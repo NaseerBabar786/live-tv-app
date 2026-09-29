@@ -117,6 +117,19 @@
   .sponsor:hover { background: rgba(255,214,0,.18); }
   .thanks { margin: 0 0 8px; color: var(--text); font-size: 15px; }
   .thanks a { color: var(--focus); }
+  .ad { display: block; width: fit-content; margin: 0 auto; line-height: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,.35); transition: transform .15s; }
+  .ad img { display: block; max-width: 100%; height: auto; }
+  .ad:hover, .ad:focus-visible { transform: scale(1.02); }
+  .ad-top { margin-top: 8px; }
+  .ad-top img { width: auto; }
+  .ad-rect { margin-top: 8px; }
+  .guide-wrap { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: start; }
+  .ad-half { position: sticky; top: 84px; }
+  @media (max-width: 900px) { .guide-wrap { grid-template-columns: 1fr; } .ad-half { display: none; } }
+  .ad-rail { position: fixed; top: 96px; display: none; z-index: 5; }
+  .ad-left { left: calc((100vw - 1200px) / 4 - 80px); }
+  .ad-right { right: calc((100vw - 1200px) / 4 - 80px); }
+  @media (min-width: 1580px) and (min-height: 720px) { .ad-rail { display: block; } }
   footer { border-top: 1px solid var(--surface-2); padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
 </style>
 </head>
@@ -136,6 +149,9 @@
   </div>
 </header>
 
+<a class="ad ad-rail ad-left" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="BulkBazaar.ca"><img src="ads/bulkbazaar-160x600.png" alt="BulkBazaar.ca: wholesale T-shirt bags" width="160" height="600" loading="lazy"></a>
+<a class="ad ad-rail ad-right" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="BulkBazaar.ca"><img src="ads/bulkbazaar-160x600.png" alt="BulkBazaar.ca: wholesale T-shirt bags" width="160" height="600" loading="lazy"></a>
+
 <main id="top" class="wrap">
   <div class="hero">
     <div>
@@ -149,6 +165,13 @@
     </div>
     <img src="tv-photo.jpg" alt="The Live TV app on a television, showing the channel list">
   </div>
+
+  <a class="ad ad-top" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="BulkBazaar.ca: wholesale T-shirt bags">
+    <picture>
+      <source media="(min-width: 760px)" srcset="ads/bulkbazaar-728x90.png">
+      <img src="ads/bulkbazaar-320x100.png" alt="BulkBazaar.ca: wholesale T-shirt bags. Buy in bulk and save. Get a quote." width="320" height="100">
+    </picture>
+  </a>
 
   <section id="watch">
     <h2>Watch live</h2>
@@ -168,6 +191,10 @@
     <p class="status" id="status">Loading channels…</p>
     <button class="btn more hidden" id="more">Show more channels</button>
   </section>
+
+  <a class="ad ad-rect" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="BulkBazaar.ca: wholesale T-shirt bags">
+    <img src="ads/bulkbazaar-300x250.png" alt="BulkBazaar.ca: wholesale T-shirt bags. Get a quote." width="300" height="250" loading="lazy">
+  </a>
 
   <section id="download">
     <h2>Get the app</h2>
@@ -198,6 +225,7 @@
       <button class="chip" data-tab="update" role="tab">Updating</button>
       <button class="chip" data-tab="help" role="tab">Problems</button>
     </div>
+    <div class="guide-wrap">
     <div class="panel guide">
       <div data-pane="phone">
         <ol class="steps">
@@ -258,6 +286,10 @@
         <h3>A channel doesn't play</h3>
         <p class="small">The broadcaster may be offline, or the channel only plays in its own country. Some channels play in the app but not in a web browser.</p>
       </div>
+    </div>
+    <a class="ad ad-half" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="BulkBazaar.ca: wholesale T-shirt bags">
+      <img src="ads/bulkbazaar-300x600.png" alt="BulkBazaar.ca: wholesale T-shirt bags. Get a quote." width="300" height="600" loading="lazy">
+    </a>
     </div>
   </section>
 </main>
