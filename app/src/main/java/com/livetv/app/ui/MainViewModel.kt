@@ -83,7 +83,7 @@ data class UiState(
             .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
 }
 
-/** Progress of "Check for updates" in Settings. */
+/** Progress of the update check that runs at start. */
 sealed interface UpdateState {
     data object Idle : UpdateState
     data object Checking : UpdateState

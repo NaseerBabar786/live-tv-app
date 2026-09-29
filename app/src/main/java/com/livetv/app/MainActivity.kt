@@ -82,9 +82,6 @@ class MainActivity : ComponentActivity() {
                 onCategoryChange = viewModel::setCategory,
                 onRefresh = viewModel::reload,
                 onSaveSource = viewModel::setPlaylistSource,
-                update = update,
-                onCheckUpdate = viewModel::checkForUpdate,
-                onInstallUpdate = viewModel::installUpdate,
             )
         }
         if (updatePrompt) StartupUpdate(update)
@@ -105,7 +102,7 @@ class MainActivity : ComponentActivity() {
                     AlertDialog(
                         onDismissRequest = { updatePrompt = false },
                         title = { Text("Update failed") },
-                        text = { Text(update.message + " You can try again from Settings.") },
+                        text = { Text(update.message + " Live TV will offer the update again next time it starts.") },
                         confirmButton = {
                             TextButton(onClick = { updatePrompt = false }, modifier = Modifier.focusGlow()) { Text("OK") }
                         },
