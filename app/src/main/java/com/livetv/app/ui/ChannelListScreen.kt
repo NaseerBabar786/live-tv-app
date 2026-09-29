@@ -1,7 +1,16 @@
 package com.livetv.app.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import com.livetv.app.R
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -100,7 +109,11 @@ fun ChannelListScreen(
                             modifier = Modifier.fillMaxWidth(),
                         )
                     } else {
-                        Text(state.title, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            AppLogo()
+                            Spacer(Modifier.width(12.dp))
+                            Text(state.title, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        }
                     }
                 },
                 actions = {
@@ -292,6 +305,25 @@ private fun ChannelCard(
                 overflow = TextOverflow.Ellipsis,
             )
         }
+    }
+}
+
+/** The app icon: a white TV with a red play button on a red tile. */
+@Composable
+private fun AppLogo() {
+    Box(
+        Modifier
+            .size(40.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(colorResource(R.color.ic_launcher_background)),
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer { scaleX = 1.3f; scaleY = 1.3f },
+        )
     }
 }
 

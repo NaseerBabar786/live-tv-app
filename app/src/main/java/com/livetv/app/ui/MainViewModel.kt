@@ -36,7 +36,7 @@ data class UiState(
     /** Screen title: the selected country's name when showing free channels by country. */
     val title: String
         get() = when (playlistSource) {
-            Famelack.SOURCE_MIX -> "Pakistan · India · Canada"
+            Famelack.SOURCE_MIX -> "Live TV"
             Famelack.SOURCE_ALL -> "All countries"
             else -> Famelack.countryCode(playlistSource)
                 ?.let { code -> countries.firstOrNull { it.code == code }?.name }
