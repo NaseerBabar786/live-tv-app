@@ -300,8 +300,9 @@
 
   const META = "https://raw.githubusercontent.com/famelack/famelack-channels/main/tv/raw/countries_metadata.json";
   let info = {};
-  let sections = [...SECTIONS];
-  let extras = store.get("countries", []); // [{cc, title}] added with the country picker
+  // The viewer's countries ({cc, title, langs?}); starts as SECTIONS plus any added with the older picker.
+  let sections = store.get("myCountries", null) || [...SECTIONS, ...store.get("countries", [])];
+  const saveSections = () => store.set("myCountries", sections);
   const seen = new Set();
 
   const fetchList = cc => fetch(RAW + cc + ".json").then(r => r.json()).catch(() => []);
@@ -330,13 +331,12 @@
 
   async function load() {
     info = await fetch(INFO).then(r => r.json()).catch(() => ({}));
-    sections = [...SECTIONS, ...extras];
     const lists = await Promise.all(sections.map(s => fetchList(s.cc)));
     sections.forEach((s, i) => addChannels(s, lists[i]));
-    if (!channels.length) { $("status").textContent = "Channels could not be loaded. Check your connection and refresh the page."; return; }
+    loadCountries();
     buildChips();
     render();
-    loadCountries();
+    if (sections.length && !channels.length) $("status").textContent = "Channels could not be loaded. Check your connection and refresh the page.";
   }
 
   // "Add a country" picker, filled from Famelack's country list.
@@ -353,6 +353,16 @@
         sel.append(o);
       });
     sel.disabled = false;
+    markPicked();
+  }
+
+  // Ticks the countries already on the list.
+  function markPicked() {
+    [...$("addCountry").options].forEach(o => {
+      if (!o.value) return;
+      const on = sections.some(s => s.cc === o.value);
+      o.textContent = (on ? "✓ " : "") + o.textContent.replace(/^✓ /, "");
+    });
   }
 
   $("addCountry").addEventListener("change", async ev => {
@@ -368,7 +378,7 @@
     addChannels(s, await fetchList(cc));
     sel.disabled = false;
     if (channels.length === before) { alert(`No channels from ${name} can play in a web browser.`); return; }
-    sections.push(s); extras.push(s); store.set("countries", extras);
+    sections.push(s); saveSections(); markPicked();
     group = name; genre = null; shown = PAGE; query = ""; $("q").value = "";
     buildChips(); render();
     const on = $("groups").querySelector(".on");
@@ -376,8 +386,7 @@
   });
 
   function removeCountry(s) {
-    extras = extras.filter(x => x.cc !== s.cc); store.set("countries", extras);
-    sections = sections.filter(x => x.cc !== s.cc);
+    sections = sections.filter(x => x.cc !== s.cc); saveSections(); markPicked();
     channels = channels.filter(c => c.group !== s.title);
     seen.clear(); channels.forEach(c => seen.add(c.streams[0]));
     channels.forEach((c, i) => c.number = i + 1);
@@ -398,7 +407,7 @@
     ["Favorites", ...sections.map(s => s.title)].forEach(name =>
       g.append(chip(name === "Favorites" ? "★ Favorites" : name, group === name,
         () => { group = group === name ? null : name; shown = PAGE; buildChips(); render(); })));
-    extras.forEach(s => {
+    sections.forEach(s => {
       const x = [...g.children].find(b => b.textContent === s.title);
       if (!x) return;
       const r = document.createElement("span");
@@ -427,7 +436,7 @@
     const frag = document.createDocumentFragment();
     visible.slice(0, shown).forEach((c, i) => frag.append(card(c, i)));
     grid.append(frag);
-    $("status").textContent = visible.length ? "" : (group === "Favorites" ? "No favorites yet. Tap the star on a channel to add it." : "No channels match.");
+    $("status").textContent = visible.length ? "" : !sections.length ? "Use Add a country to choose which countries to watch." : (group === "Favorites" ? "No favorites yet. Tap the star on a channel to add it." : "No channels match.");
     $("status").classList.toggle("hidden", !!visible.length);
     $("more").classList.toggle("hidden", visible.length <= shown);
   }
