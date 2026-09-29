@@ -12,12 +12,32 @@ android {
         applicationId = "com.naseerbabar.livetv"
         minSdk = 21
         targetSdk = 36
-        versionCode = 28
-        versionName = "1.7.0"
+        versionCode = 29
+        versionName = "1.7.1"
+    }
+
+    // CI signs every build with the same private key (from the SIGNING_KEYSTORE and
+    // SIGNING_PASSWORD repository secrets) so a new version installs over the old one.
+    // Without those secrets, builds fall back to the default debug key.
+    val keystorePath = System.getenv("SIGNING_KEYSTORE_FILE")
+    val keystorePassword = System.getenv("SIGNING_PASSWORD")
+    val shared = if (keystorePath != null && keystorePassword != null && file(keystorePath).exists()) {
+        signingConfigs.create("shared") {
+            storeFile = file(keystorePath)
+            storePassword = keystorePassword
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS") ?: "livetv"
+            keyPassword = keystorePassword
+        }
+    } else {
+        null
     }
 
     buildTypes {
+        debug {
+            if (shared != null) signingConfig = shared
+        }
         release {
+            if (shared != null) signingConfig = shared
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }

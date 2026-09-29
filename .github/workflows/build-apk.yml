@@ -31,7 +31,22 @@ jobs:
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest
 
+      # Decodes the private signing key from the repository secrets, when set, so
+      # every build is signed with the same key and updates install over the old app.
+      - name: Load signing key
+        env:
+          SIGNING_KEYSTORE: ${{ secrets.SIGNING_KEYSTORE }}
+        run: |
+          if [ -n "$SIGNING_KEYSTORE" ]; then
+            echo "$SIGNING_KEYSTORE" | base64 -d > "$RUNNER_TEMP/livetv.jks"
+            echo "SIGNING_KEYSTORE_FILE=$RUNNER_TEMP/livetv.jks" >> "$GITHUB_ENV"
+          else
+            echo "::warning::SIGNING_KEYSTORE secret is not set; using a throwaway debug key."
+          fi
+
       - name: Build debug APK
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
         run: ./gradlew assembleDebug
 
       - uses: actions/upload-artifact@v4
