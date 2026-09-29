@@ -3,12 +3,9 @@ package com.livetv.app.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -57,42 +54,24 @@ fun SponsorScreen(onDone: () -> Unit) {
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
     ) {
-        // The banner is shown up to 540x420dp (150% of its first size), and never taller
-        // than the screen allows. On wide screens the words sit beside it.
-        val landscape = maxWidth > maxHeight
-        val banner = @Composable {
+        // The banner is centred with the words under it, up to 405x315dp, and never more
+        // than 60% of the screen's height so everything fits on a TV.
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        ) {
             Image(
                 painter = painterResource(R.drawable.bulkbazaar_square),
                 contentDescription = "Bulk Bazaar Inc.: wholesale T-shirt bags. bulkbazaar.ca",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .widthIn(max = 540.dp)
-                    .heightIn(max = if (landscape) minOf(420.dp, maxHeight) else 420.dp)
+                    .widthIn(max = 405.dp)
+                    .heightIn(max = minOf(315.dp, maxHeight * 0.6f))
                     .aspectRatio(300f / 250f)
-                    .clip(RoundedCornerShape(16.dp)),
+                    .clip(RoundedCornerShape(14.dp)),
             )
-        }
-        if (landscape) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(36.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Box(Modifier.weight(1.4f, fill = false)) { banner() }
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(14.dp),
-                    modifier = Modifier.weight(1f, fill = false).widthIn(max = 460.dp),
-                ) { SponsorWords(secondsLeft, TextAlign.Start) }
-            }
-        } else {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterVertically),
-                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
-            ) {
-                banner()
-                SponsorWords(secondsLeft, TextAlign.Center)
-            }
+            SponsorWords(secondsLeft, TextAlign.Center)
         }
     }
 }
