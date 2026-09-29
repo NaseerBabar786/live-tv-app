@@ -40,6 +40,11 @@ class ChannelRepository(context: Context) {
         get() = prefs.getStringSet(KEY_FAVORITES, emptySet())?.toSet() ?: emptySet()
         set(value) = prefs.edit { putStringSet(KEY_FAVORITES, value) }
 
+    /** Languages chosen in Settings; empty means every language. */
+    var languages: Set<String>
+        get() = prefs.getStringSet(KEY_LANGUAGES, emptySet())?.toSet() ?: emptySet()
+        set(value) = prefs.edit { putStringSet(KEY_LANGUAGES, value) }
+
     var lastChannelUrl: String?
         get() = prefs.getString(KEY_LAST_CHANNEL, null)
         set(value) = prefs.edit { putString(KEY_LAST_CHANNEL, value) }
@@ -171,5 +176,6 @@ class ChannelRepository(context: Context) {
         private const val KEY_SOURCE = "playlist_source"
         private const val KEY_FAVORITES = "favorites"
         private const val KEY_LAST_CHANNEL = "last_channel"
+        private const val KEY_LANGUAGES = "languages"
     }
 }

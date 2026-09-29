@@ -80,7 +80,7 @@ fun ChannelListScreen(
     onToggleFavorite: (Channel) -> Unit,
     onQueryChange: (String) -> Unit,
     onFilterChange: (String) -> Unit,
-    onLanguageChange: (String?) -> Unit,
+    onLanguagesChange: (Set<String>) -> Unit,
     onCategoryChange: (String?) -> Unit,
     onRefresh: () -> Unit,
     onSaveSource: (String) -> Unit,
@@ -151,12 +151,7 @@ fun ChannelListScreen(
                     selected = state.filter,
                     onSelect = onFilterChange,
                 )
-                // Languages and genres have no "All" chip: tapping the selected one again clears it.
-                ChipRow(
-                    items = state.languages,
-                    selected = state.language,
-                    onSelect = { onLanguageChange(it.takeUnless { l -> l == state.language }) },
-                )
+                // Genres have no "All" chip: tapping the selected one again clears it.
                 ChipRow(
                     items = state.categories,
                     selected = state.category,
@@ -212,6 +207,12 @@ fun ChannelListScreen(
         SettingsDialog(
             currentSource = state.playlistSource,
             countries = state.countries,
+            languages = state.allLanguages,
+            selectedLanguages = state.languageFilter,
+            onLanguagesChange = {
+                showSettings = false
+                onLanguagesChange(it)
+            },
             onDismiss = { showSettings = false },
             onSave = {
                 showSettings = false

@@ -26,8 +26,8 @@ data class UiState(
     val favorites: Set<String> = emptySet(),
     val query: String = "",
     val filter: String = FILTER_ALL,
-    /** Second-row filter; null shows every language. */
-    val language: String? = null,
+    /** Languages chosen in Settings; empty shows every language. */
+    val languageFilter: Set<String> = emptySet(),
     /** Third-row filter (genre); null shows every genre. */
     val category: String? = null,
     val playlistSource: String = "",
@@ -60,13 +60,13 @@ data class UiState(
         }
 
     private val inLanguage: List<Channel>
-        get() = inGroup.filter { language == null || it.language == language }
+        get() = inGroup.filter { languageFilter.isEmpty() || it.language in languageFilter }
 
-    /** Second chip row: the languages in the selected country, most channels first. */
-    val languages: List<String>
-        get() = byCount(inGroup.mapNotNull { it.language }.filter { it != "Other" })
+    /** Every language in the loaded channels, most channels first, for the Settings picker. */
+    val allLanguages: List<String>
+        get() = byCount(channels.mapNotNull { it.language }).sortedBy { it == "Other" }
 
-    /** Third chip row: the genres in the selected country and language, most channels first. */
+    /** Second chip row: the genres in the selected country and languages, most channels first. */
     val categories: List<String>
         get() = byCount(inLanguage.mapNotNull { it.category }.filter { it !in notGenres })
             .sortedBy { it == "General" }
@@ -87,7 +87,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = ChannelRepository(app)
 
     private val _state = MutableStateFlow(
-        UiState(favorites = repo.favorites, playlistSource = repo.playlistSource)
+        UiState(favorites = repo.favorites, playlistSource = repo.playlistSource, languageFilter = repo.languages)
     )
     val state: StateFlow<UiState> = _state.asStateFlow()
 
@@ -119,15 +119,18 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setPlaylistSource(source: String) {
         repo.playlistSource = source
-        _state.update { it.copy(playlistSource = repo.playlistSource, filter = FILTER_ALL, language = null, category = null) }
+        _state.update { it.copy(playlistSource = repo.playlistSource, filter = FILTER_ALL, category = null) }
         reload()
     }
 
     fun setQuery(query: String) = _state.update { it.copy(query = query) }
 
-    fun setFilter(filter: String) = _state.update { it.copy(filter = filter, language = null, category = null) }
+    fun setFilter(filter: String) = _state.update { it.copy(filter = filter, category = null) }
 
-    fun setLanguage(language: String?) = _state.update { it.copy(language = language, category = null) }
+    fun setLanguages(languages: Set<String>) {
+        repo.languages = languages
+        _state.update { it.copy(languageFilter = languages, category = null) }
+    }
 
     fun setCategory(category: String?) = _state.update { it.copy(category = category) }
 

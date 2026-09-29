@@ -40,6 +40,9 @@ import com.livetv.app.data.Famelack
 fun SettingsDialog(
     currentSource: String,
     countries: List<Famelack.Country>,
+    languages: List<String>,
+    selectedLanguages: Set<String>,
+    onLanguagesChange: (Set<String>) -> Unit,
     onDismiss: () -> Unit,
     onSave: (String) -> Unit,
 ) {
@@ -49,6 +52,17 @@ fun SettingsDialog(
     }
     var pickingCountry by rememberSaveable { mutableStateOf(false) }
     var pickingCountries by rememberSaveable { mutableStateOf(false) }
+    var pickingLanguages by rememberSaveable { mutableStateOf(false) }
+
+    if (pickingLanguages) {
+        LanguagePicker(
+            languages = languages,
+            initial = selectedLanguages,
+            onDismiss = { pickingLanguages = false },
+            onDone = onLanguagesChange,
+        )
+        return
+    }
     val picked = Famelack.pickedCountries(currentSource)
 
     if (pickingCountries) {
@@ -92,6 +106,16 @@ fun SettingsDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
+                Text("Languages", fontWeight = FontWeight.Bold)
+                SourceButton(
+                    label = when {
+                        selectedLanguages.isEmpty() -> "All languages"
+                        else -> selectedLanguages.sortedBy { languages.indexOf(it) }.joinToString(", ")
+                    },
+                    selected = selectedLanguages.isNotEmpty(),
+                    enabled = languages.isNotEmpty(),
+                ) { pickingLanguages = true }
+
                 Text("Free TV by country", fontWeight = FontWeight.Bold)
                 Text(
                     "Free channels that broadcasters stream publicly. " +
@@ -139,6 +163,50 @@ private fun SourceButton(label: String, selected: Boolean, enabled: Boolean = tr
     } else {
         OutlinedButton(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth().focusGlow()) { Text(label) }
     }
+}
+
+/** Tick the languages to watch; none ticked shows every language. */
+@Composable
+private fun LanguagePicker(
+    languages: List<String>,
+    initial: Set<String>,
+    onDismiss: () -> Unit,
+    onDone: (Set<String>) -> Unit,
+) {
+    var chosen by remember { mutableStateOf(initial) }
+    // Languages that were picked but aren't in the current channels stay listed so they can be unticked.
+    val shown = languages + (initial - languages.toSet()).sorted()
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Choose languages") },
+        text = {
+            LazyColumn(Modifier.heightIn(max = 460.dp)) {
+                items(shown, key = { it }) { language ->
+                    val checked = language in chosen
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .focusGlow(ChipShape)
+                            .clickable { chosen = if (checked) chosen - language else chosen + language }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(checked = checked, onCheckedChange = null)
+                        Text(language, modifier = Modifier.padding(start = 8.dp))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = { onDone(chosen) }, modifier = Modifier.focusGlow()) {
+                Text(if (chosen.isEmpty()) "Show all languages" else "Show ${chosen.size} languages")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { chosen = emptySet() }, modifier = Modifier.focusGlow()) { Text("Clear") }
+        },
+    )
 }
 
 /** Tick any number of countries; the channel list then shows just those countries. */
