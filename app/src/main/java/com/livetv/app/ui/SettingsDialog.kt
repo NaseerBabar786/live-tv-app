@@ -58,6 +58,12 @@ fun SettingsDialog(
     var pickingCountry by rememberSaveable { mutableStateOf(false) }
     var pickingCountries by rememberSaveable { mutableStateOf(false) }
     var pickingLanguages by rememberSaveable { mutableStateOf(false) }
+    var showingGuide by rememberSaveable { mutableStateOf(false) }
+
+    if (showingGuide) {
+        InstallGuideDialog(onDismiss = { showingGuide = false })
+        return
+    }
 
     if (pickingLanguages) {
         LanguagePicker(
@@ -151,6 +157,12 @@ fun SettingsDialog(
                         }
                     )
                 }
+
+                HorizontalDivider()
+                OutlinedButton(
+                    onClick = { showingGuide = true },
+                    modifier = Modifier.fillMaxWidth().focusGlow(),
+                ) { Text(INSTALL_GUIDE_TITLE) }
             }
         },
         confirmButton = {

@@ -12,8 +12,8 @@ android {
         applicationId = "com.naseerbabar.livetv"
         minSdk = 21
         targetSdk = 36
-        versionCode = 33
-        versionName = "1.7.5"
+        versionCode = 34
+        versionName = "1.7.6"
     }
 
     // CI signs every build with the same private key (from the SIGNING_KEYSTORE and
