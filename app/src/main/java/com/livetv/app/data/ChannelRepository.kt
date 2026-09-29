@@ -48,12 +48,22 @@ class ChannelRepository(context: Context) {
             val channels = when {
                 source == SOURCE_SAMPLE -> M3uParser.parse(readAsset())
                 source.startsWith("content://") -> M3uParser.parse(readContentUri(Uri.parse(source)))
-                country != null -> Famelack.parseChannels(downloadCached(source, Famelack.countryUrl(country)))
+                country != null -> Famelack.parseChannels(
+                    downloadCached(source, Famelack.countryUrl(country)),
+                    channelInfo,
+                )
                 else -> M3uParser.parse(downloadCached(source, source))
             }
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
             channels
         }
+    }
+
+    /** Logos and categories for Famelack channels, bundled with the app. */
+    private val channelInfo: Map<String, Famelack.Info> by lazy {
+        runCatching {
+            Famelack.parseInfo(appContext.assets.open("channel_info.json").bufferedReader().use { it.readText() })
+        }.getOrDefault(emptyMap())
     }
 
     /** Countries that have free channels, for the country picker. */

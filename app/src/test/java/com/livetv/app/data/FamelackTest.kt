@@ -28,6 +28,24 @@ class FamelackTest {
     }
 
     @Test
+    fun appliesLogoAndCategory() {
+        val json = """
+            [{"nanoid":"a1","name":"News One","sources":{"streams":["https://x/one.m3u8"]},
+              "languages":["eng"],"country":"ca","isGeoBlocked":false},
+             {"nanoid":"g1","name":"Gen","sources":{"streams":["https://x/g.m3u8"]},
+              "languages":["urd"],"country":"pk","isGeoBlocked":false}]
+        """.trimIndent()
+        val info = Famelack.parseInfo("""{"a1":["https://logo/a.png","news"],"g1":["https://logo/g.png","general"]}""")
+
+        val channels = Famelack.parseChannels(json, info)
+
+        assertEquals("https://logo/a.png", channels[0].logo)
+        assertEquals("News", channels[0].group)
+        // "general" says nothing useful, so the language is used instead.
+        assertEquals("Urdu", channels[1].group)
+    }
+
+    @Test
     fun parsesCountriesSortedByName() {
         val json = """
             {"PK":{"country":"Pakistan","channelCount":73},

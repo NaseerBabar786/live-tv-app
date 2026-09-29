@@ -21,6 +21,11 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
+      - name: Refresh channel logos
+        # Keeps the committed copy if the channel databases can't be reached.
+        continue-on-error: true
+        run: python3 tools/build_logo_index.py
+
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest
 

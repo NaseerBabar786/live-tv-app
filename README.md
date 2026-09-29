@@ -7,7 +7,8 @@ Kotlin, Jetpack Compose and Media3 ExoPlayer.
 
 - Free TV by country: live channels that broadcasters stream publicly, from the
   [Famelack](https://github.com/famelack/famelack-channels) list (formerly TV Garden,
-  MIT licensed). Opens on your phone's country; change it in Settings.
+  MIT licensed). Opens on your phone's country; change it in Settings. Logos and
+  categories come from the [iptv-org](https://github.com/iptv-org/database) database.
 - Channel grid with logos, group filter chips, search and pull to refresh
 - Favorites (tap the star or long-press a channel)
 - Full-screen player for HLS (`.m3u8`), DASH (`.mpd`) and MPEG-TS / progressive streams
@@ -45,6 +46,7 @@ app/src/main/java/com/livetv/app/
   data/Channel.kt            channel model
   data/M3uParser.kt          M3U / EXTINF parser
   data/Famelack.kt           free channels by country (Famelack / TV Garden list)
+tools/build_logo_index.py    matches those channels to iptv-org logos and categories
   data/ChannelRepository.kt  playlist loading, cache, favorites, settings
   ui/MainViewModel.kt        UI state, search, filters, channel zapping
   ui/ChannelListScreen.kt    channel grid

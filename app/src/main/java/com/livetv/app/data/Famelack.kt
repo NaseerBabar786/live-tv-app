@@ -38,11 +38,25 @@ object Famelack {
             .toList()
     }
 
+    /** Logo URL and iptv-org category for a channel, keyed by Famelack nanoid. */
+    data class Info(val logo: String, val category: String)
+
+    /** Reads assets/channel_info.json, built by tools/build_logo_index.py. */
+    fun parseInfo(json: String): Map<String, Info> {
+        val obj = JSONObject(json)
+        return obj.keys().asSequence().associateWith { id ->
+            val a = obj.getJSONArray(id)
+            Info(logo = a.optString(0), category = a.optString(1))
+        }
+    }
+
     /**
      * Converts a country's channel list to playable channels. Channels that only
      * have YouTube sources are skipped because they can't play in ExoPlayer.
+     * Channels are grouped by category (News, Sports…) when [info] knows it,
+     * otherwise by language.
      */
-    fun parseChannels(json: String): List<Channel> {
+    fun parseChannels(json: String, info: Map<String, Info> = emptyMap()): List<Channel> {
         val array = JSONArray(json)
         return (0 until array.length()).mapNotNull { i ->
             val entry = array.getJSONObject(i)
@@ -52,18 +66,23 @@ object Famelack {
                 .orEmpty()
             if (streams.isEmpty()) return@mapNotNull null
 
+            val id = entry.optString("nanoid").ifBlank { null }
+            val extra = id?.let(info::get)
+            val category = extra?.category?.takeIf { it.isNotBlank() && it != "general" }
             val language = entry.optJSONArray("languages")?.optString(0)
             val geoBlocked = entry.optBoolean("isGeoBlocked", false)
             Channel(
                 name = entry.optString("name").ifBlank { "Channel ${i + 1}" },
                 url = streams.first(),
                 alternates = streams.drop(1),
+                logo = extra?.logo?.takeIf { it.startsWith("http") },
                 group = when {
                     geoBlocked -> "Geo-blocked"
+                    category != null -> category.replaceFirstChar { it.uppercase() }
                     language.isNullOrBlank() -> "Other"
                     else -> languageName(language)
                 },
-                tvgId = entry.optString("nanoid").ifBlank { null },
+                tvgId = id,
             )
         }
     }
