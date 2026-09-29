@@ -78,6 +78,8 @@ fun ChannelListScreen(
     onToggleFavorite: (Channel) -> Unit,
     onQueryChange: (String) -> Unit,
     onFilterChange: (String) -> Unit,
+    onLanguageChange: (String?) -> Unit,
+    onCategoryChange: (String?) -> Unit,
     onRefresh: () -> Unit,
     onSaveSource: (String) -> Unit,
 ) {
@@ -143,9 +145,20 @@ fun ChannelListScreen(
         ) {
             Column(Modifier.fillMaxSize()) {
                 ChipRow(
-                    items = state.filters,
+                    items = state.groups,
                     selected = state.filter,
                     onSelect = onFilterChange,
+                )
+                // Languages and genres have no "All" chip: tapping the selected one again clears it.
+                ChipRow(
+                    items = state.languages,
+                    selected = state.language,
+                    onSelect = { onLanguageChange(it.takeUnless { l -> l == state.language }) },
+                )
+                ChipRow(
+                    items = state.categories,
+                    selected = state.category,
+                    onSelect = { onCategoryChange(it.takeUnless { c -> c == state.category }) },
                 )
                 if (!state.loading && state.channels.isNotEmpty()) {
                     Text(
@@ -207,7 +220,7 @@ fun ChannelListScreen(
 }
 
 @Composable
-private fun ChipRow(items: List<String>, selected: String, onSelect: (String) -> Unit) {
+private fun ChipRow(items: List<String>, selected: String?, onSelect: (String) -> Unit) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 2.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -216,7 +229,7 @@ private fun ChipRow(items: List<String>, selected: String, onSelect: (String) ->
             FilterChip(
                 selected = selected == item,
                 onClick = { onSelect(item) },
-                label = { Text(filterLabel(item)) },
+                label = { Text(item) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = AccentBlue,
                     selectedLabelColor = Color.White,
