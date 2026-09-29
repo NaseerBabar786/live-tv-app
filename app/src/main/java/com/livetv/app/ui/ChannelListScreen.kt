@@ -35,7 +35,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +44,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -70,6 +70,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
+import com.livetv.app.Edition
 import com.livetv.app.data.Channel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,10 +81,12 @@ fun ChannelListScreen(
     onToggleFavorite: (Channel) -> Unit,
     onQueryChange: (String) -> Unit,
     onFilterChange: (String) -> Unit,
-    onLanguagesChange: (Set<String>) -> Unit,
     onCategoryChange: (String?) -> Unit,
     onRefresh: () -> Unit,
-    onSaveSource: (String) -> Unit,
+    /** This app's Settings dialog; it calls the given function to close. */
+    settings: @Composable (onDismiss: () -> Unit) -> Unit,
+    /** Stream Player Plus: adds the built-in demo playlist. */
+    onTryDemo: () -> Unit = {},
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
     var showSettings by rememberSaveable { mutableStateOf(false) }
@@ -146,6 +149,18 @@ fun ChannelListScreen(
                 .padding(padding),
         ) {
             Column(Modifier.fillMaxSize()) {
+                if (state.needsPlaylist) {
+                    Message(
+                        text = "Add a playlist to start watching.\n\nPaste a playlist link (M3U) from your TV " +
+                            "provider, or open a playlist file saved on this device. " +
+                            "${Edition.APP_NAME} doesn't include any channels.",
+                        action = "Add a playlist",
+                        onAction = { showSettings = true },
+                        secondAction = "Try demo channels",
+                        onSecondAction = onTryDemo,
+                    )
+                    return@Column
+                }
                 ChipRow(
                     items = state.groups,
                     selected = state.filter,
@@ -203,25 +218,7 @@ fun ChannelListScreen(
         }
     }
 
-    if (showSettings) {
-        SettingsTheme {
-            SettingsDialog(
-                currentSource = state.playlistSource,
-                countries = state.countries,
-                languages = state.allLanguages,
-                selectedLanguages = state.languageFilter,
-                onLanguagesChange = {
-                    showSettings = false
-                    onLanguagesChange(it)
-                },
-                onDismiss = { showSettings = false },
-                onSave = {
-                    showSettings = false
-                    onSaveSource(it)
-                },
-            )
-        }
-    }
+    if (showSettings) settings { showSettings = false }
 }
 
 @Composable
@@ -371,7 +368,13 @@ private fun Initials(name: String) {
 }
 
 @Composable
-private fun Message(text: String, action: String? = null, onAction: () -> Unit = {}) {
+private fun Message(
+    text: String,
+    action: String? = null,
+    onAction: () -> Unit = {},
+    secondAction: String? = null,
+    onSecondAction: () -> Unit = {},
+) {
     Column(
         Modifier
             .fillMaxSize()
@@ -382,7 +385,11 @@ private fun Message(text: String, action: String? = null, onAction: () -> Unit =
         Text(text, textAlign = TextAlign.Center)
         if (action != null) {
             Spacer(Modifier.height(16.dp))
-            Button(onClick = onAction) { Text(action) }
+            AccentButton(onClick = onAction, modifier = Modifier.focusGlow()) { Text(action) }
+        }
+        if (secondAction != null) {
+            Spacer(Modifier.height(12.dp))
+            OutlinedButton(onClick = onSecondAction, modifier = Modifier.focusGlow()) { Text(secondAction) }
         }
     }
 }

@@ -29,7 +29,7 @@ jobs:
         run: python3 tools/build_logo_index.py
 
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest
 
       # Decodes the private signing key from the repository secrets, when set, so
       # every build is signed with the same key and updates install over the old app.
@@ -44,15 +44,24 @@ jobs:
             echo "::warning::SIGNING_KEYSTORE secret is not set; using a throwaway debug key."
           fi
 
-      - name: Build debug APK
+      # Live TV ships as a debug APK (sideloaded); Stream Player Plus as a release APK
+      # plus the app bundle (.aab) that Google Play asks for.
+      - name: Build Live TV and Stream Player Plus
         env:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleLivetvDebug assemblePlayerRelease bundlePlayerRelease
 
       - uses: actions/upload-artifact@v4
         with:
           name: live-tv-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/livetv/debug/app-livetv-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stream-player-plus
+          path: |
+            app/build/outputs/apk/player/release/*.apk
+            app/build/outputs/bundle/playerRelease/*.aab
 
       # Publishes the APK as the latest GitHub release so phones and TVs can
       # download it directly from:
@@ -62,10 +71,30 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          version=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts)
+          version=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts | head -1)
           tag="v${version}-build${{ github.run_number }}"
-          cp app/build/outputs/apk/debug/app-debug.apk LiveTV.apk
+          cp app/build/outputs/apk/livetv/debug/app-livetv-debug.apk LiveTV.apk
           gh release create "$tag" LiveTV.apk \
             --title "Live TV $version (build ${{ github.run_number }})" \
             --notes "Debug build from ${{ github.sha }}." \
             --latest
+
+      # Stream Player Plus goes in its own release, one per version, never marked
+      # "latest", so Live TV's download link and update check keep finding Live TV.
+      - name: Publish Stream Player Plus
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts | sed -n 2p)
+          tag="stream-player-plus-v${version}"
+          cp app/build/outputs/apk/player/release/*.apk StreamPlayerPlus.apk
+          cp app/build/outputs/bundle/playerRelease/*.aab StreamPlayerPlus.aab
+          if gh release view "$tag" > /dev/null 2>&1; then
+            gh release upload "$tag" StreamPlayerPlus.apk StreamPlayerPlus.aab --clobber
+          else
+            gh release create "$tag" StreamPlayerPlus.apk StreamPlayerPlus.aab \
+              --title "Stream Player Plus $version" \
+              --notes "Release build for Google Play (.aab) and for testing (.apk). Built from ${{ github.sha }}." \
+              --latest=false
+          fi

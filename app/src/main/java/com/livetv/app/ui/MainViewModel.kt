@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.livetv.app.data.Channel
 import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Famelack
-import com.livetv.app.data.Updater
+import com.livetv.app.Edition
+import com.livetv.app.data.Playlist
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +17,8 @@ import kotlinx.coroutines.launch
 /** Special group filters shown before the playlist's own groups. */
 const val FILTER_ALL = "All"
 const val FILTER_FAVORITES = "Favorites"
+
+const val DEMO_PLAYLIST_NAME = "Demo channels"
 
 /** Types that are not really genres, so they get no chip. */
 private val notGenres = setOf("Geo-blocked")
@@ -36,10 +39,18 @@ data class UiState(
     /** The channel watched most recently, so going back lands on it in the list. */
     val lastWatchedId: String? = null,
     val countries: List<Famelack.Country> = emptyList(),
+    /** Playlists the viewer added (Stream Player Plus). */
+    val playlists: List<Playlist> = emptyList(),
 ) {
+    /** Stream Player Plus with no playlist yet: the screen asks the viewer to add one. */
+    val needsPlaylist: Boolean
+        get() = !Edition.LIVE_TV && playlistSource.isBlank()
+
     /** Screen title: the selected country's name when showing free channels by country. */
     val title: String
-        get() = when (playlistSource) {
+        get() = if (!Edition.LIVE_TV) {
+            playlists.firstOrNull { it.source == playlistSource }?.name ?: Edition.APP_NAME
+        } else when (playlistSource) {
             Famelack.SOURCE_MIX -> "Live TV"
             Famelack.SOURCE_ALL -> "All countries"
             else -> Famelack.countryCode(playlistSource)
@@ -83,59 +94,17 @@ data class UiState(
             .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
 }
 
-/** Progress of the update check that runs at start. */
-sealed interface UpdateState {
-    data object Idle : UpdateState
-    data object Checking : UpdateState
-    data object UpToDate : UpdateState
-    data class Available(val release: Updater.Release) : UpdateState
-    data class Downloading(val release: Updater.Release, val progress: Float) : UpdateState
-    /** The user was sent to allow installs from this app; pressing Update again continues. */
-    data class NeedsPermission(val release: Updater.Release) : UpdateState
-    data class Failed(val message: String) : UpdateState
-}
-
 class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private val repo = ChannelRepository(app)
-    private val updater = Updater(app)
-
-    private val _update = MutableStateFlow<UpdateState>(UpdateState.Idle)
-    val update: StateFlow<UpdateState> = _update.asStateFlow()
-
-    fun checkForUpdate() {
-        if (_update.value is UpdateState.Checking || _update.value is UpdateState.Downloading) return
-        _update.value = UpdateState.Checking
-        viewModelScope.launch {
-            _update.value = runCatching { updater.checkForUpdate() }.fold(
-                onSuccess = { release -> release?.let { UpdateState.Available(it) } ?: UpdateState.UpToDate },
-                onFailure = { UpdateState.Failed(it.message ?: "Could not check for updates.") },
-            )
-        }
-    }
-
-    /** Downloads [release] and opens the installer. */
-    fun installUpdate(release: Updater.Release) {
-        if (_update.value is UpdateState.Downloading) return
-        if (!updater.ensureInstallAllowed()) {
-            _update.value = UpdateState.NeedsPermission(release)
-            return
-        }
-        _update.value = UpdateState.Downloading(release, 0f)
-        viewModelScope.launch {
-            runCatching {
-                val apk = updater.download(release) { p -> _update.value = UpdateState.Downloading(release, p) }
-                updater.install(apk)
-            }.onSuccess {
-                _update.value = UpdateState.Available(release)
-            }.onFailure {
-                _update.value = UpdateState.Failed(it.message ?: "The update could not be installed.")
-            }
-        }
-    }
 
     private val _state = MutableStateFlow(
-        UiState(favorites = repo.favorites, playlistSource = repo.playlistSource, languageFilter = repo.languages)
+        UiState(
+            favorites = repo.favorites,
+            playlistSource = repo.playlistSource,
+            languageFilter = repo.languages,
+            playlists = repo.playlists,
+        )
     )
     val state: StateFlow<UiState> = _state.asStateFlow()
 
@@ -144,7 +113,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun loadCountries() {
-        if (_state.value.countries.isNotEmpty()) return
+        if (!Edition.LIVE_TV || _state.value.countries.isNotEmpty()) return
         viewModelScope.launch {
             repo.loadCountries().onSuccess { list -> _state.update { it.copy(countries = list) } }
         }
@@ -152,6 +121,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun reload() {
         loadCountries()
+        if (_state.value.needsPlaylist) {
+            _state.update { it.copy(loading = false, error = null, channels = emptyList()) }
+            return
+        }
         _state.update { it.copy(loading = true, error = null) }
         viewModelScope.launch {
             repo.loadChannels()
@@ -169,6 +142,25 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         repo.playlistSource = source
         _state.update { it.copy(playlistSource = repo.playlistSource, filter = FILTER_ALL, category = null) }
         reload()
+    }
+
+    /** Saves a playlist (replacing one with the same link) and switches to it. */
+    fun addPlaylist(name: String, source: String) {
+        val list = repo.playlists.filter { it.source != source } + Playlist(name.trim(), source.trim())
+        repo.playlists = list
+        _state.update { it.copy(playlists = list) }
+        setPlaylistSource(source)
+    }
+
+    /** Adds the bundled demo playlist: streams their owners publish openly, plus vendor test streams. */
+    fun addDemoPlaylist() = addPlaylist(DEMO_PLAYLIST_NAME, ChannelRepository.SOURCE_SAMPLE)
+
+    /** Forgets a playlist; when it was the one showing, switches to the next saved one (or none). */
+    fun removePlaylist(playlist: Playlist) {
+        val list = repo.playlists.filter { it.source != playlist.source }
+        repo.playlists = list
+        _state.update { it.copy(playlists = list) }
+        if (playlist.source == _state.value.playlistSource) setPlaylistSource(list.firstOrNull()?.source ?: "")
     }
 
     fun setQuery(query: String) = _state.update { it.copy(query = query) }

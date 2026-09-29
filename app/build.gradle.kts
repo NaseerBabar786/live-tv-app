@@ -9,11 +9,28 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.naseerbabar.livetv"
         minSdk = 21
         targetSdk = 36
-        versionCode = 43
-        versionName = "1.8.5"
+    }
+
+    // Two apps from one code base. Code and resources only one app uses live in
+    // src/livetv or src/player; each provides the Edition object the shared code calls.
+    flavorDimensions += "edition"
+    productFlavors {
+        // Live TV: built-in free channels, sponsor screen, self-updating APK from GitHub.
+        create("livetv") {
+            dimension = "edition"
+            applicationId = "com.naseerbabar.livetv"
+            versionCode = 44
+            versionName = "1.8.6"
+        }
+        // Stream Player Plus: the Google Play app. No channels of its own; viewers add playlists.
+        create("player") {
+            dimension = "edition"
+            applicationId = "com.streamplayerplus.app"
+            versionCode = 1
+            versionName = "1.0.0"
+        }
     }
 
     // CI signs every build with the same private key (from the SIGNING_KEYSTORE and
@@ -39,6 +56,7 @@ android {
         release {
             if (shared != null) signingConfig = shared
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }

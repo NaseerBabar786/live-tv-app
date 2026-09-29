@@ -2,6 +2,7 @@ package com.livetv.app.data
 
 import android.content.Context
 import android.net.Uri
+import com.livetv.app.Edition
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -44,6 +45,11 @@ class ChannelRepository(context: Context) {
     var languages: Set<String>
         get() = prefs.getStringSet(KEY_LANGUAGES, emptySet())?.toSet() ?: emptySet()
         set(value) = prefs.edit { putStringSet(KEY_LANGUAGES, value) }
+
+    /** Playlists the viewer added (Stream Player Plus). */
+    var playlists: List<Playlist>
+        get() = Playlist.fromJson(prefs.getString(KEY_PLAYLISTS, null))
+        set(value) = prefs.edit { putString(KEY_PLAYLISTS, Playlist.toJson(value)) }
 
     var lastChannelUrl: String?
         get() = prefs.getString(KEY_LAST_CHANNEL, null)
@@ -135,7 +141,8 @@ class ChannelRepository(context: Context) {
         }
     }
 
-    private fun defaultSource(): String = Famelack.SOURCE_MIX
+    /** Live TV starts on its built-in channels; Stream Player Plus has none until a playlist is added. */
+    private fun defaultSource(): String = if (Edition.LIVE_TV) Famelack.SOURCE_MIX else ""
 
     private fun readAsset(): String =
         appContext.assets.open("sample.m3u").bufferedReader().use { it.readText() }
@@ -171,11 +178,12 @@ class ChannelRepository(context: Context) {
     }
 
     companion object {
-        const val USER_AGENT = "LiveTV-Android/1.0"
+        const val USER_AGENT = Edition.USER_AGENT
         const val SOURCE_SAMPLE = "sample"
         private const val KEY_SOURCE = "playlist_source"
         private const val KEY_FAVORITES = "favorites"
         private const val KEY_LAST_CHANNEL = "last_channel"
         private const val KEY_LANGUAGES = "languages"
+        private const val KEY_PLAYLISTS = "playlists"
     }
 }
