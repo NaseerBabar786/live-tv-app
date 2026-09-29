@@ -56,6 +56,7 @@ fun SponsorScreen(onDone: () -> Unit) {
     ) {
         // The banner is centred with the words under it, up to 405x315dp, and never more
         // than 60% of the screen's height so everything fits on a TV.
+        val bannerHeight = minOf(315.dp, maxHeight * 0.6f)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
@@ -67,7 +68,7 @@ fun SponsorScreen(onDone: () -> Unit) {
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .widthIn(max = 405.dp)
-                    .heightIn(max = minOf(315.dp, maxHeight * 0.6f))
+                    .heightIn(max = bannerHeight)
                     .aspectRatio(300f / 250f)
                     .clip(RoundedCornerShape(14.dp)),
             )
