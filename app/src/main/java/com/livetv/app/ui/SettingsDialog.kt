@@ -100,8 +100,8 @@ fun SettingsDialog(
             ) {
                 Text("Free TV by country", fontWeight = FontWeight.Bold)
                 Text(
-                    "Free channels that broadcasters stream publicly, from the Famelack " +
-                        "(TV Garden) list. Some channels only play inside their own country.",
+                    "Free channels that broadcasters stream publicly. " +
+                        "Some channels only play inside their own country.",
                     style = MaterialTheme.typography.bodySmall,
                 )
                 val mixSelected = currentSource == Famelack.SOURCE_MIX

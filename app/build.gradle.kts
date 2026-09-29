@@ -12,8 +12,8 @@ android {
         applicationId = "com.naseerbabar.livetv"
         minSdk = 21
         targetSdk = 36
-        versionCode = 22
-        versionName = "1.5.4"
+        versionCode = 23
+        versionName = "1.5.5"
     }
 
     buildTypes {
