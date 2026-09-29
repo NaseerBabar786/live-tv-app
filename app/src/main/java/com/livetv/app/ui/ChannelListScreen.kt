@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -30,6 +29,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -87,7 +87,7 @@ fun ChannelListScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
+                    IconButton(modifier = Modifier.focusGlow(), onClick = {
                         if (searching) onQueryChange("")
                         searching = !searching
                     }) {
@@ -96,7 +96,7 @@ fun ChannelListScreen(
                             contentDescription = if (searching) "Close search" else "Search",
                         )
                     }
-                    IconButton(onClick = { showSettings = true }) {
+                    IconButton(onClick = { showSettings = true }, modifier = Modifier.focusGlow()) {
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
                 },
@@ -203,6 +203,12 @@ private fun ChipRow(items: List<String>, selected: String, onSelect: (String) ->
                 selected = selected == item,
                 onClick = { onSelect(item) },
                 label = { Text(item) },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                    selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+                modifier = Modifier.focusGlow(ChipShape),
             )
         }
     }
@@ -220,7 +226,8 @@ private fun ChannelCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .focusGlow(CardShape)
+            .clip(CardShape)
             .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
     ) {
         Box(
@@ -246,7 +253,7 @@ private fun ChannelCard(
             }
             IconButton(
                 onClick = onToggleFavorite,
-                modifier = Modifier.align(Alignment.TopEnd),
+                modifier = Modifier.align(Alignment.TopEnd).focusGlow(),
             ) {
                 Icon(
                     if (favorite) Icons.Filled.Star else Icons.Outlined.StarBorder,

@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -49,6 +50,9 @@ fun SettingsDialog(
     onSave: (String) -> Unit,
 ) {
     val context = LocalContext.current
+    val appVersion = remember {
+        runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull()
+    }
     var pickingCountry by rememberSaveable { mutableStateOf(false) }
     var url by rememberSaveable {
         mutableStateOf(if (currentSource.startsWith("http", ignoreCase = true)) currentSource else "")
@@ -77,7 +81,18 @@ fun SettingsDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Channels") },
+        title = {
+            Column {
+                Text("Channels")
+                if (appVersion != null) {
+                    Text(
+                        "Version $appVersion",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary,
+                    )
+                }
+            }
+        },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -96,7 +111,7 @@ fun SettingsDialog(
                 OutlinedButton(
                     onClick = { pickingCountry = true },
                     enabled = countries.isNotEmpty(),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().focusGlow(),
                 ) {
                     Text(
                         when {
@@ -121,22 +136,23 @@ fun SettingsDialog(
                 )
                 OutlinedButton(
                     onClick = { pickFile.launch(arrayOf("*/*")) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().focusGlow(),
                 ) { Text("Open playlist file") }
                 TextButton(
                     onClick = { onSave(ChannelRepository.SOURCE_SAMPLE) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().focusGlow(),
                 ) { Text("Use built-in test channels") }
             }
         },
         confirmButton = {
             TextButton(
+                modifier = Modifier.focusGlow(),
                 onClick = { onSave(url) },
                 enabled = url.trim().startsWith("http", ignoreCase = true),
             ) { Text("Load URL") }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Close") }
+            TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Close") }
         },
     )
 }
@@ -144,9 +160,9 @@ fun SettingsDialog(
 @Composable
 private fun SourceButton(label: String, selected: Boolean, onClick: () -> Unit) {
     if (selected) {
-        Button(onClick = onClick, modifier = Modifier.fillMaxWidth()) { Text("✓ $label") }
+        Button(onClick = onClick, modifier = Modifier.fillMaxWidth().focusGlow()) { Text("✓ $label") }
     } else {
-        OutlinedButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) { Text(label) }
+        OutlinedButton(onClick = onClick, modifier = Modifier.fillMaxWidth().focusGlow()) { Text(label) }
     }
 }
 
@@ -176,6 +192,7 @@ private fun CountryPicker(
                         Row(
                             Modifier
                                 .fillMaxWidth()
+                                .focusGlow(ChipShape)
                                 .clickable { onPick(country) }
                                 .padding(vertical = 12.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -191,6 +208,6 @@ private fun CountryPicker(
             }
         },
         confirmButton = {},
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Back") } },
+        dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Back") } },
     )
 }

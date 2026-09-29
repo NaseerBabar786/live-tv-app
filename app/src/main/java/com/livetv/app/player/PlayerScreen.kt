@@ -54,6 +54,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.PlayerView
 import com.livetv.app.data.Channel
+import com.livetv.app.ui.focusGlow
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -141,7 +142,7 @@ fun PlayerScreen(
                     .padding(horizontal = 4.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconButton(onClick = onBack) {
+                IconButton(onClick = onBack, modifier = Modifier.focusGlow()) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                 }
                 Column(Modifier.weight(1f)) {
@@ -156,13 +157,13 @@ fun PlayerScreen(
                         Text(it, color = Color.White.copy(alpha = 0.7f), style = MaterialTheme.typography.bodySmall)
                     }
                 }
-                IconButton(onClick = { onZap(-1) }) {
+                IconButton(onClick = { onZap(-1) }, modifier = Modifier.focusGlow()) {
                     Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Previous channel", tint = Color.White)
                 }
-                IconButton(onClick = { onZap(1) }) {
+                IconButton(onClick = { onZap(1) }, modifier = Modifier.focusGlow()) {
                     Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Next channel", tint = Color.White)
                 }
-                IconButton(onClick = onToggleFavorite) {
+                IconButton(onClick = onToggleFavorite, modifier = Modifier.focusGlow()) {
                     Icon(
                         if (favorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
                         contentDescription = if (favorite) "Remove from favorites" else "Add to favorites",
@@ -183,7 +184,7 @@ fun PlayerScreen(
             ) {
                 Text(message, color = Color.White)
                 Spacer(Modifier.height(16.dp))
-                Button(onClick = { streamPlayer.retry() }) { Text("Try again") }
+                Button(onClick = { streamPlayer.retry() }, modifier = Modifier.focusGlow()) { Text("Try again") }
             }
         }
     }
