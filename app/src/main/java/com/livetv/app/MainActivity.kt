@@ -2,6 +2,7 @@ package com.livetv.app
 
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.Rational
 import android.view.KeyEvent
@@ -58,7 +59,8 @@ class MainActivity : ComponentActivity() {
 
     /** Channel up/down on TV remotes and keyboards while a channel is playing. */
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (viewModel.state.value.playing != null && event.action == KeyEvent.ACTION_DOWN) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+            viewModel.state.value.playing != null && event.action == KeyEvent.ACTION_DOWN) {
             when (event.keyCode) {
                 KeyEvent.KEYCODE_CHANNEL_UP, KeyEvent.KEYCODE_PAGE_UP -> {
                     viewModel.zap(-1); return true
@@ -74,7 +76,8 @@ class MainActivity : ComponentActivity() {
     /** Keep watching in a small window when the user leaves the app mid-channel. */
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        if (viewModel.state.value.playing != null &&
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+            viewModel.state.value.playing != null &&
             packageManager.hasSystemFeature("android.software.picture_in_picture")
         ) {
             runCatching {

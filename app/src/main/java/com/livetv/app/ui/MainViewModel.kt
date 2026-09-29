@@ -143,7 +143,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val list = s.visibleChannels.ifEmpty { s.channels }
         if (list.isEmpty()) return
         val index = list.indexOfFirst { it.id == s.playing?.id }
-        val next = list[Math.floorMod(index + direction, list.size)]
+        val next = list[((index + direction) % list.size + list.size) % list.size]
         play(next)
     }
 }
