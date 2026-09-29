@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,45 +19,55 @@ import com.livetv.app.player.PlayerScreen
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
+import com.livetv.app.ui.SponsorScreen
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
     private var inPictureInPicture by mutableStateOf(false)
 
+    /** The sponsor screen shows once per launch, not again after rotation. */
+    private var showSponsor by mutableStateOf(true)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (savedInstanceState != null) showSponsor = false
         setContent {
             LiveTvTheme {
-                val state by viewModel.state.collectAsStateWithLifecycle()
-                val update by viewModel.update.collectAsStateWithLifecycle()
-                val playing = state.playing
-                if (playing != null) {
-                    PlayerScreen(
-                        channel = playing,
-                        favorite = playing.id in state.favorites,
-                        inPictureInPicture = inPictureInPicture,
-                        onBack = viewModel::stop,
-                        onToggleFavorite = { viewModel.toggleFavorite(playing) },
-                    )
-                } else {
-                    ChannelListScreen(
-                        state = state,
-                        onPlay = viewModel::play,
-                        onToggleFavorite = viewModel::toggleFavorite,
-                        onQueryChange = viewModel::setQuery,
-                        onFilterChange = viewModel::setFilter,
-                        onLanguagesChange = viewModel::setLanguages,
-                        onCategoryChange = viewModel::setCategory,
-                        onRefresh = viewModel::reload,
-                        onSaveSource = viewModel::setPlaylistSource,
-                        update = update,
-                        onCheckUpdate = viewModel::checkForUpdate,
-                        onInstallUpdate = viewModel::installUpdate,
-                    )
-                }
+                if (showSponsor) SponsorScreen(onDone = { showSponsor = false }) else AppContent()
             }
+        }
+    }
+
+    @Composable
+    private fun AppContent() {
+        val state by viewModel.state.collectAsStateWithLifecycle()
+        val update by viewModel.update.collectAsStateWithLifecycle()
+        val playing = state.playing
+        if (playing != null) {
+            PlayerScreen(
+                channel = playing,
+                favorite = playing.id in state.favorites,
+                inPictureInPicture = inPictureInPicture,
+                onBack = viewModel::stop,
+                onToggleFavorite = { viewModel.toggleFavorite(playing) },
+            )
+        } else {
+            ChannelListScreen(
+                state = state,
+                onPlay = viewModel::play,
+                onToggleFavorite = viewModel::toggleFavorite,
+                onQueryChange = viewModel::setQuery,
+                onFilterChange = viewModel::setFilter,
+                onLanguagesChange = viewModel::setLanguages,
+                onCategoryChange = viewModel::setCategory,
+                onRefresh = viewModel::reload,
+                onSaveSource = viewModel::setPlaylistSource,
+                update = update,
+                onCheckUpdate = viewModel::checkForUpdate,
+                onInstallUpdate = viewModel::installUpdate,
+            )
         }
     }
 
