@@ -5,8 +5,8 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-/** Soft dark blue behind channel numbers and the selected filter. */
-val AccentBlue = Color(0xFF2B4C7E)
+/** Very dark navy (near black, still blue) behind channel numbers and the selected filter. */
+val AccentBlue = Color(0xFF0D1B3A)
 
 private val colors = darkColorScheme(
     primary = Color(0xFFE53935),
