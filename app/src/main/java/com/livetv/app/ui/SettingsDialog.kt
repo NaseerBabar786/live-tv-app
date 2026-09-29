@@ -124,12 +124,7 @@ fun SettingsDialog(
                     enabled = languages.isNotEmpty(),
                 ) { pickingLanguages = true }
 
-                Text("Free TV by country", fontWeight = FontWeight.Bold)
-                Text(
-                    "Free channels that broadcasters stream publicly. " +
-                        "Some channels only play inside their own country.",
-                    style = MaterialTheme.typography.bodySmall,
-                )
+                HorizontalDivider()
                 val mixSelected = currentSource == Famelack.SOURCE_MIX
                 val allSelected = currentSource == Famelack.SOURCE_ALL
                 SourceButton("Pakistani, Indian, Canadian, UK & USA", mixSelected) { onSave(Famelack.SOURCE_MIX) }
