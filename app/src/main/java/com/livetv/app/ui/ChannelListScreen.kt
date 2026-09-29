@@ -208,24 +208,26 @@ fun ChannelListScreen(
     }
 
     if (showSettings) {
-        SettingsDialog(
-            currentSource = state.playlistSource,
-            countries = state.countries,
-            languages = state.allLanguages,
-            selectedLanguages = state.languageFilter,
-            onLanguagesChange = {
-                showSettings = false
-                onLanguagesChange(it)
-            },
-            update = update,
-            onCheckUpdate = onCheckUpdate,
-            onInstallUpdate = onInstallUpdate,
-            onDismiss = { showSettings = false },
-            onSave = {
-                showSettings = false
-                onSaveSource(it)
-            },
-        )
+        SettingsTheme {
+            SettingsDialog(
+                currentSource = state.playlistSource,
+                countries = state.countries,
+                languages = state.allLanguages,
+                selectedLanguages = state.languageFilter,
+                onLanguagesChange = {
+                    showSettings = false
+                    onLanguagesChange(it)
+                },
+                update = update,
+                onCheckUpdate = onCheckUpdate,
+                onInstallUpdate = onInstallUpdate,
+                onDismiss = { showSettings = false },
+                onSave = {
+                    showSettings = false
+                    onSaveSource(it)
+                },
+            )
+        }
     }
 }
 

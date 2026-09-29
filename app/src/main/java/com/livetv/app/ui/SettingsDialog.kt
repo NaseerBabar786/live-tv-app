@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
@@ -174,11 +173,11 @@ private fun UpdateSection(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         when (update) {
-            is UpdateState.Available -> Button(
+            is UpdateState.Available -> AccentButton(
                 onClick = { onInstall(update.release) },
                 modifier = Modifier.fillMaxWidth().focusGlow(),
             ) { Text("Update to version ${update.release.version}") }
-            is UpdateState.NeedsPermission -> Button(
+            is UpdateState.NeedsPermission -> AccentButton(
                 onClick = { onInstall(update.release) },
                 modifier = Modifier.fillMaxWidth().focusGlow(),
             ) { Text("Update to version ${update.release.version}") }
@@ -216,7 +215,7 @@ private fun UpdateSection(
 @Composable
 private fun SourceButton(label: String, selected: Boolean, enabled: Boolean = true, onClick: () -> Unit) {
     if (selected) {
-        Button(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth().focusGlow()) { Text("✓ $label") }
+        AccentButton(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth().focusGlow()) { Text("✓ $label") }
     } else {
         OutlinedButton(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth().focusGlow()) { Text(label) }
     }
@@ -256,7 +255,7 @@ private fun LanguagePicker(
             }
         },
         confirmButton = {
-            Button(onClick = { onDone(chosen) }, modifier = Modifier.focusGlow()) {
+            AccentButton(onClick = { onDone(chosen) }, modifier = Modifier.focusGlow()) {
                 Text(if (chosen.isEmpty()) "Show all languages" else "Show ${chosen.size} languages")
             }
         },
@@ -319,7 +318,7 @@ private fun MultiCountryPicker(
             }
         },
         confirmButton = {
-            Button(
+            AccentButton(
                 onClick = { onDone(chosen) },
                 enabled = chosen.isNotEmpty(),
                 modifier = Modifier.focusGlow(),
