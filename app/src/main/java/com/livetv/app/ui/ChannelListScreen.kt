@@ -71,6 +71,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.data.Channel
+import com.livetv.app.data.Updater
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,6 +85,9 @@ fun ChannelListScreen(
     onCategoryChange: (String?) -> Unit,
     onRefresh: () -> Unit,
     onSaveSource: (String) -> Unit,
+    update: UpdateState,
+    onCheckUpdate: () -> Unit,
+    onInstallUpdate: (Updater.Release) -> Unit,
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
     var showSettings by rememberSaveable { mutableStateOf(false) }
@@ -213,6 +217,9 @@ fun ChannelListScreen(
                 showSettings = false
                 onLanguagesChange(it)
             },
+            update = update,
+            onCheckUpdate = onCheckUpdate,
+            onInstallUpdate = onInstallUpdate,
             onDismiss = { showSettings = false },
             onSave = {
                 showSettings = false

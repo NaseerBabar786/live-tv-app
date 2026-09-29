@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LiveTvTheme {
                 val state by viewModel.state.collectAsStateWithLifecycle()
+                val update by viewModel.update.collectAsStateWithLifecycle()
                 val playing = state.playing
                 if (playing != null) {
                     PlayerScreen(
@@ -50,6 +51,9 @@ class MainActivity : ComponentActivity() {
                         onCategoryChange = viewModel::setCategory,
                         onRefresh = viewModel::reload,
                         onSaveSource = viewModel::setPlaylistSource,
+                        update = update,
+                        onCheckUpdate = viewModel::checkForUpdate,
+                        onInstallUpdate = viewModel::installUpdate,
                     )
                 }
             }

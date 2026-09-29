@@ -14,6 +14,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -31,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.livetv.app.data.Famelack
+import com.livetv.app.data.Updater
 
 /**
  * Lets the user choose which channels to show: Pakistani, Indian, Canadian, UK and USA,
@@ -43,6 +46,9 @@ fun SettingsDialog(
     languages: List<String>,
     selectedLanguages: Set<String>,
     onLanguagesChange: (Set<String>) -> Unit,
+    update: UpdateState,
+    onCheckUpdate: () -> Unit,
+    onInstallUpdate: (Updater.Release) -> Unit,
     onDismiss: () -> Unit,
     onSave: (String) -> Unit,
 ) {
@@ -106,6 +112,9 @@ fun SettingsDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
+                UpdateSection(update, onCheckUpdate, onInstallUpdate)
+                HorizontalDivider()
+
                 Text("Languages", fontWeight = FontWeight.Bold)
                 SourceButton(
                     label = when {
@@ -154,6 +163,54 @@ fun SettingsDialog(
             TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Close") }
         },
     )
+}
+
+/** "Check for updates", and when a newer version exists, a button that downloads and installs it. */
+@Composable
+private fun UpdateSection(
+    update: UpdateState,
+    onCheck: () -> Unit,
+    onInstall: (Updater.Release) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        when (update) {
+            is UpdateState.Available -> Button(
+                onClick = { onInstall(update.release) },
+                modifier = Modifier.fillMaxWidth().focusGlow(),
+            ) { Text("Update to version ${update.release.version}") }
+            is UpdateState.NeedsPermission -> Button(
+                onClick = { onInstall(update.release) },
+                modifier = Modifier.fillMaxWidth().focusGlow(),
+            ) { Text("Update to version ${update.release.version}") }
+            is UpdateState.Downloading -> {
+                OutlinedButton(onClick = {}, enabled = false, modifier = Modifier.fillMaxWidth()) {
+                    Text("Downloading… ${(update.progress * 100).toInt()}%")
+                }
+                LinearProgressIndicator(progress = { update.progress }, modifier = Modifier.fillMaxWidth())
+            }
+            else -> OutlinedButton(
+                onClick = onCheck,
+                enabled = update !is UpdateState.Checking,
+                modifier = Modifier.fillMaxWidth().focusGlow(),
+            ) { Text(if (update is UpdateState.Checking) "Checking…" else "Check for updates") }
+        }
+        val note = when (update) {
+            is UpdateState.UpToDate -> "You have the latest version."
+            is UpdateState.Available -> "A new version is available."
+            is UpdateState.NeedsPermission ->
+                "Allow Live TV to install apps in the screen that opened, then come back and press Update again."
+            is UpdateState.Failed -> update.message
+            else -> null
+        }
+        if (note != null) {
+            Text(
+                note,
+                style = MaterialTheme.typography.bodySmall,
+                color = if (update is UpdateState.Failed) MaterialTheme.colorScheme.error
+                else MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
 }
 
 @Composable
