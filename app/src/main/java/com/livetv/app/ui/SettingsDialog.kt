@@ -131,6 +131,7 @@ fun SettingsDialog(
                 ) { pickingLanguages = true }
 
                 HorizontalDivider()
+                Text("Countries", fontWeight = FontWeight.Bold)
                 val mixSelected = currentSource == Famelack.SOURCE_MIX
                 val allSelected = currentSource == Famelack.SOURCE_ALL
                 SourceButton("Pakistani, Indian, Canadian, UK & USA", mixSelected) { onSave(Famelack.SOURCE_MIX) }
