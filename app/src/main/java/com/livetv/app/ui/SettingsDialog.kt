@@ -401,7 +401,7 @@ private fun CountryPicker(
 private fun BulkBazaarBanner() {
     val context = LocalContext.current
     val shape = RoundedCornerShape(8.dp)
-    BoxWithConstraints(Modifier.fillMaxWidth().padding(top = 4.dp), contentAlignment = Alignment.Center) {
+    BoxWithConstraints(Modifier.fillMaxWidth().padding(vertical = 14.dp), contentAlignment = Alignment.Center) {
         val wide = maxWidth >= 440.dp
         Image(
             painter = painterResource(if (wide) R.drawable.bulkbazaar_wide else R.drawable.bulkbazaar_phone),

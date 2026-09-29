@@ -19,7 +19,16 @@ import com.livetv.app.player.PlayerScreen
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
+import com.livetv.app.ui.SettingsTheme
 import com.livetv.app.ui.SponsorScreen
+import com.livetv.app.ui.UpdatePromptDialog
+import com.livetv.app.ui.UpdateState
+import com.livetv.app.ui.focusGlow
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 
 class MainActivity : ComponentActivity() {
 
@@ -29,10 +38,19 @@ class MainActivity : ComponentActivity() {
     /** The sponsor screen shows once per launch, not again after rotation. */
     private var showSponsor by mutableStateOf(true)
 
+    /** Set at launch: the start-up update check may prompt the viewer to update. */
+    private var updatePrompt by mutableStateOf(false)
+    private var updateStarted = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        if (savedInstanceState != null) showSponsor = false
+        if (savedInstanceState != null) {
+            showSponsor = false
+        } else {
+            updatePrompt = true
+            viewModel.checkForUpdate()
+        }
         setContent {
             LiveTvTheme {
                 if (showSponsor) SponsorScreen(onDone = { showSponsor = false }) else AppContent()
@@ -68,6 +86,36 @@ class MainActivity : ComponentActivity() {
                 onCheckUpdate = viewModel::checkForUpdate,
                 onInstallUpdate = viewModel::installUpdate,
             )
+        }
+        if (updatePrompt) StartupUpdate(update)
+    }
+
+    /** Asks to update when the start-up check found a newer version; quiet otherwise. */
+    @Composable
+    private fun StartupUpdate(update: UpdateState) {
+        when (update) {
+            is UpdateState.Available, is UpdateState.Downloading, is UpdateState.NeedsPermission ->
+                UpdatePromptDialog(
+                    update = update,
+                    onInstall = { updateStarted = true; viewModel.installUpdate(it) },
+                    onLater = { updatePrompt = false },
+                )
+            is UpdateState.Failed -> if (updateStarted) {
+                SettingsTheme {
+                    AlertDialog(
+                        onDismissRequest = { updatePrompt = false },
+                        title = { Text("Update failed") },
+                        text = { Text(update.message + " You can try again from Settings.") },
+                        confirmButton = {
+                            TextButton(onClick = { updatePrompt = false }, modifier = Modifier.focusGlow()) { Text("OK") }
+                        },
+                    )
+                }
+            } else {
+                LaunchedEffect(Unit) { updatePrompt = false }
+            }
+            UpdateState.UpToDate -> LaunchedEffect(Unit) { updatePrompt = false }
+            else -> Unit
         }
     }
 

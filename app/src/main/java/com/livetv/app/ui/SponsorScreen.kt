@@ -3,7 +3,12 @@ package com.livetv.app.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -45,51 +50,82 @@ fun SponsorScreen(onDone: () -> Unit) {
         onDone()
     }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterVertically),
+    BoxWithConstraints(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp, vertical = 32.dp),
+            .padding(24.dp),
     ) {
-        Text(
-            "Thank you for using Live TV!",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-        Image(
-            painter = painterResource(R.drawable.bulkbazaar_square),
-            contentDescription = "Bulk Bazaar Inc.: wholesale T-shirt bags. bulkbazaar.ca",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .widthIn(max = 360.dp)
-                .heightIn(max = 280.dp)
-                .clip(RoundedCornerShape(12.dp)),
-        )
-        Text(
-            "Live TV is free thanks to our sponsor, Bulk Bazaar Inc. Please show them some love: " +
-                "visit bulkbazaar.ca and leave them a 5-star review ★★★★★",
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.widthIn(max = 560.dp),
-        )
-        Text(
-            "Enjoying Live TV? Please share it with your family and friends!",
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            color = FocusColor,
-            modifier = Modifier.widthIn(max = 560.dp),
-        )
-        Text(
-            "Starting in $secondsLeft…",
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-        )
+        // The banner is shown up to 540x420dp (150% of its first size), and never taller
+        // than the screen allows. On wide screens the words sit beside it.
+        val landscape = maxWidth > maxHeight
+        val banner = @Composable {
+            Image(
+                painter = painterResource(R.drawable.bulkbazaar_square),
+                contentDescription = "Bulk Bazaar Inc.: wholesale T-shirt bags. bulkbazaar.ca",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .widthIn(max = 540.dp)
+                    .heightIn(max = if (landscape) minOf(420.dp, maxHeight) else 420.dp)
+                    .aspectRatio(300f / 250f)
+                    .clip(RoundedCornerShape(16.dp)),
+            )
+        }
+        if (landscape) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(36.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Box(Modifier.weight(1.4f, fill = false)) { banner() }
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                    modifier = Modifier.weight(1f, fill = false).widthIn(max = 460.dp),
+                ) { SponsorWords(secondsLeft, TextAlign.Start) }
+            }
+        } else {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterVertically),
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            ) {
+                banner()
+                SponsorWords(secondsLeft, TextAlign.Center)
+            }
+        }
     }
+}
+
+@Composable
+private fun SponsorWords(secondsLeft: Int, align: TextAlign) {
+    Text(
+        "Thank you for using Live TV!",
+        style = MaterialTheme.typography.headlineSmall,
+        fontWeight = FontWeight.Bold,
+        textAlign = align,
+        color = MaterialTheme.colorScheme.onBackground,
+    )
+    Text(
+        "Live TV is free thanks to our sponsor, Bulk Bazaar Inc. Please show them some love: " +
+            "visit bulkbazaar.ca and leave them a 5-star review ★★★★★",
+        style = MaterialTheme.typography.bodyLarge,
+        textAlign = align,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.widthIn(max = 560.dp),
+    )
+    Text(
+        "Enjoying Live TV? Please share it with your family and friends!",
+        style = MaterialTheme.typography.bodyLarge,
+        fontWeight = FontWeight.Bold,
+        textAlign = align,
+        color = FocusColor,
+        modifier = Modifier.widthIn(max = 560.dp),
+    )
+    Text(
+        "Starting in $secondsLeft…",
+        fontSize = 14.sp,
+        textAlign = align,
+        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+    )
 }
