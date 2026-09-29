@@ -7,7 +7,8 @@ Kotlin, Jetpack Compose and Media3 ExoPlayer.
 
 - Free TV by country: live channels that broadcasters stream publicly, from the
   [Famelack](https://github.com/famelack/famelack-channels) list (formerly TV Garden,
-  MIT licensed). Opens on your phone's country; change it in Settings. Logos and
+  MIT licensed). Opens on Pakistani, Indian (Hindi, Urdu, Punjabi) and Canadian
+  channels in separate sections; Settings also offers all countries or one country. Logos and
   categories come from the [iptv-org](https://github.com/iptv-org/database) database.
 - Channel grid with logos, group filter chips, search and pull to refresh
 - Favorites (tap the star or long-press a channel)

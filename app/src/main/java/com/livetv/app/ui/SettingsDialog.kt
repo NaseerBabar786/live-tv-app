@@ -89,7 +89,11 @@ fun SettingsDialog(
                         "(TV Garden) list. Some channels only play inside their own country.",
                     style = MaterialTheme.typography.bodySmall,
                 )
-                Button(
+                val mixSelected = currentSource == Famelack.SOURCE_MIX
+                val allSelected = currentSource == Famelack.SOURCE_ALL
+                SourceButton("Pakistani, Indian & Canadian", mixSelected) { onSave(Famelack.SOURCE_MIX) }
+                SourceButton("All countries", allSelected) { onSave(Famelack.SOURCE_ALL) }
+                OutlinedButton(
                     onClick = { pickingCountry = true },
                     enabled = countries.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth(),
@@ -97,8 +101,8 @@ fun SettingsDialog(
                     Text(
                         when {
                             countries.isEmpty() -> "Loading countries…"
-                            currentCountry != null -> "Country: $currentCountry"
-                            else -> "Choose a country"
+                            currentCountry != null && !mixSelected && !allSelected -> "✓ Country: $currentCountry"
+                            else -> "One country…"
                         }
                     )
                 }
@@ -135,6 +139,15 @@ fun SettingsDialog(
             TextButton(onClick = onDismiss) { Text("Close") }
         },
     )
+}
+
+@Composable
+private fun SourceButton(label: String, selected: Boolean, onClick: () -> Unit) {
+    if (selected) {
+        Button(onClick = onClick, modifier = Modifier.fillMaxWidth()) { Text("✓ $label") }
+    } else {
+        OutlinedButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) { Text(label) }
+    }
 }
 
 @Composable

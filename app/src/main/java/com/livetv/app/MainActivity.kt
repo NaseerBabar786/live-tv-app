@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
                         onToggleFavorite = viewModel::toggleFavorite,
                         onQueryChange = viewModel::setQuery,
                         onFilterChange = viewModel::setFilter,
+                        onCategoryChange = viewModel::setCategory,
                         onRefresh = viewModel::reload,
                         onSaveSource = viewModel::setPlaylistSource,
                     )

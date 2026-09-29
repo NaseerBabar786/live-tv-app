@@ -23,8 +23,8 @@ class FamelackTest {
         assertEquals(listOf("News One", "Blocked"), channels.map { it.name })
         assertEquals("https://x/one.m3u8", channels[0].url)
         assertEquals(listOf("https://y/one.m3u8"), channels[0].alternates)
-        assertEquals("English", channels[0].group)
-        assertEquals("Geo-blocked", channels[1].group)
+        assertEquals("English", channels[0].category)
+        assertEquals("Geo-blocked", channels[1].category)
     }
 
     @Test
@@ -40,9 +40,25 @@ class FamelackTest {
         val channels = Famelack.parseChannels(json, info)
 
         assertEquals("https://logo/a.png", channels[0].logo)
-        assertEquals("News", channels[0].group)
+        assertEquals("News", channels[0].category)
         // "general" says nothing useful, so the language is used instead.
-        assertEquals("Urdu", channels[1].group)
+        assertEquals("Urdu", channels[1].category)
+    }
+
+    @Test
+    fun sectionAndLanguageFilter() {
+        val json = """
+            [{"nanoid":"h","name":"Hindi One","sources":{"streams":["https://x/h.m3u8"]},"languages":["hin"],"isGeoBlocked":false},
+             {"nanoid":"t","name":"Tamil One","sources":{"streams":["https://x/t.m3u8"]},"languages":["tam"],"isGeoBlocked":false},
+             {"nanoid":"p","name":"Punjabi One","sources":{"streams":["https://x/p.m3u8"]},"languages":["eng","pan"],"isGeoBlocked":false}]
+        """.trimIndent()
+
+        val channels = Famelack.parseChannels(json, section = "Indian", languages = setOf("hin", "urd", "pan"))
+
+        assertEquals(listOf("Hindi One", "Punjabi One"), channels.map { it.name })
+        assertEquals(listOf("Indian", "Indian"), channels.map { it.group })
+        // The matching language names the category, not the first one listed.
+        assertEquals("Punjabi", channels[1].category)
     }
 
     @Test

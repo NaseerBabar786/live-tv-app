@@ -23,29 +23,45 @@ data class UiState(
     val favorites: Set<String> = emptySet(),
     val query: String = "",
     val filter: String = FILTER_ALL,
+    /** Second-row filter (a type or language); null shows every type. */
+    val category: String? = null,
     val playlistSource: String = "",
     val playing: Channel? = null,
     val countries: List<Famelack.Country> = emptyList(),
 ) {
     /** Screen title: the selected country's name when showing free channels by country. */
     val title: String
-        get() = Famelack.countryCode(playlistSource)
-            ?.let { code -> countries.firstOrNull { it.code == code }?.name }
-            ?: "Live TV"
+        get() = when (playlistSource) {
+            Famelack.SOURCE_MIX -> "Pakistan · India · Canada"
+            Famelack.SOURCE_ALL -> "All countries"
+            else -> Famelack.countryCode(playlistSource)
+                ?.let { code -> countries.firstOrNull { it.code == code }?.name }
+                ?: "Live TV"
+        }
 
+    /** First chip row, in playlist order (e.g. Pakistani, Indian, Canadian). */
     val groups: List<String>
-        get() = listOf(FILTER_ALL, FILTER_FAVORITES) +
-            channels.mapNotNull { it.group }.distinct().sorted()
+        get() = listOf(FILTER_ALL, FILTER_FAVORITES) + channels.mapNotNull { it.group }.distinct()
+
+    private val inGroup: List<Channel>
+        get() = channels.filter {
+            when (filter) {
+                FILTER_ALL -> true
+                FILTER_FAVORITES -> it.id in favorites
+                else -> it.group == filter
+            }
+        }
+
+    /** Second chip row: the types or languages found in the selected section. */
+    val categories: List<String>
+        get() = inGroup.mapNotNull { it.category }.distinct().sortedWith(
+            // Geo-blocked and Other go last.
+            compareBy<String>({ it == "Geo-blocked" || it == "Other" }, { it })
+        )
 
     val visibleChannels: List<Channel>
-        get() = channels
-            .filter {
-                when (filter) {
-                    FILTER_ALL -> true
-                    FILTER_FAVORITES -> it.id in favorites
-                    else -> it.group == filter
-                }
-            }
+        get() = inGroup
+            .filter { category == null || it.category == category }
             .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
 }
 
@@ -83,13 +99,15 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setPlaylistSource(source: String) {
         repo.playlistSource = source
-        _state.update { it.copy(playlistSource = repo.playlistSource, filter = FILTER_ALL) }
+        _state.update { it.copy(playlistSource = repo.playlistSource, filter = FILTER_ALL, category = null) }
         reload()
     }
 
     fun setQuery(query: String) = _state.update { it.copy(query = query) }
 
-    fun setFilter(filter: String) = _state.update { it.copy(filter = filter) }
+    fun setFilter(filter: String) = _state.update { it.copy(filter = filter, category = null) }
+
+    fun setCategory(category: String?) = _state.update { it.copy(category = category) }
 
     fun toggleFavorite(channel: Channel) {
         val updated = repo.favorites.toMutableSet().apply {

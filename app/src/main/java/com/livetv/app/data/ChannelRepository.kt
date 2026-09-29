@@ -4,17 +4,23 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.Locale
 
 /**
  * Loads channels from the configured playlist source and stores user settings.
  *
  * The playlist source is one of:
- *  - "famelack:<country>": free channels for a country from [Famelack] (the default)
+ *  - "famelack:mix": Pakistani, Indian and Canadian channels from [Famelack] (the default)
+ *  - "famelack:all": every country from [Famelack]
+ *  - "famelack:<country>": free channels for one country from [Famelack]
  *  - "sample": the bundled sample playlist (assets/sample.m3u)
  *  - an http(s) URL to an M3U playlist
  *  - a content:// URI to a playlist file the user picked on the device
@@ -24,7 +30,7 @@ class ChannelRepository(context: Context) {
     private val appContext = context.applicationContext
     private val prefs = appContext.getSharedPreferences("live_tv", Context.MODE_PRIVATE)
 
-    /** Defaults to free channels for the phone's country. */
+    /** Defaults to the combined Pakistani, Indian and Canadian channels. */
     var playlistSource: String
         get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
         set(value) = prefs.edit { putString(KEY_SOURCE, value.trim()) }
@@ -48,6 +54,11 @@ class ChannelRepository(context: Context) {
             val channels = when {
                 source == SOURCE_SAMPLE -> M3uParser.parse(readAsset())
                 source.startsWith("content://") -> M3uParser.parse(readContentUri(Uri.parse(source)))
+                source == Famelack.SOURCE_MIX -> loadSections(Famelack.MIX)
+                source == Famelack.SOURCE_ALL -> loadSections(
+                    Famelack.parseCountries(downloadCached("countries", Famelack.COUNTRIES_URL))
+                        .map { Famelack.Section(it.code, it.name) }
+                )
                 country != null -> Famelack.parseChannels(
                     downloadCached(source, Famelack.countryUrl(country)),
                     channelInfo,
@@ -57,6 +68,26 @@ class ChannelRepository(context: Context) {
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
             channels
         }
+    }
+
+    /** Downloads several countries in parallel; a country that fails is skipped. */
+    private suspend fun loadSections(sections: List<Famelack.Section>): List<Channel> = coroutineScope {
+        val limit = Semaphore(8)
+        sections.map { section ->
+            async {
+                limit.withPermit {
+                    runCatching {
+                        val source = Famelack.source(section.country)
+                        Famelack.parseChannels(
+                            downloadCached(source, Famelack.countryUrl(section.country)),
+                            channelInfo,
+                            section = section.title,
+                            languages = section.languages,
+                        )
+                    }.getOrDefault(emptyList())
+                }
+            }
+        }.awaitAll().flatten()
     }
 
     /** Logos and categories for Famelack channels, bundled with the app. */
@@ -84,10 +115,7 @@ class ChannelRepository(context: Context) {
         }
     }
 
-    private fun defaultSource(): String {
-        val country = Locale.getDefault().country.lowercase()
-        return Famelack.source(if (country.length == 2) country else "us")
-    }
+    private fun defaultSource(): String = Famelack.SOURCE_MIX
 
     private fun readAsset(): String =
         appContext.assets.open("sample.m3u").bufferedReader().use { it.readText() }

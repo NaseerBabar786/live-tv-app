@@ -62,6 +62,7 @@ fun ChannelListScreen(
     onToggleFavorite: (Channel) -> Unit,
     onQueryChange: (String) -> Unit,
     onFilterChange: (String) -> Unit,
+    onCategoryChange: (String?) -> Unit,
     onRefresh: () -> Unit,
     onSaveSource: (String) -> Unit,
 ) {
@@ -109,17 +110,26 @@ fun ChannelListScreen(
                 .padding(padding),
         ) {
             Column(Modifier.fillMaxSize()) {
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(state.groups, key = { it }) { group ->
-                        FilterChip(
-                            selected = state.filter == group,
-                            onClick = { onFilterChange(group) },
-                            label = { Text(group) },
-                        )
-                    }
+                ChipRow(
+                    items = state.groups,
+                    selected = state.filter,
+                    onSelect = onFilterChange,
+                )
+                val categories = state.categories
+                if (categories.size > 1) {
+                    ChipRow(
+                        items = listOf(ALL_TYPES) + categories,
+                        selected = state.category ?: ALL_TYPES,
+                        onSelect = { onCategoryChange(it.takeUnless { c -> c == ALL_TYPES }) },
+                    )
+                }
+                if (!state.loading && state.channels.isNotEmpty()) {
+                    Text(
+                        "${state.visibleChannels.size} channels",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
+                    )
                 }
 
                 val channels = state.visibleChannels
@@ -167,6 +177,24 @@ fun ChannelListScreen(
                 onSaveSource(it)
             },
         )
+    }
+}
+
+private const val ALL_TYPES = "All types"
+
+@Composable
+private fun ChipRow(items: List<String>, selected: String, onSelect: (String) -> Unit) {
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 2.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(items, key = { it }) { item ->
+            FilterChip(
+                selected = selected == item,
+                onClick = { onSelect(item) },
+                label = { Text(item) },
+            )
+        }
     }
 }
 

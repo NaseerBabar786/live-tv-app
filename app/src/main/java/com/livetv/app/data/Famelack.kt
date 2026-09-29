@@ -17,6 +17,21 @@ object Famelack {
     /** Playlist sources for a country are stored as "famelack:<code>", e.g. "famelack:ca". */
     const val SOURCE_PREFIX = "famelack:"
 
+    /** Pakistani, Indian (Hindi/Urdu/Punjabi) and Canadian channels together. The default. */
+    const val SOURCE_MIX = "famelack:mix"
+
+    /** Every country, one section per country. */
+    const val SOURCE_ALL = "famelack:all"
+
+    /** A section of the combined view: a country, optionally limited to some languages. */
+    data class Section(val country: String, val title: String, val languages: Set<String>? = null)
+
+    val MIX = listOf(
+        Section("pk", "Pakistani"),
+        Section("in", "Indian", languages = setOf("hin", "urd", "pan")),
+        Section("ca", "Canadian"),
+    )
+
     fun countryUrl(code: String) = "$BASE/countries/${code.lowercase()}.json"
 
     fun source(code: String) = SOURCE_PREFIX + code.lowercase()
@@ -53,10 +68,16 @@ object Famelack {
     /**
      * Converts a country's channel list to playable channels. Channels that only
      * have YouTube sources are skipped because they can't play in ExoPlayer.
-     * Channels are grouped by category (News, Sports…) when [info] knows it,
-     * otherwise by language.
+     * Each channel's [Channel.category] is its type (News, Sports…) when [info]
+     * knows it, otherwise its language. [section] becomes [Channel.group]; when
+     * [languages] is set, only channels in one of those languages are kept.
      */
-    fun parseChannels(json: String, info: Map<String, Info> = emptyMap()): List<Channel> {
+    fun parseChannels(
+        json: String,
+        info: Map<String, Info> = emptyMap(),
+        section: String? = null,
+        languages: Set<String>? = null,
+    ): List<Channel> {
         val array = JSONArray(json)
         return (0 until array.length()).mapNotNull { i ->
             val entry = array.getJSONObject(i)
@@ -66,17 +87,23 @@ object Famelack {
                 .orEmpty()
             if (streams.isEmpty()) return@mapNotNull null
 
+            val langs = entry.optJSONArray("languages")
+                ?.let { l -> (0 until l.length()).map { l.getString(it).lowercase() } }
+                .orEmpty()
+            if (languages != null && langs.none { it in languages }) return@mapNotNull null
+
             val id = entry.optString("nanoid").ifBlank { null }
             val extra = id?.let(info::get)
             val category = extra?.category?.takeIf { it.isNotBlank() && it != "general" }
-            val language = entry.optJSONArray("languages")?.optString(0)
+            val language = langs.firstOrNull { languages == null || it in languages } ?: langs.firstOrNull()
             val geoBlocked = entry.optBoolean("isGeoBlocked", false)
             Channel(
                 name = entry.optString("name").ifBlank { "Channel ${i + 1}" },
                 url = streams.first(),
                 alternates = streams.drop(1),
                 logo = extra?.logo?.takeIf { it.startsWith("http") },
-                group = when {
+                group = section,
+                category = when {
                     geoBlocked -> "Geo-blocked"
                     category != null -> category.replaceFirstChar { it.uppercase() }
                     language.isNullOrBlank() -> "Other"
