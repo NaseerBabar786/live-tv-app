@@ -1,9 +1,5 @@
 package com.livetv.app.ui
 
-import android.content.Intent
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,11 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -33,14 +27,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Famelack
 
 /**
- * Lets the user choose where channels come from: free channels for a country,
- * an M3U URL, an M3U file on the device, or the bundled sample playlist.
+ * Lets the user choose which channels to show: Pakistani, Indian and Canadian,
+ * every country, or a single country.
  */
 @Composable
 fun SettingsDialog(
@@ -54,9 +46,6 @@ fun SettingsDialog(
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull()
     }
     var pickingCountry by rememberSaveable { mutableStateOf(false) }
-    var url by rememberSaveable {
-        mutableStateOf(if (currentSource.startsWith("http", ignoreCase = true)) currentSource else "")
-    }
 
     if (pickingCountry) {
         CountryPicker(
@@ -65,15 +54,6 @@ fun SettingsDialog(
             onPick = { onSave(Famelack.source(it.code)) },
         )
         return
-    }
-
-    val pickFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
-        if (uri != null) {
-            runCatching {
-                context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-            onSave(uri.toString())
-        }
     }
 
     val currentCountry = Famelack.countryCode(currentSource)
@@ -121,37 +101,9 @@ fun SettingsDialog(
                         }
                     )
                 }
-
-                HorizontalDivider()
-
-                Text("Your own playlist", fontWeight = FontWeight.Bold)
-                OutlinedTextField(
-                    value = url,
-                    onValueChange = { url = it },
-                    label = { Text("M3U playlist URL") },
-                    placeholder = { Text("https://example.com/playlist.m3u") },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                OutlinedButton(
-                    onClick = { pickFile.launch(arrayOf("*/*")) },
-                    modifier = Modifier.fillMaxWidth().focusGlow(),
-                ) { Text("Open playlist file") }
-                TextButton(
-                    onClick = { onSave(ChannelRepository.SOURCE_SAMPLE) },
-                    modifier = Modifier.fillMaxWidth().focusGlow(),
-                ) { Text("Use built-in test channels") }
             }
         },
         confirmButton = {
-            TextButton(
-                modifier = Modifier.focusGlow(),
-                onClick = { onSave(url) },
-                enabled = url.trim().startsWith("http", ignoreCase = true),
-            ) { Text("Load URL") }
-        },
-        dismissButton = {
             TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Close") }
         },
     )
