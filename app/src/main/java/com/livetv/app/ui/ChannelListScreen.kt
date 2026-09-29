@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -217,9 +218,9 @@ private fun ChipRow(items: List<String>, selected: String, onSelect: (String) ->
                 onClick = { onSelect(item) },
                 label = { Text(item) },
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primary,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                    selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                    selectedContainerColor = AccentBlue,
+                    selectedLabelColor = Color.White,
+                    selectedLeadingIconColor = Color.White,
                 ),
                 modifier = Modifier.focusGlow(ChipShape),
             )
@@ -271,11 +272,11 @@ private fun ChannelCard(
                     "${channel.number}",
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = Color.White,
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .padding(6.dp)
-                        .background(MaterialTheme.colorScheme.primary, ChipShape)
+                        .background(AccentBlue, ChipShape)
                         .padding(horizontal = 8.dp, vertical = 2.dp),
                 )
             }
