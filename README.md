@@ -13,7 +13,7 @@ Kotlin, Jetpack Compose and Media3 ExoPlayer.
 - Channel grid with logos, group filter chips, search and pull to refresh
 - Favorites (tap the star or long-press a channel)
 - Full-screen player for HLS (`.m3u8`), DASH (`.mpd`) and MPEG-TS / progressive streams
-- Previous / next channel buttons, plus Channel Up/Down on TV remotes
+- Previous / next channel buttons, plus Up/Down and Channel Up/Down on TV remotes
 - Picture-in-picture when you leave the app while watching
 - Playlist from a URL or a file on the device; the last downloaded playlist is cached for offline start
 - Per-channel `http-user-agent` and `http-referrer` from `#EXTVLCOPT` lines

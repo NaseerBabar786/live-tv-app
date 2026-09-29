@@ -57,17 +57,21 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** Channel up/down on TV remotes and keyboards while a channel is playing. */
+    /**
+     * Change channel while one is playing: Channel Up/Down, Page Up/Down, and the D-pad's
+     * Up/Down buttons on TV remotes. Both key-down and key-up are consumed so the player
+     * doesn't also pop up its controls. Holding the button doesn't skip through channels.
+     */
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-            viewModel.state.value.playing != null && event.action == KeyEvent.ACTION_DOWN) {
-            when (event.keyCode) {
-                KeyEvent.KEYCODE_CHANNEL_UP, KeyEvent.KEYCODE_PAGE_UP -> {
-                    viewModel.zap(-1); return true
-                }
-                KeyEvent.KEYCODE_CHANNEL_DOWN, KeyEvent.KEYCODE_PAGE_DOWN -> {
-                    viewModel.zap(1); return true
-                }
+        if (viewModel.state.value.playing != null) {
+            val step = when (event.keyCode) {
+                KeyEvent.KEYCODE_CHANNEL_UP, KeyEvent.KEYCODE_PAGE_UP, KeyEvent.KEYCODE_DPAD_UP -> -1
+                KeyEvent.KEYCODE_CHANNEL_DOWN, KeyEvent.KEYCODE_PAGE_DOWN, KeyEvent.KEYCODE_DPAD_DOWN -> 1
+                else -> 0
+            }
+            if (step != 0) {
+                if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) viewModel.zap(step)
+                return true
             }
         }
         return super.dispatchKeyEvent(event)
