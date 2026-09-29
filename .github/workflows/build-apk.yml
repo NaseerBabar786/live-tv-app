@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -36,3 +38,19 @@ jobs:
         with:
           name: live-tv-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      # Publishes the APK as the latest GitHub release so phones and TVs can
+      # download it directly from:
+      # https://github.com/NaseerBabar786/live-tv-app/releases/latest/download/LiveTV.apk
+      - name: Publish release
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts)
+          tag="v${version}-build${{ github.run_number }}"
+          cp app/build/outputs/apk/debug/app-debug.apk LiveTV.apk
+          gh release create "$tag" LiveTV.apk \
+            --title "Live TV $version (build ${{ github.run_number }})" \
+            --notes "Debug build from ${{ github.sha }}." \
+            --latest
