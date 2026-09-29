@@ -147,7 +147,7 @@ fun PlayerScreen(
                 }
                 Column(Modifier.weight(1f)) {
                     Text(
-                        channel.name,
+                        if (channel.number > 0) "${channel.number}  ${channel.name}" else channel.name,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,

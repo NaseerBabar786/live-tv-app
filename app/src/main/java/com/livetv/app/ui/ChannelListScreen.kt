@@ -253,6 +253,19 @@ private fun ChannelCard(
             } else {
                 Initials(channel.name)
             }
+            if (channel.number > 0) {
+                Text(
+                    "${channel.number}",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(6.dp)
+                        .background(MaterialTheme.colorScheme.primary, ChipShape)
+                        .padding(horizontal = 8.dp, vertical = 2.dp),
+                )
+            }
             IconButton(
                 onClick = onToggleFavorite,
                 modifier = Modifier.align(Alignment.TopEnd).focusGlow(),

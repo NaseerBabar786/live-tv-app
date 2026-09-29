@@ -103,7 +103,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(loading = true, error = null) }
         viewModelScope.launch {
             repo.loadChannels()
-                .onSuccess { list -> _state.update { it.copy(loading = false, channels = list) } }
+                .onSuccess { list ->
+                    val numbered = list.mapIndexed { i, channel -> channel.copy(number = i + 1) }
+                    _state.update { it.copy(loading = false, channels = numbered) }
+                }
                 .onFailure { e ->
                     _state.update { it.copy(loading = false, error = e.message ?: "Could not load the playlist.") }
                 }

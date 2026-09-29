@@ -16,6 +16,8 @@ data class Channel(
     val referrer: String? = null,
     /** Backup stream URLs tried in order when [url] fails. */
     val alternates: List<String> = emptyList(),
+    /** Channel number: its position in the loaded list, starting at 1 (0 until numbered). */
+    val number: Int = 0,
 ) {
     /** Stable key used for favorites and list keys. */
     val id: String get() = url
