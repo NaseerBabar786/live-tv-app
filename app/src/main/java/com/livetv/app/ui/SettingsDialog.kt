@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -46,6 +48,18 @@ fun SettingsDialog(
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull()
     }
     var pickingCountry by rememberSaveable { mutableStateOf(false) }
+    var pickingCountries by rememberSaveable { mutableStateOf(false) }
+    val picked = Famelack.pickedCountries(currentSource)
+
+    if (pickingCountries) {
+        MultiCountryPicker(
+            countries = countries,
+            initial = picked ?: Famelack.MIX.map { it.country },
+            onDismiss = { pickingCountries = false },
+            onDone = { onSave(Famelack.pickSource(it)) },
+        )
+        return
+    }
 
     if (pickingCountry) {
         CountryPicker(
@@ -88,6 +102,15 @@ fun SettingsDialog(
                 val allSelected = currentSource == Famelack.SOURCE_ALL
                 SourceButton("Pakistani, Indian & Canadian", mixSelected) { onSave(Famelack.SOURCE_MIX) }
                 SourceButton("All countries", allSelected) { onSave(Famelack.SOURCE_ALL) }
+                SourceButton(
+                    label = when {
+                        countries.isEmpty() -> "Loading countries…"
+                        picked != null -> "Your countries (${picked.size})"
+                        else -> "Choose countries…"
+                    },
+                    selected = picked != null,
+                    enabled = countries.isNotEmpty(),
+                ) { pickingCountries = true }
                 OutlinedButton(
                     onClick = { pickingCountry = true },
                     enabled = countries.isNotEmpty(),
@@ -110,12 +133,75 @@ fun SettingsDialog(
 }
 
 @Composable
-private fun SourceButton(label: String, selected: Boolean, onClick: () -> Unit) {
+private fun SourceButton(label: String, selected: Boolean, enabled: Boolean = true, onClick: () -> Unit) {
     if (selected) {
-        Button(onClick = onClick, modifier = Modifier.fillMaxWidth().focusGlow()) { Text("✓ $label") }
+        Button(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth().focusGlow()) { Text("✓ $label") }
     } else {
-        OutlinedButton(onClick = onClick, modifier = Modifier.fillMaxWidth().focusGlow()) { Text(label) }
+        OutlinedButton(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth().focusGlow()) { Text(label) }
     }
+}
+
+/** Tick any number of countries; the channel list then shows just those countries. */
+@Composable
+private fun MultiCountryPicker(
+    countries: List<Famelack.Country>,
+    initial: List<String>,
+    onDismiss: () -> Unit,
+    onDone: (List<String>) -> Unit,
+) {
+    var query by rememberSaveable { mutableStateOf("") }
+    var chosen by remember { mutableStateOf(initial) }
+    // Ticked countries first, in the order they were ticked, then the rest A to Z.
+    val byCode = countries.associateBy { it.code }
+    val ordered = chosen.mapNotNull { byCode[it] } + countries.filter { it.code !in chosen }
+    val shown = ordered.filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Choose countries") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    placeholder = { Text("Search") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                LazyColumn(Modifier.heightIn(max = 420.dp)) {
+                    items(shown, key = { it.code }) { country ->
+                        val checked = country.code in chosen
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .focusGlow(ChipShape)
+                                .clickable {
+                                    chosen = if (checked) chosen - country.code else chosen + country.code
+                                }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Checkbox(checked = checked, onCheckedChange = null)
+                            Text(country.name, modifier = Modifier.weight(1f).padding(start = 8.dp))
+                            Text(
+                                "${country.channelCount}",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(end = 8.dp),
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onDone(chosen) },
+                enabled = chosen.isNotEmpty(),
+                modifier = Modifier.focusGlow(),
+            ) { Text(if (chosen.isEmpty()) "Tick a country" else "Show ${chosen.size} countries") }
+        },
+        dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Back") } },
+    )
 }
 
 @Composable

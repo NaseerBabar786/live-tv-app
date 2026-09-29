@@ -92,5 +92,10 @@ class FamelackTest {
     fun sourceRoundTrip() {
         assertEquals("pk", Famelack.countryCode(Famelack.source("PK")))
         assertEquals(null, Famelack.countryCode("https://example.com/list.m3u"))
+        assertEquals(null, Famelack.countryCode(Famelack.SOURCE_MIX))
+        val picked = Famelack.pickSource(listOf("PK", "fr"))
+        assertEquals(null, Famelack.countryCode(picked))
+        assertEquals(listOf("pk", "fr"), Famelack.pickedCountries(picked))
+        assertEquals(null, Famelack.pickedCountries(Famelack.source("pk")))
     }
 }

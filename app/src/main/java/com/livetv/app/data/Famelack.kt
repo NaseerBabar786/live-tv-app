@@ -23,6 +23,16 @@ object Famelack {
     /** Every country, one section per country. */
     const val SOURCE_ALL = "famelack:all"
 
+    /** Countries the user ticked, stored as "famelack:pick:pk,in,ca". */
+    private const val SOURCE_PICK = "famelack:pick:"
+
+    fun pickSource(codes: Collection<String>) = SOURCE_PICK + codes.joinToString(",") { it.lowercase() }
+
+    /** The ticked country codes, or null when [source] isn't a list of picked countries. */
+    fun pickedCountries(source: String): List<String>? =
+        source.takeIf { it.startsWith(SOURCE_PICK) }?.removePrefix(SOURCE_PICK)
+            ?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }
+
     /** A section of the combined view: a country, optionally limited to some languages. */
     data class Section(val country: String, val title: String, val languages: Set<String>? = null)
 
@@ -36,8 +46,11 @@ object Famelack {
 
     fun source(code: String) = SOURCE_PREFIX + code.lowercase()
 
+    /** The country of a single-country source, or null for any other source. */
     fun countryCode(source: String): String? =
-        source.takeIf { it.startsWith(SOURCE_PREFIX) }?.removePrefix(SOURCE_PREFIX)
+        source.takeIf { it.startsWith(SOURCE_PREFIX) && it != SOURCE_MIX && it != SOURCE_ALL }
+            ?.removePrefix(SOURCE_PREFIX)
+            ?.takeUnless { ':' in it }
 
     data class Country(val code: String, val name: String, val channelCount: Int)
 

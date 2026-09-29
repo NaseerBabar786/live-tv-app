@@ -20,6 +20,7 @@ import java.net.URL
  * The playlist source is one of:
  *  - "famelack:mix": Pakistani, Indian and Canadian channels from [Famelack] (the default)
  *  - "famelack:all": every country from [Famelack]
+ *  - "famelack:pick:<cc>,<cc>": the countries the user ticked, one section each
  *  - "famelack:<country>": free channels for one country from [Famelack]
  *  - "sample": the bundled sample playlist (assets/sample.m3u)
  *  - an http(s) URL to an M3U playlist
@@ -51,6 +52,7 @@ class ChannelRepository(context: Context) {
         runCatching {
             val source = playlistSource
             val country = Famelack.countryCode(source)
+            val picked = Famelack.pickedCountries(source)
             val channels = when {
                 source == SOURCE_SAMPLE -> M3uParser.parse(readAsset())
                 source.startsWith("content://") -> M3uParser.parse(readContentUri(Uri.parse(source)))
@@ -59,6 +61,17 @@ class ChannelRepository(context: Context) {
                     Famelack.parseCountries(downloadCached("countries", Famelack.COUNTRIES_URL))
                         .map { Famelack.Section(it.code, it.name) }
                 )
+                picked != null -> {
+                    val names = runCatching {
+                        Famelack.parseCountries(downloadCached("countries", Famelack.COUNTRIES_URL))
+                            .associate { it.code to it.name }
+                    }.getOrDefault(emptyMap())
+                    // Pakistan, India and Canada keep their usual sections (India: Hindi, Urdu, Punjabi).
+                    loadSections(picked.map { code ->
+                        Famelack.MIX.firstOrNull { it.country == code }
+                            ?: Famelack.Section(code, names[code] ?: code.uppercase())
+                    })
+                }
                 country != null -> Famelack.parseChannels(
                     downloadCached(source, Famelack.countryUrl(country)),
                     channelInfo,
