@@ -4,9 +4,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -43,7 +45,11 @@ fun SettingsTheme(content: @Composable () -> Unit) {
     MaterialTheme(colorScheme = settingsColors, content = content)
 }
 
-/** A filled button in the main page's navy, with a light blue edge so it stands out. */
+/**
+ * A filled button in the main page's navy, with a light blue edge so it stands out.
+ * The 48dp touch-target padding is turned off so the button's bounds match the pill,
+ * otherwise [focusGlow]'s ring is drawn taller than the button with a gap above and below.
+ */
 @Composable
 fun AccentButton(
     onClick: () -> Unit,
@@ -51,14 +57,16 @@ fun AccentButton(
     enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit,
 ) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        enabled = enabled,
-        colors = ButtonDefaults.buttonColors(containerColor = AccentBlue, contentColor = Color.White),
-        border = BorderStroke(1.dp, AccentText),
-        content = content,
-    )
+    CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+        Button(
+            onClick = onClick,
+            modifier = modifier,
+            enabled = enabled,
+            colors = ButtonDefaults.buttonColors(containerColor = AccentBlue, contentColor = Color.White),
+            border = BorderStroke(1.dp, AccentText),
+            content = content,
+        )
+    }
 }
 
 @Composable
