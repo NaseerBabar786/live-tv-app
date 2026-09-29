@@ -112,6 +112,11 @@
   .note { border-left: 4px solid var(--line); background: #0A1530; padding: 10px 14px; border-radius: 6px; color: var(--muted); font-size: 15px; margin: 12px 0; }
   .hidden { display: none; }
 
+  .sponsor { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; padding: 7px 16px; border-radius: 999px; border: 1.5px solid var(--focus); color: var(--text); text-decoration: none; font-size: 15px; background: rgba(255,214,0,.08); }
+  .sponsor b { color: var(--focus); }
+  .sponsor:hover { background: rgba(255,214,0,.18); }
+  .thanks { margin: 0 0 8px; color: var(--text); font-size: 15px; }
+  .thanks a { color: var(--focus); }
   footer { border-top: 1px solid var(--surface-2); padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
 </style>
 </head>
@@ -134,6 +139,7 @@
 <main id="top" class="wrap">
   <div class="hero">
     <div>
+      <a class="sponsor" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">🎁 Compliments of <b>BulkBazaar.ca</b></a>
       <h1>Free live TV, on your phone and your TV</h1>
       <p>Pakistani, Indian, Canadian, British and American channels. Watch here in your browser, or get the Live TV app for Android phones, tablets and Google TV.</p>
       <div class="btns">
@@ -257,7 +263,7 @@
 </main>
 
 <footer>
-  <div class="wrap">Channels come from public, free-to-air streams listed by the Famelack project. Live TV does not host any video.</div>
+  <div class="wrap"><p class="thanks">Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener"><b>BulkBazaar.ca</b></a>. Visit <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">www.bulkbazaar.ca</a>.</p>Channels come from public, free-to-air streams listed by the Famelack project. Live TV does not host any video.</div>
 </footer>
 
 <div class="player" id="player" role="dialog" aria-modal="true" aria-label="Player">
