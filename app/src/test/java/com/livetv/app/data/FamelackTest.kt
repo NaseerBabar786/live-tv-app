@@ -63,6 +63,18 @@ class FamelackTest {
     }
 
     @Test
+    fun spotsRadioStations() {
+        assertEquals(true, Famelack.isRadio("CKNO-FM", "https://x/now.m3u8"))
+        assertEquals(true, Famelack.isRadio("Stingray TikTok Radio", "https://x/a.m3u8"))
+        assertEquals(true, Famelack.isRadio("Stingray Classic Rock", "https://x/b.m3u8"))
+        assertEquals(true, Famelack.isRadio("Some Station", "https://x/live.mp3"))
+        assertEquals(false, Famelack.isRadio("Ici Radio-Canada Télé", "https://x/c.m3u8"))
+        assertEquals(false, Famelack.isRadio("Qello Concerts by Stingray", "https://x/d.m3u8"))
+        assertEquals(false, Famelack.isRadio("Stingray Naturescape", "https://x/e.m3u8"))
+        assertEquals(false, Famelack.isRadio("9XM", "https://x/f.m3u8"))
+    }
+
+    @Test
     fun parsesCountriesSortedByName() {
         val json = """
             {"PK":{"country":"Pakistan","channelCount":73},

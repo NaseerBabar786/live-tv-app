@@ -91,6 +91,7 @@ object Famelack {
                 ?.let { l -> (0 until l.length()).map { l.getString(it).lowercase() } }
                 .orEmpty()
             if (languages != null && langs.none { it in languages }) return@mapNotNull null
+            if (isRadio(entry.optString("name"), streams.first())) return@mapNotNull null
 
             val id = entry.optString("nanoid").ifBlank { null }
             val extra = id?.let(info::get)
@@ -113,6 +114,25 @@ object Famelack {
             )
         }
     }
+
+    private val radioName = Regex("""\bradio\b|\bf\.?m\b|\d{2,3}[.,]\d\s*fm\b""", RegexOption.IGNORE_CASE)
+    private val tvName = Regex("""t[eé]l[eé](?![a-z])|\btv\b|television""", RegexOption.IGNORE_CASE)
+    private val audioUrl = Regex(
+        """\.(mp3|aac|ogg|opus|m4a)(\?|$)|icecast|shoutcast|streamtheworld|zeno\.fm""",
+        RegexOption.IGNORE_CASE,
+    )
+    /** Stingray's music-only channels play audio over a still screen, like radio. */
+    private val stingrayVideo = Regex("concert|karaoke|naturescape|cityscape", RegexOption.IGNORE_CASE)
+
+    /**
+     * True for radio stations mixed into the TV lists: audio-only stream URLs,
+     * names like "CKNO-FM" or "TikTok Radio" (but not "Radio-Canada Télé"),
+     * and Stingray's music-only channels.
+     */
+    fun isRadio(name: String, url: String): Boolean =
+        audioUrl.containsMatchIn(url) ||
+            (radioName.containsMatchIn(name) && !tvName.containsMatchIn(name)) ||
+            (name.startsWith("Stingray ", ignoreCase = true) && !stingrayVideo.containsMatchIn(name))
 
     /** ISO 639-2 codes ("fra", "zho") to English names ("French", "Chinese"). */
     private val languageNames: Map<String, String> by lazy {
