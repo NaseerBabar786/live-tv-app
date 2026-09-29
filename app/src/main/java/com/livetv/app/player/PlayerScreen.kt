@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.Button
@@ -63,7 +61,6 @@ fun PlayerScreen(
     favorite: Boolean,
     inPictureInPicture: Boolean,
     onBack: () -> Unit,
-    onZap: (Int) -> Unit,
     onToggleFavorite: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -156,12 +153,6 @@ fun PlayerScreen(
                     channel.group?.let {
                         Text(it, color = Color.White.copy(alpha = 0.7f), style = MaterialTheme.typography.bodySmall)
                     }
-                }
-                IconButton(onClick = { onZap(-1) }, modifier = Modifier.focusGlow()) {
-                    Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Previous channel", tint = Color.White)
-                }
-                IconButton(onClick = { onZap(1) }, modifier = Modifier.focusGlow()) {
-                    Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Next channel", tint = Color.White)
                 }
                 IconButton(onClick = onToggleFavorite, modifier = Modifier.focusGlow()) {
                     Icon(

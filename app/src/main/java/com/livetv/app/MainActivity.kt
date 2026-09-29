@@ -37,7 +37,6 @@ class MainActivity : ComponentActivity() {
                         favorite = playing.id in state.favorites,
                         inPictureInPicture = inPictureInPicture,
                         onBack = viewModel::stop,
-                        onZap = viewModel::zap,
                         onToggleFavorite = { viewModel.toggleFavorite(playing) },
                     )
                 } else {
