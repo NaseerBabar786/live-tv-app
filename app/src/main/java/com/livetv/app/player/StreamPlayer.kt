@@ -19,7 +19,8 @@ import com.livetv.app.data.ChannelRepository
  *
  * IPTV URLs often have no file extension, so the stream type cannot always be
  * guessed. For those, HLS is tried first and plain progressive (e.g. MPEG-TS)
- * second. Live streams that fall behind the live window rejoin at the live edge.
+ * second. When a channel has backup URLs, each is tried in turn. Live streams
+ * that fall behind the live window rejoin at the live edge.
  */
 @OptIn(UnstableApi::class)
 class StreamPlayer(private val context: Context) {
@@ -32,7 +33,8 @@ class StreamPlayer(private val context: Context) {
     }
 
     private var channel: Channel? = null
-    private var candidates: List<String?> = emptyList()
+    /** Every (url, mime type) combination to try for the current channel, in order. */
+    private var candidates: List<Pair<String, String?>> = emptyList()
     private var attempt = 0
 
     /** Called with a user-facing message when a stream cannot be played; null clears it. */
@@ -40,7 +42,8 @@ class StreamPlayer(private val context: Context) {
 
     fun play(channel: Channel) {
         this.channel = channel
-        candidates = mimeCandidates(channel.url)
+        candidates = (listOf(channel.url) + channel.alternates)
+            .flatMap { url -> mimeCandidates(url).map { url to it } }
         attempt = 0
         onError?.invoke(null)
         prepareCurrent()
@@ -57,9 +60,10 @@ class StreamPlayer(private val context: Context) {
 
     private fun prepareCurrent() {
         val c = channel ?: return
+        val (url, mime) = candidates.getOrNull(attempt) ?: return
         val item = MediaItem.Builder()
-            .setUri(c.url)
-            .setMimeType(candidates.getOrNull(attempt))
+            .setUri(url)
+            .setMimeType(mime)
             .build()
 
         val http = DefaultHttpDataSource.Factory()

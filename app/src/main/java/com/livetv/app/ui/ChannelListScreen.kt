@@ -81,7 +81,7 @@ fun ChannelListScreen(
                             modifier = Modifier.fillMaxWidth(),
                         )
                     } else {
-                        Text("Live TV", fontWeight = FontWeight.Bold)
+                        Text(state.title, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
                 },
                 actions = {
@@ -160,6 +160,7 @@ fun ChannelListScreen(
     if (showSettings) {
         SettingsDialog(
             currentSource = state.playlistSource,
+            countries = state.countries,
             onDismiss = { showSettings = false },
             onSave = {
                 showSettings = false

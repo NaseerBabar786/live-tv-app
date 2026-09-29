@@ -8,12 +8,14 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Locale
 
 /**
  * Loads channels from the configured playlist source and stores user settings.
  *
  * The playlist source is one of:
- *  - empty: the bundled sample playlist (assets/sample.m3u)
+ *  - "famelack:<country>": free channels for a country from [Famelack] (the default)
+ *  - "sample": the bundled sample playlist (assets/sample.m3u)
  *  - an http(s) URL to an M3U playlist
  *  - a content:// URI to a playlist file the user picked on the device
  */
@@ -21,10 +23,10 @@ class ChannelRepository(context: Context) {
 
     private val appContext = context.applicationContext
     private val prefs = appContext.getSharedPreferences("live_tv", Context.MODE_PRIVATE)
-    private val cacheFile = File(appContext.filesDir, "playlist_cache.m3u")
 
+    /** Defaults to free channels for the phone's country. */
     var playlistSource: String
-        get() = prefs.getString(KEY_SOURCE, "") ?: ""
+        get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
         set(value) = prefs.edit { putString(KEY_SOURCE, value.trim()) }
 
     var favorites: Set<String>
@@ -42,19 +44,39 @@ class ChannelRepository(context: Context) {
     suspend fun loadChannels(): Result<List<Channel>> = withContext(Dispatchers.IO) {
         runCatching {
             val source = playlistSource
-            val text = when {
-                source.isEmpty() -> readAsset()
-                source.startsWith("content://") -> readContentUri(Uri.parse(source))
-                else -> try {
-                    download(source).also { cacheFile.writeText(it) }
-                } catch (e: Exception) {
-                    if (cacheFile.exists()) cacheFile.readText() else throw e
-                }
+            val country = Famelack.countryCode(source)
+            val channels = when {
+                source == SOURCE_SAMPLE -> M3uParser.parse(readAsset())
+                source.startsWith("content://") -> M3uParser.parse(readContentUri(Uri.parse(source)))
+                country != null -> Famelack.parseChannels(downloadCached(source, Famelack.countryUrl(country)))
+                else -> M3uParser.parse(downloadCached(source, source))
             }
-            val channels = M3uParser.parse(text)
-            require(channels.isNotEmpty()) { "The playlist has no channels." }
+            require(channels.isNotEmpty()) { "No playable channels found for this source." }
             channels
         }
+    }
+
+    /** Countries that have free channels, for the country picker. */
+    suspend fun loadCountries(): Result<List<Famelack.Country>> = withContext(Dispatchers.IO) {
+        runCatching { Famelack.parseCountries(downloadCached("countries", Famelack.COUNTRIES_URL)) }
+    }
+
+    /**
+     * Downloads [url], keeping a copy on disk. When the download fails, the last
+     * good copy is used so the app still starts offline.
+     */
+    private fun downloadCached(key: String, url: String): String {
+        val cache = File(appContext.cacheDir, "src_" + key.hashCode().toUInt().toString(16))
+        return try {
+            download(url).also { cache.writeText(it) }
+        } catch (e: Exception) {
+            if (cache.exists()) cache.readText() else throw e
+        }
+    }
+
+    private fun defaultSource(): String {
+        val country = Locale.getDefault().country.lowercase()
+        return Famelack.source(if (country.length == 2) country else "us")
     }
 
     private fun readAsset(): String =
@@ -92,6 +114,7 @@ class ChannelRepository(context: Context) {
 
     companion object {
         const val USER_AGENT = "LiveTV-Android/1.0"
+        const val SOURCE_SAMPLE = "sample"
         private const val KEY_SOURCE = "playlist_source"
         private const val KEY_FAVORITES = "favorites"
         private const val KEY_LAST_CHANNEL = "last_channel"

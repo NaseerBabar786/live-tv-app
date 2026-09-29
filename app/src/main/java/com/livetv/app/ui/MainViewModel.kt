@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.livetv.app.data.Channel
 import com.livetv.app.data.ChannelRepository
+import com.livetv.app.data.Famelack
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +25,14 @@ data class UiState(
     val filter: String = FILTER_ALL,
     val playlistSource: String = "",
     val playing: Channel? = null,
+    val countries: List<Famelack.Country> = emptyList(),
 ) {
+    /** Screen title: the selected country's name when showing free channels by country. */
+    val title: String
+        get() = Famelack.countryCode(playlistSource)
+            ?.let { code -> countries.firstOrNull { it.code == code }?.name }
+            ?: "Live TV"
+
     val groups: List<String>
         get() = listOf(FILTER_ALL, FILTER_FAVORITES) +
             channels.mapNotNull { it.group }.distinct().sorted()
@@ -54,7 +62,15 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         reload()
     }
 
+    fun loadCountries() {
+        if (_state.value.countries.isNotEmpty()) return
+        viewModelScope.launch {
+            repo.loadCountries().onSuccess { list -> _state.update { it.copy(countries = list) } }
+        }
+    }
+
     fun reload() {
+        loadCountries()
         _state.update { it.copy(loading = true, error = null) }
         viewModelScope.launch {
             repo.loadChannels()

@@ -9,6 +9,8 @@ data class Channel(
     val tvgId: String? = null,
     val userAgent: String? = null,
     val referrer: String? = null,
+    /** Backup stream URLs tried in order when [url] fails. */
+    val alternates: List<String> = emptyList(),
 ) {
     /** Stable key used for favorites and list keys. */
     val id: String get() = url
