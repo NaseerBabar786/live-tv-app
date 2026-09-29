@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.livetv.app.data.Famelack
 
 /**
- * Lets the user choose which channels to show: Pakistani, Indian and Canadian,
+ * Lets the user choose which channels to show: Pakistani, Indian, Canadian, UK and USA,
  * every country, or a single country.
  */
 @Composable
@@ -124,7 +124,7 @@ fun SettingsDialog(
                 )
                 val mixSelected = currentSource == Famelack.SOURCE_MIX
                 val allSelected = currentSource == Famelack.SOURCE_ALL
-                SourceButton("Pakistani, Indian & Canadian", mixSelected) { onSave(Famelack.SOURCE_MIX) }
+                SourceButton("Pakistani, Indian, Canadian, UK & USA", mixSelected) { onSave(Famelack.SOURCE_MIX) }
                 SourceButton("All countries", allSelected) { onSave(Famelack.SOURCE_ALL) }
                 SourceButton(
                     label = when {

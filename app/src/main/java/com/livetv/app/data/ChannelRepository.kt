@@ -18,7 +18,7 @@ import java.net.URL
  * Loads channels from the configured playlist source and stores user settings.
  *
  * The playlist source is one of:
- *  - "famelack:mix": Pakistani, Indian and Canadian channels from [Famelack] (the default)
+ *  - "famelack:mix": Pakistani, Indian, Canadian, UK and USA channels from [Famelack] (the default)
  *  - "famelack:all": every country from [Famelack]
  *  - "famelack:pick:<cc>,<cc>": the countries the user ticked, one section each
  *  - "famelack:<country>": free channels for one country from [Famelack]
@@ -31,7 +31,7 @@ class ChannelRepository(context: Context) {
     private val appContext = context.applicationContext
     private val prefs = appContext.getSharedPreferences("live_tv", Context.MODE_PRIVATE)
 
-    /** Defaults to the combined Pakistani, Indian and Canadian channels. */
+    /** Defaults to the combined Pakistani, Indian, Canadian, UK and USA channels. */
     var playlistSource: String
         get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
         set(value) = prefs.edit { putString(KEY_SOURCE, value.trim()) }

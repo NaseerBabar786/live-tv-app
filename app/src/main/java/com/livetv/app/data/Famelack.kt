@@ -17,7 +17,7 @@ object Famelack {
     /** Playlist sources for a country are stored as "famelack:<code>", e.g. "famelack:ca". */
     const val SOURCE_PREFIX = "famelack:"
 
-    /** Pakistani, Indian (Hindi/Urdu/Punjabi) and Canadian channels together. The default. */
+    /** Pakistani, Indian (Hindi/Urdu/Punjabi), Canadian, UK and USA channels together. The default. */
     const val SOURCE_MIX = "famelack:mix"
 
     /** Every country, one section per country. */
@@ -40,6 +40,8 @@ object Famelack {
         Section("pk", "Pakistani"),
         Section("in", "Indian", languages = setOf("hin", "urd", "pan")),
         Section("ca", "Canadian"),
+        Section("uk", "British"),
+        Section("us", "American"),
     )
 
     fun countryUrl(code: String) = "$BASE/countries/${code.lowercase()}.json"
