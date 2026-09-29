@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live TV</title>
+<meta name="description" content="Watch free live TV channels from Pakistan, India, Canada, the UK and the USA, and get the Live TV app for Android phones and TVs.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #070D1C;
+    --surface: #0D1B3A;
+    --surface-2: #13264F;
+    --line: #2B4C7E;
+    --text: #EEF2FA;
+    --muted: #9DB8F0;
+    --accent: #9DB8F0;
+    --focus: #FFD600;
+    --red: #E53935;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  header { position: sticky; top: 0; z-index: 10; background: rgba(7,13,28,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--surface-2); }
+  header .wrap { display: flex; align-items: center; gap: 12px; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 22px; color: var(--text); text-decoration: none; }
+  .brand svg { width: 40px; height: 40px; }
+  nav { margin-left: auto; display: flex; gap: 4px; }
+  nav a { color: var(--text); text-decoration: none; padding: 8px 12px; border-radius: 999px; font-weight: 600; font-size: 15px; }
+  nav a:hover { background: var(--surface-2); }
+  @media (max-width: 560px) { nav a { padding: 8px 8px; font-size: 14px; } .brand span { display: none; } }
+
+  section { padding: 40px 0; scroll-margin-top: 64px; }
+  h2 { font-size: 28px; margin: 0 0 6px; }
+  .lead { color: var(--muted); margin: 0 0 20px; }
+
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: center; padding: 48px 0 24px; }
+  .hero h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.1; margin: 0 0 12px; }
+  .hero p { color: var(--muted); font-size: 18px; margin: 0 0 24px; }
+  .hero img { width: 100%; border-radius: 16px; border: 1px solid var(--surface-2); }
+  @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } }
+  .btns { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; font-weight: 700; text-decoration: none; border: 2px solid var(--line); color: var(--text); background: transparent; cursor: pointer; font-size: 16px; }
+  .btn.primary { background: var(--surface); border-color: var(--accent); }
+  .btn:hover { border-color: var(--focus); }
+
+  /* Channels */
+  .toolbar { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px; scrollbar-width: thin; }
+  .chip { flex: none; padding: 7px 14px; border-radius: 8px; border: 1.5px solid var(--line); background: transparent; color: var(--text); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .chip.on { background: var(--surface-2); border-color: var(--accent); color: #fff; }
+  .chip:hover { border-color: var(--focus); }
+  .search { display: flex; gap: 12px; align-items: center; }
+  .search input { flex: 1; min-width: 0; padding: 10px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
+  .count { color: var(--muted); font-size: 14px; white-space: nowrap; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+  @media (max-width: 420px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  .card { position: relative; display: flex; flex-direction: column; border-radius: 12px; background: var(--surface); border: 1.5px solid transparent; cursor: pointer; overflow: hidden; text-align: left; color: var(--text); font: inherit; padding: 0; }
+  .card:hover, .card:focus-visible { border-color: var(--focus); outline: none; transform: scale(1.03); transition: transform .12s; }
+  .card .logo { height: 96px; display: grid; place-items: center; background: #0A1530; padding: 12px; }
+  .card .logo img { max-width: 100%; max-height: 72px; object-fit: contain; }
+  .card .logo .initials { font-size: 28px; font-weight: 800; color: var(--muted); }
+  .card .meta { padding: 8px 10px 10px; }
+  .card .name { font-weight: 700; font-size: 14px; line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .card .sub { color: var(--muted); font-size: 12px; }
+  .num { position: absolute; top: 6px; left: 6px; background: var(--surface-2); color: #fff; font-size: 12px; font-weight: 700; border-radius: 6px; padding: 1px 7px; }
+  .star { position: absolute; top: 2px; right: 2px; background: none; border: 0; color: var(--muted); font-size: 20px; cursor: pointer; padding: 4px 8px; }
+  .star.on { color: var(--focus); }
+  .more { display: block; margin: 20px auto 0; }
+  .status { color: var(--muted); padding: 24px 0; }
+
+  /* Player */
+  .player { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.92); display: none; flex-direction: column; }
+  .player.open { display: flex; }
+  .player .bar { display: flex; align-items: center; gap: 8px; padding: 10px 16px; }
+  .player .title { font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .player video { flex: 1; width: 100%; min-height: 0; background: #000; }
+  .player .msg { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); max-width: 90%; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; display: none; }
+  .icon-btn { background: var(--surface); border: 1.5px solid var(--line); color: var(--text); border-radius: 999px; padding: 8px 14px; font: inherit; font-weight: 600; cursor: pointer; }
+
+  /* Download */
+  .panel { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 16px; padding: 24px; }
+  .download { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+  .download .qr { background: #fff; border-radius: 12px; padding: 10px; width: 180px; height: 180px; }
+  .download .qr img { width: 100%; height: 100%; }
+  @media (max-width: 640px) { .download { grid-template-columns: 1fr; } .download .qr { margin: 0 auto; } }
+  .big-link { font: 700 20px/1.3 ui-monospace, Menlo, Consolas, monospace; color: #fff; word-break: break-all; }
+  .small { color: var(--muted); font-size: 14px; }
+  code { word-break: break-all; color: #fff; }
+
+  /* Guide */
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .steps { margin: 0; padding-left: 22px; }
+  .steps li { margin: 0 0 10px; }
+  .steps b { color: #fff; }
+  .guide h3 { margin: 20px 0 8px; font-size: 18px; }
+  .guide h3:first-child { margin-top: 0; }
+  .note { border-left: 4px solid var(--line); background: #0A1530; padding: 10px 14px; border-radius: 6px; color: var(--muted); font-size: 15px; margin: 12px 0; }
+  .hidden { display: none; }
+
+  footer { border-top: 1px solid var(--surface-2); padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Live TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Live TV</span>
+    </a>
+    <nav>
+      <a href="#watch">Watch</a>
+      <a href="#download">Download</a>
+      <a href="#guide">Install guide</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="wrap">
+  <div class="hero">
+    <div>
+      <h1>Free live TV, on your phone and your TV</h1>
+      <p>Pakistani, Indian, Canadian, British and American channels. Watch here in your browser, or get the Live TV app for Android phones, tablets and Google TV.</p>
+      <div class="btns">
+        <a class="btn primary" href="#watch">Watch now</a>
+        <a class="btn" href="#download">Download the app</a>
+      </div>
+    </div>
+    <img src="tv-photo.jpg" alt="The Live TV app on a television, showing the channel list">
+  </div>
+
+  <section id="watch">
+    <h2>Watch live</h2>
+    <p class="lead">Pick a channel to start watching. Some channels only play in the app or in their own country.</p>
+    <div class="toolbar">
+      <div class="chips" id="groups"></div>
+      <div class="chips" id="genres"></div>
+      <div class="search">
+        <input id="q" type="search" placeholder="Search channels" aria-label="Search channels">
+        <span class="count" id="count"></span>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="status" id="status">Loading channels…</p>
+    <button class="btn more hidden" id="more">Show more channels</button>
+  </section>
+
+  <section id="download">
+    <h2>Get the app</h2>
+    <p class="lead">For Android phones, tablets, Google TV, Android TV and Fire TV. Not in the Play Store, so follow the <a href="#guide">install guide</a>.</p>
+    <div class="panel download">
+      <div>
+        <div class="btns" style="margin-bottom:18px">
+          <a class="btn primary" id="apk" href="https://github.com/NaseerBabar786/live-tv-app/releases/latest/download/LiveTV.apk">⬇ Download LiveTV.apk</a>
+          <a class="btn" href="LiveTV-Install-Guide.pdf" download>Install guide (PDF)</a>
+        </div>
+        <p class="small" id="version">The link always gives the newest version (about 22 MB).</p>
+        <p style="margin:16px 0 4px">On a TV, type this in the <b>Downloader</b> app:</p>
+        <div class="big-link">tinyurl.com/2y669ug7</div>
+        <p class="small" style="margin-top:10px">If the short link doesn't work, use the full link:<br>
+          <code>github.com/NaseerBabar786/live-tv-app/releases/latest/download/LiveTV.apk</code></p>
+      </div>
+      <div class="qr"><img src="qr.svg" alt="QR code for the download link"></div>
+    </div>
+  </section>
+
+  <section id="guide">
+    <h2>How to install</h2>
+    <p class="lead">Choose your device. You can also <a href="LiveTV-Install-Guide.pdf" target="_blank" rel="noopener">open the full guide as a PDF</a>.</p>
+    <div class="tabs" role="tablist">
+      <button class="chip on" data-tab="phone" role="tab">Phone or tablet</button>
+      <button class="chip" data-tab="tv" role="tab">Google TV / Android TV</button>
+      <button class="chip" data-tab="fire" role="tab">Fire TV</button>
+      <button class="chip" data-tab="update" role="tab">Updating</button>
+      <button class="chip" data-tab="help" role="tab">Problems</button>
+    </div>
+    <div class="panel guide">
+      <div data-pane="phone">
+        <ol class="steps">
+          <li>On the phone, open <b>Chrome</b> and go to <b>tinyurl.com/2y669ug7</b>, or scan the QR code above with the camera.</li>
+          <li>If Chrome warns that the file might be harmful, tap <b>Download anyway</b>.</li>
+          <li>When it finishes, tap <b>Open</b>. Or open the <b>My Files</b> app, go to <b>Downloads</b> and tap <b>LiveTV.apk</b>.</li>
+          <li>If you see <i>"your phone is not allowed to install unknown apps from this source"</i>, tap <b>Settings</b>, turn on <b>Allow from this source</b>, then press Back.</li>
+          <li>Tap <b>Install</b>.</li>
+          <li>If Google Play Protect blocks it, tap <b>More details</b>, then <b>Install anyway</b>.</li>
+          <li>Tap <b>Open</b>. Live TV is now in your app list.</li>
+        </ol>
+      </div>
+      <div data-pane="tv" class="hidden">
+        <p class="small" style="margin-top:0">TVs don't have a normal web browser, so you use the free <b>Downloader</b> app.</p>
+        <h3>A. Install Downloader (one time only)</h3>
+        <ol class="steps">
+          <li>On the TV home screen, open <b>Search</b> and search for <b>Downloader</b>. Install <b>Downloader by AFTVnews</b> (orange icon).</li>
+        </ol>
+        <h3>B. Allow Downloader to install apps (one time only)</h3>
+        <ol class="steps">
+          <li>Open <b>Settings</b> › <b>System</b> › <b>About</b>.</li>
+          <li>Press <b>OK</b> on <b>Android TV OS build</b> <b>7 times</b> until you see <i>"You are now a developer"</i>.</li>
+          <li>Go back to <b>Settings</b> › <b>Apps</b> › <b>Security &amp; restrictions</b> › <b>Unknown sources</b>.</li>
+          <li>Turn on <b>Downloader</b>.</li>
+        </ol>
+        <div class="note">On some older Android TVs it is under Settings › Device Preferences › Security &amp; restrictions › Unknown sources.</div>
+        <h3>C. Download and install Live TV</h3>
+        <ol class="steps">
+          <li>Open <b>Downloader</b>. Allow it to access files if it asks.</li>
+          <li>Type <b>tinyurl.com/2y669ug7</b> in the box and press <b>Go</b>. If that fails, type the full link shown above.</li>
+          <li>Wait for the download to reach about <b>22 MB</b>, then press <b>Install</b>. If Play Protect warns you, choose <b>Install anyway</b>.</li>
+          <li>Press <b>Open</b>, or <b>Done</b> and then <b>Delete</b> to remove the downloaded file.</li>
+          <li>To pin Live TV to the home screen, highlight it, hold <b>OK</b> and choose <b>Add to favourites</b>.</li>
+        </ol>
+      </div>
+      <div data-pane="fire" class="hidden">
+        <ol class="steps">
+          <li>Install <b>Downloader</b> from the Amazon Appstore.</li>
+          <li>Go to <b>Settings</b> › <b>My Fire TV</b> › <b>Developer options</b> › <b>Install unknown apps</b> and turn on <b>Downloader</b>. If Developer options is missing, open <b>Settings</b> › <b>My Fire TV</b> › <b>About</b> and press <b>OK</b> on your device name 7 times.</li>
+          <li>Follow part <b>C</b> of the Google TV steps.</li>
+        </ol>
+        <div class="note">Live TV works on Android 5.0 and newer. It does not work on iPhone, iPad, Apple TV, Roku, or Samsung and LG TVs that don't run Android. On those, you can watch on this website instead.</div>
+      </div>
+      <div data-pane="update" class="hidden">
+        <ol class="steps">
+          <li>Open Live TV and select the <b>gear icon</b> at the top right to open <b>Settings</b>.</li>
+          <li>Select <b>Check for updates</b>.</li>
+          <li>If a new version is available, select <b>Update to version …</b>.</li>
+          <li>The first time, Android may ask you to allow Live TV to install apps. Turn it on, press Back and select <b>Update</b> again.</li>
+          <li>Select <b>Install</b>. Your favourites and settings are kept.</li>
+        </ol>
+      </div>
+      <div data-pane="help" class="hidden">
+        <h3>"App not installed"</h3>
+        <p class="small">An older copy (before version 1.7.2) is on the device. Uninstall Live TV once, then install again.</p>
+        <h3>"There was a problem parsing the package"</h3>
+        <p class="small">The download was incomplete. Delete it and download again, checking it is about 22 MB. On a TV, try the full link.</p>
+        <h3>A channel doesn't play</h3>
+        <p class="small">The broadcaster may be offline, or the channel only plays in its own country. Some channels play in the app but not in a web browser.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Channels come from public, free-to-air streams listed by the Famelack project. Live TV does not host any video.</div>
+</footer>
+
+<div class="player" id="player" role="dialog" aria-modal="true" aria-label="Player">
+  <div class="bar">
+    <button class="icon-btn" id="prev" aria-label="Previous channel">▲</button>
+    <button class="icon-btn" id="next" aria-label="Next channel">▼</button>
+    <div class="title" id="ptitle"></div>
+    <button class="icon-btn" id="close">Close</button>
+  </div>
+  <video id="video" controls autoplay playsinline></video>
+  <div class="msg" id="pmsg"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+<script>
+(() => {
+  const RAW = "https://raw.githubusercontent.com/famelack/famelack-channels/main/tv/raw/countries/";
+  const INFO = "https://raw.githubusercontent.com/NaseerBabar786/live-tv-app/main/app/src/main/assets/channel_info.json";
+  const SECTIONS = [
+    { cc: "pk", title: "Pakistani" },
+    { cc: "in", title: "Indian", langs: ["hin", "urd", "pan"] },
+    { cc: "ca", title: "Canadian" },
+    { cc: "uk", title: "British" },
+    { cc: "us", title: "American" },
+  ];
+  const PAGE = 120;
+
+  const $ = id => document.getElementById(id);
+  const store = {
+    get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  };
+
+  let channels = [];
+  let favs = new Set(store.get("favs", []));
+  let group = null, genre = null, query = "", shown = PAGE, visible = [];
+
+  // Same radio filter as the app (Famelack.isRadio).
+  const radioName = /\bradio\b|\bf\.?m\b|\d{2,3}[.,]\d\s*fm\b/i;
+  const tvName = /t[eé]l[eé](?![a-z])|\btv\b|television/i;
+  const audioUrl = /\.(mp3|aac|ogg|opus|m4a)(\?|$)|icecast|shoutcast|streamtheworld|zeno\.fm/i;
+  const stingrayVideo = /concert|karaoke|naturescape|cityscape/i;
+  const isRadio = (name, url) => audioUrl.test(url) ||
+    (radioName.test(name) && !tvName.test(name)) ||
+    (/^stingray /i.test(name) && !stingrayVideo.test(name));
+
+  async function load() {
+    const info = await fetch(INFO).then(r => r.json()).catch(() => ({}));
+    const lists = await Promise.all(SECTIONS.map(s =>
+      fetch(RAW + s.cc + ".json").then(r => r.json()).catch(() => [])));
+    const seen = new Set();
+    SECTIONS.forEach((s, i) => {
+      for (const e of lists[i]) {
+        const streams = (e.sources?.streams || []).filter(u => u.startsWith("https"));
+        if (!streams.length || seen.has(streams[0])) continue;
+        const langs = (e.languages || []).map(l => l.toLowerCase());
+        if (s.langs && !langs.some(l => s.langs.includes(l))) continue;
+        if (isRadio(e.name || "", streams[0])) continue;
+        seen.add(streams[0]);
+        const extra = info[e.nanoid] || [];
+        const cat = extra[1] && extra[1] !== "general" ? extra[1][0].toUpperCase() + extra[1].slice(1) : "General";
+        channels.push({
+          id: e.nanoid || streams[0],
+          name: e.name || "Channel",
+          streams,
+          logo: (extra[0] || "").startsWith("http") ? extra[0] : null,
+          group: s.title,
+          genre: e.isGeoBlocked ? "Geo-blocked" : cat,
+          number: channels.length + 1,
+        });
+      }
+    });
+    if (!channels.length) { $("status").textContent = "Channels could not be loaded. Check your connection and refresh the page."; return; }
+    buildChips();
+    render();
+  }
+
+  function chip(label, on, onClick) {
+    const b = document.createElement("button");
+    b.className = "chip" + (on ? " on" : "");
+    b.textContent = label;
+    b.onclick = onClick;
+    return b;
+  }
+
+  function buildChips() {
+    const g = $("groups"); g.innerHTML = "";
+    ["Favorites", ...SECTIONS.map(s => s.title)].forEach(name =>
+      g.append(chip(name === "Favorites" ? "★ Favorites" : name, group === name,
+        () => { group = group === name ? null : name; shown = PAGE; buildChips(); render(); })));
+    const pool = channels.filter(c => matchGroup(c));
+    const counts = {};
+    pool.forEach(c => counts[c.genre] = (counts[c.genre] || 0) + 1);
+    const last = name => ["General", "Geo-blocked"].indexOf(name);
+    const names = Object.keys(counts).sort((a, b) => last(a) - last(b) || counts[b] - counts[a]);
+    if (genre && !names.includes(genre)) genre = null;
+    const r = $("genres"); r.innerHTML = "";
+    names.forEach(name => r.append(chip(name, genre === name,
+      () => { genre = genre === name ? null : name; shown = PAGE; buildChips(); render(); })));
+  }
+
+  const matchGroup = c => !group || (group === "Favorites" ? favs.has(c.id) : c.group === group);
+
+  function render() {
+    const q = query.trim().toLowerCase();
+    visible = channels.filter(c => matchGroup(c) && (!genre || c.genre === genre) && (!q || c.name.toLowerCase().includes(q)));
+    $("count").textContent = visible.length + " channels";
+    const grid = $("grid"); grid.innerHTML = "";
+    const frag = document.createDocumentFragment();
+    visible.slice(0, shown).forEach((c, i) => frag.append(card(c, i)));
+    grid.append(frag);
+    $("status").textContent = visible.length ? "" : (group === "Favorites" ? "No favorites yet. Tap the star on a channel to add it." : "No channels match.");
+    $("status").classList.toggle("hidden", !!visible.length);
+    $("more").classList.toggle("hidden", visible.length <= shown);
+  }
+
+  function card(c, i) {
+    const b = document.createElement("div");
+    b.className = "card"; b.tabIndex = 0; b.setAttribute("role", "button");
+    b.innerHTML = `<span class="num">${c.number}</span><div class="logo"></div><div class="meta"><div class="name"></div><div class="sub"></div></div>`;
+    const logo = b.querySelector(".logo");
+    const initials = () => { logo.innerHTML = ""; const s = document.createElement("span"); s.className = "initials"; s.textContent = c.name.replace(/[^A-Za-z0-9 ]/g, "").split(" ").filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase() || "TV"; logo.append(s); };
+    if (c.logo) { const img = document.createElement("img"); img.loading = "lazy"; img.alt = ""; img.src = c.logo; img.onerror = initials; logo.append(img); } else initials();
+    b.querySelector(".name").textContent = c.name;
+    b.querySelector(".sub").textContent = c.group + (c.genre !== "General" ? " · " + c.genre : "");
+    const star = document.createElement("button");
+    star.className = "star" + (favs.has(c.id) ? " on" : "");
+    star.setAttribute("aria-label", "Favorite");
+    star.textContent = favs.has(c.id) ? "★" : "☆";
+    star.onclick = ev => {
+      ev.stopPropagation();
+      favs.has(c.id) ? favs.delete(c.id) : favs.add(c.id);
+      store.set("favs", [...favs]);
+      star.classList.toggle("on", favs.has(c.id)); star.textContent = favs.has(c.id) ? "★" : "☆";
+      if (group === "Favorites") render();
+    };
+    b.append(star);
+    b.onclick = () => play(i);
+    b.onkeydown = ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); play(i); } };
+    return b;
+  }
+
+  // Player
+  const video = $("video");
+  let hls = null, current = -1, lastCard = null;
+
+  function stop() {
+    if (hls) { hls.destroy(); hls = null; }
+    video.pause(); video.removeAttribute("src"); video.load();
+  }
+
+  function showMsg(text) { const m = $("pmsg"); m.textContent = text; m.style.display = text ? "block" : "none"; }
+
+  function play(i) {
+    if (!visible.length) return;
+    current = (i + visible.length) % visible.length;
+    const c = visible[current];
+    $("ptitle").textContent = c.number + ". " + c.name;
+    if (!$("player").classList.contains("open")) {
+      lastCard = document.activeElement;
+      $("player").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    tryStream(c, 0);
+  }
+
+  function tryStream(c, n) {
+    stop(); showMsg("");
+    const url = c.streams[n];
+    if (!url) { showMsg("This channel isn't playing right now, or it only plays in the Live TV app or in its own country. Try another channel."); return; }
+    const next = () => { if (visible[current] === c) tryStream(c, n + 1); };
+    if (window.Hls && Hls.isSupported() && !/\.(mp4|webm)(\?|$)/i.test(url)) {
+      hls = new Hls({ maxBufferLength: 20 });
+      hls.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) next(); });
+      hls.loadSource(url);
+      hls.attachMedia(video);
+    } else {
+      video.src = url;
+      video.onerror = next;
+    }
+    video.play().catch(() => {});
+  }
+
+  function closePlayer() {
+    stop(); showMsg("");
+    $("player").classList.remove("open");
+    document.body.style.overflow = "";
+    const target = $("grid").children[current];
+    (target || lastCard)?.focus?.();
+  }
+
+  $("close").onclick = closePlayer;
+  $("prev").onclick = () => play(current - 1);
+  $("next").onclick = () => play(current + 1);
+  document.addEventListener("keydown", ev => {
+    if (!$("player").classList.contains("open")) return;
+    if (ev.key === "Escape" || ev.key === "Backspace" || ev.key === "GoBack") { ev.preventDefault(); closePlayer(); }
+    else if (ev.key === "ArrowUp" || ev.key === "ChannelUp" || ev.key === "PageUp") { ev.preventDefault(); play(current - 1); }
+    else if (ev.key === "ArrowDown" || ev.key === "ChannelDown" || ev.key === "PageDown") { ev.preventDefault(); play(current + 1); }
+  });
+
+  $("q").addEventListener("input", ev => { query = ev.target.value; shown = PAGE; render(); });
+  $("more").onclick = () => { shown += PAGE; render(); };
+
+  // Install guide tabs
+  document.querySelectorAll("[data-tab]").forEach(t => t.onclick = () => {
+    document.querySelectorAll("[data-tab]").forEach(x => x.classList.toggle("on", x === t));
+    document.querySelectorAll("[data-pane]").forEach(p => p.classList.toggle("hidden", p.dataset.pane !== t.dataset.tab));
+  });
+
+  // Newest version for the download panel.
+  fetch("https://api.github.com/repos/NaseerBabar786/live-tv-app/releases/latest")
+    .then(r => r.json())
+    .then(r => {
+      const v = (r.tag_name || "").match(/^v([\d.]+)/);
+      const apk = (r.assets || []).find(a => a.name === "LiveTV.apk");
+      if (v) $("version").textContent = `Newest version: ${v[1]}` + (apk ? ` (${(apk.size / 1048576).toFixed(0)} MB)` : "") + ". The link always gives the newest version.";
+    }).catch(() => {});
+
+  load();
+})();
+</script>
+</body>
+</html>
