@@ -5,9 +5,11 @@ data class Channel(
     val name: String,
     val url: String,
     val logo: String? = null,
-    /** Top-level section, e.g. "Pakistani" or an M3U group-title. */
+    /** Top-level section: a country such as "Pakistani", or an M3U group-title. */
     val group: String? = null,
-    /** Second-level filter within a section, e.g. "News" or "Urdu". */
+    /** Spoken language, e.g. "Urdu". */
+    val language: String? = null,
+    /** Type of channel, e.g. "News" or "Sports". */
     val category: String? = null,
     val tvgId: String? = null,
     val userAgent: String? = null,

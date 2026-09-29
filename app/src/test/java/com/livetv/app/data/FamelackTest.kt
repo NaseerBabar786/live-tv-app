@@ -23,7 +23,8 @@ class FamelackTest {
         assertEquals(listOf("News One", "Blocked"), channels.map { it.name })
         assertEquals("https://x/one.m3u8", channels[0].url)
         assertEquals(listOf("https://y/one.m3u8"), channels[0].alternates)
-        assertEquals("English", channels[0].category)
+        assertEquals("English", channels[0].language)
+        assertEquals("General", channels[0].category)
         assertEquals("Geo-blocked", channels[1].category)
     }
 
@@ -41,8 +42,8 @@ class FamelackTest {
 
         assertEquals("https://logo/a.png", channels[0].logo)
         assertEquals("News", channels[0].category)
-        // "general" says nothing useful, so the language is used instead.
-        assertEquals("Urdu", channels[1].category)
+        assertEquals("Urdu", channels[1].language)
+        assertEquals("General", channels[1].category)
     }
 
     @Test
@@ -57,8 +58,8 @@ class FamelackTest {
 
         assertEquals(listOf("Hindi One", "Punjabi One"), channels.map { it.name })
         assertEquals(listOf("Indian", "Indian"), channels.map { it.group })
-        // The matching language names the category, not the first one listed.
-        assertEquals("Punjabi", channels[1].category)
+        // The matching language is used, not the first one listed.
+        assertEquals("Punjabi", channels[1].language)
     }
 
     @Test

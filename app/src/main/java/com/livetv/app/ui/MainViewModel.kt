@@ -23,7 +23,9 @@ data class UiState(
     val favorites: Set<String> = emptySet(),
     val query: String = "",
     val filter: String = FILTER_ALL,
-    /** Second-row filter (a type or language); null shows every type. */
+    /** Second-row filter; null shows every language. */
+    val language: String? = null,
+    /** Third-row filter; null shows every type. */
     val category: String? = null,
     val playlistSource: String = "",
     val playing: Channel? = null,
@@ -52,15 +54,24 @@ data class UiState(
             }
         }
 
-    /** Second chip row: the types or languages found in the selected section. */
+    private val inLanguage: List<Channel>
+        get() = inGroup.filter { language == null || it.language == language }
+
+    /** Second chip row: the languages in the selected country, most channels first. */
+    val languages: List<String>
+        get() = inGroup.mapNotNull { it.language }.groupingBy { it }.eachCount()
+            .entries.sortedWith(compareBy({ it.key == "Other" }, { -it.value }, { it.key }))
+            .map { it.key }
+
+    /** Third chip row: the types in the selected country and language. */
     val categories: List<String>
-        get() = inGroup.mapNotNull { it.category }.distinct().sortedWith(
-            // Geo-blocked and Other go last.
-            compareBy<String>({ it == "Geo-blocked" || it == "Other" }, { it })
+        get() = inLanguage.mapNotNull { it.category }.distinct().sortedWith(
+            // Geo-blocked and General go last.
+            compareBy<String>({ it == "Geo-blocked" }, { it == "General" }, { it })
         )
 
     val visibleChannels: List<Channel>
-        get() = inGroup
+        get() = inLanguage
             .filter { category == null || it.category == category }
             .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
 }
@@ -99,13 +110,15 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setPlaylistSource(source: String) {
         repo.playlistSource = source
-        _state.update { it.copy(playlistSource = repo.playlistSource, filter = FILTER_ALL, category = null) }
+        _state.update { it.copy(playlistSource = repo.playlistSource, filter = FILTER_ALL, language = null, category = null) }
         reload()
     }
 
     fun setQuery(query: String) = _state.update { it.copy(query = query) }
 
-    fun setFilter(filter: String) = _state.update { it.copy(filter = filter, category = null) }
+    fun setFilter(filter: String) = _state.update { it.copy(filter = filter, language = null, category = null) }
+
+    fun setLanguage(language: String?) = _state.update { it.copy(language = language, category = null) }
 
     fun setCategory(category: String?) = _state.update { it.copy(category = category) }
 

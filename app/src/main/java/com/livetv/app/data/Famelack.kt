@@ -68,9 +68,9 @@ object Famelack {
     /**
      * Converts a country's channel list to playable channels. Channels that only
      * have YouTube sources are skipped because they can't play in ExoPlayer.
-     * Each channel's [Channel.category] is its type (News, Sports…) when [info]
-     * knows it, otherwise its language. [section] becomes [Channel.group]; when
-     * [languages] is set, only channels in one of those languages are kept.
+     * [section] becomes [Channel.group]; [Channel.category] is the type (News,
+     * Sports…) when [info] knows it. When [languages] is set, only channels in
+     * one of those languages are kept.
      */
     fun parseChannels(
         json: String,
@@ -103,11 +103,11 @@ object Famelack {
                 alternates = streams.drop(1),
                 logo = extra?.logo?.takeIf { it.startsWith("http") },
                 group = section,
+                language = language?.takeIf { it.isNotBlank() }?.let(::languageName) ?: "Other",
                 category = when {
                     geoBlocked -> "Geo-blocked"
                     category != null -> category.replaceFirstChar { it.uppercase() }
-                    language.isNullOrBlank() -> "Other"
-                    else -> languageName(language)
+                    else -> "General"
                 },
                 tvgId = id,
             )
