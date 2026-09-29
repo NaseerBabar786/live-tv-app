@@ -117,19 +117,19 @@
   .sponsor:hover { background: rgba(255,214,0,.18); }
   .thanks { margin: 0 0 8px; color: var(--text); font-size: 15px; }
   .thanks a { color: var(--focus); }
-  .ad { display: block; width: fit-content; margin: 0 auto; line-height: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,.35); transition: transform .15s; }
-  .ad img { display: block; max-width: 100%; height: auto; }
-  .ad:hover, .ad:focus-visible { transform: scale(1.02); }
-  .ad-top { margin-top: 8px; }
-  .ad-top img { width: auto; }
-  .ad-rect { margin-top: 8px; }
+  .bz { display: block; width: fit-content; margin: 0 auto; line-height: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,.35); transition: transform .15s; }
+  .bz img { display: block; max-width: 100%; height: auto; }
+  .bz:hover, .bz:focus-visible { transform: scale(1.02); }
+  .bz-top { margin-top: 8px; }
+  .bz-top img { width: auto; }
+  .bz-square { margin-top: 8px; }
   .guide-wrap { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: start; }
-  .ad-half { position: sticky; top: 84px; }
-  @media (max-width: 900px) { .guide-wrap { grid-template-columns: 1fr; } .ad-half { display: none; } }
-  .ad-rail { position: fixed; top: 96px; display: none; z-index: 5; }
-  .ad-left { left: calc((100vw - 1200px) / 4 - 80px); }
-  .ad-right { right: calc((100vw - 1200px) / 4 - 80px); }
-  @media (min-width: 1580px) and (min-height: 720px) { .ad-rail { display: block; } }
+  .bz-tall { position: sticky; top: 84px; }
+  @media (max-width: 900px) { .guide-wrap { grid-template-columns: 1fr; } .bz-tall { display: none; } }
+  .bz-rail { position: fixed; top: 96px; display: none; z-index: 5; }
+  .bz-left { left: calc((100vw - 1200px) / 4 - 80px); }
+  .bz-right { right: calc((100vw - 1200px) / 4 - 80px); }
+  @media (min-width: 1580px) and (min-height: 720px) { .bz-rail { display: block; } }
   footer { border-top: 1px solid var(--surface-2); padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
 </style>
 </head>
@@ -149,8 +149,8 @@
   </div>
 </header>
 
-<a class="ad ad-rail ad-left" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="Bulk Bazaar Inc."><img src="ads/bulkbazaar-160x600.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags" width="160" height="600" loading="lazy"></a>
-<a class="ad ad-rail ad-right" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="Bulk Bazaar Inc."><img src="ads/bulkbazaar-160x600.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags" width="160" height="600" loading="lazy"></a>
+<a class="bz bz-rail bz-left" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener" aria-label="Bulk Bazaar Inc."><img src="media/bz-side.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags" width="160" height="600" loading="lazy"></a>
+<a class="bz bz-rail bz-right" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener" aria-label="Bulk Bazaar Inc."><img src="media/bz-side.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags" width="160" height="600" loading="lazy"></a>
 
 <main id="top" class="wrap">
   <div class="hero">
@@ -166,10 +166,10 @@
     <img src="tv-photo.jpg" alt="The Live TV app on a television, showing the channel list">
   </div>
 
-  <a class="ad ad-top" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="Bulk Bazaar Inc.: wholesale T-shirt bags">
+  <a class="bz bz-top" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener" aria-label="Bulk Bazaar Inc.: wholesale T-shirt bags">
     <picture>
-      <source media="(min-width: 760px)" srcset="ads/bulkbazaar-728x90.png">
-      <img src="ads/bulkbazaar-320x100.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags. Buy in bulk and save. Get a quote." width="320" height="100">
+      <source media="(min-width: 760px)" srcset="media/bz-wide.png">
+      <img src="media/bz-phone.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags. Buy in bulk and save. Get a quote." width="320" height="100">
     </picture>
   </a>
 
@@ -192,8 +192,8 @@
     <button class="btn more hidden" id="more">Show more channels</button>
   </section>
 
-  <a class="ad ad-rect" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="Bulk Bazaar Inc.: wholesale T-shirt bags">
-    <img src="ads/bulkbazaar-300x250.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags. Get a quote." width="300" height="250" loading="lazy">
+  <a class="bz bz-square" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener" aria-label="Bulk Bazaar Inc.: wholesale T-shirt bags">
+    <img src="media/bz-square.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags. Get a quote." width="300" height="250" loading="lazy">
   </a>
 
   <section id="download">
@@ -287,8 +287,8 @@
         <p class="small">The broadcaster may be offline, or the channel only plays in its own country. Some channels play in the app but not in a web browser.</p>
       </div>
     </div>
-    <a class="ad ad-half" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener sponsored" aria-label="Bulk Bazaar Inc.: wholesale T-shirt bags">
-      <img src="ads/bulkbazaar-300x600.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags. Get a quote." width="300" height="600" loading="lazy">
+    <a class="bz bz-tall" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener" aria-label="Bulk Bazaar Inc.: wholesale T-shirt bags">
+      <img src="media/bz-tall.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags. Get a quote." width="300" height="600" loading="lazy">
     </a>
     </div>
   </section>
