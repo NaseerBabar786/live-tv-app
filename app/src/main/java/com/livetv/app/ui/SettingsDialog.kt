@@ -1,5 +1,17 @@
 package com.livetv.app.ui
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.livetv.app.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -164,6 +176,8 @@ fun SettingsDialog(
                     onClick = { showingGuide = true },
                     modifier = Modifier.fillMaxWidth().focusGlow(),
                 ) { Text(INSTALL_GUIDE_TITLE) }
+
+                BulkBazaarBanner()
             }
         },
         confirmButton = {
@@ -380,4 +394,34 @@ private fun CountryPicker(
         confirmButton = {},
         dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Back") } },
     )
+}
+
+/** Bulk Bazaar Inc.'s banner; opens bulkbazaar.ca. Uses the wide banner when there is room. */
+@Composable
+private fun BulkBazaarBanner() {
+    val context = LocalContext.current
+    val shape = RoundedCornerShape(8.dp)
+    BoxWithConstraints(Modifier.fillMaxWidth().padding(top = 4.dp)) {
+        val wide = maxWidth >= 440.dp
+        Image(
+            painter = painterResource(if (wide) R.drawable.bulkbazaar_wide else R.drawable.bulkbazaar_phone),
+            contentDescription = "Bulk Bazaar Inc.: wholesale T-shirt bags. Visit bulkbazaar.ca",
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(if (wide) 728f / 90f else 320f / 100f)
+                .focusGlow(shape)
+                .clip(shape)
+                .clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bulkbazaar.ca"))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    try {
+                        context.startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+                        // TVs often have no web browser.
+                        Toast.makeText(context, "Visit www.bulkbazaar.ca", Toast.LENGTH_LONG).show()
+                    }
+                },
+        )
+    }
 }
