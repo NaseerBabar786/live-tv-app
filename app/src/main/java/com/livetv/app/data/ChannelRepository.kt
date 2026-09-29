@@ -66,7 +66,9 @@ class ChannelRepository(context: Context) {
                 else -> M3uParser.parse(downloadCached(source, source))
             }
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
-            channels
+            // Lists can repeat a stream (e.g. one channel filed under two names). The
+            // stream URL is the channel's key in the grid, and a repeated key crashes it.
+            channels.distinctBy { it.id }
         }
     }
 
