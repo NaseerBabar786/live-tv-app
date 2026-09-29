@@ -29,6 +29,8 @@ data class UiState(
     val category: String? = null,
     val playlistSource: String = "",
     val playing: Channel? = null,
+    /** The channel watched most recently, so going back lands on it in the list. */
+    val lastWatchedId: String? = null,
     val countries: List<Famelack.Country> = emptyList(),
 ) {
     /** Screen title: the selected country's name when showing free channels by country. */
@@ -132,7 +134,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun play(channel: Channel) {
         repo.lastChannelUrl = channel.url
-        _state.update { it.copy(playing = channel) }
+        _state.update { it.copy(playing = channel, lastWatchedId = channel.id) }
     }
 
     fun stop() = _state.update { it.copy(playing = null) }

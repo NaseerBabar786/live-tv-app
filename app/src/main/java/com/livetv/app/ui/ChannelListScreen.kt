@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -39,7 +40,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameNanos
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -69,6 +75,19 @@ fun ChannelListScreen(
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
     var showSettings by rememberSaveable { mutableStateOf(false) }
+    val gridState = rememberLazyGridState()
+    val lastWatchedFocus = remember { FocusRequester() }
+
+    // Coming back from the player: scroll to the channel that was playing and put the
+    // remote's cursor on it.
+    LaunchedEffect(Unit) {
+        val index = state.visibleChannels.indexOfFirst { it.id == state.lastWatchedId }
+        if (index >= 0) {
+            gridState.scrollToItem(index)
+            withFrameNanos { }
+            runCatching { lastWatchedFocus.requestFocus() }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -160,6 +179,7 @@ fun ChannelListScreen(
                         contentPadding = PaddingValues(12.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
+                        state = gridState,
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         items(channels, key = { it.id }) { channel ->
@@ -168,6 +188,7 @@ fun ChannelListScreen(
                                 favorite = channel.id in state.favorites,
                                 onClick = { onPlay(channel) },
                                 onToggleFavorite = { onToggleFavorite(channel) },
+                                focusRequester = lastWatchedFocus.takeIf { channel.id == state.lastWatchedId },
                             )
                         }
                     }
@@ -221,6 +242,7 @@ private fun ChannelCard(
     favorite: Boolean,
     onClick: () -> Unit,
     onToggleFavorite: () -> Unit,
+    focusRequester: FocusRequester? = null,
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -228,6 +250,7 @@ private fun ChannelCard(
             .fillMaxWidth()
             .focusGlow(CardShape)
             .clip(CardShape)
+            .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
             .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
     ) {
         Box(
