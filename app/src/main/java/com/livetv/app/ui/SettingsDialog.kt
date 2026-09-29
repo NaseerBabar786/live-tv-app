@@ -96,7 +96,7 @@ fun SettingsDialog(
         onDismissRequest = onDismiss,
         title = {
             Column {
-                Text("Channels")
+                Text("Settings")
                 if (appVersion != null) {
                     Text(
                         "Version $appVersion",
