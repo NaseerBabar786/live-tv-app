@@ -396,19 +396,19 @@ private fun CountryPicker(
     )
 }
 
-/** Bulk Bazaar Inc.'s banner; opens bulkbazaar.ca. Uses the wide banner when there is room. */
+/** Bulk Bazaar Inc.'s banner at 80% width; opens bulkbazaar.ca. Uses the wide banner when there is room. */
 @Composable
 private fun BulkBazaarBanner() {
     val context = LocalContext.current
     val shape = RoundedCornerShape(8.dp)
-    BoxWithConstraints(Modifier.fillMaxWidth().padding(top = 4.dp)) {
+    BoxWithConstraints(Modifier.fillMaxWidth().padding(top = 4.dp), contentAlignment = Alignment.Center) {
         val wide = maxWidth >= 440.dp
         Image(
             painter = painterResource(if (wide) R.drawable.bulkbazaar_wide else R.drawable.bulkbazaar_phone),
             contentDescription = "Bulk Bazaar Inc.: wholesale T-shirt bags. Visit bulkbazaar.ca",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.8f)
                 .aspectRatio(if (wide) 728f / 90f else 320f / 100f)
                 .focusGlow(shape)
                 .clip(shape)
