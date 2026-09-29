@@ -68,8 +68,6 @@ fun ChannelListScreen(
     onToggleFavorite: (Channel) -> Unit,
     onQueryChange: (String) -> Unit,
     onFilterChange: (String) -> Unit,
-    onLanguageChange: (String?) -> Unit,
-    onCategoryChange: (String?) -> Unit,
     onRefresh: () -> Unit,
     onSaveSource: (String) -> Unit,
 ) {
@@ -135,22 +133,6 @@ fun ChannelListScreen(
                     selected = state.filter,
                     onSelect = onFilterChange,
                 )
-                val languages = state.languages
-                if (languages.size > 1) {
-                    ChipRow(
-                        items = listOf(ALL_LANGUAGES) + languages,
-                        selected = state.language ?: ALL_LANGUAGES,
-                        onSelect = { onLanguageChange(it.takeUnless { l -> l == ALL_LANGUAGES }) },
-                    )
-                }
-                val categories = state.categories
-                if (categories.size > 1) {
-                    ChipRow(
-                        items = listOf(ALL_TYPES) + categories,
-                        selected = state.category ?: ALL_TYPES,
-                        onSelect = { onCategoryChange(it.takeUnless { c -> c == ALL_TYPES }) },
-                    )
-                }
                 if (!state.loading && state.channels.isNotEmpty()) {
                     Text(
                         "${state.visibleChannels.size} channels",
@@ -209,9 +191,6 @@ fun ChannelListScreen(
         )
     }
 }
-
-private const val ALL_LANGUAGES = "All languages"
-private const val ALL_TYPES = "All types"
 
 @Composable
 private fun ChipRow(items: List<String>, selected: String, onSelect: (String) -> Unit) {
