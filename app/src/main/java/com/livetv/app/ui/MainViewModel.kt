@@ -16,6 +16,16 @@ import kotlinx.coroutines.launch
 const val FILTER_ALL = "All"
 const val FILTER_FAVORITES = "Favorites"
 
+/** Filter keys for language and genre chips, e.g. "lang:Urdu" or "genre:News". */
+private const val LANG_PREFIX = "lang:"
+private const val GENRE_PREFIX = "genre:"
+
+/** The text shown on a filter chip. */
+fun filterLabel(key: String): String = key.removePrefix(LANG_PREFIX).removePrefix(GENRE_PREFIX)
+
+/** Genres that are not really genres, so they get no chip. */
+private val notGenres = setOf("Geo-blocked")
+
 data class UiState(
     val loading: Boolean = true,
     val error: String? = null,
@@ -43,15 +53,32 @@ data class UiState(
                 ?: "Live TV"
         }
 
-    /** First chip row, in playlist order (e.g. Pakistani, Indian, Canadian). */
-    val groups: List<String>
-        get() = listOf(FILTER_ALL, FILTER_FAVORITES) + channels.mapNotNull { it.group }.distinct()
+    /**
+     * The filter row: All, Favorites, then countries in playlist order (e.g. Pakistani,
+     * Indian, Canadian), then languages and genres, each with the most channels first.
+     */
+    val filters: List<String>
+        get() {
+            val countries = channels.mapNotNull { it.group }.distinct()
+            val languages = byCount(channels.mapNotNull { it.language }.filter { it != "Other" })
+            val genres = byCount(channels.mapNotNull { it.category }.filter { it !in notGenres })
+                .sortedBy { it == "General" }
+            return listOf(FILTER_ALL, FILTER_FAVORITES) + countries +
+                languages.map { LANG_PREFIX + it } + genres.map { GENRE_PREFIX + it }
+        }
+
+    private fun byCount(values: List<String>): List<String> =
+        values.groupingBy { it }.eachCount().entries
+            .sortedWith(compareBy({ -it.value }, { it.key }))
+            .map { it.key }
 
     private val inGroup: List<Channel>
         get() = channels.filter {
-            when (filter) {
-                FILTER_ALL -> true
-                FILTER_FAVORITES -> it.id in favorites
+            when {
+                filter == FILTER_ALL -> true
+                filter == FILTER_FAVORITES -> it.id in favorites
+                filter.startsWith(LANG_PREFIX) -> it.language == filter.removePrefix(LANG_PREFIX)
+                filter.startsWith(GENRE_PREFIX) -> it.category == filter.removePrefix(GENRE_PREFIX)
                 else -> it.group == filter
             }
         }

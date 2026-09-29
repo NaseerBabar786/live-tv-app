@@ -143,7 +143,7 @@ fun ChannelListScreen(
         ) {
             Column(Modifier.fillMaxSize()) {
                 ChipRow(
-                    items = state.groups,
+                    items = state.filters,
                     selected = state.filter,
                     onSelect = onFilterChange,
                 )
@@ -216,7 +216,7 @@ private fun ChipRow(items: List<String>, selected: String, onSelect: (String) ->
             FilterChip(
                 selected = selected == item,
                 onClick = { onSelect(item) },
-                label = { Text(item) },
+                label = { Text(filterLabel(item)) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = AccentBlue,
                     selectedLabelColor = Color.White,
