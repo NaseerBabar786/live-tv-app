@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,7 +35,10 @@ private val colors = darkColorScheme(
 
 @Composable
 fun LiveCamTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = colors, content = content)
+    // The Surface sets the default text and icon colour to light, otherwise plain Text is black.
+    MaterialTheme(colorScheme = colors) {
+        Surface(color = colors.background, contentColor = colors.onBackground, content = content)
+    }
 }
 
 /**

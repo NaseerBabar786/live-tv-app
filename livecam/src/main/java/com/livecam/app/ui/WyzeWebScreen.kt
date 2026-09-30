@@ -46,6 +46,7 @@ const val WYZE_WEB_VIEW_URL = "https://view.wyze.com/live"
  * browser viewer, inside the app. The sign-in is kept in the WebView's cookies, so it is
  * only needed once per device. Which cameras play live depends on the Wyze plan
  * (free accounts get one camera per month, Cam Plus each licensed camera).
+ * On a TV the arrow keys move a pointer over the page and OK clicks (see [CursorWebView]).
  */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -53,7 +54,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     var progress by remember { mutableIntStateOf(0) }
     val webView = remember {
-        WebView(context).apply {
+        CursorWebView(context).apply {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.mediaPlaybackRequiresUserGesture = false

@@ -15,6 +15,9 @@ network. Kotlin, Jetpack Compose and Media3 ExoPlayer (RTSP + HLS).
 - RTSP over TCP by default, low-latency buffering, automatic reconnect
 - Screen stays on while the app is open, for a camera wall on the TV
 - Camera list is saved only on the device
+- Updates itself: at start it checks GitHub for a newer `livecam-v…` release, downloads it
+  and opens Android's installer (Android always asks you to press Install). The running
+  version shows next to the title.
 - Wyze cameras: the Wyze button opens Wyze Web View (view.wyze.com), Wyze's official
   browser live view, inside the app. Sign in once with your Wyze app account. Free Wyze
   accounts get live view of one camera per month; Cam Plus plays each licensed camera

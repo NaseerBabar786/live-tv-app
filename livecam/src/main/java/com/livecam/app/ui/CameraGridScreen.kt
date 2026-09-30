@@ -57,6 +57,7 @@ fun CameraGridScreen(
     onEdit: (Camera) -> Unit,
     onAdd: () -> Unit,
     onOpenWyze: () -> Unit,
+    version: String,
 ) {
     Column(
         Modifier
@@ -73,6 +74,8 @@ fun CameraGridScreen(
             Icon(Icons.Default.Videocam, contentDescription = null, tint = LiveRed)
             Spacer(Modifier.width(10.dp))
             Text("Live Cam", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.width(8.dp))
+            Text("v$version", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.weight(1f))
             OutlinedButton(onClick = onOpenWyze, modifier = Modifier.focusRing(CircleShape)) {
                 Text("Wyze")
