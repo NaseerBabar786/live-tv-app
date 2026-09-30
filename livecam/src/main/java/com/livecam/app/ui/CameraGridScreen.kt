@@ -29,6 +29,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -55,6 +56,7 @@ fun CameraGridScreen(
     onWatch: (Camera) -> Unit,
     onEdit: (Camera) -> Unit,
     onAdd: () -> Unit,
+    onOpenWyze: () -> Unit,
 ) {
     Column(
         Modifier
@@ -72,7 +74,11 @@ fun CameraGridScreen(
             Spacer(Modifier.width(10.dp))
             Text("Live Cam", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             Spacer(Modifier.weight(1f))
+            OutlinedButton(onClick = onOpenWyze, modifier = Modifier.focusRing(CircleShape)) {
+                Text("Wyze")
+            }
             if (cameras.isNotEmpty()) {
+                Spacer(Modifier.width(10.dp))
                 Button(onClick = onAdd, modifier = Modifier.focusRing(CircleShape)) {
                     Icon(Icons.Default.Add, contentDescription = null)
                     Spacer(Modifier.width(6.dp))
@@ -82,7 +88,7 @@ fun CameraGridScreen(
         }
 
         if (cameras.isEmpty()) {
-            EmptyState(onAdd)
+            EmptyState(onAdd, onOpenWyze)
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 300.dp),
@@ -168,7 +174,7 @@ fun LiveBadge() {
 }
 
 @Composable
-private fun EmptyState(onAdd: () -> Unit) {
+private fun EmptyState(onAdd: () -> Unit, onOpenWyze: () -> Unit) {
     Column(
         Modifier.fillMaxSize().padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -180,7 +186,7 @@ private fun EmptyState(onAdd: () -> Unit) {
         Spacer(Modifier.size(8.dp))
         Text(
             "Add your CCTV camera or NVR with its IP address. Most Hikvision, Dahua, Reolink, " +
-                "Tapo and ONVIF cameras work over RTSP.",
+                "Tapo and ONVIF cameras work over RTSP. Wyze cameras play through your Wyze account.",
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.widthIn(max = 420.dp),
@@ -190,6 +196,10 @@ private fun EmptyState(onAdd: () -> Unit) {
             Icon(Icons.Default.Add, contentDescription = null)
             Spacer(Modifier.width(6.dp))
             Text("Add camera")
+        }
+        Spacer(Modifier.size(12.dp))
+        OutlinedButton(onClick = onOpenWyze, modifier = Modifier.focusRing(CircleShape)) {
+            Text("Sign in with Wyze")
         }
     }
 }

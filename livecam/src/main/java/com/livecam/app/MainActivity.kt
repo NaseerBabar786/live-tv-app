@@ -7,14 +7,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livecam.app.ui.CameraEditor
 import com.livecam.app.ui.CameraGridScreen
 import com.livecam.app.ui.CamerasViewModel
 import com.livecam.app.ui.LiveCamTheme
 import com.livecam.app.ui.LiveViewScreen
+import com.livecam.app.ui.WyzeWebScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -29,7 +32,10 @@ class MainActivity : ComponentActivity() {
             LiveCamTheme {
                 val state by viewModel.state.collectAsStateWithLifecycle()
                 val watching = state.watching
-                if (watching != null) {
+                var showWyze by rememberSaveable { mutableStateOf(false) }
+                if (showWyze) {
+                    WyzeWebScreen(onBack = { showWyze = false })
+                } else if (watching != null) {
                     val index = state.cameras.indexOf(watching)
                     LiveViewScreen(
                         camera = watching,
@@ -44,6 +50,7 @@ class MainActivity : ComponentActivity() {
                         onWatch = viewModel::watch,
                         onEdit = viewModel::startEdit,
                         onAdd = viewModel::startAdd,
+                        onOpenWyze = { showWyze = true },
                     )
                 }
                 state.editing?.let { editing ->
@@ -54,10 +61,6 @@ class MainActivity : ComponentActivity() {
                         onDelete = { viewModel.delete(editing) },
                         onCancel = viewModel::cancelEdit,
                     )
-                }
-                // First launch: open the add dialog straight away.
-                LaunchedEffect(Unit) {
-                    if (savedInstanceState == null && state.cameras.isEmpty()) viewModel.startAdd()
                 }
             }
         }

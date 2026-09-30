@@ -15,10 +15,14 @@ network. Kotlin, Jetpack Compose and Media3 ExoPlayer (RTSP + HLS).
 - RTSP over TCP by default, low-latency buffering, automatic reconnect
 - Screen stays on while the app is open, for a camera wall on the TV
 - Camera list is saved only on the device
+- Wyze cameras: the Wyze button opens Wyze Web View (view.wyze.com), Wyze's official
+  browser live view, inside the app. Sign in once with your Wyze app account. Free Wyze
+  accounts get live view of one camera per month; Cam Plus plays each licensed camera
+  and Cam Unlimited plays all of them.
 
-Wyze cameras have no public stream API. To use them, run
-[docker-wyze-bridge](https://github.com/mrlt8/docker-wyze-bridge) on a computer or NAS and
-pick "Wyze (docker-wyze-bridge)" with that machine's IP.
+Wyze cameras have no public stream API. Besides Wyze Web View, they can play in the camera
+grid through [docker-wyze-bridge](https://github.com/mrlt8/docker-wyze-bridge) running on an
+always-on computer or NAS: pick "Wyze (docker-wyze-bridge)" with that machine's IP.
 
 ## Build
 
