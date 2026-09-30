@@ -189,19 +189,17 @@ fun ChannelListScreen(
                     )
                     return@Column
                 }
-                // One row: All, Favorites, then genres (countries are picked in Settings).
+                // One row: All, then genres (countries are picked in Settings; favorites lead the list).
                 // All clears every filter; tapping a selected genre clears it.
                 ChipRow(
-                    items = listOf(FILTER_ALL, FILTER_FAVORITES) + state.categories,
+                    items = listOf(FILTER_ALL) + state.categories,
                     selected = setOfNotNull(
                         FILTER_ALL.takeIf { state.filter == FILTER_ALL && state.category == null },
-                        state.filter.takeIf { it == FILTER_FAVORITES },
                         state.category,
                     ),
                     onSelect = {
                         when (it) {
                             FILTER_ALL -> onFilterChange(FILTER_ALL)
-                            FILTER_FAVORITES -> onFilterChange(if (state.filter == FILTER_FAVORITES) FILTER_ALL else FILTER_FAVORITES)
                             else -> onCategoryChange(it.takeUnless { c -> c == state.category })
                         }
                     },
