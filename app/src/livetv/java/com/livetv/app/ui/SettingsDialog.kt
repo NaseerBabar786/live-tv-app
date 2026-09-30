@@ -112,15 +112,19 @@ fun SettingsDialog(
         return
     }
     // The starting mix (Pakistani, Indian, Canadian, UK and USA) shows as those five countries picked.
+    val allCountries = currentSource == Famelack.SOURCE_ALL
     val picked = Famelack.pickedCountries(currentSource)
         ?: Famelack.MIX.map { it.country }.takeIf { currentSource == Famelack.SOURCE_MIX }
+        ?: countries.map { it.code }.takeIf { allCountries }
 
     if (pickingCountries) {
         MultiCountryPicker(
             countries = countries,
             initial = picked ?: Famelack.MIX.map { it.country },
             onDismiss = { pickingCountries = false },
-            onDone = { onSave(Famelack.pickSource(it)) },
+            onDone = {
+                onSave(if (it.size == countries.size) Famelack.SOURCE_ALL else Famelack.pickSource(it))
+            },
         )
         return
     }
@@ -169,6 +173,7 @@ fun SettingsDialog(
                 SourceButton(
                     label = when {
                         countries.isEmpty() -> "Loading countries…"
+                        allCountries -> "All countries"
                         picked != null -> "Your countries (${picked.size})"
                         else -> "Choose countries…"
                     },
@@ -288,7 +293,32 @@ private fun MultiCountryPicker(
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
+                val all = countries.isNotEmpty() && chosen.size == countries.size
                 LazyColumn(Modifier.heightIn(max = 420.dp)) {
+                    if (query.isBlank()) {
+                        item(key = "all") {
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .focusGlow(ChipShape)
+                                    .clickable { chosen = if (all) emptyList() else countries.map { it.code } }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Checkbox(checked = all, onCheckedChange = null)
+                                Text(
+                                    "All countries",
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.weight(1f).padding(start = 8.dp),
+                                )
+                                Text(
+                                    "${countries.sumOf { it.channelCount }}",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(end = 8.dp),
+                                )
+                            }
+                        }
+                    }
                     items(shown, key = { it.code }) { country ->
                         val checked = country.code in chosen
                         Row(
@@ -318,7 +348,15 @@ private fun MultiCountryPicker(
                 onClick = { onDone(chosen) },
                 enabled = chosen.isNotEmpty(),
                 modifier = Modifier.focusGlow(),
-            ) { Text(if (chosen.isEmpty()) "Tick a country" else "Show ${chosen.size} countries") }
+            ) {
+                Text(
+                    when {
+                        chosen.isEmpty() -> "Tick a country"
+                        all -> "Show all countries"
+                        else -> "Show ${chosen.size} countries"
+                    }
+                )
+            }
         },
         dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Back") } },
     )
