@@ -1,6 +1,8 @@
 package com.livecam.app.ui
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import android.os.SystemClock
 import android.webkit.ConsoleMessage
 import android.webkit.CookieManager
 import android.webkit.PermissionRequest
@@ -25,6 +27,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -89,6 +92,22 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                 override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
                     pageUrl = url.orEmpty()
                     if (!isReload) problem = null
+                    // After sign-in Wyze lands on its account site (my.wyze.com/home), which shows
+                    // nothing here. Go on to the live view, but only a few times so a redirect
+                    // back from view.wyze.com can't loop forever.
+                    if (isWyzeAccountHome(url)) {
+                        val now = SystemClock.elapsedRealtime()
+                        if (now - autoLiveWindowStart > AUTO_LIVE_WINDOW_MS) {
+                            autoLiveWindowStart = now
+                            autoLiveCount = 0
+                        }
+                        if (autoLiveCount < AUTO_LIVE_MAX) {
+                            autoLiveCount++
+                            view.post { view.loadUrl(WYZE_WEB_VIEW_URL) }
+                        } else {
+                            problem = "Wyze keeps opening its account page; try Live view"
+                        }
+                    }
                 }
 
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
@@ -181,6 +200,12 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                 )
             }
             IconButton(
+                onClick = { webView.loadUrl(WYZE_WEB_VIEW_URL) },
+                modifier = Modifier.focusRing(CircleShape),
+            ) {
+                Icon(Icons.Default.Videocam, contentDescription = "Live view")
+            }
+            IconButton(
                 onClick = { webView.reload() },
                 modifier = Modifier.focusRequester(reloadFocus).focusRing(CircleShape),
             ) {
@@ -194,6 +219,19 @@ fun WyzeWebScreen(onBack: () -> Unit) {
             AndroidView(factory = { webView }, modifier = Modifier.fillMaxSize())
         }
     }
+}
+
+private var autoLiveWindowStart = 0L
+private var autoLiveCount = 0
+private const val AUTO_LIVE_WINDOW_MS = 60_000L
+private const val AUTO_LIVE_MAX = 2
+
+/** True for Wyze's account pages that sign-in ends on, but not its login or two-factor pages. */
+internal fun isWyzeAccountHome(url: String?): Boolean {
+    val uri = runCatching { Uri.parse(url) }.getOrNull() ?: return false
+    if (uri.host != "my.wyze.com") return false
+    val path = uri.path.orEmpty().trimEnd('/')
+    return path.isEmpty() || path == "/home" || path == "/dashboard"
 }
 
 private const val DESKTOP_USER_AGENT =
