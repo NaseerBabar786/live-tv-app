@@ -164,14 +164,20 @@ fun ChannelListScreen(
                 }
                 ChipRow(
                     items = state.groups,
-                    selected = state.filter,
+                    selected = setOfNotNull(state.filter),
                     onSelect = onFilterChange,
                 )
-                // Genres have no "All" chip: tapping the selected one again clears it.
+                // Favorites, then genres. Neither has an "All" chip: tapping the selected one again clears it.
                 ChipRow(
-                    items = state.categories,
-                    selected = state.category,
-                    onSelect = { onCategoryChange(it.takeUnless { c -> c == state.category }) },
+                    items = listOf(FILTER_FAVORITES) + state.categories,
+                    selected = setOfNotNull(state.filter.takeIf { it == FILTER_FAVORITES }, state.category),
+                    onSelect = {
+                        when {
+                            it != FILTER_FAVORITES -> onCategoryChange(it.takeUnless { c -> c == state.category })
+                            state.filter == FILTER_FAVORITES -> onFilterChange(FILTER_ALL)
+                            else -> onFilterChange(FILTER_FAVORITES)
+                        }
+                    },
                 )
                 if (!state.loading && state.channels.isNotEmpty()) {
                     Text(
@@ -223,7 +229,7 @@ fun ChannelListScreen(
 }
 
 @Composable
-private fun ChipRow(items: List<String>, selected: String?, onSelect: (String) -> Unit) {
+private fun ChipRow(items: List<String>, selected: Set<String>, onSelect: (String) -> Unit) {
     // Without the extra invisible touch margin around chips, the focus glow hugs the chip's edges.
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
         ChipRowContent(items, selected, onSelect)
@@ -231,14 +237,14 @@ private fun ChipRow(items: List<String>, selected: String?, onSelect: (String) -
 }
 
 @Composable
-private fun ChipRowContent(items: List<String>, selected: String?, onSelect: (String) -> Unit) {
+private fun ChipRowContent(items: List<String>, selected: Set<String>, onSelect: (String) -> Unit) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         items(items, key = { it }) { item ->
             FilterChip(
-                selected = selected == item,
+                selected = item in selected,
                 onClick = { onSelect(item) },
                 label = { Text(item) },
                 colors = FilterChipDefaults.filterChipColors(
