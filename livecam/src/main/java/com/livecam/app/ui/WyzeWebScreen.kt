@@ -33,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -56,6 +57,8 @@ import androidx.webkit.UserAgentMetadata
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
+import kotlinx.coroutines.delay
+import org.json.JSONArray
 
 /**
  * Wyze's own browser live view (moved from view.wyze.com to my.wyze.com in 2026).
@@ -103,14 +106,6 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                     pageInfo = null
                 }
 
-                override fun onPageFinished(view: WebView, url: String?) {
-                    view.postDelayed({
-                        view.evaluateJavascript(PAGE_INFO_JS) { result ->
-                            pageInfo = result?.trim('"')?.takeIf { it.isNotBlank() && it != "null" }
-                        }
-                    }, 5_000)
-                }
-
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
                     if (request.isForMainFrame) problem = "Page error: ${error.description}"
                 }
@@ -148,6 +143,16 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                 }
             }
             loadUrl(WYZE_WEB_VIEW_URL)
+        }
+    }
+    // Wyze's site changes pages without reloading, so re-read what the page shows every few seconds.
+    LaunchedEffect(webView) {
+        while (true) {
+            delay(4_000)
+            webView.evaluateJavascript(PAGE_INFO_JS) { result ->
+                pageInfo = runCatching { JSONArray("[$result]").optString(0) }.getOrNull()
+                    ?.takeIf { it.isNotBlank() && it != "null" }
+            }
         }
     }
     // Up at the top of the page moves to the Reload button; Down from the top bar goes back in.
@@ -201,7 +206,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                     ).joinToString("  ·  "),
                     style = MaterialTheme.typography.bodySmall,
                     color = if (problem != null) LiveRed else MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
+                    maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
@@ -262,12 +267,31 @@ private fun presentAsDesktop(webView: WebView) {
     }
 }
 
+/**
+ * Runs before Wyze's own scripts: report a desktop platform with no touch screen, and lay the
+ * page out 1600px wide (a TV's 960px counts as a tablet) so it gets the desktop layout.
+ */
 private const val DESKTOP_JS = """
 (function () {
   try {
     Object.defineProperty(Navigator.prototype, 'platform', { get: function () { return 'Linux x86_64'; } });
     Object.defineProperty(Navigator.prototype, 'maxTouchPoints', { get: function () { return 0; } });
   } catch (e) {}
+  if (window.top !== window) return;
+  var WIDE = 'width=1600';
+  function widen() {
+    var metas = document.querySelectorAll('meta[name="viewport"]');
+    if (!metas.length && document.head) {
+      var m = document.createElement('meta');
+      m.name = 'viewport';
+      m.content = WIDE;
+      document.head.appendChild(m);
+      return;
+    }
+    for (var i = 0; i < metas.length; i++) if (metas[i].content !== WIDE) metas[i].content = WIDE;
+  }
+  new MutationObserver(widen).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['content'] });
+  widen();
 })();
 """
 
@@ -275,8 +299,20 @@ private const val PAGE_INFO_JS = """
 (function () {
   var b = document.body;
   if (!b) return 'no page body';
-  var words = (b.innerText || '').split(/\s+/).filter(Boolean).length;
-  return words + ' words, ' + document.getElementsByTagName('*').length + ' elements, ' + window.innerWidth + 'px wide';
+  var text = (b.innerText || '').replace(/\s+/g, ' ').trim();
+  var words = text ? text.split(' ').length : 0;
+  var info = words + ' words, ' + document.getElementsByTagName('*').length + ' elements, ' + window.innerWidth + 'px wide';
+  if (text) info += ', text "' + text.slice(0, 40) + '"';
+  var el = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2);
+  if (el) {
+    var cls = typeof el.className === 'string' ? el.className.trim().split(/\s+/)[0] : '';
+    var r = el.getBoundingClientRect();
+    info += ', middle: ' + el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + (cls ? '.' + cls.slice(0, 30) : '') +
+      ' ' + Math.round(r.width) + 'x' + Math.round(r.height) + ' ' + getComputedStyle(el).backgroundColor;
+  }
+  var media = document.querySelectorAll('video, canvas, iframe').length;
+  if (media) info += ', ' + media + ' video/canvas/frames';
+  return info;
 })()
 """
 
