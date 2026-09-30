@@ -1,5 +1,6 @@
 package com.livetv.app.ui
 
+import androidx.compose.foundation.layout.IntrinsicSize
 import com.livetv.app.data.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -127,16 +128,27 @@ fun ChannelListScreen(
                             modifier = Modifier.fillMaxWidth(),
                         )
                     } else {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Column {
-                                AppLogo(size = 34.dp)
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Clock()
-                                    if (Edition.LIVE_TV) WeatherNow()
-                                }
+                        // Logo and title, with the clock and weather spread evenly underneath.
+                        Column(Modifier.width(IntrinsicSize.Max)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                AppLogo(size = 32.dp)
+                                Spacer(Modifier.width(10.dp))
+                                Text(
+                                    state.title,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
                             }
-                            Spacer(Modifier.width(12.dp))
-                            Text(state.title, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Clock()
+                                if (Edition.LIVE_TV) WeatherNow()
+                            }
                         }
                     }
                 },
@@ -434,8 +446,8 @@ private fun Clock() {
     }
     Text(
         format.format(now),
-        fontSize = 11.sp,
-        lineHeight = 13.sp,
+        fontSize = 13.sp,
+        lineHeight = 16.sp,
         fontWeight = FontWeight.Medium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         maxLines = 1,
@@ -454,9 +466,9 @@ private fun WeatherNow() {
     }
     weather?.let {
         Text(
-            "  $it",
-            fontSize = 11.sp,
-            lineHeight = 13.sp,
+            "$it",
+            fontSize = 13.sp,
+            lineHeight = 16.sp,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
