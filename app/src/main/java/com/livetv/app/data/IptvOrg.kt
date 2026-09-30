@@ -7,7 +7,48 @@ package com.livetv.app.data
  */
 object IptvOrg {
 
-    private const val BASE = "https://iptv-org.github.io/iptv"
+    const val BASE = "https://iptv-org.github.io/iptv"
+
+    /** The list of every playlist iptv-org publishes, with channel counts. */
+    const val CATALOGUE_URL = "https://raw.githubusercontent.com/iptv-org/iptv/master/PLAYLISTS.md"
+
+    enum class Kind(val title: String) { COUNTRY("Countries"), LANGUAGE("Languages"), CATEGORY("Categories"), REGION("Regions") }
+
+    /** One ready-made playlist: e.g. Pakistan (countries/pk.m3u) or News (categories/news.m3u). */
+    data class Listing(val kind: Kind, val name: String, val url: String, val channels: Int? = null)
+
+    private val tableRow = Regex("""<tr><td[^>]*>(.*?)</td><td[^>]*>(\d+)</td><td[^>]*><code>(https://\S+?\.m3u)</code>""")
+    private val listRow = Regex("""^- (.+?) <code>(https://\S+?\.m3u)</code>""")
+
+    /**
+     * Reads iptv-org's PLAYLISTS.md: categories and languages come as table rows with
+     * channel counts, countries and regions as a list (only top-level entries are kept,
+     * not provinces and cities). Country names lose their flag emoji.
+     */
+    fun parseCatalogue(markdown: String): List<Listing> {
+        var kind: Kind? = null
+        val out = mutableListOf<Listing>()
+        markdown.lineSequence().forEach { line ->
+            when {
+                line.startsWith("### Grouped by category") -> kind = Kind.CATEGORY
+                line.startsWith("### Grouped by language") -> kind = Kind.LANGUAGE
+                line.startsWith("#### Countries") -> kind = Kind.COUNTRY
+                line.startsWith("#### Regions") -> kind = Kind.REGION
+                line.startsWith("### ") -> kind = null
+                else -> {
+                    val k = kind ?: return@forEach
+                    tableRow.find(line)?.let { m ->
+                        val (name, count, url) = m.destructured
+                        out += Listing(k, name.trim(), url, count.toIntOrNull())
+                    } ?: listRow.find(line)?.let { m ->
+                        val (name, url) = m.destructured
+                        out += Listing(k, name.dropWhile { !it.isLetter() }.trim(), url)
+                    }
+                }
+            }
+        }
+        return out.distinctBy { it.url }
+    }
 
     /** Every channel, group-title = country name. */
     const val ALL_URL = "$BASE/index.country.m3u"
@@ -26,6 +67,13 @@ object IptvOrg {
 
     /** "Geo TV (1080p) [Not 24/7]" becomes "Geo TV". */
     fun cleanName(name: String): String = name.replace(resolution, "").replace(tag, "").trim().ifBlank { name }
+
+    /**
+     * For one of iptv-org's own playlists opened on its own: the channels' categories
+     * become the chips, names are cleaned and languages filled in.
+     */
+    fun convertPlaylist(entries: List<Channel>, languages: Map<String, String>): List<Channel> =
+        convert(entries, languages, section = null).map { it.copy(group = it.category, category = null) }
 
     /** Stream URL to its first listed language, from the [LANGUAGES_URL] playlist. */
     fun parseGroups(m3u: String): Map<String, String> {

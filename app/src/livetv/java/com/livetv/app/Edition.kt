@@ -73,6 +73,17 @@ fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> U
                 onDismiss()
                 viewModel.setProvider(it)
             },
+            playlists = state.playlists,
+            onSelectPlaylist = {
+                onDismiss()
+                viewModel.setPlaylistSource(it.source)
+            },
+            onAddPlaylist = { name, url ->
+                onDismiss()
+                viewModel.addPlaylist(name, url)
+            },
+            onRemovePlaylist = viewModel::removePlaylist,
+            loadCatalogue = { viewModel.playlistCatalogue() },
             countries = state.countries,
             languages = state.allLanguages,
             selectedLanguages = state.languageFilter,

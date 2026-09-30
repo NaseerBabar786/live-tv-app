@@ -50,8 +50,8 @@ data class UiState(
 
     /** Screen title: the selected country's name when showing free channels by country. */
     val title: String
-        get() = if (!Edition.LIVE_TV) {
-            playlists.firstOrNull { it.source == playlistSource }?.name ?: Edition.APP_NAME
+        get() = playlists.firstOrNull { it.source == playlistSource }?.name ?: if (!Edition.LIVE_TV) {
+            Edition.APP_NAME
         } else when (playlistSource) {
             Famelack.SOURCE_MIX -> "Live TV"
             Famelack.SOURCE_ALL -> "All countries"
@@ -158,12 +158,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     /** Adds the bundled demo playlist: streams their owners publish openly, plus vendor test streams. */
     fun addDemoPlaylist() = addPlaylist(DEMO_PLAYLIST_NAME, ChannelRepository.SOURCE_SAMPLE)
 
-    /** Forgets a playlist; when it was the one showing, switches to the next saved one (or none). */
+    /**
+     * Forgets a playlist. When it was the one showing, Live TV goes back to its built-in
+     * channels and Stream Player Plus to the next saved playlist (or none).
+     */
     fun removePlaylist(playlist: Playlist) {
         val list = repo.playlists.filter { it.source != playlist.source }
         repo.playlists = list
         _state.update { it.copy(playlists = list) }
-        if (playlist.source == _state.value.playlistSource) setPlaylistSource(list.firstOrNull()?.source ?: "")
+        if (playlist.source == _state.value.playlistSource) {
+            setPlaylistSource(if (Edition.LIVE_TV) "" else list.firstOrNull()?.source ?: "")
+        }
     }
 
     /** Switches Live TV between the main channel list and iptv-org's, keeping the chosen countries. */
@@ -173,6 +178,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(provider = provider, filter = FILTER_ALL, category = null) }
         reload()
     }
+
+    /** iptv-org's published playlists, for "Find playlists online". */
+    suspend fun playlistCatalogue() = repo.loadPlaylistCatalogue()
 
     fun setQuery(query: String) = _state.update { it.copy(query = query) }
 

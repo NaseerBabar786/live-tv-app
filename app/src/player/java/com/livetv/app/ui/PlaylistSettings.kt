@@ -57,7 +57,6 @@ fun PlaylistSettingsDialog(
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull()
     }
     var addingLink by rememberSaveable { mutableStateOf(false) }
-    var removing by remember { mutableStateOf<Playlist?>(null) }
 
     val pickFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         if (uri != null) {
@@ -65,38 +64,17 @@ fun PlaylistSettingsDialog(
             runCatching {
                 context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            onAdd(fileName(context, uri) ?: nextName(state.playlists), uri.toString())
+            onAdd(fileName(context, uri) ?: nextPlaylistName(state.playlists), uri.toString())
         }
     }
 
     if (addingLink) {
         AddLinkDialog(
-            suggestedName = nextName(state.playlists),
+            suggestedName = nextPlaylistName(state.playlists),
             onDismiss = { addingLink = false },
             onAdd = { name, url ->
                 addingLink = false
                 onAdd(name, url)
-            },
-        )
-        return
-    }
-
-    removing?.let { playlist ->
-        AlertDialog(
-            onDismissRequest = { removing = null },
-            title = { Text("Remove playlist?") },
-            text = { Text("\"${playlist.name}\" will be removed from ${Edition.APP_NAME}.") },
-            confirmButton = {
-                AccentButton(
-                    onClick = {
-                        removing = null
-                        onRemove(playlist)
-                    },
-                    modifier = Modifier.focusGlow(),
-                ) { Text("Remove") }
-            },
-            dismissButton = {
-                TextButton(onClick = { removing = null }, modifier = Modifier.focusGlow()) { Text("Cancel") }
             },
         )
         return
@@ -125,25 +103,12 @@ fun PlaylistSettingsDialog(
                 if (state.playlists.isEmpty()) {
                     Text("No playlists yet. Add one below.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                state.playlists.forEach { playlist ->
-                    val selected = playlist.source == state.playlistSource
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        val label: @Composable () -> Unit = {
-                            Text(
-                                if (selected) "✓ ${playlist.name}" else playlist.name,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                        val rowModifier = Modifier.weight(1f).focusGlow()
-                        if (selected) {
-                            AccentButton(onClick = { onSelect(playlist) }, modifier = rowModifier) { label() }
-                        } else {
-                            OutlinedButton(onClick = { onSelect(playlist) }, modifier = rowModifier) { label() }
-                        }
-                        TextButton(onClick = { removing = playlist }, modifier = Modifier.focusGlow()) { Text("Remove") }
-                    }
-                }
+                PlaylistRows(
+                    playlists = state.playlists,
+                    currentSource = state.playlistSource,
+                    onSelect = onSelect,
+                    onRemove = onRemove,
+                )
                 OutlinedButton(
                     onClick = { addingLink = true },
                     modifier = Modifier.fillMaxWidth().focusGlow(),
@@ -179,55 +144,6 @@ fun PlaylistSettingsDialog(
             TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Close") }
         },
     )
-}
-
-@Composable
-private fun AddLinkDialog(suggestedName: String, onDismiss: () -> Unit, onAdd: (String, String) -> Unit) {
-    var url by rememberSaveable { mutableStateOf("") }
-    var name by rememberSaveable { mutableStateOf("") }
-    val valid = url.trim().let { it.startsWith("http://", true) || it.startsWith("https://", true) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Add playlist link") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedTextField(
-                    value = url,
-                    onValueChange = { url = it },
-                    label = { Text("Playlist link (M3U)") },
-                    placeholder = { Text("https://…/playlist.m3u") },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Name (optional)") },
-                    placeholder = { Text(suggestedName) },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        },
-        confirmButton = {
-            AccentButton(
-                onClick = { onAdd(name.ifBlank { suggestedName }, url.trim()) },
-                enabled = valid,
-                modifier = Modifier.focusGlow(),
-            ) { Text("Add") }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Cancel") }
-        },
-    )
-}
-
-private fun nextName(playlists: List<Playlist>): String {
-    var n = playlists.size + 1
-    while (playlists.any { it.name == "Playlist $n" }) n++
-    return "Playlist $n"
 }
 
 /** The picked file's name without its extension, e.g. "My channels" for "My channels.m3u". */

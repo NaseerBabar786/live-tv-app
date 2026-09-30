@@ -44,6 +44,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Famelack
+import com.livetv.app.data.IptvOrg
+import com.livetv.app.data.Playlist
 
 /**
  * Lets the user choose which channels to show: Pakistani, Indian, Canadian, UK and USA,
@@ -54,6 +56,11 @@ fun SettingsDialog(
     currentSource: String,
     provider: String,
     onProviderChange: (String) -> Unit,
+    playlists: List<Playlist>,
+    onSelectPlaylist: (Playlist) -> Unit,
+    onAddPlaylist: (name: String, url: String) -> Unit,
+    onRemovePlaylist: (Playlist) -> Unit,
+    loadCatalogue: suspend () -> Result<List<IptvOrg.Listing>>,
     countries: List<Famelack.Country>,
     languages: List<String>,
     selectedLanguages: Set<String>,
@@ -69,6 +76,27 @@ fun SettingsDialog(
     var pickingCountries by rememberSaveable { mutableStateOf(false) }
     var pickingLanguages by rememberSaveable { mutableStateOf(false) }
     var showingGuide by rememberSaveable { mutableStateOf(false) }
+    var findingPlaylists by rememberSaveable { mutableStateOf(false) }
+    var addingLink by rememberSaveable { mutableStateOf(false) }
+
+    if (findingPlaylists) {
+        FindPlaylistsDialog(
+            saved = playlists,
+            load = loadCatalogue,
+            onAdd = { name, url -> onAddPlaylist("$name (iptv-org)", url) },
+            onDismiss = { findingPlaylists = false },
+        )
+        return
+    }
+
+    if (addingLink) {
+        AddLinkDialog(
+            suggestedName = nextPlaylistName(playlists),
+            onDismiss = { addingLink = false },
+            onAdd = onAddPlaylist,
+        )
+        return
+    }
 
     if (showingGuide) {
         InstallGuideDialog(onDismiss = { showingGuide = false })
@@ -174,6 +202,23 @@ fun SettingsDialog(
                         }
                     )
                 }
+
+                HorizontalDivider()
+                Text("My playlists", fontWeight = FontWeight.Bold)
+                PlaylistRows(
+                    playlists = playlists,
+                    currentSource = currentSource,
+                    onSelect = onSelectPlaylist,
+                    onRemove = onRemovePlaylist,
+                )
+                OutlinedButton(
+                    onClick = { findingPlaylists = true },
+                    modifier = Modifier.fillMaxWidth().focusGlow(),
+                ) { Text("🔍 Find playlists online") }
+                OutlinedButton(
+                    onClick = { addingLink = true },
+                    modifier = Modifier.fillMaxWidth().focusGlow(),
+                ) { Text("＋ Add playlist link") }
 
                 HorizontalDivider()
                 OutlinedButton(

@@ -105,6 +105,10 @@ class ChannelRepository(context: Context) {
                     downloadCached(source, Famelack.countryUrl(country)),
                     channelInfo,
                 )
+                source.startsWith(IptvOrg.BASE) -> IptvOrg.convertPlaylist(
+                    M3uParser.parse(downloadCached(source, source)),
+                    iptvLanguages(),
+                )
                 else -> M3uParser.parse(downloadCached(source, source))
             }
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
@@ -167,6 +171,14 @@ class ChannelRepository(context: Context) {
         runCatching {
             Famelack.parseInfo(appContext.assets.open("channel_info.json").bufferedReader().use { it.readText() })
         }.getOrDefault(emptyMap())
+    }
+
+    /** Every playlist iptv-org publishes, for "Find playlists online". */
+    suspend fun loadPlaylistCatalogue(): Result<List<IptvOrg.Listing>> = withContext(Dispatchers.IO) {
+        runCatching {
+            IptvOrg.parseCatalogue(downloadCached("iptv:catalogue", IptvOrg.CATALOGUE_URL))
+                .also { require(it.isNotEmpty()) { "No playlists found." } }
+        }
     }
 
     /** Countries that have free channels, for the country picker. */
