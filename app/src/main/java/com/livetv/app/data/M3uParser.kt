@@ -62,6 +62,9 @@ object M3uParser {
                             logo = attrs["tvg-logo"]?.takeIf { it.isNotBlank() },
                             group = (attrs["group-title"] ?: extGroup)?.takeIf { it.isNotBlank() },
                             tvgId = attrs["tvg-id"]?.takeIf { it.isNotBlank() },
+                            language = attrs["tvg-language"]?.substringBefore(';')?.takeIf { it.isNotBlank() },
+                            category = attrs["tvg-genre"]?.substringBefore(';')?.takeIf { it.isNotBlank() },
+                            country = attrs["tvg-country"]?.substringBefore(';')?.lowercase()?.takeIf { it.isNotBlank() },
                             userAgent = userAgent ?: attrs["http-user-agent"],
                             referrer = referrer ?: attrs["http-referrer"],
                         )

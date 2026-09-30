@@ -37,12 +37,13 @@ class ChannelRepository(context: Context) {
         get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
         set(value) = prefs.edit { putString(KEY_SOURCE, value.trim()) }
 
-    /** Live TV's channel list: [PROVIDER_FAMELACK] (the default) or [PROVIDER_IPTV_ORG]. */
+    /** Live TV's channel list: [PROVIDER_FAMELACK] (the default), [PROVIDER_IPTV_ORG] or [PROVIDER_CHECKED]. */
     var provider: String
         get() = prefs.getString(KEY_PROVIDER, null) ?: PROVIDER_FAMELACK
         set(value) = prefs.edit { putString(KEY_PROVIDER, value) }
 
     private val iptvOrg: Boolean get() = provider == PROVIDER_IPTV_ORG
+    private val checked: Boolean get() = provider == PROVIDER_CHECKED
 
     var favorites: Set<String>
         get() = prefs.getStringSet(KEY_FAVORITES, emptySet())?.toSet() ?: emptySet()
@@ -74,6 +75,13 @@ class ChannelRepository(context: Context) {
             val channels = when {
                 source == SOURCE_SAMPLE -> M3uParser.parse(readAsset())
                 source.startsWith("content://") -> M3uParser.parse(readContentUri(Uri.parse(source)))
+                checked && source == Famelack.SOURCE_MIX ->
+                    CheckedList.convert(M3uParser.parse(downloadCached("checked:mix", CheckedList.MIX_URL)))
+                checked && source == Famelack.SOURCE_ALL -> checkedAll()
+                checked && picked != null -> CheckedList.sections(checkedAll(), picked.map { code ->
+                    Famelack.MIX.firstOrNull { it.country == code } ?: Famelack.Section(code, "")
+                })
+                checked && country != null -> checkedAll().filter { it.country == country }
                 source == Famelack.SOURCE_MIX -> loadSections(Famelack.MIX)
                 source == Famelack.SOURCE_ALL && iptvOrg -> IptvOrg.convert(
                     M3uParser.parse(downloadCached("iptv:all", IptvOrg.ALL_URL)),
@@ -117,6 +125,10 @@ class ChannelRepository(context: Context) {
             channels.distinctBy { it.id }
         }
     }
+
+    /** Every channel in the daily-checked list on tv.bulkbazaar.ca. */
+    private fun checkedAll(): List<Channel> =
+        CheckedList.convert(M3uParser.parse(downloadCached("checked:all", CheckedList.ALL_URL)))
 
     /** Downloads several countries in parallel; a country that fails is skipped. */
     private suspend fun loadSections(sections: List<Famelack.Section>): List<Channel> =
@@ -246,5 +258,6 @@ class ChannelRepository(context: Context) {
         private const val KEY_PROVIDER = "provider"
         const val PROVIDER_FAMELACK = "famelack"
         const val PROVIDER_IPTV_ORG = "iptvorg"
+        const val PROVIDER_CHECKED = "checked"
     }
 }

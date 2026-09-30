@@ -162,6 +162,9 @@ fun SettingsDialog(
                 SourceButton("iptv-org list (more channels)", provider == ChannelRepository.PROVIDER_IPTV_ORG) {
                     onProviderChange(ChannelRepository.PROVIDER_IPTV_ORG)
                 }
+                SourceButton("Working channels only (checked daily)", provider == ChannelRepository.PROVIDER_CHECKED) {
+                    onProviderChange(ChannelRepository.PROVIDER_CHECKED)
+                }
 
                 HorizontalDivider()
                 Text("Languages", fontWeight = FontWeight.Bold)

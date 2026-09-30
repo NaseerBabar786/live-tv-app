@@ -12,6 +12,8 @@ data class Channel(
     /** Type of channel, e.g. "News" or "Sports". */
     val category: String? = null,
     val tvgId: String? = null,
+    /** Country code from tvg-country, lowercase (e.g. "pk"). */
+    val country: String? = null,
     val userAgent: String? = null,
     val referrer: String? = null,
     /** Backup stream URLs tried in order when [url] fails. */

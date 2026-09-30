@@ -323,7 +323,7 @@ def check(url, opts):
 
 def entry(ch, group):
     attrs = [f'tvg-id="{ch["id"]}"' if ch["id"] else "", f'tvg-logo="{ch["logo"]}"' if ch["logo"] else "",
-             f'group-title="{group}"', f'tvg-language="{ch["language"]}"' if ch["language"] else "",
+             f'tvg-country="{ch["country"].upper()}"', f'group-title="{group}"', f'tvg-language="{ch["language"]}"' if ch["language"] else "",
              f'tvg-genre="{ch["genre"]}"' if ch["genre"] else ""]
     lines = ["#EXTINF:-1 " + " ".join(a for a in attrs if a) + "," + ch["name"]]
     if ch["opts"].get("ua"):
