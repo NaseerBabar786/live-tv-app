@@ -29,7 +29,7 @@ jobs:
         run: python3 tools/build_logo_index.py
 
       - name: Run unit tests
-        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest
+        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest :livecam:testDebugUnitTest
 
       # Decodes the private signing key from the repository secrets, when set, so
       # every build is signed with the same key and updates install over the old app.
@@ -50,6 +50,16 @@ jobs:
         env:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
         run: ./gradlew assembleLivetvDebug assemblePlayerRelease bundlePlayerRelease
+
+      - name: Build Live Cam
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew :livecam:assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: live-cam-debug-apk
+          path: livecam/build/outputs/apk/debug/livecam-debug.apk
 
       - uses: actions/upload-artifact@v4
         with:
@@ -96,5 +106,25 @@ jobs:
             gh release create "$tag" StreamPlayerPlus.apk StreamPlayerPlus.aab \
               --title "Stream Player Plus $version" \
               --notes "Release build for Google Play (.aab) and for testing (.apk). Built from ${{ github.sha }}." \
+              --latest=false
+          fi
+
+      # Live Cam gets its own release per version, never marked "latest", so Live TV's
+      # download link and update check keep finding Live TV. Phones and TVs download it from
+      # https://github.com/NaseerBabar786/live-tv-app/releases/download/livecam-v<version>/LiveCam.apk
+      - name: Publish Live Cam
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep -oP 'versionName = "\K[^"]+' livecam/build.gradle.kts | head -1)
+          tag="livecam-v${version}"
+          cp livecam/build/outputs/apk/debug/livecam-debug.apk LiveCam.apk
+          if gh release view "$tag" > /dev/null 2>&1; then
+            gh release upload "$tag" LiveCam.apk --clobber
+          else
+            gh release create "$tag" LiveCam.apk \
+              --title "Live Cam $version" \
+              --notes "Debug build of the Live Cam app from ${{ github.sha }}." \
               --latest=false
           fi
