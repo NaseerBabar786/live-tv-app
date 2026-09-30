@@ -60,10 +60,6 @@ data class UiState(
                 ?: "Live TV"
         }
 
-    /** First chip row: countries in playlist order (e.g. Pakistani, Indian, Canadian). */
-    val groups: List<String>
-        get() = channels.mapNotNull { it.group }.distinct()
-
     private val inGroup: List<Channel>
         get() = channels.filter {
             when (filter) {

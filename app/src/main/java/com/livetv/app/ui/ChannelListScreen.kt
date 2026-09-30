@@ -162,13 +162,8 @@ fun ChannelListScreen(
                     )
                     return@Column
                 }
-                // Countries. Tapping the selected one again goes back to every channel.
-                ChipRow(
-                    items = state.groups,
-                    selected = setOfNotNull(state.filter),
-                    onSelect = { onFilterChange(if (it == state.filter) FILTER_ALL else it) },
-                )
-                // All, Favorites, then genres. All clears every filter; tapping a selected genre clears it.
+                // One row: All, Favorites, then genres (countries are picked in Settings).
+                // All clears every filter; tapping a selected genre clears it.
                 ChipRow(
                     items = listOf(FILTER_ALL, FILTER_FAVORITES) + state.categories,
                     selected = setOfNotNull(
@@ -184,6 +179,14 @@ fun ChannelListScreen(
                         }
                     },
                 )
+                if (!state.loading && state.channels.isNotEmpty()) {
+                    Text(
+                        "${state.visibleChannels.size} channels",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
+                    )
+                }
 
                 val channels = state.visibleChannels
                 when {
