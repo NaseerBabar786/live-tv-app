@@ -211,8 +211,21 @@ def first_uri(text, base):
     return None
 
 
+class StageError(Exception):
+    def __init__(self, stage, cause):
+        super().__init__(f"{stage}: {cause}")
+        self.stage, self.cause = stage, cause
+
+
+def staged(stage, fn, *a, **k):
+    try:
+        return fn(*a, **k)
+    except Exception as e:
+        raise StageError(stage, e)
+
+
 def stream_works(url, opts):
-    final, data = open_url(url, opts, 262144)
+    final, data = staged("playlist", open_url, url, opts, 262144)
     head = data[:2048].decode("utf-8", "replace")
     if "#EXTM3U" in head:
         text = data.decode("utf-8", "replace")
@@ -220,14 +233,14 @@ def stream_works(url, opts):
             variant = first_uri(text.split("#EXT-X-STREAM-INF", 1)[1], final)
             if not variant:
                 return False
-            final, data = open_url(variant, opts, 262144)
+            final, data = staged("variant", open_url, variant, opts, 262144)
             text = data.decode("utf-8", "replace")
             if "#EXTM3U" not in text[:2048]:
                 return False
         segment = first_uri(text, final)
         if not segment or "#EXTINF" not in text:
             return False
-        _, chunk = open_url(segment, opts, 2048, ranged=True)
+        _, chunk = staged("segment", open_url, segment, opts, 2048, ranged=True)
         return len(chunk) > 0
     if "<MPD" in head:
         return True
@@ -241,6 +254,8 @@ REASONS = {}
 
 
 def reason(e):
+    if isinstance(e, StageError):
+        return f"{e.stage} {reason(e.cause)}"
     if isinstance(e, urllib.error.HTTPError):
         return f"HTTP {e.code}"
     if isinstance(e, urllib.error.URLError):
@@ -253,16 +268,21 @@ def reason(e):
     return text
 
 
+VLC_UA = "VLC/3.0.21 LibVLC/3.0.21"
+
+
 def check(url, opts):
+    """The User-Agent the stream works with (the list's or Live TV's first, then VLC's), or None."""
     why = "not a stream"
-    for _ in range(2):
+    tries = [opts, opts] if opts.get("ua") else [opts, dict(opts, ua=VLC_UA)]
+    for attempt in tries:
         try:
-            if stream_works(url, opts):
-                return True
+            if stream_works(url, attempt):
+                return attempt.get("ua") or APP_UA
         except Exception as e:
             why = reason(e)
     REASONS[why] = REASONS.get(why, 0) + 1
-    return False
+    return None
 
 
 # ---------------------------------------------------------------- output
@@ -316,6 +336,8 @@ def main():
     working, seen_url, seen_name = [], set(), set()
     for ch in channels:
         url = next((u for u in ch["urls"] if status.get(u)), None)
+        if url and status[url] == VLC_UA and not ch["opts"].get("ua"):
+            ch = dict(ch, opts=dict(ch["opts"], ua=VLC_UA))  # plays only with a VLC-like User-Agent
         key = (ch["country"], re.sub(r"\W+", "", ch["name"].lower()))
         if not url or url in seen_url or key in seen_name:
             continue  # dead, or the same channel already kept from the other list
@@ -339,7 +361,8 @@ def main():
     for c in working:
         counts[names.get(c["country"], c["country"])] = counts.get(names.get(c["country"], c["country"]), 0) + 1
     stats = {"checked_at": checked_at, "streams_tested": len(urls), "channels_listed": len(channels),
-             "working_channels": len(working), "livetv_channels": len(mix),
+             "working_channels": len(working),
+             "need_vlc_user_agent": sum(1 for c in working if c["opts"].get("ua") == VLC_UA), "livetv_channels": len(mix),
              "failures": dict(sorted(REASONS.items(), key=lambda kv: -kv[1])[:15]),
              "livetv_groups": {t: sum(1 for _, g in mix if g == t) for _, t, _ in MIX},
              "by_country": dict(sorted(counts.items(), key=lambda kv: -kv[1]))}
