@@ -86,10 +86,12 @@ data class UiState(
             .sortedWith(compareBy({ -it.value }, { it.key }))
             .map { it.key }
 
+    /** Favorites come first, then the rest in list order; channels keep their numbers. */
     val visibleChannels: List<Channel>
         get() = inLanguage
             .filter { category == null || it.category == category }
             .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
+            .sortedBy { it.id !in favorites }
 }
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
