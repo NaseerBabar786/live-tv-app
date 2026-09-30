@@ -1,8 +1,6 @@
 package com.livecam.app.ui
 
 import android.annotation.SuppressLint
-import android.net.Uri
-import android.os.SystemClock
 import android.webkit.ConsoleMessage
 import android.webkit.CookieManager
 import android.webkit.PermissionRequest
@@ -54,9 +52,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.webkit.UserAgentMetadata
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewCompat
+import androidx.webkit.WebViewFeature
 
-/** Wyze's own browser live view. Signing in here uses the same account as the Wyze app. */
-const val WYZE_WEB_VIEW_URL = "https://view.wyze.com/live"
+/**
+ * Wyze's own browser live view (moved from view.wyze.com to my.wyze.com in 2026).
+ * Signing in here uses the same account as the Wyze app.
+ */
+const val WYZE_WEB_VIEW_URL = "https://my.wyze.com/live"
 
 /**
  * Wyze cameras have no public stream API, so Live Cam shows Wyze Web View, Wyze's official
@@ -73,6 +78,8 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     // One-line diagnostics under the title: which Wyze page is open and the last problem it reported.
     var pageUrl by remember { mutableStateOf("") }
     var problem by remember { mutableStateOf<String?>(null) }
+    // What the page actually drew, e.g. "0 words, 12 elements", to tell a blank page from a slow one.
+    var pageInfo by remember { mutableStateOf<String?>(null) }
     val reloadFocus = remember { FocusRequester() }
     val webViewVersion = remember { runCatching { WebView.getCurrentWebViewPackage()?.versionName }.getOrNull() ?: "?" }
     val webView = remember {
@@ -86,28 +93,22 @@ fun WyzeWebScreen(onBack: () -> Unit) {
             settings.loadWithOverviewMode = true
             settings.builtInZoomControls = true
             settings.displayZoomControls = false
+            presentAsDesktop(this)
             CookieManager.getInstance().setAcceptCookie(true)
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
             webViewClient = object : WebViewClient() {
                 override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
                     pageUrl = url.orEmpty()
                     if (!isReload) problem = null
-                    // After sign-in Wyze lands on its account site (my.wyze.com/home), which shows
-                    // nothing here. Go on to the live view, but only a few times so a redirect
-                    // back from view.wyze.com can't loop forever.
-                    if (isWyzeAccountHome(url)) {
-                        val now = SystemClock.elapsedRealtime()
-                        if (now - autoLiveWindowStart > AUTO_LIVE_WINDOW_MS) {
-                            autoLiveWindowStart = now
-                            autoLiveCount = 0
+                    pageInfo = null
+                }
+
+                override fun onPageFinished(view: WebView, url: String?) {
+                    view.postDelayed({
+                        view.evaluateJavascript(PAGE_INFO_JS) { result ->
+                            pageInfo = result?.trim('"')?.takeIf { it.isNotBlank() && it != "null" }
                         }
-                        if (autoLiveCount < AUTO_LIVE_MAX) {
-                            autoLiveCount++
-                            view.post { view.loadUrl(WYZE_WEB_VIEW_URL) }
-                        } else {
-                            problem = "Wyze keeps opening its account page; try Live view"
-                        }
-                    }
+                    }, 5_000)
                 }
 
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
@@ -131,8 +132,12 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                 }
 
                 override fun onConsoleMessage(message: ConsoleMessage): Boolean {
-                    if (message.messageLevel() == ConsoleMessage.MessageLevel.ERROR) {
-                        problem = "Page script error: ${message.message().take(160)}"
+                    when (message.messageLevel()) {
+                        ConsoleMessage.MessageLevel.ERROR ->
+                            problem = "Page script error: ${message.message().take(160)}"
+                        ConsoleMessage.MessageLevel.WARNING ->
+                            if (problem == null) problem = "Page warning: ${message.message().take(160)}"
+                        else -> Unit
                     }
                     return false
                 }
@@ -190,6 +195,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                 Text(
                     listOfNotNull(
                         pageUrl.removePrefix("https://").substringBefore('?').ifEmpty { null },
+                        pageInfo,
                         problem,
                         "WebView $webViewVersion",
                     ).joinToString("  ·  "),
@@ -221,18 +227,58 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     }
 }
 
-private var autoLiveWindowStart = 0L
-private var autoLiveCount = 0
-private const val AUTO_LIVE_WINDOW_MS = 60_000L
-private const val AUTO_LIVE_MAX = 2
-
-/** True for Wyze's account pages that sign-in ends on, but not its login or two-factor pages. */
-internal fun isWyzeAccountHome(url: String?): Boolean {
-    val uri = runCatching { Uri.parse(url) }.getOrNull() ?: return false
-    if (uri.host != "my.wyze.com") return false
-    val path = uri.path.orEmpty().trimEnd('/')
-    return path.isEmpty() || path == "/home" || path == "/dashboard"
+/**
+ * Wyze's site is made for desktop browsers. Besides the user agent string, Chrome also reports
+ * "Android, mobile" through client hints and touch support, so make those look like a desktop too.
+ */
+private fun presentAsDesktop(webView: WebView) {
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.USER_AGENT_METADATA)) {
+        runCatching {
+            val brands = listOf(
+                UserAgentMetadata.BrandVersion.Builder()
+                    .setBrand("Google Chrome").setMajorVersion("139").setFullVersion("139.0.0.0").build(),
+                UserAgentMetadata.BrandVersion.Builder()
+                    .setBrand("Chromium").setMajorVersion("139").setFullVersion("139.0.0.0").build(),
+                UserAgentMetadata.BrandVersion.Builder()
+                    .setBrand("Not;A=Brand").setMajorVersion("99").setFullVersion("99.0.0.0").build(),
+            )
+            WebSettingsCompat.setUserAgentMetadata(
+                webView.settings,
+                UserAgentMetadata.Builder()
+                    .setBrandVersionList(brands)
+                    .setFullVersion("139.0.0.0")
+                    .setPlatform("Linux")
+                    .setPlatformVersion("6.0.0")
+                    .setArchitecture("x86")
+                    .setBitness(64)
+                    .setMobile(false)
+                    .setModel("")
+                    .build(),
+            )
+        }
+    }
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+        runCatching { WebViewCompat.addDocumentStartJavaScript(webView, DESKTOP_JS, setOf("*")) }
+    }
 }
+
+private const val DESKTOP_JS = """
+(function () {
+  try {
+    Object.defineProperty(Navigator.prototype, 'platform', { get: function () { return 'Linux x86_64'; } });
+    Object.defineProperty(Navigator.prototype, 'maxTouchPoints', { get: function () { return 0; } });
+  } catch (e) {}
+})();
+"""
+
+private const val PAGE_INFO_JS = """
+(function () {
+  var b = document.body;
+  if (!b) return 'no page body';
+  var words = (b.innerText || '').split(/\s+/).filter(Boolean).length;
+  return words + ' words, ' + document.getElementsByTagName('*').length + ' elements, ' + window.innerWidth + 'px wide';
+})()
+"""
 
 private const val DESKTOP_USER_AGENT =
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
