@@ -39,6 +39,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -63,6 +70,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     // One-line diagnostics under the title: which Wyze page is open and the last problem it reported.
     var pageUrl by remember { mutableStateOf("") }
     var problem by remember { mutableStateOf<String?>(null) }
+    val reloadFocus = remember { FocusRequester() }
     val webViewVersion = remember { runCatching { WebView.getCurrentWebViewPackage()?.versionName }.getOrNull() ?: "?" }
     val webView = remember {
         CursorWebView(context).apply {
@@ -118,6 +126,16 @@ fun WyzeWebScreen(onBack: () -> Unit) {
             loadUrl(WYZE_WEB_VIEW_URL)
         }
     }
+    // Up at the top of the page moves to the Reload button; Down from the top bar goes back in.
+    webView.onExitTop = { runCatching { reloadFocus.requestFocus() } }
+    val backIntoPage = Modifier.onPreviewKeyEvent { e ->
+        if (e.key == Key.DirectionDown && e.type == KeyEventType.KeyDown) {
+            webView.requestFocus()
+            true
+        } else {
+            false
+        }
+    }
 
     DisposableEffect(webView) {
         onDispose {
@@ -140,6 +158,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
         Row(
             Modifier
                 .fillMaxWidth()
+                .then(backIntoPage)
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -161,7 +180,10 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            IconButton(onClick = { webView.reload() }, modifier = Modifier.focusRing(CircleShape)) {
+            IconButton(
+                onClick = { webView.reload() },
+                modifier = Modifier.focusRequester(reloadFocus).focusRing(CircleShape),
+            ) {
                 Icon(Icons.Default.Refresh, contentDescription = "Reload")
             }
         }
