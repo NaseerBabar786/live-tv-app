@@ -162,31 +162,28 @@ fun ChannelListScreen(
                     )
                     return@Column
                 }
+                // Countries. Tapping the selected one again goes back to every channel.
                 ChipRow(
                     items = state.groups,
                     selected = setOfNotNull(state.filter),
-                    onSelect = onFilterChange,
+                    onSelect = { onFilterChange(if (it == state.filter) FILTER_ALL else it) },
                 )
-                // Favorites, then genres. Neither has an "All" chip: tapping the selected one again clears it.
+                // All, Favorites, then genres. All clears every filter; tapping a selected genre clears it.
                 ChipRow(
-                    items = listOf(FILTER_FAVORITES) + state.categories,
-                    selected = setOfNotNull(state.filter.takeIf { it == FILTER_FAVORITES }, state.category),
+                    items = listOf(FILTER_ALL, FILTER_FAVORITES) + state.categories,
+                    selected = setOfNotNull(
+                        FILTER_ALL.takeIf { state.filter == FILTER_ALL && state.category == null },
+                        state.filter.takeIf { it == FILTER_FAVORITES },
+                        state.category,
+                    ),
                     onSelect = {
-                        when {
-                            it != FILTER_FAVORITES -> onCategoryChange(it.takeUnless { c -> c == state.category })
-                            state.filter == FILTER_FAVORITES -> onFilterChange(FILTER_ALL)
-                            else -> onFilterChange(FILTER_FAVORITES)
+                        when (it) {
+                            FILTER_ALL -> onFilterChange(FILTER_ALL)
+                            FILTER_FAVORITES -> onFilterChange(if (state.filter == FILTER_FAVORITES) FILTER_ALL else FILTER_FAVORITES)
+                            else -> onCategoryChange(it.takeUnless { c -> c == state.category })
                         }
                     },
                 )
-                if (!state.loading && state.channels.isNotEmpty()) {
-                    Text(
-                        "${state.visibleChannels.size} channels",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
-                    )
-                }
 
                 val channels = state.visibleChannels
                 when {
