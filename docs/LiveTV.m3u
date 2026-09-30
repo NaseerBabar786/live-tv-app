@@ -1,6 +1,6 @@
 #EXTM3U
 # Live TV mix: Pakistani, Indian, Canadian, British and American
-# Every stream was tested and working at 2026-09-30 04:19 UTC.
+# Every stream was tested and working at 2026-09-30 04:25 UTC.
 # Free, publicly available channels from iptv-org and Famelack. Rebuilt every day.
 #EXTINF:-1 tvg-id="24NewsHD.pk@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/en/9/93/24_News_HD_Logo.png" group-title="Pakistani" tvg-language="Urdu" tvg-genre="News",24 News HD
 https://cdn4.mjunoon.tv:8087/streamtest/146M/chunks.m3u8
@@ -14,6 +14,8 @@ https://cdn4.mjunoon.tv:8087/streamtest/135M/chunks.m3u8
 https://cdn4.mjunoon.tv:8087/streamtest/118M/chunks.m3u8
 #EXTINF:-1 tvg-id="AikNews.pk@SD" tvg-logo="https://i.imgur.com/svPXoAP.png" group-title="Pakistani" tvg-language="Urdu" tvg-genre="News",Aik News SD
 https://s2.ideationtec.live/Pnn/Pnn.m3u8?token=KsR3k27_sH3n-2
+#EXTINF:-1 tvg-id="aurLifeHD.pk@SD" tvg-logo="https://i.imgur.com/GfWLn3O.jpg" group-title="Pakistani" tvg-language="English" tvg-genre="General",aurLife HD
+http://124.109.47.101/hls/stream1.m3u8
 #EXTINF:-1 tvg-id="CapitalTV.pk@SD" tvg-logo="https://i.imgur.com/UxAE5O4.png" group-title="Pakistani" tvg-language="Urdu" tvg-genre="News",Capital TV
 https://cdn4.mjunoon.tv:8087/streamtest/111M/chunks.m3u8
 #EXTINF:-1 tvg-id="FalakTV.pk@SD" tvg-logo="https://i.imgur.com/2TqlNsI.png" group-title="Pakistani" tvg-language="Punjabi" tvg-genre="Entertainment",Falak TV
@@ -56,12 +58,16 @@ https://cdn.rabta.stream/M-Sports/tracks-v1a1/mono.m3u8
 https://cdn4.mjunoon.tv:8087/streamtest/81M/chunks.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/zokC3gO.png" group-title="Pakistani" tvg-language="Urdu" tvg-genre="Religious",Paighan TV
 https://cdn4.mjunoon.tv:8087/streamtest/107M/chunks.m3u8
+#EXTINF:-1 tvg-id="AndxplorHD.in@HD" tvg-logo="https://xstreamcp-assets-msp.streamready.in/assets/LIVETV/LIVECHANNEL/LIVETV_LIVETVCHANNEL_SYMANDXPLOR_HD/images/LOGO_HD/LOGO_HD_image.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Movies",&xplor HD
+http://dksmedia.tv/play/live.php?mac=00:1A:79:B6:60:3D&stream=209743&extension=ts&play_token=mR7FwO88sY
 #EXTINF:-1 tvg-id="ABNTVIndia.us@SD" tvg-logo="https://i.imgur.com/VcZn60X.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Religious",ABN TV India
 https://mediaserver.abnvideos.com/streams/abntvindia.m3u8
 #EXTINF:-1 tvg-id="AwaazIndiaTV.in@SD" tvg-logo="https://i.imgur.com/eKQs51V.png" group-title="Indian" tvg-language="Hindi" tvg-genre="News",Awaaz India TV
 https://awaazindia.livebox.co.in/AwaazIndaTVhls/Live.m3u8
 #EXTINF:-1 tvg-id="HareKrsnaTV.in@SD" tvg-logo="https://dtil.tmsimg.com/assets/s143102_ld_h15_aa.png?lock=720x540" group-title="Indian" tvg-language="Hindi" tvg-genre="Religious",Hare Krsna TV
 https://hktv.harekrsnatv.com/HKTV/HKWebApp/manifest.mpd
+#EXTINF:-1 tvg-logo="https://i.imgur.com/VYorU1L.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Religious",Hosanna TV Hindi
+https://ktismaservers.in:3466/live/hosannattvhindhilive.m3u8
 #EXTINF:-1 tvg-id="Mango.in@SD" tvg-logo="https://i.imgur.com/neZm4CY.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Entertainment",Mango (India)
 https://stmv6.voxtvhd.com.br/cinehindi/cinehindi/playlist.m3u8
 #EXTINF:-1 tvg-id="NamdhariTV.in@SD" tvg-logo="https://i.imgur.com/NalsXTo.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Religious",Namdhari TV
@@ -72,8 +78,6 @@ https://vglivessai.akamaized.net/sg/v1/manifest/611d79b11b77e2f571934fd80ca14134
 http://cdn12.henico.net:8080/live/sadatv/index.m3u8
 #EXTINF:-1 tvg-id="SalaamTV.in@SD" tvg-logo="https://dtil.tmsimg.com/assets/s144466_ld_h15_aa.png?lock=720x540" group-title="Indian" tvg-language="Urdu" tvg-genre="News",Salaam TV
 https://d2o3r1shda7xvv.cloudfront.net/index_5.m3u8
-#EXTINF:-1 tvg-id="SonyMax.in@SD" tvg-logo="https://dtil.tmsimg.com/assets/s157590_ld_h15_aa.png?lock=720x540" group-title="Indian" tvg-language="Hindi" tvg-genre="Movies",Sony Max
-http://dksmedia.tv/play/live.php?mac=00:1A:79:B6:60:3D&stream=156013&extension=ts&play_token=slNi06NyY0
 #EXTINF:-1 tvg-id="SonySAB.in@HD" tvg-logo="https://dtil.tmsimg.com/assets/s159099_ld_h15_ab.png?lock=720x540" group-title="Indian" tvg-language="Hindi" tvg-genre="Entertainment",Sony SAB HD
 https://cloudplay-sonyliv.pages.dev/sabhd.m3u8
 #EXTINF:-1 tvg-id="SteelbirdMusic.in@SD" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Steelbird_Music.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Music",Steelbird Music
