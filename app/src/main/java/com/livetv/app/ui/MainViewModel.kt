@@ -41,6 +41,8 @@ data class UiState(
     val countries: List<Famelack.Country> = emptyList(),
     /** Playlists the viewer added (Stream Player Plus). */
     val playlists: List<Playlist> = emptyList(),
+    /** Live TV's channel list: the main (Famelack) list or iptv-org's. */
+    val provider: String = ChannelRepository.PROVIDER_FAMELACK,
 ) {
     /** Stream Player Plus with no playlist yet: the screen asks the viewer to add one. */
     val needsPlaylist: Boolean
@@ -104,6 +106,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             playlistSource = repo.playlistSource,
             languageFilter = repo.languages,
             playlists = repo.playlists,
+            provider = repo.provider,
         )
     )
     val state: StateFlow<UiState> = _state.asStateFlow()
@@ -161,6 +164,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         repo.playlists = list
         _state.update { it.copy(playlists = list) }
         if (playlist.source == _state.value.playlistSource) setPlaylistSource(list.firstOrNull()?.source ?: "")
+    }
+
+    /** Switches Live TV between the main channel list and iptv-org's, keeping the chosen countries. */
+    fun setProvider(provider: String) {
+        if (provider == repo.provider) return
+        repo.provider = provider
+        _state.update { it.copy(provider = provider, filter = FILTER_ALL, category = null) }
+        reload()
     }
 
     fun setQuery(query: String) = _state.update { it.copy(query = query) }

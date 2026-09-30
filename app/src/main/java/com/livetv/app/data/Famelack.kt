@@ -157,7 +157,7 @@ object Famelack {
         }
     }
 
-    private fun languageName(code: String): String =
+    fun languageName(code: String): String =
         (languageNames[code.lowercase()] ?: Locale.forLanguageTag(code).getDisplayLanguage(Locale.ENGLISH))
             .ifBlank { code }
             .replaceFirstChar { it.uppercase() }

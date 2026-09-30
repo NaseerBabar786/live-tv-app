@@ -68,6 +68,11 @@ fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> U
     SettingsTheme {
         SettingsDialog(
             currentSource = state.playlistSource,
+            provider = state.provider,
+            onProviderChange = {
+                onDismiss()
+                viewModel.setProvider(it)
+            },
             countries = state.countries,
             languages = state.allLanguages,
             selectedLanguages = state.languageFilter,

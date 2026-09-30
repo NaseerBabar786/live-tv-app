@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Famelack
 
 /**
@@ -51,6 +52,8 @@ import com.livetv.app.data.Famelack
 @Composable
 fun SettingsDialog(
     currentSource: String,
+    provider: String,
+    onProviderChange: (String) -> Unit,
     countries: List<Famelack.Country>,
     languages: List<String>,
     selectedLanguages: Set<String>,
@@ -124,6 +127,15 @@ fun SettingsDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
+                Text("Channel list", fontWeight = FontWeight.Bold)
+                SourceButton("Main list", provider == ChannelRepository.PROVIDER_FAMELACK) {
+                    onProviderChange(ChannelRepository.PROVIDER_FAMELACK)
+                }
+                SourceButton("iptv-org list (more channels)", provider == ChannelRepository.PROVIDER_IPTV_ORG) {
+                    onProviderChange(ChannelRepository.PROVIDER_IPTV_ORG)
+                }
+
+                HorizontalDivider()
                 Text("Languages", fontWeight = FontWeight.Bold)
                 SourceButton(
                     label = when {
