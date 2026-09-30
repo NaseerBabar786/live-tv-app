@@ -1,5 +1,15 @@
 package com.livetv.app.ui
 
+import android.view.TextureView
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.media3.common.Player
+import com.livetv.app.player.StreamPlayer
 import androidx.compose.foundation.layout.IntrinsicSize
 import com.livetv.app.data.Weather
 import kotlinx.coroutines.Dispatchers
@@ -113,6 +123,28 @@ fun ChannelListScreen(
             withFrameNanos { }
             runCatching { lastWatchedFocus.requestFocus() }
         }
+    }
+
+    // Live preview: the channel the remote's yellow highlight rests on plays, muted, in its
+    // own card after a moment. Touch screens never focus a card, so phones don't preview.
+    val context = LocalContext.current
+    var previewId by remember { mutableStateOf<String?>(null) }
+    val preview = remember { Preview(StreamPlayer(context).apply { player.volume = 0f }) }
+    DisposableEffect(Unit) { onDispose { preview.stream.release() } }
+    LaunchedEffect(previewId) {
+        preview.stream.stop()
+        preview.showing = false
+        val channel = previewId?.let { id -> state.channels.firstOrNull { it.id == id } } ?: return@LaunchedEffect
+        delay(1_000)
+        preview.stream.play(channel)
+    }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_STOP) previewId = null
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     Scaffold(
@@ -242,6 +274,11 @@ fun ChannelListScreen(
                                 onClick = { onPlay(channel) },
                                 onToggleFavorite = { onToggleFavorite(channel) },
                                 focusRequester = lastWatchedFocus.takeIf { channel.id == state.lastWatchedId },
+                                onFocusChange = { focused ->
+                                    if (focused) previewId = channel.id
+                                    else if (previewId == channel.id) previewId = null
+                                },
+                                preview = preview.takeIf { channel.id == previewId },
                             )
                         }
                     }
@@ -291,6 +328,8 @@ private fun ChannelCard(
     onClick: () -> Unit,
     onToggleFavorite: () -> Unit,
     focusRequester: FocusRequester? = null,
+    onFocusChange: (Boolean) -> Unit = {},
+    preview: Preview? = null,
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -299,6 +338,7 @@ private fun ChannelCard(
             .focusGlow(CardShape)
             .clip(CardShape)
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
+            .onFocusChanged { onFocusChange(it.hasFocus) }
             .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
     ) {
         Box(
@@ -322,6 +362,7 @@ private fun ChannelCard(
             } else {
                 Initials(channel.name)
             }
+            if (preview != null) PreviewVideo(preview)
             if (channel.number > 0) {
                 Text(
                     "${channel.number}",
@@ -472,4 +513,31 @@ private fun WeatherNow() {
             maxLines = 1,
         )
     }
+}
+
+/** The shared preview player, and whether its video has started (the logo shows until then). */
+@Stable
+private class Preview(val stream: StreamPlayer) {
+    var showing by mutableStateOf(false)
+
+    init {
+        stream.player.addListener(object : Player.Listener {
+            override fun onRenderedFirstFrame() {
+                showing = true
+            }
+        })
+    }
+}
+
+/** The preview's video, drawn over the logo once the first frame arrives. */
+@Composable
+private fun PreviewVideo(preview: Preview) {
+    val player = preview.stream.player
+    AndroidView(
+        factory = { ctx -> TextureView(ctx).also { player.setVideoTextureView(it) } },
+        onRelease = { player.clearVideoTextureView(it) },
+        modifier = Modifier
+            .fillMaxSize()
+            .graphicsLayer { alpha = if (preview.showing) 1f else 0f },
+    )
 }

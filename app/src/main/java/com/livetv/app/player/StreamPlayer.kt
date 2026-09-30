@@ -49,6 +49,14 @@ class StreamPlayer(private val context: Context) {
         prepareCurrent()
     }
 
+    /** Stops playback and forgets the channel (used by the channel-list preview). */
+    fun stop() {
+        channel = null
+        candidates = emptyList()
+        player.stop()
+        player.clearMediaItems()
+    }
+
     fun retry() {
         channel?.let(::play)
     }
