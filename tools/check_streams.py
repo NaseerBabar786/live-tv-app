@@ -30,6 +30,7 @@ import os
 import re
 import ssl
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -236,13 +237,31 @@ def stream_works(url, opts):
     return len(data) > 0
 
 
+REASONS = {}
+
+
+def reason(e):
+    if isinstance(e, urllib.error.HTTPError):
+        return f"HTTP {e.code}"
+    if isinstance(e, urllib.error.URLError):
+        e = e.reason
+    text = type(e).__name__
+    if isinstance(e, ssl.SSLError) or "CERTIFICATE" in str(e):
+        return "SSL"
+    if "timed out" in str(e).lower() or isinstance(e, TimeoutError):
+        return "timeout"
+    return text
+
+
 def check(url, opts):
+    why = "not a stream"
     for _ in range(2):
         try:
             if stream_works(url, opts):
                 return True
-        except Exception:
-            pass
+        except Exception as e:
+            why = reason(e)
+    REASONS[why] = REASONS.get(why, 0) + 1
     return False
 
 
@@ -321,6 +340,7 @@ def main():
         counts[names.get(c["country"], c["country"])] = counts.get(names.get(c["country"], c["country"]), 0) + 1
     stats = {"checked_at": checked_at, "streams_tested": len(urls), "channels_listed": len(channels),
              "working_channels": len(working), "livetv_channels": len(mix),
+             "failures": dict(sorted(REASONS.items(), key=lambda kv: -kv[1])[:15]),
              "livetv_groups": {t: sum(1 for _, g in mix if g == t) for _, t, _ in MIX},
              "by_country": dict(sorted(counts.items(), key=lambda kv: -kv[1]))}
     with open(os.path.join(OUT, "playlists.json"), "w", encoding="utf-8") as f:
