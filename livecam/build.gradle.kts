@@ -14,8 +14,8 @@ android {
         applicationId = "com.naseerbabar.livecam"
         minSdk = 26
         targetSdk = 36
-        versionCode = 6
-        versionName = "0.2.2"
+        versionCode = 7
+        versionName = "0.2.3"
     }
 
     // Same shared signing key as Live TV when CI has it, so updates install over the old app.
@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.media3.exoplayer.rtsp)
     implementation(libs.media3.ui)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.webkit)
     debugImplementation(libs.androidx.compose.ui.tooling)
     testImplementation(libs.junit)
 }
