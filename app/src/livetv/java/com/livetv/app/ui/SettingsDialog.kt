@@ -112,7 +112,9 @@ fun SettingsDialog(
         )
         return
     }
+    // The starting mix (Pakistani, Indian, Canadian, UK and USA) shows as those five countries picked.
     val picked = Famelack.pickedCountries(currentSource)
+        ?: Famelack.MIX.map { it.country }.takeIf { currentSource == Famelack.SOURCE_MIX }
 
     if (pickingCountries) {
         MultiCountryPicker(
@@ -176,9 +178,7 @@ fun SettingsDialog(
 
                 HorizontalDivider()
                 Text("Countries", fontWeight = FontWeight.Bold)
-                val mixSelected = currentSource == Famelack.SOURCE_MIX
                 val allSelected = currentSource == Famelack.SOURCE_ALL
-                SourceButton("Pakistani, Indian, Canadian, UK & USA", mixSelected) { onSave(Famelack.SOURCE_MIX) }
                 SourceButton("All countries", allSelected) { onSave(Famelack.SOURCE_ALL) }
                 SourceButton(
                     label = when {
@@ -197,7 +197,7 @@ fun SettingsDialog(
                     Text(
                         when {
                             countries.isEmpty() -> "Loading countries…"
-                            currentCountry != null && !mixSelected && !allSelected -> "✓ Country: $currentCountry"
+                            currentCountry != null -> "✓ Country: $currentCountry"
                             else -> "One country…"
                         }
                     )
