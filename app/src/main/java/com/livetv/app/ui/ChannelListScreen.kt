@@ -1,5 +1,8 @@
 package com.livetv.app.ui
 
+import com.livetv.app.data.Weather
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import android.text.format.DateFormat
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -125,9 +128,12 @@ fun ChannelListScreen(
                         )
                     } else {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Column {
                                 AppLogo(size = 34.dp)
-                                Clock()
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Clock()
+                                    if (Edition.LIVE_TV) WeatherNow()
+                                }
                             }
                             Spacer(Modifier.width(12.dp))
                             Text(state.title, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -434,4 +440,26 @@ private fun Clock() {
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         maxLines = 1,
     )
+}
+
+/** Temperature and sky for the viewer's area, refreshed every half hour; hidden until it loads. */
+@Composable
+private fun WeatherNow() {
+    var weather by remember { mutableStateOf<Weather.Now?>(null) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            withContext(Dispatchers.IO) { Weather.load() }?.let { weather = it }
+            delay(if (weather == null) 5 * 60_000L else 30 * 60_000L)
+        }
+    }
+    weather?.let {
+        Text(
+            "  $it",
+            fontSize = 11.sp,
+            lineHeight = 13.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+        )
+    }
 }
