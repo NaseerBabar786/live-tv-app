@@ -20,6 +20,12 @@ import android.webkit.WebView
 @SuppressLint("ViewConstructor")
 class CursorWebView(context: Context) : WebView(context) {
 
+    /**
+     * Called when Up is pressed with the pointer at the top and the page can't scroll further,
+     * so the screen can move focus to the controls above the page.
+     */
+    var onExitTop: (() -> Unit)? = null
+
     private val density = resources.displayMetrics.density
     private var cursorX = -1f
     private var cursorY = -1f
@@ -64,20 +70,31 @@ class CursorWebView(context: Context) : WebView(context) {
         val margin = 4f * density
         val nx = cursorX + dx * step
         val ny = cursorY + dy * step
-        if (ny < margin && dy < 0) scrollPage(-step)
+        val atTop = cursorY <= margin
+        if (ny < margin && dy < 0) {
+            scrollPage(-step) { scrolled ->
+                // Up again at the very top of a page that no longer scrolls: leave the page.
+                if (!scrolled && atTop) {
+                    cursorShown = false
+                    invalidate()
+                    onExitTop?.invoke()
+                }
+            }
+        }
         if (ny > height - margin && dy > 0) scrollPage(step)
         cursorX = nx.coerceIn(margin, width - margin)
         cursorY = ny.coerceIn(margin, height - margin)
         invalidate()
     }
 
-    private fun scrollPage(amount: Float) {
+    private fun scrollPage(amount: Float, onResult: ((Boolean) -> Unit)? = null) {
         // Screen pixels to CSS pixels, including the page zoom.
         @Suppress("DEPRECATION") val pageScale = scale.takeIf { it > 0f } ?: density
         val cssX = cursorX / pageScale
         val cssY = cursorY / pageScale
         val cssDy = amount / pageScale
         // Scrolls the page itself and, for pages that scroll an inner panel, the panel under the pointer.
+        // Returns whether anything moved, so Up at the top can tell a page that's already at the top.
         evaluateJavascript(
             """
             (function(){
@@ -85,15 +102,14 @@ class CursorWebView(context: Context) : WebView(context) {
               while (el && el !== document.body) {
                 var s = getComputedStyle(el).overflowY;
                 if ((s === 'auto' || s === 'scroll') && el.scrollHeight > el.clientHeight) {
-                  el.scrollBy(0, $cssDy); return;
+                  var before = el.scrollTop; el.scrollBy(0, $cssDy); return el.scrollTop !== before;
                 }
                 el = el.parentElement;
               }
-              window.scrollBy(0, $cssDy);
+              var y = window.scrollY; window.scrollBy(0, $cssDy); return window.scrollY !== y;
             })();
             """.trimIndent(),
-            null,
-        )
+        ) { result -> onResult?.invoke(result == "true") }
     }
 
     private fun tap() {

@@ -1,7 +1,12 @@
 package com.livecam.app.ui
 
 import android.annotation.SuppressLint
+import android.webkit.ConsoleMessage
 import android.webkit.CookieManager
+import android.webkit.PermissionRequest
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -29,12 +34,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 
@@ -53,6 +67,11 @@ const val WYZE_WEB_VIEW_URL = "https://view.wyze.com/live"
 fun WyzeWebScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     var progress by remember { mutableIntStateOf(0) }
+    // One-line diagnostics under the title: which Wyze page is open and the last problem it reported.
+    var pageUrl by remember { mutableStateOf("") }
+    var problem by remember { mutableStateOf<String?>(null) }
+    val reloadFocus = remember { FocusRequester() }
+    val webViewVersion = remember { runCatching { WebView.getCurrentWebViewPackage()?.versionName }.getOrNull() ?: "?" }
     val webView = remember {
         CursorWebView(context).apply {
             settings.javaScriptEnabled = true
@@ -66,13 +85,55 @@ fun WyzeWebScreen(onBack: () -> Unit) {
             settings.displayZoomControls = false
             CookieManager.getInstance().setAcceptCookie(true)
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
-            webViewClient = WebViewClient()
+            webViewClient = object : WebViewClient() {
+                override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
+                    pageUrl = url.orEmpty()
+                    if (!isReload) problem = null
+                }
+
+                override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
+                    if (request.isForMainFrame) problem = "Page error: ${error.description}"
+                }
+
+                override fun onReceivedHttpError(
+                    view: WebView,
+                    request: WebResourceRequest,
+                    response: WebResourceResponse,
+                ) {
+                    val url = request.url.toString()
+                    if (request.isForMainFrame || "wyze" in url) {
+                        problem = "HTTP ${response.statusCode}: ${url.substringBefore('?').takeLast(80)}"
+                    }
+                }
+            }
             webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView, newProgress: Int) {
                     progress = newProgress
                 }
+
+                override fun onConsoleMessage(message: ConsoleMessage): Boolean {
+                    if (message.messageLevel() == ConsoleMessage.MessageLevel.ERROR) {
+                        problem = "Page script error: ${message.message().take(160)}"
+                    }
+                    return false
+                }
+
+                override fun onPermissionRequest(request: PermissionRequest) {
+                    problem = "Page asked for: ${request.resources.joinToString()}"
+                    request.deny()
+                }
             }
             loadUrl(WYZE_WEB_VIEW_URL)
+        }
+    }
+    // Up at the top of the page moves to the Reload button; Down from the top bar goes back in.
+    webView.onExitTop = { runCatching { reloadFocus.requestFocus() } }
+    val backIntoPage = Modifier.onPreviewKeyEvent { e ->
+        if (e.key == Key.DirectionDown && e.type == KeyEventType.KeyDown) {
+            webView.requestFocus()
+            true
+        } else {
+            false
         }
     }
 
@@ -97,6 +158,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
         Row(
             Modifier
                 .fillMaxWidth()
+                .then(backIntoPage)
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -104,9 +166,24 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
             Spacer(Modifier.width(6.dp))
-            Text("Wyze cameras", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            Spacer(Modifier.weight(1f))
-            IconButton(onClick = { webView.reload() }, modifier = Modifier.focusRing(CircleShape)) {
+            Column(Modifier.weight(1f)) {
+                Text("Wyze cameras", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(
+                    listOfNotNull(
+                        pageUrl.removePrefix("https://").substringBefore('?').ifEmpty { null },
+                        problem,
+                        "WebView $webViewVersion",
+                    ).joinToString("  ·  "),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (problem != null) LiveRed else MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            IconButton(
+                onClick = { webView.reload() },
+                modifier = Modifier.focusRequester(reloadFocus).focusRing(CircleShape),
+            ) {
                 Icon(Icons.Default.Refresh, contentDescription = "Reload")
             }
         }
