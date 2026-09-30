@@ -276,6 +276,7 @@ private fun MultiCountryPicker(
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     var chosen by remember { mutableStateOf(initial) }
+    val all = countries.isNotEmpty() && chosen.size == countries.size
     // Ticked countries first, in the order they were ticked, then the rest A to Z.
     val byCode = countries.associateBy { it.code }
     val ordered = chosen.mapNotNull { byCode[it] } + countries.filter { it.code !in chosen }
@@ -293,7 +294,6 @@ private fun MultiCountryPicker(
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                val all = countries.isNotEmpty() && chosen.size == countries.size
                 LazyColumn(Modifier.heightIn(max = 420.dp)) {
                     if (query.isBlank()) {
                         item(key = "all") {
