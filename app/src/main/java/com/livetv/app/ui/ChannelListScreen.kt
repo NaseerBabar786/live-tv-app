@@ -1,5 +1,11 @@
 package com.livetv.app.ui
 
+import android.text.format.DateFormat
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import java.util.Date
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -119,7 +125,10 @@ fun ChannelListScreen(
                         )
                     } else {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            AppLogo()
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                AppLogo(size = 34.dp)
+                                Clock()
+                            }
                             Spacer(Modifier.width(12.dp))
                             Text(state.title, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
@@ -341,10 +350,10 @@ private fun ChannelCard(
 
 /** The app icon: a white TV with a red play button on a red tile. */
 @Composable
-private fun AppLogo() {
+private fun AppLogo(size: Dp = 40.dp) {
     Box(
         Modifier
-            .size(40.dp)
+            .size(size)
             .clip(RoundedCornerShape(10.dp))
             .background(colorResource(R.color.ic_launcher_background)),
     ) {
@@ -403,4 +412,26 @@ private fun Message(
             ) { Text(secondAction) }
         }
     }
+}
+
+/** The time, in the phone's 12- or 24-hour style, updated on the minute. */
+@Composable
+private fun Clock() {
+    val context = LocalContext.current
+    val format = remember { DateFormat.getTimeFormat(context) }
+    var now by remember { mutableStateOf(Date()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            now = Date()
+            delay(60_000 - System.currentTimeMillis() % 60_000)
+        }
+    }
+    Text(
+        format.format(now),
+        fontSize = 11.sp,
+        lineHeight = 13.sp,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+    )
 }
