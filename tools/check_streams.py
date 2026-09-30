@@ -12,7 +12,9 @@ tests each stream the way a player would, and keeps only the ones that answer:
   * Anything else: the server starts sending data.
 
 Every request uses the channel's own User-Agent/Referer when the list gives
-one, otherwise Live TV's. A stream that fails is tried once more.
+one, otherwise Live TV's. A stream that fails is tried once more with VLC's
+User-Agent, and when the server answered but a later step failed, ffprobe
+(installed in the workflow) has the final say.
 
 Writes (in docs/, served at tv.bulkbazaar.ca):
   AllChannels.m3u  every working channel, grouped by country
@@ -25,10 +27,13 @@ Standard library only. Run: python3 tools/check_streams.py [--limit N]
 import argparse
 import concurrent.futures as cf
 import datetime as dt
+import gzip
 import json
 import os
 import re
+import shutil
 import ssl
+import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -200,7 +205,13 @@ def open_url(url, opts, limit, ranged=False):
     with OPENER.open(req, timeout=TIMEOUT) as r:
         if r.status not in (200, 206):
             raise IOError(f"HTTP {r.status}")
-        return r.geturl(), r.read(limit)
+        data = r.read(limit)
+        if data[:2] == b"\x1f\x8b" and not ranged:  # some servers gzip playlists unasked
+            try:
+                data = gzip.decompress(data)
+            except (OSError, EOFError):
+                pass
+        return r.geturl(), data
 
 
 def first_uri(text, base):
@@ -230,7 +241,8 @@ def stream_works(url, opts):
     if "#EXTM3U" in head:
         text = data.decode("utf-8", "replace")
         if "#EXT-X-STREAM-INF" in text:  # master playlist: follow the first variant
-            variant = first_uri(text.split("#EXT-X-STREAM-INF", 1)[1], final)
+            tag = text.split("#EXT-X-STREAM-INF", 1)[1]
+            variant = first_uri(tag.split("\n", 1)[1] if "\n" in tag else "", final)
             if not variant:
                 return False
             final, data = staged("variant", open_url, variant, opts, 262144)
@@ -271,6 +283,22 @@ def reason(e):
 VLC_UA = "VLC/3.0.21 LibVLC/3.0.21"
 
 
+FFPROBE = shutil.which("ffprobe")
+
+
+def ffprobe_plays(url, opts):
+    """A real player's opinion: ffprobe finds an audio or video track."""
+    cmd = [FFPROBE, "-v", "error", "-rw_timeout", "15000000", "-user_agent", opts.get("ua") or APP_UA]
+    if opts.get("ref"):
+        cmd += ["-referer", opts["ref"]]
+    cmd += ["-show_entries", "stream=codec_type", "-of", "csv=p=0", url]
+    try:
+        out = subprocess.run(cmd, capture_output=True, text=True, timeout=40).stdout
+    except subprocess.TimeoutExpired:
+        return False
+    return "video" in out or "audio" in out
+
+
 def check(url, opts):
     """The User-Agent the stream works with (the list's or Live TV's first, then VLC's), or None."""
     why = "not a stream"
@@ -281,6 +309,12 @@ def check(url, opts):
                 return attempt.get("ua") or APP_UA
         except Exception as e:
             why = reason(e)
+    # The server answered but a later step failed: let ffprobe (a real player) decide.
+    if FFPROBE and not why.startswith("playlist"):
+        for attempt in tries[:1] if opts.get("ua") else tries:
+            if ffprobe_plays(url, attempt):
+                return attempt.get("ua") or APP_UA
+        why = "ffprobe: " + why
     REASONS[why] = REASONS.get(why, 0) + 1
     return None
 
