@@ -331,7 +331,7 @@ def main():
         for i, fut in enumerate(cf.as_completed(futures), 1):
             status[futures[fut]] = fut.result()
             if i % 1000 == 0:
-                print(f"{i}/{len(urls)} checked, {sum(status.values())} working", flush=True)
+                print(f"{i}/{len(urls)} checked, {sum(1 for v in status.values() if v)} working", flush=True)
 
     working, seen_url, seen_name = [], set(), set()
     for ch in channels:
