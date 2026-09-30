@@ -1,6 +1,7 @@
 package com.livecam.app.ui
 
 import android.annotation.SuppressLint
+import android.view.ViewGroup
 import android.webkit.ConsoleMessage
 import android.webkit.CookieManager
 import android.webkit.PermissionRequest
@@ -87,6 +88,9 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     val webViewVersion = remember { runCatching { WebView.getCurrentWebViewPackage()?.versionName }.getOrNull() ?: "?" }
     val webView = remember {
         CursorWebView(context).apply {
+            // AndroidView otherwise gives the WebView wrap_content height, and then the page sees a
+            // zero-height window: Wyze's layout (sized to 100vh) collapses and nothing is drawn.
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.mediaPlaybackRequiresUserGesture = false
@@ -301,7 +305,7 @@ private const val PAGE_INFO_JS = """
   if (!b) return 'no page body';
   var text = (b.innerText || '').replace(/\s+/g, ' ').trim();
   var words = text ? text.split(' ').length : 0;
-  var info = words + ' words, ' + document.getElementsByTagName('*').length + ' elements, ' + window.innerWidth + 'px wide';
+  var info = words + ' words, ' + document.getElementsByTagName('*').length + ' elements, ' + window.innerWidth + 'x' + window.innerHeight + ' window';
   if (text) info += ', text "' + text.slice(0, 40) + '"';
   var el = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2);
   if (el) {
