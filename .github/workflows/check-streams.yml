@@ -1,27 +1,48 @@
-name: Check sample streams
+name: Check streams
 
+# Tests every channel in the iptv-org and Famelack lists and publishes playlists
+# of the working ones on the website (docs/AllChannels.m3u, docs/LiveTV.m3u).
 on:
-  push:
-    paths: [app/src/main/assets/sample.m3u, .github/workflows/check-streams.yml]
+  schedule:
+    - cron: "0 9 * * *"   # every day, 09:00 UTC (5 a.m. Eastern)
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: check-streams
+  cancel-in-progress: false
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
-      - name: Probe every URL in the sample playlist
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test every stream
+        run: python3 tools/check_streams.py
+
+      # A push made with the workflow's own token doesn't start other workflows,
+      # so the APK isn't rebuilt; the website is rebuilt explicitly below.
+      - name: Publish the playlists
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          for url in $(grep -v '^#' app/src/main/assets/sample.m3u | grep -E '^https?://'); do
-            code=$(curl -sSL -m 15 -o /dev/null -w '%{http_code}' -A 'LiveTV-Android/1.0' "$url" || echo ERR)
-            echo "$code $url"
-          done
-          # For HLS master playlists, also probe the first variant playlist,
-          # since a master can answer 200 while its streams are gone.
-          for url in $(grep -v '^#' app/src/main/assets/sample.m3u | grep -E '\.m3u8$'); do
-            variant=$(curl -sSL -m 15 -A 'LiveTV-Android/1.0' "$url" | grep -v '^#' | grep -m1 . || true)
-            [ -z "$variant" ] && continue
-            case "$variant" in http*) vurl="$variant" ;; *) vurl="${url%/*}/$variant" ;; esac
-            code=$(curl -sSL -m 15 -o /dev/null -w '%{http_code}' -A 'LiveTV-Android/1.0' "$vurl" || echo ERR)
-            echo "VARIANT $code $vurl"
-          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/AllChannels.m3u docs/LiveTV.m3u docs/playlists.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Playlists: working channels as of $(date -u '+%Y-%m-%d %H:%M') UTC"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."
