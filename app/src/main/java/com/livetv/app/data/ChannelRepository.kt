@@ -37,12 +37,11 @@ class ChannelRepository(context: Context) {
         get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
         set(value) = prefs.edit { putString(KEY_SOURCE, value.trim()) }
 
-    /** Live TV's channel list: [PROVIDER_FAMELACK] (the default), [PROVIDER_IPTV_ORG] or [PROVIDER_CHECKED]. */
+    /** Live TV's channel list: [PROVIDER_FAMELACK] (the default) or [PROVIDER_CHECKED]. */
     var provider: String
-        get() = prefs.getString(KEY_PROVIDER, null) ?: PROVIDER_FAMELACK
+        get() = prefs.getString(KEY_PROVIDER, null)?.takeIf { it == PROVIDER_CHECKED } ?: PROVIDER_FAMELACK
         set(value) = prefs.edit { putString(KEY_PROVIDER, value) }
 
-    private val iptvOrg: Boolean get() = provider == PROVIDER_IPTV_ORG
     private val checked: Boolean get() = provider == PROVIDER_CHECKED
 
     var favorites: Set<String>
@@ -83,12 +82,6 @@ class ChannelRepository(context: Context) {
                 })
                 checked && country != null -> checkedAll().filter { it.country == country }
                 source == Famelack.SOURCE_MIX -> loadSections(Famelack.MIX)
-                source == Famelack.SOURCE_ALL && iptvOrg -> IptvOrg.convert(
-                    M3uParser.parse(downloadCached("iptv:all", IptvOrg.ALL_URL)),
-                    iptvLanguages(),
-                    section = null,
-                    categories = IptvOrg.parseGroups(downloadCached("iptv:categories", IptvOrg.CATEGORIES_URL)),
-                )
                 source == Famelack.SOURCE_ALL -> loadSections(
                     Famelack.parseCountries(downloadCached("countries", Famelack.COUNTRIES_URL))
                         .map { Famelack.Section(it.code, it.name) }
@@ -104,11 +97,6 @@ class ChannelRepository(context: Context) {
                             ?: Famelack.Section(code, names[code] ?: code.uppercase())
                     })
                 }
-                country != null && iptvOrg -> IptvOrg.convert(
-                    M3uParser.parse(downloadCached("iptv:$country", IptvOrg.countryUrl(country))),
-                    iptvLanguages(),
-                    section = null,
-                )
                 country != null -> Famelack.parseChannels(
                     downloadCached(source, Famelack.countryUrl(country)),
                     channelInfo,
@@ -131,28 +119,7 @@ class ChannelRepository(context: Context) {
         CheckedList.convert(M3uParser.parse(downloadCached("checked:all", CheckedList.ALL_URL)))
 
     /** Downloads several countries in parallel; a country that fails is skipped. */
-    private suspend fun loadSections(sections: List<Famelack.Section>): List<Channel> =
-        if (iptvOrg) loadIptvSections(sections) else loadFamelackSections(sections)
-
-    /** Same as the Famelack sections, from iptv-org's country playlists. */
-    private suspend fun loadIptvSections(sections: List<Famelack.Section>): List<Channel> = coroutineScope {
-        val languages = iptvLanguages()
-        val limit = Semaphore(8)
-        sections.map { section ->
-            async {
-                limit.withPermit {
-                    runCatching {
-                        IptvOrg.convert(
-                            M3uParser.parse(downloadCached("iptv:${section.country}", IptvOrg.countryUrl(section.country))),
-                            languages,
-                            section = section.title,
-                            keepLanguages = section.languages?.map(Famelack::languageName)?.toSet(),
-                        )
-                    }.getOrDefault(emptyList())
-                }
-            }
-        }.awaitAll().flatten()
-    }
+    private suspend fun loadSections(sections: List<Famelack.Section>): List<Channel> = loadFamelackSections(sections)
 
     /** Each iptv-org stream's language; empty when the index can't be loaded. */
     private fun iptvLanguages(): Map<String, String> =
@@ -257,7 +224,6 @@ class ChannelRepository(context: Context) {
         private const val KEY_PLAYLISTS = "playlists"
         private const val KEY_PROVIDER = "provider"
         const val PROVIDER_FAMELACK = "famelack"
-        const val PROVIDER_IPTV_ORG = "iptvorg"
         const val PROVIDER_CHECKED = "checked"
     }
 }

@@ -159,9 +159,6 @@ fun SettingsDialog(
                 SourceButton("Main list", provider == ChannelRepository.PROVIDER_FAMELACK) {
                     onProviderChange(ChannelRepository.PROVIDER_FAMELACK)
                 }
-                SourceButton("iptv-org list (more channels)", provider == ChannelRepository.PROVIDER_IPTV_ORG) {
-                    onProviderChange(ChannelRepository.PROVIDER_IPTV_ORG)
-                }
                 SourceButton("Working channels only (checked daily)", provider == ChannelRepository.PROVIDER_CHECKED) {
                     onProviderChange(ChannelRepository.PROVIDER_CHECKED)
                 }
