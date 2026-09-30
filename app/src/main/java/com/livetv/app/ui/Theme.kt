@@ -27,7 +27,7 @@ private val colors = darkColorScheme(
 )
 
 /** Soft light blue for text, outlines and ticks on the dark Settings screens. */
-private val AccentText = Color(0xFF9DB8F0)
+val AccentText = Color(0xFF9DB8F0)
 
 /**
  * Settings uses the main page's colours: the card colour behind the dialogs and the

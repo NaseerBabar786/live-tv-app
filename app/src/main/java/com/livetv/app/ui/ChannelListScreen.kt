@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -389,7 +390,11 @@ private fun Message(
         }
         if (secondAction != null) {
             Spacer(Modifier.height(12.dp))
-            OutlinedButton(onClick = onSecondAction, modifier = Modifier.focusGlow()) { Text(secondAction) }
+            OutlinedButton(
+                onClick = onSecondAction,
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = AccentText),
+                modifier = Modifier.focusGlow(),
+            ) { Text(secondAction) }
         }
     }
 }
