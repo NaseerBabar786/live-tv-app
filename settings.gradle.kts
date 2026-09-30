@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "LiveTV"
 include(":app")
+include(":livecam")
