@@ -17,11 +17,15 @@ import com.livecam.app.ui.CameraGridScreen
 import com.livecam.app.ui.CamerasViewModel
 import com.livecam.app.ui.LiveCamTheme
 import com.livecam.app.ui.LiveViewScreen
+import com.livecam.app.ui.UpdateDialog
+import com.livecam.app.ui.UpdateState
+import com.livecam.app.ui.UpdateViewModel
 import com.livecam.app.ui.WyzeWebScreen
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: CamerasViewModel by viewModels()
+    private val updates: UpdateViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +55,15 @@ class MainActivity : ComponentActivity() {
                         onEdit = viewModel::startEdit,
                         onAdd = viewModel::startAdd,
                         onOpenWyze = { showWyze = true },
+                        version = updates.installedVersion,
                     )
                 }
+                val update by updates.update.collectAsStateWithLifecycle()
+                UpdateDialog(
+                    state = update,
+                    onInstall = { (update as? UpdateState.ReadyToInstall)?.let { updates.install(it.release) } },
+                    onDismiss = updates::dismiss,
+                )
                 state.editing?.let { editing ->
                     CameraEditor(
                         initial = editing,
