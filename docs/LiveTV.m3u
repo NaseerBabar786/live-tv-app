@@ -1,6 +1,6 @@
 #EXTM3U
 # Live TV mix: Pakistani, Indian, Canadian, British and American
-# Every stream was tested and working at 2026-09-30 04:25 UTC.
+# Every stream was tested and working at 2026-09-30 04:41 UTC.
 # Free, publicly available channels from iptv-org and Famelack. Rebuilt every day.
 #EXTINF:-1 tvg-id="24NewsHD.pk@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/en/9/93/24_News_HD_Logo.png" group-title="Pakistani" tvg-language="Urdu" tvg-genre="News",24 News HD
 https://cdn4.mjunoon.tv:8087/streamtest/146M/chunks.m3u8
@@ -58,16 +58,12 @@ https://cdn.rabta.stream/M-Sports/tracks-v1a1/mono.m3u8
 https://cdn4.mjunoon.tv:8087/streamtest/81M/chunks.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/zokC3gO.png" group-title="Pakistani" tvg-language="Urdu" tvg-genre="Religious",Paighan TV
 https://cdn4.mjunoon.tv:8087/streamtest/107M/chunks.m3u8
-#EXTINF:-1 tvg-id="AndxplorHD.in@HD" tvg-logo="https://xstreamcp-assets-msp.streamready.in/assets/LIVETV/LIVECHANNEL/LIVETV_LIVETVCHANNEL_SYMANDXPLOR_HD/images/LOGO_HD/LOGO_HD_image.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Movies",&xplor HD
-http://dksmedia.tv/play/live.php?mac=00:1A:79:B6:60:3D&stream=209743&extension=ts&play_token=mR7FwO88sY
 #EXTINF:-1 tvg-id="ABNTVIndia.us@SD" tvg-logo="https://i.imgur.com/VcZn60X.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Religious",ABN TV India
 https://mediaserver.abnvideos.com/streams/abntvindia.m3u8
 #EXTINF:-1 tvg-id="AwaazIndiaTV.in@SD" tvg-logo="https://i.imgur.com/eKQs51V.png" group-title="Indian" tvg-language="Hindi" tvg-genre="News",Awaaz India TV
 https://awaazindia.livebox.co.in/AwaazIndaTVhls/Live.m3u8
 #EXTINF:-1 tvg-id="HareKrsnaTV.in@SD" tvg-logo="https://dtil.tmsimg.com/assets/s143102_ld_h15_aa.png?lock=720x540" group-title="Indian" tvg-language="Hindi" tvg-genre="Religious",Hare Krsna TV
 https://hktv.harekrsnatv.com/HKTV/HKWebApp/manifest.mpd
-#EXTINF:-1 tvg-logo="https://i.imgur.com/VYorU1L.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Religious",Hosanna TV Hindi
-https://ktismaservers.in:3466/live/hosannattvhindhilive.m3u8
 #EXTINF:-1 tvg-id="Mango.in@SD" tvg-logo="https://i.imgur.com/neZm4CY.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Entertainment",Mango (India)
 https://stmv6.voxtvhd.com.br/cinehindi/cinehindi/playlist.m3u8
 #EXTINF:-1 tvg-id="NamdhariTV.in@SD" tvg-logo="https://i.imgur.com/NalsXTo.png" group-title="Indian" tvg-language="Hindi" tvg-genre="Religious",Namdhari TV
@@ -110,6 +106,8 @@ http://cdn12.henico.net:8080/live/gsctv/index.m3u8
 https://icnet1hls.wns.live/hls/stream.m3u8
 #EXTINF:-1 tvg-id="KidoodleTV.ca@SD" tvg-logo="https://i.imgur.com/MaFtbM5.png" group-title="Canadian" tvg-language="English" tvg-genre="Kids",Kidoodle.TV
 https://amg07653-apmc-amg07653c9-samsung-us-8740.playouts.now.amagi.tv/playlist.m3u8
+#EXTINF:-1 tvg-id="MontrealGreekTV.ca@SD" tvg-logo="https://i.imgur.com/Y5YnUit.png" group-title="Canadian" tvg-language="English" tvg-genre="Culture",Montreal Greek TV
+http://live.greektv.ca/hls1/greektv.m3u8
 #EXTINF:-1 tvg-id="NTDTVCanada.us@East" tvg-logo="https://i.imgur.com/iyFXcDy.png" group-title="Canadian" tvg-language="Chinese" tvg-genre="General",NTD TV Canada
 https://live.ntdtv.com/mllive860/playlist.m3u8
 #EXTINF:-1 tvg-id="NTDTVCanada.us@West" tvg-logo="https://i.imgur.com/iyFXcDy.png" group-title="Canadian" tvg-language="Chinese" tvg-genre="General",NTD TV Canada West
@@ -237,6 +235,8 @@ https://sra72yz.s.gy/NICK_JR_HD.m3u8
 http://198.58.104.90:8989/nickelodeon/index.m3u8
 #EXTINF:-1 tvg-id="Nicktoons.us@East" tvg-logo="https://images.pluto.tv/channels/654ca7f92c1d3300086b608c/colorLogoPNG_1751457678592.png" group-title="American" tvg-language="English" tvg-genre="Kids",Nicktoons (United States)
 https://sra72yz.s.gy/NICKTOONS_HD.m3u8
+#EXTINF:-1 tvg-id="NorCastWeather.us@HD" tvg-logo="https://i.imgur.com/AfjoZgo.png" group-title="American" tvg-language="English" tvg-genre="Weather",NorCast Weather
+https://norcast-weather.streamology.live/api/v1/streams/c1b5b114698e1ad4687153c4402d5ef0/live.m3u8
 #EXTINF:-1 group-title="American",Novelas Turcas
 https://d3p1t3yzbr6q5d.cloudfront.net/Novelas_Turcas.m3u8
 #EXTINF:-1 group-title="American" tvg-language="English",NTD TV West
