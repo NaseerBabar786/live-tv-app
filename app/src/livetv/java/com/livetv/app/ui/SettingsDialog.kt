@@ -72,7 +72,6 @@ fun SettingsDialog(
     val appVersion = remember {
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull()
     }
-    var pickingCountry by rememberSaveable { mutableStateOf(false) }
     var pickingCountries by rememberSaveable { mutableStateOf(false) }
     var pickingLanguages by rememberSaveable { mutableStateOf(false) }
     var showingGuide by rememberSaveable { mutableStateOf(false) }
@@ -126,17 +125,6 @@ fun SettingsDialog(
         return
     }
 
-    if (pickingCountry) {
-        CountryPicker(
-            countries = countries,
-            onDismiss = { pickingCountry = false },
-            onPick = { onSave(Famelack.source(it.code)) },
-        )
-        return
-    }
-
-    val currentCountry = Famelack.countryCode(currentSource)
-        ?.let { code -> countries.firstOrNull { it.code == code }?.name ?: code.uppercase() }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -178,8 +166,6 @@ fun SettingsDialog(
 
                 HorizontalDivider()
                 Text("Countries", fontWeight = FontWeight.Bold)
-                val allSelected = currentSource == Famelack.SOURCE_ALL
-                SourceButton("All countries", allSelected) { onSave(Famelack.SOURCE_ALL) }
                 SourceButton(
                     label = when {
                         countries.isEmpty() -> "Loading countries…"
@@ -189,19 +175,6 @@ fun SettingsDialog(
                     selected = picked != null,
                     enabled = countries.isNotEmpty(),
                 ) { pickingCountries = true }
-                OutlinedButton(
-                    onClick = { pickingCountry = true },
-                    enabled = countries.isNotEmpty(),
-                    modifier = Modifier.fillMaxWidth().focusGlow(),
-                ) {
-                    Text(
-                        when {
-                            countries.isEmpty() -> "Loading countries…"
-                            currentCountry != null -> "✓ Country: $currentCountry"
-                            else -> "One country…"
-                        }
-                    )
-                }
 
                 HorizontalDivider()
                 Text("My playlists", fontWeight = FontWeight.Bold)
@@ -347,52 +320,6 @@ private fun MultiCountryPicker(
                 modifier = Modifier.focusGlow(),
             ) { Text(if (chosen.isEmpty()) "Tick a country" else "Show ${chosen.size} countries") }
         },
-        dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Back") } },
-    )
-}
-
-@Composable
-private fun CountryPicker(
-    countries: List<Famelack.Country>,
-    onDismiss: () -> Unit,
-    onPick: (Famelack.Country) -> Unit,
-) {
-    var query by rememberSaveable { mutableStateOf("") }
-    val shown = countries.filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Choose a country") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    placeholder = { Text("Search") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                LazyColumn(Modifier.heightIn(max = 420.dp)) {
-                    items(shown, key = { it.code }) { country ->
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .focusGlow(ChipShape)
-                                .clickable { onPick(country) }
-                                .padding(vertical = 12.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
-                            Text(country.name)
-                            Text(
-                                "${country.channelCount}",
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {},
         dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Back") } },
     )
 }
