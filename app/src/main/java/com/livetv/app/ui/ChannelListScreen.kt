@@ -61,6 +61,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -195,6 +200,9 @@ fun ChannelListScreen(
         mutableStateOf(TileLayout.entries.firstOrNull { it.name == prefs.getString(PREF_TILE_LAYOUT, null) } ?: TileLayout.Eight)
     }
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
+    // "1+List": the channel playing on the left, kept when coming back from full screen.
+    val listMode = wideScreen && tileLayout == TileLayout.List
+    var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
     // Still pictures for the cards on screen, kept while scrolling around.
     val snapshots = remember { mutableStateMapOf<String, ImageBitmap>() }
     // A card that stops playing keeps its last frame as its picture.
@@ -210,7 +218,7 @@ fun ChannelListScreen(
         // With big tiles (2×1 and 2×2) every card on screen plays; otherwise only the highlighted one.
         val playAll = wideScreen && (tileLayout == TileLayout.Two || tileLayout == TileLayout.Four)
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
-        val allowed = inForeground && !showSettings && !Preview.metered(context)
+        val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
         if (!allowed) return@LaunchedEffect
         delay(600)
@@ -397,6 +405,17 @@ fun ChannelListScreen(
                     // Tiles are sized so the screen holds whole rows, and the remote scrolls a
                     // row at a time, so no tile is ever cut off at the top or bottom. Each
                     // tile's picture is 16:9, so a playing channel fills it edge to edge.
+                    listMode -> PlayerWithList(
+                        channels = channels,
+                        selectedId = listChannelId ?: state.lastWatchedId,
+                        sound = previewSound,
+                        playing = inForeground && !showSettings,
+                        favorites = state.favorites,
+                        focusId = state.lastWatchedId,
+                        focus = lastWatchedFocus,
+                        onSelect = { listChannelId = it.id },
+                        onOpen = onPlay,
+                    )
                     else -> BoxWithConstraints(Modifier.fillMaxSize()) {
                     // TVs and tablets: the chosen layout (8, 4 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
@@ -674,6 +693,138 @@ private fun AppLogo(size: Dp = 40.dp) {
     }
 }
 
+/**
+ * The "1+List" layout: one channel plays in the left three quarters, and the right quarter is a
+ * list of channels. OK on a channel in the list plays it on the left; OK on the player opens it
+ * full screen, and Back returns here.
+ */
+@Composable
+private fun PlayerWithList(
+    channels: List<Channel>,
+    selectedId: String?,
+    sound: Boolean,
+    playing: Boolean,
+    favorites: Set<String>,
+    focusId: String?,
+    focus: FocusRequester,
+    onSelect: (Channel) -> Unit,
+    onOpen: (Channel) -> Unit,
+) {
+    val context = LocalContext.current
+    val selected = channels.firstOrNull { it.id == selectedId } ?: channels.firstOrNull()
+    val stream = remember { StreamPlayer(context) }
+    var showing by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<String?>(null) }
+    DisposableEffect(stream) {
+        val listener = object : Player.Listener {
+            override fun onRenderedFirstFrame() {
+                showing = true
+            }
+        }
+        stream.player.addListener(listener)
+        stream.onError = { error = it }
+        onDispose {
+            stream.player.removeListener(listener)
+            stream.release()
+        }
+    }
+    LaunchedEffect(selected?.id) {
+        showing = false
+        error = null
+        if (selected != null) stream.play(selected) else stream.stop()
+    }
+    LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
+    LaunchedEffect(playing) { stream.player.playWhenReady = playing }
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = max(0, channels.indexOfFirst { it.id == selected?.id } - 2),
+    )
+    var playerFocused by remember { mutableStateOf(false) }
+    Row(
+        Modifier
+            .fillMaxSize()
+            .padding(14.dp),
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        Box(Modifier.weight(3f).fillMaxHeight(), contentAlignment = Alignment.Center) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .clip(CardShape)
+                    .background(Color.Black)
+                    .onFocusChanged { playerFocused = it.hasFocus }
+                    .then(if (playerFocused) Modifier.border(3.dp, FocusColor, CardShape) else Modifier)
+                    .clickable { selected?.let(onOpen) },
+                contentAlignment = Alignment.Center,
+            ) {
+                AndroidView(
+                    factory = { ctx -> TextureView(ctx).also { stream.player.setVideoTextureView(it) } },
+                    onRelease = { stream.player.clearVideoTextureView(it) },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer { alpha = if (showing) 1f else 0f },
+                )
+                if (!showing) {
+                    Text(
+                        error ?: selected?.name.orEmpty(),
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(24.dp),
+                    )
+                }
+            }
+        }
+        LazyColumn(
+            state = listState,
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            contentPadding = PaddingValues(6.dp),
+            modifier = Modifier.weight(1f).fillMaxHeight(),
+        ) {
+            items(channels, key = { it.id }) { channel ->
+                val current = channel.id == selected?.id
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .then(if (channel.id == focusId) Modifier.focusRequester(focus) else Modifier)
+                        .focusGlow(ChipShape)
+                        .clip(ChipShape)
+                        .background(if (current) AccentBlue else MaterialTheme.colorScheme.surface)
+                        .clickable { onSelect(channel) }
+                        .padding(horizontal = 10.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    val color = if (current) Color.White else MaterialTheme.colorScheme.onSurface
+                    if (channel.number > 0) {
+                        Text(
+                            "${channel.number}",
+                            color = color,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            modifier = Modifier.width(44.dp),
+                        )
+                    }
+                    Text(
+                        channel.name,
+                        color = color,
+                        fontSize = 13.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f),
+                    )
+                    if (channel.id in favorites) {
+                        Icon(
+                            Icons.Filled.Star,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.size(16.dp),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun Initials(name: String) {
     val initials = name.split(' ', '-', '_')
@@ -821,6 +972,8 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     Six("3×2", 3, 2),
     Four("2×2", 2, 2),
     Two("2×1", 2, 1),
+    /** One big player on the left with a channel list on the right. */
+    List("1+List", 1, 1),
 }
 
 private const val PREF_TILE_LAYOUT = "tile_layout"
