@@ -99,6 +99,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -134,6 +140,11 @@ fun ChannelListScreen(
     var showSettings by rememberSaveable { mutableStateOf(false) }
     val gridState = rememberLazyGridState()
     val lastWatchedFocus = remember { FocusRequester() }
+    // Lets 2×1 move the highlight to a card or the layout button directly.
+    val cardFocus = remember { mutableMapOf<String, FocusRequester>() }
+    fun cardRequester(id: String): FocusRequester =
+        if (id == state.lastWatchedId) lastWatchedFocus else cardFocus.getOrPut(id) { FocusRequester() }
+    val layoutButtonFocus = remember { FocusRequester() }
 
     // Coming back from the player: scroll to the channel that was playing and put the
     // remote's cursor on it.
@@ -291,7 +302,7 @@ fun ChannelListScreen(
                                 tileLayout = TileLayout.entries[(tileLayout.ordinal + 1) % TileLayout.entries.size]
                                 prefs.edit().putString(PREF_TILE_LAYOUT, tileLayout.name).apply()
                             },
-                            modifier = Modifier.focusGlow(),
+                            modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
                         ) { Text(tileLayout.label, fontWeight = FontWeight.Bold) }
                     }
                     IconButton(
@@ -420,7 +431,32 @@ fun ChannelListScreen(
                                 favorite = channel.id in state.favorites,
                                 onClick = { onPlay(channel) },
                                 onToggleFavorite = { onToggleFavorite(channel) },
-                                focusRequester = lastWatchedFocus.takeIf { channel.id == state.lastWatchedId },
+                                focusRequester = cardRequester(channel.id),
+                                // 2×1 pages sideways: Right on the right card shows the next two
+                                // channels, Left on the left card the previous two. Up goes to
+                                // the layout button and Down does nothing.
+                                onKey = onKey@{ event ->
+                                    if (!(wide && tileLayout == TileLayout.Two) || event.type != KeyEventType.KeyDown) {
+                                        return@onKey false
+                                    }
+                                    val target = when (event.key) {
+                                        Key.DirectionRight -> if (index % 2 == 1) index + 1 else return@onKey false
+                                        Key.DirectionLeft -> if (index % 2 == 0) index - 1 else return@onKey false
+                                        Key.DirectionUp -> {
+                                            runCatching { layoutButtonFocus.requestFocus() }
+                                            return@onKey true
+                                        }
+                                        Key.DirectionDown -> return@onKey true
+                                        else -> return@onKey false
+                                    }
+                                    val next = channels.getOrNull(target) ?: return@onKey true
+                                    scope.launch {
+                                        gridState.scrollToItem(target / 2 * 2)
+                                        withFrameNanos { }
+                                        runCatching { cardRequester(next.id).requestFocus() }
+                                    }
+                                    true
+                                },
                                 onFocusChange = { focused ->
                                     if (focused) {
                                         focusedId = channel.id
@@ -492,6 +528,7 @@ private fun ChannelCard(
     onClick: () -> Unit,
     onToggleFavorite: () -> Unit,
     focusRequester: FocusRequester? = null,
+    onKey: (KeyEvent) -> Boolean = { false },
     onFocusChange: (Boolean) -> Unit = {},
     preview: Preview? = null,
     snapshot: ImageBitmap? = null,
@@ -504,6 +541,7 @@ private fun ChannelCard(
             .focusGlow(CardShape)
             .clip(CardShape)
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
+            .onPreviewKeyEvent(onKey)
             .onFocusChanged { onFocusChange(it.hasFocus) }
             .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
     ) {
