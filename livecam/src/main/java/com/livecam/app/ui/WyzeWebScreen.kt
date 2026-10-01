@@ -113,13 +113,13 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                     pageUrl = url.orEmpty()
                     if (!isReload) problem = null
                     pageInfo = null
-                    // Save the Wyze sign-in to disk now, not only when the screen closes: an app
+                    // Save the Wyze sign-in now, not only when the screen closes: an app
                     // update or the TV closing the app would otherwise lose it.
-                    CookieManager.getInstance().flush()
+                    WyzeSignIn.save(context)
                 }
 
                 override fun onPageFinished(view: WebView, url: String?) {
-                    CookieManager.getInstance().flush()
+                    WyzeSignIn.save(context)
                 }
 
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
@@ -161,6 +161,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                     request.deny()
                 }
             }
+            WyzeSignIn.restore(context)
             loadUrl(WYZE_WEB_VIEW_URL)
         }
     }
@@ -197,7 +198,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
 
     DisposableEffect(webView) {
         onDispose {
-            CookieManager.getInstance().flush()
+            WyzeSignIn.save(context)
             webView.destroy()
         }
     }
@@ -308,6 +309,7 @@ private fun presentAsDesktop(webView: WebView) {
     }
     if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
         runCatching { WebViewCompat.addDocumentStartJavaScript(webView, DESKTOP_JS, setOf("*")) }
+        runCatching { WebViewCompat.addDocumentStartJavaScript(webView, KEEP_SESSION_JS, setOf("https://*.wyze.com")) }
     }
 }
 
@@ -430,6 +432,38 @@ private const val GRID_JS = """
   var sideBySide = tiles[1].getBoundingClientRect().top < tiles[0].getBoundingClientRect().bottom;
   if (sideBySide && last.bottom + window.scrollY > window.innerHeight + 2 && shrink > 0.75) row.__liveCamShrink = shrink * 0.95;
   return 'grid ' + tiles.length + (sideBySide ? '' : ' (stacked)') + ' at ' + w + 'px, bottom ' + Math.round(last.bottom) + '/' + innerHeight;
+})();
+"""
+
+/**
+ * Wyze also keeps part of its sign-in in the page's session storage, which is wiped whenever the
+ * WebView closes. Mirror it into local storage (which is kept) and put it back when a Wyze page
+ * opens with an empty session storage, before Wyze's own scripts run.
+ */
+private const val KEEP_SESSION_JS = """
+(function () {
+  try {
+    var KEY = '__liveCamSession';
+    var ss = window.sessionStorage, ls = window.localStorage;
+    var saved = ls.getItem(KEY);
+    if (saved && ss.length === 0) {
+      var o = JSON.parse(saved);
+      for (var k in o) ss.setItem(k, o[k]);
+    }
+    var save = function () {
+      try {
+        var o = {};
+        for (var i = 0; i < ss.length; i++) { var k = ss.key(i); o[k] = ss.getItem(k); }
+        ls.setItem(KEY, JSON.stringify(o));
+      } catch (e) {}
+    };
+    var P = Storage.prototype, set = P.setItem, rem = P.removeItem, clr = P.clear;
+    P.setItem = function (k, v) { set.call(this, k, v); if (this === ss) save(); };
+    P.removeItem = function (k) { rem.call(this, k); if (this === ss) save(); };
+    P.clear = function () { clr.call(this); if (this === ss) save(); };
+    window.addEventListener('pagehide', save);
+    setInterval(save, 5000);
+  } catch (e) {}
 })();
 """
 

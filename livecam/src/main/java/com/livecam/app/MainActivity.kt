@@ -3,7 +3,6 @@ package com.livecam.app
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.WindowManager
-import android.webkit.CookieManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +20,7 @@ import com.livecam.app.ui.LiveViewScreen
 import com.livecam.app.ui.UpdateDialog
 import com.livecam.app.ui.UpdateState
 import com.livecam.app.ui.UpdateViewModel
+import com.livecam.app.ui.WyzeSignIn
 import com.livecam.app.ui.WyzeWebScreen
 
 class MainActivity : ComponentActivity() {
@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
     override fun onStop() {
         super.onStop()
         // Keep the Wyze sign-in when the TV closes the app or an update replaces it.
-        CookieManager.getInstance().flush()
+        WyzeSignIn.save(this)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
