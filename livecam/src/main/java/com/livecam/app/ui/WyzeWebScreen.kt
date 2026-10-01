@@ -90,6 +90,9 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     var navInfo by remember { mutableStateOf<String?>(null) }
     var gridInfo by remember { mutableStateOf<String?>(null) }
     val reloadFocus = remember { FocusRequester() }
+    val appVersion = remember {
+        runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: "?"
+    }
     val webViewVersion = remember { runCatching { WebView.getCurrentWebViewPackage()?.versionName }.getOrNull() ?: "?" }
     val webView = remember {
         CursorWebView(context).apply {
@@ -236,7 +239,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                         "sign-in restored ${WyzeSignIn.lastRestored}".takeIf { WyzeSignIn.lastRestored > 0 },
                         pageInfo,
                         problem,
-                        "WebView $webViewVersion",
+                        "Live Cam $appVersion, WebView $webViewVersion",
                     ).joinToString("  ·  "),
                     style = MaterialTheme.typography.bodySmall,
                     color = if (problem != null) LiveRed else MaterialTheme.colorScheme.onSurfaceVariant,
@@ -344,15 +347,15 @@ private const val DESKTOP_JS = """
 """
 
 /**
- * Finds the row holding the live camera videos and lays the cameras out 2 across for up to
- * 4 cameras (3 across for up to 9), each sized so every row fits on screen without scrolling.
- * Sizes are set straight on the elements (Wyze's own styles override a stylesheet) and checked
- * against what actually got drawn, shrinking until the last camera is fully on screen.
+ * Finds the live camera videos and places each camera on screen ourselves: 2 across for up to
+ * 4 cameras (3 across for up to 9), as large as the space below "Cameras" allows. Wyze's own
+ * masonry layout kept stacking them in one column whatever its styles were changed to, so the
+ * cameras are pinned to exact screen positions instead, and Wyze's layout no longer matters.
  */
 private const val GRID_JS = """
 (function () {
   var vids = [].slice.call(document.querySelectorAll('video')).filter(function (v) {
-    var r = v.getBoundingClientRect(); return r.width > 80 && r.height > 45;
+    var r = v.getBoundingClientRect(); return r.width > 40 && r.height > 20;
   });
   if (vids.length < 2) return 'few';
   var row = vids[0].parentElement;
@@ -374,70 +377,45 @@ private const val GRID_JS = """
   var cols = tiles.length <= 4 ? 2 : tiles.length <= 9 ? 3 : 4;
   var rows = Math.ceil(tiles.length / cols);
   var gap = 8;
-  // Space from the top of the cameras to the bottom of the screen, measured with the page
-  // scrolled to the top.
-  var top = row.getBoundingClientRect().top + window.scrollY;
-  for (var p = row.parentElement; p && p !== document.body; p = p.parentElement) top += p.scrollTop;
-  var space = window.innerHeight - top - 12;
-  var tileH = (space - gap * (rows - 1)) / rows;
-  // Height per unit of width, from what Wyze actually drew (camera picture plus its title bar).
+  // The space to fill: the content panel (the first ancestor at least half the screen wide),
+  // from where the cameras start down to the bottom of the screen.
+  var area = row.parentElement;
+  while (area && area !== document.body && area.getBoundingClientRect().width < innerWidth * 0.5) area = area.parentElement;
+  var ar = (area || document.body).getBoundingClientRect();
+  var left = Math.max(0, ar.left) + 12, right = Math.min(innerWidth, ar.right) - 12;
+  var top = Math.max(0, row.getBoundingClientRect().top);
+  var availW = right - left, availH = innerHeight - top - 10;
+  // Height per unit of width, from what Wyze drew (camera picture plus its title bar).
   var t0 = tiles[0], ratio = t0.offsetWidth > 0 ? t0.offsetHeight / t0.offsetWidth : 0;
   if (!(ratio > 0.3 && ratio < 1.5)) ratio = 0.6;
-  var avail = row.parentElement ? row.parentElement.clientWidth : innerWidth;
-  // If the last camera still ended up below the screen, shrink a little each round (a fresh
-  // choice of cameras starts over at full size).
-  if (row.__liveCamCount !== tiles.length) { row.__liveCamCount = tiles.length; row.__liveCamShrink = 1; }
-  var shrink = row.__liveCamShrink || 1;
-  var w = Math.floor(Math.min(tileH / ratio, (avail - gap * (cols - 1)) / cols) * shrink);
+  var w = Math.floor(Math.min((availW - gap * (cols - 1)) / cols, ((availH - gap * (rows - 1)) / rows) / ratio));
   w = Math.max(160, w);
-  var px = w + 'px';
-  // A little slack: borders (Wyze outlines the selected camera) and rounding would otherwise
-  // push the second camera onto the next line.
-  var full = (w * cols + gap * (cols - 1) + 6 * cols) + 'px';
-  // Wyze uses a masonry layout: a column-wise flexbox with a fixed height, an 'order' on each
-  // camera and hidden line-break elements. Undo all of that so cameras fill rows left to right.
-  set(row, 'display', 'flex');
-  set(row, 'flex-direction', 'row');
-  set(row, 'flex-wrap', 'wrap');
-  set(row, 'align-content', 'flex-start');
+  var h = Math.round(w * ratio);
+  var x0 = left + Math.max(0, (availW - (w * cols + gap * (cols - 1))) / 2);
+  // A parent with a transform would move 'fixed' boxes; correct by what was measured last time.
+  var dx = row.__liveCamDx || 0, dy = row.__liveCamDy || 0;
+  set(row, 'height', (h * rows + gap * (rows - 1)) + 'px');
   set(row, 'min-height', '0');
-  [].slice.call(row.children).forEach(function (c) {
-    if (tiles.indexOf(c) < 0) set(c, 'display', 'none');
-  });
-  set(row, 'gap', gap + 'px');
-  set(row, 'justify-content', 'center');
-  set(row, 'align-items', 'flex-start');
-  set(row, 'width', full);
-  set(row, 'max-width', full);
-  set(row, 'margin-left', 'auto');
-  set(row, 'margin-right', 'auto');
-  set(row, 'transform', 'none');
-  set(row, 'overflow', 'visible');
-  set(row, 'height', 'auto');
-  tiles.forEach(function (t) {
+  tiles.forEach(function (t, i) {
     t.classList.add('__liveCamTile');
+    set(t, 'position', 'fixed');
     set(t, 'box-sizing', 'border-box');
-    set(t, 'width', px);
+    set(t, 'left', Math.round(x0 + (i % cols) * (w + gap) + dx) + 'px');
+    set(t, 'top', Math.round(top + Math.floor(i / cols) * (h + gap) + dy) + 'px');
+    set(t, 'width', w + 'px');
+    set(t, 'max-width', w + 'px');
     set(t, 'min-width', '0');
-    set(t, 'max-width', px);
-    set(t, 'flex', '0 0 ' + px);
-    set(t, 'margin', '0');
     set(t, 'height', 'auto');
-    set(t, 'order', '0');
-    set(t, 'position', 'relative');
-    set(t, 'left', 'auto');
-    set(t, 'top', 'auto');
+    set(t, 'margin', '0');
+    set(t, 'transform', 'none');
+    set(t, 'z-index', '1');
+    set(t, 'display', 'block');
   });
-  for (var q = row.parentElement; q && q !== document.body; q = q.parentElement) {
-    var o = getComputedStyle(q).overflowX;
-    if (o === 'auto' || o === 'scroll') q.scrollLeft = 0;
-  }
+  var r0 = tiles[0].getBoundingClientRect();
+  row.__liveCamDx = dx + Math.round(x0 - r0.left);
+  row.__liveCamDy = dy + Math.round(top - r0.top);
   var last = tiles[tiles.length - 1].getBoundingClientRect();
-  var sideBySide = tiles[1].getBoundingClientRect().top < tiles[0].getBoundingClientRect().bottom;
-  var tooLow = last.bottom + window.scrollY > window.innerHeight + 2;
-  // Still one per line, or still running off the bottom: try a little smaller next round.
-  if ((!sideBySide || tooLow) && shrink > 0.75) row.__liveCamShrink = shrink * 0.95;
-  return 'grid ' + tiles.length + (sideBySide ? '' : ' (stacked)') + ' at ' + w + 'px, bottom ' + Math.round(last.bottom) + '/' + innerHeight;
+  return 'grid ' + tiles.length + ' as ' + cols + 'x' + rows + ' at ' + w + 'px, bottom ' + Math.round(last.bottom) + '/' + innerHeight;
 })();
 """
 
