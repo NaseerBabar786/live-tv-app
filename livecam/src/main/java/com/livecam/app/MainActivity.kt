@@ -3,6 +3,7 @@ package com.livecam.app
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.WindowManager
+import android.webkit.CookieManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -81,6 +82,12 @@ class MainActivity : ComponentActivity() {
      * While a camera is full screen, Up/Down and Channel Up/Down on a TV remote switch to the
      * previous or next camera. Left/Right stay free to move between the on-screen buttons.
      */
+    override fun onStop() {
+        super.onStop()
+        // Keep the Wyze sign-in when the TV closes the app or an update replaces it.
+        CookieManager.getInstance().flush()
+    }
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         val s = viewModel.state.value
         if (s.watching != null && s.editing == null) {

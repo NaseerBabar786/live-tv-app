@@ -112,6 +112,13 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                     pageUrl = url.orEmpty()
                     if (!isReload) problem = null
                     pageInfo = null
+                    // Save the Wyze sign-in to disk now, not only when the screen closes: an app
+                    // update or the TV closing the app would otherwise lose it.
+                    CookieManager.getInstance().flush()
+                }
+
+                override fun onPageFinished(view: WebView, url: String?) {
+                    CookieManager.getInstance().flush()
                 }
 
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
