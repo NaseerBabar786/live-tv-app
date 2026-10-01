@@ -200,6 +200,8 @@ fun WyzeWebScreen(onBack: () -> Unit) {
         webView.evaluateJavascript(GRID_JS, null)
         if (on) webView.requestFocus()
     }
+    // In four-camera full screen, OK goes back to the normal view.
+    webView.onOkInFullScreen = if (fullGrid && !solo) ({ setFullGrid(false) }) else null
     webView.onNavResult = { navInfo = it }
     webView.onSoloChanged = { on ->
         solo = on
@@ -394,7 +396,12 @@ private const val GRID_JS = """
     css.id = '__liveCamGridCss';
     css.textContent =
       '.__liveCamTile *{max-width:100% !important}' +
-      '.__liveCamTile video{width:100% !important;height:auto !important;object-fit:contain !important}';
+      '.__liveCamTile video{width:100% !important;height:auto !important;object-fit:contain !important}' +
+      // Full screen: only the cameras show, on black; Wyze's menu, header and the rest are hidden.
+      'html.__liveCamOnly,html.__liveCamOnly body{background:#000 !important}' +
+      'html.__liveCamOnly body *{visibility:hidden !important}' +
+      'html.__liveCamOnly .__liveCamTile,html.__liveCamOnly .__liveCamTile *{visibility:visible !important}' +
+      'html.__liveCamOnly .__liveCamTile.__liveCamHide,html.__liveCamOnly .__liveCamTile.__liveCamHide *{visibility:hidden !important}';
     (document.head || document.documentElement).appendChild(css);
   }
   var cols = tiles.length <= 4 ? 2 : tiles.length <= 9 ? 3 : 4;
@@ -420,16 +427,12 @@ private const val GRID_JS = """
   var x0 = left + Math.max(0, (availW - (w * cols + gap * (cols - 1))) / 2);
   // A parent with a transform would move 'fixed' boxes; correct by what was measured last time.
   var dx = row.__liveCamDx || 0, dy = row.__liveCamDy || 0;
-  // One camera chosen with OK goes full screen over a black backdrop; the rest stay behind it.
+  // One camera chosen with OK goes full screen on black; the other cameras are hidden.
   var solo = window.__liveCamSolo;
   if (tiles.indexOf(solo) < 0) solo = window.__liveCamSolo = null;
-  var shade = document.getElementById('__liveCamShade');
-  if ((solo || full) && !shade) {
-    shade = document.createElement('div');
-    shade.id = '__liveCamShade';
-    shade.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;background:#000;z-index:2147482000;pointer-events:none;';
-    document.documentElement.appendChild(shade);
-  } else if (!solo && !full && shade) shade.remove();
+  var old = document.getElementById('__liveCamShade');
+  if (old) old.remove();
+  document.documentElement.classList.toggle('__liveCamOnly', !!(solo || full));
   set(row, 'height', (h * rows + gap * (rows - 1)) + 'px');
   set(row, 'min-height', '0');
   tiles.forEach(function (t, i) {
@@ -437,11 +440,13 @@ private const val GRID_JS = """
     set(t, 'position', 'fixed');
     set(t, 'box-sizing', 'border-box');
     var tw = w, tx = x0 + (i % cols) * (w + gap), ty = top + Math.floor(i / cols) * (h + gap);
+    t.classList.toggle('__liveCamHide', !!solo && t !== solo);
     if (t === solo) {
       tw = Math.floor(Math.min(innerWidth, innerHeight / ratio));
       tx = (innerWidth - tw) / 2;
       ty = Math.max(0, (innerHeight - tw * ratio) / 2);
     }
+    if (i === 0) { t.__liveCamX = tx; t.__liveCamY = ty; }
     set(t, 'left', Math.round(tx + dx) + 'px');
     set(t, 'top', Math.round(ty + dy) + 'px');
     set(t, 'width', tw + 'px');
@@ -453,11 +458,9 @@ private const val GRID_JS = """
     set(t, 'z-index', t === solo ? '2147482002' : full ? '2147482001' : '1');
     set(t, 'display', 'block');
   });
-  if (!solo && !full) {
-    var r0 = tiles[0].getBoundingClientRect();
-    row.__liveCamDx = dx + Math.round(x0 - r0.left);
-    row.__liveCamDy = dy + Math.round(top - r0.top);
-  }
+  var r0 = tiles[0].getBoundingClientRect();
+  row.__liveCamDx = dx + Math.round(tiles[0].__liveCamX - r0.left);
+  row.__liveCamDy = dy + Math.round(tiles[0].__liveCamY - r0.top);
   var last = tiles[tiles.length - 1].getBoundingClientRect();
   if (solo) return 'grid ' + tiles.length + ', camera ' + (tiles.indexOf(solo) + 1) + ' full screen';
   return 'grid ' + tiles.length + ' as ' + cols + 'x' + rows + ' at ' + w + 'px, bottom ' + Math.round(last.bottom) + '/' + innerHeight;
