@@ -226,24 +226,55 @@ private const val NAV_JS = """
     return s.visibility !== 'hidden' && s.display !== 'none' && s.pointerEvents !== 'none' &&
       (parseFloat(s.opacity) > 0.05 || el.tagName === 'INPUT');
   }
-  var root = document;
-  var layers = document.querySelectorAll('.MuiModal-root:not(.MuiModal-hidden),[role=dialog],[aria-modal=true],[role=menu],[role=listbox]');
-  for (var i = layers.length - 1; i >= 0; i--) if (visible(layers[i])) { root = layers[i]; break; }
-  var found = Array.prototype.slice.call(root.querySelectorAll(SEL));
+  var found = Array.prototype.slice.call(document.querySelectorAll(SEL));
   var all = document.getElementsByTagName('*');
   for (var j = 0; j < all.length; j++) {
     var e = all[j];
-    if ((root === document || root.contains(e)) && getComputedStyle(e).cursor === 'pointer' && found.indexOf(e) < 0) found.push(e);
+    if (getComputedStyle(e).cursor === 'pointer' && found.indexOf(e) < 0) found.push(e);
   }
   found = found.filter(visible);
-  // Keep the outermost of nested clickables (a row, not the checkbox inside it).
-  var items = found.filter(function(e){
+  // Something clickable that holds several other clickables is a container (a menu, a pop-up),
+  // not a control: skip it. Of the rest, keep the outermost (a row, not the checkbox inside it).
+  found = found.filter(function(e){
+    var inside = 0;
+    for (var k = 0; k < found.length && inside < 2; k++) if (found[k] !== e && e.contains(found[k])) inside++;
+    return inside < 2;
+  });
+  var outer = found.filter(function(e){
     for (var p = e.parentElement; p; p = p.parentElement) if (found.indexOf(p) >= 0) return false;
     return true;
   });
-  var where = root === document ? '' : ' in pop-up';
-  if (!items.length) return 'none' + where;
   function center(e){ var r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+  function onScreen(e){ var c = center(e); return c.x >= 0 && c.y >= 0 && c.x < innerWidth && c.y < innerHeight; }
+  // Only things a tap would reach: an open pop-up covers the page with an invisible layer,
+  // so whatever is under it can't be pressed and is skipped.
+  function reachable(e){
+    var c = center(e), h = document.elementFromPoint(c.x, c.y);
+    return !!h && (h === e || e.contains(h) || h.contains(e));
+  }
+  function scrollers(e){
+    var list = [];
+    for (var p = e.parentElement; p && p !== document.body; p = p.parentElement) {
+      var o = getComputedStyle(p).overflowY;
+      if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight) list.push(p);
+    }
+    return list;
+  }
+  var blocked = false, open = [], boxes = [];
+  outer.forEach(function(e){
+    if (!onScreen(e)) return;
+    if (reachable(e)) { open.push(e); scrollers(e).forEach(function(b){ if (boxes.indexOf(b) < 0) boxes.push(b); }); }
+    else blocked = true;
+  });
+  // Off-screen items count when they can be scrolled to: anywhere on a normal page, or inside
+  // the same scrolling list as reachable items when a pop-up is open.
+  var items = outer.filter(function(e){
+    if (onScreen(e)) return open.indexOf(e) >= 0;
+    if (!blocked) return true;
+    return scrollers(e).some(function(b){ return boxes.indexOf(b) >= 0; });
+  });
+  var where = blocked ? ' in pop-up' : '';
+  if (!items.length) return 'none' + where;
   var cur = window.$HIGHLIGHT;
   var next = null;
   if (!cur || !cur.isConnected || items.indexOf(cur) < 0) {
@@ -265,7 +296,7 @@ private const val NAV_JS = """
       var score = along + across * 2;
       if (score < bestScore) { bestScore = score; next = e; }
     });
-    if (!next) return (dy < 0 && root === document) ? 'exitTop' : 'none' + where;
+    if (!next) return (dy < 0 && !blocked) ? 'exitTop' : 'none' + where;
   }
   next.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   window.$HIGHLIGHT = next;
