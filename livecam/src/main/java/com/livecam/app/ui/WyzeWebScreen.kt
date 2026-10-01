@@ -25,7 +25,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Mouse
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -84,6 +86,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     var problem by remember { mutableStateOf<String?>(null) }
     // What the page actually drew, e.g. "0 words, 12 elements", to tell a blank page from a slow one.
     var pageInfo by remember { mutableStateOf<String?>(null) }
+    var pointerMode by remember { mutableStateOf(false) }
     val reloadFocus = remember { FocusRequester() }
     val webViewVersion = remember { runCatching { WebView.getCurrentWebViewPackage()?.versionName }.getOrNull() ?: "?" }
     val webView = remember {
@@ -131,6 +134,9 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                 }
 
                 override fun onConsoleMessage(message: ConsoleMessage): Boolean {
+                    // Wyze's ad and analytics tags fail harmlessly; don't report them.
+                    val text = message.message()
+                    if (THIRD_PARTY.any { it in text } || THIRD_PARTY.any { it in message.sourceId().orEmpty() }) return false
                     when (message.messageLevel()) {
                         ConsoleMessage.MessageLevel.ERROR ->
                             problem = "Page script error: ${message.message().take(160)}"
@@ -212,6 +218,19 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                     color = if (problem != null) LiveRed else MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
+                )
+            }
+            // Arrow keys either jump between buttons (default) or move a free pointer.
+            IconButton(
+                onClick = {
+                    pointerMode = !pointerMode
+                    webView.pointerMode = pointerMode
+                },
+                modifier = Modifier.focusRing(CircleShape),
+            ) {
+                Icon(
+                    if (pointerMode) Icons.Default.GridView else Icons.Default.Mouse,
+                    contentDescription = if (pointerMode) "Use arrow keys to jump between buttons" else "Use a pointer",
                 )
             }
             IconButton(
@@ -319,6 +338,8 @@ private const val PAGE_INFO_JS = """
   return info;
 })()
 """
+
+private val THIRD_PARTY = listOf("google", "doubleclick", "gtm", "facebook")
 
 private const val DESKTOP_USER_AGENT =
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
