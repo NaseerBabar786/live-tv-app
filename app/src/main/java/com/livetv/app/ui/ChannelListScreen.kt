@@ -460,13 +460,20 @@ fun ChannelListScreen(
                     // grid fits exactly [columns] tiles in a row (a bit under, so rounding can't drop one).
                     val columnGap = if (wide) maxOf(gap, (maxWidth - tileWidth * columns) / (columns + 1) - 1.dp) else gap
                     @Composable
-                    fun Tile(index: Int, channel: Channel, onKey: (KeyEvent) -> Boolean, onFocused: () -> Unit = {}) =
+                    fun Tile(
+                        index: Int,
+                        channel: Channel,
+                        onKey: (KeyEvent) -> Boolean,
+                        onFocused: () -> Unit = {},
+                        onLongClick: (() -> Unit)? = null,
+                    ) =
                         ChannelCard(
                             height = cardHeight,
                             channel = channel,
                             favorite = channel.id in state.favorites,
                             onClick = { onPlay(channel) },
                             onToggleFavorite = { onToggleFavorite(channel) },
+                            onLongClick = onLongClick,
                             focusRequester = cardRequester(channel.id),
                             onKey = onKey,
                             onFocusChange = { focused ->
@@ -532,7 +539,15 @@ fun ChannelListScreen(
                                         // Keyed by channel, so a playing card slides over without restarting.
                                         key(channel.id) {
                                             Box(Modifier.width(tileWidth)) {
-                                                Tile(start + r * columns + c, channel, onKey(start + r * columns + c))
+                                                // In 2×1, holding OK moves the highlight, and the sound, to the
+                                                // other tile without changing channels.
+                                                val other = if (sideways) window.firstOrNull { it.id != channel.id } else null
+                                                Tile(
+                                                    start + r * columns + c,
+                                                    channel,
+                                                    onKey(start + r * columns + c),
+                                                    onLongClick = other?.let { { runCatching { cardRequester(it.id).requestFocus() } } },
+                                                )
                                             }
                                         }
                                     }
@@ -620,6 +635,8 @@ private fun ChannelCard(
     favorite: Boolean,
     onClick: () -> Unit,
     onToggleFavorite: () -> Unit,
+    /** Holding OK; adds or removes the favorite unless given. */
+    onLongClick: (() -> Unit)? = null,
     focusRequester: FocusRequester? = null,
     onKey: (KeyEvent) -> Boolean = { false },
     onFocusChange: (Boolean) -> Unit = {},
@@ -636,7 +653,7 @@ private fun ChannelCard(
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
             .onPreviewKeyEvent(onKey)
             .onFocusChanged { onFocusChange(it.hasFocus) }
-            .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick ?: onToggleFavorite),
     ) {
         Box(
             Modifier
