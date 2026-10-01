@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Mouse
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.Icon
@@ -91,6 +92,14 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     var gridInfo by remember { mutableStateOf<String?>(null) }
     // A camera shown full screen: the top bar hides so the camera gets the whole TV.
     var solo by remember { mutableStateOf(false) }
+    // All the chosen cameras filling the TV, without Wyze's menu or the top bar.
+    var fullGrid by remember { mutableStateOf(false) }
+    fun setFullGrid(on: Boolean) {
+        fullGrid = on
+        webView.evaluateJavascript("window.__liveCamFull = $on;", null)
+        webView.evaluateJavascript(GRID_JS, null)
+        if (on) webView.requestFocus()
+    }
     val reloadFocus = remember { FocusRequester() }
     val appVersion = remember {
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: "?"
@@ -217,6 +226,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     BackHandler {
         when {
             solo -> webView.exitSolo()
+            fullGrid -> setFullGrid(false)
             webView.canGoBack() -> webView.goBack()
             else -> onBack()
         }
@@ -228,7 +238,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
             .background(MaterialTheme.colorScheme.background)
             .safeDrawingPadding()
     ) {
-        if (!solo) Row(
+        if (!solo && !fullGrid) Row(
             Modifier
                 .fillMaxWidth()
                 .then(backIntoPage)
@@ -269,6 +279,9 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                     if (pointerMode) Icons.Default.GridView else Icons.Default.Mouse,
                     contentDescription = if (pointerMode) "Use arrow keys to jump between buttons" else "Use a pointer",
                 )
+            }
+            IconButton(onClick = { setFullGrid(true) }, modifier = Modifier.focusRing(CircleShape)) {
+                Icon(Icons.Default.Fullscreen, contentDescription = "Cameras full screen")
             }
             IconButton(
                 onClick = { webView.loadUrl(WYZE_WEB_VIEW_URL) },
@@ -394,7 +407,10 @@ private const val GRID_JS = """
   var ar = (area || document.body).getBoundingClientRect();
   var left = Math.max(0, ar.left) + 12, right = Math.min(innerWidth, ar.right) - 12;
   var top = Math.max(0, row.getBoundingClientRect().top);
-  var availW = right - left, availH = innerHeight - top - 10;
+  // Full-screen mode: the cameras get the whole window, over a black backdrop.
+  var full = !!window.__liveCamFull;
+  if (full) { left = 4; right = innerWidth - 4; top = 4; }
+  var availW = right - left, availH = innerHeight - top - (full ? 4 : 10);
   // Height per unit of width, from what Wyze drew (camera picture plus its title bar).
   var t0 = tiles[0], ratio = t0.offsetWidth > 0 ? t0.offsetHeight / t0.offsetWidth : 0;
   if (!(ratio > 0.3 && ratio < 1.5)) ratio = 0.6;
@@ -408,12 +424,12 @@ private const val GRID_JS = """
   var solo = window.__liveCamSolo;
   if (tiles.indexOf(solo) < 0) solo = window.__liveCamSolo = null;
   var shade = document.getElementById('__liveCamShade');
-  if (solo && !shade) {
+  if ((solo || full) && !shade) {
     shade = document.createElement('div');
     shade.id = '__liveCamShade';
     shade.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;background:#000;z-index:2147482000;pointer-events:none;';
     document.documentElement.appendChild(shade);
-  } else if (!solo && shade) shade.remove();
+  } else if (!solo && !full && shade) shade.remove();
   set(row, 'height', (h * rows + gap * (rows - 1)) + 'px');
   set(row, 'min-height', '0');
   tiles.forEach(function (t, i) {
@@ -434,10 +450,10 @@ private const val GRID_JS = """
     set(t, 'height', 'auto');
     set(t, 'margin', '0');
     set(t, 'transform', 'none');
-    set(t, 'z-index', t === solo ? '2147482001' : '1');
+    set(t, 'z-index', t === solo ? '2147482002' : full ? '2147482001' : '1');
     set(t, 'display', 'block');
   });
-  if (!solo) {
+  if (!solo && !full) {
     var r0 = tiles[0].getBoundingClientRect();
     row.__liveCamDx = dx + Math.round(x0 - r0.left);
     row.__liveCamDy = dy + Math.round(top - r0.top);
