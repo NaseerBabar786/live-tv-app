@@ -1,5 +1,9 @@
 package com.livetv.app.ui
 
+import android.content.Context
+import android.net.ConnectivityManager
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import android.view.TextureView
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
@@ -125,23 +129,52 @@ fun ChannelListScreen(
         }
     }
 
-    // Live preview: the channel the remote's yellow highlight rests on plays, muted, in its
-    // own card after a moment. Touch screens never focus a card, so phones don't preview.
+    // Live previews, all muted and in low quality:
+    //  * every channel in the top row plays while that row is on screen (on Wi-Fi or
+    //    Ethernet only, so phones on mobile data don't use it up);
+    //  * the channel the remote's yellow highlight rests on plays after a moment.
     val context = LocalContext.current
     var previewId by remember { mutableStateOf<String?>(null) }
-    val preview = remember { Preview(StreamPlayer(context).apply { player.volume = 0f }) }
-    DisposableEffect(Unit) { onDispose { preview.stream.release() } }
-    LaunchedEffect(previewId) {
+    var inForeground by remember { mutableStateOf(true) }
+    val preview = remember { Preview.create(context) }
+    val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
+    val firstRowIds by remember {
+        derivedStateOf {
+            gridState.layoutInfo.visibleItemsInfo.filter { it.row == 0 }.map { it.key as String }
+        }
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            preview.stream.release()
+            rowPreviews.values.forEach { it.stream.release() }
+        }
+    }
+    LaunchedEffect(firstRowIds, inForeground) {
+        val wanted = if (inForeground && !Preview.metered(context)) firstRowIds.toSet() else emptySet()
+        (rowPreviews.keys - wanted).forEach { id -> rowPreviews.remove(id)?.stream?.release() }
+        delay(1_000)
+        for (id in wanted - rowPreviews.keys) {
+            val channel = state.channels.firstOrNull { it.id == id } ?: continue
+            rowPreviews[id] = Preview.create(context).also { it.stream.play(channel) }
+        }
+    }
+    LaunchedEffect(previewId, inForeground) {
         preview.stream.stop()
         preview.showing = false
-        val channel = previewId?.let { id -> state.channels.firstOrNull { it.id == id } } ?: return@LaunchedEffect
+        val id = previewId?.takeIf { inForeground } ?: return@LaunchedEffect
         delay(1_000)
+        if (id in rowPreviews) return@LaunchedEffect // already playing in the top row
+        val channel = state.channels.firstOrNull { it.id == id } ?: return@LaunchedEffect
         preview.stream.play(channel)
     }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_STOP) previewId = null
+            when (event) {
+                Lifecycle.Event.ON_STOP -> inForeground = false
+                Lifecycle.Event.ON_START -> inForeground = true
+                else -> Unit
+            }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
@@ -278,7 +311,7 @@ fun ChannelListScreen(
                                     if (focused) previewId = channel.id
                                     else if (previewId == channel.id) previewId = null
                                 },
-                                preview = preview.takeIf { channel.id == previewId },
+                                preview = rowPreviews[channel.id] ?: preview.takeIf { channel.id == previewId },
                             )
                         }
                     }
@@ -515,7 +548,7 @@ private fun WeatherNow() {
     }
 }
 
-/** The shared preview player, and whether its video has started (the logo shows until then). */
+/** A muted, low-quality preview player, and whether its video has started (the logo shows until then). */
 @Stable
 private class Preview(val stream: StreamPlayer) {
     var showing by mutableStateOf(false)
@@ -526,6 +559,20 @@ private class Preview(val stream: StreamPlayer) {
                 showing = true
             }
         })
+    }
+
+    companion object {
+        fun create(context: Context) = Preview(
+            StreamPlayer(context).apply {
+                player.volume = 0f
+                player.trackSelectionParameters =
+                    player.trackSelectionParameters.buildUpon().setMaxVideoSizeSd().build()
+            }
+        )
+
+        /** True on mobile data (or any connection the system says costs money). */
+        fun metered(context: Context): Boolean =
+            (context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager)?.isActiveNetworkMetered ?: true
     }
 }
 
