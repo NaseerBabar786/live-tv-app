@@ -389,7 +389,9 @@ private const val GRID_JS = """
   var w = Math.floor(Math.min(tileH / ratio, (avail - gap * (cols - 1)) / cols) * shrink);
   w = Math.max(160, w);
   var px = w + 'px';
-  var full = (w * cols + gap * (cols - 1)) + 'px';
+  // A little slack: borders (Wyze outlines the selected camera) and rounding would otherwise
+  // push the second camera onto the next line.
+  var full = (w * cols + gap * (cols - 1) + 6 * cols) + 'px';
   // Wyze uses a masonry layout: a column-wise flexbox with a fixed height, an 'order' on each
   // camera and hidden line-break elements. Undo all of that so cameras fill rows left to right.
   set(row, 'display', 'flex');
@@ -401,7 +403,7 @@ private const val GRID_JS = """
     if (tiles.indexOf(c) < 0) set(c, 'display', 'none');
   });
   set(row, 'gap', gap + 'px');
-  set(row, 'justify-content', 'flex-start');
+  set(row, 'justify-content', 'center');
   set(row, 'align-items', 'flex-start');
   set(row, 'width', full);
   set(row, 'max-width', full);
@@ -412,6 +414,7 @@ private const val GRID_JS = """
   set(row, 'height', 'auto');
   tiles.forEach(function (t) {
     t.classList.add('__liveCamTile');
+    set(t, 'box-sizing', 'border-box');
     set(t, 'width', px);
     set(t, 'min-width', '0');
     set(t, 'max-width', px);
@@ -428,9 +431,10 @@ private const val GRID_JS = """
     if (o === 'auto' || o === 'scroll') q.scrollLeft = 0;
   }
   var last = tiles[tiles.length - 1].getBoundingClientRect();
-  // Only shrink once the cameras really are side by side; otherwise the layout is the problem.
   var sideBySide = tiles[1].getBoundingClientRect().top < tiles[0].getBoundingClientRect().bottom;
-  if (sideBySide && last.bottom + window.scrollY > window.innerHeight + 2 && shrink > 0.75) row.__liveCamShrink = shrink * 0.95;
+  var tooLow = last.bottom + window.scrollY > window.innerHeight + 2;
+  // Still one per line, or still running off the bottom: try a little smaller next round.
+  if ((!sideBySide || tooLow) && shrink > 0.75) row.__liveCamShrink = shrink * 0.95;
   return 'grid ' + tiles.length + (sideBySide ? '' : ' (stacked)') + ' at ' + w + 'px, bottom ' + Math.round(last.bottom) + '/' + innerHeight;
 })();
 """
