@@ -88,6 +88,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     var pageInfo by remember { mutableStateOf<String?>(null) }
     var pointerMode by remember { mutableStateOf(false) }
     var navInfo by remember { mutableStateOf<String?>(null) }
+    var gridInfo by remember { mutableStateOf<String?>(null) }
     val reloadFocus = remember { FocusRequester() }
     val webViewVersion = remember { runCatching { WebView.getCurrentWebViewPackage()?.versionName }.getOrNull() ?: "?" }
     val webView = remember {
@@ -177,7 +178,9 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     LaunchedEffect(webView) {
         while (true) {
             delay(1_500)
-            webView.evaluateJavascript(GRID_JS, null)
+            webView.evaluateJavascript(GRID_JS) { result ->
+                gridInfo = result?.trim('"')?.takeIf { it.startsWith("grid") }
+            }
         }
     }
     // Up at the top of the page moves to the Reload button; Down from the top bar goes back in.
@@ -227,6 +230,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                     listOfNotNull(
                         pageUrl.removePrefix("https://").substringBefore('?').ifEmpty { null },
                         navInfo,
+                        gridInfo,
                         pageInfo,
                         problem,
                         "WebView $webViewVersion",
@@ -336,8 +340,10 @@ private const val DESKTOP_JS = """
 """
 
 /**
- * Finds the row holding the live camera videos and turns it into a grid (2 across for up to
- * 4 cameras, 3 across for up to 9), sized so every camera fits on screen without scrolling.
+ * Finds the row holding the live camera videos and lays the cameras out 2 across for up to
+ * 4 cameras (3 across for up to 9), each sized so every row fits on screen without scrolling.
+ * Sizes are set straight on the elements (Wyze's own styles override a stylesheet) and checked
+ * against what actually got drawn, shrinking until the last camera is fully on screen.
  */
 private const val GRID_JS = """
 (function () {
@@ -352,32 +358,62 @@ private const val GRID_JS = """
     return vids.some(function (v) { return c.contains(v); });
   });
   if (tiles.length < 2) return 'no tiles';
+  function set(el, k, v) { if (el.style.getPropertyValue(k) !== v) el.style.setProperty(k, v, 'important'); }
   if (!document.getElementById('__liveCamGridCss')) {
     var css = document.createElement('style');
     css.id = '__liveCamGridCss';
     css.textContent =
-      '.__liveCamGrid{display:grid !important;gap:8px !important;transform:none !important;' +
-      'flex-wrap:wrap !important;overflow:visible !important;justify-content:center !important;width:100% !important}' +
-      '.__liveCamGrid>*{width:auto !important;min-width:0 !important;max-width:100% !important;' +
-      'flex:none !important;margin:0 !important;height:auto !important}' +
-      '.__liveCamGrid>* *{max-width:100% !important}' +
-      '.__liveCamGrid video{width:100% !important;height:auto !important;object-fit:contain !important}';
+      '.__liveCamTile *{max-width:100% !important}' +
+      '.__liveCamTile video{width:100% !important;height:auto !important;object-fit:contain !important}';
     (document.head || document.documentElement).appendChild(css);
   }
-  row.classList.add('__liveCamGrid');
   var cols = tiles.length <= 4 ? 2 : tiles.length <= 9 ? 3 : 4;
   var rows = Math.ceil(tiles.length / cols);
-  var top = Math.max(0, row.getBoundingClientRect().top + window.scrollY);
-  var space = window.innerHeight - top - 16;
-  var tileH = (space - 8 * (rows - 1)) / rows;
-  var width = Math.max(160, Math.floor(tileH * 16 / 9));
-  var tpl = 'repeat(' + cols + ', minmax(0, ' + width + 'px))';
-  if (row.style.gridTemplateColumns !== tpl) row.style.setProperty('grid-template-columns', tpl, 'important');
-  for (var p = row.parentElement; p && p !== document.body; p = p.parentElement) {
-    var o = getComputedStyle(p).overflowX;
-    if (o === 'auto' || o === 'scroll') p.scrollLeft = 0;
+  var gap = 8;
+  // Space from the top of the cameras to the bottom of the screen, measured with the page
+  // scrolled to the top.
+  var top = row.getBoundingClientRect().top + window.scrollY;
+  for (var p = row.parentElement; p && p !== document.body; p = p.parentElement) top += p.scrollTop;
+  var space = window.innerHeight - top - 12;
+  var tileH = (space - gap * (rows - 1)) / rows;
+  // Height per unit of width, from what Wyze actually drew (camera picture plus its title bar).
+  var t0 = tiles[0], ratio = t0.offsetWidth > 0 ? t0.offsetHeight / t0.offsetWidth : 0;
+  if (!(ratio > 0.3 && ratio < 1.5)) ratio = 0.6;
+  var avail = row.parentElement ? row.parentElement.clientWidth : innerWidth;
+  // If the last camera still ended up below the screen, keep shrinking a little each round.
+  var shrink = row.__liveCamShrink || 1;
+  var w = Math.floor(Math.min(tileH / ratio, (avail - gap * (cols - 1)) / cols) * shrink);
+  w = Math.max(160, w);
+  var px = w + 'px';
+  var full = (w * cols + gap * (cols - 1)) + 'px';
+  set(row, 'display', 'flex');
+  set(row, 'flex-wrap', 'wrap');
+  set(row, 'gap', gap + 'px');
+  set(row, 'justify-content', 'flex-start');
+  set(row, 'align-items', 'flex-start');
+  set(row, 'width', full);
+  set(row, 'max-width', full);
+  set(row, 'margin-left', 'auto');
+  set(row, 'margin-right', 'auto');
+  set(row, 'transform', 'none');
+  set(row, 'overflow', 'visible');
+  set(row, 'height', 'auto');
+  tiles.forEach(function (t) {
+    t.classList.add('__liveCamTile');
+    set(t, 'width', px);
+    set(t, 'min-width', '0');
+    set(t, 'max-width', px);
+    set(t, 'flex', '0 0 ' + px);
+    set(t, 'margin', '0');
+    set(t, 'height', 'auto');
+  });
+  for (var q = row.parentElement; q && q !== document.body; q = q.parentElement) {
+    var o = getComputedStyle(q).overflowX;
+    if (o === 'auto' || o === 'scroll') q.scrollLeft = 0;
   }
-  return 'grid ' + tiles.length;
+  var last = tiles[tiles.length - 1].getBoundingClientRect();
+  if (last.bottom + window.scrollY > window.innerHeight + 2 && shrink > 0.5) row.__liveCamShrink = shrink * 0.94;
+  return 'grid ' + tiles.length + ' at ' + w + 'px, bottom ' + Math.round(last.bottom) + '/' + innerHeight;
 })();
 """
 
