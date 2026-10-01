@@ -1,17 +1,13 @@
 package com.livetv.app.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,17 +19,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.livetv.app.R
 import kotlinx.coroutines.delay
 
-private const val SPONSOR_SECONDS = 10
+private const val SPONSOR_SECONDS = 5
 
 /** Shown for [SPONSOR_SECONDS] seconds when the app starts: thanks and a word from our sponsor. */
 @Composable
@@ -47,31 +39,19 @@ fun SponsorScreen(onDone: () -> Unit) {
         onDone()
     }
 
-    BoxWithConstraints(
+    // Just the words, centred on the screen.
+    Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
     ) {
-        // The banner is centred with the words under it, up to 405x315dp, and never more
-        // than 60% of the screen's height so everything fits on a TV.
-        val bannerHeight = minOf(315.dp, maxHeight * 0.6f)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.verticalScroll(rememberScrollState()),
         ) {
-            Image(
-                painter = painterResource(R.drawable.bulkbazaar_square),
-                contentDescription = "Bulk Bazaar Inc.: wholesale T-shirt bags. bulkbazaar.ca",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .widthIn(max = 405.dp)
-                    .heightIn(max = bannerHeight)
-                    .aspectRatio(300f / 250f)
-                    .clip(RoundedCornerShape(14.dp)),
-            )
             SponsorWords(secondsLeft, TextAlign.Center)
         }
     }
