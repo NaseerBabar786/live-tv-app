@@ -30,6 +30,9 @@ class CursorWebView(context: Context) : WebView(context) {
     /** Called when a camera goes full screen (true) or back to the grid of cameras (false). */
     var onSoloChanged: ((Boolean) -> Unit)? = null
 
+    /** When set, OK runs this instead of acting on the highlighted button. */
+    var onOkInFullScreen: (() -> Unit)? = null
+
     /** What the last arrow press did, e.g. "moved in pop-up, 9 choices", for the status line. */
     var onNavResult: ((String) -> Unit)? = null
 
@@ -124,6 +127,7 @@ class CursorWebView(context: Context) : WebView(context) {
      * else, taps the middle of the highlighted button, the way a finger would.
      */
     private fun pressHighlighted() {
+        onOkInFullScreen?.let { it(); return }
         evaluateJavascript(SOLO_TOGGLE_JS) { raw ->
             when (raw?.trim('"')) {
                 "on" -> onSoloChanged?.invoke(true)
