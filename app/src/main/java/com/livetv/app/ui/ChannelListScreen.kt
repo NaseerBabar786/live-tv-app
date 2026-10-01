@@ -158,6 +158,9 @@ fun ChannelListScreen(
     fun cardRequester(id: String): FocusRequester =
         if (id == state.lastWatchedId) lastWatchedFocus else cardFocus.getOrPut(id) { FocusRequester() }
     val layoutButtonFocus = remember { FocusRequester() }
+    val chipFocus = remember { FocusRequester() }
+    // 2×1: Up is being held down (it goes to the filter row instead of changing channel).
+    var upHeld by remember { mutableStateOf(false) }
 
     // Live previews in low quality: the highlighted card plays with sound, and every other
     // card on screen shows one still picture of what's on. Wi-Fi or Ethernet only, so mobile
@@ -244,6 +247,11 @@ fun ChannelListScreen(
             p.stream.stop(); p.showing = false; pool += p
         }
     }
+    // In 2×1 the sound comes from the side that isn't highlighted, so the highlighted side can
+    // flip through channels quietly. Everywhere else it's the highlighted card.
+    val soundId = if (windowed && tileLayout == TileLayout.Two && window.any { it.id == focusedId }) {
+        window.firstOrNull { it.id != focusedId }?.id
+    } else focusedId
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
@@ -258,7 +266,7 @@ fun ChannelListScreen(
             if (id in rowPreviews) continue
             val channel = state.channels.firstOrNull { it.id == id } ?: continue
             val p = pool.removeLastOrNull() ?: Preview.create(context)
-            p.stream.player.volume = if (previewSound && id == focusedId) 1f else 0f
+            p.stream.player.volume = if (previewSound && id == soundId) 1f else 0f
             rowPreviews[id] = p
             p.stream.play(channel)
         }
@@ -284,9 +292,9 @@ fun ChannelListScreen(
             }
         }
     }
-    LaunchedEffect(previewSound, focusedId, rowPreviews.keys.toSet()) {
+    LaunchedEffect(previewSound, soundId, rowPreviews.keys.toSet()) {
         // Pictures being taken stay silent; only the highlighted card has sound.
-        rowPreviews.forEach { (id, p) -> p.stream.player.volume = if (previewSound && id == focusedId) 1f else 0f }
+        rowPreviews.forEach { (id, p) -> p.stream.player.volume = if (previewSound && id == soundId) 1f else 0f }
     }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -400,6 +408,7 @@ fun ChannelListScreen(
                 // One row: All, Favorites, then genres (countries are picked in Settings; favorites
                 // also lead the list). All clears every filter; tapping a selected chip clears it.
                 ChipRow(
+                    focus = chipFocus,
                     items = listOf(FILTER_ALL, FILTER_FAVORITES) + state.categories,
                     selected = setOfNotNull(
                         FILTER_ALL.takeIf { state.filter == FILTER_ALL && state.category == null },
@@ -505,23 +514,37 @@ fun ChannelListScreen(
                         // change channels: they move the highlight, and past the last (or first) tile
                         // every channel moves along one place and one new channel comes in. Up goes
                         // to the layout button and Down does nothing.
-                        // 2×1: Left and Right move the highlight (and the sound) between the two
-                        // sides, Up and Down change the highlighted side's channel, and Back goes up
-                        // to the top bar.
+                        // 2×1: Left and Right move the highlight between the two sides, Up and Down
+                        // change the highlighted side's channel while the other side plays the sound,
+                        // holding Up goes to the filter row, and Back goes up to the top bar.
                         fun twoKey(channel: Channel): (KeyEvent) -> Boolean = onKey@{ event ->
                             if (event.key == Key.Back) {
                                 // Taken on both press and release, so the app doesn't also go back.
                                 if (event.type == KeyEventType.KeyUp) runCatching { layoutButtonFocus.requestFocus() }
                                 return@onKey true
                             }
-                            if (event.type != KeyEventType.KeyDown) return@onKey false
+                            // Up changes channel when it's let go, unless it was held down.
+                            if (event.key == Key.DirectionUp && event.type == KeyEventType.KeyDown) {
+                                if (event.nativeKeyEvent.repeatCount == 0) upHeld = false
+                                if (event.nativeKeyEvent.repeatCount == 1) {
+                                    upHeld = true
+                                    runCatching { chipFocus.requestFocus() }
+                                }
+                                return@onKey true
+                            }
+                            val up = event.key == Key.DirectionUp && event.type == KeyEventType.KeyUp
+                            if (up && upHeld) {
+                                upHeld = false
+                                return@onKey true
+                            }
+                            if (!up && event.type != KeyEventType.KeyDown) return@onKey false
                             val side = window.indexOfFirst { it.id == channel.id }
                             val other = window.getOrNull(1 - side)
-                            val target = when (event.key) {
-                                Key.DirectionLeft -> window.first().takeIf { side == 1 }
-                                Key.DirectionRight -> window.getOrNull(1).takeIf { side == 0 }
-                                Key.DirectionUp, Key.DirectionDown -> {
-                                    val step = if (event.key == Key.DirectionDown) 1 else -1
+                            val target = when {
+                                event.key == Key.DirectionLeft -> window.first().takeIf { side == 1 }
+                                event.key == Key.DirectionRight -> window.getOrNull(1).takeIf { side == 0 }
+                                up || event.key == Key.DirectionDown -> {
+                                    val step = if (up) -1 else 1
                                     var j = channels.indexOfFirst { it.id == channel.id } + step
                                     if (channels.getOrNull(j)?.id == other?.id) j += step
                                     channels.getOrNull(j)?.also { next ->
@@ -637,15 +660,17 @@ fun ChannelListScreen(
 }
 
 @Composable
-private fun ChipRow(items: List<String>, selected: Set<String>, onSelect: (String) -> Unit) {
+private fun ChipRow(focus: FocusRequester, items: List<String>, selected: Set<String>, onSelect: (String) -> Unit) {
     // Without the extra invisible touch margin around chips, the focus glow hugs the chip's edges.
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
-        ChipRowContent(items, selected, onSelect)
+        ChipRowContent(focus, items, selected, onSelect)
     }
 }
 
 @Composable
-private fun ChipRowContent(items: List<String>, selected: Set<String>, onSelect: (String) -> Unit) {
+private fun ChipRowContent(focus: FocusRequester, items: List<String>, selected: Set<String>, onSelect: (String) -> Unit) {
+    // Holding Up in 2×1 lands on the selected chip (or All).
+    val focusItem = items.firstOrNull { it in selected } ?: items.firstOrNull()
     LazyRow(
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -660,7 +685,9 @@ private fun ChipRowContent(items: List<String>, selected: Set<String>, onSelect:
                     selectedLabelColor = Color.White,
                     selectedLeadingIconColor = Color.White,
                 ),
-                modifier = Modifier.focusGlow(ChipShape),
+                modifier = Modifier
+                    .then(if (item == focusItem) Modifier.focusRequester(focus) else Modifier)
+                    .focusGlow(ChipShape),
             )
         }
     }
