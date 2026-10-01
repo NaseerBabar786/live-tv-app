@@ -436,15 +436,37 @@ fun ChannelListScreen(
                                 onToggleFavorite = { onToggleFavorite(channel) },
                                 focusRequester = cardRequester(channel.id),
                                 onKey = onKey@{ event ->
-                                    if (!sideways || event.type != KeyEventType.KeyDown) return@onKey false
-                                    when (event.key) {
-                                        Key.DirectionUp -> {
-                                            runCatching { layoutButtonFocus.requestFocus() }
-                                            true
+                                    if (event.type != KeyEventType.KeyDown) return@onKey false
+                                    if (sideways) {
+                                        return@onKey when (event.key) {
+                                            Key.DirectionUp -> {
+                                                runCatching { layoutButtonFocus.requestFocus() }
+                                                true
+                                            }
+                                            Key.DirectionDown -> true
+                                            else -> false
                                         }
-                                        Key.DirectionDown -> true
-                                        else -> false
                                     }
+                                    // Right at the end of a row goes on to the next channel and Left
+                                    // at the start of a row back to the previous one, so the whole
+                                    // list can be walked sideways.
+                                    val target = when (event.key) {
+                                        Key.DirectionRight -> if (index % columns == columns - 1) index + 1 else return@onKey false
+                                        Key.DirectionLeft -> if (index % columns == 0) index - 1 else return@onKey false
+                                        else -> return@onKey false
+                                    }
+                                    val next = channels.getOrNull(target) ?: return@onKey true
+                                    scope.launch {
+                                        val at = target / columns
+                                        val top = gridState.firstVisibleItemIndex / columns +
+                                            if (gridState.firstVisibleItemScrollOffset > 0) 1 else 0
+                                        if (at < top || at > top + rows - 1) {
+                                            gridState.scrollToItem((if (at < top) at else at - rows + 1) * columns)
+                                            withFrameNanos { }
+                                        }
+                                        runCatching { cardRequester(next.id).requestFocus() }
+                                    }
+                                    true
                                 },
                                 onFocusChange = { focused ->
                                     if (focused) {
