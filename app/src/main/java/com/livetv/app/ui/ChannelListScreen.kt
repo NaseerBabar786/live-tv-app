@@ -129,43 +129,32 @@ fun ChannelListScreen(
         }
     }
 
-    // Live previews, all muted and in low quality:
-    //  * every channel in the top row plays while that row is on screen (on Wi-Fi or
-    //    Ethernet only, so phones on mobile data don't use it up);
-    //  * the channel the remote's yellow highlight rests on plays after a moment.
+    // Live previews, muted and in low quality: every channel in the row the remote's
+    // yellow highlight is on plays; moving to another row switches to that row. Touch
+    // screens never highlight a card, so phones don't preview. Wi-Fi or Ethernet only.
     val context = LocalContext.current
     var previewId by remember { mutableStateOf<String?>(null) }
     var inForeground by remember { mutableStateOf(true) }
-    val preview = remember { Preview.create(context) }
     val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
-    val firstRowIds by remember {
+    val rowIds by remember {
         derivedStateOf {
-            gridState.layoutInfo.visibleItemsInfo.filter { it.row == 0 }.map { it.key as String }
+            val items = gridState.layoutInfo.visibleItemsInfo
+            val row = items.firstOrNull { it.key == previewId }?.row
+            if (row == null) emptyList() else items.filter { it.row == row }.map { it.key as String }
         }
     }
     DisposableEffect(Unit) {
-        onDispose {
-            preview.stream.release()
-            rowPreviews.values.forEach { it.stream.release() }
-        }
+        onDispose { rowPreviews.values.forEach { it.stream.release() } }
     }
-    LaunchedEffect(firstRowIds, inForeground) {
-        val wanted = if (inForeground && !Preview.metered(context)) firstRowIds.toSet() else emptySet()
+    LaunchedEffect(rowIds, inForeground) {
+        val wanted = if (inForeground && !Preview.metered(context)) rowIds.toSet() else emptySet()
         (rowPreviews.keys - wanted).forEach { id -> rowPreviews.remove(id)?.stream?.release() }
+        if (wanted.isEmpty()) return@LaunchedEffect
         delay(1_000)
         for (id in wanted - rowPreviews.keys) {
             val channel = state.channels.firstOrNull { it.id == id } ?: continue
             rowPreviews[id] = Preview.create(context).also { it.stream.play(channel) }
         }
-    }
-    LaunchedEffect(previewId, inForeground) {
-        preview.stream.stop()
-        preview.showing = false
-        val id = previewId?.takeIf { inForeground } ?: return@LaunchedEffect
-        delay(1_000)
-        if (id in rowPreviews) return@LaunchedEffect // already playing in the top row
-        val channel = state.channels.firstOrNull { it.id == id } ?: return@LaunchedEffect
-        preview.stream.play(channel)
     }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -311,7 +300,7 @@ fun ChannelListScreen(
                                     if (focused) previewId = channel.id
                                     else if (previewId == channel.id) previewId = null
                                 },
-                                preview = rowPreviews[channel.id] ?: preview.takeIf { channel.id == previewId },
+                                preview = rowPreviews[channel.id],
                             )
                         }
                     }
