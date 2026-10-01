@@ -29,6 +29,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import java.util.Date
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -139,9 +144,9 @@ fun ChannelListScreen(
         }
     }
 
-    // Live previews in low quality: every channel card on screen plays, and the set follows
-    // scrolling. Only the card the remote's highlight is on has sound. Wi-Fi or Ethernet
-    // only, so mobile data isn't used up.
+    // Live previews in low quality: the highlighted card plays with sound, and the other
+    // cards in its row show a still picture of what's on, refreshed every 30 seconds. The
+    // other row keeps its logos. Wi-Fi or Ethernet only, so mobile data isn't used up.
     val context = LocalContext.current
     var inForeground by remember { mutableStateOf(true) }
     var focusedId by remember { mutableStateOf<String?>(null) }
@@ -152,9 +157,9 @@ fun ChannelListScreen(
     val pool = remember { mutableListOf<Preview>() }
     val rowIds by remember {
         derivedStateOf<List<String>?> {
-            // The highlighted row plays (4 videos; all 8 on screen made the highlight lag on
-            // the Chromecast). It keeps playing when the highlight moves up to the top bar,
-            // so the sound button there can be used while it plays.
+            // Only one video plays (several at once made the highlight lag on the Chromecast).
+            // It keeps playing when the highlight moves up to the top bar, so the sound
+            // button there can be used while it plays.
             if (gridState.isScrollInProgress) null
             else {
                 val items = gridState.layoutInfo.visibleItemsInfo
@@ -169,25 +174,54 @@ fun ChannelListScreen(
     // Only the highlighted tile has sound; the speaker button in the top bar mutes it (remembered).
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
-    LaunchedEffect(rowIds, inForeground, showSettings) {
-        val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
-        val wanted = if (inForeground && !showSettings && !Preview.metered(context)) ids.toSet() else emptySet()
-        for (id in rowPreviews.keys - wanted) {
-            rowPreviews.remove(id)?.let { p -> p.stream.stop(); p.showing = false; pool += p }
+    // Still pictures for the other cards in the highlighted row, kept between visits.
+    val snapshots = remember { mutableStateMapOf<String, ImageBitmap>() }
+    // A card that stops playing keeps its last frame as its picture.
+    fun release(id: String) {
+        rowPreviews.remove(id)?.let { p ->
+            if (p.showing) p.view?.bitmap?.let { snapshots[id] = it.asImageBitmap() }
+            p.stream.stop(); p.showing = false; pool += p
         }
-        if (wanted.isEmpty()) return@LaunchedEffect
+    }
+    LaunchedEffect(rowIds, focusedId, inForeground, showSettings) {
+        val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
+        val live = focusedId?.takeIf { it in ids }
+        val allowed = inForeground && !showSettings && !Preview.metered(context)
+        for (id in rowPreviews.keys.toList()) if (!allowed || id != live) release(id)
+        if (!allowed || live == null) return@LaunchedEffect
         delay(600)
-        // Start one at a time so the TV isn't asked to open every stream at once.
-        for (id in ids.filter { it !in rowPreviews }) {
-            val channel = state.channels.firstOrNull { it.id == id } ?: continue
+        if (live !in rowPreviews) {
+            val channel = state.channels.firstOrNull { it.id == live } ?: return@LaunchedEffect
             val p = pool.removeLastOrNull() ?: Preview.create(context)
-            p.stream.player.volume = if (previewSound && id == focusedId) 1f else 0f
-            rowPreviews[id] = p
+            p.stream.player.volume = if (previewSound) 1f else 0f
+            rowPreviews[live] = p
             p.stream.play(channel)
-            delay(250)
+        }
+        if (snapshots.size > 60) snapshots.clear()
+        // One picture at a time: the channel opens muted in its card, the first frame is kept
+        // and the channel closes again.
+        while (true) {
+            val started = System.currentTimeMillis()
+            for (id in ids) {
+                if (id == live) continue
+                val channel = state.channels.firstOrNull { it.id == id } ?: continue
+                val p = pool.removeLastOrNull() ?: Preview.create(context)
+                p.stream.player.volume = 0f
+                rowPreviews[id] = p
+                try {
+                    p.stream.play(channel)
+                    withTimeoutOrNull(10_000) { snapshotFlow { p.showing }.first { it } }
+                    if (p.showing) delay(300) // release() keeps this frame
+                } finally {
+                    release(id)
+                }
+                delay(500)
+            }
+            delay(maxOf(1_000L, SnapshotRefreshMs - (System.currentTimeMillis() - started)))
         }
     }
     LaunchedEffect(previewSound, focusedId, rowPreviews.keys.toSet()) {
+        // Pictures being taken stay silent; only the highlighted card has sound.
         rowPreviews.forEach { (id, p) -> p.stream.player.volume = if (previewSound && id == focusedId) 1f else 0f }
     }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -383,6 +417,7 @@ fun ChannelListScreen(
                                     }
                                 },
                                 preview = rowPreviews[channel.id],
+                                snapshot = snapshots[channel.id].takeIf { rowIds?.contains(channel.id) == true },
                             )
                         }
                     }
@@ -437,6 +472,7 @@ private fun ChannelCard(
     focusRequester: FocusRequester? = null,
     onFocusChange: (Boolean) -> Unit = {},
     preview: Preview? = null,
+    snapshot: ImageBitmap? = null,
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -469,6 +505,14 @@ private fun ChannelCard(
                 )
             } else {
                 Initials(channel.name)
+            }
+            if (snapshot != null) {
+                Image(
+                    snapshot,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
             if (preview != null) PreviewVideo(preview)
             if (channel.number > 0) {
@@ -627,6 +671,9 @@ private fun WeatherNow() {
 private class Preview(val stream: StreamPlayer) {
     var showing by mutableStateOf(false)
 
+    /** The card's video view while it's on screen; a still picture is copied from it. */
+    var view: TextureView? = null
+
     init {
         stream.player.addListener(object : Player.Listener {
             override fun onRenderedFirstFrame() {
@@ -655,8 +702,11 @@ private class Preview(val stream: StreamPlayer) {
 private fun PreviewVideo(preview: Preview) {
     val player = preview.stream.player
     AndroidView(
-        factory = { ctx -> TextureView(ctx).also { player.setVideoTextureView(it) } },
-        onRelease = { player.clearVideoTextureView(it) },
+        factory = { ctx -> TextureView(ctx).also { preview.view = it; player.setVideoTextureView(it) } },
+        onRelease = {
+            if (preview.view === it) preview.view = null
+            player.clearVideoTextureView(it)
+        },
         modifier = Modifier
             .aspectRatio(16f / 9f)
             .graphicsLayer { alpha = if (preview.showing) 1f else 0f },
@@ -665,6 +715,9 @@ private fun PreviewVideo(preview: Preview) {
 
 /** Narrowest a channel tile gets; the screen width decides how many fit in a row. */
 private val MinTileWidth = 170.dp
+
+/** How often the still pictures in the highlighted row are refreshed. */
+private const val SnapshotRefreshMs = 30_000L
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 
