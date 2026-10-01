@@ -9,6 +9,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import com.livetv.app.data.Channel
@@ -23,9 +24,20 @@ import com.livetv.app.data.ChannelRepository
  * that fall behind the live window rejoin at the live edge.
  */
 @OptIn(UnstableApi::class)
-class StreamPlayer(private val context: Context) {
+class StreamPlayer(private val context: Context, preview: Boolean = false) {
 
-    val player: ExoPlayer = ExoPlayer.Builder(context).build().apply {
+    // Previews keep only a few seconds buffered, so a screenful of them fits in a TV's memory.
+    val player: ExoPlayer = ExoPlayer.Builder(context).apply {
+        if (preview) {
+            setLoadControl(
+                DefaultLoadControl.Builder()
+                    .setBufferDurationsMs(2_000, 6_000, 1_000, 1_000)
+                    .setTargetBufferBytes(3 * 1024 * 1024)
+                    .setPrioritizeTimeOverSizeThresholds(false)
+                    .build()
+            )
+        }
+    }.build().apply {
         playWhenReady = true
         addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) = handleError(error)

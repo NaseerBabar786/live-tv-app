@@ -129,19 +129,13 @@ fun ChannelListScreen(
         }
     }
 
-    // Live previews, muted and in low quality: every channel in the row the remote's
-    // yellow highlight is on plays; moving to another row switches to that row. Touch
-    // screens never highlight a card, so phones don't preview. Wi-Fi or Ethernet only.
+    // Live previews, muted and in low quality: every channel card on screen plays, and
+    // the set follows scrolling. Wi-Fi or Ethernet only, so mobile data isn't used up.
     val context = LocalContext.current
-    var previewId by remember { mutableStateOf<String?>(null) }
     var inForeground by remember { mutableStateOf(true) }
     val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
     val rowIds by remember {
-        derivedStateOf {
-            val items = gridState.layoutInfo.visibleItemsInfo
-            val row = items.firstOrNull { it.key == previewId }?.row
-            if (row == null) emptyList() else items.filter { it.row == row }.map { it.key as String }
-        }
+        derivedStateOf { gridState.layoutInfo.visibleItemsInfo.map { it.key as String } }
     }
     DisposableEffect(Unit) {
         onDispose { rowPreviews.values.forEach { it.stream.release() } }
@@ -296,10 +290,6 @@ fun ChannelListScreen(
                                 onClick = { onPlay(channel) },
                                 onToggleFavorite = { onToggleFavorite(channel) },
                                 focusRequester = lastWatchedFocus.takeIf { channel.id == state.lastWatchedId },
-                                onFocusChange = { focused ->
-                                    if (focused) previewId = channel.id
-                                    else if (previewId == channel.id) previewId = null
-                                },
                                 preview = rowPreviews[channel.id],
                             )
                         }
@@ -552,7 +542,7 @@ private class Preview(val stream: StreamPlayer) {
 
     companion object {
         fun create(context: Context) = Preview(
-            StreamPlayer(context).apply {
+            StreamPlayer(context, preview = true).apply {
                 player.volume = 0f
                 player.trackSelectionParameters =
                     player.trackSelectionParameters.buildUpon().setMaxVideoSizeSd().build()
