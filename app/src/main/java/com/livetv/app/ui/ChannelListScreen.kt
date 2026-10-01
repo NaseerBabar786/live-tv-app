@@ -437,19 +437,20 @@ fun ChannelListScreen(
                                 focusRequester = cardRequester(channel.id),
                                 onKey = onKey@{ event ->
                                     if (event.type != KeyEventType.KeyDown) return@onKey false
-                                    if (sideways) {
-                                        return@onKey when (event.key) {
-                                            Key.DirectionUp -> {
-                                                runCatching { layoutButtonFocus.requestFocus() }
-                                                true
-                                            }
-                                            Key.DirectionDown -> true
-                                            else -> false
+                                    // On TVs only Left and Right change channels: Up leaves the tiles
+                                    // for the top bar and Down does nothing.
+                                    if (wide) when (event.key) {
+                                        Key.DirectionUp -> {
+                                            runCatching { layoutButtonFocus.requestFocus() }
+                                            return@onKey true
                                         }
+                                        Key.DirectionDown -> return@onKey true
+                                        else -> Unit
                                     }
+                                    if (sideways) return@onKey false
                                     // Right at the end of a row goes on to the next channel and Left
-                                    // at the start of a row back to the previous one, so the whole
-                                    // list can be walked sideways.
+                                    // at the start of a row back to the previous one. Past the edge
+                                    // of the screen the next (or previous) rows come in together.
                                     val target = when (event.key) {
                                         Key.DirectionRight -> if (index % columns == columns - 1) index + 1 else return@onKey false
                                         Key.DirectionLeft -> if (index % columns == 0) index - 1 else return@onKey false
@@ -461,7 +462,7 @@ fun ChannelListScreen(
                                         val top = gridState.firstVisibleItemIndex / columns +
                                             if (gridState.firstVisibleItemScrollOffset > 0) 1 else 0
                                         if (at < top || at > top + rows - 1) {
-                                            gridState.scrollToItem((if (at < top) at else at - rows + 1) * columns)
+                                            gridState.scrollToItem((if (at < top) maxOf(0, at - rows + 1) else at) * columns)
                                             withFrameNanos { }
                                         }
                                         runCatching { cardRequester(next.id).requestFocus() }
