@@ -99,6 +99,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -411,20 +413,21 @@ fun ChannelListScreen(
                     val rowGap = maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
                     // Likewise across: when the height decides the tile size, widen the gaps so the
                     // grid fits exactly [columns] tiles in a row (a bit under, so rounding can't drop one).
-                    val columnGap = if (wide) maxOf(gap, (maxWidth - tileWidth * columns) / (columns + 1) - 1.dp) else gap
+                    // (The 2×1 strip scrolls sideways, so there the gaps are exact and the next card
+                    // starts right at the screen edge.)
+                    val stripSpare = if (wide && tileLayout == TileLayout.Two) 0.dp else 1.dp
+                    val columnGap = if (wide) maxOf(gap, (maxWidth - tileWidth * columns) / (columns + 1) - stripSpare) else gap
                     // The grid moves a whole row at a time and never shows half rows: the default
                     // "scroll just enough to show the focused tile" is turned off and the grid jumps
                     // straight to the row instead.
-                    CompositionLocalProvider(LocalBringIntoViewSpec provides NoBringIntoView) {
-                    LazyVerticalGrid(
-                        columns = GridCells.FixedSize(tileWidth),
-                        contentPadding = PaddingValues(horizontal = columnGap, vertical = rowGap),
-                        horizontalArrangement = Arrangement.spacedBy(columnGap, Alignment.CenterHorizontally),
-                        verticalArrangement = Arrangement.spacedBy(rowGap),
-                        state = gridState,
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
+                    // 2×1 is a sideways strip of two big cards: Left and Right move one channel at
+                    // a time, Up goes to the layout button and Down does nothing.
+                    val sideways = wide && tileLayout == TileLayout.Two
+                    val step = if (sideways) 1 else columns // cards per scroll step
+                    val shown = if (sideways) 2 else rows // steps on screen
+                    val cards: LazyGridScope.() -> Unit = {
                         itemsIndexed(channels, key = { _, it -> it.id }) { index, channel ->
+                            Box(if (sideways) Modifier.width(tileWidth) else Modifier) {
                             ChannelCard(
                                 height = cardHeight,
                                 channel = channel,
@@ -432,53 +435,65 @@ fun ChannelListScreen(
                                 onClick = { onPlay(channel) },
                                 onToggleFavorite = { onToggleFavorite(channel) },
                                 focusRequester = cardRequester(channel.id),
-                                // 2×1 pages sideways: Right on the right card shows the next two
-                                // channels, Left on the left card the previous two. Up goes to
-                                // the layout button and Down does nothing.
                                 onKey = onKey@{ event ->
-                                    if (!(wide && tileLayout == TileLayout.Two) || event.type != KeyEventType.KeyDown) {
-                                        return@onKey false
-                                    }
-                                    val target = when (event.key) {
-                                        Key.DirectionRight -> if (index % 2 == 1) index + 1 else return@onKey false
-                                        Key.DirectionLeft -> if (index % 2 == 0) index - 1 else return@onKey false
+                                    if (!sideways || event.type != KeyEventType.KeyDown) return@onKey false
+                                    when (event.key) {
                                         Key.DirectionUp -> {
                                             runCatching { layoutButtonFocus.requestFocus() }
-                                            return@onKey true
+                                            true
                                         }
-                                        Key.DirectionDown -> return@onKey true
-                                        else -> return@onKey false
+                                        Key.DirectionDown -> true
+                                        else -> false
                                     }
-                                    val next = channels.getOrNull(target) ?: return@onKey true
-                                    scope.launch {
-                                        gridState.scrollToItem(target / 2 * 2)
-                                        withFrameNanos { }
-                                        runCatching { cardRequester(next.id).requestFocus() }
-                                    }
-                                    true
                                 },
                                 onFocusChange = { focused ->
                                     if (focused) {
                                         focusedId = channel.id
-                                        val row = index / columns
+                                        val at = index / step
                                         val offset = gridState.firstVisibleItemScrollOffset
-                                        val top = gridState.firstVisibleItemIndex / columns + if (offset > 0) 1 else 0
+                                        val top = gridState.firstVisibleItemIndex / step + if (offset > 0) 1 else 0
                                         val newTop = when {
-                                            row < top -> row
-                                            row > top + rows - 1 -> row - rows + 1
+                                            at < top -> at
+                                            at > top + shown - 1 -> at - shown + 1
                                             else -> top
                                         }
-                                        // Scroll only when the highlight leaves the rows on screen.
+                                        // Scroll only when the highlight leaves what's on screen.
                                         if (newTop != top || offset != 0) {
-                                            scope.launch { gridState.scrollToItem(newTop * columns) }
+                                            scope.launch { gridState.scrollToItem(newTop * step) }
                                         }
                                     }
                                 },
                                 preview = rowPreviews[channel.id],
                                 snapshot = snapshots[channel.id],
                             )
+                            }
                         }
                     }
+                    // The grid moves a whole row (or, in 2×1, one card) at a time and never shows
+                    // part of a card: the default "scroll just enough to show the focused tile" is
+                    // turned off and the grid jumps straight there instead.
+                    CompositionLocalProvider(LocalBringIntoViewSpec provides NoBringIntoView) {
+                        if (sideways) {
+                            LazyHorizontalGrid(
+                                rows = GridCells.FixedSize(cardHeight),
+                                contentPadding = PaddingValues(horizontal = columnGap, vertical = rowGap),
+                                horizontalArrangement = Arrangement.spacedBy(columnGap),
+                                verticalArrangement = Arrangement.spacedBy(rowGap, Alignment.CenterVertically),
+                                state = gridState,
+                                modifier = Modifier.fillMaxSize(),
+                                content = cards,
+                            )
+                        } else {
+                            LazyVerticalGrid(
+                                columns = GridCells.FixedSize(tileWidth),
+                                contentPadding = PaddingValues(horizontal = columnGap, vertical = rowGap),
+                                horizontalArrangement = Arrangement.spacedBy(columnGap, Alignment.CenterHorizontally),
+                                verticalArrangement = Arrangement.spacedBy(rowGap),
+                                state = gridState,
+                                modifier = Modifier.fillMaxSize(),
+                                content = cards,
+                            )
+                        }
                     }
                     }
                 }
