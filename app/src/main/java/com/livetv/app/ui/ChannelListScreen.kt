@@ -144,9 +144,9 @@ fun ChannelListScreen(
         }
     }
 
-    // Live previews in low quality: the highlighted card plays with sound, and the other
-    // cards in its row show one still picture of what's on. The
-    // other row keeps its logos. Wi-Fi or Ethernet only, so mobile data isn't used up.
+    // Live previews in low quality: the highlighted card plays with sound, and every other
+    // card on screen shows one still picture of what's on. Wi-Fi or Ethernet only, so mobile
+    // data isn't used up.
     val context = LocalContext.current
     var inForeground by remember { mutableStateOf(true) }
     var focusedId by remember { mutableStateOf<String?>(null) }
@@ -163,8 +163,9 @@ fun ChannelListScreen(
             if (gridState.isScrollInProgress) null
             else {
                 val items = gridState.layoutInfo.visibleItemsInfo
+                // Every card on screen, the highlighted row first so its pictures come first.
                 val row = items.firstOrNull { it.key == focusedId }?.row
-                if (row == null) emptyList<String>() else items.filter { it.row == row }.map { it.key as String }
+                items.sortedBy { it.row != row }.map { it.key as String }
             }
         }
     }
@@ -174,7 +175,7 @@ fun ChannelListScreen(
     // Only the highlighted tile has sound; the speaker button in the top bar mutes it (remembered).
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
-    // Still pictures for the other cards in the highlighted row, kept between visits.
+    // Still pictures for the cards on screen, kept while scrolling around.
     val snapshots = remember { mutableStateMapOf<String, ImageBitmap>() }
     // A card that stops playing keeps its last frame as its picture.
     fun release(id: String) {
@@ -188,16 +189,16 @@ fun ChannelListScreen(
         val live = focusedId?.takeIf { it in ids }
         val allowed = inForeground && !showSettings && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id != live) release(id)
-        if (!allowed || live == null) return@LaunchedEffect
+        if (!allowed) return@LaunchedEffect
         delay(600)
-        if (live !in rowPreviews) {
+        if (live != null && live !in rowPreviews) {
             val channel = state.channels.firstOrNull { it.id == live } ?: return@LaunchedEffect
             val p = pool.removeLastOrNull() ?: Preview.create(context)
             p.stream.player.volume = if (previewSound) 1f else 0f
             rowPreviews[live] = p
             p.stream.play(channel)
         }
-        if (snapshots.size > 60) snapshots.clear()
+        if (snapshots.size > 80) snapshots.clear()
         // One picture at a time: the channel opens muted in its card, the first frame is kept
         // and the channel closes again.
         // Each card gets one picture; it isn't refreshed.
@@ -416,7 +417,7 @@ fun ChannelListScreen(
                                     }
                                 },
                                 preview = rowPreviews[channel.id],
-                                snapshot = snapshots[channel.id].takeIf { rowIds?.contains(channel.id) == true },
+                                snapshot = snapshots[channel.id],
                             )
                         }
                     }
