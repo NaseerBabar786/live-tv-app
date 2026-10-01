@@ -191,18 +191,21 @@ fun ChannelListScreen(
             p.stream.stop(); p.showing = false; pool += p
         }
     }
-    LaunchedEffect(rowIds, focusedId, inForeground, showSettings) {
+    LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
+        // With two big tiles (2×1) both play; otherwise only the highlighted one.
+        val playing = if (wideScreen && tileLayout == TileLayout.Two) ids.take(2).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !Preview.metered(context)
-        for (id in rowPreviews.keys.toList()) if (!allowed || id != live) release(id)
+        for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
         if (!allowed) return@LaunchedEffect
         delay(600)
-        if (live != null && live !in rowPreviews) {
-            val channel = state.channels.firstOrNull { it.id == live } ?: return@LaunchedEffect
+        for (id in playing) {
+            if (id in rowPreviews) continue
+            val channel = state.channels.firstOrNull { it.id == id } ?: continue
             val p = pool.removeLastOrNull() ?: Preview.create(context)
-            p.stream.player.volume = if (previewSound) 1f else 0f
-            rowPreviews[live] = p
+            p.stream.player.volume = if (previewSound && id == focusedId) 1f else 0f
+            rowPreviews[id] = p
             p.stream.play(channel)
         }
         if (snapshots.size > 80) snapshots.clear()
@@ -211,7 +214,7 @@ fun ChannelListScreen(
         // Each card gets one picture; it isn't refreshed.
         run {
             for (id in ids) {
-                if (id == live || id in snapshots) continue
+                if (id in playing || id in snapshots) continue
                 val channel = state.channels.firstOrNull { it.id == id } ?: continue
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
                 p.stream.player.volume = 0f
