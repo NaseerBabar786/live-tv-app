@@ -4,6 +4,15 @@
 
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
+    <!-- Settings offers to open App Bazaar only when a web browser is installed. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
     <application>
         <provider
             android:name="androidx.core.content.FileProvider"

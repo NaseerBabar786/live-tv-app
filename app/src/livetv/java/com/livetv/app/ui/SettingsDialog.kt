@@ -74,7 +74,7 @@ fun SettingsDialog(
     }
     var pickingCountries by rememberSaveable { mutableStateOf(false) }
     var pickingLanguages by rememberSaveable { mutableStateOf(false) }
-    var showingGuide by rememberSaveable { mutableStateOf(false) }
+    var showingAppBazaar by rememberSaveable { mutableStateOf(false) }
     var findingPlaylists by rememberSaveable { mutableStateOf(false) }
     var addingLink by rememberSaveable { mutableStateOf(false) }
 
@@ -97,8 +97,8 @@ fun SettingsDialog(
         return
     }
 
-    if (showingGuide) {
-        InstallGuideDialog(onDismiss = { showingGuide = false })
+    if (showingAppBazaar) {
+        AppBazaarDialog(onDismiss = { showingAppBazaar = false })
         return
     }
 
@@ -200,9 +200,9 @@ fun SettingsDialog(
 
                 HorizontalDivider()
                 OutlinedButton(
-                    onClick = { showingGuide = true },
+                    onClick = { showingAppBazaar = true },
                     modifier = Modifier.fillMaxWidth().focusGlow(),
-                ) { Text(INSTALL_GUIDE_TITLE) }
+                ) { Text("More free apps: App Bazaar") }
 
                 BulkBazaarBanner()
             }
@@ -390,4 +390,54 @@ private fun BulkBazaarBanner() {
                 },
         )
     }
+}
+
+private const val APP_BAZAAR = "apps.bulkbazaar.ca"
+
+/**
+ * Our app store, App Bazaar: its address and a QR code to scan with a phone (TVs often have no
+ * web browser), plus a button to open it where there is one.
+ */
+@Composable
+private fun AppBazaarDialog(onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    val intent = remember {
+        Intent(Intent.ACTION_VIEW, Uri.parse("https://$APP_BAZAAR")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    val hasBrowser = remember { intent.resolveActivity(context.packageManager) != null }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("More free apps: App Bazaar") },
+        text = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+            ) {
+                Text("Visit our app store, App Bazaar, for more free and useful apps.")
+                Text(APP_BAZAAR, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Image(
+                    painter = painterResource(R.drawable.app_bazaar_qr),
+                    contentDescription = "QR code for $APP_BAZAAR",
+                    modifier = Modifier.heightIn(max = 180.dp).aspectRatio(1f),
+                )
+                Text("Scan the code with your phone's camera.", style = MaterialTheme.typography.bodySmall)
+            }
+        },
+        confirmButton = {
+            if (hasBrowser) {
+                TextButton(
+                    onClick = {
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            Toast.makeText(context, "Visit $APP_BAZAAR", Toast.LENGTH_LONG).show()
+                        }
+                    },
+                    modifier = Modifier.focusGlow(),
+                ) { Text("Open") }
+            }
+        },
+        dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Back") } },
+    )
 }
