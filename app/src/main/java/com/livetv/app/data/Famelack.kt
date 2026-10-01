@@ -126,6 +126,7 @@ object Famelack {
                     else -> "General"
                 },
                 tvgId = id,
+                country = entry.optString("country").lowercase().ifBlank { null },
             )
         }
     }

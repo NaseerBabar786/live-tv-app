@@ -102,10 +102,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.key
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -114,6 +114,11 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import java.util.Locale
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -153,17 +158,6 @@ fun ChannelListScreen(
         if (id == state.lastWatchedId) lastWatchedFocus else cardFocus.getOrPut(id) { FocusRequester() }
     val layoutButtonFocus = remember { FocusRequester() }
 
-    // Coming back from the player: scroll to the channel that was playing and put the
-    // remote's cursor on it.
-    LaunchedEffect(Unit) {
-        val index = state.visibleChannels.indexOfFirst { it.id == state.lastWatchedId }
-        if (index >= 0) {
-            gridState.scrollToItem(index)
-            withFrameNanos { }
-            runCatching { lastWatchedFocus.requestFocus() }
-        }
-    }
-
     // Live previews in low quality: the highlighted card plays with sound, and every other
     // card on screen shows one still picture of what's on. Wi-Fi or Ethernet only, so mobile
     // data isn't used up.
@@ -175,7 +169,7 @@ fun ChannelListScreen(
     // blocked the main thread (release() waits for the playback thread) and froze the app.
     val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
     val pool = remember { mutableListOf<Preview>() }
-    val rowIds by remember {
+    val gridIds by remember {
         derivedStateOf<List<String>?> {
             // Only one video plays (several at once made the highlight lag on the Chromecast).
             // It keeps playing when the highlight moves up to the top bar, so the sound
@@ -203,6 +197,32 @@ fun ChannelListScreen(
     // "1+List": the channel playing on the left, kept when coming back from full screen.
     val listMode = wideScreen && tileLayout == TileLayout.List
     var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
+    // TVs and tablets show a fixed window of tiles that slides along the list one channel at a
+    // time; [windowStart] is the channel in the first tile.
+    val windowed = wideScreen && !listMode
+    val slots = tileLayout.columns * tileLayout.rows
+    var windowStart by rememberSaveable { mutableIntStateOf(0) }
+    val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
+    val window = if (windowed) state.visibleChannels.drop(start).take(slots) else emptyList()
+    val rowIds: List<String>? = if (windowed) {
+        // The highlighted row first, so its pictures come first.
+        val row = window.indexOfFirst { it.id == focusedId }.takeIf { it >= 0 }?.div(tileLayout.columns)
+        window.withIndex().sortedBy { it.index / tileLayout.columns != row }.map { it.value.id }
+    } else gridIds
+
+    // Coming back from the player: show the channel that was playing and put the remote's
+    // cursor on it.
+    LaunchedEffect(Unit) {
+        val index = state.visibleChannels.indexOfFirst { it.id == state.lastWatchedId }
+        if (index >= 0) {
+            if (windowed) {
+                if (index !in start until start + slots) windowStart = index
+            } else gridState.scrollToItem(index)
+            withFrameNanos { }
+            runCatching { lastWatchedFocus.requestFocus() }
+        }
+    }
+
     // Still pictures for the cards on screen, kept while scrolling around.
     val snapshots = remember { mutableStateMapOf<String, ImageBitmap>() }
     // A card that stops playing keeps its last frame as its picture.
@@ -215,8 +235,8 @@ fun ChannelListScreen(
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
-        // With big tiles (2×1 and 2×2) every card on screen plays; otherwise only the highlighted one.
-        val playAll = wideScreen && (tileLayout == TileLayout.Two || tileLayout == TileLayout.Four)
+        // In 2×1 both cards play; otherwise only the highlighted one.
+        val playAll = wideScreen && tileLayout == TileLayout.Two
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
@@ -276,7 +296,7 @@ fun ChannelListScreen(
                     if (searching) {
                         OutlinedTextField(
                             value = state.query,
-                            onValueChange = onQueryChange,
+                            onValueChange = { windowStart = 0; onQueryChange(it) },
                             placeholder = { Text("Search channels") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
@@ -313,6 +333,7 @@ fun ChannelListScreen(
                                 tileLayout = TileLayout.entries[(tileLayout.ordinal + 1) % TileLayout.entries.size]
                                 prefs.edit().putString(PREF_TILE_LAYOUT, tileLayout.name).apply()
                             },
+                            colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
                         ) { Text(tileLayout.label, fontWeight = FontWeight.Bold) }
                     }
@@ -373,6 +394,7 @@ fun ChannelListScreen(
                         state.category,
                     ),
                     onSelect = {
+                        windowStart = 0
                         when (it) {
                             FILTER_ALL -> onFilterChange(FILTER_ALL)
                             else -> onCategoryChange(it.takeUnless { c -> c == state.category })
@@ -411,15 +433,16 @@ fun ChannelListScreen(
                         sound = previewSound,
                         playing = inForeground && !showSettings,
                         favorites = state.favorites,
+                        onToggleFavorite = onToggleFavorite,
                         focusId = state.lastWatchedId,
                         focus = lastWatchedFocus,
                         onSelect = { listChannelId = it.id },
                         onOpen = onPlay,
                     )
                     else -> BoxWithConstraints(Modifier.fillMaxSize()) {
-                    // TVs and tablets: the chosen layout (8, 4 or 2 tiles). Phones: as many as fit.
+                    // TVs and tablets: the chosen layout (8, 6 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
-                    val wide = maxWidth >= 600.dp
+                    val wide = windowed
                     val fitColumns = if (wide) tileLayout.columns else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
                     val naturalHeight = (maxWidth - gap * (fitColumns + 1)) / fitColumns * 9f / 16f + TileTextHeight
                     val rows = if (wide) tileLayout.rows else max(1, ((maxHeight - gap) / (naturalHeight + gap)).roundToInt())
@@ -433,110 +456,120 @@ fun ChannelListScreen(
                     val rowGap = maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
                     // Likewise across: when the height decides the tile size, widen the gaps so the
                     // grid fits exactly [columns] tiles in a row (a bit under, so rounding can't drop one).
-                    // (The 2×1 strip scrolls sideways, so there the gaps are exact and the next card
-                    // starts right at the screen edge.)
-                    val stripSpare = if (wide && tileLayout == TileLayout.Two) 0.dp else 1.dp
-                    val columnGap = if (wide) maxOf(gap, (maxWidth - tileWidth * columns) / (columns + 1) - stripSpare) else gap
-                    // The grid moves a whole row at a time and never shows half rows: the default
-                    // "scroll just enough to show the focused tile" is turned off and the grid jumps
-                    // straight to the row instead.
-                    // 2×1 is a sideways strip of two big cards: Left and Right move one channel at
-                    // a time, Up goes to the layout button and Down does nothing.
-                    val sideways = wide && tileLayout == TileLayout.Two
-                    val step = if (sideways) 1 else columns // cards per scroll step
-                    val shown = if (sideways) 2 else rows // steps on screen
-                    val cards: LazyGridScope.() -> Unit = {
-                        itemsIndexed(channels, key = { _, it -> it.id }) { index, channel ->
-                            Box(if (sideways) Modifier.width(tileWidth) else Modifier) {
-                            ChannelCard(
-                                height = cardHeight,
-                                channel = channel,
-                                favorite = channel.id in state.favorites,
-                                onClick = { onPlay(channel) },
-                                onToggleFavorite = { onToggleFavorite(channel) },
-                                focusRequester = cardRequester(channel.id),
-                                onKey = onKey@{ event ->
-                                    if (event.type != KeyEventType.KeyDown) return@onKey false
-                                    // On TVs only Left and Right change channels: Up leaves the tiles
-                                    // for the top bar and Down does nothing.
-                                    if (wide) when (event.key) {
-                                        Key.DirectionUp -> {
-                                            runCatching { layoutButtonFocus.requestFocus() }
-                                            return@onKey true
+                    val columnGap = if (wide) maxOf(gap, (maxWidth - tileWidth * columns) / (columns + 1) - 1.dp) else gap
+                    @Composable
+                    fun Tile(index: Int, channel: Channel, onKey: (KeyEvent) -> Boolean, onFocused: () -> Unit = {}) =
+                        ChannelCard(
+                            height = cardHeight,
+                            channel = channel,
+                            favorite = channel.id in state.favorites,
+                            onClick = { onPlay(channel) },
+                            onToggleFavorite = { onToggleFavorite(channel) },
+                            focusRequester = cardRequester(channel.id),
+                            onKey = onKey,
+                            onFocusChange = { focused ->
+                                if (focused) {
+                                    focusedId = channel.id
+                                    onFocused()
+                                }
+                            },
+                            preview = rowPreviews[channel.id],
+                            snapshot = snapshots[channel.id],
+                        )
+                    if (wide) {
+                        // A fixed window of tiles that slides along the list. Only Left and Right
+                        // change channels: they move the highlight, and past the last (or first) tile
+                        // every channel moves along one place and one new channel comes in. In 2×1
+                        // every press slides: the channel already on screen keeps the highlight and
+                        // the sound, and the new one comes in quiet. Up goes to the layout button
+                        // and Down does nothing.
+                        val sideways = tileLayout == TileLayout.Two
+                        fun onKey(index: Int): (KeyEvent) -> Boolean = onKey@{ event ->
+                            if (event.type != KeyEventType.KeyDown) return@onKey false
+                            val first = windowStart.coerceIn(0, max(0, channels.size - slots))
+                            val last = first + slots - 1
+                            val canSlideOn = first + slots < channels.size
+                            val target = when (event.key) {
+                                Key.DirectionUp -> {
+                                    runCatching { layoutButtonFocus.requestFocus() }
+                                    return@onKey true
+                                }
+                                Key.DirectionRight -> when {
+                                    sideways && canSlideOn -> { windowStart = first + 1; first + 1 }
+                                    index < last -> index + 1
+                                    canSlideOn -> { windowStart = first + 1; index + 1 }
+                                    else -> null
+                                }
+                                Key.DirectionLeft -> when {
+                                    sideways && first > 0 -> { windowStart = first - 1; first }
+                                    index > first -> index - 1
+                                    first > 0 -> { windowStart = first - 1; index - 1 }
+                                    else -> null
+                                }
+                                Key.DirectionDown -> null
+                                else -> return@onKey false
+                            }
+                            channels.getOrNull(target ?: -1)?.let { next ->
+                                scope.launch {
+                                    withFrameNanos { }
+                                    runCatching { cardRequester(next.id).requestFocus() }
+                                }
+                            }
+                            true
+                        }
+                        Column(
+                            Modifier.fillMaxSize().padding(vertical = rowGap),
+                            verticalArrangement = Arrangement.spacedBy(rowGap),
+                        ) {
+                            window.chunked(columns).forEachIndexed { r, row ->
+                                Row(
+                                    Modifier.fillMaxWidth().padding(horizontal = columnGap),
+                                    horizontalArrangement = Arrangement.spacedBy(columnGap, Alignment.CenterHorizontally),
+                                ) {
+                                    row.forEachIndexed { c, channel ->
+                                        // Keyed by channel, so a playing card slides over without restarting.
+                                        key(channel.id) {
+                                            Box(Modifier.width(tileWidth)) {
+                                                Tile(start + r * columns + c, channel, onKey(start + r * columns + c))
+                                            }
                                         }
-                                        Key.DirectionDown -> return@onKey true
-                                        else -> Unit
                                     }
-                                    if (sideways) return@onKey false
-                                    // Right at the end of a row goes on to the next channel and Left
-                                    // at the start of a row back to the previous one. Past the edge
-                                    // of the screen the next (or previous) rows come in together.
-                                    val target = when (event.key) {
-                                        Key.DirectionRight -> if (index % columns == columns - 1) index + 1 else return@onKey false
-                                        Key.DirectionLeft -> if (index % columns == 0) index - 1 else return@onKey false
-                                        else -> return@onKey false
-                                    }
-                                    val next = channels.getOrNull(target) ?: return@onKey true
-                                    scope.launch {
-                                        val at = target / columns
-                                        val top = gridState.firstVisibleItemIndex / columns +
-                                            if (gridState.firstVisibleItemScrollOffset > 0) 1 else 0
-                                        if (at < top || at > top + rows - 1) {
-                                            gridState.scrollToItem((if (at < top) maxOf(0, at - rows + 1) else at) * columns)
-                                            withFrameNanos { }
-                                        }
-                                        runCatching { cardRequester(next.id).requestFocus() }
-                                    }
-                                    true
-                                },
-                                onFocusChange = { focused ->
-                                    if (focused) {
-                                        focusedId = channel.id
-                                        val at = index / step
-                                        val offset = gridState.firstVisibleItemScrollOffset
-                                        val top = gridState.firstVisibleItemIndex / step + if (offset > 0) 1 else 0
-                                        val newTop = when {
-                                            at < top -> at
-                                            at > top + shown - 1 -> at - shown + 1
-                                            else -> top
-                                        }
-                                        // Scroll only when the highlight leaves what's on screen.
-                                        if (newTop != top || offset != 0) {
-                                            scope.launch { gridState.scrollToItem(newTop * step) }
-                                        }
-                                    }
-                                },
-                                preview = rowPreviews[channel.id],
-                                snapshot = snapshots[channel.id],
-                            )
+                                }
                             }
                         }
-                    }
-                    // The grid moves a whole row (or, in 2×1, one card) at a time and never shows
-                    // part of a card: the default "scroll just enough to show the focused tile" is
-                    // turned off and the grid jumps straight there instead.
-                    CompositionLocalProvider(LocalBringIntoViewSpec provides NoBringIntoView) {
-                        if (sideways) {
-                            LazyHorizontalGrid(
-                                rows = GridCells.FixedSize(cardHeight),
-                                contentPadding = PaddingValues(horizontal = columnGap, vertical = rowGap),
-                                horizontalArrangement = Arrangement.spacedBy(columnGap),
-                                verticalArrangement = Arrangement.spacedBy(rowGap, Alignment.CenterVertically),
-                                state = gridState,
-                                modifier = Modifier.fillMaxSize(),
-                                content = cards,
-                            )
-                        } else {
-                            LazyVerticalGrid(
-                                columns = GridCells.FixedSize(tileWidth),
-                                contentPadding = PaddingValues(horizontal = columnGap, vertical = rowGap),
-                                horizontalArrangement = Arrangement.spacedBy(columnGap, Alignment.CenterHorizontally),
-                                verticalArrangement = Arrangement.spacedBy(rowGap),
-                                state = gridState,
-                                modifier = Modifier.fillMaxSize(),
-                                content = cards,
-                            )
+                    } else {
+                    val cards: LazyGridScope.() -> Unit = {
+                        itemsIndexed(channels, key = { _, it -> it.id }) { index, channel ->
+                            Tile(index, channel, onKey = { false }, onFocused = {
+                                // The grid moves a whole row at a time and never shows half rows.
+                                val at = index / columns
+                                val offset = gridState.firstVisibleItemScrollOffset
+                                val top = gridState.firstVisibleItemIndex / columns + if (offset > 0) 1 else 0
+                                val newTop = when {
+                                    at < top -> at
+                                    at > top + rows - 1 -> at - rows + 1
+                                    else -> top
+                                }
+                                // Scroll only when the highlight leaves what's on screen.
+                                if (newTop != top || offset != 0) {
+                                    scope.launch { gridState.scrollToItem(newTop * columns) }
+                                }
+                            })
                         }
+                    }
+                    // The default "scroll just enough to show the focused tile" is turned off and
+                    // the grid jumps straight to the row instead.
+                    CompositionLocalProvider(LocalBringIntoViewSpec provides NoBringIntoView) {
+                        LazyVerticalGrid(
+                            columns = GridCells.FixedSize(tileWidth),
+                            contentPadding = PaddingValues(horizontal = columnGap, vertical = rowGap),
+                            horizontalArrangement = Arrangement.spacedBy(columnGap, Alignment.CenterHorizontally),
+                            verticalArrangement = Arrangement.spacedBy(rowGap),
+                            state = gridState,
+                            modifier = Modifier.fillMaxSize(),
+                            content = cards,
+                        )
+                    }
                     }
                     }
                 }
@@ -696,7 +729,8 @@ private fun AppLogo(size: Dp = 40.dp) {
 /**
  * The "1+List" layout: one channel plays in the left three quarters, and the right quarter is a
  * list of channels. OK on a channel in the list plays it on the left; OK on the player opens it
- * full screen, and Back returns here.
+ * full screen, and Back returns here. Holding OK on a channel in the list offers to add it to (or
+ * remove it from) the favorites.
  */
 @Composable
 private fun PlayerWithList(
@@ -705,6 +739,7 @@ private fun PlayerWithList(
     sound: Boolean,
     playing: Boolean,
     favorites: Set<String>,
+    onToggleFavorite: (Channel) -> Unit,
     focusId: String?,
     focus: FocusRequester,
     onSelect: (Channel) -> Unit,
@@ -782,6 +817,8 @@ private fun PlayerWithList(
         ) {
             items(channels, key = { it.id }) { channel ->
                 val current = channel.id == selected?.id
+                var menu by remember { mutableStateOf(false) }
+                Box {
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -789,7 +826,7 @@ private fun PlayerWithList(
                         .focusGlow(ChipShape)
                         .clip(ChipShape)
                         .background(if (current) AccentBlue else MaterialTheme.colorScheme.surface)
-                        .clickable { onSelect(channel) }
+                        .combinedClickable(onClick = { onSelect(channel) }, onLongClick = { menu = true })
                         .padding(horizontal = 10.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -804,7 +841,7 @@ private fun PlayerWithList(
                         )
                     }
                     Text(
-                        channel.name,
+                        countryName(channel)?.let { "$it · ${channel.name}" } ?: channel.name,
                         color = color,
                         fontSize = 13.sp,
                         maxLines = 1,
@@ -820,10 +857,31 @@ private fun PlayerWithList(
                         )
                     }
                 }
+                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                    DropdownMenuItem(
+                        text = { Text(if (channel.id in favorites) "Remove from favorites" else "Add to favorites") },
+                        leadingIcon = {
+                            Icon(
+                                if (channel.id in favorites) Icons.Outlined.StarBorder else Icons.Filled.Star,
+                                contentDescription = null,
+                            )
+                        },
+                        onClick = {
+                            menu = false
+                            onToggleFavorite(channel)
+                        },
+                    )
+                }
+                }
             }
         }
     }
 }
+
+/** The channel's country in the viewer's language, e.g. "Pakistan", or null when it isn't known. */
+private fun countryName(channel: Channel): String? =
+    channel.country?.takeIf { it.length == 2 }?.let { Locale("", it.uppercase()).displayCountry }
+        ?.takeIf { it.isNotBlank() && !it.equals(channel.country, ignoreCase = true) }
 
 @Composable
 private fun Initials(name: String) {
@@ -970,7 +1028,6 @@ private val MinTileWidth = 170.dp
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
     Eight("2×4", 4, 2),
     Six("3×2", 3, 2),
-    Four("2×2", 2, 2),
     Two("2×1", 2, 1),
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
