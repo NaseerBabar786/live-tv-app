@@ -797,6 +797,15 @@ private fun PlayerWithList(
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = max(0, channels.indexOfFirst { it.id == selected?.id } - 2),
     )
+    // Favorites lead the list, so a new filter (All, Favorites, a genre) shows it from the top.
+    var shownList by remember { mutableStateOf(channels.map { it.id }) }
+    LaunchedEffect(channels) {
+        val ids = channels.map { it.id }
+        if (ids != shownList) {
+            shownList = ids
+            listState.scrollToItem(0)
+        }
+    }
     var playerFocused by remember { mutableStateOf(false) }
     Row(
         Modifier
