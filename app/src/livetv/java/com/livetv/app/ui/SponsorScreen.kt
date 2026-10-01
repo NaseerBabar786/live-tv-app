@@ -75,6 +75,13 @@ private fun SponsorWords(secondsLeft: Int, align: TextAlign) {
         modifier = Modifier.widthIn(max = 560.dp),
     )
     Text(
+        "Visit our app store, App Bazaar, for more free and useful apps: apps.bulkbazaar.ca",
+        style = MaterialTheme.typography.bodyLarge,
+        textAlign = align,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.widthIn(max = 560.dp),
+    )
+    Text(
         "Enjoying Live TV? Please share it with your family and friends!",
         style = MaterialTheme.typography.bodyLarge,
         fontWeight = FontWeight.Bold,

@@ -118,7 +118,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import java.util.Locale
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -385,18 +384,21 @@ fun ChannelListScreen(
                     )
                     return@Column
                 }
-                // One row: All, then genres (countries are picked in Settings; favorites lead the list).
-                // All clears every filter; tapping a selected genre clears it.
+                // One row: All, Favorites, then genres (countries are picked in Settings; favorites
+                // also lead the list). All clears every filter; tapping a selected chip clears it.
                 ChipRow(
-                    items = listOf(FILTER_ALL) + state.categories,
+                    items = listOf(FILTER_ALL, FILTER_FAVORITES) + state.categories,
                     selected = setOfNotNull(
                         FILTER_ALL.takeIf { state.filter == FILTER_ALL && state.category == null },
+                        FILTER_FAVORITES.takeIf { state.filter == FILTER_FAVORITES },
                         state.category,
                     ),
                     onSelect = {
                         windowStart = 0
                         when (it) {
                             FILTER_ALL -> onFilterChange(FILTER_ALL)
+                            FILTER_FAVORITES ->
+                                onFilterChange(if (state.filter == FILTER_FAVORITES) FILTER_ALL else FILTER_FAVORITES)
                             else -> onCategoryChange(it.takeUnless { c -> c == state.category })
                         }
                     },
@@ -878,10 +880,10 @@ private fun PlayerWithList(
     }
 }
 
-/** The channel's country in the viewer's language, e.g. "Pakistan", or null when it isn't known. */
+/** The channel's country as a short code, e.g. "PK" (the United Kingdom shows as "UK"), or null when it isn't known. */
 private fun countryName(channel: Channel): String? =
-    channel.country?.takeIf { it.length == 2 }?.let { Locale("", it.uppercase()).displayCountry }
-        ?.takeIf { it.isNotBlank() && !it.equals(channel.country, ignoreCase = true) }
+    channel.country?.takeIf { it.length == 2 && it.all(Char::isLetter) }?.uppercase()
+        ?.let { if (it == "GB") "UK" else it }
 
 @Composable
 private fun Initials(name: String) {
