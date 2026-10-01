@@ -247,11 +247,8 @@ fun ChannelListScreen(
             p.stream.stop(); p.showing = false; pool += p
         }
     }
-    // In 2×1 the sound comes from the side that isn't highlighted, so the highlighted side can
-    // flip through channels quietly. Everywhere else it's the highlighted card.
-    val soundId = if (windowed && tileLayout == TileLayout.Two && window.any { it.id == focusedId }) {
-        window.firstOrNull { it.id != focusedId }?.id
-    } else focusedId
+    // The highlighted card has the sound.
+    val soundId = focusedId
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
@@ -514,9 +511,9 @@ fun ChannelListScreen(
                         // change channels: they move the highlight, and past the last (or first) tile
                         // every channel moves along one place and one new channel comes in. Up goes
                         // to the layout button and Down does nothing.
-                        // 2×1: Left and Right move the highlight between the two sides, Up and Down
-                        // change the highlighted side's channel while the other side plays the sound,
-                        // holding Up goes to the filter row, and Back goes up to the top bar.
+                        // 2×1: Left and Right move the highlight (and the sound) between the two
+                        // sides, Up and Down change the highlighted side's channel, holding Up goes to
+                        // the filter row, and Back goes up to the top bar.
                         fun twoKey(channel: Channel): (KeyEvent) -> Boolean = onKey@{ event ->
                             if (event.key == Key.Back) {
                                 // Taken on both press and release, so the app doesn't also go back.
