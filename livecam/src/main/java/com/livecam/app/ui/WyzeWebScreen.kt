@@ -169,6 +169,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     LaunchedEffect(webView) {
         while (true) {
             delay(4_000)
+            webView.evaluateJavascript(AUTO_LOGIN_JS, null)
             webView.evaluateJavascript(PAGE_INFO_JS) { result ->
                 pageInfo = runCatching { JSONArray("[$result]").optString(0) }.getOrNull()
                     ?.takeIf { it.isNotBlank() && it != "null" }
@@ -232,6 +233,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                         pageUrl.removePrefix("https://").substringBefore('?').ifEmpty { null },
                         navInfo,
                         gridInfo,
+                        "sign-in restored ${WyzeSignIn.lastRestored}".takeIf { WyzeSignIn.lastRestored > 0 },
                         pageInfo,
                         problem,
                         "WebView $webViewVersion",
@@ -468,6 +470,27 @@ private const val KEEP_SESSION_JS = """
     window.addEventListener('pagehide', save);
     setInterval(save, 5000);
   } catch (e) {}
+})();
+"""
+
+/**
+ * When Wyze shows its signed-out welcome page, press its "Log in" button. Wyze's sign-in
+ * service usually still remembers the account, so this goes straight back to the cameras
+ * without typing the password. At most once a minute, so a real sign-in page isn't looped.
+ */
+private const val AUTO_LOGIN_JS = """
+(function () {
+  if (location.hostname !== 'my.wyze.com' || location.pathname.length > 1) return '';
+  var last = +(localStorage.getItem('__liveCamAutoLogin') || 0);
+  if (Date.now() - last < 60000) return '';
+  var b = [].slice.call(document.querySelectorAll('a,button')).filter(function (e) {
+    var r = e.getBoundingClientRect();
+    return r.width > 0 && r.height > 0 && /log\s*in/i.test(e.textContent || '');
+  })[0];
+  if (!b) return '';
+  localStorage.setItem('__liveCamAutoLogin', String(Date.now()));
+  b.click();
+  return 'auto login';
 })();
 """
 

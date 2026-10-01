@@ -15,6 +15,10 @@ object WyzeSignIn {
     private const val PREFS = "wyze_sign_in"
     private const val KEEP_SECONDS = 30 * 24 * 60 * 60
 
+    /** How many saved cookies the last [restore] had to put back, for the status line. */
+    var lastRestored = 0
+        private set
+
     fun save(context: Context) {
         val cookies = CookieManager.getInstance()
         val edit = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
@@ -29,12 +33,14 @@ object WyzeSignIn {
     fun restore(context: Context) {
         val cookies = CookieManager.getInstance()
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        lastRestored = 0
         for (site in SITES) {
             val saved = prefs.getString(site, null) ?: continue
             val present = names(cookies.getCookie(site))
             for (pair in saved.split(";").map { it.trim() }.filter { '=' in it }) {
                 if (pair.substringBefore('=') in present) continue
                 cookies.setCookie(site, "$pair; Max-Age=$KEEP_SECONDS; Path=/; Secure")
+                lastRestored++
             }
         }
         cookies.flush()
