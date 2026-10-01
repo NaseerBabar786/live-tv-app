@@ -23,7 +23,7 @@ sealed interface UpdateState {
 
 /**
  * Checks GitHub for a newer Live TV once per launch (the view model outlives rotation)
- * and installs it when the viewer agrees.
+ * and downloads and installs it straight away.
  */
 class UpdateViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -54,6 +54,8 @@ class UpdateViewModel(app: Application) : AndroidViewModel(app) {
                 onSuccess = { release -> release?.let { UpdateState.Available(it) } ?: UpdateState.UpToDate },
                 onFailure = { UpdateState.Failed(it.message ?: "Could not check for updates.") },
             )
+            // Updates start on their own; the viewer isn't asked first.
+            (_update.value as? UpdateState.Available)?.let { installUpdate(it.release) }
         }
     }
 

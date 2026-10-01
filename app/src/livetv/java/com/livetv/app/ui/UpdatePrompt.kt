@@ -36,12 +36,11 @@ fun UpdatePromptDialog(
     SettingsTheme {
         AlertDialog(
             onDismissRequest = onLater,
-            title = { Text("New version available!") },
+            title = { Text("Updating Live TV") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        "Live TV ${release.version} is ready. Update now to get more channels, " +
-                            "new features and bug fixes. Your favourites and settings are kept."
+                        "Updating to Live TV ${release.version}. Your favourites and settings are kept."
                     )
                     when (update) {
                         is UpdateState.Downloading -> {
