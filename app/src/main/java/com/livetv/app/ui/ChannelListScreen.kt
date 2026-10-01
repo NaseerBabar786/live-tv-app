@@ -59,6 +59,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.gestures.BringIntoViewSpec
+import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
@@ -106,7 +108,7 @@ import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
 import com.livetv.app.data.Channel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ChannelListScreen(
     state: UiState,
@@ -143,7 +145,6 @@ fun ChannelListScreen(
     val context = LocalContext.current
     var inForeground by remember { mutableStateOf(true) }
     var focusedId by remember { mutableStateOf<String?>(null) }
-    var topRow by remember { mutableStateOf(0) }
     val scope = rememberCoroutineScope()
     // Players are pooled and reused: creating and releasing ExoPlayers while scrolling
     // blocked the main thread (release() waits for the playback thread) and froze the app.
@@ -341,7 +342,10 @@ fun ChannelListScreen(
                     // so exactly [rows] rows show and the next row stays off screen.
                     val cardHeight = tileWidth * 9f / 16f + TileTextHeight
                     val rowGap = maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
-                    LaunchedEffect(columns, rows) { topRow = gridState.firstVisibleItemIndex / columns }
+                    // The grid moves a whole row at a time and never shows half rows: the default
+                    // "scroll just enough to show the focused tile" is turned off and the grid jumps
+                    // straight to the row instead.
+                    CompositionLocalProvider(LocalBringIntoViewSpec provides NoBringIntoView) {
                     LazyVerticalGrid(
                         columns = GridCells.FixedSize(tileWidth),
                         contentPadding = PaddingValues(horizontal = gap, vertical = rowGap),
@@ -362,24 +366,23 @@ fun ChannelListScreen(
                                     if (focused) {
                                         focusedId = channel.id
                                         val row = index / columns
+                                        val offset = gridState.firstVisibleItemScrollOffset
+                                        val top = gridState.firstVisibleItemIndex / columns + if (offset > 0) 1 else 0
                                         val newTop = when {
-                                            row < topRow -> row
-                                            row > topRow + rows - 1 -> row - rows + 1
-                                            else -> topRow
+                                            row < top -> row
+                                            row > top + rows - 1 -> row - rows + 1
+                                            else -> top
                                         }
                                         // Scroll only when the highlight leaves the rows on screen.
-                                        if (newTop != topRow || gridState.firstVisibleItemIndex != topRow * columns) {
-                                            topRow = newTop
-                                            scope.launch {
-                                                withFrameNanos { } // after the default bring-into-view starts
-                                                gridState.animateScrollToItem(topRow * columns)
-                                            }
+                                        if (newTop != top || offset != 0) {
+                                            scope.launch { gridState.scrollToItem(newTop * columns) }
                                         }
                                     }
                                 },
                                 preview = rowPreviews[channel.id],
                             )
                         }
+                    }
                     }
                     }
                 }
@@ -661,6 +664,12 @@ private fun PreviewVideo(preview: Preview) {
 private val MinTileWidth = 170.dp
 
 private const val PREF_PREVIEW_SOUND = "preview_sound"
+
+/** Leaves scrolling to the focused tile to the grid's own row-at-a-time handling. */
+@OptIn(ExperimentalFoundationApi::class)
+private val NoBringIntoView = object : BringIntoViewSpec {
+    override fun calculateScrollDistance(offset: Float, size: Float, containerSize: Float): Float = 0f
+}
 
 /** Room under a tile's picture for the channel name (one line). */
 private val TileTextHeight = 30.dp
