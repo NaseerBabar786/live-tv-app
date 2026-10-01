@@ -149,8 +149,9 @@ fun ChannelListScreen(
     val pool = remember { mutableListOf<Preview>() }
     val rowIds by remember {
         derivedStateOf {
-            if (gridState.isScrollInProgress) null
-            else gridState.layoutInfo.visibleItemsInfo.take(MaxPreviews).map { it.key as String }
+            // Only the highlighted tile plays: several videos at once overloaded TV boxes
+            // like the Chromecast and made the highlight lag.
+            if (gridState.isScrollInProgress) null else listOfNotNull(focusedId)
         }
     }
     DisposableEffect(Unit) {
@@ -334,14 +335,18 @@ fun ChannelListScreen(
                                     if (focused) {
                                         focusedId = channel.id
                                         val row = index / columns
-                                        topRow = when {
+                                        val newTop = when {
                                             row < topRow -> row
                                             row > topRow + rows - 1 -> row - rows + 1
                                             else -> topRow
                                         }
-                                        scope.launch {
-                                            withFrameNanos { } // after the default bring-into-view starts
-                                            gridState.animateScrollToItem(topRow * columns)
+                                        // Scroll only when the highlight leaves the rows on screen.
+                                        if (newTop != topRow || gridState.firstVisibleItemIndex != topRow * columns) {
+                                            topRow = newTop
+                                            scope.launch {
+                                                withFrameNanos { } // after the default bring-into-view starts
+                                                gridState.animateScrollToItem(topRow * columns)
+                                            }
                                         }
                                     } else if (focusedId == channel.id) {
                                         focusedId = null
@@ -632,6 +637,3 @@ private val MinTileWidth = 170.dp
 
 /** Room under a tile's picture for the channel name (one line). */
 private val TileTextHeight = 30.dp
-
-/** Most previews playing at once (a screenful of 4 x 2 tiles). */
-private const val MaxPreviews = 8
