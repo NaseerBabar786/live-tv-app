@@ -129,10 +129,12 @@ fun ChannelListScreen(
         }
     }
 
-    // Live previews, muted and in low quality: every channel card on screen plays, and
-    // the set follows scrolling. Wi-Fi or Ethernet only, so mobile data isn't used up.
+    // Live previews in low quality: every channel card on screen plays, and the set follows
+    // scrolling. Only the card the remote's highlight is on has sound. Wi-Fi or Ethernet
+    // only, so mobile data isn't used up.
     val context = LocalContext.current
     var inForeground by remember { mutableStateOf(true) }
+    var focusedId by remember { mutableStateOf<String?>(null) }
     val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
     val rowIds by remember {
         derivedStateOf { gridState.layoutInfo.visibleItemsInfo.map { it.key as String } }
@@ -149,6 +151,9 @@ fun ChannelListScreen(
             val channel = state.channels.firstOrNull { it.id == id } ?: continue
             rowPreviews[id] = Preview.create(context).also { it.stream.play(channel) }
         }
+    }
+    LaunchedEffect(focusedId, rowPreviews.keys.toSet()) {
+        rowPreviews.forEach { (id, p) -> p.stream.player.volume = if (id == focusedId) 1f else 0f }
     }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -290,6 +295,10 @@ fun ChannelListScreen(
                                 onClick = { onPlay(channel) },
                                 onToggleFavorite = { onToggleFavorite(channel) },
                                 focusRequester = lastWatchedFocus.takeIf { channel.id == state.lastWatchedId },
+                                onFocusChange = { focused ->
+                                    if (focused) focusedId = channel.id
+                                    else if (focusedId == channel.id) focusedId = null
+                                },
                                 preview = rowPreviews[channel.id],
                             )
                         }
