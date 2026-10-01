@@ -89,6 +89,8 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     var pointerMode by remember { mutableStateOf(false) }
     var navInfo by remember { mutableStateOf<String?>(null) }
     var gridInfo by remember { mutableStateOf<String?>(null) }
+    // A camera shown full screen: the top bar hides so the camera gets the whole TV.
+    var solo by remember { mutableStateOf(false) }
     val reloadFocus = remember { FocusRequester() }
     val appVersion = remember {
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: "?"
@@ -190,6 +192,10 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     }
     // Up at the top of the page moves to the Reload button; Down from the top bar goes back in.
     webView.onNavResult = { navInfo = it }
+    webView.onSoloChanged = { on ->
+        solo = on
+        webView.evaluateJavascript(GRID_JS, null)
+    }
     webView.onExitTop = { runCatching { reloadFocus.requestFocus() } }
     val backIntoPage = Modifier.onPreviewKeyEvent { e ->
         if (e.key == Key.DirectionDown && e.type == KeyEventType.KeyDown) {
@@ -207,9 +213,13 @@ fun WyzeWebScreen(onBack: () -> Unit) {
         }
     }
 
-    // Back steps through Wyze's pages first, then leaves.
+    // Back leaves a full-screen camera first, then steps through Wyze's pages, then leaves.
     BackHandler {
-        if (webView.canGoBack()) webView.goBack() else onBack()
+        when {
+            solo -> webView.exitSolo()
+            webView.canGoBack() -> webView.goBack()
+            else -> onBack()
+        }
     }
 
     Column(
@@ -218,7 +228,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
             .background(MaterialTheme.colorScheme.background)
             .safeDrawingPadding()
     ) {
-        Row(
+        if (!solo) Row(
             Modifier
                 .fillMaxWidth()
                 .then(backIntoPage)
@@ -394,27 +404,46 @@ private const val GRID_JS = """
   var x0 = left + Math.max(0, (availW - (w * cols + gap * (cols - 1))) / 2);
   // A parent with a transform would move 'fixed' boxes; correct by what was measured last time.
   var dx = row.__liveCamDx || 0, dy = row.__liveCamDy || 0;
+  // One camera chosen with OK goes full screen over a black backdrop; the rest stay behind it.
+  var solo = window.__liveCamSolo;
+  if (tiles.indexOf(solo) < 0) solo = window.__liveCamSolo = null;
+  var shade = document.getElementById('__liveCamShade');
+  if (solo && !shade) {
+    shade = document.createElement('div');
+    shade.id = '__liveCamShade';
+    shade.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;background:#000;z-index:2147482000;pointer-events:none;';
+    document.documentElement.appendChild(shade);
+  } else if (!solo && shade) shade.remove();
   set(row, 'height', (h * rows + gap * (rows - 1)) + 'px');
   set(row, 'min-height', '0');
   tiles.forEach(function (t, i) {
     t.classList.add('__liveCamTile');
     set(t, 'position', 'fixed');
     set(t, 'box-sizing', 'border-box');
-    set(t, 'left', Math.round(x0 + (i % cols) * (w + gap) + dx) + 'px');
-    set(t, 'top', Math.round(top + Math.floor(i / cols) * (h + gap) + dy) + 'px');
-    set(t, 'width', w + 'px');
-    set(t, 'max-width', w + 'px');
+    var tw = w, tx = x0 + (i % cols) * (w + gap), ty = top + Math.floor(i / cols) * (h + gap);
+    if (t === solo) {
+      tw = Math.floor(Math.min(innerWidth, innerHeight / ratio));
+      tx = (innerWidth - tw) / 2;
+      ty = Math.max(0, (innerHeight - tw * ratio) / 2);
+    }
+    set(t, 'left', Math.round(tx + dx) + 'px');
+    set(t, 'top', Math.round(ty + dy) + 'px');
+    set(t, 'width', tw + 'px');
+    set(t, 'max-width', tw + 'px');
     set(t, 'min-width', '0');
     set(t, 'height', 'auto');
     set(t, 'margin', '0');
     set(t, 'transform', 'none');
-    set(t, 'z-index', '1');
+    set(t, 'z-index', t === solo ? '2147482001' : '1');
     set(t, 'display', 'block');
   });
-  var r0 = tiles[0].getBoundingClientRect();
-  row.__liveCamDx = dx + Math.round(x0 - r0.left);
-  row.__liveCamDy = dy + Math.round(top - r0.top);
+  if (!solo) {
+    var r0 = tiles[0].getBoundingClientRect();
+    row.__liveCamDx = dx + Math.round(x0 - r0.left);
+    row.__liveCamDy = dy + Math.round(top - r0.top);
+  }
   var last = tiles[tiles.length - 1].getBoundingClientRect();
+  if (solo) return 'grid ' + tiles.length + ', camera ' + (tiles.indexOf(solo) + 1) + ' full screen';
   return 'grid ' + tiles.length + ' as ' + cols + 'x' + rows + ' at ' + w + 'px, bottom ' + Math.round(last.bottom) + '/' + innerHeight;
 })();
 """

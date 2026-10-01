@@ -27,6 +27,9 @@ class CursorWebView(context: Context) : WebView(context) {
      */
     var onExitTop: (() -> Unit)? = null
 
+    /** Called when a camera goes full screen (true) or back to the grid of cameras (false). */
+    var onSoloChanged: ((Boolean) -> Unit)? = null
+
     /** What the last arrow press did, e.g. "moved in pop-up, 9 choices", for the status line. */
     var onNavResult: ((String) -> Unit)? = null
 
@@ -111,8 +114,26 @@ class CursorWebView(context: Context) : WebView(context) {
         }
     }
 
-    /** Taps the middle of the highlighted button, the way a finger would. */
+    /** Back from a full-screen camera to the grid of cameras. */
+    fun exitSolo() {
+        evaluateJavascript(SOLO_OFF_JS) { onSoloChanged?.invoke(false) }
+    }
+
+    /**
+     * OK on a camera shows it full screen, and OK again goes back to all the cameras. On anything
+     * else, taps the middle of the highlighted button, the way a finger would.
+     */
     private fun pressHighlighted() {
+        evaluateJavascript(SOLO_TOGGLE_JS) { raw ->
+            when (raw?.trim('"')) {
+                "on" -> onSoloChanged?.invoke(true)
+                "off" -> onSoloChanged?.invoke(false)
+                else -> tapHighlighted()
+            }
+        }
+    }
+
+    private fun tapHighlighted() {
         evaluateJavascript(CENTER_JS) { result ->
             val parts = result?.trim('"')?.split(',')?.mapNotNull { it.toFloatOrNull() }
             if (parts == null || parts.size != 2) return@evaluateJavascript
@@ -213,6 +234,31 @@ private const val HIGHLIGHT = "__liveCamFocus"
 
 private const val CLEAR_HIGHLIGHT_JS = """
 (function(){ window.$HIGHLIGHT = null; var box = document.getElementById('$HIGHLIGHT'); if (box) box.remove(); })();
+"""
+
+private const val SOLO_OFF_JS = """
+(function(){ window.__liveCamSolo = null; return 'off'; })();
+"""
+
+/**
+ * With a camera full screen, any OK goes back to the grid. Otherwise, when the highlight is on one
+ * of the cameras the grid placed (class __liveCamTile), that camera goes full screen. Returns
+ * "on", "off", or "" when the highlight isn't on a camera.
+ */
+private const val SOLO_TOGGLE_JS = """
+(function(){
+  if (window.__liveCamSolo && window.__liveCamSolo.isConnected) { window.__liveCamSolo = null; return 'off'; }
+  var el = window.$HIGHLIGHT;
+  if (!el || !el.isConnected) return '';
+  var tile = el.closest ? el.closest('.__liveCamTile') : null;
+  if (!tile && el.querySelector) {
+    var inner = el.querySelectorAll('.__liveCamTile');
+    if (inner.length === 1) tile = inner[0];
+  }
+  if (!tile) return '';
+  window.__liveCamSolo = tile;
+  return 'on';
+})();
 """
 
 /** Center of the highlighted element in CSS pixels, as "x,y", or "" when nothing is highlighted. */
