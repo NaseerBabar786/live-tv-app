@@ -25,7 +25,9 @@ import com.livetv.app.data.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import android.text.format.DateFormat
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.TextButton
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
@@ -175,6 +177,11 @@ fun ChannelListScreen(
     // Only the highlighted tile has sound; the speaker button in the top bar mutes it (remembered).
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
+    // TV and tablet layout, picked with the button in the top bar (remembered).
+    var tileLayout by remember {
+        mutableStateOf(TileLayout.entries.firstOrNull { it.name == prefs.getString(PREF_TILE_LAYOUT, null) } ?: TileLayout.Eight)
+    }
+    val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
     // Still pictures for the cards on screen, kept while scrolling around.
     val snapshots = remember { mutableStateMapOf<String, ImageBitmap>() }
     // A card that stops playing keeps its last frame as its picture.
@@ -275,6 +282,15 @@ fun ChannelListScreen(
                     }
                 },
                 actions = {
+                    if (wideScreen) {
+                        TextButton(
+                            onClick = {
+                                tileLayout = TileLayout.entries[(tileLayout.ordinal + 1) % TileLayout.entries.size]
+                                prefs.edit().putString(PREF_TILE_LAYOUT, tileLayout.name).apply()
+                            },
+                            modifier = Modifier.focusGlow(),
+                        ) { Text(tileLayout.label, fontWeight = FontWeight.Bold) }
+                    }
                     IconButton(
                         onClick = {
                             previewSound = !previewSound
@@ -365,12 +381,12 @@ fun ChannelListScreen(
                     // row at a time, so no tile is ever cut off at the top or bottom. Each
                     // tile's picture is 16:9, so a playing channel fills it edge to edge.
                     else -> BoxWithConstraints(Modifier.fillMaxSize()) {
-                    // TVs and tablets: 4 tiles a row, 2 rows. Phones: as many as fit.
+                    // TVs and tablets: the chosen layout (8, 4 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
                     val wide = maxWidth >= 600.dp
-                    val fitColumns = if (wide) 4 else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
+                    val fitColumns = if (wide) tileLayout.columns else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
                     val naturalHeight = (maxWidth - gap * (fitColumns + 1)) / fitColumns * 9f / 16f + TileTextHeight
-                    val rows = if (wide) 2 else max(1, ((maxHeight - gap) / (naturalHeight + gap)).roundToInt())
+                    val rows = if (wide) tileLayout.rows else max(1, ((maxHeight - gap) / (naturalHeight + gap)).roundToInt())
                     val tileHeight = (maxHeight - gap * (rows + 1)) / rows
                     val pictureWidth = (tileHeight - TileTextHeight) * 16f / 9f
                     val tileWidth = minOf(pictureWidth, (maxWidth - gap * (fitColumns + 1)) / fitColumns)
@@ -715,6 +731,15 @@ private fun PreviewVideo(preview: Preview) {
 
 /** Narrowest a channel tile gets; the screen width decides how many fit in a row. */
 private val MinTileWidth = 170.dp
+
+/** How many tiles a TV screen shows; the label is what the top-bar button reads. */
+private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
+    Eight("2×4", 4, 2),
+    Four("2×2", 2, 2),
+    Two("2×1", 2, 1),
+}
+
+private const val PREF_TILE_LAYOUT = "tile_layout"
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 
