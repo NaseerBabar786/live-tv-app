@@ -14,8 +14,8 @@ android {
         applicationId = "com.naseerbabar.livecam"
         minSdk = 26
         targetSdk = 36
-        versionCode = 13
-        versionName = "0.3.3"
+        versionCode = 14
+        versionName = "0.3.4"
     }
 
     // Same shared signing key as Live TV when CI has it, so updates install over the old app.

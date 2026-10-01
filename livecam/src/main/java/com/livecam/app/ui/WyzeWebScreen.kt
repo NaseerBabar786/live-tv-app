@@ -173,6 +173,13 @@ fun WyzeWebScreen(onBack: () -> Unit) {
             }
         }
     }
+    // Wyze puts the chosen cameras in one row that runs off the right edge; keep them in a grid.
+    LaunchedEffect(webView) {
+        while (true) {
+            delay(1_500)
+            webView.evaluateJavascript(GRID_JS, null)
+        }
+    }
     // Up at the top of the page moves to the Reload button; Down from the top bar goes back in.
     webView.onNavResult = { navInfo = it }
     webView.onExitTop = { runCatching { reloadFocus.requestFocus() } }
@@ -325,6 +332,52 @@ private const val DESKTOP_JS = """
   }
   new MutationObserver(widen).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['content'] });
   widen();
+})();
+"""
+
+/**
+ * Finds the row holding the live camera videos and turns it into a grid (2 across for up to
+ * 4 cameras, 3 across for up to 9), sized so every camera fits on screen without scrolling.
+ */
+private const val GRID_JS = """
+(function () {
+  var vids = [].slice.call(document.querySelectorAll('video')).filter(function (v) {
+    var r = v.getBoundingClientRect(); return r.width > 80 && r.height > 45;
+  });
+  if (vids.length < 2) return 'few';
+  var row = vids[0].parentElement;
+  while (row && !vids.every(function (v) { return row.contains(v); })) row = row.parentElement;
+  if (!row || row === document.body) return 'no row';
+  var tiles = [].slice.call(row.children).filter(function (c) {
+    return vids.some(function (v) { return c.contains(v); });
+  });
+  if (tiles.length < 2) return 'no tiles';
+  if (!document.getElementById('__liveCamGridCss')) {
+    var css = document.createElement('style');
+    css.id = '__liveCamGridCss';
+    css.textContent =
+      '.__liveCamGrid{display:grid !important;gap:8px !important;transform:none !important;' +
+      'flex-wrap:wrap !important;overflow:visible !important;justify-content:center !important;width:100% !important}' +
+      '.__liveCamGrid>*{width:auto !important;min-width:0 !important;max-width:100% !important;' +
+      'flex:none !important;margin:0 !important;height:auto !important}' +
+      '.__liveCamGrid>* *{max-width:100% !important}' +
+      '.__liveCamGrid video{width:100% !important;height:auto !important;object-fit:contain !important}';
+    (document.head || document.documentElement).appendChild(css);
+  }
+  row.classList.add('__liveCamGrid');
+  var cols = tiles.length <= 4 ? 2 : tiles.length <= 9 ? 3 : 4;
+  var rows = Math.ceil(tiles.length / cols);
+  var top = Math.max(0, row.getBoundingClientRect().top + window.scrollY);
+  var space = window.innerHeight - top - 16;
+  var tileH = (space - 8 * (rows - 1)) / rows;
+  var width = Math.max(160, Math.floor(tileH * 16 / 9));
+  var tpl = 'repeat(' + cols + ', minmax(0, ' + width + 'px))';
+  if (row.style.gridTemplateColumns !== tpl) row.style.setProperty('grid-template-columns', tpl, 'important');
+  for (var p = row.parentElement; p && p !== document.body; p = p.parentElement) {
+    var o = getComputedStyle(p).overflowX;
+    if (o === 'auto' || o === 'scroll') p.scrollLeft = 0;
+  }
+  return 'grid ' + tiles.length;
 })();
 """
 
