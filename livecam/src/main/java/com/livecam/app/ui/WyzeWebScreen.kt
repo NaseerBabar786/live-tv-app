@@ -380,14 +380,24 @@ private const val GRID_JS = """
   var t0 = tiles[0], ratio = t0.offsetWidth > 0 ? t0.offsetHeight / t0.offsetWidth : 0;
   if (!(ratio > 0.3 && ratio < 1.5)) ratio = 0.6;
   var avail = row.parentElement ? row.parentElement.clientWidth : innerWidth;
-  // If the last camera still ended up below the screen, keep shrinking a little each round.
+  // If the last camera still ended up below the screen, shrink a little each round (a fresh
+  // choice of cameras starts over at full size).
+  if (row.__liveCamCount !== tiles.length) { row.__liveCamCount = tiles.length; row.__liveCamShrink = 1; }
   var shrink = row.__liveCamShrink || 1;
   var w = Math.floor(Math.min(tileH / ratio, (avail - gap * (cols - 1)) / cols) * shrink);
   w = Math.max(160, w);
   var px = w + 'px';
   var full = (w * cols + gap * (cols - 1)) + 'px';
+  // Wyze uses a masonry layout: a column-wise flexbox with a fixed height, an 'order' on each
+  // camera and hidden line-break elements. Undo all of that so cameras fill rows left to right.
   set(row, 'display', 'flex');
+  set(row, 'flex-direction', 'row');
   set(row, 'flex-wrap', 'wrap');
+  set(row, 'align-content', 'flex-start');
+  set(row, 'min-height', '0');
+  [].slice.call(row.children).forEach(function (c) {
+    if (tiles.indexOf(c) < 0) set(c, 'display', 'none');
+  });
   set(row, 'gap', gap + 'px');
   set(row, 'justify-content', 'flex-start');
   set(row, 'align-items', 'flex-start');
@@ -406,14 +416,20 @@ private const val GRID_JS = """
     set(t, 'flex', '0 0 ' + px);
     set(t, 'margin', '0');
     set(t, 'height', 'auto');
+    set(t, 'order', '0');
+    set(t, 'position', 'relative');
+    set(t, 'left', 'auto');
+    set(t, 'top', 'auto');
   });
   for (var q = row.parentElement; q && q !== document.body; q = q.parentElement) {
     var o = getComputedStyle(q).overflowX;
     if (o === 'auto' || o === 'scroll') q.scrollLeft = 0;
   }
   var last = tiles[tiles.length - 1].getBoundingClientRect();
-  if (last.bottom + window.scrollY > window.innerHeight + 2 && shrink > 0.5) row.__liveCamShrink = shrink * 0.94;
-  return 'grid ' + tiles.length + ' at ' + w + 'px, bottom ' + Math.round(last.bottom) + '/' + innerHeight;
+  // Only shrink once the cameras really are side by side; otherwise the layout is the problem.
+  var sideBySide = tiles[1].getBoundingClientRect().top < tiles[0].getBoundingClientRect().bottom;
+  if (sideBySide && last.bottom + window.scrollY > window.innerHeight + 2 && shrink > 0.75) row.__liveCamShrink = shrink * 0.95;
+  return 'grid ' + tiles.length + (sideBySide ? '' : ' (stacked)') + ' at ' + w + 'px, bottom ' + Math.round(last.bottom) + '/' + innerHeight;
 })();
 """
 
