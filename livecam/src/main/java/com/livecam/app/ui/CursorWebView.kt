@@ -72,19 +72,32 @@ class CursorWebView(context: Context) : WebView(context) {
             else -> return super.dispatchKeyEvent(event)
         }
         if (event.action == KeyEvent.ACTION_DOWN) {
-            if (pointerMode) move(dx, dy, event.repeatCount) else jump(dx, dy)
+            if (pointerMode) move(dx, dy, event.repeatCount)
+            else if (event.repeatCount == 0 || !jumpRunning) jump(dx, dy)
         }
         return true
     }
 
+    // Presses waiting while the page works out the last one. The page can be slow while several
+    // cameras are playing; queueing keeps every press without piling up dozens of held-key repeats.
+    private val pendingMoves = ArrayDeque<Pair<Int, Int>>()
+    private var jumpRunning = false
+
     /** Highlights the nearest button in the direction pressed; Up with nothing above leaves the page. */
     private fun jump(dx: Int, dy: Int) {
+        if (jumpRunning) {
+            if (pendingMoves.size < 2) pendingMoves.addLast(dx to dy)
+            return
+        }
+        jumpRunning = true
         evaluateJavascript("$NAV_JS(${dx}, ${dy})") { raw ->
+            jumpRunning = false
             val result = raw?.trim('"')
             onNavResult?.invoke(if (result == null || result == "null") "arrow keys: no response from page" else result)
             when {
                 result == null -> Unit
                 result == "exitTop" -> {
+                    pendingMoves.clear()
                     evaluateJavascript(CLEAR_HIGHLIGHT_JS, null)
                     onExitTop?.invoke()
                 }
@@ -94,6 +107,7 @@ class CursorWebView(context: Context) : WebView(context) {
                     scrollPage(dy * height / 3f)
                 }
             }
+            pendingMoves.removeFirstOrNull()?.let { (nx, ny) -> jump(nx, ny) }
         }
     }
 
@@ -214,44 +228,15 @@ private const val CENTER_JS = """
 /**
  * Moves the highlight to the nearest clickable thing in direction (dx, dy). Only looks inside an
  * open pop-up or menu when there is one. Returns "moved", "none" (nothing that way) or "exitTop".
+ * The list of choices is reused for a moment between presses, since building it is the slow part
+ * while cameras are playing. If the highlighted item is redrawn (as Wyze does after a tick), the
+ * next press carries on from where it was instead of starting at the top again.
  */
 private const val NAV_JS = """
 (function(dx, dy){
   var SEL = 'a[href],button,input:not([type=hidden]),select,textarea,label,summary,video,[role=button],[role=checkbox],[role=radio],[role=switch],[role=tab],[role=link],[role=menuitem],[role=menuitemcheckbox],[role=option],[tabindex]:not([tabindex="-1"])';
-  function visible(el) {
-    var r = el.getBoundingClientRect();
-    if (r.width < 6 || r.height < 6) return false;
-    var s = getComputedStyle(el);
-    // Material checkboxes hide the real <input> (opacity 0) over the drawn box; it still counts.
-    return s.visibility !== 'hidden' && s.display !== 'none' && s.pointerEvents !== 'none' &&
-      (parseFloat(s.opacity) > 0.05 || el.tagName === 'INPUT');
-  }
-  var found = Array.prototype.slice.call(document.querySelectorAll(SEL));
-  var all = document.getElementsByTagName('*');
-  for (var j = 0; j < all.length; j++) {
-    var e = all[j];
-    if (getComputedStyle(e).cursor === 'pointer' && found.indexOf(e) < 0) found.push(e);
-  }
-  found = found.filter(visible);
-  // Something clickable that holds several other clickables is a container (a menu, a pop-up),
-  // not a control: skip it. Of the rest, keep the outermost (a row, not the checkbox inside it).
-  found = found.filter(function(e){
-    var inside = 0;
-    for (var k = 0; k < found.length && inside < 2; k++) if (found[k] !== e && e.contains(found[k])) inside++;
-    return inside < 2;
-  });
-  var outer = found.filter(function(e){
-    for (var p = e.parentElement; p; p = p.parentElement) if (found.indexOf(p) >= 0) return false;
-    return true;
-  });
   function center(e){ var r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
   function onScreen(e){ var c = center(e); return c.x >= 0 && c.y >= 0 && c.x < innerWidth && c.y < innerHeight; }
-  // Only things a tap would reach: an open pop-up covers the page with an invisible layer,
-  // so whatever is under it can't be pressed and is skipped.
-  function reachable(e){
-    var c = center(e), h = document.elementFromPoint(c.x, c.y);
-    return !!h && (h === e || e.contains(h) || h.contains(e));
-  }
   function scrollers(e){
     var list = [];
     for (var p = e.parentElement; p && p !== document.body; p = p.parentElement) {
@@ -260,24 +245,65 @@ private const val NAV_JS = """
     }
     return list;
   }
-  var blocked = false, open = [], boxes = [];
-  outer.forEach(function(e){
-    if (!onScreen(e)) return;
-    if (reachable(e)) { open.push(e); scrollers(e).forEach(function(b){ if (boxes.indexOf(b) < 0) boxes.push(b); }); }
-    else blocked = true;
-  });
-  // Off-screen items count when they can be scrolled to: anywhere on a normal page, or inside
-  // the same scrolling list as reachable items when a pop-up is open.
-  var items = outer.filter(function(e){
-    if (onScreen(e)) return open.indexOf(e) >= 0;
-    if (!blocked) return true;
-    return scrollers(e).some(function(b){ return boxes.indexOf(b) >= 0; });
-  });
+  function build(){
+    function visible(el) {
+      var r = el.getBoundingClientRect();
+      if (r.width < 6 || r.height < 6) return false;
+      var s = getComputedStyle(el);
+      // Material checkboxes hide the real <input> (opacity 0) over the drawn box; it still counts.
+      return s.visibility !== 'hidden' && s.display !== 'none' && s.pointerEvents !== 'none' &&
+        (parseFloat(s.opacity) > 0.05 || el.tagName === 'INPUT');
+    }
+    var seen = new Set(document.querySelectorAll(SEL));
+    var all = document.body ? document.body.getElementsByTagName('*') : [];
+    for (var j = 0; j < all.length; j++) if (!seen.has(all[j]) && getComputedStyle(all[j]).cursor === 'pointer') seen.add(all[j]);
+    var found = Array.from(seen).filter(visible);
+    // Something clickable that holds several other clickables is a container (a menu, a pop-up),
+    // not a control: skip it. Of the rest, keep the outermost (a row, not the checkbox inside it).
+    var holders = new Map();
+    found.forEach(function(e){
+      for (var p = e.parentElement; p; p = p.parentElement) if (seen.has(p)) holders.set(p, (holders.get(p) || 0) + 1);
+    });
+    var kept = new Set(found.filter(function(e){ return (holders.get(e) || 0) < 2; }));
+    var outer = Array.from(kept).filter(function(e){
+      for (var p = e.parentElement; p; p = p.parentElement) if (kept.has(p)) return false;
+      return true;
+    });
+    // Only things a tap would reach: an open pop-up covers the page with an invisible layer,
+    // so whatever is under it can't be pressed and is skipped.
+    function reachable(e){
+      var c = center(e), h = document.elementFromPoint(c.x, c.y);
+      return !!h && (h === e || e.contains(h) || h.contains(e));
+    }
+    var blocked = false, open = new Set(), boxes = new Set();
+    outer.forEach(function(e){
+      if (!onScreen(e)) return;
+      if (reachable(e)) { open.add(e); scrollers(e).forEach(function(b){ boxes.add(b); }); }
+      else blocked = true;
+    });
+    // Off-screen items count when they can be scrolled to: anywhere on a normal page, or inside
+    // the same scrolling list as reachable items when a pop-up is open.
+    var items = outer.filter(function(e){
+      if (onScreen(e)) return open.has(e);
+      if (!blocked) return true;
+      return scrollers(e).some(function(b){ return boxes.has(b); });
+    });
+    return { items: items, blocked: blocked, at: Date.now() };
+  }
+  var cur = window.$HIGHLIGHT;
+  var nav = window.__liveCamNav;
+  var curOk = cur && cur.isConnected;
+  if (!nav || Date.now() - nav.at > 1500 || !curOk || nav.items.indexOf(cur) < 0 ||
+      nav.items.some(function(e){ return !e.isConnected; })) {
+    nav = window.__liveCamNav = build();
+  }
+  var items = nav.items, blocked = nav.blocked;
   var where = blocked ? ' in pop-up' : '';
   if (!items.length) return 'none' + where;
-  var cur = window.$HIGHLIGHT;
+  if (!curOk || items.indexOf(cur) < 0) cur = null;
+  var a = cur ? center(cur) : window.__liveCamLast;
   var next = null;
-  if (!cur || !cur.isConnected || items.indexOf(cur) < 0) {
+  if (!a) {
     var best = 1e12;
     items.forEach(function(e){
       var c = center(e);
@@ -287,7 +313,17 @@ private const val NAV_JS = """
     });
     next = next || items[0];
   } else {
-    var a = center(cur), bestScore = 1e12;
+    var bestScore = 1e12;
+    if (!cur) {
+      // The highlighted item was redrawn: stand on its replacement (the item now at the same
+      // spot) and move from there.
+      items.forEach(function(e){
+        var c = center(e), d = Math.abs(c.x - a.x) + Math.abs(c.y - a.y);
+        if (d < bestScore) { bestScore = d; cur = e; }
+      });
+      if (bestScore > 24) cur = null;
+      bestScore = 1e12;
+    }
     items.forEach(function(e){
       if (e === cur) return;
       var c = center(e), along = (c.x - a.x) * dx + (c.y - a.y) * dy;
@@ -296,10 +332,20 @@ private const val NAV_JS = """
       var score = along + across * 2;
       if (score < bestScore) { bestScore = score; next = e; }
     });
-    if (!next) return (dy < 0 && !blocked) ? 'exitTop' : 'none' + where;
+    if (!next) {
+      if (cur) window.$HIGHLIGHT = cur;
+      return (dy < 0 && !blocked) ? 'exitTop' : 'none' + where;
+    }
   }
-  next.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  // Keep the next item and one more beyond it in view, so the list scrolls ahead of the highlight.
+  var r = next.getBoundingClientRect(), box0 = scrollers(next)[0];
+  var top = box0 ? Math.max(0, box0.getBoundingClientRect().top) : 0;
+  var bottom = box0 ? Math.min(innerHeight, box0.getBoundingClientRect().bottom) : innerHeight;
+  var room = Math.min(r.height, (bottom - top) / 4);
+  if (r.top < top + room || r.bottom > bottom - room) next.scrollIntoView({ block: 'center', inline: 'nearest' });
   window.$HIGHLIGHT = next;
+  var c2 = center(next);
+  window.__liveCamLast = { x: c2.x, y: c2.y };
   // Draw the highlight as a box on top of everything: an outline on the element itself gets
   // clipped by scrolling lists and pop-ups.
   var box = document.getElementById('$HIGHLIGHT');
@@ -307,7 +353,7 @@ private const val NAV_JS = """
     box = document.createElement('div');
     box.id = '$HIGHLIGHT';
     box.style.cssText = 'position:fixed;z-index:2147483647;pointer-events:none;border:4px solid #1DE9B6;' +
-      'border-radius:8px;box-shadow:0 0 0 2px rgba(0,0,0,.6),0 0 12px #1DE9B6;transition:all .12s ease-out;';
+      'border-radius:8px;box-shadow:0 0 0 2px rgba(0,0,0,.6),0 0 12px #1DE9B6;';
     var place = function(){
       var el = window.$HIGHLIGHT;
       if (!el || !el.isConnected) { box.style.display = 'none'; return; }
@@ -317,14 +363,15 @@ private const val NAV_JS = """
       box.style.top = (r.top - 6) + 'px';
       box.style.width = (r.width + 4) + 'px';
       box.style.height = (r.height + 4) + 'px';
+      var c = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      window.__liveCamLast = c;
     };
     box.__place = place;
     window.addEventListener('scroll', place, true);
     window.addEventListener('resize', place);
   }
-  document.documentElement.appendChild(box);
+  if (box.parentNode !== document.documentElement) document.documentElement.appendChild(box);
   box.__place();
   return 'moved' + where + ', ' + items.length + ' choices';
 })
 """
-
