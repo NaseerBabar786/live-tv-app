@@ -168,14 +168,11 @@ fun ChannelListScreen(
         for (id in ids.filter { it !in rowPreviews }) {
             val channel = state.channels.firstOrNull { it.id == id } ?: continue
             val p = pool.removeLastOrNull() ?: Preview.create(context)
-            p.stream.player.volume = if (id == focusedId) 1f else 0f
+            p.stream.player.volume = 0f // previews stay muted, even the highlighted one
             rowPreviews[id] = p
             p.stream.play(channel)
             delay(250)
         }
-    }
-    LaunchedEffect(focusedId, rowPreviews.keys.toSet()) {
-        rowPreviews.forEach { (id, p) -> p.stream.player.volume = if (id == focusedId) 1f else 0f }
     }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
