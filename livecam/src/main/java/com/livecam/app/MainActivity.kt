@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,7 +38,10 @@ class MainActivity : ComponentActivity() {
             LiveCamTheme {
                 val state by viewModel.state.collectAsStateWithLifecycle()
                 val watching = state.watching
-                var showWyze by rememberSaveable { mutableStateOf(false) }
+                // Once Wyze has been opened, the app starts straight on the Wyze cameras;
+                // Back goes to the home screen as before.
+                val prefs = remember { getSharedPreferences("live_cam", android.content.Context.MODE_PRIVATE) }
+                var showWyze by rememberSaveable { mutableStateOf(prefs.getBoolean(KEY_USES_WYZE, false)) }
                 if (showWyze) {
                     WyzeWebScreen(onBack = { showWyze = false })
                 } else if (watching != null) {
@@ -55,7 +59,10 @@ class MainActivity : ComponentActivity() {
                         onWatch = viewModel::watch,
                         onEdit = viewModel::startEdit,
                         onAdd = viewModel::startAdd,
-                        onOpenWyze = { showWyze = true },
+                        onOpenWyze = {
+                            prefs.edit().putBoolean(KEY_USES_WYZE, true).apply()
+                            showWyze = true
+                        },
                         version = updates.installedVersion,
                     )
                 }
@@ -104,3 +111,5 @@ class MainActivity : ComponentActivity() {
         return super.dispatchKeyEvent(event)
     }
 }
+
+private const val KEY_USES_WYZE = "uses_wyze"
