@@ -77,6 +77,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
@@ -202,7 +204,15 @@ fun ChannelListScreen(
     val slots = tileLayout.columns * tileLayout.rows
     var windowStart by rememberSaveable { mutableIntStateOf(0) }
     val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
-    val window = if (windowed) state.visibleChannels.drop(start).take(slots) else emptyList()
+    // 2×1 is two separate TVs: Up and Down change the channel on the highlighted side only.
+    // [twoIds] holds the two sides' channels once one has been changed.
+    var twoIds by rememberSaveable { mutableStateOf(emptyList<String>()) }
+    val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
+    val window = when {
+        !windowed -> emptyList()
+        tileLayout == TileLayout.Two && twoChosen.size == 2 && twoChosen[0].id != twoChosen[1].id -> twoChosen
+        else -> state.visibleChannels.drop(start).take(slots)
+    }
     val rowIds: List<String>? = if (windowed) {
         // The highlighted row first, so its pictures come first.
         val row = window.indexOfFirst { it.id == focusedId }.takeIf { it >= 0 }?.div(tileLayout.columns)
@@ -215,7 +225,10 @@ fun ChannelListScreen(
         val index = state.visibleChannels.indexOfFirst { it.id == state.lastWatchedId }
         if (index >= 0) {
             if (windowed) {
-                if (index !in start until start + slots) windowStart = index
+                if (window.none { it.id == state.lastWatchedId }) {
+                    windowStart = index
+                    twoIds = emptyList()
+                }
             } else gridState.scrollToItem(index)
             withFrameNanos { }
             runCatching { lastWatchedFocus.requestFocus() }
@@ -295,7 +308,7 @@ fun ChannelListScreen(
                     if (searching) {
                         OutlinedTextField(
                             value = state.query,
-                            onValueChange = { windowStart = 0; onQueryChange(it) },
+                            onValueChange = { windowStart = 0; twoIds = emptyList(); onQueryChange(it) },
                             placeholder = { Text("Search channels") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
@@ -395,6 +408,7 @@ fun ChannelListScreen(
                     ),
                     onSelect = {
                         windowStart = 0
+                        twoIds = emptyList()
                         when (it) {
                             FILTER_ALL -> onFilterChange(FILTER_ALL)
                             FILTER_FAVORITES ->
@@ -466,6 +480,7 @@ fun ChannelListScreen(
                         channel: Channel,
                         onKey: (KeyEvent) -> Boolean,
                         onFocused: () -> Unit = {},
+                        arrows: Boolean = false,
                     ) =
                         ChannelCard(
                             height = cardHeight,
@@ -483,12 +498,46 @@ fun ChannelListScreen(
                             },
                             preview = rowPreviews[channel.id],
                             snapshot = snapshots[channel.id],
+                            arrows = arrows,
                         )
                     if (wide) {
                         // A fixed window of tiles that slides along the list. Only Left and Right
                         // change channels: they move the highlight, and past the last (or first) tile
                         // every channel moves along one place and one new channel comes in. Up goes
                         // to the layout button and Down does nothing.
+                        // 2×1: Left and Right move the highlight (and the sound) between the two
+                        // sides, Up and Down change the highlighted side's channel, and Back goes up
+                        // to the top bar.
+                        fun twoKey(channel: Channel): (KeyEvent) -> Boolean = onKey@{ event ->
+                            if (event.key == Key.Back) {
+                                // Taken on both press and release, so the app doesn't also go back.
+                                if (event.type == KeyEventType.KeyUp) runCatching { layoutButtonFocus.requestFocus() }
+                                return@onKey true
+                            }
+                            if (event.type != KeyEventType.KeyDown) return@onKey false
+                            val side = window.indexOfFirst { it.id == channel.id }
+                            val other = window.getOrNull(1 - side)
+                            val target = when (event.key) {
+                                Key.DirectionLeft -> window.first().takeIf { side == 1 }
+                                Key.DirectionRight -> window.getOrNull(1).takeIf { side == 0 }
+                                Key.DirectionUp, Key.DirectionDown -> {
+                                    val step = if (event.key == Key.DirectionDown) 1 else -1
+                                    var j = channels.indexOfFirst { it.id == channel.id } + step
+                                    if (channels.getOrNull(j)?.id == other?.id) j += step
+                                    channels.getOrNull(j)?.also { next ->
+                                        twoIds = window.map { if (it.id == channel.id) next.id else it.id }
+                                    }
+                                }
+                                else -> return@onKey false
+                            }
+                            target?.let { next ->
+                                scope.launch {
+                                    withFrameNanos { }
+                                    runCatching { cardRequester(next.id).requestFocus() }
+                                }
+                            }
+                            true
+                        }
                         fun onKey(index: Int): (KeyEvent) -> Boolean = onKey@{ event ->
                             if (event.type != KeyEventType.KeyDown) return@onKey false
                             val first = windowStart.coerceIn(0, max(0, channels.size - slots))
@@ -533,7 +582,11 @@ fun ChannelListScreen(
                                         // Keyed by channel, so a playing card slides over without restarting.
                                         key(channel.id) {
                                             Box(Modifier.width(tileWidth)) {
-                                                Tile(start + r * columns + c, channel, onKey(start + r * columns + c))
+                                                if (tileLayout == TileLayout.Two) {
+                                                    Tile(0, channel, twoKey(channel), arrows = channel.id == focusedId)
+                                                } else {
+                                                    Tile(start + r * columns + c, channel, onKey(start + r * columns + c))
+                                                }
                                             }
                                         }
                                     }
@@ -626,6 +679,8 @@ private fun ChannelCard(
     onFocusChange: (Boolean) -> Unit = {},
     preview: Preview? = null,
     snapshot: ImageBitmap? = null,
+    /** Up and down arrows: Up and Down change this card's channel (2×1). */
+    arrows: Boolean = false,
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -669,6 +724,19 @@ private fun ChannelCard(
                 )
             }
             if (preview != null) PreviewVideo(preview)
+            if (arrows) {
+                Column(
+                    Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(8.dp)
+                        .background(Color.Black.copy(alpha = 0.55f), ChipShape)
+                        .padding(4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(Icons.Filled.KeyboardArrowUp, contentDescription = null, tint = Color.White)
+                    Icon(Icons.Filled.KeyboardArrowDown, contentDescription = null, tint = Color.White)
+                }
+            }
             if (channel.number > 0) {
                 Text(
                     "${channel.number}",
