@@ -1,5 +1,11 @@
 package com.livetv.app.ui
 
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.roundToInt
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.compose.runtime.derivedStateOf
@@ -135,6 +141,8 @@ fun ChannelListScreen(
     val context = LocalContext.current
     var inForeground by remember { mutableStateOf(true) }
     var focusedId by remember { mutableStateOf<String?>(null) }
+    var topRow by remember { mutableStateOf(0) }
+    val scope = rememberCoroutineScope()
     val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
     val rowIds by remember {
         derivedStateOf { gridState.layoutInfo.visibleItemsInfo.map { it.key as String } }
@@ -280,28 +288,56 @@ fun ChannelListScreen(
                             "No channels match."
                         },
                     )
-                    else -> LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 150.dp),
-                        contentPadding = PaddingValues(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    // Tiles are sized so the screen holds whole rows, and the remote scrolls a
+                    // row at a time, so no tile is ever cut off at the top or bottom. Each
+                    // tile's picture is 16:9, so a playing channel fills it edge to edge.
+                    else -> BoxWithConstraints(Modifier.fillMaxSize()) {
+                    val gap = 14.dp
+                    val fitColumns = max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
+                    val naturalHeight = (maxWidth - gap * (fitColumns + 1)) / fitColumns * 9f / 16f + TileTextHeight
+                    val rows = max(1, ((maxHeight - gap) / (naturalHeight + gap)).roundToInt())
+                    val tileHeight = (maxHeight - gap * (rows + 1)) / rows
+                    val pictureWidth = (tileHeight - TileTextHeight) * 16f / 9f
+                    val tileWidth = minOf(pictureWidth, maxWidth - gap * 2)
+                    val columns = max(1, ((maxWidth - gap) / (tileWidth + gap)).toInt())
+                    LaunchedEffect(columns, rows) { topRow = gridState.firstVisibleItemIndex / columns }
+                    LazyVerticalGrid(
+                        columns = GridCells.FixedSize(tileWidth),
+                        contentPadding = PaddingValues(gap),
+                        horizontalArrangement = Arrangement.spacedBy(gap, Alignment.CenterHorizontally),
+                        verticalArrangement = Arrangement.spacedBy(gap),
                         state = gridState,
                         modifier = Modifier.fillMaxSize(),
                     ) {
-                        items(channels, key = { it.id }) { channel ->
+                        itemsIndexed(channels, key = { _, it -> it.id }) { index, channel ->
                             ChannelCard(
+                                height = tileWidth * 9f / 16f + TileTextHeight,
                                 channel = channel,
                                 favorite = channel.id in state.favorites,
                                 onClick = { onPlay(channel) },
                                 onToggleFavorite = { onToggleFavorite(channel) },
                                 focusRequester = lastWatchedFocus.takeIf { channel.id == state.lastWatchedId },
                                 onFocusChange = { focused ->
-                                    if (focused) focusedId = channel.id
-                                    else if (focusedId == channel.id) focusedId = null
+                                    if (focused) {
+                                        focusedId = channel.id
+                                        val row = index / columns
+                                        topRow = when {
+                                            row < topRow -> row
+                                            row > topRow + rows - 1 -> row - rows + 1
+                                            else -> topRow
+                                        }
+                                        scope.launch {
+                                            withFrameNanos { } // after the default bring-into-view starts
+                                            gridState.animateScrollToItem(topRow * columns)
+                                        }
+                                    } else if (focusedId == channel.id) {
+                                        focusedId = null
+                                    }
                                 },
                                 preview = rowPreviews[channel.id],
                             )
                         }
+                    }
                     }
                 }
             }
@@ -344,6 +380,7 @@ private fun ChipRowContent(items: List<String>, selected: Set<String>, onSelect:
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ChannelCard(
+    height: Dp,
     channel: Channel,
     favorite: Boolean,
     onClick: () -> Unit,
@@ -356,6 +393,7 @@ private fun ChannelCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .fillMaxWidth()
+            .height(height)
             .focusGlow(CardShape)
             .clip(CardShape)
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
@@ -365,7 +403,7 @@ private fun ChannelCard(
         Box(
             Modifier
                 .fillMaxWidth()
-                .aspectRatio(16f / 9f)
+                .weight(1f)
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center,
         ) {
@@ -408,7 +446,12 @@ private fun ChannelCard(
                 )
             }
         }
-        Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+        Column(
+            Modifier
+                .height(TileTextHeight)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            verticalArrangement = Arrangement.Center,
+        ) {
             Text(
                 channel.name,
                 style = MaterialTheme.typography.titleSmall,
@@ -572,7 +615,13 @@ private fun PreviewVideo(preview: Preview) {
         factory = { ctx -> TextureView(ctx).also { player.setVideoTextureView(it) } },
         onRelease = { player.clearVideoTextureView(it) },
         modifier = Modifier
-            .fillMaxSize()
+            .aspectRatio(16f / 9f)
             .graphicsLayer { alpha = if (preview.showing) 1f else 0f },
     )
 }
+
+/** Narrowest a channel tile gets; the screen width decides how many fit in a row. */
+private val MinTileWidth = 170.dp
+
+/** Room under a tile's picture for the channel name and country. */
+private val TileTextHeight = 56.dp
