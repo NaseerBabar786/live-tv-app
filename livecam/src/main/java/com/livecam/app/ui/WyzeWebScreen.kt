@@ -90,6 +90,8 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     var pointerMode by remember { mutableStateOf(false) }
     var navInfo by remember { mutableStateOf<String?>(null) }
     var gridInfo by remember { mutableStateOf<String?>(null) }
+    // What the start-up camera trim did, read back from the page's storage.
+    var trimInfo by remember { mutableStateOf<String?>(null) }
     // A camera shown full screen: the top bar hides so the camera gets the whole TV.
     var solo by remember { mutableStateOf(false) }
     // All the chosen cameras filling the TV, without Wyze's menu or the top bar.
@@ -178,6 +180,10 @@ fun WyzeWebScreen(onBack: () -> Unit) {
         while (true) {
             delay(4_000)
             webView.evaluateJavascript(AUTO_LOGIN_JS, null)
+            webView.evaluateJavascript("(function(){try{return localStorage.getItem('__liveCamTrim')}catch(e){return null}})()") { result ->
+                trimInfo = runCatching { JSONArray("[$result]").optString(0) }.getOrNull()
+                    ?.takeIf { it.isNotBlank() && it != "null" }?.take(300)
+            }
             webView.evaluateJavascript(PAGE_INFO_JS) { result ->
                 pageInfo = runCatching { JSONArray("[$result]").optString(0) }.getOrNull()
                     ?.takeIf { it.isNotBlank() && it != "null" }
@@ -258,6 +264,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                         pageUrl.removePrefix("https://").substringBefore('?').ifEmpty { null },
                         navInfo,
                         gridInfo,
+                        trimInfo,
                         "sign-in restored ${WyzeSignIn.lastRestored}".takeIf { WyzeSignIn.lastRestored > 0 },
                         pageInfo,
                         problem,
@@ -340,6 +347,9 @@ private fun presentAsDesktop(webView: WebView) {
     if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
         runCatching { WebViewCompat.addDocumentStartJavaScript(webView, DESKTOP_JS, setOf("*")) }
         runCatching { WebViewCompat.addDocumentStartJavaScript(webView, KEEP_SESSION_JS, setOf("https://*.wyze.com")) }
+        // A new token each time the app starts, so the camera choice is cut to one once per start.
+        val launch = SINGLE_CAMERA_JS.replace("LAUNCH_TOKEN", System.currentTimeMillis().toString())
+        runCatching { WebViewCompat.addDocumentStartJavaScript(webView, launch, setOf("https://*.wyze.com")) }
     }
 }
 
@@ -496,6 +506,66 @@ private const val KEEP_SESSION_JS = """
     window.addEventListener('pagehide', save);
     setInterval(save, 5000);
   } catch (e) {}
+})();
+"""
+
+/**
+ * Runs once each time the app starts, before Wyze's own scripts: Wyze remembers which cameras
+ * were chosen and opens all of them, which is slow with many cameras. Find the saved choice in
+ * the page's storage (a list under a name like "selected") and keep only its first camera.
+ * The result goes in localStorage "__liveCamTrim" for the status line.
+ */
+private const val SINGLE_CAMERA_JS = """
+(function () {
+  if (window.top !== window) return;
+  try {
+    var ls = window.localStorage, ss = window.sessionStorage;
+    if (ls.getItem('__liveCamLaunch') === 'LAUNCH_TOKEN') return;
+    ls.setItem('__liveCamLaunch', 'LAUNCH_TOKEN');
+    var NAME = /select|chosen|checked|picked|active|visible|playing|watch/i;
+    var cut = [];
+    function small(a) {
+      return a.length > 1 && a.length < 200 && a.every(function (x) {
+        return typeof x === 'string' || typeof x === 'number' || (x && typeof x === 'object' && !Array.isArray(x));
+      });
+    }
+    // Trims lists under a matching name; walks objects and JSON kept inside strings.
+    function walk(v, name, path, depth) {
+      if (depth > 6 || v === null || typeof v !== 'object') return false;
+      var changed = false;
+      if (Array.isArray(v)) {
+        if (NAME.test(name) && small(v)) { cut.push(path + ' ' + v.length); v.splice(1); return true; }
+        return false;
+      }
+      for (var k in v) {
+        var x = v[k];
+        if (typeof x === 'string' && /^[\[{]/.test(x)) {
+          try {
+            var o = JSON.parse(x);
+            if (walk(o, k, path + '.' + k, depth + 1)) { v[k] = JSON.stringify(o); changed = true; }
+          } catch (e) {}
+        } else if (walk(x, k, path + '.' + k, depth + 1)) changed = true;
+      }
+      return changed;
+    }
+    [ls, ss].forEach(function (st) {
+      for (var i = 0; i < st.length; i++) {
+        var key = st.key(i);
+        if (!key || key.indexOf('__liveCam') === 0) continue;
+        var raw = st.getItem(key);
+        if (!raw || !/^[\[{]/.test(raw)) continue;
+        try {
+          var o = JSON.parse(raw);
+          if (walk(o, key, key, 0)) st.setItem(key, JSON.stringify(o));
+        } catch (e) {}
+      }
+    });
+    var keys = [];
+    for (var j = 0; j < ls.length; j++) keys.push(ls.key(j) + '(' + (ls.getItem(ls.key(j)) || '').length + ')');
+    ls.setItem('__liveCamTrim', cut.length ? 'one camera: cut ' + cut.join(', ') : 'one camera: no saved list in ' + keys.join(' '));
+  } catch (e) {
+    try { window.localStorage.setItem('__liveCamTrim', 'one camera: ' + e); } catch (e2) {}
+  }
 })();
 """
 
