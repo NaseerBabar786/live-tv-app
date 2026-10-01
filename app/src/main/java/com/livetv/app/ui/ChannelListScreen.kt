@@ -337,18 +337,22 @@ fun ChannelListScreen(
                     val pictureWidth = (tileHeight - TileTextHeight) * 16f / 9f
                     val tileWidth = minOf(pictureWidth, (maxWidth - gap * (fitColumns + 1)) / fitColumns)
                     val columns = if (wide) fitColumns else max(1, ((maxWidth - gap) / (tileWidth + gap)).toInt())
+                    // When the width decides the tile size, spread the spare height between the rows
+                    // so exactly [rows] rows show and the next row stays off screen.
+                    val cardHeight = tileWidth * 9f / 16f + TileTextHeight
+                    val rowGap = maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
                     LaunchedEffect(columns, rows) { topRow = gridState.firstVisibleItemIndex / columns }
                     LazyVerticalGrid(
                         columns = GridCells.FixedSize(tileWidth),
-                        contentPadding = PaddingValues(gap),
+                        contentPadding = PaddingValues(horizontal = gap, vertical = rowGap),
                         horizontalArrangement = Arrangement.spacedBy(gap, Alignment.CenterHorizontally),
-                        verticalArrangement = Arrangement.spacedBy(gap),
+                        verticalArrangement = Arrangement.spacedBy(rowGap),
                         state = gridState,
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         itemsIndexed(channels, key = { _, it -> it.id }) { index, channel ->
                             ChannelCard(
-                                height = tileWidth * 9f / 16f + TileTextHeight,
+                                height = cardHeight,
                                 channel = channel,
                                 favorite = channel.id in state.favorites,
                                 onClick = { onPlay(channel) },
