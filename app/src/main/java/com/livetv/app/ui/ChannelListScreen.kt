@@ -145,7 +145,7 @@ fun ChannelListScreen(
     }
 
     // Live previews in low quality: the highlighted card plays with sound, and the other
-    // cards in its row show a still picture of what's on, refreshed every 30 seconds. The
+    // cards in its row show one still picture of what's on. The
     // other row keeps its logos. Wi-Fi or Ethernet only, so mobile data isn't used up.
     val context = LocalContext.current
     var inForeground by remember { mutableStateOf(true) }
@@ -200,10 +200,10 @@ fun ChannelListScreen(
         if (snapshots.size > 60) snapshots.clear()
         // One picture at a time: the channel opens muted in its card, the first frame is kept
         // and the channel closes again.
-        while (true) {
-            val started = System.currentTimeMillis()
+        // Each card gets one picture; it isn't refreshed.
+        run {
             for (id in ids) {
-                if (id == live) continue
+                if (id == live || id in snapshots) continue
                 val channel = state.channels.firstOrNull { it.id == id } ?: continue
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
                 p.stream.player.volume = 0f
@@ -217,7 +217,6 @@ fun ChannelListScreen(
                 }
                 delay(500)
             }
-            delay(maxOf(1_000L, SnapshotRefreshMs - (System.currentTimeMillis() - started)))
         }
     }
     LaunchedEffect(previewSound, focusedId, rowPreviews.keys.toSet()) {
@@ -715,9 +714,6 @@ private fun PreviewVideo(preview: Preview) {
 
 /** Narrowest a channel tile gets; the screen width decides how many fit in a row. */
 private val MinTileWidth = 170.dp
-
-/** How often the still pictures in the highlighted row are refreshed. */
-private const val SnapshotRefreshMs = 30_000L
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 
