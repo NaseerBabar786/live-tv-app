@@ -60,6 +60,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeOff
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -151,15 +153,21 @@ fun ChannelListScreen(
         derivedStateOf {
             // Only the highlighted tile plays: several videos at once overloaded TV boxes
             // like the Chromecast and made the highlight lag.
-            if (gridState.isScrollInProgress) null else listOfNotNull(focusedId)
+            // It keeps playing when the highlight moves up to the top bar, so the sound
+            // button there can be used while it plays.
+            if (gridState.isScrollInProgress) null
+            else listOfNotNull(focusedId?.takeIf { id -> gridState.layoutInfo.visibleItemsInfo.any { it.key == id } })
         }
     }
     DisposableEffect(Unit) {
         onDispose { (pool + rowPreviews.values).distinct().forEach { it.stream.release() } }
     }
-    LaunchedEffect(rowIds, inForeground) {
+    // Previews start muted; the speaker button in the top bar turns the sound on (remembered).
+    val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
+    var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, false)) }
+    LaunchedEffect(rowIds, inForeground, showSettings) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
-        val wanted = if (inForeground && !Preview.metered(context)) ids.toSet() else emptySet()
+        val wanted = if (inForeground && !showSettings && !Preview.metered(context)) ids.toSet() else emptySet()
         for (id in rowPreviews.keys - wanted) {
             rowPreviews.remove(id)?.let { p -> p.stream.stop(); p.showing = false; pool += p }
         }
@@ -169,11 +177,14 @@ fun ChannelListScreen(
         for (id in ids.filter { it !in rowPreviews }) {
             val channel = state.channels.firstOrNull { it.id == id } ?: continue
             val p = pool.removeLastOrNull() ?: Preview.create(context)
-            p.stream.player.volume = 0f // previews stay muted, even the highlighted one
+            p.stream.player.volume = if (previewSound) 1f else 0f
             rowPreviews[id] = p
             p.stream.play(channel)
             delay(250)
         }
+    }
+    LaunchedEffect(previewSound) {
+        rowPreviews.values.forEach { it.stream.player.volume = if (previewSound) 1f else 0f }
     }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -226,6 +237,18 @@ fun ChannelListScreen(
                     }
                 },
                 actions = {
+                    IconButton(
+                        onClick = {
+                            previewSound = !previewSound
+                            prefs.edit().putBoolean(PREF_PREVIEW_SOUND, previewSound).apply()
+                        },
+                        modifier = Modifier.focusGlow(),
+                    ) {
+                        Icon(
+                            if (previewSound) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff,
+                            contentDescription = if (previewSound) "Mute previews" else "Unmute previews",
+                        )
+                    }
                     IconButton(modifier = Modifier.focusGlow(), onClick = {
                         if (searching) onQueryChange("")
                         searching = !searching
@@ -348,8 +371,6 @@ fun ChannelListScreen(
                                                 gridState.animateScrollToItem(topRow * columns)
                                             }
                                         }
-                                    } else if (focusedId == channel.id) {
-                                        focusedId = null
                                     }
                                 },
                                 preview = rowPreviews[channel.id],
@@ -634,6 +655,8 @@ private fun PreviewVideo(preview: Preview) {
 
 /** Narrowest a channel tile gets; the screen width decides how many fit in a row. */
 private val MinTileWidth = 170.dp
+
+private const val PREF_PREVIEW_SOUND = "preview_sound"
 
 /** Room under a tile's picture for the channel name (one line). */
 private val TileTextHeight = 30.dp

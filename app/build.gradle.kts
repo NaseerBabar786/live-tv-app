@@ -21,8 +21,8 @@ android {
         create("livetv") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetv"
-            versionCode = 67
-            versionName = "1.8.29"
+            versionCode = 68
+            versionName = "1.8.30"
         }
         // Stream Player Plus: the Google Play app. No channels of its own; viewers add playlists.
         create("player") {
