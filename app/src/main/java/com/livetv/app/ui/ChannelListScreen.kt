@@ -398,14 +398,17 @@ fun ChannelListScreen(
                     // so exactly [rows] rows show and the next row stays off screen.
                     val cardHeight = tileWidth * 9f / 16f + TileTextHeight
                     val rowGap = maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
+                    // Likewise across: when the height decides the tile size, widen the gaps so the
+                    // grid fits exactly [columns] tiles in a row (a bit under, so rounding can't drop one).
+                    val columnGap = if (wide) maxOf(gap, (maxWidth - tileWidth * columns) / (columns + 1) - 1.dp) else gap
                     // The grid moves a whole row at a time and never shows half rows: the default
                     // "scroll just enough to show the focused tile" is turned off and the grid jumps
                     // straight to the row instead.
                     CompositionLocalProvider(LocalBringIntoViewSpec provides NoBringIntoView) {
                     LazyVerticalGrid(
                         columns = GridCells.FixedSize(tileWidth),
-                        contentPadding = PaddingValues(horizontal = gap, vertical = rowGap),
-                        horizontalArrangement = Arrangement.spacedBy(gap, Alignment.CenterHorizontally),
+                        contentPadding = PaddingValues(horizontal = columnGap, vertical = rowGap),
+                        horizontalArrangement = Arrangement.spacedBy(columnGap, Alignment.CenterHorizontally),
                         verticalArrangement = Arrangement.spacedBy(rowGap),
                         state = gridState,
                         modifier = Modifier.fillMaxSize(),
@@ -738,6 +741,7 @@ private val MinTileWidth = 170.dp
 /** How many tiles a TV screen shows; the label is what the top-bar button reads. */
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
     Eight("2×4", 4, 2),
+    Six("3×2", 3, 2),
     Four("2×2", 2, 2),
     Two("2×1", 2, 1),
 }
