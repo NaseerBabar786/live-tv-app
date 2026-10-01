@@ -152,20 +152,23 @@ fun ChannelListScreen(
     val pool = remember { mutableListOf<Preview>() }
     val rowIds by remember {
         derivedStateOf {
-            // Only the highlighted tile plays: several videos at once overloaded TV boxes
-            // like the Chromecast and made the highlight lag.
-            // It keeps playing when the highlight moves up to the top bar, so the sound
-            // button there can be used while it plays.
+            // The highlighted row plays (4 videos; all 8 on screen made the highlight lag on
+            // the Chromecast). It keeps playing when the highlight moves up to the top bar,
+            // so the sound button there can be used while it plays.
             if (gridState.isScrollInProgress) null
-            else listOfNotNull(focusedId?.takeIf { id -> gridState.layoutInfo.visibleItemsInfo.any { it.key == id } })
+            else {
+                val items = gridState.layoutInfo.visibleItemsInfo
+                val row = items.firstOrNull { it.key == focusedId }?.row
+                if (row == null) emptyList() else items.filter { it.row == row }.map { it.key as String }
+            }
         }
     }
     DisposableEffect(Unit) {
         onDispose { (pool + rowPreviews.values).distinct().forEach { it.stream.release() } }
     }
-    // Previews start muted; the speaker button in the top bar turns the sound on (remembered).
+    // Only the highlighted tile has sound; the speaker button in the top bar mutes it (remembered).
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
-    var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, false)) }
+    var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
     LaunchedEffect(rowIds, inForeground, showSettings) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val wanted = if (inForeground && !showSettings && !Preview.metered(context)) ids.toSet() else emptySet()
@@ -178,14 +181,14 @@ fun ChannelListScreen(
         for (id in ids.filter { it !in rowPreviews }) {
             val channel = state.channels.firstOrNull { it.id == id } ?: continue
             val p = pool.removeLastOrNull() ?: Preview.create(context)
-            p.stream.player.volume = if (previewSound) 1f else 0f
+            p.stream.player.volume = if (previewSound && id == focusedId) 1f else 0f
             rowPreviews[id] = p
             p.stream.play(channel)
             delay(250)
         }
     }
-    LaunchedEffect(previewSound) {
-        rowPreviews.values.forEach { it.stream.player.volume = if (previewSound) 1f else 0f }
+    LaunchedEffect(previewSound, focusedId, rowPreviews.keys.toSet()) {
+        rowPreviews.forEach { (id, p) -> p.stream.player.volume = if (previewSound && id == focusedId) 1f else 0f }
     }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -663,7 +666,7 @@ private fun PreviewVideo(preview: Preview) {
 /** Narrowest a channel tile gets; the screen width decides how many fit in a row. */
 private val MinTileWidth = 170.dp
 
-private const val PREF_PREVIEW_SOUND = "preview_sound"
+private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 
 /** Leaves scrolling to the focused tile to the grid's own row-at-a-time handling. */
 @OptIn(ExperimentalFoundationApi::class)
