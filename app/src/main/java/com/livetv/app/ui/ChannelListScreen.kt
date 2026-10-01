@@ -798,9 +798,10 @@ private fun PlayerWithList(
         initialFirstVisibleItemIndex = max(0, channels.indexOfFirst { it.id == selected?.id } - 2),
     )
     // Favorites lead the list, so a new filter (All, Favorites, a genre) shows it from the top.
-    var shownList by remember { mutableStateOf(channels.map { it.id }) }
+    // (Adding a favorite only reorders the same channels, so the list stays where it is.)
+    var shownList by remember { mutableStateOf(channels.map { it.id }.toSet()) }
     LaunchedEffect(channels) {
-        val ids = channels.map { it.id }
+        val ids = channels.map { it.id }.toSet()
         if (ids != shownList) {
             shownList = ids
             listState.scrollToItem(0)
