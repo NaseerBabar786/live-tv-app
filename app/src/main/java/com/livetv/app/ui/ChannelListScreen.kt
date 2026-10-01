@@ -143,21 +143,35 @@ fun ChannelListScreen(
     var focusedId by remember { mutableStateOf<String?>(null) }
     var topRow by remember { mutableStateOf(0) }
     val scope = rememberCoroutineScope()
+    // Players are pooled and reused: creating and releasing ExoPlayers while scrolling
+    // blocked the main thread (release() waits for the playback thread) and froze the app.
     val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
+    val pool = remember { mutableListOf<Preview>() }
     val rowIds by remember {
-        derivedStateOf { gridState.layoutInfo.visibleItemsInfo.map { it.key as String } }
+        derivedStateOf {
+            if (gridState.isScrollInProgress) null
+            else gridState.layoutInfo.visibleItemsInfo.take(MaxPreviews).map { it.key as String }
+        }
     }
     DisposableEffect(Unit) {
-        onDispose { rowPreviews.values.forEach { it.stream.release() } }
+        onDispose { (pool + rowPreviews.values).distinct().forEach { it.stream.release() } }
     }
     LaunchedEffect(rowIds, inForeground) {
-        val wanted = if (inForeground && !Preview.metered(context)) rowIds.toSet() else emptySet()
-        (rowPreviews.keys - wanted).forEach { id -> rowPreviews.remove(id)?.stream?.release() }
+        val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
+        val wanted = if (inForeground && !Preview.metered(context)) ids.toSet() else emptySet()
+        for (id in rowPreviews.keys - wanted) {
+            rowPreviews.remove(id)?.let { p -> p.stream.stop(); p.showing = false; pool += p }
+        }
         if (wanted.isEmpty()) return@LaunchedEffect
-        delay(1_000)
-        for (id in wanted - rowPreviews.keys) {
+        delay(600)
+        // Start one at a time so the TV isn't asked to open every stream at once.
+        for (id in ids.filter { it !in rowPreviews }) {
             val channel = state.channels.firstOrNull { it.id == id } ?: continue
-            rowPreviews[id] = Preview.create(context).also { it.stream.play(channel) }
+            val p = pool.removeLastOrNull() ?: Preview.create(context)
+            p.stream.player.volume = if (id == focusedId) 1f else 0f
+            rowPreviews[id] = p
+            p.stream.play(channel)
+            delay(250)
         }
     }
     LaunchedEffect(focusedId, rowPreviews.keys.toSet()) {
@@ -292,14 +306,16 @@ fun ChannelListScreen(
                     // row at a time, so no tile is ever cut off at the top or bottom. Each
                     // tile's picture is 16:9, so a playing channel fills it edge to edge.
                     else -> BoxWithConstraints(Modifier.fillMaxSize()) {
+                    // TVs and tablets: 4 tiles a row, 2 rows. Phones: as many as fit.
                     val gap = 14.dp
-                    val fitColumns = max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
+                    val wide = maxWidth >= 600.dp
+                    val fitColumns = if (wide) 4 else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
                     val naturalHeight = (maxWidth - gap * (fitColumns + 1)) / fitColumns * 9f / 16f + TileTextHeight
-                    val rows = max(1, ((maxHeight - gap) / (naturalHeight + gap)).roundToInt())
+                    val rows = if (wide) 2 else max(1, ((maxHeight - gap) / (naturalHeight + gap)).roundToInt())
                     val tileHeight = (maxHeight - gap * (rows + 1)) / rows
                     val pictureWidth = (tileHeight - TileTextHeight) * 16f / 9f
-                    val tileWidth = minOf(pictureWidth, maxWidth - gap * 2)
-                    val columns = max(1, ((maxWidth - gap) / (tileWidth + gap)).toInt())
+                    val tileWidth = minOf(pictureWidth, (maxWidth - gap * (fitColumns + 1)) / fitColumns)
+                    val columns = if (wide) fitColumns else max(1, ((maxWidth - gap) / (tileWidth + gap)).toInt())
                     LaunchedEffect(columns, rows) { topRow = gridState.firstVisibleItemIndex / columns }
                     LazyVerticalGrid(
                         columns = GridCells.FixedSize(tileWidth),
@@ -449,19 +465,13 @@ private fun ChannelCard(
         Column(
             Modifier
                 .height(TileTextHeight)
-                .padding(horizontal = 12.dp, vertical = 6.dp),
+                .padding(horizontal = 10.dp),
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 channel.name,
-                style = MaterialTheme.typography.titleSmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Text(
-                channel.group ?: " ",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -623,5 +633,8 @@ private fun PreviewVideo(preview: Preview) {
 /** Narrowest a channel tile gets; the screen width decides how many fit in a row. */
 private val MinTileWidth = 170.dp
 
-/** Room under a tile's picture for the channel name and country. */
-private val TileTextHeight = 56.dp
+/** Room under a tile's picture for the channel name (one line). */
+private val TileTextHeight = 30.dp
+
+/** Most previews playing at once (a screenful of 4 x 2 tiles). */
+private const val MaxPreviews = 8
