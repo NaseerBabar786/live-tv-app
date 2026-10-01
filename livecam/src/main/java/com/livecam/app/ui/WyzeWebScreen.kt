@@ -94,12 +94,6 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     var solo by remember { mutableStateOf(false) }
     // All the chosen cameras filling the TV, without Wyze's menu or the top bar.
     var fullGrid by remember { mutableStateOf(false) }
-    fun setFullGrid(on: Boolean) {
-        fullGrid = on
-        webView.evaluateJavascript("window.__liveCamFull = $on;", null)
-        webView.evaluateJavascript(GRID_JS, null)
-        if (on) webView.requestFocus()
-    }
     val reloadFocus = remember { FocusRequester() }
     val appVersion = remember {
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: "?"
@@ -200,6 +194,12 @@ fun WyzeWebScreen(onBack: () -> Unit) {
         }
     }
     // Up at the top of the page moves to the Reload button; Down from the top bar goes back in.
+    fun setFullGrid(on: Boolean) {
+        fullGrid = on
+        webView.evaluateJavascript("window.__liveCamFull = $on;", null)
+        webView.evaluateJavascript(GRID_JS, null)
+        if (on) webView.requestFocus()
+    }
     webView.onNavResult = { navInfo = it }
     webView.onSoloChanged = { on ->
         solo = on
