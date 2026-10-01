@@ -431,6 +431,7 @@ fun ChannelListScreen(
                     // tile's picture is 16:9, so a playing channel fills it edge to edge.
                     listMode -> PlayerWithList(
                         channels = channels,
+                        all = state.channels,
                         selectedId = listChannelId ?: state.lastWatchedId,
                         sound = previewSound,
                         playing = inForeground && !showSettings,
@@ -754,6 +755,8 @@ private fun AppLogo(size: Dp = 40.dp) {
 @Composable
 private fun PlayerWithList(
     channels: List<Channel>,
+    /** Every channel: the one playing keeps playing when the filters leave it out of the list. */
+    all: List<Channel>,
     selectedId: String?,
     sound: Boolean,
     playing: Boolean,
@@ -765,7 +768,9 @@ private fun PlayerWithList(
     onOpen: (Channel) -> Unit,
 ) {
     val context = LocalContext.current
-    val selected = channels.firstOrNull { it.id == selectedId } ?: channels.firstOrNull()
+    val selected = all.firstOrNull { it.id == selectedId } ?: channels.firstOrNull()
+    // Keep the first channel playing when the filters change, rather than jumping to the new first one.
+    LaunchedEffect(selected?.id) { if (selectedId == null && selected != null) onSelect(selected) }
     val stream = remember { StreamPlayer(context) }
     var showing by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
