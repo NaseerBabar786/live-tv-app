@@ -151,7 +151,7 @@ fun ChannelListScreen(
     val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
     val pool = remember { mutableListOf<Preview>() }
     val rowIds by remember {
-        derivedStateOf {
+        derivedStateOf<List<String>?> {
             // The highlighted row plays (4 videos; all 8 on screen made the highlight lag on
             // the Chromecast). It keeps playing when the highlight moves up to the top bar,
             // so the sound button there can be used while it plays.
@@ -159,7 +159,7 @@ fun ChannelListScreen(
             else {
                 val items = gridState.layoutInfo.visibleItemsInfo
                 val row = items.firstOrNull { it.key == focusedId }?.row
-                if (row == null) emptyList() else items.filter { it.row == row }.map { it.key as String }
+                if (row == null) emptyList<String>() else items.filter { it.row == row }.map { it.key as String }
             }
         }
     }
