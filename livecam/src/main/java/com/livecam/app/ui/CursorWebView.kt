@@ -27,6 +27,9 @@ class CursorWebView(context: Context) : WebView(context) {
      */
     var onExitTop: (() -> Unit)? = null
 
+    /** What the last arrow press did, e.g. "moved in pop-up, 9 choices", for the status line. */
+    var onNavResult: ((String) -> Unit)? = null
+
     /** False: arrow keys jump between buttons. True: arrow keys move a free pointer. */
     var pointerMode = false
         set(value) {
@@ -76,13 +79,16 @@ class CursorWebView(context: Context) : WebView(context) {
 
     /** Highlights the nearest button in the direction pressed; Up with nothing above leaves the page. */
     private fun jump(dx: Int, dy: Int) {
-        evaluateJavascript("$NAV_JS(${dx}, ${dy})") { result ->
-            when (result?.trim('"')) {
-                "exitTop" -> {
+        evaluateJavascript("$NAV_JS(${dx}, ${dy})") { raw ->
+            val result = raw?.trim('"')
+            onNavResult?.invoke(if (result == null || result == "null") "arrow keys: no response from page" else result)
+            when {
+                result == null -> Unit
+                result == "exitTop" -> {
                     evaluateJavascript(CLEAR_HIGHLIGHT_JS, null)
                     onExitTop?.invoke()
                 }
-                "none" -> if (dy != 0) {
+                result?.startsWith("none") == true && dy != 0 -> {
                     cursorX = width / 2f
                     cursorY = height / 2f
                     scrollPage(dy * height / 3f)
@@ -192,7 +198,7 @@ class CursorWebView(context: Context) : WebView(context) {
 private const val HIGHLIGHT = "__liveCamFocus"
 
 private const val CLEAR_HIGHLIGHT_JS = """
-(function(){ var el = window.$HIGHLIGHT; if (el) { el.style.outline = el.__lcOutline || ''; el.style.outlineOffset = el.__lcOffset || ''; } window.$HIGHLIGHT = null; })();
+(function(){ window.$HIGHLIGHT = null; var box = document.getElementById('$HIGHLIGHT'); if (box) box.remove(); })();
 """
 
 /** Center of the highlighted element in CSS pixels, as "x,y", or "" when nothing is highlighted. */
@@ -216,7 +222,9 @@ private const val NAV_JS = """
     var r = el.getBoundingClientRect();
     if (r.width < 6 || r.height < 6) return false;
     var s = getComputedStyle(el);
-    return s.visibility !== 'hidden' && s.display !== 'none' && s.pointerEvents !== 'none' && parseFloat(s.opacity) > 0.05;
+    // Material checkboxes hide the real <input> (opacity 0) over the drawn box; it still counts.
+    return s.visibility !== 'hidden' && s.display !== 'none' && s.pointerEvents !== 'none' &&
+      (parseFloat(s.opacity) > 0.05 || el.tagName === 'INPUT');
   }
   var root = document;
   var layers = document.querySelectorAll('.MuiModal-root:not(.MuiModal-hidden),[role=dialog],[aria-modal=true],[role=menu],[role=listbox]');
@@ -233,7 +241,8 @@ private const val NAV_JS = """
     for (var p = e.parentElement; p; p = p.parentElement) if (found.indexOf(p) >= 0) return false;
     return true;
   });
-  if (!items.length) return 'none';
+  var where = root === document ? '' : ' in pop-up';
+  if (!items.length) return 'none' + where;
   function center(e){ var r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
   var cur = window.$HIGHLIGHT;
   var next = null;
@@ -256,16 +265,35 @@ private const val NAV_JS = """
       var score = along + across * 2;
       if (score < bestScore) { bestScore = score; next = e; }
     });
-    if (!next) return (dy < 0 && root === document) ? 'exitTop' : 'none';
+    if (!next) return (dy < 0 && root === document) ? 'exitTop' : 'none' + where;
   }
-  if (cur && cur.isConnected) { cur.style.outline = cur.__lcOutline || ''; cur.style.outlineOffset = cur.__lcOffset || ''; }
-  next.__lcOutline = next.style.outline;
-  next.__lcOffset = next.style.outlineOffset;
-  next.style.outline = '4px solid #1DE9B6';
-  next.style.outlineOffset = '2px';
   next.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   window.$HIGHLIGHT = next;
-  return 'moved';
+  // Draw the highlight as a box on top of everything: an outline on the element itself gets
+  // clipped by scrolling lists and pop-ups.
+  var box = document.getElementById('$HIGHLIGHT');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = '$HIGHLIGHT';
+    box.style.cssText = 'position:fixed;z-index:2147483647;pointer-events:none;border:4px solid #1DE9B6;' +
+      'border-radius:8px;box-shadow:0 0 0 2px rgba(0,0,0,.6),0 0 12px #1DE9B6;transition:all .12s ease-out;';
+    var place = function(){
+      var el = window.$HIGHLIGHT;
+      if (!el || !el.isConnected) { box.style.display = 'none'; return; }
+      var r = el.getBoundingClientRect();
+      box.style.display = 'block';
+      box.style.left = (r.left - 6) + 'px';
+      box.style.top = (r.top - 6) + 'px';
+      box.style.width = (r.width + 4) + 'px';
+      box.style.height = (r.height + 4) + 'px';
+    };
+    box.__place = place;
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+  }
+  document.documentElement.appendChild(box);
+  box.__place();
+  return 'moved' + where + ', ' + items.length + ' choices';
 })
 """
 

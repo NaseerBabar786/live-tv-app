@@ -87,6 +87,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
     // What the page actually drew, e.g. "0 words, 12 elements", to tell a blank page from a slow one.
     var pageInfo by remember { mutableStateOf<String?>(null) }
     var pointerMode by remember { mutableStateOf(false) }
+    var navInfo by remember { mutableStateOf<String?>(null) }
     val reloadFocus = remember { FocusRequester() }
     val webViewVersion = remember { runCatching { WebView.getCurrentWebViewPackage()?.versionName }.getOrNull() ?: "?" }
     val webView = remember {
@@ -166,6 +167,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
         }
     }
     // Up at the top of the page moves to the Reload button; Down from the top bar goes back in.
+    webView.onNavResult = { navInfo = it }
     webView.onExitTop = { runCatching { reloadFocus.requestFocus() } }
     val backIntoPage = Modifier.onPreviewKeyEvent { e ->
         if (e.key == Key.DirectionDown && e.type == KeyEventType.KeyDown) {
@@ -210,6 +212,7 @@ fun WyzeWebScreen(onBack: () -> Unit) {
                 Text(
                     listOfNotNull(
                         pageUrl.removePrefix("https://").substringBefore('?').ifEmpty { null },
+                        navInfo,
                         pageInfo,
                         problem,
                         "WebView $webViewVersion",
