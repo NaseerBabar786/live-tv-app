@@ -2,6 +2,8 @@ package com.livetv.app
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import com.livetv.app.billing.PlayBilling
 import com.livetv.app.ui.MainViewModel
 import com.livetv.app.ui.PlaylistSettingsDialog
 import com.livetv.app.ui.SettingsTheme
@@ -28,8 +30,12 @@ fun EditionStartScreen(onDone: () -> Unit) {
     LaunchedEffect(Unit) { onDone() }
 }
 
+/** Starts Premium's Google Play billing (it restores a subscription bought on another device). */
 @Composable
-fun EditionOverlay() = Unit
+fun EditionOverlay() {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { PlayBilling.start(context) }
+}
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

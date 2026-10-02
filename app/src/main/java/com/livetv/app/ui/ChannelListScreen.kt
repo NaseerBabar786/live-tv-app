@@ -1,5 +1,9 @@
 package com.livetv.app.ui
 
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material3.AlertDialog
+import kotlinx.coroutines.flow.MutableStateFlow
+import com.livetv.app.Premium
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -211,6 +215,18 @@ fun ChannelListScreen(
         mutableStateOf(sessionTileLayout ?: TileLayout.List)
     }
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
+    // 2×2 and 1×2 are Premium in Live TV Plus (free in the other apps).
+    val premium by Premium.active.collectAsStateWithLifecycle()
+    var upsellFor by remember { mutableStateOf<TileLayout?>(null) }
+    LaunchedEffect(premium) {
+        if (premium) {
+            upsellFor?.let { tileLayout = it; sessionTileLayout = it }
+            upsellFor = null
+        } else if (tileLayout.separateTvs) {
+            tileLayout = TileLayout.List
+            sessionTileLayout = null
+        }
+    }
     // "1+List": the channel playing on the left, kept when coming back from full screen.
     val listMode = wideScreen && tileLayout == TileLayout.List
     var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
@@ -389,8 +405,13 @@ fun ChannelListScreen(
                     if (wideScreen) {
                         TextButton(
                             onClick = {
-                                tileLayout = TileLayout.entries[(tileLayout.ordinal + 1) % TileLayout.entries.size]
-                                sessionTileLayout = tileLayout
+                                val next = TileLayout.entries[(tileLayout.ordinal + 1) % TileLayout.entries.size]
+                                if (next.separateTvs && !premium) {
+                                    upsellFor = next
+                                } else {
+                                    tileLayout = next
+                                    sessionTileLayout = tileLayout
+                                }
                             },
                             colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
@@ -717,6 +738,43 @@ fun ChannelListScreen(
     }
 
     if (showSettings) settings { showSettings = false }
+    upsellFor?.let { wanted ->
+        PremiumDialog(
+            layout = wanted.label,
+            onSubscribe = { (context as? Activity)?.let { Premium.billing?.subscribe(it) } },
+            onDismiss = {
+                // Skip past the Premium layouts to the next free one.
+                tileLayout = TileLayout.entries.drop(wanted.ordinal).firstOrNull { !it.separateTvs } ?: TileLayout.entries.first()
+                sessionTileLayout = tileLayout
+                upsellFor = null
+            },
+        )
+    }
+}
+
+/** Live TV Plus: offers Premium when a Premium layout is picked. */
+@Composable
+private fun PremiumDialog(layout: String, onSubscribe: () -> Unit, onDismiss: () -> Unit) {
+    val price by remember { Premium.billing?.price ?: MutableStateFlow<String?>(null) }.collectAsStateWithLifecycle()
+    SettingsTheme {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("$layout is Premium") },
+            text = {
+                Text(
+                    "Watch two or four channels at once with the 1×2 and 2×2 layouts. " +
+                        "Premium is ${price ?: "a small monthly price"} a month through Google Play, works on every " +
+                        "phone and TV signed in to your Google account, and you can cancel any time in Google Play."
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = onSubscribe, modifier = Modifier.focusGlow()) { Text("Get Premium") }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Not now") }
+            },
+        )
+    }
 }
 
 @Composable
