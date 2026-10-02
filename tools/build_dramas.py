@@ -52,6 +52,35 @@ CHANNELS = [
     ("FilmRise TV", ["@FilmRiseTV", "@FilmRiseClassicTV", "@FilmRiseTelevision"], "FilmRise", "English"),
 ]
 
+# The same TV channels' own Dailymotion accounts (only verified accounts with exactly that
+# name), for episodes their YouTube channels don't have: (name, search, language).
+DAILYMOTION = "https://api.dailymotion.com"
+# Also tried by these Dailymotion usernames, since its search ranks big channels poorly.
+DM_CHANNELS = [
+    ("ARY Digital", "ARY Digital", "Urdu", ["arydigital", "ARYDigitalasia", "arydigitalofficial"]),
+    ("HUM TV", "HUM TV", "Urdu", ["humtv", "humtvofficial", "HUMTVpk"]),
+    ("Geo Entertainment", "Har Pal Geo", "Urdu", ["harpalgeo", "harpalgeoofficial", "geoentertainment"]),
+    ("Green Entertainment", "Green Entertainment", "Urdu", ["greenentertainment", "greentvpk"]),
+    ("Express TV", "Express Entertainment", "Urdu", ["expressentertainment", "expresstv"]),
+    ("A-Plus", "A Plus Entertainment", "Urdu", ["aplusentertainment", "aplustv"]),
+    ("ARY Zindagi", "ARY Zindagi", "Urdu", ["aryzindagi"]),
+    ("PTV Home", "PTV Home", "Urdu", ["ptvhome", "ptvhomeofficial"]),
+    ("Taarak Mehta Ka Ooltah Chashmah", "Taarak Mehta Ka Ooltah Chashmah", "Hindi", ["tmkoc", "taarakmehtakaooltahchashmah"]),
+    ("Sony SAB", "Sony SAB", "Hindi", ["sonysab", "sabtv"]),
+    ("Zee TV", "Zee TV", "Hindi", ["zeetv", "zeetvofficial"]),
+    ("Colors TV", "Colors TV", "Hindi", ["colorstv", "colors"]),
+    ("Star Plus", "StarPlus", "Hindi", ["starplus", "starplusofficial"]),
+]
+
+# One show from a channel that also posts much else: (show, handles, channel search, language,
+# searches in the channel, words a title must have). Full episodes only, filed under Shows.
+SHOW_SEARCHES = [
+    ("The Kapil Sharma Show", ["@SETIndia", "@SonyTV", "@sonytvofficial", "@TheKapilSharmaShow"],
+     "SET India|Sony Entertainment Television|Sony TV|The Kapil Sharma Show", "Hindi",
+     ["kapil sharma show full episode", "the kapil sharma show ep"], r"kapil"),
+]
+MIN_SHOW_EPISODE_MINUTES = 30
+
 # Channels whose single-episode telefilms go under Urdu Movies.
 TELEFILM_CHANNELS = {"ARY Digital", "HUM TV", "Geo Entertainment"}
 TELEFILM = re.compile(r"\btele[\s-]?films?\b", re.IGNORECASE)
@@ -160,6 +189,8 @@ def is_owner(title, expect, exact=False):
     "ARY Digital"), so a handle someone else owns is never used. A channel found by search
     must have exactly that name ("Burka Avenger Afghanistan" or "commandersafeguard1" is
     someone else's)."""
+    if "|" in expect:  # any of several names
+        return any(is_owner(title, e, exact) for e in expect.split("|"))
     if exact:
         return _key(title) == _key(expect)
     return _key(expect) in compact(title)
@@ -183,7 +214,7 @@ def channel_id(handles, query):
         if m:
             print(f"  {handle} is {title!r}, not {query!r}; skipped", file=sys.stderr)
     try:
-        page = fetch("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": query, "sp": "EgIQAg=="}), tries=2)
+        page = fetch("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": query.split("|")[0], "sp": "EgIQAg=="}), tries=2)
         for m in list(re.finditer(r'"channelRenderer":\{"channelId":"(UC[\w-]{22})"', page))[:5]:
             title = re.search(r'"title":\{"simpleText":"((?:[^"\\]|\\.)*)"', page[m.end():m.end() + 3000])
             title = _text(title.group(1)) if title else ""
@@ -258,7 +289,7 @@ def episode(title):
     m = EPISODE.match(title.strip())
     first = EPISODE_FIRST.match(title.strip())
     if m and m.group(1).strip(" -|:–"):
-        show, number = TAIL.sub("", m.group(1)).strip(" -|:–"), m.group(2)
+        show, number = TAIL.sub("", m.group(1)).strip(" -|:–([{"), m.group(2)
     elif first:
         show, number = first.group(2).strip(), first.group(1)
     else:
@@ -285,6 +316,128 @@ def movie_name(title):
     if len(name) < 2 or re.search(r"\.(com|in|net)\b|www\.", name, re.I):
         return None
     return name
+
+
+def get_json(url):
+    return json.loads(fetch(url, tries=3))
+
+
+def dm_user(search, usernames=()):
+    """The id of the verified Dailymotion account with exactly this name, or None."""
+    fields = "id,username,screenname,verified,videos_total"
+    users = []
+    for username in usernames:
+        try:
+            users.append(get_json(f"{DAILYMOTION}/user/{urllib.parse.quote(username)}?fields={fields}"))
+        except Exception:  # noqa: BLE001
+            pass  # no such user
+    query = urllib.parse.urlencode({"search": search, "fields": fields, "limit": 20})
+    try:
+        users += get_json(f"{DAILYMOTION}/users?{query}").get("list", [])
+    except Exception as e:  # noqa: BLE001
+        print(f"  Dailymotion search {search!r} failed ({e})", file=sys.stderr)
+    for u in users:
+        names = (u.get("screenname") or "", u.get("username") or "")
+        if u.get("verified") and any(is_owner(n, search, exact=True) for n in names):
+            print(f"  Dailymotion {search!r} is {u.get('screenname')!r} (@{u.get('username')}, {u.get('videos_total')} videos)")
+            return u["id"]
+    print(f"  Dailymotion {search!r}: no verified account with that name "
+          f"({', '.join(repr(u.get('screenname')) + (' verified' if u.get('verified') else '') for u in users[:5])})",
+          file=sys.stderr)
+    return None
+
+
+DM_NEWS = re.compile(r"headlines|news|bulletin|capital talk|talk show|live", re.I)
+
+
+def dailymotion(kept, today):
+    """Adds full episodes from DM_CHANNELS to kept (keys "dm:<id>"); YouTube's copy of an
+    episode is the one listed when both have it."""
+    for name, search, language, usernames in DM_CHANNELS:
+        uid = dm_user(search, usernames)
+        if not uid:
+            continue
+        videos = []
+        for page in (1, 2, 3):
+            query = urllib.parse.urlencode({"fields": "id,title,duration", "sort": "recent", "limit": 100, "page": page})
+            try:
+                data = get_json(f"{DAILYMOTION}/user/{uid}/videos?{query}")
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name}: Dailymotion page {page} failed ({e})", file=sys.stderr)
+                break
+            videos += [(v["id"], v.get("title") or "", (v.get("duration") or 0) / 60) for v in data.get("list", [])]
+            if not data.get("has_more"):
+                break
+        new = 0
+        for vid, title, mins in videos:
+            ep = episode(title)
+            if not ep or mins < MIN_MINUTES:
+                continue
+            if mins > 180 or DM_NEWS.search(title):
+                continue
+            if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
+                continue
+            show = name if name in SINGLE_SHOW or NO_SHOW_NAME.match(ep[0].strip()) else ep[0]
+            if show != name and re.sub(r"\d", "", compact(show)) in (compact(name), compact(search), ""):
+                continue  # "Express Entertainment (51)": the channel's name, not a drama's
+            key = f"dm:{vid}"
+            if key in kept:
+                kept[key]["seen"] = today.isoformat()
+            else:
+                kept[key] = {"show": show, "episode": ep[1], "channel": name, "language": language, "title": title,
+                             "source": "dailymotion", "url": f"https://www.dailymotion.com/video/{vid}",
+                             "logo": f"https://www.dailymotion.com/thumbnail/video/{vid}", "added": today.isoformat()}
+                new += 1
+        print(f"{name} (Dailymotion): {len(videos)} videos, {new} new episodes")
+        for _, title, mins in videos[:3]:
+            print(f"    e.g. {title} ({round(mins)} min)")
+
+
+def show_searches(kept, today):
+    """Adds full episodes of each SHOW_SEARCHES show to kept, all in one folder per show."""
+    for show, handles, query, language, searches, must in SHOW_SEARCHES:
+        handle, cid = channel_id(handles, query)
+        if not cid:
+            print(f"{show}: channel not found", file=sys.stderr)
+            continue
+        videos, seen = [], set()
+        for q in searches:
+            url = f"https://www.youtube.com/channel/{cid}/search?" + urllib.parse.urlencode({"query": q})
+            try:
+                for v in videos_page(url):
+                    if v[0] not in seen:
+                        seen.add(v[0])
+                        videos.append(v)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {show}: search {q!r} failed ({e})", file=sys.stderr)
+        new = 0
+        for vid, title, mins in videos:
+            ep = episode(title)
+            if not ep or not re.search(must, title, re.I) or SKIP.search(title) or (mins or 0) < MIN_SHOW_EPISODE_MINUTES:
+                continue
+            if vid in kept:
+                kept[vid]["seen"] = today.isoformat()
+            else:
+                kept[vid] = {"show": show, "episode": ep[1], "channel": show, "language": language,
+                             "title": title, "added": today.isoformat()}
+                new += 1
+        print(f"{show} ({handle} {cid}): {len(videos)} videos, {new} new episodes")
+        for _, title, mins in videos[:4]:
+            print(f"    e.g. {title} ({mins and round(mins)} min)")
+
+
+def unique_episodes(episodes):
+    """One copy of each episode (language, show, number), YouTube's first, and one spelling of
+    each show's name, so a show never gets two folders."""
+    names, seen, out = {}, set(), []
+    for vid, v in sorted(episodes.items(), key=lambda kv: kv[1].get("source") == "dailymotion"):
+        show = (v.get("language", "Urdu"), compact(v["show"]))
+        names.setdefault(show, v["show"])
+        if show + (v["episode"],) in seen:
+            continue
+        seen.add(show + (v["episode"],))
+        out.append((vid, {**v, "show": names[show]}))
+    return out
 
 
 def telefilm_name(title):
@@ -488,6 +641,8 @@ def main():
         for t in skipped[:6]:
             print(f"    skipped: {t}")
 
+    show_searches(kept, today)
+    dailymotion(kept, today)
     dubbed_movies(kept, today)
     films(kept, today)
     channel_shows(kept, today, SHOW_CHANNELS, "Shows")
@@ -501,15 +656,15 @@ def main():
     movies = {k: v for k, v in kept.items() if "movie" in v}
     telefilms = {k: v for k, v in kept.items() if "telefilm" in v}
     items = {k: v for k, v in kept.items() if "item" in v}
-    rows = sorted(episodes.items(), key=lambda kv: (kv[1]["channel"], kv[1]["show"].lower(), kv[1]["episode"]))
+    rows = sorted(unique_episodes(episodes), key=lambda kv: (kv[1]["channel"], kv[1]["show"].lower(), kv[1]["episode"]))
 
     lines = ["#EXTM3U", "# Pakistani dramas, shows, cartoons and Hindi dubbed movies from their owners' official YouTube uploads."]
     names = set()
     for vid, v in sorted(movies.items(), key=lambda kv: kv[1]["movie"].lower()):
         language = v.get("language", "Hindi")
-        if (language, v["movie"].lower()) in names:  # the same film from two channels
+        if (language, compact(v["movie"])) in names:  # the same film from two channels
             continue
-        names.add((language, v["movie"].lower()))
+        names.add((language, compact(v["movie"])))
         lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{language}" '
                      f'tvg-genre="Movies" group-title="{v.get("group", "Hindi dubbed movies")}",{v["movie"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
@@ -526,9 +681,10 @@ def main():
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in rows:
         kind = "Shows" if SHOW.search(v["show"]) else "Series"
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v.get("language", "Urdu")}" '
+        logo = v.get("logo") or f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg"
+        lines.append(f'#EXTINF:-1 tvg-logo="{logo}" tvg-language="{v.get("language", "Urdu")}" '
                      f'tvg-genre="{kind}" group-title="{v["channel"]}",{v["show"]} Episode {v["episode"]}')
-        lines.append(f"https://www.youtube.com/watch?v={vid}")
+        lines.append(v.get("url") or f"https://www.youtube.com/watch?v={vid}")
     with open(os.path.join(DOCS, "Dramas.m3u"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     shows = {(v["channel"], v["show"]) for v in episodes.values()}

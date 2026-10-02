@@ -68,10 +68,18 @@ object Vod {
     /** The newest episodes from Pakistani channels' official YouTube uploads, rebuilt daily by tools/build_dramas.py. */
     const val DRAMAS_URL = "https://tv.bulkbazaar.ca/Dramas.m3u"
 
+    /** Free films and shows from Wikimedia Commons, NASA, Vimeo and PeerTube, rebuilt weekly by tools/build_free.py. */
+    const val FREE_SOURCES_URL = "https://tv.bulkbazaar.ca/Free.m3u"
+
     /** The playlists Movies & Series always shows: the free lists in Live TV, none in the store editions. */
     fun builtIn(): List<Playlist> =
         if (Edition.HAS_VOD) {
-            listOf(Playlist("Pakistani dramas", DRAMAS_URL), Playlist("Free classics", FREE_MOVIES_URL))
+            // In this order, so where a title is in two lists the first one's copy is kept.
+            listOf(
+                Playlist("Pakistani dramas", DRAMAS_URL),
+                Playlist("Free classics", FREE_MOVIES_URL),
+                Playlist("Free films and shows", FREE_SOURCES_URL),
+            )
         } else {
             emptyList()
         }
@@ -100,7 +108,11 @@ object Vod {
 
     fun kind(channel: Channel): Kind {
         val path = channel.url.substringBefore('?').substringBefore('#').lowercase()
-        if (YouTube.videoId(channel.url) != null || Bilibili.isVideo(channel.url)) return if (isEpisode(channel)) Kind.EPISODE else Kind.MOVIE
+        if (YouTube.videoId(channel.url) != null || Bilibili.isVideo(channel.url) ||
+            Dailymotion.videoId(channel.url) != null || Vimeo.videoId(channel.url) != null
+        ) {
+            return if (isEpisode(channel)) Kind.EPISODE else Kind.MOVIE
+        }
         val hls = path.endsWith(".m3u8")
         if ("/series/" in path && !hls) return Kind.EPISODE
         if ("/movie/" in path && !hls) return Kind.MOVIE
@@ -137,9 +149,36 @@ object Vod {
      * Groups episodes into shows. Episodes without a number in their name are filed under
      * their group-title (Xtream series playlists put each show in its own group).
      */
+    /**
+     * A title reduced to its letters and digits ("The Kid (1921) [HD]" to "kid"), so one film or
+     * show spelled a little differently in two lists still matches.
+     */
+    fun titleKey(name: String): String =
+        name.lowercase()
+            .replace(Regex("""\(.*?\)|\[.*?]"""), " ")
+            .replace(Regex("""\b(the|full movie|full episode|hd|4k)\b"""), " ")
+            .filter { it.isLetterOrDigit() }
+
+    /**
+     * The same for one film, or one episode of a show, listed twice (in two lists, or from two
+     * sites such as YouTube and Dailymotion), so the Library shows it only once.
+     */
+    fun sameTitleKey(channel: Channel): String {
+        val language = language(channel)
+        val name = if (kind(channel) == Kind.EPISODE) {
+            parse(channel.name)?.let { (show, season, number) ->
+                titleKey(show).takeIf { it.isNotEmpty() }?.let { "e|$it|${season ?: 1}|$number" }
+            }
+        } else {
+            titleKey(channel.name).takeIf { it.isNotEmpty() }?.let { "m|$it" }
+        }
+        return "$language|${name ?: "u|${channel.url}"}"
+    }
+
     fun shows(episodes: List<Channel>): List<Show> =
-        episodes.groupBy { c -> parse(c.name)?.first?.takeIf { it.isNotBlank() } ?: c.group ?: c.name }
-            .map { (name, list) ->
+        episodes.groupBy { c -> showName(c).let { titleKey(it).ifEmpty { it } } }
+            .map { (_, list) ->
+                val name = showName(list.first())
                 val sorted = list.map { c -> parse(c.name).let { Episode(c, it?.second, it?.third) } }
                     .sortedWith(compareBy({ it.season ?: 0 }, { it.number ?: 0 }, { it.channel.name }))
                 Show(
@@ -150,6 +189,8 @@ object Vod {
                 )
             }
             .sortedBy { it.name.lowercase() }
+
+    private fun showName(c: Channel): String = parse(c.name)?.first?.takeIf { it.isNotBlank() } ?: c.group ?: c.name
 
     private fun clean(show: String): String = show.trim().trimEnd('-', ':', '|', '.', '_').trim()
 }

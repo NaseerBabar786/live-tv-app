@@ -1,0 +1,59 @@
+name: Build free films playlist
+
+# Builds docs/Free.m3u (tv.bulkbazaar.ca/Free.m3u): films and shows shared openly by their
+# makers (Wikimedia Commons, NASA, Vimeo Staff Picks, PeerTube), for Live TV's Library.
+on:
+  schedule:
+    - cron: "0 11 * * 2"   # weekly, Tuesdays 11:00 UTC
+  workflow_dispatch:
+  # Changes to the builder are tried out on their pull request (nothing is published there).
+  pull_request:
+    paths:
+      - tools/build_free.py
+      - .github/workflows/build-free.yml
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: build-free
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the playlist
+        run: python3 tools/build_free.py
+
+      - name: Show a sample
+        run: |
+          cat docs/free.json
+          grep "^#EXTINF" docs/Free.m3u | sed 's/.*tvg-language="\([^"]*\)" tvg-genre="\([^"]*\)" group-title="\([^"]*\)",/\1 | \2 | \3 | /' | awk -F" [|] " '{k=$1"|"$3; c[k]++; if (c[k] <= 5) print}'
+
+      # A push made with the workflow's own token doesn't start other workflows,
+      # so the website is rebuilt explicitly below.
+      - name: Publish the playlist
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/Free.m3u docs/free.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Free films playlist: as of $(date -u '+%Y-%m-%d') UTC"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

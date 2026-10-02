@@ -1,6 +1,7 @@
 package com.livetv.app.ui
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.livetv.app.data.Channel
@@ -17,6 +18,9 @@ import kotlinx.coroutines.launch
 /** Special group filters shown before the playlist's own groups. */
 const val FILTER_ALL = "All"
 const val FILTER_FAVORITES = "Favorites"
+
+/** The most channels Favorites can hold. */
+const val MAX_FAVORITES = 100
 
 const val DEMO_PLAYLIST_NAME = "Demo channels"
 
@@ -95,6 +99,9 @@ data class UiState(
 }
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
+    /** Whether the channels have loaded since the app opened (it opens on Favorites only then). */
+    private var opened = false
+
 
     private val repo = ChannelRepository(app)
 
@@ -131,7 +138,27 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             repo.loadChannels()
                 .onSuccess { list ->
                     val numbered = list.mapIndexed { i, channel -> channel.copy(number = i + 1) }
-                    _state.update { it.copy(loading = false, channels = numbered) }
+                    // The app opens on Favorites (when there are any) and on the channel watched
+                    // last time, or the first favorite when that one isn't a favorite.
+                    val opening = !opened
+                    opened = true
+                    _state.update {
+                        val favorites = numbered.filter { c -> c.id in it.favorites }
+                        val onFavorites = opening && favorites.isNotEmpty()
+                        val last = repo.lastChannelUrl?.let { url -> numbered.firstOrNull { c -> c.url == url } }
+                        val start = when {
+                            !opening -> it.lastWatchedId
+                            onFavorites -> (last?.takeIf { c -> c.id in it.favorites } ?: favorites.first()).id
+                            else -> last?.id
+                        }
+                        it.copy(
+                            loading = false,
+                            channels = numbered,
+                            lastWatchedId = start,
+                            filter = if (onFavorites) FILTER_FAVORITES else it.filter,
+                            category = if (onFavorites) null else it.category,
+                        )
+                    }
                 }
                 .onFailure { e ->
                     _state.update { it.copy(loading = false, error = e.message ?: "Could not load the playlist.") }
@@ -192,7 +219,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun setCategory(category: String?) = _state.update { it.copy(category = category) }
 
     fun toggleFavorite(channel: Channel) {
-        val updated = repo.favorites.toMutableSet().apply {
+        val current = repo.favorites
+        // Favorites holds at most MAX_FAVORITES channels (the user's choice).
+        if (channel.id !in current && current.size >= MAX_FAVORITES) {
+            Toast.makeText(
+                getApplication(),
+                "Favorites is full ($MAX_FAVORITES channels). Remove one to add another.",
+                Toast.LENGTH_LONG,
+            ).show()
+            return
+        }
+        val updated = current.toMutableSet().apply {
             if (!add(channel.id)) remove(channel.id)
         }
         repo.favorites = updated
@@ -202,6 +239,12 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun play(channel: Channel) {
         repo.lastChannelUrl = channel.url
         _state.update { it.copy(playing = channel, lastWatchedId = channel.id) }
+    }
+
+    /** Remembers a channel watched without full screen (1+List's player) as the last one watched. */
+    fun watched(channel: Channel) {
+        repo.lastChannelUrl = channel.url
+        _state.update { it.copy(lastWatchedId = channel.id) }
     }
 
     fun stop() = _state.update { it.copy(playing = null) }

@@ -35,6 +35,8 @@ jobs:
           head -n 21 docs/Dramas.m3u
           grep -c "Hindi dubbed" docs/Dramas.m3u || true
           grep -A0 "group-title=\"Telefilms\"" docs/Dramas.m3u | sed "s/.*,//" | head -n 40
+          echo "== Dailymotion"; grep -B1 "dailymotion.com" docs/Dramas.m3u | grep "^#EXTINF" | sed 's/.*group-title="\([^"]*\)",/\1 | /' | awk -F" [|] " '{c[$1]++; if (c[$1] <= 8) print}'
+          echo "== Kapil"; grep -i "kapil" docs/Dramas.m3u | grep "^#EXTINF" | sed 's/.*,//' | head -n 10
           for l in Hindi Punjabi English; do echo "== $l"; grep "tvg-language=\"$l\"" docs/Dramas.m3u | grep -v "Hindi dubbed" | sed "s/.*tvg-genre=\"\\([A-Za-z]*\\)\" group-title=\"\\([^\"]*\\)\",/\\1 | \\2 | /" | awk -F" [|] " "{c[\$1\" | \"\$2]++; if (c[\$1\" | \"\$2] <= 4) print}"; done
 
       # A push made with the workflow's own token doesn't start other workflows,

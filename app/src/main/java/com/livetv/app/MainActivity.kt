@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity() {
                 settings = { onDismiss -> EditionSettings(state, viewModel, onDismiss) },
                 onTryDemo = viewModel::addDemoPlaylist,
                 onOpenVod = if (Edition.HAS_VOD) ({ showVod = true }) else null,
+                onWatch = viewModel::watched,
             )
         }
         EditionOverlay()

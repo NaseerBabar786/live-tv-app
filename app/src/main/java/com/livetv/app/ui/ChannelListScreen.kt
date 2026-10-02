@@ -152,6 +152,8 @@ fun ChannelListScreen(
     onTryDemo: () -> Unit = {},
     /** Opens the Library (movies, series and shows); null hides its button. */
     onOpenVod: (() -> Unit)? = null,
+    /** A channel picked to play in 1+List's player, remembered as the last one watched. */
+    onWatch: (Channel) -> Unit = {},
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
     var showSettings by rememberSaveable { mutableStateOf(false) }
@@ -197,9 +199,9 @@ fun ChannelListScreen(
     // Only the highlighted tile has sound; the speaker button in the top bar mutes it (remembered).
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
-    // TV and tablet layout, picked with the button in the top bar (remembered).
+    // TV and tablet layout, picked with the button in the top bar; starts in 1+List each time the app opens.
     var tileLayout by remember {
-        mutableStateOf(TileLayout.entries.firstOrNull { it.name == prefs.getString(PREF_TILE_LAYOUT, null) } ?: TileLayout.Eight)
+        mutableStateOf(sessionTileLayout ?: TileLayout.List)
     }
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
     // "1+List": the channel playing on the left, kept when coming back from full screen.
@@ -226,9 +228,9 @@ fun ChannelListScreen(
         window.withIndex().sortedBy { it.index / tileLayout.columns != row }.map { it.value.id }
     } else gridIds
 
-    // Coming back from the player: show the channel that was playing and put the remote's
-    // cursor on it.
-    LaunchedEffect(Unit) {
+    // Opening the app, or coming back from the player: show the channel watched last and put
+    // the remote's cursor on it (once the list has loaded).
+    LaunchedEffect(state.visibleChannels.isNotEmpty()) {
         val index = state.visibleChannels.indexOfFirst { it.id == state.lastWatchedId }
         if (index >= 0) {
             if (windowed) {
@@ -352,7 +354,7 @@ fun ChannelListScreen(
                         TextButton(
                             onClick = {
                                 tileLayout = TileLayout.entries[(tileLayout.ordinal + 1) % TileLayout.entries.size]
-                                prefs.edit().putString(PREF_TILE_LAYOUT, tileLayout.name).apply()
+                                sessionTileLayout = tileLayout
                             },
                             colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
@@ -476,7 +478,7 @@ fun ChannelListScreen(
                         onToggleFavorite = onToggleFavorite,
                         focusId = state.lastWatchedId,
                         focus = lastWatchedFocus,
-                        onSelect = { listChannelId = it.id },
+                        onSelect = { listChannelId = it.id; onWatch(it) },
                         onOpen = onPlay,
                     )
                     else -> BoxWithConstraints(Modifier.fillMaxSize()) {
@@ -1159,7 +1161,11 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     List("1+List", 1, 1),
 }
 
-private const val PREF_TILE_LAYOUT = "tile_layout"
+/**
+ * The layout picked with the layout button since the app was opened. Each time the app opens
+ * it starts in 1+List (the user's choice), so the pick is kept only until then, not saved.
+ */
+private var sessionTileLayout: TileLayout? = null
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 

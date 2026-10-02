@@ -41,10 +41,11 @@ data class VodState(
 
 /**
  * Sorts videos by language, then into Movies, Series, Shows or Kids; episodes are grouped into a
- * folder per drama or show. Punjabi has movies only (the owner's choice).
+ * folder per drama or show. A title listed twice (in two lists, or from two sites) shows once,
+ * the first list's copy. Punjabi has movies only (the owner's choice).
  */
 fun shelves(items: List<Channel>): Map<Vod.Language, VodShelf> =
-    items.groupBy { Vod.language(it) }.mapValues { (language, list) ->
+    items.distinctBy { Vod.sameTitleKey(it) }.groupBy { Vod.language(it) }.mapValues { (language, list) ->
         val (episodes, movies) = list.partition { Vod.kind(it) == Vod.Kind.EPISODE }
         val (kids, grownUp) = if (language == Vod.Language.PUNJABI) {
             emptyList<Channel>() to emptyList()
