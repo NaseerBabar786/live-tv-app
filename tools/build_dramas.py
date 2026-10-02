@@ -76,7 +76,8 @@ DM_CHANNELS = [
 # One show from a channel that also posts much else: (show, handles, channel search, language,
 # searches in the channel, words a title must have). Full episodes only, filed under Shows.
 SHOW_SEARCHES = [
-    ("The Kapil Sharma Show", ["@SonyTV", "@SETIndia"], "Sony Entertainment Television", "Hindi",
+    ("The Kapil Sharma Show", ["@SETIndia", "@SonyTV", "@sonytvofficial", "@TheKapilSharmaShow"],
+     "SET India|Sony Entertainment Television|Sony TV|The Kapil Sharma Show", "Hindi",
      ["kapil sharma show full episode", "the kapil sharma show ep"], r"kapil"),
 ]
 MIN_SHOW_EPISODE_MINUTES = 30
@@ -189,6 +190,8 @@ def is_owner(title, expect, exact=False):
     "ARY Digital"), so a handle someone else owns is never used. A channel found by search
     must have exactly that name ("Burka Avenger Afghanistan" or "commandersafeguard1" is
     someone else's)."""
+    if "|" in expect:  # any of several names
+        return any(is_owner(title, e, exact) for e in expect.split("|"))
     if exact:
         return _key(title) == _key(expect)
     return _key(expect) in compact(title)
@@ -212,7 +215,7 @@ def channel_id(handles, query):
         if m:
             print(f"  {handle} is {title!r}, not {query!r}; skipped", file=sys.stderr)
     try:
-        page = fetch("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": query, "sp": "EgIQAg=="}), tries=2)
+        page = fetch("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": query.split("|")[0], "sp": "EgIQAg=="}), tries=2)
         for m in list(re.finditer(r'"channelRenderer":\{"channelId":"(UC[\w-]{22})"', page))[:5]:
             title = re.search(r'"title":\{"simpleText":"((?:[^"\\]|\\.)*)"', page[m.end():m.end() + 3000])
             title = _text(title.group(1)) if title else ""
@@ -287,7 +290,7 @@ def episode(title):
     m = EPISODE.match(title.strip())
     first = EPISODE_FIRST.match(title.strip())
     if m and m.group(1).strip(" -|:–"):
-        show, number = TAIL.sub("", m.group(1)).strip(" -|:–"), m.group(2)
+        show, number = TAIL.sub("", m.group(1)).strip(" -|:–([{"), m.group(2)
     elif first:
         show, number = first.group(2).strip(), first.group(1)
     else:
