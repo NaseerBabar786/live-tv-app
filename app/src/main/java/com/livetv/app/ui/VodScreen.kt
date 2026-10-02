@@ -150,7 +150,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                 }
                 Text(
-                    show?.name ?: language?.label ?: "Movies & Series",
+                    show?.name ?: language?.label ?: "Library",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
