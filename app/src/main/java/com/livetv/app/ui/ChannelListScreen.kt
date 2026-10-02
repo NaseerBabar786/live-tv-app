@@ -52,6 +52,7 @@ import java.util.Date
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -298,13 +299,22 @@ fun ChannelListScreen(
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
         if (!allowed) return@LaunchedEffect
         delay(600)
-        for (id in playing) {
-            if (id in rowPreviews) continue
-            val channel = state.channels.firstOrNull { it.id == id } ?: continue
+        // With several videos at once, each plays smaller so the TV can decode them all.
+        val low = playing.size > 2
+        suspend fun start(id: String) {
+            val channel = state.channels.firstOrNull { it.id == id } ?: return
             val p = pool.removeLastOrNull() ?: Preview.create(context)
+            p.lowQuality(low)
             p.stream.player.volume = if (previewSound && id == soundId) 1f else 0f
             rowPreviews[id] = p
             p.stream.play(channel)
+            if (low) delay(400) // one decoder at a time
+        }
+        for (id in playing) if (id !in rowPreviews) start(id)
+        if (low) {
+            // A video that hasn't started yet gets one more try.
+            delay(12_000)
+            for (id in playing) if (rowPreviews[id]?.showing == false) { release(id); start(id) }
         }
         if (snapshots.size > 80) snapshots.clear()
         // One picture at a time: the channel opens muted in its card, the first frame is kept
@@ -316,6 +326,7 @@ fun ChannelListScreen(
                 val channel = state.channels.firstOrNull { it.id == id } ?: continue
                 if (YouTube.isYouTube(channel.url)) continue // plays only in YouTube's player; its picture shows
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
+                p.lowQuality(false)
                 p.stream.player.volume = 0f
                 rowPreviews[id] = p
                 try {
@@ -560,7 +571,9 @@ fun ChannelListScreen(
                     val columns = if (wide) fitColumns else max(1, ((maxWidth - gap) / (tileWidth + gap)).toInt())
                     // When the width decides the tile size, spread the spare height between the rows
                     // so exactly [rows] rows show and the next row stays off screen.
-                    val cardHeight = if (fullTiles) maxHeight / rows else tileWidth * 9f / 16f + TileTextHeight
+                    // Full screen: 16:9 cells packed together and centred, so no black bands between rows.
+                    val fullHeight = minOf(maxWidth / columns * 9f / 16f, maxHeight / rows)
+                    val cardHeight = if (fullTiles) fullHeight else tileWidth * 9f / 16f + TileTextHeight
                     val rowGap = if (fullTiles) 0.dp else maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
                     // Likewise across: when the height decides the tile size, widen the gaps so the
                     // grid fits exactly [columns] tiles in a row (a bit under, so rounding can't drop one).
@@ -569,7 +582,7 @@ fun ChannelListScreen(
                         wide -> maxOf(gap, (maxWidth - tileWidth * columns) / (columns + 1) - 1.dp)
                         else -> gap
                     }
-                    val cellWidth = if (fullTiles) maxWidth / columns else tileWidth
+                    val cellWidth = if (fullTiles) fullHeight * 16f / 9f else tileWidth
                     @Composable
                     fun Tile(
                         index: Int,
@@ -692,7 +705,7 @@ fun ChannelListScreen(
                         }
                         Column(
                             Modifier.fillMaxSize().padding(vertical = rowGap),
-                            verticalArrangement = Arrangement.spacedBy(rowGap),
+                            verticalArrangement = if (fullTiles) Arrangement.Center else Arrangement.spacedBy(rowGap),
                         ) {
                             window.chunked(columns).forEachIndexed { r, row ->
                                 Row(
@@ -869,7 +882,13 @@ private fun ChannelCard(
                 .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
                 .onPreviewKeyEvent(onKey)
                 .onFocusChanged { focused = it.hasFocus; onFocusChange(it.hasFocus) }
-                .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
+                // No highlight tint over the picture; the thin border below marks the tile.
+                .combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onClick,
+                    onLongClick = onToggleFavorite,
+                ),
             contentAlignment = Alignment.Center,
         ) {
             if (snapshot != null) {
@@ -888,7 +907,8 @@ private fun ChannelCard(
                         .padding(horizontal = 10.dp, vertical = 4.dp),
                 )
             }
-            if (focused) SoundBadge(Modifier.align(Alignment.TopEnd))
+            // A thin, soft yellow line marks the tile with the sound.
+            if (focused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
         }
         return
     }
@@ -1300,6 +1320,14 @@ private class Preview(val stream: StreamPlayer) {
                 showing = true
             }
         })
+    }
+
+    /** Low: at most 426×240 and 700 kbit/s, for when many videos play at once; otherwise SD. */
+    fun lowQuality(low: Boolean) {
+        val params = stream.player.trackSelectionParameters.buildUpon()
+        if (low) params.setMaxVideoSize(426, 240).setMaxVideoBitrate(700_000)
+        else params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE)
+        stream.player.trackSelectionParameters = params.build()
     }
 
     companion object {
