@@ -28,4 +28,24 @@ class VodShelvesTest {
         // Punjabi is movies only.
         assertEquals(true, shelves.getValue(Vod.Language.PUNJABI).isEmpty)
     }
+
+    @Test
+    fun fileUnnumberedShowsKidsAndTelefilmsByGenre() {
+        fun item(name: String, group: String, category: String) =
+            yt(name, "Urdu", category).copy(group = group)
+        val urdu = shelves(
+            listOf(
+                item("Chicken Karahi Recipe", "Food Fusion", "Shows"),
+                item("Aloo Keema", "Food Fusion", "Shows"),
+                item("Burka Avenger Episode 1", "Burka Avenger", "Kids"),
+                item("Mann Pagal", "Telefilms", "Movies"),
+            ),
+        ).getValue(Vod.Language.URDU)
+        assertEquals(listOf("Food Fusion"), urdu.shows.map { it.name })
+        assertEquals(2, urdu.shows.single().episodes.size)
+        assertEquals(listOf("Burka Avenger"), urdu.kids.map { it.name })
+        assertEquals(listOf("Mann Pagal"), urdu.movies.map { it.name })
+        assertEquals(true, urdu.series.isEmpty())
+        assertEquals(urdu.kids, urdu.folders(Vod.Section.KIDS))
+    }
 }

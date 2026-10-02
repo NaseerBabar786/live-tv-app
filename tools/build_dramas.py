@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Builds a playlist of the newest Pakistani drama episodes from the TV channels' own
-official YouTube channels (ARY Digital, HUM TV, Geo Entertainment).
+Builds a playlist of the newest Pakistani drama episodes, telefilms, cooking and Islamic
+shows and Urdu cartoons from their owners' own official YouTube channels (ARY Digital,
+HUM TV, Geo Entertainment, Green Entertainment, PTV Home, Masala TV, Burka Avenger...).
 
 These are videos the channels publish for free themselves. Live TV plays them in
 YouTube's own player (YouTube app on TVs, YouTube's embedded player on phones), so
@@ -38,7 +39,38 @@ CHANNELS = [
     ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
     ("HUM TV", ["@HUMTV", "@humtvofficial"], "HUM TV"),
     ("Geo Entertainment", ["@HARPALGEO", "@harpalgeoofficial"], "HAR PAL GEO"),
+    ("Green Entertainment", ["@GreenEntertainmentpk", "@GreenEntertainment", "@greentvpk"], "Green Entertainment"),
+    ("PTV Home", ["@PTVHomeOfficial", "@PTVHome", "@ptvhomeofficialchannel"], "PTV Home Official"),
+    ("Express TV", ["@ExpressTV", "@ExpressEntertainment", "@ExpressTVpk"], "Express Entertainment"),
+    ("A-Plus", ["@APlusEntertainment", "@APlusTV", "@aplusdramas"], "A Plus Entertainment"),
+    ("TV One", ["@TVOnePakistan", "@TVOneDramas", "@tvonepk"], "TV One Pakistan"),
+    ("ARY Zindagi", ["@ARYZindagi", "@ARYZindagiOfficial"], "ARY Zindagi"),
+    ("Geo Kahani", ["@GeoKahani", "@GeoKahaniOfficial"], "Geo Kahani"),
 ]
+
+# Channels whose single-episode telefilms go under Urdu Movies.
+TELEFILM_CHANNELS = {"ARY Digital", "HUM TV", "Geo Entertainment"}
+TELEFILM = re.compile(r"\btele[\s-]?films?\b", re.IGNORECASE)
+MIN_TELEFILM_MINUTES = 45
+TELEFILM_WORDS = re.compile(
+    r"\b(tele[\s-]?films?|eid|ul|al|adha|fitr|special|full|new|latest|hd|4k|ary digital|ary|hum tv|hum|"
+    r"har pal geo|geo tv|geo|digital|pakistani|drama|\d{4})\b", re.IGNORECASE)
+
+# Channels where every full video is a show, filed in a folder named after the channel.
+SHOW_CHANNELS = [
+    ("Masala TV", ["@MasalaTVRecipes", "@masalatv", "@MasalaTV"], "Masala TV"),
+    ("Food Fusion", ["@FoodFusionPk", "@FoodFusion"], "Food Fusion"),
+    ("ARY Qtv", ["@ARYQtvOfficial", "@ARYQtv", "@QtvOfficial"], "ARY Qtv"),
+    ("Madani Channel", ["@MadaniChannel", "@MadaniChannelOfficial"], "Madani Channel"),
+]
+# Urdu cartoons from their makers' own channels; no channel search, so only the real
+# channel (by its handle) is ever used.
+KIDS_CHANNELS = [
+    ("Burka Avenger", ["@BurkaAvenger", "@BurkaAvengerOfficial", "@burkaavengertv"], None),
+    ("Commander Safeguard", ["@CommanderSafeguard", "@CommanderSafeguardOfficial"], None),
+]
+MIN_SHOW_MINUTES = 3
+SHOW_SKIP = re.compile(r"\b(teaser|promo|trailer|shorts)\b|#shorts", re.IGNORECASE)
 
 # Official YouTube channels of the companies that own the Hindi dubbed rights and
 # publish full movies free themselves.
@@ -90,7 +122,11 @@ def channel_id(handles, query):
             continue
         m = re.search(r'"externalId":"(UC[\w-]{22})"', page) or re.search(r'channel_id=(UC[\w-]{22})', page)
         if m:
+            title = re.search(r'<meta property="og:title" content="([^"]*)"', page)
+            print(f"  {handle} is {html.unescape(title.group(1)) if title else '?'!r}")
             return handle, m.group(1)
+    if not query:
+        return None, None
     try:
         page = fetch("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": query, "sp": "EgIQAg=="}), tries=2)
         m = re.search(r'"channelRenderer":\{"channelId":"(UC[\w-]{22})"', page)
@@ -192,6 +228,62 @@ def movie_name(title):
     return name
 
 
+def telefilm_name(title):
+    """ "Telefilm | Mann Pagal | ARY Digital" or 'Eid Telefilm "Mann Pagal"' to "Mann Pagal"."""
+    quoted = re.search(r'["“”‘’]([^"“”‘’]{2,40})["“”‘’]', title)
+    parts = [quoted.group(1)] if quoted else re.split(r"\s*[|\[\](){}]\s*|\s+[-–]\s+", title)
+    for part in parts:
+        name = re.sub(r"\s+", " ", TELEFILM_WORDS.sub("", part)).strip(" -|:–\"'")
+        if len(name) >= 2 and not re.search(r"\.(com|pk|tv)\b|www\.", name, re.I):
+            return name
+    return None
+
+
+def short_title(title):
+    """A video title without its hashtags and trailing "| Channel" parts, at most 80 letters."""
+    name = re.sub(r"#\S+", "", title)
+    parts = [p.strip() for p in re.split(r"\s*\|\s*", name) if p.strip()]
+    name = " | ".join(parts[:2]) if parts else title
+    return (name[:77] + "...") if len(name) > 80 else name
+
+
+def channel_shows(kept, today, channels, genre):
+    """Adds every full video from each channel (SHOW_CHANNELS or KIDS_CHANNELS) to kept."""
+    for name, handles, query in channels:
+        handle, cid = channel_id(handles, query)
+        if not cid:
+            print(f"{name}: channel not found", file=sys.stderr)
+            continue
+        videos, seen = [], set()
+        urls = [f"https://www.youtube.com/channel/{cid}/videos"]
+        if genre == "Kids":
+            urls.append(f"https://www.youtube.com/channel/{cid}/search?query=episode")
+        for url in urls:
+            try:
+                for v in videos_page(url):
+                    if v[0] not in seen:
+                        seen.add(v[0])
+                        videos.append(v)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name}: {url} failed ({e})", file=sys.stderr)
+        if not videos:
+            try:
+                videos = videos_feed(cid)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name} feed failed ({e})", file=sys.stderr)
+        new = 0
+        for vid, title, mins in videos:
+            if SHOW_SKIP.search(title) or (mins is not None and mins < MIN_SHOW_MINUTES):
+                continue
+            if vid in kept:
+                kept[vid]["seen"] = today.isoformat()
+            else:
+                kept[vid] = {"item": short_title(title), "folder": name, "genre": genre, "channel": name,
+                             "title": title, "added": today.isoformat()}
+                new += 1
+        print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new {genre.lower()}")
+
+
 def dubbed_movies(kept, today):
     """Adds full Hindi dubbed movies from MOVIE_CHANNELS to kept."""
     for name, handles, query in MOVIE_CHANNELS:
@@ -238,8 +330,11 @@ def main():
         videos, seen = [], set()
         # The Videos tab has the newest uploads (mostly clips); a search in the
         # channel for "episode" finds more full episodes.
-        for url in (f"https://www.youtube.com/channel/{cid}/videos",
-                    f"https://www.youtube.com/channel/{cid}/search?query=episode"):
+        urls = [f"https://www.youtube.com/channel/{cid}/videos",
+                f"https://www.youtube.com/channel/{cid}/search?query=episode"]
+        if name in TELEFILM_CHANNELS:
+            urls.append(f"https://www.youtube.com/channel/{cid}/search?query=telefilm")
+        for url in urls:
             try:
                 for v in videos_page(url):
                     if v[0] not in seen:
@@ -264,30 +359,44 @@ def main():
                         videos.append(v)
             except Exception as e:  # noqa: BLE001
                 print(f"  {name}: search for {show!r} failed ({e})", file=sys.stderr)
-        new = 0
+        new = telefilms = 0
         skipped = []
         for vid, title, mins in videos:
+            if name in TELEFILM_CHANNELS and TELEFILM.search(title) and not SKIP.search(title):
+                film = telefilm_name(title)
+                if film and (mins or 0) >= MIN_TELEFILM_MINUTES and vid not in kept:
+                    kept[vid] = {"telefilm": film, "channel": name, "title": title, "added": today.isoformat()}
+                    telefilms += 1
+                continue
             ep = episode(title)
             if not ep or (mins is not None and mins < MIN_MINUTES):
                 skipped.append(f"{title} ({mins and round(mins)} min)")
                 continue
-            if vid not in kept:
+            if vid in kept:
+                kept[vid]["seen"] = today.isoformat()
+            else:
                 kept[vid] = {"show": ep[0], "episode": ep[1], "channel": name, "title": title, "added": today.isoformat()}
                 new += 1
             found += 1
-        print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new episodes")
+        print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new episodes, {telefilms} new telefilms")
         for t in skipped[:6]:
             print(f"    skipped: {t}")
 
     dubbed_movies(kept, today)
+    channel_shows(kept, today, SHOW_CHANNELS, "Shows")
+    channel_shows(kept, today, KIDS_CHANNELS, "Kids")
 
+    # Kept until KEEP_DAYS after a video was last found, so a show still on its channel's
+    # page (such as an old PTV classic) stays.
     cutoff = (today - dt.timedelta(days=KEEP_DAYS)).isoformat()
-    kept = {k: v for k, v in kept.items() if v["added"] >= cutoff}
+    kept = {k: v for k, v in kept.items() if v.get("seen", v["added"]) >= cutoff}
     episodes = {k: v for k, v in kept.items() if "show" in v}
     movies = {k: v for k, v in kept.items() if "movie" in v}
+    telefilms = {k: v for k, v in kept.items() if "telefilm" in v}
+    items = {k: v for k, v in kept.items() if "item" in v}
     rows = sorted(episodes.items(), key=lambda kv: (kv[1]["channel"], kv[1]["show"].lower(), kv[1]["episode"]))
 
-    lines = ["#EXTM3U", "# Pakistani dramas and Hindi dubbed movies from their owners' official YouTube uploads."]
+    lines = ["#EXTM3U", "# Pakistani dramas, shows, cartoons and Hindi dubbed movies from their owners' official YouTube uploads."]
     names = set()
     for vid, v in sorted(movies.items(), key=lambda kv: kv[1]["movie"].lower()):
         if v["movie"].lower() in names:  # the same film from two channels
@@ -295,6 +404,17 @@ def main():
         names.add(v["movie"].lower())
         lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Hindi" '
                      f'tvg-genre="Movies" group-title="Hindi dubbed movies",{v["movie"]}')
+        lines.append(f"https://www.youtube.com/watch?v={vid}")
+    for vid, v in sorted(telefilms.items(), key=lambda kv: kv[1]["telefilm"].lower()):
+        if ("telefilm", v["telefilm"].lower()) in names:
+            continue
+        names.add(("telefilm", v["telefilm"].lower()))
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Urdu" '
+                     f'tvg-genre="Movies" group-title="Telefilms",{v["telefilm"]}')
+        lines.append(f"https://www.youtube.com/watch?v={vid}")
+    for vid, v in sorted(items.items(), key=lambda kv: (kv[1]["genre"], kv[1]["folder"], kv[1]["added"], kv[1]["item"])):
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Urdu" '
+                     f'tvg-genre="{v["genre"]}" group-title="{v["folder"]}",{v["item"].replace(",", " ")}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in rows:
         kind = "Shows" if SHOW.search(v["show"]) else "Series"
@@ -306,10 +426,13 @@ def main():
     shows = {(v["channel"], v["show"]) for v in episodes.values()}
     with open(state_path, "w", encoding="utf-8") as f:
         json.dump({"built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-                   "shows": len(shows), "episodes": len(episodes), "movies": len(movies), "videos": kept},
+                   "shows": len(shows), "episodes": len(episodes), "movies": len(movies),
+                   "telefilms": len(telefilms), "show_videos": sum(v["genre"] == "Shows" for v in items.values()),
+                   "kids_videos": sum(v["genre"] == "Kids" for v in items.values()), "videos": kept},
                   f, indent=1, ensure_ascii=False)
         f.write("\n")
-    print(f"Wrote docs/Dramas.m3u: {len(shows)} shows, {len(episodes)} episodes, {len(movies)} Hindi dubbed movies")
+    print(f"Wrote docs/Dramas.m3u: {len(shows)} shows, {len(episodes)} episodes, {len(movies)} Hindi dubbed movies, "
+          f"{len(telefilms)} telefilms, {len(items)} cooking/Islamic/kids videos")
     if not kept:
         sys.exit("No episodes found; keeping the build red so the old playlist isn't replaced.")
 

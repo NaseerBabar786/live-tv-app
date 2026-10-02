@@ -19,7 +19,7 @@ object Vod {
     enum class Language(val label: String) { URDU("Urdu"), HINDI("Hindi"), PUNJABI("Punjabi"), ENGLISH("English") }
 
     /** The sections inside a language, in the order they're shown. */
-    enum class Section(val label: String) { MOVIES("Movies"), SERIES("Series"), SHOWS("Shows") }
+    enum class Section(val label: String) { MOVIES("Movies"), SERIES("Series"), SHOWS("Shows"), KIDS("Kids") }
 
     private val languageWords = listOf(
         Language.URDU to listOf("urdu", "urd", "pakistani", "pakistan"),
@@ -47,6 +47,10 @@ object Vod {
         """\b(show|shows|reality|talk|game show|tamasha|jeeto|hasna mana|podcast|morning|ramzan|ramadan|transmission|quiz|comedy night)\b""",
         RegexOption.IGNORE_CASE,
     )
+
+    /** Whether an episode is a kids' programme (tvg-genre "Kids"). */
+    fun isKids(channel: Channel): Boolean =
+        channel.category?.let { it.contains("kids", true) || it.contains("cartoon", true) } == true
 
     /** Whether an episode belongs to a show (reality, talk, game) rather than a drama series. */
     fun isShow(channel: Channel): Boolean {
@@ -106,6 +110,11 @@ object Vod {
     }
 
     private fun isEpisode(channel: Channel): Boolean {
+        // tvg-genre from Live TV's own lists: Movies, or a Series, Shows or Kids folder.
+        channel.category?.lowercase()?.let { c ->
+            if (c == "movies" || c == "movie") return false
+            if (c == "series" || c == "shows" || c == "kids") return true
+        }
         val group = channel.group.orEmpty().lowercase()
         return parse(channel.name) != null || seriesWords.any { it in group }
     }

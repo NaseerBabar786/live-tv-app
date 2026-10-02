@@ -121,7 +121,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
     }
 
     val shelf = language?.let { state.shelves[it] } ?: VodShelf()
-    val folders = if (tab == Vod.Section.SHOWS) shelf.shows else shelf.series
+    val folders = shelf.folders(tab)
     val show = openShow?.let { name -> folders.firstOrNull { it.name == name } }
     val back: () -> Unit = {
         when {
@@ -246,14 +246,14 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
                 else -> {
                     val q = query.trim()
                     val movies = shelf.movies.filter { q.isBlank() || it.name.contains(q, true) }
-                    val series = shelf.series.filter { q.isBlank() || it.name.contains(q, true) }
-                    val shows = shelf.shows.filter { q.isBlank() || it.name.contains(q, true) }
+                    val folderLists = Vod.Section.entries.associateWith { section ->
+                        shelf.folders(section).filter { q.isBlank() || it.name.contains(q, true) }
+                    }
                     val sections = Vod.Section.entries.filter { section ->
-                        section == Vod.Section.MOVIES || (language != Vod.Language.PUNJABI &&
-                            (if (section == Vod.Section.SERIES) shelf.series else shelf.shows).isNotEmpty())
+                        section == Vod.Section.MOVIES || (language != Vod.Language.PUNJABI && shelf.folders(section).isNotEmpty())
                     }
                     val groups = (if (tab == Vod.Section.MOVIES) movies.mapNotNull { it.group } else
-                        (if (tab == Vod.Section.SERIES) series else shows).mapNotNull { it.group })
+                        folderLists.getValue(tab).mapNotNull { it.group })
                         .groupingBy { it }.eachCount().entries
                         .sortedWith(compareBy({ -it.value }, { it.key }))
                         .map { it.key }
@@ -265,11 +265,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
                             horizontalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
                             items(sections, key = { "tab:${it.name}" }) { section ->
-                                val count = when (section) {
-                                    Vod.Section.MOVIES -> movies.size
-                                    Vod.Section.SERIES -> series.size
-                                    Vod.Section.SHOWS -> shows.size
-                                }
+                                val count = if (section == Vod.Section.MOVIES) movies.size else folderLists.getValue(section).size
                                 VodChip(
                                     "${section.label} ($count)",
                                     tab == section,
@@ -295,7 +291,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
                             }
                         }
                     } else {
-                        val list = (if (tab == Vod.Section.SERIES) series else shows).filter { group == null || it.group == group }
+                        val list = folderLists.getValue(tab).filter { group == null || it.group == group }
                         if (list.isEmpty()) {
                             VodMessage("No ${language?.label} ${tab.label.lowercase()} yet.")
                         } else {
@@ -318,11 +314,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
 
 private fun sectionItems(state: VodState, language: String, section: Vod.Section): List<Any> {
     val shelf = state.shelves[Vod.Language.valueOf(language)] ?: return emptyList()
-    return when (section) {
-        Vod.Section.MOVIES -> shelf.movies
-        Vod.Section.SERIES -> shelf.series
-        Vod.Section.SHOWS -> shelf.shows
-    }
+    return if (section == Vod.Section.MOVIES) shelf.movies else shelf.folders(section)
 }
 
 private data class Poster(val key: String, val title: String, val image: String?, val subtitle: String? = null)
