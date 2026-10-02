@@ -133,8 +133,9 @@ LIVE_CHANNELS = [
 # Muslim Television Ahmadiyya's own channels; their videos go to MTA.m3u only, which Live
 # TV shows only when the viewer turns MTA on in Settings.
 MTA_CHANNELS = [
-    ("MTA International", ["@mtaonline", "@MTAInternational", "@mtaonline1"],
-     "MTA International|MTA Online|Muslim Television Ahmadiyya|MTA TV", 10),
+    # MTA's long-standing channel is "mtaOnline1" (it streams MTA's live channels); "@mtaonline" is an empty account.
+    ("MTA International", ["@mtaonline1", "@MTAInternational"],
+     "mtaOnline1|MTA International|Muslim Television Ahmadiyya|MTA TV", 10),
 ]
 MTA_FOLDERS = [
     ("Friday Sermons", re.compile(r"friday sermon|khutba|خطبہ", re.I)),
@@ -193,7 +194,8 @@ TAIL = re.compile(r"(?:[\s\-|:–]+|\b(?:2nd\s+)?last|\bmega|\bfinal|\bdouble)+$
 def fetch(url, tries=4):
     for attempt in range(tries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "en-US,en;q=0.9"})
+            req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "en-US,en;q=0.9",
+                                                       "Cookie": "CONSENT=YES+1; SOCS=CAI"})
             with urllib.request.urlopen(req, timeout=60) as r:
                 return r.read().decode("utf-8", "replace")
         except Exception as e:  # noqa: BLE001
@@ -544,8 +546,11 @@ def live_channels():
             print(f"  {name}: live page failed ({e})", file=sys.stderr)
             continue
         vid = re.search(r'<link rel="canonical" href="https://www\.youtube\.com/watch\?v=([\w-]{11})"', page)
-        if not vid or '"isLiveNow":true' not in page:
-            print(f"{name} ({cid}): not live now; left out", file=sys.stderr)
+        markers = [m for m in ('"isLiveNow":true', '"isLive":true', "hqdefault_live", '"isLiveContent":true') if m in page]
+        if not vid or not markers:
+            canonical = re.search(r'<link rel="canonical" href="([^"]*)"', page)
+            print(f"{name} ({cid}): not live now; left out (canonical {canonical and canonical.group(1)}, "
+                  f"{len(page)} bytes, {markers})", file=sys.stderr)
             continue
         print(f"{name} ({cid}): live, video {vid.group(1)}")
         lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid.group(1)}/hqdefault.jpg" tvg-country="PK" '
@@ -573,6 +578,12 @@ def mta(kept, today):
                         videos.append(v)
             except Exception as e:  # noqa: BLE001
                 print(f"  {name}: {url} failed ({e})", file=sys.stderr)
+        if not videos:
+            try:
+                videos = videos_feed(cid)
+                print(f"  {name}: {len(videos)} videos from the feed")
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name} feed failed ({e})", file=sys.stderr)
         new = 0
         for vid, title, mins in videos:
             if SHOW_SKIP.search(title) or (mins is not None and mins < shortest):
