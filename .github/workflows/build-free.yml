@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: "0 11 * * 2"   # weekly, Tuesdays 11:00 UTC
   workflow_dispatch:
+  # Changes to the builder are tried out on their pull request (nothing is published there).
+  pull_request:
+    paths:
+      - tools/build_free.py
+      - .github/workflows/build-free.yml
 
 permissions:
   contents: write
