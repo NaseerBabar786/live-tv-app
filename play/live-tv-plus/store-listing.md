@@ -8,7 +8,7 @@ TV network in the listing, screenshots or video: Google treats that as part of t
 - **Package name:** com.naseerbabar.livetvplus
 - **Category:** Video Players & Editors
 - **Contains ads:** No
-- **In-app purchases:** No
+- **In-app purchases:** Yes. One subscription, Premium (product ID `premium_monthly`, $0.99/month, auto-renewing). Create it in Play Console under Monetize > Subscriptions with that exact ID before release.
 
 ## Short description (80 characters max)
 Play your own M3U playlists on phones and Android TV, in grids or side by side.
@@ -21,7 +21,8 @@ Live TV Plus shows your channels in a grid with live previews, ready to watch.
 
 Features
 • Works on Android phones, tablets and Android TV, with full TV remote support
-• TV layouts: 2×4 and 3×2 grids, two channels side by side, or one player with a channel list
+• TV layouts: 2×4 and 3×2 grids, or one player with a channel list
+• Premium (monthly subscription): watch 2 or 4 channels at once with the 1×2 and 2×2 layouts
 • Live preview of the highlighted channel, with sound on or off
 • Clock and local weather in the top bar
 • Add as many playlists as you like and switch between them in Settings
@@ -29,7 +30,7 @@ Features
 • Channel numbers, and Up/Down on the remote to change channel while watching
 • Picture-in-picture on phones
 • Plays HLS, DASH and other common stream formats
-• No account, no ads and no tracking
+• No account, no ads and no tracking (Premium is billed by Google Play)
 
 Important: Live TV Plus is a player only. It does not include, sell or recommend any channels,
 playlists or video content. You need your own playlist from a provider you have the right to watch.

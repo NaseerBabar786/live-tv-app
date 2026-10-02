@@ -36,8 +36,8 @@ android {
         create("plus") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetvplus"
-            versionCode = 2
-            versionName = "1.0.1"
+            versionCode = 3
+            versionName = "1.1.0"
         }
     }
     // The two store editions share their playlist settings screen.
@@ -105,6 +105,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
     implementation(libs.kotlinx.coroutines.android)
+    // Live TV Plus Premium: a Google Play subscription.
+    "plusImplementation"("com.android.billingclient:billing-ktx:7.1.1")
     debugImplementation(libs.androidx.compose.ui.tooling)
     testImplementation(libs.junit)
     // Real org.json for JVM unit tests (the Android one is a stub there).
