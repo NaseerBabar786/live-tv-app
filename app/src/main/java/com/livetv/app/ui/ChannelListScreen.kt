@@ -352,7 +352,7 @@ fun ChannelListScreen(
                             },
                             colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
-                        ) { Text(tileLayout.label, fontWeight = FontWeight.Bold) }
+                        ) { Text("${tileLayout.label} Mode", fontWeight = FontWeight.Bold) }
                     }
                     IconButton(
                         onClick = {
