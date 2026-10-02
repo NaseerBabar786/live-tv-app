@@ -5,13 +5,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          for p in chlivemta1.akamaized.net/hls/live/2008145/mta1 chlivemta1.akamaized.net/hls/live/2008145/mta2 livemtaasia.akamaized.net/hls/live/2039224/mta6asia livemtaasia.akamaized.net/hls/live/2039224/mtaasia2 chlivemta1.akamaized.net/hls/live/2010556/mta3alarabia chlivemta.akamaized.net/hls/live/2016718/mta8; do
-            for ref in "" "https://www.mta.tv/"; do
-              echo "== $p referer=[$ref]"
-              curl -s -m 20 -o body.txt -D - ${ref:+-e "$ref" -H "Origin: https://www.mta.tv"} "https://$p/playlist.m3u8" | head -12
-              head -c 400 body.txt; echo
-            done
+          for p in chlivemta1.akamaized.net/hls/live/2008145/mta1 chlivemta1.akamaized.net/hls/live/2008145/mta2 livemtaasia.akamaized.net/hls/live/2039224/mta6asia livemtaasia.akamaized.net/hls/live/2039224/mtaasia2 chlivemta.akamaized.net/hls/live/2010555/mtaafrica1 chlivemta.akamaized.net/hls/live/2010555/mtaafrica2; do
+            echo "== variant $p"; curl -s -m 20 -o v.txt -w '%{http_code}\n' "https://$p/playlist_4300.m3u8"; head -c 300 v.txt; echo
+            seg=$(grep -v '^#' v.txt | head -1); [ -n "$seg" ] && { case $seg in http*) u=$seg;; *) u="https://$p/$seg";; esac; echo "seg $u"; curl -s -m 20 -o /dev/null -w 'seg %{http_code} %{size_download}\n' "$u"; }
           done
-          echo "== mta.tv live page links"
-          curl -sL -m 20 https://www.mta.tv/live | grep -oE 'https?://[^"'"'"' ]+\.m3u8[^"'"'"' ]*' | sort -u | head -40
-          curl -sL -m 20 https://www.mta.tv/ | grep -oE 'https?://[^"'"'"' ]+(akamaized|m3u8)[^"'"'"' ]*' | sort -u | head -40
+          C=https://dq1c55erlhlb2.cloudfront.net/out/v1/prod-mtai-live-shared
+          echo "== cloudfront mta1"; curl -s -m 20 -w '\n%{http_code}\n' $C/prod_mta1_world_main/prod_mta1_world_main-origin-v1/index-hls.m3u8 | head -20
+          echo "== site pages"
+          for pg in https://www.mta.tv/live https://www.mta.tv/ https://www.mta.tv/live/mta2 https://www.mta.tv/live/mta-2 https://www.mta.tv/channels; do
+            echo "-- $pg"; curl -sL -m 20 "$pg" | grep -oE 'prod_mta[a-z0-9_]+|cloudfront\.net/[^"'"'"' ]+|/live/[a-z0-9-]+' | sort -u | head -40
+          done
+          for n in mta2_europe mta3_arabia mta3_alarabia mta4_africa mta5_africa mta6_asia mta7_asia mta8_america mta2_europe_main mta1_world; do
+            for s in main ""; do id=prod_${n}${s:+_$s}; echo "try $id $(curl -s -m 10 -o /dev/null -w '%{http_code}' $C/$id/$id-origin-v1/index-hls.m3u8)"; done
+          done
