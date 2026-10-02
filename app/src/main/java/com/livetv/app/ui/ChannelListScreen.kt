@@ -197,9 +197,9 @@ fun ChannelListScreen(
     // Only the highlighted tile has sound; the speaker button in the top bar mutes it (remembered).
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
-    // TV and tablet layout, picked with the button in the top bar (remembered).
+    // TV and tablet layout, picked with the button in the top bar; starts in 1+List each time the app opens.
     var tileLayout by remember {
-        mutableStateOf(TileLayout.entries.firstOrNull { it.name == prefs.getString(PREF_TILE_LAYOUT, null) } ?: TileLayout.Eight)
+        mutableStateOf(sessionTileLayout ?: TileLayout.List)
     }
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
     // "1+List": the channel playing on the left, kept when coming back from full screen.
@@ -352,7 +352,7 @@ fun ChannelListScreen(
                         TextButton(
                             onClick = {
                                 tileLayout = TileLayout.entries[(tileLayout.ordinal + 1) % TileLayout.entries.size]
-                                prefs.edit().putString(PREF_TILE_LAYOUT, tileLayout.name).apply()
+                                sessionTileLayout = tileLayout
                             },
                             colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
@@ -1159,7 +1159,11 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     List("1+List", 1, 1),
 }
 
-private const val PREF_TILE_LAYOUT = "tile_layout"
+/**
+ * The layout picked with the layout button since the app was opened. Each time the app opens
+ * it starts in 1+List (the user's choice), so the pick is kept only until then, not saved.
+ */
+private var sessionTileLayout: TileLayout? = null
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 
