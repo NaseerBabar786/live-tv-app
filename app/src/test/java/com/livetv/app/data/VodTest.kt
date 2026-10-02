@@ -57,3 +57,26 @@ class VodTest {
         assertEquals("Chapter One", shows[2].episodes[0].label)
     }
 }
+
+class VodLanguageTest {
+    private fun ch(name: String, group: String? = null, language: String? = null, category: String? = null) =
+        Channel(name = name, url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ", group = group, language = language, category = category)
+
+    @Test
+    fun languages() {
+        assertEquals(Vod.Language.URDU, Vod.language(ch("Kaffara Episode 1", language = "Urdu")))
+        assertEquals(Vod.Language.HINDI, Vod.language(ch("Pushpa", language = "hin")))
+        assertEquals(Vod.Language.PUNJABI, Vod.language(ch("Carry On Jatta", language = "Punjabi")))
+        assertEquals(Vod.Language.HINDI, Vod.language(ch("Pushpa", group = "Hindi dubbed movies")))
+        assertEquals(Vod.Language.URDU, Vod.language(ch("Ishq Episode 2", group = "Pakistani Dramas")))
+        assertEquals(Vod.Language.ENGLISH, Vod.language(ch("His Girl Friday (1940)", group = "1940s")))
+    }
+
+    @Test
+    fun seriesAndShows() {
+        assertEquals(true, Vod.isShow(ch("TAMASHA SEASON 5 Episode 55", category = "Shows")))
+        assertEquals(false, Vod.isShow(ch("Kaffara Episode 45", category = "Series")))
+        assertEquals(true, Vod.isShow(ch("Jeeto Pakistan Episode 3")))
+        assertEquals(false, Vod.isShow(ch("Ishq Murshid Episode 30", group = "HUM TV dramas")))
+    }
+}

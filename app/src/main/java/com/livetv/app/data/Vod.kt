@@ -15,6 +15,49 @@ object Vod {
 
     enum class Kind { LIVE, MOVIE, EPISODE }
 
+    /** The four languages Movies & Series is organised by, in the order they're shown. */
+    enum class Language(val label: String) { URDU("Urdu"), HINDI("Hindi"), PUNJABI("Punjabi"), ENGLISH("English") }
+
+    /** The sections inside a language, in the order they're shown. */
+    enum class Section(val label: String) { MOVIES("Movies"), SERIES("Series"), SHOWS("Shows") }
+
+    private val languageWords = listOf(
+        Language.URDU to listOf("urdu", "urd", "pakistani", "pakistan"),
+        Language.HINDI to listOf("hindi", "hin", "bollywood", "dubbed", "indian"),
+        Language.PUNJABI to listOf("punjabi", "panjabi", "pan"),
+        Language.ENGLISH to listOf("english", "eng"),
+    )
+
+    /**
+     * The video's language: the playlist's tvg-language first, then words in its group or
+     * name ("Pakistani dramas", "Hindi Dubbed"). Anything else counts as English.
+     */
+    fun language(channel: Channel): Language {
+        channel.language?.let { lang ->
+            val l = lang.trim().lowercase()
+            languageWords.firstOrNull { (_, words) -> l in words || words.any { l.startsWith(it) && it.length > 3 } }
+                ?.let { return it.first }
+        }
+        val text = "${channel.group.orEmpty()} ${channel.category.orEmpty()} ${channel.name}".lowercase()
+        val words = Regex("""[a-z]+""").findAll(text).map { it.value }.toSet()
+        return languageWords.firstOrNull { (_, list) -> list.any { it.length > 3 && it in words } }?.first ?: Language.ENGLISH
+    }
+
+    private val showWords = Regex(
+        """\b(show|shows|reality|talk|game show|tamasha|jeeto|hasna mana|podcast|morning|ramzan|ramadan|transmission|quiz|comedy night)\b""",
+        RegexOption.IGNORE_CASE,
+    )
+
+    /** Whether an episode belongs to a show (reality, talk, game) rather than a drama series. */
+    fun isShow(channel: Channel): Boolean {
+        channel.category?.let { c ->
+            if (c.contains("show", true)) return true
+            if (c.contains("series", true) || c.contains("drama", true)) return false
+        }
+        return showWords.containsMatchIn(channel.group.orEmpty().replace("TV show", "")) ||
+            showWords.containsMatchIn(parse(channel.name)?.first ?: channel.name)
+    }
+
     /** Free public-domain films and TV, rebuilt weekly by tools/build_movies.py. */
     const val FREE_MOVIES_URL = "https://tv.bulkbazaar.ca/Movies.m3u"
 

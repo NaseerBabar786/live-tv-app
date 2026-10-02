@@ -52,6 +52,10 @@ MIN_MOVIE_MINUTES = 80
 DUBBED = re.compile(r"hindi\s+dubbed", re.IGNORECASE)
 MOVIE_SKIP = re.compile(r"\b(trailer|teaser|promo|scenes?|songs?|jukebox|comedy|action scene|fight|clip|shorts)\b", re.IGNORECASE)
 
+# Reality, game and talk shows, as opposed to drama serials. Live TV files them under Shows.
+SHOW = re.compile(r"\b(tamasha|show|reality|jeeto|hasna mana|game|talk|podcast|morning|ramzan|ramadan|transmission|"
+                  r"mazaaq raat|g sarkar|the knock)\b", re.IGNORECASE)
+
 SKIP = re.compile(
     r"\b(teaser|promo|preview|trailer|ost|title song|best scene|scenes?|clip|highlights?|"
     r"bts|behind the scenes|review|reaction|shorts|making|interview|recap|status)\b|#shorts",
@@ -289,12 +293,13 @@ def main():
         if v["movie"].lower() in names:  # the same film from two channels
             continue
         names.add(v["movie"].lower())
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" '
-                     f'group-title="Hindi dubbed movies",{v["movie"]}')
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Hindi" '
+                     f'tvg-genre="Movies" group-title="Hindi dubbed movies",{v["movie"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in rows:
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" '
-                     f'group-title="{v["channel"]} dramas",{v["show"]} Episode {v["episode"]}')
+        kind = "Shows" if SHOW.search(v["show"]) else "Series"
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Urdu" '
+                     f'tvg-genre="{kind}" group-title="{v["channel"]}",{v["show"]} Episode {v["episode"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     with open(os.path.join(DOCS, "Dramas.m3u"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
