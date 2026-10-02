@@ -135,6 +135,17 @@ jobs:
               --notes "Release build for Google Play (.aab) and for testing (.apk). Built from ${{ github.sha }}." \
               --latest=false
           fi
+          # A fixed "live-tv-plus" release always holds the newest build, so this link never changes:
+          # https://github.com/NaseerBabar786/live-tv-app/releases/download/live-tv-plus/LiveTVPlus.apk
+          if gh release view live-tv-plus > /dev/null 2>&1; then
+            gh release upload live-tv-plus LiveTVPlus.apk LiveTVPlus.aab --clobber
+          else
+            gh release create live-tv-plus LiveTVPlus.apk LiveTVPlus.aab \
+              --title "Live TV Plus (newest)" \
+              --notes "Always the newest Live TV Plus build, for testing on phones and TVs." \
+              --latest=false
+          fi
+          gh release edit live-tv-plus --notes "Always the newest Live TV Plus build (now $version), for testing on phones and TVs." || true
 
       # Live Cam gets its own release per version, never marked "latest", so Live TV's
       # download link and update check keep finding Live TV. Phones and TVs download it from
