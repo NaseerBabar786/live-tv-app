@@ -24,6 +24,13 @@ class VodTest {
     }
 
     @Test
+    fun youTubeVideos() {
+        assertEquals(Vod.Kind.EPISODE, Vod.kind(ch("Kaffara Episode 45", "https://www.youtube.com/watch?v=dQw4w9WgXcQ")))
+        assertEquals(Vod.Kind.MOVIE, Vod.kind(ch("A film", "https://youtu.be/dQw4w9WgXcQ")))
+        assertEquals(Vod.Kind.LIVE, Vod.kind(ch("A channel", "https://www.youtube.com/@ARYDigitalasia")))
+    }
+
+    @Test
     fun parsesEpisodeNumbers() {
         assertEquals(Triple("Ertugrul", 1, 5), Vod.parse("Ertugrul S01 E05"))
         assertEquals(Triple("The Office", 2, 3), Vod.parse("The Office - S02E03 - The Dundies"))
