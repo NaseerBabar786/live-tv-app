@@ -1,0 +1,12 @@
+# Temporary probe; runs only on pushes to this branch.
+name: Probe Pakistani live streams
+on:
+  push:
+    branches: [probe-pk-live]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/probe_pk_live.py
