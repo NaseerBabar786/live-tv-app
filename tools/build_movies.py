@@ -31,6 +31,7 @@ import urllib.parse
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+WIKIDATA = "https://query.wikidata.org/sparql"
 SEARCH = "https://archive.org/advancedsearch.php"
 SCRAPE = "https://archive.org/services/search/v1/scrape"
 METADATA = "https://archive.org/metadata/"
@@ -42,12 +43,12 @@ MIN_EPISODES = 3
 MIN_MOVIE_SECONDS = 40 * 60
 
 
-def get_json(url, tries=7):
+def get_json(url, tries=7, timeout=150):
     """Fetches JSON, waiting and retrying when the Archive is busy (503, timeouts)."""
     for attempt in range(tries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-            with urllib.request.urlopen(req, timeout=150) as r:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
                 return json.load(r)
         except Exception as e:  # noqa: BLE001
             if attempt + 1 == tries:
@@ -67,7 +68,7 @@ def search(collection, rows):
     try:
         params = {"q": q, "fields": "identifier,title,year", "sorts": "downloads desc",
                   "count": str(max(100, min(rows, 10000)))}
-        docs = get_json(SCRAPE + "?" + urllib.parse.urlencode(params), tries=3).get("items", [])
+        docs = get_json(SCRAPE + "?" + urllib.parse.urlencode(params), tries=3, timeout=60).get("items", [])
         if docs:
             return docs[:rows]
     except Exception as e:  # noqa: BLE001
@@ -75,7 +76,7 @@ def search(collection, rows):
     try:
         params = [("q", q), ("fl[]", "identifier"), ("fl[]", "title"), ("fl[]", "year"),
                   ("sort[]", "downloads desc"), ("rows", str(rows)), ("page", "1"), ("output", "json")]
-        docs = get_json(SEARCH + "?" + urllib.parse.urlencode(params), tries=3)["response"]["docs"]
+        docs = get_json(SEARCH + "?" + urllib.parse.urlencode(params), tries=3, timeout=60)["response"]["docs"]
         if docs:
             return docs
     except Exception as e:  # noqa: BLE001
@@ -85,13 +86,84 @@ def search(collection, rows):
         params = {"q": q, "fields": "identifier,title,year,downloads", "count": "5000"}
         if cursor:
             params["cursor"] = cursor
-        page = get_json(SCRAPE + "?" + urllib.parse.urlencode(params))
+        page = get_json(SCRAPE + "?" + urllib.parse.urlencode(params), tries=3, timeout=60)
         docs += page.get("items", [])
         cursor = page.get("cursor")
         if not cursor:
             break
     docs.sort(key=lambda d: -int(d.get("downloads") or 0))
     return docs[:rows]
+
+FILM_QUERY = """
+SELECT ?ia ?title ?date ?links WHERE {
+  VALUES ?type { wd:Q11424 wd:Q24869 wd:Q202866 wd:Q506240 }
+  ?film wdt:P31 ?type; wdt:P724 ?ia; wikibase:sitelinks ?links.
+  ?film rdfs:label ?title. FILTER(LANG(?title) = "en")
+  OPTIONAL { ?film wdt:P577 ?date }
+}
+ORDER BY DESC(?links)
+LIMIT %d
+"""
+
+EPISODE_QUERY = """
+SELECT ?ia ?title ?show ?date WHERE {
+  ?ep wdt:P31 wd:Q21191270; wdt:P724 ?ia; wdt:P179 ?series.
+  ?ep rdfs:label ?title. FILTER(LANG(?title) = "en")
+  ?series rdfs:label ?show. FILTER(LANG(?show) = "en")
+  OPTIONAL { ?ep wdt:P577 ?date }
+}
+LIMIT %d
+"""
+
+
+def wikidata(query):
+    """Rows of a Wikidata query as plain dicts; empty when Wikidata can't be reached."""
+    try:
+        url = WIKIDATA + "?" + urllib.parse.urlencode({"query": query, "format": "json"})
+        rows = get_json(url, tries=3)["results"]["bindings"]
+    except Exception as e:  # noqa: BLE001
+        print(f"  Wikidata failed ({e})", file=sys.stderr)
+        return []
+    return [{k: v["value"] for k, v in r.items()} for r in rows]
+
+
+def wikidata_items(query, limit):
+    """Archive items Wikidata links to films or TV episodes, one row per item."""
+    seen, docs = set(), []
+    for r in wikidata(query % limit):
+        ident = r["ia"].strip()
+        if not ident or ident in seen:
+            continue
+        seen.add(ident)
+        docs.append({"identifier": ident, "title": r.get("title"), "year": r.get("date", "")[:4],
+                     "date": r.get("date", ""), "show": r.get("show")})
+    return docs
+
+
+search_down = False
+
+
+def archive_search(collection, rows):
+    """Archive search, or nothing when it's down (it often is for GitHub's runners)."""
+    global search_down
+    if search_down:
+        return []
+    try:
+        return search(collection, rows)
+    except Exception as e:  # noqa: BLE001
+        print(f"  Archive search for {collection} failed ({e}); skipping it", file=sys.stderr)
+        search_down = True
+        return []
+
+
+def merge(*lists):
+    seen, out = set(), []
+    for docs in lists:
+        for d in docs:
+            if d["identifier"] not in seen:
+                seen.add(d["identifier"])
+                out.append(d)
+    return out
 
 
 def seconds(length):
@@ -110,7 +182,7 @@ def seconds(length):
 def mp4_files(identifier):
     """The item's playable MP4s, best copy of each original, in file order."""
     try:
-        meta = get_json(METADATA + urllib.parse.quote(identifier))
+        meta = get_json(METADATA + urllib.parse.quote(identifier), tries=3, timeout=60)
     except Exception as e:  # noqa: BLE001 - one bad item shouldn't stop the build
         print(f"  skip {identifier}: {e}", file=sys.stderr)
         return []
@@ -157,8 +229,14 @@ def main():
     ap.add_argument("--items", type=int, default=800, help="TV items to look at")
     args = ap.parse_args()
 
-    films = search("feature_films", args.movies)
-    tv = search("classic_tv", args.items)
+    # Wikidata's links from films and episodes to Archive items come first: its query
+    # service is reliable from GitHub's runners and its films are the well-known ones.
+    # The Archive's own search adds more when it is up.
+    wd_films = wikidata_items(FILM_QUERY, args.movies)
+    wd_tv = sorted(wikidata_items(EPISODE_QUERY, args.items), key=lambda d: (d["show"] or "", d["date"]))
+    print(f"Wikidata: {len(wd_films)} films, {len(wd_tv)} TV episodes")
+    films = merge(wd_films, archive_search("feature_films", args.movies))
+    tv = merge(wd_tv, archive_search("classic_tv", args.items))
     print(f"Search: {len(films)} films, {len(tv)} TV items")
 
     with cf.ThreadPoolExecutor(8) as pool:
@@ -190,7 +268,9 @@ def main():
         title = clean(d.get("title"))
         if not files or not title:
             continue
-        if len(files) > 1:
+        if d.get("show"):
+            shows.setdefault(clean(d["show"]), []).append((title, ident, files[0]["name"]))
+        elif len(files) > 1:
             show = show_and_episode(title)[0] if show_and_episode(title) else title
             for f in files:
                 ep = clean(f["title"] or os.path.splitext(os.path.basename(f["name"]))[0])
