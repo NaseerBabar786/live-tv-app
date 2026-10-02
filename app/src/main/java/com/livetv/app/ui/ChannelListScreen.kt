@@ -37,6 +37,8 @@ import com.livetv.app.data.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import android.text.format.DateFormat
+import java.util.Locale
+import java.text.SimpleDateFormat
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.TextButton
@@ -1262,11 +1264,15 @@ private fun Message(
     }
 }
 
-/** The time, in the phone's 12- or 24-hour style, updated on the minute. */
+/** The date and time (e.g. "Fri, Oct 2  9:54 PM"), in the phone's style, updated on the minute. */
 @Composable
 private fun Clock() {
     val context = LocalContext.current
     val format = remember { DateFormat.getTimeFormat(context) }
+    val dateFormat = remember {
+        val locale = Locale.getDefault()
+        SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "EEEMMMd"), locale)
+    }
     var now by remember { mutableStateOf(Date()) }
     LaunchedEffect(Unit) {
         while (true) {
@@ -1275,7 +1281,7 @@ private fun Clock() {
         }
     }
     Text(
-        format.format(now),
+        dateFormat.format(now) + "  " + format.format(now),
         fontSize = 13.sp,
         lineHeight = 16.sp,
         fontWeight = FontWeight.Medium,
