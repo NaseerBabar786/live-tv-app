@@ -926,7 +926,17 @@ private fun ChannelCard(
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
             .onPreviewKeyEvent(onKey)
             .onFocusChanged { focused = it.hasFocus; onFocusChange(it.hasFocus) }
-            .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
+            // TV layouts: a thin, soft yellow line marks the tile with the sound, with no tint over it.
+            .then(if (!glow && focused) Modifier.border(1.dp, FocusColor.copy(alpha = 0.7f), CardShape) else Modifier)
+            .then(
+                if (glow) Modifier.combinedClickable(onClick = onClick, onLongClick = onToggleFavorite)
+                else Modifier.combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onClick,
+                    onLongClick = onToggleFavorite,
+                )
+            ),
     ) {
         Box(
             Modifier
@@ -971,7 +981,6 @@ private fun ChannelCard(
                     Icon(Icons.Filled.KeyboardArrowDown, contentDescription = null, tint = Color.White)
                 }
             }
-            if (!glow && focused) SoundBadge(Modifier.align(Alignment.BottomEnd))
             if (channel.number > 0) {
                 Text(
                     "${channel.number}",
@@ -1011,21 +1020,6 @@ private fun ChannelCard(
             )
         }
     }
-}
-
-/** A small speaker on the tile that has the sound (TV layouts, instead of the yellow highlight). */
-@Composable
-private fun SoundBadge(modifier: Modifier) {
-    Icon(
-        Icons.AutoMirrored.Filled.VolumeUp,
-        contentDescription = "Sound",
-        tint = Color.White,
-        modifier = modifier
-            .padding(8.dp)
-            .background(Color.Black.copy(alpha = 0.6f), ChipShape)
-            .padding(4.dp)
-            .size(22.dp),
-    )
 }
 
 /** The app icon: a white TV with a red play button on a red tile. */
