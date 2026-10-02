@@ -40,6 +40,18 @@ CHANNELS = [
     ("Geo Entertainment", ["@HARPALGEO", "@harpalgeoofficial"], "HAR PAL GEO"),
 ]
 
+# Official YouTube channels of the companies that own the Hindi dubbed rights and
+# publish full movies free themselves.
+MOVIE_CHANNELS = [
+    ("Goldmines", ["@GoldminesTelefilms", "@Goldmines"], "Goldmines Telefilms"),
+    ("Pen Movies", ["@PenMovies"], "Pen Movies"),
+    ("RKD Studios", ["@RKDStudios"], "RKD Studios"),
+    ("Aditya Movies", ["@AdityaMovies"], "Aditya Movies"),
+]
+MIN_MOVIE_MINUTES = 80
+DUBBED = re.compile(r"hindi\s+dubbed", re.IGNORECASE)
+MOVIE_SKIP = re.compile(r"\b(trailer|teaser|promo|scenes?|songs?|jukebox|comedy|action scene|fight|clip|shorts)\b", re.IGNORECASE)
+
 SKIP = re.compile(
     r"\b(teaser|promo|preview|trailer|ost|title song|best scene|scenes?|clip|highlights?|"
     r"bts|behind the scenes|review|reaction|shorts|making|interview|recap|status)\b|#shorts",
@@ -157,6 +169,40 @@ def episode(title):
     return show, int(number)
 
 
+def movie_name(title):
+    """ "Pushpa (Hindi Dubbed) Full Movie | Allu Arjun" to "Pushpa"."""
+    name = re.split(r"\s*[|(\[]|\s+-\s+|\s+(?:new\s+)?(?:south\s+)?(?:hindi\s+dubbed|full\s+(?:hd\s+)?movie)", title, 1, flags=re.I)[0]
+    return name.strip(" -|:–") or None
+
+
+def dubbed_movies(kept, today):
+    """Adds full Hindi dubbed movies from MOVIE_CHANNELS to kept."""
+    for name, handles, query in MOVIE_CHANNELS:
+        handle, cid = channel_id(handles, query)
+        if not cid:
+            print(f"{name}: channel not found", file=sys.stderr)
+            continue
+        videos, seen = [], set()
+        for url in (f"https://www.youtube.com/channel/{cid}/videos",
+                    f"https://www.youtube.com/channel/{cid}/search?query=hindi+dubbed+full+movie"):
+            try:
+                for v in videos_page(url):
+                    if v[0] not in seen:
+                        seen.add(v[0])
+                        videos.append(v)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name}: {url} failed ({e})", file=sys.stderr)
+        new = 0
+        for vid, title, mins in videos:
+            if not DUBBED.search(title) or MOVIE_SKIP.search(title) or (mins or 0) < MIN_MOVIE_MINUTES:
+                continue
+            movie = movie_name(title)
+            if movie and vid not in kept:
+                kept[vid] = {"movie": movie, "channel": name, "title": title, "added": today.isoformat()}
+                new += 1
+        print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new Hindi dubbed movies")
+
+
 def main():
     state_path = os.path.join(DOCS, "dramas.json")
     try:
@@ -216,23 +262,32 @@ def main():
         for t in skipped[:6]:
             print(f"    skipped: {t}")
 
+    dubbed_movies(kept, today)
+
     cutoff = (today - dt.timedelta(days=KEEP_DAYS)).isoformat()
     kept = {k: v for k, v in kept.items() if v["added"] >= cutoff}
-    rows = sorted(kept.items(), key=lambda kv: (kv[1]["channel"], kv[1]["show"].lower(), kv[1]["episode"]))
+    episodes = {k: v for k, v in kept.items() if "show" in v}
+    movies = {k: v for k, v in kept.items() if "movie" in v}
+    rows = sorted(episodes.items(), key=lambda kv: (kv[1]["channel"], kv[1]["show"].lower(), kv[1]["episode"]))
 
-    lines = ["#EXTM3U", "# Pakistani drama episodes from the channels' official YouTube uploads."]
+    lines = ["#EXTM3U", "# Pakistani dramas and Hindi dubbed movies from their owners' official YouTube uploads."]
+    for vid, v in sorted(movies.items(), key=lambda kv: kv[1]["movie"].lower()):
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" '
+                     f'group-title="Hindi dubbed movies",{v["movie"]}')
+        lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in rows:
         lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" '
                      f'group-title="{v["channel"]} dramas",{v["show"]} Episode {v["episode"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     with open(os.path.join(DOCS, "Dramas.m3u"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
-    shows = {(v["channel"], v["show"]) for v in kept.values()}
+    shows = {(v["channel"], v["show"]) for v in episodes.values()}
     with open(state_path, "w", encoding="utf-8") as f:
         json.dump({"built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-                   "shows": len(shows), "episodes": len(kept), "videos": kept}, f, indent=1, ensure_ascii=False)
+                   "shows": len(shows), "episodes": len(episodes), "movies": len(movies), "videos": kept},
+                  f, indent=1, ensure_ascii=False)
         f.write("\n")
-    print(f"Wrote docs/Dramas.m3u: {len(shows)} shows, {len(kept)} episodes")
+    print(f"Wrote docs/Dramas.m3u: {len(shows)} shows, {len(episodes)} episodes, {len(movies)} Hindi dubbed movies")
     if not kept:
         sys.exit("No episodes found; keeping the build red so the old playlist isn't replaced.")
 
