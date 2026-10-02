@@ -19,6 +19,17 @@ class YouTubeTest {
         assertNull(YouTube.videoId("https://www.youtube.com/@ARYDigitalasia"))
         assertNull(YouTube.videoId("https://example.com/watch?v=dQw4w9WgXcQ"))
         assertNull(YouTube.videoId("http://x/live/star.m3u8"))
+        assertEquals(false, YouTube.isYouTube("http://x/live/star.m3u8"))
+    }
+}
+
+class PakistaniLiveNamesTest {
+    @Test
+    fun matchesTheSameChannelUnderAnotherSpelling() {
+        assertEquals(ChannelRepository.nameKey("92 News"), ChannelRepository.nameKey("92 News HD"))
+        assertEquals(ChannelRepository.nameKey("BOL News"), ChannelRepository.nameKey("BOL NEWS"))
+        assertEquals(true, ChannelRepository.nameKey("Aaj TV") in ChannelRepository.liveNames("Aaj News"))
+        assertEquals(false, ChannelRepository.nameKey("Hum TV") in ChannelRepository.liveNames("Hum News"))
     }
 }
 

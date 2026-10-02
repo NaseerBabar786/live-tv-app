@@ -58,6 +58,11 @@ class ChannelRepository(context: Context) {
         get() = Playlist.fromJson(prefs.getString(KEY_PLAYLISTS, null))
         set(value) = prefs.edit { putString(KEY_PLAYLISTS, Playlist.toJson(value)) }
 
+    /** Whether MTA's channels and Library programmes are shown (Live TV only; off by default). */
+    var showMta: Boolean
+        get() = Edition.HAS_VOD && prefs.getBoolean(KEY_MTA, false)
+        set(value) = prefs.edit { putBoolean(KEY_MTA, value) }
+
     var lastChannelUrl: String?
         get() = prefs.getString(KEY_LAST_CHANNEL, null)
         set(value) = prefs.edit { putString(KEY_LAST_CHANNEL, value) }
@@ -108,9 +113,11 @@ class ChannelRepository(context: Context) {
                 else -> M3uParser.parse(downloadCached(source, source))
             }
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
+            // MTA's own channels go after the list's, unless the list already has them.
+            val withMta = withPakistaniLive(channels).let { if (showMta) it + Mta.CHANNELS else it }
             // Lists can repeat a stream (e.g. one channel filed under two names). The
             // stream URL is the channel's key in the grid, and a repeated key crashes it.
-            channels.distinctBy { it.id }
+            withMta.distinctBy { it.id }
         }
     }
 
@@ -120,7 +127,8 @@ class ChannelRepository(context: Context) {
      * name when the playlist gives none.
      */
     suspend fun loadVod(): List<Channel> = coroutineScope {
-        (playlists + Vod.builtIn()).map { playlist ->
+        val mta = if (showMta) listOf(Playlist("MTA", Mta.VIDEOS_URL)) else emptyList()
+        (playlists + Vod.builtIn() + mta).map { playlist ->
             async(Dispatchers.IO) {
                 runCatching {
                     val text = when {
@@ -134,6 +142,26 @@ class ChannelRepository(context: Context) {
                 }.getOrDefault(emptyList())
             }
         }.awaitAll().flatten().distinctBy { it.id }
+    }
+
+    /**
+     * Adds the Pakistani channels that stream live on their own YouTube channel (Live TV only,
+     * when the list has Pakistani channels), after the last Pakistani channel. Each replaces a
+     * channel of the same name in the list, whose own stream doesn't work, so none is listed twice.
+     */
+    private fun withPakistaniLive(channels: List<Channel>): List<Channel> {
+        if (!Edition.HAS_VOD) return channels
+        val last = channels.indexOfLast { it.country == "pk" }
+        if (last < 0) return channels
+        val live = runCatching { M3uParser.parse(downloadCached("pakistan-live", PAKISTAN_LIVE_URL)) }
+            .getOrDefault(emptyList())
+            .filter { YouTube.isYouTube(it.url) }
+        if (live.isEmpty()) return channels
+        val group = channels[last].group
+        val names = live.flatMap { liveNames(it.name) }.toSet()
+        val kept = channels.filterIndexed { i, c -> i > last || c.country != "pk" || nameKey(c.name) !in names }
+        val at = kept.indexOfLast { it.country == "pk" } + 1
+        return kept.take(at) + live.map { it.copy(group = group ?: it.group) } + kept.drop(at)
     }
 
     /** Every channel in the daily-checked list on tv.bulkbazaar.ca. */
@@ -245,7 +273,18 @@ class ChannelRepository(context: Context) {
         private const val KEY_LANGUAGES = "languages"
         private const val KEY_PLAYLISTS = "playlists"
         private const val KEY_PROVIDER = "provider"
+        private const val KEY_MTA = "mta"
         const val PROVIDER_FAMELACK = "famelack"
         const val PROVIDER_CHECKED = "checked"
+        const val PAKISTAN_LIVE_URL = "https://tv.bulkbazaar.ca/PakistanLive.m3u"
+
+        /** "92 News HD" and "92 News" are the same channel. */
+        fun nameKey(name: String) = name.lowercase().filter { it.isLetterOrDigit() }.removeSuffix("hd")
+
+        /** The names a live channel replaces: its own, and its old one ("Aaj TV" for "Aaj News"). */
+        fun liveNames(name: String): List<String> =
+            listOfNotNull(nameKey(name), OLD_NAMES[nameKey(name)])
+
+        private val OLD_NAMES = mapOf("aajnews" to "aajtv")
     }
 }

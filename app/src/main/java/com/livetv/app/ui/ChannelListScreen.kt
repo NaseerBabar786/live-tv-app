@@ -19,6 +19,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.Player
+import com.livetv.app.data.YouTube
 import com.livetv.app.player.StreamPlayer
 import androidx.compose.foundation.layout.IntrinsicSize
 import com.livetv.app.data.Weather
@@ -281,6 +282,7 @@ fun ChannelListScreen(
             for (id in ids) {
                 if (id in playing || id in snapshots) continue
                 val channel = state.channels.firstOrNull { it.id == id } ?: continue
+                if (YouTube.isYouTube(channel.url)) continue // plays only in YouTube's player; its picture shows
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
                 p.stream.player.volume = 0f
                 rowPreviews[id] = p

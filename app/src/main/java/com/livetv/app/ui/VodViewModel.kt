@@ -69,16 +69,16 @@ class VodViewModel(app: Application) : AndroidViewModel(app) {
     private val _state = MutableStateFlow(VodState())
     val state: StateFlow<VodState> = _state.asStateFlow()
 
-    /** The playlists the lists were last loaded from. */
-    private var loadedFor: List<Playlist>? = null
+    /** The playlists (and MTA setting) the lists were last loaded from. */
+    private var loadedFor: Pair<List<Playlist>, Boolean>? = null
 
-    /** Loads the lists the first time, and again whenever the saved playlists have changed. */
+    /** Loads the lists the first time, and again whenever the saved playlists or MTA setting have changed. */
     fun refreshIfChanged() {
-        if (repo.playlists != loadedFor) reload()
+        if (repo.playlists to repo.showMta != loadedFor) reload()
     }
 
     fun reload() {
-        loadedFor = repo.playlists
+        loadedFor = repo.playlists to repo.showMta
         val hasPlaylists = repo.playlists.isNotEmpty() || Vod.builtIn().isNotEmpty()
         _state.update { it.copy(loading = hasPlaylists, hasPlaylists = hasPlaylists) }
         if (!hasPlaylists) return

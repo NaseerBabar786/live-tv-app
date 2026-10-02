@@ -25,6 +25,9 @@ object YouTube {
     }
 
     fun watchUrl(id: String) = "https://www.youtube.com/watch?v=$id"
+
+    /** Whether the link plays in YouTube's player (a video, or a channel's live stream). */
+    fun isYouTube(url: String): Boolean = videoId(url) != null
 }
 
 /** Bilibili (bilibili.tv) video and series links. They open in the Bilibili app, which is the only place they play. */
