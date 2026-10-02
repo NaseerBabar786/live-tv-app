@@ -79,7 +79,7 @@ import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
@@ -149,7 +149,7 @@ fun ChannelListScreen(
     settings: @Composable (onDismiss: () -> Unit) -> Unit,
     /** Stream Player Plus: adds the built-in demo playlist. */
     onTryDemo: () -> Unit = {},
-    /** Opens Movies & Series; null hides its button. */
+    /** Opens the Library (movies, series and shows); null hides its button. */
     onOpenVod: (() -> Unit)? = null,
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
@@ -358,8 +358,13 @@ fun ChannelListScreen(
                         ) { Text("${tileLayout.label} Mode", fontWeight = FontWeight.Bold) }
                     }
                     if (onOpenVod != null) {
-                        IconButton(onClick = onOpenVod, modifier = Modifier.focusGlow()) {
-                            Icon(Icons.Filled.Movie, contentDescription = "Movies & Series")
+                        TextButton(
+                            onClick = onOpenVod,
+                            colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                            modifier = Modifier.focusGlow(),
+                        ) {
+                            Icon(Icons.Filled.VideoLibrary, contentDescription = null)
+                            Text("Library", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
                         }
                     }
                     IconButton(
@@ -1144,7 +1149,7 @@ private val MinTileWidth = 170.dp
 /** How many tiles a TV screen shows; the label is what the top-bar button reads. */
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
     Eight("2×4", 4, 2),
-    Six("3×2", 3, 2),
+    Six("2×3", 3, 2),
     Two("2×1", 2, 1),
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
