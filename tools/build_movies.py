@@ -227,6 +227,20 @@ def as_list(value):
     return value if isinstance(value, list) else [value] if value else []
 
 
+# US copyright: films and TV from before 1964 whose copyright wasn't renewed are public
+# domain, later ones almost never are. Without a public-domain or CC licence, an item
+# needs a year up to this one (people upload whole modern series to classic_tv too).
+LAST_FREE_YEAR = 1963
+
+
+def item_year(md):
+    for value in (md.get("year"), md.get("date"), md.get("title")):
+        m = re.search(r"\b(18[89]\d|19\d\d|20\d\d)\b", str(value or ""))
+        if m:
+            return int(m.group(1))
+    return None
+
+
 def allowed(md, tv=False):
     """Free to share (a public-domain collection or licence), not a rip, and in a wanted language.
 
@@ -234,7 +248,11 @@ def allowed(md, tv=False):
     """
     collections = {str(c).lower() for c in as_list(md.get("collection"))}
     licence = str(md.get("licenseurl") or "").lower()
-    if not (collections & FREE_COLLECTIONS or "publicdomain" in licence or "creativecommons" in licence):
+    licensed = "publicdomain" in licence or "creativecommons" in licence
+    if not (collections & FREE_COLLECTIONS or licensed):
+        return False
+    year = item_year(md)
+    if not licensed and (year is None or year > LAST_FREE_YEAR):
         return False
     if RIP.search(str(md.get("title") or "")):
         return False
