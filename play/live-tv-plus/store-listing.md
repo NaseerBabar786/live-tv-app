@@ -21,8 +21,8 @@ Live TV Plus shows your channels in a grid with live previews, ready to watch.
 
 Features
 • Works on Android phones, tablets and Android TV, with full TV remote support
-• TV layouts: 2×4 and 3×2 grids, or one player with a channel list
-• Premium (monthly subscription): watch 2 or 4 channels at once with the 1×2 and 2×2 layouts
+• TV layouts: a 3×4 grid, or one player with a channel list
+• Premium (monthly subscription): watch 2, 4 or 6 channels at once with the 1×2, 2×2 and 2×3 layouts
 • Live preview of the highlighted channel, with sound on or off
 • Clock and local weather in the top bar
 • Add as many playlists as you like and switch between them in Settings
