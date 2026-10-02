@@ -60,13 +60,6 @@ fun SponsorScreen(onDone: () -> Unit) {
 @Composable
 private fun SponsorWords(secondsLeft: Int, align: TextAlign) {
     Text(
-        "Thank you for using Live TV!",
-        style = MaterialTheme.typography.headlineSmall,
-        fontWeight = FontWeight.Bold,
-        textAlign = align,
-        color = MaterialTheme.colorScheme.onBackground,
-    )
-    Text(
         "Live TV is free thanks to our sponsor, Bulk Bazaar Inc. Please show them some love: " +
             "visit bulkbazaar.ca and leave them a 5-star review ★★★★★",
         style = MaterialTheme.typography.bodyLarge,
