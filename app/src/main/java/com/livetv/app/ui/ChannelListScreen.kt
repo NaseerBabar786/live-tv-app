@@ -4,10 +4,13 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableLongStateOf
 import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.roundToInt
+import android.app.Activity
 import android.content.Context
+import android.widget.Toast
 import android.net.ConnectivityManager
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -322,6 +325,21 @@ fun ChannelListScreen(
         searching = false
         scope.launch { delay(50); runCatching { searchButtonFocus.requestFocus() } }
     }
+    // Otherwise Back doesn't close the app at once: on a TV it first goes up to the top bar,
+    // then it asks for a second press within 2 seconds.
+    var topBarFocused by remember { mutableStateOf(false) }
+    var lastBackAt by remember { mutableLongStateOf(0L) }
+    BackHandler(enabled = !searching) {
+        val now = System.currentTimeMillis()
+        when {
+            wideScreen && !topBarFocused -> runCatching { layoutButtonFocus.requestFocus() }
+            now - lastBackAt < 2_000 -> (context as? Activity)?.finish()
+            else -> {
+                lastBackAt = now
+                Toast.makeText(context, "Press Back again to exit", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -409,6 +427,7 @@ fun ChannelListScreen(
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
                 },
+                modifier = Modifier.onFocusChanged { topBarFocused = it.hasFocus },
             )
         },
     ) { padding ->
