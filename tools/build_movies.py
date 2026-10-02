@@ -39,6 +39,22 @@ DOWNLOAD = "https://archive.org/download/"
 POSTER = "https://archive.org/services/img/"
 USER_AGENT = "LiveTV-playlist-builder/1.0 (+https://tv.bulkbazaar.ca)"
 MIN_EPISODES = 3
+MAX_EPISODES_PER_SHOW = 40
+MAX_EPISODES = 4000
+# Only items in the Archive's public-domain film and TV collections, or with a
+# public-domain or Creative Commons licence. Wikidata also links to people's own
+# uploads of copyrighted films, so its links have to pass this too.
+FREE_COLLECTIONS = {
+    "feature_films", "classic_tv", "classic_cartoons", "film_noir", "sci-fi_horror",
+    "comedy_films", "silent_films", "prelinger", "moviesandfilms", "classic_tv_1950s",
+    "classic_tv_1960s", "classic_tv_westerns", "classic_tv_comedies", "classic_tv_mystery",
+}
+# Rips and re-uploads of copyrighted releases.
+RIP = re.compile(r"\b(yts|yify|rarbg|bluray|blu-ray|brrip|bdrip|web-?dl|webrip|dvdrip|x264|x265|hevc|720p|1080p|2160p)\b", re.I)
+# The user asked for Hindi, Urdu, Punjabi and English only. Items with no language
+# set are kept (nearly all are old English-language films and TV).
+PUNJABI = {"punjabi", "panjabi", "pan", "pa"}
+LANGUAGES = {"english", "eng", "en", "hindi", "hin", "hi", "urdu", "urd", "ur"} | PUNJABI
 # Films shorter than this are shorts, trailers or newsreels, not movies.
 MIN_MOVIE_SECONDS = 40 * 60
 
@@ -179,19 +195,22 @@ def seconds(length):
         return 0.0
 
 
-def mp4_files(identifier):
+def mp4_files(identifier, tv=False):
     """The item's playable MP4s, best copy of each original, in file order."""
     try:
         meta = get_json(METADATA + urllib.parse.quote(identifier), tries=3, timeout=60)
     except Exception as e:  # noqa: BLE001 - one bad item shouldn't stop the build
         print(f"  skip {identifier}: {e}", file=sys.stderr)
         return []
-    if meta.get("is_dark") or meta.get("metadata", {}).get("access-restricted-item"):
+    md = meta.get("metadata", {})
+    if meta.get("is_dark") or md.get("access-restricted-item"):
+        return []
+    if not allowed(md, tv):
         return []
     best = {}
     for f in meta.get("files", []):
         name = f.get("name", "")
-        if not name.lower().endswith(".mp4"):
+        if not name.lower().endswith(".mp4") or RIP.search(name):
             continue
         fmt = f.get("format", "")
         rank = 0 if fmt.startswith("h.264") or fmt == "MPEG4" else 1 if "512Kb" in fmt else 2
@@ -199,6 +218,26 @@ def mp4_files(identifier):
         if original not in best or rank < best[original][0]:
             best[original] = (rank, name, seconds(f.get("length")), f.get("title"))
     return [{"name": n, "length": s, "title": t} for _, n, s, t in best.values()]
+
+
+def as_list(value):
+    return value if isinstance(value, list) else [value] if value else []
+
+
+def allowed(md, tv=False):
+    """Free to share (a public-domain collection or licence), not a rip, and in a wanted language.
+
+    Punjabi is for films only (the user's choice); Punjabi TV is left out.
+    """
+    collections = {str(c).lower() for c in as_list(md.get("collection"))}
+    licence = str(md.get("licenseurl") or "").lower()
+    if not (collections & FREE_COLLECTIONS or "publicdomain" in licence or "creativecommons" in licence):
+        return False
+    if RIP.search(str(md.get("title") or "")):
+        return False
+    languages = {str(l).strip().lower() for l in as_list(md.get("language"))}
+    wanted = LANGUAGES - PUNJABI if tv else LANGUAGES
+    return not languages or bool(languages & wanted)
 
 
 def clean(text):
@@ -235,17 +274,19 @@ def main():
     wd_films = wikidata_items(FILM_QUERY, args.movies)
     wd_tv = sorted(wikidata_items(EPISODE_QUERY, args.items), key=lambda d: (d["show"] or "", d["date"]))
     print(f"Wikidata: {len(wd_films)} films, {len(wd_tv)} TV episodes")
-    films = merge(wd_films, archive_search("feature_films", args.movies))
+    films = merge(wd_films, archive_search("feature_films", args.movies),
+                  archive_search("feature_films) AND language:(Hindi OR Urdu OR Punjabi OR hin OR urd OR pan", 200))
     tv = merge(wd_tv, archive_search("classic_tv", args.items))
     print(f"Search: {len(films)} films, {len(tv)} TV items")
 
     with cf.ThreadPoolExecutor(8) as pool:
         film_files = dict(zip([d["identifier"] for d in films], pool.map(mp4_files, [d["identifier"] for d in films])))
-        tv_files = dict(zip([d["identifier"] for d in tv], pool.map(mp4_files, [d["identifier"] for d in tv])))
+        tv_files = dict(zip([d["identifier"] for d in tv], pool.map(lambda i: mp4_files(i, tv=True), [d["identifier"] for d in tv])))
 
     lines = ["#EXTM3U", "# Free public-domain films and TV from the Internet Archive (archive.org)."]
 
     movies = 0
+    names = set()
     for d in films:
         files = [f for f in film_files[d["identifier"]] if f["length"] >= MIN_MOVIE_SECONDS or not f["length"]]
         if len(files) != 1:  # none, or a film split into parts
@@ -255,6 +296,9 @@ def main():
         if not title:
             continue
         name = f"{title} ({year})" if year.isdigit() and year not in title else title
+        if name.lower() in names:
+            continue
+        names.add(name.lower())
         group = f"{year[:3]}0s" if year.isdigit() else "Classic films"
         lines += [extinf(name, POSTER + d["identifier"], group), file_url(d["identifier"], files[0]["name"])]
         movies += 1
@@ -285,9 +329,14 @@ def main():
         eps = shows[show]
         if len(eps) < MIN_EPISODES:
             continue
+        if episodes >= MAX_EPISODES:
+            break
         series += 1
-        for n, (ep, ident, name) in enumerate(eps, 1):
-            lines += [extinf(f"{show} Episode {n} - {ep}", POSTER + ident, "Classic TV series"), file_url(ident, name)]
+        title = show.strip('"\' ')
+        for n, (ep, ident, name) in enumerate(eps[:MAX_EPISODES_PER_SHOW], 1):
+            # File names make poor episode titles ("1_Old_american_barn_dance_1953.ia").
+            label = f"{title} Episode {n}" if "_" in ep or ".ia" in ep or not ep else f"{title} Episode {n} - {ep}"
+            lines += [extinf(label, POSTER + ident, "Classic TV series"), file_url(ident, name)]
             episodes += 1
 
     docs = os.path.join(ROOT, "docs")

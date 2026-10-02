@@ -24,6 +24,7 @@ import os
 import re
 import sys
 import time
+import urllib.parse
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,11 +33,11 @@ USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 MIN_MINUTES = 15
 KEEP_DAYS = 120
 
-# Each channel's YouTube handles, most likely first.
+# Each channel's YouTube handles, most likely first, then a YouTube channel search.
 CHANNELS = [
-    ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"]),
-    ("HUM TV", ["@HUMTVPakistan", "@HUMTV", "@humtvofficial"]),
-    ("Geo Entertainment", ["@HarPalGeo", "@GeoEntertainment"]),
+    ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
+    ("HUM TV", ["@HUMTV", "@humtvofficial"], "HUM TV"),
+    ("Geo Entertainment", ["@HARPALGEO", "@harpalgeoofficial"], "HAR PAL GEO"),
 ]
 
 SKIP = re.compile(
@@ -44,6 +45,8 @@ SKIP = re.compile(
     r"bts|behind the scenes|review|reaction|shorts|making|interview|recap|status)\b|#shorts",
     re.IGNORECASE,
 )
+# "Episode 30 - Show Name - ..." (some channels put the number first).
+EPISODE_FIRST = re.compile(r"^(?:Episode|Ep\.?)\s*(\d{1,4})\s*[-|:–]\s*([^|\-–\[]+)", re.IGNORECASE)
 EPISODE = re.compile(r"^(.*?)[\s\-|:–]*\b(?:Episode|Epi|Ep\.?)\s*(\d{1,4})\b", re.IGNORECASE)
 # Words that sit between the show name and "Episode" but aren't part of the name.
 TAIL = re.compile(r"(?:[\s\-|:–]+|\b(?:2nd\s+)?last|\bmega|\bfinal|\bdouble)+$", re.IGNORECASE)
@@ -62,7 +65,7 @@ def fetch(url, tries=4):
             time.sleep(5 * 2 ** attempt)
 
 
-def channel_id(handles):
+def channel_id(handles, query):
     for handle in handles:
         try:
             page = fetch(f"https://www.youtube.com/{handle}", tries=2)
@@ -72,6 +75,13 @@ def channel_id(handles):
         m = re.search(r'"externalId":"(UC[\w-]{22})"', page) or re.search(r'channel_id=(UC[\w-]{22})', page)
         if m:
             return handle, m.group(1)
+    try:
+        page = fetch("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": query, "sp": "EgIQAg=="}), tries=2)
+        m = re.search(r'"channelRenderer":\{"channelId":"(UC[\w-]{22})"', page)
+        if m:
+            return f"search {query!r}", m.group(1)
+    except Exception as e:  # noqa: BLE001
+        print(f"  search {query!r}: {e}", file=sys.stderr)
     return None, None
 
 
@@ -91,13 +101,13 @@ def _text(raw):
     return json.loads(f'"{raw}"')
 
 
-def videos_page(cid):
-    """Videos from the channel's Videos tab: (id, title, minutes).
+def videos_page(url):
+    """Videos on a channel page (its Videos tab or a search in the channel): (id, title, minutes).
 
     Reads both of the page layouts YouTube serves: the older videoRenderer and the
     newer lockupViewModel.
     """
-    page = fetch(f"https://www.youtube.com/channel/{cid}/videos")
+    page = fetch(url)
     out, seen = [], set()
     for m in re.finditer(r'"videoRenderer":\{"videoId":"([\w-]{11})"', page):
         chunk = page[m.end():m.end() + 6000]
@@ -135,12 +145,16 @@ def episode(title):
     if SKIP.search(title):
         return None
     m = EPISODE.match(title.strip())
-    if not m:
+    first = EPISODE_FIRST.match(title.strip())
+    if m and m.group(1).strip(" -|:–"):
+        show, number = TAIL.sub("", m.group(1)).strip(" -|:–"), m.group(2)
+    elif first:
+        show, number = first.group(2).strip(), first.group(1)
+    else:
         return None
-    show = TAIL.sub("", m.group(1)).strip(" -|:–")
     if not 2 <= len(show) <= 50:
         return None
-    return show, int(m.group(2))
+    return show, int(number)
 
 
 def main():
@@ -153,31 +167,42 @@ def main():
     today = dt.date.today()
 
     found = 0
-    for name, handles in CHANNELS:
-        handle, cid = channel_id(handles)
+    for name, handles, query in CHANNELS:
+        handle, cid = channel_id(handles, query)
         if not cid:
             print(f"{name}: channel not found", file=sys.stderr)
             continue
-        try:
-            videos = videos_page(cid)
-        except Exception as e:  # noqa: BLE001
-            print(f"  {name} videos page failed ({e})", file=sys.stderr)
-            videos = []
+        videos, seen = [], set()
+        # The Videos tab has the newest uploads (mostly clips); a search in the
+        # channel for "episode" finds more full episodes.
+        for url in (f"https://www.youtube.com/channel/{cid}/videos",
+                    f"https://www.youtube.com/channel/{cid}/search?query=episode"):
+            try:
+                for v in videos_page(url):
+                    if v[0] not in seen:
+                        seen.add(v[0])
+                        videos.append(v)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name}: {url} failed ({e})", file=sys.stderr)
         if not videos:
             try:
                 videos = videos_feed(cid)
             except Exception as e:  # noqa: BLE001
                 print(f"  {name} feed failed ({e})", file=sys.stderr)
         new = 0
+        skipped = []
         for vid, title, mins in videos:
             ep = episode(title)
             if not ep or (mins is not None and mins < MIN_MINUTES):
+                skipped.append(f"{title} ({mins and round(mins)} min)")
                 continue
             if vid not in kept:
                 kept[vid] = {"show": ep[0], "episode": ep[1], "channel": name, "title": title, "added": today.isoformat()}
                 new += 1
             found += 1
         print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new episodes")
+        for t in skipped[:6]:
+            print(f"    skipped: {t}")
 
     cutoff = (today - dt.timedelta(days=KEEP_DAYS)).isoformat()
     kept = {k: v for k, v in kept.items() if v["added"] >= cutoff}
