@@ -41,7 +41,6 @@ COMMONS_SEARCHES = [
     ('filetype:video deepcat:"Films in the public domain"', "Movies"),
     ('filetype:video deepcat:"Silent films"', "Movies"),
     ('filetype:video deepcat:"Documentary films"', "Shows"),
-    ('filetype:video "full movie" OR "feature film"', "Movies"),
 ]
 MIN_FILM_SECONDS = 40 * 60
 MIN_SHOW_SECONDS = 10 * 60
@@ -57,7 +56,11 @@ SEPIA = "https://sepiasearch.org/api/v1/search/videos"
 # PeerTube licence ids: 1-6 are Creative Commons licences, 7 is public domain.
 FREE_LICENCES = [1, 2, 3, 4, 5, 6, 7]
 # Stock-footage codes and ads in titles.
-JUNK = re.compile(r"\b[A-Z]{1,3}\d{4,}\b|\bpromo(tional)?\b|\bcommercial\b|\bstock footage\b", re.I)
+JUNK = re.compile(r"\b[A-Z]{1,3}\d{4,}\b|\bpromo(tional)?\b|\bcommercial\b|\bstock footage\b|\btier list\b"
+                  r"|\btraining films?\b|\breaction\b|\breview\b|\bmusic video\b|this week @nasa|\ba year of\b"
+                  r"|\bbudget\b|\bpinkfong\b|\bcocomelon\b", re.I)
+# Titles in other scripts (Russian, Chinese...) aren't in the Library's four languages.
+OTHER_SCRIPT = re.compile(r"[\u0400-\u04ff\u0370-\u03ff\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af\u0e00-\u0e7f]")
 PEERTUBE_LANGUAGES = {"en": "English", "hi": "Hindi", "ur": "Urdu", "pa": "Punjabi"}
 
 
@@ -260,6 +263,10 @@ def main():
     items, skipped = [], 0
     seen = set(known)
     for item in commons() + nasa() + vimeo() + peertube():
+        item["name"] = re.sub(r"\s+", " ", item["name"].replace(",", " ").replace('"', "")).strip()
+        if JUNK.search(item["name"]) or OTHER_SCRIPT.search(item["name"]):
+            skipped += 1
+            continue
         key = (item["language"], compact(item["name"]))
         if not key[1] or key in seen:
             skipped += 1
@@ -270,7 +277,7 @@ def main():
 
     lines = ["#EXTM3U", "# Free films and shows shared openly by their makers: Wikimedia Commons, NASA, Vimeo, PeerTube."]
     for i in items:
-        name = i["name"].replace(",", " ")
+        name = i["name"]
         lines.append(f'#EXTINF:-1 tvg-logo="{i["logo"]}" tvg-language="{i["language"]}" tvg-genre="{i["genre"]}" '
                      f'group-title="{i["group"]}",{name}')
         lines.append(i["url"])
