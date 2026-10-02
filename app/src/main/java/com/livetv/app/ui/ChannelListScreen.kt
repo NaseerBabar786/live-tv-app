@@ -295,7 +295,7 @@ fun ChannelListScreen(
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
         // In 4×4, 2×3, 2×2 and 1×2 every card plays; otherwise only the highlighted one.
-        val playAll = wideScreen && (tileLayout.separateTvs || tileLayout == TileLayout.Sixteen)
+        val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
@@ -732,7 +732,7 @@ fun ChannelListScreen(
                                                         onOpen = open,
                                                         onClick = { if (fullTiles) { open(); onPlay(channel) } else tilesFull = true })
                                                 } else {
-                                                    // 4×4: OK fills the screen with the tiles; OK again opens the channel.
+                                                    // A grid where only the highlighted tile plays (no layout uses this now).
                                                     Tile(start + r * columns + c, channel, onKey(start + r * columns + c),
                                                         onClick = { if (fullTiles) onPlay(channel) else tilesFull = true })
                                                 }
@@ -1413,8 +1413,8 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
  */
 private var sessionTileLayout: TileLayout? = null
 
-/** 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
-private val TileLayout.separateTvs get() = this == TileLayout.Two || this == TileLayout.Four || this == TileLayout.Six
+/** 1×2, 2×2, 2×3 and 4×4: every tile plays and has its own channel, changed with Up and Down. */
+private val TileLayout.separateTvs get() = this != TileLayout.List
 
 /**
  * 1×2, 2×2 and 2×3's channels, and the tile opened full screen, kept while a channel plays full
