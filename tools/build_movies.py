@@ -210,6 +210,8 @@ def mp4_files(identifier, tv=False):
         return []
     if not allowed(md, tv):
         return []
+    LANGS[identifier] = next((LANGUAGE_NAMES[str(l).strip().lower()] for l in as_list(md.get("language"))
+                              if str(l).strip().lower() in LANGUAGE_NAMES), "English")
     best = {}
     for f in meta.get("files", []):
         name = f.get("name", "")
@@ -221,6 +223,12 @@ def mp4_files(identifier, tv=False):
         if original not in best or rank < best[original][0]:
             best[original] = (rank, name, seconds(f.get("length")), f.get("title"))
     return [{"name": n, "length": s, "title": t} for _, n, s, t in best.values()]
+
+
+# Each kept item's language for the playlist ("English" unless its metadata says otherwise).
+LANGS = {}
+LANGUAGE_NAMES = {"hindi": "Hindi", "hin": "Hindi", "hi": "Hindi", "urdu": "Urdu", "urd": "Urdu", "ur": "Urdu",
+                  "punjabi": "Punjabi", "panjabi": "Punjabi", "pan": "Punjabi", "pa": "Punjabi"}
 
 
 def as_list(value):
@@ -270,8 +278,8 @@ def file_url(identifier, name):
     return DOWNLOAD + urllib.parse.quote(identifier) + "/" + urllib.parse.quote(name)
 
 
-def extinf(name, logo, group):
-    return f'#EXTINF:-1 tvg-logo="{logo}" group-title="{group}",{name}'
+def extinf(name, logo, group, language="English", genre="Movies"):
+    return f'#EXTINF:-1 tvg-logo="{logo}" tvg-language="{language}" tvg-genre="{genre}" group-title="{group}",{name}'
 
 
 def show_and_episode(title):
@@ -324,7 +332,8 @@ def main():
             continue
         names.add(name.lower())
         group = f"{year[:3]}0s" if year.isdigit() else "Classic films"
-        lines += [extinf(name, POSTER + d["identifier"], group), file_url(d["identifier"], files[0]["name"])]
+        lines += [extinf(name, POSTER + d["identifier"], group, LANGS.get(d["identifier"], "English")),
+                  file_url(d["identifier"], files[0]["name"])]
         movies += 1
 
     # Series: an item with several episodes is one show; single-episode items are
@@ -360,7 +369,8 @@ def main():
         for n, (ep, ident, name) in enumerate(eps[:MAX_EPISODES_PER_SHOW], 1):
             # File names make poor episode titles ("1_Old_american_barn_dance_1953.ia").
             label = f"{title} Episode {n}" if "_" in ep or ".ia" in ep or not ep else f"{title} Episode {n} - {ep}"
-            lines += [extinf(label, POSTER + ident, "Classic TV series"), file_url(ident, name)]
+            lines += [extinf(label, POSTER + ident, "Classic TV series", LANGS.get(ident, "English"), "Series"),
+                      file_url(ident, name)]
             episodes += 1
 
     docs = os.path.join(ROOT, "docs")

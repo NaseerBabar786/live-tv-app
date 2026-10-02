@@ -65,23 +65,25 @@ import coil3.compose.SubcomposeAsyncImage
 import kotlinx.coroutines.delay
 import com.livetv.app.data.Bilibili
 import com.livetv.app.data.Channel
+import com.livetv.app.data.Vod
 import com.livetv.app.data.YouTube
 import com.livetv.app.player.PlayerScreen
 
-private const val TAB_MOVIES = "Movies"
-private const val TAB_SERIES = "Series"
-
 /**
- * Live TV's Movies & Series: the movies and TV series in the viewer's saved playlists
- * (Settings > My playlists), as poster grids filtered by the playlists' own groups.
- * A show opens its episode list; anything picked plays full screen with a seek bar.
+ * Live TV's Movies & Series. First a language (Urdu, Hindi, Punjabi, English), then its
+ * Movies, Series and Shows as poster grids filtered by the playlists' own groups. Each
+ * drama or show is a folder that opens its episode list; anything picked plays full
+ * screen (YouTube videos in YouTube's player).
  */
 @Composable
 fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
     val vm = viewModel<VodViewModel>()
     val state by vm.state.collectAsStateWithLifecycle()
 
-    var tab by rememberSaveable { mutableStateOf(TAB_MOVIES) }
+    var languageName by rememberSaveable { mutableStateOf<String?>(null) }
+    val language = languageName?.let { Vod.Language.valueOf(it) }
+    var tabName by rememberSaveable { mutableStateOf(Vod.Section.MOVIES.name) }
+    val tab = Vod.Section.valueOf(tabName)
     var group by rememberSaveable { mutableStateOf<String?>(null) }
     var query by rememberSaveable { mutableStateOf("") }
     var searching by rememberSaveable { mutableStateOf(false) }
@@ -93,6 +95,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
     // and the remote's highlight goes back to what was picked.
     val moviesGrid = rememberLazyGridState()
     val seriesGrid = rememberLazyGridState()
+    val languageGrid = rememberLazyGridState()
     val episodeList = rememberLazyListState()
     var lastPicked by rememberSaveable { mutableStateOf<String?>(null) }
     val pickedFocus = remember { FocusRequester() }
@@ -117,16 +120,20 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
         return
     }
 
-    val show = openShow?.let { name -> state.shows.firstOrNull { it.name == name } }
-    BackHandler {
+    val shelf = language?.let { state.shelves[it] } ?: VodShelf()
+    val folders = if (tab == Vod.Section.SHOWS) shelf.shows else shelf.series
+    val show = openShow?.let { name -> folders.firstOrNull { it.name == name } }
+    val back: () -> Unit = {
         when {
             show != null -> openShow = null
             searching -> { searching = false; query = "" }
+            language != null -> { lastPicked = languageName; languageName = null; group = null }
             else -> onClose()
         }
     }
+    BackHandler(onBack = back)
 
-    LaunchedEffect(show?.name, state.loading) {
+    LaunchedEffect(show?.name, language, state.loading) {
         if (state.loading) return@LaunchedEffect
         delay(100) // let the list lay out its items first
         if (runCatching { pickedFocus.requestFocus() }.isFailure) runCatching { tabFocus.requestFocus() }
@@ -139,18 +146,18 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
                 Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconButton(onClick = { if (show != null) openShow = null else onClose() }, modifier = Modifier.focusGlow()) {
+                IconButton(onClick = back, modifier = Modifier.focusGlow()) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                 }
                 Text(
-                    show?.name ?: "Movies & Series",
+                    show?.name ?: language?.label ?: "Movies & Series",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f).padding(start = 4.dp),
                 )
-                if (show == null) {
+                if (show == null && language != null) {
                     if (searching) {
                         OutlinedTextField(
                             value = query,
@@ -212,27 +219,55 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
                         }
                     }
                 }
+                language == null -> PosterGrid(
+                    languageGrid,
+                    Vod.Language.entries.map { lang ->
+                        val size = state.shelves[lang]?.size ?: 0
+                        Poster(lang.name, lang.label, null, if (size == 1) "1 title" else "$size titles")
+                    },
+                    lastPicked ?: Vod.Language.URDU.name,
+                    pickedFocus,
+                    columns = GridCells.Fixed(4),
+                    tile = true,
+                ) { name ->
+                    languageName = name
+                    tabName = Vod.Section.entries.firstOrNull { sectionItems(state, name, it).isNotEmpty() }?.name ?: Vod.Section.MOVIES.name
+                    group = null
+                    lastPicked = null
+                }
                 else -> {
-                    val movies = state.movies.filter { query.isBlank() || it.name.contains(query.trim(), true) }
-                    val shows = state.shows.filter { query.isBlank() || it.name.contains(query.trim(), true) }
-                    val groups = (if (tab == TAB_MOVIES) movies.mapNotNull { it.group } else shows.mapNotNull { it.group })
+                    val q = query.trim()
+                    val movies = shelf.movies.filter { q.isBlank() || it.name.contains(q, true) }
+                    val series = shelf.series.filter { q.isBlank() || it.name.contains(q, true) }
+                    val shows = shelf.shows.filter { q.isBlank() || it.name.contains(q, true) }
+                    val sections = Vod.Section.entries.filter { section ->
+                        section == Vod.Section.MOVIES || (language != Vod.Language.PUNJABI &&
+                            (if (section == Vod.Section.SERIES) shelf.series else shelf.shows).isNotEmpty())
+                    }
+                    val groups = (if (tab == Vod.Section.MOVIES) movies.mapNotNull { it.group } else
+                        (if (tab == Vod.Section.SERIES) series else shows).mapNotNull { it.group })
                         .groupingBy { it }.eachCount().entries
                         .sortedWith(compareBy({ -it.value }, { it.key }))
                         .map { it.key }
+                        .takeIf { it.size > 1 }.orEmpty()
 
                     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                             horizontalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
-                            item(key = "tab:movies") {
-                                VodChip("$TAB_MOVIES (${movies.size})", tab == TAB_MOVIES, Modifier.focusRequester(tabFocus)) {
-                                    tab = TAB_MOVIES; group = null
+                            items(sections, key = { "tab:${it.name}" }) { section ->
+                                val count = when (section) {
+                                    Vod.Section.MOVIES -> movies.size
+                                    Vod.Section.SERIES -> series.size
+                                    Vod.Section.SHOWS -> shows.size
                                 }
-                            }
-                            item(key = "tab:series") {
-                                VodChip("$TAB_SERIES (${shows.size})", tab == TAB_SERIES) {
-                                    tab = TAB_SERIES; group = null
+                                VodChip(
+                                    "${section.label} ($count)",
+                                    tab == section,
+                                    if (section == sections.first()) Modifier.focusRequester(tabFocus) else Modifier,
+                                ) {
+                                    tabName = section.name; group = null
                                 }
                             }
                             items(groups, key = { "group:$it" }) { g ->
@@ -241,10 +276,10 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
                         }
                     }
 
-                    if (tab == TAB_MOVIES) {
+                    if (tab == Vod.Section.MOVIES) {
                         val list = movies.filter { group == null || it.group == group }
                         if (list.isEmpty()) {
-                            VodMessage("No movies found in your playlists.")
+                            VodMessage("No ${language?.label} movies yet.")
                         } else {
                             PosterGrid(moviesGrid, list.map { Poster(it.id, it.name, it.logo) }, lastPicked, pickedFocus) { id ->
                                 lastPicked = id
@@ -252,9 +287,9 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
                             }
                         }
                     } else {
-                        val list = shows.filter { group == null || it.group == group }
+                        val list = (if (tab == Vod.Section.SERIES) series else shows).filter { group == null || it.group == group }
                         if (list.isEmpty()) {
-                            VodMessage("No series found in your playlists.")
+                            VodMessage("No ${language?.label} ${tab.label.lowercase()} yet.")
                         } else {
                             PosterGrid(
                                 seriesGrid,
@@ -273,6 +308,15 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
     }
 }
 
+private fun sectionItems(state: VodState, language: String, section: Vod.Section): List<Any> {
+    val shelf = state.shelves[Vod.Language.valueOf(language)] ?: return emptyList()
+    return when (section) {
+        Vod.Section.MOVIES -> shelf.movies
+        Vod.Section.SERIES -> shelf.series
+        Vod.Section.SHOWS -> shelf.shows
+    }
+}
+
 private data class Poster(val key: String, val title: String, val image: String?, val subtitle: String? = null)
 
 @Composable
@@ -281,11 +325,14 @@ private fun PosterGrid(
     posters: List<Poster>,
     focusKey: String?,
     focus: FocusRequester,
+    columns: GridCells = GridCells.Adaptive(140.dp),
+    /** Wide text tiles (the language picker) instead of 2:3 posters. */
+    tile: Boolean = false,
     onOpen: (String) -> Unit,
 ) {
     LazyVerticalGrid(
         state = gridState,
-        columns = GridCells.Adaptive(140.dp),
+        columns = columns,
         contentPadding = PaddingValues(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -303,11 +350,20 @@ private fun PosterGrid(
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .aspectRatio(2f / 3f)
+                        .aspectRatio(if (tile) 16f / 9f else 2f / 3f)
                         .clip(CardShape)
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                        .background(if (tile) AccentBlue else MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center,
                 ) {
+                    if (tile) {
+                        Text(
+                            poster.title,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                        )
+                        return@Box
+                    }
                     val placeholder = @Composable {
                         Icon(
                             Icons.Filled.Movie,
@@ -329,7 +385,7 @@ private fun PosterGrid(
                         placeholder()
                     }
                 }
-                Text(
+                if (!tile) Text(
                     poster.title,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium,

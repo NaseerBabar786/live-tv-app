@@ -13,13 +13,41 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/** One language's movies, drama series and shows (each show a folder of episodes). */
+data class VodShelf(
+    val movies: List<Channel> = emptyList(),
+    val series: List<Vod.Show> = emptyList(),
+    val shows: List<Vod.Show> = emptyList(),
+) {
+    val isEmpty: Boolean get() = movies.isEmpty() && series.isEmpty() && shows.isEmpty()
+    val size: Int get() = movies.size + series.size + shows.size
+}
+
 data class VodState(
     val loading: Boolean = true,
-    val movies: List<Channel> = emptyList(),
-    val shows: List<Vod.Show> = emptyList(),
+    val shelves: Map<Vod.Language, VodShelf> = emptyMap(),
     /** False until a playlist has been saved in Settings > My playlists. */
     val hasPlaylists: Boolean = true,
 )
+
+/**
+ * Sorts videos by language, then into Movies, Series or Shows; episodes are grouped into a
+ * folder per drama or show. Punjabi has movies only (the owner's choice).
+ */
+fun shelves(items: List<Channel>): Map<Vod.Language, VodShelf> =
+    items.groupBy { Vod.language(it) }.mapValues { (language, list) ->
+        val (episodes, movies) = list.partition { Vod.kind(it) == Vod.Kind.EPISODE }
+        val (shows, series) = if (language == Vod.Language.PUNJABI) {
+            emptyList<Channel>() to emptyList()
+        } else {
+            episodes.partition { Vod.isShow(it) }
+        }
+        VodShelf(
+            movies = movies.sortedBy { it.name.lowercase() },
+            series = Vod.shows(series),
+            shows = Vod.shows(shows),
+        )
+    }
 
 /** Live TV's Movies & Series: the movies and episodes in the viewer's saved playlists. */
 class VodViewModel(app: Application) : AndroidViewModel(app) {
@@ -43,15 +71,8 @@ class VodViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(loading = hasPlaylists, hasPlaylists = hasPlaylists) }
         if (!hasPlaylists) return
         viewModelScope.launch {
-            val items = repo.loadVod()
-            val (episodes, movies) = items.partition { Vod.kind(it) == Vod.Kind.EPISODE }
-            _state.update {
-                it.copy(
-                    loading = false,
-                    movies = movies.sortedBy { m -> m.name.lowercase() },
-                    shows = Vod.shows(episodes),
-                )
-            }
+            val shelves = shelves(repo.loadVod())
+            _state.update { it.copy(loading = false, shelves = shelves) }
         }
     }
 }
