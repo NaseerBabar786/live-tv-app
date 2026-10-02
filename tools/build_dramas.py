@@ -34,18 +34,23 @@ USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 MIN_MINUTES = 15
 KEEP_DAYS = 120
 
-# Each channel's YouTube handles, most likely first, then a YouTube channel search.
+# Each channel's YouTube handles, most likely first, then a YouTube channel search (only a
+# channel whose name fits the search words is used), and the language of its programmes.
 CHANNELS = [
-    ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
-    ("HUM TV", ["@HUMTV", "@humtvofficial"], "HUM TV"),
-    ("Geo Entertainment", ["@HARPALGEO", "@harpalgeoofficial"], "HAR PAL GEO"),
-    ("Green Entertainment", ["@GreenEntertainmentpk", "@GreenEntertainment", "@greentvpk"], "Green Entertainment"),
-    ("PTV Home", ["@PTVHomeOfficial", "@PTVHome", "@ptvhomeofficialchannel"], "PTV Home"),
-    ("Express TV", ["@ExpressEntertainment", "@ExpressTVpk"], "Express TV"),
-    ("A-Plus", ["@APlusEntertainmentOfficial", "@APlusTVPakistan", "@aplusdramas"], "A Plus Entertainment"),
-    ("TV One", ["@TVOnePakistan", "@TVOneDramas", "@tvonepk"], "TV One Pakistan"),
-    ("ARY Zindagi", ["@ARYZindagiOfficial", "@ARYZindagi"], "ARY Zindagi"),
-    ("Geo Kahani", ["@GeoKahani", "@GeoKahaniOfficial"], "Geo Kahani"),
+    ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital", "Urdu"),
+    ("HUM TV", ["@HUMTV", "@humtvofficial"], "HUM TV", "Urdu"),
+    ("Geo Entertainment", ["@HARPALGEO", "@harpalgeoofficial"], "HAR PAL GEO", "Urdu"),
+    ("Green Entertainment", ["@GreenEntertainmentpk", "@GreenEntertainment", "@greentvpk"], "Green Entertainment", "Urdu"),
+    ("PTV Home", ["@PTVHomeOfficial", "@PTVHome", "@ptvhomeofficialchannel"], "PTV Home", "Urdu"),
+    ("Express TV", ["@ExpressEntertainment", "@ExpressTVpk"], "Express TV", "Urdu"),
+    ("A-Plus", ["@APlusEntertainmentOfficial", "@APlusTVPakistan", "@aplusdramas"], "A Plus Entertainment", "Urdu"),
+    ("TV One", ["@TVOnePakistan", "@TVOneDramas", "@tvonepk"], "TV One Pakistan", "Urdu"),
+    ("ARY Zindagi", ["@ARYZindagiOfficial", "@ARYZindagi"], "ARY Zindagi", "Urdu"),
+    ("Geo Kahani", ["@GeoKahani", "@GeoKahaniOfficial"], "Geo Kahani", "Urdu"),
+    ("Taarak Mehta Ka Ooltah Chashmah", ["@TaarakMehtaKaOoltahChashmah", "@tmkoc"], "Taarak Mehta Ka Ooltah Chashmah", "Hindi"),
+    ("Prasar Bharati Archives", ["@PrasarBharatiArchives", "@prasarbharatiarchive"], "Prasar Bharati Archives", "Hindi"),
+    ("DD National", ["@DDNational", "@DDNationalOfficial"], "DD National", "Hindi"),
+    ("FilmRise TV", ["@FilmRiseTV", "@FilmRiseClassicTV", "@FilmRiseTelevision"], "FilmRise", "English"),
 ]
 
 # Channels whose single-episode telefilms go under Urdu Movies.
@@ -56,19 +61,28 @@ TELEFILM_WORDS = re.compile(
     r"\b(tele[\s-]?films?|eid|ul|al|adha|fitr|special|full|new|latest|hd|4k|ary digital|ary|hum tv|hum|"
     r"har pal geo|geo tv|geo|digital|pakistani|drama|\d{4})\b", re.IGNORECASE)
 
-# Channels where every full video is a show, filed in a folder named after the channel.
+# Channels where every full video is a show, filed in a folder named after the channel:
+# (name, handles, search, language, shortest video in minutes).
 SHOW_CHANNELS = [
-    ("Masala TV", ["@MasalaTVRecipes", "@masalatv", "@MasalaTV"], "Masala TV"),
-    ("Food Fusion", ["@FoodFusionPk", "@FoodFusion"], "Food Fusion"),
-    ("ARY Qtv", ["@ARYQtvOfficial", "@ARYQtv", "@QtvOfficial"], "ARY Qtv"),
-    ("Madani Channel", ["@MadaniChannel", "@MadaniChannelOfficial"], "Madani Channel"),
+    ("Masala TV", ["@MasalaTVRecipes", "@masalatv", "@MasalaTV"], "Masala TV", "Urdu", 3),
+    ("Food Fusion", ["@FoodFusionPk", "@FoodFusion"], "Food Fusion", "Urdu", 3),
+    ("ARY Qtv", ["@ARYQtvOfficial", "@ARYQtv", "@QtvOfficial"], "ARY Qtv", "Urdu", 3),
+    ("Madani Channel", ["@MadaniChannel", "@MadaniChannelOfficial"], "Madani Channel", "Urdu", 3),
+    ("Sanjeev Kapoor Khazana", ["@SanjeevKapoorKhazana"], "Sanjeev Kapoor Khazana", "Hindi", 3),
+    ("Kabita's Kitchen", ["@KabitasKitchen"], "Kabitas Kitchen", "Hindi", 3),
+    ("DW Documentary", ["@DWDocumentary"], "DW Documentary", "English", 20),
+    ("National Geographic", ["@NatGeo"], "National Geographic", "English", 20),
 ]
-# Urdu cartoons from their makers' own channels.
+# Cartoons from their makers' own channels, filed under Kids.
 KIDS_CHANNELS = [
-    ("Burka Avenger", ["@BurkaAvengerTV", "@burka_avenger"], "Burka Avenger"),
-    ("Commander Safeguard", ["@CommanderSafeguardPK", "@SafeguardPakistan"], "Commander Safeguard"),
+    # No official Urdu channel exists for Burka Avenger or Commander Safeguard (only an Afghan
+    # Dari/Pashto one and fan re-uploads), so they are left out.
+    ("Chhota Bheem", ["@chhotabheem", "@ChhotaBheemOfficial"], "Chhota Bheem", "Hindi", 5),
+    ("Little Krishna", ["@LittleKrishna", "@LittleKrishnaOfficial"], "Little Krishna", "Hindi", 5),
+    ("Mr Bean", ["@MrBean"], "Mr Bean", "English", 5),
+    ("Peppa Pig", ["@PeppaPigOfficial", "@peppapig"], "Peppa Pig", "English", 5),
+    ("Pocoyo", ["@Pocoyo", "@PocoyoEnglish"], "Pocoyo", "English", 5),
 ]
-MIN_SHOW_MINUTES = 3
 SHOW_SKIP = re.compile(r"\b(teaser|promo|trailer|shorts)\b|#shorts", re.IGNORECASE)
 
 # Official YouTube channels of the companies that own the Hindi dubbed rights and
@@ -82,6 +96,22 @@ MOVIE_CHANNELS = [
 MIN_MOVIE_MINUTES = 80
 DUBBED = re.compile(r"hindi\s+dubbed", re.IGNORECASE)
 MOVIE_SKIP = re.compile(r"\b(trailer|teaser|promo|scenes?|songs?|jukebox|comedy|action scene|fight|clip|shorts)\b", re.IGNORECASE)
+
+# Film studios' own channels with full films in their own language: (name, handles, search,
+# language). Punjabi channels also put up songs and other languages, so their titles must say Punjabi.
+FILM_CHANNELS = [
+    ("Shemaroo", ["@ShemarooMovies", "@shemaroo"], "Shemaroo", "Hindi"),
+    ("Rajshri", ["@rajshri", "@RajshriFilms"], "Rajshri", "Hindi"),
+    ("Ultra", ["@UltraMovieParlour", "@UltraBollywood"], "Ultra", "Hindi"),
+    ("White Hill Studios", ["@WhiteHillStudios", "@WhiteHillMusic"], "White Hill", "Punjabi"),
+    ("Saga Music", ["@SagaMusic", "@SagaHits"], "Saga", "Punjabi"),
+    ("Speed Records", ["@SpeedRecords", "@SpeedPunjabi"], "Speed Records", "Punjabi"),
+    ("Evernew Studio", ["@EvernewStudio", "@EvernewPictures"], "Evernew", "Punjabi"),
+    ("FilmRise Movies", ["@FilmRiseMovies", "@FilmRise"], "FilmRise", "English"),
+]
+MIN_FILM_MINUTES = 70
+FILM_SKIP = re.compile(r"\b(trailer|teaser|promo|scenes?|jukebox|clip|shorts|songs?|video song|audio)\b|#shorts", re.IGNORECASE)
+OTHER_LANGUAGE = re.compile(r"\b(marathi|gujarati|bhojpuri|tamil|telugu|bengali|kannada|malayalam|odia|rajasthani|haryanvi)\b", re.IGNORECASE)
 
 # Reality, game and talk shows, as opposed to drama serials. Live TV files them under Shows.
 SHOW = re.compile(r"\b(tamasha|show|reality|jeeto|hasna mana|game|talk|podcast|morning|ramzan|ramadan|transmission|"
@@ -119,11 +149,18 @@ def compact(text):
     return re.sub(r"[^a-z0-9]", "", text.lower())
 
 
-def is_owner(title, expect):
+def _key(text):
+    return compact(" ".join(w for w in re.split(r"[^\w]+", text) if w.lower() not in GENERIC)) or compact(text)
+
+
+def is_owner(title, expect, exact=False):
     """Whether a YouTube channel's name fits the channel we want ("ARY Digital HD" for
-    "ARY Digital"), so a handle someone else owns is never used."""
-    key = compact(" ".join(w for w in re.split(r"[^\w]+", expect) if w.lower() not in GENERIC)) or compact(expect)
-    return key in compact(title)
+    "ARY Digital"), so a handle someone else owns is never used. A channel found by search
+    must have exactly that name ("Burka Avenger Afghanistan" or "commandersafeguard1" is
+    someone else's)."""
+    if exact:
+        return _key(title) == _key(expect)
+    return _key(expect) in compact(title)
 
 
 def channel_id(handles, query):
@@ -148,7 +185,7 @@ def channel_id(handles, query):
         for m in list(re.finditer(r'"channelRenderer":\{"channelId":"(UC[\w-]{22})"', page))[:5]:
             title = re.search(r'"title":\{"simpleText":"((?:[^"\\]|\\.)*)"', page[m.end():m.end() + 3000])
             title = _text(title.group(1)) if title else ""
-            if is_owner(title, query):
+            if is_owner(title, query, exact=True):
                 print(f"  search {query!r} found {title!r}")
                 return f"search {query!r}", m.group(1)
             print(f"  search {query!r}: {title!r} skipped", file=sys.stderr)
@@ -269,7 +306,7 @@ def short_title(title):
 
 def channel_shows(kept, today, channels, genre):
     """Adds every full video from each channel (SHOW_CHANNELS or KIDS_CHANNELS) to kept."""
-    for name, handles, query in channels:
+    for name, handles, query, language, shortest in channels:
         handle, cid = channel_id(handles, query)
         if not cid:
             print(f"{name}: channel not found", file=sys.stderr)
@@ -295,15 +332,54 @@ def channel_shows(kept, today, channels, genre):
             print(f"    e.g. {title}")
         new = 0
         for vid, title, mins in videos:
-            if SHOW_SKIP.search(title) or (mins is not None and mins < MIN_SHOW_MINUTES):
+            if SHOW_SKIP.search(title) or (mins is not None and mins < shortest):
                 continue
             if vid in kept:
                 kept[vid]["seen"] = today.isoformat()
             else:
                 kept[vid] = {"item": short_title(title), "folder": name, "genre": genre, "channel": name,
-                             "title": title, "added": today.isoformat()}
+                             "language": language, "title": title, "added": today.isoformat()}
                 new += 1
         print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new {genre.lower()}")
+
+
+def films(kept, today):
+    """Adds full films from FILM_CHANNELS to kept."""
+    for name, handles, query, language in FILM_CHANNELS:
+        handle, cid = channel_id(handles, query)
+        if not cid:
+            print(f"{name}: channel not found", file=sys.stderr)
+            continue
+        videos, seen = [], set()
+        for url in (f"https://www.youtube.com/channel/{cid}/videos",
+                    f"https://www.youtube.com/channel/{cid}/search?query=full+movie"):
+            try:
+                for v in videos_page(url):
+                    if v[0] not in seen:
+                        seen.add(v[0])
+                        videos.append(v)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name}: {url} failed ({e})", file=sys.stderr)
+        new = 0
+        for vid, title, mins in videos:
+            if FILM_SKIP.search(title) or (mins or 0) < MIN_FILM_MINUTES:
+                continue
+            if language == "Punjabi" and not re.search(r"punjabi", title, re.I):
+                continue
+            if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
+                continue
+            movie = movie_name(title)
+            if not movie:
+                continue
+            if vid in kept:
+                kept[vid]["seen"] = today.isoformat()
+            else:
+                kept[vid] = {"movie": movie, "channel": name, "group": name, "language": language,
+                             "title": title, "added": today.isoformat()}
+                new += 1
+        print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new {language} films")
+        for _, title, mins in videos[:3]:
+            print(f"    e.g. {title} ({mins and round(mins)} min)")
 
 
 def dubbed_movies(kept, today):
@@ -344,7 +420,7 @@ def main():
     today = dt.date.today()
 
     found = 0
-    for name, handles, query in CHANNELS:
+    for name, handles, query, language in CHANNELS:
         handle, cid = channel_id(handles, query)
         if not cid:
             print(f"{name}: channel not found", file=sys.stderr)
@@ -397,7 +473,8 @@ def main():
             if vid in kept:
                 kept[vid]["seen"] = today.isoformat()
             else:
-                kept[vid] = {"show": ep[0], "episode": ep[1], "channel": name, "title": title, "added": today.isoformat()}
+                kept[vid] = {"show": ep[0], "episode": ep[1], "channel": name, "language": language,
+                             "title": title, "added": today.isoformat()}
                 new += 1
             found += 1
         print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new episodes, {telefilms} new telefilms")
@@ -405,6 +482,7 @@ def main():
             print(f"    skipped: {t}")
 
     dubbed_movies(kept, today)
+    films(kept, today)
     channel_shows(kept, today, SHOW_CHANNELS, "Shows")
     channel_shows(kept, today, KIDS_CHANNELS, "Kids")
 
@@ -421,11 +499,12 @@ def main():
     lines = ["#EXTM3U", "# Pakistani dramas, shows, cartoons and Hindi dubbed movies from their owners' official YouTube uploads."]
     names = set()
     for vid, v in sorted(movies.items(), key=lambda kv: kv[1]["movie"].lower()):
-        if v["movie"].lower() in names:  # the same film from two channels
+        language = v.get("language", "Hindi")
+        if (language, v["movie"].lower()) in names:  # the same film from two channels
             continue
-        names.add(v["movie"].lower())
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Hindi" '
-                     f'tvg-genre="Movies" group-title="Hindi dubbed movies",{v["movie"]}')
+        names.add((language, v["movie"].lower()))
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{language}" '
+                     f'tvg-genre="Movies" group-title="{v.get("group", "Hindi dubbed movies")}",{v["movie"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in sorted(telefilms.items(), key=lambda kv: kv[1]["telefilm"].lower()):
         if ("telefilm", v["telefilm"].lower()) in names:
@@ -435,12 +514,12 @@ def main():
                      f'tvg-genre="Movies" group-title="Telefilms",{v["telefilm"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in sorted(items.items(), key=lambda kv: (kv[1]["genre"], kv[1]["folder"], kv[1]["added"], kv[1]["item"])):
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Urdu" '
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v.get("language", "Urdu")}" '
                      f'tvg-genre="{v["genre"]}" group-title="{v["folder"]}",{v["item"].replace(",", " ")}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in rows:
         kind = "Shows" if SHOW.search(v["show"]) else "Series"
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Urdu" '
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v.get("language", "Urdu")}" '
                      f'tvg-genre="{kind}" group-title="{v["channel"]}",{v["show"]} Episode {v["episode"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     with open(os.path.join(DOCS, "Dramas.m3u"), "w", encoding="utf-8") as f:
@@ -453,7 +532,7 @@ def main():
                    "kids_videos": sum(v["genre"] == "Kids" for v in items.values()), "videos": kept},
                   f, indent=1, ensure_ascii=False)
         f.write("\n")
-    print(f"Wrote docs/Dramas.m3u: {len(shows)} shows, {len(episodes)} episodes, {len(movies)} Hindi dubbed movies, "
+    print(f"Wrote docs/Dramas.m3u: {len(shows)} shows, {len(episodes)} episodes, {len(movies)} movies, "
           f"{len(telefilms)} telefilms, {len(items)} cooking/Islamic/kids videos")
     if not kept:
         sys.exit("No episodes found; keeping the build red so the old playlist isn't replaced.")
