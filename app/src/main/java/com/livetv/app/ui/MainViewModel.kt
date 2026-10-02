@@ -95,6 +95,9 @@ data class UiState(
 }
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
+    /** Whether the channels have loaded since the app opened (it opens on Favorites only then). */
+    private var opened = false
+
 
     private val repo = ChannelRepository(app)
 
@@ -131,10 +134,26 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             repo.loadChannels()
                 .onSuccess { list ->
                     val numbered = list.mapIndexed { i, channel -> channel.copy(number = i + 1) }
-                    // The app opens on the channel watched last time.
-                    val last = repo.lastChannelUrl?.let { url -> numbered.firstOrNull { it.url == url } }
+                    // The app opens on Favorites (when there are any) and on the channel watched
+                    // last time, or the first favorite when that one isn't a favorite.
+                    val opening = !opened
+                    opened = true
                     _state.update {
-                        it.copy(loading = false, channels = numbered, lastWatchedId = it.lastWatchedId ?: last?.id)
+                        val favorites = numbered.filter { c -> c.id in it.favorites }
+                        val onFavorites = opening && favorites.isNotEmpty()
+                        val last = repo.lastChannelUrl?.let { url -> numbered.firstOrNull { c -> c.url == url } }
+                        val start = when {
+                            !opening -> it.lastWatchedId
+                            onFavorites -> (last?.takeIf { c -> c.id in it.favorites } ?: favorites.first()).id
+                            else -> last?.id
+                        }
+                        it.copy(
+                            loading = false,
+                            channels = numbered,
+                            lastWatchedId = start,
+                            filter = if (onFavorites) FILTER_FAVORITES else it.filter,
+                            category = if (onFavorites) null else it.category,
+                        )
                     }
                 }
                 .onFailure { e ->

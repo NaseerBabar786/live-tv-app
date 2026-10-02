@@ -35,12 +35,13 @@ DOCS = os.path.join(ROOT, "docs")
 USER_AGENT = "LiveTV-playlist-builder/1.0 (+https://tv.bulkbazaar.ca)"
 
 COMMONS = "https://commons.wikimedia.org/w/api.php"
-# Commons categories of full films and documentaries.
-COMMONS_CATEGORIES = [
-    ("Category:Feature films", "Movies"),
-    ("Category:Films in the public domain", "Movies"),
-    ("Category:Silent films", "Movies"),
-    ("Category:Documentary films", "Shows"),
+# Commons searches for full films and documentaries (deepcat: also looks in subcategories).
+COMMONS_SEARCHES = [
+    ('filetype:video deepcat:"Feature films"', "Movies"),
+    ('filetype:video deepcat:"Films in the public domain"', "Movies"),
+    ('filetype:video deepcat:"Silent films"', "Movies"),
+    ('filetype:video deepcat:"Documentary films"', "Shows"),
+    ('filetype:video "full movie" OR "feature film"', "Movies"),
 ]
 MIN_FILM_SECONDS = 40 * 60
 MIN_SHOW_SECONDS = 10 * 60
@@ -55,6 +56,8 @@ VIMEO_FEEDS = [("https://vimeo.com/channels/staffpicks/videos/rss", "Vimeo Staff
 SEPIA = "https://sepiasearch.org/api/v1/search/videos"
 # PeerTube licence ids: 1-6 are Creative Commons licences, 7 is public domain.
 FREE_LICENCES = [1, 2, 3, 4, 5, 6, 7]
+# Stock-footage codes and ads in titles.
+JUNK = re.compile(r"\b[A-Z]{1,3}\d{4,}\b|\bpromo(tional)?\b|\bcommercial\b|\bstock footage\b", re.I)
 PEERTUBE_LANGUAGES = {"en": "English", "hi": "Hindi", "ur": "Urdu", "pa": "Punjabi"}
 
 
@@ -83,6 +86,7 @@ def compact(text):
 
 
 def clean_title(name):
+    name = name.strip().strip('"“”').strip()
     name = re.sub(r"\.(webm|ogv|ogg|mp4|mpg|mpeg)$", "", name, flags=re.I)
     name = re.sub(r"^File:", "", name)
     name = name.replace("_", " ")
@@ -108,20 +112,24 @@ def known_titles():
 def commons():
     """Films and documentaries on Wikimedia Commons, with a WebM copy Android can play."""
     out = []
-    for category, genre in COMMONS_CATEGORIES:
+    seen = set()
+    for category, genre in COMMONS_SEARCHES:
         params = {
-            "action": "query", "format": "json", "generator": "categorymembers", "gcmtitle": category,
-            "gcmtype": "file", "gcmlimit": "200", "prop": "videoinfo",
+            "action": "query", "format": "json", "generator": "search", "gsrsearch": category,
+            "gsrnamespace": "6", "gsrlimit": "50", "prop": "videoinfo",
             "viprop": "url|mediatype|size|derivatives|extmetadata", "viurlwidth": "640",
         }
         cont, count = {}, 0
-        for _ in range(5):
+        for _ in range(8):
             try:
                 data = get_json(COMMONS + "?" + urllib.parse.urlencode({**params, **cont}))
             except Exception as e:  # noqa: BLE001
                 print(f"  Commons {category}: {e}", file=sys.stderr)
                 break
             for page in (data.get("query", {}).get("pages") or {}).values():
+                if page.get("title") in seen:
+                    continue
+                seen.add(page.get("title"))
                 info = (page.get("videoinfo") or [{}])[0]
                 if info.get("mediatype") != "VIDEO":
                     continue
@@ -166,7 +174,7 @@ def nasa():
                 continue
             seen.add(nid)
             try:
-                files = get_json(item["href"])
+                files = get_json(urllib.parse.quote(item["href"], safe=":/?=&%"))
             except Exception as e:  # noqa: BLE001
                 print(f"  NASA {nid}: {e}", file=sys.stderr)
                 continue
@@ -174,7 +182,8 @@ def nasa():
             if not mp4:
                 continue
             preview = next((l.get("href") for l in item.get("links") or [] if l.get("rel") == "preview"), "")
-            out.append({"name": clean_title(data.get("title", nid)), "url": mp4.replace("http://", "https://"),
+            out.append({"name": clean_title(data.get("title", nid)),
+                        "url": urllib.parse.quote(mp4.replace("http://", "https://"), safe=":/?=&%~"),
                         "logo": preview, "language": "English", "genre": "Shows", "group": "NASA", "source": "nasa"})
         print(f"NASA {q!r}: {len(out)} videos so far")
     return out
@@ -218,6 +227,8 @@ def peertube():
         for v in found:
             if (v.get("licence") or {}).get("id") not in FREE_LICENCES or v.get("isLive") or v.get("nsfw"):
                 continue
+            if JUNK.search(v.get("name") or "") or (v.get("name") or "").isupper():
+                continue  # archive dumps ("PROMO FILM GG46255"), not films to watch
             host = (v.get("account") or {}).get("host") or (v.get("channel") or {}).get("host")
             if not host or not v.get("uuid"):
                 continue
