@@ -36,8 +36,8 @@ android {
         create("plus") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetvplus"
-            versionCode = 1
-            versionName = "1.0.0"
+            versionCode = 2
+            versionName = "1.0.1"
         }
     }
     // The two store editions share their playlist settings screen.

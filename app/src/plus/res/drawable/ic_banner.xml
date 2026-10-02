@@ -5,4 +5,9 @@
     <path android:fillColor="#FFFFFF"
         android:pathData="M110,55h100a6,6 0,0 1,6 6v58a6,6 0,0 1,-6 6h-100a6,6 0,0 1,-6 -6v-58a6,6 0,0 1,6 -6z" />
     <path android:fillColor="#E53935" android:pathData="M150,72 L178,90 L150,108 Z" />
+    <!-- Live TV Plus badge. -->
+    <path android:fillColor="#1E1E2E" android:pathData="M214,123m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0" />
+    <path android:fillColor="#E53935" android:pathData="M214,123m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="5" android:strokeLineCap="round"
+        android:pathData="M214,114v18 M205,123h18" />
 </vector>
