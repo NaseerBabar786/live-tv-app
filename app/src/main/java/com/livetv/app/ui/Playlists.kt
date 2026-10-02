@@ -100,7 +100,7 @@ fun AddLinkDialog(suggestedName: String, onDismiss: () -> Unit, onAdd: (name: St
                     value = name,
                     onValueChange = { name = it },
                     label = { Text("Name (optional)") },
-                    placeholder = { Text(suggestedName) },
+                    placeholder = { Text(linkName(url) ?: suggestedName) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -108,7 +108,7 @@ fun AddLinkDialog(suggestedName: String, onDismiss: () -> Unit, onAdd: (name: St
         },
         confirmButton = {
             AccentButton(
-                onClick = { onAdd(name.ifBlank { suggestedName }, url.trim()) },
+                onClick = { onAdd(name.ifBlank { linkName(url) ?: suggestedName }, url.trim()) },
                 enabled = valid,
                 modifier = Modifier.focusGlow(),
             ) { Text("Add") }
@@ -117,6 +117,21 @@ fun AddLinkDialog(suggestedName: String, onDismiss: () -> Unit, onAdd: (name: St
             TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Cancel") }
         },
     )
+}
+
+/** File names that say nothing about the playlist, so the site's name is used instead. */
+private val genericNames = setOf("playlist", "index", "get", "list", "channels", "iptv", "tv", "live", "m3u", "download")
+
+/**
+ * A name for a playlist added by link: the file name without its extension
+ * ("LiveTV" for https://example.com/LiveTV.m3u), or the site's name when the file
+ * name is a generic one like playlist.m3u or get.php. Null when the link can't be read.
+ */
+fun linkName(url: String): String? {
+    val uri = runCatching { java.net.URI(url.trim()) }.getOrNull() ?: return null
+    val host = uri.host?.removePrefix("www.")?.takeIf { it.isNotBlank() } ?: return null
+    val file = uri.path.orEmpty().trimEnd('/').substringAfterLast('/').substringBeforeLast('.').trim()
+    return file.takeIf { it.isNotEmpty() && it.lowercase() !in genericNames } ?: host
 }
 
 /** "Playlist 1", "Playlist 2"… the first one not already used. */

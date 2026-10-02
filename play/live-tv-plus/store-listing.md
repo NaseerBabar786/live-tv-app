@@ -34,9 +34,11 @@ Features
 Important: Live TV Plus is a player only. It does not include, sell or recommend any channels,
 playlists or video content. You need your own playlist from a provider you have the right to watch.
 
-## Graphics
-Not made yet: app icon (512 x 512), feature graphic (1024 x 500) and Android TV banner (1280 x 720),
-all from the Live TV logo. Never put channel names or TV network logos in them.
+## Graphics (in this folder)
+- **App icon (512 x 512):** icon-512.png
+- **Feature graphic (1024 x 500):** feature-graphic.png
+- **Android TV banner (1280 x 720):** tv-banner.png
+Never put channel names or TV network logos in them.
 - **Screenshots:** take them with Try demo channels (openly published and test streams), not with
   any other playlist. Phone: at least 2. Android TV: at least 1 (1920 x 1080).
 
