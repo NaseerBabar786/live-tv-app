@@ -912,6 +912,7 @@ private fun ChannelCard(
             }
             // A thin, soft yellow line marks the tile with the sound.
             if (focused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
+            if (focused) SoundBadge(Modifier.align(Alignment.TopEnd))
         }
         return
     }
@@ -981,6 +982,7 @@ private fun ChannelCard(
                     Icon(Icons.Filled.KeyboardArrowDown, contentDescription = null, tint = Color.White)
                 }
             }
+            if (!glow && focused) SoundBadge(Modifier.align(Alignment.BottomEnd))
             if (channel.number > 0) {
                 Text(
                     "${channel.number}",
@@ -1020,6 +1022,21 @@ private fun ChannelCard(
             )
         }
     }
+}
+
+/** A small speaker on the tile that has the sound (TV layouts, with the thin yellow line). */
+@Composable
+private fun SoundBadge(modifier: Modifier) {
+    Icon(
+        Icons.AutoMirrored.Filled.VolumeUp,
+        contentDescription = "Sound",
+        tint = Color.White,
+        modifier = modifier
+            .padding(8.dp)
+            .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+            .padding(4.dp)
+            .size(22.dp),
+    )
 }
 
 /** The app icon: a white TV with a red play button on a red tile. */
