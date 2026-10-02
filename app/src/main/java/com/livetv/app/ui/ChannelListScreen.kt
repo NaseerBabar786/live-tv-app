@@ -152,6 +152,8 @@ fun ChannelListScreen(
     onTryDemo: () -> Unit = {},
     /** Opens the Library (movies, series and shows); null hides its button. */
     onOpenVod: (() -> Unit)? = null,
+    /** A channel picked to play in 1+List's player, remembered as the last one watched. */
+    onWatch: (Channel) -> Unit = {},
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
     var showSettings by rememberSaveable { mutableStateOf(false) }
@@ -226,9 +228,9 @@ fun ChannelListScreen(
         window.withIndex().sortedBy { it.index / tileLayout.columns != row }.map { it.value.id }
     } else gridIds
 
-    // Coming back from the player: show the channel that was playing and put the remote's
-    // cursor on it.
-    LaunchedEffect(Unit) {
+    // Opening the app, or coming back from the player: show the channel watched last and put
+    // the remote's cursor on it (once the list has loaded).
+    LaunchedEffect(state.visibleChannels.isNotEmpty()) {
         val index = state.visibleChannels.indexOfFirst { it.id == state.lastWatchedId }
         if (index >= 0) {
             if (windowed) {
@@ -476,7 +478,7 @@ fun ChannelListScreen(
                         onToggleFavorite = onToggleFavorite,
                         focusId = state.lastWatchedId,
                         focus = lastWatchedFocus,
-                        onSelect = { listChannelId = it.id },
+                        onSelect = { listChannelId = it.id; onWatch(it) },
                         onOpen = onPlay,
                     )
                     else -> BoxWithConstraints(Modifier.fillMaxSize()) {

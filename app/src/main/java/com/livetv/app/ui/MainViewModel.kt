@@ -131,7 +131,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             repo.loadChannels()
                 .onSuccess { list ->
                     val numbered = list.mapIndexed { i, channel -> channel.copy(number = i + 1) }
-                    _state.update { it.copy(loading = false, channels = numbered) }
+                    // The app opens on the channel watched last time.
+                    val last = repo.lastChannelUrl?.let { url -> numbered.firstOrNull { it.url == url } }
+                    _state.update {
+                        it.copy(loading = false, channels = numbered, lastWatchedId = it.lastWatchedId ?: last?.id)
+                    }
                 }
                 .onFailure { e ->
                     _state.update { it.copy(loading = false, error = e.message ?: "Could not load the playlist.") }
@@ -202,6 +206,12 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun play(channel: Channel) {
         repo.lastChannelUrl = channel.url
         _state.update { it.copy(playing = channel, lastWatchedId = channel.id) }
+    }
+
+    /** Remembers a channel watched without full screen (1+List's player) as the last one watched. */
+    fun watched(channel: Channel) {
+        repo.lastChannelUrl = channel.url
+        _state.update { it.copy(lastWatchedId = channel.id) }
     }
 
     fun stop() = _state.update { it.copy(playing = null) }
