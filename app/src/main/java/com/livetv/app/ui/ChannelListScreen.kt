@@ -586,6 +586,7 @@ fun ChannelListScreen(
                             favorite = channel.id in state.favorites,
                             onClick = onClick,
                             bare = fullTiles,
+                            glow = !(windowed && tileLayout.separateTvs),
                             onToggleFavorite = { onToggleFavorite(channel) },
                             focusRequester = cardRequester(channel.id),
                             onKey = onKey,
@@ -846,8 +847,13 @@ private fun ChannelCard(
     snapshot: ImageBitmap? = null,
     /** Up and down arrows: Up and Down change this card's channel (2×1). */
     arrows: Boolean = false,
-    /** Full-screen tiles: just the video, a yellow frame when highlighted, the name for a moment. */
+    /** Full-screen tiles: just the video, the speaker when highlighted, the name for a moment. */
     bare: Boolean = false,
+    /**
+     * The yellow highlight. 1×2 and 2×2 turn it off: the picture stays black around the video
+     * and a small speaker marks the tile with the sound.
+     */
+    glow: Boolean = true,
 ) {
     if (bare) {
         var focused by remember { mutableStateOf(false) }
@@ -880,27 +886,28 @@ private fun ChannelCard(
                         .padding(horizontal = 10.dp, vertical = 4.dp),
                 )
             }
-            if (focused) Box(Modifier.fillMaxSize().border(3.dp, FocusColor))
+            if (focused) SoundBadge(Modifier.align(Alignment.TopEnd))
         }
         return
     }
+    var focused by remember { mutableStateOf(false) }
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .fillMaxWidth()
             .height(height)
-            .focusGlow(CardShape)
+            .then(if (glow) Modifier.focusGlow(CardShape) else Modifier)
             .clip(CardShape)
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
             .onPreviewKeyEvent(onKey)
-            .onFocusChanged { onFocusChange(it.hasFocus) }
+            .onFocusChanged { focused = it.hasFocus; onFocusChange(it.hasFocus) }
             .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
     ) {
         Box(
             Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .background(if (glow) MaterialTheme.colorScheme.surfaceVariant else Color.Black),
             contentAlignment = Alignment.Center,
         ) {
             if (channel.logo != null) {
@@ -939,6 +946,7 @@ private fun ChannelCard(
                     Icon(Icons.Filled.KeyboardArrowDown, contentDescription = null, tint = Color.White)
                 }
             }
+            if (!glow && focused) SoundBadge(Modifier.align(Alignment.BottomEnd))
             if (channel.number > 0) {
                 Text(
                     "${channel.number}",
@@ -978,6 +986,21 @@ private fun ChannelCard(
             )
         }
     }
+}
+
+/** A small speaker on the tile that has the sound (1×2 and 2×2, instead of the yellow highlight). */
+@Composable
+private fun SoundBadge(modifier: Modifier) {
+    Icon(
+        Icons.AutoMirrored.Filled.VolumeUp,
+        contentDescription = "Sound",
+        tint = Color.White,
+        modifier = modifier
+            .padding(8.dp)
+            .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+            .padding(4.dp)
+            .size(22.dp),
+    )
 }
 
 /** The app icon: a white TV with a red play button on a red tile. */
