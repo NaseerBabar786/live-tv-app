@@ -156,6 +156,12 @@
   .whatsnew li { margin: 0 0 6px; color: var(--muted); }
   .whatsnew li b { color: #fff; }
   .badge { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--red); color: #fff; font-size: 12px; font-weight: 800; vertical-align: 2px; }
+  .history { margin-top: 12px; }
+  .history summary { cursor: pointer; color: #fff; font-weight: 700; padding: 6px 0; }
+  .history dl { margin: 8px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px; }
+  .history dt { color: var(--focus); font-weight: 800; white-space: nowrap; }
+  .history dd { margin: 0; color: var(--muted); }
+  @media (max-width: 480px) { .history dl { grid-template-columns: 1fr; } .history dd { margin-bottom: 6px; } }
   .copy { margin-left: 8px; padding: 4px 12px; font-size: 14px; vertical-align: middle; }
   .warn { border-left-color: var(--focus); color: var(--text); }
   .playlists { margin-top: 16px; }
@@ -197,6 +203,7 @@
         <li>Free, no sign-up</li>
         <li>Thousands of channels</li>
         <li>Free movies and dramas</li>
+        <li>Up to 16 channels at once</li>
         <li>Made for the TV remote</li>
         <li>Updates itself</li>
       </ul>
@@ -220,83 +227,62 @@
 
   <section id="features">
     <h2>What's in the app</h2>
-    <p class="lead">Everything you see here, plus more, in the free Live TV app for Android phones and TVs.</p>
+    <p class="lead">Everything you see here, plus more, in the free Live TV app for Android phones and TVs. Newest version: <b>1.8.72</b>.</p>
     <div class="panel whatsnew">
-      <h3>What's new <span class="ver">in version 1.8.72</span></h3>
+      <h3>What's new <span class="ver">lately</span></h3>
       <ul>
-        <li><b>Even lighter tiles:</b> when several tiles play at once, each uses half the picture size it did before, so they play more smoothly. 4×4 uses half of that again, and now works like 1×2: all 16 tiles play, each its own TV (Up/Down change that tile's channel).</li>
+        <li><b>Watch up to 16 channels at once:</b> new 4×4, 2×3 and 2×2 layouts where every tile plays its own channel. Tiles use a lighter picture so they all play smoothly.</li>
+        <li><b>Full-screen tiles:</b> press OK and the tiles fill the whole screen on pure black, with nothing else in the way.</li>
+        <li><b>Easy to see the sound:</b> a thin yellow line and a small speaker mark the tile you're hearing.</li>
+        <li><b>12 more Pakistani live channels:</b> Geo News, Geo News English, ARY News, Express News, 92 News, Hum News, GNN, Aaj News, BOL News, Suno News, ARY Digital and Kids Land Urdu.</li>
+        <li><b>Library:</b> free movies, dramas and shows in Urdu, Hindi, Punjabi and English, updated every week.</li>
+        <li><b>Date beside the clock</b>, a faster start, a smarter Back button, and a clean screen when you watch one channel (the channel bar hides after a minute).</li>
       </ul>
-      <h3 style="margin-top:14px">Also new <span class="ver">in version 1.8.71</span></h3>
-      <ul>
-        <li><b>Pure black full screen:</b> the space around full-screen tiles is now pure black, not grey.</li>
-        <li><b>Smoother tiles:</b> when several tiles play at once, each uses an even lighter picture.</li>
-        <li><b>4×4 layout:</b> 16 tiles replace 3×4; the highlighted one plays, the rest show a picture.</li>
-        <li><b>Thin sound line everywhere:</b> in every TV layout, full screen or not, a very thin yellow line and a small speaker mark the tile with the sound.</li>
-        <li><b>Clean single-channel screen:</b> the channel bar (number, name, star and back arrow) goes away after one minute and comes back when you change channel.</li>
-      </ul>
-      <h3 style="margin-top:14px">Also new <span class="ver">in version 1.8.70</span></h3>
-      <ul>
-        <li><b>Date in the top bar:</b> today's date now shows beside the clock.</li>
-      </ul>
-      <h3 style="margin-top:14px">Also new <span class="ver">in version 1.8.69</span></h3>
-      <ul>
-        <li><b>Full-screen tiles sit together:</b> no black gaps between rows; the tiles are centred on screen. A very thin yellow line marks the tile with the sound, with no tint over the picture.</li>
-        <li><b>Smoother multi-video:</b> when several tiles play at once each uses a lighter picture, so all of them can play.</li>
-      </ul>
-      <h3 style="margin-top:14px">Also new <span class="ver">in version 1.8.68</span></h3>
-      <ul>
-        <li><b>3×4 layout:</b> 12 tiles replace 2×4; the highlighted one plays, the rest show a picture.</li>
-        <li><b>2×3 plays all six:</b> each tile is its own TV, like 2×2 and 1×2.</li>
-        <li><b>Cleaner tiles:</b> no yellow outline on TV layouts; a small speaker shows which tile has the sound, and the space around the video stays black. OK fills the screen with the tiles in every TV layout.</li>
-      </ul>
-      <h3 style="margin-top:14px">Also new <span class="ver">in version 1.8.67</span></h3>
-      <ul>
-        <li><b>Full-screen 2×2 and 1×2:</b> press OK on a tile and the tiles fill the whole screen, nothing else. OK again opens one channel; Back goes back to the tiles under the top bar.</li>
-      </ul>
-      <h3 style="margin-top:14px">Also new <span class="ver">in version 1.8.66</span></h3>
-      <ul>
-        <li><b>2×2 layout on TVs:</b> four channels play at once, each tile its own TV. Up and Down change the highlighted tile's channel, Left and Right move the sound between tiles.</li>
-        <li><b>Faster start:</b> channels load while the welcome screen shows, so they're ready when it ends.</li>
-        <li><b>Back button:</b> closes the search bar, then goes to the top bar; press Back twice to leave the app.</li>
-        <li><b>MTA channels fixed:</b> all 8 MTA channels play again from MTA's new links.</li>
-      </ul>
-      <h3 style="margin-top:14px">Also new <span class="ver">in version 1.8.65</span></h3>
-      <ul>
-        <li><b>More Pakistani live channels:</b> Geo News, Geo News English, ARY News, Express News, 92 News, Hum News, GNN, Aaj News, BOL News, Suno News, ARY Digital and Kids Land Urdu, streamed live from their own YouTube channels. They open in YouTube's player.</li>
-        <li><b>MTA (optional):</b> a tick box in Settings adds 8 MTA live channels and 64 MTA programmes in the Library. It's off unless you turn it on.</li>
-      </ul>
-      <h3 style="margin-top:14px">Also new <span class="ver">in version 1.8.64</span></h3>
-      <ul>
-        <li><b>Library:</b> free movies, dramas and shows in Urdu, Hindi, Punjabi and English, sorted into Movies, Series, Shows and Kids, with one folder per drama. They come from official YouTube and Dailymotion channels plus public-domain films from the Internet Archive, Wikimedia Commons, NASA, Vimeo and PeerTube. Each title appears only once, and new episodes are added every week.</li>
-        <li><b>Four layouts on TVs:</b> the TV button at the top switches between 2×4, 2×3, 1×2 and 1+List (one player with the channel list beside it).</li>
-        <li><b>Starts where you left off:</b> on TVs and tablets the app opens in 1+List, on your Favorites, playing the channel you watched last.</li>
-        <li><b>Favorites button:</b> shows just your favourite channels (up to 100).</li>
-      </ul>
+      <details class="history">
+        <summary>Full update history</summary>
+        <dl>
+          <dt>1.8.72</dt><dd>Lighter video when several tiles play. 4×4 plays all 16 tiles, each its own TV.</dd>
+          <dt>1.8.71</dt><dd>Pure black around full-screen tiles. 4×4 layout (16 tiles) replaces 3×4. Thin yellow line and speaker on the sound tile in every TV layout. The channel bar hides after a minute on one channel.</dd>
+          <dt>1.8.70</dt><dd>Today's date beside the clock.</dd>
+          <dt>1.8.69</dt><dd>Full-screen tiles sit together with no gaps between rows. Lighter video when several tiles play.</dd>
+          <dt>1.8.68</dt><dd>2×3 plays all six tiles. No yellow outline on TV layouts; a small speaker shows the sound tile. OK fills the screen with the tiles in every TV layout.</dd>
+          <dt>1.8.67</dt><dd>OK on a 2×2 or 1×2 tile fills the screen with the tiles; OK again opens one channel, Back returns.</dd>
+          <dt>1.8.66</dt><dd>2×2 layout (four TVs at once). Channels load during the welcome screen. Back closes search, then goes to the top bar; press Back twice to leave. MTA channels fixed.</dd>
+          <dt>1.8.65</dt><dd>12 Pakistani channels streamed live from their own YouTube channels. Optional MTA tick box in Settings (8 live channels, 64 programmes), off unless you turn it on. "Thank you" line removed from the start screen.</dd>
+          <dt>1.8.64</dt><dd>More Library sources: Dailymotion, Wikimedia Commons, NASA, Vimeo, PeerTube and more Internet Archive films, each title once. TVs open in 1+List, on Favorites, on the channel watched last. Favorites hold up to 100 channels.</dd>
+          <dt>1.8.57 to 1.8.63</dt><dd>The Library: free classic movies, Pakistani dramas from official channels, Hindi dubbed movies, then Urdu, Hindi, Punjabi and English sections with a folder per drama and a "Weekly Updates" note. Layout button labels and TV icon.</dd>
+          <dt>1.8.37 to 1.8.56</dt><dd>The layout button and the 1+List layout (one player with the channel list beside it). Favorites button. Tiles slide one channel at a time. App Bazaar link for more free apps.</dd>
+          <dt>1.8.24 to 1.8.36</dt><dd>Live previews on the tiles, speaker button for preview sound, TV tiles sized so only whole rows show, automatic updates.</dd>
+          <dt>1.8.8 to 1.8.19</dt><dd>"Working channels only" list checked every day, your own playlists, countries and languages in Settings, clock and weather, genre row, favourites first.</dd>
+        </dl>
+      </details>
     </div>
     <div class="features">
-      <div class="feature"><div class="ic">📺</div><h3>Built for your TV</h3><p>Big channel tiles in neat rows, with channel numbers. Move with the arrow buttons and press OK to watch.</p></div>
-      <div class="feature"><div class="ic">👀</div><h3>Live preview</h3><p>The highlighted channel plays right on its tile, so you see what's on before you open it. The speaker button turns preview sound on or off.</p></div>
-      <div class="feature"><div class="ic">🍿</div><h3>Library<span class="badge">NEW</span></h3><p>The Library button at the top opens free movies, dramas and shows. Pick a language (Urdu, Hindi, Punjabi or English), then Movies, Series, Shows or Kids. Each drama has its own folder of episodes, and the Library updates every week. Movies and series from your own playlists show up here too.</p></div>
-      <div class="feature"><div class="ic">🔲</div><h3>Choose your layout</h3><p>On a TV, the TV button at the top switches between <b>4×4</b> (16 tiles, each its own TV), <b>2×3</b> (6 tiles, each its own TV), <b>2×2</b> (4 tiles, each its own TV), <b>1×2</b> (2 big tiles, each its own TV) and <b>1+List</b> (one player with the channel list beside it). The app opens in 1+List each time. Left and Right bring in one new channel at a time.</p></div>
-      <div class="feature"><div class="ic">🎬</div><h3>Pick by genre</h3><p>One row at the top: All, News, Entertainment, Religious, Music, Movies, Sports, Kids and more.</p></div>
-      <div class="feature"><div class="ic">⭐</div><h3>Favourites first</h3><p>Hold OK on a channel (or tap its star on a phone) and it moves to the top of the list. The Favorites button shows just your favourites, up to 100 channels. On TVs the app opens on Favorites, on the channel you watched last.</p></div>
+      <div class="feature"><div class="ic">📺</div><h3>Several channels at once</h3><p>On a TV, pick <b>4×4</b> (16 channels), <b>2×3</b> (6), <b>2×2</b> (4) or <b>1×2</b> (2). Every tile plays its own channel, like separate TVs. Press OK to fill the whole screen with the tiles.</p></div>
+      <div class="feature"><div class="ic">🖥️</div><h3>1+List</h3><p>One big player with the channel list beside it. The app opens here each time, on your Favorites, playing the channel you watched last.</p></div>
+      <div class="feature"><div class="ic">🔊</div><h3>See where the sound is</h3><p>A thin yellow line and a small speaker mark the tile you're hearing. Move left or right to hear another tile. The speaker button at the top mutes it.</p></div>
+      <div class="feature"><div class="ic">🍿</div><h3>Library</h3><p>Free movies, dramas and shows. Pick Urdu, Hindi, Punjabi or English, then Movies, Series, Shows or Kids. Each drama has its own folder, and new episodes arrive every week. Only official channels and public-domain films.</p></div>
+      <div class="feature"><div class="ic">🇵🇰</div><h3>Pakistani news and dramas</h3><p>Over 60 Pakistani channels, including Geo News, ARY News, ARY Digital, Express, Hum News, Dunya, Samaa and Kids Land Urdu. Plus Indian, Canadian, British and American channels.</p></div>
+      <div class="feature"><div class="ic">⭐</div><h3>Favourites</h3><p>Hold OK on a channel (or tap its star on a phone) to add it. Favourites come first, and the Favorites button shows just them, up to 100 channels.</p></div>
+      <div class="feature"><div class="ic">🎬</div><h3>Pick by genre</h3><p>One row at the top: All, Favorites, News, Entertainment, Religious, Music, Movies, Sports, Kids and more.</p></div>
       <div class="feature"><div class="ic">🌍</div><h3>Your countries and languages</h3><p>Starts with Pakistani, Indian (Hindi, Urdu, Punjabi), Canadian, British and American channels. Add any country or language in Settings.</p></div>
-      <div class="feature"><div class="ic">✅</div><h3>Working channels only</h3><p>Optional list of channels we check every day, so dead links are left out. You can also add your own playlists.</p></div>
-      <div class="feature"><div class="ic">🕒</div><h3>Clock and weather</h3><p>The time and your local weather sit at the top of the screen.</p></div>
+      <div class="feature"><div class="ic">✅</div><h3>Working channels only</h3><p>An optional list of channels we check every day, so dead links are left out. You can also add your own playlists.</p></div>
+      <div class="feature"><div class="ic">🕒</div><h3>Clock, date and weather</h3><p>The time, today's date and your local weather sit at the top of the screen.</p></div>
+      <div class="feature"><div class="ic">⚡</div><h3>Quick and tidy</h3><p>Channels load while the welcome screen shows. When you watch one channel, the channel bar hides after a minute so you see only the picture.</p></div>
       <div class="feature"><div class="ic">🔄</div><h3>Updates itself</h3><p>New versions download on their own when the app starts. Just press Install. Favourites and settings are kept.</p></div>
     </div>
     <div class="panel remote">
       <h3 style="margin:0 0 8px;font-size:18px">Using the remote</h3>
       <table>
-        <tr><td>Arrows + OK</td><td>Move around the list and open a channel</td></tr>
-        <tr><td>Up / Down</td><td>While watching: previous or next channel (Channel +/- works too)</td></tr>
-        <tr><td>Back</td><td>Return to the list, right on the channel you were watching</td></tr>
-        <tr><td>Left / Right</td><td>On the channel tiles: move along one channel at a time</td></tr>
-        <tr><td>Up</td><td>On the channel tiles: go to the buttons at the top. In 1×2, Up and Down change the highlighted side's channel and holding Up goes to the filter row</td></tr>
-        <tr><td>TV button (top)</td><td>Switch layout: 2×4, 2×3, 1×2 or 1+List</td></tr>
-        <tr><td>Library (top)</td><td>Free movies, dramas and shows</td></tr>
+        <tr><td>Left / Right</td><td>Move between tiles; the sound moves with you</td></tr>
+        <tr><td>Up / Down</td><td>On a tile in 4×4, 2×3, 2×2 or 1×2: change that tile's channel. While watching one channel: previous or next channel (Channel +/- works too)</td></tr>
+        <tr><td>OK</td><td>Fill the screen with the tiles; OK again opens that channel on its own</td></tr>
         <tr><td>Hold OK</td><td>Add or remove a favourite</td></tr>
-        <tr><td>Gear (top right)</td><td>Settings: channel list, countries, languages, your playlists</td></tr>
+        <tr><td>Back</td><td>Return to the tiles, then to the top bar. Press Back twice to leave the app. Back also closes search</td></tr>
+        <tr><td>TV button (top)</td><td>Switch layout: 4×4, 2×3, 2×2, 1×2 or 1+List</td></tr>
+        <tr><td>Library (top)</td><td>Free movies, dramas and shows</td></tr>
+        <tr><td>Speaker (top)</td><td>Turn tile sound on or off</td></tr>
+        <tr><td>Gear (top right)</td><td>Settings: channel list, countries, languages, your playlists, MTA</td></tr>
       </table>
     </div>
   </section>
