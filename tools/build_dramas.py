@@ -55,21 +55,22 @@ CHANNELS = [
 # The same TV channels' own Dailymotion accounts (only verified accounts with exactly that
 # name), for episodes their YouTube channels don't have: (name, search, language).
 DAILYMOTION = "https://api.dailymotion.com"
+# Also tried by these Dailymotion usernames, since its search ranks big channels poorly.
 DM_CHANNELS = [
-    ("ARY Digital", "ARY Digital", "Urdu"),
-    ("HUM TV", "HUM TV", "Urdu"),
-    ("Geo Entertainment", "Har Pal Geo", "Urdu"),
-    ("Green Entertainment", "Green Entertainment", "Urdu"),
-    ("Express TV", "Express Entertainment", "Urdu"),
-    ("A-Plus", "A Plus Entertainment", "Urdu"),
-    ("ARY Zindagi", "ARY Zindagi", "Urdu"),
-    ("Geo Kahani", "Geo Kahani", "Urdu"),
-    ("PTV Home", "PTV Home", "Urdu"),
-    ("Taarak Mehta Ka Ooltah Chashmah", "Taarak Mehta Ka Ooltah Chashmah", "Hindi"),
-    ("Sony SAB", "Sony SAB", "Hindi"),
-    ("Zee TV", "Zee TV", "Hindi"),
-    ("Colors TV", "Colors TV", "Hindi"),
-    ("Star Plus", "StarPlus", "Hindi"),
+    ("ARY Digital", "ARY Digital", "Urdu", ["arydigital", "ARYDigitalasia", "arydigitalofficial"]),
+    ("HUM TV", "HUM TV", "Urdu", ["humtv", "humtvofficial", "HUMTVpk"]),
+    ("Geo Entertainment", "Har Pal Geo", "Urdu", ["harpalgeo", "harpalgeoofficial", "geoentertainment"]),
+    ("Green Entertainment", "Green Entertainment", "Urdu", ["greenentertainment", "greentvpk"]),
+    ("Express TV", "Express Entertainment", "Urdu", ["expressentertainment", "expresstv"]),
+    ("A-Plus", "A Plus Entertainment", "Urdu", ["aplusentertainment", "aplustv"]),
+    ("ARY Zindagi", "ARY Zindagi", "Urdu", ["aryzindagi"]),
+    ("Geo Kahani", "Geo Kahani", "Urdu", ["geokahani"]),
+    ("PTV Home", "PTV Home", "Urdu", ["ptvhome", "ptvhomeofficial"]),
+    ("Taarak Mehta Ka Ooltah Chashmah", "Taarak Mehta Ka Ooltah Chashmah", "Hindi", ["tmkoc", "taarakmehtakaooltahchashmah"]),
+    ("Sony SAB", "Sony SAB", "Hindi", ["sonysab", "sabtv"]),
+    ("Zee TV", "Zee TV", "Hindi", ["zeetv", "zeetvofficial"]),
+    ("Colors TV", "Colors TV", "Hindi", ["colorstv", "colors"]),
+    ("Star Plus", "StarPlus", "Hindi", ["starplus", "starplusofficial"]),
 ]
 
 # Channels whose single-episode telefilms go under Urdu Movies.
@@ -311,14 +312,20 @@ def get_json(url):
     return json.loads(fetch(url, tries=3))
 
 
-def dm_user(search):
+def dm_user(search, usernames=()):
     """The id of the verified Dailymotion account with exactly this name, or None."""
-    query = urllib.parse.urlencode({"search": search, "fields": "id,username,screenname,verified,videos_total", "limit": 20})
+    fields = "id,username,screenname,verified,videos_total"
+    users = []
+    for username in usernames:
+        try:
+            users.append(get_json(f"{DAILYMOTION}/user/{urllib.parse.quote(username)}?fields={fields}"))
+        except Exception:  # noqa: BLE001
+            pass  # no such user
+    query = urllib.parse.urlencode({"search": search, "fields": fields, "limit": 20})
     try:
-        users = get_json(f"{DAILYMOTION}/users?{query}").get("list", [])
+        users += get_json(f"{DAILYMOTION}/users?{query}").get("list", [])
     except Exception as e:  # noqa: BLE001
         print(f"  Dailymotion search {search!r} failed ({e})", file=sys.stderr)
-        return None
     for u in users:
         names = (u.get("screenname") or "", u.get("username") or "")
         if u.get("verified") and any(is_owner(n, search, exact=True) for n in names):
@@ -333,8 +340,8 @@ def dm_user(search):
 def dailymotion(kept, today):
     """Adds full episodes from DM_CHANNELS to kept (keys "dm:<id>"); YouTube's copy of an
     episode is the one listed when both have it."""
-    for name, search, language in DM_CHANNELS:
-        uid = dm_user(search)
+    for name, search, language, usernames in DM_CHANNELS:
+        uid = dm_user(search, usernames)
         if not uid:
             continue
         videos = []
