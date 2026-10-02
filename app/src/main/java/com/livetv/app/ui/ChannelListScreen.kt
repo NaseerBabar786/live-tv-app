@@ -1332,8 +1332,8 @@ private fun WeatherNow() {
 }
 
 /**
- * Preview picture quality. Normal: SD. Low (several tiles playing, e.g. 2×3): at most 160×90 and
- * 225 kbit/s. Lower (2×3): half of Low. Lowest (4×4): a quarter of Low (40×23, 56 kbit/s). A stream with no smaller version plays its smallest one.
+ * Preview picture quality. Normal: SD. Low (2×2): at most 160×90 and 225 kbit/s. Lower (2×3):
+ * half of Low. Lowest (4×4): a quarter of Low. A stream with no smaller version plays its smallest one.
  */
 private enum class Quality { Normal, Low, Lower, Lowest }
 
