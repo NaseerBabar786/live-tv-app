@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Live TV</title>
-<meta name="description" content="Watch free live TV channels from Pakistan, India, Canada, the UK and the USA, and get the Live TV app for Android phones and TVs.">
+<meta name="description" content="Watch free live TV channels from Pakistan, India, Canada, the UK and the USA, and get the Live TV app for Android phones and TVs, with a free Library of movies and dramas.">
 <meta property="og:title" content="Live TV: free live TV on your phone and TV">
 <meta property="og:description" content="Pakistani, Indian, Canadian, British and American channels, plus 170 more countries. Watch in your browser or get the app for Android and Google TV.">
 <meta property="og:image" content="https://tv.bulkbazaar.ca/share.jpg">
@@ -149,6 +149,13 @@
   .remote td:last-child { color: var(--muted); }
   @media (max-width: 480px) { .remote td:first-child { white-space: normal; width: 38%; } }
 
+  .whatsnew { margin: 0 0 16px; border-color: var(--accent); }
+  .whatsnew h3 { margin: 0 0 4px; font-size: 18px; }
+  .whatsnew .ver { color: var(--focus); font-weight: 800; }
+  .whatsnew ul { margin: 8px 0 0; padding-left: 20px; }
+  .whatsnew li { margin: 0 0 6px; color: var(--muted); }
+  .whatsnew li b { color: #fff; }
+  .badge { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--red); color: #fff; font-size: 12px; font-weight: 800; vertical-align: 2px; }
   .copy { margin-left: 8px; padding: 4px 12px; font-size: 14px; vertical-align: middle; }
   .warn { border-left-color: var(--focus); color: var(--text); }
   .playlists { margin-top: 16px; }
@@ -189,6 +196,7 @@
       <ul class="facts">
         <li>Free, no sign-up</li>
         <li>Thousands of channels</li>
+        <li>Free movies and dramas</li>
         <li>Made for the TV remote</li>
         <li>Updates itself</li>
       </ul>
@@ -214,15 +222,24 @@
   <section id="features">
     <h2>What's in the app</h2>
     <p class="lead">Everything you see here, plus more, in the free Live TV app for Android phones and TVs.</p>
+    <div class="panel whatsnew">
+      <h3>What's new <span class="ver">in version 1.8.64</span></h3>
+      <ul>
+        <li><b>Library:</b> free movies, dramas and shows in Urdu, Hindi, Punjabi and English, sorted into Movies, Series, Shows and Kids, with one folder per drama. They come from official YouTube and Dailymotion channels plus public-domain films from the Internet Archive, Wikimedia Commons, NASA, Vimeo and PeerTube. Each title appears only once, and new episodes are added every week.</li>
+        <li><b>Four layouts on TVs:</b> the TV button at the top switches between 2×4, 2×3, 1×2 and 1+List (one player with the channel list beside it).</li>
+        <li><b>Starts where you left off:</b> on TVs and tablets the app opens in 1+List, on your Favorites, playing the channel you watched last.</li>
+        <li><b>Favorites button:</b> shows just your favourite channels (up to 100).</li>
+      </ul>
+    </div>
     <div class="features">
       <div class="feature"><div class="ic">📺</div><h3>Built for your TV</h3><p>Big channel tiles in neat rows, with channel numbers. Move with the arrow buttons and press OK to watch.</p></div>
       <div class="feature"><div class="ic">👀</div><h3>Live preview</h3><p>The highlighted channel plays right on its tile, so you see what's on before you open it. The speaker button turns preview sound on or off.</p></div>
-      <div class="feature"><div class="ic">🔲</div><h3>Choose your layout</h3><p>On a TV, the layout button at the top switches between 8 tiles, 6 tiles, 2 big tiles, or one player with a channel list beside it. Left and Right bring in one new channel at a time. With 2 big tiles, each side is its own TV: Up and Down change the highlighted side, and holding Up goes to the filter row.</p></div>
+      <div class="feature"><div class="ic">🍿</div><h3>Library<span class="badge">NEW</span></h3><p>The Library button at the top opens free movies, dramas and shows. Pick a language (Urdu, Hindi, Punjabi or English), then Movies, Series, Shows or Kids. Each drama has its own folder of episodes, and the Library updates every week. Movies and series from your own playlists show up here too.</p></div>
+      <div class="feature"><div class="ic">🔲</div><h3>Choose your layout</h3><p>On a TV, the TV button at the top switches between <b>2×4</b> (8 tiles), <b>2×3</b> (6 tiles), <b>1×2</b> (2 big tiles, each its own TV) and <b>1+List</b> (one player with the channel list beside it). The app opens in 1+List each time. Left and Right bring in one new channel at a time.</p></div>
       <div class="feature"><div class="ic">🎬</div><h3>Pick by genre</h3><p>One row at the top: All, News, Entertainment, Religious, Music, Movies, Sports, Kids and more.</p></div>
-      <div class="feature"><div class="ic">⭐</div><h3>Favourites first</h3><p>Hold OK on a channel (or tap its star on a phone) and it moves to the top of the list. The Favorites button shows just your favourites.</p></div>
+      <div class="feature"><div class="ic">⭐</div><h3>Favourites first</h3><p>Hold OK on a channel (or tap its star on a phone) and it moves to the top of the list. The Favorites button shows just your favourites, up to 100 channels. On TVs the app opens on Favorites, on the channel you watched last.</p></div>
       <div class="feature"><div class="ic">🌍</div><h3>Your countries and languages</h3><p>Starts with Pakistani, Indian (Hindi, Urdu, Punjabi), Canadian, British and American channels. Add any country or language in Settings.</p></div>
       <div class="feature"><div class="ic">✅</div><h3>Working channels only</h3><p>Optional list of channels we check every day, so dead links are left out. You can also add your own playlists.</p></div>
-      <div class="feature"><div class="ic">🍿</div><h3>Movies and series</h3><p>The film button at the top opens the movies and TV series from the playlists you added in Settings, as posters you can filter and search. A series opens its list of episodes.</p></div>
       <div class="feature"><div class="ic">🕒</div><h3>Clock and weather</h3><p>The time and your local weather sit at the top of the screen.</p></div>
       <div class="feature"><div class="ic">🔄</div><h3>Updates itself</h3><p>New versions download on their own when the app starts. Just press Install. Favourites and settings are kept.</p></div>
     </div>
@@ -233,6 +250,9 @@
         <tr><td>Up / Down</td><td>While watching: previous or next channel (Channel +/- works too)</td></tr>
         <tr><td>Back</td><td>Return to the list, right on the channel you were watching</td></tr>
         <tr><td>Left / Right</td><td>On the channel tiles: move along one channel at a time</td></tr>
+        <tr><td>Up</td><td>On the channel tiles: go to the buttons at the top. In 1×2, Up and Down change the highlighted side's channel and holding Up goes to the filter row</td></tr>
+        <tr><td>TV button (top)</td><td>Switch layout: 2×4, 2×3, 1×2 or 1+List</td></tr>
+        <tr><td>Library (top)</td><td>Free movies, dramas and shows</td></tr>
         <tr><td>Hold OK</td><td>Add or remove a favourite</td></tr>
         <tr><td>Gear (top right)</td><td>Settings: channel list, countries, languages, your playlists</td></tr>
       </table>
