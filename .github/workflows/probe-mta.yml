@@ -1,0 +1,17 @@
+name: Probe MTA
+on: push
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for p in chlivemta1.akamaized.net/hls/live/2008145/mta1 chlivemta1.akamaized.net/hls/live/2008145/mta2 livemtaasia.akamaized.net/hls/live/2039224/mta6asia livemtaasia.akamaized.net/hls/live/2039224/mtaasia2 chlivemta1.akamaized.net/hls/live/2010556/mta3alarabia chlivemta.akamaized.net/hls/live/2016718/mta8; do
+            for ref in "" "https://www.mta.tv/"; do
+              echo "== $p referer=[$ref]"
+              curl -s -m 20 -o body.txt -D - ${ref:+-e "$ref" -H "Origin: https://www.mta.tv"} "https://$p/playlist.m3u8" | head -12
+              head -c 400 body.txt; echo
+            done
+          done
+          echo "== mta.tv live page links"
+          curl -sL -m 20 https://www.mta.tv/live | grep -oE 'https?://[^"'"'"' ]+\.m3u8[^"'"'"' ]*' | sort -u | head -40
+          curl -sL -m 20 https://www.mta.tv/ | grep -oE 'https?://[^"'"'"' ]+(akamaized|m3u8)[^"'"'"' ]*' | sort -u | head -40
