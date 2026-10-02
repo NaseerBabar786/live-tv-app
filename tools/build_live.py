@@ -14,6 +14,7 @@ Standard library only. Run: python3 tools/build_live.py
 import os
 import re
 import sys
+import unicodedata
 import urllib.parse
 
 from build_dramas import DOCS, _text, channel_id, fetch
@@ -67,10 +68,12 @@ def main():
         if not live:
             print(f"{name} ({cid}): not live now; left out", file=sys.stderr)
             continue
-        vid, title = next((v for v in live if ALWAYS_ON.search(v[1])), live[0])
+        # NFKC turns styled digits ("𝟐𝟒/𝟕") into plain ones.
+        vid, title = next((v for v in live if ALWAYS_ON.search(unicodedata.normalize("NFKC", v[1]))), live[0])
+        language = "English" if name.endswith("English") else "Urdu"
         print(f"{name} ({cid}): {vid} {title[:70]!r} ({len(live)} live)")
         lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-country="PK" '
-                     f'tvg-language="Urdu" tvg-genre="{genre}" group-title="Pakistani",{name}')
+                     f'tvg-language="{language}" tvg-genre="{genre}" group-title="Pakistani",{name}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     print(f"{len(lines) // 2} of {len(LIVE_CHANNELS)} channels live")
     if not lines:
