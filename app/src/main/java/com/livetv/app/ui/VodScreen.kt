@@ -63,7 +63,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.SubcomposeAsyncImage
 import kotlinx.coroutines.delay
+import com.livetv.app.data.Bilibili
 import com.livetv.app.data.Channel
+import com.livetv.app.data.YouTube
 import com.livetv.app.player.PlayerScreen
 
 private const val TAB_MOVIES = "Movies"
@@ -96,6 +98,14 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
     val pickedFocus = remember { FocusRequester() }
 
     playing?.let { channel ->
+        if (Bilibili.isVideo(channel.url)) {
+            OpenInApp(url = channel.url, appName = "Bilibili", onDone = { playing = null })
+            return
+        }
+        YouTube.videoId(channel.url)?.let { id ->
+            YouTubePlayer(videoId = id, onBack = { playing = null })
+            return
+        }
         PlayerScreen(
             channel = channel,
             favorite = false,

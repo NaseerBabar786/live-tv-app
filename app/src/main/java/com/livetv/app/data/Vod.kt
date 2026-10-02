@@ -1,5 +1,7 @@
 package com.livetv.app.data
 
+import com.livetv.app.Edition
+
 /**
  * Picks the movies and TV series out of IPTV playlists and groups series episodes by show.
  *
@@ -7,11 +9,25 @@ package com.livetv.app.data
  * /movie/ link is a movie; an Xtream /series/ link, or a video file whose name has an
  * episode number ("S01 E02") or whose group says series or drama, is an episode. Live
  * streams (HLS, MPEG-TS) never count, even in a group called "Movies", because those are
- * live movie channels.
+ * live movie channels. YouTube videos count too; they play in YouTube's own player.
  */
 object Vod {
 
     enum class Kind { LIVE, MOVIE, EPISODE }
+
+    /** Free public-domain films and TV, rebuilt weekly by tools/build_movies.py. */
+    const val FREE_MOVIES_URL = "https://tv.bulkbazaar.ca/Movies.m3u"
+
+    /** The newest episodes from Pakistani channels' official YouTube uploads, rebuilt daily by tools/build_dramas.py. */
+    const val DRAMAS_URL = "https://tv.bulkbazaar.ca/Dramas.m3u"
+
+    /** The playlists Movies & Series always shows: the free lists in Live TV, none in the store editions. */
+    fun builtIn(): List<Playlist> =
+        if (Edition.HAS_VOD) {
+            listOf(Playlist("Pakistani dramas", DRAMAS_URL), Playlist("Free classics", FREE_MOVIES_URL))
+        } else {
+            emptyList()
+        }
 
     /** One show and its episodes, in season and episode order. */
     data class Show(val name: String, val logo: String?, val group: String?, val episodes: List<Episode>)
@@ -37,13 +53,18 @@ object Vod {
 
     fun kind(channel: Channel): Kind {
         val path = channel.url.substringBefore('?').substringBefore('#').lowercase()
+        if (YouTube.videoId(channel.url) != null || Bilibili.isVideo(channel.url)) return if (isEpisode(channel)) Kind.EPISODE else Kind.MOVIE
         val hls = path.endsWith(".m3u8")
         if ("/series/" in path && !hls) return Kind.EPISODE
         if ("/movie/" in path && !hls) return Kind.MOVIE
         val video = path.substringAfterLast('/').substringAfterLast('.', "") in videoExtensions
         if (!video) return Kind.LIVE
+        return if (isEpisode(channel)) Kind.EPISODE else Kind.MOVIE
+    }
+
+    private fun isEpisode(channel: Channel): Boolean {
         val group = channel.group.orEmpty().lowercase()
-        return if (parse(channel.name) != null || seriesWords.any { it in group }) Kind.EPISODE else Kind.MOVIE
+        return parse(channel.name) != null || seriesWords.any { it in group }
     }
 
     /** Show name, season and episode number from an episode's name, or null when it has none. */
