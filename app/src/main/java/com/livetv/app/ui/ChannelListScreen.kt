@@ -79,6 +79,7 @@ import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -156,7 +157,7 @@ fun ChannelListScreen(
     var showSettings by rememberSaveable { mutableStateOf(false) }
     val gridState = rememberLazyGridState()
     val lastWatchedFocus = remember { FocusRequester() }
-    // Lets 2×1 move the highlight to a card or the layout button directly.
+    // Lets 1×2 move the highlight to a card or the layout button directly.
     val cardFocus = remember { mutableMapOf<String, FocusRequester>() }
     fun cardRequester(id: String): FocusRequester =
         if (id == state.lastWatchedId) lastWatchedFocus else cardFocus.getOrPut(id) { FocusRequester() }
@@ -210,7 +211,7 @@ fun ChannelListScreen(
     val slots = tileLayout.columns * tileLayout.rows
     var windowStart by rememberSaveable { mutableIntStateOf(0) }
     val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
-    // 2×1 is two separate TVs: Up and Down change the channel on the highlighted side only.
+    // 1×2 is two separate TVs: Up and Down change the channel on the highlighted side only.
     // [twoIds] holds the two sides' channels once one has been changed.
     var twoIds by rememberSaveable { mutableStateOf(emptyList<String>()) }
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
@@ -255,7 +256,7 @@ fun ChannelListScreen(
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
-        // In 2×1 both cards play; otherwise only the highlighted one.
+        // In 1×2 both cards play; otherwise only the highlighted one.
         val playAll = wideScreen && tileLayout == TileLayout.Two
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
@@ -355,7 +356,10 @@ fun ChannelListScreen(
                             },
                             colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
-                        ) { Text("${tileLayout.label} Mode", fontWeight = FontWeight.Bold) }
+                        ) {
+                            Icon(Icons.Filled.Tv, contentDescription = null)
+                            Text("${tileLayout.label} Mode", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                        }
                     }
                     if (onOpenVod != null) {
                         TextButton(
@@ -1150,7 +1154,7 @@ private val MinTileWidth = 170.dp
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
     Eight("2×4", 4, 2),
     Six("2×3", 3, 2),
-    Two("2×1", 2, 1),
+    Two("1×2", 2, 1),
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
 }
