@@ -47,6 +47,8 @@ data class UiState(
     val playlists: List<Playlist> = emptyList(),
     /** Live TV's channel list: the main (Famelack) list or iptv-org's. */
     val provider: String = ChannelRepository.PROVIDER_FAMELACK,
+    /** Whether MTA's channels and Library programmes are shown (Live TV only). */
+    val showMta: Boolean = false,
 ) {
     /** Stream Player Plus with no playlist yet: the screen asks the viewer to add one. */
     val needsPlaylist: Boolean
@@ -112,6 +114,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             languageFilter = repo.languages,
             playlists = repo.playlists,
             provider = repo.provider,
+            showMta = repo.showMta,
         )
     )
     val state: StateFlow<UiState> = _state.asStateFlow()
@@ -201,6 +204,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         if (provider == repo.provider) return
         repo.provider = provider
         _state.update { it.copy(provider = provider, filter = FILTER_ALL, category = null) }
+        reload()
+    }
+
+    fun setShowMta(show: Boolean) {
+        if (show == repo.showMta) return
+        repo.showMta = show
+        _state.update { it.copy(showMta = show, category = null) }
         reload()
     }
 

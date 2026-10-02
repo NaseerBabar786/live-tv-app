@@ -58,6 +58,11 @@ class ChannelRepository(context: Context) {
         get() = Playlist.fromJson(prefs.getString(KEY_PLAYLISTS, null))
         set(value) = prefs.edit { putString(KEY_PLAYLISTS, Playlist.toJson(value)) }
 
+    /** Whether MTA's channels and Library programmes are shown (Live TV only; off by default). */
+    var showMta: Boolean
+        get() = Edition.HAS_VOD && prefs.getBoolean(KEY_MTA, false)
+        set(value) = prefs.edit { putBoolean(KEY_MTA, value) }
+
     var lastChannelUrl: String?
         get() = prefs.getString(KEY_LAST_CHANNEL, null)
         set(value) = prefs.edit { putString(KEY_LAST_CHANNEL, value) }
@@ -108,9 +113,11 @@ class ChannelRepository(context: Context) {
                 else -> M3uParser.parse(downloadCached(source, source))
             }
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
+            // MTA's own channels go after the list's, unless the list already has them.
+            val withMta = if (showMta) channels + Mta.CHANNELS else channels
             // Lists can repeat a stream (e.g. one channel filed under two names). The
             // stream URL is the channel's key in the grid, and a repeated key crashes it.
-            channels.distinctBy { it.id }
+            withMta.distinctBy { it.id }
         }
     }
 
@@ -120,7 +127,8 @@ class ChannelRepository(context: Context) {
      * name when the playlist gives none.
      */
     suspend fun loadVod(): List<Channel> = coroutineScope {
-        (playlists + Vod.builtIn()).map { playlist ->
+        val mta = if (showMta) listOf(Playlist("MTA", Mta.VIDEOS_URL)) else emptyList()
+        (playlists + Vod.builtIn() + mta).map { playlist ->
             async(Dispatchers.IO) {
                 runCatching {
                     val text = when {
@@ -245,6 +253,7 @@ class ChannelRepository(context: Context) {
         private const val KEY_LANGUAGES = "languages"
         private const val KEY_PLAYLISTS = "playlists"
         private const val KEY_PROVIDER = "provider"
+        private const val KEY_MTA = "mta"
         const val PROVIDER_FAMELACK = "famelack"
         const val PROVIDER_CHECKED = "checked"
     }

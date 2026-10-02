@@ -65,6 +65,8 @@ fun SettingsDialog(
     languages: List<String>,
     selectedLanguages: Set<String>,
     onLanguagesChange: (Set<String>) -> Unit,
+    showMta: Boolean,
+    onShowMtaChange: (Boolean) -> Unit,
     onDismiss: () -> Unit,
     onSave: (String) -> Unit,
 ) {
@@ -180,6 +182,27 @@ fun SettingsDialog(
                     selected = picked != null,
                     enabled = countries.isNotEmpty(),
                 ) { pickingCountries = true }
+
+                HorizontalDivider()
+                Text("MTA (Ahmadiyya)", fontWeight = FontWeight.Bold)
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .focusGlow(ChipShape)
+                        .clickable { onShowMtaChange(!showMta) }
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Checkbox(checked = showMta, onCheckedChange = null)
+                    Column(Modifier.padding(start = 8.dp)) {
+                        Text("Show MTA channels and programmes")
+                        Text(
+                            "Muslim Television Ahmadiyya: 8 live channels and its programmes in the Library.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.secondary,
+                        )
+                    }
+                }
 
                 HorizontalDivider()
                 Text("My playlists", fontWeight = FontWeight.Bold)

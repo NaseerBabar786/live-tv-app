@@ -15,6 +15,7 @@ Episodes found on earlier runs are kept for KEEP_DAYS, so each show builds up.
 Writes (in docs/, served at tv.bulkbazaar.ca):
   Dramas.m3u     the playlist (built into Live TV's Movies & Series)
   dramas.json    every episode kept, with the day it was found, and counts
+  MTA.m3u        MTA's own videos (an optional Library section, off unless the viewer turns it on)
 
 Standard library only. Run: python3 tools/build_dramas.py
 """
@@ -110,6 +111,17 @@ KIDS_CHANNELS = [
     ("Mr Bean", ["@MrBean"], "Mr Bean", "English", 5),
     ("Peppa Pig", ["@PeppaPigOfficial", "@peppapig"], "Peppa Pig", "English", 5),
     ("Pocoyo", ["@Pocoyo", "@PocoyoEnglish"], "Pocoyo", "English", 5),
+]
+# Muslim Television Ahmadiyya's own channels; their videos go to MTA.m3u only, which Live
+# TV shows only when the viewer turns MTA on in Settings.
+MTA_CHANNELS = [
+    ("MTA International", ["@mtaonline", "@MTAInternational", "@mtaonline1"],
+     "MTA International|MTA Online|Muslim Television Ahmadiyya|MTA TV", 10),
+]
+MTA_FOLDERS = [
+    ("Friday Sermons", re.compile(r"friday sermon|khutba|خطبہ", re.I)),
+    ("Quran", re.compile(r"\bquran|qur'?an|tilawat|recitation|تلاوت", re.I)),
+    ("Children's Programmes", re.compile(r"\b(kids?|children|bachon|atfal|waqf-?e-?nau)\b", re.I)),
 ]
 SHOW_SKIP = re.compile(r"\b(teaser|promo|trailer|shorts|live stream|live)\b|#shorts", re.IGNORECASE)
 # Channels of one show only, whose titles name the story arc instead ("Flats Ki Renovation Episode 1778").
@@ -500,6 +512,43 @@ def channel_shows(kept, today, channels, genre):
         print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new {genre.lower()}")
 
 
+def mta(kept, today):
+    """Adds MTA's full videos to kept, each in a folder by programme and in Urdu or English."""
+    for name, handles, query, shortest in MTA_CHANNELS:
+        handle, cid = channel_id(handles, query)
+        if not cid:
+            print(f"{name}: channel not found", file=sys.stderr)
+            continue
+        videos, seen = [], set()
+        for url in (f"https://www.youtube.com/channel/{cid}/videos",
+                    f"https://www.youtube.com/channel/{cid}/search?query=friday+sermon",
+                    f"https://www.youtube.com/channel/{cid}/search?query=quran",
+                    f"https://www.youtube.com/channel/{cid}/search?query=children"):
+            try:
+                for v in videos_page(url):
+                    if v[0] not in seen:
+                        seen.add(v[0])
+                        videos.append(v)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name}: {url} failed ({e})", file=sys.stderr)
+        new = 0
+        for vid, title, mins in videos:
+            if SHOW_SKIP.search(title) or (mins is not None and mins < shortest):
+                continue
+            folder = next((f for f, pattern in MTA_FOLDERS if pattern.search(title)), "Programmes")
+            genre = "Kids" if folder == "Children's Programmes" else "Shows"
+            language = "Urdu" if re.search(r"urdu|[\u0600-\u06ff]", title, re.I) else "English"
+            if vid in kept:
+                kept[vid]["seen"] = today.isoformat()
+            else:
+                kept[vid] = {"item": short_title(title), "folder": folder, "genre": genre, "channel": name,
+                             "language": language, "title": title, "mta": True, "added": today.isoformat()}
+                new += 1
+        print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new")
+        for _, title, mins in videos[:5]:
+            print(f"    e.g. {title} ({mins and round(mins)} min)")
+
+
 def films(kept, today):
     """Adds full films from FILM_CHANNELS to kept."""
     for name, handles, query, language in FILM_CHANNELS:
@@ -647,6 +696,7 @@ def main():
     films(kept, today)
     channel_shows(kept, today, SHOW_CHANNELS, "Shows")
     channel_shows(kept, today, KIDS_CHANNELS, "Kids")
+    mta(kept, today)
 
     # Kept until KEEP_DAYS after a video was last found, so a show still on its channel's
     # page (such as an old PTV classic) stays.
@@ -655,7 +705,8 @@ def main():
     episodes = {k: v for k, v in kept.items() if "show" in v}
     movies = {k: v for k, v in kept.items() if "movie" in v}
     telefilms = {k: v for k, v in kept.items() if "telefilm" in v}
-    items = {k: v for k, v in kept.items() if "item" in v}
+    items = {k: v for k, v in kept.items() if "item" in v and not v.get("mta")}
+    mta_items = {k: v for k, v in kept.items() if v.get("mta")}
     rows = sorted(unique_episodes(episodes), key=lambda kv: (kv[1]["channel"], kv[1]["show"].lower(), kv[1]["episode"]))
 
     lines = ["#EXTM3U", "# Pakistani dramas, shows, cartoons and Hindi dubbed movies from their owners' official YouTube uploads."]
@@ -687,12 +738,20 @@ def main():
         lines.append(v.get("url") or f"https://www.youtube.com/watch?v={vid}")
     with open(os.path.join(DOCS, "Dramas.m3u"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
+    lines = ["#EXTM3U", "# MTA (Muslim Television Ahmadiyya) programmes from its own YouTube channel."]
+    for vid, v in sorted(mta_items.items(), key=lambda kv: (kv[1]["folder"], kv[1]["added"], kv[1]["item"]), reverse=True):
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v["language"]}" '
+                     f'tvg-genre="{v["genre"]}" group-title="MTA {v["folder"]}",{v["item"].replace(",", " ")}')
+        lines.append(f"https://www.youtube.com/watch?v={vid}")
+    with open(os.path.join(DOCS, "MTA.m3u"), "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
     shows = {(v["channel"], v["show"]) for v in episodes.values()}
     with open(state_path, "w", encoding="utf-8") as f:
         json.dump({"built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
                    "shows": len(shows), "episodes": len(episodes), "movies": len(movies),
                    "telefilms": len(telefilms), "show_videos": sum(v["genre"] == "Shows" for v in items.values()),
-                   "kids_videos": sum(v["genre"] == "Kids" for v in items.values()), "videos": kept},
+                   "kids_videos": sum(v["genre"] == "Kids" for v in items.values()), "mta_videos": len(mta_items),
+                   "videos": kept},
                   f, indent=1, ensure_ascii=False)
         f.write("\n")
     print(f"Wrote docs/Dramas.m3u: {len(shows)} shows, {len(episodes)} episodes, {len(movies)} movies, "

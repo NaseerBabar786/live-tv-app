@@ -94,6 +94,11 @@ fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> U
                 onDismiss()
                 viewModel.setLanguages(it)
             },
+            showMta = state.showMta,
+            onShowMtaChange = {
+                onDismiss()
+                viewModel.setShowMta(it)
+            },
             onDismiss = onDismiss,
             onSave = {
                 onDismiss()
