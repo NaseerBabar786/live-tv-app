@@ -49,7 +49,6 @@ CHANNELS = [
     ("Geo Kahani", ["@GeoKahani", "@GeoKahaniOfficial"], "Geo Kahani", "Urdu"),
     ("Taarak Mehta Ka Ooltah Chashmah", ["@TaarakMehtaKaOoltahChashmah", "@tmkoc"], "Taarak Mehta Ka Ooltah Chashmah", "Hindi"),
     ("Prasar Bharati Archives", ["@PrasarBharatiArchives", "@prasarbharatiarchive"], "Prasar Bharati Archives", "Hindi"),
-    ("DD National", ["@DDNational", "@DDNationalOfficial"], "DD National", "Hindi"),
     ("FilmRise TV", ["@FilmRiseTV", "@FilmRiseClassicTV", "@FilmRiseTelevision"], "FilmRise", "English"),
 ]
 
@@ -83,7 +82,9 @@ KIDS_CHANNELS = [
     ("Peppa Pig", ["@PeppaPigOfficial", "@peppapig"], "Peppa Pig", "English", 5),
     ("Pocoyo", ["@Pocoyo", "@PocoyoEnglish"], "Pocoyo", "English", 5),
 ]
-SHOW_SKIP = re.compile(r"\b(teaser|promo|trailer|shorts)\b|#shorts", re.IGNORECASE)
+SHOW_SKIP = re.compile(r"\b(teaser|promo|trailer|shorts|live stream|live)\b|#shorts", re.IGNORECASE)
+# A "show name" that is only a filler word ("FULL Episode 4777"): the channel's name is used instead.
+NO_SHOW_NAME = re.compile(r"^(full|full episode|new|latest|watch the show|se\s*\d+|season\s*\d+)$", re.IGNORECASE)
 
 # Official YouTube channels of the companies that own the Hindi dubbed rights and
 # publish full movies free themselves.
@@ -106,7 +107,6 @@ FILM_CHANNELS = [
     ("White Hill Studios", ["@WhiteHillStudios", "@WhiteHillMusic"], "White Hill", "Punjabi"),
     ("Saga Music", ["@SagaMusic", "@SagaHits"], "Saga", "Punjabi"),
     ("Speed Records", ["@SpeedRecords", "@SpeedPunjabi"], "Speed Records", "Punjabi"),
-    ("Evernew Studio", ["@EvernewStudio", "@EvernewPictures"], "Evernew", "Punjabi"),
     ("FilmRise Movies", ["@FilmRiseMovies", "@FilmRise"], "FilmRise", "English"),
 ]
 MIN_FILM_MINUTES = 70
@@ -266,7 +266,7 @@ def episode(title):
     return show, int(number)
 
 
-FILLER = re.compile(r"\b(latest|new|released|superhit|super hit|blockbuster|south|full|movie|action|romantic|comedy|hd|4k|\d{4})\b", re.I)
+FILLER = re.compile(r"\b(latest|new|released|superhit|super hit|blockbuster|south|full|movie|action|romantic|comedy|hd|4k|hindi|\d{4})\b", re.I)
 
 
 def movie_name(title):
@@ -333,6 +333,8 @@ def channel_shows(kept, today, channels, genre):
         new = 0
         for vid, title, mins in videos:
             if SHOW_SKIP.search(title) or (mins is not None and mins < shortest):
+                continue
+            if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
                 continue
             if vid in kept:
                 kept[vid]["seen"] = today.isoformat()
@@ -470,10 +472,13 @@ def main():
             if not ep or (mins is not None and mins < MIN_MINUTES):
                 skipped.append(f"{title} ({mins and round(mins)} min)")
                 continue
+            if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
+                continue
+            show = name if NO_SHOW_NAME.match(ep[0].strip()) else ep[0]
             if vid in kept:
                 kept[vid]["seen"] = today.isoformat()
             else:
-                kept[vid] = {"show": ep[0], "episode": ep[1], "channel": name, "language": language,
+                kept[vid] = {"show": show, "episode": ep[1], "channel": name, "language": language,
                              "title": title, "added": today.isoformat()}
                 new += 1
             found += 1
