@@ -73,6 +73,14 @@ DM_CHANNELS = [
     ("Star Plus", "StarPlus", "Hindi", ["starplus", "starplusofficial"]),
 ]
 
+# One show from a channel that also posts much else: (show, handles, channel search, language,
+# searches in the channel, words a title must have). Full episodes only, filed under Shows.
+SHOW_SEARCHES = [
+    ("The Kapil Sharma Show", ["@SonyTV", "@SETIndia"], "Sony Entertainment Television", "Hindi",
+     ["kapil sharma show full episode", "the kapil sharma show ep"], r"kapil"),
+]
+MIN_SHOW_EPISODE_MINUTES = 30
+
 # Channels whose single-episode telefilms go under Urdu Movies.
 TELEFILM_CHANNELS = {"ARY Digital", "HUM TV", "Geo Entertainment"}
 TELEFILM = re.compile(r"\btele[\s-]?films?\b", re.IGNORECASE)
@@ -376,6 +384,39 @@ def dailymotion(kept, today):
             print(f"    e.g. {title} ({round(mins)} min)")
 
 
+def show_searches(kept, today):
+    """Adds full episodes of each SHOW_SEARCHES show to kept, all in one folder per show."""
+    for show, handles, query, language, searches, must in SHOW_SEARCHES:
+        handle, cid = channel_id(handles, query)
+        if not cid:
+            print(f"{show}: channel not found", file=sys.stderr)
+            continue
+        videos, seen = [], set()
+        for q in searches:
+            url = f"https://www.youtube.com/channel/{cid}/search?" + urllib.parse.urlencode({"query": q})
+            try:
+                for v in videos_page(url):
+                    if v[0] not in seen:
+                        seen.add(v[0])
+                        videos.append(v)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {show}: search {q!r} failed ({e})", file=sys.stderr)
+        new = 0
+        for vid, title, mins in videos:
+            ep = episode(title)
+            if not ep or not re.search(must, title, re.I) or SKIP.search(title) or (mins or 0) < MIN_SHOW_EPISODE_MINUTES:
+                continue
+            if vid in kept:
+                kept[vid]["seen"] = today.isoformat()
+            else:
+                kept[vid] = {"show": show, "episode": ep[1], "channel": show, "language": language,
+                             "title": title, "added": today.isoformat()}
+                new += 1
+        print(f"{show} ({handle} {cid}): {len(videos)} videos, {new} new episodes")
+        for _, title, mins in videos[:4]:
+            print(f"    e.g. {title} ({mins and round(mins)} min)")
+
+
 def unique_episodes(episodes):
     """One copy of each episode (language, show, number), YouTube's first, and one spelling of
     each show's name, so a show never gets two folders."""
@@ -591,6 +632,7 @@ def main():
         for t in skipped[:6]:
             print(f"    skipped: {t}")
 
+    show_searches(kept, today)
     dailymotion(kept, today)
     dubbed_movies(kept, today)
     films(kept, today)
