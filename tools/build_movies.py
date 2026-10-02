@@ -228,8 +228,8 @@ def as_list(value):
 
 
 # US copyright: films and TV from before 1964 whose copyright wasn't renewed are public
-# domain, later ones almost never are. Without a public-domain or CC licence, an item
-# needs a year up to this one (people upload whole modern series to classic_tv too).
+# domain, later ones almost never are, so every item needs a year up to this one
+# (people upload whole modern series to classic_tv too).
 LAST_FREE_YEAR = 1963
 
 
@@ -252,7 +252,8 @@ def allowed(md, tv=False):
     if not (collections & FREE_COLLECTIONS or licensed):
         return False
     year = item_year(md)
-    if not licensed and (year is None or year > LAST_FREE_YEAR):
+    # Uploaders set their own licence (even on The Simpsons), so it can't excuse a later date.
+    if year is None or year > LAST_FREE_YEAR:
         return False
     if RIP.search(str(md.get("title") or "")):
         return False
@@ -286,18 +287,20 @@ def show_and_episode(title):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--movies", type=int, default=400, help="films to look at")
-    ap.add_argument("--items", type=int, default=800, help="TV items to look at")
+    # Off by default: classic_tv is mostly people's uploads of copyrighted series
+    # (The Simpsons, Taxi, I Love Lucy...) with wrong dates and licences.
+    ap.add_argument("--items", type=int, default=0, help="TV items to look at (0 = no TV)")
     args = ap.parse_args()
 
     # Wikidata's links from films and episodes to Archive items come first: its query
     # service is reliable from GitHub's runners and its films are the well-known ones.
     # The Archive's own search adds more when it is up.
     wd_films = wikidata_items(FILM_QUERY, args.movies)
-    wd_tv = sorted(wikidata_items(EPISODE_QUERY, args.items), key=lambda d: (d["show"] or "", d["date"]))
+    wd_tv = sorted(wikidata_items(EPISODE_QUERY, args.items), key=lambda d: (d["show"] or "", d["date"])) if args.items else []
     print(f"Wikidata: {len(wd_films)} films, {len(wd_tv)} TV episodes")
     films = merge(wd_films, archive_search("feature_films", args.movies),
                   archive_search("feature_films) AND language:(Hindi OR Urdu OR Punjabi OR hin OR urd OR pan", 200))
-    tv = merge(wd_tv, archive_search("classic_tv", args.items))
+    tv = merge(wd_tv, archive_search("classic_tv", args.items)) if args.items else []
     print(f"Search: {len(films)} films, {len(tv)} TV items")
 
     with cf.ThreadPoolExecutor(8) as pool:
