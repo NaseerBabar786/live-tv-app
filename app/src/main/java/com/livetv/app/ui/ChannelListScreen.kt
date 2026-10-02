@@ -79,6 +79,7 @@ import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
@@ -148,6 +149,8 @@ fun ChannelListScreen(
     settings: @Composable (onDismiss: () -> Unit) -> Unit,
     /** Stream Player Plus: adds the built-in demo playlist. */
     onTryDemo: () -> Unit = {},
+    /** Opens Movies & Series; null hides its button. */
+    onOpenVod: (() -> Unit)? = null,
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
     var showSettings by rememberSaveable { mutableStateOf(false) }
@@ -353,6 +356,11 @@ fun ChannelListScreen(
                             colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
                         ) { Text("${tileLayout.label} Mode", fontWeight = FontWeight.Bold) }
+                    }
+                    if (onOpenVod != null) {
+                        IconButton(onClick = onOpenVod, modifier = Modifier.focusGlow()) {
+                            Icon(Icons.Filled.Movie, contentDescription = "Movies & Series")
+                        }
                     }
                     IconButton(
                         onClick = {

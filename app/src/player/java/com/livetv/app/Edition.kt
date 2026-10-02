@@ -17,6 +17,8 @@ object Edition {
     const val USER_AGENT = "StreamPlayerPlus-Android/1.0"
     const val HAS_START_SCREEN = false
     const val HAS_WEATHER = false
+    /** Movies & Series from the saved playlists (Live TV only). */
+    const val HAS_VOD = false
 }
 
 /** No start screen ([Edition.HAS_START_SCREEN] is false), so this only hands straight on. */

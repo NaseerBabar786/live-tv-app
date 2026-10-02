@@ -114,6 +114,28 @@ class ChannelRepository(context: Context) {
         }
     }
 
+    /**
+     * The movies and series episodes in every saved playlist (Live TV's Movies & Series).
+     * A playlist that can't be loaded is skipped; each item's group gets the playlist's
+     * name when the playlist gives none.
+     */
+    suspend fun loadVod(): List<Channel> = coroutineScope {
+        playlists.map { playlist ->
+            async(Dispatchers.IO) {
+                runCatching {
+                    val text = when {
+                        playlist.source == SOURCE_SAMPLE -> readAsset()
+                        playlist.source.startsWith("content://") -> readContentUri(Uri.parse(playlist.source))
+                        else -> downloadCached(playlist.source, playlist.source)
+                    }
+                    M3uParser.parse(text)
+                        .filter { Vod.kind(it) != Vod.Kind.LIVE }
+                        .map { if (it.group == null) it.copy(group = playlist.name) else it }
+                }.getOrDefault(emptyList())
+            }
+        }.awaitAll().flatten().distinctBy { it.id }
+    }
+
     /** Every channel in the daily-checked list on tv.bulkbazaar.ca. */
     private fun checkedAll(): List<Channel> =
         CheckedList.convert(M3uParser.parse(downloadCached("checked:all", CheckedList.ALL_URL)))

@@ -62,6 +62,8 @@ fun PlayerScreen(
     inPictureInPicture: Boolean,
     onBack: () -> Unit,
     onToggleFavorite: () -> Unit,
+    /** False for movies and episodes, which can't be favourites. */
+    showFavorite: Boolean = true,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -154,12 +156,14 @@ fun PlayerScreen(
                         Text(it, color = Color.White.copy(alpha = 0.7f), style = MaterialTheme.typography.bodySmall)
                     }
                 }
-                IconButton(onClick = onToggleFavorite, modifier = Modifier.focusGlow()) {
-                    Icon(
-                        if (favorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                        contentDescription = if (favorite) "Remove from favorites" else "Add to favorites",
-                        tint = if (favorite) MaterialTheme.colorScheme.secondary else Color.White,
-                    )
+                if (showFavorite) {
+                    IconButton(onClick = onToggleFavorite, modifier = Modifier.focusGlow()) {
+                        Icon(
+                            if (favorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                            contentDescription = if (favorite) "Remove from favorites" else "Add to favorites",
+                            tint = if (favorite) MaterialTheme.colorScheme.secondary else Color.White,
+                        )
+                    }
                 }
             }
         }
