@@ -189,6 +189,18 @@ def main():
                 videos = videos_feed(cid)
             except Exception as e:  # noqa: BLE001
                 print(f"  {name} feed failed ({e})", file=sys.stderr)
+        # Fill in earlier episodes of each show found, with a search in the channel for it.
+        shows = sorted({ep[0] for ep in (episode(t) for _, t, _ in videos) if ep})
+        for show in shows[:15]:
+            url = f"https://www.youtube.com/channel/{cid}/search?" + urllib.parse.urlencode({"query": f"{show} episode"})
+            try:
+                for v in videos_page(url):
+                    ep = episode(v[1])
+                    if v[0] not in seen and ep and ep[0].lower() == show.lower():
+                        seen.add(v[0])
+                        videos.append(v)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name}: search for {show!r} failed ({e})", file=sys.stderr)
         new = 0
         skipped = []
         for vid, title, mins in videos:
