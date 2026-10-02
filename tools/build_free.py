@@ -56,7 +56,7 @@ SEPIA = "https://sepiasearch.org/api/v1/search/videos"
 # PeerTube licence ids: 1-6 are Creative Commons licences, 7 is public domain.
 FREE_LICENCES = [1, 2, 3, 4, 5, 6, 7]
 # Stock-footage codes and ads in titles.
-JUNK = re.compile(r"\b[A-Z]{1,3}\d{4,}\b|\bpromo(tional)?\b|\bcommercial\b|\bstock footage\b|\btier list\b"
+JUNK = re.compile(r"\b[A-Z]{1,3}\d{4,}[a-z]?\b|\bpromo(tional)?\b|\bcommercial\b|\bstock footage\b|\btier list\b"
                   r"|\btraining films?\b|\breaction\b|\breview\b|\bmusic video\b|this week @nasa|\ba year of\b"
                   r"|\bbudget\b|\bpinkfong\b|\bcocomelon\b", re.I)
 # Titles in other scripts (Russian, Chinese...) aren't in the Library's four languages.
