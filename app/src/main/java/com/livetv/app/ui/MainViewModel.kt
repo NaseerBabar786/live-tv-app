@@ -1,6 +1,7 @@
 package com.livetv.app.ui
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.livetv.app.data.Channel
@@ -17,6 +18,9 @@ import kotlinx.coroutines.launch
 /** Special group filters shown before the playlist's own groups. */
 const val FILTER_ALL = "All"
 const val FILTER_FAVORITES = "Favorites"
+
+/** The most channels Favorites can hold. */
+const val MAX_FAVORITES = 100
 
 const val DEMO_PLAYLIST_NAME = "Demo channels"
 
@@ -215,7 +219,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun setCategory(category: String?) = _state.update { it.copy(category = category) }
 
     fun toggleFavorite(channel: Channel) {
-        val updated = repo.favorites.toMutableSet().apply {
+        val current = repo.favorites
+        // Favorites holds at most MAX_FAVORITES channels (the user's choice).
+        if (channel.id !in current && current.size >= MAX_FAVORITES) {
+            Toast.makeText(
+                getApplication(),
+                "Favorites is full ($MAX_FAVORITES channels). Remove one to add another.",
+                Toast.LENGTH_LONG,
+            ).show()
+            return
+        }
+        val updated = current.toMutableSet().apply {
             if (!add(channel.id)) remove(channel.id)
         }
         repo.favorites = updated
