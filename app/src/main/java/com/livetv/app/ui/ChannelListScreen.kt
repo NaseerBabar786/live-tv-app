@@ -294,8 +294,8 @@ fun ChannelListScreen(
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
-        // In 4×4, 2×3, 2×2 and 1×2 every card plays; otherwise only the highlighted one.
-        val playAll = wideScreen && (tileLayout.separateTvs || tileLayout == TileLayout.Sixteen)
+        // In 1×2, 2×2 and 2×3 every card plays; otherwise only the highlighted one.
+        val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)

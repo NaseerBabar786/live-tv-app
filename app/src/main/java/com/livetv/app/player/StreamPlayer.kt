@@ -10,7 +10,6 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
-import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import com.livetv.app.data.Channel
@@ -31,9 +30,6 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
     // Previews keep only a few seconds buffered, so a screenful of them fits in a TV's memory.
     val player: ExoPlayer = ExoPlayer.Builder(context).apply {
         if (preview) {
-            // With many tiles playing, the TV's video chips can run out; tiny previews then
-            // fall back to software decoding instead of staying blank.
-            setRenderersFactory(DefaultRenderersFactory(context).setEnableDecoderFallback(true))
             setLoadControl(
                 DefaultLoadControl.Builder()
                     .setBufferDurationsMs(2_000, 6_000, 1_000, 1_000)
