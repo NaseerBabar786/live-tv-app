@@ -13,8 +13,8 @@ android {
         targetSdk = 36
     }
 
-    // Two apps from one code base. Code and resources only one app uses live in
-    // src/livetv or src/player; each provides the Edition object the shared code calls.
+    // Three apps from one code base. Code and resources only one app uses live in
+    // src/livetv, src/player or src/plus; each provides the Edition object the shared code calls.
     flavorDimensions += "edition"
     productFlavors {
         // Live TV: built-in free channels, sponsor screen, self-updating APK from GitHub.
@@ -31,6 +31,19 @@ android {
             versionCode = 2
             versionName = "1.0.1"
         }
+        // Live TV Plus: the Google Play edition of Live TV. Live TV's look and weather,
+        // but like Stream Player Plus it has no channels; viewers add playlists.
+        create("plus") {
+            dimension = "edition"
+            applicationId = "com.naseerbabar.livetvplus"
+            versionCode = 1
+            versionName = "1.0.0"
+        }
+    }
+    // The two store editions share their playlist settings screen.
+    sourceSets {
+        getByName("player").java.srcDir("src/store/java")
+        getByName("plus").java.srcDir("src/store/java")
     }
 
     // CI signs every build with the same private key (from the SIGNING_KEYSTORE and

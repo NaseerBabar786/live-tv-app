@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds app/src/main/assets/channel_info.json: a logo and category for each
+Builds app/src/livetv/assets/channel_info.json: a logo and category for each
 Famelack (TV Garden) channel, matched by name against the iptv-org database.
 
 Famelack's lists have no logos, and downloading the iptv-org database on the
@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 FAMELACK = "https://raw.githubusercontent.com/famelack/famelack-channels/main/tv/raw"
 IPTV_ORG = "https://raw.githubusercontent.com/iptv-org/api/gh-pages"
-OUT = "app/src/main/assets/channel_info.json"
+OUT = "app/src/livetv/assets/channel_info.json"
 
 
 def fetch(url):
