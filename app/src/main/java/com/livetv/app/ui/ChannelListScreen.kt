@@ -338,7 +338,7 @@ fun ChannelListScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Clock()
-                                if (Edition.LIVE_TV) WeatherNow()
+                                if (Edition.HAS_WEATHER) WeatherNow()
                             }
                         }
                     }

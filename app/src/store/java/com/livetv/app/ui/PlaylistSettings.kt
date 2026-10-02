@@ -40,7 +40,7 @@ import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Playlist
 
 /**
- * Stream Player Plus settings: the viewer's saved playlists, and adding one from a
+ * Store edition settings (Stream Player Plus and Live TV Plus): the viewer's saved playlists, and adding one from a
  * link or from a file on the device.
  */
 @Composable

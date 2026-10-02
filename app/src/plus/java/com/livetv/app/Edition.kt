@@ -8,15 +8,16 @@ import com.livetv.app.ui.SettingsTheme
 import com.livetv.app.ui.UiState
 
 /**
- * Stream Player Plus: the Google Play app. It is only a player: no channels of its own,
- * no sponsor screen and no self-updates (Google Play updates it).
+ * Live TV Plus: the Google Play edition of Live TV. Same look as Live TV (logo, clock and
+ * weather), but only a player: no channels of its own, no sponsor screen, no outside links
+ * and no self-updates (Google Play updates it).
  */
 object Edition {
     const val LIVE_TV = false
-    const val APP_NAME = "Stream Player Plus"
-    const val USER_AGENT = "StreamPlayerPlus-Android/1.0"
+    const val APP_NAME = "Live TV Plus"
+    const val USER_AGENT = "LiveTVPlus-Android/1.0"
     const val HAS_START_SCREEN = false
-    const val HAS_WEATHER = false
+    const val HAS_WEATHER = true
 }
 
 /** No start screen ([Edition.HAS_START_SCREEN] is false), so this only hands straight on. */

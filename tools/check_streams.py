@@ -145,7 +145,7 @@ def load_channels():
     # Famelack: logos and genres come from the index Live TV bundles.
     info = {}
     try:
-        with open(os.path.join(ROOT, "app/src/main/assets/channel_info.json"), encoding="utf-8") as f:
+        with open(os.path.join(ROOT, "app/src/livetv/assets/channel_info.json"), encoding="utf-8") as f:
             info = json.load(f)
     except OSError:
         pass
