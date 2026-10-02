@@ -52,6 +52,7 @@ import java.util.Date
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -881,7 +882,13 @@ private fun ChannelCard(
                 .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
                 .onPreviewKeyEvent(onKey)
                 .onFocusChanged { focused = it.hasFocus; onFocusChange(it.hasFocus) }
-                .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
+                // No highlight tint over the picture; the thin border below marks the tile.
+                .combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onClick,
+                    onLongClick = onToggleFavorite,
+                ),
             contentAlignment = Alignment.Center,
         ) {
             if (snapshot != null) {
@@ -900,7 +907,8 @@ private fun ChannelCard(
                         .padding(horizontal = 10.dp, vertical = 4.dp),
                 )
             }
-            if (focused) SoundBadge(Modifier.align(Alignment.TopEnd))
+            // A thin, soft yellow line marks the tile with the sound.
+            if (focused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
         }
         return
     }
