@@ -7,16 +7,16 @@ plays them in YouTube's own player, as YouTube's terms require.
 
 A channel's live video changes whenever it restarts its stream, so this runs every few hours.
 A channel that isn't live is left out until it is again. Each channel is found by its exact
-name (see build_dramas.channel_id), so only the channel's own uploads are used.
+name (see build_dramas.channel_id), and only live videos from that channel's id are used.
 
 Standard library only. Run: python3 tools/build_live.py
 """
-import html
 import os
 import re
 import sys
+import urllib.parse
 
-from build_dramas import DOCS, channel_id, fetch
+from build_dramas import DOCS, _text, channel_id, fetch
 
 # (name in Live TV, the YouTube channel's exact name, genre)
 LIVE_CHANNELS = [
@@ -33,26 +33,22 @@ LIVE_CHANNELS = [
     ("ARY Digital", "ARY Digital HD", "Entertainment"),
     ("Kids Land Urdu", "Kids Land", "Kids"),
 ]
-LIVE_BADGE = "THUMBNAIL_OVERLAY_BADGE_STYLE_LIVE"
 # The channel's round-the-clock stream, rather than a press conference it is also streaming.
 ALWAYS_ON = re.compile(r"24\s*/\s*7|24x7|24×7|non-?stop", re.IGNORECASE)
 
 
-def live_videos(page):
-    """(video id, title) of each video on a channel's Live tab that is live now, in page order."""
-    marks = [(m.start(), m.group(1)) for m in re.finditer(r'"videoId":"([\w-]{11})"', page)]
-    text = {}
-    for n, (start, vid) in enumerate(marks):
-        # The page from this mention to the next mention of another video belongs to this video.
-        end = next((s for s, v in marks[n + 1:] if v != vid), len(page))
-        text[vid] = text.get(vid, "") + page[start:end]
+def live_videos(cid, query):
+    """(video id, title) of each live video of channel cid, from YouTube's search for live videos
+    (a channel's own pages don't reliably say which of its videos is live)."""
+    page = fetch("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": f"{query} live", "sp": "EgJAAQ=="}), tries=2)
+    starts = [m for m in re.finditer(r'"videoRenderer":\{"videoId":"([\w-]{11})"', page)]
     out = []
-    for vid, chunk in text.items():
-        if LIVE_BADGE not in chunk:
+    for n, m in enumerate(starts):
+        chunk = page[m.end():starts[n + 1].start() if n + 1 < len(starts) else m.end() + 20000]
+        if f'"browseId":"{cid}"' not in chunk:  # another channel's video
             continue
-        title = (re.search(r'"title":\{"runs":\[\{"text":"((?:[^"\\]|\\.)*)"', chunk)
-                 or re.search(r'"lockupMetadataViewModel":\{"title":\{"content":"((?:[^"\\]|\\.)*)"', chunk))
-        out.append((vid, html.unescape(title.group(1)) if title else ""))
+        title = re.search(r'"title":\{"runs":\[\{"text":"((?:[^"\\]|\\.)*)"', chunk)
+        out.append((m.group(1), _text(title.group(1)) if title else ""))
     return out
 
 
@@ -64,9 +60,9 @@ def main():
             print(f"{name}: channel not found", file=sys.stderr)
             continue
         try:
-            live = live_videos(fetch(f"https://www.youtube.com/channel/{cid}/streams", tries=2))
+            live = live_videos(cid, query)
         except Exception as e:  # noqa: BLE001
-            print(f"  {name}: Live tab failed ({e})", file=sys.stderr)
+            print(f"  {name}: live search failed ({e})", file=sys.stderr)
             continue
         if not live:
             print(f"{name} ({cid}): not live now; left out", file=sys.stderr)
