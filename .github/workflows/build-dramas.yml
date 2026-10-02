@@ -34,6 +34,8 @@ jobs:
           python3 -c "import json; d=json.load(open('docs/dramas.json')); print(d['built'], d['shows'], 'shows', d['episodes'], 'episodes', d.get('movies'), 'movies')"
           head -n 21 docs/Dramas.m3u
           grep -c "Hindi dubbed" docs/Dramas.m3u || true
+          grep -A0 "group-title=\"Telefilms\"" docs/Dramas.m3u | sed "s/.*,//" | head -n 40
+          grep -A0 "tvg-genre=\"Kids\"" docs/Dramas.m3u | sed "s/.*,//" | head -n 10
 
       # A push made with the workflow's own token doesn't start other workflows,
       # so the website is rebuilt explicitly below.

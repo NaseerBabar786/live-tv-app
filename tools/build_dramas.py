@@ -40,11 +40,11 @@ CHANNELS = [
     ("HUM TV", ["@HUMTV", "@humtvofficial"], "HUM TV"),
     ("Geo Entertainment", ["@HARPALGEO", "@harpalgeoofficial"], "HAR PAL GEO"),
     ("Green Entertainment", ["@GreenEntertainmentpk", "@GreenEntertainment", "@greentvpk"], "Green Entertainment"),
-    ("PTV Home", ["@PTVHomeOfficial", "@PTVHome", "@ptvhomeofficialchannel"], "PTV Home Official"),
-    ("Express TV", ["@ExpressTV", "@ExpressEntertainment", "@ExpressTVpk"], "Express Entertainment"),
-    ("A-Plus", ["@APlusEntertainment", "@APlusTV", "@aplusdramas"], "A Plus Entertainment"),
+    ("PTV Home", ["@PTVHomeOfficial", "@PTVHome", "@ptvhomeofficialchannel"], "PTV Home"),
+    ("Express TV", ["@ExpressEntertainment", "@ExpressTVpk"], "Express TV"),
+    ("A-Plus", ["@APlusEntertainmentOfficial", "@APlusTVPakistan", "@aplusdramas"], "A Plus Entertainment"),
     ("TV One", ["@TVOnePakistan", "@TVOneDramas", "@tvonepk"], "TV One Pakistan"),
-    ("ARY Zindagi", ["@ARYZindagi", "@ARYZindagiOfficial"], "ARY Zindagi"),
+    ("ARY Zindagi", ["@ARYZindagiOfficial", "@ARYZindagi"], "ARY Zindagi"),
     ("Geo Kahani", ["@GeoKahani", "@GeoKahaniOfficial"], "Geo Kahani"),
 ]
 
@@ -63,11 +63,10 @@ SHOW_CHANNELS = [
     ("ARY Qtv", ["@ARYQtvOfficial", "@ARYQtv", "@QtvOfficial"], "ARY Qtv"),
     ("Madani Channel", ["@MadaniChannel", "@MadaniChannelOfficial"], "Madani Channel"),
 ]
-# Urdu cartoons from their makers' own channels; no channel search, so only the real
-# channel (by its handle) is ever used.
+# Urdu cartoons from their makers' own channels.
 KIDS_CHANNELS = [
-    ("Burka Avenger", ["@BurkaAvenger", "@BurkaAvengerOfficial", "@burkaavengertv"], None),
-    ("Commander Safeguard", ["@CommanderSafeguard", "@CommanderSafeguardOfficial"], None),
+    ("Burka Avenger", ["@BurkaAvengerTV", "@burka_avenger"], "Burka Avenger"),
+    ("Commander Safeguard", ["@CommanderSafeguardPK", "@SafeguardPakistan"], "Commander Safeguard"),
 ]
 MIN_SHOW_MINUTES = 3
 SHOW_SKIP = re.compile(r"\b(teaser|promo|trailer|shorts)\b|#shorts", re.IGNORECASE)
@@ -75,7 +74,7 @@ SHOW_SKIP = re.compile(r"\b(teaser|promo|trailer|shorts)\b|#shorts", re.IGNORECA
 # Official YouTube channels of the companies that own the Hindi dubbed rights and
 # publish full movies free themselves.
 MOVIE_CHANNELS = [
-    ("Goldmines", ["@GoldminesTelefilms", "@Goldmines"], "Goldmines Telefilms"),
+    ("Goldmines", ["@GoldminesTelefilms", "@Goldmines"], "Goldmines"),
     ("Pen Movies", ["@PenMovies"], "Pen Movies"),
     ("RKD Studios", ["@RKDStudios"], "RKD Studios"),
     ("Aditya Movies", ["@AdityaMovies"], "Aditya Movies"),
@@ -113,7 +112,23 @@ def fetch(url, tries=4):
             time.sleep(5 * 2 ** attempt)
 
 
+GENERIC = {"official", "entertainment", "tv", "pakistan", "pk", "channel", "hd"}
+
+
+def compact(text):
+    return re.sub(r"[^a-z0-9]", "", text.lower())
+
+
+def is_owner(title, expect):
+    """Whether a YouTube channel's name fits the channel we want ("ARY Digital HD" for
+    "ARY Digital"), so a handle someone else owns is never used."""
+    key = compact(" ".join(w for w in re.split(r"[^\w]+", expect) if w.lower() not in GENERIC)) or compact(expect)
+    return key in compact(title)
+
+
 def channel_id(handles, query):
+    """The YouTube channel id for one of the handles, or the top channel search result for
+    the query; only a channel whose name fits the query is used."""
     for handle in handles:
         try:
             page = fetch(f"https://www.youtube.com/{handle}", tries=2)
@@ -121,17 +136,22 @@ def channel_id(handles, query):
             print(f"  {handle}: {e}", file=sys.stderr)
             continue
         m = re.search(r'"externalId":"(UC[\w-]{22})"', page) or re.search(r'channel_id=(UC[\w-]{22})', page)
-        if m:
-            title = re.search(r'<meta property="og:title" content="([^"]*)"', page)
-            print(f"  {handle} is {html.unescape(title.group(1)) if title else '?'!r}")
+        title = re.search(r'<meta property="og:title" content="([^"]*)"', page)
+        title = html.unescape(title.group(1)) if title else ""
+        if m and is_owner(title, query):
+            print(f"  {handle} is {title!r}")
             return handle, m.group(1)
-    if not query:
-        return None, None
+        if m:
+            print(f"  {handle} is {title!r}, not {query!r}; skipped", file=sys.stderr)
     try:
         page = fetch("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": query, "sp": "EgIQAg=="}), tries=2)
-        m = re.search(r'"channelRenderer":\{"channelId":"(UC[\w-]{22})"', page)
-        if m:
-            return f"search {query!r}", m.group(1)
+        for m in list(re.finditer(r'"channelRenderer":\{"channelId":"(UC[\w-]{22})"', page))[:5]:
+            title = re.search(r'"title":\{"simpleText":"((?:[^"\\]|\\.)*)"', page[m.end():m.end() + 3000])
+            title = _text(title.group(1)) if title else ""
+            if is_owner(title, query):
+                print(f"  search {query!r} found {title!r}")
+                return f"search {query!r}", m.group(1)
+            print(f"  search {query!r}: {title!r} skipped", file=sys.stderr)
     except Exception as e:  # noqa: BLE001
         print(f"  search {query!r}: {e}", file=sys.stderr)
     return None, None
@@ -222,7 +242,7 @@ def movie_name(title):
         name = re.split(r"\s*[|(\[]|\s+-\s+|\s+(?:new\s+)?(?:south\s+)?(?:hindi\s+dubbed|full\s+(?:hd\s+)?movie)",
                         title, 1, flags=re.I)[0]
         name = FILLER.sub("", name)
-    name = re.sub(r"\s+", " ", name).strip(" -|:–\"'")
+    name = re.sub(r"\s+", " ", name).strip(" -|:–#\"'")
     if len(name) < 2 or re.search(r"\.(com|in|net)\b|www\.", name, re.I):
         return None
     return name
@@ -271,6 +291,8 @@ def channel_shows(kept, today, channels, genre):
                 videos = videos_feed(cid)
             except Exception as e:  # noqa: BLE001
                 print(f"  {name} feed failed ({e})", file=sys.stderr)
+        for vid, title, _ in videos[:3]:
+            print(f"    e.g. {title}")
         new = 0
         for vid, title, mins in videos:
             if SHOW_SKIP.search(title) or (mins is not None and mins < MIN_SHOW_MINUTES):
