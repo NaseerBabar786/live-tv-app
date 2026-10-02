@@ -76,7 +76,7 @@ object PlayBilling : Premium.Billing {
         val params = QueryProductDetailsParams.newBuilder().setProductList(listOf(product)).build()
         client?.queryProductDetailsAsync(params) { result, list ->
             if (!result.ok) return@queryProductDetailsAsync
-            details = list.productDetailsList.firstOrNull()
+            details = list.firstOrNull()
             _price.value = details?.subscriptionOfferDetails?.firstOrNull()
                 ?.pricingPhases?.pricingPhaseList?.lastOrNull()?.formattedPrice
         }
