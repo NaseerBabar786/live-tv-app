@@ -1340,10 +1340,10 @@ private class Preview(val stream: StreamPlayer) {
         })
     }
 
-    /** Low: at most 320×180, 450 kbit/s and 30 fps, for when many videos play at once; otherwise SD. */
+    /** Low: at most 160×90, 225 kbit/s and 30 fps, for when many videos play at once; otherwise SD. */
     fun lowQuality(low: Boolean) {
         val params = stream.player.trackSelectionParameters.buildUpon()
-        if (low) params.setMaxVideoSize(320, 180).setMaxVideoBitrate(450_000).setMaxVideoFrameRate(30)
+        if (low) params.setMaxVideoSize(160, 90).setMaxVideoBitrate(225_000).setMaxVideoFrameRate(30)
         else params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE).setMaxVideoFrameRate(Int.MAX_VALUE)
         stream.player.trackSelectionParameters = params.build()
     }
