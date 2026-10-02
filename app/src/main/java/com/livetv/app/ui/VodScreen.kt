@@ -149,14 +149,22 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
                 IconButton(onClick = back, modifier = Modifier.focusGlow()) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                 }
-                Text(
-                    show?.name ?: language?.label ?: "Library",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f).padding(start = 4.dp),
-                )
+                Column(Modifier.weight(1f).padding(start = 4.dp)) {
+                    Text(
+                        show?.name ?: language?.label ?: "Library",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    if (show == null && language == null) {
+                        Text(
+                            "Weekly Updates",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
                 if (show == null && language != null) {
                     if (searching) {
                         OutlinedTextField(
