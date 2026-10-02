@@ -306,6 +306,7 @@ fun ChannelListScreen(
         // 4×4 plays even lighter than 2×3 (half again), for its video and its pictures.
         val quality = when {
             wideScreen && tileLayout == TileLayout.Sixteen -> Quality.Lowest
+            wideScreen && tileLayout == TileLayout.Six -> Quality.Lower
             low -> Quality.Low
             else -> Quality.Normal
         }
@@ -1332,9 +1333,9 @@ private fun WeatherNow() {
 
 /**
  * Preview picture quality. Normal: SD. Low (several tiles playing, e.g. 2×3): at most 160×90 and
- * 225 kbit/s. Lowest (4×4): a quarter of Low (40×23, 56 kbit/s). A stream with no smaller version plays its smallest one.
+ * 225 kbit/s. Lower (2×3): half of Low. Lowest (4×4): a quarter of Low (40×23, 56 kbit/s). A stream with no smaller version plays its smallest one.
  */
-private enum class Quality { Normal, Low, Lowest }
+private enum class Quality { Normal, Low, Lower, Lowest }
 
 /** A muted, low-quality preview player, and whether its video has started (the logo shows until then). */
 @Stable
@@ -1357,6 +1358,7 @@ private class Preview(val stream: StreamPlayer) {
         when (quality) {
             Quality.Normal -> params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE).setMaxVideoFrameRate(Int.MAX_VALUE)
             Quality.Low -> params.setMaxVideoSize(160, 90).setMaxVideoBitrate(225_000).setMaxVideoFrameRate(30)
+            Quality.Lower -> params.setMaxVideoSize(80, 45).setMaxVideoBitrate(112_000).setMaxVideoFrameRate(30)
             Quality.Lowest -> params.setMaxVideoSize(40, 23).setMaxVideoBitrate(56_000).setMaxVideoFrameRate(30)
         }
         stream.player.trackSelectionParameters = params.build()
