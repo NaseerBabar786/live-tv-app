@@ -562,7 +562,7 @@ fun ChannelListScreen(
                         onOpen = onPlay,
                     )
                     else -> BoxWithConstraints(Modifier.fillMaxSize().then(if (fullTiles) Modifier.background(Color.Black) else Modifier)) {
-                    // TVs and tablets: the chosen layout (12, 6, 4 or 2 tiles). Phones: as many as fit.
+                    // TVs and tablets: the chosen layout (16, 6, 4 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
                     val wide = windowed
                     val fitColumns = if (wide) tileLayout.columns else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
@@ -726,7 +726,7 @@ fun ChannelListScreen(
                                                         onOpen = open,
                                                         onClick = { if (fullTiles) { open(); onPlay(channel) } else tilesFull = true })
                                                 } else {
-                                                    // 3×4: OK fills the screen with the tiles; OK again opens the channel.
+                                                    // 4×4: OK fills the screen with the tiles; OK again opens the channel.
                                                     Tile(start + r * columns + c, channel, onKey(start + r * columns + c),
                                                         onClick = { if (fullTiles) onPlay(channel) else tilesFull = true })
                                                 }
@@ -1373,7 +1373,7 @@ private val MinTileWidth = 170.dp
 
 /** How many tiles a TV screen shows; the label is what the top-bar button reads. */
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
-    Twelve("3×4", 4, 3),
+    Sixteen("4×4", 4, 4),
     Six("2×3", 3, 2),
     /** Four separate TVs, like 1×2. */
     Four("2×2", 2, 2),
