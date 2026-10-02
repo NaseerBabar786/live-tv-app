@@ -169,10 +169,23 @@ def episode(title):
     return show, int(number)
 
 
+FILLER = re.compile(r"\b(latest|new|released|superhit|super hit|blockbuster|south|full|movie|action|romantic|comedy|hd|4k|\d{4})\b", re.I)
+
+
 def movie_name(title):
-    """ "Pushpa (Hindi Dubbed) Full Movie | Allu Arjun" to "Pushpa"."""
-    name = re.split(r"\s*[|(\[]|\s+-\s+|\s+(?:new\s+)?(?:south\s+)?(?:hindi\s+dubbed|full\s+(?:hd\s+)?movie)", title, 1, flags=re.I)[0]
-    return name.strip(" -|:–") or None
+    """ "Pushpa (Hindi Dubbed) Full Movie | Allu Arjun" to "Pushpa"; a quoted name wins
+    ('Allu Sirish Latest "ABCD" Hindi Dubbed Movie' to "ABCD")."""
+    quoted = re.search(r'["“”]([^"“”]{2,40})["“”]', title)
+    if quoted:
+        name = quoted.group(1)
+    else:
+        name = re.split(r"\s*[|(\[]|\s+-\s+|\s+(?:new\s+)?(?:south\s+)?(?:hindi\s+dubbed|full\s+(?:hd\s+)?movie)",
+                        title, 1, flags=re.I)[0]
+        name = FILLER.sub("", name)
+    name = re.sub(r"\s+", " ", name).strip(" -|:–\"'")
+    if len(name) < 2 or re.search(r"\.(com|in|net)\b|www\.", name, re.I):
+        return None
+    return name
 
 
 def dubbed_movies(kept, today):
@@ -271,7 +284,11 @@ def main():
     rows = sorted(episodes.items(), key=lambda kv: (kv[1]["channel"], kv[1]["show"].lower(), kv[1]["episode"]))
 
     lines = ["#EXTM3U", "# Pakistani dramas and Hindi dubbed movies from their owners' official YouTube uploads."]
+    names = set()
     for vid, v in sorted(movies.items(), key=lambda kv: kv[1]["movie"].lower()):
+        if v["movie"].lower() in names:  # the same film from two channels
+            continue
+        names.add(v["movie"].lower())
         lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" '
                      f'group-title="Hindi dubbed movies",{v["movie"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
