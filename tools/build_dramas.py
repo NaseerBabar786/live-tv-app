@@ -64,7 +64,6 @@ DM_CHANNELS = [
     ("Express TV", "Express Entertainment", "Urdu", ["expressentertainment", "expresstv"]),
     ("A-Plus", "A Plus Entertainment", "Urdu", ["aplusentertainment", "aplustv"]),
     ("ARY Zindagi", "ARY Zindagi", "Urdu", ["aryzindagi"]),
-    ("Geo Kahani", "Geo Kahani", "Urdu", ["geokahani"]),
     ("PTV Home", "PTV Home", "Urdu", ["ptvhome", "ptvhomeofficial"]),
     ("Taarak Mehta Ka Ooltah Chashmah", "Taarak Mehta Ka Ooltah Chashmah", "Hindi", ["tmkoc", "taarakmehtakaooltahchashmah"]),
     ("Sony SAB", "Sony SAB", "Hindi", ["sonysab", "sabtv"]),
@@ -348,6 +347,9 @@ def dm_user(search, usernames=()):
     return None
 
 
+DM_NEWS = re.compile(r"headlines|news|bulletin|capital talk|talk show|live", re.I)
+
+
 def dailymotion(kept, today):
     """Adds full episodes from DM_CHANNELS to kept (keys "dm:<id>"); YouTube's copy of an
     episode is the one listed when both have it."""
@@ -371,9 +373,13 @@ def dailymotion(kept, today):
             ep = episode(title)
             if not ep or mins < MIN_MINUTES:
                 continue
+            if mins > 180 or DM_NEWS.search(title):
+                continue
             if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
                 continue
             show = name if name in SINGLE_SHOW or NO_SHOW_NAME.match(ep[0].strip()) else ep[0]
+            if show != name and re.sub(r"\d", "", compact(show)) in (compact(name), compact(search), ""):
+                continue  # "Express Entertainment (51)": the channel's name, not a drama's
             key = f"dm:{vid}"
             if key in kept:
                 kept[key]["seen"] = today.isoformat()
