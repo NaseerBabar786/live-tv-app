@@ -1,5 +1,6 @@
 package com.livetv.app.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.rememberCoroutineScope
@@ -157,6 +158,7 @@ fun ChannelListScreen(
     onWatch: (Channel) -> Unit = {},
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
+    val searchButtonFocus = remember { FocusRequester() }
     var showSettings by rememberSaveable { mutableStateOf(false) }
     val gridState = rememberLazyGridState()
     val lastWatchedFocus = remember { FocusRequester() }
@@ -314,6 +316,13 @@ fun ChannelListScreen(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
+    // Back closes the search bar (and clears the search) instead of closing the app.
+    BackHandler(enabled = searching) {
+        onQueryChange("")
+        searching = false
+        scope.launch { delay(50); runCatching { searchButtonFocus.requestFocus() } }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -387,7 +396,7 @@ fun ChannelListScreen(
                             contentDescription = if (previewSound) "Mute previews" else "Unmute previews",
                         )
                     }
-                    IconButton(modifier = Modifier.focusGlow(), onClick = {
+                    IconButton(modifier = Modifier.focusRequester(searchButtonFocus).focusGlow(), onClick = {
                         if (searching) onQueryChange("")
                         searching = !searching
                     }) {

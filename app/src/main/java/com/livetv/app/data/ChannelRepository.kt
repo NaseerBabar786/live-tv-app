@@ -114,7 +114,8 @@ class ChannelRepository(context: Context) {
             }
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
             // MTA's own channels go after the list's, unless the list already has them.
-            val withMta = withPakistaniLive(channels).let { if (showMta) it + Mta.CHANNELS else it }
+            val withMta = withPakistaniLive(channels.filterNot { Mta.isOldLink(it.url) })
+                .let { if (showMta) it + Mta.CHANNELS else it }
             // Lists can repeat a stream (e.g. one channel filed under two names). The
             // stream URL is the channel's key in the grid, and a repeated key crashes it.
             withMta.distinctBy { it.id }
