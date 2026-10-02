@@ -43,10 +43,11 @@ MAX_EPISODES_PER_SHOW = 40
 MAX_EPISODES = 4000
 # Only items in the Archive's public-domain film and TV collections, or with a
 # public-domain or Creative Commons licence. Wikidata also links to people's own
-# uploads of copyrighted films, so its links have to pass this too.
+# uploads of copyrighted films, so its links have to pass this too, and only films
+# Wikidata marks as public domain (P6216 = Q19652) are asked for.
 FREE_COLLECTIONS = {
     "feature_films", "classic_tv", "classic_cartoons", "film_noir", "sci-fi_horror",
-    "comedy_films", "silent_films", "prelinger", "moviesandfilms", "classic_tv_1950s",
+    "comedy_films", "silent_films", "prelinger", "classic_tv_1950s",
     "classic_tv_1960s", "classic_tv_westerns", "classic_tv_comedies", "classic_tv_mystery",
 }
 # Rips and re-uploads of copyrighted releases.
@@ -114,6 +115,7 @@ FILM_QUERY = """
 SELECT ?ia ?title ?date ?links WHERE {
   VALUES ?type { wd:Q11424 wd:Q24869 wd:Q202866 wd:Q506240 }
   ?film wdt:P31 ?type; wdt:P724 ?ia; wikibase:sitelinks ?links.
+  ?film wdt:P6216 wd:Q19652.
   ?film rdfs:label ?title. FILTER(LANG(?title) = "en")
   OPTIONAL { ?film wdt:P577 ?date }
 }
@@ -124,6 +126,7 @@ LIMIT %d
 EPISODE_QUERY = """
 SELECT ?ia ?title ?show ?date WHERE {
   ?ep wdt:P31 wd:Q21191270; wdt:P724 ?ia; wdt:P179 ?series.
+  ?ep wdt:P6216 wd:Q19652.
   ?ep rdfs:label ?title. FILTER(LANG(?title) = "en")
   ?series rdfs:label ?show. FILTER(LANG(?show) = "en")
   OPTIONAL { ?ep wdt:P577 ?date }
@@ -332,7 +335,7 @@ def main():
         if episodes >= MAX_EPISODES:
             break
         series += 1
-        title = show.strip('"\' ')
+        title = show.replace('"', "").strip()
         for n, (ep, ident, name) in enumerate(eps[:MAX_EPISODES_PER_SHOW], 1):
             # File names make poor episode titles ("1_Old_american_barn_dance_1953.ia").
             label = f"{title} Episode {n}" if "_" in ep or ".ia" in ep or not ep else f"{title} Episode {n} - {ep}"
