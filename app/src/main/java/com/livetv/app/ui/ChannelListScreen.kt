@@ -1,5 +1,7 @@
 package com.livetv.app.ui
 
+import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.AlertDialog
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -239,7 +241,9 @@ fun ChannelListScreen(
     // 1×2 and 2×2 are separate TVs: Up and Down change the channel on the highlighted tile only.
     // [twoIds] holds the tiles' channels once one has been changed.
     var twoIds by remember { mutableStateOf(sessionTileIds) }
-    SideEffect { sessionTileIds = twoIds }
+    var tilesFull by remember { mutableStateOf(sessionTilesFull) }
+    SideEffect { sessionTileIds = twoIds; sessionTilesFull = tilesFull }
+    val fullTiles = tilesFull && windowed && tileLayout.separateTvs
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
     val window = when {
         !windowed -> emptyList()
@@ -355,6 +359,7 @@ fun ChannelListScreen(
     BackHandler(enabled = !searching) {
         val now = System.currentTimeMillis()
         when {
+            fullTiles -> tilesFull = false
             wideScreen && !topBarFocused -> runCatching { layoutButtonFocus.requestFocus() }
             now - lastBackAt < 2_000 -> (context as? Activity)?.finish()
             else -> {
@@ -365,8 +370,10 @@ fun ChannelListScreen(
     }
 
     Scaffold(
+        // Full-screen tiles: no top bar and nothing around the tiles.
+        contentWindowInsets = if (fullTiles) WindowInsets(0) else ScaffoldDefaults.contentWindowInsets,
         topBar = {
-            TopAppBar(
+            if (!fullTiles) TopAppBar(
                 title = {
                     if (searching) {
                         OutlinedTextField(
@@ -405,6 +412,7 @@ fun ChannelListScreen(
                     if (wideScreen) {
                         TextButton(
                             onClick = {
+                                tilesFull = false
                                 val next = TileLayout.entries[(tileLayout.ordinal + 1) % TileLayout.entries.size]
                                 if (next.separateTvs && !premium) {
                                     upsellFor = next
@@ -481,7 +489,7 @@ fun ChannelListScreen(
                 }
                 // One row: All, Favorites, then genres (countries are picked in Settings; favorites
                 // also lead the list). All clears every filter; tapping a selected chip clears it.
-                ChipRow(
+                if (!fullTiles) ChipRow(
                     focus = chipFocus,
                     items = listOf(FILTER_ALL, FILTER_FAVORITES) + state.categories,
                     selected = setOfNotNull(
@@ -500,7 +508,7 @@ fun ChannelListScreen(
                         }
                     },
                 )
-                if (!state.loading && state.channels.isNotEmpty()) {
+                if (!fullTiles && !state.loading && state.channels.isNotEmpty()) {
                     Text(
                         "${state.visibleChannels.size} channels",
                         style = MaterialTheme.typography.labelMedium,
@@ -552,11 +560,16 @@ fun ChannelListScreen(
                     val columns = if (wide) fitColumns else max(1, ((maxWidth - gap) / (tileWidth + gap)).toInt())
                     // When the width decides the tile size, spread the spare height between the rows
                     // so exactly [rows] rows show and the next row stays off screen.
-                    val cardHeight = tileWidth * 9f / 16f + TileTextHeight
-                    val rowGap = maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
+                    val cardHeight = if (fullTiles) maxHeight / rows else tileWidth * 9f / 16f + TileTextHeight
+                    val rowGap = if (fullTiles) 0.dp else maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
                     // Likewise across: when the height decides the tile size, widen the gaps so the
                     // grid fits exactly [columns] tiles in a row (a bit under, so rounding can't drop one).
-                    val columnGap = if (wide) maxOf(gap, (maxWidth - tileWidth * columns) / (columns + 1) - 1.dp) else gap
+                    val columnGap = when {
+                        fullTiles -> 0.dp
+                        wide -> maxOf(gap, (maxWidth - tileWidth * columns) / (columns + 1) - 1.dp)
+                        else -> gap
+                    }
+                    val cellWidth = if (fullTiles) maxWidth / columns else tileWidth
                     @Composable
                     fun Tile(
                         index: Int,
@@ -565,12 +578,14 @@ fun ChannelListScreen(
                         onFocused: () -> Unit = {},
                         arrows: Boolean = false,
                         onOpen: () -> Unit = {},
+                        onClick: () -> Unit = { onOpen(); onPlay(channel) },
                     ) =
                         ChannelCard(
                             height = cardHeight,
                             channel = channel,
                             favorite = channel.id in state.favorites,
-                            onClick = { onOpen(); onPlay(channel) },
+                            onClick = onClick,
+                            bare = fullTiles,
                             onToggleFavorite = { onToggleFavorite(channel) },
                             focusRequester = cardRequester(channel.id),
                             onKey = onKey,
@@ -596,7 +611,9 @@ fun ChannelListScreen(
                         fun twoKey(channel: Channel): (KeyEvent) -> Boolean = onKey@{ event ->
                             if (event.key == Key.Back) {
                                 // Taken on both press and release, so the app doesn't also go back.
-                                if (event.type == KeyEventType.KeyUp) runCatching { layoutButtonFocus.requestFocus() }
+                                if (event.type == KeyEventType.KeyUp) {
+                                    if (fullTiles) tilesFull = false else runCatching { layoutButtonFocus.requestFocus() }
+                                }
                                 return@onKey true
                             }
                             // Up changes channel when it's let go, unless it was held down.
@@ -604,7 +621,7 @@ fun ChannelListScreen(
                                 if (event.nativeKeyEvent.repeatCount == 0) upHeld = false
                                 if (event.nativeKeyEvent.repeatCount == 1) {
                                     upHeld = true
-                                    runCatching { chipFocus.requestFocus() }
+                                    if (!fullTiles) runCatching { chipFocus.requestFocus() }
                                 }
                                 return@onKey true
                             }
@@ -684,10 +701,13 @@ fun ChannelListScreen(
                                     row.forEachIndexed { c, channel ->
                                         // Keyed by channel, so a playing card slides over without restarting.
                                         key(channel.id) {
-                                            Box(Modifier.width(tileWidth)) {
+                                            Box(Modifier.width(cellWidth)) {
                                                 if (tileLayout.separateTvs) {
-                                                    Tile(0, channel, twoKey(channel), arrows = channel.id == focusedId,
-                                                        onOpen = { sessionOpenedTile = window.indexOfFirst { it.id == channel.id } })
+                                                    // OK fills the screen with the tiles; OK again opens the channel.
+                                                    val open = { sessionOpenedTile = window.indexOfFirst { it.id == channel.id } }
+                                                    Tile(0, channel, twoKey(channel), arrows = channel.id == focusedId && !fullTiles,
+                                                        onOpen = open,
+                                                        onClick = { if (fullTiles) { open(); onPlay(channel) } else tilesFull = true })
                                                 } else {
                                                     Tile(start + r * columns + c, channel, onKey(start + r * columns + c))
                                                 }
@@ -826,7 +846,44 @@ private fun ChannelCard(
     snapshot: ImageBitmap? = null,
     /** Up and down arrows: Up and Down change this card's channel (2×1). */
     arrows: Boolean = false,
+    /** Full-screen tiles: just the video, a yellow frame when highlighted, the name for a moment. */
+    bare: Boolean = false,
 ) {
+    if (bare) {
+        var focused by remember { mutableStateOf(false) }
+        var showName by remember { mutableStateOf(true) }
+        LaunchedEffect(Unit) { delay(3_000); showName = false }
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(height)
+                .background(Color.Black)
+                .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
+                .onPreviewKeyEvent(onKey)
+                .onFocusChanged { focused = it.hasFocus; onFocusChange(it.hasFocus) }
+                .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (snapshot != null) {
+                Image(snapshot, contentDescription = null, contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize())
+            }
+            if (preview != null) PreviewVideo(preview)
+            if (showName) {
+                Text(
+                    channel.name,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(12.dp)
+                        .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                )
+            }
+            if (focused) Box(Modifier.fillMaxSize().border(3.dp, FocusColor))
+        }
+        return
+    }
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
@@ -1280,6 +1337,9 @@ private val TileLayout.separateTvs get() = this == TileLayout.Two || this == Til
  */
 private var sessionTileIds: List<String> = emptyList()
 private var sessionOpenedTile: Int = -1
+
+/** 1×2 and 2×2 fill the whole screen (OK on a tile); Back returns to the tiles under the top bar. */
+private var sessionTilesFull = false
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 
