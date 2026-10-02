@@ -303,10 +303,16 @@ fun ChannelListScreen(
         delay(600)
         // With several videos at once, each plays smaller so the TV can decode them all.
         val low = playing.size > 2
+        // 4×4 plays even lighter than 2×3 (half again), for its video and its pictures.
+        val quality = when {
+            wideScreen && tileLayout == TileLayout.Sixteen -> Quality.Lowest
+            low -> Quality.Low
+            else -> Quality.Normal
+        }
         suspend fun start(id: String) {
             val channel = state.channels.firstOrNull { it.id == id } ?: return
             val p = pool.removeLastOrNull() ?: Preview.create(context)
-            p.lowQuality(low)
+            p.setQuality(quality)
             p.stream.player.volume = if (previewSound && id == soundId) 1f else 0f
             rowPreviews[id] = p
             p.stream.play(channel)
@@ -328,7 +334,7 @@ fun ChannelListScreen(
                 val channel = state.channels.firstOrNull { it.id == id } ?: continue
                 if (YouTube.isYouTube(channel.url)) continue // plays only in YouTube's player; its picture shows
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
-                p.lowQuality(false)
+                p.setQuality(if (quality == Quality.Lowest) Quality.Lowest else Quality.Normal)
                 p.stream.player.volume = 0f
                 rowPreviews[id] = p
                 try {
@@ -1324,6 +1330,12 @@ private fun WeatherNow() {
     }
 }
 
+/**
+ * Preview picture quality. Normal: SD. Low (several tiles playing, e.g. 2×3): at most 160×90 and
+ * 225 kbit/s. Lowest (4×4): half of Low. A stream with no smaller version plays its smallest one.
+ */
+private enum class Quality { Normal, Low, Lowest }
+
 /** A muted, low-quality preview player, and whether its video has started (the logo shows until then). */
 @Stable
 private class Preview(val stream: StreamPlayer) {
@@ -1340,11 +1352,13 @@ private class Preview(val stream: StreamPlayer) {
         })
     }
 
-    /** Low: at most 160×90, 225 kbit/s and 30 fps, for when many videos play at once; otherwise SD. */
-    fun lowQuality(low: Boolean) {
+    fun setQuality(quality: Quality) {
         val params = stream.player.trackSelectionParameters.buildUpon()
-        if (low) params.setMaxVideoSize(160, 90).setMaxVideoBitrate(225_000).setMaxVideoFrameRate(30)
-        else params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE).setMaxVideoFrameRate(Int.MAX_VALUE)
+        when (quality) {
+            Quality.Normal -> params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE).setMaxVideoFrameRate(Int.MAX_VALUE)
+            Quality.Low -> params.setMaxVideoSize(160, 90).setMaxVideoBitrate(225_000).setMaxVideoFrameRate(30)
+            Quality.Lowest -> params.setMaxVideoSize(80, 45).setMaxVideoBitrate(112_000).setMaxVideoFrameRate(30)
+        }
         stream.player.trackSelectionParameters = params.build()
     }
 
