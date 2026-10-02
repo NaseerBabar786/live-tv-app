@@ -83,6 +83,8 @@ KIDS_CHANNELS = [
     ("Pocoyo", ["@Pocoyo", "@PocoyoEnglish"], "Pocoyo", "English", 5),
 ]
 SHOW_SKIP = re.compile(r"\b(teaser|promo|trailer|shorts|live stream|live)\b|#shorts", re.IGNORECASE)
+# Channels of one show only, whose titles name the story arc instead ("Flats Ki Renovation Episode 1778").
+SINGLE_SHOW = {"Taarak Mehta Ka Ooltah Chashmah"}
 # A "show name" that is only a filler word ("FULL Episode 4777"): the channel's name is used instead.
 NO_SHOW_NAME = re.compile(r"^(full|full episode|new|latest|watch the show|se\s*\d+|season\s*\d+)$", re.IGNORECASE)
 
@@ -474,7 +476,7 @@ def main():
                 continue
             if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
                 continue
-            show = name if NO_SHOW_NAME.match(ep[0].strip()) else ep[0]
+            show = name if name in SINGLE_SHOW or NO_SHOW_NAME.match(ep[0].strip()) else ep[0]
             if vid in kept:
                 kept[vid]["seen"] = today.isoformat()
             else:
