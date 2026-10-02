@@ -30,6 +30,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.livetv.app.data.YouTube
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Plays a YouTube video in YouTube's own player, as YouTube's terms require. TVs hand it to
@@ -64,6 +66,32 @@ fun YouTubePlayer(videoId: String, onBack: () -> Unit) {
             onClick = { if (openYouTubeApp(context, videoId)) onBack() },
             modifier = Modifier.align(Alignment.TopEnd).padding(12.dp).focusGlow(),
         ) { Text("Open in YouTube") }
+    }
+}
+
+/**
+ * Plays what a YouTube channel is streaming live now (a Pakistani news channel's 24/7 stream):
+ * finds the current live video, then plays it like any YouTube video. When the video can't be
+ * found, YouTube's embedded player is asked for the channel's live stream instead.
+ */
+@Composable
+fun YouTubeLivePlayer(channelId: String, onBack: () -> Unit) {
+    var video by remember(channelId) { mutableStateOf<String?>(null) }
+    var looked by remember(channelId) { mutableStateOf(false) }
+    LaunchedEffect(channelId) {
+        video = withContext(Dispatchers.IO) { YouTube.currentLiveVideo(channelId) }
+        looked = true
+    }
+    val found = video
+    when {
+        found != null -> YouTubePlayer(found, onBack)
+        looked -> EmbedPlayer("https://www.youtube.com/embed/live_stream?channel=$channelId&autoplay=1&playsinline=1", onBack)
+        else -> {
+            BackHandler(onBack = onBack)
+            Box(Modifier.fillMaxSize().background(Color.Black)) {
+                Text("Opening the live stream…", color = Color.White, modifier = Modifier.align(Alignment.Center))
+            }
+        }
     }
 }
 

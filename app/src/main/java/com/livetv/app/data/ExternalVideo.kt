@@ -25,6 +25,34 @@ object YouTube {
     }
 
     fun watchUrl(id: String) = "https://www.youtube.com/watch?v=$id"
+
+    private val liveLink = Regex("""^https?://(?:www\.|m\.)?youtube\.com/channel/(UC[A-Za-z0-9_-]{22})/live/?$""")
+
+    /** The channel id of a channel's live link (youtube.com/channel/UC…/live); null for anything else. */
+    fun liveChannelId(url: String): String? = liveLink.find(url.trim())?.groupValues?.get(1)
+
+    /** Whether the link plays in YouTube's player: a video or a channel's live stream. */
+    fun isYouTube(url: String): Boolean = videoId(url) != null || liveChannelId(url) != null
+
+    /**
+     * The video a channel is streaming live now, read from its /live page; null when it isn't
+     * live or YouTube can't be reached. Blocks: call it off the main thread.
+     */
+    fun currentLiveVideo(channelId: String): String? = runCatching {
+        val connection = java.net.URL("https://www.youtube.com/channel/$channelId/live").openConnection() as java.net.HttpURLConnection
+        connection.connectTimeout = 10_000
+        connection.readTimeout = 15_000
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36")
+        connection.setRequestProperty("Accept-Language", "en-US,en;q=0.9")
+        connection.setRequestProperty("Cookie", "CONSENT=YES+1; SOCS=CAI")
+        try {
+            val page = connection.inputStream.bufferedReader().use { it.readText() }
+            Regex("""<link rel="canonical" href="https://www\.youtube\.com/watch\?v=([A-Za-z0-9_-]{11})"""")
+                .find(page)?.groupValues?.get(1)
+        } finally {
+            connection.disconnect()
+        }
+    }.getOrNull()
 }
 
 /** Bilibili (bilibili.tv) video and series links. They open in the Bilibili app, which is the only place they play. */

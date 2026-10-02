@@ -15,6 +15,7 @@ Episodes found on earlier runs are kept for KEEP_DAYS, so each show builds up.
 Writes (in docs/, served at tv.bulkbazaar.ca):
   Dramas.m3u     the playlist (built into Live TV's Movies & Series)
   dramas.json    every episode kept, with the day it was found, and counts
+  PakistanLive.m3u  Pakistani channels' own 24/7 YouTube live streams (added to Live TV's Pakistani channels)
   MTA.m3u        MTA's own videos (an optional Library section, off unless the viewer turns it on)
 
 Standard library only. Run: python3 tools/build_dramas.py
@@ -111,6 +112,23 @@ KIDS_CHANNELS = [
     ("Mr Bean", ["@MrBean"], "Mr Bean", "English", 5),
     ("Peppa Pig", ["@PeppaPigOfficial", "@peppapig"], "Peppa Pig", "English", 5),
     ("Pocoyo", ["@Pocoyo", "@PocoyoEnglish"], "Pocoyo", "English", 5),
+]
+# Pakistani channels that stream 24/7 on their own YouTube channel but have no working stream
+# in our lists. Each is listed only while its channel is live; the link is the channel's /live
+# page, which Live TV turns into the current live video when it is played.
+LIVE_CHANNELS = [
+    ("Geo News", "Geo News", "News"),
+    ("Geo News English", "Geo News English", "News"),
+    ("ARY News", "ARY News", "News"),
+    ("Express News", "Express News", "News"),
+    ("92 News", "92 News HD", "News"),
+    ("Hum News", "HUM News", "News"),
+    ("GNN", "GNN", "News"),
+    ("Aaj News", "Aaj News", "News"),
+    ("BOL News", "BOL News", "News"),
+    ("Suno News", "SUNO NEWS HD", "News"),
+    ("ARY Digital", "ARY Digital HD", "Entertainment"),
+    ("Kids Land Urdu", "Kids Land", "Kids"),
 ]
 # Muslim Television Ahmadiyya's own channels; their videos go to MTA.m3u only, which Live
 # TV shows only when the viewer turns MTA on in Settings.
@@ -512,6 +530,30 @@ def channel_shows(kept, today, channels, genre):
         print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new {genre.lower()}")
 
 
+def live_channels():
+    """#EXTINF rows for each LIVE_CHANNELS channel that is live on YouTube right now."""
+    lines = []
+    for name, query, genre in LIVE_CHANNELS:
+        handle, cid = channel_id([], query)
+        if not cid:
+            print(f"{name}: channel not found", file=sys.stderr)
+            continue
+        try:
+            page = fetch(f"https://www.youtube.com/channel/{cid}/live", tries=2)
+        except Exception as e:  # noqa: BLE001
+            print(f"  {name}: live page failed ({e})", file=sys.stderr)
+            continue
+        vid = re.search(r'<link rel="canonical" href="https://www\.youtube\.com/watch\?v=([\w-]{11})"', page)
+        if not vid or '"isLiveNow":true' not in page:
+            print(f"{name} ({cid}): not live now; left out", file=sys.stderr)
+            continue
+        print(f"{name} ({cid}): live, video {vid.group(1)}")
+        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid.group(1)}/hqdefault.jpg" tvg-country="PK" '
+                     f'tvg-language="Urdu" tvg-genre="{genre}" group-title="Pakistani",{name}')
+        lines.append(f"https://www.youtube.com/channel/{cid}/live")
+    return lines
+
+
 def mta(kept, today):
     """Adds MTA's full videos to kept, each in a folder by programme and in Urdu or English."""
     for name, handles, query, shortest in MTA_CHANNELS:
@@ -738,6 +780,11 @@ def main():
         lines.append(v.get("url") or f"https://www.youtube.com/watch?v={vid}")
     with open(os.path.join(DOCS, "Dramas.m3u"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
+    live = live_channels()
+    if live:  # an empty run (YouTube unreachable) keeps yesterday's list
+        with open(os.path.join(DOCS, "PakistanLive.m3u"), "w", encoding="utf-8") as f:
+            f.write("\n".join(["#EXTM3U", "# Pakistani channels' own 24/7 live streams on YouTube."] + live) + "\n")
+    print(f"Wrote docs/PakistanLive.m3u: {len(live) // 2} live channels")
     lines = ["#EXTM3U", "# MTA (Muslim Television Ahmadiyya) programmes from its own YouTube channel."]
     for vid, v in sorted(mta_items.items(), key=lambda kv: (kv[1]["folder"], kv[1]["added"], kv[1]["item"]), reverse=True):
         lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v["language"]}" '

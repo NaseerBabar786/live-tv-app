@@ -14,6 +14,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import com.livetv.app.data.Channel
 import com.livetv.app.data.ChannelRepository
+import com.livetv.app.data.YouTube
 
 /**
  * Wraps ExoPlayer for IPTV-style playback.
@@ -53,6 +54,12 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
     var onError: ((String?) -> Unit)? = null
 
     fun play(channel: Channel) {
+        if (YouTube.isYouTube(channel.url)) {
+            // YouTube streams play only in YouTube's player, which opens in full screen.
+            stop()
+            onError?.invoke("This channel plays in YouTube's player. Open it in full screen to watch.")
+            return
+        }
         this.channel = channel
         candidates = (listOf(channel.url) + channel.alternates)
             .flatMap { url -> mimeCandidates(url).map { url to it } }
