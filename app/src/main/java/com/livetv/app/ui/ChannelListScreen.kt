@@ -383,7 +383,8 @@ fun ChannelListScreen(
     }
 
     Scaffold(
-        // Full-screen tiles: no top bar and nothing around the tiles.
+        // Full-screen tiles: no top bar and nothing around the tiles, which stays pure black.
+        containerColor = if (fullTiles) Color.Black else MaterialTheme.colorScheme.background,
         contentWindowInsets = if (fullTiles) WindowInsets(0) else ScaffoldDefaults.contentWindowInsets,
         topBar = {
             if (!fullTiles) TopAppBar(
@@ -560,7 +561,7 @@ fun ChannelListScreen(
                         onSelect = { listChannelId = it.id; onWatch(it) },
                         onOpen = onPlay,
                     )
-                    else -> BoxWithConstraints(Modifier.fillMaxSize()) {
+                    else -> BoxWithConstraints(Modifier.fillMaxSize().then(if (fullTiles) Modifier.background(Color.Black) else Modifier)) {
                     // TVs and tablets: the chosen layout (12, 6, 4 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
                     val wide = windowed
@@ -1328,11 +1329,11 @@ private class Preview(val stream: StreamPlayer) {
         })
     }
 
-    /** Low: at most 426×240 and 700 kbit/s, for when many videos play at once; otherwise SD. */
+    /** Low: at most 320×180, 450 kbit/s and 30 fps, for when many videos play at once; otherwise SD. */
     fun lowQuality(low: Boolean) {
         val params = stream.player.trackSelectionParameters.buildUpon()
-        if (low) params.setMaxVideoSize(426, 240).setMaxVideoBitrate(700_000)
-        else params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE)
+        if (low) params.setMaxVideoSize(320, 180).setMaxVideoBitrate(450_000).setMaxVideoFrameRate(30)
+        else params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE).setMaxVideoFrameRate(Int.MAX_VALUE)
         stream.player.trackSelectionParameters = params.build()
     }
 
