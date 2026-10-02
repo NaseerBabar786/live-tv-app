@@ -10,9 +10,12 @@ object Mta {
     const val CATEGORY = "Religious"
     const val VIDEOS_URL = "https://tv.bulkbazaar.ca/MTA.m3u"
 
-    private fun channel(name: String, path: String, language: String, logo: String) = Channel(
+    /** MTA's own CDN, as used by the player on mta.tv. */
+    private const val CDN = "https://dq1c55erlhlb2.cloudfront.net/out/v1/prod-mtai-live-shared"
+
+    private fun channel(name: String, id: String, language: String, logo: String) = Channel(
         name = name,
-        url = "https://$path/playlist.m3u8",
+        url = "$CDN/prod_$id/prod_$id-origin-v1/index-hls.m3u8",
         logo = "https://i.imgur.com/$logo.png",
         group = GROUP,
         language = language,
@@ -21,13 +24,21 @@ object Mta {
     )
 
     val CHANNELS = listOf(
-        channel("MTA1 World", "chlivemta1.akamaized.net/hls/live/2008145/mta1", "Urdu", "bYiRfAg"),
-        channel("MTA2 Europe", "chlivemta1.akamaized.net/hls/live/2008145/mta2", "Urdu", "aVts0sz"),
-        channel("MTA3 Al-Arabia", "chlivemta1.akamaized.net/hls/live/2010556/mta3alarabia", "Arabic", "m3PEldJ"),
-        channel("MTA4 Africa", "chlivemta.akamaized.net/hls/live/2010555/mtaafrica1", "English", "lmVeQQX"),
-        channel("MTA5 Africa", "chlivemta.akamaized.net/hls/live/2010555/mtaafrica2", "English", "9Cobb2i"),
-        channel("MTA6 Asia", "livemtaasia.akamaized.net/hls/live/2039224/mta6asia", "Urdu", "nhCNPJI"),
-        channel("MTA7 Asia", "livemtaasia.akamaized.net/hls/live/2039224/mtaasia2", "Urdu", "3Nl8Tpu"),
-        channel("MTA8 America", "chlivemta.akamaized.net/hls/live/2016718/mta8", "English", "CF6X9wB"),
+        channel("MTA1 World", "mta1_world_main", "Urdu", "bYiRfAg"),
+        channel("MTA2 Europe", "mta2_europe", "Urdu", "aVts0sz"),
+        channel("MTA3 Al-Arabia", "mta3_alarabia", "Arabic", "m3PEldJ"),
+        channel("MTA4 Africa", "mta4_africa", "English", "lmVeQQX"),
+        channel("MTA5 Africa", "mta5_africa", "English", "9Cobb2i"),
+        channel("MTA6 Asia", "mta6_asia", "Urdu", "nhCNPJI"),
+        channel("MTA7 Asia", "mta7_asia", "Urdu", "3Nl8Tpu"),
+        channel("MTA8 America", "mta8_america", "English", "CF6X9wB"),
     )
+
+    /**
+     * MTA's old Akamai links, still in the public lists: MTA moved to the CDN above in 2026,
+     * and the old ones are refused or all play MTA1, so they are left out.
+     */
+    private val oldLink = Regex("""^https?://(chlivemta1?|livemtaasia)\.akamaized\.net/""")
+
+    fun isOldLink(url: String) = oldLink.containsMatchIn(url)
 }

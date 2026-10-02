@@ -17,6 +17,7 @@ import com.livetv.app.ui.UiState
 import com.livetv.app.ui.UpdatePromptDialog
 import com.livetv.app.ui.UpdateState
 import com.livetv.app.ui.UpdateViewModel
+import com.livetv.app.ui.VodViewModel
 import com.livetv.app.ui.focusGlow
 
 /** Live TV: built-in free channels, a sponsor screen at start, and self-updates from GitHub. */
@@ -30,11 +31,18 @@ object Edition {
     const val HAS_VOD = true
 }
 
-/** The sponsor screen. Also starts the update check so its answer is ready when the screen ends. */
+/**
+ * The sponsor screen. Meanwhile it checks for updates and loads the channels, then the
+ * Library, so they are ready when the main screen opens.
+ */
 @Composable
 fun EditionStartScreen(onDone: () -> Unit) {
     viewModel<UpdateViewModel>()
-    SponsorScreen(onDone = onDone)
+    val state by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
+    // The Library's lists load next, once the channels are in, so they don't slow the channels down.
+    val library = viewModel<VodViewModel>()
+    LaunchedEffect(state.loading) { if (!state.loading) library.refreshIfChanged() }
+    SponsorScreen(loading = state.loading, onDone = onDone)
 }
 
 /** Asks to update when the start-up check found a newer version; quiet otherwise. */

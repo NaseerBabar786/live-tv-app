@@ -15,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -24,18 +26,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 
 private const val SPONSOR_SECONDS = 5
 
-/** Shown for [SPONSOR_SECONDS] seconds when the app starts: thanks and a word from our sponsor. */
+/** How much longer the screen may wait for the channels after the countdown. */
+private const val MAX_EXTRA_WAIT_MS = 10_000L
+
+/**
+ * Shown for [SPONSOR_SECONDS] seconds when the app starts: thanks and a word from our sponsor.
+ * The channels load meanwhile; if they aren't ready when the countdown ends, it waits for them
+ * a little longer (at most [MAX_EXTRA_WAIT_MS]) so the main screen opens with them in place.
+ */
 @Composable
-fun SponsorScreen(onDone: () -> Unit) {
+fun SponsorScreen(loading: Boolean, onDone: () -> Unit) {
     var secondsLeft by rememberSaveable { mutableIntStateOf(SPONSOR_SECONDS) }
+    val stillLoading by rememberUpdatedState(loading)
     LaunchedEffect(Unit) {
         while (secondsLeft > 0) {
             delay(1_000)
             secondsLeft--
         }
+        withTimeoutOrNull(MAX_EXTRA_WAIT_MS) { snapshotFlow { stillLoading }.first { !it } }
         onDone()
     }
 
@@ -52,13 +65,13 @@ fun SponsorScreen(onDone: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier.verticalScroll(rememberScrollState()),
         ) {
-            SponsorWords(secondsLeft, TextAlign.Center)
+            SponsorWords(if (secondsLeft == 0 && loading) null else secondsLeft, TextAlign.Center)
         }
     }
 }
 
 @Composable
-private fun SponsorWords(secondsLeft: Int, align: TextAlign) {
+private fun SponsorWords(secondsLeft: Int?, align: TextAlign) {
     Text(
         "Live TV is free thanks to our sponsor, Bulk Bazaar Inc. Please show them some love: " +
             "visit bulkbazaar.ca and leave them a 5-star review ★★★★★",
@@ -83,7 +96,7 @@ private fun SponsorWords(secondsLeft: Int, align: TextAlign) {
         modifier = Modifier.widthIn(max = 560.dp),
     )
     Text(
-        "Starting in $secondsLeft…",
+        if (secondsLeft == null) "Loading channels…" else "Starting in $secondsLeft…",
         fontSize = 14.sp,
         textAlign = align,
         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),

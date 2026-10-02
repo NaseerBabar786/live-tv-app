@@ -1,12 +1,17 @@
 package com.livetv.app.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableLongStateOf
 import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.roundToInt
+import android.app.Activity
 import android.content.Context
+import android.widget.Toast
 import android.net.ConnectivityManager
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -157,6 +162,7 @@ fun ChannelListScreen(
     onWatch: (Channel) -> Unit = {},
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
+    val searchButtonFocus = remember { FocusRequester() }
     var showSettings by rememberSaveable { mutableStateOf(false) }
     val gridState = rememberLazyGridState()
     val lastWatchedFocus = remember { FocusRequester() }
@@ -214,13 +220,14 @@ fun ChannelListScreen(
     val slots = tileLayout.columns * tileLayout.rows
     var windowStart by rememberSaveable { mutableIntStateOf(0) }
     val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
-    // 1×2 is two separate TVs: Up and Down change the channel on the highlighted side only.
-    // [twoIds] holds the two sides' channels once one has been changed.
-    var twoIds by rememberSaveable { mutableStateOf(emptyList<String>()) }
+    // 1×2 and 2×2 are separate TVs: Up and Down change the channel on the highlighted tile only.
+    // [twoIds] holds the tiles' channels once one has been changed.
+    var twoIds by remember { mutableStateOf(sessionTileIds) }
+    SideEffect { sessionTileIds = twoIds }
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
     val window = when {
         !windowed -> emptyList()
-        tileLayout == TileLayout.Two && twoChosen.size == 2 && twoChosen[0].id != twoChosen[1].id -> twoChosen
+        tileLayout.separateTvs && twoChosen.size == slots && twoChosen.distinctBy { it.id }.size == slots -> twoChosen
         else -> state.visibleChannels.drop(start).take(slots)
     }
     val rowIds: List<String>? = if (windowed) {
@@ -235,7 +242,12 @@ fun ChannelListScreen(
         val index = state.visibleChannels.indexOfFirst { it.id == state.lastWatchedId }
         if (index >= 0) {
             if (windowed) {
-                if (window.none { it.id == state.lastWatchedId }) {
+                val opened = sessionOpenedTile
+                sessionOpenedTile = -1
+                if (tileLayout.separateTvs && opened in window.indices && window.none { it.id == state.lastWatchedId }) {
+                    // Back from full screen: the tile that was opened shows the channel watched last.
+                    twoIds = window.mapIndexed { i, c -> if (i == opened) state.lastWatchedId!! else c.id }
+                } else if (window.none { it.id == state.lastWatchedId }) {
                     windowStart = index
                     twoIds = emptyList()
                 }
@@ -259,8 +271,8 @@ fun ChannelListScreen(
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
-        // In 1×2 both cards play; otherwise only the highlighted one.
-        val playAll = wideScreen && tileLayout == TileLayout.Two
+        // In 1×2 and 2×2 every card plays; otherwise only the highlighted one.
+        val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
@@ -312,6 +324,28 @@ fun ChannelListScreen(
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    // Back closes the search bar (and clears the search) instead of closing the app.
+    BackHandler(enabled = searching) {
+        onQueryChange("")
+        searching = false
+        scope.launch { delay(50); runCatching { searchButtonFocus.requestFocus() } }
+    }
+    // Otherwise Back doesn't close the app at once: on a TV it first goes up to the top bar,
+    // then it asks for a second press within 2 seconds.
+    var topBarFocused by remember { mutableStateOf(false) }
+    var lastBackAt by remember { mutableLongStateOf(0L) }
+    BackHandler(enabled = !searching) {
+        val now = System.currentTimeMillis()
+        when {
+            wideScreen && !topBarFocused -> runCatching { layoutButtonFocus.requestFocus() }
+            now - lastBackAt < 2_000 -> (context as? Activity)?.finish()
+            else -> {
+                lastBackAt = now
+                Toast.makeText(context, "Press Back again to exit", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     Scaffold(
@@ -387,7 +421,7 @@ fun ChannelListScreen(
                             contentDescription = if (previewSound) "Mute previews" else "Unmute previews",
                         )
                     }
-                    IconButton(modifier = Modifier.focusGlow(), onClick = {
+                    IconButton(modifier = Modifier.focusRequester(searchButtonFocus).focusGlow(), onClick = {
                         if (searching) onQueryChange("")
                         searching = !searching
                     }) {
@@ -400,6 +434,7 @@ fun ChannelListScreen(
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
                 },
+                modifier = Modifier.onFocusChanged { topBarFocused = it.hasFocus },
             )
         },
     ) { padding ->
@@ -484,7 +519,7 @@ fun ChannelListScreen(
                         onOpen = onPlay,
                     )
                     else -> BoxWithConstraints(Modifier.fillMaxSize()) {
-                    // TVs and tablets: the chosen layout (8, 6 or 2 tiles). Phones: as many as fit.
+                    // TVs and tablets: the chosen layout (8, 6, 4 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
                     val wide = windowed
                     val fitColumns = if (wide) tileLayout.columns else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
@@ -508,12 +543,13 @@ fun ChannelListScreen(
                         onKey: (KeyEvent) -> Boolean,
                         onFocused: () -> Unit = {},
                         arrows: Boolean = false,
+                        onOpen: () -> Unit = {},
                     ) =
                         ChannelCard(
                             height = cardHeight,
                             channel = channel,
                             favorite = channel.id in state.favorites,
-                            onClick = { onPlay(channel) },
+                            onClick = { onOpen(); onPlay(channel) },
                             onToggleFavorite = { onToggleFavorite(channel) },
                             focusRequester = cardRequester(channel.id),
                             onKey = onKey,
@@ -532,7 +568,8 @@ fun ChannelListScreen(
                         // change channels: they move the highlight, and past the last (or first) tile
                         // every channel moves along one place and one new channel comes in. Up goes
                         // to the layout button and Down does nothing.
-                        // 2×1: Left and Right move the highlight (and the sound) between the two
+                        // 2×1 (and 2×2, where Left and Right go round all four tiles): Left and Right
+                        // move the highlight (and the sound) between the two
                         // sides, Up and Down change the highlighted side's channel, holding Up goes to
                         // the filter row, and Back goes up to the top bar.
                         fun twoKey(channel: Channel): (KeyEvent) -> Boolean = onKey@{ event ->
@@ -557,14 +594,18 @@ fun ChannelListScreen(
                             }
                             if (!up && event.type != KeyEventType.KeyDown) return@onKey false
                             val side = window.indexOfFirst { it.id == channel.id }
-                            val other = window.getOrNull(1 - side)
+                            val others = window.map { it.id }.toSet() - channel.id
+                            // 2×2: Left and Right go round all four tiles in reading order.
+                            val loop = tileLayout == TileLayout.Four
                             val target = when {
-                                event.key == Key.DirectionLeft -> window.first().takeIf { side == 1 }
-                                event.key == Key.DirectionRight -> window.getOrNull(1).takeIf { side == 0 }
+                                event.key == Key.DirectionLeft ->
+                                    window.getOrNull(if (loop) (side - 1 + window.size) % window.size else side - 1)
+                                event.key == Key.DirectionRight ->
+                                    window.getOrNull(if (loop) (side + 1) % window.size else side + 1)
                                 up || event.key == Key.DirectionDown -> {
                                     val step = if (up) -1 else 1
                                     var j = channels.indexOfFirst { it.id == channel.id } + step
-                                    if (channels.getOrNull(j)?.id == other?.id) j += step
+                                    while (channels.getOrNull(j)?.id.let { it != null && it in others }) j += step
                                     channels.getOrNull(j)?.also { next ->
                                         twoIds = window.map { if (it.id == channel.id) next.id else it.id }
                                     }
@@ -623,8 +664,9 @@ fun ChannelListScreen(
                                         // Keyed by channel, so a playing card slides over without restarting.
                                         key(channel.id) {
                                             Box(Modifier.width(tileWidth)) {
-                                                if (tileLayout == TileLayout.Two) {
-                                                    Tile(0, channel, twoKey(channel), arrows = channel.id == focusedId)
+                                                if (tileLayout.separateTvs) {
+                                                    Tile(0, channel, twoKey(channel), arrows = channel.id == focusedId,
+                                                        onOpen = { sessionOpenedTile = window.indexOfFirst { it.id == channel.id } })
                                                 } else {
                                                     Tile(start + r * columns + c, channel, onKey(start + r * columns + c))
                                                 }
@@ -1158,6 +1200,8 @@ private val MinTileWidth = 170.dp
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
     Eight("2×4", 4, 2),
     Six("2×3", 3, 2),
+    /** Four separate TVs, like 1×2. */
+    Four("2×2", 2, 2),
     Two("1×2", 2, 1),
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
@@ -1168,6 +1212,16 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
  * it starts in 1+List (the user's choice), so the pick is kept only until then, not saved.
  */
 private var sessionTileLayout: TileLayout? = null
+
+/** 1×2 and 2×2: every tile plays and has its own channel, changed with Up and Down. */
+private val TileLayout.separateTvs get() = this == TileLayout.Two || this == TileLayout.Four
+
+/**
+ * 1×2 and 2×2's channels, and the tile opened full screen, kept while a channel plays full
+ * screen so Back returns to the same tiles (with the opened one on the channel watched last).
+ */
+private var sessionTileIds: List<String> = emptyList()
+private var sessionOpenedTile: Int = -1
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 
