@@ -1332,7 +1332,7 @@ private fun WeatherNow() {
 
 /**
  * Preview picture quality. Normal: SD. Low (several tiles playing, e.g. 2×3): at most 160×90 and
- * 225 kbit/s. Lowest (4×4): half of Low. A stream with no smaller version plays its smallest one.
+ * 225 kbit/s. Lowest (4×4): a quarter of Low (40×23, 56 kbit/s). A stream with no smaller version plays its smallest one.
  */
 private enum class Quality { Normal, Low, Lowest }
 
@@ -1357,7 +1357,7 @@ private class Preview(val stream: StreamPlayer) {
         when (quality) {
             Quality.Normal -> params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE).setMaxVideoFrameRate(Int.MAX_VALUE)
             Quality.Low -> params.setMaxVideoSize(160, 90).setMaxVideoBitrate(225_000).setMaxVideoFrameRate(30)
-            Quality.Lowest -> params.setMaxVideoSize(80, 45).setMaxVideoBitrate(112_000).setMaxVideoFrameRate(30)
+            Quality.Lowest -> params.setMaxVideoSize(40, 23).setMaxVideoBitrate(56_000).setMaxVideoFrameRate(30)
         }
         stream.player.trackSelectionParameters = params.build()
     }
