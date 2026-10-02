@@ -1,0 +1,3811 @@
+{
+ "built": "2026-10-02 05:02 UTC",
+ "shows": 32,
+ "episodes": 479,
+ "movies": 75,
+ "videos": {
+  "-YRkRLTGlrI": {
+   "show": "Buzz",
+   "episode": 71,
+   "channel": "ARY Digital",
+   "title": "Buzz EP 71 | Tamasha S5 9th Elimination: Sahrish Ahmed | 1 October 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "Bf37YGHf5ts": {
+   "show": "TAMASHA SEASON 5",
+   "episode": 55,
+   "channel": "ARY Digital",
+   "title": "TAMASHA SEASON 5 | EPISODE 55 | MIDWEEK ELIMINATION | 1 October 2026 | REALITY SHOW | ARY DIGITAL",
+   "added": "2026-10-02"
+  },
+  "Tv0FVcTJbZ0": {
+   "show": "Main Tera",
+   "episode": 51,
+   "channel": "ARY Digital",
+   "title": "Main Tera Episode 51 | 1 October 2026 | Ghana Ali | Yusra Irfan | Arez Ahmed | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "m6dt2gRbeso": {
+   "show": "Hey Fam",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Hey Fam | EP 6 | 1 October 2026 | ENG SUB |  Zaviyar Ejaz | Duaa Zahra | Zarrar Khan | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "gDchZzqhJSg": {
+   "show": "Parwarish",
+   "episode": 26,
+   "channel": "ARY Digital",
+   "title": "Parwarish Episode 26 | Aina Asif | Samar Jafri | 7 JULY 2025 (Eng Sub) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "kbWhqdSw7Jg": {
+   "show": "Kafeel",
+   "episode": 25,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 25 | 30 March 2026 | Emmad Irfani | Sanam Saeed | [ENG SUB] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "jnGTxPF-YrM": {
+   "show": "Habs",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 3 - Presented By Brite - 24th May 2022 (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "kPoNN2nMCzY": {
+   "show": "Pehli Si Muhabbat",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Pehli Si Muhabbat Ep 6 - Presented by Pantene [Subtitle Eng] 27th Feb 2021 - ARY Digital",
+   "added": "2026-10-02"
+  },
+  "8Jd5mkYtBXQ": {
+   "show": "Jalan",
+   "episode": 15,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 15 [Subtitle Eng] - 23rd September 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "iSdIxL4xFHY": {
+   "show": "Fraud",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 4 | 4th June 2022 (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "zW-sE08pZuE": {
+   "show": "Jalan",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 1 | Subtitle English | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "zefTuQoI_W0": {
+   "show": "Jalan",
+   "episode": 12,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 12 - Presented by Ariel | 2nd September 2020 | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "cRRqXxXLutU": {
+   "show": "Jalan",
+   "episode": 17,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 17 [Subtitle Eng] - 7th October 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "ujvyALNSfjs": {
+   "show": "Mahnoor",
+   "episode": 32,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 32 | Humayoun Ashraf | Khadija Saleem | 2 June 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "onzN4G9WnqI": {
+   "show": "Amanat",
+   "episode": 15,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 15 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "bWLnDzUgDis": {
+   "show": "Jalan",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 6 - Presented by Ariel [Subtitle Eng] - 22nd July 2020 - ARY Digital",
+   "added": "2026-10-02"
+  },
+  "NbTZe293cmI": {
+   "show": "Bulbulay Season 2",
+   "episode": 243,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 | Episode 243 | 9 March 2024 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "aF40tK46-lA": {
+   "show": "Jalan",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 3 - Presented by Ariel [Subtitle Eng] - 1st July 2020 - ARY Digital",
+   "added": "2026-10-02"
+  },
+  "mvwOE6aNSbg": {
+   "show": "Main Tera",
+   "episode": 37,
+   "channel": "ARY Digital",
+   "title": "Main Tera Episode 37 | 11 SEP 2026 | Ghana Ali | Yusra Irfan | Arez Ahmed | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "wqSxICBr0zk": {
+   "show": "Bulbulay Season 2",
+   "episode": 355,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 355 | 16 May 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "Zz7FC0szQnc": {
+   "show": "Berukhi",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 4 - 6th October 2021 - Presented By Ariel  [Subtitle English] - #ARYDigital",
+   "added": "2026-10-02"
+  },
+  "vOrli4dd5yg": {
+   "show": "Habs",
+   "episode": 7,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 7 - 21st June 2022 | Presented By Brite | (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "f2XaWezR5lw": {
+   "show": "Berukhi",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 1 - Part 1 [Subtitle Eng] - 15th September 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "5BH6C9sbndo": {
+   "show": "Berukhi",
+   "episode": 25,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 25 - Presented By Ariel [Subtitle Eng] - 2nd March 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "jEMJvNGg3aI": {
+   "show": "Habs",
+   "episode": 12,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 12 - 2nd August 2022 | Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "qZQIpZXmJv0": {
+   "show": "Sher",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Sher Episode 1 | Danish Taimoor | Sarah Khan | 21 May 2025 [ENG SUB] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "ZjoKaASn78I": {
+   "show": "Dunk",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 1 [Subtitle English] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "aK3Rw6f8T2s": {
+   "show": "Do Bol",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 2 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "F738neuO2Rc": {
+   "show": "Main Tera",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Main Tera Episode 23 | 21 August 2026 | Yusra Irfan | Arez Ahmed | Ghana Ali | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "jjumoqC7IiM": {
+   "show": "Cheekh",
+   "episode": 15,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 15 | 13th April 2019 | ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "zkoGnWpFjHo": {
+   "show": "Jalan",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 10 - Presented by Ariel - | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "w_DgRNDJNsg": {
+   "show": "Main Tera",
+   "episode": 36,
+   "channel": "ARY Digital",
+   "title": "Main Tera Episode 36 | 10 SEP 2026 | Ghana Ali | Yusra Irfan | Arez Ahmed | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "sdcqQrcedhE": {
+   "show": "Amanat",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 1 - Part 1 - Presented By Brite [Subtitle Eng] - 21st Sep 2021 - ARY Digital",
+   "added": "2026-10-02"
+  },
+  "pr0L_yNYuJY": {
+   "show": "Amanat",
+   "episode": 31,
+   "channel": "ARY Digital",
+   "title": "Amanat 2nd Last Episode 31 - Presented By Brite [Subtitle Eng] - 19th April 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "IOw7Tat2DHg": {
+   "show": "Amanat",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 2 - Part 1 - Presented By Brite [Subtitle Eng] - 28th Sep 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "VelpwOkLymk": {
+   "show": "Amanat",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 05 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "uhzYuZ73MDc": {
+   "show": "Amanat",
+   "episode": 12,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 12 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "bmSe_DCNpdM": {
+   "show": "Amanat",
+   "episode": 8,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 08 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "aZnOhif9JV4": {
+   "show": "Amanat",
+   "episode": 20,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 20 - Presented By Brite [Subtitle Eng] - 8th February 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "yoJFfxdhttw": {
+   "show": "Amanat",
+   "episode": 14,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 14 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "M-uHXXHLjxE": {
+   "show": "Amanat",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 6 - Presented By Brite [Subtitle Eng] - 2nd November 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "C5MlUTSeWpk": {
+   "show": "Amanat",
+   "episode": 25,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 25 - Presented By Brite [Subtitle Eng] - 15th March 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "zhQhmCcOvf8": {
+   "show": "Amanat",
+   "episode": 30,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 30 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "LHHtctABQ1s": {
+   "show": "Amanat",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 02 | Part - 2 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "oDVriH-HH0c": {
+   "show": "Amanat",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 23 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "tAEh8qdl18g": {
+   "show": "Amanat",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 22 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "gIQY3Rtvywc": {
+   "show": "Amanat",
+   "episode": 21,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 21 - Presented By Brite [Subtitle Eng]- 15th February 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "NGNSmagv9Zg": {
+   "show": "Amanat",
+   "episode": 26,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 26 - Presented By Brite [Subtitle Eng] - 22nd March 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "PXyZEUFtRd8": {
+   "show": "Amanat",
+   "episode": 29,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 29 | Presented By Brite [Subtitle Eng] |  ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "tP6gZCk3uw0": {
+   "show": "Amanat",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 10 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "bxl--Gc0nOA": {
+   "show": "Amanat",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 9 - Presented By Brite [Subtitle Eng] - 23rd November 2021  - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "BoTdoUrTFdE": {
+   "show": "Amanat",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 01 | Part 2 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "XiC_yplnu_k": {
+   "show": "Amanat",
+   "episode": 27,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 27 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "WY1frLw_HeI": {
+   "show": "Amanat",
+   "episode": 24,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 24 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "Gn-Q9nxQ504": {
+   "show": "Amanat",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 13 - Presented By Brite [Subtitle Eng] - 21st December 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "F9mTA-pOlKs": {
+   "show": "Amanat",
+   "episode": 28,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 28 - Presented By Brite [Subtitle Eng] - 30th March 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "yL_cTjvxTIQ": {
+   "show": "Amanat",
+   "episode": 16,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 16 | Presented By Brite [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "dlQX-oioj4I": {
+   "show": "Amanat",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Amanat Episode 11 - Presented By Brite [Subtitle Eng] - 7th December 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "lXwqa-vvsKY": {
+   "show": "Berukhi",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 11 - Presented By Ariel [Subtitle Eng] - 24th November 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "fyr-DP1csW8": {
+   "show": "Berukhi",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 10 - Presented By Ariel [Subtitle Eng] - 17th November 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "5kVFccUUur8": {
+   "show": "Berukhi",
+   "episode": 26,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 26 - Presented By Ariel [Subtitle Eng] - 9th March 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "GeEkQ2rpaXo": {
+   "show": "Berukhi",
+   "episode": 18,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 18 - Presented By Ariel [Subtitle Eng] - 12th January 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "l8MYQW29K-I": {
+   "show": "Berukhi",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 22 - Presented By Ariel [Subtitle Eng] - 9th February 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "K7Eh9nOoLEs": {
+   "show": "Berukhi",
+   "episode": 15,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 15 - Presented By Ariel [Subtitle Eng] - 22nd December 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "Vr8enIDXBDQ": {
+   "show": "Berukhi",
+   "episode": 27,
+   "channel": "ARY Digital",
+   "title": "Berukhi 2nd Last Episode 27 - Presented By Ariel [Subtitle Eng] 16th March 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "9Ht1xcT8BXU": {
+   "show": "Berukhi",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 9 - 10th November 2021 - Presented By Ariel  [Subtitle English] - #ARYDigital",
+   "added": "2026-10-02"
+  },
+  "frpXlmAXBic": {
+   "show": "Berukhi",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 6 - Presented By Ariel [Subtitle Eng] - 20th October 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "eHDEPFOvmxw": {
+   "show": "Berukhi",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 23 - Presented By Ariel [Subtitle Eng] - 16th February 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "3kPiAw-reYI": {
+   "show": "Berukhi",
+   "episode": 24,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 24 - Presented By Ariel [Subtitle Eng] - 23rd February 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "o7Y57e8ceTk": {
+   "show": "Berukhi",
+   "episode": 8,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 8 - Presented By Ariel [Subtitle Eng] - 3rd November 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "cCsYKuwZWyg": {
+   "show": "Berukhi",
+   "episode": 20,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 20 - Presented By Ariel  - [Subtitle Eng] - 26th January 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "RVdp3U004AM": {
+   "show": "Berukhi",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 5 - Presented By Ariel [Subtitle Eng] - 13th October 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "nJWogSaKKBY": {
+   "show": "Berukhi",
+   "episode": 7,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 7 - 27th October 2021 - Presented By Ariel  [Subtitle English] - #ARYDigital",
+   "added": "2026-10-02"
+  },
+  "kF-DUrSTP5c": {
+   "show": "Berukhi",
+   "episode": 21,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 21 - Presented By Ariel [Subtitle Eng] - 2nd February 2022 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "oRcZ9nvcLTw": {
+   "show": "Berukhi",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 2 - Part 1 [Subtitle Eng] - 22nd September 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "JNXvZYnn5GE": {
+   "show": "Berukhi",
+   "episode": 12,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 12  - 1st December 2021 - Presented By Ariel  [Subtitle English] - #ARYDigital",
+   "added": "2026-10-02"
+  },
+  "10PxM-jrE8c": {
+   "show": "Berukhi",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 3 - Part 1 [Subtitle Eng] - 29th September 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "5aidkNWulcM": {
+   "show": "Berukhi",
+   "episode": 14,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 14 - Presented By Ariel [Subtitle Eng] - 15th December 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "M3A4tHJaRtU": {
+   "show": "Berukhi",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 13  - 8th December 2021 - Presented By Ariel  [Subtitle English] - #ARYDigital",
+   "added": "2026-10-02"
+  },
+  "Po70NF_ijz4": {
+   "show": "Berukhi",
+   "episode": 16,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 16 - Presented By Ariel [Subtitle Eng] - 29th December 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "tmzF1F9RSXc": {
+   "show": "Berukhi",
+   "episode": 19,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 19  - 19th January 2022 - Presented By Ariel  [Subtitle English] - #ARYDigital",
+   "added": "2026-10-02"
+  },
+  "ej_2AHujejc": {
+   "show": "Berukhi",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 3 - Part 2 [Subtitle Eng] - 29th September 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "3wSPddKOgYk": {
+   "show": "Berukhi",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Berukhi Episode 2 - Part 2 [Subtitle Eng] - 22nd September 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "nmemKwaKcw4": {
+   "show": "Bulbulay Season 2",
+   "episode": 375,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 375 | 26 September 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "gZ8AS7yzJQ4": {
+   "show": "Bulbulay Season 2",
+   "episode": 374,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 374 | 19 September 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "QsZUAjKpDqU": {
+   "show": "Bulbulay Season 2",
+   "episode": 371,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 371 | 29 August 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "SI5x3njmdpk": {
+   "show": "Bulbulay Season 2",
+   "episode": 373,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 373 | 12 September 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "EjyjPfo8nAI": {
+   "show": "Bulbulay Season 2",
+   "episode": 372,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 372 | 5 September 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "DV1qJKmsZVw": {
+   "show": "Bulbulay Season 2",
+   "episode": 365,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 365 | 18 July 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "euJp2xP1NFM": {
+   "show": "Bulbulay Season 2",
+   "episode": 369,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 369 | 15 August 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "9KkEY6MzRSU": {
+   "show": "Bulbulay Season 2",
+   "episode": 364,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 364 | 11 July 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "zFUWaHxFmtc": {
+   "show": "Bulbulay Season 2",
+   "episode": 362,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 362 | 27 June 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "OnJvEp_OQOM": {
+   "show": "Bulbulay Season 2",
+   "episode": 353,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 353 | 2 May 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "zRoYYmMOkUM": {
+   "show": "Bulbulay Season 2",
+   "episode": 367,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 367 | 1 August 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "2dAoUeqDNAQ": {
+   "show": "Bulbulay Season 2",
+   "episode": 370,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 370 | 22 August 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "7F7U8RKHW8k": {
+   "show": "Bulbulay Season 2",
+   "episode": 352,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 352 | 25 April 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "mEIT2UBNI4E": {
+   "show": "Bulbulay Season 2",
+   "episode": 351,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 351  | 18 April 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "_ZVNKWjvxB4": {
+   "show": "Bulbulay Season 2",
+   "episode": 368,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 368 | 8 August 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "yiZ4bvPrlQs": {
+   "show": "Bulbulay Season 2",
+   "episode": 363,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 363 | 4 July 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "5qglL8BQHy8": {
+   "show": "Bulbulay Season 2",
+   "episode": 356,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 356 | 23 May 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "LCxoOkvGS_Q": {
+   "show": "Bulbulay Season 2",
+   "episode": 358,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 358 | 30 May 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "yZDoWur1muk": {
+   "show": "Bulbulay Season 2",
+   "episode": 359,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 359 | 6 June 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "j4800JYYU_U": {
+   "show": "Bulbulay Season 2",
+   "episode": 366,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 366 | 25 July 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "53pKBjg2N2g": {
+   "show": "Bulbulay Season 2",
+   "episode": 360,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 360 | 13 June 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "4qC2pWp9Ck8": {
+   "show": "Bulbulay Season 2",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 1 | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "VY3WTPsnUUU": {
+   "show": "Bulbulay Season 2",
+   "episode": 350,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 350  | 11 April 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "_hHVBhzerrg": {
+   "show": "Bulbulay Season 2",
+   "episode": 354,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 354 | 9 May 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "HsN5QpK1GQM": {
+   "show": "Bulbulay Season 2",
+   "episode": 361,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 361 | 20 June 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "OvWE8sS6b8o": {
+   "show": "Bulbulay Season 2",
+   "episode": 264,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 Episode 264 | 17 August 2024 | Comedy | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "vlzQcwTIzA4": {
+   "show": "Bulbulay Season 2",
+   "episode": 248,
+   "channel": "ARY Digital",
+   "title": "Bulbulay Season 2 | Episode 248 | 4 May 2024 | Comedy | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "VZUAjzFcwGE": {
+   "show": "Buzz",
+   "episode": 70,
+   "channel": "ARY Digital",
+   "title": "Buzz EP 70 | Tamasha S5 8th Elimination: Zayb Khan | 26 SEP 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "CDXILFD_6KE": {
+   "show": "Buzz",
+   "episode": 69,
+   "channel": "ARY Digital",
+   "title": "Buzz EP 69 | Tamasha S5 7th Elimination: Hamza Joher | 24 SEP 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "a5UHWcp8eb8": {
+   "show": "Buzz",
+   "episode": 67,
+   "channel": "ARY Digital",
+   "title": "Buzz EP 67 | Tamasha S5 6th Elimination: Ramsha Salahuddin | 12 SEP 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "pGPeOM2d1L0": {
+   "show": "Buzz",
+   "episode": 66,
+   "channel": "ARY Digital",
+   "title": "Buzz EP 66 | Tamasha S5 5th Elimination: Saqib Sumeer | 5 SEP 2026  | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "R-y5SMtAxiE": {
+   "show": "BUZZ",
+   "episode": 50,
+   "channel": "ARY Digital",
+   "title": "BUZZ EPISODE 50 | ADNAN SIDDIQUI | EID UL AZHA SPECIAL | 28 MAY 2026 | ARY DIGITAL",
+   "added": "2026-10-02"
+  },
+  "9PRDAhvdRCM": {
+   "show": "BUZZ",
+   "episode": 45,
+   "channel": "ARY Digital",
+   "title": "BUZZ EPISODE 45 | HAJRA YAMIN | 25th APRIL 2026 | ARY DIGITAL",
+   "added": "2026-10-02"
+  },
+  "tMpldkJ3C78": {
+   "show": "BUZZ",
+   "episode": 42,
+   "channel": "ARY Digital",
+   "title": "BUZZ EPISODE 42 | NOORAY ZEESHAN & HANIA AHMED  | 4th APRIL 2026 | ARY DIGITAL",
+   "added": "2026-10-02"
+  },
+  "cQ814420mGk": {
+   "show": "Buzz",
+   "episode": 61,
+   "channel": "ARY Digital",
+   "title": "Buzz Episode 61 | Tamasha S5 1st Elimination | Iman Lakhani | 15 Aug 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "yM-aW_MUsqY": {
+   "show": "Buzz",
+   "episode": 62,
+   "channel": "ARY Digital",
+   "title": "Buzz EP 62 | Tamasha S5 2nd Elimination: Jay Kadn | 19 Aug 2026 | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "uktY1V-x8hQ": {
+   "show": "BUZZ",
+   "episode": 56,
+   "channel": "ARY Digital",
+   "title": "BUZZ EPISODE 56 | Taqi Ahmed | 11 JULY 2026 | ARY DIGITAL",
+   "added": "2026-10-02"
+  },
+  "wleg4Az3p80": {
+   "show": "Cheekh",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 1 | Subtitle Eng | Saba Qamar | Bilal Abbas Khan | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "UHFE9l2ShrQ": {
+   "show": "Cheekh",
+   "episode": 26,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 26 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "fu0p4Aj0wpE": {
+   "show": "Cheekh",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 9 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "mC6E_5Hy-OM": {
+   "show": "Cheekh",
+   "episode": 18,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 18 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "lLx-9xLqmTk": {
+   "show": "Cheekh",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 4 - 26th January 2019 - ARY Digital  [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "54unvUp4Fp8": {
+   "show": "Cheekh",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 5 - 2nd February 2019 - ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "_FfIcdN0xnI": {
+   "show": "Cheekh",
+   "episode": 19,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 19 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "8x76tRGYMaY": {
+   "show": "Cheekh",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 2 - 12th Jan 2019 - ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "H834e1Esyns": {
+   "show": "Cheekh",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 13 | Saba Qamar | Bilal Abbas | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "04cRqs0iom0": {
+   "show": "Cheekh",
+   "episode": 7,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 7 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "X3BWyyHFaVo": {
+   "show": "Cheekh",
+   "episode": 28,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 28 | 27th July 2019 (English Subtitle) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "BnJ7Pql1F3g": {
+   "show": "Cheekh",
+   "episode": 16,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 16 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "7AKHDCCeGyQ": {
+   "show": "Cheekh",
+   "episode": 24,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 24 | 29th June 2019 | ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "DLjpVHVSGQ0": {
+   "show": "Cheekh",
+   "episode": 17,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 17 | 27th April 2019 | ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "pHCAqniAe1A": {
+   "show": "Cheekh",
+   "episode": 27,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 27 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "Zn04on4Wmew": {
+   "show": "Cheekh",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 11 | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "XRLdpIh4nIU": {
+   "show": "Cheekh",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 23 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "cKbwsm-kFV0": {
+   "show": "Cheekh",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 6 - 9th February 2019 - ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "t8B3Fgttb8g": {
+   "show": "Cheekh",
+   "episode": 20,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 20 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "ShhunaBUN7o": {
+   "show": "Cheekh",
+   "episode": 12,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 12 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "vq4Hy2-vpTk": {
+   "show": "Cheekh",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 22 | Saba Qamar | Bilal Abbas | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "qUYSZh9QiYM": {
+   "show": "Cheekh",
+   "episode": 25,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 25 | 6th July 2019 | ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "2dEScKx1qUk": {
+   "show": "Cheekh",
+   "episode": 21,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 21 | 25th May 2019 | ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "YmzGksbiPL8": {
+   "show": "Cheekh",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 3 | 19th January 2019 (English Subtitle) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "KVJxgO5KZQo": {
+   "show": "Cheekh",
+   "episode": 14,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 14 | 6th April 2019 | ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "316XLxZumb0": {
+   "show": "Cheekh",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Cheekh Episode 10 - 9th March 2019 - ARY Digital [Subtitle Eng]",
+   "added": "2026-10-02"
+  },
+  "u2fX8j_hb4Q": {
+   "show": "Do Bol",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 1 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "5LKp39SGcao": {
+   "show": "Do Bol",
+   "episode": 15,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 15 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "XUiGwAsyrL0": {
+   "show": "Do Bol",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 3 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "PN_OcjyMcv4": {
+   "show": "Do Bol",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 13 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "sPBSFpqpI08": {
+   "show": "Do Bol",
+   "episode": 21,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 21 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "mnxhJ1udfAs": {
+   "show": "Do Bol",
+   "episode": 16,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 16 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "0t9y0PGO4mg": {
+   "show": "Do Bol",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 5 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "F5YynfX9PjU": {
+   "show": "Do Bol",
+   "episode": 27,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 27 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "Vlk07V8Zf6I": {
+   "show": "Do Bol",
+   "episode": 18,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 18 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "ZoFlrSjAAIU": {
+   "show": "Do Bol",
+   "episode": 24,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 24 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "3JOrPxwujD0": {
+   "show": "Do Bol",
+   "episode": 17,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 17 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "UMYmHLHb3kA": {
+   "show": "Do Bol",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 23 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "a0rcZCg6oI0": {
+   "show": "Do Bol",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 22 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "odqVRUxKkr8": {
+   "show": "Do Bol",
+   "episode": 28,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 28 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "Ug3-9mYles0": {
+   "show": "Do Bol",
+   "episode": 14,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 14 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "kKSIap5t7hs": {
+   "show": "Do Bol",
+   "episode": 7,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 7 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "lw15bd4FZqQ": {
+   "show": "Do Bol",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 11 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "QSOf8Wr_KIE": {
+   "show": "Do Bol",
+   "episode": 25,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 25 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "GKV7Vg3Uvdg": {
+   "show": "Do Bol",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 4 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "8362DhGSURw": {
+   "show": "Do Bol",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 9 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "yndv65aKsTw": {
+   "show": "Do Bol",
+   "episode": 12,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 12 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "qG2NYdW_He8": {
+   "show": "Do Bol",
+   "episode": 20,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 20 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "j3DYokYJEOQ": {
+   "show": "Do Bol",
+   "episode": 19,
+   "channel": "ARY Digital",
+   "title": "Do Bol Episode 19 | Affan Waheed | Hira Salman | English Subtitle | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "KSyPv7YCIOE": {
+   "show": "Dunk",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 3 [Subtitle Eng] - 6th January 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "sfQeNWTgpRc": {
+   "show": "Dunk",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 2 | Bilal Abbas | Sana Javed | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "xeQz5gRcWkw": {
+   "show": "Dunk",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 5 | 20th January 2021 (English Subtitles) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "Y0Q8tPPcG8c": {
+   "show": "Dunk",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 10 [Subtitle Eng] - 24th February 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "_TzjfiqLEfA": {
+   "show": "Dunk",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 23 [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "hzqLNVj1DmY": {
+   "show": "Dunk",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 4 | Bilal Abbas | Sana Javed | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "icfavoF7o-A": {
+   "show": "Dunk",
+   "episode": 26,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 26 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "2na46CegosE": {
+   "show": "Dunk",
+   "episode": 16,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 16 [Subtitle Eng] | 7th April 2021 | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "T-hzX-FVLzo": {
+   "show": "Dunk",
+   "episode": 30,
+   "channel": "ARY Digital",
+   "title": "Dunk 2nd Last Episode 30 [Subtitle Eng] ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "o2qTPJeLMG0": {
+   "show": "Dunk",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 22 [Subtitle Eng] - 29th May 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "jJn-yu-Q0ys": {
+   "show": "Dunk",
+   "episode": 15,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 15 [Subtitle Eng] | 31st March 2021 | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "MsUjFSK-xLA": {
+   "show": "Dunk",
+   "episode": 14,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 14 [Subtitle Eng] | 24th March 2021 | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "0O0Ei7aD55E": {
+   "show": "Dunk",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 11 [Subtitle Eng] - 3rd March 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "LRiyI049NvU": {
+   "show": "Dunk",
+   "episode": 7,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 7 [Subtitle Eng]  - 3rd February 2021- ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "wzOrJ-CgOp0": {
+   "show": "Dunk",
+   "episode": 21,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 21 [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "0KFiDOqD7xE": {
+   "show": "Dunk",
+   "episode": 20,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 20 [Subtitle Eng] - 5th May 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "nHnaZvNWQ2E": {
+   "show": "Dunk",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 9 [Subtitle Eng] - 17th February 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "nV55Uf3HIJY": {
+   "show": "Dunk",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 6 [Subtitle Eng] - 27th January 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "g3B4e-fRYcY": {
+   "show": "Dunk",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 13 [Subtitle Eng] - 17th March 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "ndcAdyg2OKM": {
+   "show": "Dunk",
+   "episode": 8,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 8 [Subtitle Eng] - 10th February 2021- ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "yesFLIlLIdQ": {
+   "show": "Dunk",
+   "episode": 12,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 12 [Subtitle Eng] - 10th March 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "28qLBghMJf0": {
+   "show": "Dunk",
+   "episode": 19,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 19 [Subtitle Eng] - 28th April 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "m9I0PHj1yRM": {
+   "show": "Dunk",
+   "episode": 24,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 24 [Subtitle Eng] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "DyU6YeVRUhg": {
+   "show": "Dunk",
+   "episode": 27,
+   "channel": "ARY Digital",
+   "title": "Dunk Episode 27 [Subtitle Eng] - 3rd July 2021 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "lX55POvBUFM": {
+   "show": "Fraud",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 1 | 14th May 2022 (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "-zL0Gu-DLOc": {
+   "show": "Fraud",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 23 - 8th October 2022 (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "lv9LVrSoxts": {
+   "show": "Fraud",
+   "episode": 21,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 21 - 24th September 2022 (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "T5eFKJhTPQg": {
+   "show": "Fraud",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 11 - 16th July 2022 (Subtitles English) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "FRjEuNsm0Fg": {
+   "show": "Fraud",
+   "episode": 33,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 33 - 17th December 2022  (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "Q6sYKHH9r8E": {
+   "show": "Fraud",
+   "episode": 28,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 28 - 12th November 2022 (English Subtitle) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "3gPbwIfNL6U": {
+   "show": "Fraud",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 2 | 21st May 2022 (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "LChosNnmF8E": {
+   "show": "Fraud",
+   "episode": 27,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 27 - 5th November 2022 (English Subtitle) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "uZh81OYAEdE": {
+   "show": "Fraud",
+   "episode": 19,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 19 - 10th September 2022 (Subtitles English) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "IVqqsDdvjtg": {
+   "show": "Fraud",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 6 - 18th June 2022 (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "vxaUxN_scYU": {
+   "show": "Fraud",
+   "episode": 20,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 20 - 17th September 2022 (Subtitles English) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "uy_td0nmMHs": {
+   "show": "Fraud",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 22 - 1st October 2022  (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "Q40W5zCdlJU": {
+   "show": "Fraud",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 3 | 28th May 2022 (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "p1k4iPbu8QM": {
+   "show": "Fraud",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 9 - 2nd July 2022 (Subtitles English) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "sx_W7t3xQLc": {
+   "show": "Fraud",
+   "episode": 32,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 32 - 10th December 2022 (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "X_EmEYjYXrM": {
+   "show": "Fraud",
+   "episode": 31,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 31 - 3rd December 2022 (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "IRAWFhqc2iw": {
+   "show": "Fraud",
+   "episode": 16,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 16 - 20th August 2022 (Subtitles English) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "1onVd_xQYv4": {
+   "show": "Fraud",
+   "episode": 17,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 17 - 27th August 2022 (Subtitles English) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "zrmnU87oyhw": {
+   "show": "Fraud",
+   "episode": 29,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 29 - 19th November 2022 (English Subtitle) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "PT1GC38Ep7s": {
+   "show": "Fraud",
+   "episode": 24,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 24 - 15th October 2022 (English Subtitle) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "jHoTAvFkT3I": {
+   "show": "Fraud",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 13 (Subtitles English) - 30th July 2022 (Subtitles English) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "jCgtfVk52Xc": {
+   "show": "Fraud",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 10 - 9th July 2022 (Subtitles English) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "m0Oeh_O7GS0": {
+   "show": "Fraud",
+   "episode": 30,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 30 - 26th November 2022 (English Subtitle) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "L1q2nlObsWw": {
+   "show": "Fraud",
+   "episode": 18,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 18 - 3rd September 2022 (Subtitles English) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "7ca4Zg7qFBk": {
+   "show": "Fraud",
+   "episode": 8,
+   "channel": "ARY Digital",
+   "title": "Fraud Episode 8 - 2nd July 2022 (Subtitles English) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "JZB-QC6pxb0": {
+   "show": "Habs",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 1 - 10th May 2022 (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "D71sz-eloyk": {
+   "show": "Habs",
+   "episode": 29,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 29 - 22nd November 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "YwjQf6PK2sE": {
+   "show": "Habs",
+   "episode": 31,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 31 - 6th December 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "E8hbJIXb8KM": {
+   "show": "Habs",
+   "episode": 27,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 27 - 8th November 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "jWFqgl5Ytp4": {
+   "show": "Habs",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 5 - 7th June 2022 | Presented By Brite | (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "SiJdn0_QCVo": {
+   "show": "Habs",
+   "episode": 30,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 30 - 29th November 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "RyUDx1yPQQQ": {
+   "show": "Habs",
+   "episode": 26,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 26 - 1st November 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "G0JDFvuqNPo": {
+   "show": "Habs",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 4 - 31st May 2022 | Presented By Brite | (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "55bmg14U3V4": {
+   "show": "Habs",
+   "episode": 25,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 25 - 25th October 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "-xv5x6FOjzw": {
+   "show": "Habs",
+   "episode": 15,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 15 - 23rd August 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "HsMdFyb7BN8": {
+   "show": "Habs",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 11 - 26th July 2022 | Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "PiNIeHEPO9M": {
+   "show": "Habs",
+   "episode": 24,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 24 - 18th October 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "ycfevH7XwP8": {
+   "show": "Habs",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 6 - 14th June 2022 | Presented By Brite | (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "GUsVPYLoUgI": {
+   "show": "Habs",
+   "episode": 8,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 8 - 28th June 2022 | Presented By Brite (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "VcYUjz3cPIU": {
+   "show": "Habs",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 22 - 4th October 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "BwMx98vJ41M": {
+   "show": "Habs",
+   "episode": 18,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 18 - 13th September 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "Q6eGG1G6j08": {
+   "show": "Habs",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 10 - 19th July 2022 | Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "4RqGdUktXRU": {
+   "show": "Habs",
+   "episode": 19,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 19 - 20th September 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "kzrYJFjxVWs": {
+   "show": "Habs",
+   "episode": 20,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 20 - 27th September 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "eGSfWkGqcf4": {
+   "show": "Habs",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 9 - 5th July 2022 | Presented By Brite (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "VPLmJcpmEiI": {
+   "show": "Habs",
+   "episode": 16,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 16 - 30th August 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "7pWAQTiAkHs": {
+   "show": "Habs",
+   "episode": 17,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 17 - 6th September 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "35VyT8qWDYY": {
+   "show": "Habs",
+   "episode": 28,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 28 - 15th November 2022 - Presented By Brite (English Subtitles) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "e9PIFXWIkOo": {
+   "show": "Habs",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 13 - 16th August 2022 - Presented By Brite (English Subtitles)- ARY Digital",
+   "added": "2026-10-02"
+  },
+  "PEUzGpfoNzE": {
+   "show": "Habs",
+   "episode": 21,
+   "channel": "ARY Digital",
+   "title": "Habs Episode 21 - 4th October 2022 - Presented By Brite (English Subtitles) - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "5yfXjQivQ34": {
+   "show": "Hey Fam",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Hey Fam | Episode 1 | 16 Sep 2026 | Zaviyar Ejaz | Duaa Zahra | Zarrar Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "w_Uczq3uaTE": {
+   "show": "Hey Fam",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Hey Fam | Episode 5 | 30 Sep 2026 | Zaviyar Ejaz | Duaa Zahra | Zarrar Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "S2S037Gxzx4": {
+   "show": "Hey Fam",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Hey Fam | Episode 3 | 23 Sep 2026 | Zaviyar Ejaz | Duaa Zahra | Zarrar Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "Bq5K9bcN-iw": {
+   "show": "Hey Fam",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Hey Fam | Episode 2 | 17 Sep 2026 | Zaviyar Ejaz | Duaa Zahra | Zarrar Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "Tne3k60ucCA": {
+   "show": "Hey Fam",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Hey Fam | Episode 4 | 24 Sep 2026 | Zaviyar Ejaz | Duaa Zahra | Zarrar Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "Bc4yTTF9n8I": {
+   "show": "Izzat",
+   "episode": 12,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 12 | 1 October 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "JaAGnixyWPY": {
+   "show": "Izzat",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 11 | 30 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "7adbjYVUtDc": {
+   "show": "Izzat",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 1 | 20 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "ob2pxrn14LI": {
+   "show": "Izzat",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 10 | 29 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "EB5gRd1EFZ8": {
+   "show": "Izzat",
+   "episode": 8,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 8 | 27 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "MkYeRQZNU2A": {
+   "show": "Izzat",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 4 | 23 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "_DOn4tuWmX4": {
+   "show": "Izzat",
+   "episode": 7,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 7 | 26 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "RWqXtsuWRrg": {
+   "show": "Izzat",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 2 | 21 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "ajAhUGZg8Pc": {
+   "show": "Izzat",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 5 | 24 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "T2FLUbZ1_44": {
+   "show": "Izzat",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 6 | 25 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "2xAwwQlhFpo": {
+   "show": "Izzat",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 3 | 22 Sep 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ENG SUB | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "tz6V5Wo1KEQ": {
+   "show": "Izzat",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Izzat Episode 9 | 28 Sep 2026 | ENG SUB | Merub Ali | Atabik Mohsin | Hashaam Khan | ARY Digital",
+   "added": "2026-10-02"
+  },
+  "9RnlU60Clvo": {
+   "show": "Jalan",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 5 - Presented by Ariel [Subtitle Eng] - 15th July 2020 - ARY Digital",
+   "added": "2026-10-02"
+  },
+  "v3PUkqGFI-M": {
+   "show": "Jalan",
+   "episode": 28,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 28 | Minal Khan | Fahad Sheikh | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "-gsx6TE94BU": {
+   "show": "Jalan",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 2 | Presented By Ariel  | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "UfVyxUZzsK8": {
+   "show": "Jalan",
+   "episode": 8,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 08 | Presented by Ariel (English Subtitles) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "T5UZhHlJYZ8": {
+   "show": "Jalan",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 22 | Minal Khan | Fahad Sheikh | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "YaUnbP7_zA8": {
+   "show": "Jalan",
+   "episode": 24,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 24 | Minal Khan | Fahad Sheikh | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "2th0MaNPDdQ": {
+   "show": "Jalan",
+   "episode": 25,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 25 [Subtitle Eng] - 25th November 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "JDOrbtpkF5E": {
+   "show": "Jalan",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 9 - Presented by Ariel [Subtitle Eng] - 12th August 2020 - ARY Digital",
+   "added": "2026-10-02"
+  },
+  "hpHn7mvadmc": {
+   "show": "Jalan",
+   "episode": 16,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 16 [Subtitle Eng] - 30th September 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "OtHd8uDQb-k": {
+   "show": "Jalan",
+   "episode": 27,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 27 [Subtitle Eng] - 2nd December 2020 -  ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "YicW-lNlem0": {
+   "show": "Jalan",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 11 [Subtitle Eng] - 26th August 2020 -  ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "1E61U_hNlMQ": {
+   "show": "Jalan",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 4 - Presented by Ariel [Subtitle Eng] - 8th July 2020 - ARY Digital",
+   "added": "2026-10-02"
+  },
+  "Bu0sQ93Kc48": {
+   "show": "Jalan",
+   "episode": 29,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 29 [Subtitle Eng] - 9th December 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "ZtlPyd7w01s": {
+   "show": "Jalan",
+   "episode": 19,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 19  [Subtitle Eng]  - 21st October 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "lhZBNTrryXY": {
+   "show": "Jalan",
+   "episode": 21,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 21 | Subtitle English | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "y6fcCuz9Lgw": {
+   "show": "Jalan",
+   "episode": 18,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 18 [Subtitle Eng] - 14th October 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "soWQaXiC3MI": {
+   "show": "Jalan",
+   "episode": 14,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 14 [Subtitle Eng] - 16th September 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "PO2lEZW0Ft4": {
+   "show": "Jalan",
+   "episode": 20,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 20 [Subtitle Eng]  - 28th October 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "VBiSeFTjwmY": {
+   "show": "Jalan",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 13 [Subtitle Eng] Presented by Ariel - 9th September 2020 - ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "XVCpGrp9yRQ": {
+   "show": "Jalan",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Jalan Episode 23 [Subtitle Eng] 18th November 2020 | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "5sgFtoVYGEQ": {
+   "show": "Kafeel",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 1 | 15 Dec 2025 | Emmad Irfani | Sanam Saeed | (ENG SUB) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "DBRrGVRb2bQ": {
+   "show": "Kafeel",
+   "episode": 31,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 31 | 20 April 2026 | Emmad Irfani | Sanam Saeed | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "iSsowAULHBM": {
+   "show": "Kafeel",
+   "episode": 34,
+   "channel": "ARY Digital",
+   "title": "Kafeel Last Episode 34 | 28 April 2026 | Emmad Irfani | Sanam Saeed | [ENG SUB] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "J11lafBBQnY": {
+   "show": "Kafeel",
+   "episode": 30,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 30 | 14 April 2026 | Emmad Irfani | Sanam Saeed | Eng Subtitle | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "sL1gFMKJGg4": {
+   "show": "Kafeel",
+   "episode": 29,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 29 | 13 April 2026 | Emmad Irfani | Sanam Saeed [ENG SUB] ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "frN7IdIbEsI": {
+   "show": "Kafeel",
+   "episode": 33,
+   "channel": "ARY Digital",
+   "title": "Kafeel 2nd Last Episode 33 | 27 April 2026 | Emmad Irfani | Sanam Saeed [ENG SUB] ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "6b_CWd4ItZ0": {
+   "show": "Kafeel",
+   "episode": 32,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 32 | 21 April 2026 | Emmad Irfani | Sanam Saeed [ENG SUB] ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "pfPVo6v6wuk": {
+   "show": "Kafeel",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 10 | 13 Jan 2026 | Emmad Irfani | Sanam Saeed | (ENG SUB) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "DGrdPfwWgjE": {
+   "show": "Kafeel",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 4 | 23 Dec 2025 | Emmad Irfani | Sanam Saeed (ENG SUB) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "ENuchGskpf4": {
+   "show": "Kafeel",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 5 | 29 Dec 2025 | Emmad Irfani | Sanam Saeed | (Eng Sub) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "qRA0Oyz187U": {
+   "show": "Kafeel",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 2 | 16 Dec 2025 | Emmad Irfani | Sanam Saeed | (ENG SUB) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "LCHKgoNbPaU": {
+   "show": "Kafeel",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 11 | 19 Jan 2026 | Emmad Irfani | Sanam Saeed | (ENG SUB) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "pwxaoHg4jGc": {
+   "show": "Kafeel",
+   "episode": 21,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 21 | 23 Feb 2026 | Emmad Irfani | Sanam Saeed | (ENG SUB) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "9VEjyynHzR0": {
+   "show": "Kafeel",
+   "episode": 8,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 8 | 6 Jan 2026 | Emmad Irfani | Sanam Saeed (ENG SUB) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "_m41Es464nA": {
+   "show": "Kafeel",
+   "episode": 20,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 20 | 17 Feb 2026 | Emmad Irfani | Sanam Saeed | (Eng Sub) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "YJFqa20RXd4": {
+   "show": "Kafeel",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 9 | 12 Jan 2026 | Emmad Irfani | Sanam Saeed (ENG SUB)  ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "1vqY2_bKwVI": {
+   "show": "Kafeel",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 23 | 9 March 2026 | Emmad Irfani | Sanam Saeed (ENG SUB) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "58Dd_a_22Go": {
+   "show": "Kafeel",
+   "episode": 24,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 24 | 24 March 2026 | Emmad Irfani | Sanam Saeed | [ENG SUB] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "hdoNZOOwBok": {
+   "show": "Kafeel",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 3 | 22 Dec 2025 | Emmad Irfani | Sanam Saeed | (ENG SUB) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "x4ZbDIH7-kM": {
+   "show": "Kafeel",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 22 | 2 March 2026 | Emmad Irfani | Sanam Saeed (ENG SUB) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "hQ6oW6btwqA": {
+   "show": "Kafeel",
+   "episode": 7,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 7 | 5 Jan 2026 | Emmad Irfani | Sanam Saeed | (ENG SUB) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "YCrYjJsEoKo": {
+   "show": "Kafeel",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 13 | 26 Jan 2026 | Emmad Irfani | Sanam Saeed | (ENG SUB) | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "m1QLbFgZ_Vw": {
+   "show": "Kafeel",
+   "episode": 26,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 26 | 31 March 2026 | Emmad Irfani | Sanam Saeed | [ENG SUB] | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "09r6vBkRgbw": {
+   "show": "Kafeel",
+   "episode": 12,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 12 | 20 Jan 2026 | Emmad Irfani | Sanam Saeed | Aashir Wajahat | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "UXkQB-KWj3E": {
+   "show": "Kafeel",
+   "episode": 28,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 28 | 7 April 2026 | Emmad Irfani | Sanam Saeed [ENG SUB] ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "mMrHA1E14Q4": {
+   "show": "Kafeel",
+   "episode": 19,
+   "channel": "ARY Digital",
+   "title": "Kafeel Episode 19 | 16 Feb 2026 | Emmad Irfani | Sanam Saeed | (ENG SUB) ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "UVouX9fWlvM": {
+   "show": "Mahnoor",
+   "episode": 5,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 5 | Humayoun Ashraf | Khadija Saleem | 21 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "or644DcF1Zc": {
+   "show": "Mahnoor",
+   "episode": 9,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 9 | Humayoun Ashraf | Khadija Saleem | 27 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "WnmLOo5rZkQ": {
+   "show": "Mahnoor",
+   "episode": 3,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 3 | Humayoun Ashraf | Khadija Saleem | 17 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "G8402_q0mbI": {
+   "show": "Mahnoor",
+   "episode": 18,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 18 | Humayoun Ashraf | Khadija Saleem | 8 MAY 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "mOa6qdXOjjs": {
+   "show": "Mahnoor",
+   "episode": 23,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 23 | Humayoun Ashraf | Khadija Saleem | 15 MAY 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "Sc9Qz46FBBU": {
+   "show": "Mahnoor",
+   "episode": 35,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 35 | Humayoun Ashraf | Khadija Saleem | 5 June 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "U7kPjDCCfWg": {
+   "show": "Mahnoor",
+   "episode": 43,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 43 | Humayoun Ashraf | Khadija Saleem | 17 June 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "5hCG8xQUzmg": {
+   "show": "Mahnoor",
+   "episode": 1,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 1 | Humayoun Ashraf | Khadija Saleem | 15 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "_negUjhAiCo": {
+   "show": "Mahnoor",
+   "episode": 39,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 39 | Humayoun Ashraf | Khadija Saleem | 11 June 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "uloUdgpMK0U": {
+   "show": "Mahnoor",
+   "episode": 25,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 25 | Humayoun Ashraf | Khadija Saleem | 19 MAY 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "affX7WUx2qg": {
+   "show": "Mahnoor",
+   "episode": 7,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 7 | Humayoun Ashraf | Khadija Saleem | 23 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "XVd7ojOzgyc": {
+   "show": "Mahnoor",
+   "episode": 26,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 26 | Humayoun Ashraf | Khadija Saleem | 20 MAY 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "yEUicPMz5Qo": {
+   "show": "Mahnoor",
+   "episode": 14,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 14 | Humayoun Ashraf | Khadija Saleem | 4 MAY 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "VwsRIwSgLPU": {
+   "show": "Mahnoor",
+   "episode": 49,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 49 | Humayoun Ashraf | Khadija Saleem | 29 June 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "uocno7gfyzo": {
+   "show": "Mahnoor",
+   "episode": 13,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 13 | Humayoun Ashraf | Khadija Saleem | 1 MAY 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "WtXtPGipcvk": {
+   "show": "Mahnoor",
+   "episode": 11,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 11 | Humayoun Ashraf | Khadija Saleem | 29 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "CNB8RqA8F0w": {
+   "show": "Mahnoor",
+   "episode": 17,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 17 | Humayoun Ashraf | Khadija Saleem | 7 MAY 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "7VLFhx20rOU": {
+   "show": "Mahnoor",
+   "episode": 36,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 36 | Humayoun Ashraf | Khadija Saleem | 8 June 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "Kphe1BQ77Ao": {
+   "show": "Mahnoor",
+   "episode": 22,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 22 | Humayoun Ashraf | Khadija Saleem | 14 MAY 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "jF16ER-TBTA": {
+   "show": "Mahnoor",
+   "episode": 10,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 10 | Humayoun Ashraf | Khadija Saleem | 28 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "MuRBV8JM6zU": {
+   "show": "Mahnoor",
+   "episode": 4,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 4 | Humayoun Ashraf | Khadija Saleem | 20 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "SY3XVJXdj0o": {
+   "show": "Mahnoor",
+   "episode": 16,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 16 | Humayoun Ashraf | Khadija Saleem | 6 MAY 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "XnGRGCMG8w4": {
+   "show": "Mahnoor",
+   "episode": 2,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 2 | Humayoun Ashraf | Khadija Saleem | 16 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "lOLAvLoseBQ": {
+   "show": "Mahnoor",
+   "episode": 34,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 34 | Humayoun Ashraf | Khadija Saleem | 4 June 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "N0fD1QpsYdQ": {
+   "show": "Mahnoor",
+   "episode": 47,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 47 | Humayoun Ashraf | Khadija Saleem | 23 June 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "B8AoWkl6r9g": {
+   "show": "Mahnoor",
+   "episode": 37,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 37 | Humayoun Ashraf | Khadija Saleem | 9 June 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "GX0eecaTz1M": {
+   "show": "Mahnoor",
+   "episode": 6,
+   "channel": "ARY Digital",
+   "title": "Mahnoor Episode 6 | Humayoun Ashraf | Khadija Saleem | 22 April 2026 | ENG SUB | ARY Digital Drama",
+   "added": "2026-10-02"
+  },
+  "LV8EBdjeqtE": {
+   "show": "Gulbahar",
+   "episode": 6,
+   "channel": "HUM TV",
+   "title": "Gulbahar - Episode 06 - 1st Oct 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "vq0djsUg8MU": {
+   "show": "Tark-e-Tamanna",
+   "episode": 4,
+   "channel": "HUM TV",
+   "title": "Tark-e-Tamanna - Episode 04 - 1st Oct 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
+   "added": "2026-10-02"
+  },
+  "gacsla9g1a4": {
+   "show": "Zanjeerain",
+   "episode": 6,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 06 [Eng Sub] 14 May 2026 | ft. Sajal Aly, Ahsan Khan, Ameer Gilani & Danyal Zafar",
+   "added": "2026-10-02"
+  },
+  "T0r8FhcNcoc": {
+   "show": "Aap Ki Izzat",
+   "episode": 22,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Last Episode 22 [Eng Sub] - 26 Sep 2026 [Urwa Hocane, Ahsan Khan & Saif Ali Khan]",
+   "added": "2026-10-02"
+  },
+  "g9-2YmdbqGQ": {
+   "show": "Khushi",
+   "episode": 19,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 19 -  01 Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "EQXP0USnGIE": {
+   "show": "Gulbahar",
+   "episode": 5,
+   "channel": "HUM TV",
+   "title": "Gulbahar - Episode 05 [Eng Sub] - 30 Sep 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "aFfbhOT7LVA": {
+   "show": "Aap Ki Izzat",
+   "episode": 21,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - 2nd Last Episode 21 [Eng Sub] - 25 Sep 2026 [Urwa Hocane, Ahsan Khan & Saif Ali Khan]",
+   "added": "2026-10-02"
+  },
+  "rnJ2VK1bh1k": {
+   "show": "Udaari",
+   "episode": 7,
+   "channel": "HUM TV",
+   "title": "Udaari Episode 07 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "added": "2026-10-02"
+  },
+  "xNqlw__CeSA": {
+   "show": "Tark-e-Tamanna",
+   "episode": 1,
+   "channel": "HUM TV",
+   "title": "Tark-e-Tamanna - Episode 01 [Eng Sub] | 28th Sep 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
+   "added": "2026-10-02"
+  },
+  "r9OfXlSFteM": {
+   "show": "Bombay Tailors",
+   "episode": 24,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 24 [Eng Sub] - 29th Sep 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "9L4gEp58ZuU": {
+   "show": "Tark-e-Tamanna",
+   "episode": 3,
+   "channel": "HUM TV",
+   "title": "Tark-e-Tamanna - Episode 03 [Eng Sub] | 30th Sep 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
+   "added": "2026-10-02"
+  },
+  "LvUeBoWvdwg": {
+   "show": "Aap Ki Izzat",
+   "episode": 20,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 20 [Eng Sub] - 19 Sep 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "yZcn-8_m2bw": {
+   "show": "Mohabbat Mukhtasir",
+   "episode": 1,
+   "channel": "HUM TV",
+   "title": "Mohabbat Mukhtasir - Episode 01 [Eng Sub] - 27 Sep 2026 - [ Usama Khan & Madiha Imam ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "88GE5v_OUs0": {
+   "show": "Aap Ki Izzat",
+   "episode": 19,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 19 [Eng Sub] - 18 Sep 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "QSUxRcAbhvU": {
+   "show": "Aap Ki Izzat",
+   "episode": 10,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 10 [Eng Sub] - 15 Aug 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "SvEokQl8YsI": {
+   "show": "Aap Ki Izzat",
+   "episode": 11,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 11 [Eng Sub] - 21 Aug 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "q6ba-_sdjYA": {
+   "show": "Aap Ki Izzat",
+   "episode": 18,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 18 - [ENG SUB] 12 Sep 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "7v2Hwpw1IXs": {
+   "show": "Aap Ki Izzat",
+   "episode": 17,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 17 [Eng Sub] - 11 Sep 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "uSxbHakK88U": {
+   "show": "Aap Ki Izzat",
+   "episode": 15,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 15 [Eng Sub] - 04 Sep 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "6o-dMEj6TZU": {
+   "show": "Aap Ki Izzat",
+   "episode": 13,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 13 [Eng Sub] - 28 Aug 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "Git0V-Zh42M": {
+   "show": "Aap Ki Izzat",
+   "episode": 9,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 09 [Eng Sub] - 14 Aug 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "NJyP1IDpsEs": {
+   "show": "Aap Ki Izzat",
+   "episode": 1,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 01 [Eng Sub] 17 July 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "prfveYQ7OlY": {
+   "show": "Aap Ki Izzat",
+   "episode": 16,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 16 [Eng Sub] - 05 Sep 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "mM-FTPPVJas": {
+   "show": "Aap Ki Izzat",
+   "episode": 12,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 12 [Eng Sub] - 22 Aug 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "GXxVUaEWz7s": {
+   "show": "Aap Ki Izzat",
+   "episode": 4,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 04 [Eng Sub] 25 July 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "j8fVfrGKqCI": {
+   "show": "Aap Ki Izzat",
+   "episode": 14,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 14 [Eng Sub] - 29 Aug 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "rVJ0PPkBFnI": {
+   "show": "Aap Ki Izzat",
+   "episode": 8,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 08 [Eng Sub] 8th Aug 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "W-PxIvxg6Kg": {
+   "show": "Aap Ki Izzat",
+   "episode": 5,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 05 [Eng Sub] 31 July 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "Y85UkqToT2o": {
+   "show": "Aap Ki Izzat",
+   "episode": 3,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 03 [Eng Sub] 24 July 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "akizz4Y1Jv8": {
+   "show": "Aap Ki Izzat",
+   "episode": 6,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 06 [Eng Sub] - 01 Aug 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "HBombdbWaMM": {
+   "show": "Aap Ki Izzat",
+   "episode": 7,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 07 [Eng Sub] - 7th Aug 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan] HUM TV",
+   "added": "2026-10-02"
+  },
+  "-GPFcxh58Cg": {
+   "show": "Aap Ki Izzat",
+   "episode": 2,
+   "channel": "HUM TV",
+   "title": "Aap Ki Izzat - Episode 02 [Eng Sub] 18 July 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "7B2arnMwInU": {
+   "show": "Bombay Tailors",
+   "episode": 23,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 23 [ENG SUB] - 28th Sep 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "Q0EyOx8irpU": {
+   "show": "Bombay Tailors",
+   "episode": 1,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 01 [Eng Sub] - 13th July 2026 - [ Anika Zulfikar & Ali Ansari ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "2obd052ZEuo": {
+   "show": "Bombay Tailors",
+   "episode": 17,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 17 [Eng Sub] - 7th Sep 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "A9n-m25TDo0": {
+   "show": "Bombay Tailors",
+   "episode": 22,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 22 [Eng Sub] - 22nd Sep 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "AOMCXX_3NpA": {
+   "show": "Bombay Tailors",
+   "episode": 12,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 12 [Eng Sub]  - 18th Aug 2026   [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "HYhfBYvqBng": {
+   "show": "Bombay Tailors",
+   "episode": 21,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 21[Eng Sub] - 21st Sep 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "BK3lQQyFOpA": {
+   "show": "Bombay Tailors",
+   "episode": 15,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 15 [Eng Sub] - 31 Aug 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "daYzxX7Bbi4": {
+   "show": "Bombay Tailors",
+   "episode": 20,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 20 [Eng Sub] - 15th Sep 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "S0r9u6EfLig": {
+   "show": "Bombay Tailors",
+   "episode": 2,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 02 (Eng Sub) - 14th July 2026 - [ Anika Zulfikar & Ali Ansari ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "Cy_n84T3HsU": {
+   "show": "Bombay Tailors",
+   "episode": 13,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 13 [Eng Sub] - 24th Aug 2026   [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "u9xXYTR9SN0": {
+   "show": "Bombay Tailors",
+   "episode": 16,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 16 [Eng Sub] - 1st Sep 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "7MZ8NK0s8HU": {
+   "show": "Bombay Tailors",
+   "episode": 18,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 18 [Eng Sub] - 8th Sep 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "vZ10MSzowUI": {
+   "show": "Bombay Tailors",
+   "episode": 14,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 14 - [ENG SUB] 25 Aug 2026   [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "U6KzERKpMpU": {
+   "show": "Bombay Tailors",
+   "episode": 6,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 06 [Eng Sub] - 28th July 2026 - [ Anika Zulfikar & Ali Ansari ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "20IKABzM6Ow": {
+   "show": "Bombay Tailors",
+   "episode": 5,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 05 [Eng Sub] - 27th July 2026 - [ Anika Zulfikar & Ali Ansari ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "oG31UHSp__A": {
+   "show": "Bombay Tailors",
+   "episode": 10,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 10 [Eng Sub] - 11 Aug 2026   [ Anika Zulfikar & Ali Ansari ]  - HUM TV",
+   "added": "2026-10-02"
+  },
+  "-h1tNOiaQmA": {
+   "show": "Bombay Tailors",
+   "episode": 8,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 08 [Eng Sub] - 04 Aug 2026   [ Anika Zulfikar & Ali Ansari ]  - HUM TV",
+   "added": "2026-10-02"
+  },
+  "HOrUVTNUqd8": {
+   "show": "Bombay Tailors",
+   "episode": 11,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 11 [Eng Sub] - 17th Aug 2026   [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "prBXVI6EIuc": {
+   "show": "Bombay Tailors",
+   "episode": 3,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 03 [Eng Sub] - 20th July 2026 - [ Anika Zulfikar & Ali Ansari ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "qbAz2tfzCXk": {
+   "show": "Bombay Tailors",
+   "episode": 9,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 09 - [ENG SUB] 10 Aug 2026   [ Anika Zulfikar & Ali Ansari ]  - HUM TV",
+   "added": "2026-10-02"
+  },
+  "mm-j7nIsRuo": {
+   "show": "Bombay Tailors",
+   "episode": 19,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 19 [Eng Sub] - 14th Sep 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "wWWaTMh-uBc": {
+   "show": "Bombay Tailors",
+   "episode": 7,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 07 [Eng Sub]  03 Aug 2026   [ Anika Zulfikar & Ali Ansari ]  - HUM TV",
+   "added": "2026-10-02"
+  },
+  "VhVlEgakoM8": {
+   "show": "Bombay Tailors",
+   "episode": 4,
+   "channel": "HUM TV",
+   "title": "Bombay Tailors - Episode 04 [Eng Sub] - 21st July 2026 - [ Anika Zulfikar & Ali Ansari ] HUM TV",
+   "added": "2026-10-02"
+  },
+  "uCBJymYg8Fk": {
+   "show": "Gulbahar",
+   "episode": 1,
+   "channel": "HUM TV",
+   "title": "Gulbahar - Episode 01 [Eng Sub] - 16 Sep 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "wh-3fhWMxtY": {
+   "show": "Gulbahar",
+   "episode": 3,
+   "channel": "HUM TV",
+   "title": "Gulbahar - Episode 03 [Eng Sub] - 23rd Sep 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "r8KDPJBmVUY": {
+   "show": "Gulbahar",
+   "episode": 4,
+   "channel": "HUM TV",
+   "title": "Gulbahar - Episode 04 [Eng Sub] - 24th Sep 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "EekeQWTdNZU": {
+   "show": "Gulbahar",
+   "episode": 2,
+   "channel": "HUM TV",
+   "title": "Gulbahar - Episode 02 [Eng Sub] - 17th Sep 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "fhKSU98Vl0I": {
+   "show": "Khushi",
+   "episode": 1,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 01 [Eng Sub] - 13th Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "7qG1BkVB1w0": {
+   "show": "Khushi",
+   "episode": 16,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 16 [ENG SUB] 28 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "dhF3twGwC_I": {
+   "show": "Khushi",
+   "episode": 18,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 18 [Eng Sub] -  30 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "wo5LUlBYMbU": {
+   "show": "Khushi",
+   "episode": 17,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 17 [Eng Sub] -  29 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "qJrZC0jPsj8": {
+   "show": "Khushi",
+   "episode": 2,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 02  [ ENG SUB] 14th Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "jtsx7WpdNvs": {
+   "show": "Khushi",
+   "episode": 14,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 14 [Eng Sub] - 26 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "Nd02qrgoAbM": {
+   "show": "Khushi",
+   "episode": 10,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 10 [Eng Sub] - 22 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "XU3RuhgFxvs": {
+   "show": "Khushi",
+   "episode": 15,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 15 [Eng Sub] - 27 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "hb4U9bdPl70": {
+   "show": "Khushi",
+   "episode": 3,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 03 [Eng Sub] - 15 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "iPbtf26dqG4": {
+   "show": "Khushi",
+   "episode": 12,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 12 [Eng Sub] - 24 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "-oDjQdn2beQ": {
+   "show": "Khushi",
+   "episode": 7,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 07 - [ENG SUB] 19 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "4WgO8h7X9fI": {
+   "show": "Khushi",
+   "episode": 6,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 06 [Eng Sub] - 18 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "iPt4fMryq1Y": {
+   "show": "Khushi",
+   "episode": 4,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 04 [Eng Sub] - 16 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "FN_ANP79zrE": {
+   "show": "Khushi",
+   "episode": 13,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 13 [Eng Sub] - 25 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "sfLjVZX_Ieo": {
+   "show": "Khushi",
+   "episode": 11,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 11 [Eng Sub] - 23 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "8sg33Yl6xxs": {
+   "show": "Khushi",
+   "episode": 5,
+   "channel": "HUM TV",
+   "title": "Khushi - Episode 05 [Eng Sub] - 17 Sep 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "added": "2026-10-02"
+  },
+  "vCZ2KOFyeHY": {
+   "show": "Tark-e-Tamanna",
+   "episode": 2,
+   "channel": "HUM TV",
+   "title": "Tark-e-Tamanna - Episode 02 [Eng Sub] | 29th Sep 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
+   "added": "2026-10-02"
+  },
+  "aw8iyRdRea4": {
+   "show": "Udaari",
+   "episode": 1,
+   "channel": "HUM TV",
+   "title": "Udaari Episode 01 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "added": "2026-10-02"
+  },
+  "Rb4YxCK_Cqs": {
+   "show": "Udaari",
+   "episode": 6,
+   "channel": "HUM TV",
+   "title": "Udaari Episode 06 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "added": "2026-10-02"
+  },
+  "2ZJKWgeYCQc": {
+   "show": "Udaari",
+   "episode": 9,
+   "channel": "HUM TV",
+   "title": "Udaari Episode 09 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "added": "2026-10-02"
+  },
+  "IjGx3P0xwGQ": {
+   "show": "Udaari",
+   "episode": 8,
+   "channel": "HUM TV",
+   "title": "Udaari Episode 08 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "added": "2026-10-02"
+  },
+  "zXhmKT93aow": {
+   "show": "Udaari",
+   "episode": 3,
+   "channel": "HUM TV",
+   "title": "Udaari Episode 03 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "added": "2026-10-02"
+  },
+  "f2AByMb0SvM": {
+   "show": "Udaari",
+   "episode": 4,
+   "channel": "HUM TV",
+   "title": "Udaari Episode 04 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "added": "2026-10-02"
+  },
+  "thEg4MYecMw": {
+   "show": "Udaari",
+   "episode": 5,
+   "channel": "HUM TV",
+   "title": "Udaari Episode 05 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "added": "2026-10-02"
+  },
+  "4eF78oT9-3I": {
+   "show": "Udaari",
+   "episode": 2,
+   "channel": "HUM TV",
+   "title": "Udaari Episode 02 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "added": "2026-10-02"
+  },
+  "D3nzXSFcdcc": {
+   "show": "Zanjeerain",
+   "episode": 1,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 01 [Eng Sub] 29th Apr 2026 | ft. Sajal Aly, Ameer Gilani & Danyal Zafar | HUM TV",
+   "added": "2026-10-02"
+  },
+  "1chlB7wVwpE": {
+   "show": "Zanjeerain",
+   "episode": 39,
+   "channel": "HUM TV",
+   "title": "Zanjeerain - Last Episode 39 [Eng Sub] - 10 Sep 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "orfmjKW8gUU": {
+   "show": "Zanjeerain",
+   "episode": 38,
+   "channel": "HUM TV",
+   "title": "Zanjeerain - 2nd Last Episode 38 [Eng Sub] - 09 Sep 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "36JnrEoBOp8": {
+   "show": "Zanjeerain",
+   "episode": 26,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 26 [Eng Sub] - 29th July 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "NqQPW1FGo7U": {
+   "show": "Zanjeerain",
+   "episode": 36,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 36 [Eng Sub] - 02 Sep 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "_e8mpet25Pc": {
+   "show": "Zanjeerain",
+   "episode": 21,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 21 [Eng Sub] 9th July 2026 | ft. Sajal Aly, Danyal Zafar & Sahar Hashmi - HUM TV",
+   "added": "2026-10-02"
+  },
+  "gabuP8xlpzc": {
+   "show": "Zanjeerain",
+   "episode": 15,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 15 [Eng Sub] 17 June 2026 | ft. Sajal Aly, Danyal Zafar & Sahar Hashmi - HUM TV",
+   "added": "2026-10-02"
+  },
+  "iSz0dmpZRQM": {
+   "show": "Zanjeerain",
+   "episode": 37,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 37 [Eng Sub] - 03 Sep 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "FH4NH7E5Qf4": {
+   "show": "Zanjeerain",
+   "episode": 32,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 32 [Eng Sub] - 19th Aug 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "aQvvsHN_YIk": {
+   "show": "Zanjeerain",
+   "episode": 16,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 16 [Eng Sub] 18 June 2026 | ft. Sajal Aly, Danyal Zafar & Sahar Hashmi - HUM TV",
+   "added": "2026-10-02"
+  },
+  "HBeUBVJncSI": {
+   "show": "Zanjeerain",
+   "episode": 18,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 18 [Eng Sub] 1st July 2026 | ft. Sajal Aly, Danyal Zafar & Sahar Hashmi - HUM TV",
+   "added": "2026-10-02"
+  },
+  "Lhq7w0kgAeQ": {
+   "show": "Zanjeerain",
+   "episode": 25,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 25 [Eng Sub] - 23rd July 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "7P5KD1b5bjc": {
+   "show": "Zanjeerain",
+   "episode": 20,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 20 [Eng Sub] 8th July 2026 | ft. Sajal Aly, Danyal Zafar & Sahar Hashmi - HUM TV",
+   "added": "2026-10-02"
+  },
+  "3olQlxU7tOw": {
+   "show": "Zanjeerain",
+   "episode": 23,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 23 [Eng Sub] - 16th July 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "fmhvFaFPuoQ": {
+   "show": "Zanjeerain",
+   "episode": 24,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 24 - [Eng Sub] 22nd July 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "ky_yFDYEnf8": {
+   "show": "Zanjeerain",
+   "episode": 34,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 34 - [ENG SUB]  26th Aug 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "3uEsDLVfsJw": {
+   "show": "Zanjeerain",
+   "episode": 22,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 22 [Eng Sub] - 15th July 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "HWYmuRVH-t0": {
+   "show": "Zanjeerain",
+   "episode": 2,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 02 [Eng Sub] 30th Apr 2026 | ft. Sajal Aly, Ameer Gilani & Danyal Zafar | HUM TV",
+   "added": "2026-10-02"
+  },
+  "vvc_5djOA-o": {
+   "show": "Zanjeerain",
+   "episode": 17,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 17 [Eng Sub] 24 June 2026 | ft. Sajal Aly, Danyal Zafar & Sahar Hashmi - HUM TV",
+   "added": "2026-10-02"
+  },
+  "lIBIpRtHQnY": {
+   "show": "Zanjeerain",
+   "episode": 27,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 27 [Eng Sub] - 30th July 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "0MAVpl53dS0": {
+   "show": "Zanjeerain",
+   "episode": 28,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 28 [Eng Sub] - 5th Aug 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "VnVF77WIuyc": {
+   "show": "Zanjeerain",
+   "episode": 9,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 09 [Eng Sub] 27 May 2026 | ft. Sajal Aly, Ahsan Khan, Ameer Gilani & Danyal Zafar",
+   "added": "2026-10-02"
+  },
+  "vAAE83a4PLY": {
+   "show": "Zanjeerain",
+   "episode": 35,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 35 [Eng Sub] - 27th Aug 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "Tojh_HoLCLI": {
+   "show": "Zanjeerain",
+   "episode": 3,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 03 [Eng Sub] 06 May 2026 | ft. Sajal Aly, Ahsan Khan, Ameer Gilani & Danyal Zafar",
+   "added": "2026-10-02"
+  },
+  "181voJp3glQ": {
+   "show": "Zanjeerain",
+   "episode": 33,
+   "channel": "HUM TV",
+   "title": "Zanjeerain Episode 33 - [ENG SUB] 20th Aug 2026 | ft. Sajal Aly & Danyal Zafar - HUM TV",
+   "added": "2026-10-02"
+  },
+  "GqXL5Ek66X0": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 51,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Episode 51 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 1st October 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "e-Zr6vi5V2Q": {
+   "show": "Khafa",
+   "episode": 18,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 18 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 1st Oct 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "M8vZ_nV-CmI": {
+   "show": "Uswah",
+   "episode": 9,
+   "channel": "Geo Entertainment",
+   "title": "Uswah Episode 09 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 1st October 2026",
+   "added": "2026-10-02"
+  },
+  "hHHonWBKNBs": {
+   "show": "Uswah",
+   "episode": 8,
+   "channel": "Geo Entertainment",
+   "title": "Uswah Episode 08 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 30th September 2026",
+   "added": "2026-10-02"
+  },
+  "uuZQ-JgKT2s": {
+   "show": "Mohabbat",
+   "episode": 1,
+   "channel": "Geo Entertainment",
+   "title": "Mohabbat Episode 01 [Eng Sub] Feroze Khan - Nawal Saeed | 28th September 2026 - HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "SXsjzPjdxEo": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 50,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Episode 50 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 30th September 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "ui4xCM4UtMs": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 48,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Episode 48 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 28th September 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "HlYTKK2Eo1o": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 1,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Episode 01 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 12th August 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "TDfun2LT5t8": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 49,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Episode 49 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 29th September 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "hH5QCx5WwQ8": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 46,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Mega Episode 46 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 27th Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "SooUhjlOjMw": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 45,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Episode 45 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 26th September 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "uV_7o-W006o": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 44,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Episode 44 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 25th September 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "1kIsglRrTg8": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 42,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Episode 42 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 23rd September 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "_G7kElk3aes": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 47,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Mega Episode 47 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 27th Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "ZrEe6WFyHBU": {
+   "show": "Kaisa Yeh Ishq",
+   "episode": 26,
+   "channel": "Geo Entertainment",
+   "title": "Kaisa Yeh Ishq Episode 26 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 8th September 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "C6bAGbt1qgI": {
+   "show": "Khafa",
+   "episode": 17,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 17 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 30th Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "x3IcNsOIOO4": {
+   "show": "Khafa",
+   "episode": 1,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 01 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 5th Aug 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "quPIZoupeyY": {
+   "show": "Khafa",
+   "episode": 15,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 15 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 23rd Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "brFUra1ksyY": {
+   "show": "Khafa",
+   "episode": 11,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 11 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 9th Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "wZ19ebx6WGY": {
+   "show": "Khafa",
+   "episode": 16,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 16 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 24th Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "GRxeZeZncTw": {
+   "show": "Khafa",
+   "episode": 12,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 12 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 10th Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "tJSRlijj-PM": {
+   "show": "Khafa",
+   "episode": 13,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 13 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 16th Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "pBZM354yhfI": {
+   "show": "Khafa",
+   "episode": 2,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 02 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 6th Aug 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "YG_yP__DUJo": {
+   "show": "Khafa",
+   "episode": 14,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 14 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 17th Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "yE22HkBjf10": {
+   "show": "Khafa",
+   "episode": 4,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 04 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 13th Aug 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "PrG3LgemvEg": {
+   "show": "Khafa",
+   "episode": 3,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 03 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 12th Aug 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "uvvZmdK0UeQ": {
+   "show": "Khafa",
+   "episode": 10,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 10 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 3rd Sep 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "pwLunHIkADg": {
+   "show": "Khafa",
+   "episode": 8,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 08 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 27th Aug 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "-vXp2hwHQUs": {
+   "show": "Khafa",
+   "episode": 6,
+   "channel": "Geo Entertainment",
+   "title": "Khafa Episode 06 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 20th Aug 2026 | HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "yzjt0_tnNTY": {
+   "show": "Mohabbat",
+   "episode": 2,
+   "channel": "Geo Entertainment",
+   "title": "Mohabbat Episode 02 [Eng Sub] Feroze Khan - Nawal Saeed | 29th September 2026 - HAR PAL GEO",
+   "added": "2026-10-02"
+  },
+  "cIkO9A11ywY": {
+   "show": "Uswah",
+   "episode": 7,
+   "channel": "Geo Entertainment",
+   "title": "Uswah Episode 07 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 29th September 2026",
+   "added": "2026-10-02"
+  },
+  "22O15SALXYc": {
+   "show": "Uswah",
+   "episode": 6,
+   "channel": "Geo Entertainment",
+   "title": "Uswah Episode 06 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 28th September 2026",
+   "added": "2026-10-02"
+  },
+  "v94Gz57T0UY": {
+   "show": "Uswah",
+   "episode": 1,
+   "channel": "Geo Entertainment",
+   "title": "Uswah Episode 01 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 23rd September 2026",
+   "added": "2026-10-02"
+  },
+  "D5oFHxOOkWo": {
+   "show": "Uswah",
+   "episode": 5,
+   "channel": "Geo Entertainment",
+   "title": "Uswah Episode 05 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 27th September 2026",
+   "added": "2026-10-02"
+  },
+  "NGt6aluSxfo": {
+   "show": "Uswah",
+   "episode": 4,
+   "channel": "Geo Entertainment",
+   "title": "Uswah Episode 04 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 26th September 2026",
+   "added": "2026-10-02"
+  },
+  "zAnog2Gm0AY": {
+   "show": "Uswah",
+   "episode": 3,
+   "channel": "Geo Entertainment",
+   "title": "Uswah Episode 03 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 25th September 2026",
+   "added": "2026-10-02"
+  },
+  "KxPcUdOo2_Y": {
+   "show": "Uswah",
+   "episode": 2,
+   "channel": "Geo Entertainment",
+   "title": "Uswah Episode 02 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 24th September 2026",
+   "added": "2026-10-02"
+  },
+  "GYJeCObuuB0": {
+   "movie": "Ranga Ranga",
+   "channel": "Goldmines",
+   "title": "Ranga Ranga (2025) New Released Hindi Dubbed Movie | Panja Vaisshnav Tej, Ketika Sharma",
+   "added": "2026-10-02"
+  },
+  "B6h-kQLQqec": {
+   "movie": "Sarrainodu",
+   "channel": "Goldmines",
+   "title": "Sarrainodu (4K ULTRA HD) Full Hindi Dubbed Movie | Allu Arjun, Rakul Preet Singh, Catherine Tresa",
+   "added": "2026-10-02"
+  },
+  "I3o-UeFZFKo": {
+   "movie": "Fidaa",
+   "channel": "Goldmines",
+   "title": "Fidaa (2018) New Released Hindi Dubbed Full Movie | Varun Tej, Sai Pallavi, Sai Chand, Raja Chembolu",
+   "added": "2026-10-02"
+  },
+  "SbSTTfnEMZM": {
+   "movie": "Miss India",
+   "channel": "Goldmines",
+   "title": "Miss India 2021 New Released Hindi Dubbed Movie | Keerthy Suresh, Jagapathi Babu, Rajendra Prasad",
+   "added": "2026-10-02"
+  },
+  "T8XlRPCJdzY": {
+   "movie": "Comali",
+   "channel": "Goldmines",
+   "title": "Comali (2020) New Released Full Hindi Dubbed Movie | Jayam Ravi, Kajal Aggarwal, Samyuktha Hegde",
+   "added": "2026-10-02"
+  },
+  "BzTFg0m1l_8": {
+   "movie": "DJ",
+   "channel": "Goldmines",
+   "title": "DJ (4K ULTRA HD) South Action Hindi Dubbed Movie | Allu Arjun, Pooja Hegde",
+   "added": "2026-10-02"
+  },
+  "iXxg3DYaafo": {
+   "movie": "Janta Garage",
+   "channel": "Goldmines",
+   "title": "Janta Garage (4K ULTRA HD) - Full Hindi Dubbed Movie | Jr NTR, Mohanlal, Samantha, Nithya Menen",
+   "added": "2026-10-02"
+  },
+  "zR52MgYhm_Q": {
+   "movie": "Mr. Majnu",
+   "channel": "Goldmines",
+   "title": "Mr. Majnu (2020) New Released Hindi Dubbed Full Movie | Akhil Akkineni, Nidhhi Agerwal, Rao Ramesh",
+   "added": "2026-10-02"
+  },
+  "krCpn6RrNX8": {
+   "movie": "Madam Geeta Rani",
+   "channel": "Goldmines",
+   "title": "Madam Geeta Rani (Raatchasi) 2020 New Released Hindi Dubbed Full Movie | Jyothika, Hareesh Peradi",
+   "added": "2026-10-02"
+  },
+  "fmkS85mNZWA": {
+   "movie": "Oxygen",
+   "channel": "Goldmines",
+   "title": "Oxygen (2026) New Released Hindi Dubbed Movie | Gopichand, Raashii Khanna, Anu Emmanuel, Jagapathi",
+   "added": "2026-10-02"
+  },
+  "5PwI3p6BXvY": {
+   "movie": "Hebbuli",
+   "channel": "Goldmines",
+   "title": "Hebbuli (2018) Hindi Dubbed Full Movie | Sudeep, Amala Paul, V. Ravichandran",
+   "added": "2026-10-02"
+  },
+  "8iW9qeJaE4I": {
+   "movie": "Kaithi",
+   "channel": "Goldmines",
+   "title": "Kaithi (4K ULTRA HD) ACTION BLOCKBUSTER Hindi Dubbed Movie | Karthi, Arjun Das, Narain",
+   "added": "2026-10-02"
+  },
+  "_RmbRfYVKVM": {
+   "movie": "Dhammu",
+   "channel": "Goldmines",
+   "title": "Dhammu (Dammu) Hindi Dubbed Full Movie | Jr. NTR, Trisha Krishnan, Karthika Nair, Brahmanandam",
+   "added": "2026-10-02"
+  },
+  "1lFk1LSsI_c": {
+   "movie": "Jaya Janaki Nayaka KHOONKHAR",
+   "channel": "Pen Movies",
+   "title": "Jaya Janaki Nayaka KHOONKHAR | Full Hindi Dubbed Movie | Bellamkonda Sreenivas, Rakul Preet Singh",
+   "added": "2026-10-02"
+  },
+  "D2fGtAzEC-Y": {
+   "movie": "Rishtey A Grand Celebration",
+   "channel": "Pen Movies",
+   "title": "Rishtey A Grand Celebration | New Hindi Dubbed Movie 2022 | Naga Chaitanya, Rakul Preet Singh",
+   "added": "2026-10-02"
+  },
+  "xlaStrxzW_U": {
+   "movie": "Dayaalu",
+   "channel": "Pen Movies",
+   "title": "Dayaalu (HD) New Hindi Dubbed Movie | Nagarjuna Akkineni, Naga Chaitanya, Samantha Akkineni",
+   "added": "2026-10-02"
+  },
+  "WTGnTI3-lGQ": {
+   "movie": "Aparichit",
+   "channel": "Pen Movies",
+   "title": "Aparichit (Anniyan) Vikram, Sadha, Vivek, Prakash Raj, Nassar | Full Hindi Dubbed Movie",
+   "added": "2026-10-02"
+  },
+  "XdBQ1Fs95-Q": {
+   "movie": "Odiyan",
+   "channel": "Pen Movies",
+   "title": "Odiyan (4K) New Released Full Hindi Dubbed Movie | Mohanlal, Manju Warrier, Prakash Raj",
+   "added": "2026-10-02"
+  },
+  "LhLKxrCijdk": {
+   "movie": "Aravind Sametha",
+   "channel": "Pen Movies",
+   "title": "Aravind Sametha (4K) | Jr NTR, Pooja Hegde, Jagapathi Babu, Eesha Rebba | New Hindi Dubbed Movie",
+   "added": "2026-10-02"
+  },
+  "YS1ONWLsd5k": {
+   "movie": "Akhanda",
+   "channel": "Pen Movies",
+   "title": "Akhanda Hindi Dubbed Movie 2024 | Nandamuri Balakrishna | Pragya | Srikanth | Pen Movies",
+   "added": "2026-10-02"
+  },
+  "eqT972wZ3ME": {
+   "movie": "Krack",
+   "channel": "Pen Movies",
+   "title": "Krack (4K) | New Released Full Hindi Dubbed Movie 2022 | Ravi Teja, Shruti Haasan, Samuthirakani",
+   "added": "2026-10-02"
+  },
+  "kSxihVlomTo": {
+   "movie": "Alludu Adhurs",
+   "channel": "Pen Movies",
+   "title": "Alludu Adhurs | New Hindi Dubbed Movie | Bellamkonda Srinivas, Nabha Natesh, Sonu Sood, Prakash Raj",
+   "added": "2026-10-02"
+  },
+  "4jtbe0I1e1c": {
+   "movie": "Aravind Sametha",
+   "channel": "Pen Movies",
+   "title": "Aravind Sametha (4K) | Jr NTR, Pooja Hegde, Jagapathi Babu, Eesha Rebba | New Hindi Dubbed Movie",
+   "added": "2026-10-02"
+  },
+  "J4nBcaYMuI4": {
+   "movie": "Tholi Prema",
+   "channel": "Pen Movies",
+   "title": "Tholi Prema (4K) | Romantic Hindi Dubbed Full Movie | Varun Tej, Raashi Khanna",
+   "added": "2026-10-02"
+  },
+  "MZGKv-UqD4c": {
+   "movie": "Acharya",
+   "channel": "Pen Movies",
+   "title": "Acharya Full Movie | 2024 New Released Hindi Dubbed Movie | Chiranjeevi, Ram Charan, Pooja Hegde",
+   "added": "2026-10-02"
+  },
+  "1Gk4kR8ijiw": {
+   "movie": "Velaiilla Pattadhari",
+   "channel": "Pen Movies",
+   "title": "Velaiilla Pattadhari (VIP) 4K | New Released Full Hindi Dubbed Movie | Dhanush, Amala Paul",
+   "added": "2026-10-02"
+  },
+  "g1VNP_UFEAs": {
+   "movie": "Satya 2",
+   "channel": "Pen Movies",
+   "title": "Satya 2 | New Released Hindi Dubbed Movie | Anaika Soti, Sharwanand, Puneet Singh Ratn",
+   "added": "2026-10-02"
+  },
+  "X5osZhIodPk": {
+   "movie": "Experience the Power of Khiladi: Ravi Teja's",
+   "channel": "Pen Movies",
+   "title": "Experience the Power of Khiladi: Ravi Teja's Blockbuster Hindi Dubbed Movie",
+   "added": "2026-10-02"
+  },
+  "s6z-JwK-tTA": {
+   "movie": "Saamy²",
+   "channel": "Pen Movies",
+   "title": "Saamy² (2019) | New Released Full Hindi Dubbed Movie | Vikram, Keerthy Suresh, Aishwarya Rajesh",
+   "added": "2026-10-02"
+  },
+  "g-CVo_r_Ah0": {
+   "movie": "Allu Sirish",
+   "channel": "RKD Studios",
+   "title": "Allu Sirish Latest Hindi Dubbed Superhit Action Movies | Buddy | Gayatri Bharadwaj, Mukesh Rishi",
+   "added": "2026-10-02"
+  },
+  "awkDDxOp-9U": {
+   "movie": "Courier Boy",
+   "channel": "RKD Studios",
+   "title": "Courier Boy | Yami Gautam, Jai, Santhanam, Ashutosh Rana | South Action Thriller Hindi Dubbed Movie",
+   "added": "2026-10-02"
+  },
+  "0R2WhAztg5M": {
+   "movie": "Double Trouble",
+   "channel": "RKD Studios",
+   "title": "Double Trouble | Vijay Sethupathi, Samantha, Nayanthara, Katrina K South Action Hindi Dubbed Movie",
+   "added": "2026-10-02"
+  },
+  "9tmgFprbCgU": {
+   "movie": "Happy Birthday Jayam Ravi",
+   "channel": "RKD Studios",
+   "title": "Happy Birthday Jayam Ravi | Kasam Hindustan Ki Hindi Dubbed South Indian Action Movie | Saranya Nag",
+   "added": "2026-10-02"
+  },
+  "igMwjlE-kDg": {
+   "movie": "Happy Birthday Sudeep",
+   "channel": "RKD Studios",
+   "title": "Happy Birthday Sudeep | Bachchan Action Movie |Jagapathi Babu Latest South Indian Hindi Dubbed Movie",
+   "added": "2026-10-02"
+  },
+  "CeR-xk7jQ3s": {
+   "movie": "Inspector Vikram",
+   "channel": "RKD Studios",
+   "title": "Inspector Vikram | Prajwal Devaraj South Indian Hindi Dubbed Action Movie | Bhavana, Darshan",
+   "added": "2026-10-02"
+  },
+  "8Aeyal9Ra2A": {
+   "movie": "Happy Birthday Vishal",
+   "channel": "RKD Studios",
+   "title": "Happy Birthday Vishal | Rathnam Action Movie | Priya Bhavani Shankar South Indian Hindi Dubbed Movie",
+   "added": "2026-10-02"
+  },
+  "H1gesHztDlI": {
+   "movie": "Happy Birthday Nagarjuna",
+   "channel": "RKD Studios",
+   "title": "Happy Birthday Nagarjuna |Naa Saami Ranga Hindi Dubbed Action Movie |Allari Naresh, Ashika Ranganath",
+   "added": "2026-10-02"
+  },
+  "sNpy-C-VxYY": {
+   "movie": "Tiger Nageswara Rao",
+   "channel": "RKD Studios",
+   "title": "Tiger Nageswara Rao Full Hindi Dubbed Movie | Ravi Teja, Anupam Kher, Nupur S | South Action Movies",
+   "added": "2026-10-02"
+  },
+  "vqgllRQANC4": {
+   "movie": "Raththam Thriller",
+   "channel": "RKD Studios",
+   "title": "Raththam Full Action Thriller Movie | 2024 New Released Hindi Dubbed Movie | Vijay Antony, Mahima N.",
+   "added": "2026-10-02"
+  },
+  "RFA3ruwfLYI": {
+   "movie": "The Warriorr",
+   "channel": "RKD Studios",
+   "title": "The Warriorr New Released Full Hindi Dubbed Movie | Ram Pothineni, Aadhi Pinisetty, Krithi Shetty",
+   "added": "2026-10-02"
+  },
+  "gARhtL_BnrQ": {
+   "movie": "Bhairathi Ranagal",
+   "channel": "RKD Studios",
+   "title": "Bhairathi Ranagal | 2026 Hindi Dubbed Action Movie | Shiva Rajkumar, Rukmini Vasanth, Srii Murali",
+   "added": "2026-10-02"
+  },
+  "Vw0uUjznSbc": {
+   "movie": "Gatta Kusthi",
+   "channel": "RKD Studios",
+   "title": "Gatta Kusthi | Aishwarya Lekshmi, Vishnu Vishal, Munishkanth Latest South Action Hindi Dubbed Movie",
+   "added": "2026-10-02"
+  },
+  "-BiYMXOMyYo": {
+   "movie": "POGARU",
+   "channel": "RKD Studios",
+   "title": "POGARU (2021) NEW Released Full Hindi Dubbed Movie | Dhruva Sarja, Rashmika Mandanna, Kai Greene",
+   "added": "2026-10-02"
+  },
+  "yJetAylQjzQ": {
+   "movie": "ROBERRT",
+   "channel": "RKD Studios",
+   "title": "ROBERRT (2021)NEW Released Full Hindi Dubbed Movie | Darshan, Jagapathi Babu, Ravi Kishan, Asha Bhat",
+   "added": "2026-10-02"
+  },
+  "i-zGIFfhBwA": {
+   "movie": "Case of Kondana",
+   "channel": "RKD Studios",
+   "title": "Case of Kondana (2024) South Indian Hindi Dubbed Thriller Movie | Vijay Raghavendra, Bhavana Menon",
+   "added": "2026-10-02"
+  },
+  "lbqT-VjDNYU": {
+   "movie": "Bhadrakaali",
+   "channel": "RKD Studios",
+   "title": "Bhadrakaali (Shakthi Thirumagan) Latest Hindi Dubbed Action Thriller Movie | Vijay Antony",
+   "added": "2026-10-02"
+  },
+  "xM9f9Kikyp0": {
+   "movie": "Aagadu",
+   "channel": "RKD Studios",
+   "title": "Aagadu (Hindi Dubbed) Edited Version | Mahesh Babu Movies in Hindi Dubbed Full",
+   "added": "2026-10-02"
+  },
+  "jqkvB8qj6lk": {
+   "movie": "Jamai No.1",
+   "channel": "RKD Studios",
+   "title": "Jamai No.1 Full Romantic Movie | Syed Sohel Ryan Latest Hindi Dubbed Action Movie | Mrinalini Ravi",
+   "added": "2026-10-02"
+  },
+  "KgSxvERDN_Q": {
+   "movie": "Happy Birthday Ravi Teja",
+   "channel": "RKD Studios",
+   "title": "Happy Birthday Ravi Teja | Tiger Nageswara Rao Hindi Dubbed South Action Movie |Anupam Kher, Nupur S",
+   "added": "2026-10-02"
+  },
+  "BO9jRBQIQ1A": {
+   "movie": "LIE",
+   "channel": "RKD Studios",
+   "title": "LIE Hindi Dubbed Action Thriller Movie | Nithin,  Megha Akash, Ravi Kishan, Arjun Sarja | 2023 Movie",
+   "added": "2026-10-02"
+  },
+  "eF-k79_H4_s": {
+   "movie": "HATYA",
+   "channel": "RKD Studios",
+   "title": "HATYA (Kolai) Hindi Dubbed Movie | Vijay Antony, Ritika Singh, Meenakshi Chaudhary | Thriller Movie",
+   "added": "2026-10-02"
+  },
+  "YwGXmVX4zDc": {
+   "movie": "Seetha Version",
+   "channel": "RKD Studios",
+   "title": "Seetha Full Version (Uncut) Hindi Dubbed Action Movie | Bellamkonda Sreenivas, Kajal Agarwal, Sonu S",
+   "added": "2026-10-02"
+  },
+  "psx2jNugL-M": {
+   "movie": "Zebra",
+   "channel": "RKD Studios",
+   "title": "Zebra (2025) New Released Hindi Dubbed Action Movie | Dhananjay, Satyadev, Priya Bhavani Shankar",
+   "added": "2026-10-02"
+  },
+  "8Si3xKgnNKc": {
+   "movie": "Mission 118",
+   "channel": "RKD Studios",
+   "title": "Mission 118 (2022) | New Released Full Hindi Dubbed Movie | Kalyan Ram, Nivetha T, Shalini Pandey",
+   "added": "2026-10-02"
+  },
+  "KavrRIh0ScQ": {
+   "movie": "Custody",
+   "channel": "RKD Studios",
+   "title": "Custody Full Movie | 2023 New Released Hindi Dubbed Movie | Naga Chaitanya, Krithi Shetty, Priyamani",
+   "added": "2026-10-02"
+  },
+  "HMW3OeNif5k": {
+   "movie": "Maargan",
+   "channel": "RKD Studios",
+   "title": "Maargan (2025) New Released South Hindi Dubbed Action Thriller Movie | Vijay Antony, Ajay Dhishan",
+   "added": "2026-10-02"
+  },
+  "Bu8Y0Sapy8U": {
+   "movie": "Dil Bechara Breakup Ka Maara",
+   "channel": "RKD Studios",
+   "title": "Dil Bechara Breakup Ka Maara Full Hindi Dubbed Movie | Nani, Nithya Menon | 2024 Latest South Movies",
+   "added": "2026-10-02"
+  },
+  "m08xwFufTs8": {
+   "movie": "Dil Bechara Breakup Ka Maara",
+   "channel": "RKD Studios",
+   "title": "Dil Bechara Breakup Ka Maara (Ala Modalaindi) Full Hindi Dubbed Movie | Nani, Nithya Menon, Kriti",
+   "added": "2026-10-02"
+  },
+  "Mpf1IYpOpF4": {
+   "movie": "Crazy Fellow",
+   "channel": "Aditya Movies",
+   "title": "Crazy Fellow Hindi Dubbed Movie 2026 Full Movie | Aadi Saikumar, Digangana Suryavanshi |Mirnaa Menon",
+   "added": "2026-10-02"
+  },
+  "8Vkx70ZaBBQ": {
+   "movie": "Swathimutyam",
+   "channel": "Aditya Movies",
+   "title": "Swathimutyam Hindi Dubbed Movie 2026 Full Movie | Ganesh Bellamkonda, Varsha Bollamma | South Movie",
+   "added": "2026-10-02"
+  },
+  "gJpoFk6HXug": {
+   "movie": "Butta Bomma",
+   "channel": "Aditya Movies",
+   "title": "Butta Bomma Hindi Dubbed Full Movie 2025 | Anikha Surendran, Arjun Das, Surya Vashistta |South Movie",
+   "added": "2026-10-02"
+  },
+  "VDFys9V9poQ": {
+   "movie": "Extra Ordinary Man",
+   "channel": "Aditya Movies",
+   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
+   "added": "2026-10-02"
+  },
+  "VeoiEqdkKAk": {
+   "movie": "Srinivasa Kalyanam",
+   "channel": "Aditya Movies",
+   "title": "Srinivasa Kalyanam Hindi Dubbed Full Movie With English Subtitles | Nithiin, Rashi Khanna, Nandita",
+   "added": "2026-10-02"
+  },
+  "KYcGQ-fEUZQ": {
+   "movie": "Bhairavakona",
+   "channel": "Aditya Movies",
+   "title": "Bhairavakona Hindi Dubbed Full Movie 2024 | Sundeep Kishan | Varsha Bollamma | South Movie 2024",
+   "added": "2026-10-02"
+  },
+  "NpJ6lnbgi_s": {
+   "movie": "Check",
+   "channel": "Aditya Movies",
+   "title": "\"Check\" Latest Hindi Dubbed Full Movie 2022 [4K Ultra HD] | Nithiin, Rakul Preet, Priya Varrier",
+   "added": "2026-10-02"
+  },
+  "R7aCOI4DuA0": {
+   "movie": "A Aa",
+   "channel": "Aditya Movies",
+   "title": "A Aa Hindi Dubbed Full Movie New | Nithiin, Samantha, Anupama Parameshwaran | Trivikram",
+   "added": "2026-10-02"
+  },
+  "F50EmsabWLc": {
+   "movie": "Intelligent Khiladi",
+   "channel": "Aditya Movies",
+   "title": "Intelligent Khiladi (Goodachari) Hindi Dubbed Movie | South Movie | Adivi Sesh, Sobhita Dhulipala",
+   "added": "2026-10-02"
+  },
+  "A7jiNYxkB7c": {
+   "movie": "Amigos",
+   "channel": "Aditya Movies",
+   "title": "Amigos New Hindi Dubbed Full Movie | Nandamuri Kalyan Ram, Ashika | South Indian Movie New",
+   "added": "2026-10-02"
+  },
+  "oqcXT3tkZD0": {
+   "movie": "Macharla Chunaav Kshetra",
+   "channel": "Aditya Movies",
+   "title": "Macharla Chunaav Kshetra (M.C.K) New Released Full Hindi Dubbed Movie | Nithiin, Krithi Shetty",
+   "added": "2026-10-02"
+  },
+  "JDzXR_mV_fI": {
+   "movie": "A AA 2",
+   "channel": "Aditya Movies",
+   "title": "A AA 2 (Chal Mohan Ranga) Full Hindi Dubbed Movie With English Subtitles | Nithiin, Megha Akash",
+   "added": "2026-10-02"
+  },
+  "Kycaxw_f4RI": {
+   "movie": "Maestro",
+   "channel": "Aditya Movies",
+   "title": "Maestro New Released Hindi Dubbed Movie 2024 | Nithin, Tamannaah | Nabha Natesh | South Movie 2024",
+   "added": "2026-10-02"
+  },
+  "zAVmwt_U4c0": {
+   "movie": "Dumdaar Khiladi",
+   "channel": "Aditya Movies",
+   "title": "Dumdaar Khiladi (Hello Guru Prema kosame) Full Hindi Dubbed Movie | Ram Pothineni | Anupama",
+   "added": "2026-10-02"
+  },
+  "oCwQ5ee7cyg": {
+   "movie": "F2",
+   "channel": "Aditya Movies",
+   "title": "F2 Full Movie in Hindi | Hindi Dubbed Movies 2025 Full Movie | Venkatesh, Varun Tej, Tamannaah",
+   "added": "2026-10-02"
+  },
+  "eSrDta7umZA": {
+   "movie": "MLA Ka Power",
+   "channel": "Aditya Movies",
+   "title": "MLA Ka Power (MLA) Hindi Dubbed Full Movie | Nandamuri Kalyanram, Kajal Aggarwal | Aditya Movies",
+   "added": "2026-10-02"
+  },
+  "ftI9RAEuSLo": {
+   "movie": "Chaari 111",
+   "channel": "Aditya Movies",
+   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
+   "added": "2026-10-02"
+  }
+ }
+}
