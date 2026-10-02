@@ -217,7 +217,7 @@ fun ChannelListScreen(
         mutableStateOf(sessionTileLayout ?: TileLayout.List)
     }
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
-    // 2×2 and 1×2 are Premium in Live TV Plus (free in the other apps).
+    // 2×3, 2×2 and 1×2 are Premium in Live TV Plus (free in the other apps).
     val premium by Premium.active.collectAsStateWithLifecycle()
     var upsellFor by remember { mutableStateOf<TileLayout?>(null) }
     LaunchedEffect(premium) {
@@ -238,12 +238,12 @@ fun ChannelListScreen(
     val slots = tileLayout.columns * tileLayout.rows
     var windowStart by rememberSaveable { mutableIntStateOf(0) }
     val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
-    // 1×2 and 2×2 are separate TVs: Up and Down change the channel on the highlighted tile only.
+    // 1×2, 2×2 and 2×3 are separate TVs: Up and Down change the channel on the highlighted tile only.
     // [twoIds] holds the tiles' channels once one has been changed.
     var twoIds by remember { mutableStateOf(sessionTileIds) }
     var tilesFull by remember { mutableStateOf(sessionTilesFull) }
     SideEffect { sessionTileIds = twoIds; sessionTilesFull = tilesFull }
-    val fullTiles = tilesFull && windowed && tileLayout.separateTvs
+    val fullTiles = tilesFull && windowed
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
     val window = when {
         !windowed -> emptyList()
@@ -291,7 +291,7 @@ fun ChannelListScreen(
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
-        // In 1×2 and 2×2 every card plays; otherwise only the highlighted one.
+        // In 1×2, 2×2 and 2×3 every card plays; otherwise only the highlighted one.
         val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
@@ -548,7 +548,7 @@ fun ChannelListScreen(
                         onOpen = onPlay,
                     )
                     else -> BoxWithConstraints(Modifier.fillMaxSize()) {
-                    // TVs and tablets: the chosen layout (8, 6, 4 or 2 tiles). Phones: as many as fit.
+                    // TVs and tablets: the chosen layout (12, 6, 4 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
                     val wide = windowed
                     val fitColumns = if (wide) tileLayout.columns else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
@@ -586,7 +586,7 @@ fun ChannelListScreen(
                             favorite = channel.id in state.favorites,
                             onClick = onClick,
                             bare = fullTiles,
-                            glow = !(windowed && tileLayout.separateTvs),
+                            glow = !windowed,
                             onToggleFavorite = { onToggleFavorite(channel) },
                             focusRequester = cardRequester(channel.id),
                             onKey = onKey,
@@ -634,8 +634,8 @@ fun ChannelListScreen(
                             if (!up && event.type != KeyEventType.KeyDown) return@onKey false
                             val side = window.indexOfFirst { it.id == channel.id }
                             val others = window.map { it.id }.toSet() - channel.id
-                            // 2×2: Left and Right go round all four tiles in reading order.
-                            val loop = tileLayout == TileLayout.Four
+                            // 2×2 and 2×3: Left and Right go round all the tiles in reading order.
+                            val loop = window.size > 2
                             val target = when {
                                 event.key == Key.DirectionLeft ->
                                     window.getOrNull(if (loop) (side - 1 + window.size) % window.size else side - 1)
@@ -710,7 +710,9 @@ fun ChannelListScreen(
                                                         onOpen = open,
                                                         onClick = { if (fullTiles) { open(); onPlay(channel) } else tilesFull = true })
                                                 } else {
-                                                    Tile(start + r * columns + c, channel, onKey(start + r * columns + c))
+                                                    // 3×4: OK fills the screen with the tiles; OK again opens the channel.
+                                                    Tile(start + r * columns + c, channel, onKey(start + r * columns + c),
+                                                        onClick = { if (fullTiles) onPlay(channel) else tilesFull = true })
                                                 }
                                             }
                                         }
@@ -783,7 +785,7 @@ private fun PremiumDialog(layout: String, onSubscribe: () -> Unit, onDismiss: ()
             title = { Text("$layout is Premium") },
             text = {
                 Text(
-                    "Watch two or four channels at once with the 1×2 and 2×2 layouts. " +
+                    "Watch two, four or six channels at once with the 1×2, 2×2 and 2×3 layouts. " +
                         "Premium is ${price ?: "a small monthly price"} a month through Google Play, works on every " +
                         "phone and TV signed in to your Google account, and you can cancel any time in Google Play."
                 )
@@ -850,7 +852,7 @@ private fun ChannelCard(
     /** Full-screen tiles: just the video, the speaker when highlighted, the name for a moment. */
     bare: Boolean = false,
     /**
-     * The yellow highlight. 1×2 and 2×2 turn it off: the picture stays black around the video
+     * The yellow highlight. The TV layouts turn it off: the picture stays black around the video
      * and a small speaker marks the tile with the sound.
      */
     glow: Boolean = true,
@@ -988,7 +990,7 @@ private fun ChannelCard(
     }
 }
 
-/** A small speaker on the tile that has the sound (1×2 and 2×2, instead of the yellow highlight). */
+/** A small speaker on the tile that has the sound (TV layouts, instead of the yellow highlight). */
 @Composable
 private fun SoundBadge(modifier: Modifier) {
     Icon(
@@ -1336,7 +1338,7 @@ private val MinTileWidth = 170.dp
 
 /** How many tiles a TV screen shows; the label is what the top-bar button reads. */
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
-    Eight("2×4", 4, 2),
+    Twelve("3×4", 4, 3),
     Six("2×3", 3, 2),
     /** Four separate TVs, like 1×2. */
     Four("2×2", 2, 2),
@@ -1351,17 +1353,17 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
  */
 private var sessionTileLayout: TileLayout? = null
 
-/** 1×2 and 2×2: every tile plays and has its own channel, changed with Up and Down. */
-private val TileLayout.separateTvs get() = this == TileLayout.Two || this == TileLayout.Four
+/** 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
+private val TileLayout.separateTvs get() = this == TileLayout.Two || this == TileLayout.Four || this == TileLayout.Six
 
 /**
- * 1×2 and 2×2's channels, and the tile opened full screen, kept while a channel plays full
+ * 1×2, 2×2 and 2×3's channels, and the tile opened full screen, kept while a channel plays full
  * screen so Back returns to the same tiles (with the opened one on the channel watched last).
  */
 private var sessionTileIds: List<String> = emptyList()
 private var sessionOpenedTile: Int = -1
 
-/** 1×2 and 2×2 fill the whole screen (OK on a tile); Back returns to the tiles under the top bar. */
+/** The TV layouts fill the whole screen (OK on a tile); Back returns to the tiles under the top bar. */
 private var sessionTilesFull = false
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
