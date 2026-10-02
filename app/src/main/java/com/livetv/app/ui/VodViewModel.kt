@@ -39,7 +39,7 @@ class VodViewModel(app: Application) : AndroidViewModel(app) {
 
     fun reload() {
         loadedFor = repo.playlists
-        val hasPlaylists = repo.playlists.isNotEmpty()
+        val hasPlaylists = repo.playlists.isNotEmpty() || Vod.builtIn().isNotEmpty()
         _state.update { it.copy(loading = hasPlaylists, hasPlaylists = hasPlaylists) }
         if (!hasPlaylists) return
         viewModelScope.launch {

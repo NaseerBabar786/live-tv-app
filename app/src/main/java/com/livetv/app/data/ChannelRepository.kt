@@ -120,7 +120,7 @@ class ChannelRepository(context: Context) {
      * name when the playlist gives none.
      */
     suspend fun loadVod(): List<Channel> = coroutineScope {
-        playlists.map { playlist ->
+        (playlists + Vod.builtIn()).map { playlist ->
             async(Dispatchers.IO) {
                 runCatching {
                     val text = when {

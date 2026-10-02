@@ -1,5 +1,7 @@
 package com.livetv.app.data
 
+import com.livetv.app.Edition
+
 /**
  * Picks the movies and TV series out of IPTV playlists and groups series episodes by show.
  *
@@ -12,6 +14,13 @@ package com.livetv.app.data
 object Vod {
 
     enum class Kind { LIVE, MOVIE, EPISODE }
+
+    /** Free public-domain films and TV, rebuilt weekly by tools/build_movies.py. */
+    const val FREE_MOVIES_URL = "https://tv.bulkbazaar.ca/Movies.m3u"
+
+    /** The playlists Movies & Series always shows: the free list in Live TV, none in the store editions. */
+    fun builtIn(): List<Playlist> =
+        if (Edition.HAS_VOD) listOf(Playlist("Free classics", FREE_MOVIES_URL)) else emptyList()
 
     /** One show and its episodes, in season and episode order. */
     data class Show(val name: String, val logo: String?, val group: String?, val episodes: List<Episode>)
