@@ -87,17 +87,38 @@ def minutes(length):
     return total / 60
 
 
+def _text(raw):
+    return json.loads(f'"{raw}"')
+
+
 def videos_page(cid):
-    """Videos from the channel's Videos tab: (id, title, minutes)."""
+    """Videos from the channel's Videos tab: (id, title, minutes).
+
+    Reads both of the page layouts YouTube serves: the older videoRenderer and the
+    newer lockupViewModel.
+    """
     page = fetch(f"https://www.youtube.com/channel/{cid}/videos")
-    out = []
+    out, seen = [], set()
     for m in re.finditer(r'"videoRenderer":\{"videoId":"([\w-]{11})"', page):
         chunk = page[m.end():m.end() + 6000]
         title = re.search(r'"title":\{"runs":\[\{"text":"((?:[^"\\]|\\.)*)"', chunk)
-        length = re.search(r'"lengthText":\{"accessibility":.*?"simpleText":"([\d:]+)"', chunk) or \
-            re.search(r'"lengthText":\{"simpleText":"([\d:]+)"', chunk)
+        length = re.search(r'"lengthText":\{.*?"simpleText":"([\d:]+)"', chunk)
+        if title and m.group(1) not in seen:
+            seen.add(m.group(1))
+            out.append((m.group(1), _text(title.group(1)), minutes(length.group(1)) if length else None))
+    for m in re.finditer(r'"lockupViewModel":\{', page):
+        chunk = page[m.end():m.end() + 12000]
+        vid = re.search(r'"contentId":"([\w-]{11})"', chunk)
+        if not vid or vid.group(1) in seen or "LOCKUP_CONTENT_TYPE_VIDEO" not in chunk[:12000]:
+            continue
+        title = re.search(r'"lockupMetadataViewModel":\{"title":\{"content":"((?:[^"\\]|\\.)*)"', chunk)
+        length = re.search(r'"text":"(\d{1,2}:\d{2}(?::\d{2})?)"', chunk)
         if title:
-            out.append((m.group(1), json.loads(f'"{title.group(1)}"'), minutes(length.group(1)) if length else None))
+            seen.add(vid.group(1))
+            out.append((vid.group(1), _text(title.group(1)), minutes(length.group(1)) if length else None))
+    if not out:
+        markers = {k: page.count(k) for k in ("videoRenderer", "lockupViewModel", "consent", "ytInitialData")}
+        print(f"  no videos read from the page ({len(page)} bytes, {markers})", file=sys.stderr)
     return out
 
 
@@ -143,7 +164,10 @@ def main():
             print(f"  {name} videos page failed ({e})", file=sys.stderr)
             videos = []
         if not videos:
-            videos = videos_feed(cid)
+            try:
+                videos = videos_feed(cid)
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name} feed failed ({e})", file=sys.stderr)
         new = 0
         for vid, title, mins in videos:
             ep = episode(title)
