@@ -42,46 +42,56 @@ MIN_EPISODES = 3
 MIN_MOVIE_SECONDS = 40 * 60
 
 
-def get_json(url, tries=5):
+def get_json(url, tries=7):
     """Fetches JSON, waiting and retrying when the Archive is busy (503, timeouts)."""
     for attempt in range(tries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-            with urllib.request.urlopen(req, timeout=60) as r:
+            with urllib.request.urlopen(req, timeout=150) as r:
                 return json.load(r)
         except Exception as e:  # noqa: BLE001
             if attempt + 1 == tries:
                 raise
-            wait = 5 * 2 ** attempt
+            wait = min(120, 10 * 2 ** attempt)
             print(f"  retry in {wait}s ({e}): {url[:90]}", file=sys.stderr)
             time.sleep(wait)
 
 
 def search(collection, rows):
-    """The collection's most downloaded video items (scrape API, falling back to advanced search)."""
+    """The collection's most downloaded video items.
+
+    Tries the scrape API sorted by downloads, then advanced search, then an unsorted
+    scrape (paged, sorted here), since the Archive's search is often slow or busy.
+    """
+    q = f"collection:({collection}) AND mediatype:(movies)"
     try:
-        params = {
-            "q": f"collection:({collection}) AND mediatype:(movies)",
-            "fields": "identifier,title,year",
-            "sorts": "downloads desc",
-            "count": str(max(100, min(rows, 10000))),
-        }
-        docs = get_json(SCRAPE + "?" + urllib.parse.urlencode(params)).get("items", [])
+        params = {"q": q, "fields": "identifier,title,year", "sorts": "downloads desc",
+                  "count": str(max(100, min(rows, 10000)))}
+        docs = get_json(SCRAPE + "?" + urllib.parse.urlencode(params), tries=3).get("items", [])
         if docs:
             return docs[:rows]
     except Exception as e:  # noqa: BLE001
-        print(f"  scrape search failed ({e}); trying advanced search", file=sys.stderr)
-    params = [
-        ("q", f"collection:({collection}) AND mediatype:(movies)"),
-        ("fl[]", "identifier"),
-        ("fl[]", "title"),
-        ("fl[]", "year"),
-        ("sort[]", "downloads desc"),
-        ("rows", str(rows)),
-        ("page", "1"),
-        ("output", "json"),
-    ]
-    return get_json(SEARCH + "?" + urllib.parse.urlencode(params))["response"]["docs"]
+        print(f"  sorted scrape failed ({e}); trying advanced search", file=sys.stderr)
+    try:
+        params = [("q", q), ("fl[]", "identifier"), ("fl[]", "title"), ("fl[]", "year"),
+                  ("sort[]", "downloads desc"), ("rows", str(rows)), ("page", "1"), ("output", "json")]
+        docs = get_json(SEARCH + "?" + urllib.parse.urlencode(params), tries=3)["response"]["docs"]
+        if docs:
+            return docs
+    except Exception as e:  # noqa: BLE001
+        print(f"  advanced search failed ({e}); trying unsorted scrape", file=sys.stderr)
+    docs, cursor = [], None
+    while len(docs) < 20000:
+        params = {"q": q, "fields": "identifier,title,year,downloads", "count": "5000"}
+        if cursor:
+            params["cursor"] = cursor
+        page = get_json(SCRAPE + "?" + urllib.parse.urlencode(params))
+        docs += page.get("items", [])
+        cursor = page.get("cursor")
+        if not cursor:
+            break
+    docs.sort(key=lambda d: -int(d.get("downloads") or 0))
+    return docs[:rows]
 
 
 def seconds(length):
