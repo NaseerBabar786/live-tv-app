@@ -1,5 +1,6 @@
 package com.livetv.app.player
 
+import kotlinx.coroutines.delay
 import android.app.Activity
 import android.view.View
 import androidx.activity.compose.BackHandler
@@ -70,6 +71,14 @@ fun PlayerScreen(
 
     var error by remember { mutableStateOf<String?>(null) }
     var controlsVisible by remember { mutableStateOf(true) }
+    // The channel bar (back arrow, number and name, star) goes away after a minute on a channel
+    // and comes back when the channel changes.
+    var barShown by remember { mutableStateOf(true) }
+    LaunchedEffect(channel.id) {
+        barShown = true
+        delay(60_000)
+        barShown = false
+    }
 
     val streamPlayer = remember {
         StreamPlayer(context).also { p -> p.onError = { error = it } }
@@ -128,7 +137,7 @@ fun PlayerScreen(
         )
 
         AnimatedVisibility(
-            visible = controlsVisible && !inPictureInPicture,
+            visible = controlsVisible && barShown && !inPictureInPicture,
             enter = fadeIn(),
             exit = fadeOut(),
             modifier = Modifier.align(Alignment.TopCenter),

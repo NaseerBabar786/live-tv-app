@@ -383,7 +383,8 @@ fun ChannelListScreen(
     }
 
     Scaffold(
-        // Full-screen tiles: no top bar and nothing around the tiles.
+        // Full-screen tiles: no top bar and nothing around the tiles, which stays pure black.
+        containerColor = if (fullTiles) Color.Black else MaterialTheme.colorScheme.background,
         contentWindowInsets = if (fullTiles) WindowInsets(0) else ScaffoldDefaults.contentWindowInsets,
         topBar = {
             if (!fullTiles) TopAppBar(
@@ -560,8 +561,8 @@ fun ChannelListScreen(
                         onSelect = { listChannelId = it.id; onWatch(it) },
                         onOpen = onPlay,
                     )
-                    else -> BoxWithConstraints(Modifier.fillMaxSize()) {
-                    // TVs and tablets: the chosen layout (12, 6, 4 or 2 tiles). Phones: as many as fit.
+                    else -> BoxWithConstraints(Modifier.fillMaxSize().then(if (fullTiles) Modifier.background(Color.Black) else Modifier)) {
+                    // TVs and tablets: the chosen layout (16, 6, 4 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
                     val wide = windowed
                     val fitColumns = if (wide) tileLayout.columns else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
@@ -725,7 +726,7 @@ fun ChannelListScreen(
                                                         onOpen = open,
                                                         onClick = { if (fullTiles) { open(); onPlay(channel) } else tilesFull = true })
                                                 } else {
-                                                    // 3×4: OK fills the screen with the tiles; OK again opens the channel.
+                                                    // 4×4: OK fills the screen with the tiles; OK again opens the channel.
                                                     Tile(start + r * columns + c, channel, onKey(start + r * columns + c),
                                                         onClick = { if (fullTiles) onPlay(channel) else tilesFull = true })
                                                 }
@@ -911,6 +912,7 @@ private fun ChannelCard(
             }
             // A thin, soft yellow line marks the tile with the sound.
             if (focused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
+            if (focused) SoundBadge(Modifier.align(Alignment.TopEnd))
         }
         return
     }
@@ -925,7 +927,17 @@ private fun ChannelCard(
             .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
             .onPreviewKeyEvent(onKey)
             .onFocusChanged { focused = it.hasFocus; onFocusChange(it.hasFocus) }
-            .combinedClickable(onClick = onClick, onLongClick = onToggleFavorite),
+            // TV layouts: a thin, soft yellow line marks the tile with the sound, with no tint over it.
+            .then(if (!glow && focused) Modifier.border(1.dp, FocusColor.copy(alpha = 0.7f), CardShape) else Modifier)
+            .then(
+                if (glow) Modifier.combinedClickable(onClick = onClick, onLongClick = onToggleFavorite)
+                else Modifier.combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onClick,
+                    onLongClick = onToggleFavorite,
+                )
+            ),
     ) {
         Box(
             Modifier
@@ -1012,7 +1024,7 @@ private fun ChannelCard(
     }
 }
 
-/** A small speaker on the tile that has the sound (TV layouts, instead of the yellow highlight). */
+/** A small speaker on the tile that has the sound (TV layouts, with the thin yellow line). */
 @Composable
 private fun SoundBadge(modifier: Modifier) {
     Icon(
@@ -1328,11 +1340,11 @@ private class Preview(val stream: StreamPlayer) {
         })
     }
 
-    /** Low: at most 426×240 and 700 kbit/s, for when many videos play at once; otherwise SD. */
+    /** Low: at most 320×180, 450 kbit/s and 30 fps, for when many videos play at once; otherwise SD. */
     fun lowQuality(low: Boolean) {
         val params = stream.player.trackSelectionParameters.buildUpon()
-        if (low) params.setMaxVideoSize(426, 240).setMaxVideoBitrate(700_000)
-        else params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE)
+        if (low) params.setMaxVideoSize(320, 180).setMaxVideoBitrate(450_000).setMaxVideoFrameRate(30)
+        else params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE).setMaxVideoFrameRate(Int.MAX_VALUE)
         stream.player.trackSelectionParameters = params.build()
     }
 
@@ -1372,7 +1384,7 @@ private val MinTileWidth = 170.dp
 
 /** How many tiles a TV screen shows; the label is what the top-bar button reads. */
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
-    Twelve("3×4", 4, 3),
+    Sixteen("4×4", 4, 4),
     Six("2×3", 3, 2),
     /** Four separate TVs, like 1×2. */
     Four("2×2", 2, 2),
