@@ -26,6 +26,8 @@ object Edition {
     const val USER_AGENT = "LiveTV-Android/1.0"
     const val HAS_START_SCREEN = true
     const val HAS_WEATHER = true
+    /** Movies & Series from the saved playlists (Live TV only). */
+    const val HAS_VOD = true
 }
 
 /** The sponsor screen. Also starts the update check so its answer is ready when the screen ends. */

@@ -19,6 +19,7 @@ import com.livetv.app.player.PlayerScreen
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
+import com.livetv.app.ui.VodScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -27,6 +28,9 @@ class MainActivity : ComponentActivity() {
 
     /** The start screen (Live TV's sponsor screen) shows once per launch, not again after rotation. */
     private var showStartScreen by mutableStateOf(Edition.HAS_START_SCREEN)
+
+    /** Live TV's Movies & Series screen is open. */
+    private var showVod by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +47,9 @@ class MainActivity : ComponentActivity() {
     private fun AppContent() {
         val state by viewModel.state.collectAsStateWithLifecycle()
         val playing = state.playing
-        if (playing != null) {
+        if (showVod && playing == null) {
+            VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false })
+        } else if (playing != null) {
             PlayerScreen(
                 channel = playing,
                 favorite = playing.id in state.favorites,
@@ -62,6 +68,7 @@ class MainActivity : ComponentActivity() {
                 onRefresh = viewModel::reload,
                 settings = { onDismiss -> EditionSettings(state, viewModel, onDismiss) },
                 onTryDemo = viewModel::addDemoPlaylist,
+                onOpenVod = if (Edition.HAS_VOD) ({ showVod = true }) else null,
             )
         }
         EditionOverlay()
