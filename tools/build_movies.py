@@ -26,11 +26,13 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.parse
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SEARCH = "https://archive.org/advancedsearch.php"
+SCRAPE = "https://archive.org/services/search/v1/scrape"
 METADATA = "https://archive.org/metadata/"
 DOWNLOAD = "https://archive.org/download/"
 POSTER = "https://archive.org/services/img/"
@@ -40,14 +42,35 @@ MIN_EPISODES = 3
 MIN_MOVIE_SECONDS = 40 * 60
 
 
-def get_json(url):
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return json.load(r)
+def get_json(url, tries=5):
+    """Fetches JSON, waiting and retrying when the Archive is busy (503, timeouts)."""
+    for attempt in range(tries):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return json.load(r)
+        except Exception as e:  # noqa: BLE001
+            if attempt + 1 == tries:
+                raise
+            wait = 5 * 2 ** attempt
+            print(f"  retry in {wait}s ({e}): {url[:90]}", file=sys.stderr)
+            time.sleep(wait)
 
 
 def search(collection, rows):
-    """The collection's most downloaded video items."""
+    """The collection's most downloaded video items (scrape API, falling back to advanced search)."""
+    try:
+        params = {
+            "q": f"collection:({collection}) AND mediatype:(movies)",
+            "fields": "identifier,title,year",
+            "sorts": "downloads desc",
+            "count": str(max(100, min(rows, 10000))),
+        }
+        docs = get_json(SCRAPE + "?" + urllib.parse.urlencode(params)).get("items", [])
+        if docs:
+            return docs[:rows]
+    except Exception as e:  # noqa: BLE001
+        print(f"  scrape search failed ({e}); trying advanced search", file=sys.stderr)
     params = [
         ("q", f"collection:({collection}) AND mediatype:(movies)"),
         ("fl[]", "identifier"),
@@ -128,7 +151,7 @@ def main():
     tv = search("classic_tv", args.items)
     print(f"Search: {len(films)} films, {len(tv)} TV items")
 
-    with cf.ThreadPoolExecutor(16) as pool:
+    with cf.ThreadPoolExecutor(8) as pool:
         film_files = dict(zip([d["identifier"] for d in films], pool.map(mp4_files, [d["identifier"] for d in films])))
         tv_files = dict(zip([d["identifier"] for d in tv], pool.map(mp4_files, [d["identifier"] for d in tv])))
 
