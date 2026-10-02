@@ -6,8 +6,6 @@ on:
   schedule:
     - cron: "0 10 * * 1"   # Mondays, 10:00 UTC
   workflow_dispatch:
-  push:
-    branches: [movies-playlist]
 
 permissions:
   contents: write
