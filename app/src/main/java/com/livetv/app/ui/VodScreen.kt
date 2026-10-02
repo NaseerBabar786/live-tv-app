@@ -65,6 +65,8 @@ import coil3.compose.SubcomposeAsyncImage
 import kotlinx.coroutines.delay
 import com.livetv.app.data.Bilibili
 import com.livetv.app.data.Channel
+import com.livetv.app.data.Dailymotion
+import com.livetv.app.data.Vimeo
 import com.livetv.app.data.Vod
 import com.livetv.app.data.YouTube
 import com.livetv.app.player.PlayerScreen
@@ -103,6 +105,10 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
     playing?.let { channel ->
         if (Bilibili.isVideo(channel.url)) {
             OpenInApp(url = channel.url, appName = "Bilibili", onDone = { playing = null })
+            return
+        }
+        (Dailymotion.videoId(channel.url)?.let(Dailymotion::embedUrl) ?: Vimeo.videoId(channel.url)?.let(Vimeo::embedUrl))?.let { src ->
+            EmbedPlayer(src = src, onBack = { playing = null })
             return
         }
         YouTube.videoId(channel.url)?.let { id ->

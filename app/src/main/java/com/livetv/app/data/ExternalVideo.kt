@@ -37,3 +37,47 @@ object Bilibili {
             Regex("""^(?:[a-z]{2}(?:-[a-z]{2})?/)?(?:video|play)/\d+""").containsMatchIn(path)
     }
 }
+
+private fun hostAndPath(url: String): Pair<String, String> {
+    val rest = url.trim().substringAfter("://", "")
+    val host = rest.substringBefore('/').substringBefore('?').lowercase().removePrefix("www.")
+    return host to rest.substringAfter('/', "").substringBefore('?').substringBefore('#')
+}
+
+/** Dailymotion video links. They play in Dailymotion's own embedded player. */
+object Dailymotion {
+    private val idPattern = Regex("""^x[a-z0-9]{4,12}$""", RegexOption.IGNORE_CASE)
+
+    /** The video id of a dailymotion.com/video/…, /embed/video/… or dai.ly/… link; null for anything else. */
+    fun videoId(url: String): String? {
+        val (host, path) = hostAndPath(url)
+        val id = when (host) {
+            "dai.ly" -> path
+            "dailymotion.com", "geo.dailymotion.com" -> when {
+                path.startsWith("video/") -> path.removePrefix("video/")
+                path.startsWith("embed/video/") -> path.removePrefix("embed/video/")
+                else -> null
+            }
+            else -> null
+        }?.substringBefore('/')?.substringBefore('_')
+        return id?.takeIf { idPattern.matches(it) }
+    }
+
+    fun embedUrl(id: String) = "https://www.dailymotion.com/embed/video/$id?autoplay=1"
+}
+
+/** Vimeo video links. They play in Vimeo's own embedded player. */
+object Vimeo {
+    /** The video id of a vimeo.com/123 or player.vimeo.com/video/123 link; null for anything else. */
+    fun videoId(url: String): String? {
+        val (host, path) = hostAndPath(url)
+        val id = when (host) {
+            "vimeo.com" -> path.split('/').lastOrNull { it.isNotEmpty() }
+            "player.vimeo.com" -> path.removePrefix("video/").substringBefore('/')
+            else -> null
+        }
+        return id?.takeIf { it.length in 5..12 && it.all(Char::isDigit) }
+    }
+
+    fun embedUrl(id: String) = "https://player.vimeo.com/video/$id?autoplay=1"
+}

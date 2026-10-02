@@ -52,6 +52,26 @@ CHANNELS = [
     ("FilmRise TV", ["@FilmRiseTV", "@FilmRiseClassicTV", "@FilmRiseTelevision"], "FilmRise", "English"),
 ]
 
+# The same TV channels' own Dailymotion accounts (only verified accounts with exactly that
+# name), for episodes their YouTube channels don't have: (name, search, language).
+DAILYMOTION = "https://api.dailymotion.com"
+DM_CHANNELS = [
+    ("ARY Digital", "ARY Digital", "Urdu"),
+    ("HUM TV", "HUM TV", "Urdu"),
+    ("Geo Entertainment", "Har Pal Geo", "Urdu"),
+    ("Green Entertainment", "Green Entertainment", "Urdu"),
+    ("Express TV", "Express Entertainment", "Urdu"),
+    ("A-Plus", "A Plus Entertainment", "Urdu"),
+    ("ARY Zindagi", "ARY Zindagi", "Urdu"),
+    ("Geo Kahani", "Geo Kahani", "Urdu"),
+    ("PTV Home", "PTV Home", "Urdu"),
+    ("Taarak Mehta Ka Ooltah Chashmah", "Taarak Mehta Ka Ooltah Chashmah", "Hindi"),
+    ("Sony SAB", "Sony SAB", "Hindi"),
+    ("Zee TV", "Zee TV", "Hindi"),
+    ("Colors TV", "Colors TV", "Hindi"),
+    ("Star Plus", "StarPlus", "Hindi"),
+]
+
 # Channels whose single-episode telefilms go under Urdu Movies.
 TELEFILM_CHANNELS = {"ARY Digital", "HUM TV", "Geo Entertainment"}
 TELEFILM = re.compile(r"\btele[\s-]?films?\b", re.IGNORECASE)
@@ -287,6 +307,82 @@ def movie_name(title):
     return name
 
 
+def get_json(url):
+    return json.loads(fetch(url, tries=3))
+
+
+def dm_user(search):
+    """The id of the verified Dailymotion account with exactly this name, or None."""
+    query = urllib.parse.urlencode({"search": search, "fields": "id,username,screenname,verified,videos_total", "limit": 20})
+    try:
+        users = get_json(f"{DAILYMOTION}/users?{query}").get("list", [])
+    except Exception as e:  # noqa: BLE001
+        print(f"  Dailymotion search {search!r} failed ({e})", file=sys.stderr)
+        return None
+    for u in users:
+        names = (u.get("screenname") or "", u.get("username") or "")
+        if u.get("verified") and any(is_owner(n, search, exact=True) for n in names):
+            print(f"  Dailymotion {search!r} is {u.get('screenname')!r} (@{u.get('username')}, {u.get('videos_total')} videos)")
+            return u["id"]
+    print(f"  Dailymotion {search!r}: no verified account with that name "
+          f"({', '.join(repr(u.get('screenname')) + (' verified' if u.get('verified') else '') for u in users[:5])})",
+          file=sys.stderr)
+    return None
+
+
+def dailymotion(kept, today):
+    """Adds full episodes from DM_CHANNELS to kept (keys "dm:<id>"); YouTube's copy of an
+    episode is the one listed when both have it."""
+    for name, search, language in DM_CHANNELS:
+        uid = dm_user(search)
+        if not uid:
+            continue
+        videos = []
+        for page in (1, 2, 3):
+            query = urllib.parse.urlencode({"fields": "id,title,duration", "sort": "recent", "limit": 100, "page": page})
+            try:
+                data = get_json(f"{DAILYMOTION}/user/{uid}/videos?{query}")
+            except Exception as e:  # noqa: BLE001
+                print(f"  {name}: Dailymotion page {page} failed ({e})", file=sys.stderr)
+                break
+            videos += [(v["id"], v.get("title") or "", (v.get("duration") or 0) / 60) for v in data.get("list", [])]
+            if not data.get("has_more"):
+                break
+        new = 0
+        for vid, title, mins in videos:
+            ep = episode(title)
+            if not ep or mins < MIN_MINUTES:
+                continue
+            if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
+                continue
+            show = name if name in SINGLE_SHOW or NO_SHOW_NAME.match(ep[0].strip()) else ep[0]
+            key = f"dm:{vid}"
+            if key in kept:
+                kept[key]["seen"] = today.isoformat()
+            else:
+                kept[key] = {"show": show, "episode": ep[1], "channel": name, "language": language, "title": title,
+                             "source": "dailymotion", "url": f"https://www.dailymotion.com/video/{vid}",
+                             "logo": f"https://www.dailymotion.com/thumbnail/video/{vid}", "added": today.isoformat()}
+                new += 1
+        print(f"{name} (Dailymotion): {len(videos)} videos, {new} new episodes")
+        for _, title, mins in videos[:3]:
+            print(f"    e.g. {title} ({round(mins)} min)")
+
+
+def unique_episodes(episodes):
+    """One copy of each episode (language, show, number), YouTube's first, and one spelling of
+    each show's name, so a show never gets two folders."""
+    names, seen, out = {}, set(), []
+    for vid, v in sorted(episodes.items(), key=lambda kv: kv[1].get("source") == "dailymotion"):
+        show = (v.get("language", "Urdu"), compact(v["show"]))
+        names.setdefault(show, v["show"])
+        if show + (v["episode"],) in seen:
+            continue
+        seen.add(show + (v["episode"],))
+        out.append((vid, {**v, "show": names[show]}))
+    return out
+
+
 def telefilm_name(title):
     """ "Telefilm | Mann Pagal | ARY Digital" or 'Eid Telefilm "Mann Pagal"' to "Mann Pagal"."""
     quoted = re.search(r'["“”‘’]([^"“”‘’]{2,40})["“”‘’]', title)
@@ -488,6 +584,7 @@ def main():
         for t in skipped[:6]:
             print(f"    skipped: {t}")
 
+    dailymotion(kept, today)
     dubbed_movies(kept, today)
     films(kept, today)
     channel_shows(kept, today, SHOW_CHANNELS, "Shows")
@@ -501,15 +598,15 @@ def main():
     movies = {k: v for k, v in kept.items() if "movie" in v}
     telefilms = {k: v for k, v in kept.items() if "telefilm" in v}
     items = {k: v for k, v in kept.items() if "item" in v}
-    rows = sorted(episodes.items(), key=lambda kv: (kv[1]["channel"], kv[1]["show"].lower(), kv[1]["episode"]))
+    rows = sorted(unique_episodes(episodes), key=lambda kv: (kv[1]["channel"], kv[1]["show"].lower(), kv[1]["episode"]))
 
     lines = ["#EXTM3U", "# Pakistani dramas, shows, cartoons and Hindi dubbed movies from their owners' official YouTube uploads."]
     names = set()
     for vid, v in sorted(movies.items(), key=lambda kv: kv[1]["movie"].lower()):
         language = v.get("language", "Hindi")
-        if (language, v["movie"].lower()) in names:  # the same film from two channels
+        if (language, compact(v["movie"])) in names:  # the same film from two channels
             continue
-        names.add((language, v["movie"].lower()))
+        names.add((language, compact(v["movie"])))
         lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{language}" '
                      f'tvg-genre="Movies" group-title="{v.get("group", "Hindi dubbed movies")}",{v["movie"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
@@ -526,9 +623,10 @@ def main():
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in rows:
         kind = "Shows" if SHOW.search(v["show"]) else "Series"
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v.get("language", "Urdu")}" '
+        logo = v.get("logo") or f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg"
+        lines.append(f'#EXTINF:-1 tvg-logo="{logo}" tvg-language="{v.get("language", "Urdu")}" '
                      f'tvg-genre="{kind}" group-title="{v["channel"]}",{v["show"]} Episode {v["episode"]}')
-        lines.append(f"https://www.youtube.com/watch?v={vid}")
+        lines.append(v.get("url") or f"https://www.youtube.com/watch?v={vid}")
     with open(os.path.join(DOCS, "Dramas.m3u"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     shows = {(v["channel"], v["show"]) for v in episodes.values()}

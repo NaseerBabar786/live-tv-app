@@ -31,3 +31,25 @@ class BilibiliTest {
         assertEquals(false, Bilibili.isVideo("https://example.com/en/video/123"))
     }
 }
+
+class DailymotionTest {
+    @Test
+    fun readsVideoIds() {
+        assertEquals("x8abcd1", Dailymotion.videoId("https://www.dailymotion.com/video/x8abcd1"))
+        assertEquals("x8abcd1", Dailymotion.videoId("https://dai.ly/x8abcd1"))
+        assertEquals("x8abcd1", Dailymotion.videoId("https://www.dailymotion.com/embed/video/x8abcd1?autoplay=1"))
+        assertEquals(null, Dailymotion.videoId("https://www.dailymotion.com/arydigital"))
+        assertEquals(null, Dailymotion.videoId("https://example.com/video/x8abcd1"))
+    }
+}
+
+class VimeoTest {
+    @Test
+    fun readsVideoIds() {
+        assertEquals("76979871", Vimeo.videoId("https://vimeo.com/76979871"))
+        assertEquals("76979871", Vimeo.videoId("https://player.vimeo.com/video/76979871?h=abc"))
+        assertEquals("76979871", Vimeo.videoId("https://vimeo.com/channels/staffpicks/76979871"))
+        assertEquals(null, Vimeo.videoId("https://vimeo.com/channels/staffpicks"))
+    }
+}
+

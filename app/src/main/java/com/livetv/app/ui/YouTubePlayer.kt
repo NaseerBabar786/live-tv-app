@@ -58,7 +58,7 @@ fun YouTubePlayer(videoId: String, onBack: () -> Unit) {
     Box(Modifier.fillMaxSize().background(Color.Black)) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),
-            factory = { ctx -> embedView(ctx, videoId).also { webView = it } },
+            factory = { ctx -> embedView(ctx, "https://www.youtube.com/embed/$videoId?autoplay=1&playsinline=1&rel=0").also { webView = it } },
         )
         Button(
             onClick = { if (openYouTubeApp(context, videoId)) onBack() },
@@ -67,19 +67,38 @@ fun YouTubePlayer(videoId: String, onBack: () -> Unit) {
     }
 }
 
+/**
+ * Plays a video in its site's own embedded player (Dailymotion, Vimeo), on phones and TVs alike.
+ * Back closes it.
+ */
+@Composable
+fun EmbedPlayer(src: String, onBack: () -> Unit) {
+    BackHandler(onBack = onBack)
+    var webView by remember { mutableStateOf<WebView?>(null) }
+    DisposableEffect(src) {
+        onDispose { webView?.destroy() }
+    }
+    Box(Modifier.fillMaxSize().background(Color.Black)) {
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { ctx -> embedView(ctx, src).also { webView = it } },
+        )
+    }
+}
+
 @SuppressLint("SetJavaScriptEnabled")
-private fun embedView(context: Context, videoId: String): WebView = WebView(context).apply {
+private fun embedView(context: Context, src: String): WebView = WebView(context).apply {
     setBackgroundColor(android.graphics.Color.BLACK)
     settings.javaScriptEnabled = true
     settings.domStorageEnabled = true
     settings.mediaPlaybackRequiresUserGesture = false
     webChromeClient = WebChromeClient()
-    // YouTube's embed refuses pages with no origin, so the page is given our site's.
+    // Embedded players refuse pages with no origin, so the page is given our site's.
     val html = """
         <!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
         <style>html,body{margin:0;height:100%;background:#000}iframe{border:0;width:100%;height:100%}</style>
-        </head><body><iframe src="https://www.youtube.com/embed/$videoId?autoplay=1&playsinline=1&rel=0"
-        allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></body></html>
+        </head><body><iframe src="$src"
+        allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe></body></html>
     """.trimIndent()
     loadDataWithBaseURL("https://tv.bulkbazaar.ca/", html, "text/html", "utf-8", null)
 }

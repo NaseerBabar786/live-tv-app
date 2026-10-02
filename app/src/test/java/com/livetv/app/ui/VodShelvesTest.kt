@@ -48,4 +48,24 @@ class VodShelvesTest {
         assertEquals(true, urdu.series.isEmpty())
         assertEquals(urdu.kids, urdu.folders(Vod.Section.KIDS))
     }
+
+    @Test
+    fun showsATitleListedTwiceOnce() {
+        fun video(name: String, url: String, language: String, category: String) =
+            Channel(name = name, url = url, language = language, category = category)
+        val urdu = shelves(
+            listOf(
+                video("Izzat Episode 12", "https://youtu.be/aaaaaaaaaaa", "Urdu", "Series"),
+                video("izzat - Episode 12", "https://www.dailymotion.com/video/x8abcd1", "Urdu", "Series"),
+                video("Izzat Episode 13", "https://www.dailymotion.com/video/x8abcd2", "Urdu", "Series"),
+                video("The Kid (1921)", "https://archive.org/download/kid/kid.mp4", "Urdu", "Movies"),
+                video("Kid", "https://upload.wikimedia.org/kid.webm", "Urdu", "Movies"),
+            ),
+        ).getValue(Vod.Language.URDU)
+        val izzat = urdu.series.single()
+        assertEquals(listOf(12, 13), izzat.episodes.map { it.number })
+        // The first list's copy is kept: YouTube's episode 12, the Archive's film.
+        assertEquals("https://youtu.be/aaaaaaaaaaa", izzat.episodes.first().channel.url)
+        assertEquals(listOf("The Kid (1921)"), urdu.movies.map { it.name })
+    }
 }
