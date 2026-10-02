@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livetv.app.data.YouTube
 import com.livetv.app.player.PlayerScreen
-import com.livetv.app.ui.YouTubeLivePlayer
 import com.livetv.app.ui.YouTubePlayer
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
@@ -52,8 +51,6 @@ class MainActivity : ComponentActivity() {
         val playing = state.playing
         if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false })
-        } else if (playing != null && YouTube.liveChannelId(playing.url) != null) {
-            YouTubeLivePlayer(YouTube.liveChannelId(playing.url)!!, onBack = viewModel::stop)
         } else if (playing != null && YouTube.videoId(playing.url) != null) {
             YouTubePlayer(YouTube.videoId(playing.url)!!, onBack = viewModel::stop)
         } else if (playing != null) {

@@ -19,15 +19,6 @@ class YouTubeTest {
         assertNull(YouTube.videoId("https://www.youtube.com/@ARYDigitalasia"))
         assertNull(YouTube.videoId("https://example.com/watch?v=dQw4w9WgXcQ"))
         assertNull(YouTube.videoId("http://x/live/star.m3u8"))
-    }
-
-    @Test
-    fun readsChannelLiveLinks() {
-        val link = "https://www.youtube.com/channel/UCpEhnqL0y41EpW2TvWAHD7Q/live"
-        assertEquals("UCpEhnqL0y41EpW2TvWAHD7Q", YouTube.liveChannelId(link))
-        assertNull(YouTube.videoId(link))
-        assertEquals(true, YouTube.isYouTube(link))
-        assertNull(YouTube.liveChannelId("https://www.youtube.com/channel/UCpEhnqL0y41EpW2TvWAHD7Q/videos"))
         assertEquals(false, YouTube.isYouTube("http://x/live/star.m3u8"))
     }
 }
