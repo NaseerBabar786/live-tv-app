@@ -1,7 +1,7 @@
 name: Build dramas playlist
 
 # Builds docs/Dramas.m3u (tv.bulkbazaar.ca/Dramas.m3u): the newest Pakistani drama
-# episodes from the channels' official YouTube uploads, for Live TV's Movies & Series.
+# episodes, telefilms, cooking and Islamic shows and Urdu cartoons from their owners' official YouTube uploads, for Live TV's Library.
 on:
   schedule:
     - cron: "0 6 * * *"   # daily, 06:00 UTC
@@ -18,7 +18,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -34,6 +34,8 @@ jobs:
           python3 -c "import json; d=json.load(open('docs/dramas.json')); print(d['built'], d['shows'], 'shows', d['episodes'], 'episodes', d.get('movies'), 'movies')"
           head -n 21 docs/Dramas.m3u
           grep -c "Hindi dubbed" docs/Dramas.m3u || true
+          grep -A0 "group-title=\"Telefilms\"" docs/Dramas.m3u | sed "s/.*,//" | head -n 40
+          for l in Hindi Punjabi English; do echo "== $l"; grep "tvg-language=\"$l\"" docs/Dramas.m3u | grep -v "Hindi dubbed" | sed "s/.*tvg-genre=\"\\([A-Za-z]*\\)\" group-title=\"\\([^\"]*\\)\",/\\1 | \\2 | /" | awk -F" [|] " "{c[\$1\" | \"\$2]++; if (c[\$1\" | \"\$2] <= 4) print}"; done
 
       # A push made with the workflow's own token doesn't start other workflows,
       # so the website is rebuilt explicitly below.

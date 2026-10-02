@@ -13,14 +13,23 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/** One language's movies, drama series and shows (each show a folder of episodes). */
+/** One language's movies, drama series, shows and kids' programmes (each show a folder of episodes). */
 data class VodShelf(
     val movies: List<Channel> = emptyList(),
     val series: List<Vod.Show> = emptyList(),
     val shows: List<Vod.Show> = emptyList(),
+    val kids: List<Vod.Show> = emptyList(),
 ) {
-    val isEmpty: Boolean get() = movies.isEmpty() && series.isEmpty() && shows.isEmpty()
-    val size: Int get() = movies.size + series.size + shows.size
+    val isEmpty: Boolean get() = movies.isEmpty() && series.isEmpty() && shows.isEmpty() && kids.isEmpty()
+    val size: Int get() = movies.size + series.size + shows.size + kids.size
+
+    /** The folders of the Series, Shows or Kids section (none for Movies). */
+    fun folders(section: Vod.Section): List<Vod.Show> = when (section) {
+        Vod.Section.MOVIES -> emptyList()
+        Vod.Section.SERIES -> series
+        Vod.Section.SHOWS -> shows
+        Vod.Section.KIDS -> kids
+    }
 }
 
 data class VodState(
@@ -31,21 +40,23 @@ data class VodState(
 )
 
 /**
- * Sorts videos by language, then into Movies, Series or Shows; episodes are grouped into a
+ * Sorts videos by language, then into Movies, Series, Shows or Kids; episodes are grouped into a
  * folder per drama or show. Punjabi has movies only (the owner's choice).
  */
 fun shelves(items: List<Channel>): Map<Vod.Language, VodShelf> =
     items.groupBy { Vod.language(it) }.mapValues { (language, list) ->
         val (episodes, movies) = list.partition { Vod.kind(it) == Vod.Kind.EPISODE }
-        val (shows, series) = if (language == Vod.Language.PUNJABI) {
+        val (kids, grownUp) = if (language == Vod.Language.PUNJABI) {
             emptyList<Channel>() to emptyList()
         } else {
-            episodes.partition { Vod.isShow(it) }
+            episodes.partition { Vod.isKids(it) }
         }
+        val (shows, series) = grownUp.partition { Vod.isShow(it) }
         VodShelf(
             movies = movies.sortedBy { it.name.lowercase() },
             series = Vod.shows(series),
             shows = Vod.shows(shows),
+            kids = Vod.shows(kids),
         )
     }
 
