@@ -6,6 +6,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import com.livetv.app.account.Account
+import com.livetv.app.account.FirebaseConfig
+import com.livetv.app.ui.SignInScreen
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -42,6 +47,16 @@ fun EditionStartScreen(onDone: () -> Unit) {
     // The Library's lists load next, once the channels are in, so they don't slow the channels down.
     val library = viewModel<VodViewModel>()
     LaunchedEffect(state.loading) { if (!state.loading) library.refreshIfChanged() }
+    // Everyone signs in with Google once (when the owner's Firebase project is set up);
+    // each start is then recorded so the owner can count users.
+    val context = LocalContext.current
+    val account = remember { Account.get(context) }
+    val user by account.user.collectAsStateWithLifecycle()
+    if (FirebaseConfig.configured && user == null) {
+        SignInScreen(onSignedIn = {})
+        return
+    }
+    LaunchedEffect(Unit) { if (FirebaseConfig.configured) account.recordOpen() }
     SponsorScreen(loading = state.loading, onDone = onDone)
 }
 
