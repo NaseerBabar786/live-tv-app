@@ -290,8 +290,9 @@ fun ChannelListScreen(
             p.stream.stop(); p.showing = false; pool += p
         }
     }
-    // The highlighted card has the sound.
-    val soundId = focusedId
+    // The highlighted card has the sound; in 1+4 only the big player has it.
+    val bigPlayer = wideScreen && tileLayout == TileLayout.Five
+    val soundId = if (bigPlayer) window.firstOrNull()?.id else focusedId
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
@@ -310,10 +311,18 @@ fun ChannelListScreen(
             low -> Quality.Low
             else -> Quality.Normal
         }
+        // 1+4: the big player at normal quality, the four small ones low.
+        fun qualityOf(id: String) = when {
+            bigPlayer && id == window.firstOrNull()?.id -> Quality.Normal
+            bigPlayer -> Quality.Low
+            else -> quality
+        }
+        // A tile swapped into (or out of) the big player keeps playing at its new size.
+        for ((id, p) in rowPreviews) if (id in playing) p.setQuality(qualityOf(id))
         suspend fun start(id: String) {
             val channel = state.channels.firstOrNull { it.id == id } ?: return
             val p = pool.removeLastOrNull() ?: Preview.create(context)
-            p.setQuality(quality)
+            p.setQuality(qualityOf(id))
             p.setSound(previewSound && id == soundId)
             rowPreviews[id] = p
             p.stream.play(channel)
@@ -568,7 +577,7 @@ fun ChannelListScreen(
                         onSelect = { listChannelId = it.id; onWatch(it) },
                         onOpen = onPlay,
                     )
-                    else -> BoxWithConstraints(Modifier.fillMaxSize().then(if (fullTiles) Modifier.background(Color.Black) else Modifier)) {
+                    else -> BoxWithConstraints(Modifier.fillMaxSize().then(if (fullTiles || bigPlayer) Modifier.background(Color.Black) else Modifier)) {
                     // TVs and tablets: the chosen layout (16, 6, 4 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
                     val wide = windowed
@@ -601,14 +610,16 @@ fun ChannelListScreen(
                         onFocused: () -> Unit = {},
                         arrows: Boolean = false,
                         onOpen: () -> Unit = {},
+                        height: Dp = cardHeight,
                         onClick: () -> Unit = { onOpen(); onPlay(channel) },
                     ) =
                         ChannelCard(
-                            height = cardHeight,
+                            height = height,
                             channel = channel,
                             favorite = channel.id in state.favorites,
                             onClick = onClick,
-                            bare = fullTiles,
+                            bare = fullTiles || bigPlayer,
+                            sound = if (bigPlayer) channel.id == soundId else null,
                             glow = !windowed,
                             onToggleFavorite = { onToggleFavorite(channel) },
                             focusRequester = cardRequester(channel.id),
@@ -713,6 +724,53 @@ fun ChannelListScreen(
                             }
                             true
                         }
+                        if (bigPlayer) {
+                            // 1+4: the big player on the left (75%), four small ones stacked on the
+                            // right (25%), packed together on black. Left and Right go round all five,
+                            // Up and Down change the highlighted one's channel. OK on a small one swaps
+                            // it into the big player; OK on the big one fills the screen with the five,
+                            // and OK on it again opens it full screen.
+                            val smallWidth = minOf(maxWidth / 4, maxHeight / 4 * 16f / 9f)
+                            val smallHeight = smallWidth * 9f / 16f
+                            Row(
+                                Modifier.fillMaxSize(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                window.firstOrNull()?.let { big ->
+                                    key(big.id) {
+                                        Box(Modifier.width(smallWidth * 3)) {
+                                            Tile(0, big, twoKey(big), height = smallHeight * 4, onClick = {
+                                                if (fullTiles) {
+                                                    sessionOpenedTile = 0
+                                                    onPlay(big)
+                                                } else tilesFull = true
+                                            })
+                                        }
+                                    }
+                                }
+                                Column(Modifier.width(smallWidth)) {
+                                    window.drop(1).forEach { small ->
+                                        key(small.id) {
+                                            Tile(0, small, twoKey(small), height = smallHeight, onClick = {
+                                                val big = window.first()
+                                                twoIds = window.map {
+                                                    when (it.id) {
+                                                        big.id -> small.id
+                                                        small.id -> big.id
+                                                        else -> it.id
+                                                    }
+                                                }
+                                                scope.launch {
+                                                    withFrameNanos { }
+                                                    runCatching { cardRequester(small.id).requestFocus() }
+                                                }
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                        } else
                         Column(
                             Modifier.fillMaxSize().padding(vertical = rowGap),
                             verticalArrangement = if (fullTiles) Arrangement.Center else Arrangement.spacedBy(rowGap),
@@ -879,6 +937,8 @@ private fun ChannelCard(
      * and a small speaker marks the tile with the sound.
      */
     glow: Boolean = true,
+    /** Whether the speaker shows; null shows it on the highlighted card (1+4 keeps it on the big player). */
+    sound: Boolean? = null,
 ) {
     if (bare) {
         var focused by remember { mutableStateOf(false) }
@@ -919,7 +979,7 @@ private fun ChannelCard(
             }
             // A thin, soft yellow line marks the tile with the sound.
             if (focused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
-            if (focused) SoundBadge(Modifier.align(Alignment.TopEnd))
+            if (sound ?: focused) SoundBadge(Modifier.align(Alignment.TopEnd))
         }
         return
     }
@@ -1414,6 +1474,8 @@ private val MinTileWidth = 170.dp
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
+    /** One big player (left 75%) and four small ones stacked on the right; sound only from the big one. */
+    Five("1+4", 5, 1),
     Two("1×2", 2, 1),
     /** Four separate TVs, like 1×2. */
     Four("2×2", 2, 2),
