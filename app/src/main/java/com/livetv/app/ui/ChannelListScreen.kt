@@ -733,11 +733,12 @@ fun ChannelListScreen(
                         if (bigPlayer) {
                             // 1+4: the big player in the top left corner (85% of the width, or the full
                             // height if that's less), and small tiles filling the column on the right and
-                            // the strip underneath, as many as fit. The small tiles are one list: down the
-                            // right side, then along the bottom from right to left. Up/Down (and Left/Right
-                            // along the bottom) move through it, and past either end the list slides on by
-                            // one channel. OK on a small tile swaps it into the big player; OK on the big
-                            // player fills the screen with the tiles, and OK again opens it.
+                            // the strip underneath, as many as fit. The column and the strip are two lists:
+                            // Up/Down move through the column and Left/Right through the strip, and past
+                            // either end of one, that list slides on by one channel (a new one comes in,
+                            // the one at the other end goes). OK on a small tile swaps it into the big
+                            // player; OK on the big player fills the screen with the tiles, and OK again
+                            // opens it.
                             val bigWidth = minOf(maxWidth * 0.85f, maxHeight * 16f / 9f)
                             val bigHeight = bigWidth * 9f / 16f
                             val smallWidth = maxWidth - bigWidth
@@ -747,20 +748,25 @@ fun ChannelListScreen(
                             SideEffect { smallCount = inColumn + inRow }
                             val big = window.firstOrNull()
                             val smalls = window.drop(1)
+                            val column = smalls.take(inColumn)
+                            val strip = smalls.drop(inColumn)
                             fun focus(id: String) = scope.launch {
                                 withFrameNanos { }
                                 runCatching { cardRequester(id).requestFocus() }
                             }
-                            // Slides the small tiles one channel along (+1 next, -1 previous), skipping the
-                            // channels already showing, and highlights the one that came in.
-                            fun slide(step: Int) {
+                            // Slides one list (the column or the strip) one channel along (+1 next,
+                            // -1 previous), skipping the channels already showing, and highlights the one
+                            // that came in.
+                            fun slide(inStrip: Boolean, step: Int) {
+                                val list = if (inStrip) strip else column
+                                if (list.isEmpty()) return
                                 val shown = window.map { it.id }.toSet()
-                                val from = channels.indexOfFirst { it.id == (if (step > 0) smalls.last() else smalls.first()).id }
+                                val from = channels.indexOfFirst { it.id == (if (step > 0) list.last() else list.first()).id }
                                 var j = from + step
                                 while (channels.getOrNull(j)?.id.let { it != null && it in shown }) j += step
                                 val next = channels.getOrNull(j) ?: return
-                                val moved = if (step > 0) smalls.drop(1) + next else listOf(next) + smalls.dropLast(1)
-                                twoIds = listOfNotNull(big?.id) + moved.map { it.id }
+                                val moved = if (step > 0) list.drop(1) + next else listOf(next) + list.dropLast(1)
+                                twoIds = (listOfNotNull(big) + (if (inStrip) column + moved else moved + strip)).map { it.id }
                                 focus(next.id)
                             }
                             fun backKey(event: KeyEvent): Boolean {
@@ -774,7 +780,7 @@ fun ChannelListScreen(
                                 if (event.type != KeyEventType.KeyDown) return false
                                 when (event.key) {
                                     Key.DirectionRight -> smalls.firstOrNull()?.let { focus(it.id) }
-                                    Key.DirectionDown -> smalls.getOrNull(inColumn)?.let { focus(it.id) }
+                                    Key.DirectionDown -> strip.firstOrNull()?.let { focus(it.id) }
                                     Key.DirectionUp -> if (!fullTiles) runCatching { layoutButtonFocus.requestFocus() }
                                     Key.DirectionLeft -> Unit
                                     else -> return false
@@ -784,14 +790,17 @@ fun ChannelListScreen(
                             fun smallKey(index: Int): (KeyEvent) -> Boolean = onKey@{ event ->
                                 if (event.key == Key.Back) return@onKey backKey(event)
                                 if (event.type != KeyEventType.KeyDown) return@onKey false
-                                val bottom = index >= inColumn
-                                fun next() = smalls.getOrNull(index + 1)?.let { focus(it.id) } ?: slide(1)
-                                fun previous() = smalls.getOrNull(index - 1)?.let { focus(it.id) } ?: slide(-1)
+                                val inStrip = index >= inColumn
+                                val list = if (inStrip) strip else column
+                                val at = if (inStrip) index - inColumn else index
+                                fun move(step: Int) {
+                                    list.getOrNull(at + step)?.let { focus(it.id) } ?: slide(inStrip, step)
+                                }
                                 when (event.key) {
-                                    Key.DirectionDown -> if (!bottom) next()
-                                    Key.DirectionUp -> if (bottom) big?.let { focus(it.id) } else previous()
-                                    Key.DirectionLeft -> if (bottom) next() else big?.let { focus(it.id) }
-                                    Key.DirectionRight -> if (bottom) previous()
+                                    Key.DirectionDown -> if (!inStrip) move(1)
+                                    Key.DirectionUp -> if (inStrip) big?.let { focus(it.id) } else move(-1)
+                                    Key.DirectionRight -> if (inStrip) move(1)
+                                    Key.DirectionLeft -> if (inStrip) move(-1) else big?.let { focus(it.id) }
                                     else -> return@onKey false
                                 }
                                 true
@@ -826,15 +835,13 @@ fun ChannelListScreen(
                                             }
                                         }
                                     }
-                                    // The strip under the big player, filled from the right.
-                                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                                        smalls.drop(inColumn).withIndex().reversed().forEach { (i, small) ->
-                                            SmallTile(inColumn + i, small)
-                                        }
+                                    // The strip under the big player.
+                                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                        strip.forEachIndexed { i, small -> SmallTile(inColumn + i, small) }
                                     }
                                 }
                                 Column(Modifier.width(smallWidth)) {
-                                    smalls.take(inColumn).forEachIndexed { i, small -> SmallTile(i, small) }
+                                    column.forEachIndexed { i, small -> SmallTile(i, small) }
                                 }
                             }
                         } else
