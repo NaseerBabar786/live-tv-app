@@ -115,6 +115,7 @@
   .quad:fullscreen { display: flex; flex-direction: column; border-radius: 0; }
   .quad:fullscreen .cells { flex: 1; min-height: 0; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
   .quad:fullscreen .cell { aspect-ratio: auto; min-height: 0; overflow: hidden; }
+  .quad.bare .qbar { display: none; }
   @media (max-width: 600px) { .quad .cell .lbl { font-size: 11px; } .quad .qbar .hint { font-size: 12px; } }
 
   /* Player */
@@ -896,7 +897,15 @@
     if (ev.key === "ArrowUp" || ev.key === "ArrowDown") { ev.preventDefault(); quadStep(soundCell, ev.key === "ArrowUp" ? -1 : 1); }
     else if (ev.key in moves) { ev.preventDefault(); quadSound((soundCell + moves[ev.key] + 4) % 4); }
   });
-  document.addEventListener("fullscreenchange", () => { $("quadFull").textContent = document.fullscreenElement ? "Exit full screen" : "Full screen"; });
+  // In full screen the top bar hides after 15 seconds; Esc (leaving full screen) brings it back.
+  let barTimer = 0;
+  document.addEventListener("fullscreenchange", () => {
+    const fs = document.fullscreenElement === $("quad");
+    $("quadFull").textContent = fs ? "Exit full screen" : "Full screen";
+    clearTimeout(barTimer);
+    $("quad").classList.remove("bare");
+    if (fs) barTimer = setTimeout(() => $("quad").classList.add("bare"), 15000);
+  });
 
   // Install guide tabs
   document.querySelectorAll("[data-tab]").forEach(t => t.onclick = () => {
