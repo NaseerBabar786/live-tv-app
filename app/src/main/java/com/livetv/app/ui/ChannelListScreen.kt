@@ -29,6 +29,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.media3.common.C
 import androidx.media3.common.Player
 import com.livetv.app.data.YouTube
 import com.livetv.app.player.StreamPlayer
@@ -314,7 +315,7 @@ fun ChannelListScreen(
             val channel = state.channels.firstOrNull { it.id == id } ?: return
             val p = pool.removeLastOrNull() ?: Preview.create(context)
             p.setQuality(quality)
-            p.stream.player.volume = if (previewSound && id == soundId) 1f else 0f
+            p.setSound(previewSound && id == soundId)
             rowPreviews[id] = p
             p.stream.play(channel)
             if (low) delay(400) // one decoder at a time
@@ -336,7 +337,7 @@ fun ChannelListScreen(
                 if (YouTube.isYouTube(channel.url)) continue // plays only in YouTube's player; its picture shows
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
                 p.setQuality(if (quality == Quality.Lowest) Quality.Lowest else Quality.Normal)
-                p.stream.player.volume = 0f
+                p.setSound(false)
                 rowPreviews[id] = p
                 try {
                     p.stream.play(channel)
@@ -351,7 +352,7 @@ fun ChannelListScreen(
     }
     LaunchedEffect(previewSound, soundId, rowPreviews.keys.toSet()) {
         // Pictures being taken stay silent; only the highlighted card has sound.
-        rowPreviews.forEach { (id, p) -> p.stream.player.volume = if (previewSound && id == soundId) 1f else 0f }
+        rowPreviews.forEach { (id, p) -> p.setSound(previewSound && id == soundId) }
     }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -1362,6 +1363,18 @@ private class Preview(val stream: StreamPlayer) {
             Quality.Lowest -> params.setMaxVideoSize(40, 23).setMaxVideoBitrate(56_000).setMaxVideoFrameRate(30)
         }
         stream.player.trackSelectionParameters = params.build()
+    }
+
+    /**
+     * Only the tile with the sound decodes audio; on the silent ones the audio track is switched
+     * off, which saves the TV a decoder per tile (16 of them in 4×4).
+     */
+    fun setSound(on: Boolean) {
+        stream.player.volume = if (on) 1f else 0f
+        val params = stream.player.trackSelectionParameters
+        if (params.disabledTrackTypes.contains(C.TRACK_TYPE_AUDIO) == !on) return
+        stream.player.trackSelectionParameters =
+            params.buildUpon().setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, !on).build()
     }
 
     companion object {
