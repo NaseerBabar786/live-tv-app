@@ -37,6 +37,18 @@ class Account private constructor(context: Context) {
     private val _user = MutableStateFlow(savedUser())
     val user: StateFlow<User?> = _user
 
+    /** Why the viewer was signed out, shown on the sign-in screen (for example, used on another device). */
+    private val _notice = MutableStateFlow<String?>(null)
+    val notice: StateFlow<String?> = _notice
+
+    /**
+     * This installation's id. It outlives signing out, so the account's record can say which one
+     * device it's on: one free account, one device at a time.
+     */
+    private val deviceId: String = context.applicationContext.getSharedPreferences("device", Context.MODE_PRIVATE).let { p ->
+        p.getString("id", null) ?: java.util.UUID.randomUUID().toString().also { p.edit().putString("id", it).apply() }
+    }
+
     private var idToken: String? = null
     private var idTokenExpires = 0L
 
@@ -66,7 +78,10 @@ class Account private constructor(context: Context) {
             .putString(K_NAME, user.name)
             .putString(K_EMAIL, user.email)
             .putString(K_REFRESH, r.getString("refreshToken"))
+            // The next record claims the account for this device (the newest device wins).
+            .putBoolean(K_CLAIM, true)
             .apply()
+        _notice.value = null
         idToken = r.getString("idToken")
         idTokenExpires = System.currentTimeMillis() + r.optLong("expiresIn", 3600) * 1000
         _user.value = user
@@ -102,14 +117,27 @@ class Account private constructor(context: Context) {
     /**
      * Records this start in users/{uid}: name, email, last opened, app version and device type,
      * plus the join date the first time. Quietly does nothing when offline.
+     *
+     * One account, one device: just after signing in, this device becomes the account's device.
+     * On later starts, if the account has since been signed in on another device, this one is
+     * signed out.
      */
     suspend fun recordOpen() {
         val u = _user.value ?: return
         runCatching {
             val t = token()
             val doc = Firestore.doc("users/${u.uid}")
-            val exists = runCatching { Firestore.get(doc, t); true }
-                .getOrElse { if (it is Http.Status && it.code == 404) false else throw it }
+            val existing = runCatching { Firestore.get(doc, t) }
+                .getOrElse { if (it is Http.Status && it.code == 404) null else throw it }
+            val exists = existing != null
+            val claiming = prefs.getBoolean(K_CLAIM, false)
+            val accountDevice = existing?.optJSONObject("fields")?.optJSONObject("deviceId")?.optString("stringValue")
+            if (!claiming && !accountDevice.isNullOrEmpty() && accountDevice != deviceId) {
+                signOut()
+                _notice.value = "Your account is now being used on another device. " +
+                    "A free account works on one device at a time. Sign in again to watch here."
+                return@runCatching
+            }
             val fields = mutableMapOf<String, Any>(
                 "name" to u.name,
                 "email" to u.email,
@@ -117,9 +145,11 @@ class Account private constructor(context: Context) {
                 "appVersion" to appVersion,
                 "device" to if (isTv) "TV" else "Phone/tablet",
                 "model" to "${Build.MANUFACTURER} ${Build.MODEL}".trim(),
+                "deviceId" to deviceId,
             )
             if (!exists) fields["joined"] = Date()
             Firestore.patch(doc, fields, t)
+            if (claiming) prefs.edit().putBoolean(K_CLAIM, false).apply()
         }
     }
 
@@ -130,6 +160,7 @@ class Account private constructor(context: Context) {
         private const val K_NAME = "name"
         private const val K_EMAIL = "email"
         private const val K_REFRESH = "refresh"
+        private const val K_CLAIM = "claim_device"
 
         @Volatile private var instance: Account? = null
         fun get(context: Context): Account =

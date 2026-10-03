@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,7 @@ fun SignInScreen(onSignedIn: () -> Unit) {
     val scope = rememberCoroutineScope()
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
+    val notice by account.notice.collectAsState()
 
     fun finish(googleIdToken: String) {
         scope.launch {
@@ -122,6 +124,9 @@ fun SignInScreen(onSignedIn: () -> Unit) {
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground,
             )
+            notice?.let {
+                Text(it, color = FocusColor, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
+            }
             if (isTv) {
                 TvCodePanel(onToken = ::finish, onError = { error = it }, busy = busy)
                 OutlinedButton(onClick = ::useDeviceAccount, enabled = !busy, modifier = Modifier.focusGlow()) {
@@ -141,7 +146,8 @@ fun SignInScreen(onSignedIn: () -> Unit) {
                 Text(it, color = Color(0xFFFF8A80), textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyMedium)
             }
             Text(
-                "We keep your name and email so we know who uses Live TV and can let you post in Suggestions. " +
+                "A free account works on one device at a time. We keep your name and email so we know who uses " +
+                    "Live TV and can let you post in Suggestions. " +
                     "Privacy policy: tv.bulkbazaar.ca/privacy",
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
