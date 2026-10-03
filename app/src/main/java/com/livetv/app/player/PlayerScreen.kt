@@ -83,22 +83,29 @@ fun PlayerScreen(
     /** A message over the picture for 10 seconds (the Favourites reminder). */
     tip: String? = null,
     onTipDone: () -> Unit = {},
+    /** Bumped from outside (OK on the remote) to bring the channel bar back. */
+    barWake: Int = 0,
+    /** Told whether the channel bar is currently hidden. */
+    onBarHidden: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     var error by remember { mutableStateOf<String?>(null) }
     var controlsVisible by remember { mutableStateOf(true) }
-    // The channel bar (back arrow, number and name, star) goes away after 5 seconds and comes
-    // back for another 5 when the channel changes, a number is typed or OK brings up the controls.
+    // The channel bar (back arrow, number and name, star) goes away after 10 seconds and comes
+    // back for another 10 when the channel changes, a number is typed or OK is pressed.
     var barShown by remember { mutableStateOf(true) }
-    var barWake by remember { mutableIntStateOf(0) }
-    LaunchedEffect(channel.id, barWake, typedNumber, numberPadOpen) {
+    var controlsWake by remember { mutableIntStateOf(0) }
+    LaunchedEffect(channel.id, barWake, controlsWake, typedNumber, numberPadOpen) {
         barShown = true
+        onBarHidden(false)
         if (numberPadOpen) return@LaunchedEffect
-        delay(5_000)
+        delay(10_000)
         barShown = false
+        onBarHidden(true)
     }
+    DisposableEffect(Unit) { onDispose { onBarHidden(false) } }
 
     val streamPlayer = remember {
         StreamPlayer(context).also { p -> p.onError = { error = it } }
@@ -152,7 +159,7 @@ fun PlayerScreen(
                     setShowPreviousButton(false)
                     setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
                         controlsVisible = visibility == View.VISIBLE
-                        if (controlsVisible) barWake++
+                        if (controlsVisible) controlsWake++
                     })
                 }
             },
@@ -161,7 +168,7 @@ fun PlayerScreen(
         )
 
         AnimatedVisibility(
-            visible = (controlsVisible || numberPadOpen) && barShown && !inPictureInPicture,
+            visible = barShown && !inPictureInPicture,
             enter = fadeIn(),
             exit = fadeOut(),
             modifier = Modifier.align(Alignment.TopCenter),
