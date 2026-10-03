@@ -150,6 +150,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
+import com.livetv.app.EditionSponsorStrip
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
 
@@ -1410,11 +1411,13 @@ private fun PlayerWithList(
                 }
             }
         }
+        // The list, with Live TV's sponsor strip under it (when there are sponsors).
+        Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         LazyColumn(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(6.dp),
             contentPadding = PaddingValues(6.dp),
-            modifier = Modifier.weight(1f).fillMaxHeight(),
+            modifier = Modifier.weight(1f).fillMaxWidth(),
         ) {
             items(channels, key = { it.id }) { channel ->
                 val current = channel.id == selected?.id
@@ -1475,6 +1478,8 @@ private fun PlayerWithList(
                 }
                 }
             }
+        }
+        EditionSponsorStrip(Modifier.padding(horizontal = 6.dp))
         }
     }
 }

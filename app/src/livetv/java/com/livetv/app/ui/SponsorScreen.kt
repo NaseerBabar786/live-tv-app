@@ -1,6 +1,13 @@
 package com.livetv.app.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import com.livetv.app.sponsor.Sponsor
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,11 +43,12 @@ private const val MAX_EXTRA_WAIT_MS = 10_000L
 
 /**
  * Shown for [SPONSOR_SECONDS] seconds when the app starts: thanks and a word from our sponsor.
+ * With a paying [sponsor] it shows their picture; otherwise the words about Bulk Bazaar.
  * The channels load meanwhile; if they aren't ready when the countdown ends, it waits for them
  * a little longer (at most [MAX_EXTRA_WAIT_MS]) so the main screen opens with them in place.
  */
 @Composable
-fun SponsorScreen(loading: Boolean, onDone: () -> Unit) {
+fun SponsorScreen(loading: Boolean, sponsor: Sponsor?, onDone: () -> Unit) {
     var secondsLeft by rememberSaveable { mutableIntStateOf(SPONSOR_SECONDS) }
     val stillLoading by rememberUpdatedState(loading)
     LaunchedEffect(Unit) {
@@ -65,9 +73,59 @@ fun SponsorScreen(loading: Boolean, onDone: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier.verticalScroll(rememberScrollState()),
         ) {
-            SponsorWords(if (secondsLeft == 0 && loading) null else secondsLeft, TextAlign.Center)
+            val left = if (secondsLeft == 0 && loading) null else secondsLeft
+            if (sponsor?.picture != null) SponsoredBy(sponsor, sponsor.picture, left) else SponsorWords(left, TextAlign.Center)
         }
     }
+}
+
+/** A paying sponsor: their picture, name, line and phone or website. */
+@Composable
+private fun SponsoredBy(sponsor: Sponsor, picture: ImageBitmap, secondsLeft: Int?) {
+    val muted = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+    Text("Live TV is free thanks to our sponsors", fontSize = 14.sp, color = muted, textAlign = TextAlign.Center)
+    Image(
+        picture,
+        contentDescription = sponsor.name,
+        contentScale = ContentScale.Fit,
+        modifier = Modifier
+            .heightIn(max = 300.dp)
+            .aspectRatio(16f / 9f)
+            .clip(CardShape),
+    )
+    if (sponsor.name.isNotBlank()) {
+        Text(
+            sponsor.name,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+    }
+    if (sponsor.line.isNotBlank()) {
+        Text(
+            sponsor.line,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.widthIn(max = 560.dp),
+        )
+    }
+    if (sponsor.contact.isNotBlank()) {
+        Text(
+            sponsor.contact,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            color = FocusColor,
+        )
+    }
+    Text(
+        if (secondsLeft == null) "Loading channels…" else "Starting in $secondsLeft…",
+        fontSize = 14.sp,
+        textAlign = TextAlign.Center,
+        color = muted,
+    )
 }
 
 @Composable

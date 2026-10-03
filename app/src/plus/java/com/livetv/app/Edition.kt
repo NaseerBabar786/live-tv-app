@@ -1,6 +1,7 @@
 package com.livetv.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import com.livetv.app.billing.PlayBilling
@@ -36,6 +37,10 @@ fun EditionOverlay() {
     val context = LocalContext.current
     LaunchedEffect(Unit) { PlayBilling.start(context) }
 }
+
+/** No sponsors here. */
+@Composable
+fun EditionSponsorStrip(modifier: Modifier) = Unit
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

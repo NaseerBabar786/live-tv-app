@@ -24,7 +24,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.livetv.app.ui.MainViewModel
 import com.livetv.app.ui.SettingsDialog
 import com.livetv.app.ui.SettingsTheme
+import com.livetv.app.ui.SponsorCard
 import com.livetv.app.ui.SponsorScreen
+import com.livetv.app.ui.SponsorStrip
+import com.livetv.app.sponsor.Sponsor
+import com.livetv.app.sponsor.SponsorViews
+import com.livetv.app.sponsor.Sponsors
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.livetv.app.ui.UiState
 import com.livetv.app.ui.UpdatePromptDialog
 import com.livetv.app.ui.UpdateState
@@ -64,10 +71,24 @@ fun EditionStartScreen(onDone: () -> Unit) {
         return
     }
     LaunchedEffect(Unit) { if (FirebaseConfig.configured) account.recordOpen() }
-    SponsorScreen(loading = state.loading, onDone = onDone)
+    // A paying sponsor, in turn, from the saved list; the latest list arrives meanwhile for next time
+    // (or for now, when there was none saved yet).
+    var sponsor by remember { mutableStateOf<Sponsor?>(null) }
+    LaunchedEffect(Unit) {
+        SponsorViews.init(context)
+        Sponsors.init(context)
+        sponsor = Sponsors.next("start")
+        Sponsors.refresh(account)
+        if (sponsor == null) sponsor = Sponsors.next("start")
+    }
+    LaunchedEffect(sponsor?.id) { sponsor?.let { SponsorViews.count(it, "start") } }
+    SponsorScreen(loading = state.loading, sponsor = sponsor, onDone = onDone)
 }
 
-/** Asks to update when the start-up check found a newer version; quiet otherwise. */
+/**
+ * Asks to update when the start-up check found a newer version; quiet otherwise. Also shows the
+ * sponsor card after a channel change and sends the viewing totals.
+ */
 @Composable
 fun EditionOverlay() {
     // What's being watched is sent to Firebase every 10 minutes and whenever the app is left,
@@ -78,9 +99,15 @@ fun EditionOverlay() {
         val scope = rememberCoroutineScope()
         val lifecycleOwner = LocalLifecycleOwner.current
         LaunchedEffect(Unit) {
+            SponsorViews.init(context)
+            Sponsors.init(context)
+            var minutes = 0
             while (true) {
                 delay(10 * 60_000L)
                 account.reportViewing()
+                // New or changed sponsors reach TVs that stay on for days.
+                minutes += 10
+                if (minutes % (6 * 60) == 0) Sponsors.refresh(account)
             }
         }
         DisposableEffect(lifecycleOwner) {
@@ -91,6 +118,9 @@ fun EditionOverlay() {
             onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
         }
     }
+    // A sponsor's card after a channel change, now and then.
+    val main by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
+    SponsorCard(channelId = main.lastWatchedId)
     val updates = viewModel<UpdateViewModel>()
     val prompting by updates.prompting.collectAsStateWithLifecycle()
     val update by updates.update.collectAsStateWithLifecycle()
@@ -116,6 +146,10 @@ fun EditionOverlay() {
         else -> Unit
     }
 }
+
+/** The paying sponsors' strip under the 1+List channel list. */
+@Composable
+fun EditionSponsorStrip(modifier: Modifier) = SponsorStrip(modifier)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {
