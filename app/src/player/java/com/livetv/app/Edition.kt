@@ -1,6 +1,7 @@
 package com.livetv.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.runtime.LaunchedEffect
 import com.livetv.app.ui.MainViewModel
 import com.livetv.app.ui.PlaylistSettingsDialog
@@ -29,6 +30,10 @@ fun EditionStartScreen(onDone: () -> Unit) {
 
 @Composable
 fun EditionOverlay() = Unit
+
+/** No sponsors here. */
+@Composable
+fun EditionSponsorStrip(modifier: Modifier) = Unit
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

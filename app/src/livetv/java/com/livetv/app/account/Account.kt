@@ -3,6 +3,7 @@ package com.livetv.app.account
 import android.content.Context
 import android.os.Build
 import com.livetv.app.Watching
+import com.livetv.app.sponsor.SponsorViews
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -156,15 +157,29 @@ class Account private constructor(context: Context) {
     }
 
     /**
-     * Sends how long each channel was watched each day to usage/{day}_{uid}, for the owner's
-     * stats page. Each day's document holds that day's totals so far and is simply replaced.
+     * Sends how long each channel was watched each day to usage/{day}_{uid}, and how often each
+     * sponsor was shown to sponsorViews/{day}_{uid}, for the owner's stats page. Each day's
+     * document holds that day's totals so far and is simply replaced.
      */
     suspend fun reportViewing() = withContext(Dispatchers.IO) {
         val u = _user.value ?: return@withContext
         val days = Watching.totals().filter { (_, m) -> m.isNotEmpty() }
-        if (days.isEmpty()) return@withContext
+        val sponsorDays = SponsorViews.totals().filter { (_, m) -> m.isNotEmpty() }
+        if (days.isEmpty() && sponsorDays.isEmpty()) return@withContext
         runCatching {
             val t = token()
+            // How often each sponsor was shown, in sponsorViews/{day}_{uid}, for the stats page.
+            for ((day, sponsors) in sponsorDays) {
+                val fields = mapOf<String, Any>(
+                    "uid" to u.uid,
+                    "day" to day,
+                    "device" to if (isTv) "TV" else "Phone/tablet",
+                    "sponsors" to sponsors,
+                    "updated" to Date(),
+                )
+                Firestore.patch(Firestore.doc("sponsorViews/${day}_${u.uid}"), fields, t)
+                SponsorViews.sent(day)
+            }
             for ((day, channels) in days) {
                 val fields = mapOf<String, Any>(
                     "uid" to u.uid,
