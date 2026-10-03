@@ -181,6 +181,7 @@ fun ChannelListScreen(
     fun cardRequester(id: String): FocusRequester =
         if (id == state.lastWatchedId) lastWatchedFocus else cardFocus.getOrPut(id) { FocusRequester() }
     val layoutButtonFocus = remember { FocusRequester() }
+    val favoriteButtonFocus = remember { FocusRequester() }
     val chipFocus = remember { FocusRequester() }
     // 2×1: Up is being held down (it goes to the filter row instead of changing channel).
     var upHeld by remember { mutableStateOf(false) }
@@ -360,6 +361,40 @@ fun ChannelListScreen(
                 }
                 delay(500)
             }
+        }
+    }
+    // 1+3: the big player always comes first. When it starts dropping frames (the TV is short of
+    // power), the side tiles pause one by one on their last picture; once the big player has run
+    // smoothly for a while, they play again one by one.
+    LaunchedEffect(bigPlayer, soundId, inForeground) {
+        if (!bigPlayer || !inForeground) return@LaunchedEffect
+        val bigId = soundId ?: return@LaunchedEffect
+        val paused = mutableListOf<Pair<String, Preview>>()
+        fun resume(id: String, p: Preview) {
+            if (rowPreviews[id] === p) p.stream.player.run { seekToDefaultPosition(); play() }
+        }
+        try {
+            var last = -1
+            var calm = 0
+            while (true) {
+                delay(2_000)
+                val big = rowPreviews[bigId]
+                val dropped = big?.stream?.player?.videoDecoderCounters?.droppedBufferCount
+                if (big == null || !big.showing || dropped == null) { last = -1; continue }
+                val delta = if (last < 0) 0 else dropped - last
+                last = dropped
+                paused.removeAll { (id, p) -> rowPreviews[id] !== p }
+                if (delta > 4) {
+                    calm = 0
+                    rowPreviews.entries.lastOrNull { (id, p) -> id != bigId && paused.none { it.second === p } }
+                        ?.let { (id, p) -> p.stream.player.pause(); paused += id to p }
+                } else if (++calm >= 5 && paused.isNotEmpty()) {
+                    calm = 0
+                    paused.removeAt(paused.lastIndex).let { (id, p) -> resume(id, p) }
+                }
+            }
+        } finally {
+            paused.forEach { (id, p) -> resume(id, p) }
         }
     }
     LaunchedEffect(previewSound, soundId, rowPreviews.keys.toSet()) {
@@ -616,6 +651,7 @@ fun ChannelListScreen(
                         onOpen: () -> Unit = {},
                         height: Dp = cardHeight,
                         keepName: Boolean = false,
+                        favoriteBadge: Boolean = false,
                         onClick: () -> Unit = { onOpen(); onPlay(channel) },
                     ) =
                         ChannelCard(
@@ -626,6 +662,7 @@ fun ChannelListScreen(
                             bare = fullTiles || bigPlayer,
                             sound = if (bigPlayer) channel.id == soundId else null,
                             keepName = keepName,
+                            favoriteBadge = favoriteBadge,
                             glow = !windowed,
                             onToggleFavorite = { onToggleFavorite(channel) },
                             focusRequester = cardRequester(channel.id),
@@ -772,7 +809,8 @@ fun ChannelListScreen(
                                 when (event.key) {
                                     Key.DirectionRight -> column.firstOrNull()?.let { focus(it.id) }
                                     Key.DirectionUp -> runCatching { layoutButtonFocus.requestFocus() }
-                                    Key.DirectionDown, Key.DirectionLeft -> Unit
+                                    Key.DirectionDown -> runCatching { favoriteButtonFocus.requestFocus() }
+                                    Key.DirectionLeft -> Unit
                                     else -> return false
                                 }
                                 return true
@@ -808,11 +846,12 @@ fun ChannelListScreen(
                                     })
                                 }
                             }
+                            Column(Modifier.fillMaxSize()) {
                             Row(Modifier.fillMaxWidth().height(bigHeight)) {
                                 Box(Modifier.width(bigWidth)) {
                                     big?.let {
                                         key(it.id) {
-                                            Tile(0, it, { e -> bigKey(e) }, height = bigHeight, onClick = {
+                                            Tile(0, it, { e -> bigKey(e) }, height = bigHeight, favoriteBadge = true, onClick = {
                                                 sessionOpenedTile = 0
                                                 onPlay(it)
                                             })
@@ -822,6 +861,49 @@ fun ChannelListScreen(
                                 Column(Modifier.width(smallWidth).fillMaxHeight(), verticalArrangement = Arrangement.Center) {
                                     column.forEachIndexed { i, small -> SmallTile(i, small) }
                                 }
+                            }
+                            // Under the big player: add it to (or remove it from) Favorites.
+                            big?.let { channel ->
+                                val isFavorite = channel.id in state.favorites
+                                var buttonFocused by remember { mutableStateOf(false) }
+                                Row(
+                                    Modifier
+                                        .padding(start = 12.dp, top = 8.dp)
+                                        .focusRequester(favoriteButtonFocus)
+                                        .onFocusChanged { buttonFocused = it.hasFocus }
+                                        .onPreviewKeyEvent { e ->
+                                            when {
+                                                e.key == Key.Back -> backKey(e)
+                                                e.type != KeyEventType.KeyDown -> false
+                                                e.key == Key.DirectionUp -> { focus(channel.id); true }
+                                                e.key == Key.DirectionRight -> { column.firstOrNull()?.let { focus(it.id) }; true }
+                                                e.key == Key.DirectionDown || e.key == Key.DirectionLeft -> true
+                                                else -> false
+                                            }
+                                        }
+                                        .background(if (buttonFocused) Color.White.copy(alpha = 0.15f) else Color.Transparent, ChipShape)
+                                        .border(1.dp, if (buttonFocused) FocusColor.copy(alpha = 0.7f) else Color.White.copy(alpha = 0.3f), ChipShape)
+                                        .clickable(
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null,
+                                        ) { onToggleFavorite(channel) }
+                                        .padding(horizontal = 14.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Icon(
+                                        if (isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                                        contentDescription = null,
+                                        tint = if (isFavorite) FocusColor else Color.White,
+                                        modifier = Modifier.size(20.dp),
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        if (isFavorite) "In Favorites (OK to remove)" else "Add to Favorites",
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.labelLarge,
+                                    )
+                                }
+                            }
                             }
                         } else
                         Column(
@@ -994,6 +1076,8 @@ private fun ChannelCard(
     sound: Boolean? = null,
     /** Keeps the channel number and name showing, small (the 1+3 side tiles). */
     keepName: Boolean = false,
+    /** Shows a star when the channel is a favorite (the 1+3 big player). */
+    favoriteBadge: Boolean = false,
 ) {
     if (bare) {
         var focused by remember { mutableStateOf(false) }
@@ -1049,6 +1133,19 @@ private fun ChannelCard(
             // A thin, soft yellow line marks the tile with the sound.
             if (focused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
             if (sound ?: focused) SoundBadge(Modifier.align(Alignment.TopEnd))
+            if (favoriteBadge && favorite) {
+                Icon(
+                    Icons.Filled.Star,
+                    contentDescription = "In favorites",
+                    tint = FocusColor,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(8.dp)
+                        .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+                        .padding(4.dp)
+                        .size(22.dp),
+                )
+            }
         }
         return
     }
