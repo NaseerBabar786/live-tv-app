@@ -671,6 +671,7 @@ fun ChannelListScreen(
                         height: Dp = cardHeight,
                         keepName: Boolean = false,
                         favoriteBadge: Boolean = false,
+                        stretch: Boolean = false,
                         onClick: () -> Unit = { onOpen(); onPlay(channel) },
                     ) =
                         ChannelCard(
@@ -682,6 +683,7 @@ fun ChannelListScreen(
                             sound = if (bigPlayer) channel.id == soundId else null,
                             keepName = keepName,
                             favoriteBadge = favoriteBadge,
+                            stretch = stretch,
                             glow = !windowed,
                             onToggleFavorite = { onToggleFavorite(channel) },
                             focusRequester = cardRequester(channel.id),
@@ -788,14 +790,16 @@ fun ChannelListScreen(
                         }
                         if (bigPlayer) {
                             // 1+3: the big player in the top left corner (85% of the width, or the full
-                            // height if that's less), and three small tiles on the right, centred against
-                            // it. Up/Down move through them, and past either end the column slides on by
+                            // height if that's less), and three small tiles on the right, together exactly as
+                            // tall as it. Up/Down move through them, and past either end the column slides on by
                             // one channel (a new one comes in, the one at the other end goes). OK on a
                             // small tile swaps it into the big player; OK on the big player opens it.
                             val bigWidth = minOf(maxWidth * 0.85f, maxHeight * 16f / 9f)
                             val bigHeight = bigWidth * 9f / 16f
                             val smallWidth = maxWidth - bigWidth
-                            val smallHeight = smallWidth * 9f / 16f
+                            // The three side tiles share the big player's height exactly, top to bottom,
+                            // their pictures stretched to fill them.
+                            val smallHeight = bigHeight / 3
                             val big = window.firstOrNull()
                             val column = window.drop(1)
                             fun focus(id: String) = scope.launch {
@@ -852,7 +856,7 @@ fun ChannelListScreen(
                             @Composable
                             fun SmallTile(index: Int, small: Channel) = key(small.id) {
                                 Box(Modifier.width(smallWidth)) {
-                                    Tile(0, small, smallKey(index), height = smallHeight, keepName = true, onClick = {
+                                    Tile(0, small, smallKey(index), height = smallHeight, keepName = true, stretch = true, onClick = {
                                         val bigId = big?.id
                                         twoIds = window.map {
                                             when (it.id) {
@@ -877,7 +881,7 @@ fun ChannelListScreen(
                                         }
                                     }
                                 }
-                                Column(Modifier.width(smallWidth).fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+                                Column(Modifier.width(smallWidth).fillMaxHeight()) {
                                     column.forEachIndexed { i, small -> SmallTile(i, small) }
                                 }
                             }
@@ -1106,6 +1110,8 @@ private fun ChannelCard(
     keepName: Boolean = false,
     /** Shows a star when the channel is a favorite (the 1+3 big player). */
     favoriteBadge: Boolean = false,
+    /** Stretches the picture to fill the tile, whatever its shape (the 1+3 side tiles). */
+    stretch: Boolean = false,
 ) {
     if (bare) {
         var focused by remember { mutableStateOf(false) }
@@ -1129,9 +1135,14 @@ private fun ChannelCard(
             contentAlignment = Alignment.Center,
         ) {
             if (snapshot != null) {
-                Image(snapshot, contentDescription = null, contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize())
+                Image(
+                    snapshot,
+                    contentDescription = null,
+                    contentScale = if (stretch) ContentScale.FillBounds else ContentScale.Fit,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
-            if (preview != null) PreviewVideo(preview)
+            if (preview != null) PreviewVideo(preview, stretch)
             if (keepName) {
                 Text(
                     if (channel.number > 0) "${channel.number}  ${channel.name}" else channel.name,
@@ -1655,7 +1666,7 @@ private class Preview(val stream: StreamPlayer) {
 
 /** The preview's video, drawn over the logo once the first frame arrives. */
 @Composable
-private fun PreviewVideo(preview: Preview) {
+private fun PreviewVideo(preview: Preview, stretch: Boolean = false) {
     val player = preview.stream.player
     AndroidView(
         factory = { ctx -> TextureView(ctx).also { preview.view = it; player.setVideoTextureView(it) } },
@@ -1664,7 +1675,7 @@ private fun PreviewVideo(preview: Preview) {
             player.clearVideoTextureView(it)
         },
         modifier = Modifier
-            .aspectRatio(16f / 9f)
+            .then(if (stretch) Modifier.fillMaxSize() else Modifier.aspectRatio(16f / 9f))
             .graphicsLayer { alpha = if (preview.showing) 1f else 0f },
     )
 }
