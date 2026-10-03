@@ -90,6 +90,28 @@
   .more { display: block; margin: 20px auto 0; }
   .status { color: var(--muted); padding: 24px 0; }
 
+  /* 2x2 watch mode */
+  .quad-btn.on { border-color: var(--focus); color: var(--focus); }
+  .quad { display: none; margin: 0 0 16px; background: #000; border-radius: 12px; overflow: hidden; }
+  .quad.open { display: block; }
+  .quad .qbar { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--surface); }
+  .quad .qbar .hint { flex: 1; min-width: 0; color: var(--muted); font-size: 14px; }
+  .quad .cells { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: #000; }
+  .quad .cell { position: relative; aspect-ratio: 16 / 9; background: #0A1530; outline: 1px solid transparent; cursor: pointer; }
+  .quad .cell.sound { outline: 2px solid var(--focus); }
+  .quad .cell video { width: 100%; height: 100%; display: block; background: #000; object-fit: contain; }
+  .quad .cell .lbl { position: absolute; left: 6px; bottom: 6px; max-width: calc(100% - 12px); background: rgba(0,0,0,.65); color: #fff; font-size: 13px; font-weight: 700; padding: 2px 8px; border-radius: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none; }
+  .quad .cell .x { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,.65); color: #fff; border: 0; border-radius: 999px; width: 30px; height: 30px; font-size: 16px; cursor: pointer; }
+  .quad .cell .spk { position: absolute; top: 6px; left: 8px; font-size: 16px; display: none; }
+  .quad .cell.sound .spk { display: block; }
+  .quad .cell .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 14px; text-align: center; padding: 8px; pointer-events: none; }
+  .quad .cell .err { position: absolute; inset: 0; display: none; place-items: center; color: var(--muted); font-size: 13px; text-align: center; padding: 12px; background: #0A1530; pointer-events: none; }
+  .quad .cell.failed .err { display: grid; }
+  .quad:fullscreen { display: flex; flex-direction: column; border-radius: 0; }
+  .quad:fullscreen .cells { flex: 1; grid-template-rows: 1fr 1fr; }
+  .quad:fullscreen .cell { aspect-ratio: auto; }
+  @media (max-width: 600px) { .quad .cell .lbl { font-size: 11px; } .quad .qbar .hint { font-size: 12px; } }
+
   /* Player */
   .player { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.92); display: none; flex-direction: column; }
   .player.open { display: flex; }
@@ -346,9 +368,18 @@
         <select id="addCountry" class="add-country" aria-label="Add a country" disabled>
           <option value="">＋ Add a country</option>
         </select>
+        <button class="icon-btn quad-btn" id="quadBtn" aria-pressed="false">▦ 2×2</button>
         <input id="q" type="search" placeholder="Search channels" aria-label="Search channels">
         <span class="count" id="count"></span>
       </div>
+    </div>
+    <div class="quad" id="quad" aria-label="2×2 view">
+      <div class="qbar">
+        <span class="hint">Tap channels below to fill the 4 boxes. Tap a box to hear it.</span>
+        <button class="icon-btn" id="quadFull">Full screen</button>
+        <button class="icon-btn" id="quadClose">Close 2×2</button>
+      </div>
+      <div class="cells" id="quadCells"></div>
     </div>
     <div class="grid" id="grid"></div>
     <p class="status" id="status">Loading channels…</p>
@@ -670,8 +701,9 @@
       if (group === "Favorites") render();
     };
     b.append(star);
-    b.onclick = () => play(i);
-    b.onkeydown = ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); play(i); } };
+    const pick = () => quadOpen ? quadAdd(c) : play(i);
+    b.onclick = pick;
+    b.onkeydown = ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); pick(); } };
     return b;
   }
 
@@ -736,6 +768,95 @@
 
   $("q").addEventListener("input", ev => { query = ev.target.value; shown = PAGE; render(); });
   $("more").onclick = () => { shown += PAGE; render(); };
+
+  // 2x2 watch mode: four channels at once; only the selected box has sound.
+  let quadOpen = false, soundCell = 0;
+  const quadIds = store.get("quad", [null, null, null, null]);
+  const cells = [0, 1, 2, 3].map(k => {
+    const el = document.createElement("div");
+    el.className = "cell"; el.tabIndex = 0;
+    el.innerHTML = `<video muted playsinline autoplay></video><span class="spk">🔊</span><div class="empty">Box ${k + 1}: tap a channel below</div><div class="err">This channel isn't playing right now. Tap ✕ and pick another.</div><span class="lbl"></span><button class="x" aria-label="Remove channel">✕</button>`;
+    $("quadCells").append(el);
+    const cell = { el, video: el.querySelector("video"), hls: null, ch: null };
+    el.onclick = () => quadSound(k);
+    el.onkeydown = ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); quadSound(k); } };
+    el.querySelector(".x").onclick = ev => { ev.stopPropagation(); quadSet(k, null); };
+    return cell;
+  });
+
+  function cellStop(cell) {
+    if (cell.hls) { cell.hls.destroy(); cell.hls = null; }
+    cell.video.pause(); cell.video.removeAttribute("src"); cell.video.load();
+  }
+
+  function cellStream(cell, c, n) {
+    cellStop(cell);
+    cell.el.classList.remove("failed");
+    const url = c.streams[n];
+    if (!url) { cell.el.classList.add("failed"); return; }
+    const next = () => { if (cell.ch === c) cellStream(cell, c, n + 1); };
+    const v = cell.video;
+    if (window.Hls && Hls.isSupported() && !/\.(mp4|webm)(\?|$)/i.test(url)) {
+      // Small buffers and the lowest quality keep four streams light.
+      cell.hls = new Hls({ maxBufferLength: 10, capLevelToPlayerSize: true, startLevel: 0 });
+      cell.hls.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) next(); });
+      cell.hls.loadSource(url);
+      cell.hls.attachMedia(v);
+    } else {
+      v.src = url;
+      v.onerror = next;
+    }
+    v.play().catch(() => {});
+  }
+
+  function quadSet(k, c) {
+    const cell = cells[k];
+    cell.ch = c;
+    cell.el.querySelector(".lbl").textContent = c ? c.number + ". " + c.name : "";
+    cell.el.querySelector(".empty").style.display = c ? "none" : "";
+    cell.el.querySelector(".x").style.display = c ? "" : "none";
+    if (c && quadOpen) cellStream(cell, c, 0); else { cellStop(cell); cell.el.classList.remove("failed"); }
+    quadIds[k] = c ? c.id : null;
+    store.set("quad", quadIds);
+  }
+
+  function quadSound(k) {
+    soundCell = k;
+    cells.forEach((cell, i) => {
+      cell.video.muted = i !== k;
+      cell.el.classList.toggle("sound", i === k);
+    });
+    if (cells[k].ch) cells[k].video.play().catch(() => {});
+  }
+
+  function quadAdd(c) {
+    if (cells.some(cell => cell.ch === c)) return;
+    // The selected box if it's empty, else the next empty box, else replace the selected box.
+    let k = !cells[soundCell].ch ? soundCell : cells.findIndex(cell => !cell.ch);
+    if (k < 0) k = soundCell;
+    quadSet(k, c);
+    $("quad").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function quadShow(on) {
+    quadOpen = on;
+    $("quad").classList.toggle("open", on);
+    $("quadBtn").classList.toggle("on", on);
+    $("quadBtn").setAttribute("aria-pressed", on);
+    const byId = new Map(channels.map(c => [c.id, c]));
+    cells.forEach((cell, k) => quadSet(k, on ? (cell.ch || byId.get(quadIds[k]) || null) : cell.ch));
+    if (on) { quadSound(soundCell); $("quad").scrollIntoView({ behavior: "smooth", block: "start" }); }
+    if (!on && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
+
+  $("quadBtn").onclick = () => quadShow(!quadOpen);
+  $("quadClose").onclick = () => quadShow(false);
+  $("quadFull").onclick = () => {
+    const q = $("quad");
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else (q.requestFullscreen || q.webkitRequestFullscreen)?.call(q)?.catch?.(() => {});
+  };
+  document.addEventListener("fullscreenchange", () => { $("quadFull").textContent = document.fullscreenElement ? "Exit full screen" : "Full screen"; });
 
   // Install guide tabs
   document.querySelectorAll("[data-tab]").forEach(t => t.onclick = () => {
