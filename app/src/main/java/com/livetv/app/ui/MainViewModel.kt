@@ -9,6 +9,11 @@ import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Famelack
 import com.livetv.app.Edition
 import com.livetv.app.data.Playlist
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -92,12 +97,29 @@ data class UiState(
             .sortedWith(compareBy({ -it.value }, { it.key }))
             .map { it.key }
 
-    /** Favorites come first, then the rest in list order; channels keep their numbers. */
+    /**
+     * Favorites come first, then the rest in list order; channels keep their numbers.
+     * Inside Favorites the channels are grouped by country (Pakistan, India, Canada, UK, USA,
+     * then the rest) and numbered 1, 2, 3... from the top.
+     */
     val visibleChannels: List<Channel>
-        get() = inLanguage
-            .filter { category == null || it.category == category }
-            .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-            .sortedBy { it.id !in favorites }
+        get() {
+            val shown = inLanguage
+                .filter { category == null || it.category == category }
+                .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
+            if (filter != FILTER_FAVORITES) return shown.sortedBy { it.id !in favorites }
+            return shown
+                .sortedWith(compareBy({ countryRank(it) }, { countryName(it) }, { it.number }))
+                .mapIndexed { i, channel -> channel.copy(number = i + 1) }
+        }
+
+    private fun countryRank(channel: Channel): Int {
+        val code = channel.country ?: Famelack.MIX.firstOrNull { it.title == channel.group }?.country
+        return Famelack.MIX.indexOfFirst { it.country == code || (code == "gb" && it.country == "uk") }
+            .takeIf { it >= 0 } ?: Famelack.MIX.size
+    }
+
+    private fun countryName(channel: Channel): String = channel.group ?: channel.country ?: ""
 }
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
@@ -257,7 +279,58 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(lastWatchedId = channel.id) }
     }
 
-    fun stop() = _state.update { it.copy(playing = null) }
+    fun stop() {
+        clearTyped()
+        numberPadOpen = false
+        _state.update { it.copy(playing = null) }
+    }
+
+    /** Digits typed for a channel number while one is playing (remote keys or the on-screen pad). */
+    var typedNumber by mutableStateOf("")
+        private set
+
+    /** Whether the on-screen number pad is open (Up and Down then move on the pad). */
+    var numberPadOpen by mutableStateOf(false)
+
+    private var typedJob: Job? = null
+
+    /** Adds a digit; 2 seconds after the last one the app goes to that channel. */
+    fun typeDigit(digit: Int) {
+        if (typedNumber.length >= 4) typedNumber = ""
+        typedNumber += digit
+        typedJob?.cancel()
+        typedJob = viewModelScope.launch {
+            delay(2_000)
+            goToTyped()
+        }
+    }
+
+    fun deleteDigit() {
+        typedNumber = typedNumber.dropLast(1)
+        typedJob?.cancel()
+    }
+
+    /** Goes to the channel with the typed number in the list being watched. */
+    fun goToTyped() {
+        typedJob?.cancel()
+        val number = typedNumber.toIntOrNull()
+        typedNumber = ""
+        if (number == null) return
+        val s = _state.value
+        val channel = s.visibleChannels.firstOrNull { it.number == number }
+            ?: s.channels.takeIf { s.filter != FILTER_FAVORITES }?.firstOrNull { it.number == number }
+        if (channel == null) {
+            Toast.makeText(getApplication(), "No channel $number", Toast.LENGTH_SHORT).show()
+            return
+        }
+        numberPadOpen = false
+        play(channel)
+    }
+
+    fun clearTyped() {
+        typedJob?.cancel()
+        typedNumber = ""
+    }
 
     /** Moves to the next (+1) or previous (-1) channel in the current list, wrapping around. */
     fun zap(direction: Int) {

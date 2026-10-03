@@ -272,7 +272,7 @@ fun ChannelListScreen(
         // straight in full screen; Back comes to 1+List as usual.
         if (listMode && !sessionStartOpened && state.visibleChannels.isNotEmpty()) {
             sessionStartOpened = true
-            state.channels.firstOrNull { it.id == state.lastWatchedId }?.let {
+            (state.visibleChannels + state.channels).firstOrNull { it.id == state.lastWatchedId }?.let {
                 onPlay(it)
                 return@LaunchedEffect
             }

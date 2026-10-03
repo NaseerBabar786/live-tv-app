@@ -9,6 +9,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,18 +71,28 @@ fun PlayerScreen(
     onToggleFavorite: () -> Unit,
     /** False for movies and episodes, which can't be favourites. */
     showFavorite: Boolean = true,
+    /** Digits typed so far for a channel number (shown big in the corner). */
+    typedNumber: String = "",
+    numberPadOpen: Boolean = false,
+    /** Opens or closes the on-screen number pad; null hides the 123 button (movies). */
+    onNumberPad: ((Boolean) -> Unit)? = null,
+    onDigit: (Int) -> Unit = {},
+    onDeleteDigit: () -> Unit = {},
+    onGo: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     var error by remember { mutableStateOf<String?>(null) }
     var controlsVisible by remember { mutableStateOf(true) }
-    // The channel bar (back arrow, number and name, star) goes away after a minute on a channel
-    // and comes back when the channel changes.
+    // The channel bar (back arrow, number and name, star) goes away after 20 seconds and comes
+    // back for another 20 when the channel changes, a number is typed or OK brings up the controls.
     var barShown by remember { mutableStateOf(true) }
-    LaunchedEffect(channel.id) {
+    var barWake by remember { mutableIntStateOf(0) }
+    LaunchedEffect(channel.id, barWake, typedNumber, numberPadOpen) {
         barShown = true
-        delay(60_000)
+        if (numberPadOpen) return@LaunchedEffect
+        delay(20_000)
         barShown = false
     }
 
@@ -129,6 +145,7 @@ fun PlayerScreen(
                     setShowPreviousButton(false)
                     setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
                         controlsVisible = visibility == View.VISIBLE
+                        if (controlsVisible) barWake++
                     })
                 }
             },
@@ -137,7 +154,7 @@ fun PlayerScreen(
         )
 
         AnimatedVisibility(
-            visible = controlsVisible && barShown && !inPictureInPicture,
+            visible = (controlsVisible || numberPadOpen) && barShown && !inPictureInPicture,
             enter = fadeIn(),
             exit = fadeOut(),
             modifier = Modifier.align(Alignment.TopCenter),
@@ -165,6 +182,11 @@ fun PlayerScreen(
                         Text(it, color = Color.White.copy(alpha = 0.7f), style = MaterialTheme.typography.bodySmall)
                     }
                 }
+                if (onNumberPad != null) {
+                    TextButton(onClick = { onNumberPad(true) }, modifier = Modifier.focusGlow()) {
+                        Text("123", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                }
                 if (showFavorite) {
                     IconButton(onClick = onToggleFavorite, modifier = Modifier.focusGlow()) {
                         Icon(
@@ -175,6 +197,31 @@ fun PlayerScreen(
                     }
                 }
             }
+        }
+
+        // The number being typed, big in the top-right corner like a TV.
+        if (typedNumber.isNotEmpty() && !inPictureInPicture) {
+            Text(
+                typedNumber,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.displayMedium,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 64.dp, end = 32.dp)
+                    .background(Color.Black.copy(alpha = 0.6f), MaterialTheme.shapes.medium)
+                    .padding(horizontal = 20.dp, vertical = 8.dp),
+            )
+        }
+
+        if (numberPadOpen && onNumberPad != null && !inPictureInPicture) {
+            BackHandler { onNumberPad(false) }
+            NumberPad(
+                onDigit = onDigit,
+                onDelete = onDeleteDigit,
+                onGo = onGo,
+                modifier = Modifier.align(Alignment.CenterEnd).padding(end = 32.dp),
+            )
         }
 
         error?.let { message ->
@@ -189,6 +236,49 @@ fun PlayerScreen(
                 Text(message, color = Color.White)
                 Spacer(Modifier.height(16.dp))
                 Button(onClick = { streamPlayer.retry() }, modifier = Modifier.focusGlow()) { Text("Try again") }
+            }
+        }
+    }
+}
+
+/** An on-screen number pad for remotes without number buttons: 1-9, then delete, 0 and Go. */
+@Composable
+private fun NumberPad(
+    onDigit: (Int) -> Unit,
+    onDelete: () -> Unit,
+    onGo: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val first = remember { FocusRequester() }
+    LaunchedEffect(Unit) { runCatching { first.requestFocus() } }
+    Column(
+        modifier
+            .background(Color.Black.copy(alpha = 0.8f), MaterialTheme.shapes.large)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        val rows = listOf(listOf("1", "2", "3"), listOf("4", "5", "6"), listOf("7", "8", "9"), listOf("⌫", "0", "Go"))
+        rows.forEach { row ->
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                row.forEach { key ->
+                    Box(
+                        Modifier
+                            .size(64.dp)
+                            .then(if (key == "1") Modifier.focusRequester(first) else Modifier)
+                            .focusGlow()
+                            .background(Color.White.copy(alpha = 0.12f), MaterialTheme.shapes.medium)
+                            .clickable {
+                                when (key) {
+                                    "⌫" -> onDelete()
+                                    "Go" -> onGo()
+                                    else -> onDigit(key.toInt())
+                                }
+                            },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(key, color = Color.White, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge)
+                    }
+                }
             }
         }
     }
