@@ -296,9 +296,9 @@ fun ChannelListScreen(
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
-        // In 2×3, 2×2 and 1×2 every card plays; in 4×4 (and phones) only the highlighted one,
+        // In 1+4, 2×3, 2×2 and 1×2 every card plays; on phones only the highlighted one,
         // and the rest show a picture.
-        val playAll = wideScreen && tileLayout.separateTvs && tileLayout != TileLayout.Sixteen
+        val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
@@ -1425,7 +1425,7 @@ private class Preview(val stream: StreamPlayer) {
 
     /**
      * Only the tile with the sound decodes audio; on the silent ones the audio track is switched
-     * off, which saves the TV a decoder per tile (16 of them in 4×4).
+     * off, which saves the TV a decoder per tile.
      */
     fun setSound(on: Boolean) {
         stream.player.volume = if (on) 1f else 0f
@@ -1480,7 +1480,6 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     /** Four separate TVs, like 1×2. */
     Four("2×2", 2, 2),
     Six("2×3", 3, 2),
-    Sixteen("4×4", 4, 4),
 }
 
 /**
@@ -1489,7 +1488,7 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
  */
 private var sessionTileLayout: TileLayout? = null
 
-/** 1×2, 2×2, 2×3 and 4×4: every tile plays and has its own channel, changed with Up and Down. */
+/** 1+4, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() = this != TileLayout.List
 
 /**
