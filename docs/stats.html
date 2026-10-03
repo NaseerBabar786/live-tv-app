@@ -108,6 +108,28 @@
       </div>
     </div>
 
+    <h2 id="website">Website (tv.bulkbazaar.ca)</h2>
+    <p class="small">Visitors to the website and what they watched there. Each browser counts as one visitor; nobody is named. Your own visits aren't counted. Watch time counts the normal player and the box with sound in 2×2.</p>
+    <div class="stats" id="webStats"></div>
+    <h2>Website visitors per day (last 30 days)</h2>
+    <div class="chart" id="webDaily"></div>
+    <div class="chart-labels" id="webDailyLabels"></div>
+    <div class="grid2" style="margin-top:8px">
+      <div>
+        <h2>Watched most on the website</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>#</th><th>Channel</th><th>Country</th><th class="num">Viewers</th><th class="num">Minutes</th></tr></thead>
+          <tbody id="webTop"></tbody>
+        </table></div>
+      </div>
+      <div>
+        <h2>Pages and devices</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Page or device</th><th class="num">Visitors</th><th class="num">Page views</th></tr></thead>
+          <tbody id="webPages"></tbody>
+        </table></div>
+      </div>
+    </div>
     <h2 id="sponsors">Sponsors</h2>
     <p class="small">How many times each sponsor was shown in the period above, and on how many devices (app 1.8.90 and newer). The strip counts once a minute while it shows. Manage sponsors on the <a href="sponsors">Sponsors</a> page.</p>
     <div class="table-wrap"><table>
@@ -166,6 +188,8 @@ if (!configured) {
   let rows = [];
   /** One record per viewer per day: { uid, day, sponsors: { id: { n, start, strip, card } } }. */
   let sponsorRows = [], sponsorNote = "";
+  /** One record per website visitor per day: { uid, day, dev, views, pages: { page: n }, watch, quad, channels: { id: { n, c, s } } }. */
+  let webRows = [], webNote = "";
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
   document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
@@ -191,6 +215,18 @@ if (!configured) {
           ? "Add the 'sponsorViews' rule in Firestore › Rules to see these (see the setup notes)."
           : "Couldn't load the sponsor counts: " + e.message;
       }
+      try {
+        const wq = from
+          ? fs.query(fs.collection(db, "webVisits"), fs.where("day", ">=", from))
+          : fs.collection(db, "webVisits");
+        webRows = (await fs.getDocs(wq)).docs.map(d => d.data()).filter(r => r.day && r.uid);
+        webNote = "";
+      } catch (e) {
+        webRows = [];
+        webNote = e.code === "permission-denied"
+          ? "Add the 'webVisits' rule in Firestore › Rules to see these (see the setup notes)."
+          : "Couldn't load the website counts: " + e.message;
+      }
       $("range").textContent = from ? `Showing ${monthName(from.slice(0, 7))} to today.` : "Showing every month.";
       render();
     } catch (e) {
@@ -212,7 +248,7 @@ if (!configured) {
     load(dayStr(d));
   });
   $("all").onclick = () => load(null);
-  $("period").onchange = renderChannels;
+  $("period").onchange = () => { renderChannels(); renderWebPeriod(); };
 
   function viewersSince(from) { return new Set(rows.filter(r => r.day >= from).map(r => r.uid)).size; }
   function secondsSince(from) { return rows.filter(r => r.day >= from).reduce((a, r) => a + (r.seconds || 0), 0); }
@@ -281,7 +317,74 @@ if (!configured) {
       $("months").append(tr);
     });
     if (!months.length) $("months").innerHTML = `<tr><td colspan="6" class="small">Nothing yet. Numbers appear once people watch with version 1.8.88 or newer.</td></tr>`;
+    renderWeb();
     renderChannels();
+  }
+
+  function renderWeb() {
+    const since = from => webRows.filter(r => r.day >= from);
+    const people = list => new Set(list.map(r => r.uid)).size;
+    const d30 = since(daysAgo(29));
+    const items = [
+      ["Visitors today", people(since(daysAgo(0)))],
+      ["Visitors, last 7 days", people(since(daysAgo(6)))],
+      ["Visitors, last 30 days", people(d30)],
+      ["Page views, last 30 days", d30.reduce((a, r) => a + (r.views || 0), 0).toLocaleString()],
+      ["Watched TV on the website, last 30 days", people(d30.filter(r => r.watch > 0))],
+      ["Hours watched on the website, last 30 days", hours(d30.reduce((a, r) => a + (r.watch || 0), 0))],
+      ["Used 2×2, last 30 days", people(d30.filter(r => r.quad > 0))],
+    ];
+    $("webStats").innerHTML = "";
+    for (const [l, n] of items) {
+      const el = document.createElement("div"); el.className = "stat";
+      el.innerHTML = `<div class="n"></div><div class="l"></div>`;
+      el.querySelector(".n").textContent = n; el.querySelector(".l").textContent = l;
+      $("webStats").append(el);
+    }
+    const days = [];
+    for (let i = 29; i >= 0; i--) days.push(daysAgo(i));
+    const perDay = days.map(day => { const l = webRows.filter(r => r.day === day); return { day, users: people(l), watched: people(l.filter(r => r.watch > 0)), views: l.reduce((a, r) => a + (r.views || 0), 0) }; });
+    const max = Math.max(1, ...perDay.map(p => p.users));
+    $("webDaily").innerHTML = "";
+    for (const p of perDay) {
+      const b = document.createElement("div"); b.className = "bar";
+      b.style.height = `${p.users / max * 100}%`;
+      b.title = `${p.day}: ${p.users} visitors, ${p.watched} watched TV, ${p.views} page views`;
+      $("webDaily").append(b);
+    }
+    $("webDailyLabels").innerHTML = `<span>${days[0]}</span><span>today</span>`;
+    renderWebPeriod();
+  }
+
+  function renderWebPeriod() {
+    const n = Number($("period").value);
+    const from = n ? daysAgo(n - 1) : "";
+    const list = webRows.filter(r => r.day >= from);
+    const chans = new Map(), pages = new Map(), devs = new Map();
+    const bump = (map, key, uid, views) => { if (!map.has(key)) map.set(key, { users: new Set(), views: 0 }); const e = map.get(key); e.users.add(uid); e.views += views; };
+    for (const r of list) {
+      for (const [k, c] of Object.entries(r.channels || {})) {
+        if (!chans.has(k)) chans.set(k, { label: c.n || "?", country: c.c || "", users: new Set(), s: 0 });
+        const e = chans.get(k); e.users.add(r.uid); e.s += c.s || 0;
+      }
+      for (const [pg, v] of Object.entries(r.pages || {})) bump(pages, pg === "home" ? "Home page" : pg[0].toUpperCase() + pg.slice(1) + " page", r.uid, v || 0);
+      bump(devs, "On a " + (r.dev || "Computer").toLowerCase(), r.uid, r.views || 0);
+    }
+    const note = webNote || "Nothing yet in this period.";
+    $("webTop").innerHTML = "";
+    [...chans.values()].sort((a, b) => b.s - a.s).slice(0, 25).forEach((e, i) => {
+      const tr = document.createElement("tr");
+      cells(tr, [i + 1, e.label, e.country, { cls: "num", text: e.users.size }, { cls: "num", text: Math.max(1, Math.round(e.s / 60)).toLocaleString() }]);
+      $("webTop").append(tr);
+    });
+    if (!chans.size) $("webTop").innerHTML = `<tr><td colspan="5" class="small"></td></tr>`, $("webTop").querySelector("td").textContent = note;
+    $("webPages").innerHTML = "";
+    for (const [label, e] of [...[...pages].sort((a, b) => b[1].views - a[1].views), ...[...devs].sort((a, b) => b[1].users.size - a[1].users.size)]) {
+      const tr = document.createElement("tr");
+      cells(tr, [label, { cls: "num", text: e.users.size }, { cls: "num", text: e.views.toLocaleString() }]);
+      $("webPages").append(tr);
+    }
+    if (!pages.size) $("webPages").innerHTML = `<tr><td colspan="3" class="small"></td></tr>`, $("webPages").querySelector("td").textContent = note;
   }
 
   function renderChannels() {
