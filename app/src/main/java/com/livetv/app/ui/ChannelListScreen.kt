@@ -150,6 +150,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
+import com.livetv.app.EditionSponsorBar
 import com.livetv.app.EditionSponsorStrip
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
@@ -985,6 +986,15 @@ fun ChannelListScreen(
                             state = gridState,
                             modifier = Modifier.fillMaxSize(),
                             content = cards,
+                        )
+                    }
+                    // 1×2 leaves a band under the two tiles: Live TV's sponsor bar goes there.
+                    if (wide && tileLayout == TileLayout.Two && !fullTiles && rowGap >= 36.dp) {
+                        EditionSponsorBar(
+                            Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 5.dp)
+                                .height(minOf(rowGap - 10.dp, 96.dp)),
                         )
                     }
                     }

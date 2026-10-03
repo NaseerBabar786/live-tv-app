@@ -5,6 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -59,15 +62,71 @@ fun SponsorStrip(modifier: Modifier = Modifier) {
         delay(STRIP_MS)
         turn++
     }
-    Box(
+    // The "Sponsor" tag sits above the picture, so it never covers the sponsor's logo.
+    Column(modifier.fillMaxWidth()) {
+        SponsorLabel(Modifier.padding(bottom = 4.dp))
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .clip(CardShape)
+                .background(Color.Black),
+        ) {
+            SponsorPicture(sponsor, Modifier.fillMaxSize())
+        }
+    }
+}
+
+/**
+ * The sponsor bar under the two tiles of 1×2: the sponsor's picture on the left and their name,
+ * line and phone or website beside it. The next sponsor comes every minute.
+ */
+@Composable
+fun SponsorBar(modifier: Modifier = Modifier) {
+    val all by Sponsors.all.collectAsStateWithLifecycle()
+    val list = remember(all) { Sponsors.current() }
+    if (list.isEmpty()) return
+    var turn by remember { mutableIntStateOf(0) }
+    val sponsor = list[Math.floorMod(turn, list.size)]
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(sponsor.id, turn) {
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) SponsorViews.count(sponsor, "bar")
+        delay(STRIP_MS)
+        turn++
+    }
+    Row(
         modifier
-            .fillMaxWidth()
-            .aspectRatio(16f / 9f)
             .clip(CardShape)
-            .background(Color.Black),
+            .background(Color(0xE6101018))
+            .padding(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        SponsorPicture(sponsor, Modifier.fillMaxSize())
-        SponsorLabel(Modifier.align(Alignment.TopStart))
+        Box(
+            Modifier
+                .fillMaxHeight()
+                .aspectRatio(16f / 9f)
+                .clip(ChipShape)
+                .background(Color.Black),
+        ) {
+            SponsorPicture(sponsor, Modifier.fillMaxSize())
+        }
+        Column(Modifier.padding(horizontal = 12.dp).widthIn(max = 520.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                SponsorLabel(Modifier.padding(end = 8.dp))
+                Text(
+                    sponsor.name,
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            val words = listOf(sponsor.line, sponsor.contact).filter { it.isNotBlank() }.joinToString(" · ")
+            if (words.isNotEmpty()) {
+                Text(words, color = FocusColor, fontSize = 13.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        }
     }
 }
 
@@ -111,10 +170,10 @@ fun SponsorCard(channelId: String?) {
         ) {
             Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).background(Color.Black)) {
                 SponsorPicture(sponsor, Modifier.fillMaxSize())
-                SponsorLabel(Modifier.align(Alignment.TopStart))
             }
-            val words = listOf(sponsor.name, sponsor.contact).filter { it.isNotBlank() }.joinToString(" · ")
-            if (words.isNotEmpty()) {
+            // "Sponsor" goes in the line under the picture, not over it.
+            val words = (listOf("Sponsor") + listOf(sponsor.name, sponsor.contact).filter { it.isNotBlank() }).joinToString(" · ")
+            run {
                 Text(
                     words,
                     color = Color.White,
@@ -138,14 +197,5 @@ private fun SponsorPicture(sponsor: Sponsor, modifier: Modifier) {
 /** Says it's an ad. */
 @Composable
 private fun SponsorLabel(modifier: Modifier) {
-    Text(
-        "Sponsor",
-        color = Color.White,
-        fontSize = 10.sp,
-        modifier = modifier
-            .padding(6.dp)
-            .clip(ChipShape)
-            .background(Color(0x99000000))
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-    )
+    Text("Sponsor", color = Color.White.copy(alpha = 0.7f), fontSize = 11.sp, modifier = modifier)
 }

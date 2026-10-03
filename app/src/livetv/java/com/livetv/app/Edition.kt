@@ -24,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.livetv.app.ui.MainViewModel
 import com.livetv.app.ui.SettingsDialog
 import com.livetv.app.ui.SettingsTheme
+import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
 import com.livetv.app.ui.SponsorScreen
 import com.livetv.app.ui.SponsorStrip
@@ -150,6 +151,10 @@ fun EditionOverlay() {
 /** The paying sponsors' strip under the 1+List channel list. */
 @Composable
 fun EditionSponsorStrip(modifier: Modifier) = SponsorStrip(modifier)
+
+/** The paying sponsors' bar under the two tiles of 1×2. */
+@Composable
+fun EditionSponsorBar(modifier: Modifier) = SponsorBar(modifier)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {
