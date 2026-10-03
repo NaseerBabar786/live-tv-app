@@ -805,7 +805,7 @@
     const next = () => { if (cell.ch === c) cellStream(cell, c, n + 1); };
     const v = cell.video;
     if (window.Hls && Hls.isSupported() && !/\.(mp4|webm)(\?|$)/i.test(url)) {
-            // Play a little behind live with a longer buffer, so a slow moment doesn't freeze the picture.
+      // Play a little behind live with a longer buffer, so a slow moment doesn't freeze the picture.
       cell.hls = new Hls({ maxBufferLength: 20, maxMaxBufferLength: 30, backBufferLength: 5,
         liveSyncDurationCount: 4, lowLatencyMode: false,
         capLevelToPlayerSize: true, capLevelOnFPSDrop: true, startLevel: 0,
