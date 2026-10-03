@@ -60,6 +60,12 @@ class MainActivity : ComponentActivity() {
                 inPictureInPicture = inPictureInPicture,
                 onBack = viewModel::stop,
                 onToggleFavorite = { viewModel.toggleFavorite(playing) },
+                typedNumber = viewModel.typedNumber,
+                numberPadOpen = viewModel.numberPadOpen,
+                onNumberPad = { viewModel.numberPadOpen = it; if (!it) viewModel.clearTyped() },
+                onDigit = viewModel::typeDigit,
+                onDeleteDigit = viewModel::deleteDigit,
+                onGo = viewModel::goToTyped,
             )
         } else {
             ChannelListScreen(
@@ -86,6 +92,15 @@ class MainActivity : ComponentActivity() {
      */
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (viewModel.state.value.playing != null) {
+            // Number buttons type a channel number (it changes 2 seconds after the last digit).
+            if (event.keyCode in KeyEvent.KEYCODE_0..KeyEvent.KEYCODE_9) {
+                if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                    viewModel.typeDigit(event.keyCode - KeyEvent.KEYCODE_0)
+                }
+                return true
+            }
+            // With the number pad open, Up and Down move around the pad.
+            if (viewModel.numberPadOpen) return super.dispatchKeyEvent(event)
             val step = when (event.keyCode) {
                 KeyEvent.KEYCODE_CHANNEL_UP, KeyEvent.KEYCODE_PAGE_UP, KeyEvent.KEYCODE_DPAD_UP -> -1
                 KeyEvent.KEYCODE_CHANNEL_DOWN, KeyEvent.KEYCODE_PAGE_DOWN, KeyEvent.KEYCODE_DPAD_DOWN -> 1
