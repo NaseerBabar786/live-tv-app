@@ -115,7 +115,7 @@
   .quad:fullscreen { display: flex; flex-direction: column; border-radius: 0; }
   .quad:fullscreen .cells { flex: 1; min-height: 0; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
   .quad:fullscreen .cell { aspect-ratio: auto; min-height: 0; overflow: hidden; }
-  .quad:fullscreen .qbar { display: none; }
+  .quad:fullscreen .qbar, .quad:fullscreen .cell .x { display: none !important; }
   @media (max-width: 600px) { .quad .cell .lbl { font-size: 11px; } .quad .qbar .hint { font-size: 12px; } }
 
   /* Player */
