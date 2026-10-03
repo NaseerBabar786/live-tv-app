@@ -13,6 +13,7 @@
   label.f input[type=text], label.f input[type=date] { display: block; width: 100%; margin-top: 4px; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .preview { width: 100%; max-width: 480px; aspect-ratio: 16/9; background: #000; border-radius: 12px; display: block; object-fit: contain; margin: 6px 0 12px; }
+  .banner-preview { width: 100%; max-width: 640px; aspect-ratio: 8/1; background: #fff; border-radius: 8px; display: block; object-fit: contain; margin: 6px 0 12px; }
   .list { display: grid; gap: 12px; }
   .sp { display: grid; grid-template-columns: 160px 1fr; gap: 14px; align-items: center; background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 12px; }
   .sp img { width: 160px; aspect-ratio: 16/9; object-fit: contain; background: #000; border-radius: 8px; }
@@ -40,7 +41,7 @@
 
 <main class="wrap">
   <h1>Sponsors</h1>
-  <p class="lead">Businesses that pay to be shown in Live TV (version 1.8.90 and newer). Each one shows in turn on the start screen, in the strip under the 1+List channel list, in a bar under the two tiles of 1×2, and in a small corner card after a channel change (at most every 20 minutes). How often each was shown is on the <a href="stats#sponsors">Stats</a> page. TVs pick up changes the next time the app starts.</p>
+  <p class="lead">Businesses that pay to be shown in Live TV (version 1.8.90 and newer). Each one shows in turn on the start screen, in the strip under the 1+List channel list, in a bar under the two tiles of 1×2 (their wide banner if you add one), and in a small corner card after a channel change (at most every 20 minutes). How often each was shown is on the <a href="stats#sponsors">Stats</a> page. TVs pick up changes the next time the app starts.</p>
   <div id="notReady" class="panel hidden">This page will work once Firebase is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't an admin. <button class="btn" data-signout>Use another account</button></div>
@@ -56,6 +57,11 @@
         <input type="file" id="file" accept="image/*" style="display:block;margin-top:6px">
       </label>
       <img id="preview" class="preview hidden" alt="">
+      <label class="f">Wide banner for 1×2 (optional; 8:1, for example 1600 × 200)
+        <input type="file" id="bannerFile" accept="image/*" style="display:block;margin-top:6px">
+      </label>
+      <img id="bannerPreview" class="banner-preview hidden" alt="">
+      <button class="btn hidden" id="bannerRemove" type="button" style="margin:-4px 0 14px">Remove banner</button>
       <label class="f">Business name <input type="text" id="name" maxlength="60" required placeholder="e.g. Khan Halal Meat"></label>
       <label class="f">Short line (optional) <input type="text" id="line" maxlength="120" placeholder="e.g. Fresh halal meat, open 7 days"></label>
       <label class="f">Phone or website (optional) <input type="text" id="contact" maxlength="60" placeholder="e.g. 416-555-0100 or khanmeat.ca"></label>
@@ -91,15 +97,14 @@ window.addEventListener("unhandledrejection", () => {
   $("err").textContent = "Couldn't load this page. Check your internet connection and refresh.";
 });
 
-/** Turns any picture into a 960 × 540 JPEG (black bars when it isn't 16:9), small enough to store. */
-function shrink(file) {
+/** Turns any picture into a W × H JPEG (bars of [bg] when the shape differs), small enough to store. */
+function shrink(file, W = 960, H = 540, bg = "#000") {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      const W = 960, H = 540;
       const c = document.createElement("canvas"); c.width = W; c.height = H;
       const g = c.getContext("2d");
-      g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+      g.fillStyle = bg; g.fillRect(0, 0, W, H);
       const k = Math.min(W / img.width, H / img.height);
       const w = img.width * k, h = img.height * k;
       g.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
@@ -123,7 +128,7 @@ if (!configured) {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = fs.getFirestore(app);
-  let sponsors = [], editing = null, image = "";
+  let sponsors = [], editing = null, image = "", banner = "";
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
   document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
@@ -186,7 +191,8 @@ if (!configured) {
   }
 
   function openForm(s) {
-    editing = s || null; image = s?.image || "";
+    editing = s || null; image = s?.image || ""; banner = s?.banner || "";
+    $("bannerFile").value = ""; showBanner();
     $("formTitle").textContent = s ? "Edit sponsor" : "New sponsor";
     $("name").value = s?.name || ""; $("line").value = s?.line || ""; $("contact").value = s?.contact || "";
     $("start").value = s?.start || ""; $("end").value = s?.end || ""; $("active").checked = s ? !!s.active : true;
@@ -202,11 +208,21 @@ if (!configured) {
     try { image = await shrink(f); $("preview").src = image; $("preview").classList.remove("hidden"); $("formErr").textContent = ""; }
     catch (e) { $("formErr").textContent = e.message; }
   };
+  function showBanner() {
+    $("bannerPreview").src = banner; $("bannerPreview").classList.toggle("hidden", !banner);
+    $("bannerRemove").classList.toggle("hidden", !banner);
+  }
+  $("bannerFile").onchange = async () => {
+    const f = $("bannerFile").files[0]; if (!f) return;
+    try { banner = await shrink(f, 1600, 200, "#fff"); showBanner(); $("formErr").textContent = ""; }
+    catch (e) { $("formErr").textContent = e.message; }
+  };
+  $("bannerRemove").onclick = () => { banner = ""; $("bannerFile").value = ""; showBanner(); };
   $("form").onsubmit = async ev => {
     ev.preventDefault();
     const data = {
       name: $("name").value.trim(), line: $("line").value.trim(), contact: $("contact").value.trim(),
-      start: $("start").value, end: $("end").value, active: $("active").checked, image,
+      start: $("start").value, end: $("end").value, active: $("active").checked, image, banner,
     };
     if (!data.name) return $("formErr").textContent = "Please type the business name.";
     if (!image) return $("formErr").textContent = "Please choose a picture.";

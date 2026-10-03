@@ -78,8 +78,8 @@ fun SponsorStrip(modifier: Modifier = Modifier) {
 }
 
 /**
- * The sponsor bar under the two tiles of 1×2: the sponsor's picture on the left and their name,
- * line and phone or website beside it. The next sponsor comes every minute.
+ * The sponsor bar under the two tiles of 1×2: the sponsor's wide banner when they have one, or else
+ * their picture on the left with their name, line and phone or website beside it. The next sponsor comes every minute.
  */
 @Composable
 fun SponsorBar(modifier: Modifier = Modifier) {
@@ -93,6 +93,14 @@ fun SponsorBar(modifier: Modifier = Modifier) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) SponsorViews.count(sponsor, "bar")
         delay(STRIP_MS)
         turn++
+    }
+    // A sponsor with a wide banner gets it full size; otherwise their picture with their words beside it.
+    val banner = sponsor.banner
+    if (banner != null) {
+        Box(modifier.aspectRatio(8f).clip(ChipShape).background(Color.White)) {
+            Image(banner, contentDescription = sponsor.name, contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize())
+        }
+        return
     }
     Row(
         modifier

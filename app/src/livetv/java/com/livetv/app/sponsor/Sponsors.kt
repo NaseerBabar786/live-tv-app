@@ -31,6 +31,8 @@ class Sponsor(
     val end: String,
     val active: Boolean,
     val picture: ImageBitmap?,
+    /** An optional wide 8:1 banner for the 1×2 bar; null when the sponsor has none. */
+    val banner: ImageBitmap? = null,
 ) {
     fun showsOn(day: String) =
         active && picture != null && (start.isEmpty() || day >= start) && (end.isEmpty() || day <= end)
@@ -77,7 +79,8 @@ object Sponsors {
                         .put("start", f.text("start"))
                         .put("end", f.text("end"))
                         .put("active", f.optJSONObject("active")?.optBoolean("booleanValue") ?: false)
-                        .put("image", f.text("image")),
+                        .put("image", f.text("image"))
+                        .put("banner", f.text("banner")),
                 )
             }
             file?.writeText(arr.toString())
@@ -107,6 +110,7 @@ object Sponsors {
             end = o.optString("end"),
             active = o.optBoolean("active"),
             picture = if (o.optBoolean("active")) decode(o.optString("image")) else null,
+            banner = if (o.optBoolean("active")) o.optString("banner").takeIf { it.isNotEmpty() }?.let(::decode) else null,
         )
     }
 
