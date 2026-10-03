@@ -73,7 +73,7 @@ fun SponsorScreen(loading: Boolean, onDone: () -> Unit) {
 @Composable
 private fun SponsorWords(secondsLeft: Int?, align: TextAlign) {
     Text(
-        "Live TV is free thanks to our sponsor, Bulk Bazaar Inc. Please show them some love: " +
+        "Live TV is free thanks to our sponsor, Bulk Bazaar Inc. Please show them love: " +
             "visit bulkbazaar.ca and leave them a 5-star review ★★★★★",
         style = MaterialTheme.typography.bodyLarge,
         textAlign = align,
