@@ -10,6 +10,11 @@
 <meta name="robots" content="noindex">
 <style>
   label.f { display: block; margin: 0 0 12px; font-weight: 600; }
+  label.f textarea { display: block; width: 100%; min-height: 90px; margin-top: 4px; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; resize: vertical; }
+  .deal { margin: 6px 0 14px; padding: 14px; border: 1.5px dashed var(--line); border-radius: 12px; }
+  .deal h3 { margin: 0 0 4px; font-size: 16px; }
+  .sp .dealinfo { margin-top: 6px; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); font-size: 14px; white-space: pre-wrap; }
+  label.f input[type=email], label.f input[type=tel],
   label.f input[type=text], label.f input[type=date] { display: block; width: 100%; margin-top: 4px; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .preview { width: 100%; max-width: 480px; aspect-ratio: 16/9; background: #000; border-radius: 12px; display: block; object-fit: contain; margin: 6px 0 12px; }
@@ -70,6 +75,20 @@
         <label class="f">Last day (optional) <input type="date" id="end"></label>
       </div>
       <label class="f" style="font-weight:400"><input type="checkbox" id="active" checked> Show in the app</label>
+      <div class="deal">
+        <h3>Private deal details</h3>
+        <p class="small" style="margin:0 0 10px">Only you see these. They are stored separately and never sent to the app.</p>
+        <div class="two">
+          <label class="f">Contact person <input type="text" id="dPerson" maxlength="80"></label>
+          <label class="f">Contact phone <input type="tel" id="dPhone" maxlength="40"></label>
+        </div>
+        <div class="two">
+          <label class="f">Contact email <input type="email" id="dEmail" maxlength="120"></label>
+          <label class="f">Package booked <input type="text" id="dPackage" maxlength="120" placeholder="e.g. 3 months, all spots"></label>
+        </div>
+        <label class="f">Price and payment <input type="text" id="dPrice" maxlength="120" placeholder="e.g. $150 per month, paid until 31 Dec"></label>
+        <label class="f">Deal notes <textarea id="dNotes" maxlength="3000" placeholder="What we agreed, invoices, reminders"></textarea></label>
+      </div>
       <div class="row">
         <button class="btn primary" id="save" type="submit">Save</button>
         <button class="btn" id="cancel" type="button">Cancel</button>
@@ -140,6 +159,9 @@ if (!configured) {
   let sponsors = [], editing = null, image = "", banner = "", ticker = null;
   const TICKER_ID = "_ticker";
   const DEFAULT_TICKER = "Advertise your business on Live TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
+  /** Private deal details, admin only: sponsorDeals/{sponsorId} = { person, phone, email, package, price, notes }. */
+  let deals = {}, dealNote = "";
+  const DEAL_FIELDS = { person: "dPerson", phone: "dPhone", email: "dEmail", package: "dPackage", price: "dPrice", notes: "dNotes" };
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
   document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
@@ -167,6 +189,13 @@ if (!configured) {
       sponsors = all.filter(s => s.id !== TICKER_ID);
       $("tickerText").value = ticker ? (ticker.text || "") : DEFAULT_TICKER;
       $("tickerOn").checked = ticker ? !!ticker.active : true;
+      try {
+        deals = Object.fromEntries((await fs.getDocs(fs.collection(db, "sponsorDeals"))).docs.map(d => [d.id, d.data()]));
+        dealNote = "";
+      } catch (e) {
+        deals = {};
+        dealNote = e.code === "permission-denied" ? "To keep deal details, add the 'sponsorDeals' rule in Firestore › Rules (see the setup notes)." : "Couldn't load deal details: " + e.message;
+      }
       render();
     } catch (e) { $("err").textContent = "Couldn't load the sponsors: " + denied(e); }
   }
@@ -184,13 +213,17 @@ if (!configured) {
     for (const s of sponsors) {
       const el = document.createElement("div"); el.className = "sp";
       const [cls, label] = status(s);
-      el.innerHTML = `<img alt=""><div><b></b><span class="tag ${cls}"></span><div class="small line"></div><div class="small when"></div>
+      el.innerHTML = `<img alt=""><div><b></b><span class="tag ${cls}"></span><div class="small line"></div><div class="small when"></div><div class="dealinfo hidden"></div>
         <div class="row" style="margin-top:8px"><button class="btn edit">Edit</button><button class="btn toggle"></button><button class="btn del">Delete</button></div></div>`;
       el.querySelector("img").src = s.image || "";
       el.querySelector("b").textContent = s.name || "(no name)";
       el.querySelector(".tag").textContent = label;
       el.querySelector(".line").textContent = [s.line, s.contact].filter(Boolean).join(" · ");
       el.querySelector(".when").textContent = s.start || s.end ? `From ${s.start || "now"} to ${s.end || "no end date"}` : "No end date";
+      const d = deals[s.id];
+      const info = d ? [[d.person, d.phone, d.email].filter(Boolean).join(" · "), [d.package, d.price].filter(Boolean).join(" · "), d.notes].filter(Boolean).join("\n") : "";
+      el.querySelector(".dealinfo").textContent = info;
+      el.querySelector(".dealinfo").classList.toggle("hidden", !info);
       el.querySelector(".toggle").textContent = s.active ? "Turn off" : "Turn on";
       el.querySelector(".edit").onclick = () => openForm(s);
       el.querySelector(".toggle").onclick = async () => {
@@ -199,7 +232,7 @@ if (!configured) {
       };
       el.querySelector(".del").onclick = async () => {
         if (!confirm(`Delete ${s.name || "this sponsor"}? This can't be undone.`)) return;
-        try { await fs.deleteDoc(fs.doc(db, "sponsors", s.id)); load(); }
+        try { await fs.deleteDoc(fs.doc(db, "sponsors", s.id)); if (deals[s.id]) await fs.deleteDoc(fs.doc(db, "sponsorDeals", s.id)).catch(() => {}); load(); }
         catch (e) { $("err").textContent = denied(e); }
       };
       $("list").append(el);
@@ -212,7 +245,8 @@ if (!configured) {
     $("formTitle").textContent = s ? "Edit sponsor" : "New sponsor";
     $("name").value = s?.name || ""; $("line").value = s?.line || ""; $("contact").value = s?.contact || "";
     $("start").value = s?.start || ""; $("end").value = s?.end || ""; $("active").checked = s ? !!s.active : true;
-    $("file").value = ""; $("formErr").textContent = "";
+    $("file").value = ""; $("formErr").textContent = dealNote;
+    for (const [k, id] of Object.entries(DEAL_FIELDS)) $(id).value = (s && deals[s.id]?.[k]) || "";
     $("preview").src = image; $("preview").classList.toggle("hidden", !image);
     $("form").classList.remove("hidden");
     $("form").scrollIntoView({ behavior: "smooth" });
@@ -258,8 +292,14 @@ if (!configured) {
     if (data.start && data.end && data.end < data.start) return $("formErr").textContent = "The last day is before the first day.";
     $("save").disabled = true;
     try {
-      if (editing) await fs.updateDoc(fs.doc(db, "sponsors", editing.id), { ...data, updatedAt: fs.serverTimestamp() });
-      else await fs.addDoc(fs.collection(db, "sponsors"), { ...data, createdAt: fs.serverTimestamp() });
+      let id = editing?.id;
+      if (editing) await fs.updateDoc(fs.doc(db, "sponsors", id), { ...data, updatedAt: fs.serverTimestamp() });
+      else id = (await fs.addDoc(fs.collection(db, "sponsors"), { ...data, createdAt: fs.serverTimestamp() })).id;
+      const deal = Object.fromEntries(Object.entries(DEAL_FIELDS).map(([k, el]) => [k, $(el).value.trim()]));
+      if (Object.values(deal).some(Boolean) || deals[id]) {
+        try { await fs.setDoc(fs.doc(db, "sponsorDeals", id), { ...deal, sponsor: data.name, updatedAt: fs.serverTimestamp() }); }
+        catch (e) { $("save").disabled = false; load(); return $("formErr").textContent = "The sponsor was saved, but not the deal details: " + (e.code === "permission-denied" ? "add the 'sponsorDeals' rule in Firestore › Rules first." : e.message); }
+      }
       $("form").classList.add("hidden");
       load();
     } catch (e) { $("formErr").textContent = "Couldn't save: " + denied(e); }
