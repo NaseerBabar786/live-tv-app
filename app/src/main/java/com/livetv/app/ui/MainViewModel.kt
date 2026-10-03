@@ -10,6 +10,7 @@ import com.livetv.app.data.Famelack
 import com.livetv.app.Edition
 import com.livetv.app.data.Playlist
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.Job
@@ -303,6 +304,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Whether the on-screen number pad is open (Up and Down then move on the pad). */
     var numberPadOpen by mutableStateOf(false)
+
+    /** True while the full-screen channel bar is hidden; OK then only brings it back. */
+    var channelBarHidden by mutableStateOf(false)
+    /** Bumped to bring the channel bar back for another 10 seconds. */
+    var channelBarWake by mutableIntStateOf(0)
 
     private var typedJob: Job? = null
 

@@ -68,6 +68,8 @@ class MainActivity : ComponentActivity() {
                 onGo = viewModel::goToTyped,
                 tip = viewModel.favoritesTip,
                 onTipDone = { viewModel.favoritesTip = null },
+                barWake = viewModel.channelBarWake,
+                onBarHidden = { viewModel.channelBarHidden = it },
             )
         } else {
             ChannelListScreen(
@@ -92,6 +94,11 @@ class MainActivity : ComponentActivity() {
      * Up/Down buttons on TV remotes. Both key-down and key-up are consumed so the player
      * doesn't also pop up its controls. Holding the button doesn't skip through channels.
      */
+    private val okKeys = setOf(
+        KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER,
+    )
+    private var okBringsBar = false
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (viewModel.state.value.playing != null) {
             // Any button closes the Favourites reminder (and still does its job).
@@ -105,6 +112,17 @@ class MainActivity : ComponentActivity() {
             }
             // With the number pad open, Up and Down move around the pad.
             if (viewModel.numberPadOpen) return super.dispatchKeyEvent(event)
+            // OK while the channel bar is hidden only brings the bar back (no pause).
+            if (event.keyCode in okKeys) {
+                if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                    okBringsBar = viewModel.channelBarHidden
+                    if (okBringsBar) viewModel.channelBarWake++
+                }
+                if (okBringsBar) {
+                    if (event.action == KeyEvent.ACTION_UP) okBringsBar = false
+                    return true
+                }
+            }
             val step = when (event.keyCode) {
                 KeyEvent.KEYCODE_CHANNEL_UP, KeyEvent.KEYCODE_PAGE_UP, KeyEvent.KEYCODE_DPAD_UP -> -1
                 KeyEvent.KEYCODE_CHANNEL_DOWN, KeyEvent.KEYCODE_PAGE_DOWN, KeyEvent.KEYCODE_DPAD_DOWN -> 1
