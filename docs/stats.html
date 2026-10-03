@@ -331,7 +331,7 @@ if (!configured) {
       ["Visitors, last 30 days", people(d30)],
       ["Page views, last 30 days", d30.reduce((a, r) => a + (r.views || 0), 0).toLocaleString()],
       ["Watched TV on the website, last 30 days", people(d30.filter(r => r.watch > 0))],
-      ["Hours watched on the website, last 30 days", hours(d30.reduce((a, r) => a + (r.watch || 0), 0))],
+      ...(w => w < 3600 ? [["Minutes watched on the website, last 30 days", Math.round(w / 60)]] : [["Hours watched on the website, last 30 days", hours(w)]])(d30.reduce((a, r) => a + (r.watch || 0), 0)),
       ["Used 2×2, last 30 days", people(d30.filter(r => r.quad > 0))],
     ];
     $("webStats").innerHTML = "";
