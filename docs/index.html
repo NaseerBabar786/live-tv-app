@@ -806,7 +806,8 @@
     if (window.Hls && Hls.isSupported() && !/\.(mp4|webm)(\?|$)/i.test(url)) {
       // Small buffers and low quality keep four streams light.
       cell.hls = new Hls({ maxBufferLength: 6, maxMaxBufferLength: 10, backBufferLength: 0,
-        capLevelToPlayerSize: true, capLevelOnFPSDrop: true, startLevel: 0 });
+        capLevelToPlayerSize: true, capLevelOnFPSDrop: true, startLevel: 0,
+        abrEwmaDefaultEstimate: 300000, testBandwidth: false });
       cell.hls.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) next(); });
       cell.hls.on(Hls.Events.MANIFEST_PARSED, () => cellQuality(cell));
       cell.hls.loadSource(url);
@@ -818,14 +819,14 @@
     v.play().catch(() => {});
   }
 
-  // Silent boxes stay on the lowest quality; the sound box may go up to 480p.
+  // Every 2×2 box stays on the stream's lowest quality so four can play smoothly.
   function cellQuality(cell) {
     const h = cell.hls;
     if (!h || !h.levels || !h.levels.length) return;
-    if (cells.indexOf(cell) !== soundCell) { h.autoLevelCapping = 0; return; }
-    let cap = 0;
-    h.levels.forEach((l, i) => { if ((l.height || 0) <= 480 && (l.height || 0) >= (h.levels[cap].height || 0)) cap = i; });
-    h.autoLevelCapping = cap;
+    let low = 0;
+    h.levels.forEach((l, i) => { if ((l.bitrate || 0) < (h.levels[low].bitrate || 0)) low = i; });
+    h.autoLevelCapping = low;
+    if (h.currentLevel !== low) h.nextLevel = low;
   }
 
   function quadSet(k, c) {
