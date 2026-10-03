@@ -290,12 +290,14 @@ fun ChannelListScreen(
             p.stream.stop(); p.showing = false; pool += p
         }
     }
-    // The highlighted card has the sound.
-    val soundId = focusedId
+    // The highlighted card has the sound; in 1+4 only the big player has it.
+    val bigPlayer = wideScreen && tileLayout == TileLayout.Five
+    val soundId = if (bigPlayer) window.firstOrNull()?.id else focusedId
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
-        // In 4×4, 2×3, 2×2 and 1×2 every card plays; otherwise only the highlighted one.
+        // In 1+4, 2×3, 2×2 and 1×2 every card plays; on phones only the highlighted one,
+        // and the rest show a picture.
         val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
@@ -304,17 +306,23 @@ fun ChannelListScreen(
         delay(600)
         // With several videos at once, each plays smaller so the TV can decode them all.
         val low = playing.size > 2
-        // 4×4 plays even lighter than 2×3 (half again), for its video and its pictures.
         val quality = when {
-            wideScreen && tileLayout == TileLayout.Sixteen -> Quality.Lowest
             wideScreen && tileLayout == TileLayout.Six -> Quality.Lower
             low -> Quality.Low
             else -> Quality.Normal
         }
+        // 1+4: the big player at normal quality, the four small ones low.
+        fun qualityOf(id: String) = when {
+            bigPlayer && id == window.firstOrNull()?.id -> Quality.Normal
+            bigPlayer -> Quality.Low
+            else -> quality
+        }
+        // A tile swapped into (or out of) the big player keeps playing at its new size.
+        for ((id, p) in rowPreviews) if (id in playing) p.setQuality(qualityOf(id))
         suspend fun start(id: String) {
             val channel = state.channels.firstOrNull { it.id == id } ?: return
             val p = pool.removeLastOrNull() ?: Preview.create(context)
-            p.setQuality(quality)
+            p.setQuality(qualityOf(id))
             p.setSound(previewSound && id == soundId)
             rowPreviews[id] = p
             p.stream.play(channel)
@@ -336,7 +344,7 @@ fun ChannelListScreen(
                 val channel = state.channels.firstOrNull { it.id == id } ?: continue
                 if (YouTube.isYouTube(channel.url)) continue // plays only in YouTube's player; its picture shows
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
-                p.setQuality(if (quality == Quality.Lowest) Quality.Lowest else Quality.Normal)
+                p.setQuality(Quality.Normal)
                 p.setSound(false)
                 rowPreviews[id] = p
                 try {
@@ -569,7 +577,7 @@ fun ChannelListScreen(
                         onSelect = { listChannelId = it.id; onWatch(it) },
                         onOpen = onPlay,
                     )
-                    else -> BoxWithConstraints(Modifier.fillMaxSize().then(if (fullTiles) Modifier.background(Color.Black) else Modifier)) {
+                    else -> BoxWithConstraints(Modifier.fillMaxSize().then(if (fullTiles || bigPlayer) Modifier.background(Color.Black) else Modifier)) {
                     // TVs and tablets: the chosen layout (16, 6, 4 or 2 tiles). Phones: as many as fit.
                     val gap = 14.dp
                     val wide = windowed
@@ -602,14 +610,16 @@ fun ChannelListScreen(
                         onFocused: () -> Unit = {},
                         arrows: Boolean = false,
                         onOpen: () -> Unit = {},
+                        height: Dp = cardHeight,
                         onClick: () -> Unit = { onOpen(); onPlay(channel) },
                     ) =
                         ChannelCard(
-                            height = cardHeight,
+                            height = height,
                             channel = channel,
                             favorite = channel.id in state.favorites,
                             onClick = onClick,
-                            bare = fullTiles,
+                            bare = fullTiles || bigPlayer,
+                            sound = if (bigPlayer) channel.id == soundId else null,
                             glow = !windowed,
                             onToggleFavorite = { onToggleFavorite(channel) },
                             focusRequester = cardRequester(channel.id),
@@ -714,6 +724,53 @@ fun ChannelListScreen(
                             }
                             true
                         }
+                        if (bigPlayer) {
+                            // 1+4: the big player on the left (75%), four small ones stacked on the
+                            // right (25%), packed together on black. Left and Right go round all five,
+                            // Up and Down change the highlighted one's channel. OK on a small one swaps
+                            // it into the big player; OK on the big one fills the screen with the five,
+                            // and OK on it again opens it full screen.
+                            val smallWidth = minOf(maxWidth / 4, maxHeight / 4 * 16f / 9f)
+                            val smallHeight = smallWidth * 9f / 16f
+                            Row(
+                                Modifier.fillMaxSize(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                window.firstOrNull()?.let { big ->
+                                    key(big.id) {
+                                        Box(Modifier.width(smallWidth * 3)) {
+                                            Tile(0, big, twoKey(big), height = smallHeight * 4, onClick = {
+                                                if (fullTiles) {
+                                                    sessionOpenedTile = 0
+                                                    onPlay(big)
+                                                } else tilesFull = true
+                                            })
+                                        }
+                                    }
+                                }
+                                Column(Modifier.width(smallWidth)) {
+                                    window.drop(1).forEach { small ->
+                                        key(small.id) {
+                                            Tile(0, small, twoKey(small), height = smallHeight, onClick = {
+                                                val big = window.first()
+                                                twoIds = window.map {
+                                                    when (it.id) {
+                                                        big.id -> small.id
+                                                        small.id -> big.id
+                                                        else -> it.id
+                                                    }
+                                                }
+                                                scope.launch {
+                                                    withFrameNanos { }
+                                                    runCatching { cardRequester(small.id).requestFocus() }
+                                                }
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                        } else
                         Column(
                             Modifier.fillMaxSize().padding(vertical = rowGap),
                             verticalArrangement = if (fullTiles) Arrangement.Center else Arrangement.spacedBy(rowGap),
@@ -880,6 +937,8 @@ private fun ChannelCard(
      * and a small speaker marks the tile with the sound.
      */
     glow: Boolean = true,
+    /** Whether the speaker shows; null shows it on the highlighted card (1+4 keeps it on the big player). */
+    sound: Boolean? = null,
 ) {
     if (bare) {
         var focused by remember { mutableStateOf(false) }
@@ -920,7 +979,7 @@ private fun ChannelCard(
             }
             // A thin, soft yellow line marks the tile with the sound.
             if (focused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
-            if (focused) SoundBadge(Modifier.align(Alignment.TopEnd))
+            if (sound ?: focused) SoundBadge(Modifier.align(Alignment.TopEnd))
         }
         return
     }
@@ -1334,9 +1393,9 @@ private fun WeatherNow() {
 
 /**
  * Preview picture quality. Normal: SD. Low (2×2): at most 160×90 and 225 kbit/s. Lower (2×3):
- * half of Low. Lowest (4×4): a quarter of Low. A stream with no smaller version plays its smallest one.
+ * half of Low. A stream with no smaller version plays its smallest one.
  */
-private enum class Quality { Normal, Low, Lower, Lowest }
+private enum class Quality { Normal, Low, Lower }
 
 /** A muted, low-quality preview player, and whether its video has started (the logo shows until then). */
 @Stable
@@ -1360,14 +1419,13 @@ private class Preview(val stream: StreamPlayer) {
             Quality.Normal -> params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE).setMaxVideoFrameRate(Int.MAX_VALUE)
             Quality.Low -> params.setMaxVideoSize(160, 90).setMaxVideoBitrate(225_000).setMaxVideoFrameRate(30)
             Quality.Lower -> params.setMaxVideoSize(80, 45).setMaxVideoBitrate(112_000).setMaxVideoFrameRate(30)
-            Quality.Lowest -> params.setMaxVideoSize(40, 23).setMaxVideoBitrate(56_000).setMaxVideoFrameRate(30)
         }
         stream.player.trackSelectionParameters = params.build()
     }
 
     /**
      * Only the tile with the sound decodes audio; on the silent ones the audio track is switched
-     * off, which saves the TV a decoder per tile (16 of them in 4×4).
+     * off, which saves the TV a decoder per tile.
      */
     fun setSound(on: Boolean) {
         stream.player.volume = if (on) 1f else 0f
@@ -1416,11 +1474,12 @@ private val MinTileWidth = 170.dp
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
+    /** One big player (left 75%) and four small ones stacked on the right; sound only from the big one. */
+    Five("1+4", 5, 1),
     Two("1×2", 2, 1),
     /** Four separate TVs, like 1×2. */
     Four("2×2", 2, 2),
     Six("2×3", 3, 2),
-    Sixteen("4×4", 4, 4),
 }
 
 /**
@@ -1429,7 +1488,7 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
  */
 private var sessionTileLayout: TileLayout? = null
 
-/** 1×2, 2×2, 2×3 and 4×4: every tile plays and has its own channel, changed with Up and Down. */
+/** 1+4, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() = this != TileLayout.List
 
 /**
