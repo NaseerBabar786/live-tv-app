@@ -615,6 +615,7 @@ fun ChannelListScreen(
                         arrows: Boolean = false,
                         onOpen: () -> Unit = {},
                         height: Dp = cardHeight,
+                        keepName: Boolean = false,
                         onClick: () -> Unit = { onOpen(); onPlay(channel) },
                     ) =
                         ChannelCard(
@@ -624,6 +625,7 @@ fun ChannelListScreen(
                             onClick = onClick,
                             bare = fullTiles || bigPlayer,
                             sound = if (bigPlayer) channel.id == soundId else null,
+                            keepName = keepName,
                             glow = !windowed,
                             onToggleFavorite = { onToggleFavorite(channel) },
                             focusRequester = cardRequester(channel.id),
@@ -793,7 +795,7 @@ fun ChannelListScreen(
                             @Composable
                             fun SmallTile(index: Int, small: Channel) = key(small.id) {
                                 Box(Modifier.width(smallWidth)) {
-                                    Tile(0, small, smallKey(index), height = smallHeight, onClick = {
+                                    Tile(0, small, smallKey(index), height = smallHeight, keepName = true, onClick = {
                                         val bigId = big?.id
                                         twoIds = window.map {
                                             when (it.id) {
@@ -990,6 +992,8 @@ private fun ChannelCard(
     glow: Boolean = true,
     /** Whether the speaker shows; null shows it on the highlighted card (1+3 keeps it on the big player). */
     sound: Boolean? = null,
+    /** Keeps the channel number and name showing, small (the 1+3 side tiles). */
+    keepName: Boolean = false,
 ) {
     if (bare) {
         var focused by remember { mutableStateOf(false) }
@@ -1016,7 +1020,21 @@ private fun ChannelCard(
                 Image(snapshot, contentDescription = null, contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize())
             }
             if (preview != null) PreviewVideo(preview)
-            if (showName) {
+            if (keepName) {
+                Text(
+                    if (channel.number > 0) "${channel.number}  ${channel.name}" else channel.name,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(4.dp)
+                        .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+                        .padding(horizontal = 6.dp, vertical = 2.dp),
+                )
+            } else if (showName) {
                 Text(
                     channel.name,
                     color = Color.White,
