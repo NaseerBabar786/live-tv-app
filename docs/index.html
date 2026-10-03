@@ -107,6 +107,11 @@
   .quad .cell .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 14px; text-align: center; padding: 8px; pointer-events: none; }
   .quad .cell .err { position: absolute; inset: 0; display: none; place-items: center; color: var(--muted); font-size: 13px; text-align: center; padding: 12px; background: #0A1530; pointer-events: none; }
   .quad .cell.failed .err { display: grid; }
+  .quad .cell .ud { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); display: none; flex-direction: column; gap: 6px; }
+  .quad .cell.has .ud { display: flex; }
+  .quad .cell .ud button { background: rgba(0,0,0,.65); color: #fff; border: 0; border-radius: 999px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; }
+  .quad .cell .ud button:hover, .quad .cell .ud button:focus-visible { background: var(--focus); color: #000; outline: none; }
+  .quad:fullscreen .cell .ud button { width: 48px; height: 48px; font-size: 20px; }
   .quad:fullscreen { display: flex; flex-direction: column; border-radius: 0; }
   .quad:fullscreen .cells { flex: 1; grid-template-rows: 1fr 1fr; }
   .quad:fullscreen .cell { aspect-ratio: auto; }
@@ -774,12 +779,14 @@
   const cells = [0, 1, 2, 3].map(k => {
     const el = document.createElement("div");
     el.className = "cell"; el.tabIndex = 0;
-    el.innerHTML = `<video muted playsinline autoplay></video><span class="spk">🔊</span><div class="empty">Box ${k + 1}: tap a channel below</div><div class="err">This channel isn't playing right now. Tap ✕ and pick another.</div><span class="lbl"></span><button class="x" aria-label="Remove channel">✕</button>`;
+    el.innerHTML = `<video muted playsinline autoplay></video><span class="spk">🔊</span><div class="empty">Box ${k + 1}: tap a channel below</div><div class="err">This channel isn't playing right now. Tap ✕ and pick another.</div><span class="lbl"></span><button class="x" aria-label="Remove channel">✕</button><div class="ud"><button class="up" aria-label="Previous channel">▲</button><button class="dn" aria-label="Next channel">▼</button></div>`;
     $("quadCells").append(el);
     const cell = { el, video: el.querySelector("video"), hls: null, ch: null };
     el.onclick = () => quadSound(k);
     el.onkeydown = ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); quadSound(k); } };
     el.querySelector(".x").onclick = ev => { ev.stopPropagation(); quadSet(k, null); };
+    el.querySelector(".up").onclick = ev => { ev.stopPropagation(); quadStep(k, -1); };
+    el.querySelector(".dn").onclick = ev => { ev.stopPropagation(); quadStep(k, 1); };
     return cell;
   });
 
@@ -796,9 +803,11 @@
     const next = () => { if (cell.ch === c) cellStream(cell, c, n + 1); };
     const v = cell.video;
     if (window.Hls && Hls.isSupported() && !/\.(mp4|webm)(\?|$)/i.test(url)) {
-      // Small buffers and the lowest quality keep four streams light.
-      cell.hls = new Hls({ maxBufferLength: 10, capLevelToPlayerSize: true, startLevel: 0 });
+      // Small buffers and low quality keep four streams light.
+      cell.hls = new Hls({ maxBufferLength: 6, maxMaxBufferLength: 10, backBufferLength: 0,
+        capLevelToPlayerSize: true, capLevelOnFPSDrop: true, startLevel: 0 });
       cell.hls.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) next(); });
+      cell.hls.on(Hls.Events.MANIFEST_PARSED, () => cellQuality(cell));
       cell.hls.loadSource(url);
       cell.hls.attachMedia(v);
     } else {
@@ -808,12 +817,23 @@
     v.play().catch(() => {});
   }
 
+  // Silent boxes stay on the lowest quality; the sound box may go up to 480p.
+  function cellQuality(cell) {
+    const h = cell.hls;
+    if (!h || !h.levels || !h.levels.length) return;
+    if (cells.indexOf(cell) !== soundCell) { h.autoLevelCapping = 0; return; }
+    let cap = 0;
+    h.levels.forEach((l, i) => { if ((l.height || 0) <= 480 && (l.height || 0) >= (h.levels[cap].height || 0)) cap = i; });
+    h.autoLevelCapping = cap;
+  }
+
   function quadSet(k, c) {
     const cell = cells[k];
     cell.ch = c;
     cell.el.querySelector(".lbl").textContent = c ? c.number + ". " + c.name : "";
     cell.el.querySelector(".empty").style.display = c ? "none" : "";
     cell.el.querySelector(".x").style.display = c ? "" : "none";
+    cell.el.classList.toggle("has", !!c);
     if (c && quadOpen) cellStream(cell, c, 0); else { cellStop(cell); cell.el.classList.remove("failed"); }
     quadIds[k] = c ? c.id : null;
     store.set("quad", quadIds);
@@ -824,8 +844,22 @@
     cells.forEach((cell, i) => {
       cell.video.muted = i !== k;
       cell.el.classList.toggle("sound", i === k);
+      cellQuality(cell);
     });
     if (cells[k].ch) cells[k].video.play().catch(() => {});
+  }
+
+  // ▲/▼ on a box: previous/next channel in the list, skipping ones already in another box.
+  function quadStep(k, dir) {
+    const list = visible.length ? visible : channels;
+    if (!list.length) return;
+    let i = list.indexOf(cells[k].ch);
+    if (i < 0) i = dir > 0 ? -1 : 0;
+    for (let n = 0; n < list.length; n++) {
+      i = (i + dir + list.length) % list.length;
+      if (!cells.some((cell, j) => j !== k && cell.ch === list[i])) break;
+    }
+    quadSet(k, list[i]);
   }
 
   function quadAdd(c) {
@@ -855,6 +889,13 @@
     if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
     else (q.requestFullscreen || q.webkitRequestFullscreen)?.call(q)?.catch?.(() => {});
   };
+  // In 2×2 full screen the keyboard or remote works like the TV app: Up/Down change the sound box's channel, Left/Right move the sound.
+  document.addEventListener("keydown", ev => {
+    if (document.fullscreenElement !== $("quad")) return;
+    const moves = { ArrowLeft: -1, ArrowRight: 1 };
+    if (ev.key === "ArrowUp" || ev.key === "ArrowDown") { ev.preventDefault(); quadStep(soundCell, ev.key === "ArrowUp" ? -1 : 1); }
+    else if (ev.key in moves) { ev.preventDefault(); quadSound((soundCell + moves[ev.key] + 4) % 4); }
+  });
   document.addEventListener("fullscreenchange", () => { $("quadFull").textContent = document.fullscreenElement ? "Exit full screen" : "Full screen"; });
 
   // Install guide tabs
