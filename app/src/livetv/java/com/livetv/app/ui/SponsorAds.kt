@@ -59,15 +59,18 @@ fun SponsorStrip(modifier: Modifier = Modifier) {
         delay(STRIP_MS)
         turn++
     }
-    Box(
-        modifier
-            .fillMaxWidth()
-            .aspectRatio(16f / 9f)
-            .clip(CardShape)
-            .background(Color.Black),
-    ) {
-        SponsorPicture(sponsor, Modifier.fillMaxSize())
-        SponsorLabel(Modifier.align(Alignment.TopStart))
+    // The "Sponsor" tag sits above the picture, so it never covers the sponsor's logo.
+    Column(modifier.fillMaxWidth()) {
+        SponsorLabel(Modifier.padding(bottom = 4.dp))
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .clip(CardShape)
+                .background(Color.Black),
+        ) {
+            SponsorPicture(sponsor, Modifier.fillMaxSize())
+        }
     }
 }
 
@@ -111,10 +114,10 @@ fun SponsorCard(channelId: String?) {
         ) {
             Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).background(Color.Black)) {
                 SponsorPicture(sponsor, Modifier.fillMaxSize())
-                SponsorLabel(Modifier.align(Alignment.TopStart))
             }
-            val words = listOf(sponsor.name, sponsor.contact).filter { it.isNotBlank() }.joinToString(" · ")
-            if (words.isNotEmpty()) {
+            // "Sponsor" goes in the line under the picture, not over it.
+            val words = (listOf("Sponsor") + listOf(sponsor.name, sponsor.contact).filter { it.isNotBlank() }).joinToString(" · ")
+            run {
                 Text(
                     words,
                     color = Color.White,
@@ -138,14 +141,5 @@ private fun SponsorPicture(sponsor: Sponsor, modifier: Modifier) {
 /** Says it's an ad. */
 @Composable
 private fun SponsorLabel(modifier: Modifier) {
-    Text(
-        "Sponsor",
-        color = Color.White,
-        fontSize = 10.sp,
-        modifier = modifier
-            .padding(6.dp)
-            .clip(ChipShape)
-            .background(Color(0x99000000))
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-    )
+    Text("Sponsor", color = Color.White.copy(alpha = 0.7f), fontSize = 11.sp, modifier = modifier)
 }
