@@ -1399,14 +1399,15 @@ private fun PreviewVideo(preview: Preview) {
 private val MinTileWidth = 170.dp
 
 /** How many tiles a TV screen shows; the label is what the top-bar button reads. */
+/** In the order the top-bar button steps through them. */
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
-    Sixteen("4×4", 4, 4),
-    Six("2×3", 3, 2),
-    /** Four separate TVs, like 1×2. */
-    Four("2×2", 2, 2),
-    Two("1×2", 2, 1),
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
+    Two("1×2", 2, 1),
+    /** Four separate TVs, like 1×2. */
+    Four("2×2", 2, 2),
+    Six("2×3", 3, 2),
+    Sixteen("4×4", 4, 4),
 }
 
 /**
