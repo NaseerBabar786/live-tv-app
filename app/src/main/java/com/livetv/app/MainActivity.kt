@@ -66,6 +66,8 @@ class MainActivity : ComponentActivity() {
                 onDigit = viewModel::typeDigit,
                 onDeleteDigit = viewModel::deleteDigit,
                 onGo = viewModel::goToTyped,
+                tip = viewModel.favoritesTip,
+                onTipDone = { viewModel.favoritesTip = null },
             )
         } else {
             ChannelListScreen(
@@ -92,6 +94,8 @@ class MainActivity : ComponentActivity() {
      */
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (viewModel.state.value.playing != null) {
+            // Any button closes the Favourites reminder (and still does its job).
+            if (event.action == KeyEvent.ACTION_DOWN) viewModel.favoritesTip = null
             // Number buttons type a channel number (it changes 2 seconds after the last digit).
             if (event.keyCode in KeyEvent.KEYCODE_0..KeyEvent.KEYCODE_9) {
                 if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {

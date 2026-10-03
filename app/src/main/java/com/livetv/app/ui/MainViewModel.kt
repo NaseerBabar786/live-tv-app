@@ -268,7 +268,18 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(favorites = updated) }
     }
 
+    /** Reminder shown over the first channel opened after the app starts, until 6 favourites. */
+    var favoritesTip by mutableStateOf<String?>(null)
+    private var tipChecked = false
+
     fun play(channel: Channel) {
+        if (!tipChecked) {
+            tipChecked = true
+            if (_state.value.favorites.size < 6) {
+                favoritesTip = "Save at least 6 channels in Favourites. Press ☆ at the top of this screen, " +
+                    "or hold OK on a channel in the list."
+            }
+        }
         repo.lastChannelUrl = channel.url
         _state.update { it.copy(playing = channel, lastWatchedId = channel.id) }
     }
@@ -280,6 +291,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun stop() {
+        favoritesTip = null
         clearTyped()
         numberPadOpen = false
         _state.update { it.copy(playing = null) }

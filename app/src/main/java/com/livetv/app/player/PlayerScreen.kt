@@ -80,20 +80,23 @@ fun PlayerScreen(
     onDigit: (Int) -> Unit = {},
     onDeleteDigit: () -> Unit = {},
     onGo: () -> Unit = {},
+    /** A message over the picture for 10 seconds (the Favourites reminder). */
+    tip: String? = null,
+    onTipDone: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     var error by remember { mutableStateOf<String?>(null) }
     var controlsVisible by remember { mutableStateOf(true) }
-    // The channel bar (back arrow, number and name, star) goes away after 20 seconds and comes
-    // back for another 20 when the channel changes, a number is typed or OK brings up the controls.
+    // The channel bar (back arrow, number and name, star) goes away after 5 seconds and comes
+    // back for another 5 when the channel changes, a number is typed or OK brings up the controls.
     var barShown by remember { mutableStateOf(true) }
     var barWake by remember { mutableIntStateOf(0) }
     LaunchedEffect(channel.id, barWake, typedNumber, numberPadOpen) {
         barShown = true
         if (numberPadOpen) return@LaunchedEffect
-        delay(20_000)
+        delay(5_000)
         barShown = false
     }
 
@@ -215,6 +218,23 @@ fun PlayerScreen(
                     .padding(top = 64.dp, end = 32.dp)
                     .background(Color.Black.copy(alpha = 0.6f), MaterialTheme.shapes.medium)
                     .padding(horizontal = 20.dp, vertical = 8.dp),
+            )
+        }
+
+        if (tip != null && !inPictureInPicture) {
+            LaunchedEffect(tip) {
+                delay(10_000)
+                onTipDone()
+            }
+            Text(
+                tip,
+                color = Color.White,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 48.dp, start = 32.dp, end = 32.dp)
+                    .background(Color.Black.copy(alpha = 0.75f), MaterialTheme.shapes.medium)
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
             )
         }
 
