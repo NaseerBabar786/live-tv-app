@@ -303,7 +303,12 @@ fun ChannelListScreen(
         // In 1+3, 2×3, 2×2 and 1×2 every card plays; on phones only the highlighted one,
         // and the rest show a picture.
         val playAll = wideScreen && tileLayout.separateTvs
-        val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
+        // In 1+3 only the big player plays; the side tiles show pictures, refreshed in turn below.
+        val playing = when {
+            bigPlayer -> setOfNotNull(window.firstOrNull()?.id)
+            playAll -> ids.take(tileLayout.columns * tileLayout.rows).toSet()
+            else -> setOfNotNull(live)
+        }
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
         if (!allowed) return@LaunchedEffect
@@ -339,6 +344,31 @@ fun ChannelListScreen(
             for (id in playing) if (rowPreviews[id]?.showing == false) { release(id); start(id) }
         }
         if (snapshots.size > 80) snapshots.clear()
+        // 1+3: one player at a time visits the side tiles, keeps a fresh picture of each and
+        // moves on, so every side tile updates about every 5 seconds with one video decoding.
+        if (bigPlayer) {
+            val sides = window.drop(1).filter { it.id !in playing && !YouTube.isYouTube(it.url) }
+            if (sides.isEmpty()) return@LaunchedEffect
+            val lastAt = mutableMapOf<String, Long>()
+            while (true) {
+                for (channel in sides) {
+                    val wait = (lastAt[channel.id] ?: 0L) + 5_000 - System.currentTimeMillis()
+                    if (wait > 0) delay(wait)
+                    val p = pool.removeLastOrNull() ?: Preview.create(context)
+                    p.setQuality(Quality.Lower)
+                    p.setSound(false)
+                    rowPreviews[channel.id] = p
+                    try {
+                        p.stream.play(channel)
+                        withTimeoutOrNull(8_000) { snapshotFlow { p.showing }.first { it } }
+                        if (p.showing) delay(300) // release() keeps this frame
+                    } finally {
+                        release(channel.id)
+                    }
+                    lastAt[channel.id] = System.currentTimeMillis()
+                }
+            }
+        }
         // One picture at a time: the channel opens muted in its card, the first frame is kept
         // and the channel closes again.
         // Each card gets one picture; it isn't refreshed.
