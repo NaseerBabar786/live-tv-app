@@ -126,6 +126,10 @@
   .bz:hover, .bz:focus-visible { transform: scale(1.02); }
   .bz-top { margin-top: 8px; }
   .bz-top img { width: auto; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .gallery figure { margin: 0; }
+  .gallery img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 10px; background: #000; }
+  .gallery figcaption { margin-top: 6px; font-size: 14px; color: var(--muted); }
   .bz-note { max-width: 728px; margin: 14px auto 0; padding: 0 16px; text-align: center; line-height: 1.5; }
   .bz-note .t1 { margin: 0 0 4px; font-size: 20px; font-weight: 800; color: var(--text); }
   .bz-note .t2 { margin: 0 0 6px; color: var(--muted); }
@@ -186,6 +190,7 @@
     </a>
     <nav>
       <a href="#features">Features</a>
+      <a href="#layouts">Layouts</a>
       <a href="#watch">Watch</a>
       <a href="#download">Download</a>
       <a href="#guide">Install guide</a>
@@ -221,12 +226,6 @@
     </figure>
   </div>
 
-  <a class="bz bz-top" href="https://www.bulkbazaar.ca" target="_blank" rel="noopener" aria-label="Bulk Bazaar Inc.: wholesale T-shirt bags">
-    <picture>
-      <source media="(min-width: 760px)" srcset="media/bz-wide.png">
-      <img src="media/bz-phone.png" alt="Bulk Bazaar Inc.: wholesale T-shirt bags. Buy in bulk and save. Get a quote." width="320" height="100">
-    </picture>
-  </a>
   <div class="bz-note">
     <p class="t2">Live TV is free thanks to our sponsor, <b>Bulk Bazaar Inc.</b> Please show them love: visit <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">bulkbazaar.ca</a> and leave them a 5-star review <span class="stars">★★★★★</span></p>
     <p class="t3">Enjoying Live TV? Please share it with your family and friends!</p>
@@ -317,6 +316,21 @@
         <tr><td>Speaker (top)</td><td>Turn tile sound on or off</td></tr>
         <tr><td>Gear (top right)</td><td>Settings: channel list, countries, languages, your playlists, MTA</td></tr>
       </table>
+    </div>
+  </section>
+
+  <section id="layouts">
+    <h2>See it on a TV</h2>
+    <p class="lead">Real photos of Live TV on a Chromecast with Google TV. Press the TV button at the top to switch layouts.</p>
+    <div class="gallery">
+      <figure><a href="media/tv/1plus-list.jpg" target="_blank" rel="noopener"><img src="media/tv/1plus-list.jpg" alt="Live TV on a TV, 1+List: one big player with the channel list beside it" loading="lazy" width="1200" height="720"></a><figcaption>1+List: one big player with the channel list beside it</figcaption></figure>
+      <figure><a href="media/tv/1plus3.jpg" target="_blank" rel="noopener"><img src="media/tv/1plus3.jpg" alt="Live TV on a TV, 1+3: a big player with the sound, plus three live tiles" loading="lazy" width="1200" height="720"></a><figcaption>1+3: a big player with the sound, plus three live tiles</figcaption></figure>
+      <figure><a href="media/tv/1x2.jpg" target="_blank" rel="noopener"><img src="media/tv/1x2.jpg" alt="Live TV on a TV, 1×2: two channels side by side" loading="lazy" width="1200" height="720"></a><figcaption>1×2: two channels side by side</figcaption></figure>
+      <figure><a href="media/tv/1x2-full.jpg" target="_blank" rel="noopener"><img src="media/tv/1x2-full.jpg" alt="Live TV on a TV, 1×2 full screen: press OK and the two channels fill the TV" loading="lazy" width="1200" height="720"></a><figcaption>1×2 full screen: press OK and the two channels fill the TV</figcaption></figure>
+      <figure><a href="media/tv/2x2.jpg" target="_blank" rel="noopener"><img src="media/tv/2x2.jpg" alt="Live TV on a TV, 2×2: four channels, all playing" loading="lazy" width="1200" height="720"></a><figcaption>2×2: four channels, all playing</figcaption></figure>
+      <figure><a href="media/tv/2x2-full.jpg" target="_blank" rel="noopener"><img src="media/tv/2x2-full.jpg" alt="Live TV on a TV, 2×2 full screen" loading="lazy" width="1200" height="720"></a><figcaption>2×2 full screen</figcaption></figure>
+      <figure><a href="media/tv/2x3.jpg" target="_blank" rel="noopener"><img src="media/tv/2x3.jpg" alt="Live TV on a TV, 2×3: six channels at the same time" loading="lazy" width="1200" height="720"></a><figcaption>2×3: six channels at the same time</figcaption></figure>
+      <figure><a href="media/tv/2x3-full.jpg" target="_blank" rel="noopener"><img src="media/tv/2x3-full.jpg" alt="Live TV on a TV, 2×3 full screen" loading="lazy" width="1200" height="720"></a><figcaption>2×3 full screen</figcaption></figure>
     </div>
   </section>
 
