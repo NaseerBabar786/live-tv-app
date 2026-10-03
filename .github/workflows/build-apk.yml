@@ -49,6 +49,7 @@ jobs:
       - name: Build Live TV, Stream Player Plus and Live TV Plus
         env:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          TV_CLIENT_SECRET: ${{ secrets.TV_CLIENT_SECRET }}
         run: ./gradlew assembleLivetvDebug assemblePlayerRelease bundlePlayerRelease assemblePlusRelease bundlePlusRelease
 
       - name: Build Live Cam
