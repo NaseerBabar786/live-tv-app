@@ -109,6 +109,7 @@
   .quad .cell.failed .err { display: grid; }
   .quad .cell .ud { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); display: none; flex-direction: column; gap: 6px; }
   .quad .cell.has .ud { display: flex; }
+  @media (hover: hover) { .quad .cell.has .ud { display: none; } .quad .cell.has:hover .ud, .quad .cell.has:focus-within .ud { display: flex; } }
   .quad .cell .ud button { background: rgba(0,0,0,.65); color: #fff; border: 0; border-radius: 999px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; }
   .quad .cell .ud button:hover, .quad .cell .ud button:focus-visible { background: var(--focus); color: #000; outline: none; }
   .quad:fullscreen .cell .ud button { width: 48px; height: 48px; font-size: 20px; }
