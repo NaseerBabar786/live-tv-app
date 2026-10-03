@@ -57,6 +57,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import com.livetv.app.data.Channel
 import com.livetv.app.ui.focusGlow
@@ -141,6 +142,9 @@ fun PlayerScreen(
                     player = streamPlayer.player
                     keepScreenOn = true
                     setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
+                    // Live channels fill the whole screen, stretched if their picture is a
+                    // different shape (no black bars); movies keep their own shape.
+                    if (onNumberPad != null) resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL
                     setShowNextButton(false)
                     setShowPreviousButton(false)
                     setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
