@@ -213,6 +213,35 @@ fun PlayerScreen(
             }
         }
 
+        // With the bar hidden, live channels keep just their number, small in the top-left corner,
+        // for 5 minutes; it comes back whenever the bar does.
+        var numberShown by remember { mutableStateOf(true) }
+        LaunchedEffect(barShown) {
+            numberShown = true
+            if (barShown) return@LaunchedEffect
+            delay(5 * 60_000L)
+            numberShown = false
+        }
+        AnimatedVisibility(
+            visible = !barShown && numberShown && onNumberPad != null && channel.number > 0 && !inPictureInPicture,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .safeDrawingPadding()
+                .padding(16.dp),
+        ) {
+            Text(
+                "${channel.number}",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .background(Color.Black.copy(alpha = 0.5f), MaterialTheme.shapes.small)
+                    .padding(horizontal = 10.dp, vertical = 4.dp),
+            )
+        }
+
         // The number being typed, big in the top-right corner like a TV.
         if (typedNumber.isNotEmpty() && !inPictureInPicture) {
             Text(
