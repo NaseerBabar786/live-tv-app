@@ -295,8 +295,9 @@ fun ChannelListScreen(
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
-        // In 4×4, 2×3, 2×2 and 1×2 every card plays; otherwise only the highlighted one.
-        val playAll = wideScreen && tileLayout.separateTvs
+        // In 2×3, 2×2 and 1×2 every card plays; in 4×4 (and phones) only the highlighted one,
+        // and the rest show a picture.
+        val playAll = wideScreen && tileLayout.separateTvs && tileLayout != TileLayout.Sixteen
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
@@ -304,9 +305,7 @@ fun ChannelListScreen(
         delay(600)
         // With several videos at once, each plays smaller so the TV can decode them all.
         val low = playing.size > 2
-        // 4×4 plays even lighter than 2×3 (half again), for its video and its pictures.
         val quality = when {
-            wideScreen && tileLayout == TileLayout.Sixteen -> Quality.Lowest
             wideScreen && tileLayout == TileLayout.Six -> Quality.Lower
             low -> Quality.Low
             else -> Quality.Normal
@@ -336,7 +335,7 @@ fun ChannelListScreen(
                 val channel = state.channels.firstOrNull { it.id == id } ?: continue
                 if (YouTube.isYouTube(channel.url)) continue // plays only in YouTube's player; its picture shows
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
-                p.setQuality(if (quality == Quality.Lowest) Quality.Lowest else Quality.Normal)
+                p.setQuality(Quality.Normal)
                 p.setSound(false)
                 rowPreviews[id] = p
                 try {
@@ -1334,9 +1333,9 @@ private fun WeatherNow() {
 
 /**
  * Preview picture quality. Normal: SD. Low (2×2): at most 160×90 and 225 kbit/s. Lower (2×3):
- * half of Low. Lowest (4×4): a quarter of Low. A stream with no smaller version plays its smallest one.
+ * half of Low. A stream with no smaller version plays its smallest one.
  */
-private enum class Quality { Normal, Low, Lower, Lowest }
+private enum class Quality { Normal, Low, Lower }
 
 /** A muted, low-quality preview player, and whether its video has started (the logo shows until then). */
 @Stable
@@ -1360,7 +1359,6 @@ private class Preview(val stream: StreamPlayer) {
             Quality.Normal -> params.setMaxVideoSizeSd().setMaxVideoBitrate(Int.MAX_VALUE).setMaxVideoFrameRate(Int.MAX_VALUE)
             Quality.Low -> params.setMaxVideoSize(160, 90).setMaxVideoBitrate(225_000).setMaxVideoFrameRate(30)
             Quality.Lower -> params.setMaxVideoSize(80, 45).setMaxVideoBitrate(112_000).setMaxVideoFrameRate(30)
-            Quality.Lowest -> params.setMaxVideoSize(40, 23).setMaxVideoBitrate(56_000).setMaxVideoFrameRate(30)
         }
         stream.player.trackSelectionParameters = params.build()
     }
