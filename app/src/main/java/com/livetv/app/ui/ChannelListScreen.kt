@@ -988,6 +988,7 @@ fun ChannelListScreen(
                             content = cards,
                         )
                     }
+                    }
                     // 1×2 leaves a band under the two tiles: Live TV's sponsor bar goes there.
                     if (wide && tileLayout == TileLayout.Two && !fullTiles && rowGap >= 36.dp) {
                         EditionSponsorBar(
@@ -996,7 +997,6 @@ fun ChannelListScreen(
                                 .padding(bottom = 5.dp)
                                 .height(minOf(rowGap - 10.dp, 96.dp)),
                         )
-                    }
                     }
                     }
                 }
