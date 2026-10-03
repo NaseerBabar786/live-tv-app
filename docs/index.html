@@ -956,9 +956,18 @@
     if (p.checked_at) $("plDate").textContent = ` Last checked ${p.checked_at.slice(0, 10)}.`;
   }).catch(() => {});
 
+  // Anonymous watch-time counting for the owner's Stats page (assets/visits.js).
+  const playing = v => v && !v.paused && !v.ended && v.readyState >= 3;
+  setInterval(() => {
+    if (!window.ltWatch || document.hidden) return;
+    if ($("player").classList.contains("open") && playing(video)) ltWatch(visible[current], 5, false);
+    else if (quadOpen && cells[soundCell].ch && playing(cells[soundCell].video)) ltWatch(cells[soundCell].ch, 5, true);
+  }, 5000);
+
   load();
 })();
 </script>
+<script src="assets/visits.js"></script>
 <script src="assets/admin-nav.js"></script>
 </body>
 </html>
