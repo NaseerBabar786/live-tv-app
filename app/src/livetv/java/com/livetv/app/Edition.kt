@@ -28,6 +28,7 @@ import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
 import com.livetv.app.ui.SponsorScreen
 import com.livetv.app.ui.SponsorStrip
+import com.livetv.app.ui.SponsorTicker
 import com.livetv.app.sponsor.Sponsor
 import com.livetv.app.sponsor.SponsorViews
 import com.livetv.app.sponsor.Sponsors
@@ -155,6 +156,10 @@ fun EditionSponsorStrip(modifier: Modifier) = SponsorStrip(modifier)
 /** The paying sponsors' bar under the two tiles of 1×2. */
 @Composable
 fun EditionSponsorBar(modifier: Modifier) = SponsorBar(modifier)
+
+/** The "advertise with us" line beside the channel count. */
+@Composable
+fun EditionTicker(modifier: Modifier) = SponsorTicker(modifier)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

@@ -49,6 +49,10 @@ object Sponsors {
     private var file: File? = null
     private var prefs: SharedPreferences? = null
 
+    private val _ticker = MutableStateFlow<String?>(DEFAULT_TICKER)
+    /** The scrolling "advertise with us" line, as the owner typed it on the website; null when turned off. */
+    val ticker: StateFlow<String?> = _ticker.asStateFlow()
+
     /** Today's sponsors, in the order the owner added them. */
     fun current(): List<Sponsor> = _all.value.filter { it.showsOn(Watching.today(System.currentTimeMillis())) }
 
@@ -60,6 +64,7 @@ object Sponsors {
             prefs = context.applicationContext.getSharedPreferences("sponsors", Context.MODE_PRIVATE)
         }
         runCatching { file!!.takeIf { it.exists() }?.readText()?.let { _all.value = parse(JSONArray(it)) } }
+        prefs!!.takeIf { it.contains(K_TICKER) }?.let { _ticker.value = it.getString(K_TICKER, "")?.takeIf { t -> t.isNotEmpty() } }
         Unit
     }
 
@@ -69,7 +74,14 @@ object Sponsors {
         runCatching {
             val docs = Firestore.list("", "sponsors", newestFirst = false, limit = 50, token = account.token())
             val arr = JSONArray()
+            var ticker: String? = DEFAULT_TICKER
             for ((id, f) in docs) {
+                // The ticker's words live in the same collection, so no new Firebase rule is needed.
+                if (id == TICKER_ID) {
+                    val on = f.optJSONObject("active")?.optBoolean("booleanValue") ?: false
+                    ticker = f.text("text").trim().takeIf { on && it.isNotEmpty() }
+                    continue
+                }
                 arr.put(
                     JSONObject()
                         .put("id", id)
@@ -85,6 +97,8 @@ object Sponsors {
             }
             file?.writeText(arr.toString())
             _all.value = parse(arr)
+            prefs?.edit()?.putString(K_TICKER, ticker ?: "")?.apply()
+            _ticker.value = ticker
         }
         Unit
     }
@@ -121,6 +135,11 @@ object Sponsors {
     }.getOrNull()
 
     private fun JSONObject.text(field: String): String = optJSONObject(field)?.optString("stringValue") ?: ""
+
+    /** The ticker's document in sponsors/; older app versions skip it because it has no picture. */
+    private const val TICKER_ID = "_ticker"
+    private const val K_TICKER = "ticker"
+    const val DEFAULT_TICKER = "Advertise your business on Live TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise"
 }
 
 /**

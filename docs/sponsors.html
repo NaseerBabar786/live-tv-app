@@ -78,6 +78,15 @@
     </form>
 
     <div class="list" id="list"></div>
+
+    <form id="tickerForm" class="panel" style="margin-top:18px">
+      <h2 style="margin-top:0">Scrolling line</h2>
+      <p class="small">A line of text that scrolls across the top of the channels once every 10 minutes (Live TV 1.8.95 and newer), next to the channel count. It never runs over a channel being watched full screen.</p>
+      <label class="f">Words <input type="text" id="tickerText" maxlength="160"></label>
+      <label class="f" style="font-weight:400"><input type="checkbox" id="tickerOn" checked> Show in the app</label>
+      <div class="row"><button class="btn primary" id="tickerSave" type="submit">Save</button></div>
+      <p class="small" id="tickerMsg"></p>
+    </form>
     <p class="small" id="who" style="margin-top:18px"></p>
   </div>
   <p class="err" id="err"></p>
@@ -128,7 +137,9 @@ if (!configured) {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = fs.getFirestore(app);
-  let sponsors = [], editing = null, image = "", banner = "";
+  let sponsors = [], editing = null, image = "", banner = "", ticker = null;
+  const TICKER_ID = "_ticker";
+  const DEFAULT_TICKER = "Advertise your business on Live TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
   document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
@@ -150,7 +161,12 @@ if (!configured) {
   async function load() {
     try {
       const snap = await fs.getDocs(fs.query(fs.collection(db, "sponsors"), fs.orderBy("createdAt")));
-      sponsors = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const all = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      // The scrolling line lives in the same collection as "_ticker"; it isn't a sponsor.
+      ticker = all.find(s => s.id === TICKER_ID) || null;
+      sponsors = all.filter(s => s.id !== TICKER_ID);
+      $("tickerText").value = ticker ? (ticker.text || "") : DEFAULT_TICKER;
+      $("tickerOn").checked = ticker ? !!ticker.active : true;
       render();
     } catch (e) { $("err").textContent = "Couldn't load the sponsors: " + denied(e); }
   }
@@ -201,6 +217,19 @@ if (!configured) {
     $("form").classList.remove("hidden");
     $("form").scrollIntoView({ behavior: "smooth" });
   }
+  $("tickerForm").onsubmit = async ev => {
+    ev.preventDefault();
+    $("tickerSave").disabled = true; $("tickerMsg").textContent = "";
+    try {
+      await fs.setDoc(fs.doc(db, "sponsors", TICKER_ID), {
+        kind: "ticker", text: $("tickerText").value.trim(), active: $("tickerOn").checked,
+        createdAt: ticker?.createdAt || fs.serverTimestamp(), updatedAt: fs.serverTimestamp(),
+      });
+      $("tickerMsg").textContent = "Saved. TVs pick it up the next time the app starts.";
+      load();
+    } catch (e) { $("tickerMsg").textContent = "Couldn't save: " + denied(e); }
+    $("tickerSave").disabled = false;
+  };
   $("add").onclick = () => openForm(null);
   $("cancel").onclick = () => $("form").classList.add("hidden");
   $("file").onchange = async () => {

@@ -151,6 +151,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
 import com.livetv.app.EditionSponsorBar
+import com.livetv.app.EditionTicker
 import com.livetv.app.EditionSponsorStrip
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
@@ -597,12 +598,18 @@ fun ChannelListScreen(
                     },
                 )
                 if (!fullTiles && !state.loading && state.channels.isNotEmpty()) {
-                    Text(
-                        "${state.visibleChannels.size} channels",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
-                    )
+                    // The channel count, with Live TV's "advertise with us" ticker running beside it now and then.
+                    Row(
+                        Modifier.fillMaxWidth().height(22.dp).padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "${state.visibleChannels.size} channels",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        EditionTicker(Modifier.weight(1f).fillMaxHeight().padding(start = 24.dp))
+                    }
                 }
 
                 val channels = state.visibleChannels

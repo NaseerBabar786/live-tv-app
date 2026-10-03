@@ -1,7 +1,19 @@
 package com.livetv.app.ui
 
 import android.os.SystemClock
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import kotlinx.coroutines.flow.first
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +59,65 @@ private const val STRIP_MS = 60_000L
 private const val CARD_MS = 5_000L
 private const val CARD_EVERY_MS = 20 * 60_000L
 private const val CARD_NOT_BEFORE_MS = 5 * 60_000L
+
+/** The "advertise with us" ticker: first a minute after start, then every 10 minutes, scrolling across once. */
+private const val TICKER_FIRST_MS = 60_000L
+private const val TICKER_EVERY_MS = 10 * 60_000L
+private const val TICKER_DP_PER_SECOND = 90f
+/** When the ticker runs next (elapsed realtime), kept across screens so going in and out of a channel doesn't reset it. */
+private var nextTickerAt = 0L
+
+/**
+ * One line of text that scrolls from right to left across [modifier]'s space every 10 minutes,
+ * inviting businesses to advertise. The owner sets the words on tv.bulkbazaar.ca/sponsors.
+ */
+@Composable
+fun SponsorTicker(modifier: Modifier = Modifier) {
+    val text by Sponsors.ticker.collectAsStateWithLifecycle()
+    val words = text ?: return
+    var running by remember { mutableStateOf(false) }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(words) {
+        if (nextTickerAt == 0L) nextTickerAt = SystemClock.elapsedRealtime() + TICKER_FIRST_MS
+        while (true) {
+            delay(maxOf(0L, nextTickerAt - SystemClock.elapsedRealtime()))
+            if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                nextTickerAt = SystemClock.elapsedRealtime() + TICKER_FIRST_MS
+                continue
+            }
+            nextTickerAt = SystemClock.elapsedRealtime() + TICKER_EVERY_MS
+            running = true
+            snapshotFlow { running }.first { !it }
+        }
+    }
+    BoxWithConstraints(modifier.clipToBounds()) {
+        if (!running) return@BoxWithConstraints
+        val boxWidth = constraints.maxWidth.toFloat()
+        val pxPerSecond = with(LocalDensity.current) { TICKER_DP_PER_SECOND.dp.toPx() }
+        var textWidth by remember { mutableIntStateOf(0) }
+        val offset = remember { Animatable(boxWidth) }
+        LaunchedEffect(textWidth) {
+            if (textWidth == 0) return@LaunchedEffect
+            val ms = ((boxWidth + textWidth) / pxPerSecond * 1000).toInt()
+            offset.snapTo(boxWidth)
+            offset.animateTo(-textWidth.toFloat(), tween(ms, easing = LinearEasing))
+            running = false
+        }
+        Text(
+            words,
+            color = FocusColor,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            softWrap = false,
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .wrapContentWidth(Alignment.Start, unbounded = true)
+                .onSizeChanged { textWidth = it.width }
+                .graphicsLayer { translationX = offset.value },
+        )
+    }
+}
 
 /** The sponsor strip under the 1+List channel list: one sponsor's picture, the next every minute. */
 @Composable
