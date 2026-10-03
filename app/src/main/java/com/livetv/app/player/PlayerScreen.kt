@@ -89,14 +89,14 @@ fun PlayerScreen(
 
     var error by remember { mutableStateOf<String?>(null) }
     var controlsVisible by remember { mutableStateOf(true) }
-    // The channel bar (back arrow, number and name, star) goes away after 20 seconds and comes
-    // back for another 20 when the channel changes, a number is typed or OK brings up the controls.
+    // The channel bar (back arrow, number and name, star) goes away after 5 seconds and comes
+    // back for another 5 when the channel changes, a number is typed or OK brings up the controls.
     var barShown by remember { mutableStateOf(true) }
     var barWake by remember { mutableIntStateOf(0) }
     LaunchedEffect(channel.id, barWake, typedNumber, numberPadOpen) {
         barShown = true
         if (numberPadOpen) return@LaunchedEffect
-        delay(20_000)
+        delay(5_000)
         barShown = false
     }
 
