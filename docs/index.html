@@ -91,7 +91,16 @@
   .status { color: var(--muted); padding: 24px 0; }
 
   /* 2x2 watch mode */
-  .quad-btn.on { border-color: var(--focus); color: var(--focus); }
+  .icon-btn.quad-btn { background: var(--focus); border-color: var(--focus); color: #000; font-weight: 800; }
+  .icon-btn.quad-btn:hover { filter: brightness(1.08); }
+  .icon-btn.quad-btn.on { background: var(--surface); border-color: var(--focus); color: var(--focus); }
+  .quad-promo { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 16px; padding: 14px 16px; border-radius: 12px; border: 1.5px solid var(--focus); background: linear-gradient(90deg, rgba(255,214,0,.14), rgba(255,214,0,.03)); }
+  .quad-promo .qi { font-size: 34px; line-height: 1; color: var(--focus); }
+  .quad-promo .qt { flex: 1; min-width: 200px; }
+  .quad-promo .qt b { display: block; font-size: 18px; }
+  .quad-promo .qt span { color: var(--muted); font-size: 14px; }
+  .quad-promo.hide { display: none; }
+  .btn.quad-hero { border-color: var(--focus); color: var(--focus); }
   .quad { display: none; margin: 0 0 16px; background: #000; border-radius: 12px; overflow: hidden; }
   .quad.open { display: block; }
   .quad .qbar { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--surface); }
@@ -239,6 +248,7 @@
       <div class="btns">
         <a class="btn dl" id="heroApk" href="#download">⬇ Get the app <small>(Android)</small></a>
         <a class="btn primary" href="#watch">▶ Watch in your browser</a>
+        <a class="btn quad-hero" href="#watch" data-quad>▦ Watch 4 channels at once</a>
       </div>
       <ul class="facts">
         <li>Free: sign in once with Google</li>
@@ -261,6 +271,7 @@
     <div class="panel whatsnew">
       <h3>What's new <span class="ver">lately</span></h3>
       <ul>
+        <li><b>2×2 on the website:</b> watch 4 channels at once right here in your browser. <a href="#watch" data-quad>Try it now</a>.</li>
         <li><b>Sign in once with Google:</b> it's free and takes a moment. On a TV, scan the code with your phone. One free account works on one device at a time.</li>
         <li><b>Suggestions:</b> tell us what to improve and reply to other viewers' ideas, in the app (Settings) or on the <a href="suggestions">Suggestions page</a>.</li>
         <li><b>New 1+3 layout:</b> one big player with the sound, plus three small live tiles on the right showing each channel's number and name. Scroll them with Up and Down, and press OK to swap one into the big player.</li>
@@ -363,6 +374,11 @@
   <section id="watch">
     <h2>Watch live</h2>
     <p class="lead">Pick a channel to start watching. Use <b>Add a country</b> to see channels from anywhere in the world. Some channels only play in the app or in their own country.</p>
+    <div class="quad-promo" id="quadPromo">
+      <span class="qi">▦</span>
+      <div class="qt"><b>New: watch 4 channels at once</b><span>Turn on 2×2, tap 4 channels, and pick which box you hear. Works in full screen too.</span></div>
+      <button class="icon-btn quad-btn" data-quad>▦ Try 2×2</button>
+    </div>
     <div class="toolbar">
       <div class="chips" id="groups"></div>
       <div class="chips" id="genres"></div>
@@ -370,7 +386,7 @@
         <select id="addCountry" class="add-country" aria-label="Add a country" disabled>
           <option value="">＋ Add a country</option>
         </select>
-        <button class="icon-btn quad-btn" id="quadBtn" aria-pressed="false">▦ 2×2</button>
+        <button class="icon-btn quad-btn" id="quadBtn" aria-pressed="false">▦ Watch 4 at once</button>
         <input id="q" type="search" placeholder="Search channels" aria-label="Search channels">
         <span class="count" id="count"></span>
       </div>
@@ -880,6 +896,8 @@
     $("quad").classList.toggle("open", on);
     $("quadBtn").classList.toggle("on", on);
     $("quadBtn").setAttribute("aria-pressed", on);
+    $("quadBtn").textContent = on ? "▦ Close 2×2" : "▦ Watch 4 at once";
+    $("quadPromo").classList.toggle("hide", on);
     const byId = new Map(channels.map(c => [c.id, c]));
     cells.forEach((cell, k) => quadSet(k, on ? (cell.ch || byId.get(quadIds[k]) || null) : cell.ch));
     if (on) { quadSound(soundCell); $("quad").scrollIntoView({ behavior: "smooth", block: "start" }); }
@@ -887,6 +905,7 @@
   }
 
   $("quadBtn").onclick = () => quadShow(!quadOpen);
+  document.querySelectorAll("[data-quad]").forEach(b => b.onclick = ev => { ev.preventDefault(); quadShow(true); });
   $("quadClose").onclick = () => quadShow(false);
   $("quadFull").onclick = () => {
     const q = $("quad");
