@@ -1,5 +1,7 @@
 #EXTM3U
 # MTA (Muslim Television Ahmadiyya) programmes from its own YouTube channel.
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/8FQ5svNHy5I/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 15
+https://www.youtube.com/watch?v=8FQ5svNHy5I
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/3oORxs-dIvI/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 6
 https://www.youtube.com/watch?v=3oORxs-dIvI
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/Qb9b-ClwJXg/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 4
@@ -28,6 +30,14 @@ https://www.youtube.com/watch?v=He4j1tTKycU
 https://www.youtube.com/watch?v=TiJlOFNSc8M
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/YHdqnPRNHxc/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Holy Qur'an Recitation | Mahmud Wardi Sahib
 https://www.youtube.com/watch?v=YHdqnPRNHxc
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/8Hp2zH_xYqA/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Story Time - 22 - Controlling Your Anger
+https://www.youtube.com/watch?v=8Hp2zH_xYqA
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/jueXfbnK1gc/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Little Legends | Season 2
+https://www.youtube.com/watch?v=jueXfbnK1gc
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/lOentcktWqs/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Kudak | Season 2 Episode 1
+https://www.youtube.com/watch?v=lOentcktWqs
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/_FP7cRK1rHE/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Destination Next | Episode 6
+https://www.youtube.com/watch?v=_FP7cRK1rHE
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/Qk4ZiLndUjY/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Remembering Our Elders | Majlis Ansarullah Ijtema 2026
 https://www.youtube.com/watch?v=Qk4ZiLndUjY
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/cM85npzCiEw/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Rah-e-Huda | 26th September 2026
@@ -114,6 +124,14 @@ https://www.youtube.com/watch?v=0A-9bWJfhjI
 https://www.youtube.com/watch?v=xv7BoXaARds
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/jSngW2BXaUA/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Friday Sermons",Friday Sermon - 24th July 2026
 https://www.youtube.com/watch?v=jSngW2BXaUA
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/8X89XTlRuRY/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Kids" group-title="MTA Children's Programmes",Question Answer Session with Atfal 29 May 1993 (Urdu)
+https://www.youtube.com/watch?v=8X89XTlRuRY
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/iYAD8FaZr9c/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Kids" group-title="MTA Children's Programmes",Kids Time: Programme 1 (English & Urdu)
+https://www.youtube.com/watch?v=iYAD8FaZr9c
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/WGnXkKXkyjI/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Children's Class: 17th January 2010 - Part 6
+https://www.youtube.com/watch?v=WGnXkKXkyjI
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/jK4DzFFWEg4/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Bachon Ki Dunya Eid Special - Season 1 Episode 18
+https://www.youtube.com/watch?v=jK4DzFFWEg4
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/e_n2PXdrc7E/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Kids Space | God Summit Special
 https://www.youtube.com/watch?v=e_n2PXdrc7E
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/NvznTBAliKA/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",FS4 KIDS | EP 252: The Holy Prophet's Unwavering Trust in Allah
