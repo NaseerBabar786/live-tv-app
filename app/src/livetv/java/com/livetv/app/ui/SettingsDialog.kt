@@ -12,6 +12,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.livetv.app.R
+import com.livetv.app.account.Account
+import com.livetv.app.account.FirebaseConfig
+import androidx.compose.runtime.collectAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -77,6 +80,9 @@ fun SettingsDialog(
     var pickingCountries by rememberSaveable { mutableStateOf(false) }
     var pickingLanguages by rememberSaveable { mutableStateOf(false) }
     var showingAppBazaar by rememberSaveable { mutableStateOf(false) }
+    var showingSuggestions by rememberSaveable { mutableStateOf(false) }
+    val account = remember { Account.get(context) }
+    val signedIn by account.user.collectAsState()
     var findingPlaylists by rememberSaveable { mutableStateOf(false) }
     var addingLink by rememberSaveable { mutableStateOf(false) }
 
@@ -96,6 +102,11 @@ fun SettingsDialog(
             onDismiss = { addingLink = false },
             onAdd = onAddPlaylist,
         )
+        return
+    }
+
+    if (showingSuggestions) {
+        SuggestionsScreen(onClose = { showingSuggestions = false })
         return
     }
 
@@ -220,6 +231,26 @@ fun SettingsDialog(
                     onClick = { addingLink = true },
                     modifier = Modifier.fillMaxWidth().focusGlow(),
                 ) { Text("＋ Add playlist link") }
+
+                if (FirebaseConfig.configured && signedIn != null) {
+                    HorizontalDivider()
+                    OutlinedButton(
+                        onClick = { showingSuggestions = true },
+                        modifier = Modifier.fillMaxWidth().focusGlow(),
+                    ) { Text("💬 Suggestions: tell us what to improve") }
+                    val u = signedIn!!
+                    Text(
+                        "Signed in as ${u.name.ifBlank { u.email }}" + if (u.name.isNotBlank()) " (${u.email})" else "",
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    TextButton(
+                        onClick = {
+                            account.signOut()
+                            context.restartApp()
+                        },
+                        modifier = Modifier.focusGlow(),
+                    ) { Text("Sign out") }
+                }
 
                 HorizontalDivider()
                 OutlinedButton(
@@ -463,4 +494,12 @@ private fun AppBazaarDialog(onDismiss: () -> Unit) {
         },
         dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Back") } },
     )
+}
+
+/** Starts Live TV again from the beginning (after signing out, so it asks to sign in). */
+private fun android.content.Context.restartApp() {
+    val intent = packageManager.getLaunchIntentForPackage(packageName)?.addFlags(
+        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK,
+    ) ?: return
+    startActivity(intent)
 }

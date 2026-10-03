@@ -105,6 +105,10 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
     implementation(libs.kotlinx.coroutines.android)
+    // Live TV sign-in: the Google account picker on phones (and TVs that support it).
+    "livetvImplementation"("androidx.credentials:credentials:1.3.0")
+    "livetvImplementation"("androidx.credentials:credentials-play-services-auth:1.3.0")
+    "livetvImplementation"("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     // Live TV Plus Premium: a Google Play subscription.
     "plusImplementation"("com.android.billingclient:billing-ktx:7.1.1")
     debugImplementation(libs.androidx.compose.ui.tooling)
