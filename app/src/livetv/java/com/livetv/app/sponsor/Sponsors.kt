@@ -138,7 +138,7 @@ object SponsorViews {
         days.keys().asSequence().toList().filter { it < keep }.forEach { days.remove(it) }
     }
 
-    /** [sponsor] was shown at [place]: "start", "strip" or "card". */
+    /** [sponsor] was shown at [place]: "start", "strip", "card" or "bar" (1×2). */
     @Synchronized
     fun count(sponsor: Sponsor, place: String) {
         val day = Watching.today(System.currentTimeMillis())
@@ -149,7 +149,7 @@ object SponsorViews {
         save()
     }
 
-    /** Every day's counts, oldest first: day → sponsor id → { n, start, strip, card }. */
+    /** Every day's counts, oldest first: day → sponsor id → { n, start, strip, card, bar }. */
     @Synchronized
     fun totals(): List<Pair<String, Map<String, Map<String, Any>>>> =
         days.keys().asSequence().sorted().map { day ->
@@ -161,6 +161,7 @@ object SponsorViews {
                     "start" to s.optLong("start"),
                     "strip" to s.optLong("strip"),
                     "card" to s.optLong("card"),
+                    "bar" to s.optLong("bar"),
                 )
             }
         }.toList()
