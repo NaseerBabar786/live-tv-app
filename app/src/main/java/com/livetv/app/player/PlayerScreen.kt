@@ -59,6 +59,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
+import com.livetv.app.Watching
 import com.livetv.app.data.Channel
 import com.livetv.app.ui.focusGlow
 
@@ -112,6 +113,11 @@ fun PlayerScreen(
     }
 
     LaunchedEffect(channel.url) { streamPlayer.play(channel) }
+    // Counted for the owner's stats page.
+    DisposableEffect(channel.id) {
+        Watching.watch(streamPlayer, channel)
+        onDispose { Watching.stop(streamPlayer) }
+    }
 
     DisposableEffect(Unit) {
         onDispose { streamPlayer.release() }

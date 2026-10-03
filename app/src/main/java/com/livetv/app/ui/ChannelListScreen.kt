@@ -150,6 +150,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
+import com.livetv.app.Watching
 import com.livetv.app.data.Channel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -405,6 +406,13 @@ fun ChannelListScreen(
         } finally {
             paused.forEach { (id, p) -> resume(id, p) }
         }
+    }
+    // On TVs, the tile with the sound is the one being watched (counted for the owner's stats page).
+    val watchedTile = soundId?.takeIf { wideScreen && !listMode && previewSound && inForeground && it in rowPreviews }
+        ?.let { id -> state.channels.firstOrNull { it.id == id } }
+    DisposableEffect(watchedTile?.id) {
+        if (watchedTile != null) Watching.watch(rowPreviews, watchedTile)
+        onDispose { Watching.stop(rowPreviews) }
     }
     LaunchedEffect(previewSound, soundId, rowPreviews.keys.toSet()) {
         // Pictures being taken stay silent; only the highlighted card has sound.
@@ -1348,6 +1356,11 @@ private fun PlayerWithList(
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
     LaunchedEffect(playing) { stream.player.playWhenReady = playing }
+    // The big player's channel is counted for the owner's stats page while it plays.
+    DisposableEffect(selected?.id, playing) {
+        if (selected != null && playing) Watching.watch(stream, selected)
+        onDispose { Watching.stop(stream) }
+    }
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = max(0, channels.indexOfFirst { it.id == selected?.id } - 2),
     )

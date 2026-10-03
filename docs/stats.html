@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live TV Stats</title>
+<meta name="description" content="Live TV viewing stats.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="robots" content="noindex">
+<style>
+  .wrap { max-width: 1200px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin: 0 0 8px; }
+  .stat { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 14px 16px; }
+  .stat .n { font-size: 30px; font-weight: 800; color: var(--focus); }
+  .stat .l { color: var(--muted); font-size: 14px; }
+  .stat .d { font-size: 14px; font-weight: 700; }
+  .up { color: #69F0AE; } .down { color: #FF8A80; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--surface-2); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--surface-2); white-space: nowrap; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  th { background: var(--surface); color: var(--muted); font-weight: 700; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  .chart { display: flex; align-items: flex-end; gap: 3px; height: 160px; padding: 12px; background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; }
+  .chart .bar { flex: 1; background: var(--accent); border-radius: 3px 3px 0 0; min-height: 2px; position: relative; }
+  .chart .bar:hover { background: var(--focus); }
+  .chart-labels { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; padding: 4px 12px 0; }
+  .share { display: inline-block; height: 8px; background: var(--accent); border-radius: 4px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Live TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Live TV</span>
+    </a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="users">Users</a>
+      <a href="suggestions">Suggestions</a>
+      <a href="./#download">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Live TV stats</h1>
+  <p class="lead">How many people watch, and what they watch. Counting started with app version 1.8.88; only the owner's account can see this page.</p>
+  <div id="notReady" class="panel hidden">Stats will appear here once sign-in is set up.</div>
+  <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
+  <div id="denied" class="panel hidden">This account can't see the stats. <button class="btn" data-signout>Use another account</button></div>
+  <div id="dash" class="hidden">
+    <div class="row" style="justify-content:space-between;margin-bottom:12px">
+      <span class="small" id="range"></span>
+      <div class="row"><button class="btn" id="all">Load every month</button><button class="btn" data-signout>Sign out</button></div>
+    </div>
+    <div class="stats" id="stats"></div>
+    <p class="small">A viewer is someone who watched at least one channel that day. Watch time counts the main picture (full screen, the 1+List player, or the tile with the sound).</p>
+
+    <h2>Viewers per day (last 30 days)</h2>
+    <div class="chart" id="daily"></div>
+    <div class="chart-labels" id="dailyLabels"></div>
+
+    <h2>Month by month</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Month</th><th class="num">Viewers</th><th class="num">Change</th><th class="num">Hours watched</th><th class="num">Change</th><th class="num">Avg. minutes per viewer per day</th></tr></thead>
+      <tbody id="months"></tbody>
+    </table></div>
+
+    <div class="row" style="justify-content:space-between;margin-top:28px">
+      <h2 style="margin:0">Channels</h2>
+      <label class="small">Period:
+        <select id="period" style="background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px">
+          <option value="1">Today</option><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="0">Everything loaded</option>
+        </select>
+      </label>
+    </div>
+    <div class="grid2" style="margin-top:8px">
+      <div>
+        <h2>Watched most</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>#</th><th>Channel</th><th>Country</th><th class="num">Viewers</th><th class="num">Hours</th></tr></thead>
+          <tbody id="top"></tbody>
+        </table></div>
+      </div>
+      <div>
+        <h2>Watched least</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Channel</th><th>Country</th><th class="num">Viewers</th><th class="num">Minutes</th></tr></thead>
+          <tbody id="least"></tbody>
+        </table></div>
+      </div>
+      <div>
+        <h2>By country</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Country</th><th class="num">Viewers</th><th class="num">Hours</th><th>Share</th></tr></thead>
+          <tbody id="countries"></tbody>
+        </table></div>
+      </div>
+      <div>
+        <h2>By genre</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Genre</th><th class="num">Viewers</th><th class="num">Hours</th><th>Share</th></tr></thead>
+          <tbody id="genres"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+  <p class="err" id="err"></p>
+</main>
+<footer>
+  <div class="wrap">Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+</footer>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
+const $ = id => document.getElementById(id);
+const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
+
+window.addEventListener("unhandledrejection", e => {
+  $("err").textContent = "Couldn't load this page. Check your internet connection and refresh.";
+});
+
+const pad = n => String(n).padStart(2, "0");
+const dayStr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const daysAgo = n => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - n); return dayStr(d); };
+const hours = s => (s / 3600).toLocaleString([], { maximumFractionDigits: 1 });
+const COUNTRY = { pk: "Pakistan", in: "India", ca: "Canada", gb: "UK", uk: "UK", us: "USA", bd: "Bangladesh", ae: "UAE", sa: "Saudi Arabia", af: "Afghanistan" };
+const countryOf = c => COUNTRY[c.c?.toLowerCase()] || (c.c ? c.c.toUpperCase() : (c.g || "Other"));
+const monthName = m => new Date(m + "-15").toLocaleString([], { month: "long", year: "numeric" });
+
+function change(now, before) {
+  if (!before) return "";
+  const p = Math.round((now - before) / before * 100);
+  return `<span class="${p >= 0 ? "up" : "down"}">${p >= 0 ? "▲" : "▼"} ${Math.abs(p)}%</span>`;
+}
+function cells(tr, values) {
+  for (const v of values) {
+    const td = document.createElement("td");
+    if (v && typeof v === "object") { td.className = v.cls || ""; if (v.html != null) td.innerHTML = v.html; else td.textContent = v.text; }
+    else td.textContent = v ?? "";
+    tr.append(td);
+  }
+}
+
+if (!configured) {
+  show("notReady");
+} else {
+  const V = "10.12.2";
+  const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+  const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
+  const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = fs.getFirestore(app);
+  /** One record per viewer per day: { uid, day, device, seconds, channels: { key: { n, c, g, t, s } } }. */
+  let rows = [];
+
+  $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
+  document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => signOut(auth));
+
+  async function load(from) {
+    $("err").textContent = "";
+    $("range").textContent = "Loading…";
+    try {
+      const q = from
+        ? fs.query(fs.collection(db, "usage"), fs.where("day", ">=", from))
+        : fs.collection(db, "usage");
+      const snap = await fs.getDocs(q);
+      rows = snap.docs.map(d => d.data()).filter(r => r.day && r.uid);
+      $("range").textContent = from ? `Showing ${monthName(from.slice(0, 7))} to today.` : "Showing every month.";
+      render();
+    } catch (e) {
+      $("range").textContent = "";
+      $("err").textContent = e.code === "permission-denied"
+        ? "Firebase isn't letting this page read the stats yet. Add the 'usage' rule in Firestore › Rules (see the setup notes)."
+        : "Couldn't load the stats: " + e.message;
+    }
+  }
+
+  onAuthStateChanged(auth, user => {
+    $("err").textContent = "";
+    if (!user) return show("signedOut");
+    if (!ADMIN_EMAIL || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return show("denied");
+    show("dash");
+    // This month and the two before it, so each month can be compared with the one before.
+    const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - 2);
+    load(dayStr(d));
+  });
+  $("all").onclick = () => load(null);
+  $("period").onchange = renderChannels;
+
+  function viewersSince(from) { return new Set(rows.filter(r => r.day >= from).map(r => r.uid)).size; }
+  function secondsSince(from) { return rows.filter(r => r.day >= from).reduce((a, r) => a + (r.seconds || 0), 0); }
+
+  function render() {
+    const today = daysAgo(0);
+    const thisMonth = today.slice(0, 7);
+    const lm = new Date(); lm.setDate(1); lm.setMonth(lm.getMonth() - 1);
+    const lastMonth = dayStr(lm).slice(0, 7);
+    const byMonth = new Map();
+    for (const r of rows) {
+      const m = r.day.slice(0, 7);
+      if (!byMonth.has(m)) byMonth.set(m, { users: new Set(), seconds: 0, viewerDays: 0 });
+      const b = byMonth.get(m); b.users.add(r.uid); b.seconds += r.seconds || 0; b.viewerDays++;
+    }
+    const tm = byMonth.get(thisMonth), pm = byMonth.get(lastMonth);
+    // Compare this month so far with the same number of days last month.
+    const dayOfMonth = Number(today.slice(8));
+    const pmSoFar = rows.filter(r => r.day.startsWith(lastMonth) && Number(r.day.slice(8)) <= dayOfMonth);
+    const pmUsersSoFar = new Set(pmSoFar.map(r => r.uid)).size;
+    const tvToday = new Set(rows.filter(r => r.day >= daysAgo(29) && r.device === "TV").map(r => r.uid)).size;
+    const items = [
+      ["Watched today", viewersSince(today)],
+      ["Last 7 days", viewersSince(daysAgo(6))],
+      ["Last 30 days", viewersSince(daysAgo(29))],
+      ["This month", tm ? tm.users.size : 0, change(tm ? tm.users.size : 0, pmUsersSoFar), "vs. same days last month"],
+      ["Hours watched, last 30 days", hours(secondsSince(daysAgo(29)))],
+      ["On TVs (last 30 days)", tvToday],
+    ];
+    $("stats").innerHTML = "";
+    for (const [l, n, d, note] of items) {
+      const el = document.createElement("div"); el.className = "stat";
+      el.innerHTML = `<div class="n"></div><div class="l"></div>${d ? `<div class="d">${d} <span class="small">${note}</span></div>` : ""}`;
+      el.querySelector(".n").textContent = n; el.querySelector(".l").textContent = l;
+      $("stats").append(el);
+    }
+
+    // Viewers per day.
+    const days = [];
+    for (let i = 29; i >= 0; i--) days.push(daysAgo(i));
+    const perDay = days.map(day => ({ day, users: new Set(rows.filter(r => r.day === day).map(r => r.uid)).size, seconds: rows.filter(r => r.day === day).reduce((a, r) => a + (r.seconds || 0), 0) }));
+    const max = Math.max(1, ...perDay.map(p => p.users));
+    $("daily").innerHTML = "";
+    for (const p of perDay) {
+      const b = document.createElement("div"); b.className = "bar";
+      b.style.height = `${p.users / max * 100}%`;
+      b.title = `${p.day}: ${p.users} viewers, ${hours(p.seconds)} hours`;
+      $("daily").append(b);
+    }
+    $("dailyLabels").innerHTML = `<span>${days[0]}</span><span>today</span>`;
+
+    // Month by month, newest first.
+    const months = [...byMonth.keys()].sort();
+    $("months").innerHTML = "";
+    months.slice().reverse().forEach(m => {
+      const b = byMonth.get(m), prev = byMonth.get(months[months.indexOf(m) - 1]);
+      const tr = document.createElement("tr");
+      cells(tr, [
+        monthName(m) + (m === thisMonth ? " (so far)" : ""),
+        { cls: "num", text: b.users.size },
+        { cls: "num", html: m === thisMonth ? change(b.users.size, pmUsersSoFar) : change(b.users.size, prev?.users.size) },
+        { cls: "num", text: hours(b.seconds) },
+        { cls: "num", html: m === thisMonth ? change(b.seconds, pmSoFar.reduce((a, r) => a + (r.seconds || 0), 0)) : change(b.seconds, prev?.seconds) },
+        { cls: "num", text: Math.round(b.seconds / 60 / Math.max(1, b.viewerDays)) },
+      ]);
+      $("months").append(tr);
+    });
+    if (!months.length) $("months").innerHTML = `<tr><td colspan="6" class="small">Nothing yet. Numbers appear once people watch with version 1.8.88 or newer.</td></tr>`;
+    renderChannels();
+  }
+
+  function renderChannels() {
+    const n = Number($("period").value);
+    const from = n ? daysAgo(n - 1) : "";
+    const chans = new Map(), countries = new Map(), genres = new Map();
+    const add = (map, key, label, uid, s, extra) => {
+      if (!map.has(key)) map.set(key, { label, users: new Set(), s: 0, ...extra });
+      const e = map.get(key); e.users.add(uid); e.s += s;
+    };
+    let total = 0;
+    for (const r of rows) {
+      if (r.day < from) continue;
+      for (const [k, c] of Object.entries(r.channels || {})) {
+        const s = c.s || 0; total += s;
+        add(chans, k, c.n || "?", r.uid, s, { country: countryOf(c) });
+        add(countries, countryOf(c), countryOf(c), r.uid, s);
+        for (const g of (c.t || "Other").split(";").map(x => x.trim()).filter(Boolean)) add(genres, g, g, r.uid, s);
+      }
+    }
+    const sorted = [...chans.values()].sort((a, b) => b.s - a.s);
+    const fill = (id, list, row, empty) => {
+      $(id).innerHTML = "";
+      list.forEach((e, i) => { const tr = document.createElement("tr"); cells(tr, row(e, i)); $(id).append(tr); });
+      if (!list.length) $(id).innerHTML = `<tr><td colspan="5" class="small">${empty}</td></tr>`;
+    };
+    fill("top", sorted.slice(0, 25), (e, i) => [i + 1, e.label, e.country, { cls: "num", text: e.users.size }, { cls: "num", text: hours(e.s) }], "Nothing watched in this period yet.");
+    fill("least", sorted.slice(10).reverse().slice(0, 15), e => [e.label, e.country, { cls: "num", text: e.users.size }, { cls: "num", text: Math.max(1, Math.round(e.s / 60)) }], "Shows once more than 10 channels have been watched.");
+    const shareRow = e => [e.label, { cls: "num", text: e.users.size }, { cls: "num", text: hours(e.s) },
+      { html: `<span class="share" style="width:${Math.round(e.s / Math.max(1, total) * 120)}px"></span> ${Math.round(e.s / Math.max(1, total) * 100)}%` }];
+    fill("countries", [...countries.values()].sort((a, b) => b.s - a.s), shareRow, "Nothing yet.");
+    fill("genres", [...genres.values()].sort((a, b) => b.s - a.s).slice(0, 20), shareRow, "Nothing yet.");
+  }
+}
+</script>
+</body>
+</html>

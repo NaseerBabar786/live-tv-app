@@ -2,6 +2,7 @@ package com.livetv.app.account
 
 import android.content.Context
 import android.os.Build
+import com.livetv.app.Watching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -122,8 +123,8 @@ class Account private constructor(context: Context) {
      * On later starts, if the account has since been signed in on another device, this one is
      * signed out.
      */
-    suspend fun recordOpen() {
-        val u = _user.value ?: return
+    suspend fun recordOpen() = withContext(Dispatchers.IO) {
+        val u = _user.value ?: return@withContext
         runCatching {
             val t = token()
             val doc = Firestore.doc("users/${u.uid}")
@@ -151,6 +152,36 @@ class Account private constructor(context: Context) {
             Firestore.patch(doc, fields, t)
             if (claiming) prefs.edit().putBoolean(K_CLAIM, false).apply()
         }
+        Unit
+    }
+
+    /**
+     * Sends how long each channel was watched each day to usage/{day}_{uid}, for the owner's
+     * stats page. Each day's document holds that day's totals so far and is simply replaced.
+     */
+    suspend fun reportViewing() = withContext(Dispatchers.IO) {
+        val u = _user.value ?: return@withContext
+        val days = Watching.totals().filter { (_, m) -> m.isNotEmpty() }
+        if (days.isEmpty()) return@withContext
+        runCatching {
+            val t = token()
+            for ((day, channels) in days) {
+                val fields = mapOf<String, Any>(
+                    "uid" to u.uid,
+                    "day" to day,
+                    "device" to if (isTv) "TV" else "Phone/tablet",
+                    "appVersion" to appVersion,
+                    "seconds" to channels.values.sumOf { it.seconds },
+                    "channels" to channels.mapValues { (_, e) ->
+                        mapOf<String, Any>("n" to e.name, "c" to e.country, "g" to e.group, "t" to e.category, "s" to e.seconds)
+                    },
+                    "updated" to Date(),
+                )
+                Firestore.patch(Firestore.doc("usage/${day}_${u.uid}"), fields, t)
+                Watching.sent(day)
+            }
+        }
+        Unit
     }
 
     companion object {
@@ -274,6 +305,10 @@ internal object Firestore {
                     is Date -> JSONObject().put("timestampValue", iso(v))
                     is Int, is Long -> JSONObject().put("integerValue", v.toString())
                     is Boolean -> JSONObject().put("booleanValue", v)
+                    is Map<*, *> -> JSONObject().put(
+                        "mapValue",
+                        JSONObject().put("fields", encode(v.entries.associate { (k, x) -> k.toString() to x!! })),
+                    )
                     else -> JSONObject().put("stringValue", v.toString())
                 },
             )
