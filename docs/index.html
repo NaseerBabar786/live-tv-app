@@ -51,6 +51,8 @@
 
   .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: center; padding: 48px 0 24px; }
   .hero h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.1; margin: 0 0 12px; }
+  .hero h1 .tv { color: var(--focus); }
+  .hero h1 small { display: block; margin-top: 8px; font-size: 0.42em; font-weight: 600; color: var(--muted); }
   .hero p { color: var(--muted); font-size: 18px; margin: 0 0 24px; }
   .hero img { width: 100%; height: auto; display: block; border-radius: 16px; border: 1px solid var(--surface-2); }
   @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } }
@@ -198,8 +200,8 @@
   <div class="hero">
     <div>
       <p class="kicker">📺 The best app for live TV on your Android TV!</p>
-      <h1>Free live TV, on your phone and your TV</h1>
-      <p>Pakistani, Indian, Canadian, British and American channels. Watch here in your browser, or get the Live TV app for Android phones, tablets and Google TV.</p>
+      <h1>Free live TV on your <span class="tv">TV</span><small>…and on your phone too</small></h1>
+      <p>Pakistani, Indian, Canadian, British and American channels. Get the Live TV app for Google TV and Android TV, plus Android phones and tablets, or watch here in your browser.</p>
       <div class="btns">
         <a class="btn dl" id="heroApk" href="#download">⬇ Get the app <small>(Android)</small></a>
         <a class="btn primary" href="#watch">▶ Watch in your browser</a>
