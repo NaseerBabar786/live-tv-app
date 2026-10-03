@@ -239,9 +239,7 @@ fun ChannelListScreen(
     // TVs and tablets show a fixed window of tiles that slides along the list one channel at a
     // time; [windowStart] is the channel in the first tile.
     val windowed = wideScreen && !listMode
-    // 1+4: how many small tiles fit beside and under the big player (worked out by the layout).
-    var smallCount by remember { mutableIntStateOf(4) }
-    val slots = if (tileLayout == TileLayout.Five) 1 + smallCount else tileLayout.columns * tileLayout.rows
+    val slots = tileLayout.columns * tileLayout.rows
     var windowStart by rememberSaveable { mutableIntStateOf(0) }
     val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
     // 1×2, 2×2 and 2×3 are separate TVs: Up and Down change the channel on the highlighted tile only.
@@ -249,12 +247,12 @@ fun ChannelListScreen(
     var twoIds by remember { mutableStateOf(sessionTileIds) }
     var tilesFull by remember { mutableStateOf(sessionTilesFull) }
     SideEffect { sessionTileIds = twoIds; sessionTilesFull = tilesFull }
-    val fullTiles = tilesFull && windowed
+    // 1+3 has no full screen view: OK on its big player opens the channel straight away.
+    val fullTiles = tilesFull && windowed && tileLayout != TileLayout.Five
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
     val window = when {
         !windowed -> emptyList()
-        // 1+4 keeps its channels when the number of small tiles changes (normal view and full screen
-        // fit different numbers): the list is topped up or cut to fit.
+        // 1+3 keeps its chosen channels, topped up from the list if any are missing.
         tileLayout == TileLayout.Five ->
             (twoChosen + state.visibleChannels.drop(start) + state.visibleChannels).distinctBy { it.id }.take(slots)
         tileLayout.separateTvs && twoChosen.size == slots && twoChosen.distinctBy { it.id }.size == slots -> twoChosen
@@ -296,13 +294,13 @@ fun ChannelListScreen(
             p.stream.stop(); p.showing = false; pool += p
         }
     }
-    // The highlighted card has the sound; in 1+4 only the big player has it.
+    // The highlighted card has the sound; in 1+3 only the big player has it.
     val bigPlayer = wideScreen && tileLayout == TileLayout.Five
     val soundId = if (bigPlayer) window.firstOrNull()?.id else focusedId
     LaunchedEffect(rowIds, focusedId, inForeground, showSettings, tileLayout) {
         val ids = rowIds ?: return@LaunchedEffect // wait for scrolling to settle
         val live = focusedId?.takeIf { it in ids }
-        // In 1+4, 2×3, 2×2 and 1×2 every card plays; on phones only the highlighted one,
+        // In 1+3, 2×3, 2×2 and 1×2 every card plays; on phones only the highlighted one,
         // and the rest show a picture.
         val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
@@ -317,7 +315,7 @@ fun ChannelListScreen(
             low -> Quality.Low
             else -> Quality.Normal
         }
-        // 1+4: the big player at normal quality, the small ones like 2×3.
+        // 1+3: the big player at normal quality, the small ones like 2×3.
         fun qualityOf(id: String) = when {
             bigPlayer && id == window.firstOrNull()?.id -> Quality.Normal
             bigPlayer -> Quality.Lower
@@ -731,34 +729,25 @@ fun ChannelListScreen(
                             true
                         }
                         if (bigPlayer) {
-                            // 1+4: the big player in the top left corner (85% of the width, or the full
-                            // height if that's less), and small tiles filling the column on the right and
-                            // the strip underneath, as many as fit. The column and the strip are two lists:
-                            // Up/Down move through the column and Left/Right through the strip, and past
-                            // either end of one, that list slides on by one channel (a new one comes in,
-                            // the one at the other end goes). OK on a small tile swaps it into the big
-                            // player; OK on the big player fills the screen with the tiles, and OK again
-                            // opens it.
+                            // 1+3: the big player in the top left corner (85% of the width, or the full
+                            // height if that's less), and three small tiles on the right, centred against
+                            // it. Up/Down move through them, and past either end the column slides on by
+                            // one channel (a new one comes in, the one at the other end goes). OK on a
+                            // small tile swaps it into the big player; OK on the big player opens it.
                             val bigWidth = minOf(maxWidth * 0.85f, maxHeight * 16f / 9f)
                             val bigHeight = bigWidth * 9f / 16f
                             val smallWidth = maxWidth - bigWidth
                             val smallHeight = smallWidth * 9f / 16f
-                            val inColumn = max(1, (maxHeight / smallHeight).toInt())
-                            val inRow = if (maxHeight - bigHeight >= smallHeight - 1.dp) (bigWidth / smallWidth).toInt() else 0
-                            SideEffect { smallCount = inColumn + inRow }
                             val big = window.firstOrNull()
-                            val smalls = window.drop(1)
-                            val column = smalls.take(inColumn)
-                            val strip = smalls.drop(inColumn)
+                            val column = window.drop(1)
                             fun focus(id: String) = scope.launch {
                                 withFrameNanos { }
                                 runCatching { cardRequester(id).requestFocus() }
                             }
-                            // Slides one list (the column or the strip) one channel along (+1 next,
-                            // -1 previous), skipping the channels already showing, and highlights the one
-                            // that came in.
-                            fun slide(inStrip: Boolean, step: Int) {
-                                val list = if (inStrip) strip else column
+                            // Slides the column one channel along (+1 next, -1 previous), skipping the
+                            // channels already showing, and highlights the one that came in.
+                            fun slide(step: Int) {
+                                val list = column
                                 if (list.isEmpty()) return
                                 val shown = window.map { it.id }.toSet()
                                 val from = channels.indexOfFirst { it.id == (if (step > 0) list.last() else list.first()).id }
@@ -766,12 +755,12 @@ fun ChannelListScreen(
                                 while (channels.getOrNull(j)?.id.let { it != null && it in shown }) j += step
                                 val next = channels.getOrNull(j) ?: return
                                 val moved = if (step > 0) list.drop(1) + next else listOf(next) + list.dropLast(1)
-                                twoIds = (listOfNotNull(big) + (if (inStrip) column + moved else moved + strip)).map { it.id }
+                                twoIds = (listOfNotNull(big) + moved).map { it.id }
                                 focus(next.id)
                             }
                             fun backKey(event: KeyEvent): Boolean {
                                 if (event.type == KeyEventType.KeyUp) {
-                                    if (fullTiles) tilesFull = false else runCatching { layoutButtonFocus.requestFocus() }
+                                    runCatching { layoutButtonFocus.requestFocus() }
                                 }
                                 return true
                             }
@@ -779,10 +768,9 @@ fun ChannelListScreen(
                                 if (event.key == Key.Back) return backKey(event)
                                 if (event.type != KeyEventType.KeyDown) return false
                                 when (event.key) {
-                                    Key.DirectionRight -> smalls.firstOrNull()?.let { focus(it.id) }
-                                    Key.DirectionDown -> strip.firstOrNull()?.let { focus(it.id) }
-                                    Key.DirectionUp -> if (!fullTiles) runCatching { layoutButtonFocus.requestFocus() }
-                                    Key.DirectionLeft -> Unit
+                                    Key.DirectionRight -> column.firstOrNull()?.let { focus(it.id) }
+                                    Key.DirectionUp -> runCatching { layoutButtonFocus.requestFocus() }
+                                    Key.DirectionDown, Key.DirectionLeft -> Unit
                                     else -> return false
                                 }
                                 return true
@@ -790,17 +778,14 @@ fun ChannelListScreen(
                             fun smallKey(index: Int): (KeyEvent) -> Boolean = onKey@{ event ->
                                 if (event.key == Key.Back) return@onKey backKey(event)
                                 if (event.type != KeyEventType.KeyDown) return@onKey false
-                                val inStrip = index >= inColumn
-                                val list = if (inStrip) strip else column
-                                val at = if (inStrip) index - inColumn else index
                                 fun move(step: Int) {
-                                    list.getOrNull(at + step)?.let { focus(it.id) } ?: slide(inStrip, step)
+                                    column.getOrNull(index + step)?.let { focus(it.id) } ?: slide(step)
                                 }
                                 when (event.key) {
-                                    Key.DirectionDown -> if (!inStrip) move(1)
-                                    Key.DirectionUp -> if (inStrip) big?.let { focus(it.id) } else move(-1)
-                                    Key.DirectionRight -> if (inStrip) move(1)
-                                    Key.DirectionLeft -> if (inStrip) move(-1) else big?.let { focus(it.id) }
+                                    Key.DirectionDown -> move(1)
+                                    Key.DirectionUp -> move(-1)
+                                    Key.DirectionRight -> Unit
+                                    Key.DirectionLeft -> big?.let { focus(it.id) }
                                     else -> return@onKey false
                                 }
                                 true
@@ -821,26 +806,18 @@ fun ChannelListScreen(
                                     })
                                 }
                             }
-                            Row(Modifier.fillMaxSize()) {
-                                Column(Modifier.width(bigWidth).fillMaxHeight()) {
+                            Row(Modifier.fillMaxWidth().height(bigHeight)) {
+                                Box(Modifier.width(bigWidth)) {
                                     big?.let {
                                         key(it.id) {
-                                            Box(Modifier.width(bigWidth)) {
-                                                Tile(0, it, { e -> bigKey(e) }, height = bigHeight, onClick = {
-                                                    if (fullTiles) {
-                                                        sessionOpenedTile = 0
-                                                        onPlay(it)
-                                                    } else tilesFull = true
-                                                })
-                                            }
+                                            Tile(0, it, { e -> bigKey(e) }, height = bigHeight, onClick = {
+                                                sessionOpenedTile = 0
+                                                onPlay(it)
+                                            })
                                         }
                                     }
-                                    // The strip under the big player.
-                                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                                        strip.forEachIndexed { i, small -> SmallTile(inColumn + i, small) }
-                                    }
                                 }
-                                Column(Modifier.width(smallWidth)) {
+                                Column(Modifier.width(smallWidth).fillMaxHeight(), verticalArrangement = Arrangement.Center) {
                                     column.forEachIndexed { i, small -> SmallTile(i, small) }
                                 }
                             }
@@ -1011,7 +988,7 @@ private fun ChannelCard(
      * and a small speaker marks the tile with the sound.
      */
     glow: Boolean = true,
-    /** Whether the speaker shows; null shows it on the highlighted card (1+4 keeps it on the big player). */
+    /** Whether the speaker shows; null shows it on the highlighted card (1+3 keeps it on the big player). */
     sound: Boolean? = null,
 ) {
     if (bare) {
@@ -1549,7 +1526,7 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
     /** One big player (top left, 85% wide) and small ones around it; sound only from the big one. */
-    Five("1+4", 5, 1),
+    Five("1+3", 4, 1),
     Two("1×2", 2, 1),
     /** Four separate TVs, like 1×2. */
     Four("2×2", 2, 2),
@@ -1562,7 +1539,7 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
  */
 private var sessionTileLayout: TileLayout? = null
 
-/** 1+4, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
+/** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() = this != TileLayout.List
 
 /**
