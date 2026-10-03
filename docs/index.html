@@ -38,6 +38,9 @@
   nav { margin-left: auto; display: flex; gap: 4px; }
   nav a { color: var(--text); text-decoration: none; padding: 8px 12px; border-radius: 999px; font-weight: 600; font-size: 15px; }
   nav a:hover { background: var(--surface-2); }
+  header nav a.admin-link { font-size: 13px; color: var(--muted); }
+  @media (max-width: 560px) { header nav a.admin-extra, header nav a[href="#guide"] { display: none; } }
+  @media (max-width: 420px) { header nav a[href="#watch"] { display: none; } }
   @media (max-width: 560px) { nav a { padding: 8px 6px; font-size: 14px; } .brand span { display: none; } }
   @media (max-width: 480px) { header nav a[href="#features"] { display: none; } }
   nav a { white-space: nowrap; }
@@ -185,6 +188,7 @@
       <a href="#download">Download</a>
       <a href="#guide">Install guide</a>
       <a href="suggestions">Suggestions</a>
+      <a href="admin" class="admin-link">Admin</a>
     </nav>
   </div>
 </header>
@@ -748,5 +752,6 @@
   load();
 })();
 </script>
+<script src="assets/admin-nav.js"></script>
 </body>
 </html>

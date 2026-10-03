@@ -38,9 +38,9 @@
     </a>
     <nav>
       <a href="./">Home</a>
-      <a href="users">Users</a>
       <a href="suggestions">Suggestions</a>
       <a href="./#download">Download</a>
+      <a href="admin" class="admin-link">Admin</a>
     </nav>
   </div>
 </header>
@@ -159,7 +159,7 @@ if (!configured) {
   let rows = [];
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
-  document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => signOut(auth));
+  document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
 
   async function load(from) {
     $("err").textContent = "";
@@ -184,6 +184,7 @@ if (!configured) {
     $("err").textContent = "";
     if (!user) return show("signedOut");
     if (!ADMIN_EMAIL || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return show("denied");
+    try { localStorage.setItem("lt_admin", "1"); } catch {}
     show("dash");
     // This month and the two before it, so each month can be compared with the one before.
     const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - 2);
@@ -295,5 +296,6 @@ if (!configured) {
   }
 }
 </script>
+<script src="assets/admin-nav.js"></script>
 </body>
 </html>

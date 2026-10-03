@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live TV Admin</title>
+<meta name="description" content="Live TV admin.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="robots" content="noindex">
+<style>
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .tile { display: block; background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 18px; color: var(--text); text-decoration: none; }
+  .tile:hover, .tile:focus-visible { border-color: var(--focus); }
+  .tile b { display: block; font-size: 20px; margin-bottom: 4px; }
+  .tile span { color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Live TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Live TV</span>
+    </a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="suggestions">Suggestions</a>
+      <a href="./#download">Download</a>
+      <a href="admin" class="admin-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Admin</h1>
+  <p class="lead">For the Live TV owner only.</p>
+  <div id="notReady" class="panel hidden">Admin sign-in will work once Firebase is set up.</div>
+  <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
+  <div id="denied" class="panel hidden">This account isn't an admin. <button class="btn" data-signout>Use another account</button></div>
+  <div id="dash" class="hidden">
+    <div class="tiles">
+      <a class="tile" href="stats"><b>Stats</b><span>Viewers per day and month, what people watch most and least.</span></a>
+      <a class="tile" href="users"><b>Users</b><span>Everyone who signed in, their device and when they last opened the app.</span></a>
+      <a class="tile" href="suggestions"><b>Suggestions</b><span>Read and remove posts in the forum.</span></a>
+    </div>
+    <p class="small" id="who" style="margin-top:18px"></p>
+    <button class="btn" data-signout>Sign out</button>
+  </div>
+  <p class="err" id="err"></p>
+</main>
+<footer>
+  <div class="wrap">Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+</footer>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
+const $ = id => document.getElementById(id);
+const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
+const setAdmin = on => { try { on ? localStorage.setItem("lt_admin", "1") : localStorage.removeItem("lt_admin"); } catch {} };
+
+window.addEventListener("unhandledrejection", () => {
+  $("err").textContent = "Couldn't load this page. Check your internet connection and refresh.";
+});
+if (!configured) {
+  show("notReady");
+} else {
+  const V = "10.12.2";
+  const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+  const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
+  const auth = getAuth(initializeApp(firebaseConfig));
+  $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
+  document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { setAdmin(false); signOut(auth); });
+  onAuthStateChanged(auth, user => {
+    $("err").textContent = "";
+    if (!user) { setAdmin(false); return show("signedOut"); }
+    if (!ADMIN_EMAIL || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) { setAdmin(false); return show("denied"); }
+    setAdmin(true);
+    $("who").textContent = "Signed in as " + user.email + ".";
+    show("dash");
+  });
+}
+</script>
+<script src="assets/admin-nav.js"></script>
+</body>
+</html>
