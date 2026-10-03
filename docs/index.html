@@ -113,8 +113,8 @@
   .quad .cell .ud button:hover, .quad .cell .ud button:focus-visible { background: var(--focus); color: #000; outline: none; }
   .quad:fullscreen .cell .ud button { width: 48px; height: 48px; font-size: 20px; }
   .quad:fullscreen { display: flex; flex-direction: column; border-radius: 0; }
-  .quad:fullscreen .cells { flex: 1; grid-template-rows: 1fr 1fr; }
-  .quad:fullscreen .cell { aspect-ratio: auto; }
+  .quad:fullscreen .cells { flex: 1; min-height: 0; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+  .quad:fullscreen .cell { aspect-ratio: auto; min-height: 0; overflow: hidden; }
   @media (max-width: 600px) { .quad .cell .lbl { font-size: 11px; } .quad .qbar .hint { font-size: 12px; } }
 
   /* Player */
@@ -779,7 +779,7 @@
   const cells = [0, 1, 2, 3].map(k => {
     const el = document.createElement("div");
     el.className = "cell"; el.tabIndex = 0;
-    el.innerHTML = `<video muted playsinline autoplay></video><span class="spk">🔊</span><div class="empty">Box ${k + 1}: tap a channel below</div><div class="err">This channel isn't playing right now. Tap ✕ and pick another.</div><span class="lbl"></span><button class="x" aria-label="Remove channel">✕</button><div class="ud"><button class="up" aria-label="Previous channel">▲</button><button class="dn" aria-label="Next channel">▼</button></div>`;
+    el.innerHTML = `<video muted playsinline autoplay disablepictureinpicture></video><span class="spk">🔊</span><div class="empty">Box ${k + 1}: tap a channel below</div><div class="err">This channel isn't playing right now. Tap ✕ and pick another.</div><span class="lbl"></span><button class="x" aria-label="Remove channel">✕</button><div class="ud"><button class="up" aria-label="Previous channel">▲</button><button class="dn" aria-label="Next channel">▼</button></div>`;
     $("quadCells").append(el);
     const cell = { el, video: el.querySelector("video"), hls: null, ch: null };
     el.onclick = () => quadSound(k);
