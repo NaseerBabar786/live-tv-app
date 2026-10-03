@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Watching.init(this)
         enableEdgeToEdge()
         if (savedInstanceState != null) showStartScreen = false
         setContent {
@@ -137,6 +138,16 @@ class MainActivity : ComponentActivity() {
     }
 
     /** Keep watching in a small window when the user leaves the app mid-channel. */
+    override fun onStart() {
+        super.onStart()
+        Watching.foreground(true)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Watching.foreground(false)
+    }
+
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&

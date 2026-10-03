@@ -4,7 +4,14 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -63,6 +70,27 @@ fun EditionStartScreen(onDone: () -> Unit) {
 /** Asks to update when the start-up check found a newer version; quiet otherwise. */
 @Composable
 fun EditionOverlay() {
+    // What's being watched is sent to Firebase every 10 minutes and whenever the app is left,
+    // for the owner's stats page.
+    if (FirebaseConfig.configured) {
+        val context = LocalContext.current
+        val account = remember { Account.get(context) }
+        val scope = rememberCoroutineScope()
+        val lifecycleOwner = LocalLifecycleOwner.current
+        LaunchedEffect(Unit) {
+            while (true) {
+                delay(10 * 60_000L)
+                account.reportViewing()
+            }
+        }
+        DisposableEffect(lifecycleOwner) {
+            val observer = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_STOP) scope.launch { account.reportViewing() }
+            }
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+        }
+    }
     val updates = viewModel<UpdateViewModel>()
     val prompting by updates.prompting.collectAsStateWithLifecycle()
     val update by updates.update.collectAsStateWithLifecycle()
