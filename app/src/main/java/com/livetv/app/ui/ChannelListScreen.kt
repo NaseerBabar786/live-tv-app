@@ -268,6 +268,15 @@ fun ChannelListScreen(
     // Opening the app, or coming back from the player: show the channel watched last and put
     // the remote's cursor on it (once the list has loaded).
     LaunchedEffect(state.visibleChannels.isNotEmpty()) {
+        // On a TV, the first time the app lands in 1+List it opens the channel watched last
+        // straight in full screen; Back comes to 1+List as usual.
+        if (listMode && !sessionStartOpened && state.visibleChannels.isNotEmpty()) {
+            sessionStartOpened = true
+            state.channels.firstOrNull { it.id == state.lastWatchedId }?.let {
+                onPlay(it)
+                return@LaunchedEffect
+            }
+        }
         val index = state.visibleChannels.indexOfFirst { it.id == state.lastWatchedId }
         if (index >= 0) {
             if (windowed) {
@@ -1666,6 +1675,9 @@ private var sessionOpenedTile: Int = -1
 
 /** The TV layouts fill the whole screen (OK on a tile); Back returns to the tiles under the top bar. */
 private var sessionTilesFull = false
+
+/** Set once the app has opened the channel watched last at start-up (1+List on a TV). */
+private var sessionStartOpened = false
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 
