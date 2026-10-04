@@ -6,43 +6,60 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 
-/** Very dark navy (near black, still blue) behind channel numbers and the selected filter. */
-val AccentBlue = Color(0xFF0D1B3A)
+/** The theme's accent (very dark navy in Midnight) behind channel numbers and the selected filter. */
+val AccentBlue: Color get() = Themes.current.accent
 
-private val colors = darkColorScheme(
-    primary = Color(0xFFE53935),
-    onPrimary = Color.White,
-    secondary = Color(0xFFFFB300),
-    background = Color(0xFF121218),
-    surface = Color(0xFF1E1E2E),
-    surfaceVariant = Color(0xFF2A2A3C),
-    onSurfaceVariant = Color(0xFFCACAD8),
-)
+/** The theme's colours for Material (see [Themes]). */
+private fun colorsOf(p: Palette): ColorScheme {
+    val base = if (p.dark) darkColorScheme() else lightColorScheme()
+    return base.copy(
+        primary = p.primary,
+        onPrimary = Color.White,
+        secondary = p.secondary,
+        onSecondary = Color.Black,
+        background = p.background,
+        onBackground = p.onSurface,
+        surface = p.surface,
+        onSurface = p.onSurface,
+        surfaceVariant = p.surfaceVariant,
+        onSurfaceVariant = p.onSurfaceVariant,
+        surfaceContainer = p.surface,
+        surfaceContainerLow = p.surface,
+        surfaceContainerLowest = p.background,
+    )
+}
 
-/** Soft light blue for text, outlines and ticks on the dark Settings screens. */
-val AccentText = Color(0xFF9DB8F0)
+/** Soft text colour (light blue in Midnight) for text, outlines and ticks on the Settings screens. */
+val AccentText: Color get() = Themes.current.accentText
 
 /**
  * Settings uses the main page's colours: the card colour behind the dialogs and the
- * navy accent for buttons (see [AccentButton]) instead of the red.
+ * accent for buttons (see [AccentButton]) instead of the red.
  */
-private val settingsColors = colors.copy(
-    primary = AccentText,
-    onPrimary = AccentBlue,
-    surfaceContainerHigh = colors.surface,
-    surfaceContainerHighest = colors.surfaceVariant,
-)
-
 @Composable
 fun SettingsTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = settingsColors, content = content)
+    val p = Themes.current
+    val colors = colorsOf(p)
+    MaterialTheme(
+        colorScheme = colors.copy(
+            primary = p.accentText,
+            onPrimary = if (p.dark) p.accent else Color.White,
+            surfaceContainerHigh = colors.surface,
+            surfaceContainerHighest = colors.surfaceVariant,
+        ),
+        content = content,
+    )
 }
 
 /**
@@ -69,7 +86,14 @@ fun AccentButton(
     }
 }
 
+/** The whole app's look: the theme and text size picked in Settings > Themes and styles. */
 @Composable
 fun LiveTvTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = colors, content = content)
+    val density = LocalDensity.current
+    MaterialTheme(colorScheme = colorsOf(Themes.current)) {
+        CompositionLocalProvider(
+            LocalDensity provides Density(density.density, density.fontScale * Themes.textScale),
+            content = content,
+        )
+    }
 }

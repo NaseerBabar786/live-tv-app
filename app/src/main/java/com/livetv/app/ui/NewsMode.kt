@@ -80,10 +80,10 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
 
-private val Panel = Color(0xFF0B1222)
-private val Line = Color(0xFF1E2C4A)
-private val Muted = Color(0xFF8FA6CF)
-private val Soft = Color(0xFFB8C6E0)
+private val Panel: Color get() = Themes.current.panel
+private val Line: Color get() = Themes.current.line
+private val Muted: Color get() = Themes.current.muted
+private val Soft: Color get() = Themes.current.soft
 private val Up = Color(0xFF4CD964)
 private val Down = Color(0xFFFF5A5F)
 private val StoriesRed = Color(0xFFC62828)
@@ -1238,8 +1238,8 @@ private fun untilText(minutes: Int) = when {
     else -> "${minutes / 60} h ${minutes % 60} min"
 }
 
-private val HomeTop = Color(0xFF0B1022)
-private val HomeBottom = Color(0xFF1A1F45)
+private val HomeTop: Color get() = Themes.current.homeTop
+private val HomeBottom: Color get() = Themes.current.homeBottom
 private val Glass = Color.White.copy(alpha = 0.07f)
 private val GlassEdge = Color.White.copy(alpha = 0.10f)
 
