@@ -194,6 +194,7 @@ fun NewsMode(
     // The second channel pauses while the main one is struggling, like the sponsor video.
     val secondPlaying = playing && now >= videoOkAt
 
+    val density = androidx.compose.ui.platform.LocalDensity.current
     var playerFocused by remember { mutableStateOf(false) }
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         // The player takes three quarters of the width (less if the screen is unusually tall),
@@ -202,9 +203,12 @@ fun NewsMode(
         val playerHeight = playerWidth * 9f / 16f
         val sideWidth = maxWidth - playerWidth
         val bottomHeight = maxHeight - playerHeight
-        // Text sizes follow the screen, so a 4K TV and a tablet look the same.
-        val unit = (maxHeight.value / 540f).coerceIn(0.7f, 1.6f)
-        fun s(v: Float): TextUnit = (v * unit).sp
+        // Text sizes follow the screen, so a 4K TV and a tablet look the same. The layout is drawn
+        // for a 960×540 screen: on squarer screens (a folding phone open) the width decides, so
+        // the side panels' text still fits. Text ignores the phone's font size setting, which
+        // would push it out of the fixed panels.
+        val unit = minOf(maxHeight.value / 540f, maxWidth.value / 960f).coerceIn(0.5f, 1.6f)
+        fun s(v: Float): TextUnit = with(density) { (v * unit).dp.toSp() }
         fun d(v: Float): Dp = (v * unit).dp
 
         // The live channel (Up and Down change it, OK opens it full screen).
