@@ -60,7 +60,9 @@ import com.livetv.app.EditionSponsorVideoBox
 import com.livetv.app.EditionTicker
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
+import com.livetv.app.data.Location
 import com.livetv.app.data.News
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -145,6 +147,8 @@ fun NewsMode(
         }
     }
     LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    // Weather and prayer times for where this device is (asks once for its location).
+    DeviceLocation()
 
     var playerFocused by remember { mutableStateOf(false) }
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
@@ -281,7 +285,9 @@ private fun Divider() = Box(Modifier.fillMaxWidth().height(1.dp).background(Line
 @Composable
 private fun <T> rememberLoaded(everyMs: Long, load: () -> T?): T? {
     var value by remember { mutableStateOf<T?>(null) }
-    LaunchedEffect(Unit) {
+    // Loads again straight away when the place changes (a city picked in Settings, or the device's location found).
+    val place by Location.version.collectAsStateWithLifecycle()
+    LaunchedEffect(place) {
         while (true) {
             withContext(Dispatchers.IO) { runCatching { load() }.getOrNull() }?.let { value = it }
             delay(if (value == null) 5 * 60_000L else everyMs)

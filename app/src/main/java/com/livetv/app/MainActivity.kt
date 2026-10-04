@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Watching.init(this)
+        com.livetv.app.data.Location.init(this)
         enableEdgeToEdge()
         if (savedInstanceState != null) showStartScreen = false
         setContent {

@@ -14,9 +14,6 @@ import kotlin.math.roundToInt
  * be reached.
  */
 object News {
-    /** The viewer's area, from the internet connection (no location permission needed). */
-    data class Place(val latitude: String, val longitude: String, val city: String, val country: String)
-
     data class Day(val name: String, val icon: String, val high: Int, val low: Int, val rain: Int)
 
     data class Forecast(
@@ -35,17 +32,8 @@ object News {
 
     data class Market(val name: String, val price: Double, val change: Double)
 
-    private var place: Place? = null
-
-    fun place(): Place? = place ?: runCatching {
-        val o = JSONObject(get("https://get.geojs.io/v1/ip/geo.json"))
-        Place(
-            latitude = o.getString("latitude"),
-            longitude = o.getString("longitude"),
-            city = o.optString("city"),
-            country = o.optString("country_code").uppercase(),
-        )
-    }.getOrNull()?.also { place = it }
+    /** The viewer's area (see [Location]). */
+    fun place(): Location.Place? = Location.current()
 
     /** Fahrenheit where people use it; Celsius everywhere else. */
     private val FAHRENHEIT = setOf("US", "LR", "MM", "BS", "BZ", "KY", "PW", "FM", "MH")

@@ -18,6 +18,7 @@ object Edition {
     const val USER_AGENT = "StreamPlayerPlus-Android/1.0"
     const val HAS_START_SCREEN = false
     const val HAS_WEATHER = false
+    const val HAS_DEVICE_LOCATION = false
     /** Movies & Series from the saved playlists (Live TV only). */
     const val HAS_VOD = false
 }

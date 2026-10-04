@@ -240,6 +240,8 @@ fun ChannelListScreen(
             sessionTileLayout = null
         }
     }
+    // The weather follows the device's location; phones ask for it here, TVs when News mode opens.
+    DeviceLocation(ask = !wideScreen)
     // "1+List": the channel playing on the left, kept when coming back from full screen.
     val listMode = wideScreen && tileLayout == TileLayout.List
     // "News": the top bar and filters hide; Back brings them back (newsBar) until the player is highlighted again.
@@ -1640,7 +1642,8 @@ private fun Clock() {
 @Composable
 private fun WeatherNow() {
     var weather by remember { mutableStateOf<Weather.Now?>(null) }
-    LaunchedEffect(Unit) {
+    val place by com.livetv.app.data.Location.version.collectAsStateWithLifecycle()
+    LaunchedEffect(place) {
         while (true) {
             withContext(Dispatchers.IO) { Weather.load() }?.let { weather = it }
             delay(if (weather == null) 5 * 60_000L else 30 * 60_000L)
