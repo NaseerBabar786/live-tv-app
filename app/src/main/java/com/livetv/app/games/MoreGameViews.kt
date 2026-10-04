@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.matchParentSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -498,6 +497,7 @@ internal fun SolitaireBoard(g: Solitaire, frame: MutableIntState) {
         val gap = 6.dp
         val w = minOf((maxWidth - gap * 6) / 7, maxHeight / 4.4f)
         val h = w * 1.4f
+        val boxH = maxHeight
         fun mark(p: Int): Color? = when {
             g.held == p -> Color(0xFF00E5FF)
             g.pile == p && !g.over -> FocusColor
@@ -511,7 +511,7 @@ internal fun SolitaireBoard(g: Solitaire, frame: MutableIntState) {
                 for (k in 0 until 4) PlayingCard(g.homes[k].lastOrNull(), w, h, mark(2 + k), "A")
             }
             Spacer(Modifier.height(gap * 2))
-            val avail = maxHeight - h - gap * 2 - 12.dp
+            val avail = boxH - h - gap * 2 - 12.dp
             Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
                 for (k in 0 until 7) {
                     val col = g.columns[k]
