@@ -41,6 +41,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.livetv.app.account.Account
 import com.livetv.app.account.Forum
+import com.livetv.app.account.Messages
 import com.livetv.app.account.Post
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
@@ -63,6 +64,15 @@ fun SuggestionsScreen(onClose: () -> Unit) {
     var error by remember { mutableStateOf<String?>(null) }
     var writing by remember { mutableStateOf(false) }
     var reload by remember { mutableIntStateOf(0) }
+    var showingMessages by remember { mutableStateOf(false) }
+    // The owner's private answer to a post: it lands in that viewer's Messages.
+    var privateTo by remember { mutableStateOf<Post?>(null) }
+    var notice by remember { mutableStateOf<String?>(null) }
+
+    if (showingMessages) {
+        MessagesScreen(onClose = { showingMessages = false })
+        return
+    }
 
     LaunchedEffect(open, reload) {
         items = null
@@ -108,6 +118,11 @@ fun SuggestionsScreen(onClose: () -> Unit) {
                         Button(onClick = { writing = true }, modifier = Modifier.focusGlow()) {
                             Text(if (open == null) "＋ New suggestion" else "＋ Reply")
                         }
+                        if (open == null) {
+                            OutlinedButton(onClick = { showingMessages = true }, modifier = Modifier.focusGlow()) {
+                                Text("✉ Messages")
+                            }
+                        }
                         OutlinedButton(onClick = { if (open != null) open = null else onClose() }, modifier = Modifier.focusGlow()) {
                             Text("Back")
                         }
@@ -119,9 +134,16 @@ fun SuggestionsScreen(onClose: () -> Unit) {
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     } else {
-                        PostCard(open!!, canDelete = false, onOpen = null, onDelete = {})
+                        PostCard(
+                            open!!,
+                            canDelete = false,
+                            onOpen = null,
+                            onDelete = {},
+                            onPrivate = if (account.isAdmin && open!!.uid != me?.uid) ({ privateTo = open }) else null,
+                        )
                     }
                     error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                    notice?.let { Text(it, color = MaterialTheme.colorScheme.secondary) }
                     val list = items
                     when {
                         list == null && error == null -> CircularProgressIndicator()
@@ -136,11 +158,31 @@ fun SuggestionsScreen(onClose: () -> Unit) {
                                     canDelete = p.uid == me?.uid || account.isAdmin,
                                     onOpen = if (open == null) ({ open = p }) else null,
                                     onDelete = { delete(p) },
+                                    onPrivate = if (account.isAdmin && p.uid != me?.uid) ({ privateTo = p }) else null,
                                 )
                             }
                         }
                     }
                 }
+            }
+            privateTo?.let { p ->
+                WriteDialog(
+                    title = "Private message to ${p.name.ifBlank { "this viewer" }}",
+                    onDismiss = { privateTo = null },
+                    onSend = { text ->
+                        privateTo = null
+                        scope.launch {
+                            try {
+                                Messages(account).send(p.uid, text, toName = p.name, quote = p.text)
+                                notice = "✓ Sent to ${p.name.ifBlank { "the viewer" }}'s Messages. Their answer will be in ✉ Messages."
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                error = "Couldn't send: ${e.message ?: "check the internet connection"}"
+                            }
+                        }
+                    },
+                )
             }
             if (writing) {
                 WriteDialog(
@@ -167,7 +209,13 @@ fun SuggestionsScreen(onClose: () -> Unit) {
 }
 
 @Composable
-private fun PostCard(post: Post, canDelete: Boolean, onOpen: (() -> Unit)?, onDelete: () -> Unit) {
+private fun PostCard(
+    post: Post,
+    canDelete: Boolean,
+    onOpen: (() -> Unit)?,
+    onDelete: () -> Unit,
+    onPrivate: (() -> Unit)? = null,
+) {
     var confirming by remember { mutableStateOf(false) }
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -190,6 +238,7 @@ private fun PostCard(post: Post, canDelete: Boolean, onOpen: (() -> Unit)?, onDe
             if (onOpen != null) Text("Open to read and reply", style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary)
             Spacer(Modifier.weight(1f))
+            if (onPrivate != null) TextButton(onClick = onPrivate, modifier = Modifier.focusGlow()) { Text("✉ Reply privately") }
             if (canDelete) TextButton(onClick = { confirming = true }, modifier = Modifier.focusGlow()) { Text("Delete") }
         }
     }
@@ -208,7 +257,7 @@ private fun PostCard(post: Post, canDelete: Boolean, onOpen: (() -> Unit)?, onDe
 }
 
 @Composable
-private fun WriteDialog(title: String, onDismiss: () -> Unit, onSend: (String) -> Unit) {
+internal fun WriteDialog(title: String, onDismiss: () -> Unit, onSend: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
