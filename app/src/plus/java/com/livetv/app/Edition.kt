@@ -49,10 +49,13 @@ fun EditionSponsorBar(modifier: Modifier) = Unit
 fun EditionSponsorBox(modifier: Modifier) = Unit
 
 @Composable
+fun EditionSponsorVideoBox(modifier: Modifier, allowVideo: Boolean) = Unit
+
+@Composable
 fun editionHasSponsors(): Boolean = false
 
 @Composable
-fun EditionTicker(modifier: Modifier, big: Boolean = false) = Unit
+fun EditionTicker(modifier: Modifier, big: Boolean = false, always: Boolean = false) = Unit
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {
