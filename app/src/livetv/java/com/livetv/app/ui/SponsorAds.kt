@@ -211,6 +211,28 @@ fun SponsorBar(modifier: Modifier = Modifier) {
 }
 
 /**
+ * A sponsor's picture in a fixed box (under the side tiles of 1+3), the next one every minute.
+ * Counted with the 1+List strip.
+ */
+@Composable
+fun SponsorBox(modifier: Modifier = Modifier) {
+    val all by Sponsors.all.collectAsStateWithLifecycle()
+    val list = remember(all) { Sponsors.current() }
+    if (list.isEmpty()) return
+    var turn by remember { mutableIntStateOf(0) }
+    val sponsor = list[Math.floorMod(turn, list.size)]
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(sponsor.id, turn) {
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) SponsorViews.count(sponsor, "strip")
+        delay(STRIP_MS)
+        turn++
+    }
+    Box(modifier.clip(CardShape).background(Color.Black)) {
+        SponsorPicture(sponsor, Modifier.fillMaxSize())
+    }
+}
+
+/**
  * A small sponsor card in the bottom right corner for a few seconds after the channel changes,
  * at most once every 20 minutes. It never takes the focus or covers the middle of the picture.
  */

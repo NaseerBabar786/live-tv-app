@@ -46,6 +46,12 @@ fun EditionSponsorStrip(modifier: Modifier) = Unit
 fun EditionSponsorBar(modifier: Modifier) = Unit
 
 @Composable
+fun EditionSponsorBox(modifier: Modifier) = Unit
+
+@Composable
+fun editionHasSponsors(): Boolean = false
+
+@Composable
 fun EditionTicker(modifier: Modifier, big: Boolean = false) = Unit
 
 @Composable
