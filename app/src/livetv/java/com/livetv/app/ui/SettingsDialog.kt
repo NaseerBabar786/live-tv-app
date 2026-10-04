@@ -216,13 +216,12 @@ fun SettingsDialog(
                 WeatherCitySection(onPick = { pickingCity = true })
 
                 HorizontalDivider()
-                NewsScreenSection()
-
-                HorizontalDivider()
-                Cp24ScreenSection()
-
-                HorizontalDivider()
-                MyScreenSection()
+                Text("News, CP24 and My Screen", fontWeight = FontWeight.Bold)
+                Text(
+                    "To change what these screens show, open the screen and hold OK (or tap ⚙ on a phone).",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
 
                 HorizontalDivider()
                 Text("MTA (Ahmadiyya)", fontWeight = FontWeight.Bold)
