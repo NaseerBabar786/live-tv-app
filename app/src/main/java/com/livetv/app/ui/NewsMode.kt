@@ -1120,8 +1120,9 @@ private fun Cp24Layout(
                         when (choices[Cp24Screen.Section.Middle]) {
                             // The sponsor at its own shape; the room under it shows the next prayer, so nothing is left empty.
                             Cp24Screen.SPONSOR -> if (maxHeight - maxWidth * 9f / 16f >= rd(80f)) {
+                                val sponsorHeight = maxWidth * 9f / 16f
                                 Column(Modifier.fillMaxSize()) {
-                                    Box(Modifier.fillMaxWidth().height(maxWidth * 9f / 16f)) {
+                                    Box(Modifier.fillMaxWidth().height(sponsorHeight)) {
                                         EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
                                     }
                                     Cp24PrayerBox(Modifier.fillMaxWidth().weight(1f), today, minute, is24, rs, rd)
