@@ -608,8 +608,8 @@ fun ChannelListScreen(
                 )
                 if (!hideBars && !newsMode && !state.loading && state.channels.isNotEmpty()) {
                     // The channel count, with Live TV's "advertise with us" ticker running beside it now and then.
-                    // 1×2 and 2×2 have room for a bigger ticker in its own band above the tiles.
-                    val bandTicker = windowed && (tileLayout == TileLayout.Two || tileLayout == TileLayout.Four)
+                    // 1×2 has room for a bigger ticker in its own band above the tiles.
+                    val bandTicker = windowed && tileLayout == TileLayout.Two
                     Row(
                         Modifier.fillMaxWidth().height(24.dp).padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -681,11 +681,7 @@ fun ChannelListScreen(
                     val fitColumns = if (wide) tileLayout.columns else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
                     val naturalHeight = (maxWidth - gap * (fitColumns + 1)) / fitColumns * 9f / 16f + TileTextHeight
                     val rows = if (wide) tileLayout.rows else max(1, ((maxHeight - gap) / (naturalHeight + gap)).roundToInt())
-                    // 2×2 and 2×3 keep a band at the bottom for Live TV's sponsor bar when there are sponsors.
-                    val adBand = if (wide && !fullTiles && (tileLayout == TileLayout.Four || tileLayout == TileLayout.Six) &&
-                        editionHasSponsors()
-                    ) 60.dp else 0.dp
-                    val tileHeight = (maxHeight - adBand - gap * (rows + 1)) / rows
+                    val tileHeight = (maxHeight - gap * (rows + 1)) / rows
                     val pictureWidth = (tileHeight - TileTextHeight) * 16f / 9f
                     val tileWidth = minOf(pictureWidth, (maxWidth - gap * (fitColumns + 1)) / fitColumns)
                     val columns = if (wide) fitColumns else max(1, ((maxWidth - gap) / (tileWidth + gap)).toInt())
@@ -694,7 +690,7 @@ fun ChannelListScreen(
                     // Full screen: 16:9 cells packed together and centred, so no black bands between rows.
                     val fullHeight = minOf(maxWidth / columns * 9f / 16f, maxHeight / rows)
                     val cardHeight = if (fullTiles) fullHeight else tileWidth * 9f / 16f + TileTextHeight
-                    val rowGap = if (fullTiles) 0.dp else maxOf(gap, (maxHeight - adBand - cardHeight * rows) / (rows + 1))
+                    val rowGap = if (fullTiles) 0.dp else maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
                     // Likewise across: when the height decides the tile size, widen the gaps so the
                     // grid fits exactly [columns] tiles in a row (a bit under, so rounding can't drop one).
                     val columnGap = when {
@@ -703,6 +699,19 @@ fun ChannelListScreen(
                         else -> gap
                     }
                     val cellWidth = if (fullTiles) fullHeight * 16f / 9f else tileWidth
+                    // TVs, 1×2, 2×2 and 2×3: the tiles touch, edge to edge across the screen at 16:9,
+                    // and the sponsor banner gets the space under them (as big as fits at its 8:1 shape).
+                    // When the screen isn't tall enough for that, the tiles get shorter and their
+                    // pictures stretch a little (at most a quarter wider than 16:9) to keep the width.
+                    val packed = wide && !fullTiles && !bigPlayer
+                    val hasAd = editionHasSponsors()
+                    val minBanner = if (hasAd) 48.dp else 0.dp
+                    val packedNaturalWidth = maxWidth / columns
+                    val packedFits = packedNaturalWidth * 9f / 16f * rows + minBanner <= maxHeight
+                    val packedHeight = if (packedFits) packedNaturalWidth * 9f / 16f else (maxHeight - minBanner) / rows
+                    val packedWidth = if (packedFits) packedNaturalWidth else minOf(packedNaturalWidth, packedHeight * 16f / 9f * 1.25f)
+                    val bannerSpace = maxHeight - packedHeight * rows
+                    val bannerHeight = minOf(bannerSpace - 8.dp, maxWidth / 8)
                     @Composable
                     fun Tile(
                         index: Int,
@@ -722,7 +731,7 @@ fun ChannelListScreen(
                             channel = channel,
                             favorite = channel.id in state.favorites,
                             onClick = onClick,
-                            bare = fullTiles || bigPlayer,
+                            bare = fullTiles || bigPlayer || packed,
                             sound = if (bigPlayer) channel.id == soundId else null,
                             keepName = keepName,
                             favoriteBadge = favoriteBadge,
@@ -928,7 +937,7 @@ fun ChannelListScreen(
                                 }
                                 Column(Modifier.width(smallWidth).fillMaxHeight()) {
                                     column.forEachIndexed { i, small -> SmallTile(i, small) }
-                                    if (sideAd) EditionSponsorBox(Modifier.fillMaxWidth().height(bigHeight / 4).padding(6.dp))
+                                    if (sideAd) EditionSponsorBox(Modifier.fillMaxWidth().height(bigHeight / 4))
                                 }
                             }
                             // Under the big player: add it to (or remove it from) Favorites.
@@ -976,23 +985,30 @@ fun ChannelListScreen(
                             }
                         } else
                         Column(
-                            Modifier.fillMaxSize().padding(bottom = adBand).padding(vertical = rowGap),
-                            verticalArrangement = if (fullTiles) Arrangement.Center else Arrangement.spacedBy(rowGap),
+                            if (packed) Modifier.fillMaxSize() else Modifier.fillMaxSize().padding(vertical = rowGap),
+                            verticalArrangement = when {
+                                packed -> if (hasAd) Arrangement.Top else Arrangement.Center
+                                fullTiles -> Arrangement.Center
+                                else -> Arrangement.spacedBy(rowGap)
+                            },
                         ) {
                             window.chunked(columns).forEachIndexed { r, row ->
                                 Row(
-                                    Modifier.fillMaxWidth().padding(horizontal = columnGap),
-                                    horizontalArrangement = Arrangement.spacedBy(columnGap, Alignment.CenterHorizontally),
+                                    Modifier.fillMaxWidth().padding(horizontal = if (packed) 0.dp else columnGap),
+                                    horizontalArrangement = Arrangement.spacedBy(if (packed) 0.dp else columnGap, Alignment.CenterHorizontally),
                                 ) {
                                     row.forEachIndexed { c, channel ->
                                         // Keyed by channel, so a playing card slides over without restarting.
                                         key(channel.id) {
-                                            Box(Modifier.width(cellWidth)) {
+                                            Box(Modifier.width(if (packed) packedWidth else cellWidth)) {
                                                 if (tileLayout.separateTvs) {
                                                     // OK fills the screen with the tiles; OK again opens the channel.
                                                     val open = { sessionOpenedTile = window.indexOfFirst { it.id == channel.id } }
                                                     Tile(0, channel, twoKey(channel), arrows = channel.id == focusedId && !fullTiles,
                                                         onOpen = open,
+                                                        height = if (packed) packedHeight else cardHeight,
+                                                        keepName = packed,
+                                                        stretch = packed,
                                                         onClick = { if (fullTiles) { open(); onPlay(channel) } else tilesFull = true })
                                                 } else {
                                                     // A grid where only the highlighted tile plays (no layout uses this now).
@@ -1039,23 +1055,14 @@ fun ChannelListScreen(
                         )
                     }
                     }
-                    // 2×2 and 2×3: the sponsor bar in the band kept for it under the tiles.
-                    if (adBand > 0.dp) {
-                        EditionSponsorBar(
-                            Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = 6.dp)
-                                .height(adBand - 12.dp),
-                        )
-                    }
-                    // 1×2 leaves a band under the two tiles: Live TV's sponsor bar goes there.
-                    if (wide && tileLayout == TileLayout.Two && !fullTiles && rowGap >= 36.dp) {
-                        EditionSponsorBar(
-                            Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = 5.dp)
-                                .height(minOf(rowGap - 10.dp, 96.dp)),
-                        )
+                    // 1×2, 2×2 and 2×3: Live TV's sponsor banner, centred in the space under the tiles.
+                    if (packed && hasAd && bannerHeight >= 36.dp) {
+                        Box(
+                            Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(bannerSpace),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            EditionSponsorBar(Modifier.height(bannerHeight))
+                        }
                     }
                     }
                 }
@@ -1198,6 +1205,19 @@ private fun ChannelCard(
                 )
             }
             if (preview != null) PreviewVideo(preview, stretch)
+            if (arrows) {
+                Column(
+                    Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(8.dp)
+                        .background(Color.Black.copy(alpha = 0.55f), ChipShape)
+                        .padding(4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(Icons.Filled.KeyboardArrowUp, contentDescription = null, tint = Color.White)
+                    Icon(Icons.Filled.KeyboardArrowDown, contentDescription = null, tint = Color.White)
+                }
+            }
             if (keepName) {
                 Text(
                     if (channel.number > 0) "${channel.number}  ${channel.name}" else channel.name,

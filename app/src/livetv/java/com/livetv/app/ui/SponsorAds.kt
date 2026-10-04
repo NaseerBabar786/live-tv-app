@@ -37,6 +37,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
@@ -154,9 +156,7 @@ fun SponsorStrip(modifier: Modifier = Modifier) {
         delay(STRIP_MS)
         turn++
     }
-    // The "Sponsor" tag sits above the picture, so it never covers the sponsor's logo.
     Column(modifier.fillMaxWidth()) {
-        SponsorLabel(Modifier.padding(bottom = 4.dp))
         Box(
             Modifier
                 .fillMaxWidth()
@@ -211,17 +211,14 @@ fun SponsorBar(modifier: Modifier = Modifier) {
             SponsorPicture(sponsor, Modifier.fillMaxSize())
         }
         Column(Modifier.padding(horizontal = 12.dp).widthIn(max = 520.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                SponsorLabel(Modifier.padding(end = 8.dp))
-                Text(
-                    sponsor.name,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
+            Text(
+                sponsor.name,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
             val words = listOf(sponsor.line, sponsor.contact).filter { it.isNotBlank() }.joinToString(" · ")
             if (words.isNotEmpty()) {
                 Text(words, color = FocusColor, fontSize = 13.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -231,8 +228,8 @@ fun SponsorBar(modifier: Modifier = Modifier) {
 }
 
 /**
- * A sponsor's picture in a fixed box (under the side tiles of 1+3), the next one every minute.
- * Counted with the 1+List strip.
+ * A sponsor's picture filling a fixed box edge to edge (under the side tiles of 1+3), the next one
+ * every minute. Counted with the 1+List strip.
  */
 @Composable
 fun SponsorBox(modifier: Modifier = Modifier) {
@@ -247,16 +244,17 @@ fun SponsorBox(modifier: Modifier = Modifier) {
         delay(STRIP_MS)
         turn++
     }
-    Box(modifier.clip(CardShape).background(Color.Black)) {
-        SponsorPicture(sponsor, Modifier.fillMaxSize())
+    Box(modifier.background(Color.Black)) {
+        SponsorPicture(sponsor, Modifier.fillMaxSize(), fill = true)
     }
 }
 
 /**
- * News mode's sponsor corner: a sponsor's 16:9 picture, the next one every minute, like [SponsorBox].
+ * News mode's sponsor corner: a sponsor's picture filling the corner, the next one every minute, like [SponsorBox].
  * A sponsor with a video link plays it instead, muted and looping, while [allowVideo] is true
  * (News mode turns it off for a while when the live channel starts to stutter). The picture shows
- * until the video's first frame, and stays when the video can't play.
+ * until the video's first frame, and stays when the video can't play. A QR code in the corner
+ * lets viewers call the sponsor or open their website with their phone's camera.
  */
 @Composable
 fun SponsorVideoBox(modifier: Modifier = Modifier, allowVideo: Boolean = true) {
@@ -271,19 +269,23 @@ fun SponsorVideoBox(modifier: Modifier = Modifier, allowVideo: Boolean = true) {
         delay(STRIP_MS)
         turn++
     }
-    Box(modifier.clip(CardShape).background(Color.Black)) {
-        SponsorPicture(sponsor, Modifier.fillMaxSize())
+    BoxWithConstraints(modifier.background(Color.Black)) {
+        SponsorPicture(sponsor, Modifier.fillMaxSize(), fill = true)
         if (allowVideo && sponsor.video.isNotEmpty()) key(sponsor.id, turn) { SponsorVideo(sponsor.video) }
-        Text(
-            "Sponsor",
-            color = Color.White,
-            fontSize = 11.sp,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(6.dp)
-                .background(Color.Black.copy(alpha = 0.6f), CardShape)
-                .padding(horizontal = 6.dp, vertical = 2.dp),
-        )
+        val code = remember(sponsor.contact) { SponsorQr.bitmap(sponsor.contact) }
+        if (code != null) {
+            Image(
+                code,
+                contentDescription = "Scan to contact ${sponsor.name}",
+                filterQuality = FilterQuality.None,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(6.dp)
+                    .size(maxHeight * 0.3f)
+                    .background(Color.White)
+                    .padding(3.dp),
+            )
+        }
     }
 }
 
@@ -375,8 +377,7 @@ fun SponsorCard(channelId: String?) {
             Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).background(Color.Black)) {
                 SponsorPicture(sponsor, Modifier.fillMaxSize())
             }
-            // "Sponsor" goes in the line under the picture, not over it.
-            val words = (listOf("Sponsor") + listOf(sponsor.name, sponsor.contact).filter { it.isNotBlank() }).joinToString(" · ")
+            val words = listOf(sponsor.name, sponsor.contact).filter { it.isNotBlank() }.joinToString(" · ")
             run {
                 Text(
                     words,
@@ -392,14 +393,9 @@ fun SponsorCard(channelId: String?) {
     }
 }
 
+/** A sponsor's picture: whole, or stretched to [fill] its box edge to edge. */
 @Composable
-private fun SponsorPicture(sponsor: Sponsor, modifier: Modifier) {
+private fun SponsorPicture(sponsor: Sponsor, modifier: Modifier, fill: Boolean = false) {
     val picture = sponsor.picture ?: return
-    Image(picture, contentDescription = sponsor.name, contentScale = ContentScale.Fit, modifier = modifier)
-}
-
-/** Says it's an ad. */
-@Composable
-private fun SponsorLabel(modifier: Modifier) {
-    Text("Sponsor", color = Color.White.copy(alpha = 0.7f), fontSize = 11.sp, modifier = modifier)
+    Image(picture, contentDescription = sponsor.name, contentScale = if (fill) ContentScale.FillBounds else ContentScale.Fit, modifier = modifier)
 }
