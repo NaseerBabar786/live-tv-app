@@ -169,7 +169,10 @@ fun PlayerScreen(
                     })
                 }
             },
-            update = { view -> view.useController = !inPictureInPicture },
+            // Live channels have no player controls: the round play/pause button they brought up
+            // sat in the middle of the picture. The channel bar above does their job. Movies keep
+            // them, for pausing and moving along.
+            update = { view -> view.useController = !inPictureInPicture && onNumberPad == null },
             modifier = Modifier.fillMaxSize(),
         )
 
