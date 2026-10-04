@@ -60,19 +60,20 @@ private const val CARD_MS = 5_000L
 private const val CARD_EVERY_MS = 20 * 60_000L
 private const val CARD_NOT_BEFORE_MS = 5 * 60_000L
 
-/** The "advertise with us" ticker: first a minute after start, then every 10 minutes, scrolling across once. */
-private const val TICKER_FIRST_MS = 60_000L
-private const val TICKER_EVERY_MS = 10 * 60_000L
-private const val TICKER_DP_PER_SECOND = 90f
+/** The "advertise with us" ticker: half a minute after start, then every 30 seconds, scrolling across once. */
+private const val TICKER_FIRST_MS = 30_000L
+private const val TICKER_EVERY_MS = 30_000L
+private const val TICKER_DP_PER_SECOND = 110f
 /** When the ticker runs next (elapsed realtime), kept across screens so going in and out of a channel doesn't reset it. */
 private var nextTickerAt = 0L
 
 /**
- * One line of text that scrolls from right to left across [modifier]'s space every 10 minutes,
+ * One line of text that scrolls from right to left across [modifier]'s space every 30 seconds,
  * inviting businesses to advertise. The owner sets the words on tv.bulkbazaar.ca/sponsors.
+ * [big] is the band above the tiles of 1×2 and 2×2; otherwise it's the line beside the channel count.
  */
 @Composable
-fun SponsorTicker(modifier: Modifier = Modifier) {
+fun SponsorTicker(modifier: Modifier = Modifier, big: Boolean = false) {
     val text by Sponsors.ticker.collectAsStateWithLifecycle()
     val words = text ?: return
     var running by remember { mutableStateOf(false) }
@@ -106,7 +107,7 @@ fun SponsorTicker(modifier: Modifier = Modifier) {
         Text(
             words,
             color = FocusColor,
-            style = MaterialTheme.typography.labelLarge,
+            style = if (big) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
             softWrap = false,

@@ -599,8 +599,10 @@ fun ChannelListScreen(
                 )
                 if (!fullTiles && !state.loading && state.channels.isNotEmpty()) {
                     // The channel count, with Live TV's "advertise with us" ticker running beside it now and then.
+                    // 1×2 and 2×2 have room for a bigger ticker in its own band above the tiles.
+                    val bandTicker = windowed && (tileLayout == TileLayout.Two || tileLayout == TileLayout.Four)
                     Row(
-                        Modifier.fillMaxWidth().height(22.dp).padding(horizontal = 16.dp),
+                        Modifier.fillMaxWidth().height(24.dp).padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
@@ -608,8 +610,9 @@ fun ChannelListScreen(
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        EditionTicker(Modifier.weight(1f).fillMaxHeight().padding(start = 24.dp))
+                        if (!bandTicker) EditionTicker(Modifier.weight(1f).fillMaxHeight().padding(start = 24.dp))
                     }
+                    if (bandTicker) EditionTicker(Modifier.fillMaxWidth().height(36.dp).padding(horizontal = 16.dp), big = true)
                 }
 
                 val channels = state.visibleChannels

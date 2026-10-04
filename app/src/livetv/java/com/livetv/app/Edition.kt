@@ -157,9 +157,9 @@ fun EditionSponsorStrip(modifier: Modifier) = SponsorStrip(modifier)
 @Composable
 fun EditionSponsorBar(modifier: Modifier) = SponsorBar(modifier)
 
-/** The "advertise with us" line beside the channel count. */
+/** The "advertise with us" line: beside the channel count, or [big] in the band above the tiles. */
 @Composable
-fun EditionTicker(modifier: Modifier) = SponsorTicker(modifier)
+fun EditionTicker(modifier: Modifier, big: Boolean = false) = SponsorTicker(modifier, big)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

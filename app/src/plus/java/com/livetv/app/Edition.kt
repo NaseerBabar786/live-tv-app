@@ -46,7 +46,7 @@ fun EditionSponsorStrip(modifier: Modifier) = Unit
 fun EditionSponsorBar(modifier: Modifier) = Unit
 
 @Composable
-fun EditionTicker(modifier: Modifier) = Unit
+fun EditionTicker(modifier: Modifier, big: Boolean = false) = Unit
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {
