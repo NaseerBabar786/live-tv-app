@@ -4,6 +4,12 @@ import android.os.SystemClock
 import android.text.format.DateFormat
 import android.view.TextureView
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import com.livetv.app.data.NewsScreen
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -155,6 +161,23 @@ fun NewsMode(
     val rates = rememberLoaded(60 * 60_000L) { News.rates() }
     val gold = markets?.firstOrNull { it.name.startsWith("Gold") }?.price
 
+    // What the viewer chose for each spot (Settings > Customize News screen).
+    val choices by NewsScreen.choices.collectAsStateWithLifecycle()
+    // The second channel, when one of the spots shows it: Left and Right change it.
+    var secondId by remember { mutableStateOf(NewsScreen.secondId) }
+    val second = if (!choices.usesSecond) null else
+        all.firstOrNull { it.id == secondId && it.id != selected?.id } ?: channels.firstOrNull { it.id != selected?.id }
+    fun stepSecond(by: Int) {
+        val list = channels.filter { it.id != selected?.id }
+        if (list.isEmpty()) return
+        val i = list.indexOfFirst { it.id == second?.id }
+        val next = if (i < 0) list.first() else list[Math.floorMod(i + by, list.size)]
+        secondId = next.id
+        NewsScreen.secondId = next.id
+    }
+    // The second channel pauses while the main one is struggling, like the sponsor video.
+    val secondPlaying = playing && now >= videoOkAt
+
     var playerFocused by remember { mutableStateOf(false) }
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         // The player takes three quarters of the width (less if the screen is unusually tall),
@@ -196,7 +219,8 @@ fun NewsMode(
                                 e.type != KeyEventType.KeyDown -> false
                                 e.key == Key.DirectionUp || e.key == Key.ChannelUp -> { step(-1); true }
                                 e.key == Key.DirectionDown || e.key == Key.ChannelDown -> { step(1); true }
-                                e.key == Key.DirectionLeft || e.key == Key.DirectionRight -> true
+                                e.key == Key.DirectionLeft -> { if (choices.usesSecond) stepSecond(-1); true }
+                                e.key == Key.DirectionRight -> { if (choices.usesSecond) stepSecond(1); true }
                                 else -> false
                             }
                         }
@@ -257,25 +281,57 @@ fun NewsMode(
                         )
                     }
                 }
-                // Along the bottom: top stories, rupee rates, and the scrolling line.
+                // Along the bottom: the two chosen lines (top stories and currency rates at first),
+                // the stock prices crawling along, and the advertising line.
                 Column(Modifier.fillMaxWidth().height(bottomHeight).background(Panel)) {
-                    Headlines(Modifier.fillMaxWidth().weight(1.35f), ::s, ::d)
-                    Divider()
-                    InfoRow(Modifier.fillMaxWidth().weight(1f), rates, gold, ::s, ::d)
-                    Divider()
+                    val rows = listOf(NewsScreen.Slot.Under, NewsScreen.Slot.Info).map { choices[it] }.filter { it != NewsScreen.Panel.Empty }
+                    rows.forEachIndexed { i, panel ->
+                        val m = Modifier.fillMaxWidth().weight(if (i == 0 && rows.size > 1) 1.35f else 1f)
+                        when (panel) {
+                            NewsScreen.Panel.Stories -> Headlines(m, ::s, ::d)
+                            NewsScreen.Panel.Currencies -> InfoRow(m, rates, gold, ::s, ::d)
+                            NewsScreen.Panel.Prayers -> PrayerRow(m, ::s, ::d)
+                            NewsScreen.Panel.Markets -> Crawl(m, markets, null, null, ::s, ::d)
+                            else -> Box(m)
+                        }
+                        Divider()
+                    }
+                    if (choices.bottom == NewsScreen.Bottom.Both) {
+                        Crawl(Modifier.fillMaxWidth().weight(0.8f).background(Color(0xFF0E1830)), markets, rates, gold, ::s, ::d)
+                        Divider()
+                    }
                     Box(Modifier.fillMaxWidth().weight(0.9f).background(Color(0xFF05070D)).padding(horizontal = d(12f))) {
                         EditionTicker(Modifier.fillMaxSize(), big = true, always = true)
                     }
                 }
             }
-            // Down the right: clock and weather, markets, prayer times; the sponsor in the corner.
+            // Down the right: the three chosen panels (clock and weather, markets and prayer
+            // times at first); the sponsor in the corner. Lists (markets, rates, stories) take
+            // the space the others leave and show as many rows as fit.
             Column(Modifier.width(sideWidth).fillMaxHeight().background(Panel)) {
-                // The prayer times always keep their place at the bottom; the markets show as
-                // many rows as fit between them and the weather.
                 Column(Modifier.fillMaxWidth().height(playerHeight).padding(horizontal = d(12f))) {
-                    ClockWeather(::s, ::d)
-                    Markets(Modifier.fillMaxWidth().weight(1f), markets, ::s, ::d)
-                    Prayers(::s, ::d)
+                    val fills = setOf(NewsScreen.Panel.Markets, NewsScreen.Panel.Currencies, NewsScreen.Panel.Stories)
+                    val panels = listOf(NewsScreen.Slot.RightTop, NewsScreen.Slot.RightMiddle, NewsScreen.Slot.RightBottom)
+                        .map { choices[it] }.filter { it != NewsScreen.Panel.Empty }
+                    val anyFill = panels.any { it in fills }
+                    panels.forEachIndexed { i, panel ->
+                        if (i > 0) {
+                            // Nothing to stretch: the last panel still sits at the bottom.
+                            if (!anyFill && i == panels.lastIndex) Spacer(Modifier.weight(1f))
+                            Divider()
+                        }
+                        Box(if (panel in fills) Modifier.fillMaxWidth().weight(1f) else Modifier.fillMaxWidth()) {
+                            when (panel) {
+                                NewsScreen.Panel.Clock -> ClockWeather(::s, ::d)
+                                NewsScreen.Panel.Markets -> Markets(Modifier.fillMaxSize(), markets, ::s, ::d)
+                                NewsScreen.Panel.Prayers -> Prayers(::s, ::d)
+                                NewsScreen.Panel.Currencies -> CurrencyList(Modifier.fillMaxSize(), rates, gold, ::s, ::d)
+                                NewsScreen.Panel.Stories -> StoryList(Modifier.fillMaxSize(), ::s, ::d)
+                                NewsScreen.Panel.Second -> SecondChannel(second, secondPlaying, ::s, ::d)
+                                NewsScreen.Panel.Empty -> Unit
+                            }
+                        }
+                    }
                 }
                 Box(Modifier.fillMaxWidth().height(bottomHeight).padding(d(4f)), contentAlignment = Alignment.Center) {
                     EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = now >= videoOkAt)
@@ -346,7 +402,6 @@ private fun ClockWeather(s: (Float) -> TextUnit, d: (Float) -> Dp) {
             }
         }
     }
-    Divider()
 }
 
 @Composable
@@ -377,7 +432,6 @@ private fun Markets(modifier: Modifier, markets: List<News.Market>?, s: (Float) 
                 }
             }
         }
-        Box(Modifier.align(Alignment.BottomCenter)) { Divider() }
     }
 }
 
@@ -532,3 +586,209 @@ private fun InfoRow(modifier: Modifier, rates: News.Rates?, gold: Double?, s: (F
 
 /** Big amounts without decimals (Rs 194), small ones with two (2.68 AED). */
 private fun amount(v: Double) = if (v >= 100) "%,.0f".format(v) else if (v >= 10) "%.1f".format(v) else "%.2f".format(v)
+
+/** Every market, then the rates and gold, crawling right to left along one line. */
+@Composable
+private fun Crawl(modifier: Modifier, markets: List<News.Market>?, rates: News.Rates?, gold: Double?, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val text = remember(markets, rates, gold) {
+        buildAnnotatedString {
+            markets?.forEach { m ->
+                withStyle(SpanStyle(color = Soft)) { append(m.name.uppercase() + " ") }
+                withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.Bold)) {
+                    append((if (m.name.startsWith("Gold")) "$" else "") + "%,.0f ".format(m.price))
+                }
+                withStyle(SpanStyle(color = if (m.change >= 0) Up else Down)) {
+                    append((if (m.change >= 0) "▲ " else "▼ ") + "%.1f%%".format(abs(m.change)))
+                }
+                append("      ")
+            }
+            if (rates != null) {
+                withStyle(SpanStyle(color = Soft)) { append("1 ${rates.base} = ") }
+                News.ASIAN.filter { it.code != rates.base && rates[it.code] != null }.forEach { m ->
+                    withStyle(SpanStyle(color = FocusColor, fontWeight = FontWeight.Bold)) {
+                        append("${m.flag} ${m.symbol}${amount(rates[m.code]!!)}${if (m.symbol.isBlank()) " ${m.code}" else ""}")
+                    }
+                    append("    ")
+                }
+                val tola = listOf(rates.base to "$", "PKR" to "Rs ", "INR" to "₹").mapNotNull { (code, symbol) ->
+                    News.goldTola(gold, rates, code)?.let { "$symbol${"%,.0f".format(it)} $code" }
+                }
+                if (tola.isNotEmpty()) {
+                    append("  ")
+                    withStyle(SpanStyle(color = Soft)) { append("GOLD 1 TOLA ") }
+                    withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.Bold)) { append(tola.joinToString("  ·  ")) }
+                    append("      ")
+                }
+            }
+        }
+    }
+    Box(modifier.padding(horizontal = d(12f)), contentAlignment = Alignment.CenterStart) {
+        if (text.isEmpty()) return@Box
+        Text(
+            text,
+            fontSize = s(13f),
+            maxLines = 1,
+            softWrap = false,
+            modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE, initialDelayMillis = 0, velocity = d(55f)),
+        )
+    }
+}
+
+/** Today's prayer times in one line (for the lines under the channel). */
+@Composable
+private fun PrayerRow(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val context = LocalContext.current
+    val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
+    val is24 = remember { DateFormat.is24HourFormat(context) }
+    val minute = rememberMinute()
+    fun minutes(t: String) = t.split(':').let { (it[0].toIntOrNull() ?: 0) * 60 + (it.getOrNull(1)?.toIntOrNull() ?: 0) }
+    val prayers = today?.prayers.orEmpty()
+    val next = prayers.indexOfFirst { minutes(it.time) > minute }
+    Row(modifier.padding(horizontal = d(12f)), verticalAlignment = Alignment.CenterVertically) {
+        Text("PRAYER TIMES", color = Muted, fontWeight = FontWeight.Bold, fontSize = s(11f), letterSpacing = s(1.5f), maxLines = 1)
+        Spacer(Modifier.width(d(16f)))
+        prayers.forEachIndexed { i, p ->
+            val m = minutes(p.time)
+            val shown = if (is24) p.time else "${(m / 60 + 11) % 12 + 1}:${"%02d".format(m % 60)}"
+            val color = if (i == next) FocusColor else Color.White
+            Text(if (p.name == "Dhuhr") "Zuhr " else p.name + " ", color = if (i == next) FocusColor else Soft, fontSize = s(13f), maxLines = 1)
+            Text(shown, color = color, fontWeight = FontWeight.Bold, fontSize = s(13f), maxLines = 1)
+            Spacer(Modifier.width(d(14f)))
+        }
+        today?.hijri?.let { Text("☪ ${it.label}", color = Soft, fontSize = s(11f), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+    }
+}
+
+/** The current minute of the day, ticking over on the minute. */
+@Composable
+private fun rememberMinute(): Int {
+    var minute by remember { mutableIntStateOf(0) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            val c = java.util.Calendar.getInstance()
+            minute = c.get(java.util.Calendar.HOUR_OF_DAY) * 60 + c.get(java.util.Calendar.MINUTE)
+            delay(60_000 - System.currentTimeMillis() % 60_000)
+        }
+    }
+    return minute
+}
+
+/** Rates down the right side: as many as fit, the next ones every 10 seconds, then gold per tola. */
+@Composable
+private fun CurrencyList(modifier: Modifier, rates: News.Rates?, gold: Double?, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val r = rates ?: return
+    val items = remember(r, gold) {
+        News.ASIAN.filter { it.code != r.base && r[it.code] != null }.map { m ->
+            "${m.flag}  ${m.code}" to "${m.symbol}${amount(r[m.code]!!)}"
+        } + listOf(r.base to "$", "PKR" to "Rs ", "INR" to "₹").mapNotNull { (code, symbol) ->
+            News.goldTola(gold, r, code)?.let { "🪙  Gold tola $code" to "$symbol${"%,.0f".format(it)}" }
+        }
+    }
+    BoxWithConstraints(modifier.padding(vertical = d(6f))) {
+        val rowHeight = d(18f)
+        val fits = ((maxHeight - d(18f)) / rowHeight).toInt().coerceAtLeast(1)
+        val pages = items.chunked(fits)
+        var turn by remember { mutableIntStateOf(0) }
+        LaunchedEffect(pages.size) {
+            while (true) {
+                delay(10_000)
+                turn++
+            }
+        }
+        Column(Modifier.fillMaxWidth()) {
+            Text("1 ${r.base} =", color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f), modifier = Modifier.height(d(16f)))
+            if (pages.isEmpty()) return@Column
+            pages[Math.floorMod(turn, pages.size)].forEach { (name, value) ->
+                Row(Modifier.fillMaxWidth().height(rowHeight), verticalAlignment = Alignment.CenterVertically) {
+                    Text(name, color = Color.White, fontSize = s(12f), modifier = Modifier.weight(1f), maxLines = 1)
+                    Text(value, color = FocusColor, fontWeight = FontWeight.Bold, fontSize = s(12f), maxLines = 1)
+                }
+            }
+        }
+    }
+}
+
+/** Top stories down the right side: as many as fit, the next ones every 15 seconds. */
+@Composable
+private fun StoryList(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val stories = rememberLoaded(15 * 60_000L) { News.headlines().takeIf { it.isNotEmpty() } } ?: return
+    BoxWithConstraints(modifier.padding(vertical = d(6f))) {
+        val storyHeight = d(48f)
+        val fits = ((maxHeight - d(18f)) / storyHeight).toInt().coerceAtLeast(1)
+        val pages = stories.chunked(fits)
+        var turn by remember { mutableIntStateOf(0) }
+        LaunchedEffect(pages.size) {
+            while (true) {
+                delay(15_000)
+                turn++
+            }
+        }
+        Column(Modifier.fillMaxWidth()) {
+            Text("TOP STORIES", color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f), modifier = Modifier.height(d(16f)))
+            pages[Math.floorMod(turn, pages.size)].forEach { story ->
+                Column(Modifier.fillMaxWidth().height(storyHeight), verticalArrangement = Arrangement.Center) {
+                    Text(story.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(12f), lineHeight = s(14f), maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    Text(story.source, color = Muted, fontSize = s(9f), maxLines = 1)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * A second channel, small and silent (its sound isn't even decoded). Left and Right on the main
+ * channel change it.
+ */
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+@Composable
+private fun SecondChannel(channel: Channel?, playing: Boolean, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val context = LocalContext.current
+    val stream = remember {
+        com.livetv.app.player.StreamPlayer(context, preview = true).also {
+            it.player.volume = 0f
+            it.player.trackSelectionParameters = it.player.trackSelectionParameters.buildUpon()
+                .setMaxVideoSize(854, 480)
+                .setTrackTypeDisabled(androidx.media3.common.C.TRACK_TYPE_AUDIO, true)
+                .build()
+        }
+    }
+    var showing by remember { mutableStateOf(false) }
+    DisposableEffect(stream) {
+        val listener = object : Player.Listener {
+            override fun onRenderedFirstFrame() {
+                showing = true
+            }
+        }
+        stream.player.addListener(listener)
+        onDispose {
+            stream.player.removeListener(listener)
+            stream.release()
+        }
+    }
+    LaunchedEffect(channel?.id) {
+        showing = false
+        if (channel != null) stream.play(channel) else stream.stop()
+    }
+    LaunchedEffect(playing) { stream.player.playWhenReady = playing }
+    Box(Modifier.fillMaxWidth().padding(vertical = d(6f)).aspectRatio(16f / 9f).background(Color.Black)) {
+        AndroidView(
+            factory = { ctx -> TextureView(ctx).also { stream.player.setVideoTextureView(it) } },
+            onRelease = { stream.player.clearVideoTextureView(it) },
+            modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
+        )
+        channel?.let { ch ->
+            Text(
+                (if (ch.number > 0) "${ch.number}  " else "") + ch.name + "   ◀ ▶",
+                color = Color.White,
+                fontSize = s(10f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(d(4f))
+                    .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+                    .padding(horizontal = d(5f), vertical = d(1f)),
+            )
+        }
+    }
+}
