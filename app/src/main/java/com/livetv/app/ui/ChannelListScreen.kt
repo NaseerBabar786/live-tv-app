@@ -250,11 +250,13 @@ fun ChannelListScreen(
     // "News": the top bar and filters hide; Back brings them back (newsBar) until the player is highlighted again.
     val newsMode = wideScreen && tileLayout in INFO_LAYOUTS
     var newsBar by remember { mutableStateOf(false) }
+    // "Browse": its own rail and search bar take the place of the top bar and filters.
+    val browseMode = wideScreen && tileLayout == TileLayout.Browse
     val newsFocus = remember { FocusRequester() }
     var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
     // TVs and tablets show a fixed window of tiles that slides along the list one channel at a
     // time; [windowStart] is the channel in the first tile.
-    val windowed = wideScreen && !listMode && !newsMode
+    val windowed = wideScreen && !listMode && !newsMode && !browseMode
     val slots = tileLayout.columns * tileLayout.rows
     var windowStart by rememberSaveable { mutableIntStateOf(0) }
     val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
@@ -265,7 +267,7 @@ fun ChannelListScreen(
     SideEffect { sessionTileIds = twoIds; sessionTilesFull = tilesFull }
     // 1+3 has no full screen view: OK on its big player opens the channel straight away.
     val fullTiles = tilesFull && windowed && tileLayout != TileLayout.Five
-    val hideBars = fullTiles || (newsMode && !newsBar)
+    val hideBars = fullTiles || (newsMode && !newsBar) || browseMode
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
     val window = when {
         !windowed -> emptyList()
@@ -330,7 +332,7 @@ fun ChannelListScreen(
         // and the rest show a picture.
         val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
-        val allowed = inForeground && !showSettings && !listMode && !newsMode && !Preview.metered(context)
+        val allowed = inForeground && !showSettings && !listMode && !newsMode && !browseMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
         if (!allowed) return@LaunchedEffect
         delay(600)
@@ -452,6 +454,18 @@ fun ChannelListScreen(
         searching = false
         scope.launch { delay(50); runCatching { searchButtonFocus.requestFocus() } }
     }
+    fun nextLayout() {
+        tilesFull = false
+        // Browse's search only applies there.
+        if (tileLayout == TileLayout.Browse && state.query.isNotBlank()) onQueryChange("")
+        val next = layouts[(layouts.indexOf(tileLayout) + 1) % layouts.size]
+        if (next.separateTvs && !premium) {
+            upsellFor = next
+        } else {
+            tileLayout = next
+            sessionTileLayout = tileLayout
+        }
+    }
     // Otherwise Back doesn't close the app at once: on a TV it first goes up to the top bar,
     // then it asks for a second press within 2 seconds.
     var topBarFocused by remember { mutableStateOf(false) }
@@ -512,16 +526,7 @@ fun ChannelListScreen(
                 actions = {
                     if (wideScreen) {
                         TextButton(
-                            onClick = {
-                                tilesFull = false
-                                val next = layouts[(layouts.indexOf(tileLayout) + 1) % layouts.size]
-                                if (next.separateTvs && !premium) {
-                                    upsellFor = next
-                                } else {
-                                    tileLayout = next
-                                    sessionTileLayout = tileLayout
-                                }
-                            },
+                            onClick = ::nextLayout,
                             colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
                         ) {
@@ -645,6 +650,22 @@ fun ChannelListScreen(
 
                 val channels = state.visibleChannels
                 when {
+                    browseMode -> BrowseMode(
+                        channels = state.channels.filter { state.languageFilter.isEmpty() || it.language in state.languageFilter },
+                        favorites = state.favorites,
+                        lastWatchedId = state.lastWatchedId,
+                        query = state.query,
+                        onQueryChange = onQueryChange,
+                        sound = previewSound,
+                        playing = inForeground && !showSettings,
+                        modeFocus = layoutButtonFocus,
+                        modeLabel = tileLayout.label,
+                        onNextMode = ::nextLayout,
+                        onOpen = onPlay,
+                        onOpenGames = onOpenGames,
+                        onOpenSettings = { showSettings = true },
+                        onRailFocused = { topBarFocused = it },
+                    )
                     state.error != null && state.channels.isEmpty() -> Message(
                         text = state.error,
                         action = "Retry",
@@ -1410,7 +1431,7 @@ private fun SoundBadge(modifier: Modifier) {
 
 /** The app icon: a white TV with a red play button on a red tile. */
 @Composable
-private fun AppLogo(size: Dp = 40.dp) {
+internal fun AppLogo(size: Dp = 40.dp) {
     Box(
         Modifier
             .size(size)
@@ -1608,7 +1629,7 @@ private fun countryName(channel: Channel): String? =
         ?.let { if (it == "GB") "UK" else it }
 
 @Composable
-private fun Initials(name: String) {
+internal fun Initials(name: String) {
     val initials = name.split(' ', '-', '_')
         .filter { it.isNotBlank() }
         .take(2)
@@ -1656,7 +1677,7 @@ private fun Message(
 
 /** The date and time (e.g. "Fri, Oct 2  9:54 PM"), in the phone's style, updated on the minute. */
 @Composable
-private fun Clock() {
+internal fun Clock() {
     val context = LocalContext.current
     val format = remember { DateFormat.getTimeFormat(context) }
     val dateFormat = remember {
@@ -1682,7 +1703,7 @@ private fun Clock() {
 
 /** Temperature and sky for the viewer's area, refreshed every half hour; hidden until it loads. */
 @Composable
-private fun WeatherNow() {
+internal fun WeatherNow() {
     var weather by remember { mutableStateOf<Weather.Now?>(null) }
     val place by com.livetv.app.data.Location.version.collectAsStateWithLifecycle()
     LaunchedEffect(place) {
@@ -1786,6 +1807,8 @@ private val MinTileWidth = 170.dp
 private enum class TileLayout(val label: String, val columns: Int, val rows: Int) {
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
+    /** A home screen like a streaming app's: an icon rail, a search bar and rows of big channel cards. */
+    Browse("Browse", 1, 1),
     /** One big player (top left, 85% wide) and small ones around it; sound only from the big one. */
     Five("1+3", 4, 1),
     Two("1×2", 2, 1),
@@ -1812,10 +1835,10 @@ private var sessionTileLayout: TileLayout? = null
 private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine)
 
 /** The layouts the top-bar button steps through; News mode is Live TV's only. */
-private val layouts = TileLayout.entries.filter { it !in INFO_LAYOUTS || Edition.LIVE_TV }
+private val layouts = TileLayout.entries.filter { (it !in INFO_LAYOUTS && it != TileLayout.Browse) || Edition.LIVE_TV }
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
-private val TileLayout.separateTvs get() = this != TileLayout.List && this !in INFO_LAYOUTS
+private val TileLayout.separateTvs get() = this != TileLayout.List && this != TileLayout.Browse && this !in INFO_LAYOUTS
 
 /**
  * 1×2, 2×2 and 2×3's channels, and the tile opened full screen, kept while a channel plays full
