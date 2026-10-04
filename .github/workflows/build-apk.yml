@@ -177,6 +177,7 @@ jobs:
 
       # Live Cam gets its own release per version, never marked "latest", so Live TV's
       # download link and update check keep finding Live TV. Phones and TVs download it from
+      # the fixed "livecam" release below, or from
       # https://github.com/NaseerBabar786/live-tv-app/releases/download/livecam-v<version>/LiveCam.apk
       - name: Publish Live Cam
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -194,3 +195,15 @@ jobs:
               --notes "Debug build of the Live Cam app from ${{ github.sha }}." \
               --latest=false
           fi
+          # A fixed "livecam" release always holds the newest build, so App Bazaar and the
+          # Downloader code tv.bulkbazaar.ca/cam never change:
+          # https://github.com/NaseerBabar786/live-tv-app/releases/download/livecam/LiveCam.apk
+          if gh release view livecam > /dev/null 2>&1; then
+            gh release upload livecam LiveCam.apk --clobber
+          else
+            gh release create livecam LiveCam.apk \
+              --title "Live Cam (newest)" \
+              --notes "Always the newest Live Cam build." \
+              --latest=false
+          fi
+          gh release edit livecam --notes "Always the newest Live Cam build (now $version), from ${{ github.sha }}." || true
