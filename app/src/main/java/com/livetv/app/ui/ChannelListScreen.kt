@@ -245,7 +245,7 @@ fun ChannelListScreen(
     // "1+List": the channel playing on the left, kept when coming back from full screen.
     val listMode = wideScreen && tileLayout == TileLayout.List
     // "News": the top bar and filters hide; Back brings them back (newsBar) until the player is highlighted again.
-    val newsMode = wideScreen && tileLayout == TileLayout.News
+    val newsMode = wideScreen && (tileLayout == TileLayout.News || tileLayout == TileLayout.Cp24)
     var newsBar by remember { mutableStateOf(false) }
     val newsFocus = remember { FocusRequester() }
     var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
@@ -642,6 +642,7 @@ fun ChannelListScreen(
                     // row at a time, so no tile is ever cut off at the top or bottom. Each
                     // tile's picture is 16:9, so a playing channel fills it edge to edge.
                     newsMode -> NewsMode(
+                        cp24 = tileLayout == TileLayout.Cp24,
                         channels = channels,
                         all = state.channels,
                         selectedId = listChannelId ?: state.lastWatchedId,
@@ -1772,6 +1773,8 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     Six("2×3", 3, 2),
     /** Like a 24-hour news channel: one player with weather, markets, prayer times, stories and a sponsor around it. */
     News("News", 1, 1),
+    /** Like CP24: a big player, a red clock and weather column, a sponsor box and two scrolling lines. */
+    Cp24("CP24", 1, 1),
 }
 
 /**
@@ -1781,10 +1784,10 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
 private var sessionTileLayout: TileLayout? = null
 
 /** The layouts the top-bar button steps through; News mode is Live TV's only. */
-private val layouts = TileLayout.entries.filter { it != TileLayout.News || Edition.LIVE_TV }
+private val layouts = TileLayout.entries.filter { (it != TileLayout.News && it != TileLayout.Cp24) || Edition.LIVE_TV }
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
-private val TileLayout.separateTvs get() = this != TileLayout.List && this != TileLayout.News
+private val TileLayout.separateTvs get() = this != TileLayout.List && this != TileLayout.News && this != TileLayout.Cp24
 
 /**
  * 1×2, 2×2 and 2×3's channels, and the tile opened full screen, kept while a channel plays full

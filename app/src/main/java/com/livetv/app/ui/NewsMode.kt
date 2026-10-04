@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import com.livetv.app.data.Cp24Screen
 import com.livetv.app.data.NewsScreen
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Star
@@ -95,6 +97,8 @@ private val StoriesRed = Color(0xFFC62828)
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
 fun NewsMode(
+    /** CP24's look instead of News mode's. */
+    cp24: Boolean = false,
     channels: List<Channel>,
     all: List<Channel>,
     selectedId: String?,
@@ -162,10 +166,13 @@ fun NewsMode(
     val gold = markets?.firstOrNull { it.name.startsWith("Gold") }?.price
 
     // What the viewer chose for each spot (Settings > Customize News screen).
-    val choices by NewsScreen.choices.collectAsStateWithLifecycle()
+    val newsChoices by NewsScreen.choices.collectAsStateWithLifecycle()
+    val cp24Choices by Cp24Screen.choices.collectAsStateWithLifecycle()
+    val choices = newsChoices
+    val usesSecond = if (cp24) cp24Choices[Cp24Screen.Section.Middle] == Cp24Screen.SECOND else choices.usesSecond
     // The second channel, when one of the spots shows it: Left and Right change it.
     var secondId by remember { mutableStateOf(NewsScreen.secondId) }
-    val second = if (!choices.usesSecond) null else
+    val second = if (!usesSecond) null else
         all.firstOrNull { it.id == secondId && it.id != selected?.id } ?: channels.firstOrNull { it.id != selected?.id }
     fun stepSecond(by: Int) {
         val list = channels.filter { it.id != selected?.id }
@@ -191,96 +198,113 @@ fun NewsMode(
         fun s(v: Float): TextUnit = (v * unit).sp
         fun d(v: Float): Dp = (v * unit).dp
 
-        Row(Modifier.fillMaxSize()) {
-            Column(Modifier.width(playerWidth).fillMaxHeight()) {
-                // The live channel.
-                Box(
-                    Modifier
-                        .width(playerWidth)
-                        .height(playerHeight)
-                        .background(Color.Black)
-                        .focusRequester(focus)
-                        .onFocusChanged {
-                            playerFocused = it.isFocused
-                            if (it.isFocused) onFocused()
-                        }
-                        .onPreviewKeyEvent { e ->
-                            fun step(by: Int) {
-                                val i = channels.indexOfFirst { it.id == selected?.id }
-                                val next = when {
-                                    channels.isEmpty() -> null
-                                    i < 0 -> channels.first()
-                                    else -> channels[Math.floorMod(i + by, channels.size)]
-                                }
-                                next?.let(onSelect)
-                            }
-                            when {
-                                e.key == Key.Back -> { if (e.type == KeyEventType.KeyUp) onBack(); true }
-                                e.type != KeyEventType.KeyDown -> false
-                                e.key == Key.DirectionUp || e.key == Key.ChannelUp -> { step(-1); true }
-                                e.key == Key.DirectionDown || e.key == Key.ChannelDown -> { step(1); true }
-                                e.key == Key.DirectionLeft -> { if (choices.usesSecond) stepSecond(-1); true }
-                                e.key == Key.DirectionRight -> { if (choices.usesSecond) stepSecond(1); true }
-                                else -> false
-                            }
-                        }
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                        ) { selected?.let(onOpen) },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    AndroidView(
-                        factory = { ctx -> TextureView(ctx).also { stream.player.setVideoTextureView(it) } },
-                        onRelease = { stream.player.clearVideoTextureView(it) },
-                        modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
-                    )
-                    if (!showing) {
-                        Text(error ?: selected?.name.orEmpty(), color = Color.White, fontSize = s(16f), modifier = Modifier.padding(24.dp))
+        // The live channel (Up and Down change it, OK opens it full screen).
+        @Composable
+        fun Live(modifier: Modifier) {
+            Box(
+                Modifier
+                    .then(modifier)
+                    .background(Color.Black)
+                    .focusRequester(focus)
+                    .onFocusChanged {
+                        playerFocused = it.isFocused
+                        if (it.isFocused) onFocused()
                     }
-                    if (playerFocused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
-                    selected?.let { ch ->
-                        Row(
-                            Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(d(12f))
-                                .background(Color.Black.copy(alpha = 0.6f), ChipShape)
-                                .padding(horizontal = d(8f), vertical = d(4f)),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                "LIVE",
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = s(10f),
-                                modifier = Modifier.background(Color(0xFFE53935), ChipShape).padding(horizontal = d(5f), vertical = d(1f)),
-                            )
-                            Spacer(Modifier.width(d(8f)))
-                            if (ch.number > 0) {
-                                Text("${ch.number}", color = FocusColor, fontWeight = FontWeight.Bold, fontSize = s(14f))
-                                Spacer(Modifier.width(d(6f)))
+                    .onPreviewKeyEvent { e ->
+                        fun step(by: Int) {
+                            val i = channels.indexOfFirst { it.id == selected?.id }
+                            val next = when {
+                                channels.isEmpty() -> null
+                                i < 0 -> channels.first()
+                                else -> channels[Math.floorMod(i + by, channels.size)]
                             }
-                            Text(ch.name, color = Color.White, fontSize = s(14f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                            if (ch.id in favorites) {
-                                Spacer(Modifier.width(d(6f)))
-                                Icon(Icons.Filled.Star, contentDescription = null, tint = FocusColor, modifier = Modifier.size(d(14f)))
-                            }
+                            next?.let(onSelect)
+                        }
+                        when {
+                            e.key == Key.Back -> { if (e.type == KeyEventType.KeyUp) onBack(); true }
+                            e.type != KeyEventType.KeyDown -> false
+                            e.key == Key.DirectionUp || e.key == Key.ChannelUp -> { step(-1); true }
+                            e.key == Key.DirectionDown || e.key == Key.ChannelDown -> { step(1); true }
+                            e.key == Key.DirectionLeft -> { if (usesSecond) stepSecond(-1); true }
+                            e.key == Key.DirectionRight -> { if (usesSecond) stepSecond(1); true }
+                            else -> false
                         }
                     }
-                    if (sound) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.VolumeUp,
-                            contentDescription = "Sound",
-                            tint = Color.White,
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(d(10f))
-                                .background(Color.Black.copy(alpha = 0.6f), ChipShape)
-                                .padding(d(4f))
-                                .size(d(18f)),
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) { selected?.let(onOpen) },
+                contentAlignment = Alignment.Center,
+            ) {
+                AndroidView(
+                    factory = { ctx -> TextureView(ctx).also { stream.player.setVideoTextureView(it) } },
+                    onRelease = { stream.player.clearVideoTextureView(it) },
+                    modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
+                )
+                if (!showing) {
+                    Text(error ?: selected?.name.orEmpty(), color = Color.White, fontSize = s(16f), modifier = Modifier.padding(24.dp))
+                }
+                if (playerFocused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
+                selected?.let { ch ->
+                    Row(
+                        Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(d(12f))
+                            .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+                            .padding(horizontal = d(8f), vertical = d(4f)),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "LIVE",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = s(10f),
+                            modifier = Modifier.background(Color(0xFFE53935), ChipShape).padding(horizontal = d(5f), vertical = d(1f)),
                         )
+                        Spacer(Modifier.width(d(8f)))
+                        if (ch.number > 0) {
+                            Text("${ch.number}", color = FocusColor, fontWeight = FontWeight.Bold, fontSize = s(14f))
+                            Spacer(Modifier.width(d(6f)))
+                        }
+                        Text(ch.name, color = Color.White, fontSize = s(14f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        if (ch.id in favorites) {
+                            Spacer(Modifier.width(d(6f)))
+                            Icon(Icons.Filled.Star, contentDescription = null, tint = FocusColor, modifier = Modifier.size(d(14f)))
+                        }
                     }
                 }
+                if (sound) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.VolumeUp,
+                        contentDescription = "Sound",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(d(10f))
+                            .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+                            .padding(d(4f))
+                            .size(d(18f)),
+                    )
+                }
+            }
+        }
+
+        if (cp24) Cp24Layout(
+            live = { Live(it) },
+            selected = selected,
+            choices = cp24Choices,
+            markets = markets,
+            rates = rates,
+            gold = gold,
+            second = second,
+            secondPlaying = secondPlaying,
+            allowVideo = now >= videoOkAt,
+            s = ::s,
+            d = ::d,
+        ) else
+        Row(Modifier.fillMaxSize()) {
+            Column(Modifier.width(playerWidth).fillMaxHeight()) {
+                Live(Modifier.width(playerWidth).height(playerHeight))
                 // Along the bottom: the two chosen lines (top stories and currency rates at first),
                 // the stock prices crawling along, and the advertising line.
                 Column(Modifier.fillMaxWidth().height(bottomHeight).background(Panel)) {
@@ -791,4 +815,400 @@ private fun SecondChannel(channel: Channel?, playing: Boolean, s: (Float) -> Tex
             )
         }
     }
+}
+
+private val Cp24Red = Color(0xFFD71920)
+private val Cp24Navy = Color(0xFF0A1A3A)
+private val Cp24Sky = Color(0xFF2F6DB5)
+private val Cp24SkyDark = Color(0xFF173F7A)
+private val Cp24Green = Color(0xFF1E8E3E)
+
+/**
+ * CP24 mode: a big live channel with the top story under it, a red clock-and-weather column on
+ * the right with a big box (the sponsor at first) and a small line that takes turns, and two
+ * scrolling lines along the bottom with the channel number in red. Every section shows what the
+ * viewer picked in Settings (see [Cp24Screen]); the sponsor and the advertising line always stay.
+ */
+@Composable
+private fun Cp24Layout(
+    live: @Composable (Modifier) -> Unit,
+    selected: Channel?,
+    choices: Cp24Screen.Choices,
+    markets: List<News.Market>?,
+    rates: News.Rates?,
+    gold: Double?,
+    second: Channel?,
+    secondPlaying: Boolean,
+    allowVideo: Boolean,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+) {
+    val context = LocalContext.current
+    val forecast = if (Edition.HAS_WEATHER) rememberLoaded(30 * 60_000L) { News.forecast() } else null
+    val city = rememberLoaded(24 * 60 * 60_000L) { News.place()?.city?.takeIf { it.isNotBlank() } }
+    val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
+    val minute = rememberMinute()
+    val is24 = remember { DateFormat.is24HourFormat(context) }
+    val sponsorInBand = choices[Cp24Screen.Section.Middle] != Cp24Screen.SPONSOR
+    val crawl = choices[Cp24Screen.Section.Crawl]
+    BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
+        val lineHeight = d(30f)
+        val linesHeight = lineHeight * (if (crawl == Cp24Screen.NOTHING) 1 else 2)
+        val playerWidth = minOf(maxWidth * 0.64f, (maxHeight - linesHeight - d(90f)) * 16f / 9f)
+        val playerHeight = playerWidth * 9f / 16f
+        val bandHeight = maxHeight - linesHeight - playerHeight
+        Column(Modifier.fillMaxSize()) {
+            Row(Modifier.fillMaxWidth().weight(1f)) {
+                Column(Modifier.width(playerWidth).fillMaxHeight()) {
+                    live(Modifier.width(playerWidth).height(playerHeight))
+                    // Under the channel: the chosen line, and the sponsor beside it when the big box shows something else.
+                    Row(Modifier.fillMaxWidth().height(bandHeight).background(Cp24Navy)) {
+                        val m = Modifier.weight(1f).fillMaxHeight()
+                        when (choices[Cp24Screen.Section.Band]) {
+                            Cp24Screen.STORIES -> Cp24Story(m, s, d)
+                            Cp24Screen.PRAYERS -> PrayerRow(m, s, d)
+                            Cp24Screen.CURRENCIES -> InfoRow(m, rates, gold, s, d)
+                            Cp24Screen.MARKETS -> Crawl(m, markets, null, null, s, d)
+                            else -> Box(m)
+                        }
+                        if (sponsorInBand) {
+                            EditionSponsorVideoBox(Modifier.width(bandHeight * 16f / 9f).fillMaxHeight(), allowVideo = allowVideo)
+                        }
+                    }
+                }
+                Column(Modifier.fillMaxSize().background(Cp24SkyDark)) {
+                    Cp24DateBar(forecast, s, d)
+                    Cp24Clock(is24, s, d)
+                    Cp24Boxes(choices[Cp24Screen.Section.Boxes], forecast, today, minute, is24, s, d)
+                    // Like CP24's pressure line: how it feels, humidity and wind.
+                    Text(
+                        listOfNotNull(
+                            forecast?.let { "Feels ${it.feelsLike}°" },
+                            forecast?.humidity?.let { "Humidity $it%" },
+                            forecast?.wind?.let { "Wind $it " + if (forecast.unit == "F") "mph" else "km/h" },
+                        ).joinToString("   ·   "),
+                        color = Color.White,
+                        fontSize = s(10f),
+                        maxLines = 1,
+                        modifier = Modifier.fillMaxWidth().background(Cp24SkyDark).padding(horizontal = d(8f), vertical = d(3f)),
+                    )
+                    Text(
+                        ((city?.let { "$it " } ?: "") + "right now").uppercase(),
+                        color = Cp24Navy,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = s(13f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth().background(Color.White).padding(horizontal = d(8f), vertical = d(3f)),
+                    )
+                    // The big box (CP24's traffic box).
+                    Box(Modifier.fillMaxWidth().weight(1f).background(Panel)) {
+                        when (choices[Cp24Screen.Section.Middle]) {
+                            Cp24Screen.SPONSOR -> EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                            Cp24Screen.PRAYERS -> Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, s, d)
+                            Cp24Screen.MARKETS -> Markets(Modifier.fillMaxSize().padding(horizontal = d(10f)), markets, s, d)
+                            Cp24Screen.CURRENCIES -> CurrencyList(Modifier.fillMaxSize().padding(horizontal = d(10f)), rates, gold, s, d)
+                            Cp24Screen.STORIES -> StoryList(Modifier.fillMaxSize().padding(horizontal = d(10f)), s, d)
+                            Cp24Screen.SECOND -> Box(Modifier.fillMaxSize().padding(horizontal = d(8f)), contentAlignment = Alignment.Center) {
+                                SecondChannel(second, secondPlaying, s, d)
+                            }
+                        }
+                    }
+                    Cp24Line(Modifier.fillMaxWidth().height(d(28f)), choices[Cp24Screen.Section.Line], markets, rates, gold, today, minute, is24, s, d)
+                }
+            }
+            if (crawl != Cp24Screen.NOTHING) {
+                Box(Modifier.fillMaxWidth().height(lineHeight).background(Color(0xFF0E1830))) {
+                    if (crawl == Cp24Screen.STORIES) StoryCrawl(Modifier.fillMaxSize(), s, d)
+                    else Crawl(Modifier.fillMaxSize(), markets, rates, gold, s, d)
+                }
+            }
+            Row(Modifier.fillMaxWidth().height(lineHeight)) {
+                Box(Modifier.weight(1f).fillMaxHeight().background(Color(0xFF05070D)).padding(horizontal = d(12f))) {
+                    EditionTicker(Modifier.fillMaxSize(), big = true, always = true)
+                }
+                Box(Modifier.width(d(56f)).fillMaxHeight().background(Cp24Red), contentAlignment = Alignment.Center) {
+                    Text(
+                        selected?.number?.takeIf { it > 0 }?.toString() ?: "",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = s(18f),
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** The red bar at the top right: the day and date, and the weather now. */
+@Composable
+private fun Cp24DateBar(forecast: News.Forecast?, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    var now by remember { mutableStateOf(Date()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            now = Date()
+            delay(60_000 - System.currentTimeMillis() % 60_000)
+        }
+    }
+    val date = remember(now) { SimpleDateFormat("EEE MMM d", Locale.getDefault()).format(now).uppercase() }
+    Row(
+        Modifier.fillMaxWidth().background(Cp24Red).padding(horizontal = d(10f), vertical = d(3f)),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(date, color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(17f), modifier = Modifier.weight(1f), maxLines = 1)
+        forecast?.let {
+            Text("${it.icon} ${it.temperature}°", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(18f), maxLines = 1)
+        }
+    }
+}
+
+/** The big clock, with seconds. */
+@Composable
+private fun Cp24Clock(is24: Boolean, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    var now by remember { mutableStateOf(Date()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            now = Date()
+            delay(1_000 - System.currentTimeMillis() % 1_000)
+        }
+    }
+    val time = remember(now) { SimpleDateFormat(if (is24) "H:mm:ss" else "h:mm:ss", Locale.getDefault()).format(now) }
+    val amPm = remember(now) { if (is24) "" else SimpleDateFormat("a", Locale.getDefault()).format(now) }
+    Row(
+        Modifier.fillMaxWidth().background(Cp24Navy).padding(horizontal = d(10f), vertical = d(2f)),
+        verticalAlignment = Alignment.Bottom,
+    ) {
+        Text(time, color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(30f), lineHeight = s(34f))
+        if (amPm.isNotEmpty()) Text(" $amPm", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(12f), modifier = Modifier.padding(bottom = d(5f)))
+    }
+}
+
+/** The five boxes under the clock: the next parts of the day, the next days, or the prayer times. */
+@Composable
+private fun Cp24Boxes(
+    kind: String,
+    forecast: News.Forecast?,
+    today: News.Today?,
+    minute: Int,
+    is24: Boolean,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+) {
+    // (title, middle, bottom, highlighted)
+    val boxes: List<List<Any>> = when (kind) {
+        Cp24Screen.DAYS -> forecast?.days?.take(4)?.map { listOf(it.name, it.icon, "${it.high}°", false) }
+        Cp24Screen.PRAYERS -> today?.prayers?.let { prayers ->
+            val next = prayers.indexOfFirst { prayerMinutes(it.time) > minute }
+            prayers.mapIndexed { i, p -> listOf(prayerName(p.name).uppercase(), "🕌", shownTime(p.time, is24), i == next) }
+        }
+        else -> forecast?.periods?.map { listOf(it.name, it.icon, "${it.temperature}°", false) }
+    }.orEmpty()
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(d(90f))
+            .background(androidx.compose.ui.graphics.Brush.verticalGradient(listOf(Cp24Sky, Cp24SkyDark))),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        boxes.forEach { (title, middle, bottom, highlighted) ->
+            Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                val color = if (highlighted == true) FocusColor else Color.White
+                Text(title as String, color = color, fontWeight = FontWeight.Bold, fontSize = s(11f), maxLines = 1)
+                Text(middle as String, fontSize = s(24f), lineHeight = s(30f))
+                Text(bottom as String, color = color, fontWeight = FontWeight.Bold, fontSize = s(if (kind == Cp24Screen.PRAYERS) 13f else 20f), maxLines = 1)
+            }
+        }
+    }
+}
+
+/** The big box showing the next prayer, CP24 traffic-box style, with all five times under it. */
+@Composable
+private fun Cp24PrayerBox(modifier: Modifier, today: News.Today?, minute: Int, is24: Boolean, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val prayers = today?.prayers.orEmpty()
+    Column(modifier.padding(d(8f)), verticalArrangement = Arrangement.SpaceEvenly, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("NEXT PRAYER", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(14f))
+        val next = nextPrayer(prayers, minute)
+        if (next == null) {
+            Text("Loading…", color = Soft, fontSize = s(12f))
+            return@Column
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(d(8f))) {
+            Column(
+                Modifier.background(Cp24Green, ChipShape).border(d(2f), Color.White, ChipShape).padding(horizontal = d(14f), vertical = d(4f)),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(prayerName(next.first.name).uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(13f))
+                Text(shownTime(next.first.time, is24), color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(26f))
+            }
+            Column(
+                Modifier.background(Color.Black, ChipShape).border(d(2f), Color.White, ChipShape).padding(horizontal = d(14f), vertical = d(4f)),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text("IN", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(13f))
+                Text(untilText(next.second), color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(22f))
+            }
+        }
+        Text(
+            prayers.joinToString("   ") { "${prayerName(it.name)} ${shownTime(it.time, is24)}" },
+            color = Soft,
+            fontSize = s(10f),
+            maxLines = 1,
+        )
+        today?.hijri?.let { Text("☪ ${it.label}", color = Soft, fontSize = s(10f), maxLines = 1) }
+    }
+}
+
+/** One top story at a time under the channel, CP24 style: a red square and big white words. */
+@Composable
+private fun Cp24Story(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val stories = rememberLoaded(15 * 60_000L) { News.headlines().takeIf { it.isNotEmpty() } }
+    var turn by remember { mutableIntStateOf(0) }
+    LaunchedEffect(stories) {
+        while (true) {
+            delay(12_000)
+            turn++
+        }
+    }
+    val story = stories?.let { it[Math.floorMod(turn, it.size)] }
+    Row(modifier.padding(horizontal = d(14f), vertical = d(8f)), verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(d(14f)).background(Cp24Red))
+        Spacer(Modifier.width(d(10f)))
+        Column {
+            Text(
+                story?.title ?: Edition.APP_NAME,
+                color = Color.White,
+                fontSize = s(19f),
+                lineHeight = s(23f),
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+            )
+            story?.let { Text(it.source, color = Muted, fontSize = s(10f)) }
+        }
+    }
+}
+
+/** Every top story crawling right to left along one line. */
+@Composable
+private fun StoryCrawl(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val stories = rememberLoaded(15 * 60_000L) { News.headlines().takeIf { it.isNotEmpty() } } ?: return
+    val text = remember(stories) {
+        buildAnnotatedString {
+            stories.forEach { h ->
+                withStyle(SpanStyle(color = Cp24Red, fontWeight = FontWeight.Bold)) { append("■ ") }
+                withStyle(SpanStyle(color = Color.White)) { append(h.title) }
+                withStyle(SpanStyle(color = Muted)) { append("  (${h.source})      ") }
+            }
+        }
+    }
+    Box(modifier.padding(horizontal = d(12f)), contentAlignment = Alignment.CenterStart) {
+        Text(
+            text,
+            fontSize = s(13f),
+            maxLines = 1,
+            softWrap = false,
+            modifier = Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE, initialDelayMillis = 0, velocity = d(55f)),
+        )
+    }
+}
+
+/** The small line under the big box (CP24's "DAX" line): one item at a time, the next every 8 seconds. */
+@Composable
+private fun Cp24Line(
+    modifier: Modifier,
+    kind: String,
+    markets: List<News.Market>?,
+    rates: News.Rates?,
+    gold: Double?,
+    today: News.Today?,
+    minute: Int,
+    is24: Boolean,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+) {
+    // (label, value, change)
+    val marketItems = markets.orEmpty().map { m ->
+        Triple(m.name.uppercase(), (if (m.name.startsWith("Gold")) "$" else "") + "%,.0f".format(m.price), m.change)
+    }
+    val rateItems = rates?.let { r ->
+        News.ASIAN.filter { it.code != r.base && r[it.code] != null }
+            .map { m -> Triple("1 ${r.base} ${m.flag}", "${m.symbol}${amount(r[m.code]!!)} ${m.code}", null as Double?) }
+    }.orEmpty()
+    val prayerItems = nextPrayer(today?.prayers.orEmpty(), minute)?.let { (p, until) ->
+        listOf(Triple("NEXT PRAYER", "${prayerName(p.name)} ${shownTime(p.time, is24)} · in ${untilText(until)}", null as Double?))
+    }.orEmpty()
+    val goldItems = rates?.let { r ->
+        listOf(r.base to "$", "PKR" to "Rs ", "INR" to "₹").mapNotNull { (code, symbol) ->
+            News.goldTola(gold, r, code)?.let { Triple("GOLD 1 TOLA", "$symbol${"%,.0f".format(it)} $code", null as Double?) }
+        }
+    }.orEmpty()
+    val items = when (kind) {
+        Cp24Screen.MARKETS -> marketItems
+        Cp24Screen.CURRENCIES -> rateItems
+        Cp24Screen.NEXT_PRAYER -> prayerItems
+        Cp24Screen.GOLD -> goldItems
+        else -> {
+            // Takes turns: a market, a rate, the next prayer, gold, and round again.
+            val lists = listOf(marketItems, rateItems, prayerItems, goldItems).filter { it.isNotEmpty() }
+            val out = mutableListOf<Triple<String, String, Double?>>()
+            for (i in 0 until (lists.maxOfOrNull { it.size } ?: 0)) lists.forEach { l -> out += l[i % l.size] }
+            out
+        }
+    }
+    var turn by remember { mutableIntStateOf(0) }
+    LaunchedEffect(kind) {
+        while (true) {
+            delay(8_000)
+            turn++
+        }
+    }
+    Row(modifier.background(Color.Black), verticalAlignment = Alignment.CenterVertically) {
+        val item = items.takeIf { it.isNotEmpty() }?.let { it[Math.floorMod(turn, it.size)] } ?: return@Row
+        Text(
+            item.first,
+            color = Cp24Navy,
+            fontWeight = FontWeight.Bold,
+            fontSize = s(11f),
+            maxLines = 1,
+            modifier = Modifier.fillMaxHeight().background(Color(0xFFE6E9F0)).padding(horizontal = d(8f)).wrapContentHeight(),
+        )
+        Text(
+            item.second,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = s(13f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f).padding(horizontal = d(8f)),
+        )
+        item.third?.let { c ->
+            Text(
+                (if (c >= 0) "▲ " else "▼ ") + "%.1f%%".format(abs(c)),
+                color = if (c >= 0) Up else Down,
+                fontWeight = FontWeight.Bold,
+                fontSize = s(13f),
+                modifier = Modifier.padding(end = d(8f)),
+            )
+        }
+    }
+}
+
+private fun prayerMinutes(t: String) = t.split(':').let { (it[0].toIntOrNull() ?: 0) * 60 + (it.getOrNull(1)?.toIntOrNull() ?: 0) }
+
+private fun prayerName(name: String) = if (name == "Dhuhr") "Zuhr" else name
+
+private fun shownTime(t: String, is24: Boolean) =
+    if (is24) t else prayerMinutes(t).let { m -> "${(m / 60 + 11) % 12 + 1}:${"%02d".format(m % 60)}" }
+
+/** The next prayer and how many minutes until it (after Isha, tomorrow's Fajr). */
+private fun nextPrayer(prayers: List<News.Prayer>, minute: Int): Pair<News.Prayer, Int>? {
+    if (prayers.isEmpty()) return null
+    prayers.firstOrNull { prayerMinutes(it.time) > minute }?.let { return it to prayerMinutes(it.time) - minute }
+    val fajr = prayers.first()
+    return fajr to 24 * 60 - minute + prayerMinutes(fajr.time)
+}
+
+private fun untilText(minutes: Int) = when {
+    minutes < 60 -> "$minutes min"
+    minutes % 60 == 0 -> "${minutes / 60} h"
+    else -> "${minutes / 60} h ${minutes % 60} min"
 }

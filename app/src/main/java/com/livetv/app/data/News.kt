@@ -22,7 +22,17 @@ object News {
         val unit: String,
         val icon: String,
         val days: List<Day>,
+        /** The next few parts of the day (morning, afternoon, evening, night), like the TV news. */
+        val periods: List<Period> = emptyList(),
+        val humidity: Int? = null,
+        /** Wind in km/h (mph where it's Fahrenheit). */
+        val wind: Int? = null,
     )
+
+    data class Period(val name: String, val icon: String, val temperature: Int)
+
+    /** The hour each part of the day is shown for. */
+    private val PERIODS = mapOf(8 to "MORN", 13 to "AFT", 18 to "EVE", 23 to "NITE")
 
     data class Prayer(val name: String, val time: String)
 
@@ -87,9 +97,10 @@ object News {
         val p = place() ?: return null
         val fahrenheit = p.country in FAHRENHEIT
         val url = "https://api.open-meteo.com/v1/forecast?latitude=${p.latitude}&longitude=${p.longitude}" +
-            "&current=temperature_2m,apparent_temperature,weather_code,is_day" +
+            "&current=temperature_2m,apparent_temperature,weather_code,is_day,relative_humidity_2m,wind_speed_10m" +
+            "&hourly=temperature_2m,weather_code,is_day" +
             "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
-            "&forecast_days=5&timezone=auto" + if (fahrenheit) "&temperature_unit=fahrenheit" else ""
+            "&forecast_days=5&timezone=auto" + if (fahrenheit) "&temperature_unit=fahrenheit&wind_speed_unit=mph" else ""
         parseForecast(get(url), if (fahrenheit) "F" else "C")
     }.getOrNull()
 
@@ -110,12 +121,32 @@ object News {
                 rain = daily.getJSONArray("precipitation_probability_max").optInt(i),
             )
         }
+        // The next five parts of the day after now, from the hourly forecast.
+        val periods = mutableListOf<Period>()
+        o.optJSONObject("hourly")?.let { hourly ->
+            val times = hourly.getJSONArray("time")
+            val nowTime = now.optString("time")
+            for (i in 0 until times.length()) {
+                if (periods.size == 5) break
+                val t = times.getString(i) // "2026-10-04T13:00"
+                if (t <= nowTime) continue
+                val name = PERIODS[t.substringAfter('T').substringBefore(':').toIntOrNull()] ?: continue
+                periods += Period(
+                    name = name,
+                    icon = Weather.icon(hourly.getJSONArray("weather_code").optInt(i), day = hourly.optJSONArray("is_day")?.optInt(i, 1) != 0),
+                    temperature = hourly.getJSONArray("temperature_2m").optDouble(i).roundToInt(),
+                )
+            }
+        }
         return Forecast(
             temperature = now.getDouble("temperature_2m").roundToInt(),
             feelsLike = now.optDouble("apparent_temperature", now.getDouble("temperature_2m")).roundToInt(),
             unit = unit,
             icon = Weather.icon(now.getInt("weather_code"), day = now.optInt("is_day", 1) == 1),
             days = days,
+            periods = periods,
+            humidity = now.optDouble("relative_humidity_2m").takeUnless { it.isNaN() }?.roundToInt(),
+            wind = now.optDouble("wind_speed_10m").takeUnless { it.isNaN() }?.roundToInt(),
         )
     }
 

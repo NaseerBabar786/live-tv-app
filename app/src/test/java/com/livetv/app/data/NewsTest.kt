@@ -20,6 +20,22 @@ class NewsTest {
     }
 
     @Test
+    fun partsOfTheDay() {
+        val json = """{"current":{"time":"2026-10-04T11:15","temperature_2m":12.0,"weather_code":0,"is_day":1,
+            "relative_humidity_2m":64,"wind_speed_10m":11.6},
+            "hourly":{"time":["2026-10-04T08:00","2026-10-04T13:00","2026-10-04T18:00","2026-10-04T23:00",
+              "2026-10-05T08:00","2026-10-05T13:00","2026-10-05T18:00"],
+              "temperature_2m":[5,16.4,13,8,6,15,12],"weather_code":[0,1,2,3,0,0,0],"is_day":[1,1,0,0,1,1,0]},
+            "daily":{"time":["2026-10-04"],"weather_code":[0],"temperature_2m_max":[18],"temperature_2m_min":[8],
+            "precipitation_probability_max":[0]}}"""
+        val f = News.parseForecast(json, "C")
+        assertEquals(listOf("AFT", "EVE", "NITE", "MORN", "AFT"), f.periods.map { it.name })
+        assertEquals(16, f.periods[0].temperature)
+        assertEquals(64, f.humidity)
+        assertEquals(12, f.wind)
+    }
+
+    @Test
     fun prayerTimesDropTheZone() {
         val json = """{"data":{"timings":{"Fajr":"05:59","Sunrise":"07:15","Dhuhr":"13:06 (EDT)","Asr":"16:21",
             "Maghrib":"18:55","Isha":"20:13"}}}"""
