@@ -78,19 +78,21 @@ import com.livetv.app.player.PlayerScreen
  * screen (YouTube videos in YouTube's player).
  */
 @Composable
-fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
+fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget? = null) {
     val vm = viewModel<VodViewModel>()
     val state by vm.state.collectAsStateWithLifecycle()
 
-    var languageName by rememberSaveable { mutableStateOf<String?>(null) }
+    var languageName by rememberSaveable { mutableStateOf(start?.language?.name) }
     val language = languageName?.let { Vod.Language.valueOf(it) }
-    var tabName by rememberSaveable { mutableStateOf(Vod.Section.MOVIES.name) }
+    var tabName by rememberSaveable { mutableStateOf((start?.section ?: Vod.Section.MOVIES).name) }
     val tab = Vod.Section.valueOf(tabName)
     var group by rememberSaveable { mutableStateOf<String?>(null) }
     var query by rememberSaveable { mutableStateOf("") }
     var searching by rememberSaveable { mutableStateOf(false) }
-    var openShow by rememberSaveable { mutableStateOf<String?>(null) }
-    var playing by remember { mutableStateOf<Channel?>(null) }
+    var openShow by rememberSaveable { mutableStateOf(start?.show) }
+    var playing by remember { mutableStateOf(start?.play) }
+    // Opened from the home screen for one video: Back from it goes straight back there.
+    val stopPlaying: () -> Unit = { if (start?.play != null) onClose() else playing = null }
     val tabFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { vm.refreshIfChanged() }
     // Kept above the player so the lists keep their scroll position while something plays,
@@ -104,22 +106,22 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
 
     playing?.let { channel ->
         if (Bilibili.isVideo(channel.url)) {
-            OpenInApp(url = channel.url, appName = "Bilibili", onDone = { playing = null })
+            OpenInApp(url = channel.url, appName = "Bilibili", onDone = stopPlaying)
             return
         }
         (Dailymotion.videoId(channel.url)?.let(Dailymotion::embedUrl) ?: Vimeo.videoId(channel.url)?.let(Vimeo::embedUrl))?.let { src ->
-            EmbedPlayer(src = src, onBack = { playing = null })
+            EmbedPlayer(src = src, onBack = stopPlaying)
             return
         }
         YouTube.videoId(channel.url)?.let { id ->
-            YouTubePlayer(videoId = id, onBack = { playing = null })
+            YouTubePlayer(videoId = id, onBack = stopPlaying)
             return
         }
         PlayerScreen(
             channel = channel,
             favorite = false,
             inPictureInPicture = inPictureInPicture,
-            onBack = { playing = null },
+            onBack = stopPlaying,
             onToggleFavorite = {},
             showFavorite = false,
         )
@@ -131,7 +133,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit) {
     val show = openShow?.let { name -> folders.firstOrNull { it.name == name } }
     val back: () -> Unit = {
         when {
-            show != null -> openShow = null
+            show != null -> if (start?.show != null) onClose() else openShow = null
             searching -> { searching = false; query = "" }
             language != null -> { lastPicked = languageName; languageName = null; group = null }
             else -> onClose()

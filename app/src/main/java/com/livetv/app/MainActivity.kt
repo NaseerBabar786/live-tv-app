@@ -23,6 +23,7 @@ import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
 import com.livetv.app.ui.VodScreen
+import com.livetv.app.ui.VodTarget
 
 class MainActivity : ComponentActivity() {
 
@@ -34,6 +35,8 @@ class MainActivity : ComponentActivity() {
 
     /** Live TV's Movies & Series screen is open. */
     private var showVod by mutableStateOf(false)
+    /** A movie or show picked on Live TV Max's home screen, for the Library to open at. */
+    private var vodStart by mutableStateOf<VodTarget?>(null)
 
     /** Live TV's Games section is open. */
     private var showGames by mutableStateOf(false)
@@ -62,7 +65,7 @@ class MainActivity : ComponentActivity() {
         if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
         } else if (showVod && playing == null) {
-            VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false })
+            VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
         } else if (playing != null && YouTube.videoId(playing.url) != null) {
             YouTubePlayer(YouTube.videoId(playing.url)!!, onBack = viewModel::stop)
         } else if (playing != null) {
@@ -95,6 +98,7 @@ class MainActivity : ComponentActivity() {
                 settings = { onDismiss -> EditionSettings(state, viewModel, onDismiss) },
                 onTryDemo = viewModel::addDemoPlaylist,
                 onOpenVod = if (Edition.HAS_VOD) ({ showVod = true }) else null,
+                onOpenVodItem = if (Edition.HAS_VOD) ({ vodStart = it; showVod = true }) else null,
                 onOpenGames = if (Edition.LIVE_TV) ({ showGames = true }) else null,
                 onWatch = viewModel::watched,
             )

@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp" android:height="180dp"
+    android:viewportWidth="320" android:viewportHeight="180">
+    <!-- Live TV Max's TV banner: the TV logo and the word MAX in gold. -->
+    <path android:fillColor="#1E1E2E" android:pathData="M0,0h320v180h-320z" />
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M40,60h90a6,6 0,0 1,6 6v52a6,6 0,0 1,-6 6h-90a6,6 0,0 1,-6 -6v-52a6,6 0,0 1,6 -6z" />
+    <path android:fillColor="#E53935" android:pathData="M76,76 L102,92 L76,108 Z" />
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="5" android:strokeLineCap="round"
+        android:pathData="M70,44 L85,58 L100,44" />
+    <path android:strokeColor="#FFB300" android:strokeWidth="9" android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M160,118v-52l20,26l20,-26v52 M218,118l18,-52l18,52 M226,98h20 M266,66l32,52 M298,66l-32,52" />
+</vector>

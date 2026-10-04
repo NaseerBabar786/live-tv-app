@@ -32,6 +32,17 @@ data class VodShelf(
     }
 }
 
+/**
+ * Where the Library opens when a movie or show is picked on Live TV Max's home screen: [play]
+ * starts that video at once, [show] opens that show's episodes. Back then returns to the home screen.
+ */
+data class VodTarget(
+    val language: Vod.Language,
+    val section: Vod.Section,
+    val show: String? = null,
+    val play: Channel? = null,
+)
+
 data class VodState(
     val loading: Boolean = true,
     val shelves: Map<Vod.Language, VodShelf> = emptyMap(),

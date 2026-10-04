@@ -29,7 +29,7 @@ jobs:
         run: python3 tools/build_logo_index.py
 
       - name: Run unit tests
-        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest :livecam:testDebugUnitTest
+        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest :livecam:testDebugUnitTest
 
       # Decodes the private signing key from the repository secrets, when set, so
       # every build is signed with the same key and updates install over the old app.
@@ -46,11 +46,12 @@ jobs:
 
       # Live TV ships as a debug APK (sideloaded); Stream Player Plus and Live TV Plus as
       # a release APK plus the app bundle (.aab) that Google Play asks for.
-      - name: Build Live TV, Stream Player Plus and Live TV Plus
+      # Live TV Max is sideloaded like Live TV, so it is a debug APK too.
+      - name: Build Live TV, Live TV Max, Stream Player Plus and Live TV Plus
         env:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           TV_CLIENT_SECRET: ${{ secrets.TV_CLIENT_SECRET }}
-        run: ./gradlew assembleLivetvDebug assemblePlayerRelease bundlePlayerRelease assemblePlusRelease bundlePlusRelease
+        run: ./gradlew assembleLivetvDebug assembleMaxDebug assemblePlayerRelease bundlePlayerRelease assemblePlusRelease bundlePlusRelease
 
       - name: Build Live Cam
         env:
@@ -66,6 +67,11 @@ jobs:
         with:
           name: live-tv-debug-apk
           path: app/build/outputs/apk/livetv/debug/app-livetv-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: live-tv-max-debug-apk
+          path: app/build/outputs/apk/max/debug/app-max-debug.apk
 
       - uses: actions/upload-artifact@v4
         with:
@@ -147,6 +153,27 @@ jobs:
               --latest=false
           fi
           gh release edit live-tv-plus --notes "Always the newest Live TV Plus build (now $version), for testing on phones and TVs." || true
+
+      # Live TV Max: one fixed "live-tv-max" release, never marked "latest", always holding the
+      # newest build, so its link never changes and Live TV's update check keeps finding Live TV:
+      # https://github.com/NaseerBabar786/live-tv-app/releases/download/live-tv-max/LiveTVMax.apk
+      # Its in-app update check reads the version from this release's title ("Live TV Max 1.0.0").
+      - name: Publish Live TV Max
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts | sed -n 4p)
+          cp app/build/outputs/apk/max/debug/app-max-debug.apk LiveTVMax.apk
+          if gh release view live-tv-max > /dev/null 2>&1; then
+            gh release upload live-tv-max LiveTVMax.apk --clobber
+          else
+            gh release create live-tv-max LiveTVMax.apk \
+              --title "Live TV Max $version" \
+              --notes "Always the newest Live TV Max build." \
+              --latest=false
+          fi
+          gh release edit live-tv-max --title "Live TV Max $version" --notes "Always the newest Live TV Max build (now $version), from ${{ github.sha }}."
 
       # Live Cam gets its own release per version, never marked "latest", so Live TV's
       # download link and update check keep finding Live TV. Phones and TVs download it from

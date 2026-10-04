@@ -65,11 +65,11 @@ data class UiState(
         get() = playlists.firstOrNull { it.source == playlistSource }?.name ?: if (!Edition.LIVE_TV) {
             Edition.APP_NAME
         } else when (playlistSource) {
-            Famelack.SOURCE_MIX -> "Live TV"
+            Famelack.SOURCE_MIX -> Edition.APP_NAME
             Famelack.SOURCE_ALL -> "All countries"
             else -> Famelack.countryCode(playlistSource)
                 ?.let { code -> countries.firstOrNull { it.code == code }?.name }
-                ?: "Live TV"
+                ?: Edition.APP_NAME
         }
 
     private val inGroup: List<Channel>
