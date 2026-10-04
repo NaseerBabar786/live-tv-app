@@ -72,7 +72,7 @@ import kotlinx.coroutines.launch
 private const val STRIP_MS = 60_000L
 /** The channel change card: how long it shows, how often at most, and not this soon after start. */
 private const val CARD_MS = 5_000L
-private const val CARD_EVERY_MS = 20 * 60_000L
+private const val CARD_EVERY_MS = 2 * 60_000L
 private const val CARD_NOT_BEFORE_MS = 5 * 60_000L
 
 /** The "advertise with us" ticker: half a minute after start, then every 30 seconds, scrolling across once. */
@@ -338,7 +338,7 @@ private fun SponsorVideo(url: String) {
 
 /**
  * A small sponsor card in the bottom right corner for a few seconds after the channel changes,
- * at most once every 20 minutes. It never takes the focus or covers the middle of the picture.
+ * at most once every 2 minutes. It never takes the focus or covers the middle of the picture.
  */
 @Composable
 fun SponsorCard(channelId: String?) {

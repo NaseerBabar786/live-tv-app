@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -201,6 +202,15 @@ fun NewsMode(
 
     val density = androidx.compose.ui.platform.LocalDensity.current
     var playerFocused by remember { mutableStateOf(false) }
+    // The screen's own settings: hold OK (or Menu, or tap ⚙) to change what it shows, right here.
+    val customizable = !home
+    var customizing by remember { mutableStateOf(false) }
+    var held by remember { mutableStateOf(false) }
+    var hint by remember { mutableStateOf(customizable) }
+    LaunchedEffect(Unit) {
+        delay(10_000)
+        hint = false
+    }
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         // The player takes three quarters of the width (less if the screen is unusually tall),
         // the rest of the width and height go to the panels.
@@ -240,6 +250,24 @@ fun NewsMode(
                         }
                         when {
                             e.key == Key.Back -> { if (e.type == KeyEventType.KeyUp) onBack(); true }
+                            customizable && (e.key == Key.Menu || e.key == Key.Settings) -> {
+                                if (e.type == KeyEventType.KeyDown) customizing = true
+                                true
+                            }
+                            // OK opens the channel full screen; held down, it opens this screen's settings.
+                            e.key == Key.DirectionCenter || e.key == Key.Enter || e.key == Key.NumPadEnter -> {
+                                if (e.type == KeyEventType.KeyDown) {
+                                    if (customizable && e.nativeKeyEvent.repeatCount >= 6 && !held) {
+                                        held = true
+                                        hint = false
+                                        customizing = true
+                                    }
+                                } else if (e.type == KeyEventType.KeyUp) {
+                                    if (!held) selected?.let(onOpen)
+                                    held = false
+                                }
+                                true
+                            }
                             e.type != KeyEventType.KeyDown -> false
                             e.key == Key.DirectionUp || e.key == Key.ChannelUp -> { step(-1); true }
                             e.key == Key.DirectionDown || e.key == Key.ChannelDown -> { step(1); true }
@@ -293,6 +321,34 @@ fun NewsMode(
                         }
                     }
                 }
+                if (customizable) {
+                    // A tap on a phone; on a TV, the hint for the first seconds says to hold OK.
+                    Icon(
+                        Icons.Filled.Settings,
+                        contentDescription = "Customize this screen",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .padding(d(10f))
+                            .background(Color.Black.copy(alpha = 0.5f), ChipShape)
+                            .clickable { customizing = true }
+                            .padding(d(4f))
+                            .size(d(16f)),
+                    )
+                    if (hint) {
+                        Text(
+                            "Hold OK to customize this screen",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = s(12f),
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(top = d(12f))
+                                .background(FocusColor, ChipShape)
+                                .padding(horizontal = d(12f), vertical = d(5f)),
+                        )
+                    }
+                }
                 if (sound) {
                     Icon(
                         Icons.AutoMirrored.Filled.VolumeUp,
@@ -307,6 +363,21 @@ fun NewsMode(
                     )
                 }
             }
+        }
+
+        if (customizing) {
+            ScreenSettings(
+                section = when {
+                    mine -> ScreenKind.Mine
+                    cp24 -> ScreenKind.Cp24
+                    else -> ScreenKind.News
+                },
+                onDone = {
+                    customizing = false
+                    held = false
+                    runCatching { focus.requestFocus() }
+                },
+            )
         }
 
         if (mine) MyLayout(
