@@ -45,6 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,6 +55,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
@@ -83,7 +85,7 @@ private class BrowseRow(val key: String, val title: String, val channels: List<C
 
 /** Where the Browse screen was (row, card and scroll), kept while a channel plays full screen. */
 private var sessionRowKey: String? = null
-private val sessionCardIndex = mutableMapOf<String, Int>()
+private val sessionCardIndex = mutableStateMapOf<String, Int>()
 private var sessionListIndex = 0
 private var sessionListOffset = 0
 
@@ -219,7 +221,8 @@ internal fun BrowseMode(
         val key = sessionRowKey?.takeIf { k -> rows.any { it.key == k } } ?: rows.first().key
         withFrameNanos { }
         withFrameNanos { }
-        if (runCatching { rowRequester(key).requestFocus() }.isFailure) focusRow(key)
+        if (listState.layoutInfo.visibleItemsInfo.any { it.key == key }) runCatching { rowRequester(key).requestFocus() }
+        else focusRow(key)
     }
     BackHandler(enabled = searchOpen) {
         onQueryChange("")
@@ -242,7 +245,7 @@ internal fun BrowseMode(
         ) {
             item(key = "header") {
                 Row(
-                    Modifier.fillMaxWidth().padding(end = 28.dp, bottom = 4.dp),
+                    Modifier.fillMaxWidth().padding(start = 14.dp, end = 28.dp, bottom = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (searchOpen) {
@@ -311,12 +314,12 @@ internal fun BrowseMode(
                         color = palette.onSurface,
                         fontWeight = FontWeight.Bold,
                         fontSize = 17.sp,
-                        modifier = Modifier.padding(start = 6.dp, bottom = 8.dp),
+                        modifier = Modifier.padding(start = 14.dp, bottom = 2.dp),
                     )
                     LazyRow(
                         state = rememberLazyListState(max(0, focusIndex - 1)),
                         horizontalArrangement = Arrangement.spacedBy(18.dp),
-                        contentPadding = PaddingValues(start = 6.dp, end = 40.dp, top = 6.dp, bottom = 6.dp),
+                        contentPadding = PaddingValues(start = 14.dp, end = 40.dp, top = 10.dp, bottom = 10.dp),
                     ) {
                         itemsIndexed(row.channels, key = { _, c -> c.id }) { i, channel ->
                             val here = focusedKey == row.key to channel.id
@@ -358,18 +361,21 @@ internal fun BrowseMode(
                 .padding(vertical = 24.dp, horizontal = 12.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
         ) {
-            RailItem(Icons.Filled.Search, "Search", railFocused) {
+            // Only while that row is on screen (an unattached requester can't take the cursor).
+            val backKey = focusedKey?.first ?: rows.firstOrNull()?.key
+            val back = backKey?.takeIf { k -> listState.layoutInfo.visibleItemsInfo.any { it.key == k } }?.let { rowRequester(it) }
+            RailItem(Icons.Filled.Search, "Search", railFocused, right = back) {
                 searchOpen = true
                 scope.launch { listState.animateScrollToItem(0) }
             }
-            RailItem(Icons.Filled.Home, "Home", railFocused) { rows.firstOrNull()?.let { focusRow(it.key) } }
-            RailItem(Icons.Filled.Star, "Favorites", railFocused) {
+            RailItem(Icons.Filled.Home, "Home", railFocused, right = back) { rows.firstOrNull()?.let { focusRow(it.key) } }
+            RailItem(Icons.Filled.Star, "Favorites", railFocused, right = back) {
                 if (rows.any { it.key == "favorites" }) focusRow("favorites")
                 else android.widget.Toast.makeText(context, "No favorites yet. Hold OK on a channel in 1+List to add one.", android.widget.Toast.LENGTH_LONG).show()
             }
-            if (onOpenGames != null) RailItem(Icons.Filled.SportsEsports, "Games", railFocused, onClick = onOpenGames)
-            RailItem(Icons.Filled.Tv, "$modeLabel Mode", railFocused, Modifier.focusRequester(modeFocus), onClick = onNextMode)
-            RailItem(Icons.Filled.Settings, "Settings", railFocused, onClick = onOpenSettings)
+            if (onOpenGames != null) RailItem(Icons.Filled.SportsEsports, "Games", railFocused, right = back, onClick = onOpenGames)
+            RailItem(Icons.Filled.Tv, "$modeLabel Mode", railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
+            RailItem(Icons.Filled.Settings, "Settings", railFocused, right = back, onClick = onOpenSettings)
         }
     }
 }
@@ -380,10 +386,13 @@ private fun RailItem(
     label: String,
     expanded: Boolean,
     modifier: Modifier = Modifier,
+    /** Where Right goes: the card the cursor was on. */
+    right: FocusRequester? = null,
     onClick: () -> Unit,
 ) {
     Row(
         modifier
+            .focusProperties { if (right != null) this.right = right }
             .fillMaxWidth()
             .height(44.dp)
             .focusGlow(RoundedCornerShape(22.dp))
