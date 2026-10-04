@@ -1,5 +1,7 @@
 #EXTM3U
 # MTA (Muslim Television Ahmadiyya) programmes from its own YouTube channel.
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/obwDxDMvPOU/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 18
+https://www.youtube.com/watch?v=obwDxDMvPOU
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/8FQ5svNHy5I/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 15
 https://www.youtube.com/watch?v=8FQ5svNHy5I
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/3oORxs-dIvI/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 6
@@ -30,6 +32,10 @@ https://www.youtube.com/watch?v=He4j1tTKycU
 https://www.youtube.com/watch?v=TiJlOFNSc8M
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/YHdqnPRNHxc/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Holy Qur'an Recitation | Mahmud Wardi Sahib
 https://www.youtube.com/watch?v=YHdqnPRNHxc
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/nVEHrZw6nwI/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Murtaz | The Story of a mother  her child & Khilafat
+https://www.youtube.com/watch?v=nVEHrZw6nwI
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/yQLIzpJZVpY/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Intikhab-e-Sukhan | 3rd October 2026
+https://www.youtube.com/watch?v=yQLIzpJZVpY
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/8Hp2zH_xYqA/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Story Time - 22 - Controlling Your Anger
 https://www.youtube.com/watch?v=8Hp2zH_xYqA
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/jueXfbnK1gc/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Little Legends | Season 2
@@ -124,6 +130,10 @@ https://www.youtube.com/watch?v=0A-9bWJfhjI
 https://www.youtube.com/watch?v=xv7BoXaARds
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/jSngW2BXaUA/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Friday Sermons",Friday Sermon - 24th July 2026
 https://www.youtube.com/watch?v=jSngW2BXaUA
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/G9P05gABRHQ/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Kids Space | Episode 10
+https://www.youtube.com/watch?v=G9P05gABRHQ
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/Bq24-qlnMao/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Kids Space | Eid Special
+https://www.youtube.com/watch?v=Bq24-qlnMao
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/8X89XTlRuRY/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Kids" group-title="MTA Children's Programmes",Question Answer Session with Atfal 29 May 1993 (Urdu)
 https://www.youtube.com/watch?v=8X89XTlRuRY
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/iYAD8FaZr9c/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Kids" group-title="MTA Children's Programmes",Kids Time: Programme 1 (English & Urdu)
