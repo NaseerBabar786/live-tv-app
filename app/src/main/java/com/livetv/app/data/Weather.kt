@@ -6,8 +6,8 @@ import java.net.URL
 import kotlin.math.roundToInt
 
 /**
- * Current weather for the viewer's area, shown beside the clock. The area comes from the
- * internet connection (no location permission needed); the weather from Open-Meteo.
+ * Current weather for the viewer's area, shown beside the clock. The area comes from [Location]
+ * (a city typed in Settings, the device's location, or the internet connection); the weather from Open-Meteo.
  * Neither service needs an account or key.
  */
 object Weather {
@@ -15,17 +15,15 @@ object Weather {
         override fun toString() = "$icon $temperature°$unit"
     }
 
-    private const val LOCATION_URL = "https://get.geojs.io/v1/ip/geo.json"
-
     /** Fahrenheit where people use it; Celsius everywhere else. */
     private val FAHRENHEIT = setOf("US", "LR", "MM", "BS", "BZ", "KY", "PW", "FM", "MH")
 
     /** Looks up the weather now, or null when either service can't be reached. */
     fun load(): Now? = runCatching {
-        val place = JSONObject(get(LOCATION_URL))
-        val fahrenheit = place.optString("country_code").uppercase() in FAHRENHEIT
-        val url = "https://api.open-meteo.com/v1/forecast?latitude=${place.getString("latitude")}" +
-            "&longitude=${place.getString("longitude")}&current=temperature_2m,weather_code,is_day" +
+        val place = Location.current() ?: return null
+        val fahrenheit = place.country in FAHRENHEIT
+        val url = "https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}" +
+            "&longitude=${place.longitude}&current=temperature_2m,weather_code,is_day" +
             if (fahrenheit) "&temperature_unit=fahrenheit" else ""
         parse(get(url), if (fahrenheit) "F" else "C")
     }.getOrNull()

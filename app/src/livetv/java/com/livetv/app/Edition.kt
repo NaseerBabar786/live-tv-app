@@ -50,6 +50,8 @@ object Edition {
     const val USER_AGENT = "LiveTV-Android/1.0"
     const val HAS_START_SCREEN = true
     const val HAS_WEATHER = true
+    /** Asks once for the device's approximate location, for the weather and prayer times. */
+    const val HAS_DEVICE_LOCATION = true
     /** Movies & Series from the saved playlists (Live TV only). */
     const val HAS_VOD = true
 }

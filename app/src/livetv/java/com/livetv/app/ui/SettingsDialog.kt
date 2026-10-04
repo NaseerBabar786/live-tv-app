@@ -85,6 +85,12 @@ fun SettingsDialog(
     val signedIn by account.user.collectAsState()
     var findingPlaylists by rememberSaveable { mutableStateOf(false) }
     var addingLink by rememberSaveable { mutableStateOf(false) }
+    var pickingCity by rememberSaveable { mutableStateOf(false) }
+
+    if (pickingCity) {
+        WeatherCityPicker(onDismiss = { pickingCity = false })
+        return
+    }
 
     if (findingPlaylists) {
         FindPlaylistsDialog(
@@ -193,6 +199,9 @@ fun SettingsDialog(
                     selected = picked != null,
                     enabled = countries.isNotEmpty(),
                 ) { pickingCountries = true }
+
+                HorizontalDivider()
+                WeatherCitySection(onPick = { pickingCity = true })
 
                 HorizontalDivider()
                 Text("MTA (Ahmadiyya)", fontWeight = FontWeight.Bold)
