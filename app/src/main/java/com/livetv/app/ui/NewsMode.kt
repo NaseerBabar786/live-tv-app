@@ -10,6 +10,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import com.livetv.app.data.Cp24Screen
+import com.livetv.app.data.MyScreen
 import com.livetv.app.data.NewsScreen
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -102,6 +103,8 @@ fun NewsMode(
     cp24: Boolean = false,
     /** The modern Home screen instead of News mode's. */
     home: Boolean = false,
+    /** My Screen: the viewer's own layout and information. */
+    mine: Boolean = false,
     channels: List<Channel>,
     all: List<Channel>,
     selectedId: String?,
@@ -171,12 +174,14 @@ fun NewsMode(
     // What the viewer chose for each spot (Settings > Customize News screen).
     val newsChoices by NewsScreen.choices.collectAsStateWithLifecycle()
     val cp24Choices by Cp24Screen.choices.collectAsStateWithLifecycle()
+    val myChoices by MyScreen.choices.collectAsStateWithLifecycle()
     val choices = newsChoices
     // Home: Right shows a second channel in the corner of the main one (and moves it along), Left hides it.
     var pip by remember { mutableStateOf(false) }
     val usesSecond = when {
         cp24 -> cp24Choices[Cp24Screen.Section.Middle] == Cp24Screen.SECOND
         home -> pip
+        mine -> myChoices.usesSecond
         else -> choices.usesSecond
     }
     // The second channel, when one of the spots shows it: Left and Right change it.
@@ -304,7 +309,18 @@ fun NewsMode(
             }
         }
 
-        if (home) HomeLayout(
+        if (mine) MyLayout(
+            live = { Live(it) },
+            choices = myChoices,
+            second = second,
+            secondPlaying = secondPlaying,
+            markets = markets,
+            rates = rates,
+            gold = gold,
+            allowVideo = now >= videoOkAt,
+            s = ::s,
+            d = ::d,
+        ) else if (home) HomeLayout(
             live = { Live(it) },
             second = second,
             secondPlaying = secondPlaying,
@@ -1492,6 +1508,190 @@ private fun HomeStories(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -
                             .clip(androidx.compose.foundation.shape.RoundedCornerShape(50))
                             .background(if (i == at % 12) FocusColor else Color.White.copy(alpha = 0.2f)),
                     )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * My Screen: the viewer builds it in Settings (see [MyScreen]). The channel on the left or the
+ * right (or bigger), up to four spots beside it, one panel under it, a style (glass cards, flat
+ * edge to edge, or bold headers) and an accent colour. Whatever is picked, every part stretches so
+ * no space is left empty; the sponsor and the advertising line always stay.
+ */
+@Composable
+private fun MyLayout(
+    live: @Composable (Modifier) -> Unit,
+    choices: MyScreen.Choices,
+    second: Channel?,
+    secondPlaying: Boolean,
+    markets: List<News.Market>?,
+    rates: News.Rates?,
+    gold: Double?,
+    allowVideo: Boolean,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+) {
+    val context = LocalContext.current
+    val forecast = if (Edition.HAS_WEATHER) rememberLoaded(30 * 60_000L) { News.forecast() } else null
+    val city = rememberLoaded(24 * 60 * 60_000L) { News.place()?.city?.takeIf { it.isNotBlank() } }
+    val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
+    val minute = rememberMinute()
+    val is24 = remember { DateFormat.is24HourFormat(context) }
+
+    val style = choices[MyScreen.Section.Style]
+    val layout = choices[MyScreen.Section.Layout]
+    val under = choices[MyScreen.Section.Line]
+    val accent = Color(choices.accent)
+    val glass = style == MyScreen.GLASS
+    val flat = style == MyScreen.FLAT
+    val shape: androidx.compose.ui.graphics.Shape =
+        if (glass) androidx.compose.foundation.shape.RoundedCornerShape(d(14f)) else androidx.compose.ui.graphics.RectangleShape
+    val backdrop: androidx.compose.ui.graphics.Brush = when {
+        glass -> androidx.compose.ui.graphics.Brush.linearGradient(listOf(HomeTop, HomeBottom))
+        flat -> androidx.compose.ui.graphics.SolidColor(Line)
+        else -> androidx.compose.ui.graphics.SolidColor(Color.Black)
+    }
+
+    @Composable
+    fun Card(modifier: Modifier, title: String, content: @Composable () -> Unit) {
+        Column(
+            modifier
+                .clip(shape)
+                .background(if (glass) Glass else Panel)
+                .then(if (glass) Modifier.border(1.dp, GlassEdge, shape) else Modifier),
+        ) {
+            when (style) {
+                MyScreen.BOLD -> Box(
+                    Modifier.fillMaxWidth().height(d(20f)).background(accent).padding(horizontal = d(10f)),
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    Text(title.uppercase(), color = Color.Black, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.2f), maxLines = 1)
+                }
+                MyScreen.FLAT -> Box(Modifier.fillMaxWidth().height(d(2f)).background(accent))
+            }
+            Row(Modifier.fillMaxWidth().weight(1f)) {
+                if (glass) Box(Modifier.width(d(3f)).fillMaxHeight().background(accent))
+                Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.CenterStart) { content() }
+            }
+        }
+    }
+
+    /** What goes in one spot (or under the channel); [wide] is the panel under the channel. */
+    @Composable
+    fun Spot(what: String, wide: Boolean) {
+        val fill = Modifier.fillMaxSize()
+        val padded = Modifier.fillMaxSize().padding(horizontal = d(12f))
+        when (what) {
+            MyScreen.CLOCK -> HomeClock(Modifier.fillMaxWidth(), today, is24, s, d)
+            MyScreen.WEATHER -> HomeWeather(Modifier.fillMaxWidth(), forecast, city, s, d)
+            MyScreen.PRAYERS -> HomePrayer(fill, today, minute, is24, s, d)
+            MyScreen.STORIES -> if (wide) HomeStories(fill, s, d) else StoryList(padded, s, d)
+            MyScreen.MARKETS, MyScreen.CURRENCIES -> if (wide) {
+                // Under the channel there's room for both, the one picked first.
+                Row(fill) {
+                    val first = what == MyScreen.MARKETS
+                    Box(Modifier.weight(1f).fillMaxHeight().padding(horizontal = d(12f))) {
+                        if (first) Markets(Modifier.fillMaxSize(), markets, s, d) else CurrencyList(Modifier.fillMaxSize(), rates, gold, s, d)
+                    }
+                    Box(Modifier.width(1.dp).fillMaxHeight().padding(vertical = d(8f)).background(Line))
+                    Box(Modifier.weight(1f).fillMaxHeight().padding(horizontal = d(12f))) {
+                        if (first) CurrencyList(Modifier.fillMaxSize(), rates, gold, s, d) else Markets(Modifier.fillMaxSize(), markets, s, d)
+                    }
+                }
+            } else if (what == MyScreen.MARKETS) {
+                Markets(padded, markets, s, d)
+            } else {
+                CurrencyList(padded, rates, gold, s, d)
+            }
+            MyScreen.SECOND -> Box(fill.background(Color.Black), contentAlignment = Alignment.Center) {
+                SecondChannel(second, secondPlaying, s) { 0.dp }
+            }
+        }
+    }
+
+    BoxWithConstraints(Modifier.fillMaxSize().background(backdrop)) {
+        val pad = if (flat) 0.dp else d(8f)
+        val sep = if (flat) 1.dp else d(8f)
+        val tickerHeight = d(24f)
+        val availW = maxWidth - pad * 2 - sep
+        val availH = maxHeight - pad * 2 - tickerHeight - sep
+        val big = layout == MyScreen.BIG
+        val hasUnder = under != MyScreen.NOTHING
+        // With a panel under the channel the picture stays 16:9 and the panel takes the rest of
+        // the height; without one the channel takes the whole height (stretched a little).
+        val playerW = if (hasUnder) {
+            minOf(availW * (if (big) 0.78f else 0.66f), (availH - sep - d(if (big) 90f else 110f)) * 16f / 9f)
+        } else {
+            minOf(availH * 16f / 9f, availW * 0.82f)
+        }
+        val sideW = availW - playerW
+        val spots = choices.spots
+
+        Column(Modifier.fillMaxSize().padding(pad), verticalArrangement = Arrangement.spacedBy(sep)) {
+            Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(sep)) {
+                @Composable
+                fun Player() {
+                    Column(Modifier.width(playerW).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(sep)) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .then(if (hasUnder) Modifier.height(playerW * 9f / 16f) else Modifier.weight(1f))
+                                .clip(shape)
+                                .background(Color.Black)
+                                .then(if (style == MyScreen.BOLD) Modifier.border(d(2f), accent) else Modifier),
+                        ) {
+                            live(Modifier.fillMaxSize())
+                            nextPrayer(today?.prayers.orEmpty(), minute)?.let { (p, until) ->
+                                if (until in 1..10) {
+                                    Text(
+                                        "🕌  ${prayerName(p.name)} in $until min",
+                                        color = Color.Black,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = s(14f),
+                                        modifier = Modifier
+                                            .align(Alignment.TopCenter)
+                                            .padding(top = d(12f))
+                                            .background(accent, androidx.compose.foundation.shape.RoundedCornerShape(50))
+                                            .padding(horizontal = d(16f), vertical = d(6f)),
+                                    )
+                                }
+                            }
+                        }
+                        if (hasUnder) Card(Modifier.fillMaxWidth().weight(1f), under) { Spot(under, wide = true) }
+                    }
+                }
+
+                @Composable
+                fun Side() {
+                    Column(Modifier.width(sideW).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(sep)) {
+                        spots.forEach { what -> Card(Modifier.fillMaxWidth().weight(1f), what) { Spot(what, wide = false) } }
+                        // The sponsor always stays: 16:9 at the column's width, or the whole
+                        // column when no spots are picked.
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .then(if (spots.isEmpty()) Modifier.weight(1f) else Modifier.height(minOf(sideW * 9f / 16f, availH * 0.4f)))
+                                .clip(shape),
+                        ) {
+                            EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                        }
+                    }
+                }
+
+                if (layout == MyScreen.LEFT) {
+                    Side()
+                    Player()
+                } else {
+                    Player()
+                    Side()
+                }
+            }
+            Row(Modifier.fillMaxWidth().height(tickerHeight).clip(shape).background(Color.Black.copy(alpha = 0.55f))) {
+                Box(Modifier.width(d(4f)).fillMaxHeight().background(accent))
+                Box(Modifier.weight(1f).fillMaxHeight().padding(horizontal = d(12f))) {
+                    EditionTicker(Modifier.fillMaxSize(), big = false, always = true)
                 }
             }
         }

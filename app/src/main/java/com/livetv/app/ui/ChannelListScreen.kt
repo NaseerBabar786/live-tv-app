@@ -644,6 +644,7 @@ fun ChannelListScreen(
                     newsMode -> NewsMode(
                         cp24 = tileLayout == TileLayout.Cp24,
                         home = tileLayout == TileLayout.Home,
+                        mine = tileLayout == TileLayout.Mine,
                         channels = channels,
                         all = state.channels,
                         selectedId = listChannelId ?: state.lastWatchedId,
@@ -1778,6 +1779,8 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     Cp24("CP24", 1, 1),
     /** A modern home screen: the channel, clock, weather, prayers with reminders, stories, markets, rates and the sponsor on cards. */
     Home("Home", 1, 1),
+    /** The viewer's own screen: layout, style, colour and information picked in Settings. */
+    Mine("My Screen", 1, 1),
 }
 
 /**
@@ -1787,7 +1790,7 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
 private var sessionTileLayout: TileLayout? = null
 
 /** News, CP24 and Home: one channel with information around it (Live TV only). */
-private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home)
+private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine)
 
 /** The layouts the top-bar button steps through; News mode is Live TV's only. */
 private val layouts = TileLayout.entries.filter { it !in INFO_LAYOUTS || Edition.LIVE_TV }

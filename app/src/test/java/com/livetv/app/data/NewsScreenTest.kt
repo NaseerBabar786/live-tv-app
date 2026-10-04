@@ -29,3 +29,17 @@ class Cp24ScreenTest {
         assertEquals(Cp24Screen.PRICES, c[Cp24Screen.Section.Crawl])
     }
 }
+
+class MyScreenTest {
+    @Test
+    fun spotsSkipNothingAndKnowTheSecondChannel() {
+        val c = MyScreen.Choices(emptyMap())
+        assertEquals(listOf(MyScreen.CLOCK, MyScreen.WEATHER, MyScreen.PRAYERS, MyScreen.MARKETS), c.spots)
+        assertEquals(MyScreen.RIGHT, c[MyScreen.Section.Layout])
+        assertEquals(0xFFFFC107L, c.accent)
+        assertFalse(c.usesSecond)
+        val picked = MyScreen.Choices(mapOf(MyScreen.Section.Spot1 to MyScreen.NOTHING, MyScreen.Section.Spot2 to MyScreen.SECOND))
+        assertEquals(listOf(MyScreen.SECOND, MyScreen.PRAYERS, MyScreen.MARKETS), picked.spots)
+        assertTrue(picked.usesSecond)
+    }
+}

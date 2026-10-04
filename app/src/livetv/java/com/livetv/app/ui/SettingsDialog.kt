@@ -212,6 +212,9 @@ fun SettingsDialog(
                 Cp24ScreenSection()
 
                 HorizontalDivider()
+                MyScreenSection()
+
+                HorizontalDivider()
                 Text("MTA (Ahmadiyya)", fontWeight = FontWeight.Bold)
                 Row(
                     Modifier
