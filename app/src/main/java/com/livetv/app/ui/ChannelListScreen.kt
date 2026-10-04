@@ -1786,14 +1786,14 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
  */
 private var sessionTileLayout: TileLayout? = null
 
+/** News, CP24 and Home: one channel with information around it (Live TV only). */
+private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home)
+
 /** The layouts the top-bar button steps through; News mode is Live TV's only. */
 private val layouts = TileLayout.entries.filter { it !in INFO_LAYOUTS || Edition.LIVE_TV }
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() = this != TileLayout.List && this !in INFO_LAYOUTS
-
-/** News, CP24 and Home: one channel with information around it (Live TV only). */
-private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home)
 
 /**
  * 1×2, 2×2 and 2×3's channels, and the tile opened full screen, kept while a channel plays full
