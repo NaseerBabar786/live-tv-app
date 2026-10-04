@@ -50,7 +50,7 @@
       <div class="row"><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
@@ -130,6 +130,12 @@ if (!configured) {
       [i + 1, u.name, u.email, u.device, u.model, u.appVersion, fmt(u.joined), fmt(u.lastOpened)].forEach(v => {
         const td = document.createElement("td"); td.textContent = v ?? ""; tr.append(td);
       });
+      // Starts (or opens) a private conversation with this viewer; it lands in their Messages.
+      const td = document.createElement("td");
+      const a = document.createElement("a");
+      a.textContent = "✉ Message";
+      a.href = "suggestions#to=" + encodeURIComponent(u.id) + "&name=" + encodeURIComponent(u.name || "") + "&email=" + encodeURIComponent(u.email || "");
+      td.append(a); tr.append(td);
       tbody.append(tr);
     });
   }

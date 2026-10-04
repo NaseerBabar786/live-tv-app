@@ -17,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import com.livetv.app.account.Account
 import com.livetv.app.account.FirebaseConfig
+import com.livetv.app.account.Messages
+import com.livetv.app.ui.MessagesScreen
 import com.livetv.app.ui.SignInScreen
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -124,6 +126,7 @@ fun EditionOverlay() {
             onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
         }
     }
+    if (FirebaseConfig.configured) NewMessagePrompt()
     // A sponsor's card after a channel change, now and then.
     val main by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
     SponsorCard(channelId = main.lastWatchedId)
@@ -150,6 +153,50 @@ fun EditionOverlay() {
         }
         UpdateState.UpToDate -> LaunchedEffect(Unit) { updates.dismissPrompt() }
         else -> Unit
+    }
+}
+
+/**
+ * Says when a private message has arrived (for a viewer, from the Live TV team; for the owner,
+ * from a viewer): soon after start, then every 30 minutes. Each message is announced only once.
+ */
+@Composable
+private fun NewMessagePrompt() {
+    val context = LocalContext.current
+    val account = remember { Account.get(context) }
+    val user by account.user.collectAsStateWithLifecycle()
+    val prefs = remember { context.getSharedPreferences("messages", android.content.Context.MODE_PRIVATE) }
+    var preview by remember { mutableStateOf<String?>(null) }
+    var reading by remember { mutableStateOf(false) }
+    LaunchedEffect(user?.uid) {
+        if (user == null) return@LaunchedEffect
+        delay(15_000)
+        while (true) {
+            val newest = runCatching { Messages(account).newest() }.getOrNull()
+            if (newest != null && newest.second.time > prefs.getLong("announced", 0L)) {
+                prefs.edit().putLong("announced", newest.second.time).apply()
+                preview = newest.first
+            }
+            delay(30 * 60_000L)
+        }
+    }
+    if (reading) {
+        MessagesScreen(onClose = { reading = false })
+        return
+    }
+    val text = preview ?: return
+    SettingsTheme {
+        AlertDialog(
+            onDismissRequest = { preview = null },
+            title = { Text(if (account.isAdmin) "✉ New message from a viewer" else "✉ New message from the Live TV team") },
+            text = { Text(text.take(200) + if (text.length > 200) "…" else "") },
+            confirmButton = {
+                TextButton(onClick = { preview = null; reading = true }, modifier = Modifier.focusGlow()) { Text("Read and reply") }
+            },
+            dismissButton = {
+                TextButton(onClick = { preview = null }, modifier = Modifier.focusGlow()) { Text("Later") }
+            },
+        )
     }
 }
 
