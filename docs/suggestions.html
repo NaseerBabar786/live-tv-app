@@ -18,6 +18,22 @@
   .replies { margin: 10px 0 0 14px; padding-left: 12px; border-left: 2px solid var(--surface-2); }
   .replies .post { background: transparent; border: 0; padding: 6px 0; margin: 0; }
   .me { color: var(--muted); font-size: 14px; }
+  .tabs { display: flex; gap: 8px; margin: 0 0 16px; }
+  .tab { padding: 9px 18px; border-radius: 999px; border: 2px solid var(--line); background: transparent; color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+  .tab.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .badge { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 6px; border-radius: 999px; background: var(--red); color: #fff; font-size: 13px; line-height: 20px; text-align: center; }
+  .convo { display: flex; gap: 12px; align-items: center; width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 12px 16px; margin: 0 0 10px; color: var(--text); font: inherit; cursor: pointer; }
+  .convo:hover { border-color: var(--focus); }
+  .convo .body { flex: 1; min-width: 0; }
+  .convo .last { color: var(--muted); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .convo.unread .who::after { content: "New"; margin-left: 8px; padding: 1px 8px; border-radius: 999px; background: var(--red); color: #fff; font-size: 12px; }
+  .chat { display: flex; flex-direction: column; gap: 10px; margin: 0 0 14px; }
+  .bubble { max-width: 80%; padding: 10px 14px; border-radius: 16px; background: var(--surface); border: 1px solid var(--surface-2); white-space: pre-wrap; word-wrap: break-word; }
+  .bubble.mine { align-self: flex-end; background: #1E3A5F; border-color: #2B527F; }
+  .bubble .when { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+  .bubble .from { display: block; font-weight: 800; font-size: 13px; margin-bottom: 2px; }
+  .quote { display: block; margin: 0 0 6px; padding: 4px 10px; border-left: 3px solid var(--line); color: var(--muted); font-size: 14px; }
+  .pm { margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -38,7 +54,7 @@
 
 <main class="wrap">
   <h1>💬 Suggestions</h1>
-  <p class="lead">Tell us what to improve or add to Live TV, and reply to other viewers' ideas. Only Live TV app users can read and post here.</p>
+  <p class="lead">Tell us what to improve or add to Live TV, and reply to other viewers' ideas. Private replies from the Live TV team arrive in your Messages. Only Live TV app users can read and post here.</p>
 
   <div id="notReady" class="panel hidden">Suggestions is opening soon. Please check back in a little while.</div>
 
@@ -58,12 +74,30 @@
       <span class="me" id="me"></span>
       <button class="btn" data-signout>Sign out</button>
     </div>
+    <div class="tabs">
+      <button class="tab on" id="tabForum">💬 Suggestions</button>
+      <button class="tab" id="tabInbox">✉ Messages<span class="badge hidden" id="unread"></span></button>
+    </div>
+    <div id="forumPane">
     <div class="panel" style="margin-bottom:20px">
       <label for="newText"><b>Your suggestion</b></label>
       <textarea id="newText" maxlength="2000" placeholder="What should we improve or add?"></textarea>
       <div class="row" style="margin-top:10px"><button class="btn primary" id="send">Post</button><span class="small" id="sendMsg"></span></div>
     </div>
     <div id="posts"><p class="small">Loading…</p></div>
+    </div>
+    <div id="inboxPane" class="hidden">
+      <div id="convos"></div>
+      <div id="thread" class="hidden">
+        <div class="row" style="margin-bottom:12px"><button class="btn" id="backToList">‹ All messages</button><b id="threadWho"></b></div>
+        <p class="small" id="threadNote"></p>
+        <div class="chat" id="chat"></div>
+        <div class="panel">
+          <textarea id="msgText" maxlength="2000" placeholder="Write a message" style="min-height:80px"></textarea>
+          <div class="row" style="margin-top:10px"><button class="btn primary" id="msgSend">Send</button><span class="small" id="msgInfo"></span></div>
+        </div>
+      </div>
+    </div>
   </div>
   <p class="err" id="err"></p>
 </main>
@@ -107,6 +141,8 @@ if (!configured) {
     $("me").textContent = "Signed in as " + (user.displayName || user.email);
     show("forum");
     load();
+    refreshUnread();
+    if (location.hash === "#messages") openTab("inbox");
   });
 
   const fmt = ts => ts?.toDate ? ts.toDate().toLocaleString([], { dateStyle: "medium", timeStyle: "short" }) : "";
@@ -131,8 +167,157 @@ if (!configured) {
       };
       actions.append(del);
     }
+    // The owner can answer any viewer privately: it lands in that viewer's Messages.
+    if (admin && d.uid && d.uid !== me.uid) {
+      const pm = document.createElement("button");
+      pm.textContent = "✉ Reply privately";
+      pm.onclick = () => {
+        if (el.querySelector(":scope > .pm")) return;
+        const form = document.createElement("div");
+        form.className = "pm";
+        form.innerHTML = `<textarea maxlength="2000" style="min-height:70px"></textarea><div class="row" style="margin-top:6px"><button class="btn primary">Send to their Messages</button><button class="btn">Cancel</button><span class="small"></span></div>`;
+        form.querySelector("textarea").placeholder = "Private message to " + (d.name || "this viewer");
+        const [send, cancel] = form.querySelectorAll("button");
+        cancel.onclick = () => form.remove();
+        send.onclick = async () => {
+          const text = form.querySelector("textarea").value.trim();
+          if (!text) return;
+          send.disabled = true;
+          try {
+            await sendMessage(d.uid, text, { name: d.name, quote: d.text });
+            form.innerHTML = '<p class="small">✓ Sent. It\'s in their Messages, and you\'ll see their answer under ✉ Messages.</p>';
+          } catch (e) { send.disabled = false; form.querySelector(".small").textContent = "Couldn't send: " + e.message; }
+        };
+        el.append(form);
+        form.querySelector("textarea").focus();
+      };
+      actions.append(pm);
+    }
     return el;
   }
+
+  // ---- Messages: private conversations between each viewer and the Live TV team ----
+  // inbox/{viewer uid} holds the latest message and who has unread ones; inbox/{uid}/messages holds them all.
+  let openUid = null;
+
+  async function sendMessage(uid, text, extra = {}) {
+    const fromAdmin = admin && uid !== me.uid;
+    const msg = { from: fromAdmin ? "admin" : "user", uid: me.uid, name: me.displayName || "Live TV viewer", text, createdAt: fs.serverTimestamp() };
+    if (extra.quote) msg.quote = String(extra.quote).slice(0, 300);
+    await fs.addDoc(fs.collection(db, "inbox", uid, "messages"), msg);
+    const head = { uid, lastText: text.slice(0, 200), lastAt: fs.serverTimestamp(), lastFrom: msg.from };
+    if (fromAdmin) {
+      head.userUnread = true;
+      if (extra.name) head.name = extra.name;
+    } else {
+      Object.assign(head, { adminUnread: true, userUnread: false, name: me.displayName || "Live TV viewer", email: me.email || "" });
+    }
+    await fs.setDoc(fs.doc(db, "inbox", uid), head, { merge: true });
+  }
+
+  async function refreshUnread() {
+    let n = 0;
+    try {
+      if (admin) {
+        n = (await fs.getDocs(fs.query(fs.collection(db, "inbox"), fs.where("adminUnread", "==", true), fs.limit(100)))).size;
+      } else {
+        const d = await fs.getDoc(fs.doc(db, "inbox", me.uid));
+        n = d.exists() && d.data().userUnread ? 1 : 0;
+      }
+    } catch {}
+    $("unread").textContent = n;
+    $("unread").classList.toggle("hidden", !n);
+  }
+
+  function openTab(which) {
+    const inbox = which === "inbox";
+    $("tabForum").classList.toggle("on", !inbox);
+    $("tabInbox").classList.toggle("on", inbox);
+    $("forumPane").classList.toggle("hidden", inbox);
+    $("inboxPane").classList.toggle("hidden", !inbox);
+    history.replaceState(null, "", inbox ? "#messages" : location.pathname);
+    if (inbox) admin ? listConvos() : openThread(me.uid, "Live TV team");
+  }
+  $("tabForum").onclick = () => openTab("forum");
+  $("tabInbox").onclick = () => openTab("inbox");
+  $("backToList").onclick = () => listConvos();
+
+  async function listConvos() {
+    openUid = null;
+    $("thread").classList.add("hidden");
+    const box = $("convos");
+    box.classList.remove("hidden");
+    box.innerHTML = '<p class="small">Loading…</p>';
+    try {
+      const snap = await fs.getDocs(fs.query(fs.collection(db, "inbox"), fs.orderBy("lastAt", "desc"), fs.limit(200)));
+      box.innerHTML = snap.empty ? '<p class="small">No messages yet. Use "✉ Reply privately" on a suggestion to message its writer.</p>' : "";
+      snap.forEach(c => {
+        const d = c.data();
+        const b = document.createElement("button");
+        b.className = "convo" + (d.adminUnread ? " unread" : "");
+        b.innerHTML = `<div class="body"><div class="who" style="font-weight:800"></div><div class="last"></div></div><span class="small"></span>`;
+        b.querySelector(".who").textContent = d.name || "Live TV viewer";
+        b.querySelector(".last").textContent = (d.lastFrom === "admin" ? "You: " : "") + (d.lastText || "");
+        b.querySelector(".small").textContent = fmt(d.lastAt);
+        b.onclick = () => openThread(c.id, d.name || "Live TV viewer", d.email);
+        box.append(b);
+      });
+    } catch (e) { box.innerHTML = ""; $("err").textContent = "Couldn't load messages: " + e.message; }
+  }
+
+  async function openThread(uid, who, email) {
+    openUid = uid;
+    $("convos").classList.toggle("hidden", true);
+    $("thread").classList.remove("hidden");
+    $("backToList").classList.toggle("hidden", !admin);
+    $("threadWho").textContent = admin ? who + (email ? " · " + email : "") : "";
+    $("threadNote").textContent = admin ? "" : "Your private conversation with the Live TV team. Only you and the team can see it.";
+    $("msgInfo").textContent = "";
+    const chat = $("chat");
+    chat.innerHTML = '<p class="small">Loading…</p>';
+    try {
+      const snap = await fs.getDocs(fs.query(fs.collection(db, "inbox", uid, "messages"), fs.orderBy("createdAt", "asc"), fs.limit(500)));
+      if (openUid !== uid) return;
+      chat.innerHTML = snap.empty ? '<p class="small">' + (admin ? "No messages yet." : "No messages yet. Write to the Live TV team below and we'll answer here.") + '</p>' : "";
+      snap.forEach(m => {
+        const d = m.data();
+        const mine = (d.from === "admin") === admin;
+        const b = document.createElement("div");
+        b.className = "bubble" + (mine ? " mine" : "");
+        const from = document.createElement("span");
+        from.className = "from";
+        from.textContent = mine ? "You" : d.from === "admin" ? "Live TV team" : (d.name || who);
+        b.append(from);
+        if (d.quote) { const q = document.createElement("span"); q.className = "quote"; q.textContent = (admin ? "Suggestion: " : "Your suggestion: ") + d.quote; b.append(q); }
+        b.append(document.createTextNode(d.text || ""));
+        const when = document.createElement("span");
+        when.className = "when";
+        when.textContent = fmt(d.createdAt);
+        b.append(when);
+        chat.append(b);
+      });
+      // Opening the conversation marks it read for this side.
+      const ref = fs.doc(db, "inbox", uid);
+      const head = await fs.getDoc(ref);
+      if (head.exists() && head.data()[admin ? "adminUnread" : "userUnread"]) {
+        await fs.updateDoc(ref, { [admin ? "adminUnread" : "userUnread"]: false });
+      }
+      refreshUnread();
+    } catch (e) { chat.innerHTML = ""; $("err").textContent = "Couldn't load messages: " + e.message; }
+  }
+
+  $("msgSend").onclick = async () => {
+    const text = $("msgText").value.trim();
+    if (!text || !openUid) return;
+    $("msgSend").disabled = true;
+    try {
+      await sendMessage(openUid, text);
+      $("msgText").value = "";
+      await openThread(openUid, $("threadWho").textContent.split(" · ")[0] || "Live TV viewer", $("threadWho").textContent.split(" · ")[1]);
+      $("msgInfo").textContent = "Sent.";
+    } catch (e) { $("msgInfo").textContent = "Couldn't send: " + e.message; }
+    $("msgSend").disabled = false;
+  };
 
   async function load() {
     const box = $("posts");

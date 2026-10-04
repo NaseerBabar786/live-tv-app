@@ -13,6 +13,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.livetv.app.R
 import com.livetv.app.account.Account
+import com.livetv.app.account.Messages
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.runtime.LaunchedEffect
 import com.livetv.app.account.FirebaseConfig
 import androidx.compose.runtime.collectAsState
 import androidx.compose.foundation.clickable
@@ -81,6 +85,7 @@ fun SettingsDialog(
     var pickingLanguages by rememberSaveable { mutableStateOf(false) }
     var showingAppBazaar by rememberSaveable { mutableStateOf(false) }
     var showingSuggestions by rememberSaveable { mutableStateOf(false) }
+    var showingMessages by rememberSaveable { mutableStateOf(false) }
     val account = remember { Account.get(context) }
     val signedIn by account.user.collectAsState()
     var findingPlaylists by rememberSaveable { mutableStateOf(false) }
@@ -113,6 +118,11 @@ fun SettingsDialog(
 
     if (showingSuggestions) {
         SuggestionsScreen(onClose = { showingSuggestions = false })
+        return
+    }
+
+    if (showingMessages) {
+        MessagesScreen(onClose = { showingMessages = false })
         return
     }
 
@@ -253,6 +263,18 @@ fun SettingsDialog(
                         onClick = { showingSuggestions = true },
                         modifier = Modifier.fillMaxWidth().focusGlow(),
                     ) { Text("💬 Suggestions: tell us what to improve") }
+                    var unread by remember { mutableStateOf(false) }
+                    LaunchedEffect(Unit) { unread = runCatching { Messages(account).newest() != null }.getOrDefault(false) }
+                    OutlinedButton(
+                        onClick = { showingMessages = true },
+                        modifier = Modifier.fillMaxWidth().focusGlow(),
+                    ) {
+                        Text(if (account.isAdmin) "✉ Messages from viewers" else "✉ Messages from the Live TV team")
+                        if (unread) {
+                            Spacer(Modifier.width(8.dp))
+                            NewBadge()
+                        }
+                    }
                     val u = signedIn!!
                     Text(
                         "Signed in as ${u.name.ifBlank { u.email }}" + if (u.name.isNotBlank()) " (${u.email})" else "",

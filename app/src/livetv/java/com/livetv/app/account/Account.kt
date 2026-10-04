@@ -287,8 +287,15 @@ internal object Firestore {
         Http.request("DELETE", "$base/$path", null, null, token)
     }
 
-    /** Documents of [collection] under [parent] ("" for top level), ordered by createdAt. */
-    fun list(parent: String, collection: String, newestFirst: Boolean, limit: Int, token: String): List<Pair<String, JSONObject>> {
+    /** Documents of [collection] under [parent] ("" for top level), ordered by [orderBy]. */
+    fun list(
+        parent: String,
+        collection: String,
+        newestFirst: Boolean,
+        limit: Int,
+        token: String,
+        orderBy: String = "createdAt",
+    ): List<Pair<String, JSONObject>> {
         val query = JSONObject().put(
             "structuredQuery",
             JSONObject()
@@ -297,7 +304,7 @@ internal object Firestore {
                     "orderBy",
                     JSONArray().put(
                         JSONObject()
-                            .put("field", JSONObject().put("fieldPath", "createdAt"))
+                            .put("field", JSONObject().put("fieldPath", orderBy))
                             .put("direction", if (newestFirst) "DESCENDING" else "ASCENDING"),
                     ),
                 )
@@ -340,5 +347,6 @@ internal object Firestore {
     }.getOrNull()
 
     fun JSONObject.str(field: String): String = optJSONObject(field)?.optString("stringValue") ?: ""
+    fun JSONObject.bool(field: String): Boolean = optJSONObject(field)?.optBoolean("booleanValue") ?: false
     fun JSONObject.time(field: String): Date? = optJSONObject(field)?.optString("timestampValue")?.let(::parseIso)
 }
