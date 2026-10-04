@@ -175,6 +175,8 @@ fun ChannelListScreen(
     onTryDemo: () -> Unit = {},
     /** Opens the Library (movies, series and shows); null hides its button. */
     onOpenVod: (() -> Unit)? = null,
+    /** Live TV Max's home screen: opens the Library at a movie or show. */
+    onOpenVodItem: ((VodTarget) -> Unit)? = null,
     /** Opens the Games section; null hides its button. */
     onOpenGames: (() -> Unit)? = null,
     /** A channel picked to play in 1+List's player, remembered as the last one watched. */
@@ -227,8 +229,9 @@ fun ChannelListScreen(
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
     // TV and tablet layout, picked with the button in the top bar; starts in 1+List each time the app opens.
+    // Live TV Max opens on its Browse home screen.
     var tileLayout by remember {
-        mutableStateOf(sessionTileLayout ?: TileLayout.List)
+        mutableStateOf(sessionTileLayout ?: if (Edition.MAX) TileLayout.Browse else TileLayout.List)
     }
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
     // 2×3, 2×2 and 1×2 are Premium in Live TV Plus (free in the other apps).
@@ -251,7 +254,8 @@ fun ChannelListScreen(
     val newsMode = wideScreen && tileLayout in INFO_LAYOUTS
     var newsBar by remember { mutableStateOf(false) }
     // "Browse": its own rail and search bar take the place of the top bar and filters.
-    val browseMode = wideScreen && tileLayout == TileLayout.Browse
+    // Live TV Max shows it on phones too (the other layouts are for TVs and tablets).
+    val browseMode = (wideScreen || Edition.MAX) && tileLayout == TileLayout.Browse
     val newsFocus = remember { FocusRequester() }
     var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
     // TVs and tablets show a fixed window of tiles that slides along the list one channel at a
@@ -660,9 +664,11 @@ fun ChannelListScreen(
                         playing = inForeground && !showSettings,
                         modeFocus = layoutButtonFocus,
                         modeLabel = tileLayout.label,
-                        onNextMode = ::nextLayout,
+                        // Phones have no other layout to go to.
+                        onNextMode = if (wideScreen) ::nextLayout else null,
                         onOpen = onPlay,
                         onOpenGames = onOpenGames,
+                        onOpenVodItem = onOpenVodItem,
                         onOpenSettings = { showSettings = true },
                         onRailFocused = { topBarFocused = it },
                     )

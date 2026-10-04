@@ -75,13 +75,30 @@ import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
+import com.livetv.app.data.Guide
+import com.livetv.app.data.Vod
+import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.runtime.produceState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.livetv.app.player.StreamPlayer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
-/** One row of cards on the Browse screen. */
-private class BrowseRow(val key: String, val title: String, val channels: List<Channel>)
+/** One row of cards on the Browse screen: live channels, or (Live TV Max) movies and shows. */
+private class BrowseRow(
+    val key: String,
+    val title: String,
+    val channels: List<Channel> = emptyList(),
+    val videos: List<VideoCard> = emptyList(),
+) {
+    val size: Int get() = if (videos.isNotEmpty()) videos.size else channels.size
+}
+
+/** A movie, or a drama or show with its episodes, on Live TV Max's home screen. */
+private class VideoCard(val id: String, val title: String, val subtitle: String, val image: String?, val target: VodTarget)
 
 /** Where the Browse screen was (row, card and scroll), kept while a channel plays full screen. */
 private var sessionRowKey: String? = null
@@ -91,6 +108,8 @@ private var sessionListOffset = 0
 
 private const val PREFS = "browse"
 private const val K_RECENT = "recent"
+private const val K_RECENT_VIDEOS = "recent_videos"
+private const val MAX_RECENT_VIDEOS = 20
 private const val MAX_RECENT = 20
 private const val MAX_PER_ROW = 80
 
@@ -113,9 +132,12 @@ internal fun BrowseMode(
     /** The layout button (Back from the cards lands here, as it does on the other layouts' top bar). */
     modeFocus: FocusRequester,
     modeLabel: String,
-    onNextMode: () -> Unit,
+    /** Null on phones, which have no other layout. */
+    onNextMode: (() -> Unit)?,
     onOpen: (Channel) -> Unit,
     onOpenGames: (() -> Unit)?,
+    /** Live TV Max: opens a movie or show in the Library. */
+    onOpenVodItem: ((VodTarget) -> Unit)?,
     onOpenSettings: () -> Unit,
     /** Whether the rail has the remote's cursor (Back there asks to exit). */
     onRailFocused: (Boolean) -> Unit,
@@ -133,10 +155,42 @@ internal fun BrowseMode(
         onOpen(channel)
     }
 
+    // Live TV Max: movies and shows opened from here, newest first ("language|section|show|name|url|logo").
+    var recentVideos by remember {
+        mutableStateOf(prefs.getString(K_RECENT_VIDEOS, null)?.split('\n')?.filter { it.isNotBlank() }.orEmpty())
+    }
+    fun openVideo(card: VideoCard) {
+        val t = card.target
+        val line = listOf(t.language.name, t.section.name, t.show.orEmpty(), t.play?.name.orEmpty(), t.play?.url.orEmpty(), card.image.orEmpty())
+            .joinToString("|") { it.replace('|', ' ').replace('\n', ' ') }
+        // One card per show or movie: the show's name, or the movie's address.
+        fun key(l: String) = l.split('|').let { p -> p.getOrNull(2).orEmpty().ifBlank { p.getOrNull(4).orEmpty() } }
+        recentVideos = (listOf(line) + recentVideos.filter { key(it) != key(line) }).take(MAX_RECENT_VIDEOS)
+        prefs.edit().putString(K_RECENT_VIDEOS, recentVideos.joinToString("\n")).apply()
+        onOpenVodItem?.invoke(t)
+    }
+    // Live TV Max: the movies and shows, and what's on now and next.
+    val vodModel = viewModel<VodViewModel>()
+    val vod by vodModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) { if (Edition.MAX && onOpenVodItem != null) vodModel.refreshIfChanged() }
+    val guide by produceState(emptyMap<String, List<Guide.Programme>>()) {
+        if (!Edition.MAX) return@produceState
+        while (true) {
+            value = Guide.load()
+            delay(60 * 60_000L)
+        }
+    }
+    val nowSec by produceState(System.currentTimeMillis() / 1000) {
+        while (true) {
+            delay(30_000)
+            value = System.currentTimeMillis() / 1000
+        }
+    }
+
     var searchOpen by remember { mutableStateOf(query.isNotBlank()) }
     val searchFocus = remember { FocusRequester() }
     val byId = remember(channels) { channels.associateBy { it.id } }
-    val rows = remember(channels, favorites, recent, lastWatchedId, query) {
+    val rows = remember(channels, favorites, recent, lastWatchedId, query, recentVideos, vod.shelves, guide, nowSec / 300) {
         buildList {
             val q = query.trim()
             if (q.isNotEmpty()) {
@@ -144,9 +198,23 @@ internal fun BrowseMode(
             }
             val watched = (recent + listOfNotNull(lastWatchedId)).distinct().mapNotNull { byId[it] }
             add(BrowseRow("recent", "Continue watching", watched))
+            if (Edition.MAX && onOpenVodItem != null) add(BrowseRow("videos:recent", "Continue watching: movies and dramas", videos = recentVideoCards(recentVideos)))
             add(BrowseRow("favorites", "Favorites", channels.filter { it.id in favorites }))
+            if (Edition.MAX) {
+                val onNow = channels.filter { Guide.nowNext(guide, it, nowSec).first != null }
+                add(BrowseRow("onnow", "On now", onNow.sortedByDescending { it.id in favorites }))
+            }
             channels.mapNotNull { it.group }.distinct().forEach { group ->
                 add(BrowseRow("group:$group", group, channels.filter { it.group == group }))
+            }
+            if (Edition.MAX) {
+                // One row per language, biggest first (only when there's more than one).
+                val languages = channels.mapNotNull { it.language }.filter { it != "Other" }
+                    .groupingBy { it }.eachCount().entries.sortedByDescending { it.value }.take(8)
+                if (languages.size > 1) languages.forEach { (language, _) ->
+                    add(BrowseRow("language:$language", "$language channels", channels.filter { it.language == language }))
+                }
+                if (onOpenVodItem != null) videoRows(vod.shelves).forEach(::add)
             }
             channels.mapNotNull { it.category }
                 .filter { it !in setOf("General", "Undefined", "Other") }
@@ -156,7 +224,7 @@ internal fun BrowseMode(
                 .forEach { (category, _) ->
                     add(BrowseRow("genre:$category", category, channels.filter { it.category == category }))
                 }
-        }.filter { it.channels.isNotEmpty() }.map { BrowseRow(it.key, it.title, it.channels.take(MAX_PER_ROW)) }
+        }.filter { it.size > 0 }.map { BrowseRow(it.key, it.title, it.channels.take(MAX_PER_ROW), it.videos.take(MAX_PER_ROW)) }
     }
 
     // One live preview at a time, on the highlighted card (Wi-Fi or Ethernet only).
@@ -236,7 +304,9 @@ internal fun BrowseMode(
     ) {
         val railCollapsed = 76.dp
         val contentWidth = maxWidth - railCollapsed - 24.dp
-        val cardWidth = contentWidth / 3.35f
+        // Phones (Live TV Max): one and a half cards across instead of three and a bit.
+        val phone = maxWidth < 600.dp
+        val cardWidth = contentWidth / if (phone) 1.45f else 3.35f
         LazyColumn(
             state = listState,
             contentPadding = PaddingValues(start = railCollapsed + 8.dp, end = 0.dp, top = 18.dp, bottom = 40.dp),
@@ -291,7 +361,7 @@ internal fun BrowseMode(
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
                             Clock()
-                            if (Edition.HAS_WEATHER) WeatherNow()
+                            if (Edition.HAS_WEATHER && !phone) WeatherNow()
                         }
                     }
                 }
@@ -307,7 +377,7 @@ internal fun BrowseMode(
             }
             items(rows.size, key = { rows[it].key }) { r ->
                 val row = rows[r]
-                val focusIndex = (sessionCardIndex[row.key] ?: 0).coerceIn(0, row.channels.lastIndex)
+                val focusIndex = (sessionCardIndex[row.key] ?: 0).coerceIn(0, row.size - 1)
                 Column {
                     Text(
                         row.title,
@@ -321,11 +391,27 @@ internal fun BrowseMode(
                         horizontalArrangement = Arrangement.spacedBy(18.dp),
                         contentPadding = PaddingValues(start = 14.dp, end = 40.dp, top = 10.dp, bottom = 10.dp),
                     ) {
+                        itemsIndexed(row.videos, key = { _, v -> v.id }) { i, video ->
+                            VideoBrowseCard(
+                                video = video,
+                                width = cardWidth,
+                                modifier = if (i == focusIndex) Modifier.focusRequester(rowRequester(row.key)) else Modifier,
+                                onFocused = {
+                                    focusedKey = null
+                                    sessionRowKey = row.key
+                                    sessionCardIndex[row.key] = i
+                                },
+                                onClick = { openVideo(video) },
+                            )
+                        }
                         itemsIndexed(row.channels, key = { _, c -> c.id }) { i, channel ->
                             val here = focusedKey == row.key to channel.id
+                            val (now, next) = if (Edition.MAX) Guide.nowNext(guide, channel, nowSec) else null to null
                             BrowseCard(
                                 channel = channel,
                                 width = cardWidth,
+                                now = now,
+                                next = next,
                                 favorite = channel.id in favorites,
                                 stream = stream.takeIf { here && previewId == channel.id },
                                 showing = here && showing,
@@ -373,8 +459,18 @@ internal fun BrowseMode(
                 if (rows.any { it.key == "favorites" }) focusRow("favorites")
                 else android.widget.Toast.makeText(context, "No favorites yet. Hold OK on a channel in 1+List to add one.", android.widget.Toast.LENGTH_LONG).show()
             }
+            if (Edition.MAX) {
+                RailItem(Icons.Filled.Schedule, "On now", railFocused, right = back) {
+                    if (rows.any { it.key == "onnow" }) focusRow("onnow")
+                    else android.widget.Toast.makeText(context, "The TV guide isn't available right now.", android.widget.Toast.LENGTH_LONG).show()
+                }
+                RailItem(Icons.Filled.Movie, "Movies and dramas", railFocused, right = back) {
+                    rows.firstOrNull { it.key.startsWith("videos:") && it.key != "videos:recent" }?.let { focusRow(it.key) }
+                        ?: android.widget.Toast.makeText(context, "Movies and dramas are still loading.", android.widget.Toast.LENGTH_LONG).show()
+                }
+            }
             if (onOpenGames != null) RailItem(Icons.Filled.SportsEsports, "Games", railFocused, right = back, onClick = onOpenGames)
-            RailItem(Icons.Filled.Tv, "$modeLabel Mode", railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
+            if (onNextMode != null) RailItem(Icons.Filled.Tv, "$modeLabel Mode", railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
             RailItem(Icons.Filled.Settings, "Settings", railFocused, right = back, onClick = onOpenSettings)
         }
     }
@@ -414,6 +510,9 @@ private fun RailItem(
 private fun BrowseCard(
     channel: Channel,
     width: androidx.compose.ui.unit.Dp,
+    /** Live TV Max's guide: what's on now and next, when the channel has listings. */
+    now: Guide.Programme? = null,
+    next: Guide.Programme? = null,
     favorite: Boolean,
     stream: StreamPlayer?,
     showing: Boolean,
@@ -503,7 +602,29 @@ private fun BrowseCard(
             modifier = Modifier.padding(top = 10.dp, start = 2.dp),
         )
         val details = listOfNotNull(channel.group, channel.category, channel.language).distinct().joinToString(" · ")
-        if (details.isNotEmpty()) {
+        if (now != null || next != null) {
+            now?.let {
+                Text(
+                    "Now: ${it.title}",
+                    color = palette.secondary,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(start = 2.dp),
+                )
+            }
+            next?.let {
+                Text(
+                    "Next ${clockTime(it.start)}: ${it.title}",
+                    color = palette.onSurfaceVariant,
+                    fontSize = 12.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(start = 2.dp),
+                )
+            }
+        } else if (details.isNotEmpty()) {
             Text(
                 details,
                 color = palette.onSurfaceVariant,
@@ -514,6 +635,127 @@ private fun BrowseCard(
             )
         }
     }
+}
+
+/** A movie or show card: its picture filling the 16:9 frame, the title and a short line under it. */
+@Composable
+private fun VideoBrowseCard(
+    video: VideoCard,
+    width: androidx.compose.ui.unit.Dp,
+    modifier: Modifier,
+    onFocused: () -> Unit,
+    onClick: () -> Unit,
+) {
+    val palette = Themes.current
+    Column(Modifier.width(width)) {
+        Box(
+            modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .onFocusChanged { if (it.hasFocus) onFocused() }
+                .focusGlow(CardShape)
+                .clip(CardShape)
+                .background(Brush.linearGradient(listOf(palette.surfaceVariant, palette.surface)))
+                .clickable(onClick = onClick),
+            contentAlignment = Alignment.Center,
+        ) {
+            val placeholder = @Composable {
+                Icon(Icons.Filled.Movie, contentDescription = null, tint = palette.onSurfaceVariant, modifier = Modifier.size(44.dp))
+            }
+            if (video.image != null) {
+                SubcomposeAsyncImage(
+                    model = video.image,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    error = { placeholder() },
+                    loading = { placeholder() },
+                )
+            } else {
+                placeholder()
+            }
+        }
+        Text(
+            video.title,
+            color = palette.onSurface,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(top = 10.dp, start = 2.dp),
+        )
+        Text(
+            video.subtitle,
+            color = palette.onSurfaceVariant,
+            fontSize = 12.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(start = 2.dp),
+        )
+    }
+}
+
+/** Live TV Max's movie and show rows: per language, its dramas, movies, shows and kids' programmes. */
+private fun videoRows(shelves: Map<Vod.Language, VodShelf>): List<BrowseRow> = buildList {
+    for (language in Vod.Language.entries) {
+        val shelf = shelves[language] ?: continue
+        val dramaWord = if (language == Vod.Language.URDU || language == Vod.Language.HINDI) "dramas" else "series"
+        fun folders(section: Vod.Section, title: String) = BrowseRow(
+            "videos:${language.name}:${section.name}",
+            title,
+            videos = shelf.folders(section).map { show ->
+                VideoCard(
+                    id = "show:${show.name}",
+                    title = show.name,
+                    subtitle = if (show.episodes.size == 1) "1 episode" else "${show.episodes.size} episodes",
+                    image = show.logo,
+                    target = VodTarget(language, section, show = show.name),
+                )
+            },
+        )
+        add(folders(Vod.Section.SERIES, "${language.label} $dramaWord"))
+        add(
+            BrowseRow(
+                "videos:${language.name}:MOVIES",
+                "${language.label} movies",
+                videos = shelf.movies.map { movie ->
+                    VideoCard(
+                        id = "movie:${movie.id}",
+                        title = movie.name,
+                        subtitle = listOfNotNull("Movie", movie.group).distinct().joinToString(" · "),
+                        image = movie.logo,
+                        target = VodTarget(language, Vod.Section.MOVIES, play = movie),
+                    )
+                }.distinctBy { it.id },
+            ),
+        )
+        add(folders(Vod.Section.SHOWS, "${language.label} shows"))
+        add(folders(Vod.Section.KIDS, "${language.label} kids"))
+    }
+}
+
+/** The "Continue watching: movies and dramas" cards, from the lines saved by openVideo. */
+private fun recentVideoCards(lines: List<String>): List<VideoCard> = lines.mapNotNull { line ->
+    val p = line.split('|')
+    if (p.size < 6) return@mapNotNull null
+    val language = runCatching { Vod.Language.valueOf(p[0]) }.getOrNull() ?: return@mapNotNull null
+    val section = runCatching { Vod.Section.valueOf(p[1]) }.getOrNull() ?: return@mapNotNull null
+    val image = p[5].ifBlank { null }
+    if (p[2].isNotBlank()) {
+        VideoCard("show:${p[2]}", p[2], "${language.label} ${section.label.lowercase()}", image, VodTarget(language, section, show = p[2]))
+    } else if (p[4].isNotBlank()) {
+        val movie = Channel(name = p[3], url = p[4], logo = image)
+        VideoCard("movie:${p[4]}", p[3], "${language.label} movie", image, VodTarget(language, section, play = movie))
+    } else {
+        null
+    }
+}.distinctBy { it.id }
+
+/** "9:30 PM" (or "21:30", as the device is set) for a time in unix seconds. */
+@Composable
+private fun clockTime(seconds: Long): String {
+    val context = LocalContext.current
+    return remember(seconds) { android.text.format.DateFormat.getTimeFormat(context).format(java.util.Date(seconds * 1000)) }
 }
 
 private fun metered(context: Context): Boolean =
