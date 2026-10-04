@@ -27,6 +27,7 @@ import com.livetv.app.ui.SettingsTheme
 import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
 import com.livetv.app.ui.SponsorScreen
+import com.livetv.app.ui.SponsorBox
 import com.livetv.app.ui.SponsorStrip
 import com.livetv.app.ui.SponsorTicker
 import com.livetv.app.sponsor.Sponsor
@@ -156,6 +157,17 @@ fun EditionSponsorStrip(modifier: Modifier) = SponsorStrip(modifier)
 /** The paying sponsors' bar under the two tiles of 1×2. */
 @Composable
 fun EditionSponsorBar(modifier: Modifier) = SponsorBar(modifier)
+
+/** A sponsor's 16:9 picture under the three side tiles of 1+3. */
+@Composable
+fun EditionSponsorBox(modifier: Modifier) = SponsorBox(modifier)
+
+/** Whether any sponsor shows today, so layouts keep room for one only when there is. */
+@Composable
+fun editionHasSponsors(): Boolean {
+    val all by Sponsors.all.collectAsStateWithLifecycle()
+    return remember(all) { Sponsors.current().isNotEmpty() }
+}
 
 /** The "advertise with us" line: beside the channel count, or [big] in the band above the tiles. */
 @Composable

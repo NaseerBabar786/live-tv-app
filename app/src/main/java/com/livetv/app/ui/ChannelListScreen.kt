@@ -152,6 +152,8 @@ import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
 import com.livetv.app.EditionSponsorBar
 import com.livetv.app.EditionTicker
+import com.livetv.app.EditionSponsorBox
+import com.livetv.app.editionHasSponsors
 import com.livetv.app.EditionSponsorStrip
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
@@ -652,7 +654,11 @@ fun ChannelListScreen(
                     val fitColumns = if (wide) tileLayout.columns else max(1, ((maxWidth - gap) / (MinTileWidth + gap)).toInt())
                     val naturalHeight = (maxWidth - gap * (fitColumns + 1)) / fitColumns * 9f / 16f + TileTextHeight
                     val rows = if (wide) tileLayout.rows else max(1, ((maxHeight - gap) / (naturalHeight + gap)).roundToInt())
-                    val tileHeight = (maxHeight - gap * (rows + 1)) / rows
+                    // 2×2 and 2×3 keep a band at the bottom for Live TV's sponsor bar when there are sponsors.
+                    val adBand = if (wide && !fullTiles && (tileLayout == TileLayout.Four || tileLayout == TileLayout.Six) &&
+                        editionHasSponsors()
+                    ) 60.dp else 0.dp
+                    val tileHeight = (maxHeight - adBand - gap * (rows + 1)) / rows
                     val pictureWidth = (tileHeight - TileTextHeight) * 16f / 9f
                     val tileWidth = minOf(pictureWidth, (maxWidth - gap * (fitColumns + 1)) / fitColumns)
                     val columns = if (wide) fitColumns else max(1, ((maxWidth - gap) / (tileWidth + gap)).toInt())
@@ -661,7 +667,7 @@ fun ChannelListScreen(
                     // Full screen: 16:9 cells packed together and centred, so no black bands between rows.
                     val fullHeight = minOf(maxWidth / columns * 9f / 16f, maxHeight / rows)
                     val cardHeight = if (fullTiles) fullHeight else tileWidth * 9f / 16f + TileTextHeight
-                    val rowGap = if (fullTiles) 0.dp else maxOf(gap, (maxHeight - cardHeight * rows) / (rows + 1))
+                    val rowGap = if (fullTiles) 0.dp else maxOf(gap, (maxHeight - adBand - cardHeight * rows) / (rows + 1))
                     // Likewise across: when the height decides the tile size, widen the gaps so the
                     // grid fits exactly [columns] tiles in a row (a bit under, so rounding can't drop one).
                     val columnGap = when {
@@ -809,7 +815,9 @@ fun ChannelListScreen(
                             val smallWidth = maxWidth - bigWidth
                             // The three side tiles share the big player's height exactly, top to bottom,
                             // their pictures stretched to fill them.
-                            val smallHeight = bigHeight / 3
+                            // With sponsors, a quarter of that height goes to a sponsor picture under them.
+                            val sideAd = editionHasSponsors()
+                            val smallHeight = if (sideAd) bigHeight / 4 else bigHeight / 3
                             val big = window.firstOrNull()
                             val column = window.drop(1)
                             fun focus(id: String) = scope.launch {
@@ -893,6 +901,7 @@ fun ChannelListScreen(
                                 }
                                 Column(Modifier.width(smallWidth).fillMaxHeight()) {
                                     column.forEachIndexed { i, small -> SmallTile(i, small) }
+                                    if (sideAd) EditionSponsorBox(Modifier.fillMaxWidth().height(bigHeight / 4).padding(6.dp))
                                 }
                             }
                             // Under the big player: add it to (or remove it from) Favorites.
@@ -940,7 +949,7 @@ fun ChannelListScreen(
                             }
                         } else
                         Column(
-                            Modifier.fillMaxSize().padding(vertical = rowGap),
+                            Modifier.fillMaxSize().padding(bottom = adBand).padding(vertical = rowGap),
                             verticalArrangement = if (fullTiles) Arrangement.Center else Arrangement.spacedBy(rowGap),
                         ) {
                             window.chunked(columns).forEachIndexed { r, row ->
@@ -1002,6 +1011,15 @@ fun ChannelListScreen(
                             content = cards,
                         )
                     }
+                    }
+                    // 2×2 and 2×3: the sponsor bar in the band kept for it under the tiles.
+                    if (adBand > 0.dp) {
+                        EditionSponsorBar(
+                            Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 6.dp)
+                                .height(adBand - 12.dp),
+                        )
                     }
                     // 1×2 leaves a band under the two tiles: Live TV's sponsor bar goes there.
                     if (wide && tileLayout == TileLayout.Two && !fullTiles && rowGap >= 36.dp) {
