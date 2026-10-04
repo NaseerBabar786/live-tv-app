@@ -11,6 +11,7 @@ android {
     defaultConfig {
         minSdk = 21
         targetSdk = 36
+        buildConfigField("boolean", "IS_MAX", "false")
     }
 
     // Three apps from one code base. Code and resources only one app uses live in
@@ -42,11 +43,27 @@ android {
             versionCode = 3
             versionName = "1.1.0"
         }
+        // Live TV Max: Live TV's channels and code, opening on a streaming-style home screen
+        // (rows by country and language, a now/next guide, movies and dramas). Installs beside Live TV.
+        create("max") {
+            dimension = "edition"
+            applicationId = "com.naseerbabar.livetvmax"
+            versionCode = 1
+            versionName = "1.0.0"
+            buildConfigField("boolean", "IS_MAX", "true")
+            buildConfigField("String", "TV_CLIENT_SECRET", "\"${System.getenv("TV_CLIENT_SECRET") ?: ""}\"")
+        }
     }
     // The two store editions share their playlist settings screen.
     sourceSets {
         getByName("player").java.srcDir("src/store/java")
         getByName("plus").java.srcDir("src/store/java")
+        // Live TV Max is built from Live TV's own code and pictures, plus its icon in src/max.
+        getByName("max") {
+            java.srcDir("src/livetv/java")
+            res.srcDir("src/livetv/res")
+            assets.srcDir("src/livetv/assets")
+        }
     }
 
     // CI signs every build with the same private key (from the SIGNING_KEYSTORE and
@@ -114,6 +131,10 @@ dependencies {
     "livetvImplementation"("androidx.credentials:credentials-play-services-auth:1.3.0")
     "livetvImplementation"("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     "livetvImplementation"("com.google.zxing:core:3.5.3")
+    "maxImplementation"("androidx.credentials:credentials:1.3.0")
+    "maxImplementation"("androidx.credentials:credentials-play-services-auth:1.3.0")
+    "maxImplementation"("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    "maxImplementation"("com.google.zxing:core:3.5.3")
     // Live TV Plus Premium: a Google Play subscription.
     "plusImplementation"("com.android.billingclient:billing-ktx:7.1.1")
     debugImplementation(libs.androidx.compose.ui.tooling)

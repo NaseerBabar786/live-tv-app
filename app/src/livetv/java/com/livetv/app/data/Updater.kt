@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
+import com.livetv.app.Edition
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -29,8 +30,9 @@ class Updater(context: Context) {
 
     /** The latest release when it is newer than the installed app, or null when up to date. */
     suspend fun checkForUpdate(): Release? = withContext(Dispatchers.IO) {
-        val json = JSONObject(fetchText(LATEST_RELEASE_API))
-        val version = versionFromTag(json.getString("tag_name"))
+        val json = JSONObject(fetchText(if (Edition.MAX) MAX_RELEASE_API else LATEST_RELEASE_API))
+        // Live TV Max's fixed release is named "Live TV Max 1.0.0"; Live TV's tags carry the version.
+        val version = if (Edition.MAX) json.getString("name").substringAfterLast(' ') else versionFromTag(json.getString("tag_name"))
         val assets = json.getJSONArray("assets")
         val apk = (0 until assets.length()).map { assets.getJSONObject(it) }
             .firstOrNull { it.getString("name").endsWith(".apk") }
@@ -142,6 +144,10 @@ class Updater(context: Context) {
     companion object {
         private const val LATEST_RELEASE_API =
             "https://api.github.com/repos/NaseerBabar786/live-tv-app/releases/latest"
+
+        /** Live TV Max's newest build is always in the release tagged "live-tv-max" (see build-apk.yml). */
+        private const val MAX_RELEASE_API =
+            "https://api.github.com/repos/NaseerBabar786/live-tv-app/releases/tags/live-tv-max"
 
         /** "v1.6.2-build31" -> "1.6.2". */
         fun versionFromTag(tag: String): String = tag.removePrefix("v").substringBefore("-")

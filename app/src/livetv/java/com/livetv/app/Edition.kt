@@ -45,10 +45,15 @@ import com.livetv.app.ui.UpdateViewModel
 import com.livetv.app.ui.VodViewModel
 import com.livetv.app.ui.focusGlow
 
-/** Live TV: built-in free channels, a sponsor screen at start, and self-updates from GitHub. */
+/**
+ * Live TV: built-in free channels, a sponsor screen at start, and self-updates from GitHub.
+ * Live TV Max (the max flavor) is built from this same code; [MAX] tells them apart.
+ */
 object Edition {
     const val LIVE_TV = true
-    const val APP_NAME = "Live TV"
+    /** Live TV Max: opens on the Browse home screen, with language rows, a now/next guide, movies and dramas. */
+    const val MAX = BuildConfig.IS_MAX
+    val APP_NAME = if (MAX) "Live TV Max" else "Live TV"
     const val USER_AGENT = "LiveTV-Android/1.0"
     const val HAS_START_SCREEN = true
     const val HAS_WEATHER = true
@@ -70,11 +75,12 @@ fun EditionStartScreen(onDone: () -> Unit) {
     val library = viewModel<VodViewModel>()
     LaunchedEffect(state.loading) { if (!state.loading) library.refreshIfChanged() }
     // Everyone signs in with Google once (when the owner's Firebase project is set up);
-    // each start is then recorded so the owner can count users.
+    // each start is then recorded so the owner can count users. Live TV Max doesn't ask:
+    // one account works on one device at a time, so it would sign Live TV out on the same TV.
     val context = LocalContext.current
     val account = remember { Account.get(context) }
     val user by account.user.collectAsStateWithLifecycle()
-    if (FirebaseConfig.configured && user == null) {
+    if (FirebaseConfig.configured && user == null && !Edition.MAX) {
         SignInScreen(onSignedIn = {})
         return
     }
@@ -142,7 +148,7 @@ fun EditionOverlay() {
                 AlertDialog(
                     onDismissRequest = updates::dismissPrompt,
                     title = { Text("Update failed") },
-                    text = { Text(u.message + " Live TV will offer the update again next time it starts.") },
+                    text = { Text(u.message + " ${Edition.APP_NAME} will offer the update again next time it starts.") },
                     confirmButton = {
                         TextButton(onClick = updates::dismissPrompt, modifier = Modifier.focusGlow()) { Text("OK") }
                     },

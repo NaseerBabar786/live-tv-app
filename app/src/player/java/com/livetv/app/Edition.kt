@@ -14,6 +14,7 @@ import com.livetv.app.ui.UiState
  */
 object Edition {
     const val LIVE_TV = false
+    const val MAX = false
     const val APP_NAME = "Stream Player Plus"
     const val USER_AGENT = "StreamPlayerPlus-Android/1.0"
     const val HAS_START_SCREEN = false
