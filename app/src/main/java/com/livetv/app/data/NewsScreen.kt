@@ -158,3 +158,78 @@ object Cp24Screen {
         prefs?.edit()?.clear()?.apply()
     }
 }
+
+/**
+ * My Screen mode: the viewer picks the layout, the style, the accent colour and what each spot
+ * shows (Settings > Customize My Screen). Whatever they pick fills the whole screen: a spot set to
+ * nothing gives its room to the others. The sponsor and the advertising line always stay.
+ */
+object MyScreen {
+    const val RIGHT = "Panel on the right"
+    const val LEFT = "Panel on the left"
+    const val BIG = "Big channel"
+    const val GLASS = "Glass cards"
+    const val FLAT = "Flat, edge to edge"
+    const val BOLD = "Bold headers"
+    const val CLOCK = "Clock"
+    const val WEATHER = "Weather"
+    const val PRAYERS = "Prayer times"
+    const val MARKETS = "Markets"
+    const val CURRENCIES = "Currency rates"
+    const val STORIES = "Top stories"
+    const val SECOND = "Second channel"
+    const val NOTHING = "Nothing"
+
+    /** Accent colours, by name (ARGB). */
+    val ACCENTS = linkedMapOf(
+        "Gold" to 0xFFFFC107L,
+        "Red" to 0xFFE53935L,
+        "Green" to 0xFF2ECC71L,
+        "Blue" to 0xFF4FA3FFL,
+        "Purple" to 0xFFB388FFL,
+    )
+
+    private val SPOT = listOf(CLOCK, WEATHER, PRAYERS, MARKETS, CURRENCIES, STORIES, SECOND, NOTHING)
+
+    enum class Section(val label: String, val options: List<String>) {
+        Layout("Layout", listOf(RIGHT, LEFT, BIG)),
+        Style("Style", listOf(GLASS, FLAT, BOLD)),
+        Accent("Accent colour", ACCENTS.keys.toList()),
+        Spot1("Spot 1", listOf(CLOCK) + (SPOT - CLOCK)),
+        Spot2("Spot 2", listOf(WEATHER) + (SPOT - WEATHER)),
+        Spot3("Spot 3", listOf(PRAYERS) + (SPOT - PRAYERS)),
+        Spot4("Spot 4", listOf(MARKETS) + (SPOT - MARKETS)),
+        Line("Under the channel", listOf(STORIES, CURRENCIES, PRAYERS, MARKETS, NOTHING)),
+    }
+
+    data class Choices(val picked: Map<Section, String>) {
+        operator fun get(section: Section): String = picked[section]?.takeIf { it in section.options } ?: section.options.first()
+        val spots get() = listOf(Section.Spot1, Section.Spot2, Section.Spot3, Section.Spot4).map { get(it) }.filter { it != NOTHING }
+        val usesSecond get() = SECOND in spots
+        val accent get() = ACCENTS[get(Section.Accent)] ?: ACCENTS.values.first()
+    }
+
+    private var prefs: SharedPreferences? = null
+    private val _choices = MutableStateFlow(Choices(emptyMap()))
+    val choices: StateFlow<Choices> = _choices.asStateFlow()
+
+    fun init(context: Context) {
+        if (prefs != null) return
+        val p = context.applicationContext.getSharedPreferences("my_screen", Context.MODE_PRIVATE)
+        prefs = p
+        _choices.value = Choices(Section.entries.mapNotNull { s -> p.getString(s.name, null)?.let { s to it } }.toMap())
+    }
+
+    fun next(section: Section) {
+        val now = _choices.value
+        val list = section.options
+        val picked = list[(list.indexOf(now[section]) + 1) % list.size]
+        _choices.value = Choices(now.picked + (section to picked))
+        prefs?.edit()?.putString(section.name, picked)?.apply()
+    }
+
+    fun reset() {
+        _choices.value = Choices(emptyMap())
+        prefs?.edit()?.clear()?.apply()
+    }
+}
