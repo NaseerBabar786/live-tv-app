@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livetv.app.data.YouTube
+import com.livetv.app.games.GamesScreen
 import com.livetv.app.player.PlayerScreen
 import com.livetv.app.ui.YouTubePlayer
 import com.livetv.app.ui.ChannelListScreen
@@ -33,6 +34,9 @@ class MainActivity : ComponentActivity() {
 
     /** Live TV's Movies & Series screen is open. */
     private var showVod by mutableStateOf(false)
+
+    /** Live TV's Games section is open. */
+    private var showGames by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +59,9 @@ class MainActivity : ComponentActivity() {
     private fun AppContent() {
         val state by viewModel.state.collectAsStateWithLifecycle()
         val playing = state.playing
-        if (showVod && playing == null) {
+        if (showGames && playing == null) {
+            GamesScreen(onClose = { showGames = false })
+        } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false })
         } else if (playing != null && YouTube.videoId(playing.url) != null) {
             YouTubePlayer(YouTube.videoId(playing.url)!!, onBack = viewModel::stop)
@@ -89,6 +95,7 @@ class MainActivity : ComponentActivity() {
                 settings = { onDismiss -> EditionSettings(state, viewModel, onDismiss) },
                 onTryDemo = viewModel::addDemoPlaylist,
                 onOpenVod = if (Edition.HAS_VOD) ({ showVod = true }) else null,
+                onOpenGames = if (Edition.LIVE_TV) ({ showGames = true }) else null,
                 onWatch = viewModel::watched,
             )
         }

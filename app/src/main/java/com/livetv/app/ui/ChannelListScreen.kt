@@ -97,6 +97,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
@@ -174,6 +175,8 @@ fun ChannelListScreen(
     onTryDemo: () -> Unit = {},
     /** Opens the Library (movies, series and shows); null hides its button. */
     onOpenVod: (() -> Unit)? = null,
+    /** Opens the Games section; null hides its button. */
+    onOpenGames: (() -> Unit)? = null,
     /** A channel picked to play in 1+List's player, remembered as the last one watched. */
     onWatch: (Channel) -> Unit = {},
 ) {
@@ -534,6 +537,22 @@ fun ChannelListScreen(
                         ) {
                             Icon(Icons.Filled.VideoLibrary, contentDescription = null)
                             Text("Library", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                        }
+                    }
+                    if (onOpenGames != null) {
+                        if (wideScreen) {
+                            TextButton(
+                                onClick = onOpenGames,
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusGlow(),
+                            ) {
+                                Icon(Icons.Filled.SportsEsports, contentDescription = null)
+                                Text("Games", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
+                        } else {
+                            IconButton(onClick = onOpenGames, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.Filled.SportsEsports, contentDescription = "Games")
+                            }
                         }
                     }
                     IconButton(
