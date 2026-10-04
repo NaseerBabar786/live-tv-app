@@ -246,7 +246,6 @@ fun ChannelListScreen(
     val newsMode = wideScreen && tileLayout == TileLayout.News
     var newsBar by remember { mutableStateOf(false) }
     val newsFocus = remember { FocusRequester() }
-    val hideBars = fullTiles || (newsMode && !newsBar)
     var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
     // TVs and tablets show a fixed window of tiles that slides along the list one channel at a
     // time; [windowStart] is the channel in the first tile.
@@ -261,6 +260,7 @@ fun ChannelListScreen(
     SideEffect { sessionTileIds = twoIds; sessionTilesFull = tilesFull }
     // 1+3 has no full screen view: OK on its big player opens the channel straight away.
     val fullTiles = tilesFull && windowed && tileLayout != TileLayout.Five
+    val hideBars = fullTiles || (newsMode && !newsBar)
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
     val window = when {
         !windowed -> emptyList()
