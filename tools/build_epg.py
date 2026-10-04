@@ -79,8 +79,8 @@ def our_keys():
         for line in open(m3u, encoding="utf-8", errors="ignore"):
             if line.startswith("#EXTINF") and "," in line:
                 keys.add(key(line.rsplit(",", 1)[1].strip()))
-    keys.discard("")
-    return keys
+    # Very short names ("10 TV" -> "10") would match unrelated channels.
+    return {k for k in keys if len(k) >= 3}
 
 
 def when(text):
