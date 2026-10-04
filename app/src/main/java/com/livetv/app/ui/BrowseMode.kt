@@ -95,7 +95,7 @@ private const val MAX_RECENT = 20
 private const val MAX_PER_ROW = 80
 
 /**
- * "Browse" mode: a home screen like a streaming app's. A rail of icons on the left (Search, Home,
+ * "Live TV Max" mode: a home screen like a streaming app's. A rail of icons on the left (Search, Home,
  * Favorites, Games, the layout button and Settings), a search bar on top, and rows of big channel
  * cards: Continue watching, Favorites, then one row per country and per genre. The highlighted
  * card plays the channel live after a moment; OK opens it full screen and Back returns here.

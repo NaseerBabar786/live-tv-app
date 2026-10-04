@@ -1808,7 +1808,7 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     /** One big player on the left with a channel list on the right. */
     List("1+List", 1, 1),
     /** A home screen like a streaming app's: an icon rail, a search bar and rows of big channel cards. */
-    Browse("Browse", 1, 1),
+    Browse("Live TV Max", 1, 1),
     /** One big player (top left, 85% wide) and small ones around it; sound only from the big one. */
     Five("1+3", 4, 1),
     Two("1×2", 2, 1),
