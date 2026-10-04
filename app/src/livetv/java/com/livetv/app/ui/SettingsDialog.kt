@@ -211,6 +211,8 @@ fun SettingsDialog(
                 ) { pickingCountries = true }
 
                 HorizontalDivider()
+                ThemeSection()
+                HorizontalDivider()
                 WeatherCitySection(onPick = { pickingCity = true })
 
                 HorizontalDivider()

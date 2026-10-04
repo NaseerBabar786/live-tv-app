@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 
-/** Bright highlight colour for whatever the TV remote's cursor is on. */
-val FocusColor = Color(0xFFFFD600)
+/** Bright highlight colour (the theme's; yellow in Midnight) for whatever the TV remote's cursor is on. */
+val FocusColor: Color get() = Themes.current.focus
 
 val PillShape: Shape = CircleShape
 val ChipShape: Shape = RoundedCornerShape(8.dp)

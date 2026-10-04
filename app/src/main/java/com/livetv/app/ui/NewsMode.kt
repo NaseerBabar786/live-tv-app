@@ -44,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -79,10 +80,10 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
 
-private val Panel = Color(0xFF0B1222)
-private val Line = Color(0xFF1E2C4A)
-private val Muted = Color(0xFF8FA6CF)
-private val Soft = Color(0xFFB8C6E0)
+private val Panel: Color get() = Themes.current.panel
+private val Line: Color get() = Themes.current.line
+private val Muted: Color get() = Themes.current.muted
+private val Soft: Color get() = Themes.current.soft
 private val Up = Color(0xFF4CD964)
 private val Down = Color(0xFFFF5A5F)
 private val StoriesRed = Color(0xFFC62828)
@@ -99,6 +100,8 @@ private val StoriesRed = Color(0xFFC62828)
 fun NewsMode(
     /** CP24's look instead of News mode's. */
     cp24: Boolean = false,
+    /** The modern Home screen instead of News mode's. */
+    home: Boolean = false,
     channels: List<Channel>,
     all: List<Channel>,
     selectedId: String?,
@@ -169,7 +172,13 @@ fun NewsMode(
     val newsChoices by NewsScreen.choices.collectAsStateWithLifecycle()
     val cp24Choices by Cp24Screen.choices.collectAsStateWithLifecycle()
     val choices = newsChoices
-    val usesSecond = if (cp24) cp24Choices[Cp24Screen.Section.Middle] == Cp24Screen.SECOND else choices.usesSecond
+    // Home: Right shows a second channel in the corner of the main one (and moves it along), Left hides it.
+    var pip by remember { mutableStateOf(false) }
+    val usesSecond = when {
+        cp24 -> cp24Choices[Cp24Screen.Section.Middle] == Cp24Screen.SECOND
+        home -> pip
+        else -> choices.usesSecond
+    }
     // The second channel, when one of the spots shows it: Left and Right change it.
     var secondId by remember { mutableStateOf(NewsScreen.secondId) }
     val second = if (!usesSecond) null else
@@ -185,6 +194,7 @@ fun NewsMode(
     // The second channel pauses while the main one is struggling, like the sponsor video.
     val secondPlaying = playing && now >= videoOkAt
 
+    val density = androidx.compose.ui.platform.LocalDensity.current
     var playerFocused by remember { mutableStateOf(false) }
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         // The player takes three quarters of the width (less if the screen is unusually tall),
@@ -193,9 +203,12 @@ fun NewsMode(
         val playerHeight = playerWidth * 9f / 16f
         val sideWidth = maxWidth - playerWidth
         val bottomHeight = maxHeight - playerHeight
-        // Text sizes follow the screen, so a 4K TV and a tablet look the same.
-        val unit = (maxHeight.value / 540f).coerceIn(0.7f, 1.6f)
-        fun s(v: Float): TextUnit = (v * unit).sp
+        // Text sizes follow the screen, so a 4K TV and a tablet look the same. The layout is drawn
+        // for a 960×540 screen: on squarer screens (a folding phone open) the width decides, so
+        // the side panels' text still fits. Text ignores the phone's font size setting, which
+        // would push it out of the fixed panels.
+        val unit = minOf(maxHeight.value / 540f, maxWidth.value / 960f).coerceIn(0.5f, 1.6f)
+        fun s(v: Float): TextUnit = with(density) { (v * unit).dp.toSp() }
         fun d(v: Float): Dp = (v * unit).dp
 
         // The live channel (Up and Down change it, OK opens it full screen).
@@ -225,6 +238,8 @@ fun NewsMode(
                             e.type != KeyEventType.KeyDown -> false
                             e.key == Key.DirectionUp || e.key == Key.ChannelUp -> { step(-1); true }
                             e.key == Key.DirectionDown || e.key == Key.ChannelDown -> { step(1); true }
+                            home && e.key == Key.DirectionLeft -> { pip = false; true }
+                            home && e.key == Key.DirectionRight -> { if (pip) stepSecond(1) else pip = true; true }
                             e.key == Key.DirectionLeft -> { if (usesSecond) stepSecond(-1); true }
                             e.key == Key.DirectionRight -> { if (usesSecond) stepSecond(1); true }
                             else -> false
@@ -289,7 +304,17 @@ fun NewsMode(
             }
         }
 
-        if (cp24) Cp24Layout(
+        if (home) HomeLayout(
+            live = { Live(it) },
+            second = second,
+            secondPlaying = secondPlaying,
+            markets = markets,
+            rates = rates,
+            gold = gold,
+            allowVideo = now >= videoOkAt,
+            s = ::s,
+            d = ::d,
+        ) else if (cp24) Cp24Layout(
             live = { Live(it) },
             selected = selected,
             choices = cp24Choices,
@@ -1211,4 +1236,264 @@ private fun untilText(minutes: Int) = when {
     minutes < 60 -> "$minutes min"
     minutes % 60 == 0 -> "${minutes / 60} h"
     else -> "${minutes / 60} h ${minutes % 60} min"
+}
+
+private val HomeTop: Color get() = Themes.current.homeTop
+private val HomeBottom: Color get() = Themes.current.homeBottom
+private val Glass = Color.White.copy(alpha = 0.07f)
+private val GlassEdge = Color.White.copy(alpha = 0.10f)
+
+/**
+ * Home mode: a modern screen of rounded cards around the live channel. The clock with the Islamic
+ * date; the weather now and for the rest of the day; the next prayer with a countdown (sehri and
+ * iftar in Ramadan) and a reminder over the channel ten minutes before each prayer; top stories,
+ * markets, currency rates and the sponsor along the bottom; the advertising line under them.
+ * Right shows a second channel in the corner of the main one (Right again changes it, Left hides it).
+ */
+@Composable
+private fun HomeLayout(
+    live: @Composable (Modifier) -> Unit,
+    second: Channel?,
+    secondPlaying: Boolean,
+    markets: List<News.Market>?,
+    rates: News.Rates?,
+    gold: Double?,
+    allowVideo: Boolean,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+) {
+    val context = LocalContext.current
+    val forecast = if (Edition.HAS_WEATHER) rememberLoaded(30 * 60_000L) { News.forecast() } else null
+    val city = rememberLoaded(24 * 60 * 60_000L) { News.place()?.city?.takeIf { it.isNotBlank() } }
+    val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
+    val minute = rememberMinute()
+    val is24 = remember { DateFormat.is24HourFormat(context) }
+    val shape = androidx.compose.foundation.shape.RoundedCornerShape(d(14f))
+    fun Modifier.card() = this.clip(shape).background(Glass).border(1.dp, GlassEdge, shape)
+    BoxWithConstraints(
+        Modifier
+            .fillMaxSize()
+            .background(androidx.compose.ui.graphics.Brush.linearGradient(listOf(HomeTop, HomeBottom))),
+    ) {
+        val gap = d(10f)
+        val tickerHeight = d(24f)
+        val playerWidth = minOf((maxWidth - gap * 3) * 0.66f, (maxHeight - gap * 4 - tickerHeight - d(110f)) * 16f / 9f)
+        val playerHeight = playerWidth * 9f / 16f
+        Column(Modifier.fillMaxSize().padding(gap), verticalArrangement = Arrangement.spacedBy(gap)) {
+            Row(Modifier.fillMaxWidth().height(playerHeight), horizontalArrangement = Arrangement.spacedBy(gap)) {
+                Box(Modifier.width(playerWidth).fillMaxHeight().clip(shape)) {
+                    live(Modifier.fillMaxSize())
+                    // A gentle reminder ten minutes (or less) before each prayer.
+                    nextPrayer(today?.prayers.orEmpty(), minute)?.let { (p, until) ->
+                        if (until in 1..10) {
+                            Text(
+                                "🕌  ${prayerName(p.name)} in $until min",
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = s(14f),
+                                modifier = Modifier
+                                    .align(Alignment.TopCenter)
+                                    .padding(top = d(12f))
+                                    .background(FocusColor, androidx.compose.foundation.shape.RoundedCornerShape(50))
+                                    .padding(horizontal = d(16f), vertical = d(6f)),
+                            )
+                        }
+                    }
+                    // The second channel, in the bottom right corner.
+                    if (second != null) {
+                        Box(
+                            Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(d(10f))
+                                .width(playerWidth * 0.3f)
+                                .clip(androidx.compose.foundation.shape.RoundedCornerShape(d(8f)))
+                                .border(2.dp, Color.White.copy(alpha = 0.8f), androidx.compose.foundation.shape.RoundedCornerShape(d(8f))),
+                        ) {
+                            SecondChannel(second, secondPlaying, s) { 0.dp }
+                        }
+                    }
+                }
+                Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(gap)) {
+                    HomeClock(Modifier.fillMaxWidth().card(), today, is24, s, d)
+                    HomeWeather(Modifier.fillMaxWidth().card(), forecast, city, s, d)
+                    HomePrayer(Modifier.fillMaxWidth().weight(1f).card(), today, minute, is24, s, d)
+                }
+            }
+            Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(gap)) {
+                HomeStories(Modifier.weight(2f).fillMaxHeight().card(), s, d)
+                Box(Modifier.weight(1f).fillMaxHeight().card().padding(horizontal = d(10f))) {
+                    Markets(Modifier.fillMaxSize(), markets, s, d)
+                }
+                Box(Modifier.weight(1f).fillMaxHeight().card().padding(horizontal = d(10f))) {
+                    CurrencyList(Modifier.fillMaxSize(), rates, gold, s, d)
+                }
+                BoxWithConstraints(Modifier.fillMaxHeight()) {
+                    Box(Modifier.width(maxHeight * 16f / 9f).fillMaxHeight().clip(shape)) {
+                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                    }
+                }
+            }
+            Box(Modifier.fillMaxWidth().height(tickerHeight).clip(shape).background(Color.Black.copy(alpha = 0.4f)).padding(horizontal = d(12f))) {
+                EditionTicker(Modifier.fillMaxSize(), big = false, always = true)
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomeClock(modifier: Modifier, today: News.Today?, is24: Boolean, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    var now by remember { mutableStateOf(Date()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            now = Date()
+            delay(1_000 - System.currentTimeMillis() % 1_000)
+        }
+    }
+    val time = remember(now) { SimpleDateFormat(if (is24) "H:mm" else "h:mm", Locale.getDefault()).format(now) }
+    val seconds = remember(now) { SimpleDateFormat(":ss", Locale.getDefault()).format(now) }
+    val amPm = remember(now) { if (is24) "" else SimpleDateFormat("a", Locale.getDefault()).format(now) }
+    val date = remember(now) { SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(now) }
+    Column(modifier.padding(horizontal = d(14f), vertical = d(8f))) {
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(time, color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(40f), lineHeight = s(42f))
+            Text(seconds, color = Soft, fontWeight = FontWeight.Bold, fontSize = s(18f), modifier = Modifier.padding(bottom = d(5f)))
+            if (amPm.isNotEmpty()) Text(" $amPm", color = Soft, fontWeight = FontWeight.Bold, fontSize = s(14f), modifier = Modifier.padding(bottom = d(6f)))
+        }
+        Text(date, color = Color.White, fontSize = s(12f), maxLines = 1)
+        today?.hijri?.let { Text("☪ ${it.label}", color = FocusColor, fontSize = s(11f), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+    }
+}
+
+@Composable
+private fun HomeWeather(modifier: Modifier, forecast: News.Forecast?, city: String?, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    Column(modifier.padding(horizontal = d(14f), vertical = d(8f))) {
+        if (forecast == null) {
+            Text(city?.let { "📍 $it" } ?: "Weather", color = Soft, fontSize = s(12f))
+            return@Column
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(forecast.icon, fontSize = s(28f))
+            Spacer(Modifier.width(d(8f)))
+            Text("${forecast.temperature}°", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(30f))
+            Spacer(Modifier.width(d(10f)))
+            Column(Modifier.weight(1f)) {
+                city?.let { Text("📍 $it", color = Color.White, fontSize = s(12f), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                Text(
+                    listOfNotNull("feels ${forecast.feelsLike}°", forecast.humidity?.let { "💧$it%" }).joinToString("  ·  "),
+                    color = Soft,
+                    fontSize = s(10f),
+                    maxLines = 1,
+                )
+            }
+        }
+        val parts = forecast.periods.take(4).map { Triple(it.name, it.icon, it.temperature) }
+            .ifEmpty { forecast.days.take(4).map { Triple(it.name, it.icon, it.high) } }
+        Row(Modifier.fillMaxWidth().padding(top = d(4f)), horizontalArrangement = Arrangement.SpaceBetween) {
+            parts.forEach { (name, icon, t) ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(name.lowercase().replaceFirstChar { it.uppercase() } + " ", color = Soft, fontSize = s(10f))
+                    Text(icon, fontSize = s(12f))
+                    Text(" $t°", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(11f))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomePrayer(modifier: Modifier, today: News.Today?, minute: Int, is24: Boolean, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val prayers = today?.prayers.orEmpty()
+    Column(modifier.padding(horizontal = d(14f), vertical = d(8f)), verticalArrangement = Arrangement.SpaceBetween) {
+        val next = nextPrayer(prayers, minute)
+        if (next == null) {
+            Text("PRAYER TIMES", color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f))
+            Text("Loading…", color = Soft, fontSize = s(11f))
+            return@Column
+        }
+        val (p, until) = next
+        val ramadan = today?.hijri?.month == 9
+        Row(verticalAlignment = Alignment.Bottom) {
+            Column(Modifier.weight(1f)) {
+                Text("NEXT PRAYER", color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f))
+                Text(
+                    "${prayerName(p.name)}  ${shownTime(p.time, is24)}",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = s(20f),
+                    maxLines = 1,
+                )
+            }
+            Text("in ${untilText(until)}", color = FocusColor, fontWeight = FontWeight.Bold, fontSize = s(14f), maxLines = 1)
+        }
+        // How far along it is from the last prayer to the next one.
+        val previous = prayers.lastOrNull { prayerMinutes(it.time) <= minute } ?: prayers.last()
+        val span = Math.floorMod(prayerMinutes(p.time) - prayerMinutes(previous.time), 24 * 60).coerceAtLeast(1)
+        val done = (1f - until.toFloat() / span).coerceIn(0f, 1f)
+        Box(Modifier.fillMaxWidth().height(d(5f)).clip(androidx.compose.foundation.shape.RoundedCornerShape(50)).background(Color.White.copy(alpha = 0.12f))) {
+            Box(Modifier.fillMaxWidth(done).fillMaxHeight().background(FocusColor))
+        }
+        if (ramadan) {
+            val fajr = prayers.firstOrNull { it.name == "Fajr" }
+            val maghrib = prayers.firstOrNull { it.name == "Maghrib" }
+            val text = when {
+                maghrib != null && prayerMinutes(maghrib.time) > minute ->
+                    "🌙 Iftar in ${untilText(prayerMinutes(maghrib.time) - minute)}"
+                fajr != null -> "🌙 Sehri ends at ${shownTime(fajr.time, is24)}"
+                else -> null
+            }
+            text?.let { Text(it, color = FocusColor, fontSize = s(11f), maxLines = 1) }
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            prayers.forEach { q ->
+                val isNext = q == p
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(prayerName(q.name), color = if (isNext) FocusColor else Muted, fontSize = s(9f), maxLines = 1)
+                    Text(shownTime(q.time, is24), color = if (isNext) FocusColor else Color.White, fontWeight = FontWeight.Bold, fontSize = s(11f), maxLines = 1)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomeStories(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val stories = rememberLoaded(15 * 60_000L) { News.headlines().takeIf { it.isNotEmpty() } }
+    var turn by remember { mutableIntStateOf(0) }
+    LaunchedEffect(stories) {
+        while (true) {
+            delay(12_000)
+            turn++
+        }
+    }
+    val story = stories?.let { it[Math.floorMod(turn, it.size)] }
+    Column(modifier.padding(horizontal = d(14f), vertical = d(10f)), verticalArrangement = Arrangement.SpaceBetween) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(d(8f)).clip(androidx.compose.foundation.shape.RoundedCornerShape(50)).background(Cp24Red))
+            Spacer(Modifier.width(d(6f)))
+            Text("TOP STORIES" + (story?.let { " · ${it.source.uppercase()}" } ?: ""), color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f), maxLines = 1)
+        }
+        Text(
+            story?.title ?: Edition.APP_NAME,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = s(16f),
+            lineHeight = s(20f),
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis,
+        )
+        // Little dots: which of the stories this is.
+        stories?.let { list ->
+            Row(horizontalArrangement = Arrangement.spacedBy(d(4f))) {
+                val at = Math.floorMod(turn, list.size)
+                for (i in 0 until minOf(list.size, 12)) {
+                    Box(
+                        Modifier
+                            .size(d(5f))
+                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(50))
+                            .background(if (i == at % 12) FocusColor else Color.White.copy(alpha = 0.2f)),
+                    )
+                }
+            }
+        }
+    }
 }
