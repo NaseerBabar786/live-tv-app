@@ -87,6 +87,11 @@
     <div id="posts"><p class="small">Loading…</p></div>
     </div>
     <div id="inboxPane" class="hidden">
+      <div id="newMsg" class="panel hidden" style="margin-bottom:14px">
+        <label for="findViewer"><b>＋ New message</b></label>
+        <input id="findViewer" type="search" placeholder="Find a viewer by name or email" style="width:100%;margin-top:6px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit">
+        <div id="viewerHits" style="margin-top:8px"></div>
+      </div>
       <div id="convos"></div>
       <div id="thread" class="hidden">
         <div class="row" style="margin-bottom:12px"><button class="btn" id="backToList">‹ All messages</button><b id="threadWho"></b></div>
@@ -143,6 +148,11 @@ if (!configured) {
     load();
     refreshUnread();
     if (location.hash === "#messages") openTab("inbox");
+    if (admin && location.hash.startsWith("#to=")) {
+      const h = new URLSearchParams(location.hash.slice(1));
+      openTab("inbox", false);
+      openThread(h.get("to"), h.get("name") || "Live TV viewer", h.get("email") || "");
+    }
   });
 
   const fmt = ts => ts?.toDate ? ts.toDate().toLocaleString([], { dateStyle: "medium", timeStyle: "short" }) : "";
@@ -209,6 +219,7 @@ if (!configured) {
     if (fromAdmin) {
       head.userUnread = true;
       if (extra.name) head.name = extra.name;
+      if (extra.email) head.email = extra.email;
     } else {
       Object.assign(head, { adminUnread: true, userUnread: false, name: me.displayName || "Live TV viewer", email: me.email || "" });
     }
@@ -229,28 +240,52 @@ if (!configured) {
     $("unread").classList.toggle("hidden", !n);
   }
 
-  function openTab(which) {
+  function openTab(which, openFirst = true) {
     const inbox = which === "inbox";
     $("tabForum").classList.toggle("on", !inbox);
     $("tabInbox").classList.toggle("on", inbox);
     $("forumPane").classList.toggle("hidden", inbox);
     $("inboxPane").classList.toggle("hidden", !inbox);
     history.replaceState(null, "", inbox ? "#messages" : location.pathname);
-    if (inbox) admin ? listConvos() : openThread(me.uid, "Live TV team");
+    if (inbox && openFirst) admin ? listConvos() : openThread(me.uid, "Live TV team");
   }
   $("tabForum").onclick = () => openTab("forum");
   $("tabInbox").onclick = () => openTab("inbox");
   $("backToList").onclick = () => listConvos();
 
+  // The owner can start a conversation with any viewer who has signed in to the app.
+  let viewers = null;
+  $("findViewer").oninput = async () => {
+    const q = $("findViewer").value.trim().toLowerCase();
+    const box = $("viewerHits");
+    if (!q) { box.innerHTML = ""; return; }
+    if (!viewers) {
+      try { viewers = (await fs.getDocs(fs.collection(db, "users"))).docs.map(d => ({ uid: d.id, ...d.data() })); }
+      catch (e) { box.textContent = "Couldn't load viewers: " + e.message; return; }
+    }
+    const hits = viewers.filter(v => [v.name, v.email].join(" ").toLowerCase().includes(q)).slice(0, 8);
+    box.innerHTML = hits.length ? "" : '<p class="small">No viewer found.</p>';
+    hits.forEach(v => {
+      const b = document.createElement("button");
+      b.className = "convo";
+      b.innerHTML = `<div class="body"><div style="font-weight:800"></div><div class="last"></div></div><span class="small">Write ›</span>`;
+      b.querySelector(".body div").textContent = v.name || "Live TV viewer";
+      b.querySelector(".last").textContent = v.email || "";
+      b.onclick = () => { $("findViewer").value = ""; box.innerHTML = ""; openThread(v.uid, v.name || "Live TV viewer", v.email || ""); };
+      box.append(b);
+    });
+  };
+
   async function listConvos() {
     openUid = null;
+    $("newMsg").classList.toggle("hidden", !admin);
     $("thread").classList.add("hidden");
     const box = $("convos");
     box.classList.remove("hidden");
     box.innerHTML = '<p class="small">Loading…</p>';
     try {
       const snap = await fs.getDocs(fs.query(fs.collection(db, "inbox"), fs.orderBy("lastAt", "desc"), fs.limit(200)));
-      box.innerHTML = snap.empty ? '<p class="small">No messages yet. Use "✉ Reply privately" on a suggestion to message its writer.</p>' : "";
+      box.innerHTML = snap.empty ? '<p class="small">No messages yet. Find a viewer above, or use "✉ Reply privately" on a suggestion.</p>' : "";
       snap.forEach(c => {
         const d = c.data();
         const b = document.createElement("button");
@@ -268,6 +303,7 @@ if (!configured) {
   async function openThread(uid, who, email) {
     openUid = uid;
     $("convos").classList.toggle("hidden", true);
+    $("newMsg").classList.add("hidden");
     $("thread").classList.remove("hidden");
     $("backToList").classList.toggle("hidden", !admin);
     $("threadWho").textContent = admin ? who + (email ? " · " + email : "") : "";
@@ -278,7 +314,7 @@ if (!configured) {
     try {
       const snap = await fs.getDocs(fs.query(fs.collection(db, "inbox", uid, "messages"), fs.orderBy("createdAt", "asc"), fs.limit(500)));
       if (openUid !== uid) return;
-      chat.innerHTML = snap.empty ? '<p class="small">' + (admin ? "No messages yet." : "No messages yet. Write to the Live TV team below and we'll answer here.") + '</p>' : "";
+      chat.innerHTML = snap.empty ? '<p class="small">' + (admin ? "No messages yet. Write the first one below; it goes to their Messages in the app and here." : "No messages yet. Write to the Live TV team below and we'll answer here.") + '</p>' : "";
       snap.forEach(m => {
         const d = m.data();
         const mine = (d.from === "admin") === admin;
@@ -311,9 +347,10 @@ if (!configured) {
     if (!text || !openUid) return;
     $("msgSend").disabled = true;
     try {
-      await sendMessage(openUid, text);
+      const [who, email] = $("threadWho").textContent.split(" · ");
+      await sendMessage(openUid, text, { name: who, email });
       $("msgText").value = "";
-      await openThread(openUid, $("threadWho").textContent.split(" · ")[0] || "Live TV viewer", $("threadWho").textContent.split(" · ")[1]);
+      await openThread(openUid, who || "Live TV viewer", email);
       $("msgInfo").textContent = "Sent.";
     } catch (e) { $("msgInfo").textContent = "Couldn't send: " + e.message; }
     $("msgSend").disabled = false;

@@ -42,6 +42,11 @@ import com.livetv.app.account.Account
 import com.livetv.app.account.Conversation
 import com.livetv.app.account.Message
 import com.livetv.app.account.Messages
+import com.livetv.app.account.User
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import java.text.DateFormat
@@ -68,6 +73,8 @@ fun MessagesScreen(onClose: () -> Unit) {
     var error by remember { mutableStateOf<String?>(null) }
     var writing by remember { mutableStateOf(false) }
     var reload by remember { mutableIntStateOf(0) }
+    // The owner picking a viewer to start a conversation with.
+    var picking by remember { mutableStateOf(false) }
 
     LaunchedEffect(open, reload) {
         error = null
@@ -110,6 +117,9 @@ fun MessagesScreen(onClose: () -> Unit) {
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.weight(1f),
                         )
+                        if (open == null && admin) {
+                            Button(onClick = { picking = true }, modifier = Modifier.focusGlow()) { Text("＋ New message") }
+                        }
                         if (open != null) {
                             Button(onClick = { writing = true }, modifier = Modifier.focusGlow()) {
                                 Text(if (thread.isNullOrEmpty()) "＋ Write" else "＋ Reply")
@@ -119,7 +129,7 @@ fun MessagesScreen(onClose: () -> Unit) {
                     }
                     if (open == null) {
                         Text(
-                            "Private conversations with viewers. To start one, open a suggestion and choose ✉ Reply privately.",
+                            "Private conversations with viewers. Choose ＋ New message to write to anyone, or ✉ Reply privately on a suggestion.",
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     } else if (!admin) {
@@ -161,6 +171,17 @@ fun MessagesScreen(onClose: () -> Unit) {
                     }
                 }
             }
+            if (picking) {
+                ViewerPicker(
+                    load = { messages.viewers() },
+                    onPick = { v ->
+                        picking = false
+                        openName = v.name + if (v.email.isNotBlank()) " · ${v.email}" else ""
+                        open = v.uid
+                    },
+                    onDismiss = { picking = false },
+                )
+            }
             if (writing) {
                 val uid = open
                 WriteDialog(
@@ -170,7 +191,8 @@ fun MessagesScreen(onClose: () -> Unit) {
                         writing = false
                         if (uid != null) scope.launch {
                             try {
-                                messages.send(uid, text)
+                                val (name, email) = openName.split(" · ").let { it[0] to it.getOrElse(1) { "" } }
+                                messages.send(uid, text, toName = if (admin) name else "", toEmail = if (admin) email else "")
                                 reload++
                             } catch (e: CancellationException) {
                                 throw e
@@ -249,6 +271,62 @@ private fun Bubble(m: Message, mine: Boolean, admin: Boolean) {
             m.createdAt?.let { Text(formatWhen(it), style = MaterialTheme.typography.bodySmall, color = ink.copy(alpha = 0.75f)) }
         }
     }
+}
+
+/** The owner's list of viewers to write to, with a search box. */
+@Composable
+private fun ViewerPicker(load: suspend () -> List<User>, onPick: (User) -> Unit, onDismiss: () -> Unit) {
+    var all by remember { mutableStateOf<List<User>?>(null) }
+    var failed by remember { mutableStateOf<String?>(null) }
+    var query by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        try {
+            all = load()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            failed = "Couldn't load viewers: ${e.message ?: "check the internet connection"}"
+        }
+    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("New message to…") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    placeholder = { Text("Find by name or email") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                failed?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                val list = all
+                if (list == null && failed == null) CircularProgressIndicator()
+                if (list != null) {
+                    val q = query.trim().lowercase()
+                    val hits = list.filter { q.isEmpty() || "${it.name} ${it.email}".lowercase().contains(q) }
+                    LazyColumn(Modifier.heightIn(max = 360.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        items(hits, key = { it.uid }) { v ->
+                            Column(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .focusGlow(RoundedCornerShape(10.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(10.dp))
+                                    .clickable { onPick(v) }
+                                    .padding(10.dp),
+                            ) {
+                                Text(v.name, fontWeight = FontWeight.Bold)
+                                if (v.email.isNotBlank()) Text(v.email, style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Cancel") } },
+    )
 }
 
 /** A small red "New" label. */

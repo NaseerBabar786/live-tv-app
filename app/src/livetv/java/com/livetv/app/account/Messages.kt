@@ -53,6 +53,12 @@ class Messages(private val account: Account) {
         }
     }
 
+    /** Everyone who has signed in to the app, most recently seen first: the owner can write to any of them. */
+    suspend fun viewers(): List<User> = withContext(Dispatchers.IO) {
+        Firestore.list("", "users", newestFirst = true, limit = 1000, token = account.token(), orderBy = "lastOpened")
+            .map { (id, f) -> User(id, f.str("name").ifBlank { "Live TV viewer" }, f.str("email")) }
+    }
+
     suspend fun messages(uid: String): List<Message> = withContext(Dispatchers.IO) {
         Firestore.list("inbox/$uid", "messages", newestFirst = false, limit = 500, token = account.token()).map { (id, f) ->
             Message(id, f.str("from") == "admin", f.str("name"), f.str("text"), f.str("quote"), f.time("createdAt"))
@@ -76,7 +82,7 @@ class Messages(private val account: Account) {
     }
 
     /** Sends [text] to the conversation of viewer [uid] (the viewer's own uid when they write). */
-    suspend fun send(uid: String, text: String, toName: String = "", quote: String = "") = withContext(Dispatchers.IO) {
+    suspend fun send(uid: String, text: String, toName: String = "", quote: String = "", toEmail: String = "") = withContext(Dispatchers.IO) {
         val me = account.user.value ?: error("Not signed in")
         val fromAdmin = account.isAdmin && uid != me.uid
         val t = account.token()
@@ -100,6 +106,7 @@ class Messages(private val account: Account) {
         if (fromAdmin) {
             head["userUnread"] = true
             if (toName.isNotBlank()) head["name"] = toName
+            if (toEmail.isNotBlank()) head["email"] = toEmail
         } else {
             head["adminUnread"] = true
             head["userUnread"] = false
