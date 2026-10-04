@@ -21,8 +21,8 @@ android {
         create("livetv") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetv"
-            versionCode = 138
-            versionName = "1.9.0"
+            versionCode = 139
+            versionName = "1.9.1"
             // The TV sign-in client secret comes from the TV_CLIENT_SECRET repository secret,
             // so it stays out of the public code.
             buildConfigField("String", "TV_CLIENT_SECRET", "\"${System.getenv("TV_CLIENT_SECRET") ?: ""}\"")
@@ -113,6 +113,7 @@ dependencies {
     "livetvImplementation"("androidx.credentials:credentials:1.3.0")
     "livetvImplementation"("androidx.credentials:credentials-play-services-auth:1.3.0")
     "livetvImplementation"("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    "livetvImplementation"("com.google.zxing:core:3.5.3")
     // Live TV Plus Premium: a Google Play subscription.
     "plusImplementation"("com.android.billingclient:billing-ktx:7.1.1")
     debugImplementation(libs.androidx.compose.ui.tooling)

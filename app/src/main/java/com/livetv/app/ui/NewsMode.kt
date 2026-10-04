@@ -150,6 +150,11 @@ fun NewsMode(
     // Weather and prayer times for where this device is (asks once for its location).
     DeviceLocation()
 
+    // Loaded once here: the markets panel and the gold-per-tola line both use them.
+    val markets = rememberLoaded(5 * 60_000L) { News.markets().takeIf { it.isNotEmpty() } }
+    val rates = rememberLoaded(60 * 60_000L) { News.rates() }
+    val gold = markets?.firstOrNull { it.name.startsWith("Gold") }?.price
+
     var playerFocused by remember { mutableStateOf(false) }
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         // The player takes three quarters of the width (less if the screen is unusually tall),
@@ -256,7 +261,7 @@ fun NewsMode(
                 Column(Modifier.fillMaxWidth().height(bottomHeight).background(Panel)) {
                     Headlines(Modifier.fillMaxWidth().weight(1.35f), ::s, ::d)
                     Divider()
-                    InfoRow(Modifier.fillMaxWidth().weight(1f), ::s, ::d)
+                    InfoRow(Modifier.fillMaxWidth().weight(1f), rates, gold, ::s, ::d)
                     Divider()
                     Box(Modifier.fillMaxWidth().weight(0.9f).background(Color(0xFF05070D)).padding(horizontal = d(12f))) {
                         EditionTicker(Modifier.fillMaxSize(), big = true, always = true)
@@ -265,9 +270,11 @@ fun NewsMode(
             }
             // Down the right: clock and weather, markets, prayer times; the sponsor in the corner.
             Column(Modifier.width(sideWidth).fillMaxHeight().background(Panel)) {
+                // The prayer times always keep their place at the bottom; the markets show as
+                // many rows as fit between them and the weather.
                 Column(Modifier.fillMaxWidth().height(playerHeight).padding(horizontal = d(12f))) {
                     ClockWeather(::s, ::d)
-                    Markets(::s, ::d)
+                    Markets(Modifier.fillMaxWidth().weight(1f), markets, ::s, ::d)
                     Prayers(::s, ::d)
                 }
                 Box(Modifier.fillMaxWidth().height(bottomHeight).padding(d(4f)), contentAlignment = Alignment.Center) {
@@ -343,37 +350,42 @@ private fun ClockWeather(s: (Float) -> TextUnit, d: (Float) -> Dp) {
 }
 
 @Composable
-private fun Markets(s: (Float) -> TextUnit, d: (Float) -> Dp) {
-    val markets = rememberLoaded(5 * 60_000L) { News.markets().takeIf { it.isNotEmpty() } } ?: return
-    Column(Modifier.fillMaxWidth().padding(vertical = d(6f))) {
-        Text("MARKETS", color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f))
-        markets.forEach { m ->
-            Row(Modifier.fillMaxWidth().padding(top = d(2f)), verticalAlignment = Alignment.CenterVertically) {
-                Text(m.name, color = Color.White, fontSize = s(12f), modifier = Modifier.weight(1f), maxLines = 1)
-                Text(
-                    if (m.name.startsWith("Gold")) "$" + "%,.0f".format(m.price) else "%,.0f".format(m.price),
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = s(12f),
-                )
-                Text(
-                    (if (m.change >= 0) "▲ " else "▼ ") + "%.1f%%".format(abs(m.change)),
-                    color = if (m.change >= 0) Up else Down,
-                    fontSize = s(11f),
-                    modifier = Modifier.width(d(56f)).padding(start = d(6f)),
-                    maxLines = 1,
-                )
+private fun Markets(modifier: Modifier, markets: List<News.Market>?, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    BoxWithConstraints(modifier) {
+        val rowHeight = d(18f)
+        val fits = ((maxHeight - d(30f)) / rowHeight).toInt()
+        if (markets == null || fits < 1) return@BoxWithConstraints
+        Column(Modifier.fillMaxWidth().padding(vertical = d(6f))) {
+            Text("MARKETS", color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f), modifier = Modifier.height(d(16f)))
+            markets.take(fits).forEach { m ->
+                Row(Modifier.fillMaxWidth().height(rowHeight), verticalAlignment = Alignment.CenterVertically) {
+                    Text(m.name, color = Color.White, fontSize = s(12f), modifier = Modifier.weight(1f), maxLines = 1)
+                    Text(
+                        if (m.name.startsWith("Gold")) "$" + "%,.0f".format(m.price) else "%,.0f".format(m.price),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = s(12f),
+                        maxLines = 1,
+                    )
+                    Text(
+                        (if (m.change >= 0) "▲ " else "▼ ") + "%.1f%%".format(abs(m.change)),
+                        color = if (m.change >= 0) Up else Down,
+                        fontSize = s(11f),
+                        modifier = Modifier.width(d(56f)).padding(start = d(6f)),
+                        maxLines = 1,
+                    )
+                }
             }
         }
+        Box(Modifier.align(Alignment.BottomCenter)) { Divider() }
     }
-    Divider()
 }
 
 @Composable
 private fun Prayers(s: (Float) -> TextUnit, d: (Float) -> Dp) {
     val context = LocalContext.current
     // Reloaded every few hours, so it moves on to the next day's times overnight.
-    val prayers = rememberLoaded(3 * 60 * 60_000L) { News.prayers() } ?: return
+    val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
     val city = rememberLoaded(24 * 60 * 60_000L) { News.place()?.city?.takeIf { it.isNotBlank() } }
     var minute by remember { mutableIntStateOf(0) }
     LaunchedEffect(Unit) {
@@ -385,8 +397,10 @@ private fun Prayers(s: (Float) -> TextUnit, d: (Float) -> Dp) {
     }
     val is24 = remember { DateFormat.is24HourFormat(context) }
     fun minutes(t: String) = t.split(':').let { (it[0].toIntOrNull() ?: 0) * 60 + (it.getOrNull(1)?.toIntOrNull() ?: 0) }
+    fun shown(t: String) = if (is24) t else minutes(t).let { m -> "${(m / 60 + 11) % 12 + 1}:${"%02d".format(m % 60)}" }
+    val prayers = today?.prayers.orEmpty()
     val next = prayers.indexOfFirst { minutes(it.time) > minute }
-    Column(Modifier.fillMaxWidth().padding(vertical = d(6f))) {
+    Column(Modifier.fillMaxWidth().padding(top = d(6f), bottom = d(8f))) {
         Text(
             "PRAYER TIMES" + (city?.let { " · ${it.uppercase()}" } ?: ""),
             color = Muted,
@@ -396,18 +410,46 @@ private fun Prayers(s: (Float) -> TextUnit, d: (Float) -> Dp) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Row(Modifier.fillMaxWidth().padding(top = d(3f)), horizontalArrangement = Arrangement.SpaceBetween) {
-            prayers.forEachIndexed { i, p ->
-                val m = minutes(p.time)
-                val shown = if (is24) p.time else "${(m / 60 + 11) % 12 + 1}:${"%02d".format(m % 60)}"
-                val color = if (i == next) FocusColor else Color.White
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(p.name, color = if (i == next) FocusColor else Muted, fontSize = s(9f))
-                    Text(shown, color = color, fontWeight = FontWeight.Bold, fontSize = s(12f))
+        if (prayers.isEmpty()) {
+            Text("Loading…", color = Soft, fontSize = s(11f), modifier = Modifier.padding(top = d(3f)))
+        } else {
+            Row(Modifier.fillMaxWidth().padding(top = d(3f)), horizontalArrangement = Arrangement.SpaceBetween) {
+                prayers.forEachIndexed { i, p ->
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(if (p.name == "Dhuhr") "Zuhr" else p.name, color = if (i == next) FocusColor else Muted, fontSize = s(9f), maxLines = 1)
+                        Text(shown(p.time), color = if (i == next) FocusColor else Color.White, fontWeight = FontWeight.Bold, fontSize = s(12f), maxLines = 1)
+                    }
                 }
             }
         }
+        today?.hijri?.let { h ->
+            Text("☪ ${h.label}", color = Soft, fontSize = s(10f), maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = d(4f)))
+            islamicNote(h, prayers.firstOrNull { it.name == "Fajr" }?.time?.let(::shown), prayers.firstOrNull { it.name == "Maghrib" }?.time?.let(::shown))?.let {
+                Text(it, color = FocusColor, fontSize = s(10f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        }
     }
+}
+
+/**
+ * During Ramadan, when the fast starts and ends today; otherwise how far off Ramadan or the next
+ * Eid is, when it's within two months. Islamic months are 29 or 30 days, so the count is "about".
+ */
+private fun islamicNote(h: News.Hijri, fajr: String?, maghrib: String?): String? {
+    if (h.month == 9) {
+        return "Ramadan day ${h.day}" + (if (fajr != null && maghrib != null) " · Sehri $fajr · Iftar $maghrib" else "")
+    }
+    if (h.month == 10 && h.day <= 3) return "Eid Mubarak!"
+    if (h.month == 12 && h.day in 10..13) return "Eid Mubarak!"
+    fun daysTo(month: Int, day: Int): Int {
+        var months = month - h.month
+        if (months < 0 || (months == 0 && day < h.day)) months += 12
+        return (months * 29.53 + (day - h.day)).toInt()
+    }
+    val events = listOf("Ramadan" to daysTo(9, 1), "Eid al-Fitr" to daysTo(10, 1), "Eid al-Adha" to daysTo(12, 10))
+    val (name, days) = events.minBy { it.second }
+    if (days > 60) return null
+    return if (days <= 1) "$name starts about tomorrow" else "$name in about $days days"
 }
 
 /** One top story at a time, the next every 12 seconds. */
@@ -446,18 +488,47 @@ private fun Headlines(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> 
     }
 }
 
-/** Rupees for the viewer's money, and how to use the remote here. */
+/**
+ * The viewer's money against Asian currencies, a few at a time (the next few every 10 seconds),
+ * then the price of a tola of gold.
+ */
 @Composable
-private fun InfoRow(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp) {
-    val rates = rememberLoaded(60 * 60_000L) { News.rates() }
-    Row(modifier.padding(horizontal = d(12f)), verticalAlignment = Alignment.CenterVertically) {
-        rates?.let { r ->
-            Text("1 ${r.base} = ", color = Color.White, fontSize = s(13f))
-            r.pkr?.let { Text("Rs %.1f 🇵🇰".format(it), color = FocusColor, fontWeight = FontWeight.Bold, fontSize = s(13f)) }
-            if (r.pkr != null && r.inr != null) Text("   ·   ", color = Muted, fontSize = s(13f))
-            r.inr?.let { Text("₹%.1f 🇮🇳".format(it), color = FocusColor, fontWeight = FontWeight.Bold, fontSize = s(13f)) }
+private fun InfoRow(modifier: Modifier, rates: News.Rates?, gold: Double?, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+    val groups = remember(rates, gold) {
+        val r = rates ?: return@remember emptyList()
+        val shown = News.ASIAN.filter { it.code != r.base && r[it.code] != null }
+        val tola = listOf(r.base to "$", "PKR" to "Rs ", "INR" to "₹").mapNotNull { (code, symbol) ->
+            News.goldTola(gold, r, code)?.let { Triple(code, symbol, it) }
         }
-        Spacer(Modifier.weight(1f))
-        Text("▲▼ channel   OK full screen", color = Muted, fontSize = s(10f), maxLines = 1)
+        shown.chunked(5).map { group -> group.map { m -> "${m.flag} ${m.symbol}${amount(r[m.code]!!)}${if (m.symbol.isBlank()) " ${m.code}" else ""}" } } +
+            listOfNotNull(tola.takeIf { it.isNotEmpty() }?.map { (code, symbol, v) -> "$symbol${"%,.0f".format(v)} $code" })
+    }
+    var turn by remember { mutableIntStateOf(0) }
+    LaunchedEffect(groups) {
+        turn = 0
+        while (true) {
+            delay(10_000)
+            turn++
+        }
+    }
+    Row(modifier.padding(horizontal = d(12f)), verticalAlignment = Alignment.CenterVertically) {
+        if (rates == null || groups.isEmpty()) return@Row
+        val i = Math.floorMod(turn, groups.size)
+        val isGold = gold != null && i == groups.size - 1 && groups.size > 1
+        Text(
+            if (isGold) "GOLD 1 TOLA" else "1 ${rates.base} =",
+            color = if (isGold) FocusColor else Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = s(13f),
+            maxLines = 1,
+        )
+        Spacer(Modifier.width(d(14f)))
+        groups[i].forEachIndexed { n, item ->
+            if (n > 0) Text("  ·  ", color = Muted, fontSize = s(13f))
+            Text(item, color = if (isGold) Color.White else FocusColor, fontWeight = FontWeight.Bold, fontSize = s(13f), maxLines = 1)
+        }
     }
 }
+
+/** Big amounts without decimals (Rs 194), small ones with two (2.68 AED). */
+private fun amount(v: Double) = if (v >= 100) "%,.0f".format(v) else if (v >= 10) "%.1f".format(v) else "%.2f".format(v)
