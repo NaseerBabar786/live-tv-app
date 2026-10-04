@@ -26,7 +26,52 @@ object News {
 
     data class Prayer(val name: String, val time: String)
 
-    data class Rates(val base: String, val pkr: Double?, val inr: Double?)
+    /** How much of each currency one unit of [base] buys (e.g. "PKR" to 200.5). */
+    data class Rates(val base: String, val values: Map<String, Double>) {
+        operator fun get(code: String): Double? = values[code]
+    }
+
+    /** One currency in the rates row: its code, symbol and flag. */
+    data class Money(val code: String, val symbol: String, val flag: String)
+
+    /** Asian currencies shown against the viewer's money, a few at a time. */
+    val ASIAN = listOf(
+        Money("PKR", "Rs ", "🇵🇰"),
+        Money("INR", "₹", "🇮🇳"),
+        Money("BDT", "৳", "🇧🇩"),
+        Money("LKR", "Rs ", "🇱🇰"),
+        Money("NPR", "Rs ", "🇳🇵"),
+        Money("AFN", "؋", "🇦🇫"),
+        Money("AED", "", "🇦🇪"),
+        Money("SAR", "", "🇸🇦"),
+        Money("QAR", "", "🇶🇦"),
+        Money("PHP", "₱", "🇵🇭"),
+        Money("CNY", "¥", "🇨🇳"),
+        Money("MYR", "RM ", "🇲🇾"),
+    )
+
+    /** Today's Islamic date as aladhan gives it, e.g. day 12, month 4 "Rabīʿ al-thānī", year 1448. */
+    data class Hijri(val day: Int, val month: Int, val monthName: String, val year: Int) {
+        val label get() = "$day $monthName $year AH"
+    }
+
+    /** Today's prayer times and Islamic date. */
+    data class Today(val prayers: List<Prayer>, val hijri: Hijri?)
+
+    /** Grams in a tola and in a troy ounce (gold is priced per troy ounce). */
+    private const val TOLA_GRAMS = 11.6638
+    private const val OUNCE_GRAMS = 31.1035
+
+    /**
+     * The price of one tola of gold in [code], from the gold price in US dollars per ounce and
+     * [rates] (which must include USD and [code]); null when either is missing.
+     */
+    fun goldTola(goldUsdPerOunce: Double?, rates: Rates?, code: String): Double? {
+        val usd = rates?.get("USD") ?: return null
+        val wanted = if (code == rates.base) 1.0 else rates[code] ?: return null
+        if (goldUsdPerOunce == null || usd <= 0) return null
+        return goldUsdPerOunce / usd * wanted * TOLA_GRAMS / OUNCE_GRAMS
+    }
 
     data class Headline(val title: String, val source: String)
 
@@ -75,10 +120,22 @@ object News {
     }
 
     /** Today's five prayer times for the viewer's area (ISNA method, used across North America). */
-    fun prayers(): List<Prayer>? = runCatching {
+    fun today(): Today? = runCatching {
         val p = place() ?: return null
         val today = SimpleDateFormat("dd-MM-yyyy", Locale.US).format(Date())
-        parsePrayers(get("https://api.aladhan.com/v1/timings/$today?latitude=${p.latitude}&longitude=${p.longitude}&method=2"))
+        val json = get("https://api.aladhan.com/v1/timings/$today?latitude=${p.latitude}&longitude=${p.longitude}&method=2")
+        Today(parsePrayers(json), parseHijri(json))
+    }.getOrNull()
+
+    fun parseHijri(json: String): Hijri? = runCatching {
+        val h = JSONObject(json).getJSONObject("data").getJSONObject("date").getJSONObject("hijri")
+        val month = h.getJSONObject("month")
+        Hijri(
+            day = h.getString("day").toInt(),
+            month = month.getInt("number"),
+            monthName = month.optString("en"),
+            year = h.getString("year").toInt(),
+        )
     }.getOrNull()
 
     fun parsePrayers(json: String): List<Prayer> {
@@ -89,7 +146,7 @@ object News {
         }
     }
 
-    /** Rupees for one unit of the viewer's money (Canadian dollars in Canada). */
+    /** Other currencies for one unit of the viewer's money (Canadian dollars in Canada). */
     fun rates(): Rates? = runCatching {
         val base = when (place()?.country) {
             "US" -> "USD"
@@ -103,7 +160,8 @@ object News {
 
     fun parseRates(json: String, base: String): Rates {
         val r = JSONObject(json).getJSONObject("rates")
-        return Rates(base, r.optDouble("PKR").takeUnless { it.isNaN() }, r.optDouble("INR").takeUnless { it.isNaN() })
+        val values = r.keys().asSequence().mapNotNull { k -> r.optDouble(k).takeUnless { it.isNaN() }?.let { k to it } }.toMap()
+        return Rates(base, values)
     }
 
     /** Top stories from Pakistan, Canada and India, taken in turn so each source shows. */

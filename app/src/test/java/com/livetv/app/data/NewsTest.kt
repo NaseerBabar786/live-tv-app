@@ -30,9 +30,22 @@ class NewsTest {
 
     @Test
     fun rupeeRates() {
-        val r = News.parseRates("""{"result":"success","rates":{"CAD":1,"PKR":194.27,"INR":67.61}}""", "CAD")
-        assertEquals(194.27, r.pkr!!, 0.001)
-        assertEquals(67.61, r.inr!!, 0.001)
+        val r = News.parseRates("""{"result":"success","rates":{"CAD":1,"PKR":194.27,"INR":67.61,"USD":0.73}}""", "CAD")
+        assertEquals(194.27, r["PKR"]!!, 0.001)
+        assertEquals(67.61, r["INR"]!!, 0.001)
+        // Gold at 2000 USD an ounce is about 2740 CAD an ounce, so about 1027 CAD a tola.
+        assertEquals(1027.5, News.goldTola(2000.0, r, "CAD")!!, 1.0)
+        assertEquals(1027.5 * 194.27, News.goldTola(2000.0, r, "PKR")!!, 200.0)
+    }
+
+    @Test
+    fun hijriDate() {
+        val json = """{"data":{"timings":{},"date":{"hijri":{"day":"12","year":"1448",
+            "month":{"number":4,"en":"Rabīʿ al-thānī"}}}}}"""
+        val h = News.parseHijri(json)!!
+        assertEquals(12, h.day)
+        assertEquals(4, h.month)
+        assertEquals("12 Rabīʿ al-thānī 1448 AH", h.label)
     }
 
     @Test
