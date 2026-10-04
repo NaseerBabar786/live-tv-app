@@ -12,6 +12,7 @@ import androidx.compose.ui.text.withStyle
 import com.livetv.app.data.Cp24Screen
 import com.livetv.app.data.MyScreen
 import com.livetv.app.data.NewsScreen
+import com.livetv.app.data.ScreenLooks
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -177,8 +178,17 @@ fun NewsMode(
     val cp24Choices by Cp24Screen.choices.collectAsStateWithLifecycle()
     val myChoices by MyScreen.choices.collectAsStateWithLifecycle()
     val choices = newsChoices
-    // Home: Right shows a second channel in the corner of the main one (and moves it along), Left hides it.
-    var pip by remember { mutableStateOf(false) }
+    // Text sizes and the tiles' own looks (Home and My Screen).
+    val looks by ScreenLooks.values.collectAsStateWithLifecycle()
+    val kind = when {
+        mine -> ScreenKind.Mine
+        home -> ScreenKind.Home
+        cp24 -> ScreenKind.Cp24
+        else -> ScreenKind.News
+    }
+    val textScale = ScreenLooks.textScale(looks, kind.key)
+    // Home: a second channel in the corner of the main one, when it's switched on in its settings.
+    val pip = ScreenLooks.value(looks, ScreenLooks.HOME_CORNER, ScreenLooks.CORNER) == "On"
     val usesSecond = when {
         cp24 -> cp24Choices[Cp24Screen.Section.Middle] == Cp24Screen.SECOND
         home -> pip
@@ -203,8 +213,12 @@ fun NewsMode(
     val density = androidx.compose.ui.platform.LocalDensity.current
     var playerFocused by remember { mutableStateOf(false) }
     // The screen's own settings: hold OK (or Menu, or tap ⚙) to change what it shows, right here.
-    val customizable = !home
+    val customizable = true
+    // Home and My Screen: the arrows move onto the tiles beside the channel, and OK on one opens its own settings.
+    val tiles = home || mine
     var customizing by remember { mutableStateOf(false) }
+    var tileOpen by remember { mutableStateOf<TileRef?>(null) }
+    val tileFocus = remember { mutableMapOf<String, FocusRequester>() }
     var held by remember { mutableStateOf(false) }
     var hint by remember { mutableStateOf(customizable) }
     LaunchedEffect(Unit) {
@@ -223,7 +237,7 @@ fun NewsMode(
         // the side panels' text still fits. Text ignores the phone's font size setting, which
         // would push it out of the fixed panels.
         val unit = minOf(maxHeight.value / 540f, maxWidth.value / 960f).coerceIn(0.5f, 1.6f)
-        fun s(v: Float): TextUnit = with(density) { (v * unit).dp.toSp() }
+        fun s(v: Float): TextUnit = with(density) { (v * unit * textScale).dp.toSp() }
         fun d(v: Float): Dp = (v * unit).dp
 
         // The live channel (Up and Down change it, OK opens it full screen).
@@ -271,8 +285,8 @@ fun NewsMode(
                             e.type != KeyEventType.KeyDown -> false
                             e.key == Key.DirectionUp || e.key == Key.ChannelUp -> { step(-1); true }
                             e.key == Key.DirectionDown || e.key == Key.ChannelDown -> { step(1); true }
-                            home && e.key == Key.DirectionLeft -> { pip = false; true }
-                            home && e.key == Key.DirectionRight -> { if (pip) stepSecond(1) else pip = true; true }
+                            // Home and My Screen: Left and Right move onto the tiles.
+                            tiles && (e.key == Key.DirectionLeft || e.key == Key.DirectionRight) -> false
                             e.key == Key.DirectionLeft -> { if (usesSecond) stepSecond(-1); true }
                             e.key == Key.DirectionRight -> { if (usesSecond) stepSecond(1); true }
                             else -> false
@@ -337,7 +351,7 @@ fun NewsMode(
                     )
                     if (hint) {
                         Text(
-                            "Hold OK to customize this screen",
+                            if (tiles) "Hold OK to customize this screen · arrows to pick a tile" else "Hold OK to customize this screen",
                             color = Color.Black,
                             fontWeight = FontWeight.Bold,
                             fontSize = s(12f),
@@ -367,11 +381,7 @@ fun NewsMode(
 
         if (customizing) {
             ScreenSettings(
-                section = when {
-                    mine -> ScreenKind.Mine
-                    cp24 -> ScreenKind.Cp24
-                    else -> ScreenKind.News
-                },
+                section = kind,
                 onDone = {
                     customizing = false
                     held = false
@@ -379,26 +389,104 @@ fun NewsMode(
                 },
             )
         }
+        tileOpen?.let { ref ->
+            ScreenSettings(
+                section = kind,
+                tile = ref,
+                onNextSecond = { stepSecond(1) },
+                onDone = {
+                    tileOpen = null
+                    runCatching { tileFocus[ref.id]?.requestFocus() }
+                },
+            )
+        }
+
+        // One tile beside the channel on Home and My Screen: its look as the viewer set it, the
+        // remote's highlight, and OK for its settings. [k] shrinks its text and spacing to fit
+        // the room the tile has.
+        val info = if (tiles) rememberInfo(second, secondPlaying, markets, rates, gold) else null
+        @Composable
+        fun Tile(ref: TileRef, what: String, modifier: Modifier, usual: TileUsual, k: Float, wide: Boolean) {
+            val look = ScreenLooks.Look(looks, ref.id)
+            val accent = look.accent?.let { Color(it) } ?: usual.accent
+            val shape: androidx.compose.ui.graphics.Shape = when (look[ScreenLooks.Opt.Corners]) {
+                "Rounded" -> androidx.compose.foundation.shape.RoundedCornerShape(d(14f))
+                "Square" -> androidx.compose.ui.graphics.RectangleShape
+                else -> usual.shape
+            }
+            val background = when (look[ScreenLooks.Opt.Background]) {
+                "Solid" -> Panel
+                "Dark" -> Color.Black.copy(alpha = 0.85f)
+                "Accent tint" -> accent.copy(alpha = 0.18f)
+                "Clear" -> Color.Transparent
+                else -> usual.background
+            }
+            val edge: Pair<Dp, Color>? = when (look[ScreenLooks.Opt.Border]) {
+                "None" -> null
+                "Thin" -> 1.dp to Color.White.copy(alpha = 0.3f)
+                "Accent colour" -> 2.dp to accent
+                else -> usual.border?.let { 1.dp to it }
+            }
+            val requester = tileFocus.getOrPut(ref.id) { FocusRequester() }
+            var focused by remember { mutableStateOf(false) }
+            val scale = k * look.textScale
+            val spacing = k * look.spacing
+            Column(
+                modifier
+                    .focusRequester(requester)
+                    .onFocusChanged { focused = it.hasFocus }
+                    .onPreviewKeyEvent { e ->
+                        if (e.key != Key.Back) return@onPreviewKeyEvent false
+                        if (e.type == KeyEventType.KeyUp) runCatching { focus.requestFocus() }
+                        true
+                    }
+                    .clip(shape)
+                    .background(background)
+                    .then(edge?.let { (w, c) -> Modifier.border(w, c, shape) } ?: Modifier)
+                    .then(if (focused) Modifier.border(3.dp, FocusColor, shape) else Modifier)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) { tileOpen = ref },
+            ) {
+                when (usual.header) {
+                    MyScreen.BOLD -> Box(
+                        Modifier.fillMaxWidth().height(d(20f * k)).background(accent).padding(horizontal = d(10f)),
+                        contentAlignment = Alignment.CenterStart,
+                    ) {
+                        Text(what.uppercase(), color = Color.Black, fontWeight = FontWeight.Bold, fontSize = s(10f * scale), letterSpacing = s(1.2f), maxLines = 1)
+                    }
+                    MyScreen.FLAT -> Box(Modifier.fillMaxWidth().height(d(2f)).background(accent))
+                }
+                Row(Modifier.fillMaxWidth().weight(1f)) {
+                    if (usual.stripe) Box(Modifier.width(d(3f)).fillMaxHeight().background(accent))
+                    Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.CenterStart) {
+                        InfoTile(what, wide, wide && mine, look, accent, info!!, { v -> s(v * scale) }, { v -> d(v * spacing) })
+                    }
+                }
+            }
+        }
+        // What a Home tile shows (its own pick, or the usual one).
+        fun homeShows(id: String, usual: String) =
+            ScreenLooks.value(looks, "$id/Shows", listOf(usual) + (ScreenLooks.HOME_CONTENT - usual))
 
         if (mine) MyLayout(
             live = { Live(it) },
             choices = myChoices,
-            second = second,
-            secondPlaying = secondPlaying,
-            markets = markets,
-            rates = rates,
-            gold = gold,
+            info = info!!,
             allowVideo = now >= videoOkAt,
+            tile = { section, what, modifier, usual, k, wide ->
+                Tile(TileRef("mine:${section.name}", section.label, mySection = section), what, modifier, usual, k, wide)
+            },
             s = ::s,
             d = ::d,
         ) else if (home) HomeLayout(
             live = { Live(it) },
-            second = second,
-            secondPlaying = secondPlaying,
-            markets = markets,
-            rates = rates,
-            gold = gold,
+            info = info!!,
             allowVideo = now >= videoOkAt,
+            tile = { id, title, usualShows, modifier, usual, k, wide ->
+                Tile(TileRef(id, title, usual = usualShows), homeShows(id, usualShows), modifier, usual, k, wide)
+            },
             s = ::s,
             d = ::d,
         ) else if (cp24) Cp24Layout(
@@ -541,9 +629,9 @@ private fun ClockWeather(s: (Float) -> TextUnit, d: (Float) -> Dp) {
 }
 
 @Composable
-private fun Markets(modifier: Modifier, markets: List<News.Market>?, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun Markets(modifier: Modifier, markets: List<News.Market>?, s: (Float) -> TextUnit, d: (Float) -> Dp, rows: Float = 1f) {
     BoxWithConstraints(modifier) {
-        val rowHeight = d(18f)
+        val rowHeight = d(18f * rows)
         val fits = ((maxHeight - d(30f)) / rowHeight).toInt()
         if (markets == null || fits < 1) return@BoxWithConstraints
         Column(Modifier.fillMaxWidth().padding(vertical = d(6f))) {
@@ -811,7 +899,15 @@ private fun rememberMinute(): Int {
 
 /** Rates down the right side: as many as fit, the next ones every 10 seconds, then gold per tola. */
 @Composable
-private fun CurrencyList(modifier: Modifier, rates: News.Rates?, gold: Double?, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun CurrencyList(
+    modifier: Modifier,
+    rates: News.Rates?,
+    gold: Double?,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+    accent: Color = FocusColor,
+    rows: Float = 1f,
+) {
     val r = rates ?: return
     val items = remember(r, gold) {
         News.ASIAN.filter { it.code != r.base && r[it.code] != null }.map { m ->
@@ -821,7 +917,7 @@ private fun CurrencyList(modifier: Modifier, rates: News.Rates?, gold: Double?, 
         }
     }
     BoxWithConstraints(modifier.padding(vertical = d(6f))) {
-        val rowHeight = d(18f)
+        val rowHeight = d(18f * rows)
         val fits = ((maxHeight - d(18f)) / rowHeight).toInt().coerceAtLeast(1)
         val pages = items.chunked(fits)
         var turn by remember { mutableIntStateOf(0) }
@@ -837,7 +933,7 @@ private fun CurrencyList(modifier: Modifier, rates: News.Rates?, gold: Double?, 
             pages[Math.floorMod(turn, pages.size)].forEach { (name, value) ->
                 Row(Modifier.fillMaxWidth().height(rowHeight), verticalAlignment = Alignment.CenterVertically) {
                     Text(name, color = Color.White, fontSize = s(12f), modifier = Modifier.weight(1f), maxLines = 1)
-                    Text(value, color = FocusColor, fontWeight = FontWeight.Bold, fontSize = s(12f), maxLines = 1)
+                    Text(value, color = accent, fontWeight = FontWeight.Bold, fontSize = s(12f), maxLines = 1)
                 }
             }
         }
@@ -846,16 +942,16 @@ private fun CurrencyList(modifier: Modifier, rates: News.Rates?, gold: Double?, 
 
 /** Top stories down the right side: as many as fit, the next ones every 15 seconds. */
 @Composable
-private fun StoryList(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun StoryList(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp, every: Long = 15_000L, lines: Int = 2) {
     val stories = rememberLoaded(15 * 60_000L) { News.headlines().takeIf { it.isNotEmpty() } } ?: return
     BoxWithConstraints(modifier.padding(vertical = d(6f))) {
-        val storyHeight = d(48f)
+        val storyHeight = d(24f + 12f * lines)
         val fits = ((maxHeight - d(18f)) / storyHeight).toInt().coerceAtLeast(1)
         val pages = stories.chunked(fits)
         var turn by remember { mutableIntStateOf(0) }
-        LaunchedEffect(pages.size) {
+        LaunchedEffect(pages.size, every) {
             while (true) {
-                delay(15_000)
+                delay(every)
                 turn++
             }
         }
@@ -863,7 +959,7 @@ private fun StoryList(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> 
             Text("TOP STORIES", color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f), modifier = Modifier.height(d(16f)))
             pages[Math.floorMod(turn, pages.size)].forEach { story ->
                 Column(Modifier.fillMaxWidth().height(storyHeight), verticalArrangement = Arrangement.Center) {
-                    Text(story.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(12f), lineHeight = s(14f), maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    Text(story.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(12f), lineHeight = s(14f), maxLines = lines, overflow = TextOverflow.Ellipsis)
                     Text(story.source, color = Muted, fontSize = s(9f), maxLines = 1)
                 }
             }
@@ -966,9 +1062,15 @@ private fun Cp24Layout(
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         val lineHeight = d(30f)
         val linesHeight = lineHeight * (if (crawl == Cp24Screen.NOTHING) 1 else 2)
-        val playerWidth = minOf(maxWidth * 0.64f, (maxHeight - linesHeight - d(90f)) * 16f / 9f)
+        // The channel gets three quarters of the width (the band under it keeps room for two lines).
+        val playerWidth = minOf(maxWidth * 0.75f, (maxHeight - linesHeight - d(75f)) * 16f / 9f)
         val playerHeight = playerWidth * 9f / 16f
         val bandHeight = maxHeight - linesHeight - playerHeight
+        // The column on the right was drawn for a bit over a third of the width: its text and
+        // boxes shrink to fit the narrower column.
+        val k = ((maxWidth - playerWidth) / (maxWidth * 0.36f)).coerceIn(0.7f, 1f)
+        val rs: (Float) -> TextUnit = { v -> s(v * k) }
+        val rd: (Float) -> Dp = { v -> d(v * k) }
         Column(Modifier.fillMaxSize()) {
             Row(Modifier.fillMaxWidth().weight(1f)) {
                 Column(Modifier.width(playerWidth).fillMaxHeight()) {
@@ -989,9 +1091,9 @@ private fun Cp24Layout(
                     }
                 }
                 Column(Modifier.fillMaxSize().background(Cp24SkyDark)) {
-                    Cp24DateBar(forecast, s, d)
-                    Cp24Clock(is24, s, d)
-                    Cp24Boxes(choices[Cp24Screen.Section.Boxes], forecast, today, minute, is24, s, d)
+                    Cp24DateBar(forecast, rs, rd)
+                    Cp24Clock(is24, rs, rd)
+                    Cp24Boxes(choices[Cp24Screen.Section.Boxes], forecast, today, minute, is24, rs, rd)
                     // Like CP24's pressure line: how it feels, humidity and wind.
                     Text(
                         listOfNotNull(
@@ -1000,33 +1102,44 @@ private fun Cp24Layout(
                             forecast?.wind?.let { "Wind $it " + if (forecast.unit == "F") "mph" else "km/h" },
                         ).joinToString("   ·   "),
                         color = Color.White,
-                        fontSize = s(10f),
+                        fontSize = rs(10f),
                         maxLines = 1,
-                        modifier = Modifier.fillMaxWidth().background(Cp24SkyDark).padding(horizontal = d(8f), vertical = d(3f)),
+                        modifier = Modifier.fillMaxWidth().background(Cp24SkyDark).padding(horizontal = rd(8f), vertical = rd(3f)),
                     )
                     Text(
                         ((city?.let { "$it " } ?: "") + "right now").uppercase(),
                         color = Cp24Navy,
                         fontWeight = FontWeight.Bold,
-                        fontSize = s(13f),
+                        fontSize = rs(13f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.fillMaxWidth().background(Color.White).padding(horizontal = d(8f), vertical = d(3f)),
+                        modifier = Modifier.fillMaxWidth().background(Color.White).padding(horizontal = rd(8f), vertical = rd(3f)),
                     )
                     // The big box (CP24's traffic box).
-                    Box(Modifier.fillMaxWidth().weight(1f).background(Panel)) {
+                    BoxWithConstraints(Modifier.fillMaxWidth().weight(1f).background(Panel)) {
                         when (choices[Cp24Screen.Section.Middle]) {
-                            Cp24Screen.SPONSOR -> EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
-                            Cp24Screen.PRAYERS -> Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, s, d)
-                            Cp24Screen.MARKETS -> Markets(Modifier.fillMaxSize().padding(horizontal = d(10f)), markets, s, d)
-                            Cp24Screen.CURRENCIES -> CurrencyList(Modifier.fillMaxSize().padding(horizontal = d(10f)), rates, gold, s, d)
-                            Cp24Screen.STORIES -> StoryList(Modifier.fillMaxSize().padding(horizontal = d(10f)), s, d)
-                            Cp24Screen.SECOND -> Box(Modifier.fillMaxSize().padding(horizontal = d(8f)), contentAlignment = Alignment.Center) {
-                                SecondChannel(second, secondPlaying, s, d)
+                            // The sponsor at its own shape; the room under it shows the next prayer, so nothing is left empty.
+                            Cp24Screen.SPONSOR -> if (maxHeight - maxWidth * 9f / 16f >= rd(80f)) {
+                                val sponsorHeight = maxWidth * 9f / 16f
+                                Column(Modifier.fillMaxSize()) {
+                                    Box(Modifier.fillMaxWidth().height(sponsorHeight)) {
+                                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                                    }
+                                    Cp24PrayerBox(Modifier.fillMaxWidth().weight(1f), today, minute, is24, rs, rd)
+                                }
+                            } else {
+                                EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                            }
+                            Cp24Screen.PRAYERS -> Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, rs, rd)
+                            Cp24Screen.MARKETS -> Markets(Modifier.fillMaxSize().padding(horizontal = rd(10f)), markets, rs, rd)
+                            Cp24Screen.CURRENCIES -> CurrencyList(Modifier.fillMaxSize().padding(horizontal = rd(10f)), rates, gold, rs, rd)
+                            Cp24Screen.STORIES -> StoryList(Modifier.fillMaxSize().padding(horizontal = rd(10f)), rs, rd)
+                            Cp24Screen.SECOND -> Box(Modifier.fillMaxSize().padding(horizontal = rd(8f)), contentAlignment = Alignment.Center) {
+                                SecondChannel(second, secondPlaying, rs, rd)
                             }
                         }
                     }
-                    Cp24Line(Modifier.fillMaxWidth().height(d(28f)), choices[Cp24Screen.Section.Line], markets, rates, gold, today, minute, is24, s, d)
+                    Cp24Line(Modifier.fillMaxWidth().height(rd(28f)), choices[Cp24Screen.Section.Line], markets, rates, gold, today, minute, is24, rs, rd)
                 }
             }
             if (crawl != Cp24Screen.NOTHING) {
@@ -1191,7 +1304,7 @@ private fun Cp24Story(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> 
                 color = Color.White,
                 fontSize = s(19f),
                 lineHeight = s(23f),
-                maxLines = 3,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
             story?.let { Text(it.source, color = Muted, fontSize = s(10f)) }
@@ -1330,33 +1443,133 @@ private val HomeBottom: Color get() = Themes.current.homeBottom
 private val Glass = Color.White.copy(alpha = 0.07f)
 private val GlassEdge = Color.White.copy(alpha = 0.10f)
 
-/**
- * Home mode: a modern screen of rounded cards around the live channel. The clock with the Islamic
- * date; the weather now and for the rest of the day; the next prayer with a countdown (sehri and
- * iftar in Ramadan) and a reminder over the channel ten minutes before each prayer; top stories,
- * markets, currency rates and the sponsor along the bottom; the advertising line under them.
- * Right shows a second channel in the corner of the main one (Right again changes it, Left hides it).
- */
+/** What the tiles on Home and My Screen show, loaded once for all of them. */
+private class InfoData(
+    val forecast: News.Forecast?,
+    val city: String?,
+    val today: News.Today?,
+    val minute: Int,
+    val is24: Boolean,
+    val markets: List<News.Market>?,
+    val rates: News.Rates?,
+    val gold: Double?,
+    val second: Channel?,
+    val secondPlaying: Boolean,
+)
+
 @Composable
-private fun HomeLayout(
-    live: @Composable (Modifier) -> Unit,
-    second: Channel?,
-    secondPlaying: Boolean,
-    markets: List<News.Market>?,
-    rates: News.Rates?,
-    gold: Double?,
-    allowVideo: Boolean,
-    s: (Float) -> TextUnit,
-    d: (Float) -> Dp,
-) {
+private fun rememberInfo(second: Channel?, secondPlaying: Boolean, markets: List<News.Market>?, rates: News.Rates?, gold: Double?): InfoData {
     val context = LocalContext.current
     val forecast = if (Edition.HAS_WEATHER) rememberLoaded(30 * 60_000L) { News.forecast() } else null
     val city = rememberLoaded(24 * 60 * 60_000L) { News.place()?.city?.takeIf { it.isNotBlank() } }
     val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
     val minute = rememberMinute()
     val is24 = remember { DateFormat.is24HourFormat(context) }
+    return InfoData(forecast, city, today, minute, is24, markets, rates, gold, second, secondPlaying)
+}
+
+/** How a tile looks when the viewer hasn't changed it: the screen's own style. */
+private class TileUsual(
+    val shape: androidx.compose.ui.graphics.Shape,
+    val background: Color,
+    val border: Color?,
+    val accent: Color,
+    /** My Screen's style: bold headers or a thin line on top. */
+    val header: String? = null,
+    /** A thin accent stripe down the left (My Screen's glass cards). */
+    val stripe: Boolean = false,
+)
+
+/** What one tile shows, with the choices the viewer made for it. */
+@Composable
+private fun InfoTile(
+    what: String,
+    /** A wide tile: one big headline at a time instead of a list. */
+    wide: Boolean,
+    /** The wide panel under the channel on My Screen: room for both markets and rates. */
+    both: Boolean,
+    look: ScreenLooks.Look,
+    accent: Color,
+    info: InfoData,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+) {
+    val is24 = when (look[ScreenLooks.Opt.Format]) {
+        "12-hour" -> false
+        "24-hour" -> true
+        else -> info.is24
+    }
+    val rows = when (look[ScreenLooks.Opt.Rows]) {
+        "Tight" -> 0.85f
+        "Tall" -> 1.25f
+        else -> 1f
+    }
+    val every = (look[ScreenLooks.Opt.Speed].substringBefore(' ').toLongOrNull() ?: 12L) * 1000L
+    val lines = look[ScreenLooks.Opt.Lines].toIntOrNull()
+    val fill = Modifier.fillMaxSize()
+    val padded = Modifier.fillMaxSize().padding(horizontal = d(12f))
+    when (what) {
+        MyScreen.CLOCK -> HomeClock(
+            Modifier.fillMaxWidth(), info.today, is24, s, d, accent,
+            seconds = look.shows(ScreenLooks.Opt.Seconds),
+            date = look.shows(ScreenLooks.Opt.Date),
+            islamic = look.shows(ScreenLooks.Opt.Islamic),
+        )
+        MyScreen.WEATHER -> HomeWeather(
+            Modifier.fillMaxWidth(), info.forecast, info.city, s, d,
+            next = look.shows(ScreenLooks.Opt.Forecast),
+            feels = look.shows(ScreenLooks.Opt.FeelsLike),
+            showCity = look.shows(ScreenLooks.Opt.City),
+        )
+        MyScreen.PRAYERS -> HomePrayer(
+            fill, info.today, info.minute, is24, s, d, accent,
+            all = look.shows(ScreenLooks.Opt.AllTimes),
+            progress = look.shows(ScreenLooks.Opt.Progress),
+            ramadanLine = look.shows(ScreenLooks.Opt.Ramadan),
+        )
+        MyScreen.STORIES -> if (wide) HomeStories(fill, s, d, every, lines ?: 3) else StoryList(padded, s, d, every, lines ?: 2)
+        MyScreen.MARKETS, MyScreen.CURRENCIES -> if (both) {
+            // Under the channel there's room for both, the one picked first.
+            Row(fill) {
+                val first = what == MyScreen.MARKETS
+                Box(Modifier.weight(1f).fillMaxHeight().padding(horizontal = d(12f))) {
+                    if (first) Markets(Modifier.fillMaxSize(), info.markets, s, d, rows) else CurrencyList(Modifier.fillMaxSize(), info.rates, info.gold, s, d, accent, rows)
+                }
+                Box(Modifier.width(1.dp).fillMaxHeight().padding(vertical = d(8f)).background(Line))
+                Box(Modifier.weight(1f).fillMaxHeight().padding(horizontal = d(12f))) {
+                    if (first) CurrencyList(Modifier.fillMaxSize(), info.rates, info.gold, s, d, accent, rows) else Markets(Modifier.fillMaxSize(), info.markets, s, d, rows)
+                }
+            }
+        } else if (what == MyScreen.MARKETS) {
+            Markets(padded, info.markets, s, d, rows)
+        } else {
+            CurrencyList(padded, info.rates, info.gold, s, d, accent, rows)
+        }
+        MyScreen.SECOND -> Box(fill.background(Color.Black), contentAlignment = Alignment.Center) {
+            SecondChannel(info.second, info.secondPlaying, s) { 0.dp }
+        }
+    }
+}
+
+/**
+ * Home mode: a modern screen of rounded cards around a big live channel. Down the right: the
+ * clock with the Islamic date, the weather now and for the rest of the day, and the next prayer
+ * with a countdown (sehri and iftar in Ramadan); a reminder over the channel ten minutes before
+ * each prayer. Along the bottom: top stories, markets, currency rates and the sponsor, with the
+ * advertising line under them. The arrows move onto the tiles, and OK on one changes what it
+ * shows and how it looks. A second channel can sit in the corner of the main one (its settings).
+ */
+@Composable
+private fun HomeLayout(
+    live: @Composable (Modifier) -> Unit,
+    info: InfoData,
+    allowVideo: Boolean,
+    tile: @Composable (id: String, title: String, usualShows: String, modifier: Modifier, usual: TileUsual, k: Float, wide: Boolean) -> Unit,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+) {
     val shape = androidx.compose.foundation.shape.RoundedCornerShape(d(14f))
-    fun Modifier.card() = this.clip(shape).background(Glass).border(1.dp, GlassEdge, shape)
+    val usual = TileUsual(shape, Glass, GlassEdge, FocusColor)
     BoxWithConstraints(
         Modifier
             .fillMaxSize()
@@ -1364,14 +1577,21 @@ private fun HomeLayout(
     ) {
         val gap = d(10f)
         val tickerHeight = d(24f)
-        val playerWidth = minOf((maxWidth - gap * 3) * 0.66f, (maxHeight - gap * 4 - tickerHeight - d(110f)) * 16f / 9f)
+        // A quarter bigger than it used to be (two thirds of the width), as long as the row of
+        // tiles under it keeps room for a few lines.
+        val playerWidth = minOf((maxWidth - gap * 3) * 0.66f * 1.25f, (maxHeight - gap * 4 - tickerHeight - d(64f)) * 16f / 9f)
         val playerHeight = playerWidth * 9f / 16f
+        val sideWidth = maxWidth - gap * 3 - playerWidth
+        val bottomHeight = maxHeight - gap * 4 - tickerHeight - playerHeight
+        // The tiles' text and spacing shrink with the room they have (they were drawn for wider and taller tiles).
+        val kSide = (sideWidth / ((maxWidth - gap * 3) * 0.34f)).coerceIn(0.7f, 1f)
+        val kBottom = (bottomHeight / d(135f)).coerceIn(0.72f, 1f)
         Column(Modifier.fillMaxSize().padding(gap), verticalArrangement = Arrangement.spacedBy(gap)) {
             Row(Modifier.fillMaxWidth().height(playerHeight), horizontalArrangement = Arrangement.spacedBy(gap)) {
                 Box(Modifier.width(playerWidth).fillMaxHeight().clip(shape)) {
                     live(Modifier.fillMaxSize())
                     // A gentle reminder ten minutes (or less) before each prayer.
-                    nextPrayer(today?.prayers.orEmpty(), minute)?.let { (p, until) ->
+                    nextPrayer(info.today?.prayers.orEmpty(), info.minute)?.let { (p, until) ->
                         if (until in 1..10) {
                             Text(
                                 "🕌  ${prayerName(p.name)} in $until min",
@@ -1387,7 +1607,7 @@ private fun HomeLayout(
                         }
                     }
                     // The second channel, in the bottom right corner.
-                    if (second != null) {
+                    if (info.second != null) {
                         Box(
                             Modifier
                                 .align(Alignment.BottomEnd)
@@ -1396,24 +1616,20 @@ private fun HomeLayout(
                                 .clip(androidx.compose.foundation.shape.RoundedCornerShape(d(8f)))
                                 .border(2.dp, Color.White.copy(alpha = 0.8f), androidx.compose.foundation.shape.RoundedCornerShape(d(8f))),
                         ) {
-                            SecondChannel(second, secondPlaying, s) { 0.dp }
+                            SecondChannel(info.second, info.secondPlaying, s) { 0.dp }
                         }
                     }
                 }
                 Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(gap)) {
-                    HomeClock(Modifier.fillMaxWidth().card(), today, is24, s, d)
-                    HomeWeather(Modifier.fillMaxWidth().card(), forecast, city, s, d)
-                    HomePrayer(Modifier.fillMaxWidth().weight(1f).card(), today, minute, is24, s, d)
+                    tile("home:r1", "Top right tile", MyScreen.CLOCK, Modifier.fillMaxWidth().weight(1f), usual, kSide, false)
+                    tile("home:r2", "Middle right tile", MyScreen.WEATHER, Modifier.fillMaxWidth().weight(1f), usual, kSide, false)
+                    tile("home:r3", "Lower right tile", MyScreen.PRAYERS, Modifier.fillMaxWidth().weight(1.4f), usual, kSide, false)
                 }
             }
             Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(gap)) {
-                HomeStories(Modifier.weight(2f).fillMaxHeight().card(), s, d)
-                Box(Modifier.weight(1f).fillMaxHeight().card().padding(horizontal = d(10f))) {
-                    Markets(Modifier.fillMaxSize(), markets, s, d)
-                }
-                Box(Modifier.weight(1f).fillMaxHeight().card().padding(horizontal = d(10f))) {
-                    CurrencyList(Modifier.fillMaxSize(), rates, gold, s, d)
-                }
+                tile("home:b1", "Bottom left tile", MyScreen.STORIES, Modifier.weight(2f).fillMaxHeight(), usual, kBottom, true)
+                tile("home:b2", "Bottom middle tile", MyScreen.MARKETS, Modifier.weight(1f).fillMaxHeight(), usual, kBottom, false)
+                tile("home:b3", "Bottom right tile", MyScreen.CURRENCIES, Modifier.weight(1f).fillMaxHeight(), usual, kBottom, false)
                 BoxWithConstraints(Modifier.fillMaxHeight()) {
                     Box(Modifier.width(maxHeight * 16f / 9f).fillMaxHeight().clip(shape)) {
                         EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
@@ -1428,7 +1644,17 @@ private fun HomeLayout(
 }
 
 @Composable
-private fun HomeClock(modifier: Modifier, today: News.Today?, is24: Boolean, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun HomeClock(
+    modifier: Modifier,
+    today: News.Today?,
+    is24: Boolean,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+    accent: Color = FocusColor,
+    seconds: Boolean = true,
+    date: Boolean = true,
+    islamic: Boolean = true,
+) {
     var now by remember { mutableStateOf(Date()) }
     LaunchedEffect(Unit) {
         while (true) {
@@ -1437,50 +1663,64 @@ private fun HomeClock(modifier: Modifier, today: News.Today?, is24: Boolean, s: 
         }
     }
     val time = remember(now) { SimpleDateFormat(if (is24) "H:mm" else "h:mm", Locale.getDefault()).format(now) }
-    val seconds = remember(now) { SimpleDateFormat(":ss", Locale.getDefault()).format(now) }
+    val secs = remember(now) { SimpleDateFormat(":ss", Locale.getDefault()).format(now) }
     val amPm = remember(now) { if (is24) "" else SimpleDateFormat("a", Locale.getDefault()).format(now) }
-    val date = remember(now) { SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(now) }
+    val day = remember(now) { SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(now) }
     Column(modifier.padding(horizontal = d(14f), vertical = d(8f))) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(time, color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(40f), lineHeight = s(42f))
-            Text(seconds, color = Soft, fontWeight = FontWeight.Bold, fontSize = s(18f), modifier = Modifier.padding(bottom = d(5f)))
+            if (seconds) Text(secs, color = Soft, fontWeight = FontWeight.Bold, fontSize = s(18f), modifier = Modifier.padding(bottom = d(5f)))
             if (amPm.isNotEmpty()) Text(" $amPm", color = Soft, fontWeight = FontWeight.Bold, fontSize = s(14f), modifier = Modifier.padding(bottom = d(6f)))
         }
-        Text(date, color = Color.White, fontSize = s(12f), maxLines = 1)
-        today?.hijri?.let { Text("☪ ${it.label}", color = FocusColor, fontSize = s(11f), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+        if (date) Text(day, color = Color.White, fontSize = s(12f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        if (islamic) today?.hijri?.let { Text("☪ ${it.label}", color = accent, fontSize = s(11f), maxLines = 1, overflow = TextOverflow.Ellipsis) }
     }
 }
 
 @Composable
-private fun HomeWeather(modifier: Modifier, forecast: News.Forecast?, city: String?, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun HomeWeather(
+    modifier: Modifier,
+    forecast: News.Forecast?,
+    city: String?,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+    next: Boolean = true,
+    feels: Boolean = true,
+    showCity: Boolean = true,
+) {
     Column(modifier.padding(horizontal = d(14f), vertical = d(8f))) {
         if (forecast == null) {
-            Text(city?.let { "📍 $it" } ?: "Weather", color = Soft, fontSize = s(12f))
+            Text(city?.takeIf { showCity }?.let { "📍 $it" } ?: "Weather", color = Soft, fontSize = s(12f))
             return@Column
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(forecast.icon, fontSize = s(28f))
             Spacer(Modifier.width(d(8f)))
-            Text("${forecast.temperature}°", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(30f))
+            Text("${forecast.temperature}°", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(30f), maxLines = 1)
             Spacer(Modifier.width(d(10f)))
             Column(Modifier.weight(1f)) {
-                city?.let { Text("📍 $it", color = Color.White, fontSize = s(12f), maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                Text(
+                if (showCity) city?.let { Text("📍 $it", color = Color.White, fontSize = s(12f), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                if (feels) Text(
                     listOfNotNull("feels ${forecast.feelsLike}°", forecast.humidity?.let { "💧$it%" }).joinToString("  ·  "),
                     color = Soft,
                     fontSize = s(10f),
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }
+        if (!next) return@Column
         val parts = forecast.periods.take(4).map { Triple(it.name, it.icon, it.temperature) }
             .ifEmpty { forecast.days.take(4).map { Triple(it.name, it.icon, it.high) } }
-        Row(Modifier.fillMaxWidth().padding(top = d(4f)), horizontalArrangement = Arrangement.SpaceBetween) {
+        // Equal columns, so they fit however narrow the tile is.
+        Row(Modifier.fillMaxWidth().padding(top = d(4f))) {
             parts.forEach { (name, icon, t) ->
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(name.lowercase().replaceFirstChar { it.uppercase() } + " ", color = Soft, fontSize = s(10f))
-                    Text(icon, fontSize = s(12f))
-                    Text(" $t°", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(11f))
+                Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(name.lowercase().replaceFirstChar { it.uppercase() }, color = Soft, fontSize = s(10f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(icon, fontSize = s(12f))
+                        Text(" $t°", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(11f), maxLines = 1)
+                    }
                 }
             }
         }
@@ -1488,7 +1728,18 @@ private fun HomeWeather(modifier: Modifier, forecast: News.Forecast?, city: Stri
 }
 
 @Composable
-private fun HomePrayer(modifier: Modifier, today: News.Today?, minute: Int, is24: Boolean, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun HomePrayer(
+    modifier: Modifier,
+    today: News.Today?,
+    minute: Int,
+    is24: Boolean,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+    accent: Color = FocusColor,
+    all: Boolean = true,
+    progress: Boolean = true,
+    ramadanLine: Boolean = true,
+) {
     val prayers = today?.prayers.orEmpty()
     Column(modifier.padding(horizontal = d(14f), vertical = d(8f)), verticalArrangement = Arrangement.SpaceBetween) {
         val next = nextPrayer(prayers, minute)
@@ -1510,16 +1761,16 @@ private fun HomePrayer(modifier: Modifier, today: News.Today?, minute: Int, is24
                     maxLines = 1,
                 )
             }
-            Text("in ${untilText(until)}", color = FocusColor, fontWeight = FontWeight.Bold, fontSize = s(14f), maxLines = 1)
+            Text("in ${untilText(until)}", color = accent, fontWeight = FontWeight.Bold, fontSize = s(14f), maxLines = 1)
         }
         // How far along it is from the last prayer to the next one.
         val previous = prayers.lastOrNull { prayerMinutes(it.time) <= minute } ?: prayers.last()
         val span = Math.floorMod(prayerMinutes(p.time) - prayerMinutes(previous.time), 24 * 60).coerceAtLeast(1)
         val done = (1f - until.toFloat() / span).coerceIn(0f, 1f)
-        Box(Modifier.fillMaxWidth().height(d(5f)).clip(androidx.compose.foundation.shape.RoundedCornerShape(50)).background(Color.White.copy(alpha = 0.12f))) {
-            Box(Modifier.fillMaxWidth(done).fillMaxHeight().background(FocusColor))
+        if (progress) Box(Modifier.fillMaxWidth().height(d(5f)).clip(androidx.compose.foundation.shape.RoundedCornerShape(50)).background(Color.White.copy(alpha = 0.12f))) {
+            Box(Modifier.fillMaxWidth(done).fillMaxHeight().background(accent))
         }
-        if (ramadan) {
+        if (ramadan && ramadanLine) {
             val fajr = prayers.firstOrNull { it.name == "Fajr" }
             val maghrib = prayers.firstOrNull { it.name == "Maghrib" }
             val text = when {
@@ -1528,14 +1779,14 @@ private fun HomePrayer(modifier: Modifier, today: News.Today?, minute: Int, is24
                 fajr != null -> "🌙 Sehri ends at ${shownTime(fajr.time, is24)}"
                 else -> null
             }
-            text?.let { Text(it, color = FocusColor, fontSize = s(11f), maxLines = 1) }
+            text?.let { Text(it, color = accent, fontSize = s(11f), maxLines = 1) }
         }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        if (all) Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             prayers.forEach { q ->
                 val isNext = q == p
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(prayerName(q.name), color = if (isNext) FocusColor else Muted, fontSize = s(9f), maxLines = 1)
-                    Text(shownTime(q.time, is24), color = if (isNext) FocusColor else Color.White, fontWeight = FontWeight.Bold, fontSize = s(11f), maxLines = 1)
+                    Text(prayerName(q.name), color = if (isNext) accent else Muted, fontSize = s(9f), maxLines = 1)
+                    Text(shownTime(q.time, is24), color = if (isNext) accent else Color.White, fontWeight = FontWeight.Bold, fontSize = s(11f), maxLines = 1)
                 }
             }
         }
@@ -1543,42 +1794,53 @@ private fun HomePrayer(modifier: Modifier, today: News.Today?, minute: Int, is24
 }
 
 @Composable
-private fun HomeStories(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun HomeStories(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> Dp, every: Long = 12_000L, lines: Int = 3) {
     val stories = rememberLoaded(15 * 60_000L) { News.headlines().takeIf { it.isNotEmpty() } }
     var turn by remember { mutableIntStateOf(0) }
-    LaunchedEffect(stories) {
+    LaunchedEffect(stories, every) {
         while (true) {
-            delay(12_000)
+            delay(every)
             turn++
         }
     }
     val story = stories?.let { it[Math.floorMod(turn, it.size)] }
-    Column(modifier.padding(horizontal = d(14f), vertical = d(10f)), verticalArrangement = Arrangement.SpaceBetween) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(d(8f)).clip(androidx.compose.foundation.shape.RoundedCornerShape(50)).background(Cp24Red))
-            Spacer(Modifier.width(d(6f)))
-            Text("TOP STORIES" + (story?.let { " · ${it.source.uppercase()}" } ?: ""), color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f), maxLines = 1)
-        }
-        Text(
-            story?.title ?: Edition.APP_NAME,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontSize = s(16f),
-            lineHeight = s(20f),
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis,
-        )
-        // Little dots: which of the stories this is.
-        stories?.let { list ->
-            Row(horizontalArrangement = Arrangement.spacedBy(d(4f))) {
-                val at = Math.floorMod(turn, list.size)
-                for (i in 0 until minOf(list.size, 12)) {
-                    Box(
-                        Modifier
-                            .size(d(5f))
-                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(50))
-                            .background(if (i == at % 12) FocusColor else Color.White.copy(alpha = 0.2f)),
-                    )
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    BoxWithConstraints(modifier.padding(horizontal = d(14f), vertical = d(8f))) {
+        // As many headline lines as the tile has room for (up to the number picked); the dots
+        // only when there's room to spare.
+        val lineHeight = with(density) { s(20f).toDp() }
+        val header = with(density) { s(14f).toDp() }
+        val dots = d(9f)
+        val room = maxHeight - header
+        val shownLines = (room / lineHeight).toInt().coerceIn(1, lines)
+        val withDots = room - lineHeight * shownLines >= dots
+        Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.size(d(8f)).clip(androidx.compose.foundation.shape.RoundedCornerShape(50)).background(Cp24Red))
+                Spacer(Modifier.width(d(6f)))
+                Text("TOP STORIES" + (story?.let { " · ${it.source.uppercase()}" } ?: ""), color = Muted, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.5f), maxLines = 1)
+            }
+            Text(
+                story?.title ?: Edition.APP_NAME,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = s(16f),
+                lineHeight = s(20f),
+                maxLines = shownLines,
+                overflow = TextOverflow.Ellipsis,
+            )
+            // Little dots: which of the stories this is.
+            if (withDots) stories?.let { list ->
+                Row(horizontalArrangement = Arrangement.spacedBy(d(4f))) {
+                    val at = Math.floorMod(turn, list.size)
+                    for (i in 0 until minOf(list.size, 12)) {
+                        Box(
+                            Modifier
+                                .size(d(5f))
+                                .clip(androidx.compose.foundation.shape.RoundedCornerShape(50))
+                                .background(if (i == at % 12) FocusColor else Color.White.copy(alpha = 0.2f)),
+                        )
+                    }
                 }
             }
         }
@@ -1589,28 +1851,19 @@ private fun HomeStories(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -
  * My Screen: the viewer builds it in Settings (see [MyScreen]). The channel on the left or the
  * right (or bigger), up to four spots beside it, one panel under it, a style (glass cards, flat
  * edge to edge, or bold headers) and an accent colour. Whatever is picked, every part stretches so
- * no space is left empty; the sponsor and the advertising line always stay.
+ * no space is left empty; the sponsor and the advertising line always stay. The arrows move onto
+ * the spots, and OK on one changes what it shows and how it looks.
  */
 @Composable
 private fun MyLayout(
     live: @Composable (Modifier) -> Unit,
     choices: MyScreen.Choices,
-    second: Channel?,
-    secondPlaying: Boolean,
-    markets: List<News.Market>?,
-    rates: News.Rates?,
-    gold: Double?,
+    info: InfoData,
     allowVideo: Boolean,
+    tile: @Composable (section: MyScreen.Section, what: String, modifier: Modifier, usual: TileUsual, k: Float, wide: Boolean) -> Unit,
     s: (Float) -> TextUnit,
     d: (Float) -> Dp,
 ) {
-    val context = LocalContext.current
-    val forecast = if (Edition.HAS_WEATHER) rememberLoaded(30 * 60_000L) { News.forecast() } else null
-    val city = rememberLoaded(24 * 60 * 60_000L) { News.place()?.city?.takeIf { it.isNotBlank() } }
-    val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
-    val minute = rememberMinute()
-    val is24 = remember { DateFormat.is24HourFormat(context) }
-
     val style = choices[MyScreen.Section.Style]
     val layout = choices[MyScreen.Section.Layout]
     val under = choices[MyScreen.Section.Line]
@@ -1624,63 +1877,14 @@ private fun MyLayout(
         flat -> androidx.compose.ui.graphics.SolidColor(Line)
         else -> androidx.compose.ui.graphics.SolidColor(Color.Black)
     }
-
-    @Composable
-    fun Card(modifier: Modifier, title: String, content: @Composable () -> Unit) {
-        Column(
-            modifier
-                .clip(shape)
-                .background(if (glass) Glass else Panel)
-                .then(if (glass) Modifier.border(1.dp, GlassEdge, shape) else Modifier),
-        ) {
-            when (style) {
-                MyScreen.BOLD -> Box(
-                    Modifier.fillMaxWidth().height(d(20f)).background(accent).padding(horizontal = d(10f)),
-                    contentAlignment = Alignment.CenterStart,
-                ) {
-                    Text(title.uppercase(), color = Color.Black, fontWeight = FontWeight.Bold, fontSize = s(10f), letterSpacing = s(1.2f), maxLines = 1)
-                }
-                MyScreen.FLAT -> Box(Modifier.fillMaxWidth().height(d(2f)).background(accent))
-            }
-            Row(Modifier.fillMaxWidth().weight(1f)) {
-                if (glass) Box(Modifier.width(d(3f)).fillMaxHeight().background(accent))
-                Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.CenterStart) { content() }
-            }
-        }
-    }
-
-    /** What goes in one spot (or under the channel); [wide] is the panel under the channel. */
-    @Composable
-    fun Spot(what: String, wide: Boolean) {
-        val fill = Modifier.fillMaxSize()
-        val padded = Modifier.fillMaxSize().padding(horizontal = d(12f))
-        when (what) {
-            MyScreen.CLOCK -> HomeClock(Modifier.fillMaxWidth(), today, is24, s, d)
-            MyScreen.WEATHER -> HomeWeather(Modifier.fillMaxWidth(), forecast, city, s, d)
-            MyScreen.PRAYERS -> HomePrayer(fill, today, minute, is24, s, d)
-            MyScreen.STORIES -> if (wide) HomeStories(fill, s, d) else StoryList(padded, s, d)
-            MyScreen.MARKETS, MyScreen.CURRENCIES -> if (wide) {
-                // Under the channel there's room for both, the one picked first.
-                Row(fill) {
-                    val first = what == MyScreen.MARKETS
-                    Box(Modifier.weight(1f).fillMaxHeight().padding(horizontal = d(12f))) {
-                        if (first) Markets(Modifier.fillMaxSize(), markets, s, d) else CurrencyList(Modifier.fillMaxSize(), rates, gold, s, d)
-                    }
-                    Box(Modifier.width(1.dp).fillMaxHeight().padding(vertical = d(8f)).background(Line))
-                    Box(Modifier.weight(1f).fillMaxHeight().padding(horizontal = d(12f))) {
-                        if (first) CurrencyList(Modifier.fillMaxSize(), rates, gold, s, d) else Markets(Modifier.fillMaxSize(), markets, s, d)
-                    }
-                }
-            } else if (what == MyScreen.MARKETS) {
-                Markets(padded, markets, s, d)
-            } else {
-                CurrencyList(padded, rates, gold, s, d)
-            }
-            MyScreen.SECOND -> Box(fill.background(Color.Black), contentAlignment = Alignment.Center) {
-                SecondChannel(second, secondPlaying, s) { 0.dp }
-            }
-        }
-    }
+    val usual = TileUsual(
+        shape = shape,
+        background = if (glass) Glass else Panel,
+        border = if (glass) GlassEdge else null,
+        accent = accent,
+        header = style.takeIf { it != MyScreen.GLASS },
+        stripe = glass,
+    )
 
     BoxWithConstraints(Modifier.fillMaxSize().background(backdrop)) {
         val pad = if (flat) 0.dp else d(8f)
@@ -1690,15 +1894,21 @@ private fun MyLayout(
         val availH = maxHeight - pad * 2 - tickerHeight - sep
         val big = layout == MyScreen.BIG
         val hasUnder = under != MyScreen.NOTHING
-        // With a panel under the channel the picture stays 16:9 and the panel takes the rest of
-        // the height; without one the channel takes the whole height (stretched a little).
+        // The channel gets about three quarters of the width (more with "Big channel"). With a
+        // panel under it the picture stays 16:9 and the panel takes the rest of the height;
+        // without one the channel takes the whole height (stretched a little).
         val playerW = if (hasUnder) {
-            minOf(availW * (if (big) 0.78f else 0.66f), (availH - sep - d(if (big) 90f else 110f)) * 16f / 9f)
+            minOf(availW * (if (big) 0.85f else 0.75f), (availH - sep - d(if (big) 72f else 86f)) * 16f / 9f)
         } else {
-            minOf(availH * 16f / 9f, availW * 0.82f)
+            minOf(availH * 16f / 9f, availW * (if (big) 0.88f else 0.8f))
         }
         val sideW = availW - playerW
-        val spots = choices.spots
+        val underH = availH - sep - playerW * 9f / 16f
+        // The tiles' text and spacing shrink with the room they have (they were drawn for wider tiles).
+        val kSide = (sideW / (availW * 0.34f)).coerceIn(0.7f, 1f)
+        val kUnder = (underH / d(110f)).coerceIn(0.72f, 1f)
+        val spots = listOf(MyScreen.Section.Spot1, MyScreen.Section.Spot2, MyScreen.Section.Spot3, MyScreen.Section.Spot4)
+            .map { it to choices[it] }.filter { it.second != MyScreen.NOTHING }
 
         Column(Modifier.fillMaxSize().padding(pad), verticalArrangement = Arrangement.spacedBy(sep)) {
             Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(sep)) {
@@ -1714,7 +1924,7 @@ private fun MyLayout(
                                 .then(if (style == MyScreen.BOLD) Modifier.border(d(2f), accent) else Modifier),
                         ) {
                             live(Modifier.fillMaxSize())
-                            nextPrayer(today?.prayers.orEmpty(), minute)?.let { (p, until) ->
+                            nextPrayer(info.today?.prayers.orEmpty(), info.minute)?.let { (p, until) ->
                                 if (until in 1..10) {
                                     Text(
                                         "🕌  ${prayerName(p.name)} in $until min",
@@ -1730,14 +1940,14 @@ private fun MyLayout(
                                 }
                             }
                         }
-                        if (hasUnder) Card(Modifier.fillMaxWidth().weight(1f), under) { Spot(under, wide = true) }
+                        if (hasUnder) tile(MyScreen.Section.Line, under, Modifier.fillMaxWidth().weight(1f), usual, kUnder, true)
                     }
                 }
 
                 @Composable
                 fun Side() {
                     Column(Modifier.width(sideW).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(sep)) {
-                        spots.forEach { what -> Card(Modifier.fillMaxWidth().weight(1f), what) { Spot(what, wide = false) } }
+                        spots.forEach { (section, what) -> tile(section, what, Modifier.fillMaxWidth().weight(1f), usual, kSide, false) }
                         // The sponsor always stays: 16:9 at the column's width, or the whole
                         // column when no spots are picked.
                         Box(

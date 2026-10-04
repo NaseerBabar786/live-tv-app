@@ -48,6 +48,7 @@ class MainActivity : ComponentActivity() {
         com.livetv.app.data.NewsScreen.init(this)
         com.livetv.app.data.Cp24Screen.init(this)
         com.livetv.app.data.MyScreen.init(this)
+        com.livetv.app.data.ScreenLooks.init(this)
         com.livetv.app.ui.Themes.init(this)
         enableEdgeToEdge()
         if (savedInstanceState != null) showStartScreen = false
