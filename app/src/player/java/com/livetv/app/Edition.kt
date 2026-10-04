@@ -39,6 +39,9 @@ fun EditionSponsorStrip(modifier: Modifier) = Unit
 fun EditionSponsorBar(modifier: Modifier) = Unit
 
 @Composable
+fun EditionTicker(modifier: Modifier) = Unit
+
+@Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {
     SettingsTheme {
         PlaylistSettingsDialog(
