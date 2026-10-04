@@ -47,8 +47,6 @@ import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.Date
 
-private val MineColor = Color(0xFF1E3A5F)
-
 /**
  * Messages, full screen. A viewer sees their private conversation with the Live TV team and can
  * write back; the owner sees everyone's conversations, newest first, and opens one to answer.
@@ -215,6 +213,7 @@ private fun ConversationCard(c: Conversation, onOpen: () -> Unit) {
 
 @Composable
 private fun Bubble(m: Message, mine: Boolean, admin: Boolean) {
+    val ink = if (mine) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
     Box(Modifier.fillMaxWidth()) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -223,7 +222,10 @@ private fun Bubble(m: Message, mine: Boolean, admin: Boolean) {
                 .widthIn(max = 620.dp)
                 .focusGlow(RoundedCornerShape(16.dp))
                 .focusable()
-                .background(if (mine) MineColor else MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp))
+                .background(
+                    if (mine) AccentBlue else MaterialTheme.colorScheme.surfaceVariant,
+                    RoundedCornerShape(16.dp),
+                )
                 .padding(horizontal = 14.dp, vertical = 10.dp),
         ) {
             Text(
@@ -234,16 +236,17 @@ private fun Bubble(m: Message, mine: Boolean, admin: Boolean) {
                 },
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.bodySmall,
+                color = ink,
             )
             if (m.quote.isNotBlank()) {
                 Text(
                     (if (admin) "Suggestion: " else "Your suggestion: ") + m.quote,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+                    color = ink.copy(alpha = 0.75f),
                 )
             }
-            Text(m.text, style = MaterialTheme.typography.bodyLarge)
-            m.createdAt?.let { Text(formatWhen(it), style = MaterialTheme.typography.bodySmall) }
+            Text(m.text, style = MaterialTheme.typography.bodyLarge, color = ink)
+            m.createdAt?.let { Text(formatWhen(it), style = MaterialTheme.typography.bodySmall, color = ink.copy(alpha = 0.75f)) }
         }
     }
 }
