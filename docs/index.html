@@ -56,6 +56,8 @@
   .hero p { color: var(--muted); font-size: 18px; margin: 0 0 24px; }
   .hero img { width: 100%; height: auto; display: block; border-radius: 16px; border: 1px solid var(--surface-2); }
   @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } }
+  .ad-video { text-align: center; padding-top: 16px; }
+  .ad-video video { width: 100%; max-width: 320px; height: auto; aspect-ratio: 9 / 16; border-radius: 16px; border: 1px solid var(--surface-2); background: #000; display: block; margin: 0 auto 10px; }
   .btns { display: flex; flex-wrap: wrap; gap: 12px; }
   .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; font-weight: 700; text-decoration: none; border: 2px solid var(--line); color: var(--text); background: transparent; cursor: pointer; font-size: 16px; }
   .btn.primary { background: var(--surface); border-color: var(--accent); }
@@ -264,6 +266,12 @@
       <figcaption>Live TV on a Chromecast with Google TV</figcaption>
     </figure>
   </div>
+
+  <section id="video" class="ad-video">
+    <h2>See Live TV in 25 seconds</h2>
+    <video src="media/livetv-ad.mp4" poster="media/livetv-ad-poster.jpg" controls playsinline preload="none" width="1080" height="1920"></video>
+    <p class="small"><a href="media/livetv-ad.mp4" download="LiveTV-ad.mp4">⬇ Download the video</a> to share it on WhatsApp, TikTok or Facebook.</p>
+  </section>
 
   <section id="features">
     <h2>What's in the app</h2>
