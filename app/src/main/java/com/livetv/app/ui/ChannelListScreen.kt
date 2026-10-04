@@ -242,10 +242,14 @@ fun ChannelListScreen(
     }
     // "1+List": the channel playing on the left, kept when coming back from full screen.
     val listMode = wideScreen && tileLayout == TileLayout.List
+    // "News": the top bar and filters hide; Back brings them back (newsBar) until the player is highlighted again.
+    val newsMode = wideScreen && tileLayout == TileLayout.News
+    var newsBar by remember { mutableStateOf(false) }
+    val newsFocus = remember { FocusRequester() }
     var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
     // TVs and tablets show a fixed window of tiles that slides along the list one channel at a
     // time; [windowStart] is the channel in the first tile.
-    val windowed = wideScreen && !listMode
+    val windowed = wideScreen && !listMode && !newsMode
     val slots = tileLayout.columns * tileLayout.rows
     var windowStart by rememberSaveable { mutableIntStateOf(0) }
     val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
@@ -256,6 +260,7 @@ fun ChannelListScreen(
     SideEffect { sessionTileIds = twoIds; sessionTilesFull = tilesFull }
     // 1+3 has no full screen view: OK on its big player opens the channel straight away.
     val fullTiles = tilesFull && windowed && tileLayout != TileLayout.Five
+    val hideBars = fullTiles || (newsMode && !newsBar)
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
     val window = when {
         !windowed -> emptyList()
@@ -320,7 +325,7 @@ fun ChannelListScreen(
         // and the rest show a picture.
         val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
-        val allowed = inForeground && !showSettings && !listMode && !Preview.metered(context)
+        val allowed = inForeground && !showSettings && !listMode && !newsMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
         if (!allowed) return@LaunchedEffect
         delay(600)
@@ -461,10 +466,10 @@ fun ChannelListScreen(
 
     Scaffold(
         // Full-screen tiles: no top bar and nothing around the tiles, which stays pure black.
-        containerColor = if (fullTiles) Color.Black else MaterialTheme.colorScheme.background,
-        contentWindowInsets = if (fullTiles) WindowInsets(0) else ScaffoldDefaults.contentWindowInsets,
+        containerColor = if (hideBars) Color.Black else MaterialTheme.colorScheme.background,
+        contentWindowInsets = if (hideBars) WindowInsets(0) else ScaffoldDefaults.contentWindowInsets,
         topBar = {
-            if (!fullTiles) TopAppBar(
+            if (!hideBars) TopAppBar(
                 title = {
                     if (searching) {
                         OutlinedTextField(
@@ -504,7 +509,7 @@ fun ChannelListScreen(
                         TextButton(
                             onClick = {
                                 tilesFull = false
-                                val next = TileLayout.entries[(tileLayout.ordinal + 1) % TileLayout.entries.size]
+                                val next = layouts[(layouts.indexOf(tileLayout) + 1) % layouts.size]
                                 if (next.separateTvs && !premium) {
                                     upsellFor = next
                                 } else {
@@ -580,7 +585,7 @@ fun ChannelListScreen(
                 }
                 // One row: All, Favorites, then genres (countries are picked in Settings; favorites
                 // also lead the list). All clears every filter; tapping a selected chip clears it.
-                if (!fullTiles) ChipRow(
+                if (!hideBars) ChipRow(
                     focus = chipFocus,
                     items = listOf(FILTER_ALL, FILTER_FAVORITES) + state.categories,
                     selected = setOfNotNull(
@@ -599,7 +604,7 @@ fun ChannelListScreen(
                         }
                     },
                 )
-                if (!fullTiles && !state.loading && state.channels.isNotEmpty()) {
+                if (!hideBars && !newsMode && !state.loading && state.channels.isNotEmpty()) {
                     // The channel count, with Live TV's "advertise with us" ticker running beside it now and then.
                     // 1×2 and 2×2 have room for a bigger ticker in its own band above the tiles.
                     val bandTicker = windowed && (tileLayout == TileLayout.Two || tileLayout == TileLayout.Four)
@@ -634,6 +639,26 @@ fun ChannelListScreen(
                     // Tiles are sized so the screen holds whole rows, and the remote scrolls a
                     // row at a time, so no tile is ever cut off at the top or bottom. Each
                     // tile's picture is 16:9, so a playing channel fills it edge to edge.
+                    newsMode -> NewsMode(
+                        channels = channels,
+                        all = state.channels,
+                        selectedId = listChannelId ?: state.lastWatchedId,
+                        sound = previewSound,
+                        playing = inForeground && !showSettings,
+                        favorites = state.favorites,
+                        focus = newsFocus,
+                        onSelect = { listChannelId = it.id; onWatch(it) },
+                        onOpen = onPlay,
+                        onBack = {
+                            newsBar = true
+                            scope.launch {
+                                withFrameNanos { }
+                                withFrameNanos { }
+                                runCatching { layoutButtonFocus.requestFocus() }
+                            }
+                        },
+                        onFocused = { newsBar = false },
+                    )
                     listMode -> PlayerWithList(
                         channels = channels,
                         all = state.channels,
@@ -1722,6 +1747,8 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     /** Four separate TVs, like 1×2. */
     Four("2×2", 2, 2),
     Six("2×3", 3, 2),
+    /** Like a 24-hour news channel: one player with weather, markets, prayer times, stories and a sponsor around it. */
+    News("News", 1, 1),
 }
 
 /**
@@ -1730,8 +1757,11 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
  */
 private var sessionTileLayout: TileLayout? = null
 
+/** The layouts the top-bar button steps through; News mode is Live TV's only. */
+private val layouts = TileLayout.entries.filter { it != TileLayout.News || Edition.LIVE_TV }
+
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
-private val TileLayout.separateTvs get() = this != TileLayout.List
+private val TileLayout.separateTvs get() = this != TileLayout.List && this != TileLayout.News
 
 /**
  * 1×2, 2×2 and 2×3's channels, and the tile opened full screen, kept while a channel plays full

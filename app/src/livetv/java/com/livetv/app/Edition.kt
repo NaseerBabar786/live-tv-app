@@ -28,6 +28,7 @@ import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
 import com.livetv.app.ui.SponsorScreen
 import com.livetv.app.ui.SponsorBox
+import com.livetv.app.ui.SponsorVideoBox
 import com.livetv.app.ui.SponsorStrip
 import com.livetv.app.ui.SponsorTicker
 import com.livetv.app.sponsor.Sponsor
@@ -162,6 +163,10 @@ fun EditionSponsorBar(modifier: Modifier) = SponsorBar(modifier)
 @Composable
 fun EditionSponsorBox(modifier: Modifier) = SponsorBox(modifier)
 
+/** News mode's sponsor corner: a picture, or the sponsor's muted video while [allowVideo]. */
+@Composable
+fun EditionSponsorVideoBox(modifier: Modifier, allowVideo: Boolean) = SponsorVideoBox(modifier, allowVideo)
+
 /** Whether any sponsor shows today, so layouts keep room for one only when there is. */
 @Composable
 fun editionHasSponsors(): Boolean {
@@ -171,7 +176,7 @@ fun editionHasSponsors(): Boolean {
 
 /** The "advertise with us" line: beside the channel count, or [big] in the band above the tiles. */
 @Composable
-fun EditionTicker(modifier: Modifier, big: Boolean = false) = SponsorTicker(modifier, big)
+fun EditionTicker(modifier: Modifier, big: Boolean = false, always: Boolean = false) = SponsorTicker(modifier, big, always)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

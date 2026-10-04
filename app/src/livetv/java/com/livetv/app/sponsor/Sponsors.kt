@@ -33,6 +33,8 @@ class Sponsor(
     val picture: ImageBitmap?,
     /** An optional wide 8:1 banner for the 1×2 bar; null when the sponsor has none. */
     val banner: ImageBitmap? = null,
+    /** An optional MP4 link, played muted in News mode's sponsor corner; empty when there is none. */
+    val video: String = "",
 ) {
     fun showsOn(day: String) =
         active && picture != null && (start.isEmpty() || day >= start) && (end.isEmpty() || day <= end)
@@ -92,7 +94,8 @@ object Sponsors {
                         .put("end", f.text("end"))
                         .put("active", f.optJSONObject("active")?.optBoolean("booleanValue") ?: false)
                         .put("image", f.text("image"))
-                        .put("banner", f.text("banner")),
+                        .put("banner", f.text("banner"))
+                        .put("video", f.text("video")),
                 )
             }
             file?.writeText(arr.toString())
@@ -125,6 +128,7 @@ object Sponsors {
             active = o.optBoolean("active"),
             picture = if (o.optBoolean("active")) decode(o.optString("image")) else null,
             banner = if (o.optBoolean("active")) o.optString("banner").takeIf { it.isNotEmpty() }?.let(::decode) else null,
+            video = o.optString("video").trim().takeIf { it.startsWith("https://") }.orEmpty(),
         )
     }
 

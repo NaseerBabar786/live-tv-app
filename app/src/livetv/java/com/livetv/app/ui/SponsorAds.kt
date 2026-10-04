@@ -1,6 +1,19 @@
 package com.livetv.app.ui
 
 import android.os.SystemClock
+import android.view.TextureView
+import androidx.annotation.OptIn
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.key
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -71,14 +84,21 @@ private var nextTickerAt = 0L
  * One line of text that scrolls from right to left across [modifier]'s space every 30 seconds,
  * inviting businesses to advertise. The owner sets the words on tv.bulkbazaar.ca/sponsors.
  * [big] is the band above the tiles of 1×2 and 2×2; otherwise it's the line beside the channel count.
+ * [always] keeps it running without the 30 second wait (News mode's bottom band).
  */
 @Composable
-fun SponsorTicker(modifier: Modifier = Modifier, big: Boolean = false) {
+fun SponsorTicker(modifier: Modifier = Modifier, big: Boolean = false, always: Boolean = false) {
     val text by Sponsors.ticker.collectAsStateWithLifecycle()
     val words = text ?: return
     var running by remember { mutableStateOf(false) }
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(words) {
+        // News mode: the line runs again and again, with a short pause between.
+        if (always) while (true) {
+            running = true
+            snapshotFlow { running }.first { !it }
+            delay(2_000)
+        }
         if (nextTickerAt == 0L) nextTickerAt = SystemClock.elapsedRealtime() + TICKER_FIRST_MS
         while (true) {
             delay(maxOf(0L, nextTickerAt - SystemClock.elapsedRealtime()))
@@ -230,6 +250,88 @@ fun SponsorBox(modifier: Modifier = Modifier) {
     Box(modifier.clip(CardShape).background(Color.Black)) {
         SponsorPicture(sponsor, Modifier.fillMaxSize())
     }
+}
+
+/**
+ * News mode's sponsor corner: a sponsor's 16:9 picture, the next one every minute, like [SponsorBox].
+ * A sponsor with a video link plays it instead, muted and looping, while [allowVideo] is true
+ * (News mode turns it off for a while when the live channel starts to stutter). The picture shows
+ * until the video's first frame, and stays when the video can't play.
+ */
+@Composable
+fun SponsorVideoBox(modifier: Modifier = Modifier, allowVideo: Boolean = true) {
+    val all by Sponsors.all.collectAsStateWithLifecycle()
+    val list = remember(all) { Sponsors.current() }
+    if (list.isEmpty()) return
+    var turn by remember { mutableIntStateOf(0) }
+    val sponsor = list[Math.floorMod(turn, list.size)]
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(sponsor.id, turn) {
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) SponsorViews.count(sponsor, "strip")
+        delay(STRIP_MS)
+        turn++
+    }
+    Box(modifier.clip(CardShape).background(Color.Black)) {
+        SponsorPicture(sponsor, Modifier.fillMaxSize())
+        if (allowVideo && sponsor.video.isNotEmpty()) key(sponsor.id, turn) { SponsorVideo(sponsor.video) }
+        Text(
+            "Sponsor",
+            color = Color.White,
+            fontSize = 11.sp,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(6.dp)
+                .background(Color.Black.copy(alpha = 0.6f), CardShape)
+                .padding(horizontal = 6.dp, vertical = 2.dp),
+        )
+    }
+}
+
+/** A sponsor's video: muted (its audio isn't even decoded), at most 720p, looping; hidden until it shows a picture. */
+@OptIn(UnstableApi::class)
+@Composable
+private fun SponsorVideo(url: String) {
+    val context = LocalContext.current
+    var showing by remember { mutableStateOf(false) }
+    val player = remember {
+        ExoPlayer.Builder(context).build().apply {
+            volume = 0f
+            repeatMode = Player.REPEAT_MODE_ONE
+            trackSelectionParameters = trackSelectionParameters.buildUpon()
+                .setMaxVideoSize(1280, 720)
+                .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, true)
+                .build()
+            addListener(object : Player.Listener {
+                override fun onRenderedFirstFrame() { showing = true }
+                override fun onPlayerError(error: PlaybackException) { showing = false }
+            })
+            setMediaItem(MediaItem.fromUri(url))
+            playWhenReady = true
+            prepare()
+        }
+    }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_STOP -> player.pause()
+                Lifecycle.Event.ON_START -> player.play()
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            player.release()
+        }
+    }
+    AndroidView(
+        factory = { ctx -> TextureView(ctx).also { player.setVideoTextureView(it) } },
+        onRelease = { player.clearVideoTextureView(it) },
+        modifier = Modifier
+            .fillMaxSize()
+            .graphicsLayer { alpha = if (showing) 1f else 0f },
+    )
 }
 
 /**

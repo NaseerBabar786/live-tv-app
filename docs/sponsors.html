@@ -46,7 +46,7 @@
 
 <main class="wrap">
   <h1>Sponsors</h1>
-  <p class="lead">Businesses that pay to be shown in Live TV (version 1.8.90 and newer). Each one shows in turn on the start screen, in the strip under the 1+List channel list, in a bar under the tiles of 1×2, 2×2 and 2×3 (their wide banner if you add one), under the side tiles of 1+3, and in a small corner card after a channel change (at most every 20 minutes). How often each was shown is on the <a href="stats#sponsors">Stats</a> page. TVs pick up changes the next time the app starts.</p>
+  <p class="lead">Businesses that pay to be shown in Live TV (version 1.8.90 and newer). Each one shows in turn on the start screen, in the strip under the 1+List channel list, in a bar under the tiles of 1×2, 2×2 and 2×3 (their wide banner if you add one), under the side tiles of 1+3, in the corner of News mode (as a muted video when you add a video link), and in a small corner card after a channel change (at most every 20 minutes). How often each was shown is on the <a href="stats#sponsors">Stats</a> page. TVs pick up changes the next time the app starts.</p>
   <div id="notReady" class="panel hidden">This page will work once Firebase is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't an admin. <button class="btn" data-signout>Use another account</button></div>
@@ -67,6 +67,9 @@
       </label>
       <img id="bannerPreview" class="banner-preview hidden" alt="">
       <button class="btn hidden" id="bannerRemove" type="button" style="margin:-4px 0 14px">Remove banner</button>
+      <label class="f">Video link for News mode (optional; an MP4 link, 10 to 30 seconds, 720p or smaller, under 10 MB, plays muted)
+        <input type="url" id="video" maxlength="400" placeholder="e.g. https://tv.bulkbazaar.ca/ads/khan-meat.mp4">
+      </label>
       <label class="f">Business name <input type="text" id="name" maxlength="60" required placeholder="e.g. Khan Halal Meat"></label>
       <label class="f">Short line (optional) <input type="text" id="line" maxlength="120" placeholder="e.g. Fresh halal meat, open 7 days"></label>
       <label class="f">Phone or website (optional) <input type="text" id="contact" maxlength="60" placeholder="e.g. 416-555-0100 or khanmeat.ca"></label>
@@ -244,6 +247,7 @@ if (!configured) {
     $("bannerFile").value = ""; showBanner();
     $("formTitle").textContent = s ? "Edit sponsor" : "New sponsor";
     $("name").value = s?.name || ""; $("line").value = s?.line || ""; $("contact").value = s?.contact || "";
+    $("video").value = s?.video || "";
     $("start").value = s?.start || ""; $("end").value = s?.end || ""; $("active").checked = s ? !!s.active : true;
     $("file").value = ""; $("formErr").textContent = dealNote;
     for (const [k, id] of Object.entries(DEAL_FIELDS)) $(id).value = (s && deals[s.id]?.[k]) || "";
@@ -286,7 +290,9 @@ if (!configured) {
     const data = {
       name: $("name").value.trim(), line: $("line").value.trim(), contact: $("contact").value.trim(),
       start: $("start").value, end: $("end").value, active: $("active").checked, image, banner,
+      video: $("video").value.trim(),
     };
+    if (data.video && !/^https:\/\/\S+$/i.test(data.video)) return $("formErr").textContent = "The video link should start with https://";
     if (!data.name) return $("formErr").textContent = "Please type the business name.";
     if (!image) return $("formErr").textContent = "Please choose a picture.";
     if (data.start && data.end && data.end < data.start) return $("formErr").textContent = "The last day is before the first day.";
