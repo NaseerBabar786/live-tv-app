@@ -101,3 +101,60 @@ private val ROWS = listOf(
     NewsScreen.Panel.Markets,
     NewsScreen.Panel.Empty,
 )
+
+/**
+ * What the viewer chose for each section of CP24 mode (Settings > Customize CP24 screen). The
+ * first option of each section is the usual one. The sponsor and the advertising line always stay:
+ * when the big box shows something else, the sponsor moves beside the story under the channel.
+ */
+object Cp24Screen {
+    const val STORIES = "Top stories"
+    const val PRAYERS = "Prayer times"
+    const val CURRENCIES = "Currency rates"
+    const val MARKETS = "Markets"
+    const val NOTHING = "Nothing"
+    const val HOURS = "Next hours"
+    const val DAYS = "Next 4 days"
+    const val SPONSOR = "Sponsor"
+    const val SECOND = "Second channel"
+    const val TURNS = "Takes turns"
+    const val NEXT_PRAYER = "Next prayer"
+    const val GOLD = "Gold per tola"
+    const val PRICES = "Stock prices and rates"
+
+    enum class Section(val label: String, val options: List<String>) {
+        Band("Under the channel", listOf(STORIES, PRAYERS, CURRENCIES, MARKETS, NOTHING)),
+        Boxes("Weather boxes", listOf(HOURS, DAYS, PRAYERS)),
+        Middle("Big box", listOf(SPONSOR, PRAYERS, MARKETS, CURRENCIES, STORIES, SECOND)),
+        Line("Small line", listOf(TURNS, MARKETS, CURRENCIES, NEXT_PRAYER, GOLD)),
+        Crawl("Scrolling line", listOf(PRICES, STORIES, NOTHING)),
+    }
+
+    data class Choices(val picked: Map<Section, String>) {
+        operator fun get(section: Section): String = picked[section]?.takeIf { it in section.options } ?: section.options.first()
+    }
+
+    private var prefs: SharedPreferences? = null
+    private val _choices = MutableStateFlow(Choices(emptyMap()))
+    val choices: StateFlow<Choices> = _choices.asStateFlow()
+
+    fun init(context: Context) {
+        if (prefs != null) return
+        val p = context.applicationContext.getSharedPreferences("cp24_screen", Context.MODE_PRIVATE)
+        prefs = p
+        _choices.value = Choices(Section.entries.mapNotNull { s -> p.getString(s.name, null)?.let { s to it } }.toMap())
+    }
+
+    fun next(section: Section) {
+        val now = _choices.value
+        val list = section.options
+        val picked = list[(list.indexOf(now[section]) + 1) % list.size]
+        _choices.value = Choices(now.picked + (section to picked))
+        prefs?.edit()?.putString(section.name, picked)?.apply()
+    }
+
+    fun reset() {
+        _choices.value = Choices(emptyMap())
+        prefs?.edit()?.clear()?.apply()
+    }
+}
