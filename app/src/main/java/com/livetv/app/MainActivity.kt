@@ -38,6 +38,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Watching.init(this)
         com.livetv.app.data.Location.init(this)
+        com.livetv.app.data.NewsScreen.init(this)
         enableEdgeToEdge()
         if (savedInstanceState != null) showStartScreen = false
         setContent {

@@ -204,6 +204,9 @@ fun SettingsDialog(
                 WeatherCitySection(onPick = { pickingCity = true })
 
                 HorizontalDivider()
+                NewsScreenSection()
+
+                HorizontalDivider()
                 Text("MTA (Ahmadiyya)", fontWeight = FontWeight.Bold)
                 Row(
                     Modifier
