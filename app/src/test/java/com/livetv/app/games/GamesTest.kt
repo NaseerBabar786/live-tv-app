@@ -11,6 +11,7 @@ class GamesTest {
     fun everyGameStartsAndTakesEveryButton() {
         for (info in GAMES) {
             val game = info.create()
+            if (!game.ready) game.begin()
             assertFalse(info.name, game.over)
             repeat(300) { n ->
                 if (game.over) return@repeat
@@ -19,7 +20,7 @@ class GamesTest {
                 if (game.tickMs > 0) game.tick()
             }
         }
-        assertEquals(12, GAMES.size)
+        assertEquals(24, GAMES.size)
         assertEquals(GAMES.size, GAMES.map { it.id }.toSet().size)
     }
 
