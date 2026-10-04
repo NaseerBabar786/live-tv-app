@@ -91,6 +91,11 @@ fun SettingsDialog(
     var findingPlaylists by rememberSaveable { mutableStateOf(false) }
     var addingLink by rememberSaveable { mutableStateOf(false) }
     var pickingCity by rememberSaveable { mutableStateOf(false) }
+    var pickingTheme by rememberSaveable { mutableStateOf(false) }
+    if (pickingTheme) {
+        ThemePicker(onDismiss = { pickingTheme = false })
+        return
+    }
 
     if (pickingCity) {
         WeatherCityPicker(onDismiss = { pickingCity = false })
@@ -211,7 +216,7 @@ fun SettingsDialog(
                 ) { pickingCountries = true }
 
                 HorizontalDivider()
-                ThemeSection()
+                ThemeSection(onPick = { pickingTheme = true })
                 HorizontalDivider()
                 WeatherCitySection(onPick = { pickingCity = true })
 

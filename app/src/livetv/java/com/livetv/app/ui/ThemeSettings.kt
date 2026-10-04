@@ -4,6 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,41 +27,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-/** Settings: the whole app's colours, and the text size. */
+/** Settings: the theme in use (the list opens in its own menu) and the text size. */
 @Composable
-fun ThemeSection() {
+fun ThemeSection(onPick: () -> Unit) {
     Text("Themes and styles", fontWeight = FontWeight.Bold)
     Text(
-        "Colours for the whole app. Press OK on one to use it.",
+        "Colours for the whole app, ${Themes.all.size} to choose from.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )
-    Themes.all.forEach { p ->
-        val picked = p === Themes.current
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .focusGlow(ChipShape)
-                .clickable { Themes.pick(p) }
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            // A little preview: background, card, main colour and highlight.
-            Row(
-                Modifier
-                    .background(p.background, ChipShape)
-                    .border(1.dp, Color.White.copy(alpha = 0.25f), ChipShape)
-                    .padding(horizontal = 6.dp, vertical = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                listOf(p.surfaceVariant, p.primary, p.focus).forEach { c ->
-                    Box(Modifier.size(14.dp).background(c, CircleShape))
-                }
-            }
-            Spacer(Modifier.width(12.dp))
-            Text(p.name, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
-            if (picked) Text("✓", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-        }
+    OutlinedButton(onClick = onPick, modifier = Modifier.fillMaxWidth().focusGlow()) {
+        Swatches(Themes.current)
+        Spacer(Modifier.width(10.dp))
+        Text("Theme: ${Themes.current.name}  ›")
     }
     Row(
         Modifier
@@ -67,5 +51,53 @@ fun ThemeSection() {
     ) {
         Text("Text size", modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
         Text("${Themes.sizeName}  ›", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+/** The themes menu: every theme with a little preview. OK on one uses it straight away. */
+@Composable
+fun ThemePicker(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Themes") },
+        text = {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                Themes.all.forEach { p ->
+                    val picked = p === Themes.current
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .focusGlow(ChipShape)
+                            .clickable { Themes.pick(p) }
+                            .padding(horizontal = 8.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Swatches(p)
+                        Spacer(Modifier.width(12.dp))
+                        Text(p.name, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+                        if (picked) Text("✓", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Done") }
+        },
+    )
+}
+
+/** A little preview of a theme: background, card, main colour and highlight. */
+@Composable
+private fun Swatches(p: Palette) {
+    Row(
+        Modifier
+            .background(p.background, ChipShape)
+            .border(1.dp, Color.White.copy(alpha = 0.25f), ChipShape)
+            .padding(horizontal = 6.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        listOf(p.surfaceVariant, p.primary, p.focus).forEach { c ->
+            Box(Modifier.size(14.dp).background(c, CircleShape))
+        }
     }
 }
