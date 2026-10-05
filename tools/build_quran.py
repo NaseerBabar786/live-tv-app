@@ -20,7 +20,7 @@ OUT = os.path.join(os.path.dirname(__file__), "..", "quran", "src", "main", "ass
 
 # Translations, picked by name so a changed resource id can't swap in a different work.
 TRANSLATIONS = {
-    "ur": ("ur", ["jalandhr"], "Fateh Muhammad Jalandhry"),
+    "ur": ("ur", ["jalandh"], "Fateh Muhammad Jalandhry"),
     "en": ("en", ["saheeh", "sahih"], "Saheeh International"),
 }
 
