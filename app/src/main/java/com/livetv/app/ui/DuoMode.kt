@@ -413,7 +413,7 @@ internal fun DuoMode(
         val cardWidth = cardHeight * 16f / 9f
 
         Column(Modifier.fillMaxSize()) {
-            // The top bar: Modes, the mode's name, the clock and the weather.
+            // The top bar: Modes, the clock and the weather.
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -422,36 +422,18 @@ internal fun DuoMode(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 val modesFocused = at == DuoAt.Modes
+                // Just the Modes icon and word, plain; a yellow highlight when the remote is on it.
                 Row(
                     Modifier
                         .clip(RoundedCornerShape(50))
-                        .background(Color(0xFF3A4DB0))
-                        .padding(4.dp),
+                        .background(if (modesFocused) Yellow else Color.Transparent)
+                        .padding(horizontal = 14.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        Modifier
-                            .clip(RoundedCornerShape(50))
-                            .background(if (modesFocused) Yellow else Color.Transparent)
-                            .padding(horizontal = 16.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        val ink = if (modesFocused) Color.Black else Color.White
-                        Icon(Icons.Filled.Dashboard, contentDescription = null, tint = ink, modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text("Modes", color = ink, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                    }
-                    Text(
-                        "Duo",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        modifier = Modifier
-                            .padding(start = 4.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(Color.White.copy(alpha = 0.85f))
-                            .padding(horizontal = 16.dp, vertical = 6.dp),
-                    )
+                    val ink = if (modesFocused) Color.Black else Color.White.copy(alpha = 0.85f)
+                    Icon(Icons.Filled.Dashboard, contentDescription = null, tint = ink, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text("Modes", color = ink, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
                 }
                 Spacer(Modifier.weight(1f))
                 Clock()
