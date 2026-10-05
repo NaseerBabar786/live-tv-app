@@ -93,7 +93,7 @@ fun DetailScreen(
                     } else FocusButton(
                         onClick = onAct,
                         modifier = Modifier.focusRequester(mainFocus).widthIn(min = 160.dp),
-                        enabled = action != Action.Unavailable && action !is Action.Downloading,
+                        enabled = action != Action.Unavailable && action !is Action.Downloading && action != Action.Installing,
                     ) { Text(actionLabel(action), fontSize = 16.sp) }
                     if (installed != null && app.packageName != null) {
                         FocusOutlinedButton(onClick = onUninstall) { Text("Uninstall") }
