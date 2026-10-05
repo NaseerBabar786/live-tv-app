@@ -32,26 +32,26 @@ import androidx.compose.ui.unit.sp
  */
 @Composable
 fun ThemePicker(vm: AppViewModel, compact: Boolean = false) {
-    val custom = Palettes.custom(vm.customBackground, vm.customText)
+    val custom = Palettes.custom(vm.customBackground, vm.customText, vm.customExtra)
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ChoiceRow {
             (Palettes.presets + custom).forEach { p ->
                 ThemeTile(p, selected = vm.themeId == p.id, compact = compact) { vm.chooseTheme(p) }
             }
         }
-        if (vm.themeId == "custom") {
-            Text(S.background.get(), fontWeight = FontWeight.SemiBold)
-            ChoiceRow {
-                Palettes.backgrounds.forEach { c ->
-                    Swatch(c, vm.customBackground == c) { vm.chooseCustomColors(background = c) }
-                }
-            }
-            Text(S.textColour.get(), fontWeight = FontWeight.SemiBold)
-            ChoiceRow {
-                Palettes.textColors.forEach { c ->
-                    Swatch(c, vm.customText == c) { vm.chooseCustomColors(text = c) }
-                }
-            }
+        if (vm.themeId != "custom") {
+            ChoiceRow { Choice(S.customizeTheme.get(), false) { vm.customizeCurrent() } }
+        } else {
+            val p = vm.palette
+            ColourRow(S.background.get(), Palettes.backgrounds, p.background) { vm.chooseCustomColors(background = it) }
+            ColourRow(S.cardColour.get(), Palettes.backgrounds, p.card) { vm.chooseCustomColor("card", it) }
+            ColourRow(S.quranColour.get(), Palettes.textColors, p.arabic) { vm.chooseCustomColor("arabic", it) }
+            ColourRow(S.textColour.get(), Palettes.textColors, p.text) { vm.chooseCustomColors(text = it) }
+            ColourRow(S.accentColour.get(), Palettes.accents, p.accent) { vm.chooseCustomColor("accent", it) }
+            ColourRow(S.highlightColour.get(), Palettes.highlights, p.highlight) { vm.chooseCustomColor("highlight", it) }
+            ColourRow(S.barColour.get(), HomeTiles.swatches, p.bar) { vm.chooseCustomColor("bar", it) }
+            ColourRow(S.letterCardColour.get(), Palettes.backgrounds, p.letterCard) { vm.chooseCustomColor("letterCard", it) }
+            ColourRow(S.letterTextColour.get(), Palettes.textColors, p.letterText) { vm.chooseCustomColor("letterText", it) }
         }
         Text(S.lineSpacing.get(), fontWeight = FontWeight.SemiBold)
         ChoiceRow {
@@ -59,6 +59,15 @@ fun ThemePicker(vm: AppViewModel, compact: Boolean = false) {
                 Choice(label.get(), vm.lineSpacing == i) { vm.chooseLineSpacing(i) }
             }
         }
+    }
+}
+
+/** A label and a row of colour swatches, the one in use ticked. */
+@Composable
+private fun ColourRow(label: String, colours: List<Color>, current: Color, onPick: (Color) -> Unit) {
+    Text(label, fontWeight = FontWeight.SemiBold)
+    ChoiceRow {
+        (listOf(current) + colours).distinct().forEach { c -> Swatch(c, current == c) { onPick(c) } }
     }
 }
 

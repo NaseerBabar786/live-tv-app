@@ -113,9 +113,9 @@ private fun SurahRow(s: Surah, modifier: Modifier, onClick: () -> Unit) {
             modifier = Modifier
                 .size(44.dp)
                 .clip(CircleShape)
-                .background(Green),
+                .background(palette.bar),
             contentAlignment = Alignment.Center,
-        ) { Text("${s.number}", fontWeight = FontWeight.Bold, color = Gold) }
+        ) { Text("${s.number}", fontWeight = FontWeight.Bold, color = palette.barAccent) }
         Column(modifier = Modifier.weight(1f)) {
             Text(s.nameEn, fontSize = 19.sp, fontWeight = FontWeight.SemiBold)
             Text(
@@ -221,19 +221,19 @@ private fun SurahHeader(surah: Surah, q: QuranText, reciterName: String) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(TileShape)
-            .background(Green)
+            .background(palette.bar)
             .padding(14.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ArabicText("سُوۡرَةُ ${surah.nameAr}", size = 30.sp, color = Gold, align = TextAlign.Center)
+        ArabicText("سُوۡرَةُ ${surah.nameAr}", size = 30.sp, color = palette.barAccent, align = TextAlign.Center)
         Text(
             "${tr(surah.meaningEn, surah.meaningUr)} · ${surah.ayahs.size} ${S.ayahs.get()} · $reciterName",
             fontSize = 14.sp,
-            color = Color.White.copy(alpha = 0.85f),
+            color = palette.onBar.copy(alpha = 0.85f),
             textAlign = TextAlign.Center,
         )
         if (surah.number != 1 && surah.number != 9) {
-            ArabicText(q.bismillah, size = 30.sp, color = Cream, align = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            ArabicText(q.bismillah, size = 30.sp, color = palette.onBar, align = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         }
     }
 }

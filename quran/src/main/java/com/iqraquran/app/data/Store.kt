@@ -44,6 +44,10 @@ class Store(context: Context) {
         get() = prefs.getInt("custom_text", 0xFF222222.toInt())
         set(v) = prefs.edit().putInt("custom_text", v).apply()
 
+    /** One more colour of the Custom theme (card, arabic, accent, highlight) as ARGB; 0 = automatic. */
+    fun customColor(slot: String): Int = prefs.getInt("custom_$slot", 0)
+    fun setCustomColor(slot: String, argb: Int) = prefs.edit().putInt("custom_$slot", argb).apply()
+
     /** Extra space between lines of Quran text: 0 normal, 1 wide, 2 wider. */
     var lineSpacing: Int
         get() = prefs.getInt("line_spacing", 0)

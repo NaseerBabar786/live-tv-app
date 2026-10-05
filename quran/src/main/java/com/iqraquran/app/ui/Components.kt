@@ -46,14 +46,14 @@ fun TopBar(title: String, onBack: (() -> Unit)?, actions: @Composable RowScope.(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Green)
+            .background(palette.bar)
             .statusBarsPadding()
             .padding(horizontal = 8.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (onBack != null) {
             IconButton(onClick = onBack, modifier = Modifier.focusRing(CircleShape)) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = S.back.get(), tint = Color.White)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = S.back.get(), tint = palette.onBar)
             }
         }
         Text(
@@ -62,7 +62,7 @@ fun TopBar(title: String, onBack: (() -> Unit)?, actions: @Composable RowScope.(
                 .weight(1f)
                 .padding(horizontal = 8.dp),
             style = MaterialTheme.typography.titleLarge,
-            color = Color.White,
+            color = palette.onBar,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
