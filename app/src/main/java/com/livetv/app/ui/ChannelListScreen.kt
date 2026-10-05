@@ -11,13 +11,11 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.mutableLongStateOf
 import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.roundToInt
 import android.app.Activity
 import android.content.Context
-import android.widget.Toast
 import android.net.ConnectivityManager
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -494,21 +492,16 @@ fun ChannelListScreen(
         }
     }
     // Otherwise Back doesn't close the app at once: on a TV it first goes up to the top bar,
-    // then it asks for a second press within 2 seconds.
+    // then it asks "Exit?" with Yes and No (the cursor starts on No).
     var topBarFocused by remember { mutableStateOf(false) }
-    var lastBackAt by remember { mutableLongStateOf(0L) }
+    var exitOpen by remember { mutableStateOf(false) }
     BackHandler(enabled = !searching) {
-        val now = System.currentTimeMillis()
         when {
             fullTiles -> tilesFull = false
             wideScreen && !topBarFocused -> runCatching { layoutButtonFocus.requestFocus() }
             // Browse never closes the app: Back on its rail opens the Modes menu instead.
             browseMode && !Edition.MAX -> modesOpen = true
-            now - lastBackAt < 2_000 -> (context as? Activity)?.finish()
-            else -> {
-                lastBackAt = now
-                Toast.makeText(context, "Press Back again to exit", Toast.LENGTH_SHORT).show()
-            }
+            else -> exitOpen = true
         }
     }
 
@@ -1186,6 +1179,7 @@ fun ChannelListScreen(
     }
 
     if (showSettings) settings { showSettings = false }
+    if (exitOpen) ExitDialog(onExit = { (context as? Activity)?.finish() }, onDismiss = { exitOpen = false })
     if (modesOpen) {
         ModesMenu(
             current = tileLayout,
@@ -1304,6 +1298,28 @@ private fun ModesMenu(
                 }
             }
         }
+    }
+}
+
+/** Asks before closing the app. The cursor starts on No, so a stray OK keeps watching. */
+@Composable
+private fun ExitDialog(onExit: () -> Unit, onDismiss: () -> Unit) {
+    val no = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        withFrameNanos { }
+        runCatching { no.requestFocus() }
+    }
+    SettingsTheme {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("Exit ${androidx.compose.ui.res.stringResource(R.string.app_name)}?") },
+            confirmButton = {
+                TextButton(onClick = onExit, modifier = Modifier.focusGlow()) { Text("Yes") }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss, modifier = Modifier.focusRequester(no).focusGlow()) { Text("No") }
+            },
+        )
     }
 }
 
