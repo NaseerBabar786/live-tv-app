@@ -29,7 +29,7 @@ jobs:
         run: python3 tools/build_logo_index.py
 
       - name: Run unit tests
-        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest
+        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest :appbazaar:testDebugUnitTest
 
       # Decodes the private signing key from the repository secrets, when set, so
       # every build is signed with the same key and updates install over the old app.
@@ -72,6 +72,16 @@ jobs:
         env:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
         run: ./gradlew :claudenotes:assembleDebug
+
+      - name: Build App Bazaar
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew :appbazaar:assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-bazaar-apk
+          path: appbazaar/build/outputs/apk/debug/appbazaar-debug.apk
 
       - uses: actions/upload-artifact@v4
         with:
@@ -279,3 +289,24 @@ jobs:
               --latest=false
           fi
           gh release edit multichat --notes "Always the newest Multi Chat for Android phones (now $version), from ${{ github.sha }}." || true
+
+      # App Bazaar: one fixed "app-bazaar" release, never marked "latest", always holding the newest
+      # build, so its link and the Downloader code tv.bulkbazaar.ca/bazaar never change:
+      # https://github.com/NaseerBabar786/live-tv-app/releases/download/app-bazaar/AppBazaar.apk
+      # The app updates itself from its own entry in apps.bulkbazaar.ca/apps.json.
+      - name: Publish App Bazaar
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep -oP 'versionName = "\K[^"]+' appbazaar/build.gradle.kts | head -1)
+          cp appbazaar/build/outputs/apk/debug/appbazaar-debug.apk AppBazaar.apk
+          if gh release view app-bazaar > /dev/null 2>&1; then
+            gh release upload app-bazaar AppBazaar.apk --clobber
+          else
+            gh release create app-bazaar AppBazaar.apk \
+              --title "App Bazaar $version" \
+              --notes "Always the newest App Bazaar build." \
+              --latest=false
+          fi
+          gh release edit app-bazaar --title "App Bazaar $version" --notes "Always the newest App Bazaar build (now $version), from ${{ github.sha }}."
