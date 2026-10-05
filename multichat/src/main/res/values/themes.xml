@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.MultiChat" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#0B141A</item>
+        <item name="android:statusBarColor">#111B21</item>
+        <item name="android:navigationBarColor">#111B21</item>
+    </style>
+</resources>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+<title>Multi Chat</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<aside id="bar">
+  <div id="accounts" role="tablist" aria-label="Accounts"></div>
+  <button class="tool add" id="add" title="Add an account">+</button>
+  <div class="grow"></div>
+  <button class="tool" id="btnTemplates" title="Quick replies (Ctrl+Shift+Q)" aria-label="Quick replies">
+    <svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 9h8M8 12h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="tool" id="btnView" title="Side by side (Ctrl+Shift+S)" aria-label="Side by side">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="7.5" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+  </button>
+  <button class="tool" id="btnLock" title="Lock (Ctrl+L)" aria-label="Lock">
+    <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+  </button>
+  <button class="tool" id="btnSettings" title="Settings" aria-label="Settings">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</aside>
+
+<main id="main">
+  <div id="update" hidden>
+    <span id="updateText"></span>
+    <button id="updateGet">Download</button>
+    <button id="updateLater" class="ghost">Later</button>
+  </div>
+  <div id="panes"></div>
+  <section id="welcome" hidden>
+    <img src="icon.png" alt="" width="96" height="96">
+    <h1>Welcome to Multi Chat</h1>
+    <p>Use several WhatsApp accounts on this PC at the same time, each in its own separate box.</p>
+    <ol>
+      <li>Press <b>Add account</b> and give it a name and colour, like “Bulk Bazaar” or “Personal”.</li>
+      <li>On your phone, open WhatsApp, tap <b>⋮ &gt; Linked devices &gt; Link a device</b>, and scan the QR code.</li>
+      <li>Repeat for each account. Every box stays signed in on its own.</li>
+    </ol>
+    <button id="welcomeAdd" class="primary">Add account</button>
+    <p class="fine">Multi Chat opens the official WhatsApp Web for each account. It is not made by or connected with WhatsApp or Meta.</p>
+  </section>
+</main>
+
+<aside id="drawer" hidden>
+  <header>
+    <h2>Quick replies</h2>
+    <button class="icon" id="drawerClose" aria-label="Close">✕</button>
+  </header>
+  <input id="tplSearch" type="search" placeholder="Search replies">
+  <p class="hint">Click a reply to type it into the open chat. It is never sent by itself: you press Send.</p>
+  <div id="tplList"></div>
+  <form id="tplForm">
+    <input id="tplTitle" placeholder="Short name, like Address" maxlength="60">
+    <textarea id="tplText" rows="4" placeholder="Message text" maxlength="4000" required></textarea>
+    <div class="row">
+      <button type="submit" class="primary" id="tplSave">Add reply</button>
+      <button type="button" class="ghost" id="tplCancel" hidden>Cancel</button>
+    </div>
+  </form>
+</aside>
+
+<div id="lock" hidden>
+  <div class="lockbox">
+    <img src="icon.png" alt="" width="72" height="72">
+    <h1>Multi Chat is locked</h1>
+    <form id="lockForm">
+      <input id="lockPin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="Enter PIN" aria-label="PIN">
+      <button class="primary" type="submit">Unlock</button>
+    </form>
+    <p id="lockError" class="error"></p>
+  </div>
+</div>
+
+<dialog id="accDialog">
+  <form method="dialog" id="accForm">
+    <h2 id="accTitle">Account</h2>
+    <div class="photo-row">
+      <div id="accAvatar" class="avatar big"></div>
+      <div>
+        <button type="button" id="accPhoto">Choose photo</button>
+        <button type="button" id="accPhotoRemove" class="ghost">Remove photo</button>
+      </div>
+    </div>
+    <label>Name <input id="accName" maxlength="40" required></label>
+    <div class="label">Colour</div>
+    <div id="accColors" class="swatches"></div>
+    <label class="check"><input type="checkbox" id="accMuted"> Turn off notifications for this account</label>
+    <label class="check"><input type="checkbox" id="accQuiet"> Quiet hours (no notifications)</label>
+    <div class="row times">
+      <label>From <input type="time" id="accFrom" value="22:00"></label>
+      <label>To <input type="time" id="accTo" value="07:00"></label>
+    </div>
+    <div class="row">
+      <button type="button" id="accUp" class="ghost">Move up</button>
+      <button type="button" id="accDown" class="ghost">Move down</button>
+      <button type="button" id="accReload" class="ghost">Reload</button>
+    </div>
+    <div class="row end">
+      <button type="button" id="accDelete" class="danger">Remove account</button>
+      <div class="grow"></div>
+      <button value="cancel" formnovalidate class="ghost">Cancel</button>
+      <button value="ok" class="primary" id="accOk">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="setDialog">
+  <form method="dialog" id="setForm">
+    <h2>Settings</h2>
+    <h3>PIN lock</h3>
+    <p class="hint" id="pinStatus"></p>
+    <div class="row">
+      <input id="pinCurrent" type="password" inputmode="numeric" maxlength="8" placeholder="Current PIN" hidden>
+      <input id="pinNew" type="password" inputmode="numeric" maxlength="8" placeholder="New PIN (4 to 8 digits)">
+      <button type="button" id="pinSet">Set PIN</button>
+      <button type="button" id="pinRemove" class="ghost" hidden>Remove PIN</button>
+    </div>
+    <p id="pinMsg" class="error"></p>
+    <label>Lock automatically when the PC is not used for
+      <select id="setAutoLock">
+        <option value="0">Never</option>
+        <option value="1">1 minute</option>
+        <option value="5">5 minutes</option>
+        <option value="15">15 minutes</option>
+        <option value="30">30 minutes</option>
+        <option value="60">1 hour</option>
+      </select>
+    </label>
+    <h3>Notifications</h3>
+    <label class="check"><input type="checkbox" id="setHidePreview"> Hide message text (show only the account name)</label>
+    <h3>Windows</h3>
+    <label class="check"><input type="checkbox" id="setTray"> Keep running in the tray when the window is closed</label>
+    <label class="check"><input type="checkbox" id="setStartup"> Start with Windows</label>
+    <p class="fine" id="about"></p>
+    <div class="row end">
+      <div class="grow"></div>
+      <button value="ok" class="primary">Done</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="confirmDialog">
+  <form method="dialog">
+    <p id="confirmText"></p>
+    <div class="row end">
+      <div class="grow"></div>
+      <button value="cancel" class="ghost">Cancel</button>
+      <button value="ok" class="danger">Remove</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="util.js"></script>
+<script src="renderer.js"></script>
+</body>
+</html>
