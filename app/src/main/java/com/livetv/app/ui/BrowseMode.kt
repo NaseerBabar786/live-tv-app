@@ -1,6 +1,8 @@
 package com.livetv.app.ui
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.view.TextureView
 import androidx.activity.compose.BackHandler
@@ -84,6 +86,7 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import com.livetv.app.data.YouTube
 import kotlinx.coroutines.flow.first
@@ -92,7 +95,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.livetv.app.player.StreamPlayer
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.util.UUID
+import java.util.concurrent.Executors
 import kotlin.math.max
 
 /** One row of cards on the Browse screen: live channels, or (Live TV Max) movies and shows. */
@@ -115,30 +123,99 @@ private var sessionListIndex = 0
 private var sessionListOffset = 0
 
 /**
- * Still pictures of what each channel was showing, taken while Browse is open, so the cards that
- * aren't highlighted show the channel instead of its logo. Kept while the app is open.
+ * Still pictures of what each channel was showing, so the cards that aren't highlighted show the
+ * channel instead of its logo. Taken for every channel while Browse is open and the cursor rests,
+ * and saved on the device so they're already there the next time the app opens.
  */
 internal val browsePictures = mutableStateMapOf<String, ImageBitmap>()
 internal val browsePictureAt = mutableMapOf<String, Long>()
 /** A card's picture is taken again once it's this old and the card is on screen. */
 internal const val PICTURE_FRESH_MS = 5 * 60_000L
-private const val MAX_PICTURES = 150
+/** Cards that aren't on screen are refreshed less often. */
+private const val PICTURE_FRESH_OFF_SCREEN_MS = 30 * 60_000L
+/** Pictures kept in memory (about 115 KB each); the rest load from the device when shown. */
+private const val MAX_PICTURES = 300
+/** Pictures kept on the device. */
+private const val MAX_SAVED_PICTURES = 1500
+private const val PICTURE_W = 320
+private const val PICTURE_H = 180
+
+/** A silent player that takes the cards' pictures, the view it draws into, and whether a frame is in. */
+private class Grabber(val stream: StreamPlayer) {
+    val view = ViewHolder()
+    var showing by mutableStateOf(false)
+}
 
 /** The TextureView a player is drawing into, so its frame can be kept as a picture. */
 internal class ViewHolder { var view: TextureView? = null }
 
 /** The frame on [holder]'s view, small enough to keep many (16:9). */
-internal fun ViewHolder.picture(): ImageBitmap? =
-    runCatching { view?.getBitmap(384, 216)?.asImageBitmap() }.getOrNull()
+internal fun ViewHolder.picture(): ImageBitmap? = runCatching {
+    view?.getBitmap(PICTURE_W, PICTURE_H)?.let { full ->
+        full.copy(Bitmap.Config.RGB_565, false).also { full.recycle() }.asImageBitmap()
+    }
+}.getOrNull()
+
+private var pictureDir: File? = null
+private val pictureDisk = Executors.newSingleThreadExecutor()
+private fun pictureFile(id: String): File? =
+    pictureDir?.let { File(it, UUID.nameUUIDFromBytes(id.toByteArray()).toString() + ".jpg") }
+
+/** Sets up the folder the pictures are saved in, and trims it when it holds too many. */
+internal fun initPictures(context: Context) {
+    if (pictureDir != null) return
+    val dir = File(context.cacheDir, "browse_pictures").apply { mkdirs() }
+    pictureDir = dir
+    pictureDisk.execute {
+        val files = dir.listFiles().orEmpty()
+        if (files.size > MAX_SAVED_PICTURES) {
+            files.sortedBy { it.lastModified() }.take(files.size - MAX_SAVED_PICTURES).forEach { it.delete() }
+        }
+    }
+}
+
+/** When [id]'s picture was taken, here or on an earlier run (0 if never). */
+private fun pictureTakenAt(id: String): Long =
+    browsePictureAt[id] ?: (pictureFile(id)?.lastModified() ?: 0L).also { if (it > 0) browsePictureAt[id] = it }
+
+/** The picture saved on the device for [id], if any (read off the main thread). */
+internal suspend fun loadSavedPicture(id: String): ImageBitmap? = withContext(Dispatchers.IO) {
+    runCatching {
+        pictureFile(id)?.takeIf { it.exists() }?.let { f ->
+            BitmapFactory.decodeFile(f.path, BitmapFactory.Options().apply { inPreferredConfig = Bitmap.Config.RGB_565 })
+                ?.asImageBitmap()
+        }
+    }.getOrNull()
+}
+
+private fun rememberInMemory(id: String, picture: ImageBitmap) {
+    if (id !in browsePictures && browsePictures.size >= MAX_PICTURES) {
+        // Forget the oldest ones; they're still saved on the device.
+        browsePictures.keys.sortedBy { browsePictureAt[it] ?: 0L }.take(MAX_PICTURES / 5).forEach { browsePictures.remove(it) }
+    }
+    browsePictures[id] = picture
+}
 
 internal fun keepPicture(id: String, picture: ImageBitmap?) {
     if (picture == null) return
-    if (browsePictures.size > MAX_PICTURES) {
-        browsePictures.clear()
-        browsePictureAt.clear()
-    }
-    browsePictures[id] = picture
+    rememberInMemory(id, picture)
     browsePictureAt[id] = System.currentTimeMillis()
+    val file = pictureFile(id) ?: return
+    val bitmap = picture.asAndroidBitmap()
+    pictureDisk.execute {
+        runCatching {
+            val temp = File(file.path + ".tmp")
+            temp.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, 75, it) }
+            temp.renameTo(file)
+        }
+    }
+}
+
+/** Shows [id]'s saved picture when its card comes on screen without one in memory. */
+internal suspend fun showSavedPicture(id: String) {
+    if (id in browsePictures) return
+    val picture = loadSavedPicture(id) ?: return
+    if (id !in browsePictures) rememberInMemory(id, picture)
 }
 
 private const val PREFS = "browse"
@@ -300,29 +377,35 @@ internal fun BrowseMode(
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
 
-    // Only the highlighted card plays. Every other card on screen shows a still picture of what's
-    // on: a second, silent player opens each one in turn, keeps its first frame and closes again
-    // (one at a time, refreshed every few minutes; Wi-Fi or Ethernet only).
-    val grabber = remember {
-        StreamPlayer(context, preview = true).apply {
-            player.volume = 0f
-            player.trackSelectionParameters = player.trackSelectionParameters.buildUpon().setMaxVideoSizeSd().build()
+    // Only the highlighted card plays. Every other card shows a still picture of what's on: two
+    // silent players open the channels in turn, keep a frame and close again. They start with the
+    // cards around the cursor and on screen, then go through every row, so the pictures are already
+    // there when the cursor gets to them (refreshed every few minutes; Wi-Fi or Ethernet only).
+    val grabbers = remember {
+        List(2) {
+            Grabber(
+                StreamPlayer(context, preview = true).apply {
+                    player.volume = 0f
+                    player.trackSelectionParameters = player.trackSelectionParameters.buildUpon().setMaxVideoSizeSd().build()
+                },
+            )
         }
     }
-    val grabView = remember { ViewHolder() }
-    var grabId by remember { mutableStateOf<String?>(null) }
-    var grabShowing by remember { mutableStateOf(false) }
     val onScreen = remember { mutableStateMapOf<String, Int>() } // card id -> cards showing it
-    DisposableEffect(grabber) {
-        val listener = object : Player.Listener {
-            override fun onRenderedFirstFrame() {
-                grabShowing = true
-            }
+    DisposableEffect(grabbers) {
+        initPictures(context)
+        val listeners = grabbers.map { g ->
+            object : Player.Listener {
+                override fun onRenderedFirstFrame() {
+                    g.showing = true
+                }
+            }.also { g.stream.player.addListener(it) }
         }
-        grabber.player.addListener(listener)
         onDispose {
-            grabber.player.removeListener(listener)
-            grabber.release()
+            grabbers.forEachIndexed { i, g ->
+                g.stream.player.removeListener(listeners[i])
+                g.stream.release()
+            }
         }
     }
     val currentById by rememberUpdatedState(byId)
@@ -346,53 +429,69 @@ internal fun BrowseMode(
             }.distinct()
         }.orEmpty(),
     )
-    LaunchedEffect(playing) {
-        if (!playing) return@LaunchedEffect
-        delay(1_500) // let the highlighted card start first
-        while (true) {
-            if (metered(context)) {
-                delay(10_000)
-                continue
-            }
-            // Wait until the cursor has rested for a second before taking another picture.
-            val still = System.currentTimeMillis() - movedAt
-            if (still < 1_000) {
-                delay(1_000 - still)
-                continue
-            }
-            val now = System.currentTimeMillis()
-            val id = (currentNeighbours + onScreen.keys.toList())
-                .distinct()
-                .filter { it != currentFocused }
-                .firstOrNull { now - (browsePictureAt[it] ?: 0L) > PICTURE_FRESH_MS }
-            val channel = id?.let { currentById[it] }
-            if (id == null || channel == null || YouTube.isYouTube(channel.url)) {
-                if (id != null) browsePictureAt[id] = now // nothing to take; skip it for a while
-                delay(1_000)
-                continue
-            }
-            grabShowing = false
-            grabId = id
-            val startedAt = movedAt
-            var interrupted = false
-            try {
-                grabber.play(channel)
-                // The cursor moving again stops the picture straight away.
-                withTimeoutOrNull(10_000) { snapshotFlow { grabShowing || movedAt != startedAt }.first { it } }
-                if (grabShowing && movedAt == startedAt) {
-                    delay(400)
+    // Then every row, a card from each row in turn (first cards first).
+    val currentAll by rememberUpdatedState(
+        remember(rows) {
+            val lists = rows.map { it.channels }
+            buildList {
+                for (i in 0 until (lists.maxOfOrNull { it.size } ?: 0)) lists.forEach { l -> l.getOrNull(i)?.let { add(it.id) } }
+            }.distinct()
+        },
+    )
+    val taking = remember { mutableSetOf<String>() }
+    fun nextToTake(): String? {
+        val now = System.currentTimeMillis()
+        val near = (currentNeighbours + onScreen.keys.toList()).distinct()
+        fun wanted(id: String, freshFor: Long) =
+            id != currentFocused && id !in taking && now - pictureTakenAt(id) > freshFor
+        return near.firstOrNull { wanted(it, PICTURE_FRESH_MS) }
+            ?: currentAll.firstOrNull { wanted(it, PICTURE_FRESH_OFF_SCREEN_MS) }
+    }
+    grabbers.forEachIndexed { n, g ->
+        LaunchedEffect(playing, g) {
+            if (!playing) return@LaunchedEffect
+            delay(1_500L + n * 300L) // let the highlighted card start first
+            while (true) {
+                if (metered(context)) {
+                    delay(10_000)
+                    continue
                 }
-                if (grabShowing && movedAt == startedAt) keepPicture(id, grabView.picture())
-                interrupted = movedAt != startedAt
-            } finally {
-                grabber.stop()
-                grabId = null
-                grabShowing = false
+                // Wait until the cursor has rested for a second before taking another picture.
+                val still = System.currentTimeMillis() - movedAt
+                if (still < 1_000) {
+                    delay(1_000 - still)
+                    continue
+                }
+                val id = nextToTake()
+                val channel = id?.let { currentById[it] }
+                if (id == null || channel == null || YouTube.isYouTube(channel.url)) {
+                    if (id != null) browsePictureAt[id] = System.currentTimeMillis() // nothing to take; skip it for a while
+                    delay(if (id == null) 2_000 else 50)
+                    continue
+                }
+                taking += id
+                g.showing = false
+                val startedAt = movedAt
+                var interrupted = false
+                try {
+                    g.stream.play(channel)
+                    // The cursor moving again stops the picture straight away.
+                    withTimeoutOrNull(8_000) { snapshotFlow { g.showing || movedAt != startedAt }.first { it } }
+                    if (g.showing && movedAt == startedAt) {
+                        delay(250)
+                    }
+                    if (g.showing && movedAt == startedAt) keepPicture(id, g.view.picture())
+                    interrupted = movedAt != startedAt
+                } finally {
+                    g.stream.stop()
+                    g.showing = false
+                    taking -= id
+                }
+                // A channel that didn't open isn't tried again straight away (one cut short by the
+                // cursor moving is tried again once it rests).
+                if (!interrupted) browsePictureAt[id] = System.currentTimeMillis()
+                delay(150)
             }
-            // A channel that didn't open isn't tried again straight away (one cut short by the
-            // cursor moving is tried again once it rests).
-            if (!interrupted) browsePictureAt[id] = System.currentTimeMillis()
-            delay(400)
         }
     }
     DisposableEffect(previewId, sound, playing) {
@@ -439,6 +538,20 @@ internal fun BrowseMode(
             .fillMaxSize()
             .background(Brush.verticalGradient(listOf(palette.homeTop, palette.homeBottom))),
     ) {
+        // The picture takers draw here, out of sight under the rail and the cards.
+        val density = androidx.compose.ui.platform.LocalDensity.current
+        grabbers.forEach { g ->
+            AndroidView(
+                factory = { ctx -> TextureView(ctx).also { g.view.view = it; g.stream.player.setVideoTextureView(it) } },
+                onRelease = {
+                    if (g.view.view === it) g.view.view = null
+                    g.stream.player.clearVideoTextureView(it)
+                },
+                modifier = Modifier
+                    .size(with(density) { PICTURE_W.toDp() }, with(density) { PICTURE_H.toDp() })
+                    .graphicsLayer { alpha = 0.01f },
+            )
+        }
         val railCollapsed = 76.dp
         val contentWidth = maxWidth - railCollapsed - 24.dp
         // Phones (Live TV Max): one and a half cards across instead of three and a bit.
@@ -544,6 +657,7 @@ internal fun BrowseMode(
                             }
                             itemsIndexed(row.channels, key = { _, c -> c.id }) { i, channel ->
                                 val here = focusedKey == row.key to channel.id
+                                LaunchedEffect(channel.id) { showSavedPicture(channel.id) }
                                 DisposableEffect(channel.id) {
                                     onScreen[channel.id] = (onScreen[channel.id] ?: 0) + 1
                                     onDispose {
@@ -562,9 +676,6 @@ internal fun BrowseMode(
                                     streamView = previewView,
                                     showing = here && showing,
                                     picture = browsePictures[channel.id],
-                                    grab = grabber.takeIf { grabId == channel.id && !here },
-                                    grabView = grabView,
-                                    grabShowing = grabShowing,
                                     modifier = if (i == focusIndex) Modifier.focusRequester(rowRequester(row.key)) else Modifier,
                                     onFocused = {
                                         focusedKey = row.key to channel.id
@@ -670,10 +781,6 @@ private fun BrowseCard(
     showing: Boolean,
     /** A still of what the channel was showing, drawn over the logo. */
     picture: ImageBitmap?,
-    /** The silent player taking this card's picture, while it does. */
-    grab: StreamPlayer?,
-    grabView: ViewHolder,
-    grabShowing: Boolean,
     modifier: Modifier,
     onFocused: () -> Unit,
     onClick: () -> Unit,
@@ -709,17 +816,6 @@ private fun BrowseCard(
             }
             if (picture != null) {
                 Image(picture, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
-            }
-            if (grab != null) {
-                // Shows once its first frame is in (as the grid's pictures do), then that frame is kept.
-                AndroidView(
-                    factory = { ctx -> TextureView(ctx).also { grabView.view = it; grab.player.setVideoTextureView(it) } },
-                    onRelease = {
-                        if (grabView.view === it) grabView.view = null
-                        grab.player.clearVideoTextureView(it)
-                    },
-                    modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (grabShowing) 1f else 0f },
-                )
             }
             if (stream != null) {
                 AndroidView(
