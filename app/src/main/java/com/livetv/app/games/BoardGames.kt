@@ -253,6 +253,7 @@ class FourInRow(private val rnd: Random = Random.Default) : Game() {
 
 /** Open every square without a mine. The first square opened is always safe. */
 class Mines(private val rnd: Random = Random.Default, val cols: Int = 12, val rows: Int = 8, private val count: Int = 15) : Game() {
+    override val cursorRepeats = true
     val mine = BooleanArray(cols * rows)
     val open = BooleanArray(cols * rows)
     val flag = BooleanArray(cols * rows)
@@ -321,6 +322,7 @@ private val CARD_FACES = listOf("🍎", "🍌", "🍇", "🍒", "⭐", "🌙", "
 
 /** Twenty cards face down; turn two at a time to find the ten pairs. */
 class Memory(rnd: Random = Random.Default) : Game() {
+    override val cursorRepeats = true
     val cols = 5
     val rows = 4
     val cards: List<String> = (CARD_FACES + CARD_FACES).shuffled(rnd)

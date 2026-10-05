@@ -7,6 +7,7 @@ import kotlin.random.Random
  * three strengths, or two people. White is at the bottom and moves first.
  */
 class Chess(private val rnd: Random = Random.Default) : Game() {
+    override val cursorRepeats = true
     /** Square = row * 8 + column, row 0 at the top. Positive is White: 1 pawn, 2 knight, 3 bishop, 4 rook, 5 queen, 6 king. */
     class Position(
         val b: IntArray = IntArray(64),
@@ -64,11 +65,12 @@ class Chess(private val rnd: Random = Random.Default) : Game() {
     }
 
     override fun press(p: Pad) {
-        if (over || (vsTv && pos.side == -1)) return
+        if (over) return
         if (p != Pad.Ok) {
             cursor = moveCursor(cursor, p, 8, 8)
             return
         }
+        if (vsTv && pos.side == -1) return
         val legal = legalMoves(pos)
         if (selected >= 0 && cursor in targets) {
             play(Move(selected, cursor))

@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -470,6 +471,21 @@ private fun PlayingCard(card: Card?, w: androidx.compose.ui.unit.Dp, h: androidx
     val shape = RoundedCornerShape(w * 0.1f)
     Box(
         Modifier.size(w, h)
+            // A bright glow around the highlighted card so it's easy to find from the sofa.
+            .then(
+                if (highlight != null) Modifier.drawBehind {
+                    val r = w.toPx() * 0.1f
+                    for ((grow, alpha) in listOf(10.dp to 0.25f, 6.dp to 0.45f)) {
+                        val g = grow.toPx()
+                        drawRoundRect(
+                            highlight.copy(alpha = alpha),
+                            topLeft = Offset(-g, -g),
+                            size = Size(size.width + 2 * g, size.height + 2 * g),
+                            cornerRadius = CornerRadius(r + g, r + g),
+                        )
+                    }
+                } else Modifier
+            )
             .background(
                 when {
                     card == null -> Color.White.copy(alpha = 0.08f)
@@ -478,7 +494,8 @@ private fun PlayingCard(card: Card?, w: androidx.compose.ui.unit.Dp, h: androidx
                 },
                 shape,
             )
-            .border(if (highlight != null) 3.dp else 1.dp, highlight ?: Color(0xFF9E9E9E), shape)
+            .border(if (highlight != null) 5.dp else 1.dp, highlight ?: Color(0xFF9E9E9E), shape)
+            .then(if (highlight != null) Modifier.background(highlight.copy(alpha = 0.22f), shape) else Modifier)
             .padding(start = w * 0.08f, top = h * 0.02f),
     ) {
         val fs = with(LocalDensity.current) { (w * 0.3f).toSp() }
@@ -490,6 +507,9 @@ private fun PlayingCard(card: Card?, w: androidx.compose.ui.unit.Dp, h: androidx
     }
 }
 
+/** Solitaire's cursor: a vivid yellow that stands out on the green table whatever the app's theme. */
+private val SolitaireYellow = Color(0xFFFFEA00)
+
 @Composable
 internal fun SolitaireBoard(g: Solitaire, frame: MutableIntState) {
     frame.intValue
@@ -500,7 +520,7 @@ internal fun SolitaireBoard(g: Solitaire, frame: MutableIntState) {
         val boxH = maxHeight
         fun mark(p: Int): Color? = when {
             g.held == p -> Color(0xFF00E5FF)
-            g.pile == p && !g.over -> FocusColor
+            g.pile == p && !g.over -> SolitaireYellow
             else -> null
         }
         Column {
@@ -523,7 +543,7 @@ internal fun SolitaireBoard(g: Solitaire, frame: MutableIntState) {
                             val fromEnd = col.size - idx
                             val picked = (g.pile == p && fromEnd <= g.depth && !g.over) || (g.held == p && fromEnd <= g.heldCount)
                             Box(Modifier.offset(y = step * idx)) {
-                                PlayingCard(card, w, h, if (picked) mark(p) ?: FocusColor else null)
+                                PlayingCard(card, w, h, if (picked) mark(p) ?: SolitaireYellow else null)
                             }
                         }
                     }

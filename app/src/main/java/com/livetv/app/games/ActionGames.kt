@@ -229,7 +229,7 @@ class BrickBreaker : Game() {
 
     override fun press(p: Pad) {
         held = heldDirection(held, p, true, Pad.Left, Pad.Right)
-        if (p == Pad.Ok && stuck) {
+        if ((p == Pad.Ok || p == Pad.Up) && stuck) {
             stuck = false
             vx = speed * 0.5f
             vy = -speed * 0.87f
@@ -412,7 +412,7 @@ class SpaceDefender(private val rnd: Random = Random.Default) : Game() {
 
     override fun press(p: Pad) {
         held = heldDirection(held, p, true, Pad.Left, Pad.Right)
-        if (p == Pad.Ok && shots.size < 2) shots.add(floatArrayOf(shipX, shipY - 4f))
+        if ((p == Pad.Ok || p == Pad.Up) && shots.size < 2) shots.add(floatArrayOf(shipX, shipY - 4f))
     }
 
     override fun release(p: Pad) {

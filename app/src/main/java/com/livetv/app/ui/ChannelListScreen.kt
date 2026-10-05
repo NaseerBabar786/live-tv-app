@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -494,6 +495,8 @@ fun ChannelListScreen(
         when {
             fullTiles -> tilesFull = false
             wideScreen && !topBarFocused -> runCatching { layoutButtonFocus.requestFocus() }
+            // Browse never closes the app: Back on its rail opens the Modes menu instead.
+            browseMode && !Edition.MAX -> modesOpen = true
             now - lastBackAt < 2_000 -> (context as? Activity)?.finish()
             else -> {
                 lastBackAt = now
@@ -550,7 +553,7 @@ fun ChannelListScreen(
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
                         ) {
                             Icon(Icons.Filled.Tv, contentDescription = null)
-                            Text("Modes · ${tileLayout.label}", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            Text("Modes", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
                         }
                     }
                     if (onOpenVod != null) {
@@ -652,7 +655,8 @@ fun ChannelListScreen(
                 if (!hideBars && !newsMode && !state.loading && state.channels.isNotEmpty()) {
                     // The channel count, with Live TV's "advertise with us" ticker running beside it now and then.
                     // 1×2 has room for a bigger ticker in its own band above the tiles.
-                    val bandTicker = windowed && tileLayout == TileLayout.Two
+                    // (1×2 used to have a bigger ticker in its own band; it now matches 2×3.)
+                    val bandTicker = false
                     Row(
                         Modifier.fillMaxWidth().height(24.dp).padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -772,11 +776,25 @@ fun ChannelListScreen(
                     val minBanner = if (hasAd) 48.dp else 0.dp
                     val packedNaturalWidth = maxWidth / columns
                     val packedFits = packedNaturalWidth * 9f / 16f * rows + minBanner <= maxHeight
-                    val packedHeight = if (packedFits) packedNaturalWidth * 9f / 16f else (maxHeight - minBanner) / rows
+                    val sharedHeight = if (packedFits) packedNaturalWidth * 9f / 16f else (maxHeight - minBanner) / rows
                     // 2×2 always spans the whole width (its pictures stretch), so there are no black bands at the sides.
-                    val packedWidth = if (packedFits || tileLayout == TileLayout.Four) packedNaturalWidth else minOf(packedNaturalWidth, packedHeight * 16f / 9f * 1.25f)
-                    val bannerSpace = maxHeight - packedHeight * rows
-                    val bannerHeight = minOf(bannerSpace - 8.dp, maxWidth / 8)
+                    val sharedWidth = if (packedFits || tileLayout == TileLayout.Four) packedNaturalWidth else minOf(packedNaturalWidth, sharedHeight * 16f / 9f * 1.25f)
+                    // 1×2: the banner is the size 2×3's gets, and the two players sit in the middle with
+                    // the same gap above, between, beside and below them (and around the banner).
+                    val evenTwo = packed && tileLayout == TileLayout.Two
+                    val sixBanner = run {
+                        val natural = maxWidth / 3 * 9f / 16f
+                        val height = if (natural * 2 + minBanner <= maxHeight) natural else (maxHeight - minBanner) / 2
+                        if (hasAd) minOf(maxHeight - height * 2 - 8.dp, maxWidth / 8) else 0.dp
+                    }.coerceAtLeast(0.dp)
+                    val twoBanner = if (sixBanner >= 36.dp) sixBanner else 0.dp
+                    val twoGaps = if (twoBanner > 0.dp) 3 else 2 // vertical gaps: above, (between,) below
+                    val twoGap = if (!evenTwo) 0.dp else
+                        ((maxHeight - twoBanner - maxWidth * 9f / 32f) / (twoGaps - 27f / 32f)).coerceAtLeast(0.dp)
+                    val packedWidth = if (evenTwo) (maxWidth - twoGap * 3) / 2 else sharedWidth
+                    val packedHeight = if (evenTwo) packedWidth * 9f / 16f else sharedHeight
+                    val bannerSpace = if (evenTwo) maxHeight - twoGap - packedHeight else maxHeight - packedHeight * rows
+                    val bannerHeight = if (evenTwo) twoBanner else minOf(bannerSpace - 8.dp, maxWidth / 8)
                     @Composable
                     fun Tile(
                         index: Int,
@@ -1050,8 +1068,13 @@ fun ChannelListScreen(
                             }
                         } else
                         Column(
-                            if (packed) Modifier.fillMaxSize() else Modifier.fillMaxSize().padding(vertical = rowGap),
+                            when {
+                                evenTwo -> Modifier.fillMaxSize().padding(top = twoGap)
+                                packed -> Modifier.fillMaxSize()
+                                else -> Modifier.fillMaxSize().padding(vertical = rowGap)
+                            },
                             verticalArrangement = when {
+                                evenTwo -> Arrangement.Top
                                 packed -> if (hasAd) Arrangement.Top else Arrangement.Center
                                 fullTiles -> Arrangement.Center
                                 else -> Arrangement.spacedBy(rowGap)
@@ -1059,8 +1082,8 @@ fun ChannelListScreen(
                         ) {
                             window.chunked(columns).forEachIndexed { r, row ->
                                 Row(
-                                    Modifier.fillMaxWidth().padding(horizontal = if (packed) 0.dp else columnGap),
-                                    horizontalArrangement = Arrangement.spacedBy(if (packed) 0.dp else columnGap, Alignment.CenterHorizontally),
+                                    Modifier.fillMaxWidth().padding(horizontal = if (evenTwo) twoGap else if (packed) 0.dp else columnGap),
+                                    horizontalArrangement = Arrangement.spacedBy(if (evenTwo) twoGap else if (packed) 0.dp else columnGap, Alignment.CenterHorizontally),
                                 ) {
                                     row.forEachIndexed { c, channel ->
                                         // Keyed by channel, so a playing card slides over without restarting.
@@ -1961,8 +1984,10 @@ private var sessionTileLayout: TileLayout? = null
 /** News, CP24 and Home: one channel with information around it (Live TV only). */
 private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine)
 
-/** The layouts the top-bar button steps through; News mode is Live TV's only. */
-private val layouts = TileLayout.entries.filter { (it !in INFO_LAYOUTS && it != TileLayout.Browse) || Edition.LIVE_TV }
+/** The layouts the top-bar button steps through; News mode is Live TV's only. Home mode was taken out (user's choice, 1.9.13). */
+private val layouts = TileLayout.entries.filter {
+    it != TileLayout.Home && ((it !in INFO_LAYOUTS && it != TileLayout.Browse) || Edition.LIVE_TV)
+}
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() = this != TileLayout.List && this != TileLayout.Browse && this !in INFO_LAYOUTS

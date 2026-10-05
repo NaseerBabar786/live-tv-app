@@ -56,7 +56,8 @@ class Cricket(private val rnd: Random = Random.Default) : Game() {
     }
 
     override fun press(p: Pad) {
-        if (over || p != Pad.Ok || ball < 0f || swung) return
+        // OK swings; so does any arrow, for remotes where OK is awkward to reach.
+        if (over || p == Pad.Hold || ball < 0f || swung) return
         swung = true
         val mid = (zoneStart + zoneEnd) / 2
         val off = abs(ball - mid)

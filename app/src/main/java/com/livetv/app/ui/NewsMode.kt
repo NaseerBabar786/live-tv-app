@@ -59,6 +59,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -557,8 +558,12 @@ fun NewsMode(
                         }
                     }
                 }
+                // The corner shows Toronto's traffic cameras, like CP24 (the sponsor still shows
+                // here if the cameras can't be reached).
                 Box(Modifier.fillMaxWidth().height(bottomHeight).padding(d(4f)), contentAlignment = Alignment.Center) {
-                    EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = now >= videoOkAt)
+                    TrafficCameras(Modifier.fillMaxSize(), ::s) {
+                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = now >= videoOkAt)
+                    }
                 }
             }
         }
@@ -1978,3 +1983,69 @@ private fun MyLayout(
         }
     }
 }
+
+/**
+ * The City of Toronto's highway traffic cameras, CP24 style. Each camera
+ * is a still picture the city refreshes every minute or so; one shows for [TRAFFIC_EACH_MS], then the
+ * next. Cameras that don't load are skipped; if none load, [fallback] shows instead for a while.
+ */
+@Composable
+private fun TrafficCameras(modifier: Modifier, s: (Float) -> TextUnit, fallback: @Composable () -> Unit) {
+    var index by remember { mutableStateOf((TRAFFIC_CAMERAS.indices).random()) }
+    var failures by remember { mutableStateOf(0) }
+    var stamp by remember { mutableStateOf(System.currentTimeMillis() / 60_000) }
+    // Next camera every few seconds (a picture that failed moves on at once, below).
+    LaunchedEffect(index, failures) {
+        if (failures >= TRAFFIC_CAMERAS.size) {
+            delay(10 * 60_000L) // none reachable: the sponsor shows, then try again
+            failures = 0
+            return@LaunchedEffect
+        }
+        delay(TRAFFIC_EACH_MS)
+        index = (index + 1) % TRAFFIC_CAMERAS.size
+        stamp = System.currentTimeMillis() / 60_000
+    }
+    if (failures >= TRAFFIC_CAMERAS.size) {
+        fallback()
+        return
+    }
+    val camera = TRAFFIC_CAMERAS[index]
+    Box(modifier.background(Color.Black)) {
+        coil3.compose.AsyncImage(
+            // A new address each minute, so the picture isn't served from the cache.
+            model = "https://opendata.toronto.ca/transportation/tmc/rescucameraimages/CameraImages/loc${camera.first}.jpg?t=$stamp",
+            contentDescription = "Traffic camera: ${camera.second}",
+            contentScale = ContentScale.FillBounds,
+            onSuccess = { failures = 0 },
+            onError = {
+                failures++
+                index = (index + 1) % TRAFFIC_CAMERAS.size
+            },
+            modifier = Modifier.fillMaxSize(),
+        )
+        Row(
+            Modifier.align(Alignment.TopStart).background(Color(0xFFD32F2F)).padding(horizontal = 6.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("TRAFFIC", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(12f))
+        }
+        Text(
+            camera.second,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = s(12f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .background(Color.Black.copy(alpha = 0.65f))
+                .padding(horizontal = 6.dp, vertical = 2.dp),
+        )
+    }
+}
+
+private const val TRAFFIC_EACH_MS = 8_000L
+
+/** The city's RESCU highway camera numbers (Gardiner, DVP, Lake Shore); ones that don't answer are skipped. */
+private val TRAFFIC_CAMERAS = (8001..8040).map { it to "Toronto traffic camera ${it - 8000}" }
