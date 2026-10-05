@@ -59,7 +59,10 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -97,7 +100,7 @@ private val TileShape = RoundedCornerShape(8.dp)
  * (held down, it adds the channel to Favorites or takes it off). Up goes to the big player, where
  * OK opens the channel full screen; Down comes back to the strip. At the start of the strip are
  * the Modes button and the group button (Favorites, each country, All channels). Only the big
- * player plays; the tiles show only each channel's number and name, so the strip stays quick.
+ * player plays; the tiles show only each channel's logo, number and name, so the strip stays quick.
  */
 @Composable
 internal fun StripMode(
@@ -481,7 +484,7 @@ private fun StripButton(height: Dp, focused: Boolean, top: String, bottom: Strin
     }
 }
 
-/** One channel in the strip: its number and name only (no pictures, so the strip stays quick). */
+/** One channel in the strip: its logo, number and name (no pictures, so the strip stays quick). */
 @Composable
 private fun StripTile(channel: Channel, width: Dp, height: Dp, focused: Boolean, live: Boolean, favorite: Boolean) {
     val scale by animateFloatAsState(if (focused) 1.1f else 1f, label = "scale")
@@ -502,22 +505,32 @@ private fun StripTile(channel: Channel, width: Dp, height: Dp, focused: Boolean,
     ) {
         val ink = if (focused) Color.Black else Color.White
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            if (channel.number > 0) {
-                Text(
-                    "${channel.number}",
-                    color = if (focused) Color.Black else Yellow,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    maxLines = 1,
+            if (channel.logo != null) {
+                // The channel's small logo (no live or still pictures, so the strip stays quick).
+                SubcomposeAsyncImage(
+                    model = channel.logo,
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.height(height * 0.36f).width(width * 0.6f),
+                    error = { },
+                    loading = { },
                 )
+                Spacer(Modifier.height(3.dp))
             }
             Text(
-                channel.name,
+                buildAnnotatedString {
+                    if (channel.number > 0) {
+                        withStyle(SpanStyle(color = if (focused) Color.Black else Yellow, fontWeight = FontWeight.Bold)) {
+                            append("${channel.number}  ")
+                        }
+                    }
+                    append(channel.name)
+                },
                 color = ink,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 13.sp,
-                lineHeight = 15.sp,
-                maxLines = 2,
+                fontSize = 12.sp,
+                lineHeight = 14.sp,
+                maxLines = if (channel.logo != null) 2 else 3,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,
             )
