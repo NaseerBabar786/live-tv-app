@@ -84,11 +84,16 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         private set
     var customText by mutableStateOf(Color(store.customText))
         private set
+    var customExtra by mutableStateOf(Palettes.customSlots.associateWith { store.customColor(it) })
+        private set
     var lineSpacing by mutableStateOf(store.lineSpacing)
         private set
 
+    var tileColors by mutableStateOf(HomeTiles.keys.associateWith { store.tileColor(it) })
+        private set
+
     /** The reading theme in use. */
-    val palette: Palette get() = Palettes.byId(themeId, customBackground, customText)
+    val palette: Palette get() = Palettes.byId(themeId, customBackground, customText, customExtra)
 
     var profiles by mutableStateOf(store.profiles)
         private set
@@ -164,9 +169,40 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun chooseCustomColors(background: Color? = null, text: Color? = null) {
-        if (themeId != "custom") chooseTheme(Palettes.custom(customBackground, customText))
+        if (themeId != "custom") chooseTheme(Palettes.custom(customBackground, customText, customExtra))
         background?.let { customBackground = it; store.customBackground = it.toArgb() }
         text?.let { customText = it; store.customText = it.toArgb() }
+    }
+
+    /** Sets one more colour of the Custom theme (see Palettes.customSlots); null = automatic. */
+    fun chooseCustomColor(slot: String, color: Color?) {
+        if (themeId != "custom") chooseTheme(Palettes.custom(customBackground, customText, customExtra))
+        val argb = color?.toArgb() ?: 0
+        store.setCustomColor(slot, argb)
+        customExtra = customExtra + (slot to argb)
+    }
+
+    /** Copies the theme on screen into Custom, so the reader can change any of its colours. */
+    fun customizeCurrent() {
+        val p = palette
+        chooseCustomColors(background = p.background, text = p.text)
+        mapOf(
+            "card" to p.card, "arabic" to p.arabic, "accent" to p.accent, "highlight" to p.highlight,
+            "bar" to p.bar, "letterCard" to p.letterCard, "letterText" to p.letterText,
+        )
+            .forEach { (slot, c) -> chooseCustomColor(slot, c) }
+    }
+
+    /** Colour of a home screen button: the reader's choice, else its default. */
+    fun tileColor(key: String): Color =
+        tileColors[key]?.takeIf { it != 0 }?.let { Color(it) } ?: HomeTiles.default(key)
+
+    /** Sets a home screen button's colour; null puts every button back to its default. */
+    fun chooseTileColor(key: String?, color: Color?) {
+        val keys = if (key == null) HomeTiles.keys else listOf(key)
+        val argb = color?.toArgb() ?: 0
+        keys.forEach { store.setTileColor(it, argb) }
+        tileColors = tileColors + keys.associateWith { argb }
     }
 
     fun chooseLineSpacing(v: Int) {

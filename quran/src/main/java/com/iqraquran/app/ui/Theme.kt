@@ -44,6 +44,22 @@ val KidColors = listOf(
     Color(0xFFEC407A), Color(0xFF9CCC65), Color(0xFFFFA726), Color(0xFF5C6BC0),
 )
 
+/** The big buttons on the home screen, their default colours and the colours to choose from. */
+object HomeTiles {
+    val keys = listOf("kids", "read", "hifz", "continue")
+    fun default(key: String): Color = when (key) {
+        "kids" -> KidColors[1]
+        "read" -> KidColors[0]
+        "hifz" -> KidColors[2]
+        else -> Green
+    }
+    val swatches = listOf(
+        Color(0xFFEF6C00), Color(0xFF26A69A), Color(0xFF7E57C2), Color(0xFF0B5D45),
+        Color(0xFF1565C0), Color(0xFF0F1B2D), Color(0xFFC62828), Color(0xFF8A5A2B),
+        Color(0xFFAD1457), Color(0xFF546E7A), Color(0xFF2E7D32), Color(0xFF37474F),
+    )
+}
+
 /** Scheherazade New (SIL Open Font License): a font made for the Quran's full set of marks. */
 val QuranFont = FontFamily(Font(R.font.scheherazade))
 
@@ -72,7 +88,17 @@ data class Palette(
     /** Background of the ayah being recited. */
     val highlight: Color,
     val dark: Boolean,
-)
+    /** Top bars and the surah title banner. */
+    val bar: Color = Green,
+    /** Kids Qaida letter cards and their letters. */
+    val letterCard: Color = Cream,
+    val letterText: Color = GreenDark,
+) {
+    /** Text and icons on [bar]. */
+    val onBar: Color get() = if (bar.luminance() > 0.45f) Color(0xFF111111) else Color.White
+    /** Surah names on [bar]. */
+    val barAccent: Color get() = if (bar.luminance() > 0.45f) Color(0xFF5D4300) else Gold
+}
 
 object Palettes {
     val classic = Palette(
@@ -118,7 +144,26 @@ object Palettes {
         accent = Color(0xFFFFEB3B), onAccent = Color.Black, highlight = Color(0xFF263238), dark = true,
     )
 
-    val presets = listOf(classic, paper, sepia, mushaf, softDark, night, contrast)
+    val sky = Palette(
+        "sky", "Sky", "آسمانی",
+        background = Color(0xFFE8EEF4), card = Color(0xFFF5F8FB), cardAlt = Color(0xFFD6E1EB),
+        arabic = Color(0xFF16263A), text = Color(0xFF1B2A3A), muted = Color(0xFF4F6275),
+        accent = Color(0xFF2F6690), onAccent = Color.White, highlight = Color(0xFFD3E4F2), dark = false,
+    )
+    val grey = Palette(
+        "grey", "Soft grey (e-ink)", "ہلکا سرمئی",
+        background = Color(0xFFE4E4E0), card = Color(0xFFEFEFEB), cardAlt = Color(0xFFD3D3CE),
+        arabic = Color(0xFF1C1C1C), text = Color(0xFF1E1E1E), muted = Color(0xFF55554F),
+        accent = Color(0xFF3D3D3D), onAccent = Color.White, highlight = Color(0xFFD0D0CA), dark = false,
+    )
+    val midnight = Palette(
+        "midnight", "Midnight blue", "گہرا نیلا",
+        background = Color(0xFF0F1B2D), card = Color(0xFF17263D), cardAlt = Color(0xFF203350),
+        arabic = Color(0xFFF1E6C8), text = Color(0xFFDCE6F2), muted = Color(0xFF9FB1C7),
+        accent = Color(0xFF7FB2E5), onAccent = Color(0xFF0B1422), highlight = Color(0xFF243A5A), dark = true,
+    )
+
+    val presets = listOf(classic, paper, sepia, mushaf, sky, grey, softDark, midnight, night, contrast)
 
     /** Background choices for the Custom theme. */
     val backgrounds = listOf(
@@ -132,27 +177,50 @@ object Palettes {
         Color(0xFFFFFFFF), Color(0xFFFFF8E7), Color(0xFFE9C79A), Color(0xFFB9F6CA), Color(0xFFFFEB3B),
     )
 
-    /** A theme built from the reader's own background and text colours. */
-    fun custom(background: Color, text: Color): Palette {
+    /** Accent colours (headings, ayah numbers, selected buttons) for the Custom theme. */
+    val accents = listOf(
+        Gold, Color(0xFFD9A55B), Color(0xFF0B5D45), Color(0xFF2E7D4F), Color(0xFF2F6690), Color(0xFF7FB2E5),
+        Color(0xFF8A5A2B), Color(0xFFC62828), Color(0xFFAD1457), Color(0xFF7E57C2), Color(0xFFEF6C00), Color(0xFF3D3D3D),
+    )
+
+    /** Highlight colours (the ayah being recited) for the Custom theme. */
+    val highlights = listOf(
+        Color(0xFFE3F0E6), Color(0xFFE6D2A8), Color(0xFFD3E4F2), Color(0xFFFFF59D), Color(0xFFF8BBD0), Color(0xFFD0D0CA),
+        Color(0xFF1F6B52), Color(0xFF33423E), Color(0xFF243A5A), Color(0xFF2E2418), Color(0xFF263238), Color(0xFF4A148C),
+    )
+
+    /** The colours of the Custom theme the reader can set one by one (besides background and text). */
+    val customSlots = listOf("card", "arabic", "accent", "highlight", "bar", "letterCard", "letterText")
+
+    /**
+     * A theme built from the reader's own colours. [extra] holds the colours named in
+     * [customSlots] as ARGB; a missing or 0 entry is worked out from the background and text.
+     */
+    fun custom(background: Color, text: Color, extra: Map<String, Int> = emptyMap()): Palette {
+        fun pick(slot: String, auto: Color) = extra[slot]?.takeIf { it != 0 }?.let { Color(it) } ?: auto
         val dark = background.luminance() < 0.4f
-        val accent = if (dark) Gold else Green
+        val accent = pick("accent", if (dark) Gold else Green)
+        val card = pick("card", lerp(background, text, 0.05f))
         return Palette(
             "custom", "Custom", "اپنی پسند",
             background = background,
-            card = lerp(background, text, 0.05f),
-            cardAlt = lerp(background, text, 0.12f),
-            arabic = text,
+            card = card,
+            cardAlt = lerp(card, text, 0.08f),
+            arabic = pick("arabic", text),
             text = text,
             muted = lerp(text, background, 0.3f),
             accent = accent,
-            onAccent = if (dark) GreenDark else Color.White,
-            highlight = lerp(background, accent, 0.22f),
+            onAccent = if (accent.luminance() > 0.45f) Color(0xFF111111) else Color.White,
+            highlight = pick("highlight", lerp(background, accent, 0.22f)),
             dark = dark,
+            bar = pick("bar", Green),
+            letterCard = pick("letterCard", Cream),
+            letterText = pick("letterText", GreenDark),
         )
     }
 
-    fun byId(id: String?, customBackground: Color, customText: Color): Palette =
-        if (id == "custom") custom(customBackground, customText) else presets.firstOrNull { it.id == id } ?: classic
+    fun byId(id: String?, customBackground: Color, customText: Color, extra: Map<String, Int> = emptyMap()): Palette =
+        if (id == "custom") custom(customBackground, customText, extra) else presets.firstOrNull { it.id == id } ?: classic
 }
 
 val LocalPalette = staticCompositionLocalOf { Palettes.classic }

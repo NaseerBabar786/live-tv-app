@@ -170,7 +170,7 @@ fun QaidaLessonScreen(vm: AppViewModel, id: Int) {
 
 @Composable
 private fun LetterCard(item: Qaida.Item, highlighted: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val bg by animateColorAsState(if (highlighted) Gold else Cream, label = "card")
+    val bg by animateColorAsState(if (highlighted) Gold else palette.letterCard, label = "card")
     Column(
         modifier = modifier
             .focusRing()
@@ -180,10 +180,10 @@ private fun LetterCard(item: Qaida.Item, highlighted: Boolean, modifier: Modifie
             .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ArabicText(item.text, size = 40.sp, color = GreenDark, align = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+        ArabicText(item.text, size = 40.sp, color = palette.letterText, align = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         val label = tr(item.en, item.ur)
         if (label.isNotEmpty()) {
-            Text(label, color = GreenDark.copy(alpha = 0.8f), fontSize = 14.sp, textAlign = TextAlign.Center, maxLines = 1)
+            Text(label, color = palette.letterText.copy(alpha = 0.8f), fontSize = 14.sp, textAlign = TextAlign.Center, maxLines = 1)
         }
     }
 }
@@ -272,7 +272,7 @@ fun QaidaQuizScreen(vm: AppViewModel, id: Int) {
                         val color = when {
                             correct && isAnswer -> Good
                             index in wrong -> Bad
-                            else -> Cream
+                            else -> palette.letterCard
                         }
                         Box(
                             modifier = Modifier
@@ -293,7 +293,7 @@ fun QaidaQuizScreen(vm: AppViewModel, id: Int) {
                                 },
                             contentAlignment = Alignment.Center,
                         ) {
-                            ArabicText(option.text, size = 44.sp, color = GreenDark, align = TextAlign.Center)
+                            ArabicText(option.text, size = 44.sp, color = palette.letterText, align = TextAlign.Center)
                         }
                     }
                 }
