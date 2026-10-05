@@ -1,6 +1,11 @@
 package com.appbazaar.app.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +47,9 @@ fun HelpScreen(isTv: Boolean, onBack: () -> Unit, onPermission: () -> Unit) {
             Text("All apps")
         }
         Spacer(Modifier.height(18.dp))
-        Text("How to install apps", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        Logo(40)
+        Spacer(Modifier.height(18.dp))
+        Text("How to install apps", fontSize = 28.sp, fontWeight = FontWeight.Medium, color = Ink)
         Spacer(Modifier.height(6.dp))
         Text(
             "Press Install on any app. App Bazaar downloads it and Android asks you to confirm. " +
@@ -83,12 +90,15 @@ fun HelpScreen(isTv: Boolean, onBack: () -> Unit, onPermission: () -> Unit) {
 @Composable
 private fun Guide(title: String, steps: List<String>) {
     Spacer(Modifier.height(26.dp))
-    Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Accent)
+    Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = GreenDark)
     steps.forEachIndexed { i, s ->
         Spacer(Modifier.height(10.dp))
         Row(Modifier.widthIn(max = 900.dp)) {
-            Text("${i + 1}.", fontWeight = FontWeight.Bold, modifier = Modifier.width(28.dp))
-            Text(s, color = Color(0xFFDCE3EA), fontSize = 15.sp, lineHeight = 22.sp)
+            Box(Modifier.size(28.dp).clip(CircleShape).background(GreenSoft), contentAlignment = Alignment.Center) {
+                Text("${i + 1}", fontWeight = FontWeight.Bold, color = GreenDark, fontSize = 14.sp)
+            }
+            Spacer(Modifier.width(12.dp))
+            Text(s, color = Ink, fontSize = 15.sp, lineHeight = 22.sp)
         }
     }
 }

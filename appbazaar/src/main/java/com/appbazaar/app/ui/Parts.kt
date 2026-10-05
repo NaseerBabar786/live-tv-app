@@ -1,6 +1,7 @@
 package com.appbazaar.app.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.appbazaar.app.data.StoreApp
@@ -22,7 +24,8 @@ import com.appbazaar.app.data.StoreApp
 @Composable
 fun AppIcon(app: StoreApp, size: Dp) {
     Box(
-        Modifier.size(size).clip(RoundedCornerShape(size * 0.22f)).background(Color(app.iconColor)),
+        Modifier.size(size).clip(RoundedCornerShape(size * 0.22f)).background(Color(app.iconColor))
+            .border(1.dp, Line, RoundedCornerShape(size * 0.22f)),
         contentAlignment = Alignment.Center,
     ) {
         if (app.iconUrl != null) {
@@ -46,8 +49,8 @@ fun actionLabel(action: Action): String = when (action) {
 @Composable
 fun DownloadBar(action: Action, modifier: Modifier = Modifier) {
     if (action !is Action.Downloading) return
-    if (action.progress < 0f) LinearProgressIndicator(modifier, color = Accent)
-    else LinearProgressIndicator({ action.progress }, modifier, color = Accent)
+    if (action.progress < 0f) LinearProgressIndicator(modifier, color = Green, trackColor = GreenSoft)
+    else LinearProgressIndicator({ action.progress }, modifier, color = Green, trackColor = GreenSoft)
 }
 
 fun platformsLabel(app: StoreApp): String = when {
