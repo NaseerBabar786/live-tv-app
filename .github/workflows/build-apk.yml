@@ -29,7 +29,7 @@ jobs:
         run: python3 tools/build_logo_index.py
 
       - name: Run unit tests
-        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest :appbazaar:testDebugUnitTest
+        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest :appbazaar:testDebugUnitTest :quran:testDebugUnitTest
 
       # Decodes the private signing key from the repository secrets, when set, so
       # every build is signed with the same key and updates install over the old app.
@@ -67,6 +67,16 @@ jobs:
         with:
           name: multi-chat-debug-apk
           path: multichat/build/outputs/apk/debug/multichat-debug.apk
+
+      - name: Build Iqra Quran
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew :quran:assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iqra-quran-debug-apk
+          path: quran/build/outputs/apk/debug/quran-debug.apk
 
       - name: Build Notes for Claude
         env:
@@ -310,3 +320,34 @@ jobs:
               --latest=false
           fi
           gh release edit app-bazaar --title "App Bazaar $version" --notes "Always the newest App Bazaar build (now $version), from ${{ github.sha }}."
+
+      # Iqra Quran gets its own release per version (its in-app updater looks for the highest
+      # "iqra-quran-v…" tag), never marked "latest", so Live TV's links keep finding Live TV.
+      # A fixed "iqra-quran" release always holds the newest build, so App Bazaar and the
+      # Downloader code tv.bulkbazaar.ca/quran never change:
+      # https://github.com/NaseerBabar786/live-tv-app/releases/download/iqra-quran/IqraQuran.apk
+      - name: Publish Iqra Quran
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep -oP 'versionName = "\K[^"]+' quran/build.gradle.kts | head -1)
+          tag="iqra-quran-v${version}"
+          cp quran/build/outputs/apk/debug/quran-debug.apk IqraQuran.apk
+          if gh release view "$tag" > /dev/null 2>&1; then
+            gh release upload "$tag" IqraQuran.apk --clobber
+          else
+            gh release create "$tag" IqraQuran.apk \
+              --title "Iqra Quran $version" \
+              --notes "Iqra Quran $version from ${{ github.sha }}." \
+              --latest=false
+          fi
+          if gh release view iqra-quran > /dev/null 2>&1; then
+            gh release upload iqra-quran IqraQuran.apk --clobber
+          else
+            gh release create iqra-quran IqraQuran.apk \
+              --title "Iqra Quran (newest)" \
+              --notes "Always the newest Iqra Quran build." \
+              --latest=false
+          fi
+          gh release edit iqra-quran --notes "Always the newest Iqra Quran build (now $version), from ${{ github.sha }}." || true

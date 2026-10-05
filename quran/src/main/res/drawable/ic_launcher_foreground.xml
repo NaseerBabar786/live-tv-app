@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Crescent -->
+    <path android:fillColor="#F2C14E"
+        android:pathData="M54,22a10,10 0,1 0,9.5 13.2a8,8 0,1 1,-9.5 -13.2z" />
+    <!-- Open book pages -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M30,46c8,-3 16,-2 23,3v28c-7,-5 -15,-6 -23,-3z" />
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M78,46c-8,-3 -16,-2 -23,3v28c7,-5 15,-6 23,-3z" />
+    <!-- Lines of text -->
+    <path android:strokeColor="#0B5D45" android:strokeWidth="1.6" android:strokeLineCap="round"
+        android:pathData="M35,54c5,-1 9,-1 13,1M35,60c5,-1 9,-1 13,1M35,66c5,-1 9,-1 13,1M60,55c4,-2 8,-2 13,-1M60,61c4,-2 8,-2 13,-1M60,67c4,-2 8,-2 13,-1" />
+    <!-- Stand (rehal) -->
+    <path android:fillColor="#F2C14E"
+        android:pathData="M30,79l24,8l24,-8l2,3l-26,9l-26,-9z" />
+</vector>
