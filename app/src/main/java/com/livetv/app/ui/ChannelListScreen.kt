@@ -95,7 +95,20 @@ import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.ViewColumn
+import androidx.compose.material.icons.filled.ViewQuilt
+import androidx.compose.material.icons.filled.ViewCarousel
+import androidx.compose.material.icons.filled.ViewSidebar
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Search
@@ -458,11 +471,13 @@ fun ChannelListScreen(
         searching = false
         scope.launch { delay(50); runCatching { searchButtonFocus.requestFocus() } }
     }
-    fun nextLayout() {
+    // The Modes menu: every layout in one list, picked with OK.
+    var modesOpen by remember { mutableStateOf(false) }
+    fun pickLayout(next: TileLayout) {
+        modesOpen = false
         tilesFull = false
         // Browse's search only applies there.
-        if (tileLayout == TileLayout.Browse && state.query.isNotBlank()) onQueryChange("")
-        val next = layouts[(layouts.indexOf(tileLayout) + 1) % layouts.size]
+        if (tileLayout == TileLayout.Browse && next != TileLayout.Browse && state.query.isNotBlank()) onQueryChange("")
         if (next.separateTvs && !premium) {
             upsellFor = next
         } else {
@@ -530,12 +545,12 @@ fun ChannelListScreen(
                 actions = {
                     if (wideScreen) {
                         TextButton(
-                            onClick = ::nextLayout,
+                            onClick = { modesOpen = true },
                             colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
                             modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
                         ) {
                             Icon(Icons.Filled.Tv, contentDescription = null)
-                            Text("${tileLayout.label} Mode", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            Text("Modes · ${tileLayout.label}", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
                         }
                     }
                     if (onOpenVod != null) {
@@ -663,9 +678,9 @@ fun ChannelListScreen(
                         sound = previewSound,
                         playing = inForeground && !showSettings,
                         modeFocus = layoutButtonFocus,
-                        modeLabel = tileLayout.label,
+                        modeLabel = "Modes",
                         // Phones have no other layout to go to.
-                        onNextMode = if (wideScreen) ::nextLayout else null,
+                        onNextMode = if (wideScreen) ({ modesOpen = true }) else null,
                         onOpen = onPlay,
                         onOpenGames = onOpenGames,
                         onOpenVodItem = onOpenVodItem,
@@ -758,7 +773,8 @@ fun ChannelListScreen(
                     val packedNaturalWidth = maxWidth / columns
                     val packedFits = packedNaturalWidth * 9f / 16f * rows + minBanner <= maxHeight
                     val packedHeight = if (packedFits) packedNaturalWidth * 9f / 16f else (maxHeight - minBanner) / rows
-                    val packedWidth = if (packedFits) packedNaturalWidth else minOf(packedNaturalWidth, packedHeight * 16f / 9f * 1.25f)
+                    // 2×2 always spans the whole width (its pictures stretch), so there are no black bands at the sides.
+                    val packedWidth = if (packedFits || tileLayout == TileLayout.Four) packedNaturalWidth else minOf(packedNaturalWidth, packedHeight * 16f / 9f * 1.25f)
                     val bannerSpace = maxHeight - packedHeight * rows
                     val bannerHeight = minOf(bannerSpace - 8.dp, maxWidth / 8)
                     @Composable
@@ -1120,6 +1136,14 @@ fun ChannelListScreen(
     }
 
     if (showSettings) settings { showSettings = false }
+    if (modesOpen) {
+        ModesMenu(
+            current = tileLayout,
+            locked = { it.separateTvs && !premium },
+            onPick = ::pickLayout,
+            onDismiss = { modesOpen = false },
+        )
+    }
     upsellFor?.let { wanted ->
         PremiumDialog(
             layout = wanted.label,
@@ -1131,6 +1155,103 @@ fun ChannelListScreen(
                 upsellFor = null
             },
         )
+    }
+}
+
+/** What each mode is, under its name in the Modes menu. */
+private val TileLayout.about: String
+    get() = when (this) {
+        TileLayout.List -> "One channel with the channel list beside it"
+        TileLayout.Browse -> "Rows of big channel cards, like a streaming app"
+        TileLayout.Five -> "One big channel and three small ones"
+        TileLayout.Two -> "Two channels side by side"
+        TileLayout.Four -> "Four channels at once"
+        TileLayout.Six -> "Six channels at once"
+        TileLayout.News -> "Your channel with weather, markets and stories"
+        TileLayout.Cp24 -> "A big channel with the clock and weather, CP24 style"
+        TileLayout.Home -> "Your channel with cards around it"
+        TileLayout.Mine -> "A screen you build yourself"
+    }
+
+private val TileLayout.icon: androidx.compose.ui.graphics.vector.ImageVector
+    get() = when (this) {
+        TileLayout.List -> Icons.Filled.ViewSidebar
+        TileLayout.Browse -> Icons.Filled.ViewCarousel
+        TileLayout.Five -> Icons.Filled.ViewQuilt
+        TileLayout.Two -> Icons.Filled.ViewColumn
+        TileLayout.Four -> Icons.Filled.GridView
+        TileLayout.Six -> Icons.Filled.Apps
+        TileLayout.News -> Icons.Filled.Public
+        TileLayout.Cp24 -> Icons.Filled.Schedule
+        TileLayout.Home -> Icons.Filled.Home
+        TileLayout.Mine -> Icons.Filled.Dashboard
+    }
+
+/**
+ * The Modes menu: every mode in one list, with a line about each and a tick on the one in use.
+ * Up and Down move, OK switches to that mode, Back closes it.
+ */
+@Composable
+private fun ModesMenu(
+    current: TileLayout,
+    /** Live TV Plus: the modes that need Premium. */
+    locked: (TileLayout) -> Boolean,
+    onPick: (TileLayout) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
+        val first = remember { FocusRequester() }
+        LaunchedEffect(Unit) {
+            withFrameNanos { }
+            runCatching { first.requestFocus() }
+        }
+        androidx.compose.material3.Surface(
+            shape = RoundedCornerShape(16.dp),
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.widthIn(min = 300.dp, max = 460.dp),
+        ) {
+            Column(
+                Modifier
+                    .verticalScroll(androidx.compose.foundation.rememberScrollState())
+                    .padding(vertical = 12.dp, horizontal = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                Text(
+                    "Modes",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 10.dp, bottom = 6.dp),
+                )
+                layouts.forEach { layout ->
+                    val on = layout == current
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .then(if (on) Modifier.focusRequester(first) else Modifier)
+                            .focusGlow(ChipShape)
+                            .clip(ChipShape)
+                            .background(if (on) MaterialTheme.colorScheme.primary.copy(alpha = 0.18f) else Color.Transparent)
+                            .clickable { onPick(layout) }
+                            .padding(horizontal = 10.dp, vertical = 7.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(layout.icon, contentDescription = null, modifier = Modifier.size(24.dp))
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(layout.label + if (locked(layout)) "  · Premium" else "", fontWeight = FontWeight.Bold)
+                            Text(
+                                layout.about,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                        if (on) Icon(Icons.Filled.Check, contentDescription = "In use", tint = MaterialTheme.colorScheme.primary)
+                    }
+                }
+            }
+        }
     }
 }
 

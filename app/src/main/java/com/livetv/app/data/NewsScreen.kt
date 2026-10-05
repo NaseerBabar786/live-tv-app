@@ -233,3 +233,112 @@ object MyScreen {
         prefs?.edit()?.clear()?.apply()
     }
 }
+
+/**
+ * Text size of each information screen (News, CP24, Home, My Screen), and the look of each tile
+ * on Home and My Screen: what it shows, its text size, background, corners, border, accent colour,
+ * spacing, and a few choices of its own (seconds on the clock, the forecast under the weather...).
+ * The first value of each option is the usual one.
+ */
+object ScreenLooks {
+    const val SHOW = "Show"
+    const val HIDE = "Hide"
+    const val USUAL = "Usual"
+
+    /** Text sizes, by name. */
+    val TEXT_SIZES = linkedMapOf("Normal" to 1f, "Large" to 1.15f, "Extra large" to 1.3f, "Small" to 0.87f)
+
+    /** Accent colours, by name (ARGB); "Theme" keeps the theme's own. */
+    val ACCENTS = linkedMapOf(
+        "Theme" to null,
+        "Gold" to 0xFFFFC107L,
+        "Red" to 0xFFE53935L,
+        "Green" to 0xFF2ECC71L,
+        "Blue" to 0xFF4FA3FFL,
+        "Purple" to 0xFFB388FFL,
+        "White" to 0xFFFFFFFFL,
+    )
+
+    /** What a Home tile can show. */
+    val HOME_CONTENT = listOf(MyScreen.CLOCK, MyScreen.WEATHER, MyScreen.PRAYERS, MyScreen.STORIES, MyScreen.MARKETS, MyScreen.CURRENCIES)
+
+    enum class Opt(val label: String, val values: List<String>) {
+        Text("Text size", ScreenLooks.TEXT_SIZES.keys.toList()),
+        Background("Background", listOf(ScreenLooks.USUAL, "Solid", "Dark", "Accent tint", "Clear")),
+        Corners("Corners", listOf(ScreenLooks.USUAL, "Rounded", "Square")),
+        Border("Border", listOf(ScreenLooks.USUAL, "None", "Thin", "Accent colour")),
+        Accent("Accent colour", ScreenLooks.ACCENTS.keys.toList()),
+        Spacing("Spacing", listOf("Normal", "Compact", "Roomy")),
+        Format("Clock", listOf("Phone setting", "12-hour", "24-hour")),
+        Seconds("Seconds", listOf(ScreenLooks.SHOW, ScreenLooks.HIDE)),
+        Date("Date", listOf(ScreenLooks.SHOW, ScreenLooks.HIDE)),
+        Islamic("Islamic date", listOf(ScreenLooks.SHOW, ScreenLooks.HIDE)),
+        Forecast("Next hours", listOf(ScreenLooks.SHOW, ScreenLooks.HIDE)),
+        FeelsLike("Feels like and humidity", listOf(ScreenLooks.SHOW, ScreenLooks.HIDE)),
+        City("City", listOf(ScreenLooks.SHOW, ScreenLooks.HIDE)),
+        AllTimes("All five times", listOf(ScreenLooks.SHOW, ScreenLooks.HIDE)),
+        Progress("Progress bar", listOf(ScreenLooks.SHOW, ScreenLooks.HIDE)),
+        Ramadan("Sehri and iftar", listOf(ScreenLooks.SHOW, ScreenLooks.HIDE)),
+        Speed("Next story every", listOf("12 s", "8 s", "20 s")),
+        Lines("Headline lines", listOf(ScreenLooks.USUAL, "1", "2", "3", "4")),
+        Rows("Row height", listOf("Normal", "Tight", "Tall")),
+    }
+
+    /** The options a tile showing [content] offers (besides what it shows). */
+    fun options(content: String): List<Opt> = listOf(Opt.Text, Opt.Background, Opt.Corners, Opt.Border, Opt.Accent, Opt.Spacing) +
+        when (content) {
+            MyScreen.CLOCK -> listOf(Opt.Format, Opt.Seconds, Opt.Date, Opt.Islamic)
+            MyScreen.WEATHER -> listOf(Opt.Forecast, Opt.FeelsLike, Opt.City)
+            MyScreen.PRAYERS -> listOf(Opt.Format, Opt.AllTimes, Opt.Progress, Opt.Ramadan)
+            MyScreen.STORIES -> listOf(Opt.Speed, Opt.Lines)
+            MyScreen.MARKETS, MyScreen.CURRENCIES -> listOf(Opt.Rows)
+            else -> emptyList()
+        }
+
+    /** One tile's choices. */
+    class Look(private val picked: Map<String, String>, private val tile: String) {
+        operator fun get(o: Opt): String = ScreenLooks.value(picked, "$tile/${o.name}", o.values)
+        fun shows(o: Opt) = get(o) == ScreenLooks.SHOW
+        val textScale: Float get() = ScreenLooks.TEXT_SIZES[get(Opt.Text)] ?: 1f
+        val spacing: Float get() = when (get(Opt.Spacing)) { "Compact" -> 0.75f; "Roomy" -> 1.3f; else -> 1f }
+        val accent: Long? get() = ScreenLooks.ACCENTS[get(Opt.Accent)]
+    }
+
+    private var prefs: SharedPreferences? = null
+    private val _values = MutableStateFlow<Map<String, String>>(emptyMap())
+    val values: StateFlow<Map<String, String>> = _values.asStateFlow()
+
+    fun init(context: Context) {
+        if (prefs != null) return
+        val p = context.applicationContext.getSharedPreferences("screen_looks", Context.MODE_PRIVATE)
+        prefs = p
+        _values.value = p.all.mapNotNull { (k, v) -> (v as? String)?.let { k to it } }.toMap()
+    }
+
+    /** The value stored under [key] if it's still one of [options], or the first option. */
+    fun value(values: Map<String, String>, key: String, options: List<String>): String =
+        values[key]?.takeIf { it in options } ?: options.first()
+
+    /** Moves [key] on to its next option (OK on a TV remote steps through them). */
+    fun next(key: String, options: List<String>) {
+        val now = _values.value
+        val picked = options[(options.indexOf(value(now, key, options)) + 1) % options.size]
+        _values.value = now + (key to picked)
+        prefs?.edit()?.putString(key, picked)?.apply()
+    }
+
+    /** A screen's text size ("news", "cp24", "home" or "mine"). */
+    fun textScale(values: Map<String, String>, screen: String): Float =
+        TEXT_SIZES[value(values, "$screen/Text", TEXT_SIZES.keys.toList())] ?: 1f
+
+    /** Puts back the usual choices for every key starting with [prefix]. */
+    fun reset(prefix: String) {
+        val now = _values.value
+        val gone = now.keys.filter { it.startsWith(prefix) }
+        _values.value = now - gone.toSet()
+        prefs?.edit()?.apply { gone.forEach { remove(it) } }?.apply()
+    }
+
+    const val HOME_CORNER = "home/Corner"
+    val CORNER = listOf("Off", "On")
+}
