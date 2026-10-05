@@ -43,6 +43,7 @@ fun actionLabel(action: Action): String = when (action) {
     Action.Website -> "Open website"
     Action.OnPc -> "Get it on PC"
     Action.Unavailable -> "Not on Android"
+    Action.Installing -> "Installing…"
     is Action.Downloading ->
         if (action.progress < 0f) "Downloading…" else "Downloading ${(action.progress * 100).toInt()}%"
 }

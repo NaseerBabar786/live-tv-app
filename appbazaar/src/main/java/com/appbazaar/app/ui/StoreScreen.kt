@@ -44,6 +44,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -80,7 +81,7 @@ fun StoreScreen(
     val pad = if (isTv) 48.dp else 16.dp
 
     Column(Modifier.fillMaxSize().background(Bg)) {
-        TopBar(state, isTv, pad, onRefresh, onHelp)
+        TopBar(state, isTv, pad, onRefresh, onHelp, onUpdateAll)
         LazyVerticalGrid(
             columns = GridCells.Adaptive(if (isTv) 280.dp else 300.dp),
             modifier = Modifier.fillMaxSize(),
@@ -123,7 +124,7 @@ fun StoreScreen(
                             Text(updates.joinToString { it.name }, color = Muted, fontSize = 13.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
                         Spacer(Modifier.width(12.dp))
-                        FocusButton(onClick = onUpdateAll, enabled = updates.none { state.downloads[it.id] != null }) {
+                        FocusButton(onClick = onUpdateAll, enabled = updates.none { state.downloads[it.id] != null || state.installing == it.id }) {
                             Text("Update all")
                         }
                     }
@@ -200,9 +201,10 @@ fun StoreScreen(
 
 /** The App Bazaar logo and name, like the website's header. */
 @Composable
-fun Logo(size: Int = 40) {
+fun Logo(size: Int = 40, withName: Boolean = true) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Image(painterResource(R.drawable.ic_logo), contentDescription = null, modifier = Modifier.size(size.dp))
+        Image(painterResource(R.drawable.ic_logo), contentDescription = "App Bazaar", modifier = Modifier.size(size.dp))
+        if (!withName) return@Row
         Spacer(Modifier.width(10.dp))
         Text("App ", fontSize = (size * 0.58f).sp, fontWeight = FontWeight.Medium, color = LogoInk)
         Text("Bazaar", fontSize = (size * 0.58f).sp, fontWeight = FontWeight.Medium, color = Teal)
@@ -210,30 +212,65 @@ fun Logo(size: Int = 40) {
 }
 
 @Composable
-private fun TopBar(state: StoreState, isTv: Boolean, pad: androidx.compose.ui.unit.Dp, onRefresh: () -> Unit, onHelp: () -> Unit) {
+private fun TopBar(
+    state: StoreState,
+    isTv: Boolean,
+    pad: androidx.compose.ui.unit.Dp,
+    onRefresh: () -> Unit,
+    onHelp: () -> Unit,
+    onUpdateAll: () -> Unit,
+) {
+    // One-tap "Update all" lives here, on every screen; App Bazaar's own update has its own bar.
+    val updates = state.updates.count { it.id != Catalog.SELF_ID }
     Surface(color = Bg, shadowElevation = 3.dp) {
         Row(
             Modifier.fillMaxWidth().padding(horizontal = pad, vertical = if (isTv) 16.dp else 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Logo(if (isTv) 44 else 36)
+            // Narrow phones show just the logo, like the website on phones, so Update all fits beside it.
+            Logo(if (isTv) 44 else 30, withName = isTv || LocalConfiguration.current.screenWidthDp >= 400)
             Spacer(Modifier.weight(1f))
             if (state.loading && state.apps.isNotEmpty()) {
                 CircularProgressIndicator(Modifier.size(20.dp), color = Green, strokeWidth = 2.dp)
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(10.dp))
             }
-            FocusOutlinedButton(onClick = onRefresh) {
-                Icon(Icons.Default.Refresh, contentDescription = "Refresh", modifier = Modifier.size(18.dp))
-                if (isTv) {
+            if (updates > 0) {
+                FocusButton(onClick = onUpdateAll) {
+                    if (isTv) {
+                        Icon(Icons.Default.SystemUpdate, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(6.dp))
+                    }
+                    Text("Update all")
+                    Spacer(Modifier.width(6.dp))
+                    Box(Modifier.clip(RoundedCornerShape(50)).background(Color.White).padding(horizontal = 6.dp)) {
+                        Text("$updates", color = GreenDark, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            } else {
+                FocusOutlinedButton(onClick = onUpdateAll) {
+                    if (isTv) {
+                        Icon(Icons.Default.SystemUpdate, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(6.dp))
+                    }
+                    Text("Update all")
+                }
+            }
+            if (isTv) {
+                // Phones refresh by themselves each time the store opens; TVs keep running, so they get a button.
+                Spacer(Modifier.width(10.dp))
+                FocusOutlinedButton(onClick = onRefresh) {
+                    Icon(Icons.Default.Refresh, contentDescription = "Refresh", modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(6.dp))
                     Text("Refresh")
                 }
             }
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(if (isTv) 10.dp else 6.dp))
             FocusOutlinedButton(onClick = onHelp) {
                 Icon(Icons.AutoMirrored.Filled.HelpOutline, contentDescription = "Help", modifier = Modifier.size(18.dp))
-                Spacer(Modifier.width(6.dp))
-                Text(if (isTv) "How to install" else "Help")
+                if (isTv) {
+                    Spacer(Modifier.width(6.dp))
+                    Text("How to install")
+                }
             }
         }
     }
@@ -332,7 +369,7 @@ private fun AppCard(app: StoreApp, action: Action, installed: String?, onOpen: (
                     if (action == Action.Open) {
                         FocusOutlinedButton(onClick = onAct) { Text(actionLabel(action)) }
                     } else {
-                        FocusButton(onClick = onAct, enabled = action != Action.Unavailable && action !is Action.Downloading) {
+                        FocusButton(onClick = onAct, enabled = action != Action.Unavailable && action !is Action.Downloading && action != Action.Installing) {
                             Text(actionLabel(action))
                         }
                     }
