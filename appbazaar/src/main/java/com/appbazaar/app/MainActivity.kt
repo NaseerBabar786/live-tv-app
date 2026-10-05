@@ -2,6 +2,7 @@ package com.appbazaar.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -41,7 +42,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // White bars with dark icons, like the website, whatever the phone's dark-mode setting.
+        val bars = SystemBarStyle.light(android.graphics.Color.WHITE, android.graphics.Color.WHITE)
+        enableEdgeToEdge(statusBarStyle = bars, navigationBarStyle = bars)
         setContent {
             // App icons on the website are SVG pictures.
             setSingletonImageLoaderFactory { ctx -> ImageLoader.Builder(ctx).components { add(SvgDecoder.Factory()) }.build() }

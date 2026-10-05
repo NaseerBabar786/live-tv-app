@@ -71,7 +71,8 @@ fun DetailScreen(
                     AppIcon(app, if (isTv) 96.dp else 72.dp)
                     Spacer(Modifier.width(16.dp))
                     Column {
-                        Text(app.name, fontSize = if (isTv) 32.sp else 26.sp, fontWeight = FontWeight.Bold)
+                        Text(app.name, fontSize = if (isTv) 32.sp else 26.sp, fontWeight = FontWeight.Medium, color = Ink)
+                        Text("App Bazaar", color = Green, fontSize = 14.sp, fontWeight = FontWeight.Medium)
                         Text(app.tagline, color = Muted, fontSize = 15.sp)
                     }
                 }
@@ -79,7 +80,7 @@ fun DetailScreen(
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     FocusButton(
                         onClick = onAct,
-                        modifier = Modifier.focusRequester(mainFocus),
+                        modifier = Modifier.focusRequester(mainFocus).widthIn(min = 160.dp),
                         enabled = action != Action.Unavailable && action !is Action.Downloading,
                     ) { Text(actionLabel(action), fontSize = 16.sp) }
                     if (installed != null && app.packageName != null) {
@@ -129,10 +130,13 @@ private fun Facts(app: StoreApp, installed: String?) {
         app.category.takeIf { it.isNotBlank() }?.let { "Category" to it },
         app.updated.takeIf { it.isNotBlank() }?.let { "Updated" to it },
     )
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(28.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    FlowRow(
+        Modifier.clip(RoundedCornerShape(12.dp)).background(Soft).padding(horizontal = 18.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(28.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         facts.forEach { (k, v) ->
             Column {
-                Text(v, fontWeight = FontWeight.Bold)
+                Text(v, fontWeight = FontWeight.Medium, color = Ink)
                 Text(k, color = Muted, fontSize = 12.sp)
             }
         }
@@ -143,7 +147,7 @@ private fun Facts(app: StoreApp, installed: String?) {
 private fun Block(title: String, body: String) {
     if (body.isBlank()) return
     Spacer(Modifier.height(22.dp))
-    Text(title, fontSize = 19.sp, fontWeight = FontWeight.Bold)
+    Text(title, fontSize = 19.sp, fontWeight = FontWeight.Medium, color = Ink)
     Spacer(Modifier.height(6.dp))
-    Text(body, color = Color(0xFFDCE3EA), fontSize = 15.sp, lineHeight = 22.sp, modifier = Modifier.widthIn(max = 900.dp))
+    Text(body, color = Ink, fontSize = 15.sp, lineHeight = 22.sp, modifier = Modifier.widthIn(max = 900.dp))
 }
