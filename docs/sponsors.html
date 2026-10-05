@@ -46,7 +46,7 @@
 
 <main class="wrap">
   <h1>Sponsors</h1>
-  <p class="lead">Businesses that pay to be shown in Free Live TV (version 1.8.90 and newer). Each one shows in turn on the start screen, in the strip under the 1+List channel list, in a bar under the tiles of 1×2, 2×2 and 2×3 (their wide banner if you add one), under the side tiles of 1+3, in the corner of News mode (as a muted video when you add a video link), and in a small corner card after a channel change (at most every 20 minutes). How often each was shown is on the <a href="stats#sponsors">Stats</a> page. TVs pick up changes the next time the app starts.</p>
+  <p class="lead">Businesses that pay to be shown in Free Live TV (version 1.8.90 and newer). Each one shows in turn on the start screen, in the strip under the 1+List channel list, in a bar under the tiles of 1×2, 2×2 and 2×3 (their wide banner if you add one), under the side tiles of 1+3, in the corner of News mode (as a muted video when you add a video link), and in a pop-up after a channel change (at most every 2 minutes): their picture for a few seconds, or, if you choose Video, their video played to the end (at most every 30 minutes). OK on any ad opens their website inside the app. How often each was shown is on the <a href="stats#sponsors">Stats</a> page. TVs pick up changes the next time the app starts.</p>
   <div id="notReady" class="panel hidden">This page will work once Firebase is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't an admin. <button class="btn" data-signout>Use another account</button></div>
@@ -67,8 +67,15 @@
       </label>
       <img id="bannerPreview" class="banner-preview hidden" alt="">
       <button class="btn hidden" id="bannerRemove" type="button" style="margin:-4px 0 14px">Remove banner</button>
-      <label class="f">Video link for News mode (optional; an MP4 link, 10 to 30 seconds, 720p or smaller, under 10 MB, plays muted)
+      <label class="f">Video link (optional; an MP4 link, 720p or smaller, under 10 MB, plays muted). Plays in News mode's corner, and in the pop-up when you choose Video below
         <input type="url" id="video" maxlength="400" placeholder="e.g. https://tv.bulkbazaar.ca/ads/khan-meat.mp4">
+      </label>
+      <button class="btn" id="usePromo" type="button" style="margin:-4px 0 14px">Use the Free Live TV promo video</button>
+      <label class="f">Pop-up ad after a channel change
+        <select id="popup" style="display:block;margin-top:6px">
+          <option value="picture">Picture (a few seconds)</option>
+          <option value="video">Video (plays to the end, then closes; at most every 30 minutes, otherwise the picture)</option>
+        </select>
       </label>
       <label class="f">Business name <input type="text" id="name" maxlength="60" required placeholder="e.g. Khan Halal Meat"></label>
       <label class="f">Short line (optional) <input type="text" id="line" maxlength="120" placeholder="e.g. Fresh halal meat, open 7 days"></label>
@@ -121,6 +128,10 @@
 <script type="module">
 import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
 const $ = id => document.getElementById(id);
+$("usePromo")?.addEventListener("click", () => {
+  $("video").value = "https://tv.bulkbazaar.ca/media/livetv-promo.mp4";
+  $("popup").value = "video";
+});
 const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 const pad = n => String(n).padStart(2, "0");
 const today = (d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`)(new Date());
@@ -250,6 +261,7 @@ if (!configured) {
     $("name").value = s?.name || ""; $("line").value = s?.line || ""; $("contact").value = s?.contact || "";
     $("website").value = s?.website || "";
     $("video").value = s?.video || "";
+    $("popup").value = s?.popup === "video" ? "video" : "picture";
     $("start").value = s?.start || ""; $("end").value = s?.end || ""; $("active").checked = s ? !!s.active : true;
     $("file").value = ""; $("formErr").textContent = dealNote;
     for (const [k, id] of Object.entries(DEAL_FIELDS)) $(id).value = (s && deals[s.id]?.[k]) || "";
@@ -293,8 +305,9 @@ if (!configured) {
       name: $("name").value.trim(), line: $("line").value.trim(), contact: $("contact").value.trim(),
       website: $("website").value.trim().replace(/\/+$/, ""),
       start: $("start").value, end: $("end").value, active: $("active").checked, image, banner,
-      video: $("video").value.trim(),
+      video: $("video").value.trim(), popup: $("popup").value,
     };
+    if (data.popup === "video" && !data.video) return $("formErr").textContent = "For a video pop-up, please add the video link.";
     if (data.video && !/^https:\/\/\S+$/i.test(data.video)) return $("formErr").textContent = "The video link should start with https://";
     if (data.website && !/^(https?:\/\/)?[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}(\/\S*)?$/i.test(data.website)) return $("formErr").textContent = "The website should look like bulkbazaar.ca";
     if (!data.name) return $("formErr").textContent = "Please type the business name.";

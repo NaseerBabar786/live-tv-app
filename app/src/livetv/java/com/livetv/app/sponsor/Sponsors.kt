@@ -37,6 +37,8 @@ class Sponsor(
     val video: String = "",
     /** The sponsor's website, opened inside the app when a viewer presses OK on the sponsor tile; empty when there is none. */
     val website: String = "",
+    /** The channel change pop-up plays [video] to the end instead of showing the picture (chosen on /sponsors). */
+    val popupVideo: Boolean = false,
 ) {
     /** The address to open: the website box, or else the "phone or website" box when it holds a web address; null when neither does. */
     val site: String? get() = siteUrl(website) ?: siteUrl(contact)
@@ -111,7 +113,8 @@ object Sponsors {
                         .put("image", f.text("image"))
                         .put("banner", f.text("banner"))
                         .put("video", f.text("video"))
-                        .put("website", f.text("website")),
+                        .put("website", f.text("website"))
+                        .put("popup", f.text("popup")),
                 )
             }
             file?.writeText(arr.toString())
@@ -146,6 +149,7 @@ object Sponsors {
             banner = if (o.optBoolean("active")) o.optString("banner").takeIf { it.isNotEmpty() }?.let(::decode) else null,
             video = o.optString("video").trim().takeIf { it.startsWith("https://") }.orEmpty(),
             website = o.optString("website").trim(),
+            popupVideo = o.optString("popup") == "video",
         )
     }
 

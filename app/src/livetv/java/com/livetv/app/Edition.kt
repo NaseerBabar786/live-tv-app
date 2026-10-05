@@ -135,7 +135,7 @@ fun EditionOverlay() {
     if (FirebaseConfig.configured) NewMessagePrompt()
     // A sponsor's card after a channel change, now and then.
     val main by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
-    SponsorCard(channelId = main.lastWatchedId)
+    SponsorCard(channelId = main.lastWatchedId, fullScreen = main.playing != null)
     val updates = viewModel<UpdateViewModel>()
     val prompting by updates.prompting.collectAsStateWithLifecycle()
     val update by updates.update.collectAsStateWithLifecycle()
