@@ -28,6 +28,15 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import kotlinx.coroutines.flow.first
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -257,19 +266,42 @@ fun SponsorBox(modifier: Modifier = Modifier) {
  * lets viewers call the sponsor or open their website with their phone's camera.
  */
 @Composable
-fun SponsorVideoBox(modifier: Modifier = Modifier, allowVideo: Boolean = true) {
+fun SponsorVideoBox(modifier: Modifier = Modifier, allowVideo: Boolean = true, clickable: Boolean = false, onBack: (() -> Unit)? = null) {
     val all by Sponsors.all.collectAsStateWithLifecycle()
     val list = remember(all) { Sponsors.current() }
     if (list.isEmpty()) return
     var turn by remember { mutableIntStateOf(0) }
     val sponsor = list[Math.floorMod(turn, list.size)]
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    var focused by remember { mutableStateOf(false) }
+    var open by remember { mutableStateOf<Sponsor?>(null) }
     LaunchedEffect(sponsor.id, turn) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) SponsorViews.count(sponsor, "strip")
         delay(STRIP_MS)
+        // The same sponsor stays while the remote is on it or their website is open.
+        while (focused || open != null) delay(1_000L)
         turn++
     }
-    BoxWithConstraints(modifier.background(Color.Black)) {
+    // With a website, the sponsor is one more tile: the arrows reach it and OK opens the site
+    // inside the app (Google TV has no browser); Back from the site comes straight back here.
+    val site = if (clickable) sponsor.site else null
+    open?.let { s ->
+        SponsorSite(s.site.orEmpty(), s.name, onClose = { open = null })
+    }
+    val click = if (site != null) {
+        Modifier
+            .onFocusChanged { focused = it.isFocused }
+            .onPreviewKeyEvent { e ->
+                if (e.key != Key.Back || onBack == null) return@onPreviewKeyEvent false
+                if (e.type == KeyEventType.KeyUp) onBack()
+                true
+            }
+            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
+                SponsorViews.count(sponsor, "click")
+                open = sponsor
+            }
+    } else Modifier
+    BoxWithConstraints(modifier.then(click).background(Color.Black)) {
         SponsorPicture(sponsor, Modifier.fillMaxSize(), fill = true)
         if (allowVideo && sponsor.video.isNotEmpty()) key(sponsor.id, turn) { SponsorVideo(sponsor.video) }
         val code = remember(sponsor.contact) { SponsorQr.bitmap(sponsor.contact) }
@@ -284,6 +316,21 @@ fun SponsorVideoBox(modifier: Modifier = Modifier, allowVideo: Boolean = true) {
                     .size(maxHeight * 0.3f)
                     .background(Color.White)
                     .padding(3.dp),
+            )
+        }
+        if (site != null && focused) {
+            Box(Modifier.fillMaxSize().border(3.dp, FocusColor))
+            Text(
+                "OK: visit website",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 11.sp,
+                maxLines = 1,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 6.dp)
+                    .background(FocusColor, androidx.compose.foundation.shape.RoundedCornerShape(50))
+                    .padding(horizontal = 10.dp, vertical = 3.dp),
             )
         }
     }

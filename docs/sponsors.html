@@ -73,6 +73,7 @@
       <label class="f">Business name <input type="text" id="name" maxlength="60" required placeholder="e.g. Khan Halal Meat"></label>
       <label class="f">Short line (optional) <input type="text" id="line" maxlength="120" placeholder="e.g. Fresh halal meat, open 7 days"></label>
       <label class="f">Phone or website (optional) <input type="text" id="contact" maxlength="60" placeholder="e.g. 416-555-0100 or khanmeat.ca"></label>
+      <label class="f">Website (optional; opens in the app when a viewer presses OK on the sponsor in Home or My Screen) <input type="text" id="website" maxlength="200" placeholder="e.g. bulkbazaar.ca"></label>
       <div class="two">
         <label class="f">First day (optional) <input type="date" id="start"></label>
         <label class="f">Last day (optional) <input type="date" id="end"></label>
@@ -221,7 +222,7 @@ if (!configured) {
       el.querySelector("img").src = s.image || "";
       el.querySelector("b").textContent = s.name || "(no name)";
       el.querySelector(".tag").textContent = label;
-      el.querySelector(".line").textContent = [s.line, s.contact].filter(Boolean).join(" · ");
+      el.querySelector(".line").textContent = [s.line, s.contact, s.website].filter(Boolean).join(" · ");
       el.querySelector(".when").textContent = s.start || s.end ? `From ${s.start || "now"} to ${s.end || "no end date"}` : "No end date";
       const d = deals[s.id];
       const info = d ? [[d.person, d.phone, d.email].filter(Boolean).join(" · "), [d.package, d.price].filter(Boolean).join(" · "), d.notes].filter(Boolean).join("\n") : "";
@@ -247,6 +248,7 @@ if (!configured) {
     $("bannerFile").value = ""; showBanner();
     $("formTitle").textContent = s ? "Edit sponsor" : "New sponsor";
     $("name").value = s?.name || ""; $("line").value = s?.line || ""; $("contact").value = s?.contact || "";
+    $("website").value = s?.website || "";
     $("video").value = s?.video || "";
     $("start").value = s?.start || ""; $("end").value = s?.end || ""; $("active").checked = s ? !!s.active : true;
     $("file").value = ""; $("formErr").textContent = dealNote;
@@ -289,10 +291,12 @@ if (!configured) {
     ev.preventDefault();
     const data = {
       name: $("name").value.trim(), line: $("line").value.trim(), contact: $("contact").value.trim(),
+      website: $("website").value.trim().replace(/\/+$/, ""),
       start: $("start").value, end: $("end").value, active: $("active").checked, image, banner,
       video: $("video").value.trim(),
     };
     if (data.video && !/^https:\/\/\S+$/i.test(data.video)) return $("formErr").textContent = "The video link should start with https://";
+    if (data.website && !/^(https?:\/\/)?[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}(\/\S*)?$/i.test(data.website)) return $("formErr").textContent = "The website should look like bulkbazaar.ca";
     if (!data.name) return $("formErr").textContent = "Please type the business name.";
     if (!image) return $("formErr").textContent = "Please choose a picture.";
     if (data.start && data.end && data.end < data.start) return $("formErr").textContent = "The last day is before the first day.";

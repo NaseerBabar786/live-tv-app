@@ -220,7 +220,8 @@ fun EditionSponsorBox(modifier: Modifier) = SponsorBox(modifier)
 
 /** News mode's sponsor corner: a picture, or the sponsor's muted video while [allowVideo]. */
 @Composable
-fun EditionSponsorVideoBox(modifier: Modifier, allowVideo: Boolean) = SponsorVideoBox(modifier, allowVideo)
+fun EditionSponsorVideoBox(modifier: Modifier, allowVideo: Boolean, clickable: Boolean = false, onBack: (() -> Unit)? = null) =
+    SponsorVideoBox(modifier, allowVideo, clickable, onBack)
 
 /** Whether any sponsor shows today, so layouts keep room for one only when there is. */
 @Composable

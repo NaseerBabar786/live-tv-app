@@ -35,7 +35,12 @@ class Sponsor(
     val banner: ImageBitmap? = null,
     /** An optional MP4 link, played muted in News mode's sponsor corner; empty when there is none. */
     val video: String = "",
+    /** The sponsor's website, opened inside the app when a viewer presses OK on the sponsor tile; empty when there is none. */
+    val website: String = "",
 ) {
+    /** The address to open: the website box, or else the "phone or website" box when it holds a web address; null when neither does. */
+    val site: String? get() = siteUrl(website) ?: siteUrl(contact)
+
     fun showsOn(day: String) =
         active && picture != null && (start.isEmpty() || day >= start) && (end.isEmpty() || day <= end)
 }
@@ -44,6 +49,15 @@ class Sponsor(
  * The sponsors to show. They come from Firestore (sponsors/{id}) and are kept in a file, so the
  * start screen can show one straight away, before the new list arrives.
  */
+/** [text] as a web address when it looks like one ("bulkbazaar.ca", "www.x.com/shop", "http://…"); null for a phone number or blank. */
+fun siteUrl(text: String): String? {
+    val t = text.trim()
+    if (t.isEmpty() || t.any { it.isWhitespace() }) return null
+    val host = t.removePrefix("https://").removePrefix("http://").substringBefore('/').substringBefore('?')
+    if (!Regex("^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,}$").matches(host)) return null
+    return if (t.startsWith("http://") || t.startsWith("https://")) t else "https://$t"
+}
+
 object Sponsors {
     private val _all = MutableStateFlow<List<Sponsor>>(emptyList())
     val all: StateFlow<List<Sponsor>> = _all.asStateFlow()
@@ -95,7 +109,8 @@ object Sponsors {
                         .put("active", f.optJSONObject("active")?.optBoolean("booleanValue") ?: false)
                         .put("image", f.text("image"))
                         .put("banner", f.text("banner"))
-                        .put("video", f.text("video")),
+                        .put("video", f.text("video"))
+                        .put("website", f.text("website")),
                 )
             }
             file?.writeText(arr.toString())
@@ -129,6 +144,7 @@ object Sponsors {
             picture = if (o.optBoolean("active")) decode(o.optString("image")) else null,
             banner = if (o.optBoolean("active")) o.optString("banner").takeIf { it.isNotEmpty() }?.let(::decode) else null,
             video = o.optString("video").trim().takeIf { it.startsWith("https://") }.orEmpty(),
+            website = o.optString("website").trim(),
         )
     }
 
@@ -165,7 +181,7 @@ object SponsorViews {
         days.keys().asSequence().toList().filter { it < keep }.forEach { days.remove(it) }
     }
 
-    /** [sponsor] was shown at [place]: "start", "strip", "card" or "bar" (1×2). */
+    /** [sponsor] was shown at [place]: "start", "strip", "card", "bar" (1×2), or "click" (OK on the sponsor opened their website). */
     @Synchronized
     fun count(sponsor: Sponsor, place: String) {
         val day = Watching.today(System.currentTimeMillis())
@@ -176,7 +192,7 @@ object SponsorViews {
         save()
     }
 
-    /** Every day's counts, oldest first: day → sponsor id → { n, start, strip, card, bar }. */
+    /** Every day's counts, oldest first: day → sponsor id → { n, start, strip, card, bar, click }. */
     @Synchronized
     fun totals(): List<Pair<String, Map<String, Map<String, Any>>>> =
         days.keys().asSequence().sorted().map { day ->
@@ -189,6 +205,7 @@ object SponsorViews {
                     "strip" to s.optLong("strip"),
                     "card" to s.optLong("card"),
                     "bar" to s.optLong("bar"),
+                    "click" to s.optLong("click"),
                 )
             }
         }.toList()
