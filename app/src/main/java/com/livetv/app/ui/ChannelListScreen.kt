@@ -242,12 +242,16 @@ fun ChannelListScreen(
     // Only the highlighted tile has sound; the speaker button in the top bar mutes it (remembered).
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
-    // TV and tablet layout, picked with the button in the top bar; starts in 1+List each time the app opens.
-    // Live TV Max opens on its Browse home screen.
-    var tileLayout by remember {
-        mutableStateOf(sessionTileLayout ?: if (Edition.MAX) TileLayout.Browse else TileLayout.List)
-    }
+    // TV and tablet layout, picked with the button in the top bar. Each time the app opens, Free Live TV
+    // (on a TV or tablet) and Live TV Max start on the Browse home screen (user's choice, 1.9.15);
+    // the other apps start in 1+List.
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
+    var tileLayout by remember {
+        mutableStateOf(
+            sessionTileLayout
+                ?: if (Edition.MAX || (Edition.LIVE_TV && wideScreen)) TileLayout.Browse else TileLayout.List,
+        )
+    }
     // 2×3, 2×2 and 1×2 are Premium in Live TV Plus (free in the other apps).
     val premium by Premium.active.collectAsStateWithLifecycle()
     var upsellFor by remember { mutableStateOf<TileLayout?>(null) }
@@ -1977,7 +1981,7 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
 
 /**
  * The layout picked with the layout button since the app was opened. Each time the app opens
- * it starts in 1+List (the user's choice), so the pick is kept only until then, not saved.
+ * it starts again (Browse on Free Live TV's TV screens), so the pick is kept only until then, not saved.
  */
 private var sessionTileLayout: TileLayout? = null
 
