@@ -168,7 +168,6 @@ import com.livetv.app.EditionSponsorBar
 import com.livetv.app.EditionTicker
 import com.livetv.app.EditionSponsorBox
 import com.livetv.app.editionHasSponsors
-import com.livetv.app.EditionSponsorStrip
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
 
@@ -1745,7 +1744,7 @@ private fun PlayerWithList(
                 }
             }
         }
-        // The list, with Free Live TV's sponsor strip under it (when there are sponsors).
+        // The list fills the whole right side (no sponsor strip under it since 1.9.22).
         Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         LazyColumn(
             state = listState,
@@ -1813,7 +1812,6 @@ private fun PlayerWithList(
                 }
             }
         }
-        EditionSponsorStrip(Modifier.padding(horizontal = 6.dp))
         }
     }
 }
