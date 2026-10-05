@@ -267,6 +267,8 @@ internal fun BrowseMode(
     var showing by remember { mutableStateOf(false) }
     var focusedKey by remember { mutableStateOf<Pair<String, String>?>(null) } // row key, channel id
     var previewId by remember { mutableStateOf<String?>(null) }
+    // When the cursor last moved: nothing loads while it is moving (user's choice, 1.9.16).
+    var movedAt by remember { mutableStateOf(0L) }
     val previewView = remember { ViewHolder() }
     DisposableEffect(stream) {
         val listener = object : Player.Listener {
@@ -282,6 +284,7 @@ internal fun BrowseMode(
         }
     }
     LaunchedEffect(focusedKey, playing) {
+        movedAt = System.currentTimeMillis()
         // The card the cursor leaves keeps its last frame as its picture.
         previewId?.let { if (showing) keepPicture(it, previewView.picture()) }
         stream.stop()
@@ -351,6 +354,12 @@ internal fun BrowseMode(
                 delay(10_000)
                 continue
             }
+            // Wait until the cursor has rested for a second before taking another picture.
+            val still = System.currentTimeMillis() - movedAt
+            if (still < 1_000) {
+                delay(1_000 - still)
+                continue
+            }
             val now = System.currentTimeMillis()
             val id = (currentNeighbours + onScreen.keys.toList())
                 .distinct()
@@ -364,20 +373,25 @@ internal fun BrowseMode(
             }
             grabShowing = false
             grabId = id
+            val startedAt = movedAt
+            var interrupted = false
             try {
                 grabber.play(channel)
-                withTimeoutOrNull(10_000) { snapshotFlow { grabShowing }.first { it } }
-                if (grabShowing) {
+                // The cursor moving again stops the picture straight away.
+                withTimeoutOrNull(10_000) { snapshotFlow { grabShowing || movedAt != startedAt }.first { it } }
+                if (grabShowing && movedAt == startedAt) {
                     delay(400)
-                    keepPicture(id, grabView.picture())
                 }
+                if (grabShowing && movedAt == startedAt) keepPicture(id, grabView.picture())
+                interrupted = movedAt != startedAt
             } finally {
                 grabber.stop()
                 grabId = null
                 grabShowing = false
             }
-            // A channel that didn't open isn't tried again straight away.
-            browsePictureAt[id] = System.currentTimeMillis()
+            // A channel that didn't open isn't tried again straight away (one cut short by the
+            // cursor moving is tried again once it rests).
+            if (!interrupted) browsePictureAt[id] = System.currentTimeMillis()
             delay(400)
         }
     }
