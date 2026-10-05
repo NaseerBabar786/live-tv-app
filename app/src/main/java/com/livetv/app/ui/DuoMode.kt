@@ -100,7 +100,6 @@ private const val MAX_PER_ROW = 120
 
 private val Yellow = Color(0xFFFFD54F)
 private val PlayerShape = RoundedCornerShape(22.dp)
-private val CardShape = RoundedCornerShape(12.dp)
 
 /**
  * "Duo" mode, like the Google TV home screen: a top bar with the Modes button and the clock, two
