@@ -2,10 +2,7 @@ package com.livetv.app.ui
 
 import android.view.TextureView
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -424,12 +421,8 @@ internal fun StripMode(
                     )
                 }
                 // Over the top of the picture for a few seconds: the channel, the clock and the weather.
-                AnimatedVisibility(
-                    visible = infoShown || current == null,
-                    enter = fadeIn(),
-                    exit = fadeOut(),
-                    modifier = Modifier.fillMaxWidth().align(Alignment.TopStart),
-                ) {
+                val infoAlpha by animateFloatAsState(if (infoShown || current == null) 1f else 0f, label = "info")
+                Box(Modifier.fillMaxWidth().align(Alignment.TopStart).graphicsLayer { alpha = infoAlpha }) {
                     Row(
                         Modifier
                             .fillMaxWidth()
