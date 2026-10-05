@@ -11,7 +11,7 @@ import com.livetv.app.ui.SettingsTheme
 import com.livetv.app.ui.UiState
 
 /**
- * Live TV Plus: the Google Play edition of Live TV. Same look as Live TV (logo, clock and
+ * Live TV Plus: the Google Play edition of Free Live TV. Same look as Free Live TV (logo, clock and
  * weather), but only a player: no channels of its own, no sponsor screen, no outside links
  * and no self-updates (Google Play updates it).
  */
@@ -23,7 +23,7 @@ object Edition {
     const val HAS_START_SCREEN = false
     const val HAS_WEATHER = true
     const val HAS_DEVICE_LOCATION = false
-    /** Movies & Series from the saved playlists (Live TV only). */
+    /** Movies & Series from the saved playlists (Free Live TV only). */
     const val HAS_VOD = false
 }
 

@@ -1,7 +1,7 @@
 name: Build free films playlist
 
 # Builds docs/Free.m3u (tv.bulkbazaar.ca/Free.m3u): films and shows shared openly by their
-# makers (Wikimedia Commons, NASA, Vimeo Staff Picks, PeerTube), for Live TV's Library.
+# makers (Wikimedia Commons, NASA, Vimeo Staff Picks, PeerTube), for Free Live TV's Library.
 on:
   schedule:
     - cron: "0 11 * * 2"   # weekly, Tuesdays 11:00 UTC

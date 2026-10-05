@@ -71,7 +71,7 @@ object Vod {
     /** Free films and shows from Wikimedia Commons, NASA, Vimeo and PeerTube, rebuilt weekly by tools/build_free.py. */
     const val FREE_SOURCES_URL = "https://tv.bulkbazaar.ca/Free.m3u"
 
-    /** The playlists Movies & Series always shows: the free lists in Live TV, none in the store editions. */
+    /** The playlists Movies & Series always shows: the free lists in Free Live TV, none in the store editions. */
     fun builtIn(): List<Playlist> =
         if (Edition.HAS_VOD) {
             // In this order, so where a title is in two lists the first one's copy is kept.
@@ -122,7 +122,7 @@ object Vod {
     }
 
     private fun isEpisode(channel: Channel): Boolean {
-        // tvg-genre from Live TV's own lists: Movies, or a Series, Shows or Kids folder.
+        // tvg-genre from Free Live TV's own lists: Movies, or a Series, Shows or Kids folder.
         channel.category?.lowercase()?.let { c ->
             if (c == "movies" || c == "movie") return false
             if (c == "series" || c == "shows" || c == "kids") return true
