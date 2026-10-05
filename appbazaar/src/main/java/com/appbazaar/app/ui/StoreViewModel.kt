@@ -52,7 +52,8 @@ data class StoreState(
     val selfUpdate: StoreApp? get() = apps.firstOrNull { it.id == Catalog.SELF_ID && action(it) == Action.Update }
 
     fun visible(): List<StoreApp> = when (section) {
-        Section.ALL -> apps
+        // Apps for PCs only (no Android download and no web app) have nothing to offer here.
+        Section.ALL -> apps.filter { it.apkUrl != null || it.webUrl != null }
         Section.TV -> apps.filter { it.forTv }
         Section.PHONE -> apps.filter { it.forPhone }
         Section.UPDATES -> updates
