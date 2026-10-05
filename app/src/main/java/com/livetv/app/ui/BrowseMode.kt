@@ -289,7 +289,7 @@ internal fun BrowseMode(
         previewId = null
         val id = focusedKey?.second
         if (!playing || id == null) return@LaunchedEffect
-        delay(900) // only once the cursor rests on a card
+        delay(2_000) // only once the cursor rests on a card
         if (metered(context)) return@LaunchedEffect
         val channel = byId[id] ?: return@LaunchedEffect
         previewId = id
@@ -324,16 +324,36 @@ internal fun BrowseMode(
     }
     val currentById by rememberUpdatedState(byId)
     val currentFocused by rememberUpdatedState(focusedKey?.second)
+    // The cards around the highlighted one (left, right, above, below) get their pictures first,
+    // so the card the cursor moves to next already shows what's on.
+    val currentNeighbours by rememberUpdatedState(
+        focusedKey?.let { (rowKey, id) ->
+            val r = rows.indexOfFirst { it.key == rowKey }
+            val i = rows.getOrNull(r)?.channels?.indexOfFirst { it.id == id } ?: -1
+            if (r < 0 || i < 0) emptyList()
+            else buildList {
+                rows[r].channels.getOrNull(i - 1)?.let { add(it.id) }
+                rows[r].channels.getOrNull(i + 1)?.let { add(it.id) }
+                for (other in listOf(rows.getOrNull(r - 1), rows.getOrNull(r + 1))) {
+                    val list = other?.channels ?: continue
+                    if (list.isEmpty()) continue
+                    add(list[i.coerceAtMost(list.size - 1)].id)
+                    add(list[(sessionCardIndex[other.key] ?: 0).coerceIn(0, list.size - 1)].id)
+                }
+            }.distinct()
+        }.orEmpty(),
+    )
     LaunchedEffect(playing) {
         if (!playing) return@LaunchedEffect
-        delay(1_500) // let the highlighted card start first
+        delay(2_500) // let the highlighted card start first
         while (true) {
             if (metered(context)) {
                 delay(10_000)
                 continue
             }
             val now = System.currentTimeMillis()
-            val id = onScreen.keys.toList()
+            val id = (currentNeighbours + onScreen.keys.toList())
+                .distinct()
                 .filter { it != currentFocused }
                 .firstOrNull { now - (browsePictureAt[it] ?: 0L) > PICTURE_FRESH_MS }
             val channel = id?.let { currentById[it] }
@@ -380,7 +400,7 @@ internal fun BrowseMode(
         val index = rows.indexOfFirst { it.key == key }
         if (index < 0) return
         scope.launch {
-            listState.animateScrollToItem(index + 1) // the header is item 0
+            listState.animateScrollToItem(index)
             withFrameNanos { }
             withFrameNanos { }
             runCatching { rowRequester(key).requestFocus() }
@@ -409,135 +429,137 @@ internal fun BrowseMode(
         val contentWidth = maxWidth - railCollapsed - 24.dp
         // Phones (Live TV Max): one and a half cards across instead of three and a bit.
         val phone = maxWidth < 600.dp
-        val cardWidth = contentWidth / if (phone) 1.45f else 3.35f
-        LazyColumn(
-            state = listState,
-            contentPadding = PaddingValues(start = railCollapsed + 8.dp, end = 0.dp, top = 18.dp, bottom = 40.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            item(key = "header") {
-                Row(
-                    Modifier.fillMaxWidth().padding(start = 14.dp, end = 28.dp, bottom = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    if (searchOpen) {
-                        LaunchedEffect(Unit) { withFrameNanos { }; runCatching { searchFocus.requestFocus() } }
-                        OutlinedTextField(
-                            value = query,
-                            onValueChange = onQueryChange,
-                            placeholder = { Text("Search channels") },
-                            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
-                            singleLine = true,
-                            shape = RoundedCornerShape(50),
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                            keyboardActions = KeyboardActions(onSearch = { if (query.isNotBlank()) focusRow("search") }),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedContainerColor = palette.surfaceVariant,
-                                unfocusedContainerColor = palette.surfaceVariant,
-                            ),
-                            modifier = Modifier.width(contentWidth * 0.45f).focusRequester(searchFocus),
-                        )
-                    } else {
-                        Row(
-                            Modifier
-                                .width(contentWidth * 0.45f)
-                                .height(48.dp)
-                                .focusGlow()
-                                .clip(RoundedCornerShape(50))
-                                .background(palette.surfaceVariant)
-                                .clickable { searchOpen = true }
-                                .padding(horizontal = 18.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(Icons.Filled.Search, contentDescription = null, tint = palette.onSurfaceVariant)
-                            Spacer(Modifier.width(12.dp))
-                            Text("Search", color = palette.onSurfaceVariant, fontSize = 17.sp, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                    Spacer(Modifier.weight(1f))
-                    Column(horizontalAlignment = Alignment.End) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            AppLogo(size = 30.dp)
-                            Spacer(Modifier.width(8.dp))
-                            Text(Edition.APP_NAME, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = palette.onSurface)
-                        }
-                        Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Clock()
-                            if (Edition.HAS_WEATHER && !phone) WeatherNow()
-                        }
-                    }
-                }
-            }
-            if (rows.isEmpty()) {
-                item(key = "empty") {
-                    Text(
-                        if (query.isNotBlank()) "No channels match \"$query\"." else "Loading channels…",
-                        color = palette.onSurfaceVariant,
-                        modifier = Modifier.padding(24.dp),
+        // TV: cards 25% bigger than before (about 2.7 across instead of 3.35).
+        val cardWidth = contentWidth / if (phone) 1.45f else 2.68f
+        // The header (search, name, clock, weather) stays put; only the rows scroll under it.
+        Column(Modifier.fillMaxSize().padding(start = railCollapsed + 8.dp)) {
+            Row(
+                Modifier.fillMaxWidth().padding(start = 14.dp, end = 28.dp, top = 18.dp, bottom = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (searchOpen) {
+                    LaunchedEffect(Unit) { withFrameNanos { }; runCatching { searchFocus.requestFocus() } }
+                    OutlinedTextField(
+                        value = query,
+                        onValueChange = onQueryChange,
+                        placeholder = { Text("Search channels") },
+                        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                        singleLine = true,
+                        shape = RoundedCornerShape(50),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(onSearch = { if (query.isNotBlank()) focusRow("search") }),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = palette.surfaceVariant,
+                            unfocusedContainerColor = palette.surfaceVariant,
+                        ),
+                        modifier = Modifier.width(contentWidth * 0.45f).focusRequester(searchFocus),
                     )
-                }
-            }
-            items(rows.size, key = { rows[it].key }) { r ->
-                val row = rows[r]
-                val focusIndex = (sessionCardIndex[row.key] ?: 0).coerceIn(0, row.size - 1)
-                Column {
-                    Text(
-                        row.title,
-                        color = palette.onSurface,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 17.sp,
-                        modifier = Modifier.padding(start = 14.dp, bottom = 2.dp),
-                    )
-                    LazyRow(
-                        state = rememberLazyListState(max(0, focusIndex - 1)),
-                        horizontalArrangement = Arrangement.spacedBy(18.dp),
-                        contentPadding = PaddingValues(start = 14.dp, end = 40.dp, top = 10.dp, bottom = 10.dp),
+                } else {
+                    Row(
+                        Modifier
+                            .width(contentWidth * 0.45f)
+                            .height(48.dp)
+                            .focusGlow()
+                            .clip(RoundedCornerShape(50))
+                            .background(palette.surfaceVariant)
+                            .clickable { searchOpen = true }
+                            .padding(horizontal = 18.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        itemsIndexed(row.videos, key = { _, v -> v.id }) { i, video ->
-                            VideoBrowseCard(
-                                video = video,
-                                width = cardWidth,
-                                modifier = if (i == focusIndex) Modifier.focusRequester(rowRequester(row.key)) else Modifier,
-                                onFocused = {
-                                    focusedKey = null
-                                    sessionRowKey = row.key
-                                    sessionCardIndex[row.key] = i
-                                },
-                                onClick = { openVideo(video) },
-                            )
-                        }
-                        itemsIndexed(row.channels, key = { _, c -> c.id }) { i, channel ->
-                            val here = focusedKey == row.key to channel.id
-                            DisposableEffect(channel.id) {
-                                onScreen[channel.id] = (onScreen[channel.id] ?: 0) + 1
-                                onDispose {
-                                    val left = (onScreen[channel.id] ?: 1) - 1
-                                    if (left > 0) onScreen[channel.id] = left else onScreen.remove(channel.id)
-                                }
+                        Icon(Icons.Filled.Search, contentDescription = null, tint = palette.onSurfaceVariant)
+                        Spacer(Modifier.width(12.dp))
+                        Text("Search", color = palette.onSurfaceVariant, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+                Spacer(Modifier.weight(1f))
+                Column(horizontalAlignment = Alignment.End) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        AppLogo(size = 30.dp)
+                        Spacer(Modifier.width(8.dp))
+                        Text(Edition.APP_NAME, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = palette.onSurface)
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Clock()
+                        if (Edition.HAS_WEATHER && !phone) WeatherNow()
+                    }
+                }
+            }
+            LazyColumn(
+                state = listState,
+                contentPadding = PaddingValues(top = 6.dp, bottom = 40.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.fillMaxWidth().weight(1f),
+            ) {
+                if (rows.isEmpty()) {
+                    item(key = "empty") {
+                        Text(
+                            if (query.isNotBlank()) "No channels match \"$query\"." else "Loading channels…",
+                            color = palette.onSurfaceVariant,
+                            modifier = Modifier.padding(24.dp),
+                        )
+                    }
+                }
+                items(rows.size, key = { rows[it].key }) { r ->
+                    val row = rows[r]
+                    val focusIndex = (sessionCardIndex[row.key] ?: 0).coerceIn(0, row.size - 1)
+                    Column {
+                        Text(
+                            row.title,
+                            color = palette.onSurface,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 17.sp,
+                            modifier = Modifier.padding(start = 14.dp, bottom = 2.dp),
+                        )
+                        LazyRow(
+                            state = rememberLazyListState(max(0, focusIndex - 1)),
+                            horizontalArrangement = Arrangement.spacedBy(18.dp),
+                            contentPadding = PaddingValues(start = 14.dp, end = 40.dp, top = 10.dp, bottom = 10.dp),
+                        ) {
+                            itemsIndexed(row.videos, key = { _, v -> v.id }) { i, video ->
+                                VideoBrowseCard(
+                                    video = video,
+                                    width = cardWidth,
+                                    modifier = if (i == focusIndex) Modifier.focusRequester(rowRequester(row.key)) else Modifier,
+                                    onFocused = {
+                                        focusedKey = null
+                                        sessionRowKey = row.key
+                                        sessionCardIndex[row.key] = i
+                                    },
+                                    onClick = { openVideo(video) },
+                                )
                             }
-                            val (now, next) = if (Edition.MAX) Guide.nowNext(guide, channel, nowSec) else null to null
-                            BrowseCard(
-                                channel = channel,
-                                width = cardWidth,
-                                now = now,
-                                next = next,
-                                favorite = channel.id in favorites,
-                                stream = stream.takeIf { here && previewId == channel.id },
-                                streamView = previewView,
-                                showing = here && showing,
-                                picture = browsePictures[channel.id],
-                                grab = grabber.takeIf { grabId == channel.id && !here },
-                                grabView = grabView,
-                                grabShowing = grabShowing,
-                                modifier = if (i == focusIndex) Modifier.focusRequester(rowRequester(row.key)) else Modifier,
-                                onFocused = {
-                                    focusedKey = row.key to channel.id
-                                    sessionRowKey = row.key
-                                    sessionCardIndex[row.key] = i
-                                },
-                                onClick = { open(channel) },
-                            )
+                            itemsIndexed(row.channels, key = { _, c -> c.id }) { i, channel ->
+                                val here = focusedKey == row.key to channel.id
+                                DisposableEffect(channel.id) {
+                                    onScreen[channel.id] = (onScreen[channel.id] ?: 0) + 1
+                                    onDispose {
+                                        val left = (onScreen[channel.id] ?: 1) - 1
+                                        if (left > 0) onScreen[channel.id] = left else onScreen.remove(channel.id)
+                                    }
+                                }
+                                val (now, next) = if (Edition.MAX) Guide.nowNext(guide, channel, nowSec) else null to null
+                                BrowseCard(
+                                    channel = channel,
+                                    width = cardWidth,
+                                    now = now,
+                                    next = next,
+                                    favorite = channel.id in favorites,
+                                    stream = stream.takeIf { here && previewId == channel.id },
+                                    streamView = previewView,
+                                    showing = here && showing,
+                                    picture = browsePictures[channel.id],
+                                    grab = grabber.takeIf { grabId == channel.id && !here },
+                                    grabView = grabView,
+                                    grabShowing = grabShowing,
+                                    modifier = if (i == focusIndex) Modifier.focusRequester(rowRequester(row.key)) else Modifier,
+                                    onFocused = {
+                                        focusedKey = row.key to channel.id
+                                        sessionRowKey = row.key
+                                        sessionCardIndex[row.key] = i
+                                    },
+                                    onClick = { open(channel) },
+                                )
+                            }
                         }
                     }
                 }
