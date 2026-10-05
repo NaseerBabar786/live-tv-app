@@ -1067,9 +1067,6 @@ https://media.streambrothers.com:1936/8506/8506/playlist.m3u8
 https://media.streambrothers.com:1936/8014/8014/playlist.m3u8
 #EXTINF:-1 tvg-id="NosTVBonaire2.bq@SD" tvg-logo="https://i.imgur.com/9pQdGw1.png" tvg-country="BQ" group-title="Bonaire" tvg-language="Dutch" tvg-genre="General",NosTV Bonaire 2
 https://stream2.nostvbonaire.com/hls/0/stream.m3u8
-#EXTINF:-1 tvg-id="AXNAdria.us@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/AXN_logo_%282015%29.svg/960px-AXN_logo_%282015%29.svg.png" tvg-country="BA" group-title="Bosnia and Herzegovina" tvg-language="English" tvg-genre="Movies",AXN Adria
-#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.3
-http://5.57.74.130:8000/play/a0at/index.m3u8
 #EXTINF:-1 tvg-id="AXNSpin.hu@SD" tvg-logo="https://i.imgur.com/uVFenKm.png" tvg-country="BA" group-title="Bosnia and Herzegovina" tvg-language="Croatian" tvg-genre="Entertainment",AXN Spin
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 VLC/3.0.18 LibVLC/3.0.18
 #EXTVLCOPT:http-referrer=https://cool-tv.net/

@@ -41,6 +41,7 @@ fun actionLabel(action: Action): String = when (action) {
     Action.Update -> "Update"
     Action.Open -> "Open"
     Action.Website -> "Open website"
+    Action.OnPc -> "Get it on PC"
     Action.Unavailable -> "Not on Android"
     is Action.Downloading ->
         if (action.progress < 0f) "Downloading…" else "Downloading ${(action.progress * 100).toInt()}%"
@@ -56,6 +57,8 @@ fun DownloadBar(action: Action, modifier: Modifier = Modifier) {
 fun platformsLabel(app: StoreApp): String = when {
     app.forTv && app.forPhone -> "Phone + TV"
     app.forTv -> "TV"
+    app.forPhone && app.forPc -> "Phone + PC"
     app.forPhone -> "Phone"
+    app.forPc -> "PC"
     else -> app.platforms.joinToString()
 }

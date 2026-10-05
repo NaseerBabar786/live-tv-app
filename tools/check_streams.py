@@ -102,6 +102,14 @@ TVNAME = re.compile(r"t[eé]l[eé](?![a-z])|\btv\b|television", re.I)
 AUDIO = re.compile(r"\.(mp3|aac|ogg|opus|m4a)(\?|$)|icecast|shoutcast|streamtheworld|zeno\.fm", re.I)
 
 
+# Streams that carry a restreamer's own mark burned into the picture (it can't be hidden by the app).
+STAMPED = ("5.57.74.130",)  # AXN Adria: round arrow badge over the video, 2026-10-05
+
+
+def is_stamped(url):
+    return any(s in url for s in STAMPED)
+
+
 def is_radio(name, url):
     return bool(AUDIO.search(url) or (RADIO.search(name) and not TVNAME.search(name)))
 
@@ -131,7 +139,7 @@ def load_channels():
             print(f"iptv-org {code}: {e}", file=sys.stderr)
             continue
         for attrs, name, url, opts in entries:
-            if is_radio(name, url):
+            if is_radio(name, url) or is_stamped(url):
                 continue
             genre = genres.get(url) or attrs.get("group-title", "").split(";")[0]
             opts = {k: v for k, v in {"ua": opts.get("ua") or attrs.get("http-user-agent"),
@@ -161,7 +169,7 @@ def load_channels():
             print(f"famelack {code}: {e}", file=sys.stderr)
             continue
         for e in entries:
-            urls = [u for u in (e.get("sources") or {}).get("streams", []) if u.startswith("http")]
+            urls = [u for u in (e.get("sources") or {}).get("streams", []) if u.startswith("http") and not is_stamped(u)]
             name = e.get("name", "")
             if not urls or is_radio(name, urls[0]):
                 continue

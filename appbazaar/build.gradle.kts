@@ -14,8 +14,8 @@ android {
         applicationId = "com.naseerbabar.appbazaar"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.1.0"
+        versionCode = 3
+        versionName = "1.2.0"
     }
 
     // Same shared signing key as Live TV when CI has it, so updates install over the old app.
@@ -72,6 +72,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
     implementation(libs.coil.svg)
+    // QR codes that send PC apps' download page to a computer.
+    implementation("com.google.zxing:core:3.5.3")
     debugImplementation(libs.androidx.compose.ui.tooling)
     testImplementation(libs.junit)
     // Real org.json for JVM unit tests (the Android one is a stub there).

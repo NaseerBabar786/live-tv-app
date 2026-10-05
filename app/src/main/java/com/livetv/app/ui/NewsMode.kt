@@ -69,7 +69,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.Player
 import com.livetv.app.Edition
-import com.livetv.app.EditionSponsorVideoBox
 import com.livetv.app.EditionTicker
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
@@ -530,9 +529,9 @@ fun NewsMode(
                                 NewsScreen.Panel.Currencies -> CurrencyList(Modifier.fillMaxSize(), rates, gold, ::s, ::d)
                                 NewsScreen.Panel.Stories -> StoryList(Modifier.fillMaxSize(), ::s, ::d)
                                 NewsScreen.Panel.Second -> SecondChannel(second, secondPlaying, ::s, ::d)
-                                // Like CP24 (the sponsor shows here if the cameras can't be reached).
+                                // Like CP24 (prayer times show here if the cameras can't be reached).
                                 NewsScreen.Panel.Traffic -> TrafficCameras(Modifier.fillMaxSize().padding(vertical = d(6f)), ::s) {
-                                    EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = now >= videoOkAt)
+                                    Prayers(::s, ::d)
                                 }
                                 NewsScreen.Panel.Empty -> Unit
                             }
@@ -1636,11 +1635,6 @@ private fun HomeLayout(
                 tile("home:b1", "Bottom left tile", MyScreen.STORIES, Modifier.weight(2f).fillMaxHeight(), usual, kBottom, true)
                 tile("home:b2", "Bottom middle tile", MyScreen.MARKETS, Modifier.weight(1f).fillMaxHeight(), usual, kBottom, false)
                 tile("home:b3", "Bottom right tile", MyScreen.CURRENCIES, Modifier.weight(1f).fillMaxHeight(), usual, kBottom, false)
-                BoxWithConstraints(Modifier.fillMaxHeight()) {
-                    Box(Modifier.width(maxHeight * 16f / 9f).fillMaxHeight().clip(shape)) {
-                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo, clickable = true, onBack = onSponsorBack)
-                    }
-                }
             }
             Box(Modifier.fillMaxWidth().height(tickerHeight).clip(shape).background(Color.Black.copy(alpha = 0.4f)).padding(horizontal = d(12f))) {
                 EditionTicker(Modifier.fillMaxSize(), big = false, always = true)
@@ -1857,7 +1851,7 @@ private fun HomeStories(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -
  * My Screen: the viewer builds it in Settings (see [MyScreen]). The channel on the left or the
  * right (or bigger), up to four spots beside it, one panel under it, a style (glass cards, flat
  * edge to edge, or bold headers) and an accent colour. Whatever is picked, every part stretches so
- * no space is left empty; the sponsor and the advertising line always stay. The arrows move onto
+ * no space is left empty; the advertising line always stays. The arrows move onto
  * the spots, and OK on one changes what it shows and how it looks.
  */
 @Composable
@@ -1954,17 +1948,10 @@ private fun MyLayout(
                 @Composable
                 fun Side() {
                     Column(Modifier.width(sideW).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(sep)) {
-                        spots.forEach { (section, what) -> tile(section, what, Modifier.fillMaxWidth().weight(1f), usual, kSide, false) }
-                        // The sponsor always stays: 16:9 at the column's width, or the whole
-                        // column when no spots are picked.
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .then(if (spots.isEmpty()) Modifier.weight(1f) else Modifier.height(minOf(sideW * 9f / 16f, availH * 0.4f)))
-                                .clip(shape),
-                        ) {
-                            EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo, clickable = true, onBack = onSponsorBack)
-                        }
+                        // The spots share the column (no sponsor under them since 1.9.32); with none
+                        // picked, the clock fills it.
+                        spots.ifEmpty { listOf(MyScreen.Section.Spot1 to MyScreen.CLOCK) }
+                            .forEach { (section, what) -> tile(section, what, Modifier.fillMaxWidth().weight(1f), usual, kSide, false) }
                     }
                 }
 

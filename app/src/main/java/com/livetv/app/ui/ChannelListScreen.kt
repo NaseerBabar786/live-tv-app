@@ -168,8 +168,6 @@ import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
 import com.livetv.app.EditionSponsorBar
 import com.livetv.app.EditionTicker
-import com.livetv.app.EditionSponsorBox
-import com.livetv.app.editionHasSponsors
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
 
@@ -833,11 +831,11 @@ fun ChannelListScreen(
                     }
                     val cellWidth = if (fullTiles) fullHeight * 16f / 9f else tileWidth
                     // TVs, 1×2, 2×2 and 2×3: the tiles touch, edge to edge across the screen at 16:9,
-                    // and the sponsor banner gets the space under them (as big as fits at its 8:1 shape).
+                    // (no sponsor banner under them since 1.9.32).
                     // When the screen isn't tall enough for that, the tiles get shorter and their
                     // pictures stretch a little (at most a quarter wider than 16:9) to keep the width.
                     val packed = wide && !fullTiles && !bigPlayer
-                    val hasAd = editionHasSponsors()
+                    val hasAd = false
                     val minBanner = if (hasAd) 48.dp else 0.dp
                     val packedNaturalWidth = maxWidth / columns
                     val packedFits = packedNaturalWidth * 9f / 16f * rows + minBanner <= maxHeight
@@ -998,10 +996,8 @@ fun ChannelListScreen(
                             val bigHeight = bigWidth * 9f / 16f
                             val smallWidth = maxWidth - bigWidth
                             // The three side tiles share the big player's height exactly, top to bottom,
-                            // their pictures stretched to fill them.
-                            // With sponsors, a quarter of that height goes to a sponsor picture under them.
-                            val sideAd = editionHasSponsors()
-                            val smallHeight = if (sideAd) bigHeight / 4 else bigHeight / 3
+                            // their pictures stretched to fill them (no sponsor picture under them since 1.9.30).
+                            val smallHeight = bigHeight / 3
                             val big = window.firstOrNull()
                             val column = window.drop(1)
                             fun focus(id: String) = scope.launch {
@@ -1085,7 +1081,6 @@ fun ChannelListScreen(
                                 }
                                 Column(Modifier.width(smallWidth).fillMaxHeight()) {
                                     column.forEachIndexed { i, small -> SmallTile(i, small) }
-                                    if (sideAd) EditionSponsorBox(Modifier.fillMaxWidth().height(bigHeight / 4))
                                 }
                             }
                             // Under the big player: add it to (or remove it from) Favorites.
