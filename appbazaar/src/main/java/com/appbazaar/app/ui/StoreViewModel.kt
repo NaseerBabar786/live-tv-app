@@ -85,7 +85,7 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(loading = true, error = null) }
         viewModelScope.launch {
             runCatching { repo.refresh() }
-                .onSuccess { apps -> setApps(apps); _state.update { it.copy(loading = false) } }
+                .onSuccess { apps -> setApps(apps); _state.update { it.copy(loading = false) }; autoUpdateSelf() }
                 .onFailure { e ->
                     _state.update {
                         it.copy(
@@ -159,6 +159,20 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
                 say("${app.name} did not download: ${e.message ?: "no internet"}")
             }
         }
+    }
+
+    /**
+     * When a newer App Bazaar is listed, download it straight away (once per start) and open the
+     * installer. Android still asks the user to press Install once: sideloaded apps can't skip that.
+     */
+    private var selfUpdateStarted = false
+
+    private fun autoUpdateSelf() {
+        if (selfUpdateStarted) return
+        val self = _state.value.selfUpdate ?: return
+        selfUpdateStarted = true
+        say("Updating App Bazaar to ${self.version}…")
+        download(self)
     }
 
     private fun say(text: String) = _state.update { it.copy(message = text) }
