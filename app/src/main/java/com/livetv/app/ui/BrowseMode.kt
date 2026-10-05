@@ -289,7 +289,7 @@ internal fun BrowseMode(
         previewId = null
         val id = focusedKey?.second
         if (!playing || id == null) return@LaunchedEffect
-        delay(2_000) // only once the cursor rests on a card
+        delay(1_000) // only once the cursor rests on a card
         if (metered(context)) return@LaunchedEffect
         val channel = byId[id] ?: return@LaunchedEffect
         previewId = id
@@ -345,7 +345,7 @@ internal fun BrowseMode(
     )
     LaunchedEffect(playing) {
         if (!playing) return@LaunchedEffect
-        delay(2_500) // let the highlighted card start first
+        delay(1_500) // let the highlighted card start first
         while (true) {
             if (metered(context)) {
                 delay(10_000)
