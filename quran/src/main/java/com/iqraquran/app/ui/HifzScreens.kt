@@ -72,7 +72,7 @@ fun HifzHomeScreen(vm: AppViewModel) {
                     Modifier.fillMaxWidth().focusRequester(first),
                 ) { vm.open(Screen.SurahList(forHifz = true)) }
             }
-            item { Text(S.todaysRevision.get(), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Gold) }
+            item { Text(S.todaysRevision.get(), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = palette.accent) }
             if (due.isEmpty()) {
                 item { Text(S.nothingDue.get(), color = MaterialTheme.colorScheme.onSurfaceVariant) }
             }
@@ -93,7 +93,7 @@ fun HifzHomeScreen(vm: AppViewModel) {
                     items(inGroup, key = { it.key }) { item -> RevisionRow(vm, item) }
                 }
             }
-            item { Text(S.juzMap.get(), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Gold) }
+            item { Text(S.juzMap.get(), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = palette.accent) }
             item { JuzMap(Hifz.juzProgress(vm.hifz, q.ayahCounts)) }
             val rest = vm.hifz.filter { !Hifz.isDue(it, today) }
             if (rest.isNotEmpty()) {
@@ -123,7 +123,7 @@ private fun RevisionRow(vm: AppViewModel, item: Hifz.Item) {
             Text("${surah.nameEn} ${item.from}–${item.to}", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
             Text(
                 surah.nameAr + if (item.weak) " · " + S.weak.get() else "",
-                color = if (item.weak) Gold else MaterialTheme.colorScheme.onSurfaceVariant,
+                color = if (item.weak) palette.accent else MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
             )
         }
@@ -155,7 +155,7 @@ private fun JuzMap(progress: List<Float>) {
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("$juz", fontWeight = FontWeight.Bold, color = if (p >= 1f) Gold else Color.White)
+                            Text("$juz", fontWeight = FontWeight.Bold, color = if (p >= 1f) Gold else if (p > 0f) Color.White else palette.text)
                             if (p > 0f) Text("${(p * 100).toInt()}%", fontSize = 11.sp, color = Color.White)
                         }
                     }
@@ -187,7 +187,7 @@ fun HifzSetupScreen(vm: AppViewModel, surahNo: Int) {
                 .padding(horizontal = if (isWide()) 120.dp else 16.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            ArabicText(surah.nameAr, size = 34.sp, color = Gold, align = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            ArabicText(surah.nameAr, size = 34.sp, color = palette.accent, align = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             Stepper(S.fromAyah.get(), from, 1..count) {
                 from = it
                 if (to < it) to = it
@@ -270,7 +270,7 @@ fun HifzSessionScreen(vm: AppViewModel, s: Screen.HifzSession) {
                 else "${S.ayahWord.get()} $ayah · ${S.repeat.get()} ${now?.second?.label ?: ""}",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Gold,
+                color = palette.accent,
             )
             // Progress through the whole plan.
             Box(
@@ -282,7 +282,7 @@ fun HifzSessionScreen(vm: AppViewModel, s: Screen.HifzSession) {
                 Box(
                     Modifier
                         .fillMaxWidth(if (finished) 1f else (stepIndex + 1f) / plan.size)
-                        .background(Gold)
+                        .background(palette.accent)
                         .padding(vertical = 4.dp),
                 )
             }
@@ -301,11 +301,11 @@ fun HifzSessionScreen(vm: AppViewModel, s: Screen.HifzSession) {
                     "${surah.ayahs[ayah - 1]} ${ayahMark(ayah)}",
                     size = (vm.textSize + 6).sp,
                     // Blur works from Android 12; older devices just fade the text right down.
-                    color = if (showText) Cream else Cream.copy(alpha = 0.1f),
+                    color = if (showText) palette.arabic else palette.arabic.copy(alpha = 0.1f),
                     align = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().then(if (showText) Modifier else Modifier.blur(18.dp)),
                 )
-                if (!showText) Text(S.tapToPeek.get(), color = Gold, fontWeight = FontWeight.Bold)
+                if (!showText) Text(S.tapToPeek.get(), color = palette.accent, fontWeight = FontWeight.Bold)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.focusRequester(playButton)) {

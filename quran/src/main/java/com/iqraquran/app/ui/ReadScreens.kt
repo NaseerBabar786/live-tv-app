@@ -57,7 +57,7 @@ import java.util.Locale
 fun Loading() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            CircularProgressIndicator(color = Gold)
+            CircularProgressIndicator(color = palette.accent)
             Text(S.loading.get())
         }
     }
@@ -124,7 +124,7 @@ private fun SurahRow(s: Surah, modifier: Modifier, onClick: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        ArabicText(s.nameAr, size = 26.sp, color = Gold)
+        ArabicText(s.nameAr, size = 26.sp, color = palette.accent)
     }
 }
 
@@ -253,7 +253,7 @@ private fun AyahCard(
             .fillMaxWidth()
             .focusRing()
             .clip(TileShape)
-            .background(if (highlighted) Color(0xFF1F6B52) else MaterialTheme.colorScheme.surface)
+            .background(if (highlighted) palette.highlight else MaterialTheme.colorScheme.surface)
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -261,7 +261,7 @@ private fun AyahCard(
         ArabicText(
             "$text ${ayahMark(ayah)}",
             size = vm.textSize.sp,
-            color = if (highlighted) Gold else Cream,
+            color = if (highlighted) palette.accent else palette.arabic,
             modifier = Modifier.fillMaxWidth(),
         )
         val mode = vm.translation
@@ -299,6 +299,8 @@ private fun ReadOptions(vm: AppViewModel, kids: Boolean) {
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
+        Text(S.theme.get(), fontWeight = FontWeight.SemiBold)
+        ThemePicker(vm, compact = true)
         Text(S.translation.get(), fontWeight = FontWeight.SemiBold)
         ChoiceRow {
             listOf(

@@ -66,7 +66,7 @@ fun HomeScreen(vm: AppViewModel) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(S.appName.get(), fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Gold)
+                Text(S.appName.get(), fontSize = 30.sp, fontWeight = FontWeight.Bold, color = palette.accent)
                 Text(S.tagline.get(), fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             RoundButton(Icons.Filled.Settings, S.settings.get(), { vm.open(Screen.Settings) }, size = 48)
@@ -76,7 +76,7 @@ fun HomeScreen(vm: AppViewModel) {
             "اِقۡرَاۡ بِاسۡمِ رَبِّكَ الَّذِىۡ خَلَقَ",
             size = 30.sp,
             modifier = Modifier.fillMaxWidth(),
-            color = Gold,
+            color = palette.accent,
             align = androidx.compose.ui.text.style.TextAlign.Center,
         )
 
@@ -104,7 +104,7 @@ fun HomeScreen(vm: AppViewModel) {
                         .background(MaterialTheme.colorScheme.surfaceVariant)
                         .clickable { adding = true },
                     contentAlignment = Alignment.Center,
-                ) { Icon(Icons.Filled.Add, contentDescription = S.addProfile.get(), tint = Color.White) }
+                ) { Icon(Icons.Filled.Add, contentDescription = S.addProfile.get(), tint = palette.text) }
             }
         }
 
@@ -195,7 +195,7 @@ private fun ProfileChip(name: String, color: Color, selected: Boolean, onClick: 
         ) {
             Text(name.take(1), color = if (selected) color else Color.White, fontWeight = FontWeight.Bold)
         }
-        Text(name, color = Color.White, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal)
+        Text(name, color = if (selected) Color.White else palette.text, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal)
     }
 }
 

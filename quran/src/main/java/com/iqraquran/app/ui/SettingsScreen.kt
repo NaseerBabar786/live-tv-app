@@ -33,6 +33,8 @@ fun SettingsScreen(vm: AppViewModel, version: String) {
                 Choice("اردو", vm.lang == Lang.Ur) { vm.setLanguage(Lang.Ur) }
                 Choice("English", vm.lang == Lang.En) { vm.setLanguage(Lang.En) }
             }
+            Heading(S.readingTheme.get())
+            ThemePicker(vm)
             Heading(S.translation.get())
             ChoiceRow {
                 listOf(
