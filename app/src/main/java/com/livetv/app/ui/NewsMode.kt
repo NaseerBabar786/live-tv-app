@@ -1121,8 +1121,9 @@ private fun Cp24Layout(
                             // Toronto's traffic cameras at 16:9, like CP24; the room under them shows the next prayer,
                             // so nothing is left empty. If no camera answers, the prayer box fills the spot.
                             Cp24Screen.TRAFFIC -> if (maxHeight - maxWidth * 9f / 16f >= rd(80f)) {
+                                val cameraHeight = maxWidth * 9f / 16f
                                 Column(Modifier.fillMaxSize()) {
-                                    TrafficCameras(Modifier.fillMaxWidth().height(maxWidth * 9f / 16f), rs) {
+                                    TrafficCameras(Modifier.fillMaxWidth().height(cameraHeight), rs) {
                                         Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, rs, rd)
                                     }
                                     Cp24PrayerBox(Modifier.fillMaxWidth().weight(1f), today, minute, is24, rs, rd)
