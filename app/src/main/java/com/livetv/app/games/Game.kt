@@ -45,6 +45,30 @@ abstract class Game {
     /** A line under the score: lives, level, the computer's points. */
     open val status: String = ""
 
+    /** Choices shown before the game starts (players, difficulty); none starts straight away. */
+    open val options: List<String> = emptyList()
+    open val optionsTitle: String = ""
+    var choice = 0
+    var started = false
+        private set
+
+    /** Past the opening choices, so buttons and ticks go to the game itself. */
+    val ready: Boolean get() = options.isEmpty() || started
+
+    /** Ticks that think hard (the TV's chess move) and run away from the screen's thread. */
+    open val heavy: Boolean = false
+
+    /** The number buttons (Sudoku). */
+    open val usesDigits: Boolean = false
+    open fun digit(d: Int) {}
+
+    fun begin() {
+        started = true
+        onBegin(choice)
+    }
+
+    protected open fun onBegin(choice: Int) {}
+
     open fun press(p: Pad) {}
     open fun release(p: Pad) {}
     open fun tick() {}
@@ -79,4 +103,16 @@ val GAMES = listOf(
     GameInfo("memory", "Memory Cards", "🃏", "Arrows move, OK flips a card. Find all the matching pairs.", Scoring.Fewest) { Memory() },
     GameInfo("slide", "Slide Puzzle", "🧩", "Arrows slide a tile into the gap. Put 1 to 15 in order.", Scoring.Fewest) { SlidePuzzle() },
     GameInfo("echo", "Color Echo", "🎨", "Watch the colours light up, then repeat them with the arrows.", Scoring.Best) { ColorEcho() },
+    GameInfo("ludo", "Ludo", "🎲", "OK rolls the dice. Left and Right pick a piece, OK moves it. A 6 brings a piece out and rolls again. Get all four home.", Scoring.Wins) { Ludo() },
+    GameInfo("cricket", "Cricket", "🏏", "Press OK to swing as the ball reaches the yellow zone. Perfect timing hits a six. Chase the target before the overs or wickets run out.", Scoring.Best) { Cricket() },
+    GameInfo("snakes", "Snakes & Ladders", "🐍", "OK rolls the dice. Ladders take you up, snakes bring you down. First to 100 wins.", Scoring.Wins) { SnakesLadders() },
+    GameInfo("chess", "Chess", "♟️", "Arrows move, OK picks a piece and OK again moves it to a highlighted square.", Scoring.Wins) { Chess() },
+    GameInfo("quiz", "Quiz Time", "❓", "Arrows pick an answer, OK locks it in. Answer fast for bonus points. 10 questions a round.", Scoring.Best) { Quiz() },
+    GameInfo("sudoku", "Sudoku", "🔢", "Arrows move. Number buttons fill a square (0 clears), or OK counts up 1 to 9. Every row, column and box needs 1 to 9 once.", Scoring.Wins) { Sudoku() },
+    GameInfo("solitaire", "Solitaire", "🂡", "Arrows move, OK picks up cards and OK again puts them down. OK twice on a card sends it home. OK on the deck turns a card.", Scoring.Wins) { Solitaire() },
+    GameInfo("race", "Car Race", "🏎️", "Left and Right change lanes. Dodge the traffic; it gets faster.", Scoring.Best) { CarRace() },
+    GameInfo("maze", "Maze Muncher", "👾", "Arrows steer. Eat every dot and keep away from the ghosts. A big dot lets you chase them.", Scoring.Best) { MazeMuncher() },
+    GameInfo("checkers", "Checkers", "⚫", "Arrows move, OK picks a piece and OK again moves it. Jump over the TV's pieces to take them; reach the far side to crown a king.", Scoring.Wins) { Checkers() },
+    GameInfo("words", "Word Guess", "🔤", "Guess the hidden word one letter at a time. Arrows pick a letter, OK tries it. Seven wrong guesses and the round is lost.", Scoring.Best) { WordGuess() },
+    GameInfo("carrom", "Carrom", "⚪", "Left and Right move the striker, Up and Down aim. Hold OK to build power, let go to shoot. Pocket every coin in as few shots as you can.", Scoring.Fewest) { Carrom() },
 )

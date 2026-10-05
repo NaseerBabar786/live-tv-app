@@ -57,7 +57,14 @@
   .hero img { width: 100%; height: auto; display: block; border-radius: 16px; border: 1px solid var(--surface-2); }
   @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } }
   .ad-video { text-align: center; padding-top: 16px; }
-  .ad-video video { width: 100%; max-width: 320px; height: auto; aspect-ratio: 9 / 16; border-radius: 16px; border: 1px solid var(--surface-2); background: #000; display: block; margin: 0 auto 10px; }
+  /* The promo video plays inside the TV screen of the hero photo. */
+  .tvbox { position: relative; overflow: hidden; border-radius: 16px; }
+  .tvstage { position: absolute; left: 0; top: 0; width: 1200px; height: 920px; transform-origin: 0 0; pointer-events: none; }
+  .tvstage video { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; background: #000; object-fit: fill; opacity: 0; transition: opacity .6s; pointer-events: auto; cursor: pointer; }
+  .tvstage video.on { opacity: 1; }
+  .tvstage video:fullscreen { transform: none !important; object-fit: contain; }
+  .tvctl { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+  .tvctl button { font: inherit; font-size: 14px; font-weight: 700; padding: 7px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface-2); color: var(--text); cursor: pointer; }
   .btns { display: flex; flex-wrap: wrap; gap: 12px; }
   .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; font-weight: 700; text-decoration: none; border: 2px solid var(--line); color: var(--text); background: transparent; cursor: pointer; font-size: 16px; }
   .btn.primary { background: var(--surface); border-color: var(--accent); }
@@ -262,20 +269,22 @@
       </ul>
     </div>
     <figure>
-      <img src="app-tv.jpg" width="1200" height="920" alt="The Live TV app on a television: clock and weather at the top, a row of genres, and channel tiles in two rows">
-      <figcaption>Live TV on a Chromecast with Google TV</figcaption>
+      <div class="tvbox" id="tvbox">
+        <img src="app-tv.jpg" width="1200" height="920" alt="The Live TV app on a television: clock and weather at the top, a row of genres, and channel tiles in two rows">
+        <div class="tvstage" id="tvstage"><video id="tvvideo" src="media/livetv-promo.mp4" poster="media/livetv-promo-poster.jpg" muted loop playsinline preload="metadata" aria-label="Live TV promo video: every layout and feature"></video></div>
+      </div>
+      <div class="tvctl"><button type="button" id="tvfull">⛶ Watch full screen</button><a class="btn" style="padding:7px 14px;font-size:14px" href="media/livetv-promo.mp4" download="LiveTV-promo.mp4">⬇ Download video</a></div>
+      <figcaption>Live TV on a Chromecast with Google TV: every layout and feature in 100 seconds</figcaption>
     </figure>
   </div>
 
   <section id="video" class="ad-video">
-    <h2>See Live TV in 25 seconds</h2>
-    <video src="media/livetv-ad.mp4" poster="media/livetv-ad-poster.jpg" controls playsinline preload="none" width="1080" height="1920"></video>
-    <p class="small"><a href="media/livetv-ad.mp4" download="LiveTV-ad.mp4">⬇ Download the video</a> to share it on WhatsApp, TikTok or Facebook.</p>
+    <p class="small">Share Live TV: <a href="media/livetv-promo.mp4" download="LiveTV-promo.mp4">⬇ the full video (widescreen)</a> · <a href="media/livetv-ad.mp4" download="LiveTV-ad.mp4">⬇ the 25-second phone video</a> for WhatsApp, TikTok or Facebook.</p>
   </section>
 
   <section id="features">
     <h2>What's in the app</h2>
-    <p class="lead">Everything you see here, plus more, in the free Live TV app for Android phones and TVs. Newest version: <b>1.9.11</b>.</p>
+    <p class="lead">Everything you see here, plus more, in the free Live TV app for Android phones and TVs. Newest version: <b>1.9.12</b>.</p>
     <div class="panel whatsnew">
       <h3>What's new <span class="ver">lately</span></h3>
       <ul>
@@ -307,6 +316,7 @@
       <details class="history">
         <summary>Full update history</summary>
         <dl>
+          <dt>1.9.12</dt><dd>12 more games, 24 in all: Ludo, Cricket, Snakes &amp; Ladders, Chess, Checkers, Quiz Time (general knowledge, cricket, geography, science, Islamic knowledge), Sudoku, Solitaire, Car Race, Maze Muncher, Carrom and Word Guess. Ludo and Snakes &amp; Ladders are for up to 4 people passing the remote.</dd>
           <dt>1.9.11</dt><dd>A Modes menu lists every mode in one place. Home and My Screen: move onto any tile with the arrows and press OK to change what it shows, its text size, colours, corners and more; the channel is bigger (about three quarters of the width on My Screen, a quarter bigger on Home). CP24's channel takes three quarters of the width. Every screen's settings have a text size. 2×2 fills the whole width. No more round play button over the channel.</dd>
           <dt>1.9.10</dt><dd>New Browse mode on TV: rows of big channel cards (Continue watching, Favorites, countries and genres), a search bar and an icon menu on the left; the highlighted card plays live.</dd>
           <dt>1.9.9</dt><dd>Customize News, CP24 and My Screen right inside the screen: hold OK (or tap ⚙ on a phone) and a panel opens on the side; every change shows behind it straight away. Themes now have their own menu with 10 dark themes (new: Ocean, Crimson, Graphite, Black gold, Plum). The sponsor card on channel change can show every 2 minutes.</dd>
@@ -1001,6 +1011,50 @@
   }, 5000);
 
   load();
+})();
+</script>
+<script>
+// Hero: play the promo video inside the TV screen of the photo.
+// Screen corners in the 1200x920 photo, measured by hand: top-left, top-right, bottom-right, bottom-left.
+(function () {
+  var box = document.getElementById("tvbox"), stage = document.getElementById("tvstage"), v = document.getElementById("tvvideo");
+  if (!box || !v) return;
+  var Q = [[32, 37], [1162, 185], [1160, 812], [25, 902]], W = 1920, H = 1080;
+  // Homography from the video rectangle to the screen quad, as a CSS matrix3d.
+  function solve(A, b) {
+    var n = b.length, i, j, k;
+    for (i = 0; i < n; i++) A[i].push(b[i]);
+    for (i = 0; i < n; i++) {
+      var m = i; for (k = i + 1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[m][i])) m = k;
+      var t = A[i]; A[i] = A[m]; A[m] = t;
+      for (k = i + 1; k < n; k++) { var f = A[k][i] / A[i][i]; for (j = i; j <= n; j++) A[k][j] -= f * A[i][j]; }
+    }
+    var x = new Array(n);
+    for (i = n - 1; i >= 0; i--) { var s = A[i][n]; for (j = i + 1; j < n; j++) s -= A[i][j] * x[j]; x[i] = s / A[i][i]; }
+    return x;
+  }
+  var src = [[0, 0], [W, 0], [W, H], [0, H]], A = [], b = [];
+  for (var i = 0; i < 4; i++) {
+    var x = src[i][0], y = src[i][1], u = Q[i][0], w = Q[i][1];
+    A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); b.push(u);
+    A.push([0, 0, 0, x, y, 1, -w * x, -w * y]); b.push(w);
+  }
+  var h = solve(A, b);
+  v.style.transform = "matrix3d(" + [h[0], h[3], 0, h[6], h[1], h[4], 0, h[7], 0, 0, 1, 0, h[2], h[5], 0, 1].join(",") + ")";
+  function fit() { stage.style.transform = "scale(" + box.clientWidth / 1200 + ")"; }
+  fit(); window.addEventListener("resize", fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(box);
+  v.addEventListener("playing", function () { v.classList.add("on"); });
+  var p = v.play(); if (p && p.catch) p.catch(function () {});
+  v.classList.add("on");
+  function big() {
+    v.muted = false; v.currentTime = 0; v.play();
+    var f = v.requestFullscreen || v.webkitRequestFullscreen || v.webkitEnterFullscreen;
+    if (f) { try { f.call(v); } catch (e) {} }
+  }
+  document.getElementById("tvfull").addEventListener("click", big);
+  v.addEventListener("click", big);
+  document.addEventListener("fullscreenchange", function () { if (!document.fullscreenElement) { v.muted = true; v.controls = false; } else if (document.fullscreenElement === v) v.controls = true; });
 })();
 </script>
 <script src="assets/visits.js"></script>

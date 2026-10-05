@@ -33,8 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.livetv.app.ui.FocusColor
 
-private val FieldColor = Color(0xFF0A0F1E)
-private val FieldLine = Color(0xFF26314F)
+internal val FieldColor = Color(0xFF0A0F1E)
+internal val FieldLine = Color(0xFF26314F)
 private val BLOCK_COLORS = listOf(
     Color(0xFF00BCD4), Color(0xFFFFD600), Color(0xFFAB47BC), Color(0xFF66BB6A),
     Color(0xFFEF5350), Color(0xFF42A5F5), Color(0xFFFF9800),
@@ -60,12 +60,24 @@ fun GameBoard(game: Game, frame: MutableIntState) {
         is Memory -> MemoryBoard(game, frame)
         is SlidePuzzle -> SlideBoard(game, frame)
         is ColorEcho -> EchoBoard(game, frame)
+        is Ludo -> LudoBoard(game, frame)
+        is SnakesLadders -> SnakesBoard(game, frame)
+        is Chess -> ChessBoard(game, frame)
+        is Checkers -> CheckersBoard(game, frame)
+        is Quiz -> QuizBoard(game, frame)
+        is Cricket -> CricketBoard(game, frame)
+        is CarRace -> RaceBoard(game, frame)
+        is MazeMuncher -> MazeBoard(game, frame)
+        is Sudoku -> SudokuBoard(game, frame)
+        is Solitaire -> SolitaireBoard(game, frame)
+        is Carrom -> CarromBoard(game, frame)
+        is WordGuess -> WordBoard(game, frame)
     }
 }
 
 /** A dark playing field of [w] × [h] game units, scaled to fit. */
 @Composable
-private fun Field(w: Float, h: Float, frame: MutableIntState, draw: DrawScope.(scale: Float) -> Unit) {
+internal fun Field(w: Float, h: Float, frame: MutableIntState, draw: DrawScope.(scale: Float) -> Unit) {
     Canvas(
         Modifier
             .aspectRatio(w / h)
@@ -78,7 +90,7 @@ private fun Field(w: Float, h: Float, frame: MutableIntState, draw: DrawScope.(s
     }
 }
 
-private fun DrawScope.cell(x: Int, y: Int, s: Float, color: Color, inset: Float = 0.08f) {
+internal fun DrawScope.cell(x: Int, y: Int, s: Float, color: Color, inset: Float = 0.08f) {
     drawRoundRect(
         color,
         topLeft = Offset((x + inset) * s, (y + inset) * s),
@@ -187,7 +199,7 @@ private fun SpaceBoard(g: SpaceDefender, frame: MutableIntState) = Field(g.field
 
 /** A square board of [cols] × [rows] boxes, each drawn by [content]. */
 @Composable
-private fun Grid(cols: Int, rows: Int, frame: MutableIntState, gap: Float = 4f, content: @Composable BoxScope.(Int) -> Unit) {
+internal fun Grid(cols: Int, rows: Int, frame: MutableIntState, gap: Float = 4f, content: @Composable BoxScope.(Int) -> Unit) {
     frame.intValue
     Column(
         Modifier
@@ -211,14 +223,14 @@ private fun Grid(cols: Int, rows: Int, frame: MutableIntState, gap: Float = 4f, 
 
 /** Text sized to the box it's in. */
 @Composable
-private fun FitText(text: String, color: Color = Color.White, part: Float = 0.5f) {
+internal fun FitText(text: String, color: Color = Color.White, part: Float = 0.5f) {
     BoxWithConstraints(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         val size = with(LocalDensity.current) { (minOf(maxWidth, maxHeight * 1.4f) * part).toSp() }
         Text(text, color = color, fontSize = size, fontWeight = FontWeight.Bold, maxLines = 1)
     }
 }
 
-private fun Modifier.square(color: Color, selected: Boolean = false, shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(8.dp)) =
+internal fun Modifier.square(color: Color, selected: Boolean = false, shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(8.dp)) =
     fillMaxSize()
         .background(color, shape)
         .then(if (selected) Modifier.border(4.dp, FocusColor, shape) else Modifier)

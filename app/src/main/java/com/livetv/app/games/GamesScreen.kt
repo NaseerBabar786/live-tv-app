@@ -61,9 +61,11 @@ import androidx.compose.ui.unit.sp
 import com.livetv.app.ui.CardShape
 import com.livetv.app.ui.FocusColor
 import com.livetv.app.ui.focusGlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** Each game's record (best score, fewest moves or wins), kept on this device. */
 class GameScores(context: Context) {
@@ -213,6 +215,17 @@ private fun GamePlay(info: GameInfo, scores: GameScores) {
             }
             return
         }
+        if (!game.ready) {
+            // The opening choices: arrows change it, OK starts.
+            if (down) when (p) {
+                Pad.Left, Pad.Up -> game.choice = (game.choice - 1).mod(game.options.size)
+                Pad.Right, Pad.Down -> game.choice = (game.choice + 1) % game.options.size
+                Pad.Ok -> game.begin()
+                else -> Unit
+            }
+            frame.intValue++
+            return
+        }
         if (down) game.press(p) else game.release(p)
         after()
     }
@@ -228,10 +241,11 @@ private fun GamePlay(info: GameInfo, scores: GameScores) {
             val t = game.tickMs
             spare = (spare + now - last).coerceAtMost(t * 4)
             last = now
-            if (game.over) continue
+            if (game.over || !game.ready) continue
             var ran = false
             while (spare >= t && !game.over) {
-                game.tick()
+                // The TV's chess thinking runs off the screen's thread so the picture doesn't freeze.
+                if (game.heavy) withContext(Dispatchers.Default) { game.tick() } else game.tick()
                 spare -= t
                 ran = true
             }
@@ -244,6 +258,18 @@ private fun GamePlay(info: GameInfo, scores: GameScores) {
         .focusable()
         .onKeyEvent { event ->
             val e = event.nativeKeyEvent
+            val digit = when (e.keyCode) {
+                in KeyEvent.KEYCODE_0..KeyEvent.KEYCODE_9 -> e.keyCode - KeyEvent.KEYCODE_0
+                in KeyEvent.KEYCODE_NUMPAD_0..KeyEvent.KEYCODE_NUMPAD_9 -> e.keyCode - KeyEvent.KEYCODE_NUMPAD_0
+                else -> -1
+            }
+            if (digit >= 0 && game.usesDigits && game.ready && !game.over) {
+                if (e.action == KeyEvent.ACTION_DOWN && e.repeatCount == 0) {
+                    game.digit(digit)
+                    after()
+                }
+                return@onKeyEvent true
+            }
             val pad = padFor(e.keyCode) ?: return@onKeyEvent false
             val holdMode = pad == Pad.Ok && game.usesHold && !game.over
             when (e.action) {
@@ -266,10 +292,9 @@ private fun GamePlay(info: GameInfo, scores: GameScores) {
         val board: @Composable (Modifier) -> Unit = { m ->
             Box(m, contentAlignment = Alignment.Center) {
                 GameBoard(game, frame)
-                if (game.over) {
-                    frame.intValue
-                    GameOver(game, touch)
-                }
+                frame.intValue
+                if (game.over) GameOver(game, touch)
+                if (!game.ready) Choices(game, touch)
             }
         }
         val panel: @Composable () -> Unit = { InfoPanel(info, game, frame, scores) }
@@ -314,6 +339,41 @@ private fun InfoPanel(info: GameInfo, game: Game, frame: MutableIntState, scores
         Spacer(Modifier.height(10.dp))
         Text(info.help, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Text("Back: games menu", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+/** The choices before a game starts: players or difficulty. */
+@Composable
+private fun Choices(game: Game, touch: Boolean) {
+    Box(
+        Modifier
+            .background(Color.Black.copy(alpha = 0.88f), RoundedCornerShape(16.dp))
+            .border(2.dp, FocusColor, RoundedCornerShape(16.dp))
+            .padding(horizontal = 28.dp, vertical = 20.dp),
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(game.optionsTitle, color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(12.dp))
+            game.options.forEachIndexed { i, label ->
+                val on = i == game.choice
+                Text(
+                    label,
+                    color = if (on) Color.Black else Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = if (on) FontWeight.Bold else FontWeight.Normal,
+                    modifier = Modifier
+                        .padding(vertical = 3.dp)
+                        .background(if (on) FocusColor else Color.Transparent, RoundedCornerShape(10.dp))
+                        .padding(horizontal = 18.dp, vertical = 6.dp),
+                )
+            }
+            Spacer(Modifier.height(10.dp))
+            Text(
+                if (touch) "▲ ▼ to choose, OK to start" else "Up and Down to choose, OK to start",
+                color = FocusColor,
+                fontSize = 16.sp,
+            )
+        }
     }
 }
 
