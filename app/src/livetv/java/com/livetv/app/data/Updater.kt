@@ -31,7 +31,7 @@ class Updater(context: Context) {
     /** The latest release when it is newer than the installed app, or null when up to date. */
     suspend fun checkForUpdate(): Release? = withContext(Dispatchers.IO) {
         val json = JSONObject(fetchText(if (Edition.MAX) MAX_RELEASE_API else LATEST_RELEASE_API))
-        // Live TV Max's fixed release is named "Live TV Max 1.0.0"; Live TV's tags carry the version.
+        // Live TV Max's fixed release is named "Live TV Max 1.0.0"; Free Live TV's tags carry the version.
         val version = if (Edition.MAX) json.getString("name").substringAfterLast(' ') else versionFromTag(json.getString("tag_name"))
         val assets = json.getJSONArray("assets")
         val apk = (0 until assets.length()).map { assets.getJSONObject(it) }

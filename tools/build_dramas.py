@@ -4,7 +4,7 @@ Builds a playlist of the newest Pakistani drama episodes, telefilms, cooking and
 shows and Urdu cartoons from their owners' own official YouTube channels (ARY Digital,
 HUM TV, Geo Entertainment, Green Entertainment, PTV Home, Masala TV, Burka Avenger...).
 
-These are videos the channels publish for free themselves. Live TV plays them in
+These are videos the channels publish for free themselves. Free Live TV plays them in
 YouTube's own player (YouTube app on TVs, YouTube's embedded player on phones), so
 nothing is downloaded or re-hosted, as YouTube's terms require.
 
@@ -13,7 +13,7 @@ clips or OSTs, and (when YouTube says how long they are) at least MIN_MINUTES lo
 Episodes found on earlier runs are kept for KEEP_DAYS, so each show builds up.
 
 Writes (in docs/, served at tv.bulkbazaar.ca):
-  Dramas.m3u     the playlist (built into Live TV's Movies & Series)
+  Dramas.m3u     the playlist (built into Free Live TV's Movies & Series)
   dramas.json    every episode kept, with the day it was found, and counts
   MTA.m3u        MTA's own videos (an optional Library section, off unless the viewer turns it on)
 
@@ -157,7 +157,7 @@ MIN_FILM_MINUTES = 70
 FILM_SKIP = re.compile(r"\b(trailer|teaser|promo|scenes?|jukebox|clip|shorts|songs?|video song|audio)\b|#shorts", re.IGNORECASE)
 OTHER_LANGUAGE = re.compile(r"\b(marathi|gujarati|bhojpuri|tamil|telugu|bengali|kannada|malayalam|odia|rajasthani|haryanvi)\b", re.IGNORECASE)
 
-# Reality, game and talk shows, as opposed to drama serials. Live TV files them under Shows.
+# Reality, game and talk shows, as opposed to drama serials. Free Live TV files them under Shows.
 SHOW = re.compile(r"\b(tamasha|show|reality|jeeto|hasna mana|game|talk|podcast|morning|ramzan|ramadan|transmission|"
                   r"mazaaq raat|g sarkar|the knock)\b", re.IGNORECASE)
 

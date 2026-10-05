@@ -18,7 +18,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
-/** A business that pays to be shown in Live TV, as the owner set it up on tv.bulkbazaar.ca/sponsors. */
+/** A business that pays to be shown in Free Live TV, as the owner set it up on tv.bulkbazaar.ca/sponsors. */
 class Sponsor(
     val id: String,
     val name: String,
@@ -143,12 +143,12 @@ object Sponsors {
     /** The ticker's document in sponsors/; older app versions skip it because it has no picture. */
     private const val TICKER_ID = "_ticker"
     private const val K_TICKER = "ticker"
-    const val DEFAULT_TICKER = "Advertise your business on Live TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise"
+    const val DEFAULT_TICKER = "Advertise your business on Free Live TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise"
 }
 
 /**
  * Counts how often each sponsor is shown, per day and place, so the owner can tell sponsors how
- * many times their ad was seen. Live TV sends the totals to Firebase with the viewing totals.
+ * many times their ad was seen. Free Live TV sends the totals to Firebase with the viewing totals.
  */
 object SponsorViews {
     private var prefs: SharedPreferences? = null
