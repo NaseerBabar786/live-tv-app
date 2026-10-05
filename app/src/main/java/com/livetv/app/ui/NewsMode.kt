@@ -1038,9 +1038,9 @@ private val Cp24Green = Color(0xFF1E8E3E)
 
 /**
  * CP24 mode: a big live channel with the top story under it, a red clock-and-weather column on
- * the right with a big box (the sponsor at first) and a small line that takes turns, and two
+ * the right with a big box (traffic cameras at first) and a small line that takes turns, and two
  * scrolling lines along the bottom with the channel number in red. Every section shows what the
- * viewer picked in Settings (see [Cp24Screen]); the sponsor and the advertising line always stay.
+ * viewer picked in Settings (see [Cp24Screen]); the traffic cameras and the advertising line always stay.
  */
 @Composable
 private fun Cp24Layout(
@@ -1062,7 +1062,7 @@ private fun Cp24Layout(
     val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
     val minute = rememberMinute()
     val is24 = remember { DateFormat.is24HourFormat(context) }
-    val sponsorInBand = choices[Cp24Screen.Section.Middle] != Cp24Screen.SPONSOR
+    val trafficInBand = choices[Cp24Screen.Section.Middle] != Cp24Screen.TRAFFIC
     val crawl = choices[Cp24Screen.Section.Crawl]
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         val lineHeight = d(30f)
@@ -1080,7 +1080,7 @@ private fun Cp24Layout(
             Row(Modifier.fillMaxWidth().weight(1f)) {
                 Column(Modifier.width(playerWidth).fillMaxHeight()) {
                     live(Modifier.width(playerWidth).height(playerHeight))
-                    // Under the channel: the chosen line, and the sponsor beside it when the big box shows something else.
+                    // Under the channel: the chosen line, and the traffic cameras beside it when the big box shows something else.
                     Row(Modifier.fillMaxWidth().height(bandHeight).background(Cp24Navy)) {
                         val m = Modifier.weight(1f).fillMaxHeight()
                         when (choices[Cp24Screen.Section.Band]) {
@@ -1090,8 +1090,8 @@ private fun Cp24Layout(
                             Cp24Screen.MARKETS -> Crawl(m, markets, null, null, s, d)
                             else -> Box(m)
                         }
-                        if (sponsorInBand) {
-                            EditionSponsorVideoBox(Modifier.width(bandHeight * 16f / 9f).fillMaxHeight(), allowVideo = allowVideo)
+                        if (trafficInBand) {
+                            TrafficCameras(Modifier.width(bandHeight * 16f / 9f).fillMaxHeight(), s) {}
                         }
                     }
                 }
@@ -1123,17 +1123,19 @@ private fun Cp24Layout(
                     // The big box (CP24's traffic box).
                     BoxWithConstraints(Modifier.fillMaxWidth().weight(1f).background(Panel)) {
                         when (choices[Cp24Screen.Section.Middle]) {
-                            // The sponsor at its own shape; the room under it shows the next prayer, so nothing is left empty.
-                            Cp24Screen.SPONSOR -> if (maxHeight - maxWidth * 9f / 16f >= rd(80f)) {
-                                val sponsorHeight = maxWidth * 9f / 16f
+                            // Toronto's traffic cameras at 16:9, like CP24; the room under them shows the next prayer,
+                            // so nothing is left empty. If no camera answers, the prayer box fills the spot.
+                            Cp24Screen.TRAFFIC -> if (maxHeight - maxWidth * 9f / 16f >= rd(80f)) {
                                 Column(Modifier.fillMaxSize()) {
-                                    Box(Modifier.fillMaxWidth().height(sponsorHeight)) {
-                                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                                    TrafficCameras(Modifier.fillMaxWidth().height(maxWidth * 9f / 16f), rs) {
+                                        Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, rs, rd)
                                     }
                                     Cp24PrayerBox(Modifier.fillMaxWidth().weight(1f), today, minute, is24, rs, rd)
                                 }
                             } else {
-                                EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                                TrafficCameras(Modifier.fillMaxSize(), rs) {
+                                    Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, rs, rd)
+                                }
                             }
                             Cp24Screen.PRAYERS -> Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, rs, rd)
                             Cp24Screen.MARKETS -> Markets(Modifier.fillMaxSize().padding(horizontal = rd(10f)), markets, rs, rd)

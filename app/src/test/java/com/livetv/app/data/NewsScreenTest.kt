@@ -23,7 +23,7 @@ class Cp24ScreenTest {
     @Test
     fun firstOptionIsTheUsualOne() {
         val c = Cp24Screen.Choices(mapOf(Cp24Screen.Section.Middle to "Not an option"))
-        assertEquals(Cp24Screen.SPONSOR, c[Cp24Screen.Section.Middle])
+        assertEquals(Cp24Screen.TRAFFIC, c[Cp24Screen.Section.Middle])
         assertEquals(Cp24Screen.STORIES, c[Cp24Screen.Section.Band])
         assertEquals(Cp24Screen.HOURS, c[Cp24Screen.Section.Boxes])
         assertEquals(Cp24Screen.PRICES, c[Cp24Screen.Section.Crawl])
