@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.appbazaar.app.R
+import com.appbazaar.app.data.Catalog
 import com.appbazaar.app.data.StoreApp
 
 private fun sectionTitle(s: Section) = when (s) {
@@ -69,6 +70,7 @@ fun StoreScreen(
     onAct: (StoreApp) -> Unit,
     onRefresh: () -> Unit,
     onHelp: () -> Unit,
+    onUpdateAll: () -> Unit,
 ) {
     val firstFocus = remember { FocusRequester() }
     LaunchedEffect(isTv) { if (isTv) runCatching { firstFocus.requestFocus() } }
@@ -99,6 +101,29 @@ fun StoreScreen(
                                 Text("Press to update the store itself.", color = Muted, fontSize = 13.sp)
                             }
                             Text(actionLabel(state.action(self)), color = GreenDark, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+            val updates = state.updates.filter { it.id != Catalog.SELF_ID } // App Bazaar has its own banner above
+            if (updates.isNotEmpty()) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Row(
+                        Modifier.clip(RoundedCornerShape(12.dp)).background(GreenSoft).padding(horizontal = 16.dp, vertical = 12.dp).fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(Icons.Default.SystemUpdate, null, tint = GreenDark, modifier = Modifier.size(26.dp))
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                if (updates.size == 1) "1 update ready" else "${updates.size} updates ready",
+                                fontWeight = FontWeight.Medium, color = Ink,
+                            )
+                            Text(updates.joinToString { it.name }, color = Muted, fontSize = 13.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        FocusButton(onClick = onUpdateAll, enabled = updates.none { state.downloads[it.id] != null }) {
+                            Text("Update all")
                         }
                     }
                 }

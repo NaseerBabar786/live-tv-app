@@ -69,8 +69,12 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
     private val _state = MutableStateFlow(StoreState(section = if (isTv) Section.TV else Section.PHONE))
     val state: StateFlow<StoreState> = _state.asStateFlow()
 
-    /** A finished download waiting for the "Install unknown apps" switch. */
-    private var pending: File? = null
+    /**
+     * Finished downloads waiting for Android's installer. Installers open one at a time: the next one
+     * opens when the user comes back from the previous one (Android asks for one Install tap per app).
+     */
+    private val installQueue = ArrayDeque<File>()
+    private var waitingForInstaller = false
     private var lastRefresh = 0L
 
     init {
@@ -101,12 +105,9 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
     /** Called whenever the screen comes back: an app may have been installed or removed meanwhile. */
     fun onResume() {
         refreshInstalled()
-        pending?.let { file ->
-            if (installer.canInstall()) {
-                pending = null
-                _state.update { it.copy(askInstallPermission = false) }
-                runCatching { installer.install(file) }
-            }
+        if (waitingForInstaller || (_state.value.askInstallPermission && installer.canInstall())) {
+            waitingForInstaller = false
+            pumpInstalls()
         }
         if (System.currentTimeMillis() - lastRefresh > 10 * 60_000L) refresh()
     }
@@ -116,7 +117,7 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
     fun dismissMessage() = _state.update { it.copy(message = null) }
 
     fun dismissPermission() {
-        pending = null
+        installQueue.clear()
         _state.update { it.copy(askInstallPermission = false) }
     }
 
@@ -137,6 +138,19 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /** Updates every one of our apps on this device in one go. */
+    fun updateAll() {
+        // App Bazaar's own update restarts the store and would stop the others, so it waits for its
+        // own turn (it updates itself on the next start) unless it is the only one.
+        val list = _state.value.updates.filter { it.id != Catalog.SELF_ID }.ifEmpty { _state.value.updates }
+        if (list.isEmpty()) return
+        say(
+            if (list.size == 1) "Updating ${list[0].name}…"
+            else "Updating ${list.size} apps. Android asks you to press Install for each one.",
+        )
+        list.forEach { if (_state.value.downloads[it.id] == null) download(it) }
+    }
+
     fun uninstall(app: StoreApp) {
         app.packageName?.let { installer.uninstall(it) }
     }
@@ -148,12 +162,9 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
                 installer.download(app) { p -> _state.update { it.copy(downloads = it.downloads + (app.id to p)) } }
             }.onSuccess { file ->
                 _state.update { it.copy(downloads = it.downloads - app.id) }
-                if (installer.canInstall()) {
-                    runCatching { installer.install(file) }.onFailure { say("Could not open the installer: ${it.message}") }
-                } else {
-                    pending = file
-                    _state.update { it.copy(askInstallPermission = true) }
-                }
+                // App Bazaar's own update restarts the store, so it always installs last.
+                if (app.id == Catalog.SELF_ID) installQueue.addLast(file) else installQueue.addFirst(file)
+                if (!waitingForInstaller) pumpInstalls()
             }.onFailure { e ->
                 _state.update { it.copy(downloads = it.downloads - app.id) }
                 say("${app.name} did not download: ${e.message ?: "no internet"}")
@@ -173,6 +184,20 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
         selfUpdateStarted = true
         say("Updating App Bazaar to ${self.version}…")
         download(self)
+    }
+
+    /** Opens the installer for the next finished download, asking for the install switch first if needed. */
+    private fun pumpInstalls() {
+        if (installQueue.isEmpty()) return
+        if (!installer.canInstall()) {
+            _state.update { it.copy(askInstallPermission = true) }
+            return
+        }
+        _state.update { it.copy(askInstallPermission = false) }
+        val next = installQueue.removeFirst()
+        runCatching { installer.install(next) }
+            .onSuccess { waitingForInstaller = true }
+            .onFailure { say("Could not open the installer: ${it.message}"); pumpInstalls() }
     }
 
     private fun say(text: String) = _state.update { it.copy(message = text) }

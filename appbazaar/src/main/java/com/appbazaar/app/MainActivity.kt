@@ -82,6 +82,7 @@ class MainActivity : ComponentActivity() {
                             onAct = store::act,
                             onRefresh = store::refresh,
                             onHelp = { help = true },
+                            onUpdateAll = store::updateAll,
                         )
                     }
                     SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter))
@@ -94,7 +95,7 @@ class MainActivity : ComponentActivity() {
                         text = {
                             Text(
                                 "Android asks this once. On the next screen turn on \"Allow from this source\" " +
-                                    "(on a TV: Unknown sources > App Bazaar), then press Back. The install starts by itself.",
+                                    "(on a TV: Unknown sources > App Bazaar), then press Back. The install continues by itself.",
                             )
                         },
                         confirmButton = { FocusButton(onClick = store::openPermissionSettings) { Text("Open settings") } },
