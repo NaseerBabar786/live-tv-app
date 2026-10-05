@@ -38,15 +38,15 @@ fun SettingsScreen(vm: AppViewModel, version: String) {
                 listOf(
                     TranslationMode.None to S.none, TranslationMode.Urdu to S.urdu,
                     TranslationMode.English to S.english, TranslationMode.Both to S.both,
-                ).forEach { (mode, label) -> Choice(label.get(), vm.translation == mode) { vm.setTranslation(mode) } }
+                ).forEach { (mode, label) -> Choice(label.get(), vm.translation == mode) { vm.chooseTranslation(mode) } }
             }
             Heading(S.reciter.get())
             ChoiceRow {
-                vm.reciters.forEach { r -> Choice(tr(r.en, r.ur), vm.reciter.id == r.id) { vm.setReciter(r) } }
+                vm.reciters.forEach { r -> Choice(tr(r.en, r.ur), vm.reciter.id == r.id) { vm.chooseReciter(r) } }
             }
             Heading(S.kidsReciter.get())
             ChoiceRow {
-                vm.reciters.forEach { r -> Choice(tr(r.en, r.ur), vm.kidsReciter.id == r.id) { vm.setKidsReciter(r) } }
+                vm.reciters.forEach { r -> Choice(tr(r.en, r.ur), vm.kidsReciter.id == r.id) { vm.chooseKidsReciter(r) } }
             }
             Heading(S.textSize.get())
             ChoiceRow {

@@ -304,13 +304,13 @@ private fun ReadOptions(vm: AppViewModel, kids: Boolean) {
             listOf(
                 TranslationMode.None to S.none, TranslationMode.Urdu to S.urdu,
                 TranslationMode.English to S.english, TranslationMode.Both to S.both,
-            ).forEach { (mode, label) -> Choice(label.get(), vm.translation == mode) { vm.setTranslation(mode) } }
+            ).forEach { (mode, label) -> Choice(label.get(), vm.translation == mode) { vm.chooseTranslation(mode) } }
         }
         Text(S.reciter.get(), fontWeight = FontWeight.SemiBold)
         ChoiceRow {
             vm.reciters.forEach { r ->
                 val selected = (if (kids) vm.kidsReciter else vm.reciter).id == r.id
-                Choice(tr(r.en, r.ur), selected) { if (kids) vm.setKidsReciter(r) else vm.setReciter(r) }
+                Choice(tr(r.en, r.ur), selected) { if (kids) vm.chooseKidsReciter(r) else vm.chooseReciter(r) }
             }
         }
         Text(S.textSize.get(), fontWeight = FontWeight.SemiBold)

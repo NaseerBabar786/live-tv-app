@@ -129,17 +129,17 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         store.language = if (l == Lang.Ur) "ur" else "en"
     }
 
-    fun setReciter(r: Reciter) {
+    fun chooseReciter(r: Reciter) {
         reciter = r
         store.reciterId = r.id
     }
 
-    fun setKidsReciter(r: Reciter) {
+    fun chooseKidsReciter(r: Reciter) {
         kidsReciter = r
         store.kidsReciterId = r.id
     }
 
-    fun setTranslation(t: TranslationMode) {
+    fun chooseTranslation(t: TranslationMode) {
         translation = t
         store.translation = t
     }
