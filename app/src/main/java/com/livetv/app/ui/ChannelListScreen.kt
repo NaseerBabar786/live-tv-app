@@ -109,6 +109,7 @@ import androidx.compose.material.icons.filled.ViewQuilt
 import androidx.compose.material.icons.filled.ViewArray
 import androidx.compose.material.icons.filled.ViewCarousel
 import androidx.compose.material.icons.filled.ViewDay
+import androidx.compose.material.icons.filled.VerticalSplit
 import androidx.compose.material.icons.filled.ViewSidebar
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material.icons.filled.SportsEsports
@@ -277,11 +278,13 @@ fun ChannelListScreen(
     val carouselMode = wideScreen && tileLayout == TileLayout.Carousel
     // "Strip": a big player on top and a strip of channel tiles along the bottom; Back on its Modes button shows the top bar.
     val stripMode = wideScreen && tileLayout == TileLayout.Strip
+    // "Duo": two silent players side by side on top and rows of channel cards below; Back on its Modes button shows the top bar.
+    val duoMode = wideScreen && tileLayout == TileLayout.Duo
     val newsFocus = remember { FocusRequester() }
     var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
     // TVs and tablets show a fixed window of tiles that slides along the list one channel at a
     // time; [windowStart] is the channel in the first tile.
-    val windowed = wideScreen && !listMode && !newsMode && !browseMode && !carouselMode && !stripMode
+    val windowed = wideScreen && !listMode && !newsMode && !browseMode && !carouselMode && !stripMode && !duoMode
     val slots = tileLayout.columns * tileLayout.rows
     var windowStart by rememberSaveable { mutableIntStateOf(0) }
     val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
@@ -292,7 +295,7 @@ fun ChannelListScreen(
     SideEffect { sessionTileIds = twoIds; sessionTilesFull = tilesFull }
     // 1+3 has no full screen view: OK on its big player opens the channel straight away.
     val fullTiles = tilesFull && windowed && tileLayout != TileLayout.Five
-    val hideBars = fullTiles || ((newsMode || carouselMode || stripMode) && !newsBar) || browseMode
+    val hideBars = fullTiles || ((newsMode || carouselMode || stripMode || duoMode) && !newsBar) || browseMode
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
     val window = when {
         !windowed -> emptyList()
@@ -357,7 +360,7 @@ fun ChannelListScreen(
         // and the rest show a picture.
         val playAll = wideScreen && tileLayout.separateTvs
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
-        val allowed = inForeground && !showSettings && !listMode && !newsMode && !browseMode && !carouselMode && !stripMode && !Preview.metered(context)
+        val allowed = inForeground && !showSettings && !listMode && !newsMode && !browseMode && !carouselMode && !stripMode && !duoMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
         if (!allowed) return@LaunchedEffect
         delay(600)
@@ -654,7 +657,7 @@ fun ChannelListScreen(
                         }
                     },
                 )
-                if (!hideBars && !newsMode && !carouselMode && !stripMode && !state.loading && state.channels.isNotEmpty()) {
+                if (!hideBars && !newsMode && !carouselMode && !stripMode && !duoMode && !state.loading && state.channels.isNotEmpty()) {
                     // The channel count, with Free Live TV's "advertise with us" ticker running beside it now and then.
                     // 1×2 has room for a bigger ticker in its own band above the tiles.
                     // (1×2 used to have a bigger ticker in its own band; it now matches 2×3.)
@@ -721,6 +724,25 @@ fun ChannelListScreen(
                         playing = inForeground && !showSettings,
                         focus = newsFocus,
                         onWatch = onWatch,
+                        onOpen = onPlay,
+                        onToggleFavorite = onToggleFavorite,
+                        onModes = { modesOpen = true },
+                        onBack = {
+                            newsBar = true
+                            scope.launch {
+                                withFrameNanos { }
+                                withFrameNanos { }
+                                runCatching { layoutButtonFocus.requestFocus() }
+                            }
+                        },
+                        onFocused = { newsBar = false },
+                    )
+                    duoMode -> DuoMode(
+                        channels = state.channels.filter { state.languageFilter.isEmpty() || it.language in state.languageFilter },
+                        favorites = state.favorites,
+                        lastWatchedId = state.lastWatchedId,
+                        playing = inForeground && !showSettings,
+                        focus = newsFocus,
                         onOpen = onPlay,
                         onToggleFavorite = onToggleFavorite,
                         onModes = { modesOpen = true },
@@ -1232,6 +1254,7 @@ private val TileLayout.about: String
         TileLayout.Browse -> "Rows of big channel cards, like a streaming app"
         TileLayout.Carousel -> "One big channel in the middle, slide left and right"
         TileLayout.Strip -> "A big channel on top, channel tiles along the bottom"
+        TileLayout.Duo -> "Two channels playing on top, channel cards below"
         TileLayout.Five -> "One big channel and three small ones"
         TileLayout.Two -> "Two channels side by side"
         TileLayout.Four -> "Four channels at once"
@@ -1248,6 +1271,7 @@ private val TileLayout.icon: androidx.compose.ui.graphics.vector.ImageVector
         TileLayout.Browse -> Icons.Filled.ViewCarousel
         TileLayout.Carousel -> Icons.Filled.ViewArray
         TileLayout.Strip -> Icons.Filled.ViewDay
+        TileLayout.Duo -> Icons.Filled.VerticalSplit
         TileLayout.Five -> Icons.Filled.ViewQuilt
         TileLayout.Two -> Icons.Filled.ViewColumn
         TileLayout.Four -> Icons.Filled.GridView
@@ -2032,6 +2056,8 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
     Carousel("Carousel", 1, 1),
     /** One big player across the top and a strip of channel tiles along the bottom. */
     Strip("Strip", 1, 1),
+    /** Two silent players side by side on top and rows of channel cards below, like the Google TV home screen. */
+    Duo("Duo", 1, 1),
     /** One big player (top left, 85% wide) and small ones around it; sound only from the big one. */
     Five("1+3", 4, 1),
     Two("1×2", 2, 1),
@@ -2059,12 +2085,12 @@ private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Ho
 
 /** The layouts the top-bar button steps through; News mode is Free Live TV's only. Home mode is back (user's choice, 1.9.18). */
 private val layouts = TileLayout.entries.filter {
-    (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel && it != TileLayout.Strip) || Edition.LIVE_TV
+    (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel && it != TileLayout.Strip && it != TileLayout.Duo) || Edition.LIVE_TV
 }
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() =
-    this != TileLayout.List && this != TileLayout.Browse && this != TileLayout.Carousel && this != TileLayout.Strip && this !in INFO_LAYOUTS
+    this != TileLayout.List && this != TileLayout.Browse && this != TileLayout.Carousel && this != TileLayout.Strip && this != TileLayout.Duo && this !in INFO_LAYOUTS
 
 /**
  * 1×2, 2×2 and 2×3's channels, and the tile opened full screen, kept while a channel plays full
