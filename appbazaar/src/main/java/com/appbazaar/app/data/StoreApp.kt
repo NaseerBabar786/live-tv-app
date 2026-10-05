@@ -25,10 +25,18 @@ data class StoreApp(
     val tvCode: String?,
     val featured: Boolean,
     val paid: Boolean,
+    /** Computer downloads by kind ("windows", "mac", "linux", "windowsPortable"). They can't be installed here. */
+    val pcLinks: Map<String, String> = emptyMap(),
 ) {
     val forTv: Boolean get() = platforms.any { it.contains("TV", ignoreCase = true) }
     val forPhone: Boolean get() = platforms.any { it == "Android" || it.contains("phone", ignoreCase = true) }
+    val forPc: Boolean get() = pcLinks.isNotEmpty() || platforms.any { it.lowercase() in PC_PLATFORMS || it.contains("PC") }
+
+    /** The app's page on the website, where a computer can download it. */
+    val pageUrl: String get() = Catalog.SITE + "#" + id
 }
+
+private val PC_PLATFORMS = setOf("windows", "mac", "macos", "linux")
 
 object Catalog {
 
@@ -73,6 +81,8 @@ object Catalog {
                 tvCode = a.optString("tvCode").takeIf { it.isNotBlank() },
                 featured = a.optBoolean("featured"),
                 paid = a.has("price"),
+                pcLinks = listOf("windows", "windowsPortable", "mac", "linux")
+                    .mapNotNull { k -> links?.optString(k)?.takeIf { it.isNotBlank() }?.let { k to it } }.toMap(),
             )
         }
     }
