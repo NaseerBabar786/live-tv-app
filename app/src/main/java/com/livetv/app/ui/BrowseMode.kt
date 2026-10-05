@@ -470,7 +470,7 @@ internal fun BrowseMode(
                 }
             }
             if (onOpenGames != null) RailItem(Icons.Filled.SportsEsports, "Games", railFocused, right = back, onClick = onOpenGames)
-            if (onNextMode != null) RailItem(Icons.Filled.Tv, "$modeLabel Mode", railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
+            if (onNextMode != null) RailItem(Icons.Filled.Tv, modeLabel, railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
             RailItem(Icons.Filled.Settings, "Settings", railFocused, right = back, onClick = onOpenSettings)
         }
     }
