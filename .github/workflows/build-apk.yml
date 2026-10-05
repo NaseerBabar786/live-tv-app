@@ -250,7 +250,7 @@ jobs:
           gh release edit claude-notes --title "Notes for Claude $version" --notes "Always the newest Notes for Claude build (now $version), from ${{ github.sha }}."
 
       # Multi Chat (several WhatsApp Web accounts on one phone) gets its own release per version,
-      # never marked "latest", so Live TV's download link and update check keep finding Live TV.
+      # never marked "latest", so Free Live TV's download link and update check keep finding Free Live TV.
       # The app's updater looks for the highest "multichat-v…" tag. The fixed "multichat" release
       # always holds the newest build, so App Bazaar's link never changes:
       # https://github.com/NaseerBabar786/live-tv-app/releases/download/multichat/MultiChat.apk
