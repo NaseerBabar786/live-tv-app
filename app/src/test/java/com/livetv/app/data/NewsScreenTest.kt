@@ -10,7 +10,8 @@ class NewsScreenTest {
     fun defaultsAreTheUsualScreen() {
         val c = NewsScreen.Choices(emptyMap(), NewsScreen.Bottom.Both)
         assertEquals(NewsScreen.Panel.Clock, c[NewsScreen.Slot.RightTop])
-        assertEquals(NewsScreen.Panel.Prayers, c[NewsScreen.Slot.RightBottom])
+        assertEquals(NewsScreen.Panel.Prayers, c[NewsScreen.Slot.RightMiddle])
+        assertEquals(NewsScreen.Panel.Traffic, c[NewsScreen.Slot.RightBottom])
         assertEquals(NewsScreen.Panel.Stories, c[NewsScreen.Slot.Under])
         assertFalse(c.usesSecond)
         NewsScreen.Slot.entries.forEach { assertTrue(it.default in it.choices) }

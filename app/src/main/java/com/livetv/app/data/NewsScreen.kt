@@ -18,13 +18,14 @@ object NewsScreen {
         Currencies("Currency rates"),
         Stories("Top stories"),
         Second("Second channel"),
+        Traffic("Traffic cameras"),
         Empty("Nothing"),
     }
 
     enum class Slot(val label: String, val default: Panel, val choices: List<Panel>) {
         RightTop("Right side, top", Panel.Clock, RIGHT),
-        RightMiddle("Right side, middle", Panel.Markets, RIGHT),
-        RightBottom("Right side, bottom", Panel.Prayers, RIGHT),
+        RightMiddle("Right side, middle", Panel.Prayers, RIGHT),
+        RightBottom("Right side, bottom", Panel.Traffic, RIGHT),
         Under("Under the channel", Panel.Stories, ROWS),
         Info("Second line", Panel.Currencies, ROWS),
     }
@@ -92,6 +93,7 @@ private val RIGHT = listOf(
     NewsScreen.Panel.Currencies,
     NewsScreen.Panel.Stories,
     NewsScreen.Panel.Second,
+    NewsScreen.Panel.Traffic,
     NewsScreen.Panel.Empty,
 )
 private val ROWS = listOf(

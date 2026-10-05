@@ -503,39 +503,14 @@ fun NewsMode(
             s = ::s,
             d = ::d,
         ) else
-        Row(Modifier.fillMaxSize()) {
-            Column(Modifier.width(playerWidth).fillMaxHeight()) {
+        Column(Modifier.fillMaxSize()) {
+            Row(Modifier.fillMaxWidth().height(playerHeight)) {
                 Live(Modifier.width(playerWidth).height(playerHeight))
-                // Along the bottom: the two chosen lines (top stories and currency rates at first),
-                // the stock prices crawling along, and the advertising line.
-                Column(Modifier.fillMaxWidth().height(bottomHeight).background(Panel)) {
-                    val rows = listOf(NewsScreen.Slot.Under, NewsScreen.Slot.Info).map { choices[it] }.filter { it != NewsScreen.Panel.Empty }
-                    rows.forEachIndexed { i, panel ->
-                        val m = Modifier.fillMaxWidth().weight(if (i == 0 && rows.size > 1) 1.35f else 1f)
-                        when (panel) {
-                            NewsScreen.Panel.Stories -> Headlines(m, ::s, ::d)
-                            NewsScreen.Panel.Currencies -> InfoRow(m, rates, gold, ::s, ::d)
-                            NewsScreen.Panel.Prayers -> PrayerRow(m, ::s, ::d)
-                            NewsScreen.Panel.Markets -> Crawl(m, markets, null, null, ::s, ::d)
-                            else -> Box(m)
-                        }
-                        Divider()
-                    }
-                    if (choices.bottom == NewsScreen.Bottom.Both) {
-                        Crawl(Modifier.fillMaxWidth().weight(0.8f).background(Color(0xFF0E1830)), markets, rates, gold, ::s, ::d)
-                        Divider()
-                    }
-                    Box(Modifier.fillMaxWidth().weight(0.9f).background(Color(0xFF05070D)).padding(horizontal = d(12f))) {
-                        EditionTicker(Modifier.fillMaxSize(), big = true, always = true)
-                    }
-                }
-            }
-            // Down the right: the three chosen panels (clock and weather, markets and prayer
-            // times at first); the sponsor in the corner. Lists (markets, rates, stories) take
-            // the space the others leave and show as many rows as fit.
-            Column(Modifier.width(sideWidth).fillMaxHeight().background(Panel)) {
-                Column(Modifier.fillMaxWidth().height(playerHeight).padding(horizontal = d(12f))) {
-                    val fills = setOf(NewsScreen.Panel.Markets, NewsScreen.Panel.Currencies, NewsScreen.Panel.Stories)
+                // Down the right: the three chosen panels (clock and weather, prayer times and
+                // Toronto's traffic cameras at first). Lists (markets, rates, stories) and the
+                // cameras take the space the others leave.
+                Column(Modifier.width(sideWidth).fillMaxHeight().background(Panel).padding(horizontal = d(12f))) {
+                    val fills = setOf(NewsScreen.Panel.Markets, NewsScreen.Panel.Currencies, NewsScreen.Panel.Stories, NewsScreen.Panel.Traffic)
                     val panels = listOf(NewsScreen.Slot.RightTop, NewsScreen.Slot.RightMiddle, NewsScreen.Slot.RightBottom)
                         .map { choices[it] }.filter { it != NewsScreen.Panel.Empty }
                     val anyFill = panels.any { it in fills }
@@ -553,17 +528,37 @@ fun NewsMode(
                                 NewsScreen.Panel.Currencies -> CurrencyList(Modifier.fillMaxSize(), rates, gold, ::s, ::d)
                                 NewsScreen.Panel.Stories -> StoryList(Modifier.fillMaxSize(), ::s, ::d)
                                 NewsScreen.Panel.Second -> SecondChannel(second, secondPlaying, ::s, ::d)
+                                // Like CP24 (the sponsor shows here if the cameras can't be reached).
+                                NewsScreen.Panel.Traffic -> TrafficCameras(Modifier.fillMaxSize().padding(vertical = d(6f)), ::s) {
+                                    EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = now >= videoOkAt)
+                                }
                                 NewsScreen.Panel.Empty -> Unit
                             }
                         }
                     }
                 }
-                // The corner shows Toronto's traffic cameras, like CP24 (the sponsor still shows
-                // here if the cameras can't be reached).
-                Box(Modifier.fillMaxWidth().height(bottomHeight).padding(d(4f)), contentAlignment = Alignment.Center) {
-                    TrafficCameras(Modifier.fillMaxSize(), ::s) {
-                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = now >= videoOkAt)
+            }
+            // Along the whole bottom: the two chosen lines (top stories and currency rates at
+            // first), the stock prices crawling along, and the advertising line.
+            Column(Modifier.fillMaxWidth().height(bottomHeight).background(Panel)) {
+                val rows = listOf(NewsScreen.Slot.Under, NewsScreen.Slot.Info).map { choices[it] }.filter { it != NewsScreen.Panel.Empty }
+                rows.forEachIndexed { i, panel ->
+                    val m = Modifier.fillMaxWidth().weight(if (i == 0 && rows.size > 1) 1.35f else 1f)
+                    when (panel) {
+                        NewsScreen.Panel.Stories -> Headlines(m, ::s, ::d)
+                        NewsScreen.Panel.Currencies -> InfoRow(m, rates, gold, ::s, ::d)
+                        NewsScreen.Panel.Prayers -> PrayerRow(m, ::s, ::d)
+                        NewsScreen.Panel.Markets -> Crawl(m, markets, null, null, ::s, ::d)
+                        else -> Box(m)
                     }
+                    Divider()
+                }
+                if (choices.bottom == NewsScreen.Bottom.Both) {
+                    Crawl(Modifier.fillMaxWidth().weight(0.8f).background(Color(0xFF0E1830)), markets, rates, gold, ::s, ::d)
+                    Divider()
+                }
+                Box(Modifier.fillMaxWidth().weight(0.9f).background(Color(0xFF05070D)).padding(horizontal = d(12f))) {
+                    EditionTicker(Modifier.fillMaxSize(), big = true, always = true)
                 }
             }
         }
