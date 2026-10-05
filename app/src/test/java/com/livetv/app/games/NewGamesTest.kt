@@ -132,6 +132,23 @@ class NewGamesTest {
     }
 
     @Test
+    fun solitaireUpAndDownGoStraightAcross() {
+        val s = Solitaire(Random(6))
+        // From the last column, Up reaches the last home pile (above it), and Down comes back.
+        repeat(6) { s.press(Pad.Right) }
+        assertEquals(12, s.pile)
+        repeat(20) { s.press(Pad.Up) }
+        assertEquals(5, s.pile)
+        s.press(Pad.Down)
+        assertEquals(12, s.pile)
+        // The first home pile sits over the fourth column.
+        s.press(Pad.Up); repeat(20) { s.press(Pad.Up) }
+        while (s.pile != 2) s.press(Pad.Left)
+        s.press(Pad.Down)
+        assertEquals(9, s.pile)
+    }
+
+    @Test
     fun mazeDotsAreAllReachable() {
         val m = MazeMuncher(Random(1))
         val seen = mutableSetOf(m.player)

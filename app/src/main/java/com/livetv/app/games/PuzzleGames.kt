@@ -8,6 +8,7 @@ import kotlin.random.Random
 
 /** Sudoku with a fresh puzzle each time that has exactly one answer. */
 class Sudoku(private val rnd: Random = Random.Default) : Game() {
+    override val cursorRepeats = true
     val solution = IntArray(81)
     val grid = IntArray(81)
     val given = BooleanArray(81)
@@ -155,10 +156,11 @@ class Solitaire(rnd: Random = Random.Default) : Game() {
         when (p) {
             Pad.Left -> { pile = if (pile == 6) 12 else if (pile == 0) 5 else pile - 1; depth = 1 }
             Pad.Right -> { pile = if (pile == 12) 6 else if (pile == 5) 0 else pile + 1; depth = 1 }
+            // Up and Down go straight up and down the table: the top row has a gap over the third column.
             Pad.Up -> if (pile >= 6) {
-                if (held < 0 && depth < faceUp(pile)) depth++ else { pile = (pile - 6).coerceAtMost(5); depth = 1 }
+                if (held < 0 && depth < faceUp(pile)) depth++ else { pile = TOP_ABOVE[pile - 6]; depth = 1 }
             }
-            Pad.Down -> if (pile < 6) { pile = (pile + 6).coerceAtMost(12); depth = 1 } else if (depth > 1) depth--
+            Pad.Down -> if (pile < 6) { pile = 6 + COLUMN_BELOW[pile]; depth = 1 } else if (depth > 1) depth--
             Pad.Ok -> ok()
             else -> Unit
         }
@@ -232,6 +234,13 @@ class Solitaire(rnd: Random = Random.Default) : Game() {
         if (from >= 6) src.lastOrNull()?.up = true
         score++
         if (homes.all { it.size == 13 }) finish("You won in $score moves!", won = true)
+    }
+
+    private companion object {
+        /** The top row's piles (deck, turned card, four homes) over table columns 0, 1, 3, 4, 5, 6. */
+        val COLUMN_BELOW = intArrayOf(0, 1, 3, 4, 5, 6)
+        /** The top-row pile above each table column (the gap over column 2 goes to the first home). */
+        val TOP_ABOVE = intArrayOf(0, 1, 2, 2, 3, 4, 5)
     }
 }
 
@@ -422,6 +431,7 @@ class Carrom(private val rnd: Random = Random.Default) : Game() {
 
 /** Guess the hidden word a letter at a time; seven wrong letters lose the round. */
 class WordGuess(private val rnd: Random = Random.Default) : Game() {
+    override val cursorRepeats = true
     var topic = ""
         private set
     var word = ""

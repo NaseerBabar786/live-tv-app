@@ -231,7 +231,13 @@ private fun GamePlay(info: GameInfo, scores: GameScores) {
     }
 
     LaunchedEffect(game) {
-        runCatching { focus.requestFocus() }
+        // The remote's keys only reach the game once it has the focus; the menu's card that had it
+        // is gone, so ask again after the board is on screen (and once more in case it was too soon).
+        withFrameMillis { }
+        if (runCatching { focus.requestFocus() }.isFailure) {
+            delay(100)
+            runCatching { focus.requestFocus() }
+        }
         if (game.tickMs <= 0) return@LaunchedEffect
         // Ticks follow the screen's frames, so the game pauses whenever the app isn't showing.
         var last = withFrameMillis { it }
@@ -277,6 +283,8 @@ private fun GamePlay(info: GameInfo, scores: GameScores) {
                     holdMode && e.repeatCount == 0 -> { okPending = true; holdFired = false }
                     holdMode -> if (okPending && !holdFired) { holdFired = true; send(Pad.Hold, true) }
                     e.repeatCount == 0 || game.repeats -> send(pad, true)
+                    // A held arrow moves the cursor on, a step every few repeats so it can be stopped.
+                    game.cursorRepeats && pad != Pad.Ok && e.repeatCount % 3 == 0 -> send(pad, true)
                 }
                 KeyEvent.ACTION_UP -> {
                     if (holdMode && okPending && !holdFired) send(Pad.Ok, true)

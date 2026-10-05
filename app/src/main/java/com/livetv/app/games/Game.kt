@@ -28,6 +28,9 @@ abstract class Game {
     /** Held buttons repeat (moving a block along, sliding a paddle). */
     open val repeats: Boolean = false
 
+    /** A held arrow keeps moving the cursor (board games with a cursor to move a long way). */
+    open val cursorRepeats: Boolean = false
+
     /** OK held down sends [Pad.Hold] instead of [Pad.Ok]. */
     open val usesHold: Boolean = false
 

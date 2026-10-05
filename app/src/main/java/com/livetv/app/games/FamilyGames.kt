@@ -234,7 +234,8 @@ class SnakesLadders(private val rnd: Random = Random.Default) : Game() {
     fun isHuman(p: Int) = p < humans
 
     override fun press(p: Pad) {
-        if (over || busy || !isHuman(turn) || p != Pad.Ok) return
+        // Any button rolls (OK or an arrow).
+        if (over || busy || !isHuman(turn) || p == Pad.Hold) return
         roll()
     }
 
@@ -309,6 +310,7 @@ class SnakesLadders(private val rnd: Random = Random.Default) : Game() {
  * a jump carries on while it can. Against the TV, or two people.
  */
 class Checkers(private val rnd: Random = Random.Default) : Game() {
+    override val cursorRepeats = true
     /** 1 red, 2 red king, -1 black, -2 black king. */
     val board = IntArray(64)
     var side = 1
@@ -359,11 +361,12 @@ class Checkers(private val rnd: Random = Random.Default) : Game() {
     class Move(val path: List<Int>, val taken: List<Int>)
 
     override fun press(p: Pad) {
-        if (over || (vsTv && side == -1)) return
+        if (over) return
         if (p != Pad.Ok) {
             cursor = moveCursor(cursor, p, 8, 8)
             return
         }
+        if (vsTv && side == -1) return
         val all = moves(board, side)
         if (partial.isEmpty()) {
             if (board[cursor] * side > 0 && all.any { it.path.first() == cursor }) {

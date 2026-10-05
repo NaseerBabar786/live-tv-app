@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.view.TextureView
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -80,6 +81,13 @@ import com.livetv.app.data.Vod
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import com.livetv.app.data.YouTube
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.livetv.app.player.StreamPlayer
@@ -105,6 +113,33 @@ private var sessionRowKey: String? = null
 private val sessionCardIndex = mutableStateMapOf<String, Int>()
 private var sessionListIndex = 0
 private var sessionListOffset = 0
+
+/**
+ * Still pictures of what each channel was showing, taken while Browse is open, so the cards that
+ * aren't highlighted show the channel instead of its logo. Kept while the app is open.
+ */
+private val browsePictures = mutableStateMapOf<String, ImageBitmap>()
+private val browsePictureAt = mutableMapOf<String, Long>()
+/** A card's picture is taken again once it's this old and the card is on screen. */
+private const val PICTURE_FRESH_MS = 5 * 60_000L
+private const val MAX_PICTURES = 150
+
+/** The TextureView a player is drawing into, so its frame can be kept as a picture. */
+private class ViewHolder { var view: TextureView? = null }
+
+/** The frame on [holder]'s view, small enough to keep many (16:9). */
+private fun ViewHolder.picture(): ImageBitmap? =
+    runCatching { view?.getBitmap(384, 216)?.asImageBitmap() }.getOrNull()
+
+private fun keepPicture(id: String, picture: ImageBitmap?) {
+    if (picture == null) return
+    if (browsePictures.size > MAX_PICTURES) {
+        browsePictures.clear()
+        browsePictureAt.clear()
+    }
+    browsePictures[id] = picture
+    browsePictureAt[id] = System.currentTimeMillis()
+}
 
 private const val PREFS = "browse"
 private const val K_RECENT = "recent"
@@ -232,6 +267,7 @@ internal fun BrowseMode(
     var showing by remember { mutableStateOf(false) }
     var focusedKey by remember { mutableStateOf<Pair<String, String>?>(null) } // row key, channel id
     var previewId by remember { mutableStateOf<String?>(null) }
+    val previewView = remember { ViewHolder() }
     DisposableEffect(stream) {
         val listener = object : Player.Listener {
             override fun onRenderedFirstFrame() {
@@ -246,6 +282,8 @@ internal fun BrowseMode(
         }
     }
     LaunchedEffect(focusedKey, playing) {
+        // The card the cursor leaves keeps its last frame as its picture.
+        previewId?.let { if (showing) keepPicture(it, previewView.picture()) }
         stream.stop()
         showing = false
         previewId = null
@@ -258,6 +296,71 @@ internal fun BrowseMode(
         stream.play(channel)
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
+
+    // Only the highlighted card plays. Every other card on screen shows a still picture of what's
+    // on: a second, silent player opens each one in turn, keeps its first frame and closes again
+    // (one at a time, refreshed every few minutes; Wi-Fi or Ethernet only).
+    val grabber = remember {
+        StreamPlayer(context, preview = true).apply {
+            player.volume = 0f
+            player.trackSelectionParameters = player.trackSelectionParameters.buildUpon().setMaxVideoSizeSd().build()
+        }
+    }
+    val grabView = remember { ViewHolder() }
+    var grabId by remember { mutableStateOf<String?>(null) }
+    var grabShowing by remember { mutableStateOf(false) }
+    val onScreen = remember { mutableStateMapOf<String, Int>() } // card id -> cards showing it
+    DisposableEffect(grabber) {
+        val listener = object : Player.Listener {
+            override fun onRenderedFirstFrame() {
+                grabShowing = true
+            }
+        }
+        grabber.player.addListener(listener)
+        onDispose {
+            grabber.player.removeListener(listener)
+            grabber.release()
+        }
+    }
+    val currentById by rememberUpdatedState(byId)
+    val currentFocused by rememberUpdatedState(focusedKey?.second)
+    LaunchedEffect(playing) {
+        if (!playing) return@LaunchedEffect
+        delay(1_500) // let the highlighted card start first
+        while (true) {
+            if (metered(context)) {
+                delay(10_000)
+                continue
+            }
+            val now = System.currentTimeMillis()
+            val id = onScreen.keys.toList()
+                .filter { it != currentFocused }
+                .firstOrNull { now - (browsePictureAt[it] ?: 0L) > PICTURE_FRESH_MS }
+            val channel = id?.let { currentById[it] }
+            if (id == null || channel == null || YouTube.isYouTube(channel.url)) {
+                if (id != null) browsePictureAt[id] = now // nothing to take; skip it for a while
+                delay(1_000)
+                continue
+            }
+            grabShowing = false
+            grabId = id
+            try {
+                grabber.play(channel)
+                withTimeoutOrNull(10_000) { snapshotFlow { grabShowing }.first { it } }
+                if (grabShowing) {
+                    delay(400)
+                    keepPicture(id, grabView.picture())
+                }
+            } finally {
+                grabber.stop()
+                grabId = null
+                grabShowing = false
+            }
+            // A channel that didn't open isn't tried again straight away.
+            browsePictureAt[id] = System.currentTimeMillis()
+            delay(400)
+        }
+    }
     DisposableEffect(previewId, sound, playing) {
         val channel = previewId?.let { byId[it] }
         if (channel != null && sound && playing) Watching.watch(stream, channel)
@@ -406,6 +509,13 @@ internal fun BrowseMode(
                         }
                         itemsIndexed(row.channels, key = { _, c -> c.id }) { i, channel ->
                             val here = focusedKey == row.key to channel.id
+                            DisposableEffect(channel.id) {
+                                onScreen[channel.id] = (onScreen[channel.id] ?: 0) + 1
+                                onDispose {
+                                    val left = (onScreen[channel.id] ?: 1) - 1
+                                    if (left > 0) onScreen[channel.id] = left else onScreen.remove(channel.id)
+                                }
+                            }
                             val (now, next) = if (Edition.MAX) Guide.nowNext(guide, channel, nowSec) else null to null
                             BrowseCard(
                                 channel = channel,
@@ -414,7 +524,12 @@ internal fun BrowseMode(
                                 next = next,
                                 favorite = channel.id in favorites,
                                 stream = stream.takeIf { here && previewId == channel.id },
+                                streamView = previewView,
                                 showing = here && showing,
+                                picture = browsePictures[channel.id],
+                                grab = grabber.takeIf { grabId == channel.id && !here },
+                                grabView = grabView,
+                                grabShowing = grabShowing,
                                 modifier = if (i == focusIndex) Modifier.focusRequester(rowRequester(row.key)) else Modifier,
                                 onFocused = {
                                     focusedKey = row.key to channel.id
@@ -515,7 +630,14 @@ private fun BrowseCard(
     next: Guide.Programme? = null,
     favorite: Boolean,
     stream: StreamPlayer?,
+    streamView: ViewHolder,
     showing: Boolean,
+    /** A still of what the channel was showing, drawn over the logo. */
+    picture: ImageBitmap?,
+    /** The silent player taking this card's picture, while it does. */
+    grab: StreamPlayer?,
+    grabView: ViewHolder,
+    grabShowing: Boolean,
     modifier: Modifier,
     onFocused: () -> Unit,
     onClick: () -> Unit,
@@ -549,10 +671,27 @@ private fun BrowseCard(
             } else {
                 Initials(channel.name)
             }
+            if (picture != null) {
+                Image(picture, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
+            }
+            if (grab != null) {
+                // Shows once its first frame is in (as the grid's pictures do), then that frame is kept.
+                AndroidView(
+                    factory = { ctx -> TextureView(ctx).also { grabView.view = it; grab.player.setVideoTextureView(it) } },
+                    onRelease = {
+                        if (grabView.view === it) grabView.view = null
+                        grab.player.clearVideoTextureView(it)
+                    },
+                    modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (grabShowing) 1f else 0f },
+                )
+            }
             if (stream != null) {
                 AndroidView(
-                    factory = { ctx -> TextureView(ctx).also { stream.player.setVideoTextureView(it) } },
-                    onRelease = { stream.player.clearVideoTextureView(it) },
+                    factory = { ctx -> TextureView(ctx).also { streamView.view = it; stream.player.setVideoTextureView(it) } },
+                    onRelease = {
+                        if (streamView.view === it) streamView.view = null
+                        stream.player.clearVideoTextureView(it)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .background(if (showing) Color.Black else Color.Transparent)
