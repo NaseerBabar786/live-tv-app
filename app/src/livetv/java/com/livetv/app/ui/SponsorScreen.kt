@@ -2,6 +2,12 @@ package com.livetv.app.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.ui.draw.clip
@@ -51,20 +57,37 @@ private const val MAX_EXTRA_WAIT_MS = 10_000L
 fun SponsorScreen(loading: Boolean, sponsor: Sponsor?, onDone: () -> Unit) {
     var secondsLeft by rememberSaveable { mutableIntStateOf(SPONSOR_SECONDS) }
     val stillLoading by rememberUpdatedState(loading)
+    val opener = rememberSiteOpener()
+    // Without a paying sponsor the words are about Bulk Bazaar, so OK opens their website.
+    val shown = sponsor?.takeIf { it.picture != null }
+    val site = shown?.site ?: "https://bulkbazaar.ca"
     LaunchedEffect(Unit) {
         while (secondsLeft > 0) {
             delay(1_000)
-            secondsLeft--
+            // The countdown waits while the sponsor's website is open.
+            if (opener.sponsor == null) secondsLeft--
         }
         withTimeoutOrNull(MAX_EXTRA_WAIT_MS) { snapshotFlow { stillLoading }.first { !it } }
+        snapshotFlow { opener.sponsor }.first { it == null }
         onDone()
     }
+    val focus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    fun visit() {
+        if (shown != null) opener.open(shown)
+        else opener.sponsor = Sponsor(
+            id = "_bulkbazaar", name = "Bulk Bazaar Inc.", line = "", contact = "", start = "", end = "",
+            active = true, picture = null, website = site,
+        )
+    }
 
-    // Just the words, centred on the screen.
+    // Just the words, centred on the screen. OK (or a tap) opens the sponsor's website.
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
+            .focusRequester(focus)
+            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) { visit() }
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
     ) {
@@ -75,6 +98,17 @@ fun SponsorScreen(loading: Boolean, sponsor: Sponsor?, onDone: () -> Unit) {
         ) {
             val left = if (secondsLeft == 0 && loading) null else secondsLeft
             if (sponsor?.picture != null) SponsoredBy(sponsor, sponsor.picture, left) else SponsorWords(left, TextAlign.Center)
+            if (shown == null || shown.site != null) {
+                Text(
+                    "Press OK to visit their website",
+                    color = Color.Black,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .background(FocusColor, androidx.compose.foundation.shape.RoundedCornerShape(50))
+                        .padding(horizontal = 14.dp, vertical = 5.dp),
+                )
+            }
         }
     }
 }
