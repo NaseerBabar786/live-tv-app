@@ -26,7 +26,7 @@ const val FILTER_ALL = "All"
 const val FILTER_FAVORITES = "Favorites"
 
 /** The most channels Favorites can hold. */
-const val MAX_FAVORITES = 100
+const val MAX_FAVORITES = 200
 
 const val DEMO_PLAYLIST_NAME = "Demo channels"
 
