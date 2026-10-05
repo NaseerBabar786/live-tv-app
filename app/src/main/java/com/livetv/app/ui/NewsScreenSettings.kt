@@ -39,7 +39,7 @@ fun NewsScreenSection() {
     val choices by NewsScreen.choices.collectAsStateWithLifecycle()
     Text("Customize News screen", fontWeight = FontWeight.Bold)
     Text(
-        "Press OK on a spot to change what it shows. The sponsor corner stays.",
+        "Press OK on a spot to change what it shows.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )
@@ -71,7 +71,7 @@ fun Cp24ScreenSection() {
     val choices by Cp24Screen.choices.collectAsStateWithLifecycle()
     Text("Customize CP24 screen", fontWeight = FontWeight.Bold)
     Text(
-        "Press OK on a section to change what it shows. The sponsor stays.",
+        "Press OK on a section to change what it shows.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )
@@ -87,7 +87,7 @@ fun MyScreenSection() {
     val choices by MyScreen.choices.collectAsStateWithLifecycle()
     Text("Customize My Screen", fontWeight = FontWeight.Bold)
     Text(
-        "Press OK to change each one. Whatever you pick fills the whole screen; the sponsor and the ticker stay.",
+        "Press OK to change each one. Whatever you pick fills the whole screen; the ticker stays.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )

@@ -88,7 +88,7 @@ private const val STRIP_MS = 60_000L
 /** The channel change card: how long it shows, how often at most, and not this soon after start. */
 private const val CARD_MS = 5_000L
 private const val CARD_SITE_MS = 8_000L
-private const val CARD_EVERY_MS = 2 * 60_000L
+private const val CARD_EVERY_MS = 3 * 60_000L
 private const val CARD_NOT_BEFORE_MS = 5 * 60_000L
 /** A sponsor's video pop-up: at most this often (other times their picture card shows). */
 private const val VIDEO_EVERY_MS = 30 * 60_000L
@@ -405,7 +405,7 @@ private fun SponsorVideo(url: String) {
 
 /**
  * A small sponsor card in the bottom right corner for a few seconds after the channel changes,
- * at most once every 2 minutes. It never takes the focus or covers the middle of the picture.
+ * at most once every 3 minutes. It never takes the focus or covers the middle of the picture.
  * A sponsor whose pop-up is set to video plays their video in a bigger window instead, to the end
  * (on a full screen channel, at most every [VIDEO_EVERY_MS]); with no such sponsor, the Free Live TV
  * promo plays like that once per start. OK opens the sponsor's website; back from it, the video goes on.
