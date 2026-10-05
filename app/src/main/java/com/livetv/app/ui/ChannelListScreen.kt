@@ -11,13 +11,11 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.mutableLongStateOf
 import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.roundToInt
 import android.app.Activity
 import android.content.Context
-import android.widget.Toast
 import android.net.ConnectivityManager
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -493,21 +491,16 @@ fun ChannelListScreen(
         }
     }
     // Otherwise Back doesn't close the app at once: on a TV it first goes up to the top bar,
-    // then it asks for a second press within 2 seconds.
+    // then it asks "Exit?" with Yes and No (the cursor starts on No).
     var topBarFocused by remember { mutableStateOf(false) }
-    var lastBackAt by remember { mutableLongStateOf(0L) }
+    var exitOpen by remember { mutableStateOf(false) }
     BackHandler(enabled = !searching) {
-        val now = System.currentTimeMillis()
         when {
             fullTiles -> tilesFull = false
             wideScreen && !topBarFocused -> runCatching { layoutButtonFocus.requestFocus() }
             // Browse never closes the app: Back on its rail opens the Modes menu instead.
             browseMode && !Edition.MAX -> modesOpen = true
-            now - lastBackAt < 2_000 -> (context as? Activity)?.finish()
-            else -> {
-                lastBackAt = now
-                Toast.makeText(context, "Press Back again to exit", Toast.LENGTH_SHORT).show()
-            }
+            else -> exitOpen = true
         }
     }
 
@@ -1185,6 +1178,7 @@ fun ChannelListScreen(
     }
 
     if (showSettings) settings { showSettings = false }
+    if (exitOpen) ExitDialog(onExit = { (context as? Activity)?.finish() }, onDismiss = { exitOpen = false })
     if (modesOpen) {
         ModesMenu(
             current = tileLayout,
@@ -1303,6 +1297,28 @@ private fun ModesMenu(
                 }
             }
         }
+    }
+}
+
+/** Asks before closing the app. The cursor starts on No, so a stray OK keeps watching. */
+@Composable
+private fun ExitDialog(onExit: () -> Unit, onDismiss: () -> Unit) {
+    val no = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        withFrameNanos { }
+        runCatching { no.requestFocus() }
+    }
+    SettingsTheme {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("Exit ${androidx.compose.ui.res.stringResource(R.string.app_name)}?") },
+            confirmButton = {
+                TextButton(onClick = onExit, modifier = Modifier.focusGlow()) { Text("Yes") }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss, modifier = Modifier.focusRequester(no).focusGlow()) { Text("No") }
+            },
+        )
     }
 }
 
@@ -1728,7 +1744,7 @@ private fun PlayerWithList(
                 }
             }
         }
-        // The list fills the whole right side (no sponsor strip under it since 1.9.19).
+        // The list fills the whole right side (no sponsor strip under it since 1.9.22).
         Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         LazyColumn(
             state = listState,
@@ -2013,9 +2029,9 @@ private var sessionTileLayout: TileLayout? = null
 /** News, CP24 and Home: one channel with information around it (Free Live TV only). */
 private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine)
 
-/** The layouts the top-bar button steps through; News mode is Free Live TV's only. Home mode was taken out (user's choice, 1.9.14). */
+/** The layouts the top-bar button steps through; News mode is Free Live TV's only. Home mode is back (user's choice, 1.9.18). */
 private val layouts = TileLayout.entries.filter {
-    it != TileLayout.Home && ((it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel) || Edition.LIVE_TV)
+    (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel) || Edition.LIVE_TV
 }
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
