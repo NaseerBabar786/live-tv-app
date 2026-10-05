@@ -49,6 +49,10 @@ class Store(context: Context) {
         get() = prefs.getInt("line_spacing", 0)
         set(v) = prefs.edit().putInt("line_spacing", v).apply()
 
+    /** Colour of a home screen button as ARGB, or 0 for its default colour. */
+    fun tileColor(key: String): Int = prefs.getInt("tile_$key", 0)
+    fun setTileColor(key: String, argb: Int) = prefs.edit().putInt("tile_$key", argb).apply()
+
     /** Arabic text size in sp. */
     var textSize: Int
         get() = prefs.getInt("text_size", 30)

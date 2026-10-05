@@ -119,4 +119,6 @@ object S {
     val normal = L("Normal", "عام")
     val wide = L("Wide", "زیادہ")
     val wider = L("Wider", "اور زیادہ")
+    val homeColors = L("Home button colours", "ہوم بٹنوں کے رنگ")
+    val resetColors = L("Reset colours", "اصل رنگ")
 }

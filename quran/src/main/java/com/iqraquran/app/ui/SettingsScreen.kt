@@ -35,6 +35,16 @@ fun SettingsScreen(vm: AppViewModel, version: String) {
             }
             Heading(S.readingTheme.get())
             ThemePicker(vm)
+            Heading(S.homeColors.get())
+            listOf("kids" to S.kids, "read" to S.read, "hifz" to S.hifz, "continue" to S.continueReading).forEach { (key, label) ->
+                Text(label.get(), fontWeight = FontWeight.SemiBold)
+                ChoiceRow {
+                    HomeTiles.swatches.forEach { c ->
+                        Swatch(c, vm.tileColor(key) == c) { vm.chooseTileColor(key, c) }
+                    }
+                }
+            }
+            ChoiceRow { Choice(S.resetColors.get(), false) { vm.chooseTileColor(null, null) } }
             Heading(S.translation.get())
             ChoiceRow {
                 listOf(

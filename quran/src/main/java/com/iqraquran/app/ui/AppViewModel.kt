@@ -87,6 +87,9 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     var lineSpacing by mutableStateOf(store.lineSpacing)
         private set
 
+    var tileColors by mutableStateOf(HomeTiles.keys.associateWith { store.tileColor(it) })
+        private set
+
     /** The reading theme in use. */
     val palette: Palette get() = Palettes.byId(themeId, customBackground, customText)
 
@@ -167,6 +170,18 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         if (themeId != "custom") chooseTheme(Palettes.custom(customBackground, customText))
         background?.let { customBackground = it; store.customBackground = it.toArgb() }
         text?.let { customText = it; store.customText = it.toArgb() }
+    }
+
+    /** Colour of a home screen button: the reader's choice, else its default. */
+    fun tileColor(key: String): Color =
+        tileColors[key]?.takeIf { it != 0 }?.let { Color(it) } ?: HomeTiles.default(key)
+
+    /** Sets a home screen button's colour; null puts every button back to its default. */
+    fun chooseTileColor(key: String?, color: Color?) {
+        val keys = if (key == null) HomeTiles.keys else listOf(key)
+        val argb = color?.toArgb() ?: 0
+        keys.forEach { store.setTileColor(it, argb) }
+        tileColors = tileColors + keys.associateWith { argb }
     }
 
     fun chooseLineSpacing(v: Int) {

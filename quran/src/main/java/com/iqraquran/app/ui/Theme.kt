@@ -44,6 +44,22 @@ val KidColors = listOf(
     Color(0xFFEC407A), Color(0xFF9CCC65), Color(0xFFFFA726), Color(0xFF5C6BC0),
 )
 
+/** The big buttons on the home screen, their default colours and the colours to choose from. */
+object HomeTiles {
+    val keys = listOf("kids", "read", "hifz", "continue")
+    fun default(key: String): Color = when (key) {
+        "kids" -> KidColors[1]
+        "read" -> KidColors[0]
+        "hifz" -> KidColors[2]
+        else -> Green
+    }
+    val swatches = listOf(
+        Color(0xFFEF6C00), Color(0xFF26A69A), Color(0xFF7E57C2), Color(0xFF0B5D45),
+        Color(0xFF1565C0), Color(0xFF0F1B2D), Color(0xFFC62828), Color(0xFF8A5A2B),
+        Color(0xFFAD1457), Color(0xFF546E7A), Color(0xFF2E7D32), Color(0xFF37474F),
+    )
+}
+
 /** Scheherazade New (SIL Open Font License): a font made for the Quran's full set of marks. */
 val QuranFont = FontFamily(Font(R.font.scheherazade))
 

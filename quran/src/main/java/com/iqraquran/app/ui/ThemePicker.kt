@@ -95,7 +95,7 @@ private fun ThemeTile(p: Palette, selected: Boolean, compact: Boolean, onClick: 
 }
 
 @Composable
-private fun Swatch(c: Color, selected: Boolean, onClick: () -> Unit) {
+fun Swatch(c: Color, selected: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .focusRing(CircleShape)

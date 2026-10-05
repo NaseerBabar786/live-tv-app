@@ -118,17 +118,17 @@ fun HomeScreen(vm: AppViewModel) {
 
         val tiles = listOf<@Composable (Modifier) -> Unit>(
             { m ->
-                BigTile(S.kids.get(), S.kidsSub.get(), KidColors[1], Icons.Filled.ChildCare, m.focusRequester(first)) {
+                BigTile(S.kids.get(), S.kidsSub.get(), vm.tileColor("kids"), Icons.Filled.ChildCare, m.focusRequester(first)) {
                     vm.open(Screen.QaidaMap)
                 }
             },
             { m ->
-                BigTile(S.read.get(), S.readSub.get(), KidColors[0], Icons.AutoMirrored.Filled.MenuBook, m) {
+                BigTile(S.read.get(), S.readSub.get(), vm.tileColor("read"), Icons.AutoMirrored.Filled.MenuBook, m) {
                     vm.open(Screen.SurahList(forHifz = false))
                 }
             },
             { m ->
-                BigTile(S.hifz.get(), S.hifzSub.get(), KidColors[2], Icons.Filled.Psychology, m) {
+                BigTile(S.hifz.get(), S.hifzSub.get(), vm.tileColor("hifz"), Icons.Filled.Psychology, m) {
                     vm.open(Screen.HifzHome)
                 }
             },
@@ -148,7 +148,7 @@ fun HomeScreen(vm: AppViewModel) {
             BigTile(
                 S.continueReading.get(),
                 "${surah.nameEn} · ${surah.nameAr} · ${S.ayahWord.get()} ${last.second}",
-                Green,
+                vm.tileColor("continue"),
                 Icons.Filled.Bookmark,
                 Modifier.fillMaxWidth(),
             ) { vm.open(Screen.Read(last.first, last.second)) }
