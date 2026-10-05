@@ -324,6 +324,25 @@ internal fun BrowseMode(
     }
     val currentById by rememberUpdatedState(byId)
     val currentFocused by rememberUpdatedState(focusedKey?.second)
+    // The cards around the highlighted one (left, right, above, below) get their pictures first,
+    // so the card the cursor moves to next already shows what's on.
+    val currentNeighbours by rememberUpdatedState(
+        focusedKey?.let { (rowKey, id) ->
+            val r = rows.indexOfFirst { it.key == rowKey }
+            val i = rows.getOrNull(r)?.channels?.indexOfFirst { it.id == id } ?: -1
+            if (r < 0 || i < 0) emptyList()
+            else buildList {
+                rows[r].channels.getOrNull(i - 1)?.let { add(it.id) }
+                rows[r].channels.getOrNull(i + 1)?.let { add(it.id) }
+                for (other in listOf(rows.getOrNull(r - 1), rows.getOrNull(r + 1))) {
+                    val list = other?.channels ?: continue
+                    if (list.isEmpty()) continue
+                    add(list[i.coerceAtMost(list.size - 1)].id)
+                    add(list[(sessionCardIndex[other.key] ?: 0).coerceIn(0, list.size - 1)].id)
+                }
+            }.distinct()
+        }.orEmpty(),
+    )
     LaunchedEffect(playing) {
         if (!playing) return@LaunchedEffect
         delay(2_500) // let the highlighted card start first
@@ -333,7 +352,8 @@ internal fun BrowseMode(
                 continue
             }
             val now = System.currentTimeMillis()
-            val id = onScreen.keys.toList()
+            val id = (currentNeighbours + onScreen.keys.toList())
+                .distinct()
                 .filter { it != currentFocused }
                 .firstOrNull { now - (browsePictureAt[it] ?: 0L) > PICTURE_FRESH_MS }
             val channel = id?.let { currentById[it] }
