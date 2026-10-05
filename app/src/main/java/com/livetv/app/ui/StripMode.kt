@@ -59,7 +59,11 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -96,7 +100,7 @@ private val TileShape = RoundedCornerShape(8.dp)
  * (held down, it adds the channel to Favorites or takes it off). Up goes to the big player, where
  * OK opens the channel full screen; Down comes back to the strip. At the start of the strip are
  * the Modes button and the group button (Favorites, each country, All channels). Only the big
- * player plays; the tiles show still pictures, so a Chromecast only decodes one video.
+ * player plays; the tiles show only each channel's logo, number and name, so the strip stays quick.
  */
 @Composable
 internal fun StripMode(
@@ -188,8 +192,6 @@ internal fun StripMode(
     }
     val currentOnWatch by rememberUpdatedState(onWatch)
     LaunchedEffect(current?.id, playing) {
-        // The channel going away keeps its last frame as its tile's picture.
-        shownId?.let { if (showing) keepPicture(it, view.picture()) }
         stream.stop()
         showing = false
         shownId = null
@@ -206,80 +208,7 @@ internal fun StripMode(
         onDispose { Watching.stop(stream) }
     }
 
-    // The tiles' pictures: saved ones load from the device; for the rest a second, silent player
-    // opens the tiles near the cursor in turn and keeps a frame (Wi-Fi or Ethernet only).
     val rowState = rememberLazyListState()
-    val visibleIds by remember(list) {
-        androidx.compose.runtime.derivedStateOf {
-            rowState.layoutInfo.visibleItemsInfo.mapNotNull { list.getOrNull(it.index - 2)?.id }
-        }
-    }
-    LaunchedEffect(visibleIds) { visibleIds.forEach { showSavedPicture(it) } }
-    var movedAt by remember { mutableLongStateOf(0L) }
-    LaunchedEffect(cursor, groupKey) { movedAt = System.currentTimeMillis() }
-    val grabber = remember {
-        StreamPlayer(context, preview = true).apply {
-            player.volume = 0f
-            player.trackSelectionParameters = player.trackSelectionParameters.buildUpon().setMaxVideoSizeSd().build()
-        }
-    }
-    val grabView = remember { ViewHolder() }
-    var grabShowing by remember { mutableStateOf(false) }
-    DisposableEffect(grabber) {
-        val listener = object : Player.Listener {
-            override fun onRenderedFirstFrame() {
-                grabShowing = true
-            }
-        }
-        grabber.player.addListener(listener)
-        onDispose {
-            grabber.player.removeListener(listener)
-            grabber.release()
-        }
-    }
-    val wanted by rememberUpdatedState(
-        (listOf(0, 1, -1, 2, -2, 3, -3, 4, -4).mapNotNull { list.getOrNull(at + it) } +
-            visibleIds.mapNotNull { id -> list.firstOrNull { it.id == id } })
-            .filter { it.id != shownId }
-            .distinctBy { it.id },
-    )
-    LaunchedEffect(playing) {
-        if (!playing) return@LaunchedEffect
-        delay(2_000) // let the big player start first
-        while (true) {
-            if (metered(context)) {
-                delay(10_000)
-                continue
-            }
-            val still = System.currentTimeMillis() - movedAt
-            if (still < 1_000) {
-                delay(1_000 - still)
-                continue
-            }
-            val now = System.currentTimeMillis()
-            val channel = wanted.firstOrNull { now - (browsePictureAt[it.id] ?: 0L) > PICTURE_FRESH_MS }
-            if (channel == null || YouTube.isYouTube(channel.url)) {
-                if (channel != null) browsePictureAt[channel.id] = now
-                delay(1_000)
-                continue
-            }
-            grabShowing = false
-            val startedAt = movedAt
-            var interrupted = false
-            try {
-                grabber.play(channel)
-                withTimeoutOrNull(10_000) { snapshotFlow { grabShowing || movedAt != startedAt }.first { it } }
-                if (grabShowing && movedAt == startedAt) delay(400)
-                if (grabShowing && movedAt == startedAt) keepPicture(channel.id, grabView.picture())
-                interrupted = movedAt != startedAt
-            } finally {
-                grabber.stop()
-                grabShowing = false
-            }
-            if (!interrupted) browsePictureAt[channel.id] = System.currentTimeMillis()
-            delay(400)
-        }
-    }
 
     // The highlighted tile stays in view, with a tile or two showing before it.
     LaunchedEffect(cursor, groupKey) {
@@ -387,9 +316,6 @@ internal fun StripMode(
                 if (current == null) {
                     Text("Loading channels…", color = palette.onSurfaceVariant, modifier = Modifier.align(Alignment.Center))
                 } else {
-                    browsePictures[current.id]?.let {
-                        Image(it, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
-                    }
                     if (shownId == current.id) {
                         AndroidView(
                             factory = { ctx -> TextureView(ctx).also { view.view = it; stream.player.setVideoTextureView(it) } },
@@ -464,18 +390,6 @@ internal fun StripMode(
                         }
                     }
                 }
-                // The silent player taking the tiles' pictures draws here, out of sight.
-                val density = LocalDensity.current
-                AndroidView(
-                    factory = { ctx -> TextureView(ctx).also { grabView.view = it; grabber.player.setVideoTextureView(it) } },
-                    onRelease = {
-                        if (grabView.view === it) grabView.view = null
-                        grabber.player.clearVideoTextureView(it)
-                    },
-                    modifier = Modifier
-                        .size(with(density) { 320.toDp() }, with(density) { 180.toDp() })
-                        .graphicsLayer { alpha = 0.01f },
-                )
             }
 
             // The strip: Modes, the group, then the group's channels.
@@ -570,64 +484,55 @@ private fun StripButton(height: Dp, focused: Boolean, top: String, bottom: Strin
     }
 }
 
-/** One channel in the strip: its picture (or logo), with the number and name along the bottom. */
+/** One channel in the strip: its logo, number and name (no pictures, so the strip stays quick). */
 @Composable
 private fun StripTile(channel: Channel, width: Dp, height: Dp, focused: Boolean, live: Boolean, favorite: Boolean) {
-    val palette = Themes.current
     val scale by animateFloatAsState(if (focused) 1.1f else 1f, label = "scale")
     Box(
         Modifier
             .graphicsLayer { scaleX = scale; scaleY = scale }
             .size(width, height)
-            .then(
+            .clip(TileShape)
+            .background(
                 when {
-                    focused -> Modifier.border(BorderStroke(3.dp, Yellow), TileShape)
-                    live -> Modifier.border(BorderStroke(2.dp, Color.White.copy(alpha = 0.8f)), TileShape)
-                    else -> Modifier
+                    focused -> Yellow
+                    live -> Color.White.copy(alpha = 0.24f)
+                    else -> Color.White.copy(alpha = 0.10f)
                 },
             )
-            .padding(if (focused) 3.dp else if (live) 2.dp else 0.dp)
-            .clip(TileShape)
-            .background(Brush.linearGradient(listOf(palette.surfaceVariant, palette.surface))),
+            .padding(horizontal = 8.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center,
     ) {
-        if (channel.logo != null) {
-            SubcomposeAsyncImage(
-                model = channel.logo,
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.fillMaxSize().padding(horizontal = 22.dp, vertical = 14.dp),
-                error = { Initials(channel.name) },
-                loading = { Initials(channel.name) },
-            )
-        } else {
-            Initials(channel.name)
-        }
-        browsePictures[channel.id]?.let {
-            Image(it, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
-        }
-        if (!focused && !live) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.25f)))
-        // Along the bottom: the number and name.
-        Row(
-            Modifier
-                .align(Alignment.BottomStart)
-                .fillMaxWidth()
-                .background(Brush.verticalGradient(listOf(Color.Transparent, Color.Black.copy(alpha = 0.85f))))
-                .padding(start = 6.dp, end = 6.dp, top = 10.dp, bottom = 3.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            if (channel.number > 0) {
-                Text("${channel.number}", color = Yellow, fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1)
-                Spacer(Modifier.width(4.dp))
+        val ink = if (focused) Color.Black else Color.White
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            if (channel.logo != null) {
+                // The channel's small logo (no live or still pictures, so the strip stays quick).
+                SubcomposeAsyncImage(
+                    model = channel.logo,
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.height(height * 0.36f).width(width * 0.6f),
+                    error = { },
+                    loading = { },
+                )
+                Spacer(Modifier.height(3.dp))
             }
             Text(
-                channel.name,
-                color = Color.White,
+                buildAnnotatedString {
+                    if (channel.number > 0) {
+                        withStyle(SpanStyle(color = if (focused) Color.Black else Yellow, fontWeight = FontWeight.Bold)) {
+                            append("${channel.number}  ")
+                        }
+                    }
+                    append(channel.name)
+                },
+                color = ink,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 11.sp,
-                maxLines = 1,
+                fontSize = 12.sp,
+                lineHeight = 14.sp,
+                maxLines = if (channel.logo != null) 2 else 3,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center,
             )
         }
         // Top corners: playing now (speaker) and favourite (star).
@@ -635,22 +540,16 @@ private fun StripTile(channel: Channel, width: Dp, height: Dp, focused: Boolean,
             Icon(
                 Icons.Filled.VolumeUp,
                 contentDescription = "Playing",
-                tint = Color.Black,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(4.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(Yellow)
-                    .padding(2.dp)
-                    .size(12.dp),
+                tint = ink,
+                modifier = Modifier.align(Alignment.TopStart).size(14.dp),
             )
         }
         if (favorite) {
             Icon(
                 Icons.Filled.Star,
                 contentDescription = "Favorite",
-                tint = Yellow,
-                modifier = Modifier.align(Alignment.TopEnd).padding(4.dp).size(14.dp),
+                tint = if (focused) Color.Black else Yellow,
+                modifier = Modifier.align(Alignment.TopEnd).size(14.dp),
             )
         }
     }
