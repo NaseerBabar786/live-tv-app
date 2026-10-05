@@ -168,7 +168,6 @@ import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
 import com.livetv.app.EditionSponsorBar
 import com.livetv.app.EditionTicker
-import com.livetv.app.editionHasSponsors
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
 
@@ -832,11 +831,11 @@ fun ChannelListScreen(
                     }
                     val cellWidth = if (fullTiles) fullHeight * 16f / 9f else tileWidth
                     // TVs, 1×2, 2×2 and 2×3: the tiles touch, edge to edge across the screen at 16:9,
-                    // and the sponsor banner gets the space under them (as big as fits at its 8:1 shape).
+                    // (no sponsor banner under them since 1.9.32).
                     // When the screen isn't tall enough for that, the tiles get shorter and their
                     // pictures stretch a little (at most a quarter wider than 16:9) to keep the width.
                     val packed = wide && !fullTiles && !bigPlayer
-                    val hasAd = editionHasSponsors()
+                    val hasAd = false
                     val minBanner = if (hasAd) 48.dp else 0.dp
                     val packedNaturalWidth = maxWidth / columns
                     val packedFits = packedNaturalWidth * 9f / 16f * rows + minBanner <= maxHeight
