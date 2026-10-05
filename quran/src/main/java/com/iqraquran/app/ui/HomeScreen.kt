@@ -1,5 +1,6 @@
 package com.iqraquran.app.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,9 +44,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.iqraquran.app.R
 import com.iqraquran.app.data.Profile
 
 @Composable
@@ -64,7 +67,12 @@ fun HomeScreen(vm: AppViewModel) {
             .padding(horizontal = if (wide) 48.dp else 16.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            Image(
+                painterResource(R.drawable.ic_logo),
+                contentDescription = null,
+                modifier = Modifier.size(if (wide) 72.dp else 60.dp).clip(RoundedCornerShape(18.dp)),
+            )
             Column(modifier = Modifier.weight(1f)) {
                 Text(S.appName.get(), fontSize = 30.sp, fontWeight = FontWeight.Bold, color = palette.accent)
                 Text(S.tagline.get(), fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
