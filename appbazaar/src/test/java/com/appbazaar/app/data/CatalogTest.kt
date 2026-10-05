@@ -19,6 +19,8 @@ class CatalogTest {
            "links":{"android":"https://example.com/n.apk"}},
           {"id":"paid","name":"Paid","price":"${'$'}2.99","links":{"android":"https://example.com/p.apk"}},
           {"id":"demo","name":"Demo","example":true},
+          {"id":"pc-tool","name":"PC Tool","platforms":["Windows"],
+           "links":{"windows":"https://example.com/Setup.exe","windowsPortable":"https://example.com/Portable.exe"}},
           {"name":"No id"}
         ]}
     """.trimIndent()
@@ -26,7 +28,7 @@ class CatalogTest {
     @Test
     fun readsAppsAndMakesPicturesAbsolute() {
         val apps = Catalog.parse(json)
-        assertEquals(listOf("live-tv", "notes", "paid"), apps.map { it.id })
+        assertEquals(listOf("live-tv", "notes", "paid", "pc-tool"), apps.map { it.id })
         val tv = apps[0]
         assertEquals("https://apps.bulkbazaar.ca/icons/live-tv.svg", tv.iconUrl)
         assertEquals("https://apps.bulkbazaar.ca/images/live-tv.jpg", tv.bannerUrl)
@@ -54,5 +56,16 @@ class CatalogTest {
     fun colours() {
         assertEquals(0xFF0F9D74, Catalog.parseColor("#0F9D74"))
         assertNull(Catalog.parseColor("teal"))
+    }
+
+    @Test
+    fun pcAppsKeepTheirComputerDownloads() {
+        val apps = Catalog.parse(json)
+        val pc = apps.first { it.id == "pc-tool" }
+        assertTrue(pc.forPc)
+        assertNull(pc.apkUrl)
+        assertEquals("https://example.com/Setup.exe", pc.pcLinks["windows"])
+        assertEquals("https://apps.bulkbazaar.ca/#pc-tool", pc.pageUrl)
+        assertFalse(apps.first { it.id == "live-tv" }.forPc)
     }
 }

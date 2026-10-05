@@ -58,6 +58,7 @@ private fun sectionTitle(s: Section) = when (s) {
     Section.ALL -> "All apps" to "Everything in App Bazaar"
     Section.TV -> "TV apps" to "Made for Google TV, Android TV and Fire TV remotes"
     Section.PHONE -> "Phone apps" to "For Android phones and tablets"
+    Section.PC -> "PC apps" to "Programs for Windows computers. Open one to see the QR code and link for your PC."
     Section.UPDATES -> "Updates" to "Newer versions of apps on this device"
 }
 
@@ -151,7 +152,7 @@ fun StoreScreen(
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp), contentPadding = PaddingValues(vertical = 4.dp)) {
                         items(featured, key = { "hero-" + it.id }) { app ->
                             HeroCard(
-                                app, state.action(app), isTv,
+                                app, if (state.section == Section.PC) Action.OnPc else state.action(app), isTv,
                                 Modifier.then(if (isTv) Modifier.width(520.dp) else Modifier.fillParentMaxWidth(0.88f)),
                                 onClick = { onOpen(app) },
                             )
@@ -177,7 +178,13 @@ fun StoreScreen(
                 }
             }
             items(list, key = { it.id }) { app ->
-                AppCard(app, state.action(app), state.installed[app.id], onOpen = { onOpen(app) }, onAct = { onAct(app) })
+                // In the PC section every card's button leads to the app's page with the QR code for the computer.
+                val pcView = state.section == Section.PC
+                AppCard(
+                    app, if (pcView) Action.OnPc else state.action(app), state.installed[app.id].takeUnless { pcView },
+                    onOpen = { onOpen(app) },
+                    onAct = { if (pcView || state.action(app) == Action.OnPc) onOpen(app) else onAct(app) },
+                )
             }
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {

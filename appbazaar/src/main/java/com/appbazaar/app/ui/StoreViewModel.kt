@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 
-enum class Section(val label: String) { ALL("All apps"), TV("TV apps"), PHONE("Phone apps"), UPDATES("Updates") }
+enum class Section(val label: String) { ALL("All apps"), TV("TV apps"), PHONE("Phone apps"), PC("PC apps"), UPDATES("Updates") }
 
 /** What the main button of an app shows. */
 sealed interface Action {
@@ -23,6 +23,8 @@ sealed interface Action {
     data object Update : Action
     data object Open : Action
     data object Website : Action
+    /** Only for computers: the button shows how to get it on a PC (QR code and link). */
+    data object OnPc : Action
     data object Unavailable : Action
     data class Downloading(val progress: Float) : Action
 }
@@ -41,7 +43,11 @@ data class StoreState(
 ) {
     fun action(app: StoreApp): Action {
         downloads[app.id]?.let { return Action.Downloading(it) }
-        if (app.apkUrl == null) return if (app.webUrl != null) Action.Website else Action.Unavailable
+        if (app.apkUrl == null) return when {
+            app.forPc -> Action.OnPc
+            app.webUrl != null -> Action.Website
+            else -> Action.Unavailable
+        }
         val have = installed[app.id] ?: return Action.Install
         return if (app.version.isNotBlank() && Versions.isNewer(app.version, have)) Action.Update else Action.Open
     }
@@ -52,10 +58,10 @@ data class StoreState(
     val selfUpdate: StoreApp? get() = apps.firstOrNull { it.id == Catalog.SELF_ID && action(it) == Action.Update }
 
     fun visible(): List<StoreApp> = when (section) {
-        // Apps for PCs only (no Android download and no web app) have nothing to offer here.
-        Section.ALL -> apps.filter { it.apkUrl != null || it.webUrl != null }
+        Section.ALL -> apps.filter { it.apkUrl != null || it.webUrl != null || it.forPc }
         Section.TV -> apps.filter { it.forTv }
         Section.PHONE -> apps.filter { it.forPhone }
+        Section.PC -> apps.filter { it.forPc }
         Section.UPDATES -> updates
     }
 }
@@ -134,7 +140,7 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
             Action.Install, Action.Update -> download(app)
             Action.Open -> if (!installer.open(app.packageName ?: return)) say("${app.name} has no screen to open on this device.")
             Action.Website -> app.webUrl?.let { if (!installer.openWeb(it)) say("This device has no web browser for ${it}.") }
-            Action.Unavailable, is Action.Downloading -> Unit
+            Action.OnPc, Action.Unavailable, is Action.Downloading -> Unit
         }
     }
 
