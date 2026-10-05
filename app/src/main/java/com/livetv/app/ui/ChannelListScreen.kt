@@ -2031,9 +2031,9 @@ private var sessionTileLayout: TileLayout? = null
 /** News, CP24 and Home: one channel with information around it (Free Live TV only). */
 private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine)
 
-/** The layouts the top-bar button steps through; News mode is Free Live TV's only. Home mode was taken out (user's choice, 1.9.14). */
+/** The layouts the top-bar button steps through; News mode is Free Live TV's only. Home mode is back (user's choice, 1.9.18). */
 private val layouts = TileLayout.entries.filter {
-    it != TileLayout.Home && ((it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel) || Edition.LIVE_TV)
+    (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel) || Edition.LIVE_TV
 }
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
