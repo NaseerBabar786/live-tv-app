@@ -1,7 +1,7 @@
 name: Build dramas playlist
 
 # Builds docs/Dramas.m3u (tv.bulkbazaar.ca/Dramas.m3u): the newest Pakistani drama
-# episodes, telefilms, cooking and Islamic shows and Urdu cartoons from their owners' official YouTube uploads, for Live TV's Library.
+# episodes, telefilms, cooking and Islamic shows and Urdu cartoons from their owners' official YouTube uploads, for Free Live TV's Library.
 on:
   schedule:
     - cron: "0 6 * * *"   # daily, 06:00 UTC

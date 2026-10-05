@@ -10,11 +10,11 @@ Uses two of the Archive's public-domain collections:
 
 For each item it reads the file list and keeps one MP4 (H.264 first, then the
 smaller 512Kb copy). Films become movies, grouped by decade. TV items become
-series episodes named "Show Episode N" so Live TV's Movies & Series screen
+series episodes named "Show Episode N" so Free Live TV's Movies & Series screen
 files them under their show; a show needs at least MIN_EPISODES episodes.
 
 Writes (in docs/, served at tv.bulkbazaar.ca):
-  Movies.m3u     the playlist (add it in Live TV: Settings > My playlists)
+  Movies.m3u     the playlist (add it in Free Live TV: Settings > My playlists)
   movies.json    counts and the time it was built
 
 Standard library only. Run: python3 tools/build_movies.py [--movies N] [--items N]

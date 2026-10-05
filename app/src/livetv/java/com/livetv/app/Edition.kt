@@ -46,20 +46,20 @@ import com.livetv.app.ui.VodViewModel
 import com.livetv.app.ui.focusGlow
 
 /**
- * Live TV: built-in free channels, a sponsor screen at start, and self-updates from GitHub.
+ * Free Live TV: built-in free channels, a sponsor screen at start, and self-updates from GitHub.
  * Live TV Max (the max flavor) is built from this same code; [MAX] tells them apart.
  */
 object Edition {
     const val LIVE_TV = true
     /** Live TV Max: opens on the Browse home screen, with language rows, a now/next guide, movies and dramas. */
     const val MAX = BuildConfig.IS_MAX
-    val APP_NAME = if (MAX) "Live TV Max" else "Live TV"
+    val APP_NAME = if (MAX) "Live TV Max" else "Free Live TV"
     const val USER_AGENT = "LiveTV-Android/1.0"
     const val HAS_START_SCREEN = true
     const val HAS_WEATHER = true
     /** Asks once for the device's approximate location, for the weather and prayer times. */
     const val HAS_DEVICE_LOCATION = true
-    /** Movies & Series from the saved playlists (Live TV only). */
+    /** Movies & Series from the saved playlists (Free Live TV only). */
     const val HAS_VOD = true
 }
 
@@ -76,7 +76,7 @@ fun EditionStartScreen(onDone: () -> Unit) {
     LaunchedEffect(state.loading) { if (!state.loading) library.refreshIfChanged() }
     // Everyone signs in with Google once (when the owner's Firebase project is set up);
     // each start is then recorded so the owner can count users. Live TV Max doesn't ask:
-    // one account works on one device at a time, so it would sign Live TV out on the same TV.
+    // one account works on one device at a time, so it would sign Free Live TV out on the same TV.
     val context = LocalContext.current
     val account = remember { Account.get(context) }
     val user by account.user.collectAsStateWithLifecycle()
@@ -163,7 +163,7 @@ fun EditionOverlay() {
 }
 
 /**
- * Says when a private message has arrived (for a viewer, from the Live TV team; for the owner,
+ * Says when a private message has arrived (for a viewer, from the Free Live TV team; for the owner,
  * from a viewer): soon after start, then every 30 minutes. Each message is announced only once.
  */
 @Composable
@@ -194,7 +194,7 @@ private fun NewMessagePrompt() {
     SettingsTheme {
         AlertDialog(
             onDismissRequest = { preview = null },
-            title = { Text(if (account.isAdmin) "✉ New message from a viewer" else "✉ New message from the Live TV team") },
+            title = { Text(if (account.isAdmin) "✉ New message from a viewer" else "✉ New message from the Free Live TV team") },
             text = { Text(text.take(200) + if (text.length > 200) "…" else "") },
             confirmButton = {
                 TextButton(onClick = { preview = null; reading = true }, modifier = Modifier.focusGlow()) { Text("Read and reply") }

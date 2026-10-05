@@ -1,0 +1,73 @@
+name: Build Multi Chat for PC
+
+# Multi Chat for Windows (Electron). Builds the installer and the portable .exe on a Windows
+# runner, and on main keeps the newest ones in the fixed "multichat-pc" release (never marked
+# "latest", so Free Live TV's links keep finding Free Live TV):
+# https://github.com/NaseerBabar786/live-tv-app/releases/download/multichat-pc/MultiChat-Setup.exe
+# https://github.com/NaseerBabar786/live-tv-app/releases/download/multichat-pc/MultiChat-Portable.exe
+# The app's update check reads the version from this release's title ("Multi Chat for PC 1.0.0").
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'multichat-pc/**'
+      - '.github/workflows/build-multichat-pc.yml'
+  pull_request:
+    paths:
+      - 'multichat-pc/**'
+      - '.github/workflows/build-multichat-pc.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+        working-directory: multichat-pc
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: multichat-pc/package-lock.json
+
+      - run: npm ci
+
+      - name: Check and test
+        run: npm run check
+
+      - name: Build installer and portable app
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npx electron-builder --win --x64 --publish never
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: multi-chat-windows
+          path: |
+            multichat-pc/dist/MultiChat-Setup.exe
+            multichat-pc/dist/MultiChat-Portable.exe
+
+      - name: Publish Multi Chat for PC
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          cd dist
+          if gh release view multichat-pc > /dev/null 2>&1; then
+            gh release upload multichat-pc MultiChat-Setup.exe MultiChat-Portable.exe --clobber
+          else
+            gh release create multichat-pc MultiChat-Setup.exe MultiChat-Portable.exe \
+              --title "Multi Chat for PC $version" \
+              --notes "Always the newest Multi Chat for Windows." \
+              --latest=false
+          fi
+          gh release edit multichat-pc --title "Multi Chat for PC $version" \
+            --notes "Always the newest Multi Chat for Windows (now $version), from ${{ github.sha }}. Setup installs it with Start menu and desktop shortcuts; Portable runs without installing."

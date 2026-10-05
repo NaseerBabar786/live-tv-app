@@ -650,7 +650,7 @@ fun ChannelListScreen(
                     },
                 )
                 if (!hideBars && !newsMode && !state.loading && state.channels.isNotEmpty()) {
-                    // The channel count, with Live TV's "advertise with us" ticker running beside it now and then.
+                    // The channel count, with Free Live TV's "advertise with us" ticker running beside it now and then.
                     // 1×2 has room for a bigger ticker in its own band above the tiles.
                     val bandTicker = windowed && tileLayout == TileLayout.Two
                     Row(
@@ -1120,7 +1120,7 @@ fun ChannelListScreen(
                         )
                     }
                     }
-                    // 1×2, 2×2 and 2×3: Live TV's sponsor banner, centred in the space under the tiles.
+                    // 1×2, 2×2 and 2×3: Free Live TV's sponsor banner, centred in the space under the tiles.
                     if (packed && hasAd && bannerHeight >= 36.dp) {
                         Box(
                             Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(bannerSpace),
@@ -1677,7 +1677,7 @@ private fun PlayerWithList(
                 }
             }
         }
-        // The list, with Live TV's sponsor strip under it (when there are sponsors).
+        // The list, with Free Live TV's sponsor strip under it (when there are sponsors).
         Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         LazyColumn(
             state = listState,
@@ -1958,10 +1958,10 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
  */
 private var sessionTileLayout: TileLayout? = null
 
-/** News, CP24 and Home: one channel with information around it (Live TV only). */
+/** News, CP24 and Home: one channel with information around it (Free Live TV only). */
 private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine)
 
-/** The layouts the top-bar button steps through; News mode is Live TV's only. */
+/** The layouts the top-bar button steps through; News mode is Free Live TV's only. */
 private val layouts = TileLayout.entries.filter { (it !in INFO_LAYOUTS && it != TileLayout.Browse) || Edition.LIVE_TV }
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
