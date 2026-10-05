@@ -118,7 +118,26 @@ object Palettes {
         accent = Color(0xFFFFEB3B), onAccent = Color.Black, highlight = Color(0xFF263238), dark = true,
     )
 
-    val presets = listOf(classic, paper, sepia, mushaf, softDark, night, contrast)
+    val sky = Palette(
+        "sky", "Sky", "آسمانی",
+        background = Color(0xFFE8EEF4), card = Color(0xFFF5F8FB), cardAlt = Color(0xFFD6E1EB),
+        arabic = Color(0xFF16263A), text = Color(0xFF1B2A3A), muted = Color(0xFF4F6275),
+        accent = Color(0xFF2F6690), onAccent = Color.White, highlight = Color(0xFFD3E4F2), dark = false,
+    )
+    val grey = Palette(
+        "grey", "Soft grey (e-ink)", "ہلکا سرمئی",
+        background = Color(0xFFE4E4E0), card = Color(0xFFEFEFEB), cardAlt = Color(0xFFD3D3CE),
+        arabic = Color(0xFF1C1C1C), text = Color(0xFF1E1E1E), muted = Color(0xFF55554F),
+        accent = Color(0xFF3D3D3D), onAccent = Color.White, highlight = Color(0xFFD0D0CA), dark = false,
+    )
+    val midnight = Palette(
+        "midnight", "Midnight blue", "گہرا نیلا",
+        background = Color(0xFF0F1B2D), card = Color(0xFF17263D), cardAlt = Color(0xFF203350),
+        arabic = Color(0xFFF1E6C8), text = Color(0xFFDCE6F2), muted = Color(0xFF9FB1C7),
+        accent = Color(0xFF7FB2E5), onAccent = Color(0xFF0B1422), highlight = Color(0xFF243A5A), dark = true,
+    )
+
+    val presets = listOf(classic, paper, sepia, mushaf, sky, grey, softDark, midnight, night, contrast)
 
     /** Background choices for the Custom theme. */
     val backgrounds = listOf(
