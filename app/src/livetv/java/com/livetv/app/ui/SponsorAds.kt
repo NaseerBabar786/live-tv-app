@@ -1,7 +1,10 @@
 package com.livetv.app.ui
 
 import android.os.SystemClock
+import android.content.Context
 import android.view.TextureView
+import androidx.activity.compose.BackHandler
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.annotation.OptIn
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.key
@@ -87,6 +90,16 @@ private const val CARD_MS = 5_000L
 private const val CARD_SITE_MS = 8_000L
 private const val CARD_EVERY_MS = 2 * 60_000L
 private const val CARD_NOT_BEFORE_MS = 5 * 60_000L
+/** A sponsor's video pop-up: at most this often (other times their picture card shows). */
+private const val VIDEO_EVERY_MS = 30 * 60_000L
+
+/** The Free Live TV promo video from the website's home page (see [SponsorCard]). */
+private const val PROMO_ID = "promo"
+private const val PROMO_URL = "https://tv.bulkbazaar.ca/media/livetv-promo.mp4"
+private const val PROMO_EVERY_MS = 60 * 60_000L
+private const val PROMO_NOT_BEFORE_MS = 2 * 60_000L
+/** The promo was shown already since the app started. */
+private var promoShown = false
 
 /** The "advertise with us" ticker: half a minute after start, then every 30 seconds, scrolling across once. */
 private const val TICKER_FIRST_MS = 30_000L
@@ -393,41 +406,81 @@ private fun SponsorVideo(url: String) {
 /**
  * A small sponsor card in the bottom right corner for a few seconds after the channel changes,
  * at most once every 2 minutes. It never takes the focus or covers the middle of the picture.
+ * A sponsor whose pop-up is set to video plays their video in a bigger window instead, to the end
+ * (on a full screen channel, at most every [VIDEO_EVERY_MS]); with no such sponsor, the Free Live TV
+ * promo plays like that once per start. OK opens the sponsor's website; back from it, the video goes on.
  */
 @Composable
-fun SponsorCard(channelId: String?) {
+fun SponsorCard(channelId: String?, fullScreen: Boolean) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences("sponsors", Context.MODE_PRIVATE) }
     val startedAt = remember { SystemClock.elapsedRealtime() }
     var lastCard by remember { mutableStateOf(startedAt - CARD_EVERY_MS + CARD_NOT_BEFORE_MS) }
     var lastChannel by remember { mutableStateOf(channelId) }
     var showing by remember { mutableStateOf<Sponsor?>(null) }
+    var video by remember { mutableStateOf<Sponsor?>(null) }
+    val isFullScreen by rememberUpdatedState(fullScreen)
     val opener = rememberSiteOpener()
-    // While the card shows, OK on the remote (or a tap) opens the sponsor's website.
-    val current = showing
+    // While the card or video shows, OK on the remote (or a tap) opens the sponsor's website.
+    val current = showing ?: video
     DisposableEffect(current) {
-        if (current?.site != null) SponsorKey.onOk = { showing = null; opener.open(current) }
+        if (current?.site != null) SponsorKey.onOk = { if (showing === current) showing = null; opener.open(current) }
         onDispose { SponsorKey.onOk = null }
     }
     LaunchedEffect(channelId) {
-        if (channelId == null || channelId == lastChannel) return@LaunchedEffect
+        if (channelId == null || channelId == lastChannel || video != null) return@LaunchedEffect
         lastChannel = channelId
         val now = SystemClock.elapsedRealtime()
+        val wall = System.currentTimeMillis()
+        // The Free Live TV promo: once per start and at most once an hour, when no sponsor has a video pop-up.
+        if (isFullScreen && !promoShown && now - startedAt >= PROMO_NOT_BEFORE_MS &&
+            Sponsors.current().none { it.popupVideo && it.video.isNotEmpty() } &&
+            wall - prefs.getLong("promoAt", 0L) >= PROMO_EVERY_MS
+        ) {
+            promoShown = true
+            prefs.edit().putLong("promoAt", wall).apply()
+            lastCard = now
+            showing = null
+            scope.launch {
+                delay(1_500)
+                if (isFullScreen) video = PromoSponsor
+            }
+            return@LaunchedEffect
+        }
         if (now - lastCard < CARD_EVERY_MS) return@LaunchedEffect
         val sponsor = Sponsors.next("card") ?: return@LaunchedEffect
         lastCard = now
+        val asVideo = sponsor.popupVideo && sponsor.video.isNotEmpty() && isFullScreen &&
+            wall - prefs.getLong("videoAt", 0L) >= VIDEO_EVERY_MS
+        if (asVideo) prefs.edit().putLong("videoAt", wall).apply()
         scope.launch {
             // Let the new channel's picture come up first.
             delay(1_500)
-            showing = sponsor
             SponsorViews.count(sponsor, "card")
+            if (asVideo && isFullScreen) {
+                showing = null
+                video = sponsor
+                return@launch
+            }
+            showing = sponsor
             // A little longer when OK can open their website, so there's time to press it.
             delay(if (sponsor.site != null) CARD_SITE_MS else CARD_MS)
             if (showing === sponsor) showing = null
         }
     }
-    val sponsor = showing ?: return
     // Not in the small picture-in-picture window.
     val width = LocalConfiguration.current.screenWidthDp
+    // Leaving the full screen channel (or going to the small window) closes the video.
+    LaunchedEffect(fullScreen, width) { if (!fullScreen || width < 400) video = null }
+    val playing = video
+    if (playing != null && fullScreen && width >= 400) {
+        key(playing) {
+            VideoPopup(playing, width, paused = opener.sponsor != null, onDone = { if (video === playing) video = null })
+        }
+        return
+    }
+    val sponsor = showing ?: return
     if (width < 400) return
     Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.BottomEnd) {
         Column(
@@ -452,16 +505,107 @@ fun SponsorCard(channelId: String?) {
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                 )
             }
-            if (sponsor.site != null) {
-                Text(
-                    "Press OK to visit their website",
-                    color = Color.Black,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    modifier = Modifier.fillMaxWidth().background(FocusColor).padding(horizontal = 10.dp, vertical = 4.dp),
-                )
-            }
+            if (sponsor.site != null) VisitLine()
+        }
+    }
+}
+
+/** "Press OK to visit their website" under a pop-up. */
+@Composable
+private fun VisitLine() {
+    Text(
+        "Press OK to visit their website",
+        color = Color.Black,
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        maxLines = 1,
+        modifier = Modifier.fillMaxWidth().background(FocusColor).padding(horizontal = 10.dp, vertical = 4.dp),
+    )
+}
+
+/** The Free Live TV promo video from the website's home page, played in the pop-up like a sponsor's video. */
+private val PromoSponsor = Sponsor(
+    id = PROMO_ID, name = "Free Live TV", line = "", contact = "tv.bulkbazaar.ca", start = "", end = "",
+    active = true, picture = null, video = PROMO_URL, website = "tv.bulkbazaar.ca", popupVideo = true,
+)
+
+/**
+ * [sponsor]'s video in a window in the bottom right corner, muted, played once to the end; then it
+ * closes by itself. Back closes it early. It never takes the focus, so the remote keeps changing channels;
+ * OK opens the website (see [SponsorCard]) and the video waits, [paused], until the viewer comes back.
+ * Nothing shows until the first frame; if the video can't play (or doesn't start within 20 seconds) it just closes.
+ */
+@OptIn(UnstableApi::class)
+@Composable
+private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, onDone: () -> Unit) {
+    val context = LocalContext.current
+    val done by rememberUpdatedState(onDone)
+    var showing by remember { mutableStateOf(false) }
+    var secondsLeft by remember { mutableIntStateOf(0) }
+    val player = remember {
+        ExoPlayer.Builder(context).build().apply {
+            volume = 0f
+            trackSelectionParameters = trackSelectionParameters.buildUpon()
+                .setMaxVideoSize(1280, 720)
+                .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, true)
+                .build()
+            addListener(object : Player.Listener {
+                override fun onRenderedFirstFrame() { showing = true }
+                override fun onPlaybackStateChanged(state: Int) { if (state == Player.STATE_ENDED) done() }
+                override fun onPlayerError(error: PlaybackException) { done() }
+            })
+            setMediaItem(MediaItem.fromUri(sponsor.video))
+            playWhenReady = true
+            prepare()
+        }
+    }
+    LaunchedEffect(paused) { player.playWhenReady = !paused }
+    LaunchedEffect(Unit) {
+        delay(20_000)
+        if (!showing) done()
+    }
+    LaunchedEffect(showing) {
+        while (showing) {
+            val left = player.duration - player.currentPosition
+            if (player.duration > 0) secondsLeft = ((left + 999) / 1000).toInt().coerceAtLeast(0)
+            delay(500)
+        }
+    }
+    BackHandler(enabled = showing && !paused) { done() }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        // Leaving the app closes it.
+        val observer = LifecycleEventObserver { _, event -> if (event == Lifecycle.Event.ON_STOP) done() }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            player.release()
+        }
+    }
+    Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.BottomEnd) {
+        Column(
+            Modifier
+                .width((screenWidth * 40 / 100).dp)
+                .graphicsLayer { alpha = if (showing) 1f else 0f }
+                .clip(CardShape)
+                .background(Color(0xE6101018)),
+        ) {
+            AndroidView(
+                factory = { ctx -> TextureView(ctx).also { player.setVideoTextureView(it) } },
+                onRelease = { player.clearVideoTextureView(it) },
+                modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f).background(Color.Black),
+            )
+            val time = if (secondsLeft > 0) "Closes in ${secondsLeft / 60}:${"%02d".format(secondsLeft % 60)} · " else ""
+            Text(
+                "${sponsor.name} · ${time}Back to close",
+                color = Color.White,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            )
+            if (sponsor.site != null) VisitLine()
         }
     }
 }
@@ -480,7 +624,7 @@ class SiteOpener {
 
     fun open(s: Sponsor) {
         if (s.site == null) return
-        SponsorViews.count(s, "click")
+        if (s.id != PROMO_ID) SponsorViews.count(s, "click")
         sponsor = s
     }
 }
