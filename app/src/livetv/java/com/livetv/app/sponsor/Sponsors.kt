@@ -40,6 +40,7 @@ class Sponsor(
 ) {
     /** The address to open: the website box, or else the "phone or website" box when it holds a web address; null when neither does. */
     val site: String? get() = siteUrl(website) ?: siteUrl(contact)
+        ?: "https://bulkbazaar.ca".takeIf { name.contains("bulk bazaar", ignoreCase = true) }
 
     fun showsOn(day: String) =
         active && picture != null && (start.isEmpty() || day >= start) && (end.isEmpty() || day <= end)
