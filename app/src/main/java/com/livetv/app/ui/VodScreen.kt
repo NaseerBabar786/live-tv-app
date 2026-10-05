@@ -72,7 +72,7 @@ import com.livetv.app.data.YouTube
 import com.livetv.app.player.PlayerScreen
 
 /**
- * Live TV's Movies & Series. First a language (Urdu, Hindi, Punjabi, English), then its
+ * Free Live TV's Movies & Series. First a language (Urdu, Hindi, Punjabi, English), then its
  * Movies, Series and Shows as poster grids filtered by the playlists' own groups. Each
  * drama or show is a folder that opens its episode list; anything picked plays full
  * screen (YouTube videos in YouTube's player).

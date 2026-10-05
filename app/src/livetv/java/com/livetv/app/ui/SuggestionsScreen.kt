@@ -129,7 +129,7 @@ fun SuggestionsScreen(onClose: () -> Unit) {
                     }
                     if (open == null) {
                         Text(
-                            "Tell us what to improve or add to Live TV, and reply to other viewers' ideas. " +
+                            "Tell us what to improve or add to Free Live TV, and reply to other viewers' ideas. " +
                                 "Also on the website: tv.bulkbazaar.ca/suggestions",
                             style = MaterialTheme.typography.bodyMedium,
                         )
@@ -227,7 +227,7 @@ private fun PostCard(
             .padding(14.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(post.name.ifBlank { "Live TV viewer" }, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            Text(post.name.ifBlank { "Free Live TV viewer" }, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
             post.createdAt?.let {
                 Text(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(it),
                     style = MaterialTheme.typography.bodySmall)

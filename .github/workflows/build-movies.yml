@@ -1,7 +1,7 @@
 name: Build movies playlist
 
 # Builds docs/Movies.m3u (tv.bulkbazaar.ca/Movies.m3u): free public-domain films
-# and TV series from the Internet Archive, for Live TV's Movies & Series screen.
+# and TV series from the Internet Archive, for Free Live TV's Movies & Series screen.
 on:
   schedule:
     - cron: "0 10 * * 1"   # Mondays, 10:00 UTC

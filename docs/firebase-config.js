@@ -1,4 +1,4 @@
-// The Live TV Firebase project (public values; access is controlled by the Firestore rules).
+// The Free Live TV Firebase project (public values; access is controlled by the Firestore rules).
 export const firebaseConfig = {
   apiKey: "AIzaSyAukJcRHwIV_W3TKtr3_5XiVJZe-7491KE",
   authDomain: "live-tv-b2164.firebaseapp.com",

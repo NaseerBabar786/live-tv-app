@@ -52,7 +52,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 /**
- * Live TV asks everyone to sign in with Google once. TVs show a code to approve at
+ * Free Live TV asks everyone to sign in with Google once. TVs show a code to approve at
  * google.com/device on a phone (and can try the TV's own Google account); phones use the
  * account picker.
  */
@@ -115,7 +115,7 @@ fun SignInScreen(onSignedIn: () -> Unit) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Image(painterResource(R.drawable.ic_launcher_foreground), contentDescription = null, modifier = Modifier.size(56.dp))
-                Text("Welcome to Live TV", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold,
+                Text("Welcome to Free Live TV", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground)
             }
             Text(
@@ -147,7 +147,7 @@ fun SignInScreen(onSignedIn: () -> Unit) {
             }
             Text(
                 "A free account works on one device at a time. We keep your name and email so we know who uses " +
-                    "Live TV and can let you post in Suggestions. " +
+                    "Free Live TV and can let you post in Suggestions. " +
                     "Privacy policy: tv.bulkbazaar.ca/privacy",
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
