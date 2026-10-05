@@ -149,7 +149,7 @@ fun QaidaLessonScreen(vm: AppViewModel, id: Int) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(tr(lesson.tipEn, lesson.tipUr), fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     if (status == Speaker.Status.NoArabic) {
-                        Text(S.noArabicVoice.get(), color = Gold, fontSize = 15.sp)
+                        Text(S.noArabicVoice.get(), color = palette.accent, fontSize = 15.sp)
                     }
                 }
             }
@@ -238,7 +238,7 @@ fun QaidaQuizScreen(vm: AppViewModel, id: Int) {
         ) {
             if (finished) {
                 Spacer(Modifier.height(30.dp))
-                Text(S.finished.get(), fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Gold)
+                Text(S.finished.get(), fontSize = 30.sp, fontWeight = FontWeight.Bold, color = palette.accent)
                 Stars(Qaida.stars(mistakes), size = 64)
                 Text(S.wellDone.get(), fontSize = 24.sp)
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -251,14 +251,14 @@ fun QaidaQuizScreen(vm: AppViewModel, id: Int) {
                 }
                 return@Column
             }
-            if (status == Speaker.Status.NoArabic) Text(S.noArabicVoice.get(), color = Gold)
+            if (status == Speaker.Status.NoArabic) Text(S.noArabicVoice.get(), color = palette.accent)
             Text("${round + 1} / ${Qaida.QUIZ_LENGTH}", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Text(
                     if (correct) S.wellDone.get() else S.whichOne.get(),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (correct) Good else Color.White,
+                    color = if (correct) Good else palette.text,
                 )
                 RoundButton(Icons.AutoMirrored.Filled.VolumeUp, S.listenAgain.get(), { vm.speaker.say(question.first.say) })
             }

@@ -5,6 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.iqraquran.app.data.Hifz
@@ -76,6 +78,18 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     var lastRead by mutableStateOf(store.lastRead)
         private set
 
+    var themeId by mutableStateOf(store.themeId)
+        private set
+    var customBackground by mutableStateOf(Color(store.customBackground))
+        private set
+    var customText by mutableStateOf(Color(store.customText))
+        private set
+    var lineSpacing by mutableStateOf(store.lineSpacing)
+        private set
+
+    /** The reading theme in use. */
+    val palette: Palette get() = Palettes.byId(themeId, customBackground, customText)
+
     var profiles by mutableStateOf(store.profiles)
         private set
     var profile by mutableStateOf<Profile?>(null)
@@ -142,6 +156,22 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     fun chooseTranslation(t: TranslationMode) {
         translation = t
         store.translation = t
+    }
+
+    fun chooseTheme(p: Palette) {
+        themeId = p.id
+        store.themeId = p.id
+    }
+
+    fun chooseCustomColors(background: Color? = null, text: Color? = null) {
+        if (themeId != "custom") chooseTheme(Palettes.custom(customBackground, customText))
+        background?.let { customBackground = it; store.customBackground = it.toArgb() }
+        text?.let { customText = it; store.customText = it.toArgb() }
+    }
+
+    fun chooseLineSpacing(v: Int) {
+        lineSpacing = v.coerceIn(0, 2)
+        store.lineSpacing = lineSpacing
     }
 
     fun changeTextSize(delta: Int) {

@@ -21,6 +21,7 @@ import com.iqraquran.app.ui.HomeScreen
 import com.iqraquran.app.ui.IqraTheme
 import com.iqraquran.app.ui.Lang
 import com.iqraquran.app.ui.LocalLang
+import com.iqraquran.app.ui.LocalLineSpacing
 import com.iqraquran.app.ui.QaidaLessonScreen
 import com.iqraquran.app.ui.QaidaMapScreen
 import com.iqraquran.app.ui.QaidaQuizScreen
@@ -46,9 +47,10 @@ class MainActivity : ComponentActivity() {
             val lang = vm.lang
             CompositionLocalProvider(
                 LocalLang provides lang,
+                LocalLineSpacing provides vm.lineSpacing,
                 LocalLayoutDirection provides if (lang == Lang.Ur) LayoutDirection.Rtl else LayoutDirection.Ltr,
             ) {
-                IqraTheme {
+                IqraTheme(vm.palette) {
                     BackHandler(enabled = vm.stack.size > 1) { vm.back() }
                     when (val s = vm.screen) {
                         Screen.Home -> HomeScreen(vm)

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -75,7 +76,7 @@ fun ArabicText(
     text: String,
     size: TextUnit,
     modifier: Modifier = Modifier,
-    color: Color = Cream,
+    color: Color = palette.arabic,
     align: TextAlign = TextAlign.Right,
 ) {
     Text(
@@ -83,7 +84,7 @@ fun ArabicText(
         modifier = modifier,
         fontFamily = QuranFont,
         fontSize = size,
-        lineHeight = size * 1.9f,
+        lineHeight = size * (1.9f + 0.35f * LocalLineSpacing.current),
         color = color,
         textAlign = align,
         style = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Rtl),
@@ -125,7 +126,7 @@ fun Stars(count: Int, size: Int = 22) {
             Icon(
                 if (i < count) Icons.Filled.Star else Icons.Filled.StarBorder,
                 contentDescription = null,
-                tint = if (i < count) Gold else Color.White.copy(alpha = 0.6f),
+                tint = if (i < count) Gold else LocalContentColor.current.copy(alpha = 0.55f),
                 modifier = Modifier.size(size.dp),
             )
         }
@@ -140,17 +141,24 @@ fun Choice(label: String, selected: Boolean, onClick: () -> Unit) {
         modifier = Modifier
             .focusRing(RoundedCornerShape(50))
             .clip(RoundedCornerShape(50))
-            .background(if (selected) Gold else MaterialTheme.colorScheme.surfaceVariant)
+            .background(if (selected) palette.accent else MaterialTheme.colorScheme.surfaceVariant)
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 10.dp),
-        color = if (selected) GreenDark else Color.White,
+        color = if (selected) palette.onAccent else palette.text,
         fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
     )
 }
 
 /** A small round button with an icon, for players and steppers. */
 @Composable
-fun RoundButton(icon: ImageVector, label: String, onClick: () -> Unit, color: Color = Gold, size: Int = 56) {
+fun RoundButton(
+    icon: ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    color: Color = palette.accent,
+    size: Int = 56,
+    tint: Color = palette.onAccent,
+) {
     Box(
         modifier = Modifier
             .focusRing(CircleShape)
@@ -160,7 +168,7 @@ fun RoundButton(icon: ImageVector, label: String, onClick: () -> Unit, color: Co
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(icon, contentDescription = label, tint = GreenDark, modifier = Modifier.size((size * 0.55f).dp))
+        Icon(icon, contentDescription = label, tint = tint, modifier = Modifier.size((size * 0.55f).dp))
     }
 }
 
@@ -190,6 +198,6 @@ private fun StepButton(text: String, onClick: () -> Unit) {
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Text(text, fontSize = 26.sp, color = Color.White)
+        Text(text, fontSize = 26.sp, color = palette.text)
     }
 }

@@ -31,6 +31,24 @@ class Store(context: Context) {
             .getOrDefault(TranslationMode.Urdu)
         set(v) = prefs.edit().putString("translation", v.name).apply()
 
+    /** Reading theme id (see Palettes), and the colours of the Custom theme as ARGB. */
+    var themeId: String
+        get() = prefs.getString("theme", "classic") ?: "classic"
+        set(v) = prefs.edit().putString("theme", v).apply()
+
+    var customBackground: Int
+        get() = prefs.getInt("custom_bg", 0xFFF6F3EA.toInt())
+        set(v) = prefs.edit().putInt("custom_bg", v).apply()
+
+    var customText: Int
+        get() = prefs.getInt("custom_text", 0xFF222222.toInt())
+        set(v) = prefs.edit().putInt("custom_text", v).apply()
+
+    /** Extra space between lines of Quran text: 0 normal, 1 wide, 2 wider. */
+    var lineSpacing: Int
+        get() = prefs.getInt("line_spacing", 0)
+        set(v) = prefs.edit().putInt("line_spacing", v).apply()
+
     /** Arabic text size in sp. */
     var textSize: Int
         get() = prefs.getInt("text_size", 30)

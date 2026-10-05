@@ -111,4 +111,12 @@ object S {
     val surahLesson = L("Pick a surah to learn", "سیکھنے کے لیے سورت چنیں")
     val minutes = L("Gap", "وقفہ")
     val seconds = L("s", "سیکنڈ")
+    val readingTheme = L("Reading theme (easy on the eyes)", "پڑھنے کا رنگ (آنکھوں کے لیے آسان)")
+    val theme = L("Theme", "رنگ")
+    val background = L("Background", "پس منظر")
+    val textColour = L("Text colour", "لکھائی کا رنگ")
+    val lineSpacing = L("Line spacing", "سطروں کا فاصلہ")
+    val normal = L("Normal", "عام")
+    val wide = L("Wide", "زیادہ")
+    val wider = L("Wider", "اور زیادہ")
 }
