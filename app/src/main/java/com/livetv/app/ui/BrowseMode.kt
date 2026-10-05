@@ -118,20 +118,20 @@ private var sessionListOffset = 0
  * Still pictures of what each channel was showing, taken while Browse is open, so the cards that
  * aren't highlighted show the channel instead of its logo. Kept while the app is open.
  */
-private val browsePictures = mutableStateMapOf<String, ImageBitmap>()
-private val browsePictureAt = mutableMapOf<String, Long>()
+internal val browsePictures = mutableStateMapOf<String, ImageBitmap>()
+internal val browsePictureAt = mutableMapOf<String, Long>()
 /** A card's picture is taken again once it's this old and the card is on screen. */
-private const val PICTURE_FRESH_MS = 5 * 60_000L
+internal const val PICTURE_FRESH_MS = 5 * 60_000L
 private const val MAX_PICTURES = 150
 
 /** The TextureView a player is drawing into, so its frame can be kept as a picture. */
-private class ViewHolder { var view: TextureView? = null }
+internal class ViewHolder { var view: TextureView? = null }
 
 /** The frame on [holder]'s view, small enough to keep many (16:9). */
-private fun ViewHolder.picture(): ImageBitmap? =
+internal fun ViewHolder.picture(): ImageBitmap? =
     runCatching { view?.getBitmap(384, 216)?.asImageBitmap() }.getOrNull()
 
-private fun keepPicture(id: String, picture: ImageBitmap?) {
+internal fun keepPicture(id: String, picture: ImageBitmap?) {
     if (picture == null) return
     if (browsePictures.size > MAX_PICTURES) {
         browsePictures.clear()
@@ -933,5 +933,5 @@ private fun clockTime(seconds: Long): String {
     return remember(seconds) { android.text.format.DateFormat.getTimeFormat(context).format(java.util.Date(seconds * 1000)) }
 }
 
-private fun metered(context: Context): Boolean =
+internal fun metered(context: Context): Boolean =
     (context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager)?.isActiveNetworkMetered ?: true
