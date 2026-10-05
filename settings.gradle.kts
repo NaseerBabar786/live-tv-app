@@ -17,3 +17,4 @@ rootProject.name = "LiveTV"
 include(":app")
 include(":livecam")
 include(":claudenotes")
+include(":appbazaar")
