@@ -25,7 +25,9 @@ class Speaker(context: Context) {
 
     private var onDone: (() -> Unit)? = null
 
-    private val tts: TextToSpeech = TextToSpeech(context.applicationContext) { result ->
+    private val tts: TextToSpeech = TextToSpeech(context.applicationContext) { result -> onInit(result) }
+
+    private fun onInit(result: Int) {
         _status.value = if (result == TextToSpeech.SUCCESS && setArabic()) Status.Ready else Status.NoArabic
     }
 

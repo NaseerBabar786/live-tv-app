@@ -108,7 +108,7 @@ fun HomeScreen(vm: AppViewModel) {
             }
         }
 
-        val tiles: List<@Composable (Modifier) -> Unit> = listOf(
+        val tiles = listOf<@Composable (Modifier) -> Unit>(
             { m ->
                 BigTile(S.kids.get(), S.kidsSub.get(), KidColors[1], Icons.Filled.ChildCare, m.focusRequester(first)) {
                     vm.open(Screen.QaidaMap)
