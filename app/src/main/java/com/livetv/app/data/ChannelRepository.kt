@@ -37,7 +37,7 @@ class ChannelRepository(context: Context) {
         get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
         set(value) = prefs.edit { putString(KEY_SOURCE, value.trim()) }
 
-    /** Live TV's channel list: [PROVIDER_FAMELACK] (the default) or [PROVIDER_CHECKED]. */
+    /** Free Live TV's channel list: [PROVIDER_FAMELACK] (the default) or [PROVIDER_CHECKED]. */
     var provider: String
         get() = prefs.getString(KEY_PROVIDER, null)?.takeIf { it == PROVIDER_CHECKED } ?: PROVIDER_FAMELACK
         set(value) = prefs.edit { putString(KEY_PROVIDER, value) }
@@ -58,7 +58,7 @@ class ChannelRepository(context: Context) {
         get() = Playlist.fromJson(prefs.getString(KEY_PLAYLISTS, null))
         set(value) = prefs.edit { putString(KEY_PLAYLISTS, Playlist.toJson(value)) }
 
-    /** Whether MTA's channels and Library programmes are shown (Live TV only; off by default). */
+    /** Whether MTA's channels and Library programmes are shown (Free Live TV only; off by default). */
     var showMta: Boolean
         get() = Edition.HAS_VOD && prefs.getBoolean(KEY_MTA, false)
         set(value) = prefs.edit { putBoolean(KEY_MTA, value) }
@@ -123,7 +123,7 @@ class ChannelRepository(context: Context) {
     }
 
     /**
-     * The movies and series episodes in every saved playlist (Live TV's Movies & Series).
+     * The movies and series episodes in every saved playlist (Free Live TV's Movies & Series).
      * A playlist that can't be loaded is skipped; each item's group gets the playlist's
      * name when the playlist gives none.
      */
@@ -146,7 +146,7 @@ class ChannelRepository(context: Context) {
     }
 
     /**
-     * Adds the Pakistani channels that stream live on their own YouTube channel (Live TV only,
+     * Adds the Pakistani channels that stream live on their own YouTube channel (Free Live TV only,
      * when the list has Pakistani channels), after the last Pakistani channel. Each replaces a
      * channel of the same name in the list, whose own stream doesn't work, so none is listed twice.
      */
@@ -229,7 +229,7 @@ class ChannelRepository(context: Context) {
         }
     }
 
-    /** Live TV starts on its built-in channels; Stream Player Plus has none until a playlist is added. */
+    /** Free Live TV starts on its built-in channels; Stream Player Plus has none until a playlist is added. */
     private fun defaultSource(): String = if (Edition.LIVE_TV) Famelack.SOURCE_MIX else ""
 
     private fun readAsset(): String =

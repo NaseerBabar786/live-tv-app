@@ -44,10 +44,10 @@ jobs:
             echo "::warning::SIGNING_KEYSTORE secret is not set; using a throwaway debug key."
           fi
 
-      # Live TV ships as a debug APK (sideloaded); Stream Player Plus and Live TV Plus as
+      # Free Live TV ships as a debug APK (sideloaded); Stream Player Plus and Live TV Plus as
       # a release APK plus the app bundle (.aab) that Google Play asks for.
-      # Live TV Max is sideloaded like Live TV, so it is a debug APK too.
-      - name: Build Live TV, Live TV Max, Stream Player Plus and Live TV Plus
+      # Live TV Max is sideloaded like Free Live TV, so it is a debug APK too.
+      - name: Build Free Live TV, Live TV Max, Stream Player Plus and Live TV Plus
         env:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           TV_CLIENT_SECRET: ${{ secrets.TV_CLIENT_SECRET }}
@@ -119,12 +119,12 @@ jobs:
           tag="v${version}-build${{ github.run_number }}"
           cp app/build/outputs/apk/livetv/debug/app-livetv-debug.apk LiveTV.apk
           gh release create "$tag" LiveTV.apk \
-            --title "Live TV $version (build ${{ github.run_number }})" \
+            --title "Free Live TV $version (build ${{ github.run_number }})" \
             --notes "Debug build from ${{ github.sha }}." \
             --latest
 
       # Stream Player Plus goes in its own release, one per version, never marked
-      # "latest", so Live TV's download link and update check keep finding Live TV.
+      # "latest", so Free Live TV's download link and update check keep finding Free Live TV.
       - name: Publish Stream Player Plus
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         env:
@@ -144,7 +144,7 @@ jobs:
           fi
 
       # Live TV Plus, like Stream Player Plus, gets its own release per version, never
-      # marked "latest", so Live TV's download link and update check keep finding Live TV.
+      # marked "latest", so Free Live TV's download link and update check keep finding Free Live TV.
       - name: Publish Live TV Plus
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         env:
@@ -175,7 +175,7 @@ jobs:
           gh release edit live-tv-plus --notes "Always the newest Live TV Plus build (now $version), for testing on phones and TVs." || true
 
       # Live TV Max: one fixed "live-tv-max" release, never marked "latest", always holding the
-      # newest build, so its link never changes and Live TV's update check keeps finding Live TV:
+      # newest build, so its link never changes and Free Live TV's update check keeps finding Free Live TV:
       # https://github.com/NaseerBabar786/live-tv-app/releases/download/live-tv-max/LiveTVMax.apk
       # Its in-app update check reads the version from this release's title ("Live TV Max 1.0.0").
       - name: Publish Live TV Max
@@ -195,8 +195,8 @@ jobs:
           fi
           gh release edit live-tv-max --title "Live TV Max $version" --notes "Always the newest Live TV Max build (now $version), from ${{ github.sha }}."
 
-      # Live Cam gets its own release per version, never marked "latest", so Live TV's
-      # download link and update check keep finding Live TV. Phones and TVs download it from
+      # Live Cam gets its own release per version, never marked "latest", so Free Live TV's
+      # download link and update check keep finding Free Live TV. Phones and TVs download it from
       # the fixed "livecam" release below, or from
       # https://github.com/NaseerBabar786/live-tv-app/releases/download/livecam-v<version>/LiveCam.apk
       - name: Publish Live Cam
@@ -229,7 +229,7 @@ jobs:
           gh release edit livecam --notes "Always the newest Live Cam build (now $version), from ${{ github.sha }}." || true
 
       # Notes for Claude: one fixed "claude-notes" release, never marked "latest", always holding
-      # the newest build, so its link never changes and Live TV's update check keeps finding Live TV:
+      # the newest build, so its link never changes and Free Live TV's update check keeps finding Free Live TV:
       # https://github.com/NaseerBabar786/live-tv-app/releases/download/claude-notes/NotesForClaude.apk
       # Its in-app update check reads the version from this release's title ("Notes for Claude 1.0.0").
       - name: Publish Notes for Claude
@@ -250,7 +250,7 @@ jobs:
           gh release edit claude-notes --title "Notes for Claude $version" --notes "Always the newest Notes for Claude build (now $version), from ${{ github.sha }}."
 
       # Multi Chat (several WhatsApp Web accounts on one phone) gets its own release per version,
-      # never marked "latest", so Live TV's download link and update check keep finding Live TV.
+      # never marked "latest", so Free Live TV's download link and update check keep finding Free Live TV.
       # The app's updater looks for the highest "multichat-v…" tag. The fixed "multichat" release
       # always holds the newest build, so App Bazaar's link never changes:
       # https://github.com/NaseerBabar786/live-tv-app/releases/download/multichat/MultiChat.apk

@@ -278,7 +278,7 @@ fun SettingsDialog(
                         onClick = { showingMessages = true },
                         modifier = Modifier.fillMaxWidth().focusGlow(),
                     ) {
-                        Text(if (account.isAdmin) "✉ Messages from viewers" else "✉ Messages from the Live TV team")
+                        Text(if (account.isAdmin) "✉ Messages from viewers" else "✉ Messages from the Free Live TV team")
                         if (unread) {
                             Spacer(Modifier.width(8.dp))
                             NewBadge()
@@ -542,7 +542,7 @@ private fun AppBazaarDialog(onDismiss: () -> Unit) {
     )
 }
 
-/** Starts Live TV again from the beginning (after signing out, so it asks to sign in). */
+/** Starts Free Live TV again from the beginning (after signing out, so it asks to sign in). */
 private fun android.content.Context.restartApp() {
     val intent = packageManager.getLaunchIntentForPackage(packageName)?.addFlags(
         Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK,

@@ -1,5 +1,5 @@
 #EXTM3U
-# Live TV mix: Pakistani, Indian, Canadian, British and American
+# Free Live TV mix: Pakistani, Indian, Canadian, British and American
 # Every stream was tested and working at 2026-10-04 16:02 UTC.
 # Free, publicly available channels from iptv-org and Famelack. Rebuilt every day.
 #EXTINF:-1 tvg-id="24NewsHD.pk@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/en/9/93/24_News_HD_Logo.png" tvg-country="PK" group-title="Pakistani" tvg-language="Urdu" tvg-genre="News",24 News HD

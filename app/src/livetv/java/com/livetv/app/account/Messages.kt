@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Date
 
-/** One message in a viewer's private conversation with the Live TV team. */
+/** One message in a viewer's private conversation with the Free Live TV team. */
 data class Message(
     val id: String,
     val fromAdmin: Boolean,
@@ -31,7 +31,7 @@ data class Conversation(
 )
 
 /**
- * Private messages between each viewer and the Live TV team (the owner), the same ones as on
+ * Private messages between each viewer and the Free Live TV team (the owner), the same ones as on
  * tv.bulkbazaar.ca/suggestions#messages. inbox/{viewer uid} holds the latest message and who has
  * unread ones; inbox/{uid}/messages holds them all. Only that viewer and the owner can read them.
  */
@@ -42,7 +42,7 @@ class Messages(private val account: Account) {
         Firestore.list("", "inbox", newestFirst = true, limit = 200, token = account.token(), orderBy = "lastAt").map { (id, f) ->
             Conversation(
                 uid = id,
-                name = f.str("name").ifBlank { "Live TV viewer" },
+                name = f.str("name").ifBlank { "Free Live TV viewer" },
                 email = f.str("email"),
                 lastText = f.str("lastText"),
                 lastFromAdmin = f.str("lastFrom") == "admin",
@@ -56,7 +56,7 @@ class Messages(private val account: Account) {
     /** Everyone who has signed in to the app, most recently seen first: the owner can write to any of them. */
     suspend fun viewers(): List<User> = withContext(Dispatchers.IO) {
         Firestore.list("", "users", newestFirst = true, limit = 1000, token = account.token(), orderBy = "lastOpened")
-            .map { (id, f) -> User(id, f.str("name").ifBlank { "Live TV viewer" }, f.str("email")) }
+            .map { (id, f) -> User(id, f.str("name").ifBlank { "Free Live TV viewer" }, f.str("email")) }
     }
 
     suspend fun messages(uid: String): List<Message> = withContext(Dispatchers.IO) {
@@ -91,7 +91,7 @@ class Messages(private val account: Account) {
         val msg = mutableMapOf<String, Any>(
             "from" to if (fromAdmin) "admin" else "user",
             "uid" to me.uid,
-            "name" to me.name.ifBlank { "Live TV viewer" },
+            "name" to me.name.ifBlank { "Free Live TV viewer" },
             "text" to body,
             "createdAt" to now,
         )
@@ -110,7 +110,7 @@ class Messages(private val account: Account) {
         } else {
             head["adminUnread"] = true
             head["userUnread"] = false
-            head["name"] = me.name.ifBlank { "Live TV viewer" }
+            head["name"] = me.name.ifBlank { "Free Live TV viewer" }
             head["email"] = me.email
         }
         Firestore.patch(Firestore.doc("inbox/$uid"), head, t)
