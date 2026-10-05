@@ -53,12 +53,23 @@ def clean(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
+def tidy_arabic(text):
+    """The Indo-Pak text uses private-use characters for a few stop signs that only the
+    publisher's own font can draw; standard fonts show them as empty boxes, so they are dropped.
+    Invisible marks are removed and wide spaces become normal ones."""
+    text = "".join(ch for ch in text if not 0xE000 <= ord(ch) <= 0xF8FF)
+    text = text.replace("\ufe8e", "\u0627")
+    text = re.sub("[\u200b\u200e\u200f\ufeff]", "", text)
+    text = re.sub("[\u2002\u2003\u00a0]", " ", text)
+    return re.sub(" +", " ", text).strip()
+
+
 def by_surah(verses, field):
     out = [[] for _ in range(114)]
     for v in sorted(verses, key=lambda v: tuple(int(x) for x in v["verse_key"].split(":"))):
         s, a = (int(x) for x in v["verse_key"].split(":"))
         assert a == len(out[s - 1]) + 1, f"gap before {v['verse_key']}"
-        out[s - 1].append(v[field].strip())
+        out[s - 1].append(tidy_arabic(v[field]))
     return out
 
 
