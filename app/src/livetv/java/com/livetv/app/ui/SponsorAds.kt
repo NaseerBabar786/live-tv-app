@@ -28,6 +28,18 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import kotlinx.coroutines.flow.first
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
+import com.livetv.app.SponsorKey
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -72,6 +84,7 @@ import kotlinx.coroutines.launch
 private const val STRIP_MS = 60_000L
 /** The channel change card: how long it shows, how often at most, and not this soon after start. */
 private const val CARD_MS = 5_000L
+private const val CARD_SITE_MS = 8_000L
 private const val CARD_EVERY_MS = 2 * 60_000L
 private const val CARD_NOT_BEFORE_MS = 5 * 60_000L
 
@@ -181,21 +194,25 @@ fun SponsorBar(modifier: Modifier = Modifier) {
     var turn by remember { mutableIntStateOf(0) }
     val sponsor = list[Math.floorMod(turn, list.size)]
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val opener = rememberSiteOpener()
     LaunchedEffect(sponsor.id, turn) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) SponsorViews.count(sponsor, "bar")
         delay(STRIP_MS)
+        while (opener.sponsor != null) delay(1_000L)
         turn++
     }
     // A sponsor with a wide banner gets it full size; otherwise their picture with their words beside it.
+    // A tap opens their website (the arrows belong to the tiles above it).
     val banner = sponsor.banner
     if (banner != null) {
-        Box(modifier.aspectRatio(8f).clip(ChipShape).background(Color.White)) {
+        Box(modifier.sponsorTap(sponsor, opener).aspectRatio(8f).clip(ChipShape).background(Color.White)) {
             Image(banner, contentDescription = sponsor.name, contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize())
         }
         return
     }
     Row(
         modifier
+            .sponsorTap(sponsor, opener)
             .clip(CardShape)
             .background(Color(0xE6101018))
             .padding(4.dp),
@@ -239,12 +256,14 @@ fun SponsorBox(modifier: Modifier = Modifier) {
     var turn by remember { mutableIntStateOf(0) }
     val sponsor = list[Math.floorMod(turn, list.size)]
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val opener = rememberSiteOpener()
     LaunchedEffect(sponsor.id, turn) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) SponsorViews.count(sponsor, "strip")
         delay(STRIP_MS)
+        while (opener.sponsor != null) delay(1_000L)
         turn++
     }
-    Box(modifier.background(Color.Black)) {
+    Box(modifier.sponsorTap(sponsor, opener).background(Color.Black)) {
         SponsorPicture(sponsor, Modifier.fillMaxSize(), fill = true)
     }
 }
@@ -257,19 +276,39 @@ fun SponsorBox(modifier: Modifier = Modifier) {
  * lets viewers call the sponsor or open their website with their phone's camera.
  */
 @Composable
-fun SponsorVideoBox(modifier: Modifier = Modifier, allowVideo: Boolean = true) {
+fun SponsorVideoBox(modifier: Modifier = Modifier, allowVideo: Boolean = true, clickable: Boolean = false, onBack: (() -> Unit)? = null) {
     val all by Sponsors.all.collectAsStateWithLifecycle()
     val list = remember(all) { Sponsors.current() }
     if (list.isEmpty()) return
     var turn by remember { mutableIntStateOf(0) }
     val sponsor = list[Math.floorMod(turn, list.size)]
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    var focused by remember { mutableStateOf(false) }
+    val opener = rememberSiteOpener()
     LaunchedEffect(sponsor.id, turn) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) SponsorViews.count(sponsor, "strip")
         delay(STRIP_MS)
+        // The same sponsor stays while the remote is on it or their website is open.
+        while (focused || opener.sponsor != null) delay(1_000L)
         turn++
     }
-    BoxWithConstraints(modifier.background(Color.Black)) {
+    // With a website, the sponsor is one more tile: the arrows reach it and OK opens the site
+    // inside the app (Google TV has no browser); Back from the site comes straight back here.
+    // Where the arrows can't reach it (News, CP24), a tap still opens it on phones.
+    val site = if (clickable) sponsor.site else null
+    val click = if (site == null) Modifier.sponsorTap(sponsor, opener) else {
+        Modifier
+            .onFocusChanged { focused = it.isFocused }
+            .onPreviewKeyEvent { e ->
+                if (e.key != Key.Back || onBack == null) return@onPreviewKeyEvent false
+                if (e.type == KeyEventType.KeyUp) onBack()
+                true
+            }
+            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
+                opener.open(sponsor)
+            }
+    }
+    BoxWithConstraints(modifier.then(click).background(Color.Black)) {
         SponsorPicture(sponsor, Modifier.fillMaxSize(), fill = true)
         if (allowVideo && sponsor.video.isNotEmpty()) key(sponsor.id, turn) { SponsorVideo(sponsor.video) }
         val code = remember(sponsor.contact) { SponsorQr.bitmap(sponsor.contact) }
@@ -284,6 +323,21 @@ fun SponsorVideoBox(modifier: Modifier = Modifier, allowVideo: Boolean = true) {
                     .size(maxHeight * 0.3f)
                     .background(Color.White)
                     .padding(3.dp),
+            )
+        }
+        if (site != null && focused) {
+            Box(Modifier.fillMaxSize().border(3.dp, FocusColor))
+            Text(
+                "OK: visit website",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 11.sp,
+                maxLines = 1,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 6.dp)
+                    .background(FocusColor, androidx.compose.foundation.shape.RoundedCornerShape(50))
+                    .padding(horizontal = 10.dp, vertical = 3.dp),
             )
         }
     }
@@ -347,6 +401,13 @@ fun SponsorCard(channelId: String?) {
     var lastCard by remember { mutableStateOf(startedAt - CARD_EVERY_MS + CARD_NOT_BEFORE_MS) }
     var lastChannel by remember { mutableStateOf(channelId) }
     var showing by remember { mutableStateOf<Sponsor?>(null) }
+    val opener = rememberSiteOpener()
+    // While the card shows, OK on the remote (or a tap) opens the sponsor's website.
+    val current = showing
+    DisposableEffect(current) {
+        if (current?.site != null) SponsorKey.onOk = { showing = null; opener.open(current) }
+        onDispose { SponsorKey.onOk = null }
+    }
     LaunchedEffect(channelId) {
         if (channelId == null || channelId == lastChannel) return@LaunchedEffect
         lastChannel = channelId
@@ -359,7 +420,8 @@ fun SponsorCard(channelId: String?) {
             delay(1_500)
             showing = sponsor
             SponsorViews.count(sponsor, "card")
-            delay(CARD_MS)
+            // A little longer when OK can open their website, so there's time to press it.
+            delay(if (sponsor.site != null) CARD_SITE_MS else CARD_MS)
             if (showing === sponsor) showing = null
         }
     }
@@ -371,6 +433,7 @@ fun SponsorCard(channelId: String?) {
         Column(
             Modifier
                 .width(minOf(280, width * 45 / 100).dp)
+                .sponsorTap(sponsor, opener)
                 .clip(CardShape)
                 .background(Color(0xE6101018)),
         ) {
@@ -389,6 +452,16 @@ fun SponsorCard(channelId: String?) {
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                 )
             }
+            if (sponsor.site != null) {
+                Text(
+                    "Press OK to visit their website",
+                    color = Color.Black,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    modifier = Modifier.fillMaxWidth().background(FocusColor).padding(horizontal = 10.dp, vertical = 4.dp),
+                )
+            }
         }
     }
 }
@@ -399,3 +472,26 @@ private fun SponsorPicture(sponsor: Sponsor, modifier: Modifier, fill: Boolean =
     val picture = sponsor.picture ?: return
     Image(picture, contentDescription = sponsor.name, contentScale = if (fill) ContentScale.FillBounds else ContentScale.Fit, modifier = modifier)
 }
+
+/** Opens a sponsor's website over everything (see [SponsorSite]) and counts the click. */
+class SiteOpener {
+    /** The sponsor whose website is open; null when none is. */
+    var sponsor by mutableStateOf<Sponsor?>(null)
+
+    fun open(s: Sponsor) {
+        if (s.site == null) return
+        SponsorViews.count(s, "click")
+        sponsor = s
+    }
+}
+
+@Composable
+fun rememberSiteOpener(): SiteOpener {
+    val opener = remember { SiteOpener() }
+    opener.sponsor?.let { s -> SponsorSite(s.site.orEmpty(), s.name, onClose = { opener.sponsor = null }) }
+    return opener
+}
+
+/** A tap (phones and tablets) opens the sponsor's website; it never takes the remote's focus. */
+fun Modifier.sponsorTap(sponsor: Sponsor, opener: SiteOpener): Modifier =
+    if (sponsor.site == null) this else pointerInput(sponsor.id) { detectTapGestures(onTap = { opener.open(sponsor) }) }

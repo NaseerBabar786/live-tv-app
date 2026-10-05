@@ -481,6 +481,7 @@ fun NewsMode(
             },
             s = ::s,
             d = ::d,
+            onSponsorBack = { runCatching { focus.requestFocus() } },
         ) else if (home) HomeLayout(
             live = { Live(it) },
             info = info!!,
@@ -490,6 +491,7 @@ fun NewsMode(
             },
             s = ::s,
             d = ::d,
+            onSponsorBack = { runCatching { focus.requestFocus() } },
         ) else if (cp24) Cp24Layout(
             live = { Live(it) },
             selected = selected,
@@ -1570,6 +1572,7 @@ private fun HomeLayout(
     tile: @Composable (id: String, title: String, usualShows: String, modifier: Modifier, usual: TileUsual, k: Float, wide: Boolean) -> Unit,
     s: (Float) -> TextUnit,
     d: (Float) -> Dp,
+    onSponsorBack: () -> Unit = {},
 ) {
     val shape = androidx.compose.foundation.shape.RoundedCornerShape(d(14f))
     val usual = TileUsual(shape, Glass, GlassEdge, FocusColor)
@@ -1635,7 +1638,7 @@ private fun HomeLayout(
                 tile("home:b3", "Bottom right tile", MyScreen.CURRENCIES, Modifier.weight(1f).fillMaxHeight(), usual, kBottom, false)
                 BoxWithConstraints(Modifier.fillMaxHeight()) {
                     Box(Modifier.width(maxHeight * 16f / 9f).fillMaxHeight().clip(shape)) {
-                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo, clickable = true, onBack = onSponsorBack)
                     }
                 }
             }
@@ -1866,6 +1869,7 @@ private fun MyLayout(
     tile: @Composable (section: MyScreen.Section, what: String, modifier: Modifier, usual: TileUsual, k: Float, wide: Boolean) -> Unit,
     s: (Float) -> TextUnit,
     d: (Float) -> Dp,
+    onSponsorBack: () -> Unit = {},
 ) {
     val style = choices[MyScreen.Section.Style]
     val layout = choices[MyScreen.Section.Layout]
@@ -1959,7 +1963,7 @@ private fun MyLayout(
                                 .then(if (spots.isEmpty()) Modifier.weight(1f) else Modifier.height(minOf(sideW * 9f / 16f, availH * 0.4f)))
                                 .clip(shape),
                         ) {
-                            EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                            EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo, clickable = true, onBack = onSponsorBack)
                         }
                     }
                 }

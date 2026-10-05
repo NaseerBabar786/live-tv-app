@@ -51,7 +51,7 @@ fun EditionSponsorBar(modifier: Modifier) = Unit
 fun EditionSponsorBox(modifier: Modifier) = Unit
 
 @Composable
-fun EditionSponsorVideoBox(modifier: Modifier, allowVideo: Boolean) = Unit
+fun EditionSponsorVideoBox(modifier: Modifier, allowVideo: Boolean, clickable: Boolean = false, onBack: (() -> Unit)? = null) = Unit
 
 @Composable
 fun editionHasSponsors(): Boolean = false

@@ -117,7 +117,21 @@ class MainActivity : ComponentActivity() {
     )
     private var okBringsBar = false
 
+    /** OK went down while a sponsor card was showing: its key-up belongs to the card too. */
+    private var okForSponsor = false
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        // A sponsor card is showing: OK opens the sponsor's website.
+        if (event.keyCode in okKeys) {
+            if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0 && SponsorKey.onOk != null) okForSponsor = true
+            if (okForSponsor) {
+                if (event.action == KeyEvent.ACTION_UP) {
+                    okForSponsor = false
+                    SponsorKey.onOk?.invoke()
+                }
+                return true
+            }
+        }
         if (viewModel.state.value.playing != null) {
             // Any button closes the Favourites reminder (and still does its job).
             if (event.action == KeyEvent.ACTION_DOWN) viewModel.favoritesTip = null
