@@ -29,7 +29,7 @@ jobs:
         run: python3 tools/build_logo_index.py
 
       - name: Run unit tests
-        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest
+        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest
 
       # Decodes the private signing key from the repository secrets, when set, so
       # every build is signed with the same key and updates install over the old app.
@@ -57,6 +57,16 @@ jobs:
         env:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
         run: ./gradlew :livecam:assembleDebug
+
+      - name: Build Multi Chat
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew :multichat:assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: multi-chat-debug-apk
+          path: multichat/build/outputs/apk/debug/multichat-debug.apk
 
       - name: Build Notes for Claude
         env:
@@ -238,3 +248,34 @@ jobs:
               --latest=false
           fi
           gh release edit claude-notes --title "Notes for Claude $version" --notes "Always the newest Notes for Claude build (now $version), from ${{ github.sha }}."
+
+      # Multi Chat (several WhatsApp Web accounts on one phone) gets its own release per version,
+      # never marked "latest", so Live TV's download link and update check keep finding Live TV.
+      # The app's updater looks for the highest "multichat-v…" tag. The fixed "multichat" release
+      # always holds the newest build, so App Bazaar's link never changes:
+      # https://github.com/NaseerBabar786/live-tv-app/releases/download/multichat/MultiChat.apk
+      - name: Publish Multi Chat
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep -oP 'versionName = "\K[^"]+' multichat/build.gradle.kts | head -1)
+          tag="multichat-v${version}"
+          cp multichat/build/outputs/apk/debug/multichat-debug.apk MultiChat.apk
+          if gh release view "$tag" > /dev/null 2>&1; then
+            gh release upload "$tag" MultiChat.apk --clobber
+          else
+            gh release create "$tag" MultiChat.apk \
+              --title "Multi Chat $version" \
+              --notes "Multi Chat for Android phones, built from ${{ github.sha }}." \
+              --latest=false
+          fi
+          if gh release view multichat > /dev/null 2>&1; then
+            gh release upload multichat MultiChat.apk --clobber
+          else
+            gh release create multichat MultiChat.apk \
+              --title "Multi Chat (newest)" \
+              --notes "Always the newest Multi Chat for Android phones." \
+              --latest=false
+          fi
+          gh release edit multichat --notes "Always the newest Multi Chat for Android phones (now $version), from ${{ github.sha }}." || true

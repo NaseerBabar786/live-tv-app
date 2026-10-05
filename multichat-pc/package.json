@@ -1,0 +1,51 @@
+{
+  "name": "multichat",
+  "productName": "Multi Chat",
+  "version": "1.0.0",
+  "description": "Several WhatsApp Web accounts side by side, each in its own separate box.",
+  "author": "Bulk Bazaar Inc.",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/wa-preload.js && node --check src/renderer.js && node --check src/util.js && node --test test/util.test.js",
+    "dist": "electron-builder --win --publish never"
+  },
+  "devDependencies": {
+    "electron": "^38.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "ca.bulkbazaar.multichat",
+    "productName": "Multi Chat",
+    "copyright": "Bulk Bazaar Inc.",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "assets/icon.png",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Multi Chat",
+      "artifactName": "MultiChat-Setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "MultiChat-Portable.${ext}"
+    }
+  }
+}
