@@ -18,13 +18,14 @@ object NewsScreen {
         Currencies("Currency rates"),
         Stories("Top stories"),
         Second("Second channel"),
+        Traffic("Traffic cameras"),
         Empty("Nothing"),
     }
 
     enum class Slot(val label: String, val default: Panel, val choices: List<Panel>) {
         RightTop("Right side, top", Panel.Clock, RIGHT),
-        RightMiddle("Right side, middle", Panel.Markets, RIGHT),
-        RightBottom("Right side, bottom", Panel.Prayers, RIGHT),
+        RightMiddle("Right side, middle", Panel.Prayers, RIGHT),
+        RightBottom("Right side, bottom", Panel.Traffic, RIGHT),
         Under("Under the channel", Panel.Stories, ROWS),
         Info("Second line", Panel.Currencies, ROWS),
     }
@@ -92,6 +93,7 @@ private val RIGHT = listOf(
     NewsScreen.Panel.Currencies,
     NewsScreen.Panel.Stories,
     NewsScreen.Panel.Second,
+    NewsScreen.Panel.Traffic,
     NewsScreen.Panel.Empty,
 )
 private val ROWS = listOf(
@@ -115,7 +117,7 @@ object Cp24Screen {
     const val NOTHING = "Nothing"
     const val HOURS = "Next hours"
     const val DAYS = "Next 4 days"
-    const val SPONSOR = "Sponsor"
+    const val TRAFFIC = "Traffic cameras"
     const val SECOND = "Second channel"
     const val TURNS = "Takes turns"
     const val NEXT_PRAYER = "Next prayer"
@@ -125,7 +127,7 @@ object Cp24Screen {
     enum class Section(val label: String, val options: List<String>) {
         Band("Under the channel", listOf(STORIES, PRAYERS, CURRENCIES, MARKETS, NOTHING)),
         Boxes("Weather boxes", listOf(HOURS, DAYS, PRAYERS)),
-        Middle("Big box", listOf(SPONSOR, PRAYERS, MARKETS, CURRENCIES, STORIES, SECOND)),
+        Middle("Big box", listOf(TRAFFIC, PRAYERS, MARKETS, CURRENCIES, STORIES, SECOND)),
         Line("Small line", listOf(TURNS, MARKETS, CURRENCIES, NEXT_PRAYER, GOLD)),
         Crawl("Scrolling line", listOf(PRICES, STORIES, NOTHING)),
     }

@@ -503,39 +503,14 @@ fun NewsMode(
             s = ::s,
             d = ::d,
         ) else
-        Row(Modifier.fillMaxSize()) {
-            Column(Modifier.width(playerWidth).fillMaxHeight()) {
+        Column(Modifier.fillMaxSize()) {
+            Row(Modifier.fillMaxWidth().height(playerHeight)) {
                 Live(Modifier.width(playerWidth).height(playerHeight))
-                // Along the bottom: the two chosen lines (top stories and currency rates at first),
-                // the stock prices crawling along, and the advertising line.
-                Column(Modifier.fillMaxWidth().height(bottomHeight).background(Panel)) {
-                    val rows = listOf(NewsScreen.Slot.Under, NewsScreen.Slot.Info).map { choices[it] }.filter { it != NewsScreen.Panel.Empty }
-                    rows.forEachIndexed { i, panel ->
-                        val m = Modifier.fillMaxWidth().weight(if (i == 0 && rows.size > 1) 1.35f else 1f)
-                        when (panel) {
-                            NewsScreen.Panel.Stories -> Headlines(m, ::s, ::d)
-                            NewsScreen.Panel.Currencies -> InfoRow(m, rates, gold, ::s, ::d)
-                            NewsScreen.Panel.Prayers -> PrayerRow(m, ::s, ::d)
-                            NewsScreen.Panel.Markets -> Crawl(m, markets, null, null, ::s, ::d)
-                            else -> Box(m)
-                        }
-                        Divider()
-                    }
-                    if (choices.bottom == NewsScreen.Bottom.Both) {
-                        Crawl(Modifier.fillMaxWidth().weight(0.8f).background(Color(0xFF0E1830)), markets, rates, gold, ::s, ::d)
-                        Divider()
-                    }
-                    Box(Modifier.fillMaxWidth().weight(0.9f).background(Color(0xFF05070D)).padding(horizontal = d(12f))) {
-                        EditionTicker(Modifier.fillMaxSize(), big = true, always = true)
-                    }
-                }
-            }
-            // Down the right: the three chosen panels (clock and weather, markets and prayer
-            // times at first); the sponsor in the corner. Lists (markets, rates, stories) take
-            // the space the others leave and show as many rows as fit.
-            Column(Modifier.width(sideWidth).fillMaxHeight().background(Panel)) {
-                Column(Modifier.fillMaxWidth().height(playerHeight).padding(horizontal = d(12f))) {
-                    val fills = setOf(NewsScreen.Panel.Markets, NewsScreen.Panel.Currencies, NewsScreen.Panel.Stories)
+                // Down the right: the three chosen panels (clock and weather, prayer times and
+                // Toronto's traffic cameras at first). Lists (markets, rates, stories) and the
+                // cameras take the space the others leave.
+                Column(Modifier.width(sideWidth).fillMaxHeight().background(Panel).padding(horizontal = d(12f))) {
+                    val fills = setOf(NewsScreen.Panel.Markets, NewsScreen.Panel.Currencies, NewsScreen.Panel.Stories, NewsScreen.Panel.Traffic)
                     val panels = listOf(NewsScreen.Slot.RightTop, NewsScreen.Slot.RightMiddle, NewsScreen.Slot.RightBottom)
                         .map { choices[it] }.filter { it != NewsScreen.Panel.Empty }
                     val anyFill = panels.any { it in fills }
@@ -553,17 +528,37 @@ fun NewsMode(
                                 NewsScreen.Panel.Currencies -> CurrencyList(Modifier.fillMaxSize(), rates, gold, ::s, ::d)
                                 NewsScreen.Panel.Stories -> StoryList(Modifier.fillMaxSize(), ::s, ::d)
                                 NewsScreen.Panel.Second -> SecondChannel(second, secondPlaying, ::s, ::d)
+                                // Like CP24 (the sponsor shows here if the cameras can't be reached).
+                                NewsScreen.Panel.Traffic -> TrafficCameras(Modifier.fillMaxSize().padding(vertical = d(6f)), ::s) {
+                                    EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = now >= videoOkAt)
+                                }
                                 NewsScreen.Panel.Empty -> Unit
                             }
                         }
                     }
                 }
-                // The corner shows Toronto's traffic cameras, like CP24 (the sponsor still shows
-                // here if the cameras can't be reached).
-                Box(Modifier.fillMaxWidth().height(bottomHeight).padding(d(4f)), contentAlignment = Alignment.Center) {
-                    TrafficCameras(Modifier.fillMaxSize(), ::s) {
-                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = now >= videoOkAt)
+            }
+            // Along the whole bottom: the two chosen lines (top stories and currency rates at
+            // first), the stock prices crawling along, and the advertising line.
+            Column(Modifier.fillMaxWidth().height(bottomHeight).background(Panel)) {
+                val rows = listOf(NewsScreen.Slot.Under, NewsScreen.Slot.Info).map { choices[it] }.filter { it != NewsScreen.Panel.Empty }
+                rows.forEachIndexed { i, panel ->
+                    val m = Modifier.fillMaxWidth().weight(if (i == 0 && rows.size > 1) 1.35f else 1f)
+                    when (panel) {
+                        NewsScreen.Panel.Stories -> Headlines(m, ::s, ::d)
+                        NewsScreen.Panel.Currencies -> InfoRow(m, rates, gold, ::s, ::d)
+                        NewsScreen.Panel.Prayers -> PrayerRow(m, ::s, ::d)
+                        NewsScreen.Panel.Markets -> Crawl(m, markets, null, null, ::s, ::d)
+                        else -> Box(m)
                     }
+                    Divider()
+                }
+                if (choices.bottom == NewsScreen.Bottom.Both) {
+                    Crawl(Modifier.fillMaxWidth().weight(0.8f).background(Color(0xFF0E1830)), markets, rates, gold, ::s, ::d)
+                    Divider()
+                }
+                Box(Modifier.fillMaxWidth().weight(0.9f).background(Color(0xFF05070D)).padding(horizontal = d(12f))) {
+                    EditionTicker(Modifier.fillMaxSize(), big = true, always = true)
                 }
             }
         }
@@ -1038,9 +1033,9 @@ private val Cp24Green = Color(0xFF1E8E3E)
 
 /**
  * CP24 mode: a big live channel with the top story under it, a red clock-and-weather column on
- * the right with a big box (the sponsor at first) and a small line that takes turns, and two
+ * the right with a big box (traffic cameras at first) and a small line that takes turns, and two
  * scrolling lines along the bottom with the channel number in red. Every section shows what the
- * viewer picked in Settings (see [Cp24Screen]); the sponsor and the advertising line always stay.
+ * viewer picked in Settings (see [Cp24Screen]); the traffic cameras and the advertising line always stay.
  */
 @Composable
 private fun Cp24Layout(
@@ -1062,7 +1057,7 @@ private fun Cp24Layout(
     val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
     val minute = rememberMinute()
     val is24 = remember { DateFormat.is24HourFormat(context) }
-    val sponsorInBand = choices[Cp24Screen.Section.Middle] != Cp24Screen.SPONSOR
+    val trafficInBand = choices[Cp24Screen.Section.Middle] != Cp24Screen.TRAFFIC
     val crawl = choices[Cp24Screen.Section.Crawl]
     BoxWithConstraints(Modifier.fillMaxSize().background(Color.Black)) {
         val lineHeight = d(30f)
@@ -1080,7 +1075,7 @@ private fun Cp24Layout(
             Row(Modifier.fillMaxWidth().weight(1f)) {
                 Column(Modifier.width(playerWidth).fillMaxHeight()) {
                     live(Modifier.width(playerWidth).height(playerHeight))
-                    // Under the channel: the chosen line, and the sponsor beside it when the big box shows something else.
+                    // Under the channel: the chosen line, and the traffic cameras beside it when the big box shows something else.
                     Row(Modifier.fillMaxWidth().height(bandHeight).background(Cp24Navy)) {
                         val m = Modifier.weight(1f).fillMaxHeight()
                         when (choices[Cp24Screen.Section.Band]) {
@@ -1090,8 +1085,8 @@ private fun Cp24Layout(
                             Cp24Screen.MARKETS -> Crawl(m, markets, null, null, s, d)
                             else -> Box(m)
                         }
-                        if (sponsorInBand) {
-                            EditionSponsorVideoBox(Modifier.width(bandHeight * 16f / 9f).fillMaxHeight(), allowVideo = allowVideo)
+                        if (trafficInBand) {
+                            TrafficCameras(Modifier.width(bandHeight * 16f / 9f).fillMaxHeight(), s) {}
                         }
                     }
                 }
@@ -1123,17 +1118,20 @@ private fun Cp24Layout(
                     // The big box (CP24's traffic box).
                     BoxWithConstraints(Modifier.fillMaxWidth().weight(1f).background(Panel)) {
                         when (choices[Cp24Screen.Section.Middle]) {
-                            // The sponsor at its own shape; the room under it shows the next prayer, so nothing is left empty.
-                            Cp24Screen.SPONSOR -> if (maxHeight - maxWidth * 9f / 16f >= rd(80f)) {
-                                val sponsorHeight = maxWidth * 9f / 16f
+                            // Toronto's traffic cameras at 16:9, like CP24; the room under them shows the next prayer,
+                            // so nothing is left empty. If no camera answers, the prayer box fills the spot.
+                            Cp24Screen.TRAFFIC -> if (maxHeight - maxWidth * 9f / 16f >= rd(80f)) {
+                                val cameraHeight = maxWidth * 9f / 16f
                                 Column(Modifier.fillMaxSize()) {
-                                    Box(Modifier.fillMaxWidth().height(sponsorHeight)) {
-                                        EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                                    TrafficCameras(Modifier.fillMaxWidth().height(cameraHeight), rs) {
+                                        Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, rs, rd)
                                     }
                                     Cp24PrayerBox(Modifier.fillMaxWidth().weight(1f), today, minute, is24, rs, rd)
                                 }
                             } else {
-                                EditionSponsorVideoBox(Modifier.fillMaxSize(), allowVideo = allowVideo)
+                                TrafficCameras(Modifier.fillMaxSize(), rs) {
+                                    Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, rs, rd)
+                                }
                             }
                             Cp24Screen.PRAYERS -> Cp24PrayerBox(Modifier.fillMaxSize(), today, minute, is24, rs, rd)
                             Cp24Screen.MARKETS -> Markets(Modifier.fillMaxSize().padding(horizontal = rd(10f)), markets, rs, rd)
