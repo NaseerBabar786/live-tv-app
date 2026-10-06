@@ -196,15 +196,18 @@ fun SettingsDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
-                Text("Channel list", fontWeight = FontWeight.Bold)
-                SourceButton("Main list", provider == ChannelRepository.PROVIDER_FAMELACK) {
-                    onProviderChange(ChannelRepository.PROVIDER_FAMELACK)
-                }
-                SourceButton("Working channels only (checked daily)", provider == ChannelRepository.PROVIDER_CHECKED) {
-                    onProviderChange(ChannelRepository.PROVIDER_CHECKED)
-                }
+                // Cable TV always uses the working channels (1.9.60); Live TV Max still offers the choice.
+                if (Edition.MAX) {
+                    Text("Channel list", fontWeight = FontWeight.Bold)
+                    SourceButton("Main list", provider == ChannelRepository.PROVIDER_FAMELACK) {
+                        onProviderChange(ChannelRepository.PROVIDER_FAMELACK)
+                    }
+                    SourceButton("Working channels only (checked daily)", provider == ChannelRepository.PROVIDER_CHECKED) {
+                        onProviderChange(ChannelRepository.PROVIDER_CHECKED)
+                    }
 
-                HorizontalDivider()
+                    HorizontalDivider()
+                }
                 Text("Languages", fontWeight = FontWeight.Bold)
                 SourceButton(
                     label = when {
