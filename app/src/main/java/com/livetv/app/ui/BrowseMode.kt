@@ -1,5 +1,8 @@
 package com.livetv.app.ui
 
+import androidx.compose.runtime.key
+import com.livetv.app.BuildConfig
+import com.livetv.app.data.MyChannel
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -360,8 +363,12 @@ internal fun BrowseMode(
             stream.release()
         }
     }
+    // Our YouTube channels and Bazaar Hits preview their own page (1.9.60), not their backup films.
+    var pagePreview by remember { mutableStateOf<Pair<String, String>?>(null) }
+    val failedPages = remember { mutableStateMapOf<String, Boolean>() }
     LaunchedEffect(focusedKey, playing) {
         movedAt = System.currentTimeMillis()
+        pagePreview = null
         // The card the cursor leaves keeps its last frame as its picture.
         previewId?.let { if (showing) keepPicture(it, previewView.picture()) }
         stream.stop()
@@ -373,7 +380,8 @@ internal fun BrowseMode(
         if (metered(context)) return@LaunchedEffect
         val channel = byId[id] ?: return@LaunchedEffect
         previewId = id
-        stream.play(channel)
+        val page = MyChannel.pageFor(channel, BuildConfig.VERSION_CODE)?.takeIf { failedPages[id] != true }
+        if (page != null) pagePreview = id to page else stream.play(channel)
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
 
@@ -471,7 +479,7 @@ internal fun BrowseMode(
                 }
                 val id = nextToTake()
                 val channel = id?.let { currentById[it] }
-                if (id == null || channel == null || YouTube.isYouTube(channel.url)) {
+                if (id == null || channel == null || YouTube.isYouTube(channel.url) || MyChannel.pageFor(channel, BuildConfig.VERSION_CODE) != null) {
                     if (id != null) browsePictureAt[id] = System.currentTimeMillis() // nothing to take; skip it for a while
                     delay(if (id == null) 2_000 else 50)
                     continue
@@ -682,6 +690,14 @@ internal fun BrowseMode(
                                     stream = stream.takeIf { here && previewId == channel.id },
                                     streamView = previewView,
                                     showing = here && showing,
+                                    page = pagePreview?.takeIf { here && it.first == channel.id }?.second
+                                        ?.let { if (sound) it else "$it&mute=1" },
+                                    onPageFailed = {
+                                        if (MyChannel.webPage(channel) != null) {
+                                            failedPages[channel.id] = true
+                                            pagePreview = null
+                                        }
+                                    },
                                     picture = browsePictures[channel.id],
                                     modifier = if (i == focusIndex) Modifier.focusRequester(rowRequester(row.key)) else Modifier,
                                     onFocused = {
@@ -786,6 +802,9 @@ private fun BrowseCard(
     stream: StreamPlayer?,
     streamView: ViewHolder,
     showing: Boolean,
+    /** Our YouTube page for the channel, previewing instead of [stream] (1.9.60). */
+    page: String? = null,
+    onPageFailed: () -> Unit = {},
     /** A still of what the channel was showing, drawn over the logo. */
     picture: ImageBitmap?,
     modifier: Modifier,
@@ -824,7 +843,9 @@ private fun BrowseCard(
             if (picture != null) {
                 Image(picture, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
             }
-            if (stream != null) {
+            if (page != null) {
+                key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+            } else if (stream != null) {
                 AndroidView(
                     factory = { ctx -> TextureView(ctx).also { streamView.view = it; stream.player.setVideoTextureView(it) } },
                     onRelease = {

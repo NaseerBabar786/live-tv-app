@@ -156,6 +156,12 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
 @Composable
 fun WebPreview(url: String, modifier: Modifier = Modifier, onFallback: (() -> Unit)? = null) {
     var webView by remember { mutableStateOf<WebView?>(null) }
+    // TVs play the sound here but leave YouTube's picture black (full screen is fine), so on a TV the page
+    // shows the playing video's own picture instead (1.9.60).
+    val context = LocalContext.current
+    val page = remember(url) {
+        if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)) "$url&still=1" else url
+    }
     DisposableEffect(Unit) {
         onDispose { webView?.destroy() }
     }
@@ -193,7 +199,7 @@ fun WebPreview(url: String, modifier: Modifier = Modifier, onFallback: (() -> Un
                 isFocusableInTouchMode = false
                 // Taps go to the player box around it (OK opens the channel full screen).
                 setOnTouchListener { _, _ -> true }
-                loadUrl(url)
+                loadUrl(page)
             }.also { webView = it }
         },
     )
