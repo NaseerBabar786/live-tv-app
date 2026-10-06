@@ -8,7 +8,7 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
   2 Bazaar Cinema  full films from the studios' own channels
   3 Bazaar Music   Punjabi, Sufi and qawwali from the labels' channels (film songs are on 4)
   5 Bazaar Kids    cartoons from the makers' channels
-  6 Bazaar Sports  mostly cricket (ICC, PCB, BCCI, PSL, IPL...), plus wrestling (WWE, AEW) and other popular sports
+  6 Bazaar Sports  mostly cricket (ICC, PCB, BCCI, PSL, IPL...), plus wrestling (WWE, AEW), Canadian favourites (NHL, Sportsnet, TSN, Blue Jays, Raptors, CFL) and other popular sports
   7 Bazaar Travel  tourism boards and travel shows
   8 Bazaar Comedy  comedy shows from their channels
   9 Bazaar Movies English  full English films from studios' and distributors' free-movie channels
@@ -114,9 +114,17 @@ CHANNELS = {
             ("NBA", ["@NBA"], "NBA"),
             ("Formula 1", ["@Formula1"], "FORMULA 1|Formula 1"),
             ("Pro Kabaddi", ["@ProKabaddi", "@prokabaddileague"], "Pro Kabaddi|ProKabaddi"),
+            # Popular in Canada: hockey, the Raptors, the Blue Jays and the CFL.
+            ("NHL", ["@NHL"], "NHL"),
+            ("Sportsnet", ["@Sportsnet", "@sportsnet"], "Sportsnet"),
+            ("TSN", ["@TSN", "@tsn"], "TSN"),
+            ("Blue Jays", ["@BlueJays", "@bluejays"], "Blue Jays|Toronto Blue Jays"),
+            ("Raptors", ["@Raptors", "@raptors"], "Raptors|Toronto Raptors"),
+            ("CFL", ["@CFL", "@cfl"], "CFL|Canadian Football League"),
         ],
         # Fewer from the non-cricket sources, so cricket stays about half the channel.
-        "cap": {"AEW": 25, "FIFA": 20, "Premier League": 20, "NBA": 15, "Formula 1": 15, "Pro Kabaddi": 15, "WWE": 60},
+        "cap": {"AEW": 25, "FIFA": 20, "Premier League": 20, "NBA": 15, "Formula 1": 15, "Pro Kabaddi": 15, "WWE": 60,
+                "NHL": 20, "Sportsnet": 15, "TSN": 15, "Blue Jays": 10, "Raptors": 10, "CFL": 10},
     },
     "travel": {
         "name": "Bazaar Travel", "mins": (2, 60),

@@ -29,7 +29,7 @@ export const STATIONS = [
     name: "Bazaar Kids", dial: "5", doc: "_channel_kids", page: "channel/?c=kids", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-kids.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
     credits: "Cartoons: public-domain classics (Popeye, Superman, Felix the Cat) from the Internet Archive, Blender Foundation shorts (CC BY) and NASA videos." },
-  { id: "sports", yt: true, web: "channel/ytc.html?c=sports", ytMins: 8, tagline: "Cricket, wrestling and more, day and night",
+  { id: "sports", yt: true, web: "channel/ytc.html?c=sports", ytMins: 8, tagline: "Cricket, wrestling, hockey and more, day and night",
     name: "Bazaar Sports", dial: "6", doc: "_channel_sports", page: "channel/?c=sports", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-sports.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
     credits: "Sport: public-domain and CC BY sports films (classic boxing, cricket, football, athletics) from the Internet Archive. No modern leagues or tournaments." },
