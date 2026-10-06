@@ -1,0 +1,9 @@
+{
+  "note": "Cable TV promos for the app's ad break every 10 minutes on full-screen channels. They play in turn, a different one each break. secs = length in seconds (10-60). Add a line to put a new promo on air.",
+  "promos": [
+    { "src": "cable-tv-video-ad-1.mp4", "secs": 60 },
+    { "src": "cable-tv-video-ad-2.mp4", "secs": 30 },
+    { "src": "cable-tv-video-ad-3.mp4", "secs": 30 },
+    { "src": "cable-tv-video-ad-4.mp4", "secs": 30 }
+  ]
+}
