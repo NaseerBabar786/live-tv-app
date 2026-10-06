@@ -219,7 +219,7 @@ def main():
             picked.append(s)
     print(f"Picked {len(picked)} songs")
 
-    logo = os.path.join(ROOT, "docs", "channel", "logos", "bazaar-music.png")
+    logo = os.path.join(ROOT, "docs", "channel", "logos", "bazaar-music-square.png")
     videos = []
     for s in picked:
         if len(videos) >= args.limit:
