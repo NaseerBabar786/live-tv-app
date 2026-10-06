@@ -40,8 +40,8 @@ android {
         create("plus") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetvplus"
-            versionCode = 3
-            versionName = "1.1.0"
+            versionCode = 4
+            versionName = "1.2.0"
         }
         // Live TV Max: Free Live TV's channels and code, opening on a streaming-style home screen
         // (rows by country and language, a now/next guide, movies and dramas). Installs beside Free Live TV.

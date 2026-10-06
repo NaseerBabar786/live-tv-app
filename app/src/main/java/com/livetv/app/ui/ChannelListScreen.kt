@@ -1243,7 +1243,7 @@ fun ChannelListScreen(
     upsellFor?.let { wanted ->
         PremiumDialog(
             layout = wanted.label,
-            onSubscribe = { (context as? Activity)?.let { Premium.billing?.subscribe(it) } },
+            onSubscribe = { option -> (context as? Activity)?.let { Premium.billing?.subscribe(it, option) } },
             onDismiss = {
                 // Skip past the Premium layouts to the next free one.
                 tileLayout = TileLayout.entries.drop(wanted.ordinal).firstOrNull { !it.separateTvs } ?: TileLayout.entries.first()
@@ -1388,23 +1388,36 @@ private fun ExitDialog(onExit: () -> Unit, onDismiss: () -> Unit) {
     }
 }
 
-/** Live TV Plus: offers Premium when a Premium layout is picked. */
+/** Live TV Plus: offers Premium when a Premium layout is picked, with a button per plan length. */
 @Composable
-private fun PremiumDialog(layout: String, onSubscribe: () -> Unit, onDismiss: () -> Unit) {
+private fun PremiumDialog(layout: String, onSubscribe: (option: Int) -> Unit, onDismiss: () -> Unit) {
     val price by remember { Premium.billing?.price ?: MutableStateFlow<String?>(null) }.collectAsStateWithLifecycle()
+    val options by remember {
+        Premium.billing?.options ?: MutableStateFlow<List<Premium.Option>>(emptyList())
+    }.collectAsStateWithLifecycle()
     SettingsTheme {
         AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text("$layout is Premium") },
             text = {
-                Text(
-                    "Watch two, four or six channels at once with the 1×2, 2×2 and 2×3 layouts. " +
-                        "Premium is ${price ?: "a small monthly price"} a month through Google Play, works on every " +
-                        "phone and TV signed in to your Google account, and you can cancel any time in Google Play."
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        "Watch two, four or six channels at once with the 1×2, 2×2 and 2×3 layouts. " +
+                            "Premium is ${price ?: "a small monthly price"} a month through Google Play (or less with 6 months " +
+                            "or a year), works on every phone and TV signed in to your Google account, and you can " +
+                            "cancel any time in Google Play."
+                    )
+                    options.forEachIndexed { i, o ->
+                        OutlinedButton(onClick = { onSubscribe(i) }, modifier = Modifier.fillMaxWidth().focusGlow()) {
+                            Text("${o.label}: ${o.price}")
+                        }
+                    }
+                }
             },
             confirmButton = {
-                TextButton(onClick = onSubscribe, modifier = Modifier.focusGlow()) { Text("Get Premium") }
+                if (options.isEmpty()) {
+                    TextButton(onClick = { onSubscribe(0) }, modifier = Modifier.focusGlow()) { Text("Get Premium") }
+                }
             },
             dismissButton = {
                 TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Not now") }
