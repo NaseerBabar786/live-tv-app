@@ -372,7 +372,7 @@
 
 <script type="module">
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
-import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./channel/schedule.js";
+import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, expand } from "./channel/schedule.js";
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 
@@ -989,15 +989,23 @@ if (wide.matches) setTab("overview");
 // Moving the window between a big and a small screen switches between the dashboard and the long page.
 wide.addEventListener("change", () => { if (wide.matches) setTab(tab); else delete document.querySelector(".work").dataset.tab; });
 
-function renderGuide() {
-  const list = guide(c, Date.now() - 1, 3, 40);
+/**
+ * The next six hours as viewers will see them: each programme's start and end time. A time slot (the
+ * news) cuts into whatever is on, which carries on where it stopped once the slot is over ("continues").
+ * The day's trailer, music and programme-block lists are filled in as on TV.
+ */
+async function renderGuide() {
+  const shown = c;
+  const e = await expand(shown).catch(() => shown);
+  if (shown !== c) return;
+  const list = guide(e, Date.now() - 1, 6.5, 200);
   $("guide").innerHTML = list.length ? "" : '<p class="small">Nothing to play. Add videos to the loop or a time slot.</p>';
   list.forEach((g, i) => {
     const d = document.createElement("div");
     if (i === 0) d.className = "cur";
     d.innerHTML = "<span></span><span></span><span class='small'></span>";
-    d.children[0].textContent = i === 0 ? "Now" : timeText(g.at, c.tz);
-    d.children[1].textContent = g.video.title + (g.slot ? "  (time slot)" : "");
+    d.children[0].textContent = (i === 0 ? "Now" : timeText(g.at, c.tz)) + (isFinite(g.end) ? " – " + timeText(g.end, c.tz) : "");
+    d.children[1].textContent = g.video.title + (g.slot ? "  (time slot)" : "") + (g.resumed ? "  (continues)" : "");
     d.children[2].textContent = lengthText(g.video.secs);
     $("guide").appendChild(d);
   });

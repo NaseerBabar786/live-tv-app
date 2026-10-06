@@ -164,10 +164,12 @@ export function guide(c, from = Date.now(), hours = 12, max = 60) {
       t = now.nextAt;
       continue;
     }
-    const start = t - now.offset;
-    if (!out.length || out[out.length - 1].at !== start || out[out.length - 1].video.id !== now.video.id) {
-      out.push({ at: start, video: now.video, slot: now.slot });
-    }
+    // Each entry starts and ends at real clock times. A programme a time slot (the news) cut into
+    // comes back after it as its own entry, "resumed", carrying on where it stopped.
+    const start = out.length ? t : t - now.offset;
+    const prev = out[out.length - 1];
+    if (prev && prev.video.id === now.video.id && prev.end === t && !now.slot) prev.end = now.until;
+    else out.push({ at: start, end: now.until, video: now.video, slot: now.slot, resumed: !!out.length && now.offset > 1000 });
     if (!isFinite(now.until)) break;
     t = Math.max(now.until, t + 1000);
   }
@@ -279,6 +281,7 @@ export function blockPage(c, b) {
  * [c] with each "trailers", "music" or "list" entry replaced by the videos of its list (rebuilt every day), as the app
  * does (MyChannel.expand): each loop place gets the whole list; a time slot can't hold a list.
  */
+const listCache = {};
 export async function expand(c) {
   const lists = (c.videos || []).filter(v => ["trailers", "music", "list"].includes(v.kind) && /^https?:/.test(v.url || ""));
   if (!lists.length) return c;
@@ -286,7 +289,15 @@ export async function expand(c) {
   for (const v of c.videos) {
     if (!lists.includes(v)) { videos.push(v); continue; }
     let list = [];
-    try { list = (await (await fetch(v.url, { cache: "no-store" })).json()).videos || []; } catch {}
+    try {
+      // Fetched at most every 10 minutes (the lists change once a day).
+      const hit = listCache[v.url];
+      if (hit && Date.now() - hit.at < 600000) list = hit.videos;
+      else {
+        list = (await (await fetch(v.url, { cache: "no-store" })).json()).videos || [];
+        listCache[v.url] = { at: Date.now(), videos: list };
+      }
+    } catch {}
     ids[v.id] = [];
     for (const t of list) {
       if (!/^[\w-]{11}$/.test(t.id || "") || !(t.secs > 0)) continue;

@@ -155,7 +155,7 @@ function renderGuide() {
     if (i === 0) d.className = "cur";
     d.innerHTML = `<span class="t"></span><span></span><span class="l"></span>`;
     d.children[0].textContent = i === 0 ? "Now" : timeText(g.at, tz);
-    d.children[1].textContent = g.video.title;
+    d.children[1].textContent = g.video.title + (g.resumed ? " (continues)" : "");
     d.children[2].textContent = lengthText(g.video.secs);
     $("guide").appendChild(d);
   });
