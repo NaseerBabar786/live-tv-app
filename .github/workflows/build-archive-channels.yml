@@ -45,6 +45,11 @@ jobs:
         continue-on-error: true
         run: python3 tools/build_archive_channels.py --channel comedy
 
+      # Bazaar Kids is a hand-made list; make sure its Archive videos are H.264 copies too.
+      - name: Bazaar Kids videos in H.264
+        continue-on-error: true
+        run: python3 tools/build_archive_channels.py --fix docs/channel/kids-schedule.json
+
       # A push made with the workflow's own token doesn't start other workflows,
       # so the website is rebuilt explicitly below.
       - name: Publish the schedule
