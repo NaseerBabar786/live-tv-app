@@ -1,6 +1,6 @@
 name: Build Bazaar Music
 
-# Bazaar Music, our music channel (000 in Free Live TV): picks free-to-use songs on Wikimedia Commons
+# Bazaar Music, our music channel (channel 3 in Free Live TV): picks free-to-use songs on Wikimedia Commons
 # (public domain, CC0, CC BY; no film songs), makes each a 720p MP4 with the song's name on screen,
 # puts them on the "sur-media" pre-release and writes docs/channel/sur-schedule.json.
 # Songs already on the release are kept. A pull request only tries a few songs.

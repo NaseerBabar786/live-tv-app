@@ -1,7 +1,7 @@
 name: Build Bazaar Cinema schedule
 
 # Builds docs/channel/filmein-schedule.json (tv.bulkbazaar.ca/channel/filmein-schedule.json): the
-# ready-made schedule of Bazaar Cinema, our classic-films channel (00 in Free Live TV), from the
+# ready-made schedule of Bazaar Cinema, our classic-films channel (channel 2 in Free Live TV), from the
 # public-domain films in docs/Movies.m3u. A new evening line-up and loop order every week.
 on:
   schedule:

@@ -16,26 +16,30 @@ import java.util.TimeZone
  */
 object MyChannel {
     /**
-     * One of our channels: [id] names its saved settings and its stream address, [dial] is what
-     * viewers type on the remote to reach it.
+     * One of our channels: [id] names its saved settings and its stream address, [number] is its
+     * channel number (our channels are 1 to [COUNT], 1.9.45), and [dial] the row of zeros that
+     * reached it before then, which still works.
      */
-    class Station(val id: String, val dial: String, val name: String)
+    class Station(val id: String, val number: Int, val dial: String, val name: String)
+
+    /** Our channels take numbers 1 to 8; the other channels are numbered from 9. */
+    const val COUNT = 8
 
     /** Our channels, in the order they lead the channel list. */
     val STATIONS = listOf(
-        Station("main", "0", "Bazaar TV"),
+        Station("main", 1, "0", "Bazaar TV"),
         // Public-domain classic films round the clock (built weekly from Movies.m3u).
-        Station("filmein", "00", "Bazaar Cinema"),
+        Station("filmein", 2, "00", "Bazaar Cinema"),
         // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
-        Station("sur", "000", "Bazaar Music"),
+        Station("sur", 3, "000", "Bazaar Music"),
         // Public-domain and Creative Commons cartoons for children (1.9.41).
-        Station("kids", "00000", "Bazaar Kids"),
+        Station("kids", 5, "00000", "Bazaar Kids"),
         // Public-domain and CC BY sports films from the Internet Archive, built by tools/build_archive_channels.py (1.9.43).
-        Station("sports", "000000", "Bazaar Sports"),
+        Station("sports", 6, "000000", "Bazaar Sports"),
         // Public-domain travel films of countries, cities and parks, also by build_archive_channels.py (1.9.44).
-        Station("travel", "0000000", "Bazaar Travel"),
+        Station("travel", 7, "0000000", "Bazaar Travel"),
         // Silent and classic comedy (Chaplin, Laurel and Hardy, Keaton), also by build_archive_channels.py (1.9.44).
-        Station("comedy", "00000000", "Bazaar Comedy"),
+        Station("comedy", 8, "00000000", "Bazaar Comedy"),
     )
 
     private const val SCHEME = "mychannel://"
@@ -45,8 +49,11 @@ object MyChannel {
 
     fun urlOf(id: String) = SCHEME + id
 
+    /** Bazaar Hits' channel number, between Bazaar Music (3) and Bazaar Kids (5). */
+    const val HITS_NUMBER = 4
+
     /**
-     * Bazaar Hits (dialled 0000): the music labels' own YouTube uploads, one after another in
+     * Bazaar Hits (channel 4, dialled 0000 before 1.9.45): the music labels' own YouTube uploads, one after another in
      * YouTube's player on this page (song list built by tools/build_bollywood.py). No schedule.
      */
     const val BOLLYWOOD_URL = "https://tv.bulkbazaar.ca/channel/bollywood.html"
@@ -54,7 +61,7 @@ object MyChannel {
         name = "Bazaar Hits",
         url = BOLLYWOOD_URL,
         logo = "https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png",
-        number = 0,
+        number = HITS_NUMBER,
     )
 
     fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
@@ -86,7 +93,7 @@ object MyChannel {
         val id: String = "main",
     ) {
         val channel: Channel
-            get() = Channel(name = name, url = urlOf(id), logo = logo, number = 0)
+            get() = Channel(name = name, url = urlOf(id), logo = logo, number = STATIONS.firstOrNull { it.id == id }?.number ?: 0)
     }
 
     /** What to show at a moment. */
@@ -128,12 +135,10 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In dial order: 0, 00, 000, 0000 (Bazaar Hits), 00000, 000000, 0000000, 00000000.
-        (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel?.let { st.dial to it } } + ("0000" to bollywood))
-            .sortedBy { it.first.length }
-            .map { it.second }
+        // In number order: 1 to 8, Bazaar Hits being 4.
+        (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
 
-    /** The channel a viewer reaches by typing [typed] ("0", "00"), when it's on. */
+    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), when it's on. */
     fun byDial(typed: String): Channel? =
         if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
 

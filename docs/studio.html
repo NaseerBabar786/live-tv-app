@@ -163,7 +163,7 @@
 
 <main class="wrap studio-main">
   <h1>Channel Studio</h1>
-  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 0</b>, Bazaar Cinema <b>channel 00</b>, Bazaar Music <b>channel 000</b>, Bazaar Kids <b>channel 00000</b>, from 1.9.41; Bazaar Sports <b>channel 000000</b>, from 1.9.43; Bazaar Travel <b>channel 0000000</b> and Bazaar Comedy <b>channel 00000000</b>, from 1.9.44) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 1</b>, Bazaar Cinema <b>2</b>, Bazaar Music <b>3</b>, Bazaar Hits <b>4</b>, Bazaar Kids <b>5</b>, Bazaar Sports <b>6</b>, Bazaar Travel <b>7</b> and Bazaar Comedy <b>8</b>, from 1.9.45) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
@@ -171,7 +171,7 @@
   <div id="dash" class="hidden studio">
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
-    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b>Bazaar Hits (channel 0000)</b> plays the music labels' official YouTube songs round the clock and picks them by itself, so it has no schedule to edit. Below is what it's playing right now, as on TV. <a href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
+    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b>Bazaar Hits (channel 4)</b> plays the music labels' official YouTube songs round the clock and picks them by itself, so it has no schedule to edit. Below is what it's playing right now, as on TV. <a href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -409,7 +409,7 @@ window.studioFirebase = { auth, db, fs }; // shared with the 🎙 Ask Gemini but
 let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
 // The channel being worked on (?c=filmein opens Bazaar Cinema).
 // Bazaar Hits is a web page (the music labels' YouTube videos), not a schedule: Studio only plays it.
-const HITS = { id: "hits", name: "Bazaar Hits", dial: "0000", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/bazaar-hits.png" };
+const HITS = { id: "hits", name: "Bazaar Hits", dial: "4", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/bazaar-hits.png" };
 let station = [...STATIONS, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Math.random().toString(36).slice(2, 9);
@@ -448,9 +448,9 @@ function stationButton(st, note) {
 function renderStations() {
   $("stations").innerHTML = "";
   for (const st of STATIONS) {
-    // Bazaar Hits (0000) sits between 000 and 00000. It runs by itself from the music labels'
+    // Bazaar Hits (4) sits between 3 and 5. It runs by itself from the music labels'
     // song list (no schedule to edit), so picking it just plays it in the player.
-    if (st.dial.length === 5) stationButton(HITS, "Channel 0000 · runs by itself");
+    if (st.dial === "5") stationButton(HITS, "Channel 4 · runs by itself");
     stationButton(st, `Channel ${st.dial} in the app`);
   }
   $("publicLink").href = station.page;
