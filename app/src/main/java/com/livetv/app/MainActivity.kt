@@ -155,12 +155,26 @@ class MainActivity : ComponentActivity() {
     /** Opens [url] in [WebChannelActivity] (black here meanwhile); Back there comes back with [onBack]. */
     @Composable
     private fun OpenWebChannel(url: String, onBack: () -> Unit, onFallback: () -> Unit, onDone: () -> Unit = onBack) {
-        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        var launcher: androidx.activity.result.ActivityResultLauncher<android.content.Intent>? = null
+        launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val before = viewModel.state.value.playing?.id
             when (result.resultCode) {
                 WebChannelActivity.RESULT_FALLBACK -> onFallback()
+                // Bazaar TV's YouTube run (trailers, music, dramas...) is over: its own player goes on.
                 WebChannelActivity.RESULT_DONE -> onDone()
+                // Channel up/down or a typed number in the YouTube window: the next channel opens as usual.
+                WebChannelActivity.RESULT_ZAP -> viewModel.zap(result.data?.getIntExtra(WebChannelActivity.EXTRA_STEP, 1) ?: 1)
+                WebChannelActivity.RESULT_NUMBER -> {
+                    result.data?.getStringExtra(WebChannelActivity.EXTRA_NUMBER).orEmpty().forEach { viewModel.typeDigit(it - '0') }
+                    viewModel.goToTyped()
+                }
                 else -> onBack()
             }
+            // No such channel (or the same one): this channel opens again.
+            if (result.resultCode != WebChannelActivity.RESULT_FALLBACK && result.resultCode != WebChannelActivity.RESULT_DONE &&
+                result.resultCode != android.app.Activity.RESULT_CANCELED &&
+                viewModel.state.value.playing?.id == before
+            ) launcher?.launch(WebChannelActivity.intent(this@MainActivity, url))
         }
         // Once per channel, also when this screen is rebuilt (a turned phone) while it's open.
         var opened by rememberSaveable(url) { mutableStateOf(false) }

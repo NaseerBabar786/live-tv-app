@@ -1,5 +1,8 @@
 package com.livetv.app.ui
 
+import androidx.compose.runtime.key
+import com.livetv.app.BuildConfig
+import com.livetv.app.data.MyChannel
 import android.os.SystemClock
 import android.text.format.DateFormat
 import android.view.TextureView
@@ -138,10 +141,14 @@ fun NewsMode(
             stream.release()
         }
     }
-    LaunchedEffect(selected?.id) {
+    // Our YouTube channels and Bazaar Hits play their own page here (1.9.60), not their backup films.
+    var pageFailed by remember(selected?.id) { mutableStateOf(false) }
+    val page = selected?.takeIf { !pageFailed && playing }?.let { MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
+        ?.let { if (sound) it else "$it&mute=1" }
+    LaunchedEffect(selected?.id, page) {
         showing = false
         error = null
-        if (selected != null) stream.play(selected) else stream.stop()
+        if (selected != null && page == null) stream.play(selected) else stream.stop()
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
     LaunchedEffect(playing) { stream.player.playWhenReady = playing }
@@ -303,7 +310,9 @@ fun NewsMode(
                     onRelease = { stream.player.clearVideoTextureView(it) },
                     modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
                 )
-                if (!showing) {
+                if (page != null) key(page) {
+                    WebPreview(page, Modifier.fillMaxSize(), onFallback = { if (MyChannel.webPage(selected) != null) pageFailed = true })
+                } else if (!showing) {
                     Text(error ?: selected?.name.orEmpty(), color = Color.White, fontSize = s(16f), modifier = Modifier.padding(24.dp))
                 }
                 if (playerFocused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
@@ -998,9 +1007,11 @@ private fun SecondChannel(channel: Channel?, playing: Boolean, s: (Float) -> Tex
             stream.release()
         }
     }
-    LaunchedEffect(channel?.id) {
+    var pageFailed by remember(channel?.id) { mutableStateOf(false) }
+    val page = channel?.takeIf { !pageFailed && playing }?.let { MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }?.let { "$it&mute=1" }
+    LaunchedEffect(channel?.id, page) {
         showing = false
-        if (channel != null) stream.play(channel) else stream.stop()
+        if (channel != null && page == null) stream.play(channel) else stream.stop()
     }
     LaunchedEffect(playing) { stream.player.playWhenReady = playing }
     Box(Modifier.fillMaxWidth().padding(vertical = d(6f)).aspectRatio(16f / 9f).background(Color.Black)) {
@@ -1009,6 +1020,9 @@ private fun SecondChannel(channel: Channel?, playing: Boolean, s: (Float) -> Tex
             onRelease = { stream.player.clearVideoTextureView(it) },
             modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
         )
+        if (page != null) key(page) {
+            WebPreview(page, Modifier.fillMaxSize(), onFallback = { if (MyChannel.webPage(channel) != null) pageFailed = true })
+        }
         channel?.let { ch ->
             Text(
                 (if (ch.number > 0) "${ch.number}  " else "") + ch.name + "   ◀ ▶",

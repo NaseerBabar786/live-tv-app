@@ -131,6 +131,15 @@ object MyChannel {
         /** "HH:mm" in the channel's time zone. */
         val time: String,
         val video: String,
+        /**
+         * A weekly show (a drama, serial or series): its episodes' video ids, one per airing, in order,
+         * starting on [since] ("yyyy-MM-dd"); after the last one it starts again from episode 1.
+         * Empty for a slot that plays [video] every time. [video] is the first episode, for older apps.
+         */
+        val episodes: List<String> = emptyList(),
+        val since: String = "",
+        /** The show's name, for the guide and the viewing stats ("" when the slot has none). */
+        val show: String = "",
     )
 
     class Config(
@@ -164,6 +173,8 @@ object MyChannel {
             val loopIndex: Int = -1,
             /** When the next time slot starts (the loop waits then); Long.MAX_VALUE when none is booked. */
             val nextSlotMs: Long = Long.MAX_VALUE,
+            /** The booked show, when a weekly show's slot is on. */
+            val show: String = "",
         ) : Now()
         /** Nothing on; [next] starts at [nextAt] (null when nothing is booked). */
         class OffAir(val next: Video?, val nextAt: Long?) : Now()
@@ -225,7 +236,8 @@ object MyChannel {
         val slots = o.optJSONArray("slots")?.let { a ->
             (0 until a.length()).mapNotNull { i ->
                 val s = a.optJSONObject(i) ?: return@mapNotNull null
-                Slot(s.optString("day", "all"), s.optString("time"), s.optString("video"))
+                val eps = s.optJSONArray("episodes")?.let { e -> (0 until e.length()).map { e.optString(it) }.filter { it.isNotEmpty() } }.orEmpty()
+                Slot(s.optString("day", "all"), s.optString("time"), s.optString("video"), eps, s.optString("since"), s.optString("show").trim())
             }
         }.orEmpty()
         val loop = o.optJSONArray("loop")?.let { a -> (0 until a.length()).map { a.optString(it) } }.orEmpty()
@@ -247,13 +259,13 @@ object MyChannel {
     fun now(channel: Channel?, nowMs: Long = System.currentTimeMillis()): Now =
         configOf(channel)?.let { whatsOn(it, nowMs) } ?: Now.OffAir(null, null)
 
-    private class Start(val at: Long, val video: Video, val dated: Boolean)
+    private class Start(val at: Long, val video: Video, val dated: Boolean, val show: String = "")
 
     /**
      * What [c] plays at [nowMs]. A slot plays its video from its start time to the end of the
      * video, or until the next slot starts. Between slots the loop list plays back to back: it starts
      * from the top at midnight (the channel's time) and waits during each slot, carrying on where it
-     * was after it (since 1.9.65, for the hourly news; it used to start again from the top), so every
+     * was after it (since 1.9.67, for the hourly news; it used to start again from the top), so every
      * viewer is at the same place. Same as whatsOn in docs/channel/schedule.js.
      */
     fun whatsOn(c: Config, nowMs: Long): Now {
@@ -268,7 +280,7 @@ object MyChannel {
         val nextAt = next?.at ?: Long.MAX_VALUE
         if (current != null) {
             val end = if (current.video.seconds > 0) current.at + current.video.seconds * 1000 else Long.MAX_VALUE
-            if (nowMs < end) return Now.Playing(current.video, nowMs - current.at, minOf(end, nextAt))
+            if (nowMs < end) return Now.Playing(current.video, nowMs - current.at, minOf(end, nextAt), show = current.show)
         }
         // The loop's own clock: time since midnight, less the time slots took since then.
         val midnight = Calendar.getInstance(tz).apply {
@@ -415,8 +427,8 @@ object MyChannel {
         val date = "%04d-%02d-%02d".format(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH))
         val weekday = cal.get(Calendar.DAY_OF_WEEK)
         return c.slots.mapNotNull { s ->
-            val video = byId[s.video] ?: return@mapNotNull null
             if (!onDay(s.day, date, weekday)) return@mapNotNull null
+            val video = episodeOn(s, date, byId) ?: return@mapNotNull null
             val (h, m) = s.time.split(':').mapNotNull { it.trim().toIntOrNull() }.takeIf { it.size == 2 } ?: return@mapNotNull null
             val at = (cal.clone() as Calendar).apply {
                 set(Calendar.HOUR_OF_DAY, h)
@@ -424,8 +436,39 @@ object MyChannel {
                 set(Calendar.SECOND, 0)
                 set(Calendar.MILLISECOND, 0)
             }.timeInMillis
-            Start(at, video, dated = s.day.length == 10)
+            Start(at, video, dated = s.day.length == 10, show = s.show)
         }
+    }
+
+    /**
+     * The video [s] plays on [date]: for a weekly show, the episode for that airing (the first on
+     * [Slot.since], then one more each time the slot comes round, from episode 1 again after the last).
+     */
+    private fun episodeOn(s: Slot, date: String, byId: Map<String, Video>): Video? {
+        val eps = s.episodes.filter { it in byId }
+        if (eps.isEmpty()) return byId[s.video]
+        return byId[eps[Math.floorMod(airingsBefore(s.day, s.since, date), eps.size)]]
+    }
+
+    /** How many times a slot on [day] came round from [since] up to (not counting) [date]; 0 before [since]. */
+    fun airingsBefore(day: String, since: String, date: String): Int {
+        val from = dayNumber(since) ?: return 0
+        val to = dayNumber(date) ?: return 0
+        val n = to - from
+        if (n <= 0) return 0
+        // Day 0 (1970-01-01) was a Thursday; 1 = Sunday as in Calendar.
+        val startWeekday = Math.floorMod(from + 4, 7) + 1
+        val perWeek = (1..7).count { onDay(day, "", it) }
+        var count = (n / 7) * perWeek
+        for (i in 0 until n % 7) if (onDay(day, "", Math.floorMod(startWeekday - 1 + i, 7) + 1)) count++
+        return count
+    }
+
+    /** Days since 1970-01-01 for "yyyy-MM-dd"; null when it isn't a date. */
+    private fun dayNumber(date: String): Int? {
+        val p = date.split('-').mapNotNull { it.toIntOrNull() }.takeIf { it.size == 3 } ?: return null
+        val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply { clear(); set(p[0], p[1] - 1, p[2]) }
+        return (cal.timeInMillis / 86_400_000L).toInt()
     }
 
     private val weekdays = listOf("sun", "mon", "tue", "wed", "thu", "fri", "sat")

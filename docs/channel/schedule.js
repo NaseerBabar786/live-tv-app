@@ -2,7 +2,8 @@
 // The same rules as the app (MyChannel.kt), so the website and every TV show the same thing.
 //
 // Settings: { name, logo, logoCorner, active, tz, ticker, tickerOn,
-//             videos: [{ id, title, url, secs, kind }], slots: [{ day, time, video }], loop: [ids] }
+//             videos: [{ id, title, url, secs, kind }], slots: [{ day, time, video, show?, episodes?, since? }], loop: [ids] }
+// A slot with episodes is a weekly show (drama, serial): one episode per airing from [since], then from episode 1 again.
 
 const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 export const TEST_SCHEDULE_URL = "https://tv.bulkbazaar.ca/channel/test-schedule.json";
@@ -91,6 +92,32 @@ export function onDay(day, date, weekday) {
   return day === date;
 }
 
+/** Days since 1970-01-01 for "yyyy-mm-dd"; null when it isn't a date. */
+function dayNumber(date) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date || "");
+  return m ? Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / 86400000) : null;
+}
+
+/** How many times a slot on [day] came round from [since] up to (not counting) [date]; 0 before [since]. Same as the app. */
+export function airingsBefore(day, since, date) {
+  const from = dayNumber(since), to = dayNumber(date);
+  if (from == null || to == null || to <= from) return 0;
+  const n = to - from;
+  const startWeekday = (((from + 4) % 7) + 7) % 7; // 1970-01-01 was a Thursday; 0 = Sunday
+  let perWeek = 0;
+  for (let w = 0; w < 7; w++) if (onDay(day, "", w)) perWeek++;
+  let count = Math.floor(n / 7) * perWeek;
+  for (let i = 0; i < n % 7; i++) if (onDay(day, "", (startWeekday + i) % 7)) count++;
+  return count;
+}
+
+/** The video slot [s] plays on [date]: for a weekly show, that airing's episode. */
+export function episodeOn(s, date, byId) {
+  const eps = (s.episodes || []).filter(id => byId[id]);
+  if (!eps.length) return byId[s.video];
+  return byId[eps[airingsBefore(s.day, s.since, date) % eps.length]];
+}
+
 /** The slot start times around [now]: yesterday, today and tomorrow. */
 function starts(c, now) {
   const tz = c.tz || "America/Toronto";
@@ -99,10 +126,11 @@ function starts(c, now) {
   for (const offset of [-1, 0, 1]) {
     const { date, weekday } = parts(now + offset * 86400000, tz);
     for (const s of c.slots || []) {
-      const video = byId[s.video];
       const m = /^(\d{1,2}):(\d{2})$/.exec(s.time || "");
-      if (!video || !m || !onDay(s.day, date, weekday)) continue;
-      out.push({ at: zonedTime(date, +m[1], +m[2], tz), video, dated: (s.day || "").length === 10 });
+      if (!m || !onDay(s.day, date, weekday)) continue;
+      const video = episodeOn(s, date, byId);
+      if (!video) continue;
+      out.push({ at: zonedTime(date, +m[1], +m[2], tz), video, dated: (s.day || "").length === 10, show: s.show || "" });
     }
   }
   out.sort((a, b) => a.at - b.at || (a.dated ? -1 : 1));
@@ -121,11 +149,11 @@ export function whatsOn(c, now = Date.now()) {
   const nextAt = next ? next.at : Infinity;
   if (current) {
     const end = current.video.secs > 0 ? current.at + current.video.secs * 1000 : Infinity;
-    if (now < end) return { video: current.video, offset: now - current.at, until: Math.min(end, nextAt), slot: true };
+    if (now < end) return { video: current.video, offset: now - current.at, until: Math.min(end, nextAt), slot: true, show: current.show };
   }
   // After a time slot the loop starts again from the top; before any slot it runs on the clock.
   // The loop starts from the top at midnight (the channel's time) and waits during each slot, carrying
-  // on after it (since 1.9.65, for the hourly news). Same as MyChannel.whatsOn in the app.
+  // on after it (since 1.9.67, for the hourly news). Same as MyChannel.whatsOn in the app.
   const tz = c.tz || "America/Toronto";
   const midnight = zonedTime(parts(now, tz).date, 0, 0, tz);
   let slotTime = 0;
@@ -169,7 +197,7 @@ export function guide(c, from = Date.now(), hours = 12, max = 60) {
     const start = out.length ? t : t - now.offset;
     const prev = out[out.length - 1];
     if (prev && prev.video.id === now.video.id && prev.end === t && !now.slot) prev.end = now.until;
-    else out.push({ at: start, end: now.until, video: now.video, slot: now.slot, resumed: !!out.length && now.offset > 1000 });
+    else out.push({ at: start, end: now.until, video: now.video, slot: now.slot, show: now.show || "", resumed: !!out.length && now.offset > 1000 });
     if (!isFinite(now.until)) break;
     t = Math.max(now.until, t + 1000);
   }
