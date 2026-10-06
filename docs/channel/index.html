@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bazaar TV · Watch live</title>
+<meta name="description" content="Watch our channel live, free, on Free Live TV.">
+<meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png">
+<link rel="icon" href="logos/bazaar-tv.png" id="favicon">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  .stage { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; }
+  .stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+  .stage .bug { position: absolute; width: 9%; aspect-ratio: 1; opacity: .85; pointer-events: none; }
+  .bug.tr { top: 3%; right: 2.5%; } .bug.tl { top: 3%; left: 2.5%; } .bug.br { bottom: 9%; right: 2.5%; } .bug.bl { bottom: 9%; left: 2.5%; }
+  .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 2vw, 22px); padding: .35em 0; }
+  .ticker span { display: inline-block; padding-left: 100%; animation: crawl 28s linear infinite; }
+  @keyframes crawl { to { transform: translateX(-100%); } }
+  .stage .off { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 20px; color: #fff; font-size: 20px; }
+  .stage .sound { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+  .stage:fullscreen { border-radius: 0; }
+  .now { display: flex; gap: 14px; align-items: center; margin: 14px 0 6px; flex-wrap: wrap; }
+  .now img { width: 56px; height: 56px; }
+  .now b { font-size: 20px; }
+  .live { background: var(--red); color: #fff; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; margin-right: 6px; }
+  .guide { display: grid; gap: 6px; }
+  .guide div { display: grid; grid-template-columns: 90px 1fr auto; gap: 10px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--surface-2); border-radius: 10px; }
+  .guide div.cur { border-color: var(--focus); }
+  .guide .t { font-weight: 700; } .guide .l { color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Free Live TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Free Live TV</span>
+    </a>
+    <nav>
+      <a href="../">Home</a>
+      <a href="../#download">Download</a>
+      <a href="../admin" class="admin-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="stage" id="stage">
+    <video id="video" playsinline muted autoplay></video>
+    <img class="bug tr hidden" id="bug" alt="">
+    <div class="off hidden" id="off"></div>
+    <button class="btn primary sound" id="sound">🔊 Tap for sound</button>
+    <div class="ticker hidden" id="ticker"><span id="tickerText"></span></div>
+  </div>
+  <div class="now">
+    <img id="logo" alt="" class="hidden">
+    <div style="flex:1;min-width:200px">
+      <div><span class="live">LIVE</span><b id="name">Loading…</b></div>
+      <div class="small" id="nowText"></div>
+    </div>
+    <button class="btn" id="full">⛶ Full screen</button>
+  </div>
+  <p class="small">Watch it on your TV too: it's channel 0 in the free <a href="../">Free Live TV</a> app.</p>
+  <h2>Coming up</h2>
+  <div class="guide" id="guide"></div>
+  <p class="small" id="credits" style="margin-top:18px">Films: Blender Foundation open movies (Creative Commons Attribution), blender.org.</p>
+</main>
+<footer>
+  <div class="wrap">Free Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="../privacy">Privacy policy</a></div>
+</footer>
+
+<script type="module">
+import { firebaseConfig } from "../firebase-config.js";
+import { whatsOn, guide, timeText, lengthText, tuneIn, TEST_SCHEDULE_URL } from "./schedule.js";
+const $ = id => document.getElementById(id);
+const video = $("video");
+
+/** The owner's public settings (channel/main), or the test schedule until there are any. */
+async function load() {
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/channel/main?key=${firebaseConfig.apiKey}`;
+    const r = await fetch(url, { cache: "no-store" });
+    if (r.ok) {
+      const data = (await r.json()).fields?.data?.stringValue;
+      if (data) return JSON.parse(data);
+    }
+  } catch {}
+  return (await fetch(TEST_SCHEDULE_URL, { cache: "no-store" })).json();
+}
+
+let c = await load(), tv = null;
+function show() {
+  document.title = `${c.name || "My Channel"} · Watch live`;
+  $("name").textContent = c.name || "My Channel";
+  if (c.logo) {
+    $("logo").src = c.logo; $("logo").classList.remove("hidden"); $("favicon").href = c.logo;
+    $("bug").src = c.logo;
+  }
+  const corner = c.logoCorner || "tr";
+  $("bug").className = `bug ${corner}` + (!c.logo || corner === "off" ? " hidden" : "");
+  const tick = c.tickerOn !== false && (c.ticker || "").trim();
+  $("ticker").classList.toggle("hidden", !tick);
+  $("tickerText").textContent = tick || "";
+  renderGuide();
+}
+const isShow = g => g.slot || !g.video.kind || g.video.kind === "programme" || g.video.kind === "live";
+function renderGuide() {
+  const tz = c.tz || "America/Toronto";
+  const now = Date.now();
+  // Viewers see the programmes; ads and idents between them are left out of the guide.
+  const list = guide(c, now - 1, 12, 120).filter((g, i) => i === 0 || isShow(g)).slice(0, 25);
+  $("guide").innerHTML = "";
+  list.forEach((g, i) => {
+    const d = document.createElement("div");
+    if (i === 0) d.className = "cur";
+    d.innerHTML = `<span class="t"></span><span></span><span class="l"></span>`;
+    d.children[0].textContent = i === 0 ? "Now" : timeText(g.at, tz);
+    d.children[1].textContent = g.video.title;
+    d.children[2].textContent = lengthText(g.video.secs);
+    $("guide").appendChild(d);
+  });
+  if (!list.length) $("guide").innerHTML = `<p class="small">Nothing booked yet.</p>`;
+}
+function onChange(on) {
+  $("off").classList.add("hidden");
+  const next = guide(c, Date.now(), 6, 60).slice(1).find(isShow);
+  $("nowText").textContent = `Now: ${on.video.title}` + (next ? `  ·  Next: ${next.video.title} at ${timeText(next.at, c.tz)}` : "");
+  renderGuide();
+}
+function onOff(on) {
+  $("off").classList.remove("hidden");
+  $("off").textContent = `${c.name || "This channel"} is off air right now.` + (on.next ? ` Next: ${on.next.title} at ${timeText(on.nextAt, c.tz)}.` : "");
+  $("nowText").textContent = "Off air";
+}
+show();
+if (c.active === false) onOff({});
+else tv = tuneIn(video, c, { onChange, onOff });
+
+$("sound").onclick = () => { video.muted = false; video.play().catch(() => {}); $("sound").classList.add("hidden"); };
+$("full").onclick = () => $("stage").requestFullscreen?.();
+// New settings from the owner arrive within 5 minutes.
+setInterval(async () => {
+  try {
+    const n = await load();
+    if (JSON.stringify(n) === JSON.stringify(c)) return;
+    c = n; show();
+    if (tv) tv.update(c); else if (c.active !== false) tv = tuneIn(video, c, { onChange, onOff });
+  } catch {}
+}, 5 * 60000);
+</script>
+<script src="../assets/visits.js"></script>
+</body>
+</html>

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.livetv.app.data.Channel
 import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Famelack
+import com.livetv.app.data.MyChannel
 import com.livetv.app.Edition
 import com.livetv.app.data.Playlist
 import androidx.compose.runtime.getValue
@@ -76,13 +77,13 @@ data class UiState(
         get() = channels.filter {
             when (filter) {
                 FILTER_ALL -> true
-                FILTER_FAVORITES -> it.id in favorites
+                FILTER_FAVORITES -> it.id in favorites || MyChannel.isMine(it)
                 else -> it.group == filter
             }
         }
 
     private val inLanguage: List<Channel>
-        get() = inGroup.filter { languageFilter.isEmpty() || it.language in languageFilter }
+        get() = inGroup.filter { languageFilter.isEmpty() || it.language in languageFilter || MyChannel.isMine(it) }
 
     /** Every language in the loaded channels, most channels first, for the Settings picker. */
     val allLanguages: List<String>
@@ -108,8 +109,10 @@ data class UiState(
             val shown = inLanguage
                 .filter { category == null || it.category == category }
                 .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-            if (filter != FILTER_FAVORITES) return shown.sortedBy { it.id !in favorites }
-            return shown
+            // The owner's own channel (number 0) always leads.
+            if (filter != FILTER_FAVORITES) return shown.sortedWith(compareBy({ !MyChannel.isMine(it) }, { it.id !in favorites }))
+            val (mine, rest) = shown.partition { MyChannel.isMine(it) }
+            return mine + rest
                 .sortedWith(compareBy({ countryRank(it) }, { countryName(it) }, { it.number }))
                 .mapIndexed { i, channel -> channel.copy(number = i + 1) }
         }
@@ -144,6 +147,21 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         reload()
+        // The owner's own channel (tv.bulkbazaar.ca/studio) joins the list when it's switched on.
+        if (Edition.LIVE_TV) {
+            MyChannel.init(app)
+            viewModelScope.launch {
+                MyChannel.config.collect { _ -> _state.update { it.copy(channels = withMyChannel(it.channels)) } }
+            }
+        }
+    }
+
+    /** [list] with the owner's channel first (when it's on), as channel 0. */
+    private fun withMyChannel(list: List<Channel>): List<Channel> {
+        val rest = list.filterNot { MyChannel.isMine(it) }
+        if (rest.isEmpty()) return rest
+        val mine = MyChannel.config.value?.channel?.takeIf { Edition.LIVE_TV } ?: return rest
+        return listOf(mine) + rest
     }
 
     fun loadCountries() {
@@ -163,7 +181,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             repo.loadChannels()
                 .onSuccess { list ->
-                    val numbered = list.mapIndexed { i, channel -> channel.copy(number = i + 1) }
+                    val numbered = withMyChannel(list.mapIndexed { i, channel -> channel.copy(number = i + 1) })
                     // The app opens on Favorites (when there are any) and on the channel watched
                     // last time, or the first favorite when that one isn't a favorite.
                     val opening = !opened

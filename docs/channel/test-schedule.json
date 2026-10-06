@@ -1,0 +1,140 @@
+{
+ "name": "Bazaar TV",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Welcome to Bazaar TV, channel 0 on Free Live TV  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca  ·  This is a 1-hour test programme",
+ "tickerOn": true,
+ "videos": [
+  {
+   "id": "welcome",
+   "title": "Welcome to Bazaar TV",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ident-welcome.mp4",
+   "secs": 10,
+   "kind": "ident"
+  },
+  {
+   "id": "break",
+   "title": "Commercial break",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ident-break.mp4",
+   "secs": 5,
+   "kind": "ident"
+  },
+  {
+   "id": "next",
+   "title": "Coming up next",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ident-coming-up.mp4",
+   "secs": 8,
+   "kind": "ident"
+  },
+  {
+   "id": "adbb",
+   "title": "Ad: Bulk Bazaar",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-bulk-bazaar.mp4",
+   "secs": 20,
+   "kind": "ad"
+  },
+  {
+   "id": "adhere",
+   "title": "Ad: Advertise on Bazaar TV",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
+   "secs": 15,
+   "kind": "ad"
+  },
+  {
+   "id": "promo",
+   "title": "Promo: Free Live TV app",
+   "url": "https://tv.bulkbazaar.ca/channel/media/promo-free-live-tv.mp4",
+   "secs": 15,
+   "kind": "ad"
+  },
+  {
+   "id": "bbb",
+   "title": "Big Buck Bunny (cartoon)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/big-buck-bunny.mp4",
+   "secs": 596,
+   "kind": "programme"
+  },
+  {
+   "id": "ed",
+   "title": "Elephants Dream (short film)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream.mp4",
+   "secs": 653,
+   "kind": "programme"
+  },
+  {
+   "id": "tos",
+   "title": "Tears of Steel (sci-fi short)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel.mp4",
+   "secs": 734,
+   "kind": "programme"
+  },
+  {
+   "id": "sintel",
+   "title": "Sintel (fantasy short)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel.mp4",
+   "secs": 888,
+   "kind": "programme"
+  },
+  {
+   "id": "llama",
+   "title": "Caminandes: Gran Dillama (kids)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/caminandes-gran-dillama.mp4",
+   "secs": 146,
+   "kind": "programme"
+  },
+  {
+   "id": "tostrailer",
+   "title": "Trailer: Tears of Steel",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-teaser.mp4",
+   "secs": 39,
+   "kind": "ident"
+  },
+  {
+   "id": "edtrailer",
+   "title": "Trailer: Elephants Dream",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-teaser.mp4",
+   "secs": 75,
+   "kind": "ident"
+  }
+ ],
+ "slots": [
+  {
+   "day": "all",
+   "time": "20:00",
+   "video": "sintel"
+  }
+ ],
+ "loop": [
+  "welcome",
+  "bbb",
+  "break",
+  "adbb",
+  "adhere",
+  "next",
+  "ed",
+  "break",
+  "promo",
+  "adbb",
+  "next",
+  "tostrailer",
+  "llama",
+  "break",
+  "adhere",
+  "adbb",
+  "next",
+  "tos",
+  "break",
+  "adbb",
+  "promo",
+  "next",
+  "edtrailer",
+  "sintel",
+  "break",
+  "adbb",
+  "adhere",
+  "promo",
+  "next"
+ ]
+}
