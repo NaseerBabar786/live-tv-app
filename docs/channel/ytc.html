@@ -88,7 +88,14 @@ function play(step, start = 0) {
 
 fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()).then(d => {
   if (!d.videos || d.videos.length < 3) return fallBack();
-  videos = shuffled(d.videos, Math.floor(Date.now() / 86400000) + station.id.length);
+  const seed = Math.floor(Date.now() / 86400000) + station.id.length;
+  // "Top" videos (Bazaar Sports' main events and newest highlights) come round after every third one.
+  const top = shuffled(d.videos.filter(v => v.top), seed + 1);
+  const rest = shuffled(d.videos.filter(v => !v.top), seed);
+  if (top.length && rest.length) {
+    videos = [];
+    rest.forEach((v, i) => { videos.push(v); if (i % 3 === 2) videos.push(top[Math.floor(i / 3) % top.length]); });
+  } else videos = top.concat(rest);
   // Where the channel is now: the day's running order, round the clock.
   const total = videos.reduce((t, v) => t + lengthOf(v), 0);
   let pos = Math.floor((Date.now() / 1000) % total);

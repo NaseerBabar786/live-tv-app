@@ -122,6 +122,11 @@ CHANNELS = {
             ("Raptors", ["@Raptors", "@raptors"], "Raptors|Toronto Raptors"),
             ("CFL", ["@CFL", "@cfl"], "CFL|Canadian Football League"),
         ],
+        # Big main events come round often (marked "top"): the owner's wish, 2026-10-06.
+        "events": r"final|semi-?final|world cup|champions trophy|asia cup|t20 world|ashes|test series|odi series|"
+                  r"wrestlemania|summerslam|royal rumble|survivor series|money in the bank|elimination chamber|crown jewel|"
+                  r"night of champions|all in|double or nothing|full gear|revolution|playoff|stanley cup|grey cup|"
+                  r"world series|nba finals|champions league|el clasico|grand prix|derby",
         # Fewer from the non-cricket sources, so cricket stays about half the channel.
         "cap": {"AEW": 25, "FIFA": 20, "Premier League": 20, "NBA": 15, "Formula 1": 15, "Pro Kabaddi": 15, "WWE": 60,
                 "NHL": 20, "Sportsnet": 15, "TSN": 15, "Blue Jays": 10, "Raptors": 10, "CFL": 10},
@@ -260,8 +265,17 @@ def build(cid, ch, today):
         # A source taken off the list goes with its videos.
         if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v["found"])).days <= KEEP_DAYS:
             found[vid] = v
+    # Main events from the last two weeks, and anything found in the last two days, are "top":
+    # the channel page plays them far more often (Bazaar Sports, the owner's wish, 2026-10-06).
+    if ch.get("events"):
+        events = re.compile(ch["events"], re.I)
+        for v in found.values():
+            age = (today - dt.date.fromisoformat(v["found"])).days
+            v["top"] = bool(events.search(v["title"]) and age <= 14) or age <= 2
     videos = sorted(found.values(), key=lambda v: v["found"], reverse=True)[:MAX_VIDEOS]
     summary = f"{ch['name']}: {len(videos)} videos ({', '.join(counts)})"
+    if ch.get("events"):
+        summary += f"; {sum(1 for v in videos if v.get('top'))} top (main events and newest)"
     if os.environ.get("GITHUB_ACTIONS"):
         print(f"::notice title={ch['name']}::{summary}")
     if len(videos) < 5:
