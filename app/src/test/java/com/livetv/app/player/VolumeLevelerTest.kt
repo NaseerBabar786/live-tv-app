@@ -45,7 +45,7 @@ class VolumeLevelerTest {
     @Test
     fun quietAndLoudChannelsComeOutAtTheSameLevel() {
         val l = leveler()
-        val quiet = play(l, 0.03, 8) // about -33 dB
+        val quiet = play(l, 0.05, 8) // about -29 dB, within the +12 dB the leveler may add
         l.flush() // channel change
         val loud = play(l, 0.9, 8) // about -4 dB
         assertTrue("quiet $quiet loud $loud", abs(quiet - loud) < 2.0)
