@@ -53,10 +53,18 @@ def films_in_playlist(path):
                 if 'tvg-genre="Movies"' in info:
                     lang = re.search(r'tvg-language="([^"]*)"', info)
                     logo = re.search(r'tvg-logo="([^"]*)"', info)
-                    out.append((info.rsplit(",", 1)[1].strip(), line, lang.group(1) if lang else "English",
+                    out.append((tidy(info.rsplit(",", 1)[1].strip()), line, lang.group(1) if lang else "English",
                                 logo.group(1) if logo else None))
                 info = None
     return out
+
+
+def tidy(title):
+    """Archive titles lose their commas in the playlist: "Amazing Mr. X   The (1948)", "It's A Joke  Son"."""
+    m = re.match(r"^(.*?)\s{2,}(The|A|An)(\s*\(\d{4}\))?$", title)
+    if m:
+        return f"{m.group(2)} {m.group(1)}{m.group(3) or ''}"
+    return re.sub(r"\s{2,}", ", ", title).strip()
 
 
 def get_json(url, tries=4, timeout=60):
@@ -125,12 +133,18 @@ def main():
     if len(videos) < 10:
         sys.exit("Too few films; keeping the old schedule.")
 
-    # Hindi, Urdu and Punjabi films get the evening first; then the rest take turns, week by week.
+    # Weekend evenings go to Hindi, Urdu and Punjabi films while there are any; the other films
+    # take turns on the other nights, week by week.
     desi = [v for v in videos if v["lang"] in SOUTH_ASIAN]
     rest = [v for v in videos if v["lang"] not in SOUTH_ASIAN]
-    order = desi + rest
-    start = (week * len(DAYS)) % len(order)
-    tonight = (order[start:] + order[:start])[:len(DAYS)]
+
+    def turn(films, n):
+        start = (week * n) % len(films)
+        return (films[start:] + films[:start])[:n]
+
+    weekend = turn(desi, 2) if len(desi) >= 2 else []
+    weekdays = turn(rest, len(DAYS) - len(weekend))
+    tonight = weekdays[:5] + weekend + weekdays[5:]
     slots = [{"day": day, "time": NIGHT, "video": v["id"]} for day, v in zip(DAYS, tonight)]
     for v in tonight:
         v["title"] = "Raat Ki Film: " + v["title"]
