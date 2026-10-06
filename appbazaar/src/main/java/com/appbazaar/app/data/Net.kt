@@ -56,7 +56,9 @@ object Net {
                 connectTimeout = 15_000
                 readTimeout = 30_000
                 instanceFollowRedirects = false
+                useCaches = false
                 setRequestProperty("User-Agent", "AppBazaar-Android")
+                setRequestProperty("Cache-Control", "no-cache")
             }
             when (val code = conn.responseCode) {
                 in 200..299 -> return conn

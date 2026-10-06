@@ -73,6 +73,7 @@ class MainActivity : ComponentActivity() {
                             onBack = { openId = null },
                             onAct = { store.act(open) },
                             onUninstall = { store.uninstall(open) },
+                            onLaunch = { store.launch(open) },
                             onWeb = { store.installer.openWeb(it) },
                         )
                         else -> StoreScreen(
@@ -80,7 +81,7 @@ class MainActivity : ComponentActivity() {
                             onSection = store::select,
                             onOpen = { openId = it.id },
                             onAct = store::act,
-                            onRefresh = store::refresh,
+                            onRefresh = { store.refresh(manual = true) },
                             onHelp = { help = true },
                             onUpdateAll = store::updateAll,
                         )
