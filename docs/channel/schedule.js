@@ -271,11 +271,11 @@ export function blockPage(c, b) {
 }
 
 /**
- * [c] with each "trailers" entry replaced by the videos of its list (rebuilt every day), as the app
+ * [c] with each "trailers" or "music" entry replaced by the videos of its list (rebuilt every day), as the app
  * does (MyChannel.expand): each loop place gets the whole list; a time slot can't hold a list.
  */
 export async function expand(c) {
-  const lists = (c.videos || []).filter(v => v.kind === "trailers" && /^https?:/.test(v.url || ""));
+  const lists = (c.videos || []).filter(v => (v.kind === "trailers" || v.kind === "music") && /^https?:/.test(v.url || ""));
   if (!lists.length) return c;
   const ids = {}, videos = [];
   for (const v of c.videos) {

@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bazaar TV · Upcoming movie trailers</title>
+<title>Bazaar TV · On now</title>
 <style>
-  /* A run of YouTube videos on Bazaar TV (its upcoming film trailers, 2026-10-06, list built daily by
-     tools/build_trailers.py), played in YouTube's own player and locked like Bazaar Hits: no buttons,
+  /* A run of YouTube videos on Bazaar TV (its upcoming film trailers and popular music videos, 2026-10-06,
+     lists built daily by tools/build_trailers.py and tools/build_music_videos.py), played in YouTube's own player and locked like Bazaar Hits: no buttons,
      no pausing, no skipping, no leaving for YouTube; a tap only shows what's on.
      Everyone is at the same place: ?at= is when the run started and ?until= when it ends (ms), ?ids= and
      ?secs= the videos and their lengths. When the run is over, the channel's own player goes on
@@ -40,7 +40,7 @@
 </head>
 <body>
 <div id="player"></div>
-<div class="cover" id="cover"><img alt="" id="coverLogo" hidden><b id="coverTitle">Coming soon to cinemas</b><small id="coverSub">Upcoming movie trailers</small></div>
+<div class="cover" id="cover"><img alt="" id="coverLogo" hidden><b id="coverTitle">Bazaar TV</b><small id="coverSub"></small></div>
 <div class="shield" id="shield"></div>
 <img class="bug off" id="bug" alt="">
 <div class="now hide" id="now"></div>
@@ -60,20 +60,24 @@ const starts = [];
 ids.reduce((t, _, i) => (starts.push(t), t + (secs[i] || 0) * 1000), at);
 const end = until || (ids.length ? starts[ids.length - 1] + (secs[ids.length - 1] || 0) * 1000 : at);
 
-document.title = name + " · Upcoming movie trailers";
+document.title = name + " · On now";
 $("coverLogo").src = logo; $("coverLogo").hidden = false;
 $("bug").src = logo;
 // The advertise line always runs here (the owner's ads rule); the channel's own line when it has one.
 const own = q.get("tick") || "";
 $("tick").textContent = /advertise/i.test(own) ? own
-  : `${name} · Upcoming movie trailers · ${own ? own + " · " : ""}Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+  : `${name} · ${own ? own + " · " : ""}Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 
-// Titles, studios and languages from the day's list (the address carries only ids and lengths).
+// Titles, makers and languages from the day's lists (the address carries only ids and lengths).
 let info = {};
-fetch("trailers.json", { cache: "no-store" }).then(r => r.json()).then(d => {
-  for (const v of d.videos || []) info[v.id] = v;
-  if (cur >= 0) showNow();
-}).catch(() => {});
+for (const list of ["trailers.json", "music-videos.json"]) {
+  fetch(list, { cache: "no-store" }).then(r => r.json()).then(d => {
+    for (const v of d.videos || []) info[v.id] = { kind: list === "trailers.json" ? "trailer" : "music", ...v };
+    if (cur >= 0) showNow();
+  }).catch(() => {});
+}
+const isMusic = v => v?.kind === "music";
+const between = v => isMusic(v) ? "Music videos" : "Coming soon to cinemas";
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
 let corners = { labels: {} };
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(); }).catch(() => {});
@@ -111,8 +115,8 @@ function showNow() {
   const v = info[ids[cur]];
   placeBug();
   $("now").innerHTML = "<span></span><small></small>";
-  $("now").firstChild.textContent = v ? v.title : "Upcoming movie trailer";
-  $("now").lastChild.textContent = name + " · Coming soon" + (v ? ` · ${v.lang} · ${v.label}` : "");
+  $("now").firstChild.textContent = v ? v.title : "On now";
+  $("now").lastChild.textContent = name + (v ? ` · ${isMusic(v) ? "Music video" : "Coming soon"} · ${v.lang} · ${v.label}` : "");
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
@@ -121,9 +125,10 @@ function load(i, offset) {
   cur = i;
   const v = info[ids[i]];
   const prev = i > 0 ? info[ids[i - 1]] : null;
-  // A new language gets its own card: "Upcoming Hindi movies".
-  if (v && (!prev || prev.lang !== v.lang)) cover(true, `Upcoming ${v.lang} movies`, "Coming soon to cinemas");
-  else cover(true, "Coming soon to cinemas", v ? v.title : "Upcoming movie trailers");
+  // A new language gets its own card: "Upcoming Hindi movies", "Popular Punjabi music".
+  if (v && (!prev || prev.lang !== v.lang || prev.kind !== v.kind))
+    cover(true, isMusic(v) ? `Popular ${v.lang} music` : `Upcoming ${v.lang} movies`, between(v));
+  else cover(true, between(v), v ? v.title : "");
   player.loadVideoById({ videoId: ids[i], startSeconds: Math.max(0, offset) });
   showNow();
 }
@@ -168,10 +173,10 @@ window.onYouTubeIframeAPIReady = () => {
         else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
         // It never stays paused; at the end of a trailer our card waits for the next one's turn.
         else if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
-        else if (e.data === YT.PlayerState.ENDED) cover(true, "Coming soon to cinemas", "Next trailer coming up");
+        else if (e.data === YT.PlayerState.ENDED) cover(true, between(info[ids[cur]]), "Coming up next");
       },
-      // A trailer its owner won't let others play: our card until the next one. When none will play, our own player goes on.
-      onError: e => { lastError = e.data; cover(true, "Coming soon to cinemas", "Next trailer coming up"); if (++failures >= 4) fallBack(); },
+      // A video its owner won't let others play: our card until the next one. When none will play, our own player goes on.
+      onError: e => { lastError = e.data; cover(true, between(info[ids[cur]]), "Coming up next"); if (++failures >= 4) fallBack(); },
     },
   });
 };

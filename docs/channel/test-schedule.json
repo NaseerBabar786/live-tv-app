@@ -4,7 +4,7 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca  ·  This is a 2-hour test programme with upcoming movie trailers",
+ "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca  ·  This is a 3-hour test programme with upcoming movie trailers and music videos",
  "tickerOn": true,
  "videos": [
   {
@@ -167,6 +167,13 @@
    "url": "https://archive.org/download/PartiallyRestoredVideoEventsFromTheApollo11Mission/Apollo_11_Intro_H264_720p.mp4",
    "secs": 137,
    "kind": "programme"
+  },
+  {
+   "id": "music",
+   "title": "Popular music videos",
+   "url": "https://tv.bulkbazaar.ca/channel/music-videos.json",
+   "secs": 0,
+   "kind": "music"
   }
  ],
  "slots": [
@@ -249,6 +256,12 @@
   "next",
   "apollo",
   "break",
+  "promo",
+  "next",
+  "music",
+  "break",
+  "adbb",
+  "adhere",
   "promo",
   "next"
  ]

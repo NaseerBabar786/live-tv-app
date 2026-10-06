@@ -338,8 +338,11 @@ object MyChannel {
             (c.ticker?.let { "&tick=" + enc(it) } ?: "") + "&ver=$version"
     }
 
-    /** A schedule entry that stands for a list built on the website ("trailers": Bazaar TV's upcoming trailers). */
-    private const val LIST_KIND = "trailers"
+    /**
+     * Schedule entries that stand for a list built on the website every day: Bazaar TV's upcoming
+     * trailers ("trailers", tools/build_trailers.py) and popular music videos ("music", tools/build_music_videos.py).
+     */
+    private val LIST_KINDS = setOf("trailers", "music")
 
     /**
      * [o] (a schedule as saved) with each list entry replaced by the videos in its list, as [fetch]
@@ -349,7 +352,7 @@ object MyChannel {
     fun expand(o: JSONObject, fetch: (String) -> JSONObject?): JSONObject {
         val videos = o.optJSONArray("videos") ?: return o
         val lists = (0 until videos.length()).mapNotNull { videos.optJSONObject(it) }
-            .filter { it.optString("kind") == LIST_KIND && it.optString("url").startsWith("http") }
+            .filter { it.optString("kind") in LIST_KINDS && it.optString("url").startsWith("http") }
         if (lists.isEmpty()) return o
         val out = JSONObject(o.toString())
         val newVideos = org.json.JSONArray()

@@ -185,7 +185,7 @@ def language(lang, label, sources, today, old):
                 continue
             films[film] = films.get(film, 0) + 1
             found.append({"id": vid, "title": title.strip(), "label": source, "lang": lang, "secs": secs,
-                          "age": age, "found": first})
+                          "age": age, "found": first, "kind": "trailer"})
             print(f"    {age if age is not None else '?':>3} days  {title}")
             kept += 1
         print(f"{lang} · {source}: {len(videos)} videos, {kept} trailers")
