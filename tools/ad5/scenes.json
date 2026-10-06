@@ -1,0 +1,43 @@
+{
+ "style": "cinematic TV commercial still, photorealistic, warm soft evening light, cozy modern Canadian family living room, snow visible through the window, shallow depth of field, 35mm film look, natural skin tones",
+ "people": {
+  "abbu": "a friendly Pakistani father in his early 50s with a short neat salt-and-pepper beard, rectangular glasses, wearing a navy blue knit sweater",
+  "ammi": "a Pakistani mother in her mid 40s wearing a maroon shalwar kameez with a cream dupatta over her shoulders",
+  "bilal": "a cheerful Pakistani teenage boy about 16 with short black hair wearing a grey hoodie",
+  "dadi": "a sweet elderly Pakistani grandmother in her 70s with a white dupatta covering her hair and round glasses"
+ },
+ "scenes": [
+  {"id": "s1", "dur": 4.5, "who": ["abbu"],
+   "image": "medium shot of {abbu} sitting on a beige sofa holding an opened paper bill letter in both hands, staring at it with a shocked face, raised eyebrows",
+   "motion": "the man stares at the bill in shock, his eyes widen and he lowers his glasses, slow camera push in",
+   "voice": "abbu", "ur": "یہ کیبل کا بل... پھر سے ایک سو بیس ڈالر!", "en": "This cable bill... $120 again!"},
+  {"id": "s2", "dur": 4.0, "who": ["ammi"],
+   "image": "medium shot of {ammi} standing in the kitchen doorway with her hands on her hips, looking annoyed toward the camera",
+   "motion": "the woman shakes her head with annoyance and gestures with one hand, subtle camera movement",
+   "voice": "ammi", "ur": "اور ہمارے ڈرامے پھر بھی نہیں آتے!", "en": "And our dramas still don't even come on!"},
+  {"id": "s3", "dur": 4.5, "who": ["bilal"],
+   "image": "medium shot of {bilal} leaning over the back of the sofa with a big confident smile, holding up a black TV remote control",
+   "motion": "the teenage boy grins and raises the TV remote, giving a thumbs up with his other hand, camera slowly pushes in",
+   "voice": "bilal", "ur": "ابو، کیبل ٹی وی لگا لیں۔ بالکل فری ہے!", "en": "Dad, just get Cable TV. It's totally free!"},
+  {"id": "s4", "dur": 4.0, "who": ["abbu"],
+   "image": "close-up of {abbu} looking surprised and curious, eyebrows raised, a hopeful half smile, sofa and warm lamp behind him",
+   "motion": "the man tilts his head with surprise and then breaks into a hopeful smile",
+   "voice": "abbu", "ur": "فری؟ سچ میں؟", "en": "Free? Really?"},
+  {"id": "s5", "dur": 5.0, "who": ["abbu", "ammi", "bilal", "dadi"],
+   "image": "wide shot from behind a large flat screen TV showing a colorful cricket match, the whole family on the sofa facing the camera: {dadi} in the middle, {abbu}, {ammi} and {bilal}, all cheering happily with raised arms",
+   "motion": "the family jumps up cheering and clapping joyfully, the grandmother claps her hands, lively celebration",
+   "voice": "dadi", "ur": "واہ! کرکٹ بھی، اور میرا ڈرامہ بھی!", "en": "Wow! Cricket, and my drama too!"},
+  {"id": "s6", "dur": 4.0, "who": ["abbu"],
+   "image": "medium shot of {abbu} laughing happily while tearing a paper bill in half with both hands, the family blurred in the background",
+   "motion": "the man laughs and tears the paper bill in half, pieces of paper fall, joyful mood",
+   "voice": "abbu", "ur": "بل ختم... مزہ شروع!", "en": "Bill gone... the fun begins!"}
+ ],
+ "end": {"dur": 5.0, "voice": "narrator", "ur": "کیبل ٹی وی۔ بالکل فری۔ آج ہی لگائیں: ٹی وی ڈاٹ بلک بازار ڈاٹ سی اے", "en": "Cable TV. Totally free. Get it today: tv.bulkbazaar.ca"},
+ "voices": {
+  "abbu": ["ur-PK-AsadNeural", "-2Hz", "+0%"],
+  "ammi": ["ur-PK-UzmaNeural", "+0Hz", "+5%"],
+  "bilal": ["ur-IN-SalmanNeural", "+18Hz", "+10%"],
+  "dadi": ["ur-IN-GulNeural", "-12Hz", "-5%"],
+  "narrator": ["ur-IN-SalmanNeural", "-4Hz", "+0%"]
+ }
+}

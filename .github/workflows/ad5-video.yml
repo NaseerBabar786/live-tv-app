@@ -4,6 +4,9 @@ on:
     branches: [ad5-ai-video]
     paths: ["tools/ad5/**", ".github/workflows/ad5-video.yml"]
   workflow_dispatch:
+    inputs:
+      only: {description: 'scene ids, comma separated (empty = all)', required: false, default: ''}
+      seed: {description: 'picture seed', required: false, default: '5151'}
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -19,6 +22,8 @@ jobs:
       - name: Run
         env:
           GH_TOKEN: ${{ github.token }}
+          ONLY: ${{ github.event.inputs.only }}
+          SEED: ${{ github.event.inputs.seed || '5151' }}
         run: |
           set -eu
           cd tools/ad5
