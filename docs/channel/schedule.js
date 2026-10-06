@@ -54,6 +54,10 @@ export const STATIONS = [
     name: "Bazaar Dramas", dial: "11", doc: "_channel_dramas", page: "channel/?c=dramas", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-dramas.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Dramas: full episodes from the TV channels' own YouTube channels (HUM TV, ARY Digital, Geo, Green). Backup: public-domain classic films." },
+  { id: "cooking", yt: true, web: "channel/ytc.html?c=cooking", ytMins: 15, tagline: "Recipes and cooking shows, day and night",
+    name: "Bazaar Cooking", dial: "12", doc: "_channel_cooking", page: "channel/?c=cooking", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cooking.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Cooking: recipes and shows from the cooks' own YouTube channels (Food Fusion, Kitchen with Amna, Sanjeev Kapoor, Masala TV and others). Backup: public-domain classic films." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
