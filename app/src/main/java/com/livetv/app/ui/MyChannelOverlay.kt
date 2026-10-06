@@ -54,7 +54,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                     // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
                     .height(unit * 9f)
                     .widthIn(max = unit * 26f)
-                    .alpha(0.85f),
+                    .alpha(0.55f),
             )
         }
         c.ticker?.let { line ->
