@@ -10,7 +10,7 @@
   "scenes": [
     {
       "card": "title",
-      "prompt": "a big golden lion with a dark brown mane and a small white rabbit with long ears facing each other in a jungle clearing, sunrise",
+      "prompt": "a majestic adult male lion with a big dark brown mane and a cute fluffy small white bunny rabbit with long upright ears facing each other in a jungle clearing, sunrise",
       "lines": ["آج کی کہانی ہے، شیر اور چالاک خرگوش۔"]
     },
     {
@@ -21,21 +21,21 @@
       ]
     },
     {
-      "prompt": "a big fierce golden lion with a dark brown mane roaring on a rock while frightened deer and rabbits run away into the jungle",
+      "prompt": "a majestic fierce adult male lion with a big dark brown mane roaring on a rock while frightened deer and rabbits run away into the jungle",
       "lines": [
         "یہ شیر روز بلا وجہ بہت سے جانوروں کا شکار کرتا تھا۔",
         "سارے جانور ہر وقت ڈرے سہمے رہتے تھے۔"
       ]
     },
     {
-      "prompt": "jungle animals, a deer, an elephant, a monkey, a bear, a fox and a small white rabbit, sitting in a circle having a worried meeting under a huge banyan tree",
+      "prompt": "jungle animals, a deer, an elephant, a monkey, a bear, a fox and a cute fluffy small white bunny rabbit, sitting in a circle having a worried meeting under a huge banyan tree",
       "lines": [
         "ایک دن سب جانوروں نے ایک بڑے برگد کے درخت کے نیچے جلسہ کیا۔",
         "ہرن نے کہا، اگر یہی حال رہا تو جنگل میں کوئی نہیں بچے گا۔"
       ]
     },
     {
-      "prompt": "a group of jungle animals, deer, elephant, monkey and bear, bowing politely in front of a big golden lion with a dark brown mane sitting proudly outside his cave",
+      "prompt": "a group of jungle animals, deer, elephant, monkey and bear, bowing politely in front of a majestic adult male lion with a big dark brown mane sitting proudly outside his cave",
       "lines": [
         "سب جانور مل کر شیر کے پاس گئے اور ادب سے بولے،",
         "بادشاہ سلامت، آپ شکار کے لیے پریشان نہ ہوں۔ ہم روز خود ایک جانور آپ کے پاس بھیج دیا کریں گے۔",
@@ -43,7 +43,7 @@
       ]
     },
     {
-      "prompt": "a small white rabbit with long ears walking slowly along a jungle path, thinking with a clever look, a paw on its chin, afternoon light",
+      "prompt": "a cute fluffy small white bunny rabbit with long upright ears walking slowly along a jungle path, thinking with a clever look, a paw on its chin, afternoon light",
       "lines": [
         "کئی دن ایسے ہی گزر گئے۔ پھر ایک دن ایک چھوٹے سے خرگوش کی باری آئی۔",
         "خرگوش چھوٹا تھا مگر بہت عقلمند تھا۔ اس نے راستے بھر سوچا، میں اپنی جان کیسے بچاؤں؟",
@@ -51,14 +51,14 @@
       ]
     },
     {
-      "prompt": "a hungry angry big golden lion with a dark brown mane roaring down at a tiny white rabbit standing in front of him, outside a rocky cave, evening",
+      "prompt": "a hungry angry majestic adult male lion with a big dark brown mane roaring down at a tiny white rabbit standing in front of him, outside a rocky cave, evening",
       "lines": [
         "شیر بھوک سے بے حال تھا۔ وہ غصے سے دھاڑا، اتنی دیر کیوں لگائی؟",
         "اور تم اتنے چھوٹے ہو، تم سے میرا پیٹ کیسے بھرے گا؟"
       ]
     },
     {
-      "prompt": "a small white rabbit with long ears bowing and explaining with its paws joined to a big golden lion with a dark brown mane who listens with a frown",
+      "prompt": "a cute fluffy small white bunny rabbit with long upright ears bowing and explaining with its paws joined to a majestic adult male lion with a big dark brown mane who listens with a frown",
       "lines": [
         "خرگوش نے ادب سے کہا، حضور، ہم پانچ خرگوش آپ کے پاس آ رہے تھے۔",
         "راستے میں ایک دوسرے شیر نے ہمیں روک لیا۔ وہ کہتا ہے کہ اس جنگل کا اصل بادشاہ وہ ہے۔",
@@ -66,35 +66,35 @@
       ]
     },
     {
-      "prompt": "a furious big golden lion with a dark brown mane striding through the jungle following a small white rabbit that leads the way, dramatic sunset",
+      "prompt": "a furious majestic adult male lion with a big dark brown mane striding through the jungle following a cute fluffy small white bunny rabbit that leads the way, dramatic sunset",
       "lines": [
         "یہ سن کر شیر کا غصہ آسمان پر پہنچ گیا۔",
         "وہ گرجا، کہاں ہے وہ؟ مجھے فوراً اس کے پاس لے چلو!"
       ]
     },
     {
-      "prompt": "an old deep round stone well in a jungle clearing, a small white rabbit pointing at the well and a big golden lion with a dark brown mane standing beside it",
+      "prompt": "an old deep round stone well in a jungle clearing, a cute fluffy small white bunny rabbit pointing at the well and a majestic adult male lion with a big dark brown mane standing beside it",
       "lines": [
         "خرگوش شیر کو ایک پرانے گہرے کنویں کے پاس لے گیا،",
         "اور بولا، حضور، وہ دوسرا شیر اسی قلعے کے اندر چھپا بیٹھا ہے۔"
       ]
     },
     {
-      "prompt": "view from inside a deep stone well looking up at a big golden lion with a dark brown mane peering down, his reflection in the dark water below",
+      "prompt": "a majestic adult male lion with a big dark brown mane leaning over the edge of an old round stone well, looking down at his own reflection of a lion face in the still water inside the well",
       "lines": [
         "شیر نے کنویں میں جھانکا تو پانی میں اسے اپنا ہی عکس نظر آیا۔",
         "وہ سمجھا کہ یہی دوسرا شیر ہے۔ اس نے زور سے دہاڑ ماری، اور کنویں سے اس کی اپنی آواز گونج کر واپس آئی۔"
       ]
     },
     {
-      "prompt": "a big splash of water inside an old stone well in the jungle at dusk, a small white rabbit watching from the edge, dramatic",
+      "prompt": "an old round stone well in a jungle at dusk with a huge splash of water shooting up out of it, a cute fluffy small white bunny rabbit sitting on the stone edge watching, dramatic",
       "lines": [
         "غصے میں اندھا شیر دشمن پر حملہ کرنے کے لیے کنویں میں کود پڑا،",
         "اور پھر کبھی باہر نہ نکل سکا۔"
       ]
     },
     {
-      "prompt": "happy jungle animals celebrating and dancing around a small white rabbit, deer, elephant, monkeys, peacocks, flowers, bright morning sunshine",
+      "prompt": "happy jungle animals celebrating and dancing around a cute fluffy small white bunny rabbit, deer, elephant, monkeys, peacocks, flowers, bright morning sunshine",
       "lines": [
         "خرگوش خوشی خوشی واپس آیا اور سب جانوروں کو یہ خبر سنائی۔",
         "سارے جنگل میں خوشیاں منائی گئیں، اور سب جانور پھر سے امن اور سکون سے رہنے لگے۔"
@@ -103,7 +103,7 @@
     {
       "card": "moral",
       "cardText": "سبق: عقل طاقت سے بڑی ہے",
-      "prompt": "a small white rabbit with long ears sitting peacefully on a hill above a beautiful jungle at golden sunset, birds flying",
+      "prompt": "a cute fluffy small white bunny rabbit with long upright ears sitting peacefully on a hill above a beautiful jungle at golden sunset, birds flying",
       "lines": [
         "اس کہانی سے ہمیں یہ سبق ملتا ہے کہ عقل طاقت سے بڑی ہوتی ہے۔",
         "مشکل وقت میں گھبرانے کے بجائے سمجھداری سے کام لینا چاہیے۔",

@@ -74,7 +74,11 @@ def ai_picture(prompt, seed, path):
             req = urllib.request.Request(url, headers={"User-Agent": "BazaarTV-stories/1.0"})
             with urllib.request.urlopen(req, timeout=180) as r, open(path, "wb") as f:
                 f.write(r.read())
-            Image.open(path).convert("RGB").save(path, quality=93)
+            im = Image.open(path).convert("RGB")
+            print("picture", os.path.basename(path), im.size)
+            # Cut off the bottom strip, where the free service puts its small logo.
+            im = im.crop((0, 0, im.width, int(im.height * 0.93)))
+            im.save(path, quality=95)
             return True
         except Exception as e:
             print("picture retry", attempt, e)
@@ -128,7 +132,17 @@ Style: Small,Noto Nastaliq Urdu,40,&H00FFFFFF,&H00FFFFFF,&H00101010,&HAA000000,0
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
 
+def source_hash(folder):
+    """Changes when the story or this script changes, so the workflow knows to make the video again."""
+    import hashlib
+    h = hashlib.sha256()
+    for p in (os.path.join(folder, "story.json"), os.path.abspath(__file__)):
+        h.update(open(p, "rb").read())
+    return h.hexdigest()[:16]
+
 def main():
+    if "--hash" in sys.argv:
+        print(source_hash(sys.argv[1])); return
     folder, out = sys.argv[1], sys.argv[2]
     offline = "--offline" in sys.argv
     story = json.load(open(os.path.join(folder, "story.json"), encoding="utf-8"))
@@ -199,7 +213,7 @@ def main():
         "-c:v", "libx264", "-preset", "medium", "-crf", "22", "-maxrate", "2500k", "-bufsize", "5000k", "-g", "50",
         "-c:a", "aac", "-b:a", "128k", "-ac", "2", "-shortest", "-movflags", "+faststart", mp4)
     real = secs(mp4)
-    json.dump({"id": story["id"], "title": story["titleEn"], "secs": int(round(real)), "aiPictures": ai_ok,
+    json.dump({"id": story["id"], "title": story["titleEn"], "secs": int(round(real)), "aiPictures": ai_ok, "source": source_hash(folder),
                "scenes": len(story["scenes"])}, open(os.path.join(out, story["id"] + ".json"), "w"), indent=1)
     print(f"Done: {mp4} {real:.1f}s, AI pictures {ai_ok}/{len(story['scenes'])}")
 
