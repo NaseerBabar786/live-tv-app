@@ -44,6 +44,7 @@
 <a class="back" id="back" href="./" hidden>Our channels</a>
 <div class="ticker"><span>Bazaar Hits · Film songs, day and night, from the music labels' own channels · Channel 4 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
 <div class="msg" id="msg">Loading Bazaar Hits…</div>
+<script src="promo.js"></script>
 <script>
 const app = new URLSearchParams(location.search).has("app");
 const $ = id => document.getElementById(id);
@@ -119,7 +120,8 @@ window.onYouTubeIframeAPIReady = () => {
         else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
         lastState = e.data;
         if (e.data === YT.PlayerState.PLAYING) started = true;
-        if (e.data === YT.PlayerState.ENDED) play(1);
+        // Between two videos, now and then, our own Cable TV promo (promo.js).
+        if (e.data === YT.PlayerState.ENDED) promoBreak(e.target.isMuted(), () => play(1));
         else if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
       },
       // A video its label won't let others play here is skipped.
