@@ -19,7 +19,8 @@
   .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; font-size: clamp(14px, 2.4vw, 28px); }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
-  .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  /* The logo sits above the middle, so the loading circle in the middle of the picture stays in view (1.9.60). */
+  .cover img { height: 15vh; max-width: 40vw; object-fit: contain; opacity: .9; transform: translateY(-17vh); }
   .cover.off { opacity: 0; }
   /* The "advertise with us" line in its own strip under the picture, never over YouTube's player
      (YouTube's rules), the same as ytc.html (owner's ads-everywhere rule). */

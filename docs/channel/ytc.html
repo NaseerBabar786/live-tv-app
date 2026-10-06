@@ -31,7 +31,8 @@
   .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
-  .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  /* The logo sits above the middle, so the loading circle in the middle of the picture stays in view (1.9.60). */
+  .cover img { height: 15vh; max-width: 40vw; object-fit: contain; opacity: .9; transform: translateY(-17vh); }
   .cover.off { opacity: 0; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
