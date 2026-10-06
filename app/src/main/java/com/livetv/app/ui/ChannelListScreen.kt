@@ -222,6 +222,10 @@ fun ChannelListScreen(
     // Players are pooled and reused: creating and releasing ExoPlayers while scrolling
     // blocked the main thread (release() waits for the playback thread) and froze the app.
     val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
+    // Tiles of our YouTube channels and Bazaar Hits play their own page (1.9.60), not their backup films;
+    // by channel id. A page that gives up on YouTube drops back to the films.
+    val pageTiles = remember { mutableStateMapOf<String, String>() }
+    val failedPages = remember { mutableStateMapOf<String, Boolean>() }
     val pool = remember { mutableListOf<Preview>() }
     val gridIds by remember {
         derivedStateOf<List<String>?> {
@@ -353,6 +357,7 @@ fun ChannelListScreen(
     val snapshots = remember { mutableStateMapOf<String, ImageBitmap>() }
     // A card that stops playing keeps its last frame as its picture.
     fun release(id: String) {
+        pageTiles.remove(id)
         rowPreviews.remove(id)?.let { p ->
             if (p.showing) p.view?.bitmap?.let { snapshots[id] = it.asImageBitmap() }
             p.stream.stop(); p.showing = false; pool += p
@@ -370,6 +375,7 @@ fun ChannelListScreen(
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !newsMode && !browseMode && !carouselMode && !stripMode && !duoMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
+        for (id in pageTiles.keys.toList()) if (!allowed || id !in playing) pageTiles.remove(id)
         if (!allowed) return@LaunchedEffect
         delay(600)
         // With several videos at once, each plays smaller so the TV can decode them all.
@@ -389,6 +395,7 @@ fun ChannelListScreen(
         for ((id, p) in rowPreviews) if (id in playing) p.setQuality(qualityOf(id))
         suspend fun start(id: String) {
             val channel = state.channels.firstOrNull { it.id == id } ?: return
+            if (failedPages[id] != true) MyChannel.pageFor(channel, BuildConfig.VERSION_CODE)?.let { pageTiles[id] = it; return }
             val p = pool.removeLastOrNull() ?: Preview.create(context)
             p.setQuality(qualityOf(id))
             p.setSound(previewSound && id == soundId)
@@ -396,7 +403,7 @@ fun ChannelListScreen(
             p.stream.play(channel)
             if (low) delay(400) // one decoder at a time
         }
-        for (id in playing) if (id !in rowPreviews) start(id)
+        for (id in playing) if (id !in rowPreviews && id !in pageTiles) start(id)
         if (low) {
             // A video that hasn't started yet gets one more try.
             delay(12_000)
@@ -411,6 +418,7 @@ fun ChannelListScreen(
                 if (id in playing || id in snapshots) continue
                 val channel = state.channels.firstOrNull { it.id == id } ?: continue
                 if (YouTube.isYouTube(channel.url)) continue // plays only in YouTube's player; its picture shows
+                if (MyChannel.pageFor(channel, BuildConfig.VERSION_CODE) != null) continue
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
                 p.setQuality(Quality.Normal)
                 p.setSound(false)
@@ -901,6 +909,13 @@ fun ChannelListScreen(
                                 }
                             },
                             preview = rowPreviews[channel.id],
+                            page = pageTiles[channel.id]?.let { if (previewSound && channel.id == soundId) it else "$it&mute=1" },
+                            onPageFailed = {
+                                if (MyChannel.webPage(channel) != null) {
+                                    failedPages[channel.id] = true
+                                    pageTiles.remove(channel.id)
+                                }
+                            },
                             snapshot = snapshots[channel.id],
                             arrows = arrows,
                         )
@@ -1479,6 +1494,9 @@ private fun ChannelCard(
     onKey: (KeyEvent) -> Boolean = { false },
     onFocusChange: (Boolean) -> Unit = {},
     preview: Preview? = null,
+    /** Our YouTube page for the channel, playing in the card instead of [preview] (1.9.60). */
+    page: String? = null,
+    onPageFailed: () -> Unit = {},
     snapshot: ImageBitmap? = null,
     /** Up and down arrows: Up and Down change this card's channel (2×1). */
     arrows: Boolean = false,
@@ -1527,7 +1545,8 @@ private fun ChannelCard(
                     modifier = Modifier.fillMaxSize(),
                 )
             }
-            if (preview != null) PreviewVideo(preview, stretch)
+            if (page != null) key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+            else if (preview != null) PreviewVideo(preview, stretch)
             if (arrows) {
                 Column(
                     Modifier
@@ -1638,7 +1657,8 @@ private fun ChannelCard(
                     modifier = Modifier.fillMaxSize(),
                 )
             }
-            if (preview != null) PreviewVideo(preview)
+            if (page != null) key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+            else if (preview != null) PreviewVideo(preview)
             if (arrows) {
                 Column(
                     Modifier

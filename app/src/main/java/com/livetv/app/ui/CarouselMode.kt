@@ -252,7 +252,7 @@ internal fun CarouselMode(
             }
             val now = System.currentTimeMillis()
             val channel = neighbours.firstOrNull { now - (browsePictureAt[it.id] ?: 0L) > PICTURE_FRESH_MS }
-            if (channel == null || YouTube.isYouTube(channel.url)) {
+            if (channel == null || YouTube.isYouTube(channel.url) || MyChannel.pageFor(channel, BuildConfig.VERSION_CODE) != null) {
                 if (channel != null) browsePictureAt[channel.id] = now
                 delay(1_000)
                 continue
