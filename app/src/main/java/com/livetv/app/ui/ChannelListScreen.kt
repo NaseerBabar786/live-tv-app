@@ -141,6 +141,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.key
+import com.livetv.app.BuildConfig
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.foundation.lazy.grid.LazyGridScope
@@ -1762,10 +1763,14 @@ private fun PlayerWithList(
             stream.release()
         }
     }
-    LaunchedEffect(selected?.id) {
+    // Our YouTube channels, Bazaar Hits and YouTube videos play their locked page right in the picture
+    // (1.9.50); our channels' free films play there instead when YouTube won't.
+    var pageFailed by remember(selected?.id) { mutableStateOf(false) }
+    val page = selected?.takeIf { !pageFailed }?.let { MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
+    LaunchedEffect(selected?.id, page) {
         showing = false
         error = null
-        if (selected != null) stream.play(selected) else stream.stop()
+        if (selected != null && page == null) stream.play(selected) else stream.stop()
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
     LaunchedEffect(playing) { stream.player.playWhenReady = playing }
@@ -1813,7 +1818,13 @@ private fun PlayerWithList(
                         .fillMaxSize()
                         .graphicsLayer { alpha = if (showing) 1f else 0f },
                 )
-                if (!showing) {
+                if (page != null) {
+                    key(page) {
+                        WebPreview(page, Modifier.fillMaxSize(), onFallback = {
+                            if (MyChannel.webPage(selected) != null) pageFailed = true
+                        })
+                    }
+                } else if (!showing) {
                     Text(
                         error ?: selected?.name.orEmpty(),
                         color = Color.White,

@@ -121,7 +121,9 @@ async function load() {
       if (data) return JSON.parse(data);
     }
   } catch {}
-  return (await fetch(station.ready, { cache: "no-store" })).json();
+  const ready = await (await fetch(station.ready, { cache: "no-store" })).json();
+  // A channel borrowing another's free films as its backup keeps its own name and logo.
+  return station.backup ? { ...ready, name: station.name, logo: station.logo } : ready;
 }
 
 let c = await load(), tv = null;

@@ -102,12 +102,24 @@ class MyChannelTest {
         assertEquals("mychannel://filmein", films.channel.url)
         assertTrue(MyChannel.isMine(films.channel))
         assertEquals(MyChannel.URL, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.url)
-        assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000"), MyChannel.STATIONS.map { it.dial })
-        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8), MyChannel.STATIONS.map { it.number })
+        assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000", "9", "10", "11"), MyChannel.STATIONS.map { it.dial })
+        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8, 9, 10, 11), MyChannel.STATIONS.map { it.number })
         assertEquals(1, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.number)
         assertEquals(2, films.channel.number)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=filmein&app=1", MyChannel.webPage(films.channel))
         assertEquals(null, MyChannel.webPage(MyChannel.parse(JSONObject("""{"videos":[]}""")).channel))
+        val dramas = MyChannel.parse(JSONObject("""{"name":"Bazaar Dramas","videos":[]}"""), "dramas")
+        assertEquals(11, dramas.channel.number)
+        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1", MyChannel.webPage(dramas.channel))
+        assertEquals("filmein", MyChannel.STATIONS.first { it.id == "english" }.backup)
+        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1&v=188", MyChannel.pageFor(dramas.channel, 188))
+        assertEquals("${MyChannel.BOLLYWOOD_URL}?app=1&v=188", MyChannel.pageFor(Channel(name = "Bazaar Hits", url = MyChannel.BOLLYWOOD_URL), 188))
+        assertEquals(
+            "https://tv.bulkbazaar.ca/channel/yt.html?app=1&v=abcdefghijk&name=Geo%20News&ver=188",
+            MyChannel.pageFor(Channel(name = "Geo News", url = "https://www.youtube.com/watch?v=abcdefghijk"), 188),
+        )
+        assertEquals(null, MyChannel.pageFor(Channel(name = "A", url = "https://example.com/a.m3u8"), 188))
+        assertEquals(null, MyChannel.pageFor(MyChannel.parse(JSONObject("""{"videos":[]}""")).channel, 188))
     }
 
     @Test

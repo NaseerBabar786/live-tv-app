@@ -135,6 +135,47 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
     )
 }
 
+/**
+ * [url] (one of our YouTube pages) playing inside a small player, such as the 1+List picture, without
+ * taking the remote: the arrows and OK stay with the screen around it. [onFallback] runs when the page
+ * gives up on YouTube (livetv://fallback).
+ */
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+fun WebPreview(url: String, modifier: Modifier = Modifier, onFallback: (() -> Unit)? = null) {
+    var webView by remember { mutableStateOf<WebView?>(null) }
+    DisposableEffect(Unit) {
+        onDispose { webView?.destroy() }
+    }
+    AndroidView(
+        modifier = modifier,
+        factory = { ctx ->
+            WebView(ctx).apply {
+                setBackgroundColor(android.graphics.Color.BLACK)
+                settings.javaScriptEnabled = true
+                settings.domStorageEnabled = true
+                settings.mediaPlaybackRequiresUserGesture = false
+                settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                webViewClient = object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                        if (request.url.scheme != "livetv") return false
+                        if (request.url.host == "fallback") onFallback?.invoke()
+                        return true
+                    }
+                }
+                webChromeClient = object : WebChromeClient() {
+                    override fun getDefaultVideoPoster(): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                }
+                isFocusable = false
+                isFocusableInTouchMode = false
+                // Taps go to the player box around it (OK opens the channel full screen).
+                setOnTouchListener { _, _ -> true }
+                loadUrl(url)
+            }.also { webView = it }
+        },
+    )
+}
+
 @SuppressLint("SetJavaScriptEnabled")
 private fun embedView(context: Context, src: String): WebView = WebView(context).apply {
     setBackgroundColor(android.graphics.Color.BLACK)

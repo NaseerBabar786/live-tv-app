@@ -11,6 +11,9 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
   6 Bazaar Sports  cricket highlights (ICC, PCB, BCCI, PSL, IPL...) and a little football
   7 Bazaar Travel  tourism boards and travel shows
   8 Bazaar Comedy  comedy shows from their channels
+  9 Bazaar Movies English  full English films from studios' and distributors' free-movie channels
+ 10 Bazaar Movies Hindi    full Hindi films from the studios' channels
+ 11 Bazaar Dramas  full episodes of Pakistani dramas from the TV channels' own channels
 
 Only the channel that really owns each handle is used (its name must match). Videos found on
 earlier runs are kept for KEEP_DAYS, so each list builds up. The public-domain schedules
@@ -130,6 +133,47 @@ CHANNELS = {
         ],
         # A source channel with many kinds of shows: only these shows are taken from it.
         "only": {"Bulbulay": r"bulbulay", "The Kapil Sharma Show": r"kapil", "Taarak Mehta": r"taarak|tmkoc|mehta"},
+    },
+    "english": {
+        "name": "Bazaar Movies English", "mins": (70, 200), "search": "full movie",
+        "keep": r"full (movie|film)|movie|film",
+        "skip": r"scene|clip|horror|slasher|erotic|18\+|hindi|dubbed|spoof",
+        "sources": [
+            ("FilmRise Movies", ["@FilmRiseMovies", "@FilmRiseFilms"], "FilmRise"),
+            ("Popcornflix", ["@Popcornflix", "@popcornflix"], "Popcornflix"),
+            ("Paramount Movies", ["@ParamountMovies"], "Paramount Movies|Paramount"),
+            ("Movie Central", ["@MovieCentral", "@MovieCentralFilms"], "Movie Central"),
+            ("Moviegrams", ["@Moviegrams", "@moviegrams"], "Moviegrams"),
+            ("Family Movies", ["@FamilyMoviesForFree", "@ClassicFamilyMovies"], "Family"),
+        ],
+    },
+    "hindi": {
+        "name": "Bazaar Movies Hindi", "mins": (70, 200), "search": "hindi full movie",
+        "keep": r"full (movie|film)|movie|film",
+        "skip": r"scene|song|jukebox|comedy scenes|best of|spoof|clip",
+        "sources": [
+            ("Goldmines Bollywood", ["@GoldminesBollywood", "@GoldminesHindi"], "Goldmines"),
+            ("Tips Films", ["@TipsFilms", "@tipsfilms"], "Tips"),
+            ("B4U Movies", ["@B4UMovies", "@b4umovies"], "B4U"),
+            ("Zee Studios", ["@ZeeStudios", "@zeestudios"], "Zee"),
+            ("Eros Now", ["@ErosNow", "@erosnow"], "Eros"),
+            ("Shemaroo Movies", ["@ShemarooMovies"], "Shemaroo"),
+            ("Pen Movies", ["@PenMovies"], "Pen Movies"),
+        ],
+    },
+    "dramas": {
+        "name": "Bazaar Dramas", "mins": (18, 75), "search": "episode",
+        # Full episodes only, no teasers, OSTs or clips.
+        "keep": r"episode|\bep\b|\bepi\b|ep\s*\d|قسط",
+        "skip": r"\bost\b|title song|scene|best moment|clip|bts|behind the scenes|review|highlights|recap|interview|morning show|news",
+        "sources": [
+            ("HUM TV", ["@HUMTV", "@humtvpk"], "HUM TV"),
+            ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
+            ("Har Pal Geo", ["@HarPalGeo", "@harpalgeo"], "HAR PAL GEO|Har Pal Geo"),
+            ("Green Entertainment", ["@GreenTVEntertainment", "@greenentertainment"], "Green"),
+            ("Express TV", ["@ExpressTV", "@expresstv"], "Express TV"),
+            ("Geo Entertainment", ["@GeoEntertainment"], "Geo"),
+        ],
     },
 }
 
