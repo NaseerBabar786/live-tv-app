@@ -64,6 +64,7 @@
     <nav>
       <a href="./">Home</a>
       <a href="channel/">Watch channel</a>
+      <a href="media">🎬 Media Library</a>
       <a href="admin" class="admin-link">Admin</a>
     </nav>
   </div>
@@ -148,6 +149,7 @@
       <details class="help" id="libraryBox" style="background:#1E293B">
         <summary>📚 Free show library: shows you're allowed to broadcast, ready to add</summary>
         <p>Old films, cartoons, NASA space videos and Blender cartoons that are free to show on TV (public domain or Creative Commons). Tap <b>Add</b>: short shows also go into the loop; long films are best given a time slot in step 4. The licence is under each one.</p>
+        <p>Everything in your <a href="media" target="_blank">🎬 Media Library</a> (AI dubbed Urdu and Hindi films, stories, and videos you added there) is in this list too, under "Media Library". Pick a section below to see just those.</p>
         <div class="row" style="margin-bottom:10px"><select id="libCat" style="padding:8px;border-radius:10px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit"></select></div>
         <div class="items" id="library"></div>
       </details>
@@ -286,6 +288,7 @@ onAuthStateChanged(auth, async user => {
   $("who").textContent = "Signed in as " + user.email + ".";
   show("dash");
   await loadSaved();
+  loadLibrary(); // again now signed in, to include your Media Library changes
 });
 
 function renderStations() {
@@ -518,6 +521,23 @@ $("videoForm").onsubmit = async e => {
 let library = [];
 async function loadLibrary() {
   try { library = await (await fetch("channel/library.json?t=" + Date.now())).json(); } catch { library = []; }
+  // The Media Library (admin page /media): its built-in list plus the owner's own changes there.
+  try {
+    const media = await (await fetch("media/library.json?t=" + Date.now())).json();
+    let mine = null;
+    try { const snap = await fs.getDoc(fs.doc(db, "sponsors", "_library")); if (snap.exists() && snap.data().data) mine = JSON.parse(snap.data().data); } catch {}
+    const removed = new Set(mine?.removed || []);
+    const items = [...(mine?.items || [])];
+    for (const it of media.items) if (!items.some(x => x.id === it.id) && !removed.has(it.id)) items.push(it);
+    const sections = [...(mine?.categories || []), ...media.categories];
+    const LANG = { ur: "Urdu", hi: "Hindi", en: "English", pa: "Punjabi" };
+    for (const it of items) {
+      if (!it.url || library.some(x => x.url === it.url)) continue;
+      const sec = sections.find(c => c.id === it.cat)?.name || "Other";
+      library.push({ cat: "Media Library · " + sec, title: it.title + (it.lang && it.lang !== "en" ? ` (${LANG[it.lang] || it.lang})` : ""),
+        url: it.url, secs: it.secs || 600, licence: it.credit || (it.ai ? "Our own AI video" : "From your Media Library") });
+    }
+  } catch {}
   const cats = [...new Set(library.map(x => x.cat))];
   $("libCat").innerHTML = '<option value="">All shows (' + library.length + ')</option>' + cats.map(c => `<option></option>`).join("");
   [...$("libCat").options].slice(1).forEach((o, i) => { o.value = cats[i]; o.textContent = cats[i]; });
