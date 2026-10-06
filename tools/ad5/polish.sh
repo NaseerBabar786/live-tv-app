@@ -9,7 +9,8 @@ unzip -q rife.zip -d rife; R=$(dirname $(find rife -name rife-ncnn-vulkan -type 
 rm -rf f0 f1 f2; mkdir -p f0 f1
 ffmpeg -v error -i out/$ONLY-src.mp4 -vf "crop=iw:floor(ih*0.975/2)*2:0:0" f0/%05d.png
 n=$(ls f0 | wc -l)
-if (cd $R && ./rife-ncnn-vulkan -i ../../f0 -o ../../f1 -m rife-v4.6 -n $((n*2)) -g -1 -j 1:2:2) ; then FPS=32; else rm -rf f1; mkdir f1; cp f0/* f1/; FPS=16; fi
+SF=$(ffprobe -v error -select_streams v -show_entries stream=r_frame_rate -of csv=p=0 out/$ONLY-src.mp4 | python3 -c "import sys; a,b=sys.stdin.read().strip().split('/'); print(round(int(a)/int(b)))")
+if (cd $R && ./rife-ncnn-vulkan -i ../../f0 -o ../../f1 -m rife-v4.6 -n $((n*2)) -g -1 -j 1:2:2) ; then FPS=$((SF*2)); else rm -rf f1; mkdir f1; cp f0/* f1/; FPS=$SF; fi
 ls f1 | head -2; ls f1 | wc -l
 python3 upscale.py f1 f2
 ffmpeg -v error -y -framerate $FPS -i f2/%08d.png -i out/$ONLY-src.mp4 -map 0:v -map 1:a? -c:v libx264 -crf 14 -preset slow -pix_fmt yuv420p -c:a aac out/$ONLY-hd.mp4 \
