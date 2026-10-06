@@ -73,3 +73,12 @@ d.polygon([(S/2-34, 104), (S/2-34, 176), (S/2+30, 140)], fill=(234,179,8))
 center_text(d, S/2, 196, "PURANI", font(B, 92), (254,243,199)); center_text(d, S/2, 300, "FILMEIN", font(B, 78), (234,179,8))
 center_text(d, S/2, 396, "CLASSICS", font(BD, 30), (254,243,199))
 save(im, "purani-filmein")
+
+# 7 Sur TV: purple to teal circle, music note, white wordmark
+im = Image.new("RGBA", (S,S), (0,0,0,0)); bg = grad((S,S), (124,58,237), (13,148,136)); im.paste(bg, (0,0), circle_mask((S,S)))
+d = ImageDraw.Draw(im)
+d.ellipse([186,196,256,246], fill="white"); d.ellipse([286,176,356,226], fill="white")  # two notes joined by a beam
+d.rectangle([242,96,256,222], fill="white"); d.rectangle([342,76,356,202], fill="white")
+d.polygon([(242,96),(356,76),(356,108),(242,128)], fill="white")
+center_text(d, S/2, 270, "SUR", font(B, 140), "white"); center_text(d, S/2, 412, "TV", font(B, 60), (253,224,71))
+save(im, "sur-tv")

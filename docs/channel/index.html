@@ -91,9 +91,7 @@ for (const st of STATIONS) {
   $("tabs").appendChild(a);
 }
 $("dial").textContent = $("dial2").textContent = station.dial;
-$("credits").textContent = station.id === "filmein"
-  ? "Films: public-domain classics from the Internet Archive (archive.org). A film every night at 8 PM Toronto time."
-  : "Films: Blender Foundation open movies (Creative Commons Attribution), blender.org.";
+$("credits").textContent = station.credits;
 
 /** The owner's public settings (channel/<id>), or the ready-made schedule until there are any. */
 async function load() {

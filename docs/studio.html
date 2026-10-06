@@ -70,7 +70,7 @@
 
 <main class="wrap">
   <h1>Channel Studio</h1>
-  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 0</b>, Purani Filmein <b>channel 00</b>, from 1.9.37) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 0</b>, Purani Filmein <b>channel 00</b>, Sur TV <b>channel 000</b>, from 1.9.37) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
@@ -227,7 +227,7 @@
       <button class="btn primary" id="save">💾 Save and put on air</button>
       <button class="btn" id="undo">↶ Undo all changes</button>
       <button class="btn" id="loadTest">Load the test programme</button>
-      <button class="btn hidden" id="useAuto">Go back to the automatic weekly films</button>
+      <button class="btn hidden" id="useAuto">Go back to the automatic schedule</button>
       <span id="saveMsg" class="small"></span>
     </div>
     <div id="ruleNote" class="panel hidden" style="margin-top:18px">
@@ -251,7 +251,7 @@ import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./channe
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 const LOGOS = [
-  ["Bazaar TV", "bazaar-tv"], ["Purani Filmein", "purani-filmein"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
+  ["Bazaar TV", "bazaar-tv"], ["Purani Filmein", "purani-filmein"], ["Sur TV", "sur-tv"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
 ].map(([name, file]) => ({ name, url: `https://tv.bulkbazaar.ca/channel/logos/${file}.png` }));
 
 const V = "10.12.2";
@@ -302,7 +302,7 @@ function renderStations() {
   }
   $("publicLink").href = station.page;
   $("publicLink").textContent = "tv.bulkbazaar.ca/" + station.page;
-  $("loadTest").textContent = station.auto ? "Load the automatic weekly films" : "Load the test programme";
+  $("loadTest").textContent = station.auto ? "Load the automatic schedule" : "Load the test programme";
   $("useAuto").classList.toggle("hidden", !station.auto);
 }
 
@@ -318,7 +318,7 @@ async function loadSaved() {
     } else {
       saved = await testProgramme();
       $("saveMsg").innerHTML = station.auto
-        ? '<span class="warn">Nothing saved yet: this is the automatic schedule, rebuilt every Monday from the free public-domain films (a film every night at 8 PM, the rest round the clock). It\'s already playing in the app. Change anything you like, then Save; after that your saved version plays instead.</span>'
+        ? `<span class="warn">Nothing saved yet: this is the automatic schedule (${station.id === "sur" ? "free-to-use songs, refreshed monthly" : "free public-domain films, rebuilt every Monday: a film every night at 8 PM, the rest round the clock"}). It's already playing in the app. Change anything you like, then Save; after that your saved version plays instead.</span>`
         : '<span class="warn">Nothing saved yet: this is the ready-made 1-hour test programme. It\'s already playing in the app. Change anything you like, then Save.</span>';
     }
   } catch (e) {
@@ -627,16 +627,16 @@ $("undo").onclick = () => {
   $("saveMsg").textContent = "Back to what was last saved.";
 };
 $("loadTest").onclick = async () => {
-  if (!confirm(`Replace everything on this page with ${station.auto ? "the automatic weekly films" : "the ready-made 1-hour test programme"}? (Nothing changes on TVs until you Save.)`)) return;
+  if (!confirm(`Replace everything on this page with ${station.auto ? "the automatic schedule" : "the ready-made 1-hour test programme"}? (Nothing changes on TVs until you Save.)`)) return;
   c = await testProgramme(); changed(); renderAll();
 };
 $("useAuto").onclick = async () => {
-  if (!confirm(`Delete your saved ${station.name} and go back to the automatic schedule, rebuilt every Monday? TVs switch within about 10 minutes.`)) return;
+  if (!confirm(`Delete your saved ${station.name} and go back to the automatic schedule? TVs switch within about 10 minutes.`)) return;
   try {
     await fs.deleteDoc(fs.doc(db, "sponsors", station.doc));
     try { await fs.deleteDoc(fs.doc(db, "channel", station.id)); } catch {}
     await loadSaved();
-    $("saveMsg").innerHTML = '<span class="ok">✓ Back to the automatic weekly films.</span>';
+    $("saveMsg").innerHTML = '<span class="ok">✓ Back to the automatic schedule.</span>';
   } catch (e) {
     $("saveMsg").innerHTML = `<span class="err">Couldn't do that: ${e.message}</span>`;
   }

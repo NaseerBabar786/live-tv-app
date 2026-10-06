@@ -109,7 +109,7 @@ data class UiState(
             val shown = inLanguage
                 .filter { category == null || it.category == category }
                 .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-            // The owner's own channels (dialled 0 and 00) always lead.
+            // The owner's own channels (dialled 0, 00 and 000) always lead.
             if (filter != FILTER_FAVORITES) return shown.sortedWith(compareBy({ !MyChannel.isMine(it) }, { it.id !in favorites }))
             val (mine, rest) = shown.partition { MyChannel.isMine(it) }
             return mine + rest
@@ -156,7 +156,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** [list] with the owner's channels first (those that are on): Bazaar TV, then Purani Filmein. */
+    /** [list] with the owner's channels first (those that are on): Bazaar TV, Purani Filmein, Sur TV. */
     private fun withMyChannel(list: List<Channel>): List<Channel> {
         val rest = list.filterNot { MyChannel.isMine(it) }
         if (rest.isEmpty() || !Edition.LIVE_TV) return rest
@@ -352,7 +352,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val number = typed.toIntOrNull()
         typedNumber = ""
         if (number == null) return
-        // 0 is Bazaar TV and 00 Purani Filmein, the owner's own channels.
+        // 0 is Bazaar TV, 00 Purani Filmein and 000 Sur TV, the owner's own channels.
         MyChannel.byDial(typed)?.takeIf { Edition.LIVE_TV }?.let {
             numberPadOpen = false
             play(it)

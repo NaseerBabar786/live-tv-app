@@ -13,9 +13,14 @@ export const TEST_SCHEDULE_URL = "https://tv.bulkbazaar.ca/channel/test-schedule
  */
 export const STATIONS = [
   { id: "main", name: "Bazaar TV", dial: "0", doc: "_channel", page: "channel/",
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png", ready: TEST_SCHEDULE_URL },
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png", ready: TEST_SCHEDULE_URL,
+    credits: "Films: Blender Foundation open movies (Creative Commons Attribution), blender.org." },
   { id: "filmein", name: "Purani Filmein", dial: "00", doc: "_channel_filmein", page: "channel/?c=filmein", auto: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/purani-filmein.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json" },
+    logo: "https://tv.bulkbazaar.ca/channel/logos/purani-filmein.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Films: public-domain classics from the Internet Archive (archive.org). A film every night at 8 PM Toronto time." },
+  { id: "sur", name: "Sur TV", dial: "000", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/sur-tv.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
+    credits: "Music: recordings that are free to use (public domain, CC0 and CC BY) from Wikimedia Commons; each song's credit and licence show on screen. No film songs." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */

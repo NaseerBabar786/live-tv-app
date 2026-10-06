@@ -26,6 +26,8 @@ object MyChannel {
         Station("main", "0", "Bazaar TV"),
         // Public-domain classic films round the clock (built weekly from Movies.m3u).
         Station("filmein", "00", "Purani Filmein"),
+        // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
+        Station("sur", "000", "Sur TV"),
     )
 
     private const val SCHEME = "mychannel://"
