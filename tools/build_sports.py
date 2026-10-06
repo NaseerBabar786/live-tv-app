@@ -44,7 +44,8 @@ FREE = re.compile(r"publicdomain|/licenses/by/\d", re.I)
 # Not for a family sports channel, or not really sport.
 SKIP = re.compile(r"\b(bullfight|cockfight|hunting|trailer|promo|commercial|ad\b|advert|nazi|propaganda|"
                   r"podcast|lecture|interview|talk show|radio|slideshow|video game|gameplay|fifa \d|pes \d|nba 2k|"
-                  r"highlights 20\d\d|vs\.? .* 20[12]\d)\b", re.I)
+                  r"highlights 20\d\d|vs\.? .* 20[12]\d|confederacy|state parks|ten thousand lakes|recreation resources|"
+                  r"california recreation|ozzie and harriet)\b", re.I)
 
 TICKER = ("Bazaar Sports · Classic sport from the film archives, day and night · Boxing, cricket, football, "
           "athletics and more · Channel 000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500")
