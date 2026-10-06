@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (CrashGuard.start(this)) return
         Watching.init(this)
         com.livetv.app.data.Location.init(this)
         com.livetv.app.data.NewsScreen.init(this)

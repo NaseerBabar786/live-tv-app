@@ -47,5 +47,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/download_paths" />
         </provider>
+        <!-- Opens instead of the app when a new version closed by itself while starting (CrashGuard). -->
+        <activity
+            android:name=".RescueActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
     </application>
 </manifest>
