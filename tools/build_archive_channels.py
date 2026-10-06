@@ -39,6 +39,9 @@ TRUSTED = {"prelinger", "feature_films", "classic_tv", "silent_films", "universa
            "classic_cartoons", "comedy_films", "sports_films", "fedflix", "nasa", "ephemera"}
 # Old enough that the public-domain claim is believable (US films before 1964 that weren't renewed).
 LAST_YEAR = 1970
+# The Archive's own H.264 copies: an original ".mp4" is often older MPEG-4 video that browsers
+# show as a black picture with sound.
+H264 = ("h.264", "h.264 ia", "h.264 hd", "512kb mpeg4")
 # Licences that let anyone show the film: public domain, CC0 and CC BY (not -SA, -NC or -ND).
 FREE = re.compile(r"publicdomain|/licenses/by/\d", re.I)
 # Never on our channels.
@@ -157,8 +160,8 @@ def best_file(ident):
     if not FREE.search(str(md.get("licenseurl", ""))):
         return None
     mp4s = [f for f in meta.get("files", []) if f.get("name", "").lower().endswith(".mp4")]
-    # The Archive's own h.264 copy plays everywhere; prefer it, then the smallest other MP4.
-    mp4s.sort(key=lambda f: (f.get("format") != "h.264", "512kb" not in f["name"], int(f.get("size", 0) or 0)))
+    # An H.264 copy plays everywhere; prefer the full-size one.
+    mp4s.sort(key=lambda f: (str(f.get("format", "")).lower() not in H264, "512kb" in f["name"].lower(), int(f.get("size", 0) or 0)))
     for f in mp4s:
         secs = int(seconds(f.get("length")))
         if MIN_SECS <= secs <= MAX_SECS:
@@ -179,11 +182,33 @@ def notice(kind, text):
         print(f"::{kind} title={TITLE}::" + text.replace("%", "%25").replace("\r", "").replace("\n", "%0A"))
 
 
+def fix(path):
+    """Points [path]'s Archive videos at H.264 copies, which browsers can show (see build_filmein.playable)."""
+    from build_filmein import playable
+    with open(path, encoding="utf-8") as fh:
+        schedule = json.load(fh)
+    changed = 0
+    for v in schedule.get("videos", []):
+        secs, url = playable(v["url"])
+        if url != v["url"]:
+            print(f"  {v['title']}: {v['url']} -> {url}")
+            v["url"], changed = url, changed + 1
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(schedule, fh, ensure_ascii=False, indent=1)
+        fh.write("\n")
+    notice("notice", f"{path}: {changed} videos now point at H.264 copies")
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--channel", choices=sorted(CHANNELS), required=True)
+    ap.add_argument("--channel", choices=sorted(CHANNELS))
     ap.add_argument("--date", help="build for the week of this date (default: today)")
+    ap.add_argument("--fix", metavar="SCHEDULE", help="only swap the Archive videos in this schedule for H.264 copies")
     args = ap.parse_args()
+    if args.fix:
+        return fix(args.fix)
+    if not args.channel:
+        ap.error("--channel or --fix is needed")
     global TITLE
     ch = CHANNELS[args.channel]
     TITLE = ch["name"]

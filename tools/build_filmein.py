@@ -93,21 +93,38 @@ def seconds(length):
         return 0.0
 
 
-def length_of(url):
-    """The film's length in whole seconds, from the Archive's file list (0 when unknown)."""
+# The Archive's own H.264 copies. An uploader's original ".mp4" is often older MPEG-4 video
+# (DivX/Xvid), which Android plays but Chrome, Edge and Safari can't: the web page then plays
+# the sound over a black picture. So the page and the app both get an H.264 copy when there is one.
+H264 = ("h.264", "h.264 ia", "h.264 hd", "512kb mpeg4")
+
+
+def playable(url):
+    """(length in whole seconds, url of a copy browsers can play) for an Archive file; (0, url) when unknown."""
     m = re.match(r"https://archive\.org/download/([^/]+)/(.+)$", url)
     if not m:
-        return 0
+        return 0, url
     ident, name = m.group(1), urllib.parse.unquote(m.group(2))
     try:
         meta = get_json(METADATA + urllib.parse.quote(ident))
     except Exception as e:  # noqa: BLE001 - one bad item shouldn't stop the build
         print(f"  skip {ident}: {e}", file=sys.stderr)
-        return 0
-    for f in meta.get("files", []):
-        if f.get("name") == name:
-            return int(seconds(f.get("length")))
-    return 0
+        return 0, url
+    files = meta.get("files", [])
+    this = next((f for f in files if f.get("name") == name), None)
+    if not this:
+        return 0, url
+    secs = int(seconds(this.get("length")))
+    if str(this.get("format", "")).lower() in H264:
+        return secs, url
+    # An H.264 copy made from this file, the full-size one first.
+    copies = [f for f in files if str(f.get("format", "")).lower() in H264 and f.get("name", "").lower().endswith(".mp4")
+              and (f.get("original") == name or not f.get("original"))]
+    copies.sort(key=lambda f: (str(f.get("format", "")).lower() == "512kb mpeg4", f.get("original") != name))
+    if copies:
+        best = copies[0]
+        return int(seconds(best.get("length"))) or secs, f"https://archive.org/download/{ident}/{urllib.parse.quote(best['name'])}"
+    return secs, url
 
 
 def main():
@@ -119,10 +136,10 @@ def main():
 
     films = films_in_playlist(os.path.join(ROOT, "docs", "Movies.m3u"))
     with cf.ThreadPoolExecutor(8) as pool:
-        lengths = list(pool.map(length_of, [f[1] for f in films]))
+        found = list(pool.map(playable, [f[1] for f in films]))
 
     videos, ids = [], set()
-    for (title, url, lang, _), secs in zip(films, lengths):
+    for (title, _, lang, _), (secs, url) in zip(films, found):
         # The Hindi, Urdu and Punjabi films in the list are people's uploads of films still under
         # copyright in India and Pakistan (some carry a piracy site's name), so a channel that
         # broadcasts them could be taken down. Only the Archive's public-domain classics play.
@@ -133,6 +150,9 @@ def main():
             vid += "-2"
         ids.add(vid)
         videos.append({"id": vid, "title": title, "url": url, "secs": secs, "kind": "programme", "lang": lang})
+    swapped = sum(url != f[1] for f, (_, url) in zip(films, found))
+    if os.environ.get("GITHUB_ACTIONS"):
+        print(f"::notice title=Bazaar Cinema::{swapped} of {len(films)} films now play the Archive's H.264 copy")
     print(f"{len(videos)} of {len(films)} films have a known length of at least {MIN_SECONDS // 60} minutes")
     if len(videos) < 10:
         sys.exit("Too few films; keeping the old schedule.")
