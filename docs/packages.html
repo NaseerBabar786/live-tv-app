@@ -32,7 +32,8 @@
   .Free { background: var(--surface-2); } .Silver { background: #9e9e9e; color: #000; } .Gold { background: #f5c542; color: #000; } .Platinum { background: #b3e5fc; color: #000; }
   @media (min-width: 1200px) {
     .split { display: grid; grid-template-columns: minmax(640px, 700px) minmax(0, 1fr); gap: 24px; align-items: start; }
-    .split > .panel:first-child { position: sticky; top: 16px; margin-bottom: 0 !important; }
+    .split > .panel:first-child { margin-bottom: 0 !important; }
+    .split > .pk-main { grid-column: 1 / -1; }
   }
   #cfgMsg { margin-left: 12px; font-weight: 700; }
   #cfgMsg.saved { color: #69f0ae; } #cfgMsg.bad { color: #ff8a80; }
@@ -64,6 +65,7 @@
 <main class="wrap">
   <h1>Packages</h1>
   <p class="lead">Free, Silver, Gold and Platinum for Cable TV viewers. Turn packages on, set prices, and give each viewer a package when they pay.</p>
+  <p class="err" id="err"></p>
   <div id="notReady" class="panel hidden">This page works once sign-in is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the admin. <button class="btn" data-signout>Use another account</button></div>
@@ -151,7 +153,6 @@
     <p class="small">Pick the package and press +1 month, +6 months or +1 year. Time is added after the current end date, so renewing early loses nothing. The viewer's app picks it up within an hour, or at once when they reopen it. They see a reminder 5 days before it ends.</p>
     </div>
   </div>
-  <p class="err" id="err"></p>
 </main>
 <footer>
   <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
