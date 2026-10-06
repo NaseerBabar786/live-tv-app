@@ -31,7 +31,8 @@
   .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
-  .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  /* The logo sits above the middle, so the loading circle in the middle of the picture stays in view (1.9.60). */
+  .cover img { height: 15vh; max-width: 40vw; object-fit: contain; opacity: .9; transform: translateY(-17vh); }
   .cover.off { opacity: 0; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
@@ -49,6 +50,7 @@
 <div class="ticker"><span id="tick"></span></div>
 <div class="msg" id="msg">Loading…</div>
 <script src="promo.js"></script>
+<script src="still.js"></script>
 <script type="module">
 import { STATIONS } from "./schedule.js";
 const q = new URLSearchParams(location.search);
@@ -156,6 +158,8 @@ window.onYouTubeIframeAPIReady = () => {
         e.target.setVolume(60);
         $("msg").remove();
         if (!app) { e.target.mute(); $("sound").hidden = false; }
+        // The app's silent players (Duo mode) open the page with mute=1 (1.9.60).
+        if (new URLSearchParams(location.search).has("mute")) e.target.mute();
         // Join the film where the channel is now, like live TV: some TVs ignore the player's start setting.
         if (window.startAt > 5) e.target.seekTo(window.startAt, true);
         e.target.playVideo();
@@ -176,6 +180,7 @@ window.onYouTubeIframeAPIReady = () => {
       onError: e => { lastError = e.data; if (++failures >= 5) fallBack(); else setTimeout(() => play(1), 1000); },
     },
   });
+  stillFor(player);
 };
 // A tap or OK only shows what's playing; double-click goes full screen (on the website).
 $("shield").onclick = showNow;
