@@ -2,10 +2,11 @@ name: Find free shows
 on:
   push:
     branches: [shows-library]
-    paths: [tools/find_shows.py, .github/workflows/find-shows.yml]
+    paths: [tools/check_shows.py, tools/shows_candidates.json, .github/workflows/find-shows.yml]
 jobs:
-  find:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 tools/find_shows.py | tee shows.jsonl
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: python3 tools/check_shows.py tools/shows_candidates.json
