@@ -18,12 +18,12 @@ android {
     // src/livetv, src/player or src/plus; each provides the Edition object the shared code calls.
     flavorDimensions += "edition"
     productFlavors {
-        // Free Live TV: built-in free channels, sponsor screen, self-updating APK from GitHub.
+        // Cable TV: built-in free channels, sponsor screen, self-updating APK from GitHub.
         create("livetv") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetv"
-            versionCode = 184
-            versionName = "1.9.46"
+            versionCode = 185
+            versionName = "1.9.47"
             // The TV sign-in client secret comes from the TV_CLIENT_SECRET repository secret,
             // so it stays out of the public code.
             buildConfigField("String", "TV_CLIENT_SECRET", "\"${System.getenv("TV_CLIENT_SECRET") ?: ""}\"")
@@ -35,7 +35,7 @@ android {
             versionCode = 2
             versionName = "1.0.1"
         }
-        // Live TV Plus: the Google Play edition of Free Live TV. Free Live TV's look and weather,
+        // Live TV Plus: the Google Play edition of Cable TV. Cable TV's look and weather,
         // but like Stream Player Plus it has no channels; viewers add playlists.
         create("plus") {
             dimension = "edition"
@@ -43,8 +43,8 @@ android {
             versionCode = 4
             versionName = "1.2.0"
         }
-        // Live TV Max: Free Live TV's channels and code, opening on a streaming-style home screen
-        // (rows by country and language, a now/next guide, movies and dramas). Installs beside Free Live TV.
+        // Live TV Max: Cable TV's channels and code, opening on a streaming-style home screen
+        // (rows by country and language, a now/next guide, movies and dramas). Installs beside Cable TV.
         create("max") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetvmax"
@@ -58,7 +58,7 @@ android {
     sourceSets {
         getByName("player").java.srcDir("src/store/java")
         getByName("plus").java.srcDir("src/store/java")
-        // Live TV Max is built from Free Live TV's own code and pictures, plus its icon in src/max.
+        // Live TV Max is built from Cable TV's own code and pictures, plus its icon in src/max.
         getByName("max") {
             java.srcDir("src/livetv/java")
             res.srcDir("src/livetv/res")
@@ -126,7 +126,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
     implementation(libs.kotlinx.coroutines.android)
-    // Free Live TV sign-in: the Google account picker on phones (and TVs that support it).
+    // Cable TV sign-in: the Google account picker on phones (and TVs that support it).
     "livetvImplementation"("androidx.credentials:credentials:1.3.0")
     "livetvImplementation"("androidx.credentials:credentials-play-services-auth:1.3.0")
     "livetvImplementation"("com.google.android.libraries.identity.googleid:googleid:1.1.1")

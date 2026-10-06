@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds the song list of Bazaar Hits, our music channel of film songs (channel 4 in Free Live TV).
+Builds the song list of Bazaar Hits, our music channel of film songs (channel 4 in Cable TV).
 
 The songs are the music labels' own uploads on their official YouTube channels (T-Series,
 Saregama, Zee Music, Sony Music India, Tips, YRF, Coke Studio...), which they publish free

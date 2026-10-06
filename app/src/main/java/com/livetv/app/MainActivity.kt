@@ -32,15 +32,15 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
     private var inPictureInPicture by mutableStateOf(false)
 
-    /** The start screen (Free Live TV's sponsor screen) shows once per launch, not again after rotation. */
+    /** The start screen (Cable TV's sponsor screen) shows once per launch, not again after rotation. */
     private var showStartScreen by mutableStateOf(Edition.HAS_START_SCREEN)
 
-    /** Free Live TV's Movies & Series screen is open. */
+    /** Cable TV's Movies & Series screen is open. */
     private var showVod by mutableStateOf(false)
     /** A movie or show picked on Live TV Max's home screen, for the Library to open at. */
     private var vodStart by mutableStateOf<VodTarget?>(null)
 
-    /** Free Live TV's Games section is open. */
+    /** Cable TV's Games section is open. */
     private var showGames by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {

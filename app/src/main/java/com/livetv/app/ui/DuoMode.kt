@@ -442,7 +442,7 @@ internal fun DuoMode(
                     WeatherNow()
                 }
                 Spacer(Modifier.width(12.dp))
-                Text("Free Live TV", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                Text("Cable TV", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
             }
 
             // The two players.

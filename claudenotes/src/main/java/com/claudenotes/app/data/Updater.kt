@@ -14,7 +14,7 @@ import java.net.URL
 
 /**
  * Checks GitHub for a newer Notes for Claude release, downloads its APK and hands it to the
- * system installer. The app shares its repository with Free Live TV, so it reads one fixed
+ * system installer. The app shares its repository with Cable TV, so it reads one fixed
  * "claude-notes" release whose title carries the version.
  */
 class Updater(context: Context) {

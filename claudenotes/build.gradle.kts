@@ -18,7 +18,7 @@ android {
         versionName = "1.0.0"
     }
 
-    // Same shared signing key as Free Live TV when CI has it, so updates install over the old app.
+    // Same shared signing key as Cable TV when CI has it, so updates install over the old app.
     val keystorePath = System.getenv("SIGNING_KEYSTORE_FILE")
     val keystorePassword = System.getenv("SIGNING_PASSWORD")
     val shared = if (keystorePath != null && keystorePassword != null && file(keystorePath).exists()) {

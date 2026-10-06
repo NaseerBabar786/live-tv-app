@@ -93,7 +93,7 @@ private const val CARD_NOT_BEFORE_MS = 5 * 60_000L
 /** A sponsor's video pop-up: at most this often (other times their picture card shows). */
 private const val VIDEO_EVERY_MS = 30 * 60_000L
 
-/** The Free Live TV promo video from the website's home page (see [SponsorCard]). */
+/** The Cable TV promo video from the website's home page (see [SponsorCard]). */
 private const val PROMO_ID = "promo"
 private const val PROMO_URL = "https://tv.bulkbazaar.ca/media/livetv-promo.mp4"
 private const val PROMO_EVERY_MS = 60 * 60_000L
@@ -423,7 +423,7 @@ private fun SponsorVideo(url: String) {
  * A small sponsor card in the bottom right corner for a few seconds after the channel changes,
  * at most once every 3 minutes. It never takes the focus or covers the middle of the picture.
  * A sponsor whose pop-up is set to video plays their video in a bigger window instead, to the end
- * (on a full screen channel, at most every [VIDEO_EVERY_MS]); with no such sponsor, the Free Live TV
+ * (on a full screen channel, at most every [VIDEO_EVERY_MS]); with no such sponsor, the Cable TV
  * promo plays like that once per start. OK opens the sponsor's website; back from it, the video goes on.
  */
 @Composable
@@ -449,7 +449,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
         lastChannel = channelId
         val now = SystemClock.elapsedRealtime()
         val wall = System.currentTimeMillis()
-        // The Free Live TV promo: once per start and at most once an hour, when no sponsor has a video pop-up.
+        // The Cable TV promo: once per start and at most once an hour, when no sponsor has a video pop-up.
         if (isFullScreen && !promoShown && now - startedAt >= PROMO_NOT_BEFORE_MS &&
             Sponsors.current().none { it.popupVideo && it.video.isNotEmpty() } &&
             wall - prefs.getLong("promoAt", 0L) >= PROMO_EVERY_MS
@@ -540,11 +540,11 @@ private fun VisitLine() {
 }
 
 /**
- * The Free Live TV promo video from the website's home page, played in the pop-up like a sponsor's video.
+ * The Cable TV promo video from the website's home page, played in the pop-up like a sponsor's video.
  * No website: viewers are already in the app, so OK and taps keep working as usual instead of opening the web page.
  */
 private val PromoSponsor = Sponsor(
-    id = PROMO_ID, name = "Free Live TV", line = "", contact = "", start = "", end = "",
+    id = PROMO_ID, name = "Cable TV", line = "", contact = "", start = "", end = "",
     active = true, picture = null, video = PROMO_URL, website = "", popupVideo = true,
 )
 

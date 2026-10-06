@@ -40,7 +40,7 @@ import java.util.Date
 fun planDate(d: Date): String = DateFormat.getDateInstance(DateFormat.MEDIUM).format(d)
 
 /**
- * Free Live TV's packages: the viewer's package and when it ends, what each package adds and
+ * Cable TV's packages: the viewer's package and when it ends, what each package adds and
  * costs, and an Ask button for each length that messages the owner, who replies with how to pay.
  */
 @Composable

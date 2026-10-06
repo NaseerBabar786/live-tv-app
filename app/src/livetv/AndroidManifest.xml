@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Free Live TV only: the self-updater downloads new versions and hands them to the installer. -->
+<!-- Cable TV only: the self-updater downloads new versions and hands them to the installer. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds Bazaar Music, our music channel (channel 3 in Free Live TV), from music that is free to use.
+Builds Bazaar Music, our music channel (channel 3 in Cable TV), from music that is free to use.
 
 Source: Wikimedia Commons, where every file states its licence. Only public domain, CC0 and
 CC BY recordings are taken (no "share-alike", "non-commercial" or "no-derivatives"), and
@@ -268,7 +268,7 @@ def main():
         "active": True,
         "tz": "America/Toronto",
         "ticker": ("Bazaar Music · Free music, day and night · Classical, qawwali, ghazal and more, all free to use "
-                   "(public domain and Creative Commons, from Wikimedia Commons) · Channel 3 on Free Live TV "
+                   "(public domain and Creative Commons, from Wikimedia Commons) · Channel 3 on Cable TV "
                    "· Advertise with us: WhatsApp 437 602 6500"),
         "tickerOn": True,
         "videos": videos,
