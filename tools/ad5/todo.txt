@@ -1,1 +1,1 @@
-s6:voices
+s1:lips s2:lips s3:lips s5:lips s6:lips
