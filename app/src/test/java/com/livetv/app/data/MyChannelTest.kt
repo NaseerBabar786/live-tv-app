@@ -57,10 +57,18 @@ class MyChannelTest {
         val c = config("""[{"day":"all","time":"21:00","video":"b"}]""", """["a","ad"]""")
         val now = MyChannel.whatsOn(c, at(20, 59, 50)) as MyChannel.Now.Playing
         assertTrue(now.untilMs <= at(21, 0))
-        // Everyone is at the same place in the loop.
+        // Everyone is at the same place in the loop, which started again when yesterday's 9 PM show ended.
         val total = 620_000L
-        val pos = Math.floorMod(at(20, 59, 50), total)
+        val pos = Math.floorMod(at(20, 59, 50) - (at(21, 20) - 86_400_000L), total)
         assertEquals(if (pos < 600_000) "a" else "ad", now.video.id)
+    }
+
+    @Test
+    fun loopStartsFromTheTopAfterASlot() {
+        val c = config("""[{"day":"all","time":"20:00","video":"a"}]""", """["b","ad"]""")
+        val now = MyChannel.whatsOn(c, at(20, 10, 30)) as MyChannel.Now.Playing
+        assertEquals("b", now.video.id)
+        assertEquals(30_000L, now.offsetMs)
     }
 
     @Test

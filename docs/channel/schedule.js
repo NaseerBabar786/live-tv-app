@@ -70,11 +70,19 @@ export function whatsOn(c, now = Date.now()) {
     const end = current.video.secs > 0 ? current.at + current.video.secs * 1000 : Infinity;
     if (now < end) return { video: current.video, offset: now - current.at, until: Math.min(end, nextAt), slot: true };
   }
+  // After a time slot the loop starts again from the top; before any slot it runs on the clock.
+  let anchor = 0;
+  all.forEach((s, i) => {
+    if (s.at > now) return;
+    const cut = all[i + 1] ? all[i + 1].at : Infinity;
+    const end = Math.min(s.video.secs > 0 ? s.at + s.video.secs * 1000 : Infinity, cut);
+    if (end <= now) anchor = Math.max(anchor, end);
+  });
   const loopIds = (c.loop || []).filter(id => byId[id]);
   const loop = loopIds.map(id => byId[id]).filter(v => v.secs > 0);
   const total = loop.reduce((t, v) => t + v.secs * 1000, 0);
   if (total > 0) {
-    let pos = ((now % total) + total) % total;
+    let pos = (((now - anchor) % total) + total) % total;
     for (const v of loop) {
       const len = v.secs * 1000;
       if (pos < len) return { video: v, offset: pos, until: Math.min(now - pos + len, nextAt), slot: false };

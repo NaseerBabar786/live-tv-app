@@ -116,8 +116,8 @@ object MyChannel {
 
     /**
      * What [c] plays at [nowMs]. A slot plays its video from its start time to the end of the
-     * video, or until the next slot starts. Between slots the loop list plays back to back, timed
-     * from a fixed point so every viewer is at the same place in it.
+     * video, or until the next slot starts. Between slots the loop list plays back to back, from
+     * the top after each slot (and on the clock before the first), so every viewer is at the same place.
      */
     fun whatsOn(c: Config, nowMs: Long): Now {
         val byId = c.videos.associateBy { it.id }
@@ -133,10 +133,18 @@ object MyChannel {
             val end = if (current.video.seconds > 0) current.at + current.video.seconds * 1000 else Long.MAX_VALUE
             if (nowMs < end) return Now.Playing(current.video, nowMs - current.at, minOf(end, nextAt))
         }
+        // After a time slot the loop starts again from the top; before any slot it runs on the clock.
+        var anchor = 0L
+        starts.forEachIndexed { i, s ->
+            if (s.at > nowMs) return@forEachIndexed
+            val cut = starts.getOrNull(i + 1)?.at ?: Long.MAX_VALUE
+            val end = minOf(if (s.video.seconds > 0) s.at + s.video.seconds * 1000 else Long.MAX_VALUE, cut)
+            if (end <= nowMs) anchor = maxOf(anchor, end)
+        }
         val loop = c.loop.mapNotNull { byId[it] }.filter { it.seconds > 0 }
         val total = loop.sumOf { it.seconds * 1000 }
         if (total > 0) {
-            var pos = Math.floorMod(nowMs, total)
+            var pos = Math.floorMod(nowMs - anchor, total)
             for (v in loop) {
                 val len = v.seconds * 1000
                 if (pos < len) return Now.Playing(v, pos, minOf(nowMs - pos + len, nextAt))

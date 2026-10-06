@@ -6,9 +6,6 @@ name: Build channel media
 
 on:
   workflow_dispatch:
-  push:
-    branches: [my-channel]
-    paths: [.github/workflows/build-channel-media.yml]
 
 jobs:
   films:
