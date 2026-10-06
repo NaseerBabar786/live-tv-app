@@ -14,6 +14,7 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
   9 Bazaar Movies English  full English films from studios' and distributors' free-movie channels
  10 Bazaar Movies Hindi    full Hindi films from the studios' channels
  11 Bazaar Dramas  full episodes of Pakistani dramas from the TV channels' own channels
+ 12 Bazaar Cooking recipes and cooking shows from the cooks' own channels
 
 Only the channel that really owns each handle is used (its name must match). Videos found on
 earlier runs are kept for KEEP_DAYS, so each list builds up. The public-domain schedules
@@ -173,6 +174,21 @@ CHANNELS = {
             ("Green Entertainment", ["@GreenTVEntertainment", "@greenentertainment"], "Green"),
             ("Express TV", ["@ExpressTV", "@expresstv"], "Express TV"),
             ("Geo Entertainment", ["@GeoEntertainment"], "Geo"),
+        ],
+    },
+    "cooking": {
+        "name": "Bazaar Cooking", "mins": (4, 45),
+        "skip": r"vlog|q ?& ?a|giveaway|unboxing|review|haul|podcast|mukbang|eating challenge",
+        "sources": [
+            ("Food Fusion", ["@FoodFusionPk", "@foodfusion"], "Food Fusion"),
+            ("Kitchen with Amna", ["@KitchenWithAmna", "@kitchenwithamna"], "Kitchen With Amna"),
+            ("Masala TV", ["@MasalaTVRecipes", "@MasalaTV"], "Masala TV|Masala"),
+            ("Sanjeev Kapoor", ["@SanjeevKapoorKhazana", "@sanjeevkapoorkhazana"], "Sanjeev Kapoor"),
+            ("Ranveer Brar", ["@RanveerBrar", "@ranveerbrar"], "Ranveer Brar"),
+            ("Kabita's Kitchen", ["@KabitasKitchen", "@kabitaskitchen"], "Kabita"),
+            ("Chef Zakir", ["@ChefZakirOfficial"], "Zakir"),
+            ("Shireen Anwar", ["@ShireenAnwarRecipes"], "Shireen"),
+            ("Get Curried", ["@GetCurried", "@getcurried"], "Get Curried"),
         ],
     },
 }
