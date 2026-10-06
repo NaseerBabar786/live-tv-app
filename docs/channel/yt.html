@@ -17,10 +17,15 @@
   .hide { opacity: 0; }
   .sound { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
   .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; font-size: clamp(14px, 2.4vw, 28px); }
+  /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
+  .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
+  .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  .cover.off { opacity: 0; }
 </style>
 </head>
 <body>
 <div id="player"></div>
+<div class="cover" id="cover"><img alt="" id="coverLogo" hidden></div>
 <div class="shield" id="shield"></div>
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
@@ -46,6 +51,14 @@ if (!/^[\w-]{6,20}$/.test(id)) {
   s.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(s);
 }
+// The cover goes once the video is really playing, and comes back while the next one loads.
+let coverTimer = null;
+function cover(on) {
+  clearTimeout(coverTimer);
+  if (on) $("cover").classList.remove("off");
+  // A moment after it starts, so YouTube's own title and logo at the start have gone too.
+  else coverTimer = setTimeout(() => $("cover").classList.add("off"), 1200);
+}
 window.onYouTubeIframeAPIReady = () => {
   player = new YT.Player("player", {
     videoId: id,
@@ -62,6 +75,8 @@ window.onYouTubeIframeAPIReady = () => {
       },
       // It never stays paused, and a video that ends starts again, like a channel on a loop.
       onStateChange: e => {
+        if (e.data === YT.PlayerState.PLAYING) cover(false);
+        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
         if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
         else if (e.data === YT.PlayerState.ENDED) { e.target.seekTo(0); e.target.playVideo(); }
       },
