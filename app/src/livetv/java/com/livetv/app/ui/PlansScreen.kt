@@ -117,12 +117,12 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                             )
                             Text(Subscription.FEATURES[tier] ?: "", style = MaterialTheme.typography.bodySmall)
                             if (prices != null) {
-                                // Longest first: the year is the best value.
+                                // Shortest first, like tv.bulkbazaar.ca/packages (owner, 2026-10-06); the year is the best value.
                                 val lengths = listOf(
-                                    "1 year" to prices.year,
-                                    "6 months" to prices.sixMonths,
-                                    "3 months" to prices.threeMonths,
                                     "1 month" to prices.month,
+                                    "3 months" to prices.threeMonths,
+                                    "6 months" to prices.sixMonths,
+                                    "1 year" to prices.year,
                                 )
                                 lengths.chunked(2).forEach { pair ->
                                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {

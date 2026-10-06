@@ -45,26 +45,25 @@ object Subscription {
 
     // Declared before _offer: Offer() reads it while this object starts, and a later one is still null then.
     val DEFAULT_PRICES: Map<Plans.Tier, Prices> = mapOf(
-        Plans.Tier.Silver to Prices("$17.99", "$9.89", "$5.39", "$1.99"),
+        Plans.Tier.Silver to Prices("$17.79", "$9.79", "$5.39", "$1.99"),
         Plans.Tier.Gold to Prices("$35.99", "$19.79", "$10.89", "$3.99"),
-        Plans.Tier.Platinum to Prices("$53.99", "$29.69", "$16.29", "$5.99"),
+        Plans.Tier.Platinum to Prices("$53.79", "$29.59", "$16.29", "$5.99"),
     )
 
     /**
-     * The shorter plans from the yearly price: each one costs 10% more per month than the next
-     * longer one (6 months = half a year + 10%, 3 months = half of that + 10%, 1 month = a third
-     * of that + 10%), rounded to the nearest 10 cents and ending in 9. The same sums as
-     * tv.bulkbazaar.ca/packages.
+     * The longer plans from the monthly price: each one costs 10% less per month than the one before
+     * it (3 months = 3 months' worth - 10%, 6 months = twice that - 10%, 1 year = twice that - 10%),
+     * rounded to the nearest 10 cents and ending in 9. The same sums as tv.bulkbazaar.ca/packages.
      */
-    fun fromYear(year: String): Prices? {
-        val y = year.filter { it.isDigit() || it == '.' }.toDoubleOrNull() ?: return null
-        if (y <= 0) return null
+    fun fromMonth(month: String): Prices? {
+        val m = month.filter { it.isDigit() || it == '.' }.toDoubleOrNull() ?: return null
+        if (m <= 0) return null
         fun r(v: Double) = (Math.round(v * 10) / 10.0 - 0.01).coerceAtLeast(0.99)
-        val six = r(y / 2 * 1.1)
-        val three = r(six / 2 * 1.1)
-        val month = r(three / 3 * 1.1)
+        val three = r(m * 3 / 1.1)
+        val six = r(three * 2 / 1.1)
+        val year = r(six * 2 / 1.1)
         fun f(v: Double) = "$" + String.format(java.util.Locale.US, "%.2f", v)
-        return Prices(year, f(six), f(three), f(month))
+        return Prices(f(year), f(six), f(three), month)
     }
 
     private val _offer = MutableStateFlow(Offer())
@@ -139,15 +138,15 @@ object Subscription {
         if (f == null) return Offer()
         fun price(tier: Plans.Tier, key: String, fallback: String) =
             f.str("${tier.name.lowercase()}_$key").ifBlank { fallback }
-        // The owner types the yearly price; the shorter plans are worked out from it unless set too.
+        // The owner types the monthly price; the longer plans are worked out from it unless set too.
         val prices = DEFAULT_PRICES.mapValues { (tier, d) ->
-            val year = price(tier, "year", d.year)
-            val auto = fromYear(year) ?: d
+            val month = price(tier, "month", d.month)
+            val auto = fromMonth(month) ?: d
             Prices(
-                year,
+                price(tier, "year", auto.year),
                 price(tier, "six", auto.sixMonths),
                 price(tier, "three", auto.threeMonths),
-                price(tier, "month", auto.month),
+                month,
             )
         }
         val trial = f.optJSONObject("trialDays")?.let { it.optString("integerValue").toIntOrNull() ?: it.optInt("doubleValue", 7) } ?: 7

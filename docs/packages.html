@@ -76,10 +76,10 @@
         <span class="small">While this is off, every viewer has everything (like today). When it's on, viewers without a package get Free, and new viewers get a free trial of everything first.</span></p>
       <p><label>Free trial for new viewers: <input class="inp" type="number" id="trialDays" min="0" max="365" style="width:80px"> days</label></p>
       <div class="table-wrap prices"><table>
-        <thead><tr><th>Package</th><th>1 year (you type)</th><th>6 months</th><th>3 months</th><th>1 month</th></tr></thead>
+        <thead><tr><th>Package</th><th>1 month (you type)</th><th>3 months</th><th>6 months</th><th>1 year</th></tr></thead>
         <tbody id="priceRows"></tbody>
       </table></div>
-      <p class="small">Type only the <b>1 year</b> price; the others fill in by themselves. Each shorter plan costs 10% more per month than the one above it, ending in 9 cents. Example: a year at $53.99 ($4.50 a month) makes 6 months $29.69 ($4.95 a month), 3 months $16.29 ($5.43 a month) and 1 month $5.99. You can still change any box by hand before saving.</p>
+      <p class="small">Type only the <b>1 month</b> price; the others fill in by themselves. Each longer plan costs about 10% less per month than the one before it, ending in 9 cents. Example: 1 month at $5.99 makes 3 months $16.29 ($5.43 a month), 6 months $29.59 ($4.93 a month) and 1 year $53.79 ($4.48 a month). You can still change any box by hand before saving.</p>
       <p><label><b>How to pay</b> (shown to viewers on the packages screen)<br><textarea class="inp" id="howToPay"></textarea></label></p>
       <div class="row"><button class="btn primary" id="saveCfg">Save settings</button><span class="small" id="cfgMsg"></span></div>
     </div>
@@ -163,11 +163,11 @@ import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
 const $ = id => document.getElementById(id);
 const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 const TIERS = ["Silver", "Gold", "Platinum"];
-const LENGTHS = [["year", "1 year"], ["six", "6 months"], ["three", "3 months"], ["month", "1 month"]];
+const LENGTHS = [["month", "1 month"], ["three", "3 months"], ["six", "6 months"], ["year", "1 year"]];
 const DEFAULTS = {
-  silver_year: "$17.99", silver_six: "$9.89", silver_three: "$5.39", silver_month: "$1.99",
-  gold_year: "$35.99", gold_six: "$19.79", gold_three: "$10.89", gold_month: "$3.99",
-  platinum_year: "$53.99", platinum_six: "$29.69", platinum_three: "$16.29", platinum_month: "$5.99",
+  silver_month: "$1.99", silver_three: "$5.39", silver_six: "$9.79", silver_year: "$17.79",
+  gold_month: "$3.99", gold_three: "$10.89", gold_six: "$19.79", gold_year: "$35.99",
+  platinum_month: "$5.99", platinum_three: "$16.29", platinum_six: "$29.59", platinum_year: "$53.79",
   trialDays: 7, enforce: false,
   howToPay: "Pick a package below and press Ask. We'll message you back here with how to pay (Interac e-Transfer or card), and turn your package on as soon as it's paid. Questions? WhatsApp 437 602 6500.",
 };
@@ -225,8 +225,8 @@ if (!configured) {
       }
       tb.append(tr);
     }
-    // Settings saved before 3 months existed: work it out from the year.
-    for (const t of TIERS) if (saved[t.toLowerCase() + "_year"] && !saved[t.toLowerCase() + "_three"]) fillFromYear(t.toLowerCase());
+    // Settings saved before 3 months existed: work the others out from the month.
+    for (const t of TIERS) if (saved[t.toLowerCase() + "_month"] && !saved[t.toLowerCase() + "_three"]) fillFromMonth(t.toLowerCase());
     showPrices();
   }
 
@@ -234,21 +234,21 @@ if (!configured) {
   function showPrices() {
     document.querySelectorAll(".price[data-p]").forEach(el => {
       const t = el.dataset.p;
-      el.textContent = `${$(t + "_year").value}/year · ${$(t + "_six").value}/6 months · ${$(t + "_three").value}/3 months · ${$(t + "_month").value}/month`;
+      el.textContent = `${$(t + "_month").value}/month · ${$(t + "_three").value}/3 months · ${$(t + "_six").value}/6 months · ${$(t + "_year").value}/year`;
     });
   }
-  // From the yearly price: each shorter plan costs 10% more per month than the next longer one,
+  // From the monthly price: each longer plan costs 10% less per month than the one before it,
   // rounded to the nearest 10 cents and ending in 9 (the app does the same sums when a box is empty).
   const round99 = v => Math.max(0.99, Math.round(v * 10) / 10 - 0.01);
   const money = v => "$" + v.toFixed(2);
-  function fillFromYear(t) {
-    const y = parseFloat($(t + "_year").value.replace(/[^0-9.]/g, ""));
-    if (!(y > 0)) return;
-    const six = round99(y / 2 * 1.1), three = round99(six / 2 * 1.1), month = round99(three / 3 * 1.1);
-    $(t + "_six").value = money(six); $(t + "_three").value = money(three); $(t + "_month").value = money(month);
+  function fillFromMonth(t) {
+    const m = parseFloat($(t + "_month").value.replace(/[^0-9.]/g, ""));
+    if (!(m > 0)) return;
+    const three = round99(m * 3 / 1.1), six = round99(three * 2 / 1.1), year = round99(six * 2 / 1.1);
+    $(t + "_three").value = money(three); $(t + "_six").value = money(six); $(t + "_year").value = money(year);
   }
   $("priceRows").addEventListener("input", e => {
-    if (e.target.id?.endsWith("_year")) fillFromYear(e.target.id.replace("_year", ""));
+    if (e.target.id?.endsWith("_month")) fillFromMonth(e.target.id.replace("_month", ""));
     showPrices();
   });
 
