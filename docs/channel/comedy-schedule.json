@@ -1,0 +1,2279 @@
+{
+ "name": "Bazaar Comedy",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedy.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Bazaar Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies · Channel 00000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+ "tickerOn": true,
+ "videos": [
+  {
+   "id": "charlie-chaplin-festival",
+   "title": "Charlie Chaplin Festival",
+   "url": "https://archive.org/download/charlie_chaplin_film_fest/charlie_chaplin_film_fest.mp4",
+   "secs": 4646,
+   "kind": "programme"
+  },
+  {
+   "id": "his-girl-friday",
+   "title": "His Girl Friday",
+   "url": "https://archive.org/download/his_girl_friday/his_girl_friday.mp4",
+   "secs": 5504,
+   "kind": "programme"
+  },
+  {
+   "id": "my-favorite-brunette",
+   "title": "My Favorite Brunette",
+   "url": "https://archive.org/download/my_favorite_brunette/my_favorite_brunette.mp4",
+   "secs": 5212,
+   "kind": "programme"
+  },
+  {
+   "id": "as-you-like-it",
+   "title": "As You Like It",
+   "url": "https://archive.org/download/AsYouLikeIt1936/AsYouLikeIt.mp4",
+   "secs": 5783,
+   "kind": "programme"
+  },
+  {
+   "id": "royal-wedding",
+   "title": "Royal Wedding",
+   "url": "https://archive.org/download/royal_wedding/royal_wedding.mp4",
+   "secs": 5497,
+   "kind": "programme"
+  },
+  {
+   "id": "the-flying-deuces",
+   "title": "The Flying Deuces",
+   "url": "https://archive.org/download/TheFlyingDeuces/The_Flying_Deuces.mp4",
+   "secs": 4077,
+   "kind": "programme"
+  },
+  {
+   "id": "the-amazing-adventure",
+   "title": "The Amazing Adventure",
+   "url": "https://archive.org/download/amazing_adventure/amazing_adventuarchive.mp4",
+   "secs": 3712,
+   "kind": "programme"
+  },
+  {
+   "id": "mr-robinson-crusoe",
+   "title": "Mr. Robinson Crusoe",
+   "url": "https://archive.org/download/mr_robinson_crusoe/video.mp4",
+   "secs": 4231,
+   "kind": "programme"
+  },
+  {
+   "id": "africa-screams",
+   "title": "Africa Screams",
+   "url": "https://archive.org/download/AfricaScreams/Africa_Screams.mp4",
+   "secs": 4735,
+   "kind": "programme"
+  },
+  {
+   "id": "the-over-the-hill-gang",
+   "title": "The Over-the-Hill Gang",
+   "url": "https://archive.org/download/TheOvertheHillGang/TheOvertheHillGang.mp4",
+   "secs": 4208,
+   "kind": "programme"
+  },
+  {
+   "id": "behave-yourself",
+   "title": "Behave Yourself",
+   "url": "https://archive.org/download/behave_yourself_ipod/behave_yourself_512kb.mp4",
+   "secs": 4796,
+   "kind": "programme"
+  },
+  {
+   "id": "disorder-in-the-court",
+   "title": "Disorder in the Court",
+   "url": "https://archive.org/download/disorder_in_the_court/disorder_in_the_court.mp4",
+   "secs": 996,
+   "kind": "programme"
+  },
+  {
+   "id": "at-war-with-the-army",
+   "title": "At War with the Army",
+   "url": "https://archive.org/download/AtWarWithTheArmy/AtWarWithTheArmy.mp4",
+   "secs": 5431,
+   "kind": "programme"
+  },
+  {
+   "id": "the-over-the-hill-gang-rides-again",
+   "title": "The Over-the-Hill Gang Rides Again",
+   "url": "https://archive.org/download/TheOver-the-HillGangRidesAgain/TheOver-the-HillGangRidesAgain.mp4",
+   "secs": 4433,
+   "kind": "programme"
+  },
+  {
+   "id": "sing-a-song-of-six-pants",
+   "title": "Sing A Song of Six Pants",
+   "url": "https://archive.org/download/sing_a_song_of_six_pants/sing_a_song_of_six_pants.mp4",
+   "secs": 1017,
+   "kind": "programme"
+  },
+  {
+   "id": "private-snuffy-smith",
+   "title": "Private Snuffy Smith",
+   "url": "https://archive.org/download/private_snuffy_smith/private_snuffy_smith.mp4",
+   "secs": 3953,
+   "kind": "programme"
+  },
+  {
+   "id": "jack-and-the-beanstalk",
+   "title": "Jack and the Beanstalk",
+   "url": "https://archive.org/download/cco_jackandthebeanstalk/ccoPublicDomainJack_and_the_Beanstalk.mp4",
+   "secs": 4898,
+   "kind": "programme"
+  },
+  {
+   "id": "girl-o-my-dreams",
+   "title": "Girl o' My Dreams",
+   "url": "https://archive.org/download/girl_o_my_dreams/girl_o_my_dreams.mp4",
+   "secs": 3770,
+   "kind": "programme"
+  },
+  {
+   "id": "the-general",
+   "title": "The General",
+   "url": "https://archive.org/download/TheGeneral/The_General_512kb.mp4",
+   "secs": 4039,
+   "kind": "programme"
+  },
+  {
+   "id": "the-ghost-train",
+   "title": "The Ghost Train",
+   "url": "https://archive.org/download/TheGhostTrain/TheGhostTrain.mp4",
+   "secs": 4882,
+   "kind": "programme"
+  },
+  {
+   "id": "the-goat",
+   "title": "The Goat",
+   "url": "https://archive.org/download/TheGoat/The_Goat_512kb.mp4",
+   "secs": 1374,
+   "kind": "programme"
+  },
+  {
+   "id": "mush-and-milk",
+   "title": "Mush and Milk",
+   "url": "https://archive.org/download/MushAndMilk/MushnMilk_512kb.mp4",
+   "secs": 1084,
+   "kind": "programme"
+  },
+  {
+   "id": "miss-london-ltd",
+   "title": "Miss London Ltd.",
+   "url": "https://archive.org/download/miss_london_ltd_1943/miss_london_ltd.mp4",
+   "secs": 5695,
+   "kind": "programme"
+  },
+  {
+   "id": "made-for-each-other",
+   "title": "Made for Each Other",
+   "url": "https://archive.org/download/made_for_each_other_film/made_for_each_other_512kb.mp4",
+   "secs": 5429,
+   "kind": "programme"
+  },
+  {
+   "id": "the-divorce-of-lady-x",
+   "title": "The Divorce of Lady X",
+   "url": "https://archive.org/download/Lady_X/The_Divorce_of_Lady_X_512kb.mp4",
+   "secs": 5443,
+   "kind": "programme"
+  },
+  {
+   "id": "santa-s-surprise",
+   "title": "Santa's Surprise",
+   "url": "https://archive.org/download/SantasSuprise/SantasSuprise_512kb.mp4",
+   "secs": 466,
+   "kind": "programme"
+  },
+  {
+   "id": "one-week",
+   "title": "One Week",
+   "url": "https://archive.org/download/OneWeek/One_Week_512kb.mp4",
+   "secs": 1336,
+   "kind": "programme"
+  },
+  {
+   "id": "nothing-sacred",
+   "title": "Nothing Sacred",
+   "url": "https://archive.org/download/NothingSacred/NothingSacred.mp4",
+   "secs": 4450,
+   "kind": "programme"
+  },
+  {
+   "id": "private-buckaroo",
+   "title": "Private Buckaroo",
+   "url": "https://archive.org/download/private_buckaroo_ipod/private_buckaroo_512kb.mp4",
+   "secs": 4025,
+   "kind": "programme"
+  },
+  {
+   "id": "a-night-in-the-show",
+   "title": "A Night in the Show",
+   "url": "https://archive.org/download/ANightintheShow/A_Night_in_the_Show_512kb.mp4",
+   "secs": 1083,
+   "kind": "programme"
+  },
+  {
+   "id": "topper-returns",
+   "title": "Topper Returns",
+   "url": "https://archive.org/download/Topper_Returns_41/Topper_Returns_41_512kb.mp4",
+   "secs": 5301,
+   "kind": "programme"
+  },
+  {
+   "id": "malice-in-the-palace",
+   "title": "Malice in the Palace",
+   "url": "https://archive.org/download/malice_in_the_palace/malice_in_the_palace.mp4",
+   "secs": 945,
+   "kind": "programme"
+  },
+  {
+   "id": "the-scarlet-pimpernel",
+   "title": "The Scarlet Pimpernel",
+   "url": "https://archive.org/download/TheScarletPimpernel/TheScarletPimpernel.mp4",
+   "secs": 5571,
+   "kind": "programme"
+  },
+  {
+   "id": "love-island",
+   "title": "Love Island",
+   "url": "https://archive.org/download/love_island/love_island.mp4",
+   "secs": 3702,
+   "kind": "programme"
+  },
+  {
+   "id": "my-dear-secretary",
+   "title": "My Dear Secretary",
+   "url": "https://archive.org/download/my_dear_secretary/my_dear_secretary.mp4",
+   "secs": 5662,
+   "kind": "programme"
+  },
+  {
+   "id": "pygmalion",
+   "title": "Pygmalion",
+   "url": "https://archive.org/download/Pygmalion/Pygmalion.mp4",
+   "secs": 5703,
+   "kind": "programme"
+  },
+  {
+   "id": "love-affair",
+   "title": "Love Affair",
+   "url": "https://archive.org/download/LoveAffair/LoveAffair.mp4",
+   "secs": 5210,
+   "kind": "programme"
+  },
+  {
+   "id": "a-bride-for-henry",
+   "title": "A Bride for Henry",
+   "url": "https://archive.org/download/bride_for_henry_ipod/bride_for_henry_512kb.mp4",
+   "secs": 3525,
+   "kind": "programme"
+  },
+  {
+   "id": "the-bashful-bachelor",
+   "title": "The Bashful Bachelor",
+   "url": "https://archive.org/download/the_bashful_bachelor/the_bashful_bachelor.mp4",
+   "secs": 4575,
+   "kind": "programme"
+  },
+  {
+   "id": "steamboat-bill-jr",
+   "title": "Steamboat Bill Jr.",
+   "url": "https://archive.org/download/steamboat_bill_ipod/steamboat_bill_512kb.mp4",
+   "secs": 4147,
+   "kind": "programme"
+  },
+  {
+   "id": "uncle-joe",
+   "title": "Uncle Joe",
+   "url": "https://archive.org/download/UncleJoe/Uncle_Joe.mp4",
+   "secs": 3040,
+   "kind": "programme"
+  },
+  {
+   "id": "little-men",
+   "title": "Little Men",
+   "url": "https://archive.org/download/little_men/little_men.mp4",
+   "secs": 4986,
+   "kind": "programme"
+  },
+  {
+   "id": "pot-o-gold",
+   "title": "Pot o' Gold",
+   "url": "https://archive.org/download/pot_o_gold/pot_o_gold_512kb.mp4",
+   "secs": 5130,
+   "kind": "programme"
+  },
+  {
+   "id": "the-milky-way",
+   "title": "The Milky Way",
+   "url": "https://archive.org/download/Milky_Way_movie/Milky_Way.mp4",
+   "secs": 5247,
+   "kind": "programme"
+  },
+  {
+   "id": "parlor-bedroom-and-bath",
+   "title": "Parlor, Bedroom and Bath",
+   "url": "https://archive.org/download/ParlorBedroomandBath/Parlor_Bedroom_and_Bath.mp4",
+   "secs": 4350,
+   "kind": "programme"
+  },
+  {
+   "id": "kid-dynamite",
+   "title": "Kid Dynamite",
+   "url": "https://archive.org/download/kid_dynamite/kid_dynamitearchive.mp4",
+   "secs": 3965,
+   "kind": "programme"
+  },
+  {
+   "id": "affairs-of-cappy-ricks",
+   "title": "Affairs of Cappy Ricks",
+   "url": "https://archive.org/download/affairs_of_cappy_ricks_ipod/affairs_of_cappy_ricks_512kb.mp4",
+   "secs": 3350,
+   "kind": "programme"
+  },
+  {
+   "id": "my-love-for-your-aka-honeymoon-in-bali",
+   "title": "My Love for Your (AKA Honeymoon in Bali)",
+   "url": "https://archive.org/download/my_love_for_yours_ipod/my_love_for_yours_512kb.mp4",
+   "secs": 5984,
+   "kind": "programme"
+  },
+  {
+   "id": "that-uncertain-feeling",
+   "title": "That Uncertain Feeling",
+   "url": "https://archive.org/download/ThatUncertainFeeling/ThatUncertainFeeling.mp4",
+   "secs": 4998,
+   "kind": "programme"
+  },
+  {
+   "id": "the-sin-of-harold-diddlebock",
+   "title": "The Sin of Harold Diddlebock",
+   "url": "https://archive.org/download/harolddiddlebock/harolddiddlebock_512kb.mp4",
+   "secs": 5375,
+   "kind": "programme"
+  },
+  {
+   "id": "war-babies",
+   "title": "War Babies",
+   "url": "https://archive.org/download/war_babies/war_babies.mp4",
+   "secs": 552,
+   "kind": "programme"
+  },
+  {
+   "id": "so-s-your-aunt-emma",
+   "title": "So's Your Aunt Emma",
+   "url": "https://archive.org/download/sos_your_aunt_emma_1942/sos_your_aunt_emma_512kb.mp4",
+   "secs": 3739,
+   "kind": "programme"
+  },
+  {
+   "id": "mud-and-sand",
+   "title": "Mud and Sand",
+   "url": "https://archive.org/download/MudandSand/MudandSand_512kb.mp4",
+   "secs": 2385,
+   "kind": "programme"
+  },
+  {
+   "id": "neath-brooklyn-bridge",
+   "title": "'Neath Brooklyn Bridge",
+   "url": "https://archive.org/download/neath_brooklyn_bridge/neath_the_brooklyn_bridge.mp4",
+   "secs": 3654,
+   "kind": "programme"
+  },
+  {
+   "id": "let-s-get-tough",
+   "title": "Let's Get Tough",
+   "url": "https://archive.org/download/lets_get_tough/lets_get_tough_512kb.mp4",
+   "secs": 3249,
+   "kind": "programme"
+  },
+  {
+   "id": "million-dollar-weekend",
+   "title": "Million Dollar Weekend",
+   "url": "https://archive.org/download/million_dollar_weekend/million_dollar_weekend.mp4",
+   "secs": 4324,
+   "kind": "programme"
+  },
+  {
+   "id": "bowery-blitzkrieg",
+   "title": "Bowery Blitzkrieg",
+   "url": "https://archive.org/download/bowery_blitzkrieg/bowery_blitzkrieg.mp4",
+   "secs": 3771,
+   "kind": "programme"
+  },
+  {
+   "id": "his-double-life",
+   "title": "His Double Life",
+   "url": "https://archive.org/download/his_double_life/his_double_life.mp4",
+   "secs": 5524,
+   "kind": "programme"
+  },
+  {
+   "id": "irish-luck",
+   "title": "Irish Luck",
+   "url": "https://archive.org/download/irish_luck_ipod/irish_luck_512kb.mp4",
+   "secs": 3048,
+   "kind": "programme"
+  },
+  {
+   "id": "dora-s-dunkin-donuts",
+   "title": "Dora's Dunkin Donuts",
+   "url": "https://archive.org/download/DorasDunkinDonuts/AVI_ST_Doras_Dunkin_Donuts.mp4",
+   "secs": 1182,
+   "kind": "programme"
+  },
+  {
+   "id": "the-ghost-walks",
+   "title": "The Ghost Walks",
+   "url": "https://archive.org/download/The.Ghost.Walks/The_Ghost_Walks_512kb.mp4",
+   "secs": 3806,
+   "kind": "programme"
+  },
+  {
+   "id": "million-dollar-kid",
+   "title": "Million Dollar Kid",
+   "url": "https://archive.org/download/the_million_dollar_kid/the_million_dollar_kid.mp4",
+   "secs": 3848,
+   "kind": "programme"
+  },
+  {
+   "id": "fiesta",
+   "title": "Fiesta",
+   "url": "https://archive.org/download/Fiesta_/Fiesta.mp4",
+   "secs": 2662,
+   "kind": "programme"
+  },
+  {
+   "id": "eternally-yours",
+   "title": "Eternally Yours",
+   "url": "https://archive.org/download/eternally_yours_ipod/eternally_yours_512kb.mp4",
+   "secs": 5351,
+   "kind": "programme"
+  },
+  {
+   "id": "street-angel",
+   "title": "Street Angel (馬路天使)",
+   "url": "https://archive.org/download/street_angel/street_angel.mp4",
+   "secs": 5429,
+   "kind": "programme"
+  },
+  {
+   "id": "the-nasty-rabbit-1964",
+   "title": "The Nasty Rabbit 1964",
+   "url": "https://archive.org/download/TheNastyRabbit1964.mp4/TheNastyRabbit1964.mp4",
+   "secs": 5358,
+   "kind": "programme"
+  },
+  {
+   "id": "oh-mr-porter",
+   "title": "Oh, Mr. Porter!",
+   "url": "https://archive.org/download/Oh_Mr.Porter_1937/Oh_Mr.Porter_1937.mp4",
+   "secs": 4841,
+   "kind": "programme"
+  },
+  {
+   "id": "topper-henrietta-sells-the-house",
+   "title": "Topper - Henrietta Sells The House",
+   "url": "https://archive.org/download/Topper-HenriettaSellsTheHouse/TopperHenriettaSellsTheHouse_512kb.mp4",
+   "secs": 1692,
+   "kind": "programme"
+  },
+  {
+   "id": "the-golf-specialist",
+   "title": "The Golf Specialist",
+   "url": "https://archive.org/download/Golf_Specialist_1930/Golf_Specialist.mp4",
+   "secs": 1230,
+   "kind": "programme"
+  },
+  {
+   "id": "the-beachcomber",
+   "title": "The Beachcomber",
+   "url": "https://archive.org/download/TheBeachcomber/The_Beachcomber.mp4",
+   "secs": 5252,
+   "kind": "programme"
+  },
+  {
+   "id": "stork-club-the",
+   "title": "Stork Club, The",
+   "url": "https://archive.org/download/the_stork_club/the_stork_club_512kb.mp4",
+   "secs": 5899,
+   "kind": "programme"
+  },
+  {
+   "id": "thunder-in-the-city",
+   "title": "Thunder in the City",
+   "url": "https://archive.org/download/ThunderintheCity/ThunderintheCity.mp4",
+   "secs": 5216,
+   "kind": "programme"
+  },
+  {
+   "id": "where-there-s-a-will",
+   "title": "Where There's a Will",
+   "url": "https://archive.org/download/WhereTheresAWill/WhereTheresAWill.mp4",
+   "secs": 4597,
+   "kind": "programme"
+  },
+  {
+   "id": "steamboat-bill-jr-2",
+   "title": "Steamboat Bill, Jr.",
+   "url": "https://archive.org/download/SteamboatBillJr/Steamboat_Bill.Jr_512kb.mp4",
+   "secs": 4147,
+   "kind": "programme"
+  },
+  {
+   "id": "the-electric-house",
+   "title": "The Electric House",
+   "url": "https://archive.org/download/TheElectricHouse/The_Electric_House_512kb.mp4",
+   "secs": 1232,
+   "kind": "programme"
+  },
+  {
+   "id": "lost-in-the-stratosphere",
+   "title": "Lost in the Stratosphere",
+   "url": "https://archive.org/download/lost_in_the_stratosphere/lost_in_the_stratosphere.mp4",
+   "secs": 3912,
+   "kind": "programme"
+  },
+  {
+   "id": "lost-honeymoon",
+   "title": "Lost Honeymoon",
+   "url": "https://archive.org/download/LostHoneymoon/LostHoneymoon.mp4",
+   "secs": 4181,
+   "kind": "programme"
+  },
+  {
+   "id": "smart-alecks",
+   "title": "Smart Alecks",
+   "url": "https://archive.org/download/smart_alecks_ipod/smart_alecks_512kb.mp4",
+   "secs": 3922,
+   "kind": "programme"
+  },
+  {
+   "id": "flying-wild",
+   "title": "Flying Wild",
+   "url": "https://archive.org/download/flying_wild/flying_wild.mp4",
+   "secs": 3654,
+   "kind": "programme"
+  },
+  {
+   "id": "manhattan-love-song",
+   "title": "Manhattan Love Song",
+   "url": "https://archive.org/download/ManhattanLoveSong/ManhattanLoveSong.mp4",
+   "secs": 4177,
+   "kind": "programme"
+  },
+  {
+   "id": "bela-lugosi-meets-a-brooklyn-gorilla",
+   "title": "Bela Lugosi Meets a Brooklyn Gorilla",
+   "url": "https://archive.org/download/BelaLugosiMeetsaBrooklynGorilla/BelaLugosiMeetsaBrooklynGorilla.mp4",
+   "secs": 4447,
+   "kind": "programme"
+  },
+  {
+   "id": "storm-in-a-teacup",
+   "title": "Storm in a Teacup",
+   "url": "https://archive.org/download/StormInATeacup1937/StormInATeacup1937VivienLeighRexHarrisonCecilParker.mp4",
+   "secs": 5161,
+   "kind": "programme"
+  },
+  {
+   "id": "love-laughs-at-andy-hardy",
+   "title": "Love Laughs at Andy Hardy",
+   "url": "https://archive.org/download/loveLaughsatAndyHardy/love_laughs_at_andy_hardy_512kb.mp4",
+   "secs": 5549,
+   "kind": "programme"
+  },
+  {
+   "id": "girl-from-calgary",
+   "title": "Girl From Calgary",
+   "url": "https://archive.org/download/girl_from_calgary/girl_from_calgary.mp4",
+   "secs": 3764,
+   "kind": "programme"
+  },
+  {
+   "id": "speak-easily",
+   "title": "Speak Easily",
+   "url": "https://archive.org/download/speak_easily/speak_easily_512kb.mp4",
+   "secs": 4858,
+   "kind": "programme"
+  },
+  {
+   "id": "the-gorilla",
+   "title": "The Gorilla",
+   "url": "https://archive.org/download/The_Gorilla_1939/The_Gorilla_1939_512kb.mp4",
+   "secs": 3964,
+   "kind": "programme"
+  },
+  {
+   "id": "the-nut",
+   "title": "The Nut",
+   "url": "https://archive.org/download/The_Nut/The_Nut_512kb.mp4",
+   "secs": 4468,
+   "kind": "programme"
+  },
+  {
+   "id": "q-planes",
+   "title": "Q Planes",
+   "url": "https://archive.org/download/Q-Planes/Q-Planes.mp4",
+   "secs": 4708,
+   "kind": "programme"
+  },
+  {
+   "id": "lady-windermere-s-fan",
+   "title": "Lady Windermere's Fan",
+   "url": "https://archive.org/download/LadyWindermeresFan/LadyWindermeresFan_512kb.mp4",
+   "secs": 5176,
+   "kind": "programme"
+  },
+  {
+   "id": "angel-on-my-shoulder",
+   "title": "Angel on My Shoulder",
+   "url": "https://archive.org/download/angelOnMyShoulder/angel_on_my_shoulder.mp4",
+   "secs": 5396,
+   "kind": "programme"
+  },
+  {
+   "id": "so-this-is-washingtom",
+   "title": "So This is Washingtom",
+   "url": "https://archive.org/download/so_this_is_washington_ipod/so_this_is_washington_512kb.mp4",
+   "secs": 3763,
+   "kind": "programme"
+  },
+  {
+   "id": "back-room-boy",
+   "title": "Back-Room Boy",
+   "url": "https://archive.org/download/Back-RoomBoy/Back-RoomBoy.mp4",
+   "secs": 4734,
+   "kind": "programme"
+  },
+  {
+   "id": "his-new-profession",
+   "title": "His New Profession",
+   "url": "https://archive.org/download/HisNewProfession/The_good_for_nothing_512kb.mp4",
+   "secs": 821,
+   "kind": "programme"
+  },
+  {
+   "id": "big-news",
+   "title": "Big News",
+   "url": "https://archive.org/download/BigNews/BigNews.mp4",
+   "secs": 3977,
+   "kind": "programme"
+  },
+  {
+   "id": "when-s-your-birthday",
+   "title": "When's Your Birthday?",
+   "url": "https://archive.org/download/WhensYourBirthday/WhensYourBirthday.mp4",
+   "secs": 4536,
+   "kind": "programme"
+  },
+  {
+   "id": "juke-joint",
+   "title": "Juke Joint",
+   "url": "https://archive.org/download/JukeJoint/JukeJoint.mp4",
+   "secs": 3515,
+   "kind": "programme"
+  },
+  {
+   "id": "zis-boom-bah",
+   "title": "Zis Boom Bah",
+   "url": "https://archive.org/download/zis_boom_bah/zis_boom_bah_512kb.mp4",
+   "secs": 3692,
+   "kind": "programme"
+  },
+  {
+   "id": "the-perils-of-pauline",
+   "title": "The Perils of Pauline",
+   "url": "https://archive.org/download/ThePerilsofPauline/ThePerilsofPauline.mp4",
+   "secs": 5551,
+   "kind": "programme"
+  },
+  {
+   "id": "the-private-life-of-don-juan",
+   "title": "The Private Life of Don Juan",
+   "url": "https://archive.org/download/ThePrivateLifeofDonJuan/ThePrivateLifeofDonJuan.mp4",
+   "secs": 5215,
+   "kind": "programme"
+  },
+  {
+   "id": "chasing-trouble",
+   "title": "Chasing Trouble",
+   "url": "https://archive.org/download/chasing_trouble_ipod/chasing_trouble_512kb.mp4",
+   "secs": 3580,
+   "kind": "programme"
+  },
+  {
+   "id": "escape-to-paradise",
+   "title": "Escape To Paradise",
+   "url": "https://archive.org/download/escape_to_paradise/escape_to_paradise.mp4",
+   "secs": 3641,
+   "kind": "programme"
+  },
+  {
+   "id": "ask-dad",
+   "title": "Ask Dad",
+   "url": "https://archive.org/download/ask_dad/ask_dad.mp4",
+   "secs": 1335,
+   "kind": "programme"
+  },
+  {
+   "id": "romance-on-the-run",
+   "title": "Romance on the Run",
+   "url": "https://archive.org/download/Romance_on_the_Run_H264/Romance_on_the_Run_512kb.mp4",
+   "secs": 3186,
+   "kind": "programme"
+  },
+  {
+   "id": "the-animal-kingdom",
+   "title": "The Animal Kingdom",
+   "url": "https://archive.org/download/Animal_Kingdom/Animal_Kingdom.mp4",
+   "secs": 5074,
+   "kind": "programme"
+  },
+  {
+   "id": "reaching-for-the-moon",
+   "title": "Reaching for the Moon",
+   "url": "https://archive.org/download/ReachingForTheMoondecember291930/ReachingForTheMoon-1930-douglasFairbanksBebeDanielsEdwardEverettHortonBingCrosby.mp4",
+   "secs": 3979,
+   "kind": "programme"
+  },
+  {
+   "id": "there-goes-the-bride",
+   "title": "There Goes the Bride",
+   "url": "https://archive.org/download/TheregoestheBride/TheregoestheBride.mp4",
+   "secs": 4619,
+   "kind": "programme"
+  },
+  {
+   "id": "one-body-too-many",
+   "title": "One Body Too Many",
+   "url": "https://archive.org/download/one_body_too_many_ipod/One_Body_Too_Many_512kb.mp4",
+   "secs": 4532,
+   "kind": "programme"
+  },
+  {
+   "id": "swing-hostess",
+   "title": "Swing Hostess",
+   "url": "https://archive.org/download/SwingHostess/SwingHostess.mp4",
+   "secs": 4412,
+   "kind": "programme"
+  },
+  {
+   "id": "cops",
+   "title": "Cops",
+   "url": "https://archive.org/download/Cops/cops_512kb.mp4",
+   "secs": 1084,
+   "kind": "programme"
+  },
+  {
+   "id": "half-shot-at-sunrse",
+   "title": "Half Shot at Sunrse",
+   "url": "https://archive.org/download/half_shot_at_sunrise/half_shot_at_sunrise_512kb.mp4",
+   "secs": 4682,
+   "kind": "programme"
+  },
+  {
+   "id": "judge-priest",
+   "title": "Judge Priest",
+   "url": "https://archive.org/download/Judge_Priest/Judge_Priest.mp4",
+   "secs": 4830,
+   "kind": "programme"
+  },
+  {
+   "id": "king-kelly-of-the-u-s-a",
+   "title": "King Kelly of the U.S.A.",
+   "url": "https://archive.org/download/KingKellyoftheUSA/KingKellyoftheUSA.mp4",
+   "secs": 4003,
+   "kind": "programme"
+  },
+  {
+   "id": "a-natural-born-gambler",
+   "title": "A Natural Born Gambler",
+   "url": "https://archive.org/download/natural_born_gambler/natural_born_gambler_512kb.mp4",
+   "secs": 1310,
+   "kind": "programme"
+  },
+  {
+   "id": "the-bell-boy",
+   "title": "The Bell Boy",
+   "url": "https://archive.org/download/bellboy/bellboy_512kb.mp4",
+   "secs": 1718,
+   "kind": "programme"
+  },
+  {
+   "id": "chasing-choo-choos",
+   "title": "CHASING CHOO CHOOS",
+   "url": "https://archive.org/download/CHASINGCHOOCHOOS/CHASING%20CHOO%20CHOOS.mp4",
+   "secs": 1341,
+   "kind": "programme"
+  },
+  {
+   "id": "one-too-many",
+   "title": "One Too Many",
+   "url": "https://archive.org/download/OneTooMany/one_too_many_512kb.mp4",
+   "secs": 899,
+   "kind": "programme"
+  },
+  {
+   "id": "pardon-my-pups",
+   "title": "Pardon My Pups",
+   "url": "https://archive.org/download/PardonMyPups/AVI_ST_Pardon_My_Pups.mp4",
+   "secs": 1095,
+   "kind": "programme"
+  },
+  {
+   "id": "mabel-s-dramatic-career",
+   "title": "Mabel's Dramatic Career",
+   "url": "https://archive.org/download/MabelsDramaticCareer/mabels_dramatic_career_512kb.mp4",
+   "secs": 836,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-a-night-in-the-show-1915",
+   "title": "Charlie Chaplin . A Night In The Show (1915, Classic, Silent, Short, Colorized Film noir)",
+   "url": "https://archive.org/download/charlie-chaplin-.-a-night-in-the-show-1915-classic-short-colourized-bw-mix/Charlie%20Chaplin%20.%20A%20Night%20in%20the%20Show%20%281915%2C%20Classic%2C%20Short%2C%20Colourized%20BW%20mix%29.mp4",
+   "secs": 1451,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-the-cure-1917-classic-si",
+   "title": "Charlie Chaplin . The Cure (1917 Classic, Silent, Film Noir, Comedy)",
+   "url": "https://archive.org/download/charlie-chaplin-.-the-cure-1917-classic-siletnt-film-noir-comedy/Charlie%20Chaplin%20.%20The%20Cure%20%281917%20Classic%2C%20Siletnt%2C%20Film%20noir%2C%20Comedy%29.mp4",
+   "secs": 1245,
+   "kind": "programme"
+  },
+  {
+   "id": "i-remember-mama-mama-s-bad-day",
+   "title": "''I Remember Mama'' - Mama's Bad Day",
+   "url": "https://archive.org/download/Mama1950/Mama-MamasBadDay1950.mp4",
+   "secs": 1734,
+   "kind": "programme"
+  },
+  {
+   "id": "ozzie-and-harriet-david-s-almost-in-laws",
+   "title": "''Ozzie and Harriet'' - David's Almost In-Laws (Aired 23 November 1960)",
+   "url": "https://archive.org/download/OzzieNelsonInLaws/AlmostInLawsDavidNelson_512kb.mp4",
+   "secs": 1689,
+   "kind": "programme"
+  },
+  {
+   "id": "early-television-comedy-burns-and-allen-",
+   "title": "Early Television Comedy: ''Burns and Allen\" (Episode Title: 'Kleebob Card Game')",
+   "url": "https://archive.org/download/Kleebob/BurnsAllenKleebob_512kb.mp4",
+   "secs": 1763,
+   "kind": "programme"
+  },
+  {
+   "id": "fifties-television-dreams-i-married-joan",
+   "title": "Fifties Television: ''Dreams'' - I Married Joan (1952)",
+   "url": "https://archive.org/download/Dreams_Joan/IMarriedJoan_Dreams_512kb.mp4",
+   "secs": 1432,
+   "kind": "programme"
+  },
+  {
+   "id": "beulah-the-new-arrival-50-s-sitcom-class",
+   "title": "'Beulah' - The New Arrival (50's Sitcom) (Classic Television)",
+   "url": "https://archive.org/download/Beulah_3/Beulah-NewArrival.mp4",
+   "secs": 1497,
+   "kind": "programme"
+  },
+  {
+   "id": "the-adventures-of-ozzie-and-harriet-epis",
+   "title": "''The Adventures of Ozzie and Harriet'' (Episode Title: ''Little Black Box'', aired 13 May 1959)",
+   "url": "https://archive.org/download/OzzieBox/OzzieBlackBox_512kb.mp4",
+   "secs": 1760,
+   "kind": "programme"
+  },
+  {
+   "id": "the-betty-hutton-show-art-for-goldie-s-s",
+   "title": "'The Betty Hutton Show' - Art for Goldie's Sake",
+   "url": "https://archive.org/download/Betty_Mutton/TheBettyHuttonShow-ArtForGoldiesSake.mp4",
+   "secs": 1520,
+   "kind": "programme"
+  },
+  {
+   "id": "classic-tv-ozzie-and-harriet-episode-air",
+   "title": "Classic TV: ''Ozzie and Harriet'' (Episode Aired 4 June 1958)",
+   "url": "https://archive.org/download/OzzieBridge/OzzieBridge_512kb.mp4",
+   "secs": 1758,
+   "kind": "programme"
+  },
+  {
+   "id": "life-with-elizabeth-misc-episode-no-1",
+   "title": "''Life with Elizabeth'' - Misc episode No. 1",
+   "url": "https://archive.org/download/Life_with_Elizabeth/LifeWithElizabethMisc1.mp4",
+   "secs": 1512,
+   "kind": "programme"
+  },
+  {
+   "id": "the-eve-arden-show-it-gives-me-great-ple",
+   "title": "'The Eve Arden Show' - It Gives Me Great Pleasure",
+   "url": "https://archive.org/download/Eve_Arden_3/Eve_Arden_3_512kb.mp4",
+   "secs": 1684,
+   "kind": "programme"
+  },
+  {
+   "id": "mama-the-parade-grandstand-1955",
+   "title": "'Mama' - The Parade Grandstand (1955)",
+   "url": "https://archive.org/download/Mama5/TheParadeGrandstand1955.mp4",
+   "secs": 1758,
+   "kind": "programme"
+  },
+  {
+   "id": "classic-television-comedy-the-pajama-gam",
+   "title": "Classic Television Comedy: ''The Pajama Game'' - Ozzie and Harriet",
+   "url": "https://archive.org/download/OzziePajamas/OzzieHarriet_Pajama_512kb.mp4",
+   "secs": 1764,
+   "kind": "programme"
+  },
+  {
+   "id": "burns-and-allen-beverly-hills-uplift-soc",
+   "title": "''Burns and Allen'' - Beverly Hills Uplift Society (Episode aired 11 October 1951)",
+   "url": "https://archive.org/download/HeyGracieUplift/BeverlyHillsUplift1951.mp4",
+   "secs": 1705,
+   "kind": "programme"
+  },
+  {
+   "id": "classic-tv-comedy-burns-and-allen-title-",
+   "title": "Classic TV Comedy: ''Burns and Allen'' - (Title: Gracie's Vegetarian Plot) (1951)",
+   "url": "https://archive.org/download/GraciePlot/GraciePlot_512kb.mp4",
+   "secs": 1766,
+   "kind": "programme"
+  },
+  {
+   "id": "mack-and-myer-for-hire-finders-weepers-c",
+   "title": "\"Mack and Myer for Hire\" - Finders Weepers (Classic TV)",
+   "url": "https://archive.org/download/Friendly_Enemies/MackandMyerForHire-FindersWeepers.mp4",
+   "secs": 689,
+   "kind": "programme"
+  },
+  {
+   "id": "classic-sitcom-comedy-ozzie-and-harriet-",
+   "title": "Classic Sitcom Comedy: ''Ozzie and Harriet'' (''The Barking Dog'', 16 November 1961)",
+   "url": "https://archive.org/download/BarkingDog1961/BarkingDog_512kb.mp4",
+   "secs": 1745,
+   "kind": "programme"
+  },
+  {
+   "id": "meet-corliss-archer-no-clothes-for-the-p",
+   "title": "'Meet Corliss Archer' - No Clothes for the Party",
+   "url": "https://archive.org/download/Corliss_7/Corliss_7_1954_512kb.mp4",
+   "secs": 1486,
+   "kind": "programme"
+  },
+  {
+   "id": "burns-and-allen-episode-title-too-much-o",
+   "title": "''Burns and Allen'' (Episode title: ''Too Much of the Mortons''?) (Possibly Aired: 5th July 1951)",
+   "url": "https://archive.org/download/GracieGeorgePlusOthers/TooMuchGracie_512kb.mp4",
+   "secs": 1765,
+   "kind": "programme"
+  },
+  {
+   "id": "life-with-elizabeth-misc-episode-no-2",
+   "title": "''Life with Elizabeth'' - Misc episode No. 2",
+   "url": "https://archive.org/download/Life_With_Elizabeth_2/LifeWithElizabethMisc2.mp4",
+   "secs": 1554,
+   "kind": "programme"
+  },
+  {
+   "id": "burns-and-allen-space-patrol-kids-visit-",
+   "title": "''Burns and Allen'' - Space Patrol Kids Visit (Episide aired 16 August 1951)",
+   "url": "https://archive.org/download/GracieAllenSpaceGirls/SpacePatrolKidsVisit.mp4",
+   "secs": 1759,
+   "kind": "programme"
+  },
+  {
+   "id": "classic-tv-comedy-burns-and-allen-episod",
+   "title": "Classic TV Comedy: ''Burns and Allen'' - (Episode Title: Teenage Girl Spends the Weekend)",
+   "url": "https://archive.org/download/BurnsAllenTeenager/TeenageGirlSpendstheWeekend1951.mp4",
+   "secs": 1774,
+   "kind": "programme"
+  },
+  {
+   "id": "classic-tv-comedy-burns-and-allen-episod-2",
+   "title": "Classic TV Comedy: ''Burns and Allen'' - (Episode Title: The Income Tax Man)",
+   "url": "https://archive.org/download/IncomeTaxMan/GracieTax_512kb.mp4",
+   "secs": 1768,
+   "kind": "programme"
+  },
+  {
+   "id": "1950-s-television-broken-toe-i-married-j",
+   "title": "1950's Television: - Broken Toe - ''I Married Joan''",
+   "url": "https://archive.org/download/Joan_Broken_Toe/Joan_Broken_Toe_512kb.mp4",
+   "secs": 1441,
+   "kind": "programme"
+  },
+  {
+   "id": "fifties-popular-culture-burns-and-allen-",
+   "title": "Fifties Popular Culture - ''Burns and Allen'' (Episode Aired 13th March 1952)",
+   "url": "https://archive.org/download/GracieRing/GracieRing_512kb.mp4",
+   "secs": 1768,
+   "kind": "programme"
+  },
+  {
+   "id": "i-married-joan-the-jailbird-1955-nbc-tv-",
+   "title": "''I Married Joan'' - The Jailbird (1955, NBC-TV Comedy)",
+   "url": "https://archive.org/download/JailJoan/Joan_Jailbird_512kb.mp4",
+   "secs": 1490,
+   "kind": "programme"
+  },
+  {
+   "id": "meet-corliss-archer-corliss-the-cheerlea",
+   "title": "\"Meet Corliss Archer\" - Corliss The Cheerleader",
+   "url": "https://archive.org/download/Corliss_The_Cheerleader/Corliss_The_Cheerleader_512kb.mp4",
+   "secs": 1549,
+   "kind": "programme"
+  },
+  {
+   "id": "1954-i-married-joan-the-clothes-budget-n",
+   "title": "1954 ''I Married Joan'' - ''The Clothes Budget' - (NBC-TV, Light Comedy)",
+   "url": "https://archive.org/download/JoanClothes/JoanClothes_512kb.mp4",
+   "secs": 1446,
+   "kind": "programme"
+  },
+  {
+   "id": "ozzie-and-harriet-season-8-episode-7-tit",
+   "title": "''Ozzie and Harriet'' (Season 8, episode 7, title ''David, the Sleuth'', aired 18 November 1959)",
+   "url": "https://archive.org/download/DavidNelsonIsBetterThanFamilyGuy/DavidtheSleuth_512kb.mp4",
+   "secs": 1747,
+   "kind": "programme"
+  },
+  {
+   "id": "1960-s-television-ozzie-and-harriet-a-le",
+   "title": "1960's Television: ''Ozzie and Harriet'' (''A Letter About Harriet'', 1 April 1964)",
+   "url": "https://archive.org/download/1960sTelevisionozzieAndHarrietaLetterAboutHarriet1April/LetterAboutHarriet_512kb.mp4",
+   "secs": 1671,
+   "kind": "programme"
+  },
+  {
+   "id": "1960-s-television-ozzie-and-harriet-a-la",
+   "title": "1960's Television: ''Ozzie and Harriet'' (''A Lamp and Dave and June'', 1 February 1962)",
+   "url": "https://archive.org/download/LampDavid/LampDavidJune_512kb.mp4",
+   "secs": 1748,
+   "kind": "programme"
+  },
+  {
+   "id": "1960-s-mainstream-culture-ozzie-and-harr",
+   "title": "1960's Mainstream Culture: ''Ozzie and Harriet'' (A Painting from the Past, 17 March 1965)",
+   "url": "https://archive.org/download/1960sMainstreamCultureozzieAndHarrietaPaintingFromThePast17/PaintingfromThePast_512kb.mp4",
+   "secs": 1738,
+   "kind": "programme"
+  },
+  {
+   "id": "1950-s-pop-culture-ozzie-and-harriet-epi",
+   "title": "1950's Pop Culture: ''Ozzie and Harriet'' (Episode Aired: 10 December 1958)",
+   "url": "https://archive.org/download/MotorCycleDavidNelson/DavidMotorcycle_512kb.mp4",
+   "secs": 1760,
+   "kind": "programme"
+  },
+  {
+   "id": "ozzie-and-harriet-episode-title-no-news-",
+   "title": "''Ozzie and Harriet'' - (Episode Title: ''No News for Harriet'', Season 8 Episode 31, Aired 8 June 1960)",
+   "url": "https://archive.org/download/NoNewsforHarriet/NoNewsforHarriet_512kb.mp4",
+   "secs": 1761,
+   "kind": "programme"
+  },
+  {
+   "id": "life-with-elizabeth-misc-episode-no-5",
+   "title": "''Life with Elizabeth'' - Misc episode No. 5",
+   "url": "https://archive.org/download/Life_With_Elizabeth_6/LifeWithElizabethMisc5.mp4",
+   "secs": 1555,
+   "kind": "programme"
+  },
+  {
+   "id": "classic-crap-the-betty-hutton-show-rosem",
+   "title": "Classic Crap: The Betty Hutton Show - ''Rosemary's Romance''",
+   "url": "https://archive.org/download/Betty_Hutton_3/BettyHuttonRosemaryRomance.mp4",
+   "secs": 1527,
+   "kind": "programme"
+  },
+  {
+   "id": "meet-corliss-archer-a-date-for-doris",
+   "title": "\"Meet Corliss Archer\" - A Date for Doris",
+   "url": "https://archive.org/download/A_Date_For_Doris/A_Date_For_Doris_512kb.mp4",
+   "secs": 1537,
+   "kind": "programme"
+  },
+  {
+   "id": "fifties-television-bev-s-boyfriend-i-mar",
+   "title": "Fifties Television - Bev's Boyfriend - ''I Married Joan'' (1953)",
+   "url": "https://archive.org/download/Joan_Boyfriend/Joan_Boyfriend_512kb.mp4",
+   "secs": 1485,
+   "kind": "programme"
+  },
+  {
+   "id": "life-with-elizabeth-misc-episode-no-3",
+   "title": "''Life with Elizabeth'' - Misc episode No. 3",
+   "url": "https://archive.org/download/Life_With_Elizabeth_3/LifeWithElizabethMisc3.mp4",
+   "secs": 1517,
+   "kind": "programme"
+  },
+  {
+   "id": "1960-s-united-states-culture-ozzie-and-h",
+   "title": "1960's United States Culture: ''Ozzie and Harriet'' - The Manly Arts",
+   "url": "https://archive.org/download/TheManlyArts/TheManlyArts_512kb.mp4",
+   "secs": 1762,
+   "kind": "programme"
+  },
+  {
+   "id": "fifties-television-home-of-the-week-i-ma",
+   "title": "Fifties Television: ''Home of the Week'' - I Married Joan (1954)",
+   "url": "https://archive.org/download/Joan_Home_Of_The_Week/I_Married_Joan_Home_512kb.mp4",
+   "secs": 1519,
+   "kind": "programme"
+  },
+  {
+   "id": "meet-corliss-archer-quaranteened-1954",
+   "title": "'Meet Corliss Archer' - Quaranteened (1954)",
+   "url": "https://archive.org/download/Meet_Corliss_Archer_6/Corliss_6_512kb.mp4",
+   "secs": 1545,
+   "kind": "programme"
+  },
+  {
+   "id": "1950-s-television-ozzie-and-harriet-epis",
+   "title": "1950's Television: ''Ozzie and Harriet'' (Episode: ''Jealous Joe Randolph'', Aired 4 February 1959)",
+   "url": "https://archive.org/download/JealousJoeRandolph/Jealous_JoeRandolph_512kb.mp4",
+   "secs": 1757,
+   "kind": "programme"
+  },
+  {
+   "id": "meet-corliss-archer-dexter-the-helper",
+   "title": "'Meet Corliss Archer' - Dexter the Helper",
+   "url": "https://archive.org/download/Corliss_9/Corliss_9_512kb.mp4",
+   "secs": 1546,
+   "kind": "programme"
+  },
+  {
+   "id": "lmao-the-trouble-with-father-leave-it-to",
+   "title": "LMAO: ''The Trouble with Father'' - Leave it to Stu (1953)",
+   "url": "https://archive.org/download/HappyHappy/Chickens_512kb.mp4",
+   "secs": 1753,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-snow-white",
+   "title": "Betty Boop: Snow White",
+   "url": "https://archive.org/download/bb_snow_white/bb_snow_white_512kb.mp4",
+   "secs": 424,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-minnie-the-moocher",
+   "title": "Betty Boop: Minnie The Moocher",
+   "url": "https://archive.org/download/bb_minnie_the_moocher/bb_minnie_the_moocher_512kb.mp4",
+   "secs": 466,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-and-grampy",
+   "title": "Betty Boop And Grampy",
+   "url": "https://archive.org/download/bb_and_grampy/bb_and_grampy_512kb.mp4",
+   "secs": 418,
+   "kind": "programme"
+  },
+  {
+   "id": "your-name-here",
+   "title": "Your Name Here",
+   "url": "https://archive.org/download/YourName1960/YourName1960.mp4",
+   "secs": 608,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-s-rise-to-fame",
+   "title": "Betty Boop's Rise To Fame",
+   "url": "https://archive.org/download/bb_rise_to_fame/bb_rise_to_fame_512kb.mp4",
+   "secs": 527,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-and-the-little-king",
+   "title": "Betty Boop And The Little King",
+   "url": "https://archive.org/download/bb_and_the_little_king/bb_and_the_little_king_512kb.mp4",
+   "secs": 369,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-be-human",
+   "title": "Betty Boop: Be Human",
+   "url": "https://archive.org/download/bb_be_human/bb_be_human_512kb.mp4",
+   "secs": 388,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-s-big-boss",
+   "title": "Betty Boop's Big Boss",
+   "url": "https://archive.org/download/bb_big_boss/bb_big_boss_512kb.mp4",
+   "secs": 376,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-betty-in-blunderland",
+   "title": "Betty Boop: Betty in Blunderland",
+   "url": "https://archive.org/download/bb_betty_in_blunderland/bb_betty_in_blunderland_512kb.mp4",
+   "secs": 393,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-the-old-man-of-the-mountain",
+   "title": "Betty Boop: The Old Man Of The Mountain",
+   "url": "https://archive.org/download/bb_old_man_of_the_mountain/bb_old_man_of_the_mountain_512kb.mp4",
+   "secs": 412,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-chess-nuts",
+   "title": "Betty Boop: Chess Nuts",
+   "url": "https://archive.org/download/bb_chess_nuts/bb_chess_nuts_512kb.mp4",
+   "secs": 371,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-happy-you-and-merry-me",
+   "title": "Betty Boop: Happy You And Merry Me",
+   "url": "https://archive.org/download/bb_happy_you/bb_happy_you_512kb.mp4",
+   "secs": 395,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-stop-that-noise",
+   "title": "Betty Boop: Stop That Noise",
+   "url": "https://archive.org/download/bb_stop_that_noise/bb_stop_that_noise_512kb.mp4",
+   "secs": 542,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-musical-mountaineers",
+   "title": "Betty Boop: Musical Mountaineers",
+   "url": "https://archive.org/download/bb_musical_mountaineers/bb_musical_mountaineers_512kb.mp4",
+   "secs": 370,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-house-cleaning-blues",
+   "title": "Betty Boop: House Cleaning Blues",
+   "url": "https://archive.org/download/bb_house_cleaning_blues/bb_house_cleaning_blues_512kb.mp4",
+   "secs": 369,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-not-now",
+   "title": "Betty Boop: Not Now",
+   "url": "https://archive.org/download/bb_not_now/bb_not_now_512kb.mp4",
+   "secs": 384,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-parade-of-the-wooden-soldiers",
+   "title": "Betty Boop: Parade of the Wooden Soldiers",
+   "url": "https://archive.org/download/bb_parade_of_the_wooden_soldiers/bb_parade_of_the_wooden_soldiers_512kb.mp4",
+   "secs": 480,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-swat-the-fly",
+   "title": "Betty Boop: Swat The Fly",
+   "url": "https://archive.org/download/bb_swat_the_fly/bb_swat_that_fly_512kb.mp4",
+   "secs": 327,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-morning-noon-and-night",
+   "title": "Betty Boop: Morning, Noon And Night",
+   "url": "https://archive.org/download/bb_morning_noon_and_night/bb_morning_noon_and_night_512kb.mp4",
+   "secs": 452,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-she-wronged-him-right",
+   "title": "Betty Boop: She Wronged Him Right",
+   "url": "https://archive.org/download/bb_she_wronged_him_right/bb_she_wronged_him_right_512kb.mp4",
+   "secs": 387,
+   "kind": "programme"
+  },
+  {
+   "id": "betty-boop-the-impractical-joker",
+   "title": "Betty Boop: The Impractical Joker",
+   "url": "https://archive.org/download/bb_the_impractical_joker/bb_the_impractical_joker_512kb.mp4",
+   "secs": 372,
+   "kind": "programme"
+  },
+  {
+   "id": "groucho-marx-in-you-bet-your-life-chair-",
+   "title": "Groucho Marx in ''You Bet Your Life'' (''Chair'') (Comedy/Game Show)",
+   "url": "https://archive.org/download/GrouchoChair/GrouchoChair_512kb.mp4",
+   "secs": 1770,
+   "kind": "programme"
+  },
+  {
+   "id": "brooklyn-goes-to-san-francisco",
+   "title": "Brooklyn Goes to San Francisco",
+   "url": "https://archive.org/download/Brooklyn1947/Brooklyn1947.mp4",
+   "secs": 560,
+   "kind": "programme"
+  },
+  {
+   "id": "classic-1960-s-television-ozzie-and-harr",
+   "title": "Classic 1960's Television: ''Ozzie and Harriet'' - Dave's Golf Story (8 March 1961)",
+   "url": "https://archive.org/download/DaveGolf/DavesGolfStory_512kb.mp4",
+   "secs": 1636,
+   "kind": "programme"
+  },
+  {
+   "id": "the-larkins-1x-07-christmas-with-the-lar",
+   "title": "The Larkins 1x 07 Christmas With The Larkins",
+   "url": "https://archive.org/download/TheLarkins1x07CheistmasWithTheLarkins/The%20Larkins%201x07%20Cheistmas%20With%20The%20Larkins.mp4",
+   "secs": 1724,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-pawnshop",
+   "title": "Charlie Chaplin's \" The Pawnshop\"",
+   "url": "https://archive.org/download/CC_1916_10_02_ThePawnshop/CC_1916_10_02_ThePawnshop_512kb.mp4",
+   "secs": 1221,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-count",
+   "title": "Charlie Chaplin's \"The Count\"",
+   "url": "https://archive.org/download/CC_1916_09_04_TheCount/CC_1916_09_04_TheCount_512kb.mp4",
+   "secs": 1210,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-floorwalker",
+   "title": "Charlie Chaplin's \"The Floorwalker\"",
+   "url": "https://archive.org/download/CC_1916_05_15_TheFloorwalker/CC_1916_05_15_TheFloorwalker_512kb.mp4",
+   "secs": 1169,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-rink",
+   "title": "Charlie Chaplin's \"The Rink\"",
+   "url": "https://archive.org/download/CC_1916_12_04_TheRink/CC_1916_12_04_TheRink_512kb.mp4",
+   "secs": 1169,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-charlie-shanghaied",
+   "title": "Charlie Chaplin's \"Charlie Shanghaied\"",
+   "url": "https://archive.org/download/CC_1915_10_04_CharlieShanghaied/CC_1915_10_04_CharlieShanghaied_512kb.mp4",
+   "secs": 1390,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-good-for-nothing",
+   "title": "Charlie Chaplin's \"The Good For Nothing\"",
+   "url": "https://archive.org/download/CC_1914_08_31_TheGoodforNothing/CC_1914_08_31_TheGoodforNothing_512kb.mp4",
+   "secs": 810,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-charlie-s-recreation",
+   "title": "Charlie Chaplin's \"Charlie's Recreation\"",
+   "url": "https://archive.org/download/CC_1914_08_13_CharliesRecreation/CC_1914_08_13_CharliesRecreation_512kb.mp4",
+   "secs": 742,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-tillies-punctured-roma",
+   "title": "Charlie Chaplin's \"Tillies Punctured Romance\"",
+   "url": "https://archive.org/download/CC_1914_11_14_TilliesPuncturedRomance/CC_1914_11_14_TilliesPuncturedRomance_512kb.mp4",
+   "secs": 4291,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-kids-auto-race-at-veni",
+   "title": "Charlie Chaplin's \"Kids Auto Race At Venice\"",
+   "url": "https://archive.org/download/CC_1914_02_07_KidsAutoRaceAtVenice/CC_1914_02_07_KidsAutoRaceAtVenice_512kb.mp4",
+   "secs": 358,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-one-a-m",
+   "title": "Charlie Chaplin's \"One A.M.\"",
+   "url": "https://archive.org/download/CC_1916_08_07_One_A_M/CC_1916_08_07_One_A_M_512kb.mp4",
+   "secs": 1008,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-making-a-living",
+   "title": "Charlie Chaplin's \"Making A Living\"",
+   "url": "https://archive.org/download/CC_1914_02_02_MakingALiving/CC_1914_02_02_MakingALiving_512kb.mp4",
+   "secs": 531,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-immigrant",
+   "title": "Charlie Chaplin's \"The Immigrant\"",
+   "url": "https://archive.org/download/CC_1917_06_17_TheImmigrant/CC_1917_06_17_TheImmigrant_512kb.mp4",
+   "secs": 1200,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-a-fair-exchange",
+   "title": "Charlie Chaplin's \"A Fair Exchange\"",
+   "url": "https://archive.org/download/CC_1914_12_05_AFairExchange/CC_1914_12_05_AFairExchange_512kb.mp4",
+   "secs": 772,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-mabels-strange-predica",
+   "title": "Charlie Chaplin's \"Mabels Strange Predicament\"",
+   "url": "https://archive.org/download/CC_1914_02_09_MabelsStrangePredicament/CC_1914_02_09_MabelsStrangePredicament_512kb.mp4",
+   "secs": 622,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-adventurer",
+   "title": "Charlie Chaplin's \"The Adventurer\"",
+   "url": "https://archive.org/download/CC_1917_10_22_TheAdventurer/CC_1917_10_22_TheAdventurer_512kb.mp4",
+   "secs": 1139,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-police",
+   "title": "Charlie Chaplin's \"Police\"",
+   "url": "https://archive.org/download/CC_1916_05_27_Police/CC_1916_05_27_Police_512kb.mp4",
+   "secs": 879,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-knockout",
+   "title": "Charlie Chaplin's \"The Knockout\"",
+   "url": "https://archive.org/download/CC_1914_06_11_TheKnockout/CC_1914_06_11_TheKnockout_512kb.mp4",
+   "secs": 1438,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-triple-trouble",
+   "title": "Charlie Chaplin's Triple Trouble",
+   "url": "https://archive.org/download/CC_1918_xx_xx_TripleTrouble/CC_1918_xx_xx_TripleTrouble_512kb.mp4",
+   "secs": 1643,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplins-a-film-johnnie",
+   "title": "Charlie Chaplins \"A Film Johnnie\"",
+   "url": "https://archive.org/download/CC_1914_03_02_FilmJohnny/CC_1914_03_02_FilmJohnny_512kb.mp4",
+   "secs": 429,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-between-showers",
+   "title": "Charlie Chaplin's \"Between Showers\"",
+   "url": "https://archive.org/download/CC_1914_02_28_BetweenShowers/CC_1914_02_28_BetweenShowers_512kb.mp4",
+   "secs": 539,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-caught-in-a-caberet",
+   "title": "Charlie Chaplin's \"Caught in a Caberet\"",
+   "url": "https://archive.org/download/CC_1914_04_27_CaughtinaCaberet/CC_1914_04_27_CaughtinaCaberet_512kb.mp4",
+   "secs": 946,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-a-busy-day",
+   "title": "Charlie Chaplin's \"A Busy Day\"",
+   "url": "https://archive.org/download/CC_1914_05_07_ABusyDay/CC_1914_05_07_ABusyDay_512kb.mp4",
+   "secs": 363,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-cruel-cruel-love",
+   "title": "Charlie Chaplin's \"Cruel Cruel Love\"",
+   "url": "https://archive.org/download/CC_1914_03_26_CruelCruelLove/CC_1914_03_26_CruelCruelLove_512kb.mp4",
+   "secs": 538,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-behind-the-screen",
+   "title": "Charlie Chaplin's \"Behind The Screen\"",
+   "url": "https://archive.org/download/CC_1916_11_13_BehindtheScreen/CC_1916_11_13_BehindtheScreen_512kb.mp4",
+   "secs": 1193,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-his-new-job",
+   "title": "Charlie Chaplin's \"His New Job\"",
+   "url": "https://archive.org/download/CC_1915_02_01_HisNewJob/CC_1915_02_01_HisNewJob_512kb.mp4",
+   "secs": 1233,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-fireman",
+   "title": "Charlie Chaplin's \"The Fireman\"",
+   "url": "https://archive.org/download/CC_1916_06_12_TheFireman/CC_1916_06_12_TheFireman_512kb.mp4",
+   "secs": 946,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-masquerader",
+   "title": "Charlie Chaplin's \"The Masquerader\"",
+   "url": "https://archive.org/download/CC_1914_08_27_TheMasquerader/CC_1914_08_27_TheMasquerader_512kb.mp4",
+   "secs": 551,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-charolot-gargon-de-the",
+   "title": "Charlie Chaplin's \"Charolot Gargon De Theater\" ( The Property Man)",
+   "url": "https://archive.org/download/CC_1914_08_01_CharolotGargonDeTheater/CC_1914_08_01_CharolotGargonDeTheater_512kb.mp4",
+   "secs": 1103,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-bond",
+   "title": "Charlie Chaplin's \"The Bond\"",
+   "url": "https://archive.org/download/CC_1918_09_29_TheBond/CC_1918_09_29_TheBond_512kb.mp4",
+   "secs": 652,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-his-favorite-pasttime",
+   "title": "Charlie Chaplin's \"His Favorite Pasttime\"",
+   "url": "https://archive.org/download/CC_1914_03_16_HisFavoritePasttime/CC_1914_03_16_HisFavoritePasttime_512kb.mp4",
+   "secs": 804,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-laffing-gas-aka-laughi",
+   "title": "Charlie Chaplin's \"Laffing Gas\" aka Laughing Gas",
+   "url": "https://archive.org/download/CC_1914_07_09_LaffingGas/CC_1914_07_09_LaffingGas_512kb.mp4",
+   "secs": 809,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-charlott-et-le-mannequ",
+   "title": "Charlie Chaplin's \"Charlott Et Le Mannequin\" (Mabel's Married Life)",
+   "url": "https://archive.org/download/CC_1914_06_20_CharlottEtLeMannequin/CC_1914_06_20_CharlottEtLeMannequin_512kb.mp4",
+   "secs": 762,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-fatal-mallet",
+   "title": "Charlie Chaplin's \"The Fatal Mallet\"",
+   "url": "https://archive.org/download/CC_1914_06_01_TheFatalMallet/CC_1914_06_01_TheFatalMallet_512kb.mp4",
+   "secs": 587,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-rounders",
+   "title": "Charlie Chaplin's \"The Rounders\"",
+   "url": "https://archive.org/download/CC_1914_09_07_TheRounders/CC_1914_09_07_TheRounders_512kb.mp4",
+   "secs": 575,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-landladys-pet-aka-",
+   "title": "Charlie Chaplin's \"The Landladys Pet\" aka The Star Boarder",
+   "url": "https://archive.org/download/CC_1914_04_04_TheLandladysPet/CC_1914_04_04_TheLandladysPet_512kb.mp4",
+   "secs": 465,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-mabel-s-busy-day",
+   "title": "Charlie Chaplin's \"Mabel's Busy Day\"",
+   "url": "https://archive.org/download/CC_1914_06_13_MabelsBusyDay/CC_1914_06_13_MabelsBusyDay_512kb.mp4",
+   "secs": 574,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-musical-tramps",
+   "title": "Charlie Chaplin's \"Musical Tramps\"",
+   "url": "https://archive.org/download/CC_1914_11_07_MusicalTramps/CC_1914_11_07_MusicalTramps_512kb.mp4",
+   "secs": 687,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-face-on-the-barroom-fl",
+   "title": "Charlie Chaplin's \"Face On The Barroom Floor\"",
+   "url": "https://archive.org/download/CC_1914_08_10_FaceOnTheBarroomFloor/CC_1914_08_10_FaceOnTheBarroomFloor_512kb.mp4",
+   "secs": 696,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-his-prehistoric-past",
+   "title": "Charlie Chaplin's \"His Prehistoric Past\"",
+   "url": "https://archive.org/download/CC_1914_12_07_HisPrehistoricpast/CC_1914_12_07_HisPrehistoricpast_512kb.mp4",
+   "secs": 720,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-his-trysting-place",
+   "title": "Charlie Chaplin's \"His Trysting Place\"",
+   "url": "https://archive.org/download/CC_1914_11_09_HisTrystingPlace/CC_1914_11_09_HisTrystingPlace_512kb.mp4",
+   "secs": 956,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-charlott-mabel-aux-cou",
+   "title": "Charlie Chaplin's \"Charlott Mabel Aux Courses\" aka Gentlemen of Nerve",
+   "url": "https://archive.org/download/CC_1914_10_29_CharlottMabelAuxCourses/CC_1914_10_29_CharlottMabelAuxCourses_512kb.mp4",
+   "secs": 603,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-the-rival-mashers-aka-",
+   "title": "Charlie Chaplin's \"The Rival Mashers\" aka Those Love Pangs",
+   "url": "https://archive.org/download/CC_1914_10_10_TheRivalMashers/CC_1914_10_10_TheRivalMashers_512kb.mp4",
+   "secs": 728,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-s-dough-and-dynamite",
+   "title": "Charlie Chaplin's \"Dough And Dynamite\"",
+   "url": "https://archive.org/download/CC_1914_10_26_DoughandDynamite/CC_1914_10_26_DoughandDynamite_512kb.mp4",
+   "secs": 742,
+   "kind": "programme"
+  },
+  {
+   "id": "in-the-park-tinted",
+   "title": "In the Park [tinted]",
+   "url": "https://archive.org/download/InTheParktinted/InThePark_512kb.mp4",
+   "secs": 843,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-the-champion-1915-classi",
+   "title": "Charlie Chaplin . The Champion (1915 Classic, Silent, Film Noir, Dramady)",
+   "url": "https://archive.org/download/charlie-chaplin-.-the-champion-1915-classic-silent-film-noir-dramady/Charlie%20Chaplin%20.%20The%20Champion%20%281915%20Classic%2C%20Silent%2C%20Film%20noir%2C%20Dramady%29.mp4",
+   "secs": 1850,
+   "kind": "programme"
+  },
+  {
+   "id": "charlie-chaplin-in-making-a-living-1914-",
+   "title": "Charlie Chaplin In Making A Living, 1914 (colorized)",
+   "url": "https://archive.org/download/charlie-chaplin-in-making-a-living-1914-colorized/Charlie-Chaplin-in-making-a-living.ia.mp4",
+   "secs": 531,
+   "kind": "programme"
+  },
+  {
+   "id": "the-general-complete-clearer-1926",
+   "title": "The General (complete & clearer) (1926)",
+   "url": "https://archive.org/download/The_General_Buster_Keaton/The_General.mp4",
+   "secs": 4723,
+   "kind": "programme"
+  },
+  {
+   "id": "neighbors",
+   "title": "Neighbors",
+   "url": "https://archive.org/download/Neighbors/frigoNeighbors_512kb.mp4",
+   "secs": 1054,
+   "kind": "programme"
+  },
+  {
+   "id": "the-playhouse",
+   "title": "The Playhouse",
+   "url": "https://archive.org/download/ThePlayhouse/The_Playhouse_512kb.mp4",
+   "secs": 1208,
+   "kind": "programme"
+  },
+  {
+   "id": "college",
+   "title": "College",
+   "url": "https://archive.org/download/college/College_512kb.mp4",
+   "secs": 3881,
+   "kind": "programme"
+  },
+  {
+   "id": "the-paleface",
+   "title": "The Paleface",
+   "url": "https://archive.org/download/ThePaleface/The_Paleface_512kb.mp4",
+   "secs": 1266,
+   "kind": "programme"
+  },
+  {
+   "id": "the-blacksmith",
+   "title": "The Blacksmith",
+   "url": "https://archive.org/download/TheBlacksmith/The_Blacksmith_512kb.mp4",
+   "secs": 1159,
+   "kind": "programme"
+  },
+  {
+   "id": "the-boat",
+   "title": "The Boat",
+   "url": "https://archive.org/download/TheBoat/The_Boat_512kb.mp4",
+   "secs": 1607,
+   "kind": "programme"
+  },
+  {
+   "id": "convict-13",
+   "title": "Convict 13",
+   "url": "https://archive.org/download/Convict13/Convict_13_512kb.mp4",
+   "secs": 1219,
+   "kind": "programme"
+  },
+  {
+   "id": "daydreams",
+   "title": "Daydreams",
+   "url": "https://archive.org/download/Daydreams/Daydreams_512kb.mp4",
+   "secs": 1087,
+   "kind": "programme"
+  },
+  {
+   "id": "my-wifes-relations",
+   "title": "My Wifes Relations",
+   "url": "https://archive.org/download/MyWifesRelations/My_Wifes_Relations_512kb.mp4",
+   "secs": 1327,
+   "kind": "programme"
+  },
+  {
+   "id": "love-nest",
+   "title": "Love Nest",
+   "url": "https://archive.org/download/LoveNest/keaton.love.nest_512kb.mp4",
+   "secs": 1343,
+   "kind": "programme"
+  },
+  {
+   "id": "the-balloonatic",
+   "title": "The Balloonatic",
+   "url": "https://archive.org/download/TheBalloonatic/The_Balloonatic_512kb.mp4",
+   "secs": 1350,
+   "kind": "programme"
+  },
+  {
+   "id": "the-frozen-north",
+   "title": "The Frozen North",
+   "url": "https://archive.org/download/The_Frozen_North/The_Frozen_North_512kb.mp4",
+   "secs": 1031,
+   "kind": "programme"
+  },
+  {
+   "id": "the-flaming-urge",
+   "title": "The Flaming Urge",
+   "url": "https://archive.org/download/Flaming_Urge_1953/Flaming_Urge.mp4",
+   "secs": 4058,
+   "kind": "programme"
+  },
+  {
+   "id": "bumping-into-broadway-1919-directed-by-h",
+   "title": "Bumping Into Broadway (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/bumping-into-broadway-1919-directed-by-hal-roach/Bumping%20Into%20Broadway%20%281919%29%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 1478,
+   "kind": "programme"
+  },
+  {
+   "id": "spring-fever-1919-directed-by-hal-roach",
+   "title": "Spring Fever (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/spring-fever-1919-directed-by-hal-roach/Spring%20Fever%20%281919%29%20%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 600,
+   "kind": "programme"
+  },
+  {
+   "id": "his-royal-slyness-1920-directed-by-alfre",
+   "title": "HIs Royal Slyness (1920) Directed By Alfred J. Goulding, Hal Roach",
+   "url": "https://archive.org/download/his-royal-slyness-1920-directed-by-alfred-j.-goulding-hal-roach/HIs%20Royal%20Slyness%20%281920%29%20Directed%20by%20Alfred%20J.%20Goulding%2C%20Hal%20Roach%20.mp4",
+   "secs": 1312,
+   "kind": "programme"
+  },
+  {
+   "id": "the-flirt-1917-directed-by-billy-gilbert",
+   "title": "The Flirt (1917) Directed By Billy Gilbert",
+   "url": "https://archive.org/download/the-flirt-1917-directed-by-billy-gilbert/The%20Flirt%20%281917%29%20Directed%20by%20Billy%20Gilbert.mp4",
+   "secs": 438,
+   "kind": "programme"
+  },
+  {
+   "id": "the-rajah-1919-directed-by-hal-roach",
+   "title": "The Rajah (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/the-rajah-1919-directed-by-hal-roach/The%20Rajah%20%281919%29%20%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 143,
+   "kind": "programme"
+  },
+  {
+   "id": "somewhere-in-turkey-1918-directed-by-alf",
+   "title": "Somewhere In Turkey (1918) Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/somewhere-in-turkey-1918-directed-by-alfred-j.-goulding/Somewhere%20in%20Turkey%20%281918%29%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
+   "secs": 611,
+   "kind": "programme"
+  },
+  {
+   "id": "miss-fatty-s-seaside-lovers-1915-directe",
+   "title": "Miss Fatty’s Seaside Lovers (1915) Directed By Roscoe ‘ Fatty’ Arbuckle",
+   "url": "https://archive.org/download/miss-fattys-seaside-lovers-1915-directed-by-roscoe-fatty-arbuckle/Miss%20Fatty%E2%80%99s%20Seaside%20Lovers%20%281915%29%20%20Directed%20by%20Roscoe%20%E2%80%98Fatty%E2%80%99%20Arbuckle.mp4",
+   "secs": 681,
+   "kind": "programme"
+  },
+  {
+   "id": "look-out-below-1919-directed-by-hal-roac",
+   "title": "Look Out Below (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/look-out-below-1919-directed-by-hal-roach/LOOK%20OUT%20BELOW%20%281919%29%20%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 256,
+   "kind": "programme"
+  },
+  {
+   "id": "captain-kidd-s-kids-1919-directed-by-hal",
+   "title": "Captain Kidd's Kids (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/captain-kidds-kids-1919-directed-by-hal-roach/Captain%20Kidd%27s%20Kids%20%281919%29%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 1134,
+   "kind": "programme"
+  },
+  {
+   "id": "just-neighbors-1919-directed-by-harold-l",
+   "title": "Just Neighbors (1919) Directed By Harold Lloyd, Frank Terry",
+   "url": "https://archive.org/download/harold-lloyd-just-neighbors-1919-directed-by-harold-lloyd-frank-terry/Harold%20Lloyd%20-%20Just%20Neighbors%20%281919%29%20Directed%20by%20Harold%20Lloyd%2C%20Frank%20Terry%20.mp4",
+   "secs": 784,
+   "kind": "programme"
+  },
+  {
+   "id": "back-to-the-woods-1919-directed-by-hal-r",
+   "title": "Back To The Woods (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/back-to-the-woods-1919-directed-by-hal-roach/Back%20to%20the%20Woods%20%281919%29%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 592,
+   "kind": "programme"
+  },
+  {
+   "id": "from-hand-to-mouth-1919-directed-by-alfr",
+   "title": "From Hand To Mouth (1919) Directed By Alfred J. Goulding, Hal Roach",
+   "url": "https://archive.org/download/from-hand-to-mouth-1919-directed-by-alfred-j.-goulding-hal-roach/From%20Hand%20to%20Mouth%20%281919%29%20Directed%20by%20Alfred%20J.%20Goulding%2C%20Hal%20Roach%20.mp4",
+   "secs": 1305,
+   "kind": "programme"
+  },
+  {
+   "id": "rainbow-island-1917-directed-by-billy-gi",
+   "title": "Rainbow Island (1917) Directed By Billy Gilbert",
+   "url": "https://archive.org/download/rainbow-island-1917-directed-by-billy-gilbert/Rainbow%20Island%20%281917%29%20%20Directed%20by%20Billy%20Gilbert.mp4",
+   "secs": 351,
+   "kind": "programme"
+  },
+  {
+   "id": "chop-suey-co-1919-directed-by-hal-roach",
+   "title": "Chop Suey & Co. (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/chop-suey-co.-1919-directed-by-hal-roach/Chop%20Suey%20%26%20Co.%20%281919%29%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 484,
+   "kind": "programme"
+  },
+  {
+   "id": "ask-father-1919",
+   "title": "Ask Father (1919)",
+   "url": "https://archive.org/download/ask-father-1919/Ask%20Father%20%281919%29.mp4",
+   "secs": 791,
+   "kind": "programme"
+  },
+  {
+   "id": "count-your-change-1919-directed-by-alfre",
+   "title": "Count Your Change (1919) Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/count-your-change-1919-directed-by-alfred-j.-goulding/Count%20Your%20Change%20%281919%29%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
+   "secs": 693,
+   "kind": "programme"
+  },
+  {
+   "id": "billy-blazes-esq-1919-directed-by-hal-ro",
+   "title": "Billy Blazes, Esq. (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/billy-blazes-esq.-1919-directed-by-hal-roach/Billy%20Blazes%2C%20Esq.%20%281919%29%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 735,
+   "kind": "programme"
+  },
+  {
+   "id": "don-t-shove-1919-directed-by-alfred-j-go",
+   "title": "Don't Shove (1919) Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/dont-shove-1919-directed-by-alfred-j.-goulding/Don%27t%20Shove%20%281919%29%20Directed%20by%20Alfred%20J.%20Goulding%20.mp4",
+   "secs": 556,
+   "kind": "programme"
+  },
+  {
+   "id": "fireman-save-my-child-1918-directed-by-a",
+   "title": "Fireman, Save My Child (1918) Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/fireman-save-my-child-1918-directed-by-alfred-j.-goulding/FIREMAN%2C%20SAVE%20MY%20CHILD%20%281918%29%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
+   "secs": 492,
+   "kind": "programme"
+  },
+  {
+   "id": "a-sammy-in-siberia-1919-directed-by-hal-",
+   "title": "A Sammy In Siberia (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/a-sammy-in-siberia-1919-directed-by-hal-roach/A%20Sammy%20in%20Siberia%20%281919%29%20%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 604,
+   "kind": "programme"
+  },
+  {
+   "id": "off-the-trolley-1919-directed-by-alfred-",
+   "title": "Off The Trolley (1919) Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/off-the-trolley-1919-directed-by-alfred-j.-goulding/Off%20the%20Trolley%20%281919%29%20%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
+   "secs": 399,
+   "kind": "programme"
+  },
+  {
+   "id": "a-jazzed-honeymoon-1919-directed-by-hal-",
+   "title": "A Jazzed Honeymoon (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/a-jazzed-honeymoon-1919-directed-by-hal-roach/A%20Jazzed%20Honeymoon%20%281919%29%20%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 485,
+   "kind": "programme"
+  },
+  {
+   "id": "young-mr-jazz-1919-directed-by-hal-roach",
+   "title": "Young Mr. Jazz (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/young-mr.-jazz-1919-directed-by-hal-roach/Young%20Mr.%20Jazz%20%281919%29%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 582,
+   "kind": "programme"
+  },
+  {
+   "id": "pay-your-dues-1919-directed-by-vincent-b",
+   "title": "Pay Your Dues (1919) Directed By Vincent Bryan, Hal Roach",
+   "url": "https://archive.org/download/pay-your-dues-1919-directed-by-vincent-bryan-hal-roach/Pay%20your%20dues%20%20%281919%29%20Directed%20by%20Vincent%20Bryan%2C%20Hal%20Roach%20.mp4",
+   "secs": 763,
+   "kind": "programme"
+  },
+  {
+   "id": "their-social-splash-1915-directed-by-cha",
+   "title": "Their Social Splash (1915) Directed By Charles Avery, Arvid E. Gillstrom",
+   "url": "https://archive.org/download/their-social-splash-1915-directed-by-charles-avery-arvid-e.-gillstrom/Their%20Social%20Splash%20%281915%29%20Directed%20by%20Charles%20Avery%2C%20Arvid%20E.%20Gillstrom.mp4",
+   "secs": 666,
+   "kind": "programme"
+  },
+  {
+   "id": "i-m-on-my-way-1919-directed-by-hal-roach",
+   "title": "I'm On My Way (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/im-on-my-way-1919-directed-by-hal-roach/I%27m%20On%20My%20Way%20%281919%29%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 807,
+   "kind": "programme"
+  },
+  {
+   "id": "going-going-gone-1919",
+   "title": "Going! Going! Gone! (1919)",
+   "url": "https://archive.org/download/going-going-gone-1919-directed-by-gilbert-pratt/Going%21%20Going%21%20Gone%21%20%281919%29%20%20Directed%20by%20Gilbert%20Pratt.mp4",
+   "secs": 621,
+   "kind": "programme"
+  },
+  {
+   "id": "on-the-fire-1919-directed-by-hal-roach",
+   "title": "On The Fire (1919) Directed By Hal Roach",
+   "url": "https://archive.org/download/on-the-fire-1919-directed-by-hal-roach/On%20The%20Fire%20%281919%29%20%20Directed%20by%20Hal%20Roach.mp4",
+   "secs": 469,
+   "kind": "programme"
+  },
+  {
+   "id": "the-city-slicker-1918-directed-by-gilber",
+   "title": "The City Slicker ( 1918) Directed By Gilbert Pratt",
+   "url": "https://archive.org/download/the-city-slicker-1918-directed-by-gilbert-pratt-colorized/The%20City%20Slicker%20%281918%29%20%20Directed%20by%20Gilbert%20Pratt.mp4",
+   "secs": 685,
+   "kind": "programme"
+  },
+  {
+   "id": "ring-up-the-curtain-1919-directed-by-alf",
+   "title": "Ring Up The Curtain (1919) Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/ring-up-the-curtain-1919-directed-by-alfred-j.-goulding/Ring%20Up%20the%20Curtain%20%281919%29%20%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
+   "secs": 711,
+   "kind": "programme"
+  },
+  {
+   "id": "the-marathon-1919-directed-by-alfred-j-g",
+   "title": "The Marathon (1919) Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/the-marathon-1919-directed-by-alfred-j.-goulding/The%20Marathon%20%281919%29%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
+   "secs": 838,
+   "kind": "programme"
+  },
+  {
+   "id": "never-touched-me-1919-directed-by-alfred",
+   "title": "Never Touched Me [1919] Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/never-touched-me-1919-directed-by-alfred-j.-goulding/Never%20Touched%20Me%20%5B1919%5D%20%20Directed%20by%20Alfred%20J.%20Goulding%20.mp4",
+   "secs": 488,
+   "kind": "programme"
+  },
+  {
+   "id": "abbott-and-costello-in-the-foreign-legio",
+   "title": "Abbott and Costello in the Foreign Legion (1950)",
+   "url": "https://archive.org/download/abbott-and-costello-in-the-foreign-legion-1950/Abbott%20and%20Costello%20in%20the%20Foreign%20Legion%20%281950%29.mp4",
+   "secs": 4777,
+   "kind": "programme"
+  },
+  {
+   "id": "abbott-and-costello-meet-the-keystone-ko",
+   "title": "Abbott and Costello Meet the Keystone Kops (1955)",
+   "url": "https://archive.org/download/abbott-and-costello-meet-the-keystone-kops-1955/Abbott%20and%20Costello%20Meet%20the%20Keystone%20Kops%20%281955%29.mp4",
+   "secs": 4732,
+   "kind": "programme"
+  }
+ ],
+ "slots": [],
+ "loop": [
+  "betty-boop-not-now",
+  "steamboat-bill-jr-2",
+  "the-flirt-1917-directed-by-billy-gilbert",
+  "a-bride-for-henry",
+  "charlie-chaplin-s-behind-the-screen",
+  "brooklyn-goes-to-san-francisco",
+  "their-social-splash-1915-directed-by-cha",
+  "the-boat",
+  "charlie-chaplins-a-film-johnnie",
+  "meet-corliss-archer-corliss-the-cheerlea",
+  "betty-boop-musical-mountaineers",
+  "that-uncertain-feeling",
+  "1954-i-married-joan-the-clothes-budget-n",
+  "eternally-yours",
+  "charlie-chaplin-the-champion-1915-classi",
+  "girl-from-calgary",
+  "big-news",
+  "juke-joint",
+  "charlie-chaplin-s-caught-in-a-caberet",
+  "fifties-television-dreams-i-married-joan",
+  "neath-brooklyn-bridge",
+  "mush-and-milk",
+  "charlie-chaplin-s-face-on-the-barroom-fl",
+  "abbott-and-costello-meet-the-keystone-ko",
+  "somewhere-in-turkey-1918-directed-by-alf",
+  "charlie-chaplin-s-the-good-for-nothing",
+  "charlie-chaplin-s-mabel-s-busy-day",
+  "charlie-chaplin-s-musical-tramps",
+  "his-new-profession",
+  "betty-boop-be-human",
+  "sing-a-song-of-six-pants",
+  "so-s-your-aunt-emma",
+  "the-beachcomber",
+  "escape-to-paradise",
+  "zis-boom-bah",
+  "ask-father-1919",
+  "charlie-chaplin-s-one-a-m",
+  "the-electric-house",
+  "q-planes",
+  "look-out-below-1919-directed-by-hal-roac",
+  "the-balloonatic",
+  "betty-boop-the-impractical-joker",
+  "my-favorite-brunette",
+  "billy-blazes-esq-1919-directed-by-hal-ro",
+  "lost-honeymoon",
+  "1960-s-television-ozzie-and-harriet-a-le",
+  "topper-henrietta-sells-the-house",
+  "the-ghost-train",
+  "romance-on-the-run",
+  "neighbors",
+  "back-room-boy",
+  "abbott-and-costello-in-the-foreign-legio",
+  "the-scarlet-pimpernel",
+  "charlie-chaplin-s-the-rival-mashers-aka-",
+  "reaching-for-the-moon",
+  "burns-and-allen-beverly-hills-uplift-soc",
+  "thunder-in-the-city",
+  "malice-in-the-palace",
+  "one-week",
+  "charlie-chaplin-s-the-immigrant",
+  "charlie-chaplin-s-the-rink",
+  "1960-s-united-states-culture-ozzie-and-h",
+  "million-dollar-weekend",
+  "jack-and-the-beanstalk",
+  "charlie-chaplin-s-charlie-shanghaied",
+  "classic-television-comedy-the-pajama-gam",
+  "the-playhouse",
+  "speak-easily",
+  "meet-corliss-archer-no-clothes-for-the-p",
+  "there-goes-the-bride",
+  "the-golf-specialist",
+  "dora-s-dunkin-donuts",
+  "love-nest",
+  "betty-boop-she-wronged-him-right",
+  "bumping-into-broadway-1919-directed-by-h",
+  "mama-the-parade-grandstand-1955",
+  "my-dear-secretary",
+  "betty-boop-s-big-boss",
+  "bowery-blitzkrieg",
+  "lady-windermere-s-fan",
+  "betty-boop-parade-of-the-wooden-soldiers",
+  "charlie-chaplin-s-between-showers",
+  "the-rajah-1919-directed-by-hal-roach",
+  "charlie-chaplin-s-the-floorwalker",
+  "charlie-chaplin-s-a-busy-day",
+  "never-touched-me-1919-directed-by-alfred",
+  "the-adventures-of-ozzie-and-harriet-epis",
+  "the-goat",
+  "daydreams",
+  "classic-tv-comedy-burns-and-allen-title-",
+  "life-with-elizabeth-misc-episode-no-2",
+  "pot-o-gold",
+  "betty-boop-house-cleaning-blues",
+  "the-private-life-of-don-juan",
+  "love-affair",
+  "i-m-on-my-way-1919-directed-by-hal-roach",
+  "charlie-chaplin-s-triple-trouble",
+  "college",
+  "behave-yourself",
+  "classic-crap-the-betty-hutton-show-rosem",
+  "captain-kidd-s-kids-1919-directed-by-hal",
+  "million-dollar-kid",
+  "life-with-elizabeth-misc-episode-no-3",
+  "charlie-chaplin-s-his-new-job",
+  "war-babies",
+  "betty-boop-happy-you-and-merry-me",
+  "charlie-chaplin-s-charlott-et-le-mannequ",
+  "young-mr-jazz-1919-directed-by-hal-roach",
+  "charlie-chaplin-s-his-favorite-pasttime",
+  "nothing-sacred",
+  "charlie-chaplin-s-his-trysting-place",
+  "as-you-like-it",
+  "beulah-the-new-arrival-50-s-sitcom-class",
+  "the-general",
+  "chasing-trouble",
+  "lost-in-the-stratosphere",
+  "charlie-chaplin-s-mabels-strange-predica",
+  "betty-boop-snow-white",
+  "charlie-chaplin-the-cure-1917-classic-si",
+  "a-sammy-in-siberia-1919-directed-by-hal-",
+  "bela-lugosi-meets-a-brooklyn-gorilla",
+  "charlie-chaplin-s-the-pawnshop",
+  "fireman-save-my-child-1918-directed-by-a",
+  "i-remember-mama-mama-s-bad-day",
+  "charlie-chaplin-a-night-in-the-show-1915",
+  "count-your-change-1919-directed-by-alfre",
+  "charlie-chaplin-s-tillies-punctured-roma",
+  "charlie-chaplin-s-the-adventurer",
+  "life-with-elizabeth-misc-episode-no-1",
+  "the-over-the-hill-gang-rides-again",
+  "a-natural-born-gambler",
+  "storm-in-a-teacup",
+  "flying-wild",
+  "the-larkins-1x-07-christmas-with-the-lar",
+  "burns-and-allen-space-patrol-kids-visit-",
+  "classic-1960-s-television-ozzie-and-harr",
+  "1960-s-television-ozzie-and-harriet-a-la",
+  "a-jazzed-honeymoon-1919-directed-by-hal-",
+  "angel-on-my-shoulder",
+  "1950-s-television-broken-toe-i-married-j",
+  "disorder-in-the-court",
+  "rainbow-island-1917-directed-by-billy-gi",
+  "the-paleface",
+  "mabel-s-dramatic-career",
+  "betty-boop-minnie-the-moocher",
+  "the-over-the-hill-gang",
+  "ask-dad",
+  "the-perils-of-pauline",
+  "the-divorce-of-lady-x",
+  "betty-boop-and-the-little-king",
+  "little-men",
+  "his-royal-slyness-1920-directed-by-alfre",
+  "a-night-in-the-show",
+  "classic-tv-comedy-burns-and-allen-episod-2",
+  "the-animal-kingdom",
+  "1950-s-television-ozzie-and-harriet-epis",
+  "fiesta",
+  "charlie-chaplin-s-the-fireman",
+  "pay-your-dues-1919-directed-by-vincent-b",
+  "betty-boop-morning-noon-and-night",
+  "at-war-with-the-army",
+  "the-bell-boy",
+  "charlie-chaplin-s-the-bond",
+  "topper-returns",
+  "street-angel",
+  "oh-mr-porter",
+  "the-city-slicker-1918-directed-by-gilber",
+  "charlie-chaplin-s-the-rounders",
+  "classic-tv-ozzie-and-harriet-episode-air",
+  "let-s-get-tough",
+  "pygmalion",
+  "in-the-park-tinted",
+  "charlie-chaplin-s-charlie-s-recreation",
+  "parlor-bedroom-and-bath",
+  "fifties-popular-culture-burns-and-allen-",
+  "private-snuffy-smith",
+  "so-this-is-washingtom",
+  "ring-up-the-curtain-1919-directed-by-alf",
+  "manhattan-love-song",
+  "the-bashful-bachelor",
+  "betty-boop-and-grampy",
+  "i-married-joan-the-jailbird-1955-nbc-tv-",
+  "judge-priest",
+  "the-eve-arden-show-it-gives-me-great-ple",
+  "when-s-your-birthday",
+  "miss-london-ltd",
+  "burns-and-allen-episode-title-too-much-o",
+  "swing-hostess",
+  "early-television-comedy-burns-and-allen-",
+  "the-ghost-walks",
+  "love-laughs-at-andy-hardy",
+  "the-marathon-1919-directed-by-alfred-j-g",
+  "the-nasty-rabbit-1964",
+  "charlie-chaplin-s-the-landladys-pet-aka-",
+  "uncle-joe",
+  "life-with-elizabeth-misc-episode-no-5",
+  "irish-luck",
+  "the-frozen-north",
+  "the-blacksmith",
+  "royal-wedding",
+  "back-to-the-woods-1919-directed-by-hal-r",
+  "one-body-too-many",
+  "mr-robinson-crusoe",
+  "girl-o-my-dreams",
+  "ozzie-and-harriet-david-s-almost-in-laws",
+  "charlie-chaplin-s-his-prehistoric-past",
+  "meet-corliss-archer-dexter-the-helper",
+  "spring-fever-1919-directed-by-hal-roach",
+  "love-island",
+  "fifties-television-bev-s-boyfriend-i-mar",
+  "charlie-chaplin-s-kids-auto-race-at-veni",
+  "affairs-of-cappy-ricks",
+  "lmao-the-trouble-with-father-leave-it-to",
+  "the-milky-way",
+  "charlie-chaplin-festival",
+  "don-t-shove-1919-directed-by-alfred-j-go",
+  "your-name-here",
+  "charlie-chaplin-s-charolot-gargon-de-the",
+  "meet-corliss-archer-a-date-for-doris",
+  "smart-alecks",
+  "cops",
+  "the-flaming-urge",
+  "going-going-gone-1919",
+  "charlie-chaplin-s-dough-and-dynamite",
+  "the-amazing-adventure",
+  "the-flying-deuces",
+  "santa-s-surprise",
+  "the-sin-of-harold-diddlebock",
+  "just-neighbors-1919-directed-by-harold-l",
+  "stork-club-the",
+  "pardon-my-pups",
+  "charlie-chaplin-s-the-fatal-mallet",
+  "chop-suey-co-1919-directed-by-hal-roach",
+  "charlie-chaplin-s-cruel-cruel-love",
+  "charlie-chaplin-s-the-count",
+  "private-buckaroo",
+  "my-wifes-relations",
+  "1950-s-pop-culture-ozzie-and-harriet-epi",
+  "mud-and-sand",
+  "one-too-many",
+  "betty-boop-chess-nuts",
+  "charlie-chaplin-in-making-a-living-1914-",
+  "the-betty-hutton-show-art-for-goldie-s-s",
+  "betty-boop-stop-that-noise",
+  "fifties-television-home-of-the-week-i-ma",
+  "miss-fatty-s-seaside-lovers-1915-directe",
+  "his-double-life",
+  "on-the-fire-1919-directed-by-hal-roach",
+  "classic-tv-comedy-burns-and-allen-episod",
+  "meet-corliss-archer-quaranteened-1954",
+  "chasing-choo-choos",
+  "1960-s-mainstream-culture-ozzie-and-harr",
+  "betty-boop-the-old-man-of-the-mountain",
+  "charlie-chaplin-s-the-knockout",
+  "charlie-chaplin-s-police",
+  "mack-and-myer-for-hire-finders-weepers-c",
+  "africa-screams",
+  "half-shot-at-sunrse",
+  "the-nut",
+  "ozzie-and-harriet-season-8-episode-7-tit",
+  "my-love-for-your-aka-honeymoon-in-bali",
+  "made-for-each-other",
+  "betty-boop-s-rise-to-fame",
+  "charlie-chaplin-s-making-a-living",
+  "betty-boop-betty-in-blunderland",
+  "kid-dynamite",
+  "betty-boop-swat-the-fly",
+  "classic-sitcom-comedy-ozzie-and-harriet-",
+  "where-there-s-a-will",
+  "charlie-chaplin-s-the-masquerader",
+  "convict-13",
+  "ozzie-and-harriet-episode-title-no-news-",
+  "charlie-chaplin-s-charlott-mabel-aux-cou",
+  "the-gorilla",
+  "charlie-chaplin-s-a-fair-exchange",
+  "from-hand-to-mouth-1919-directed-by-alfr",
+  "the-general-complete-clearer-1926",
+  "charlie-chaplin-s-laffing-gas-aka-laughi",
+  "king-kelly-of-the-u-s-a",
+  "groucho-marx-in-you-bet-your-life-chair-",
+  "steamboat-bill-jr",
+  "his-girl-friday",
+  "off-the-trolley-1919-directed-by-alfred-"
+ ],
+ "built": "2026-10-06 16:59 UTC"
+}
