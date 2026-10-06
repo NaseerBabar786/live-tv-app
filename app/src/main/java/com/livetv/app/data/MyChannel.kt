@@ -265,7 +265,7 @@ object MyChannel {
         val nextAt = next?.at ?: Long.MAX_VALUE
         if (current != null) {
             val end = if (current.video.seconds > 0) current.at + current.video.seconds * 1000 else Long.MAX_VALUE
-            if (nowMs < end) return Now.Playing(current.video, nowMs - current.at, minOf(end, nextAt), current.show)
+            if (nowMs < end) return Now.Playing(current.video, nowMs - current.at, minOf(end, nextAt), show = current.show)
         }
         // After a time slot the loop starts again from the top; before any slot it runs on the clock.
         var anchor = 0L
