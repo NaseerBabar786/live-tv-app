@@ -1,5 +1,6 @@
 package com.livetv.app.ui
 
+import com.livetv.app.data.OwnerTest
 import android.content.ActivityNotFoundException
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
@@ -185,6 +186,7 @@ fun SettingsDialog(
                         "Version $appVersion",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.clickable { OwnerTest.tap(context) }, // 7 taps: owner's test updates
                     )
                 }
             }

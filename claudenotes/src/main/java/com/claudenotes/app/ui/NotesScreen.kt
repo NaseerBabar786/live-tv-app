@@ -2,6 +2,8 @@
 
 package com.claudenotes.app.ui
 
+import com.claudenotes.app.data.OwnerTest
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -201,9 +203,11 @@ fun NotesScreen(
                         NoteCard(note, onToggle = { onToggle(note.id) }, onOpen = { onEdit(note) }, onRestore = { onRestore(note.id) })
                     }
                     item {
+                        val context = LocalContext.current
                         Text(
                             "Version $version",
-                            Modifier.fillMaxWidth().padding(top = 8.dp),
+                            // 7 taps: owner's test updates
+                            Modifier.fillMaxWidth().padding(top = 8.dp).clickable { OwnerTest.tap(context) },
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.outline,
                         )
