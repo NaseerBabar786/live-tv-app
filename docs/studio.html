@@ -1267,7 +1267,7 @@ async function loadPromos() {
 loadPromos();
 /** Same as make_show_promos.py: the promo's name for a booking. */
 const promoSlug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "show";
-const cleanTitle = t => t.replace(/\s*\([^)]*\)\s*$/, "").trim() || t;
+const cleanTitle = t => t.split(/\s+\(/)[0].trim().replace(/^[ ,]+|[ ,]+$/g, "") || t;
 function promoKey(s) {
   const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
   const eps = (s.episodes?.length ? s.episodes : [s.video]).map(id => byId[id]).filter(v => v && v.secs > 0 && kindOf(v) === "programme");
