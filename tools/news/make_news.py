@@ -9,7 +9,7 @@ Two bulletins, each always EXACTLY the same length so the channel schedule never
 --kind auto (the default) makes the one due at the next full hour in Toronto.
 
 How it works:
-  1. reads the newest headlines from public RSS feeds (CBC, Global News, CityNews, Government of Canada,
+  1. reads the newest headlines from public RSS feeds (CBC, Global News, CityNews,
      BBC, Al Jazeera, UN News),
   2. writes our OWN short news-reader script from them (GitHub Models, free with the workflow's
      token; if that fails, a plain "<source> reports: <headline>" line), always naming the source,
@@ -41,7 +41,6 @@ FEEDS = {
         ("CBC News", "https://www.cbc.ca/cmlink/rss-canada"),
         ("Global News", "https://globalnews.ca/canada/feed/"),
         ("CityNews", "https://toronto.citynews.ca/feed/"),
-        ("Government of Canada", "https://api.io.canada.ca/io-server/gc/news/en/v2?sort=publishedDate&orderBy=desc&pick=30&format=atom"),
         ("Global News", "https://globalnews.ca/politics/feed/"),
     ],
     "world": [
@@ -177,9 +176,12 @@ def ai_script(stories, kind):
     text = ""
     for attempt in range(3):
         try:
-            r = urllib.request.Request("https://models.github.ai/inference/chat/completions",
-                                       data=json.dumps(req).encode(), method="POST",
-                                       headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+            # GitHub Models; the older Azure address (same free token) when the new one answers oddly.
+            url, model = (("https://models.github.ai/inference/chat/completions", req["model"]) if attempt == 0 else
+                          ("https://models.inference.ai.azure.com/chat/completions", req["model"].split("/")[-1]))
+            r = urllib.request.Request(url, data=json.dumps(dict(req, model=model)).encode(), method="POST",
+                                       headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json",
+                                                "Accept": "application/json", "X-GitHub-Api-Version": "2022-11-28"})
             with urllib.request.urlopen(r, timeout=120) as resp:
                 raw = resp.read().decode(errors="replace")
             text = raw
@@ -195,7 +197,8 @@ def ai_script(stories, kind):
         except Exception as e:
             detail = e.read().decode(errors="replace")[:300] if hasattr(e, "read") else repr(text[:300])
             print("GitHub Models failed", attempt, e, detail)
-            if attempt == 2: NOTES.append(f"GitHub Models failed: {e} {detail}")
+            NOTES.append(f"AI try {attempt}: {e} {detail}")
+            if attempt == 2: NOTES.append("GitHub Models failed")
             time.sleep(10 * (attempt + 1))
 
 # ---------- weather (Open-Meteo, CC BY 4.0) ----------
