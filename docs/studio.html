@@ -404,7 +404,7 @@ const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firest
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = fs.getFirestore(app);
-window.studioFirebase = { auth, db, fs }; // shared with the 🎙 Ask AI button (assets/ai-help.js)
+window.studioFirebase = { auth, db, fs }; // shared with the 🎙 Ask Gemini button (assets/ai-help.js)
 
 let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
 // The channel being worked on (?c=filmein opens Bazaar Cinema).

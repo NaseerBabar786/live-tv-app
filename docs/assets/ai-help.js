@@ -64,17 +64,17 @@ const fab = document.createElement("button");
 fab.id = "aiFab";
 fab.type = "button";
 fab.className = "hidden";
-fab.textContent = "🎙 Ask AI";
-fab.title = "Ask the AI a question by voice";
+fab.textContent = "🎙 Ask Gemini";
+fab.title = "Ask Gemini a question by voice";
 document.body.appendChild(fab);
 
 const box = document.createElement("div");
 box.id = "aiBox";
 box.className = "hidden";
 box.innerHTML = `
-  <header><b>🎙 AI help</b><select id="aiLang" aria-label="Language"></select><button class="x" id="aiClose" aria-label="Close">✕</button></header>
+  <header><b>🎙 Ask Gemini</b><select id="aiLang" aria-label="Language"></select><button class="x" id="aiClose" aria-label="Close">✕</button></header>
   <div id="aiSetup" class="hidden">
-    <p style="margin:0"><b>One-time setup, free:</b> AI help uses Google's free Gemini key. No card and no charges.</p>
+    <p style="margin:0"><b>One-time setup, free:</b> Ask Gemini uses Google's free Gemini key. No card and no charges.</p>
     <ol>
       <li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with your Google account.</li>
       <li>Press <b>Create API key</b> and copy it. Don't add billing; the free tier is enough.</li>
