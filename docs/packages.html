@@ -35,9 +35,12 @@
     .split > .panel:first-child { margin-bottom: 0 !important; }
     .split > .pk-main { grid-column: 1 / -1; }
   }
-  #cfgMsg { margin-left: 12px; font-weight: 700; }
-  #cfgMsg.saved { color: #69f0ae; } #cfgMsg.bad { color: #ff8a80; }
+  #cfgMsg, #featMsg { margin-left: 12px; font-weight: 700; }
+  #cfgMsg.saved, #featMsg.saved { color: #69f0ae; } #cfgMsg.bad, #featMsg.bad { color: #ff8a80; }
   .soon { color: #ff8a80; font-weight: 700; }
+  .feats td, .feats th { text-align: center; padding: 7px 10px; }
+  .feats td:first-child, .feats th:first-child { text-align: left; }
+  .feats input { width: 20px; height: 20px; }
   .pkgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
   .pkg { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 12px 16px; }
   .pkg h3 { margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; }
@@ -85,48 +88,15 @@
     </div>
 
     <div class="panel" style="margin-bottom:20px">
-      <h2 style="margin-top:0">What's in each package</h2>
-      <p class="small">Each package has everything in the one before it, plus more. The prices shown are the ones in Settings above.</p>
-      <div class="pkgs">
-        <div class="pkg"><h3><span class="pill Free">Free</span> <span class="price">$0</span></h3>
-          <p><b>For:</b> anyone who wants to try Cable TV.</p>
-          <ul>
-            <li><b>Our own channels</b> (Bazaar TV, Cinema, Music, Hits, Kids, Sports and the rest), plus <b>Aaj Tak</b> (India) and <b>ARY News</b> (Pakistan)</li>
-            <li><b>1+List</b>: one channel with the channel list beside it</li>
-            <li>Full screen, favourites, channel numbers and search</li>
-          </ul></div>
-        <div class="pkg"><h3><span class="pill Silver">Silver</span> <span class="price" data-p="silver"></span></h3>
-          <p><b>For:</b> anyone who wants every channel, one at a time.</p>
-          <ul>
-            <li>Everything in Free, plus:</li>
-            <li><b>All channels</b> from every country</li>
-            <li><b>Browse</b>: the home screen with rows of big channel cards</li>
-            <li><b>Carousel</b>: one big channel, slide left and right to the next</li>
-          </ul></div>
-        <div class="pkg"><h3><span class="pill Gold">Gold</span> <span class="price" data-p="gold"></span></h3>
-          <p><b>For:</b> anyone who wants everything the app has.</p>
-          <ul>
-            <li>Everything in Silver, plus:</li>
-            <li><b>1×2</b>: two channels side by side</li>
-            <li><b>1+3</b>: one big channel and three small ones beside it</li>
-            <li><b>Duo</b>: two channels playing on top, channel cards below</li>
-            <li><b>Strip</b>: a big channel on top, small channel tiles along the bottom</li>
-            <li><b>2×2</b>: four channels at once</li>
-            <li><b>2×3</b>: six channels at once</li>
-            <li><b>News</b>: your channel with weather, prayer times, traffic cameras and headlines around it</li>
-            <li><b>CP24</b>: a big channel with a clock, weather and scrolling lines, like the Toronto news channel</li>
-            <li><b>Home</b>: your channel with cards for the clock, weather, prayers, stories and markets</li>
-            <li><b>My Screen</b>: a screen the viewer designs themselves</li>
-            <li><b>Movies &amp; Dramas</b>: the Library of movies and drama series</li>
-            <li><b>Games</b>: the 12 retro games played with the TV remote</li>
-          </ul></div>
-        <div class="pkg"><h3><span class="pill Platinum">Platinum</span> <span class="price" data-p="platinum"></span></h3>
-          <p><b>For:</b> a home with two TVs.</p>
-          <ul>
-            <li>Everything in Gold, plus:</li>
-            <li><b>2 devices</b>: one account works on two TVs or phones at the same time (every other package works on one)</li>
-          </ul></div>
-      </div>
+      <h2 style="margin-top:0">Design your packages</h2>
+      <p class="small">Tick what each package gets, then press <b>Save settings</b>. Every package always has 1+List, full screen, favourites, channel numbers and search. Without <b>All channels</b> a package has only our own channels plus Aaj Tak and ARY News. The app follows your ticks the next time each viewer opens it.</p>
+      <div class="table-wrap feats"><table>
+        <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Silver">Silver</span></th><th><span class="pill Gold">Gold</span></th><th><span class="pill Platinum">Platinum</span></th></tr></thead>
+        <tbody id="featRows"></tbody>
+      </table></div>
+      <div class="row" style="margin:10px 0 18px"><button class="btn primary" id="saveFeats">Save settings</button> <button class="btn" id="resetFeats">Start again from our suggestion</button><span class="small" id="featMsg"></span></div>
+      <h3>What viewers see in each package</h3>
+      <div class="pkgs" id="pkgCards"></div>
 
       <h3>How it works</h3>
       <ul class="how">
@@ -163,6 +133,31 @@ import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
 const $ = id => document.getElementById(id);
 const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 const TIERS = ["Silver", "Gold", "Platinum"];
+// What a package can include; the keys match the app (Plans.Feature). 1+List is in every package.
+const FEATURES = [
+  ["channels", "All channels", "every channel from every country (without it: our own channels plus Aaj Tak and ARY News)"],
+  ["browse", "Browse", "the home screen with rows of big channel cards"],
+  ["carousel", "Carousel", "one big channel, slide left and right to the next"],
+  ["strip", "Strip", "a big channel on top, small channel tiles along the bottom"],
+  ["two", "1×2", "two channels side by side"],
+  ["five", "1+3", "one big channel and three small ones beside it"],
+  ["duo", "Duo", "two channels playing on top, channel cards below"],
+  ["four", "2×2", "four channels at once"],
+  ["six", "2×3", "six channels at once"],
+  ["news", "News", "your channel with weather, prayer times, traffic cameras and headlines around it"],
+  ["cp24", "CP24", "a big channel with a clock, weather and scrolling lines"],
+  ["home", "Home", "your channel with cards for the clock, weather, prayers, stories and markets"],
+  ["mine", "My Screen", "a screen the viewer designs themselves"],
+  ["library", "Movies & Dramas", "the Library of movies and drama series"],
+  ["games", "Games", "the 12 retro games played with the TV remote"],
+  ["devices", "2 devices", "one account works on two TVs or phones at the same time"],
+];
+const ALL_TIERS = ["Free", "Silver", "Gold", "Platinum"];
+const ALL_KEYS = FEATURES.map(f => f[0]);
+const DEFAULT_FEATURES = {
+  free: [], silver: ["channels", "browse", "carousel"],
+  gold: ALL_KEYS.filter(k => k !== "devices"), platinum: ALL_KEYS,
+};
 const LENGTHS = [["month", "1 month"], ["three", "3 months"], ["six", "6 months"], ["year", "1 year"]];
 const DEFAULTS = {
   silver_month: "$1.99", silver_three: "$5.39", silver_six: "$9.79", silver_year: "$17.79",
@@ -225,15 +220,52 @@ if (!configured) {
       }
       tb.append(tr);
     }
+    // The tick grid: one row per feature, one box per package.
+    const fr = $("featRows"); fr.innerHTML = "";
+    for (const [key, label, what] of FEATURES) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td><b>${label}</b><br><span class="small">${what}</span></td>`;
+      for (const t of ALL_TIERS) {
+        const id = t.toLowerCase(), saved = c[id + "_features"];
+        const on = (saved === undefined ? DEFAULT_FEATURES[id] : saved.split(",")).includes(key);
+        tr.insertAdjacentHTML("beforeend", `<td><input type="checkbox" data-t="${id}" data-k="${key}" ${on ? "checked" : ""} aria-label="${label} in ${t}"></td>`);
+      }
+      fr.append(tr);
+    }
+    showCards();
     // Settings saved before 3 months existed: work the others out from the month.
     for (const t of TIERS) if (saved[t.toLowerCase() + "_month"] && !saved[t.toLowerCase() + "_three"]) fillFromMonth(t.toLowerCase());
     showPrices();
   }
 
+  // The ticked features of a package, e.g. "channels,browse".
+  const ticked = t => [...document.querySelectorAll(`#featRows input[data-t="${t}"]:checked`)].map(i => i.dataset.k);
+  // The package cards follow the ticks.
+  function showCards() {
+    $("pkgCards").innerHTML = ALL_TIERS.map(t => {
+      const id = t.toLowerCase(), has = ticked(id);
+      const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : "<li><b>Our own channels</b>, plus Aaj Tak and ARY News</li>",
+        "<li><b>1+List</b>, full screen, favourites and search</li>",
+        ...FEATURES.filter(f => f[0] !== "channels" && has.includes(f[0])).map(f => `<li><b>${f[1]}</b>: ${f[2]}</li>`)];
+      return `<div class="pkg"><h3><span class="pill ${t}">${t}</span> <span class="price" data-p="${id}">${id === "free" ? "$0" : ""}</span></h3><ul>${items.join("")}</ul></div>`;
+    }).join("");
+    showPrices();
+  }
+  $("featRows").addEventListener("change", showCards);
+  $("resetFeats").onclick = () => {
+    document.querySelectorAll("#featRows input").forEach(i => { i.checked = DEFAULT_FEATURES[i.dataset.t].includes(i.dataset.k); });
+    showCards();
+  };
+  $("saveFeats").onclick = () => $("saveCfg").click();
+  // The save result shows beside both Save buttons.
+  new MutationObserver(() => { $("featMsg").className = $("cfgMsg").className; $("featMsg").textContent = $("cfgMsg").textContent; })
+    .observe($("cfgMsg"), { childList: true, characterData: true, subtree: true, attributes: true });
+
   // The prices in each package card follow the Settings boxes as they are typed.
   function showPrices() {
     document.querySelectorAll(".price[data-p]").forEach(el => {
       const t = el.dataset.p;
+      if (t === "free") return;
       el.textContent = `${$(t + "_month").value}/month · ${$(t + "_three").value}/3 months · ${$(t + "_six").value}/6 months · ${$(t + "_year").value}/year`;
     });
   }
@@ -255,7 +287,8 @@ if (!configured) {
   $("saveCfg").onclick = async () => {
     const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), updated: fs.serverTimestamp() };
     for (const t of TIERS) for (const [k] of LENGTHS) { const id = `${t.toLowerCase()}_${k}`; data[id] = $(id).value.trim(); }
-    if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have the Free channels in 1+List (after their free trial).")) return;
+    for (const t of ALL_TIERS) data[t.toLowerCase() + "_features"] = ticked(t.toLowerCase()).join(",");
+    if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have what you ticked for Free (after their free trial).")) return;
     const msg = $("cfgMsg"); msg.className = "small"; msg.textContent = "Saving…";
     try {
       await fs.setDoc(fs.doc(db, "config", "plans"), data);

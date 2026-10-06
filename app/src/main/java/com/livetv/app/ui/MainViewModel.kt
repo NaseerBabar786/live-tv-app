@@ -20,6 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -57,7 +58,7 @@ data class UiState(
     val provider: String = ChannelRepository.PROVIDER_FAMELACK,
     /** Whether MTA's channels and Library programmes are shown (Cable TV only). */
     val showMta: Boolean = false,
-    /** Cable TV's Free package: only [Plans.freeChannel]s are listed. */
+    /** A Cable TV package without all channels: only [Plans.freeChannel]s are listed. */
     val freeOnly: Boolean = false,
 ) {
     /** Stream Player Plus with no playlist yet: the screen asks the viewer to add one. */
@@ -153,8 +154,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         reload()
         // Cable TV's Free package lists only its few channels; the channel watched last moves onto one of them.
         viewModelScope.launch {
-            Plans.current.collect { tier ->
-                val freeOnly = tier == Plans.Tier.Free
+            combine(Plans.current, Plans.features) { _, _ -> !Plans.has(Plans.Feature.AllChannels) }.collect { freeOnly ->
                 _state.update { s ->
                     val last = s.channels.firstOrNull { it.id == s.lastWatchedId }
                     val keep = !freeOnly || last == null || Plans.freeChannel(last)
@@ -311,7 +311,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun play(channel: Channel) {
         if (!Plans.allowsChannel(channel)) {
-            Plans.ask(channel.name, Plans.Tier.Silver)
+            Plans.ask(channel.name, Plans.Feature.AllChannels)
             return
         }
         if (!tipChecked) {

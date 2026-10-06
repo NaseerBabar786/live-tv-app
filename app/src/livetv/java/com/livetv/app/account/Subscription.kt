@@ -30,6 +30,8 @@ object Subscription {
         val trialDays: Int = 7,
         val prices: Map<Plans.Tier, Prices> = DEFAULT_PRICES,
         val howToPay: String = DEFAULT_HOW_TO_PAY,
+        /** What each package has, as ticked by the owner at tv.bulkbazaar.ca/packages. */
+        val features: Map<Plans.Tier, Set<Plans.Feature>> = Plans.DEFAULT_FEATURES,
     )
 
     /** Where the viewer's package comes from, for the packages screen and the end-date warning. */
@@ -73,7 +75,7 @@ object Subscription {
     val status: StateFlow<Status?> = _status
 
     /** Packages are on, and this viewer has Platinum: their account works on two devices. */
-    val twoDevices: Boolean get() = _offer.value.enforced && Plans.current.value == Plans.Tier.Platinum
+    val twoDevices: Boolean get() = _offer.value.enforced && Plans.has(Plans.Feature.TwoDevices)
 
     private const val PREFS = "subscription"
 
@@ -81,6 +83,10 @@ object Subscription {
     fun init(context: Context) {
         if (Edition.MAX) return
         val p = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        // The owner's packages as last read; packages off (nothing saved) leaves everything open.
+        if (p.contains("features_free")) {
+            Plans.setFeatures(Plans.Tier.entries.associateWith { Plans.Feature.parse(p.getString("features_${it.name.lowercase()}", "") ?: "") })
+        }
         p.getString("tier", null)?.let { name ->
             Plans.Tier.entries.firstOrNull { it.name == name }?.let { tier ->
                 val until = p.getLong("until", 0L)
@@ -119,11 +125,16 @@ object Subscription {
                 }
             }
             _status.value = status
+            Plans.setFeatures(if (offer.enforced) offer.features else null)
             Plans.set(status.tier)
-            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
-                .putString("tier", status.tier.name)
-                .putLong("until", status.until?.time ?: 0L)
-                .apply()
+            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().apply {
+                putString("tier", status.tier.name)
+                putLong("until", status.until?.time ?: 0L)
+                Plans.Tier.entries.forEach { t ->
+                    val key = "features_${t.name.lowercase()}"
+                    if (offer.enforced) putString(key, offer.features[t].orEmpty().joinToString(",") { it.key }) else remove(key)
+                }
+            }.apply()
         }
         Unit
     }
@@ -155,16 +166,21 @@ object Subscription {
             trialDays = trial.coerceIn(0, 365),
             prices = prices,
             howToPay = f.str("howToPay").ifBlank { DEFAULT_HOW_TO_PAY },
+            // "free_features" and so on: what the owner ticked; a package never saved keeps its default.
+            features = Plans.Tier.entries.associateWith { t ->
+                val key = "${t.name.lowercase()}_features"
+                if (f.has(key)) Plans.Feature.parse(f.str(key)) else Plans.DEFAULT_FEATURES[t].orEmpty()
+            },
         )
     }
 
-    /** What each package adds, for the packages screen. */
-    val FEATURES: Map<Plans.Tier, String> = mapOf(
-        Plans.Tier.Free to "Our own channels plus Aaj Tak and ARY News, in 1+List mode, full screen, favourites",
-        Plans.Tier.Silver to "All channels, plus Browse and Carousel modes",
-        Plans.Tier.Gold to "Everything in the app: every mode (1×2, 1+3, Duo, Strip, 2×2, 2×3, News, CP24, Home, My Screen), Movies & Dramas and Games",
-        Plans.Tier.Platinum to "Everything in Gold, and your account on 2 devices at once",
-    )
+    /** What [tier] has, in a line for the packages screen. */
+    fun describe(tier: Plans.Tier): String {
+        val has = _offer.value.features[tier].orEmpty()
+        val channels = if (Plans.Feature.AllChannels in has) "All channels" else "Our own channels plus Aaj Tak and ARY News"
+        val extras = Plans.Feature.entries.filter { it != Plans.Feature.AllChannels && it in has }.map { it.label }
+        return "$channels. 1+List" + extras.joinToString("") { ", $it" } + ", full screen and favourites"
+    }
 
     const val DEFAULT_HOW_TO_PAY =
         "Pick a package below and press Ask. We'll message you back here with how to pay " +

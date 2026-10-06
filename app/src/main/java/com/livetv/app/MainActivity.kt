@@ -119,9 +119,9 @@ class MainActivity : ComponentActivity() {
                 onRefresh = viewModel::reload,
                 settings = { onDismiss -> EditionSettings(state, viewModel, onDismiss) },
                 onTryDemo = viewModel::addDemoPlaylist,
-                onOpenVod = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.LIBRARY)) showVod = true }) else null,
-                onOpenVodItem = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.LIBRARY)) { vodStart = it; showVod = true } }) else null,
-                onOpenGames = if (Edition.LIVE_TV) ({ if (!Plans.ask("Games", Plans.GAMES)) showGames = true }) else null,
+                onOpenVod = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) showVod = true }) else null,
+                onOpenVodItem = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) { vodStart = it; showVod = true } }) else null,
+                onOpenGames = if (Edition.LIVE_TV) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
                 onWatch = viewModel::watched,
             )
         }

@@ -115,7 +115,7 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                                     if (tier == current) "  ✓ yours" else "",
                                 fontWeight = FontWeight.Bold,
                             )
-                            Text(Subscription.FEATURES[tier] ?: "", style = MaterialTheme.typography.bodySmall)
+                            Text(Subscription.describe(tier), style = MaterialTheme.typography.bodySmall)
                             if (prices != null) {
                                 // Shortest first, like tv.bulkbazaar.ca/packages (owner, 2026-10-06); the year is the best value.
                                 val lengths = listOf(
