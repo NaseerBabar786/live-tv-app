@@ -14,7 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
  * packages on) has everything, so [current] starts at Platinum and every package has every feature.
  */
 object Plans {
-    enum class Tier(val label: String) { Free("Free"), Silver("Silver"), Gold("Gold"), Platinum("Platinum") }
+    /** [Promo] is the Promotional package: not for sale, the owner gives it to chosen viewers for a set time. */
+    enum class Tier(val label: String) { Free("Free"), Silver("Silver"), Gold("Gold"), Platinum("Platinum"), Promo("Promotional") }
 
     /** What a package can include. The keys are the ones the packages page saves ("free_features" and so on). */
     enum class Feature(val key: String, val label: String) {
@@ -48,6 +49,7 @@ object Plans {
         Tier.Silver to setOf(Feature.AllChannels, Feature.Browse, Feature.Carousel),
         Tier.Gold to Feature.entries.toSet() - Feature.TwoDevices,
         Tier.Platinum to Feature.entries.toSet(),
+        Tier.Promo to Feature.entries.toSet() - Feature.TwoDevices,
     )
 
     // Declared before _features, which starts with it.
@@ -66,9 +68,9 @@ object Plans {
     /** Whether the viewer's package has [feature]. */
     fun has(feature: Feature): Boolean = feature in (_features.value[_current.value] ?: emptySet())
 
-    /** The first package with [feature], for "needs Gold" and the packages screen. */
+    /** The first package for sale with [feature], for "needs Gold" and the packages screen. */
     fun lowestWith(feature: Feature): Tier =
-        Tier.entries.firstOrNull { feature in (_features.value[it] ?: emptySet()) } ?: Tier.Platinum
+        Tier.entries.firstOrNull { it != Tier.Promo && feature in (_features.value[it] ?: emptySet()) } ?: Tier.Platinum
 
     private val _current = MutableStateFlow(Tier.Platinum)
 

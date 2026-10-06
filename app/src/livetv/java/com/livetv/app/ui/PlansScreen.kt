@@ -97,7 +97,8 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                     Text(offer.howToPay, style = MaterialTheme.typography.bodySmall)
                     sent?.let { Text(it, color = FocusColor) }
                     error?.let { Text(it, color = Color(0xFFFF8A80)) }
-                    Plans.Tier.entries.forEach { tier ->
+                    // The Promotional package isn't for sale: it shows only to a viewer who has it.
+                    Plans.Tier.entries.filter { it != Plans.Tier.Promo || it == current }.forEach { tier ->
                         val prices = offer.prices[tier]
                         Column(
                             Modifier
