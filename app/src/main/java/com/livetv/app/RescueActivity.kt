@@ -52,6 +52,11 @@ class RescueActivity : Activity() {
         }
         root.addView(text("$appName closed by itself", 26f))
         root.addView(text("The new version did not start properly. Go back to the last good version? Your settings are kept.", 18f))
+        CrashGuard.lastError(this)?.let { error ->
+            root.addView(text("What went wrong (also sent to the owner's crash list): $error", 13f).apply {
+                setTextColor(Color.parseColor("#B0B0C0"))
+            })
+        }
         status = text("", 16f).apply { setTextColor(Color.parseColor("#FFB300")) }
         goBack = Button(this).apply {
             text = "Go back to the last good version"
