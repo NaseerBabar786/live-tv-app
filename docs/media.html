@@ -175,12 +175,15 @@ async function save(msg) {
 function render() {
   const langsUsed = [...new Set(lib.items.map(i => i.lang))];
   $("langs").innerHTML = ["all", ...Object.keys(LANGS).filter(l => langsUsed.includes(l))].map(l =>
-    `<button class="chip ${l === lang ? "sel" : ""}" data-lang="${l}">${l === "all" ? "All languages" : LANGS[l]}</button>`).join("");
+    `<button class="chip ${l === lang ? "sel" : ""}" data-lang="${l}">${l === "all" ? "All languages" : LANGS[l]}</button>`).join("")
+    + (lib.categories.some(c => c.id === "promos") ? `<button class="chip ${lang === "promos" ? "sel" : ""}" data-lang="promos">📣 Promos</button>` : "");
   $("langs").querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { lang = b.dataset.lang; render(); });
   const catOptions = id => lib.categories.map(c => `<option value="${esc(c.id)}" ${c.id === id ? "selected" : ""}>${esc(c.name)}</option>`).join("");
   $("aCat").innerHTML = catOptions();
-  $("cats").innerHTML = lib.categories.map(c => {
-    const items = lib.items.filter(i => i.cat === c.id && (lang === "all" || i.lang === lang));
+  // "Promos" shows only the Cable TV Promos section (our own ads, kept here until the owner uses them).
+  const shown = lang === "promos" ? lib.categories.filter(c => c.id === "promos") : lib.categories;
+  $("cats").innerHTML = shown.map(c => {
+    const items = lib.items.filter(i => i.cat === c.id && (lang === "all" || lang === "promos" || i.lang === lang));
     const total = lib.items.filter(i => i.cat === c.id).length;
     return `<section class="cat"><h2>${esc(c.name)} <span class="count">${items.length} video${items.length === 1 ? "" : "s"}</span>
       <span class="tools"><button class="btn" data-ren="${esc(c.id)}" title="Rename">✎</button>${total ? "" : `<button class="btn" data-delcat="${esc(c.id)}" title="Remove section">✕</button>`}</span></h2>
