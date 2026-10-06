@@ -1,0 +1,53 @@
+name: Build upcoming trailers
+
+# docs/channel/trailers.json: Bazaar TV's block of upcoming film trailers (English, Hindi, Punjabi,
+# Pakistani) from the studios' and labels' own YouTube channels, rebuilt every day. Played in
+# YouTube's player, locked, on tv.bulkbazaar.ca/channel/block.html (also in the app).
+on:
+  schedule:
+    - cron: "30 8 * * *"   # every day, 08:30 UTC
+  push:
+    branches: [main]
+    paths: [tools/build_trailers.py, .github/workflows/build-trailers.yml]
+  pull_request:
+    paths: [tools/build_trailers.py, .github/workflows/build-trailers.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: build-trailers
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the list
+        run: python3 tools/build_trailers.py
+
+      - name: Publish the list
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/channel/trailers.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Upcoming trailers as of $(date -u '+%Y-%m-%d')"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."
