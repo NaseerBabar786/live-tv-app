@@ -32,13 +32,35 @@
   .item .acts button { padding: 6px 10px; font-size: 14px; }
   .kind { display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
   .kind.programme { background: #1E3A8A; color: #DBEAFE; } .kind.ad { background: #7C2D12; color: #FFEDD5; } .kind.ident { background: #14532D; color: #DCFCE7; } .kind.live { background: #7F1D1D; color: #FEE2E2; }
-  .stage { position: relative; width: 100%; max-width: 640px; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; }
-  .stage video { width: 100%; height: 100%; object-fit: contain; }
-  .stage .bug { position: absolute; width: 9%; aspect-ratio: 1; opacity: .85; }
-  .bug.tr { top: 3%; right: 2.5%; } .bug.tl { top: 3%; left: 2.5%; } .bug.br { bottom: 10%; right: 2.5%; } .bug.bl { bottom: 10%; left: 2.5%; }
-  .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: 14px; padding: 4px 0; }
-  .ticker span { display: inline-block; padding-left: 100%; animation: crawl 24s linear infinite; }
-  @keyframes crawl { to { transform: translateX(-100%); } }
+  /* TV preview: sizes come from the picture's width (cqw), like the app's overlay, so it looks the same as on a TV. */
+  .tvbox { margin: 0 0 18px; }
+  .tvslot { position: relative; }
+  .stage { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; container-type: inline-size; }
+  .stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; background: #000; }
+  .stage video.keep { object-fit: contain; }
+  .stage .bug { position: absolute; width: 8cqw; height: 8cqw; object-fit: contain; opacity: .85; pointer-events: none; }
+  .bug.tr { top: 2cqw; right: 2.5cqw; } .bug.tl { top: 2cqw; left: 2.5cqw; } .bug.br { bottom: 2cqw; right: 2.5cqw; } .bug.bl { bottom: 2cqw; left: 2.5cqw; }
+  .stage.ticking .bug.br, .stage.ticking .bug.bl { bottom: 6cqw; }
+  .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: 1.9cqw; line-height: 1.25; padding: .6cqw 0; }
+  .ticker span { display: inline-block; }
+  .stage .chbar { position: absolute; left: 0; right: 0; top: 0; padding: 1.2cqw 2cqw 3cqw; background: linear-gradient(rgba(0,0,0,.7), transparent); color: #fff; font-weight: 700; font-size: 2.2cqw; transition: opacity .4s; pointer-events: none; }
+  .stage .chbar small { display: block; font-weight: 400; opacity: .7; font-size: 1.6cqw; }
+  .stage .chbar.gone { opacity: 0; }
+  .stage .adline { position: absolute; left: 0; right: 0; bottom: 0; height: 5cqw; background: rgba(0,0,0,.55); overflow: hidden; pointer-events: none; }
+  .adline span { position: absolute; top: 50%; transform: translateY(-50%); white-space: nowrap; color: var(--focus); font-weight: 700; font-size: 2.4cqw; }
+  .stage .off { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 6cqw; color: #fff; font-size: 3cqw; background: #000; }
+  .stage .tag { position: absolute; left: 1.5cqw; bottom: 1.5cqw; background: var(--red); color: #fff; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; pointer-events: none; }
+  .stage.ticking .tag { bottom: calc(5.5cqw); }
+  .stage:fullscreen { border-radius: 0; }
+  .modes { display: inline-flex; border: 2px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .modes button { background: none; border: 0; color: var(--text); font: inherit; font-weight: 700; padding: 8px 14px; cursor: pointer; }
+  .modes button.sel { background: var(--focus); color: #111; }
+  /* When the big player scrolls away it docks in the corner, so edits further down still show. */
+  .tvslot.docked .stage { position: fixed; right: 16px; bottom: 120px; width: min(360px, 46vw); z-index: 6; box-shadow: 0 8px 30px rgba(0,0,0,.6); border: 2px solid var(--focus); }
+  .tvslot.docked .stage .tag { display: none; }
+  .undock { position: absolute; top: 4px; right: 4px; z-index: 2; background: rgba(0,0,0,.6); color: #fff; border: 0; border-radius: 999px; width: 26px; height: 26px; cursor: pointer; display: none; }
+  .tvslot.docked .undock { display: block; }
+  @media (max-width: 640px) { .tvslot.docked .stage { top: 8px; bottom: auto; right: 8px; width: 60vw; } }
   .savebar { position: sticky; bottom: 0; background: var(--surface); border-top: 2px solid var(--focus); padding: 12px 16px; margin: 0 -16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; z-index: 5; }
   .ok { color: #A5D6A7; } .warn { color: #FFD54F; }
   .guide { display: grid; gap: 4px; font-size: 15px; }
@@ -79,6 +101,44 @@
   <div id="dash" class="hidden">
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
+    <section class="panel tvbox" id="tvbox">
+      <div class="row" style="justify-content:space-between;margin:0 0 10px">
+        <h2 style="margin:0">📺 How it looks on TV</h2>
+        <div class="modes" role="group" aria-label="What to show">
+          <button type="button" id="modeEdit" class="sel">Your changes</button>
+          <button type="button" id="modeAir">On TVs now</button>
+        </div>
+      </div>
+      <div class="tvslot" id="tvslot">
+        <div class="stage" id="stage">
+          <video id="pv" playsinline muted autoplay></video>
+          <img class="bug tr hidden" id="bug" alt="">
+          <div class="off hidden" id="offBox"></div>
+          <div class="chbar" id="chbar"><span id="chbarName"></span><small id="chbarNow"></small></div>
+          <div class="ticker hidden" id="tickerBox"><span id="tickerText"></span></div>
+          <div class="adline hidden" id="adline"><span id="adlineText"></span></div>
+          <span class="tag" id="tag">PREVIEW</span>
+          <button class="undock" id="undock" type="button" title="Close the small player">✕</button>
+        </div>
+      </div>
+      <p id="nowText" style="font-weight:700;margin:10px 0 4px"></p>
+      <p class="small" id="modeText" style="margin:0 0 10px"></p>
+      <div class="row">
+        <button class="btn" type="button" id="soundBtn">🔊 Sound on</button>
+        <button class="btn" type="button" id="fullBtn">⛶ Full screen</button>
+        <button class="btn" type="button" id="barBtn">Show the channel bar</button>
+        <button class="btn" type="button" id="adBtn">Run the "Advertise" line</button>
+      </div>
+      <details class="help" style="margin:12px 0 0"><summary>What am I looking at?</summary>
+        <ul>
+          <li><b>Your changes</b> plays your channel with everything on this page, even before you press Save: the logo, its corner, the scrolling line, the loop and time slots. Change something and it shows here straight away.</li>
+          <li><b>On TVs now</b> plays the last saved version: exactly what viewers' TVs show at this moment.</li>
+          <li>The picture is stretched to fill the screen, like the app does on TVs. The logo and the scrolling line are drawn at the same size and speed as on the TV.</li>
+          <li>The channel bar shows for 10 seconds when someone opens the channel on TV. The yellow "Advertise" line (from the Sponsors page) runs along the bottom every 2 minutes on full screen.</li>
+          <li>Scroll down and the player follows you in the corner, so you can watch while you edit.</li>
+        </ul>
+      </details>
+    </section>
     <details class="help panel" style="padding:14px 18px" open>
       <summary>How it works (read this first)</summary>
       <ol>
@@ -219,13 +279,7 @@
 
     <section class="panel">
       <h2><span class="num">5</span> Check it</h2>
-      <p class="small" style="margin-top:0">A preview of your <b>unsaved</b> changes, exactly as viewers will see them after you save.</p>
-      <div class="stage" id="stage">
-        <video id="pv" playsinline muted autoplay controls></video>
-        <img class="bug tr hidden" id="bug" alt="">
-        <div class="ticker hidden" id="tickerBox"><span id="tickerText"></span></div>
-      </div>
-      <p id="nowText" style="font-weight:700"></p>
+      <p class="small" style="margin-top:0">The programme guide for your <b>unsaved</b> changes. The player at the top shows them playing.</p>
       <h3 style="margin-bottom:6px">Next 3 hours</h3>
       <div class="guide" id="guide"></div>
     </section>
@@ -402,7 +456,7 @@ function renderVideos() {
     d.querySelector("b").textContent = v.title;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
     d.querySelector(".meta").textContent = `${lengthText(v.secs)} · ${uses ? "used " + uses + "×" : "not used yet"} · ${v.url}`;
-    d.querySelector('[data-a=play]').onclick = () => { stopPreview(); $("pv").muted = false; $("pv").src = v.url; $("pv").play().catch(() => {}); $("nowText").textContent = "Watching: " + v.title + " (press Play live below to go back)"; $("stage").scrollIntoView({ behavior: "smooth" }); showLiveButton(); };
+    d.querySelector('[data-a=play]').onclick = () => watchOne(v.title, v.url);
     d.querySelector('[data-a=edit]').onclick = () => editVideo(v);
     d.querySelector('[data-a=del]').onclick = () => {
       if (uses && !confirm(`"${v.title}" is used ${uses} time(s) in the loop or time slots. Delete it from those too?`)) return;
@@ -544,7 +598,7 @@ function renderLibrary() {
       changed(); renderAll();
       $("vMsg").innerHTML = `<span class="ok">✓ Added "${show.title}"` + (show.secs <= 30 * 60 ? " and put it at the end of the loop." : ". It's a long film: give it a time slot in step 4.") + " Press Save to put it on air.</span>";
     };
-    d.querySelector('[data-a=play]').onclick = () => { stopPreview(); $("pv").muted = false; $("pv").src = show.url; $("pv").play().catch(() => {}); $("nowText").textContent = "Watching: " + show.title + " (press Play live below to go back)"; $("stage").scrollIntoView({ behavior: "smooth" }); showLiveButton(); };
+    d.querySelector('[data-a=play]').onclick = () => watchOne(show.title, show.url);
     $("library").appendChild(d);
   }
 }
@@ -617,32 +671,147 @@ $("slotForm").onsubmit = e => {
   changed(); renderAll();
 };
 
-// ---------- step 5 ----------
+// ---------- the TV preview ----------
+// "edit" plays the page as it is now (unsaved changes too); "air" plays what was last saved, as on TVs.
+let mode = "edit", marquee = null, barTimer = null, adRun = null, tickerNow = "";
+const shown = () => (mode === "air" ? saved : c) || c;
 function stopPreview() { if (preview) { preview.stop(); preview = null; } }
 function showLiveButton() {
   if ($("liveBtn")) return;
   const b = document.createElement("button");
-  b.className = "btn"; b.id = "liveBtn"; b.textContent = "▶ Play live"; b.style.marginTop = "8px";
-  b.onclick = () => { b.remove(); startPreview(); };
-  $("stage").after(b);
+  b.className = "btn"; b.id = "liveBtn"; b.type = "button"; b.textContent = "▶ Back to the channel";
+  b.onclick = () => startPreview();
+  $("soundBtn").before(b);
+}
+/** Plays one video from the list in the player (not the schedule). */
+function watchOne(title, url) {
+  stopPreview();
+  $("offBox").classList.add("hidden");
+  $("pv").muted = false; soundText();
+  $("pv").src = url; $("pv").play().catch(() => {});
+  $("nowText").textContent = "Watching: " + title + " (just this video, not the channel)";
+  $("tag").textContent = "WATCHING ONE VIDEO";
+  $("tvbox").scrollIntoView({ behavior: "smooth" });
+  showLiveButton();
 }
 function startPreview() {
   stopPreview();
   $("liveBtn")?.remove();
-  if (c.active === false) { $("pv").removeAttribute("src"); $("nowText").textContent = "The channel is switched OFF (step 1)."; return; }
-  preview = tuneIn($("pv"), c, {
-    onChange: on => { $("nowText").textContent = `On air now: ${on.video.title}` + (on.slot ? " (time slot)" : " (loop)"); renderGuide(); },
-    onOff: on => { $("nowText").textContent = "Off air now." + (on.next ? ` Next: ${on.next.title} at ${timeText(on.nextAt, c.tz)}.` : " Nothing is booked: add videos to the loop."); },
+  const cfg = shown();
+  renderPreviewLook();
+  if (!cfg) return;
+  if (cfg.active === false) {
+    $("pv").removeAttribute("src"); $("pv").load();
+    $("offBox").textContent = mode === "air" ? "This channel is switched off: it isn't in the app." : "The channel is switched OFF (step 1).";
+    $("offBox").classList.remove("hidden");
+    $("nowText").textContent = "Off";
+    return;
+  }
+  preview = tuneIn($("pv"), cfg, {
+    onChange: on => {
+      $("offBox").classList.add("hidden");
+      $("nowText").textContent = `${mode === "air" ? "On TVs now" : "Playing now"}: ${on.video.title}` + (on.slot ? " (time slot)" : " (loop)");
+      $("chbarNow").textContent = on.video.title;
+      renderGuide();
+    },
+    onOff: on => {
+      const text = `${cfg.name || "This channel"} is off air right now.` + (on.next ? ` Next: ${on.next.title} at ${timeText(on.nextAt, cfg.tz)}.` : " Nothing is booked: add videos to the loop.");
+      $("offBox").textContent = text; $("offBox").classList.remove("hidden");
+      $("nowText").textContent = text;
+    },
   });
+  flashBar();
 }
+/** The TV's channel bar: shows for 10 seconds when the channel opens. */
+function flashBar() {
+  clearTimeout(barTimer);
+  $("chbar").classList.remove("gone");
+  barTimer = setTimeout(() => $("chbar").classList.add("gone"), 10000);
+}
+/** Logo, scrolling line, channel bar and labels, from the version being shown. */
 function renderPreviewLook() {
-  const corner = c.logoCorner || "tr";
-  $("bug").className = `bug ${corner}` + (!c.logo || corner === "off" ? " hidden" : "");
-  if (c.logo) $("bug").src = c.logo;
-  const tick = c.tickerOn !== false && (c.ticker || "").trim();
+  const cfg = shown();
+  if (!cfg) return;
+  const corner = cfg.logoCorner || "tr";
+  $("bug").className = `bug ${corner}` + (!cfg.logo || corner === "off" ? " hidden" : "");
+  if (cfg.logo && $("bug").getAttribute("src") !== cfg.logo) $("bug").src = cfg.logo;
+  const tick = cfg.tickerOn !== false && (cfg.ticker || "").trim();
   $("tickerBox").classList.toggle("hidden", !tick);
-  $("tickerText").textContent = tick || "";
+  $("stage").classList.toggle("ticking", !!tick);
+  tickerNow = tick || "";
+  runTicker(tickerNow);
+  $("chbarName").textContent = `${station.dial}  ${cfg.name || "My Channel"}`;
+  const editing = mode === "edit";
+  $("modeEdit").classList.toggle("sel", editing);
+  $("modeAir").classList.toggle("sel", !editing);
+  if (!$("liveBtn")) $("tag").textContent = editing ? (dirty ? "PREVIEW · NOT SAVED YET" : "PREVIEW") : "ON TVs NOW";
+  $("modeText").textContent = editing
+    ? (dirty ? "Showing your changes. TVs still show the saved version until you press Save." : "No unsaved changes: this is the same as on TVs.")
+    : "Showing the saved version: what viewers see right now. Edit anything to switch back to your changes.";
 }
+/** The scrolling line like the app's: starts at the left, moves 7% of the width a second, repeats after a gap. */
+function runTicker(text) {
+  const box = $("tickerBox"), span = $("tickerText");
+  const w = box.clientWidth;
+  const key = text + "|" + w;
+  if (span.dataset.key === key) return;
+  span.dataset.key = key;
+  marquee?.cancel(); marquee = null;
+  span.textContent = text;
+  if (!text || !w) return;
+  const tw = span.offsetWidth;
+  if (tw <= w) return;
+  const gap = w / 3;
+  span.innerHTML = "<span></span><span></span>";
+  span.children[0].textContent = text;
+  span.children[1].textContent = text;
+  span.children[1].style.paddingLeft = gap + "px";
+  marquee = span.animate([{ transform: "translateX(0)" }, { transform: `translateX(${-(tw + gap)}px)` }],
+    { duration: (tw + gap) / (0.07 * w) * 1000, iterations: Infinity });
+}
+/** The yellow "Advertise" line from the Sponsors page, run once along the bottom as on a full-screen TV. */
+async function runAdLine() {
+  let text = "Advertise your business on Free Live TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
+  try {
+    const t = await fs.getDoc(fs.doc(db, "sponsors", "_ticker"));
+    if (t.exists()) {
+      if (t.data().active === false) { $("modeText").textContent = 'The "Advertise" line is switched off on the Sponsors page, so TVs don\'t show it.'; return; }
+      if ((t.data().text || "").trim()) text = t.data().text.trim();
+    }
+  } catch {}
+  adRun?.cancel();
+  const box = $("adline"), span = $("adlineText");
+  span.textContent = text;
+  box.classList.remove("hidden");
+  const w = box.clientWidth, tw = span.offsetWidth;
+  adRun = span.animate([{ transform: `translate(${w}px,-50%)` }, { transform: `translate(${-tw}px,-50%)` }],
+    { duration: (w + tw) / (0.115 * w) * 1000 });
+  adRun.onfinish = () => { box.classList.add("hidden"); adRun = null; };
+}
+function setMode(m) {
+  if (mode === m) return;
+  mode = m;
+  startPreview();
+}
+const soundText = () => $("soundBtn").textContent = $("pv").muted ? "🔊 Sound on" : "🔇 Sound off";
+$("modeEdit").onclick = () => setMode("edit");
+$("modeAir").onclick = () => setMode("air");
+$("soundBtn").onclick = () => { $("pv").muted = !$("pv").muted; $("pv").play().catch(() => {}); soundText(); };
+$("fullBtn").onclick = () => { $("tvslot").classList.remove("docked"); $("stage").requestFullscreen?.(); };
+$("barBtn").onclick = flashBar;
+$("adBtn").onclick = runAdLine;
+$("stage").onclick = e => { if (e.target.id !== "undock") flashBar(); };
+// Docking, full screen and window size change the picture's width, so the line is measured again.
+new ResizeObserver(() => runTicker(tickerNow)).observe($("stage"));
+// Follows you down the page in the corner; ✕ puts it away until you scroll back up.
+let undocked = false;
+$("undock").onclick = () => { undocked = true; $("tvslot").classList.remove("docked"); };
+new IntersectionObserver(([e]) => {
+  const away = !e.isIntersecting && e.boundingClientRect.top < 0;
+  if (!away) undocked = false;
+  $("tvslot").style.minHeight = away ? $("tvslot").offsetHeight + "px" : "";
+  $("tvslot").classList.toggle("docked", away && !undocked && !document.fullscreenElement);
+}, { threshold: 0 }).observe($("tvslot"));
 function renderGuide() {
   const list = guide(c, Date.now() - 1, 3, 40);
   $("guide").innerHTML = list.length ? "" : '<p class="small">Nothing to play. Add videos to the loop or a time slot.</p>';
@@ -663,6 +832,8 @@ let previewTimer = null;
 function changed(schedule = true) {
   dirty = true;
   $("saveMsg").innerHTML = '<span class="warn">Unsaved changes. Press Save to put them on air.</span>';
+  // Editing while "On TVs now" is showing switches the player back to the changes.
+  if (mode === "air") { mode = "edit"; schedule = true; }
   renderPreviewLook();
   if (!schedule) return;
   clearTimeout(previewTimer);
@@ -709,6 +880,7 @@ $("save").onclick = async () => {
   try {
     await fs.setDoc(fs.doc(db, "sponsors", station.doc), { name: c.name, active: c.active !== false, data, updatedAt: fs.serverTimestamp() });
     saved = clone(c); dirty = false;
+    if (mode === "air") startPreview(); else renderPreviewLook();
     let note = "";
     try {
       await fs.setDoc(fs.doc(db, "channel", station.id), { data, updatedAt: fs.serverTimestamp() });
