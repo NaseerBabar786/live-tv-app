@@ -268,6 +268,7 @@ const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firest
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = fs.getFirestore(app);
+window.studioFirebase = { auth, db, fs }; // shared with the 🎙 Ask AI button (assets/ai-help.js)
 
 let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
 // The channel being worked on (?c=filmein opens Bazaar Cinema).
@@ -723,6 +724,7 @@ $("save").onclick = async () => {
   }
 };
 </script>
+<script type="module" src="assets/ai-help.js"></script>
 <script src="assets/visits.js"></script>
 </body>
 </html>
