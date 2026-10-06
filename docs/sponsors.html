@@ -25,6 +25,12 @@
   .sp b { font-size: 18px; }
   .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-left: 6px; }
   .tag.on { background: #1B5E20; color: #C8E6C9; } .tag.off { background: #424242; color: #E0E0E0; } .tag.wait { background: #4E342E; color: #FFE0B2; }
+  @media (min-width: 1200px) {
+    .list { grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); }
+    #form { column-count: 2; column-gap: 28px; }
+    #form > * { break-inside: avoid; }
+    #form > h2, #form > .row, #form > .err { column-span: all; }
+  }
   @media (max-width: 560px) { .sp { grid-template-columns: 1fr; } .sp img { width: 100%; } .two { grid-template-columns: 1fr; } }
 </style>
 </head>

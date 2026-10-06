@@ -34,6 +34,13 @@
   .bubble .from { display: block; font-weight: 800; font-size: 13px; margin-bottom: 2px; }
   .quote { display: block; margin: 0 0 6px; padding: 4px 10px; border-left: 3px solid var(--line); color: var(--muted); font-size: 14px; }
   .pm { margin-top: 8px; }
+  @media (min-width: 1200px) {
+    #forumPane { display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px; align-items: start; }
+    #forumPane > .panel { position: sticky; top: 16px; margin-bottom: 0 !important; }
+    #posts { column-count: 2; column-gap: 16px; }
+    #posts .post { break-inside: avoid; }
+    #posts > .post { display: inline-block; width: 100%; }
+  }
 </style>
 </head>
 <body>
