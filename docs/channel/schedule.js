@@ -153,7 +153,7 @@ export function whatsOn(c, now = Date.now()) {
   }
   // After a time slot the loop starts again from the top; before any slot it runs on the clock.
   // The loop starts from the top at midnight (the channel's time) and waits during each slot, carrying
-  // on after it (since 1.9.67, for the hourly news). Same as MyChannel.whatsOn in the app.
+  // on after it (since 1.9.69, for the hourly news). Same as MyChannel.whatsOn in the app.
   const tz = c.tz || "America/Toronto";
   const midnight = zonedTime(parts(now, tz).date, 0, 0, tz);
   let slotTime = 0;

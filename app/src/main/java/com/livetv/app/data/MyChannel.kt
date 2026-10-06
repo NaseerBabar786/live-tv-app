@@ -265,7 +265,7 @@ object MyChannel {
      * What [c] plays at [nowMs]. A slot plays its video from its start time to the end of the
      * video, or until the next slot starts. Between slots the loop list plays back to back: it starts
      * from the top at midnight (the channel's time) and waits during each slot, carrying on where it
-     * was after it (since 1.9.67, for the hourly news; it used to start again from the top), so every
+     * was after it (since 1.9.69, for the hourly news; it used to start again from the top), so every
      * viewer is at the same place. Same as whatsOn in docs/channel/schedule.js.
      */
     fun whatsOn(c: Config, nowMs: Long): Now {

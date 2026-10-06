@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.mutableStateOf
@@ -129,12 +130,30 @@ fun PlayerScreen(
         onDispose { streamPlayer.release() }
     }
 
+    // A full-screen ad break (Cable TV): the channel pauses while the ads play, then carries on from
+    // live (a live stream jumps back to now; a film carries on where it stopped).
+    val adBreak by AdBreak.active.collectAsStateWithLifecycle()
+    var pausedForAds by remember { mutableStateOf(false) }
+    LaunchedEffect(adBreak) {
+        val p = streamPlayer.player
+        if (adBreak) {
+            pausedForAds = true
+            p.pause()
+        } else if (pausedForAds) {
+            pausedForAds = false
+            if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                if (p.isCurrentMediaItemLive) p.seekToDefaultPosition()
+                p.play()
+            }
+        }
+    }
+
     // Pause when the app goes to the background; resume when it returns.
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_STOP -> streamPlayer.player.pause()
-                Lifecycle.Event.ON_START -> streamPlayer.player.play()
+                Lifecycle.Event.ON_START -> if (!AdBreak.active.value) streamPlayer.player.play()
                 else -> Unit
             }
         }
@@ -303,7 +322,7 @@ fun PlayerScreen(
                         .height(44.dp),
                     big = true,
                     everyMs = 2 * 60_000L,
-                    skip = { skipNow || SponsorKey.onOk != null },
+                    skip = { skipNow || SponsorKey.onOk != null || AdBreak.active.value },
                 )
             }
         }

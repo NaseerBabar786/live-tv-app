@@ -148,6 +148,7 @@
   .wk .col .blk b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .wk .col .blk:hover { border-color: var(--focus); }
   .wk .now { position: absolute; left: 0; right: 0; border-top: 2px solid #EF4444; z-index: 2; pointer-events: none; }
+  .wk .col .blk .pr { float: right; }
   .eps { display: grid; gap: 4px; max-height: 240px; overflow-y: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px; margin: 6px 0 10px; }
   .eps label { display: flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
   .eps .ep { min-width: 52px; font-size: 12px; font-weight: 800; color: var(--focus); }
@@ -394,6 +395,12 @@
         <label class="small" style="margin-left:auto"><input type="checkbox" id="wkHeat"> Shade the hours where people watch most (last 30 days)</label>
       </div>
       <div class="wk" id="wk"></div>
+      <details class="help" id="promoBox" open style="margin-top:12px">
+        <summary>🎬 Coming-up promos for your shows</summary>
+        <p class="small" style="margin:6px 0">Every booked show gets its own 20-second promo, like real channels run: quick cuts of the show itself, its name and time, an announcer and our own music. Promos are made by themselves within about an hour after you Save a booking. Add them to the loop and they play in the breaks (each break stays at 60 seconds or less).</p>
+        <div class="items" id="promos"></div>
+        <div class="row" style="margin-top:8px"><button class="btn primary" type="button" id="promoAll">Add all ready promos to the loop</button><span class="small" id="promoMsg"></span></div>
+      </details>
       <form id="showForm" class="panel" style="margin-top:12px;background:var(--surface-2)">
         <b id="showFormTitle">Book a weekly show</b>
         <p class="small" style="margin:4px 0 8px">Pick the day and time, then tick the video. For a drama or serial, tick <b>every episode in order</b>: the first plays on the start date, the next one the following time, and so on (after the last episode it starts again from episode 1).</p>
@@ -1162,7 +1169,7 @@ function renderWeek() {
       el.className = "blk" + (b.ep ? " series" : "");
       el.style.top = `calc(${b.start / 60} * var(--hh))`;
       el.style.height = `calc(${Math.max(0.6, (b.end - b.start) / 60)} * var(--hh) - 2px)`;
-      el.innerHTML = "<b></b><span></span>";
+      el.innerHTML = (promoFor(b.slot) ? '<span class="pr" title="Its promo is ready">🎬</span>' : "") + "<b></b><span></span>";
       el.querySelector("b").textContent = b.slot.show || b.video.title;
       el.querySelector("span").textContent = `${clock(b.start)}` + (b.ep ? ` · Ep ${b.ep}` : "") + (b.slot.show && !b.ep ? ` · ${b.video.title}` : "") + (b.ep ? ` · ${b.video.title}` : "");
       el.title = `${b.slot.show ? b.slot.show + ": " : ""}${b.video.title} (${lengthText(b.video.secs)})`;
@@ -1251,6 +1258,78 @@ $("showForm").onsubmit = e => {
   const n = pickedEps.length;
   changed(); renderAll(); editShow(slot);
   $("shMsg").innerHTML = `<span class="ok">✓ Booked${show ? ` "${esc(show)}"` : ""}: ${esc($("shDay").selectedOptions[0].textContent.toLowerCase())} at ${clock(hm(time))}${n > 1 ? `, ${n} episodes from ${slot.since}` : ""}. Press Save to put it on air.</span>`;
+};
+
+// ---------- coming-up promos (made by tools/promos, listed in media/show-promos.json) ----------
+let showPromos = {};
+async function loadPromos() {
+  try { showPromos = (await (await fetch("media/show-promos.json?t=" + Date.now())).json()).promos || {}; } catch { showPromos = {}; }
+  if (c) { renderWeek(); renderPromos(); }
+}
+loadPromos();
+/** Same as make_show_promos.py: the promo's name for a booking. */
+const promoSlug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "show";
+const cleanTitle = t => t.replace(/\s*\([^)]*\)\s*$/, "").trim() || t;
+function promoKey(s) {
+  const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
+  const eps = (s.episodes?.length ? s.episodes : [s.video]).map(id => byId[id]).filter(v => v && v.secs > 0 && kindOf(v) === "programme");
+  if (!eps.length) return null;
+  return `${promoSlug(cleanTitle(s.show || eps[0].title))}-${s.day || "all"}-${(s.time || "").replace(":", "")}`;
+}
+const promoFor = s => showPromos[promoKey(s)] || null;
+const inLoop = p => c.videos.some(v => v.url === p.url && c.loop.includes(v.id));
+/** Puts [p] in the loop after a few programmes, spread out, where the break it joins stays at 60 s or less. */
+function addPromo(p) {
+  if (inLoop(p)) return 0;
+  let v = c.videos.find(x => x.url === p.url);
+  if (!v) { v = { id: uid(), title: "Promo: " + p.title, url: p.url, secs: p.secs, kind: "ident" }; c.videos.push(v); }
+  const byId = Object.fromEntries(c.videos.map(x => [x.id, x]));
+  const isShow = id => kindOf(byId[id] || {}) === "programme" || kindOf(byId[id] || {}) === "live";
+  const breakAfter = i => { let t = 0; for (let j = i + 1; j < c.loop.length && !isShow(c.loop[j]); j++) t += byId[c.loop[j]]?.secs || 0; return t; };
+  const spots = c.loop.map((id, i) => i).filter(i => isShow(c.loop[i]) && breakAfter(i) + v.secs <= 61);
+  if (!spots.length) { c.loop.push(v.id); return 1; }
+  const total = c.loop.reduce((t, id) => t + (byId[id]?.secs || 0), 0);
+  const want = Math.min(spots.length, total > 2 * 3600 ? 3 : 2);
+  const chosen = [...new Set([...Array(want)].map((_, k) => spots[Math.floor((k + 0.5) * spots.length / want)]))];
+  chosen.sort((a, b) => b - a).forEach(i => c.loop.splice(i + 1, 0, v.id));
+  return chosen.length;
+}
+function renderPromos() {
+  if (!c) return;
+  $("promos").innerHTML = "";
+  const seen = new Set();
+  for (const s of c.slots) {
+    const key = promoKey(s);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    const p = showPromos[key];
+    const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
+    const d = document.createElement("div");
+    d.className = "item";
+    d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts"></div>`;
+    d.querySelector("b").textContent = (s.show || byId[s.video]?.title || "") + ` · ${DAY_TEXT[s.day] || s.day} ${clock(hm(s.time))}`;
+    d.querySelector(".meta").textContent = p ? `Promo ready · ${p.secs} s${p.voice ? " · with announcer" : ""} · ${inLoop(p) ? "✓ in the loop" : "not in the loop yet"}`
+      : saved?.slots?.some(x => promoKey(x) === key) ? "Promo being made (within about an hour)" : "Press Save: the promo is made after the booking is on air";
+    if (p) {
+      const w = document.createElement("button"); w.className = "btn"; w.textContent = "▶ Watch"; w.onclick = () => watchOne("Promo: " + p.title, p.url);
+      d.querySelector(".acts").appendChild(w);
+      if (!inLoop(p)) {
+        const a = document.createElement("button"); a.className = "btn primary"; a.textContent = "Add to the loop";
+        a.onclick = () => { const n = addPromo(p); changed(); renderAll(); $("promoMsg").innerHTML = `<span class="ok">✓ Added in ${n} break${n === 1 ? "" : "s"}. Press Save to put it on air.</span>`; };
+        d.querySelector(".acts").appendChild(a);
+      }
+    }
+    $("promos").appendChild(d);
+  }
+  if (!seen.size) $("promos").innerHTML = '<p class="small">Book a show above and its promo is made for you.</p>';
+  $("promoAll").disabled = !c.slots.some(s => { const p = promoFor(s); return p && !inLoop(p); });
+}
+$("promoAll").onclick = () => {
+  let n = 0;
+  for (const s of c.slots) { const p = promoFor(s); if (p && !inLoop(p)) { addPromo(p); n++; } }
+  if (!n) return;
+  changed(); renderAll();
+  $("promoMsg").innerHTML = `<span class="ok">✓ ${n} promo${n === 1 ? "" : "s"} added to the breaks. Press Save to put them on air.</span>`;
 };
 
 // ---------- most watched ----------
@@ -1368,7 +1447,7 @@ function changed(schedule = true) {
 }
 function renderAll() {
   c.videos ||= []; c.loop ||= []; c.slots ||= [];
-  renderChannel(); renderVideos(); renderLoop(); renderSlots(); renderPreviewLook(); renderGuide(); renderOverview(); renderWeek(); renderEpisodePicker();
+  renderChannel(); renderVideos(); renderLoop(); renderSlots(); renderPreviewLook(); renderGuide(); renderOverview(); renderWeek(); renderEpisodePicker(); renderPromos();
   if (library.length) renderLibrary();
   if (!preview) startPreview();
 }
