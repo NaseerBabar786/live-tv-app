@@ -20,10 +20,6 @@
   details.help { margin: 0 0 14px; background: var(--surface-2); border-radius: 10px; padding: 10px 14px; }
   details.help summary { cursor: pointer; font-weight: 700; color: var(--accent); }
   details.help p, details.help li { color: var(--text); font-size: 15px; }
-  .logos { display: flex; gap: 10px; flex-wrap: wrap; margin: 6px 0 12px; }
-  .logos button { background: none; border: 3px solid transparent; border-radius: 16px; padding: 4px; cursor: pointer; color: var(--text); font: inherit; font-size: 12px; width: 104px; }
-  .logos button.sel { border-color: var(--focus); }
-  .logos img { width: 96px; height: 56px; object-fit: contain; display: block; margin: 0 auto 4px; }
   .items { display: grid; gap: 8px; }
   .item { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
   .item b { display: block; }
@@ -134,8 +130,6 @@
     .tile img.lg { width: 52px; height: 52px; }
     .tile .pill { display: inline-block; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
     .pill.on { background: #14532D; color: #DCFCE7; } .pill.off { background: #7F1D1D; color: #FEE2E2; } .pill.unsaved { background: var(--focus); color: #111; }
-    .steps .logos button { width: 84px; padding: 2px; font-size: 11px; }
-    .steps .logos img { width: 78px; height: 44px; }
   }
   /* Bazaar Hits: only the player and a note. */
   #hitsFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 3; background: #000; }
@@ -204,7 +198,7 @@
       </div>
       <details class="help" style="margin:12px 0 0"><summary>What am I looking at?</summary>
         <ul>
-          <li><b>Your changes</b> plays your channel with everything on this page, even before you press Save: the logo, its corner, the scrolling line, the loop and time slots. Change something and it shows here straight away.</li>
+          <li><b>Your changes</b> plays your channel with everything on this page, even before you press Save: the logo, the scrolling line, the loop and time slots. Change something and it shows here straight away.</li>
           <li><b>On TVs now</b> plays the last saved version: exactly what viewers' TVs show at this moment.</li>
           <li>The picture is stretched to fill the screen, like the app does on TVs. The logo and the scrolling line are drawn at the same size and speed as on the TV.</li>
           <li>The channel bar shows for 10 seconds when someone opens the channel on TV. The yellow "Advertise" line (from the Sponsors page) runs along the bottom every 2 minutes on full screen.</li>
@@ -262,25 +256,13 @@
       </div>
       <label class="f"><input type="checkbox" id="active"> Channel is ON (untick to take it off the air; it disappears from the app)</label>
 
-      <p style="font-weight:600;margin:6px 0 0">Logo <span class="small">(tap one, or paste your own link below)</span></p>
-      <div class="logos" id="logos"></div>
-      <div class="two">
-        <label class="f">Logo link (a square PNG works best)<input id="logo" placeholder="https://…/logo.png"></label>
-        <label class="f">Show the logo on the picture
-          <select id="logoCorner">
-            <option value="tr">Top right</option><option value="tl">Top left</option>
-            <option value="br">Bottom right</option><option value="bl">Bottom left</option>
-            <option value="off">Don't show it</option>
-          </select>
-        </label>
-      </div>
       <label class="f">Scrolling line (ticker) along the bottom
         <input id="ticker" maxlength="300" placeholder="Welcome to Bazaar TV · Advertise with us: WhatsApp 437 602 6500">
       </label>
       <label class="f"><input type="checkbox" id="tickerOn"> Show the scrolling line</label>
-      <details class="help"><summary>Tips for the logo and the ticker</summary>
+      <details class="help"><summary>Tips for the ticker</summary>
         <ul>
-          <li>Your own logo: upload a square PNG somewhere public (for example <a href="https://imgbb.com" target="_blank" rel="noopener">imgbb.com</a>, then "Direct link") and paste the link ending in .png.</li>
+          <li>Each channel keeps its own Bazaar logo, and its corner is picked for you so it never covers the video owner's logo.</li>
           <li>The scrolling line is one line of text. Separate items with " · ". Leave it empty or untick the box to hide it.</li>
         </ul>
       </details>
@@ -393,9 +375,6 @@ import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./channel/schedule.js";
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
-const LOGOS = [
-  ["Bazaar TV", "bazaar-tv"], ["Bazaar Cinema", "bazaar-cinema"], ["Bazaar Music", "bazaar-music"], ["Bazaar Hits", "bazaar-hits"], ["Bazaar Kids", "bazaar-kids"], ["Bazaar Sports", "bazaar-sports"], ["Bazaar Travel", "bazaar-travel"], ["Bazaar Comedy", "bazaar-comedy"], ["Bazaar Movies English", "bazaar-english"], ["Bazaar Movies Hindi", "bazaar-hindi"], ["Bazaar Dramas", "bazaar-dramas"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
-].map(([name, file]) => ({ name, url: `https://tv.bulkbazaar.ca/channel/logos/${file}.png` }));
 
 const V = "10.12.2";
 const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
@@ -507,6 +486,8 @@ async function loadSaved() {
     $("err").textContent = "Couldn't load your channel: " + e.message;
     saved = await testProgramme();
   }
+  // The logo isn't picked here any more: a channel keeps the one already saved, else its own Bazaar logo.
+  if (!saved.logo) saved.logo = station.logo;
   c = clone(saved);
   dirty = false;
   renderAll();
@@ -517,37 +498,12 @@ function renderChannel() {
   $("name").value = c.name || "";
   $("tz").value = c.tz || "America/Toronto";
   $("active").checked = c.active !== false;
-  $("logo").value = c.logo || "";
-  $("logoCorner").value = c.logoCorner || "tr";
   $("ticker").value = c.ticker || "";
   $("tickerOn").checked = c.tickerOn !== false;
-  $("logos").innerHTML = "";
-  for (const l of LOGOS) {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = c.logo === l.url ? "sel" : "";
-    b.innerHTML = `<img alt=""><span></span>`;
-    b.querySelector("img").src = l.url;
-    b.querySelector("span").textContent = l.name;
-    b.onclick = () => {
-      // Picking a ready logo also offers its name, when the name is still a ready one (or empty).
-      const ready = !c.name || LOGOS.some(x => x.name === c.name) || c.name === "My Channel";
-      c.logo = l.url;
-      if (ready) c.name = l.name;
-      changed(false); renderChannel();
-    };
-    $("logos").appendChild(b);
-  }
 }
 $("name").oninput = () => { c.name = $("name").value; changed(false); };
 $("tz").onchange = () => { c.tz = $("tz").value; changed(); };
 $("active").onchange = () => { c.active = $("active").checked; changed(); };
-$("logo").onchange = () => {
-  const v = $("logo").value.trim();
-  if (v && !/^https:\/\//.test(v)) { alert("The logo link must start with https://"); $("logo").value = c.logo || ""; return; }
-  c.logo = v; changed(false); renderChannel();
-};
-$("logoCorner").onchange = () => { c.logoCorner = $("logoCorner").value; changed(false); };
 $("ticker").oninput = () => { c.ticker = $("ticker").value; changed(false); };
 $("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(false); };
 
@@ -966,7 +922,6 @@ function setTab(id) {
   if (wide.matches) window.scrollTo({ top: 0 });
 }
 const esc = t => String(t ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
-const CORNER_TEXT = { tr: "top right", tl: "top left", br: "bottom right", bl: "bottom left", off: "hidden" };
 /** One tile per part of the channel, with what's in it; a click opens that part. */
 function renderOverview() {
   if (!c || !wide.matches) return;
@@ -979,9 +934,9 @@ function renderOverview() {
   const tiles = [
     ["step1", `<h3>${c.logo ? `<img class="lg" alt="" src="${esc(c.logo)}">` : ""}<span>1 · Your channel</span></h3>
       <div class="big">${esc(c.name || "My Channel")}</div>
-      <div><span class="pill ${c.active === false ? "off" : "on"}">${c.active === false ? "OFF AIR" : "ON AIR"}</span> <span class="sub">Channel ${esc(station.dial)} · logo ${CORNER_TEXT[c.logoCorner || "tr"]} · ${esc((c.tz || "America/Toronto").split("/").pop().replace("_", " "))} time</span></div>
+      <div><span class="pill ${c.active === false ? "off" : "on"}">${c.active === false ? "OFF AIR" : "ON AIR"}</span> <span class="sub">Channel ${esc(station.dial)} · ${esc((c.tz || "America/Toronto").split("/").pop().replace("_", " "))} time</span></div>
       <div class="sub">${tick ? "Scrolling line: " + esc(tick.length > 110 ? tick.slice(0, 110) + "…" : tick) : "Scrolling line: off"}</div>
-      <span class="go">Change name, logo, ticker ›</span>`],
+      <span class="go">Change name, ticker ›</span>`],
     ["step2", `<h3>2 · Videos</h3>
       <div class="big">${c.videos.length}</div>
       <div class="sub">${count("programme")} programmes · ${count("ad")} ads · ${count("ident")} promos · ${count("live")} live streams</div>
