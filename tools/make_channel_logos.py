@@ -145,3 +145,42 @@ im.paste(ball, (int(cx-r), int(cy-r)), circle_mask((2*r, 2*r)))
 text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
 text_fit(d, L/2, 710, "SPORTS", B, 200, (254,240,138), 640)
 save_big(im, "bazaar-sports")
+
+# 11 Bazaar Travel, 0000000 (travel films, 1.9.44): sky blue to teal rounded square, a globe with a plane
+im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (14,165,233), (13,148,136)), (0,0), rounded_mask((L,L), 220))
+d = ImageDraw.Draw(im)
+cx, cy, r = L/2, 290, 150
+d.ellipse([cx-r, cy-r, cx+r, cy+r], fill=(255,255,255))
+ink = (13,148,136)
+for k in (0.35, 0.75):  # lines of longitude
+    d.ellipse([cx-r*k, cy-r, cx+r*k, cy+r], outline=ink, width=12)
+d.line([(cx, cy-r), (cx, cy+r)], fill=ink, width=12)
+for t in (-0.5, 0, 0.5):  # lines of latitude
+    hw = r * math.sqrt(1 - t*t)
+    d.line([(cx-hw, cy + t*r), (cx+hw, cy + t*r)], fill=ink, width=12)
+d.ellipse([cx-r, cy-r, cx+r, cy+r], outline=(250,204,21), width=18)
+# a little plane flying round the globe, top right
+px, py, s = cx + 150, cy - 140, 70
+plane = [(px+s, py-s*0.15), (px-s*0.2, py+s*0.05), (px-s*0.55, py+s*0.55), (px-s*0.7, py+s*0.5), (px-s*0.45, py-s*0.02),
+         (px-s*0.8, py-s*0.08), (px-s*0.95, py+s*0.15), (px-s*1.05, py+s*0.1), (px-s*0.95, py-s*0.25), (px-s*0.45, py-s*0.32),
+         (px-s*0.6, py-s*0.85), (px-s*0.45, py-s*0.9), (px-s*0.1, py-s*0.38)]
+d.polygon(plane, fill=(250,204,21))
+text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
+text_fit(d, L/2, 710, "TRAVEL", B, 200, (254,240,138), 640)
+save_big(im, "bazaar-travel")
+
+# 12 Bazaar Comedy, 00000000 (classic comedy, 1.9.44): orange to pink rounded square, a big laughing face
+im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (249,115,22), (219,39,119)), (0,0), rounded_mask((L,L), 220))
+d = ImageDraw.Draw(im)
+cx, cy, r = L/2, 290, 160
+d.ellipse([cx-r, cy-r, cx+r, cy+r], fill=(253,224,71))
+ink = (30,41,59)
+for sx in (-1, 1):  # eyes squeezed shut with laughing
+    d.arc([cx + sx*62 - 34, cy - 70, cx + sx*62 + 34, cy - 10], 200, 340, fill=ink, width=16)
+d.chord([cx-100, cy-10, cx+100, cy+120], 0, 180, fill=ink)  # wide open mouth
+d.chord([cx-62, cy+60, cx+62, cy+118], 180, 360, fill=(244,63,94))  # tongue
+for sx in (-1, 1):  # tears of joy
+    d.ellipse([cx + sx*118 - 16, cy - 12, cx + sx*118 + 16, cy + 30], fill=(56,189,248))
+text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
+text_fit(d, L/2, 710, "COMEDY", B, 200, (254,240,138), 640)
+save_big(im, "bazaar-comedy")

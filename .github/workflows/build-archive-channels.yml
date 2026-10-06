@@ -1,0 +1,65 @@
+name: Build Bazaar Sports, Travel and Comedy schedules
+
+# Builds docs/channel/sports-, travel- and comedy-schedule.json (on tv.bulkbazaar.ca/channel/):
+# the ready-made schedules of Bazaar Sports (000000), Travel (0000000) and Comedy (00000000),
+# from public-domain and CC BY films on the Internet Archive. A new loop order every week.
+on:
+  schedule:
+    - cron: "30 12 * * 1"   # Mondays, 12:30 UTC
+  push:
+    branches: [main]
+    paths: [tools/build_archive_channels.py, .github/workflows/build-archive-channels.yml]
+  pull_request:
+    paths: [tools/build_archive_channels.py, .github/workflows/build-archive-channels.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: build-archive-channels
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Each channel on its own step, so one failing keeps its old schedule but not the other's.
+      - name: Build Bazaar Sports
+        continue-on-error: true
+        run: python3 tools/build_archive_channels.py --channel sports
+
+      - name: Build Bazaar Travel
+        continue-on-error: true
+        run: python3 tools/build_archive_channels.py --channel travel
+
+      - name: Build Bazaar Comedy
+        continue-on-error: true
+        run: python3 tools/build_archive_channels.py --channel comedy
+
+      # A push made with the workflow's own token doesn't start other workflows,
+      # so the website is rebuilt explicitly below.
+      - name: Publish the schedule
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/channel/*-schedule.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Bazaar Sports, Travel and Comedy schedules for the week of $(date -u '+%Y-%m-%d')"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

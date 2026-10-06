@@ -27,6 +27,12 @@ export const STATIONS = [
   { id: "sports", name: "Bazaar Sports", dial: "000000", doc: "_channel_sports", page: "channel/?c=sports", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-sports.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
     credits: "Sport: public-domain and CC BY sports films (classic boxing, cricket, football, athletics) from the Internet Archive. No modern leagues or tournaments." },
+  { id: "travel", name: "Bazaar Travel", dial: "0000000", doc: "_channel_travel", page: "channel/?c=travel", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-travel.png", ready: "https://tv.bulkbazaar.ca/channel/travel-schedule.json",
+    credits: "Travel: public-domain and CC BY travel films of countries, cities and parks from the Internet Archive." },
+  { id: "comedy", name: "Bazaar Comedy", dial: "00000000", doc: "_channel_comedy", page: "channel/?c=comedy", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedy.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
+    credits: "Comedy: public-domain silent and classic comedies (Chaplin, Laurel and Hardy, Keaton) and early TV comedies from the Internet Archive." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */

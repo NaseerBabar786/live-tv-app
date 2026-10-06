@@ -72,7 +72,7 @@
 
 <main class="wrap">
   <h1>Channel Studio</h1>
-  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 0</b>, Bazaar Cinema <b>channel 00</b>, Bazaar Music <b>channel 000</b>, Bazaar Kids <b>channel 00000</b>, from 1.9.41; Bazaar Sports <b>channel 000000</b>, from 1.9.43) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 0</b>, Bazaar Cinema <b>channel 00</b>, Bazaar Music <b>channel 000</b>, Bazaar Kids <b>channel 00000</b>, from 1.9.41; Bazaar Sports <b>channel 000000</b>, from 1.9.43; Bazaar Travel <b>channel 0000000</b> and Bazaar Comedy <b>channel 00000000</b>, from 1.9.44) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
@@ -260,7 +260,7 @@ import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./channe
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 const LOGOS = [
-  ["Bazaar TV", "bazaar-tv"], ["Bazaar Cinema", "bazaar-cinema"], ["Bazaar Music", "bazaar-music"], ["Bazaar Hits", "bazaar-hits"], ["Bazaar Kids", "bazaar-kids"], ["Bazaar Sports", "bazaar-sports"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
+  ["Bazaar TV", "bazaar-tv"], ["Bazaar Cinema", "bazaar-cinema"], ["Bazaar Music", "bazaar-music"], ["Bazaar Hits", "bazaar-hits"], ["Bazaar Kids", "bazaar-kids"], ["Bazaar Sports", "bazaar-sports"], ["Bazaar Travel", "bazaar-travel"], ["Bazaar Comedy", "bazaar-comedy"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
 ].map(([name, file]) => ({ name, url: `https://tv.bulkbazaar.ca/channel/logos/${file}.png` }));
 
 const V = "10.12.2";
