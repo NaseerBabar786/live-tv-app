@@ -31,8 +31,11 @@ def credits(film):
 
 
 LANGS = {
-    "ur": ("urdu", "Urdu", "urd", {"m": "ur-PK-AsadNeural", "f": "ur-PK-UzmaNeural"}),
-    "hi": ("hindi", "Hindi", "hin", {"m": "hi-IN-MadhurNeural", "f": "hi-IN-SwaraNeural"}),
+    # m / f = main man and woman, m2 / f2 = a second man and woman (older or different voice).
+    "ur": ("urdu", "Urdu", "urd", {"m": ("ur-PK-AsadNeural", 0), "f": ("ur-PK-UzmaNeural", 0),
+                                   "m2": ("ur-IN-SalmanNeural", -4), "f2": ("ur-IN-GulNeural", 0)}),
+    "hi": ("hindi", "Hindi", "hin", {"m": ("hi-IN-MadhurNeural", 0), "f": ("hi-IN-SwaraNeural", 0),
+                                     "m2": ("hi-IN-MadhurNeural", -14), "f2": ("hi-IN-SwaraNeural", 8)}),
 }
 
 
@@ -151,9 +154,10 @@ def credit_line(film, lang_name):
 
 async def speak(text, voice, rate, path):
     import edge_tts
+    name, pitch = voice
     for attempt in range(4):
         try:
-            await edge_tts.Communicate(text, voice, rate=f"+{rate}%").save(path)
+            await edge_tts.Communicate(text, name, rate=f"+{rate}%", pitch=f"{pitch:+d}Hz").save(path)
             return
         except Exception as e:  # the service sometimes drops a request
             print(f"retry {attempt + 1} for {path}: {e}", flush=True)
