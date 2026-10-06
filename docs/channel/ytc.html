@@ -107,6 +107,9 @@ window.onYouTubeIframeAPIReady = () => {
     playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, start: window.startAt || 0, origin: location.origin },
     events: {
       onReady: e => {
+        // YouTube's own leveling leaves videos a little louder than Cable TV's leveled channels;
+        // 60% brings them to the same loudness, so switching channels keeps one volume.
+        e.target.setVolume(60);
         $("msg").remove();
         if (!app) { e.target.mute(); $("sound").hidden = false; }
         e.target.playVideo();
