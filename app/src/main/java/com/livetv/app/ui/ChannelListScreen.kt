@@ -1822,7 +1822,7 @@ private fun PlayerWithList(
                         modifier = Modifier.padding(24.dp),
                     )
                 }
-                if (showing && MyChannel.isMine(selected)) MyChannelOverlay()
+                if (showing && MyChannel.isMine(selected)) MyChannelOverlay(selected)
             }
         }
         // The list fills the whole right side (no sponsor strip under it since 1.9.22).
