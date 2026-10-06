@@ -14,6 +14,11 @@ if [ "${MODE:-}" = "lips" ]; then
   gh release upload ad5-work -R "$GITHUB_REPOSITORY" --clobber out/*
   exit 0
 fi
+if [ "${MODE:-}" = "voices" ]; then
+  VOICES=1 ONLY=none python3 gen.py
+  gh release upload ad5-work -R "$GITHUB_REPOSITORY" --clobber out/end.mp3
+  exit 0
+fi
 if [ "${MODE:-}" = "polish" ]; then
   sudo apt-get install -y -qq ffmpeg >/dev/null
   curl -fsSL -o out/$ONLY-src.mp4 "$REL/$ONLY-lips.mp4" || curl -fsSL -o out/$ONLY-src.mp4 "$REL/$ONLY.mp4"
