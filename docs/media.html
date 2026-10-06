@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Media Library</title>
+<meta name="description" content="Videos for Bazaar TV, sorted by category and language.">
+<link rel="icon" href="channel/logos/bazaar-tv.png">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="robots" content="noindex">
+<style>
+  .bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 0 0 18px; }
+  .chip { padding: 7px 14px; border-radius: 999px; border: 2px solid var(--line); background: transparent; color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+  .chip.sel { border-color: var(--focus); color: var(--focus); }
+  section.cat { margin: 0 0 26px; }
+  section.cat h2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; }
+  section.cat h2 .count { color: var(--muted); font-size: 15px; font-weight: 400; }
+  section.cat h2 .tools { margin-left: auto; display: flex; gap: 6px; }
+  section.cat h2 .tools button { padding: 4px 10px; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .card .pic { position: relative; aspect-ratio: 16/9; background: #000 center/cover no-repeat; cursor: pointer; border: 0; padding: 0; width: 100%; }
+  .card .pic span { position: absolute; inset: 0; display: grid; place-items: center; font-size: 34px; color: #fff; text-shadow: 0 2px 8px #000; opacity: .85; }
+  .card .len { position: absolute; right: 6px; bottom: 6px; background: rgba(0,0,0,.75); color: #fff; font-size: 12px; padding: 1px 6px; border-radius: 6px; }
+  .card .body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .card b { font-size: 16px; }
+  .lang { display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-right: 4px; }
+  .lang.ur { background: #14532D; color: #DCFCE7; } .lang.hi { background: #7C2D12; color: #FFEDD5; } .lang.en { background: #1E3A8A; color: #DBEAFE; }
+  .card .credit { color: var(--muted); font-size: 12px; }
+  .card .acts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+  .card .acts button, .card .acts a, .card select { padding: 5px 10px; font-size: 13px; }
+  .card select { border-radius: 999px; border: 2px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-size: 13px; }
+  .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+  dialog { background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 14px; padding: 0; width: min(960px, 96vw); }
+  dialog video { width: 100%; display: block; background: #000; max-height: 70vh; }
+  dialog .dbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; }
+  label.f { display: block; margin: 0 0 10px; font-weight: 600; }
+  label.f input, label.f select { display: block; width: 100%; margin-top: 4px; padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .two { grid-template-columns: 1fr; } }
+  .ok { color: #9BE59B; } .warn { color: #FFD27A; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Free Live TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Free Live TV</span>
+    </a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="admin" class="admin-link">Admin</a>
+      <a href="studio">Studio</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>🎬 Media Library</h1>
+  <p class="lead">Videos for Bazaar TV, sorted into sections. Press a picture to watch, move videos between sections, and send any of them to your channel.</p>
+  <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
+  <div id="denied" class="panel hidden">This account isn't an admin. <button class="btn" data-signout>Use another account</button></div>
+  <div id="dash" class="hidden">
+    <div class="bar" id="langs"></div>
+    <div id="cats"></div>
+
+    <section class="panel" style="margin-top:10px">
+      <h2 style="margin-top:0">Add a video</h2>
+      <p class="small">Paste a direct link to an MP4 file (for example from your GitHub "channel-media" release). Only add videos you are allowed to show.</p>
+      <form id="addForm">
+        <div class="two">
+          <label class="f">Title <input id="aTitle" required></label>
+          <label class="f">Link (MP4) <input id="aUrl" type="url" required placeholder="https://…/video.mp4"></label>
+        </div>
+        <div class="two">
+          <label class="f">Section <select id="aCat"></select></label>
+          <label class="f">Language <select id="aLang"><option value="ur">Urdu</option><option value="hi">Hindi</option><option value="en">English</option><option value="pa">Punjabi</option></select></label>
+        </div>
+        <button class="btn primary" type="submit">Add video</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2 style="margin-top:0">Sections</h2>
+      <form id="catForm" class="bar"><input id="catName" placeholder="New section name" style="padding:9px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit"> <button class="btn" type="submit">Add section</button></form>
+      <p class="small">Use ✎ to rename a section and ✕ to remove an empty one. Your changes are saved for you automatically.</p>
+    </section>
+    <p id="saveMsg" class="small"></p>
+    <p class="small" id="who"></p>
+    <button class="btn" data-signout>Sign out</button>
+  </div>
+  <p class="err" id="err"></p>
+</main>
+
+<dialog id="player">
+  <video id="video" controls playsinline preload="metadata"></video>
+  <div class="dbar"><span id="pTitle"></span><button class="btn" id="pClose">Close</button></div>
+</dialog>
+
+<footer>
+  <div class="wrap">Free Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+</footer>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
+import { lengthText, TEST_SCHEDULE_URL } from "./channel/schedule.js";
+const $ = id => document.getElementById(id);
+const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+const LANGS = { ur: "Urdu", hi: "Hindi", en: "English", pa: "Punjabi" };
+
+const V = "10.12.2";
+const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
+const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = fs.getFirestore(app);
+// Saved in sponsors/_library (the admin can already write there; no createdAt, so sponsor lists skip it).
+const LIB_DOC = fs.doc(db, "sponsors", "_library");
+
+let lib = null, lang = "all";
+
+$("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
+document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => signOut(auth));
+onAuthStateChanged(auth, async user => {
+  $("err").textContent = "";
+  if (!user) return show("signedOut");
+  if (user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return show("denied");
+  try { localStorage.setItem("lt_admin", "1"); } catch {}
+  $("who").textContent = "Signed in as " + user.email + ".";
+  show("dash");
+  await load();
+});
+
+// The built-in list (media/library.json) grows when new videos are made; the owner's own
+// changes (sections, moves, removals, added links) are kept on top of it.
+async function load() {
+  const builtIn = await (await fetch("media/library.json?t=" + Date.now())).json();
+  let mine = null;
+  try {
+    const snap = await fs.getDoc(LIB_DOC);
+    if (snap.exists() && snap.data().data) mine = JSON.parse(snap.data().data);
+  } catch (e) { $("err").textContent = "Couldn't load your saved changes: " + e.message; }
+  if (!mine) mine = { categories: builtIn.categories, items: [], removed: [] };
+  const have = new Set(mine.items.map(i => i.id));
+  const removed = new Set(mine.removed || []);
+  for (const it of builtIn.items) if (!have.has(it.id) && !removed.has(it.id)) mine.items.push(it);
+  const cats = new Set(mine.categories.map(c => c.id));
+  for (const c of builtIn.categories) if (!cats.has(c.id) && mine.items.some(i => i.cat === c.id)) mine.categories.push(c);
+  lib = mine;
+  render();
+}
+
+async function save(msg) {
+  $("saveMsg").textContent = "Saving…";
+  try {
+    await fs.setDoc(LIB_DOC, { data: JSON.stringify(lib), updatedAt: fs.serverTimestamp() });
+    $("saveMsg").innerHTML = `<span class="ok">✓ ${esc(msg || "Saved.")}</span>`;
+  } catch (e) {
+    $("saveMsg").innerHTML = `<span class="err">Couldn't save: ${esc(e.message)}</span>`;
+  }
+}
+
+function render() {
+  const langsUsed = [...new Set(lib.items.map(i => i.lang))];
+  $("langs").innerHTML = ["all", ...Object.keys(LANGS).filter(l => langsUsed.includes(l))].map(l =>
+    `<button class="chip ${l === lang ? "sel" : ""}" data-lang="${l}">${l === "all" ? "All languages" : LANGS[l]}</button>`).join("");
+  $("langs").querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { lang = b.dataset.lang; render(); });
+  const catOptions = id => lib.categories.map(c => `<option value="${esc(c.id)}" ${c.id === id ? "selected" : ""}>${esc(c.name)}</option>`).join("");
+  $("aCat").innerHTML = catOptions();
+  $("cats").innerHTML = lib.categories.map(c => {
+    const items = lib.items.filter(i => i.cat === c.id && (lang === "all" || i.lang === lang));
+    const total = lib.items.filter(i => i.cat === c.id).length;
+    return `<section class="cat"><h2>${esc(c.name)} <span class="count">${items.length} video${items.length === 1 ? "" : "s"}</span>
+      <span class="tools"><button class="btn" data-ren="${esc(c.id)}" title="Rename">✎</button>${total ? "" : `<button class="btn" data-delcat="${esc(c.id)}" title="Remove section">✕</button>`}</span></h2>
+      ${items.length ? `<div class="grid">${items.map(i => card(i, catOptions(i.cat))).join("")}</div>` : `<p class="empty">Nothing here yet.</p>`}</section>`;
+  }).join("");
+  document.querySelectorAll("[data-play]").forEach(b => b.onclick = () => play(byId(b.dataset.play)));
+  document.querySelectorAll("[data-move]").forEach(s => s.onchange = () => { byId(s.dataset.move).cat = s.value; render(); save("Moved."); });
+  document.querySelectorAll("[data-send]").forEach(b => b.onclick = () => sendToChannel(byId(b.dataset.send), b));
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+    const it = byId(b.dataset.del);
+    if (!confirm(`Remove "${it.title}" from the library? (The video file itself stays where it is.)`)) return;
+    lib.items = lib.items.filter(x => x.id !== it.id);
+    lib.removed = [...new Set([...(lib.removed || []), it.id])];
+    render(); save("Removed.");
+  });
+  document.querySelectorAll("[data-ren]").forEach(b => b.onclick = () => {
+    const c = lib.categories.find(x => x.id === b.dataset.ren);
+    const name = prompt("New name for this section:", c.name);
+    if (name && name.trim()) { c.name = name.trim(); render(); save("Renamed."); }
+  });
+  document.querySelectorAll("[data-delcat]").forEach(b => b.onclick = () => {
+    lib.categories = lib.categories.filter(x => x.id !== b.dataset.delcat); render(); save("Section removed.");
+  });
+}
+
+const byId = id => lib.items.find(i => i.id === id);
+
+function card(i, options) {
+  return `<div class="card">
+    <button class="pic" data-play="${esc(i.id)}" style="background-image:url('${esc(i.poster || "")}')" aria-label="Play ${esc(i.title)}"><span>▶</span>${i.secs ? `<em class="len">${lengthText(i.secs)}</em>` : ""}</button>
+    <div class="body">
+      <b>${esc(i.title)}</b>
+      <div><span class="lang ${esc(i.lang)}">${esc(LANGS[i.lang] || i.lang)}</span>${i.ai ? '<span class="small">AI voices</span>' : ""}</div>
+      ${i.about ? `<div class="small">${esc(i.about)}</div>` : ""}
+      ${i.credit ? `<div class="credit">${esc(i.credit)}</div>` : ""}
+      <div class="acts">
+        <button class="btn primary" data-send="${esc(i.id)}">＋ Bazaar TV</button>
+        <select data-move="${esc(i.id)}" title="Move to section">${options}</select>
+        ${i.srt ? `<a class="btn" href="${esc(i.srt)}" title="Subtitles file">Subtitles</a>` : ""}
+        <button class="btn" data-del="${esc(i.id)}" title="Remove from library">✕</button>
+      </div>
+    </div></div>`;
+}
+
+function play(i) {
+  $("video").src = i.url; $("pTitle").textContent = i.title;
+  $("player").showModal(); $("video").play().catch(() => {});
+}
+$("pClose").onclick = () => $("player").close();
+$("player").addEventListener("close", () => { $("video").pause(); $("video").removeAttribute("src"); $("video").load(); });
+
+// Adds the video to the channel's video list and to the end of the non-stop loop, the same
+// way the Studio saves (sponsors/_channel for the app, channel/main for the public page).
+async function sendToChannel(i, btn) {
+  if (!confirm(`Add "${i.title}" to Bazaar TV? It goes at the end of the non-stop loop. You can move it in the Studio.`)) return;
+  btn.disabled = true;
+  try {
+    const snap = await fs.getDoc(fs.doc(db, "sponsors", "_channel"));
+    const ch = snap.exists() && snap.data().data ? JSON.parse(snap.data().data)
+      : await (await fetch(TEST_SCHEDULE_URL + "?t=" + Date.now())).json();
+    ch.videos ||= []; ch.loop ||= []; ch.slots ||= [];
+    let v = ch.videos.find(x => x.url === i.url);
+    if (!v) {
+      v = { id: "lib" + Math.random().toString(36).slice(2, 7), title: i.title, url: i.url, secs: i.secs || 600, kind: "programme" };
+      ch.videos.push(v);
+    }
+    ch.loop.push(v.id);
+    const data = JSON.stringify(ch);
+    await fs.setDoc(fs.doc(db, "sponsors", "_channel"), { name: ch.name || "Bazaar TV", active: ch.active !== false, data, updatedAt: fs.serverTimestamp() });
+    try { await fs.setDoc(fs.doc(db, "channel", "main"), { data, updatedAt: fs.serverTimestamp() }); } catch {}
+    $("saveMsg").innerHTML = `<span class="ok">✓ "${esc(i.title)}" is now on Bazaar TV (end of the loop). TVs pick it up within about 10 minutes. <a href="studio">Open the Studio</a> to move it or give it a time slot.</span>`;
+  } catch (e) {
+    $("saveMsg").innerHTML = `<span class="err">Couldn't add it: ${esc(e.message)}</span>`;
+  } finally { btn.disabled = false; }
+}
+
+$("addForm").onsubmit = e => {
+  e.preventDefault();
+  lib.items.unshift({ id: "own" + Date.now().toString(36), title: $("aTitle").value.trim(), url: $("aUrl").value.trim(), cat: $("aCat").value, lang: $("aLang").value });
+  $("addForm").reset(); render(); save("Video added.");
+};
+$("catForm").onsubmit = e => {
+  e.preventDefault();
+  const name = $("catName").value.trim(); if (!name) return;
+  lib.categories.push({ id: name.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + Date.now().toString(36).slice(-3), name });
+  $("catName").value = ""; render(); save("Section added.");
+};
+</script>
+<script src="assets/visits.js"></script>
+</body>
+</html>
