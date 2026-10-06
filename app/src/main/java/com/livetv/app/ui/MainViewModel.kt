@@ -156,7 +156,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** [list] with the owner's channels first (those that are on): Bazaar TV, Sunehra Daur, Sur Sukoon. */
+    /** [list] with the owner's channels first (those that are on): Bazaar TV, Bazaar Cinema, Bazaar Music. */
     private fun withMyChannel(list: List<Channel>): List<Channel> {
         val rest = list.filterNot { MyChannel.isMine(it) }
         if (rest.isEmpty() || !Edition.LIVE_TV) return rest
@@ -352,7 +352,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val number = typed.toIntOrNull()
         typedNumber = ""
         if (number == null) return
-        // 0 is Bazaar TV, 00 Sunehra Daur and 000 Sur Sukoon, the owner's own channels.
+        // 0 is Bazaar TV, 00 Bazaar Cinema and 000 Bazaar Music, the owner's own channels.
         MyChannel.byDial(typed)?.takeIf { Edition.LIVE_TV }?.let {
             numberPadOpen = false
             play(it)

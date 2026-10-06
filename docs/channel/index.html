@@ -79,7 +79,7 @@ import { firebaseConfig } from "../firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./schedule.js";
 const $ = id => document.getElementById(id);
 const video = $("video");
-// Which of our channels: ?c=filmein is Sunehra Daur, otherwise Bazaar TV.
+// Which of our channels: ?c=filmein is Bazaar Cinema, otherwise Bazaar TV.
 const station = STATIONS.find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
 for (const st of STATIONS) {
   const a = document.createElement("a");
@@ -91,10 +91,10 @@ for (const st of STATIONS) {
   $("tabs").appendChild(a);
 }
 {
-  // Geet Bahar is its own page: the music labels' YouTube videos, one after another.
+  // Bazaar Hits is its own page: the music labels' YouTube videos, one after another.
   const a = document.createElement("a");
   a.href = "bollywood.html";
-  a.innerHTML = `<img alt="" src="logos/geet-bahar.png"><span>0000  Geet Bahar</span>`;
+  a.innerHTML = `<img alt="" src="logos/bazaar-hits.png"><span>0000  Bazaar Hits</span>`;
   $("tabs").appendChild(a);
 }
 $("dial").textContent = $("dial2").textContent = station.dial;
