@@ -70,14 +70,19 @@ $("tick").textContent = /advertise/i.test(own) ? own
 
 // Titles, makers and languages from the day's lists (the address carries only ids and lengths).
 let info = {};
-for (const list of ["trailers.json", "music-videos.json"]) {
+// Keep in step with tools/build_trailers.py, build_music_videos.py and build_bazaar_blocks.py.
+const LISTS = ["trailers.json", "music-videos.json", "block-kids.json", "block-drama-1.json", "block-drama-2.json",
+  "block-cooking.json", "block-comedy.json", "block-sports.json", "block-travel.json"];
+for (const list of LISTS) {
   fetch(list, { cache: "no-store" }).then(r => r.json()).then(d => {
     for (const v of d.videos || []) info[v.id] = { kind: list === "trailers.json" ? "trailer" : "music", ...v };
     if (cur >= 0) showNow();
   }).catch(() => {});
 }
+const KINDS = { trailer: "Coming soon to cinemas", music: "Music videos", kids: "Kids' time", drama: "Drama",
+  cooking: "Cooking", comedy: "Comedy", sports: "Sports highlights", travel: "Travel" };
 const isMusic = v => v?.kind === "music";
-const between = v => isMusic(v) ? "Music videos" : "Coming soon to cinemas";
+const between = v => KINDS[v?.kind] || name;
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
 let corners = { labels: {} };
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(); }).catch(() => {});
@@ -116,7 +121,8 @@ function showNow() {
   placeBug();
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = v ? v.title : "On now";
-  $("now").lastChild.textContent = name + (v ? ` · ${isMusic(v) ? "Music video" : "Coming soon"} · ${v.lang} · ${v.label}` : "");
+  $("now").lastChild.textContent = name + (!v ? "" : v.kind === "trailer" ? ` · Coming soon · ${v.lang} · ${v.label}`
+    : isMusic(v) ? ` · Music video · ${v.lang} · ${v.label}` : ` · ${between(v)} · ${v.label}`);
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
@@ -126,8 +132,9 @@ function load(i, offset) {
   const v = info[ids[i]];
   const prev = i > 0 ? info[ids[i - 1]] : null;
   // A new language gets its own card: "Upcoming Hindi movies", "Popular Punjabi music".
-  if (v && (!prev || prev.lang !== v.lang || prev.kind !== v.kind))
+  if (v && v.lang && (!prev || prev.lang !== v.lang || prev.kind !== v.kind))
     cover(true, isMusic(v) ? `Popular ${v.lang} music` : `Upcoming ${v.lang} movies`, between(v));
+  else if (v && (!prev || prev.kind !== v.kind)) cover(true, between(v), v.title);
   else cover(true, between(v), v ? v.title : "");
   player.loadVideoById({ videoId: ids[i], startSeconds: Math.max(0, offset) });
   showNow();

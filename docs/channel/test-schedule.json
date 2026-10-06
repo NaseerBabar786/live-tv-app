@@ -4,7 +4,7 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca  ·  This is a 3-hour test programme with upcoming movie trailers and music videos",
+ "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  News every hour  ·  Dramas, music, movie trailers, cartoons, cooking, comedy, sports and travel  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
  "tickerOn": true,
  "videos": [
   {
@@ -174,95 +174,259 @@
    "url": "https://tv.bulkbazaar.ca/channel/music-videos.json",
    "secs": 0,
    "kind": "music"
+  },
+  {
+   "id": "kids",
+   "title": "Kids' time: cartoons and rhymes",
+   "url": "https://tv.bulkbazaar.ca/channel/block-kids.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "drama-1",
+   "title": "Pakistani drama",
+   "url": "https://tv.bulkbazaar.ca/channel/block-drama-1.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "drama-2",
+   "title": "Pakistani drama",
+   "url": "https://tv.bulkbazaar.ca/channel/block-drama-2.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "cooking",
+   "title": "Cooking",
+   "url": "https://tv.bulkbazaar.ca/channel/block-cooking.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "comedy",
+   "title": "Comedy",
+   "url": "https://tv.bulkbazaar.ca/channel/block-comedy.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "sports",
+   "title": "Sports highlights",
+   "url": "https://tv.bulkbazaar.ca/channel/block-sports.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "travel",
+   "title": "Travel",
+   "url": "https://tv.bulkbazaar.ca/channel/block-travel.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "news-headlines",
+   "title": "Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4",
+   "secs": 180,
+   "kind": "programme"
+  },
+  {
+   "id": "news-full",
+   "title": "Bazaar TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4",
+   "secs": 600,
+   "kind": "programme"
   }
  ],
  "slots": [
   {
    "day": "all",
+   "time": "00:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "01:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "02:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "03:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "04:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "05:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "06:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "07:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
    "time": "08:00",
-   "video": "popeye"
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "09:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "10:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "11:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "12:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "13:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "14:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "15:00",
+   "video": "news-full"
   },
   {
    "day": "all",
    "time": "16:00",
-   "video": "superman"
+   "video": "news-headlines"
   },
   {
    "day": "all",
    "time": "17:00",
-   "video": "gulliver"
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "18:00",
+   "video": "news-full"
   },
   {
    "day": "all",
    "time": "19:00",
-   "video": "raja"
+   "video": "news-headlines"
   },
   {
    "day": "all",
    "time": "20:00",
-   "video": "sintel"
+   "video": "news-headlines"
   },
   {
    "day": "all",
    "time": "21:00",
-   "video": "safety"
+   "video": "news-full"
   },
   {
    "day": "all",
-   "time": "22:30",
-   "video": "nasaiss"
+   "time": "22:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "23:00",
+   "video": "news-headlines"
   }
  ],
  "loop": [
   "welcome",
-  "bbb",
+  "next",
+  "kids",
   "break",
   "adbb",
-  "adhere",
-  "next",
-  "ed",
-  "break",
   "promo",
-  "adbb",
   "next",
-  "tostrailer",
-  "llama",
-  "story1",
+  "popeye",
   "break",
   "adhere",
   "adbb",
   "next",
-  "tos",
-  "break",
-  "adbb",
-  "promo",
-  "next",
-  "edtrailer",
-  "sintel",
-  "break",
-  "adbb",
-  "adhere",
-  "promo",
-  "next",
-  "trailers",
+  "drama-1",
   "break",
   "promo",
   "adbb",
-  "next",
-  "madsci",
-  "break",
-  "adhere",
-  "adbb",
-  "next",
-  "apollo",
-  "break",
-  "promo",
   "next",
   "music",
   "break",
   "adbb",
   "adhere",
+  "next",
+  "cooking",
+  "break",
   "promo",
+  "next",
+  "story1",
+  "llama",
+  "break",
+  "adbb",
+  "next",
+  "trailers",
+  "break",
+  "promo",
+  "adhere",
+  "next",
+  "comedy",
+  "break",
+  "adbb",
+  "next",
+  "superman",
+  "madsci",
+  "break",
+  "promo",
+  "adbb",
+  "next",
+  "sports",
+  "break",
+  "adhere",
+  "next",
+  "travel",
+  "apollo",
+  "break",
+  "adbb",
+  "promo",
+  "next",
+  "drama-2",
+  "break",
+  "adbb",
+  "adhere",
+  "next",
+  "raja",
+  "break",
+  "promo",
+  "adbb",
   "next"
  ]
 }

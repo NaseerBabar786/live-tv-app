@@ -1,0 +1,49 @@
+{
+ "name": "Kids' time",
+ "built": "2026-10-06 23:12 UTC",
+ "secs": 1584,
+ "videos": [
+  {
+   "id": "mJ0RZm_fEvM",
+   "title": "हाँ हाँ फल गीत (Yes Yes Fruits Song) - ChuChu TV Hindi Rhymes in 4K for Kids",
+   "label": "ChuChu TV Hindi",
+   "secs": 387,
+   "kind": "kids"
+  },
+  {
+   "id": "GRTkkYzW3Go",
+   "title": "हाँ, हाँ, स्कूल जाओ (Yes,Yes, Go To School) - ChuChu TV Hindi Rhymes in 4K for Kids",
+   "label": "ChuChu TV Hindi",
+   "secs": 280,
+   "kind": "kids"
+  },
+  {
+   "id": "O0nV7hJ9qzk",
+   "title": "Potty Training Song | CoComelon Nursery Rhymes & Kids Songs",
+   "label": "Cocomelon",
+   "secs": 330,
+   "kind": "kids"
+  },
+  {
+   "id": "3G8OSUZgPCw",
+   "title": "Clap Along with JJ and His Siblings | Beach Boom-Clap | CoComelon Nursery Rhymes & Kids Songs",
+   "label": "Cocomelon",
+   "secs": 175,
+   "kind": "kids"
+  },
+  {
+   "id": "UnZBF5xhPwA",
+   "title": "Baby is Sick Song - ChuChu TV Hindi Rhymes in 4K for Kids #ChuChuTV100M",
+   "label": "ChuChu TV Hindi",
+   "secs": 246,
+   "kind": "kids"
+  },
+  {
+   "id": "6B-l3YcU45w",
+   "title": "Pat a Cake Song – ChuChu TV Hindi Rhymes in 4K for Kids #ChuChuTV100M",
+   "label": "ChuChu TV Hindi",
+   "secs": 166,
+   "kind": "kids"
+  }
+ ]
+}

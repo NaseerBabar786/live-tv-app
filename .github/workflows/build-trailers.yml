@@ -9,9 +9,9 @@ on:
     - cron: "30 8 * * *"   # every day, 08:30 UTC
   push:
     branches: [main]
-    paths: [tools/build_trailers.py, tools/build_music_videos.py, .github/workflows/build-trailers.yml]
+    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, .github/workflows/build-trailers.yml]
   pull_request:
-    paths: [tools/build_trailers.py, tools/build_music_videos.py, .github/workflows/build-trailers.yml]
+    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, .github/workflows/build-trailers.yml]
   workflow_dispatch:
 
 permissions:
@@ -40,6 +40,10 @@ jobs:
         if: always()
         run: python3 tools/build_music_videos.py
 
+      - name: Pick the day's programme blocks
+        if: always()
+        run: python3 tools/build_bazaar_blocks.py
+
       - name: Publish the lists
         if: always() && github.ref == 'refs/heads/main'
         env:
@@ -47,7 +51,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/channel/trailers.json docs/channel/music-videos.json
+          git add docs/channel/trailers.json docs/channel/music-videos.json docs/channel/block-*.json
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0

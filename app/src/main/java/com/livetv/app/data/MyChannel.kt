@@ -162,6 +162,8 @@ object MyChannel {
             val untilMs: Long,
             /** Its place in the loop list (without zero-length entries); -1 for a time slot or a live stream. */
             val loopIndex: Int = -1,
+            /** When the next time slot starts (the loop waits then); Long.MAX_VALUE when none is booked. */
+            val nextSlotMs: Long = Long.MAX_VALUE,
         ) : Now()
         /** Nothing on; [next] starts at [nextAt] (null when nothing is booked). */
         class OffAir(val next: Video?, val nextAt: Long?) : Now()
@@ -249,8 +251,10 @@ object MyChannel {
 
     /**
      * What [c] plays at [nowMs]. A slot plays its video from its start time to the end of the
-     * video, or until the next slot starts. Between slots the loop list plays back to back, from
-     * the top after each slot (and on the clock before the first), so every viewer is at the same place.
+     * video, or until the next slot starts. Between slots the loop list plays back to back: it starts
+     * from the top at midnight (the channel's time) and waits during each slot, carrying on where it
+     * was after it (since 1.9.65, for the hourly news; it used to start again from the top), so every
+     * viewer is at the same place. Same as whatsOn in docs/channel/schedule.js.
      */
     fun whatsOn(c: Config, nowMs: Long): Now {
         val byId = c.videos.associateBy { it.id }
@@ -266,21 +270,29 @@ object MyChannel {
             val end = if (current.video.seconds > 0) current.at + current.video.seconds * 1000 else Long.MAX_VALUE
             if (nowMs < end) return Now.Playing(current.video, nowMs - current.at, minOf(end, nextAt))
         }
-        // After a time slot the loop starts again from the top; before any slot it runs on the clock.
-        var anchor = 0L
+        // The loop's own clock: time since midnight, less the time slots took since then.
+        val midnight = Calendar.getInstance(tz).apply {
+            timeInMillis = nowMs
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        var slotTime = 0L
         starts.forEachIndexed { i, s ->
-            if (s.at > nowMs) return@forEachIndexed
+            if (s.at >= nowMs) return@forEachIndexed
             val cut = starts.getOrNull(i + 1)?.at ?: Long.MAX_VALUE
-            val end = minOf(if (s.video.seconds > 0) s.at + s.video.seconds * 1000 else Long.MAX_VALUE, cut)
-            if (end <= nowMs) anchor = maxOf(anchor, end)
+            val end = minOf(if (s.video.seconds > 0) s.at + s.video.seconds * 1000 else Long.MAX_VALUE, cut, nowMs)
+            slotTime += (end - maxOf(s.at, midnight)).coerceAtLeast(0)
         }
+        val anchor = midnight + slotTime
         val loop = c.loop.mapNotNull { byId[it] }.filter { it.seconds > 0 }
         val total = loop.sumOf { it.seconds * 1000 }
         if (total > 0) {
             var pos = Math.floorMod(nowMs - anchor, total)
             loop.forEachIndexed { i, v ->
                 val len = v.seconds * 1000
-                if (pos < len) return Now.Playing(v, pos, minOf(nowMs - pos + len, nextAt), i)
+                if (pos < len) return Now.Playing(v, pos, minOf(nowMs - pos + len, nextAt), i, nextAt)
                 pos -= len
             }
         }
@@ -317,9 +329,8 @@ object MyChannel {
             last++
             end += loop[last].seconds * 1000
         }
-        // A time slot that starts in the middle cuts it short.
-        val cut = if (now.untilMs < begun + now.video.seconds * 1000) now.untilMs else end
-        return Block(loop.subList(first, last + 1), start, minOf(end, cut))
+        // The next time slot (the news) cuts it short; the rest follows after it, on a new page.
+        return Block(loop.subList(first, last + 1), start, minOf(end, now.nextSlotMs))
     }
 
     /**
@@ -340,9 +351,10 @@ object MyChannel {
 
     /**
      * Schedule entries that stand for a list built on the website every day: Bazaar TV's upcoming
-     * trailers ("trailers", tools/build_trailers.py) and popular music videos ("music", tools/build_music_videos.py).
+     * trailers ("trailers", tools/build_trailers.py), popular music videos ("music", tools/build_music_videos.py)
+     * and its other programme blocks: dramas, cartoons, cooking and more ("list", tools/build_bazaar_blocks.py).
      */
-    private val LIST_KINDS = setOf("trailers", "music")
+    private val LIST_KINDS = setOf("trailers", "music", "list")
 
     /**
      * [o] (a schedule as saved) with each list entry replaced by the videos in its list, as [fetch]

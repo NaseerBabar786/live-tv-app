@@ -1,0 +1,28 @@
+{
+ "name": "Sports highlights",
+ "built": "2026-10-06 23:12 UTC",
+ "secs": 1603,
+ "videos": [
+  {
+   "id": "P4McmaGWwUc",
+   "title": "GLORIOUS Goals That You Need To See! 🔥",
+   "label": "Premier League",
+   "secs": 556,
+   "kind": "sports"
+  },
+  {
+   "id": "SuygnFxX9UI",
+   "title": "Lionesses Put On A Show Before EURO 2025 | England 7-0 Jamaica | Highlights",
+   "label": "England Cricket",
+   "secs": 537,
+   "kind": "sports"
+  },
+  {
+   "id": "UJzKMQ74eMY",
+   "title": "Australia v India 2024-25 | Fourth Test | Day One",
+   "label": "Cricket Australia",
+   "secs": 510,
+   "kind": "sports"
+  }
+ ]
+}

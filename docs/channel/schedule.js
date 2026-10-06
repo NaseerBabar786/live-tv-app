@@ -124,13 +124,18 @@ export function whatsOn(c, now = Date.now()) {
     if (now < end) return { video: current.video, offset: now - current.at, until: Math.min(end, nextAt), slot: true };
   }
   // After a time slot the loop starts again from the top; before any slot it runs on the clock.
-  let anchor = 0;
+  // The loop starts from the top at midnight (the channel's time) and waits during each slot, carrying
+  // on after it (since 1.9.65, for the hourly news). Same as MyChannel.whatsOn in the app.
+  const tz = c.tz || "America/Toronto";
+  const midnight = zonedTime(parts(now, tz).date, 0, 0, tz);
+  let slotTime = 0;
   all.forEach((s, i) => {
-    if (s.at > now) return;
+    if (s.at >= now) return;
     const cut = all[i + 1] ? all[i + 1].at : Infinity;
-    const end = Math.min(s.video.secs > 0 ? s.at + s.video.secs * 1000 : Infinity, cut);
-    if (end <= now) anchor = Math.max(anchor, end);
+    const end = Math.min(s.video.secs > 0 ? s.at + s.video.secs * 1000 : Infinity, cut, now);
+    slotTime += Math.max(0, end - Math.max(s.at, midnight));
   });
+  const anchor = midnight + slotTime;
   const loopIds = (c.loop || []).filter(id => byId[id]);
   const loop = loopIds.map(id => byId[id]).filter(v => v.secs > 0);
   const total = loop.reduce((t, v) => t + v.secs * 1000, 0);
@@ -138,7 +143,7 @@ export function whatsOn(c, now = Date.now()) {
     let pos = (((now - anchor) % total) + total) % total;
     for (const [i, v] of loop.entries()) {
       const len = v.secs * 1000;
-      if (pos < len) return { video: v, offset: pos, until: Math.min(now - pos + len, nextAt), slot: false, loopIndex: i };
+      if (pos < len) return { video: v, offset: pos, until: Math.min(now - pos + len, nextAt), slot: false, loopIndex: i, nextAt };
       pos -= len;
     }
   }
@@ -257,8 +262,8 @@ export function blockAt(c, now = Date.now()) {
   let first = on.loopIndex, last = on.loopIndex, start = begun, end = begun + on.video.secs * 1000;
   while (first > 0 && youtubeId(loop[first - 1].url)) { first--; start -= loop[first].secs * 1000; }
   while (last + 1 < loop.length && youtubeId(loop[last + 1].url)) { last++; end += loop[last].secs * 1000; }
-  const cut = on.until < begun + on.video.secs * 1000 ? on.until : end;
-  return { videos: loop.slice(first, last + 1), start, end: Math.min(end, cut) };
+  // The next time slot (the news) cuts it short; the rest follows after it, on a new page.
+  return { videos: loop.slice(first, last + 1), start, end: Math.min(end, on.nextAt) };
 }
 
 /** The address of channel/block.html playing [b] for channel settings [c]. */
@@ -271,11 +276,11 @@ export function blockPage(c, b) {
 }
 
 /**
- * [c] with each "trailers" or "music" entry replaced by the videos of its list (rebuilt every day), as the app
+ * [c] with each "trailers", "music" or "list" entry replaced by the videos of its list (rebuilt every day), as the app
  * does (MyChannel.expand): each loop place gets the whole list; a time slot can't hold a list.
  */
 export async function expand(c) {
-  const lists = (c.videos || []).filter(v => (v.kind === "trailers" || v.kind === "music") && /^https?:/.test(v.url || ""));
+  const lists = (c.videos || []).filter(v => ["trailers", "music", "list"].includes(v.kind) && /^https?:/.test(v.url || ""));
   if (!lists.length) return c;
   const ids = {}, videos = [];
   for (const v of c.videos) {

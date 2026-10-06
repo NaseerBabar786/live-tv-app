@@ -57,18 +57,20 @@ class MyChannelTest {
         val c = config("""[{"day":"all","time":"21:00","video":"b"}]""", """["a","ad"]""")
         val now = MyChannel.whatsOn(c, at(20, 59, 50)) as MyChannel.Now.Playing
         assertTrue(now.untilMs <= at(21, 0))
-        // Everyone is at the same place in the loop, which started again when yesterday's 9 PM show ended.
+        // Everyone is at the same place in the loop, which started from the top at midnight.
         val total = 620_000L
-        val pos = Math.floorMod(at(20, 59, 50) - (at(21, 20) - 86_400_000L), total)
+        val pos = Math.floorMod(at(20, 59, 50) - at(0, 0), total)
         assertEquals(if (pos < 600_000) "a" else "ad", now.video.id)
     }
 
     @Test
-    fun loopStartsFromTheTopAfterASlot() {
+    fun loopWaitsDuringASlotAndCarriesOn() {
         val c = config("""[{"day":"all","time":"20:00","video":"a"}]""", """["b","ad"]""")
-        val now = MyChannel.whatsOn(c, at(20, 10, 30)) as MyChannel.Now.Playing
-        assertEquals("b", now.video.id)
-        assertEquals(30_000L, now.offsetMs)
+        // At 20:00 the loop stops for the 10-minute slot; at 20:10:30 it is 30 s further on than at 20:00.
+        val before = MyChannel.whatsOn(c, at(19, 59, 59)) as MyChannel.Now.Playing
+        val after = MyChannel.whatsOn(c, at(20, 10, 0)) as MyChannel.Now.Playing
+        assertEquals(before.video.id, after.video.id)
+        assertEquals(before.offsetMs + 1_000L, after.offsetMs)
     }
 
     @Test
@@ -157,16 +159,17 @@ class MyChannelTest {
             """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
               {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":600},
               {"id":"tr","url":"https://tv.bulkbazaar.ca/channel/trailers.json","secs":0,"kind":"trailers"}],
-              "slots":[{"day":"all","time":"20:00","video":"a"}],"loop":["a","tr"]}""",
+              "slots":[],"loop":["a","tr"]}""",
         )
         val c = MyChannel.parse(MyChannel.expand(saved) { trailers })
-        // The loop starts again at 20:10 when the slot ends: film A to 20:20, then the trailers to 20:23.
-        assertEquals(null, MyChannel.block(c, at(20, 15)))
-        val first = MyChannel.block(c, at(20, 21))!!
-        val second = MyChannel.block(c, at(20, 22, 30))!!
+        // The loop (13 minutes) starts at midnight: film A for 10 minutes, then the trailers for 3.
+        val round = at(0, 0) + 100 * 780_000L
+        assertEquals(null, MyChannel.block(c, round + 300_000))
+        val first = MyChannel.block(c, round + 630_000)!!
+        val second = MyChannel.block(c, round + 750_000)!!
         assertEquals(listOf("AAAAAAAAAAA", "BBBBBBBBBBB"), first.videos.map { it.youtube })
-        assertEquals(at(20, 20), first.startMs)
-        assertEquals(at(20, 23), first.endMs)
+        assertEquals(round + 600_000, first.startMs)
+        assertEquals(round + 780_000, first.endMs)
         // The same block (and page address) all the way through.
         assertEquals(first.startMs, second.startMs)
         assertEquals(first.endMs, second.endMs)
