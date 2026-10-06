@@ -285,7 +285,8 @@ fun EditionTicker(
     always: Boolean = false,
     everyMs: Long = 0L,
     skip: () -> Boolean = { false },
-) = SponsorTicker(modifier, big, always, everyMs, skip)
+    band: Boolean = false,
+) = SponsorTicker(modifier, big, always, everyMs, skip, band)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

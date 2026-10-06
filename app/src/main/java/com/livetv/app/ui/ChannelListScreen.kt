@@ -668,10 +668,8 @@ fun ChannelListScreen(
                     },
                 )
                 if (!hideBars && !newsMode && !carouselMode && !stripMode && !duoMode && !state.loading && state.channels.isNotEmpty()) {
-                    // The channel count, with Cable TV's "advertise with us" ticker running beside it now and then.
-                    // 1×2 has room for a bigger ticker in its own band above the tiles.
-                    // (1×2 used to have a bigger ticker in its own band; it now matches 2×3.)
-                    val bandTicker = false
+                    // The channel count. (The "advertise with us" ticker used to run beside it; since 1.9.58
+                    // it runs along the bottom of the screen instead, see below.)
                     Row(
                         Modifier.fillMaxWidth().height(24.dp).padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -681,9 +679,7 @@ fun ChannelListScreen(
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        if (!bandTicker) EditionTicker(Modifier.weight(1f).fillMaxHeight().padding(start = 24.dp))
                     }
-                    if (bandTicker) EditionTicker(Modifier.fillMaxWidth().height(36.dp).padding(horizontal = 16.dp), big = true)
                 }
 
                 val channels = state.visibleChannels
@@ -1226,6 +1222,16 @@ fun ChannelListScreen(
                     }
                     }
                 }
+            }
+            // Cable TV's "advertise with us" line along the bottom of every channel screen (owner's rule,
+            // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel, Strip and Duo.
+            // News, CP24, Home and My Screen have their own band at the bottom.
+            if (!newsMode && !state.needsPlaylist) {
+                EditionTicker(
+                    Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(36.dp),
+                    big = true,
+                    band = true,
+                )
             }
         }
     }
