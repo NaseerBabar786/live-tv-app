@@ -1,11 +1,12 @@
-// AI help for the owner's admin pages (Channel Studio): a 🎙 button that opens a voice chat with Claude.
-// Speak a question (browser speech recognition), Claude answers in text and out loud (speech synthesis).
-// The Claude API key is never in this public code: the owner pastes it once and it's kept in Firestore
+// AI help for the owner's admin pages (Channel Studio): a 🎙 button that opens a voice chat with an AI.
+// Speak a question (browser speech recognition), the AI answers in text and out loud (speech synthesis).
+// Uses Google's Gemini API on its free tier (no card, no charges; the free tier has a daily limit).
+// The key is never in this public code: the owner pastes it once and it's kept in Firestore
 // at sponsorDeals/_aiHelp, which only the admin account can read (see the sponsorDeals rule).
 // The page sets window.studioFirebase = { auth, db, fs } after starting Firebase; this waits for it.
 
 const KEY_DOC = ["sponsorDeals", "_aiHelp"];
-const MODELS = ["claude-sonnet-5-5", "claude-haiku-4-5"];
+const MODELS = ["gemini-flash-latest", "gemini-2.5-flash", "gemini-flash-lite-latest"];
 const LANGS = [
   { code: "en-US", label: "English", say: "English" },
   { code: "ur-PK", label: "اردو", say: "Urdu, written in Urdu script" },
@@ -64,7 +65,7 @@ fab.id = "aiFab";
 fab.type = "button";
 fab.className = "hidden";
 fab.textContent = "🎙 Ask AI";
-fab.title = "Ask Claude a question by voice";
+fab.title = "Ask the AI a question by voice";
 document.body.appendChild(fab);
 
 const box = document.createElement("div");
@@ -73,13 +74,13 @@ box.className = "hidden";
 box.innerHTML = `
   <header><b>🎙 AI help</b><select id="aiLang" aria-label="Language"></select><button class="x" id="aiClose" aria-label="Close">✕</button></header>
   <div id="aiSetup" class="hidden">
-    <p style="margin:0"><b>One-time setup:</b> AI help uses your own Claude API key, so answers are billed to you (a question costs about one cent).</p>
+    <p style="margin:0"><b>One-time setup, free:</b> AI help uses Google's free Gemini key. No card and no charges.</p>
     <ol>
-      <li>Open <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com › API keys</a> and sign in.</li>
-      <li>Add a little credit under <b>Billing</b> (5 dollars lasts a long time).</li>
-      <li>Press <b>Create key</b>, copy it, and paste it here.</li>
+      <li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with your Google account.</li>
+      <li>Press <b>Create API key</b> and copy it. Don't add billing; the free tier is enough.</li>
+      <li>Paste it here and press Save key.</li>
     </ol>
-    <input type="password" id="aiKey" placeholder="sk-ant-…" autocomplete="off">
+    <input type="password" id="aiKey" placeholder="AIza…" autocomplete="off">
     <div class="row"><button class="btn primary" id="aiKeySave" type="button">Save key</button><span class="small" id="aiKeyMsg"></span></div>
     <p class="small" style="margin:0">The key is saved in your private Firebase area that only your admin account can read. It is never put on the public website.</p>
   </div>
@@ -125,8 +126,7 @@ auth.onAuthStateChanged(user => {
 async function loadKey() {
   try {
     const snap = await fs.getDoc(fs.doc(db, ...KEY_DOC));
-    apiKey = snap.exists() ? snap.data().key || null : null;
-    if (snap.exists() && snap.data().model) model = snap.data().model;
+    apiKey = snap.exists() ? snap.data().geminiKey || null : null;
     keyLoaded = true;
   } catch (e) {
     note("Couldn't read your saved key: " + e.message);
@@ -134,12 +134,12 @@ async function loadKey() {
 }
 async function saveKey() {
   const k = $("aiKey").value.trim();
-  if (!/^sk-ant-/.test(k)) return $("aiKeyMsg").textContent = "That doesn't look like a Claude key (it starts with sk-ant-).";
+  if (!/^AIza/.test(k)) return $("aiKeyMsg").textContent = "That doesn't look like a Gemini key (it starts with AIza).";
   $("aiKeyMsg").textContent = "Checking the key…";
-  const test = await callClaude([{ role: "user", content: "Say OK." }], null, k).catch(e => e);
+  const test = await callAI([{ role: "user", content: "Say OK." }], null, k).catch(e => e);
   if (test instanceof Error) return $("aiKeyMsg").textContent = test.message;
   try {
-    await fs.setDoc(fs.doc(db, ...KEY_DOC), { key: k, model, updatedAt: fs.serverTimestamp() });
+    await fs.setDoc(fs.doc(db, ...KEY_DOC), { geminiKey: k, updatedAt: fs.serverTimestamp() });
   } catch (e) {
     return $("aiKeyMsg").textContent = "The key works but couldn't be saved: " + e.message;
   }
@@ -203,7 +203,7 @@ async function ask(text) {
   const speaker = sentenceSpeaker();
   try {
     let full = "";
-    await callClaude(chat.slice(-20), part => {
+    await callAI(chat.slice(-20), part => {
       full += part;
       out.textContent = full;
       $("aiMsgs").scrollTop = $("aiMsgs").scrollHeight;
@@ -224,31 +224,36 @@ async function ask(text) {
   }
 }
 
-/** Streams an answer from Claude; [onText] gets each new piece of text. Throws Errors with plain messages. */
-async function callClaude(messages, onText, key = apiKey) {
-  for (let i = MODELS.indexOf(model); i < MODELS.length; i++) {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+/** Streams an answer from Gemini; [onText] gets each new piece of text. Throws Errors with plain messages. */
+async function callAI(messages, onText, key = apiKey) {
+  const contents = messages.map(m => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.content }] }));
+  for (let i = Math.max(0, MODELS.indexOf(model)); i < MODELS.length; i++) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODELS[i]}:` + (onText ? "streamGenerateContent?alt=sse" : "generateContent");
+    const res = await fetch(url, {
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true",
-      },
-      body: JSON.stringify({ model: MODELS[i], max_tokens: 1024, system: onText ? systemPrompt() : undefined, messages, stream: !!onText }),
+      headers: { "content-type": "application/json", "x-goog-api-key": key },
+      body: JSON.stringify({
+        contents,
+        systemInstruction: onText ? { parts: [{ text: systemPrompt() }] } : undefined,
+        generationConfig: { maxOutputTokens: 2048 },
+      }),
     }).catch(() => { throw new Error("No internet connection. Check it and try again."); });
     if (res.ok) {
-      if (MODELS[i] !== model) model = MODELS[i];
+      model = MODELS[i];
       if (onText) await readStream(res, onText);
       return;
     }
     const body = await res.json().catch(() => ({}));
     const msg = body.error?.message || "";
-    if (res.status === 404 && /model/i.test(msg) && i + 1 < MODELS.length) continue;
-    if (res.status === 401 || res.status === 403) throw Object.assign(new Error("Claude didn't accept the key. Paste a new one (console.anthropic.com › API keys)."), { badKey: true });
-    if (/credit balance/i.test(msg)) throw new Error("Your Claude account is out of credit. Add some at console.anthropic.com › Billing, then ask again.");
-    if (res.status === 429 || res.status === 529 || res.status >= 500) throw new Error("Claude is busy right now. Try again in a minute.");
-    throw new Error("Claude said: " + (msg || res.status));
+    if (res.status === 404 && i + 1 < MODELS.length) continue;
+    if (/API_KEY|API key/i.test(JSON.stringify(body)) || res.status === 401 || res.status === 403)
+      throw Object.assign(new Error("Google didn't accept the key. Make a new one at aistudio.google.com/apikey and paste it."), { badKey: true });
+    if (res.status === 429) {
+      if (i + 1 < MODELS.length) continue;
+      throw new Error("The free limit is used up for now. Try again in a minute, or tomorrow if it says so again.");
+    }
+    if (res.status >= 500) throw new Error("The AI is busy right now. Try again in a minute.");
+    throw new Error("The AI said: " + (msg || res.status));
   }
 }
 async function readStream(res, onText) {
@@ -266,8 +271,8 @@ async function readStream(res, onText) {
       if (!line.startsWith("data:")) continue;
       let ev;
       try { ev = JSON.parse(line.slice(5)); } catch { continue; }
-      if (ev.type === "content_block_delta" && ev.delta?.type === "text_delta") onText(ev.delta.text);
-      if (ev.type === "error") throw new Error("Claude is busy right now. Try again in a minute.");
+      if (ev.error) throw new Error("The AI is busy right now. Try again in a minute.");
+      for (const part of ev.candidates?.[0]?.content?.parts || []) if (part.text && !part.thought) onText(part.text);
     }
   }
 }
