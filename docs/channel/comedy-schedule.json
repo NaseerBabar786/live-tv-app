@@ -4,7 +4,7 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Bazaar Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies · Channel 8 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+ "ticker": "Bazaar Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies · Channel 8 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
  "tickerOn": true,
  "videos": [
   {
@@ -2275,5 +2275,5 @@
   "his-girl-friday",
   "off-the-trolley-1919-directed-by-alfred-"
  ],
- "built": "2026-10-06 17:43 UTC"
+ "built": "2026-10-06 18:37 UTC"
 }

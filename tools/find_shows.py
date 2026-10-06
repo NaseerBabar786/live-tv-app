@@ -3,7 +3,7 @@ an H.264 MP4, their length and a direct link. Prints one JSON line per item (run
 import json, sys, urllib.parse, urllib.request
 
 def get(url):
-    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "FreeLiveTV/1.0"}), timeout=60) as r:
+    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "CableTV/1.0"}), timeout=60) as r:
         return json.load(r)
 
 SEARCHES = [

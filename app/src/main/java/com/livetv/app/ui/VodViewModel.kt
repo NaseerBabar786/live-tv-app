@@ -72,7 +72,7 @@ fun shelves(items: List<Channel>): Map<Vod.Language, VodShelf> =
         )
     }
 
-/** Free Live TV's Movies & Series: the movies and episodes in the viewer's saved playlists. */
+/** Cable TV's Movies & Series: the movies and episodes in the viewer's saved playlists. */
 class VodViewModel(app: Application) : AndroidViewModel(app) {
 
     private val repo = ChannelRepository(app)

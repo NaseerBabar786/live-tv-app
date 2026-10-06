@@ -14,7 +14,7 @@ import java.net.URL
 
 /**
  * Checks GitHub for a newer Multi Chat release, downloads its APK and hands it to the
- * system installer. Multi Chat shares its repository with Free Live TV, so it looks through the
+ * system installer. Multi Chat shares its repository with Cable TV, so it looks through the
  * recent releases for the highest "multichat-v…" tag rather than GitHub's "latest".
  */
 class Updater(context: Context) {

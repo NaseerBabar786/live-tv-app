@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds the ready-made schedules of our Internet Archive channels in Free Live TV:
+Builds the ready-made schedules of our Internet Archive channels in Cable TV:
 
   * Bazaar Sports (6): classic sport, boxing, baseball, roller derby, sport films;
   * Bazaar Travel (7): travelogues and scenic films of countries, cities and parks;
@@ -60,7 +60,7 @@ CHANNELS = {
         "skip": rf"bullfight|cockfight|hunting|fifa \d|pes \d|nba 2k|highlights 20\d\d|vs\.? .* 20[12]\d|"
                 rf"ozzie and harriet|{TRAVEL_FILMS}",
         "ticker": "Bazaar Sports · Classic sport from the film archives, day and night · Boxing, cricket, football, "
-                  "athletics and more · Channel 6 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+                  "athletics and more · Channel 6 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
     },
     "travel": {
         "name": "Bazaar Travel", "dial": "7",
@@ -72,7 +72,7 @@ CHANNELS = {
                 r"conservation corps|civilan conservation|ccc\b|human crop|groundwater|silt|captain z-ro|fashion|"
                 r"planet|spaceship|venus",
         "ticker": "Bazaar Travel · See the world, day and night · Classic travel films of countries, cities and "
-                  "parks · Channel 7 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+                  "parks · Channel 7 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
     },
     "comedy": {
         "name": "Bazaar Comedy", "dial": "8",
@@ -88,7 +88,7 @@ CHANNELS = {
                 r"naughty|death|killer|crime|crooked|manhunt|creature|haunted|machine gun|baby face|scarlet clue|"
                 r"rascal you|bamboo isle|c\.c\. and company|steptoe|dick van dyke|raiders|billy the kid",
         "ticker": "Bazaar Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies "
-                  "· Channel 8 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+                  "· Channel 8 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
     },
 }
 

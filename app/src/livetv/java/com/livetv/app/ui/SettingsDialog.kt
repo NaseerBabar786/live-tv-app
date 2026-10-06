@@ -289,7 +289,7 @@ fun SettingsDialog(
                         onClick = { showingMessages = true },
                         modifier = Modifier.fillMaxWidth().focusGlow(),
                     ) {
-                        Text(if (account.isAdmin) "✉ Messages from viewers" else "✉ Messages from the Free Live TV team")
+                        Text(if (account.isAdmin) "✉ Messages from viewers" else "✉ Messages from the Cable TV team")
                         if (unread) {
                             Spacer(Modifier.width(8.dp))
                             NewBadge()
@@ -593,7 +593,7 @@ private fun AppBazaarDialog(onDismiss: () -> Unit) {
                     onClick = {
                         val updater = com.livetv.app.data.Updater(context)
                         if (!updater.ensureInstallAllowed()) {
-                            Toast.makeText(context, "Allow Free Live TV to install apps, then press Install again.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Allow Cable TV to install apps, then press Install again.", Toast.LENGTH_LONG).show()
                             return@TextButton
                         }
                         progress = 0f
@@ -617,7 +617,7 @@ private fun AppBazaarDialog(onDismiss: () -> Unit) {
     )
 }
 
-/** Starts Free Live TV again from the beginning (after signing out, so it asks to sign in). */
+/** Starts Cable TV again from the beginning (after signing out, so it asks to sign in). */
 private fun android.content.Context.restartApp() {
     val intent = packageManager.getLaunchIntentForPackage(packageName)?.addFlags(
         Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK,

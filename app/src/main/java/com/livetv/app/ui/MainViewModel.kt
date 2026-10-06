@@ -52,9 +52,9 @@ data class UiState(
     val countries: List<Famelack.Country> = emptyList(),
     /** Playlists the viewer added (Stream Player Plus). */
     val playlists: List<Playlist> = emptyList(),
-    /** Free Live TV's channel list: the main (Famelack) list or iptv-org's. */
+    /** Cable TV's channel list: the main (Famelack) list or iptv-org's. */
     val provider: String = ChannelRepository.PROVIDER_FAMELACK,
-    /** Whether MTA's channels and Library programmes are shown (Free Live TV only). */
+    /** Whether MTA's channels and Library programmes are shown (Cable TV only). */
     val showMta: Boolean = false,
 ) {
     /** Stream Player Plus with no playlist yet: the screen asks the viewer to add one. */
@@ -227,7 +227,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun addDemoPlaylist() = addPlaylist(DEMO_PLAYLIST_NAME, ChannelRepository.SOURCE_SAMPLE)
 
     /**
-     * Forgets a playlist. When it was the one showing, Free Live TV goes back to its built-in
+     * Forgets a playlist. When it was the one showing, Cable TV goes back to its built-in
      * channels and Stream Player Plus to the next saved playlist (or none).
      */
     fun removePlaylist(playlist: Playlist) {
@@ -239,7 +239,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Switches Free Live TV between the main channel list and iptv-org's, keeping the chosen countries. */
+    /** Switches Cable TV between the main channel list and iptv-org's, keeping the chosen countries. */
     fun setProvider(provider: String) {
         if (provider == repo.provider) return
         repo.provider = provider

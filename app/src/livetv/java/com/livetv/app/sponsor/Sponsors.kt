@@ -18,7 +18,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
-/** A business that pays to be shown in Free Live TV, as the owner set it up on tv.bulkbazaar.ca/sponsors. */
+/** A business that pays to be shown in Cable TV, as the owner set it up on tv.bulkbazaar.ca/sponsors. */
 class Sponsor(
     val id: String,
     val name: String,
@@ -98,7 +98,8 @@ object Sponsors {
                 // The ticker's words live in the same collection, so no new Firebase rule is needed.
                 if (id == TICKER_ID) {
                     val on = f.optJSONObject("active")?.optBoolean("booleanValue") ?: false
-                    ticker = f.text("text").trim().takeIf { on && it.isNotEmpty() }
+                    // Words saved before the rename to Cable TV (1.9.48) still say the old name.
+                    ticker = f.text("text").trim().replace("Free Live TV", "Cable TV").takeIf { on && it.isNotEmpty() }
                     continue
                 }
                 arr.put(
@@ -164,12 +165,12 @@ object Sponsors {
     /** The ticker's document in sponsors/; older app versions skip it because it has no picture. */
     private const val TICKER_ID = "_ticker"
     private const val K_TICKER = "ticker"
-    const val DEFAULT_TICKER = "Advertise your business on Free Live TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise"
+    const val DEFAULT_TICKER = "Advertise your business on Cable TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise"
 }
 
 /**
  * Counts how often each sponsor is shown, per day and place, so the owner can tell sponsors how
- * many times their ad was seen. Free Live TV sends the totals to Firebase with the viewing totals.
+ * many times their ad was seen. Cable TV sends the totals to Firebase with the viewing totals.
  */
 object SponsorViews {
     private var prefs: SharedPreferences? = null

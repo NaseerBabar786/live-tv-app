@@ -6,15 +6,15 @@ import org.junit.Test
 
 class ClaudeMessageTest {
 
-    private val topics = listOf(Topic("Free Live TV", "https://claude.ai/project/a"), Topic("Website"), Topic("Other"))
+    private val topics = listOf(Topic("Cable TV", "https://claude.ai/project/a"), Topic("Website"), Topic("Other"))
 
     @Test
     fun groupsByTopicThenKind() {
         val notes = listOf(
             Note(1, Kind.IDEA, "Dark theme", "Website", 1),
-            Note(2, Kind.TASK, "Fix the guide", "Free Live TV", 2),
-            Note(3, Kind.VOICE, "line one\nline two", "Free Live TV", 3),
-            Note(4, Kind.TASK, "Add search", "Free Live TV", 4),
+            Note(2, Kind.TASK, "Fix the guide", "Cable TV", 2),
+            Note(3, Kind.VOICE, "line one\nline two", "Cable TV", 3),
+            Note(4, Kind.TASK, "Add search", "Cable TV", 4),
         )
         val text = ClaudeMessage.build(notes, topics.map { it.name }, "Mon 5 Oct 2026")
         assertEquals(
@@ -22,7 +22,7 @@ class ClaudeMessageTest {
             Notes for Claude, Mon 5 Oct 2026
             Each topic below belongs to its own project or thread. Please pass each one to the thread that owns it, or start a new thread for it.
 
-            ## Free Live TV
+            ## Cable TV
 
             Work to do:
             1. Fix the guide
@@ -44,7 +44,7 @@ class ClaudeMessageTest {
     fun splitsByProjectLink() {
         val notes = listOf(
             Note(1, Kind.TASK, "a", "Website", 1),
-            Note(2, Kind.TASK, "b", "Free Live TV", 2),
+            Note(2, Kind.TASK, "b", "Cable TV", 2),
             Note(3, Kind.IDEA, "c", "Other", 3),
         )
         val plan = SendPlan.plan(notes, topics, "https://claude.ai/project/main", "today")

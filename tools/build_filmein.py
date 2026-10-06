@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds the ready-made schedule for Bazaar Cinema, our classic-films channel (channel 2 in Free Live TV).
+Builds the ready-made schedule for Bazaar Cinema, our classic-films channel (channel 2 in Cable TV).
 
 Takes the public-domain films in docs/Movies.m3u (made by build_movies.py from the Internet
 Archive), reads each film's length from the Archive, and writes a channel schedule in the
@@ -39,7 +39,7 @@ SOUTH_ASIAN = {"Hindi", "Urdu", "Punjabi"}
 RIP = re.compile(r"www\.|\.com|@|\bCD ?\d\b|xclusive|dvdrip|x264", re.I)
 
 TICKER = ("Bazaar Cinema · Classic films, free, day and night · Raat Ki Film: a film every night at 8 PM (Toronto) "
-          "· Channel 2 on Free Live TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca")
+          "· Channel 2 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca")
 
 
 def films_in_playlist(path):
