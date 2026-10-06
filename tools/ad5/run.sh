@@ -7,7 +7,7 @@ if [ "${MODE:-}" = "lips" ]; then
   curl -fsSL -o out/$ONLY-voice.audio "$REL/$ONLY${VOICE_SUFFIX:-}.${VOICE_EXT:-mp3}"
   D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 out/$ONLY.mp4)
   ffmpeg -v error -y -i out/$ONLY-voice.audio -af "silenceremove=start_periods=1:start_threshold=-45dB,adelay=250|250,apad" -t "$D" -ac 1 -ar 16000 out/$ONLY-line.wav
-  python3 lipsync.py $ONLY
+  if [ "${CPU_LIPS:-}" = "1" ]; then bash lips_cpu.sh; else python3 lipsync.py $ONLY; fi
   rm -f out/$ONLY.mp4 out/$ONLY-voice.audio
   gh release upload ad5-work -R "$GITHUB_REPOSITORY" --clobber out/*
   exit 0

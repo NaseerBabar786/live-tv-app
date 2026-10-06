@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    timeout-minutes: 60
+    timeout-minutes: 340
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +31,8 @@ jobs:
           ONLY: ${{ matrix.scene }}
           VOICES: "0"
           TRY_SEEDS: ''
-          MODE: ${{ matrix.scene == 's2' && 'tts' || 'lips' }}
+          MODE: lips
+          CPU_LIPS: "1"
         run: |
           set -eu
           cd tools/ad5
