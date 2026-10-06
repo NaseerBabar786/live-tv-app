@@ -70,15 +70,85 @@ class Account private constructor(context: Context) {
             .put("returnSecureToken", true)
             .put("returnIdpCredential", true)
         val r = Http.postJson("$IDENTITY/accounts:signInWithIdp?key=${FirebaseConfig.API_KEY}", body)
-        val user = User(
-            uid = r.getString("localId"),
-            name = r.optString("displayName").ifBlank { r.optString("fullName") },
-            email = r.optString("email"),
+        remember(r, r.optString("displayName").ifBlank { r.optString("fullName") }, PROVIDER_GOOGLE)
+    }
+
+    /** Creates an email and password account (any email, no confirmation email) and signs in. */
+    suspend fun signUpWithEmail(name: String, email: String, password: String): User = withContext(Dispatchers.IO) {
+        val r = emailCall("accounts:signUp", email, password)
+        if (name.isNotBlank()) {
+            // Keeps the name on the Firebase account too, so it shows the same everywhere.
+            runCatching {
+                Http.postJson(
+                    "$IDENTITY/accounts:update?key=${FirebaseConfig.API_KEY}",
+                    JSONObject().put("idToken", r.getString("idToken")).put("displayName", name.trim()),
+                )
+            }
+        }
+        remember(r, name.trim(), PROVIDER_PASSWORD)
+    }
+
+    /** Signs in with an email and password account. */
+    suspend fun signInWithEmail(email: String, password: String): User = withContext(Dispatchers.IO) {
+        val r = emailCall("accounts:signInWithPassword", email, password)
+        remember(r, r.optString("displayName"), PROVIDER_PASSWORD)
+    }
+
+    /** Sends Firebase's "reset your password" email. It only arrives when the address is real. */
+    suspend fun sendPasswordReset(email: String) = withContext(Dispatchers.IO) {
+        try {
+            Http.postJson(
+                "$IDENTITY/accounts:sendOobCode?key=${FirebaseConfig.API_KEY}",
+                JSONObject().put("requestType", "PASSWORD_RESET").put("email", email.trim()),
+            )
+        } catch (e: Http.Status) {
+            throw IOException(friendly(e.message))
+        }
+        Unit
+    }
+
+    /** True when the viewer signed in with an email and password (so they can change it here). */
+    val usesPassword: Boolean get() = prefs.getString(K_PROVIDER, null) == PROVIDER_PASSWORD
+
+    /**
+     * Changes the signed-in viewer's password. The current password is checked first, which also
+     * gives a fresh sign-in (Firebase asks for one before a password change).
+     */
+    suspend fun changePassword(current: String, new: String) = withContext(Dispatchers.IO) {
+        val email = _user.value?.email ?: throw IOException("Not signed in")
+        val fresh = emailCall("accounts:signInWithPassword", email, current)
+        val r = try {
+            Http.postJson(
+                "$IDENTITY/accounts:update?key=${FirebaseConfig.API_KEY}",
+                JSONObject().put("idToken", fresh.getString("idToken")).put("password", new).put("returnSecureToken", true),
+            )
+        } catch (e: Http.Status) {
+            throw IOException(friendly(e.message))
+        }
+        // The old sign-in stops working after a password change; keep the new one.
+        prefs.edit().putString(K_REFRESH, r.getString("refreshToken")).apply()
+        idToken = r.getString("idToken")
+        idTokenExpires = System.currentTimeMillis() + r.optLong("expiresIn", 3600) * 1000
+        Unit
+    }
+
+    private fun emailCall(endpoint: String, email: String, password: String): JSONObject = try {
+        Http.postJson(
+            "$IDENTITY/$endpoint?key=${FirebaseConfig.API_KEY}",
+            JSONObject().put("email", email.trim()).put("password", password).put("returnSecureToken", true),
         )
+    } catch (e: Http.Status) {
+        throw IOException(friendly(e.message))
+    }
+
+    /** Keeps a new Firebase session (from any sign-in) and makes it the current viewer. */
+    private fun remember(r: JSONObject, name: String, provider: String): User {
+        val user = User(uid = r.getString("localId"), name = name, email = r.optString("email"))
         prefs.edit()
             .putString(K_UID, user.uid)
             .putString(K_NAME, user.name)
             .putString(K_EMAIL, user.email)
+            .putString(K_PROVIDER, provider)
             .putString(K_REFRESH, r.getString("refreshToken"))
             // The next record claims the account for this device (the newest device wins).
             .putBoolean(K_CLAIM, true)
@@ -87,7 +157,7 @@ class Account private constructor(context: Context) {
         idToken = r.getString("idToken")
         idTokenExpires = System.currentTimeMillis() + r.optLong("expiresIn", 3600) * 1000
         _user.value = user
-        user
+        return user
     }
 
     fun signOut() {
@@ -134,7 +204,11 @@ class Account private constructor(context: Context) {
             val exists = existing != null
             val claiming = prefs.getBoolean(K_CLAIM, false)
             val accountDevice = existing?.optJSONObject("fields")?.optJSONObject("deviceId")?.optString("stringValue")
-            if (!claiming && !accountDevice.isNullOrEmpty() && accountDevice != deviceId) {
+            // Platinum (while packages are on): the account works on two devices, the two newest.
+            val secondDevice = existing?.optJSONObject("fields")?.optJSONObject("deviceId2")?.optString("stringValue")
+            val twoDevices = Subscription.twoDevices
+            val known = accountDevice == deviceId || (twoDevices && secondDevice == deviceId)
+            if (!claiming && !accountDevice.isNullOrEmpty() && !known) {
                 signOut()
                 _notice.value = "Your account is now being used on another device. " +
                     "A free account works on one device at a time. Sign in again to watch here."
@@ -148,7 +222,14 @@ class Account private constructor(context: Context) {
                 "device" to if (isTv) "TV" else "Phone/tablet",
                 "model" to "${Build.MANUFACTURER} ${Build.MODEL}".trim(),
                 "deviceId" to deviceId,
+                "signIn" to if (usesPassword) "Email" else "Google",
             )
+            // The second device opening again leaves both devices as they are.
+            if (!claiming && twoDevices && secondDevice == deviceId && accountDevice != deviceId) fields.remove("deviceId")
+            // With two devices, the device used before stays as the second one.
+            if (twoDevices && claiming && !accountDevice.isNullOrEmpty() && accountDevice != deviceId) {
+                fields["deviceId2"] = accountDevice
+            }
             if (!exists) fields["joined"] = Date()
             Firestore.patch(doc, fields, t)
             if (claiming) prefs.edit().putBoolean(K_CLAIM, false).apply()
@@ -207,12 +288,33 @@ class Account private constructor(context: Context) {
         private const val K_EMAIL = "email"
         private const val K_REFRESH = "refresh"
         private const val K_CLAIM = "claim_device"
+        private const val K_PROVIDER = "provider"
+        private const val PROVIDER_GOOGLE = "google"
+        private const val PROVIDER_PASSWORD = "password"
 
         @Volatile private var instance: Account? = null
         fun get(context: Context): Account =
             instance ?: synchronized(this) { instance ?: Account(context).also { instance = it } }
 
         private fun enc(s: String) = URLEncoder.encode(s, "UTF-8")
+
+        /** Firebase's error codes, in plain words. */
+        fun friendly(code: String?): String {
+            val c = code ?: ""
+            return when {
+                c.startsWith("EMAIL_EXISTS") -> "There's already an account with this email. Sign in instead, or use Forgot password."
+                c.startsWith("INVALID_LOGIN_CREDENTIALS") || c.startsWith("INVALID_PASSWORD") || c.startsWith("EMAIL_NOT_FOUND") ->
+                    "The email or password is wrong. Check them and try again."
+                c.startsWith("INVALID_EMAIL") || c.startsWith("MISSING_EMAIL") -> "That doesn't look like an email address."
+                c.startsWith("WEAK_PASSWORD") || c.startsWith("MISSING_PASSWORD") -> "The password needs at least 6 characters."
+                c.startsWith("USER_DISABLED") -> "This account has been turned off. Please contact us."
+                c.startsWith("TOO_MANY_ATTEMPTS") -> "Too many tries. Wait a few minutes and try again."
+                c.startsWith("OPERATION_NOT_ALLOWED") || c.startsWith("PASSWORD_LOGIN_DISABLED") ->
+                    "Email sign-in isn't switched on yet. Please use Google for now."
+                c.isBlank() -> "Check the internet connection and try again."
+                else -> c
+            }
+        }
     }
 }
 

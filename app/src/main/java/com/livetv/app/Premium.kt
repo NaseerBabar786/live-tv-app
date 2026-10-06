@@ -12,10 +12,18 @@ import kotlinx.coroutines.flow.asStateFlow
 object Premium {
     /** What a Premium seller provides: Live TV Plus's Google Play billing. */
     interface Billing {
-        /** The monthly price as Google Play shows it (e.g. "$0.99"), once known. */
+        /** The monthly price as Google Play shows it (e.g. "$1.99"), once known. */
         val price: StateFlow<String?>
-        fun subscribe(activity: Activity)
+
+        /** Every plan length Google Play offers (monthly, 6 months, yearly), shortest first, once known. */
+        val options: StateFlow<List<Option>>
+
+        /** Opens Google Play's checkout for plan [option] (an index into [options]; the first plan when unknown). */
+        fun subscribe(activity: Activity, option: Int = 0)
     }
+
+    /** One plan length and its price, such as "6 months" and "$9.99". */
+    data class Option(val label: String, val price: String)
 
     private val _active = MutableStateFlow(true)
 

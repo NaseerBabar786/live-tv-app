@@ -18,6 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import com.livetv.app.account.Account
 import com.livetv.app.account.FirebaseConfig
 import com.livetv.app.account.Messages
+import com.livetv.app.account.Subscription
+import com.livetv.app.ui.PlanEndingNotice
+import com.livetv.app.ui.PlansScreen
 import com.livetv.app.ui.MessagesScreen
 import com.livetv.app.ui.SignInScreen
 import androidx.compose.ui.Modifier
@@ -82,11 +85,18 @@ fun EditionStartScreen(onDone: () -> Unit) {
     val context = LocalContext.current
     val account = remember { Account.get(context) }
     val user by account.user.collectAsStateWithLifecycle()
+    remember { Subscription.init(context) }
     if (FirebaseConfig.configured && user == null && !Edition.MAX) {
         SignInScreen(onSignedIn = {})
         return
     }
-    LaunchedEffect(Unit) { if (FirebaseConfig.configured) account.recordOpen() }
+    LaunchedEffect(Unit) {
+        if (FirebaseConfig.configured) {
+            // The package first: Platinum lets the account stay signed in on a second device.
+            Subscription.refresh(context, account)
+            account.recordOpen()
+        }
+    }
     // A paying sponsor, in turn, from the saved list; the latest list arrives meanwhile for next time
     // (or for now, when there was none saved yet).
     var sponsor by remember { mutableStateOf<Sponsor?>(null) }
@@ -129,6 +139,8 @@ fun EditionOverlay() {
                 // New or changed sponsors reach TVs that stay on for days.
                 minutes += 10
                 if (minutes % (6 * 60) == 0) Sponsors.refresh(account)
+                // A package bought or ended reaches TVs that stay on for days.
+                if (minutes % 60 == 0) Subscription.refresh(context, account)
                 // The owner's channel schedule changes more often.
                 MyChannelSync.refresh(account)
             }
@@ -142,6 +154,7 @@ fun EditionOverlay() {
         }
     }
     if (FirebaseConfig.configured) NewMessagePrompt()
+    if (FirebaseConfig.configured && !Edition.MAX) PlanPrompts()
     // A sponsor's card after a channel change, now and then.
     val main by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
     SponsorCard(channelId = main.lastWatchedId, fullScreen = main.playing != null)
@@ -169,6 +182,31 @@ fun EditionOverlay() {
         UpdateState.UpToDate -> LaunchedEffect(Unit) { updates.dismissPrompt() }
         else -> Unit
     }
+}
+
+/**
+ * Free Live TV's packages: the packages screen when a mode or section needs a bigger package
+ * (or from Settings), and the warning when a package is about to end.
+ */
+@Composable
+private fun PlanPrompts() {
+    val asking by Plans.asking.collectAsStateWithLifecycle()
+    var messages by remember { mutableStateOf(false) }
+    if (messages) {
+        MessagesScreen(onClose = { messages = false })
+        return
+    }
+    val a = asking
+    if (a != null) {
+        PlansScreen(
+            feature = a.feature,
+            needed = a.needed,
+            onMessages = { Plans.closeAsk(); messages = true },
+            onDismiss = Plans::closeAsk,
+        )
+        return
+    }
+    PlanEndingNotice(onRenew = Plans::showPlans, onMessages = { messages = true })
 }
 
 /**

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.AlertDialog
 import kotlinx.coroutines.flow.MutableStateFlow
+import com.livetv.app.Plans
 import com.livetv.app.Premium
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -251,6 +252,14 @@ fun ChannelListScreen(
                 ?: if (Edition.MAX || (Edition.LIVE_TV && wideScreen)) TileLayout.Browse else TileLayout.List,
         )
     }
+    // Free Live TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
+    val tier by Plans.current.collectAsStateWithLifecycle()
+    LaunchedEffect(tier, tileLayout) {
+        if (!Plans.allows(tileLayout.tier)) {
+            tileLayout = if (wideScreen) TileLayout.Browse else TileLayout.List
+            sessionTileLayout = tileLayout
+        }
+    }
     // 2×3, 2×2 and 1×2 are Premium in Live TV Plus (free in the other apps).
     val premium by Premium.active.collectAsStateWithLifecycle()
     var upsellFor by remember { mutableStateOf<TileLayout?>(null) }
@@ -490,6 +499,8 @@ fun ChannelListScreen(
         if (tileLayout == TileLayout.Browse && next != TileLayout.Browse && state.query.isNotBlank()) onQueryChange("")
         if (next.separateTvs && !premium) {
             upsellFor = next
+        } else if (Plans.ask("${next.label} mode", next.tier)) {
+            // Free Live TV shows its packages; the mode stays as it was.
         } else {
             tileLayout = next
             sessionTileLayout = tileLayout
@@ -1225,6 +1236,7 @@ fun ChannelListScreen(
         ModesMenu(
             current = tileLayout,
             locked = { it.separateTvs && !premium },
+            needs = { if (Plans.allows(it.tier)) null else it.tier.label },
             onPick = ::pickLayout,
             onDismiss = { modesOpen = false },
         )
@@ -1232,7 +1244,7 @@ fun ChannelListScreen(
     upsellFor?.let { wanted ->
         PremiumDialog(
             layout = wanted.label,
-            onSubscribe = { (context as? Activity)?.let { Premium.billing?.subscribe(it) } },
+            onSubscribe = { option -> (context as? Activity)?.let { Premium.billing?.subscribe(it, option) } },
             onDismiss = {
                 // Skip past the Premium layouts to the next free one.
                 tileLayout = TileLayout.entries.drop(wanted.ordinal).firstOrNull { !it.separateTvs } ?: TileLayout.entries.first()
@@ -1287,6 +1299,8 @@ private fun ModesMenu(
     current: TileLayout,
     /** Live TV Plus: the modes that need Premium. */
     locked: (TileLayout) -> Boolean,
+    /** Free Live TV: the package a mode needs, when the viewer's package doesn't have it. */
+    needs: (TileLayout) -> String? = { null },
     onPick: (TileLayout) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -1329,7 +1343,14 @@ private fun ModesMenu(
                         Icon(layout.icon, contentDescription = null, modifier = Modifier.size(24.dp))
                         Spacer(Modifier.width(12.dp))
                         Column(Modifier.weight(1f)) {
-                            Text(layout.label + if (locked(layout)) "  · Premium" else "", fontWeight = FontWeight.Bold)
+                            Text(
+                                layout.label + when {
+                                    locked(layout) -> "  · Premium"
+                                    needs(layout) != null -> "  · 🔒 ${needs(layout)}"
+                                    else -> ""
+                                },
+                                fontWeight = FontWeight.Bold,
+                            )
                             Text(
                                 layout.about,
                                 style = MaterialTheme.typography.bodySmall,
@@ -1368,23 +1389,36 @@ private fun ExitDialog(onExit: () -> Unit, onDismiss: () -> Unit) {
     }
 }
 
-/** Live TV Plus: offers Premium when a Premium layout is picked. */
+/** Live TV Plus: offers Premium when a Premium layout is picked, with a button per plan length. */
 @Composable
-private fun PremiumDialog(layout: String, onSubscribe: () -> Unit, onDismiss: () -> Unit) {
+private fun PremiumDialog(layout: String, onSubscribe: (option: Int) -> Unit, onDismiss: () -> Unit) {
     val price by remember { Premium.billing?.price ?: MutableStateFlow<String?>(null) }.collectAsStateWithLifecycle()
+    val options by remember {
+        Premium.billing?.options ?: MutableStateFlow<List<Premium.Option>>(emptyList())
+    }.collectAsStateWithLifecycle()
     SettingsTheme {
         AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text("$layout is Premium") },
             text = {
-                Text(
-                    "Watch two, four or six channels at once with the 1×2, 2×2 and 2×3 layouts. " +
-                        "Premium is ${price ?: "a small monthly price"} a month through Google Play, works on every " +
-                        "phone and TV signed in to your Google account, and you can cancel any time in Google Play."
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        "Watch two, four or six channels at once with the 1×2, 2×2 and 2×3 layouts. " +
+                            "Premium is ${price ?: "a small monthly price"} a month through Google Play (or less with 6 months " +
+                            "or a year), works on every phone and TV signed in to your Google account, and you can " +
+                            "cancel any time in Google Play."
+                    )
+                    options.forEachIndexed { i, o ->
+                        OutlinedButton(onClick = { onSubscribe(i) }, modifier = Modifier.fillMaxWidth().focusGlow()) {
+                            Text("${o.label}: ${o.price}")
+                        }
+                    }
+                }
             },
             confirmButton = {
-                TextButton(onClick = onSubscribe, modifier = Modifier.focusGlow()) { Text("Get Premium") }
+                if (options.isEmpty()) {
+                    TextButton(onClick = { onSubscribe(0) }, modifier = Modifier.focusGlow()) { Text("Get Premium") }
+                }
             },
             dismissButton = {
                 TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Not now") }
@@ -2084,6 +2118,15 @@ private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Ho
 private val layouts = TileLayout.entries.filter {
     (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel && it != TileLayout.Strip && it != TileLayout.Duo) || Edition.LIVE_TV
 }
+
+/** Free Live TV's package each mode needs (see [Plans]). */
+private val TileLayout.tier: Plans.Tier
+    get() = when (this) {
+        TileLayout.List, TileLayout.Browse, TileLayout.Carousel, TileLayout.Strip -> Plans.Tier.Free
+        TileLayout.Two, TileLayout.Five, TileLayout.Duo -> Plans.Tier.Silver
+        TileLayout.Four, TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine -> Plans.Tier.Gold
+        TileLayout.Six -> Plans.Tier.Platinum
+    }
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() =
