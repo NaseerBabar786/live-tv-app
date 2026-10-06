@@ -51,6 +51,7 @@
 <div class="ticker"><span>Bazaar Hits · Film songs, day and night, from the music labels' own channels · Channel 4 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
 <div class="msg" id="msg">Loading Bazaar Hits…</div>
 <script src="promo.js"></script>
+<script src="still.js"></script>
 <script>
 const app = new URLSearchParams(location.search).has("app");
 const $ = id => document.getElementById(id);
@@ -143,6 +144,7 @@ window.onYouTubeIframeAPIReady = () => {
       onError: e => { lastError = e.data; setTimeout(() => play(1), 1000); },
     },
   });
+  stillFor(player);
 };
 $("sound").onclick = () => { player.unMute(); player.playVideo(); $("sound").hidden = true; };
 // A tap or OK only shows what's playing; the songs run on by themselves, like a TV channel.

@@ -49,6 +49,7 @@
 <div class="ticker"><span id="tick"></span></div>
 <div class="msg" id="msg">Loading…</div>
 <script src="promo.js"></script>
+<script src="still.js"></script>
 <script type="module">
 import { STATIONS } from "./schedule.js";
 const q = new URLSearchParams(location.search);
@@ -176,6 +177,7 @@ window.onYouTubeIframeAPIReady = () => {
       onError: e => { lastError = e.data; if (++failures >= 5) fallBack(); else setTimeout(() => play(1), 1000); },
     },
   });
+  stillFor(player);
 };
 // A tap or OK only shows what's playing; double-click goes full screen (on the website).
 $("shield").onclick = showNow;
