@@ -1,0 +1,71 @@
+name: Build channel media
+
+# Downloads the free Blender open movies (Creative Commons Attribution) for the owner's test
+# channel, makes them 720p MP4s that start quickly, and puts them on the "channel-media"
+# release, so the app and tv.bulkbazaar.ca/channel can play them from a direct link.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [my-channel]
+    paths: [.github/workflows/build-channel-media.yml]
+
+jobs:
+  films:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Download and convert
+        run: |
+          set -u
+          mkdir -p out
+          get() {
+            name="$1"; shift
+            for url in "$@"; do
+              echo "Trying $url"
+              if curl -fsSL --retry 2 -o "src_$name" "$url" && [ "$(stat -c %s "src_$name")" -gt 5000000 ]; then
+                ffmpeg -nostdin -loglevel error -y -i "src_$name" \
+                  -vf "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,fps=25,format=yuv420p" \
+                  -c:v libx264 -preset veryfast -crf 25 -maxrate 2500k -bufsize 5000k -g 50 \
+                  -c:a aac -b:a 128k -ac 2 -movflags +faststart "out/$name.mp4" && { rm -f "src_$name"; return 0; }
+              fi
+            done
+            echo "::warning::No source worked for $name"
+          }
+          get big-buck-bunny \
+            https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_720p_h264.mov \
+            https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_640x360.m4v \
+            https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4
+          get elephants-dream \
+            https://archive.org/download/ElephantsDream/ed_hd.mp4 \
+            https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4 \
+            https://download.blender.org/ED/ED_1024.avi
+          get tears-of-steel \
+            https://download.blender.org/demo/movies/ToS/tears_of_steel_720p.mov \
+            http://ftp.nluug.nl/pub/graphics/blender/demo/movies/ToS/tears_of_steel_720p.mov
+          get sintel \
+            https://download.blender.org/durian/movies/Sintel.2010.720p.mkv \
+            https://archive.org/download/Sintel/sintel-2048-stereo_512kb.mp4
+          get spring \
+            https://download.blender.org/demo/movies/Spring/spring_2019_1080p.mp4 \
+            https://archive.org/download/spring-blender-open-movie/Spring%20-%20Blender%20Open%20Movie.mp4
+          echo "Blender demo movies folder:"; curl -fsSL https://download.blender.org/demo/movies/ | grep -o 'href="[^"]*"' | head -60 || true
+          echo "== Lengths =="
+          for f in out/*.mp4; do
+            echo "$(basename "$f") $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f") $(stat -c %s "$f")"
+          done | tee lengths.txt
+          cp lengths.txt out/lengths.txt
+
+      - name: Upload to the channel-media release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A pre-release, so it never becomes "latest" (the app's download link uses latest).
+          gh release view channel-media -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create channel-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false \
+              --title "Channel media" --notes "Videos for the test schedule of the owner's channel (Blender open movies, CC BY)."
+          gh release upload channel-media out/* -R "$GITHUB_REPOSITORY" --clobber
