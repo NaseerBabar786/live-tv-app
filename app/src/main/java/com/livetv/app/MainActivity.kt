@@ -19,6 +19,8 @@ import com.livetv.app.data.YouTube
 import com.livetv.app.games.GamesScreen
 import com.livetv.app.player.PlayerScreen
 import com.livetv.app.ui.YouTubePlayer
+import com.livetv.app.ui.WebChannel
+import com.livetv.app.data.MyChannel
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
@@ -67,6 +69,8 @@ class MainActivity : ComponentActivity() {
             GamesScreen(onClose = { showGames = false })
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
+        } else if (playing != null && playing.url == MyChannel.BOLLYWOOD_URL) {
+            WebChannel(MyChannel.BOLLYWOOD_URL + "?app=1", onBack = viewModel::stop)
         } else if (playing != null && YouTube.videoId(playing.url) != null) {
             YouTubePlayer(YouTube.videoId(playing.url)!!, onBack = viewModel::stop)
         } else if (playing != null) {

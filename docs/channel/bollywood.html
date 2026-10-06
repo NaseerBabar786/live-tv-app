@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bollywood Hits · Watch live</title>
+<meta name="description" content="Bollywood Hits: film songs round the clock, from the music labels' own YouTube channels.">
+<meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/bollywood-hits.png">
+<link rel="icon" href="logos/bollywood-hits.png">
+<style>
+  /* Plays the music labels' own YouTube uploads in YouTube's player, one after another, like a
+     channel. Opened full screen by the Free Live TV app (?app=1) and linked from /channel. */
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
+  #player { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .bug { position: absolute; top: 3%; right: 2.5%; width: 8%; opacity: .85; pointer-events: none; }
+  .now { position: absolute; left: 3%; bottom: 6%; max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; }
+  .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
+  .hide { opacity: 0; }
+  .sound, .back { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+  .back { left: auto; right: 12%; background: rgba(16,24,39,.85); text-decoration: none; }
+  .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
+</style>
+</head>
+<body>
+<div id="player"></div>
+<img class="bug" src="logos/bollywood-hits.png" alt="">
+<div class="now hide" id="now"></div>
+<button class="sound" id="sound" hidden>🔊 Tap for sound</button>
+<a class="back" id="back" href="./" hidden>Our channels</a>
+<div class="msg" id="msg">Loading Bollywood Hits…</div>
+<script>
+const app = new URLSearchParams(location.search).has("app");
+const $ = id => document.getElementById(id);
+if (!app) { $("back").hidden = false; }
+let songs = [], at = 0, player = null, nowTimer = null;
+
+// Everyone joins the same running order: shuffled the same way each day, at a place set by the clock.
+function shuffled(list, seed) {
+  const a = list.slice();
+  for (let i = a.length - 1; i > 0; i--) { seed = (seed * 9301 + 49297) % 233280; const j = Math.floor(seed / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function showNow() {
+  const s = songs[at];
+  $("now").innerHTML = "<span></span><small></small>";
+  $("now").firstChild.textContent = s.title;
+  $("now").lastChild.textContent = "Bollywood Hits · " + s.label;
+  $("now").classList.remove("hide");
+  clearTimeout(nowTimer);
+  nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
+}
+function play(step = 0) {
+  at = (at + step + songs.length) % songs.length;
+  player.loadVideoById(songs[at].id);
+  showNow();
+}
+fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()).then(d => {
+  const day = Math.floor(Date.now() / 86400000);
+  songs = shuffled(d.songs, day);
+  // About four minutes a song.
+  const mins = (Date.now() % 86400000) / 60000;
+  at = Math.floor(mins / 4) % songs.length;
+  const s = document.createElement("script");
+  s.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(s);
+}).catch(() => { $("msg").textContent = "Bollywood Hits can't load right now. Please try again in a minute."; });
+
+window.onYouTubeIframeAPIReady = () => {
+  $("msg").remove();
+  player = new YT.Player("player", {
+    videoId: songs[at].id,
+    playerVars: { autoplay: 1, controls: app ? 0 : 1, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, origin: location.origin },
+    events: {
+      onReady: e => {
+        if (!app) { e.target.mute(); $("sound").hidden = false; }
+        e.target.playVideo();
+        showNow();
+      },
+      onStateChange: e => { if (e.data === YT.PlayerState.ENDED) play(1); },
+      // A video its label won't let others play here is skipped.
+      onError: () => setTimeout(() => play(1), 1000),
+    },
+  });
+};
+$("sound").onclick = () => { player.unMute(); player.playVideo(); $("sound").hidden = true; };
+// Remote and keyboard: right or down for the next song, left or up for the one before.
+document.addEventListener("keydown", e => {
+  if (!player || !songs.length) return;
+  if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "MediaTrackNext") { play(1); e.preventDefault(); }
+  if (e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "MediaTrackPrevious") { play(-1); e.preventDefault(); }
+  if (e.key === "Enter") showNow();
+});
+</script>
+</body>
+</html>

@@ -82,3 +82,11 @@ d.rectangle([242,96,256,222], fill="white"); d.rectangle([342,76,356,202], fill=
 d.polygon([(242,96),(356,76),(356,108),(242,128)], fill="white")
 center_text(d, S/2, 270, "SUR", font(B, 140), "white"); center_text(d, S/2, 412, "TV", font(B, 60), (253,224,71))
 save(im, "sur-tv")
+
+# 8 Bollywood Hits: magenta to orange rounded square, star + wordmark
+im = Image.new("RGBA", (S,S), (0,0,0,0)); bg = grad((S,S), (219,39,119), (249,115,22)); im.paste(bg, (0,0), rounded_mask((S,S), 110))
+d = ImageDraw.Draw(im)
+pts = [(S/2 + (80 if i % 2 == 0 else 34) * math.cos(math.radians(-90 + i*36)), 140 + (80 if i % 2 == 0 else 34) * math.sin(math.radians(-90 + i*36))) for i in range(10)]
+d.polygon(pts, fill=(253,224,71))
+center_text(d, S/2, 240, "BOLLYWOOD", font(B, 66), "white"); center_text(d, S/2, 340, "HITS", font(B, 120), (255,247,237))
+save(im, "bollywood-hits")

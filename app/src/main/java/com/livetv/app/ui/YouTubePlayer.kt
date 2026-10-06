@@ -86,6 +86,35 @@ fun EmbedPlayer(src: String, onBack: () -> Unit) {
     }
 }
 
+/**
+ * A channel that is a page of ours playing videos in their site's own player one after another
+ * (Bollywood Hits: YouTube's embedded player). Full screen; the remote's arrows go to the page; Back closes it.
+ */
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+fun WebChannel(url: String, onBack: () -> Unit) {
+    BackHandler(onBack = onBack)
+    var webView by remember { mutableStateOf<WebView?>(null) }
+    DisposableEffect(url) {
+        onDispose { webView?.destroy() }
+    }
+    AndroidView(
+        modifier = Modifier.fillMaxSize().background(Color.Black),
+        factory = { ctx ->
+            WebView(ctx).apply {
+                setBackgroundColor(android.graphics.Color.BLACK)
+                settings.javaScriptEnabled = true
+                settings.domStorageEnabled = true
+                settings.mediaPlaybackRequiresUserGesture = false
+                webChromeClient = WebChromeClient()
+                isFocusable = true
+                loadUrl(url)
+                requestFocus()
+            }.also { webView = it }
+        },
+    )
+}
+
 @SuppressLint("SetJavaScriptEnabled")
 private fun embedView(context: Context, src: String): WebView = WebView(context).apply {
     setBackgroundColor(android.graphics.Color.BLACK)

@@ -37,7 +37,19 @@ object MyChannel {
 
     fun urlOf(id: String) = SCHEME + id
 
-    fun isMine(channel: Channel?) = channel?.url?.startsWith(SCHEME) == true
+    /**
+     * Bollywood Hits (dialled 0000): the music labels' own YouTube uploads, one after another in
+     * YouTube's player on this page (song list built by tools/build_bollywood.py). No schedule.
+     */
+    const val BOLLYWOOD_URL = "https://tv.bulkbazaar.ca/channel/bollywood.html"
+    private val bollywood = Channel(
+        name = "Bollywood Hits",
+        url = BOLLYWOOD_URL,
+        logo = "https://tv.bulkbazaar.ca/channel/logos/bollywood-hits.png",
+        number = 0,
+    )
+
+    fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
 
     class Video(val id: String, val title: String, val url: String, /** 0 for a live stream. */ val seconds: Long)
 
@@ -107,10 +119,11 @@ object MyChannel {
     }
 
     /** The channels that are on, in station order. */
-    fun channels(): List<Channel> = STATIONS.mapNotNull { _configs.value[it.id]?.channel }
+    fun channels(): List<Channel> = STATIONS.mapNotNull { _configs.value[it.id]?.channel } + bollywood
 
     /** The channel a viewer reaches by typing [typed] ("0", "00"), when it's on. */
-    fun byDial(typed: String): Channel? = STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
+    fun byDial(typed: String): Channel? =
+        if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
 
     /** [channel]'s settings when it's one of ours and on. */
     fun configOf(channel: Channel?): Config? = channel?.takeIf(::isMine)?.let { _configs.value[it.url.removePrefix(SCHEME)] }

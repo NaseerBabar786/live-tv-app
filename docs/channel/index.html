@@ -90,6 +90,13 @@ for (const st of STATIONS) {
   a.querySelector("span").textContent = `${st.dial}  ${st.name}`;
   $("tabs").appendChild(a);
 }
+{
+  // Bollywood Hits is its own page: the music labels' YouTube videos, one after another.
+  const a = document.createElement("a");
+  a.href = "bollywood.html";
+  a.innerHTML = `<img alt="" src="logos/bollywood-hits.png"><span>0000  Bollywood Hits</span>`;
+  $("tabs").appendChild(a);
+}
 $("dial").textContent = $("dial2").textContent = station.dial;
 $("credits").textContent = station.credits;
 
