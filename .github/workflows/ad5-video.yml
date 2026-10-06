@@ -17,6 +17,9 @@ jobs:
         scene: [s1, s2, s3, s4, s5, s6]
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
       - name: Should this scene run?
         id: want
         run: |
