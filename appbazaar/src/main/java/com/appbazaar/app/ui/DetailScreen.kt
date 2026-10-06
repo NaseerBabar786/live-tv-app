@@ -52,6 +52,7 @@ fun DetailScreen(
     onBack: () -> Unit,
     onAct: () -> Unit,
     onUninstall: () -> Unit,
+    onLaunch: () -> Unit,
     onWeb: (String) -> Unit,
 ) {
     val action = state.action(app)
@@ -95,15 +96,18 @@ fun DetailScreen(
                         modifier = Modifier.focusRequester(mainFocus).widthIn(min = 160.dp),
                         enabled = action != Action.Unavailable && action !is Action.Downloading && action != Action.Installing,
                     ) { Text(actionLabel(action), fontSize = 16.sp) }
+                    if (action == Action.Update) {
+                        // An update is waiting, but the app on the device can still be opened as it is.
+                        FocusOutlinedButton(onClick = onLaunch) { Text("Open") }
+                    }
                     if (installed != null && app.packageName != null) {
                         FocusOutlinedButton(onClick = onUninstall) { Text("Uninstall") }
                     }
                     if (app.forPc && action != Action.OnPc && !isTv) {
                         FocusOutlinedButton(onClick = { sharePage(context, app) }) { Text("Send to my PC") }
                     }
-                    if (app.webUrl != null && app.apkUrl != null) {
-                        FocusOutlinedButton(onClick = { onWeb(app.webUrl) }) { Text("Website") }
-                    }
+                    // No website button next to an app that installs here: on Free Live TV it opened the
+                    // web player instead of the app. Web-only apps still open their site from the main button.
                 }
                 DownloadBar(action, Modifier.widthIn(max = 420.dp).fillMaxWidth().padding(top = 12.dp).clip(RoundedCornerShape(4.dp)))
                 Spacer(Modifier.height(16.dp))

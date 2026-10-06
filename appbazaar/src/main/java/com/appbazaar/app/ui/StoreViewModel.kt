@@ -97,14 +97,25 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
         refresh()
     }
 
-    fun refresh() {
+    /** Fetches the app list again. [manual] is the Refresh button: it then says what it found. */
+    fun refresh(manual: Boolean = false) {
         if (_state.value.loading) return
         lastRefresh = System.currentTimeMillis()
         _state.update { it.copy(loading = true, error = null) }
         viewModelScope.launch {
             runCatching { repo.refresh() }
-                .onSuccess { apps -> setApps(apps); _state.update { it.copy(loading = false) }; autoUpdateSelf() }
+                .onSuccess { apps ->
+                    setApps(apps)
+                    refreshInstalled()
+                    _state.update { it.copy(loading = false) }
+                    if (manual) {
+                        val n = _state.value.updates.size
+                        say(if (n == 0) "Checked just now. All your apps are up to date." else "Checked just now. $n update${if (n > 1) "s" else ""} ready.")
+                    }
+                    autoUpdateSelf()
+                }
                 .onFailure { e ->
+                    if (manual && _state.value.apps.isNotEmpty()) say("Could not reach App Bazaar (${e.message ?: "no internet"}). Please try again.")
                     _state.update {
                         it.copy(
                             loading = false,
@@ -126,7 +137,8 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
         } else if (_state.value.askInstallPermission && installer.canInstall()) {
             pumpInstalls()
         }
-        if (System.currentTimeMillis() - lastRefresh > 10 * 60_000L) refresh()
+        // Coming back to the store (from the home screen or another app) fetches the list again.
+        if (System.currentTimeMillis() - lastRefresh > 30_000L) refresh()
     }
 
     fun select(section: Section) = _state.update { it.copy(section = section) }
@@ -169,6 +181,11 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
             else "Updating ${list.size} apps…",
         )
         list.forEach { if (_state.value.downloads[it.id] == null) download(it) }
+    }
+
+    /** Starts the installed app, whatever its version. */
+    fun launch(app: StoreApp) {
+        if (!installer.open(app.packageName ?: return)) say("${app.name} has no screen to open on this device.")
     }
 
     fun uninstall(app: StoreApp) {

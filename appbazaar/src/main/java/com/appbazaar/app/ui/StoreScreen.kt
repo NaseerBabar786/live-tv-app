@@ -255,13 +255,12 @@ private fun TopBar(
                     Text("Update all")
                 }
             }
-            if (isTv) {
-                // Phones refresh by themselves each time the store opens; TVs keep running, so they get a button.
-                Spacer(Modifier.width(10.dp))
-                FocusOutlinedButton(onClick = onRefresh) {
-                    Icon(Icons.Default.Refresh, contentDescription = "Refresh", modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(if (isTv) 10.dp else 6.dp))
+            FocusOutlinedButton(onClick = onRefresh) {
+                Icon(Icons.Default.Refresh, contentDescription = "Refresh", modifier = Modifier.size(18.dp))
+                if (isTv) {
                     Spacer(Modifier.width(6.dp))
-                    Text("Refresh")
+                    Text(if (state.loading) "Checking…" else "Refresh")
                 }
             }
             Spacer(Modifier.width(if (isTv) 10.dp else 6.dp))

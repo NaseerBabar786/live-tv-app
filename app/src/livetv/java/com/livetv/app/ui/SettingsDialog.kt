@@ -1,6 +1,8 @@
 package com.livetv.app.ui
 
 import android.content.ActivityNotFoundException
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -322,7 +324,10 @@ fun SettingsDialog(
 
                 HorizontalDivider()
                 OutlinedButton(
-                    onClick = { showingAppBazaar = true },
+                    onClick = {
+                        val open = context.appBazaarLaunchIntent()
+                        if (open == null || runCatching { context.startActivity(open) }.isFailure) showingAppBazaar = true
+                    },
                     modifier = Modifier.fillMaxWidth().focusGlow(),
                 ) { Text("More free apps: App Bazaar") }
 
@@ -515,18 +520,39 @@ private fun BulkBazaarBanner() {
 }
 
 private const val APP_BAZAAR = "apps.bulkbazaar.ca"
+private const val APP_BAZAAR_PACKAGE = "com.naseerbabar.appbazaar"
+private const val APP_BAZAAR_APK = "https://github.com/NaseerBabar786/live-tv-app/releases/download/app-bazaar/AppBazaar.apk"
+
+/** The App Bazaar app's start screen (the TV one on TVs), or null when it isn't installed. */
+private fun android.content.Context.appBazaarLaunchIntent(): Intent? {
+    val pm = packageManager
+    val tv = pm.hasSystemFeature(android.content.pm.PackageManager.FEATURE_LEANBACK)
+    return (pm.getLeanbackLaunchIntentForPackage(APP_BAZAAR_PACKAGE)?.takeIf { tv }
+        ?: pm.getLaunchIntentForPackage(APP_BAZAAR_PACKAGE)
+        ?: pm.getLeanbackLaunchIntentForPackage(APP_BAZAAR_PACKAGE))
+        ?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+}
 
 /**
- * Our app store, App Bazaar: its address and a QR code to scan with a phone (TVs often have no
- * web browser), plus a button to open it where there is one.
+ * Our app store, App Bazaar. When the App Bazaar app is on the device, Open starts it (not the
+ * website). Otherwise Install downloads the app and opens the installer; the address and a QR
+ * code stay for phones without it.
  */
 @Composable
 private fun AppBazaarDialog(onDismiss: () -> Unit) {
     val context = LocalContext.current
-    val intent = remember {
-        Intent(Intent.ACTION_VIEW, Uri.parse("https://$APP_BAZAAR")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val scope = rememberCoroutineScope()
+    var bazaar by remember { mutableStateOf(context.appBazaarLaunchIntent()) }
+    var progress by remember { mutableStateOf<Float?>(null) }
+    // Coming back from the installer: switch Install to Open.
+    val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+    androidx.compose.runtime.DisposableEffect(lifecycle) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) bazaar = context.appBazaarLaunchIntent()
+        }
+        lifecycle.addObserver(observer)
+        onDispose { lifecycle.removeObserver(observer) }
     }
-    val hasBrowser = remember { intent.resolveActivity(context.packageManager) != null }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("More free apps: App Bazaar") },
@@ -536,28 +562,55 @@ private fun AppBazaarDialog(onDismiss: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
             ) {
-                Text("Visit our app store, App Bazaar, for more free and useful apps.")
-                Text(APP_BAZAAR, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                Image(
-                    painter = painterResource(R.drawable.app_bazaar_qr),
-                    contentDescription = "QR code for $APP_BAZAAR",
-                    modifier = Modifier.heightIn(max = 180.dp).aspectRatio(1f),
-                )
-                Text("Scan the code with your phone's camera.", style = MaterialTheme.typography.bodySmall)
+                if (bazaar != null) {
+                    Text("Open the App Bazaar app to install and update all our free apps.")
+                } else {
+                    Text("Get the App Bazaar app to install and update all our free apps on this device.")
+                    progress?.let { Text("Downloading App Bazaar… ${(it * 100).toInt()}%") }
+                    Text("Or visit $APP_BAZAAR", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Image(
+                        painter = painterResource(R.drawable.app_bazaar_qr),
+                        contentDescription = "QR code for $APP_BAZAAR",
+                        modifier = Modifier.heightIn(max = 160.dp).aspectRatio(1f),
+                    )
+                    Text("Scan the code with your phone's camera.", style = MaterialTheme.typography.bodySmall)
+                }
             }
         },
         confirmButton = {
-            if (hasBrowser) {
+            val open = bazaar
+            if (open != null) {
                 TextButton(
                     onClick = {
-                        try {
-                            context.startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            Toast.makeText(context, "Visit $APP_BAZAAR", Toast.LENGTH_LONG).show()
+                        if (runCatching { context.startActivity(open) }.isSuccess) onDismiss()
+                        else Toast.makeText(context, "App Bazaar didn't open. Please try again.", Toast.LENGTH_LONG).show()
+                    },
+                    modifier = Modifier.focusGlow(),
+                ) { Text("Open App Bazaar") }
+            } else {
+                TextButton(
+                    enabled = progress == null,
+                    onClick = {
+                        val updater = com.livetv.app.data.Updater(context)
+                        if (!updater.ensureInstallAllowed()) {
+                            Toast.makeText(context, "Allow Free Live TV to install apps, then press Install again.", Toast.LENGTH_LONG).show()
+                            return@TextButton
+                        }
+                        progress = 0f
+                        scope.launch {
+                            runCatching {
+                                val apk = updater.download(
+                                    com.livetv.app.data.Updater.Release("", APP_BAZAAR_APK, 0), "AppBazaar.apk",
+                                ) { progress = it }
+                                updater.install(apk)
+                            }.onFailure {
+                                Toast.makeText(context, "Couldn't download App Bazaar: ${it.message}", Toast.LENGTH_LONG).show()
+                            }
+                            progress = null
                         }
                     },
                     modifier = Modifier.focusGlow(),
-                ) { Text("Open") }
+                ) { Text("Install App Bazaar") }
             }
         },
         dismissButton = { TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("Back") } },

@@ -80,15 +80,15 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
         scheduledUrl = null
         scheduledZero = null
         endedUrl = null
-        if (MyChannel.isMine(channel)) {
-            this.channel = channel
-            playScheduled()
-            return
-        }
         if (YouTube.isYouTube(channel.url)) {
             // YouTube streams play only in YouTube's player, which opens in full screen.
             stop()
             onError?.invoke("This channel plays in YouTube's player. Open it in full screen to watch.")
+            return
+        }
+        if (MyChannel.isMine(channel)) {
+            this.channel = channel
+            playScheduled()
             return
         }
         this.channel = channel
@@ -148,7 +148,7 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
     private fun playScheduled() {
         handler.removeCallbacks(nextOnSchedule)
         val nowMs = System.currentTimeMillis()
-        when (val now = MyChannel.now(nowMs)) {
+        when (val now = MyChannel.now(channel, nowMs)) {
             is MyChannel.Now.Playing -> {
                 val url = now.video.url
                 if (url == endedUrl && now.offsetMs > 0) {

@@ -18,7 +18,7 @@ class StoreRepository(context: Context) {
 
     suspend fun refresh(): List<StoreApp> = withContext(Dispatchers.IO) {
         // A changing query skips any stale copy kept by the phone or GitHub Pages' cache.
-        val text = Net.fetchText(Catalog.APPS_JSON + "?t=" + System.currentTimeMillis() / 60_000)
+        val text = Net.fetchText(Catalog.APPS_JSON + "?t=" + System.currentTimeMillis())
         val apps = Catalog.parse(text)
         if (apps.isNotEmpty()) runCatching { cache.writeText(text) }
         apps

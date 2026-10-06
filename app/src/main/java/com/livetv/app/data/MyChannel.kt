@@ -10,15 +10,46 @@ import java.util.Calendar
 import java.util.TimeZone
 
 /**
- * The owner's own channel, run from tv.bulkbazaar.ca/channel. There is no streaming server: the
+ * The owner's own channels, run from tv.bulkbazaar.ca/studio. There is no streaming server: the
  * page saves a schedule (videos, time slots and a loop list) and every app works out from the clock
  * what is on now and how far into it, so all viewers see the same moment, like live TV.
  */
 object MyChannel {
-    /** The channel's stream address in the channel list; [StreamPlayer] plays the schedule instead. */
+    /**
+     * One of our channels: [id] names its saved settings and its stream address, [dial] is what
+     * viewers type on the remote to reach it.
+     */
+    class Station(val id: String, val dial: String, val name: String)
+
+    /** Our channels, in the order they lead the channel list. */
+    val STATIONS = listOf(
+        Station("main", "0", "Bazaar TV"),
+        // Public-domain classic films round the clock (built weekly from Movies.m3u).
+        Station("filmein", "00", "Sunehra Daur"),
+        // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
+        Station("sur", "000", "Sur Sukoon"),
+    )
+
+    private const val SCHEME = "mychannel://"
+
+    /** Bazaar TV's stream address in the channel list; [StreamPlayer] plays the schedule instead. */
     const val URL = "mychannel://main"
 
-    fun isMine(channel: Channel?) = channel?.url == URL
+    fun urlOf(id: String) = SCHEME + id
+
+    /**
+     * Geet Bahar (dialled 0000): the music labels' own YouTube uploads, one after another in
+     * YouTube's player on this page (song list built by tools/build_bollywood.py). No schedule.
+     */
+    const val BOLLYWOOD_URL = "https://tv.bulkbazaar.ca/channel/bollywood.html"
+    private val bollywood = Channel(
+        name = "Geet Bahar",
+        url = BOLLYWOOD_URL,
+        logo = "https://tv.bulkbazaar.ca/channel/logos/geet-bahar.png",
+        number = 0,
+    )
+
+    fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
 
     class Video(val id: String, val title: String, val url: String, /** 0 for a live stream. */ val seconds: Long)
 
@@ -43,9 +74,11 @@ object MyChannel {
         val ticker: String? = null,
         /** Where the logo sits on the picture: "tl", "tr", "bl", "br", or "off". */
         val logoCorner: String = "tr",
+        /** Which of [STATIONS] this is. */
+        val id: String = "main",
     ) {
         val channel: Channel
-            get() = Channel(name = name, url = URL, logo = logo, number = 0)
+            get() = Channel(name = name, url = urlOf(id), logo = logo, number = 0)
     }
 
     /** What to show at a moment. */
@@ -56,31 +89,49 @@ object MyChannel {
         class OffAir(val next: Video?, val nextAt: Long?) : Now()
     }
 
-    private val _config = MutableStateFlow<Config?>(null)
-    /** The channel when the owner switched it on and gave it something to play; null otherwise. */
-    val config: StateFlow<Config?> = _config.asStateFlow()
+    private val _configs = MutableStateFlow<Map<String, Config>>(emptyMap())
+    /** The channels the owner switched on and gave something to play, by station id. */
+    val configs: StateFlow<Map<String, Config>> = _configs.asStateFlow()
 
-    private var file: File? = null
+    private var files: Map<String, File>? = null
 
-    /** Reads the saved schedule, so the channel shows before the network answers. */
+    /** Reads the saved schedules, so the channels show before the network answers. */
     @Synchronized
     fun init(context: Context) {
-        if (file != null) return
-        file = File(context.applicationContext.filesDir, "my_channel.json")
-        runCatching { file!!.takeIf { it.exists() }?.readText()?.let { _config.value = usable(parse(JSONObject(it))) } }
+        if (files != null) return
+        val dir = context.applicationContext.filesDir
+        files = STATIONS.associate { it.id to File(dir, if (it.id == "main") "my_channel.json" else "my_channel_${it.id}.json") }
+        val read = files!!.mapNotNull { (id, file) ->
+            runCatching { file.takeIf { it.exists() }?.readText()?.let { usable(parse(JSONObject(it), id)) } }.getOrNull()?.let { id to it }
+        }
+        _configs.value = read.toMap()
     }
 
-    /** Stores the owner's latest settings ([json] as saved by the website; null when there are none). */
-    fun update(json: JSONObject?) {
-        val parsed = json?.let { runCatching { parse(it) }.getOrNull() }
-        runCatching { if (json == null) file?.delete() else file?.writeText(json.toString()) }
-        _config.value = usable(parsed)
+    /** Stores the owner's latest settings for station [id] ([json] as saved by the website; null when there are none). */
+    @Synchronized
+    fun update(id: String, json: JSONObject?) {
+        val parsed = json?.let { runCatching { parse(it, id) }.getOrNull() }
+        runCatching { files?.get(id)?.let { if (json == null) it.delete() else it.writeText(json.toString()) } }
+        val next = _configs.value.toMutableMap()
+        val on = usable(parsed)
+        if (on != null) next[id] = on else next.remove(id)
+        _configs.value = next
     }
+
+    /** The channels that are on, in station order. */
+    fun channels(): List<Channel> = STATIONS.mapNotNull { _configs.value[it.id]?.channel } + bollywood
+
+    /** The channel a viewer reaches by typing [typed] ("0", "00"), when it's on. */
+    fun byDial(typed: String): Channel? =
+        if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
+
+    /** [channel]'s settings when it's one of ours and on. */
+    fun configOf(channel: Channel?): Config? = channel?.takeIf(::isMine)?.let { _configs.value[it.url.removePrefix(SCHEME)] }
 
     private fun usable(c: Config?) = c?.takeIf { it.active && it.videos.isNotEmpty() }
 
     /** Parses { name, logo, active, tz, videos:[{id,title,url,secs}], slots:[{day,time,video}], loop:[ids] }. */
-    fun parse(o: JSONObject): Config {
+    fun parse(o: JSONObject, id: String = "main"): Config {
         val videos = o.optJSONArray("videos")?.let { a ->
             (0 until a.length()).mapNotNull { i ->
                 val v = a.optJSONObject(i) ?: return@mapNotNull null
@@ -106,11 +157,13 @@ object MyChannel {
             loop = loop,
             ticker = o.optString("ticker").trim().takeIf { it.isNotEmpty() && o.optBoolean("tickerOn", true) },
             logoCorner = o.optString("logoCorner").ifBlank { "tr" },
+            id = id,
         )
     }
 
-    /** What the current settings put on air at [nowMs]; off air when the channel is off. */
-    fun now(nowMs: Long = System.currentTimeMillis()): Now = _config.value?.let { whatsOn(it, nowMs) } ?: Now.OffAir(null, null)
+    /** What [channel]'s current settings put on air at [nowMs]; off air when the channel is off. */
+    fun now(channel: Channel?, nowMs: Long = System.currentTimeMillis()): Now =
+        configOf(channel)?.let { whatsOn(it, nowMs) } ?: Now.OffAir(null, null)
 
     private class Start(val at: Long, val video: Video, val dated: Boolean)
 
