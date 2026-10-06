@@ -128,4 +128,20 @@ class MyChannelTest {
         assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
         assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
     }
+
+    @Test
+    fun weeklyShowPlaysTheNextEpisodeEachWeek() {
+        // Tuesdays at 20:00 from 2026-09-22: episode 1 on Sep 22, 2 on Sep 29, 3 on Oct 6.
+        val c = config("""[{"day":"tue","time":"20:00","video":"a","show":"Tuesday Drama","episodes":["a","b","live"],"since":"2026-09-22"}]""")
+        val now = MyChannel.whatsOn(c, at(20, 1)) as MyChannel.Now.Playing
+        assertEquals("live", now.video.id)
+        assertEquals("Tuesday Drama", now.show)
+        assertEquals(2, MyChannel.airingsBefore("tue", "2026-09-22", "2026-10-06"))
+        // After the last episode it starts again from episode 1.
+        assertEquals(3, MyChannel.airingsBefore("tue", "2026-09-22", "2026-10-13"))
+        // Before its first date it plays episode 1.
+        assertEquals(0, MyChannel.airingsBefore("tue", "2026-10-13", "2026-10-06"))
+        assertEquals(5, MyChannel.airingsBefore("weekdays", "2026-10-05", "2026-10-12"))
+        assertEquals(2, MyChannel.airingsBefore("weekend", "2026-10-02", "2026-10-05"))
+    }
 }

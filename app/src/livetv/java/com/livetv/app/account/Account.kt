@@ -244,7 +244,7 @@ class Account private constructor(context: Context) {
      */
     suspend fun reportViewing() = withContext(Dispatchers.IO) {
         val u = _user.value ?: return@withContext
-        val days = Watching.totals().filter { (_, m) -> m.isNotEmpty() }
+        val days = Watching.totals().filter { (_, d) -> d.channels.isNotEmpty() || d.programmes.isNotEmpty() }
         val sponsorDays = SponsorViews.totals().filter { (_, m) -> m.isNotEmpty() }
         if (days.isEmpty() && sponsorDays.isEmpty()) return@withContext
         runCatching {
@@ -261,8 +261,9 @@ class Account private constructor(context: Context) {
                 Firestore.patch(Firestore.doc("sponsorViews/${day}_${u.uid}"), fields, t)
                 SponsorViews.sent(day)
             }
-            for ((day, channels) in days) {
-                val fields = mapOf<String, Any>(
+            for ((day, totals) in days) {
+                val channels = totals.channels
+                val fields = mutableMapOf<String, Any>(
                     "uid" to u.uid,
                     "day" to day,
                     "device" to if (isTv) "TV" else "Phone/tablet",
@@ -273,6 +274,13 @@ class Account private constructor(context: Context) {
                     },
                     "updated" to Date(),
                 )
+                // 1.9.65: which programmes on our own channels were watched, and at which weekday and hour.
+                if (totals.programmes.isNotEmpty()) {
+                    fields["programmes"] = totals.programmes.mapValues { (_, p) ->
+                        mapOf<String, Any>("t" to p.title, "st" to p.station, "sh" to p.show, "s" to p.seconds)
+                    }
+                    fields["hours"] = totals.hours.mapKeys { (k, _) -> k.replace('|', '_') }
+                }
                 Firestore.patch(Firestore.doc("usage/${day}_${u.uid}"), fields, t)
                 Watching.sent(day)
             }
