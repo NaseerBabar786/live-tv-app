@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Live TV Plus Premium: a Google Play subscription ([PRODUCT_ID], set up in Play Console) with
- * one base plan per length: monthly ($1.99), 6 months and yearly. The viewer picks one. Google ties it to the viewer's Google account, so it unlocks on every phone and
+ * one base plan per length: 1 year, 6 months, 3 months and 1 month ($1.99). The viewer picks one. Google ties it to the viewer's Google account, so it unlocks on every phone and
  * TV signed in to that account. The last answer is remembered so Premium works offline.
  */
 object PlayBilling : Premium.Billing {
@@ -80,12 +80,12 @@ object PlayBilling : Premium.Billing {
         client?.queryProductDetailsAsync(params) { result, list ->
             if (!result.ok) return@queryProductDetailsAsync
             details = list.firstOrNull()
-            // One offer per base plan (the plain base plan, not promotions), shortest first.
+            // One offer per base plan (the plain base plan, not promotions), longest (best value) first.
             offers = details?.subscriptionOfferDetails.orEmpty()
                 .filter { it.offerId == null }
                 .ifEmpty { details?.subscriptionOfferDetails.orEmpty() }
                 .distinctBy { it.basePlanId }
-                .sortedBy { months(it.lastPhase?.billingPeriod) }
+                .sortedByDescending { months(it.lastPhase?.billingPeriod) }
             _options.value = offers.mapNotNull { o ->
                 o.lastPhase?.let { Premium.Option(label(it.billingPeriod), it.formattedPrice) }
             }
