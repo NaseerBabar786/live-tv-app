@@ -1,0 +1,25 @@
+name: Ad 5 AI video
+on:
+  push:
+    branches: [ad5-ai-video]
+    paths: ["tools/ad5/**", ".github/workflows/ad5-video.yml"]
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-noto-core
+          pip install -q gradio_client edge-tts numpy pillow requests
+      - name: Run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          cd tools/ad5
+          bash run.sh
