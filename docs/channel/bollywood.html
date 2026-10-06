@@ -12,6 +12,10 @@
      channel. Opened full screen by the Free Live TV app (?app=1) and linked from /channel. */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
   #player { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* Like a TV channel: nobody can pause, skip or open YouTube from the picture. A clear sheet
+     over the player takes every click and tap; YouTube's own buttons are switched off below. */
+  #player, iframe#player { pointer-events: none; }
+  .shield { position: absolute; inset: 0; background: transparent; }
   .bug { position: absolute; top: 3%; right: 2.5%; width: 8%; opacity: .85; pointer-events: none; }
   .now { position: absolute; left: 3%; bottom: 10%; max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; }
   .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
@@ -27,6 +31,7 @@
 </head>
 <body>
 <div id="player"></div>
+<div class="shield" id="shield"></div>
 <img class="bug" src="logos/bazaar-hits.png" alt="">
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
@@ -74,26 +79,32 @@ window.onYouTubeIframeAPIReady = () => {
   $("msg").remove();
   player = new YT.Player("player", {
     videoId: songs[at].id,
-    playerVars: { autoplay: 1, controls: app ? 0 : 1, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, origin: location.origin },
+    playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, origin: location.origin },
     events: {
       onReady: e => {
         if (!app) { e.target.mute(); $("sound").hidden = false; }
         e.target.playVideo();
         showNow();
       },
-      onStateChange: e => { if (e.data === YT.PlayerState.ENDED) play(1); },
+      // It never stays paused: a channel keeps playing.
+      onStateChange: e => {
+        if (e.data === YT.PlayerState.ENDED) play(1);
+        else if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
+      },
       // A video its label won't let others play here is skipped.
       onError: () => setTimeout(() => play(1), 1000),
     },
   });
 };
 $("sound").onclick = () => { player.unMute(); player.playVideo(); $("sound").hidden = true; };
-// Remote and keyboard: right or down for the next song, left or up for the one before.
+// A tap or OK only shows what's playing; the songs run on by themselves, like a TV channel.
+$("shield").onclick = () => songs.length && showNow();
+// Double-click for full screen (YouTube's own button is off).
+$("shield").ondblclick = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {});
 document.addEventListener("keydown", e => {
   if (!player || !songs.length) return;
-  if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "MediaTrackNext") { play(1); e.preventDefault(); }
-  if (e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "MediaTrackPrevious") { play(-1); e.preventDefault(); }
-  if (e.key === "Enter") showNow();
+  if (e.key === "Enter" || e.key === " ") { showNow(); e.preventDefault(); }
+  if (e.key === "MediaPlayPause" || e.key === "MediaPause" || e.key === "k") e.preventDefault();
 });
 </script>
 </body>
