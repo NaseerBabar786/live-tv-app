@@ -1,0 +1,545 @@
+{
+ "name": "Bazaar Travel",
+ "built": "2026-10-06 18:16 UTC",
+ "videos": [
+  {
+   "id": "5h27x35Oi70",
+   "title": "Pampore, the land of Saffron | Jammu and Kashmir",
+   "label": "Incredible India",
+   "mins": 2.1666666666666665,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "UkZupj7YAAc",
+   "title": "BEST Beaches in Okinawa, Japan | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 3.45,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "CtBOoHuk0Bo",
+   "title": "Inside Morocco’s UNDERRATED Capital | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 4.133333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "DLGm_-GvDw4",
+   "title": "Inside Mexico’s BOOMING Wine Country | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 4.166666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "H6_l9hNAYUI",
+   "title": "The BEST Way to Explore California’s Redwoods | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 2.5166666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "crh_-z7jJ5k",
+   "title": "How to REALLY SEE Veneto, Italy | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 3.85,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "rfCqMbzmyzE",
+   "title": "Is This France's Most EPIC Road Trip? | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 4.216666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "vHUd1AtPklM",
+   "title": "One of the Pacific’s Most UNIQUE Islands | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 3.9,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "-o8KkY45ATI",
+   "title": "Watch This BEFORE Visiting Patagonia, Argentina | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 3.75,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "G62hTMqD8Y0",
+   "title": "Exploring India by TOY TRAIN | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 3.45,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "LlJE3dkPMLI",
+   "title": "Two Ways to Texas",
+   "label": "Lonely Planet",
+   "mins": 5.933333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "rEfuZRfeWVY",
+   "title": "Staying INSIDE Kruger National Park | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 3.05,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "7nTLkG7jAAs",
+   "title": "Sardinia’s STUNNING Local Spots | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 2.5166666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "HOEhSn0FbVI",
+   "title": "Top Chef Virgilio Martinez’s ULTIMATE Guide To Peru | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 3.65,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "tSrYfeJEPIA",
+   "title": "The BEST Way To See Vietnam’s Mekong River | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 4.016666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "sGGmiRIOMD0",
+   "title": "Watch This BEFORE You Stay In Japan’s Ryokans | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 2.966666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "1HqTLQ2ClGI",
+   "title": "The SURPRISING Wonders of Nevada",
+   "label": "Lonely Planet",
+   "mins": 7.483333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "S3Q1LRNjYV0",
+   "title": "Spain’s Next BIG Holiday Escape | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 2.6,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "Hm3ykyCmPjk",
+   "title": "How To REALLY See Mexico City | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 2.6166666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "AhKepCcA-Ig",
+   "title": "South Korea’s MUST-SEE Island Escape | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 2.8666666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "M17o989NwCA",
+   "title": "Inside India’s REAL Spice Capital | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 2.6,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "8_aFtMNVQpc",
+   "title": "What To Know BEFORE Visiting New Zealand | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 3.683333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "qOK3WvkI5vg",
+   "title": "The WILDEST Safari Destination In Africa | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 3.033333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "go5uXCeC-CE",
+   "title": "The Ultimate LOCAL Guide To Cartagena | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 4.25,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ETPK3gSWvOs",
+   "title": "The SURPRISING Year-Round Vacation Spot | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 3.4166666666666665,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "JCi7N6VzAT4",
+   "title": "What You HAVE To See In British Columbia | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "mins": 2.9,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "PcZQiRl3tRk",
+   "title": "Four Thrilling Activities That'll Make You Fall In Love with Utah",
+   "label": "Lonely Planet",
+   "mins": 4.816666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "nUqnExmyT4I",
+   "title": "Take a Sensory Adventure Across Nevada",
+   "label": "Lonely Planet",
+   "mins": 7.75,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "dD7FK91KHTc",
+   "title": "The Ultimate Locals’ Guide to Spain",
+   "label": "Lonely Planet",
+   "mins": 11.783333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "UxVPPVbc2sM",
+   "title": "Why POLAND Is Your Next Epic Europe Trip | Lonely Planet's Best in Travel 2024",
+   "label": "Lonely Planet",
+   "mins": 4.833333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "LFT-KVSGQG8",
+   "title": "The Sky. The Sea. The Desert. The City. All Beyond The Ordinary!",
+   "label": "Visit Dubai",
+   "mins": 2.2333333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "Y3-dH_qCKpg",
+   "title": "Dubai Stories | Meet the People Shaping Dubai’s Creative Spirit",
+   "label": "Visit Dubai",
+   "mins": 2.0,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "cciBKxDzpaM",
+   "title": "The Making of \"Dubai. Summer Moments\"",
+   "label": "Visit Dubai",
+   "mins": 3.1,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "jui_We1VPNA",
+   "title": "Jam with Anirudh Ravichander and Arqam Al Abri: A musical collaboration beyond borders",
+   "label": "Visit Dubai",
+   "mins": 3.2,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ZVE4g-lG7Tw",
+   "title": "أحدث مستجدات وجهة دبي",
+   "label": "Visit Dubai",
+   "mins": 3.216666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "02PWh_RjKPw",
+   "title": "Dubai. Beyond Real",
+   "label": "Visit Dubai",
+   "mins": 3.5,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "30iKq4j3oTg",
+   "title": "How to Make Gözleme | Turkish Cuisine",
+   "label": "Türkiye",
+   "mins": 3.3,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "Sr-Xqujy5iU",
+   "title": "How to Make Menemen | Turkish Cuisine",
+   "label": "Türkiye",
+   "mins": 4.016666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "t48oEBJnX0s",
+   "title": "Making of \"Taste of İzmir\" Mini-Series",
+   "label": "Türkiye",
+   "mins": 21.783333333333335,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "Z-kV7ELcsPs",
+   "title": "Making of \"Whisper of Origins\" Mini-Series",
+   "label": "Türkiye",
+   "mins": 16.3,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "mm1FpbA-JIc",
+   "title": "Making of \"Turquoise Summer\" Mini-Series",
+   "label": "Türkiye",
+   "mins": 16.683333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "Im4doE5L3Q4",
+   "title": "Making of \"Heartbound: Turkish Black Sea\" Mini-Series",
+   "label": "Türkiye",
+   "mins": 15.9,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "uf2UNkJw1gw",
+   "title": "How to Make Çılbır | Turkish Cuisine",
+   "label": "Türkiye",
+   "mins": 4.416666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "QAfuFrKJIjs",
+   "title": "How to Make Hünkar Beğendi | Turkish Cuisine",
+   "label": "Türkiye",
+   "mins": 3.6166666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "fZ4gOXZfQe8",
+   "title": "The Knot: Gateway to Anatolia - Episode 1: The First Knot | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.9833333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "tzIXNGwnlm0",
+   "title": "The Knot: Gateway to Anatolia - Episode 2: The Clue | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.6333333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "HgwYgs7huZs",
+   "title": "The Knot: Gateway to Anatolia- Episode3: This Is as Far as It Goes | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.4166666666666665,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "QpF7rxuYl1w",
+   "title": "The Knot: Gateway to Anatolia - Episode 4: Eyes of the Wind | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.95,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "FJkmqhLWoks",
+   "title": "The Knot: Gateway to Anatolia - Episode 5: The Spark of Love | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.0166666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "D10Aqbr1CAI",
+   "title": "The Knot: Gateway to Anatolia - Episode 6: Love or Competition | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.85,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "G_DqWoiKMi8",
+   "title": "The Knot: Gateway to Anatolia - Episode 7: Tit for Tat | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.2,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "sV4LLKkJwNU",
+   "title": "The Knot: Gateway to Anatolia - Episode 8: Stillness Within Strength|Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.066666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "mrm6Eay1rZc",
+   "title": "The Knot: Gateway to Anatolia - Episode 9: May the Best Person Win | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.6333333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "-Q58dKcs1i4",
+   "title": "The Knot: Gateway to Anatolia - Episode 10: Trust | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.9833333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "CCljUpbMpas",
+   "title": "The Knot: Gateway to Anatolia - Episode 11: Resolution | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.966666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "86bcBvvtYzA",
+   "title": "Mersin: A Different Side of the Mediterranean",
+   "label": "Türkiye",
+   "mins": 2.65,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "7hb9cD4s8wA",
+   "title": "How to Make Bursa Kebap | Turkish Cuisine",
+   "label": "Türkiye",
+   "mins": 4.033333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "w0_STavS3N0",
+   "title": "Heartbound: Turkish Black Sea: Episode 1 – The Escape | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.3666666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "vzT9qfsTZFo",
+   "title": "Heartbound: Turkish Black Sea: Episode 2 – To Go or To Stay? | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 3.033333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "cxKIwKnhzrk",
+   "title": "Heartbound: Turkish Black Sea: Episode 3 – The Shadow Behind Me | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.966666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "gv6JCIMrreQ",
+   "title": "Heartbound: Turkish Black Sea: Episode 4 –  Before the Storm | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.966666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "BT2b_JpVCsA",
+   "title": "Heartbound: Turkish Black Sea: Episode 5 –  Course of the Heart | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 3.0,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "AuRYaZd3boM",
+   "title": "Heartbound: Turkish Black Sea: Episode 6 –  One Step Closer | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.35,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "HFqI6t2Is68",
+   "title": "Discover Panamá by boat with captain Juan Fischer | The Professionals",
+   "label": "Expedia",
+   "mins": 3.0,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "uztdKUPJGvA",
+   "title": "Hannah Kosh Wants No Feet On Her Flights",
+   "label": "Expedia",
+   "mins": 3.066666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "wi_eIHycgdU",
+   "title": "Rocsi Diaz Has The Right To Recline Her Seat!",
+   "label": "Expedia",
+   "mins": 3.15,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "QPlwEVVCv9Q",
+   "title": "Every Mom Rule Nicole Guerrero Break's the Second She Gets to the Airport",
+   "label": "Expedia",
+   "mins": 2.8666666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "YqVYsADMH-M",
+   "title": "Chrishell Stause's Travel Rules (Selling Sunset Star Spills)",
+   "label": "Expedia",
+   "mins": 3.75,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "rXyjYS-EuUM",
+   "title": "Discover Panama’s nature with conservationist Bennison Sherrod Lopez | The Professionals",
+   "label": "Expedia",
+   "mins": 3.0,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "bJUpu8xATGw",
+   "title": "Seoul Travel Guide: The ULTIMATE Neighborhoods to Explore",
+   "label": "Expedia",
+   "mins": 8.45,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "CVocx2_RAvE",
+   "title": "Gold Coast, Australia Travel Guide: MUST-SEE beaches, amusement parks and more",
+   "label": "Expedia",
+   "mins": 5.683333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "e9EXGHxv-ps",
+   "title": "The ULTIMATE San Francisco Neighborhood Guide 2026",
+   "label": "Expedia",
+   "mins": 8.5,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "_oTgBj0yf3s",
+   "title": "Creative inspiration awaits in Cologne, Hannover, and Münster, Germany | Next Stop",
+   "label": "Expedia",
+   "mins": 2.1166666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "utgbGMpZndw",
+   "title": "The ULTIMATE Lisbon Travel Guide: Top Neighborhoods to Explore",
+   "label": "Expedia",
+   "mins": 9.566666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "LnTsw29Hutc",
+   "title": "Edinburgh Travel Guide: MUST-SEE Spots in Old Town, New Town and More",
+   "label": "Expedia",
+   "mins": 8.016666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "xP9-seFMmPw",
+   "title": "Travel Goals: Budapest | Exploring Hungary with Liverpool FC Players",
+   "label": "Expedia",
+   "mins": 2.9833333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "YdkvGbOahY8",
+   "title": "Discover Panama's food scene with chef Isaac Villaverde | The Professionals",
+   "label": "Expedia",
+   "mins": 2.55,
+   "found": "2026-10-06"
+  }
+ ]
+}
