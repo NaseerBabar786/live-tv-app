@@ -1,0 +1,52 @@
+name: AI dub (test)
+
+# Test of AI dubbing into Urdu and Hindi, only for the Blender open movies (CC BY) on the
+# "channel-media" release. See tools/ai_dub.py. Step "prepare" writes down the English lines;
+# after the lines are translated into tools/dub/, step "voice" makes the dubbed MP4s.
+
+on:
+  workflow_dispatch:
+    inputs:
+      step:
+        description: "prepare or voice"
+        required: true
+        default: prepare
+      films:
+        description: "Films, comma separated (names on the channel-media release)"
+        required: true
+        default: tears-of-steel,elephants-dream
+      langs:
+        description: "Languages for the voice step"
+        required: true
+        default: ur,hi
+
+jobs:
+  dub:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          pip install -q numpy
+          if [ "${{ inputs.step }}" = prepare ]; then
+            pip install -q torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+            pip install -q demucs faster-whisper soundfile
+          else
+            pip install -q edge-tts
+          fi
+      - name: Run
+        run: python tools/ai_dub.py "${{ inputs.step }}" "${{ inputs.films }}" "${{ inputs.langs }}"
+      - name: Upload to the channel-media release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # The release must stay a pre-release so "latest" keeps pointing at the app.
+          gh release upload channel-media out/* -R "$GITHUB_REPOSITORY" --clobber
+          gh release edit channel-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false
