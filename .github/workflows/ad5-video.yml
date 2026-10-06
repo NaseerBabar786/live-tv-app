@@ -29,7 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           ONLY: ${{ matrix.scene }}
-          VOICES: "0"
+          VOICES: ${{ matrix.scene == 's5' && '1' || '0' }}
           TRY_SEEDS: ${{ matrix.scene == 's5' && '11,22,33,44,55,66' || '' }}
         run: |
           set -eu

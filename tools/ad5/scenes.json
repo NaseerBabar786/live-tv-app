@@ -86,8 +86,8 @@
  "end": {
   "dur": 5.0,
   "voice": "narrator",
-  "ur": "کیبل ٹی وی۔ بالکل فری۔ آج ہی لگائیں: ٹی وی ڈاٹ بلک بازار ڈاٹ سی اے",
-  "en": "Cable TV. Totally free. Get it today: tv.bulkbazaar.ca"
+  "ur": "کیبل ٹی وی، بالکل فری! ٹی وی ڈاٹ بلک بازار ڈاٹ سی اے",
+  "en": "Cable TV, totally free! tv.bulkbazaar.ca"
  },
  "voices": {
   "abbu": [
@@ -111,9 +111,9 @@
    "-5%"
   ],
   "narrator": [
-   "ur-IN-SalmanNeural",
-   "-4Hz",
-   "+0%"
+   "ur-PK-AsadNeural",
+   "+2Hz",
+   "+12%"
   ]
  }
 }
