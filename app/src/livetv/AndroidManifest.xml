@@ -10,6 +10,8 @@
 
     <!-- Settings offers to open App Bazaar only when a web browser is installed. -->
     <queries>
+        <!-- Settings opens the App Bazaar app when it is installed. -->
+        <package android:name="com.naseerbabar.appbazaar" />
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.BROWSABLE" />
