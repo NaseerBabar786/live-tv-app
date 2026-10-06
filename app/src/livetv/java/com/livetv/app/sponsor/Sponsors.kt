@@ -99,7 +99,7 @@ object Sponsors {
                 if (id == TICKER_ID) {
                     val on = f.optJSONObject("active")?.optBoolean("booleanValue") ?: false
                     // Words saved before the rename to Cable TV (1.9.45) still say the old name.
-                    ticker = f.text("text").trim().replace("Cable TV", "Cable TV").takeIf { on && it.isNotEmpty() }
+                    ticker = f.text("text").trim().replace("Free Live TV", "Cable TV").takeIf { on && it.isNotEmpty() }
                     continue
                 }
                 arr.put(

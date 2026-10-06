@@ -43,6 +43,9 @@ class MainActivity : ComponentActivity() {
     /** Cable TV's Games section is open. */
     private var showGames by mutableStateOf(false)
 
+    /** Our YouTube-run channels that couldn't play there this session; their free-film schedule plays instead. */
+    private var fellBack by mutableStateOf(setOf<String>())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Watching.init(this)
@@ -69,6 +72,10 @@ class MainActivity : ComponentActivity() {
             GamesScreen(onClose = { showGames = false })
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
+        } else if (playing != null && MyChannel.webPage(playing) != null && playing.url !in fellBack) {
+            // Our channels that run like Bazaar Hits; their free-film schedule plays if YouTube won't.
+            WebChannel(MyChannel.webPage(playing)!! + "&v=" + BuildConfig.VERSION_CODE, onBack = viewModel::stop,
+                onFallback = { fellBack = fellBack + playing.url })
         } else if (playing != null && playing.url == MyChannel.BOLLYWOOD_URL) {
             WebChannel(MyChannel.BOLLYWOOD_URL + "?app=1&v=" + BuildConfig.VERSION_CODE, onBack = viewModel::stop)
         } else if (playing != null && YouTube.videoId(playing.url) != null) {
