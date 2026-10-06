@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Music",
- "built": "2026-10-06 19:04 UTC",
+ "built": "2026-10-06 19:52 UTC",
  "videos": [
   {
    "id": "jsBCSNnQpuo",
@@ -444,10 +444,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "Tq3LW8ZQ91w",
-   "title": "Coco | Official Video | Sukh-E ft. Shweta Sharda | Jaani | Arvindr Khaira | Desi Melodies",
+   "id": "gkds6yVdDLI",
+   "title": "Paon Ki Jutti - Jyoti Nooran | Isha Malviya | Shiv Panditt | Jaani | Arvvindr S Khaira | Bunny",
    "label": "Desi Melodies",
-   "mins": 2.9166666666666665,
+   "mins": 3.933333333333333,
    "found": "2026-10-06"
   },
   {
@@ -458,24 +458,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "gkds6yVdDLI",
-   "title": "Paon Ki Jutti - Jyoti Nooran | Isha Malviya | Shiv Panditt | Jaani | Arvvindr S Khaira | Bunny",
+   "id": "Tq3LW8ZQ91w",
+   "title": "Coco | Official Video | Sukh-E ft. Shweta Sharda | Jaani | Arvindr Khaira | Desi Melodies",
    "label": "Desi Melodies",
-   "mins": 3.933333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "5KkHLDkPcq8",
-   "title": "BPraak - Zohrajabeen (Video) | Randeep Hooda, Priyanka Chahar Choudhary | Jaani | Arvindr Khaira",
-   "label": "Desi Melodies",
-   "mins": 4.366666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "BtQp2U6hJII",
-   "title": "White Brown Black - Avvy Sra | Karan Aujla | Jaani | Amanninder Singh | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 2.85,
+   "mins": 2.9166666666666665,
    "found": "2026-10-06"
   },
   {
@@ -486,10 +472,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "FMJCjRU1W_s",
-   "title": "Mohammad Faiz - Tu Hi Tu | Jitendra Kumar | Zahrah S Khan | Arvvindr S Khaira | Bunny | Sagar",
+   "id": "BtQp2U6hJII",
+   "title": "White Brown Black - Avvy Sra | Karan Aujla | Jaani | Amanninder Singh | Desi Melodies",
    "label": "Desi Melodies",
-   "mins": 4.233333333333333,
+   "mins": 2.85,
    "found": "2026-10-06"
   },
   {
@@ -500,17 +486,17 @@
    "found": "2026-10-06"
   },
   {
-   "id": "JQDHOIxoIwo",
-   "title": "Mohammad Faiz, Asees Kaur - Tu Hi Tu (Unplugged) | Sagar | Bunny | Jaani | Arvvindr S Khaira",
+   "id": "FMJCjRU1W_s",
+   "title": "Mohammad Faiz - Tu Hi Tu | Jitendra Kumar | Zahrah S Khan | Arvvindr S Khaira | Bunny | Sagar",
    "label": "Desi Melodies",
-   "mins": 3.183333333333333,
+   "mins": 4.233333333333333,
    "found": "2026-10-06"
   },
   {
-   "id": "hMy5za-m5Ew",
-   "title": "FILHALL | Akshay Kumar Ft Nupur Sanon | BPraak | Jaani | Arvindr Khaira | Ammy Virk | DESI MELODIES",
+   "id": "5KkHLDkPcq8",
+   "title": "BPraak - Zohrajabeen (Video) | Randeep Hooda, Priyanka Chahar Choudhary | Jaani | Arvindr Khaira",
    "label": "Desi Melodies",
-   "mins": 5.5,
+   "mins": 4.366666666666666,
    "found": "2026-10-06"
   },
   {
@@ -521,6 +507,13 @@
    "found": "2026-10-06"
   },
   {
+   "id": "hMy5za-m5Ew",
+   "title": "FILHALL | Akshay Kumar Ft Nupur Sanon | BPraak | Jaani | Arvindr Khaira | Ammy Virk | DESI MELODIES",
+   "label": "Desi Melodies",
+   "mins": 5.5,
+   "found": "2026-10-06"
+  },
+  {
    "id": "DUwlGduupRI",
    "title": "Filhaal2 Mohabbat | Akshay Kumar Ft Nupur Sanon | Ammy Virk | BPraak | Jaani | Arvindr Khaira",
    "label": "Desi Melodies",
@@ -528,10 +521,17 @@
    "found": "2026-10-06"
   },
   {
-   "id": "cAMHx-m9oh8",
-   "title": "Kya Loge Tum | Akshay Kumar | Amyra Dastur | BPraak | Jaani | Arvindr Khaira | Zohrajabeen",
+   "id": "JQDHOIxoIwo",
+   "title": "Mohammad Faiz, Asees Kaur - Tu Hi Tu (Unplugged) | Sagar | Bunny | Jaani | Arvvindr S Khaira",
    "label": "Desi Melodies",
-   "mins": 4.016666666666667,
+   "mins": 3.183333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "7lWeQs8Firo",
+   "title": "COKA : Sukh-E Muzical Doctorz | Alankrita Sahai | Jaani | Arvindr Khaira | DM",
+   "label": "Desi Melodies",
+   "mins": 3.0166666666666666,
    "found": "2026-10-06"
   },
   {
@@ -542,17 +542,17 @@
    "found": "2026-10-06"
   },
   {
+   "id": "cAMHx-m9oh8",
+   "title": "Kya Loge Tum | Akshay Kumar | Amyra Dastur | BPraak | Jaani | Arvindr Khaira | Zohrajabeen",
+   "label": "Desi Melodies",
+   "mins": 4.016666666666667,
+   "found": "2026-10-06"
+  },
+  {
    "id": "OKuGTy7D52c",
    "title": "Kuch Bhi Ho Jaye | B Praak | Jaani | Arvindr Khaira | DM | New Romantic song 2020",
    "label": "Desi Melodies",
    "mins": 5.016666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "7lWeQs8Firo",
-   "title": "COKA : Sukh-E Muzical Doctorz | Alankrita Sahai | Jaani | Arvindr Khaira | DM",
-   "label": "Desi Melodies",
-   "mins": 3.0166666666666666,
    "found": "2026-10-06"
   },
   {
@@ -773,6 +773,13 @@
    "found": "2026-10-06"
   },
   {
+   "id": "rv9qC2mMRjo",
+   "title": "Boss : Jass Manak (Official Video) Satti Dhillon | Ri | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.8333333333333335,
+   "found": "2026-10-06"
+  },
+  {
    "id": "OKDGEYVzIGI",
    "title": "Defender (Full Video) Harf Cheema - Sudesh Kumari - Sruishty Mann - Latest Punjabi Song - Geet MP3",
    "label": "Geet MP3",
@@ -787,13 +794,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "haYm5k6h5yc",
-   "title": "Yaari : Guri (Official Video) Sehnaz Gill | Deep Jandu | Arvindr Khaira | Punjabi Songs | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 4.233333333333333,
-   "found": "2026-10-06"
-  },
-  {
    "id": "HG96KYzCnbY",
    "title": "Suit Punjabi : Jass Manak (Official Video) Satti Dhillon | Punjabi Song | Geet MP3",
    "label": "Geet MP3",
@@ -801,10 +801,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "rv9qC2mMRjo",
-   "title": "Boss : Jass Manak (Official Video) Satti Dhillon | Ri | Punjabi Songs | Geet MP3",
+   "id": "haYm5k6h5yc",
+   "title": "Yaari : Guri (Official Video) Sehnaz Gill | Deep Jandu | Arvindr Khaira | Punjabi Songs | Geet MP3",
    "label": "Geet MP3",
-   "mins": 2.8333333333333335,
+   "mins": 4.233333333333333,
    "found": "2026-10-06"
   },
   {
@@ -850,13 +850,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "ltEqVQoK2gs",
-   "title": "Sun Sajna - Deep Jandu & Chitralekha Sen (Official Video) Punjabi Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.283333333333333,
-   "found": "2026-10-06"
-  },
-  {
    "id": "sNhAQzopNRM",
    "title": "Tu Te Kehndi C : BOHEMIA Ft. Divine (Official Video) Deep Jandu | New Punjabi Song | Geet MP3",
    "label": "Geet MP3",
@@ -864,10 +857,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "LnSVh-0nPao",
-   "title": "Gede : Karan Randhawa (Official Video) Rav Dhillon | Simar Kaur | Punjabi Song Geet MP3",
+   "id": "ltEqVQoK2gs",
+   "title": "Sun Sajna - Deep Jandu & Chitralekha Sen (Official Video) Punjabi Song | Geet MP3",
    "label": "Geet MP3",
-   "mins": 3.35,
+   "mins": 3.283333333333333,
    "found": "2026-10-06"
   },
   {
@@ -878,17 +871,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "PFUGyV46AuM",
-   "title": "TOM And JERRY (Official Video) Satbir Aujla | Satti Dhillon | Divya Puri | Punjabi Songs | Geet MP3",
+   "id": "LnSVh-0nPao",
+   "title": "Gede : Karan Randhawa (Official Video) Rav Dhillon | Simar Kaur | Punjabi Song Geet MP3",
    "label": "Geet MP3",
-   "mins": 3.75,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "FTjZGbVCWX0",
-   "title": "Vibe : Satbir Aujla (Full Song) Punjabi Songs | Punjabi Songs | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.0833333333333335,
+   "mins": 3.35,
    "found": "2026-10-06"
   },
   {
@@ -934,6 +920,13 @@
    "found": "2026-10-06"
   },
   {
+   "id": "eYSaHXXFIBU",
+   "title": "Sanson Ki Mala Pe Simron Mein - Ustad Nusrat Fateh Ali Khan - OSA Official HD Video",
+   "label": "Oriental Star Agencies",
+   "mins": 13.533333333333333,
+   "found": "2026-10-06"
+  },
+  {
    "id": "yTkaKSVu_xU",
    "title": "Chandni Raatein - Partners in Rhyme Ft. Shamsa Kanwal - OSA Official HD Video",
    "label": "Oriental Star Agencies",
@@ -941,10 +934,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "mBcGSdafEHc",
-   "title": "Tere Bina Rogi Hoye Pyase Nain | Noor Jehan & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
+   "id": "Lmv_WI0aLQE",
+   "title": "Man Atkeya Beparwah De Naal | Nusrat Fateh Ali Khan | complete full version | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 8.15,
+   "mins": 14.583333333333334,
    "found": "2026-10-06"
   },
   {
@@ -955,45 +948,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "FJRBjGqrizI",
-   "title": "Kangna - Shahzad Roy - OSA Official HD Video",
+   "id": "ocMEmQ3s8qE",
+   "title": "Kise Da Yaar Na Vichre | Ustad Nusrat Fateh Ali Khan | Official Version | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 3.5166666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "lNyr6xs-EM8",
-   "title": "TERI YAAD - SAJJAD ALI - OSA OFFICIAL",
-   "label": "Oriental Star Agencies",
-   "mins": 5.733333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "eYSaHXXFIBU",
-   "title": "Sanson Ki Mala Pe Simron Mein - Ustad Nusrat Fateh Ali Khan - OSA Official HD Video",
-   "label": "Oriental Star Agencies",
-   "mins": 13.533333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Crwo6Tuhtw0",
-   "title": "Meri Zindagi Hai Tu (Remix) | Nusrat Fateh Ali Khan | official HD video | OSA Worldwide",
-   "label": "Oriental Star Agencies",
-   "mins": 7.95,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zbDLkWOprVE",
-   "title": "Sanware Tore Bin Jiya | Humera Channa & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
-   "label": "Oriental Star Agencies",
-   "mins": 7.05,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "f-s4mM9ls8o",
-   "title": "Nit Khair Mangan Sohnia Mein Teri - Ustad Nusrat Fateh Ali Khan - OSA Official HD Video",
-   "label": "Oriental Star Agencies",
-   "mins": 14.416666666666666,
+   "mins": 7.216666666666667,
    "found": "2026-10-06"
   },
   {
@@ -1071,6 +1029,62 @@
    "title": "Entry Funkin' OST - Reality",
    "label": "Saga Music",
    "mins": 2.0833333333333335,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "PFUGyV46AuM",
+   "title": "TOM And JERRY (Official Video) Satbir Aujla | Satti Dhillon | Divya Puri | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.75,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "FTjZGbVCWX0",
+   "title": "Vibe : Satbir Aujla (Full Song) Punjabi Songs | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.0833333333333335,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "mBcGSdafEHc",
+   "title": "Tere Bina Rogi Hoye Pyase Nain | Noor Jehan & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 8.15,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "FJRBjGqrizI",
+   "title": "Kangna - Shahzad Roy - OSA Official HD Video",
+   "label": "Oriental Star Agencies",
+   "mins": 3.5166666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "lNyr6xs-EM8",
+   "title": "TERI YAAD - SAJJAD ALI - OSA OFFICIAL",
+   "label": "Oriental Star Agencies",
+   "mins": 5.733333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "Crwo6Tuhtw0",
+   "title": "Meri Zindagi Hai Tu (Remix) | Nusrat Fateh Ali Khan | official HD video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 7.95,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "zbDLkWOprVE",
+   "title": "Sanware Tore Bin Jiya | Humera Channa & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 7.05,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "f-s4mM9ls8o",
+   "title": "Nit Khair Mangan Sohnia Mein Teri - Ustad Nusrat Fateh Ali Khan - OSA Official HD Video",
+   "label": "Oriental Star Agencies",
+   "mins": 14.416666666666666,
    "found": "2026-10-06"
   },
   {
