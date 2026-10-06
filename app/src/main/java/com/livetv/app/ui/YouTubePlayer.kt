@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.graphics.Bitmap
 import android.view.View
+import android.view.ViewGroup
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
@@ -122,6 +124,16 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
                         if (request.url.host == "fallback") onFallback?.invoke()
                         return true
                     }
+
+                    // A web page that runs out of memory (YouTube on a small TV) loses its renderer; unhandled,
+                    // that closes the whole app (1.9.58).
+                    override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+                        (view.parent as? ViewGroup)?.removeView(view)
+                        view.destroy()
+                        if (webView === view) webView = null
+                        onFallback?.invoke()
+                        return true
+                    }
                 }
                 webChromeClient = object : WebChromeClient() {
                     // No grey placeholder picture over the video while it starts.
@@ -163,6 +175,16 @@ fun WebPreview(url: String, modifier: Modifier = Modifier, onFallback: (() -> Un
                         if (request.url.host == "fallback") onFallback?.invoke()
                         return true
                     }
+
+                    // A web page that runs out of memory (YouTube on a small TV) loses its renderer; unhandled,
+                    // that closes the whole app (1.9.58).
+                    override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+                        (view.parent as? ViewGroup)?.removeView(view)
+                        view.destroy()
+                        if (webView === view) webView = null
+                        onFallback?.invoke()
+                        return true
+                    }
                 }
                 webChromeClient = object : WebChromeClient() {
                     override fun getDefaultVideoPoster(): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
@@ -184,6 +206,14 @@ private fun embedView(context: Context, src: String): WebView = WebView(context)
     settings.domStorageEnabled = true
     settings.mediaPlaybackRequiresUserGesture = false
     webChromeClient = WebChromeClient()
+    webViewClient = object : WebViewClient() {
+        // Its renderer running out of memory must not close the whole app (1.9.58).
+        override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+            (view.parent as? ViewGroup)?.removeView(view)
+            view.destroy()
+            return true
+        }
+    }
     // Embedded players refuse pages with no origin, so the page is given our site's.
     val html = """
         <!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
