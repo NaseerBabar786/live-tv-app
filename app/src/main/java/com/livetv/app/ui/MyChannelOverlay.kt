@@ -51,9 +51,9 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                     .align(corner)
                     .padding(horizontal = unit * 2.5f, vertical = unit * 2f)
                     .padding(bottom = if (bottom && c.ticker != null) tickerHeight else 0.dp)
-                    // Our logos are wide (1.9.47); a square one still fits in the same height.
-                    .height(unit * 7f)
-                    .widthIn(max = unit * 24f)
+                    // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
+                    .height(unit * 9f)
+                    .widthIn(max = unit * 26f)
                     .alpha(0.85f),
             )
         }

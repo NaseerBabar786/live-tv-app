@@ -109,4 +109,11 @@ class MyChannelTest {
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=filmein&app=1", MyChannel.webPage(films.channel))
         assertEquals(null, MyChannel.webPage(MyChannel.parse(JSONObject("""{"videos":[]}""")).channel))
     }
+
+    @Test
+    fun ourLogosCarryAVersionSoTvsFetchTheNewPicture() {
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png?v=3", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
+        assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
+    }
 }
