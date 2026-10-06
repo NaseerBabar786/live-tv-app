@@ -37,6 +37,7 @@ import com.claudenotes.app.ui.SendChoiceDialog
 import com.claudenotes.app.ui.SettingsDialog
 import com.claudenotes.app.ui.UpdateDialog
 import com.claudenotes.app.ui.UpdateViewModel
+import com.claudenotes.app.ui.pendingRelease
 import com.claudenotes.app.ui.VoiceInput
 import kotlinx.coroutines.launch
 
@@ -161,7 +162,7 @@ class MainActivity : ComponentActivity() {
                 val update by updates.update.collectAsStateWithLifecycle()
                 UpdateDialog(
                     state = update,
-                    onInstall = { (update as? com.claudenotes.app.ui.UpdateState.ReadyToInstall)?.let { updates.install(it.release) } },
+                    onInstall = { update.pendingRelease?.let { updates.install(it) } },
                     onDismiss = updates::dismiss,
                 )
             }

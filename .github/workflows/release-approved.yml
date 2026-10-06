@@ -1,0 +1,137 @@
+name: Release approved build
+
+# The owner's release rule: every build first goes to the owner-only "test" pre-release (see
+# build-apk.yml). Nothing reaches users until the owner has tested it and said it is good. Then this
+# workflow (run by hand, or by Claude after the owner's yes) copies the tested APKs from "test" to
+# the public releases that the apps, the website and App Bazaar read. Apps then show a
+# "New update available" reminder; they never update by themselves.
+# App Bazaar's list (apps.bulkbazaar.ca/apps.json) follows within the hour (its sync job reads these
+# public downloads), or at once by running "Sync app versions" in NaseerBabar786/app-store.
+on:
+  workflow_dispatch:
+    inputs:
+      apps:
+        description: "Which tested app(s) to send to everyone"
+        type: choice
+        default: cable-tv
+        options:
+          - cable-tv
+          - live-tv-max
+          - app-bazaar
+          - iqra-quran
+          - live-cam
+          - multi-chat
+          - notes-for-claude
+          - all
+      build:
+        description: "Only release if the test build is this build number (blank = the current test build)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-approved
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      APPS: ${{ inputs.apps }}
+    steps:
+      - name: Download the tested build
+        run: |
+          gh release download test --pattern '*' --clobber
+          cat versions.json
+          want="${{ inputs.build }}"
+          have=$(jq -r .build versions.json)
+          if [ -n "$want" ] && [ "$want" != "$have" ]; then
+            echo "::error::The test build is now $have, not $want. A newer build replaced the one that was tested; test it first."
+            exit 1
+          fi
+          echo "BUILD=$have" >> "$GITHUB_ENV"
+          echo "COMMIT=$(jq -r .commit versions.json)" >> "$GITHUB_ENV"
+
+      # Picked when APPS is the app's id or "all".
+      - name: Cable TV
+        if: inputs.apps == 'cable-tv' || inputs.apps == 'all'
+        run: |
+          version=$(jq -r '."cable-tv"' versions.json)
+          tag="v${version}-build${BUILD}"
+          if gh release view "$tag" > /dev/null 2>&1; then
+            gh release upload "$tag" LiveTV.apk --clobber
+            gh release edit "$tag" --latest
+          else
+            gh release create "$tag" LiveTV.apk \
+              --title "Cable TV $version (build $BUILD)" \
+              --notes "Tested and approved by the owner. Built from $COMMIT." \
+              --target "$COMMIT" --latest
+          fi
+
+      # One fixed "live-tv-max" release; the app reads its version from the title ("Live TV Max 1.0.0").
+      - name: Live TV Max
+        if: inputs.apps == 'live-tv-max' || inputs.apps == 'all'
+        run: |
+          version=$(jq -r '."live-tv-max"' versions.json)
+          if gh release view live-tv-max > /dev/null 2>&1; then
+            gh release upload live-tv-max LiveTVMax.apk --clobber
+          else
+            gh release create live-tv-max LiveTVMax.apk --title "Live TV Max $version" --notes "Newest approved Live TV Max." --latest=false
+          fi
+          gh release edit live-tv-max --title "Live TV Max $version" --notes "Newest approved Live TV Max build (now $version), from $COMMIT."
+
+      # One fixed "app-bazaar" release (Downloader code tv.bulkbazaar.ca/bazaar).
+      - name: App Bazaar
+        if: inputs.apps == 'app-bazaar' || inputs.apps == 'all'
+        run: |
+          version=$(jq -r '."app-bazaar"' versions.json)
+          if gh release view app-bazaar > /dev/null 2>&1; then
+            gh release upload app-bazaar AppBazaar.apk --clobber
+          else
+            gh release create app-bazaar AppBazaar.apk --title "App Bazaar $version" --notes "Newest approved App Bazaar." --latest=false
+          fi
+          gh release edit app-bazaar --title "App Bazaar $version" --notes "Newest approved App Bazaar build (now $version), from $COMMIT."
+
+      # Per-version tag "<prefix>-v<version>" (the apps' update checks look for the highest one)
+      # plus a fixed release whose link never changes (App Bazaar and the Downloader codes use it).
+      - name: Iqra Quran, Live Cam, Multi Chat
+        run: |
+          publish() { # id prefix fixed file title
+            [ "$APPS" = "$1" ] || [ "$APPS" = all ] || return 0
+            version=$(jq -r --arg k "$1" '.[$k]' versions.json)
+            tag="$2-v${version}"
+            if gh release view "$tag" > /dev/null 2>&1; then
+              gh release upload "$tag" "$4" --clobber
+            else
+              gh release create "$tag" "$4" --title "$5 $version" --notes "Tested and approved. Built from $COMMIT." --latest=false
+            fi
+            if gh release view "$3" > /dev/null 2>&1; then
+              gh release upload "$3" "$4" --clobber
+            else
+              gh release create "$3" "$4" --title "$5 (newest)" --notes "Newest approved $5." --latest=false
+            fi
+            gh release edit "$3" --notes "Newest approved $5 build (now $version), from $COMMIT." || true
+          }
+          publish iqra-quran iqra-quran iqra-quran IqraQuran.apk "Iqra Quran"
+          publish live-cam livecam livecam LiveCam.apk "Live Cam"
+          publish multi-chat multichat multichat MultiChat.apk "Multi Chat"
+
+      # One fixed "claude-notes" release; the app reads its version from the title.
+      - name: Notes for Claude
+        if: inputs.apps == 'notes-for-claude' || inputs.apps == 'all'
+        run: |
+          version=$(jq -r '."notes-for-claude"' versions.json)
+          if gh release view claude-notes > /dev/null 2>&1; then
+            gh release upload claude-notes NotesForClaude.apk --clobber
+          else
+            gh release create claude-notes NotesForClaude.apk --title "Notes for Claude $version" --notes "Newest approved Notes for Claude." --latest=false
+          fi
+          gh release edit claude-notes --title "Notes for Claude $version" --notes "Newest approved Notes for Claude build (now $version), from $COMMIT."
+
+      - name: Summary
+        run: |
+          echo "Released ($APPS) from test build $BUILD. Apps show 'New update available' on their next start." | tee -a "$GITHUB_STEP_SUMMARY"

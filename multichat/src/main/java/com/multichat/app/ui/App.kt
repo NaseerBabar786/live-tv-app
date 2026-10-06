@@ -177,7 +177,7 @@ fun App(activity: MainActivity, updates: UpdateViewModel) {
         }
         UpdateDialog(
             state = update,
-            onInstall = { (update as? UpdateState.ReadyToInstall)?.let { Lock.openingOwnScreen(); updates.install(it.release) } },
+            onInstall = { update.pendingRelease?.let { Lock.openingOwnScreen(); updates.install(it) } },
             onDismiss = updates::dismiss,
         )
     }
