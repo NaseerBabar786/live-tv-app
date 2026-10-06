@@ -77,6 +77,7 @@ CHANNELS = [  # file, word, main colour, second colour, tag under the slab
     ("bazaar-english", "MOVIES", (230, 40, 60), (25, 45, 140), "ENGLISH"),
     ("bazaar-hindi", "MOVIES", (255, 140, 0), (0, 140, 70), "HINDI"),
     ("bazaar-dramas", "DRAMAS", (190, 70, 230), (230, 40, 110)),
+    ("bazaar-cooking", "COOKING", (240, 70, 30), (255, 185, 0)),
 ]
 OLD_NAMES = {"bazaar-cinema": "sunehra-daur", "bazaar-music": "sur-sukoon", "bazaar-hits": "geet-bahar"}  # links saved before 1.9.41
 
