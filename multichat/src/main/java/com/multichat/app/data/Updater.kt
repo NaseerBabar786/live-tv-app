@@ -8,6 +8,7 @@ import androidx.core.content.FileProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
@@ -29,6 +30,7 @@ class Updater(context: Context) {
 
     /** The newest Multi Chat release when it is newer than the installed app, or null when up to date. */
     suspend fun checkForUpdate(): Release? = withContext(Dispatchers.IO) {
+        testRelease()?.let { return@withContext it }
         val releases = JSONArray(fetchText(RELEASES_API))
         val newest = (0 until releases.length())
             .map { releases.getJSONObject(it) }
@@ -42,6 +44,14 @@ class Updater(context: Context) {
             }
             .maxWithOrNull { a, b -> UpdateVersions.compare(a.version, b.version) }
         newest?.takeIf { UpdateVersions.isNewer(it.version, installedVersion) }
+    }
+
+    /** The owner's newer test build, only when test updates are on for this device (see [OwnerTest]). */
+    private fun testRelease(): Release? {
+        if (!OwnerTest.isOn(appContext)) return null
+        val version = runCatching { JSONObject(fetchText(OwnerTest.VERSIONS)).optString("multi-chat") }.getOrNull()
+            ?.takeIf { it.isNotBlank() && UpdateVersions.isNewer(it, installedVersion) } ?: return null
+        return Release("$version (test)", OwnerTest.BASE + "MultiChat.apk", 0)
     }
 
     /** Downloads the release's APK, reporting progress from 0 to 1. */
