@@ -21,11 +21,15 @@ BASE = f"https://github.com/{REPO}/releases/download/channel-media"
 RATE = 44100
 OUT = "out"
 
-CREDITS = {
-    "tears-of-steel": ("Tears of Steel", "(CC) Blender Foundation | mango.blender.org", "CC BY 3.0"),
-    "elephants-dream": ("Elephants Dream", "(c) copyright 2006, Blender Foundation / Netherlands Media Art Institute / www.elephantsdream.org", "CC BY 2.5"),
-    "sintel": ("Sintel", "(c) copyright Blender Foundation | durian.blender.org", "CC BY 3.0"),
-}
+# Title, credit, licence and (for films not on the release yet) where to download them.
+FILMS = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "dub", "films.json"), encoding="utf-8"))
+
+
+def credits(film):
+    f = FILMS[film]
+    return f["title"], f["holder"], f["licence"]
+
+
 LANGS = {
     "ur": ("urdu", "Urdu", "urd", {"m": "ur-PK-AsadNeural", "f": "ur-PK-UzmaNeural"}),
     "hi": ("hindi", "Hindi", "hin", {"m": "hi-IN-MadhurNeural", "f": "hi-IN-SwaraNeural"}),
@@ -70,11 +74,36 @@ def write_srt(path, lines, credit):
 
 # ---------------------------------------------------------------- prepare
 
+def get_film(film):
+    """The film from the release, or (first time) from its source, made into a 720p MP4 that is
+    also uploaded to the release with the dubbed copies."""
+    path = f"{film}.mp4"
+    if os.path.exists(path):
+        return path
+    if subprocess.run(["curl", "-fsSL", "--retry", "3", "-o", path, f"{BASE}/{film}.mp4"]).returncode == 0:
+        return path
+    for url in FILMS[film].get("sources", []):
+        if subprocess.run(["curl", "-fsSL", "--retry", "3", "-o", f"src_{film}", url]).returncode != 0:
+            continue
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", f"src_{film}",
+            "-vf", "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,fps=25,format=yuv420p",
+            "-c:v", "libx264", "-preset", "veryfast", "-crf", "25", "-maxrate", "2500k", "-bufsize", "5000k", "-g", "50",
+            "-c:a", "aac", "-b:a", "128k", "-ac", "2", "-movflags", "+faststart", path)
+        os.makedirs(OUT, exist_ok=True)
+        subprocess.run(["cp", path, f"{OUT}/{film}.mp4"], check=True)
+        return path
+    raise RuntimeError(f"no source worked for {film}")
+
+
 def prepare(film):
     os.makedirs(OUT, exist_ok=True)
-    src = fetch(f"{BASE}/{film}.mp4", f"{film}.mp4")
+    src = get_film(film)
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-vn", "-ac", "2", "-ar", str(RATE), f"{film}.wav")
     run(sys.executable, "-m", "demucs", "--two-stems", "vocals", "-n", "htdemucs", "-o", "sep", f"{film}.wav")
+    length = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", src],
+                                  check=True, capture_output=True, text=True).stdout)
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-ss", str(int(length * 0.3)), "-i", src, "-frames:v", "1",
+        "-vf", "scale=640:-2", "-q:v", "4", f"{OUT}/{film}-poster.jpg")
     stems = f"sep/htdemucs/{film}"
     for stem, name in (("no_vocals", "music"), ("vocals", "voices")):
         run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", f"{stems}/{stem}.wav",
@@ -92,7 +121,7 @@ def prepare(film):
 
 
 def credit_line(film, lang_name):
-    title, holder, licence = CREDITS[film]
+    title, holder, licence = credits(film)
     return f"{title} {holder}, {licence}. AI {lang_name} voices added by Bazaar TV."
 
 
@@ -120,7 +149,7 @@ def voice(film, lang):
     script = json.load(open(f"tools/dub/{film}.{lang}.json", encoding="utf-8"))
     lines = script["segments"]
     os.makedirs(OUT, exist_ok=True); os.makedirs("tts", exist_ok=True)
-    src = fetch(f"{BASE}/{film}.mp4", f"{film}.mp4")
+    src = get_film(film)
     music = read_audio(fetch(f"{BASE}/dubwork-{film}-music.m4a", f"{film}-music.m4a"), 2)
     orig = read_audio(fetch(f"{BASE}/dubwork-{film}-voices.m4a", f"{film}-voices.m4a"), 2)
     n = min(len(music), len(orig))
@@ -165,7 +194,7 @@ def voice(film, lang):
     mix /= max(1.0, float(np.abs(mix).max()) / 0.98)
     write_wav(f"{film}-{lang}-mix.wav", mix)
 
-    title, holder, licence = CREDITS[film]
+    title, holder, licence = credits(film)
     credit = credit_line(film, lang_name)
     write_srt(f"{OUT}/{film}-{folder}.srt", lines, credit)
     font = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
