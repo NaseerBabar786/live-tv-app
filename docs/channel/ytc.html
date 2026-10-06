@@ -25,10 +25,15 @@
   @keyframes tick { to { transform: translateX(-100%); } }
   .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
   .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
+  /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
+  .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
+  .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  .cover.off { opacity: 0; }
 </style>
 </head>
 <body>
 <div id="player"></div>
+<div class="cover" id="cover"><img alt="" id="coverLogo" hidden></div>
 <div class="shield" id="shield"></div>
 <img class="bug" id="bug" alt="">
 <div class="now hide" id="now"></div>
@@ -46,6 +51,8 @@ let videos = [], at = 0, player = null, nowTimer = null, failures = 0;
 
 document.title = station.name + " · Watch live";
 $("bug").src = station.logo;
+$("coverLogo").src = station.logo;
+$("coverLogo").hidden = false;
 $("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (!app) $("back").hidden = false;
 
@@ -74,6 +81,7 @@ function showNow() {
 }
 function play(step, start = 0) {
   at = (at + step + videos.length) % videos.length;
+  cover(true);
   player.loadVideoById({ videoId: videos[at].id, startSeconds: start });
   showNow();
 }
@@ -101,6 +109,14 @@ setTimeout(() => {
   d.textContent = `YouTube didn't start here (${lastError ? "error " + lastError : "state " + lastState}) · ${(navigator.userAgent.match(/Chrome\/[\d.]+/) || ["?"])[0]}`;
   document.body.appendChild(d);
 }, 15000);
+// The cover goes once the video is really playing, and comes back while the next one loads.
+let coverTimer = null;
+function cover(on) {
+  clearTimeout(coverTimer);
+  if (on) $("cover").classList.remove("off");
+  // A moment after it starts, so YouTube's own title and logo at the start have gone too.
+  else coverTimer = setTimeout(() => $("cover").classList.add("off"), 1200);
+}
 window.onYouTubeIframeAPIReady = () => {
   player = new YT.Player("player", {
     videoId: videos[at].id,
@@ -117,6 +133,8 @@ window.onYouTubeIframeAPIReady = () => {
       },
       // It never stays paused; the next video follows when one ends.
       onStateChange: e => {
+        if (e.data === YT.PlayerState.PLAYING) cover(false);
+        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
         lastState = e.data;
         if (e.data === YT.PlayerState.PLAYING) started = true;
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
