@@ -98,7 +98,7 @@ class MyChannelTest {
 
     @Test
     fun eachStationHasItsOwnAddress() {
-        val films = MyChannel.parse(JSONObject("""{"name":"Purani Filmein","videos":[]}"""), "filmein")
+        val films = MyChannel.parse(JSONObject("""{"name":"Sunehra Daur","videos":[]}"""), "filmein")
         assertEquals("mychannel://filmein", films.channel.url)
         assertTrue(MyChannel.isMine(films.channel))
         assertEquals(MyChannel.URL, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.url)

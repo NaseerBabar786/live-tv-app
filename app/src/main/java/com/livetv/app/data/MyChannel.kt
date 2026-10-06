@@ -25,9 +25,9 @@ object MyChannel {
     val STATIONS = listOf(
         Station("main", "0", "Bazaar TV"),
         // Public-domain classic films round the clock (built weekly from Movies.m3u).
-        Station("filmein", "00", "Purani Filmein"),
+        Station("filmein", "00", "Sunehra Daur"),
         // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
-        Station("sur", "000", "Sur TV"),
+        Station("sur", "000", "Sur Sukoon"),
     )
 
     private const val SCHEME = "mychannel://"
@@ -38,14 +38,14 @@ object MyChannel {
     fun urlOf(id: String) = SCHEME + id
 
     /**
-     * Bollywood Hits (dialled 0000): the music labels' own YouTube uploads, one after another in
+     * Geet Bahar (dialled 0000): the music labels' own YouTube uploads, one after another in
      * YouTube's player on this page (song list built by tools/build_bollywood.py). No schedule.
      */
     const val BOLLYWOOD_URL = "https://tv.bulkbazaar.ca/channel/bollywood.html"
     private val bollywood = Channel(
-        name = "Bollywood Hits",
+        name = "Geet Bahar",
         url = BOLLYWOOD_URL,
-        logo = "https://tv.bulkbazaar.ca/channel/logos/bollywood-hits.png",
+        logo = "https://tv.bulkbazaar.ca/channel/logos/geet-bahar.png",
         number = 0,
     )
 

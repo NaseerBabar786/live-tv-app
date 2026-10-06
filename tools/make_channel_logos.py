@@ -62,31 +62,52 @@ d.ellipse([40,40,S-41,S-41], fill=(17,17,27))
 center_text(d, S/2, 150, "RANG", font(B, 120), "white"); center_text(d, S/2, 285, "TV", font(B, 90), (250,204,21))
 save(im, "rang-tv")
 
-# 6 Purani Filmein: sepia film reel badge, gold wordmark
-im = Image.new("RGBA", (S,S), (0,0,0,0)); bg = grad((S,S), (120,53,15), (41,22,8)); im.paste(bg, (0,0), circle_mask((S,S)))
-d = ImageDraw.Draw(im)
-d.ellipse([18,18,S-19,S-19], outline=(234,179,8), width=10)
-for i in range(12):  # sprocket holes around the edge, like a film reel
-    a = math.radians(i*30); cx, cy = S/2 + 205*math.cos(a), S/2 + 205*math.sin(a)
-    d.rounded_rectangle([cx-13, cy-13, cx+13, cy+13], 5, fill=(28,15,5))
-d.polygon([(S/2-34, 104), (S/2-34, 176), (S/2+30, 140)], fill=(234,179,8))
-center_text(d, S/2, 196, "PURANI", font(B, 92), (254,243,199)); center_text(d, S/2, 300, "FILMEIN", font(B, 78), (234,179,8))
-center_text(d, S/2, 396, "CLASSICS", font(BD, 30), (254,243,199))
-save(im, "purani-filmein")
 
-# 7 Sur TV: purple to teal circle, music note, white wordmark
-im = Image.new("RGBA", (S,S), (0,0,0,0)); bg = grad((S,S), (124,58,237), (13,148,136)); im.paste(bg, (0,0), circle_mask((S,S)))
-d = ImageDraw.Draw(im)
-d.ellipse([186,196,256,246], fill="white"); d.ellipse([286,176,356,226], fill="white")  # two notes joined by a beam
-d.rectangle([242,96,256,222], fill="white"); d.rectangle([342,76,356,202], fill="white")
-d.polygon([(242,96),(356,76),(356,108),(242,128)], fill="white")
-center_text(d, S/2, 270, "SUR", font(B, 140), "white"); center_text(d, S/2, 412, "TV", font(B, 60), (253,224,71))
-save(im, "sur-tv")
+# Our extra channels, drawn at double size and scaled down for smooth edges.
+L = 1024
+def save_big(im, name): im.resize((S, S), Image.LANCZOS).save(f"{OUT}/{name}.png")
+def text_fit(d, cx, y, text, path, size, fill, width):
+    f = font(path, size)
+    while d.textlength(text, font=f) > width: size -= 4; f = font(path, size)
+    center_text(d, cx, y, text, f, fill)
 
-# 8 Bollywood Hits: magenta to orange rounded square, star + wordmark
-im = Image.new("RGBA", (S,S), (0,0,0,0)); bg = grad((S,S), (219,39,119), (249,115,22)); im.paste(bg, (0,0), rounded_mask((S,S), 110))
+# 6 Sunehra Daur (golden-era films): maroon disc, gold ring and film sprockets, gold play mark
+im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (127,29,29), (40,8,8)), (0,0), circle_mask((L,L)))
 d = ImageDraw.Draw(im)
-pts = [(S/2 + (80 if i % 2 == 0 else 34) * math.cos(math.radians(-90 + i*36)), 140 + (80 if i % 2 == 0 else 34) * math.sin(math.radians(-90 + i*36))) for i in range(10)]
-d.polygon(pts, fill=(253,224,71))
-center_text(d, S/2, 240, "BOLLYWOOD", font(B, 66), "white"); center_text(d, S/2, 340, "HITS", font(B, 120), (255,247,237))
-save(im, "bollywood-hits")
+d.ellipse([20,20,L-21,L-21], outline=(245,190,60), width=56)
+for i in range(24):  # film sprockets along the gold band
+    a = math.radians(i*15); cx, cy = L/2 + 464*math.cos(a), L/2 + 464*math.sin(a)
+    d.rounded_rectangle([cx-12, cy-12, cx+12, cy+12], 4, fill=(60,12,12))
+d.ellipse([L/2-118, 150, L/2+118, 386], fill=(245,190,60))
+d.polygon([(L/2-38, 212), (L/2-38, 324), (L/2+62, 268)], fill=(127,29,29))
+text_fit(d, L/2, 410, "SUNEHRA", B, 180, (253,230,138), 700)
+text_fit(d, L/2, 600, "DAUR", B, 190, (255,255,255), 560)
+text_fit(d, L/2, 812, "CLASSIC CINEMA", BD, 48, (253,230,138), 420)
+save_big(im, "sunehra-daur")
+
+# 7 Sur Sukoon (calm music): indigo to teal disc, sound waves round a glowing dot
+im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (49,46,129), (15,118,110)), (0,0), circle_mask((L,L)))
+d = ImageDraw.Draw(im)
+cx, cy = L/2, 300
+d.ellipse([cx-66, cy-66, cx+66, cy+66], fill=(253,224,71))
+for r, w, a in ((120, 20, 255), (185, 18, 190), (250, 16, 120)):  # sound spreading out both ways
+    d.arc([cx-r, cy-r, cx+r, cy+r], 140, 220, fill=(255,255,255,a), width=w)
+    d.arc([cx-r, cy-r, cx+r, cy+r], -40, 40, fill=(255,255,255,a), width=w)
+text_fit(d, L/2, 470, "SUR", B, 250, (255,255,255), 640)
+text_fit(d, L/2, 735, "SUKOON", B, 130, (153,246,228), 640)
+save_big(im, "sur-sukoon")
+
+# 8 Geet Bahar (film songs): pink to orange rounded square, a flower of petals with a note inside
+im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (219,39,119), (249,115,22)), (0,0), rounded_mask((L,L), 220))
+d = ImageDraw.Draw(im)
+cx, cy = L/2, 300
+for i in range(8):
+    a = math.radians(i*45); px, py = cx + 112*math.cos(a), cy + 112*math.sin(a)
+    d.ellipse([px-78, py-78, px+78, py+78], fill=(253,224,71))
+d.ellipse([cx-104, cy-104, cx+104, cy+104], fill=(255,255,255))
+d.ellipse([cx-58, cy+6, cx-6, cy+48], fill=(219,39,119)); d.ellipse([cx+10, cy-14, cx+62, cy+28], fill=(219,39,119))
+d.rectangle([cx-17, cy-66, cx-5, cy+30], fill=(219,39,119)); d.rectangle([cx+50, cy-86, cx+62, cy+10], fill=(219,39,119))
+d.polygon([(cx-17, cy-66), (cx+62, cy-86), (cx+62, cy-58), (cx-17, cy-38)], fill=(219,39,119))
+text_fit(d, L/2, 500, "GEET", B, 210, (255,255,255), 700)
+text_fit(d, L/2, 730, "BAHAR", B, 170, (255,247,237), 760)
+save_big(im, "geet-bahar")

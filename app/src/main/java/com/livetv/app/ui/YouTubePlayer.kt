@@ -88,7 +88,7 @@ fun EmbedPlayer(src: String, onBack: () -> Unit) {
 
 /**
  * A channel that is a page of ours playing videos in their site's own player one after another
- * (Bollywood Hits: YouTube's embedded player). Full screen; the remote's arrows go to the page; Back closes it.
+ * (Geet Bahar: YouTube's embedded player). Full screen; the remote's arrows go to the page; Back closes it.
  */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
