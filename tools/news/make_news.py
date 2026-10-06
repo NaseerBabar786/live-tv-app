@@ -9,7 +9,8 @@ Two bulletins, each always EXACTLY the same length so the channel schedule never
 --kind auto (the default) makes the one due at the next full hour in Toronto.
 
 How it works:
-  1. reads the newest headlines from public RSS feeds (CBC, Global News, BBC, Al Jazeera, UN News),
+  1. reads the newest headlines from public RSS feeds (CBC, Global News, CityNews, Government of Canada,
+     BBC, Al Jazeera, UN News),
   2. writes our OWN short news-reader script from them (GitHub Models, free with the workflow's
      token; if that fails, a plain "<source> reports: <headline>" line), always naming the source,
   3. reads it with Microsoft Edge's free Canadian neural voices (edge-tts),
@@ -38,14 +39,16 @@ NOTES = []  # what worked and what failed, saved in news-<kind>.json for checkin
 FEEDS = {
     "canada": [
         ("CBC News", "https://www.cbc.ca/cmlink/rss-canada"),
-        ("CBC News", "https://www.cbc.ca/cmlink/rss-topstories"),
         ("Global News", "https://globalnews.ca/canada/feed/"),
-        ("CBC News", "https://www.cbc.ca/cmlink/rss-politics"),
+        ("CityNews", "https://toronto.citynews.ca/feed/"),
+        ("Government of Canada", "https://api.io.canada.ca/io-server/gc/news/en/v2?sort=publishedDate&orderBy=desc&pick=30&format=atom"),
+        ("Global News", "https://globalnews.ca/politics/feed/"),
     ],
     "world": [
         ("BBC News", "https://feeds.bbci.co.uk/news/world/rss.xml"),
         ("Al Jazeera", "https://www.aljazeera.com/xml/rss/all.xml"),
         ("UN News", "https://news.un.org/feed/subscribe/en/news/all/rss.xml"),
+        ("Global News", "https://globalnews.ca/world/feed/"),
         ("CBC News", "https://www.cbc.ca/cmlink/rss-world"),
     ],
 }
@@ -69,7 +72,7 @@ def brand_font(size):
 def run(*cmd):
     subprocess.run(cmd, check=True)
 
-def fetch(url, timeout=30):
+def fetch(url, timeout=15):
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read()
@@ -98,6 +101,8 @@ def parse_feed(data, source):
                 try: when = dt.datetime.fromisoformat(v.replace("Z", "+00:00"))
                 except Exception: pass
             if when: break
+        if re.search(r"media advisory|will make an announcement|to make an announcement|^statement by", title, re.I):
+            continue
         if title and len(title) > 15:
             out.append({"title": title, "desc": desc, "source": source,
                         "when": when.timestamp() if when else None})
@@ -167,14 +172,18 @@ def ai_script(stories, kind):
     length = "one sentence of 20 to 30 words" if kind == "headlines" else "two or three sentences, 45 to 70 words"
     body = "\n".join(f"{i + 1}. [{s['source']}] {s['title']} -- {s['desc'][:600]}" for i, s in enumerate(stories))
     req = {"model": os.environ.get("NEWS_MODEL", "openai/gpt-4.1-mini"), "temperature": 0.3,
+           "response_format": {"type": "json_object"},
            "messages": [{"role": "user", "content": PROMPT.format(length=length, stories=body)}]}
+    text = ""
     for attempt in range(3):
         try:
             r = urllib.request.Request("https://models.github.ai/inference/chat/completions",
                                        data=json.dumps(req).encode(), method="POST",
                                        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
             with urllib.request.urlopen(r, timeout=120) as resp:
-                text = json.load(resp)["choices"][0]["message"]["content"]
+                raw = resp.read().decode(errors="replace")
+            text = raw
+            text = json.loads(raw)["choices"][0]["message"]["content"] or ""
             text = re.sub(r"^```(json)?|```$", "", text.strip()).strip()
             got = json.loads(text)["stories"]
             if len(got) != len(stories): raise ValueError(f"{len(got)} stories back for {len(stories)}")
@@ -184,7 +193,7 @@ def ai_script(stories, kind):
                     s["headline"], s["read"], s["ai"] = h, rd, True
             return
         except Exception as e:
-            detail = e.read().decode(errors="replace")[:300] if hasattr(e, "read") else ""
+            detail = e.read().decode(errors="replace")[:300] if hasattr(e, "read") else repr(text[:300])
             print("GitHub Models failed", attempt, e, detail)
             if attempt == 2: NOTES.append(f"GitHub Models failed: {e} {detail}")
             time.sleep(10 * (attempt + 1))
