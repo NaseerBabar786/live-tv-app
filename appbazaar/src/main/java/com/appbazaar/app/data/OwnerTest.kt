@@ -1,14 +1,15 @@
 package com.appbazaar.app.data
 
 import android.content.Context
+import android.net.Uri
 import android.os.SystemClock
 import android.widget.Toast
 import org.json.JSONObject
 
 /**
  * The owner's test updates. Every new build first goes to the owner-only "test" release; nobody else
- * gets it until the owner has tried it and said it is good. Seven quick taps on the version number
- * turn test updates on (or off again) on this device; then the app offers each newer test build.
+ * gets it until the owner has tried it and said it is good. On the owner's device (Cable TV signed in as the
+ * owner, or seven quick taps on the version number) test updates are on and a "Try test version" button shows.
  */
 object OwnerTest {
 
@@ -23,6 +24,25 @@ object OwnerTest {
 
     fun set(context: Context, on: Boolean) =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply()
+
+    /** Cable TV and Live TV Max answer whether their signed-in account is the owner's (see their OwnerProvider). */
+    private val OWNER_APPS = listOf("com.naseerbabar.livetv", "com.naseerbabar.livetvmax")
+
+    /**
+     * Whether this is the owner's device: test updates were switched on here, or Cable TV on this device is
+     * signed in with the owner's account. Only our own apps (same signing key) get an answer. Call off the main thread.
+     */
+    fun isOwner(context: Context): Boolean {
+        if (isOn(context)) return true
+        val owner = OWNER_APPS.any { app ->
+            runCatching {
+                context.contentResolver.query(Uri.parse("content://$app.owner"), null, null, null, null)
+                    ?.use { it.moveToFirst() && it.getInt(0) == 1 } == true
+            }.getOrDefault(false)
+        }
+        if (owner) set(context, true)
+        return owner
+    }
 
     private var taps = 0
     private var lastTap = 0L

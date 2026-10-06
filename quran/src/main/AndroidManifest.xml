@@ -12,6 +12,9 @@
 
     <!-- Lets the app find the phone's text-to-speech engine for the Qaida letter sounds. -->
     <queries>
+        <!-- Asks Cable TV whether this is the owner's device (OwnerTest). -->
+        <package android:name="com.naseerbabar.livetv" />
+        <package android:name="com.naseerbabar.livetvmax" />
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>

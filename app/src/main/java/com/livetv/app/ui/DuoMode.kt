@@ -99,7 +99,8 @@ private const val K_LEFT = "left"
 private const val K_RIGHT = "right"
 /** Which player the next card goes into (0 left, 1 right). */
 private const val K_NEXT = "next"
-private const val MAX_PER_ROW = 120
+/** The countries whose rows come first, in this order (after Favorites and All channels). */
+private val COUNTRY_ORDER = listOf("pk", "in", "ca", "us")
 
 private val Yellow = Color(0xFFFFD54F)
 private val PlayerShape = RoundedCornerShape(22.dp)
@@ -133,13 +134,17 @@ internal fun DuoMode(
     val prefs = remember { context.getSharedPreferences(PREFS, Context.MODE_PRIVATE) }
     val byId = remember(channels) { channels.associateBy { it.id } }
 
+    // Favorites, then every channel (our own first), then the countries: Pakistan, India, Canada and the
+    // US first, then all the others in list order (owner's order, 1.9.61). Rows scroll through every channel.
     val rows = remember(channels, favorites) {
         buildList {
             val favs = channels.filter { it.id in favorites }
             if (favs.isNotEmpty()) add(DuoRow("favorites", "Favorites", favs))
-            channels.mapNotNull { it.group }.distinct().forEach { group ->
-                add(DuoRow("group:$group", group, channels.filter { it.group == group }.take(MAX_PER_ROW)))
-            }
+            if (channels.isNotEmpty()) add(DuoRow("all", "All channels", channels))
+            val byGroup = channels.filter { it.group != null }.groupBy { it.group!! }
+                    byGroup.entries
+                .sortedBy { (_, list) -> COUNTRY_ORDER.indexOf(list.first().country?.lowercase()).let { if (it < 0) Int.MAX_VALUE else it } }
+                .forEach { (group, list) -> add(DuoRow("group:$group", group, list)) }
         }
     }
 

@@ -10,6 +10,12 @@
     <uses-feature android:name="android.software.leanback" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
+    <queries>
+        <!-- Asks Cable TV whether this is the owner's device (OwnerTest). -->
+        <package android:name="com.naseerbabar.livetv" />
+        <package android:name="com.naseerbabar.livetvmax" />
+    </queries>
+
     <application
         android:allowBackup="false"
         android:banner="@drawable/ic_banner"

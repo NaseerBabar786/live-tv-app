@@ -867,11 +867,12 @@ fun ChannelListScreen(
                         if (hasAd) minOf(maxHeight - height * 2 - 8.dp, maxWidth / 8) else 0.dp
                     }.coerceAtLeast(0.dp)
                     val twoBanner = if (sixBanner >= 36.dp) sixBanner else 0.dp
-                    val twoGaps = if (twoBanner > 0.dp) 3 else 2 // vertical gaps: above, (between,) below
-                    val twoGap = if (!evenTwo) 0.dp else
-                        ((maxHeight - twoBanner - maxWidth * 9f / 32f) / (twoGaps - 27f / 32f)).coerceAtLeast(0.dp)
-                    val packedWidth = if (evenTwo) (maxWidth - twoGap * 3) / 2 else sharedWidth
-                    val packedHeight = if (evenTwo) packedWidth * 9f / 16f else sharedHeight
+                    // 1×2 (owner, 1.9.61): the two players fill the whole width, side by side and touching in
+                    // the middle, no black at the sides or between them; centred top to bottom.
+                    val twoGap = 0.dp
+                    val packedWidth = if (evenTwo) maxWidth / 2 else sharedWidth
+                    val packedHeight = if (evenTwo) minOf(packedWidth * 9f / 16f, maxHeight) else sharedHeight
+                    val twoTop = if (evenTwo) ((maxHeight - packedHeight) / 2).coerceAtLeast(0.dp) else 0.dp
                     val bannerSpace = if (evenTwo) maxHeight - twoGap - packedHeight else maxHeight - packedHeight * rows
                     val bannerHeight = if (evenTwo) twoBanner else minOf(bannerSpace - 8.dp, maxWidth / 8)
                     @Composable
@@ -1152,7 +1153,7 @@ fun ChannelListScreen(
                         } else
                         Column(
                             when {
-                                evenTwo -> Modifier.fillMaxSize().padding(top = twoGap)
+                                evenTwo -> Modifier.fillMaxSize().padding(top = twoTop)
                                 packed -> Modifier.fillMaxSize()
                                 else -> Modifier.fillMaxSize().padding(vertical = rowGap)
                             },

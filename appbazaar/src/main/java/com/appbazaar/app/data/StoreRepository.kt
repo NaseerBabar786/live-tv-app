@@ -23,6 +23,6 @@ class StoreRepository(context: Context) {
         val apps = Catalog.parse(text)
         if (apps.isNotEmpty()) runCatching { cache.writeText(text) }
         // On the owner's device, newer test builds show as updates before anyone else gets them.
-        if (OwnerTest.isOn(appContext)) runCatching { OwnerTest.withTestBuilds(apps) }.getOrDefault(apps) else apps
+        if (OwnerTest.isOwner(appContext)) runCatching { OwnerTest.withTestBuilds(apps) }.getOrDefault(apps) else apps
     }
 }
