@@ -65,8 +65,8 @@ save(im, "rang-tv")
 import numpy as np
 from PIL import ImageChops
 POP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts", "Poppins-BlackItalic.ttf")
-CHANNELS = [  # file, word, main colour, second colour
-    ("bazaar-tv", "BAZAAR", (255, 120, 0), (214, 20, 40)),
+CHANNELS = [  # file, word, main colour, second colour, tag under the slab
+    ("bazaar-tv", "BAZAAR", (255, 120, 0), (214, 20, 40), "TV"),
     ("bazaar-cinema", "CINEMA", (230, 170, 40), (140, 20, 30)),
     ("bazaar-music", "MUSIC", (150, 70, 255), (0, 190, 200)),
     ("bazaar-hits", "HITS", (255, 40, 140), (255, 120, 0)),
@@ -74,6 +74,9 @@ CHANNELS = [  # file, word, main colour, second colour
     ("bazaar-sports", "SPORTS", (0, 110, 255), (0, 200, 120)),
     ("bazaar-travel", "TRAVEL", (0, 170, 230), (0, 160, 140)),
     ("bazaar-comedy", "COMEDY", (255, 200, 0), (255, 80, 60)),
+    ("bazaar-english", "MOVIES", (230, 40, 60), (25, 45, 140), "ENGLISH"),
+    ("bazaar-hindi", "MOVIES", (255, 140, 0), (0, 140, 70), "HINDI"),
+    ("bazaar-dramas", "DRAMAS", (190, 70, 230), (230, 40, 110)),
 ]
 OLD_NAMES = {"bazaar-cinema": "sunehra-daur", "bazaar-music": "sur-sukoon", "bazaar-hits": "geet-bahar"}  # links saved before 1.9.41
 
@@ -118,7 +121,7 @@ def slab(w, h, sl=0.35):
     m = Image.new("L", (int(w + h * sl), h), 0)
     ImageDraw.Draw(m).polygon([(h * sl, 0), (w + h * sl, 0), (w, h), (0, h)], fill=255); return m
 
-def action_logo(key, word, c1, c2):
+def action_logo(key, word, c1, c2, tag=None):
     tw = word_mask(word, 330, track=-6)
     s0 = slab(tw.width + 140, tw.height + 110); sm = Image.new("L", (s0.width + 80, s0.height + 80), 0); sm.paste(s0, (40, 40))
     ph = s0.height
@@ -139,22 +142,24 @@ def action_logo(key, word, c1, c2):
     t = Image.new("L", out.size, 0); t.paste(tw, (ox + (sm.width - tw.width) // 2 + 10, oy + (sm.height - tw.height) // 2))
     out.alpha_composite(paint(shift(t, 10, 12), dark(c2, .5)))
     out.alpha_composite(paint(t, (255, 255, 255)))
-    tv = key == "bazaar-tv"
-    tm = word_mask("TV" if tv else "BAZAAR", 190 if tv else 120, track=0 if tv else 10)
-    tab = slab(tm.width + 80, tm.height + 46)
-    tx, ty = (ox + sm.width - tab.width - 10, oy + sm.height - 40) if tv else (ox + 120, oy - tab.height + 30)
-    tl = Image.new("L", out.size, 0); tl.paste(tab, (tx, ty))
-    out.alpha_composite(soft(shift(tl, 8, 10), 8, 150))
-    out.alpha_composite(paint(grow(tl, 8), (255, 255, 255)))
-    out.alpha_composite(paint(tl, c2 if tv else (18, 18, 24)))
-    tt = Image.new("L", out.size, 0); tt.paste(tm, (tx + (tab.width - tm.width) // 2 + 6, ty + (tab.height - tm.height) // 2))
-    out.alpha_composite(paint(tt, (255, 255, 255) if tv else light(c1, .2)))
+    tabs = [] if word == "BAZAAR" else [("BAZAAR", 120, 10, False)]
+    if tag: tabs.append((tag, 190 if len(tag) <= 2 else 120, 0 if len(tag) <= 2 else 8, True))
+    for text, size, track, under in tabs:  # dark BAZAAR tab on top, coloured tag (TV, ENGLISH) under the slab
+        tm = word_mask(text, size, track=track)
+        tab = slab(tm.width + 80, tm.height + 46)
+        tx, ty = (ox + sm.width - tab.width - 10, oy + sm.height - 40) if under else (ox + 120, oy - tab.height + 30)
+        tl = Image.new("L", out.size, 0); tl.paste(tab, (tx, ty))
+        out.alpha_composite(soft(shift(tl, 8, 10), 8, 150))
+        out.alpha_composite(paint(grow(tl, 8), (255, 255, 255)))
+        out.alpha_composite(paint(tl, c2 if under else (18, 18, 24)))
+        tt = Image.new("L", out.size, 0); tt.paste(tm, (tx + (tab.width - tm.width) // 2 + 6, ty + (tab.height - tm.height) // 2))
+        out.alpha_composite(paint(tt, (255, 255, 255) if under else light(c1, .2)))
     out = out.crop(out.getbbox())
     pad = Image.new("RGBA", (out.width + 24, out.height + 24), (0, 0, 0, 0)); pad.alpha_composite(out, (12, 12))
     return pad
 
-for key, word, c1, c2 in CHANNELS:
-    lg = action_logo(key, word, c1, c2)
+for key, word, c1, c2, *tag in CHANNELS:
+    lg = action_logo(key, word, c1, c2, *tag)
     k = 900 / lg.width; wide = lg.resize((900, int(lg.height * k)), Image.LANCZOS)
     wide.save(f"{OUT}/{key}.png", optimize=True)
     sq = Image.new("RGBA", (S, S), (0, 0, 0, 0)); s = lg.resize((S - 16, int(lg.height * (S - 16) / lg.width)), Image.LANCZOS)

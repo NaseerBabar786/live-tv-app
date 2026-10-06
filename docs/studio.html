@@ -394,7 +394,7 @@ import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./channe
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 const LOGOS = [
-  ["Bazaar TV", "bazaar-tv"], ["Bazaar Cinema", "bazaar-cinema"], ["Bazaar Music", "bazaar-music"], ["Bazaar Hits", "bazaar-hits"], ["Bazaar Kids", "bazaar-kids"], ["Bazaar Sports", "bazaar-sports"], ["Bazaar Travel", "bazaar-travel"], ["Bazaar Comedy", "bazaar-comedy"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
+  ["Bazaar TV", "bazaar-tv"], ["Bazaar Cinema", "bazaar-cinema"], ["Bazaar Music", "bazaar-music"], ["Bazaar Hits", "bazaar-hits"], ["Bazaar Kids", "bazaar-kids"], ["Bazaar Sports", "bazaar-sports"], ["Bazaar Travel", "bazaar-travel"], ["Bazaar Comedy", "bazaar-comedy"], ["Bazaar Movies English", "bazaar-english"], ["Bazaar Movies Hindi", "bazaar-hindi"], ["Bazaar Dramas", "bazaar-dramas"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
 ].map(([name, file]) => ({ name, url: `https://tv.bulkbazaar.ca/channel/logos/${file}.png` }));
 
 const V = "10.12.2";
