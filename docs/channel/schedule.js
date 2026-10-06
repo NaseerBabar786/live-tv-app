@@ -24,6 +24,9 @@ export const STATIONS = [
   { id: "kids", name: "Bazaar Kids", dial: "00000", doc: "_channel_kids", page: "channel/?c=kids", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-kids.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
     credits: "Cartoons: public-domain classics (Popeye, Superman, Felix the Cat) from the Internet Archive, Blender Foundation shorts (CC BY) and NASA videos." },
+  { id: "sports", name: "Bazaar Sports", dial: "000000", doc: "_channel_sports", page: "channel/?c=sports", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-sports.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
+    credits: "Sport: public-domain and CC BY sports films (classic boxing, cricket, football, athletics) from the Internet Archive. No modern leagues or tournaments." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
