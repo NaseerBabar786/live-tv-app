@@ -1,12 +1,15 @@
 package com.livetv.app
 
+import com.livetv.app.data.Channel
+import com.livetv.app.data.ChannelRepository
+import com.livetv.app.data.MyChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * Cable TV's packages: Free, Silver, Gold and Platinum. Each one adds modes and sections to
- * the one below. Every other app (and Cable TV until the owner turns packages on) has
+ * the one below; Free also has only a few channels ([freeChannel]). Every other app (and Cable TV until the owner turns packages on) has
  * everything, so [current] starts at Platinum.
  */
 object Plans {
@@ -44,6 +47,18 @@ object Plans {
     fun closeAsk() {
         _asking.value = null
     }
+
+    /**
+     * The Free package's channels: all of our own, plus the most-watched news channel of India (Aaj Tak)
+     * and of Pakistan (ARY News) (owner, 2026-10-06). Silver and up have every channel.
+     */
+    private val FREE_NAMES = setOf("aajtak", "arynews")
+
+    fun freeChannel(channel: Channel): Boolean =
+        MyChannel.isMine(channel) || ChannelRepository.nameKey(channel.name) in FREE_NAMES
+
+    /** Whether the viewer may watch [channel] with their package. */
+    fun allowsChannel(channel: Channel): Boolean = allows(Tier.Silver) || freeChannel(channel)
 
     /** Movies & Dramas. */
     val LIBRARY = Tier.Gold

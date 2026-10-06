@@ -256,7 +256,7 @@ fun ChannelListScreen(
     val tier by Plans.current.collectAsStateWithLifecycle()
     LaunchedEffect(tier, tileLayout) {
         if (!Plans.allows(tileLayout.tier)) {
-            tileLayout = if (Edition.MAX) TileLayout.Browse else TileLayout.List
+            tileLayout = if (Edition.MAX && Plans.allows(TileLayout.Browse.tier)) TileLayout.Browse else TileLayout.List
             sessionTileLayout = tileLayout
         }
     }
@@ -2138,8 +2138,10 @@ private val layouts = TileLayout.entries.filter {
 /** Cable TV's package each mode needs (see [Plans]). */
 private val TileLayout.tier: Plans.Tier
     get() = when (this) {
-        TileLayout.List, TileLayout.Browse, TileLayout.Carousel, TileLayout.Strip -> Plans.Tier.Free
-        TileLayout.Two, TileLayout.Five, TileLayout.Duo -> Plans.Tier.Silver
+        // Owner, 2026-10-06: Free is 1+List only; Silver adds Browse and Carousel; Gold has the rest but 2×3.
+        TileLayout.List -> Plans.Tier.Free
+        TileLayout.Browse, TileLayout.Carousel -> Plans.Tier.Silver
+        TileLayout.Two, TileLayout.Five, TileLayout.Duo, TileLayout.Strip,
         TileLayout.Four, TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine -> Plans.Tier.Gold
         TileLayout.Six -> Plans.Tier.Platinum
     }

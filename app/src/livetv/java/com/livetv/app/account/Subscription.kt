@@ -161,9 +161,9 @@ object Subscription {
 
     /** What each package adds, for the packages screen. */
     val FEATURES: Map<Plans.Tier, String> = mapOf(
-        Plans.Tier.Free to "Browse, 1+List, Carousel and Strip modes, full screen, favourites",
-        Plans.Tier.Silver to "Everything in Free, plus 1×2, 1+3 and Duo modes",
-        Plans.Tier.Gold to "Everything in Silver, plus 2×2, News, CP24, Home, My Screen and Movies & Dramas",
+        Plans.Tier.Free to "Our own channels plus Aaj Tak and ARY News, in 1+List mode, full screen, favourites",
+        Plans.Tier.Silver to "All channels, plus Browse and Carousel modes",
+        Plans.Tier.Gold to "Everything in Silver, plus 1×2, 1+3, Duo, Strip, 2×2, News, CP24, Home, My Screen and Movies & Dramas",
         Plans.Tier.Platinum to "Everything, plus 2×3, Games, and your account on 2 devices at once",
     )
 

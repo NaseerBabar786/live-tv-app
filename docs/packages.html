@@ -79,26 +79,28 @@
       <p class="small">Each package has everything in the one before it, plus more. The prices shown are the ones in Settings above.</p>
       <div class="pkgs">
         <div class="pkg"><h3><span class="pill Free">Free</span> <span class="price">$0</span></h3>
-          <p><b>For:</b> anyone who just wants to watch one channel at a time.</p>
+          <p><b>For:</b> anyone who wants to try Cable TV.</p>
           <ul>
-            <li><b>All channels</b>, full screen, favourites, channel numbers and search</li>
-            <li><b>Browse</b>: the home screen with rows of big channel cards</li>
+            <li><b>Our own channels</b> (Bazaar TV, Cinema, Music, Hits, Kids, Sports and the rest), plus <b>Aaj Tak</b> (India) and <b>ARY News</b> (Pakistan)</li>
             <li><b>1+List</b>: one channel with the channel list beside it</li>
-            <li><b>Carousel</b>: one big channel, slide left and right to the next</li>
-            <li><b>Strip</b>: a big channel on top, small channel tiles along the bottom</li>
+            <li>Full screen, favourites, channel numbers and search</li>
           </ul></div>
         <div class="pkg"><h3><span class="pill Silver">Silver</span> <span class="price" data-p="silver"></span></h3>
-          <p><b>For:</b> people who like to keep an eye on a second channel.</p>
+          <p><b>For:</b> anyone who wants every channel, one at a time.</p>
           <ul>
             <li>Everything in Free, plus:</li>
-            <li><b>1×2</b>: two channels side by side</li>
-            <li><b>1+3</b>: one big channel and three small ones beside it</li>
-            <li><b>Duo</b>: two channels playing on top, channel cards below</li>
+            <li><b>All channels</b> from every country</li>
+            <li><b>Browse</b>: the home screen with rows of big channel cards</li>
+            <li><b>Carousel</b>: one big channel, slide left and right to the next</li>
           </ul></div>
         <div class="pkg"><h3><span class="pill Gold">Gold</span> <span class="price" data-p="gold"></span></h3>
           <p><b>For:</b> families and news watchers who want the TV to show more than one thing.</p>
           <ul>
             <li>Everything in Silver, plus:</li>
+            <li><b>1×2</b>: two channels side by side</li>
+            <li><b>1+3</b>: one big channel and three small ones beside it</li>
+            <li><b>Duo</b>: two channels playing on top, channel cards below</li>
+            <li><b>Strip</b>: a big channel on top, small channel tiles along the bottom</li>
             <li><b>2×2</b>: four channels at once</li>
             <li><b>News</b>: your channel with weather, prayer times, traffic cameras and headlines around it</li>
             <li><b>CP24</b>: a big channel with a clock, weather and scrolling lines, like the Toronto news channel</li>
@@ -243,7 +245,7 @@ if (!configured) {
   $("saveCfg").onclick = async () => {
     const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), updated: fs.serverTimestamp() };
     for (const t of TIERS) for (const [k] of LENGTHS) { const id = `${t.toLowerCase()}_${k}`; data[id] = $(id).value.trim(); }
-    if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have the Free modes (after their free trial).")) return;
+    if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have the Free channels in 1+List (after their free trial).")) return;
     try { await fs.setDoc(fs.doc(db, "config", "plans"), data); $("cfgMsg").textContent = "Saved."; }
     catch (e) { $("cfgMsg").textContent = "Couldn't save: " + e.message; }
   };
