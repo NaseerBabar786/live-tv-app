@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
         } else if (playing != null && playing.url == MyChannel.BOLLYWOOD_URL) {
-            WebChannel(MyChannel.BOLLYWOOD_URL + "?app=1", onBack = viewModel::stop)
+            WebChannel(MyChannel.BOLLYWOOD_URL + "?app=1&v=" + BuildConfig.VERSION_CODE, onBack = viewModel::stop)
         } else if (playing != null && YouTube.videoId(playing.url) != null) {
             YouTubePlayer(YouTube.videoId(playing.url)!!, onBack = viewModel::stop)
         } else if (playing != null) {
