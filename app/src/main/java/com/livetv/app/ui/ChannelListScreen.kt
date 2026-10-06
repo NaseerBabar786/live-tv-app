@@ -243,7 +243,7 @@ fun ChannelListScreen(
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
     // TV and tablet layout, picked with the button in the top bar. Each time the app opens, Live TV Max
-    // starts on the Browse home screen; Free Live TV and the other apps start in 1+List (user's choice, 1.9.41).
+    // starts on the Browse home screen; Cable TV and the other apps start in 1+List (user's choice, 1.9.41).
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
     var tileLayout by remember {
         mutableStateOf(
@@ -251,7 +251,7 @@ fun ChannelListScreen(
                 ?: if (Edition.MAX) TileLayout.Browse else TileLayout.List,
         )
     }
-    // Free Live TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
+    // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
     LaunchedEffect(tier, tileLayout) {
         if (!Plans.allows(tileLayout.tier)) {
@@ -499,7 +499,7 @@ fun ChannelListScreen(
         if (next.separateTvs && !premium) {
             upsellFor = next
         } else if (Plans.ask("${next.label} mode", next.tier)) {
-            // Free Live TV shows its packages; the mode stays as it was.
+            // Cable TV shows its packages; the mode stays as it was.
         } else {
             tileLayout = next
             sessionTileLayout = tileLayout
@@ -667,7 +667,7 @@ fun ChannelListScreen(
                     },
                 )
                 if (!hideBars && !newsMode && !carouselMode && !stripMode && !duoMode && !state.loading && state.channels.isNotEmpty()) {
-                    // The channel count, with Free Live TV's "advertise with us" ticker running beside it now and then.
+                    // The channel count, with Cable TV's "advertise with us" ticker running beside it now and then.
                     // 1×2 has room for a bigger ticker in its own band above the tiles.
                     // (1×2 used to have a bigger ticker in its own band; it now matches 2×3.)
                     val bandTicker = false
@@ -1214,7 +1214,7 @@ fun ChannelListScreen(
                         )
                     }
                     }
-                    // 1×2, 2×2 and 2×3: Free Live TV's sponsor banner, centred in the space under the tiles.
+                    // 1×2, 2×2 and 2×3: Cable TV's sponsor banner, centred in the space under the tiles.
                     if (packed && hasAd && bannerHeight >= 36.dp) {
                         Box(
                             Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(bannerSpace),
@@ -1298,7 +1298,7 @@ private fun ModesMenu(
     current: TileLayout,
     /** Live TV Plus: the modes that need Premium. */
     locked: (TileLayout) -> Boolean,
-    /** Free Live TV: the package a mode needs, when the viewer's package doesn't have it. */
+    /** Cable TV: the package a mode needs, when the viewer's package doesn't have it. */
     needs: (TileLayout) -> String? = { null },
     onPick: (TileLayout) -> Unit,
     onDismiss: () -> Unit,
@@ -2106,19 +2106,19 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
 
 /**
  * The layout picked with the layout button since the app was opened. Each time the app opens
- * it starts again (Browse on Free Live TV's TV screens), so the pick is kept only until then, not saved.
+ * it starts again (Browse on Cable TV's TV screens), so the pick is kept only until then, not saved.
  */
 private var sessionTileLayout: TileLayout? = null
 
-/** News, CP24 and Home: one channel with information around it (Free Live TV only). */
+/** News, CP24 and Home: one channel with information around it (Cable TV only). */
 private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine)
 
-/** The layouts the top-bar button steps through; News mode is Free Live TV's only. Home mode is back (user's choice, 1.9.18). */
+/** The layouts the top-bar button steps through; News mode is Cable TV's only. Home mode is back (user's choice, 1.9.18). */
 private val layouts = TileLayout.entries.filter {
     (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel && it != TileLayout.Strip && it != TileLayout.Duo) || Edition.LIVE_TV
 }
 
-/** Free Live TV's package each mode needs (see [Plans]). */
+/** Cable TV's package each mode needs (see [Plans]). */
 private val TileLayout.tier: Plans.Tier
     get() = when (this) {
         TileLayout.List, TileLayout.Browse, TileLayout.Carousel, TileLayout.Strip -> Plans.Tier.Free

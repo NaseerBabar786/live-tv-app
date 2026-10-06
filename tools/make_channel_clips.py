@@ -51,7 +51,7 @@ os.makedirs(OUT, exist_ok=True)
 ORANGE, RED, NAVY, BLUE, GREEN, TEAL = (255, 153, 0), (220, 38, 38), (15, 23, 42), (30, 64, 175), (16, 185, 129), (6, 95, 70)
 
 render(slide(ORANGE, RED, [("You're watching Bazaar TV", f(B, 64), "white"),
-                           ("on Free Live TV", f(BD, 40), (255, 236, 179))]), 10, "ident-welcome.mp4")
+                           ("on Cable TV", f(BD, 40), (255, 236, 179))]), 10, "ident-welcome.mp4")
 render(slide(NAVY, BLUE, [("Coming up next", f(B, 72), "white"),
                           ("Stay with Bazaar TV", f(BD, 40), (191, 219, 254))]), 8, "ident-coming-up.mp4")
 render(slide(NAVY, BLUE, [("Commercial break", f(B, 64), "white"),
@@ -63,6 +63,6 @@ render(ad, 20, "ad-bulk-bazaar.mp4")
 render(slide(GREEN, TEAL, [("Your ad could be here!", f(B, 64), "white"),
                            ("Advertise on Bazaar TV", f(BD, 44), (253, 224, 71)),
                            ("WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise", f(BD, 32), "white")]), 15, "ad-advertise-here.mp4")
-render(slide(RED, ORANGE, [("Free Live TV", f(B, 72), "white"),
+render(slide(RED, ORANGE, [("Cable TV", f(B, 72), "white"),
                            ("Up to 6 channels at once on one TV. Free.", f(BD, 38), "white"),
                            ("Download at tv.bulkbazaar.ca", f(BD, 38), (255, 236, 179))]), 15, "promo-free-live-tv.mp4")

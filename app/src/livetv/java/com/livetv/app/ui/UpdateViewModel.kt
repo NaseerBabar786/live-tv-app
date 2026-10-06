@@ -22,7 +22,7 @@ sealed interface UpdateState {
 }
 
 /**
- * Checks GitHub for a newer Free Live TV once per launch (the view model outlives rotation)
+ * Checks GitHub for a newer Cable TV once per launch (the view model outlives rotation)
  * and downloads and installs it straight away.
  */
 class UpdateViewModel(app: Application) : AndroidViewModel(app) {

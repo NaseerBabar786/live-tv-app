@@ -1,6 +1,6 @@
 name: Build Bazaar Hits
 
-# docs/channel/bollywood.json: the song list of Bazaar Hits (channel 4 in Free Live TV), from the
+# docs/channel/bollywood.json: the song list of Bazaar Hits (channel 4 in Cable TV), from the
 # music labels' own YouTube channels. Played in YouTube's player on tv.bulkbazaar.ca/channel/bollywood.html.
 on:
   schedule:

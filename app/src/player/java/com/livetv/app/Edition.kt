@@ -20,7 +20,7 @@ object Edition {
     const val HAS_START_SCREEN = false
     const val HAS_WEATHER = false
     const val HAS_DEVICE_LOCATION = false
-    /** Movies & Series from the saved playlists (Free Live TV only). */
+    /** Movies & Series from the saved playlists (Cable TV only). */
     const val HAS_VOD = false
 }
 
