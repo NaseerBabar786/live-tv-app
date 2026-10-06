@@ -61,6 +61,8 @@ import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
+import com.livetv.app.data.MyChannel
+import com.livetv.app.ui.MyChannelOverlay
 import com.livetv.app.ui.focusGlow
 
 @OptIn(UnstableApi::class)
@@ -175,6 +177,8 @@ fun PlayerScreen(
             update = { view -> view.useController = !inPictureInPicture && onNumberPad == null },
             modifier = Modifier.fillMaxSize(),
         )
+        // The owner's channel: its logo in the corner and its scrolling line.
+        if (MyChannel.isMine(channel)) MyChannelOverlay()
 
         AnimatedVisibility(
             visible = barShown && !inPictureInPicture,

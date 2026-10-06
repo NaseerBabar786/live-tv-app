@@ -1,6 +1,8 @@
 package com.livetv.app.player
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MimeTypes
@@ -15,6 +17,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import com.livetv.app.data.Channel
 import com.livetv.app.data.ChannelRepository
+import com.livetv.app.data.MyChannel
 import com.livetv.app.data.YouTube
 
 /**
@@ -46,6 +49,13 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
         playWhenReady = true
         addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) = handleError(error)
+            override fun onPlaybackStateChanged(state: Int) {
+                // The owner's channel moves on to whatever its schedule has next.
+                if (state == Player.STATE_ENDED && MyChannel.isMine(channel)) {
+                    endedUrl = scheduledUrl
+                    playScheduled()
+                }
+            }
         })
     }
 
@@ -54,10 +64,27 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
     private var candidates: List<Pair<String, String?>> = emptyList()
     private var attempt = 0
 
+    private val handler = Handler(Looper.getMainLooper())
+    private val nextOnSchedule = Runnable { if (MyChannel.isMine(channel)) playScheduled() }
+    /** The owner's channel: the video playing, and when (wall clock) its position 0 was. */
+    private var scheduledUrl: String? = null
+    private var scheduledZero: Long? = null
+    /** A video that reached its end early (its length on the website was too long). */
+    private var endedUrl: String? = null
+
     /** Called with a user-facing message when a stream cannot be played; null clears it. */
     var onError: ((String?) -> Unit)? = null
 
     fun play(channel: Channel) {
+        handler.removeCallbacks(nextOnSchedule)
+        scheduledUrl = null
+        scheduledZero = null
+        endedUrl = null
+        if (MyChannel.isMine(channel)) {
+            this.channel = channel
+            playScheduled()
+            return
+        }
         if (YouTube.isYouTube(channel.url)) {
             // YouTube streams play only in YouTube's player, which opens in full screen.
             stop()
@@ -74,6 +101,7 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
 
     /** Stops playback and forgets the channel (used by the channel-list preview). */
     fun stop() {
+        handler.removeCallbacks(nextOnSchedule)
         channel = null
         candidates = emptyList()
         player.stop()
@@ -84,7 +112,9 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
         channel?.let(::play)
     }
 
+
     fun release() {
+        handler.removeCallbacks(nextOnSchedule)
         onError = null
         player.release()
     }
@@ -106,9 +136,53 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
 
         val source = DefaultMediaSourceFactory(DefaultDataSource.Factory(context, http))
             .createMediaSource(item)
-        player.setMediaSource(source)
+        // The owner's channel joins its video where the schedule is now, like live TV.
+        val zero = scheduledZero
+        if (zero != null) player.setMediaSource(source, (System.currentTimeMillis() - zero).coerceAtLeast(0))
+        else player.setMediaSource(source)
         player.prepare()
         player.play()
+    }
+
+    /** Plays what the owner's schedule has on now, and comes back when it moves on. */
+    private fun playScheduled() {
+        handler.removeCallbacks(nextOnSchedule)
+        val nowMs = System.currentTimeMillis()
+        when (val now = MyChannel.now(nowMs)) {
+            is MyChannel.Now.Playing -> {
+                val url = now.video.url
+                if (url == endedUrl && now.offsetMs > 0) {
+                    // Already over; wait quietly for the next programme.
+                    handler.postDelayed(nextOnSchedule, (now.untilMs - nowMs).coerceIn(1_000, 60_000))
+                    return
+                }
+                endedUrl = null
+                // Checked at least every minute, so a changed schedule is picked up soon.
+                handler.postDelayed(nextOnSchedule, (now.untilMs - nowMs).coerceIn(1_000, 60_000))
+                val zero = if (now.video.seconds > 0) nowMs - now.offsetMs else null
+                // The same video still on (e.g. the schedule was refreshed): leave it playing.
+                if (url == scheduledUrl && zero == scheduledZero && player.playbackState != Player.STATE_IDLE) return
+                scheduledUrl = url
+                scheduledZero = zero
+                candidates = mimeCandidates(url).map { url to it }
+                attempt = 0
+                onError?.invoke(null)
+                prepareCurrent()
+            }
+            is MyChannel.Now.OffAir -> {
+                scheduledUrl = null
+                scheduledZero = null
+                player.stop()
+                player.clearMediaItems()
+                val name = channel?.name ?: "This channel"
+                val next = now.next?.let { v ->
+                    val at = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(now.nextAt ?: nowMs))
+                    " Next: ${v.title} at $at."
+                }.orEmpty()
+                onError?.invoke("$name is off air right now.$next")
+                handler.postDelayed(nextOnSchedule, ((now.nextAt ?: Long.MAX_VALUE) - nowMs).coerceIn(1_000, 60_000))
+            }
+        }
     }
 
     private fun handleError(error: PlaybackException) {
