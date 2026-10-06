@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       step:
-        description: "prepare or voice"
+        description: "find, prepare or voice"
         required: true
         default: prepare
       films:
@@ -41,9 +41,14 @@ jobs:
           else
             pip install -q edge-tts
           fi
+      - name: Find films
+        if: inputs.step == 'find'
+        run: python tools/find_media.py
       - name: Run
+        if: inputs.step != 'find'
         run: python tools/ai_dub.py "${{ inputs.step }}" "${{ inputs.films }}" "${{ inputs.langs }}"
       - name: Upload to the channel-media release
+        if: inputs.step != 'find'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
