@@ -137,6 +137,12 @@
           <li>Best format: MP4, H.264 video, AAC sound, 720p or 1080p.</li>
         </ul>
       </details>
+      <details class="help" id="libraryBox" style="background:#1E293B">
+        <summary>📚 Free show library: shows you're allowed to broadcast, ready to add</summary>
+        <p>Old films, cartoons, NASA space videos and Blender cartoons that are free to show on TV (public domain or Creative Commons). Tap <b>Add</b>: short shows also go into the loop; long films are best given a time slot in step 4. The licence is under each one.</p>
+        <div class="row" style="margin-bottom:10px"><select id="libCat" style="padding:8px;border-radius:10px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit"></select></div>
+        <div class="items" id="library"></div>
+      </details>
       <div class="items" id="videos"></div>
       <form id="videoForm" class="panel" style="margin-top:12px;background:var(--surface-2)">
         <b id="videoFormTitle">Add a video</b>
@@ -457,6 +463,43 @@ $("videoForm").onsubmit = async e => {
   changed(); renderAll();
 };
 
+// ---------- free show library ----------
+let library = [];
+async function loadLibrary() {
+  try { library = await (await fetch("channel/library.json?t=" + Date.now())).json(); } catch { library = []; }
+  const cats = [...new Set(library.map(x => x.cat))];
+  $("libCat").innerHTML = '<option value="">All shows (' + library.length + ')</option>' + cats.map(c => `<option></option>`).join("");
+  [...$("libCat").options].slice(1).forEach((o, i) => { o.value = cats[i]; o.textContent = cats[i]; });
+  renderLibrary();
+}
+function renderLibrary() {
+  const cat = $("libCat").value;
+  $("library").innerHTML = "";
+  for (const show of library.filter(x => !cat || x.cat === cat)) {
+    const have = c && c.videos.some(v => v.url === show.url);
+    const d = document.createElement("div");
+    d.className = "item";
+    d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts"><button class="btn" data-a="play">▶ Watch</button><button class="btn primary" data-a="add"></button></div>`;
+    d.querySelector("b").textContent = show.title;
+    d.querySelector(".meta").textContent = `${show.cat} · ${lengthText(show.secs)} · ${show.licence}`;
+    const add = d.querySelector('[data-a=add]');
+    add.textContent = have ? "✓ Added" : "Add";
+    add.disabled = have;
+    add.onclick = () => {
+      const v = { id: uid(), title: show.title, url: show.url, secs: show.secs, kind: "programme" };
+      c.videos.push(v);
+      // Shorts join the loop; feature films wait for a time slot.
+      if (show.secs <= 30 * 60) c.loop.push(v.id);
+      changed(); renderAll();
+      $("vMsg").innerHTML = `<span class="ok">✓ Added "${show.title}"` + (show.secs <= 30 * 60 ? " and put it at the end of the loop." : ". It's a long film: give it a time slot in step 4.") + " Press Save to put it on air.</span>";
+    };
+    d.querySelector('[data-a=play]').onclick = () => { stopPreview(); $("pv").muted = false; $("pv").src = show.url; $("pv").play().catch(() => {}); $("nowText").textContent = "Watching: " + show.title + " (press Play live below to go back)"; $("stage").scrollIntoView({ behavior: "smooth" }); showLiveButton(); };
+    $("library").appendChild(d);
+  }
+}
+$("libCat").onchange = renderLibrary;
+loadLibrary();
+
 // ---------- step 3 ----------
 function renderLoop() {
   const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
@@ -577,6 +620,7 @@ function changed(schedule = true) {
 function renderAll() {
   c.videos ||= []; c.loop ||= []; c.slots ||= [];
   renderChannel(); renderVideos(); renderLoop(); renderSlots(); renderPreviewLook(); renderGuide();
+  if (library.length) renderLibrary();
   if (!preview) startPreview();
 }
 window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
