@@ -124,3 +124,24 @@ d.arc([cx-62, cy-30, cx+62, cy+68], 20, 160, fill=(30,41,59), width=16)
 text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
 text_fit(d, L/2, 710, "KIDS", B, 210, (254,249,195), 600)
 save_big(im, "bazaar-kids")
+
+# 10 Bazaar Sports, 000000 (classic sport, 1.9.43): blue to deep green rounded square, a football in a gold ring
+im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (37,99,235), (21,128,61)), (0,0), rounded_mask((L,L), 220))
+d = ImageDraw.Draw(im)
+cx, cy, r = L/2, 290, 150
+d.ellipse([cx-r-24, cy-r-24, cx+r+24, cy+r+24], fill=(250,204,21))
+def pent(x, y, s, rot=-90):
+    return [(x + s*math.cos(math.radians(rot + 72*i)), y + s*math.sin(math.radians(rot + 72*i))) for i in range(5)]
+ball = Image.new("RGBA", (2*r, 2*r), (255,255,255,255)); bd = ImageDraw.Draw(ball)
+ink = (15,23,42)
+bd.polygon(pent(r, r, 50), fill=ink)
+for i in range(5):  # seams from the middle patch to the patches cut off by the ball's edge
+    a = math.radians(-90 + 72*i)
+    bd.line([(r + 50*math.cos(a), r + 50*math.sin(a)), (r + 135*math.cos(a), r + 135*math.sin(a))], fill=ink, width=9)
+    a2 = math.radians(-90 + 72*i + 36)
+    bd.line([(r + 40*math.cos(a2), r + 40*math.sin(a2)), (r + 105*math.cos(a2), r + 105*math.sin(a2))], fill=ink, width=9)
+    bd.polygon(pent(r + 150*math.cos(a), r + 150*math.sin(a), 52, -90 + 72*i + 36), fill=ink)
+im.paste(ball, (int(cx-r), int(cy-r)), circle_mask((2*r, 2*r)))
+text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
+text_fit(d, L/2, 710, "SPORTS", B, 200, (254,240,138), 640)
+save_big(im, "bazaar-sports")
