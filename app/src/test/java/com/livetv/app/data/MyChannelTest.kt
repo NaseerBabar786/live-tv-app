@@ -112,5 +112,13 @@ class MyChannelTest {
         assertEquals(11, dramas.channel.number)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1", MyChannel.webPage(dramas.channel))
         assertEquals("filmein", MyChannel.STATIONS.first { it.id == "english" }.backup)
+        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1&v=188", MyChannel.pageFor(dramas.channel, 188))
+        assertEquals("${MyChannel.BOLLYWOOD_URL}?app=1&v=188", MyChannel.pageFor(Channel(name = "Bazaar Hits", url = MyChannel.BOLLYWOOD_URL), 188))
+        assertEquals(
+            "https://tv.bulkbazaar.ca/channel/yt.html?app=1&v=abcdefghijk&name=Geo%20News&ver=188",
+            MyChannel.pageFor(Channel(name = "Geo News", url = "https://www.youtube.com/watch?v=abcdefghijk"), 188),
+        )
+        assertEquals(null, MyChannel.pageFor(Channel(name = "A", url = "https://example.com/a.m3u8"), 188))
+        assertEquals(null, MyChannel.pageFor(MyChannel.parse(JSONObject("""{"videos":[]}""")).channel, 188))
     }
 }

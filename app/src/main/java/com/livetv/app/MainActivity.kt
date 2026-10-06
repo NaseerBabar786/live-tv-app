@@ -2,7 +2,6 @@ package com.livetv.app
 
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Rational
@@ -16,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.livetv.app.data.YouTube
 import com.livetv.app.games.GamesScreen
 import com.livetv.app.player.PlayerScreen
 import com.livetv.app.ui.WebChannel
@@ -72,18 +70,12 @@ class MainActivity : ComponentActivity() {
             GamesScreen(onClose = { showGames = false })
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
-        } else if (playing != null && MyChannel.webPage(playing) != null && playing.url !in fellBack) {
-            // Our channels that run like Bazaar Hits; their free-film schedule plays if YouTube won't.
-            WebChannel(MyChannel.webPage(playing)!! + "&v=" + BuildConfig.VERSION_CODE, onBack = viewModel::stop,
-                onFallback = { fellBack = fellBack + playing.url })
-        } else if (playing != null && playing.url == MyChannel.BOLLYWOOD_URL) {
-            WebChannel(MyChannel.BOLLYWOOD_URL + "?app=1&v=" + BuildConfig.VERSION_CODE, onBack = viewModel::stop)
-        } else if (playing != null && YouTube.videoId(playing.url) != null) {
-            // A YouTube channel plays like Bazaar Hits: YouTube's player with its buttons off, so it
-            // can't be paused, skipped or left for YouTube (owner's rule, 1.9.46).
-            val page = "https://tv.bulkbazaar.ca/channel/yt.html?app=1&v=" + YouTube.videoId(playing.url) +
-                "&name=" + Uri.encode(playing.name) + "&ver=" + BuildConfig.VERSION_CODE
-            WebChannel(page, onBack = viewModel::stop)
+        } else if (playing != null && playing.url !in fellBack && MyChannel.pageFor(playing, BuildConfig.VERSION_CODE) != null) {
+            // Our channels that run like Bazaar Hits, Bazaar Hits itself, and any YouTube channel: YouTube's
+            // player with its buttons off, so it can't be paused, skipped or left for YouTube (owner's rule, 1.9.46).
+            // Our channels' free-film schedule plays if YouTube won't.
+            WebChannel(MyChannel.pageFor(playing, BuildConfig.VERSION_CODE)!!, onBack = viewModel::stop,
+                onFallback = { if (MyChannel.webPage(playing) != null) fellBack = fellBack + playing.url })
         } else if (playing != null) {
             PlayerScreen(
                 channel = playing,

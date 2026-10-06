@@ -24,6 +24,7 @@
   .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }
   .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
+  .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
 </style>
 </head>
 <body>
@@ -91,6 +92,15 @@ fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()).then(d
   document.head.appendChild(s);
 }).catch(fallBack);
 
+// When YouTube hasn't started after 15 s, the screen says why (a photo of it tells us what to fix).
+let started = false, lastError = null, lastState = "none";
+setTimeout(() => {
+  if (started) return;
+  const d = document.createElement("div");
+  d.className = "diag";
+  d.textContent = `YouTube didn't start here (${lastError ? "error " + lastError : "state " + lastState}) · ${(navigator.userAgent.match(/Chrome\/[\d.]+/) || ["?"])[0]}`;
+  document.body.appendChild(d);
+}, 15000);
 window.onYouTubeIframeAPIReady = () => {
   player = new YT.Player("player", {
     videoId: videos[at].id,
@@ -104,12 +114,14 @@ window.onYouTubeIframeAPIReady = () => {
       },
       // It never stays paused; the next video follows when one ends.
       onStateChange: e => {
+        lastState = e.data;
+        if (e.data === YT.PlayerState.PLAYING) started = true;
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
         if (e.data === YT.PlayerState.ENDED) play(1);
         else if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
       },
       // A video its owner won't let others play is skipped; when none will play, the free films take over.
-      onError: () => { if (++failures >= 5) fallBack(); else setTimeout(() => play(1), 1000); },
+      onError: e => { lastError = e.data; if (++failures >= 5) fallBack(); else setTimeout(() => play(1), 1000); },
     },
   });
 };

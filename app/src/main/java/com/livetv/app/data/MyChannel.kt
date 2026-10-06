@@ -94,6 +94,19 @@ object MyChannel {
         return STATIONS.firstOrNull { it.id == id && it.youtube }?.let { "https://tv.bulkbazaar.ca/channel/ytc.html?c=${it.id}&app=1" }
     }
 
+    /**
+     * The page of ours that plays [channel] in YouTube's player, locked (our YouTube channels, Bazaar Hits,
+     * or any YouTube video in a channel list); null for channels our own player plays. [version] is the app's.
+     */
+    fun pageFor(channel: Channel?, version: Int): String? {
+        channel ?: return null
+        webPage(channel)?.let { return "$it&v=$version" }
+        if (channel.url == BOLLYWOOD_URL) return "$BOLLYWOOD_URL?app=1&v=$version"
+        val id = YouTube.videoId(channel.url) ?: return null
+        return "https://tv.bulkbazaar.ca/channel/yt.html?app=1&v=$id&name=" +
+            java.net.URLEncoder.encode(channel.name, "UTF-8").replace("+", "%20") + "&ver=$version"
+    }
+
     fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
 
     class Video(val id: String, val title: String, val url: String, /** 0 for a live stream. */ val seconds: Long)
