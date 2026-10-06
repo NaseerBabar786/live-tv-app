@@ -32,20 +32,21 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 LENGTH = {"headlines": 180, "full": 600}
 NAME = {"headlines": "HEADLINES", "full": "THE FULL REPORT"}
 VOICE_A, VOICE_B, RATE = "en-CA-ClaraNeural", "en-CA-LiamNeural", "+4%"
-UA = {"User-Agent": "BazaarTV-News/1.0 (+https://tv.bulkbazaar.ca)"}
+UA = {"User-Agent": "Mozilla/5.0 (compatible; BazaarTV-News/1.0; +https://tv.bulkbazaar.ca)"}
+NOTES = []  # what worked and what failed, saved in news-<kind>.json for checking
 
 FEEDS = {
     "canada": [
-        ("CBC News", "https://www.cbc.ca/webfeed/rss/rss-canada"),
-        ("CBC News", "https://www.cbc.ca/webfeed/rss/rss-topstories"),
+        ("CBC News", "https://www.cbc.ca/cmlink/rss-canada"),
+        ("CBC News", "https://www.cbc.ca/cmlink/rss-topstories"),
         ("Global News", "https://globalnews.ca/canada/feed/"),
-        ("CBC News", "https://www.cbc.ca/webfeed/rss/rss-politics"),
+        ("CBC News", "https://www.cbc.ca/cmlink/rss-politics"),
     ],
     "world": [
         ("BBC News", "https://feeds.bbci.co.uk/news/world/rss.xml"),
         ("Al Jazeera", "https://www.aljazeera.com/xml/rss/all.xml"),
         ("UN News", "https://news.un.org/feed/subscribe/en/news/all/rss.xml"),
-        ("CBC News", "https://www.cbc.ca/webfeed/rss/rss-world"),
+        ("CBC News", "https://www.cbc.ca/cmlink/rss-world"),
     ],
 }
 # How many stories each bulletin tries to fit (the fitting step drops the last ones if too long).
@@ -120,10 +121,10 @@ def gather(kind):
                 items = parse_feed(fetch(url), source)
                 # Fresh stories only (last 18 hours) when the feed gives dates.
                 items = [s for s in items if not s["when"] or now - s["when"] < 18 * 3600]
-                print(f"{source} {url}: {len(items)} stories")
+                print(f"{source} {url}: {len(items)} stories"); NOTES.append(f"{url}: {len(items)}")
                 lists.append(items)
             except Exception as e:
-                print("feed failed", url, e)
+                print("feed failed", url, e); NOTES.append(f"{url}: failed {e}")
         # Take stories in turn from each feed, so one source doesn't fill the bulletin.
         out, i = [], 0
         while len(out) < WANT[kind][section] + 3 and any(i < len(l) for l in lists):
@@ -146,14 +147,23 @@ Stories:
 {stories}"""
 
 def write_script(stories, kind):
-    """Our own wording for each story (GitHub Models); a plain attributed line when that fails."""
+    """Our own wording, a few stories per request (each request stays small for the free limits)."""
+    plain(stories, kind)
+    for i in range(0, len(stories), 6):
+        ai_script(stories[i:i + 6], kind)
+    NOTES.append(f"AI wording: {sum(bool(s.get('ai')) for s in stories)} of {len(stories)}")
+
+def plain(stories, kind):
+    """The plain attributed line each story keeps when the AI wording fails."""
     for s in stories:
         first = re.split(r"(?<=[.!?])\s+", s["desc"])[0] if s["desc"] else ""
         if len(first.split()) > 35: first = " ".join(first.split()[:35]) + "."
         s["headline"] = s["title"]
         s["read"] = f"{s['source']} reports: {s['title'].rstrip('.')}." + (f" {first}" if kind == "full" and first else "")
+
+def ai_script(stories, kind):
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
-    if not token or not stories: return
+    if not token or not stories or "GitHub Models failed" in " ".join(NOTES): return
     length = "one sentence of 20 to 30 words" if kind == "headlines" else "two or three sentences, 45 to 70 words"
     body = "\n".join(f"{i + 1}. [{s['source']}] {s['title']} -- {s['desc'][:600]}" for i, s in enumerate(stories))
     req = {"model": os.environ.get("NEWS_MODEL", "openai/gpt-4.1-mini"), "temperature": 0.3,
@@ -172,12 +182,12 @@ def write_script(stories, kind):
                 h, rd = clean(g.get("headline", "")), clean(g.get("read", ""))
                 if 3 <= len(h.split()) <= 14 and 8 <= len(rd.split()) <= 110:
                     s["headline"], s["read"], s["ai"] = h, rd, True
-            print("script written by GitHub Models")
             return
         except Exception as e:
-            print("GitHub Models failed", attempt, e)
+            detail = e.read().decode(errors="replace")[:300] if hasattr(e, "read") else ""
+            print("GitHub Models failed", attempt, e, detail)
+            if attempt == 2: NOTES.append(f"GitHub Models failed: {e} {detail}")
             time.sleep(10 * (attempt + 1))
-    print("using plain headline lines")
 
 # ---------- weather (Open-Meteo, CC BY 4.0) ----------
 WMO = {0: "clear", 1: "mostly clear", 2: "partly cloudy", 3: "cloudy", 45: "foggy", 48: "foggy",
@@ -374,7 +384,8 @@ def title_card(path, kind, when, sub):
     d.text(((W - d.textlength(when, font=f)) / 2, 450), when, font=f, fill=(210, 220, 240))
     if sub:
         f = font(False, 20)
-        d.text(((W - d.textlength(sub, font=f)) / 2, 555), sub, font=f, fill=(180, 195, 225))
+        for i, ln in enumerate(wrap(d, sub, f, 1080, 3)):
+            d.text(((W - d.textlength(ln, font=f)) / 2, 552 + i * 26), ln, font=f, fill=(180, 195, 225))
     im.save(path)
 
 def weather_card(path, label, w):
@@ -447,12 +458,13 @@ def main():
         try:
             wx = weather()
         except Exception as e:
-            print("weather failed", e); wx = None
+            print("weather failed", e); wx = None; NOTES.append(f"weather failed: {e}")
 
     label = f"{NAME[kind]}  ·  {clock(slot)}  ·  {slot.strftime('%A, %B %-d')}"
     sources = sorted({s["source"] for s in stories})
     nxt = slot + dt.timedelta(hours=1)
     next_full = slot + dt.timedelta(hours=3 - slot.hour % 3)
+    up_next = f"Next: {'the full report' if nxt.hour % 3 == 0 else 'headlines'} at {clock(nxt)}"
 
     # Segments: (kind, text, voice, picture maker)
     head = (f"{greeting(slot.hour)}. It's {say_hour(slot)} in Toronto, and this is Bazaar TV News"
@@ -516,13 +528,13 @@ def main():
         elif sk == "open":
             pic = "c-title.png"
         else:
-            title_card(os.path.join(work, pic), kind, f"Next: headlines at {clock(nxt)}",
+            title_card(os.path.join(work, pic), kind, up_next,
                        f"Full report every three hours, next at {clock(next_full)}")
         cards.append((pic, dur)); t += dur
     end_secs = total - t
     credits = ("Stories based on reporting by " + ", ".join(sources) +
-               (". Weather: Open-Meteo.com" if wx else "") + ". Written with AI help and read by an AI voice.")
-    title_card(os.path.join(work, "c-end.png"), kind, f"Next: headlines at {clock(nxt)}", credits)
+               (". Weather: Open-Meteo.com" if wx else "") + (". Written with AI help" if any(st.get("ai") for st in shown) else "") + ". Read by an AI voice.")
+    title_card(os.path.join(work, "c-end.png"), kind, up_next, credits)
     cards.append(("c-end.png", end_secs))
 
     music = np.zeros_like(voice_track)
@@ -550,7 +562,7 @@ def main():
                                capture_output=True, text=True, check=True).stdout)
     if abs(got - total) > 1.0: raise SystemExit(f"{mp4} is {got:.1f} s, wanted {total} s")
     info = {"kind": kind, "secs": total, "slot": slot.isoformat(), "made": dt.datetime.now(dt.timezone.utc).isoformat(),
-            "sources": sources, "weather": bool(wx),
+            "sources": sources, "weather": bool(wx), "notes": NOTES,
             "stories": [{"section": s["section"], "headline": s["headline"], "source": s["source"],
                          "ai": bool(s.get("ai"))} for s in shown]}
     json.dump(info, open(os.path.join(out, f"news-{kind}.json"), "w"), indent=1)
