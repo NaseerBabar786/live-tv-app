@@ -96,9 +96,12 @@ private const val CARD_NOT_BEFORE_MS = 3 * 60_000L
 /** A sponsor's video pop-up: at most this often (other times their picture card shows). */
 private const val VIDEO_EVERY_MS = 30 * 60_000L
 /** Full screen, YouTube style (1.9.58): up to [POD_SIZE] ads back to back, each picture ad [PICTURE_MS] long,
- *  with a countdown; Back skips an ad once it has been on for [SKIP_AFTER_MS]. */
+ *  with a countdown; Back skips an ad once it has been on for [SKIP_AFTER_MS]. Owner's pop-up ad length
+ *  rule: ads are 10 to 60 seconds and a break never runs over [BREAK_MS] (an ad that doesn't fit what's
+ *  left is left out; a video of unknown length is stopped when the minute is up). */
 private const val POD_SIZE = 2
-private const val PICTURE_MS = 15_000L
+private const val PICTURE_MS = 20_000L
+private const val BREAK_MS = 60_000L
 private const val SKIP_AFTER_MS = 10_000L
 
 /** The Cable TV promo video from the website's home page (see [SponsorCard]). */
@@ -452,6 +455,9 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
     var shownAt by remember { mutableLongStateOf(0L) }
     var shownFor by remember { mutableLongStateOf(CARD_MS) }
     var podJob by remember { mutableStateOf<Job?>(null) }
+    // A video ad: the most it may play (what's left of the break's minute), and how much it played.
+    var videoMax by remember { mutableLongStateOf(BREAK_MS) }
+    var videoPlayed by remember { mutableLongStateOf(0L) }
     val isFullScreen by rememberUpdatedState(fullScreen)
     val opener = rememberSiteOpener()
     // While the card or video shows on a full-screen channel, OK on the remote (or a tap) opens the
@@ -470,12 +476,23 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
         val first = Sponsors.next("card") ?: return
         val pod = if (isFullScreen) {
             val more = (2..POD_SIZE).mapNotNull { Sponsors.next("card") }
-            (listOf(first) + more).distinctBy { it.id }
+            // Only as many as fit in the break's minute (a video of unknown length counted as 30 s;
+            // at most one video per [VIDEO_EVERY_MS]).
+            var total = 0L
+            var videoDue = System.currentTimeMillis() - prefs.getLong("videoAt", 0L) >= VIDEO_EVERY_MS
+            (listOf(first) + more).distinctBy { it.id }.filterIndexed { i, sp ->
+                val asVideo = videoDue && sp.popupVideo && sp.video.isNotEmpty() && sp.videoSecs * 1000L <= BREAK_MS - total
+                val ms = if (asVideo) (sp.videoSecs.takeIf { it > 0 } ?: 30) * 1000L else PICTURE_MS
+                (i == 0 || total + ms <= BREAK_MS).also { if (it) { total += ms; if (asVideo) videoDue = false } }
+            }
         } else listOf(first)
         lastCard = SystemClock.elapsedRealtime()
         val full = isFullScreen
         podJob = scope.launch {
             delay(wait)
+            // What's left of the break's minute: time spent on ads (not on a sponsor's website).
+            var left = BREAK_MS
+            var index = 0
             for ((i, sponsor) in pod.withIndex()) {
                 // Leaving the full-screen channel ends the break.
                 if (full && !isFullScreen) break
@@ -485,25 +502,32 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
                     delay(600)
                     if (full && !isFullScreen) break
                 }
-                podAt = i
+                if (full && left < 10_000L) break
+                val wall = System.currentTimeMillis()
+                val videoMs = sponsor.videoSecs * 1000L
+                val asVideo = sponsor.popupVideo && sponsor.video.isNotEmpty() && isFullScreen &&
+                    videoMs <= left && wall - prefs.getLong("videoAt", 0L) >= VIDEO_EVERY_MS
+                // A picture ad that doesn't fit what's left of the minute waits for the next break.
+                if (!asVideo && full && i > 0 && PICTURE_MS > left) continue
+                podAt = index++
                 podSize = pod.size
                 SponsorViews.count(sponsor, "card")
-                val wall = System.currentTimeMillis()
-                val asVideo = sponsor.popupVideo && sponsor.video.isNotEmpty() && isFullScreen &&
-                    wall - prefs.getLong("videoAt", 0L) >= VIDEO_EVERY_MS
                 if (asVideo) {
                     prefs.edit().putLong("videoAt", wall).apply()
                     showing = null
+                    videoMax = left
                     video = sponsor
                     snapshotFlow { video }.first { it !== sponsor }
+                    left -= videoPlayed.coerceAtLeast(1_000L)
                     continue
                 }
                 // A little longer when OK can open their website, so there's time to press it.
-                shownFor = if (full) PICTURE_MS else if (sponsor.site != null) CARD_SITE_MS else CARD_MS
+                shownFor = if (full) minOf(PICTURE_MS, left) else if (sponsor.site != null) CARD_SITE_MS else CARD_MS
                 shownAt = SystemClock.elapsedRealtime()
                 showing = sponsor
                 withTimeoutOrNull(shownFor) { snapshotFlow { showing }.first { it !== sponsor } }
                 if (showing === sponsor) showing = null
+                left -= SystemClock.elapsedRealtime() - shownAt
             }
             podAt = 0
             podSize = 1
@@ -559,7 +583,8 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
     if (playing != null && fullScreen && width >= 400) {
         key(playing) {
             VideoPopup(playing, width, paused = opener.sponsor != null, label = adLabel(podAt, podSize, playing),
-                onDone = { if (video === playing) video = null })
+                maxMs = if (playing === PromoSponsor) BREAK_MS else videoMax,
+                onDone = { played -> videoPlayed = played; if (video === playing) video = null })
         }
         return
     }
@@ -677,12 +702,13 @@ private val PromoSponsor = Sponsor(
  */
 @OptIn(UnstableApi::class)
 @Composable
-private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, label: String, onDone: () -> Unit) {
+private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, label: String, maxMs: Long, onDone: (playedMs: Long) -> Unit) {
     val context = LocalContext.current
-    val done by rememberUpdatedState(onDone)
+    val finish by rememberUpdatedState(onDone)
     var showing by remember { mutableStateOf(false) }
     var secondsLeft by remember { mutableIntStateOf(0) }
     var playedMs by remember { mutableLongStateOf(0L) }
+    val done = { finish(playedMs) }
     val player = remember {
         ExoPlayer.Builder(context).build().apply {
             volume = 0f
@@ -707,9 +733,11 @@ private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, labe
     }
     LaunchedEffect(showing) {
         while (showing) {
-            val left = player.duration - player.currentPosition
-            if (player.duration > 0) secondsLeft = ((left + 999) / 1000).toInt().coerceAtLeast(0)
+            // Never past what's left of the break's minute (owner's pop-up ad length rule).
+            val end = if (player.duration > 0) minOf(player.duration, maxMs) else maxMs
+            secondsLeft = ((end - player.currentPosition + 999) / 1000).toInt().coerceAtLeast(0)
             playedMs = player.currentPosition
+            if (playedMs >= maxMs) { done(); break }
             delay(250)
         }
     }

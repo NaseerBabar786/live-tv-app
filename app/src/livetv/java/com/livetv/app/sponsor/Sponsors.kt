@@ -39,6 +39,8 @@ class Sponsor(
     val website: String = "",
     /** The channel change pop-up plays [video] to the end instead of showing the picture (chosen on /sponsors). */
     val popupVideo: Boolean = false,
+    /** [video]'s length in seconds as /sponsors measured it; 0 when not known. */
+    val videoSecs: Int = 0,
 ) {
     /** The address to open: the website box, or else the "phone or website" box when it holds a web address; null when neither does. */
     val site: String? get() = siteUrl(website) ?: siteUrl(contact)
@@ -115,7 +117,8 @@ object Sponsors {
                         .put("banner", f.text("banner"))
                         .put("video", f.text("video"))
                         .put("website", f.text("website"))
-                        .put("popup", f.text("popup")),
+                        .put("popup", f.text("popup"))
+                        .put("videoSecs", f.optJSONObject("videoSecs")?.let { it.optString("integerValue").toIntOrNull() ?: it.optDouble("doubleValue", 0.0).toInt() } ?: 0),
                 )
             }
             file?.writeText(arr.toString())
@@ -151,6 +154,7 @@ object Sponsors {
             video = o.optString("video").trim().takeIf { it.startsWith("https://") }.orEmpty(),
             website = o.optString("website").trim(),
             popupVideo = o.optString("popup") == "video",
+            videoSecs = o.optInt("videoSecs"),
         )
     }
 
