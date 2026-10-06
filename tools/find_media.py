@@ -44,11 +44,13 @@ def commons(q, n=12):
 
 
 if __name__ == "__main__":
-    for ident in ["superman_the_mechanical_monsters", "SupermanTheMechanicalMonsters", "superman_1941", "Superman-TheMechanicalMonsters",
-                  "popeye_ali_baba", "Popeye_forty_thieves", "Popeye_Sindbad", "TheMechanicalMonsters"]:
+    for ident in ["sprite-fright-2021", "CosmosLaundromat", "cosmos-laundromat", "CosmosLaundromatFirstCycle",
+                  "DuckandC1951", "Sintel", "agent-327-operation-barbershop", "wing-it-blender"]:
         archive_item(ident)
-    for q in ['title:("mechanical monsters") AND mediatype:movies', 'title:(superman) AND title:(fleischer) AND mediatype:movies',
-              'title:(popeye) AND collection:(classic_cartoons) AND mediatype:movies', 'collection:classic_cartoons AND mediatype:movies AND title:(superman)']:
+    for q in ['title:("cosmos laundromat")', 'title:("sprite fright")', 'title:("wing it") AND blender',
+              'title:(charge) AND blender', 'collection:prelinger AND subject:(nature OR animals OR science) AND mediatype:movies',
+              'collection:nasa AND mediatype:movies AND title:(documentary)']:
         archive_search(q)
-    for q in ["Superman Mechanical Monsters filetype:video", "Fleischer Superman filetype:video", "Popeye public domain filetype:video"]:
+    for q in ["Cosmos Laundromat filetype:video", "Sprite Fright filetype:video", "Wing It Blender filetype:video",
+              "NASA documentary filetype:video", "documentary narrated public domain filetype:video incategory:Documentary_films"]:
         commons(q)
