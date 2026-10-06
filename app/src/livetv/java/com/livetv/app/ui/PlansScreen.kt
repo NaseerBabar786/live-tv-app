@@ -117,15 +117,20 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                             )
                             Text(Subscription.FEATURES[tier] ?: "", style = MaterialTheme.typography.bodySmall)
                             if (prices != null) {
-                                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                    OutlinedButton(onClick = { ask(tier, "1 month", prices.month) }, modifier = Modifier.focusGlow()) {
-                                        Text("1 month ${prices.month}")
-                                    }
-                                    OutlinedButton(onClick = { ask(tier, "6 months", prices.sixMonths) }, modifier = Modifier.focusGlow()) {
-                                        Text("6 months ${prices.sixMonths}")
-                                    }
-                                    OutlinedButton(onClick = { ask(tier, "1 year", prices.year) }, modifier = Modifier.focusGlow()) {
-                                        Text("1 year ${prices.year}")
+                                // Longest first: the year is the best value.
+                                val lengths = listOf(
+                                    "1 year" to prices.year,
+                                    "6 months" to prices.sixMonths,
+                                    "3 months" to prices.threeMonths,
+                                    "1 month" to prices.month,
+                                )
+                                lengths.chunked(2).forEach { pair ->
+                                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        pair.forEach { (length, price) ->
+                                            OutlinedButton(onClick = { ask(tier, length, price) }, modifier = Modifier.focusGlow()) {
+                                                Text("$length $price")
+                                            }
+                                        }
                                     }
                                 }
                             }

@@ -40,8 +40,8 @@ android {
         create("plus") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetvplus"
-            versionCode = 4
-            versionName = "1.2.0"
+            versionCode = 5
+            versionName = "1.3.0"
         }
         // Live TV Max: Cable TV's channels and code, opening on a streaming-style home screen
         // (rows by country and language, a now/next guide, movies and dramas). Installs beside Cable TV.
