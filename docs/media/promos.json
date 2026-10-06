@@ -1,6 +1,20 @@
 {
   "note": "Our own Cable TV promos for the breaks on our YouTube channels (channel/promo.js). They play in turn. Add a new one by putting the mp4 in docs/media and adding a line here. Never paid sponsor ads.",
   "promos": [
-    { "src": "cabletv-ad-1.mp4", "title": "Cable TV Video Ad 1", "secs": 60 }
+    {
+      "src": "cabletv-ad-1.mp4",
+      "title": "Cable TV Video Ad 1",
+      "secs": 60
+    },
+    {
+      "src": "cabletv-ad-2.mp4",
+      "title": "Cable TV Video Ad 2: Bazaar channels",
+      "secs": 30
+    },
+    {
+      "src": "cabletv-ad-3.mp4",
+      "title": "Cable TV Video Ad 3: free + install",
+      "secs": 30
+    }
   ]
 }
