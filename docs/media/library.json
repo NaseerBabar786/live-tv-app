@@ -23,6 +23,10 @@
   {
    "id": "stories",
    "name": "Stories"
+  },
+  {
+   "id": "promos",
+   "name": "Cable TV Promos"
   }
  ],
  "items": [
@@ -229,6 +233,39 @@
    "about": "A strange story of an old man and a young man inside a giant machine.",
    "credit": "Elephants Dream (c) 2006 Blender Foundation / Netherlands Media Art Institute / elephantsdream.org, CC BY 2.5.",
    "srt": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-hindi.srt"
+  },
+  {
+   "id": "cable-tv-video-ad-1",
+   "cat": "promos",
+   "lang": "en",
+   "title": "Cable TV Video Ad 1",
+   "url": "media/cable-tv-video-ad-1.mp4",
+   "secs": 60,
+   "poster": "media/cable-tv-ad-1-poster.jpg",
+   "about": "One minute: no cable bill, 100% free, layouts, Bazaar channels, easy install, tv.bulkbazaar.ca.",
+   "credit": "Our own ad with original music. Not on any channel yet."
+  },
+  {
+   "id": "cable-tv-video-ad-2",
+   "cat": "promos",
+   "lang": "en",
+   "title": "Cable TV Video Ad 2",
+   "url": "media/cable-tv-video-ad-2.mp4",
+   "secs": 30,
+   "poster": "media/cable-tv-ad-2-poster.jpg",
+   "about": "30 seconds: the Bazaar channels one by one.",
+   "credit": "Our own ad with original music. Not on any channel yet."
+  },
+  {
+   "id": "cable-tv-video-ad-3",
+   "cat": "promos",
+   "lang": "en",
+   "title": "Cable TV Video Ad 3",
+   "url": "media/livetv-promo.mp4",
+   "secs": 30,
+   "poster": "media/cable-tv-ad-3-poster.jpg",
+   "about": "30 seconds: $0, three easy install steps, everything included.",
+   "credit": "Our own ad with original music. Plays as the Cable TV pop-up ad in the app (when no sponsor video is set)."
   }
  ]
 }
