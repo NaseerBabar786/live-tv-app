@@ -13,6 +13,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.livetv.app.R
 import com.livetv.app.account.Account
+import com.livetv.app.account.Subscription
+import com.livetv.app.Edition
+import com.livetv.app.Plans
 import com.livetv.app.account.Messages
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Spacer
@@ -86,6 +89,7 @@ fun SettingsDialog(
     var showingAppBazaar by rememberSaveable { mutableStateOf(false) }
     var showingSuggestions by rememberSaveable { mutableStateOf(false) }
     var showingMessages by rememberSaveable { mutableStateOf(false) }
+    var changingPassword by rememberSaveable { mutableStateOf(false) }
     val account = remember { Account.get(context) }
     val signedIn by account.user.collectAsState()
     var findingPlaylists by rememberSaveable { mutableStateOf(false) }
@@ -123,6 +127,11 @@ fun SettingsDialog(
 
     if (showingSuggestions) {
         SuggestionsScreen(onClose = { showingSuggestions = false })
+        return
+    }
+
+    if (changingPassword) {
+        ChangePasswordDialog(onDismiss = { changingPassword = false })
         return
     }
 
@@ -284,11 +293,24 @@ fun SettingsDialog(
                             NewBadge()
                         }
                     }
+                    if (!Edition.MAX) {
+                        val tier by Plans.current.collectAsState()
+                        val offer by Subscription.offer.collectAsState()
+                        OutlinedButton(
+                            onClick = { onDismiss(); Plans.showPlans() },
+                            modifier = Modifier.fillMaxWidth().focusGlow(),
+                        ) { Text(if (offer.enforced) "⭐ My package: ${tier.label}" else "⭐ Packages") }
+                    }
                     val u = signedIn!!
                     Text(
                         "Signed in as ${u.name.ifBlank { u.email }}" + if (u.name.isNotBlank()) " (${u.email})" else "",
                         style = MaterialTheme.typography.bodySmall,
                     )
+                    if (account.usesPassword) {
+                        TextButton(onClick = { changingPassword = true }, modifier = Modifier.focusGlow()) {
+                            Text("🔑 Change password")
+                        }
+                    }
                     TextButton(
                         onClick = {
                             account.signOut()

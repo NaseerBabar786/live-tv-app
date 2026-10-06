@@ -50,10 +50,11 @@
       <div class="row"><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th></th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
+  <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
   <p class="err" id="err"></p>
 </main>
 <footer>
@@ -73,7 +74,7 @@ if (!configured) {
 } else {
   const V = "10.12.2";
   const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
-  const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
+  const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, sendPasswordResetEmail } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
   const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -127,7 +128,7 @@ if (!configured) {
     const tbody = $("rows"); tbody.innerHTML = "";
     list.forEach((u, i) => {
       const tr = document.createElement("tr");
-      [i + 1, u.name, u.email, u.device, u.model, u.appVersion, fmt(u.joined), fmt(u.lastOpened)].forEach(v => {
+      [i + 1, u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, fmt(u.joined), fmt(u.lastOpened)].forEach(v => {
         const td = document.createElement("td"); td.textContent = v ?? ""; tr.append(td);
       });
       // Starts (or opens) a private conversation with this viewer; it lands in their Messages.
@@ -135,16 +136,70 @@ if (!configured) {
       const a = document.createElement("a");
       a.textContent = "✉ Message";
       a.href = "suggestions#to=" + encodeURIComponent(u.id) + "&name=" + encodeURIComponent(u.name || "") + "&email=" + encodeURIComponent(u.email || "");
-      td.append(a); tr.append(td);
+      const setPw = document.createElement("a");
+      setPw.textContent = "🔑 Set password"; setPw.href = "#"; setPw.style.marginLeft = "12px";
+      setPw.onclick = e => { e.preventDefault(); setPassword(u); };
+      const reset = document.createElement("a");
+      reset.textContent = "✉ Reset email"; reset.href = "#"; reset.style.marginLeft = "12px";
+      reset.onclick = e => { e.preventDefault(); resetEmail(u); };
+      td.append(a, setPw, reset); tr.append(td);
       tbody.append(tr);
     });
   }
   $("q").oninput = render;
 
+  // Setting someone's password needs the owner's own Google permission for the Firebase project
+  // (there's no server): Google asks for it once, in a pop-up, the first time.
+  let ownerToken = null;
+  async function getOwnerToken() {
+    if (ownerToken && ownerToken.expires > Date.now()) return ownerToken.value;
+    const p = new GoogleAuthProvider();
+    p.addScope("https://www.googleapis.com/auth/cloud-platform");
+    p.setCustomParameters({ login_hint: ADMIN_EMAIL });
+    const r = await signInWithPopup(auth, p);
+    const value = GoogleAuthProvider.credentialFromResult(r)?.accessToken;
+    if (!value) throw new Error("Google didn't give permission.");
+    ownerToken = { value, expires: Date.now() + 50 * 60e3 };
+    return value;
+  }
+
+  async function setPassword(u) {
+    const who = u.name || u.email || "this viewer";
+    const pw = prompt(`New password for ${who} (6 or more characters). You'll tell it to them:`);
+    if (pw == null) return;
+    if (pw.length < 6) return alert("The password needs at least 6 characters.");
+    $("err").textContent = "";
+    try {
+      const token = await getOwnerToken();
+      const res = await fetch(`https://identitytoolkit.googleapis.com/v1/projects/${firebaseConfig.projectId}/accounts:update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token, "X-Goog-User-Project": firebaseConfig.projectId },
+        body: JSON.stringify({ localId: u.id, password: pw }),
+      });
+      if (!res.ok) {
+        const msg = (await res.json().catch(() => ({})))?.error?.message || ("HTTP " + res.status);
+        if (res.status === 401) ownerToken = null;
+        throw new Error(msg);
+      }
+      alert(`Done. ${who} can now sign in with:\n\nEmail: ${u.email}\nPassword: ${pw}\n\nThey can change it in the app's Settings › Change password.`);
+    } catch (e) {
+      $("err").textContent = "Couldn't set the password: " + e.message + ". You can use ✉ Reset email instead if their email is real.";
+    }
+  }
+
+  async function resetEmail(u) {
+    if (!u.email) return alert("This viewer has no email saved.");
+    if (!confirm(`Send a "make a new password" email to ${u.email}?`)) return;
+    try {
+      await sendPasswordResetEmail(auth, u.email);
+      alert("Sent. If the email address is real, they'll get a link to make a new password.");
+    } catch (e) { $("err").textContent = "Couldn't send it: " + e.message; }
+  }
+
   $("csv").onclick = () => {
     const esc = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
-    const lines = [["Name", "Email", "Device", "Model", "Version", "Joined", "Last opened"].map(esc).join(",")]
-      .concat(users.map(u => [u.name, u.email, u.device, u.model, u.appVersion, u.joined?.toISOString(), u.lastOpened?.toISOString()].map(esc).join(",")));
+    const lines = [["Name", "Email", "Sign-in", "Device", "Model", "Version", "Joined", "Last opened"].map(esc).join(",")]
+      .concat(users.map(u => [u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, u.joined?.toISOString(), u.lastOpened?.toISOString()].map(esc).join(",")));
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
     a.download = "live-tv-users.csv"; a.click();

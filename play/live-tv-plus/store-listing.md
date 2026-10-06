@@ -8,7 +8,7 @@ TV network in the listing, screenshots or video: Google treats that as part of t
 - **Package name:** com.naseerbabar.livetvplus
 - **Category:** Video Players & Editors
 - **Contains ads:** No
-- **In-app purchases:** Yes. One subscription, Premium (product ID `premium_monthly`, $0.99/month, auto-renewing). Create it in Play Console under Monetize > Subscriptions with that exact ID before release.
+- **In-app purchases:** Yes. One subscription, Premium (product ID `premium_monthly`, auto-renewing) with three base plans: monthly $1.99, 6 months $9.99 and yearly $17.99. Create it in Play Console under Monetize > Subscriptions with that exact ID and add the three base plans (billing periods 1 month, 6 months, 1 year) before release. The app lists every base plan it finds, shortest first.
 
 ## Short description (80 characters max)
 Play your own M3U playlists on phones and Android TV, in grids or side by side.
