@@ -109,7 +109,7 @@ data class UiState(
             val shown = inLanguage
                 .filter { category == null || it.category == category }
                 .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-            // The owner's own channels (dialled 0 to 0000000) always lead.
+            // The owner's own channels (dialled 0 to 00000000) always lead.
             if (filter != FILTER_FAVORITES) return shown.sortedWith(compareBy({ !MyChannel.isMine(it) }, { it.id !in favorites }))
             val (mine, rest) = shown.partition { MyChannel.isMine(it) }
             return mine + rest
@@ -156,7 +156,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** [list] with the owner's channels first (those that are on): Bazaar TV, Cinema, Music, Hits, Kids, Sports and Travel. */
+    /** [list] with the owner's channels first (those that are on): Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel and Comedy. */
     private fun withMyChannel(list: List<Channel>): List<Channel> {
         val rest = list.filterNot { MyChannel.isMine(it) }
         if (rest.isEmpty() || !Edition.LIVE_TV) return rest
@@ -331,7 +331,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Adds a digit; 2 seconds after the last one the app goes to that channel. */
     fun typeDigit(digit: Int) {
-        if (typedNumber.length >= 7) typedNumber = ""
+        if (typedNumber.length >= 8) typedNumber = ""
         typedNumber += digit
         typedJob?.cancel()
         typedJob = viewModelScope.launch {
@@ -352,7 +352,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val number = typed.toIntOrNull()
         typedNumber = ""
         if (number == null) return
-        // 0 is Bazaar TV, 00 Bazaar Cinema, 000 Bazaar Music, 0000 Bazaar Hits, 00000 Bazaar Kids, 000000 Bazaar Sports and 0000000 Bazaar Travel, the owner's own channels.
+        // 0 is Bazaar TV, 00 Bazaar Cinema, 000 Bazaar Music, 0000 Bazaar Hits, 00000 Bazaar Kids, 000000 Bazaar Sports, 0000000 Bazaar Travel and 00000000 Bazaar Comedy, the owner's own channels.
         MyChannel.byDial(typed)?.takeIf { Edition.LIVE_TV }?.let {
             numberPadOpen = false
             play(it)

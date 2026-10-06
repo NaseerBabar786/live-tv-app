@@ -168,3 +168,19 @@ d.polygon(plane, fill=(250,204,21))
 text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
 text_fit(d, L/2, 710, "TRAVEL", B, 200, (254,240,138), 640)
 save_big(im, "bazaar-travel")
+
+# 12 Bazaar Comedy, 00000000 (classic comedy, 1.9.44): orange to pink rounded square, a big laughing face
+im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (249,115,22), (219,39,119)), (0,0), rounded_mask((L,L), 220))
+d = ImageDraw.Draw(im)
+cx, cy, r = L/2, 290, 160
+d.ellipse([cx-r, cy-r, cx+r, cy+r], fill=(253,224,71))
+ink = (30,41,59)
+for sx in (-1, 1):  # eyes squeezed shut with laughing
+    d.arc([cx + sx*62 - 34, cy - 70, cx + sx*62 + 34, cy - 10], 200, 340, fill=ink, width=16)
+d.chord([cx-100, cy-10, cx+100, cy+120], 0, 180, fill=ink)  # wide open mouth
+d.chord([cx-62, cy+60, cx+62, cy+118], 180, 360, fill=(244,63,94))  # tongue
+for sx in (-1, 1):  # tears of joy
+    d.ellipse([cx + sx*118 - 16, cy - 12, cx + sx*118 + 16, cy + 30], fill=(56,189,248))
+text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
+text_fit(d, L/2, 710, "COMEDY", B, 200, (254,240,138), 640)
+save_big(im, "bazaar-comedy")

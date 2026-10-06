@@ -1,7 +1,7 @@
-name: Build Bazaar Sports and Travel schedules
+name: Build Bazaar Sports, Travel and Comedy schedules
 
-# Builds docs/channel/sports-schedule.json and travel-schedule.json (on tv.bulkbazaar.ca/channel/):
-# the ready-made schedules of Bazaar Sports (000000) and Bazaar Travel (0000000) in Free Live TV,
+# Builds docs/channel/sports-, travel- and comedy-schedule.json (on tv.bulkbazaar.ca/channel/):
+# the ready-made schedules of Bazaar Sports (000000), Travel (0000000) and Comedy (00000000),
 # from public-domain and CC BY films on the Internet Archive. A new loop order every week.
 on:
   schedule:
@@ -41,6 +41,10 @@ jobs:
         continue-on-error: true
         run: python3 tools/build_archive_channels.py --channel travel
 
+      - name: Build Bazaar Comedy
+        continue-on-error: true
+        run: python3 tools/build_archive_channels.py --channel comedy
+
       # A push made with the workflow's own token doesn't start other workflows,
       # so the website is rebuilt explicitly below.
       - name: Publish the schedule
@@ -55,7 +59,7 @@ jobs:
             echo "No changes."
             exit 0
           fi
-          git commit -m "Bazaar Sports and Travel schedules for the week of $(date -u '+%Y-%m-%d')"
+          git commit -m "Bazaar Sports, Travel and Comedy schedules for the week of $(date -u '+%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

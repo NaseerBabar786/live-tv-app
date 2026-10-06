@@ -3,7 +3,8 @@
 Builds the ready-made schedules of our Internet Archive channels in Free Live TV:
 
   * Bazaar Sports (000000): classic sport, boxing, baseball, roller derby, sport films;
-  * Bazaar Travel (0000000): travelogues and scenic films of countries, cities and parks.
+  * Bazaar Travel (0000000): travelogues and scenic films of countries, cities and parks;
+  * Bazaar Comedy (00000000): silent and classic comedy shorts, films and early TV comedies.
 
 Only films from the Archive's curated collections whose item states a public-domain mark, CC0
 or plain CC BY licence are taken (no "share-alike", "non-commercial" or "no-derivatives"), and
@@ -12,7 +13,7 @@ never play here.
 
 Writes docs/channel/<id>-schedule.json, the same shape Channel Studio saves: all the films back
 to back round the clock, in a new order every week. Standard library only.
-Run: python3 tools/build_archive_channels.py --channel sports|travel [--date YYYY-MM-DD]
+Run: python3 tools/build_archive_channels.py --channel sports|travel|comedy [--date YYYY-MM-DD]
 """
 import argparse
 import concurrent.futures as cf
@@ -30,7 +31,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 USER_AGENT = "LiveTV-playlist-builder/1.0 (+https://tv.bulkbazaar.ca)"
 SEARCH = "https://archive.org/advancedsearch.php?"
 METADATA = "https://archive.org/metadata/"
-MIN_SECS, MAX_SECS = 2 * 60, 75 * 60
+MIN_SECS, MAX_SECS = 2 * 60, 100 * 60
 
 # Only the Archive's curated collections: anyone can upload to the Archive and mark it public
 # domain, so a claim on a private upload (a modern cartoon, a TV advert) can't be trusted.
@@ -69,6 +70,18 @@ CHANNELS = {
         "ticker": "Bazaar Travel · See the world, day and night · Classic travel films of countries, cities and "
                   "parks · Channel 0000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
     },
+    "comedy": {
+        "name": "Bazaar Comedy", "dial": "00000000",
+        "subjects": ["comedy", "comedies", "slapstick", "silent comedy", "comedy films", "sitcom", "sitcoms",
+                     "comedy shorts", "humor", "laurel and hardy", "charlie chaplin", "buster keaton", "three stooges",
+                     "harold lloyd", "abbott and costello"],
+        # The Archive's own comedy collections, searched as a whole too.
+        "collections": ["comedy_films"],
+        # Family viewing: no horror comedies, no blackface minstrel routines, no adverts.
+        "skip": r"minstrel|blackface|horror|zombie|murder|strip|burlesque|stag|risque|naughty",
+        "ticker": "Bazaar Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies "
+                  "· Channel 00000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+    },
 }
 
 
@@ -106,10 +119,11 @@ def old_enough(doc):
 def candidates(ch, skip):
     """Archive items tagged with one of the channel's subjects and a free licence, most watched first."""
     seen, out = set(), []
-    for sport in ch["subjects"]:
+    queries = [f'subject:"{x}"' for x in ch["subjects"]] + [f"collection:{c}" for c in ch.get("collections", [])]
+    for sport in queries:
         # Licence is checked here (and again on the item), not in the query: the search's
         # wildcards don't match inside licence links.
-        url = SEARCH + urllib.parse.urlencode({"q": f'mediatype:movies AND subject:"{sport}"',
+        url = SEARCH + urllib.parse.urlencode({"q": f"mediatype:movies AND {sport}",
                                                "fl[]": ["identifier", "title", "licenseurl", "collection", "year"], "rows": 300,
                                                "output": "json", "sort[]": "downloads desc"}, doseq=True)
         try:

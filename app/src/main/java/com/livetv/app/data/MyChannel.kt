@@ -34,6 +34,8 @@ object MyChannel {
         Station("sports", "000000", "Bazaar Sports"),
         // Public-domain travel films of countries, cities and parks, also by build_archive_channels.py (1.9.44).
         Station("travel", "0000000", "Bazaar Travel"),
+        // Silent and classic comedy (Chaplin, Laurel and Hardy, Keaton), also by build_archive_channels.py (1.9.44).
+        Station("comedy", "00000000", "Bazaar Comedy"),
     )
 
     private const val SCHEME = "mychannel://"
@@ -126,7 +128,7 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In dial order: 0, 00, 000, 0000 (Bazaar Hits), 00000, 000000, 0000000.
+        // In dial order: 0, 00, 000, 0000 (Bazaar Hits), 00000, 000000, 0000000, 00000000.
         (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel?.let { st.dial to it } } + ("0000" to bollywood))
             .sortedBy { it.first.length }
             .map { it.second }
