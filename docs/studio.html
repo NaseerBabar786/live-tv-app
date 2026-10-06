@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Channel Studio</title>
-<meta name="description" content="Run your own TV channel inside Free Live TV.">
-<link rel="icon" href="channel/logos/bazaar-tv.png">
+<meta name="description" content="Run your own TV channel inside Cable TV.">
+<link rel="icon" href="channel/logos/bazaar-tv-square.png">
 <link rel="stylesheet" href="assets/site.css">
 <meta name="robots" content="noindex">
 <style>
@@ -20,10 +20,6 @@
   details.help { margin: 0 0 14px; background: var(--surface-2); border-radius: 10px; padding: 10px 14px; }
   details.help summary { cursor: pointer; font-weight: 700; color: var(--accent); }
   details.help p, details.help li { color: var(--text); font-size: 15px; }
-  .logos { display: flex; gap: 10px; flex-wrap: wrap; margin: 6px 0 12px; }
-  .logos button { background: none; border: 3px solid transparent; border-radius: 16px; padding: 4px; cursor: pointer; color: var(--text); font: inherit; font-size: 12px; width: 104px; }
-  .logos button.sel { border-color: var(--focus); }
-  .logos img { width: 88px; height: 88px; display: block; margin: 0 auto 4px; }
   .items { display: grid; gap: 8px; }
   .item { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
   .item b { display: block; }
@@ -38,7 +34,7 @@
   .stage { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; container-type: inline-size; }
   .stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; background: #000; }
   .stage video.keep { object-fit: contain; }
-  .stage .bug { position: absolute; width: 8cqw; height: 8cqw; object-fit: contain; opacity: .85; pointer-events: none; }
+  .stage .bug { position: absolute; height: 9cqw; width: auto; max-width: 26cqw; object-fit: contain; opacity: .55; pointer-events: none; }
   .bug.tr { top: 2cqw; right: 2.5cqw; } .bug.tl { top: 2cqw; left: 2.5cqw; } .bug.br { bottom: 2cqw; right: 2.5cqw; } .bug.bl { bottom: 2cqw; left: 2.5cqw; }
   .stage.ticking .bug.br, .stage.ticking .bug.bl { bottom: 6cqw; }
   .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: 1.9cqw; line-height: 1.25; padding: .6cqw 0; }
@@ -70,7 +66,7 @@
   .stations button, .stations a { text-decoration: none; }
   .stations button, .stations a { display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 14px; border: 3px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
   .stations button.sel { border-color: var(--focus); }
-  .stations img { width: 44px; height: 44px; }
+  .stations img { width: 84px; height: 44px; object-fit: contain; }
   .stations small { display: block; font-weight: 400; color: var(--muted); }
   /* ---------- layout: one column on phones and laptops, side by side on wide screens ---------- */
   .studio { display: flex; flex-direction: column; }
@@ -91,7 +87,7 @@
     .side > p { margin-bottom: 4px !important; }
     .side .stations { gap: 6px; margin-bottom: 10px; }
     .side .stations button, .side .stations a { padding: 4px 10px 4px 4px; gap: 6px; font-size: 14px; border-width: 2px; }
-    .side .stations img { width: 30px; height: 30px; }
+    .side .stations img { width: 60px; height: 30px; }
     .side .stations small { font-size: 11px; white-space: nowrap; }
     /* Save sits right under the channel picker, so it is always on screen. */
     .side .savebar { order: 3; margin-bottom: 12px !important; padding: 8px 12px; } .side .tvbox { order: 4; } .side #step5 { order: 5; }
@@ -134,9 +130,11 @@
     .tile img.lg { width: 52px; height: 52px; }
     .tile .pill { display: inline-block; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
     .pill.on { background: #14532D; color: #DCFCE7; } .pill.off { background: #7F1D1D; color: #FEE2E2; } .pill.unsaved { background: var(--focus); color: #111; }
-    .steps .logos button { width: 84px; padding: 2px; font-size: 11px; }
-    .steps .logos img { width: 64px; height: 64px; }
   }
+  /* Bazaar Hits: only the player and a note. */
+  #hitsFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 3; background: #000; }
+  .hitsMode .work, .hitsMode #step5, .hitsMode .savebar, .hitsMode .modes, .hitsMode #soundBtn, .hitsMode #barBtn, .hitsMode #adBtn, .hitsMode .tvbox details { display: none !important; }
+  .hitsMode #hitsNote { display: block !important; }
   pre.rule { background: var(--bg); padding: 10px; border-radius: 8px; overflow: auto; font-size: 13px; }
   @media (max-width: 640px) { .two, .three { grid-template-columns: 1fr; } .item { grid-template-columns: 1fr; } .item .acts { justify-content: flex-start; } }
 </style>
@@ -144,9 +142,9 @@
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Free Live TV home">
+    <a class="brand" href="./" aria-label="Cable TV home">
       <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Free Live TV</span>
+      <span>Cable TV</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -159,7 +157,7 @@
 
 <main class="wrap studio-main">
   <h1>Channel Studio</h1>
-  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 0</b>, Bazaar Cinema <b>channel 00</b>, Bazaar Music <b>channel 000</b>, Bazaar Kids <b>channel 00000</b>, from 1.9.41; Bazaar Sports <b>channel 000000</b>, from 1.9.43; Bazaar Travel <b>channel 0000000</b> and Bazaar Comedy <b>channel 00000000</b>, from 1.9.44) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+  <p class="lead">Run your own TV channels. They show at the top of every list in Cable TV (Bazaar TV is <b>channel 1</b>, Bazaar Cinema <b>2</b>, Bazaar Music <b>3</b>, Bazaar Hits <b>4</b>, Bazaar Kids <b>5</b>, Bazaar Sports <b>6</b>, Bazaar Travel <b>7</b> and Bazaar Comedy <b>8</b>, from 1.9.45) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
@@ -167,6 +165,7 @@
   <div id="dash" class="hidden studio">
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
+    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 4)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span> and picks them by itself, so it has no schedule to edit. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -199,7 +198,7 @@
       </div>
       <details class="help" style="margin:12px 0 0"><summary>What am I looking at?</summary>
         <ul>
-          <li><b>Your changes</b> plays your channel with everything on this page, even before you press Save: the logo, its corner, the scrolling line, the loop and time slots. Change something and it shows here straight away.</li>
+          <li><b>Your changes</b> plays your channel with everything on this page, even before you press Save: the logo, the scrolling line, the loop and time slots. Change something and it shows here straight away.</li>
           <li><b>On TVs now</b> plays the last saved version: exactly what viewers' TVs show at this moment.</li>
           <li>The picture is stretched to fill the screen, like the app does on TVs. The logo and the scrolling line are drawn at the same size and speed as on the TV.</li>
           <li>The channel bar shows for 10 seconds when someone opens the channel on TV. The yellow "Advertise" line (from the Sponsors page) runs along the bottom every 2 minutes on full screen.</li>
@@ -257,25 +256,13 @@
       </div>
       <label class="f"><input type="checkbox" id="active"> Channel is ON (untick to take it off the air; it disappears from the app)</label>
 
-      <p style="font-weight:600;margin:6px 0 0">Logo <span class="small">(tap one, or paste your own link below)</span></p>
-      <div class="logos" id="logos"></div>
-      <div class="two">
-        <label class="f">Logo link (a square PNG works best)<input id="logo" placeholder="https://…/logo.png"></label>
-        <label class="f">Show the logo on the picture
-          <select id="logoCorner">
-            <option value="tr">Top right</option><option value="tl">Top left</option>
-            <option value="br">Bottom right</option><option value="bl">Bottom left</option>
-            <option value="off">Don't show it</option>
-          </select>
-        </label>
-      </div>
       <label class="f">Scrolling line (ticker) along the bottom
         <input id="ticker" maxlength="300" placeholder="Welcome to Bazaar TV · Advertise with us: WhatsApp 437 602 6500">
       </label>
       <label class="f"><input type="checkbox" id="tickerOn"> Show the scrolling line</label>
-      <details class="help"><summary>Tips for the logo and the ticker</summary>
+      <details class="help"><summary>Tips for the ticker</summary>
         <ul>
-          <li>Your own logo: upload a square PNG somewhere public (for example <a href="https://imgbb.com" target="_blank" rel="noopener">imgbb.com</a>, then "Direct link") and paste the link ending in .png.</li>
+          <li>Each channel keeps its own Bazaar logo, and its corner is picked for you so it never covers the video owner's logo.</li>
           <li>The scrolling line is one line of text. Separate items with " · ". Leave it empty or untick the box to hide it.</li>
         </ul>
       </details>
@@ -388,9 +375,6 @@ import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./channel/schedule.js";
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
-const LOGOS = [
-  ["Bazaar TV", "bazaar-tv"], ["Bazaar Cinema", "bazaar-cinema"], ["Bazaar Music", "bazaar-music"], ["Bazaar Hits", "bazaar-hits"], ["Bazaar Kids", "bazaar-kids"], ["Bazaar Sports", "bazaar-sports"], ["Bazaar Travel", "bazaar-travel"], ["Bazaar Comedy", "bazaar-comedy"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
-].map(([name, file]) => ({ name, url: `https://tv.bulkbazaar.ca/channel/logos/${file}.png` }));
 
 const V = "10.12.2";
 const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
@@ -399,11 +383,13 @@ const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firest
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = fs.getFirestore(app);
-window.studioFirebase = { auth, db, fs }; // shared with the 🎙 Ask AI button (assets/ai-help.js)
+window.studioFirebase = { auth, db, fs }; // shared with the 🎙 Ask Gemini button (assets/ai-help.js)
 
 let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
 // The channel being worked on (?c=filmein opens Bazaar Cinema).
-let station = STATIONS.find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
+// Bazaar Hits is a web page (the music labels' YouTube videos), not a schedule: Studio only plays it.
+const HITS = { id: "hits", name: "Bazaar Hits", dial: "4", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/bazaar-hits.png" };
+let station = [...STATIONS, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Math.random().toString(36).slice(2, 9);
 
@@ -420,35 +406,31 @@ onAuthStateChanged(auth, async user => {
   loadLibrary(); // again now signed in, to include your Media Library changes
 });
 
+function stationButton(st, note) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = st === station ? "sel" : "";
+  b.innerHTML = `<img alt=""><span><span></span><small></small></span>`;
+  b.querySelector("img").src = st.logo;
+  b.querySelector("span span").textContent = st.name;
+  b.querySelector("small").textContent = note;
+  b.onclick = async () => {
+    if (st === station) return;
+    if (dirty && !confirm(`You have unsaved changes on ${station.name}. Leave them?`)) return;
+    station = st;
+    history.replaceState(null, "", st.id === "main" ? location.pathname : `?c=${st.id}`);
+    stopPreview();
+    await loadSaved();
+  };
+  $("stations").appendChild(b);
+}
 function renderStations() {
   $("stations").innerHTML = "";
   for (const st of STATIONS) {
-    // Bazaar Hits (0000) sits between 000 and 00000. It runs by itself from the music labels'
-    // song list (no schedule to edit here), so its card opens its page instead.
-    if (st.dial.length === 5) {
-      const h = document.createElement("a");
-      h.className = "station-link";
-      h.href = "channel/bollywood.html";
-      h.target = "_blank";
-      h.innerHTML = `<img alt="" src="channel/logos/bazaar-hits.png"><span><span>Bazaar Hits</span><small>Channel 0000 · runs by itself</small></span>`;
-      $("stations").appendChild(h);
-    }
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = st === station ? "sel" : "";
-    b.innerHTML = `<img alt=""><span><span></span><small></small></span>`;
-    b.querySelector("img").src = st.logo;
-    b.querySelector("span span").textContent = st.name;
-    b.querySelector("small").textContent = `Channel ${st.dial} in the app`;
-    b.onclick = async () => {
-      if (st === station) return;
-      if (dirty && !confirm(`You have unsaved changes on ${station.name}. Leave them?`)) return;
-      station = st;
-      history.replaceState(null, "", st.id === "main" ? location.pathname : `?c=${st.id}`);
-      stopPreview();
-      await loadSaved();
-    };
-    $("stations").appendChild(b);
+    // Bazaar Hits (4) sits between 3 and 5. It runs by itself from the music labels'
+    // song list (no schedule to edit), so picking it just plays it in the player.
+    if (st.dial === "5") stationButton(HITS, "Channel 4 · runs by itself");
+    stationButton(st, st.web ? `Channel ${st.dial} · runs by itself` : `Channel ${st.dial} in the app`);
   }
   $("publicLink").href = station.page;
   $("publicLink").textContent = "tv.bulkbazaar.ca/" + station.page;
@@ -456,10 +438,39 @@ function renderStations() {
   $("useAuto").classList.toggle("hidden", !station.auto);
 }
 
-async function testProgramme() { return (await fetch(station.ready + "?t=" + Date.now())).json(); }
+async function testProgramme() {
+  const ready = await (await fetch(station.ready + "?t=" + Date.now())).json();
+  // Channels 9 to 11 borrow Bazaar Cinema's free films as their backup, under their own name and logo.
+  return station.backup ? { ...ready, name: station.name, logo: station.logo } : ready;
+}
 
+/** Bazaar Hits: its own page plays inside the player; the editing parts are put away. */
+function showHits(on) {
+  $("dash").classList.toggle("hitsMode", on);
+  let f = $("hitsFrame");
+  if (!on) { f?.remove(); return; }
+  stopPreview();
+  $("pv").pause(); $("pv").removeAttribute("src"); $("pv").load();
+  if (!f) {
+    f = document.createElement("iframe");
+    f.id = "hitsFrame";
+    f.allow = "autoplay; encrypted-media; fullscreen";
+    f.allowFullscreen = true;
+    $("stage").appendChild(f);
+  }
+  f.src = station.web;
+  $("hitsName").textContent = `${station.name} (channel ${station.dial})`;
+  $("hitsAbout").textContent = station === HITS ? "plays the music labels' official YouTube songs round the clock"
+    : `plays official videos from well-known YouTube channels round the clock (${station.tagline.toLowerCase()}); its free-film schedule is only the backup`;
+  $("hitsLink").href = station.page.startsWith("channel/?") ? station.web : station.page;
+  $("nowText").textContent = station === HITS ? "Bazaar Hits: film songs from the music labels' own YouTube channels, one after another."
+    : `${station.name}: official videos from YouTube channels, one after another, locked like Bazaar Hits.`;
+  $("modeText").textContent = "It runs by itself from its list (updated every day), so there's nothing to edit here. Tap 🔊 for sound.";
+}
 async function loadSaved() {
   renderStations();
+  showHits(!!station.web);
+  if (station.web) { dirty = false; return; }
   try {
     const snap = await fs.getDoc(fs.doc(db, "sponsors", station.doc));
     if (snap.exists() && snap.data().data) {
@@ -475,6 +486,8 @@ async function loadSaved() {
     $("err").textContent = "Couldn't load your channel: " + e.message;
     saved = await testProgramme();
   }
+  // The logo isn't picked here any more: a channel keeps the one already saved, else its own Bazaar logo.
+  if (!saved.logo) saved.logo = station.logo;
   c = clone(saved);
   dirty = false;
   renderAll();
@@ -485,37 +498,12 @@ function renderChannel() {
   $("name").value = c.name || "";
   $("tz").value = c.tz || "America/Toronto";
   $("active").checked = c.active !== false;
-  $("logo").value = c.logo || "";
-  $("logoCorner").value = c.logoCorner || "tr";
   $("ticker").value = c.ticker || "";
   $("tickerOn").checked = c.tickerOn !== false;
-  $("logos").innerHTML = "";
-  for (const l of LOGOS) {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = c.logo === l.url ? "sel" : "";
-    b.innerHTML = `<img alt=""><span></span>`;
-    b.querySelector("img").src = l.url;
-    b.querySelector("span").textContent = l.name;
-    b.onclick = () => {
-      // Picking a ready logo also offers its name, when the name is still a ready one (or empty).
-      const ready = !c.name || LOGOS.some(x => x.name === c.name) || c.name === "My Channel";
-      c.logo = l.url;
-      if (ready) c.name = l.name;
-      changed(false); renderChannel();
-    };
-    $("logos").appendChild(b);
-  }
 }
 $("name").oninput = () => { c.name = $("name").value; changed(false); };
 $("tz").onchange = () => { c.tz = $("tz").value; changed(); };
 $("active").onchange = () => { c.active = $("active").checked; changed(); };
-$("logo").onchange = () => {
-  const v = $("logo").value.trim();
-  if (v && !/^https:\/\//.test(v)) { alert("The logo link must start with https://"); $("logo").value = c.logo || ""; return; }
-  c.logo = v; changed(false); renderChannel();
-};
-$("logoCorner").onchange = () => { c.logoCorner = $("logoCorner").value; changed(false); };
 $("ticker").oninput = () => { c.ticker = $("ticker").value; changed(false); };
 $("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(false); };
 
@@ -867,7 +855,7 @@ function runTicker(text) {
 }
 /** The yellow "Advertise" line from the Sponsors page, run once along the bottom as on a full-screen TV. */
 async function runAdLine() {
-  let text = "Advertise your business on Free Live TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
+  let text = "Advertise your business on Cable TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
   try {
     const t = await fs.getDoc(fs.doc(db, "sponsors", "_ticker"));
     if (t.exists()) {
@@ -934,7 +922,6 @@ function setTab(id) {
   if (wide.matches) window.scrollTo({ top: 0 });
 }
 const esc = t => String(t ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
-const CORNER_TEXT = { tr: "top right", tl: "top left", br: "bottom right", bl: "bottom left", off: "hidden" };
 /** One tile per part of the channel, with what's in it; a click opens that part. */
 function renderOverview() {
   if (!c || !wide.matches) return;
@@ -947,9 +934,9 @@ function renderOverview() {
   const tiles = [
     ["step1", `<h3>${c.logo ? `<img class="lg" alt="" src="${esc(c.logo)}">` : ""}<span>1 · Your channel</span></h3>
       <div class="big">${esc(c.name || "My Channel")}</div>
-      <div><span class="pill ${c.active === false ? "off" : "on"}">${c.active === false ? "OFF AIR" : "ON AIR"}</span> <span class="sub">Channel ${esc(station.dial)} · logo ${CORNER_TEXT[c.logoCorner || "tr"]} · ${esc((c.tz || "America/Toronto").split("/").pop().replace("_", " "))} time</span></div>
+      <div><span class="pill ${c.active === false ? "off" : "on"}">${c.active === false ? "OFF AIR" : "ON AIR"}</span> <span class="sub">Channel ${esc(station.dial)} · ${esc((c.tz || "America/Toronto").split("/").pop().replace("_", " "))} time</span></div>
       <div class="sub">${tick ? "Scrolling line: " + esc(tick.length > 110 ? tick.slice(0, 110) + "…" : tick) : "Scrolling line: off"}</div>
-      <span class="go">Change name, logo, ticker ›</span>`],
+      <span class="go">Change name, ticker ›</span>`],
     ["step2", `<h3>2 · Videos</h3>
       <div class="big">${c.videos.length}</div>
       <div class="sub">${count("programme")} programmes · ${count("ad")} ads · ${count("ident")} promos · ${count("live")} live streams</div>

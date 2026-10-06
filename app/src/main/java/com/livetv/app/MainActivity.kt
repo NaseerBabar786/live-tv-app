@@ -2,6 +2,7 @@ package com.livetv.app
 
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
+import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
 import android.util.Rational
@@ -15,11 +16,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.livetv.app.data.YouTube
 import com.livetv.app.games.GamesScreen
 import com.livetv.app.player.PlayerScreen
-import com.livetv.app.ui.YouTubePlayer
-import com.livetv.app.ui.WebChannel
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.livetv.app.data.MyChannel
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
@@ -32,16 +39,19 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
     private var inPictureInPicture by mutableStateOf(false)
 
-    /** The start screen (Free Live TV's sponsor screen) shows once per launch, not again after rotation. */
+    /** The start screen (Cable TV's sponsor screen) shows once per launch, not again after rotation. */
     private var showStartScreen by mutableStateOf(Edition.HAS_START_SCREEN)
 
-    /** Free Live TV's Movies & Series screen is open. */
+    /** Cable TV's Movies & Series screen is open. */
     private var showVod by mutableStateOf(false)
     /** A movie or show picked on Live TV Max's home screen, for the Library to open at. */
     private var vodStart by mutableStateOf<VodTarget?>(null)
 
-    /** Free Live TV's Games section is open. */
+    /** Cable TV's Games section is open. */
     private var showGames by mutableStateOf(false)
+
+    /** Our YouTube-run channels that couldn't play there this session; their free-film schedule plays instead. */
+    private var fellBack by mutableStateOf(setOf<String>())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +63,9 @@ class MainActivity : ComponentActivity() {
         com.livetv.app.data.ScreenLooks.init(this)
         com.livetv.app.ui.Themes.init(this)
         enableEdgeToEdge()
+        // TVs draw a web page's video (YouTube) underneath the window, showing through a hole in the page;
+        // an opaque window keeps that hole black, with only the sound (1.9.55).
+        window.setFormat(PixelFormat.TRANSLUCENT)
         if (savedInstanceState != null) showStartScreen = false
         setContent {
             LiveTvTheme {
@@ -69,10 +82,13 @@ class MainActivity : ComponentActivity() {
             GamesScreen(onClose = { showGames = false })
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
-        } else if (playing != null && playing.url == MyChannel.BOLLYWOOD_URL) {
-            WebChannel(MyChannel.BOLLYWOOD_URL + "?app=1&v=" + BuildConfig.VERSION_CODE, onBack = viewModel::stop)
-        } else if (playing != null && YouTube.videoId(playing.url) != null) {
-            YouTubePlayer(YouTube.videoId(playing.url)!!, onBack = viewModel::stop)
+        } else if (playing != null && playing.url !in fellBack && MyChannel.pageFor(playing, BuildConfig.VERSION_CODE) != null) {
+            // Our channels that run like Bazaar Hits, Bazaar Hits itself, and any YouTube channel: YouTube's
+            // player with its buttons off, so it can't be paused, skipped or left for YouTube (owner's rule, 1.9.46).
+            // Our channels' free-film schedule plays if YouTube won't.
+            // It opens in its own plain window (WebChannelActivity, 1.9.51): inside this screen TVs kept the picture black.
+            OpenWebChannel(MyChannel.pageFor(playing, BuildConfig.VERSION_CODE)!!, onBack = viewModel::stop,
+                onFallback = { if (MyChannel.webPage(playing) != null) fellBack = fellBack + playing.url else viewModel.stop() })
         } else if (playing != null) {
             PlayerScreen(
                 channel = playing,
@@ -123,6 +139,23 @@ class MainActivity : ComponentActivity() {
 
     /** OK went down while a sponsor card was showing: its key-up belongs to the card too. */
     private var okForSponsor = false
+
+    /** Opens [url] in [WebChannelActivity] (black here meanwhile); Back there comes back with [onBack]. */
+    @Composable
+    private fun OpenWebChannel(url: String, onBack: () -> Unit, onFallback: () -> Unit) {
+        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == WebChannelActivity.RESULT_FALLBACK) onFallback() else onBack()
+        }
+        // Once per channel, also when this screen is rebuilt (a turned phone) while it's open.
+        var opened by rememberSaveable(url) { mutableStateOf(false) }
+        LaunchedEffect(url) {
+            if (!opened) {
+                opened = true
+                launcher.launch(WebChannelActivity.intent(this@MainActivity, url))
+            }
+        }
+        Box(Modifier.fillMaxSize().background(Color.Black))
+    }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         // A sponsor card is showing: OK opens the sponsor's website.

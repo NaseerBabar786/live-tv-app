@@ -2,7 +2,7 @@ name: Build Multi Chat for PC
 
 # Multi Chat for Windows (Electron). Builds the installer and the portable .exe on a Windows
 # runner, and on main keeps the newest ones in the fixed "multichat-pc" release (never marked
-# "latest", so Free Live TV's links keep finding Free Live TV):
+# "latest", so Cable TV's links keep finding Cable TV):
 # https://github.com/NaseerBabar786/live-tv-app/releases/download/multichat-pc/MultiChat-Setup.exe
 # https://github.com/NaseerBabar786/live-tv-app/releases/download/multichat-pc/MultiChat-Portable.exe
 # The app's update check reads the version from this release's title ("Multi Chat for PC 1.0.0").

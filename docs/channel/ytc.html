@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cable TV · Watch live</title>
+<meta name="description" content="Our channels on Cable TV: official videos from well-known YouTube channels, round the clock.">
+<style>
+  /* Our channels that run like Bazaar Hits (1.9.47): official uploads from well-known YouTube
+     channels (list built by tools/build_youtube_channels.py), one after another in YouTube's own
+     player, locked so nobody can pause, skip or leave for YouTube (the owner's rule for every
+     YouTube channel). ?c=<station id>; the app adds &app=1. When YouTube won't play, the channel's
+     free-film schedule plays instead (on the website: channel/?c=<id>; in the app: its own player). */
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
+  #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .shield { position: absolute; inset: 0; background: transparent; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 9vw; max-width: 26vw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .now { position: absolute; left: 3%; bottom: 10%; max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; pointer-events: none; }
+  .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
+  .hide { opacity: 0; }
+  .sound, .back { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+  .back { left: auto; right: 30%; background: rgba(16,24,39,.85); text-decoration: none; }
+  .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.85); color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); padding: .35em 0; pointer-events: none; }
+  .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
+  @keyframes tick { to { transform: translateX(-100%); } }
+  .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
+  .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
+  /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
+  .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
+  .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  .cover.off { opacity: 0; }
+</style>
+</head>
+<body>
+<div id="player"></div>
+<div class="cover" id="cover"><img alt="" id="coverLogo" hidden></div>
+<div class="shield" id="shield"></div>
+<img class="bug" id="bug" alt="">
+<div class="now hide" id="now"></div>
+<button class="sound" id="sound" hidden>🔊 Tap for sound</button>
+<a class="back" id="back" href="./" hidden>Our channels</a>
+<div class="ticker"><span id="tick"></span></div>
+<div class="msg" id="msg">Loading…</div>
+<script src="promo.js"></script>
+<script type="module">
+import { STATIONS } from "./schedule.js";
+const q = new URLSearchParams(location.search);
+const app = q.has("app");
+const $ = id => document.getElementById(id);
+const station = STATIONS.find(s => s.id === q.get("c")) || STATIONS.find(s => s.yt);
+let videos = [], at = 0, player = null, nowTimer = null, failures = 0;
+
+document.title = station.name + " · Watch live";
+$("bug").src = station.logo;
+$("coverLogo").src = station.logo;
+$("coverLogo").hidden = false;
+$("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+if (!app) $("back").hidden = false;
+
+/** YouTube won't play here: the channel's free-film schedule plays instead. */
+function fallBack() {
+  if (app) location.href = "livetv://fallback";
+  else location.replace(`./?c=${station.id}`);
+}
+
+// Everyone joins the same running order: shuffled the same way each day, at a place set by the clock.
+function shuffled(list, seed) {
+  const a = list.slice();
+  for (let i = a.length - 1; i > 0; i--) { seed = (seed * 9301 + 49297) % 233280; const j = Math.floor(seed / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+const lengthOf = v => (v.mins || station.ytMins || 5) * 60;
+function showNow() {
+  const v = videos[at];
+  if (!v) return;
+  $("now").innerHTML = "<span></span><small></small>";
+  $("now").firstChild.textContent = v.title;
+  $("now").lastChild.textContent = station.name + " · " + v.label;
+  $("now").classList.remove("hide");
+  clearTimeout(nowTimer);
+  nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
+}
+function play(step, start = 0) {
+  at = (at + step + videos.length) % videos.length;
+  cover(true);
+  player.loadVideoById({ videoId: videos[at].id, startSeconds: start });
+  showNow();
+}
+
+fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()).then(d => {
+  if (!d.videos || d.videos.length < 3) return fallBack();
+  videos = shuffled(d.videos, Math.floor(Date.now() / 86400000) + station.id.length);
+  // Where the channel is now: the day's running order, round the clock.
+  const total = videos.reduce((t, v) => t + lengthOf(v), 0);
+  let pos = Math.floor((Date.now() / 1000) % total);
+  at = 0;
+  while (pos >= lengthOf(videos[at])) { pos -= lengthOf(videos[at]); at++; }
+  window.startAt = pos;
+  const s = document.createElement("script");
+  s.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(s);
+}).catch(fallBack);
+
+// When YouTube hasn't started after 15 s, the screen says why (a photo of it tells us what to fix).
+let started = false, lastError = null, lastState = "none";
+setTimeout(() => {
+  if (started) return;
+  const d = document.createElement("div");
+  d.className = "diag";
+  d.textContent = `YouTube didn't start here (${lastError ? "error " + lastError : "state " + lastState}) · ${(navigator.userAgent.match(/Chrome\/[\d.]+/) || ["?"])[0]}`;
+  document.body.appendChild(d);
+}, 15000);
+// The cover goes once the video is really playing, and comes back while the next one loads.
+let coverTimer = null;
+function cover(on) {
+  clearTimeout(coverTimer);
+  if (on) $("cover").classList.remove("off");
+  // A moment after it starts, so YouTube's own title and logo at the start have gone too.
+  else coverTimer = setTimeout(() => $("cover").classList.add("off"), 1200);
+}
+window.onYouTubeIframeAPIReady = () => {
+  player = new YT.Player("player", {
+    videoId: videos[at].id,
+    playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, start: window.startAt || 0, origin: location.origin },
+    events: {
+      onReady: e => {
+        // YouTube's own leveling leaves videos a little louder than Cable TV's leveled channels;
+        // 60% brings them to the same loudness, so switching channels keeps one volume.
+        e.target.setVolume(60);
+        $("msg").remove();
+        if (!app) { e.target.mute(); $("sound").hidden = false; }
+        e.target.playVideo();
+        showNow();
+      },
+      // It never stays paused; the next video follows when one ends.
+      onStateChange: e => {
+        if (e.data === YT.PlayerState.PLAYING) cover(false);
+        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        lastState = e.data;
+        if (e.data === YT.PlayerState.PLAYING) started = true;
+        if (e.data === YT.PlayerState.PLAYING) failures = 0;
+        // Between two videos, now and then, our own Cable TV promo (promo.js).
+        if (e.data === YT.PlayerState.ENDED) promoBreak(e.target.isMuted(), () => play(1));
+        else if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
+      },
+      // A video its owner won't let others play is skipped; when none will play, the free films take over.
+      onError: e => { lastError = e.data; if (++failures >= 5) fallBack(); else setTimeout(() => play(1), 1000); },
+    },
+  });
+};
+// A tap or OK only shows what's playing; double-click goes full screen (on the website).
+$("shield").onclick = showNow;
+$("shield").ondblclick = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {});
+$("sound").onclick = () => { player.unMute(); player.playVideo(); $("sound").hidden = true; };
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") { showNow(); e.preventDefault(); }
+  if (e.key === "MediaPlayPause" || e.key === "MediaPause" || e.key === "k") e.preventDefault();
+});
+</script>
+</body>
+</html>

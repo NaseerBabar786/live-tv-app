@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Free Live TV's packages: Free, Silver, Gold and Platinum. Each one adds modes and sections to
- * the one below. Every other app (and Free Live TV until the owner turns packages on) has
+ * Cable TV's packages: Free, Silver, Gold and Platinum. Each one adds modes and sections to
+ * the one below. Every other app (and Cable TV until the owner turns packages on) has
  * everything, so [current] starts at Platinum.
  */
 object Plans {
@@ -23,7 +23,7 @@ object Plans {
 
     fun allows(needed: Tier): Boolean = _current.value >= needed
 
-    /** What the viewer tried to open without the package for it; Free Live TV shows its packages then. */
+    /** What the viewer tried to open without the package for it; Cable TV shows its packages then. */
     data class Ask(val feature: String, val needed: Tier)
 
     private val _asking = MutableStateFlow<Ask?>(null)

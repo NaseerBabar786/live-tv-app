@@ -2,7 +2,7 @@
 """
 Builds playlists of TV channels whose streams are working right now.
 
-Collects every channel from the two open lists Free Live TV uses, iptv-org
+Collects every channel from the two open lists Cable TV uses, iptv-org
 (github.com/iptv-org/iptv) and Famelack (github.com/famelack/famelack-channels),
 tests each stream the way a player would, and keeps only the ones that answer:
 
@@ -12,13 +12,13 @@ tests each stream the way a player would, and keeps only the ones that answer:
   * Anything else: the server starts sending data.
 
 Every request uses the channel's own User-Agent/Referer when the list gives
-one, otherwise Free Live TV's. A stream that fails is tried once more with VLC's
+one, otherwise Cable TV's. A stream that fails is tried once more with VLC's
 User-Agent, and when the server answered but a later step failed, ffprobe
 (installed in the workflow) has the final say.
 
 Writes (in docs/, served at tv.bulkbazaar.ca):
   AllChannels.m3u  every working channel, grouped by country
-  LiveTV.m3u       Free Live TV's mix: Pakistani, Indian (Hindi/Urdu/Punjabi),
+  LiveTV.m3u       Cable TV's mix: Pakistani, Indian (Hindi/Urdu/Punjabi),
                    Canadian, British and American
   playlists.json   counts and the time of the check
 
@@ -150,7 +150,7 @@ def load_channels():
                 "genre": "" if genre in ("", "Undefined") else genre, "urls": [url], "opts": opts,
             })
 
-    # Famelack: logos and genres come from the index Free Live TV bundles.
+    # Famelack: logos and genres come from the index Cable TV bundles.
     info = {}
     try:
         with open(os.path.join(ROOT, "app/src/livetv/assets/channel_info.json"), encoding="utf-8") as f:
@@ -308,7 +308,7 @@ def ffprobe_plays(url, opts):
 
 
 def check(url, opts):
-    """The User-Agent the stream works with (the list's or Free Live TV's first, then VLC's), or None."""
+    """The User-Agent the stream works with (the list's or Cable TV's first, then VLC's), or None."""
     why = "not a stream"
     tries = [opts, opts] if opts.get("ua") else [opts, dict(opts, ua=VLC_UA)]
     for attempt in tries:
@@ -396,7 +396,7 @@ def main():
     for code, title, keep in MIX:
         mix += [(c, title) for c in sorted(working, key=lambda c: c["name"].lower())
                 if c["country"] == code and (keep is None or c["language"] in keep)]
-    write(os.path.join(OUT, "LiveTV.m3u"), "Free Live TV mix: Pakistani, Indian, Canadian, British and American",
+    write(os.path.join(OUT, "LiveTV.m3u"), "Cable TV mix: Pakistani, Indian, Canadian, British and American",
           mix, checked_at)
 
     counts = {}

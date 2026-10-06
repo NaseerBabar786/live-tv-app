@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bazaar TV · Watch live</title>
-<meta name="description" content="Watch our channel live, free, on Free Live TV.">
+<meta name="description" content="Watch our channel live, free, on Cable TV.">
 <meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png">
-<link rel="icon" href="logos/bazaar-tv.png" id="favicon">
+<link rel="icon" href="logos/bazaar-tv-square.png" id="favicon">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
   .stage { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; }
   .stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
-  .stage .bug { position: absolute; width: 9%; aspect-ratio: 1; opacity: .85; pointer-events: none; }
+  .stage .bug { position: absolute; height: 16%; width: auto; max-width: 26%; object-fit: contain; opacity: .55; pointer-events: none; }
   .bug.tr { top: 3%; right: 2.5%; } .bug.tl { top: 3%; left: 2.5%; } .bug.br { bottom: 9%; right: 2.5%; } .bug.bl { bottom: 9%; left: 2.5%; }
   .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 2vw, 22px); padding: .35em 0; }
   .ticker span { display: inline-block; padding-left: 100%; animation: crawl 28s linear infinite; }
@@ -20,7 +20,7 @@
   .stage .sound { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
   .stage:fullscreen { border-radius: 0; }
   .now { display: flex; gap: 14px; align-items: center; margin: 14px 0 6px; flex-wrap: wrap; }
-  .now img { width: 56px; height: 56px; }
+  .now img { width: 120px; height: 56px; object-fit: contain; }
   .now b { font-size: 20px; }
   .live { background: var(--red); color: #fff; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; margin-right: 6px; }
   .guide { display: grid; gap: 6px; }
@@ -29,16 +29,24 @@
   .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }
   .tabs a { display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; border: 2px solid var(--surface-2); background: var(--surface); color: var(--text); text-decoration: none; font-weight: 700; }
   .tabs a.sel { border-color: var(--focus); }
-  .tabs img { width: 32px; height: 32px; }
+  .tabs img { width: 76px; height: 32px; object-fit: contain; }
   .guide .t { font-weight: 700; } .guide .l { color: var(--muted); font-size: 14px; }
+  @media (min-width: 1200px) {
+    main.wrap { display: grid; grid-template-columns: minmax(0, 1fr) 440px; grid-template-rows: auto auto auto auto auto auto 1fr; column-gap: 28px; align-items: start; }
+    main.wrap > .tabs { grid-column: 1 / -1; }
+    main.wrap > .stage { grid-column: 1; grid-row: 2 / 8; }
+    main.wrap > :not(.tabs):not(.stage) { grid-column: 2; }
+    main.wrap > .now { margin-top: 0; }
+    main.wrap > h2 { margin-top: 12px; }
+  }
 </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="../" aria-label="Free Live TV home">
+    <a class="brand" href="../" aria-label="Cable TV home">
       <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Free Live TV</span>
+      <span>Cable TV</span>
     </a>
     <nav>
       <a href="../">Home</a>
@@ -65,13 +73,13 @@
     </div>
     <button class="btn" id="full">⛶ Full screen</button>
   </div>
-  <p class="small">Watch it on your TV too: it's channel <span id="dial">0</span> in the free <a href="../">Free Live TV</a> app (type <span id="dial2">0</span> on the remote).</p>
+  <p class="small">Watch it on your TV too: it's channel <span id="dial">0</span> in the free <a href="../">Cable TV</a> app (type <span id="dial2">0</span> on the remote).</p>
   <h2>Coming up</h2>
   <div class="guide" id="guide"></div>
   <p class="small" id="credits" style="margin-top:18px"></p>
 </main>
 <footer>
-  <div class="wrap">Free Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="../privacy">Privacy policy</a></div>
+  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="../privacy">Privacy policy</a></div>
 </footer>
 
 <script type="module">
@@ -82,17 +90,18 @@ const video = $("video");
 // Which of our channels: ?c=filmein is Bazaar Cinema, ?c=sur Bazaar Music, ?c=kids Bazaar Kids, ?c=sports Bazaar Sports, ?c=travel Bazaar Travel, ?c=comedy Bazaar Comedy, otherwise Bazaar TV.
 const station = STATIONS.find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
 // Bazaar Hits (0000) is its own page (the music labels' YouTube videos, one after another),
-// so it gets a tab between 000 and 00000.
+// so it gets a tab between 3 and 5.
 function hitsTab() {
   const a = document.createElement("a");
   a.href = "bollywood.html";
-  a.innerHTML = `<img alt="" src="logos/bazaar-hits.png"><span>0000  Bazaar Hits</span>`;
+  a.innerHTML = `<img alt="" src="logos/bazaar-hits.png"><span>4  Bazaar Hits</span>`;
   $("tabs").appendChild(a);
 }
 for (const st of STATIONS) {
-  if (st.dial.length === 5) hitsTab();
+  if (st.dial === "5") hitsTab();
   const a = document.createElement("a");
-  a.href = st.id === "main" ? "./" : `./?c=${st.id}`;
+  // Channels that run like Bazaar Hits open their YouTube page (this page is their backup).
+  a.href = st.yt ? `ytc.html?c=${st.id}` : st.id === "main" ? "./" : `./?c=${st.id}`;
   if (st === station) a.className = "sel";
   a.innerHTML = `<img alt=""><span></span>`;
   a.querySelector("img").src = st.logo;
@@ -112,7 +121,9 @@ async function load() {
       if (data) return JSON.parse(data);
     }
   } catch {}
-  return (await fetch(station.ready, { cache: "no-store" })).json();
+  const ready = await (await fetch(station.ready, { cache: "no-store" })).json();
+  // A channel borrowing another's free films as its backup keeps its own name and logo.
+  return station.backup ? { ...ready, name: station.name, logo: station.logo } : ready;
 }
 
 let c = await load(), tv = null;
@@ -120,7 +131,7 @@ function show() {
   document.title = `${c.name || "My Channel"} · Watch live`;
   $("name").textContent = c.name || "My Channel";
   if (c.logo) {
-    $("logo").src = c.logo; $("logo").classList.remove("hidden"); $("favicon").href = c.logo;
+    $("logo").src = c.logo; $("logo").classList.remove("hidden"); $("favicon").href = /\/channel\/logos\/bazaar-[a-z]+\.png$/.test(c.logo) ? c.logo.replace(/\.png$/, "-square.png") : c.logo;
     $("bug").src = c.logo;
   }
   const corner = c.logoCorner || "tr";

@@ -9,6 +9,8 @@ import android.net.Uri
 import android.graphics.Bitmap
 import android.view.View
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebViewClient
 import android.webkit.WebSettings
 import android.widget.Toast
 import android.webkit.WebView
@@ -92,10 +94,11 @@ fun EmbedPlayer(src: String, onBack: () -> Unit) {
 /**
  * A channel that is a page of ours playing videos in their site's own player one after another
  * (Bazaar Hits: YouTube's embedded player). Full screen; the remote's arrows go to the page; Back closes it.
+ * When the page can't play (YouTube refuses every video) it opens livetv://fallback and [onFallback] runs.
  */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebChannel(url: String, onBack: () -> Unit) {
+fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null) {
     BackHandler(onBack = onBack)
     var webView by remember { mutableStateOf<WebView?>(null) }
     DisposableEffect(url) {
@@ -113,6 +116,13 @@ fun WebChannel(url: String, onBack: () -> Unit) {
                 settings.mediaPlaybackRequiresUserGesture = false
                 // Always the newest page, not a copy the TV kept from an earlier version.
                 settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                webViewClient = object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                        if (request.url.scheme != "livetv") return false
+                        if (request.url.host == "fallback") onFallback?.invoke()
+                        return true
+                    }
+                }
                 webChromeClient = object : WebChromeClient() {
                     // No grey placeholder picture over the video while it starts.
                     override fun getDefaultVideoPoster(): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
@@ -120,6 +130,48 @@ fun WebChannel(url: String, onBack: () -> Unit) {
                 isFocusable = true
                 loadUrl(url)
                 requestFocus()
+            }.also { webView = it }
+        },
+    )
+}
+
+/**
+ * [url] (one of our YouTube pages) playing inside a small player, such as the 1+List picture, without
+ * taking the remote: the arrows and OK stay with the screen around it. [onFallback] runs when the page
+ * gives up on YouTube (livetv://fallback).
+ */
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+fun WebPreview(url: String, modifier: Modifier = Modifier, onFallback: (() -> Unit)? = null) {
+    var webView by remember { mutableStateOf<WebView?>(null) }
+    DisposableEffect(Unit) {
+        onDispose { webView?.destroy() }
+    }
+    AndroidView(
+        modifier = modifier,
+        factory = { ctx ->
+            WebView(ctx).apply {
+                // See-through, so the TV's video under the window shows through the page's hole (see WebChannelActivity).
+                setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                settings.javaScriptEnabled = true
+                settings.domStorageEnabled = true
+                settings.mediaPlaybackRequiresUserGesture = false
+                settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                webViewClient = object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                        if (request.url.scheme != "livetv") return false
+                        if (request.url.host == "fallback") onFallback?.invoke()
+                        return true
+                    }
+                }
+                webChromeClient = object : WebChromeClient() {
+                    override fun getDefaultVideoPoster(): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                }
+                isFocusable = false
+                isFocusableInTouchMode = false
+                // Taps go to the player box around it (OK opens the channel full screen).
+                setOnTouchListener { _, _ -> true }
+                loadUrl(url)
             }.also { webView = it }
         },
     )

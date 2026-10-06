@@ -16,26 +16,62 @@ import java.util.TimeZone
  */
 object MyChannel {
     /**
-     * One of our channels: [id] names its saved settings and its stream address, [dial] is what
-     * viewers type on the remote to reach it.
+     * Our logos get redrawn at the same address (1.9.47, 1.9.49), and Coil keeps the old picture on
+     * disk for ever, so our own logo links carry this number; raise it whenever the logos change.
      */
-    class Station(val id: String, val dial: String, val name: String)
+    private const val LOGO_VERSION = 4
 
-    /** Our channels, in the order they lead the channel list. */
+    fun freshLogo(url: String): String =
+        if ("/channel/logos/" in url && '?' !in url) "$url?v=$LOGO_VERSION" else url
+
+    /**
+     * One of our channels: [id] names its saved settings and its stream address, [number] is its
+     * channel number (our channels are 1 to [COUNT], 1.9.45), and [dial] the row of zeros that
+     * reached it before then, which still works.
+     */
+    class Station(
+        val id: String,
+        val number: Int,
+        val dial: String,
+        val name: String,
+        /** Runs like Bazaar Hits (1.9.47): official YouTube videos on our page, its schedule only the backup. */
+        val youtube: Boolean = false,
+        /**
+         * Whose ready-made schedule is the backup, for a channel with none of its own (9 to 11, 1.9.50);
+         * it then keeps its own [name] and logo ([logo], under tv.bulkbazaar.ca/channel/logos/).
+         */
+        val backup: String = id,
+        val logo: String? = null,
+    )
+
+    /** Our channels take numbers 1 to 12; the other channels are numbered from 13. */
+    const val COUNT = 12
+
+    /**
+     * Our channels, in the order they lead the channel list. Since 1.9.47 all but Bazaar TV run
+     * from official YouTube videos (tools/build_youtube_channels.py); the free films below are their backup.
+     */
     val STATIONS = listOf(
-        Station("main", "0", "Bazaar TV"),
+        Station("main", 1, "0", "Bazaar TV"),
         // Public-domain classic films round the clock (built weekly from Movies.m3u).
-        Station("filmein", "00", "Bazaar Cinema"),
+        Station("filmein", 2, "00", "Bazaar Cinema", youtube = true),
         // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
-        Station("sur", "000", "Bazaar Music"),
+        Station("sur", 3, "000", "Bazaar Music", youtube = true),
         // Public-domain and Creative Commons cartoons for children (1.9.41).
-        Station("kids", "00000", "Bazaar Kids"),
+        Station("kids", 5, "00000", "Bazaar Kids", youtube = true),
         // Public-domain and CC BY sports films from the Internet Archive, built by tools/build_archive_channels.py (1.9.43).
-        Station("sports", "000000", "Bazaar Sports"),
+        Station("sports", 6, "000000", "Bazaar Sports", youtube = true),
         // Public-domain travel films of countries, cities and parks, also by build_archive_channels.py (1.9.44).
-        Station("travel", "0000000", "Bazaar Travel"),
+        Station("travel", 7, "0000000", "Bazaar Travel", youtube = true),
         // Silent and classic comedy (Chaplin, Laurel and Hardy, Keaton), also by build_archive_channels.py (1.9.44).
-        Station("comedy", "00000000", "Bazaar Comedy"),
+        Station("comedy", 8, "00000000", "Bazaar Comedy", youtube = true),
+        // 1.9.50: full films in English and in Hindi, and Pakistani dramas, from their makers' channels.
+        // They came after the rows of zeros, so they're dialled by number only; Bazaar Cinema's free films are their backup.
+        Station("english", 9, "9", "Bazaar Movies English", youtube = true, backup = "filmein", logo = "bazaar-english.png"),
+        Station("hindi", 10, "10", "Bazaar Movies Hindi", youtube = true, backup = "filmein", logo = "bazaar-hindi.png"),
+        Station("dramas", 11, "11", "Bazaar Dramas", youtube = true, backup = "filmein", logo = "bazaar-dramas.png"),
+        // 1.9.53: cooking shows in Urdu, Hindi, Punjabi and English from the cooks' own channels.
+        Station("cooking", 12, "12", "Bazaar Cooking", youtube = true, backup = "filmein", logo = "bazaar-cooking.png"),
     )
 
     private const val SCHEME = "mychannel://"
@@ -45,17 +81,42 @@ object MyChannel {
 
     fun urlOf(id: String) = SCHEME + id
 
+    /** Bazaar Hits' channel number, between Bazaar Music (3) and Bazaar Kids (5). */
+    const val HITS_NUMBER = 4
+
     /**
-     * Bazaar Hits (dialled 0000): the music labels' own YouTube uploads, one after another in
+     * Bazaar Hits (channel 4, dialled 0000 before 1.9.45): the music labels' own YouTube uploads, one after another in
      * YouTube's player on this page (song list built by tools/build_bollywood.py). No schedule.
      */
     const val BOLLYWOOD_URL = "https://tv.bulkbazaar.ca/channel/bollywood.html"
     private val bollywood = Channel(
         name = "Bazaar Hits",
         url = BOLLYWOOD_URL,
-        logo = "https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png",
-        number = 0,
+        logo = freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png"),
+        number = HITS_NUMBER,
     )
+
+    /**
+     * The page that plays [channel] like Bazaar Hits (official YouTube videos, locked), when it is
+     * one of our channels that runs that way; null otherwise.
+     */
+    fun webPage(channel: Channel?): String? {
+        val id = channel?.url?.takeIf { it.startsWith(SCHEME) }?.removePrefix(SCHEME) ?: return null
+        return STATIONS.firstOrNull { it.id == id && it.youtube }?.let { "https://tv.bulkbazaar.ca/channel/ytc.html?c=${it.id}&app=1" }
+    }
+
+    /**
+     * The page of ours that plays [channel] in YouTube's player, locked (our YouTube channels, Bazaar Hits,
+     * or any YouTube video in a channel list); null for channels our own player plays. [version] is the app's.
+     */
+    fun pageFor(channel: Channel?, version: Int): String? {
+        channel ?: return null
+        webPage(channel)?.let { return "$it&v=$version" }
+        if (channel.url == BOLLYWOOD_URL) return "$BOLLYWOOD_URL?app=1&v=$version"
+        val id = YouTube.videoId(channel.url) ?: return null
+        return "https://tv.bulkbazaar.ca/channel/yt.html?app=1&v=$id&name=" +
+            java.net.URLEncoder.encode(channel.name, "UTF-8").replace("+", "%20") + "&ver=$version"
+    }
 
     fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
 
@@ -86,7 +147,7 @@ object MyChannel {
         val id: String = "main",
     ) {
         val channel: Channel
-            get() = Channel(name = name, url = urlOf(id), logo = logo, number = 0)
+            get() = Channel(name = name, url = urlOf(id), logo = logo, number = STATIONS.firstOrNull { it.id == id }?.number ?: 0)
     }
 
     /** What to show at a moment. */
@@ -128,12 +189,10 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In dial order: 0, 00, 000, 0000 (Bazaar Hits), 00000, 000000, 0000000, 00000000.
-        (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel?.let { st.dial to it } } + ("0000" to bollywood))
-            .sortedBy { it.first.length }
-            .map { it.second }
+        // In number order: 1 to 12, Bazaar Hits being 4.
+        (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
 
-    /** The channel a viewer reaches by typing [typed] ("0", "00"), when it's on. */
+    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 12, when it's on. */
     fun byDial(typed: String): Channel? =
         if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
 
@@ -161,7 +220,7 @@ object MyChannel {
         val loop = o.optJSONArray("loop")?.let { a -> (0 until a.length()).map { a.optString(it) } }.orEmpty()
         return Config(
             name = o.optString("name").trim().ifEmpty { "My Channel" },
-            logo = o.optString("logo").trim().takeIf { it.startsWith("http") },
+            logo = o.optString("logo").trim().takeIf { it.startsWith("http") }?.let(::freshLogo),
             active = o.optBoolean("active", true),
             timeZone = o.optString("tz").ifBlank { "America/Toronto" },
             videos = videos,

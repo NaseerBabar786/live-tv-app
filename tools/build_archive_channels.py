@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Builds the ready-made schedules of our Internet Archive channels in Free Live TV:
+Builds the ready-made schedules of our Internet Archive channels in Cable TV:
 
-  * Bazaar Sports (000000): classic sport, boxing, baseball, roller derby, sport films;
-  * Bazaar Travel (0000000): travelogues and scenic films of countries, cities and parks;
-  * Bazaar Comedy (00000000): silent and classic comedy shorts, films and early TV comedies.
+  * Bazaar Sports (6): classic sport, boxing, baseball, roller derby, sport films;
+  * Bazaar Travel (7): travelogues and scenic films of countries, cities and parks;
+  * Bazaar Comedy (8): silent and classic comedy shorts, films and early TV comedies.
 
 Only films from the Archive's curated collections whose item states a public-domain mark, CC0
 or plain CC BY licence are taken (no "share-alike", "non-commercial" or "no-derivatives"), and
@@ -51,7 +51,7 @@ TRAVEL_FILMS = r"state parks|ten thousand lakes|recreation resources|california 
 
 CHANNELS = {
     "sports": {
-        "name": "Bazaar Sports", "dial": "000000",
+        "name": "Bazaar Sports", "dial": "6",
         "subjects": ["sports", "sport", "boxing", "baseball", "football", "soccer", "cricket", "hockey", "tennis",
                      "golf", "basketball", "wrestling", "athletics", "track and field", "olympics", "skiing",
                      "swimming", "racing", "auto racing", "horse racing", "cycling", "rowing", "polo", "squash",
@@ -60,10 +60,10 @@ CHANNELS = {
         "skip": rf"bullfight|cockfight|hunting|fifa \d|pes \d|nba 2k|highlights 20\d\d|vs\.? .* 20[12]\d|"
                 rf"ozzie and harriet|{TRAVEL_FILMS}",
         "ticker": "Bazaar Sports · Classic sport from the film archives, day and night · Boxing, cricket, football, "
-                  "athletics and more · Channel 000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+                  "athletics and more · Channel 6 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
     },
     "travel": {
-        "name": "Bazaar Travel", "dial": "0000000",
+        "name": "Bazaar Travel", "dial": "7",
         "subjects": ["travel", "travelogue", "travelogues", "tourism", "tourist", "tourists", "vacation",
                      "vacations", "sightseeing", "scenery", "national parks", "voyages and travels",
                      "description and travel", "travel films"],
@@ -72,10 +72,10 @@ CHANNELS = {
                 r"conservation corps|civilan conservation|ccc\b|human crop|groundwater|silt|captain z-ro|fashion|"
                 r"planet|spaceship|venus",
         "ticker": "Bazaar Travel · See the world, day and night · Classic travel films of countries, cities and "
-                  "parks · Channel 0000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+                  "parks · Channel 7 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
     },
     "comedy": {
-        "name": "Bazaar Comedy", "dial": "00000000",
+        "name": "Bazaar Comedy", "dial": "8",
         "subjects": ["comedy", "comedies", "slapstick", "silent comedy", "comedy films", "sitcom", "sitcoms",
                      "comedy shorts", "humor", "laurel and hardy", "charlie chaplin", "buster keaton", "three stooges",
                      "harold lloyd", "abbott and costello"],
@@ -88,7 +88,7 @@ CHANNELS = {
                 r"naughty|death|killer|crime|crooked|manhunt|creature|haunted|machine gun|baby face|scarlet clue|"
                 r"rascal you|bamboo isle|c\.c\. and company|steptoe|dick van dyke|raiders|billy the kid",
         "ticker": "Bazaar Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies "
-                  "· Channel 00000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+                  "· Channel 8 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
     },
 }
 

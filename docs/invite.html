@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Invite Advertisers</title>
-<meta name="description" content="Ready-to-send messages inviting businesses to advertise on Free Live TV.">
+<meta name="description" content="Ready-to-send messages inviting businesses to advertise on Cable TV.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/site.css">
 <meta name="robots" content="noindex">
@@ -20,14 +20,18 @@
   .msg textarea { min-height: 220px; resize: vertical; }
   .msg .row { gap: 8px; flex-wrap: wrap; }
   .done { color: #69F0AE; font-size: 14px; margin-left: 6px; }
+  @media (min-width: 1200px) {
+    main.wrap { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; align-items: start; }
+    main.wrap > :not(.msg) { grid-column: 1 / -1; }
+  }
 </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Free Live TV home">
+    <a class="brand" href="./" aria-label="Cable TV home">
       <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Free Live TV</span>
+      <span>Cable TV</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -40,11 +44,11 @@
 
 <main class="wrap">
   <h1>Invite advertisers</h1>
-  <p class="lead">Ready-to-send messages for businesses that might advertise on Free Live TV. Change any words you like, then tap a button to send. Changes stay on this device only.</p>
+  <p class="lead">Ready-to-send messages for businesses that might advertise on Cable TV. Change any words you like, then tap a button to send. Changes stay on this device only.</p>
 
   <div class="msg">
     <h2>Link to share</h2>
-    <p class="small" style="margin:0">The public page that explains advertising on Free Live TV.</p>
+    <p class="small" style="margin:0">The public page that explains advertising on Cable TV.</p>
     <input type="text" id="link" readonly value="https://tv.bulkbazaar.ca/advertise">
     <div class="row"><button class="btn primary" data-copy="link">Copy link</button><a class="btn" href="advertise" target="_blank">Open the page</a></div>
   </div>
@@ -72,7 +76,7 @@
   <p class="small"><a href="admin">← Back to Admin</a></p>
 </main>
 <footer>
-  <div class="wrap">Free Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
 </footer>
 
 <script>
@@ -82,7 +86,7 @@
   const DRAFTS = {
     wa: `Hello! 👋
 
-Grow your business with *Free Live TV*, the free app that Pakistani and Indian families in Canada use to watch their home channels on the big TV and on their phones.
+Grow your business with *Cable TV*, the free app that Pakistani and Indian families in Canada use to watch their home channels on the big TV and on their phones.
 
 📺 Your ad shows right on the TV screen: when the app opens, beside the channel list, and after channel changes.
 💰 Simple, affordable monthly packages for local businesses.
@@ -91,13 +95,13 @@ Grow your business with *Free Live TV*, the free app that Pakistani and Indian f
 See how it works: ${LINK}
 
 Reply here or WhatsApp 437 602 6500 to book your spot.`,
-    sms: `Hi! Advertise your business on Free Live TV, the free TV app for Pakistani and Indian families in Canada. Your ad shows right on their TV screen. Affordable monthly packages. Details: ${LINK} or WhatsApp 437 602 6500.`,
-    subj: "Advertise your business on Free Live TV",
+    sms: `Hi! Advertise your business on Cable TV, the free TV app for Pakistani and Indian families in Canada. Your ad shows right on their TV screen. Affordable monthly packages. Details: ${LINK} or WhatsApp 437 602 6500.`,
+    subj: "Advertise your business on Cable TV",
     mail: `Hello,
 
-I'd like to invite your business to advertise on Free Live TV.
+I'd like to invite your business to advertise on Cable TV.
 
-Free Live TV is a free app that Pakistani and Indian families in Canada use to watch their home channels on Google TV and Android TV, on phones, and on our website. Families watch it together on the big screen.
+Cable TV is a free app that Pakistani and Indian families in Canada use to watch their home channels on Google TV and Android TV, on phones, and on our website. Families watch it together on the big screen.
 
 Your ad would show:
 • on the start screen when the app opens
@@ -113,7 +117,7 @@ To book a spot or ask about prices, reply to this email or WhatsApp me at 437 60
 
 Thank you,
 Naseer Babar
-Free Live TV, brought to you by Bulk Bazaar Inc.`,
+Cable TV, brought to you by Bulk Bazaar Inc.`,
   };
   const KEY = "lt_invite_drafts";
   let saved = {};

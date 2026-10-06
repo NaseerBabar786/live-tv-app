@@ -4,7 +4,7 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Bazaar Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies · Channel 00000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+ "ticker": "Bazaar Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies · Channel 8 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
  "tickerOn": true,
  "videos": [
   {
@@ -358,17 +358,17 @@
    "kind": "programme"
   },
   {
-   "id": "war-babies",
-   "title": "War Babies",
-   "url": "https://archive.org/download/war_babies/war_babies.mp4",
-   "secs": 552,
-   "kind": "programme"
-  },
-  {
    "id": "so-s-your-aunt-emma",
    "title": "So's Your Aunt Emma",
    "url": "https://archive.org/download/sos_your_aunt_emma_1942/sos_your_aunt_emma_512kb.mp4",
    "secs": 3739,
+   "kind": "programme"
+  },
+  {
+   "id": "war-babies",
+   "title": "War Babies",
+   "url": "https://archive.org/download/war_babies/war_babies.mp4",
+   "secs": 552,
    "kind": "programme"
   },
   {
@@ -2022,7 +2022,7 @@
   "his-new-profession",
   "betty-boop-be-human",
   "sing-a-song-of-six-pants",
-  "so-s-your-aunt-emma",
+  "war-babies",
   "the-beachcomber",
   "escape-to-paradise",
   "zis-boom-bah",
@@ -2095,7 +2095,7 @@
   "million-dollar-kid",
   "life-with-elizabeth-misc-episode-no-3",
   "charlie-chaplin-s-his-new-job",
-  "war-babies",
+  "so-s-your-aunt-emma",
   "betty-boop-happy-you-and-merry-me",
   "charlie-chaplin-s-charlott-et-le-mannequ",
   "young-mr-jazz-1919-directed-by-hal-roach",
@@ -2275,5 +2275,5 @@
   "his-girl-friday",
   "off-the-trolley-1919-directed-by-alfred-"
  ],
- "built": "2026-10-06 17:08 UTC"
+ "built": "2026-10-06 18:37 UTC"
 }

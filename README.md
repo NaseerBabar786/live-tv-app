@@ -1,4 +1,4 @@
-# Free Live TV (Android)
+# Cable TV (Android)
 
 A native Android app for watching live TV channels from an M3U / M3U8 playlist.
 Kotlin, Jetpack Compose and Media3 ExoPlayer.

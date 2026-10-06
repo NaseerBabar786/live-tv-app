@@ -6,8 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,8 +51,10 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                     .align(corner)
                     .padding(horizontal = unit * 2.5f, vertical = unit * 2f)
                     .padding(bottom = if (bottom && c.ticker != null) tickerHeight else 0.dp)
-                    .size(unit * 8f)
-                    .alpha(0.85f),
+                    // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
+                    .height(unit * 9f)
+                    .widthIn(max = unit * 26f)
+                    .alpha(0.55f),
             )
         }
         c.ticker?.let { line ->

@@ -4,7 +4,7 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Bazaar TV, channel 0 on Free Live TV  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca  ·  This is a 1-hour test programme",
+ "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca  ·  This is a 1-hour test programme",
  "tickerOn": true,
  "videos": [
   {
@@ -44,7 +44,7 @@
   },
   {
    "id": "promo",
-   "title": "Promo: Free Live TV app",
+   "title": "Promo: Cable TV app",
    "url": "https://tv.bulkbazaar.ca/channel/media/promo-free-live-tv.mp4",
    "secs": 15,
    "kind": "ad"

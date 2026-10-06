@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Premium features (the 2×2 and 1×2 layouts). Free Live TV and Stream Player Plus have them for
+ * Premium features (the 2×2 and 1×2 layouts). Cable TV and Stream Player Plus have them for
  * everyone; Live TV Plus sells them as a Google Play subscription and sets [billing] at start.
  */
 object Premium {
@@ -15,7 +15,7 @@ object Premium {
         /** The monthly price as Google Play shows it (e.g. "$1.99"), once known. */
         val price: StateFlow<String?>
 
-        /** Every plan length Google Play offers (monthly, 6 months, yearly), shortest first, once known. */
+        /** Every plan length Google Play offers (yearly, 6 months, 3 months, monthly), longest first, once known. */
         val options: StateFlow<List<Option>>
 
         /** Opens Google Play's checkout for plan [option] (an index into [options]; the first plan when unknown). */

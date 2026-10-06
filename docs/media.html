@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Media Library</title>
 <meta name="description" content="Videos for Bazaar TV, sorted by category and language.">
-<link rel="icon" href="channel/logos/bazaar-tv.png">
+<link rel="icon" href="channel/logos/bazaar-tv-square.png">
 <link rel="stylesheet" href="assets/site.css">
 <meta name="robots" content="noindex">
 <style>
@@ -38,15 +38,21 @@
   label.f input, label.f select { display: block; width: 100%; margin-top: 4px; padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 600px) { .two { grid-template-columns: 1fr; } }
+  @media (min-width: 1200px) {
+    .lib-split { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 28px; align-items: start; }
+    .lib-side { position: sticky; top: 16px; }
+    .lib-side .panel:first-child { margin-top: 0 !important; }
+    .lib-side .two { grid-template-columns: 1fr; gap: 0; }
+  }
   .ok { color: #9BE59B; } .warn { color: #FFD27A; }
 </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Free Live TV home">
+    <a class="brand" href="./" aria-label="Cable TV home">
       <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Free Live TV</span>
+      <span>Cable TV</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -63,8 +69,9 @@
   <div id="denied" class="panel hidden">This account isn't an admin. <button class="btn" data-signout>Use another account</button></div>
   <div id="dash" class="hidden">
     <div class="bar" id="langs"></div>
+    <div class="lib-split">
     <div id="cats"></div>
-
+    <aside class="lib-side">
     <section class="panel" style="margin-top:10px">
       <h2 style="margin-top:0">Add a video</h2>
       <p class="small">Paste a direct link to an MP4 file (for example from your GitHub "channel-media" release). Only add videos you are allowed to show.</p>
@@ -89,6 +96,8 @@
     <p id="saveMsg" class="small"></p>
     <p class="small" id="who"></p>
     <button class="btn" data-signout>Sign out</button>
+    </aside>
+    </div>
   </div>
   <p class="err" id="err"></p>
 </main>
@@ -99,7 +108,7 @@
 </dialog>
 
 <footer>
-  <div class="wrap">Free Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
 </footer>
 
 <script type="module">

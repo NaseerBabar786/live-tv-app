@@ -117,7 +117,7 @@ fun SponsorScreen(loading: Boolean, sponsor: Sponsor?, onDone: () -> Unit) {
 @Composable
 private fun SponsoredBy(sponsor: Sponsor, picture: ImageBitmap, secondsLeft: Int?) {
     val muted = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-    Text("Free Live TV stays free thanks to our sponsors", fontSize = 14.sp, color = muted, textAlign = TextAlign.Center)
+    Text("Cable TV stays free thanks to our sponsors", fontSize = 14.sp, color = muted, textAlign = TextAlign.Center)
     Image(
         picture,
         contentDescription = sponsor.name,
@@ -165,7 +165,7 @@ private fun SponsoredBy(sponsor: Sponsor, picture: ImageBitmap, secondsLeft: Int
 @Composable
 private fun SponsorWords(secondsLeft: Int?, align: TextAlign) {
     Text(
-        "Free Live TV stays free thanks to our sponsor, Bulk Bazaar Inc. Please show them love: " +
+        "Cable TV stays free thanks to our sponsor, Bulk Bazaar Inc. Please show them love: " +
             "visit bulkbazaar.ca and leave them a 5-star review ★★★★★",
         style = MaterialTheme.typography.bodyLarge,
         textAlign = align,
@@ -180,7 +180,7 @@ private fun SponsorWords(secondsLeft: Int?, align: TextAlign) {
         modifier = Modifier.widthIn(max = 560.dp),
     )
     Text(
-        "Enjoying Free Live TV? Please share it with your family and friends!",
+        "Enjoying Cable TV? Please share it with your family and friends!",
         style = MaterialTheme.typography.bodyLarge,
         fontWeight = FontWeight.Bold,
         textAlign = align,

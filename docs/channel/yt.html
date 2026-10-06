@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cable TV · Watch live</title>
+<meta name="robots" content="noindex">
+<style>
+  /* A YouTube channel or video in a channel list, played like a TV channel (1.9.46): YouTube's
+     own player, as YouTube's terms require, but with its buttons off and a clear sheet over it,
+     so nobody can pause, skip or leave for YouTube. The same rule as Bazaar Hits (bollywood.html).
+     Opened full screen by the Cable TV app: ?v=<video id>&name=<channel name>&app=1 */
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
+  #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .shield { position: absolute; inset: 0; background: transparent; }
+  .now { position: absolute; left: 3%; bottom: 6%; max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; pointer-events: none; }
+  .hide { opacity: 0; }
+  .sound { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+  .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; font-size: clamp(14px, 2.4vw, 28px); }
+  /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
+  .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
+  .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  .cover.off { opacity: 0; }
+</style>
+</head>
+<body>
+<div id="player"></div>
+<div class="cover" id="cover"><img alt="" id="coverLogo" hidden></div>
+<div class="shield" id="shield"></div>
+<div class="now hide" id="now"></div>
+<button class="sound" id="sound" hidden>🔊 Tap for sound</button>
+<div class="msg" id="msg">Loading…</div>
+<script>
+const q = new URLSearchParams(location.search);
+const app = q.has("app"), id = q.get("v") || "", name = q.get("name") || "";
+const $ = x => document.getElementById(x);
+let player = null, nowTimer = null;
+if (name) document.title = name + " · Watch live";
+
+function showNow() {
+  if (!name) return;
+  $("now").textContent = name;
+  $("now").classList.remove("hide");
+  clearTimeout(nowTimer);
+  nowTimer = setTimeout(() => $("now").classList.add("hide"), 6000);
+}
+if (!/^[\w-]{6,20}$/.test(id)) {
+  $("msg").textContent = "This channel can't play right now.";
+} else {
+  const s = document.createElement("script");
+  s.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(s);
+}
+// The cover goes once the video is really playing, and comes back while the next one loads.
+let coverTimer = null;
+function cover(on) {
+  clearTimeout(coverTimer);
+  if (on) $("cover").classList.remove("off");
+  // A moment after it starts, so YouTube's own title and logo at the start have gone too.
+  else coverTimer = setTimeout(() => $("cover").classList.add("off"), 1200);
+}
+window.onYouTubeIframeAPIReady = () => {
+  player = new YT.Player("player", {
+    videoId: id,
+    playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, origin: location.origin },
+    events: {
+      onReady: e => {
+        // YouTube's own leveling leaves videos a little louder than Cable TV's leveled channels;
+        // 60% brings them to the same loudness, so switching channels keeps one volume.
+        e.target.setVolume(60);
+        $("msg").remove();
+        if (!app) { e.target.mute(); $("sound").hidden = false; }
+        e.target.playVideo();
+        showNow();
+      },
+      // It never stays paused, and a video that ends starts again, like a channel on a loop.
+      onStateChange: e => {
+        if (e.data === YT.PlayerState.PLAYING) cover(false);
+        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
+        else if (e.data === YT.PlayerState.ENDED) { e.target.seekTo(0); e.target.playVideo(); }
+      },
+      // The channel's owner doesn't let other sites play it.
+      onError: () => {
+        const m = document.createElement("div");
+        m.className = "msg";
+        m.textContent = (name || "This channel") + " can't play here right now. Please pick another channel.";
+        document.body.appendChild(m);
+      },
+    },
+  });
+};
+// A tap or OK only shows the channel's name; double-click goes full screen (on the website).
+$("shield").onclick = showNow;
+$("shield").ondblclick = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {});
+$("sound").onclick = () => { player.unMute(); player.playVideo(); $("sound").hidden = true; };
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") { showNow(); e.preventDefault(); }
+  if (e.key === "MediaPlayPause" || e.key === "MediaPause" || e.key === "k") e.preventDefault();
+});
+</script>
+</body>
+</html>

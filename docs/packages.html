@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free Live TV Packages</title>
-<meta name="description" content="Free Live TV packages and subscriptions.">
+<title>Cable TV Packages</title>
+<meta name="description" content="Cable TV packages and subscriptions.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/site.css">
 <meta name="robots" content="noindex">
 <style>
-  .wrap { max-width: 1200px; }
+  .wrap { max-width: 1640px; }
   .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin: 0 0 20px; }
   .stat { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 14px 16px; }
   .stat .n { font-size: 30px; font-weight: 800; color: var(--focus); }
@@ -24,15 +24,25 @@
   textarea.inp { width: 100%; min-height: 70px; }
   .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: 13px; }
   .Free { background: var(--surface-2); } .Silver { background: #9e9e9e; color: #000; } .Gold { background: #f5c542; color: #000; } .Platinum { background: #b3e5fc; color: #000; }
+  @media (min-width: 1200px) {
+    .split { display: grid; grid-template-columns: minmax(460px, 560px) minmax(0, 1fr); gap: 24px; align-items: start; }
+    .split > .panel:first-child { position: sticky; top: 16px; margin-bottom: 0 !important; }
+  }
   .soon { color: #ff8a80; font-weight: 700; }
+  .pkgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+  .pkg { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 12px 16px; }
+  .pkg h3 { margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; }
+  .pkg .price { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .pkg ul, ul.how { padding-left: 18px; margin: 6px 0 0; }
+  .pkg li, ul.how li { margin: 4px 0; }
 </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Free Live TV home">
+    <a class="brand" href="./" aria-label="Cable TV home">
       <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Free Live TV</span>
+      <span>Cable TV</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -45,25 +55,79 @@
 
 <main class="wrap">
   <h1>Packages</h1>
-  <p class="lead">Free, Silver, Gold and Platinum for Free Live TV viewers. Turn packages on, set prices, and give each viewer a package when they pay.</p>
+  <p class="lead">Free, Silver, Gold and Platinum for Cable TV viewers. Turn packages on, set prices, and give each viewer a package when they pay.</p>
   <div id="notReady" class="panel hidden">This page works once sign-in is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the admin. <button class="btn" data-signout>Use another account</button></div>
-  <div id="dash" class="hidden">
+  <div id="dash" class="hidden split">
     <div class="panel" style="margin-bottom:20px">
       <h2 style="margin-top:0">Settings</h2>
       <p><label><input type="checkbox" id="enforce"> <b>Packages are on</b></label><br>
         <span class="small">While this is off, every viewer has everything (like today). When it's on, viewers without a package get Free, and new viewers get a free trial of everything first.</span></p>
       <p><label>Free trial for new viewers: <input class="inp" type="number" id="trialDays" min="0" max="365" style="width:80px"> days</label></p>
       <div class="table-wrap prices" style="max-width:560px"><table>
-        <thead><tr><th>Package</th><th>1 month</th><th>6 months</th><th>1 year</th></tr></thead>
+        <thead><tr><th>Package</th><th>1 year (you type)</th><th>6 months</th><th>3 months</th><th>1 month</th></tr></thead>
         <tbody id="priceRows"></tbody>
       </table></div>
+      <p class="small">Type only the <b>1 year</b> price; the others fill in by themselves. Each shorter plan costs 10% more per month than the one above it, ending in 9 cents. Example: a year at $53.99 ($4.50 a month) makes 6 months $29.69 ($4.95 a month), 3 months $16.29 ($5.43 a month) and 1 month $5.99. You can still change any box by hand before saving.</p>
       <p><label><b>How to pay</b> (shown to viewers on the packages screen)<br><textarea class="inp" id="howToPay"></textarea></label></p>
       <div class="row"><button class="btn primary" id="saveCfg">Save settings</button><span class="small" id="cfgMsg"></span></div>
-      <p class="small">Free: Browse, 1+List, Carousel, Strip, full screen, favourites. Silver adds 1×2, 1+3, Duo. Gold adds 2×2, News, CP24, Home, My Screen, Movies &amp; Dramas. Platinum adds 2×3, Games and 2 devices on one account.</p>
     </div>
 
+    <div class="panel" style="margin-bottom:20px">
+      <h2 style="margin-top:0">What's in each package</h2>
+      <p class="small">Each package has everything in the one before it, plus more. The prices shown are the ones in Settings above.</p>
+      <div class="pkgs">
+        <div class="pkg"><h3><span class="pill Free">Free</span> <span class="price">$0</span></h3>
+          <p><b>For:</b> anyone who just wants to watch one channel at a time.</p>
+          <ul>
+            <li><b>All channels</b>, full screen, favourites, channel numbers and search</li>
+            <li><b>Browse</b>: the home screen with rows of big channel cards</li>
+            <li><b>1+List</b>: one channel with the channel list beside it</li>
+            <li><b>Carousel</b>: one big channel, slide left and right to the next</li>
+            <li><b>Strip</b>: a big channel on top, small channel tiles along the bottom</li>
+          </ul></div>
+        <div class="pkg"><h3><span class="pill Silver">Silver</span> <span class="price" data-p="silver"></span></h3>
+          <p><b>For:</b> people who like to keep an eye on a second channel.</p>
+          <ul>
+            <li>Everything in Free, plus:</li>
+            <li><b>1×2</b>: two channels side by side</li>
+            <li><b>1+3</b>: one big channel and three small ones beside it</li>
+            <li><b>Duo</b>: two channels playing on top, channel cards below</li>
+          </ul></div>
+        <div class="pkg"><h3><span class="pill Gold">Gold</span> <span class="price" data-p="gold"></span></h3>
+          <p><b>For:</b> families and news watchers who want the TV to show more than one thing.</p>
+          <ul>
+            <li>Everything in Silver, plus:</li>
+            <li><b>2×2</b>: four channels at once</li>
+            <li><b>News</b>: your channel with weather, prayer times, traffic cameras and headlines around it</li>
+            <li><b>CP24</b>: a big channel with a clock, weather and scrolling lines, like the Toronto news channel</li>
+            <li><b>Home</b>: your channel with cards for the clock, weather, prayers, stories and markets</li>
+            <li><b>My Screen</b>: a screen the viewer designs themselves</li>
+            <li><b>Movies &amp; Dramas</b>: the Library of movies and drama series</li>
+          </ul></div>
+        <div class="pkg"><h3><span class="pill Platinum">Platinum</span> <span class="price" data-p="platinum"></span></h3>
+          <p><b>For:</b> the biggest fans, or a home with two TVs.</p>
+          <ul>
+            <li>Everything in Gold, plus:</li>
+            <li><b>2×3</b>: six channels at once</li>
+            <li><b>Games</b>: the 12 retro games played with the TV remote</li>
+            <li><b>2 devices</b>: one account works on two TVs or phones at the same time (every other package works on one)</li>
+          </ul></div>
+      </div>
+
+      <h3>How it works</h3>
+      <ul class="how">
+        <li><b>Packages off</b> (the switch in Settings is unticked): every viewer has everything, like Platinum, for free. Nothing is locked.</li>
+        <li><b>Packages on</b>: a viewer without a package has <b>Free</b>. Locked modes show a 🔒 and the package they need; picking one opens the packages screen in the app.</li>
+        <li><b>Free trial</b>: a brand-new viewer gets <b>everything (Platinum)</b> for the trial days in Settings, counted from the day they first signed in. When the trial ends they drop to Free, unless you gave them a package. This is different from the Free package, which only has the basic modes and never ends.</li>
+        <li><b>Buying</b>: in the app the viewer picks a package and a length and presses <b>Ask</b>. That sends you a message in ✉ Messages. You reply with how to pay, and once they've paid you give them the package below.</li>
+        <li><b>Ending</b>: 5 days before a package (or the trial) ends, the viewer sees a reminder once a day with <b>Renew</b> and <b>Message us</b> buttons. When it ends they drop to Free, and for a week the app tells them it ended.</li>
+        <li><b>Renewing</b>: giving the same package again adds the time after the current end date, so paying early loses nothing. Giving a different package starts it today.</li>
+      </ul>
+    </div>
+
+    <div class="pk-main">
     <div class="stats" id="stats"></div>
     <div class="row" style="justify-content:space-between;margin-bottom:12px">
       <input type="search" id="q" placeholder="Search name or email">
@@ -75,11 +139,12 @@
       <tbody id="rows"></tbody>
     </table></div>
     <p class="small">Pick the package and press +1 month, +6 months or +1 year. Time is added after the current end date, so renewing early loses nothing. The viewer's app picks it up within an hour, or at once when they reopen it. They see a reminder 5 days before it ends.</p>
+    </div>
   </div>
   <p class="err" id="err"></p>
 </main>
 <footer>
-  <div class="wrap">Free Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
 </footer>
 
 <script type="module">
@@ -87,11 +152,11 @@ import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
 const $ = id => document.getElementById(id);
 const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 const TIERS = ["Silver", "Gold", "Platinum"];
-const LENGTHS = [["month", "1 month"], ["six", "6 months"], ["year", "1 year"]];
+const LENGTHS = [["year", "1 year"], ["six", "6 months"], ["three", "3 months"], ["month", "1 month"]];
 const DEFAULTS = {
-  silver_month: "$1.99", silver_six: "$9.99", silver_year: "$17.99",
-  gold_month: "$3.99", gold_six: "$19.99", gold_year: "$35.99",
-  platinum_month: "$5.99", platinum_six: "$29.99", platinum_year: "$53.99",
+  silver_year: "$17.99", silver_six: "$9.89", silver_three: "$5.39", silver_month: "$1.99",
+  gold_year: "$35.99", gold_six: "$19.79", gold_three: "$10.89", gold_month: "$3.99",
+  platinum_year: "$53.99", platinum_six: "$29.69", platinum_three: "$16.29", platinum_month: "$5.99",
   trialDays: 7, enforce: false,
   howToPay: "Pick a package below and press Ask. We'll message you back here with how to pay (Interac e-Transfer or card), and turn your package on as soon as it's paid. Questions? WhatsApp 437 602 6500.",
 };
@@ -132,6 +197,7 @@ if (!configured) {
   async function loadConfig() {
     let c = {};
     try { const s = await fs.getDoc(fs.doc(db, "config", "plans")); if (s.exists()) c = s.data(); } catch {}
+    const saved = c;
     c = { ...DEFAULTS, ...c };
     $("enforce").checked = !!c.enforce;
     $("trialDays").value = c.trialDays;
@@ -142,12 +208,37 @@ if (!configured) {
       tr.innerHTML = `<td><span class="pill ${t}">${t}</span></td>`;
       for (const [k] of LENGTHS) {
         const td = document.createElement("td"); const inp = document.createElement("input");
-        inp.className = "inp"; inp.id = `${t.toLowerCase()}_${k}`; inp.value = c[inp.id];
+        inp.className = "inp"; inp.id = `${t.toLowerCase()}_${k}`; inp.value = c[inp.id] ?? "";
         td.append(inp); tr.append(td);
       }
       tb.append(tr);
     }
+    // Settings saved before 3 months existed: work it out from the year.
+    for (const t of TIERS) if (saved[t.toLowerCase() + "_year"] && !saved[t.toLowerCase() + "_three"]) fillFromYear(t.toLowerCase());
+    showPrices();
   }
+
+  // The prices in each package card follow the Settings boxes as they are typed.
+  function showPrices() {
+    document.querySelectorAll(".price[data-p]").forEach(el => {
+      const t = el.dataset.p;
+      el.textContent = `${$(t + "_year").value}/year · ${$(t + "_six").value}/6 months · ${$(t + "_three").value}/3 months · ${$(t + "_month").value}/month`;
+    });
+  }
+  // From the yearly price: each shorter plan costs 10% more per month than the next longer one,
+  // rounded to the nearest 10 cents and ending in 9 (the app does the same sums when a box is empty).
+  const round99 = v => Math.max(0.99, Math.round(v * 10) / 10 - 0.01);
+  const money = v => "$" + v.toFixed(2);
+  function fillFromYear(t) {
+    const y = parseFloat($(t + "_year").value.replace(/[^0-9.]/g, ""));
+    if (!(y > 0)) return;
+    const six = round99(y / 2 * 1.1), three = round99(six / 2 * 1.1), month = round99(three / 3 * 1.1);
+    $(t + "_six").value = money(six); $(t + "_three").value = money(three); $(t + "_month").value = money(month);
+  }
+  $("priceRows").addEventListener("input", e => {
+    if (e.target.id?.endsWith("_year")) fillFromYear(e.target.id.replace("_year", ""));
+    showPrices();
+  });
 
   $("saveCfg").onclick = async () => {
     const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), updated: fs.serverTimestamp() };

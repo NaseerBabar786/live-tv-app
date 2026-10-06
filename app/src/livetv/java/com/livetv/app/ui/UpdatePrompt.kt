@@ -36,11 +36,11 @@ fun UpdatePromptDialog(
     SettingsTheme {
         AlertDialog(
             onDismissRequest = onLater,
-            title = { Text("Updating Free Live TV") },
+            title = { Text("Updating Cable TV") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        "Updating to Free Live TV ${release.version}. Your favourites and settings are kept."
+                        "Updating to Cable TV ${release.version}. Your favourites and settings are kept."
                     )
                     when (update) {
                         is UpdateState.Downloading -> {
@@ -48,7 +48,7 @@ fun UpdatePromptDialog(
                             LinearProgressIndicator(progress = { update.progress }, modifier = Modifier.fillMaxWidth())
                         }
                         is UpdateState.NeedsPermission -> Text(
-                            "Allow Free Live TV to install apps in the screen that opened, then come back " +
+                            "Allow Cable TV to install apps in the screen that opened, then come back " +
                                 "and press Update now again."
                         )
                         else -> Unit
