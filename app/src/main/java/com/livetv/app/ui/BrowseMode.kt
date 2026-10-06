@@ -379,7 +379,7 @@ internal fun BrowseMode(
 
     // Only the highlighted card plays. Every other card shows a still picture of what's on: one
     // silent player opens the channels in turn, keeps a frame and closes again. It starts with the
-    // cards around the cursor and on screen, then go through every row, so the pictures are already
+    // cards around the cursor and on screen, then goes through every row, so the pictures are already
     // there when the cursor gets to them (refreshed every few minutes; Wi-Fi or Ethernet only).
     val grabbers = remember {
         // One picture-taker: with the highlighted card that's at most 2 videos open at once, which
@@ -464,8 +464,8 @@ internal fun BrowseMode(
                     delay(1_000 - still)
                     continue
                 }
-                // The highlighted card's video opens first; only one video starts at a time.
-                if (previewId != null && !showing) {
+                // The highlighted card's video opens first (given up to 8 s), so only one video starts at a time.
+                if (previewId != null && !showing && System.currentTimeMillis() - movedAt < 9_000) {
                     delay(300)
                     continue
                 }
