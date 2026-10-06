@@ -75,6 +75,12 @@ async def voices():
             except Exception as e:
                 print("voice retry", sid, e, flush=True); time.sleep(5)
 
+if os.environ.get("TRY_SEEDS"):
+    sc = next(x for x in S["scenes"] if x["id"] == ONLY[0])
+    for sd in os.environ["TRY_SEEDS"].split(","):
+        SEED = int(sd) - int(sc["id"][1:]); sc2 = dict(sc, id=sc["id"])
+        p = picture(sc2); os.rename(p, f"out/{sc['id']}-seed{sd}.jpg")
+    raise SystemExit(0)
 if os.environ.get("VOICES", "1") == "1":
     asyncio.run(voices())
 for sc in S["scenes"]:
