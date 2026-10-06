@@ -1,0 +1,11 @@
+name: Find free shows
+on:
+  push:
+    branches: [shows-library]
+    paths: [tools/find_shows.py, .github/workflows/find-shows.yml]
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/find_shows.py | tee shows.jsonl
