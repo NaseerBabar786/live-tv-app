@@ -1,0 +1,53 @@
+name: Build YouTube channel lists
+
+# docs/channel/yt-<id>.json: the video lists of our channels that run like Bazaar Hits (Cinema 2,
+# Music 3, Kids 5, Sports 6, Travel 7, Comedy 8), from official YouTube channels. Played in
+# YouTube's player, locked, on tv.bulkbazaar.ca/channel/ytc.html?c=<id> (also in the app).
+on:
+  schedule:
+    - cron: "45 9 * * *"   # every day, 09:45 UTC
+  push:
+    branches: [main]
+    paths: [tools/build_youtube_channels.py, .github/workflows/build-youtube-channels.yml]
+  pull_request:
+    paths: [tools/build_youtube_channels.py, .github/workflows/build-youtube-channels.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: build-youtube-channels
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the lists
+        run: python3 tools/build_youtube_channels.py
+
+      - name: Publish the lists
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/channel/yt-*.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "YouTube channel lists as of $(date -u '+%Y-%m-%d')"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."
