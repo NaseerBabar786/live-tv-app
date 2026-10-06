@@ -3,11 +3,16 @@ package com.livetv.app.data
 import android.content.Context
 import android.os.SystemClock
 import android.widget.Toast
+import com.livetv.app.account.Account
+import com.livetv.app.account.FirebaseConfig
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * The owner's test updates. Every new build first goes to the owner-only "test" release; nobody else
- * gets it until the owner has tried it and said it is good. Seven quick taps on the version number
- * turn test updates on (or off again) on this device; then the app offers each newer test build.
+ * gets it until the owner has tried it and said it is good. Signed in with the owner's account (or after seven
+ * quick taps on the version number) test updates are on and a "Try test version" button shows in Settings.
+ * Our other apps ask [com.livetv.app.OwnerProvider] whether this is the owner's device.
  */
 object OwnerTest {
 
@@ -22,6 +27,29 @@ object OwnerTest {
 
     fun set(context: Context, on: Boolean) =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply()
+
+    /** Whether this is the owner's device: signed in with the owner's account, or test updates switched on here. */
+    fun isOwner(context: Context): Boolean {
+        val admin = runCatching { FirebaseConfig.configured && Account.get(context).isAdmin }.getOrDefault(false)
+        if (admin && !isOn(context)) set(context, true)
+        return admin || isOn(context)
+    }
+
+    /**
+     * The owner's "Try test version" button: downloads the newest test build and opens the installer.
+     * Returns what to tell the owner. If the test build closes by itself, CrashGuard offers the last good version.
+     */
+    suspend fun tryNewest(context: Context, onProgress: (Float) -> Unit): String {
+        set(context, true)
+        val updater = Updater(context)
+        val release = withContext(Dispatchers.IO) { updater.testRelease() }
+            ?: return "No newer test version right now. You have ${updater.installedVersion}."
+        val apk = runCatching { updater.download(release, onProgress = onProgress) }
+            .getOrElse { return it.message ?: "The test version could not be downloaded." }
+        if (!updater.ensureInstallAllowed()) return "Allow installing apps, then press Try test version again."
+        return runCatching { updater.install(apk); "Installing ${release.version}." }
+            .getOrElse { it.message ?: "The installer could not be opened." }
+    }
 
     private var taps = 0
     private var lastTap = 0L

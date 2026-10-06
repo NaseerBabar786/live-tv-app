@@ -159,6 +159,7 @@ fun SettingsDialog(activity: MainActivity, version: String, onDismiss: () -> Uni
                     color = Muted,
                     fontSize = 13.sp,
                 )
+                TestVersionButton()
                 Text(
                     "Multi Chat $version. Each account is the official WhatsApp Web in its own separate box, " +
                         "saved only on this phone. Multi Chat is not made by or connected with WhatsApp or Meta.",

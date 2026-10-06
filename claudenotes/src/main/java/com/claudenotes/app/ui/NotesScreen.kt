@@ -211,6 +211,7 @@ fun NotesScreen(
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.outline,
                         )
+                        TestVersionButton(Modifier.padding(top = 8.dp))
                     }
                 }
             }

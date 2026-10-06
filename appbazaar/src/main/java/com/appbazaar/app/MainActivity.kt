@@ -68,7 +68,12 @@ class MainActivity : ComponentActivity() {
 
                 Box(Modifier.fillMaxSize().background(Bg).safeDrawingPadding()) {
                     when {
-                        help -> HelpScreen(store.isTv, onBack = { help = false }, onPermission = store::openPermissionSettings)
+                        help -> HelpScreen(
+                            store.isTv,
+                            onBack = { help = false },
+                            onPermission = store::openPermissionSettings,
+                            onTryTest = { help = false; store.refresh(manual = true) },
+                        )
                         open != null -> DetailScreen(
                             open, state, store.isTv,
                             onBack = { openId = null },

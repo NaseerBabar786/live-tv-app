@@ -11,8 +11,6 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
 import com.livetv.app.Edition
-import com.livetv.app.account.Account
-import com.livetv.app.account.FirebaseConfig
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -48,10 +46,8 @@ class Updater(context: Context) {
      * The owner's newer test build, only when test updates are on for this device (see [OwnerTest]).
      * Signing in with the owner's account turns them on by itself.
      */
-    private fun testRelease(): Release? {
-        val owner = runCatching { FirebaseConfig.configured && Account.get(appContext).isAdmin }.getOrDefault(false)
-        if (owner && !OwnerTest.isOn(appContext)) OwnerTest.set(appContext, true)
-        if (!owner && !OwnerTest.isOn(appContext)) return null
+    fun testRelease(): Release? {
+        if (!OwnerTest.isOwner(appContext)) return null
         val version = runCatching {
             JSONObject(fetchText(OwnerTest.VERSIONS)).optString(if (Edition.MAX) "live-tv-max" else "cable-tv")
         }.getOrNull()?.takeIf { it.isNotBlank() && isNewer(it, installedVersion) } ?: return null

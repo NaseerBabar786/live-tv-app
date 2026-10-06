@@ -85,6 +85,7 @@ fun CameraGridScreen(
                 modifier = Modifier.clickable { OwnerTest.tap(context) }, // 7 taps: owner's test updates
             )
             Spacer(Modifier.weight(1f))
+            TestVersionButton(Modifier.padding(end = 10.dp).focusRing(CircleShape))
             OutlinedButton(onClick = onOpenWyze, modifier = Modifier.focusRing(CircleShape)) {
                 Text("Wyze")
             }
