@@ -31,11 +31,13 @@ def credits(film):
 
 
 LANGS = {
-    # m / f = main man and woman, m2 / f2 = a second man and woman (older or different voice).
+    # m / f = main man and woman, m2 / f2 / m3 = other voices (older or deeper).
     "ur": ("urdu", "Urdu", "urd", {"m": ("ur-PK-AsadNeural", 0), "f": ("ur-PK-UzmaNeural", 0),
-                                   "m2": ("ur-IN-SalmanNeural", -4), "f2": ("ur-IN-GulNeural", 0)}),
+                                   "m2": ("ur-IN-SalmanNeural", -4), "f2": ("ur-IN-GulNeural", 0),
+                                   "m3": ("ur-PK-AsadNeural", -14)}),
     "hi": ("hindi", "Hindi", "hin", {"m": ("hi-IN-MadhurNeural", 0), "f": ("hi-IN-SwaraNeural", 0),
-                                     "m2": ("hi-IN-MadhurNeural", -14), "f2": ("hi-IN-SwaraNeural", 8)}),
+                                     "m2": ("hi-IN-MadhurNeural", -14), "f2": ("hi-IN-SwaraNeural", 8),
+                                     "m3": ("hi-IN-MadhurNeural", -24)}),
 }
 
 
