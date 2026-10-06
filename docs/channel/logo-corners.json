@@ -1,0 +1,24 @@
+{
+  "about": "Where OUR logo goes on our YouTube channels and Bazaar Hits, by uploader (the label in the channel lists): tr top right (the default), tl top left, br bottom right, bl bottom left. The owner's rule (2026-10-06): our logo never sits on the uploader's own logo, so it goes to the opposite side. Change a line here when one overlaps; no rebuild needed.",
+  "default": "tr",
+  "labels": {
+    "Saregama": "tl",
+    "Zee Music": "tl",
+    "Sony Music India": "tl",
+    "Tips": "tl",
+    "Speed Records": "tl",
+    "HUM TV": "tl",
+    "Har Pal Geo": "tl",
+    "Geo Entertainment": "tl",
+    "Express TV": "tl",
+    "Green Entertainment": "tl",
+    "Taarak Mehta": "tl",
+    "The Kapil Sharma Show": "tl",
+    "Masala TV": "tl",
+    "Shemaroo": "tl",
+    "Shemaroo Movies": "tl",
+    "B4U Movies": "tl",
+    "ARY Digital": "tr",
+    "T-Series": "tr"
+  }
+}

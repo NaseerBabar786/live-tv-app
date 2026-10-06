@@ -32,6 +32,9 @@
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
   .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
   .cover.off { opacity: 0; }
+  .bug.tl { right: auto; left: 2.5%; }
+  .bug.br { top: auto; bottom: 12%; }
+  .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
 </style>
 </head>
 <body>
@@ -57,8 +60,17 @@ function shuffled(list, seed) {
   for (let i = a.length - 1; i > 0; i--) { seed = (seed * 9301 + 49297) % 233280; const j = Math.floor(seed / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
   return a;
 }
+// Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
+let corners = { default: "tr", labels: {} }, bugLabel = null;
+fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(bugLabel); }).catch(() => {});
+function placeBug(label) {
+  bugLabel = label;
+  const corner = corners.labels?.[label] || corners.default || "tr";
+  document.querySelector(".bug").className = "bug " + corner;
+}
 function showNow() {
   const s = songs[at];
+  placeBug(s.label);
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = s.title;
   $("now").lastChild.textContent = "Bazaar Hits · " + s.label;
