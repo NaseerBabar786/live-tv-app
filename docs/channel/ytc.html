@@ -89,10 +89,14 @@ function play(step, start = 0) {
 fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()).then(d => {
   if (!d.videos || d.videos.length < 3) return fallBack();
   const seed = Math.floor(Date.now() / 86400000) + station.id.length;
-  // "Top" videos (Bazaar Sports' main events and newest highlights) come round after every third one.
+  // "Top" videos come round more often: Bazaar Sports' main events and newest highlights after every
+  // third video; on Bazaar Movies Hindi new films ([topRatio] 3) three for every older one.
   const top = shuffled(d.videos.filter(v => v.top), seed + 1);
   const rest = shuffled(d.videos.filter(v => !v.top), seed);
-  if (top.length && rest.length) {
+  if (top.length && rest.length && station.topRatio) {
+    videos = [];
+    top.forEach((v, i) => { videos.push(v); if (i % station.topRatio === station.topRatio - 1) videos.push(rest[Math.floor(i / station.topRatio) % rest.length]); });
+  } else if (top.length && rest.length) {
     videos = [];
     rest.forEach((v, i) => { videos.push(v); if (i % 3 === 2) videos.push(top[Math.floor(i / 3) % top.length]); });
   } else videos = top.concat(rest);

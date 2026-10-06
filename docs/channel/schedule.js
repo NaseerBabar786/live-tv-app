@@ -46,7 +46,7 @@ export const STATIONS = [
     name: "Bazaar Movies English", dial: "9", doc: "_channel_english", page: "channel/?c=english", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-english.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: full films from the studios' and distributors' own YouTube channels. Backup: public-domain classics from the Internet Archive." },
-  { id: "hindi", yt: true, web: "channel/ytc.html?c=hindi", ytMins: 140, tagline: "Full Hindi films, day and night",
+  { id: "hindi", yt: true, web: "channel/ytc.html?c=hindi", ytMins: 140, tagline: "New Hindi films, day and night", topRatio: 3,
     name: "Bazaar Movies Hindi", dial: "10", doc: "_channel_hindi", page: "channel/?c=hindi", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: full Hindi films from the studios' own YouTube channels. Backup: public-domain classics from the Internet Archive." },

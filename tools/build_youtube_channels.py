@@ -170,7 +170,11 @@ CHANNELS = {
         ],
     },
     "hindi": {
-        "name": "Bazaar Movies Hindi", "mins": (70, 200), "search": "hindi full movie",
+        "name": "Bazaar Movies Hindi", "mins": (70, 200),
+        "search": ["hindi full movie", "new hindi movie %(year)s", "new hindi movie %(last)s"],
+        # Mostly new films (the owner's wish, 2026-10-06): a film whose title names a year from the
+        # last four is "top", and the channel page plays those three times as often as the rest.
+        "recent_years": 4,
         "keep": r"full (movie|film)|movie|film",
         "skip": r"scene|song|jukebox|comedy scenes|best of|spoof|clip",
         "sources": [
@@ -232,8 +236,10 @@ def build(cid, ch, today):
             continue
         videos = []
         pages = [f"https://www.youtube.com/channel/{chan}/videos"]
-        if ch.get("search"):
-            pages.append(f"https://www.youtube.com/channel/{chan}/search?query=" + ch["search"].replace(" ", "+"))
+        searches = ch.get("search") or []
+        for query in [searches] if isinstance(searches, str) else searches:
+            query = query % {"year": today.year, "last": today.year - 1}
+            pages.append(f"https://www.youtube.com/channel/{chan}/search?query=" + query.replace(" ", "+"))
         for url in pages:
             try:
                 videos += videos_page(url)
@@ -272,10 +278,15 @@ def build(cid, ch, today):
         for v in found.values():
             age = (today - dt.date.fromisoformat(v["found"])).days
             v["top"] = bool(events.search(v["title"]) and age <= 14) or age <= 2
-    videos = sorted(found.values(), key=lambda v: v["found"], reverse=True)[:MAX_VIDEOS]
+    if ch.get("recent_years"):
+        for v in found.values():
+            years = [int(y) for y in re.findall(r"\b(19[5-9]\d|20[0-4]\d)\b", v["title"])]
+            v["top"] = bool(years) and max(years) >= today.year - ch["recent_years"]
+    # Newest films first, so the list keeps them when it is full.
+    videos = sorted(found.values(), key=lambda v: (bool(v.get("top")), v["found"]), reverse=True)[:MAX_VIDEOS]
     summary = f"{ch['name']}: {len(videos)} videos ({', '.join(counts)})"
-    if ch.get("events"):
-        summary += f"; {sum(1 for v in videos if v.get('top'))} top (main events and newest)"
+    if ch.get("events") or ch.get("recent_years"):
+        summary += f"; {sum(1 for v in videos if v.get('top'))} top ({'main events and newest' if ch.get('events') else 'new films'})"
     if os.environ.get("GITHUB_ACTIONS"):
         print(f"::notice title={ch['name']}::{summary}")
     if len(videos) < 5:
