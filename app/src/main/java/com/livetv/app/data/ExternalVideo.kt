@@ -26,7 +26,7 @@ object YouTube {
 
     fun watchUrl(id: String) = "https://www.youtube.com/watch?v=$id"
 
-    /** Whether the link plays in YouTube's player (a video, a channel's live stream, or Geet Bahar). */
+    /** Whether the link plays in YouTube's player (a video, a channel's live stream, or Bazaar Hits). */
     fun isYouTube(url: String): Boolean = videoId(url) != null || url == MyChannel.BOLLYWOOD_URL
 }
 

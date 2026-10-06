@@ -1,7 +1,7 @@
-name: Build Sunehra Daur schedule
+name: Build Bazaar Cinema schedule
 
 # Builds docs/channel/filmein-schedule.json (tv.bulkbazaar.ca/channel/filmein-schedule.json): the
-# ready-made schedule of Sunehra Daur, our classic-films channel (00 in Free Live TV), from the
+# ready-made schedule of Bazaar Cinema, our classic-films channel (00 in Free Live TV), from the
 # public-domain films in docs/Movies.m3u. A new evening line-up and loop order every week.
 on:
   schedule:
@@ -49,7 +49,7 @@ jobs:
             echo "No changes."
             exit 0
           fi
-          git commit -m "Sunehra Daur schedule for the week of $(date -u '+%Y-%m-%d')"
+          git commit -m "Bazaar Cinema schedule for the week of $(date -u '+%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds Sur Sukoon, our music channel (000 in Free Live TV), from music that is free to use.
+Builds Bazaar Music, our music channel (000 in Free Live TV), from music that is free to use.
 
 Source: Wikimedia Commons, where every file states its licence. Only public domain, CC0 and
 CC BY recordings are taken (no "share-alike", "non-commercial" or "no-derivatives"), and
@@ -162,7 +162,7 @@ def card(song, path, logo):
     if os.path.exists(logo):
         lg = Image.open(logo).convert("RGBA").resize((150, 150))
         im.paste(lg, (70, 60), lg)
-    d.text((240, 95), "SUR SUKOON", font=font(52), fill=(255, 255, 255))
+    d.text((240, 95), "BAZAAR MUSIC", font=font(52), fill=(255, 255, 255))
     d.text((240, 160), "Free music, day and night", font=font(26, False), fill=(204, 251, 241))
     d.text((70, 300), "NOW PLAYING", font=font(28), fill=(250, 204, 21))
     lines = wrap(d, latin(song["name"]) or "Music", font(60), 1140)[:3]
@@ -219,7 +219,7 @@ def main():
             picked.append(s)
     print(f"Picked {len(picked)} songs")
 
-    logo = os.path.join(ROOT, "docs", "channel", "logos", "sur-sukoon.png")
+    logo = os.path.join(ROOT, "docs", "channel", "logos", "bazaar-music.png")
     videos = []
     for s in picked:
         if len(videos) >= args.limit:
@@ -262,12 +262,12 @@ def main():
         sys.exit("Too few songs; keeping the old schedule.")
 
     schedule = {
-        "name": "Sur Sukoon",
-        "logo": "https://tv.bulkbazaar.ca/channel/logos/sur-sukoon.png",
+        "name": "Bazaar Music",
+        "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-music.png",
         "logoCorner": "tr",
         "active": True,
         "tz": "America/Toronto",
-        "ticker": ("Sur Sukoon · Free music, day and night · Classical, qawwali, ghazal and more, all free to use "
+        "ticker": ("Bazaar Music · Free music, day and night · Classical, qawwali, ghazal and more, all free to use "
                    "(public domain and Creative Commons, from Wikimedia Commons) · Channel 000 on Free Live TV "
                    "· Advertise with us: WhatsApp 437 602 6500"),
         "tickerOn": True,

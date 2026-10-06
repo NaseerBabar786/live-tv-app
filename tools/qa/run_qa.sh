@@ -94,7 +94,7 @@ for k in RIGHT DOWN; do key KEYCODE_DPAD_$k; sleep 2; done
 key KEYCODE_DPAD_CENTER
 sleep 12; shot 05-player
 # The owner's own channels by number: 0, 00, 000, 0000.
-for n in 1 2 3 4; do
+for n in 1 2 3 4 5; do
   # All digits in one command, so a slow emulator can't split "00" into two separate "0"s.
   adb shell input keyevent $(for i in $(seq $n); do printf "KEYCODE_0 "; done)
   sleep 4;  shot "06-channel-$(printf '0%.0s' $(seq $n))-dial"
