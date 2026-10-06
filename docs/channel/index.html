@@ -26,6 +26,10 @@
   .guide { display: grid; gap: 6px; }
   .guide div { display: grid; grid-template-columns: 90px 1fr auto; gap: 10px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--surface-2); border-radius: 10px; }
   .guide div.cur { border-color: var(--focus); }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }
+  .tabs a { display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; border: 2px solid var(--surface-2); background: var(--surface); color: var(--text); text-decoration: none; font-weight: 700; }
+  .tabs a.sel { border-color: var(--focus); }
+  .tabs img { width: 32px; height: 32px; }
   .guide .t { font-weight: 700; } .guide .l { color: var(--muted); font-size: 14px; }
 </style>
 </head>
@@ -45,6 +49,7 @@
 </header>
 
 <main class="wrap">
+  <nav class="tabs" id="tabs" aria-label="Our channels"></nav>
   <div class="stage" id="stage">
     <video id="video" playsinline muted autoplay></video>
     <img class="bug tr hidden" id="bug" alt="">
@@ -60,10 +65,10 @@
     </div>
     <button class="btn" id="full">⛶ Full screen</button>
   </div>
-  <p class="small">Watch it on your TV too: it's channel 0 in the free <a href="../">Free Live TV</a> app.</p>
+  <p class="small">Watch it on your TV too: it's channel <span id="dial">0</span> in the free <a href="../">Free Live TV</a> app (type <span id="dial2">0</span> on the remote).</p>
   <h2>Coming up</h2>
   <div class="guide" id="guide"></div>
-  <p class="small" id="credits" style="margin-top:18px">Films: Blender Foundation open movies (Creative Commons Attribution), blender.org.</p>
+  <p class="small" id="credits" style="margin-top:18px"></p>
 </main>
 <footer>
   <div class="wrap">Free Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="../privacy">Privacy policy</a></div>
@@ -71,21 +76,36 @@
 
 <script type="module">
 import { firebaseConfig } from "../firebase-config.js";
-import { whatsOn, guide, timeText, lengthText, tuneIn, TEST_SCHEDULE_URL } from "./schedule.js";
+import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./schedule.js";
 const $ = id => document.getElementById(id);
 const video = $("video");
+// Which of our channels: ?c=filmein is Purani Filmein, otherwise Bazaar TV.
+const station = STATIONS.find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
+for (const st of STATIONS) {
+  const a = document.createElement("a");
+  a.href = st.id === "main" ? "./" : `./?c=${st.id}`;
+  if (st === station) a.className = "sel";
+  a.innerHTML = `<img alt=""><span></span>`;
+  a.querySelector("img").src = st.logo;
+  a.querySelector("span").textContent = `${st.dial}  ${st.name}`;
+  $("tabs").appendChild(a);
+}
+$("dial").textContent = $("dial2").textContent = station.dial;
+$("credits").textContent = station.id === "filmein"
+  ? "Films: public-domain classics from the Internet Archive (archive.org). A film every night at 8 PM Toronto time."
+  : "Films: Blender Foundation open movies (Creative Commons Attribution), blender.org.";
 
-/** The owner's public settings (channel/main), or the test schedule until there are any. */
+/** The owner's public settings (channel/<id>), or the ready-made schedule until there are any. */
 async function load() {
   try {
-    const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/channel/main?key=${firebaseConfig.apiKey}`;
+    const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/channel/${station.id}?key=${firebaseConfig.apiKey}`;
     const r = await fetch(url, { cache: "no-store" });
     if (r.ok) {
       const data = (await r.json()).fields?.data?.stringValue;
       if (data) return JSON.parse(data);
     }
   } catch {}
-  return (await fetch(TEST_SCHEDULE_URL, { cache: "no-store" })).json();
+  return (await fetch(station.ready, { cache: "no-store" })).json();
 }
 
 let c = await load(), tv = null;

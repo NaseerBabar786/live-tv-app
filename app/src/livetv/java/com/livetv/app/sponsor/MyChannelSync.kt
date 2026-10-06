@@ -9,25 +9,30 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 /**
- * Fetches the owner's channel settings, saved on tv.bulkbazaar.ca/studio. They live in
- * sponsors/_channel, which app users can already read (no new Firebase rule), with a public copy in
- * channel/main for the website. Until the owner saves anything, the test schedule on the website
- * plays, so the channel works from the first day.
+ * Fetches the owner's channel settings, saved on tv.bulkbazaar.ca/studio. Bazaar TV's live in
+ * sponsors/_channel and the other channels' in sponsors/_channel_<id>, which app users can already
+ * read (no new Firebase rule), with public copies in channel/<id> for the website. Until the owner
+ * saves anything, the ready-made schedule on the website plays, so each channel works from the first
+ * day (Purani Filmein's is rebuilt every week from the public-domain films list).
  */
 object MyChannelSync {
-    private const val TEST_SCHEDULE = "https://tv.bulkbazaar.ca/channel/test-schedule.json"
+    private fun readyMade(id: String) =
+        if (id == "main") "https://tv.bulkbazaar.ca/channel/test-schedule.json"
+        else "https://tv.bulkbazaar.ca/channel/$id-schedule.json"
 
     /** Quietly keeps the saved settings when offline. */
     suspend fun refresh(account: Account) = withContext(Dispatchers.IO) {
-        runCatching { MyChannel.update(fetch(account)) }
-        Unit
+        val token = if (account.user.value != null) runCatching { account.token() }.getOrNull() else null
+        for (station in MyChannel.STATIONS) {
+            runCatching { MyChannel.update(station.id, fetch(station.id, token)) }
+        }
     }
 
-    private suspend fun fetch(account: Account): JSONObject? {
-        val token = if (account.user.value != null) runCatching { account.token() }.getOrNull() else null
-        val doc = token?.let { document("sponsors/_channel", it) } ?: document("channel/main", null)
+    private fun fetch(id: String, token: String?): JSONObject? {
+        val owner = if (id == "main") "sponsors/_channel" else "sponsors/_channel_$id"
+        val doc = token?.let { document(owner, it) } ?: document("channel/$id", null)
         if (doc != null) return doc
-        return JSONObject(Http.request("GET", TEST_SCHEDULE, null, null, null))
+        return JSONObject(Http.request("GET", readyMade(id), null, null, null))
     }
 
     /** The settings in a document's "data" field; null when there's no such document (or no access). */

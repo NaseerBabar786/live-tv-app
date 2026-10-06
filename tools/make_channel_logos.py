@@ -61,3 +61,15 @@ for i, c in enumerate(cols): d.pieslice([0,0,S-1,S-1], i*60-90, (i+1)*60-90, fil
 d.ellipse([40,40,S-41,S-41], fill=(17,17,27))
 center_text(d, S/2, 150, "RANG", font(B, 120), "white"); center_text(d, S/2, 285, "TV", font(B, 90), (250,204,21))
 save(im, "rang-tv")
+
+# 6 Purani Filmein: sepia film reel badge, gold wordmark
+im = Image.new("RGBA", (S,S), (0,0,0,0)); bg = grad((S,S), (120,53,15), (41,22,8)); im.paste(bg, (0,0), circle_mask((S,S)))
+d = ImageDraw.Draw(im)
+d.ellipse([18,18,S-19,S-19], outline=(234,179,8), width=10)
+for i in range(12):  # sprocket holes around the edge, like a film reel
+    a = math.radians(i*30); cx, cy = S/2 + 205*math.cos(a), S/2 + 205*math.sin(a)
+    d.rounded_rectangle([cx-13, cy-13, cx+13, cy+13], 5, fill=(28,15,5))
+d.polygon([(S/2-34, 104), (S/2-34, 176), (S/2+30, 140)], fill=(234,179,8))
+center_text(d, S/2, 196, "PURANI", font(B, 92), (254,243,199)); center_text(d, S/2, 300, "FILMEIN", font(B, 78), (234,179,8))
+center_text(d, S/2, 396, "CLASSICS", font(BD, 30), (254,243,199))
+save(im, "purani-filmein")

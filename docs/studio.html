@@ -44,6 +44,11 @@
   .guide { display: grid; gap: 4px; font-size: 15px; }
   .guide div { display: grid; grid-template-columns: 80px 1fr auto; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--bg); }
   .guide div.cur { outline: 2px solid var(--focus); }
+  .stations { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 18px; }
+  .stations button { display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 14px; border: 3px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+  .stations button.sel { border-color: var(--focus); }
+  .stations img { width: 44px; height: 44px; }
+  .stations small { display: block; font-weight: 400; color: var(--muted); }
   pre.rule { background: var(--bg); padding: 10px; border-radius: 8px; overflow: auto; font-size: 13px; }
   @media (max-width: 640px) { .two, .three { grid-template-columns: 1fr; } .item { grid-template-columns: 1fr; } .item .acts { justify-content: flex-start; } }
 </style>
@@ -65,12 +70,14 @@
 
 <main class="wrap">
   <h1>Channel Studio</h1>
-  <p class="lead">Run your own TV channel. It shows as <b>channel 0</b> at the top of every list in Free Live TV (1.9.35 and newer) and on the public page <a href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 0</b>, Purani Filmein <b>channel 00</b>, from 1.9.37) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
 
   <div id="dash" class="hidden">
+    <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
+    <div class="stations" id="stations"></div>
     <details class="help panel" style="padding:14px 18px" open>
       <summary>How it works (read this first)</summary>
       <ol>
@@ -220,6 +227,7 @@
       <button class="btn primary" id="save">💾 Save and put on air</button>
       <button class="btn" id="undo">↶ Undo all changes</button>
       <button class="btn" id="loadTest">Load the test programme</button>
+      <button class="btn hidden" id="useAuto">Go back to the automatic weekly films</button>
       <span id="saveMsg" class="small"></span>
     </div>
     <div id="ruleNote" class="panel hidden" style="margin-top:18px">
@@ -239,11 +247,11 @@
 
 <script type="module">
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
-import { whatsOn, guide, timeText, lengthText, tuneIn, TEST_SCHEDULE_URL } from "./channel/schedule.js";
+import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./channel/schedule.js";
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 const LOGOS = [
-  ["Bazaar TV", "bazaar-tv"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
+  ["Bazaar TV", "bazaar-tv"], ["Purani Filmein", "purani-filmein"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
 ].map(([name, file]) => ({ name, url: `https://tv.bulkbazaar.ca/channel/logos/${file}.png` }));
 
 const V = "10.12.2";
@@ -255,6 +263,8 @@ const auth = getAuth(app);
 const db = fs.getFirestore(app);
 
 let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
+// The channel being worked on (?c=filmein opens Purani Filmein).
+let station = STATIONS.find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Math.random().toString(36).slice(2, 9);
 
@@ -270,17 +280,46 @@ onAuthStateChanged(auth, async user => {
   await loadSaved();
 });
 
-async function testProgramme() { return (await fetch(TEST_SCHEDULE_URL + "?t=" + Date.now())).json(); }
+function renderStations() {
+  $("stations").innerHTML = "";
+  for (const st of STATIONS) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = st === station ? "sel" : "";
+    b.innerHTML = `<img alt=""><span><span></span><small></small></span>`;
+    b.querySelector("img").src = st.logo;
+    b.querySelector("span span").textContent = st.name;
+    b.querySelector("small").textContent = `Channel ${st.dial} in the app`;
+    b.onclick = async () => {
+      if (st === station) return;
+      if (dirty && !confirm(`You have unsaved changes on ${station.name}. Leave them?`)) return;
+      station = st;
+      history.replaceState(null, "", st.id === "main" ? location.pathname : `?c=${st.id}`);
+      stopPreview();
+      await loadSaved();
+    };
+    $("stations").appendChild(b);
+  }
+  $("publicLink").href = station.page;
+  $("publicLink").textContent = "tv.bulkbazaar.ca/" + station.page;
+  $("loadTest").textContent = station.auto ? "Load the automatic weekly films" : "Load the test programme";
+  $("useAuto").classList.toggle("hidden", !station.auto);
+}
+
+async function testProgramme() { return (await fetch(station.ready + "?t=" + Date.now())).json(); }
 
 async function loadSaved() {
+  renderStations();
   try {
-    const snap = await fs.getDoc(fs.doc(db, "sponsors", "_channel"));
+    const snap = await fs.getDoc(fs.doc(db, "sponsors", station.doc));
     if (snap.exists() && snap.data().data) {
       saved = JSON.parse(snap.data().data);
-      $("saveMsg").textContent = "Loaded your saved channel.";
+      $("saveMsg").textContent = `Loaded your saved ${station.name}.`;
     } else {
       saved = await testProgramme();
-      $("saveMsg").innerHTML = '<span class="warn">Nothing saved yet: this is the ready-made 1-hour test programme. It\'s already playing in the app. Change anything you like, then Save.</span>';
+      $("saveMsg").innerHTML = station.auto
+        ? '<span class="warn">Nothing saved yet: this is the automatic schedule, rebuilt every Monday from the free public-domain films (a film every night at 8 PM, the rest round the clock). It\'s already playing in the app. Change anything you like, then Save; after that your saved version plays instead.</span>'
+        : '<span class="warn">Nothing saved yet: this is the ready-made 1-hour test programme. It\'s already playing in the app. Change anything you like, then Save.</span>';
     }
   } catch (e) {
     $("err").textContent = "Couldn't load your channel: " + e.message;
@@ -588,8 +627,19 @@ $("undo").onclick = () => {
   $("saveMsg").textContent = "Back to what was last saved.";
 };
 $("loadTest").onclick = async () => {
-  if (!confirm("Replace everything on this page with the ready-made 1-hour test programme? (Nothing changes on TVs until you Save.)")) return;
+  if (!confirm(`Replace everything on this page with ${station.auto ? "the automatic weekly films" : "the ready-made 1-hour test programme"}? (Nothing changes on TVs until you Save.)`)) return;
   c = await testProgramme(); changed(); renderAll();
+};
+$("useAuto").onclick = async () => {
+  if (!confirm(`Delete your saved ${station.name} and go back to the automatic schedule, rebuilt every Monday? TVs switch within about 10 minutes.`)) return;
+  try {
+    await fs.deleteDoc(fs.doc(db, "sponsors", station.doc));
+    try { await fs.deleteDoc(fs.doc(db, "channel", station.id)); } catch {}
+    await loadSaved();
+    $("saveMsg").innerHTML = '<span class="ok">✓ Back to the automatic weekly films.</span>';
+  } catch (e) {
+    $("saveMsg").innerHTML = `<span class="err">Couldn't do that: ${e.message}</span>`;
+  }
 };
 $("copyRule").onclick = () => navigator.clipboard.writeText($("ruleText").textContent).then(() => $("copyRule").textContent = "Copied ✓");
 
@@ -601,11 +651,11 @@ $("save").onclick = async () => {
   $("save").disabled = true;
   $("saveMsg").textContent = "Saving…";
   try {
-    await fs.setDoc(fs.doc(db, "sponsors", "_channel"), { name: c.name, active: c.active !== false, data, updatedAt: fs.serverTimestamp() });
+    await fs.setDoc(fs.doc(db, "sponsors", station.doc), { name: c.name, active: c.active !== false, data, updatedAt: fs.serverTimestamp() });
     saved = clone(c); dirty = false;
     let note = "";
     try {
-      await fs.setDoc(fs.doc(db, "channel", "main"), { data, updatedAt: fs.serverTimestamp() });
+      await fs.setDoc(fs.doc(db, "channel", station.id), { data, updatedAt: fs.serverTimestamp() });
       $("ruleNote").classList.add("hidden");
     } catch (e) {
       if (e.code === "permission-denied") { $("ruleNote").classList.remove("hidden"); note = " The public page needs one more step (see below)."; }

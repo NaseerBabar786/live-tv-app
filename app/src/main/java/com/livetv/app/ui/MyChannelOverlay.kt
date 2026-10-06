@@ -20,16 +20,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.livetv.app.data.Channel
 import com.livetv.app.data.MyChannel
 
 /**
- * The owner's channel's logo in a corner of the picture and its scrolling line along the bottom,
- * as set on tv.bulkbazaar.ca/studio. Draws nothing for other channels.
+ * One of the owner's channels' logo in a corner of the picture and its scrolling line along the
+ * bottom, as set on tv.bulkbazaar.ca/studio. Draws nothing for other channels.
  */
 @Composable
-fun MyChannelOverlay(modifier: Modifier = Modifier) {
-    val config by MyChannel.config.collectAsStateWithLifecycle()
-    val c = config ?: return
+fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
+    val configs by MyChannel.configs.collectAsStateWithLifecycle()
+    val c = channel?.takeIf(MyChannel::isMine)?.let { configs[it.url.removePrefix("mychannel://")] } ?: return
     BoxWithConstraints(modifier.fillMaxSize()) {
         // Sized from the picture, so it looks the same in full screen and in a smaller player.
         val unit = maxWidth / 100

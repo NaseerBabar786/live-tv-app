@@ -7,6 +7,17 @@
 const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 export const TEST_SCHEDULE_URL = "https://tv.bulkbazaar.ca/channel/test-schedule.json";
 
+/**
+ * Our channels. [doc] is the owner's copy in Firestore sponsors/ (the app reads it) and channel/[id]
+ * the public copy; [ready] plays until the owner saves anything. Keep in step with MyChannel.STATIONS.
+ */
+export const STATIONS = [
+  { id: "main", name: "Bazaar TV", dial: "0", doc: "_channel", page: "channel/",
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png", ready: TEST_SCHEDULE_URL },
+  { id: "filmein", name: "Purani Filmein", dial: "00", doc: "_channel_filmein", page: "channel/?c=filmein", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/purani-filmein.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json" },
+];
+
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
 function parts(ms, tz) {
   const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", {

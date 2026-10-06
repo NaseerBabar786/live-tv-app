@@ -1,0 +1,55 @@
+name: Build Purani Filmein schedule
+
+# Builds docs/channel/filmein-schedule.json (tv.bulkbazaar.ca/channel/filmein-schedule.json): the
+# ready-made schedule of Purani Filmein, our classic-films channel (00 in Free Live TV), from the
+# public-domain films in docs/Movies.m3u. A new evening line-up and loop order every week.
+on:
+  schedule:
+    - cron: "0 12 * * 1"   # Mondays, 12:00 UTC (after the movies playlist)
+  push:
+    branches: [main]
+    paths: [tools/build_filmein.py, .github/workflows/build-filmein.yml]
+  pull_request:
+    paths: [tools/build_filmein.py, .github/workflows/build-filmein.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: build-filmein
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the schedule
+        run: python3 tools/build_filmein.py
+
+      # A push made with the workflow's own token doesn't start other workflows,
+      # so the website is rebuilt explicitly below.
+      - name: Publish the schedule
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/channel/filmein-schedule.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Purani Filmein schedule for the week of $(date -u '+%Y-%m-%d')"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

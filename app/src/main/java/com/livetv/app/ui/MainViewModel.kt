@@ -109,7 +109,7 @@ data class UiState(
             val shown = inLanguage
                 .filter { category == null || it.category == category }
                 .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-            // The owner's own channel (number 0) always leads.
+            // The owner's own channels (dialled 0 and 00) always lead.
             if (filter != FILTER_FAVORITES) return shown.sortedWith(compareBy({ !MyChannel.isMine(it) }, { it.id !in favorites }))
             val (mine, rest) = shown.partition { MyChannel.isMine(it) }
             return mine + rest
@@ -147,21 +147,20 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         reload()
-        // The owner's own channel (tv.bulkbazaar.ca/studio) joins the list when it's switched on.
+        // The owner's own channels (tv.bulkbazaar.ca/studio) join the list when they're switched on.
         if (Edition.LIVE_TV) {
             MyChannel.init(app)
             viewModelScope.launch {
-                MyChannel.config.collect { _ -> _state.update { it.copy(channels = withMyChannel(it.channels)) } }
+                MyChannel.configs.collect { _ -> _state.update { it.copy(channels = withMyChannel(it.channels)) } }
             }
         }
     }
 
-    /** [list] with the owner's channel first (when it's on), as channel 0. */
+    /** [list] with the owner's channels first (those that are on): Bazaar TV, then Purani Filmein. */
     private fun withMyChannel(list: List<Channel>): List<Channel> {
         val rest = list.filterNot { MyChannel.isMine(it) }
-        if (rest.isEmpty()) return rest
-        val mine = MyChannel.config.value?.channel?.takeIf { Edition.LIVE_TV } ?: return rest
-        return listOf(mine) + rest
+        if (rest.isEmpty() || !Edition.LIVE_TV) return rest
+        return MyChannel.channels() + rest
     }
 
     fun loadCountries() {
@@ -349,9 +348,16 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     /** Goes to the channel with the typed number in the list being watched. */
     fun goToTyped() {
         typedJob?.cancel()
-        val number = typedNumber.toIntOrNull()
+        val typed = typedNumber
+        val number = typed.toIntOrNull()
         typedNumber = ""
         if (number == null) return
+        // 0 is Bazaar TV and 00 Purani Filmein, the owner's own channels.
+        MyChannel.byDial(typed)?.takeIf { Edition.LIVE_TV }?.let {
+            numberPadOpen = false
+            play(it)
+            return
+        }
         val s = _state.value
         val channel = s.visibleChannels.firstOrNull { it.number == number }
             ?: s.channels.takeIf { s.filter != FILTER_FAVORITES }?.firstOrNull { it.number == number }

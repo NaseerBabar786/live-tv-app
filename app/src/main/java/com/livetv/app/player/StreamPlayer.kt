@@ -148,7 +148,7 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
     private fun playScheduled() {
         handler.removeCallbacks(nextOnSchedule)
         val nowMs = System.currentTimeMillis()
-        when (val now = MyChannel.now(nowMs)) {
+        when (val now = MyChannel.now(channel, nowMs)) {
             is MyChannel.Now.Playing -> {
                 val url = now.video.url
                 if (url == endedUrl && now.offsetMs > 0) {
