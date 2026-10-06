@@ -539,10 +539,13 @@ private fun VisitLine() {
     )
 }
 
-/** The Free Live TV promo video from the website's home page, played in the pop-up like a sponsor's video. */
+/**
+ * The Free Live TV promo video from the website's home page, played in the pop-up like a sponsor's video.
+ * No website: viewers are already in the app, so OK and taps keep working as usual instead of opening the web page.
+ */
 private val PromoSponsor = Sponsor(
-    id = PROMO_ID, name = "Free Live TV", line = "", contact = "tv.bulkbazaar.ca", start = "", end = "",
-    active = true, picture = null, video = PROMO_URL, website = "tv.bulkbazaar.ca", popupVideo = true,
+    id = PROMO_ID, name = "Free Live TV", line = "", contact = "", start = "", end = "",
+    active = true, picture = null, video = PROMO_URL, website = "", popupVideo = true,
 )
 
 /**
