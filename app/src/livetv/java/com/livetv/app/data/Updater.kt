@@ -42,9 +42,9 @@ class Updater(context: Context) {
     }
 
     /** Downloads the release's APK, reporting progress from 0 to 1. */
-    suspend fun download(release: Release, onProgress: (Float) -> Unit): File = withContext(Dispatchers.IO) {
+    suspend fun download(release: Release, name: String = "LiveTV.apk", onProgress: (Float) -> Unit): File = withContext(Dispatchers.IO) {
         val dir = File(appContext.cacheDir, "updates").apply { mkdirs() }
-        val file = File(dir, "LiveTV.apk")
+        val file = File(dir, name)
         val conn = open(release.apkUrl)
         try {
             val total = conn.contentLengthLong.takeIf { it > 0 } ?: release.size
@@ -94,7 +94,7 @@ class Updater(context: Context) {
             FileProvider.getUriForFile(appContext, "${appContext.packageName}.updates", apk)
         } else {
             // Before Android 7 the installer only opens plain files it can read.
-            val shared = File(appContext.externalCacheDir ?: error("No storage for the update."), "LiveTV.apk")
+            val shared = File(appContext.externalCacheDir ?: error("No storage for the update."), apk.name)
             apk.copyTo(shared, overwrite = true)
             Uri.fromFile(shared)
         }
