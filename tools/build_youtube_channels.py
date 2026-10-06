@@ -8,7 +8,7 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
   2 Bazaar Cinema  full films from the studios' own channels
   3 Bazaar Music   Punjabi, Sufi and qawwali from the labels' channels (film songs are on 4)
   5 Bazaar Kids    cartoons from the makers' channels
-  6 Bazaar Sports  cricket highlights (ICC, PCB, BCCI, PSL, IPL...) and a little football
+  6 Bazaar Sports  mostly cricket (ICC, PCB, BCCI, PSL, IPL...), plus wrestling (WWE, AEW) and other popular sports
   7 Bazaar Travel  tourism boards and travel shows
   8 Bazaar Comedy  comedy shows from their channels
   9 Bazaar Movies English  full English films from studios' and distributors' free-movie channels
@@ -95,9 +95,9 @@ CHANNELS = {
         ],
     },
     "sports": {
-        "name": "Bazaar Sports", "mins": (2, 30), "search": "highlights",
+        "name": "Bazaar Sports", "mins": (2, 45), "search": "highlights",
         "skip": r"podcast|press conference|interview|reaction|preview|prediction|draw|ticket|bet",
-        # Mostly cricket (the owner's wish, 2026-10-06), a little football.
+        # Cricket is the main part, then wrestling, then the most-watched other sports (the owner's wish, 2026-10-06).
         "sources": [
             ("ICC", ["@ICC"], "ICC"),
             ("Pakistan Cricket", ["@TheRealPCB", "@PakistanCricketBoard"], "Pakistan Cricket"),
@@ -107,8 +107,16 @@ CHANNELS = {
             ("England Cricket", ["@englandcricket"], "England"),
             ("Cricket Australia", ["@cricketcomau", "@CricketAustralia"], "cricket.com.au|Cricket Australia"),
             ("CPL", ["@CPLT20"], "CPL|Caribbean Premier League"),
+            ("WWE", ["@WWE"], "WWE"),
+            ("AEW", ["@AEW", "@AllEliteWrestling"], "All Elite Wrestling|AEW"),
             ("FIFA", ["@FIFA"], "FIFA"),
+            ("Premier League", ["@premierleague"], "Premier League"),
+            ("NBA", ["@NBA"], "NBA"),
+            ("Formula 1", ["@Formula1"], "FORMULA 1|Formula 1"),
+            ("Pro Kabaddi", ["@ProKabaddi", "@prokabaddileague"], "Pro Kabaddi|ProKabaddi"),
         ],
+        # Fewer from the non-cricket sources, so cricket stays about half the channel.
+        "cap": {"AEW": 25, "FIFA": 20, "Premier League": 20, "NBA": 15, "Formula 1": 15, "Pro Kabaddi": 15, "WWE": 60},
     },
     "travel": {
         "name": "Bazaar Travel", "mins": (2, 60),
@@ -231,6 +239,8 @@ def build(cid, ch, today):
             # A video with no known length (from the feed) is kept on its title alone.
             if mins is not None and not low <= mins <= high:
                 continue
+            if kept >= ch.get("cap", {}).get(label, MAX_VIDEOS):
+                break
             found[vid] = {"id": vid, "title": title.strip(), "label": label, "mins": mins,
                           "found": old.get(vid, {}).get("found", today.isoformat())}
             kept += 1
