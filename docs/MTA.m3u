@@ -1,5 +1,11 @@
 #EXTM3U
 # MTA (Muslim Television Ahmadiyya) programmes from its own YouTube channel.
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/jWp8aAdRbyI/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 27
+https://www.youtube.com/watch?v=jWp8aAdRbyI
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/194V1YfE93g/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 12
+https://www.youtube.com/watch?v=194V1YfE93g
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/TNTvZfuUeIQ/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Shows" group-title="MTA Quran",Holy Qur’an Recitation | Part 26
+https://www.youtube.com/watch?v=TNTvZfuUeIQ
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/obwDxDMvPOU/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 18
 https://www.youtube.com/watch?v=obwDxDMvPOU
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/8FQ5svNHy5I/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 15
@@ -32,6 +38,8 @@ https://www.youtube.com/watch?v=He4j1tTKycU
 https://www.youtube.com/watch?v=TiJlOFNSc8M
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/YHdqnPRNHxc/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Holy Qur'an Recitation | Mahmud Wardi Sahib
 https://www.youtube.com/watch?v=YHdqnPRNHxc
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/FGgcDDgiI7Q/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Rah-e-Huda | 3rd October 2026
+https://www.youtube.com/watch?v=FGgcDDgiI7Q
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/V2innw8_dns/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Fazl: Episode 1 - A mission without a mosque
 https://www.youtube.com/watch?v=V2innw8_dns
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/DiWzxiVbOfk/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",FS4KIDS | EP 251: The Art of Letting Go
