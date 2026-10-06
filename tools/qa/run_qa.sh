@@ -100,6 +100,27 @@ launch; sleep 3
 tap_text "Settings" && { sleep 3; shot 11-settings; key KEYCODE_BACK; }
 running && note "app still running at the end" || note "APP NOT RUNNING AT THE END"
 adb logcat -d > "$OUT/logcat.txt"
+
+# ---- Part 3: updating from 1.9.33 over the top, the way viewers get it ----
+if [ -n "${OLD_APK:-}" ] && [ -f "$OLD_APK" ]; then
+  adb logcat -d > "$OUT/logcat.txt"
+  adb uninstall "$PKG" >> "$LOG" 2>&1
+  adb logcat -c
+  note "installing old APK $OLD_APK"
+  adb install -r "$OLD_APK" >> "$LOG" 2>&1
+  grant; launch
+  sleep 45; shot 12-old-home
+  key KEYCODE_DPAD_CENTER; sleep 10; shot 13-old-player
+  adb shell am force-stop "$PKG"
+  note "updating to the release APK"
+  adb install -r "$RELEASE_APK" >> "$LOG" 2>&1
+  adb shell dumpsys package "$PKG" | grep -m1 versionName | tee -a "$LOG"
+  launch
+  sleep 8;  shot 14-updated-start
+  sleep 30; shot 15-updated-after
+  running && note "updated app still running" || note "UPDATED APP NOT RUNNING"
+  adb logcat -d > "$OUT/logcat-update.txt"
+fi
 adb logcat -b crash -d > "$OUT/crash.txt"
 grep -n "FATAL EXCEPTION\|ANR in $PKG\|Process: $PKG" "$OUT"/logcat*.txt > "$OUT/crashes-found.txt"
 note "crash lines found: $(wc -l < "$OUT/crashes-found.txt")"

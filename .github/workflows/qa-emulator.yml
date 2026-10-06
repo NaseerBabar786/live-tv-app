@@ -47,7 +47,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release download --repo "$GITHUB_REPOSITORY" --pattern LiveTV.apk --dir rel
-          gh release view --repo "$GITHUB_REPOSITORY" --json tagName -q .tagName > rel/tag.txt
+          gh api "repos/$GITHUB_REPOSITORY/releases/latest" -q .tag_name > rel/tag.txt
+          gh release download v1.9.33-build507 --repo "$GITHUB_REPOSITORY" --pattern LiveTV.apk --output rel/old.apk
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -94,7 +95,7 @@ jobs:
           profile: ${{ matrix.profile }}
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: bash tools/qa/run_qa.sh qa-out/${{ matrix.device }} apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk
+          script: OLD_APK=apks/rel/old.apk bash tools/qa/run_qa.sh qa-out/${{ matrix.device }} apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk
       - uses: actions/upload-artifact@v4
         if: always()
         with:
