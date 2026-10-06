@@ -36,6 +36,7 @@ MIN_SECONDS = 45 * 60
 NIGHT = "20:00"
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 SOUTH_ASIAN = {"Hindi", "Urdu", "Punjabi"}
+RIP = re.compile(r"www\.|\.com|@|\bCD ?\d\b|xclusive|dvdrip|x264", re.I)
 
 TICKER = ("Purani Filmein · Classic films, free, day and night · Raat Ki Film: a film every night at 8 PM (Toronto) "
           "· Channel 00 on Free Live TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca")
@@ -122,7 +123,10 @@ def main():
 
     videos, ids = [], set()
     for (title, url, lang, _), secs in zip(films, lengths):
-        if secs < MIN_SECONDS:
+        # The Hindi, Urdu and Punjabi films in the list are people's uploads of films still under
+        # copyright in India and Pakistan (some carry a piracy site's name), so a channel that
+        # broadcasts them could be taken down. Only the Archive's public-domain classics play.
+        if secs < MIN_SECONDS or lang in SOUTH_ASIAN or RIP.search(title):
             continue
         vid = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:40] or "film"
         while vid in ids:
@@ -133,18 +137,11 @@ def main():
     if len(videos) < 10:
         sys.exit("Too few films; keeping the old schedule.")
 
-    # Weekend evenings go to Hindi, Urdu and Punjabi films while there are any; the other films
-    # take turns on the other nights, week by week.
-    desi = [v for v in videos if v["lang"] in SOUTH_ASIAN]
-    rest = [v for v in videos if v["lang"] not in SOUTH_ASIAN]
-
-    def turn(films, n):
-        start = (week * n) % len(films)
-        return (films[start:] + films[:start])[:n]
-
-    weekend = turn(desi, 2) if len(desi) >= 2 else []
-    weekdays = turn(rest, len(DAYS) - len(weekend))
-    tonight = weekdays[:5] + weekend + weekdays[5:]
+    # The films take turns in the evening, a new seven every week.
+    # (Proper films only: a title with its year, not a file name like "German_SniperTraining".)
+    proper = [v for v in videos if re.search(r"\(\d{4}\)$", v["title"]) and "_" not in v["title"]] or videos
+    start = (week * len(DAYS)) % len(proper)
+    tonight = (proper[start:] + proper[:start])[:len(DAYS)]
     slots = [{"day": day, "time": NIGHT, "video": v["id"]} for day, v in zip(DAYS, tonight)]
     for v in tonight:
         v["title"] = "Raat Ki Film: " + v["title"]
