@@ -291,7 +291,7 @@ fun PlayerScreen(
             )
         }
 
-        // Live channels: the yellow "advertise with us" line scrolls once along the bottom every
+        // Live channels: the white "advertise with us" line scrolls once along the bottom every
         // 2 minutes, skipping a turn while the channel bar, number pad, a tip or a sponsor card is up.
         if (onNumberPad != null && !inPictureInPicture) {
             val skipNow by rememberUpdatedState(barShown || numberPadOpen || typedNumber.isNotEmpty() || tip != null || error != null)

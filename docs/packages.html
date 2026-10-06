@@ -20,14 +20,22 @@
   th { background: var(--surface); color: var(--muted); font-weight: 700; position: sticky; top: 0; }
   input[type=search] { width: 100%; max-width: 360px; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
   select, .inp { padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
-  .prices td input { width: 90px; }
+  .prices td input { width: 84px; }
+  .prices th, .prices td { padding: 9px 10px; }
+  @media (max-width: 600px) {
+    .prices th, .prices td { padding: 7px 4px; white-space: normal; }
+    .prices td input { width: 52px; padding: 6px 4px; }
+    .prices .pill { padding: 2px 6px; font-size: 12px; }
+  }
   textarea.inp { width: 100%; min-height: 70px; }
   .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: 13px; }
   .Free { background: var(--surface-2); } .Silver { background: #9e9e9e; color: #000; } .Gold { background: #f5c542; color: #000; } .Platinum { background: #b3e5fc; color: #000; }
   @media (min-width: 1200px) {
-    .split { display: grid; grid-template-columns: minmax(460px, 560px) minmax(0, 1fr); gap: 24px; align-items: start; }
+    .split { display: grid; grid-template-columns: minmax(640px, 700px) minmax(0, 1fr); gap: 24px; align-items: start; }
     .split > .panel:first-child { position: sticky; top: 16px; margin-bottom: 0 !important; }
   }
+  #cfgMsg { margin-left: 12px; font-weight: 700; }
+  #cfgMsg.saved { color: #69f0ae; } #cfgMsg.bad { color: #ff8a80; }
   .soon { color: #ff8a80; font-weight: 700; }
   .pkgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
   .pkg { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 12px 16px; }
@@ -65,7 +73,7 @@
       <p><label><input type="checkbox" id="enforce"> <b>Packages are on</b></label><br>
         <span class="small">While this is off, every viewer has everything (like today). When it's on, viewers without a package get Free, and new viewers get a free trial of everything first.</span></p>
       <p><label>Free trial for new viewers: <input class="inp" type="number" id="trialDays" min="0" max="365" style="width:80px"> days</label></p>
-      <div class="table-wrap prices" style="max-width:560px"><table>
+      <div class="table-wrap prices"><table>
         <thead><tr><th>Package</th><th>1 year (you type)</th><th>6 months</th><th>3 months</th><th>1 month</th></tr></thead>
         <tbody id="priceRows"></tbody>
       </table></div>
@@ -198,7 +206,8 @@ if (!configured) {
 
   async function loadConfig() {
     let c = {};
-    try { const s = await fs.getDoc(fs.doc(db, "config", "plans")); if (s.exists()) c = s.data(); } catch {}
+    try { const s = await fs.getDoc(fs.doc(db, "config", "plans")); if (s.exists()) c = s.data(); }
+    catch (e) { $("cfgMsg").className = "bad"; $("cfgMsg").textContent = "Couldn't load your saved prices: " + saveHelp(e); }
     const saved = c;
     c = { ...DEFAULTS, ...c };
     $("enforce").checked = !!c.enforce;
@@ -246,9 +255,17 @@ if (!configured) {
     const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), updated: fs.serverTimestamp() };
     for (const t of TIERS) for (const [k] of LENGTHS) { const id = `${t.toLowerCase()}_${k}`; data[id] = $(id).value.trim(); }
     if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have the Free channels in 1+List (after their free trial).")) return;
-    try { await fs.setDoc(fs.doc(db, "config", "plans"), data); $("cfgMsg").textContent = "Saved."; }
-    catch (e) { $("cfgMsg").textContent = "Couldn't save: " + e.message; }
+    const msg = $("cfgMsg"); msg.className = "small"; msg.textContent = "Saving…";
+    try {
+      await fs.setDoc(fs.doc(db, "config", "plans"), data);
+      // Read it back from the server so "Saved" only shows when it really is.
+      const back = (await fs.getDocFromServer(fs.doc(db, "config", "plans"))).data() || {};
+      if (back.silver_year !== data.silver_year || back.platinum_month !== data.platinum_month) throw new Error("the saved prices didn't come back");
+      msg.className = "saved"; msg.textContent = "✓ Saved at " + new Date().toLocaleTimeString([], { timeStyle: "short" });
+    } catch (e) { msg.className = "bad"; msg.textContent = "Not saved: " + saveHelp(e); }
   };
+
+  const saveHelp = e => /permission/i.test(e.message || "") ? "Firebase blocked it. The Firestore rules need publishing (Firebase console › Firestore › Rules › paste firestore-rules.txt › Publish)." : (e.message || String(e));
 
   const active = p => p && p.tier && p.tier !== "Free" && p.until && p.until > new Date();
   function stats() {

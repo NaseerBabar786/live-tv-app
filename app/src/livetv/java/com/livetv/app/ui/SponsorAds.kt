@@ -183,7 +183,8 @@ fun SponsorTicker(
         }
         Text(
             words,
-            color = FocusColor,
+            // White, the owner's choice (1.9.61; it was yellow).
+            color = Color.White,
             style = if (big) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             maxLines = 1,

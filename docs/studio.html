@@ -43,7 +43,7 @@
   .stage .chbar small { display: block; font-weight: 400; opacity: .7; font-size: 1.6cqw; }
   .stage .chbar.gone { opacity: 0; }
   .stage .adline { position: absolute; left: 0; right: 0; bottom: 0; height: 5cqw; background: rgba(0,0,0,.55); overflow: hidden; pointer-events: none; }
-  .adline span { position: absolute; top: 50%; transform: translateY(-50%); white-space: nowrap; color: var(--focus); font-weight: 700; font-size: 2.4cqw; }
+  .adline span { position: absolute; top: 50%; transform: translateY(-50%); white-space: nowrap; color: #fff; font-weight: 700; font-size: 2.4cqw; }
   .stage .off { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 6cqw; color: #fff; font-size: 3cqw; background: #000; }
   .stage .tag { position: absolute; left: 1.5cqw; bottom: 1.5cqw; background: var(--red); color: #fff; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; pointer-events: none; }
   .stage.ticking .tag { bottom: calc(5.5cqw); }
@@ -201,7 +201,7 @@
           <li><b>Your changes</b> plays your channel with everything on this page, even before you press Save: the logo, the scrolling line, the loop and time slots. Change something and it shows here straight away.</li>
           <li><b>On TVs now</b> plays the last saved version: exactly what viewers' TVs show at this moment.</li>
           <li>The picture is stretched to fill the screen, like the app does on TVs. The logo and the scrolling line are drawn at the same size and speed as on the TV.</li>
-          <li>The channel bar shows for 10 seconds when someone opens the channel on TV. The yellow "Advertise" line (from the Sponsors page) runs along the bottom every 2 minutes on full screen.</li>
+          <li>The channel bar shows for 10 seconds when someone opens the channel on TV. The white "Advertise" line (from the Sponsors page) runs along the bottom every 2 minutes on full screen.</li>
           <li>On a big screen the player stays on the left while you edit on the right. On a smaller screen it follows you in the corner when you scroll down.</li>
         </ul>
       </details>
@@ -862,7 +862,7 @@ function runTicker(text) {
   marquee = span.animate([{ transform: "translateX(0)" }, { transform: `translateX(${-(tw + gap)}px)` }],
     { duration: (tw + gap) / (0.07 * w) * 1000, iterations: Infinity });
 }
-/** The yellow "Advertise" line from the Sponsors page, run once along the bottom as on a full-screen TV. */
+/** The white "Advertise" line from the Sponsors page, run once along the bottom as on a full-screen TV. */
 async function runAdLine() {
   let text = "Advertise your business on Cable TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
   try {
