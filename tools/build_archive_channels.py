@@ -64,7 +64,8 @@ CHANNELS = {
                      "vacations", "sightseeing", "scenery", "national parks", "voyages and travels",
                      "description and travel", "travel films"],
         # A travel channel shows places, not war films, newsreels of disasters or adverts.
-        "skip": r"war\b|army|military|navy|bomb|atomic|invasion|combat|enemy|crime|disaster|accident|newsreel",
+        "skip": r"war\b|army|military|navy|bomb|atomic|invasion|combat|enemy|crime|disaster|accident|newsreel|"
+                r"conservation corps|civilan conservation|ccc\b|human crop|groundwater|silt|captain z-ro|fashion",
         "ticker": "Bazaar Travel · See the world, day and night · Classic travel films of countries, cities and "
                   "parks · Channel 0000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
     },
