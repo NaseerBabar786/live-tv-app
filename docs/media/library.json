@@ -1,0 +1,11 @@
+{
+ "categories": [
+  {"id": "dramas", "name": "Dramas"},
+  {"id": "movies", "name": "Movies"},
+  {"id": "documentaries", "name": "Documentaries"},
+  {"id": "kids", "name": "Kids"},
+  {"id": "comedy", "name": "Comedy"},
+  {"id": "stories", "name": "Stories"}
+ ],
+ "items": []
+}

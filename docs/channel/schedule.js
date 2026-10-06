@@ -14,7 +14,7 @@ export const TEST_SCHEDULE_URL = "https://tv.bulkbazaar.ca/channel/test-schedule
 export const STATIONS = [
   { id: "main", name: "Bazaar TV", dial: "0", doc: "_channel", page: "channel/",
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png", ready: TEST_SCHEDULE_URL,
-    credits: "Films: Blender Foundation open movies (Creative Commons Attribution), blender.org." },
+    credits: "Shows are public domain or Creative Commons works. Blender films: Blender Foundation, blender.org (CC BY). Space videos: NASA." },
   { id: "filmein", name: "Sunehra Daur", dial: "00", doc: "_channel_filmein", page: "channel/?c=filmein", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/sunehra-daur.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: public-domain classics from the Internet Archive (archive.org). A film every night at 8 PM Toronto time." },
