@@ -137,6 +137,10 @@
     .steps .logos button { width: 84px; padding: 2px; font-size: 11px; }
     .steps .logos img { width: 64px; height: 64px; }
   }
+  /* Bazaar Hits: only the player and a note. */
+  #hitsFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 3; background: #000; }
+  .hitsMode .work, .hitsMode #step5, .hitsMode .savebar, .hitsMode .modes, .hitsMode #soundBtn, .hitsMode #barBtn, .hitsMode #adBtn, .hitsMode .tvbox details { display: none !important; }
+  .hitsMode #hitsNote { display: block !important; }
   pre.rule { background: var(--bg); padding: 10px; border-radius: 8px; overflow: auto; font-size: 13px; }
   @media (max-width: 640px) { .two, .three { grid-template-columns: 1fr; } .item { grid-template-columns: 1fr; } .item .acts { justify-content: flex-start; } }
 </style>
@@ -167,6 +171,7 @@
   <div id="dash" class="hidden studio">
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
+    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b>Bazaar Hits (channel 4)</b> plays the music labels' official YouTube songs round the clock and picks them by itself, so it has no schedule to edit. Below is what it's playing right now, as on TV. <a href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -403,7 +408,9 @@ window.studioFirebase = { auth, db, fs }; // shared with the 🎙 Ask AI button 
 
 let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
 // The channel being worked on (?c=filmein opens Bazaar Cinema).
-let station = STATIONS.find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
+// Bazaar Hits is a web page (the music labels' YouTube videos), not a schedule: Studio only plays it.
+const HITS = { id: "hits", name: "Bazaar Hits", dial: "4", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/bazaar-hits.png" };
+let station = [...STATIONS, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Math.random().toString(36).slice(2, 9);
 
@@ -420,35 +427,31 @@ onAuthStateChanged(auth, async user => {
   loadLibrary(); // again now signed in, to include your Media Library changes
 });
 
+function stationButton(st, note) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = st === station ? "sel" : "";
+  b.innerHTML = `<img alt=""><span><span></span><small></small></span>`;
+  b.querySelector("img").src = st.logo;
+  b.querySelector("span span").textContent = st.name;
+  b.querySelector("small").textContent = note;
+  b.onclick = async () => {
+    if (st === station) return;
+    if (dirty && !confirm(`You have unsaved changes on ${station.name}. Leave them?`)) return;
+    station = st;
+    history.replaceState(null, "", st.id === "main" ? location.pathname : `?c=${st.id}`);
+    stopPreview();
+    await loadSaved();
+  };
+  $("stations").appendChild(b);
+}
 function renderStations() {
   $("stations").innerHTML = "";
   for (const st of STATIONS) {
     // Bazaar Hits (4) sits between 3 and 5. It runs by itself from the music labels'
-    // song list (no schedule to edit here), so its card opens its page instead.
-    if (st.dial === "5") {
-      const h = document.createElement("a");
-      h.className = "station-link";
-      h.href = "channel/bollywood.html";
-      h.target = "_blank";
-      h.innerHTML = `<img alt="" src="channel/logos/bazaar-hits.png"><span><span>Bazaar Hits</span><small>Channel 4 · runs by itself</small></span>`;
-      $("stations").appendChild(h);
-    }
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = st === station ? "sel" : "";
-    b.innerHTML = `<img alt=""><span><span></span><small></small></span>`;
-    b.querySelector("img").src = st.logo;
-    b.querySelector("span span").textContent = st.name;
-    b.querySelector("small").textContent = `Channel ${st.dial} in the app`;
-    b.onclick = async () => {
-      if (st === station) return;
-      if (dirty && !confirm(`You have unsaved changes on ${station.name}. Leave them?`)) return;
-      station = st;
-      history.replaceState(null, "", st.id === "main" ? location.pathname : `?c=${st.id}`);
-      stopPreview();
-      await loadSaved();
-    };
-    $("stations").appendChild(b);
+    // song list (no schedule to edit), so picking it just plays it in the player.
+    if (st.dial === "5") stationButton(HITS, "Channel 4 · runs by itself");
+    stationButton(st, `Channel ${st.dial} in the app`);
   }
   $("publicLink").href = station.page;
   $("publicLink").textContent = "tv.bulkbazaar.ca/" + station.page;
@@ -458,8 +461,28 @@ function renderStations() {
 
 async function testProgramme() { return (await fetch(station.ready + "?t=" + Date.now())).json(); }
 
+/** Bazaar Hits: its own page plays inside the player; the editing parts are put away. */
+function showHits(on) {
+  $("dash").classList.toggle("hitsMode", on);
+  let f = $("hitsFrame");
+  if (!on) { f?.remove(); return; }
+  stopPreview();
+  $("pv").pause(); $("pv").removeAttribute("src"); $("pv").load();
+  if (!f) {
+    f = document.createElement("iframe");
+    f.id = "hitsFrame";
+    f.allow = "autoplay; encrypted-media; fullscreen";
+    f.allowFullscreen = true;
+    $("stage").appendChild(f);
+  }
+  f.src = HITS.web;
+  $("nowText").textContent = "Bazaar Hits: film songs from the music labels' own YouTube channels, one after another.";
+  $("modeText").textContent = "It runs by itself from the labels' song list (updated every day), so there's nothing to edit here. Tap the picture for sound.";
+}
 async function loadSaved() {
   renderStations();
+  showHits(!!station.web);
+  if (station.web) { dirty = false; return; }
   try {
     const snap = await fs.getDoc(fs.doc(db, "sponsors", station.doc));
     if (snap.exists() && snap.data().data) {
