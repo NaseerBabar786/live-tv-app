@@ -266,6 +266,17 @@
    "poster": "media/cable-tv-ad-3-poster.jpg",
    "about": "30 seconds: $0, three easy install steps, everything included.",
    "credit": "Our own ad with original music. Plays as the Cable TV pop-up ad in the app (when no sponsor video is set)."
+  },
+  {
+   "id": "cable-tv-video-ad-4",
+   "cat": "promos",
+   "lang": "en",
+   "title": "Cable TV Video Ad 4",
+   "url": "media/cable-tv-video-ad-4.mp4",
+   "secs": 30,
+   "poster": "media/cable-tv-ad-4-poster.jpg",
+   "about": "30 s promo: free Cable TV, channels playing in 1+List, 2×2, 2×3 and 1+3, 3 easy install steps",
+   "credit": "Sintel, Tears of Steel, Big Buck Bunny, Caminandes © Blender Foundation, CC BY. Not on any channel yet."
   }
  ]
 }
