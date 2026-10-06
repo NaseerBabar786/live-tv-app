@@ -124,7 +124,7 @@ class MyChannelTest {
 
     @Test
     fun ourLogosCarryAVersionSoTvsFetchTheNewPicture() {
-        assertEquals("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png?v=3", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png?v=4", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
         assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
         assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
     }

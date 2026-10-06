@@ -77,6 +77,7 @@ CHANNELS = [  # file, word, main colour, second colour, tag under the slab
     ("bazaar-english", "MOVIES", (230, 40, 60), (25, 45, 140), "ENGLISH"),
     ("bazaar-hindi", "MOVIES", (255, 140, 0), (0, 140, 70), "HINDI"),
     ("bazaar-dramas", "DRAMAS", (190, 70, 230), (230, 40, 110)),
+    ("bazaar-cooking", "COOKING", (240, 70, 30), (255, 185, 0)),
 ]
 OLD_NAMES = {"bazaar-cinema": "sunehra-daur", "bazaar-music": "sur-sukoon", "bazaar-hits": "geet-bahar"}  # links saved before 1.9.41
 
@@ -121,9 +122,19 @@ def slab(w, h, sl=0.35):
     m = Image.new("L", (int(w + h * sl), h), 0)
     ImageDraw.Draw(m).polygon([(h * sl, 0), (w + h * sl, 0), (w, h), (0, h)], fill=255); return m
 
+TEXT_W, TEXT_H = 1300, 241  # the same slab for every channel, so all logos are one size (1.9.50)
+
+def fitted_word(word):
+    """The channel word at the size that fits the slab: long words shrink, short ones spread out a little."""
+    size, track = 330, -6
+    m = word_mask(word, size, track)
+    while m.width > TEXT_W: size -= 6; m = word_mask(word, size, track)
+    if len(word) > 1 and m.width < TEXT_W: m = word_mask(word, size, min(60, track + (TEXT_W - m.width) // (len(word) - 1)))
+    return m
+
 def action_logo(key, word, c1, c2, tag=None):
-    tw = word_mask(word, 330, track=-6)
-    s0 = slab(tw.width + 140, tw.height + 110); sm = Image.new("L", (s0.width + 80, s0.height + 80), 0); sm.paste(s0, (40, 40))
+    tw = fitted_word(word)
+    s0 = slab(TEXT_W + 140, TEXT_H + 110); sm = Image.new("L", (s0.width + 80, s0.height + 80), 0); sm.paste(s0, (40, 40))
     ph = s0.height
     out = Image.new("RGBA", (sm.width + 900, sm.height + 560), (0, 0, 0, 0)); ox, oy = 200, 320
     st = Image.new("L", out.size, 0); sd = ImageDraw.Draw(st)
@@ -154,12 +165,13 @@ def action_logo(key, word, c1, c2, tag=None):
         out.alpha_composite(paint(tl, c2 if under else (10, 10, 14)))
         tt = Image.new("L", out.size, 0); tt.paste(tm, (tx + (tab.width - tm.width) // 2 + 6, ty + (tab.height - tm.height) // 2))
         out.alpha_composite(paint(tt, (255, 255, 255)))
-    out = out.crop(out.getbbox())
-    pad = Image.new("RGBA", (out.width + 24, out.height + 24), (0, 0, 0, 0)); pad.alpha_composite(out, (12, 12))
-    return pad
+    return out  # cropped later to one box shared by every channel
 
-for key, word, c1, c2, *tag in CHANNELS:
-    lg = action_logo(key, word, c1, c2, *tag)
+drawn = [(key, action_logo(key, word, c1, c2, *tag)) for key, word, c1, c2, *tag in CHANNELS]
+boxes = [im.getbbox() for _, im in drawn]
+box = (min(b[0] for b in boxes) - 12, min(b[1] for b in boxes) - 12, max(b[2] for b in boxes) + 12, max(b[3] for b in boxes) + 12)
+for key, lg in drawn:
+    lg = lg.crop(box)  # every logo gets the same canvas, so they show at the same size in the TV corner
     k = 900 / lg.width; wide = lg.resize((900, int(lg.height * k)), Image.LANCZOS)
     wide.save(f"{OUT}/{key}.png", optimize=True)
     sq = Image.new("RGBA", (S, S), (0, 0, 0, 0)); s = lg.resize((S - 16, int(lg.height * (S - 16) / lg.width)), Image.LANCZOS)

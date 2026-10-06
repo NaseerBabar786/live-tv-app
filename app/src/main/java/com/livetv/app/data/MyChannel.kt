@@ -19,7 +19,7 @@ object MyChannel {
      * Our logos get redrawn at the same address (1.9.47, 1.9.49), and Coil keeps the old picture on
      * disk for ever, so our own logo links carry this number; raise it whenever the logos change.
      */
-    private const val LOGO_VERSION = 3
+    private const val LOGO_VERSION = 4
 
     fun freshLogo(url: String): String =
         if ("/channel/logos/" in url && '?' !in url) "$url?v=$LOGO_VERSION" else url
