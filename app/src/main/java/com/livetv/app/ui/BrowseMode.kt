@@ -377,12 +377,14 @@ internal fun BrowseMode(
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
 
-    // Only the highlighted card plays. Every other card shows a still picture of what's on: two
-    // silent players open the channels in turn, keep a frame and close again. They start with the
+    // Only the highlighted card plays. Every other card shows a still picture of what's on: one
+    // silent player opens the channels in turn, keeps a frame and closes again. It starts with the
     // cards around the cursor and on screen, then go through every row, so the pictures are already
     // there when the cursor gets to them (refreshed every few minutes; Wi-Fi or Ethernet only).
     val grabbers = remember {
-        List(2) {
+        // One picture-taker: with the highlighted card that's at most 2 videos open at once, which
+        // a Chromecast can manage (3 froze its video player, 1.9.41).
+        List(1) {
             Grabber(
                 StreamPlayer(context, preview = true).apply {
                     player.volume = 0f
@@ -460,6 +462,11 @@ internal fun BrowseMode(
                 val still = System.currentTimeMillis() - movedAt
                 if (still < 1_000) {
                     delay(1_000 - still)
+                    continue
+                }
+                // The highlighted card's video opens first; only one video starts at a time.
+                if (previewId != null && !showing) {
+                    delay(300)
                     continue
                 }
                 val id = nextToTake()
