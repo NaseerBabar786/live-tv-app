@@ -1,6 +1,7 @@
 /* Promo breaks on our YouTube channels (ytc.html, bollywood.html): now and then, between two
-   videos (never in the middle of one), our own 25-second Cable TV promo plays in our own video
-   player, outside YouTube's, then the channel carries on. Only our own promos here, never paid
+   videos (never in the middle of one), one of our own Cable TV promos plays in our own video
+   player, outside YouTube's, then the channel carries on. The promos are listed in
+   media/promos.json and play in turn. Only our own promos here, never paid
    sponsor ads: YouTube's rules don't allow selling ads around its videos. Paid ads run on
    Bazaar TV (channel 1) only.
 
@@ -8,11 +9,12 @@
    when none is due, calls done() at once. */
 (function () {
   const EVERY_MS = 30 * 60 * 1000;   // at most one break every 30 minutes
-  const LONGEST_MS = 40 * 1000;      // a promo that stalls never holds the channel up
-  const SRC = "../media/livetv-ad.mp4";
-  const KEY = "cabletv-promo-at";
+  const KEY = "cabletv-promo-at", NEXT = "cabletv-promo-next";
+  let promos = [];
+  fetch("../media/promos.json", { cache: "no-store" }).then(r => r.json())
+    .then(d => { promos = (d.promos || []).filter(p => p.src); }).catch(() => {});
 
-  // The first break comes 30 minutes after the channel opens, not on the first video change.
+  // The first break comes 15 to 30 minutes after the channel opens, never on the first video change.
   let last = Date.now();
   try { last = Math.max(last - EVERY_MS / 2, Number(localStorage.getItem(KEY)) || 0); } catch (e) {}
 
@@ -22,13 +24,16 @@
   document.head.appendChild(css);
 
   window.promoBreak = (muted, done) => {
-    if (Date.now() - last < EVERY_MS) return done();
+    if (!promos.length || Date.now() - last < EVERY_MS) return done();
     last = Date.now();
-    try { localStorage.setItem(KEY, String(last)); } catch (e) {}
+    let n = 0;
+    try { n = Number(localStorage.getItem(NEXT)) || 0; } catch (e) {}
+    const promo = promos[n % promos.length];
+    try { localStorage.setItem(KEY, String(last)); localStorage.setItem(NEXT, String((n + 1) % promos.length)); } catch (e) {}
     const box = document.createElement("div");
     box.className = "promo";
     const v = document.createElement("video");
-    v.src = SRC;
+    v.src = "../media/" + promo.src;
     v.autoplay = true;
     v.playsInline = true;
     v.muted = !!muted;
@@ -43,7 +48,8 @@
       box.remove();
       done();
     };
-    const guard = setTimeout(finish, LONGEST_MS);
+    // A promo that stalls never holds the channel up.
+    const guard = setTimeout(finish, ((promo.secs || 60) + 20) * 1000);
     v.onended = finish;
     v.onerror = finish;
     // Like the channel itself, it never stays paused.
