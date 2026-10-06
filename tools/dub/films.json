@@ -1,8 +1,65 @@
 {
- "tears-of-steel": {"title": "Tears of Steel", "holder": "(CC) Blender Foundation | mango.blender.org", "licence": "CC BY 3.0", "cat": "movies",
-   "about": "Sci-fi: a group of warriors and scientists try to save the world from robots."},
- "elephants-dream": {"title": "Elephants Dream", "holder": "(c) 2006 Blender Foundation / Netherlands Media Art Institute / elephantsdream.org", "licence": "CC BY 2.5", "cat": "stories",
-   "about": "A strange story of an old man and a young man inside a giant machine."},
- "sintel": {"title": "Sintel", "holder": "(c) Blender Foundation | durian.blender.org", "licence": "CC BY 3.0", "cat": "movies",
-   "about": "Fantasy: a young girl searches the world for her lost baby dragon."}
+ "tears-of-steel": {
+  "title": "Tears of Steel",
+  "holder": "(CC) Blender Foundation | mango.blender.org",
+  "licence": "CC BY 3.0",
+  "cat": "movies",
+  "about": "Sci-fi: a group of warriors and scientists try to save the world from robots."
+ },
+ "elephants-dream": {
+  "title": "Elephants Dream",
+  "holder": "(c) 2006 Blender Foundation / Netherlands Media Art Institute / elephantsdream.org",
+  "licence": "CC BY 2.5",
+  "cat": "stories",
+  "about": "A strange story of an old man and a young man inside a giant machine."
+ },
+ "sintel": {
+  "title": "Sintel",
+  "holder": "(c) Blender Foundation | durian.blender.org",
+  "licence": "CC BY 3.0",
+  "cat": "movies",
+  "about": "Fantasy: a young girl searches the world for her lost baby dragon."
+ },
+ "cosmos-laundromat": {
+  "title": "Cosmos Laundromat",
+  "holder": "(CC) Blender Foundation | gooseberry.blender.org",
+  "licence": "CC BY 4.0",
+  "cat": "dramas",
+  "about": "Drama: a sad sheep on a lonely island meets a strange salesman who offers him any life he wants.",
+  "sources": [
+   "https://archive.org/download/CosmosLaundromatFirstCycle/Cosmos%20Laundromat%20-%20First%20Cycle%20%281080p%29.mp4",
+   "https://upload.wikimedia.org/wikipedia/commons/3/36/Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm"
+  ]
+ },
+ "sprite-fright": {
+  "title": "Sprite Fright",
+  "holder": "(CC) Blender Foundation | studio.blender.org",
+  "licence": "CC BY 4.0",
+  "cat": "comedy",
+  "about": "Comedy: rude teenagers on a forest trip meet the tiny mushroom people who live there.",
+  "sources": [
+   "https://archive.org/download/sprite-fright-2021/Sprite%20Fright%20%282021%29.mkv",
+   "https://upload.wikimedia.org/wikipedia/commons/7/74/Sprite_Fright_-_Open_Movie_by_Blender_Studio.webm"
+  ]
+ },
+ "wing-it": {
+  "title": "Wing It!",
+  "holder": "(CC) Blender Foundation | studio.blender.org",
+  "licence": "CC BY 4.0",
+  "cat": "kids",
+  "about": "Kids: a cat and a dog try to fly a home-made rocket plane.",
+  "sources": [
+   "https://upload.wikimedia.org/wikipedia/commons/3/38/WING_IT%21_-_Blender_Open_Movie-full_movie.webm"
+  ]
+ },
+ "seven-minutes-of-terror": {
+  "title": "Curiosity's Seven Minutes of Terror",
+  "holder": "NASA / JPL-Caltech",
+  "licence": "Public domain",
+  "cat": "documentaries",
+  "about": "Documentary: NASA engineers explain how the Curiosity rover landed on Mars.",
+  "sources": [
+   "https://upload.wikimedia.org/wikipedia/commons/9/96/Curiosity%27s_Seven_Minutes_of_Terror.ogv"
+  ]
+ }
 }
