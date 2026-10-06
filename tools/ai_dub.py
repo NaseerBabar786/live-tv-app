@@ -98,26 +98,48 @@ def get_film(film):
 def prepare(film):
     os.makedirs(OUT, exist_ok=True)
     src = get_film(film)
-    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-vn", "-ac", "2", "-ar", str(RATE), f"{film}.wav")
-    run(sys.executable, "-m", "demucs", "--two-stems", "vocals", "-n", "htdemucs", "-o", "sep", f"{film}.wav")
-    length = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", src],
-                                  check=True, capture_output=True, text=True).stdout)
-    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-ss", str(int(length * 0.3)), "-i", src, "-frames:v", "1",
-        "-vf", "scale=640:-2", "-q:v", "4", f"{OUT}/{film}-poster.jpg")
-    stems = f"sep/htdemucs/{film}"
-    for stem, name in (("no_vocals", "music"), ("vocals", "voices")):
-        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", f"{stems}/{stem}.wav",
-            "-c:a", "aac", "-b:a", "192k", f"{OUT}/dubwork-{film}-{name}.m4a")
+    voices = f"{film}-voices.m4a"
+    # The sound stems are kept on the release; only split them again when they aren't there.
+    if subprocess.run(["curl", "-fsSL", "-o", voices, f"{BASE}/dubwork-{film}-voices.m4a"]).returncode != 0:
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-vn", "-ac", "2", "-ar", str(RATE), f"{film}.wav")
+        run(sys.executable, "-m", "demucs", "--two-stems", "vocals", "-n", "htdemucs", "-o", "sep", f"{film}.wav")
+        stems = f"sep/htdemucs/{film}"
+        for stem, name in (("no_vocals", "music"), ("vocals", "voices")):
+            run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", f"{stems}/{stem}.wav",
+                "-c:a", "aac", "-b:a", "192k", f"{OUT}/dubwork-{film}-{name}.m4a")
+        voices = f"{stems}/vocals.wav"
+        length = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", src],
+                                      check=True, capture_output=True, text=True).stdout)
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-ss", str(int(length * 0.3)), "-i", src, "-frames:v", "1",
+            "-vf", "scale=640:-2", "-q:v", "4", f"{OUT}/{film}-poster.jpg")
 
     from faster_whisper import WhisperModel
     model = WhisperModel("medium.en", device="cpu", compute_type="int8")
-    segs, _ = model.transcribe(f"{stems}/vocals.wav", language="en", beam_size=5, vad_filter=True,
+    segs, _ = model.transcribe(voices, language="en", beam_size=5, vad_filter=True, word_timestamps=True,
                                condition_on_previous_text=False)
-    lines = [{"start": round(s.start, 2), "end": round(s.end, 2), "text": s.text.strip()} for s in segs]
+    words = [w for s in segs for w in (s.words or [])]
+    lines = to_lines(words)
     with open(f"{OUT}/dubwork-{film}.en.json", "w", encoding="utf-8") as f:
         json.dump({"film": film, "segments": lines}, f, ensure_ascii=False, indent=1)
     write_srt(f"{OUT}/{film}-english.srt", lines, credit_line(film, "English"))
     print(f"{film}: {len(lines)} lines")
+
+
+def to_lines(words):
+    """Words with timings -> short lines that start when the speaking starts: a new line after a
+    pause, or after the end of a sentence once the line is long enough."""
+    lines, cur = [], []
+    for w in words:
+        if cur:
+            gap = w.start - cur[-1].end
+            text = cur[-1].word.strip()
+            long_enough = cur[-1].end - cur[0].start > 1.2
+            if gap > 0.7 or (text[-1:] in ".?!" and long_enough) or cur[-1].end - cur[0].start > 7:
+                lines.append(cur); cur = []
+        cur.append(w)
+    if cur:
+        lines.append(cur)
+    return [{"start": round(l[0].start, 2), "end": round(l[-1].end, 2), "text": "".join(w.word for w in l).strip()} for l in lines]
 
 
 def credit_line(film, lang_name):
