@@ -47,7 +47,7 @@
   "holder": "(CC) Blender Foundation | studio.blender.org",
   "licence": "CC BY 4.0",
   "cat": "kids",
-  "about": "Kids: a cat and a dog try to fly a home-made rocket plane.",
+  "about": "Kids: a cat and a dog try to fly a home-made rocket plane. (No talking, so it needs no dubbing.)",
   "sources": [
    "https://upload.wikimedia.org/wikipedia/commons/3/38/WING_IT%21_-_Blender_Open_Movie-full_movie.webm"
   ]
@@ -60,6 +60,16 @@
   "about": "Documentary: NASA engineers explain how the Curiosity rover landed on Mars.",
   "sources": [
    "https://upload.wikimedia.org/wikipedia/commons/9/96/Curiosity%27s_Seven_Minutes_of_Terror.ogv"
+  ]
+ },
+ "superman-1941": {
+  "title": "Superman: The Mad Scientist (1941)",
+  "holder": "Fleischer Studios, 1941",
+  "licence": "Public domain",
+  "cat": "kids",
+  "about": "Cartoon: Superman stops a mad scientist's energy ray from destroying the city.",
+  "sources": [
+   "https://upload.wikimedia.org/wikipedia/commons/8/83/Superman_%281941%29.webm"
   ]
  }
 }
