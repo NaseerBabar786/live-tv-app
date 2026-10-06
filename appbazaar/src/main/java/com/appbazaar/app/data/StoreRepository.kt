@@ -11,7 +11,8 @@ import java.io.File
  */
 class StoreRepository(context: Context) {
 
-    private val cache = File(context.applicationContext.filesDir, "apps.json")
+    private val appContext = context.applicationContext
+    private val cache = File(appContext.filesDir, "apps.json")
 
     fun cached(): List<StoreApp> =
         runCatching { if (cache.exists()) Catalog.parse(cache.readText()) else emptyList() }.getOrDefault(emptyList())
@@ -21,6 +22,7 @@ class StoreRepository(context: Context) {
         val text = Net.fetchText(Catalog.APPS_JSON + "?t=" + System.currentTimeMillis())
         val apps = Catalog.parse(text)
         if (apps.isNotEmpty()) runCatching { cache.writeText(text) }
-        apps
+        // On the owner's device, newer test builds show as updates before anyone else gets them.
+        if (OwnerTest.isOn(appContext)) runCatching { OwnerTest.withTestBuilds(apps) }.getOrDefault(apps) else apps
     }
 }

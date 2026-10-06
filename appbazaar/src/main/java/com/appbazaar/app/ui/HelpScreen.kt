@@ -1,5 +1,8 @@
 package com.appbazaar.app.ui
 
+import com.appbazaar.app.data.OwnerTest
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -83,6 +86,16 @@ fun HelpScreen(isTv: Boolean, onBack: () -> Unit, onPermission: () -> Unit) {
         Text(
             "Full guides with pictures: apps.bulkbazaar.ca/guides/tv.html and apps.bulkbazaar.ca/guides/phone.html",
             color = Muted, fontSize = 13.sp,
+        )
+        val context = LocalContext.current
+        val version = remember {
+            runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: ""
+        }
+        Text(
+            "App Bazaar $version",
+            color = Muted, fontSize = 13.sp,
+            // 7 taps: owner's test updates
+            modifier = Modifier.padding(top = 10.dp).clickable { OwnerTest.tap(context) },
         )
     }
 }

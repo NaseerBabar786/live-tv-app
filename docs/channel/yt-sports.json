@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Sports",
- "built": "2026-10-06 21:02 UTC",
+ "built": "2026-10-06 21:25 UTC",
  "videos": [
   {
    "id": "VpRNJC6xTeI",
@@ -219,10 +219,18 @@
    "top": true
   },
   {
-   "id": "H7q7q1IwEY4",
-   "title": "पाकिस्तान को हराकर भारत फाइनल में | 2011 विश्व कप",
+   "id": "fDqIqDlq_6I",
+   "title": "भारत की सेमी-फाइनल में जगह पक्की | Hindi Highlights | IND v WI | Men’s T20 World Cup 2026",
    "label": "ICC",
-   "mins": 9.966666666666667,
+   "mins": 5.016666666666667,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "PNdu5pXGSDw",
+   "title": "भारत की ज़िम्बाब्वे पर अहम जीत | Hindi Highlights | IND v ZIM | Men’s T20 World Cup 2026",
+   "label": "ICC",
+   "mins": 5.016666666666667,
    "found": "2026-10-06",
    "top": true
   },
@@ -251,14 +259,6 @@
    "top": true
   },
   {
-   "id": "PNdu5pXGSDw",
-   "title": "भारत की ज़िम्बाब्वे पर अहम जीत | Hindi Highlights | IND v ZIM | Men’s T20 World Cup 2026",
-   "label": "ICC",
-   "mins": 5.016666666666667,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
    "id": "VpZ2iUlLsRw",
    "title": "Pakistan v USA | Match Highlights | Men’s T20 World Cup 2026",
    "label": "ICC",
@@ -267,10 +267,18 @@
    "top": true
   },
   {
-   "id": "MZbvx1wUMXc",
-   "title": "Woakes & Roy Send England To Final! | Australia vs England - Highlights | ICC Cricket World Cup 2019",
+   "id": "H7q7q1IwEY4",
+   "title": "पाकिस्तान को हराकर भारत फाइनल में | 2011 विश्व कप",
    "label": "ICC",
-   "mins": 5.983333333333333,
+   "mins": 9.966666666666667,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "OC8t9A_y00U",
+   "title": "भारत की लगातार चौथी जीत | Hindi Highlights | IND v NED | Men’s T20 World Cup 2026",
+   "label": "ICC",
+   "mins": 5.016666666666667,
    "found": "2026-10-06",
    "top": true
   },
@@ -283,18 +291,10 @@
    "top": true
   },
   {
-   "id": "gLMHVM-m9p0",
-   "title": "ICC #WT20 Australia vs New Zealand  Match Highlights",
+   "id": "gHTeFCbu6Io",
+   "title": "Australia v South Africa | Match Highlights | Women's #T20WorldCup 2026",
    "label": "ICC",
-   "mins": 2.95,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "W4nj50SkI5M",
-   "title": "England v West Indies | Match Highlights | Men’s T20 World Cup 2026",
-   "label": "ICC",
-   "mins": 6.983333333333333,
+   "mins": 2.0166666666666666,
    "found": "2026-10-06",
    "top": true
   },
@@ -307,18 +307,50 @@
    "top": true
   },
   {
-   "id": "gHTeFCbu6Io",
-   "title": "Australia v South Africa | Match Highlights | Women's #T20WorldCup 2026",
+   "id": "YphL3Whh5B0",
+   "title": "Cricket World Cup 2011 Final: India v Sri Lanka | Match Highlights",
    "label": "ICC",
-   "mins": 2.0166666666666666,
+   "mins": 8.466666666666667,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "95Ia6yBcnXI",
-   "title": "Stokes Stars In Opener! | England vs South Africa - Match Highlights | ICC Cricket World Cup 2019",
+   "id": "MZbvx1wUMXc",
+   "title": "Woakes & Roy Send England To Final! | Australia vs England - Highlights | ICC Cricket World Cup 2019",
    "label": "ICC",
-   "mins": 5.266666666666667,
+   "mins": 5.983333333333333,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "gTo-lPOGPdg",
+   "title": "Australia v India | WTC23 Final | Match Highlights",
+   "label": "ICC",
+   "mins": 12.033333333333333,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "IdchmuJOrRM",
+   "title": "Sri Lanka v Ireland | Match Highlights | Women's #T20WorldCup 2026",
+   "label": "ICC",
+   "mins": 2.1666666666666665,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "gLMHVM-m9p0",
+   "title": "ICC #WT20 Australia vs New Zealand  Match Highlights",
+   "label": "ICC",
+   "mins": 2.95,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "jm2r5xzYx-A",
+   "title": "India March On With Easy Win | West Indies vs India - Match Highlights | ICC Cricket World Cup 2019",
+   "label": "ICC",
+   "mins": 6.033333333333333,
    "found": "2026-10-06",
    "top": true
   },
@@ -627,30 +659,6 @@
    "top": true
   },
   {
-   "id": "a04zJbAY7x0",
-   "title": "India Women Vs South Africa Women 1st Test Day 2 Highlight 2024 |Ind W Vs SA Women|",
-   "label": "BCCI",
-   "mins": 8.433333333333334,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "DY45NChXK-k",
-   "title": "india women vs south africa women test match highlight |cricket|highlight in hindi|",
-   "label": "BCCI",
-   "mins": 16.716666666666665,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "6R9zD7MfpeI",
-   "title": "indiawomen vs saw 2nd odi cricket match in highlight #cricket match#2nd odi",
-   "label": "BCCI",
-   "mins": 15.033333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
    "id": "U39D-NFq8lk",
    "title": "Views of Beautiful Chinnaswamy",
    "label": "IPL",
@@ -931,104 +939,8 @@
    "top": true
   },
   {
-   "id": "yx9k18xZqoM",
-   "title": "Wayne Rooney's Best Goals | Unstoppable Volley Against Russia! | Top 5 | England",
-   "label": "England Cricket",
-   "mins": 4.983333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "Ox8pZOlVo2A",
-   "title": "HIGHLIGHTS | England v Iceland | Women | FIFA World Cup European Qualifier",
-   "label": "England Cricket",
-   "mins": 3.3833333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "tIbxoiGskys",
-   "title": "Three Lions Complete World Cup Qualification Unbeaten! | Albania 0-2 England | Highlights",
-   "label": "England Cricket",
-   "mins": 3.0833333333333335,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "J1hiW3EGTJ0",
-   "title": "Three Lions Defeated In Nottingham | England 1-3 Senegal | International Friendly | Highlights",
-   "label": "England Cricket",
-   "mins": 3.3833333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "SuygnFxX9UI",
-   "title": "Lionesses Put On A Show Before EURO 2025 | England 7-0 Jamaica | Highlights",
-   "label": "England Cricket",
-   "mins": 8.95,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "raKOes8GZAA",
-   "title": "Scotland 0-2 England | Paul Gascoigne Scores Classic Euro 96 STUNNER! | Highlights | Euro 96",
-   "label": "England Cricket",
-   "mins": 2.816666666666667,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "VlrLZ5lOwdA",
-   "title": "England 10-0 Luxembourg | Lionesses Put TEN Past Luxembourg | Highlights",
-   "label": "England Cricket",
-   "mins": 10.666666666666666,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "KoUU3I3q5wg",
-   "title": "England 2-1 Uruguay | Crouch and Cole Complete Comeback! | Archive Highlights",
-   "label": "England Cricket",
-   "mins": 6.4,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "lBOS43RWfY0",
-   "title": "⏮️ Late Heartbreak For The Three Lions | Spain v England | UEFA Euros 2024 | Highlights",
-   "label": "England Cricket",
-   "mins": 8.716666666666667,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "emAIEADXAYM",
-   "title": "Italy 1-2 England | Kane Becomes England's Record All-Time Goal Scorer | Highlights",
-   "label": "England Cricket",
-   "mins": 3.6333333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "x4fW8cHPU6M",
-   "title": "England 7-0 North Macedonia | Bukayo Saka Old Trafford Hat-Trick Hero | Highlights",
-   "label": "England Cricket",
-   "mins": 3.5,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "dUHTT2VnKao",
-   "title": "Germany 1-5 England (2001) Highlights | From the Archive",
-   "label": "England Cricket",
-   "mins": 4.75,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
    "id": "PI5nRvwggQw",
-   "title": "'Who is that?!' Testing cricketers' pop culture knowledge 🤔",
+   "title": "'Is that someone we should know?' Aussie cricketers guess 2026 celebrities 👀",
    "label": "Cricket Australia",
    "mins": 8.45,
    "found": "2026-10-06",
@@ -1171,14 +1083,6 @@
    "top": true
   },
   {
-   "id": "6nKGHuRQbLk",
-   "title": "Australia v India 2025-26 | Fourth T20I",
-   "label": "Cricket Australia",
-   "mins": 8.083333333333334,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
    "id": "rpPCjyVfQOo",
    "title": "India hold their nerve to win ODI epic in Canberra | Dettol ODI Series 2020",
    "label": "Cricket Australia",
@@ -1191,6 +1095,14 @@
    "title": "India claim stunning series win, end Australia's Gabba streak | Vodafone Test Series 2020-21",
    "label": "Cricket Australia",
    "mins": 8.5,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "6nKGHuRQbLk",
+   "title": "Australia v India 2025-26 | Fourth T20I",
+   "label": "Cricket Australia",
+   "mins": 8.083333333333334,
    "found": "2026-10-06",
    "top": true
   },
@@ -1211,14 +1123,6 @@
    "top": true
   },
   {
-   "id": "PorfJhrc6JY",
-   "title": "Australia v India 2025-26 | Third T20I",
-   "label": "Cricket Australia",
-   "mins": 8.033333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
    "id": "umhgNzIZq3s",
    "title": "Complete highlights of SCG Test",
    "label": "Cricket Australia",
@@ -1227,10 +1131,10 @@
    "top": true
   },
   {
-   "id": "KFobXwrq1Lo",
-   "title": "Root relief! Full highlights of Joe's drought-breaking Test ton in Australia | Men's Ashes 2025-26",
+   "id": "EY41X9sfxlA",
+   "title": "Highlights: Australia v India, MCG | ODI Tri-Series 2014-15",
    "label": "Cricket Australia",
-   "mins": 4.2,
+   "mins": 12.066666666666666,
    "found": "2026-10-06",
    "top": true
   },
@@ -1243,18 +1147,18 @@
    "top": true
   },
   {
-   "id": "UJzKMQ74eMY",
-   "title": "Australia v India 2024-25 | Fourth Test | Day One",
-   "label": "Cricket Australia",
-   "mins": 8.5,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
    "id": "A-kbmFiCMUI",
    "title": "Kohli, Dhoni too good for the Aussies | Second Gillette ODI",
    "label": "Cricket Australia",
    "mins": 5.933333333333334,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "UJzKMQ74eMY",
+   "title": "Australia v India 2024-25 | Fourth Test | Day One",
+   "label": "Cricket Australia",
+   "mins": 8.5,
    "found": "2026-10-06",
    "top": true
   },
@@ -1267,10 +1171,114 @@
    "top": true
   },
   {
-   "id": "EY41X9sfxlA",
-   "title": "Highlights: Australia v India, MCG | ODI Tri-Series 2014-15",
+   "id": "PorfJhrc6JY",
+   "title": "Australia v India 2025-26 | Third T20I",
    "label": "Cricket Australia",
-   "mins": 12.066666666666666,
+   "mins": 8.033333333333333,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "zNokixQnb04",
+   "title": "Full over: Johnson destroys England with searing Ashes over",
+   "label": "Cricket Australia",
+   "mins": 8.733333333333333,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "KFobXwrq1Lo",
+   "title": "Root relief! Full highlights of Joe's drought-breaking Test ton in Australia | Men's Ashes 2025-26",
+   "label": "Cricket Australia",
+   "mins": 4.2,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "KwajqqlTKfw",
+   "title": "Highlights of day one, first Test",
+   "label": "Cricket Australia",
+   "mins": 6.266666666666667,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "09tB57qOc1A",
+   "title": "Australia v India 2025-26 | Second ODI",
+   "label": "Cricket Australia",
+   "mins": 8.316666666666666,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "qs-Rab-rQnc",
+   "title": "Australia v India 2025-26 | First ODI",
+   "label": "Cricket Australia",
+   "mins": 8.116666666666667,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "xHqrDqjMi5g",
+   "title": "Australia v Pakistan | Second ODI | ODI Series 2024-25",
+   "label": "Cricket Australia",
+   "mins": 8.083333333333334,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "dMGRTR97Ito",
+   "title": "Pandya's power seals series win for India with epic chase | Dettol T20I Series 2020",
+   "label": "Cricket Australia",
+   "mins": 8.5,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "9-37VRXW22s",
+   "title": "MCG Test full highlights",
+   "label": "Cricket Australia",
+   "mins": 10.75,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "v2bAEek6nc4",
+   "title": "India’s bowlers fire on entertaining Boxing Day | Vodafone Test Series 2020-21",
+   "label": "Cricket Australia",
+   "mins": 8.5,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "e0SzreAH6Vg",
+   "title": "Full highlights: Australia v Pakistan, 1999 Hobart Test",
+   "label": "Cricket Australia",
+   "mins": 25.45,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "Q5QXZdwsxuw",
+   "title": "India close in on Test victory | Third Domain Test",
+   "label": "Cricket Australia",
+   "mins": 5.966666666666667,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "qWUsV2Ios8A",
+   "title": "India take 1-0 lead after dramatic T20 opener | Dettol T20I Series 2020",
+   "label": "Cricket Australia",
+   "mins": 8.5,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "s2P1yzN2CaE",
+   "title": "Full highlights of day five of the 2014 Adelaide Test",
+   "label": "Cricket Australia",
+   "mins": 7.5,
    "found": "2026-10-06",
    "top": true
   },
@@ -1523,22 +1531,6 @@
    "top": true
   },
   {
-   "id": "6oRhs4Rc2-k",
-   "title": "Full SmackDown highlights: Oct. 2, 2026",
-   "label": "WWE",
-   "mins": 10.133333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "eHJPVr9z_0M",
-   "title": "Jaida Parker SHOCKS The Bloodline: Raw highlights, Sept. 28, 2026",
-   "label": "WWE",
-   "mins": 3.6166666666666667,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
    "id": "sjbI-sWFyqk",
    "title": "Blake Monroe knocks out Giulia in debut match: SmackDown highlights, Oct. 2, 2026",
    "label": "WWE",
@@ -1563,6 +1555,14 @@
    "top": true
   },
   {
+   "id": "6oRhs4Rc2-k",
+   "title": "Full SmackDown highlights: Oct. 2, 2026",
+   "label": "WWE",
+   "mins": 10.133333333333333,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
    "id": "KzQvv4JmVvk",
    "title": "Trick Williams, Gunther, Finn Bálor, Penta and Je'Von Evans confront Sami Zayn: SmackDown highlights",
    "label": "WWE",
@@ -1571,10 +1571,18 @@
    "top": true
   },
   {
-   "id": "bl67qUd7Tqc",
-   "title": "Full NXT highlights: Sept. 29, 2026",
+   "id": "eHJPVr9z_0M",
+   "title": "Jaida Parker SHOCKS The Bloodline: Raw highlights, Sept. 28, 2026",
    "label": "WWE",
-   "mins": 10.983333333333333,
+   "mins": 3.6166666666666667,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "k7YyHuxMMKY",
+   "title": "Ricky Saints and The War Raiders take down Rey Fenix and Fraxiom: SmackDown highlights, Oct. 2, 2026",
+   "label": "WWE",
+   "mins": 3.15,
    "found": "2026-10-06",
    "top": true
   },
@@ -1691,74 +1699,10 @@
    "top": true
   },
   {
-   "id": "XDcfLcRmZaQ",
-   "title": "AEW Dynamite Highlights in 8 Minutes: Chicago, IL | AEW Highlights 7/16/25",
-   "label": "AEW",
-   "mins": 8.983333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "nQNXyauYncc",
-   "title": "Jon Moxley delivers an inspiring message to Will Ospreay immediately following AEW All Out",
-   "label": "AEW",
-   "mins": 3.9833333333333334,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "jLRPYkcom9Q",
-   "title": "Andrade El Ídolo vs PAC - AEW National Championship | AEW All Out 2026",
-   "label": "AEW",
-   "mins": 2.0,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "MDUsAtG_Gao",
-   "title": "AEW Collision Beach Break Highlights in 8 Minutes: Chicago, IL | AEW Highlights 5/18/25",
-   "label": "AEW",
-   "mins": 8.683333333333334,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
    "id": "c6MTksDzmmQ",
    "title": "Maya World vs Julia Hart (7/2/26) | AEW Collision Highlights Presented by Upper Deck",
    "label": "AEW",
    "mins": 2.15,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "Wtjz2qDJAuo",
-   "title": "Highlights from AEW: All In! NOW AVAILABLE ON-DEMAND! | 8/27/23, AEW All In",
-   "label": "AEW",
-   "mins": 2.0,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "-koTgdx0M-A",
-   "title": "Kenny Omega vs Bad Dude Tito (6/13/26) | AEW Collision Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.1333333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "X0lVKxmedBs",
-   "title": "The Elite vs Lethal Twist (6/20/26) | AEW Collision Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.1666666666666665,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "3G9pOG4s7_4",
-   "title": "Kyle Fletcher vs PAC: AEW Continental Classic MATCH HIGHLIGHTS | AEW Dynamite, 12/17/25",
-   "label": "AEW",
-   "mins": 2.0,
    "found": "2026-10-06",
    "top": true
   },
@@ -1771,10 +1715,74 @@
    "top": true
   },
   {
+   "id": "-koTgdx0M-A",
+   "title": "Kenny Omega vs Bad Dude Tito (6/13/26) | AEW Collision Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.1333333333333333,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "f6KSl6rwIsg",
+   "title": "Toni Storm vs. Mercedes Moné | AEW Women’s World Title Highlights | AEW All In: Texas 2025",
+   "label": "AEW",
+   "mins": 5.05,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "w6wIsrPlBjo",
+   "title": "Skye Blue vs Maya World (6/10/26) | AEW Dynamite Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.1666666666666665,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
    "id": "30KEFuUJ6UM",
    "title": "The Young Bucks vs. Swerve Strickland & Will Ospreay Highlights | AEW All In: Texas 2025",
    "label": "AEW",
    "mins": 5.866666666666666,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "XDcfLcRmZaQ",
+   "title": "AEW Dynamite Highlights in 8 Minutes: Chicago, IL | AEW Highlights 7/16/25",
+   "label": "AEW",
+   "mins": 8.983333333333333,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "tOMBMYfaww4",
+   "title": "Kazuchika Okada vs. Kenny Omega | AEW Unified Championship Match Highlights | AEW All In: Texas 2025",
+   "label": "AEW",
+   "mins": 5.216666666666667,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "L5hRrvuk9FU",
+   "title": "AEW Collision HIGHLIGHTS: Bandido vs Mascara Dorada for the ROH World Championship! | 11/1/25",
+   "label": "AEW",
+   "mins": 2.0166666666666666,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "O9wqG8UlJ0s",
+   "title": "MJF vs RUSH - AEW World Championship (6/3/26) | AEW Dynamite Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.0833333333333335,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
+   "id": "MxHZw_AnJSw",
+   "title": "El Clon vs Komander: Match HIGHLIGHTS | AEW Collision, 1/10/26",
+   "label": "AEW",
+   "mins": 2.0,
    "found": "2026-10-06",
    "top": true
   },
@@ -1788,7 +1796,7 @@
   },
   {
    "id": "8eHyYKFRh6k",
-   "title": "1986 World Cup Goals Compilation | BEST HEADERS",
+   "title": "These 1986 FIFA World Cup Headers Are So Satisfying!",
    "label": "FIFA",
    "mins": 5.5,
    "found": "2026-10-06",
@@ -1820,7 +1828,7 @@
   },
   {
    "id": "6IojQsXHsB0",
-   "title": "13 Minutes Of Just SENSATIONAL GOALS | 2002 FIFA World Cup",
+   "title": "These 2002 FIFA World Cup Long Range Goals Are Truly Special!",
    "label": "FIFA",
    "mins": 13.116666666666667,
    "found": "2026-10-06",
@@ -1860,7 +1868,7 @@
   },
   {
    "id": "6brqrA3oiqI",
-   "title": "12 Minutes Of UNBELIEVABLE Goals From The 2022 FIFA World Cup!",
+   "title": "Goals From Downtown! Screamers To See On Repeat | 2022 World Cup",
    "label": "FIFA",
    "mins": 11.4,
    "found": "2026-10-06",
@@ -2739,6 +2747,14 @@
    "top": true
   },
   {
+   "id": "0JqsUXfgzCA",
+   "title": "Are fans & media in Toronto being too hard on Maple Leafs’ McKenna?",
+   "label": "TSN",
+   "mins": 8.183333333333334,
+   "found": "2026-10-06",
+   "top": true
+  },
+  {
    "id": "M7UPEXrTWhs",
    "title": "Demidov out! How will Canadiens adjust?",
    "label": "TSN",
@@ -2847,14 +2863,6 @@
    "title": "Sanderson out: can Senators adjust without stud defenceman?",
    "label": "TSN",
    "mins": 8.733333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "2lRma3p37Ow",
-   "title": "Biron puts Stevenson under the microscope ahead of Jets debut",
-   "label": "TSN",
-   "mins": 3.3833333333333333,
    "found": "2026-10-06",
    "top": true
   },
@@ -3043,162 +3051,154 @@
    "top": true
   },
   {
-   "id": "fDqIqDlq_6I",
-   "title": "भारत की सेमी-फाइनल में जगह पक्की | Hindi Highlights | IND v WI | Men’s T20 World Cup 2026",
+   "id": "W4nj50SkI5M",
+   "title": "England v West Indies | Match Highlights | Men’s T20 World Cup 2026",
    "label": "ICC",
-   "mins": 5.016666666666667,
+   "mins": 6.983333333333333,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "OC8t9A_y00U",
-   "title": "भारत की लगातार चौथी जीत | Hindi Highlights | IND v NED | Men’s T20 World Cup 2026",
+   "id": "95Ia6yBcnXI",
+   "title": "Stokes Stars In Opener! | England vs South Africa - Match Highlights | ICC Cricket World Cup 2019",
    "label": "ICC",
-   "mins": 5.016666666666667,
+   "mins": 5.266666666666667,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "YphL3Whh5B0",
-   "title": "Cricket World Cup 2011 Final: India v Sri Lanka | Match Highlights",
-   "label": "ICC",
-   "mins": 8.466666666666667,
+   "id": "a04zJbAY7x0",
+   "title": "India Women Vs South Africa Women 1st Test Day 2 Highlight 2024 |Ind W Vs SA Women|",
+   "label": "BCCI",
+   "mins": 8.433333333333334,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "gTo-lPOGPdg",
-   "title": "Australia v India | WTC23 Final | Match Highlights",
-   "label": "ICC",
-   "mins": 12.033333333333333,
+   "id": "DY45NChXK-k",
+   "title": "india women vs south africa women test match highlight |cricket|highlight in hindi|",
+   "label": "BCCI",
+   "mins": 16.716666666666665,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "qs-Rab-rQnc",
-   "title": "Australia v India 2025-26 | First ODI",
-   "label": "Cricket Australia",
-   "mins": 8.116666666666667,
+   "id": "6R9zD7MfpeI",
+   "title": "indiawomen vs saw 2nd odi cricket match in highlight #cricket match#2nd odi",
+   "label": "BCCI",
+   "mins": 15.033333333333333,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "qWUsV2Ios8A",
-   "title": "India take 1-0 lead after dramatic T20 opener | Dettol T20I Series 2020",
-   "label": "Cricket Australia",
-   "mins": 8.5,
+   "id": "yx9k18xZqoM",
+   "title": "Wayne Rooney's Best Goals | Unstoppable Volley Against Russia! | Top 5 | England",
+   "label": "England Cricket",
+   "mins": 4.983333333333333,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "5J7zE95UN_s",
-   "title": "Smith, Zampa shine in high-scoring first ODI | Dettol ODI Series 2020",
-   "label": "Cricket Australia",
-   "mins": 8.5,
+   "id": "Ox8pZOlVo2A",
+   "title": "HIGHLIGHTS | England v Iceland | Women | FIFA World Cup European Qualifier",
+   "label": "England Cricket",
+   "mins": 3.3833333333333333,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "s2P1yzN2CaE",
-   "title": "Full highlights of day five of the 2014 Adelaide Test",
-   "label": "Cricket Australia",
-   "mins": 7.5,
+   "id": "tIbxoiGskys",
+   "title": "Three Lions Complete World Cup Qualification Unbeaten! | Albania 0-2 England | Highlights",
+   "label": "England Cricket",
+   "mins": 3.0833333333333335,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "h_Yh4Ze7WJQ",
-   "title": "Highlights: England v India, WACA | T20I Tri-Series 2014-15",
-   "label": "Cricket Australia",
-   "mins": 10.0,
+   "id": "J1hiW3EGTJ0",
+   "title": "Three Lions Defeated In Nottingham | England 1-3 Senegal | International Friendly | Highlights",
+   "label": "England Cricket",
+   "mins": 3.3833333333333333,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "xEvYNGFBLDw",
-   "title": "Lightning strikes Aussie fightback after Mandhana ton | Australia v India 2021",
-   "label": "Cricket Australia",
-   "mins": 5.533333333333333,
+   "id": "SuygnFxX9UI",
+   "title": "Lionesses Put On A Show Before EURO 2025 | England 7-0 Jamaica | Highlights",
+   "label": "England Cricket",
+   "mins": 8.95,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "WrhQ7BcTiNM",
-   "title": "Highlights: Strikers v Heat - BBL06",
-   "label": "Cricket Australia",
-   "mins": 6.95,
+   "id": "raKOes8GZAA",
+   "title": "Scotland 0-2 England | Paul Gascoigne Scores Classic Euro 96 STUNNER! | Highlights | Euro 96",
+   "label": "England Cricket",
+   "mins": 2.816666666666667,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "RsT5JfzYzGw",
-   "title": "HIGHLIGHTS | Thailand vs Vietnam | FIFA ASEAN Cup 2026™",
-   "label": "FIFA",
-   "mins": 2.066666666666667,
+   "id": "VlrLZ5lOwdA",
+   "title": "England 10-0 Luxembourg | Lionesses Put TEN Past Luxembourg | Highlights",
+   "label": "England Cricket",
+   "mins": 10.666666666666666,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "Petu_ouNzr4",
-   "title": "Highlights | Uruguay 0-1 Spain | FIFA World Cup 2026™",
-   "label": "FIFA",
-   "mins": 2.183333333333333,
+   "id": "KoUU3I3q5wg",
+   "title": "England 2-1 Uruguay | Crouch and Cole Complete Comeback! | Archive Highlights",
+   "label": "England Cricket",
+   "mins": 6.4,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "j0BQN0nJ7mM",
-   "title": "Highlights | Spain 4-0 Saudi Arabia | FIFA World Cup 2026™",
-   "label": "FIFA",
-   "mins": 2.183333333333333,
+   "id": "lBOS43RWfY0",
+   "title": "⏮️ Late Heartbreak For The Three Lions | Spain v England | UEFA Euros 2024 | Highlights",
+   "label": "England Cricket",
+   "mins": 8.716666666666667,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "ynqGWHJPkuQ",
-   "title": "Highlights | England 4-2 Croatia | FIFA World Cup 2026™",
-   "label": "FIFA",
-   "mins": 2.183333333333333,
+   "id": "emAIEADXAYM",
+   "title": "Italy 1-2 England | Kane Becomes England's Record All-Time Goal Scorer | Highlights",
+   "label": "England Cricket",
+   "mins": 3.6333333333333333,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "_cV8QcKp3GU",
-   "title": "Highlights | France 0-2 Spain | FIFA World Cup 2026™ Semi-Finals",
-   "label": "FIFA",
-   "mins": 2.183333333333333,
+   "id": "x4fW8cHPU6M",
+   "title": "England 7-0 North Macedonia | Bukayo Saka Old Trafford Hat-Trick Hero | Highlights",
+   "label": "England Cricket",
+   "mins": 3.5,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "j8BxnOqoKG8",
-   "title": "Brazil v Spain | Quarter-Final | FIFA Beach Soccer World Cup Seychelles 2025™ | Match Highlights",
-   "label": "FIFA",
-   "mins": 2.0,
+   "id": "dUHTT2VnKao",
+   "title": "Germany 1-5 England (2001) Highlights | From the Archive",
+   "label": "England Cricket",
+   "mins": 4.75,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "TImmPYoLE-8",
-   "title": "Highlights | Ecuador 2-1 Germany | FIFA World Cup 2026™",
-   "label": "FIFA",
-   "mins": 2.183333333333333,
+   "id": "bl67qUd7Tqc",
+   "title": "Full NXT highlights: Sept. 29, 2026",
+   "label": "WWE",
+   "mins": 10.983333333333333,
    "found": "2026-10-06",
    "top": true
   },
   {
-   "id": "tXxvgvgMiRg",
-   "title": "Highlights | USA 2-0 Australia | FIFA World Cup 2026™",
-   "label": "FIFA",
-   "mins": 2.183333333333333,
-   "found": "2026-10-06",
-   "top": true
-  },
-  {
-   "id": "ZU2ssk6Bmg8",
-   "title": "Highlights | Morocco 4-2 Haiti | FIFA World Cup 2026™",
-   "label": "FIFA",
-   "mins": 2.183333333333333,
+   "id": "nQNXyauYncc",
+   "title": "Jon Moxley delivers an inspiring message to Will Ospreay immediately following AEW All Out",
+   "label": "AEW",
+   "mins": 3.9833333333333334,
    "found": "2026-10-06",
    "top": true
   }

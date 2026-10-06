@@ -11,6 +11,8 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
 import com.livetv.app.Edition
+import com.livetv.app.account.Account
+import com.livetv.app.account.FirebaseConfig
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -30,6 +32,7 @@ class Updater(context: Context) {
 
     /** The latest release when it is newer than the installed app, or null when up to date. */
     suspend fun checkForUpdate(): Release? = withContext(Dispatchers.IO) {
+        testRelease()?.let { return@withContext it }
         val json = JSONObject(fetchText(if (Edition.MAX) MAX_RELEASE_API else LATEST_RELEASE_API))
         // Live TV Max's fixed release is named "Live TV Max 1.0.0"; Cable TV's tags carry the version.
         val version = if (Edition.MAX) json.getString("name").substringAfterLast(' ') else versionFromTag(json.getString("tag_name"))
@@ -39,6 +42,19 @@ class Updater(context: Context) {
             ?: error("The latest release has no app file.")
         Release(version, apk.getString("browser_download_url"), apk.optLong("size"))
             .takeIf { isNewer(it.version, installedVersion) }
+    }
+
+    /**
+     * The owner's newer test build, only when test updates are on for this device (see [OwnerTest]).
+     * Signing in with the owner's account turns them on by itself.
+     */
+    private fun testRelease(): Release? {
+        val owner = runCatching { FirebaseConfig.configured && Account.get(appContext).isAdmin }.getOrDefault(false)
+        if (!owner && !OwnerTest.isOn(appContext)) return null
+        val version = runCatching {
+            JSONObject(fetchText(OwnerTest.VERSIONS)).optString(if (Edition.MAX) "live-tv-max" else "cable-tv")
+        }.getOrNull()?.takeIf { it.isNotBlank() && isNewer(it, installedVersion) } ?: return null
+        return Release("$version (test)", OwnerTest.BASE + if (Edition.MAX) "LiveTVMax.apk" else "LiveTV.apk", 0)
     }
 
     /** Downloads the release's APK, reporting progress from 0 to 1. */
