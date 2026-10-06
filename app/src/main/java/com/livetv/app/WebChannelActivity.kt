@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.PixelFormat
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,8 @@ class WebChannelActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // The video is drawn underneath the window; an opaque window keeps it black (1.9.55).
+        window.setFormat(PixelFormat.TRANSLUCENT)
         val url = intent.getStringExtra(EXTRA_URL) ?: return finish()
         val view = WebView(this).apply {
             settings.javaScriptEnabled = true
