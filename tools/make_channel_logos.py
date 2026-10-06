@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-import math, sys
+import math, os, sys
 OUT = sys.argv[1]
 B = "/usr/share/fonts/opentype/inter/Inter-Black.otf"
 BD = "/usr/share/fonts/opentype/inter/Inter-Bold.otf"
@@ -29,12 +29,6 @@ def tv_icon(d, cx, cy, s, fill, play):
 S = 512
 def save(im, name): im.save(f"{OUT}/{name}.png")
 
-# 1 Bazaar TV: orange to red rounded square, white TV + wordmark
-im = Image.new("RGBA", (S,S), (0,0,0,0)); bg = grad((S,S), (255,153,0), (220,38,38)); im.paste(bg, (0,0), rounded_mask((S,S), 110))
-d = ImageDraw.Draw(im); tv_icon(d, S/2, 185, 190, (255,255,255,255), (220,38,38,255))
-center_text(d, S/2, 300, "BAZAAR", font(B, 96), "white"); center_text(d, S/2, 400, "TV", font(B, 70), (255,236,179))
-save(im, "bazaar-tv")
-
 # 2 BB Live: deep blue circle, big BB, red LIVE pill
 im = Image.new("RGBA", (S,S), (0,0,0,0)); bg = grad((S,S), (30,64,175), (15,23,42)); im.paste(bg, (0,0), circle_mask((S,S)))
 d = ImageDraw.Draw(im); center_text(d, S/2, 95, "BB", font(B, 230), "white")
@@ -63,124 +57,106 @@ center_text(d, S/2, 150, "RANG", font(B, 120), "white"); center_text(d, S/2, 285
 save(im, "rang-tv")
 
 
-# Our extra channels, drawn at double size and scaled down for smooth edges.
-L = 1024
-def save_big(im, name): im.resize((S, S), Image.LANCZOS).save(f"{OUT}/{name}.png")
-def text_fit(d, cx, y, text, path, size, fill, width):
-    f = font(path, size)
-    while d.textlength(text, font=f) > width: size -= 4; f = font(path, size)
-    center_text(d, cx, y, text, f, fill)
 
-# 6 Bazaar Cinema, 00 (golden-era films; was Sunehra Daur until 1.9.41): maroon disc, gold ring and film sprockets, gold play mark
-im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (127,29,29), (40,8,8)), (0,0), circle_mask((L,L)))
-d = ImageDraw.Draw(im)
-d.ellipse([20,20,L-21,L-21], outline=(245,190,60), width=56)
-for i in range(24):  # film sprockets along the gold band
-    a = math.radians(i*15); cx, cy = L/2 + 464*math.cos(a), L/2 + 464*math.sin(a)
-    d.rounded_rectangle([cx-12, cy-12, cx+12, cy+12], 4, fill=(60,12,12))
-d.ellipse([L/2-118, 150, L/2+118, 386], fill=(245,190,60))
-d.polygon([(L/2-38, 212), (L/2-38, 324), (L/2+62, 268)], fill=(127,29,29))
-text_fit(d, L/2, 410, "BAZAAR", B, 180, (253,230,138), 700)
-text_fit(d, L/2, 600, "CINEMA", B, 190, (255,255,255), 640)
-text_fit(d, L/2, 812, "CLASSIC FILMS", BD, 48, (253,230,138), 420)
-save_big(im, "bazaar-cinema")
+# Our own channels (1.9.47): broadcast-style "action slash" logos. A slanted colour slab with the
+# channel word in heavy italic, speed lines on the left and a dark BAZAAR tab on top (a red TV tab
+# under Bazaar TV). Wide pictures, so the app and website show them as wide corner logos; each also
+# gets a <name>-square.png copy for favicons and title cards.
+import numpy as np
+from PIL import ImageChops
+POP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts", "Poppins-BlackItalic.ttf")
+CHANNELS = [  # file, word, main colour, second colour
+    ("bazaar-tv", "BAZAAR", (255, 120, 0), (214, 20, 40)),
+    ("bazaar-cinema", "CINEMA", (230, 170, 40), (140, 20, 30)),
+    ("bazaar-music", "MUSIC", (150, 70, 255), (0, 190, 200)),
+    ("bazaar-hits", "HITS", (255, 40, 140), (255, 120, 0)),
+    ("bazaar-kids", "KIDS", (60, 200, 60), (255, 200, 0)),
+    ("bazaar-sports", "SPORTS", (0, 110, 255), (0, 200, 120)),
+    ("bazaar-travel", "TRAVEL", (0, 170, 230), (0, 160, 140)),
+    ("bazaar-comedy", "COMEDY", (255, 200, 0), (255, 80, 60)),
+]
+OLD_NAMES = {"bazaar-cinema": "sunehra-daur", "bazaar-music": "sur-sukoon", "bazaar-hits": "geet-bahar"}  # links saved before 1.9.41
 
-# 7 Bazaar Music, 000 (calm music; was Sur Sukoon until 1.9.41): indigo to teal disc, sound waves round a glowing dot
-im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (49,46,129), (15,118,110)), (0,0), circle_mask((L,L)))
-d = ImageDraw.Draw(im)
-cx, cy = L/2, 300
-d.ellipse([cx-66, cy-66, cx+66, cy+66], fill=(253,224,71))
-for r, w, a in ((120, 20, 255), (185, 18, 190), (250, 16, 120)):  # sound spreading out both ways
-    d.arc([cx-r, cy-r, cx+r, cy+r], 140, 220, fill=(255,255,255,a), width=w)
-    d.arc([cx-r, cy-r, cx+r, cy+r], -40, 40, fill=(255,255,255,a), width=w)
-text_fit(d, L/2, 470, "BAZAAR", B, 250, (255,255,255), 640)
-text_fit(d, L/2, 680, "MUSIC", B, 190, (153,246,228), 560)
-save_big(im, "bazaar-music")
+def mix(a, b, t): return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
+def dark(c, k): return tuple(int(v * k) for v in c)
+def light(c, k): return mix(c, (255, 255, 255), k)
 
-# 8 Bazaar Hits, 0000 (film songs; was Geet Bahar until 1.9.41): pink to orange rounded square, a flower of petals with a note inside
-im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (219,39,119), (249,115,22)), (0,0), rounded_mask((L,L), 220))
-d = ImageDraw.Draw(im)
-cx, cy = L/2, 300
-for i in range(8):
-    a = math.radians(i*45); px, py = cx + 112*math.cos(a), cy + 112*math.sin(a)
-    d.ellipse([px-78, py-78, px+78, py+78], fill=(253,224,71))
-d.ellipse([cx-104, cy-104, cx+104, cy+104], fill=(255,255,255))
-d.ellipse([cx-58, cy+6, cx-6, cy+48], fill=(219,39,119)); d.ellipse([cx+10, cy-14, cx+62, cy+28], fill=(219,39,119))
-d.rectangle([cx-17, cy-66, cx-5, cy+30], fill=(219,39,119)); d.rectangle([cx+50, cy-86, cx+62, cy+10], fill=(219,39,119))
-d.polygon([(cx-17, cy-66), (cx+62, cy-86), (cx+62, cy-58), (cx-17, cy-38)], fill=(219,39,119))
-text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
-text_fit(d, L/2, 710, "HITS", B, 200, (255,247,237), 600)
-save_big(im, "bazaar-hits")
+def word_mask(text, size, track=0):
+    f = ImageFont.truetype(POP, size)
+    m = Image.new("L", (int(sum(f.getlength(ch) for ch in text) + track * len(text) + size), int(size * 1.6)), 0)
+    d = ImageDraw.Draw(m); x = size * 0.3
+    for ch in text: d.text((x, size * 0.2), ch, font=f, fill=255); x += f.getlength(ch) + track
+    return m.crop(m.getbbox())
 
-# 9 Bazaar Kids, 00000 (cartoons, 1.9.41): green to sky-blue rounded square, a smiling sun with rays
-im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (34,197,94), (14,165,233)), (0,0), rounded_mask((L,L), 220))
-d = ImageDraw.Draw(im)
-cx, cy = L/2, 290
-for i in range(12):  # rays
-    a = math.radians(i*30); d.line([(cx + 120*math.cos(a), cy + 120*math.sin(a)), (cx + 185*math.cos(a), cy + 185*math.sin(a))], fill=(253,224,71), width=26)
-d.ellipse([cx-110, cy-110, cx+110, cy+110], fill=(253,224,71))
-d.ellipse([cx-50, cy-40, cx-22, cy-8], fill=(30,41,59)); d.ellipse([cx+22, cy-40, cx+50, cy-8], fill=(30,41,59))
-d.arc([cx-62, cy-30, cx+62, cy+68], 20, 160, fill=(30,41,59), width=16)
-text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
-text_fit(d, L/2, 710, "KIDS", B, 210, (254,249,195), 600)
-save_big(im, "bazaar-kids")
+def grow(m, r):
+    return m.filter(ImageFilter.GaussianBlur(r / 2)).point(lambda v: 255 if v > 8 else v * 32)
 
-# 10 Bazaar Sports, 000000 (classic sport, 1.9.43): blue to deep green rounded square, a football in a gold ring
-im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (37,99,235), (21,128,61)), (0,0), rounded_mask((L,L), 220))
-d = ImageDraw.Draw(im)
-cx, cy, r = L/2, 290, 150
-d.ellipse([cx-r-24, cy-r-24, cx+r+24, cy+r+24], fill=(250,204,21))
-def pent(x, y, s, rot=-90):
-    return [(x + s*math.cos(math.radians(rot + 72*i)), y + s*math.sin(math.radians(rot + 72*i))) for i in range(5)]
-ball = Image.new("RGBA", (2*r, 2*r), (255,255,255,255)); bd = ImageDraw.Draw(ball)
-ink = (15,23,42)
-bd.polygon(pent(r, r, 50), fill=ink)
-for i in range(5):  # seams from the middle patch to the patches cut off by the ball's edge
-    a = math.radians(-90 + 72*i)
-    bd.line([(r + 50*math.cos(a), r + 50*math.sin(a)), (r + 135*math.cos(a), r + 135*math.sin(a))], fill=ink, width=9)
-    a2 = math.radians(-90 + 72*i + 36)
-    bd.line([(r + 40*math.cos(a2), r + 40*math.sin(a2)), (r + 105*math.cos(a2), r + 105*math.sin(a2))], fill=ink, width=9)
-    bd.polygon(pent(r + 150*math.cos(a), r + 150*math.sin(a), 52, -90 + 72*i + 36), fill=ink)
-im.paste(ball, (int(cx-r), int(cy-r)), circle_mask((2*r, 2*r)))
-text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
-text_fit(d, L/2, 710, "SPORTS", B, 200, (254,240,138), 640)
-save_big(im, "bazaar-sports")
+def shift(m, dx, dy):
+    out = Image.new("L", m.size, 0); out.paste(m, (int(dx), int(dy))); return out
 
-# 11 Bazaar Travel, 0000000 (travel films, 1.9.44): sky blue to teal rounded square, a globe with a plane
-im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (14,165,233), (13,148,136)), (0,0), rounded_mask((L,L), 220))
-d = ImageDraw.Draw(im)
-cx, cy, r = L/2, 290, 150
-d.ellipse([cx-r, cy-r, cx+r, cy+r], fill=(255,255,255))
-ink = (13,148,136)
-for k in (0.35, 0.75):  # lines of longitude
-    d.ellipse([cx-r*k, cy-r, cx+r*k, cy+r], outline=ink, width=12)
-d.line([(cx, cy-r), (cx, cy+r)], fill=ink, width=12)
-for t in (-0.5, 0, 0.5):  # lines of latitude
-    hw = r * math.sqrt(1 - t*t)
-    d.line([(cx-hw, cy + t*r), (cx+hw, cy + t*r)], fill=ink, width=12)
-d.ellipse([cx-r, cy-r, cx+r, cy+r], outline=(250,204,21), width=18)
-# a little plane flying round the globe, top right
-px, py, s = cx + 150, cy - 140, 70
-plane = [(px+s, py-s*0.15), (px-s*0.2, py+s*0.05), (px-s*0.55, py+s*0.55), (px-s*0.7, py+s*0.5), (px-s*0.45, py-s*0.02),
-         (px-s*0.8, py-s*0.08), (px-s*0.95, py+s*0.15), (px-s*1.05, py+s*0.1), (px-s*0.95, py-s*0.25), (px-s*0.45, py-s*0.32),
-         (px-s*0.6, py-s*0.85), (px-s*0.45, py-s*0.9), (px-s*0.1, py-s*0.38)]
-d.polygon(plane, fill=(250,204,21))
-text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
-text_fit(d, L/2, 710, "TRAVEL", B, 200, (254,240,138), 640)
-save_big(im, "bazaar-travel")
+def vgrad(size, stops):
+    w, h = size; ys = np.linspace(0, 1, h); arr = np.zeros((h, 3))
+    for c in range(3): arr[:, c] = np.interp(ys, [s[0] for s in stops], [s[1][c] for s in stops])
+    return Image.fromarray(np.repeat(arr[:, None, :], w, axis=1).astype(np.uint8), "RGB").convert("RGBA")
 
-# 12 Bazaar Comedy, 00000000 (classic comedy, 1.9.44): orange to pink rounded square, a big laughing face
-im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (249,115,22), (219,39,119)), (0,0), rounded_mask((L,L), 220))
-d = ImageDraw.Draw(im)
-cx, cy, r = L/2, 290, 160
-d.ellipse([cx-r, cy-r, cx+r, cy+r], fill=(253,224,71))
-ink = (30,41,59)
-for sx in (-1, 1):  # eyes squeezed shut with laughing
-    d.arc([cx + sx*62 - 34, cy - 70, cx + sx*62 + 34, cy - 10], 200, 340, fill=ink, width=16)
-d.chord([cx-100, cy-10, cx+100, cy+120], 0, 180, fill=ink)  # wide open mouth
-d.chord([cx-62, cy+60, cx+62, cy+118], 180, 360, fill=(244,63,94))  # tongue
-for sx in (-1, 1):  # tears of joy
-    d.ellipse([cx + sx*118 - 16, cy - 12, cx + sx*118 + 16, cy + 30], fill=(56,189,248))
-text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
-text_fit(d, L/2, 710, "COMEDY", B, 200, (254,240,138), 640)
-save_big(im, "bazaar-comedy")
+def hgrad(size, stops):
+    return vgrad((size[1], size[0]), stops).rotate(90, expand=True).transpose(Image.FLIP_TOP_BOTTOM)
+
+def paint(m, src):
+    if isinstance(src, tuple): src = Image.new("RGBA", m.size, src + (255,))
+    out = Image.new("RGBA", m.size, (0, 0, 0, 0)); out.paste(src, (0, 0), m); return out
+
+def soft(m, blur, alpha):
+    return paint(m.filter(ImageFilter.GaussianBlur(blur)).point(lambda v: v * alpha // 255), (0, 0, 0))
+
+def gloss(m, top, bottom, a):
+    w, h = m.size; px = np.zeros((h, w), np.uint8); y0, y1 = int(h * top), int(h * bottom)
+    for y in range(y0, y1): px[y, :] = int(a * (1 - (y - y0) / max(1, y1 - y0)))
+    return paint(ImageChops.multiply(Image.fromarray(px, "L"), m), (255, 255, 255))
+
+def slab(w, h, sl=0.35):
+    m = Image.new("L", (int(w + h * sl), h), 0)
+    ImageDraw.Draw(m).polygon([(h * sl, 0), (w + h * sl, 0), (w, h), (0, h)], fill=255); return m
+
+def action_logo(key, word, c1, c2):
+    tw = word_mask(word, 330, track=-6)
+    s0 = slab(tw.width + 140, tw.height + 110); sm = Image.new("L", (s0.width + 80, s0.height + 80), 0); sm.paste(s0, (40, 40))
+    ph = s0.height
+    out = Image.new("RGBA", (sm.width + 260, sm.height + 400), (0, 0, 0, 0)); ox, oy = 200, 160
+    st = Image.new("L", out.size, 0); sd = ImageDraw.Draw(st)
+    for yy, ln, th in ((0.2, 320, 16), (0.38, 420, 22), (0.56, 260, 14), (0.74, 380, 18)):  # speed lines
+        y = oy + sm.height * yy; x2 = ox + 70 + (1 - yy) * ph * 0.35
+        sd.polygon([(x2 - ln, y), (x2, y - th / 2), (x2, y + th / 2)], fill=255)
+    out.alpha_composite(paint(st, hgrad(out.size, [(0, c1), (0.25, light(c1, .4)), (1, (255, 255, 255))])))
+    big = Image.new("L", out.size, 0); big.paste(sm, (ox, oy))
+    out.alpha_composite(soft(shift(big, 18, 22), 18, 170))
+    out.alpha_composite(paint(grow(big, 12), (255, 255, 255)))
+    out.alpha_composite(paint(big, vgrad(out.size, [(0, light(c1, .25)), ((oy + sm.height * .5) / out.height, c1), (1, c2)])))
+    hl = Image.new("L", out.size, 0)  # light streak across the slab
+    ImageDraw.Draw(hl).polygon([(ox + 40, oy + sm.height * .55), (ox + sm.width, oy + 40), (ox + sm.width, oy + 90), (ox + 40, oy + sm.height * .62)], fill=90)
+    out.alpha_composite(paint(ImageChops.multiply(hl, big), (255, 255, 255)))
+    out.alpha_composite(gloss(big, oy / out.height, (oy + sm.height * .45) / out.height, 70))
+    t = Image.new("L", out.size, 0); t.paste(tw, (ox + (sm.width - tw.width) // 2 + 10, oy + (sm.height - tw.height) // 2))
+    out.alpha_composite(paint(shift(t, 10, 12), dark(c2, .5)))
+    out.alpha_composite(paint(t, (255, 255, 255)))
+    tv = key == "bazaar-tv"
+    tm = word_mask("TV" if tv else "BAZAAR", 190 if tv else 120, track=0 if tv else 10)
+    tab = slab(tm.width + 80, tm.height + 46)
+    tx, ty = (ox + sm.width - tab.width - 10, oy + sm.height - 40) if tv else (ox + 120, oy - tab.height + 30)
+    tl = Image.new("L", out.size, 0); tl.paste(tab, (tx, ty))
+    out.alpha_composite(soft(shift(tl, 8, 10), 8, 150))
+    out.alpha_composite(paint(grow(tl, 8), (255, 255, 255)))
+    out.alpha_composite(paint(tl, c2 if tv else (18, 18, 24)))
+    tt = Image.new("L", out.size, 0); tt.paste(tm, (tx + (tab.width - tm.width) // 2 + 6, ty + (tab.height - tm.height) // 2))
+    out.alpha_composite(paint(tt, (255, 255, 255) if tv else light(c1, .2)))
+    out = out.crop(out.getbbox())
+    pad = Image.new("RGBA", (out.width + 24, out.height + 24), (0, 0, 0, 0)); pad.alpha_composite(out, (12, 12))
+    return pad
+
+for key, word, c1, c2 in CHANNELS:
+    lg = action_logo(key, word, c1, c2)
+    k = 900 / lg.width; wide = lg.resize((900, int(lg.height * k)), Image.LANCZOS)
+    wide.save(f"{OUT}/{key}.png", optimize=True)
+    sq = Image.new("RGBA", (S, S), (0, 0, 0, 0)); s = lg.resize((S - 16, int(lg.height * (S - 16) / lg.width)), Image.LANCZOS)
+    sq.alpha_composite(s, (8, (S - s.height) // 2)); sq.save(f"{OUT}/{key}-square.png", optimize=True)
+    if key in OLD_NAMES: wide.save(f"{OUT}/{OLD_NAMES[key]}.png", optimize=True)

@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 AD_PICTURE, OUT = sys.argv[1], sys.argv[2]
 HERE = os.path.dirname(os.path.abspath(__file__))
-LOGO = os.path.join(HERE, "..", "docs", "channel", "logos", "bazaar-tv.png")
+LOGO = os.path.join(HERE, "..", "docs", "channel", "logos", "bazaar-tv-square.png")
 B = "/usr/share/fonts/opentype/inter/Inter-Black.otf"
 BD = "/usr/share/fonts/opentype/inter/Inter-Bold.otf"
 W, H = 1280, 720

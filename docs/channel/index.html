@@ -6,12 +6,12 @@
 <title>Bazaar TV · Watch live</title>
 <meta name="description" content="Watch our channel live, free, on Free Live TV.">
 <meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png">
-<link rel="icon" href="logos/bazaar-tv.png" id="favicon">
+<link rel="icon" href="logos/bazaar-tv-square.png" id="favicon">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
   .stage { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; }
   .stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
-  .stage .bug { position: absolute; width: 9%; aspect-ratio: 1; opacity: .85; pointer-events: none; }
+  .stage .bug { position: absolute; height: 12.4%; width: auto; max-width: 24%; object-fit: contain; opacity: .85; pointer-events: none; }
   .bug.tr { top: 3%; right: 2.5%; } .bug.tl { top: 3%; left: 2.5%; } .bug.br { bottom: 9%; right: 2.5%; } .bug.bl { bottom: 9%; left: 2.5%; }
   .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 2vw, 22px); padding: .35em 0; }
   .ticker span { display: inline-block; padding-left: 100%; animation: crawl 28s linear infinite; }
@@ -20,7 +20,7 @@
   .stage .sound { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
   .stage:fullscreen { border-radius: 0; }
   .now { display: flex; gap: 14px; align-items: center; margin: 14px 0 6px; flex-wrap: wrap; }
-  .now img { width: 56px; height: 56px; }
+  .now img { width: 120px; height: 56px; object-fit: contain; }
   .now b { font-size: 20px; }
   .live { background: var(--red); color: #fff; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; margin-right: 6px; }
   .guide { display: grid; gap: 6px; }
@@ -29,7 +29,7 @@
   .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }
   .tabs a { display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; border: 2px solid var(--surface-2); background: var(--surface); color: var(--text); text-decoration: none; font-weight: 700; }
   .tabs a.sel { border-color: var(--focus); }
-  .tabs img { width: 32px; height: 32px; }
+  .tabs img { width: 76px; height: 32px; object-fit: contain; }
   .guide .t { font-weight: 700; } .guide .l { color: var(--muted); font-size: 14px; }
   @media (min-width: 1200px) {
     main.wrap { display: grid; grid-template-columns: minmax(0, 1fr) 440px; grid-template-rows: auto auto auto auto auto auto 1fr; column-gap: 28px; align-items: start; }
@@ -128,7 +128,7 @@ function show() {
   document.title = `${c.name || "My Channel"} · Watch live`;
   $("name").textContent = c.name || "My Channel";
   if (c.logo) {
-    $("logo").src = c.logo; $("logo").classList.remove("hidden"); $("favicon").href = c.logo;
+    $("logo").src = c.logo; $("logo").classList.remove("hidden"); $("favicon").href = /\/channel\/logos\/bazaar-[a-z]+\.png$/.test(c.logo) ? c.logo.replace(/\.png$/, "-square.png") : c.logo;
     $("bug").src = c.logo;
   }
   const corner = c.logoCorner || "tr";
