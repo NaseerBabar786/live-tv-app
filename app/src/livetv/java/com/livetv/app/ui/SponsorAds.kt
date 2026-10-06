@@ -107,7 +107,7 @@ private const val PICTURE_MS = 20_000L
 private const val BREAK_MS = 60_000L
 private const val SKIP_AFTER_MS = 10_000L
 
-/** Full-screen channels: an ad break every 10 minutes (owner, 1.9.67): the channel pauses, our own Cable TV
+/** Full-screen channels: an ad break every 10 minutes (owner, 1.9.68): the channel pauses, our own Cable TV
  *  promo plays (a different one each time) with a sponsor's ad when one fits, then the channel carries on. */
 private const val BREAK_EVERY_MS = 10 * 60_000L
 /** Our Cable TV promos for the breaks, in turn: media/app-promos.json on the website (the owner can add more). */
@@ -598,7 +598,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
             }.getOrNull()?.takeIf { it.isNotEmpty() }?.let { promos = it }
         }
     }
-    // Staying on one channel full screen: the ad break still comes every [BREAK_EVERY_MS] (owner, 1.9.67).
+    // Staying on one channel full screen: the ad break still comes every [BREAK_EVERY_MS] (owner, 1.9.68).
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val screenWidth by rememberUpdatedState(LocalConfiguration.current.screenWidthDp)
     LaunchedEffect(fullScreen) {
