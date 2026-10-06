@@ -27,10 +27,16 @@ object MyChannel {
         val name: String,
         /** Runs like Bazaar Hits (1.9.47): official YouTube videos on our page, its schedule only the backup. */
         val youtube: Boolean = false,
+        /**
+         * Whose ready-made schedule is the backup, for a channel with none of its own (9 to 11, 1.9.50);
+         * it then keeps its own [name] and logo ([logo], under tv.bulkbazaar.ca/channel/logos/).
+         */
+        val backup: String = id,
+        val logo: String? = null,
     )
 
-    /** Our channels take numbers 1 to 8; the other channels are numbered from 9. */
-    const val COUNT = 8
+    /** Our channels take numbers 1 to 11; the other channels are numbered from 12. */
+    const val COUNT = 11
 
     /**
      * Our channels, in the order they lead the channel list. Since 1.9.47 all but Bazaar TV run
@@ -50,6 +56,11 @@ object MyChannel {
         Station("travel", 7, "0000000", "Bazaar Travel", youtube = true),
         // Silent and classic comedy (Chaplin, Laurel and Hardy, Keaton), also by build_archive_channels.py (1.9.44).
         Station("comedy", 8, "00000000", "Bazaar Comedy", youtube = true),
+        // 1.9.50: full films in English and in Hindi, and Pakistani dramas, from their makers' channels.
+        // They came after the rows of zeros, so they're dialled by number only; Bazaar Cinema's free films are their backup.
+        Station("english", 9, "9", "Bazaar Movies English", youtube = true, backup = "filmein", logo = "bazaar-english.png"),
+        Station("hindi", 10, "10", "Bazaar Movies Hindi", youtube = true, backup = "filmein", logo = "bazaar-hindi.png"),
+        Station("dramas", 11, "11", "Bazaar Dramas", youtube = true, backup = "filmein", logo = "bazaar-dramas.png"),
     )
 
     private const val SCHEME = "mychannel://"
@@ -154,10 +165,10 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In number order: 1 to 8, Bazaar Hits being 4.
+        // In number order: 1 to 11, Bazaar Hits being 4.
         (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
 
-    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), when it's on. */
+    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 11, when it's on. */
     fun byDial(typed: String): Channel? =
         if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
 

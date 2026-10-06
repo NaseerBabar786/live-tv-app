@@ -41,6 +41,19 @@ export const STATIONS = [
     name: "Bazaar Comedy", dial: "8", doc: "_channel_comedy", page: "channel/?c=comedy", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedy.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
     credits: "Comedy: public-domain silent and classic comedies (Chaplin, Laurel and Hardy, Keaton) and early TV comedies from the Internet Archive." },
+  // 1.9.50: no schedule of their own; when YouTube won't play, Bazaar Cinema's free films ([backup]) play under their name.
+  { id: "english", yt: true, web: "channel/ytc.html?c=english", ytMins: 100, tagline: "Full English films, day and night",
+    name: "Bazaar Movies English", dial: "9", doc: "_channel_english", page: "channel/?c=english", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-english.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Films: full films from the studios' and distributors' own YouTube channels. Backup: public-domain classics from the Internet Archive." },
+  { id: "hindi", yt: true, web: "channel/ytc.html?c=hindi", ytMins: 140, tagline: "Full Hindi films, day and night",
+    name: "Bazaar Movies Hindi", dial: "10", doc: "_channel_hindi", page: "channel/?c=hindi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Films: full Hindi films from the studios' own YouTube channels. Backup: public-domain classics from the Internet Archive." },
+  { id: "dramas", yt: true, web: "channel/ytc.html?c=dramas", ytMins: 40, tagline: "Pakistani dramas, day and night",
+    name: "Bazaar Dramas", dial: "11", doc: "_channel_dramas", page: "channel/?c=dramas", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-dramas.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Dramas: full episodes from the TV channels' own YouTube channels (HUM TV, ARY Digital, Geo, Green). Backup: public-domain classic films." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */

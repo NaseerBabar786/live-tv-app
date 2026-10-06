@@ -25,15 +25,22 @@ object MyChannelSync {
     suspend fun refresh(account: Account) = withContext(Dispatchers.IO) {
         val token = if (account.user.value != null) runCatching { account.token() }.getOrNull() else null
         for (station in MyChannel.STATIONS) {
-            runCatching { MyChannel.update(station.id, fetch(station.id, token)) }
+            runCatching { MyChannel.update(station.id, fetch(station, token)) }
         }
     }
 
-    private fun fetch(id: String, token: String?): JSONObject? {
+    private fun fetch(station: MyChannel.Station, token: String?): JSONObject? {
+        val id = station.id
         val owner = if (id == "main") "sponsors/_channel" else "sponsors/_channel_$id"
         val doc = token?.let { document(owner, it) } ?: document("channel/$id", null)
         if (doc != null) return doc
-        return JSONObject(Http.request("GET", readyMade(id), null, null, null))
+        val ready = JSONObject(Http.request("GET", readyMade(station.backup), null, null, null))
+        // Another channel's schedule as the backup: it still shows this channel's own name and logo.
+        if (station.backup != id) {
+            ready.put("name", station.name)
+            station.logo?.let { ready.put("logo", "https://tv.bulkbazaar.ca/channel/logos/$it") }
+        }
+        return ready
     }
 
     /** The settings in a document's "data" field; null when there's no such document (or no access). */
