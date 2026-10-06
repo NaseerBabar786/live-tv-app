@@ -38,6 +38,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,6 +61,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
+import com.livetv.app.EditionTicker
+import com.livetv.app.SponsorKey
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
 import com.livetv.app.data.MyChannel
@@ -285,6 +289,23 @@ fun PlayerScreen(
                     .background(Color.Black.copy(alpha = 0.75f), MaterialTheme.shapes.medium)
                     .padding(horizontal = 20.dp, vertical = 12.dp),
             )
+        }
+
+        // Live channels: the yellow "advertise with us" line scrolls once along the bottom every
+        // 2 minutes, skipping a turn while the channel bar, number pad, a tip or a sponsor card is up.
+        if (onNumberPad != null && !inPictureInPicture) {
+            val skipNow by rememberUpdatedState(barShown || numberPadOpen || typedNumber.isNotEmpty() || tip != null || error != null)
+            key(channel.id) {
+                EditionTicker(
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .height(44.dp),
+                    big = true,
+                    everyMs = 2 * 60_000L,
+                    skip = { skipNow || SponsorKey.onOk != null },
+                )
+            }
         }
 
         if (numberPadOpen && onNumberPad != null && !inPictureInPicture) {

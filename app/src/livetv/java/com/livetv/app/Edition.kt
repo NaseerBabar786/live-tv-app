@@ -279,7 +279,13 @@ fun editionHasSponsors(): Boolean {
 
 /** The "advertise with us" line: beside the channel count, or [big] in the band above the tiles. */
 @Composable
-fun EditionTicker(modifier: Modifier, big: Boolean = false, always: Boolean = false) = SponsorTicker(modifier, big, always)
+fun EditionTicker(
+    modifier: Modifier,
+    big: Boolean = false,
+    always: Boolean = false,
+    everyMs: Long = 0L,
+    skip: () -> Boolean = { false },
+) = SponsorTicker(modifier, big, always, everyMs, skip)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {
