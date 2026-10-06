@@ -93,6 +93,7 @@ fun SettingsDialog(
     var showingSuggestions by rememberSaveable { mutableStateOf(false) }
     var showingMessages by rememberSaveable { mutableStateOf(false) }
     var changingPassword by rememberSaveable { mutableStateOf(false) }
+    var editingBilling by rememberSaveable { mutableStateOf(false) }
     val account = remember { Account.get(context) }
     val signedIn by account.user.collectAsState()
     var findingPlaylists by rememberSaveable { mutableStateOf(false) }
@@ -140,6 +141,11 @@ fun SettingsDialog(
 
     if (showingMessages) {
         MessagesScreen(onClose = { showingMessages = false })
+        return
+    }
+
+    if (editingBilling) {
+        BillingDialog(onDismiss = { editingBilling = false })
         return
     }
 
@@ -308,6 +314,12 @@ fun SettingsDialog(
                             onClick = { onDismiss(); Plans.showPlans() },
                             modifier = Modifier.fillMaxWidth().focusGlow(),
                         ) { Text(if (offer.enforced) "⭐ My package: ${tier.label}" else "⭐ Packages") }
+                        if (!account.isAdmin) {
+                            OutlinedButton(
+                                onClick = { editingBilling = true },
+                                modifier = Modifier.fillMaxWidth().focusGlow(),
+                            ) { Text("💳 My billing details") }
+                        }
                     }
                     val u = signedIn!!
                     Text(
