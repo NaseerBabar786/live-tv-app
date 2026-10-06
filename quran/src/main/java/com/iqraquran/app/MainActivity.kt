@@ -30,8 +30,8 @@ import com.iqraquran.app.ui.Screen
 import com.iqraquran.app.ui.SettingsScreen
 import com.iqraquran.app.ui.SurahListScreen
 import com.iqraquran.app.ui.UpdateDialog
-import com.iqraquran.app.ui.UpdateState
 import com.iqraquran.app.ui.UpdateViewModel
+import com.iqraquran.app.ui.pendingRelease
 
 class MainActivity : ComponentActivity() {
 
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     val update by updates.update.collectAsStateWithLifecycle()
                     UpdateDialog(
                         state = update,
-                        onInstall = { (update as? UpdateState.ReadyToInstall)?.let { updates.install(it.release) } },
+                        onInstall = { update.pendingRelease?.let { updates.install(it) } },
                         onDismiss = updates::dismiss,
                     )
                 }

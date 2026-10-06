@@ -112,7 +112,6 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
                         val n = _state.value.updates.size
                         say(if (n == 0) "Checked just now. All your apps are up to date." else "Checked just now. $n update${if (n > 1) "s" else ""} ready.")
                     }
-                    autoUpdateSelf()
                 }
                 .onFailure { e ->
                     if (manual && _state.value.apps.isNotEmpty()) say("Could not reach App Bazaar (${e.message ?: "no internet"}). Please try again.")
@@ -170,7 +169,7 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
     /** Updates every one of our apps on this device in one go. */
     fun updateAll() {
         // App Bazaar's own update restarts the store and would stop the others, so it waits for its
-        // own turn (it updates itself on the next start) unless it is the only one.
+        // own turn (its own banner offers it) unless it is the only one.
         val list = _state.value.updates.filter { it.id != Catalog.SELF_ID }.ifEmpty { _state.value.updates }
         if (list.isEmpty()) {
             say("All your apps are up to date.")
@@ -209,21 +208,6 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /**
-     * When a newer App Bazaar is listed, download it straight away (once per start) and open the
-     * installer. Android still asks the user to press Install once: sideloaded apps can't skip that.
-     */
-    private var selfUpdateStarted = false
-
-    private fun autoUpdateSelf() {
-        if (selfUpdateStarted) return
-        val self = _state.value.selfUpdate ?: return
-        selfUpdateStarted = true
-        say("Updating App Bazaar to ${self.version}…")
-        download(self)
-    }
-
-    /** Opens the installer for the next finished download, asking for the install switch first if needed. */
     /**
      * Installs the next finished download. Updates to apps App Bazaar installed go through without an
      * Install tap on Android 12 and newer; others show Android's Install screen. App Bazaar's own

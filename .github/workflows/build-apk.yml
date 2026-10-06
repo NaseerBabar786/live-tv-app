@@ -127,21 +127,49 @@ jobs:
             app/build/outputs/apk/plus/release/*.apk
             app/build/outputs/bundle/plusRelease/*.aab
 
-      # Publishes the APK as the latest GitHub release so phones and TVs can
-      # download it directly from:
-      # https://github.com/NaseerBabar786/live-tv-app/releases/latest/download/LiveTV.apk
-      - name: Publish release
+      # Every build goes to ONE fixed pre-release, "test", that only the owner uses. It is never
+      # "latest", and no app looks at it for updates, so nothing reaches users from here. Owner's links:
+      # https://github.com/NaseerBabar786/live-tv-app/releases/download/test/LiveTV.apk  (tv.bulkbazaar.ca/test)
+      # and the same release for the other apps. Once the owner has tested a build and said yes, the
+      # "Release approved build" workflow (release-approved.yml) copies it to the public releases
+      # that the apps, the website and App Bazaar read; only then do users see "New update available".
+      - name: Publish test build (owner only)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          version=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts | head -1)
-          tag="v${version}-build${{ github.run_number }}"
+          v() { grep -oP 'versionName = "\K[^"]+' "$1" | sed -n "${2:-1}p"; }
           cp app/build/outputs/apk/livetv/debug/app-livetv-debug.apk LiveTV.apk
-          gh release create "$tag" LiveTV.apk \
-            --title "Cable TV $version (build ${{ github.run_number }})" \
-            --notes "Debug build from ${{ github.sha }}." \
-            --latest
+          cp app/build/outputs/apk/max/debug/app-max-debug.apk LiveTVMax.apk
+          cp appbazaar/build/outputs/apk/debug/appbazaar-debug.apk AppBazaar.apk
+          cp quran/build/outputs/apk/debug/quran-debug.apk IqraQuran.apk
+          cp livecam/build/outputs/apk/debug/livecam-debug.apk LiveCam.apk
+          cp multichat/build/outputs/apk/debug/multichat-debug.apk MultiChat.apk
+          cp claudenotes/build/outputs/apk/debug/claudenotes-debug.apk NotesForClaude.apk
+          cat > versions.json <<JSON
+          {
+            "build": ${{ github.run_number }},
+            "commit": "${{ github.sha }}",
+            "cable-tv": "$(v app/build.gradle.kts 1)",
+            "live-tv-max": "$(v app/build.gradle.kts 4)",
+            "app-bazaar": "$(v appbazaar/build.gradle.kts)",
+            "iqra-quran": "$(v quran/build.gradle.kts)",
+            "live-cam": "$(v livecam/build.gradle.kts)",
+            "multi-chat": "$(v multichat/build.gradle.kts)",
+            "notes-for-claude": "$(v claudenotes/build.gradle.kts)"
+          }
+          JSON
+          cat versions.json
+          files="LiveTV.apk LiveTVMax.apk AppBazaar.apk IqraQuran.apk LiveCam.apk MultiChat.apk NotesForClaude.apk versions.json"
+          if gh release view test > /dev/null 2>&1; then
+            gh release upload test $files --clobber
+          else
+            gh release create test $files --prerelease --latest=false \
+              --title "TEST build (owner only)" --notes "Test build."
+          fi
+          notes=$(python3 -c 'import json; d=json.load(open("versions.json")); print("Owner-only TEST build %s from %s. Not sent to users until approved.\n\n" % (d["build"], d["commit"][:7]) + "\n".join("- %s %s" % (k, d[k]) for k in d if k not in ("build", "commit")))')
+          gh release edit test --prerelease --latest=false \
+            --title "TEST build ${{ github.run_number }} (Cable TV $(v app/build.gradle.kts 1))" --notes "$notes"
 
       # Stream Player Plus goes in its own release, one per version, never marked
       # "latest", so Cable TV's download link and update check keep finding Cable TV.
@@ -194,160 +222,3 @@ jobs:
           fi
           gh release edit live-tv-plus --notes "Always the newest Live TV Plus build (now $version), for testing on phones and TVs." || true
 
-      # Live TV Max: one fixed "live-tv-max" release, never marked "latest", always holding the
-      # newest build, so its link never changes and Cable TV's update check keeps finding Cable TV:
-      # https://github.com/NaseerBabar786/live-tv-app/releases/download/live-tv-max/LiveTVMax.apk
-      # Its in-app update check reads the version from this release's title ("Live TV Max 1.0.0").
-      - name: Publish Live TV Max
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          version=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts | sed -n 4p)
-          cp app/build/outputs/apk/max/debug/app-max-debug.apk LiveTVMax.apk
-          if gh release view live-tv-max > /dev/null 2>&1; then
-            gh release upload live-tv-max LiveTVMax.apk --clobber
-          else
-            gh release create live-tv-max LiveTVMax.apk \
-              --title "Live TV Max $version" \
-              --notes "Always the newest Live TV Max build." \
-              --latest=false
-          fi
-          gh release edit live-tv-max --title "Live TV Max $version" --notes "Always the newest Live TV Max build (now $version), from ${{ github.sha }}."
-
-      # Live Cam gets its own release per version, never marked "latest", so Cable TV's
-      # download link and update check keep finding Cable TV. Phones and TVs download it from
-      # the fixed "livecam" release below, or from
-      # https://github.com/NaseerBabar786/live-tv-app/releases/download/livecam-v<version>/LiveCam.apk
-      - name: Publish Live Cam
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          version=$(grep -oP 'versionName = "\K[^"]+' livecam/build.gradle.kts | head -1)
-          tag="livecam-v${version}"
-          cp livecam/build/outputs/apk/debug/livecam-debug.apk LiveCam.apk
-          if gh release view "$tag" > /dev/null 2>&1; then
-            gh release upload "$tag" LiveCam.apk --clobber
-          else
-            gh release create "$tag" LiveCam.apk \
-              --title "Live Cam $version" \
-              --notes "Debug build of the Live Cam app from ${{ github.sha }}." \
-              --latest=false
-          fi
-          # A fixed "livecam" release always holds the newest build, so App Bazaar and the
-          # Downloader code tv.bulkbazaar.ca/cam never change:
-          # https://github.com/NaseerBabar786/live-tv-app/releases/download/livecam/LiveCam.apk
-          if gh release view livecam > /dev/null 2>&1; then
-            gh release upload livecam LiveCam.apk --clobber
-          else
-            gh release create livecam LiveCam.apk \
-              --title "Live Cam (newest)" \
-              --notes "Always the newest Live Cam build." \
-              --latest=false
-          fi
-          gh release edit livecam --notes "Always the newest Live Cam build (now $version), from ${{ github.sha }}." || true
-
-      # Notes for Claude: one fixed "claude-notes" release, never marked "latest", always holding
-      # the newest build, so its link never changes and Cable TV's update check keeps finding Cable TV:
-      # https://github.com/NaseerBabar786/live-tv-app/releases/download/claude-notes/NotesForClaude.apk
-      # Its in-app update check reads the version from this release's title ("Notes for Claude 1.0.0").
-      - name: Publish Notes for Claude
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          version=$(grep -oP 'versionName = "\K[^"]+' claudenotes/build.gradle.kts | head -1)
-          cp claudenotes/build/outputs/apk/debug/claudenotes-debug.apk NotesForClaude.apk
-          if gh release view claude-notes > /dev/null 2>&1; then
-            gh release upload claude-notes NotesForClaude.apk --clobber
-          else
-            gh release create claude-notes NotesForClaude.apk \
-              --title "Notes for Claude $version" \
-              --notes "Always the newest Notes for Claude build." \
-              --latest=false
-          fi
-          gh release edit claude-notes --title "Notes for Claude $version" --notes "Always the newest Notes for Claude build (now $version), from ${{ github.sha }}."
-
-      # Multi Chat (several WhatsApp Web accounts on one phone) gets its own release per version,
-      # never marked "latest", so Cable TV's download link and update check keep finding Cable TV.
-      # The app's updater looks for the highest "multichat-v…" tag. The fixed "multichat" release
-      # always holds the newest build, so App Bazaar's link never changes:
-      # https://github.com/NaseerBabar786/live-tv-app/releases/download/multichat/MultiChat.apk
-      - name: Publish Multi Chat
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          version=$(grep -oP 'versionName = "\K[^"]+' multichat/build.gradle.kts | head -1)
-          tag="multichat-v${version}"
-          cp multichat/build/outputs/apk/debug/multichat-debug.apk MultiChat.apk
-          if gh release view "$tag" > /dev/null 2>&1; then
-            gh release upload "$tag" MultiChat.apk --clobber
-          else
-            gh release create "$tag" MultiChat.apk \
-              --title "Multi Chat $version" \
-              --notes "Multi Chat for Android phones, built from ${{ github.sha }}." \
-              --latest=false
-          fi
-          if gh release view multichat > /dev/null 2>&1; then
-            gh release upload multichat MultiChat.apk --clobber
-          else
-            gh release create multichat MultiChat.apk \
-              --title "Multi Chat (newest)" \
-              --notes "Always the newest Multi Chat for Android phones." \
-              --latest=false
-          fi
-          gh release edit multichat --notes "Always the newest Multi Chat for Android phones (now $version), from ${{ github.sha }}." || true
-
-      # App Bazaar: one fixed "app-bazaar" release, never marked "latest", always holding the newest
-      # build, so its link and the Downloader code tv.bulkbazaar.ca/bazaar never change:
-      # https://github.com/NaseerBabar786/live-tv-app/releases/download/app-bazaar/AppBazaar.apk
-      # The app updates itself from its own entry in apps.bulkbazaar.ca/apps.json.
-      - name: Publish App Bazaar
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          version=$(grep -oP 'versionName = "\K[^"]+' appbazaar/build.gradle.kts | head -1)
-          cp appbazaar/build/outputs/apk/debug/appbazaar-debug.apk AppBazaar.apk
-          if gh release view app-bazaar > /dev/null 2>&1; then
-            gh release upload app-bazaar AppBazaar.apk --clobber
-          else
-            gh release create app-bazaar AppBazaar.apk \
-              --title "App Bazaar $version" \
-              --notes "Always the newest App Bazaar build." \
-              --latest=false
-          fi
-          gh release edit app-bazaar --title "App Bazaar $version" --notes "Always the newest App Bazaar build (now $version), from ${{ github.sha }}."
-
-      # Iqra Quran gets its own release per version (its in-app updater looks for the highest
-      # "iqra-quran-v…" tag), never marked "latest", so Live TV's links keep finding Live TV.
-      # A fixed "iqra-quran" release always holds the newest build, so App Bazaar and the
-      # Downloader code tv.bulkbazaar.ca/quran never change:
-      # https://github.com/NaseerBabar786/live-tv-app/releases/download/iqra-quran/IqraQuran.apk
-      - name: Publish Iqra Quran
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          version=$(grep -oP 'versionName = "\K[^"]+' quran/build.gradle.kts | head -1)
-          tag="iqra-quran-v${version}"
-          cp quran/build/outputs/apk/debug/quran-debug.apk IqraQuran.apk
-          if gh release view "$tag" > /dev/null 2>&1; then
-            gh release upload "$tag" IqraQuran.apk --clobber
-          else
-            gh release create "$tag" IqraQuran.apk \
-              --title "Iqra Quran $version" \
-              --notes "Iqra Quran $version from ${{ github.sha }}." \
-              --latest=false
-          fi
-          if gh release view iqra-quran > /dev/null 2>&1; then
-            gh release upload iqra-quran IqraQuran.apk --clobber
-          else
-            gh release create iqra-quran IqraQuran.apk \
-              --title "Iqra Quran (newest)" \
-              --notes "Always the newest Iqra Quran build." \
-              --latest=false
-          fi
-          gh release edit iqra-quran --notes "Always the newest Iqra Quran build (now $version), from ${{ github.sha }}." || true

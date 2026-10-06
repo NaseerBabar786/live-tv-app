@@ -11,11 +11,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-/** Download progress and install prompt for the automatic update. Nothing shows while idle. */
+/** The "New update available" reminder, then download progress and the install prompt. Nothing shows while idle. */
 @Composable
 fun UpdateDialog(state: UpdateState, onInstall: () -> Unit, onDismiss: () -> Unit) {
     when (state) {
         UpdateState.Idle -> Unit
+        is UpdateState.Available -> AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("New update available") },
+            text = { Text("Multi Chat ${state.release.version} is ready. Your settings are kept.") },
+            confirmButton = {
+                TextButton(onClick = onInstall) { Text("Update") }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) { Text("Later") }
+            },
+        )
         is UpdateState.Downloading -> AlertDialog(
             onDismissRequest = {},
             title = { Text("Updating to Multi Chat ${state.release.version}") },

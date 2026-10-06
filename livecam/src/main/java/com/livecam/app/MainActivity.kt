@@ -19,8 +19,8 @@ import com.livecam.app.ui.CamerasViewModel
 import com.livecam.app.ui.LiveCamTheme
 import com.livecam.app.ui.LiveViewScreen
 import com.livecam.app.ui.UpdateDialog
-import com.livecam.app.ui.UpdateState
 import com.livecam.app.ui.UpdateViewModel
+import com.livecam.app.ui.pendingRelease
 import com.livecam.app.ui.WyzeSignIn
 import com.livecam.app.ui.WyzeWebScreen
 
@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                 val update by updates.update.collectAsStateWithLifecycle()
                 UpdateDialog(
                     state = update,
-                    onInstall = { (update as? UpdateState.ReadyToInstall)?.let { updates.install(it.release) } },
+                    onInstall = { update.pendingRelease?.let { updates.install(it) } },
                     onDismiss = updates::dismiss,
                 )
                 state.editing?.let { editing ->
