@@ -8,7 +8,7 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
   2 Bazaar Cinema  full films from the studios' own channels
   3 Bazaar Music   Punjabi, Sufi and qawwali from the labels' channels (film songs are on 4)
   5 Bazaar Kids    cartoons from the makers' channels
-  6 Bazaar Sports  highlights from the sports bodies' channels
+  6 Bazaar Sports  cricket highlights (ICC, PCB, BCCI, PSL, IPL...) and a little football
   7 Bazaar Travel  tourism boards and travel shows
   8 Bazaar Comedy  comedy shows from their channels
 
@@ -77,12 +77,17 @@ CHANNELS = {
     "sports": {
         "name": "Bazaar Sports", "mins": (2, 30), "search": "highlights",
         "skip": r"podcast|press conference|interview|reaction|preview|prediction|draw|ticket|bet",
+        # Mostly cricket (the owner's wish, 2026-10-06), a little football.
         "sources": [
             ("ICC", ["@ICC"], "ICC"),
             ("Pakistan Cricket", ["@TheRealPCB", "@PakistanCricketBoard"], "Pakistan Cricket"),
+            ("BCCI", ["@BCCI", "@bcci"], "BCCI"),
+            ("PSL", ["@thepsl", "@PSL"], "PSL|Pakistan Super League"),
+            ("IPL", ["@IPL"], "IPL|Indian Premier League"),
+            ("England Cricket", ["@englandcricket"], "England"),
+            ("Cricket Australia", ["@cricketcomau", "@CricketAustralia"], "cricket.com.au|Cricket Australia"),
+            ("CPL", ["@CPLT20"], "CPL|Caribbean Premier League"),
             ("FIFA", ["@FIFA"], "FIFA"),
-            ("Olympics", ["@Olympics"], "Olympics"),
-            ("Hockey India", ["@HockeyIndia"], "Hockey India"),
         ],
     },
     "travel": {
@@ -156,8 +161,10 @@ def build(cid, ch, today):
         print(f"{label}: {len(videos)} videos, {kept} kept")
         counts.append(f"{label} {kept}")
 
+    labels = {label for label, _, _ in ch["sources"]}
     for vid, v in old.items():
-        if vid not in found and (today - dt.date.fromisoformat(v["found"])).days <= KEEP_DAYS:
+        # A source taken off the list goes with its videos.
+        if vid not in found and v.get("label") in labels and (today - dt.date.fromisoformat(v["found"])).days <= KEEP_DAYS:
             found[vid] = v
     videos = sorted(found.values(), key=lambda v: v["found"], reverse=True)[:MAX_VIDEOS]
     summary = f"{ch['name']}: {len(videos)} videos ({', '.join(counts)})"
