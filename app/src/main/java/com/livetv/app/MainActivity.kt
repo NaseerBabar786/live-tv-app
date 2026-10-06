@@ -17,7 +17,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livetv.app.games.GamesScreen
 import com.livetv.app.player.PlayerScreen
-import com.livetv.app.ui.WebChannel
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.livetv.app.data.MyChannel
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
@@ -74,8 +82,9 @@ class MainActivity : ComponentActivity() {
             // Our channels that run like Bazaar Hits, Bazaar Hits itself, and any YouTube channel: YouTube's
             // player with its buttons off, so it can't be paused, skipped or left for YouTube (owner's rule, 1.9.46).
             // Our channels' free-film schedule plays if YouTube won't.
-            WebChannel(MyChannel.pageFor(playing, BuildConfig.VERSION_CODE)!!, onBack = viewModel::stop,
-                onFallback = { if (MyChannel.webPage(playing) != null) fellBack = fellBack + playing.url })
+            // It opens in its own plain window (WebChannelActivity, 1.9.51): inside this screen TVs kept the picture black.
+            OpenWebChannel(MyChannel.pageFor(playing, BuildConfig.VERSION_CODE)!!, onBack = viewModel::stop,
+                onFallback = { if (MyChannel.webPage(playing) != null) fellBack = fellBack + playing.url else viewModel.stop() })
         } else if (playing != null) {
             PlayerScreen(
                 channel = playing,
@@ -126,6 +135,23 @@ class MainActivity : ComponentActivity() {
 
     /** OK went down while a sponsor card was showing: its key-up belongs to the card too. */
     private var okForSponsor = false
+
+    /** Opens [url] in [WebChannelActivity] (black here meanwhile); Back there comes back with [onBack]. */
+    @Composable
+    private fun OpenWebChannel(url: String, onBack: () -> Unit, onFallback: () -> Unit) {
+        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == WebChannelActivity.RESULT_FALLBACK) onFallback() else onBack()
+        }
+        // Once per channel, also when this screen is rebuilt (a turned phone) while it's open.
+        var opened by rememberSaveable(url) { mutableStateOf(false) }
+        LaunchedEffect(url) {
+            if (!opened) {
+                opened = true
+                launcher.launch(WebChannelActivity.intent(this@MainActivity, url))
+            }
+        }
+        Box(Modifier.fillMaxSize().background(Color.Black))
+    }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         // A sponsor card is showing: OK opens the sponsor's website.

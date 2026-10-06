@@ -151,7 +151,8 @@ fun WebPreview(url: String, modifier: Modifier = Modifier, onFallback: (() -> Un
         modifier = modifier,
         factory = { ctx ->
             WebView(ctx).apply {
-                setBackgroundColor(android.graphics.Color.BLACK)
+                // See-through, so the TV's video under the window shows through the page's hole (see WebChannelActivity).
+                setBackgroundColor(android.graphics.Color.TRANSPARENT)
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 settings.mediaPlaybackRequiresUserGesture = false
