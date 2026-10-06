@@ -1,5 +1,7 @@
 set -eu
 mkdir -p out
+MODE=$(tr ' ' '\n' < todo.txt | grep "^$ONLY:" | cut -d: -f2 || true)
+echo "mode $MODE"
 REL="https://github.com/$GITHUB_REPOSITORY/releases/download/ad5-work"
 if [ "${MODE:-}" = "lips" ]; then
   sudo apt-get install -y -qq ffmpeg >/dev/null
@@ -10,6 +12,14 @@ if [ "${MODE:-}" = "lips" ]; then
   if [ "${CPU_LIPS:-}" = "1" ]; then bash lips_cpu.sh; else python3 lipsync.py $ONLY; fi
   rm -f out/$ONLY.mp4 out/$ONLY-voice.audio
   gh release upload ad5-work -R "$GITHUB_REPOSITORY" --clobber out/*
+  exit 0
+fi
+if [ "${MODE:-}" = "polish" ]; then
+  sudo apt-get install -y -qq ffmpeg >/dev/null
+  curl -fsSL -o out/$ONLY-src.mp4 "$REL/$ONLY-lips.mp4" || curl -fsSL -o out/$ONLY-src.mp4 "$REL/$ONLY.mp4"
+  bash polish.sh
+  rm -f out/$ONLY-src.mp4
+  gh release upload ad5-work -R "$GITHUB_REPOSITORY" --clobber out/$ONLY-hd.mp4
   exit 0
 fi
 if [ "${MODE:-}" = "tts" ]; then

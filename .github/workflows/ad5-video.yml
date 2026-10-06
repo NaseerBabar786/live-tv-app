@@ -20,7 +20,7 @@ jobs:
       - name: Should this scene run?
         id: want
         run: |
-          if grep -qw "${{ matrix.scene }}" tools/ad5/todo.txt; then echo "go=1" >> "$GITHUB_OUTPUT"; fi
+          if grep -qE "(^| )${{ matrix.scene }}(:| |$)" tools/ad5/todo.txt; then echo "go=1" >> "$GITHUB_OUTPUT"; fi
       - name: Install
         if: steps.want.outputs.go == '1'
         run: pip install -q gradio_client edge-tts pillow
@@ -31,7 +31,6 @@ jobs:
           ONLY: ${{ matrix.scene }}
           VOICES: "0"
           TRY_SEEDS: ''
-          MODE: lips
           CPU_LIPS: "1"
         run: |
           set -eu
