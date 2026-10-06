@@ -1,0 +1,75 @@
+name: Build story videos
+
+# Makes the narrated story videos in tools/stories/<name>/story.json (AI voice, AI pictures,
+# Urdu subtitles) and puts them on the "channel-media" pre-release for Bazaar TV.
+# A video already on the release is kept; delete it there (or run with "remake") to make it again.
+
+on:
+  workflow_dispatch:
+    inputs:
+      story:
+        description: "Story folder name (empty = all stories)"
+        required: false
+        default: ""
+      remake:
+        description: "Make it again even if it is already on the release"
+        type: boolean
+        default: false
+  push:
+    paths:
+      - "tools/stories/**"
+      - ".github/workflows/build-story-videos.yml"
+
+concurrency:
+  group: story-videos
+  cancel-in-progress: false
+
+jobs:
+  stories:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q edge-tts numpy pillow
+
+      - name: Make videos
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ONLY: ${{ github.event.inputs.story }}
+          REMAKE: ${{ github.event.inputs.remake }}
+        run: |
+          set -eu
+          mkdir -p out
+          have=$(gh release view channel-media -R "$GITHUB_REPOSITORY" --json assets -q '.assets[].name' 2>/dev/null || true)
+          for dir in tools/stories/*/; do
+            name=$(basename "$dir")
+            [ -f "$dir/story.json" ] || continue
+            [ -z "$ONLY" ] || [ "$ONLY" = "$name" ] || continue
+            id=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['id'])" "$dir/story.json")
+            if [ "$REMAKE" != "true" ] && echo "$have" | grep -qx "$id.mp4"; then echo "Have $id"; continue; fi
+            python3 tools/stories/make_story_video.py "$dir" "out/$name"
+            cp "out/$name/$id.mp4" "out/$name/$id.json" out/
+          done
+          ls -la out
+
+      - name: Keep the pictures
+        uses: actions/upload-artifact@v4
+        with:
+          name: story-pictures
+          path: out/*/images/
+          if-no-files-found: ignore
+
+      - name: Upload to the channel-media release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A pre-release, so it never becomes "latest" (the app's download link uses latest).
+          gh release view channel-media -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create channel-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false \
+              --title "Channel media" --notes "Videos for the owner's channel."
+          ls out/*.mp4 >/dev/null 2>&1 && gh release upload channel-media out/*.mp4 out/*.json -R "$GITHUB_REPOSITORY" --clobber || echo "No new videos"

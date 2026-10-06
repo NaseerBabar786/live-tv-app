@@ -1,0 +1,114 @@
+{
+  "id": "story-lion-and-rabbit",
+  "title": "شیر اور چالاک خرگوش",
+  "subtitle": "پنچ تنتر کی ایک پرانی کہانی",
+  "titleEn": "Story: The Lion and the Clever Rabbit (Urdu)",
+  "voice": "ur-PK-UzmaNeural",
+  "rate": "-8%",
+  "seed": 7311,
+  "style": "Beautiful children's storybook illustration, soft watercolor and gouache painting, warm golden light, lush green Indian jungle, classic Panchatantra folk tale, gentle and friendly, highly detailed, wide cinematic composition, no text, no letters, no watermark",
+  "scenes": [
+    {
+      "card": "title",
+      "prompt": "a big golden lion with a dark brown mane and a small white rabbit with long ears facing each other in a jungle clearing, sunrise",
+      "lines": ["آج کی کہانی ہے، شیر اور چالاک خرگوش۔"]
+    },
+    {
+      "prompt": "a lush green jungle with a river, deer, monkeys, peacocks, elephants and rabbits living happily together, morning light",
+      "lines": [
+        "بہت پرانے زمانے کی بات ہے، ایک گھنے اور ہرے بھرے جنگل میں بہت سے جانور مل جل کر رہتے تھے۔",
+        "اسی جنگل میں بھاسورک نام کا ایک طاقتور اور ظالم شیر بھی رہتا تھا۔"
+      ]
+    },
+    {
+      "prompt": "a big fierce golden lion with a dark brown mane roaring on a rock while frightened deer and rabbits run away into the jungle",
+      "lines": [
+        "یہ شیر روز بلا وجہ بہت سے جانوروں کا شکار کرتا تھا۔",
+        "سارے جانور ہر وقت ڈرے سہمے رہتے تھے۔"
+      ]
+    },
+    {
+      "prompt": "jungle animals, a deer, an elephant, a monkey, a bear, a fox and a small white rabbit, sitting in a circle having a worried meeting under a huge banyan tree",
+      "lines": [
+        "ایک دن سب جانوروں نے ایک بڑے برگد کے درخت کے نیچے جلسہ کیا۔",
+        "ہرن نے کہا، اگر یہی حال رہا تو جنگل میں کوئی نہیں بچے گا۔"
+      ]
+    },
+    {
+      "prompt": "a group of jungle animals, deer, elephant, monkey and bear, bowing politely in front of a big golden lion with a dark brown mane sitting proudly outside his cave",
+      "lines": [
+        "سب جانور مل کر شیر کے پاس گئے اور ادب سے بولے،",
+        "بادشاہ سلامت، آپ شکار کے لیے پریشان نہ ہوں۔ ہم روز خود ایک جانور آپ کے پاس بھیج دیا کریں گے۔",
+        "شیر مان گیا، لیکن ساتھ ہی کہا، اگر کسی دن کوئی نہ آیا تو میں سب کو کھا جاؤں گا۔"
+      ]
+    },
+    {
+      "prompt": "a small white rabbit with long ears walking slowly along a jungle path, thinking with a clever look, a paw on its chin, afternoon light",
+      "lines": [
+        "کئی دن ایسے ہی گزر گئے۔ پھر ایک دن ایک چھوٹے سے خرگوش کی باری آئی۔",
+        "خرگوش چھوٹا تھا مگر بہت عقلمند تھا۔ اس نے راستے بھر سوچا، میں اپنی جان کیسے بچاؤں؟",
+        "وہ جان بوجھ کر بہت دیر سے، آہستہ آہستہ شیر کے پاس پہنچا۔"
+      ]
+    },
+    {
+      "prompt": "a hungry angry big golden lion with a dark brown mane roaring down at a tiny white rabbit standing in front of him, outside a rocky cave, evening",
+      "lines": [
+        "شیر بھوک سے بے حال تھا۔ وہ غصے سے دھاڑا، اتنی دیر کیوں لگائی؟",
+        "اور تم اتنے چھوٹے ہو، تم سے میرا پیٹ کیسے بھرے گا؟"
+      ]
+    },
+    {
+      "prompt": "a small white rabbit with long ears bowing and explaining with its paws joined to a big golden lion with a dark brown mane who listens with a frown",
+      "lines": [
+        "خرگوش نے ادب سے کہا، حضور، ہم پانچ خرگوش آپ کے پاس آ رہے تھے۔",
+        "راستے میں ایک دوسرے شیر نے ہمیں روک لیا۔ وہ کہتا ہے کہ اس جنگل کا اصل بادشاہ وہ ہے۔",
+        "میں بڑی مشکل سے بچ کر آپ کو بتانے آیا ہوں۔"
+      ]
+    },
+    {
+      "prompt": "a furious big golden lion with a dark brown mane striding through the jungle following a small white rabbit that leads the way, dramatic sunset",
+      "lines": [
+        "یہ سن کر شیر کا غصہ آسمان پر پہنچ گیا۔",
+        "وہ گرجا، کہاں ہے وہ؟ مجھے فوراً اس کے پاس لے چلو!"
+      ]
+    },
+    {
+      "prompt": "an old deep round stone well in a jungle clearing, a small white rabbit pointing at the well and a big golden lion with a dark brown mane standing beside it",
+      "lines": [
+        "خرگوش شیر کو ایک پرانے گہرے کنویں کے پاس لے گیا،",
+        "اور بولا، حضور، وہ دوسرا شیر اسی قلعے کے اندر چھپا بیٹھا ہے۔"
+      ]
+    },
+    {
+      "prompt": "view from inside a deep stone well looking up at a big golden lion with a dark brown mane peering down, his reflection in the dark water below",
+      "lines": [
+        "شیر نے کنویں میں جھانکا تو پانی میں اسے اپنا ہی عکس نظر آیا۔",
+        "وہ سمجھا کہ یہی دوسرا شیر ہے۔ اس نے زور سے دہاڑ ماری، اور کنویں سے اس کی اپنی آواز گونج کر واپس آئی۔"
+      ]
+    },
+    {
+      "prompt": "a big splash of water inside an old stone well in the jungle at dusk, a small white rabbit watching from the edge, dramatic",
+      "lines": [
+        "غصے میں اندھا شیر دشمن پر حملہ کرنے کے لیے کنویں میں کود پڑا،",
+        "اور پھر کبھی باہر نہ نکل سکا۔"
+      ]
+    },
+    {
+      "prompt": "happy jungle animals celebrating and dancing around a small white rabbit, deer, elephant, monkeys, peacocks, flowers, bright morning sunshine",
+      "lines": [
+        "خرگوش خوشی خوشی واپس آیا اور سب جانوروں کو یہ خبر سنائی۔",
+        "سارے جنگل میں خوشیاں منائی گئیں، اور سب جانور پھر سے امن اور سکون سے رہنے لگے۔"
+      ]
+    },
+    {
+      "card": "moral",
+      "cardText": "سبق: عقل طاقت سے بڑی ہے",
+      "prompt": "a small white rabbit with long ears sitting peacefully on a hill above a beautiful jungle at golden sunset, birds flying",
+      "lines": [
+        "اس کہانی سے ہمیں یہ سبق ملتا ہے کہ عقل طاقت سے بڑی ہوتی ہے۔",
+        "مشکل وقت میں گھبرانے کے بجائے سمجھداری سے کام لینا چاہیے۔",
+        "ایسی ہی مزید کہانیوں کے لیے دیکھتے رہیے، بازار ٹی وی۔"
+      ]
+    }
+  ]
+}
