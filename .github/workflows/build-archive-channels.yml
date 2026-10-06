@@ -1,16 +1,16 @@
-name: Build Bazaar Sports schedule
+name: Build Bazaar Sports and Travel schedules
 
-# Builds docs/channel/sports-schedule.json (tv.bulkbazaar.ca/channel/sports-schedule.json): the
-# ready-made schedule of Bazaar Sports, our sports channel (000000 in Free Live TV), from
-# public-domain and CC BY sports films on the Internet Archive. A new loop order every week.
+# Builds docs/channel/sports-schedule.json and travel-schedule.json (on tv.bulkbazaar.ca/channel/):
+# the ready-made schedules of Bazaar Sports (000000) and Bazaar Travel (0000000) in Free Live TV,
+# from public-domain and CC BY films on the Internet Archive. A new loop order every week.
 on:
   schedule:
     - cron: "30 12 * * 1"   # Mondays, 12:30 UTC
   push:
     branches: [main]
-    paths: [tools/build_sports.py, .github/workflows/build-sports.yml]
+    paths: [tools/build_archive_channels.py, .github/workflows/build-archive-channels.yml]
   pull_request:
-    paths: [tools/build_sports.py, .github/workflows/build-sports.yml]
+    paths: [tools/build_archive_channels.py, .github/workflows/build-archive-channels.yml]
   workflow_dispatch:
 
 permissions:
@@ -18,7 +18,7 @@ permissions:
   pages: write
 
 concurrency:
-  group: build-sports
+  group: build-archive-channels
   cancel-in-progress: false
 
 jobs:
@@ -32,8 +32,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Build the schedule
-        run: python3 tools/build_sports.py
+      # Each channel on its own step, so one failing keeps its old schedule but not the other's.
+      - name: Build Bazaar Sports
+        continue-on-error: true
+        run: python3 tools/build_archive_channels.py --channel sports
+
+      - name: Build Bazaar Travel
+        continue-on-error: true
+        run: python3 tools/build_archive_channels.py --channel travel
 
       # A push made with the workflow's own token doesn't start other workflows,
       # so the website is rebuilt explicitly below.
@@ -44,12 +50,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/channel/sports-schedule.json
+          git add docs/channel/*-schedule.json
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0
           fi
-          git commit -m "Bazaar Sports schedule for the week of $(date -u '+%Y-%m-%d')"
+          git commit -m "Bazaar Sports and Travel schedules for the week of $(date -u '+%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."
