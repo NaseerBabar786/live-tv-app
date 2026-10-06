@@ -6,6 +6,7 @@ name: Build YouTube channel lists
 on:
   schedule:
     - cron: "45 9 * * *"   # every day, 09:45 UTC
+    - cron: "15 */3 * * *" # Bazaar Sports every 3 hours, so main events show soon after they're posted
   push:
     branches: [main]
     paths: [tools/build_youtube_channels.py, .github/workflows/build-youtube-channels.yml]
@@ -33,7 +34,12 @@ jobs:
           python-version: "3.12"
 
       - name: Build the lists
-        run: python3 tools/build_youtube_channels.py
+        run: |
+          if [ "${{ github.event.schedule }}" = "15 */3 * * *" ]; then
+            python3 tools/build_youtube_channels.py --channel sports
+          else
+            python3 tools/build_youtube_channels.py
+          fi
 
       - name: Publish the lists
         if: github.ref == 'refs/heads/main'

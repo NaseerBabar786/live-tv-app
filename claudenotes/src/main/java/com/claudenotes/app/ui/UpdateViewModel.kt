@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 /** Progress of the update that runs at start. */
 sealed interface UpdateState {
     data object Idle : UpdateState
+    /** A newer version was approved and published; only a reminder until the user taps Update. */
+    data class Available(val release: Updater.Release) : UpdateState
     data class Downloading(val release: Updater.Release, val progress: Float) : UpdateState
     /** Downloaded; the system installer was opened (or waits on the install permission). */
     data class ReadyToInstall(val release: Updater.Release, val needsPermission: Boolean) : UpdateState
@@ -19,9 +21,9 @@ sealed interface UpdateState {
 }
 
 /**
- * Once per launch, checks GitHub for a newer Notes for Claude and, when there is one, downloads it
- * straight away and opens the installer. Android always shows its own Install screen; after
- * installing, its Open button starts the new version.
+ * Once per launch, checks GitHub for a newer Notes for Claude. When the owner has approved one, it only
+ * shows a "New update available" reminder; nothing downloads until the user taps Update. Android
+ * then shows its own Install screen, and its Open button starts the new version.
  */
 class UpdateViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -37,7 +39,15 @@ class UpdateViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             // No network or GitHub down: carry on quietly, the next start tries again.
             val release = runCatching { updater.checkForUpdate() }.getOrNull() ?: return@launch
-            _update.value = UpdateState.Downloading(release, 0f)
+            _update.value = UpdateState.Available(release)
+        }
+    }
+
+    /** The reminder's Update button: downloads the new version, then opens the installer. */
+    private fun download(release: Updater.Release) {
+        if (_update.value is UpdateState.Downloading) return
+        _update.value = UpdateState.Downloading(release, 0f)
+        viewModelScope.launch {
             runCatching {
                 updater.download(release) { p -> _update.value = UpdateState.Downloading(release, p) }
             }.onSuccess { file ->
@@ -49,9 +59,12 @@ class UpdateViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Opens the installer, or first the one-time permission screen. Also the dialog's Install button. */
+    /**
+     * The dialog's Update/Install button: downloads first when needed, then opens the installer,
+     * or first the one-time permission screen.
+     */
     fun install(release: Updater.Release) {
-        val file = apk ?: return
+        val file = apk ?: return download(release)
         if (!updater.canInstall() && updater.openInstallPermission()) {
             _update.value = UpdateState.ReadyToInstall(release, needsPermission = true)
             return
@@ -65,3 +78,11 @@ class UpdateViewModel(app: Application) : AndroidViewModel(app) {
         _update.value = UpdateState.Idle
     }
 }
+
+/** The release the update dialog is about, or null when there is nothing to install. */
+val UpdateState.pendingRelease: Updater.Release?
+    get() = when (this) {
+        is UpdateState.Available -> release
+        is UpdateState.ReadyToInstall -> release
+        else -> null
+    }

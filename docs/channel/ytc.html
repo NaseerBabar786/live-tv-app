@@ -15,12 +15,16 @@
   #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .shield { position: absolute; inset: 0; background: transparent; }
   .bug { position: absolute; top: 3%; right: 2.5%; height: 9vw; max-width: 26vw; object-fit: contain; opacity: .55; pointer-events: none; }
-  .now { position: absolute; left: 3%; bottom: 10%; max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; pointer-events: none; }
+  .now { position: absolute; left: 3%; bottom: calc(var(--strip) + 5%); max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; pointer-events: none; }
   .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
   .hide { opacity: 0; }
   .sound, .back { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
   .back { left: auto; right: 30%; background: rgba(16,24,39,.85); text-decoration: none; }
-  .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.85); color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); padding: .35em 0; pointer-events: none; }
+  /* The scrolling line sits in its own strip under the picture, never over YouTube's player
+     (YouTube's rules); the player, its cover and the clear sheet stop just above it. */
+  :root { --strip: clamp(22px, 3.4vw, 40px); }
+  #player, .cover, .shield { top: 0; bottom: auto !important; height: calc(100% - var(--strip)) !important; }
+  .ticker { position: absolute; left: 0; right: 0; bottom: 0; height: var(--strip); line-height: var(--strip); background: #101827; color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); pointer-events: none; }
   .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }
   .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
@@ -29,6 +33,9 @@
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
   .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
   .cover.off { opacity: 0; }
+  .bug.tl { right: auto; left: 2.5%; }
+  .bug.br { top: auto; bottom: 12%; }
+  .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
 </style>
 </head>
 <body>
@@ -70,9 +77,18 @@ function shuffled(list, seed) {
   return a;
 }
 const lengthOf = v => (v.mins || station.ytMins || 5) * 60;
+// Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
+let corners = { default: "tr", labels: {} }, bugLabel = null;
+fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(bugLabel); }).catch(() => {});
+function placeBug(label) {
+  bugLabel = label;
+  const corner = corners.labels?.[label] || corners.default || "tr";
+  document.querySelector(".bug").className = "bug " + corner;
+}
 function showNow() {
   const v = videos[at];
   if (!v) return;
+  placeBug(v.label);
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = v.title;
   $("now").lastChild.textContent = station.name + " · " + v.label;
@@ -89,7 +105,18 @@ function play(step, start = 0) {
 
 fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()).then(d => {
   if (!d.videos || d.videos.length < 3) return fallBack();
-  videos = shuffled(d.videos, Math.floor(Date.now() / 86400000) + station.id.length);
+  const seed = Math.floor(Date.now() / 86400000) + station.id.length;
+  // "Top" videos come round more often: Bazaar Sports' main events and newest highlights after every
+  // third video; on Bazaar Movies Hindi new films ([topRatio] 3) three for every older one.
+  const top = shuffled(d.videos.filter(v => v.top), seed + 1);
+  const rest = shuffled(d.videos.filter(v => !v.top), seed);
+  if (top.length && rest.length && station.topRatio) {
+    videos = [];
+    top.forEach((v, i) => { videos.push(v); if (i % station.topRatio === station.topRatio - 1) videos.push(rest[Math.floor(i / station.topRatio) % rest.length]); });
+  } else if (top.length && rest.length) {
+    videos = [];
+    rest.forEach((v, i) => { videos.push(v); if (i % 3 === 2) videos.push(top[Math.floor(i / 3) % top.length]); });
+  } else videos = top.concat(rest);
   // Where the channel is now: the day's running order, round the clock.
   const total = videos.reduce((t, v) => t + lengthOf(v), 0);
   let pos = Math.floor((Date.now() / 1000) % total);
@@ -115,8 +142,8 @@ let coverTimer = null;
 function cover(on) {
   clearTimeout(coverTimer);
   if (on) $("cover").classList.remove("off");
-  // A moment after it starts, so YouTube's own title and logo at the start have gone too.
-  else coverTimer = setTimeout(() => $("cover").classList.add("off"), 1200);
+  // 3.5 s after it starts, when YouTube's own title, logo and buttons at the start have faded away.
+  else coverTimer = setTimeout(() => $("cover").classList.add("off"), 3500);
 }
 window.onYouTubeIframeAPIReady = () => {
   player = new YT.Player("player", {
@@ -129,6 +156,8 @@ window.onYouTubeIframeAPIReady = () => {
         e.target.setVolume(60);
         $("msg").remove();
         if (!app) { e.target.mute(); $("sound").hidden = false; }
+        // Join the film where the channel is now, like live TV: some TVs ignore the player's start setting.
+        if (window.startAt > 5) e.target.seekTo(window.startAt, true);
         e.target.playVideo();
         showNow();
       },

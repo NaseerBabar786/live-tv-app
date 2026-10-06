@@ -14,11 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import com.livetv.app.Edition
 import com.livetv.app.data.Updater
 
 /**
- * Shown after the start-up check finds a newer version: asks the viewer to update and
- * shows the download progress. [update] must be Available, Downloading or NeedsPermission.
+ * Shown after the start-up check finds a newer approved version: reminds the viewer an update is
+ * available and, once they tap Update now, shows the download progress. [update] must be Available, Downloading or NeedsPermission.
  */
 @Composable
 fun UpdatePromptDialog(
@@ -36,11 +37,11 @@ fun UpdatePromptDialog(
     SettingsTheme {
         AlertDialog(
             onDismissRequest = onLater,
-            title = { Text("Updating Cable TV") },
+            title = { Text(if (update is UpdateState.Available) "New update available" else "Updating ${Edition.APP_NAME}") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        "Updating to Cable TV ${release.version}. Your favourites and settings are kept."
+                        "${Edition.APP_NAME} ${release.version} is ready. Your favourites and settings are kept."
                     )
                     when (update) {
                         is UpdateState.Downloading -> {
