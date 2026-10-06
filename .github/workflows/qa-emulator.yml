@@ -119,7 +119,7 @@ jobs:
           cp all/qa-apks/unit-summary.txt up/ 2>/dev/null || true
           for d in tv phone; do
             [ -d all/qa-$d ] || continue
-            for f in all/qa-$d/*; do cp "$f" "up/$d-$(basename "$f")"; done
+            for f in all/qa-$d/*; do [ -s "$f" ] && cp "$f" "up/$d-$(basename "$f")"; done
           done
           (cd all && zip -qr ../up/qa-everything.zip .)
           gh release delete qa-results --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
