@@ -102,19 +102,19 @@ data class UiState(
     /**
      * Favorites come first, then the rest in list order; channels keep their numbers.
      * Inside Favorites the channels are grouped by country (Pakistan, India, Canada, UK, USA,
-     * then the rest) and numbered 1, 2, 3... from the top.
+     * then the rest) and numbered 9, 10, 11... from the top, after our own channels 1 to 8.
      */
     val visibleChannels: List<Channel>
         get() {
             val shown = inLanguage
                 .filter { category == null || it.category == category }
                 .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-            // The owner's own channels (dialled 0 to 00000000) always lead.
+            // The owner's own channels (numbers 1 to 8) always lead.
             if (filter != FILTER_FAVORITES) return shown.sortedWith(compareBy({ !MyChannel.isMine(it) }, { it.id !in favorites }))
             val (mine, rest) = shown.partition { MyChannel.isMine(it) }
             return mine + rest
                 .sortedWith(compareBy({ countryRank(it) }, { countryName(it) }, { it.number }))
-                .mapIndexed { i, channel -> channel.copy(number = i + 1) }
+                .mapIndexed { i, channel -> channel.copy(number = MyChannel.COUNT + i + 1) }
         }
 
     private fun countryRank(channel: Channel): Int {
@@ -180,7 +180,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             repo.loadChannels()
                 .onSuccess { list ->
-                    val numbered = withMyChannel(list.mapIndexed { i, channel -> channel.copy(number = i + 1) })
+                    val numbered = withMyChannel(list.mapIndexed { i, channel -> channel.copy(number = MyChannel.COUNT + i + 1) })
                     // The app opens on Favorites (when there are any) and on the channel watched
                     // last time, or the first favorite when that one isn't a favorite.
                     val opening = !opened
@@ -352,7 +352,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val number = typed.toIntOrNull()
         typedNumber = ""
         if (number == null) return
-        // 0 is Bazaar TV, 00 Bazaar Cinema, 000 Bazaar Music, 0000 Bazaar Hits, 00000 Bazaar Kids, 000000 Bazaar Sports, 0000000 Bazaar Travel and 00000000 Bazaar Comedy, the owner's own channels.
+        // The owner's own channels are 1 to 8 (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel,
+        // Comedy); the rows of zeros that reached them before 1.9.45 (0 to 00000000) still work.
         MyChannel.byDial(typed)?.takeIf { Edition.LIVE_TV }?.let {
             numberPadOpen = false
             play(it)

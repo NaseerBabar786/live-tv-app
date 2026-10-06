@@ -1,7 +1,7 @@
 name: Build Bazaar Sports, Travel and Comedy schedules
 
 # Builds docs/channel/sports-, travel- and comedy-schedule.json (on tv.bulkbazaar.ca/channel/):
-# the ready-made schedules of Bazaar Sports (000000), Travel (0000000) and Comedy (00000000),
+# the ready-made schedules of Bazaar Sports (6), Travel (7) and Comedy (8),
 # from public-domain and CC BY films on the Internet Archive. A new loop order every week.
 on:
   schedule:

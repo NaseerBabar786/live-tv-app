@@ -103,5 +103,8 @@ class MyChannelTest {
         assertTrue(MyChannel.isMine(films.channel))
         assertEquals(MyChannel.URL, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.url)
         assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000"), MyChannel.STATIONS.map { it.dial })
+        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8), MyChannel.STATIONS.map { it.number })
+        assertEquals(1, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.number)
+        assertEquals(2, films.channel.number)
     }
 }

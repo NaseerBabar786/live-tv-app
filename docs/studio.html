@@ -159,7 +159,7 @@
 
 <main class="wrap studio-main">
   <h1>Channel Studio</h1>
-  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 0</b>, Bazaar Cinema <b>channel 00</b>, Bazaar Music <b>channel 000</b>, Bazaar Kids <b>channel 00000</b>, from 1.9.41; Bazaar Sports <b>channel 000000</b>, from 1.9.43; Bazaar Travel <b>channel 0000000</b> and Bazaar Comedy <b>channel 00000000</b>, from 1.9.44) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+  <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 1</b>, Bazaar Cinema <b>2</b>, Bazaar Music <b>3</b>, Bazaar Hits <b>4</b>, Bazaar Kids <b>5</b>, Bazaar Sports <b>6</b>, Bazaar Travel <b>7</b> and Bazaar Comedy <b>8</b>, from 1.9.45) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
@@ -423,14 +423,14 @@ onAuthStateChanged(auth, async user => {
 function renderStations() {
   $("stations").innerHTML = "";
   for (const st of STATIONS) {
-    // Bazaar Hits (0000) sits between 000 and 00000. It runs by itself from the music labels'
+    // Bazaar Hits (4) sits between 3 and 5. It runs by itself from the music labels'
     // song list (no schedule to edit here), so its card opens its page instead.
-    if (st.dial.length === 5) {
+    if (st.dial === "5") {
       const h = document.createElement("a");
       h.className = "station-link";
       h.href = "channel/bollywood.html";
       h.target = "_blank";
-      h.innerHTML = `<img alt="" src="channel/logos/bazaar-hits.png"><span><span>Bazaar Hits</span><small>Channel 0000 · runs by itself</small></span>`;
+      h.innerHTML = `<img alt="" src="channel/logos/bazaar-hits.png"><span><span>Bazaar Hits</span><small>Channel 4 · runs by itself</small></span>`;
       $("stations").appendChild(h);
     }
     const b = document.createElement("button");
