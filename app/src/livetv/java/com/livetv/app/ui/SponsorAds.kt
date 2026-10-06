@@ -501,7 +501,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
     Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.BottomEnd) {
         Column(
             Modifier
-                .width(minOf(280, width * 45 / 100).dp)
+                .width(minOf(210, width * 34 / 100).dp)
                 .sponsorTap(sponsor, opener)
                 .clip(CardShape)
                 .background(Color(0xE6101018)),
@@ -514,7 +514,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
                 Text(
                     words,
                     color = Color.White,
-                    fontSize = 13.sp,
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -532,7 +532,7 @@ private fun VisitLine() {
     Text(
         "Press OK to visit their website",
         color = Color.Black,
-        fontSize = 12.sp,
+        fontSize = 10.sp,
         fontWeight = FontWeight.Bold,
         maxLines = 1,
         modifier = Modifier.fillMaxWidth().background(FocusColor).padding(horizontal = 10.dp, vertical = 4.dp),
@@ -604,7 +604,7 @@ private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, onDo
     Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.BottomEnd) {
         Column(
             Modifier
-                .width((screenWidth * 40 / 100).dp)
+                .width((screenWidth * 30 / 100).dp)
                 .graphicsLayer { alpha = if (showing) 1f else 0f }
                 .clip(CardShape)
                 .background(Color(0xE6101018)),
@@ -618,7 +618,7 @@ private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, onDo
             Text(
                 "${sponsor.name} · ${time}Back to close",
                 color = Color.White,
-                fontSize = 13.sp,
+                fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
