@@ -38,6 +38,12 @@
   label.f input, label.f select { display: block; width: 100%; margin-top: 4px; padding: 9px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 600px) { .two { grid-template-columns: 1fr; } }
+  @media (min-width: 1200px) {
+    .lib-split { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 28px; align-items: start; }
+    .lib-side { position: sticky; top: 16px; }
+    .lib-side .panel:first-child { margin-top: 0 !important; }
+    .lib-side .two { grid-template-columns: 1fr; gap: 0; }
+  }
   .ok { color: #9BE59B; } .warn { color: #FFD27A; }
 </style>
 </head>
@@ -63,8 +69,9 @@
   <div id="denied" class="panel hidden">This account isn't an admin. <button class="btn" data-signout>Use another account</button></div>
   <div id="dash" class="hidden">
     <div class="bar" id="langs"></div>
+    <div class="lib-split">
     <div id="cats"></div>
-
+    <aside class="lib-side">
     <section class="panel" style="margin-top:10px">
       <h2 style="margin-top:0">Add a video</h2>
       <p class="small">Paste a direct link to an MP4 file (for example from your GitHub "channel-media" release). Only add videos you are allowed to show.</p>
@@ -89,6 +96,8 @@
     <p id="saveMsg" class="small"></p>
     <p class="small" id="who"></p>
     <button class="btn" data-signout>Sign out</button>
+    </aside>
+    </div>
   </div>
   <p class="err" id="err"></p>
 </main>

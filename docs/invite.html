@@ -20,6 +20,10 @@
   .msg textarea { min-height: 220px; resize: vertical; }
   .msg .row { gap: 8px; flex-wrap: wrap; }
   .done { color: #69F0AE; font-size: 14px; margin-left: 6px; }
+  @media (min-width: 1200px) {
+    main.wrap { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; align-items: start; }
+    main.wrap > :not(.msg) { grid-column: 1 / -1; }
+  }
 </style>
 </head>
 <body>

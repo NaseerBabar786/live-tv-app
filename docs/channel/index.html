@@ -31,6 +31,14 @@
   .tabs a.sel { border-color: var(--focus); }
   .tabs img { width: 32px; height: 32px; }
   .guide .t { font-weight: 700; } .guide .l { color: var(--muted); font-size: 14px; }
+  @media (min-width: 1200px) {
+    main.wrap { display: grid; grid-template-columns: minmax(0, 1fr) 440px; grid-template-rows: auto auto auto auto auto auto 1fr; column-gap: 28px; align-items: start; }
+    main.wrap > .tabs { grid-column: 1 / -1; }
+    main.wrap > .stage { grid-column: 1; grid-row: 2 / 8; }
+    main.wrap > :not(.tabs):not(.stage) { grid-column: 2; }
+    main.wrap > .now { margin-top: 0; }
+    main.wrap > h2 { margin-top: 12px; }
+  }
 </style>
 </head>
 <body>
