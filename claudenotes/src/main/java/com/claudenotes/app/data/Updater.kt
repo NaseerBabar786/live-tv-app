@@ -40,8 +40,8 @@ class Updater(context: Context) {
     }
 
     /** The owner's newer test build, only when test updates are on for this device (see [OwnerTest]). */
-    private fun testRelease(): Release? {
-        if (!OwnerTest.isOn(appContext)) return null
+    fun testRelease(): Release? {
+        if (!OwnerTest.isOwner(appContext)) return null
         val version = runCatching { JSONObject(fetchText(OwnerTest.VERSIONS)).optString("notes-for-claude") }.getOrNull()
             ?.takeIf { it.isNotBlank() && UpdateVersions.isNewer(it, installedVersion) } ?: return null
         return Release("$version (test)", OwnerTest.BASE + "NotesForClaude.apk", 0)

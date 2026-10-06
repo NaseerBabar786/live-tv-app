@@ -77,6 +77,7 @@ fun SettingsScreen(vm: AppViewModel, version: String) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.clickable { OwnerTest.tap(context) }, // 7 taps: owner's test updates
             )
+            TestVersionButton()
         }
     }
 }

@@ -196,6 +196,7 @@ fun SettingsDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
+                TestVersionButton(Modifier.fillMaxWidth().focusGlow())
                 // Cable TV always uses the working channels (1.9.60); Live TV Max still offers the choice.
                 if (Edition.MAX) {
                     Text("Channel list", fontWeight = FontWeight.Bold)
