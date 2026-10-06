@@ -2138,12 +2138,11 @@ private val layouts = TileLayout.entries.filter {
 /** Cable TV's package each mode needs (see [Plans]). */
 private val TileLayout.tier: Plans.Tier
     get() = when (this) {
-        // Owner, 2026-10-06: Free is 1+List only; Silver adds Browse and Carousel; Gold has the rest but 2×3.
+        // Owner, 2026-10-06: Free is 1+List only; Silver adds Browse and Carousel; Gold has every mode.
         TileLayout.List -> Plans.Tier.Free
         TileLayout.Browse, TileLayout.Carousel -> Plans.Tier.Silver
-        TileLayout.Two, TileLayout.Five, TileLayout.Duo, TileLayout.Strip,
-        TileLayout.Four, TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine -> Plans.Tier.Gold
-        TileLayout.Six -> Plans.Tier.Platinum
+        TileLayout.Two, TileLayout.Five, TileLayout.Duo, TileLayout.Strip, TileLayout.Four, TileLayout.Six,
+        TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine -> Plans.Tier.Gold
     }
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */

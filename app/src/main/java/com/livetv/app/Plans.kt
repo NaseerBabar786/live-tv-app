@@ -64,5 +64,5 @@ object Plans {
     val LIBRARY = Tier.Gold
 
     /** Games. */
-    val GAMES = Tier.Platinum
+    val GAMES = Tier.Gold
 }

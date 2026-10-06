@@ -163,8 +163,8 @@ object Subscription {
     val FEATURES: Map<Plans.Tier, String> = mapOf(
         Plans.Tier.Free to "Our own channels plus Aaj Tak and ARY News, in 1+List mode, full screen, favourites",
         Plans.Tier.Silver to "All channels, plus Browse and Carousel modes",
-        Plans.Tier.Gold to "Everything in Silver, plus 1×2, 1+3, Duo, Strip, 2×2, News, CP24, Home, My Screen and Movies & Dramas",
-        Plans.Tier.Platinum to "Everything, plus 2×3, Games, and your account on 2 devices at once",
+        Plans.Tier.Gold to "Everything in the app: every mode (1×2, 1+3, Duo, Strip, 2×2, 2×3, News, CP24, Home, My Screen), Movies & Dramas and Games",
+        Plans.Tier.Platinum to "Everything in Gold, and your account on 2 devices at once",
     )
 
     const val DEFAULT_HOW_TO_PAY =
