@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Live TV Packages</title>
+<meta name="description" content="Free Live TV packages and subscriptions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="robots" content="noindex">
+<style>
+  .wrap { max-width: 1200px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin: 0 0 20px; }
+  .stat { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 14px 16px; }
+  .stat .n { font-size: 30px; font-weight: 800; color: var(--focus); }
+  .stat .l { color: var(--muted); font-size: 14px; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--surface-2); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--surface-2); white-space: nowrap; }
+  th { background: var(--surface); color: var(--muted); font-weight: 700; position: sticky; top: 0; }
+  input[type=search] { width: 100%; max-width: 360px; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
+  select, .inp { padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
+  .prices td input { width: 90px; }
+  textarea.inp { width: 100%; min-height: 70px; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: 13px; }
+  .Free { background: var(--surface-2); } .Silver { background: #9e9e9e; color: #000; } .Gold { background: #f5c542; color: #000; } .Platinum { background: #b3e5fc; color: #000; }
+  .soon { color: #ff8a80; font-weight: 700; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Free Live TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Free Live TV</span>
+    </a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="suggestions">Suggestions</a>
+      <a href="./#download">Download</a>
+      <a href="admin" class="admin-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Packages</h1>
+  <p class="lead">Free, Silver, Gold and Platinum for Free Live TV viewers. Turn packages on, set prices, and give each viewer a package when they pay.</p>
+  <div id="notReady" class="panel hidden">This page works once sign-in is set up.</div>
+  <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
+  <div id="denied" class="panel hidden">This account isn't the admin. <button class="btn" data-signout>Use another account</button></div>
+  <div id="dash" class="hidden">
+    <div class="panel" style="margin-bottom:20px">
+      <h2 style="margin-top:0">Settings</h2>
+      <p><label><input type="checkbox" id="enforce"> <b>Packages are on</b></label><br>
+        <span class="small">While this is off, every viewer has everything (like today). When it's on, viewers without a package get Free, and new viewers get a free trial of everything first.</span></p>
+      <p><label>Free trial for new viewers: <input class="inp" type="number" id="trialDays" min="0" max="365" style="width:80px"> days</label></p>
+      <div class="table-wrap prices" style="max-width:560px"><table>
+        <thead><tr><th>Package</th><th>1 month</th><th>6 months</th><th>1 year</th></tr></thead>
+        <tbody id="priceRows"></tbody>
+      </table></div>
+      <p><label><b>How to pay</b> (shown to viewers on the packages screen)<br><textarea class="inp" id="howToPay"></textarea></label></p>
+      <div class="row"><button class="btn primary" id="saveCfg">Save settings</button><span class="small" id="cfgMsg"></span></div>
+      <p class="small">Free: Browse, 1+List, Carousel, Strip, full screen, favourites. Silver adds 1×2, 1+3, Duo. Gold adds 2×2, News, CP24, Home, My Screen, Movies &amp; Dramas. Platinum adds 2×3, Games and 2 devices on one account.</p>
+    </div>
+
+    <div class="stats" id="stats"></div>
+    <div class="row" style="justify-content:space-between;margin-bottom:12px">
+      <input type="search" id="q" placeholder="Search name or email">
+      <label class="small"><input type="checkbox" id="onlyPaid"> Only viewers with a package</label>
+      <button class="btn" data-signout>Sign out</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Name</th><th>Email</th><th>Package</th><th>Until</th><th>Give package</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+    <p class="small">Pick the package and press +1 month, +6 months or +1 year. Time is added after the current end date, so renewing early loses nothing. The viewer's app picks it up within an hour, or at once when they reopen it. They see a reminder 5 days before it ends.</p>
+  </div>
+  <p class="err" id="err"></p>
+</main>
+<footer>
+  <div class="wrap">Free Live TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+</footer>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
+const $ = id => document.getElementById(id);
+const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
+const TIERS = ["Silver", "Gold", "Platinum"];
+const LENGTHS = [["month", "1 month"], ["six", "6 months"], ["year", "1 year"]];
+const DEFAULTS = {
+  silver_month: "$1.99", silver_six: "$9.99", silver_year: "$17.99",
+  gold_month: "$3.99", gold_six: "$19.99", gold_year: "$35.99",
+  platinum_month: "$5.99", platinum_six: "$29.99", platinum_year: "$53.99",
+  trialDays: 7, enforce: false,
+  howToPay: "Pick a package below and press Ask. We'll message you back here with how to pay (Interac e-Transfer or card), and turn your package on as soon as it's paid. Questions? WhatsApp 437 602 6500.",
+};
+
+window.addEventListener("unhandledrejection", () => {
+  $("err").textContent = "Couldn't load this page. Check your internet connection and refresh.";
+});
+if (!configured) {
+  show("notReady");
+} else {
+  const V = "10.12.2";
+  const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+  const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
+  const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = fs.getFirestore(app);
+  let users = [], plans = {};
+
+  $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
+  document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
+
+  onAuthStateChanged(auth, async user => {
+    $("err").textContent = "";
+    if (!user) return show("signedOut");
+    if (!ADMIN_EMAIL || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return show("denied");
+    try { localStorage.setItem("lt_admin", "1"); } catch {}
+    show("dash");
+    try {
+      await loadConfig();
+      const [u, p] = await Promise.all([fs.getDocs(fs.collection(db, "users")), fs.getDocs(fs.collection(db, "plans"))]);
+      users = u.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.lastOpened?.toMillis?.() || 0) - (a.lastOpened?.toMillis?.() || 0));
+      plans = Object.fromEntries(p.docs.map(d => [d.id, { ...d.data(), until: d.data().until?.toDate?.() }]));
+      stats(); render();
+    } catch (e) { $("err").textContent = "Couldn't load: " + e.message + " (are the new Firestore rules published?)"; }
+  });
+
+  async function loadConfig() {
+    let c = {};
+    try { const s = await fs.getDoc(fs.doc(db, "config", "plans")); if (s.exists()) c = s.data(); } catch {}
+    c = { ...DEFAULTS, ...c };
+    $("enforce").checked = !!c.enforce;
+    $("trialDays").value = c.trialDays;
+    $("howToPay").value = c.howToPay;
+    const tb = $("priceRows"); tb.innerHTML = "";
+    for (const t of TIERS) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td><span class="pill ${t}">${t}</span></td>`;
+      for (const [k] of LENGTHS) {
+        const td = document.createElement("td"); const inp = document.createElement("input");
+        inp.className = "inp"; inp.id = `${t.toLowerCase()}_${k}`; inp.value = c[inp.id];
+        td.append(inp); tr.append(td);
+      }
+      tb.append(tr);
+    }
+  }
+
+  $("saveCfg").onclick = async () => {
+    const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), updated: fs.serverTimestamp() };
+    for (const t of TIERS) for (const [k] of LENGTHS) { const id = `${t.toLowerCase()}_${k}`; data[id] = $(id).value.trim(); }
+    if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have the Free modes (after their free trial).")) return;
+    try { await fs.setDoc(fs.doc(db, "config", "plans"), data); $("cfgMsg").textContent = "Saved."; }
+    catch (e) { $("cfgMsg").textContent = "Couldn't save: " + e.message; }
+  };
+
+  const active = p => p && p.tier && p.tier !== "Free" && p.until && p.until > new Date();
+  function stats() {
+    const counts = { Silver: 0, Gold: 0, Platinum: 0 }; let soon = 0;
+    for (const p of Object.values(plans)) if (active(p)) { counts[p.tier] = (counts[p.tier] || 0) + 1; if (p.until - Date.now() < 5 * 864e5) soon++; }
+    const items = [["Viewers", users.length], ["Silver", counts.Silver], ["Gold", counts.Gold], ["Platinum", counts.Platinum], ["Ending in 5 days", soon]];
+    $("stats").innerHTML = "";
+    for (const [l, n] of items) {
+      const el = document.createElement("div"); el.className = "stat";
+      el.innerHTML = `<div class="n"></div><div class="l"></div>`;
+      el.querySelector(".n").textContent = n; el.querySelector(".l").textContent = l;
+      $("stats").append(el);
+    }
+  }
+
+  const fmt = d => d ? d.toLocaleDateString([], { dateStyle: "medium" }) : "";
+  function render() {
+    const q = $("q").value.trim().toLowerCase();
+    const list = users.filter(u => (!q || [u.name, u.email].join(" ").toLowerCase().includes(q)) && (!$("onlyPaid").checked || active(plans[u.id])));
+    const tbody = $("rows"); tbody.innerHTML = "";
+    for (const u of list) {
+      const p = plans[u.id]; const on = active(p);
+      const tr = document.createElement("tr");
+      const cell = (v, cls) => { const td = document.createElement("td"); td.textContent = v ?? ""; if (cls) td.className = cls; tr.append(td); return td; };
+      cell(u.name); cell(u.email);
+      const tierTd = cell(""); const pill = document.createElement("span"); pill.className = "pill " + (on ? p.tier : "Free"); pill.textContent = on ? p.tier : "Free"; tierTd.append(pill);
+      cell(on ? fmt(p.until) : (p?.until ? "ended " + fmt(p.until) : ""), on && p.until - Date.now() < 5 * 864e5 ? "soon" : "");
+      const give = cell("");
+      const sel = document.createElement("select"); TIERS.forEach(t => { const o = document.createElement("option"); o.textContent = t; sel.append(o); });
+      if (on) sel.value = p.tier;
+      give.append(sel);
+      for (const [months, label] of [[1, "+1 month"], [6, "+6 months"], [12, "+1 year"]]) {
+        const b = document.createElement("button"); b.className = "btn"; b.style.marginLeft = "6px"; b.textContent = label;
+        b.onclick = () => givePlan(u, sel.value, months);
+        give.append(b);
+      }
+      const end = cell("");
+      if (on) { const r = document.createElement("a"); r.href = "#"; r.textContent = "End now"; r.onclick = e => { e.preventDefault(); endPlan(u); }; end.append(r); }
+      const m = document.createElement("a"); m.textContent = "✉ Message"; m.style.marginLeft = "12px";
+      m.href = "suggestions#to=" + encodeURIComponent(u.id) + "&name=" + encodeURIComponent(u.name || "") + "&email=" + encodeURIComponent(u.email || "");
+      end.append(m);
+      tbody.append(tr);
+    }
+  }
+  $("q").oninput = render; $("onlyPaid").onchange = render;
+
+  async function givePlan(u, tier, months) {
+    const p = plans[u.id];
+    // Renewing the same package adds after its end date; a new package starts today.
+    const from = active(p) && p.tier === tier ? new Date(p.until) : new Date();
+    const until = new Date(from); until.setMonth(until.getMonth() + months);
+    if (!confirm(`Give ${u.name || u.email} ${tier} until ${fmt(until)}?`)) return;
+    try {
+      await fs.setDoc(fs.doc(db, "plans", u.id), { tier, until: fs.Timestamp.fromDate(until), name: u.name || "", email: u.email || "", updated: fs.serverTimestamp() });
+      plans[u.id] = { tier, until, name: u.name, email: u.email };
+      stats(); render();
+    } catch (e) { $("err").textContent = "Couldn't save: " + e.message; }
+  }
+
+  async function endPlan(u) {
+    if (!confirm(`End ${u.name || u.email}'s package now? They go back to Free.`)) return;
+    const now = new Date();
+    try {
+      await fs.setDoc(fs.doc(db, "plans", u.id), { tier: plans[u.id].tier, until: fs.Timestamp.fromDate(now), name: u.name || "", email: u.email || "", updated: fs.serverTimestamp() });
+      plans[u.id].until = now; stats(); render();
+    } catch (e) { $("err").textContent = "Couldn't save: " + e.message; }
+  }
+}
+</script>
+<script src="assets/admin-nav.js"></script>
+</body>
+</html>

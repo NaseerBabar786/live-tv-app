@@ -22,8 +22,8 @@ android {
         create("livetv") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetv"
-            versionCode = 171
-            versionName = "1.9.33"
+            versionCode = 172
+            versionName = "1.9.34"
             // The TV sign-in client secret comes from the TV_CLIENT_SECRET repository secret,
             // so it stays out of the public code.
             buildConfigField("String", "TV_CLIENT_SECRET", "\"${System.getenv("TV_CLIENT_SECRET") ?: ""}\"")
@@ -40,8 +40,8 @@ android {
         create("plus") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetvplus"
-            versionCode = 3
-            versionName = "1.1.0"
+            versionCode = 4
+            versionName = "1.2.0"
         }
         // Live TV Max: Free Live TV's channels and code, opening on a streaming-style home screen
         // (rows by country and language, a now/next guide, movies and dramas). Installs beside Free Live TV.

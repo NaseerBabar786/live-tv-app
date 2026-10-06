@@ -59,13 +59,20 @@
   <div id="notReady" class="panel hidden">Suggestions is opening soon. Please check back in a little while.</div>
 
   <div id="signedOut" class="panel hidden">
-    <p style="margin-top:0">Sign in with the same Google account you use in the Free Live TV app.</p>
-    <button class="btn primary" id="signIn">Sign in with Google</button>
+    <p style="margin-top:0">Sign in with the same account you use in the Free Live TV app.</p>
+    <form id="emailForm" style="display:grid;gap:8px;max-width:360px;margin-bottom:14px">
+      <input id="emEmail" type="email" placeholder="Email" autocomplete="username" required style="padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit">
+      <input id="emPass" type="password" placeholder="Password" autocomplete="current-password" required style="padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit">
+      <label class="small"><input type="checkbox" id="emShow"> Show password</label>
+      <div class="row"><button class="btn primary" type="submit">Sign in</button><a href="#" id="emForgot" class="small">Forgot password?</a></div>
+    </form>
+    <button class="btn" id="signIn">Sign in with Google</button>
+    <p class="small">No account yet? Create one in the Free Live TV app. Forgot your password? Message us on WhatsApp at 437 602 6500 and we'll set a new one.</p>
     <p class="small">Don't have the app yet? <a href="./#download">Download Free Live TV</a>, sign in there once, then come back.</p>
   </div>
 
   <div id="notUser" class="panel hidden">
-    <p style="margin-top:0"><b>This account hasn't signed in to the Free Live TV app yet.</b> Open Free Live TV on your phone or TV, sign in with this Google account, then refresh this page.</p>
+    <p style="margin-top:0"><b>This account hasn't signed in to the Free Live TV app yet.</b> Open Free Live TV on your phone or TV, sign in with this account, then refresh this page.</p>
     <div class="row"><a class="btn" href="./#download">Download Free Live TV</a><button class="btn" data-signout>Use another account</button></div>
   </div>
 
@@ -123,7 +130,7 @@ if (!configured) {
 } else {
   const V = "10.12.2";
   const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
-  const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
+  const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, signInWithEmailAndPassword, sendPasswordResetEmail } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
   const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -132,6 +139,29 @@ if (!configured) {
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = "Couldn't sign in: " + e.message);
   document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => signOut(auth));
+  const plain = code => ({
+    "auth/invalid-credential": "The email or password is wrong.",
+    "auth/invalid-login-credentials": "The email or password is wrong.",
+    "auth/wrong-password": "The email or password is wrong.",
+    "auth/user-not-found": "The email or password is wrong.",
+    "auth/invalid-email": "That doesn't look like an email address.",
+    "auth/too-many-requests": "Too many tries. Wait a few minutes and try again.",
+    "auth/operation-not-allowed": "Email sign-in isn't switched on yet. Please use Google for now.",
+  })[code];
+  $("emShow").onchange = () => $("emPass").type = $("emShow").checked ? "text" : "password";
+  $("emailForm").onsubmit = e => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, $("emEmail").value.trim(), $("emPass").value)
+      .catch(err => $("err").textContent = "Couldn't sign in: " + (plain(err.code) || err.message));
+  };
+  $("emForgot").onclick = e => {
+    e.preventDefault();
+    const email = $("emEmail").value.trim();
+    if (!email) return $("err").textContent = "Type your email first, then press Forgot password.";
+    sendPasswordResetEmail(auth, email)
+      .then(() => $("err").textContent = "If that email is real, we sent it a link to make a new password. No email? Message us on WhatsApp at 437 602 6500.")
+      .catch(err => $("err").textContent = "Couldn't send it: " + (plain(err.code) || err.message));
+  };
 
   onAuthStateChanged(auth, async user => {
     $("err").textContent = "";

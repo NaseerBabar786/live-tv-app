@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Live TV Plus Premium: a monthly Google Play subscription ([PRODUCT_ID], set up in Play
- * Console). Google ties it to the viewer's Google account, so it unlocks on every phone and
+ * Live TV Plus Premium: a Google Play subscription ([PRODUCT_ID], set up in Play Console) with
+ * one base plan per length: monthly ($1.99), 6 months and yearly. The viewer picks one. Google ties it to the viewer's Google account, so it unlocks on every phone and
  * TV signed in to that account. The last answer is remembered so Premium works offline.
  */
 object PlayBilling : Premium.Billing {
@@ -31,6 +31,9 @@ object PlayBilling : Premium.Billing {
     private var details: ProductDetails? = null
     private val _price = MutableStateFlow<String?>(null)
     override val price: StateFlow<String?> = _price
+    private var offers: List<ProductDetails.SubscriptionOfferDetails> = emptyList()
+    private val _options = MutableStateFlow<List<Premium.Option>>(emptyList())
+    override val options: StateFlow<List<Premium.Option>> = _options
 
     /** Called once when the app starts. */
     fun start(context: Context) {
@@ -77,19 +80,44 @@ object PlayBilling : Premium.Billing {
         client?.queryProductDetailsAsync(params) { result, list ->
             if (!result.ok) return@queryProductDetailsAsync
             details = list.firstOrNull()
-            _price.value = details?.subscriptionOfferDetails?.firstOrNull()
-                ?.pricingPhases?.pricingPhaseList?.lastOrNull()?.formattedPrice
+            // One offer per base plan (the plain base plan, not promotions), shortest first.
+            offers = details?.subscriptionOfferDetails.orEmpty()
+                .filter { it.offerId == null }
+                .ifEmpty { details?.subscriptionOfferDetails.orEmpty() }
+                .distinctBy { it.basePlanId }
+                .sortedBy { months(it.lastPhase?.billingPeriod) }
+            _options.value = offers.mapNotNull { o ->
+                o.lastPhase?.let { Premium.Option(label(it.billingPeriod), it.formattedPrice) }
+            }
+            _price.value = (offers.firstOrNull { months(it.lastPhase?.billingPeriod) == 1 } ?: offers.firstOrNull())
+                ?.lastPhase?.formattedPrice
         }
     }
 
-    override fun subscribe(activity: Activity) {
+    private val ProductDetails.SubscriptionOfferDetails.lastPhase
+        get() = pricingPhases.pricingPhaseList.lastOrNull()
+
+    /** An ISO 8601 period such as "P1M", "P6M" or "P1Y", in months. */
+    private fun months(period: String?): Int {
+        val m = Regex("P(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)W)?").matchEntire(period ?: return 99) ?: return 99
+        val (y, mo, w) = m.destructured
+        return (y.toIntOrNull() ?: 0) * 12 + (mo.toIntOrNull() ?: 0) + if (w.isNotEmpty()) 1 else 0
+    }
+
+    private fun label(period: String): String = when (val m = months(period)) {
+        1 -> "1 month"
+        12 -> "1 year"
+        else -> if (m % 12 == 0) "${m / 12} years" else "$m months"
+    }
+
+    override fun subscribe(activity: Activity, option: Int) {
         val c = client ?: return
         if (!c.isReady) {
             connect()
             return
         }
         val product = details ?: run { loadDetails(); return }
-        val offer = product.subscriptionOfferDetails?.firstOrNull() ?: return
+        val offer = offers.getOrNull(option) ?: product.subscriptionOfferDetails?.firstOrNull() ?: return
         val params = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(
                 listOf(
