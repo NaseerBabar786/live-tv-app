@@ -183,6 +183,11 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
         list.forEach { if (_state.value.downloads[it.id] == null) download(it) }
     }
 
+    /** Starts the installed app, whatever its version. */
+    fun launch(app: StoreApp) {
+        if (!installer.open(app.packageName ?: return)) say("${app.name} has no screen to open on this device.")
+    }
+
     fun uninstall(app: StoreApp) {
         app.packageName?.let { installer.uninstall(it) }
     }

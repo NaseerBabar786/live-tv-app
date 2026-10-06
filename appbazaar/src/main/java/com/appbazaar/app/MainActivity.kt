@@ -73,6 +73,7 @@ class MainActivity : ComponentActivity() {
                             onBack = { openId = null },
                             onAct = { store.act(open) },
                             onUninstall = { store.uninstall(open) },
+                            onLaunch = { store.launch(open) },
                             onWeb = { store.installer.openWeb(it) },
                         )
                         else -> StoreScreen(
