@@ -126,7 +126,8 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
         } else if (_state.value.askInstallPermission && installer.canInstall()) {
             pumpInstalls()
         }
-        if (System.currentTimeMillis() - lastRefresh > 10 * 60_000L) refresh()
+        // Coming back to the store (from the home screen or another app) fetches the list again.
+        if (System.currentTimeMillis() - lastRefresh > 30_000L) refresh()
     }
 
     fun select(section: Section) = _state.update { it.copy(section = section) }
