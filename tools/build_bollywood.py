@@ -22,6 +22,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id, videos_feed, videos_page  # noqa: E402
+from build_youtube_channels import other_language  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "channel", "bollywood.json")
@@ -71,7 +72,8 @@ def main():
                 print(f"  feed: {e}", file=sys.stderr)
         kept = 0
         for vid, title, mins in videos:
-            if NOT_SONG.search(title) or vid in found:
+            # Urdu, Hindi, Punjabi and English songs only (the owner's wish, 2026-10-06).
+            if NOT_SONG.search(title) or vid in found or other_language(title):
                 continue
             # The feed has no lengths; a song from it is kept on its title alone.
             if mins is not None and not 2 <= mins <= 9:
@@ -82,7 +84,7 @@ def main():
         print(f"{label}: {len(videos)} videos, {kept} songs")
 
     for vid, s in old.items():
-        if vid not in found and (today - dt.date.fromisoformat(s["found"])).days <= KEEP_DAYS:
+        if vid not in found and not other_language(s["title"]) and (today - dt.date.fromisoformat(s["found"])).days <= KEEP_DAYS:
             found[vid] = s
     songs = sorted(found.values(), key=lambda s: s["found"], reverse=True)[:MAX_SONGS]
     if len(songs) < 10:

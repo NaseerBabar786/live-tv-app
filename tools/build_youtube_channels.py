@@ -34,6 +34,19 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEEP_DAYS = 180
 MAX_VIDEOS = 400
 
+# Our channels play Urdu, Hindi, Punjabi and English programmes (the owner's wish, 2026-10-06): a
+# title naming another language is left out, unless it also says it's in one of ours ("Hindi dubbed").
+OTHER_LANGUAGE = re.compile(r"\b(tamil|telugu|kannada|malayalam|marathi|gujarati|bengali|bangla|bhojpuri|odia|oriya|"
+                            r"assamese|nepali|sinhala|haryanvi|rajasthani|spanish|español|espanol|portugu[eê]s|french|"
+                            r"français|deutsch|german|arabic|عربي|türkçe|turkce|indonesia|bahasa|russian|русский|"
+                            r"chinese|中文|japanese|日本語|korean|한국어|italiano|thai|vietnamese)\b", re.I)
+OUR_LANGUAGE = re.compile(r"\b(hindi|urdu|punjabi|english)\b", re.I)
+
+
+def other_language(title):
+    return bool(OTHER_LANGUAGE.search(title)) and not OUR_LANGUAGE.search(title)
+
+
 # Never on our channels, whatever the source.
 NEVER = r"trailer|teaser|#shorts?\b|\bshorts\b|promo|reaction|announcement|first look|motion poster|\blive\b|livestream|premiere"
 
@@ -41,7 +54,7 @@ CHANNELS = {
     "filmein": {
         "name": "Bazaar Cinema", "mins": (70, 200), "search": "full movie",
         "keep": r"full (movie|film)|movie|film",
-        "skip": r"scene|song|jukebox|comedy scenes|best of|dubbed in|spoof",
+        "skip": r"scene|song|jukebox|comedy scenes|best of|spoof",
         "sources": [
             ("Shemaroo", ["@ShemarooMovies", "@shemaroo"], "Shemaroo"),
             ("Rajshri", ["@rajshri", "@RajshriFilms"], "Rajshri"),
@@ -66,7 +79,10 @@ CHANNELS = {
         "name": "Bazaar Kids", "mins": (2, 60),
         "skip": r"toy|unboxing|scary|horror|prank",
         "sources": [
-            ("Ghulam Rasool", ["@GhulamRasoolCartoon", "@ghulamrasool"], "Ghulam Rasool"),
+            ("Ghulam Rasool", ["@GhulamRasoolCartoon", "@ghulamrasool", "@GhulamRasoolOfficial", "@KidsLandUrdu"], "Ghulam Rasool|Kids Land"),
+            ("ChuChu TV Hindi", ["@ChuChuTVHindi", "@ChuChuTVHindiRhymes"], "ChuChu TV Hindi|ChuChuTV Hindi"),
+            ("Infobells Hindi", ["@InfobellsHindi", "@infobellshindi"], "Infobells"),
+            ("Jugnu Kids", ["@JugnuKids", "@jugnukids"], "Jugnu Kids"),
             ("ChuChu TV", ["@ChuChuTV"], "ChuChu TV"),
             ("Cocomelon", ["@CoComelon", "@cocomelon"], "CoComelon"),
             ("Masha and the Bear", ["@MashaBearEN", "@MashaandtheBear"], "Masha and The Bear"),
@@ -150,7 +166,7 @@ def build(cid, ch, today):
         only = re.compile(ch.get("only", {}).get(label, ""), re.I) if label in ch.get("only", {}) else None
         kept = 0
         for vid, title, mins in videos:
-            if vid in found or skip.search(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
+            if vid in found or skip.search(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
                 continue
             # A video with no known length (from the feed) is kept on its title alone.
             if mins is not None and not low <= mins <= high:
@@ -164,7 +180,7 @@ def build(cid, ch, today):
     labels = {label for label, _, _ in ch["sources"]}
     for vid, v in old.items():
         # A source taken off the list goes with its videos.
-        if vid not in found and v.get("label") in labels and (today - dt.date.fromisoformat(v["found"])).days <= KEEP_DAYS:
+        if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v["found"])).days <= KEEP_DAYS:
             found[vid] = v
     videos = sorted(found.values(), key=lambda v: v["found"], reverse=True)[:MAX_VIDEOS]
     summary = f"{ch['name']}: {len(videos)} videos ({', '.join(counts)})"
