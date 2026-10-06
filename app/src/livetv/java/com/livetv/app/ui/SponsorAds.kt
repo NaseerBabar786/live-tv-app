@@ -89,7 +89,7 @@ private const val STRIP_MS = 60_000L
 private const val CARD_MS = 5_000L
 private const val CARD_SITE_MS = 8_000L
 private const val CARD_EVERY_MS = 3 * 60_000L
-private const val CARD_NOT_BEFORE_MS = 5 * 60_000L
+private const val CARD_NOT_BEFORE_MS = 3 * 60_000L
 /** A sponsor's video pop-up: at most this often (other times their picture card shows). */
 private const val VIDEO_EVERY_MS = 30 * 60_000L
 
@@ -115,6 +115,7 @@ private var nextTickerAt = 0L
  * [always] keeps it running without the 30 second wait (News mode's bottom band).
  * [everyMs] above 0 runs it on its own clock instead, once every [everyMs] (the full-screen channel),
  * on a dark band, skipping a turn while [skip] says something else is on screen.
+ * [band] puts the dark band behind it too (the line along the bottom of the channel screens).
  */
 @Composable
 fun SponsorTicker(
@@ -123,6 +124,7 @@ fun SponsorTicker(
     always: Boolean = false,
     everyMs: Long = 0L,
     skip: () -> Boolean = { false },
+    band: Boolean = false,
 ) {
     val text by Sponsors.ticker.collectAsStateWithLifecycle()
     val words = text ?: return
@@ -156,7 +158,7 @@ fun SponsorTicker(
     }
     BoxWithConstraints(modifier.clipToBounds()) {
         if (!running) return@BoxWithConstraints
-        if (everyMs > 0) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.55f)))
+        if (everyMs > 0 || band) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.55f)))
         val boxWidth = constraints.maxWidth.toFloat()
         val pxPerSecond = with(LocalDensity.current) { TICKER_DP_PER_SECOND.dp.toPx() }
         var textWidth by remember { mutableIntStateOf(0) }
@@ -446,6 +448,29 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
         if (current?.site != null && fullScreen) SponsorKey.onOk = { if (showing === current) showing = null; opener.open(current) }
         onDispose { SponsorKey.onOk = null }
     }
+    // The next sponsor's pop-up: their picture card, or their video when it's due. [wait] lets a new
+    // channel's picture come up first.
+    fun popUp(wait: Long) {
+        val sponsor = Sponsors.next("card") ?: return
+        val wall = System.currentTimeMillis()
+        lastCard = SystemClock.elapsedRealtime()
+        val asVideo = sponsor.popupVideo && sponsor.video.isNotEmpty() && isFullScreen &&
+            wall - prefs.getLong("videoAt", 0L) >= VIDEO_EVERY_MS
+        if (asVideo) prefs.edit().putLong("videoAt", wall).apply()
+        scope.launch {
+            delay(wait)
+            SponsorViews.count(sponsor, "card")
+            if (asVideo && isFullScreen) {
+                showing = null
+                video = sponsor
+                return@launch
+            }
+            showing = sponsor
+            // A little longer when OK can open their website, so there's time to press it.
+            delay(if (sponsor.site != null) CARD_SITE_MS else CARD_MS)
+            if (showing === sponsor) showing = null
+        }
+    }
     LaunchedEffect(channelId) {
         if (channelId == null || channelId == lastChannel || video != null) return@LaunchedEffect
         lastChannel = channelId
@@ -467,24 +492,25 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
             return@LaunchedEffect
         }
         if (now - lastCard < CARD_EVERY_MS) return@LaunchedEffect
-        val sponsor = Sponsors.next("card") ?: return@LaunchedEffect
-        lastCard = now
-        val asVideo = sponsor.popupVideo && sponsor.video.isNotEmpty() && isFullScreen &&
-            wall - prefs.getLong("videoAt", 0L) >= VIDEO_EVERY_MS
-        if (asVideo) prefs.edit().putLong("videoAt", wall).apply()
-        scope.launch {
-            // Let the new channel's picture come up first.
-            delay(1_500)
-            SponsorViews.count(sponsor, "card")
-            if (asVideo && isFullScreen) {
-                showing = null
-                video = sponsor
-                return@launch
+        popUp(1_500)
+    }
+    // Staying on one channel full screen: the pop-up still comes every [CARD_EVERY_MS] (owner's rule, 1.9.58).
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val screenWidth by rememberUpdatedState(LocalConfiguration.current.screenWidthDp)
+    LaunchedEffect(fullScreen) {
+        if (!fullScreen) return@LaunchedEffect
+        while (true) {
+            delay(maxOf(1_000L, lastCard + CARD_EVERY_MS - SystemClock.elapsedRealtime()))
+            if (SystemClock.elapsedRealtime() - lastCard < CARD_EVERY_MS) continue
+            // Not while another window (our YouTube channels) or another app is in front, not in the small
+            // picture-in-picture window, and not over a pop-up.
+            if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) || screenWidth < 400 || showing != null || video != null) {
+                delay(10_000)
+                continue
             }
-            showing = sponsor
-            // A little longer when OK can open their website, so there's time to press it.
-            delay(if (sponsor.site != null) CARD_SITE_MS else CARD_MS)
-            if (showing === sponsor) showing = null
+            popUp(0)
+            // No sponsor at the moment: look again in a minute.
+            if (SystemClock.elapsedRealtime() - lastCard >= CARD_EVERY_MS) delay(60_000)
         }
     }
     // Not in the small picture-in-picture window.
