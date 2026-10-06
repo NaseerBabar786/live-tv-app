@@ -31,6 +31,7 @@ jobs:
           ONLY: ${{ matrix.scene }}
           VOICES: "0"
           TRY_SEEDS: ''
+          MODE: ${{ matrix.scene == 's2' && 'tts' || 'lips' }}
         run: |
           set -eu
           cd tools/ad5
