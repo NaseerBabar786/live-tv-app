@@ -29,6 +29,9 @@
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
   .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
   .cover.off { opacity: 0; }
+  .bug.tl { right: auto; left: 2.5%; }
+  .bug.br { top: auto; bottom: 12%; }
+  .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
 </style>
 </head>
 <body>
@@ -70,9 +73,18 @@ function shuffled(list, seed) {
   return a;
 }
 const lengthOf = v => (v.mins || station.ytMins || 5) * 60;
+// Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
+let corners = { default: "tr", labels: {} }, bugLabel = null;
+fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(bugLabel); }).catch(() => {});
+function placeBug(label) {
+  bugLabel = label;
+  const corner = corners.labels?.[label] || corners.default || "tr";
+  document.querySelector(".bug").className = "bug " + corner;
+}
 function showNow() {
   const v = videos[at];
   if (!v) return;
+  placeBug(v.label);
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = v.title;
   $("now").lastChild.textContent = station.name + " · " + v.label;
