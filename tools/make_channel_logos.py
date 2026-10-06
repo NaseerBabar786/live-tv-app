@@ -111,3 +111,16 @@ d.polygon([(cx-17, cy-66), (cx+62, cy-86), (cx+62, cy-58), (cx-17, cy-38)], fill
 text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
 text_fit(d, L/2, 710, "HITS", B, 200, (255,247,237), 600)
 save_big(im, "bazaar-hits")
+
+# 9 Bazaar Kids, 00000 (cartoons, 1.9.41): green to sky-blue rounded square, a smiling sun with rays
+im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (34,197,94), (14,165,233)), (0,0), rounded_mask((L,L), 220))
+d = ImageDraw.Draw(im)
+cx, cy = L/2, 290
+for i in range(12):  # rays
+    a = math.radians(i*30); d.line([(cx + 120*math.cos(a), cy + 120*math.sin(a)), (cx + 185*math.cos(a), cy + 185*math.sin(a))], fill=(253,224,71), width=26)
+d.ellipse([cx-110, cy-110, cx+110, cy+110], fill=(253,224,71))
+d.ellipse([cx-50, cy-40, cx-22, cy-8], fill=(30,41,59)); d.ellipse([cx+22, cy-40, cx+50, cy-8], fill=(30,41,59))
+d.arc([cx-62, cy-30, cx+62, cy+68], 20, 160, fill=(30,41,59), width=16)
+text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
+text_fit(d, L/2, 710, "KIDS", B, 210, (254,249,195), 600)
+save_big(im, "bazaar-kids")

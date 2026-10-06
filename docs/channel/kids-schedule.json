@@ -1,0 +1,206 @@
+{
+ "name": "Bazaar Kids",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-kids.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Bazaar Kids · Cartoons and fun learning, day and night · Popeye, Superman, Felix the Cat, space videos and Urdu stories · Channel 00000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
+ "tickerOn": true,
+ "videos": [
+  {
+   "id": "the-lion-and-the-clever-rabbit",
+   "title": "شیر اور چالاک خرگوش · The Lion and the Clever Rabbit",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/story-lion-and-rabbit.mp4",
+   "secs": 202,
+   "kind": "show"
+  },
+  {
+   "id": "popeye-meets-sindbad-the-sailor-1936",
+   "title": "Popeye Meets Sindbad the Sailor (1936)",
+   "url": "https://archive.org/download/POPEYEMeetsSindbadTheSailor1936/POPEYE%20meets%20Sindbad%20The%20Sailor%20%281936%29.mp4",
+   "secs": 993,
+   "kind": "show"
+  },
+  {
+   "id": "popeye-meets-ali-baba-s-forty-thieves-19",
+   "title": "Popeye Meets Ali Baba's Forty Thieves (1937)",
+   "url": "https://archive.org/download/PopeyeAliBabaRestored512kb/PopeyeAliBabaRestored_512kb.mp4",
+   "secs": 1035,
+   "kind": "show"
+  },
+  {
+   "id": "popeye-aladdin-and-his-wonderful-lamp-19",
+   "title": "Popeye: Aladdin and His Wonderful Lamp (1939)",
+   "url": "https://archive.org/download/Popeye_the_Sailor_Meets_Aladdin_and_His_Wonderful_Lamp/Popeye_-_Aladdin_and_His_Wonderful_Lamp_512kb.mp4",
+   "secs": 1305,
+   "kind": "show"
+  },
+  {
+   "id": "gulliver-s-travels-1939-full-cartoon-fil",
+   "title": "Gulliver's Travels (1939, full cartoon film)",
+   "url": "https://archive.org/download/GulliversTravels720p_652/GulliversTravels.mp4",
+   "secs": 4582,
+   "kind": "show"
+  },
+  {
+   "id": "superman-the-mechanical-monsters-1941",
+   "title": "Superman: The Mechanical Monsters (1941)",
+   "url": "https://archive.org/download/superman_the_mechanical_monsters/superman_the_mechanical_monsters_512kb.mp4",
+   "secs": 614,
+   "kind": "show"
+  },
+  {
+   "id": "superman-electric-earthquake-1942",
+   "title": "Superman: Electric Earthquake (1942)",
+   "url": "https://archive.org/download/superman_electric_earthquake/superman_electric_earthquake_512kb.mp4",
+   "secs": 522,
+   "kind": "show"
+  },
+  {
+   "id": "superman-eleventh-hour-1942",
+   "title": "Superman: Eleventh Hour (1942)",
+   "url": "https://archive.org/download/superman_eleventh_hour/superman_eleventh_hour_512kb.mp4",
+   "secs": 478,
+   "kind": "show"
+  },
+  {
+   "id": "felix-the-cat-the-goose-that-laid-the-go",
+   "title": "Felix the Cat: The Goose That Laid the Golden Egg (1936)",
+   "url": "https://archive.org/download/felix_the_cat_the_goos_that_laid_the_golden_egg/felix_the_cat_the_goos_that_laid_the_golden_egg_512kb.mp4",
+   "secs": 428,
+   "kind": "show"
+  },
+  {
+   "id": "spring-blender-animated-short-2019",
+   "title": "Spring (Blender animated short, 2019)",
+   "url": "https://archive.org/download/spring_blenderopenmovie/Spring%20-%20Blender%20Open%20Movie%20-%20YouTube.mp4",
+   "secs": 464,
+   "kind": "show"
+  },
+  {
+   "id": "caminandes-episodes-1-to-3-llama-cartoon",
+   "title": "Caminandes, episodes 1 to 3 (llama cartoons)",
+   "url": "https://archive.org/download/Caminandesep13BlenderAnimatedShort2013/Caminandes%20%28ep%201-3%29%20Blender%20Animated%20Short%2C%202013.mp4",
+   "secs": 385,
+   "kind": "show"
+  },
+  {
+   "id": "nasa-tour-the-international-space-statio",
+   "title": "NASA: Tour the International Space Station",
+   "url": "https://archive.org/download/TourTheInternationalSpaceStation/finckeHD_compress1.mp4",
+   "secs": 601,
+   "kind": "show"
+  },
+  {
+   "id": "nasa-life-on-the-space-station",
+   "title": "NASA: Life on the Space Station",
+   "url": "https://archive.org/download/ISSVideoResourceLifeOnStation720p/ISS%20Video%20Resource_LifeOnStation_720p.mp4",
+   "secs": 303,
+   "kind": "show"
+  },
+  {
+   "id": "nasa-food-aboard-the-space-station",
+   "title": "NASA: Food Aboard the Space Station",
+   "url": "https://archive.org/download/NASA_Space_Operations_Launch_Services_Clip15_HD/NASA_Space_Operations_Launch_Services_Clip15_HD.mp4",
+   "secs": 541,
+   "kind": "show"
+  },
+  {
+   "id": "nasa-shuttle-discovery-flies-around-the-",
+   "title": "NASA: Shuttle Discovery flies around the Space Station",
+   "url": "https://archive.org/download/DiscoveryFlyaroundOfInternationalSpaceStation/STS_119_HD_ISS_FLyaround_Sped_Up.mp4",
+   "secs": 168,
+   "kind": "show"
+  },
+  {
+   "id": "nasa-keeping-the-space-station-in-orbit",
+   "title": "NASA: Keeping the Space Station in Orbit",
+   "url": "https://archive.org/download/RealWorldKeepingTheInternationalSpaceStationInOrbit/Rw44spacestationFixClean.mp4",
+   "secs": 338,
+   "kind": "show"
+  },
+  {
+   "id": "nasa-apollo-11-the-moon-landing-restored",
+   "title": "NASA: Apollo 11, the Moon landing (restored)",
+   "url": "https://archive.org/download/PartiallyRestoredVideoEventsFromTheApollo11Mission/Apollo_11_Intro_H264_720p.mp4",
+   "secs": 137,
+   "kind": "show"
+  },
+  {
+   "id": "birds-of-prey-1938",
+   "title": "Birds of Prey (1938)",
+   "url": "https://archive.org/download/BirdsofP1938/BirdsofP1938.mp4",
+   "secs": 624,
+   "kind": "show"
+  },
+  {
+   "id": "growing-things-a-nature-lesson-1928",
+   "title": "Growing Things: a nature lesson (1928)",
+   "url": "https://archive.org/download/6109_Growing_Things_A_Film_Lesson_in_Nature_Study_01_00_43_01/6109_Growing_Things_A_Film_Lesson_in_Nature_Study_01_00_43_01.mp4",
+   "secs": 516,
+   "kind": "show"
+  },
+  {
+   "id": "curiosity-s-seven-minutes-of-terror-urdu",
+   "title": "Curiosity's Seven Minutes of Terror (Urdu AI dub)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-urdu.mp4",
+   "secs": 303,
+   "kind": "show"
+  },
+  {
+   "id": "curiosity-s-seven-minutes-of-terror-hind",
+   "title": "Curiosity's Seven Minutes of Terror (Hindi AI dub)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-hindi.mp4",
+   "secs": 303,
+   "kind": "show"
+  },
+  {
+   "id": "superman-the-mad-scientist-1941-urdu-ai-",
+   "title": "Superman: The Mad Scientist (1941) (Urdu AI dub)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/superman-1941-urdu.mp4",
+   "secs": 628,
+   "kind": "show"
+  },
+  {
+   "id": "superman-the-mad-scientist-1941-hindi-ai",
+   "title": "Superman: The Mad Scientist (1941) (Hindi AI dub)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/superman-1941-hindi.mp4",
+   "secs": 628,
+   "kind": "show"
+  },
+  {
+   "id": "wing-it",
+   "title": "Wing It!",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/wing-it.mp4",
+   "secs": 238,
+   "kind": "show"
+  }
+ ],
+ "slots": [],
+ "loop": [
+  "the-lion-and-the-clever-rabbit",
+  "popeye-meets-sindbad-the-sailor-1936",
+  "nasa-tour-the-international-space-statio",
+  "popeye-meets-ali-baba-s-forty-thieves-19",
+  "popeye-aladdin-and-his-wonderful-lamp-19",
+  "nasa-life-on-the-space-station",
+  "gulliver-s-travels-1939-full-cartoon-fil",
+  "superman-the-mechanical-monsters-1941",
+  "nasa-food-aboard-the-space-station",
+  "superman-electric-earthquake-1942",
+  "superman-eleventh-hour-1942",
+  "nasa-shuttle-discovery-flies-around-the-",
+  "felix-the-cat-the-goose-that-laid-the-go",
+  "spring-blender-animated-short-2019",
+  "nasa-keeping-the-space-station-in-orbit",
+  "caminandes-episodes-1-to-3-llama-cartoon",
+  "curiosity-s-seven-minutes-of-terror-urdu",
+  "nasa-apollo-11-the-moon-landing-restored",
+  "curiosity-s-seven-minutes-of-terror-hind",
+  "superman-the-mad-scientist-1941-urdu-ai-",
+  "birds-of-prey-1938",
+  "superman-the-mad-scientist-1941-hindi-ai",
+  "wing-it",
+  "growing-things-a-nature-lesson-1928"
+ ]
+}

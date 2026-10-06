@@ -28,6 +28,8 @@ object MyChannel {
         Station("filmein", "00", "Bazaar Cinema"),
         // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
         Station("sur", "000", "Bazaar Music"),
+        // Public-domain and Creative Commons cartoons for children (1.9.41).
+        Station("kids", "00000", "Bazaar Kids"),
     )
 
     private const val SCHEME = "mychannel://"
@@ -119,7 +121,11 @@ object MyChannel {
     }
 
     /** The channels that are on, in station order. */
-    fun channels(): List<Channel> = STATIONS.mapNotNull { _configs.value[it.id]?.channel } + bollywood
+    fun channels(): List<Channel> =
+        // In dial order: 0, 00, 000, 0000 (Bazaar Hits), 00000.
+        (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel?.let { st.dial to it } } + ("0000" to bollywood))
+            .sortedBy { it.first.length }
+            .map { it.second }
 
     /** The channel a viewer reaches by typing [typed] ("0", "00"), when it's on. */
     fun byDial(typed: String): Channel? =

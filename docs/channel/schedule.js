@@ -21,6 +21,9 @@ export const STATIONS = [
   { id: "sur", name: "Bazaar Music", dial: "000", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-music.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
     credits: "Music: recordings that are free to use (public domain, CC0 and CC BY) from Wikimedia Commons; each song's credit and licence show on screen. No film songs." },
+  { id: "kids", name: "Bazaar Kids", dial: "00000", doc: "_channel_kids", page: "channel/?c=kids", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-kids.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
+    credits: "Cartoons: public-domain classics (Popeye, Superman, Felix the Cat) from the Internet Archive, Blender Foundation shorts (CC BY) and NASA videos." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
