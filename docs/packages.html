@@ -20,12 +20,18 @@
   th { background: var(--surface); color: var(--muted); font-weight: 700; position: sticky; top: 0; }
   input[type=search] { width: 100%; max-width: 360px; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
   select, .inp { padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
-  .prices td input { width: 90px; }
+  .prices td input { width: 84px; }
+  .prices th, .prices td { padding: 9px 10px; }
+  @media (max-width: 600px) {
+    .prices th, .prices td { padding: 7px 4px; white-space: normal; }
+    .prices td input { width: 52px; padding: 6px 4px; }
+    .prices .pill { padding: 2px 6px; font-size: 12px; }
+  }
   textarea.inp { width: 100%; min-height: 70px; }
   .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: 13px; }
   .Free { background: var(--surface-2); } .Silver { background: #9e9e9e; color: #000; } .Gold { background: #f5c542; color: #000; } .Platinum { background: #b3e5fc; color: #000; }
   @media (min-width: 1200px) {
-    .split { display: grid; grid-template-columns: minmax(460px, 560px) minmax(0, 1fr); gap: 24px; align-items: start; }
+    .split { display: grid; grid-template-columns: minmax(640px, 700px) minmax(0, 1fr); gap: 24px; align-items: start; }
     .split > .panel:first-child { position: sticky; top: 16px; margin-bottom: 0 !important; }
   }
   .soon { color: #ff8a80; font-weight: 700; }
@@ -65,7 +71,7 @@
       <p><label><input type="checkbox" id="enforce"> <b>Packages are on</b></label><br>
         <span class="small">While this is off, every viewer has everything (like today). When it's on, viewers without a package get Free, and new viewers get a free trial of everything first.</span></p>
       <p><label>Free trial for new viewers: <input class="inp" type="number" id="trialDays" min="0" max="365" style="width:80px"> days</label></p>
-      <div class="table-wrap prices" style="max-width:560px"><table>
+      <div class="table-wrap prices"><table>
         <thead><tr><th>Package</th><th>1 year (you type)</th><th>6 months</th><th>3 months</th><th>1 month</th></tr></thead>
         <tbody id="priceRows"></tbody>
       </table></div>
