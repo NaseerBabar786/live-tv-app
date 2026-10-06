@@ -1,29 +1,35 @@
 name: Ad 5 AI video
+# Makes the raw parts of Cable TV Video Ad 5 (one runner per scene, so each uses its own free quota).
 on:
   push:
     branches: [ad5-ai-video]
     paths: ["tools/ad5/**", ".github/workflows/ad5-video.yml"]
   workflow_dispatch:
-    inputs:
-      only: {description: 'scene ids, comma separated (empty = all)', required: false, default: ''}
-      seed: {description: 'picture seed', required: false, default: '5151'}
 jobs:
-  run:
+  scene:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    timeout-minutes: 300
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        scene: [s1, s2, s3, s4, s5, s6]
     steps:
       - uses: actions/checkout@v4
-      - name: Install
+      - name: Should this scene run?
+        id: want
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-noto-core
-          pip install -q gradio_client edge-tts numpy pillow requests
+          if grep -qw "${{ matrix.scene }}" tools/ad5/todo.txt; then echo "go=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Install
+        if: steps.want.outputs.go == '1'
+        run: pip install -q gradio_client edge-tts pillow
       - name: Run
+        if: steps.want.outputs.go == '1'
         env:
           GH_TOKEN: ${{ github.token }}
-          ONLY: ${{ github.event.inputs.only }}
-          SEED: ${{ github.event.inputs.seed || '5151' }}
+          ONLY: ${{ matrix.scene }}
+          VOICES: "0"
         run: |
           set -eu
           cd tools/ad5

@@ -75,7 +75,8 @@ async def voices():
             except Exception as e:
                 print("voice retry", sid, e, flush=True); time.sleep(5)
 
-asyncio.run(voices())
+if os.environ.get("VOICES", "1") == "1":
+    asyncio.run(voices())
 for sc in S["scenes"]:
     if ONLY and sc["id"] not in ONLY: continue
     img = picture(sc)
