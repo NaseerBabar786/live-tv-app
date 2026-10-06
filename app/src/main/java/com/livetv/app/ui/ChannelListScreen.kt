@@ -258,9 +258,10 @@ fun ChannelListScreen(
     }
     // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
-    LaunchedEffect(tier, tileLayout) {
-        if (!Plans.allows(tileLayout.tier)) {
-            tileLayout = if (Edition.MAX) TileLayout.Browse else TileLayout.List
+    val packages by Plans.features.collectAsStateWithLifecycle()
+    LaunchedEffect(tier, packages, tileLayout) {
+        if (!tileLayout.allowed) {
+            tileLayout = if (Edition.MAX && TileLayout.Browse.allowed) TileLayout.Browse else TileLayout.List
             sessionTileLayout = tileLayout
         }
     }
@@ -507,7 +508,7 @@ fun ChannelListScreen(
         if (tileLayout == TileLayout.Browse && next != TileLayout.Browse && state.query.isNotBlank()) onQueryChange("")
         if (next.separateTvs && !premium) {
             upsellFor = next
-        } else if (Plans.ask("${next.label} mode", next.tier)) {
+        } else if (next.feature?.let { Plans.ask("${next.label} mode", it) } == true) {
             // Cable TV shows its packages; the mode stays as it was.
         } else {
             tileLayout = next
@@ -1258,7 +1259,7 @@ fun ChannelListScreen(
         ModesMenu(
             current = tileLayout,
             locked = { it.separateTvs && !premium },
-            needs = { if (Plans.allows(it.tier)) null else it.tier.label },
+            needs = { it.feature?.takeUnless(Plans::has)?.let { f -> Plans.lowestWith(f).label } },
             onPick = ::pickLayout,
             onDismiss = { modesOpen = false },
         )
@@ -2156,14 +2157,26 @@ private val layouts = TileLayout.entries.filter {
     (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel && it != TileLayout.Strip && it != TileLayout.Duo) || Edition.LIVE_TV
 }
 
-/** Cable TV's package each mode needs (see [Plans]). */
-private val TileLayout.tier: Plans.Tier
+/** The package feature each mode needs (see [Plans]); 1+List is in every package. */
+private val TileLayout.feature: Plans.Feature?
     get() = when (this) {
-        TileLayout.List, TileLayout.Browse, TileLayout.Carousel, TileLayout.Strip -> Plans.Tier.Free
-        TileLayout.Two, TileLayout.Five, TileLayout.Duo -> Plans.Tier.Silver
-        TileLayout.Four, TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine -> Plans.Tier.Gold
-        TileLayout.Six -> Plans.Tier.Platinum
+        TileLayout.List -> null
+        TileLayout.Browse -> Plans.Feature.Browse
+        TileLayout.Carousel -> Plans.Feature.Carousel
+        TileLayout.Strip -> Plans.Feature.Strip
+        TileLayout.Two -> Plans.Feature.Two
+        TileLayout.Five -> Plans.Feature.Five
+        TileLayout.Duo -> Plans.Feature.Duo
+        TileLayout.Four -> Plans.Feature.Four
+        TileLayout.Six -> Plans.Feature.Six
+        TileLayout.News -> Plans.Feature.News
+        TileLayout.Cp24 -> Plans.Feature.Cp24
+        TileLayout.Home -> Plans.Feature.Home
+        TileLayout.Mine -> Plans.Feature.Mine
     }
+
+/** Whether the viewer's package has this mode. */
+private val TileLayout.allowed: Boolean get() = feature?.let(Plans::has) ?: true
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() =
