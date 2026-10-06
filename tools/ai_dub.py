@@ -31,8 +31,13 @@ def credits(film):
 
 
 LANGS = {
-    "ur": ("urdu", "Urdu", "urd", {"m": "ur-PK-AsadNeural", "f": "ur-PK-UzmaNeural"}),
-    "hi": ("hindi", "Hindi", "hin", {"m": "hi-IN-MadhurNeural", "f": "hi-IN-SwaraNeural"}),
+    # m / f = main man and woman, m2 / f2 / m3 = other voices (older or deeper).
+    "ur": ("urdu", "Urdu", "urd", {"m": ("ur-PK-AsadNeural", 0), "f": ("ur-PK-UzmaNeural", 0),
+                                   "m2": ("ur-IN-SalmanNeural", -4), "f2": ("ur-IN-GulNeural", 0),
+                                   "m3": ("ur-PK-AsadNeural", -14)}),
+    "hi": ("hindi", "Hindi", "hin", {"m": ("hi-IN-MadhurNeural", 0), "f": ("hi-IN-SwaraNeural", 0),
+                                     "m2": ("hi-IN-MadhurNeural", -14), "f2": ("hi-IN-SwaraNeural", 8),
+                                     "m3": ("hi-IN-MadhurNeural", -24)}),
 }
 
 
@@ -98,26 +103,48 @@ def get_film(film):
 def prepare(film):
     os.makedirs(OUT, exist_ok=True)
     src = get_film(film)
-    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-vn", "-ac", "2", "-ar", str(RATE), f"{film}.wav")
-    run(sys.executable, "-m", "demucs", "--two-stems", "vocals", "-n", "htdemucs", "-o", "sep", f"{film}.wav")
-    length = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", src],
-                                  check=True, capture_output=True, text=True).stdout)
-    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-ss", str(int(length * 0.3)), "-i", src, "-frames:v", "1",
-        "-vf", "scale=640:-2", "-q:v", "4", f"{OUT}/{film}-poster.jpg")
-    stems = f"sep/htdemucs/{film}"
-    for stem, name in (("no_vocals", "music"), ("vocals", "voices")):
-        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", f"{stems}/{stem}.wav",
-            "-c:a", "aac", "-b:a", "192k", f"{OUT}/dubwork-{film}-{name}.m4a")
+    voices = f"{film}-voices.m4a"
+    # The sound stems are kept on the release; only split them again when they aren't there.
+    if subprocess.run(["curl", "-fsSL", "-o", voices, f"{BASE}/dubwork-{film}-voices.m4a"]).returncode != 0:
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-vn", "-ac", "2", "-ar", str(RATE), f"{film}.wav")
+        run(sys.executable, "-m", "demucs", "--two-stems", "vocals", "-n", "htdemucs", "-o", "sep", f"{film}.wav")
+        stems = f"sep/htdemucs/{film}"
+        for stem, name in (("no_vocals", "music"), ("vocals", "voices")):
+            run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", f"{stems}/{stem}.wav",
+                "-c:a", "aac", "-b:a", "192k", f"{OUT}/dubwork-{film}-{name}.m4a")
+        voices = f"{stems}/vocals.wav"
+        length = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", src],
+                                      check=True, capture_output=True, text=True).stdout)
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-ss", str(int(length * 0.3)), "-i", src, "-frames:v", "1",
+            "-vf", "scale=640:-2", "-q:v", "4", f"{OUT}/{film}-poster.jpg")
 
     from faster_whisper import WhisperModel
     model = WhisperModel("medium.en", device="cpu", compute_type="int8")
-    segs, _ = model.transcribe(f"{stems}/vocals.wav", language="en", beam_size=5, vad_filter=True,
+    segs, _ = model.transcribe(voices, language="en", beam_size=5, vad_filter=True, word_timestamps=True,
                                condition_on_previous_text=False)
-    lines = [{"start": round(s.start, 2), "end": round(s.end, 2), "text": s.text.strip()} for s in segs]
+    words = [w for s in segs for w in (s.words or [])]
+    lines = to_lines(words)
     with open(f"{OUT}/dubwork-{film}.en.json", "w", encoding="utf-8") as f:
         json.dump({"film": film, "segments": lines}, f, ensure_ascii=False, indent=1)
     write_srt(f"{OUT}/{film}-english.srt", lines, credit_line(film, "English"))
     print(f"{film}: {len(lines)} lines")
+
+
+def to_lines(words):
+    """Words with timings -> short lines that start when the speaking starts: a new line after a
+    pause, or after the end of a sentence once the line is long enough."""
+    lines, cur = [], []
+    for w in words:
+        if cur:
+            gap = w.start - cur[-1].end
+            text = cur[-1].word.strip()
+            long_enough = cur[-1].end - cur[0].start > 1.2
+            if gap > 0.7 or (text[-1:] in ".?!" and long_enough) or cur[-1].end - cur[0].start > 7:
+                lines.append(cur); cur = []
+        cur.append(w)
+    if cur:
+        lines.append(cur)
+    return [{"start": round(l[0].start, 2), "end": round(l[-1].end, 2), "text": "".join(w.word for w in l).strip()} for l in lines]
 
 
 def credit_line(film, lang_name):
@@ -129,9 +156,10 @@ def credit_line(film, lang_name):
 
 async def speak(text, voice, rate, path):
     import edge_tts
+    name, pitch = voice
     for attempt in range(4):
         try:
-            await edge_tts.Communicate(text, voice, rate=f"+{rate}%").save(path)
+            await edge_tts.Communicate(text, name, rate=f"+{rate}%", pitch=f"{pitch:+d}Hz").save(path)
             return
         except Exception as e:  # the service sometimes drops a request
             print(f"retry {attempt + 1} for {path}: {e}", flush=True)
@@ -198,9 +226,10 @@ def voice(film, lang):
     credit = credit_line(film, lang_name)
     write_srt(f"{OUT}/{film}-{folder}.srt", lines, credit)
     font = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-    label = f"{title} - AI {lang_name} dub (test)\\n{holder.replace(':', '')}\\n{licence}  -  voices changed by Bazaar TV"
-    label = label.replace("'", "")
-    draw = (f"drawtext=fontfile={font}:text='{label}':fontcolor=white:fontsize=22:line_spacing=6:"
+    # The credit sits on screen for the first 8 seconds (CC BY asks for credit and a note of what changed).
+    with open(f"{film}-{lang}-credit.txt", "w", encoding="utf-8") as f:
+        f.write(f"{title} - AI {lang_name} dub (test)\n{holder}\n{licence}  -  voices changed by Bazaar TV")
+    draw = (f"drawtext=fontfile={font}:textfile={film}-{lang}-credit.txt:fontcolor=white:fontsize=22:line_spacing=6:"
             f"box=1:boxcolor=black@0.55:boxborderw=12:x=30:y=h-th-40:enable='lt(t,8)'")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-i", f"{film}-{lang}-mix.wav",
         "-map", "0:v:0", "-map", "1:a:0", "-vf", draw,
