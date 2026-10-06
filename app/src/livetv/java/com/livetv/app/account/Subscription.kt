@@ -32,7 +32,29 @@ object Subscription {
         val howToPay: String = DEFAULT_HOW_TO_PAY,
         /** What each package has, as ticked by the owner at tv.bulkbazaar.ca/packages. */
         val features: Map<Plans.Tier, Set<Plans.Feature>> = Plans.DEFAULT_FEATURES,
+        /** The owner's promotions (Christmas, Labour Day...), from config/promos. */
+        val promos: List<Promo> = emptyList(),
     )
+
+    /**
+     * One promotion: on sale from [start] to [end] (whole days, the device's time zone) at [price] for
+     * [months], with its own [features]. A viewer who has it has the Promo package with these features.
+     */
+    data class Promo(
+        val id: String,
+        val name: String,
+        val start: String,
+        val end: String,
+        val price: String,
+        val months: Int,
+        val features: Set<Plans.Feature>,
+    ) {
+        val length: String get() = if (months == 12) "1 year" else if (months == 1) "1 month" else "$months months"
+
+        /** Whether today is between its start and end dates. */
+        fun onSale(today: String = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(Date())): Boolean =
+            (start.isBlank() || today >= start) && (end.isBlank() || today <= end)
+    }
 
     /** Where the viewer's package comes from, for the packages screen and the end-date warning. */
     data class Status(
@@ -43,7 +65,12 @@ object Subscription {
         /** The paid package that ended, when it ended in the last week. */
         val endedTier: Plans.Tier? = null,
         val endedAt: Date? = null,
-    )
+        /** The promotion's name when the package is [Plans.Tier.Promo]. */
+        val promoName: String? = null,
+    ) {
+        /** "Gold", or the promotion's name ("Christmas Sale"). */
+        val label: String get() = promoName ?: tier.label
+    }
 
     // Declared before _offer: Offer() reads it while this object starts, and a later one is still null then.
     val DEFAULT_PRICES: Map<Plans.Tier, Prices> = mapOf(
@@ -103,8 +130,10 @@ object Subscription {
         runCatching {
             val t = account.token()
             val config = getOrNull(Firestore.doc("config/plans"), t)?.optJSONObject("fields")
-            val offer = parseOffer(config)
+            val promoDoc = getOrNull(Firestore.doc("config/promos"), t)?.optJSONObject("fields")
+            val offer = parseOffer(config).copy(promos = parsePromos(promoDoc?.str("items").orEmpty()))
             _offer.value = offer
+            var features = offer.features
             val now = Date()
             val status = if (!offer.enforced) {
                 Status(Plans.Tier.Platinum)
@@ -114,9 +143,13 @@ object Subscription {
                 val paidUntil = plan?.time("until")
                 val joined = getOrNull(Firestore.doc("users/${u.uid}"), t)?.optJSONObject("fields")?.time("joined") ?: now
                 val trialEnd = Date(joined.time + offer.trialDays * 86_400_000L)
+                // A promotion has its own features; one the owner has since deleted keeps the Promo defaults.
+                val promo = if (paid == Plans.Tier.Promo) offer.promos.firstOrNull { it.id == plan?.str("promo") } else null
+                if (promo != null) features = features + (Plans.Tier.Promo to promo.features)
+                val promoName = if (paid == Plans.Tier.Promo) promo?.name ?: plan?.str("promoName")?.ifBlank { null } else null
                 when {
                     paid != null && paid != Plans.Tier.Free && paidUntil != null && paidUntil.after(now) ->
-                        Status(paid, paidUntil)
+                        Status(paid, paidUntil, promoName = promoName)
                     offer.trialDays > 0 && trialEnd.after(now) ->
                         Status(Plans.Tier.Platinum, trialEnd, trial = true)
                     paid != null && paid != Plans.Tier.Free && paidUntil != null && now.time - paidUntil.time < 7 * 86_400_000L ->
@@ -125,14 +158,14 @@ object Subscription {
                 }
             }
             _status.value = status
-            Plans.setFeatures(if (offer.enforced) offer.features else null)
+            Plans.setFeatures(if (offer.enforced) features else null)
             Plans.set(status.tier)
             context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().apply {
                 putString("tier", status.tier.name)
                 putLong("until", status.until?.time ?: 0L)
                 Plans.Tier.entries.forEach { t ->
                     val key = "features_${t.name.lowercase()}"
-                    if (offer.enforced) putString(key, offer.features[t].orEmpty().joinToString(",") { it.key }) else remove(key)
+                    if (offer.enforced) putString(key, features[t].orEmpty().joinToString(",") { it.key }) else remove(key)
                 }
             }.apply()
         }
@@ -174,9 +207,28 @@ object Subscription {
         )
     }
 
+    /** The promotions in config/promos "items": a JSON list the packages page writes. */
+    private fun parsePromos(items: String): List<Promo> = runCatching {
+        val list = org.json.JSONArray(items)
+        (0 until list.length()).mapNotNull { i ->
+            val o = list.optJSONObject(i) ?: return@mapNotNull null
+            Promo(
+                id = o.optString("id").ifBlank { return@mapNotNull null },
+                name = o.optString("name").ifBlank { "Promotion" },
+                start = o.optString("start"),
+                end = o.optString("end"),
+                price = o.optString("price"),
+                months = o.optInt("months", 1).coerceIn(1, 24),
+                features = Plans.Feature.parse(o.optString("features")),
+            )
+        }
+    }.getOrDefault(emptyList())
+
     /** What [tier] has, in a line for the packages screen. */
-    fun describe(tier: Plans.Tier): String {
-        val has = _offer.value.features[tier].orEmpty()
+    fun describe(tier: Plans.Tier): String = describe(_offer.value.features[tier].orEmpty())
+
+    /** A line listing [has] for the packages screen. */
+    fun describe(has: Set<Plans.Feature>): String {
         val channels = if (Plans.Feature.AllChannels in has) "All channels" else "Our own channels plus Aaj Tak and ARY News"
         val extras = Plans.Feature.entries.filter { it != Plans.Feature.AllChannels && it in has }.map { it.label }
         return "$channels. 1+List" + extras.joinToString("") { ", $it" } + ", full screen and favourites"

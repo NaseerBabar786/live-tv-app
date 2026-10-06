@@ -55,16 +55,16 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
     var error by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) { Subscription.refresh(context, account) }
 
-    fun ask(tier: Plans.Tier, length: String, price: String) {
+    fun ask(name: String, length: String, price: String) {
         val me = account.user.value ?: return
         scope.launch {
             error = null
             try {
                 Messages(account).send(
                     me.uid,
-                    "Hi! Please turn on the ${tier.label} package for $length ($price). How do I pay?",
+                    "Hi! Please turn on the $name for $length ($price). How do I pay?",
                 )
-                sent = "Sent. We'll reply in Messages with how to pay, and turn ${tier.label} on as soon as it's paid."
+                sent = "Sent. We'll reply in Messages with how to pay, and turn it on as soon as it's paid."
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -87,7 +87,7 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                     val s = status
                     Text(
                         buildString {
-                            append("Your package: ${current.label}")
+                            append("Your package: ${s?.label ?: current.label}")
                             if (s?.trial == true) append(" (free trial)")
                             if (s?.until != null) append(", until ${planDate(s.until)}")
                             if (!offer.enforced) append(". Everything is free for now.")
@@ -97,8 +97,25 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                     Text(offer.howToPay, style = MaterialTheme.typography.bodySmall)
                     sent?.let { Text(it, color = FocusColor) }
                     error?.let { Text(it, color = Color(0xFFFF8A80)) }
-                    // The Promotional package isn't for sale: it shows only to a viewer who has it.
-                    Plans.Tier.entries.filter { it != Plans.Tier.Promo || it == current }.forEach { tier ->
+                    // The owner's promotions on sale today (Christmas, Labour Day...), each with its own price and features.
+                    offer.promos.filter { it.onSale() }.forEach { promo ->
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.22f), RoundedCornerShape(12.dp))
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Text("🎉 ${promo.name} · ${promo.price} for ${promo.length}", fontWeight = FontWeight.Bold)
+                            if (promo.end.isNotBlank()) Text("On sale until ${promo.end}", style = MaterialTheme.typography.bodySmall)
+                            Text(Subscription.describe(promo.features), style = MaterialTheme.typography.bodySmall)
+                            OutlinedButton(onClick = { ask("${promo.name} promotion", promo.length, promo.price) }, modifier = Modifier.focusGlow()) {
+                                Text("Ask for ${promo.name}")
+                            }
+                        }
+                    }
+                    // The Promo package itself is shown above as a promotion, not as a package for sale.
+                    Plans.Tier.entries.filter { it != Plans.Tier.Promo }.forEach { tier ->
                         val prices = offer.prices[tier]
                         Column(
                             Modifier
@@ -128,7 +145,7 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                                 lengths.chunked(2).forEach { pair ->
                                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                         pair.forEach { (length, price) ->
-                                            OutlinedButton(onClick = { ask(tier, length, price) }, modifier = Modifier.focusGlow()) {
+                                            OutlinedButton(onClick = { ask("${tier.label} package", length, price) }, modifier = Modifier.focusGlow()) {
                                                 Text("$length $price")
                                             }
                                         }
@@ -167,7 +184,7 @@ fun PlanEndingNotice(onRenew: () -> Unit, onMessages: () -> Unit) {
     val text = when {
         s.until != null && s.until.time - now < 5 * day -> {
             val left = ((s.until.time - now + day - 1) / day).coerceAtLeast(0)
-            val what = if (s.trial) "Your free trial" else "Your ${s.tier.label} package"
+            val what = if (s.trial) "Your free trial" else "Your ${s.label} package"
             "$what ends on ${planDate(s.until)}" + when (left) {
                 0L -> " (today)."
                 1L -> " (tomorrow)."

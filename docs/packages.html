@@ -35,8 +35,10 @@
     .split > .panel:first-child { margin-bottom: 0 !important; }
     .split > .pk-main { grid-column: 1 / -1; }
   }
-  #cfgMsg, #featMsg { margin-left: 12px; font-weight: 700; }
-  #cfgMsg.saved, #featMsg.saved { color: #69f0ae; } #cfgMsg.bad, #featMsg.bad { color: #ff8a80; }
+  #cfgMsg, #featMsg, #promoMsg { margin-left: 12px; font-weight: 700; }
+  .promo label { display: block; margin: 6px 0; } .promo .inp { width: 100%; box-sizing: border-box; }
+  .promo .ticks label { display: inline-block; margin: 3px 10px 3px 0; font-size: 13px; }
+  #cfgMsg.saved, #featMsg.saved, #promoMsg.saved { color: #69f0ae; } #cfgMsg.bad, #featMsg.bad, #promoMsg.bad { color: #ff8a80; }
   .soon { color: #ff8a80; font-weight: 700; }
   .feats td, .feats th { text-align: center; padding: 7px 10px; }
   .feats td:first-child, .feats th:first-child { text-align: left; }
@@ -67,7 +69,7 @@
 
 <main class="wrap">
   <h1>Packages</h1>
-  <p class="lead">Free, Silver, Gold and Platinum for Cable TV viewers, plus a Promotional package you give to chosen viewers. Turn packages on, set prices, and give each viewer a package when they pay.</p>
+  <p class="lead">Free, Silver, Gold and Platinum for Cable TV viewers, plus promotions (Christmas, Labour Day...) with their own dates, price and features. Turn packages on, set prices, and give each viewer a package when they pay.</p>
   <p class="err" id="err"></p>
   <div id="notReady" class="panel hidden">This page works once sign-in is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
@@ -91,7 +93,7 @@
       <h2 style="margin-top:0">Design your packages</h2>
       <p class="small">Tick what each package gets, then press <b>Save settings</b>. Every package always has 1+List, full screen, favourites, channel numbers and search. Without <b>All channels</b> a package has only our own channels plus Aaj Tak and ARY News. The app follows your ticks the next time each viewer opens it.</p>
       <div class="table-wrap feats"><table>
-        <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Silver">Silver</span></th><th><span class="pill Gold">Gold</span></th><th><span class="pill Platinum">Platinum</span></th><th><span class="pill Promo">Promotional</span></th></tr></thead>
+        <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Silver">Silver</span></th><th><span class="pill Gold">Gold</span></th><th><span class="pill Platinum">Platinum</span></th></tr></thead>
         <tbody id="featRows"></tbody>
       </table></div>
       <div class="row" style="margin:10px 0 18px"><button class="btn primary" id="saveFeats">Save settings</button> <button class="btn" id="resetFeats">Start again from our suggestion</button><span class="small" id="featMsg"></span></div>
@@ -107,6 +109,13 @@
         <li><b>Ending</b>: 5 days before a package (or the trial) ends, the viewer sees a reminder once a day with <b>Renew</b> and <b>Message us</b> buttons. When it ends they drop to Free, and for a week the app tells them it ended.</li>
         <li><b>Renewing</b>: giving the same package again adds the time after the current end date, so paying early loses nothing. Giving a different package starts it today.</li>
       </ul>
+    </div>
+
+    <div class="panel" style="margin-bottom:20px">
+      <h2 style="margin-top:0">Promotions</h2>
+      <p class="small">Run a sale for Christmas, Labour Day, Family Day, Halloween or any event. Each promotion has its own name, dates, price, length and features. Viewers see it in the app's packages screen only between its start and end dates and ask for it like any package; you can also give it to a viewer in the list below. Press <b>Save promotions</b> after changes.</p>
+      <div id="promoList" class="pkgs"></div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="addPromo">+ Add a promotion</button> <button class="btn primary" id="savePromos">Save promotions</button><span class="small" id="promoMsg"></span></div>
     </div>
 
     <div class="pk-main">
@@ -152,14 +161,13 @@ const FEATURES = [
   ["games", "Games", "the 12 retro games played with the TV remote"],
   ["devices", "2 devices", "one account works on two TVs or phones at the same time"],
 ];
-const ALL_TIERS = ["Free", "Silver", "Gold", "Platinum", "Promo"];
-// The Promotional package ("Promo" in the app): not for sale, you give it to chosen viewers for a set time.
-const tierName = t => t === "Promo" ? "Promotional" : t;
+const ALL_TIERS = ["Free", "Silver", "Gold", "Platinum"];
+// A promotion is the "Promo" package in the app; each viewer's plan names which promotion (promo, promoName).
+const tierName = (t, p) => t === "Promo" ? (p?.promoName || "Promotion") : t;
 const ALL_KEYS = FEATURES.map(f => f[0]);
 const DEFAULT_FEATURES = {
   free: [], silver: ["channels", "browse", "carousel"],
   gold: ALL_KEYS.filter(k => k !== "devices"), platinum: ALL_KEYS,
-  promo: ALL_KEYS.filter(k => k !== "devices"),
 };
 const LENGTHS = [["month", "1 month"], ["three", "3 months"], ["six", "6 months"], ["year", "1 year"]];
 const DEFAULTS = {
@@ -183,7 +191,7 @@ if (!configured) {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = fs.getFirestore(app);
-  let users = [], plans = {};
+  let users = [], plans = {}, promos = [];
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
   document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
@@ -196,6 +204,7 @@ if (!configured) {
     show("dash");
     try {
       await loadConfig();
+      await loadPromos();
       const [u, p] = await Promise.all([fs.getDocs(fs.collection(db, "users")), fs.getDocs(fs.collection(db, "plans"))]);
       users = u.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.lastOpened?.toMillis?.() || 0) - (a.lastOpened?.toMillis?.() || 0));
       plans = Object.fromEntries(p.docs.map(d => [d.id, { ...d.data(), until: d.data().until?.toDate?.() }]));
@@ -241,6 +250,65 @@ if (!configured) {
     showPrices();
   }
 
+  // Promotions live in config/promos as "items": a JSON list of { id, name, start, end, price, months, features }.
+  const esc = v => String(v ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
+  async function loadPromos() {
+    try {
+      const s = await fs.getDoc(fs.doc(db, "config", "promos"));
+      promos = s.exists() ? JSON.parse(s.data().items || "[]") : [];
+    } catch (e) { $("promoMsg").className = "bad"; $("promoMsg").textContent = "Couldn't load your promotions: " + saveHelp(e); promos = []; }
+    showPromos();
+  }
+  function showPromos() {
+    const today = new Date().toISOString().slice(0, 10);
+    $("promoList").innerHTML = promos.length ? promos.map((p, i) => {
+      const live = (!p.start || today >= p.start) && (!p.end || today <= p.end);
+      const has = (p.features || "").split(",");
+      return `<div class="pkg promo" data-i="${i}">
+        <h3><span class="pill Promo">🎉 ${esc(p.name || "Promotion")}</span> <span class="small">${live ? "on sale now" : p.start && today < p.start ? "starts " + esc(p.start) : "ended"}</span></h3>
+        <label>Name <input class="inp" data-f="name" value="${esc(p.name)}" placeholder="Christmas Sale"></label>
+        <label>Starts <input class="inp" type="date" data-f="start" value="${esc(p.start)}"></label>
+        <label>Ends <input class="inp" type="date" data-f="end" value="${esc(p.end)}"></label>
+        <label>Price <input class="inp" data-f="price" value="${esc(p.price)}" placeholder="$9.99"></label>
+        <label>Length <select class="inp" data-f="months">${[1, 3, 6, 12].map(m => `<option value="${m}" ${+p.months === m ? "selected" : ""}>${m === 12 ? "1 year" : m === 1 ? "1 month" : m + " months"}</option>`).join("")}</select></label>
+        <div class="ticks"><b>Includes</b> (1+List is always in):<br>${FEATURES.map(([k, label]) => `<label><input type="checkbox" data-k="${k}" ${has.includes(k) ? "checked" : ""}> ${label}</label>`).join("")}</div>
+        <button class="btn" data-del="${i}" style="margin-top:8px">Delete</button>
+      </div>`;
+    }).join("") : `<p class="small">No promotions yet. Press <b>+ Add a promotion</b>.</p>`;
+  }
+  // Typing and ticking update the list kept on the page; Save promotions writes it.
+  $("promoList").addEventListener("input", e => {
+    const card = e.target.closest(".promo"); if (!card) return;
+    const p = promos[+card.dataset.i];
+    if (e.target.dataset.f) p[e.target.dataset.f] = e.target.dataset.f === "months" ? +e.target.value : e.target.value;
+    if (e.target.dataset.k) p.features = [...card.querySelectorAll("input[data-k]:checked")].map(x => x.dataset.k).join(",");
+  });
+  $("promoList").addEventListener("click", e => {
+    const i = e.target.dataset?.del; if (i === undefined) return;
+    if (!confirm(`Delete the ${promos[+i].name || "promotion"}? Viewers who already have it keep it until it ends.`)) return;
+    promos.splice(+i, 1); showPromos();
+  });
+  $("addPromo").onclick = () => {
+    const start = new Date(), end = new Date(); end.setDate(end.getDate() + 14);
+    promos.push({ id: Math.random().toString(36).slice(2, 10), name: "", start: start.toISOString().slice(0, 10), end: end.toISOString().slice(0, 10),
+      price: "", months: 1, features: DEFAULT_FEATURES.gold.join(",") });
+    showPromos();
+    $("promoList").lastElementChild?.querySelector("input")?.focus();
+  };
+  $("savePromos").onclick = async () => {
+    const msg = $("promoMsg"); msg.className = "small"; msg.textContent = "Saving…";
+    const bad = promos.find(p => !p.name?.trim() || !p.price?.trim());
+    if (bad) { msg.className = "bad"; msg.textContent = "Not saved: every promotion needs a name and a price."; return; }
+    try {
+      const items = JSON.stringify(promos.map(p => ({ ...p, name: p.name.trim(), price: p.price.trim() })));
+      await fs.setDoc(fs.doc(db, "config", "promos"), { items, updated: fs.serverTimestamp() });
+      const back = (await fs.getDocFromServer(fs.doc(db, "config", "promos"))).data() || {};
+      if (back.items !== items) throw new Error("the saved promotions didn't come back");
+      msg.className = "saved"; msg.textContent = "✓ Saved at " + new Date().toLocaleTimeString([], { timeStyle: "short" });
+      showPromos(); render();
+    } catch (e) { msg.className = "bad"; msg.textContent = "Not saved: " + saveHelp(e); }
+  };
+
   // The ticked features of a package, e.g. "channels,browse".
   const ticked = t => [...document.querySelectorAll(`#featRows input[data-t="${t}"]:checked`)].map(i => i.dataset.k);
   // The package cards follow the ticks.
@@ -250,7 +318,7 @@ if (!configured) {
       const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : "<li><b>Our own channels</b>, plus Aaj Tak and ARY News</li>",
         "<li><b>1+List</b>, full screen, favourites and search</li>",
         ...FEATURES.filter(f => f[0] !== "channels" && has.includes(f[0])).map(f => `<li><b>${f[1]}</b>: ${f[2]}</li>`)];
-      const price = id === "free" ? "$0" : id === "promo" ? "given by you, free" : "";
+      const price = id === "free" ? "$0" : "";
       return `<div class="pkg"><h3><span class="pill ${t}">${tierName(t)}</span> <span class="price" data-p="${id}">${price}</span></h3><ul>${items.join("")}</ul></div>`;
     }).join("");
     showPrices();
@@ -269,7 +337,7 @@ if (!configured) {
   function showPrices() {
     document.querySelectorAll(".price[data-p]").forEach(el => {
       const t = el.dataset.p;
-      if (t === "free" || t === "promo") return;
+      if (t === "free") return;
       el.textContent = `${$(t + "_month").value}/month · ${$(t + "_three").value}/3 months · ${$(t + "_six").value}/6 months · ${$(t + "_year").value}/year`;
     });
   }
@@ -309,7 +377,7 @@ if (!configured) {
   function stats() {
     const counts = { Silver: 0, Gold: 0, Platinum: 0, Promo: 0 }; let soon = 0;
     for (const p of Object.values(plans)) if (active(p)) { counts[p.tier] = (counts[p.tier] || 0) + 1; if (p.until - Date.now() < 5 * 864e5) soon++; }
-    const items = [["Viewers", users.length], ["Silver", counts.Silver], ["Gold", counts.Gold], ["Platinum", counts.Platinum], ["Promotional", counts.Promo], ["Ending in 5 days", soon]];
+    const items = [["Viewers", users.length], ["Silver", counts.Silver], ["Gold", counts.Gold], ["Platinum", counts.Platinum], ["Promotions", counts.Promo], ["Ending in 5 days", soon]];
     $("stats").innerHTML = "";
     for (const [l, n] of items) {
       const el = document.createElement("div"); el.className = "stat";
@@ -329,11 +397,13 @@ if (!configured) {
       const tr = document.createElement("tr");
       const cell = (v, cls) => { const td = document.createElement("td"); td.textContent = v ?? ""; if (cls) td.className = cls; tr.append(td); return td; };
       cell(u.name); cell(u.email);
-      const tierTd = cell(""); const pill = document.createElement("span"); pill.className = "pill " + (on ? p.tier : "Free"); pill.textContent = on ? tierName(p.tier) : "Free"; tierTd.append(pill);
+      const tierTd = cell(""); const pill = document.createElement("span"); pill.className = "pill " + (on ? p.tier : "Free"); pill.textContent = on ? tierName(p.tier, p) : "Free"; tierTd.append(pill);
       cell(on ? fmt(p.until) : (p?.until ? "ended " + fmt(p.until) : ""), on && p.until - Date.now() < 5 * 864e5 ? "soon" : "");
       const give = cell("");
-      const sel = document.createElement("select"); [...TIERS, "Promo"].forEach(t => { const o = document.createElement("option"); o.value = t; o.textContent = tierName(t); sel.append(o); });
-      if (on) sel.value = p.tier;
+      const sel = document.createElement("select");
+      TIERS.forEach(t => { const o = document.createElement("option"); o.value = t; o.textContent = t; sel.append(o); });
+      promos.forEach(pr => { const o = document.createElement("option"); o.value = "promo:" + pr.id; o.textContent = "🎉 " + (pr.name || "Promotion"); sel.append(o); });
+      if (on) sel.value = p.tier === "Promo" ? "promo:" + p.promo : p.tier;
       give.append(sel);
       for (const [months, label] of [[1, "+1 month"], [6, "+6 months"], [12, "+1 year"]]) {
         const b = document.createElement("button"); b.className = "btn"; b.style.marginLeft = "6px"; b.textContent = label;
@@ -350,15 +420,20 @@ if (!configured) {
   }
   $("q").oninput = render; $("onlyPaid").onchange = render;
 
-  async function givePlan(u, tier, months) {
+  async function givePlan(u, choice, months) {
     const p = plans[u.id];
+    // A promotion ("promo:<id>") is the Promo package with that promotion's name and features.
+    const promo = choice.startsWith("promo:") ? promos.find(x => x.id === choice.slice(6)) : null;
+    const tier = promo ? "Promo" : choice;
+    const extra = promo ? { promo: promo.id, promoName: promo.name || "Promotion" } : {};
     // Renewing the same package adds after its end date; a new package starts today.
-    const from = active(p) && p.tier === tier ? new Date(p.until) : new Date();
+    const same = active(p) && p.tier === tier && (!promo || p.promo === promo.id);
+    const from = same ? new Date(p.until) : new Date();
     const until = new Date(from); until.setMonth(until.getMonth() + months);
-    if (!confirm(`Give ${u.name || u.email} ${tier} until ${fmt(until)}?`)) return;
+    if (!confirm(`Give ${u.name || u.email} ${promo ? extra.promoName : tier} until ${fmt(until)}?`)) return;
     try {
-      await fs.setDoc(fs.doc(db, "plans", u.id), { tier, until: fs.Timestamp.fromDate(until), name: u.name || "", email: u.email || "", updated: fs.serverTimestamp() });
-      plans[u.id] = { tier, until, name: u.name, email: u.email };
+      await fs.setDoc(fs.doc(db, "plans", u.id), { tier, ...extra, until: fs.Timestamp.fromDate(until), name: u.name || "", email: u.email || "", updated: fs.serverTimestamp() });
+      plans[u.id] = { tier, ...extra, until, name: u.name, email: u.email };
       stats(); render();
     } catch (e) { $("err").textContent = "Couldn't save: " + e.message; }
   }
