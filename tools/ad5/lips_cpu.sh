@@ -13,6 +13,16 @@ for f in ["latentsync_unet.pt", "whisper/tiny.pt"]:
 PY
 # make it run on CPU in float32
 grep -rl --include=*.py -E "cuda|float16" . | xargs sed -i -E 's/"cuda"/"cpu"/g; s/\.cuda\(\)/.to("cpu")/g; s/torch\.float16/torch.float32/g; s/device="cuda"/device="cpu"/g'
+python3 - <<'PY'
+import re
+p = "latentsync/utils/image_processor.py"; s = open(p).read()
+s = s.replace('if device == "cpu":\n            self.face_detector = None\n        else:\n            self.face_detector = FaceDetector(device=device)', 'self.face_detector = FaceDetector(device=device)')
+open(p, "w").write(s)
+p = "latentsync/utils/face_detector.py"; s = open(p).read()
+s = s.replace('providers=["CUDAExecutionProvider"]', 'providers=["CPUExecutionProvider"]').replace("ctx_id=cuda_to_int(device)", "ctx_id=-1")
+open(p, "w").write(s)
+print(open("latentsync/utils/face_detector.py").read()[:900])
+PY
 grep -rn --include=*.py -E "cuda" . | head -20 || true
 cfg=$(ls configs/unet/*.yaml | head -1); echo "config $cfg"; cat "$cfg" | head -60
 cd -
