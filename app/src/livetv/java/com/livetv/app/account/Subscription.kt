@@ -43,6 +43,13 @@ object Subscription {
         val endedAt: Date? = null,
     )
 
+    // Declared before _offer: Offer() reads it while this object starts, and a later one is still null then.
+    val DEFAULT_PRICES: Map<Plans.Tier, Prices> = mapOf(
+        Plans.Tier.Silver to Prices("$1.99", "$9.99", "$17.99"),
+        Plans.Tier.Gold to Prices("$3.99", "$19.99", "$35.99"),
+        Plans.Tier.Platinum to Prices("$5.99", "$29.99", "$53.99"),
+    )
+
     private val _offer = MutableStateFlow(Offer())
     val offer: StateFlow<Offer> = _offer
 
@@ -133,12 +140,6 @@ object Subscription {
         Plans.Tier.Silver to "Everything in Free, plus 1×2, 1+3 and Duo modes",
         Plans.Tier.Gold to "Everything in Silver, plus 2×2, News, CP24, Home, My Screen and Movies & Dramas",
         Plans.Tier.Platinum to "Everything, plus 2×3, Games, and your account on 2 devices at once",
-    )
-
-    val DEFAULT_PRICES: Map<Plans.Tier, Prices> = mapOf(
-        Plans.Tier.Silver to Prices("$1.99", "$9.99", "$17.99"),
-        Plans.Tier.Gold to Prices("$3.99", "$19.99", "$35.99"),
-        Plans.Tier.Platinum to Prices("$5.99", "$29.99", "$53.99"),
     )
 
     const val DEFAULT_HOW_TO_PAY =
