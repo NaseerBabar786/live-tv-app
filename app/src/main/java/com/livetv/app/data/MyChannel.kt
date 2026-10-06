@@ -120,7 +120,10 @@ object MyChannel {
 
     fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
 
-    class Video(val id: String, val title: String, val url: String, /** 0 for a live stream. */ val seconds: Long)
+    class Video(val id: String, val title: String, val url: String, /** 0 for a live stream. */ val seconds: Long) {
+        /** The YouTube video this is, when it is one (Bazaar TV's upcoming trailers): it plays on our locked page. */
+        val youtube: String? = YouTube.videoId(url)
+    }
 
     class Slot(
         /** "all", "weekdays", "weekend", "mon".."sun", or a date "yyyy-MM-dd". */
@@ -153,7 +156,13 @@ object MyChannel {
     /** What to show at a moment. */
     sealed class Now {
         /** Play [video] from [offsetMs] until [untilMs] (wall clock), when the schedule moves on. */
-        class Playing(val video: Video, val offsetMs: Long, val untilMs: Long) : Now()
+        class Playing(
+            val video: Video,
+            val offsetMs: Long,
+            val untilMs: Long,
+            /** Its place in the loop list (without zero-length entries); -1 for a time slot or a live stream. */
+            val loopIndex: Int = -1,
+        ) : Now()
         /** Nothing on; [next] starts at [nextAt] (null when nothing is booked). */
         class OffAir(val next: Video?, val nextAt: Long?) : Now()
     }
@@ -269,15 +278,118 @@ object MyChannel {
         val total = loop.sumOf { it.seconds * 1000 }
         if (total > 0) {
             var pos = Math.floorMod(nowMs - anchor, total)
-            for (v in loop) {
+            loop.forEachIndexed { i, v ->
                 val len = v.seconds * 1000
-                if (pos < len) return Now.Playing(v, pos, minOf(nowMs - pos + len, nextAt))
+                if (pos < len) return Now.Playing(v, pos, minOf(nowMs - pos + len, nextAt), i)
                 pos -= len
             }
         }
         // A live stream in the loop plays on until the next slot.
         c.loop.mapNotNull { byId[it] }.firstOrNull { it.seconds == 0L }?.let { return Now.Playing(it, 0, nextAt) }
         return Now.OffAir(next?.video, next?.at)
+    }
+
+    /**
+     * A run of YouTube videos on air (Bazaar TV's upcoming trailers, 2026-10-06): they play one after
+     * another on our locked page from [startMs] to [endMs] (wall clock), then our own player goes on.
+     */
+    class Block(val videos: List<Video>, val startMs: Long, val endMs: Long)
+
+    /** The run of YouTube videos [c] has on at [nowMs]; null when our own player plays. */
+    fun block(c: Config, nowMs: Long): Block? {
+        val now = whatsOn(c, nowMs) as? Now.Playing ?: return null
+        if (now.video.youtube == null) return null
+        val begun = nowMs - now.offsetMs
+        if (now.loopIndex < 0) return Block(listOf(now.video), begun, now.untilMs)
+        // The loop's neighbours that are YouTube videos too, up to the ends of the list (it starts again
+        // from the top after a time slot, so a run never reaches across the end).
+        val byId = c.videos.associateBy { it.id }
+        val loop = c.loop.mapNotNull { byId[it] }.filter { it.seconds > 0 }
+        var first = now.loopIndex
+        var start = begun
+        while (first > 0 && loop[first - 1].youtube != null) {
+            first--
+            start -= loop[first].seconds * 1000
+        }
+        var last = now.loopIndex
+        var end = begun + now.video.seconds * 1000
+        while (last + 1 < loop.size && loop[last + 1].youtube != null) {
+            last++
+            end += loop[last].seconds * 1000
+        }
+        // A time slot that starts in the middle cuts it short.
+        val cut = if (now.untilMs < begun + now.video.seconds * 1000) now.untilMs else end
+        return Block(loop.subList(first, last + 1), start, minOf(end, cut))
+    }
+
+    /**
+     * Our locked page playing [channel]'s run of YouTube videos on now, joined where the clock says;
+     * null when our own player plays. The address stays the same for the whole run.
+     */
+    fun blockPage(channel: Channel?, version: Int, nowMs: Long = System.currentTimeMillis()): String? {
+        val c = configOf(channel) ?: return null
+        if (STATIONS.firstOrNull { it.id == c.id }?.youtube == true) return null
+        val b = block(c, nowMs) ?: return null
+        fun enc(s: String) = java.net.URLEncoder.encode(s, "UTF-8").replace("+", "%20")
+        return "https://tv.bulkbazaar.ca/channel/block.html?app=1&at=${b.startMs}&until=${b.endMs}" +
+            "&ids=" + b.videos.joinToString(",") { it.youtube!! } +
+            "&secs=" + b.videos.joinToString(",") { it.seconds.toString() } +
+            "&name=" + enc(c.name) + (c.logo?.let { "&logo=" + enc(it) } ?: "") + "&corner=" + c.logoCorner +
+            (c.ticker?.let { "&tick=" + enc(it) } ?: "") + "&ver=$version"
+    }
+
+    /** A schedule entry that stands for a list built on the website ("trailers": Bazaar TV's upcoming trailers). */
+    private const val LIST_KIND = "trailers"
+
+    /**
+     * [o] (a schedule as saved) with each list entry replaced by the videos in its list, as [fetch]
+     * gets them (null when it can't): the list changes every day without the owner saving anything.
+     * Each loop place of the entry gets the whole list; a time slot can't hold a list and is dropped.
+     */
+    fun expand(o: JSONObject, fetch: (String) -> JSONObject?): JSONObject {
+        val videos = o.optJSONArray("videos") ?: return o
+        val lists = (0 until videos.length()).mapNotNull { videos.optJSONObject(it) }
+            .filter { it.optString("kind") == LIST_KIND && it.optString("url").startsWith("http") }
+        if (lists.isEmpty()) return o
+        val out = JSONObject(o.toString())
+        val newVideos = org.json.JSONArray()
+        val ids = mutableMapOf<String, List<String>>()
+        for (i in 0 until videos.length()) {
+            val v = videos.optJSONObject(i) ?: continue
+            if (v !in lists) {
+                newVideos.put(v)
+                continue
+            }
+            val list = runCatching { fetch(v.optString("url")) }.getOrNull()?.optJSONArray("videos")
+            val parts = mutableListOf<String>()
+            for (j in 0 until (list?.length() ?: 0)) {
+                val item = list!!.optJSONObject(j) ?: continue
+                val yt = item.optString("id").takeIf { Regex("[A-Za-z0-9_-]{11}").matches(it) } ?: continue
+                val secs = item.optLong("secs").takeIf { it > 0 } ?: continue
+                val id = "${v.optString("id")}-$yt"
+                if (id !in parts) newVideos.put(JSONObject().put("id", id).put("title", item.optString("title"))
+                    .put("url", YouTube.watchUrl(yt)).put("secs", secs).put("kind", "programme"))
+                parts += id
+            }
+            ids[v.optString("id")] = parts
+        }
+        out.put("videos", newVideos)
+        val loop = o.optJSONArray("loop")
+        if (loop != null) {
+            val newLoop = org.json.JSONArray()
+            for (i in 0 until loop.length()) {
+                val id = loop.optString(i)
+                ids[id]?.forEach { newLoop.put(it) } ?: newLoop.put(id)
+            }
+            out.put("loop", newLoop)
+        }
+        val slots = o.optJSONArray("slots")
+        if (slots != null) {
+            val kept = org.json.JSONArray()
+            for (i in 0 until slots.length()) slots.optJSONObject(i)?.takeIf { it.optString("video") !in ids }?.let { kept.put(it) }
+            out.put("slots", kept)
+        }
+        return out
     }
 
     private fun slotsOn(c: Config, byId: Map<String, Video>, tz: TimeZone, nowMs: Long, dayOffset: Int): List<Start> {

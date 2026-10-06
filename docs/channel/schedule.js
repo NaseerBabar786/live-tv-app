@@ -136,9 +136,9 @@ export function whatsOn(c, now = Date.now()) {
   const total = loop.reduce((t, v) => t + v.secs * 1000, 0);
   if (total > 0) {
     let pos = (((now - anchor) % total) + total) % total;
-    for (const v of loop) {
+    for (const [i, v] of loop.entries()) {
       const len = v.secs * 1000;
-      if (pos < len) return { video: v, offset: pos, until: Math.min(now - pos + len, nextAt), slot: false };
+      if (pos < len) return { video: v, offset: pos, until: Math.min(now - pos + len, nextAt), slot: false, loopIndex: i };
       pos -= len;
     }
   }
@@ -180,7 +180,7 @@ export function lengthText(secs) {
 }
 
 /** Plays [c] in [video] (a <video> element) as live TV: joins the current programme at the right spot. */
-export function tuneIn(video, c, { onChange, onOff } = {}) {
+export function tuneIn(video, c, { onChange, onOff, onBlock } = {}) {
   let timer = null, hls = null, playing = null, stopped = false;
   async function step() {
     clearTimeout(timer);
@@ -191,6 +191,7 @@ export function tuneIn(video, c, { onChange, onOff } = {}) {
       playing = null;
       if (hls) { hls.destroy(); hls = null; }
       video.removeAttribute("src"); video.load();
+      onBlock && onBlock(null);
       onOff && onOff(on);
       timer = setTimeout(step, Math.min(60000, Math.max(1000, (on.nextAt || now + 60000) - now)));
       return;
@@ -199,7 +200,13 @@ export function tuneIn(video, c, { onChange, onOff } = {}) {
     const key = on.video.url + "|" + zero;
     if (key !== playing) {
       playing = key;
-      await load(on.video.url, zero);
+      // Bazaar TV's upcoming trailers play on our locked YouTube page (onBlock), not in this player.
+      const block = youtubeId(on.video.url) ? blockAt(c, now) : null;
+      if (block) {
+        if (hls) { hls.destroy(); hls = null; }
+        video.pause(); video.removeAttribute("src"); video.load();
+      } else await load(on.video.url, zero);
+      onBlock && onBlock(block);
       onChange && onChange(on);
     }
     timer = setTimeout(step, Math.min(60000, Math.max(1000, on.until - now)));
@@ -228,4 +235,60 @@ export function tuneIn(video, c, { onChange, onOff } = {}) {
     update(newConfig) { c = newConfig; playing = null; step(); },
     stop() { stopped = true; clearTimeout(timer); if (hls) hls.destroy(); video.pause(); },
   };
+}
+
+/** The YouTube video id of [url] (Bazaar TV's upcoming trailers), or null. */
+export function youtubeId(url) {
+  const m = /^https?:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/.exec(url || "");
+  return m ? m[1] : null;
+}
+
+/**
+ * The run of YouTube videos [c] has on at [now] (Bazaar TV's upcoming trailers): { videos, start, end },
+ * played on channel/block.html; null while our own player plays. Same as MyChannel.block in the app.
+ */
+export function blockAt(c, now = Date.now()) {
+  const on = whatsOn(c, now);
+  if (on.off || !youtubeId(on.video.url)) return null;
+  const begun = now - on.offset;
+  if (on.loopIndex === undefined) return { videos: [on.video], start: begun, end: on.until };
+  const byId = Object.fromEntries((c.videos || []).map(v => [v.id, v]));
+  const loop = (c.loop || []).map(id => byId[id]).filter(v => v && v.secs > 0);
+  let first = on.loopIndex, last = on.loopIndex, start = begun, end = begun + on.video.secs * 1000;
+  while (first > 0 && youtubeId(loop[first - 1].url)) { first--; start -= loop[first].secs * 1000; }
+  while (last + 1 < loop.length && youtubeId(loop[last + 1].url)) { last++; end += loop[last].secs * 1000; }
+  const cut = on.until < begun + on.video.secs * 1000 ? on.until : end;
+  return { videos: loop.slice(first, last + 1), start, end: Math.min(end, cut) };
+}
+
+/** The address of channel/block.html playing [b] for channel settings [c]. */
+export function blockPage(c, b) {
+  const p = new URLSearchParams({ at: b.start, until: b.end, ids: b.videos.map(v => youtubeId(v.url)).join(","),
+    secs: b.videos.map(v => v.secs).join(","), name: c.name || "Bazaar TV", corner: c.logoCorner || "tr" });
+  if (c.logo) p.set("logo", c.logo);
+  if (c.tickerOn !== false && c.ticker) p.set("tick", c.ticker);
+  return "https://tv.bulkbazaar.ca/channel/block.html?" + p;
+}
+
+/**
+ * [c] with each "trailers" entry replaced by the videos of its list (rebuilt every day), as the app
+ * does (MyChannel.expand): each loop place gets the whole list; a time slot can't hold a list.
+ */
+export async function expand(c) {
+  const lists = (c.videos || []).filter(v => v.kind === "trailers" && /^https?:/.test(v.url || ""));
+  if (!lists.length) return c;
+  const ids = {}, videos = [];
+  for (const v of c.videos) {
+    if (!lists.includes(v)) { videos.push(v); continue; }
+    let list = [];
+    try { list = (await (await fetch(v.url, { cache: "no-store" })).json()).videos || []; } catch {}
+    ids[v.id] = [];
+    for (const t of list) {
+      if (!/^[\w-]{11}$/.test(t.id || "") || !(t.secs > 0)) continue;
+      const id = `${v.id}-${t.id}`;
+      if (!ids[v.id].includes(id)) videos.push({ id, title: t.title, url: "https://www.youtube.com/watch?v=" + t.id, secs: t.secs, kind: "programme" });
+      ids[v.id].push(id);
+    }
+  }
+  return { ...c, videos, loop: (c.loop || []).flatMap(id => ids[id] || [id]), slots: (c.slots || []).filter(s => !ids[s.video]) };
 }

@@ -509,7 +509,7 @@ $("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(fal
 
 // ---------- step 2 ----------
 const kindOf = v => v.kind || (v.secs > 0 ? "programme" : "live");
-const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE" };
+const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY" };
 function renderVideos() {
   $("videos").innerHTML = "";
   if (!c.videos.length) $("videos").innerHTML = '<p class="small">No videos yet. Add one below.</p>';
@@ -679,19 +679,21 @@ function renderLibrary() {
     d.className = "item";
     d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts"><button class="btn" data-a="play">▶ Watch</button><button class="btn primary" data-a="add"></button></div>`;
     d.querySelector("b").textContent = show.title;
-    d.querySelector(".meta").textContent = `${show.cat} · ${lengthText(show.secs)} · ${show.licence}`;
+    d.querySelector(".meta").textContent = `${show.cat} · ${show.kind === "trailers" ? "about 50 min, new every day" : lengthText(show.secs)} · ${show.licence}`;
+    if (show.kind === "trailers") d.querySelector('[data-a=play]').remove();
     const add = d.querySelector('[data-a=add]');
     add.textContent = have ? "✓ Added" : "Add";
     add.disabled = have;
     add.onclick = () => {
-      const v = { id: uid(), title: show.title, url: show.url, secs: show.secs, kind: "programme" };
+      const v = { id: uid(), title: show.title, url: show.url, secs: show.secs, kind: show.kind || "programme" };
       c.videos.push(v);
-      // Shorts join the loop; feature films wait for a time slot.
-      if (show.secs <= 30 * 60) c.loop.push(v.id);
+      // Shorts join the loop; feature films wait for a time slot. Upcoming trailers (a list rebuilt
+      // every day, played on our locked YouTube page) always go in the loop.
+      if (show.secs <= 30 * 60 || show.kind === "trailers") c.loop.push(v.id);
       changed(); renderAll();
       $("vMsg").innerHTML = `<span class="ok">✓ Added "${show.title}"` + (show.secs <= 30 * 60 ? " and put it at the end of the loop." : ". It's a long film: give it a time slot in step 4.") + " Press Save to put it on air.</span>";
     };
-    d.querySelector('[data-a=play]').onclick = () => watchOne(show.title, show.url);
+    d.querySelector('[data-a=play]')?.addEventListener("click", () => watchOne(show.title, show.url));
     $("library").appendChild(d);
   }
 }

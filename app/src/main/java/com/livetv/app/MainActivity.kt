@@ -28,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.livetv.app.data.MyChannel
+import com.livetv.app.ui.rememberBlockPage
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
@@ -79,17 +80,27 @@ class MainActivity : ComponentActivity() {
     private fun AppContent() {
         val state by viewModel.state.collectAsStateWithLifecycle()
         val playing = state.playing
+        // Bazaar TV's upcoming trailers play on our locked YouTube page; its own player plays the rest.
+        val block = rememberBlockPage(playing)
+        val page = playing?.let { block ?: MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
         if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
-        } else if (playing != null && playing.url !in fellBack && MyChannel.pageFor(playing, BuildConfig.VERSION_CODE) != null) {
+        } else if (playing != null && page != null && playing.url !in fellBack && page !in fellBack) {
             // Our channels that run like Bazaar Hits, Bazaar Hits itself, and any YouTube channel: YouTube's
             // player with its buttons off, so it can't be paused, skipped or left for YouTube (owner's rule, 1.9.46).
             // Our channels' free-film schedule plays if YouTube won't.
             // It opens in its own plain window (WebChannelActivity, 1.9.51): inside this screen TVs kept the picture black.
-            OpenWebChannel(MyChannel.pageFor(playing, BuildConfig.VERSION_CODE)!!, onBack = viewModel::stop,
-                onFallback = { if (MyChannel.webPage(playing) != null) fellBack = fellBack + playing.url else viewModel.stop() })
+            // When the trailers are over (or won't play) our own player takes over again.
+            OpenWebChannel(page, onBack = viewModel::stop, onDone = {},
+                onFallback = {
+                    when {
+                        block != null -> fellBack = fellBack + page
+                        MyChannel.webPage(playing) != null -> fellBack = fellBack + playing.url
+                        else -> viewModel.stop()
+                    }
+                })
         } else if (playing != null) {
             PlayerScreen(
                 channel = playing,
@@ -143,9 +154,13 @@ class MainActivity : ComponentActivity() {
 
     /** Opens [url] in [WebChannelActivity] (black here meanwhile); Back there comes back with [onBack]. */
     @Composable
-    private fun OpenWebChannel(url: String, onBack: () -> Unit, onFallback: () -> Unit) {
+    private fun OpenWebChannel(url: String, onBack: () -> Unit, onFallback: () -> Unit, onDone: () -> Unit = onBack) {
         val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == WebChannelActivity.RESULT_FALLBACK) onFallback() else onBack()
+            when (result.resultCode) {
+                WebChannelActivity.RESULT_FALLBACK -> onFallback()
+                WebChannelActivity.RESULT_DONE -> onDone()
+                else -> onBack()
+            }
         }
         // Once per channel, also when this screen is rebuilt (a turned phone) while it's open.
         var opened by rememberSaveable(url) { mutableStateOf(false) }

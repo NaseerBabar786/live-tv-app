@@ -29,7 +29,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "channel", "trailers.json")
 
 # Newer than this many days counts as upcoming (films are usually out within three months of the trailer).
-MAX_DAYS = 120
+MAX_DAYS = 60
 # A trailer or teaser runs from about half a minute to five minutes.
 SECS = (25, 330)
 # The whole block, about 50 minutes, so Bazaar TV's test programme comes to about two hours.
@@ -41,7 +41,12 @@ TRAILER = re.compile(r"\btrailer\b|\bteaser\b", re.I)
 SKIP = re.compile(r"reaction|review|breakdown|explained|recap|behind the scenes|\bbts\b|making of|interview|"
                   r"full (movie|film)|#shorts?\b|\bshorts\b|song|lyric|jukebox|\baudio\b|fan[- ]?made|concept|"
                   r"\bspoof\b|parody|re-?release|anniversary|\bgame\b|gameplay|season \d|series|\bep(isode)?\b|"
-                  r"tv spot|\bspot\b|featurette|clip|scene", re.I)
+                  r"tv spot|\bspot\b|featurette|clip|scene|restor|remaster|television|netflix|prime video|disney\+|"
+                  r"jiohotstar|hotstar|zee5|\bott\b|streaming|out tomorrow|out now|trailer out|announcement|countdown", re.I)
+MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+MON = r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?"
+DAY_MONTH = re.compile(r"\b(\d{1,2})(?:st|nd|rd|th)?\s*" + MON + r"(?:\s*,?\s*(20\d\d))?", re.I)
+MONTH_DAY = re.compile(r"\b" + MON + r"\s*(\d{1,2})(?:st|nd|rd|th)?\b(?:\s*,?\s*(20\d\d))?", re.I)
 
 # (label, handles, the channel's name as YouTube shows it). Only a channel whose name fits is used.
 LANGUAGES = [
@@ -50,7 +55,6 @@ LANGUAGES = [
         ("Universal Pictures", ["@UniversalPictures", "@universalpictures"], "Universal Pictures"),
         ("Sony Pictures", ["@SonyPictures", "@sonypictures"], "Sony Pictures Entertainment|Sony Pictures"),
         ("Paramount Pictures", ["@ParamountPictures", "@paramountpictures"], "Paramount Pictures"),
-        ("Walt Disney Studios", ["@disneystudios", "@DisneyStudios"], "Walt Disney Studios|Disney Studios"),
         ("Marvel", ["@marvel", "@Marvel"], "Marvel Entertainment|Marvel"),
         ("20th Century Studios", ["@20thCenturyStudios", "@20thcenturystudios"], "20th Century Studios"),
         ("Lionsgate", ["@LionsgateMovies", "@lionsgatemovies"], "Lionsgate Movies|Lionsgate"),
@@ -60,30 +64,21 @@ LANGUAGES = [
         ("Yash Raj Films", ["@yrf", "@YRF"], "Yash Raj Films|YRF"),
         ("T-Series", ["@tseries", "@TSeries"], "T-Series"),
         ("Dharma Productions", ["@dharmamovies", "@DharmaProductions"], "Dharma Productions"),
-        ("Zee Studios", ["@ZeeStudios", "@zeestudios"], "Zee Studios"),
         ("Excel Movies", ["@excelmovies", "@ExcelMovies"], "Excel Movies|Excel Entertainment"),
         ("Maddock Films", ["@MaddockFilms", "@maddockfilms"], "Maddock Films"),
         ("Jio Studios", ["@JioStudios", "@jiostudios"], "Jio Studios"),
-        ("Red Chillies", ["@RedChilliesEnt", "@redchillies"], "Red Chillies"),
         ("Pen Movies", ["@PenMovies"], "Pen Movies"),
     ]),
     ("Punjabi", "Upcoming Punjabi movies", [
         ("Speed Records", ["@SpeedRecords", "@speedrecords"], "Speed Records"),
         ("White Hill Music", ["@WhiteHillMusic", "@whitehillmusic"], "White Hill"),
-        ("Saga Music", ["@SagaMusic", "@SagaMusicOfficial"], "Saga"),
         ("Rhythm Boyz", ["@RhythmBoyz", "@rhythmboyzentertainment"], "Rhythm Boyz"),
         ("Tips Punjabi", ["@TipsPunjabi", "@tipspunjabi"], "Tips Punjabi"),
-        ("Zee Studios", ["@ZeeStudios", "@zeestudios"], "Zee Studios"),
         ("Geet MP3", ["@GeetMP3"], "Geet MP3"),
         ("Humble Music", ["@HumbleMusic", "@humblemusic"], "Humble"),
     ]),
     ("Pakistani", "Upcoming Pakistani movies", [
         ("ARY Films", ["@ARYFilms", "@aryfilms", "@ARYFilmsOfficial"], "ARY Films"),
-        ("HUM Films", ["@HUMFilms", "@humfilms", "@HumFilmsOfficial"], "HUM Films"),
-        ("Geo Films", ["@GeoFilms", "@geofilms", "@GeoFilmsOfficial"], "Geo Films"),
-        ("IMGC Global", ["@IMGCGlobal", "@imgcglobal"], "IMGC"),
-        ("Mandviwalla Entertainment", ["@MandviwallaEntertainment", "@mandviwalla"], "Mandviwalla"),
-        ("Hum Network", ["@HUMNetwork", "@humnetworkofficial"], "HUM Network"),
         ("Showcase Films", ["@ShowcaseFilms", "@showcasefilms"], "Showcase Films"),
     ]),
 ]
@@ -133,6 +128,26 @@ def uploads(url):
     return out
 
 
+def released(title, today):
+    """Whether the title's own release date ("In Cinemas 16th Oct", "Rel 17th July") has passed by more than a week."""
+    m = DAY_MONTH.search(title)
+    if m:
+        day, mon, year = int(m.group(1)), m.group(2), m.group(3)
+    else:
+        m = MONTH_DAY.search(title)
+        if not m:
+            return False
+        mon, day, year = m.group(1), int(m.group(2)), m.group(3)
+    try:
+        date = dt.date(int(year) if year else today.year, MONTHS.index(mon.lower()[:3]) + 1, day)
+    except ValueError:
+        return False
+    # "15th Jan" written in October is next January.
+    if not year and (today - date).days > 200:
+        date = date.replace(year=date.year + 1)
+    return (today - date).days > 7
+
+
 def film_name(title):
     """The film a trailer belongs to: the title before "Official Trailer", "| Teaser" and the like."""
     name = re.split(r"\s*[|\-–—:(\[]\s*(?:official\s+)?(?:hindi\s+|punjabi\s+|urdu\s+|final\s+|new\s+|first\s+)?(?:trailer|teaser)",
@@ -157,7 +172,7 @@ def language(lang, label, sources, today, old):
                 print(f"  {url}: {e}", file=sys.stderr)
         kept = 0
         for vid, title, secs, age in videos:
-            if not TRAILER.search(title) or SKIP.search(title) or other_language(title):
+            if not TRAILER.search(title) or SKIP.search(title) or other_language(title) or released(title, today):
                 continue
             if secs is None or not SECS[0] <= secs <= SECS[1]:
                 continue
@@ -171,6 +186,7 @@ def language(lang, label, sources, today, old):
             films[film] = films.get(film, 0) + 1
             found.append({"id": vid, "title": title.strip(), "label": source, "lang": lang, "secs": secs,
                           "age": age, "found": first})
+            print(f"    {age if age is not None else '?':>3} days  {title}")
             kept += 1
         print(f"{lang} · {source}: {len(videos)} videos, {kept} trailers")
     # Newest first.
@@ -213,7 +229,7 @@ def main():
     if os.environ.get("GITHUB_ACTIONS"):
         print(f"::notice title=Upcoming trailers::{summary}")
     for v in block:
-        print(f"  {v['lang']:9} {v['secs']:4}s  {v['label']:24} {v['title']}")
+        print(f"  {v['lang']:9} {v['secs']:4}s  {v['label']:24} {v['title']}  (first seen {v['found']})")
     if len(block) < 6:
         sys.exit(f"Too few trailers ({summary}); keeping the old list.")
     with open(OUT, "w", encoding="utf-8") as f:

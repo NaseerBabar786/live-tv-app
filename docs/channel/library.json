@@ -1,5 +1,13 @@
 [
  {
+  "cat": "Upcoming movie trailers (new every day)",
+  "title": "Upcoming movie trailers: English, Hindi, Punjabi and Pakistani films",
+  "url": "https://tv.bulkbazaar.ca/channel/trailers.json",
+  "licence": "Official trailers from the studios' and labels' own YouTube channels, played locked in YouTube's player",
+  "secs": 0,
+  "kind": "trailers"
+ },
+ {
   "cat": "Our stories (AI, Urdu)",
   "title": "شیر اور چالاک خرگوش · The Lion and the Clever Rabbit",
   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/story-lion-and-rabbit.mp4",

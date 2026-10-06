@@ -128,4 +128,47 @@ class MyChannelTest {
         assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
         assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
     }
+
+    private val trailers = JSONObject(
+        """{"videos":[{"id":"AAAAAAAAAAA","title":"T1","secs":120},{"id":"BBBBBBBBBBB","title":"T2","secs":60},{"id":"bad","secs":5}]}""",
+    )
+
+    @Test
+    fun trailerListTakesItsEntrysPlace() {
+        val saved = JSONObject(
+            """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
+              {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":600},
+              {"id":"tr","title":"Upcoming trailers","url":"https://tv.bulkbazaar.ca/channel/trailers.json","secs":0,"kind":"trailers"}],
+              "slots":[{"day":"all","time":"20:00","video":"tr"}],"loop":["a","tr","a"]}""",
+        )
+        val out = MyChannel.expand(saved) { url -> assertEquals("https://tv.bulkbazaar.ca/channel/trailers.json", url); trailers }
+        assertEquals(listOf("a", "tr-AAAAAAAAAAA", "tr-BBBBBBBBBBB", "a"), (0 until 4).map { out.getJSONArray("loop").getString(it) })
+        assertEquals(0, out.getJSONArray("slots").length())
+        val c = MyChannel.parse(out)
+        assertEquals("AAAAAAAAAAA", c.videos.first { it.id == "tr-AAAAAAAAAAA" }.youtube)
+        // Not reachable: the entry is simply skipped, as older apps do.
+        val offline = MyChannel.expand(saved) { null }
+        assertEquals(listOf("a", "a"), (0 until offline.getJSONArray("loop").length()).map { offline.getJSONArray("loop").getString(it) })
+    }
+
+    @Test
+    fun trailersPlayAsOneBlockOnOurPage() {
+        val saved = JSONObject(
+            """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
+              {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":600},
+              {"id":"tr","url":"https://tv.bulkbazaar.ca/channel/trailers.json","secs":0,"kind":"trailers"}],
+              "slots":[{"day":"all","time":"20:00","video":"a"}],"loop":["a","tr"]}""",
+        )
+        val c = MyChannel.parse(MyChannel.expand(saved) { trailers })
+        // The loop starts again at 20:10 when the slot ends: film A to 20:20, then the trailers to 20:23.
+        assertEquals(null, MyChannel.block(c, at(20, 15)))
+        val first = MyChannel.block(c, at(20, 21))!!
+        val second = MyChannel.block(c, at(20, 22, 30))!!
+        assertEquals(listOf("AAAAAAAAAAA", "BBBBBBBBBBB"), first.videos.map { it.youtube })
+        assertEquals(at(20, 20), first.startMs)
+        assertEquals(at(20, 23), first.endMs)
+        // The same block (and page address) all the way through.
+        assertEquals(first.startMs, second.startMs)
+        assertEquals(first.endMs, second.endMs)
+    }
 }

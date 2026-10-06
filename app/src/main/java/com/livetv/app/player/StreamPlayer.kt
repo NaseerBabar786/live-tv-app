@@ -155,6 +155,17 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
         when (val now = MyChannel.now(channel, nowMs)) {
             is MyChannel.Now.Playing -> {
                 val url = now.video.url
+                if (now.video.youtube != null) {
+                    // Bazaar TV's upcoming trailers play on our locked YouTube page (full screen and in
+                    // the 1+List picture), never in this player: a small tile just says what's on.
+                    scheduledUrl = null
+                    scheduledZero = null
+                    player.stop()
+                    player.clearMediaItems()
+                    onError?.invoke("Upcoming movie trailers are on now. Open ${channel?.name ?: "the channel"} to watch them.")
+                    handler.postDelayed(nextOnSchedule, (now.untilMs - nowMs).coerceIn(1_000, 60_000))
+                    return
+                }
                 if (url == endedUrl && now.offsetMs > 0) {
                     // Already over; wait quietly for the next programme.
                     handler.postDelayed(nextOnSchedule, (now.untilMs - nowMs).coerceIn(1_000, 60_000))
