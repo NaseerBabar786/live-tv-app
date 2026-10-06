@@ -20,14 +20,23 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
 
       - name: Download and convert
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -u
           mkdir -p out
+          have=$(gh release view channel-media -R "$GITHUB_REPOSITORY" --json assets -q '.assets[].name' 2>/dev/null || true)
           get() {
             name="$1"; shift
+            # Films already on the release are kept (delete one there to make it again).
+            if echo "$have" | grep -qx "$name.mp4"; then echo "Have $name"; return 0; fi
             for url in "$@"; do
               echo "Trying $url"
-              if curl -fsSL --retry 2 -o "src_$name" "$url" && [ "$(stat -c %s "src_$name")" -gt 5000000 ]; then
+              if curl -fsSL --retry 2 -o "src_$name" "$url" && [ "$(stat -c %s "src_$name")" -gt 1000000 ]; then
+                if [[ "$url" == *.zip ]]; then
+                  mkdir -p "z_$name" && unzip -o -q "src_$name" -d "z_$name" && \
+                    mv "$(find "z_$name" -type f \( -name '*.mp4' -o -name '*.mov' -o -name '*.avi' -o -name '*.mkv' \) | head -1)" "src_$name"
+                fi
                 ffmpeg -nostdin -loglevel error -y -i "src_$name" \
                   -vf "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,fps=25,format=yuv420p" \
                   -c:v libx264 -preset veryfast -crf 25 -maxrate 2500k -bufsize 5000k -g 50 \
@@ -50,12 +59,12 @@ jobs:
           get sintel \
             https://download.blender.org/durian/movies/Sintel.2010.720p.mkv \
             https://archive.org/download/Sintel/sintel-2048-stereo_512kb.mp4
-          get spring \
-            https://download.blender.org/demo/movies/Spring/spring_2019_1080p.mp4 \
-            https://archive.org/download/spring-blender-open-movie/Spring%20-%20Blender%20Open%20Movie.mp4
-          echo "Blender demo movies folder:"; curl -fsSL https://download.blender.org/demo/movies/ | grep -o 'href="[^"]*"' | head -60 || true
+          get caminandes-gran-dillama https://download.blender.org/demo/movies/caminandes_gran_dillama.mp4.zip
+          get elephants-dream-teaser https://download.blender.org/demo/movies/elephantsdream_teaser.mp4.zip
+          get tears-of-steel-teaser https://download.blender.org/demo/movies/tears-of-steel_teaser.mp4.zip
           echo "== Lengths =="
           for f in out/*.mp4; do
+            [ -e "$f" ] || continue
             echo "$(basename "$f") $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f") $(stat -c %s "$f")"
           done | tee lengths.txt
           cp lengths.txt out/lengths.txt
@@ -68,4 +77,5 @@ jobs:
           gh release view channel-media -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
             gh release create channel-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false \
               --title "Channel media" --notes "Videos for the test schedule of the owner's channel (Blender open movies, CC BY)."
-          gh release upload channel-media out/* -R "$GITHUB_REPOSITORY" --clobber
+          ls out/*.mp4 >/dev/null 2>&1 && gh release upload channel-media out/*.mp4 -R "$GITHUB_REPOSITORY" --clobber || echo "No new films"
+          [ -s out/lengths.txt ] && cp out/lengths.txt out/lengths-new.txt && gh release upload channel-media out/lengths-new.txt -R "$GITHUB_REPOSITORY" --clobber || true

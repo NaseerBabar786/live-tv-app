@@ -29,6 +29,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.C
 import androidx.media3.common.Player
+import com.livetv.app.data.MyChannel
 import com.livetv.app.data.YouTube
 import com.livetv.app.player.StreamPlayer
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -1787,6 +1788,7 @@ private fun PlayerWithList(
                         modifier = Modifier.padding(24.dp),
                     )
                 }
+                if (showing && MyChannel.isMine(selected)) MyChannelOverlay()
             }
         }
         // The list fills the whole right side (no sponsor strip under it since 1.9.22).

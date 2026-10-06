@@ -39,9 +39,13 @@ object MyChannel {
         val slots: List<Slot>,
         /** Video ids played one after another, round the clock, when no slot is on. */
         val loop: List<String>,
+        /** The scrolling line along the bottom of the picture; null when off. */
+        val ticker: String? = null,
+        /** Where the logo sits on the picture: "tl", "tr", "bl", "br", or "off". */
+        val logoCorner: String = "tr",
     ) {
         val channel: Channel
-            get() = Channel(name = name, url = URL, logo = logo, group = name, category = "My channel", number = 0)
+            get() = Channel(name = name, url = URL, logo = logo, number = 0)
     }
 
     /** What to show at a moment. */
@@ -100,6 +104,8 @@ object MyChannel {
             videos = videos,
             slots = slots,
             loop = loop,
+            ticker = o.optString("ticker").trim().takeIf { it.isNotEmpty() && o.optBoolean("tickerOn", true) },
+            logoCorner = o.optString("logoCorner").ifBlank { "tr" },
         )
     }
 

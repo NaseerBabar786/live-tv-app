@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Channel Studio</title>
+<meta name="description" content="Run your own TV channel inside Free Live TV.">
+<link rel="icon" href="channel/logos/bazaar-tv.png">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="robots" content="noindex">
+<style>
+  label.f { display: block; margin: 0 0 12px; font-weight: 600; }
+  label.f input, label.f select { display: block; width: 100%; margin-top: 4px; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
+  label.f input[type=checkbox] { display: inline; width: auto; margin: 0 8px 0 0; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  section.panel { margin: 0 0 18px; }
+  section.panel h2 { margin-top: 0; display: flex; align-items: center; gap: 10px; }
+  .num { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--red); color: #fff; font-size: 16px; flex: none; }
+  details.help { margin: 0 0 14px; background: var(--surface-2); border-radius: 10px; padding: 10px 14px; }
+  details.help summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+  details.help p, details.help li { color: var(--text); font-size: 15px; }
+  .logos { display: flex; gap: 10px; flex-wrap: wrap; margin: 6px 0 12px; }
+  .logos button { background: none; border: 3px solid transparent; border-radius: 16px; padding: 4px; cursor: pointer; color: var(--text); font: inherit; font-size: 12px; width: 104px; }
+  .logos button.sel { border-color: var(--focus); }
+  .logos img { width: 88px; height: 88px; display: block; margin: 0 auto 4px; }
+  .items { display: grid; gap: 8px; }
+  .item { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .item b { display: block; }
+  .item .meta { color: var(--muted); font-size: 13px; word-break: break-all; }
+  .item .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .item .acts button { padding: 6px 10px; font-size: 14px; }
+  .kind { display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+  .kind.programme { background: #1E3A8A; color: #DBEAFE; } .kind.ad { background: #7C2D12; color: #FFEDD5; } .kind.ident { background: #14532D; color: #DCFCE7; } .kind.live { background: #7F1D1D; color: #FEE2E2; }
+  .stage { position: relative; width: 100%; max-width: 640px; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; }
+  .stage video { width: 100%; height: 100%; object-fit: contain; }
+  .stage .bug { position: absolute; width: 9%; aspect-ratio: 1; opacity: .85; }
+  .bug.tr { top: 3%; right: 2.5%; } .bug.tl { top: 3%; left: 2.5%; } .bug.br { bottom: 10%; right: 2.5%; } .bug.bl { bottom: 10%; left: 2.5%; }
+  .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: 14px; padding: 4px 0; }
+  .ticker span { display: inline-block; padding-left: 100%; animation: crawl 24s linear infinite; }
+  @keyframes crawl { to { transform: translateX(-100%); } }
+  .savebar { position: sticky; bottom: 0; background: var(--surface); border-top: 2px solid var(--focus); padding: 12px 16px; margin: 0 -16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; z-index: 5; }
+  .ok { color: #A5D6A7; } .warn { color: #FFD54F; }
+  .guide { display: grid; gap: 4px; font-size: 15px; }
+  .guide div { display: grid; grid-template-columns: 80px 1fr auto; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--bg); }
+  .guide div.cur { outline: 2px solid var(--focus); }
+  pre.rule { background: var(--bg); padding: 10px; border-radius: 8px; overflow: auto; font-size: 13px; }
+  @media (max-width: 640px) { .two, .three { grid-template-columns: 1fr; } .item { grid-template-columns: 1fr; } .item .acts { justify-content: flex-start; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Free Live TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Free Live TV</span>
+    </a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="channel/">Watch channel</a>
+      <a href="admin" class="admin-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Channel Studio</h1>
+  <p class="lead">Run your own TV channel. It shows as <b>channel 0</b> at the top of every list in Free Live TV (1.9.34 and newer) and on the public page <a href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+
+  <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
+  <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
+
+  <div id="dash" class="hidden">
+    <details class="help panel" style="padding:14px 18px" open>
+      <summary>How it works (read this first)</summary>
+      <ol>
+        <li><b>Videos</b> (step 2): add each video with a direct link to an MP4 file. The length fills in by itself.</li>
+        <li><b>Non-stop loop</b> (step 3): the order your videos play round the clock, like a playlist on repeat. Put ads between programmes here.</li>
+        <li><b>Time slots</b> (step 4, optional): a video that must start at an exact time, e.g. "Every day at 8:00 PM, Cooking Show". It interrupts the loop, and the loop carries on after it.</li>
+        <li>Press <b>Save</b> at the bottom. Nothing changes on TVs until you save.</li>
+      </ol>
+      <p><b>Made a mistake?</b> Press <b>Undo all changes</b> at the bottom to go back to what was last saved. To start again from the ready-made 1-hour test programme, press <b>Load the test programme</b>.</p>
+    </details>
+
+    <section class="panel">
+      <h2><span class="num">1</span> Your channel</h2>
+      <div class="two">
+        <label class="f">Channel name<input id="name" maxlength="40" placeholder="Bazaar TV"></label>
+        <label class="f">Time zone of your time slots
+          <select id="tz">
+            <option value="America/Toronto">Toronto / New York (Eastern)</option>
+            <option value="America/Winnipeg">Winnipeg (Central)</option>
+            <option value="America/Edmonton">Edmonton (Mountain)</option>
+            <option value="America/Vancouver">Vancouver (Pacific)</option>
+            <option value="Asia/Karachi">Pakistan</option>
+            <option value="Asia/Kolkata">India</option>
+            <option value="Europe/London">UK</option>
+            <option value="Asia/Dubai">Dubai</option>
+          </select>
+        </label>
+      </div>
+      <label class="f"><input type="checkbox" id="active"> Channel is ON (untick to take it off the air; it disappears from the app)</label>
+
+      <p style="font-weight:600;margin:6px 0 0">Logo <span class="small">(tap one, or paste your own link below)</span></p>
+      <div class="logos" id="logos"></div>
+      <div class="two">
+        <label class="f">Logo link (a square PNG works best)<input id="logo" placeholder="https://…/logo.png"></label>
+        <label class="f">Show the logo on the picture
+          <select id="logoCorner">
+            <option value="tr">Top right</option><option value="tl">Top left</option>
+            <option value="br">Bottom right</option><option value="bl">Bottom left</option>
+            <option value="off">Don't show it</option>
+          </select>
+        </label>
+      </div>
+      <label class="f">Scrolling line (ticker) along the bottom
+        <input id="ticker" maxlength="300" placeholder="Welcome to Bazaar TV · Advertise with us: WhatsApp 437 602 6500">
+      </label>
+      <label class="f"><input type="checkbox" id="tickerOn"> Show the scrolling line</label>
+      <details class="help"><summary>Tips for the logo and the ticker</summary>
+        <ul>
+          <li>Your own logo: upload a square PNG somewhere public (for example <a href="https://imgbb.com" target="_blank" rel="noopener">imgbb.com</a>, then "Direct link") and paste the link ending in .png.</li>
+          <li>The scrolling line is one line of text. Separate items with " · ". Leave it empty or untick the box to hide it.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="panel">
+      <h2><span class="num">2</span> Videos</h2>
+      <details class="help"><summary>Where do I put my videos? (important)</summary>
+        <p>The free plan can't store video files, so each video needs a <b>direct link to an MP4 file</b>: a link that, opened in a browser, shows just the video.</p>
+        <ul>
+          <li><b>archive.org</b> (free, no limit): sign in, Upload, wait for it to finish, open the item, under "Download options" right-click <b>MPEG4</b> › Copy link. The link looks like https://archive.org/download/…/….mp4</li>
+          <li><b>Dropbox</b>: Share › Copy link. Paste it here; the page changes the ending to <code>raw=1</code> for you.</li>
+          <li><b>Live streams</b> (.m3u8): also fine. Leave the length empty; they play until the next time slot.</li>
+          <li><b>Not supported:</b> YouTube, Facebook and Google Drive links. Their players won't run inside TV apps.</li>
+          <li>Best format: MP4, H.264 video, AAC sound, 720p or 1080p.</li>
+        </ul>
+      </details>
+      <div class="items" id="videos"></div>
+      <form id="videoForm" class="panel" style="margin-top:12px;background:var(--surface-2)">
+        <b id="videoFormTitle">Add a video</b>
+        <div class="two" style="margin-top:8px">
+          <label class="f">Title (shown in the guide)<input id="vTitle" maxlength="80" placeholder="Cooking with Naseer, episode 1"></label>
+          <label class="f">Type
+            <select id="vKind"><option value="programme">Programme</option><option value="ad">Ad</option><option value="ident">Channel ident / promo</option><option value="live">Live stream</option></select>
+          </label>
+        </div>
+        <label class="f">Video link (MP4 or .m3u8)<input id="vUrl" placeholder="https://archive.org/download/…/video.mp4"></label>
+        <div class="row">
+          <label class="f" style="margin:0">Length (minutes:seconds)<input id="vLen" placeholder="reads by itself" style="max-width:180px"></label>
+          <button class="btn" type="button" id="vCheck">Check link</button>
+          <button class="btn primary" type="submit" id="vSave">Add video</button>
+          <button class="btn hidden" type="button" id="vCancel">Cancel</button>
+        </div>
+        <p class="small" id="vMsg"></p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2><span class="num">3</span> Non-stop loop</h2>
+      <p class="small" style="margin-top:0">Plays from top to bottom, then starts again, all day and night. A video can be in the loop more than once (handy for ads). Total: <b id="loopTotal">0:00</b></p>
+      <details class="help"><summary>How the loop works</summary>
+        <ul>
+          <li>Use ▲ ▼ to change the order and ✕ to take a video out of the loop (it stays in your Videos list).</li>
+          <li>The loop is timed by the clock, so all viewers are at the same place in it.</li>
+          <li>If the loop is empty and no time slot is on, the channel shows "off air" with what's next.</li>
+        </ul>
+      </details>
+      <div class="items" id="loop"></div>
+      <div class="row" style="margin-top:12px">
+        <select id="loopAdd" style="padding:10px;border-radius:12px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit;max-width:100%"></select>
+        <button class="btn" id="loopAddBtn" type="button">Add to the loop</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2><span class="num">4</span> Time slots <span class="small">(optional)</span></h2>
+      <details class="help"><summary>How time slots work</summary>
+        <ul>
+          <li>A slot starts its video at the exact time, on the days you choose, in the time zone from step 1.</li>
+          <li>When the video ends, the loop carries on. If the next slot starts first, it cuts the video short.</li>
+          <li>A slot for a date (e.g. Eid) wins over an "every day" slot at the same time.</li>
+        </ul>
+      </details>
+      <div class="items" id="slots"></div>
+      <form id="slotForm" class="panel" style="margin-top:12px;background:var(--surface-2)">
+        <b>Add a time slot</b>
+        <div class="three" style="margin-top:8px">
+          <label class="f">Day
+            <select id="sDay">
+              <option value="all">Every day</option><option value="weekdays">Monday to Friday</option><option value="weekend">Saturday and Sunday</option>
+              <option value="mon">Mondays</option><option value="tue">Tuesdays</option><option value="wed">Wednesdays</option><option value="thu">Thursdays</option>
+              <option value="fri">Fridays</option><option value="sat">Saturdays</option><option value="sun">Sundays</option><option value="date">One date…</option>
+            </select>
+          </label>
+          <label class="f">Start time<input type="time" id="sTime" value="20:00"></label>
+          <label class="f">Video<select id="sVideo"></select></label>
+        </div>
+        <label class="f hidden" id="sDateBox">Date<input type="date" id="sDate"></label>
+        <div class="row"><button class="btn primary" type="submit">Add time slot</button></div>
+        <p class="small" id="sMsg"></p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2><span class="num">5</span> Check it</h2>
+      <p class="small" style="margin-top:0">A preview of your <b>unsaved</b> changes, exactly as viewers will see them after you save.</p>
+      <div class="stage" id="stage">
+        <video id="pv" playsinline muted autoplay controls></video>
+        <img class="bug tr hidden" id="bug" alt="">
+        <div class="ticker hidden" id="tickerBox"><span id="tickerText"></span></div>
+      </div>
+      <p id="nowText" style="font-weight:700"></p>
+      <h3 style="margin-bottom:6px">Next 12 hours</h3>
+      <div class="guide" id="guide"></div>
+    </section>
+
+    <div class="savebar">
+      <button class="btn primary" id="save">💾 Save and put on air</button>
+      <button class="btn" id="undo">↶ Undo all changes</button>
+      <button class="btn" id="loadTest">Load the test programme</button>
+      <span id="saveMsg" class="small"></span>
+    </div>
+    <div id="ruleNote" class="panel hidden" style="margin-top:18px">
+      <b>One-time step for the public page.</b> Your channel is saved and plays in the app. For <a href="channel/">tv.bulkbazaar.ca/channel</a> to show it too (instead of the test programme), add this rule once in Firebase › Firestore › Rules, just above the last two <code>}</code>, then press Publish:
+      <pre class="rule" id="ruleText">    // The owner's channel (Channel Studio): anyone may read it; only you change it.
+    match /channel/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }</pre>
+      <button class="btn" id="copyRule">Copy the rule</button>
+    </div>
+    <p class="small" id="who" style="margin-top:18px"></p>
+    <button class="btn" data-signout>Sign out</button>
+  </div>
+  <p class="err" id="err"></p>
+</main>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
+import { whatsOn, guide, timeText, lengthText, tuneIn, TEST_SCHEDULE_URL } from "./channel/schedule.js";
+const $ = id => document.getElementById(id);
+const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
+const LOGOS = [
+  ["Bazaar TV", "bazaar-tv"], ["BB Live", "bb-live"], ["Apna TV", "apna-tv"], ["Desi Lehar TV", "desi-lehar-tv"], ["Rang TV", "rang-tv"],
+].map(([name, file]) => ({ name, url: `https://tv.bulkbazaar.ca/channel/logos/${file}.png` }));
+
+const V = "10.12.2";
+const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
+const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = fs.getFirestore(app);
+
+let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
+const clone = o => JSON.parse(JSON.stringify(o));
+const uid = () => Math.random().toString(36).slice(2, 9);
+
+$("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
+document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => signOut(auth));
+onAuthStateChanged(auth, async user => {
+  $("err").textContent = "";
+  if (!user) return show("signedOut");
+  if (user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return show("denied");
+  try { localStorage.setItem("lt_admin", "1"); } catch {}
+  $("who").textContent = "Signed in as " + user.email + ".";
+  show("dash");
+  await loadSaved();
+});
+
+async function testProgramme() { return (await fetch(TEST_SCHEDULE_URL + "?t=" + Date.now())).json(); }
+
+async function loadSaved() {
+  try {
+    const snap = await fs.getDoc(fs.doc(db, "sponsors", "_channel"));
+    if (snap.exists() && snap.data().data) {
+      saved = JSON.parse(snap.data().data);
+      $("saveMsg").textContent = "Loaded your saved channel.";
+    } else {
+      saved = await testProgramme();
+      $("saveMsg").innerHTML = '<span class="warn">Nothing saved yet: this is the ready-made 1-hour test programme. It\'s already playing in the app. Change anything you like, then Save.</span>';
+    }
+  } catch (e) {
+    $("err").textContent = "Couldn't load your channel: " + e.message;
+    saved = await testProgramme();
+  }
+  c = clone(saved);
+  dirty = false;
+  renderAll();
+}
+
+// ---------- step 1 ----------
+function renderChannel() {
+  $("name").value = c.name || "";
+  $("tz").value = c.tz || "America/Toronto";
+  $("active").checked = c.active !== false;
+  $("logo").value = c.logo || "";
+  $("logoCorner").value = c.logoCorner || "tr";
+  $("ticker").value = c.ticker || "";
+  $("tickerOn").checked = c.tickerOn !== false;
+  $("logos").innerHTML = "";
+  for (const l of LOGOS) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = c.logo === l.url ? "sel" : "";
+    b.innerHTML = `<img alt=""><span></span>`;
+    b.querySelector("img").src = l.url;
+    b.querySelector("span").textContent = l.name;
+    b.onclick = () => {
+      // Picking a ready logo also offers its name, when the name is still a ready one (or empty).
+      const ready = !c.name || LOGOS.some(x => x.name === c.name) || c.name === "My Channel";
+      c.logo = l.url;
+      if (ready) c.name = l.name;
+      changed(false); renderChannel();
+    };
+    $("logos").appendChild(b);
+  }
+}
+$("name").oninput = () => { c.name = $("name").value; changed(false); };
+$("tz").onchange = () => { c.tz = $("tz").value; changed(); };
+$("active").onchange = () => { c.active = $("active").checked; changed(); };
+$("logo").onchange = () => {
+  const v = $("logo").value.trim();
+  if (v && !/^https:\/\//.test(v)) { alert("The logo link must start with https://"); $("logo").value = c.logo || ""; return; }
+  c.logo = v; changed(false); renderChannel();
+};
+$("logoCorner").onchange = () => { c.logoCorner = $("logoCorner").value; changed(false); };
+$("ticker").oninput = () => { c.ticker = $("ticker").value; changed(false); };
+$("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(false); };
+
+// ---------- step 2 ----------
+const kindOf = v => v.kind || (v.secs > 0 ? "programme" : "live");
+const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE" };
+function renderVideos() {
+  $("videos").innerHTML = "";
+  if (!c.videos.length) $("videos").innerHTML = '<p class="small">No videos yet. Add one below.</p>';
+  for (const v of c.videos) {
+    const d = document.createElement("div");
+    d.className = "item";
+    const uses = c.loop.filter(x => x === v.id).length + c.slots.filter(s => s.video === v.id).length;
+    d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts">
+      <button class="btn" data-a="play">▶ Watch</button><button class="btn" data-a="edit">Edit</button><button class="btn" data-a="del">Delete</button></div>`;
+    d.querySelector("b").textContent = v.title;
+    d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
+    d.querySelector(".meta").textContent = `${lengthText(v.secs)} · ${uses ? "used " + uses + "×" : "not used yet"} · ${v.url}`;
+    d.querySelector('[data-a=play]').onclick = () => { stopPreview(); $("pv").muted = false; $("pv").src = v.url; $("pv").play().catch(() => {}); $("nowText").textContent = "Watching: " + v.title + " (press Play live below to go back)"; $("stage").scrollIntoView({ behavior: "smooth" }); showLiveButton(); };
+    d.querySelector('[data-a=edit]').onclick = () => editVideo(v);
+    d.querySelector('[data-a=del]').onclick = () => {
+      if (uses && !confirm(`"${v.title}" is used ${uses} time(s) in the loop or time slots. Delete it from those too?`)) return;
+      if (!uses && !confirm(`Delete "${v.title}"?`)) return;
+      c.videos = c.videos.filter(x => x !== v);
+      c.loop = c.loop.filter(x => x !== v.id);
+      c.slots = c.slots.filter(s => s.video !== v.id);
+      changed(); renderAll();
+    };
+    $("videos").appendChild(d);
+  }
+  const opts = c.videos.map(v => `<option value="${v.id}"></option>`).join("");
+  for (const sel of [$("loopAdd"), $("sVideo")]) {
+    sel.innerHTML = opts || '<option value="">Add a video first</option>';
+    [...sel.options].forEach((o, i) => { if (c.videos[i]) o.textContent = `${c.videos[i].title} (${lengthText(c.videos[i].secs)})`; });
+  }
+}
+
+/** Fixes common link mistakes; returns { url, problem }. */
+function cleanLink(raw) {
+  let url = raw.trim();
+  if (!url) return { problem: "Paste the video's link." };
+  if (!/^https?:\/\//i.test(url)) return { problem: "A link starts with https:// (copy the whole address)." };
+  if (/youtube\.com|youtu\.be|facebook\.com|fb\.watch|instagram\.com|tiktok\.com/i.test(url))
+    return { problem: "YouTube, Facebook, Instagram and TikTok links can't play inside TV apps. Upload the MP4 to archive.org or Dropbox and use that link." };
+  if (/drive\.google\.com/i.test(url)) return { problem: "Google Drive links stop working after a few views. Please use archive.org or Dropbox." };
+  if (/dropbox\.com/i.test(url) && !/[?&]raw=1/.test(url)) {
+    // Dropbox share links open a web page; raw=1 gives the video itself.
+    url = url.replace(/([?&])dl=[01]&?/, "$1").replace(/[?&]$/, "");
+    url += (url.includes("?") ? "&" : "?") + "raw=1";
+  }
+  if (/archive\.org\/details\//i.test(url)) return { problem: "That's the archive.org page, not the video. Under Download options, right-click MPEG4 › Copy link." };
+  if (url.startsWith("http://")) return { url, warning: "Links starting with http:// (no s) may not play on some TVs. Use https:// if the site allows it." };
+  return { url };
+}
+function parseLen(t) {
+  t = (t || "").trim();
+  if (!t) return null;
+  const p = t.split(":").map(Number);
+  if (p.some(isNaN)) return NaN;
+  return p.reduce((a, b) => a * 60 + b, 0);
+}
+function readLength(url) {
+  return new Promise(resolve => {
+    const v = document.createElement("video");
+    v.preload = "metadata"; v.muted = true;
+    const done = s => { clearTimeout(t); v.removeAttribute("src"); v.load(); resolve(s); };
+    const t = setTimeout(() => done(null), 15000);
+    v.onloadedmetadata = () => done(isFinite(v.duration) ? Math.round(v.duration) : 0);
+    v.onerror = () => done(undefined);
+    v.src = url;
+  });
+}
+async function checkLink() {
+  const { url, problem, warning } = cleanLink($("vUrl").value);
+  $("vMsg").className = "small";
+  if (problem) { $("vMsg").innerHTML = `<span class="err">${problem}</span>`; return null; }
+  $("vUrl").value = url;
+  if (/\.m3u8(\?|$)/i.test(url)) {
+    $("vMsg").innerHTML = `<span class="ok">A stream link (.m3u8). For a live stream leave the length empty; for a recorded one type its length.</span>`;
+    return url;
+  }
+  $("vMsg").textContent = "Checking the link…";
+  const secs = await readLength(url);
+  if (secs === undefined) { $("vMsg").innerHTML = `<span class="err">This link doesn't open as a video. Check that it's a direct link to an MP4 (open it in a new tab: you should see only the video).</span>`; return null; }
+  if (secs === null) { $("vMsg").innerHTML = `<span class="warn">The video is slow to answer. Type its length (e.g. 12:30) to be safe.</span>`; return url; }
+  if (secs > 0) $("vLen").value = lengthText(secs);
+  $("vMsg").innerHTML = `<span class="ok">✓ The video works (${lengthText(secs)}).</span>` + (warning ? ` <span class="warn">${warning}</span>` : "");
+  return url;
+}
+$("vCheck").onclick = checkLink;
+$("vUrl").onchange = checkLink;
+function editVideo(v) {
+  editingVideo = v;
+  $("videoFormTitle").textContent = "Edit video";
+  $("vTitle").value = v.title; $("vUrl").value = v.url; $("vLen").value = v.secs > 0 ? lengthText(v.secs) : ""; $("vKind").value = kindOf(v);
+  $("vSave").textContent = "Save video"; $("vCancel").classList.remove("hidden"); $("vMsg").textContent = "";
+  $("videoForm").scrollIntoView({ behavior: "smooth" });
+}
+function resetVideoForm() {
+  editingVideo = null;
+  $("videoForm").reset();
+  $("videoFormTitle").textContent = "Add a video"; $("vSave").textContent = "Add video"; $("vCancel").classList.add("hidden");
+}
+$("vCancel").onclick = () => { resetVideoForm(); $("vMsg").textContent = ""; };
+$("videoForm").onsubmit = async e => {
+  e.preventDefault();
+  const title = $("vTitle").value.trim();
+  if (!title) { $("vMsg").innerHTML = '<span class="err">Give the video a title, e.g. "Cooking show, episode 1".</span>'; return; }
+  const url = await checkLink();
+  if (!url) return;
+  const kind = $("vKind").value;
+  let secs = parseLen($("vLen").value);
+  if (Number.isNaN(secs)) { $("vMsg").innerHTML = '<span class="err">Write the length like 12:30 (minutes:seconds) or 1:05:00.</span>'; return; }
+  if (kind === "live") secs = 0;
+  else if (!secs) { $("vMsg").innerHTML = '<span class="err">This video needs a length (e.g. 12:30), or choose Type: Live stream.</span>'; return; }
+  const v = editingVideo || { id: uid() };
+  Object.assign(v, { title, url, secs, kind });
+  if (!editingVideo) {
+    c.videos.push(v);
+    if (kind !== "live") c.loop.push(v.id);
+    $("vMsg").innerHTML = `<span class="ok">✓ Added "${title}"` + (kind !== "live" ? " and put it at the end of the loop." : ". Give it a time slot in step 4.") + "</span>";
+  } else $("vMsg").innerHTML = `<span class="ok">✓ Saved "${title}".</span>`;
+  resetVideoForm();
+  changed(); renderAll();
+};
+
+// ---------- step 3 ----------
+function renderLoop() {
+  const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
+  c.loop = c.loop.filter(id => byId[id]);
+  $("loop").innerHTML = "";
+  let at = 0;
+  c.loop.forEach((id, i) => {
+    const v = byId[id];
+    const d = document.createElement("div");
+    d.className = "item";
+    d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts">
+      <button class="btn" data-a="up" title="Move up">▲</button><button class="btn" data-a="down" title="Move down">▼</button><button class="btn" data-a="x" title="Take out of the loop">✕</button></div>`;
+    d.querySelector("b").textContent = `${i + 1}. ${v.title}`;
+    d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
+    d.querySelector(".meta").textContent = v.secs > 0 ? `starts at ${lengthText(at)} into the loop · ${lengthText(v.secs)} long` : "live stream: plays until the next time slot (the rest of the loop is skipped)";
+    at += v.secs > 0 ? v.secs : 0;
+    const move = to => { if (to < 0 || to >= c.loop.length) return; [c.loop[i], c.loop[to]] = [c.loop[to], c.loop[i]]; changed(); renderAll(); };
+    d.querySelector('[data-a=up]').onclick = () => move(i - 1);
+    d.querySelector('[data-a=down]').onclick = () => move(i + 1);
+    d.querySelector('[data-a=x]').onclick = () => { c.loop.splice(i, 1); changed(); renderAll(); };
+    $("loop").appendChild(d);
+  });
+  if (!c.loop.length) $("loop").innerHTML = '<p class="small">The loop is empty. Between time slots the channel will be off air.</p>';
+  $("loopTotal").textContent = lengthText(at) || "0:00";
+}
+$("loopAddBtn").onclick = () => { const id = $("loopAdd").value; if (!id) return; c.loop.push(id); changed(); renderAll(); };
+
+// ---------- step 4 ----------
+const DAY_TEXT = { all: "Every day", weekdays: "Mon–Fri", weekend: "Sat & Sun", mon: "Mondays", tue: "Tuesdays", wed: "Wednesdays", thu: "Thursdays", fri: "Fridays", sat: "Saturdays", sun: "Sundays" };
+function renderSlots() {
+  const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
+  c.slots = c.slots.filter(s => byId[s.video]);
+  c.slots.sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+  $("slots").innerHTML = c.slots.length ? "" : '<p class="small">No time slots. The loop plays all day.</p>';
+  c.slots.forEach((s, i) => {
+    const v = byId[s.video];
+    const d = document.createElement("div");
+    d.className = "item";
+    d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts"><button class="btn" data-a="x">Delete</button></div>`;
+    const [h, m] = s.time.split(":").map(Number);
+    const t = new Date(2000, 0, 1, h, m).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    d.querySelector("b").textContent = `${DAY_TEXT[s.day] || s.day} at ${t}`;
+    const end = h * 60 + m + Math.ceil(v.secs / 60);
+    const clash = v.secs > 0 && c.slots.find(o => o !== s && (o.day === s.day || o.day === "all" || s.day === "all") && (() => { const [oh, om] = o.time.split(":").map(Number); const st = oh * 60 + om; return st > h * 60 + m && st < end; })());
+    d.querySelector(".meta").textContent = `${v.title} · ${lengthText(v.secs)}` + (clash ? ` · ⚠ the ${clash.time} slot starts before this ends, so this is cut short` : "");
+    d.querySelector('[data-a=x]').onclick = () => { c.slots.splice(i, 1); changed(); renderAll(); };
+    $("slots").appendChild(d);
+  });
+}
+$("sDay").onchange = () => $("sDateBox").classList.toggle("hidden", $("sDay").value !== "date");
+$("slotForm").onsubmit = e => {
+  e.preventDefault();
+  const video = $("sVideo").value, time = $("sTime").value;
+  let day = $("sDay").value;
+  if (!video) { $("sMsg").innerHTML = '<span class="err">Add a video in step 2 first.</span>'; return; }
+  if (!time) { $("sMsg").innerHTML = '<span class="err">Choose a start time.</span>'; return; }
+  if (day === "date") {
+    day = $("sDate").value;
+    if (!day) { $("sMsg").innerHTML = '<span class="err">Choose the date.</span>'; return; }
+  }
+  if (c.slots.some(s => s.day === day && s.time === time)) { $("sMsg").innerHTML = '<span class="err">There is already a slot at that time on that day. Delete it first.</span>'; return; }
+  c.slots.push({ day, time, video });
+  $("sMsg").innerHTML = '<span class="ok">✓ Time slot added.</span>';
+  changed(); renderAll();
+};
+
+// ---------- step 5 ----------
+function stopPreview() { if (preview) { preview.stop(); preview = null; } }
+function showLiveButton() {
+  if ($("liveBtn")) return;
+  const b = document.createElement("button");
+  b.className = "btn"; b.id = "liveBtn"; b.textContent = "▶ Play live"; b.style.marginTop = "8px";
+  b.onclick = () => { b.remove(); startPreview(); };
+  $("stage").after(b);
+}
+function startPreview() {
+  stopPreview();
+  $("liveBtn")?.remove();
+  if (c.active === false) { $("pv").removeAttribute("src"); $("nowText").textContent = "The channel is switched OFF (step 1)."; return; }
+  preview = tuneIn($("pv"), c, {
+    onChange: on => { $("nowText").textContent = `On air now: ${on.video.title}` + (on.slot ? " (time slot)" : " (loop)"); renderGuide(); },
+    onOff: on => { $("nowText").textContent = "Off air now." + (on.next ? ` Next: ${on.next.title} at ${timeText(on.nextAt, c.tz)}.` : " Nothing is booked: add videos to the loop."); },
+  });
+}
+function renderPreviewLook() {
+  const corner = c.logoCorner || "tr";
+  $("bug").className = `bug ${corner}` + (!c.logo || corner === "off" ? " hidden" : "");
+  if (c.logo) $("bug").src = c.logo;
+  const tick = c.tickerOn !== false && (c.ticker || "").trim();
+  $("tickerBox").classList.toggle("hidden", !tick);
+  $("tickerText").textContent = tick || "";
+}
+function renderGuide() {
+  const list = guide(c, Date.now() - 1, 12, 80);
+  $("guide").innerHTML = list.length ? "" : '<p class="small">Nothing to play. Add videos to the loop or a time slot.</p>';
+  list.forEach((g, i) => {
+    const d = document.createElement("div");
+    if (i === 0) d.className = "cur";
+    d.innerHTML = "<span></span><span></span><span class='small'></span>";
+    d.children[0].textContent = i === 0 ? "Now" : timeText(g.at, c.tz);
+    d.children[1].textContent = g.video.title + (g.slot ? "  (time slot)" : "");
+    d.children[2].textContent = lengthText(g.video.secs);
+    $("guide").appendChild(d);
+  });
+}
+
+// ---------- saving ----------
+let previewTimer = null;
+/** Marks unsaved changes; [schedule] false for looks only (name, logo, ticker), which don't restart the preview. */
+function changed(schedule = true) {
+  dirty = true;
+  $("saveMsg").innerHTML = '<span class="warn">Unsaved changes. Press Save to put them on air.</span>';
+  renderPreviewLook();
+  if (!schedule) return;
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => { renderGuide(); startPreview(); }, 800);
+}
+function renderAll() {
+  c.videos ||= []; c.loop ||= []; c.slots ||= [];
+  renderChannel(); renderVideos(); renderLoop(); renderSlots(); renderPreviewLook(); renderGuide();
+  if (!preview) startPreview();
+}
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+$("undo").onclick = () => {
+  if (!dirty) { $("saveMsg").textContent = "Nothing to undo."; return; }
+  if (!confirm("Go back to what was last saved? Your unsaved changes will be lost.")) return;
+  c = clone(saved); dirty = false; renderAll(); startPreview();
+  $("saveMsg").textContent = "Back to what was last saved.";
+};
+$("loadTest").onclick = async () => {
+  if (!confirm("Replace everything on this page with the ready-made 1-hour test programme? (Nothing changes on TVs until you Save.)")) return;
+  c = await testProgramme(); changed(); renderAll();
+};
+$("copyRule").onclick = () => navigator.clipboard.writeText($("ruleText").textContent).then(() => $("copyRule").textContent = "Copied ✓");
+
+$("save").onclick = async () => {
+  c.name = (c.name || "").trim() || "My Channel";
+  if (!c.videos.length) { $("saveMsg").innerHTML = '<span class="err">Add at least one video (step 2) before saving.</span>'; return; }
+  if (!c.loop.length && !c.slots.length) { $("saveMsg").innerHTML = '<span class="err">Put at least one video in the loop (step 3) or a time slot (step 4).</span>'; return; }
+  const data = JSON.stringify(c);
+  $("save").disabled = true;
+  $("saveMsg").textContent = "Saving…";
+  try {
+    await fs.setDoc(fs.doc(db, "sponsors", "_channel"), { name: c.name, active: c.active !== false, data, updatedAt: fs.serverTimestamp() });
+    saved = clone(c); dirty = false;
+    let note = "";
+    try {
+      await fs.setDoc(fs.doc(db, "channel", "main"), { data, updatedAt: fs.serverTimestamp() });
+      $("ruleNote").classList.add("hidden");
+    } catch (e) {
+      if (e.code === "permission-denied") { $("ruleNote").classList.remove("hidden"); note = " The public page needs one more step (see below)."; }
+    }
+    $("saveMsg").innerHTML = `<span class="ok">✓ Saved. TVs show it within about 10 minutes (or right away after restarting the app).${note}</span>`;
+  } catch (e) {
+    $("saveMsg").innerHTML = `<span class="err">Couldn't save: ${e.message}. Check your internet and press Save again; nothing is lost.</span>`;
+  } finally {
+    $("save").disabled = false;
+  }
+};
+</script>
+<script src="assets/visits.js"></script>
+</body>
+</html>

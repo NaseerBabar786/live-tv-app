@@ -36,6 +36,8 @@ import com.livetv.app.ui.SponsorTicker
 import com.livetv.app.sponsor.Sponsor
 import com.livetv.app.sponsor.SponsorViews
 import com.livetv.app.sponsor.Sponsors
+import com.livetv.app.sponsor.MyChannelSync
+import com.livetv.app.data.MyChannel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.livetv.app.ui.UiState
@@ -96,6 +98,11 @@ fun EditionStartScreen(onDone: () -> Unit) {
         if (sponsor == null) sponsor = Sponsors.next("start")
     }
     LaunchedEffect(sponsor?.id) { sponsor?.let { SponsorViews.count(it, "start") } }
+    // The owner's own channel and its schedule (tv.bulkbazaar.ca/studio).
+    LaunchedEffect(Unit) {
+        MyChannel.init(context)
+        MyChannelSync.refresh(account)
+    }
     SponsorScreen(loading = state.loading, sponsor = sponsor, onDone = onDone)
 }
 
@@ -122,6 +129,8 @@ fun EditionOverlay() {
                 // New or changed sponsors reach TVs that stay on for days.
                 minutes += 10
                 if (minutes % (6 * 60) == 0) Sponsors.refresh(account)
+                // The owner's channel schedule changes more often.
+                MyChannelSync.refresh(account)
             }
         }
         DisposableEffect(lifecycleOwner) {
