@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                             onSection = store::select,
                             onOpen = { openId = it.id },
                             onAct = store::act,
-                            onRefresh = store::refresh,
+                            onRefresh = { store.refresh(manual = true) },
                             onHelp = { help = true },
                             onUpdateAll = store::updateAll,
                         )

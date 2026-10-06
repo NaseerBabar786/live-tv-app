@@ -97,14 +97,25 @@ class StoreViewModel(app: Application) : AndroidViewModel(app) {
         refresh()
     }
 
-    fun refresh() {
+    /** Fetches the app list again. [manual] is the Refresh button: it then says what it found. */
+    fun refresh(manual: Boolean = false) {
         if (_state.value.loading) return
         lastRefresh = System.currentTimeMillis()
         _state.update { it.copy(loading = true, error = null) }
         viewModelScope.launch {
             runCatching { repo.refresh() }
-                .onSuccess { apps -> setApps(apps); _state.update { it.copy(loading = false) }; autoUpdateSelf() }
+                .onSuccess { apps ->
+                    setApps(apps)
+                    refreshInstalled()
+                    _state.update { it.copy(loading = false) }
+                    if (manual) {
+                        val n = _state.value.updates.size
+                        say(if (n == 0) "Checked just now. All your apps are up to date." else "Checked just now. $n update${if (n > 1) "s" else ""} ready.")
+                    }
+                    autoUpdateSelf()
+                }
                 .onFailure { e ->
+                    if (manual && _state.value.apps.isNotEmpty()) say("Could not reach App Bazaar (${e.message ?: "no internet"}). Please try again.")
                     _state.update {
                         it.copy(
                             loading = false,
