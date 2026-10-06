@@ -2,7 +2,6 @@ package com.livetv.app
 
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
-import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
 import android.util.Rational
@@ -63,9 +62,6 @@ class MainActivity : ComponentActivity() {
         com.livetv.app.data.ScreenLooks.init(this)
         com.livetv.app.ui.Themes.init(this)
         enableEdgeToEdge()
-        // TVs draw a web page's video (YouTube) underneath the window, showing through a hole in the page;
-        // an opaque window keeps that hole black, with only the sound (1.9.55).
-        window.setFormat(PixelFormat.TRANSLUCENT)
         if (savedInstanceState != null) showStartScreen = false
         setContent {
             LiveTvTheme {
