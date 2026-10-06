@@ -235,6 +235,28 @@
    "srt": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-hindi.srt"
   },
   {
+   "id": "cable-tv-video-ad-1",
+   "cat": "promos",
+   "lang": "en",
+   "title": "Cable TV Video Ad 1",
+   "url": "media/cable-tv-video-ad-1.mp4",
+   "secs": 60,
+   "poster": "media/cable-tv-ad-1-poster.jpg",
+   "about": "One minute: no cable bill, 100% free, layouts, Bazaar channels, easy install, tv.bulkbazaar.ca.",
+   "credit": "Our own ad with original music. Not on any channel yet."
+  },
+  {
+   "id": "cable-tv-video-ad-2",
+   "cat": "promos",
+   "lang": "en",
+   "title": "Cable TV Video Ad 2",
+   "url": "media/cable-tv-video-ad-2.mp4",
+   "secs": 30,
+   "poster": "media/cable-tv-ad-2-poster.jpg",
+   "about": "30 seconds: the Bazaar channels one by one.",
+   "credit": "Our own ad with original music. Not on any channel yet."
+  },
+  {
    "id": "cable-tv-video-ad-3",
    "cat": "promos",
    "lang": "en",
