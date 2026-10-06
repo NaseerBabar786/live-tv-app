@@ -57,7 +57,13 @@ fun EditionSponsorVideoBox(modifier: Modifier, allowVideo: Boolean, clickable: B
 fun editionHasSponsors(): Boolean = false
 
 @Composable
-fun EditionTicker(modifier: Modifier, big: Boolean = false, always: Boolean = false) = Unit
+fun EditionTicker(
+    modifier: Modifier,
+    big: Boolean = false,
+    always: Boolean = false,
+    everyMs: Long = 0L,
+    skip: () -> Boolean = { false },
+) = Unit
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

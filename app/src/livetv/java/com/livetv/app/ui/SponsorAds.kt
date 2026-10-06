@@ -113,9 +113,17 @@ private var nextTickerAt = 0L
  * inviting businesses to advertise. The owner sets the words on tv.bulkbazaar.ca/sponsors.
  * [big] is the band above the tiles of 1×2 and 2×2; otherwise it's the line beside the channel count.
  * [always] keeps it running without the 30 second wait (News mode's bottom band).
+ * [everyMs] above 0 runs it on its own clock instead, once every [everyMs] (the full-screen channel),
+ * on a dark band, skipping a turn while [skip] says something else is on screen.
  */
 @Composable
-fun SponsorTicker(modifier: Modifier = Modifier, big: Boolean = false, always: Boolean = false) {
+fun SponsorTicker(
+    modifier: Modifier = Modifier,
+    big: Boolean = false,
+    always: Boolean = false,
+    everyMs: Long = 0L,
+    skip: () -> Boolean = { false },
+) {
     val text by Sponsors.ticker.collectAsStateWithLifecycle()
     val words = text ?: return
     var running by remember { mutableStateOf(false) }
@@ -126,6 +134,13 @@ fun SponsorTicker(modifier: Modifier = Modifier, big: Boolean = false, always: B
             running = true
             snapshotFlow { running }.first { !it }
             delay(2_000)
+        }
+        // Full-screen channel: every [everyMs], counted from when the channel opened.
+        if (everyMs > 0) while (true) {
+            delay(everyMs)
+            if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) || skip()) continue
+            running = true
+            snapshotFlow { running }.first { !it }
         }
         if (nextTickerAt == 0L) nextTickerAt = SystemClock.elapsedRealtime() + TICKER_FIRST_MS
         while (true) {
@@ -141,6 +156,7 @@ fun SponsorTicker(modifier: Modifier = Modifier, big: Boolean = false, always: B
     }
     BoxWithConstraints(modifier.clipToBounds()) {
         if (!running) return@BoxWithConstraints
+        if (everyMs > 0) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.55f)))
         val boxWidth = constraints.maxWidth.toFloat()
         val pxPerSecond = with(LocalDensity.current) { TICKER_DP_PER_SECOND.dp.toPx() }
         var textWidth by remember { mutableIntStateOf(0) }
