@@ -10,6 +10,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -52,7 +63,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 /**
- * Free Live TV asks everyone to sign in with Google once. TVs show a code to approve at
+ * Free Live TV asks everyone to sign in once: with an email and password account they make here
+ * (any email, no confirmation email), or with Google. For Google, TVs show a code to approve at
  * google.com/device on a phone (and can try the TV's own Google account); phones use the
  * account picker.
  */
@@ -65,6 +77,7 @@ fun SignInScreen(onSignedIn: () -> Unit) {
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     val notice by account.notice.collectAsState()
+    var withGoogle by remember { mutableStateOf(false) }
 
     fun finish(googleIdToken: String) {
         scope.launch {
@@ -119,7 +132,7 @@ fun SignInScreen(onSignedIn: () -> Unit) {
                     color = MaterialTheme.colorScheme.onBackground)
             }
             Text(
-                "Sign in with your Google account to start watching. It's free, and you only do it once.",
+                "Sign in to start watching. It's free, and you only do it once.",
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -127,7 +140,18 @@ fun SignInScreen(onSignedIn: () -> Unit) {
             notice?.let {
                 Text(it, color = FocusColor, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
             }
-            if (isTv) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                ChoiceButton("Email and password", selected = !withGoogle, enabled = !busy) { withGoogle = false; error = null }
+                ChoiceButton("Google account", selected = withGoogle, enabled = !busy) { withGoogle = true; error = null }
+            }
+            if (!withGoogle) {
+                EmailSignIn(
+                    busy = busy,
+                    onBusy = { busy = it },
+                    onError = { error = it },
+                    onSignedIn = onSignedIn,
+                )
+            } else if (isTv) {
                 TvCodePanel(onToken = ::finish, onError = { error = it }, busy = busy)
                 OutlinedButton(onClick = ::useDeviceAccount, enabled = !busy, modifier = Modifier.focusGlow()) {
                     Text("Or use this TV's Google account")
@@ -147,12 +171,132 @@ fun SignInScreen(onSignedIn: () -> Unit) {
             }
             Text(
                 "A free account works on one device at a time. We keep your name and email so we know who uses " +
-                    "Free Live TV and can let you post in Suggestions. " +
+                    "Free Live TV and can let you post in Suggestions. Your password is stored scrambled: nobody can read it. " +
+                    "Forgot it? Message us on WhatsApp at 437 602 6500 and we'll set a new one for you. " +
                     "Privacy policy: tv.bulkbazaar.ca/privacy",
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             )
+        }
+    }
+}
+
+@Composable
+private fun ChoiceButton(label: String, selected: Boolean, enabled: Boolean, onClick: () -> Unit) {
+    if (selected) {
+        AccentButton(onClick = onClick, enabled = enabled, modifier = Modifier.focusGlow()) { Text("✓ $label") }
+    } else {
+        OutlinedButton(onClick = onClick, enabled = enabled, modifier = Modifier.focusGlow()) { Text(label) }
+    }
+}
+
+/**
+ * Sign in or create an account with any email and a password of 6 or more characters. "Show
+ * password" lets the viewer see what they typed; "Forgot password" sends Firebase's reset email.
+ */
+@Composable
+private fun EmailSignIn(busy: Boolean, onBusy: (Boolean) -> Unit, onError: (String?) -> Unit, onSignedIn: () -> Unit) {
+    val context = LocalContext.current
+    val account = remember { Account.get(context) }
+    val scope = rememberCoroutineScope()
+    var creating by rememberSaveable { mutableStateOf(false) }
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var showPassword by remember { mutableStateOf(false) }
+    var info by remember { mutableStateOf<String?>(null) }
+    val ready = email.contains('@') && password.length >= 6 && (!creating || name.isNotBlank())
+
+    fun go() {
+        if (!ready || busy) return
+        scope.launch {
+            onBusy(true); onError(null); info = null
+            try {
+                if (creating) account.signUpWithEmail(name, email, password) else account.signInWithEmail(email, password)
+                onSignedIn()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                onError(e.message ?: "Couldn't sign in. Check the internet connection.")
+            } finally {
+                onBusy(false)
+            }
+        }
+    }
+
+    fun forgot() {
+        if (!email.contains('@')) { onError("Type your email first, then press Forgot password."); return }
+        scope.launch {
+            onBusy(true); onError(null); info = null
+            try {
+                account.sendPasswordReset(email)
+                info = "We sent a link to $email to make a new password. No email? Message us on WhatsApp at " +
+                    "437 602 6500 and we'll set a new password for you."
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                onError((e.message ?: "Couldn't send the email.") + " You can also message us on WhatsApp at 437 602 6500.")
+            } finally {
+                onBusy(false)
+            }
+        }
+    }
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .widthIn(max = 520.dp)
+            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp))
+            .padding(20.dp),
+    ) {
+        Text(
+            if (creating) "Create your free account" else "Sign in",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        if (creating) {
+            OutlinedTextField(
+                value = name, onValueChange = { name = it }, singleLine = true,
+                label = { Text("Your name") },
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Next),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        OutlinedTextField(
+            value = email, onValueChange = { email = it.trim() }, singleLine = true,
+            label = { Text("Email") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        OutlinedTextField(
+            value = password, onValueChange = { password = it }, singleLine = true,
+            label = { Text(if (creating) "Make a password (6 or more characters)" else "Password") },
+            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { go() }),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            TextButton(onClick = { showPassword = !showPassword }, modifier = Modifier.focusGlow()) {
+                Text(if (showPassword) "🙈 Hide password" else "👁 Show password")
+            }
+            if (!creating) {
+                TextButton(onClick = ::forgot, enabled = !busy, modifier = Modifier.focusGlow()) { Text("Forgot password?") }
+            }
+        }
+        AccentButton(onClick = ::go, enabled = ready && !busy, modifier = Modifier.fillMaxWidth().focusGlow()) {
+            Text(if (creating) "Create account" else "Sign in", fontSize = 18.sp)
+        }
+        TextButton(
+            onClick = { creating = !creating; onError(null); info = null },
+            enabled = !busy,
+            modifier = Modifier.focusGlow(),
+        ) { Text(if (creating) "Already have an account? Sign in" else "New here? Create a free account") }
+        info?.let {
+            Text(it, color = FocusColor, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
