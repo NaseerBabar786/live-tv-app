@@ -16,6 +16,15 @@ import java.util.TimeZone
  */
 object MyChannel {
     /**
+     * Our logos get redrawn at the same address (1.9.47, 1.9.49), and Coil keeps the old picture on
+     * disk for ever, so our own logo links carry this number; raise it whenever the logos change.
+     */
+    private const val LOGO_VERSION = 3
+
+    fun freshLogo(url: String): String =
+        if ("/channel/logos/" in url && '?' !in url) "$url?v=$LOGO_VERSION" else url
+
+    /**
      * One of our channels: [id] names its saved settings and its stream address, [number] is its
      * channel number (our channels are 1 to [COUNT], 1.9.45), and [dial] the row of zeros that
      * reached it before then, which still works.
@@ -81,7 +90,7 @@ object MyChannel {
     private val bollywood = Channel(
         name = "Bazaar Hits",
         url = BOLLYWOOD_URL,
-        logo = "https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png",
+        logo = freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png"),
         number = HITS_NUMBER,
     )
 
@@ -209,7 +218,7 @@ object MyChannel {
         val loop = o.optJSONArray("loop")?.let { a -> (0 until a.length()).map { a.optString(it) } }.orEmpty()
         return Config(
             name = o.optString("name").trim().ifEmpty { "My Channel" },
-            logo = o.optString("logo").trim().takeIf { it.startsWith("http") },
+            logo = o.optString("logo").trim().takeIf { it.startsWith("http") }?.let(::freshLogo),
             active = o.optBoolean("active", true),
             timeZone = o.optString("tz").ifBlank { "America/Toronto" },
             videos = videos,

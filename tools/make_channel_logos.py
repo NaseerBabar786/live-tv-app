@@ -125,7 +125,7 @@ def action_logo(key, word, c1, c2, tag=None):
     tw = word_mask(word, 330, track=-6)
     s0 = slab(tw.width + 140, tw.height + 110); sm = Image.new("L", (s0.width + 80, s0.height + 80), 0); sm.paste(s0, (40, 40))
     ph = s0.height
-    out = Image.new("RGBA", (sm.width + 260, sm.height + 400), (0, 0, 0, 0)); ox, oy = 200, 160
+    out = Image.new("RGBA", (sm.width + 900, sm.height + 560), (0, 0, 0, 0)); ox, oy = 200, 320
     st = Image.new("L", out.size, 0); sd = ImageDraw.Draw(st)
     for yy, ln, th in ((0.2, 320, 16), (0.38, 420, 22), (0.56, 260, 14), (0.74, 380, 18)):  # speed lines
         y = oy + sm.height * yy; x2 = ox + 70 + (1 - yy) * ph * 0.35
@@ -142,18 +142,18 @@ def action_logo(key, word, c1, c2, tag=None):
     t = Image.new("L", out.size, 0); t.paste(tw, (ox + (sm.width - tw.width) // 2 + 10, oy + (sm.height - tw.height) // 2))
     out.alpha_composite(paint(shift(t, 10, 12), dark(c2, .5)))
     out.alpha_composite(paint(t, (255, 255, 255)))
-    tabs = [] if word == "BAZAAR" else [("BAZAAR", 120, 10, False)]
-    if tag: tabs.append((tag, 190 if len(tag) <= 2 else 120, 0 if len(tag) <= 2 else 8, True))
+    tabs = [] if word == "BAZAAR" else [("BAZAAR", 235, 6, False)]  # big enough to read in the TV corner (1.9.49)
+    if tag: tabs.append((tag, 190 if len(tag) <= 2 else 175, 0 if len(tag) <= 2 else 6, True))
     for text, size, track, under in tabs:  # dark BAZAAR tab on top, coloured tag (TV, ENGLISH) under the slab
         tm = word_mask(text, size, track=track)
         tab = slab(tm.width + 80, tm.height + 46)
         tx, ty = (ox + sm.width - tab.width - 10, oy + sm.height - 40) if under else (ox + 120, oy - tab.height + 30)
         tl = Image.new("L", out.size, 0); tl.paste(tab, (tx, ty))
         out.alpha_composite(soft(shift(tl, 8, 10), 8, 150))
-        out.alpha_composite(paint(grow(tl, 8), (255, 255, 255)))
-        out.alpha_composite(paint(tl, c2 if under else (18, 18, 24)))
+        out.alpha_composite(paint(grow(tl, 12), (255, 255, 255)))
+        out.alpha_composite(paint(tl, c2 if under else (10, 10, 14)))
         tt = Image.new("L", out.size, 0); tt.paste(tm, (tx + (tab.width - tm.width) // 2 + 6, ty + (tab.height - tm.height) // 2))
-        out.alpha_composite(paint(tt, (255, 255, 255) if under else light(c1, .2)))
+        out.alpha_composite(paint(tt, (255, 255, 255)))
     out = out.crop(out.getbbox())
     pad = Image.new("RGBA", (out.width + 24, out.height + 24), (0, 0, 0, 0)); pad.alpha_composite(out, (12, 12))
     return pad

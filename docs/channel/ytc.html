@@ -14,12 +14,12 @@
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
   #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .shield { position: absolute; inset: 0; background: transparent; }
-  .bug { position: absolute; top: 3%; right: 2.5%; width: 8%; opacity: .85; pointer-events: none; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 9vw; max-width: 26vw; object-fit: contain; opacity: .85; pointer-events: none; }
   .now { position: absolute; left: 3%; bottom: 10%; max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; pointer-events: none; }
   .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
   .hide { opacity: 0; }
   .sound, .back { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
-  .back { left: auto; right: 12%; background: rgba(16,24,39,.85); text-decoration: none; }
+  .back { left: auto; right: 30%; background: rgba(16,24,39,.85); text-decoration: none; }
   .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.85); color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); padding: .35em 0; pointer-events: none; }
   .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }

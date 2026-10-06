@@ -121,4 +121,11 @@ class MyChannelTest {
         assertEquals(null, MyChannel.pageFor(Channel(name = "A", url = "https://example.com/a.m3u8"), 188))
         assertEquals(null, MyChannel.pageFor(MyChannel.parse(JSONObject("""{"videos":[]}""")).channel, 188))
     }
+
+    @Test
+    fun ourLogosCarryAVersionSoTvsFetchTheNewPicture() {
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png?v=3", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
+        assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
+    }
 }
