@@ -103,10 +103,12 @@ function show() {
   $("tickerText").textContent = tick || "";
   renderGuide();
 }
+const isShow = g => g.slot || !g.video.kind || g.video.kind === "programme" || g.video.kind === "live";
 function renderGuide() {
   const tz = c.tz || "America/Toronto";
   const now = Date.now();
-  const list = guide(c, now - 1, 12, 30);
+  // Viewers see the programmes; ads and idents between them are left out of the guide.
+  const list = guide(c, now - 1, 12, 120).filter((g, i) => i === 0 || isShow(g)).slice(0, 25);
   $("guide").innerHTML = "";
   list.forEach((g, i) => {
     const d = document.createElement("div");
@@ -121,7 +123,7 @@ function renderGuide() {
 }
 function onChange(on) {
   $("off").classList.add("hidden");
-  const next = guide(c, Date.now(), 6, 2)[1];
+  const next = guide(c, Date.now(), 6, 60).slice(1).find(isShow);
   $("nowText").textContent = `Now: ${on.video.title}` + (next ? `  ·  Next: ${next.video.title} at ${timeText(next.at, c.tz)}` : "");
   renderGuide();
 }
