@@ -224,9 +224,10 @@ def voice(film, lang):
     credit = credit_line(film, lang_name)
     write_srt(f"{OUT}/{film}-{folder}.srt", lines, credit)
     font = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-    label = f"{title} - AI {lang_name} dub (test)\\n{holder.replace(':', '')}\\n{licence}  -  voices changed by Bazaar TV"
-    label = label.replace("'", "")
-    draw = (f"drawtext=fontfile={font}:text='{label}':fontcolor=white:fontsize=22:line_spacing=6:"
+    # The credit sits on screen for the first 8 seconds (CC BY asks for credit and a note of what changed).
+    with open(f"{film}-{lang}-credit.txt", "w", encoding="utf-8") as f:
+        f.write(f"{title} - AI {lang_name} dub (test)\n{holder}\n{licence}  -  voices changed by Bazaar TV")
+    draw = (f"drawtext=fontfile={font}:textfile={film}-{lang}-credit.txt:fontcolor=white:fontsize=22:line_spacing=6:"
             f"box=1:boxcolor=black@0.55:boxborderw=12:x=30:y=h-th-40:enable='lt(t,8)'")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-i", f"{film}-{lang}-mix.wav",
         "-map", "0:v:0", "-map", "1:a:0", "-vf", draw,
