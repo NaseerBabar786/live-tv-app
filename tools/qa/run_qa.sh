@@ -79,6 +79,17 @@ grant
 launch
 sleep 5;  shot 03-start-screen
 sleep 35; shot 04-home
+# Walk around Browse like a viewer: move, wait for previews and pictures, open, go back.
+for k in RIGHT RIGHT DOWN RIGHT DOWN DOWN LEFT; do key KEYCODE_DPAD_$k; sleep 3; done
+sleep 15; shot 04b-browse-walk
+running && note "still running after Browse walk" || note "NOT RUNNING after Browse walk"
+adb shell dumpsys activity processes | grep -i "notresponding\|crashing" | head -3 | tee -a "$LOG"
+for i in 1 2 3 4 5; do key KEYCODE_BACK; sleep 2; done
+shot 04c-after-backs
+key KEYCODE_DPAD_RIGHT; key KEYCODE_DPAD_CENTER; sleep 3; shot 04d-exit-yes
+launch; sleep 20; shot 04e-relaunch
+running && note "relaunch running" || note "RELAUNCH NOT RUNNING"
+for k in RIGHT DOWN; do key KEYCODE_DPAD_$k; sleep 2; done
 # OK on the focused channel opens it full screen.
 key KEYCODE_DPAD_CENTER
 sleep 12; shot 05-player
@@ -122,7 +133,8 @@ if [ -n "${OLD_APK:-}" ] && [ -f "$OLD_APK" ]; then
   adb logcat -d > "$OUT/logcat-update.txt"
 fi
 adb logcat -b crash -d > "$OUT/crash.txt"
-grep -n "FATAL EXCEPTION\|ANR in $PKG\|Process: $PKG" "$OUT"/logcat*.txt > "$OUT/crashes-found.txt"
+grep -n "FATAL EXCEPTION\|ANR in\|Application Not Responding\|ANR in $PKG\|Process: $PKG" "$OUT"/logcat*.txt > "$OUT/crashes-found.txt"
 note "crash lines found: $(wc -l < "$OUT/crashes-found.txt")"
+adb shell ls -l /data/anr >> "$LOG" 2>&1
 rm -f "$OUT/_tap.xml"
 exit 0
