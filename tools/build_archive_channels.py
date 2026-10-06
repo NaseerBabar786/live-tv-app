@@ -66,7 +66,8 @@ CHANNELS = {
                      "description and travel", "travel films"],
         # A travel channel shows places, not war films, newsreels of disasters or adverts.
         "skip": r"war\b|army|military|navy|bomb|atomic|invasion|combat|enemy|crime|disaster|accident|newsreel|"
-                r"conservation corps|civilan conservation|ccc\b|human crop|groundwater|silt|captain z-ro|fashion",
+                r"conservation corps|civilan conservation|ccc\b|human crop|groundwater|silt|captain z-ro|fashion|"
+                r"planet|spaceship|venus",
         "ticker": "Bazaar Travel · See the world, day and night · Classic travel films of countries, cities and "
                   "parks · Channel 0000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
     },
@@ -78,7 +79,11 @@ CHANNELS = {
         # The Archive's own comedy collections, searched as a whole too.
         "collections": ["comedy_films"],
         # Family viewing: no horror comedies, no blackface minstrel routines, no adverts.
-        "skip": r"minstrel|blackface|horror|zombie|murder|strip|burlesque|stag|risque|naughty",
+        # Family viewing: no horror or crime films, no burlesque, no cartoons with racist caricatures,
+        # and no later TV shows (Steptoe and Son, Dick Van Dyke) whose free-licence claim is doubtful.
+        "skip": r"minstrel|blackface|horror|horrors|zombie|zombies|murder|strip|burlesque|teaserama|stag|risque|"
+                r"naughty|death|killer|crime|crooked|manhunt|creature|haunted|machine gun|baby face|scarlet clue|"
+                r"rascal you|bamboo isle|c\.c\. and company|steptoe|dick van dyke|raiders|billy the kid",
         "ticker": "Bazaar Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies "
                   "· Channel 00000000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500",
     },
