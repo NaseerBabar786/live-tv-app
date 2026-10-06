@@ -20,26 +20,36 @@ object MyChannel {
      * channel number (our channels are 1 to [COUNT], 1.9.45), and [dial] the row of zeros that
      * reached it before then, which still works.
      */
-    class Station(val id: String, val number: Int, val dial: String, val name: String)
+    class Station(
+        val id: String,
+        val number: Int,
+        val dial: String,
+        val name: String,
+        /** Runs like Bazaar Hits (1.9.47): official YouTube videos on our page, its schedule only the backup. */
+        val youtube: Boolean = false,
+    )
 
     /** Our channels take numbers 1 to 8; the other channels are numbered from 9. */
     const val COUNT = 8
 
-    /** Our channels, in the order they lead the channel list. */
+    /**
+     * Our channels, in the order they lead the channel list. Since 1.9.47 all but Bazaar TV run
+     * from official YouTube videos (tools/build_youtube_channels.py); the free films below are their backup.
+     */
     val STATIONS = listOf(
         Station("main", 1, "0", "Bazaar TV"),
         // Public-domain classic films round the clock (built weekly from Movies.m3u).
-        Station("filmein", 2, "00", "Bazaar Cinema"),
+        Station("filmein", 2, "00", "Bazaar Cinema", youtube = true),
         // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
-        Station("sur", 3, "000", "Bazaar Music"),
+        Station("sur", 3, "000", "Bazaar Music", youtube = true),
         // Public-domain and Creative Commons cartoons for children (1.9.41).
-        Station("kids", 5, "00000", "Bazaar Kids"),
+        Station("kids", 5, "00000", "Bazaar Kids", youtube = true),
         // Public-domain and CC BY sports films from the Internet Archive, built by tools/build_archive_channels.py (1.9.43).
-        Station("sports", 6, "000000", "Bazaar Sports"),
+        Station("sports", 6, "000000", "Bazaar Sports", youtube = true),
         // Public-domain travel films of countries, cities and parks, also by build_archive_channels.py (1.9.44).
-        Station("travel", 7, "0000000", "Bazaar Travel"),
+        Station("travel", 7, "0000000", "Bazaar Travel", youtube = true),
         // Silent and classic comedy (Chaplin, Laurel and Hardy, Keaton), also by build_archive_channels.py (1.9.44).
-        Station("comedy", 8, "00000000", "Bazaar Comedy"),
+        Station("comedy", 8, "00000000", "Bazaar Comedy", youtube = true),
     )
 
     private const val SCHEME = "mychannel://"
@@ -63,6 +73,15 @@ object MyChannel {
         logo = "https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png",
         number = HITS_NUMBER,
     )
+
+    /**
+     * The page that plays [channel] like Bazaar Hits (official YouTube videos, locked), when it is
+     * one of our channels that runs that way; null otherwise.
+     */
+    fun webPage(channel: Channel?): String? {
+        val id = channel?.url?.takeIf { it.startsWith(SCHEME) }?.removePrefix(SCHEME) ?: return null
+        return STATIONS.firstOrNull { it.id == id && it.youtube }?.let { "https://tv.bulkbazaar.ca/channel/ytc.html?c=${it.id}&app=1" }
+    }
 
     fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
 

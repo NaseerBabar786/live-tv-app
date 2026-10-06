@@ -10,27 +10,35 @@ export const TEST_SCHEDULE_URL = "https://tv.bulkbazaar.ca/channel/test-schedule
 /**
  * Our channels. [doc] is the owner's copy in Firestore sponsors/ (the app reads it) and channel/[id]
  * the public copy; [ready] plays until the owner saves anything. Keep in step with MyChannel.STATIONS.
+ * [yt] channels run like Bazaar Hits (1.9.47): official YouTube videos on [web] (channel/ytc.html),
+ * locked; their schedule ([ready] or the owner's saved one) is the backup when YouTube won't play.
  */
 export const STATIONS = [
   { id: "main", name: "Bazaar TV", dial: "1", doc: "_channel", page: "channel/",
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png", ready: TEST_SCHEDULE_URL,
     credits: "Shows are public domain or Creative Commons works. Blender films: Blender Foundation, blender.org (CC BY). Space videos: NASA." },
-  { id: "filmein", name: "Bazaar Cinema", dial: "2", doc: "_channel_filmein", page: "channel/?c=filmein", auto: true,
+  { id: "filmein", yt: true, web: "channel/ytc.html?c=filmein", ytMins: 120, tagline: "Full films from the studios' own channels, day and night",
+    name: "Bazaar Cinema", dial: "2", doc: "_channel_filmein", page: "channel/?c=filmein", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cinema.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: public-domain classics from the Internet Archive (archive.org). A film every night at 8 PM Toronto time." },
-  { id: "sur", name: "Bazaar Music", dial: "3", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
+  { id: "sur", yt: true, web: "channel/ytc.html?c=sur", ytMins: 5, tagline: "Punjabi, Sufi and qawwali, day and night",
+    name: "Bazaar Music", dial: "3", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-music.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
     credits: "Music: recordings that are free to use (public domain, CC0 and CC BY) from Wikimedia Commons; each song's credit and licence show on screen. No film songs." },
-  { id: "kids", name: "Bazaar Kids", dial: "5", doc: "_channel_kids", page: "channel/?c=kids", auto: true,
+  { id: "kids", yt: true, web: "channel/ytc.html?c=kids", ytMins: 10, tagline: "Cartoons and songs for children, day and night",
+    name: "Bazaar Kids", dial: "5", doc: "_channel_kids", page: "channel/?c=kids", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-kids.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
     credits: "Cartoons: public-domain classics (Popeye, Superman, Felix the Cat) from the Internet Archive, Blender Foundation shorts (CC BY) and NASA videos." },
-  { id: "sports", name: "Bazaar Sports", dial: "6", doc: "_channel_sports", page: "channel/?c=sports", auto: true,
+  { id: "sports", yt: true, web: "channel/ytc.html?c=sports", ytMins: 8, tagline: "Sports highlights, day and night",
+    name: "Bazaar Sports", dial: "6", doc: "_channel_sports", page: "channel/?c=sports", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-sports.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
     credits: "Sport: public-domain and CC BY sports films (classic boxing, cricket, football, athletics) from the Internet Archive. No modern leagues or tournaments." },
-  { id: "travel", name: "Bazaar Travel", dial: "7", doc: "_channel_travel", page: "channel/?c=travel", auto: true,
+  { id: "travel", yt: true, web: "channel/ytc.html?c=travel", ytMins: 10, tagline: "See the world, day and night",
+    name: "Bazaar Travel", dial: "7", doc: "_channel_travel", page: "channel/?c=travel", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-travel.png", ready: "https://tv.bulkbazaar.ca/channel/travel-schedule.json",
     credits: "Travel: public-domain and CC BY travel films of countries, cities and parks from the Internet Archive." },
-  { id: "comedy", name: "Bazaar Comedy", dial: "8", doc: "_channel_comedy", page: "channel/?c=comedy", auto: true,
+  { id: "comedy", yt: true, web: "channel/ytc.html?c=comedy", ytMins: 15, tagline: "Laughs day and night",
+    name: "Bazaar Comedy", dial: "8", doc: "_channel_comedy", page: "channel/?c=comedy", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedy.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
     credits: "Comedy: public-domain silent and classic comedies (Chaplin, Laurel and Hardy, Keaton) and early TV comedies from the Internet Archive." },
 ];

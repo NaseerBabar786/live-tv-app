@@ -100,7 +100,8 @@ function hitsTab() {
 for (const st of STATIONS) {
   if (st.dial === "5") hitsTab();
   const a = document.createElement("a");
-  a.href = st.id === "main" ? "./" : `./?c=${st.id}`;
+  // Channels that run like Bazaar Hits open their YouTube page (this page is their backup).
+  a.href = st.yt ? `ytc.html?c=${st.id}` : st.id === "main" ? "./" : `./?c=${st.id}`;
   if (st === station) a.className = "sel";
   a.innerHTML = `<img alt=""><span></span>`;
   a.querySelector("img").src = st.logo;

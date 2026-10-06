@@ -171,7 +171,7 @@
   <div id="dash" class="hidden studio">
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
-    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b>Bazaar Hits (channel 4)</b> plays the music labels' official YouTube songs round the clock and picks them by itself, so it has no schedule to edit. Below is what it's playing right now, as on TV. <a href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
+    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 4)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span> and picks them by itself, so it has no schedule to edit. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -451,7 +451,7 @@ function renderStations() {
     // Bazaar Hits (4) sits between 3 and 5. It runs by itself from the music labels'
     // song list (no schedule to edit), so picking it just plays it in the player.
     if (st.dial === "5") stationButton(HITS, "Channel 4 · runs by itself");
-    stationButton(st, `Channel ${st.dial} in the app`);
+    stationButton(st, st.web ? `Channel ${st.dial} · runs by itself` : `Channel ${st.dial} in the app`);
   }
   $("publicLink").href = station.page;
   $("publicLink").textContent = "tv.bulkbazaar.ca/" + station.page;
@@ -475,9 +475,14 @@ function showHits(on) {
     f.allowFullscreen = true;
     $("stage").appendChild(f);
   }
-  f.src = HITS.web;
-  $("nowText").textContent = "Bazaar Hits: film songs from the music labels' own YouTube channels, one after another.";
-  $("modeText").textContent = "It runs by itself from the labels' song list (updated every day), so there's nothing to edit here. Tap the picture for sound.";
+  f.src = station.web;
+  $("hitsName").textContent = `${station.name} (channel ${station.dial})`;
+  $("hitsAbout").textContent = station === HITS ? "plays the music labels' official YouTube songs round the clock"
+    : `plays official videos from well-known YouTube channels round the clock (${station.tagline.toLowerCase()}); its free-film schedule is only the backup`;
+  $("hitsLink").href = station.page.startsWith("channel/?") ? station.web : station.page;
+  $("nowText").textContent = station === HITS ? "Bazaar Hits: film songs from the music labels' own YouTube channels, one after another."
+    : `${station.name}: official videos from YouTube channels, one after another, locked like Bazaar Hits.`;
+  $("modeText").textContent = "It runs by itself from its list (updated every day), so there's nothing to edit here. Tap 🔊 for sound.";
 }
 async function loadSaved() {
   renderStations();
