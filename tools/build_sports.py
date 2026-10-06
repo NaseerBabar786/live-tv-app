@@ -105,6 +105,12 @@ def best_file(ident):
     return None
 
 
+def notice(kind, text):
+    """A GitHub Actions annotation, which shows on the run's page (and through the API) without its log."""
+    if os.environ.get("GITHUB_ACTIONS"):
+        print(f"::{kind} title=Bazaar Sports::" + text.replace("%", "%25").replace("\r", "").replace("\n", "%0A"))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", help="build for the week of this date (default: today)")
@@ -112,7 +118,11 @@ def main():
     today = dt.date.fromisoformat(args.date) if args.date else dt.date.today()
     year, week, _ = today.isocalendar()
 
-    found = candidates()
+    try:
+        found = candidates()
+    except Exception as e:  # noqa: BLE001 - say why in the run's annotations
+        notice("error", f"Archive search failed: {e}")
+        raise
     print(f"{len(found)} free-licence sports items on the Archive")
     with cf.ThreadPoolExecutor(8) as pool:
         files = list(pool.map(best_file, [d["identifier"] for d in found]))
@@ -128,7 +138,10 @@ def main():
         ids.add(vid)
         videos.append({"id": vid, "title": f[0], "url": f[1], "secs": f[2], "kind": "programme"})
         print(f"  {f[2] // 60:3d} min  {f[0]}  [{d.get('licenseurl')}]  {d['identifier']}")
+    listing = "\n".join(f"{v['secs'] // 60} min  {v['title']}  {v['url']}" for v in videos)
+    notice("notice", f"{len(found)} items found, {len(videos)} usable:\n{listing}"[:60000])
     if len(videos) < 10:
+        notice("error", f"Too few sports films ({len(videos)}); keeping the old schedule.")
         sys.exit("Too few sports films; keeping the old schedule.")
 
     loop = [v["id"] for v in videos]
