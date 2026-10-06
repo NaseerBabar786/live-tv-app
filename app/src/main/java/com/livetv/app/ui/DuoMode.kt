@@ -1,5 +1,8 @@
 package com.livetv.app.ui
 
+import androidx.compose.runtime.key
+import com.livetv.app.BuildConfig
+import com.livetv.app.data.MyChannel
 import android.content.Context
 import android.view.TextureView
 import android.widget.Toast
@@ -209,8 +212,15 @@ internal fun DuoMode(
             }
         }
     }
+    // Our YouTube channels and Bazaar Hits play their own page, silent like the other players (1.9.60),
+    // not their backup films.
+    val pageFailed = remember { mutableStateMapOf<String, Boolean>() }
+    val pages = (0..1).map { i ->
+        players[i]?.takeIf { playing && pageFailed[it.id] != true }
+            ?.let { MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }?.let { "$it&mute=1" }
+    }
     for (i in 0..1) {
-        LaunchedEffect(players[i]?.id, playing) {
+        LaunchedEffect(players[i]?.id, playing, pages[i]) {
             // The channel going away keeps its last frame as its card's picture.
             shownIds[i]?.let { if (showing[i] == true) keepPicture(it, views[i].picture()) }
             streams[i].stop()
@@ -220,7 +230,7 @@ internal fun DuoMode(
             if (!playing) return@LaunchedEffect
             if (i == 1) delay(1_200)
             shownIds[i] = channel.id
-            streams[i].play(channel)
+            if (pages[i] == null) streams[i].play(channel)
         }
     }
 
@@ -462,6 +472,8 @@ internal fun DuoMode(
                         favorite = players[i]?.id in favorites,
                         showVideo = shownIds[i] != null && shownIds[i] == players[i]?.id,
                         showing = showing[i] == true,
+                        page = pages[i],
+                        onPageFailed = { players[i]?.let { c -> if (MyChannel.webPage(c) != null) pageFailed[c.id] = true } },
                         attach = { view -> views[i].view = view; streams[i].player.setVideoTextureView(view) },
                         detach = { view ->
                             if (views[i].view === view) views[i].view = null
@@ -543,6 +555,9 @@ private fun DuoPlayer(
     favorite: Boolean,
     showVideo: Boolean,
     showing: Boolean,
+    /** Our YouTube page for the channel, when it plays that way. */
+    page: String?,
+    onPageFailed: () -> Unit,
     attach: (TextureView) -> Unit,
     detach: (TextureView) -> Unit,
 ) {
@@ -576,7 +591,9 @@ private fun DuoPlayer(
         browsePictures[channel.id]?.let {
             Image(it, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
         }
-        if (showVideo) {
+        if (page != null) {
+            key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+        } else if (showVideo) {
             AndroidView(
                 factory = { ctx -> TextureView(ctx).also(attach) },
                 onRelease = detach,

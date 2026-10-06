@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.runtime.key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
@@ -71,9 +72,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.Player
 import coil3.compose.SubcomposeAsyncImage
+import com.livetv.app.BuildConfig
 import com.livetv.app.Edition
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
+import com.livetv.app.data.MyChannel
 import com.livetv.app.data.YouTube
 import com.livetv.app.player.StreamPlayer
 import kotlinx.coroutines.delay
@@ -191,7 +194,11 @@ internal fun StripMode(
         }
     }
     val currentOnWatch by rememberUpdatedState(onWatch)
-    LaunchedEffect(current?.id, playing) {
+    // Our YouTube channels and Bazaar Hits play their own page here, as in 1+List (1.9.60); before, the
+    // player fell to their backup films, the same film on several channels.
+    var pageFailed by remember(current?.id) { mutableStateOf(false) }
+    val page = current?.takeIf { playing && !pageFailed }?.let { MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
+    LaunchedEffect(current?.id, playing, page) {
         stream.stop()
         showing = false
         shownId = null
@@ -199,7 +206,7 @@ internal fun StripMode(
         if (!playing) return@LaunchedEffect
         currentOnWatch(channel)
         shownId = channel.id
-        stream.play(channel)
+        if (page == null) stream.play(channel)
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
     DisposableEffect(shownId, sound, playing) {
@@ -315,6 +322,12 @@ internal fun StripMode(
             ) {
                 if (current == null) {
                     Text("Loading channels…", color = palette.onSurfaceVariant, modifier = Modifier.align(Alignment.Center))
+                } else if (page != null) {
+                    key(page) {
+                        WebPreview(page, Modifier.fillMaxSize(), onFallback = {
+                            if (MyChannel.webPage(current) != null) pageFailed = true
+                        })
+                    }
                 } else {
                     if (shownId == current.id) {
                         AndroidView(

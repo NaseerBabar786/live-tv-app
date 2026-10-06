@@ -128,6 +128,8 @@ window.onYouTubeIframeAPIReady = () => {
         // 60% brings them to the same loudness, so switching channels keeps one volume.
         e.target.setVolume(60);
         if (!app) { e.target.mute(); $("sound").hidden = false; }
+        // The app's silent players (Duo mode) open the page with mute=1 (1.9.60).
+        if (new URLSearchParams(location.search).has("mute")) e.target.mute();
         e.target.playVideo();
         showNow();
       },

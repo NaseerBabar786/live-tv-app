@@ -158,6 +158,8 @@ window.onYouTubeIframeAPIReady = () => {
         e.target.setVolume(60);
         $("msg").remove();
         if (!app) { e.target.mute(); $("sound").hidden = false; }
+        // The app's silent players (Duo mode) open the page with mute=1 (1.9.60).
+        if (new URLSearchParams(location.search).has("mute")) e.target.mute();
         // Join the film where the channel is now, like live TV: some TVs ignore the player's start setting.
         if (window.startAt > 5) e.target.seekTo(window.startAt, true);
         e.target.playVideo();
