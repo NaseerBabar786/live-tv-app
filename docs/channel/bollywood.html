@@ -97,8 +97,8 @@ let coverTimer = null;
 function cover(on) {
   clearTimeout(coverTimer);
   if (on) $("cover").classList.remove("off");
-  // A moment after it starts, so YouTube's own title and logo at the start have gone too.
-  else coverTimer = setTimeout(() => $("cover").classList.add("off"), 1200);
+  // 3.5 s after it starts, when YouTube's own title, logo and buttons at the start have faded away.
+  else coverTimer = setTimeout(() => $("cover").classList.add("off"), 3500);
 }
 window.onYouTubeIframeAPIReady = () => {
   $("msg").remove();
