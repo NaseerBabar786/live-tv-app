@@ -80,6 +80,17 @@ def files_in(category, depth=1):
         cont = {"cmcontinue": d["continue"]["cmcontinue"]}
 
 
+def files_found(query):
+    """Audio file titles a Commons search finds for [query]."""
+    d = api(action="query", list="search", srsearch=f"{query} filetype:audio", srnamespace="6", srlimit="50")
+    return [m["title"] for m in d.get("query", {}).get("search", [])]
+
+
+# Searches add the South Asian recordings that sit outside those categories.
+DESI_SEARCHES = ["qawwali", "ghazal", "raga", "raag", "sitar", "shehnai", "sarangi", "bansuri", "sarod",
+                 "santoor", "tabla", "hindustani", "carnatic", "veena", "sufi kalam", "naat", "thumri", "bhajan"]
+
+
 def plain(text):
     return html.unescape(re.sub(r"<[^>]+>", "", text or "")).strip()
 
@@ -191,20 +202,21 @@ def main():
         old = {v["url"]: v["secs"] for v in json.load(open(SCHEDULE)).get("videos", [])}
 
     picked, seen = [], set()
-    for group, per_category, share in ((DESI, 12, 0.6), (CLASSICAL, 6, 1.0)):
-        for cat in group:
-            if len(picked) >= args.limit * share:
-                break
-            try:
-                songs = details(files_in(cat)[:300])
-            except Exception as e:  # noqa: BLE001
-                print(f"  {cat}: {e}", file=sys.stderr)
-                continue
-            fresh = [s for s in songs if s["title"] not in seen][:per_category]
-            print(f"{cat}: {len(songs)} usable, taking {len(fresh)}")
-            for s in fresh:
-                seen.add(s["title"])
-                picked.append(s)
+    sources = [("category", c, 12, 0.6) for c in DESI] + [("search", q, 8, 0.6) for q in DESI_SEARCHES] + \
+              [("category", c, 6, 1.0) for c in CLASSICAL]
+    for kind, cat, per_category, share in sources:
+        if len(picked) >= args.limit * share:
+            continue
+        try:
+            songs = details((files_in(cat) if kind == "category" else files_found(cat))[:300])
+        except Exception as e:  # noqa: BLE001
+            print(f"  {cat}: {e}", file=sys.stderr)
+            continue
+        fresh = [s for s in songs if s["title"] not in seen][:per_category]
+        print(f"{cat}: {len(songs)} usable, taking {len(fresh)}")
+        for s in fresh:
+            seen.add(s["title"])
+            picked.append(s)
     print(f"Picked {len(picked)} songs")
 
     logo = os.path.join(ROOT, "docs", "channel", "logos", "sur-sukoon.png")
@@ -246,7 +258,7 @@ def main():
         videos.append({"id": slug(s["title"])[:30] + str(len(videos)), "title": title[:90], "url": url,
                        "secs": int(secs), "kind": "programme", "licence": s["licence"], "source": s["url"]})
         print(f"  {int(secs // 60)}:{int(secs % 60):02d}  {title}")
-    if len(videos) < 5:
+    if len(videos) < min(5, args.limit):
         sys.exit("Too few songs; keeping the old schedule.")
 
     schedule = {
