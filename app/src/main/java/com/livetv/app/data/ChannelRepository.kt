@@ -37,9 +37,12 @@ class ChannelRepository(context: Context) {
         get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
         set(value) = prefs.edit { putString(KEY_SOURCE, value.trim()) }
 
-    /** Cable TV's channel list: [PROVIDER_FAMELACK] (the default) or [PROVIDER_CHECKED]. */
+    /** The channel list: [PROVIDER_FAMELACK] or [PROVIDER_CHECKED]. Cable TV always uses the daily-checked
+     *  working list (owner's choice, 1.9.60: the Settings choice is gone, and viewers who had picked the main
+     *  list move over too); Live TV Max keeps its Settings choice, main list by default. */
     var provider: String
-        get() = prefs.getString(KEY_PROVIDER, null)?.takeIf { it == PROVIDER_CHECKED } ?: PROVIDER_FAMELACK
+        get() = if (Edition.LIVE_TV && !Edition.MAX) PROVIDER_CHECKED
+            else prefs.getString(KEY_PROVIDER, null)?.takeIf { it == PROVIDER_CHECKED } ?: PROVIDER_FAMELACK
         set(value) = prefs.edit { putString(KEY_PROVIDER, value) }
 
     private val checked: Boolean get() = provider == PROVIDER_CHECKED
