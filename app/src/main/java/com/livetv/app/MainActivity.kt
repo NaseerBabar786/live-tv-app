@@ -2,6 +2,7 @@ package com.livetv.app
 
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Rational
@@ -18,7 +19,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livetv.app.data.YouTube
 import com.livetv.app.games.GamesScreen
 import com.livetv.app.player.PlayerScreen
-import com.livetv.app.ui.YouTubePlayer
 import com.livetv.app.ui.WebChannel
 import com.livetv.app.data.MyChannel
 import com.livetv.app.ui.ChannelListScreen
@@ -72,7 +72,11 @@ class MainActivity : ComponentActivity() {
         } else if (playing != null && playing.url == MyChannel.BOLLYWOOD_URL) {
             WebChannel(MyChannel.BOLLYWOOD_URL + "?app=1&v=" + BuildConfig.VERSION_CODE, onBack = viewModel::stop)
         } else if (playing != null && YouTube.videoId(playing.url) != null) {
-            YouTubePlayer(YouTube.videoId(playing.url)!!, onBack = viewModel::stop)
+            // A YouTube channel plays like Bazaar Hits: YouTube's player with its buttons off, so it
+            // can't be paused, skipped or left for YouTube (owner's rule, 1.9.46).
+            val page = "https://tv.bulkbazaar.ca/channel/yt.html?app=1&v=" + YouTube.videoId(playing.url) +
+                "&name=" + Uri.encode(playing.name) + "&ver=" + BuildConfig.VERSION_CODE
+            WebChannel(page, onBack = viewModel::stop)
         } else if (playing != null) {
             PlayerScreen(
                 channel = playing,
