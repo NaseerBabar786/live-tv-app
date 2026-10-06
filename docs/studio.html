@@ -56,11 +56,11 @@
   .modes button { background: none; border: 0; color: var(--text); font: inherit; font-weight: 700; padding: 8px 14px; cursor: pointer; }
   .modes button.sel { background: var(--focus); color: #111; }
   /* When the big player scrolls away it docks in the corner, so edits further down still show. */
-  .tvslot.docked .stage { position: fixed; right: 16px; bottom: 120px; width: min(360px, 46vw); z-index: 6; box-shadow: 0 8px 30px rgba(0,0,0,.6); border: 2px solid var(--focus); }
+  .tvslot.docked .stage { position: fixed; right: 16px; top: 12px; width: min(360px, 46vw); z-index: 6; box-shadow: 0 8px 30px rgba(0,0,0,.6); border: 2px solid var(--focus); }
   .tvslot.docked .stage .tag { display: none; }
   .undock { position: absolute; top: 4px; right: 4px; z-index: 2; background: rgba(0,0,0,.6); color: #fff; border: 0; border-radius: 999px; width: 26px; height: 26px; cursor: pointer; display: none; }
   .tvslot.docked .undock { display: block; }
-  @media (max-width: 640px) { .tvslot.docked .stage { top: 8px; bottom: auto; right: 8px; width: 60vw; } }
+  @media (max-width: 640px) { .tvslot.docked .stage { top: 8px; right: 8px; width: 60vw; } }
   .savebar { position: sticky; bottom: 0; background: var(--surface); border-top: 2px solid var(--focus); padding: 12px 16px; margin: 0 -16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; z-index: 5; }
   .ok { color: #A5D6A7; } .warn { color: #FFD54F; }
   .guide { display: grid; gap: 4px; font-size: 15px; }
@@ -72,6 +72,44 @@
   .stations button.sel { border-color: var(--focus); }
   .stations img { width: 44px; height: 44px; }
   .stations small { display: block; font-weight: 400; color: var(--muted); }
+  /* ---------- layout: one column on phones and laptops, side by side on wide screens ---------- */
+  .studio { display: flex; flex-direction: column; }
+  .studio .side, .studio .work, .studio .steps { display: contents; }
+  .side > p { order: 1; } .stations { order: 2; } .tvbox { order: 3; } #howTo { order: 4; } .steps > section { order: 5; }
+  #step5 { order: 6; } .savebar { order: 7; } .work > :not(#howTo):not(.steps) { order: 8; }
+  @media (min-width: 1200px) {
+    main.studio-main, header .wrap { max-width: 1880px; }
+    main.studio-main { padding-top: 20px; }
+    main.studio-main h1 { font-size: 30px; margin: 0 0 2px; }
+    main.studio-main .lead { margin: 0 0 14px; font-size: 15px; }
+    .studio { display: grid; grid-template-columns: minmax(520px, 38%) 1fr; gap: 18px; align-items: start; }
+    .studio .side { display: flex; flex-direction: column; position: sticky; top: 10px; max-height: calc(100vh - 20px); overflow-y: auto; padding-right: 4px; }
+    .studio .work { display: block; min-width: 0; }
+    .studio .steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(540px, 1fr)); gap: 18px; align-items: start; }
+    .studio .steps > section.panel { margin: 0; min-width: 0; }
+    .side > p { margin-bottom: 4px !important; }
+    .side .stations { gap: 6px; margin-bottom: 10px; }
+    .side .stations button, .side .stations a { padding: 4px 10px 4px 4px; gap: 6px; font-size: 14px; border-width: 2px; }
+    .side .stations img { width: 30px; height: 30px; }
+    .side .stations small { font-size: 11px; white-space: nowrap; }
+    /* Save sits right under the channel picker, so it is always on screen. */
+    .side .savebar { order: 3; margin-bottom: 12px !important; padding: 8px 12px; } .side .tvbox { order: 4; } .side #step5 { order: 5; }
+    .side .tvbox .row .btn { padding: 6px 12px; font-size: 14px; }
+    .side .tvbox #nowText { margin-top: 8px !important; }
+    .side .tvbox { margin-bottom: 12px; padding: 14px; }
+    .side .tvbox h2 { font-size: 18px; }
+    .side #step5 { margin-bottom: 12px; padding: 14px; }
+    .side #step5 h2 { font-size: 18px; margin-bottom: 4px; }
+    .side #step5 h3 { display: none; }
+    .side #step5 .guide { max-height: 30vh; overflow-y: auto; font-size: 14px; }
+    .side .savebar { position: static; margin: 0; border: 2px solid var(--focus); border-radius: 14px; }
+    .side .savebar .btn { padding: 8px 14px; font-size: 15px; }
+    /* Long lists scroll inside their own box instead of making the page longer. */
+    .steps #videos, .steps #loop, .steps #slots, .steps #library { max-height: 52vh; overflow-y: auto; padding-right: 4px; }
+    .work #howTo { margin-bottom: 18px; }
+    .steps .logos button { width: 84px; padding: 2px; font-size: 11px; }
+    .steps .logos img { width: 64px; height: 64px; }
+  }
   pre.rule { background: var(--bg); padding: 10px; border-radius: 8px; overflow: auto; font-size: 13px; }
   @media (max-width: 640px) { .two, .three { grid-template-columns: 1fr; } .item { grid-template-columns: 1fr; } .item .acts { justify-content: flex-start; } }
 </style>
@@ -91,14 +129,16 @@
   </div>
 </header>
 
-<main class="wrap">
+<main class="wrap studio-main">
   <h1>Channel Studio</h1>
   <p class="lead">Run your own TV channels. They show at the top of every list in Free Live TV (Bazaar TV is <b>channel 0</b>, Bazaar Cinema <b>channel 00</b>, Bazaar Music <b>channel 000</b>, Bazaar Kids <b>channel 00000</b>, from 1.9.41; Bazaar Sports <b>channel 000000</b>, from 1.9.43) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
 
-  <div id="dash" class="hidden">
+  <div id="dash" class="hidden studio">
+    <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
+    <aside class="side">
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -135,11 +175,27 @@
           <li><b>On TVs now</b> plays the last saved version: exactly what viewers' TVs show at this moment.</li>
           <li>The picture is stretched to fill the screen, like the app does on TVs. The logo and the scrolling line are drawn at the same size and speed as on the TV.</li>
           <li>The channel bar shows for 10 seconds when someone opens the channel on TV. The yellow "Advertise" line (from the Sponsors page) runs along the bottom every 2 minutes on full screen.</li>
-          <li>Scroll down and the player follows you in the corner, so you can watch while you edit.</li>
+          <li>On a big screen the player stays on the left while you edit on the right. On a smaller screen it follows you in the corner when you scroll down.</li>
         </ul>
       </details>
     </section>
-    <details class="help panel" style="padding:14px 18px" open>
+    <section class="panel" id="step5">
+      <h2><span class="num">5</span> Check it</h2>
+      <p class="small" style="margin-top:0">The programme guide for your <b>unsaved</b> changes. The player shows them playing.</p>
+      <h3 style="margin-bottom:6px">Next 3 hours</h3>
+      <div class="guide" id="guide"></div>
+    </section>
+
+    <div class="savebar">
+      <button class="btn primary" id="save">💾 Save and put on air</button>
+      <button class="btn" id="undo">↶ Undo all changes</button>
+      <button class="btn" id="loadTest">Load the test programme</button>
+      <button class="btn hidden" id="useAuto">Go back to the automatic schedule</button>
+      <span id="saveMsg" class="small"></span>
+    </div>
+    </aside>
+    <div class="work">
+    <details class="help panel" id="howTo" style="padding:14px 18px" open>
       <summary>How it works (read this first)</summary>
       <ol>
         <li><b>Videos</b> (step 2): add each video with a direct link to an MP4 file. The length fills in by itself.</li>
@@ -150,6 +206,7 @@
       <p><b>Made a mistake?</b> Press <b>Undo all changes</b> at the bottom to go back to what was last saved. To start again from the ready-made 1-hour test programme, press <b>Load the test programme</b>.</p>
     </details>
 
+      <div class="steps">
     <section class="panel">
       <h2><span class="num">1</span> Your channel</h2>
       <div class="two">
@@ -277,20 +334,7 @@
       </form>
     </section>
 
-    <section class="panel">
-      <h2><span class="num">5</span> Check it</h2>
-      <p class="small" style="margin-top:0">The programme guide for your <b>unsaved</b> changes. The player at the top shows them playing.</p>
-      <h3 style="margin-bottom:6px">Next 3 hours</h3>
-      <div class="guide" id="guide"></div>
-    </section>
-
-    <div class="savebar">
-      <button class="btn primary" id="save">💾 Save and put on air</button>
-      <button class="btn" id="undo">↶ Undo all changes</button>
-      <button class="btn" id="loadTest">Load the test programme</button>
-      <button class="btn hidden" id="useAuto">Go back to the automatic schedule</button>
-      <span id="saveMsg" class="small"></span>
-    </div>
+      </div>
     <div id="ruleNote" class="panel hidden" style="margin-top:18px">
       <b>One-time step for the public page.</b> Your channel is saved and plays in the app. For <a href="channel/">tv.bulkbazaar.ca/channel</a> to show it too (instead of the test programme), add this rule once in Firebase › Firestore › Rules, just above the last two <code>}</code>, then press Publish:
       <pre class="rule" id="ruleText">    // The owner's channel (Channel Studio): anyone may read it; only you change it.
@@ -302,6 +346,7 @@
     </div>
     <p class="small" id="who" style="margin-top:18px"></p>
     <button class="btn" data-signout>Sign out</button>
+    </div>
   </div>
   <p class="err" id="err"></p>
 </main>
@@ -806,8 +851,11 @@ new ResizeObserver(() => runTicker(tickerNow)).observe($("stage"));
 // Follows you down the page in the corner; ✕ puts it away until you scroll back up.
 let undocked = false;
 $("undock").onclick = () => { undocked = true; $("tvslot").classList.remove("docked"); };
+// On wide screens the player's column stays on screen by itself, so it never docks.
+const wide = matchMedia("(min-width: 1200px)");
+if (wide.matches) $("howTo").open = false;
 new IntersectionObserver(([e]) => {
-  const away = !e.isIntersecting && e.boundingClientRect.top < 0;
+  const away = !wide.matches && !e.isIntersecting && e.boundingClientRect.top < 0;
   if (!away) undocked = false;
   $("tvslot").style.minHeight = away ? $("tvslot").offsetHeight + "px" : "";
   $("tvslot").classList.toggle("docked", away && !undocked && !document.fullscreenElement);
