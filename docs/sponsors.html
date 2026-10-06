@@ -52,7 +52,7 @@
 
 <main class="wrap">
   <h1>Sponsors</h1>
-  <p class="lead">Businesses that pay to be shown in Cable TV (version 1.8.90 and newer). Each one shows in turn on the start screen, in the strip under the 1+List channel list, in a bar under the tiles of 1×2, 2×2 and 2×3 (their wide banner if you add one), under the side tiles of 1+3, in the corner of News mode (as a muted video when you add a video link), and in a pop-up after a channel change (at most every 2 minutes): their picture for a few seconds, or, if you choose Video, their video played to the end (at most every 30 minutes). OK on any ad opens their website inside the app. How often each was shown is on the <a href="stats#sponsors">Stats</a> page. TVs pick up changes the next time the app starts.</p>
+  <p class="lead">Businesses that pay to be shown in Cable TV (version 1.8.90 and newer). Each one shows in turn on the start screen, in the strip under the 1+List channel list, in a bar under the tiles of 1×2, 2×2 and 2×3 (their wide banner if you add one), under the side tiles of 1+3, in the corner of News mode (as a muted video when you add a video link), and in a pop-up ad break on full-screen channels (at most every 3 minutes, up to 2 ads back to back, never more than 1 minute in all; viewers can skip each ad after 10 seconds): their picture, or, if you choose Video, their video (at most every 30 minutes). Video ads must be 10, 20, 30, 40, 50 or 60 seconds long; this page measures the video and warns you when it isn't. OK on any ad opens their website inside the app. How often each was shown is on the <a href="stats#sponsors">Stats</a> page. TVs pick up changes the next time the app starts.</p>
   <div id="notReady" class="panel hidden">This page will work once Firebase is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't an admin. <button class="btn" data-signout>Use another account</button></div>
@@ -76,11 +76,12 @@
       <label class="f">Video link (optional; an MP4 link, 720p or smaller, under 10 MB, plays muted). Plays in News mode's corner, and in the pop-up when you choose Video below
         <input type="url" id="video" maxlength="400" placeholder="e.g. https://tv.bulkbazaar.ca/ads/khan-meat.mp4">
       </label>
+      <p id="videoLen" class="hint" style="margin:-8px 0 10px;font-size:14px"></p>
       <button class="btn" id="usePromo" type="button" style="margin:-4px 0 14px">Use the Cable TV promo video</button>
       <label class="f">Pop-up ad after a channel change
         <select id="popup" style="display:block;margin-top:6px">
-          <option value="picture">Picture (a few seconds)</option>
-          <option value="video">Video (plays to the end, then closes; at most every 30 minutes, otherwise the picture)</option>
+          <option value="picture">Picture (20 seconds on a full-screen channel, Skip after 10 s)</option>
+          <option value="video">Video (10, 20, 30, 40, 50 or 60 seconds; Skip after 10 s; at most every 30 minutes, otherwise the picture)</option>
         </select>
       </label>
       <label class="f">Business name <input type="text" id="name" maxlength="60" required placeholder="e.g. Khan Halal Meat"></label>
@@ -245,6 +246,19 @@ if (!configured) {
       const info = d ? [[d.person, d.phone, d.email].filter(Boolean).join(" · "), [d.package, d.price].filter(Boolean).join(" · "), d.notes].filter(Boolean).join("\n") : "";
       el.querySelector(".dealinfo").textContent = info;
       el.querySelector(".dealinfo").classList.toggle("hidden", !info);
+      // A video pop-up whose length breaks the pop-up ad length rule gets a reminder here.
+      if (s.popup === "video" && s.video) {
+        const note = document.createElement("div"); note.className = "small"; note.textContent = "Video ad: measuring…";
+        el.querySelector(".when").after(note);
+        const v = document.createElement("video"); v.preload = "metadata"; v.muted = true;
+        v.onloadedmetadata = () => {
+          note.textContent = "Video ad: " + lengthNote(v.duration);
+          if (/⚠/.test(note.textContent)) note.style.color = "#E53935";
+          v.removeAttribute("src"); v.load();
+        };
+        v.onerror = () => { note.textContent = "Video ad: ⚠ the video link doesn't play. Please check it."; note.style.color = "#E53935"; };
+        v.src = s.video;
+      }
       el.querySelector(".toggle").textContent = s.active ? "Turn off" : "Turn on";
       el.querySelector(".edit").onclick = () => openForm(s);
       el.querySelector(".toggle").onclick = async () => {
@@ -268,6 +282,7 @@ if (!configured) {
     $("website").value = s?.website || "";
     $("video").value = s?.video || "";
     $("popup").value = s?.popup === "video" ? "video" : "picture";
+    videoLenFor = ""; measureVideo();
     $("start").value = s?.start || ""; $("end").value = s?.end || ""; $("active").checked = s ? !!s.active : true;
     $("file").value = ""; $("formErr").textContent = dealNote;
     for (const [k, id] of Object.entries(DEAL_FIELDS)) $(id).value = (s && deals[s.id]?.[k]) || "";
@@ -305,6 +320,40 @@ if (!configured) {
     catch (e) { $("formErr").textContent = e.message; }
   };
   $("bannerRemove").onclick = () => { banner = ""; $("bannerFile").value = ""; showBanner(); };
+  // Pop-up ad length rule (owner, 2026-10-06): video ads are 10, 20, 30, 40, 50 or 60 seconds, and a
+  // break (up to 2 ads back to back) never runs over 1 minute. The video's length is measured here and
+  // saved as videoSecs; the app also stops any break at 1 minute.
+  let videoSecs = 0, videoLenFor = "";
+  function lengthNote(secs) {
+    if (!secs) return "";
+    const near = Math.round(secs / 10) * 10, ok = Math.abs(secs - near) <= 1 && near >= 10 && near <= 60;
+    if (secs > 61) return `⚠ This video is ${Math.round(secs)} s long. Pop-up ads can be at most 60 seconds; the app will cut it off at 1 minute. Please make a 10, 20, 30, 40, 50 or 60 second version.`;
+    if (!ok) return `⚠ This video is ${Math.round(secs)} s long. Pop-up ads should be 10, 20, 30, 40, 50 or 60 seconds (nearest: ${Math.min(60, Math.max(10, near))} s), so two ads fit in a 1-minute break.`;
+    const pairs = near === 60 ? "It plays alone in a break (a break is at most 1 minute)." : `In a break it can pair with an ad of up to ${60 - near} s.`;
+    return `✓ ${near} second video. ${pairs}`;
+  }
+  function measureVideo() {
+    const url = $("video").value.trim();
+    if (url === videoLenFor) return;
+    videoLenFor = url; videoSecs = 0;
+    $("videoLen").textContent = "";
+    if (!/^https:\/\/\S+$/i.test(url)) return;
+    $("videoLen").textContent = "Measuring the video…";
+    const v = document.createElement("video");
+    v.preload = "metadata"; v.muted = true;
+    v.onloadedmetadata = () => {
+      if (url !== videoLenFor) return;
+      videoSecs = isFinite(v.duration) ? Math.round(v.duration) : 0;
+      $("videoLen").textContent = videoSecs ? lengthNote(v.duration) : "Couldn't read this video's length; please check the link plays.";
+      $("videoLen").style.color = /^⚠|Couldn't/.test($("videoLen").textContent) ? "#E53935" : "";
+      v.removeAttribute("src"); v.load();
+    };
+    v.onerror = () => { if (url === videoLenFor) { $("videoLen").textContent = "⚠ This video link doesn't play. Please check it."; $("videoLen").style.color = "#E53935"; } };
+    v.src = url;
+  }
+  $("video").addEventListener("change", measureVideo);
+  $("video").addEventListener("blur", measureVideo);
+  $("usePromo").addEventListener("click", () => setTimeout(measureVideo, 0));
   $("form").onsubmit = async ev => {
     ev.preventDefault();
     const data = {
@@ -313,6 +362,9 @@ if (!configured) {
       start: $("start").value, end: $("end").value, active: $("active").checked, image, banner,
       video: $("video").value.trim(), popup: $("popup").value,
     };
+    if (data.video && data.video === videoLenFor && videoSecs) data.videoSecs = videoSecs;
+    if (data.popup === "video" && /^⚠/.test($("videoLen").textContent) &&
+        !confirm($("videoLen").textContent.replace(/^⚠ /, "") + "\n\nSave anyway?")) return;
     if (data.popup === "video" && !data.video) return $("formErr").textContent = "For a video pop-up, please add the video link.";
     if (data.video && !/^https:\/\/\S+$/i.test(data.video)) return $("formErr").textContent = "The video link should start with https://";
     if (data.website && !/^(https?:\/\/)?[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}(\/\S*)?$/i.test(data.website)) return $("formErr").textContent = "The website should look like bulkbazaar.ca";

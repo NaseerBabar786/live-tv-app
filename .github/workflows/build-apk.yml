@@ -14,6 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Version codes x10, so a rebuilt last good version (code + 1) can install over this build
+      # when it crashes (see tools/version_codes.py and the rollback job below).
+      - name: Version codes x10
+        run: python3 tools/version_codes.py scale
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -222,3 +227,75 @@ jobs:
           fi
           gh release edit live-tv-plus --notes "Always the newest Live TV Plus build (now $version), for testing on phones and TVs." || true
 
+
+  # Crash rollback (owner's rule): rebuilds the last approved version of every app with this build's
+  # version code + 1, so an app whose new version closes by itself can go back with one tap
+  # (RescueActivity). Owner's test devices use these test/Rollback-*.apk files; when a build is
+  # approved, release-approved.yml copies its rollbacks to the public "rollback" release.
+  rollback:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Load signing key
+        env:
+          SIGNING_KEYSTORE: ${{ secrets.SIGNING_KEYSTORE }}
+        run: |
+          if [ -n "$SIGNING_KEYSTORE" ]; then
+            echo "$SIGNING_KEYSTORE" | base64 -d > "$RUNNER_TEMP/livetv.jks"
+            echo "SIGNING_KEYSTORE_FILE=$RUNNER_TEMP/livetv.jks" >> "$GITHUB_ENV"
+          fi
+
+      # approved.json (in the "rollback" release) names the commit each app was last approved from.
+      # Before the first approval, every app falls back to the commit of the latest Cable TV release.
+      - name: Build the last approved versions
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          TV_CLIENT_SECRET: ${{ secrets.TV_CLIENT_SECRET }}
+        run: |
+          python3 tools/version_codes.py scale
+          gh release download rollback --pattern approved.json --clobber 2>/dev/null || echo '{}' > approved.json
+          fallback=$(git rev-list -n1 "$(gh release view --json tagName -q .tagName)")
+          mkdir -p out
+          # app id, gradle task, built APK (in the old checkout), published name
+          while read -r id task built name; do
+            commit=$(jq -r --arg k "$id" '.[$k] // empty' approved.json)
+            commit=${commit:-$fallback}
+            dir="$RUNNER_TEMP/old-$commit"
+            if [ ! -d "$dir" ]; then
+              git worktree add --detach "$dir" "$commit"
+              python3 tools/version_codes.py rollback "$dir"
+            fi
+            echo "::group::$id from $commit"
+            if (cd "$dir" && ./gradlew "$task") && cp "$dir/$built" "out/Rollback-$name"; then
+              echo "built Rollback-$name"
+            else
+              echo "::warning::Could not rebuild the last approved $id from $commit"
+            fi
+            echo "::endgroup::"
+          done <<'LIST'
+          cable-tv :app:assembleLivetvDebug app/build/outputs/apk/livetv/debug/app-livetv-debug.apk LiveTV.apk
+          live-tv-max :app:assembleMaxDebug app/build/outputs/apk/max/debug/app-max-debug.apk LiveTVMax.apk
+          app-bazaar :appbazaar:assembleDebug appbazaar/build/outputs/apk/debug/appbazaar-debug.apk AppBazaar.apk
+          iqra-quran :quran:assembleDebug quran/build/outputs/apk/debug/quran-debug.apk IqraQuran.apk
+          live-cam :livecam:assembleDebug livecam/build/outputs/apk/debug/livecam-debug.apk LiveCam.apk
+          multi-chat :multichat:assembleDebug multichat/build/outputs/apk/debug/multichat-debug.apk MultiChat.apk
+          notes-for-claude :claudenotes:assembleDebug claudenotes/build/outputs/apk/debug/claudenotes-debug.apk NotesForClaude.apk
+          LIST
+          ls -l out
+          if ls out/*.apk > /dev/null 2>&1; then gh release upload test out/*.apk --clobber; fi

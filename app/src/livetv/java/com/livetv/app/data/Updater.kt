@@ -50,6 +50,7 @@ class Updater(context: Context) {
      */
     private fun testRelease(): Release? {
         val owner = runCatching { FirebaseConfig.configured && Account.get(appContext).isAdmin }.getOrDefault(false)
+        if (owner && !OwnerTest.isOn(appContext)) OwnerTest.set(appContext, true)
         if (!owner && !OwnerTest.isOn(appContext)) return null
         val version = runCatching {
             JSONObject(fetchText(OwnerTest.VERSIONS)).optString(if (Edition.MAX) "live-tv-max" else "cable-tv")

@@ -27,7 +27,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
 import com.livetv.app.data.MyChannel
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
@@ -51,16 +50,12 @@ class MainActivity : ComponentActivity() {
     /** Cable TV's Games section is open. */
     private var showGames by mutableStateOf(false)
 
-    /** Why the app closed last time, shown once on this start (1.9.58). */
-    private var lastCrash by mutableStateOf<String?>(null)
-
     /** Our YouTube-run channels that couldn't play there this session; their free-film schedule plays instead. */
     private var fellBack by mutableStateOf(setOf<String>())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CrashNote.install(this)
-        if (savedInstanceState == null) lastCrash = CrashNote.takeLast(this)
+        if (CrashGuard.start(this)) return
         Watching.init(this)
         com.livetv.app.data.Location.init(this)
         com.livetv.app.data.NewsScreen.init(this)
@@ -76,21 +71,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             LiveTvTheme {
                 if (showStartScreen) EditionStartScreen(onDone = { showStartScreen = false }) else AppContent()
-                lastCrash?.let { text ->
-                    androidx.compose.material3.AlertDialog(
-                        onDismissRequest = { lastCrash = null },
-                        title = { androidx.compose.material3.Text("Cable TV closed by itself last time") },
-                        text = {
-                            androidx.compose.material3.Text(
-                                "Please send a photo of this to Bulk Bazaar so it can be fixed.\n\n$text",
-                                fontSize = 11.sp,
-                            )
-                        },
-                        confirmButton = {
-                            androidx.compose.material3.TextButton(onClick = { lastCrash = null }) { androidx.compose.material3.Text("OK") }
-                        },
-                    )
-                }
             }
         }
     }
