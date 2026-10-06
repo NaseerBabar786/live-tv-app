@@ -1,6 +1,6 @@
-name: Build Geet Bahar
+name: Build Bazaar Hits
 
-# docs/channel/bollywood.json: the song list of Geet Bahar (0000 in Free Live TV), from the
+# docs/channel/bollywood.json: the song list of Bazaar Hits (0000 in Free Live TV), from the
 # music labels' own YouTube channels. Played in YouTube's player on tv.bulkbazaar.ca/channel/bollywood.html.
 on:
   schedule:
@@ -46,7 +46,7 @@ jobs:
             echo "No changes."
             exit 0
           fi
-          git commit -m "Geet Bahar songs as of $(date -u '+%Y-%m-%d')"
+          git commit -m "Bazaar Hits songs as of $(date -u '+%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

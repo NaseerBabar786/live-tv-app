@@ -6,7 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.graphics.Bitmap
+import android.view.View
 import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import android.widget.Toast
 import android.webkit.WebView
 import androidx.activity.compose.BackHandler
@@ -88,7 +91,7 @@ fun EmbedPlayer(src: String, onBack: () -> Unit) {
 
 /**
  * A channel that is a page of ours playing videos in their site's own player one after another
- * (Geet Bahar: YouTube's embedded player). Full screen; the remote's arrows go to the page; Back closes it.
+ * (Bazaar Hits: YouTube's embedded player). Full screen; the remote's arrows go to the page; Back closes it.
  */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -102,11 +105,18 @@ fun WebChannel(url: String, onBack: () -> Unit) {
         modifier = Modifier.fillMaxSize().background(Color.Black),
         factory = { ctx ->
             WebView(ctx).apply {
-                setBackgroundColor(android.graphics.Color.BLACK)
+                // The video is drawn by the TV's own decoder in a hardware layer; a software layer or
+                // a painted view background left it black with only the sound on a Chromecast (1.9.41).
+                setLayerType(View.LAYER_TYPE_HARDWARE, null)
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 settings.mediaPlaybackRequiresUserGesture = false
-                webChromeClient = WebChromeClient()
+                // Always the newest page, not a copy the TV kept from an earlier version.
+                settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                webChromeClient = object : WebChromeClient() {
+                    // No grey placeholder picture over the video while it starts.
+                    override fun getDefaultVideoPoster(): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                }
                 isFocusable = true
                 loadUrl(url)
                 requestFocus()

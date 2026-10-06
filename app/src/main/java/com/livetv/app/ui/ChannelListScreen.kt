@@ -242,21 +242,20 @@ fun ChannelListScreen(
     // Only the highlighted tile has sound; the speaker button in the top bar mutes it (remembered).
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
-    // TV and tablet layout, picked with the button in the top bar. Each time the app opens, Free Live TV
-    // (on a TV or tablet) and Live TV Max start on the Browse home screen (user's choice, 1.9.15);
-    // the other apps start in 1+List.
+    // TV and tablet layout, picked with the button in the top bar. Each time the app opens, Live TV Max
+    // starts on the Browse home screen; Free Live TV and the other apps start in 1+List (user's choice, 1.9.41).
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
     var tileLayout by remember {
         mutableStateOf(
             sessionTileLayout
-                ?: if (Edition.MAX || (Edition.LIVE_TV && wideScreen)) TileLayout.Browse else TileLayout.List,
+                ?: if (Edition.MAX) TileLayout.Browse else TileLayout.List,
         )
     }
     // Free Live TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
     LaunchedEffect(tier, tileLayout) {
         if (!Plans.allows(tileLayout.tier)) {
-            tileLayout = if (wideScreen) TileLayout.Browse else TileLayout.List
+            tileLayout = if (Edition.MAX) TileLayout.Browse else TileLayout.List
             sessionTileLayout = tileLayout
         }
     }
@@ -322,9 +321,9 @@ fun ChannelListScreen(
     // Opening the app, or coming back from the player: show the channel watched last and put
     // the remote's cursor on it (once the list has loaded).
     LaunchedEffect(state.visibleChannels.isNotEmpty()) {
-        // On a TV, the first time the app lands in 1+List it opens the channel watched last
-        // straight in full screen; Back comes to 1+List as usual.
-        if (listMode && !sessionStartOpened && state.visibleChannels.isNotEmpty()) {
+        // On a TV the app opens in 1+List with the channel watched last playing beside the list
+        // (1.9.41); it no longer jumps straight to full screen. [START_FULL_SCREEN] turns that back on.
+        if (START_FULL_SCREEN && listMode && !sessionStartOpened && state.visibleChannels.isNotEmpty()) {
             sessionStartOpened = true
             (state.visibleChannels + state.channels).firstOrNull { it.id == state.lastWatchedId }?.let {
                 onPlay(it)
@@ -2144,6 +2143,9 @@ private var sessionTilesFull = false
 
 /** Set once the app has opened the channel watched last at start-up (1+List on a TV). */
 private var sessionStartOpened = false
+
+/** Open the channel watched last in full screen at start-up (off since 1.9.41: the app opens in 1+List). */
+private const val START_FULL_SCREEN = false
 
 private const val PREF_PREVIEW_SOUND = "preview_sound_highlighted"
 

@@ -25,9 +25,11 @@ object MyChannel {
     val STATIONS = listOf(
         Station("main", "0", "Bazaar TV"),
         // Public-domain classic films round the clock (built weekly from Movies.m3u).
-        Station("filmein", "00", "Sunehra Daur"),
+        Station("filmein", "00", "Bazaar Cinema"),
         // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
-        Station("sur", "000", "Sur Sukoon"),
+        Station("sur", "000", "Bazaar Music"),
+        // Public-domain and Creative Commons cartoons for children (1.9.41).
+        Station("kids", "00000", "Bazaar Kids"),
     )
 
     private const val SCHEME = "mychannel://"
@@ -38,14 +40,14 @@ object MyChannel {
     fun urlOf(id: String) = SCHEME + id
 
     /**
-     * Geet Bahar (dialled 0000): the music labels' own YouTube uploads, one after another in
+     * Bazaar Hits (dialled 0000): the music labels' own YouTube uploads, one after another in
      * YouTube's player on this page (song list built by tools/build_bollywood.py). No schedule.
      */
     const val BOLLYWOOD_URL = "https://tv.bulkbazaar.ca/channel/bollywood.html"
     private val bollywood = Channel(
-        name = "Geet Bahar",
+        name = "Bazaar Hits",
         url = BOLLYWOOD_URL,
-        logo = "https://tv.bulkbazaar.ca/channel/logos/geet-bahar.png",
+        logo = "https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png",
         number = 0,
     )
 
@@ -119,7 +121,11 @@ object MyChannel {
     }
 
     /** The channels that are on, in station order. */
-    fun channels(): List<Channel> = STATIONS.mapNotNull { _configs.value[it.id]?.channel } + bollywood
+    fun channels(): List<Channel> =
+        // In dial order: 0, 00, 000, 0000 (Bazaar Hits), 00000.
+        (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel?.let { st.dial to it } } + ("0000" to bollywood))
+            .sortedBy { it.first.length }
+            .map { it.second }
 
     /** The channel a viewer reaches by typing [typed] ("0", "00"), when it's on. */
     fun byDial(typed: String): Channel? =

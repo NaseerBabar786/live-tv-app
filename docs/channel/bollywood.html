@@ -3,31 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Geet Bahar · Watch live</title>
-<meta name="description" content="Geet Bahar: film songs round the clock, from the music labels' own YouTube channels.">
-<meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/geet-bahar.png">
-<link rel="icon" href="logos/geet-bahar.png">
+<title>Bazaar Hits · Watch live</title>
+<meta name="description" content="Bazaar Hits: film songs round the clock, from the music labels' own YouTube channels.">
+<meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png">
+<link rel="icon" href="logos/bazaar-hits.png">
 <style>
   /* Plays the music labels' own YouTube uploads in YouTube's player, one after another, like a
      channel. Opened full screen by the Free Live TV app (?app=1) and linked from /channel. */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
   #player { position: absolute; inset: 0; width: 100%; height: 100%; }
   .bug { position: absolute; top: 3%; right: 2.5%; width: 8%; opacity: .85; pointer-events: none; }
-  .now { position: absolute; left: 3%; bottom: 6%; max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; }
+  .now { position: absolute; left: 3%; bottom: 10%; max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; }
   .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
   .hide { opacity: 0; }
   .sound, .back { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
   .back { left: auto; right: 12%; background: rgba(16,24,39,.85); text-decoration: none; }
+  /* The same scrolling line as our other channels, along the bottom. */
+  .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.85); color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); padding: .35em 0; pointer-events: none; }
+  .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
+  @keyframes tick { to { transform: translateX(-100%); } }
   .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
 </style>
 </head>
 <body>
 <div id="player"></div>
-<img class="bug" src="logos/geet-bahar.png" alt="">
+<img class="bug" src="logos/bazaar-hits.png" alt="">
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
 <a class="back" id="back" href="./" hidden>Our channels</a>
-<div class="msg" id="msg">Loading Geet Bahar…</div>
+<div class="ticker"><span>Bazaar Hits · Film songs, day and night, from the music labels' own channels · Channel 0000 on Free Live TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
+<div class="msg" id="msg">Loading Bazaar Hits…</div>
 <script>
 const app = new URLSearchParams(location.search).has("app");
 const $ = id => document.getElementById(id);
@@ -44,7 +49,7 @@ function showNow() {
   const s = songs[at];
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = s.title;
-  $("now").lastChild.textContent = "Geet Bahar · " + s.label;
+  $("now").lastChild.textContent = "Bazaar Hits · " + s.label;
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
@@ -63,7 +68,7 @@ fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()).then(d => {
   const s = document.createElement("script");
   s.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(s);
-}).catch(() => { $("msg").textContent = "Geet Bahar can't load right now. Please try again in a minute."; });
+}).catch(() => { $("msg").textContent = "Bazaar Hits can't load right now. Please try again in a minute."; });
 
 window.onYouTubeIframeAPIReady = () => {
   $("msg").remove();
