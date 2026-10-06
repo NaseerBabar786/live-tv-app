@@ -33,6 +33,12 @@ MIN_SECS, MAX_SECS = 2 * 60, 75 * 60
 SPORTS = ["sports", "sport", "boxing", "baseball", "football", "soccer", "cricket", "hockey", "tennis", "golf",
           "basketball", "wrestling", "athletics", "track and field", "olympics", "skiing", "swimming", "racing",
           "auto racing", "horse racing", "cycling", "rowing", "polo", "squash", "badminton", "kabaddi", "field hockey"]
+# Only the Archive's curated collections: anyone can upload to the Archive and mark it public
+# domain, so a claim on a private upload (a modern cartoon, a TV advert) can't be trusted.
+TRUSTED = {"prelinger", "feature_films", "classic_tv", "silent_films", "universal_newsreels", "newsandpublicaffairs",
+           "classic_cartoons", "comedy_films", "sports_films", "fedflix", "nasa", "ephemera"}
+# Old enough that the public-domain claim is believable (US films before 1964 that weren't renewed).
+LAST_YEAR = 1970
 # Licences that let anyone show the film: public domain, CC0 and CC BY (not -SA, -NC or -ND).
 FREE = re.compile(r"publicdomain|/licenses/by/\d", re.I)
 # Not for a family sports channel, or not really sport.
@@ -70,6 +76,12 @@ def seconds(length):
         return 0.0
 
 
+def old_enough(doc):
+    """True when the item's year is known and no later than LAST_YEAR."""
+    m = re.search(r"\d{4}", str(doc.get("year", "")))
+    return bool(m) and int(m.group()) <= LAST_YEAR
+
+
 def candidates():
     """Archive items tagged with a sport and a free licence, most watched first."""
     seen, out = set(), []
@@ -77,14 +89,15 @@ def candidates():
         # Licence is checked here (and again on the item), not in the query: the search's
         # wildcards don't match inside licence links.
         url = SEARCH + urllib.parse.urlencode({"q": f'mediatype:movies AND subject:"{sport}"',
-                                               "fl[]": ["identifier", "title", "licenseurl"], "rows": 300,
+                                               "fl[]": ["identifier", "title", "licenseurl", "collection", "year"], "rows": 300,
                                                "output": "json", "sort[]": "downloads desc"}, doseq=True)
         try:
             docs = get_json(url).get("response", {}).get("docs", [])
         except Exception as e:  # noqa: BLE001 - one sport's search failing shouldn't stop the rest
             print(f"  search {sport}: {e}", file=sys.stderr)
             continue
-        free = [d for d in docs if FREE.search(str(d.get("licenseurl", ""))) and not SKIP.search(str(d.get("title", "")))]
+        free = [d for d in docs if FREE.search(str(d.get("licenseurl", ""))) and not SKIP.search(str(d.get("title", "")))
+                and TRUSTED & set(d.get("collection") or []) and old_enough(d)]
         print(f"  {sport}: {len(docs)} items, {len(free)} free")
         for d in free:
             if d["identifier"] not in seen:
@@ -150,8 +163,10 @@ def main():
         ids.add(vid)
         videos.append({"id": vid, "title": f[0], "url": f[1], "secs": f[2], "kind": "programme"})
         print(f"  {f[2] // 60:3d} min  {f[0]}  [{d.get('licenseurl')}]  {d['identifier']}")
-    listing = "\n".join(f"{v['secs'] // 60} min  {v['title']}  {v['url']}" for v in videos)
-    notice("notice", f"{len(found)} items found, {len(videos)} usable:\n{listing}"[:60000])
+    notice("notice", f"{len(found)} items found, {len(videos)} usable")
+    lines = [f"{v['secs'] // 60}m {v['title']}" for v in videos]
+    for k in range(0, min(len(lines), 240), 30):  # annotations are cut at about 4 KB each
+        notice("notice", "\n".join(lines[k:k + 30]))
     if len(videos) < 10:
         notice("error", f"Too few sports films ({len(videos)}); keeping the old schedule.")
         sys.exit("Too few sports films; keeping the old schedule.")
