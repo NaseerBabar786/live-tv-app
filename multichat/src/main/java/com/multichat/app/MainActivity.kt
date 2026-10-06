@@ -68,6 +68,7 @@ class MainActivity : FragmentActivity(), WebPool.Host {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (CrashGuard.start(this)) return
         Store.init(this)
         Notifier.createChannels(this)
         WebPool.init(application)

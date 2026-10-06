@@ -132,6 +132,31 @@ jobs:
           fi
           gh release edit claude-notes --title "Notes for Claude $version" --notes "Newest approved Notes for Claude build (now $version), from $COMMIT."
 
+      # Crash rollback: this test build came with the previously approved version of each app rebuilt
+      # with a higher version code (Rollback-*.apk). Users of the version approved now go back to that
+      # one if it closes by itself on start. approved.json records this approval for the next rollbacks.
+      - name: Rollback copies
+        run: |
+          gh release download rollback --pattern approved.json --clobber 2>/dev/null || echo '{}' > approved.json
+          for pair in cable-tv:LiveTV.apk live-tv-max:LiveTVMax.apk app-bazaar:AppBazaar.apk iqra-quran:IqraQuran.apk \
+                      live-cam:LiveCam.apk multi-chat:MultiChat.apk notes-for-claude:NotesForClaude.apk; do
+            id=${pair%%:*}; apk=${pair#*:}
+            [ "$APPS" = "$id" ] || [ "$APPS" = all ] || continue
+            jq --arg k "$id" --arg c "$COMMIT" '.[$k] = $c' approved.json > a.tmp && mv a.tmp approved.json
+            if [ -f "Rollback-$apk" ]; then
+              mkdir -p rb && cp "Rollback-$apk" "rb/$apk"
+            else
+              echo "::warning::No rollback copy of $id in this test build."
+            fi
+          done
+          cat approved.json
+          if ! gh release view rollback > /dev/null 2>&1; then
+            gh release create rollback approved.json --title "Last good versions (crash rollback)" \
+              --notes "If a new version closes by itself on start, the apps offer to go back to these." --latest=false
+          fi
+          gh release upload rollback approved.json --clobber
+          if ls rb/*.apk > /dev/null 2>&1; then gh release upload rollback rb/*.apk --clobber; fi
+
       - name: Summary
         run: |
           echo "Released ($APPS) from test build $BUILD. Apps show 'New update available' on their next start." | tee -a "$GITHUB_STEP_SUMMARY"

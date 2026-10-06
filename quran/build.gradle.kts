@@ -14,8 +14,8 @@ android {
         applicationId = "com.naseerbabar.iqraquran"
         minSdk = 26
         targetSdk = 36
-        versionCode = 6
-        versionName = "1.3.2"
+        versionCode = 7
+        versionName = "1.3.3"
     }
 
     // Same shared signing key as Live TV when CI has it, so updates install over the old app.
