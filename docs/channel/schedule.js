@@ -15,12 +15,15 @@ export const STATIONS = [
   { id: "main", name: "Bazaar TV", dial: "0", doc: "_channel", page: "channel/",
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png", ready: TEST_SCHEDULE_URL,
     credits: "Shows are public domain or Creative Commons works. Blender films: Blender Foundation, blender.org (CC BY). Space videos: NASA." },
-  { id: "filmein", name: "Sunehra Daur", dial: "00", doc: "_channel_filmein", page: "channel/?c=filmein", auto: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/sunehra-daur.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+  { id: "filmein", name: "Bazaar Cinema", dial: "00", doc: "_channel_filmein", page: "channel/?c=filmein", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cinema.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: public-domain classics from the Internet Archive (archive.org). A film every night at 8 PM Toronto time." },
-  { id: "sur", name: "Sur Sukoon", dial: "000", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/sur-sukoon.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
+  { id: "sur", name: "Bazaar Music", dial: "000", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-music.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
     credits: "Music: recordings that are free to use (public domain, CC0 and CC BY) from Wikimedia Commons; each song's credit and licence show on screen. No film songs." },
+  { id: "kids", name: "Bazaar Kids", dial: "00000", doc: "_channel_kids", page: "channel/?c=kids", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-kids.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
+    credits: "Cartoons: public-domain classics (Popeye, Superman, Felix the Cat) from the Internet Archive, Blender Foundation shorts (CC BY) and NASA videos." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds the song list of Geet Bahar, our music channel of film songs (0000 in Free Live TV).
+Builds the song list of Bazaar Hits, our music channel of film songs (0000 in Free Live TV).
 
 The songs are the music labels' own uploads on their official YouTube channels (T-Series,
 Saregama, Zee Music, Sony Music India, Tips, YRF, Coke Studio...), which they publish free
@@ -88,7 +88,7 @@ def main():
     if len(songs) < 10:
         sys.exit("Too few songs; keeping the old list.")
     with open(OUT, "w", encoding="utf-8") as f:
-        json.dump({"name": "Geet Bahar", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        json.dump({"name": "Bazaar Hits", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
                    "songs": songs}, f, ensure_ascii=False, indent=1)
         f.write("\n")
     print(f"Wrote docs/channel/bollywood.json: {len(songs)} songs")

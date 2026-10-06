@@ -13,7 +13,7 @@ import org.json.JSONObject
  * sponsors/_channel and the other channels' in sponsors/_channel_<id>, which app users can already
  * read (no new Firebase rule), with public copies in channel/<id> for the website. Until the owner
  * saves anything, the ready-made schedule on the website plays, so each channel works from the first
- * day (Sunehra Daur's is rebuilt every week from the public-domain films list, Sur Sukoon's monthly
+ * day (Bazaar Cinema's is rebuilt every week from the public-domain films list, Bazaar Music's monthly
  * from free-to-use songs).
  */
 object MyChannelSync {

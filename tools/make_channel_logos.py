@@ -71,7 +71,7 @@ def text_fit(d, cx, y, text, path, size, fill, width):
     while d.textlength(text, font=f) > width: size -= 4; f = font(path, size)
     center_text(d, cx, y, text, f, fill)
 
-# 6 Sunehra Daur (golden-era films): maroon disc, gold ring and film sprockets, gold play mark
+# 6 Bazaar Cinema, 00 (golden-era films; was Sunehra Daur until 1.9.41): maroon disc, gold ring and film sprockets, gold play mark
 im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (127,29,29), (40,8,8)), (0,0), circle_mask((L,L)))
 d = ImageDraw.Draw(im)
 d.ellipse([20,20,L-21,L-21], outline=(245,190,60), width=56)
@@ -80,12 +80,12 @@ for i in range(24):  # film sprockets along the gold band
     d.rounded_rectangle([cx-12, cy-12, cx+12, cy+12], 4, fill=(60,12,12))
 d.ellipse([L/2-118, 150, L/2+118, 386], fill=(245,190,60))
 d.polygon([(L/2-38, 212), (L/2-38, 324), (L/2+62, 268)], fill=(127,29,29))
-text_fit(d, L/2, 410, "SUNEHRA", B, 180, (253,230,138), 700)
-text_fit(d, L/2, 600, "DAUR", B, 190, (255,255,255), 560)
-text_fit(d, L/2, 812, "CLASSIC CINEMA", BD, 48, (253,230,138), 420)
-save_big(im, "sunehra-daur")
+text_fit(d, L/2, 410, "BAZAAR", B, 180, (253,230,138), 700)
+text_fit(d, L/2, 600, "CINEMA", B, 190, (255,255,255), 640)
+text_fit(d, L/2, 812, "CLASSIC FILMS", BD, 48, (253,230,138), 420)
+save_big(im, "bazaar-cinema")
 
-# 7 Sur Sukoon (calm music): indigo to teal disc, sound waves round a glowing dot
+# 7 Bazaar Music, 000 (calm music; was Sur Sukoon until 1.9.41): indigo to teal disc, sound waves round a glowing dot
 im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (49,46,129), (15,118,110)), (0,0), circle_mask((L,L)))
 d = ImageDraw.Draw(im)
 cx, cy = L/2, 300
@@ -93,11 +93,11 @@ d.ellipse([cx-66, cy-66, cx+66, cy+66], fill=(253,224,71))
 for r, w, a in ((120, 20, 255), (185, 18, 190), (250, 16, 120)):  # sound spreading out both ways
     d.arc([cx-r, cy-r, cx+r, cy+r], 140, 220, fill=(255,255,255,a), width=w)
     d.arc([cx-r, cy-r, cx+r, cy+r], -40, 40, fill=(255,255,255,a), width=w)
-text_fit(d, L/2, 470, "SUR", B, 250, (255,255,255), 640)
-text_fit(d, L/2, 735, "SUKOON", B, 130, (153,246,228), 640)
-save_big(im, "sur-sukoon")
+text_fit(d, L/2, 470, "BAZAAR", B, 250, (255,255,255), 640)
+text_fit(d, L/2, 680, "MUSIC", B, 190, (153,246,228), 560)
+save_big(im, "bazaar-music")
 
-# 8 Geet Bahar (film songs): pink to orange rounded square, a flower of petals with a note inside
+# 8 Bazaar Hits, 0000 (film songs; was Geet Bahar until 1.9.41): pink to orange rounded square, a flower of petals with a note inside
 im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (219,39,119), (249,115,22)), (0,0), rounded_mask((L,L), 220))
 d = ImageDraw.Draw(im)
 cx, cy = L/2, 300
@@ -108,6 +108,19 @@ d.ellipse([cx-104, cy-104, cx+104, cy+104], fill=(255,255,255))
 d.ellipse([cx-58, cy+6, cx-6, cy+48], fill=(219,39,119)); d.ellipse([cx+10, cy-14, cx+62, cy+28], fill=(219,39,119))
 d.rectangle([cx-17, cy-66, cx-5, cy+30], fill=(219,39,119)); d.rectangle([cx+50, cy-86, cx+62, cy+10], fill=(219,39,119))
 d.polygon([(cx-17, cy-66), (cx+62, cy-86), (cx+62, cy-58), (cx-17, cy-38)], fill=(219,39,119))
-text_fit(d, L/2, 500, "GEET", B, 210, (255,255,255), 700)
-text_fit(d, L/2, 730, "BAHAR", B, 170, (255,247,237), 760)
-save_big(im, "geet-bahar")
+text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
+text_fit(d, L/2, 710, "HITS", B, 200, (255,247,237), 600)
+save_big(im, "bazaar-hits")
+
+# 9 Bazaar Kids, 00000 (cartoons, 1.9.41): green to sky-blue rounded square, a smiling sun with rays
+im = Image.new("RGBA", (L,L), (0,0,0,0)); im.paste(grad((L,L), (34,197,94), (14,165,233)), (0,0), rounded_mask((L,L), 220))
+d = ImageDraw.Draw(im)
+cx, cy = L/2, 290
+for i in range(12):  # rays
+    a = math.radians(i*30); d.line([(cx + 120*math.cos(a), cy + 120*math.sin(a)), (cx + 185*math.cos(a), cy + 185*math.sin(a))], fill=(253,224,71), width=26)
+d.ellipse([cx-110, cy-110, cx+110, cy+110], fill=(253,224,71))
+d.ellipse([cx-50, cy-40, cx-22, cy-8], fill=(30,41,59)); d.ellipse([cx+22, cy-40, cx+50, cy-8], fill=(30,41,59))
+d.arc([cx-62, cy-30, cx+62, cy+68], 20, 160, fill=(30,41,59), width=16)
+text_fit(d, L/2, 500, "BAZAAR", B, 210, (255,255,255), 700)
+text_fit(d, L/2, 710, "KIDS", B, 210, (254,249,195), 600)
+save_big(im, "bazaar-kids")
