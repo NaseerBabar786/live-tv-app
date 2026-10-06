@@ -18,6 +18,23 @@
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
   th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--surface-2); white-space: nowrap; }
   th { background: var(--surface); color: var(--muted); font-weight: 700; position: sticky; top: 0; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover td { background: var(--surface); }
+  .miss { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #5D2B00; color: #FFCC80; }
+  .ok { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #12391A; color: #A5D6A7; }
+  dialog#bill { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 24px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 16px; padding: 0; }
+  dialog#bill::backdrop { background: rgba(0,0,0,.7); }
+  .bill-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; padding: 18px 20px 6px; }
+  .bill-head h2 { margin: 0; }
+  .bill-body { padding: 0 20px 20px; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 16px; margin: 12px 0; }
+  .grid2 label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--muted); }
+  .grid2 .inp, .grid2 select { padding: 8px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
+  .checklist { list-style: none; padding: 0; margin: 8px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4px 16px; }
+  .checklist li.no { color: #FFCC80; }
+  .checklist li.yes { color: #A5D6A7; }
+  .said { background: var(--bg); border: 1px dashed var(--line); border-radius: 12px; padding: 10px 14px; font-size: 14px; margin: 10px 0; }
+  .contact { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
   input[type=search] { width: 100%; max-width: 360px; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
 </style>
 </head>
@@ -50,13 +67,51 @@
       <div class="row"><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th></th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Billing</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
+  <p class="small">💳 Click any user to open their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
   <p class="err" id="err"></p>
 </main>
+<dialog id="bill">
+  <div class="bill-head">
+    <div><h2 id="bName"></h2><div class="small" id="bSub"></div></div>
+    <button class="btn" id="bClose" aria-label="Close">✕</button>
+  </div>
+  <div class="bill-body">
+    <b>Missing</b>
+    <ul class="checklist" id="bCheck"></ul>
+    <div class="said hidden" id="bSaid"></div>
+    <div class="contact">
+      <button class="btn primary" id="bAsk">📲 Ask in the app</button>
+      <a class="btn" id="bEmail" target="_blank" rel="noopener">✉ Email</a>
+      <a class="btn" id="bSms">💬 Text (SMS)</a>
+      <a class="btn" id="bWa" target="_blank" rel="noopener">🟢 WhatsApp</a>
+    </div>
+    <div class="small" id="bAsked"></div>
+    <div class="grid2">
+      <label>Package<select id="fPackage"><option value="">Not chosen yet</option><option>Free</option><option>Silver</option><option>Gold</option><option>Platinum</option></select></label>
+      <label>Plan length (how often they pay)<select id="fLength"><option value="">Not chosen yet</option><option value="month">Every month</option><option value="three">Every 3 months</option><option value="six">Every 6 months</option><option value="year">Every year</option></select></label>
+      <label>Amount each time<input class="inp" id="fAmount" placeholder="$3.99"></label>
+      <label>How they pay<select id="fMethod"><option value="">Not chosen yet</option><option>Interac e-Transfer</option><option>Credit or debit card</option><option>Cash</option><option>Other</option></select></label>
+      <label>Last paid on<input class="inp" type="date" id="fLastPaid"></label>
+      <label>Next payment due<input class="inp" type="date" id="fNext"></label>
+      <label>Phone number<input class="inp" type="tel" id="fPhone" placeholder="437 555 0123"></label>
+      <label>WhatsApp number (if different)<input class="inp" type="tel" id="fWhatsapp"></label>
+      <label>Contact email (if different)<input class="inp" type="email" id="fEmail"></label>
+    </div>
+    <label class="small">Notes (only you see these)<textarea id="fNotes" style="min-height:70px"></textarea></label>
+    <div class="row" style="margin-top:12px">
+      <button class="btn primary" id="bSave">Save</button>
+      <button class="btn" id="bPaid">✓ Paid today</button>
+      <a class="btn" id="bPlan" href="packages">⭐ Turn on their package</a>
+      <span class="small" id="bMsg"></span>
+    </div>
+    <p class="small">The package they can actually use is turned on at <a href="packages">Packages</a> (that sets their end date). <b>✓ Paid today</b> sets "last paid" to today and moves "next payment due" forward by one plan length. Phone numbers are only seen by you and are used to contact the viewer about their package.</p>
+  </div>
+</dialog>
 <footer>
   <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
 </footer>
@@ -79,7 +134,7 @@ if (!configured) {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = fs.getFirestore(app);
-  let users = [];
+  let users = [], billing = {}, info = {}, plans = {}, prices = {}, rulesMissing = false;
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
   document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
@@ -95,9 +150,55 @@ if (!configured) {
       users = snap.docs.map(d => ({ id: d.id, ...d.data() }))
         .map(u => ({ ...u, joined: u.joined?.toDate?.(), lastOpened: u.lastOpened?.toDate?.() }))
         .sort((a, b) => (b.lastOpened || 0) - (a.lastOpened || 0));
-      stats(); render();
     } catch (e) { $("err").textContent = "Couldn't load users: " + e.message; }
+    await loadBilling();
+    stats(); render();
   });
+
+  // Billing details: billing/{uid} is yours only; billingInfo/{uid} is what the viewer filled in
+  // in the app (and when you last asked them); plans/{uid} is the package turned on at /packages.
+  const all = async name => Object.fromEntries((await fs.getDocs(fs.collection(db, name))).docs.map(d => [d.id, d.data()]));
+  async function loadBilling() {
+    const r = await Promise.allSettled([all("billing"), all("billingInfo"), all("plans"), fs.getDoc(fs.doc(db, "config", "plans"))]);
+    if (r[0].status === "fulfilled") billing = r[0].value; else rulesMissing = true;
+    if (r[1].status === "fulfilled") info = r[1].value; else rulesMissing = true;
+    if (r[2].status === "fulfilled") plans = r[2].value;
+    if (r[3].status === "fulfilled" && r[3].value.exists()) prices = r[3].value.data();
+    if (rulesMissing) $("err").textContent = "Billing details can't be saved yet: publish the new Firestore rules (billing and billingInfo) in Firebase first.";
+  }
+
+  const LENGTH_LABEL = { month: "every month", three: "every 3 months", six: "every 6 months", year: "every year" };
+  const LENGTH_MONTHS = { month: 1, three: 3, six: 6, year: 12 };
+  const LENGTH_FROM_APP = { "1 month": "month", "3 months": "three", "6 months": "six", "1 year": "year" };
+  const toDate = t => t?.toDate?.() || null;
+  const activePlan = uid => { const p = plans[uid]; const until = toDate(p?.until); return p && p.tier && p.tier !== "Free" && until && until > new Date() ? { tier: p.tier, until } : null; };
+
+  /** What we know for this viewer: your saved details first, then what they told us in the app. */
+  function details(u) {
+    const b = billing[u.id] || {}, v = info[u.id] || {}, plan = activePlan(u.id);
+    return {
+      package: b.package || plan?.tier || v.wantPackage || "",
+      length: b.length || LENGTH_FROM_APP[v.wantLength] || "",
+      amount: b.amount || "",
+      method: b.method || v.payMethod || "",
+      lastPaid: toDate(b.lastPaid),
+      next: toDate(b.nextPayment) || plan?.until || null,
+      phone: b.phone || v.phone || "",
+      whatsapp: b.whatsapp || v.whatsapp || "",
+      email: b.email || u.email || "",
+      notes: b.notes || "",
+    };
+  }
+  const CHECKS = [
+    ["package", "Package", "which package they want"],
+    ["length", "Plan length", "how often they'll pay (every month, 3 months, 6 months or year)"],
+    ["method", "Payment method", "how they'll pay (Interac e-Transfer, card or cash)"],
+    ["phone", "Phone number", "a phone number to reach them"],
+    ["next", "Next payment date", null],
+  ];
+  // A viewer on Free only needs a phone number; paying viewers need everything.
+  const lacking = d => CHECKS.filter(([k]) => !d[k] && (d.package !== "Free" || k === "phone"));
+  const missing = u => lacking(details(u));
 
   function stats() {
     const now = Date.now(), day = 864e5;
@@ -111,6 +212,7 @@ if (!configured) {
       ["New this week", users.filter(u => within(u.joined, 7 * day)).length],
       ["On TVs", users.filter(u => u.device === "TV").length],
       ["On phones/tablets", users.filter(u => u.device && u.device !== "TV").length],
+      ["Billing details complete", users.filter(u => !missing(u).length).length],
     ];
     $("stats").innerHTML = "";
     for (const [l, n] of items) {
@@ -131,6 +233,12 @@ if (!configured) {
       [i + 1, u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, fmt(u.joined), fmt(u.lastOpened)].forEach(v => {
         const td = document.createElement("td"); td.textContent = v ?? ""; tr.append(td);
       });
+      const bTd = document.createElement("td"); const badge = document.createElement("span");
+      const miss = missing(u);
+      badge.className = miss.length ? "miss" : "ok";
+      badge.textContent = miss.length ? `${miss.length} missing` : (details(u).package || "✓ Complete");
+      bTd.append(badge); tr.append(bTd);
+      tr.onclick = e => { if (!e.target.closest("a")) openBilling(u); };
       // Starts (or opens) a private conversation with this viewer; it lands in their Messages.
       const td = document.createElement("td");
       const a = document.createElement("a");
@@ -196,10 +304,135 @@ if (!configured) {
     } catch (e) { $("err").textContent = "Couldn't send it: " + e.message; }
   }
 
+  // ---- Billing panel ----
+  let cur = null;
+  const dayStr = d => d ? new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10) : "";
+  const fromDay = s => s ? new Date(s + "T12:00:00") : null;
+  const digits = s => String(s || "").replace(/[^0-9]/g, "");
+  // Canadian/US 10-digit numbers get the country code 1 (WhatsApp and SMS links need it).
+  const intl = s => { const n = digits(s); return n.length === 10 ? "1" + n : n; };
+  const priceFor = (pkg, len) => pkg && len && pkg !== "Free" ? (prices[`${pkg.toLowerCase()}_${len}`] || "") : "";
+
+  function contactText(u, miss) {
+    const first = (u.name || "").split(" ")[0] || "there";
+    const asks = miss.filter(m => m[2]).map(m => "- " + m[2]);
+    return `Hi ${first}, this is the Cable TV team. The free period has ended, so to keep watching please send us:\n${asks.join("\n") || "- a quick confirmation of your package"}\n\nYou can also fill this in on your TV: Cable TV › Settings › 💳 My billing details. Questions? WhatsApp 437 602 6500. Thank you!`;
+  }
+
+  function fillLinks(u) {
+    const d = readForm(u), miss = lacking(d);
+    const text = contactText(u, miss);
+    const email = d.email;
+    $("bEmail").classList.toggle("hidden", !email);
+    $("bEmail").href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent("Your Cable TV package")}&body=${encodeURIComponent(text)}`;
+    const phone = intl(d.phone), wa = intl(d.whatsapp || d.phone);
+    $("bSms").classList.toggle("hidden", !phone);
+    $("bSms").href = `sms:+${phone}?body=${encodeURIComponent(text)}`;
+    $("bWa").classList.toggle("hidden", !wa);
+    $("bWa").href = `https://wa.me/${wa}?text=${encodeURIComponent(text)}`;
+    $("bCheck").innerHTML = "";
+    for (const [k, label] of CHECKS) {
+      const li = document.createElement("li"); const has = !miss.some(m => m[0] === k);
+      li.className = has ? "yes" : "no";
+      li.textContent = (has ? "✓ " : "✗ ") + label; $("bCheck").append(li);
+    }
+  }
+
+  function readForm(u) {
+    return {
+      package: $("fPackage").value, length: $("fLength").value, amount: $("fAmount").value.trim(), method: $("fMethod").value,
+      lastPaid: fromDay($("fLastPaid").value), next: fromDay($("fNext").value), phone: $("fPhone").value.trim(),
+      whatsapp: $("fWhatsapp").value.trim(), email: $("fEmail").value.trim() || u.email || "", notes: $("fNotes").value.trim(),
+    };
+  }
+
+  function openBilling(u) {
+    cur = u;
+    const d = details(u), v = info[u.id] || {}, plan = activePlan(u.id);
+    $("bName").textContent = u.name || u.email || "Viewer";
+    $("bSub").textContent = [u.email, u.device, plan ? `${plan.tier} until ${plan.until.toLocaleDateString()}` : "No paid package on"].filter(Boolean).join(" · ");
+    $("fPackage").value = d.package; $("fLength").value = d.length; $("fMethod").value = d.method;
+    $("fAmount").value = d.amount || priceFor(d.package, d.length);
+    $("fLastPaid").value = dayStr(d.lastPaid); $("fNext").value = dayStr(d.next);
+    $("fPhone").value = d.phone; $("fWhatsapp").value = d.whatsapp;
+    $("fEmail").value = billing[u.id]?.email || ""; $("fEmail").placeholder = u.email || "";
+    $("fNotes").value = d.notes;
+    const said = [v.wantPackage && `Package: ${v.wantPackage}`, v.wantLength && `Pays: ${v.wantLength}`, v.payMethod && `By: ${v.payMethod}`,
+      v.phone && `Phone: ${v.phone}`, v.whatsapp && `WhatsApp: ${v.whatsapp}`, v.note && `Note: "${v.note}"`].filter(Boolean);
+    $("bSaid").classList.toggle("hidden", !said.length);
+    $("bSaid").textContent = said.length ? `📲 They filled in on ${toDate(v.answeredAt)?.toLocaleString() || "the app"}: ` + said.join(" · ") : "";
+    const asked = toDate(v.askedAt), answered = toDate(v.answeredAt);
+    $("bAsked").textContent = asked ? (answered && answered > asked ? `You asked on ${asked.toLocaleString()}; they answered.` : `You asked in the app on ${asked.toLocaleString()}; no answer yet.`) : "";
+    $("bMsg").textContent = "";
+    fillLinks(u);
+    $("bill").showModal();
+  }
+  for (const id of ["fPackage", "fLength", "fAmount", "fMethod", "fLastPaid", "fNext", "fPhone", "fWhatsapp", "fEmail"]) {
+    $(id).addEventListener("input", () => {
+      if ((id === "fPackage" || id === "fLength") && cur) { const pr = priceFor($("fPackage").value, $("fLength").value); if (pr) $("fAmount").value = pr; }
+      if (cur) fillLinks(cur);
+    });
+  }
+  $("bClose").onclick = () => $("bill").close();
+  $("bill").addEventListener("close", () => { cur = null; });
+
+  async function saveBilling(u, d) {
+    const data = {
+      package: d.package, length: d.length, amount: d.amount, method: d.method,
+      lastPaid: d.lastPaid ? fs.Timestamp.fromDate(d.lastPaid) : null,
+      nextPayment: d.next ? fs.Timestamp.fromDate(d.next) : null,
+      phone: d.phone, whatsapp: d.whatsapp, email: $("fEmail").value.trim(), notes: d.notes,
+      name: u.name || "", userEmail: u.email || "", updated: fs.serverTimestamp(),
+    };
+    await fs.setDoc(fs.doc(db, "billing", u.id), data);
+    billing[u.id] = data;
+    stats(); render();
+  }
+  $("bSave").onclick = async () => {
+    const u = cur; if (!u) return;
+    $("bMsg").textContent = "Saving…";
+    try { await saveBilling(u, readForm(u)); $("bMsg").textContent = "Saved."; fillLinks(u); }
+    catch (e) { $("bMsg").textContent = "Couldn't save: " + e.message + (e.code === "permission-denied" ? " (publish the new Firestore rules first)" : ""); }
+  };
+  $("bPaid").onclick = async () => {
+    const u = cur; if (!u) return;
+    const d = readForm(u);
+    if (!d.length) return alert("Pick the plan length first, so the next payment date can move forward.");
+    const today = new Date(); today.setHours(12, 0, 0, 0);
+    const base = d.next && d.next > today ? new Date(d.next) : new Date(today);
+    base.setMonth(base.getMonth() + LENGTH_MONTHS[d.length]);
+    d.lastPaid = today; d.next = base;
+    $("fLastPaid").value = dayStr(today); $("fNext").value = dayStr(base);
+    $("bMsg").textContent = "Saving…";
+    try { await saveBilling(u, d); $("bMsg").textContent = `Saved. Next payment due ${base.toLocaleDateString()}. Remember to extend their package at Packages.`; fillLinks(u); }
+    catch (e) { $("bMsg").textContent = "Couldn't save: " + e.message; }
+  };
+
+  // Sends the viewer a private message (their app shows it) and a request their app turns into a form.
+  $("bAsk").onclick = async () => {
+    const u = cur; if (!u) return;
+    const d = readForm(u), miss = lacking(d).filter(m => m[2]);
+    if (!miss.length && !confirm("Nothing the viewer can fill in is missing. Ask them to check their details anyway?")) return;
+    const text = contactText(u, miss);
+    $("bMsg").textContent = "Sending…";
+    try {
+      const me = auth.currentUser;
+      await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: me.uid, name: me.displayName || "Cable TV team", text, createdAt: fs.serverTimestamp() });
+      await fs.setDoc(fs.doc(db, "inbox", u.id), { uid: u.id, lastText: text.slice(0, 200), lastAt: fs.serverTimestamp(), lastFrom: "admin", userUnread: true, name: u.name || "", email: u.email || "" }, { merge: true });
+      const ask = { asked: miss.map(m => m[0]).join(","), askedAt: fs.serverTimestamp() };
+      await fs.setDoc(fs.doc(db, "billingInfo", u.id), ask, { merge: true });
+      info[u.id] = { ...(info[u.id] || {}), asked: ask.asked, askedAt: fs.Timestamp.now() };
+      $("bMsg").textContent = "Sent. Their app shows the message and a form to fill in (app 1.9.63 or newer; older apps show the message only).";
+      $("bAsked").textContent = `You asked in the app just now.`;
+    } catch (e) { $("bMsg").textContent = "Couldn't send: " + e.message + (e.code === "permission-denied" ? " (publish the new Firestore rules first)" : ""); }
+  };
+
   $("csv").onclick = () => {
     const esc = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
-    const lines = [["Name", "Email", "Sign-in", "Device", "Model", "Version", "Joined", "Last opened"].map(esc).join(",")]
-      .concat(users.map(u => [u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, u.joined?.toISOString(), u.lastOpened?.toISOString()].map(esc).join(",")));
+    const day = d => d ? d.toISOString().slice(0, 10) : "";
+    const lines = [["Name", "Email", "Sign-in", "Device", "Model", "Version", "Joined", "Last opened", "Package", "Pays", "Amount", "Payment method", "Last paid", "Next payment", "Phone", "WhatsApp", "Missing"].map(esc).join(",")]
+      .concat(users.map(u => { const d = details(u); return [u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, u.joined?.toISOString(), u.lastOpened?.toISOString(),
+        d.package, LENGTH_LABEL[d.length] || "", d.amount, d.method, day(d.lastPaid), day(d.next), d.phone, d.whatsapp, missing(u).map(m => m[1]).join("; ")].map(esc).join(","); }));
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
     a.download = "live-tv-users.csv"; a.click();
