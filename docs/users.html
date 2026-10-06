@@ -92,7 +92,7 @@
     </div>
     <div class="small" id="bAsked"></div>
     <div class="grid2">
-      <label>Package<select id="fPackage"><option value="">Not chosen yet</option><option>Free</option><option>Silver</option><option>Gold</option><option>Platinum</option></select></label>
+      <label>Package<select id="fPackage"><option value="">Not chosen yet</option><option>Free</option><option>Silver</option><option>Gold</option><option>Platinum</option><option value="Promo">Promotional</option></select></label>
       <label>Plan length (how often they pay)<select id="fLength"><option value="">Not chosen yet</option><option value="month">Every month</option><option value="three">Every 3 months</option><option value="six">Every 6 months</option><option value="year">Every year</option></select></label>
       <label>Amount each time<input class="inp" id="fAmount" placeholder="$3.99"></label>
       <label>How they pay<select id="fMethod"><option value="">Not chosen yet</option><option>Interac e-Transfer</option><option>Credit or debit card</option><option>Cash</option><option>Other</option></select></label>
@@ -196,8 +196,16 @@ if (!configured) {
     ["phone", "Phone number", "a phone number to reach them"],
     ["next", "Next payment date", null],
   ];
-  // A viewer on Free only needs a phone number; paying viewers need everything.
-  const lacking = d => CHECKS.filter(([k]) => !d[k] && (d.package !== "Free" || k === "phone"));
+  // Only Silver, Gold and Platinum are paid for; a viewer on Free or a promotion only needs a phone number.
+  const PAID = ["Silver", "Gold", "Platinum"];
+  const lacking = d => CHECKS.filter(([k]) => !d[k] && (!d.package || PAID.includes(d.package) || k === "phone" || k === "package"));
+  // Promotions are stored under their own names in plans/{uid} ("Promo" is the Promotional package).
+  const tierName = t => t === "Promo" ? "Promotional" : t;
+  function ensureOption(v) {
+    if (v && ![...$("fPackage").options].some(o => o.value === v)) {
+      const o = document.createElement("option"); o.value = v; o.textContent = tierName(v); $("fPackage").append(o);
+    }
+  }
   const missing = u => lacking(details(u));
 
   function stats() {
@@ -236,7 +244,7 @@ if (!configured) {
       const bTd = document.createElement("td"); const badge = document.createElement("span");
       const miss = missing(u);
       badge.className = miss.length ? "miss" : "ok";
-      badge.textContent = miss.length ? `${miss.length} missing` : (details(u).package || "✓ Complete");
+      badge.textContent = miss.length ? `${miss.length} missing` : (tierName(details(u).package) || "✓ Complete");
       bTd.append(badge); tr.append(bTd);
       tr.onclick = e => { if (!e.target.closest("a")) openBilling(u); };
       // Starts (or opens) a private conversation with this viewer; it lands in their Messages.
@@ -311,7 +319,7 @@ if (!configured) {
   const digits = s => String(s || "").replace(/[^0-9]/g, "");
   // Canadian/US 10-digit numbers get the country code 1 (WhatsApp and SMS links need it).
   const intl = s => { const n = digits(s); return n.length === 10 ? "1" + n : n; };
-  const priceFor = (pkg, len) => pkg && len && pkg !== "Free" ? (prices[`${pkg.toLowerCase()}_${len}`] || "") : "";
+  const priceFor = (pkg, len) => pkg && len && PAID.includes(pkg) ? (prices[`${pkg.toLowerCase()}_${len}`] || "") : "";
 
   function contactText(u, miss) {
     const first = (u.name || "").split(" ")[0] || "there";
@@ -350,8 +358,8 @@ if (!configured) {
     cur = u;
     const d = details(u), v = info[u.id] || {}, plan = activePlan(u.id);
     $("bName").textContent = u.name || u.email || "Viewer";
-    $("bSub").textContent = [u.email, u.device, plan ? `${plan.tier} until ${plan.until.toLocaleDateString()}` : "No paid package on"].filter(Boolean).join(" · ");
-    $("fPackage").value = d.package; $("fLength").value = d.length; $("fMethod").value = d.method;
+    $("bSub").textContent = [u.email, u.device, plan ? `${tierName(plan.tier)} until ${plan.until.toLocaleDateString()}` : "No paid package on"].filter(Boolean).join(" · ");
+    ensureOption(d.package); $("fPackage").value = d.package; $("fLength").value = d.length; $("fMethod").value = d.method;
     $("fAmount").value = d.amount || priceFor(d.package, d.length);
     $("fLastPaid").value = dayStr(d.lastPaid); $("fNext").value = dayStr(d.next);
     $("fPhone").value = d.phone; $("fWhatsapp").value = d.whatsapp;
