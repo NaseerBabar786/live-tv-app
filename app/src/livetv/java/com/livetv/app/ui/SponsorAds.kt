@@ -438,10 +438,12 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
     var video by remember { mutableStateOf<Sponsor?>(null) }
     val isFullScreen by rememberUpdatedState(fullScreen)
     val opener = rememberSiteOpener()
-    // While the card or video shows, OK on the remote (or a tap) opens the sponsor's website.
+    // While the card or video shows on a full-screen channel, OK on the remote (or a tap) opens the
+    // sponsor's website. Not in 1+List and the other layouts: there OK opens the channel picked
+    // (1.9.57; OK on Bazaar Cinema went to the sponsor's website instead).
     val current = showing ?: video
-    DisposableEffect(current) {
-        if (current?.site != null) SponsorKey.onOk = { if (showing === current) showing = null; opener.open(current) }
+    DisposableEffect(current, fullScreen) {
+        if (current?.site != null && fullScreen) SponsorKey.onOk = { if (showing === current) showing = null; opener.open(current) }
         onDispose { SponsorKey.onOk = null }
     }
     LaunchedEffect(channelId) {
@@ -521,7 +523,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                 )
             }
-            if (sponsor.site != null) VisitLine()
+            if (sponsor.site != null && fullScreen) VisitLine()
         }
     }
 }
