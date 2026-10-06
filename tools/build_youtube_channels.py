@@ -8,7 +8,7 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
   2 Bazaar Cinema  full films from the studios' own channels
   3 Bazaar Music   Punjabi, Sufi and qawwali from the labels' channels (film songs are on 4)
   5 Bazaar Kids    cartoons from the makers' channels
-  6 Bazaar Sports  cricket highlights (ICC, PCB, BCCI, PSL, IPL...) and a little football
+  6 Bazaar Sports  mostly cricket (ICC, PCB, BCCI, PSL, IPL...), plus wrestling (WWE, AEW), Canadian favourites (NHL, Sportsnet, TSN, Blue Jays, Raptors, CFL) and other popular sports
   7 Bazaar Travel  tourism boards and travel shows
   8 Bazaar Comedy  comedy shows from their channels
   9 Bazaar Movies English  full English films from studios' and distributors' free-movie channels
@@ -95,9 +95,9 @@ CHANNELS = {
         ],
     },
     "sports": {
-        "name": "Bazaar Sports", "mins": (2, 30), "search": "highlights",
+        "name": "Bazaar Sports", "mins": (2, 45), "search": "highlights",
         "skip": r"podcast|press conference|interview|reaction|preview|prediction|draw|ticket|bet",
-        # Mostly cricket (the owner's wish, 2026-10-06), a little football.
+        # Cricket is the main part, then wrestling, then the most-watched other sports (the owner's wish, 2026-10-06).
         "sources": [
             ("ICC", ["@ICC"], "ICC"),
             ("Pakistan Cricket", ["@TheRealPCB", "@PakistanCricketBoard"], "Pakistan Cricket"),
@@ -107,8 +107,29 @@ CHANNELS = {
             ("England Cricket", ["@englandcricket"], "England"),
             ("Cricket Australia", ["@cricketcomau", "@CricketAustralia"], "cricket.com.au|Cricket Australia"),
             ("CPL", ["@CPLT20"], "CPL|Caribbean Premier League"),
+            ("WWE", ["@WWE"], "WWE"),
+            ("AEW", ["@AEW", "@AllEliteWrestling"], "All Elite Wrestling|AEW"),
             ("FIFA", ["@FIFA"], "FIFA"),
+            ("Premier League", ["@premierleague"], "Premier League"),
+            ("NBA", ["@NBA"], "NBA"),
+            ("Formula 1", ["@Formula1"], "FORMULA 1|Formula 1"),
+            ("Pro Kabaddi", ["@ProKabaddi", "@prokabaddileague"], "Pro Kabaddi|ProKabaddi"),
+            # Popular in Canada: hockey, the Raptors, the Blue Jays and the CFL.
+            ("NHL", ["@NHL"], "NHL"),
+            ("Sportsnet", ["@Sportsnet", "@sportsnet"], "Sportsnet"),
+            ("TSN", ["@TSN", "@tsn"], "TSN"),
+            ("Blue Jays", ["@BlueJays", "@bluejays"], "Blue Jays|Toronto Blue Jays"),
+            ("Raptors", ["@Raptors", "@raptors"], "Raptors|Toronto Raptors"),
+            ("CFL", ["@CFL", "@cfl"], "CFL|Canadian Football League"),
         ],
+        # Big main events come round often (marked "top"): the owner's wish, 2026-10-06.
+        "events": r"final|semi-?final|world cup|champions trophy|asia cup|t20 world|ashes|test series|odi series|"
+                  r"wrestlemania|summerslam|royal rumble|survivor series|money in the bank|elimination chamber|crown jewel|"
+                  r"night of champions|all in|double or nothing|full gear|revolution|playoff|stanley cup|grey cup|"
+                  r"world series|nba finals|champions league|el clasico|grand prix|derby",
+        # Fewer from the non-cricket sources, so cricket stays about half the channel.
+        "cap": {"AEW": 25, "FIFA": 20, "Premier League": 20, "NBA": 15, "Formula 1": 15, "Pro Kabaddi": 15, "WWE": 60,
+                "NHL": 20, "Sportsnet": 15, "TSN": 15, "Blue Jays": 10, "Raptors": 10, "CFL": 10},
     },
     "travel": {
         "name": "Bazaar Travel", "mins": (2, 60),
@@ -149,7 +170,11 @@ CHANNELS = {
         ],
     },
     "hindi": {
-        "name": "Bazaar Movies Hindi", "mins": (70, 200), "search": "hindi full movie",
+        "name": "Bazaar Movies Hindi", "mins": (70, 200),
+        "search": ["hindi full movie", "new hindi movie %(year)s", "new hindi movie %(last)s"],
+        # Mostly new films (the owner's wish, 2026-10-06): a film whose title names a year from the
+        # last four is "top", and the channel page plays those three times as often as the rest.
+        "recent_years": 4,
         "keep": r"full (movie|film)|movie|film",
         "skip": r"scene|song|jukebox|comedy scenes|best of|spoof|clip",
         "sources": [
@@ -211,8 +236,10 @@ def build(cid, ch, today):
             continue
         videos = []
         pages = [f"https://www.youtube.com/channel/{chan}/videos"]
-        if ch.get("search"):
-            pages.append(f"https://www.youtube.com/channel/{chan}/search?query=" + ch["search"].replace(" ", "+"))
+        searches = ch.get("search") or []
+        for query in [searches] if isinstance(searches, str) else searches:
+            query = query % {"year": today.year, "last": today.year - 1}
+            pages.append(f"https://www.youtube.com/channel/{chan}/search?query=" + query.replace(" ", "+"))
         for url in pages:
             try:
                 videos += videos_page(url)
@@ -231,6 +258,8 @@ def build(cid, ch, today):
             # A video with no known length (from the feed) is kept on its title alone.
             if mins is not None and not low <= mins <= high:
                 continue
+            if kept >= ch.get("cap", {}).get(label, MAX_VIDEOS):
+                break
             found[vid] = {"id": vid, "title": title.strip(), "label": label, "mins": mins,
                           "found": old.get(vid, {}).get("found", today.isoformat())}
             kept += 1
@@ -242,8 +271,22 @@ def build(cid, ch, today):
         # A source taken off the list goes with its videos.
         if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v["found"])).days <= KEEP_DAYS:
             found[vid] = v
-    videos = sorted(found.values(), key=lambda v: v["found"], reverse=True)[:MAX_VIDEOS]
+    # Main events from the last two weeks, and anything found in the last two days, are "top":
+    # the channel page plays them far more often (Bazaar Sports, the owner's wish, 2026-10-06).
+    if ch.get("events"):
+        events = re.compile(ch["events"], re.I)
+        for v in found.values():
+            age = (today - dt.date.fromisoformat(v["found"])).days
+            v["top"] = bool(events.search(v["title"]) and age <= 14) or age <= 2
+    if ch.get("recent_years"):
+        for v in found.values():
+            years = [int(y) for y in re.findall(r"\b(19[5-9]\d|20[0-4]\d)\b", v["title"])]
+            v["top"] = bool(years) and max(years) >= today.year - ch["recent_years"]
+    # Newest films first, so the list keeps them when it is full.
+    videos = sorted(found.values(), key=lambda v: (bool(v.get("top")), v["found"]), reverse=True)[:MAX_VIDEOS]
     summary = f"{ch['name']}: {len(videos)} videos ({', '.join(counts)})"
+    if ch.get("events") or ch.get("recent_years"):
+        summary += f"; {sum(1 for v in videos if v.get('top'))} top ({'main events and newest' if ch.get('events') else 'new films'})"
     if os.environ.get("GITHUB_ACTIONS"):
         print(f"::notice title={ch['name']}::{summary}")
     if len(videos) < 5:
