@@ -13,6 +13,10 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
+import androidx.media3.common.audio.AudioProcessor
+import androidx.media3.exoplayer.audio.AudioCapabilities
+import androidx.media3.exoplayer.audio.AudioSink
+import androidx.media3.exoplayer.audio.DefaultAudioSink
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import com.livetv.app.data.Channel
@@ -33,10 +37,10 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
 
     // Previews keep only a few seconds buffered, so a screenful of them fits in a TV's memory.
     val player: ExoPlayer = ExoPlayer.Builder(context).apply {
+        // With many tiles playing, the TV's video chips can run out; tiny previews then
+        // fall back to software decoding instead of staying blank.
+        setRenderersFactory(LevelingRenderersFactory(context).setEnableDecoderFallback(preview))
         if (preview) {
-            // With many tiles playing, the TV's video chips can run out; tiny previews then
-            // fall back to software decoding instead of staying blank.
-            setRenderersFactory(DefaultRenderersFactory(context).setEnableDecoderFallback(true))
             setLoadControl(
                 DefaultLoadControl.Builder()
                     .setBufferDurationsMs(2_000, 6_000, 1_000, 1_000)
@@ -225,4 +229,24 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
             else -> listOf(MimeTypes.APPLICATION_M3U8, null)
         }
     }
+}
+
+/**
+ * Plays every channel's sound through [VolumeLeveler], so all channels come out at about
+ * the same loudness. Sound is always decoded on the device (never passed straight to the
+ * TV or sound bar as Dolby), since only decoded sound can be leveled.
+ */
+@OptIn(UnstableApi::class)
+private class LevelingRenderersFactory(context: Context) : DefaultRenderersFactory(context) {
+    @Suppress("DEPRECATION")
+    override fun buildAudioSink(
+        context: Context,
+        enableFloatOutput: Boolean,
+        enableAudioTrackPlaybackParams: Boolean,
+    ): AudioSink = DefaultAudioSink.Builder()
+        .setAudioCapabilities(AudioCapabilities.DEFAULT_AUDIO_CAPABILITIES)
+        .setAudioProcessors(arrayOf<AudioProcessor>(VolumeLeveler()))
+        .setEnableFloatOutput(false)
+        .setEnableAudioTrackPlaybackParams(enableAudioTrackPlaybackParams)
+        .build()
 }
