@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -96,6 +97,13 @@ fun SponsorSite(url: String, name: String, onClose: () -> Unit) {
                                         }
                                         override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) { loading = true }
                                         override fun onPageFinished(view: WebView, url: String?) { loading = false }
+                                        // Its renderer running out of memory must not close the whole app (1.9.58).
+                                        override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+                                            (view.parent as? android.view.ViewGroup)?.removeView(view)
+                                            view.destroy()
+                                            if (web === view) web = null
+                                            return true
+                                        }
                                     }
                                     loadUrl(url)
                                     requestFocus()

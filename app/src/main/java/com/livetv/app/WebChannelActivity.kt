@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -50,6 +51,17 @@ class WebChannelActivity : Activity() {
                         setResult(RESULT_FALLBACK)
                         finish()
                     }
+                    return true
+                }
+
+                // A page that runs out of memory (YouTube on a small TV) loses its renderer; unhandled, that
+                // closed the whole app and it started again (1.9.58). Instead the channel's free films play.
+                override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+                    (view.parent as? ViewGroup)?.removeView(view)
+                    view.destroy()
+                    webView = null
+                    setResult(RESULT_FALLBACK)
+                    finish()
                     return true
                 }
             }

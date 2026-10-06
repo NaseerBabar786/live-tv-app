@@ -39,8 +39,7 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
     val player: ExoPlayer = ExoPlayer.Builder(context).apply {
         // With many tiles playing, the TV's video chips can run out; tiny previews then
         // fall back to software decoding instead of staying blank.
-        // (1.9.56: the volume leveler is off while a crash on TVs is looked into.)
-        setRenderersFactory(DefaultRenderersFactory(context).setEnableDecoderFallback(preview))
+        setRenderersFactory(LevelingRenderersFactory(context).setEnableDecoderFallback(preview))
         if (preview) {
             setLoadControl(
                 DefaultLoadControl.Builder()
