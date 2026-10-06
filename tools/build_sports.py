@@ -72,13 +72,25 @@ def seconds(length):
 
 def candidates():
     """Archive items tagged with a sport and a free licence, most watched first."""
-    subjects = " OR ".join(f'subject:"{s}"' for s in SPORTS)
-    q = (f"mediatype:movies AND ({subjects}) AND "
-         "(licenseurl:*publicdomain* OR licenseurl:*licenses/by/*)")
-    url = SEARCH + urllib.parse.urlencode({"q": q, "fl[]": ["identifier", "title", "licenseurl"], "rows": 400,
-                                           "output": "json", "sort[]": "downloads desc"}, doseq=True)
-    docs = get_json(url).get("response", {}).get("docs", [])
-    return [d for d in docs if FREE.search(str(d.get("licenseurl", ""))) and not SKIP.search(str(d.get("title", "")))]
+    seen, out = set(), []
+    for sport in SPORTS:
+        # Licence is checked here (and again on the item), not in the query: the search's
+        # wildcards don't match inside licence links.
+        url = SEARCH + urllib.parse.urlencode({"q": f'mediatype:movies AND subject:"{sport}"',
+                                               "fl[]": ["identifier", "title", "licenseurl"], "rows": 300,
+                                               "output": "json", "sort[]": "downloads desc"}, doseq=True)
+        try:
+            docs = get_json(url).get("response", {}).get("docs", [])
+        except Exception as e:  # noqa: BLE001 - one sport's search failing shouldn't stop the rest
+            print(f"  search {sport}: {e}", file=sys.stderr)
+            continue
+        free = [d for d in docs if FREE.search(str(d.get("licenseurl", ""))) and not SKIP.search(str(d.get("title", "")))]
+        print(f"  {sport}: {len(docs)} items, {len(free)} free")
+        for d in free:
+            if d["identifier"] not in seen:
+                seen.add(d["identifier"])
+                out.append(d)
+    return out
 
 
 def best_file(ident):
