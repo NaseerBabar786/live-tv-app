@@ -182,7 +182,7 @@ fun PlayerScreen(
             modifier = Modifier.fillMaxSize(),
         )
         // The owner's channel: its logo in the corner and its scrolling line.
-        if (MyChannel.isMine(channel)) MyChannelOverlay()
+        if (MyChannel.isMine(channel)) MyChannelOverlay(channel)
 
         AnimatedVisibility(
             visible = barShown && !inPictureInPicture,
