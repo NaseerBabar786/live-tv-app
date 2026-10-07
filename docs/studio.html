@@ -195,6 +195,12 @@
   .stclock small { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
   @media (max-width: 640px) { .pk { grid-template-columns: 60px 1fr; } .pk img { display: none; } .pk .acts { grid-column: 1 / -1; justify-content: flex-start; } }
   .pk.playing { outline: 2px solid var(--focus); }
+  .pk .tag { display: inline-block; font-size: 12px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-right: 6px; background: var(--surface); border: 1px solid var(--line); }
+  .pk .tag.on { border-color: #66BB6A; color: #66BB6A; } .pk .tag.nw { border-color: var(--focus); }
+  #pkAddPick, #pkFilter { font: inherit; padding: 8px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); color: var(--text); }
+  #pkGuide div.edit { grid-template-columns: 80px 1fr auto auto; }
+  #pkGuide div.ins { outline: 2px dashed #66BB6A; }
+  #pkGuide .mv { display: flex; gap: 4px; } #pkGuide .mv button { padding: 2px 8px; font-size: 13px; }
   pre.rule { background: var(--bg); padding: 10px; border-radius: 8px; overflow: auto; font-size: 13px; }
   @media (max-width: 640px) { .two, .three { grid-template-columns: 1fr; } .item { grid-template-columns: 1fr; } .item .acts { justify-content: flex-start; } }
 </style>
@@ -494,19 +500,24 @@
     </div>
     <section class="panel" id="picks">
       <h2 style="margin-top:0;display:block">📺 Programmes on <span id="pkName"></span></h2>
-      <p class="small" style="margin-top:0">How it works: every day we look for new programmes for this channel on the official YouTube channels. They land in <b>🆕 New</b>, and nothing new goes on air until you approve it. Your <b>✅ Approved</b> list is what the channel plays. Every night at 10 PM (Toronto time), tomorrow's 24-hour schedule is made from your approved programmes, mixed with our ad breaks (and trailers on movie channels), and then it's <b>locked</b>: it plays exactly as shown, all day. Changes you save today go into tomorrow's schedule.</p>
+      <p class="small" style="margin-top:0">How it works, in three steps. <b>📚 Library</b>: every programme we've found for this channel (our daily search adds new ones); nothing ever leaves it. <b>✅ Next transmission</b>: the programmes you approve from the Library; only these go on air. <b>📅 Schedule</b>: the next 24 hours made from Next transmission, mixed with our ad breaks (and trailers on movie channels). Change the order if you like, then press 🔒 Lock. A locked day plays exactly as shown and changes only if you unlock it to fix a mistake. Anything you haven't locked yourself is locked automatically at 10 PM (Toronto time).</p>
       <div class="pkTabs" id="pkTabs" role="tablist">
-        <button type="button" data-t="new">🆕 New <span></span></button>
-        <button type="button" data-t="approved">✅ Approved <span></span></button>
-        <button type="button" data-t="removed">🚫 Removed <span></span></button>
+        <button type="button" data-t="library">📚 Library <span></span></button>
+        <button type="button" data-t="approved">✅ Next transmission <span></span></button>
         <button type="button" data-t="schedule">📅 Schedule</button>
       </div>
       <div id="pkLists">
         <p class="small" id="pkTabHelp" style="margin:0 0 8px"></p>
-        <h3 style="margin:0 0 6px">Sources <span class="small">(remove one to take off everything it uploads)</span></h3>
+        <h3 style="margin:0 0 6px">Sources on air <span class="small">(untick one to keep everything it uploads off the air; its programmes stay in the Library)</span></h3>
         <div class="pkSources" id="pkSources"></div>
         <div class="row">
           <input id="pkFind" type="search" placeholder="Find a programme…" style="flex:1;min-width:180px">
+          <select id="pkFilter" aria-label="Show">
+            <option value="all">Show all</option>
+            <option value="new">🆕 New only</option>
+            <option value="approved">✅ In next transmission</option>
+            <option value="not">Not in next transmission</option>
+          </select>
           <button class="btn" type="button" id="pkAllNew">✓ Approve all new</button>
         </div>
         <p class="small" id="pkCount" style="margin:8px 0 0"></p>
@@ -516,7 +527,13 @@
         <div class="row" style="margin:0 0 8px">
           <button class="btn" type="button" id="pkDayToday">Today</button>
           <button class="btn" type="button" id="pkDayTomorrow">Tomorrow</button>
-          <span class="small" id="pkLockNote"></span>
+        </div>
+        <p id="pkLockNote" style="margin:0 0 8px;font-weight:700"></p>
+        <div class="row" id="pkSchedActs" style="margin:0 0 10px"></div>
+        <div class="row hidden" id="pkAddBar" style="margin:0 0 10px">
+          <select id="pkAddPick" style="flex:1;min-width:200px" aria-label="Programme to add"></select>
+          <button class="btn ok" type="button" id="pkAddBtn">＋ Add</button>
+          <span class="small" id="pkAddWhere"></span>
         </div>
         <div class="guide" id="pkGuide"></div>
       </div>
@@ -542,7 +559,7 @@
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand, zonedTime } from "./channel/schedule.js";
 import { mountCards } from "./channel/cards.js";
-import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers } from "./channel/ytorder.js";
+import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
 let breakPromos = [], pkTrailers = [];
 loadBreakPromos("media/").then(p => { breakPromos = p; setTimeout(() => { try { if (pick) renderPicks(); } catch {} }); });
 const $ = id => document.getElementById(id);
@@ -1585,11 +1602,14 @@ $("save").onclick = async () => {
     $("save").disabled = false;
   }
 };
-// ---------- 📺 Programmes: New → Approved → locked 24-hour schedule (owner, 2026-10-07) ----------
-// Saved in sponsors/_picks (Studio reads it) and the public copy channel/picks (the nightly lock job and the
-// channel pages read it, channel/ytorder.js). One doc for all channels:
-// { <station id>: { on: [approved ids], off: [removed ids], offLabels: [removed sources] } }.
-let pkAll = null, pkList = [], pick = null, previewing = null, pkTab = "new", pkDay = "today", pkLocked = null;
+// ---------- 📺 Programmes: 📚 Library → ✅ Next transmission → 📅 locked 24-hour schedule (owner, 2026-10-07) ----------
+// Approvals are saved in sponsors/_picks (Studio reads it) and the public copy channel/picks (the nightly lock
+// job and the channel pages read it, channel/ytorder.js). One doc for all channels:
+// { <station id>: { on: [approved ids], out: [library only], off: [taken off], offLabels: [sources off] } }.
+// Days the owner locks here: sponsorDeals/_sched_<id> (Studio's copy) and channel/sched-<id> (public, what the
+// channel pages and the lock job read): { days: { "<date>": { items, at } } }.
+let pkAll = null, pkList = [], pick = null, previewing = null, pkTab = "library", pkDay = "tomorrow", pkLocked = null;
+let pkOwner = {}, pkEdit = null;
 const TORONTO = "America/Toronto";
 /** ▶ Preview: one video from the list plays in the player above, with YouTube's buttons so you can skip
  *  through it (Studio only; viewers still get the locked channel). "Back to the channel" puts the channel back. */
@@ -1599,7 +1619,7 @@ function previewVideo(v) {
   previewing = v.id;
   f.src = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
   $("nowText").textContent = "Preview: " + v.title;
-  $("modeText").innerHTML = `Only you see this preview. If it says the video is unavailable, it can't play on our channel either: remove it. <button class="btn" type="button" id="pkBack">◀ Back to the channel</button>`;
+  $("modeText").innerHTML = `Only you see this preview. If it says the video is unavailable, it can't play on our channel either: leave it out of Next transmission. <button class="btn" type="button" id="pkBack">◀ Back to the channel</button>`;
   $("pkBack").onclick = () => { previewing = null; showHits(true); renderPicks(); };
   $("tvbox").scrollIntoView({ behavior: "smooth", block: "nearest" });
   renderPicks();
@@ -1607,7 +1627,7 @@ function previewVideo(v) {
 const pkStation = () => station === HITS ? { id: "hits", ytMins: 4 } : station;
 const pkLen = v => lengthText(Math.round((v.mins || pkStation().ytMins || 4) * 60));
 async function loadPicksPanel() {
-  previewing = null;
+  previewing = null; pkEdit = null;
   $("pkName").textContent = station.name;
   $("pkMsg").textContent = "Loading…";
   $("pkList").innerHTML = ""; $("pkSources").innerHTML = ""; $("pkGuide").innerHTML = "";
@@ -1623,41 +1643,49 @@ async function loadPicksPanel() {
     pkList = d.videos || d.songs || [];
     pkTrailers = station === HITS ? [] : await loadTrailers(station, "channel/");
     try { pkLocked = station === HITS ? null : await (await fetch(`channel/locked/${station.id}.json?t=${Date.now()}`)).json(); } catch { pkLocked = null; }
-    pick = clone(pkAll[station.id] || { off: [], offLabels: [], on: [] });
-    pick.off ||= []; pick.offLabels ||= []; pick.on ||= [];
+    pkOwner = {};
+    if (station !== HITS) {
+      try {
+        const snap = await fs.getDoc(fs.doc(db, "sponsorDeals", "_sched_" + station.id));
+        pkOwner = snap.exists() && snap.data().data ? JSON.parse(snap.data().data).days || {} : {};
+      } catch {}
+    }
+    if (wanted !== station) return;
+    pick = clone(pkAll[station.id] || {});
+    pick.off ||= []; pick.offLabels ||= []; pick.on ||= []; pick.out ||= [];
     // The old "wait until I tick them" setting becomes plain approvals.
     if (pick.mode === "manual") { pkList.forEach(v => { if (status(v, pick) === "removed" && !pick.off.includes(v.id)) pick.off.push(v.id); }); }
     delete pick.mode;
-    const fresh = pkList.filter(v => status(v, pick) === "new").length;
-    pkTab = fresh ? "new" : "approved";
-    $("pkMsg").textContent = `${pkList.length} programmes found for this channel (list updated ${d.built || "daily"}).`;
+    pkTab = "library";
+    $("pkFilter").value = pkList.some(v => status(v, pick) === "new") ? "new" : "all";
+    $("pkMsg").textContent = `${pkList.length} programmes in the Library (list updated ${d.built || "daily"}).`;
     renderPicks();
   } catch (e) {
     $("pkMsg").innerHTML = `<span class="err">Couldn't load the programme list: ${esc(e.message)}</span>`;
   }
 }
 function pkChanged() { dirty = true; $("pkMsg").innerHTML = `<span class="warn">Not saved yet.</span>`; renderPicks(); }
-/** Moves a programme to "approved" or "removed". */
+/** "approved" puts a programme in Next transmission; "library" takes it out again (it stays in the Library). */
 function setStatus(v, to) {
   pick.on = pick.on.filter(id => id !== v.id);
+  pick.out = pick.out.filter(id => id !== v.id);
   pick.off = pick.off.filter(id => id !== v.id);
   if (to === "approved") {
     pick.on.push(v.id);
-    // Approving one video of a removed source brings the source back, minus its other videos.
+    // Approving one video of a source that's off brings the source back, minus its other videos.
     if (pick.offLabels.includes(v.label)) {
       pick.offLabels = pick.offLabels.filter(l => l !== v.label);
-      pkList.filter(x => x.label === v.label && x.id !== v.id && !pick.on.includes(x.id)).forEach(x => pick.off.push(x.id));
+      pkList.filter(x => x.label === v.label && x.id !== v.id && !pick.on.includes(x.id)).forEach(x => pick.out.push(x.id));
     }
-  } else if (to === "removed") pick.off.push(v.id);
+  } else if (to === "library") pick.out.push(v.id);
 }
 const TAB_HELP = {
-  new: "Found by our daily search and not on air yet. Watch with ▶ Preview, then ✓ Approve or ✕ Remove.",
-  approved: "On air: the channel's schedule is made from these. ✕ Remove takes one off from the next schedule.",
-  removed: "Taken off. ↩ Approve puts one back in the next schedule.",
+  library: "Everything found for this channel. Watch with ▶ Preview, then ＋ Add the ones you want to Next transmission. Nothing is ever deleted from here.",
+  approved: "What goes on air: the next 24-hour schedule is made from these. − Take out keeps a programme in the Library but off the air.",
 };
 function renderPicks() {
-  const counts = { new: 0, approved: 0, removed: 0 };
-  pkList.forEach(v => counts[status(v, pick)]++);
+  const counts = { library: pkList.length, approved: 0, fresh: 0 };
+  pkList.forEach(v => { const s = status(v, pick); if (s === "approved") counts.approved++; if (s === "new") counts.fresh++; });
   document.querySelectorAll("#pkTabs button").forEach(b => {
     b.classList.toggle("sel", b.dataset.t === pkTab);
     if (counts[b.dataset.t] !== undefined) b.querySelector("span").textContent = `(${counts[b.dataset.t]})`;
@@ -1665,8 +1693,9 @@ function renderPicks() {
   $("pkLists").classList.toggle("hidden", pkTab === "schedule");
   $("pkSched").classList.toggle("hidden", pkTab !== "schedule");
   if (pkTab === "schedule") return renderSchedule();
-  $("pkTabHelp").textContent = TAB_HELP[pkTab];
-  $("pkAllNew").classList.toggle("hidden", pkTab !== "new" || !counts.new);
+  $("pkTabHelp").textContent = TAB_HELP[pkTab] + (pkTab === "library" && counts.fresh ? ` ${counts.fresh} new waiting for you.` : "");
+  $("pkFilter").classList.toggle("hidden", pkTab !== "library");
+  $("pkAllNew").classList.toggle("hidden", pkTab !== "library" || !counts.fresh);
   // Sources
   const labels = [...new Set(pkList.map(v => v.label))];
   $("pkSources").innerHTML = "";
@@ -1688,11 +1717,13 @@ function renderPicks() {
     $("pkSources").appendChild(lab);
   }
   // Programmes in this tab, each with its length in front.
-  const find = $("pkFind").value.trim().toLowerCase();
+  const find = $("pkFind").value.trim().toLowerCase(), filter = $("pkFilter").value;
   $("pkList").innerHTML = "";
   let shown = 0;
   for (const v of pkList) {
-    if (status(v, pick) !== pkTab) continue;
+    const st = status(v, pick);
+    if (pkTab === "approved" && st !== "approved") continue;
+    if (pkTab === "library" && (filter === "new" && st !== "new" || filter === "approved" && st !== "approved" || filter === "not" && st === "approved")) continue;
     if (find && !(v.title + " " + v.label).toLowerCase().includes(find)) continue;
     if (++shown > 400) break;
     const row = document.createElement("div");
@@ -1701,58 +1732,177 @@ function renderPicks() {
     row.querySelector(".len").textContent = pkLen(v);
     row.querySelector("img").src = `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
     row.querySelector("b").textContent = v.title;
-    row.querySelector("small").textContent = [v.label, v.top ? "★ comes round more often" : "", v.found ? "found " + v.found : ""].filter(Boolean).join(" · ");
+    const small = row.querySelector("small");
+    if (pkTab === "library") {
+      const tag = document.createElement("span");
+      tag.className = "tag" + (st === "approved" ? " on" : st === "new" ? " nw" : "");
+      tag.textContent = st === "approved" ? "✅ In next transmission" : st === "new" ? "🆕 New" : st === "removed" ? "Off the air" : "In the Library";
+      small.appendChild(tag);
+    }
+    small.appendChild(document.createTextNode([v.label, v.top ? "★ comes round more often" : "", v.found ? "found " + v.found : ""].filter(Boolean).join(" · ")));
     const acts = row.querySelector(".acts");
     const btn = (text, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn " + cls; b.textContent = text; b.onclick = fn; acts.appendChild(b); };
     btn("▶ Preview", "pv", () => previewVideo(v));
-    if (pkTab !== "approved") btn(pkTab === "new" ? "✓ Approve" : "↩ Approve", "ok", () => { setStatus(v, "approved"); pkChanged(); });
-    if (pkTab !== "removed") btn("✕ Remove", "no", () => { setStatus(v, "removed"); pkChanged(); });
+    if (st === "approved") btn(pkTab === "approved" ? "− Take out (stays in Library)" : "− Take out", "no", () => { setStatus(v, "library"); pkChanged(); });
+    else btn("＋ Add to next transmission", "ok", () => { setStatus(v, "approved"); pkChanged(); });
     $("pkList").appendChild(row);
   }
-  $("pkCount").textContent = shown ? `${shown} programme${shown === 1 ? "" : "s"} here.` : pkTab === "new" ? "Nothing new waiting. New finds show up here every day." : "None.";
-  if (pkTab === "approved" && !counts.approved) $("pkCount").textContent = station === HITS ? "Nothing approved: Bazaar Hits plays every song." : "Nothing approved: the channel plays its free backup films instead.";
+  $("pkCount").textContent = shown ? `${shown} programme${shown === 1 ? "" : "s"} here.` : pkTab === "library" && filter === "new" ? "Nothing new waiting. New finds show up here every day." : "None.";
+  if (pkTab === "approved" && !counts.approved) $("pkCount").textContent = station === HITS ? "Nothing approved: Bazaar Hits plays every song." : "Nothing in Next transmission: the channel plays its free backup films instead.";
 }
 function torontoDate(ms) { return new Intl.DateTimeFormat("en-CA", { timeZone: TORONTO, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(ms)); }
-/** 📅 Schedule: today's locked day from now, or tomorrow's (locked at 10 PM; until then, a draft with your changes). */
+const isProg = x => x.kind === "video" && !x.trailer && !x.cont;
+/** The day as it stands: the one you locked here, the one locked at 10 PM, or a draft from Next transmission. */
+function pkDayNow(date) {
+  if (pkOwner[date]?.items) return { items: pkOwner[date].items, by: "you", at: pkOwner[date].at };
+  if (pkLocked?.days?.[date]) return { items: pkLocked.days[date], by: "auto" };
+  return { items: pkDraft(date), by: null };
+}
+function pkDraft(date) {
+  const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers }, date).map(slimItem);
+  // Tomorrow begins with the rest of a film still running at midnight.
+  if (date !== torontoDay().date) {
+    const today = pkDayNow(torontoDay().date).items, cont = today.length && carryOver(today, torontoDay().start);
+    if (cont) items.unshift(cont);
+  }
+  return items;
+}
+/** ✏️ Change the order (or 🔓 unlock): what has played and what's on now stay; everything after can change. */
+function startEdit(date, items) {
+  let keep = 0;
+  if (date === torontoDay().date) {
+    keep = itemAt(items).i + 1;
+    while (items[keep]?.kind === "video" && items[keep].trailer) keep++;   // the trailers after the film on now
+  } else while (items[keep]?.cont) keep++;
+  pkEdit = { date, keep: items.slice(0, keep), progs: items.slice(keep).filter(isProg).map(x => x.v), insertAt: null };
+  renderSchedule();
+}
+function editedItems() {
+  return rebuildDay(pkStation(), pkEdit.keep, pkEdit.progs, breakPromos, pkTrailers);
+}
+async function lockDay(date, items) {
+  const label = date === torontoDay().date ? "today" : "tomorrow";
+  if (!confirm(`Lock ${station.name}'s schedule for ${label}? It will play exactly as shown.`)) return;
+  // Keep yesterday onwards only, so the saved schedule stays small.
+  const from = torontoDate(Date.now() - 24 * 3600e3);
+  const days = Object.fromEntries(Object.entries(pkOwner).filter(([d]) => d >= from));
+  days[date] = { items, at: new Date().toISOString() };
+  const data = JSON.stringify({ days });
+  $("pkMsg").textContent = "Locking…";
+  try {
+    await fs.setDoc(fs.doc(db, "sponsorDeals", "_sched_" + station.id), { data, updatedAt: fs.serverTimestamp() });
+    pkOwner = days; pkEdit = null;
+  } catch (e) {
+    $("pkMsg").innerHTML = `<span class="err">Couldn't lock: ${esc(e.message)}</span>`;
+    return;
+  }
+  try {
+    await fs.setDoc(fs.doc(db, "channel", schedDoc(station.id)), { data, updatedAt: fs.serverTimestamp() });
+    $("pkRule").classList.add("hidden");
+    $("pkMsg").innerHTML = `<span class="ok">🔒 Locked. ${esc(station.name)} plays ${label}'s schedule exactly like this${label === "today" ? " (TVs pick up the change within 5 minutes)" : ""}.</span>`;
+  } catch (e) {
+    if (e.code === "permission-denied") $("pkRule").classList.remove("hidden");
+    $("pkMsg").innerHTML = `<span class="warn">Locked for you, but TVs can't see it yet: Firebase needs the one-time rule below.</span>`;
+  }
+  renderSchedule();
+}
+/** 📅 Schedule: today from the programme on now, or tomorrow. Lock it, or unlock it to fix a mistake. */
 function renderSchedule() {
-  const st = pkStation(), today = torontoDay().date, tomorrow = torontoDate(Date.now() + 24 * 3600e3);
+  const today = torontoDay().date, tomorrow = torontoDate(Date.now() + 24 * 3600e3);
   const date = pkDay === "today" ? today : tomorrow;
   $("pkDayToday").classList.toggle("primary", pkDay === "today");
   $("pkDayTomorrow").classList.toggle("primary", pkDay !== "today");
-  let items = pkLocked?.days?.[date], note;
-  if (items) note = pkDay === "today" ? "🔒 Locked: plays exactly like this all day." : "🔒 Locked: tomorrow plays exactly like this. Changes you save now go into the day after.";
-  else {
-    items = dayPlan(st, { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers }, date);
-    note = station === HITS ? "Bazaar Hits makes its day by itself from the approved songs." : pkDay === "today" ? "Not locked yet: worked out from your approved programmes." : "Draft with your changes (saved or not). It gets locked at 10 PM Toronto time.";
+  if (pkEdit && pkEdit.date !== date) pkEdit = null;
+  const hits = station === HITS, now = pkDayNow(date), editing = !!pkEdit;
+  const items = editing ? editedItems() : now.items;
+  const acts = $("pkSchedActs");
+  acts.innerHTML = "";
+  const btn = (text, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn " + cls; b.textContent = text; b.onclick = fn; acts.appendChild(b); };
+  const when = now.at ? ` at ${timeText(Date.parse(now.at), TORONTO)}` + (torontoDate(Date.parse(now.at)) !== today ? " yesterday" : "") : "";
+  if (hits) $("pkLockNote").textContent = "Bazaar Hits makes its day by itself from the approved songs.";
+  else if (editing) {
+    $("pkLockNote").textContent = now.by ? "🔓 Unlocked for changes. TVs still play the locked day until you lock it again." : "✏️ Changing the order. Lock it when it looks right.";
+    btn("🔒 Lock " + (pkDay === "today" ? "today" : "tomorrow"), "primary", () => lockDay(date, editedItems()));
+    btn("↻ Start again from Next transmission", "", () => {
+      if (pkDay !== "today" || confirm("Start the rest of today again from Next transmission? What has played and the programme on now stay.")) {
+        const fresh = pkDraft(date);
+        // Today: keep what has played, then Next transmission's order from the programme after the one on now.
+        if (pkDay === "today") { const ids = new Set(pkEdit.keep.map(x => x.v?.id)); pkEdit.progs = fresh.filter(isProg).map(x => x.v).filter(v => !ids.has(v.id)); renderSchedule(); }
+        else startEdit(date, fresh);
+      }
+    });
+    btn("Cancel", "", () => { pkEdit = null; renderSchedule(); });
+  } else if (now.by) {
+    $("pkLockNote").textContent = now.by === "you" ? `🔒 Locked by you${when}: plays exactly like this.` : "🔒 Locked automatically at 10 PM: plays exactly like this.";
+    btn("🔓 Unlock to fix a mistake", "", () => {
+      if (confirm(pkDay === "today" ? "Unlock today? What has already played and the programme on now stay as they are; you can change what comes after, then lock it again." : "Unlock tomorrow to change it? Lock it again when you're done.")) startEdit(date, now.items);
+    });
+  } else {
+    $("pkLockNote").textContent = pkDay === "today" ? "Not locked: worked out from Next transmission." : "Draft from Next transmission (with your unsaved changes). It locks by itself at 10 PM Toronto time, or lock it now.";
+    btn("🔒 Lock " + (pkDay === "today" ? "today" : "tomorrow"), "primary", () => lockDay(date, now.items));
+    btn("✏️ Change the order", "", () => startEdit(date, now.items));
   }
-  $("pkLockNote").textContent = note;
+  // Adding a programme from Next transmission (at the end, or after the one you pick with ＋).
+  $("pkAddBar").classList.toggle("hidden", !editing);
+  if (editing) {
+    const sel = $("pkAddPick"), was = sel.value;
+    sel.innerHTML = "";
+    pkList.filter(v => status(v, pick) === "approved").sort((a, b) => a.title.localeCompare(b.title)).forEach(v => {
+      const o = document.createElement("option"); o.value = v.id; o.textContent = `${pkLen(v)} · ${v.title}`; sel.appendChild(o);
+    });
+    if (was) sel.value = was;
+    const at = pkEdit.insertAt;
+    $("pkAddWhere").textContent = at === null ? "goes at the end of the day" : `goes after “${pkEdit.progs[at]?.title || ""}”`;
+  }
   // From midnight Toronto time; today starts at the programme that's on now.
   const start = zonedTime(date, 0, 0, TORONTO);
   let t = start;
-  const all = items.map(item => { const r = { item, startMs: t }; t += item.secs * 1000; return r; });
+  const all = items.map((item, n) => { const r = { item, n, startMs: t }; t += item.secs * 1000; return r; });
+  const total = t - start;
   let from = 0;
-  if (pkDay === "today") { const w = itemAt(items); from = w.i; }
+  if (pkDay === "today") from = itemAt(items).i;
   const rows = [];
   const dayEnd = zonedTime(torontoDate(start + 26 * 3600e3), 0, 0, TORONTO);
-  for (const u of all.slice(from)) {
+  const keepN = editing ? pkEdit.keep.length : 0;
+  let p = 0;   // programme number among the ones that can change
+  for (const u of all) {
+    const prog = editing && u.n >= keepN && isProg(u.item) ? p++ : null;
+    if (u.n < from) continue;
     if (u.startMs >= dayEnd) break;   // the day ends at midnight (a film running then finishes first)
     const last = rows[rows.length - 1];
     const kind = u.item.clip ? "clips" : u.item.trailer ? "trailers" : null;
     if (kind && last?.kind === kind) { last.count++; last.secs += u.item.secs; continue; }
-    if (rows.length >= 200) break;
-    rows.push(kind ? { kind, count: 1, secs: u.item.secs, startMs: u.startMs } : { item: u.item, secs: u.item.secs, startMs: u.startMs });
+    if (rows.length >= (editing ? 600 : 200)) break;
+    rows.push(kind ? { kind, count: 1, secs: u.item.secs, startMs: u.startMs } : { item: u.item, secs: u.item.secs, startMs: u.startMs, prog });
   }
   $("pkGuide").innerHTML = "";
+  if (!hits && total < 23 * 3600e3 && items.length) {
+    const w = document.createElement("p");
+    w.className = "small warn";
+    w.textContent = `These programmes fill ${lengthText(Math.round(total / 1000))}, less than a day: the list starts again from the top until midnight. Add more to Next transmission for a full day.`;
+    $("pkGuide").appendChild(w);
+  }
   rows.forEach((r, k) => {
     const g = document.createElement("div");
-    g.className = (k || pkDay !== "today" ? "" : "cur") + (r.kind || r.item.kind === "break" ? " adrow" : "");
+    g.className = (k || pkDay !== "today" ? "" : "cur") + (r.kind || r.item.kind === "break" ? " adrow" : "") + (r.prog != null ? " edit" : "") + (r.prog != null && r.prog === pkEdit?.insertAt ? " ins" : "");
     g.innerHTML = "<span></span><span></span><span></span>";
     g.children[0].textContent = timeText(r.startMs, TORONTO);
     g.children[1].textContent = r.kind === "clips" ? `🎞 Coming up on ${station.name}: clips of our next ${r.count} films`
       : r.kind === "trailers" ? `🎬 Coming soon: ${r.count} trailers of new Hindi films`
       : r.item.kind === "break" ? "📢 Ad break: " + r.item.promos.map(p => p.title || p.src).join(" + ")
-      : r.item.v.title;
+      : (r.item.cont ? "(continued) " : "") + r.item.v.title;
     g.children[2].textContent = lengthText(r.secs);
+    if (r.prog != null) {
+      const mv = document.createElement("span");
+      mv.className = "mv";
+      const b = (text, title, fn) => { const x = document.createElement("button"); x.type = "button"; x.className = "btn"; x.textContent = text; x.title = title; x.onclick = fn; mv.appendChild(x); };
+      const i = r.prog, list = pkEdit.progs;
+      b("↑", "Move up", () => { if (i > 0) { [list[i - 1], list[i]] = [list[i], list[i - 1]]; renderSchedule(); } });
+      b("↓", "Move down", () => { if (i < list.length - 1) { [list[i + 1], list[i]] = [list[i], list[i + 1]]; renderSchedule(); } });
+      b("＋", "Add a programme after this one", () => { pkEdit.insertAt = pkEdit.insertAt === i ? null : i; renderSchedule(); });
+      b("✕", "Take out of this day", () => { list.splice(i, 1); if (pkEdit.insertAt !== null && pkEdit.insertAt >= list.length) pkEdit.insertAt = null; renderSchedule(); });
+      g.appendChild(mv);
+    }
     $("pkGuide").appendChild(g);
   });
 }
@@ -1760,9 +1910,18 @@ document.querySelectorAll("#pkTabs button").forEach(b => b.onclick = () => { pkT
 $("pkDayToday").onclick = () => { pkDay = "today"; renderPicks(); };
 $("pkDayTomorrow").onclick = () => { pkDay = "tomorrow"; renderPicks(); };
 $("pkFind").oninput = renderPicks;
+$("pkFilter").onchange = renderPicks;
+$("pkAddBtn").onclick = () => {
+  const v = pkList.find(x => x.id === $("pkAddPick").value);
+  if (!v || !pkEdit) return;
+  const at = pkEdit.insertAt === null ? pkEdit.progs.length : pkEdit.insertAt + 1;
+  pkEdit.progs.splice(at, 0, { id: v.id, title: v.title, label: v.label, mins: v.mins });
+  if (pkEdit.insertAt !== null) pkEdit.insertAt = at;
+  renderSchedule();
+};
 $("pkAllNew").onclick = () => {
   const fresh = pkList.filter(v => status(v, pick) === "new");
-  if (!confirm(`Approve all ${fresh.length} new programmes for ${station.name}?`)) return;
+  if (!confirm(`Add all ${fresh.length} new programmes to ${station.name}'s Next transmission?`)) return;
   fresh.forEach(v => setStatus(v, "approved")); pkChanged();
 };
 $("pkCopyRule").onclick = () => navigator.clipboard.writeText($("pkRuleText").textContent).then(() => $("pkCopyRule").textContent = "Copied ✓");
@@ -1770,7 +1929,8 @@ $("pkSave").onclick = async () => {
   if (!pick) return;
   // Only ids still in the list are kept, so the saved lists don't grow for ever.
   const ids = new Set(pkList.map(v => v.id));
-  const clean = { on: pick.on.filter(id => ids.has(id)), off: pick.off.filter(id => ids.has(id)), offLabels: pick.offLabels };
+  const keep = l => l.filter(id => ids.has(id));
+  const clean = { on: keep(pick.on), out: keep(pick.out), off: keep(pick.off), offLabels: pick.offLabels };
   const next = { ...pkAll, [station.id]: clean };
   const data = JSON.stringify(next);
   $("pkMsg").textContent = "Saving…";
@@ -1785,7 +1945,7 @@ $("pkSave").onclick = async () => {
   try {
     await fs.setDoc(fs.doc(db, "channel", "picks"), { data, updatedAt: fs.serverTimestamp() });
     $("pkRule").classList.add("hidden");
-    $("pkMsg").innerHTML = `<span class="ok">✓ Saved. It goes into ${esc(station.name)}'s next schedule, locked at 10 PM tonight.</span>`;
+    $("pkMsg").innerHTML = `<span class="ok">✓ Saved. Next transmission goes into ${esc(station.name)}'s next schedule you lock (or the one locked at 10 PM tonight).</span>`;
   } catch (e) {
     if (e.code === "permission-denied") $("pkRule").classList.remove("hidden");
     $("pkMsg").innerHTML = `<span class="warn">Saved for you, but the schedule maker can't see it yet: Firebase needs the one-time rule below.</span>`;
