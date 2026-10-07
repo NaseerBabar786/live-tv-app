@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.view.GestureDetector
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -134,21 +133,23 @@ class WebChannelActivity : Activity() {
     }
 
     // Phones: a swipe up goes to the next channel and a swipe down to the one before, as on our other
-    // full-screen channels; a tap still reaches the page (it shows the title).
-    private val swipes by lazy {
-        GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-                val dy = e2.y - (e1?.y ?: return false)
-                val dx = e2.x - e1.x
-                if (Math.abs(dy) < 120 * resources.displayMetrics.density / 2 || Math.abs(dy) < Math.abs(dx)) return false
-                finishWith(RESULT_ZAP, Intent().putExtra(EXTRA_STEP, if (dy < 0) 1 else -1))
-                return true
-            }
-        })
-    }
+    // full-screen channels; a tap still reaches the page (it shows the title). Measured from where the
+    // finger went down to where it came up, whatever the page does with the touch (1.9.98).
+    private var downX = 0f
+    private var downY = 0f
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        swipes.onTouchEvent(ev)
+        when (ev.actionMasked) {
+            MotionEvent.ACTION_DOWN -> { downX = ev.x; downY = ev.y }
+            MotionEvent.ACTION_UP -> {
+                val dx = ev.x - downX
+                val dy = ev.y - downY
+                if (Math.abs(dy) >= 48 * resources.displayMetrics.density && Math.abs(dy) > Math.abs(dx)) {
+                    finishWith(RESULT_ZAP, Intent().putExtra(EXTRA_STEP, if (dy < 0) 1 else -1))
+                    return true
+                }
+            }
+        }
         return super.dispatchTouchEvent(ev)
     }
 
