@@ -13,16 +13,17 @@ env:
 jobs:
   sample:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
       - run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
+          timeout 300 sudo apt-get update -qq || true
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
           pip install -q edge-tts numpy pillow
           for id in $(python3 -c "import json; print(' '.join(json.load(open('tools/news/presenters/on-air.json'))['readers']))"); do
-            curl -fsSL -o "tools/news/presenters/clips/$id.mp4" \
+            curl -fsSL -m 120 -o "tools/news/presenters/clips/$id.mp4" \
               "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || true
           done
       - env:
