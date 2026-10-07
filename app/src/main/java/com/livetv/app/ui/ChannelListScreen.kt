@@ -1220,9 +1220,10 @@ fun ChannelListScreen(
                                                         onArrow = { step -> changeTile(channel, step) },
                                                         onClick = {
                                                             when {
-                                                                // Phones: the first tap gives a tile the sound, the next does what OK does.
+                                                                // Phones: the first tap gives a tile the sound; a tap on the tile with
+                                                                // the sound opens it full screen (1.9.98; it only filled the screen with the tiles).
                                                                 phone && focusedId != channel.id -> focusedId = channel.id
-                                                                fullTiles -> { open(); onPlay(channel) }
+                                                                phone || fullTiles -> { open(); onPlay(channel) }
                                                                 else -> tilesFull = true
                                                             }
                                                         })
@@ -1645,6 +1646,20 @@ private fun ChannelCard(
             }
             // A thin, soft yellow line marks the tile with the sound.
             if (focused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
+            // Phones: what the finger does on the tile with the sound.
+            if (focused && onSwipe != null) {
+                Text(
+                    "Tap: full screen · Swipe: channel",
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(6.dp)
+                        .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+                        .padding(horizontal = 6.dp, vertical = 2.dp),
+                )
+            }
             if (sound ?: focused) SoundBadge(Modifier.align(Alignment.TopEnd))
             if (favoriteBadge && favorite) {
                 Icon(
