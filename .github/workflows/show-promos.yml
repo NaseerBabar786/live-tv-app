@@ -50,7 +50,8 @@ jobs:
           import json, subprocess, sys
           for s in json.load(open("tools/promos/samples.json")):
               json.dump(s, open("spec.json", "w"))
-              subprocess.run([sys.executable, "tools/promos/make_promo.py", "spec.json", f"out/{s['name']}.mp4"], check=True)
+              # One sample that can't be made doesn't stop the others.
+              subprocess.run([sys.executable, "tools/promos/make_promo.py", "spec.json", f"out/{s['name']}.mp4"])
           PY
 
       - name: Upload to the channel-media release

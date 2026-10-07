@@ -12,7 +12,7 @@ spec: { "title": "Sintel", "when": "Every Friday · 8 PM", "day": "fri", "time":
 
 Needs ffmpeg/ffprobe, numpy, pillow; edge-tts for the announcer (left out when it can't be reached).
 """
-import json, os, re, subprocess, sys, tempfile, wave
+import json, os, re, subprocess, sys, tempfile, time, urllib.parse, urllib.request, wave
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
@@ -30,7 +30,16 @@ def run(cmd, **kw):
     return subprocess.run(cmd, check=True, **kw)
 
 
-def duration(url):
+def duration(url, tries=3):
+    for i in range(tries):
+        d = _duration(url)
+        if d > 0:
+            return d
+        time.sleep(3 * (i + 1)) if i < tries - 1 else None
+    return 0.0
+
+
+def _duration(url):
     try:
         out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", url],
                              capture_output=True, text=True, timeout=120).stdout.strip()
@@ -121,8 +130,30 @@ MASTERS = {"sintel": "https://download.blender.org/durian/movies/Sintel.2010.108
            "bunny": "https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_1080p_h264.mov"}
 
 
+def archive_best(url):
+    """For an archive.org file, the item's biggest video file (often the original scan, sharper than
+    the small "512kb" copy we stream); [url] itself when there's nothing better."""
+    m = re.match(r"https://archive\.org/download/([^/]+)/", url)
+    if not m:
+        return url
+    try:
+        meta = json.load(urllib.request.urlopen(f"https://archive.org/metadata/{m[1]}", timeout=30))
+    except Exception as e:
+        print("archive.org list not readable:", e, file=sys.stderr)
+        return url
+    vids = [f for f in meta.get("files", []) if re.search(r"\.(mp4|m4v|mov|mkv|mpe?g|avi|ogv)$", f.get("name", ""), re.I)]
+    best = max(vids, key=lambda f: (int(f.get("height") or 0), int(f.get("size") or 0)), default=None)
+    if not best:
+        return url
+    return f"https://archive.org/download/{m[1]}/" + urllib.parse.quote(best["name"])
+
+
 def best_copy(url):
     """The sharpest copy of [url] we can open: the film maker's master when there is one."""
+    better = archive_best(url)
+    if better != url and duration(better) > 20:
+        print("Using the bigger copy:", better, file=sys.stderr)
+        return better
     name = url.rsplit("/", 1)[-1].lower()
     for key, master in MASTERS.items():
         # Not the dubbed copies (sintel-urdu.mp4): they carry our own voices.
