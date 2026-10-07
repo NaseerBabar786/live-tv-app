@@ -22,6 +22,7 @@ on:
   push:
     paths:
       - "tools/news/**"
+      - "tools/music/**"
       - ".github/workflows/build-news.yml"
 
 concurrency:

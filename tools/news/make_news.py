@@ -14,7 +14,7 @@ Bazaar TV is an Urdu/Hindi channel (owner, 2026-10-07), so everything spoken and
      Google's free translate address; every story names its source,
   2. read with Microsoft Edge's free Urdu neural voices (edge-tts, ur-PK Uzma and Asad),
   3. our own news graphics in Urdu (Noto Nastaliq), no pictures or video from other broadcasters,
-     music made here, Toronto + Canada weather from Open-Meteo (CC BY 4.0).
+     music by Kevin MacLeod (CC BY 3.0, tools/music), Toronto + Canada weather from Open-Meteo (CC BY 4.0).
 The top corners and the bottom strip stay free for the app's channel number, logo and ticker.
 --offline skips the internet (silent voice, sample stories) to check the layout.
 Needs ffmpeg, numpy, Pillow (with raqm/fribidi for Urdu text) and (online) edge-tts.
@@ -265,44 +265,26 @@ def speak(text, voice, base, offline):
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", base + ".mp3", "-ac", "1", "-ar", str(SR), wav)
     return read_wav(wav)
 
-# ---------- music (made here, free to use) ----------
-def tone(f, n, decay=0.0):
-    t = np.arange(n) / SR
-    w = np.sin(2 * np.pi * f * t) + 0.35 * np.sin(4 * np.pi * f * t) + 0.15 * np.sin(6 * np.pi * f * t)
-    return w * (np.exp(-t * decay) if decay else 1)
+# ---------- music (free-licence recordings, tools/music/library.py; credited on the end card) ----------
+sys.path.insert(0, os.path.join(HERE, "..", "music"))
+import library as music_lib  # noqa: E402
+
+def _mono(x):
+    """Library audio (44.1 kHz stereo) as mono at our SR, peak 1."""
+    m = x.mean(1)
+    if SR != music_lib.SR:
+        m = np.interp(np.arange(int(len(m) * SR / music_lib.SR)) * music_lib.SR / SR, np.arange(len(m)), m)
+    return (m / max(1e-6, np.abs(m).max())).astype(np.float32)
 
 def sting(secs=6.0):
-    """A bright news opening: rising notes, a low hit on each beat, a held chord."""
-    n = int(SR * secs); out = np.zeros(n, np.float32); beat = 0.42
-    notes = [293.66, 369.99, 440.0, 587.33, 739.99, 880.0]
-    for i, f in enumerate(notes):
-        a = int(i * beat / 2 * SR); out[a:a + int(SR * 0.9)] += 0.5 * tone(f, min(int(SR * 0.9), n - a), 4)
-    for k in range(int(secs / beat)):
-        a = int(k * beat * SR); m = min(int(SR * 0.5), n - a)
-        t = np.arange(m) / SR
-        out[a:a + m] += (0.9 if k % 4 == 0 else 0.45) * np.sin(2 * np.pi * (70 - 30 * t) * t) * np.exp(-t * 9)
-    a = int(SR * 2.6)
-    for f in (293.66, 369.99, 440.0, 587.33):
-        out[a:] += 0.22 * tone(f, n - a, 0.6)
-    fade = int(SR * 0.8); out[-fade:] *= np.linspace(1, 0, fade)
-    return out / max(1e-6, np.abs(out).max())
+    """A bright news opening: the start of a lively part of "Psychedelic Crater"."""
+    return _mono(music_lib.bed("promo", secs, fade_in=0.05, fade_out=1.0))
 
 def bed(secs):
-    """A quiet pulsing bed under the reader (loops cleanly every 8 bars)."""
-    n = int(SR * secs); t = np.arange(n) / SR; out = np.zeros(n, np.float32)
-    chords = [[146.83, 220.0, 293.66], [130.81, 196.0, 261.63], [116.54, 174.61, 233.08], [130.81, 196.0, 261.63]]
-    bar = 2.0
-    for k in range(int(secs // bar) + 1):
-        a, b = int(k * bar * SR), min(n, int((k + 1) * bar * SR))
-        if a >= b: continue
-        tt = t[a:b] - k * bar
-        pulse = 0.6 + 0.4 * (np.cos(2 * np.pi * tt * 2) > 0.3)
-        for f in chords[k % 4]:
-            out[a:b] += pulse * np.sin(2 * np.pi * f * tt) / 3
-        out[a:b] += 0.5 * np.sin(2 * np.pi * chords[k % 4][0] / 2 * tt) * np.exp(-tt * 3)
-    # smooth the bar joins
-    out = np.convolve(out, np.ones(64) / 64, mode="same")
-    return out / max(1e-6, np.abs(out).max())
+    """A soft bed under the reader: "Vadodora Chill Mix" (loops on the bar for long bulletins)."""
+    return _mono(music_lib.bed("calm", secs, fade_in=1.0, fade_out=1.0))
+
+MUSIC_CREDIT = "Music: Kevin MacLeod (incompetech.com), CC BY 3.0"
 
 def background(path, secs=8):
     """A slowly moving dark blue studio background that loops every [secs] seconds."""
@@ -671,7 +653,7 @@ def main():
     news_len = t + end_secs
     credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • کینیڈا کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
     title_card(os.path.join(work, "c-end.png"), kind, up_next, credits,
-               "Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else "AI voice")
+               ("Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else "AI voice") + " · " + MUSIC_CREDIT)
     cards.append(("c-end.png", end_secs))
 
     music = np.zeros_like(voice_track)
