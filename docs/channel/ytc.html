@@ -53,7 +53,7 @@
 <script src="still.js"></script>
 <script type="module">
 import { STATIONS } from "./schedule.js";
-import { loadPicks, loadPromos, loadTrailers, playable, runningOrder, withBreaks, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
+import { loadPicks, loadPromos, loadTrailers, loadLocked, dayPlan, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
 const q = new URLSearchParams(location.search);
 const app = q.has("app");
 const $ = id => document.getElementById(id);
@@ -110,14 +110,19 @@ function playItem(i, offset = 0) {
   }
   inBreak = false;
   // A "coming up" clip plays 45 seconds from inside one of the channel's next films.
-  const base = it.clip ? it.start : 0;
+  // The rest of last night's film (cont) also starts part-way into its video.
+  const base = it.start || 0;
   target = { id: it.v.id, at: Date.now() - offset * 1000, base, item: cur };
-  player.loadVideoById(it.clip ? { videoId: it.v.id, startSeconds: base + offset, endSeconds: base + it.secs } : { videoId: it.v.id, startSeconds: offset });
+  player.loadVideoById(it.clip ? { videoId: it.v.id, startSeconds: base + offset, endSeconds: base + it.secs } : { videoId: it.v.id, startSeconds: base + offset });
   showNow();
 }
 /** Like TV, the clock decides what's on: after a programme (or an ad break) the channel goes on wherever it is now. */
 function rejoin(ended) {
-  if (torontoDay().date !== day) { order(); const w = itemAt(items); return playItem(w.i, w.offset); }
+  if (torontoDay().date !== day) {
+    // A new day: its locked schedule (or, without one, the day worked out here).
+    const date = torontoDay().date;
+    return loadLocked(station, "", date).then(lk => { locked = lk && { date, items: lk }; order(); const w = itemAt(items); playItem(w.i, w.offset); });
+  }
   const w = itemAt(items);
   // The one that just ended (a little early against its listed length, or an ad skipped): the next one, from the top.
   if (w.i === ended) return playItem(ended + 1, 0);
@@ -132,20 +137,23 @@ function keepInStep() {
   if (items[cur].clip && have >= items[cur].secs - 0.5) return rejoin(cur);
   if (Math.abs(want - have) > 30 && want < items[cur].secs - 30) player.seekTo(target.base + want, true);
 }
-// The day's running order with its ad breaks, without the videos the owner took off in Channel Studio (📺 Programmes).
-let all = [], picks = null, promos = [], trailers = [], day = null;
+// The day's running order with its ad breaks: the locked day (channel/locked/<id>.json, written every night,
+// so the day never changes once it has begun), or, when there is none, worked out the same way here from
+// the programmes the owner approved in Channel Studio (📺 Programmes).
+let all = [], picks = null, promos = [], trailers = [], day = null, locked = null;
 function order() {
   day = torontoDay().date;
-  items = withBreaks(runningOrder(station, all.filter(v => playable(v, picks)), day), station, promos, trailers);
+  items = locked && locked.date === day ? locked.items : dayPlan(station, { list: all, picks, promos, trailers }, day);
 }
 
 let joinAt = 0;
-Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station)]).then(([d, p, pr, tr]) => {
+Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station)]).then(([d, p, pr, tr, lk]) => {
   if (!d.videos || d.videos.length < 3) return fallBack();
   all = d.videos;
   picks = p[station.id] || null;
   promos = pr;
   trailers = tr;
+  locked = lk && { date: torontoDay().date, items: lk };
   order();
   // Nothing left to play (every programme taken off): the free films take over.
   if (!items.some(x => x.kind === "video")) return fallBack();
