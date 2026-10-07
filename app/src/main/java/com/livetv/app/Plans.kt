@@ -1,6 +1,7 @@
 package com.livetv.app
 
 import com.livetv.app.data.Channel
+import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.MyChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -106,7 +107,18 @@ object Plans {
      * The channels of a package without [Feature.AllChannels]: only our own Bazaar channels (owner, 2026-10-07;
      * Aaj Tak and ARY News were dropped).
      */
-    fun freeChannel(channel: Channel): Boolean = MyChannel.isMine(channel)
+    fun freeChannel(channel: Channel): Boolean =
+        MyChannel.isMine(channel) || ChannelRepository.nameKey(channel.name) in _extraChannels.value
+
+    private val _extraChannels = MutableStateFlow<Set<String>>(emptySet())
+
+    /** Channels the owner adds to packages without [Feature.AllChannels] on tv.bulkbazaar.ca/packages (name keys). */
+    val extraChannels: StateFlow<Set<String>> = _extraChannels.asStateFlow()
+
+    /** [names] as the owner typed them: "Aaj Tak, ARY News". */
+    fun setExtraChannels(names: String) {
+        _extraChannels.value = names.split(',').map { ChannelRepository.nameKey(it.trim()) }.filter { it.isNotEmpty() }.toSet()
+    }
 
     /** Whether the viewer may watch [channel] with their package. */
     fun allowsChannel(channel: Channel): Boolean = has(Feature.AllChannels) || freeChannel(channel)
