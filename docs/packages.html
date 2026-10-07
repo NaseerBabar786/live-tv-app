@@ -98,7 +98,7 @@
 
     <div class="panel" style="margin-bottom:20px">
       <h2 style="margin-top:0">Design your packages</h2>
-      <p class="small">Tick what each package gets, then press <b>Save settings</b>. Every package always has 1+List, full screen, favourites, channel numbers and search. Without <b>All channels</b> a package has only our own channels plus Aaj Tak and ARY News. The app follows your ticks the next time each viewer opens it.</p>
+      <p class="small">Tick what each package gets, then press <b>Save settings</b>. Every package always has 1+List, full screen, favourites, channel numbers and search. Without <b>All channels</b> a package has only our own Bazaar channels (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel, Comedy, Movies, Dramas, Cooking, Latest Movies, Teens). The app follows your ticks the next time each viewer opens it.</p>
       <div class="table-wrap feats"><table>
         <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Silver">Silver</span></th><th><span class="pill Gold">Gold</span></th><th><span class="pill Platinum">Platinum</span></th></tr></thead>
         <tbody id="featRows"></tbody>
@@ -151,7 +151,7 @@ const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x)
 const TIERS = ["Silver", "Gold", "Platinum"];
 // What a package can include; the keys match the app (Plans.Feature). 1+List is in every package.
 const FEATURES = [
-  ["channels", "All channels", "every channel from every country (without it: our own channels plus Aaj Tak and ARY News)"],
+  ["channels", "All channels", "every channel from every country (without it: only our own Bazaar channels)"],
   ["browse", "Browse", "the home screen with rows of big channel cards"],
   ["carousel", "Carousel", "one big channel, slide left and right to the next"],
   ["strip", "Strip", "a big channel on top, small channel tiles along the bottom"],
@@ -322,7 +322,7 @@ if (!configured) {
   function showCards() {
     $("pkgCards").innerHTML = ALL_TIERS.map(t => {
       const id = t.toLowerCase(), has = ticked(id);
-      const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : "<li><b>Our own channels</b>, plus Aaj Tak and ARY News</li>",
+      const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : "<li><b>Only our own Bazaar channels</b></li>",
         "<li><b>1+List</b>, full screen, favourites and search</li>",
         ...FEATURES.filter(f => f[0] !== "channels" && has.includes(f[0])).map(f => `<li><b>${f[1]}</b>: ${f[2]}</li>`)];
       const price = id === "free" ? "$0" : "";

@@ -1,7 +1,6 @@
 package com.livetv.app
 
 import com.livetv.app.data.Channel
-import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.MyChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -104,13 +103,10 @@ object Plans {
     }
 
     /**
-     * The channels of a package without [Feature.AllChannels]: all of our own, plus the most-watched news
-     * channel of India (Aaj Tak) and of Pakistan (ARY News) (owner, 2026-10-06).
+     * The channels of a package without [Feature.AllChannels]: only our own Bazaar channels (owner, 2026-10-07;
+     * Aaj Tak and ARY News were dropped).
      */
-    private val FREE_NAMES = setOf("aajtak", "arynews")
-
-    fun freeChannel(channel: Channel): Boolean =
-        MyChannel.isMine(channel) || ChannelRepository.nameKey(channel.name) in FREE_NAMES
+    fun freeChannel(channel: Channel): Boolean = MyChannel.isMine(channel)
 
     /** Whether the viewer may watch [channel] with their package. */
     fun allowsChannel(channel: Channel): Boolean = has(Feature.AllChannels) || freeChannel(channel)
