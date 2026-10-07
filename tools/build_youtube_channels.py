@@ -35,7 +35,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_dramas import channel_id, videos_feed, videos_page  # noqa: E402
+from build_dramas import channel_id, fetch, videos_feed, videos_page  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEEP_DAYS = 180
@@ -271,7 +271,7 @@ CHANNELS = {
     # rights holders' own channels: re-uploads of new films by anyone else are pirated and soon taken down.
     "latest": {
         "name": "Latest Movies", "mins": (60, 200), "search": "full movie",
-        "newest": True, "max_age": 365, "max": 80,
+        "newest": True, "max_age": 365, "max": 120,
         "keep": r"full (movie|film)|movie|film|telefilm",
         "skip": r"scene|song|jukebox|comedy scenes|best of|spoof|clip|horror|slasher|erotic|18\+|review|explained|recap",
         "sources": [
@@ -306,10 +306,22 @@ CHANNELS = {
             ("Green Entertainment", ["@GreenTVEntertainment", "@greenentertainment"], "Green", "telefilm"),
             ("ARY Films", ["@ARYFilms", "@aryfilms"], "ARY Films", "full movie"),
         ],
+        # The newest few from each source, so every language gets its share.
+        "cap": {"*": 5},
     },
 }
 
 SUMMARIES = []
+
+
+def upload_dates(chan):
+    """When each of the channel's 15 newest uploads went up (its RSS feed): {video id: "yyyy-mm-dd"}."""
+    try:
+        feed = fetch(f"https://www.youtube.com/feeds/videos.xml?channel_id={chan}", tries=2)
+    except Exception as e:  # noqa: BLE001
+        print(f"  feed: {e}", file=sys.stderr)
+        return {}
+    return dict(re.findall(r"<yt:videoId>([\w-]{11})</yt:videoId>.*?<published>(\d{4}-\d\d-\d\d)", feed, re.S))
 
 
 def build(cid, ch, today):
@@ -345,33 +357,39 @@ def build(cid, ch, today):
             except Exception as e:  # noqa: BLE001
                 print(f"  feed: {e}", file=sys.stderr)
         only = re.compile(ch.get("only", {}).get(label, ""), re.I) if label in ch.get("only", {}) else None
-        kept = 0
+        kept = dated = 0
+        dates = upload_dates(chan) if ch.get("newest") else {}
         for vid, title, mins, age in videos:
             if vid in found or skip.search(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
                 continue
             # A video with no known length (from the feed) is kept on its title alone.
             if mins is not None and not low <= mins <= high:
                 continue
-            if kept >= ch.get("cap", {}).get(label, MAX_VIDEOS):
+            if kept >= ch.get("cap", {}).get(label, ch.get("cap", {}).get("*", MAX_VIDEOS)):
                 break
             found[vid] = {"id": vid, "title": title.strip(), "label": label, "mins": mins,
                           "found": old.get(vid, {}).get("found", today.isoformat())}
             if ch.get("newest"):
-                # When it went up: from "3 weeks ago" on the page, else as first seen here.
-                up = (today - dt.timedelta(days=age)).isoformat() if age is not None else old.get(vid, {}).get("uploaded", found[vid]["found"])
-                if (today - dt.date.fromisoformat(up)).days > ch["max_age"]:
+                # When it went up on YouTube: the channel's feed (its 15 newest), else "3 weeks ago" on the
+                # page, else as known before; a film with no known date goes after the dated ones.
+                up = dates.get(vid) or ((today - dt.timedelta(days=age)).isoformat() if age is not None else old.get(vid, {}).get("up"))
+                if up and (today - dt.date.fromisoformat(up)).days > ch["max_age"]:
                     del found[vid]
                     continue
-                found[vid]["uploaded"] = up
+                if up:
+                    found[vid]["up"] = up
+                    dated += 1
             kept += 1
         print(f"{label}: {len(videos)} videos, {kept} kept")
-        counts.append(f"{label} {kept}")
+        counts.append(f"{label} {kept}" + (f" ({dated} dated)" if ch.get("newest") else ""))
 
     labels = {label for label, *_ in ch["sources"]}
-    date = "uploaded" if ch.get("newest") else "found"
     for vid, v in old.items():
         # A source taken off the list goes with its videos.
-        if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v.get(date, v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
+        # (Latest Movies keeps only films whose upload day is known.)
+        if ch.get("newest") and not v.get("up"):
+            continue
+        if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v.get("up", v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
             found[vid] = v
     # Main events from the last two weeks, and anything found in the last two days, are "top":
     # the channel page plays them far more often (Bazaar Sports, the owner's wish, 2026-10-06).
@@ -385,7 +403,11 @@ def build(cid, ch, today):
             years = [int(y) for y in re.findall(r"\b(19[5-9]\d|20[0-4]\d)\b", v["title"])]
             v["top"] = bool(years) and max(years) >= today.year - ch["recent_years"]
     # Newest films first, so the list keeps them when it is full (Latest Movies: by the day each went up on YouTube).
-    videos = sorted(found.values(), key=lambda v: (bool(v.get("top")), v.get(date, v["found"])), reverse=True)[:ch.get("max", MAX_VIDEOS)]
+    if ch.get("newest"):
+        newest = lambda v: (bool(v.get("up")), v.get("up", ""))  # noqa: E731
+    else:
+        newest = lambda v: (bool(v.get("top")), v["found"])  # noqa: E731
+    videos = sorted(found.values(), key=newest, reverse=True)[:ch.get("max", MAX_VIDEOS)]
     summary = f"{ch['name']}: {len(videos)} videos ({', '.join(counts)})"
     if ch.get("events") or ch.get("recent_years"):
         summary += f"; {sum(1 for v in videos if v.get('top'))} top ({'main events and newest' if ch.get('events') else 'new films'})"
