@@ -54,11 +54,14 @@ const before = existsSync(new URL("unplayable.json", DIR)) ? read("unplayable.js
 if (!offline) {
   const all = [...ids.keys()];
   let n = 0, failedLookups = 0;
+  const codes = {};
   async function check(id) {
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
         const r = await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent("https://www.youtube.com/watch?v=" + id)}`, { signal: AbortSignal.timeout(15000) });
-        if (r.status === 401 || r.status === 403) return "embedding turned off by its owner";
+        codes[r.status] = (codes[r.status] || 0) + 1;
+        // 401 is YouTube's answer for "embedding turned off"; anything else (403, 429, 5xx) is no answer.
+        if (r.status === 401) return "embedding turned off by its owner";
         if (r.status === 404 || r.status === 400) return "removed or private";
         if (r.ok) return null;
       } catch {}
@@ -74,6 +77,7 @@ if (!offline) {
     }
   });
   await Promise.all(workers);
+  console.log(`Checked ${all.length} videos: ${JSON.stringify(codes)}`);
   if (failedLookups > all.length / 4) {
     console.log(`::warning::${failedLookups} of ${all.length} look-ups failed; unplayable.json left as it was.`);
     Object.assign(unplayable, before);
