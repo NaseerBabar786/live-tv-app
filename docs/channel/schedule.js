@@ -60,6 +60,11 @@ export const STATIONS = [
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cooking.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Cooking: recipes and shows from the cooks' own YouTube channels (Food Fusion, Kitchen with Amna, Sanjeev Kapoor, Masala TV and others). Backup: public-domain classic films." },
   // 14 (13 is kept for Latest Movies): for 12 to 16 year olds; Bazaar Kids (5) stays for small children.
+  // The owner's wish: just "Latest Movies", newest uploads first, played as they are with no logo of ours on the picture.
+  { id: "latest", yt: true, web: "channel/ytc.html?c=latest", ytMins: 120, newest: true, noBug: true, tagline: "The newest full movies in Hindi, English, Punjabi and Urdu",
+    name: "Latest Movies", dial: "13", doc: "_channel_latest", page: "channel/?c=latest", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/latest-movies.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Latest Movies: the newest full films from the studios' and TV channels' own YouTube channels (Goldmines, Pen Movies, Shemaroo, FilmRise, Popcornflix, White Hill, ARY, HUM and others). Backup: public-domain classic films." },
   { id: "teens", yt: true, web: "channel/ytc.html?c=teens", ytMins: 12, tagline: "Science, cartoons and challenges for teens, day and night",
     name: "Bazaar Teens", dial: "14", doc: "_channel_teens", page: "channel/?c=teens", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-teens.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",

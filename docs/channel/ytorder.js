@@ -61,6 +61,15 @@ export async function loadPicks() {
  */
 export function runningOrder(station, list, date) {
   const seed = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000) + station.id.length;
+  if (station.newest) {
+    // Latest Movies: each day opens with the films that went up on YouTube in the last week, newest first,
+    // then goes on through the older ones from where the day before left off (the list comes newest first).
+    const week = Date.parse(date + "T00:00:00Z") - 7 * 86400e3;
+    const fresh = list.filter(v => Date.parse(v.uploaded || v.found) >= week);
+    const rest = list.filter(v => !fresh.includes(v));
+    const from = rest.length ? (seed * 10) % rest.length : 0;
+    return fresh.concat(rest.slice(from), rest.slice(0, from));
+  }
   const top = shuffled(list.filter(v => v.top), seed + 1);
   const rest = shuffled(list.filter(v => !v.top), seed);
   if (top.length && rest.length && station.topRatio) {

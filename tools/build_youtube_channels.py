@@ -15,6 +15,8 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
  10 Bazaar Movies Hindi    full Hindi films from the studios' channels
  11 Bazaar Dramas  full episodes of Pakistani dramas from the TV channels' own channels
  12 Bazaar Cooking recipes and cooking shows from the cooks' own channels
+ 13 Latest Movies  the newest full films in Hindi, English, Punjabi and Urdu from the studios',
+                   labels' and TV channels' own uploads, newest first (no logo of ours on it)
  14 Bazaar Teens  science, cartoons, challenges and talent shows for 12 to 16 year olds
 
 Only the channel that really owns each handle is used (its name must match). Videos found on
@@ -265,7 +267,49 @@ CHANNELS = {
                                         "National Geographic", "Fact Tech", "Cartoon Network", "Disney Channel",
                                         "Nickelodeon", "Nick India", "Pokemon", "Dude Perfect", "MrBeast", "Got Talent Global")},
     },
+    # The owner's wish (2026-10-06): just "Latest Movies", newest uploads first, no logo of ours. Only the
+    # rights holders' own channels: re-uploads of new films by anyone else are pirated and soon taken down.
+    "latest": {
+        "name": "Latest Movies", "mins": (60, 200), "search": "full movie",
+        "newest": True, "max_age": 365, "max": 80,
+        "keep": r"full (movie|film)|movie|film|telefilm",
+        "skip": r"scene|song|jukebox|comedy scenes|best of|spoof|clip|horror|slasher|erotic|18\+|review|explained|recap",
+        "sources": [
+            # Hindi (new South films dubbed in Hindi are most of what the studios put up)
+            ("Goldmines", ["@GoldminesTelefilms", "@Goldmines"], "Goldmines"),
+            ("Goldmines Bollywood", ["@GoldminesBollywood", "@GoldminesHindi"], "Goldmines"),
+            ("Pen Movies", ["@PenMovies"], "Pen Movies"),
+            ("Shemaroo Movies", ["@ShemarooMovies"], "Shemaroo"),
+            ("Ultra Movie Parlour", ["@UltraMovieParlour"], "Ultra"),
+            ("Tips Films", ["@TipsFilms", "@tipsfilms"], "Tips"),
+            ("B4U Movies", ["@B4UMovies", "@b4umovies"], "B4U"),
+            ("Zee Studios", ["@ZeeStudios", "@zeestudios"], "Zee"),
+            ("RKD Studios", ["@RKDStudios", "@rkdstudios"], "RKD"),
+            ("Aditya Movies", ["@AdityaMovies", "@adityamovies"], "Aditya"),
+            ("Rajshri", ["@rajshri", "@RajshriFilms"], "Rajshri"),
+            # English
+            ("FilmRise Movies", ["@FilmRiseMovies", "@FilmRiseFilms"], "FilmRise"),
+            ("Popcornflix", ["@Popcornflix", "@popcornflix"], "Popcornflix"),
+            ("Paramount Movies", ["@ParamountMovies"], "Paramount Movies|Paramount"),
+            ("Movie Central", ["@MovieCentral", "@MovieCentralFilms"], "Movie Central"),
+            ("Moviegrams", ["@Moviegrams", "@moviegrams"], "Moviegrams"),
+            ("Maverick Movies", ["@MaverickMovies", "@maverickmovies"], "Maverick"),
+            # Punjabi
+            ("White Hill", ["@WhiteHillMusic", "@WhiteHillStudios"], "White Hill", "punjabi full movie"),
+            ("Saga", ["@SagaMusic", "@SagaMusicOfficial", "@SagaHits"], "Saga", "punjabi full movie"),
+            ("Speed Records", ["@SpeedRecords"], "Speed Records", "full movie"),
+            ("Tips Punjabi", ["@TipsPunjabi"], "Tips Punjabi", "full movie"),
+            # Urdu (Pakistani films and telefilms from the TV channels)
+            ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital", "telefilm"),
+            ("HUM TV", ["@HUMTV", "@humtvpk"], "HUM TV", "telefilm"),
+            ("Har Pal Geo", ["@HarPalGeo", "@harpalgeo"], "HAR PAL GEO|Har Pal Geo", "telefilm"),
+            ("Green Entertainment", ["@GreenTVEntertainment", "@greenentertainment"], "Green", "telefilm"),
+            ("ARY Films", ["@ARYFilms", "@aryfilms"], "ARY Films", "full movie"),
+        ],
+    },
 }
+
+SUMMARIES = []
 
 
 def build(cid, ch, today):
@@ -277,7 +321,8 @@ def build(cid, ch, today):
     keep = re.compile(ch["keep"], re.I) if ch.get("keep") else None
     low, high = ch["mins"]
     found, counts = {}, []
-    for label, handles, name in ch["sources"]:
+    # A source may name its own search (a 4th item) in place of the channel's.
+    for label, handles, name, *own in ch["sources"]:
         _, chan = channel_id(handles, name)
         if not chan:
             print(f"{label}: channel not found", file=sys.stderr)
@@ -285,23 +330,23 @@ def build(cid, ch, today):
             continue
         videos = []
         pages = [f"https://www.youtube.com/channel/{chan}/videos"]
-        searches = ch.get("search") or []
+        searches = own[0] if own else ch.get("search") or []
         for query in [searches] if isinstance(searches, str) else searches:
             query = query % {"year": today.year, "last": today.year - 1}
             pages.append(f"https://www.youtube.com/channel/{chan}/search?query=" + query.replace(" ", "+"))
         for url in pages:
             try:
-                videos += videos_page(url)
+                videos += videos_page(url, with_age=True)
             except Exception as e:  # noqa: BLE001
                 print(f"  {url}: {e}", file=sys.stderr)
         if not videos:
             try:
-                videos = videos_feed(chan)
+                videos = [v + (None,) for v in videos_feed(chan)]
             except Exception as e:  # noqa: BLE001
                 print(f"  feed: {e}", file=sys.stderr)
         only = re.compile(ch.get("only", {}).get(label, ""), re.I) if label in ch.get("only", {}) else None
         kept = 0
-        for vid, title, mins in videos:
+        for vid, title, mins, age in videos:
             if vid in found or skip.search(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
                 continue
             # A video with no known length (from the feed) is kept on its title alone.
@@ -311,14 +356,22 @@ def build(cid, ch, today):
                 break
             found[vid] = {"id": vid, "title": title.strip(), "label": label, "mins": mins,
                           "found": old.get(vid, {}).get("found", today.isoformat())}
+            if ch.get("newest"):
+                # When it went up: from "3 weeks ago" on the page, else as first seen here.
+                up = (today - dt.timedelta(days=age)).isoformat() if age is not None else old.get(vid, {}).get("uploaded", found[vid]["found"])
+                if (today - dt.date.fromisoformat(up)).days > ch["max_age"]:
+                    del found[vid]
+                    continue
+                found[vid]["uploaded"] = up
             kept += 1
         print(f"{label}: {len(videos)} videos, {kept} kept")
         counts.append(f"{label} {kept}")
 
-    labels = {label for label, _, _ in ch["sources"]}
+    labels = {label for label, *_ in ch["sources"]}
+    date = "uploaded" if ch.get("newest") else "found"
     for vid, v in old.items():
         # A source taken off the list goes with its videos.
-        if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v["found"])).days <= KEEP_DAYS:
+        if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v.get(date, v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
             found[vid] = v
     # Main events from the last two weeks, and anything found in the last two days, are "top":
     # the channel page plays them far more often (Bazaar Sports, the owner's wish, 2026-10-06).
@@ -331,13 +384,12 @@ def build(cid, ch, today):
         for v in found.values():
             years = [int(y) for y in re.findall(r"\b(19[5-9]\d|20[0-4]\d)\b", v["title"])]
             v["top"] = bool(years) and max(years) >= today.year - ch["recent_years"]
-    # Newest films first, so the list keeps them when it is full.
-    videos = sorted(found.values(), key=lambda v: (bool(v.get("top")), v["found"]), reverse=True)[:MAX_VIDEOS]
+    # Newest films first, so the list keeps them when it is full (Latest Movies: by the day each went up on YouTube).
+    videos = sorted(found.values(), key=lambda v: (bool(v.get("top")), v.get(date, v["found"])), reverse=True)[:ch.get("max", MAX_VIDEOS)]
     summary = f"{ch['name']}: {len(videos)} videos ({', '.join(counts)})"
     if ch.get("events") or ch.get("recent_years"):
         summary += f"; {sum(1 for v in videos if v.get('top'))} top ({'main events and newest' if ch.get('events') else 'new films'})"
-    if os.environ.get("GITHUB_ACTIONS"):
-        print(f"::notice title={ch['name']}::{summary}")
+    SUMMARIES.append(summary)
     if len(videos) < 5:
         print(f"{ch['name']}: too few videos; keeping the old list.", file=sys.stderr)
         return False
@@ -355,6 +407,9 @@ def main():
     args = ap.parse_args()
     today = dt.date.today()
     ok = [build(cid, CHANNELS[cid], today) for cid in ([args.channel] if args.channel else CHANNELS)]
+    if os.environ.get("GITHUB_ACTIONS"):
+        # One notice for all of them: GitHub shows only 10 per step, and there are more channels than that.
+        print("::notice title=YouTube channel lists::" + "%0A".join(SUMMARIES))
     if not any(ok):
         sys.exit("No channel list could be built.")
 
