@@ -70,7 +70,7 @@ def main():
     os.makedirs(out, exist_ok=True)
     cfg = json.load(open(os.path.join(HERE, "presenters.json")))
     mv = cfg["moving"]; p = next(x for x in mv["people"] if x["id"] == pid)
-    asyncio.run(__import__("edge_tts").Communicate(cfg["line"], cfg["voice"]).save(f"{out}/line.mp3"))
+    asyncio.run(__import__("edge_tts").Communicate(cfg["line"], p.get("voice", cfg["voice"])).save(f"{out}/line.mp3"))
     img = f"{out}/{pid}.jpg"
     if not os.path.exists(img):
         picture(p, img)
