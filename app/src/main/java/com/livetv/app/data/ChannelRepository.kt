@@ -116,9 +116,10 @@ class ChannelRepository(context: Context) {
                 else -> M3uParser.parse(downloadCached(source, source))
             }
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
-            // MTA's own channels go after the list's, unless the list already has them.
+            // MTA's own channels lead the list when they're on (right after our Bazaar channels,
+            // so 16 to 23), and replace any copy of them further down.
             val withMta = withPakistaniLive(channels.filterNot { Mta.isOldLink(it.url) })
-                .let { if (showMta) it + Mta.CHANNELS else it }
+                .let { if (showMta) Mta.CHANNELS + it else it }
             // Lists can repeat a stream (e.g. one channel filed under two names). The
             // stream URL is the channel's key in the grid, and a repeated key crashes it.
             withMta.distinctBy { it.id }

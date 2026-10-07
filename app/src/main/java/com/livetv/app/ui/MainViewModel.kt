@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.livetv.app.data.Channel
 import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Famelack
+import com.livetv.app.data.Mta
 import com.livetv.app.data.MyChannel
 import com.livetv.app.Edition
 import com.livetv.app.Plans
@@ -82,13 +83,13 @@ data class UiState(
             if (freeOnly && !Plans.freeChannel(it)) return@filter false
             when (filter) {
                 FILTER_ALL -> true
-                FILTER_FAVORITES -> it.id in favorites || MyChannel.isMine(it)
+                FILTER_FAVORITES -> it.id in favorites || leads(it)
                 else -> it.group == filter
             }
         }
 
     private val inLanguage: List<Channel>
-        get() = inGroup.filter { languageFilter.isEmpty() || it.language in languageFilter || MyChannel.isMine(it) }
+        get() = inGroup.filter { languageFilter.isEmpty() || it.language in languageFilter || leads(it) }
 
     /** Every language in the loaded channels, most channels first, for the Settings picker. */
     val allLanguages: List<String>
@@ -105,22 +106,29 @@ data class UiState(
             .map { it.key }
 
     /**
-     * Favorites come first, then the rest in list order; channels keep their numbers.
-     * Inside Favorites the channels are grouped by country (Pakistan, India, Canada, UK, USA,
-     * then the rest) and numbered 9, 10, 11... from the top, after our own channels 1 to 8.
+     * Our channels, then MTA's (when on), then favorites, then the rest in list order; channels keep their numbers.
+     * Inside Favorites the other channels are grouped by country (Pakistan, India, Canada, UK, USA,
+     * then the rest) and numbered on from the top, after our own channels 1 to 15 and MTA's 16 to 23.
      */
     val visibleChannels: List<Channel>
         get() {
             val shown = inLanguage
                 .filter { category == null || it.category == category }
                 .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-            // The owner's own channels (numbers 1 to 8) always lead.
-            if (filter != FILTER_FAVORITES) return shown.sortedWith(compareBy({ !MyChannel.isMine(it) }, { it.id !in favorites }))
-            val (mine, rest) = shown.partition { MyChannel.isMine(it) }
-            return mine + rest
+            // The owner's own channels (numbers 1 to 15) always lead, then MTA's when they're on.
+            if (filter != FILTER_FAVORITES) {
+                return shown.sortedWith(compareBy({ !MyChannel.isMine(it) }, { !Mta.isMta(it) }, { it.id !in favorites }))
+            }
+            val (lead, rest) = shown.partition { leads(it) }
+            val first = lead.sortedBy { !MyChannel.isMine(it) }
+            val mta = channels.count { Mta.isMta(it) }
+            return first + rest
                 .sortedWith(compareBy({ countryRank(it) }, { countryName(it) }, { it.number }))
-                .mapIndexed { i, channel -> channel.copy(number = MyChannel.COUNT + i + 1) }
+                .mapIndexed { i, channel -> channel.copy(number = MyChannel.COUNT + mta + i + 1) }
         }
+
+    /** Our Bazaar channels and MTA's (when on): always listed first, in every language and in Favorites. */
+    private fun leads(channel: Channel) = MyChannel.isMine(channel) || Mta.isMta(channel)
 
     private fun countryRank(channel: Channel): Int {
         val code = channel.country ?: Famelack.MIX.firstOrNull { it.title == channel.group }?.country

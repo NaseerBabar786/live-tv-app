@@ -1,4 +1,4 @@
-// Settings: account and package, countries, languages, equal volume, updates and About.
+// Settings: account and package, countries, languages, MTA, equal volume, updates and About.
 import { h, button, dialog, toast } from '../dom.js';
 import * as nav from '../nav.js';
 import * as channels from '../channels.js';
@@ -37,6 +37,12 @@ export function openSettings({ onChanged, onExit }) {
     store.set('equalVolume', !eq);
     close();
     toast(`Equal volume is ${eq ? 'off' : 'on'}. It applies from the next channel.`);
+  }));
+  const showMta = channels.state.showMta;
+  body.appendChild(row(`MTA channels: ${showMta ? 'On' : 'Off'}`, 'Muslim Television Ahmadiyya: 8 free live channels (16 to 23, right after our Bazaar channels)', () => {
+    close();
+    channels.setShowMta(!showMta);
+    toast(showMta ? 'MTA channels are off.' : 'MTA channels are on: numbers 16 to 23.');
   }));
   body.appendChild(row('Reload the channel list', 'Fetch the newest working channels', () => { close(); channels.reload(); toast('Loading the newest channels…'); }));
   body.appendChild(row('Check for updates', `Cable TV for PC ${BUILD.version}`, () => { close(); checkForUpdate({ manual: true }); }));

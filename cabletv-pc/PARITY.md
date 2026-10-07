@@ -50,3 +50,6 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 - 1.9.96 (PC 1.0.4): packages screen shows Free once (no "Free · free") and Gold at one price a month, $9.99 by default (`settings.js`, `plans.js`).
 - 1.9.100 (PC 1.0.5): the start screen shows only a loading circle while the channels load; no sponsor
   or words, no 5-second countdown (`screens/start.js`).
+- 1.10.2 (PC 1.0.6): Settings has "MTA channels" (off by default). When on, MTA's 8 live channels come
+  right after our Bazaar channels as 16 to 23 (the other channels from 24), also in Favorites and in
+  every language, and they are free in every package (`mta.js`, `channels.js`, `plans.js`).
