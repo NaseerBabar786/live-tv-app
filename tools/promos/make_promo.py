@@ -99,8 +99,8 @@ def pick_moments(videos, count):
 
 
 def clean_title(t):
-    """"Sintel (fantasy short)" -> "Sintel"; "Trailer: X" stays."""
-    return re.sub(r"\s*\([^)]*\)\s*$", "", t).strip() or t
+    """"Sintel (fantasy short)" -> "Sintel"; "Raja Harishchandra (1913), India's first …" -> "Raja Harishchandra"."""
+    return re.split(r"\s+\(", t, 1)[0].strip(" ,") or t
 
 
 # ---------- drawing ----------
