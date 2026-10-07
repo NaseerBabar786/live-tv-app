@@ -1,21 +1,9 @@
 {
-  "note": "Cable TV promos for the app's ad break every 10 minutes on full-screen channels. They play in turn, a different one each break. secs = length in seconds (10-60). 720p copies (cabletv-ad-N.mp4) so TVs start them quickly. Add a line to put a new promo on air.",
+  "note": "Cable TV promo for the app's ad break every 10 minutes on full-screen channels. Owner, 2026-10-07: Ad 6 (60 s) is the only promo on air; the earlier ads are off for now. 720p copy so TVs start it quickly. secs = length in seconds (10-60).",
   "promos": [
     {
-      "src": "cabletv-ad-1.mp4",
+      "src": "cabletv-ad-6.mp4",
       "secs": 60
-    },
-    {
-      "src": "cabletv-ad-2.mp4",
-      "secs": 30
-    },
-    {
-      "src": "cabletv-ad-3.mp4",
-      "secs": 30
-    },
-    {
-      "src": "cabletv-ad-4.mp4",
-      "secs": 30
     }
   ]
 }
