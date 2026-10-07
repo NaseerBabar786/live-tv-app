@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cable TV · Library</title>
+<style>
+  /* Library films and episodes from official YouTube channels (Cable TV 1.9.99), played inside our app
+     instead of handing them to the YouTube app: YouTube's embedded player with its own buttons off and
+     our own on top (pause, back and forward 10 s, a progress bar). ?v=<video id>&t=<title>; the app adds
+     &app=1. Remote: OK pauses and plays, Left/Right go back and forward (held: faster), Up/Down show the
+     bar. When the video ends the page opens livetv://done; a video its owner won't let others play opens
+     livetv://blocked (the app then offers YouTube's own app). The last place in each video is kept, so
+     it goes on from there next time. */
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; color: #fff; }
+  #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .shield { position: absolute; inset: 0; }
+  /* Our own black card until the video plays, and a still with a pause sign while paused, so YouTube's
+     own loading and paused screens (title, "More videos") never show. */
+  .cover { position: absolute; inset: 0; background: #000 center / contain no-repeat; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
+  .cover.off { opacity: 0; }
+  .cover .sign { font-size: 12vh; width: 22vh; height: 22vh; border-radius: 50%; background: rgba(16,24,39,.75); display: grid; place-items: center; }
+  .cover .sign[hidden] { display: none; }
+  .spin { width: 8vh; height: 8vh; border: .8vh solid rgba(255,255,255,.25); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .top { position: absolute; left: 0; right: 0; top: 0; padding: 3vh 4vw 8vh; background: linear-gradient(rgba(0,0,0,.75), transparent); font-weight: 700; font-size: clamp(15px, 2.6vw, 30px); }
+  .bar { position: absolute; left: 0; right: 0; bottom: 0; padding: 8vh 4vw 4vh; background: linear-gradient(transparent, rgba(0,0,0,.85)); }
+  .top, .bar { transition: opacity .4s; }
+  .gone { opacity: 0; pointer-events: none; }
+  .track { position: relative; height: clamp(6px, 1vh, 12px); background: rgba(255,255,255,.3); border-radius: 99px; cursor: pointer; }
+  .track .fill { position: absolute; left: 0; top: 0; bottom: 0; background: #E53935; border-radius: 99px; }
+  .track .knob { position: absolute; top: 50%; width: clamp(14px, 2.2vh, 26px); height: clamp(14px, 2.2vh, 26px); margin: calc(clamp(14px, 2.2vh, 26px) / -2) 0 0 calc(clamp(14px, 2.2vh, 26px) / -2); background: #fff; border-radius: 50%; }
+  .row { display: flex; align-items: center; gap: 2vw; margin-top: 2.5vh; font-size: clamp(14px, 2.2vw, 26px); }
+  .row button { font: inherit; color: #fff; background: rgba(255,255,255,.14); border: 0; border-radius: 999px; padding: .45em .9em; cursor: pointer; min-width: 3.2em; }
+  .row .play { font-size: 1.3em; padding: .3em 1em; background: #E53935; }
+  .row .time { margin-left: auto; font-variant-numeric: tabular-nums; opacity: .9; }
+  .row .hint { opacity: .6; font-size: .75em; }
+  .toast { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); background: rgba(16,24,39,.9); padding: .7em 1.2em; border-radius: 12px; font-weight: 700; font-size: clamp(16px, 3vw, 34px); transition: opacity .4s; pointer-events: none; }
+  .msg { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 20px; background: #000; font-size: clamp(15px, 2.4vw, 28px); }
+  .msg a { color: #fff; }
+</style>
+</head>
+<body>
+<div id="player"></div>
+<div class="shield" id="shield"></div>
+<div class="cover" id="cover"><div class="spin" id="spin"></div><div class="sign" id="sign" hidden>⏸</div></div>
+<div class="top" id="top"></div>
+<div class="bar" id="bar">
+  <div class="track" id="track"><div class="fill" id="fill"></div><div class="knob" id="knob"></div></div>
+  <div class="row">
+    <button id="back10" aria-label="Back 10 seconds">⏪ 10</button>
+    <button class="play" id="play" aria-label="Pause">⏸</button>
+    <button id="fwd10" aria-label="Forward 10 seconds">10 ⏩</button>
+    <span class="hint" id="hint">◀ ▶ back / forward · OK pause</span>
+    <span class="time" id="time">0:00 / 0:00</span>
+  </div>
+</div>
+<div class="toast gone" id="toast"></div>
+<script>
+const q = new URLSearchParams(location.search);
+const app = q.has("app");
+const id = (q.get("v") || "").replace(/[^\w-]/g, "");
+const $ = x => document.getElementById(x);
+let player = null, ready = false, wantPlay = true, hideTimer = null, toastTimer = null, saveTimer = null;
+let started = false, seekTo = null, seekTimer = null, held = 0;
+
+const title = q.get("t") || "";
+$("top").textContent = title;
+document.title = (title ? title + " · " : "") + "Cable TV";
+// Phones and the website: no remote, so the remote's hint isn't needed.
+if (!app || matchMedia("(pointer: coarse)").matches) $("hint").hidden = true;
+
+const time = s => {
+  s = Math.max(0, Math.floor(s || 0));
+  const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, sec = String(s % 60).padStart(2, "0");
+  return h ? `${h}:${String(m).padStart(2, "0")}:${sec}` : `${m}:${sec}`;
+};
+const now = () => seekTo != null ? seekTo : (ready ? player.getCurrentTime() : 0);
+const length = () => (ready && player.getDuration()) || 0;
+const playing = () => ready && player.getPlayerState() === YT.PlayerState.PLAYING;
+
+function toast(text) {
+  $("toast").textContent = text;
+  $("toast").classList.remove("gone");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $("toast").classList.add("gone"), 1800);
+}
+/** The title and bar show, and go again 4 s later while the film plays (they stay while paused). */
+function showBar() {
+  $("top").classList.remove("gone");
+  $("bar").classList.remove("gone");
+  clearTimeout(hideTimer);
+  hideTimer = setTimeout(() => { if (wantPlay && seekTo == null) { $("top").classList.add("gone"); $("bar").classList.add("gone"); } }, 4000);
+}
+function draw() {
+  const d = length(), t = now();
+  const p = d ? Math.min(100, t / d * 100) : 0;
+  $("fill").style.width = p + "%";
+  $("knob").style.left = p + "%";
+  $("time").textContent = `${time(t)} / ${time(d)}`;
+  $("play").textContent = wantPlay ? "⏸" : "▶";
+  $("play").setAttribute("aria-label", wantPlay ? "Pause" : "Play");
+}
+function cover(on, paused) {
+  $("cover").classList.toggle("off", !on);
+  $("sign").hidden = !paused;
+  $("spin").hidden = !!paused;
+  // Paused: the video's own picture under our pause sign, not YouTube's paused screen.
+  $("cover").style.backgroundImage = paused ? `url(https://i.ytimg.com/vi/${id}/hqdefault.jpg)` : "";
+}
+
+function setPlaying(on) {
+  if (!ready) return;
+  wantPlay = on;
+  if (on) player.playVideo(); else { player.pauseVideo(); cover(true, true); }
+  draw();
+  showBar();
+}
+/** Back or forward by [by] seconds. Presses close together add up and the jump happens once they stop. */
+function jump(by) {
+  if (!ready) return;
+  const d = length();
+  seekTo = Math.max(0, Math.min(d ? d - 1 : Infinity, now() + by));
+  draw();
+  showBar();
+  clearTimeout(seekTimer);
+  seekTimer = setTimeout(() => { player.seekTo(seekTo, true); seekTo = null; if (wantPlay) player.playVideo(); draw(); showBar(); }, 450);
+}
+function jumpToPart(part) {
+  const d = length();
+  if (!d) return;
+  jump(part * d - now());
+}
+function save() {
+  if (!ready || !started) return;
+  try {
+    const t = player.getCurrentTime(), d = length();
+    // Near the end counts as watched: next time it starts from the beginning.
+    if (d && t > 30 && t < d - 60) localStorage.setItem("film:" + id, String(Math.floor(t)));
+    else localStorage.removeItem("film:" + id);
+  } catch {}
+}
+function leave(where) {
+  save();
+  if (app) location.href = "livetv://" + where;
+}
+
+// Remote and keyboard. The app also turns its media buttons (play/pause, rewind, fast forward) into these.
+window.filmKey = key => {
+  switch (key) {
+    case "playpause": setPlaying(!wantPlay); break;
+    case "play": setPlaying(true); break;
+    case "pause": setPlaying(false); break;
+    case "back": jump(-10); break;
+    case "forward": jump(10); break;
+    case "rewind": jump(-30); break;
+    case "fastforward": jump(30); break;
+    default: showBar();
+  }
+};
+document.addEventListener("keydown", e => {
+  // Held down, the jumps grow: 10 s, then 30 s, then a minute at a time.
+  held = e.repeat ? held + 1 : 0;
+  const step = held > 20 ? 60 : held > 6 ? 30 : 10;
+  const keys = {
+    Enter: "playpause", " ": "playpause", k: "playpause", MediaPlayPause: "playpause", MediaPlay: "play", MediaPause: "pause",
+    MediaRewind: "rewind", MediaFastForward: "fastforward",
+  };
+  if (e.key === "ArrowLeft" || e.key === "j") jump(-step);
+  else if (e.key === "ArrowRight" || e.key === "l") jump(step);
+  else if (keys[e.key]) { if (!e.repeat) filmKey(keys[e.key]); }
+  else if (/^[0-9]$/.test(e.key)) jumpToPart(+e.key / 10);
+  else { showBar(); return; }
+  e.preventDefault();
+});
+// Touch and mouse: a tap shows or hides the bar; the buttons and the progress bar work as usual.
+$("shield").onclick = () => {
+  if ($("bar").classList.contains("gone")) showBar();
+  else if (!app) setPlaying(!wantPlay);
+  else { $("top").classList.add("gone"); $("bar").classList.add("gone"); }
+};
+$("shield").ondblclick = () => { if (!app) (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {}); };
+$("play").onclick = () => setPlaying(!wantPlay);
+$("back10").onclick = () => jump(-10);
+$("fwd10").onclick = () => jump(10);
+$("track").onclick = e => { const r = $("track").getBoundingClientRect(); jumpToPart((e.clientX - r.left) / r.width); };
+for (const b of document.querySelectorAll("button")) b.tabIndex = -1; // the remote's arrows go to the page, not the buttons
+window.addEventListener("pagehide", save);
+document.addEventListener("visibilitychange", () => { if (document.hidden) save(); });
+
+if (!id) {
+  document.body.insertAdjacentHTML("beforeend", '<div class="msg">No video picked.</div>');
+} else {
+  const s = document.createElement("script");
+  s.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(s);
+}
+window.onYouTubeIframeAPIReady = () => {
+  let from = 0;
+  try { from = +localStorage.getItem("film:" + id) || 0; } catch {}
+  player = new YT.Player("player", {
+    videoId: id,
+    playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, start: from, origin: location.origin },
+    events: {
+      onReady: e => {
+        ready = true;
+        // The same loudness as Cable TV's leveled channels (see ytc.html).
+        e.target.setVolume(60);
+        if (!app) e.target.mute(); // browsers only start a video with sound after a tap
+        e.target.playVideo();
+        if (from) toast("Continuing from " + time(from));
+        setInterval(draw, 500);
+        saveTimer = setInterval(save, 5000);
+        draw();
+        showBar();
+      },
+      onStateChange: e => {
+        const S = YT.PlayerState;
+        if (e.data === S.PLAYING) {
+          const first = !started;
+          started = true;
+          // Paused by the TV behind our back (another sound, the window going out of view): our pause screen.
+          if (!wantPlay) { player.pauseVideo(); return; }
+          // A moment after it starts, when YouTube's own title at the start has faded.
+          setTimeout(() => { if (playing()) cover(false); }, first ? 2500 : 300);
+        } else if (e.data === S.PAUSED) {
+          cover(true, true);
+          if (wantPlay) { wantPlay = false; draw(); showBar(); }
+        } else if (e.data === S.ENDED) {
+          try { localStorage.removeItem("film:" + id); } catch {}
+          cover(true);
+          if (app) location.href = "livetv://done";
+          else { wantPlay = false; draw(); showBar(); }
+        } else if (e.data === S.BUFFERING || e.data === S.UNSTARTED) {
+          if (wantPlay) cover(true);
+        }
+      },
+      // 101 and 150: its owner won't let it play outside YouTube.
+      onError: e => {
+        if (app && (e.data === 101 || e.data === 150)) { location.href = "livetv://blocked"; return; }
+        document.body.insertAdjacentHTML("beforeend",
+          `<div class="msg"><div>This video won't play here.<br><br><a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">Watch it on YouTube</a></div></div>`);
+      },
+    },
+  });
+};
+</script>
+</body>
+</html>
