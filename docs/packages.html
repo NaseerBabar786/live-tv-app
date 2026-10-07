@@ -198,7 +198,8 @@ const ALL_TIERS = ["Free", "Silver", "Gold", "Platinum"];
 const tierName = (t, p) => t === "Promo" ? (p?.promoName || "Promotion") : t;
 const ALL_KEYS = FEATURES.map(f => f[0]);
 const DEFAULT_FEATURES = {
-  free: [], silver: ["channels", "browse", "carousel"],
+  // Free: every feature but All channels, so only our own Bazaar channels (owner, 2026-10-07).
+  free: ALL_KEYS.filter(k => k !== "channels"), silver: ["channels", "browse", "carousel"],
   gold: ALL_KEYS.filter(k => k !== "devices"), platinum: ALL_KEYS,
 };
 const LENGTHS = [["month", "1 month"], ["three", "3 months"], ["six", "6 months"], ["year", "1 year"]];
