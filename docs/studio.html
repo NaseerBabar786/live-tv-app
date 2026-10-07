@@ -374,6 +374,7 @@
         <div class="row" style="margin-bottom:10px"><select id="libCat" style="padding:8px;border-radius:10px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit"></select></div>
         <div class="items" id="library"></div>
       </details>
+      <div id="adWarn" class="hidden" style="margin:8px 0;padding:10px 12px;border-radius:12px;border:1.5px solid #E53935;background:rgba(229,57,53,.12)"></div>
       <div class="items" id="videos"></div>
       <form id="videoForm" class="panel" style="margin-top:12px;background:var(--surface-2)">
         <b id="videoFormTitle">Add a video</b>
@@ -404,6 +405,7 @@
           <li>If the loop is empty and no time slot is on, the channel shows "off air" with what's next.</li>
         </ul>
       </details>
+      <div id="breakWarn" class="hidden" style="margin:8px 0;padding:10px 12px;border-radius:12px;border:1.5px solid #E53935;background:rgba(229,57,53,.12)"></div>
       <div class="items" id="loop"></div>
       <div class="row" style="margin-top:12px">
         <select id="loopAdd" style="padding:10px;border-radius:12px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit;max-width:100%"></select>
@@ -758,6 +760,15 @@ $("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(fal
 const kindOf = v => v.kind || (v.secs > 0 ? "programme" : "live");
 const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY", music: "MUSIC VIDEOS · NEW EVERY DAY", list: "YOUTUBE BLOCK · NEW EVERY DAY" };
 let justLooped = null;
+// Pop-up ad length rule (owner, 2026-10-07): ads are 5, 10, 15 ... 60 seconds; one break is 60 s at most.
+const AD_RULE = "5, 10, 15, 20 … up to 60 second";
+function adProblem(v) {
+  if (kindOf(v) !== "ad" || !(v.secs > 0)) return "";
+  const near = Math.round(v.secs / 5) * 5;
+  if (v.secs > 61) return `This ad is ${lengthText(v.secs)} long. Ads can be at most 60 seconds.`;
+  if (Math.abs(v.secs - near) > 1 || near < 5) return `This ad is ${Math.round(v.secs)} seconds. Ads must be 5, 10, 15, 20 … 60 seconds (nearest: ${Math.min(60, Math.max(5, near))}).`;
+  return "";
+}
 function renderVideos() {
   $("videos").innerHTML = "";
   if (!c.videos.length) $("videos").innerHTML = '<p class="small">No videos yet. Add one below.</p>';
@@ -770,9 +781,22 @@ function renderVideos() {
     d.querySelector("b").textContent = v.title;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
     d.querySelector(".meta").textContent = `${lengthText(v.secs)} · ${uses ? "used " + uses + "×" : "not used yet"} · ${v.url}`;
-    // Ad length rule: a reminder on an ad that isn't 10, 20, 30, 40, 50 or 60 seconds.
-    if (kindOf(v) === "ad" && v.secs && (v.secs > 61 || Math.abs(v.secs - Math.round(v.secs / 10) * 10) > 1 || v.secs < 9))
-      d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="err">⚠ Ads should be 10, 20, 30, 40, 50 or 60 seconds · </span>');
+    // Ad length rule: an ad that isn't 5, 10, 15 ... 60 seconds gets a fix bar: change it, take it off air, or delete it.
+    const problem = adProblem(v);
+    if (problem) {
+      d.id = "v-" + v.id;
+      d.style.flexWrap = "wrap";
+      d.insertAdjacentHTML("beforeend", `<div class="adfix" style="flex-basis:100%;margin-top:8px"><span class="err"></span>
+        <div class="row" style="margin-top:6px"><button class="btn" data-a="fix">✏️ Change link or length</button>${uses ? '<button class="btn" data-a="off">Keep it, take it off air</button>' : ""}<button class="btn" data-a="del2">🗑 Delete it</button></div></div>`);
+      d.querySelector(".adfix .err").textContent = "⚠ " + problem;
+      d.querySelector('[data-a=fix]').onclick = () => { editVideo(v); $("vMsg").innerHTML = `<span class="warn">Paste the link of a ${AD_RULE} version, or fix the length, then tap Save video.</span>`; };
+      d.querySelector('[data-a=off]')?.addEventListener("click", () => {
+        c.loop = c.loop.filter(x => x !== v.id);
+        c.slots = c.slots.filter(s => s.video !== v.id);
+        changed(); renderAll();
+      });
+      d.querySelector('[data-a=del2]').onclick = () => d.querySelector('[data-a=del]').click();
+    }
     if (justLooped === v.id) d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="ok">✓ Added at the end of the loop. Press Save to put it on air · </span>');
     d.querySelector('[data-a=play]').onclick = () => watchOne(v.title, v.url);
     d.querySelector('[data-a=loop]').onclick = () => { c.loop.push(v.id); justLooped = v.id; changed(); renderAll(); };
@@ -796,6 +820,12 @@ function renderVideos() {
       changed(); renderAll();
     };
     $("videos").appendChild(d);
+  }
+  const bad = c.videos.filter(adProblem);
+  $("adWarn").classList.toggle("hidden", !bad.length);
+  if (bad.length) {
+    $("adWarn").innerHTML = `<b class="err">⚠ ${bad.length === 1 ? "1 ad breaks" : bad.length + " ads break"} the ad length rule</b> (5, 10, 15 … 60 seconds). Each one has buttons to fix it: change the link, take it off air, or delete it. <button class="btn" type="button" id="adWarnGo">Show me</button>`;
+    $("adWarnGo").onclick = () => document.getElementById("v-" + bad[0].id)?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
   const opts = c.videos.map(v => `<option value="${v.id}"></option>`).join("");
   for (const sel of [$("loopAdd"), $("sVideo")]) {
@@ -893,12 +923,7 @@ $("videoForm").onsubmit = async e => {
     if (kind !== "live") c.loop.push(v.id);
     $("vMsg").innerHTML = `<span class="ok">✓ Added "${title}"` + (kind !== "live" ? " and put it at the end of the loop." : ". Give it a time slot in step 4.") + "</span>";
   } else $("vMsg").innerHTML = `<span class="ok">✓ Saved "${title}".</span>`;
-  // Ad length rule (owner, 2026-10-06): ads are 10, 20, 30, 40, 50 or 60 seconds; a reminder when one isn't.
-  if (kind === "ad") {
-    const near = Math.round(secs / 10) * 10;
-    if (secs > 61) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${lengthText(secs)} long. Ads should be at most 1 minute (10, 20, 30, 40, 50 or 60 seconds).</span>`;
-    else if (Math.abs(secs - near) > 1 || near < 10) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${secs} seconds. Ads should be 10, 20, 30, 40, 50 or 60 seconds (nearest: ${Math.min(60, Math.max(10, near))}).</span>`;
-  }
+  if (adProblem(v)) $("vMsg").innerHTML += `<br><span class="err">⚠ ${adProblem(v)}</span>`;
   resetVideoForm();
   changed(); renderAll();
 };
@@ -965,7 +990,8 @@ function renderLoop() {
   const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
   c.loop = c.loop.filter(id => byId[id]);
   $("loop").innerHTML = "";
-  let at = 0;
+  let at = 0, longBreak = null;
+  const isShowV = x => ["programme", "live", "trailers", "music", "list"].includes(kindOf(x || {}));
   c.loop.forEach((id, i) => {
     const v = byId[id];
     const d = document.createElement("div");
@@ -980,8 +1006,22 @@ function renderLoop() {
     d.querySelector('[data-a=up]').onclick = () => move(i - 1);
     d.querySelector('[data-a=down]').onclick = () => move(i + 1);
     d.querySelector('[data-a=x]').onclick = () => { c.loop.splice(i, 1); changed(); renderAll(); };
+    // A break (ads and promos between two programmes) over 60 s: mark every item in it.
+    let st = i; while (st > 0 && !isShowV(byId[c.loop[st - 1]])) st--;
+    if (!isShowV(v)) {
+      let t = 0; for (let j = st; j < c.loop.length && !isShowV(byId[c.loop[j]]); j++) t += byId[c.loop[j]].secs > 0 ? byId[c.loop[j]].secs : 0;
+      if (t > 61) {
+        if (!longBreak) longBreak = d;
+        d.querySelector(".meta").insertAdjacentHTML("afterbegin", `<span class="err">⚠ This break is ${Math.round(t)} s, over 60 s: tap ✕ on one of its ads, or ▲ ▼ to move one next to another programme · </span>`);
+      }
+    }
     $("loop").appendChild(d);
   });
+  $("breakWarn").classList.toggle("hidden", !longBreak);
+  if (longBreak) {
+    $("breakWarn").innerHTML = `<b class="err">⚠ An ad break in the loop is over 60 seconds.</b> Its ads are marked in red. <button class="btn" type="button" id="breakWarnGo">Show me</button>`;
+    $("breakWarnGo").onclick = () => longBreak.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
   if (!c.loop.length) $("loop").innerHTML = '<p class="small">The loop is empty. Between time slots the channel will be off air.</p>';
   $("loopTotal").textContent = lengthText(at) || "0:00";
 }
