@@ -23,10 +23,11 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHANNEL = os.path.join(ROOT, "docs", "channel")
 
-# Since 2026-10-07 the owner wants Bazaar TV about 99% Urdu and Hindi: only Hindi and Urdu uploaders
+# Since 2026-10-07 the owner wants Bazaar TV 100% Urdu and Hindi: only Hindi and Urdu uploaders
 # (the English kids' channels, Get Curried and the English sports and travel channels are left out),
 # and a Hindi film in place of sports and travel.
-HINDI_KIDS = {"ChuChu TV Hindi", "Infobells Hindi"}
+# Infobells Hindi's uploads are mostly English rhymes, so only ChuChu TV Hindi.
+HINDI_KIDS = {"ChuChu TV Hindi"}
 URDU_HINDI_COOKING = {"Food Fusion", "Kitchen with Amna", "Masala TV", "Shireen Anwar", "Sanjeev Kapoor",
                       "Ranveer Brar", "Kabita's Kitchen"}
 # name: (source lists, kind, about how many minutes, shortest and longest video in minutes, title filter,
@@ -38,7 +39,8 @@ BLOCKS = {
     "cooking": (["cooking"], "cooking", 20, (4, 16), None, None, URDU_HINDI_COOKING),
     "comedy": (["comedy"], "comedy", 25, (3, 26), None, None, {"Taarak Mehta"}),
     # One whole Hindi film, an hour and a half to two and a half hours.
-    "film": (["filmein", "hindi"], "film", 90, (80, 150), None, r"bhojpuri|trailer|teaser|scene|comedy scenes|songs", None),
+    "film": (["filmein", "hindi"], "film", 90, (80, 150), r"hindi|urdu|[\u0900-\u097F]",
+             r"bhojpuri|marathi|punjabi|gujarati|bengali|english|trailer|teaser|scene|songs", None),
 }
 TITLES = {"kids": "Kids' time", "drama": "Drama", "cooking": "Cooking", "comedy": "Comedy", "film": "Hindi film"}
 

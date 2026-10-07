@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Builds Bazaar TV's block of popular music videos (the owner's wish, 2026-10-06): the newest official
-videos in Hindi and Urdu (since 2026-10-07: the owner wants Bazaar TV about 99% Urdu and Hindi) from the music labels' and artists' own YouTube channels,
+videos in Hindi and Urdu (since 2026-10-07: the owner wants Bazaar TV 100% Urdu and Hindi) from the music labels' and artists' own YouTube channels,
 played in YouTube's own player, locked like Bazaar Hits (docs/channel/block.html). Nothing is
 downloaded or re-hosted.
 

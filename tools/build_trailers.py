@@ -33,7 +33,7 @@ MAX_DAYS = 60
 # A trailer or teaser runs from about half a minute to five minutes.
 SECS = (25, 330)
 # The whole block, about 35 minutes. Since 2026-10-07 only Hindi and Pakistani films: the owner wants
-# Bazaar TV about 99% Urdu and Hindi.
+# Bazaar TV 100% Urdu and Hindi.
 TARGET_SECS = 35 * 60
 # At most this many trailers of one film (a teaser and a trailer are both fine).
 PER_FILM = 2
