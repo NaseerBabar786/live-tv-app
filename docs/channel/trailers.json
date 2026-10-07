@@ -1,7 +1,7 @@
 {
  "name": "آنے والی فلموں کے ٹریلر",
- "built": "2026-10-07 17:48 UTC",
- "secs": 2097,
+ "built": "2026-10-07 18:34 UTC",
+ "secs": 2098,
  "videos": [
   {
    "id": "SoTw56f1-OA",
@@ -59,6 +59,51 @@
    "kind": "trailer"
   },
   {
+   "id": "_6Ix1VF_yWM",
+   "title": "\"Krrish 3 Trailer\" Official | Hrithik Roshan, Priyanka Chopra, Vivek Oberoi",
+   "label": "T-Series",
+   "lang": "Hindi",
+   "secs": 133,
+   "found": "2026-10-07",
+   "kind": "trailer"
+  },
+  {
+   "id": "r4HusFmN4uw",
+   "title": "120 Bahadur | Official Trailer | Farhan Akhtar | Raashii Khanna | 21st November",
+   "label": "Excel Movies",
+   "lang": "Hindi",
+   "secs": 168,
+   "found": "2026-10-07",
+   "kind": "trailer"
+  },
+  {
+   "id": "owPuQjInzO8",
+   "title": "2.0 - Official Teaser [Hindi] | Rajinikanth | Akshay Kumar | A R Rahman | Shankar | Subaskaran",
+   "label": "Dharma Productions",
+   "lang": "Hindi",
+   "secs": 92,
+   "found": "2026-10-07",
+   "kind": "trailer"
+  },
+  {
+   "id": "_qOl_7qfPOM",
+   "title": "2.0 - Official Trailer [Hindi] | Rajinikanth | Akshay Kumar | A R Rahman | Shankar | Subaskaran",
+   "label": "Dharma Productions",
+   "lang": "Hindi",
+   "secs": 127,
+   "found": "2026-10-07",
+   "kind": "trailer"
+  },
+  {
+   "id": "_HVOgUwv1YM",
+   "title": "Attack | Official Teaser | John A, Jacqueline F, Rakul Preet S | Lakshya Raj Anand | Jan 28th",
+   "label": "Pen Movies",
+   "lang": "Hindi",
+   "secs": 84,
+   "found": "2026-10-07",
+   "kind": "trailer"
+  },
+  {
    "id": "A5WCg26ZKx0",
    "title": "TRAILER: BESHARAM | RELEASING THIS SUNDAY, AT 8:00 PM | ARY FILMS",
    "label": "ARY Films",
@@ -96,65 +141,11 @@
    "kind": "trailer"
   },
   {
-   "id": "Y5Q8z66aV9U",
-   "title": "Aag Lagay Basti Mein | Official Trailer | Fahad Mustafa & Mahira Khan | This Eid",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 141,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "vhxpwaHbW_Q",
-   "title": "Azaadi | Official Trailer | ARY Films",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 89,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "-pqPuTQWr4g",
-   "title": "FRAUD - MOVIE | TRAILER | Saba Qamar | Ahsan Khan | Mikaal Zulfiqar | ARY FILMS",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 73,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "QZ2zrfK0A90",
-   "title": "HABS - MOVIE | TRAILER | Feroze Khan | Ushna Shah | Ayesha Omar | ARY FILMS",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 54,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "LeSewoq4uW4",
-   "title": "KUCH ANKAHI - MOVIE | TRAILER | Bilal Abbas | Sajal Aly | ARY FILMS",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 69,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
    "id": "dCQ09ijWyWE",
    "title": "Lahore Se AAgay Trailer",
    "label": "Showcase Films",
    "lang": "Pakistani",
    "secs": 179,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "MhMHXeewXN4",
-   "title": "Parchi | | Official Trailer | Ali Rehman Khan | Hareem Farooq | ARY Films",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 177,
    "found": "2026-10-07",
    "kind": "trailer"
   }
