@@ -154,13 +154,14 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
  */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebPreview(url: String, modifier: Modifier = Modifier, onFallback: (() -> Unit)? = null) {
+fun WebPreview(url: String, modifier: Modifier = Modifier, still: Boolean = true, onFallback: (() -> Unit)? = null) {
     var webView by remember { mutableStateOf<WebView?>(null) }
     // TVs play the sound here but leave YouTube's picture black (full screen is fine), so on a TV the page
-    // shows the playing video's own picture instead (1.9.60).
+    // shows the playing video's own picture instead (1.9.60). [still] false: the moving video, for a box
+    // with nothing around it that covers the TV's video (1+List, 1.9.74).
     val context = LocalContext.current
     val page = remember(url) {
-        if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)) "$url&still=1" else url
+        if (still && context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)) "$url&still=1" else url
     }
     DisposableEffect(Unit) {
         onDispose { webView?.destroy() }
