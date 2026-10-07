@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+<title>Cable TV</title>
+<style>
+  body { margin: 0; background: #1E1E2E; color: #E6E1E5; font: 16px 'Segoe UI', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; }
+  .box { max-width: 560px; padding: 24px; text-align: center; }
+  h1 { font-size: 22px; } p { color: #CACAD8; line-height: 1.45; }
+  button { font: inherit; font-weight: 700; padding: 10px 20px; margin: 8px; border-radius: 10px; border: 2px solid transparent; cursor: pointer; }
+  button:focus { outline: none; border-color: #FFD600; }
+  #back { background: #E53935; color: #fff; } #again { background: #2A2A3C; color: #fff; }
+  #err { font-size: 12px; opacity: .6; word-break: break-word; }
+</style>
+</head>
+<body>
+<div class="box">
+  <img src="logo.svg" width="64" height="64" alt="">
+  <h1>Cable TV didn't start properly</h1>
+  <p>This version closed by itself while starting. We've been told about it and will fix it.
+     Press <b>Go back</b> to put back the version that worked, or <b>Try again</b>.</p>
+  <div><button id="back">Go back</button><button id="again">Try again</button></div>
+  <p id="status"></p>
+  <p id="err"></p>
+</div>
+<script>
+  const $ = (id) => document.getElementById(id);
+  pc.rescueInfo().then((i) => { $('err').textContent = `Version ${i.version}` + (i.lastError ? `: ${i.lastError}` : ''); });
+  pc.on('install-progress', (p) => { $('status').textContent = `Downloading… ${Math.round(p * 100)}%`; });
+  $('back').onclick = async () => {
+    $('status').textContent = 'Downloading the version that worked…';
+    try { const r = await pc.rescueGoBack(); if (r && r.opened) $('status').textContent = 'The download page is open in your browser.'; }
+    catch (e) { $('status').textContent = "The download didn't work. Check the internet connection and try again."; }
+  };
+  $('again').onclick = () => pc.rescueTryAgain();
+  $('back').focus();
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') (document.activeElement === $('back') ? $('again') : $('back')).focus();
+  });
+</script>
+</body>
+</html>
