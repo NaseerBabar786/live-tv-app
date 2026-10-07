@@ -112,6 +112,118 @@
    "voice": true,
    "credit": "",
    "hash": "cb09255b4484"
+  },
+  "bazaar-tv-news-headlines-all-0800": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 8 AM",
+   "day": "all",
+   "time": "08:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0800.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "a92df6952c45"
+  },
+  "bazaar-tv-news-the-full-report-all-0900": {
+   "title": "Bazaar TV News: The Full Report",
+   "when": "Every day · 9 AM",
+   "day": "all",
+   "time": "09:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0900.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "27498cb168e1"
+  },
+  "bazaar-tv-news-headlines-all-1000": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 10 AM",
+   "day": "all",
+   "time": "10:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1000.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "cdcfb541cac7"
+  },
+  "bazaar-tv-news-headlines-all-1100": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 11 AM",
+   "day": "all",
+   "time": "11:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1100.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "28a3e4d907ba"
+  },
+  "bazaar-tv-news-the-full-report-all-1200": {
+   "title": "Bazaar TV News: The Full Report",
+   "when": "Every day · 12 PM",
+   "day": "all",
+   "time": "12:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-1200.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "62fbd4546cf8"
+  },
+  "bazaar-tv-news-headlines-all-1300": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 1 PM",
+   "day": "all",
+   "time": "13:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1300.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "e7d658162a5d"
+  },
+  "bazaar-tv-news-headlines-all-1400": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 2 PM",
+   "day": "all",
+   "time": "14:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1400.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "4fb85751628a"
+  },
+  "bazaar-tv-news-the-full-report-all-1500": {
+   "title": "Bazaar TV News: The Full Report",
+   "when": "Every day · 3 PM",
+   "day": "all",
+   "time": "15:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-1500.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "d1d3e5ecb007"
   }
  }
 }
