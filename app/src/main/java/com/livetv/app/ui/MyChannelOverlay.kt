@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import kotlinx.coroutines.delay
+import com.livetv.app.BuildConfig
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -23,6 +26,22 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.livetv.app.data.Channel
 import com.livetv.app.data.MyChannel
+
+/**
+ * The locked page for the run of YouTube videos [channel] has on now (Bazaar TV's upcoming trailers),
+ * or null while our own player plays; checked every second, so the screen switches when the run starts and ends.
+ */
+@Composable
+fun rememberBlockPage(channel: Channel?): String? {
+    val configs by MyChannel.configs.collectAsStateWithLifecycle()
+    val page by produceState(MyChannel.blockPage(channel, BuildConfig.VERSION_CODE), channel?.url, configs) {
+        while (true) {
+            value = MyChannel.blockPage(channel, BuildConfig.VERSION_CODE)
+            delay(1_000)
+        }
+    }
+    return page
+}
 
 /**
  * One of the owner's channels' logo in a corner of the picture and its scrolling line along the

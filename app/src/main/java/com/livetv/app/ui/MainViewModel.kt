@@ -9,6 +9,7 @@ import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Famelack
 import com.livetv.app.data.MyChannel
 import com.livetv.app.Edition
+import com.livetv.app.Plans
 import com.livetv.app.data.Playlist
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -19,6 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -56,6 +58,8 @@ data class UiState(
     val provider: String = ChannelRepository.PROVIDER_FAMELACK,
     /** Whether MTA's channels and Library programmes are shown (Cable TV only). */
     val showMta: Boolean = false,
+    /** A Cable TV package without all channels: only [Plans.freeChannel]s are listed. */
+    val freeOnly: Boolean = false,
 ) {
     /** Stream Player Plus with no playlist yet: the screen asks the viewer to add one. */
     val needsPlaylist: Boolean
@@ -75,6 +79,7 @@ data class UiState(
 
     private val inGroup: List<Channel>
         get() = channels.filter {
+            if (freeOnly && !Plans.freeChannel(it)) return@filter false
             when (filter) {
                 FILTER_ALL -> true
                 FILTER_FAVORITES -> it.id in favorites || MyChannel.isMine(it)
@@ -147,6 +152,19 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         reload()
+        // Cable TV's Free package lists only its few channels; the channel watched last moves onto one of them.
+        viewModelScope.launch {
+            combine(Plans.current, Plans.features) { _, _ -> !Plans.has(Plans.Feature.AllChannels) }.collect { freeOnly ->
+                _state.update { s ->
+                    val last = s.channels.firstOrNull { it.id == s.lastWatchedId }
+                    val keep = !freeOnly || last == null || Plans.freeChannel(last)
+                    s.copy(
+                        freeOnly = freeOnly,
+                        lastWatchedId = if (keep) s.lastWatchedId else s.channels.firstOrNull(Plans::freeChannel)?.id,
+                    )
+                }
+            }
+        }
         // The owner's own channels (tv.bulkbazaar.ca/studio) join the list when they're switched on.
         if (Edition.LIVE_TV) {
             MyChannel.init(app)
@@ -189,6 +207,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                         val favorites = numbered.filter { c -> c.id in it.favorites }
                         val onFavorites = opening && favorites.isNotEmpty()
                         val last = repo.lastChannelUrl?.let { url -> numbered.firstOrNull { c -> c.url == url } }
+                            ?.takeIf { c -> !it.freeOnly || Plans.freeChannel(c) }
                         val start = when {
                             !opening -> it.lastWatchedId
                             onFavorites -> (last?.takeIf { c -> c.id in it.favorites } ?: favorites.first()).id
@@ -291,6 +310,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private var tipChecked = false
 
     fun play(channel: Channel) {
+        if (!Plans.allowsChannel(channel)) {
+            Plans.ask(channel.name, Plans.Feature.AllChannels)
+            return
+        }
         if (!tipChecked) {
             tipChecked = true
             if (_state.value.favorites.size < 6) {

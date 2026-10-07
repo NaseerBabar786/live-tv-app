@@ -1,0 +1,28 @@
+{
+ "name": "Sports highlights",
+ "built": "2026-10-07 00:04 UTC",
+ "secs": 1518,
+ "videos": [
+  {
+   "id": "VQjiI2fUOek",
+   "title": "Who Has The Coldest Celebration in The Premier League? | Fill In The Blank",
+   "label": "Premier League",
+   "secs": 595,
+   "kind": "sports"
+  },
+  {
+   "id": "PorfJhrc6JY",
+   "title": "Australia v India 2025-26 | Third T20I",
+   "label": "Cricket Australia",
+   "secs": 482,
+   "kind": "sports"
+  },
+  {
+   "id": "HbI12v42QVo",
+   "title": "Ducks Knock off Panthers in OT | Full Overtime",
+   "label": "NHL",
+   "secs": 441,
+   "kind": "sports"
+  }
+ ]
+}

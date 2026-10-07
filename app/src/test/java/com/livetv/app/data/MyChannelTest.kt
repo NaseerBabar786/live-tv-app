@@ -57,18 +57,20 @@ class MyChannelTest {
         val c = config("""[{"day":"all","time":"21:00","video":"b"}]""", """["a","ad"]""")
         val now = MyChannel.whatsOn(c, at(20, 59, 50)) as MyChannel.Now.Playing
         assertTrue(now.untilMs <= at(21, 0))
-        // Everyone is at the same place in the loop, which started again when yesterday's 9 PM show ended.
+        // Everyone is at the same place in the loop, which started from the top at midnight.
         val total = 620_000L
-        val pos = Math.floorMod(at(20, 59, 50) - (at(21, 20) - 86_400_000L), total)
+        val pos = Math.floorMod(at(20, 59, 50) - at(0, 0), total)
         assertEquals(if (pos < 600_000) "a" else "ad", now.video.id)
     }
 
     @Test
-    fun loopStartsFromTheTopAfterASlot() {
+    fun loopWaitsDuringASlotAndCarriesOn() {
         val c = config("""[{"day":"all","time":"20:00","video":"a"}]""", """["b","ad"]""")
-        val now = MyChannel.whatsOn(c, at(20, 10, 30)) as MyChannel.Now.Playing
-        assertEquals("b", now.video.id)
-        assertEquals(30_000L, now.offsetMs)
+        // At 20:00 the loop stops for the 10-minute slot; at 20:10:30 it is 30 s further on than at 20:00.
+        val before = MyChannel.whatsOn(c, at(19, 59, 59)) as MyChannel.Now.Playing
+        val after = MyChannel.whatsOn(c, at(20, 10, 0)) as MyChannel.Now.Playing
+        assertEquals(before.video.id, after.video.id)
+        assertEquals(before.offsetMs + 1_000L, after.offsetMs)
     }
 
     @Test
@@ -127,5 +129,65 @@ class MyChannelTest {
         assertEquals("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png?v=4", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
         assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
         assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
+    }
+
+    private val trailers = JSONObject(
+        """{"videos":[{"id":"AAAAAAAAAAA","title":"T1","secs":120},{"id":"BBBBBBBBBBB","title":"T2","secs":60},{"id":"bad","secs":5}]}""",
+    )
+
+    @Test
+    fun trailerListTakesItsEntrysPlace() {
+        val saved = JSONObject(
+            """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
+              {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":600},
+              {"id":"tr","title":"Upcoming trailers","url":"https://tv.bulkbazaar.ca/channel/trailers.json","secs":0,"kind":"trailers"}],
+              "slots":[{"day":"all","time":"20:00","video":"tr"}],"loop":["a","tr","a"]}""",
+        )
+        val out = MyChannel.expand(saved) { url -> assertEquals("https://tv.bulkbazaar.ca/channel/trailers.json", url); trailers }
+        assertEquals(listOf("a", "tr-AAAAAAAAAAA", "tr-BBBBBBBBBBB", "a"), (0 until 4).map { out.getJSONArray("loop").getString(it) })
+        assertEquals(0, out.getJSONArray("slots").length())
+        val c = MyChannel.parse(out)
+        assertEquals("AAAAAAAAAAA", c.videos.first { it.id == "tr-AAAAAAAAAAA" }.youtube)
+        // Not reachable: the entry is simply skipped, as older apps do.
+        val offline = MyChannel.expand(saved) { null }
+        assertEquals(listOf("a", "a"), (0 until offline.getJSONArray("loop").length()).map { offline.getJSONArray("loop").getString(it) })
+    }
+
+    @Test
+    fun trailersPlayAsOneBlockOnOurPage() {
+        val saved = JSONObject(
+            """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
+              {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":600},
+              {"id":"tr","url":"https://tv.bulkbazaar.ca/channel/trailers.json","secs":0,"kind":"trailers"}],
+              "slots":[],"loop":["a","tr"]}""",
+        )
+        val c = MyChannel.parse(MyChannel.expand(saved) { trailers })
+        // The loop (13 minutes) starts at midnight: film A for 10 minutes, then the trailers for 3.
+        val round = at(0, 0) + 100 * 780_000L
+        assertEquals(null, MyChannel.block(c, round + 300_000))
+        val first = MyChannel.block(c, round + 630_000)!!
+        val second = MyChannel.block(c, round + 750_000)!!
+        assertEquals(listOf("AAAAAAAAAAA", "BBBBBBBBBBB"), first.videos.map { it.youtube })
+        assertEquals(round + 600_000, first.startMs)
+        assertEquals(round + 780_000, first.endMs)
+        // The same block (and page address) all the way through.
+        assertEquals(first.startMs, second.startMs)
+        assertEquals(first.endMs, second.endMs)
+    }
+
+    @Test
+    fun weeklyShowPlaysTheNextEpisodeEachWeek() {
+        // Tuesdays at 20:00 from 2026-09-22: episode 1 on Sep 22, 2 on Sep 29, 3 on Oct 6.
+        val c = config("""[{"day":"tue","time":"20:00","video":"a","show":"Tuesday Drama","episodes":["a","b","live"],"since":"2026-09-22"}]""")
+        val now = MyChannel.whatsOn(c, at(20, 1)) as MyChannel.Now.Playing
+        assertEquals("live", now.video.id)
+        assertEquals("Tuesday Drama", now.show)
+        assertEquals(2, MyChannel.airingsBefore("tue", "2026-09-22", "2026-10-06"))
+        // After the last episode it starts again from episode 1.
+        assertEquals(3, MyChannel.airingsBefore("tue", "2026-09-22", "2026-10-13"))
+        // Before its first date it plays episode 1.
+        assertEquals(0, MyChannel.airingsBefore("tue", "2026-10-13", "2026-10-06"))
+        assertEquals(5, MyChannel.airingsBefore("weekdays", "2026-10-05", "2026-10-12"))
+        assertEquals(2, MyChannel.airingsBefore("weekend", "2026-10-02", "2026-10-05"))
     }
 }

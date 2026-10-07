@@ -1,0 +1,35 @@
+{
+ "name": "Travel",
+ "built": "2026-10-07 00:04 UTC",
+ "secs": 1111,
+ "videos": [
+  {
+   "id": "go5uXCeC-CE",
+   "title": "The Ultimate LOCAL Guide To Cartagena | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "secs": 255,
+   "kind": "travel"
+  },
+  {
+   "id": "LnTsw29Hutc",
+   "title": "Edinburgh Travel Guide: MUST-SEE Spots in Old Town, New Town and More",
+   "label": "Expedia",
+   "secs": 481,
+   "kind": "travel"
+  },
+  {
+   "id": "rEfuZRfeWVY",
+   "title": "Staying INSIDE Kruger National Park | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "secs": 183,
+   "kind": "travel"
+  },
+  {
+   "id": "jui_We1VPNA",
+   "title": "Jam with Anirudh Ravichander and Arqam Al Abri: A musical collaboration beyond borders",
+   "label": "Visit Dubai",
+   "secs": 192,
+   "kind": "travel"
+  }
+ ]
+}

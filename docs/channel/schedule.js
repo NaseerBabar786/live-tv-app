@@ -2,7 +2,8 @@
 // The same rules as the app (MyChannel.kt), so the website and every TV show the same thing.
 //
 // Settings: { name, logo, logoCorner, active, tz, ticker, tickerOn,
-//             videos: [{ id, title, url, secs, kind }], slots: [{ day, time, video }], loop: [ids] }
+//             videos: [{ id, title, url, secs, kind }], slots: [{ day, time, video, show?, episodes?, since? }], loop: [ids] }
+// A slot with episodes is a weekly show (drama, serial): one episode per airing from [since], then from episode 1 again.
 
 const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 export const TEST_SCHEDULE_URL = "https://tv.bulkbazaar.ca/channel/test-schedule.json";
@@ -91,6 +92,32 @@ export function onDay(day, date, weekday) {
   return day === date;
 }
 
+/** Days since 1970-01-01 for "yyyy-mm-dd"; null when it isn't a date. */
+function dayNumber(date) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date || "");
+  return m ? Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / 86400000) : null;
+}
+
+/** How many times a slot on [day] came round from [since] up to (not counting) [date]; 0 before [since]. Same as the app. */
+export function airingsBefore(day, since, date) {
+  const from = dayNumber(since), to = dayNumber(date);
+  if (from == null || to == null || to <= from) return 0;
+  const n = to - from;
+  const startWeekday = (((from + 4) % 7) + 7) % 7; // 1970-01-01 was a Thursday; 0 = Sunday
+  let perWeek = 0;
+  for (let w = 0; w < 7; w++) if (onDay(day, "", w)) perWeek++;
+  let count = Math.floor(n / 7) * perWeek;
+  for (let i = 0; i < n % 7; i++) if (onDay(day, "", (startWeekday + i) % 7)) count++;
+  return count;
+}
+
+/** The video slot [s] plays on [date]: for a weekly show, that airing's episode. */
+export function episodeOn(s, date, byId) {
+  const eps = (s.episodes || []).filter(id => byId[id]);
+  if (!eps.length) return byId[s.video];
+  return byId[eps[airingsBefore(s.day, s.since, date) % eps.length]];
+}
+
 /** The slot start times around [now]: yesterday, today and tomorrow. */
 function starts(c, now) {
   const tz = c.tz || "America/Toronto";
@@ -99,10 +126,11 @@ function starts(c, now) {
   for (const offset of [-1, 0, 1]) {
     const { date, weekday } = parts(now + offset * 86400000, tz);
     for (const s of c.slots || []) {
-      const video = byId[s.video];
       const m = /^(\d{1,2}):(\d{2})$/.exec(s.time || "");
-      if (!video || !m || !onDay(s.day, date, weekday)) continue;
-      out.push({ at: zonedTime(date, +m[1], +m[2], tz), video, dated: (s.day || "").length === 10 });
+      if (!m || !onDay(s.day, date, weekday)) continue;
+      const video = episodeOn(s, date, byId);
+      if (!video) continue;
+      out.push({ at: zonedTime(date, +m[1], +m[2], tz), video, dated: (s.day || "").length === 10, show: s.show || "" });
     }
   }
   out.sort((a, b) => a.at - b.at || (a.dated ? -1 : 1));
@@ -121,24 +149,29 @@ export function whatsOn(c, now = Date.now()) {
   const nextAt = next ? next.at : Infinity;
   if (current) {
     const end = current.video.secs > 0 ? current.at + current.video.secs * 1000 : Infinity;
-    if (now < end) return { video: current.video, offset: now - current.at, until: Math.min(end, nextAt), slot: true };
+    if (now < end) return { video: current.video, offset: now - current.at, until: Math.min(end, nextAt), slot: true, show: current.show };
   }
   // After a time slot the loop starts again from the top; before any slot it runs on the clock.
-  let anchor = 0;
+  // The loop starts from the top at midnight (the channel's time) and waits during each slot, carrying
+  // on after it (since 1.9.69, for the hourly news). Same as MyChannel.whatsOn in the app.
+  const tz = c.tz || "America/Toronto";
+  const midnight = zonedTime(parts(now, tz).date, 0, 0, tz);
+  let slotTime = 0;
   all.forEach((s, i) => {
-    if (s.at > now) return;
+    if (s.at >= now) return;
     const cut = all[i + 1] ? all[i + 1].at : Infinity;
-    const end = Math.min(s.video.secs > 0 ? s.at + s.video.secs * 1000 : Infinity, cut);
-    if (end <= now) anchor = Math.max(anchor, end);
+    const end = Math.min(s.video.secs > 0 ? s.at + s.video.secs * 1000 : Infinity, cut, now);
+    slotTime += Math.max(0, end - Math.max(s.at, midnight));
   });
+  const anchor = midnight + slotTime;
   const loopIds = (c.loop || []).filter(id => byId[id]);
   const loop = loopIds.map(id => byId[id]).filter(v => v.secs > 0);
   const total = loop.reduce((t, v) => t + v.secs * 1000, 0);
   if (total > 0) {
     let pos = (((now - anchor) % total) + total) % total;
-    for (const v of loop) {
+    for (const [i, v] of loop.entries()) {
       const len = v.secs * 1000;
-      if (pos < len) return { video: v, offset: pos, until: Math.min(now - pos + len, nextAt), slot: false };
+      if (pos < len) return { video: v, offset: pos, until: Math.min(now - pos + len, nextAt), slot: false, loopIndex: i, nextAt };
       pos -= len;
     }
   }
@@ -159,10 +192,12 @@ export function guide(c, from = Date.now(), hours = 12, max = 60) {
       t = now.nextAt;
       continue;
     }
-    const start = t - now.offset;
-    if (!out.length || out[out.length - 1].at !== start || out[out.length - 1].video.id !== now.video.id) {
-      out.push({ at: start, video: now.video, slot: now.slot });
-    }
+    // Each entry starts and ends at real clock times. A programme a time slot (the news) cut into
+    // comes back after it as its own entry, "resumed", carrying on where it stopped.
+    const start = out.length ? t : t - now.offset;
+    const prev = out[out.length - 1];
+    if (prev && prev.video.id === now.video.id && prev.end === t && !now.slot) prev.end = now.until;
+    else out.push({ at: start, end: now.until, video: now.video, slot: now.slot, show: now.show || "", resumed: !!out.length && now.offset > 1000 });
     if (!isFinite(now.until)) break;
     t = Math.max(now.until, t + 1000);
   }
@@ -180,7 +215,7 @@ export function lengthText(secs) {
 }
 
 /** Plays [c] in [video] (a <video> element) as live TV: joins the current programme at the right spot. */
-export function tuneIn(video, c, { onChange, onOff } = {}) {
+export function tuneIn(video, c, { onChange, onOff, onBlock } = {}) {
   let timer = null, hls = null, playing = null, stopped = false;
   async function step() {
     clearTimeout(timer);
@@ -191,6 +226,7 @@ export function tuneIn(video, c, { onChange, onOff } = {}) {
       playing = null;
       if (hls) { hls.destroy(); hls = null; }
       video.removeAttribute("src"); video.load();
+      onBlock && onBlock(null);
       onOff && onOff(on);
       timer = setTimeout(step, Math.min(60000, Math.max(1000, (on.nextAt || now + 60000) - now)));
       return;
@@ -199,7 +235,13 @@ export function tuneIn(video, c, { onChange, onOff } = {}) {
     const key = on.video.url + "|" + zero;
     if (key !== playing) {
       playing = key;
-      await load(on.video.url, zero);
+      // Bazaar TV's upcoming trailers play on our locked YouTube page (onBlock), not in this player.
+      const block = youtubeId(on.video.url) ? blockAt(c, now) : null;
+      if (block) {
+        if (hls) { hls.destroy(); hls = null; }
+        video.pause(); video.removeAttribute("src"); video.load();
+      } else await load(on.video.url, zero);
+      onBlock && onBlock(block);
       onChange && onChange(on);
     }
     timer = setTimeout(step, Math.min(60000, Math.max(1000, on.until - now)));
@@ -228,4 +270,69 @@ export function tuneIn(video, c, { onChange, onOff } = {}) {
     update(newConfig) { c = newConfig; playing = null; step(); },
     stop() { stopped = true; clearTimeout(timer); if (hls) hls.destroy(); video.pause(); },
   };
+}
+
+/** The YouTube video id of [url] (Bazaar TV's upcoming trailers), or null. */
+export function youtubeId(url) {
+  const m = /^https?:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/.exec(url || "");
+  return m ? m[1] : null;
+}
+
+/**
+ * The run of YouTube videos [c] has on at [now] (Bazaar TV's upcoming trailers): { videos, start, end },
+ * played on channel/block.html; null while our own player plays. Same as MyChannel.block in the app.
+ */
+export function blockAt(c, now = Date.now()) {
+  const on = whatsOn(c, now);
+  if (on.off || !youtubeId(on.video.url)) return null;
+  const begun = now - on.offset;
+  if (on.loopIndex === undefined) return { videos: [on.video], start: begun, end: on.until };
+  const byId = Object.fromEntries((c.videos || []).map(v => [v.id, v]));
+  const loop = (c.loop || []).map(id => byId[id]).filter(v => v && v.secs > 0);
+  let first = on.loopIndex, last = on.loopIndex, start = begun, end = begun + on.video.secs * 1000;
+  while (first > 0 && youtubeId(loop[first - 1].url)) { first--; start -= loop[first].secs * 1000; }
+  while (last + 1 < loop.length && youtubeId(loop[last + 1].url)) { last++; end += loop[last].secs * 1000; }
+  // The next time slot (the news) cuts it short; the rest follows after it, on a new page.
+  return { videos: loop.slice(first, last + 1), start, end: Math.min(end, on.nextAt) };
+}
+
+/** The address of channel/block.html playing [b] for channel settings [c]. */
+export function blockPage(c, b) {
+  const p = new URLSearchParams({ at: b.start, until: b.end, ids: b.videos.map(v => youtubeId(v.url)).join(","),
+    secs: b.videos.map(v => v.secs).join(","), name: c.name || "Bazaar TV", corner: c.logoCorner || "tr" });
+  if (c.logo) p.set("logo", c.logo);
+  if (c.tickerOn !== false && c.ticker) p.set("tick", c.ticker);
+  return "https://tv.bulkbazaar.ca/channel/block.html?" + p;
+}
+
+/**
+ * [c] with each "trailers", "music" or "list" entry replaced by the videos of its list (rebuilt every day), as the app
+ * does (MyChannel.expand): each loop place gets the whole list; a time slot can't hold a list.
+ */
+const listCache = {};
+export async function expand(c) {
+  const lists = (c.videos || []).filter(v => ["trailers", "music", "list"].includes(v.kind) && /^https?:/.test(v.url || ""));
+  if (!lists.length) return c;
+  const ids = {}, videos = [];
+  for (const v of c.videos) {
+    if (!lists.includes(v)) { videos.push(v); continue; }
+    let list = [];
+    try {
+      // Fetched at most every 10 minutes (the lists change once a day).
+      const hit = listCache[v.url];
+      if (hit && Date.now() - hit.at < 600000) list = hit.videos;
+      else {
+        list = (await (await fetch(v.url, { cache: "no-store" })).json()).videos || [];
+        listCache[v.url] = { at: Date.now(), videos: list };
+      }
+    } catch {}
+    ids[v.id] = [];
+    for (const t of list) {
+      if (!/^[\w-]{11}$/.test(t.id || "") || !(t.secs > 0)) continue;
+      const id = `${v.id}-${t.id}`;
+      if (!ids[v.id].includes(id)) videos.push({ id, title: t.title, url: "https://www.youtube.com/watch?v=" + t.id, secs: t.secs, kind: "programme" });
+      ids[v.id].push(id);
+    }
+  }
+  return { ...c, videos, loop: (c.loop || []).flatMap(id => ids[id] || [id]), slots: (c.slots || []).filter(s => !ids[s.video]) };
 }

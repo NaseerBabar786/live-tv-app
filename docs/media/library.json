@@ -288,6 +288,86 @@
    "poster": "media/livetv-tour-poster.jpg",
    "about": "100 s: every layout and feature on a Chromecast with Google TV (the old home page video).",
    "credit": "Our own video."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-the-full-report-all-0000",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0000.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 12 AM.",
+   "credit": "Our own promo with original music."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-headlines-all-0100",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0100.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 1 AM.",
+   "credit": "Our own promo with original music."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-headlines-all-0200",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0200.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 2 AM.",
+   "credit": "Our own promo with original music."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-the-full-report-all-0300",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0300.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 3 AM.",
+   "credit": "Our own promo with original music."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-headlines-all-0400",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0400.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 4 AM.",
+   "credit": "Our own promo with original music."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-headlines-all-0500",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0500.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 5 AM.",
+   "credit": "Our own promo with original music."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-the-full-report-all-0600",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0600.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 6 AM.",
+   "credit": "Our own promo with original music."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-headlines-all-0700",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0700.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 7 AM.",
+   "credit": "Our own promo with original music."
   }
  ]
 }

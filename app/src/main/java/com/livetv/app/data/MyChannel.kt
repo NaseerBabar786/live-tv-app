@@ -120,7 +120,10 @@ object MyChannel {
 
     fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
 
-    class Video(val id: String, val title: String, val url: String, /** 0 for a live stream. */ val seconds: Long)
+    class Video(val id: String, val title: String, val url: String, /** 0 for a live stream. */ val seconds: Long) {
+        /** The YouTube video this is, when it is one (Bazaar TV's upcoming trailers): it plays on our locked page. */
+        val youtube: String? = YouTube.videoId(url)
+    }
 
     class Slot(
         /** "all", "weekdays", "weekend", "mon".."sun", or a date "yyyy-MM-dd". */
@@ -128,6 +131,15 @@ object MyChannel {
         /** "HH:mm" in the channel's time zone. */
         val time: String,
         val video: String,
+        /**
+         * A weekly show (a drama, serial or series): its episodes' video ids, one per airing, in order,
+         * starting on [since] ("yyyy-MM-dd"); after the last one it starts again from episode 1.
+         * Empty for a slot that plays [video] every time. [video] is the first episode, for older apps.
+         */
+        val episodes: List<String> = emptyList(),
+        val since: String = "",
+        /** The show's name, for the guide and the viewing stats ("" when the slot has none). */
+        val show: String = "",
     )
 
     class Config(
@@ -153,7 +165,17 @@ object MyChannel {
     /** What to show at a moment. */
     sealed class Now {
         /** Play [video] from [offsetMs] until [untilMs] (wall clock), when the schedule moves on. */
-        class Playing(val video: Video, val offsetMs: Long, val untilMs: Long) : Now()
+        class Playing(
+            val video: Video,
+            val offsetMs: Long,
+            val untilMs: Long,
+            /** Its place in the loop list (without zero-length entries); -1 for a time slot or a live stream. */
+            val loopIndex: Int = -1,
+            /** When the next time slot starts (the loop waits then); Long.MAX_VALUE when none is booked. */
+            val nextSlotMs: Long = Long.MAX_VALUE,
+            /** The booked show, when a weekly show's slot is on. */
+            val show: String = "",
+        ) : Now()
         /** Nothing on; [next] starts at [nextAt] (null when nothing is booked). */
         class OffAir(val next: Video?, val nextAt: Long?) : Now()
     }
@@ -214,7 +236,8 @@ object MyChannel {
         val slots = o.optJSONArray("slots")?.let { a ->
             (0 until a.length()).mapNotNull { i ->
                 val s = a.optJSONObject(i) ?: return@mapNotNull null
-                Slot(s.optString("day", "all"), s.optString("time"), s.optString("video"))
+                val eps = s.optJSONArray("episodes")?.let { e -> (0 until e.length()).map { e.optString(it) }.filter { it.isNotEmpty() } }.orEmpty()
+                Slot(s.optString("day", "all"), s.optString("time"), s.optString("video"), eps, s.optString("since"), s.optString("show").trim())
             }
         }.orEmpty()
         val loop = o.optJSONArray("loop")?.let { a -> (0 until a.length()).map { a.optString(it) } }.orEmpty()
@@ -236,12 +259,14 @@ object MyChannel {
     fun now(channel: Channel?, nowMs: Long = System.currentTimeMillis()): Now =
         configOf(channel)?.let { whatsOn(it, nowMs) } ?: Now.OffAir(null, null)
 
-    private class Start(val at: Long, val video: Video, val dated: Boolean)
+    private class Start(val at: Long, val video: Video, val dated: Boolean, val show: String = "")
 
     /**
      * What [c] plays at [nowMs]. A slot plays its video from its start time to the end of the
-     * video, or until the next slot starts. Between slots the loop list plays back to back, from
-     * the top after each slot (and on the clock before the first), so every viewer is at the same place.
+     * video, or until the next slot starts. Between slots the loop list plays back to back: it starts
+     * from the top at midnight (the channel's time) and waits during each slot, carrying on where it
+     * was after it (since 1.9.69, for the hourly news; it used to start again from the top), so every
+     * viewer is at the same place. Same as whatsOn in docs/channel/schedule.js.
      */
     fun whatsOn(c: Config, nowMs: Long): Now {
         val byId = c.videos.associateBy { it.id }
@@ -255,29 +280,143 @@ object MyChannel {
         val nextAt = next?.at ?: Long.MAX_VALUE
         if (current != null) {
             val end = if (current.video.seconds > 0) current.at + current.video.seconds * 1000 else Long.MAX_VALUE
-            if (nowMs < end) return Now.Playing(current.video, nowMs - current.at, minOf(end, nextAt))
+            if (nowMs < end) return Now.Playing(current.video, nowMs - current.at, minOf(end, nextAt), show = current.show)
         }
-        // After a time slot the loop starts again from the top; before any slot it runs on the clock.
-        var anchor = 0L
+        // The loop's own clock: time since midnight, less the time slots took since then.
+        val midnight = Calendar.getInstance(tz).apply {
+            timeInMillis = nowMs
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        var slotTime = 0L
         starts.forEachIndexed { i, s ->
-            if (s.at > nowMs) return@forEachIndexed
+            if (s.at >= nowMs) return@forEachIndexed
             val cut = starts.getOrNull(i + 1)?.at ?: Long.MAX_VALUE
-            val end = minOf(if (s.video.seconds > 0) s.at + s.video.seconds * 1000 else Long.MAX_VALUE, cut)
-            if (end <= nowMs) anchor = maxOf(anchor, end)
+            val end = minOf(if (s.video.seconds > 0) s.at + s.video.seconds * 1000 else Long.MAX_VALUE, cut, nowMs)
+            slotTime += (end - maxOf(s.at, midnight)).coerceAtLeast(0)
         }
+        val anchor = midnight + slotTime
         val loop = c.loop.mapNotNull { byId[it] }.filter { it.seconds > 0 }
         val total = loop.sumOf { it.seconds * 1000 }
         if (total > 0) {
             var pos = Math.floorMod(nowMs - anchor, total)
-            for (v in loop) {
+            loop.forEachIndexed { i, v ->
                 val len = v.seconds * 1000
-                if (pos < len) return Now.Playing(v, pos, minOf(nowMs - pos + len, nextAt))
+                if (pos < len) return Now.Playing(v, pos, minOf(nowMs - pos + len, nextAt), i, nextAt)
                 pos -= len
             }
         }
         // A live stream in the loop plays on until the next slot.
         c.loop.mapNotNull { byId[it] }.firstOrNull { it.seconds == 0L }?.let { return Now.Playing(it, 0, nextAt) }
         return Now.OffAir(next?.video, next?.at)
+    }
+
+    /**
+     * A run of YouTube videos on air (Bazaar TV's upcoming trailers, 2026-10-06): they play one after
+     * another on our locked page from [startMs] to [endMs] (wall clock), then our own player goes on.
+     */
+    class Block(val videos: List<Video>, val startMs: Long, val endMs: Long)
+
+    /** The run of YouTube videos [c] has on at [nowMs]; null when our own player plays. */
+    fun block(c: Config, nowMs: Long): Block? {
+        val now = whatsOn(c, nowMs) as? Now.Playing ?: return null
+        if (now.video.youtube == null) return null
+        val begun = nowMs - now.offsetMs
+        if (now.loopIndex < 0) return Block(listOf(now.video), begun, now.untilMs)
+        // The loop's neighbours that are YouTube videos too, up to the ends of the list (it starts again
+        // from the top after a time slot, so a run never reaches across the end).
+        val byId = c.videos.associateBy { it.id }
+        val loop = c.loop.mapNotNull { byId[it] }.filter { it.seconds > 0 }
+        var first = now.loopIndex
+        var start = begun
+        while (first > 0 && loop[first - 1].youtube != null) {
+            first--
+            start -= loop[first].seconds * 1000
+        }
+        var last = now.loopIndex
+        var end = begun + now.video.seconds * 1000
+        while (last + 1 < loop.size && loop[last + 1].youtube != null) {
+            last++
+            end += loop[last].seconds * 1000
+        }
+        // The next time slot (the news) cuts it short; the rest follows after it, on a new page.
+        return Block(loop.subList(first, last + 1), start, minOf(end, now.nextSlotMs))
+    }
+
+    /**
+     * Our locked page playing [channel]'s run of YouTube videos on now, joined where the clock says;
+     * null when our own player plays. The address stays the same for the whole run.
+     */
+    fun blockPage(channel: Channel?, version: Int, nowMs: Long = System.currentTimeMillis()): String? {
+        val c = configOf(channel) ?: return null
+        if (STATIONS.firstOrNull { it.id == c.id }?.youtube == true) return null
+        val b = block(c, nowMs) ?: return null
+        fun enc(s: String) = java.net.URLEncoder.encode(s, "UTF-8").replace("+", "%20")
+        return "https://tv.bulkbazaar.ca/channel/block.html?app=1&at=${b.startMs}&until=${b.endMs}" +
+            "&ids=" + b.videos.joinToString(",") { it.youtube!! } +
+            "&secs=" + b.videos.joinToString(",") { it.seconds.toString() } +
+            "&name=" + enc(c.name) + (c.logo?.let { "&logo=" + enc(it) } ?: "") + "&corner=" + c.logoCorner +
+            (c.ticker?.let { "&tick=" + enc(it) } ?: "") + "&ver=$version"
+    }
+
+    /**
+     * Schedule entries that stand for a list built on the website every day: Bazaar TV's upcoming
+     * trailers ("trailers", tools/build_trailers.py), popular music videos ("music", tools/build_music_videos.py)
+     * and its other programme blocks: dramas, cartoons, cooking and more ("list", tools/build_bazaar_blocks.py).
+     */
+    private val LIST_KINDS = setOf("trailers", "music", "list")
+
+    /**
+     * [o] (a schedule as saved) with each list entry replaced by the videos in its list, as [fetch]
+     * gets them (null when it can't): the list changes every day without the owner saving anything.
+     * Each loop place of the entry gets the whole list; a time slot can't hold a list and is dropped.
+     */
+    fun expand(o: JSONObject, fetch: (String) -> JSONObject?): JSONObject {
+        val videos = o.optJSONArray("videos") ?: return o
+        val lists = (0 until videos.length()).mapNotNull { videos.optJSONObject(it) }
+            .filter { it.optString("kind") in LIST_KINDS && it.optString("url").startsWith("http") }
+        if (lists.isEmpty()) return o
+        val out = JSONObject(o.toString())
+        val newVideos = org.json.JSONArray()
+        val ids = mutableMapOf<String, List<String>>()
+        for (i in 0 until videos.length()) {
+            val v = videos.optJSONObject(i) ?: continue
+            if (v !in lists) {
+                newVideos.put(v)
+                continue
+            }
+            val list = runCatching { fetch(v.optString("url")) }.getOrNull()?.optJSONArray("videos")
+            val parts = mutableListOf<String>()
+            for (j in 0 until (list?.length() ?: 0)) {
+                val item = list!!.optJSONObject(j) ?: continue
+                val yt = item.optString("id").takeIf { Regex("[A-Za-z0-9_-]{11}").matches(it) } ?: continue
+                val secs = item.optLong("secs").takeIf { it > 0 } ?: continue
+                val id = "${v.optString("id")}-$yt"
+                if (id !in parts) newVideos.put(JSONObject().put("id", id).put("title", item.optString("title"))
+                    .put("url", YouTube.watchUrl(yt)).put("secs", secs).put("kind", "programme"))
+                parts += id
+            }
+            ids[v.optString("id")] = parts
+        }
+        out.put("videos", newVideos)
+        val loop = o.optJSONArray("loop")
+        if (loop != null) {
+            val newLoop = org.json.JSONArray()
+            for (i in 0 until loop.length()) {
+                val id = loop.optString(i)
+                ids[id]?.forEach { newLoop.put(it) } ?: newLoop.put(id)
+            }
+            out.put("loop", newLoop)
+        }
+        val slots = o.optJSONArray("slots")
+        if (slots != null) {
+            val kept = org.json.JSONArray()
+            for (i in 0 until slots.length()) slots.optJSONObject(i)?.takeIf { it.optString("video") !in ids }?.let { kept.put(it) }
+            out.put("slots", kept)
+        }
+        return out
     }
 
     private fun slotsOn(c: Config, byId: Map<String, Video>, tz: TimeZone, nowMs: Long, dayOffset: Int): List<Start> {
@@ -288,8 +427,8 @@ object MyChannel {
         val date = "%04d-%02d-%02d".format(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH))
         val weekday = cal.get(Calendar.DAY_OF_WEEK)
         return c.slots.mapNotNull { s ->
-            val video = byId[s.video] ?: return@mapNotNull null
             if (!onDay(s.day, date, weekday)) return@mapNotNull null
+            val video = episodeOn(s, date, byId) ?: return@mapNotNull null
             val (h, m) = s.time.split(':').mapNotNull { it.trim().toIntOrNull() }.takeIf { it.size == 2 } ?: return@mapNotNull null
             val at = (cal.clone() as Calendar).apply {
                 set(Calendar.HOUR_OF_DAY, h)
@@ -297,8 +436,39 @@ object MyChannel {
                 set(Calendar.SECOND, 0)
                 set(Calendar.MILLISECOND, 0)
             }.timeInMillis
-            Start(at, video, dated = s.day.length == 10)
+            Start(at, video, dated = s.day.length == 10, show = s.show)
         }
+    }
+
+    /**
+     * The video [s] plays on [date]: for a weekly show, the episode for that airing (the first on
+     * [Slot.since], then one more each time the slot comes round, from episode 1 again after the last).
+     */
+    private fun episodeOn(s: Slot, date: String, byId: Map<String, Video>): Video? {
+        val eps = s.episodes.filter { it in byId }
+        if (eps.isEmpty()) return byId[s.video]
+        return byId[eps[Math.floorMod(airingsBefore(s.day, s.since, date), eps.size)]]
+    }
+
+    /** How many times a slot on [day] came round from [since] up to (not counting) [date]; 0 before [since]. */
+    fun airingsBefore(day: String, since: String, date: String): Int {
+        val from = dayNumber(since) ?: return 0
+        val to = dayNumber(date) ?: return 0
+        val n = to - from
+        if (n <= 0) return 0
+        // Day 0 (1970-01-01) was a Thursday; 1 = Sunday as in Calendar.
+        val startWeekday = Math.floorMod(from + 4, 7) + 1
+        val perWeek = (1..7).count { onDay(day, "", it) }
+        var count = (n / 7) * perWeek
+        for (i in 0 until n % 7) if (onDay(day, "", Math.floorMod(startWeekday - 1 + i, 7) + 1)) count++
+        return count
+    }
+
+    /** Days since 1970-01-01 for "yyyy-MM-dd"; null when it isn't a date. */
+    private fun dayNumber(date: String): Int? {
+        val p = date.split('-').mapNotNull { it.toIntOrNull() }.takeIf { it.size == 3 } ?: return null
+        val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply { clear(); set(p[0], p[1] - 1, p[2]) }
+        return (cal.timeInMillis / 86_400_000L).toInt()
     }
 
     private val weekdays = listOf("sun", "mon", "tue", "wed", "thu", "fri", "sat")

@@ -1,0 +1,117 @@
+{
+ "about": "Coming-up promos for the shows booked on Bazaar TV (from the ready-made schedule), made by tools/promos.",
+ "promos": {
+  "bazaar-tv-news-the-full-report-all-0000": {
+   "title": "Bazaar TV News: The Full Report",
+   "when": "Every day · 12 AM",
+   "day": "all",
+   "time": "00:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0000.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "1af73efde8bb"
+  },
+  "bazaar-tv-news-headlines-all-0100": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 1 AM",
+   "day": "all",
+   "time": "01:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0100.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "da478d795a14"
+  },
+  "bazaar-tv-news-headlines-all-0200": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 2 AM",
+   "day": "all",
+   "time": "02:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0200.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "828e853cd110"
+  },
+  "bazaar-tv-news-the-full-report-all-0300": {
+   "title": "Bazaar TV News: The Full Report",
+   "when": "Every day · 3 AM",
+   "day": "all",
+   "time": "03:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0300.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "8fd5fd0b5ea6"
+  },
+  "bazaar-tv-news-headlines-all-0400": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 4 AM",
+   "day": "all",
+   "time": "04:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0400.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "6f8745a66bb7"
+  },
+  "bazaar-tv-news-headlines-all-0500": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 5 AM",
+   "day": "all",
+   "time": "05:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0500.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "13334faa1ecd"
+  },
+  "bazaar-tv-news-the-full-report-all-0600": {
+   "title": "Bazaar TV News: The Full Report",
+   "when": "Every day · 6 AM",
+   "day": "all",
+   "time": "06:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0600.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "421a332b56b7"
+  },
+  "bazaar-tv-news-headlines-all-0700": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 7 AM",
+   "day": "all",
+   "time": "07:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0700.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "0e79e81b133c"
+  }
+ }
+}
