@@ -19,7 +19,7 @@ at every build (`scripts/prepare.js`); changing it needs a new PC version too.
 ## Not on PC yet (second test build)
 
 Browse, Carousel, Strip, Duo, News, CP24, Home and My Screen modes; Movies & Dramas (Library);
-Games; Messages, Suggestions, promo codes and billing details. The Modes menu shows them as
+the 24 classic games (the PC has the two modern ones); Messages, Suggestions, promo codes and billing details. The Modes menu shows them as
 "coming soon on PC".
 
 ## Changes that needed nothing on PC
@@ -50,3 +50,5 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 - 1.9.96 (PC 1.0.4): packages screen shows Free once (no "Free · free") and Gold at one price a month, $9.99 by default (`settings.js`, `plans.js`).
 - 1.9.100 (PC 1.0.5): the start screen shows only a loading circle while the channels load; no sponsor
   or words, no 5-second countdown (`screens/start.js`).
+- 1.10.2 (PC 1.0.6): two modern games, Block Burst and Color Pour, in a 🎮 Games screen. Both apps open the
+  very same pages (`app/src/main/assets/games`, copied in by `scripts/prepare.js`; `screens/games.js`).

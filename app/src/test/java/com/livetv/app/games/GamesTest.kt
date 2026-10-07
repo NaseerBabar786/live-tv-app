@@ -25,6 +25,19 @@ class GamesTest {
     }
 
     @Test
+    fun modernGamesHaveTheirPages() {
+        assertEquals(WEB_GAMES.size, WEB_GAMES.map { it.id }.toSet().size)
+        assertTrue(WEB_GAMES.none { w -> GAMES.any { it.id == w.id } })
+        for (g in WEB_GAMES) {
+            val page = java.io.File("src/main/assets/games/${g.page}")
+            assertTrue("${g.page} is missing", page.isFile)
+            // The page names its game id when it reports a record, so the menu shows it.
+            val script = java.io.File("src/main/assets/games/${g.page.removeSuffix(".html")}.js").readText()
+            assertTrue(g.id, script.contains("'${g.id}'"))
+        }
+    }
+
+    @Test
     fun snakeEndsAtTheWall() {
         val snake = Snake(Random(1))
         repeat(40) { snake.tick() }

@@ -13,6 +13,7 @@ import { tilesMode } from './tiles.js';
 import { fiveMode } from './five.js';
 import { openFull } from './full.js';
 import { openSettings } from './settings.js';
+import { openGames } from './games.js';
 
 /** Every mode, in the TV app's order; the ones not on PC yet show as coming soon. */
 export const MODES = [
@@ -47,10 +48,12 @@ export function openHome({ onExit }) {
   const modesBtn = button('▦  Modes', () => openModes(), 'top');
   const soundBtn = button('', () => { sound = !sound; store.set('previewSound', sound); renderSound(); current?.setSound?.(sound); }, 'icon');
   const searchBtn = button('🔍', () => toggleSearch(), 'icon');
+  const gamesBtn = button('🎮', () => showGames(), 'icon');
+  gamesBtn.title = 'Games';
   const settingsBtn = button('⚙', () => openSettings({ onChanged: refreshAll, onExit: askExit }), 'icon');
   const topbar = h('header.topbar',
     h('div.brand', h('div.brandline', h('img.logo', { src: 'logo.svg', alt: '' }), title), h('div.brandline.sub', clock, weatherEl)),
-    search, h('div.spacer'), modesBtn, soundBtn, searchBtn, settingsBtn);
+    search, h('div.spacer'), modesBtn, gamesBtn, soundBtn, searchBtn, settingsBtn);
   const chips = h('div.chips');
   const count = h('div.count');
   const content = h('div.content');
@@ -181,6 +184,21 @@ export function openHome({ onExit }) {
 
   function askExit() {
     dialog({ title: 'Exit Cable TV?', buttons: [['Yes', onExit], ['No', null]], focusIndex: 1 });
+  }
+
+  // ---------- Games (the TV app's 🎮 button) ----------
+  function showGames() {
+    current?.pause?.();
+    ads.detach(content);
+    root.classList.add('hidden');
+    openGames({
+      onClose: () => {
+        root.classList.remove('hidden');
+        ads.attach(content, { full: false });
+        current?.resume?.();
+        nav.focus(gamesBtn);
+      },
+    });
   }
 
   // ---------- Opening a channel full screen ----------
