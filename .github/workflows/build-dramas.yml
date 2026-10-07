@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: "0 9 * * *"   # every day at 09:00 UTC: 5 am in Toronto (4 am in winter)
   workflow_dispatch:
+  # Changes to the builder are tried out on their pull request (nothing is published there).
+  pull_request:
+    paths:
+      - tools/build_dramas.py
+      - .github/workflows/build-dramas.yml
 
 permissions:
   contents: write
@@ -38,6 +43,8 @@ jobs:
           python3 -c "import json; d=json.load(open('docs/dramas.json')); print(d['built'], d['shows'], 'shows', d['episodes'], 'episodes', d.get('movies'), 'movies')"
           head -n 21 docs/Dramas.m3u
           grep -c "Hindi dubbed" docs/Dramas.m3u || true
+          echo "== English"; grep "tvg-language=\"English\"" docs/Dramas.m3u | sed 's/.*tvg-genre="\([^"]*\)" group-title="\([^"]*\)",/\1 | \2 | /' | awk -F" [|] " '{k=$1"|"$2; c[k]++; if (c[k] <= 3) print}'
+          echo "== English counts"; grep "tvg-language=\"English\"" docs/Dramas.m3u | sed 's/.*group-title="\([^"]*\)".*/\1/' | sort | uniq -c
           grep -A0 "group-title=\"Telefilms\"" docs/Dramas.m3u | sed "s/.*,//" | head -n 40
           echo "== Dailymotion"; grep -B1 "dailymotion.com" docs/Dramas.m3u | grep "^#EXTINF" | sed 's/.*group-title="\([^"]*\)",/\1 | /' | awk -F" [|] " '{c[$1]++; if (c[$1] <= 8) print}'
           echo "== Kapil"; grep -i "kapil" docs/Dramas.m3u | grep "^#EXTINF" | sed 's/.*,//' | head -n 10
