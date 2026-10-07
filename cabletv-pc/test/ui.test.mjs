@@ -31,3 +31,11 @@ test('versions, stream kinds and YouTube ids', () => {
   assert.deepEqual(streamKinds('https://x/live'), ['hls', 'ts', 'file']);
   assert.equal(youtubeId('https://www.youtube.com/watch?v=dQw4w9WgXcQ'), 'dQw4w9WgXcQ');
 });
+
+test('MTA: 8 channels of its own links, old Akamai links dropped', async () => {
+  const mta = await import('../src/ui/mta.js');
+  assert.equal(mta.CHANNELS.length, 8);
+  assert.ok(mta.CHANNELS.every(mta.isMta));
+  assert.equal(mta.isMta({ url: 'https://x/geo.m3u8' }), false);
+  assert.ok(mta.isOldLink('https://chlivemta.akamaized.net/hls/live/x.m3u8'));
+});
