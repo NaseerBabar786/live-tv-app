@@ -166,12 +166,20 @@
   .heatmap { display: grid; grid-template-columns: 44px repeat(24, 1fr); gap: 2px; font-size: 11px; margin-bottom: 8px; }
   .heatmap span { text-align: center; color: var(--muted); }
   .heatmap i { display: block; aspect-ratio: 1.3; border-radius: 3px; background: var(--surface-2); }
-  .hitsMode .work, .hitsMode #step5, .hitsMode .savebar, .hitsMode .modes, .hitsMode #soundBtn, .hitsMode #barBtn, .hitsMode #adBtn, .hitsMode .tvbox details { display: none !important; }
+  .hitsMode #step5, .hitsMode .savebar, .hitsMode .modes, .hitsMode #soundBtn, .hitsMode #barBtn, .hitsMode #adBtn, .hitsMode .tvbox details { display: none !important; }
   .hitsMode #hitsNote { display: block !important; }
   /* 📺 Programmes (2026-10-07): which videos our YouTube channels and Bazaar Hits may play. */
-  #picks { display: none; order: 9; }
+  #picks, #chHelp { display: none; }
   .hitsMode #picks { display: block; }
-  @media (min-width: 1200px) { #picks { grid-column: 2; grid-row: 1; margin: 0; } }
+  /* Our YouTube channels and Bazaar Hits (2026-10-07): the same dashboard as Bazaar TV, with their own tabs
+     (Overview, Library, Next transmission, Schedule, Most watched, Help) instead of Bazaar TV's steps. */
+  .hitsMode .work > #howTo, .hitsMode .steps > section:not(#stats) { display: none !important; }
+  @media (max-width: 1199px) { .hitsMode .work > :not(#picks) { display: none !important; } }
+  @media (min-width: 1200px) {
+    .hitsMode .work[data-tab] #picks, .hitsMode #pkTabs, .hitsMode #picks > h2 + p { display: none; }
+    .hitsMode .work[data-tab=library] #picks, .hitsMode .work[data-tab=approved] #picks, .hitsMode .work[data-tab=schedule] #picks { display: block; }
+    .hitsMode .work[data-tab=help] #chHelp { display: block; }
+  }
   .pkSources { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
   .pkSources label { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--line); background: var(--bg); cursor: pointer; font-size: 14px; }
   .pkSources label.off { opacity: .55; text-decoration: line-through; }
@@ -233,7 +241,7 @@
   <div id="dash" class="hidden studio">
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
-    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 4)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span> and picks them by itself, so it has no schedule to edit. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
+    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 4)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span>. Choose its programmes and lock its schedule on the right. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -293,6 +301,16 @@
       <!-- Wide screens: a software-style dashboard. The tabs (or a tile in the overview) open one part at a time. -->
       <nav class="snav" id="snav" aria-label="Studio sections"></nav>
       <div class="overview" id="overview"></div>
+      <section class="panel" id="chHelp">
+        <h2 style="margin-top:0">How <span class="chName"></span> works</h2>
+        <ol>
+          <li><b>📚 Library</b>: every programme our daily search finds on this channel's official YouTube sources. Watch any with ▶ Preview. Nothing ever leaves the Library.</li>
+          <li><b>✅ Next transmission</b>: the programmes you approve from the Library. Only these go on air. Press 💾 Save programmes after changes.</li>
+          <li><b>📅 Schedule</b>: the next 24 hours, made from Next transmission and mixed with our ad breaks (and trailers on movie channels). Change the order if you like, then 🔒 Lock it. A locked day plays exactly as shown; 🔓 Unlock only to fix a mistake. Days you don't lock lock by themselves at 10 PM (Toronto time).</li>
+          <li><b>On air</b>: everyone joins what's on now, like real TV. A programme that ends early is filled with our promos, a video that won't play is skipped, and a frozen picture is restarted.</li>
+        </ol>
+        <p class="small">Public page: <a class="chPage" target="_blank" rel="noopener"></a></p>
+      </section>
     <details class="help panel" id="howTo" style="padding:14px 18px" open>
       <summary>How it works (read this first)</summary>
       <ol>
@@ -684,15 +702,17 @@ function showHits(on) {
   f.src = station.web;
   $("hitsName").textContent = `${station.name} (channel ${station.dial})`;
   $("hitsAbout").textContent = station === HITS ? "plays the music labels' official YouTube songs round the clock"
-    : `plays official videos from well-known YouTube channels round the clock (${station.tagline.toLowerCase()}); its free-film schedule is only the backup`;
+    : `plays official videos from well-known YouTube channels round the clock (${station.tagline.toLowerCase()})`;
   $("hitsLink").href = station.page.startsWith("channel/?") ? station.web : station.page;
   $("nowText").textContent = station === HITS ? "Bazaar Hits: film songs from the music labels' own YouTube channels, one after another."
     : `${station.name}: official videos from YouTube channels, one after another, locked like Bazaar Hits.`;
-  $("modeText").textContent = "It runs by itself from its list (updated every day), so there's nothing to edit here. Tap 🔊 for sound.";
+  $("modeText").textContent = "It runs by itself from its locked schedule. Choose its programmes in the Library and Next transmission. Tap 🔊 for sound.";
 }
 async function loadSaved() {
   renderStations();
   showHits(!!station.web);
+  // Every channel opens on its Overview first (owner, 2026-10-07).
+  if (wide.matches) setTab("overview");
   if (station.web) { dirty = false; loadPicksPanel(); return; }
   try {
     const snap = await fs.getDoc(fs.doc(db, "sponsors", station.doc));
@@ -1141,11 +1161,15 @@ new IntersectionObserver(([e]) => {
   $("tvslot").classList.toggle("docked", away && !undocked && !document.fullscreenElement);
 }, { threshold: 0 }).observe($("tvslot"));
 // ---------- the dashboard (wide screens) ----------
+// Our YouTube channels' Programmes panel sits in the dashboard, after the Overview (its tabs are dashboard tabs).
+$("chHelp").after($("picks"));
 const TABS = [["overview", "▦ Overview"], ["step1", "1 · Your channel"], ["step2", "2 · Videos"], ["step3", "3 · Loop"], ["step4", "4 · Time slots"], ["week", "📅 Week"], ["stats", "📊 Most watched"], ["help", "? Help"]];
+// Channels that play YouTube (Cinema, Music, Hits, Kids...): the same dashboard, with the Programmes steps.
+const WEB_TABS = [["overview", "▦ Overview"], ["library", "📚 Library"], ["approved", "✅ Next transmission"], ["schedule", "📅 Schedule"], ["stats", "📊 Most watched"], ["help", "? Help"]];
 let tab = "overview";
 function renderNav() {
   $("snav").innerHTML = "";
-  for (const [id, label] of TABS) {
+  for (const [id, label] of station.web ? WEB_TABS : TABS) {
     const b = document.createElement("button");
     b.type = "button";
     b.textContent = label;
@@ -1155,18 +1179,22 @@ function renderNav() {
   }
 }
 function setTab(id) {
+  // A tab the other kind of channel doesn't have: its Overview.
+  if (!(station.web ? WEB_TABS : TABS).some(([t]) => t === id)) id = "overview";
   tab = id;
   document.querySelector(".work").dataset.tab = id;
+  if (station.web && ["library", "approved", "schedule"].includes(id) && pick) { pkTab = id; renderPicks(); }
   if (id === "help") $("howTo").open = true;
   renderNav();
   if (id === "overview") renderOverview();
   if (id === "week") renderWeek();
-  if (id === "stats" && !stats) loadStats();
+  if (id === "stats" && stats?.of !== station.name) loadStats();
   if (wide.matches) window.scrollTo({ top: 0 });
 }
 const esc = t => String(t ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
 /** One tile per part of the channel, with what's in it; a click opens that part. */
 function renderOverview() {
+  if (station.web) return renderWebOverview();
   if (!c || !wide.matches) return;
   const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
   const count = k => c.videos.filter(v => kindOf(v) === k).length;
@@ -1224,7 +1252,87 @@ function renderOverview() {
     $("overview").appendChild(b);
   }
 }
-if (wide.matches) setTab("overview");
+/** The Overview of a channel that plays YouTube: one tile per part, like Bazaar TV's (owner, 2026-10-07). */
+function renderWebOverview() {
+  if (!wide.matches) return;
+  document.querySelectorAll(".chName").forEach(e => e.textContent = station.name);
+  document.querySelectorAll(".chPage").forEach(a => { a.href = station.page.startsWith("channel/?") ? station.web : station.page; a.textContent = "tv.bulkbazaar.ca/" + station.page; });
+  const st = pkStation(), ready = !!pick;
+  const secsOf = v => Math.round((v.mins || st.ytMins || 4) * 60);
+  const approved = ready ? pkList.filter(v => status(v, pick) === "approved") : [];
+  const fresh = ready ? pkList.filter(v => status(v, pick) === "new") : [];
+  const newest = pkList.slice().sort((a, b) => (b.found || "").localeCompare(a.found || "")).slice(0, 4);
+  const hours = secs => secs >= 3600 ? `${Math.floor(secs / 3600)} h ${Math.round(secs % 3600 / 60)} min` : lengthText(secs);
+  const onAirSecs = approved.reduce((t, v) => t + secsOf(v), 0);
+  const today = torontoDay().date, tomorrow = torontoDate(Date.now() + 24 * 3600e3);
+  const dayState = date => { if (station === HITS || !ready) return "Made by itself"; const d = pkDayNow(date); return d.by === "you" ? "🔒 Locked by you" : d.by === "auto" ? "🔒 Locked" : "Draft, locks at 10 PM"; };
+  // What's on now and next (programmes only; ad breaks, clips and trailers in between).
+  let upNext = [];
+  if (ready && station !== HITS) {
+    const items = pkDayNow(today).items, w = itemAt(items);
+    let t = w.startMs;
+    for (let k = 0; k < items.length && upNext.length < 6; k++) {
+      const it = items[(w.i + k) % items.length];
+      if (it.kind === "video" && !it.trailer) upNext.push({ at: t, title: (it.cont ? "(continued) " : "") + it.v.title, secs: it.secs, now: k === 0 });
+      t += (k === 0 ? it.secs - w.offset : it.secs) * 1000;
+    }
+  } else if (ready) upNext = approved.slice(0, 6).map(v => ({ title: v.title, secs: secsOf(v) }));
+  const labels = [...new Set(pkList.map(v => v.label))];
+  const sourcesOn = ready ? labels.filter(l => !pick.offLabels.includes(l)) : labels;
+  const mine = (pkCheck?.problems || []).filter(p => p.channel.split(", ").includes(station.name));
+  const cantPlay = mine.filter(p => /can't play/.test(p.text)).length;
+  const watched = stats?.of === station.name ? stats.chans?.find(x => x.name === station.name) : null;
+  const li = (a, b) => `<li><span>${a}</span><span class="sub">${b}</span></li>`;
+  const tiles = [
+    ["help", `<h3>${station.logo ? `<img class="lg" alt="" src="${esc(station.logo)}">` : ""}<span>Your channel</span></h3>
+      <div class="big">${esc(station.name)}</div>
+      <div><span class="pill on">ON AIR</span> <span class="sub">Channel ${esc(station.dial)} · Toronto time</span></div>
+      <div class="sub">${esc(station.tagline || "Official videos from YouTube channels, round the clock")}</div>
+      <span class="go">How it works ›</span>`],
+    ["library", `<h3>📚 Library</h3>
+      <div class="big">${pkList.length}</div>
+      <div class="sub">programmes found · ${fresh.length ? `<b>${fresh.length} new</b> waiting for you` : "nothing new waiting"}</div>
+      <ul>${newest.map(v => li(esc(v.title), lengthText(secsOf(v)))).join("")}</ul>
+      <span class="go">${fresh.length ? "Review the new ones ›" : "Open the Library ›"}</span>`],
+    ["approved", `<h3>✅ Next transmission</h3>
+      <div class="big">${approved.length}</div>
+      <div class="sub">programmes on air · ${hours(onAirSecs)} in all${onAirSecs && onAirSecs < 24 * 3600 && station !== HITS ? " (less than a day: it repeats)" : ""}</div>
+      <ul>${approved.slice(0, 4).map(v => li(esc(v.title), lengthText(secsOf(v)))).join("")}${approved.length > 4 ? `<li class="sub">+ ${approved.length - 4} more</li>` : ""}</ul>
+      <span class="go">Choose what goes on air ›</span>`],
+    ["schedule", `<h3>📅 Schedule</h3>
+      <ul>${li("<b>Today</b> " + today, dayState(today))}${li("<b>Tomorrow</b> " + tomorrow, dayState(tomorrow))}</ul>
+      <div class="sub">${station === HITS ? "Bazaar Hits makes its day by itself from the approved songs." : "24 hours from Next transmission, with our ad breaks" + (station.trailerLangs ? " and trailers" : "") + ". Lock it, or unlock to fix a mistake."}</div>
+      <span class="go">Open the schedule ›</span>`],
+    ["schedule", `<h3>📺 Coming up</h3>
+      <ul>${upNext.map(u => li((u.now ? "<b>Now</b> · " : u.at ? timeText(u.at, TORONTO) + " · " : "") + esc(u.title), lengthText(u.secs))).join("") || '<li class="sub">Loading…</li>'}</ul>
+      <span class="go">See the whole day ›</span>`],
+    ["library", `<h3>🎬 Sources</h3>
+      <div class="big">${sourcesOn.length}<span class="sub" style="font-size:16px"> of ${labels.length} on air</span></div>
+      <ul>${labels.slice(0, 5).map(l => li(esc(l), `${pkList.filter(v => v.label === l).length} videos`)).join("")}${labels.length > 5 ? `<li class="sub">+ ${labels.length - 5} more</li>` : ""}</ul>
+      <span class="go">Switch a source on or off ›</span>`],
+    ["stats", `<h3>📊 Most watched</h3>
+      ${watched ? `<div class="big">${fmtTime(watched.secs)}</div><div class="sub">watched on ${esc(station.name)} by ${watched.users.size} viewer${watched.users.size === 1 ? "" : "s"} in the last ${stats.days} days</div>`
+        : stats?.of === station.name ? `<div class="sub">Nobody counted on ${esc(station.name)} in the last ${stats.days} days yet</div>` : '<div class="sub">See how much people watch this channel, and when</div>'}
+      <span class="go">Open the numbers ›</span>`],
+    ["help", `<h3>${dirty ? '<span class="pill unsaved">NOT SAVED</span>' : '<span class="pill on">SAVED</span>'} Status</h3>
+      <div class="sub">${dirty ? "You have changes to Next transmission that aren't saved. Press 💾 Save programmes." : "Next transmission is saved."}</div>
+      <div class="sub">${pkCheck ? (cantPlay ? `Daily check (${esc(pkCheck.checked)}): ${cantPlay} video${cantPlay === 1 ? "" : "s"} can't play outside YouTube and are left out.` : `Daily check (${esc(pkCheck.checked)}): no problems.`) : ""}</div>
+      <span class="go">How it works ›</span>`],
+  ];
+  $("overview").innerHTML = "";
+  for (const [to, html] of tiles) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tile"; b.innerHTML = html;
+    b.onclick = () => {
+      if (to === "schedule") pkDay = "today";
+      if (to === "library" && fresh.length) $("pkFilter").value = "new";
+      setTab(to);
+    };
+    $("overview").appendChild(b);
+  }
+}
+// After the whole page script has run (the Programmes parts below must exist first).
+if (wide.matches) queueMicrotask(() => setTab("overview"));
 // Moving the window between a big and a small screen switches between the dashboard and the long page.
 wide.addEventListener("change", () => { if (wide.matches) setTab(tab); else delete document.querySelector(".work").dataset.tab; });
 
@@ -1463,7 +1571,7 @@ $("promoAll").onclick = () => {
 const fmtTime = secs => { const m = Math.round(secs / 60); return m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`; };
 async function loadStats() {
   const days = +$("stDays").value;
-  const st = station.web ? STATIONS[0] : station;
+  const st = station === HITS ? { id: "hits", name: "Bazaar Hits" } : station;
   const from = addDays(todayIn(), -(days - 1));
   $("stMsg").textContent = "Loading…";
   try {
@@ -1494,7 +1602,7 @@ async function loadStats() {
     });
     const pl = [...progs.values()].sort((a, b) => b.secs - a.secs);
     const cl = [...chans.values()].sort((a, b) => b.secs - a.secs);
-    stats = { days, heat, top: pl[0] || null };
+    stats = { days, heat, top: pl[0] || null, chans: cl, total, of: station.name };
     document.querySelectorAll(".stName").forEach(e => e.textContent = st.name);
     const best = Object.entries(heat).sort((a, b) => b[1] - a[1])[0];
     const bestText = best ? (() => { const [w, h] = best[0].split("-").map(Number); return `${["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][w]}s around ${clock(h * 60)}`; })() : "–";
@@ -1636,7 +1744,7 @@ $("save").onclick = async () => {
 // Days the owner locks here: sponsorDeals/_sched_<id> (Studio's copy) and channel/sched-<id> (public, what the
 // channel pages and the lock job read): { days: { "<date>": { items, at } } }.
 let pkAll = null, pkList = [], pick = null, previewing = null, pkTab = "library", pkDay = "tomorrow", pkLocked = null;
-let pkOwner = {}, pkEdit = null;
+let pkOwner = {}, pkEdit = null, pkCheck = null;
 const TORONTO = "America/Toronto";
 /** ▶ Preview: one video from the list plays in the player above, with YouTube's buttons so you can skip
  *  through it (Studio only; viewers still get the locked channel). "Back to the channel" puts the channel back. */
@@ -1686,7 +1794,10 @@ async function loadPicksPanel() {
     pkTab = "library";
     $("pkFilter").value = pkList.some(v => status(v, pick) === "new") ? "new" : "all";
     $("pkMsg").textContent = `${pkList.length} programmes in the Library (list updated ${d.built || "daily"}).`;
+    try { pkCheck = await (await fetch("channel/channel-check.json?t=" + Date.now())).json(); } catch { pkCheck = null; }
     renderPicks();
+    if (tab === "overview") renderOverview();
+    if (stats?.of !== station.name && wide.matches) loadStats();
   } catch (e) {
     $("pkMsg").innerHTML = `<span class="err">Couldn't load the programme list: ${esc(e.message)}</span>`;
   }

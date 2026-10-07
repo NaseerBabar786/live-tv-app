@@ -1,13 +1,36 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-07 08:44 UTC",
- "secs": 2152,
+ "built": "2026-10-07 17:48 UTC",
+ "secs": 2292,
  "videos": [
   {
-   "id": "sHnIrE-e4YE",
-   "title": "Raqaas Ep 10 (Subtitle) 6th October 26, Digitally Presented by Parley Cosmetics | Danyal Z - Komal M",
-   "label": "Green Entertainment",
-   "secs": 2152,
+   "id": "88GE5v_OUs0",
+   "title": "Aap Ki Izzat - Episode 19 [Eng Sub] - 18 Sep 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
+   "label": "HUM TV",
+   "secs": 2292,
+   "kind": "drama"
+  }
+ ],
+ "spares": [
+  {
+   "id": "KxPcUdOo2_Y",
+   "title": "Uswah Episode 02 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 24th September 2026",
+   "label": "Har Pal Geo",
+   "secs": 2382,
+   "kind": "drama"
+  },
+  {
+   "id": "Mg5t1PzPYFs",
+   "title": "Bas Tera Saath Ho Last EP 45 | 5 October 2026 | Farhan Saeed | Sana Javed | ENG SUB | ARY Digital",
+   "label": "ARY Digital",
+   "secs": 2440,
+   "kind": "drama"
+  },
+  {
+   "id": "WtR6O30Mbt0",
+   "title": "Uswah Episode 10 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 2nd October 2026",
+   "label": "Har Pal Geo",
+   "secs": 2389,
    "kind": "drama"
   }
  ]
