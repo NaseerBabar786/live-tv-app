@@ -1,6 +1,6 @@
 name: News look sample
 # Makes a SAMPLE headlines bulletin in a new look for the owner to approve (never touches the on-air files).
-# Result: channel-media/news-sample-<look>.mp4
+# Result: channel-media/news-sample-<look>-headlines.mp4 and news-sample-<look>-full.mp4
 on:
   push:
     paths: [".github/workflows/news-sample.yml"]
@@ -30,6 +30,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -eu
-          python3 tools/news/make_news.py out --kind headlines
-          mv out/news-headlines.mp4 news-sample-$LOOK.mp4
-          gh release upload channel-media news-sample-$LOOK.mp4 -R "$GITHUB_REPOSITORY" --clobber
+          for k in headlines full; do
+            python3 tools/news/make_news.py out --kind $k
+            mv out/news-$k.mp4 news-sample-$LOOK-$k.mp4
+          done
+          gh release upload channel-media news-sample-$LOOK-headlines.mp4 news-sample-$LOOK-full.mp4 -R "$GITHUB_REPOSITORY" --clobber

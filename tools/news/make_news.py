@@ -350,7 +350,7 @@ CALM_CHORDS = [[146.83, 220.0, 293.66, 369.99], [123.47, 185.0, 246.94, 293.66],
                [98.0, 196.0, 246.94, 293.66], [110.0, 220.0, 277.18, 329.63]]
 
 def calm_bed(secs):
-    n = int(SR * secs); out = np.zeros(n + SR * 5, np.float32); bar = 4.0
+    n = int(SR * secs); out = np.zeros(n + SR * 8, np.float32); bar = 4.0
     for k in range(int(secs // bar) + 1):
         ch = CALM_CHORDS[k % 4]; a = int(k * bar * SR)
         out[a:a + int(SR * (bar + 1))] += 0.55 * pad(ch[1:], int(SR * (bar + 1)))
@@ -482,14 +482,39 @@ def pill(d, name, col):
     d.rounded_rectangle([RIGHT - pw, 128, RIGHT, 176], 8, fill=col)
     text(d, RIGHT - pw / 2, 150, name, 24, "white", "m")
 
+# While the stories are read, the newsreader can stay on screen in a small window on the left of the panel
+# (owner, 2026-10-07); the story text then uses the narrower right part.
+PIP = None  # set by main: {"box": (x, y, w, h), "ur": name}
+PIP_BOX = (100, 196, 288, 162)
+
+def pip_frame(d):
+    if not PIP: return
+    x, y, w, h = PIP_BOX
+    d.rounded_rectangle([x - 4, y - 4, x + w + 4, y + h + 4], 8, fill=(255, 255, 255, 235))
+    d.rectangle([x, y + h + 4, x + w, y + h + 40], fill=RED)
+    text(d, x + w / 2, y + h + 22, f"نیوز ریڈر {PIP['ur']}", 20, "white", "m")
+
+BADGE = None  # set by main in the calm look: the programme name kept on screen the whole time (owner, 2026-10-07)
+
+def badge(d):
+    """Programme name at the top centre (the top corners stay free for the app's number and logo)."""
+    if not BADGE: return
+    fs = fonts(26); w = line_len(d, tokens(BADGE), fs) + 56
+    d.rounded_rectangle([W / 2 - w / 2, 26, W / 2 + w / 2, 76], 12, fill=RED)
+    d.ellipse([W / 2 + w / 2 - 30, 45, W / 2 + w / 2 - 18, 57], fill="white")
+    text(d, W / 2 - 8, 51, BADGE, 26, "white", "m")
+
+def text_w():
+    return 760 if PIP else 1050
+
 def card(path, label, section, headline, body, source, count):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     name, col = SECTION[section]
-    panel(d, col); pill(d, name, col)
+    panel(d, col); pill(d, name, col); pip_frame(d); badge(d)
     if count: text(d, 110, 150, count, 20, (170, 185, 215), "l")
     size = 44
     while True:
-        lines = wrap(d, headline, size, 1050, 3)
+        lines = wrap(d, headline, size, text_w(), 3)
         if len(lines) <= 2 or size <= 34: break
         size -= 4
     step = int(size * 1.75)
@@ -497,7 +522,7 @@ def card(path, label, section, headline, body, source, count):
     for ln in lines:
         draw_line(d, RIGHT, y, ln, fonts(size), "white"); y += step
     y += 6
-    for ln in wrap(d, body, 25, 1050, max(1, (545 - y) // 46)):
+    for ln in wrap(d, body, 25, text_w(), max(1, (545 - y) // 46)):
         draw_line(d, RIGHT, y, ln, fonts(25, False), LIGHT); y += 46
     if source: text(d, RIGHT, 562, source, 19, DIM)
     lower_bar(d, label)
@@ -505,6 +530,7 @@ def card(path, label, section, headline, body, source, count):
 
 def title_card(path, kind, when, sub, english=""):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    badge(d)
     d.rounded_rectangle([170, 180, 1110, 540], 22, fill=(8, 16, 40, 230))
     text(d, W / 2, 260, BRAND, 78, "white", "m")
     d.rectangle([340, 342, 940, 348], fill=RED)
@@ -518,7 +544,7 @@ def title_card(path, kind, when, sub, english=""):
 
 def weather_card(path, label, w):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    panel(d, TEAL); pill(d, "موسم", TEAL)
+    panel(d, TEAL); pill(d, "موسم", TEAL); pip_frame(d); badge(d)
     t = w[0]
     text(d, RIGHT, 220, "ٹورنٹو", 40, "white")
     d.text((RIGHT, 300), f"{t['now']}°", font=font(True, 110), fill="white", anchor="rm")
@@ -587,16 +613,18 @@ def newsreader(slot):
     p = dict(people[ids[slot.hour % len(ids)]]); p["clip"] = os.path.join(here, "clips", f"{p['id']}.mp4")
     return p
 
-def add_reader(body, reader, windows, label, work):
+def add_reader(body, reader, windows, label, work, pip=None):
     """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    lower_bar(d, f"{label} • {reader['ur']}")
+    lower_bar(d, f"{label} • {reader['ur']}"); badge(d)
     im.save(os.path.join(work, "reader-bar.png"))
     ins = ["-i", body]
     for t0, dur in windows:
         ins += ["-stream_loop", "-1", "-itsoffset", f"{t0:.3f}", "-i", reader["clip"]]
     ins += ["-loop", "1", "-i", os.path.join(work, "reader-bar.png")]
     bar = len(windows) + 1
+    if pip:
+        ins += ["-stream_loop", "-1", "-itsoffset", f"{pip[0]:.3f}", "-i", reader["clip"]]
     graph, last = [], "[0:v]"
     for k, (t0, dur) in enumerate(windows, 1):
         on = f"between(t,{t0:.3f},{t0 + dur:.3f})"
@@ -604,6 +632,13 @@ def add_reader(body, reader, windows, label, work):
         graph.append(f"{last}[r{k}]overlay=0:0:eof_action=pass:enable='{on}'[m{k}]")
         graph.append(f"[m{k}][{bar}:v]overlay=0:0:shortest=1:enable='{on}'[b{k}]")
         last = f"[b{k}]"
+    if pip:
+        x, y, w, h = PIP_BOX
+        on = f"between(t,{pip[0]:.3f},{pip[1]:.3f})"
+        # her face and shoulders: the middle of the clip, a little above centre
+        graph.append(f"[{bar + 1}:v]crop=iw*0.56:ih*0.56:iw*0.22:ih*0.04,scale={w}:{h},fps={FPS},setsar=1[pv]")
+        graph.append(f"{last}[pv]overlay={x}:{y}:eof_action=pass:enable='{on}'[pp]")
+        last = "[pp]"
     tmp = os.path.join(work, "with-reader.mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(graph) + f";{last}format=yuv420p[v]",
         "-map", "[v]", "-map", "0:a", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
@@ -716,6 +751,10 @@ def main():
     title_card(os.path.join(work, "c-title.png"), kind, f"{clock(slot)} • {date_ur(slot, True)}", "")
     cards.append(("c-title.png", STING))
     t = STING; n = 0; on_camera = []
+    global PIP, BADGE
+    if LOOK == "calm": BADGE = {"headlines": "اہم خبریں", "full": "تفصیلی خبریں"}[kind]
+    reader = newsreader(slot)
+    PIP = {"ur": reader["ur"]} if reader and os.environ.get("NEWS_PIP", "1" if LOOK == "calm" else "0") == "1" else None
     for i, (sk, text, v, s) in enumerate(segs):
         audio = voice(text, v)
         a = int(t * SR); voice_track[a:a + len(audio)] += audio[:len(voice_track) - a]
@@ -766,9 +805,9 @@ def main():
         "-filter_complex", f"[1:v]fps={FPS},format=rgba[c];[0:v][c]overlay=0:0:format=auto,format=yuv420p[v]",
         "-map", "[v]", "-map", "2:a", "-t", f"{news_len:.3f}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
         "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
-    reader = newsreader(slot)
     if reader and on_camera:
-        add_reader(body, reader, on_camera, label, work)
+        pip = (on_camera[0][0] + on_camera[0][1], on_camera[-1][0]) if PIP and len(on_camera) > 1 else None
+        add_reader(body, reader, on_camera, label, work, pip)
     promos = []
     if body != mp4:
         promos = add_promos(body, total - news_len, slot, work, mp4)
