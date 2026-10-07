@@ -8,10 +8,14 @@ name: Build news bulletins
 
 on:
   # Owner rule (2026-10-07): every bulletin is on the release at least 30 minutes before air time.
-  # The :02 run makes the next hour's bulletin (ready by about :12); the :20 run only builds it if the
-  # first one failed or never started, so a good bulletin is never replaced close to air time.
+  # GitHub often starts scheduled runs 20-30 minutes late, so several start times are queued; the first
+  # to run makes the next hour's bulletin and the others see it is already up and stop. (The file for
+  # the coming hour can't be made earlier: the same file is still playing until :03.)
   schedule:
-    - cron: "2 * * * *"
+    - cron: "4 * * * *"
+    - cron: "7 * * * *"
+    - cron: "10 * * * *"
+    - cron: "15 * * * *"
     - cron: "20 * * * *"
   workflow_dispatch:
     inputs:
@@ -59,12 +63,12 @@ jobs:
           python3 -c "from PIL import features; assert features.check('raqm'), 'Urdu text needs raqm'"
           # A code change makes both, so both are fresh with the new look.
           if [ "$EVENT" = "push" ] || [ "$KIND" = "both" ]; then kinds="headlines full"; else kinds="$KIND"; fi
-          if [ "$EVENT" = "schedule" ] && [ "$(date -u +%M)" -ge 15 ]; then
+          if [ "$EVENT" = "schedule" ]; then
             read -r due slot <<< "$(python3 tools/news/make_news.py out --kind auto --due)"
             have=$(curl -fsSL "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-$due.json" \
                    | python3 -c "import json,sys; print(json.load(sys.stdin).get('slot',''))" || true)
             if [ "$have" = "$slot" ]; then echo "news-$due for $slot is already up; nothing to do"; exit 0; fi
-            echo "back-up run: news-$due for $slot is missing (have '$have'), building it now"
+            echo "news-$due for $slot is not up yet (have '$have'), building it now"
           fi
           for k in $kinds; do python3 tools/news/make_news.py out --kind "$k"; done
           ls -la out
