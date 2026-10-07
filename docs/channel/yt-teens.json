@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Teens",
- "built": "2026-10-07 10:05 UTC",
+ "built": "2026-10-07 17:50 UTC",
  "videos": [
   {
    "id": "ujkD4SxPKOI",
@@ -395,6 +395,13 @@
    "found": "2026-10-07"
   },
   {
+   "id": "rhHj8-dpXx8",
+   "title": "5 of Science's Weirdest Paradoxes",
+   "label": "SciShow",
+   "mins": 12.866666666666667,
+   "found": "2026-10-07"
+  },
+  {
    "id": "rd_kVzsqRAc",
    "title": "What the Power Pose Controversy Reveals About Science",
    "label": "SciShow",
@@ -581,13 +588,6 @@
    "title": "LSD May Lead to a New Kind of Medicine",
    "label": "SciShow",
    "mins": 24.666666666666668,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "0DD6u8nK4wE",
-   "title": "Is the Secret to Treating Schizophrenia in... Engineering?",
-   "label": "SciShow",
-   "mins": 22.15,
    "found": "2026-10-07"
   },
   {
@@ -1326,6 +1326,13 @@
    "found": "2026-10-07"
   },
   {
+   "id": "8QIIixbNXMo",
+   "title": "Pearl and Rose: Love & Loyalty 💗🌹 Steven Universe | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 13.966666666666667,
+   "found": "2026-10-07"
+  },
+  {
    "id": "cj9WSsFf_Ao",
    "title": "Every Alien Introduced in Ben 10: Alien Force | Cartoon Network",
    "label": "Cartoon Network",
@@ -1512,13 +1519,6 @@
    "title": "Chowder’s Weirdest Recipes EVER! 🍦🤪 Chowder | Cartoon Network",
    "label": "Cartoon Network",
    "mins": 18.9,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "HRE8O2_S9l4",
-   "title": "Gumball and Darwin’s Top BFF Moments | The Amazing World of Gumball | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 13.533333333333333,
    "found": "2026-10-07"
   },
   {
@@ -1739,6 +1739,27 @@
    "found": "2026-10-07"
   },
   {
+   "id": "CUFj2YOQwZQ",
+   "title": "Appu's bell fell off! Can Keymon and Rohan tie it back?",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "qJPQ0Js-5hA",
+   "title": "Happy’s clever trick exposes the thieves! | Watch Bhoot Bandhus only on Sonic.",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "mhuLcF78jpo",
+   "title": "The treasure map is in danger! Shiva to the rescue!",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-07"
+  },
+  {
    "id": "kN5iGB6tF6o",
    "title": "That escalated from free to FREAK real quick. 🥲",
    "label": "Nick India",
@@ -1823,24 +1844,10 @@
    "found": "2026-10-07"
   },
   {
-   "id": "HrDSAkzRyI8",
-   "title": "Ye long weekend toh aate hi khatam ho gaya 😭",
-   "label": "Nick India",
-   "mins": null,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "RDlNr7NMAko",
-   "title": "Cricket ke liye toh kuch bhi kar sakta hu😌",
-   "label": "Nick India",
-   "mins": null,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "ERb5pvj9jEY",
-   "title": "Chatpate chips ke liye kuch bhi🤭",
-   "label": "Nick India",
-   "mins": null,
+   "id": "dUUuIRVAcdU",
+   "title": "A Cosmic Discovery | Pokémon the Series: Sun & Moon—Ultra Adventures | Official Clip",
+   "label": "Pokemon",
+   "mins": 3.9833333333333334,
    "found": "2026-10-07"
   },
   {
@@ -2209,7 +2216,7 @@
   },
   {
    "id": "6eeVYVBKRSs",
-   "title": "She Overcame A Serious Injury... Now She's Won The Golden Buzzer! 🤯 | Ukraine's Got Talent",
+   "title": "After Months Of Rehab, She Stuns The Judges With THIS! 😮 | Ukraine's Got Talent",
    "label": "Got Talent Global",
    "mins": 4.833333333333333,
    "found": "2026-10-07"
@@ -2275,6 +2282,41 @@
    "title": "14-Year-Old Singer Wins Her SECOND Golden Buzzer on America's Got Talent! 🤩",
    "label": "Got Talent Global",
    "mins": 5.083333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "0DD6u8nK4wE",
+   "title": "Is the Secret to Treating Schizophrenia in... Engineering?",
+   "label": "SciShow",
+   "mins": 22.15,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "HRE8O2_S9l4",
+   "title": "Gumball and Darwin’s Top BFF Moments | The Amazing World of Gumball | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 13.533333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "HrDSAkzRyI8",
+   "title": "Ye long weekend toh aate hi khatam ho gaya 😭",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "RDlNr7NMAko",
+   "title": "Cricket ke liye toh kuch bhi kar sakta hu😌",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ERb5pvj9jEY",
+   "title": "Chatpate chips ke liye kuch bhi🤭",
+   "label": "Nick India",
+   "mins": null,
    "found": "2026-10-07"
   },
   {

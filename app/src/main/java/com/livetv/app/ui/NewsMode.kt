@@ -311,7 +311,7 @@ fun NewsMode(
                     modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
                 )
                 if (page != null) key(page) {
-                    WebPreview(page, Modifier.fillMaxSize(), onFallback = { if (MyChannel.webPage(selected) != null) pageFailed = true })
+                    WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = { if (MyChannel.webPage(selected) != null) pageFailed = true })
                 } else if (!showing) {
                     Text(error ?: selected?.name.orEmpty(), color = Color.White, fontSize = s(16f), modifier = Modifier.padding(24.dp))
                 }
@@ -1021,7 +1021,7 @@ private fun SecondChannel(channel: Channel?, playing: Boolean, s: (Float) -> Tex
             modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
         )
         if (page != null) key(page) {
-            WebPreview(page, Modifier.fillMaxSize(), onFallback = { if (MyChannel.webPage(channel) != null) pageFailed = true })
+            WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = { if (MyChannel.webPage(channel) != null) pageFailed = true })
         }
         channel?.let { ch ->
             Text(

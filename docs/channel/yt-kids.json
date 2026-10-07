@@ -1,12 +1,19 @@
 {
  "name": "Bazaar Kids",
- "built": "2026-10-07 10:01 UTC",
+ "built": "2026-10-07 17:46 UTC",
  "videos": [
   {
    "id": "RWgoOtdVbc8",
    "title": "🎒🔎 Where is Everyone? 🐻🌿 Best Episodes Cartoon Collection 🎬 Masha and the Bear 2026",
    "label": "Masha and the Bear",
    "mins": 34.1,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "x6Xau6pDJ-M",
+   "title": "Peppa Pig is SICK! 🤒 | Learning How to REST & GET BETTER | Peppa Pig Official Full Episodes",
+   "label": "Peppa Pig",
+   "mins": 44.916666666666664,
    "found": "2026-10-07"
   },
   {
@@ -430,6 +437,13 @@
    "found": "2026-10-07"
   },
   {
+   "id": "mSRt15Lzq4I",
+   "title": "Animal Sounds Song 🐶🍎 | Little Baby Bum",
+   "label": "Little Baby Bum",
+   "mins": 4.816666666666666,
+   "found": "2026-10-07"
+  },
+  {
    "id": "1OIqNRMHtHo",
    "title": "Kindness Song 💖Friend Song Collection | Little Baby Bum",
    "label": "Little Baby Bum",
@@ -560,13 +574,6 @@
    "title": "Veggie Songs for Kids 🥦🥕 Eat Your Vegetables | Little Baby Bum",
    "label": "Little Baby Bum",
    "mins": 8.133333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "8y0BLnDbbwc",
-   "title": "Old Macdonald 🍪 LBB New Look VS Classic Look! | Little Baby Bum",
-   "label": "Little Baby Bum",
-   "mins": 4.283333333333333,
    "found": "2026-10-07"
   },
   {
@@ -707,6 +714,13 @@
    "title": "Blippi's Best Construction Vehicles 🏗️ Top 5 Special 🚜",
    "label": "Blippi",
    "mins": 14.883333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "KzwKQK_znZg",
+   "title": "Monster on the Street: Nursery Rhyme Karaoke 🎤  | Sesame Street Songs 🎵",
+   "label": "Sesame Street",
+   "mins": 2.816666666666667,
    "found": "2026-10-07"
   },
   {
@@ -941,6 +955,13 @@
    "found": "2026-10-07"
   },
   {
+   "id": "NNaD6i1mhWE",
+   "title": "Can the Pirate Pups Save Adventure Bay Before Time Runs Out?! ⏱️🏴‍☠️ | PAW Patrol: PAWse & Play",
+   "label": "PAW Patrol",
+   "mins": 3.066666666666667,
+   "found": "2026-10-07"
+  },
+  {
    "id": "xp-RIuEDhgM",
    "title": "Rocky and Marshall Create a Super Recycling Upgrade! 🚒 | Rocky's Garage | PAW Patrol",
    "label": "PAW Patrol",
@@ -1029,6 +1050,13 @@
    "title": "Chase and Ryder's Magic Act ✨ Can It Keep Them Out of Danger? | Compilation | PAW Patrol",
    "label": "PAW Patrol",
    "mins": 39.78333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "pHyCG8--rcg",
+   "title": "🎸 Pocoyo the ROCKSTAR! 🤘 Can Pato Become a Star Too? | POCOYO ENGLISH | Musical Cartoons for Kids",
+   "label": "Pocoyo",
+   "mins": 48.6,
    "found": "2026-10-07"
   },
   {
@@ -1162,13 +1190,6 @@
    "title": "Va-Vamoosh! 🚀 See What Pocoyo's INCREDIBLE Vehicle Can Do! | Pocoyo English | Sing Along Songs",
    "label": "Pocoyo",
    "mins": 2.033333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "76xddH1Szyg",
-   "title": "Let's Sing: The WHEELS ON THE BUS! 🚌 | Pocoyo English | Sing Along with Pocoyo! | Kids Songs",
-   "label": "Pocoyo",
-   "mins": 30.583333333333332,
    "found": "2026-10-07"
   },
   {
@@ -1312,6 +1333,27 @@
    "found": "2026-10-07"
   },
   {
+   "id": "1o08UJXe6uE",
+   "title": "Mr. Beans Funniest Moments Caught on Camera | Mr Bean Animated",
+   "label": "Mr Bean Cartoon",
+   "mins": 24.933333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "hDsI-cyMZLw",
+   "title": "Mr Bean's Most AWKWARD Bathroom Moment! 👖 | Bean: the Movie | Mr Bean",
+   "label": "Mr Bean Cartoon",
+   "mins": 3.283333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "XTsqlMW4i4c",
+   "title": "Can Mr Bean Finally Master the Piano? 🎹 | Mr Bean Animated Season 1 | Funny Clips | Mr Bean",
+   "label": "Mr Bean Cartoon",
+   "mins": 24.583333333333332,
+   "found": "2026-10-07"
+  },
+  {
    "id": "iS8X_EyTkmk",
    "title": "Mr Tiny Saves the Day in Wild Slapstick Chaos | Mr Bean Animated",
    "label": "Mr Bean Cartoon",
@@ -1428,27 +1470,6 @@
    "title": "Mr Bean Chaos Deliveries and a Beach Escape | Mr Bean Animated",
    "label": "Mr Bean Cartoon",
    "mins": 22.883333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "YB26nOmGnE0",
-   "title": "Mr Bean Meets His Favourite Movie Star! 🎬 | Mr Bean Animated Season 4 | Funny Clips | Mr Bean",
-   "label": "Mr Bean Cartoon",
-   "mins": 3.533333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "lWPIV1wXVt8",
-   "title": "Mr Bean Enters a SPOOKY Abandoned House! 😱 | Mr Bean Animated Season 3 | Funny Clips | Mr Bean",
-   "label": "Mr Bean Cartoon",
-   "mins": 23.316666666666666,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "E-BH-wEkGZA",
-   "title": "Maximum Mischief: A Mr Bean Collection | Compilation | Mr Bean",
-   "label": "Mr Bean Cartoon",
-   "mins": 15.483333333333333,
    "found": "2026-10-07"
   },
   {
@@ -1785,6 +1806,41 @@
    "title": "Thomas & Friends: Railway Stories | Really Helpful Engines | FULL SPECIAL!",
    "label": "Thomas & Friends",
    "mins": 30.533333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "8y0BLnDbbwc",
+   "title": "Old Macdonald 🍪 LBB New Look VS Classic Look! | Little Baby Bum",
+   "label": "Little Baby Bum",
+   "mins": 4.283333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "76xddH1Szyg",
+   "title": "Let's Sing: The WHEELS ON THE BUS! 🚌 | Pocoyo English | Sing Along with Pocoyo! | Kids Songs",
+   "label": "Pocoyo",
+   "mins": 30.583333333333332,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "YB26nOmGnE0",
+   "title": "Mr Bean Meets His Favourite Movie Star! 🎬 | Mr Bean Animated Season 4 | Funny Clips | Mr Bean",
+   "label": "Mr Bean Cartoon",
+   "mins": 3.533333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "lWPIV1wXVt8",
+   "title": "Mr Bean Enters a SPOOKY Abandoned House! 😱 | Mr Bean Animated Season 3 | Funny Clips | Mr Bean",
+   "label": "Mr Bean Cartoon",
+   "mins": 23.316666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "E-BH-wEkGZA",
+   "title": "Maximum Mischief: A Mr Bean Collection | Compilation | Mr Bean",
+   "label": "Mr Bean Cartoon",
+   "mins": 15.483333333333333,
    "found": "2026-10-07"
   },
   {
@@ -2744,13 +2800,6 @@
    "title": "Peppa Pig Plays Dress Up! 👗 EXTREME MAKEOVER 💄 Peppa Pig Tales Episodes | 20 Minutes",
    "label": "Peppa Pig",
    "mins": 21.383333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Av5tZIYrJds",
-   "title": "Masha and the Bear 2026 🍭🍫 La Dolce Vita and more popular episodes 🍰🍓 Best episodes collection 🎬",
-   "label": "Masha and the Bear",
-   "mins": 45.95,
    "found": "2026-10-06"
   }
  ]
