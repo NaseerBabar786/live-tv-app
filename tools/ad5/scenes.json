@@ -78,6 +78,24 @@
    "voice": "abbu",
    "ur": "بل ختم... مزہ شروع!",
    "en": "Bill gone... the fun begins!"
+  },
+  {
+   "id": "s3b",
+   "dur": 3.7,
+   "who": [
+    "bilal"
+   ],
+   "image": "Over-the-shoulder view from behind a teenage boy with short black hair in a grey hoodie sitting on a sofa, his arm stretched out pointing a black TV remote at a big wall-mounted flat TV showing a colorful grid of TV channels, cozy modern living room, evening, photorealistic",
+   "motion": "the boy points the remote at the TV and presses buttons, the TV screen changes channels, camera slowly pushes in"
+  },
+  {
+   "id": "s5b",
+   "dur": 3.8,
+   "who": [
+    "dadi"
+   ],
+   "image": "View from behind an elderly grandmother with a white dupatta over her head sitting on a sofa, watching a colorful cricket match on a big flat TV in a cozy warm living room, photorealistic",
+   "motion": "the grandmother claps her hands excitedly and raises her arms in joy while the cricket match plays on the TV"
   }
  ],
  "end": {

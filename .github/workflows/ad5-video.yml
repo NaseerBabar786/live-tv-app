@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        scene: [s1, s2, s3, s4, s5, s6]
+        scene: [s1, s2, s3, s4, s5, s6, s3b, s5b]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

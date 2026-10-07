@@ -19,7 +19,7 @@ def picture(sc):
     if os.path.exists(keep):
         shutil.copy(keep, path); return path
     url = ("https://image.pollinations.ai/prompt/" + urllib.parse.quote(prompt_for(sc)) +
-           f"?width=1280&height=768&seed={SEED + int(sc['id'][1:])}&nologo=true&model=flux")
+           f"?width=1280&height=768&seed={SEED + int(sc['id'][1])}&nologo=true&model=flux")
     for a in range(6):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "BazaarTV-ad5/1.0"})
