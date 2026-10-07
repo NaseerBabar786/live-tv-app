@@ -10,8 +10,7 @@ Two bulletins, each always EXACTLY the same length so the channel schedule never
 --kind probe only checks every feed and the translator and writes news-probe.json.
 
 Bazaar TV is an Urdu/Hindi channel (owner, 2026-10-07), so everything spoken and written is Urdu:
-  1. Pakistan and world news from Urdu news feeds (BBC Urdu, DW Urdu, VOA Urdu, Independent Urdu,
-     Express), Canada news from Canadian English feeds (Global News, CityNews) put into Urdu with
+  1. Pakistan and world news from Urdu news feeds (BBC Urdu, DW Urdu, Independent Urdu, Express), Canada news from Canadian English feeds (Global News, CityNews) put into Urdu with
      Google's free translate address; every story names its source,
   2. read with Microsoft Edge's free Urdu neural voices (edge-tts, ur-PK Uzma and Asad),
   3. our own news graphics in Urdu (Noto Nastaliq), no pictures or video from other broadcasters,
@@ -42,7 +41,6 @@ NOTES = []  # what worked and what failed, saved in news-<kind>.json for checkin
 URDU_FEEDS = [
     ("بی بی سی اردو", "https://feeds.bbci.co.uk/urdu/rss.xml"),
     ("ڈی ڈبلیو اردو", "https://rss.dw.com/rdf/rss-urdu-all"),
-    ("وائس آف امریکہ اردو", "https://www.urduvoa.com/api/zmgqoe$opi"),
     ("انڈپینڈنٹ اردو", "https://www.independenturdu.com/rss.xml"),
     ("ایکسپریس", "https://www.express.pk/feed/"),
 ]
@@ -79,7 +77,11 @@ def run(*cmd):
 def fetch(url, timeout=15):
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read()
+        data = r.read()
+    if data[:2] == b"\x1f\x8b":  # some feeds send gzip even when not asked
+        import gzip
+        data = gzip.decompress(data)
+    return data.lstrip(b"\xef\xbb\xbf \r\n\t")
 
 # ---------- news ----------
 def clean(s):
@@ -523,7 +525,7 @@ def main():
     sources = sorted({s["source"] for s in stories})
     nxt = slot + dt.timedelta(hours=1)
     next_full = slot + dt.timedelta(hours=3 - slot.hour % 3)
-    up_next = f"اگلا پروگرام {NAME['full'] if nxt.hour % 3 == 0 else NAME['headlines']}، {clock(nxt)}"
+    up_next = f"اگلی خبریں {clock(nxt)}" + (f" • {NAME['full']}" if nxt.hour % 3 == 0 else "")
 
     head = (f"السلام علیکم۔ ٹورنٹو میں {period(slot.hour)} کے {slot.hour % 12 or 12} بجے ہیں، اور یہ ہے بازار ٹی وی نیوز۔ "
             + ("تفصیلی خبرنامے میں خوش آمدید۔" if kind == "full" else "پیش ہیں اس وقت کی اہم خبریں۔"))
@@ -574,7 +576,7 @@ def main():
             n += 1
             src = "ذریعہ " + s["source"] + (" • ترجمہ" if s["section"] == "canada" else "")
             card(os.path.join(work, pic), label, s["section"], s["headline"],
-                 first_sentence(s["desc"]) if kind == "full" else "", src, f"خبر {n} • کل {len(shown)}")
+                 first_sentence(s["desc"]), src, f"خبر {n} • کل {len(shown)}")
         elif sk == "weather":
             weather_card(os.path.join(work, pic), label, wx)
         elif sk == "open":
