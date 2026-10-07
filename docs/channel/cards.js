@@ -65,7 +65,7 @@ export function mountCards(stage, config) {
 }
 
 function fill(el, isToday, c, now) {
-  const tz = c.tz || "America/Toronto";
+  // Times in the viewer's own time, like the clock beside the logo and the app's cards.
   el.innerHTML = "";
   const add = (cls, text, parent = el) => { const d = document.createElement("div"); d.className = cls; d.textContent = text; parent.appendChild(d); return d; };
   if (isToday) {
@@ -78,7 +78,7 @@ function fill(el, isToday, c, now) {
       const on = s.at <= now;
       if (on) row.classList.add("on");
       else if (!hi) { row.classList.add("hi"); hi = true; }
-      add("w", on ? "NOW" : timeText(s.at, tz), row);
+      add("w", on ? "NOW" : timeText(s.at), row);
       const n = add("n", s.title, add("", "", row));
       if (s.more) add("m", `+${s.more} more today`, n.parentNode);
     }
@@ -87,7 +87,7 @@ function fill(el, isToday, c, now) {
     if (!list.length) return;
     add("h", "UP NEXT");
     add("t", list[0].title);
-    add("s", `${timeText(list[0].at, tz)} · ${whenText(list[0].at, now)}`);
-    if (list[1]) add("s", `Later: ${timeText(list[1].at, tz)}  ${list[1].title}`);
+    add("s", `${timeText(list[0].at)} · ${whenText(list[0].at, now)}`);
+    if (list[1]) add("s", `Later: ${timeText(list[1].at)}  ${list[1].title}`);
   }
 }
