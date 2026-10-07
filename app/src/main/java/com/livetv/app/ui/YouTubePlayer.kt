@@ -169,7 +169,7 @@ fun WebPreview(url: String, modifier: Modifier = Modifier, still: Boolean = true
     val page = remember(url) { if (still && tv) "$url&still=1" else url }
     // The moving video on a TV: the page goes in a plain WebView straight in the window, over this box,
     // like full screen (WebChannelActivity), where TVs do show the picture. Inside Compose they don't,
-    // even in a square box (1.9.74 test) (1.9.77).
+    // even in a square box (1.9.74 test) (1.9.78).
     val activity = remember { context.findActivity() }
     if (!still && tv && activity != null) {
         WindowWebPreview(activity, page, modifier, onFallback)
