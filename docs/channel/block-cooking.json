@@ -1,43 +1,50 @@
 {
  "name": "کھانا پکائیں",
- "built": "2026-10-07 17:48 UTC",
- "secs": 1376,
+ "built": "2026-10-07 18:34 UTC",
+ "secs": 1280,
  "videos": [
   {
-   "id": "2mtDUTRCsM8",
-   "title": "Ganesh Chaturthi Special! 4 Delicious Bhog Recipes for Bappa By Chef@sanjeevkapoorkhazana",
+   "id": "SZ96Y0aaJyY",
+   "title": "Rakhshbandhan Special: Chocolate Crunch Cake | Sanjeev Kapoor | Festive Delights 2026 with Nutralite",
    "label": "Sanjeev Kapoor",
-   "secs": 722,
+   "secs": 568,
    "kind": "cooking"
   },
   {
-   "id": "4M9Cvo73Oq4",
-   "title": "5 Café Favourites You Can Make at Home | Easy & Delicious Recipes By Chef@sanjeevkapoorkhazana",
-   "label": "Sanjeev Kapoor",
-   "secs": 654,
+   "id": "9IpyaLhbP6k",
+   "title": "Creamy Cheesy Chicken Dilkhush Kabab Recipe l How To Make Chicke Dilkhush Kabab",
+   "label": "Kitchen with Amna",
+   "secs": 403,
+   "kind": "cooking"
+  },
+  {
+   "id": "XilDKdsuScM",
+   "title": "10 Minutes Mango Delight Recipe l Mango Dessert Recipe By Kitchen With Amna",
+   "label": "Kitchen with Amna",
+   "secs": 309,
    "kind": "cooking"
   }
  ],
  "spares": [
   {
-   "id": "dUL-hgIyUz8",
-   "title": "Mutton Lasagna Recipe By Kitchen With Amna",
+   "id": "CpaP0VRPbXc",
+   "title": "Kali Mirch Mutton Karahi l Lahori Black Pepper Mutton Karahi Recipe l Bakra Eid Special Recipe",
    "label": "Kitchen with Amna",
-   "secs": 397,
+   "secs": 357,
    "kind": "cooking"
   },
   {
-   "id": "S8EG6L9wHok",
-   "title": "Best Mushroom recipe | | Dhaba Mushroom Masala | Chef Ranveer Brar",
-   "label": "Ranveer Brar",
-   "secs": 557,
+   "id": "YPlxK_xX3qU",
+   "title": "Mughlai Fish Curry Recipe | Flavorful Fish Curry | Chef A.R. Jamali | Masala TV",
+   "label": "Masala TV",
+   "secs": 507,
    "kind": "cooking"
   },
   {
-   "id": "k-XWayH760U",
-   "title": "Kadhi Pakoda recipe | Kadhi Chawal",
+   "id": "JD2bTIzs0TM",
+   "title": "High Protein Laddoo Recipe | Sugar Free laddoo",
    "label": "Kabita's Kitchen",
-   "secs": 599,
+   "secs": 571,
    "kind": "cooking"
   }
  ]
