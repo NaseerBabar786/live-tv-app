@@ -35,6 +35,8 @@ object Subscription {
         val features: Map<Plans.Tier, Set<Plans.Feature>> = Plans.DEFAULT_FEATURES,
         /** The owner's promotions (Christmas, Labour Day...), from config/promos. */
         val promos: List<Promo> = emptyList(),
+        /** Channels the owner adds to packages without All channels, as typed: "Aaj Tak, ARY News". */
+        val extraChannels: String = "",
     )
 
     /**
@@ -115,6 +117,7 @@ object Subscription {
         if (p.contains("features_free")) {
             Plans.setFeatures(Plans.Tier.entries.associateWith { Plans.Feature.parse(p.getString("features_${it.name.lowercase()}", "") ?: "") })
         }
+        Plans.setExtraChannels(p.getString("extra_channels", "") ?: "")
         p.getString("tier", null)?.let { name ->
             Plans.Tier.entries.firstOrNull { it.name == name }?.let { tier ->
                 val until = p.getLong("until", 0L)
@@ -160,9 +163,11 @@ object Subscription {
             }
             _status.value = status
             Plans.setFeatures(if (offer.enforced) features else null)
+            Plans.setExtraChannels(offer.extraChannels)
             Plans.set(status.tier)
             context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().apply {
                 putString("tier", status.tier.name)
+                putString("extra_channels", offer.extraChannels)
                 putLong("until", status.until?.time ?: 0L)
                 Plans.Tier.entries.forEach { t ->
                     val key = "features_${t.name.lowercase()}"
@@ -268,6 +273,7 @@ object Subscription {
             trialDays = trial.coerceIn(0, 365),
             prices = prices,
             howToPay = f.str("howToPay").ifBlank { DEFAULT_HOW_TO_PAY },
+            extraChannels = f.str("extra_channels").trim(),
             // "free_features" and so on: what the owner ticked; a package never saved keeps its default.
             features = Plans.Tier.entries.associateWith { t ->
                 val key = "${t.name.lowercase()}_features"
@@ -298,7 +304,12 @@ object Subscription {
 
     /** A line listing [has] for the packages screen. */
     fun describe(has: Set<Plans.Feature>): String {
-        val channels = if (Plans.Feature.AllChannels in has) "All channels" else "Only our own Bazaar channels"
+        val extra = _offer.value.extraChannels
+        val channels = when {
+            Plans.Feature.AllChannels in has -> "All channels"
+            extra.isNotBlank() -> "Our own Bazaar channels plus $extra"
+            else -> "Only our own Bazaar channels"
+        }
         val extras = Plans.Feature.entries.filter { it != Plans.Feature.AllChannels && it in has }.map { it.label }
         return "$channels. 1+List" + extras.joinToString("") { ", $it" } + ", full screen and favourites"
     }

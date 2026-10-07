@@ -62,7 +62,7 @@ const app = q.has("app");
 const ids = (q.get("ids") || "").split(",").filter(id => /^[\w-]{11}$/.test(id));
 const secs = (q.get("secs") || "").split(",").map(Number);
 const at = +q.get("at") || Date.now(), until = +q.get("until") || 0;
-const name = q.get("name") || "Bazaar TV";
+const name = q.get("name") || "Bazaar TV One";
 const logo = q.get("logo") || "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png";
 const corner = q.get("corner") || "tr";
 const starts = [];

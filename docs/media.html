@@ -252,7 +252,7 @@ async function sendToChannel(i, btn) {
     }
     ch.loop.push(v.id);
     const data = JSON.stringify(ch);
-    await fs.setDoc(fs.doc(db, "sponsors", "_channel"), { name: ch.name || "Bazaar TV", active: ch.active !== false, data, updatedAt: fs.serverTimestamp() });
+    await fs.setDoc(fs.doc(db, "sponsors", "_channel"), { name: ch.name || "Bazaar TV One", active: ch.active !== false, data, updatedAt: fs.serverTimestamp() });
     try { await fs.setDoc(fs.doc(db, "channel", "main"), { data, updatedAt: fs.serverTimestamp() }); } catch {}
     $("saveMsg").innerHTML = `<span class="ok">✓ "${esc(i.title)}" is now on Bazaar TV (end of the loop). TVs pick it up within about 10 minutes. <a href="studio">Open the Studio</a> to move it or give it a time slot.</span>`;
   } catch (e) {

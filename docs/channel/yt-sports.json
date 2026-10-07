@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Sports",
- "built": "2026-10-07 17:47 UTC",
+ "built": "2026-10-07 18:31 UTC",
  "videos": [
   {
    "id": "VpRNJC6xTeI",
@@ -339,6 +339,14 @@
    "top": true
   },
   {
+   "id": "vnrqNB-rF_o",
+   "title": "Full Match Highlights | Day 2 | PTV vs Ghani | Abbottabad CS | President Trophy Grade-I | MZK1K",
+   "label": "Pakistan Cricket",
+   "mins": 30.966666666666665,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "Vmj6nt9wwcw",
    "title": "Hasan Nawaz's media talk ahead of Pakistan's T20I series against Sri Lanka",
    "label": "Pakistan Cricket",
@@ -499,14 +507,6 @@
    "top": true
   },
   {
-   "id": "7y34AYVaS5Y",
-   "title": "Post Match Ceremony | Pakistan vs Sri Lanka | Match 2 | Women U19 Tri-Nation Series 2026 | MZP1J",
-   "label": "Pakistan Cricket",
-   "mins": 3.35,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "usE17A15OFU",
    "title": "🔴 - 𝐑𝐄𝐋𝐈𝐕𝐄 | Pakistan vs Sri Lanka | Pakistan Win By 36 Runs | 3rd T20I 2017 | PCB | MR1K",
    "label": "Pakistan Cricket",
@@ -603,18 +603,18 @@
    "top": true
   },
   {
-   "id": "a7vWUCAtk5A",
-   "title": "Full Highlights | Pakistan vs South Africa ODI Series | 3rd ODI | PCB | M2R1U",
-   "label": "Pakistan Cricket",
-   "mins": 19.366666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "Qp5U64cxW5o",
    "title": "Extended Highlights | Pakistan Women vs Zimbabwe Women | Match 03 | T20I Series 2026 | M9H1K",
    "label": "Pakistan Cricket",
    "mins": 25.5,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "a7vWUCAtk5A",
+   "title": "Full Highlights | Pakistan vs South Africa ODI Series | 3rd ODI | PCB | M2R1U",
+   "label": "Pakistan Cricket",
+   "mins": 19.366666666666667,
    "found": "2026-10-07",
    "top": true
   },
@@ -643,18 +643,18 @@
    "top": true
   },
   {
-   "id": "lEyjtvUnK2w",
-   "title": "2nd Innings Highlights | Pakistan W vs Bangladesh W | Women U19 Tri-Nation Series 2026 | MZP1J",
-   "label": "Pakistan Cricket",
-   "mins": 8.45,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "mRWx9ZBOcoM",
    "title": "Pakistan vs Australia 1st ODI 2026 | Full Match Highlights | ODI Series | PCB | MR1K",
    "label": "Pakistan Cricket",
    "mins": 29.083333333333332,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "lEyjtvUnK2w",
+   "title": "2nd Innings Highlights | Pakistan W vs Bangladesh W | Women U19 Tri-Nation Series 2026 | MZP1J",
+   "label": "Pakistan Cricket",
+   "mins": 8.45,
    "found": "2026-10-07",
    "top": true
   },
@@ -667,26 +667,18 @@
    "top": true
   },
   {
-   "id": "-maVoMfbxak",
-   "title": "Full Highlights | Pakistan vs South Africa Test Series 2025 | 1st Test Day 1 | PCB | M2R1U",
-   "label": "Pakistan Cricket",
-   "mins": 19.616666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "mmAMlEX-JGI",
-   "title": "1st Innings Highlights | Pakistan Women vs Zimbabwe Women | Match 02 | T20I Series 2026 | M9H1K",
-   "label": "Pakistan Cricket",
-   "mins": 10.583333333333334,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "FtHAcFe4BRk",
    "title": "Full Highlights | Pakistan vs South Africa T20I Series | 2nd T20I | PCB | M2R1U",
    "label": "Pakistan Cricket",
    "mins": 19.1,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "-maVoMfbxak",
+   "title": "Full Highlights | Pakistan vs South Africa Test Series 2025 | 1st Test Day 1 | PCB | M2R1U",
+   "label": "Pakistan Cricket",
+   "mins": 19.616666666666667,
    "found": "2026-10-07",
    "top": true
   },
@@ -963,14 +955,6 @@
    "top": true
   },
   {
-   "id": "8bUh6P-oQqU",
-   "title": "Anderson flips 🔥 Bellingham & Rogers Bring Vibes 😂 & Stones' Dance Scares Tuchel! 😱 | Best of Camp",
-   "label": "England Cricket",
-   "mins": 24.1,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "yx9k18xZqoM",
    "title": "Wayne Rooney's Best Goals | Unstoppable Volley Against Russia! | Top 5 | England",
    "label": "England Cricket",
@@ -1019,6 +1003,14 @@
    "top": true
   },
   {
+   "id": "SuygnFxX9UI",
+   "title": "Lionesses Put On A Show Before EURO 2025 | England 7-0 Jamaica | Highlights",
+   "label": "England Cricket",
+   "mins": 8.95,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "ycujUPJhRUs",
    "title": "Nwaneri, Gray and Esse In The Goals! | England U21 4-1 Moldova | UEFA Euro Qualifiers | Highlights",
    "label": "England Cricket",
@@ -1035,18 +1027,18 @@
    "top": true
   },
   {
-   "id": "emAIEADXAYM",
-   "title": "Italy 1-2 England | Kane Becomes England's Record All-Time Goal Scorer | Highlights",
-   "label": "England Cricket",
-   "mins": 3.6333333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "ojBfwwE9PVg",
    "title": "Three Lions Defeated at Wembley | England 0-1 Japan | International Match | Highlights",
    "label": "England Cricket",
    "mins": 3.466666666666667,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "Pmqyrm4C7b0",
+   "title": "Lionesses Defeated In Manchester | England 1-2 Brazil | Homecoming Series | Highlights",
+   "label": "England Cricket",
+   "mins": 5.133333333333334,
    "found": "2026-10-07",
    "top": true
   },
@@ -1435,18 +1427,18 @@
    "top": true
   },
   {
-   "id": "stfjKr6kaWM",
-   "title": "DANGER, FATSHI NE VEUT PLUS DES ELECTIONS EN 2023, LA PREUVE ! S. LUKONDE , PM OU FIGUGRANT",
+   "id": "entCWysU9wA",
+   "title": "ANNONCE, A SUIVRE A 16H00, EMISSION CHAUDE: F. KALOMBO, D. SAFU, M. MUKEBAY SUR UN MEME PLATEAU.",
    "label": "CPL",
-   "mins": 41.983333333333334,
+   "mins": 2.8333333333333335,
    "found": "2026-10-07",
    "top": true
   },
   {
-   "id": "piAepyDihlA",
-   "title": "ALLO CPL: KALEV ZAPPE LA JUSTICE, SAMA LUKONDE, PL OU PLACEBO DE FATSHI? JKK A DUBAI, DEJA L'EXIL?",
+   "id": "stfjKr6kaWM",
+   "title": "DANGER, FATSHI NE VEUT PLUS DES ELECTIONS EN 2023, LA PREUVE ! S. LUKONDE , PM OU FIGUGRANT",
    "label": "CPL",
-   "mins": 33.88333333333333,
+   "mins": 41.983333333333334,
    "found": "2026-10-07",
    "top": true
   },
@@ -1463,14 +1455,6 @@
    "title": "DECRY 17.4.21, PROLONGEMENT MANDAT FATSHI, IL NE FAUT PAS. DEPUTES FRONDEURS, CHANTAGE EHONTE.",
    "label": "CPL",
    "mins": 41.56666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "_TA2wJePRzM",
-   "title": "DECRY 1.6.21, LOI CENI, FAYULU PLEURE, FATSHI S'OBSTINE. JLIST ACHETE, LE FATSHISTES SE PERDENT.",
-   "label": "CPL",
-   "mins": 35.43333333333333,
    "found": "2026-10-07",
    "top": true
   },
@@ -1659,18 +1643,18 @@
    "top": true
   },
   {
-   "id": "lCC9QSv-mHA",
-   "title": "Greatest Money in the Bank Ladder Match wins: WWE Top 10, Oct. 4, 2026",
-   "label": "WWE",
-   "mins": 9.4,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "RIWndBEgzFU",
    "title": "Zilla Fatu to Lexis King: “I’m going to **** you up!”: NXT highlights, Sept. 29, 2026",
    "label": "WWE",
    "mins": 3.05,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "lCC9QSv-mHA",
+   "title": "Greatest Money in the Bank Ladder Match wins: WWE Top 10, Oct. 4, 2026",
+   "label": "WWE",
+   "mins": 9.4,
    "found": "2026-10-07",
    "top": true
   },
@@ -1687,14 +1671,6 @@
    "title": "Tiffany Stratton qualifies for Money in the Bank Ladder Match: SmackDown highlights, Oct. 2, 2026",
    "label": "WWE",
    "mins": 3.283333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "_Qp9xSOwFHg",
-   "title": "Top 10 SmackDown moments: WWE Top 10, Oct. 2, 2026",
-   "label": "WWE",
-   "mins": 8.15,
    "found": "2026-10-07",
    "top": true
   },
@@ -1843,58 +1819,10 @@
    "top": true
   },
   {
-   "id": "FSxAjmP1keY",
-   "title": "MJF vs Kenny Omega ⏪ 2023",
-   "label": "AEW",
-   "mins": 2.0,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "XDcfLcRmZaQ",
-   "title": "AEW Dynamite Highlights in 8 Minutes: Chicago, IL | AEW Highlights 7/16/25",
-   "label": "AEW",
-   "mins": 8.983333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "X0lVKxmedBs",
-   "title": "The Elite vs Lethal Twist (6/20/26) | AEW Collision Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.1666666666666665,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "-koTgdx0M-A",
-   "title": "Kenny Omega vs Bad Dude Tito (6/13/26) | AEW Collision Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.1333333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "c6MTksDzmmQ",
-   "title": "Maya World vs Julia Hart (7/2/26) | AEW Collision Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.15,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "CEyMiBUkcNU",
    "title": "Lio Rush CRASHES the Cage Match! 😱 | AEW Forbidden Door 2026 Highlights Presented by Upper Deck",
    "label": "AEW",
    "mins": 2.1333333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "9-UJv-WHFdU",
-   "title": "Ospreay & Strickland get INTENSE! (6/17/26) | AEW Dynamite Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.066666666666667,
    "found": "2026-10-07",
    "top": true
   },
@@ -1924,7 +1852,7 @@
   },
   {
    "id": "9dX1HXGiTPM",
-   "title": "Best Volley From FIFA World Cup 2014? It Has To Be James!",
+   "title": "The 2014 FIFA World Cup Had Some Insane Volleys And Half-Volleys!",
    "label": "FIFA",
    "mins": 8.666666666666666,
    "found": "2026-10-07",
@@ -1940,7 +1868,7 @@
   },
   {
    "id": "AIo5-YN_DF8",
-   "title": "Just Another Lionel Messi Trademark Winner For Argentina! | 2014 FIFA World Cup",
+   "title": "10-Min Highlights | Argentina 2 – 1 Bosnia and Herzegovina | 2014 FIFA World Cup",
    "label": "FIFA",
    "mins": 10.0,
    "found": "2026-10-07",
@@ -1956,7 +1884,7 @@
   },
   {
    "id": "WiBKgOpdvkE",
-   "title": "Incredible Volleys and Half Volleys From The 1994 FIFA World Cup",
+   "title": "These Volleys And Half Volleys From The 1994 FIFA World Cup Were Special!",
    "label": "FIFA",
    "mins": 4.233333333333333,
    "found": "2026-10-07",
@@ -1964,7 +1892,7 @@
   },
   {
    "id": "6IojQsXHsB0",
-   "title": "These 2002 FIFA World Cup Long Range Goals Are Truly Special!",
+   "title": "13 Minutes Of Just SENSATIONAL GOALS | 2002 FIFA World Cup",
    "label": "FIFA",
    "mins": 13.116666666666667,
    "found": "2026-10-07",
@@ -1988,7 +1916,7 @@
   },
   {
    "id": "jZWLHQI7A-w",
-   "title": "Perfect Group Stage Complete | Netherlands 2-0 Chile | 2014 World Cup EXTENDED HIGHLIGHTS",
+   "title": "10-Min Highlights | Netherlands Ease Past Chile | 2014 FIFA World Cup",
    "label": "FIFA",
    "mins": 10.0,
    "found": "2026-10-07",
@@ -1996,7 +1924,7 @@
   },
   {
    "id": "aBls45aOzTY",
-   "title": "10-Min Highlights | Cameroon 1-4 Brazil | 2014 FIFA World Cup",
+   "title": "Neymar Double Defeats Cameroon | 2014 EXTENDED HIGHLIGHTS",
    "label": "FIFA",
    "mins": 13.816666666666666,
    "found": "2026-10-07",
@@ -2004,7 +1932,7 @@
   },
   {
    "id": "6brqrA3oiqI",
-   "title": "Goals From Downtown! Screamers To See On Repeat | 2022 World Cup",
+   "title": "2022 FIFA World Cup Goals You Will Watch On Repeat!",
    "label": "FIFA",
    "mins": 11.4,
    "found": "2026-10-07",
@@ -2028,7 +1956,7 @@
   },
   {
    "id": "Hkphb8DmmK4",
-   "title": "EXTENDED HIGHLIGHTS | Uruguay 1-3 Costa Rica | 2014 FIFA World Cup",
+   "title": "When Costa Rica Stunned Uruguay! | 2014 FIFA World Cup Highlights",
    "label": "FIFA",
    "mins": 10.0,
    "found": "2026-10-07",
@@ -2051,10 +1979,10 @@
    "top": true
   },
   {
-   "id": "-LHb5yN-OzI",
-   "title": "Highlights | Argentina 3-2 Egypt | FIFA World Cup 2026™",
+   "id": "j8BxnOqoKG8",
+   "title": "Brazil v Spain | Quarter-Final | FIFA Beach Soccer World Cup Seychelles 2025™ | Match Highlights",
    "label": "FIFA",
-   "mins": 2.183333333333333,
+   "mins": 2.0,
    "found": "2026-10-07",
    "top": true
   },
@@ -2364,7 +2292,7 @@
   },
   {
    "id": "-vk6HV7dwVw",
-   "title": "From 18th to The Podium! | Lewis Hamilton's Comeback In Sepang | 2026 Bahrain Grand Prix In Malaysia",
+   "title": "Lewis Hamilton's EPIC Comeback In Sepang! | 2026 Bahrain Grand Prix In Malaysia",
    "label": "Formula 1",
    "mins": 8.05,
    "found": "2026-10-07",
@@ -2580,7 +2508,7 @@
   },
   {
    "id": "wPBq3j-FzK0",
-   "title": "Scorpion Saves & Glove Robberies! | NHL Saves of the Week",
+   "title": "Top NHL Saves of Week 1 | 2026-27 Season",
    "label": "NHL",
    "mins": 6.066666666666666,
    "found": "2026-10-07",
@@ -2859,6 +2787,14 @@
    "top": true
   },
   {
+   "id": "Fd6CwEINpfk",
+   "title": "Is Crosby-Ovechkin the best head-to-head rivalry in hockey history? | The Talking Point",
+   "label": "TSN",
+   "mins": 2.783333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "BRMR3qvw074",
    "title": "Habs Lunch - Four things Habs fans shouldn't panic about | Montreal 690",
    "label": "TSN",
@@ -2967,14 +2903,6 @@
    "title": "Insider Trading: Panthers breathe sigh of relief on Barkov",
    "label": "TSN",
    "mins": 5.1,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "2YN3BuutyRo",
-   "title": "Throw the Flag: Henoc Muamba calls out Ben Johnson, Jets offence & Browns haters",
-   "label": "TSN",
-   "mins": 3.5166666666666666,
    "found": "2026-10-07",
    "top": true
   },
@@ -3163,42 +3091,114 @@
    "top": true
   },
   {
-   "id": "amMJfaB5dXo",
-   "title": "Rohit Hundred Seals Win | South Africa vs India - Match Highlights | ICC Cricket World Cup 2019",
-   "label": "ICC",
-   "mins": 5.133333333333334,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "gLMHVM-m9p0",
-   "title": "ICC #WT20 Australia vs New Zealand  Match Highlights",
-   "label": "ICC",
-   "mins": 2.95,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "B-QAbYx7EWs",
-   "title": "Extended Highlights | Pakistan Women vs Zimbabwe Women | Match 02 | T20I Series 2026 | M9H1K",
+   "id": "7y34AYVaS5Y",
+   "title": "Post Match Ceremony | Pakistan vs Sri Lanka | Match 2 | Women U19 Tri-Nation Series 2026 | MZP1J",
    "label": "Pakistan Cricket",
-   "mins": 24.416666666666668,
+   "mins": 3.35,
    "found": "2026-10-07",
    "top": true
   },
   {
-   "id": "8H2KRJn6C8I",
-   "title": "Full Highlights | Pakistan Women vs Zimbabwe Women | Match 01 | ODI Series 2026 | M9H1K",
+   "id": "mmAMlEX-JGI",
+   "title": "1st Innings Highlights | Pakistan Women vs Zimbabwe Women | Match 02 | T20I Series 2026 | M9H1K",
    "label": "Pakistan Cricket",
-   "mins": 25.983333333333334,
+   "mins": 10.583333333333334,
    "found": "2026-10-07",
    "top": true
   },
   {
-   "id": "-IGpzCDvOeo",
-   "title": "Full Match Highlights | Pakistan Women v West Indies Women | Women's Tri-Series 2026 | M2 | MZF1U",
-   "label": "Pakistan Cricket",
-   "mins": 24.633333333333333,
+   "id": "8bUh6P-oQqU",
+   "title": "Anderson flips 🔥 Bellingham & Rogers Bring Vibes 😂 & Stones' Dance Scares Tuchel! 😱 | Best of Camp",
+   "label": "England Cricket",
+   "mins": 24.1,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "emAIEADXAYM",
+   "title": "Italy 1-2 England | Kane Becomes England's Record All-Time Goal Scorer | Highlights",
+   "label": "England Cricket",
+   "mins": 3.6333333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "piAepyDihlA",
+   "title": "ALLO CPL: KALEV ZAPPE LA JUSTICE, SAMA LUKONDE, PL OU PLACEBO DE FATSHI? JKK A DUBAI, DEJA L'EXIL?",
+   "label": "CPL",
+   "mins": 33.88333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "_TA2wJePRzM",
+   "title": "DECRY 1.6.21, LOI CENI, FAYULU PLEURE, FATSHI S'OBSTINE. JLIST ACHETE, LE FATSHISTES SE PERDENT.",
+   "label": "CPL",
+   "mins": 35.43333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "_Qp9xSOwFHg",
+   "title": "Top 10 SmackDown moments: WWE Top 10, Oct. 2, 2026",
+   "label": "WWE",
+   "mins": 8.15,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "FSxAjmP1keY",
+   "title": "MJF vs Kenny Omega ⏪ 2023",
+   "label": "AEW",
+   "mins": 2.0,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "XDcfLcRmZaQ",
+   "title": "AEW Dynamite Highlights in 8 Minutes: Chicago, IL | AEW Highlights 7/16/25",
+   "label": "AEW",
+   "mins": 8.983333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "X0lVKxmedBs",
+   "title": "The Elite vs Lethal Twist (6/20/26) | AEW Collision Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.1666666666666665,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "-koTgdx0M-A",
+   "title": "Kenny Omega vs Bad Dude Tito (6/13/26) | AEW Collision Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.1333333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "c6MTksDzmmQ",
+   "title": "Maya World vs Julia Hart (7/2/26) | AEW Collision Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.15,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "9-UJv-WHFdU",
+   "title": "Ospreay & Strickland get INTENSE! (6/17/26) | AEW Dynamite Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.066666666666667,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "-LHb5yN-OzI",
+   "title": "Highlights | Argentina 3-2 Egypt | FIFA World Cup 2026™",
+   "label": "FIFA",
+   "mins": 2.183333333333333,
    "found": "2026-10-07",
    "top": true
   }

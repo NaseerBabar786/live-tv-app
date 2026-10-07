@@ -69,6 +69,7 @@
   .stations button.sel { border-color: var(--focus); }
   .stations img { width: 84px; height: 44px; object-fit: contain; }
   .stations small { display: block; font-weight: 400; color: var(--muted); }
+  .stations .dial { color: var(--focus); font-weight: 800; }
   /* ---------- layout: one column on phones and laptops, side by side on wide screens ---------- */
   .studio { display: flex; flex-direction: column; }
   .studio .side, .studio .work, .studio .steps { display: contents; }
@@ -326,7 +327,7 @@
     <section class="panel" id="step1">
       <h2><span class="num">1</span> Your channel</h2>
       <div class="two">
-        <label class="f">Channel name<input id="name" maxlength="40" placeholder="Bazaar TV"></label>
+        <label class="f">Channel name (fixed)<input id="name" readonly tabindex="-1" style="opacity:.7;cursor:default"></label>
         <label class="f">Time zone of your time slots
           <select id="tz">
             <option value="America/Toronto">Toronto / New York (Eastern)</option>
@@ -651,9 +652,11 @@ function stationButton(st, note) {
   const b = document.createElement("button");
   b.type = "button";
   b.className = st === station ? "sel" : "";
-  b.innerHTML = `<img alt=""><span><span></span><small></small></span>`;
+  // The channel number first, as big as the name: "1. Bazaar TV" (owner, 2026-10-07).
+  b.innerHTML = `<img alt=""><span><span><b class="dial"></b> <span class="nm"></span></span><small></small></span>`;
   b.querySelector("img").src = st.logo;
-  b.querySelector("span span").textContent = st.name;
+  b.querySelector(".dial").textContent = st.dial + ".";
+  b.querySelector(".nm").textContent = st.name;
   b.querySelector("small").textContent = note;
   b.onclick = async () => {
     if (st === station) return;
@@ -731,6 +734,8 @@ async function loadSaved() {
   }
   // The logo isn't picked here any more: a channel keeps the one already saved, else its own Bazaar logo.
   if (!saved.logo) saved.logo = station.logo;
+  // Each channel keeps its own fixed name (owner, 2026-10-07): "Bazaar TV One", "Bazaar Cinema"...
+  saved.name = station.name;
   c = clone(saved);
   dirty = false;
   renderAll();
@@ -744,7 +749,6 @@ function renderChannel() {
   $("ticker").value = c.ticker || "";
   $("tickerOn").checked = c.tickerOn !== false;
 }
-$("name").oninput = () => { c.name = $("name").value; changed(false); };
 $("tz").onchange = () => { c.tz = $("tz").value; changed(); };
 $("active").onchange = () => { c.active = $("active").checked; changed(); };
 $("ticker").oninput = () => { c.ticker = $("ticker").value; changed(false); };
@@ -1712,7 +1716,7 @@ $("useAuto").onclick = async () => {
 $("copyRule").onclick = () => navigator.clipboard.writeText($("ruleText").textContent).then(() => $("copyRule").textContent = "Copied ✓");
 
 $("save").onclick = async () => {
-  c.name = (c.name || "").trim() || "My Channel";
+  c.name = station.name;
   if (!c.videos.length) { $("saveMsg").innerHTML = '<span class="err">Add at least one video (step 2) before saving.</span>'; return; }
   if (!c.loop.length && !c.slots.length) { $("saveMsg").innerHTML = '<span class="err">Put at least one video in the loop (step 3) or a time slot (step 4).</span>'; return; }
   const data = JSON.stringify(c);
