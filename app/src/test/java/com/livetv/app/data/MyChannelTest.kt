@@ -218,7 +218,7 @@ class MyChannelTest {
         assertTrue(MyChannel.cardAt(c, first)!!.today)
         assertEquals(null, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS))
         // Late at night the list fills up past midnight, and never repeats the Up next programme.
-        val now = at(23, 40)
+        val now = at(23, 59)
         val next = MyChannel.upNext(c, now, 1).first()
         val later = MyChannel.laterShows(c, now, next.title)
         assertTrue(later.size >= 3)
