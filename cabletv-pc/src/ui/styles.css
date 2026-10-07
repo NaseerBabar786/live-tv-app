@@ -171,3 +171,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .field { width: 360px; background: var(--surface); color: var(--text); border: 2px solid var(--surface2); border-radius: 10px; padding: 11px 14px; font: inherit; outline: none; }
 .field:focus { border-color: var(--focus); }
 .links { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+
+/* Games (screens/games.js) */
+.games { position: absolute; inset: 0; padding: 28px 36px; background: var(--bg, #0b0f1e); overflow-y: auto; }
+.games-head { display: flex; align-items: baseline; gap: 18px; }
+.games-head h1 { margin: 0; font-size: 30px; }
+.games-sub { color: var(--muted); font-size: 15px; }
+.games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; margin-top: 22px; }
+.game-card { position: relative; border: 0; border-radius: 16px; padding: 22px 10px; background: var(--surface, #1d2238); color: var(--text); cursor: pointer; outline: none; }
+.game-card:focus, .game-card:hover { box-shadow: 0 0 0 3px var(--focus); transform: scale(1.03); }
+.game-icon { font-size: 50px; }
+.game-name { font-size: 19px; font-weight: 700; margin-top: 8px; }
+.game-rec { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.game-new { position: absolute; top: 8px; right: 8px; background: var(--focus); color: #000; font-size: 11px; font-weight: 800; border-radius: 6px; padding: 2px 6px; }
+.games-more { color: var(--muted); margin-top: 26px; font-size: 14px; }
+.game-frame { position: fixed; inset: 0; width: 100vw; height: 100vh; border: 0; z-index: 60; background: #000; }

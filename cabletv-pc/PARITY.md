@@ -19,7 +19,7 @@ at every build (`scripts/prepare.js`); changing it needs a new PC version too.
 ## Not on PC yet (second test build)
 
 Browse, Carousel, Strip, Duo, News, CP24, Home and My Screen modes; Movies & Dramas (Library);
-Games; Messages, Suggestions, promo codes and billing details. The Modes menu shows them as
+the 24 classic games (the PC has the two modern ones); Messages, Suggestions, promo codes and billing details. The Modes menu shows them as
 "coming soon on PC".
 
 ## Changes that needed nothing on PC
@@ -53,3 +53,5 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 - 1.10.2 (PC 1.0.6): Settings has "MTA channels" (off by default). When on, MTA's 8 live channels come
   right after our Bazaar channels as 16 to 23 (the other channels from 24), also in Favorites and in
   every language, and they are free in every package (`mta.js`, `channels.js`, `plans.js`).
+- 1.10.3 (PC 1.0.7): two modern games, Block Burst and Color Pour, in a 🎮 Games screen. Both apps open the
+  very same pages (`app/src/main/assets/games`, copied in by `scripts/prepare.js`; `screens/games.js`).

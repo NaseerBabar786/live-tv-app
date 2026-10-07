@@ -119,3 +119,15 @@ val GAMES = listOf(
     GameInfo("words", "Word Guess", "🔤", "Guess the hidden word one letter at a time. Arrows pick a letter, OK tries it. Seven wrong guesses and the round is lost.", Scoring.Best) { WordGuess() },
     GameInfo("carrom", "Carrom", "⚪", "Left and Right move the striker, Up and Down aim. Hold OK to build power, let go to shoot. Pocket every coin in as few shots as you can.", Scoring.Fewest) { Carrom() },
 )
+
+/**
+ * One of the modern games (1.10.x): drawn by a page in assets/games with smooth animation, effects and
+ * sound, played with the remote, touch or a mouse. The PC app opens the same pages.
+ * The page reports its record (best score, highest level done) and [label] shows it on the menu.
+ */
+class WebGameInfo(val id: String, val name: String, val icon: String, val page: String, val label: (Int) -> String)
+
+val WEB_GAMES = listOf(
+    WebGameInfo("blockburst", "Block Burst", "💥", "blockburst.html") { "Best: $it" },
+    WebGameInfo("colorpour", "Color Pour", "🧪", "colorpour.html") { "Level $it done" },
+)

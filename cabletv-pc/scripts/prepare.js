@@ -20,6 +20,10 @@ for (const [from, to] of copies) {
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.copyFileSync(src, dest);
 }
+// The modern games: the same pages as the TV app's (app/src/main/assets/games).
+const games = path.join(root, '..', 'app', 'src', 'main', 'assets', 'games');
+fs.mkdirSync(path.join(ui, 'shared', 'games'), { recursive: true });
+for (const f of fs.readdirSync(games)) fs.copyFileSync(path.join(games, f), path.join(ui, 'shared', 'games', f));
 // Which Cable TV (Android) version this PC app is in step with, for Settings > About.
 const gradle = fs.readFileSync(path.join(root, '..', 'app', 'build.gradle.kts'), 'utf8');
 const tv = /create\("livetv"\)[\s\S]*?versionName = "([^"]+)"/.exec(gradle);
