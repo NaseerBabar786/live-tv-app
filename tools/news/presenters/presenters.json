@@ -102,6 +102,39 @@
     "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her late twenties sitting at a glossy news desk, long dark hair, elegant embroidered maroon shalwar kameez with a light dupatta on one shoulder, natural skin texture, both hands resting on the desk, looking into the camera with a gentle closed-mouth smile, real television news studio with blurred blue screens behind her, soft key light, Canon 85mm, shallow depth of field, photographed by a professional, not illustration",
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
+   },
+   {
+    "id": "anchor-6c",
+    "name": "Zara",
+    "ur": "زارا",
+    "seed": 5606,
+    "picture": "anchor-6",
+    "edit": "Dress her in a modest charcoal grey long-sleeved kurta with a soft ivory chiffon dupatta draped neatly over her head and shoulders, covering her hair. Keep her face, hairline, skin tone, pose, the news desk and the studio exactly the same; photorealistic.",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful young South Asian woman TV news anchor, shoulder-length dark hair neatly styled, small pearl earrings, wearing a buttoned-up black blazer over a high-collar cream blouse, modest outfit with a high neckline and long sleeves, fully covered, sitting at a glossy curved news desk, natural skin texture, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind her, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
+   },
+   {
+    "id": "anchor-8b",
+    "name": "Mehwish",
+    "ur": "مہوش",
+    "seed": 5808,
+    "picture": "anchor-8",
+    "edit": "Change her outfit to an elegant emerald green long-sleeved kameez with a matching emerald chiffon dupatta draped neatly over her head and shoulders, covering her hair. Keep her face, hairline, skin tone, pose, the news desk and the studio exactly the same; photorealistic.",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her late twenties wearing a neatly wrapped soft beige hijab, gentle makeup, wearing an elegant dusty rose long-sleeved kameez, modest outfit with a high neckline and long sleeves, fully covered, sitting at a glossy curved news desk, natural skin texture, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind her, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
+   },
+   {
+    "id": "anchor-8c",
+    "name": "Mehwish",
+    "ur": "مہوش",
+    "seed": 5808,
+    "picture": "anchor-8",
+    "edit": "Change her outfit to a modest navy blue long-sleeved kameez with fine silver embroidery and a light grey chiffon dupatta draped neatly over her head and shoulders, covering her hair. Keep her face, hairline, skin tone, pose, the news desk and the studio exactly the same; photorealistic.",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her late twenties wearing a neatly wrapped soft beige hijab, gentle makeup, wearing an elegant dusty rose long-sleeved kameez, modest outfit with a high neckline and long sleeves, fully covered, sitting at a glossy curved news desk, natural skin texture, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind her, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
    }
   ]
  }

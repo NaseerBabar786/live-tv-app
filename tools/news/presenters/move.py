@@ -22,6 +22,21 @@ def length(f):
 def picture(p, out):
     url = ("https://image.pollinations.ai/prompt/" + urllib.parse.quote(p["prompt"]) +
            f"?width=1280&height=768&seed={p['seed']}&nologo=true&model=flux")
+    if p.get("edit"):
+        # Same woman in a different outfit: edit her own picture (Pollinations kontext), keeping the face.
+        src = f"https://github.com/{os.environ.get('GITHUB_REPOSITORY', 'NaseerBabar786/live-tv-app')}/releases/download/channel-media/{p['picture']}.jpg"
+        edit = ("https://image.pollinations.ai/prompt/" + urllib.parse.quote(p["edit"]) +
+                f"?model=kontext&image={urllib.parse.quote(src, safe='')}&width=1280&height=720&seed={p['seed']}&nologo=true")
+        try:
+            req = urllib.request.Request(edit, headers={"User-Agent": "BazaarTV-news/1.0"})
+            with urllib.request.urlopen(req, timeout=240) as r, open(out, "wb") as f:
+                f.write(r.read())
+            im = Image.open(out).convert("RGB").resize((1280, 720), Image.LANCZOS)
+            im.save(out, quality=95); print("edited picture", out, flush=True); return
+        except Exception as e:
+            print("edit failed, making a new picture instead:", e, flush=True)
+            url = ("https://image.pollinations.ai/prompt/" + urllib.parse.quote(p["prompt"] + ". " + p["edit"]) +
+                   f"?width=1280&height=768&seed={p['seed']}&nologo=true&model=flux")
     for a in range(6):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "BazaarTV-news/1.0"})
