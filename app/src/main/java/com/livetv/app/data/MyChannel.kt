@@ -122,6 +122,10 @@ object MyChannel {
 
     fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
 
+    /** True when [channel] is one of ours with its own scrolling line along the bottom (MyChannelOverlay). */
+    fun hasTicker(channel: Channel?) =
+        isMine(channel) && configs.value[channel!!.url.removePrefix(SCHEME)]?.ticker != null
+
     class Video(
         val id: String,
         val title: String,
