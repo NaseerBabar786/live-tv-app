@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,7 +40,7 @@ fun NewsScreenSection() {
     val choices by NewsScreen.choices.collectAsStateWithLifecycle()
     Text("Customize News screen", fontWeight = FontWeight.Bold)
     Text(
-        "Press OK on a spot to change what it shows.",
+        if (rememberIsPhone()) "Tap a spot to change what it shows." else "Press OK on a spot to change what it shows.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )
@@ -71,7 +72,7 @@ fun Cp24ScreenSection() {
     val choices by Cp24Screen.choices.collectAsStateWithLifecycle()
     Text("Customize CP24 screen", fontWeight = FontWeight.Bold)
     Text(
-        "Press OK on a section to change what it shows.",
+        if (rememberIsPhone()) "Tap a section to change what it shows." else "Press OK on a section to change what it shows.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )
@@ -87,7 +88,7 @@ fun MyScreenSection() {
     val choices by MyScreen.choices.collectAsStateWithLifecycle()
     Text("Customize My Screen", fontWeight = FontWeight.Bold)
     Text(
-        "Press OK to change each one. Whatever you pick fills the whole screen; the ticker stays.",
+        (if (rememberIsPhone()) "Tap" else "Press OK") + " to change each one. Whatever you pick fills the whole screen; the ticker stays.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )
@@ -115,7 +116,8 @@ private fun HomeScreenSection() {
     val values by ScreenLooks.values.collectAsStateWithLifecycle()
     Text("Customize Home screen", fontWeight = FontWeight.Bold)
     Text(
-        "To change a tile, close this, move to the tile with the arrows and press OK.",
+        if (rememberIsPhone()) "To change a tile, close this and tap the tile."
+        else "To change a tile, close this, move to the tile with the arrows and press OK.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )
@@ -145,7 +147,7 @@ private fun TileSection(tile: TileRef, onNextSecond: (() -> Unit)?) {
     val content = tile.mySection?.let { myChoices[it] } ?: ScreenLooks.value(values, "${tile.id}/Shows", shows)
     Text("Customize: ${tile.title}", fontWeight = FontWeight.Bold)
     Text(
-        "Press OK on a line to change it. Every change shows straight away.",
+        (if (rememberIsPhone()) "Tap a line" else "Press OK on a line") + " to change it. Every change shows straight away.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )
@@ -165,7 +167,7 @@ private fun TileSection(tile: TileRef, onNextSecond: (() -> Unit)?) {
 /**
  * The screen's own settings, opened from inside the mode (hold OK, Menu, or tap ⚙). A panel on
  * the right with the screen still bright behind it, so each change shows straight away.
- * Back or Done closes it.
+ * Back or Done closes it (or, on a phone, a tap beside the panel).
  */
 @Composable
 fun ScreenSettings(
@@ -189,6 +191,8 @@ fun ScreenSettings(
         LaunchedEffect(Unit) { runCatching { done.requestFocus() } }
         SettingsTheme {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.CenterEnd) {
+                // A tap on the screen beside the panel closes it, like Back (the panel itself keeps its taps).
+                Box(Modifier.matchParentSize().focusProperties { canFocus = false }.tap(onTap = onDone))
                 Surface(
                     modifier = Modifier.fillMaxWidth(0.42f).widthIn(min = 280.dp, max = 380.dp).fillMaxHeight(),
                     color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),

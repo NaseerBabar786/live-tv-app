@@ -375,8 +375,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val number = typed.toIntOrNull()
         typedNumber = ""
         if (number == null) return
-        // The owner's own channels are 1 to 14 (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel,
-        // Comedy, Movies English, Movies Hindi, Dramas, Cooking, Latest Movies, Teens); the rows of zeros that reached them before 1.9.45 (0 to 00000000) still work.
+        // The owner's own channels are 1 to 15 (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel,
+        // Comedy, Movies English, Movies Hindi, Dramas, Cooking, Latest Movies, Teens, Ads); the rows of zeros that reached them before 1.9.45 (0 to 00000000) still work.
         MyChannel.byDial(typed)?.takeIf { Edition.LIVE_TV }?.let {
             numberPadOpen = false
             play(it)

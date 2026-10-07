@@ -41,6 +41,7 @@
 <div class="ticker"><span id="tick"></span></div>
 <div class="msg" id="msg">Loading…</div>
 <script src="still.js"></script>
+<script src="keepplaying.js"></script>
 <script>
 const q = new URLSearchParams(location.search);
 const app = q.has("app"), id = q.get("v") || "", name = q.get("name") || "";
@@ -90,7 +91,8 @@ window.onYouTubeIframeAPIReady = () => {
       // It never stays paused, and a video that ends starts again, like a channel on a loop.
       onStateChange: e => {
         if (e.data === YT.PlayerState.PLAYING) cover(false);
-        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
+        else cover(true);
         if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
         else if (e.data === YT.PlayerState.ENDED) { e.target.seekTo(0); e.target.playVideo(); }
       },
@@ -104,6 +106,7 @@ window.onYouTubeIframeAPIReady = () => {
     },
   });
   stillFor(player);
+  keepPlaying(player, () => false, () => cover(true));
 };
 // A tap or OK only shows the channel's name; double-click goes full screen (on the website).
 $("shield").onclick = showNow;

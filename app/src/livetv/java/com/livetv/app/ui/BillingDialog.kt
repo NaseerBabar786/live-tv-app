@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.livetv.app.Plans
 import com.livetv.app.account.Account
 import com.livetv.app.account.Billing
 import com.livetv.app.account.BillingInfo
@@ -54,7 +55,7 @@ fun BillingDialog(asked: Boolean = false, onDismiss: () -> Unit) {
     var done by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         runCatching { Billing.load(account) }.getOrNull()?.let {
-            phone = it.phone; whatsapp = it.whatsapp; pkg = it.wantPackage
+            phone = it.phone; whatsapp = it.whatsapp; pkg = Plans.Tier.of(it.wantPackage)?.takeIf { t -> t != Plans.Tier.Promo }?.label ?: ""
             length = it.wantLength; method = it.payMethod; note = it.note
         }
         loaded = true

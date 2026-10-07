@@ -22,7 +22,7 @@
   #player { pointer-events: none; }
   #own { background: #000; object-fit: contain; pointer-events: none; }
   .shield { background: transparent; }
-  .bug { position: absolute; top: 3%; right: 2.5%; height: 9vw; max-width: 26vw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: .55; pointer-events: none; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
@@ -55,6 +55,7 @@
 <div class="now hide" id="now" dir="auto"></div>
 <button class="sound" id="sound" hidden>🔊 آواز کے لیے ٹیپ کریں</button>
 <div class="ticker" id="ticker"><span id="tick" dir="auto"></span></div>
+<script src="keepplaying.js"></script>
 <script>
 const q = new URLSearchParams(location.search);
 const $ = id => document.getElementById(id);
@@ -249,12 +250,15 @@ window.onYouTubeIframeAPIReady = () => {
         if (!app) { e.target.mute(); $("sound").hidden = false; }
         load(i, (Date.now() - starts[i]) / 1000);
         setInterval(step, 1000);
+        keepPlaying(e.target, () => finished || ownOn, () => cover(true));
       },
       onStateChange: e => {
         if (e.data === YT.PlayerState.PLAYING) { if (ownOn) { e.target.stopVideo(); return; } cover(false); started = true; failures = 0; }
-        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
+        // (Not while our own show plays: YouTube is stopped under it then.)
+        else if (!ownOn) cover(true);
         // It never stays paused; at the end of a trailer our card waits for the next one's turn.
-        else if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
+        if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
         // A video shorter than its time: the next spare, or our own short shows.
         else if (e.data === YT.PlayerState.ENDED) { cover(true, between(info[ids[cur]]), "اگلا پروگرام"); rescue(); }
       },

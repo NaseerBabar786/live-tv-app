@@ -6,9 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
+import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.GestureDetector
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -41,6 +44,8 @@ class WebChannelActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // Phones: full screen is sideways, as on every other channel.
+        if (!com.livetv.app.ui.isTv(this)) requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         // The video is drawn underneath the window; an opaque window keeps it black (1.9.55).
         window.setFormat(PixelFormat.TRANSLUCENT)
         val url = intent.getStringExtra(EXTRA_URL) ?: return finish()
@@ -126,6 +131,25 @@ class WebChannelActivity : Activity() {
             return true
         }
         return super.dispatchKeyEvent(event)
+    }
+
+    // Phones: a swipe up goes to the next channel and a swipe down to the one before, as on our other
+    // full-screen channels; a tap still reaches the page (it shows the title).
+    private val swipes by lazy {
+        GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+                val dy = e2.y - (e1?.y ?: return false)
+                val dx = e2.x - e1.x
+                if (Math.abs(dy) < 120 * resources.displayMetrics.density / 2 || Math.abs(dy) < Math.abs(dx)) return false
+                finishWith(RESULT_ZAP, Intent().putExtra(EXTRA_STEP, if (dy < 0) 1 else -1))
+                return true
+            }
+        })
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        swipes.onTouchEvent(ev)
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun finishWith(code: Int, data: Intent) {

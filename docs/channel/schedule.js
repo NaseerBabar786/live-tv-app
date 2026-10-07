@@ -69,6 +69,11 @@ export const STATIONS = [
     name: "Bazaar Teens", dial: "14", doc: "_channel_teens", page: "channel/?c=teens", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-teens.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Teens: science, cartoons and challenge shows from their makers' own YouTube channels (Kurzgesagt, TED-Ed, Mark Rober, Cartoon Network, Dude Perfect and others). Backup: public-domain classic films." },
+  // 15 (owner, 2026-10-07): ads and promos round the clock, played by our own player (no YouTube):
+  // our Cable TV promos, then the sponsors' ads from /sponsors, then "Advertise with us" (ads-schedule.json).
+  { id: "ads", name: "Bazaar Ads", dial: "15", doc: "_channel_ads", page: "channel/?c=ads", auto: true, noPopup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-ads.png", ready: "https://tv.bulkbazaar.ca/channel/ads-schedule.json",
+    credits: "Ads: our own Cable TV promos and our sponsors' ads. Advertise your business here: WhatsApp 437 602 6500 or tv.bulkbazaar.ca/advertise." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
@@ -437,7 +442,7 @@ export function blockPage(c, b) {
  */
 const listCache = {};
 export async function expand(c) {
-  const lists = (c.videos || []).filter(v => ["trailers", "music", "list"].includes(v.kind) && /^https?:/.test(v.url || ""));
+  const lists = (c.videos || []).filter(v => ["trailers", "music", "list", "ads"].includes(v.kind) && /^https?:/.test(v.url || ""));
   if (!lists.length) return c;
   const ids = {}, videos = [];
   for (const v of c.videos) {
@@ -448,11 +453,23 @@ export async function expand(c) {
       const hit = listCache[v.url];
       if (hit && Date.now() - hit.at < 600000) list = hit.videos;
       else {
-        list = (await (await fetch(v.url, { cache: "no-store" })).json()).videos || [];
+        const o = await (await fetch(v.url, { cache: "no-store" })).json();
+        list = (v.kind === "ads" ? o.ads || o.promos : o.videos) || [];
         listCache[v.url] = { at: Date.now(), videos: list };
       }
     } catch {}
     ids[v.id] = [];
+    if (v.kind === "ads") {
+      // Bazaar Ads: our promos or the sponsors' ads, our own videos ([src] beside the list or a full link), 5 to 60 s each.
+      list.forEach((t, i) => {
+        const secs = Math.min(60, Math.round(t.secs || 0));
+        if (!t.src || secs < 5) return;
+        const id = `${v.id}-${i}`;
+        videos.push({ id, title: t.title || v.title || "Ad", url: new URL(t.src, v.url).href, secs, kind: "ad" });
+        ids[v.id].push(id);
+      });
+      continue;
+    }
     for (const t of list) {
       if (!/^[\w-]{11}$/.test(t.id || "") || !(t.secs > 0)) continue;
       const id = `${v.id}-${t.id}`;
