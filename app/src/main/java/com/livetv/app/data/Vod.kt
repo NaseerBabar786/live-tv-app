@@ -62,13 +62,25 @@ object Vod {
             showWords.containsMatchIn(parse(channel.name)?.first ?: channel.name)
     }
 
-    /** Free public-domain films and TV, rebuilt weekly by tools/build_movies.py. */
+    /** How many days a programme counts as "Newly added" after it first shows up in a list. */
+    const val NEW_DAYS = 7
+
+    /** The first day still counted as new ("2026-10-01" on 2026-10-07). */
+    fun newSince(now: Long = System.currentTimeMillis()): String {
+        val format = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+        return format.format(java.util.Date(now - (NEW_DAYS - 1) * 24L * 60 * 60 * 1000))
+    }
+
+    /** Whether a programme first showed up in its list on or after [since] (see tools/first_seen.py). */
+    fun isNew(channel: Channel, since: String): Boolean = channel.added?.let { it >= since } == true
+
+    /** Free public-domain films and TV, rebuilt every morning by tools/build_movies.py. */
     const val FREE_MOVIES_URL = "https://tv.bulkbazaar.ca/Movies.m3u"
 
-    /** The newest episodes from Pakistani channels' official YouTube uploads, rebuilt daily by tools/build_dramas.py. */
+    /** The newest episodes from Pakistani channels' official YouTube uploads, rebuilt every morning by tools/build_dramas.py. */
     const val DRAMAS_URL = "https://tv.bulkbazaar.ca/Dramas.m3u"
 
-    /** Free films and shows from Wikimedia Commons, NASA, Vimeo and PeerTube, rebuilt weekly by tools/build_free.py. */
+    /** Free films and shows from Wikimedia Commons, NASA, Vimeo and PeerTube, rebuilt every morning by tools/build_free.py. */
     const val FREE_SOURCES_URL = "https://tv.bulkbazaar.ca/Free.m3u"
 
     /** The playlists Movies & Series always shows: the free lists in Cable TV, none in the store editions. */
@@ -85,7 +97,13 @@ object Vod {
         }
 
     /** One show and its episodes, in season and episode order. */
-    data class Show(val name: String, val logo: String?, val group: String?, val episodes: List<Episode>)
+    data class Show(val name: String, val logo: String?, val group: String?, val episodes: List<Episode>) {
+        /** The day its newest episode first showed up (null when the lists don't say). */
+        val added: String? get() = episodes.mapNotNull { it.channel.added }.maxOrNull()
+
+        /** Its episodes that are newly added (see [isNew]). */
+        fun newEpisodes(since: String): Int = episodes.count { isNew(it.channel, since) }
+    }
 
     data class Episode(val channel: Channel, val season: Int?, val number: Int?) {
         /** "S1 E2" (or the full name when it has no episode number). */

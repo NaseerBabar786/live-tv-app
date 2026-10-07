@@ -20,6 +20,8 @@ data class Channel(
     val alternates: List<String> = emptyList(),
     /** Channel number: its position in the loaded list, starting at 1 (0 until numbered). */
     val number: Int = 0,
+    /** The day it first showed up in its Library list ("2026-10-07", from added="..."), or null. */
+    val added: String? = null,
 ) {
     /** Stable key used for favorites and list keys. */
     val id: String get() = url

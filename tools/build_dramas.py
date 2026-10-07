@@ -15,6 +15,7 @@ Episodes found on earlier runs are kept for KEEP_DAYS, so each show builds up.
 Writes (in docs/, served at tv.bulkbazaar.ca):
   Dramas.m3u     the playlist (built into Cable TV's Movies & Series)
   dramas.json    every episode kept, with the day it was found, and counts
+                 (the day also goes in the playlist as added="...", for the Library's Newly added)
   MTA.m3u        MTA's own videos (an optional Library section, off unless the viewer turns it on)
 
 Standard library only. Run: python3 tools/build_dramas.py
@@ -737,31 +738,31 @@ def main():
         if (language, compact(v["movie"])) in names:  # the same film from two channels
             continue
         names.add((language, compact(v["movie"])))
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{language}" '
+        lines.append(f'#EXTINF:-1 added="{v["added"]}" tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{language}" '
                      f'tvg-genre="Movies" group-title="{v.get("group", "Hindi dubbed movies")}",{v["movie"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in sorted(telefilms.items(), key=lambda kv: kv[1]["telefilm"].lower()):
         if ("telefilm", v["telefilm"].lower()) in names:
             continue
         names.add(("telefilm", v["telefilm"].lower()))
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Urdu" '
+        lines.append(f'#EXTINF:-1 added="{v["added"]}" tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="Urdu" '
                      f'tvg-genre="Movies" group-title="Telefilms",{v["telefilm"]}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in sorted(items.items(), key=lambda kv: (kv[1]["genre"], kv[1]["folder"], kv[1]["added"], kv[1]["item"])):
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v.get("language", "Urdu")}" '
+        lines.append(f'#EXTINF:-1 added="{v["added"]}" tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v.get("language", "Urdu")}" '
                      f'tvg-genre="{v["genre"]}" group-title="{v["folder"]}",{v["item"].replace(",", " ")}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     for vid, v in rows:
         kind = "Shows" if SHOW.search(v["show"]) else "Series"
         logo = v.get("logo") or f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg"
-        lines.append(f'#EXTINF:-1 tvg-logo="{logo}" tvg-language="{v.get("language", "Urdu")}" '
+        lines.append(f'#EXTINF:-1 added="{v["added"]}" tvg-logo="{logo}" tvg-language="{v.get("language", "Urdu")}" '
                      f'tvg-genre="{kind}" group-title="{v["channel"]}",{v["show"]} Episode {v["episode"]}')
         lines.append(v.get("url") or f"https://www.youtube.com/watch?v={vid}")
     with open(os.path.join(DOCS, "Dramas.m3u"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     lines = ["#EXTM3U", "# MTA (Muslim Television Ahmadiyya) programmes from its own YouTube channel."]
     for vid, v in sorted(mta_items.items(), key=lambda kv: (kv[1]["folder"], kv[1]["added"], kv[1]["item"]), reverse=True):
-        lines.append(f'#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v["language"]}" '
+        lines.append(f'#EXTINF:-1 added="{v["added"]}" tvg-logo="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" tvg-language="{v["language"]}" '
                      f'tvg-genre="{v["genre"]}" group-title="MTA {v["folder"]}",{v["item"].replace(",", " ")}')
         lines.append(f"https://www.youtube.com/watch?v={vid}")
     with open(os.path.join(DOCS, "MTA.m3u"), "w", encoding="utf-8") as f:
