@@ -44,8 +44,8 @@ object MyChannel {
         val logo: String? = null,
     )
 
-    /** Our channels take numbers 1 to 12; the other channels are numbered from 13. */
-    const val COUNT = 12
+    /** Our channels take numbers 1 to 14 (13 kept for Latest Movies); the other channels are numbered from 15. */
+    const val COUNT = 14
 
     /**
      * Our channels, in the order they lead the channel list. Since 1.9.47 all but Bazaar TV run
@@ -72,6 +72,8 @@ object MyChannel {
         Station("dramas", 11, "11", "Bazaar Dramas", youtube = true, backup = "filmein", logo = "bazaar-dramas.png"),
         // 1.9.53: cooking shows in Urdu, Hindi, Punjabi and English from the cooks' own channels.
         Station("cooking", 12, "12", "Bazaar Cooking", youtube = true, backup = "filmein", logo = "bazaar-cooking.png"),
+        // 1.9.76: science, cartoons and challenge shows for 12 to 16 year olds; Bazaar Kids stays for small children.
+        Station("teens", 14, "14", "Bazaar Teens", youtube = true, backup = "filmein", logo = "bazaar-teens.png"),
     )
 
     private const val SCHEME = "mychannel://"
@@ -221,10 +223,10 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In number order: 1 to 12, Bazaar Hits being 4.
+        // In number order: 1 to 14, Bazaar Hits being 4.
         (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
 
-    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 12, when it's on. */
+    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 14, when it's on. */
     fun byDial(typed: String): Channel? =
         if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
 

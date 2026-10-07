@@ -59,6 +59,11 @@ export const STATIONS = [
     name: "Bazaar Cooking", dial: "12", doc: "_channel_cooking", page: "channel/?c=cooking", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cooking.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Cooking: recipes and shows from the cooks' own YouTube channels (Food Fusion, Kitchen with Amna, Sanjeev Kapoor, Masala TV and others). Backup: public-domain classic films." },
+  // 14 (13 is kept for Latest Movies): for 12 to 16 year olds; Bazaar Kids (5) stays for small children.
+  { id: "teens", yt: true, web: "channel/ytc.html?c=teens", ytMins: 12, tagline: "Science, cartoons and challenges for teens, day and night",
+    name: "Bazaar Teens", dial: "14", doc: "_channel_teens", page: "channel/?c=teens", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-teens.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Teens: science, cartoons and challenge shows from their makers' own YouTube channels (Kurzgesagt, TED-Ed, Mark Rober, Cartoon Network, Dude Perfect and others). Backup: public-domain classic films." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
