@@ -29,6 +29,8 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
   promo breaks).
 - 1.9.90: phone touch layouts (upright 1+List, sideways full screen). Phone-only; the PC keeps its mouse
   and keyboard layout.
+- YouTube channels never paused on YouTube's screen (docs/channel/keepplaying.js): the PC loads the
+  same live pages (ytc.html, yt.html, bollywood.html), so it gets the fix without a new PC build.
 
 ## In step
 
