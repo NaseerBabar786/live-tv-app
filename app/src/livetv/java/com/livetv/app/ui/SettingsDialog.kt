@@ -272,22 +272,28 @@ fun SettingsDialog(
                     }
                 }
 
-                HorizontalDivider()
-                Text("My playlists", fontWeight = FontWeight.Bold)
-                PlaylistRows(
-                    playlists = playlists,
-                    currentSource = currentSource,
-                    onSelect = onSelectPlaylist,
-                    onRemove = onRemovePlaylist,
-                )
-                OutlinedButton(
-                    onClick = { findingPlaylists = true },
-                    modifier = Modifier.fillMaxWidth().focusGlow(),
-                ) { Text("🔍 Find playlists online") }
-                OutlinedButton(
-                    onClick = { addingLink = true },
-                    modifier = Modifier.fillMaxWidth().focusGlow(),
-                ) { Text("＋ Add playlist link") }
+                // Owner (2026-10-07): Cable TV no longer offers finding or adding playlists;
+                // lists a viewer already added stay here so they can still pick or remove them.
+                if (Edition.MAX || playlists.isNotEmpty()) {
+                    HorizontalDivider()
+                    Text("My playlists", fontWeight = FontWeight.Bold)
+                    PlaylistRows(
+                        playlists = playlists,
+                        currentSource = currentSource,
+                        onSelect = onSelectPlaylist,
+                        onRemove = onRemovePlaylist,
+                    )
+                }
+                if (Edition.MAX) {
+                    OutlinedButton(
+                        onClick = { findingPlaylists = true },
+                        modifier = Modifier.fillMaxWidth().focusGlow(),
+                    ) { Text("🔍 Find playlists online") }
+                    OutlinedButton(
+                        onClick = { addingLink = true },
+                        modifier = Modifier.fillMaxWidth().focusGlow(),
+                    ) { Text("＋ Add playlist link") }
+                }
 
                 if (FirebaseConfig.configured && signedIn != null) {
                     HorizontalDivider()

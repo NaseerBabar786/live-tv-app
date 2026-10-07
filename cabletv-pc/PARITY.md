@@ -31,6 +31,8 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
   and keyboard layout.
 - YouTube channels never paused on YouTube's screen (docs/channel/keepplaying.js): the PC loads the
   same live pages (ytc.html, yt.html, bollywood.html), so it gets the fix without a new PC build.
+- 1.9.94: Settings > My playlists no longer has "Find playlists online" or "+ Add playlist link".
+  The PC never had playlist settings, so nothing to remove here.
 
 ## In step
 
