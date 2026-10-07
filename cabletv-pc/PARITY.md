@@ -15,6 +15,8 @@ When Cable TV changes:
 
 Website code shared with the PC app (`docs/channel/schedule.js`, `cards.js`, `clock.js`) is copied in
 at every build (`scripts/prepare.js`); changing it needs a new PC version too.
+Iqra Quran's text, translations, reciters and font (`qurankit/src/main/assets/quran`, `res/font`) and
+logo (`docs/quran/logo.svg`) are copied the same way.
 
 ## Not on PC yet (second test build)
 
@@ -46,3 +48,4 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 - 1.9.96 (PC 1.0.4): packages screen shows Free once (no "Free · free") and Gold at one price a month, $9.99 by default (`settings.js`, `plans.js`).
 - 1.9.100 (PC 1.0.5): the start screen shows only a loading circle while the channels load; no sponsor
   or words, no 5-second countdown (`screens/start.js`).
+- 1.10.3 (PC 1.0.6): Iqra Quran in the top bar: Kids Qaida, Read with recitation, Hifz, in Cable TV's colours (`screens/quran.js`). On PC the Qaida letter sounds use Windows' own Arabic voice when it has one.

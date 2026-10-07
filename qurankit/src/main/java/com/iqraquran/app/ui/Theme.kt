@@ -46,11 +46,12 @@ val KidColors = listOf(
 
 /** The big buttons on the home screen, their default colours and the colours to choose from. */
 object HomeTiles {
-    val keys = listOf("kids", "read", "hifz", "continue")
+    val keys = listOf("kids", "read", "hifz", "namaz", "continue")
     fun default(key: String): Color = when (key) {
         "kids" -> KidColors[1]
         "read" -> KidColors[0]
         "hifz" -> KidColors[2]
+        "namaz" -> KidColors[7]
         else -> Green
     }
     val swatches = listOf(

@@ -67,6 +67,8 @@ class MainActivity : ComponentActivity() {
         com.livetv.app.data.MyScreen.init(this)
         com.livetv.app.data.ScreenLooks.init(this)
         com.livetv.app.ui.Themes.init(this)
+        // Azan at prayer times while Cable TV is on screen (Iqra Quran > Namaz settings).
+        QuranSection.startAzan(this)
         enableEdgeToEdge()
         // TVs draw a web page's video (YouTube) underneath the window, showing through a hole in the page;
         // an opaque window keeps that hole black, with only the sound (1.9.55).

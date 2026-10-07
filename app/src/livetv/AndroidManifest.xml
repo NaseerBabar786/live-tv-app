@@ -12,6 +12,8 @@
     <queries>
         <!-- Settings opens the App Bazaar app when it is installed. -->
         <package android:name="com.naseerbabar.appbazaar" />
+        <!-- The Azan: when the Iqra Quran app is installed it plays the Azan, and Cable TV shows it silently. -->
+        <package android:name="com.naseerbabar.iqraquran" />
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.BROWSABLE" />

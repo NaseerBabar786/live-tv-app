@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.ChildCare
@@ -130,6 +131,18 @@ fun HomeScreen(vm: AppViewModel) {
             { m ->
                 BigTile(S.hifz.get(), S.hifzSub.get(), vm.tileColor("hifz"), Icons.Filled.Psychology, m) {
                     vm.open(Screen.HifzHome)
+                }
+            },
+            { m ->
+                // The next prayer and the time left, else what the section is.
+                val now = rememberNow()
+                vm.azanVersion
+                val next = vm.azan.around(now)?.second
+                val sub = if (next != null) {
+                    "${tr(next.first.en, next.first.ur)} · ${countdown(next.second - now)}"
+                } else PS.namazSub.get()
+                BigTile(PS.namaz.get(), sub, vm.tileColor("namaz"), Icons.Filled.AccessTime, m) {
+                    vm.open(Screen.Prayer)
                 }
             },
         )

@@ -16,7 +16,13 @@ import com.iqraquran.app.data.QuranText
 import com.iqraquran.app.data.Reciter
 import com.iqraquran.app.data.Store
 import com.iqraquran.app.data.TranslationMode
+import com.iqraquran.app.data.AsrMethod
+import com.iqraquran.app.data.AzanMode
+import com.iqraquran.app.data.AzanSettings
+import com.iqraquran.app.data.AzanVoice
+import com.iqraquran.app.data.CalcMethod
 import com.iqraquran.app.player.AyahPlayer
+import com.iqraquran.app.player.AzanPlayer
 import com.iqraquran.app.player.Speaker
 import java.util.Locale
 import java.util.TimeZone
@@ -43,6 +49,8 @@ sealed interface Screen {
         val revising: Boolean,
     ) : Screen
     data object Settings : Screen
+    data object Prayer : Screen
+    data object AzanSettings : Screen
 }
 
 class AppViewModel(app: Application) : AndroidViewModel(app) {
@@ -51,6 +59,19 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     val player = AyahPlayer(app)
     val speaker = Speaker(app)
     val reciters: List<Reciter> = Quran.reciters(app)
+
+    /** Prayer times and Azan settings (the Namaz screens). */
+    val azan = AzanSettings(app)
+    private val azanPlayer = AzanPlayer(app)
+
+    /** Goes up after every Azan setting change, so the Namaz screens redraw. */
+    var azanVersion by mutableStateOf(0)
+        private set
+    var voices by mutableStateOf<List<AzanVoice>>(azan.voices())
+        private set
+    /** The recording being played as a sample in Azan settings. */
+    var sampleId by mutableStateOf<String?>(null)
+        private set
 
     var quran by mutableStateOf<QuranText?>(null)
         private set
@@ -120,6 +141,12 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         }
         selectProfile(profiles.firstOrNull { it.id == store.currentProfileId } ?: profiles.first())
         viewModelScope.launch { quran = Quran.load(app) }
+        viewModelScope.launch {
+            azan.refreshPlace()
+            voices = azan.refreshVoices()
+            azanVersion++
+            azan.downloadChosen()
+        }
     }
 
     /** Today as days since 1 Jan 1970 in local time (like LocalDate.toEpochDay, which needs Android 8). */
@@ -131,6 +158,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     // Navigation
 
     fun open(s: Screen) {
+        stopAzanSample()
         player.stop()
         speaker.stop()
         stack.add(s)
@@ -231,6 +259,39 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         store.lastRead = lastRead
     }
 
+    // Namaz and Azan
+
+    private fun azanChanged() {
+        azanVersion++
+        viewModelScope.launch { azan.downloadChosen() }
+    }
+
+    fun setAzanMode(p: com.iqraquran.app.data.Prayer, m: AzanMode) { azan.setMode(p, m); azanChanged() }
+    fun chooseVoice(id: String) { azan.voiceId = id; azanChanged() }
+    fun chooseFajrVoice(id: String) { azan.fajrVoiceId = id; azanChanged() }
+    fun setAzanVolume(v: Int) { azan.volume = v; azanChanged() }
+    fun setReminder(m: Int) { azan.reminderMinutes = m; azanChanged() }
+    fun setQuiet(from: Int, to: Int) { azan.quietFrom = from; azan.quietTo = to; azanChanged() }
+    fun setMethod(m: CalcMethod?) { azan.method = m; azanChanged() }
+    fun setAsr(m: AsrMethod) { azan.asr = m; azanChanged() }
+    fun setHijriAdjust(d: Int) { azan.hijriAdjust = d; azanChanged() }
+
+    fun findPlaceAgain() {
+        azan.placeFixed = false
+        viewModelScope.launch { azan.refreshPlace(); azanChanged() }
+    }
+
+    fun playAzanSample(id: String) {
+        val v = voices.firstOrNull { it.id == id } ?: return
+        sampleId = id
+        azanPlayer.playAzan(azan, v, azan.volume) { sampleId = null }
+    }
+
+    fun stopAzanSample() {
+        azanPlayer.stop()
+        sampleId = null
+    }
+
     // Learners
 
     fun selectProfile(p: Profile) {
@@ -293,6 +354,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     override fun onCleared() {
+        azanPlayer.stop()
         player.release()
         speaker.release()
     }

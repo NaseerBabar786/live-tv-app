@@ -13,6 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iqraquran.app.azan.AzanAlarms
+import com.iqraquran.app.data.AzanSettings
 import com.iqraquran.app.ui.AppViewModel
 import com.iqraquran.app.ui.HifzHomeScreen
 import com.iqraquran.app.ui.HifzSessionScreen
@@ -28,6 +30,8 @@ import com.iqraquran.app.ui.QaidaQuizScreen
 import com.iqraquran.app.ui.ReadScreen
 import com.iqraquran.app.ui.Screen
 import com.iqraquran.app.ui.SettingsScreen
+import com.iqraquran.app.ui.PrayerScreen
+import com.iqraquran.app.ui.AzanSettingsScreen
 import com.iqraquran.app.ui.SurahListScreen
 import com.iqraquran.app.ui.UpdateDialog
 import com.iqraquran.app.ui.UpdateViewModel
@@ -36,12 +40,22 @@ import com.iqraquran.app.ui.pendingRelease
 
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        /** Opens the Namaz screen (tapping a prayer-time notification). */
+        const val EXTRA_OPEN_NAMAZ = "open_namaz"
+    }
+
     private val vm: AppViewModel by viewModels()
     private val updates: UpdateViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (CrashGuard.start(this)) return
+        // Any Azan setting change sets the next alarm; so does every start.
+        AzanSettings.changed = { AzanAlarms.schedule(it) }
+        AzanAlarms.schedule(this)
+        if (intent?.getBooleanExtra(EXTRA_OPEN_NAMAZ, false) == true) vm.open(Screen.Prayer)
+        askForNotifications()
         enableEdgeToEdge()
         // Recitation and Hifz repeats run for a while without touching the screen.
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -65,6 +79,8 @@ class MainActivity : ComponentActivity() {
                         is Screen.HifzSetup -> HifzSetupScreen(vm, s.surah)
                         is Screen.HifzSession -> HifzSessionScreen(vm, s)
                         Screen.Settings -> SettingsScreen(vm) { VersionFooter(updates.installedVersion) }
+                        Screen.Prayer -> PrayerScreen(vm)
+                        Screen.AzanSettings -> AzanSettingsScreen(vm)
                     }
                     val update by updates.update.collectAsStateWithLifecycle()
                     UpdateDialog(
@@ -75,6 +91,21 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        if (intent.getBooleanExtra(EXTRA_OPEN_NAMAZ, false) && vm.screen != Screen.Prayer) vm.open(Screen.Prayer)
+    }
+
+    /** Android 13 and later ask before an app may show notifications; the Azan needs them when the app is closed. */
+    private fun askForNotifications() {
+        if (android.os.Build.VERSION.SDK_INT < 33) return
+        if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) return
+        val prefs = getSharedPreferences("iqra_quran", MODE_PRIVATE)
+        if (prefs.getBoolean("asked_notifications", false)) return
+        prefs.edit().putBoolean("asked_notifications", true).apply()
+        requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 7)
     }
 
     /** The remote's Play/Pause key controls the recitation anywhere in the app. */

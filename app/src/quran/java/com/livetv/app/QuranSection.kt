@@ -1,6 +1,10 @@
 package com.livetv.app
 
 import android.view.KeyEvent as AndroidKeyEvent
+import android.app.Activity
+import android.app.Application
+import android.content.Context
+import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +25,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.iqraquran.app.data.AzanSettings
 import com.iqraquran.app.ui.AppViewModel
+import com.iqraquran.app.ui.AzanActivity
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import com.iqraquran.app.ui.HifzHomeScreen
 import com.iqraquran.app.ui.HifzSessionScreen
 import com.iqraquran.app.ui.HifzSetupScreen
@@ -36,6 +44,8 @@ import com.iqraquran.app.ui.QaidaQuizScreen
 import com.iqraquran.app.ui.ReadScreen
 import com.iqraquran.app.ui.Screen
 import com.iqraquran.app.ui.SettingsScreen
+import com.iqraquran.app.ui.PrayerScreen
+import com.iqraquran.app.ui.AzanSettingsScreen
 import com.iqraquran.app.ui.SurahListScreen
 import com.iqraquran.app.ui.Palette as QuranPalette
 import com.livetv.app.ui.Palette as TvPalette
@@ -49,12 +59,63 @@ import com.livetv.app.ui.Themes
 object QuranSection {
     const val AVAILABLE = true
 
+    /** True while the Azan screen is up (YouTube channels go quiet underneath). */
+    val azanShowing: Boolean get() = AzanActivity.showing
+
+    private var started = false
+    private var top: java.lang.ref.WeakReference<Activity>? = null
+
+    /**
+     * The Azan inside Cable TV: while Cable TV is on screen, each prayer time opens the Azan screen (the
+     * channel pauses under it and comes back after) or a banner, as set in Iqra Quran > Namaz.
+     * When the Iqra Quran app is installed it plays the Azan itself, so Cable TV shows the screen silently.
+     */
+    fun startAzan(activity: Activity) {
+        AzanActivity.hostPalette = paletteFor(Themes.current)
+        if (started) return
+        started = true
+        val app = activity.application
+        app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+            override fun onActivityResumed(a: Activity) { top = java.lang.ref.WeakReference(a) }
+            override fun onActivityPaused(a: Activity) { if (top?.get() === a) top = null }
+            override fun onActivityCreated(a: Activity, b: Bundle?) = Unit
+            override fun onActivityStarted(a: Activity) = Unit
+            override fun onActivityStopped(a: Activity) = Unit
+            override fun onActivitySaveInstanceState(a: Activity, b: Bundle) = Unit
+            override fun onActivityDestroyed(a: Activity) = Unit
+        })
+        top = java.lang.ref.WeakReference(activity)
+        val settings = AzanSettings(app)
+        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
+        kotlinx.coroutines.GlobalScope.launch(kotlinx.coroutines.Dispatchers.Main) {
+            launch { settings.refreshPlace(); settings.refreshVoices(); settings.downloadChosen() }
+            while (true) {
+                val next = settings.nextEvent()
+                if (next == null) { delay(10 * 60_000L); continue }
+                // Wake at the time (checking now and then, as settings and the clock can change meanwhile).
+                val wait = next.at - System.currentTimeMillis()
+                if (wait > 60_000L) { delay(minOf(wait - 1000L, 10 * 60_000L)); continue }
+                delay(wait.coerceAtLeast(0))
+                val a = top?.get()
+                if (a != null && !a.isFinishing && a !is AzanActivity) {
+                    AzanActivity.hostPalette = paletteFor(Themes.current)
+                    val silent = installed(app, AzanActivity.IQRA_PACKAGE)
+                    runCatching { a.startActivity(AzanActivity.intent(a, next, silent)) }
+                }
+                delay(61_000L)
+            }
+        }
+    }
+
+    private fun installed(context: Context, pkg: String): Boolean =
+        runCatching { context.packageManager.getPackageInfo(pkg, 0); true }.getOrDefault(false)
+
     @Composable
     fun Screen(onClose: () -> Unit) {
         val vm: AppViewModel = viewModel()
         val tv = Themes.current
         val colours = remember(tv) { paletteFor(tv) }
-        SideEffect { vm.fixedPalette = colours }
+        SideEffect { vm.fixedPalette = colours; AzanActivity.hostPalette = colours }
         val lifecycle = LocalLifecycleOwner.current.lifecycle
         val view = LocalView.current
         DisposableEffect(lifecycle) {
@@ -104,6 +165,8 @@ object QuranSection {
                         is Screen.HifzSetup -> HifzSetupScreen(vm, s.surah)
                         is Screen.HifzSession -> HifzSessionScreen(vm, s)
                         Screen.Settings -> SettingsScreen(vm)
+                        Screen.Prayer -> PrayerScreen(vm)
+                        Screen.AzanSettings -> AzanSettingsScreen(vm)
                     }
                 }
             }
