@@ -667,7 +667,7 @@ def main():
         cards.append((pic, dur)); t += dur
     left = total - t
     # A short gap stays on the end card; a long one gets promos after a normal-length end card.
-    end_secs = left if left <= END_MAX + 15 else END_MAX
+    end_secs = left if left <= END_MAX + 3 else END_MAX
     news_len = t + end_secs
     credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • کینیڈا کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
     title_card(os.path.join(work, "c-end.png"), kind, up_next, credits,
