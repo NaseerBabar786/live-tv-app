@@ -15,6 +15,7 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
  10 Bazaar Movies Hindi    full Hindi films from the studios' channels
  11 Bazaar Dramas  full episodes of Pakistani dramas from the TV channels' own channels
  12 Bazaar Cooking recipes and cooking shows from the cooks' own channels
+ 14 Bazaar Teens  science, cartoons, challenges and talent shows for 12 to 16 year olds
 
 Only the channel that really owns each handle is used (its name must match). Videos found on
 earlier runs are kept for KEEP_DAYS, so each list builds up. The public-domain schedules
@@ -234,6 +235,35 @@ CHANNELS = {
             ("Shireen Anwar", ["@ShireenAnwarRecipes"], "Shireen"),
             ("Get Curried", ["@GetCurried", "@getcurried"], "Get Curried"),
         ],
+    },
+    # For 12 to 16 year olds (the owner's wish, 2026-10-07); Bazaar Kids stays for small children.
+    "teens": {
+        "name": "Bazaar Teens", "mins": (3, 30),
+        "skip": r"horror|scary|gore|explicit|18\+|podcast|vlog|merch|sponsor|giveaway|toy|nursery|rhymes?|preschool|toddler",
+        "sources": [
+            # Science and how things work
+            ("Kurzgesagt", ["@kurzgesagt"], "Kurzgesagt"),
+            ("TED-Ed", ["@TEDEd"], "TED-Ed"),
+            ("SciShow", ["@SciShow"], "SciShow"),
+            ("Veritasium", ["@veritasium"], "Veritasium"),
+            ("Mark Rober", ["@MarkRober"], "Mark Rober"),
+            ("CrashCourse", ["@crashcourse"], "CrashCourse|Crash Course"),
+            ("National Geographic", ["@NatGeo"], "National Geographic"),
+            ("Fact Tech", ["@FactTechz"], "FactTechz|Fact Tech"),
+            # Cartoons and shows
+            ("Cartoon Network", ["@cartoonnetwork"], "Cartoon Network"),
+            ("Disney Channel", ["@disneychannel"], "Disney Channel"),
+            ("Nickelodeon", ["@Nickelodeon"], "Nickelodeon"),
+            ("Nick India", ["@NickIndia", "@nickindia"], "Nick India|Nickelodeon India"),
+            ("Pokemon", ["@pokemon"], "Pokemon|Pokémon"),
+            # Challenges, sport tricks and talent shows
+            ("Dude Perfect", ["@DudePerfect"], "Dude Perfect"),
+            ("MrBeast", ["@MrBeast"], "MrBeast"),
+            ("Got Talent Global", ["@GotTalentGlobal"], "Got Talent"),
+        ],
+        "cap": {label: 30 for label in ("Kurzgesagt", "TED-Ed", "SciShow", "Veritasium", "Mark Rober", "CrashCourse",
+                                        "National Geographic", "Fact Tech", "Cartoon Network", "Disney Channel",
+                                        "Nickelodeon", "Nick India", "Pokemon", "Dude Perfect", "MrBeast", "Got Talent Global")},
     },
 }
 
