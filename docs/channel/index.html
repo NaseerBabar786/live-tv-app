@@ -86,6 +86,7 @@
 <script type="module">
 import { firebaseConfig } from "../firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, expand, blockPage } from "./schedule.js";
+import { mountCards } from "./cards.js";
 const $ = id => document.getElementById(id);
 const video = $("video");
 // Which of our channels: ?c=filmein is Bazaar Cinema, ?c=sur Bazaar Music, ?c=kids Bazaar Kids, ?c=sports Bazaar Sports, ?c=travel Bazaar Travel, ?c=comedy Bazaar Comedy, otherwise Bazaar TV.
@@ -173,6 +174,8 @@ function onOff(on) {
   $("nowText").textContent = "Off air";
 }
 show();
+// Every 10 minutes "Up next", every 20 minutes today's shows, with the ad breaks.
+mountCards($("stage"), () => c);
 if (c.active === false) onOff({});
 else tv = tuneIn(video, c, { onChange, onOff, onBlock });
 
