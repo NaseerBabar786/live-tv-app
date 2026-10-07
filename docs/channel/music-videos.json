@@ -1,45 +1,8 @@
 {
- "name": "Popular music videos",
- "built": "2026-10-07 00:04 UTC",
- "secs": 3233,
+ "name": "مقبول گانے",
+ "built": "2026-10-07 01:44 UTC",
+ "secs": 2911,
  "videos": [
-  {
-   "id": "1l7wbZmdtys",
-   "title": "Bruno Mars - Dance With Me [Official Music Video]",
-   "label": "Bruno Mars",
-   "lang": "English",
-   "secs": 220,
-   "found": "2026-10-07",
-   "kind": "music",
-   "section": "Popular English music"
-  },
-  {
-   "id": "mw3kSNIxjqo",
-   "title": "Taylor Swift - Patient Zero (Official Music Video)",
-   "label": "Taylor Swift",
-   "lang": "English",
-   "secs": 313,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "yAUedzRJMpw",
-   "title": "Charlie Puth - Sideways (feat. Coco Jones) [Official Video]",
-   "label": "Charlie Puth",
-   "lang": "English",
-   "secs": 235,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "XwCWKSO0F8s",
-   "title": "Taylor Swift - I Knew It, I Knew You (Piano Version) (Official Music Video)",
-   "label": "Taylor Swift",
-   "lang": "English",
-   "secs": 196,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
   {
    "id": "ylwSKPnFb_8",
    "title": "Chehra - Official Music Video | Mitta Ror ft. Swara Verma",
@@ -48,7 +11,7 @@
    "secs": 227,
    "found": "2026-10-07",
    "kind": "music",
-   "section": "Popular Hindi music"
+   "section": "مقبول ہندی گانے"
   },
   {
    "id": "-WlM9FPV8Bs",
@@ -78,6 +41,42 @@
    "kind": "music"
   },
   {
+   "id": "vrOCv5SOTrU",
+   "title": "Jaadugari | AMAN | Official Music Video | Raah Records | New Release",
+   "label": "YRF",
+   "lang": "Hindi",
+   "secs": 185,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "CNOASnEEc_M",
+   "title": "O Bharat Mere - Full Video | Bharat Bhhagya Viddhaata | Kangana Ranaut | Prabhjee, Krsna Solo, Manoj",
+   "label": "Zee Music",
+   "lang": "Hindi",
+   "secs": 221,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "bTeZIuPjBfA",
+   "title": "INSHALLAH (Official Video) - Samarthh Jurel | Mishikka Chaurasia | Shahzad Ali | Palash Muchhal",
+   "label": "T-Series",
+   "lang": "Hindi",
+   "secs": 254,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "ujtwJ2z7QrY",
+   "title": "Kaho Na Kaho - 8K/4K Music Video | Emraan Hashmi, Mallika Sherawat | Amir Jamal | Anu Malik | Murder",
+   "label": "Sony Music India",
+   "lang": "Hindi",
+   "secs": 275,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
    "id": "ghajr4DFmSY",
    "title": "Maheya | Coke Studio Nu.WAV | Asim Azhar x AARYAN x Rovalio",
    "label": "Coke Studio Pakistan",
@@ -85,7 +84,7 @@
    "secs": 249,
    "found": "2026-10-07",
    "kind": "music",
-   "section": "Popular Urdu music"
+   "section": "مقبول اردو گانے"
   },
   {
    "id": "WRcIwPwlxbw",
@@ -106,48 +105,29 @@
    "kind": "music"
   },
   {
+   "id": "8Ix-ekSoEdY",
+   "title": "Rangeen | Coke Studio Nu.WAV | Hasan Raheem x Izzchughtai x Umair",
+   "label": "Coke Studio Pakistan",
+   "lang": "Urdu",
+   "secs": 235,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "e-1zjovjWiA",
+   "title": "Dil | Coke Studio Nu.WAV | Afusic x Zoha Waseem x Ali Soomro",
+   "label": "Coke Studio Pakistan",
+   "lang": "Urdu",
+   "secs": 189,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
    "id": "4o5508kTdT8",
    "title": "Coke Studio Nu.WAV",
    "label": "Coke Studio Pakistan",
    "lang": "Urdu",
    "secs": 149,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "4SltcOfhauo",
-   "title": "Hazaaran Jailaan (Official Video) | Gurnam Bhullar | Isha Malviya | Romantic Punjabi Song 2026",
-   "label": "Speed Records",
-   "lang": "Punjabi",
-   "secs": 104,
-   "found": "2026-10-07",
-   "kind": "music",
-   "section": "Popular Punjabi music"
-  },
-  {
-   "id": "eI_s34ktN8A",
-   "title": "Zora Zori (Official Video) Honey Dhillon | Sandeep Aulakh | New Punjabi Song 2026 #newsong",
-   "label": "White Hill Music",
-   "lang": "Punjabi",
-   "secs": 217,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "s89tjDD4YIs",
-   "title": "DEEWANE: ARJUN SAHOTA (Full Video) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
-   "label": "Geet MP3",
-   "lang": "Punjabi",
-   "secs": 196,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "jL57dghpf50",
-   "title": "Diljit Dosanjh : Devil (Official Video) Intense : Hizzy : I'm an Artist Bro",
-   "label": "Diljit Dosanjh",
-   "lang": "Punjabi",
-   "secs": 200,
    "found": "2026-10-07",
    "kind": "music"
   }

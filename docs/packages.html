@@ -43,6 +43,13 @@
   .feats td, .feats th { text-align: center; padding: 7px 10px; }
   .feats td:first-child, .feats th:first-child { text-align: left; }
   .feats input { width: 20px; height: 20px; }
+  /* Everything fits: descriptions wrap, the tick columns stay narrow, nothing scrolls sideways. */
+  .feats table { table-layout: fixed; }
+  .feats th:not(:first-child), .feats td:not(:first-child) { width: 84px; padding: 7px 2px; }
+  .feats td:first-child { white-space: normal; }
+  .users td { white-space: normal; overflow-wrap: anywhere; }
+  .users td:nth-child(5), .users td:nth-child(6) { white-space: nowrap; }
+  @media (max-width: 600px) { .users td:nth-child(5) { white-space: normal; } .users select { max-width: 150px; } .feats td:first-child { overflow-wrap: anywhere; } .feats th:not(:first-child), .feats td:not(:first-child) { width: 54px; } .feats .pill { padding: 2px 5px; font-size: 11px; } }
   .pkgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
   .pkg { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 12px 16px; }
   .pkg h3 { margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; }
@@ -125,7 +132,7 @@
       <label class="small"><input type="checkbox" id="onlyPaid"> Only viewers with a package</label>
       <button class="btn" data-signout>Sign out</button>
     </div>
-    <div class="table-wrap"><table>
+    <div class="table-wrap users"><table>
       <thead><tr><th>Name</th><th>Email</th><th>Package</th><th>Until</th><th>Give package</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
