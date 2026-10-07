@@ -604,6 +604,7 @@ def newsreader(slot):
     here = os.path.join(HERE, "presenters")
     try:
         ids = json.load(open(os.path.join(here, "on-air.json")))["readers"]
+        if os.environ.get("NEWS_READERS"): ids = os.environ["NEWS_READERS"].split(",")  # samples
         people = {p["id"]: p for p in json.load(open(os.path.join(here, "presenters.json")))["moving"]["people"]}
     except Exception as e:
         NOTES.append(f"no newsreader: {e}"); return None

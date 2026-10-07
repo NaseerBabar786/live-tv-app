@@ -10,6 +10,7 @@ on:
         default: "calm"
 env:
   LOOK: ${{ github.event.inputs.look || 'calm' }}
+  READERS: "anchor-1c"   # newsreader(s) for the sample (space separated)
 jobs:
   sample:
     runs-on: ubuntu-latest
@@ -22,12 +23,13 @@ jobs:
           timeout 300 sudo apt-get update -qq || true
           sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
           pip install -q edge-tts numpy pillow
-          for id in $(python3 -c "import json; print(' '.join(json.load(open('tools/news/presenters/on-air.json'))['readers']))"); do
+          for id in ${READERS:-$(python3 -c "import json; print(' '.join(json.load(open('tools/news/presenters/on-air.json'))['readers']))")}; do
             curl -fsSL -m 120 -o "tools/news/presenters/clips/$id.mp4" \
               "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || true
           done
       - env:
           NEWS_LOOK: ${{ env.LOOK }}
+          NEWS_READERS: ${{ env.READERS }}
           GH_TOKEN: ${{ github.token }}
         run: |
           set -eu
