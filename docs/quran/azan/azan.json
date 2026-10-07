@@ -1,0 +1,74 @@
+{
+ "voices": [
+  {
+   "id": "makkah",
+   "en": "Makkah, Masjid al-Haram",
+   "ur": "مکہ، مسجد الحرام",
+   "fajr": false,
+   "file": "makkah.mp3",
+   "seconds": 197,
+   "credit": "Seyfula Islam, CC BY 3.0, via Wikimedia Commons",
+   "source": "https://commons.wikimedia.org/wiki/File:Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm"
+  },
+  {
+   "id": "makkah-maghrib",
+   "en": "Makkah, Maghrib",
+   "ur": "مکہ، مغرب",
+   "fajr": false,
+   "file": "makkah-maghrib.mp3",
+   "seconds": 300,
+   "credit": "3omar Faruq, CC BY 3.0, via Wikimedia Commons",
+   "source": "https://commons.wikimedia.org/wiki/File:Maghrib_Adhan_at_the_Masjid_al_Haram,_Mecca_-_25_Feb,_2012.webm"
+  },
+  {
+   "id": "melodic",
+   "en": "Soft and melodic",
+   "ur": "نرم اور خوش الحان",
+   "fajr": false,
+   "file": "melodic.mp3",
+   "seconds": 154,
+   "credit": "Adam-synagda, CC0, via Wikimedia Commons",
+   "source": "https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg"
+  },
+  {
+   "id": "classic",
+   "en": "Classic",
+   "ur": "روایتی",
+   "fajr": false,
+   "file": "classic.mp3",
+   "seconds": 183,
+   "credit": "Andrewler, CC BY-SA 4.0, via Wikimedia Commons",
+   "source": "https://commons.wikimedia.org/wiki/File:Azan.ogg"
+  },
+  {
+   "id": "aaqib",
+   "en": "Aaqib Azeez",
+   "ur": "عاقب عزیز",
+   "fajr": false,
+   "file": "aaqib.mp3",
+   "seconds": 86,
+   "credit": "Atcovi, CC BY-SA 4.0, via Wikimedia Commons",
+   "source": "https://commons.wikimedia.org/wiki/File:The_Adhan_-_Muslim_Call_to_Prayer_-_Aaqib_Azeez.mp3"
+  },
+  {
+   "id": "short",
+   "en": "Short and plain",
+   "ur": "مختصر اور سادہ",
+   "fajr": false,
+   "file": "short.mp3",
+   "seconds": 27,
+   "credit": "Jarih (Moi même), CC BY-SA 3.0, via Wikimedia Commons",
+   "source": "https://commons.wikimedia.org/wiki/File:Adhan_wiki.oga"
+  },
+  {
+   "id": "fajr-1",
+   "en": "Fajr Azan 1",
+   "ur": "فجر کی اذان 1",
+   "fajr": true,
+   "file": "fajr-1.mp3",
+   "seconds": 248,
+   "credit": "Islamic Center Malmö, CC BY 3.0, via Wikimedia Commons",
+   "source": "https://commons.wikimedia.org/wiki/File:Eid_al-Fitr_Fajr_azan_at_Malm%C3%B6_Mosque_-_19_August_2012.webm"
+  }
+ ]
+}
