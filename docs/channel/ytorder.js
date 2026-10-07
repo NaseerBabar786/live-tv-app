@@ -97,6 +97,16 @@ export function upcoming(order, station, count, fromMs = Date.now()) {
 // videos (music, clips) a break comes before the next video once 10 minutes have run since the last one.
 
 export const BREAK_GAP_SECS = 10 * 60;
+export const TRAILERS_PER_BLOCK = 12;
+
+/** Trailers of upcoming films for a movie channel (channel/trailers.json, the languages in [trailerLangs]). */
+export async function loadTrailers(station, base = "") {
+  if (!station.trailerLangs) return [];
+  try {
+    const d = await (await fetch(base + "trailers.json", { cache: "no-store" })).json();
+    return (d.videos || []).filter(v => v.id && v.secs > 0 && v.secs <= 600 && station.trailerLangs.includes(v.lang));
+  } catch { return []; }
+}
 
 /** Our approved promos for the breaks, 10 to 60 seconds each. */
 export async function loadPromos(base = "../media/") {
@@ -110,9 +120,11 @@ export async function loadPromos(base = "../media/") {
  * The running order with its ad breaks: [{ kind: "break", promos, secs } | { kind: "video", v, secs }].
  * Breaks take the promos in turn, as many as fit in 60 seconds, so each break shows different ones.
  */
-export function withBreaks(order, station, promos) {
+export function withBreaks(order, station, promos, trailers = []) {
   const items = [];
-  let since = Infinity, p = 0;
+  let since = Infinity, p = 0, t = 0;
+  // Movie channels (owner, 2026-10-07): after every film, 10 to 15 trailers of upcoming films, then the ad break.
+  const perBlock = Math.min(TRAILERS_PER_BLOCK, trailers.length);
   for (const v of order) {
     const secs = lengthOf(v, station);
     if (promos.length && since >= BREAK_GAP_SECS) {
@@ -126,6 +138,13 @@ export function withBreaks(order, station, promos) {
     }
     items.push({ kind: "video", v, secs });
     since += secs;
+    if (perBlock >= 5 && secs >= 30 * 60) {
+      for (let k = 0; k < perBlock; k++, t++) {
+        const tr = trailers[t % trailers.length];
+        items.push({ kind: "video", trailer: true, v: { ...tr, mins: tr.secs / 60 }, secs: tr.secs });
+        since += tr.secs;
+      }
+    }
   }
   return items;
 }

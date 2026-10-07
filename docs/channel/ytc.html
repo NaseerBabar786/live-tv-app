@@ -53,7 +53,7 @@
 <script src="still.js"></script>
 <script type="module">
 import { STATIONS } from "./schedule.js";
-import { loadPicks, loadPromos, playable, runningOrder, withBreaks, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
+import { loadPicks, loadPromos, loadTrailers, playable, runningOrder, withBreaks, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
 const q = new URLSearchParams(location.search);
 const app = q.has("app");
 const $ = id => document.getElementById(id);
@@ -88,7 +88,7 @@ function showNow() {
   placeBug(v.label);
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = v.title;
-  $("now").lastChild.textContent = station.name + " · " + v.label;
+  $("now").lastChild.textContent = station.name + " · " + (items[cur].trailer ? "Coming soon · " : "") + v.label;
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
@@ -129,18 +129,19 @@ function keepInStep() {
   if (Math.abs(want - have) > 30 && want < items[cur].secs - 30) player.seekTo(want, true);
 }
 // The day's running order with its ad breaks, without the videos the owner took off in Channel Studio (📺 Programmes).
-let all = [], picks = null, promos = [], day = null;
+let all = [], picks = null, promos = [], trailers = [], day = null;
 function order() {
   day = torontoDay().date;
-  items = withBreaks(runningOrder(station, all.filter(v => playable(v, picks)), day), station, promos);
+  items = withBreaks(runningOrder(station, all.filter(v => playable(v, picks)), day), station, promos, trailers);
 }
 
 let joinAt = 0;
-Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos()]).then(([d, p, pr]) => {
+Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station)]).then(([d, p, pr, tr]) => {
   if (!d.videos || d.videos.length < 3) return fallBack();
   all = d.videos;
   picks = p[station.id] || null;
   promos = pr;
+  trailers = tr;
   order();
   // Nothing left to play (every programme taken off): the free films take over.
   if (!items.some(x => x.kind === "video")) return fallBack();

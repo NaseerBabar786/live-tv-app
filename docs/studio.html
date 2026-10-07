@@ -522,8 +522,8 @@
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand } from "./channel/schedule.js";
 import { mountCards } from "./channel/cards.js";
-import { playable, runningOrder, torontoDay, withBreaks, itemsFrom, loadPromos as loadBreakPromos } from "./channel/ytorder.js";
-let breakPromos = [];
+import { playable, runningOrder, torontoDay, withBreaks, itemsFrom, loadPromos as loadBreakPromos, loadTrailers } from "./channel/ytorder.js";
+let breakPromos = [], pkTrailers = [];
 loadBreakPromos("media/").then(p => { breakPromos = p; setTimeout(() => { try { if (pick) renderPicks(); } catch {} }); });
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
@@ -1578,6 +1578,7 @@ async function loadPicksPanel() {
     const d = await (await fetch(url + "?t=" + Date.now())).json();
     if (wanted !== station) return;
     pkList = d.videos || d.songs || [];
+    pkTrailers = station === HITS ? [] : await loadTrailers(station, "channel/");
     pick = clone(pkAll[station.id] || { mode: "auto", off: [], offLabels: [], on: [] });
     pick.off ||= []; pick.offLabels ||= []; pick.on ||= [];
     $("pkMsg").textContent = `${pkList.length} programmes in today's list (updated ${d.built || "daily"}).`;
@@ -1652,15 +1653,23 @@ function renderPicks() {
   const st = pkStation(), order = runningOrder(st, onAir, torontoDay().date);
   $("pkGuide").innerHTML = "";
   // With the ad break of our own promos before each programme (media/promos.json, never over 60 seconds).
-  itemsFrom(withBreaks(order, st, breakPromos), 40).forEach((u, k) => {
+  // Movie channels: after every film, a block of upcoming-film trailers (one row here).
+  const rows = [];
+  for (const u of itemsFrom(withBreaks(order, st, breakPromos, pkTrailers), 200)) {
+    const last = rows[rows.length - 1];
+    if (u.item.trailer && last?.trailers) { last.count++; last.secs += u.item.secs; continue; }
+    if (rows.length >= 40) break;
+    rows.push(u.item.trailer ? { trailers: true, count: 1, secs: u.item.secs, startMs: u.startMs } : { item: u.item, secs: u.item.secs, startMs: u.startMs });
+  }
+  rows.forEach((r, k) => {
     const g = document.createElement("div");
-    g.className = (k ? "" : "cur") + (u.item.kind === "break" ? " adrow" : "");
+    g.className = (k ? "" : "cur") + (r.trailers || r.item.kind === "break" ? " adrow" : "");
     g.innerHTML = "<span></span><span></span><span></span>";
-    g.children[0].textContent = k ? timeText(u.startMs) : "Now";
-    g.children[1].textContent = u.item.kind === "break"
-      ? "📢 Ad break: " + u.item.promos.map(p => p.title || p.src).join(" + ")
-      : u.item.v.title;
-    g.children[2].textContent = lengthText(u.item.secs);
+    g.children[0].textContent = k ? timeText(r.startMs) : "Now";
+    g.children[1].textContent = r.trailers ? `🎬 Coming soon: ${r.count} trailers of upcoming films`
+      : r.item.kind === "break" ? "📢 Ad break: " + r.item.promos.map(p => p.title || p.src).join(" + ")
+      : r.item.v.title;
+    g.children[2].textContent = lengthText(r.secs);
     $("pkGuide").appendChild(g);
   });
 }
