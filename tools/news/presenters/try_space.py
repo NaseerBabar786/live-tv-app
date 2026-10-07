@@ -47,6 +47,7 @@ for p in ep["parameters"]:
     elif k == "audio": args.append(handle_file(wav))
     elif k == "text" and not p.get("parameter_has_default"): args.append(PROMPT)
     elif k == "text" and isinstance(p.get("parameter_default"), str) and len(p["parameter_default"]) > 25: args.append(PROMPT)
+    elif "max audio" in (p.get("label") or "").lower(): args.append(60)
     elif p.get("parameter_has_default"): args.append(p["parameter_default"])
     elif choices(p): args.append(choices(p)[0])
     elif p.get("python_type", {}).get("type") in ("int", "float"): args.append(EXTRA.get(len(args), 0))

@@ -15,11 +15,11 @@ on:
       ids:
         description: 'Anchor ids from presenters.json "moving", as a JSON list'
         required: false
-        default: '["anchor-5","anchor-6","anchor-7","anchor-8"]'
+        default: '["anchor-1c"]'
       lips:
-        description: "Also make the lip-synced version"
+        description: "Also make the LatentSync lip-synced version (slow, soft mouth)"
         type: boolean
-        default: true
+        default: false
 
 # One runner per anchor (each runner has its own free video quota).
 jobs:
@@ -28,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        id: ${{ fromJson(github.event.inputs.ids || '["anchor-5","anchor-6","anchor-7","anchor-8"]') }}
+        id: ${{ fromJson(github.event.inputs.ids || '["anchor-1c"]') }}
     env:
       ID: ${{ matrix.id }}
     timeout-minutes: 90
@@ -50,7 +50,8 @@ jobs:
           set -eu
           mkdir -p mv
           # Keep the same picture once made, so the lips run and later lines show the same person.
-          curl -fsSL -o mv/$ID.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$ID.jpg" || rm -f mv/$ID.jpg
+          PIC=$(python3 -c "import json,os; print(next((p.get('picture', p['id']) for p in json.load(open('tools/news/presenters/presenters.json'))['moving']['people'] if p['id'] == os.environ['ID']), os.environ['ID']))")
+          curl -fsSL -o mv/$ID.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$PIC.jpg" || rm -f mv/$ID.jpg
           python3 tools/news/presenters/move.py "$ID" mv
           python3 tools/news/presenters/sample.py mv/$ID-move.mp4 mv/line.mp3 "$ID" news-move-$ID.mp4
           cp mv/$ID-move.mp4 news-move-$ID-raw.mp4
@@ -58,13 +59,13 @@ jobs:
 
   lips:
     needs: move
-    if: github.event_name == 'push' || github.event.inputs.lips == 'true'
+    if: github.event.inputs.lips == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 340
     strategy:
       fail-fast: false
       matrix:
-        id: ${{ fromJson(github.event.inputs.ids || '["anchor-5","anchor-6","anchor-7","anchor-8"]') }}
+        id: ${{ fromJson(github.event.inputs.ids || '["anchor-1c"]') }}
     env:
       ID: ${{ matrix.id }}
     permissions:

@@ -19,11 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {n: 2, space: "victor/LongCat-Video-Avatar-1.5"}
-          - {n: 3, space: "alexnasa/OmniAvatar"}
-          - {n: 4, space: "acvlab/FantasyTalking"}
-          - {n: 5, space: "fffiloni/EchoMimic"}
-          - {n: 8, space: "hugging-apps/leaptalk-talking-head"}
+          - {n: 9, space: "hugging-apps/leaptalk-talking-head"}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -38,7 +34,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           curl -fsSL -o face.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$ANCHOR.jpg"
-          python3 -c "import asyncio,json,edge_tts; c=json.load(open('tools/news/presenters/presenters.json')); asyncio.run(edge_tts.Communicate(c['line'], c['voice']).save('line.mp3'))"
+          # A real story as read in a bulletin (about 30 s), to see if lip-sync holds over a longer read.
+          python3 -c "import asyncio,json,edge_tts; c=json.load(open('tools/news/presenters/presenters.json')); t=c['line']+' بی بی سی اردو کے مطابق، پاکستان میں نوے لاکھ سے زائد افراد پیٹرول سبسڈی سے فائدہ اٹھا رہے ہیں۔ حکومت کا کہنا ہے کہ اس منصوبے کو اگلے سال بھی جاری رکھا جائے گا، اور اس کے لیے نئی رقم مختص کی گئی ہے۔'; asyncio.run(edge_tts.Communicate(t, c['voice']).save('line.mp3'))"
           ffmpeg -v error -y -i line.mp3 -ac 1 -ar 16000 line.wav
           set +e
           timeout 40m python3 tools/news/presenters/try_space.py "${{ matrix.space }}" face.jpg line.wav news-try-${{ matrix.n }}.mp4 > log.txt 2>&1

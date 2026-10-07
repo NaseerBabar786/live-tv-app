@@ -10,7 +10,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 SPACES = ["zerogpu-aoti/wan2-2-fp8da-aoti-faster", "multimodalart/wan2-1-fast"]
 NEG = ("blurry, distorted face, deformed hands, extra fingers, extra people, text, subtitles, watermark, logo, "
-       "static, frozen, cartoon, plastic skin, camera shake, zoom")
+       "static, frozen, cartoon, plastic skin, camera shake, zoom, waving, hand gestures, raising hands, pointing")
 
 def sh(*a):
     subprocess.run(list(a), check=True)
@@ -59,10 +59,10 @@ def main():
     img = f"{out}/{pid}.jpg"
     if not os.path.exists(img):
         picture(p, img)
-    clip(img, mv["motion"], f"{out}/a.mp4")
+    clip(img, p.get("motion", mv["motion"]), f"{out}/a.mp4")
     sh("ffmpeg", "-v", "error", "-y", "-sseof", "-0.1", "-i", f"{out}/a.mp4", "-frames:v", "1", "-q:v", "2", f"{out}/a-last.jpg")
     try:
-        clip(f"{out}/a-last.jpg", mv["motion2"], f"{out}/b.mp4"); parts = ["a", "b"]
+        clip(f"{out}/a-last.jpg", p.get("motion2", mv["motion2"]), f"{out}/b.mp4"); parts = ["a", "b"]
     except SystemExit:
         parts = ["a"]
     with open(f"{out}/parts.txt", "w") as f:
