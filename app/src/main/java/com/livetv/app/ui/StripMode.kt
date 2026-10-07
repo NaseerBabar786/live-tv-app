@@ -324,7 +324,7 @@ internal fun StripMode(
                     Text("Loading channels…", color = palette.onSurfaceVariant, modifier = Modifier.align(Alignment.Center))
                 } else if (page != null) {
                     key(page) {
-                        WebPreview(page, Modifier.fillMaxSize(), onFallback = {
+                        WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = {
                             if (MyChannel.webPage(current) != null) pageFailed = true
                         })
                     }

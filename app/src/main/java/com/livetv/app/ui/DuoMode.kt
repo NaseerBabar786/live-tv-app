@@ -597,7 +597,7 @@ private fun DuoPlayer(
             Image(it, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
         }
         if (page != null) {
-            key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+            key(page) { WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = onPageFailed) }
         } else if (showVideo) {
             AndroidView(
                 factory = { ctx -> TextureView(ctx).also(attach) },
