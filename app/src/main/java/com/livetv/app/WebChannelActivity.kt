@@ -164,8 +164,8 @@ class WebChannelActivity : Activity() {
     private var downY = 0f
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-<<<<<<< HEAD
-        when (ev.actionMasked) {
+        // Films (Library) keep their own buttons; no channel changes there.
+        if (!film) when (ev.actionMasked) {
             MotionEvent.ACTION_DOWN -> { downX = ev.x; downY = ev.y }
             MotionEvent.ACTION_UP -> {
                 val dx = ev.x - downX
@@ -176,9 +176,6 @@ class WebChannelActivity : Activity() {
                 }
             }
         }
-=======
-        if (!film) swipes.onTouchEvent(ev)
->>>>>>> origin/main
         return super.dispatchTouchEvent(ev)
     }
 
