@@ -134,12 +134,13 @@
 
     <div class="panel" style="margin-bottom:20px">
       <h2 style="margin-top:0">Promo codes</h2>
-      <p class="small">Give someone a package for free with a code. Make a code here, send it to them, and they type it in the app: <b>Settings › ⭐ Packages › Promo code</b>. They get the package straight away. Each person can use a code only once, and nobody can use a code you haven't made. If they already have the same package, the code's time is added after it ends. Press <b>Edit</b> on a code to change what it's for, its package, its length or how many people can use it (up to 100,000); people who already used it keep what they got.</p>
+      <p class="small">Give someone a package for free with a code. Make a code here, send it to them, and they type it in the app: <b>Settings › ⭐ Packages › Promo code</b>. They get the package straight away. Each person can use a code only once, and nobody can use a code you haven't made. If they already have the same package, the code's time is added after it ends. Press <b>Edit</b> on a code to change what it's for, its package, its length or how many people can use it (up to 100,000, or <b>No limit</b> for a code that runs all the time, like a welcome offer); people who already used it keep what they got.</p>
       <div class="pcform">
         <label>Code<span class="row" style="gap:6px"><input class="inp" id="pcCode" maxlength="20" placeholder="e.g. EID2026" style="width:150px;text-transform:uppercase"> <button class="btn" id="pcRandom" type="button">Make one up</button></span></label>
         <label>Package<select id="pcTier"><option selected>Gold</option></select></label>
         <label>For how long<select id="pcDays"><option value="7">1 week</option><option value="30" selected>1 month</option><option value="90">3 months</option><option value="180">6 months</option><option value="365">1 year</option></select></label>
         <label>How many people<input type="number" class="inp" id="pcUses" value="1" min="1" max="100000" style="width:100px"></label>
+        <label style="align-self:flex-end;padding-bottom:8px;white-space:nowrap"><input type="checkbox" id="pcNoLimit"> No limit</label>
         <label style="flex:1;min-width:220px">What it's for<input class="inp" id="pcNote" placeholder="e.g. Free month for my cousin Ali"></label>
         <button class="btn primary" id="pcAdd" type="button">Make code</button>
       </div>
@@ -425,6 +426,9 @@ if (!configured) {
   // Promo codes (promoCodes/{CODE}): a free package for a set time; the viewer types the code in the app.
   // The Firestore rules let a viewer read a code only by its exact name and use it once (see firestore-rules.txt).
   let codes = [];
+  // "No limit": a count nobody reaches, so the app and the Firestore rules (used < uses) need no change.
+  // Each account can still use a code only once (usedBy).
+  const NO_LIMIT = 1000000000;
   const DAYS = { 7: "1 week", 30: "1 month", 90: "3 months", 180: "6 months", 365: "1 year" };
   const pcMsg = (t, cls) => { $("pcMsg").textContent = t; $("pcMsg").className = "small " + (cls || ""); };
   async function loadCodes() {
@@ -441,9 +445,11 @@ if (!configured) {
     const tb = $("pcRows");
     if (!codes.length) { tb.innerHTML = `<tr><td colspan="6" class="small">No promo codes yet.</td></tr>`; return; }
     tb.innerHTML = codes.map((c, i) => {
-      const who = Object.values(c.usedBy || {}).sort((a, b) => (a.at?.toMillis?.() || 0) - (b.at?.toMillis?.() || 0))
+      // A no-limit code can have many people: show the 20 newest.
+      const all = Object.values(c.usedBy || {}).sort((a, b) => (a.at?.toMillis?.() || 0) - (b.at?.toMillis?.() || 0));
+      const who = (all.length > 20 ? `<span class="small">…and ${all.length - 20} earlier</span><br>` : "") + all.slice(-20)
         .map(w => esc(w.name || w.email || "someone") + (w.at?.toDate ? ` <span class="small">(${fmt(w.at.toDate())})</span>` : "")).join("<br>");
-      const off = c.active === false, full = (c.used || 0) >= (c.uses || 1);
+      const off = c.active === false, full = (c.used || 0) >= (c.uses || 1), open = c.uses >= NO_LIMIT;
       if (editingCode === c.id) {
         const days = DAY_OPTIONS.includes(c.days) ? DAY_OPTIONS : [...DAY_OPTIONS, c.days];
         return `<tr data-edit="${i}">
@@ -451,7 +457,8 @@ if (!configured) {
         <td><input class="inp" data-f="note" value="${esc(c.note)}" style="width:100%;box-sizing:border-box"></td>
         <td><select data-f="tier">${TIERS.map(t => `<option${t === c.tier ? " selected" : ""}>${t}</option>`).join("")}</select>
           <select data-f="days">${days.map(d => `<option value="${d}"${d === c.days ? " selected" : ""}>${esc(DAYS[d] || d + " days")}</option>`).join("")}</select></td>
-        <td>${c.used || 0} of <input type="number" class="inp" data-f="uses" min="1" max="100000" value="${c.uses || 1}" style="width:100px"></td>
+        <td>${c.used || 0} of <input type="number" class="inp" data-f="uses" min="1" max="100000" value="${open ? 1 : c.uses || 1}" style="width:100px"${open ? " disabled" : ""}>
+          <label class="small" style="display:block"><input type="checkbox" data-nolimit${open ? " checked" : ""}> No limit</label></td>
         <td>${who || '<span class="small">nobody yet</span>'}</td>
         <td><button class="btn primary" type="button" data-save="${i}">Save</button> <a href="#" data-cancel="${i}" style="margin-left:8px">Cancel</a></td></tr>`;
       }
@@ -459,7 +466,7 @@ if (!configured) {
         <td><code>${esc(c.id)}</code> <a href="#" data-copy="${i}" class="small">copy</a></td>
         <td>${esc(c.note)}</td>
         <td><span class="pill ${esc(c.tier)}">${esc(c.tier)}</span> ${esc(DAYS[c.days] || c.days + " days")}</td>
-        <td>${c.used || 0} of ${c.uses || 1}${off ? " · <b>turned off</b>" : full ? " · <b>used up</b>" : ""}</td>
+        <td>${open ? `${c.used || 0} used · no limit` : `${c.used || 0} of ${c.uses || 1}`}${off ? " · <b>turned off</b>" : full ? " · <b>used up</b>" : ""}</td>
         <td>${who || '<span class="small">nobody yet</span>'}</td>
         <td><a href="#" data-edit-code="${i}">Edit</a> <a href="#" data-toggle="${i}" style="margin-left:12px">${off ? "Turn on" : "Turn off"}</a> <a href="#" data-del="${i}" style="margin-left:12px">Delete</a></td></tr>`;
     }).join("");
@@ -475,13 +482,14 @@ if (!configured) {
       } else if (a.dataset.save !== undefined) {
         // Changes apply to people who use the code from now on; those who already used it keep what they got.
         const row = a.closest("tr"), f = k => row.querySelector(`[data-f="${k}"]`).value;
-        const note = f("note").trim(), uses = parseInt(f("uses"), 10);
+        const noLimit = row.querySelector("[data-nolimit]").checked;
+        const note = f("note").trim(), uses = noLimit ? NO_LIMIT : parseInt(f("uses"), 10);
         if (!note) return pcMsg("Write what the code is for.", "bad");
-        if (!(uses >= 1 && uses <= 100000)) return pcMsg("How many people: a number from 1 to 100,000.", "bad");
+        if (!noLimit && !(uses >= 1 && uses <= 100000)) return pcMsg("How many people: a number from 1 to 100,000.", "bad");
         const change = { note, tier: f("tier"), days: parseInt(f("days"), 10), uses };
         await fs.updateDoc(fs.doc(db, "promoCodes", c.id), change);
         Object.assign(c, change); editingCode = null; showCodes();
-        pcMsg(`Saved ${c.id}: ${c.tier} for ${DAYS[c.days] || c.days + " days"}, ${c.used || 0} of ${c.uses} used.` + ((c.used || 0) >= c.uses ? " It's used up now; raise the number to let more people in." : ""), "saved");
+        pcMsg(`Saved ${c.id}: ${c.tier} for ${DAYS[c.days] || c.days + " days"}, ` + (noLimit ? `no limit (${c.used || 0} used so far), once per account.` : `${c.used || 0} of ${c.uses} used.`) + ((c.used || 0) >= c.uses ? " It's used up now; raise the number to let more people in." : ""), "saved");
       } else if (a.dataset.copy !== undefined) {
         await navigator.clipboard.writeText(c.id); pcMsg(`Copied ${c.id}.`, "saved");
       } else if (a.dataset.toggle !== undefined) {
@@ -494,13 +502,19 @@ if (!configured) {
       }
     } catch (err) { pcMsg("Couldn't save: " + saveHelp(err), "bad"); }
   });
+  $("pcNoLimit").onchange = () => { $("pcUses").disabled = $("pcNoLimit").checked; };
+  // In the edit row, No limit greys out the number.
+  $("pcRows").addEventListener("change", e => {
+    if (e.target.matches("[data-nolimit]")) e.target.closest("td").querySelector('[data-f="uses"]').disabled = e.target.checked;
+  });
   $("pcRandom").onclick = () => {
     const abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     $("pcCode").value = Array.from(crypto.getRandomValues(new Uint32Array(8)), n => abc[n % abc.length]).join("");
   };
   $("pcAdd").onclick = async () => {
     const id = $("pcCode").value.trim().toUpperCase();
-    const uses = Math.max(1, Math.min(100000, parseInt($("pcUses").value, 10) || 1));
+    const noLimit = $("pcNoLimit").checked;
+    const uses = noLimit ? NO_LIMIT : Math.max(1, Math.min(100000, parseInt($("pcUses").value, 10) || 1));
     const note = $("pcNote").value.trim();
     if (!/^[A-Z0-9-]{4,20}$/.test(id)) return pcMsg("A code needs 4 to 20 letters or numbers (a dash is fine). Or press Make one up.", "bad");
     if (!note) return pcMsg("Write what the code is for, so you remember later.", "bad");
@@ -510,8 +524,8 @@ if (!configured) {
       const c = { tier: $("pcTier").value, days: parseInt($("pcDays").value, 10), uses, used: 0, usedBy: {}, note, active: true, created: fs.serverTimestamp() };
       await fs.setDoc(ref, c);
       codes.unshift({ id, ...c, created: null }); showCodes();
-      $("pcCode").value = ""; $("pcNote").value = ""; $("pcUses").value = 1;
-      pcMsg(`Made ${id}: ${c.tier} for ${DAYS[c.days]}, for ${uses === 1 ? "1 person" : uses + " people"}. Send it to them; they type it in Settings › ⭐ Packages.`, "saved");
+      $("pcCode").value = ""; $("pcNote").value = ""; $("pcUses").value = 1; $("pcNoLimit").checked = false; $("pcUses").disabled = false;
+      pcMsg(`Made ${id}: ${c.tier} for ${DAYS[c.days]}, ${noLimit ? "with no limit, once per account" : "for " + (uses === 1 ? "1 person" : uses + " people")}. Send it to them; they type it in Settings › ⭐ Packages.`, "saved");
     } catch (err) { pcMsg("Couldn't make the code: " + saveHelp(err), "bad"); }
   };
 
