@@ -75,7 +75,8 @@
       if (v.currentTime !== lastT) { lastT = v.currentTime; movedAt = Date.now(); }
       else if (Date.now() - movedAt > 8000 && Date.now() - startedAt > 8000) { movedAt = Date.now(); next(); return; }
       const left = Math.ceil((skipFrom - Date.now()) / 1000);
-      skip.hidden = false;
+      // An ad of 10 seconds or less just plays to the end: nothing to skip.
+      skip.hidden = (list[k] && list[k].secs || 30) <= 10;
       skip.textContent = left > 0 ? `Skip ad in ${left}` : (k < list.length - 1 ? "Skip ad ›" : "Skip ›");
     }, 250);
     skip.onclick = () => { if (canSkip()) next(); };

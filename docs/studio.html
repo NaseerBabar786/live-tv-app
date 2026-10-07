@@ -765,9 +765,9 @@ function renderVideos() {
     d.querySelector("b").textContent = v.title;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
     d.querySelector(".meta").textContent = `${lengthText(v.secs)} · ${uses ? "used " + uses + "×" : "not used yet"} · ${v.url}`;
-    // Ad length rule: a reminder on an ad that isn't 10, 20, 30, 40, 50 or 60 seconds.
-    if (kindOf(v) === "ad" && v.secs && (v.secs > 61 || Math.abs(v.secs - Math.round(v.secs / 10) * 10) > 1 || v.secs < 9))
-      d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="err">⚠ Ads should be 10, 20, 30, 40, 50 or 60 seconds · </span>');
+    // Ad length rule (owner, 2026-10-07): a reminder on an ad that isn't 5, 10, 15 … 60 seconds.
+    if (kindOf(v) === "ad" && v.secs && (v.secs > 61 || Math.abs(v.secs - Math.round(v.secs / 5) * 5) > 1 || v.secs < 4))
+      d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="err">⚠ Ads should be 5, 10, 15 … 60 seconds · </span>');
     d.querySelector('[data-a=play]').onclick = () => watchOne(v.title, v.url);
     d.querySelector('[data-a=edit]').onclick = () => editVideo(v);
     d.querySelector('[data-a=del]').onclick = () => {
@@ -880,11 +880,11 @@ $("videoForm").onsubmit = async e => {
     if (kind !== "live") c.loop.push(v.id);
     $("vMsg").innerHTML = `<span class="ok">✓ Added "${title}"` + (kind !== "live" ? " and put it at the end of the loop." : ". Give it a time slot in step 4.") + "</span>";
   } else $("vMsg").innerHTML = `<span class="ok">✓ Saved "${title}".</span>`;
-  // Ad length rule (owner, 2026-10-06): ads are 10, 20, 30, 40, 50 or 60 seconds; a reminder when one isn't.
+  // Ad length rule (owner, 2026-10-07): ads are 5, 10, 15 … 60 seconds (multiples of 5); a reminder when one isn't.
   if (kind === "ad") {
-    const near = Math.round(secs / 10) * 10;
-    if (secs > 61) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${lengthText(secs)} long. Ads should be at most 1 minute (10, 20, 30, 40, 50 or 60 seconds).</span>`;
-    else if (Math.abs(secs - near) > 1 || near < 10) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${secs} seconds. Ads should be 10, 20, 30, 40, 50 or 60 seconds (nearest: ${Math.min(60, Math.max(10, near))}).</span>`;
+    const near = Math.round(secs / 5) * 5;
+    if (secs > 61) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${lengthText(secs)} long. Ads should be at most 1 minute (5, 10, 15 … 60 seconds).</span>`;
+    else if (Math.abs(secs - near) > 1 || near < 5) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${secs} seconds. Ads should be 5, 10, 15 … 60 seconds (nearest: ${Math.min(60, Math.max(5, near))}).</span>`;
   }
   resetVideoForm();
   changed(); renderAll();

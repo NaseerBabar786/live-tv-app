@@ -101,7 +101,7 @@ private const val CARD_NOT_BEFORE_MS = 3 * 60_000L
 private const val VIDEO_EVERY_MS = 30 * 60_000L
 /** Full screen, YouTube style (1.9.58): up to [POD_SIZE] ads back to back, each picture ad [PICTURE_MS] long,
  *  with a countdown; Back skips an ad once it has been on for [SKIP_AFTER_MS]. Owner's pop-up ad length
- *  rule: ads are 10 to 60 seconds and a break never runs over [BREAK_MS] (an ad that doesn't fit what's
+ *  rule (2026-10-07): ads are 5 to 60 seconds in steps of 5 and a break never runs over [BREAK_MS] (an ad that doesn't fit what's
  *  left is left out; a video of unknown length is stopped when the minute is up). */
 private const val POD_SIZE = 2
 private const val PICTURE_MS = 20_000L
@@ -542,7 +542,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
                         delay(600)
                         if (full && !isFullScreen) break
                     }
-                    if (full && left < 10_000L) break
+                    if (full && left < 5_000L) break
                     val wall = System.currentTimeMillis()
                     val videoMs = sponsor.videoSecs * 1000L
                     val isPromo = sponsor.id.startsWith(PROMO_ID)
@@ -607,7 +607,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
                     val o = arr.getJSONObject(i)
                     val src = o.optString("src").takeIf { it.isNotBlank() } ?: return@mapNotNull null
                     val url = if (src.startsWith("https://")) src else "https://tv.bulkbazaar.ca/media/$src"
-                    url to o.optInt("secs", 30).coerceIn(10, 60)
+                    url to o.optInt("secs", 30).coerceIn(5, 60)
                 }
             }.getOrNull()?.takeIf { it.isNotEmpty() }?.let { promos = it }
         }
