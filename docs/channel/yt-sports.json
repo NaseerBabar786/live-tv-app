@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Sports",
- "built": "2026-10-07 18:31 UTC",
+ "built": "2026-10-07 21:27 UTC",
  "videos": [
   {
    "id": "VpRNJC6xTeI",
@@ -171,18 +171,18 @@
    "top": true
   },
   {
-   "id": "CSTRAWxWBwQ",
-   "title": "India v USA | Match Highlights | Men’s T20 World Cup 2026",
-   "label": "ICC",
-   "mins": 7.0,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "YqKYpgZ9FWU",
    "title": "Cricket World Cup 2023 Final: Australia v India | Match Highlights",
    "label": "ICC",
    "mins": 9.05,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "CSTRAWxWBwQ",
+   "title": "India v USA | Match Highlights | Men’s T20 World Cup 2026",
+   "label": "ICC",
+   "mins": 7.0,
    "found": "2026-10-07",
    "top": true
   },
@@ -203,18 +203,18 @@
    "top": true
   },
   {
-   "id": "yC9NfyI7yR8",
-   "title": "भारत पहुँचा फाइनल में | Hindi Highlights | IND v ENG | Men’s T20 World Cup 2026",
-   "label": "ICC",
-   "mins": 5.0,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "AFEZzf9_EHk",
    "title": "Rohit Sharma Hits 140! | India v Pakistan - Match Highlights | ICC Cricket World Cup 2019",
    "label": "ICC",
    "mins": 6.25,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "yC9NfyI7yR8",
+   "title": "भारत पहुँचा फाइनल में | Hindi Highlights | IND v ENG | Men’s T20 World Cup 2026",
+   "label": "ICC",
+   "mins": 5.0,
    "found": "2026-10-07",
    "top": true
   },
@@ -251,18 +251,18 @@
    "top": true
   },
   {
-   "id": "8MWMvoZqt0E",
-   "title": "Carnage with the ball | The Best Deliveries of T20WC 2024",
-   "label": "ICC",
-   "mins": 3.75,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "VpZ2iUlLsRw",
    "title": "Pakistan v USA | Match Highlights | Men’s T20 World Cup 2026",
    "label": "ICC",
    "mins": 7.183333333333334,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "8MWMvoZqt0E",
+   "title": "Carnage with the ball | The Best Deliveries of T20WC 2024",
+   "label": "ICC",
+   "mins": 3.75,
    "found": "2026-10-07",
    "top": true
   },
@@ -291,10 +291,10 @@
    "top": true
   },
   {
-   "id": "YphL3Whh5B0",
-   "title": "Cricket World Cup 2011 Final: India v Sri Lanka | Match Highlights",
+   "id": "jm2r5xzYx-A",
+   "title": "India March On With Easy Win | West Indies vs India - Match Highlights | ICC Cricket World Cup 2019",
    "label": "ICC",
-   "mins": 8.466666666666667,
+   "mins": 6.033333333333333,
    "found": "2026-10-07",
    "top": true
   },
@@ -303,14 +303,6 @@
    "title": "भारत बना चैंपियन | Hindi Highlights | IND v NZ | Men’s T20 World Cup Final",
    "label": "ICC",
    "mins": 5.016666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "jm2r5xzYx-A",
-   "title": "India March On With Easy Win | West Indies vs India - Match Highlights | ICC Cricket World Cup 2019",
-   "label": "ICC",
-   "mins": 6.033333333333333,
    "found": "2026-10-07",
    "top": true
   },
@@ -331,10 +323,42 @@
    "top": true
   },
   {
+   "id": "YphL3Whh5B0",
+   "title": "Cricket World Cup 2011 Final: India v Sri Lanka | Match Highlights",
+   "label": "ICC",
+   "mins": 8.466666666666667,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "gTo-lPOGPdg",
    "title": "Australia v India | WTC23 Final | Match Highlights",
    "label": "ICC",
    "mins": 12.033333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "paHmKzZVUHQ",
+   "title": "Full Highlights | Day 2 | OGDCL v MIT Solutions | Shoaib Akhtar | President Trophy Grade-I | MZK1K",
+   "label": "Pakistan Cricket",
+   "mins": 18.9,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "vO7e060zGjw",
+   "title": "Full Highlights | Day 2 | KRL v SBP | Imran Khan Stadium | Presidents Trophy Grade-I | MZK1K",
+   "label": "Pakistan Cricket",
+   "mins": 6.466666666666667,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "pZxVNP43RP4",
+   "title": "Full Highlights | Day 2 | SNGPL vs Kingsmen | President Trophy Grade-I | MZK1K",
+   "label": "Pakistan Cricket",
+   "mins": 14.1,
    "found": "2026-10-07",
    "top": true
   },
@@ -499,22 +523,6 @@
    "top": true
   },
   {
-   "id": "QOd2K6d9la0",
-   "title": "Bowling Excellence, Big Hits & Stunning Catch | The Best of Shadab Khan in International Cricket",
-   "label": "Pakistan Cricket",
-   "mins": 3.8666666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "usE17A15OFU",
-   "title": "🔴 - 𝐑𝐄𝐋𝐈𝐕𝐄 | Pakistan vs Sri Lanka | Pakistan Win By 36 Runs | 3rd T20I 2017 | PCB | MR1K",
-   "label": "Pakistan Cricket",
-   "mins": null,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "lBY0qQ71PaU",
    "title": "Full Highlights | Pakistan vs Sri Lanka | Match 2 | Women U19 Tri-Nation Series 2026 | MZP1J",
    "label": "Pakistan Cricket",
@@ -539,26 +547,10 @@
    "top": true
   },
   {
-   "id": "IGqsYfLDM0Q",
-   "title": "Full Highlight | Pakistan vs Australia | 3rd ODI 2022 | PCB | MM2T",
+   "id": "a7vWUCAtk5A",
+   "title": "Full Highlights | Pakistan vs South Africa ODI Series | 3rd ODI | PCB | M2R1U",
    "label": "Pakistan Cricket",
-   "mins": 8.833333333333334,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "7dlgN-NRJTc",
-   "title": "West Indies All Wickets Compilation & Highlights 🏆 | 2nd Test 2025 | PCB | MR1K",
-   "label": "Pakistan Cricket",
-   "mins": 16.016666666666666,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "KUGw2JT84MA",
-   "title": "Full Highlights | Pakistan vs South Africa ODI Series | 2nd ODI | PCB | M2R1U",
-   "label": "Pakistan Cricket",
-   "mins": 23.216666666666665,
+   "mins": 19.366666666666667,
    "found": "2026-10-07",
    "top": true
   },
@@ -571,14 +563,6 @@
    "top": true
   },
   {
-   "id": "iX23AC-2pgE",
-   "title": "Day 3 Highlights | Pakistan vs England | 2nd Test 2024 | PCB | MR1K",
-   "label": "Pakistan Cricket",
-   "mins": 16.983333333333334,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "FdYxJClfRP4",
    "title": "Full Highlights | Pakistan vs New Zealand | 5th T20I 2024 | PCB | M2E2U",
    "label": "Pakistan Cricket",
@@ -587,34 +571,26 @@
    "top": true
   },
   {
-   "id": "Aa-ZIQEYsSY",
-   "title": "Full Highlights | Pakistan vs England | Day 03 | 2nd Test 2024 | PCB | MR1K",
+   "id": "KUGw2JT84MA",
+   "title": "Full Highlights | Pakistan vs South Africa ODI Series | 2nd ODI | PCB | M2R1U",
    "label": "Pakistan Cricket",
-   "mins": 16.983333333333334,
+   "mins": 23.216666666666665,
    "found": "2026-10-07",
    "top": true
   },
   {
-   "id": "Y1EXqu6MMP4",
-   "title": "Full Day 4 Highlights 🔥 | Pakistan vs England | 3rd Test 2015 | MR1T",
+   "id": "0LbwoeqHVBw",
+   "title": "Full Highlights | Pakistan vs Zimbabwe | Match 01 | Tri Nation Series | PCB | M2T1U",
    "label": "Pakistan Cricket",
-   "mins": 8.383333333333333,
+   "mins": 19.4,
    "found": "2026-10-07",
    "top": true
   },
   {
-   "id": "Qp5U64cxW5o",
-   "title": "Extended Highlights | Pakistan Women vs Zimbabwe Women | Match 03 | T20I Series 2026 | M9H1K",
+   "id": "IGqsYfLDM0Q",
+   "title": "Full Highlight | Pakistan vs Australia | 3rd ODI 2022 | PCB | MM2T",
    "label": "Pakistan Cricket",
-   "mins": 25.5,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "a7vWUCAtk5A",
-   "title": "Full Highlights | Pakistan vs South Africa ODI Series | 3rd ODI | PCB | M2R1U",
-   "label": "Pakistan Cricket",
-   "mins": 19.366666666666667,
+   "mins": 8.833333333333334,
    "found": "2026-10-07",
    "top": true
   },
@@ -623,46 +599,6 @@
    "title": "Full Highlights | Pakistan vs Sri Lanka ODI series 2025 | 2nd ODI | PCB | M2S1U",
    "label": "Pakistan Cricket",
    "mins": 23.616666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "GEMV63ZaYuM",
-   "title": "Short Highlights | Pakistan vs Sri Lanka ODI series 2025 | 2nd ODI | PCB | M2S1U",
-   "label": "Pakistan Cricket",
-   "mins": 10.833333333333334,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "u1v9bT6r7NM",
-   "title": "Full Highlights | Pakistan vs Sri Lanka ODI series 2025 | 1st ODI | PCB | M2S1U",
-   "label": "Pakistan Cricket",
-   "mins": 25.666666666666668,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "mRWx9ZBOcoM",
-   "title": "Pakistan vs Australia 1st ODI 2026 | Full Match Highlights | ODI Series | PCB | MR1K",
-   "label": "Pakistan Cricket",
-   "mins": 29.083333333333332,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "lEyjtvUnK2w",
-   "title": "2nd Innings Highlights | Pakistan W vs Bangladesh W | Women U19 Tri-Nation Series 2026 | MZP1J",
-   "label": "Pakistan Cricket",
-   "mins": 8.45,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "B6_xZqnuzp0",
-   "title": "1st Innings Highlights | University of Lahore PCB Talent Hunt | Beaconhouse vs Aitchison | MZO1K",
-   "label": "Pakistan Cricket",
-   "mins": 11.783333333333333,
    "found": "2026-10-07",
    "top": true
   },
@@ -679,6 +615,86 @@
    "title": "Full Highlights | Pakistan vs South Africa Test Series 2025 | 1st Test Day 1 | PCB | M2R1U",
    "label": "Pakistan Cricket",
    "mins": 19.616666666666667,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "paO8QDOJmsg",
+   "title": "Dramatic End to Karachi Test! Day 5 Highlights - Pakistan vs Australia, 1994",
+   "label": "Pakistan Cricket",
+   "mins": 35.45,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "vxOXWexxLfc",
+   "title": "Full Highlights | Pakistan vs Zimbabwe | Match 04 | Tri Nation Series | PCB | M2T1U",
+   "label": "Pakistan Cricket",
+   "mins": 24.083333333333332,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "Qp5U64cxW5o",
+   "title": "Extended Highlights | Pakistan Women vs Zimbabwe Women | Match 03 | T20I Series 2026 | M9H1K",
+   "label": "Pakistan Cricket",
+   "mins": 25.5,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "u0uyJesi2xI",
+   "title": "Full Highlights  | Pakistan vs South Africa ODI Series | 1st ODI | PCB | M2R1U",
+   "label": "Pakistan Cricket",
+   "mins": 25.55,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "0tX-yPiRVik",
+   "title": "1st Innings Highlights | Pakistan vs Bangladesh | Women U19 Tri-Nation Series 2026 | MZP1J",
+   "label": "Pakistan Cricket",
+   "mins": 9.55,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "mRWx9ZBOcoM",
+   "title": "Pakistan vs Australia 1st ODI 2026 | Full Match Highlights | ODI Series | PCB | MR1K",
+   "label": "Pakistan Cricket",
+   "mins": 29.083333333333332,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "u1v9bT6r7NM",
+   "title": "Full Highlights | Pakistan vs Sri Lanka ODI series 2025 | 1st ODI | PCB | M2S1U",
+   "label": "Pakistan Cricket",
+   "mins": 25.666666666666668,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "r-dRMy_BSck",
+   "title": "Full Highlights | Pakistan vs Sri Lanka | The Final | Tri Nation Series | PCB | M2T1U",
+   "label": "Pakistan Cricket",
+   "mins": 19.366666666666667,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "NfYggsfWhe8",
+   "title": "Pakistan Complete Record Chase vs South Africa | Full Highlights | 3rd ODI | Tri-Nation Series 2025",
+   "label": "Pakistan Cricket",
+   "mins": 28.066666666666666,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "SVxyAPijxDQ",
+   "title": "Pakistan vs Australia 3rd T20I 2026 🔥 | Full Highlights | Pakistan Complete 3-0 Sweep | PCB | MR1K",
+   "label": "Pakistan Cricket",
+   "mins": 22.1,
    "found": "2026-10-07",
    "top": true
   },
@@ -955,18 +971,18 @@
    "top": true
   },
   {
-   "id": "yx9k18xZqoM",
-   "title": "Wayne Rooney's Best Goals | Unstoppable Volley Against Russia! | Top 5 | England",
-   "label": "England Cricket",
-   "mins": 4.983333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "eOjgFsRwsqY",
    "title": "⏮️ | FULL PENALTY SHOOT-OUT | England v Switzerland | UEFA Euros 2024 | Highlights",
    "label": "England Cricket",
    "mins": 6.183333333333334,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "yx9k18xZqoM",
+   "title": "Wayne Rooney's Best Goals | Unstoppable Volley Against Russia! | Top 5 | England",
+   "label": "England Cricket",
+   "mins": 4.983333333333333,
    "found": "2026-10-07",
    "top": true
   },
@@ -1003,14 +1019,6 @@
    "top": true
   },
   {
-   "id": "SuygnFxX9UI",
-   "title": "Lionesses Put On A Show Before EURO 2025 | England 7-0 Jamaica | Highlights",
-   "label": "England Cricket",
-   "mins": 8.95,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "ycujUPJhRUs",
    "title": "Nwaneri, Gray and Esse In The Goals! | England U21 4-1 Moldova | UEFA Euro Qualifiers | Highlights",
    "label": "England Cricket",
@@ -1023,6 +1031,14 @@
    "title": "⏮️ Late Heartbreak For The Three Lions | Spain v England | UEFA Euros 2024 | Highlights",
    "label": "England Cricket",
    "mins": 8.716666666666667,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "emAIEADXAYM",
+   "title": "Italy 1-2 England | Kane Becomes England's Record All-Time Goal Scorer | Highlights",
+   "label": "England Cricket",
+   "mins": 3.6333333333333333,
    "found": "2026-10-07",
    "top": true
   },
@@ -1043,8 +1059,16 @@
    "top": true
   },
   {
+   "id": "P4tqsEwrixc",
+   "title": "Lucia Kendall Shines On Debut | England 3-0 Australia | Homecoming Series | Highlights",
+   "label": "England Cricket",
+   "mins": 6.966666666666667,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "PI5nRvwggQw",
-   "title": "'Is that someone we should know?' Aussie cricketers guess 2026 celebrities 👀",
+   "title": "'Who is that?!' Testing cricketers' pop culture knowledge 🤔",
    "label": "Cricket Australia",
    "mins": 8.45,
    "found": "2026-10-07",
@@ -1195,14 +1219,6 @@
    "top": true
   },
   {
-   "id": "PImGfI5yaVY",
-   "title": "Australia v India 2025-26 | Third ODI",
-   "label": "Cricket Australia",
-   "mins": 8.233333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "J4OlMqUi0P4",
    "title": "Full highlights of Kohli's Perth classic",
    "label": "Cricket Australia",
@@ -1235,10 +1251,10 @@
    "top": true
   },
   {
-   "id": "rpPCjyVfQOo",
-   "title": "India hold their nerve to win ODI epic in Canberra | Dettol ODI Series 2020",
+   "id": "PImGfI5yaVY",
+   "title": "Australia v India 2025-26 | Third ODI",
    "label": "Cricket Australia",
-   "mins": 8.483333333333333,
+   "mins": 8.233333333333333,
    "found": "2026-10-07",
    "top": true
   },
@@ -1251,10 +1267,10 @@
    "top": true
   },
   {
-   "id": "PorfJhrc6JY",
-   "title": "Australia v India 2025-26 | Third T20I",
+   "id": "rpPCjyVfQOo",
+   "title": "India hold their nerve to win ODI epic in Canberra | Dettol ODI Series 2020",
    "label": "Cricket Australia",
-   "mins": 8.033333333333333,
+   "mins": 8.483333333333333,
    "found": "2026-10-07",
    "top": true
   },
@@ -1283,6 +1299,14 @@
    "top": true
   },
   {
+   "id": "PorfJhrc6JY",
+   "title": "Australia v India 2025-26 | Third T20I",
+   "label": "Cricket Australia",
+   "mins": 8.033333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "Q5QXZdwsxuw",
    "title": "India close in on Test victory | Third Domain Test",
    "label": "Cricket Australia",
@@ -1307,18 +1331,18 @@
    "top": true
   },
   {
-   "id": "09tB57qOc1A",
-   "title": "Australia v India 2025-26 | Second ODI",
-   "label": "Cricket Australia",
-   "mins": 8.316666666666666,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "9-37VRXW22s",
    "title": "MCG Test full highlights",
    "label": "Cricket Australia",
    "mins": 10.75,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "09tB57qOc1A",
+   "title": "Australia v India 2025-26 | Second ODI",
+   "label": "Cricket Australia",
+   "mins": 8.316666666666666,
    "found": "2026-10-07",
    "top": true
   },
@@ -1339,18 +1363,18 @@
    "top": true
   },
   {
-   "id": "a5anNGO7qXo",
-   "title": "From the Vault: KP's Ashes annihilation",
-   "label": "Cricket Australia",
-   "mins": 4.0,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "v2bAEek6nc4",
    "title": "India’s bowlers fire on entertaining Boxing Day | Vodafone Test Series 2020-21",
    "label": "Cricket Australia",
    "mins": 8.5,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "a5anNGO7qXo",
+   "title": "From the Vault: KP's Ashes annihilation",
+   "label": "Cricket Australia",
+   "mins": 4.0,
    "found": "2026-10-07",
    "top": true
   },
@@ -1459,6 +1483,14 @@
    "top": true
   },
   {
+   "id": "GfDnYKElNpc",
+   "title": "Top 10 WWE NXT moments: WWE Top 10, Oct. 6, 2026",
+   "label": "WWE",
+   "mins": 8.333333333333334,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "b1-Pua_v7KQ",
    "title": "Tiffany Stratton paints a Mardi Gras float: Small Business Superstars",
    "label": "WWE",
@@ -1543,14 +1575,6 @@
    "title": "Zilla Fatu overpowers Lexis King in one-on-one match: NXT highlights, Oct. 6, 2026",
    "label": "WWE",
    "mins": 3.45,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "thFhXlqtnHo",
-   "title": "Money in the Bank Special",
-   "label": "WWE",
-   "mins": null,
    "found": "2026-10-07",
    "top": true
   },
@@ -1643,18 +1667,18 @@
    "top": true
   },
   {
-   "id": "RIWndBEgzFU",
-   "title": "Zilla Fatu to Lexis King: “I’m going to **** you up!”: NXT highlights, Sept. 29, 2026",
-   "label": "WWE",
-   "mins": 3.05,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
    "id": "lCC9QSv-mHA",
    "title": "Greatest Money in the Bank Ladder Match wins: WWE Top 10, Oct. 4, 2026",
    "label": "WWE",
    "mins": 9.4,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "RIWndBEgzFU",
+   "title": "Zilla Fatu to Lexis King: “I’m going to **** you up!”: NXT highlights, Sept. 29, 2026",
+   "label": "WWE",
+   "mins": 3.05,
    "found": "2026-10-07",
    "top": true
   },
@@ -1811,6 +1835,46 @@
    "top": true
   },
   {
+   "id": "c6MTksDzmmQ",
+   "title": "Maya World vs Julia Hart (7/2/26) | AEW Collision Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.15,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "FSxAjmP1keY",
+   "title": "MJF vs Kenny Omega ⏪ 2023",
+   "label": "AEW",
+   "mins": 2.0,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "VP3fByhpONc",
+   "title": "Persephone vs Julia Hart (6/13/26) | AEW Collision Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.1,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "AQZII9WsuQA",
+   "title": "AEW Collision HIGHLIGHTS: Thekla vs Mina Shirakawa! | 10/25/25",
+   "label": "AEW",
+   "mins": 2.0,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "w6wIsrPlBjo",
+   "title": "Skye Blue vs Maya World (6/10/26) | AEW Dynamite Highlights Presented by Upper Deck",
+   "label": "AEW",
+   "mins": 2.1666666666666665,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "z9xRLJ6OV0U",
    "title": "A look at the life and legacy of Benjamin \"PAC\" Satterley",
    "label": "AEW",
@@ -1819,16 +1883,24 @@
    "top": true
   },
   {
-   "id": "CEyMiBUkcNU",
-   "title": "Lio Rush CRASHES the Cage Match! 😱 | AEW Forbidden Door 2026 Highlights Presented by Upper Deck",
+   "id": "9-UJv-WHFdU",
+   "title": "Ospreay & Strickland get INTENSE! (6/17/26) | AEW Dynamite Highlights Presented by Upper Deck",
    "label": "AEW",
-   "mins": 2.1333333333333333,
+   "mins": 2.066666666666667,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "3G9pOG4s7_4",
+   "title": "Kyle Fletcher vs PAC: AEW Continental Classic MATCH HIGHLIGHTS | AEW Dynamite, 12/17/25",
+   "label": "AEW",
+   "mins": 2.0,
    "found": "2026-10-07",
    "top": true
   },
   {
    "id": "ruQ-sADsdak",
-   "title": "20 Minutes Of NOSTALGIC HEADERS To Take You Back To The 2006 FIFA World Cup",
+   "title": "These 2006 FIFA World Cup Headers Are Just ICONIC!",
    "label": "FIFA",
    "mins": 19.616666666666667,
    "found": "2026-10-07",
@@ -1836,7 +1908,7 @@
   },
   {
    "id": "DKF1CyDHaOw",
-   "title": "These 1998 FIFA World Cup Volleys And Half-Volleys Are Just UNREAL!",
+   "title": "Every Volley And Half-Volley From FIFA World Cup 1998!",
    "label": "FIFA",
    "mins": 10.5,
    "found": "2026-10-07",
@@ -1844,7 +1916,7 @@
   },
   {
    "id": "Jb5DIrcG3no",
-   "title": "When Larin Rescued Canada! | 2026 FIFA World Cup Highlights",
+   "title": "2-Min Highlights | Canada v Bosnia and Herzegovina | 2026 FIFA World Cup",
    "label": "FIFA",
    "mins": 2.183333333333333,
    "found": "2026-10-07",
@@ -1868,7 +1940,7 @@
   },
   {
    "id": "AIo5-YN_DF8",
-   "title": "10-Min Highlights | Argentina 2 – 1 Bosnia and Herzegovina | 2014 FIFA World Cup",
+   "title": "Just Another Lionel Messi Trademark Winner For Argentina! | 2014 FIFA World Cup",
    "label": "FIFA",
    "mins": 10.0,
    "found": "2026-10-07",
@@ -1884,7 +1956,7 @@
   },
   {
    "id": "WiBKgOpdvkE",
-   "title": "These Volleys And Half Volleys From The 1994 FIFA World Cup Were Special!",
+   "title": "1994 Nostalgia: Volleys & Half Volleys To Savour",
    "label": "FIFA",
    "mins": 4.233333333333333,
    "found": "2026-10-07",
@@ -1892,7 +1964,7 @@
   },
   {
    "id": "6IojQsXHsB0",
-   "title": "13 Minutes Of Just SENSATIONAL GOALS | 2002 FIFA World Cup",
+   "title": "Every Goal From Outside The Box | 2002 World Cup",
    "label": "FIFA",
    "mins": 13.116666666666667,
    "found": "2026-10-07",
@@ -1916,7 +1988,7 @@
   },
   {
    "id": "jZWLHQI7A-w",
-   "title": "10-Min Highlights | Netherlands Ease Past Chile | 2014 FIFA World Cup",
+   "title": "Perfect Group Stage Complete | Netherlands 2-0 Chile | 2014 World Cup EXTENDED HIGHLIGHTS",
    "label": "FIFA",
    "mins": 10.0,
    "found": "2026-10-07",
@@ -1924,7 +1996,7 @@
   },
   {
    "id": "aBls45aOzTY",
-   "title": "Neymar Double Defeats Cameroon | 2014 EXTENDED HIGHLIGHTS",
+   "title": "10-Min Highlights | Cameroon 1-4 Brazil | 2014 FIFA World Cup",
    "label": "FIFA",
    "mins": 13.816666666666666,
    "found": "2026-10-07",
@@ -1956,7 +2028,7 @@
   },
   {
    "id": "Hkphb8DmmK4",
-   "title": "When Costa Rica Stunned Uruguay! | 2014 FIFA World Cup Highlights",
+   "title": "EXTENDED HIGHLIGHTS | Uruguay 1-3 Costa Rica | 2014 FIFA World Cup",
    "label": "FIFA",
    "mins": 10.0,
    "found": "2026-10-07",
@@ -1964,7 +2036,7 @@
   },
   {
    "id": "JTmeVrP_cf4",
-   "title": "2-Minute Highlights | France 0-2 Mexico | 2010 FIFA World Cup",
+   "title": "When Mexico Surprised The World v France | 2010 FIFA World Cup",
    "label": "FIFA",
    "mins": 2.0833333333333335,
    "found": "2026-10-07",
@@ -1979,10 +2051,10 @@
    "top": true
   },
   {
-   "id": "j8BxnOqoKG8",
-   "title": "Brazil v Spain | Quarter-Final | FIFA Beach Soccer World Cup Seychelles 2025™ | Match Highlights",
+   "id": "-LHb5yN-OzI",
+   "title": "Highlights | Argentina 3-2 Egypt | FIFA World Cup 2026™",
    "label": "FIFA",
-   "mins": 2.0,
+   "mins": 2.183333333333333,
    "found": "2026-10-07",
    "top": true
   },
@@ -2508,7 +2580,7 @@
   },
   {
    "id": "wPBq3j-FzK0",
-   "title": "Top NHL Saves of Week 1 | 2026-27 Season",
+   "title": "Scorpion Saves & Glove Robberies! | NHL Saves of the Week",
    "label": "NHL",
    "mins": 6.066666666666666,
    "found": "2026-10-07",
@@ -2787,6 +2859,30 @@
    "top": true
   },
   {
+   "id": "lhKN-Dsb2o0",
+   "title": "Why are so many hockey fans sleeping on Evan Bouchard?",
+   "label": "TSN",
+   "mins": 4.95,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "5EsY4UP_tDU",
+   "title": "Can Scheifele snap slump and win battle vs. MacKinnon?",
+   "label": "TSN",
+   "mins": 4.233333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
+   "id": "GQ3DdAgEoZs",
+   "title": "Gavin McKenna makes a Splash in a Dramatic Maple Leafs win | Digital Sportscentre",
+   "label": "TSN",
+   "mins": 4.533333333333333,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "Fd6CwEINpfk",
    "title": "Is Crosby-Ovechkin the best head-to-head rivalry in hockey history? | The Talking Point",
    "label": "TSN",
@@ -2879,30 +2975,6 @@
    "title": "Should the NHL Crack Down on No-Trade Clauses?",
    "label": "TSN",
    "mins": 9.266666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "Dzgudv9YiI8",
-   "title": "How Should the Maple Leafs Manage Bobrovsky and Stolarz This Season?",
-   "label": "TSN",
-   "mins": 9.766666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "FFua4fNp39g",
-   "title": "The Quiz: Should there be harsher penalties for fighting in the NHL?",
-   "label": "TSN",
-   "mins": 6.216666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "TU4HY9D4vEU",
-   "title": "Insider Trading: Panthers breathe sigh of relief on Barkov",
-   "label": "TSN",
-   "mins": 5.1,
    "found": "2026-10-07",
    "top": true
   },
@@ -3011,6 +3083,14 @@
    "top": true
   },
   {
+   "id": "N1bF15vXKy8",
+   "title": "The ALL-CFL Defensive Linemen You NEED to Know",
+   "label": "CFL",
+   "mins": 2.95,
+   "found": "2026-10-07",
+   "top": true
+  },
+  {
    "id": "2Qux8KmFDDc",
    "title": "EVERY CFL Touchdown from Week 18!",
    "label": "CFL",
@@ -3083,122 +3163,42 @@
    "top": true
   },
   {
-   "id": "Ecu31O9xq-k",
-   "title": "Unveiling The New CFL Indigenous Logo",
-   "label": "CFL",
-   "mins": 2.6166666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "7y34AYVaS5Y",
-   "title": "Post Match Ceremony | Pakistan vs Sri Lanka | Match 2 | Women U19 Tri-Nation Series 2026 | MZP1J",
+   "id": "QOd2K6d9la0",
+   "title": "Bowling Excellence, Big Hits & Stunning Catch | The Best of Shadab Khan in International Cricket",
    "label": "Pakistan Cricket",
-   "mins": 3.35,
+   "mins": 3.8666666666666667,
    "found": "2026-10-07",
    "top": true
   },
   {
-   "id": "mmAMlEX-JGI",
-   "title": "1st Innings Highlights | Pakistan Women vs Zimbabwe Women | Match 02 | T20I Series 2026 | M9H1K",
+   "id": "usE17A15OFU",
+   "title": "🔴 - 𝐑𝐄𝐋𝐈𝐕𝐄 | Pakistan vs Sri Lanka | Pakistan Win By 36 Runs | 3rd T20I 2017 | PCB | MR1K",
    "label": "Pakistan Cricket",
-   "mins": 10.583333333333334,
+   "mins": null,
    "found": "2026-10-07",
    "top": true
   },
   {
-   "id": "8bUh6P-oQqU",
-   "title": "Anderson flips 🔥 Bellingham & Rogers Bring Vibes 😂 & Stones' Dance Scares Tuchel! 😱 | Best of Camp",
-   "label": "England Cricket",
-   "mins": 24.1,
+   "id": "7dlgN-NRJTc",
+   "title": "West Indies All Wickets Compilation & Highlights 🏆 | 2nd Test 2025 | PCB | MR1K",
+   "label": "Pakistan Cricket",
+   "mins": 16.016666666666666,
    "found": "2026-10-07",
    "top": true
   },
   {
-   "id": "emAIEADXAYM",
-   "title": "Italy 1-2 England | Kane Becomes England's Record All-Time Goal Scorer | Highlights",
-   "label": "England Cricket",
-   "mins": 3.6333333333333333,
+   "id": "iX23AC-2pgE",
+   "title": "Day 3 Highlights | Pakistan vs England | 2nd Test 2024 | PCB | MR1K",
+   "label": "Pakistan Cricket",
+   "mins": 16.983333333333334,
    "found": "2026-10-07",
    "top": true
   },
   {
-   "id": "piAepyDihlA",
-   "title": "ALLO CPL: KALEV ZAPPE LA JUSTICE, SAMA LUKONDE, PL OU PLACEBO DE FATSHI? JKK A DUBAI, DEJA L'EXIL?",
-   "label": "CPL",
-   "mins": 33.88333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "_TA2wJePRzM",
-   "title": "DECRY 1.6.21, LOI CENI, FAYULU PLEURE, FATSHI S'OBSTINE. JLIST ACHETE, LE FATSHISTES SE PERDENT.",
-   "label": "CPL",
-   "mins": 35.43333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "_Qp9xSOwFHg",
-   "title": "Top 10 SmackDown moments: WWE Top 10, Oct. 2, 2026",
-   "label": "WWE",
-   "mins": 8.15,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "FSxAjmP1keY",
-   "title": "MJF vs Kenny Omega ⏪ 2023",
-   "label": "AEW",
-   "mins": 2.0,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "XDcfLcRmZaQ",
-   "title": "AEW Dynamite Highlights in 8 Minutes: Chicago, IL | AEW Highlights 7/16/25",
-   "label": "AEW",
-   "mins": 8.983333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "X0lVKxmedBs",
-   "title": "The Elite vs Lethal Twist (6/20/26) | AEW Collision Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.1666666666666665,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "-koTgdx0M-A",
-   "title": "Kenny Omega vs Bad Dude Tito (6/13/26) | AEW Collision Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.1333333333333333,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "c6MTksDzmmQ",
-   "title": "Maya World vs Julia Hart (7/2/26) | AEW Collision Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.15,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "9-UJv-WHFdU",
-   "title": "Ospreay & Strickland get INTENSE! (6/17/26) | AEW Dynamite Highlights Presented by Upper Deck",
-   "label": "AEW",
-   "mins": 2.066666666666667,
-   "found": "2026-10-07",
-   "top": true
-  },
-  {
-   "id": "-LHb5yN-OzI",
-   "title": "Highlights | Argentina 3-2 Egypt | FIFA World Cup 2026™",
-   "label": "FIFA",
-   "mins": 2.183333333333333,
+   "id": "Aa-ZIQEYsSY",
+   "title": "Full Highlights | Pakistan vs England | Day 03 | 2nd Test 2024 | PCB | MR1K",
+   "label": "Pakistan Cricket",
+   "mins": 16.983333333333334,
    "found": "2026-10-07",
    "top": true
   }
