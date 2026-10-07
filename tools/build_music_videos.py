@@ -23,6 +23,7 @@ from build_dramas import channel_id  # noqa: E402
 from build_trailers import uploads  # noqa: E402
 from build_youtube_channels import other_language  # noqa: E402
 from titles import screen_title  # noqa: E402
+from playable import keep_playable  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "channel", "music-videos.json")
@@ -97,6 +98,8 @@ def main():
     if os.path.exists(OUT):
         old = {v["id"]: v for v in json.load(open(OUT, encoding="utf-8")).get("videos", [])}
     lists = [(lang, label, language(lang, sources, today, old)) for lang, label, sources in LANGUAGES]
+    # Only videos that play in an embedded player (Bazaar TV's block page): tools/playable.py.
+    lists = [(lang, label, keep_playable(videos)) for lang, label, videos in lists]
     # An equal share for each language; one with too few songs leaves its share to the others.
     # Within a language the channels take turns, newest songs first.
     chosen = {lang: [] for lang, _, _ in lists}

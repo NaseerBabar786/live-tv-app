@@ -10,7 +10,10 @@ Bazaar TV's schedule holds one entry of kind "list" per block, pointing at docs/
 the app (MyChannel.expand) and the website (schedule.js expand) put the day's videos in its place.
 A different choice each day (seeded by the date), the same for every viewer.
 
-Writes docs/channel/block-<name>.json. Standard library only, no network.
+Only videos that play in an embedded player (tools/playable.py), and a few spares of the same kind that the
+block page plays in place of one that still won't start there.
+
+Writes docs/channel/block-<name>.json. Standard library only.
 Run: python3 tools/build_bazaar_blocks.py
 """
 import datetime as dt
@@ -22,6 +25,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from titles import screen_title  # noqa: E402
+from playable import plays  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHANNEL = os.path.join(ROOT, "docs", "channel")
@@ -55,6 +59,8 @@ BLOCKS = {
     "film": (["filmein", "hindi"], "film", 90, (80, 150), r"hindi|urdu|[\u0900-\u097F]",
              r"bhojpuri|marathi|punjabi|gujarati|bengali|english|trailer|teaser|scene|songs", None),
 }
+# Spare videos for each block, in case one won't start on a viewer's TV (docs/channel/block.html).
+SPARES = 3
 TITLES = {"kids": "بچوں کا وقت", "drama": "ڈرامہ", "cooking": "کھانا پکائیں", "comedy": "مزاحیہ", "film": "ہندی فلم"}
 
 
@@ -78,23 +84,33 @@ def main():
         rest = [v for v in pool if v not in top]
         rnd.shuffle(top)
         rnd.shuffle(rest)
-        chosen, total = [], 0
+        chosen, spares, total = [], [], 0
+        item = lambda v: {"id": v["id"], "title": screen_title(v["title"], TITLES[kind]), "label": v.get("label", ""),
+                          "secs": round(v["mins"] * 60), "kind": kind}
         for v in top + rest:
             secs = round(v["mins"] * 60)
+            if total >= mins * 60 * 0.85:
+                if len(spares) >= SPARES:
+                    break
+                if plays(v["id"]):
+                    spares.append(item(v))
+                    taken.add(v["id"])
+                continue
             if total and total + secs > mins * 60 * 1.15:
                 continue
-            chosen.append({"id": v["id"], "title": screen_title(v["title"], TITLES[kind]), "label": v.get("label", ""), "secs": secs, "kind": kind})
+            if not plays(v["id"]):
+                print(f"{name}: leaving out {v['id']} (won't play embedded)", file=sys.stderr)
+                continue
+            chosen.append(item(v))
             taken.add(v["id"])
             total += secs
-            if total >= mins * 60 * 0.85:
-                break
         if not chosen:
             print(f"{name}: nothing to choose; keeping the old list.", file=sys.stderr)
             continue
         out = os.path.join(CHANNEL, f"block-{name}.json")
         with open(out, "w", encoding="utf-8") as f:
             json.dump({"name": TITLES[kind], "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-                       "secs": total, "videos": chosen}, f, ensure_ascii=False, indent=1)
+                       "secs": total, "videos": chosen, "spares": spares}, f, ensure_ascii=False, indent=1)
             f.write("\n")
         print(f"{name}: {len(chosen)} videos, {total // 60} min: " + " / ".join(v["title"][:50] for v in chosen))
 
