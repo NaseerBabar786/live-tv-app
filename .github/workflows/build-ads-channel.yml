@@ -42,7 +42,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A docs/channel/ads-sponsors.json docs/channel/ads
+          git add -A docs/channel/ads-sponsors.json
+          # The pictures folder only exists once a sponsor has a picture ad.
+          if [ -d docs/channel/ads ]; then git add -A docs/channel/ads; fi
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0
