@@ -51,6 +51,9 @@ class MainActivity : ComponentActivity() {
     /** Cable TV's Games section is open. */
     private var showGames by mutableStateOf(false)
 
+    /** Cable TV's Weather section is open (1.10.4). */
+    private var showWeather by mutableStateOf(false)
+
     /** Our YouTube-run channels that couldn't play there this session; their free-film schedule plays instead. */
     private var fellBack by mutableStateOf(setOf<String>())
 
@@ -59,6 +62,7 @@ class MainActivity : ComponentActivity() {
         if (CrashGuard.start(this)) return
         Watching.init(this)
         com.livetv.app.data.Location.init(this)
+        com.livetv.app.data.WeatherApp.init(this)
         com.livetv.app.data.NewsScreen.init(this)
         com.livetv.app.data.Cp24Screen.init(this)
         com.livetv.app.data.MyScreen.init(this)
@@ -83,7 +87,9 @@ class MainActivity : ComponentActivity() {
         // Bazaar TV's upcoming trailers play on our locked YouTube page; its own player plays the rest.
         val block = rememberBlockPage(playing)
         val page = playing?.let { block ?: MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
-        if (showGames && playing == null) {
+        if (showWeather && playing == null) {
+            com.livetv.app.ui.WeatherScreen(onClose = { showWeather = false })
+        } else if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
@@ -134,6 +140,7 @@ class MainActivity : ComponentActivity() {
                 onOpenVod = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) showVod = true }) else null,
                 onOpenVodItem = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) { vodStart = it; showVod = true } }) else null,
                 onOpenGames = if (Edition.LIVE_TV) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
+                onOpenWeather = if (Edition.LIVE_TV) ({ showWeather = true }) else null,
                 onWatch = viewModel::watched,
             )
         }

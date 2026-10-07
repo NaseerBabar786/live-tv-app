@@ -8,6 +8,7 @@ import * as plans from '../plans.js';
 import * as store from '../store.js';
 import * as ads from '../ads.js';
 import * as weather from '../weather.js';
+import { openWeather } from './weather.js';
 import { listMode } from './list.js';
 import { tilesMode } from './tiles.js';
 import { fiveMode } from './five.js';
@@ -45,12 +46,13 @@ export function openHome({ onExit }) {
   const weatherEl = h('span.weather');
   const search = h('input.search.hidden', { type: 'search', placeholder: 'Search channels' });
   const modesBtn = button('▦  Modes', () => openModes(), 'top');
+  const weatherBtn = button('☀️  Weather', () => showWeather(), 'top');
   const soundBtn = button('', () => { sound = !sound; store.set('previewSound', sound); renderSound(); current?.setSound?.(sound); }, 'icon');
   const searchBtn = button('🔍', () => toggleSearch(), 'icon');
   const settingsBtn = button('⚙', () => openSettings({ onChanged: refreshAll, onExit: askExit }), 'icon');
   const topbar = h('header.topbar',
     h('div.brand', h('div.brandline', h('img.logo', { src: 'logo.svg', alt: '' }), title), h('div.brandline.sub', clock, weatherEl)),
-    search, h('div.spacer'), modesBtn, soundBtn, searchBtn, settingsBtn);
+    search, h('div.spacer'), modesBtn, weatherBtn, soundBtn, searchBtn, settingsBtn);
   const chips = h('div.chips');
   const count = h('div.count');
   const content = h('div.content');
@@ -181,6 +183,21 @@ export function openHome({ onExit }) {
 
   function askExit() {
     dialog({ title: 'Exit Cable TV?', buttons: [['Yes', onExit], ['No', null]], focusIndex: 1 });
+  }
+
+  // ---------- Weather (1.10.4) ----------
+  function showWeather() {
+    current?.pause?.();
+    ads.detach(content);
+    root.classList.add('hidden');
+    openWeather({
+      onClose: () => {
+        root.classList.remove('hidden');
+        ads.attach(content, { full: false });
+        current?.resume?.();
+        nav.focus(weatherBtn);
+      },
+    });
   }
 
   // ---------- Opening a channel full screen ----------

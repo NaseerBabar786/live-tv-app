@@ -40,6 +40,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SportsEsports
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.Icon
@@ -251,6 +252,8 @@ internal fun BrowseMode(
     onNextMode: (() -> Unit)?,
     onOpen: (Channel) -> Unit,
     onOpenGames: (() -> Unit)?,
+    /** Opens the Weather section; null hides it. */
+    onOpenWeather: (() -> Unit)? = null,
     /** Live TV Max: opens a movie or show in the Library. */
     onOpenVodItem: ((VodTarget) -> Unit)?,
     onOpenSettings: () -> Unit,
@@ -765,6 +768,7 @@ internal fun BrowseMode(
                 }
             }
             if (onOpenGames != null) RailItem(Icons.Filled.SportsEsports, "Games", railFocused, right = back, onClick = onOpenGames)
+            if (onOpenWeather != null) RailItem(Icons.Filled.WbSunny, "Weather", railFocused, right = back, onClick = onOpenWeather)
             if (onNextMode != null) RailItem(Icons.Filled.Tv, modeLabel, railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
             RailItem(Icons.Filled.Settings, "Settings", railFocused, right = back, onClick = onOpenSettings)
         }

@@ -46,3 +46,6 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 - 1.9.96 (PC 1.0.4): packages screen shows Free once (no "Free · free") and Gold at one price a month, $9.99 by default (`settings.js`, `plans.js`).
 - 1.9.100 (PC 1.0.5): the start screen shows only a loading circle while the channels load; no sponsor
   or words, no 5-second countdown (`screens/start.js`).
+- 1.10.4 (PC 1.0.6): ☀️ Weather in the top bar: your place and places you add, the weather now, Morning to
+  Night, 24 hours, 10 days, details, warnings, weather map and weather stories (`screens/weather.js`,
+  `weatherdata.js`; stories open in the browser).

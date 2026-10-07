@@ -115,6 +115,7 @@ import androidx.compose.material.icons.filled.VerticalSplit
 import androidx.compose.material.icons.filled.ViewSidebar
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material.icons.filled.SportsEsports
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
@@ -195,6 +196,8 @@ fun ChannelListScreen(
     onOpenVodItem: ((VodTarget) -> Unit)? = null,
     /** Opens the Games section; null hides its button. */
     onOpenGames: (() -> Unit)? = null,
+    /** Opens the Weather section (1.10.4); null hides its button. */
+    onOpenWeather: (() -> Unit)? = null,
     /** A channel picked to play in 1+List's player, remembered as the last one watched. */
     onWatch: (Channel) -> Unit = {},
 ) {
@@ -626,6 +629,22 @@ fun ChannelListScreen(
                             }
                         }
                     }
+                    if (onOpenWeather != null) {
+                        if (wideScreen) {
+                            TextButton(
+                                onClick = onOpenWeather,
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusGlow(),
+                            ) {
+                                Icon(Icons.Filled.WbSunny, contentDescription = null)
+                                Text("Weather", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
+                        } else {
+                            IconButton(onClick = onOpenWeather, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.Filled.WbSunny, contentDescription = "Weather")
+                            }
+                        }
+                    }
                     IconButton(
                         onClick = {
                             previewSound = !previewSound
@@ -727,6 +746,7 @@ fun ChannelListScreen(
                         onNextMode = if (wideScreen || phone) ({ modesOpen = true }) else null,
                         onOpen = onPlay,
                         onOpenGames = onOpenGames,
+                        onOpenWeather = onOpenWeather,
                         onOpenVodItem = onOpenVodItem,
                         onOpenSettings = { showSettings = true },
                         onRailFocused = { topBarFocused = it },
