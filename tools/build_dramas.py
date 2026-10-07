@@ -30,6 +30,9 @@ import time
 import urllib.parse
 import urllib.request
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from playable import plays  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(ROOT, "docs")
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
@@ -102,6 +105,13 @@ SHOW_CHANNELS = [
     ("Kabita's Kitchen", ["@KabitasKitchen"], "Kabitas Kitchen", "Hindi", 3),
     ("DW Documentary", ["@DWDocumentary"], "DW Documentary", "English", 20),
     ("National Geographic", ["@NatGeo"], "National Geographic", "English", 20),
+    # Newer English shows from their owners' channels (owner, 2026-10-07: replace the old English films).
+    ("Hell's Kitchen", ["@HellsKitchen"], "Hell's Kitchen", "English", 30),
+    ("Kitchen Nightmares", ["@KitchenNightmares"], "Kitchen Nightmares", "English", 30),
+    ("MasterChef", ["@MasterChefWorld"], "MasterChef World", "English", 30),
+    ("Shark Tank", ["@SharkTankGlobal"], "Shark Tank Global", "English", 30),
+    ("Dragons' Den", ["@DragonsDen"], "Dragons' Den|Dragons Den", "English", 30),
+    ("Border Security", ["@BorderSecurity"], "Border Security", "English", 20),
 ]
 # Cartoons from their makers' own channels, filed under Kids.
 KIDS_CHANNELS = [
@@ -112,7 +122,17 @@ KIDS_CHANNELS = [
     ("Mr Bean", ["@MrBean"], "Mr Bean", "English", 5),
     ("Peppa Pig", ["@PeppaPigOfficial", "@peppapig"], "Peppa Pig", "English", 5),
     ("Pocoyo", ["@Pocoyo", "@PocoyoEnglish"], "Pocoyo", "English", 5),
+    ("Masha and the Bear", ["@MashaBearEN"], "Masha and the Bear", "English", 10),
+    ("PAW Patrol", ["@PAWPatrolOfficial"], "PAW Patrol", "English", 10),
+    ("Oddbods", ["@Oddbods"], "Oddbods", "English", 10),
+    ("Thomas & Friends", ["@ThomasAndFriends"], "Thomas & Friends|Thomas and Friends", "English", 10),
+    ("Pokémon", ["@pokemon"], "Pokémon|Pokemon", "English", 15),
 ]
+# Channels that also post other things: only titles with these words are kept.
+ONLY_TITLES = {
+    "Pokémon": re.compile(r"full episode", re.IGNORECASE),
+    "Hell's Kitchen": re.compile(r"full episode|marathon|season \d", re.IGNORECASE),
+}
 # Muslim Television Ahmadiyya's own channels; their videos go to MTA.m3u only, which Live
 # TV shows only when the viewer turns MTA on in Settings.
 MTA_CHANNELS = [
@@ -153,7 +173,15 @@ FILM_CHANNELS = [
     ("Saga Music", ["@SagaMusic", "@SagaHits"], "Saga", "Punjabi"),
     ("Speed Records", ["@SpeedRecords", "@SpeedPunjabi"], "Speed Records", "Punjabi"),
     ("FilmRise Movies", ["@FilmRiseMovies", "@FilmRise"], "FilmRise", "English"),
+    # Newer English films (2000s to this year) from the companies that own them (owner, 2026-10-07).
+    ("Movie Central", ["@MovieCentral"], "Movie Central", "English"),
+    ("Popcornflix", ["@Popcornflix"], "Popcornflix", "English"),
+    ("Maverick Movies", ["@MaverickMovies"], "Maverick Movies", "English"),
+    ("Gravitas Movies", ["@GravitasMovies"], "Gravitas", "English"),
 ]
+# Channels whose titles start with a one-line story and put the film's name second:
+# "He Fell In Love With A Fake Princess | Princess for a Day | Full 2026 Romance Movie".
+NAME_SECOND = {"Movie Central"}
 MIN_FILM_MINUTES = 70
 FILM_SKIP = re.compile(r"\b(trailer|teaser|promo|scenes?|jukebox|clip|shorts|songs?|video song|audio)\b|#shorts", re.IGNORECASE)
 OTHER_LANGUAGE = re.compile(r"\b(marathi|gujarati|bhojpuri|tamil|telugu|bengali|kannada|malayalam|odia|rajasthani|haryanvi)\b", re.IGNORECASE)
@@ -517,10 +545,14 @@ def channel_shows(kept, today, channels, genre):
         for vid, title, mins in videos:
             if SHOW_SKIP.search(title) or (mins is not None and mins < shortest):
                 continue
+            if name in ONLY_TITLES and not ONLY_TITLES[name].search(title):
+                continue
             if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
                 continue
             if vid in kept:
                 kept[vid]["seen"] = today.isoformat()
+            elif language == "English" and not plays(vid):
+                continue  # its owner doesn't let it play in other apps
             else:
                 kept[vid] = {"item": short_title(title), "folder": name, "genre": genre, "channel": name,
                              "language": language, "title": title, "added": today.isoformat()}
@@ -596,11 +628,14 @@ def films(kept, today):
                 continue
             if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
                 continue
-            movie = movie_name(title)
+            parts = [p.strip() for p in title.split("|")]
+            movie = movie_name(parts[1] if name in NAME_SECOND and len(parts) >= 3 else title)
             if not movie:
                 continue
             if vid in kept:
                 kept[vid]["seen"] = today.isoformat()
+            elif language == "English" and not plays(vid):
+                continue  # its owner doesn't let it play in other apps
             else:
                 kept[vid] = {"movie": movie, "channel": name, "group": name, "language": language,
                              "title": title, "added": today.isoformat()}

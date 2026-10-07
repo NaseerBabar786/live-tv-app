@@ -11,6 +11,10 @@ Library. Every source here is public domain or freely licensed by its owner:
   * PeerTube: films on PeerTube sites under a Creative Commons or public-domain licence,
     found with the SepiaSearch index (MP4).
 
+The owner found the old English films (silent and 1920s-1960s films from Commons and PeerTube) too old
+for viewers (2026-10-07), so English programmes come only from NASA and Vimeo here; newer English films,
+shows and cartoons come from their owners' YouTube channels in build_dramas.py.
+
 Nothing that is already in Movies.m3u or Dramas.m3u is listed again, and each title is
 listed once, so the Library never shows a film twice.
 
@@ -257,6 +261,10 @@ def peertube():
     return out
 
 
+# Sources whose English films are old public-domain ones, left out of the Library (see above).
+OLD_ENGLISH_SOURCES = {"commons", "peertube"}
+
+
 def main():
     known = known_titles()
     print(f"{len(known)} titles already in Movies.m3u and Dramas.m3u")
@@ -265,6 +273,9 @@ def main():
     for item in commons() + nasa() + vimeo() + peertube():
         item["name"] = re.sub(r"\s+", " ", item["name"].replace(",", " ").replace('"', "")).strip()
         if JUNK.search(item["name"]) or OTHER_SCRIPT.search(item["name"]):
+            skipped += 1
+            continue
+        if item["language"] == "English" and item["source"] in OLD_ENGLISH_SOURCES:
             skipped += 1
             continue
         key = (item["language"], compact(item["name"]))
@@ -284,7 +295,7 @@ def main():
     counts = {}
     for i in items:
         counts[i["source"]] = counts.get(i["source"], 0) + 1
-    print(f"Wrote docs/Free.m3u: {len(items)} items {counts}, {skipped} left out as already listed or repeated")
+    print(f"Wrote docs/Free.m3u: {len(items)} items {counts}, {skipped} left out as old English, already listed or repeated")
     if not items:
         sys.exit("Nothing found; keeping the build red so the old playlist isn't replaced.")
     with open(os.path.join(DOCS, "Free.m3u"), "w", encoding="utf-8") as f:
