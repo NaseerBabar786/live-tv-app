@@ -64,6 +64,8 @@ jobs:
           # A code change makes both, so both are fresh with the new look.
           if [ "$EVENT" = "push" ] || [ "$KIND" = "both" ]; then kinds="headlines full"; else kinds="$KIND"; fi
           if [ "$EVENT" = "schedule" ]; then
+            # Never replace the file while the hour's bulletin is still playing (:00-:03).
+            while [ "$(date -u +%M)" -lt 4 ]; do sleep 20; done
             read -r due slot <<< "$(python3 tools/news/make_news.py out --kind auto --due)"
             have=$(curl -fsSL "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-$due.json" \
                    | python3 -c "import json,sys; print(json.load(sys.stdin).get('slot',''))" || true)
