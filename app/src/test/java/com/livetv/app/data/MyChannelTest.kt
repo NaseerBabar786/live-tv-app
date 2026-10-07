@@ -211,7 +211,11 @@ class MyChannelTest {
         assertTrue(MyChannel.cardAt(c, first)!!.today)
         assertEquals(false, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS)!!.today)
         assertEquals(null, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS + MyChannel.NEXT_CARD_MS))
-        assertEquals("Night Film", MyChannel.todaysShows(c, at(20, 0)).first().title)
+        // One booked show left today: the next programmes fill the card up, in time order.
+        val today = MyChannel.todaysShows(c, at(20, 0))
+        assertEquals(listOf("Film A", "Night Film"), today.map { it.title })
+        assertTrue(today.any { it.title == "Night Film" && it.booked })
+        assertEquals(today.sortedBy { it.at }.map { it.at }, today.map { it.at })
         assertTrue(MyChannel.upNext(c, at(20, 0)).isNotEmpty())
     }
 }
