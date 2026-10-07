@@ -38,5 +38,5 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 
 - 1.9.91 (PC 1.0.1): only Free and Gold packages; Free is fixed (every feature, only our own channels)
   and every package has at least that; old Silver and Platinum count as Gold (`plans.js`).
-- 1.9.94 (PC 1.0.4): the start screen shows only a loading circle while the channels load; no sponsor
+- 1.9.97 (PC 1.0.5): the start screen shows only a loading circle while the channels load; no sponsor
   or words, no 5-second countdown (`screens/start.js`).
