@@ -107,6 +107,8 @@
         <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Silver">Silver</span></th><th><span class="pill Gold">Gold</span></th><th><span class="pill Platinum">Platinum</span></th></tr></thead>
         <tbody id="featRows"></tbody>
       </table></div>
+      <label class="small" for="extraChannels" style="display:block;margin-top:12px"><b>Extra channels without "All channels"</b>: packages without All channels (like Free) get our own Bazaar channels plus the channels you type here, separated by commas. Leave it empty for only our own channels.</label>
+      <input class="inp" id="extraChannels" placeholder="e.g. Aaj Tak, ARY News" style="width:100%;box-sizing:border-box;margin-top:6px">
       <div class="row" style="margin:10px 0 18px"><button class="btn primary" id="saveFeats">Save settings</button> <button class="btn" id="resetFeats">Start again from our suggestion</button><span class="small" id="featMsg"></span></div>
       <h3>What viewers see in each package</h3>
       <div class="pkgs" id="pkgCards"></div>
@@ -251,6 +253,7 @@ if (!configured) {
     $("enforce").checked = !!c.enforce;
     $("trialDays").value = c.trialDays;
     $("howToPay").value = c.howToPay;
+    $("extraChannels").value = c.extra_channels || "";
     const tb = $("priceRows"); tb.innerHTML = "";
     for (const t of TIERS) {
       const tr = document.createElement("tr");
@@ -345,7 +348,7 @@ if (!configured) {
   function showCards() {
     $("pkgCards").innerHTML = ALL_TIERS.map(t => {
       const id = t.toLowerCase(), has = ticked(id);
-      const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : "<li><b>Only our own Bazaar channels</b></li>",
+      const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : ($("extraChannels").value.trim() ? `<li><b>Our own Bazaar channels</b> plus ${esc($("extraChannels").value.trim())}</li>` : "<li><b>Only our own Bazaar channels</b></li>"),
         "<li><b>1+List</b>, full screen, favourites and search</li>",
         ...FEATURES.filter(f => f[0] !== "channels" && has.includes(f[0])).map(f => `<li><b>${f[1]}</b>: ${f[2]}</li>`)];
       const price = id === "free" ? "$0" : "";
@@ -354,6 +357,7 @@ if (!configured) {
     showPrices();
   }
   $("featRows").addEventListener("change", showCards);
+  $("extraChannels").addEventListener("input", showCards);
   $("resetFeats").onclick = () => {
     document.querySelectorAll("#featRows input").forEach(i => { i.checked = DEFAULT_FEATURES[i.dataset.t].includes(i.dataset.k); });
     showCards();
@@ -387,7 +391,7 @@ if (!configured) {
   });
 
   $("saveCfg").onclick = async () => {
-    const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), updated: fs.serverTimestamp() };
+    const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), extra_channels: $("extraChannels").value.split(",").map(x => x.trim()).filter(Boolean).join(", "), updated: fs.serverTimestamp() };
     for (const t of TIERS) for (const [k] of LENGTHS) { const id = `${t.toLowerCase()}_${k}`; data[id] = $(id).value.trim(); }
     for (const t of ALL_TIERS) data[t.toLowerCase() + "_features"] = ticked(t.toLowerCase()).join(",");
     if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have what you ticked for Free (after their free trial).")) return;
