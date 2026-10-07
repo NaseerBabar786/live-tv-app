@@ -455,7 +455,7 @@ private fun SponsorVideo(url: String) {
  * promo plays like that once per start. OK opens the sponsor's website; back from it, the video goes on.
  */
 @Composable
-fun SponsorCard(channelId: String?, fullScreen: Boolean) {
+fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = false) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("sponsors", Context.MODE_PRIVATE) }
@@ -476,6 +476,8 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
     var videoMax by remember { mutableLongStateOf(BREAK_MS) }
     var videoPlayed by remember { mutableLongStateOf(0L) }
     val isFullScreen by rememberUpdatedState(fullScreen)
+    // Before a Library video in YouTube's player: only our own Cable TV promo, no paid sponsor (YouTube's rules, 1.9.89).
+    val onlyPromos by rememberUpdatedState(promosOnly)
     val opener = rememberSiteOpener()
     // While the card or video shows on a full-screen channel, OK on the remote (or a tap) opens the
     // sponsor's website. Not in 1+List and the other layouts: there OK opens the channel picked
@@ -490,7 +492,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
     // [wait] lets a new channel's picture come up first.
     fun popUp(wait: Long) {
         if (podJob?.isActive == true) return
-        val first = Sponsors.next("card")
+        val first = if (onlyPromos) null else Sponsors.next("card")
         val pod = if (isFullScreen) {
             val more = if (first == null) emptyList() else (2..POD_SIZE).mapNotNull { Sponsors.next("card") }
             // Only as many as fit in the break's minute (a video of unknown length counted as 30 s;

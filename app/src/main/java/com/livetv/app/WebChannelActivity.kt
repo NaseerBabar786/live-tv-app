@@ -20,7 +20,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.TextView
-import com.livetv.app.player.PageAds
 
 /**
  * Our YouTube channels and Bazaar Hits full screen (1.9.51): the locked page in a plain WebView that
@@ -60,20 +59,12 @@ class WebChannelActivity : Activity() {
                         setResult(RESULT_FALLBACK)
                         finish()
                     }
-                    // A sponsor's ad played in one of the page's breaks: counted like the app's pop-ups (1.9.89).
-                    if (request.url.host == "ad") request.url.getQueryParameter("id")?.let { PageAds.seen(it) }
                     // A run of trailers on Bazaar TV is over: its own player goes on.
                     if (request.url.host == "done") {
                         setResult(RESULT_DONE)
                         finish()
                     }
                     return true
-                }
-
-                // Today's sponsors for the page's ad breaks between videos (channel/promo.js), never over
-                // YouTube's player (1.9.89).
-                override fun onPageFinished(view: WebView, url: String) {
-                    if (url.startsWith("https://tv.bulkbazaar.ca/")) view.evaluateJavascript("window.cabletvAds = ${PageAds.json()};", null)
                 }
 
                 // A page that runs out of memory (YouTube on a small TV) loses its renderer; unhandled, that

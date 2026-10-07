@@ -32,12 +32,3 @@ object LibraryAds {
     val now = MutableStateFlow<LibraryVideo?>(null)
 }
 
-/**
- * Sponsor ads for the breaks between videos on our YouTube channel pages (WebChannelActivity, 1.9.89):
- * [json] gives today's sponsors for the page (a JSON list), [seen] counts one that played.
- * Filled in by Cable TV; nothing in the other editions.
- */
-object PageAds {
-    @Volatile var json: () -> String = { "[]" }
-    @Volatile var seen: (id: String) -> Unit = {}
-}

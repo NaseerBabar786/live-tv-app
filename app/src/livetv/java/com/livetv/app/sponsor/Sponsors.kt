@@ -41,8 +41,6 @@ class Sponsor(
     val popupVideo: Boolean = false,
     /** [video]'s length in seconds as /sponsors measured it; 0 when not known. */
     val videoSecs: Int = 0,
-    /** The picture as its JPEG "data:" URL, for the ad breaks on our YouTube channel pages. */
-    val pictureUrl: String = "",
 ) {
     /** The address to open: the website box, or else the "phone or website" box when it holds a web address; null when neither does. */
     val site: String? get() = siteUrl(website) ?: siteUrl(contact)
@@ -157,7 +155,6 @@ object Sponsors {
             website = o.optString("website").trim(),
             popupVideo = o.optString("popup") == "video",
             videoSecs = o.optInt("videoSecs"),
-            pictureUrl = if (o.optBoolean("active")) o.optString("image") else "",
         )
     }
 

@@ -35,7 +35,6 @@ import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
 import com.livetv.app.ui.LIBRARY_PREFIX
 import com.livetv.app.player.LibraryAds
-import com.livetv.app.player.PageAds
 import com.livetv.app.ui.SponsorScreen
 import com.livetv.app.ui.SponsorBox
 import com.livetv.app.ui.SponsorVideoBox
@@ -164,19 +163,14 @@ fun EditionOverlay() {
     // A sponsor's card after a channel change, now and then.
     val main by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
     // Library movies and dramas get the full-screen ad breaks too (1.9.89); a video in YouTube's own
-    // player only the one before it starts, never over it (YouTube's rules).
+    // player only our own promo before it starts, no paid sponsor ads (YouTube's rules).
     val library by LibraryAds.now.collectAsStateWithLifecycle()
     val vod = library
     SponsorCard(
         channelId = vod?.let { LIBRARY_PREFIX + it.id } ?: main.lastWatchedId,
         fullScreen = main.playing != null || (vod != null && (!vod.embed || vod.waiting)),
+        promosOnly = vod?.embed == true,
     )
-    // Today's sponsors for the ad breaks between videos on our YouTube channel pages (1.9.89).
-    DisposableEffect(Unit) {
-        PageAds.json = { pageAdsJson(Sponsors.current()) }
-        PageAds.seen = { id -> Sponsors.current().firstOrNull { it.id == id }?.let { SponsorViews.count(it, "card") } }
-        onDispose { }
-    }
     val updates = viewModel<UpdateViewModel>()
     val prompting by updates.prompting.collectAsStateWithLifecycle()
     val update by updates.update.collectAsStateWithLifecycle()
@@ -365,20 +359,4 @@ fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> U
             },
         )
     }
-}
-
-/** [sponsors] as the JSON list our YouTube channel pages read for their ad breaks (channel/promo.js). */
-internal fun pageAdsJson(sponsors: List<Sponsor>): String {
-    val arr = org.json.JSONArray()
-    for (sp in sponsors) {
-        if (sp.pictureUrl.isEmpty() && sp.video.isEmpty()) continue
-        arr.put(org.json.JSONObject()
-            .put("id", sp.id)
-            .put("name", sp.name)
-            .put("picture", sp.pictureUrl)
-            .put("video", sp.video)
-            .put("popupVideo", sp.popupVideo)
-            .put("secs", sp.videoSecs))
-    }
-    return arr.toString()
 }
