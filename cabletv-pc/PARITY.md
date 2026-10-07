@@ -38,6 +38,10 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
   instead of the YouTube app. The PC has no Library yet; when it gets one, it loads the same page.
 - 1.10.0: phone touch fixes (swipes now change channel in full screen and on tiles; a tap on the tile
   with the sound opens it full screen). Phone-only; the PC uses its mouse and keyboard.
+- 1.10.1: every Library list (Dramas, Movies, Free) is rebuilt every morning at about 5 am Toronto time and
+  dates each programme (`added="..."`, `tools/first_seen.py`); the Library shows a "Newly added" chip, NEW marks
+  and new titles first, in each language and section, on TV and phone (same APK). The PC has no Library yet;
+  when it gets one, it reads the same `added` dates and shows the same Newly added section.
 
 ## In step
 

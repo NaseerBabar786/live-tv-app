@@ -4,12 +4,13 @@ name: Build free films playlist
 # makers (Wikimedia Commons, NASA, Vimeo Staff Picks, PeerTube), for Cable TV's Library.
 on:
   schedule:
-    - cron: "0 11 * * 2"   # weekly, Tuesdays 11:00 UTC
+    - cron: "10 9 * * *"   # every day at 09:10 UTC: 5 am in Toronto (4 am in winter)
   workflow_dispatch:
   # Changes to the builder are tried out on their pull request (nothing is published there).
   pull_request:
     paths:
       - tools/build_free.py
+      - tools/first_seen.py
       - .github/workflows/build-free.yml
 
 permissions:
@@ -33,6 +34,10 @@ jobs:
 
       - name: Build the playlist
         run: python3 tools/build_free.py
+
+      # The day each programme first showed up, for the Library's "Newly added" section.
+      - name: Mark newly added programmes
+        run: python3 tools/first_seen.py docs/Free.m3u
 
       - name: Show a sample
         run: |
