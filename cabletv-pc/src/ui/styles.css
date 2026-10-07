@@ -111,7 +111,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .ferror { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 7; background: rgba(0,0,0,.8); color: #fff; padding: 24px; border-radius: 12px; text-align: center; max-width: 60%; }
 .fpad { position: absolute; right: 32px; top: 50%; transform: translateY(-50%); z-index: 8; display: grid; grid-template-columns: repeat(3, 64px); gap: 8px; background: rgba(0,0,0,.8); padding: 12px; border-radius: 16px; }
 .btn.pad { height: 64px; font-size: 22px; background: rgba(255,255,255,.12); color: #fff; }
-.full .bug { position: absolute; height: 16%; width: auto; max-width: 26%; object-fit: contain; opacity: .55; pointer-events: none; z-index: 2; }
+.full .bug { position: absolute; height: 12%; width: auto; max-width: 19.5%; object-fit: contain; opacity: .55; pointer-events: none; z-index: 2; }
 .full .bug.tr { top: 3%; right: 2.5%; } .full .bug.tl { top: 3%; left: 2.5%; } .full .bug.br { bottom: 9%; right: 2.5%; } .full .bug.bl { bottom: 9%; left: 2.5%; }
 .full .bugclock { z-index: 2; }
 .ownticker { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 2vw, 22px); padding: .35em 0; }
