@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -25,6 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livetv.app.Plans
@@ -53,6 +58,9 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
     val current by Plans.current.collectAsStateWithLifecycle()
     var sent by remember { mutableStateOf<String?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
+    var code by remember { mutableStateOf("") }
+    var codeNote by remember { mutableStateOf<String?>(null) }
+    var redeeming by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { Subscription.refresh(context, account) }
 
     fun ask(name: String, length: String, price: String) {
@@ -70,6 +78,22 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
             } catch (e: Exception) {
                 error = "Couldn't send it. Check the internet connection, or WhatsApp 437 602 6500."
             }
+        }
+    }
+
+    // A promo code from the owner (tv.bulkbazaar.ca/packages) turns a package on straight away, free.
+    fun redeem() {
+        if (redeeming) return
+        scope.launch {
+            redeeming = true
+            codeNote = try {
+                Subscription.redeem(context, account, code).also { if (it.startsWith("Done")) code = "" }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                "Couldn't check the code. Check the internet connection and try again."
+            }
+            redeeming = false
         }
     }
 
@@ -95,6 +119,30 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                         fontWeight = FontWeight.Bold,
                     )
                     Text(offer.howToPay, style = MaterialTheme.typography.bodySmall)
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp))
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Text("🎟 Have a promo code?", fontWeight = FontWeight.Bold)
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            OutlinedTextField(
+                                value = code,
+                                onValueChange = { code = it.uppercase().take(20) },
+                                singleLine = true,
+                                placeholder = { Text("Promo code") },
+                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters, imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = { redeem() }),
+                                modifier = Modifier.weight(1f).focusGlow(),
+                            )
+                            OutlinedButton(onClick = { redeem() }, enabled = !redeeming, modifier = Modifier.focusGlow()) {
+                                Text(if (redeeming) "Checking…" else "Use code")
+                            }
+                        }
+                        codeNote?.let { Text(it, color = if (it.startsWith("Done")) FocusColor else Color(0xFFFF8A80)) }
+                    }
                     sent?.let { Text(it, color = FocusColor) }
                     error?.let { Text(it, color = Color(0xFFFF8A80)) }
                     // The owner's promotions on sale today (Christmas, Labour Day...), each with its own price and features.
