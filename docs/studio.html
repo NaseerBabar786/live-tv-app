@@ -175,13 +175,15 @@
   .pkSources label { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--line); background: var(--bg); cursor: pointer; font-size: 14px; }
   .pkSources label.off { opacity: .55; text-decoration: line-through; }
   #pkList { display: grid; gap: 6px; max-height: 55vh; overflow-y: auto; padding-right: 4px; margin: 10px 0 16px; }
-  .pk { display: grid; grid-template-columns: auto 96px 1fr; gap: 10px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; cursor: pointer; }
+  .pk { display: grid; grid-template-columns: auto 96px 1fr auto; gap: 10px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; cursor: pointer; }
   .pk.off { opacity: .5; }
   .pk.off b { text-decoration: line-through; }
   .pk img { width: 96px; height: 54px; object-fit: cover; border-radius: 6px; background: #000; }
   .pk input, .pkSources input { width: 20px; height: 20px; accent-color: var(--focus); }
   .pk small { display: block; color: var(--muted); font-size: 13px; }
   #pkGuide { max-height: 40vh; overflow-y: auto; }
+  .pk .pv { padding: 6px 12px; font-size: 14px; white-space: nowrap; }
+  .pk.playing { outline: 2px solid var(--focus); }
   pre.rule { background: var(--bg); padding: 10px; border-radius: 8px; overflow: auto; font-size: 13px; }
   @media (max-width: 640px) { .two, .three { grid-template-columns: 1fr; } .item { grid-template-columns: 1fr; } .item .acts { justify-content: flex-start; } }
 </style>
@@ -1559,9 +1561,23 @@ $("save").onclick = async () => {
 // ---------- 📺 Programmes: which videos our YouTube channels and Bazaar Hits may play (2026-10-07) ----------
 // Saved in sponsors/_picks (Studio reads it) and the public copy channel/picks (the channel pages read it,
 // channel/ytorder.js). One doc for all channels: { <station id>: { mode, off: [ids], offLabels: [sources], on: [ids] } }.
-let pkAll = null, pkList = [], pick = null;
+let pkAll = null, pkList = [], pick = null, previewing = null;
+/** ▶ Preview: one video from the list plays in the player above, with YouTube's buttons so you can skip
+ *  through it (Studio only; viewers still get the locked channel). "Back to the channel" puts the channel back. */
+function previewVideo(v) {
+  const f = $("hitsFrame");
+  if (!f) return;
+  previewing = v.id;
+  f.src = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+  $("nowText").textContent = "Preview: " + v.title;
+  $("modeText").innerHTML = `Only you see this preview. If it says the video is unavailable, it can't play on our channel either: untick it. <button class="btn" type="button" id="pkBack">◀ Back to the channel</button>`;
+  $("pkBack").onclick = () => { previewing = null; showHits(true); renderPicks(); };
+  $("tvbox").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  renderPicks();
+}
 const pkStation = () => station === HITS ? { id: "hits", ytMins: 4 } : station;
 async function loadPicksPanel() {
+  previewing = null;
   $("pkName").textContent = station.name;
   $("pkMsg").textContent = "Loading…";
   $("pkList").innerHTML = ""; $("pkSources").innerHTML = ""; $("pkGuide").innerHTML = "";
@@ -1635,7 +1651,9 @@ function renderPicks() {
     if (++shown > 400) break;
     const row = document.createElement("label");
     row.className = "pk" + (on ? "" : " off");
-    row.innerHTML = `<input type="checkbox"><img alt="" loading="lazy"><span><b></b><small></small></span>`;
+    row.innerHTML = `<input type="checkbox"><img alt="" loading="lazy"><span><b></b><small></small></span><button type="button" class="btn pv">▶ Preview</button>`;
+    if (v.id === previewing) row.classList.add("playing");
+    row.querySelector(".pv").onclick = e => { e.preventDefault(); previewVideo(v); };
     row.querySelector("input").checked = on;
     row.querySelector("input").onchange = e => { setOn(v, e.target.checked); pkChanged(); };
     row.querySelector("img").src = `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
@@ -1695,7 +1713,9 @@ $("pkSave").onclick = async () => {
     $("pkMsg").innerHTML = `<span class="warn">Saved for you, but TVs can't see it yet: Firebase needs the one-time rule below.</span>`;
   }
   // The player shows the channel with the new choices.
+  previewing = null;
   showHits(true);
+  renderPicks();
 };
 </script>
 <script type="module" src="assets/ai-help.js"></script>
