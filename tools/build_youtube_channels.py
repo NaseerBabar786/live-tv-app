@@ -6,7 +6,7 @@ on tv.bulkbazaar.ca/channel/ytc.html?c=<id> (also inside the app), locked so nob
 skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's terms require.
 
   2 Bazaar Cinema  full films from the studios' own channels
-  3 Bazaar Music   Punjabi, Sufi and qawwali from the labels' channels (film songs are on 4)
+  3 Bazaar Music   Punjabi, Sufi and qawwali from the labels' channels and Coke Studio (film songs are on 4)
   5 Bazaar Kids    cartoons and English kids' shows from the makers' channels
   6 Bazaar Sports  mostly cricket (ICC, PCB, BCCI, PSL, IPL...), plus wrestling (WWE, AEW), Canadian favourites (NHL, Sportsnet, TSN, Blue Jays, Raptors, CFL) and other popular sports
   7 Bazaar Travel  tourism boards and travel shows
@@ -70,7 +70,8 @@ CHANNELS = {
         ],
     },
     "sur": {
-        "name": "Bazaar Music", "mins": (2, 15), "search": "official video",
+        # More sources and searches (2026-10-07): the channel had about 11 hours and repeated its day.
+        "name": "Bazaar Music", "mins": (2, 15), "search": ["official video", "qawwali", "sufi", "punjabi song"],
         "skip": r"jukebox|full album|non ?stop|mashup|audio|lyric|lyrical|making|interview|bts|behind the scenes",
         "sources": [
             ("White Hill Music", ["@WhiteHillMusic"], "White Hill"),
@@ -78,6 +79,11 @@ CHANNELS = {
             ("Geet MP3", ["@GeetMP3"], "Geet MP3"),
             ("Oriental Star Agencies", ["@OSAWorldwide", "@OrientalStarAgencies"], "Oriental Star|OSA"),
             ("Saga Music", ["@SagaMusic", "@SagaMusicOfficial"], "Saga"),
+            ("Speed Records", ["@SpeedRecords"], "Speed Records"),
+            ("T-Series Apna Punjab", ["@TSeriesApnaPunjab", "@tseriesapnapunjab"], "Apna Punjab"),
+            ("Coke Studio Pakistan", ["@cokestudio", "@CokeStudioPakistan"], "Coke Studio"),
+            ("Jass Records", ["@JassRecords"], "Jass Records"),
+            ("Humble Music", ["@HumbleMusic"], "Humble Music"),
         ],
     },
     "kids": {
@@ -152,7 +158,8 @@ CHANNELS = {
                 "NHL": 20, "Sportsnet": 15, "TSN": 15, "Blue Jays": 10, "Raptors": 10, "CFL": 10},
     },
     "travel": {
-        "name": "Bazaar Travel", "mins": (2, 60),
+        # More sources and searches (2026-10-07): the channel had about 6 hours and repeated its day.
+        "name": "Bazaar Travel", "mins": (2, 60), "search": ["travel guide", "things to do", "episode"],
         "skip": r"podcast|interview|news|press|webinar|conference|recipe",
         "sources": [
             ("Incredible India", ["@IncredibleIndia", "@incredibleindia"], "Incredible India"),
@@ -161,6 +168,13 @@ CHANNELS = {
             ("Visit Saudi", ["@VisitSaudi"], "Visit Saudi"),
             ("Türkiye", ["@GoTurkiye", "@goturkiye"], "Go Türkiye|GoTürkiye|Turkiye"),
             ("Expedia", ["@Expedia", "@ExpediaTV"], "Expedia"),
+            ("Rick Steves", ["@RickStevesEurope", "@ricksteves"], "Rick Steves"),
+            ("Kerala Tourism", ["@KeralaTourism", "@keralatourism"], "Kerala Tourism"),
+            ("Switzerland Tourism", ["@MySwitzerland", "@myswitzerland"], "Switzerland"),
+            ("Visit Maldives", ["@VisitMaldives", "@visitmaldives"], "Maldives"),
+            ("Destination Canada", ["@ExploreCanada", "@DestinationCanada"], "Canada"),
+            ("VisitBritain", ["@VisitBritain", "@visitbritain"], "VisitBritain|Visit Britain"),
+            ("Kara and Nate", ["@KaraandNate"], "Kara and Nate"),
         ],
     },
     "comedy": {
