@@ -15,7 +15,7 @@ on:
       ids:
         description: 'Anchor ids from presenters.json "moving", as a JSON list'
         required: false
-        default: '["anchor-m1","anchor-m2","anchor-m3","anchor-m4","anchor-m5"]'
+        default: '["anchor-5c"]'
       lips:
         description: "Also make the LatentSync lip-synced version (slow, soft mouth)"
         type: boolean
@@ -28,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        id: ${{ fromJson(github.event.inputs.ids || '["anchor-m1","anchor-m2","anchor-m3","anchor-m4","anchor-m5"]') }}
+        id: ${{ fromJson(github.event.inputs.ids || '["anchor-5c"]') }}
     env:
       ID: ${{ matrix.id }}
     timeout-minutes: 90
@@ -68,7 +68,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        id: ${{ fromJson(github.event.inputs.ids || '["anchor-m1","anchor-m2","anchor-m3","anchor-m4","anchor-m5"]') }}
+        id: ${{ fromJson(github.event.inputs.ids || '["anchor-5c"]') }}
     env:
       ID: ${{ matrix.id }}
     permissions:
