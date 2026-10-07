@@ -33,6 +33,8 @@ import com.livetv.app.ui.SettingsDialog
 import com.livetv.app.ui.SettingsTheme
 import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
+import com.livetv.app.ui.LIBRARY_PREFIX
+import com.livetv.app.player.LibraryAds
 import com.livetv.app.ui.SponsorScreen
 import com.livetv.app.ui.SponsorBox
 import com.livetv.app.ui.SponsorVideoBox
@@ -160,7 +162,15 @@ fun EditionOverlay() {
     if (FirebaseConfig.configured && !Edition.MAX) BillingPrompt()
     // A sponsor's card after a channel change, now and then.
     val main by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
-    SponsorCard(channelId = main.lastWatchedId, fullScreen = main.playing != null)
+    // Library movies and dramas get the full-screen ad breaks too (1.9.89); a video in YouTube's own
+    // player only our own promo before it starts, no paid sponsor ads (YouTube's rules).
+    val library by LibraryAds.now.collectAsStateWithLifecycle()
+    val vod = library
+    SponsorCard(
+        channelId = vod?.let { LIBRARY_PREFIX + it.id } ?: main.lastWatchedId,
+        fullScreen = main.playing != null || (vod != null && (!vod.embed || vod.waiting)),
+        promosOnly = vod?.embed == true,
+    )
     val updates = viewModel<UpdateViewModel>()
     val prompting by updates.prompting.collectAsStateWithLifecycle()
     val update by updates.update.collectAsStateWithLifecycle()
