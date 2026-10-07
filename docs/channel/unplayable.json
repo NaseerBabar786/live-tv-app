@@ -1,7 +1,21 @@
 {
- "checked": "2026-10-07 05:41 UTC",
+ "checked": "2026-10-07 16:08 UTC",
  "ids": {
+  "laDP-Tu8S9M": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
   "7gqCU86EDiA": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "UM54pRjkfos": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Cinema"
@@ -51,7 +65,7 @@
    ],
    "since": "2026-10-07"
   },
-  "qwbplAADzG0": {
+  "lmam9Jm7PvA": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Cinema"
@@ -65,56 +79,7 @@
    ],
    "since": "2026-10-07"
   },
-  "VggUigT1akE": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
-  "lmam9Jm7PvA": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
-  "NiQ2-ORNY3k": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
-  "jiM1220-PaE": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
-  "x0dQST05AuA": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
-  "CPXAyvabM54": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
   "iU2_KY7RxUM": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
-  "nGNmyt9Ywqc": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Cinema"
@@ -128,7 +93,147 @@
    ],
    "since": "2026-10-07"
   },
+  "qwbplAADzG0": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "NiQ2-ORNY3k": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "VggUigT1akE": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "CPXAyvabM54": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "jiM1220-PaE": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "4rBRZC9oOEc": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "x0dQST05AuA": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "1lFk1LSsI_c": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema",
+    "Bazaar Movies Hindi",
+    "Latest Movies"
+   ],
+   "since": "2026-10-07"
+  },
+  "tKqo-4qAeJA": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema",
+    "Bazaar Movies Hindi",
+    "Latest Movies"
+   ],
+   "since": "2026-10-07"
+  },
+  "lg2i2oqnoy0": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema",
+    "Bazaar Movies Hindi"
+   ],
+   "since": "2026-10-07"
+  },
+  "yNamXD_Rfaw": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "zqeJTI0C8yI": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "Lnh9jlEIt2U": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "RCIDz5D5zVs": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "LXXkiUKDK4w": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema",
+    "Bazaar Movies Hindi"
+   ],
+   "since": "2026-10-07"
+  },
+  "uoGCXFuDiQo": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema",
+    "Bazaar Movies Hindi"
+   ],
+   "since": "2026-10-07"
+  },
+  "nGNmyt9Ywqc": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
   "28Ia7wl1V20": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "6H4ezbf86vQ": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Cinema"
+   ],
+   "since": "2026-10-07"
+  },
+  "AVc9MsVDG-Q": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Cinema"
@@ -142,87 +247,11 @@
    ],
    "since": "2026-10-07"
   },
-  "tKqo-4qAeJA": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema",
-    "Bazaar Movies Hindi",
-    "Latest Movies"
-   ],
-   "since": "2026-10-07"
-  },
-  "1lFk1LSsI_c": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema",
-    "Bazaar Movies Hindi",
-    "Latest Movies"
-   ],
-   "since": "2026-10-07"
-  },
-  "uoGCXFuDiQo": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema",
-    "Bazaar Movies Hindi"
-   ],
-   "since": "2026-10-07"
-  },
-  "lg2i2oqnoy0": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema",
-    "Bazaar Movies Hindi",
-    "Latest Movies"
-   ],
-   "since": "2026-10-07"
-  },
-  "6H4ezbf86vQ": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema",
-    "Latest Movies"
-   ],
-   "since": "2026-10-07"
-  },
-  "LXXkiUKDK4w": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema",
-    "Bazaar Movies Hindi",
-    "Latest Movies"
-   ],
-   "since": "2026-10-07"
-  },
-  "AVc9MsVDG-Q": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema",
-    "Latest Movies"
-   ],
-   "since": "2026-10-07"
-  },
-  "RCIDz5D5zVs": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema",
-    "Latest Movies"
-   ],
-   "since": "2026-10-07"
-  },
-  "yNamXD_Rfaw": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
   "xlaStrxzW_U": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Cinema",
-    "Bazaar Movies Hindi",
-    "Latest Movies"
+    "Bazaar Movies Hindi"
    ],
    "since": "2026-10-07"
   },
@@ -240,20 +269,6 @@
    ],
    "since": "2026-10-07"
   },
-  "zqeJTI0C8yI": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
-  "SOPh8MyfqpA": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
   "USdFRRVL2oU": {
    "why": "embedding turned off by its owner",
    "channels": [
@@ -261,14 +276,7 @@
    ],
    "since": "2026-10-07"
   },
-  "Lnh9jlEIt2U": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Cinema"
-   ],
-   "since": "2026-10-07"
-  },
-  "4rBRZC9oOEc": {
+  "SOPh8MyfqpA": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Cinema"
@@ -333,14 +341,14 @@
    ],
    "since": "2026-10-07"
   },
-  "ptf_gDPb3rw": {
+  "b1lGkuE0WbI": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids"
    ],
    "since": "2026-10-07"
   },
-  "gHhNeHoGGLg": {
+  "ptf_gDPb3rw": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids"
@@ -354,14 +362,7 @@
    ],
    "since": "2026-10-07"
   },
-  "eScPCCPgKDo": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Kids"
-   ],
-   "since": "2026-10-07"
-  },
-  "b1lGkuE0WbI": {
+  "gHhNeHoGGLg": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids"
@@ -375,6 +376,13 @@
    ],
    "since": "2026-10-07"
   },
+  "rW8hSZihwXQ": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Kids"
+   ],
+   "since": "2026-10-07"
+  },
   "syhzsa3ODY8": {
    "why": "embedding turned off by its owner",
    "channels": [
@@ -382,42 +390,7 @@
    ],
    "since": "2026-10-07"
   },
-  "VnmPb2W9kEk": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Kids"
-   ],
-   "since": "2026-10-07"
-  },
-  "yxEPzSxJGCY": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Kids"
-   ],
-   "since": "2026-10-07"
-  },
-  "5MPGdcIuVG4": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Kids"
-   ],
-   "since": "2026-10-07"
-  },
-  "b3DrypIoIlI": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Kids"
-   ],
-   "since": "2026-10-07"
-  },
-  "PYCeKp1L6F8": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Kids"
-   ],
-   "since": "2026-10-07"
-  },
-  "rW8hSZihwXQ": {
+  "eScPCCPgKDo": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids"
@@ -431,7 +404,28 @@
    ],
    "since": "2026-10-07"
   },
-  "rUKOjpnsdm0": {
+  "VnmPb2W9kEk": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Kids"
+   ],
+   "since": "2026-10-07"
+  },
+  "5MPGdcIuVG4": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Kids"
+   ],
+   "since": "2026-10-07"
+  },
+  "PYCeKp1L6F8": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Kids"
+   ],
+   "since": "2026-10-07"
+  },
+  "yxEPzSxJGCY": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids"
@@ -445,7 +439,21 @@
    ],
    "since": "2026-10-07"
   },
+  "b3DrypIoIlI": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Kids"
+   ],
+   "since": "2026-10-07"
+  },
   "roL5ecn2qcw": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Kids"
+   ],
+   "since": "2026-10-07"
+  },
+  "rUKOjpnsdm0": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids"
@@ -456,6 +464,14 @@
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids"
+   ],
+   "since": "2026-10-07"
+  },
+  "mkI1Ffbx-Iw": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Kids",
+    "Bazaar Comedy"
    ],
    "since": "2026-10-07"
   },
@@ -475,23 +491,7 @@
    ],
    "since": "2026-10-07"
   },
-  "mkI1Ffbx-Iw": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Kids",
-    "Bazaar Comedy"
-   ],
-   "since": "2026-10-07"
-  },
   "ZkFYVBUT18Q": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Kids",
-    "Bazaar Comedy"
-   ],
-   "since": "2026-10-07"
-  },
-  "FM90Irp__Vw": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids",
@@ -507,7 +507,15 @@
    ],
    "since": "2026-10-07"
   },
-  "DyLvQrbxyjk": {
+  "FM90Irp__Vw": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Kids",
+    "Bazaar Comedy"
+   ],
+   "since": "2026-10-07"
+  },
+  "5N3ErI_PIds": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids",
@@ -531,15 +539,7 @@
    ],
    "since": "2026-10-07"
   },
-  "5N3ErI_PIds": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Kids",
-    "Bazaar Comedy"
-   ],
-   "since": "2026-10-07"
-  },
-  "L8Uv0Nc9orw": {
+  "DyLvQrbxyjk": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Kids",
@@ -555,21 +555,22 @@
    ],
    "since": "2026-10-07"
   },
-  "e0SzreAH6Vg": {
+  "L8Uv0Nc9orw": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Kids",
+    "Bazaar Comedy"
+   ],
+   "since": "2026-10-07"
+  },
+  "J4OlMqUi0P4": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Sports"
    ],
    "since": "2026-10-07"
   },
-  "ERUVxtoh3T8": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Sports"
-   ],
-   "since": "2026-10-07"
-  },
-  "a6L-efvFXiA": {
+  "EY41X9sfxlA": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Sports"
@@ -577,62 +578,6 @@
    "since": "2026-10-07"
   },
   "Q5QXZdwsxuw": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Sports"
-   ],
-   "since": "2026-10-07"
-  },
-  "GzW4qSM2bbk": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Sports"
-   ],
-   "since": "2026-10-07"
-  },
-  "aleoOO4PgyE": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Sports"
-   ],
-   "since": "2026-10-07"
-  },
-  "h_Yh4Ze7WJQ": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Sports"
-   ],
-   "since": "2026-10-07"
-  },
-  "Sr9Gd8TIciM": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Sports"
-   ],
-   "since": "2026-10-07"
-  },
-  "qA9nzucwh6o": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Sports"
-   ],
-   "since": "2026-10-07"
-  },
-  "KwnUbeDQ0YE": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Sports"
-   ],
-   "since": "2026-10-07"
-  },
-  "JFXdf36J3H4": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Sports"
-   ],
-   "since": "2026-10-07"
-  },
-  "J4OlMqUi0P4": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Sports"
@@ -650,6 +595,27 @@
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Sports"
+   ],
+   "since": "2026-10-07"
+  },
+  "KwnUbeDQ0YE": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Sports"
+   ],
+   "since": "2026-10-07"
+  },
+  "qA9nzucwh6o": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Sports"
+   ],
+   "since": "2026-10-07"
+  },
+  "XuSnfzrcYLU": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Travel"
    ],
    "since": "2026-10-07"
   },
@@ -688,6 +654,13 @@
    ],
    "since": "2026-10-07"
   },
+  "DORZxNJo0I8": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Comedy"
+   ],
+   "since": "2026-10-07"
+  },
   "zJGyAWyfs7E": {
    "why": "embedding turned off by its owner",
    "channels": [
@@ -702,35 +675,7 @@
    ],
    "since": "2026-10-07"
   },
-  "Te1hhSSz0Yg": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Comedy"
-   ],
-   "since": "2026-10-07"
-  },
-  "7n4Glt2smIs": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Comedy"
-   ],
-   "since": "2026-10-07"
-  },
-  "9XtH_WqL7uU": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Comedy"
-   ],
-   "since": "2026-10-07"
-  },
-  "DORZxNJo0I8": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Bazaar Comedy"
-   ],
-   "since": "2026-10-07"
-  },
-  "s6odTol8nI8": {
+  "MKeC0u1QYns": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Comedy"
@@ -744,7 +689,21 @@
    ],
    "since": "2026-10-07"
   },
-  "MKeC0u1QYns": {
+  "s6odTol8nI8": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Comedy"
+   ],
+   "since": "2026-10-07"
+  },
+  "9XtH_WqL7uU": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Comedy"
+   ],
+   "since": "2026-10-07"
+  },
+  "Te1hhSSz0Yg": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Comedy"
@@ -758,7 +717,7 @@
    ],
    "since": "2026-10-07"
   },
-  "Agz3knudN6M": {
+  "7n4Glt2smIs": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Comedy"
@@ -772,7 +731,7 @@
    ],
    "since": "2026-10-07"
   },
-  "qZYhSlR3CVw": {
+  "Agz3knudN6M": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Comedy"
@@ -780,6 +739,13 @@
    "since": "2026-10-07"
   },
   "c-zJjxqoDzI": {
+   "why": "embedding turned off by its owner",
+   "channels": [
+    "Bazaar Comedy"
+   ],
+   "since": "2026-10-07"
+  },
+  "qZYhSlR3CVw": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Comedy"
@@ -800,14 +766,14 @@
    ],
    "since": "2026-10-07"
   },
-  "DqsbvV83LRI": {
+  "FE435iFT6jw": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Movies Hindi"
    ],
    "since": "2026-10-07"
   },
-  "FE435iFT6jw": {
+  "DqsbvV83LRI": {
    "why": "embedding turned off by its owner",
    "channels": [
     "Bazaar Movies Hindi"
