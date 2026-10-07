@@ -154,7 +154,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         reload()
         // Cable TV's Free package lists only its few channels; the channel watched last moves onto one of them.
         viewModelScope.launch {
-            combine(Plans.current, Plans.features) { _, _ -> !Plans.has(Plans.Feature.AllChannels) }.collect { freeOnly ->
+            combine(Plans.current, Plans.features, Plans.extraChannels) { _, _, _ -> !Plans.has(Plans.Feature.AllChannels) }.collect { freeOnly ->
                 _state.update { s ->
                     val last = s.channels.firstOrNull { it.id == s.lastWatchedId }
                     val keep = !freeOnly || last == null || Plans.freeChannel(last)
