@@ -400,17 +400,23 @@
       <p class="small" style="margin-top:0">Plays from top to bottom, then starts again, all day and night. A video can be in the loop more than once (handy for ads). Total: <b id="loopTotal">0:00</b></p>
       <details class="help"><summary>How the loop works</summary>
         <ul>
-          <li>Use ▲ ▼ to change the order and ✕ to take a video out of the loop (it stays in your Videos list).</li>
+          <li>Use ▲ ▼ to change the order and <b>✕ Remove</b> to take a video out of the loop (it stays in your Videos list).</li>
+          <li>The row with <b>▶ ON TV NOW</b> is what viewers are watching at this moment.</li>
           <li>The loop is timed by the clock, so all viewers are at the same place in it.</li>
           <li>If the loop is empty and no time slot is on, the channel shows "off air" with what's next.</li>
         </ul>
       </details>
       <div id="breakWarn" class="hidden" style="margin:8px 0;padding:10px 12px;border-radius:12px;border:1.5px solid #E53935;background:rgba(229,57,53,.12)"></div>
-      <div class="items" id="loop"></div>
-      <div class="row" style="margin-top:12px">
+      <div class="row" style="margin:8px 0 12px;padding:10px 12px;border-radius:12px;background:var(--surface-2)">
+        <b>＋ Add a video:</b>
         <select id="loopAdd" style="padding:10px;border-radius:12px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit;max-width:100%"></select>
-        <button class="btn" id="loopAddBtn" type="button">Add to the loop</button>
+        <select id="loopWhere" aria-label="Where" style="padding:10px;border-radius:12px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit">
+          <option value="end">at the end</option><option value="next">right after what's on now</option><option value="top">at the top</option>
+        </select>
+        <button class="btn primary" id="loopAddBtn" type="button">Add to the loop</button>
       </div>
+      <p id="loopNow" class="small" style="margin:0 0 8px;font-weight:700"></p>
+      <div class="items" id="loop"></div>
     </section>
 
     <section class="panel" id="step4">
@@ -991,16 +997,20 @@ function renderLoop() {
   c.loop = c.loop.filter(id => byId[id]);
   $("loop").innerHTML = "";
   let at = 0, longBreak = null;
+  loopRows = [];
   const isShowV = x => ["programme", "live", "trailers", "music", "list"].includes(kindOf(x || {}));
   c.loop.forEach((id, i) => {
     const v = byId[id];
     const d = document.createElement("div");
     d.className = "item";
     d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts">
-      <button class="btn" data-a="up" title="Move up">▲</button><button class="btn" data-a="down" title="Move down">▼</button><button class="btn" data-a="x" title="Take out of the loop">✕</button></div>`;
+      <button class="btn" data-a="up" title="Move up">▲</button><button class="btn" data-a="down" title="Move down">▼</button><button class="btn" data-a="x" title="Take out of the loop" style="color:#FF8A80;border-color:#E53935">✕ Remove</button></div>`;
     d.querySelector("b").textContent = `${i + 1}. ${v.title}`;
+    loopRows[i] = d;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
-    d.querySelector(".meta").textContent = v.secs > 0 ? `starts at ${lengthText(at)} into the loop · ${lengthText(v.secs)} long` : "live stream: plays until the next time slot (the rest of the loop is skipped)";
+    d.querySelector(".meta").textContent = v.secs > 0 ? `starts at ${at > 0 ? lengthText(at) : "0:00"} into the loop · ${lengthText(v.secs)} long`
+      : ["trailers", "music", "list"].includes(kindOf(v)) ? "today's YouTube list: its videos play here one after another (the list changes every day)"
+      : "live stream: plays until the next time slot (the rest of the loop is skipped)";
     at += v.secs > 0 ? v.secs : 0;
     const move = to => { if (to < 0 || to >= c.loop.length) return; [c.loop[i], c.loop[to]] = [c.loop[to], c.loop[i]]; changed(); renderAll(); };
     d.querySelector('[data-a=up]').onclick = () => move(i - 1);
@@ -1024,8 +1034,60 @@ function renderLoop() {
   }
   if (!c.loop.length) $("loop").innerHTML = '<p class="small">The loop is empty. Between time slots the channel will be off air.</p>';
   $("loopTotal").textContent = lengthText(at) || "0:00";
+  markLoopNow();
 }
-$("loopAddBtn").onclick = () => { const id = $("loopAdd").value; if (!id) return; c.loop.push(id); changed(); renderAll(); };
+/**
+ * Highlights the loop row playing right now (the same clock the TVs use). YouTube lists are filled in
+ * first, so a row that is a whole list is found from the video inside it that's on.
+ */
+let loopRows = [], loopNowTimer = null;
+async function markLoopNow() {
+  clearTimeout(loopNowTimer);
+  loopNowTimer = setTimeout(markLoopNow, 15000);
+  const cfg = c;
+  if (!cfg) return;
+  const e = await expand(cfg).catch(() => cfg);
+  if (cfg !== c) return;
+  const on = whatsOn(e);
+  // Which row of c.loop each playing entry of the filled-in loop comes from (as whatsOn counts it).
+  const eById = Object.fromEntries(e.videos.map(v => [v.id, v]));
+  const per = {};
+  for (const id of new Set(cfg.loop)) if (!eById[id]) per[id] = e.loop.filter(x => x.startsWith(id + "-")).length / Math.max(1, cfg.loop.filter(x => x === id).length);
+  const rowOf = [];
+  cfg.loop.forEach((id, i) => { for (let k = 0; k < (eById[id] ? 1 : per[id] || 0); k++) rowOf.push(i); });
+  const playing = e.loop.map((id, k) => [id, rowOf[k]]).filter(([id]) => eById[id]?.secs > 0).map(([, r]) => r);
+  const row = !on.off && !on.slot ? (on.loopIndex != null ? playing[on.loopIndex] : cfg.loop.findIndex(id => id === on.video.id)) : -1;
+  const label = dirty ? "▶ PLAYING NOW (with your unsaved changes)" : "▶ ON TV NOW";
+  loopRows.forEach((d, i) => {
+    d.style.outline = i === row ? "3px solid var(--focus)" : "";
+    d.querySelector(".nowtag")?.remove();
+    if (i === row) {
+      const t = document.createElement("div");
+      t.className = "nowtag"; t.style.cssText = "color:var(--focus);font-weight:800;margin-top:4px";
+      const inside = on.video.title !== cfg.videos.find(v => v.id === cfg.loop[i])?.title ? `: ${on.video.title}` : "";
+      t.textContent = label + inside + (isFinite(on.until) ? ` · until ${timeText(on.until, cfg.tz)}` : "");
+      d.firstElementChild.appendChild(t);
+    }
+  });
+  $("loopNow").textContent = on.off ? "Nothing is on air right now."
+    : on.slot ? `Right now a time slot is on: ${on.show ? on.show + ": " : ""}${on.video.title}. The loop carries on after it.`
+    : row >= 0 ? `${dirty ? "Playing now (your changes)" : "On TV now"}: row ${row + 1}, ${on.video.title}.` + (row > 2 ? " " : "") : "";
+  if (row > 2 && $("loopNow").textContent) {
+    const go = document.createElement("button"); go.className = "btn"; go.type = "button"; go.textContent = "Show me";
+    go.onclick = () => loopRows[row]?.scrollIntoView({ behavior: "smooth", block: "center" });
+    $("loopNow").append(go);
+  }
+}
+$("loopAddBtn").onclick = async () => {
+  const id = $("loopAdd").value; if (!id) return;
+  const where = $("loopWhere").value;
+  let at = c.loop.length;
+  if (where === "top") at = 0;
+  if (where === "next") { const r = loopRows.findIndex(d => d.querySelector(".nowtag")); at = r >= 0 ? r + 1 : c.loop.length; }
+  c.loop.splice(at, 0, id);
+  changed(); renderAll();
+  loopRows[at]?.scrollIntoView({ behavior: "smooth", block: "center" });
+};
 
 // ---------- step 4 ----------
 const DAY_TEXT = { all: "Every day", weekdays: "Mon–Fri", weekend: "Sat & Sun", mon: "Mondays", tue: "Tuesdays", wed: "Wednesdays", thu: "Thursdays", fri: "Fridays", sat: "Saturdays", sun: "Sundays" };
