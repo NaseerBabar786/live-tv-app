@@ -757,6 +757,7 @@ $("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(fal
 // ---------- step 2 ----------
 const kindOf = v => v.kind || (v.secs > 0 ? "programme" : "live");
 const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY", music: "MUSIC VIDEOS · NEW EVERY DAY", list: "YOUTUBE BLOCK · NEW EVERY DAY" };
+let justLooped = null;
 function renderVideos() {
   $("videos").innerHTML = "";
   if (!c.videos.length) $("videos").innerHTML = '<p class="small">No videos yet. Add one below.</p>';
@@ -765,14 +766,22 @@ function renderVideos() {
     d.className = "item";
     const uses = c.loop.filter(x => x === v.id).length + c.slots.filter(s => s.video === v.id || (s.episodes || []).includes(v.id)).length;
     d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts">
-      <button class="btn" data-a="play">▶ Watch</button><button class="btn" data-a="edit">Edit</button><button class="btn" data-a="del">Delete</button></div>`;
+      <button class="btn" data-a="play">▶ Watch</button><button class="btn" data-a="loop" title="Put it at the end of the non-stop loop">＋ Loop</button><button class="btn" data-a="slot" title="Give it a time slot">🕗 Time slot</button><button class="btn" data-a="edit">Edit</button><button class="btn" data-a="del">Delete</button></div>`;
     d.querySelector("b").textContent = v.title;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
     d.querySelector(".meta").textContent = `${lengthText(v.secs)} · ${uses ? "used " + uses + "×" : "not used yet"} · ${v.url}`;
     // Ad length rule: a reminder on an ad that isn't 10, 20, 30, 40, 50 or 60 seconds.
     if (kindOf(v) === "ad" && v.secs && (v.secs > 61 || Math.abs(v.secs - Math.round(v.secs / 10) * 10) > 1 || v.secs < 9))
       d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="err">⚠ Ads should be 10, 20, 30, 40, 50 or 60 seconds · </span>');
+    if (justLooped === v.id) d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="ok">✓ Added at the end of the loop. Press Save to put it on air · </span>');
     d.querySelector('[data-a=play]').onclick = () => watchOne(v.title, v.url);
+    d.querySelector('[data-a=loop]').onclick = () => { c.loop.push(v.id); justLooped = v.id; changed(); renderAll(); };
+    d.querySelector('[data-a=slot]').onclick = () => {
+      setTab("step4");
+      $("sVideo").value = v.id;
+      $("sMsg").innerHTML = `Pick the day and start time for "${esc(v.title)}", then tap <b>Add time slot</b>.`;
+      $("slotForm").scrollIntoView({ behavior: "smooth", block: "center" });
+    };
     d.querySelector('[data-a=edit]').onclick = () => editVideo(v);
     d.querySelector('[data-a=del]').onclick = () => {
       if (uses && !confirm(`"${v.title}" is used ${uses} time(s) in the loop or time slots. Delete it from those too?`)) return;
