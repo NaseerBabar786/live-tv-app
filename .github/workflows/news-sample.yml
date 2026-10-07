@@ -1,0 +1,35 @@
+name: News look sample
+# Makes a SAMPLE headlines bulletin in a new look for the owner to approve (never touches the on-air files).
+# Result: channel-media/news-sample-<look>.mp4
+on:
+  push:
+    paths: [".github/workflows/news-sample.yml"]
+  workflow_dispatch:
+    inputs:
+      look:
+        default: "calm"
+env:
+  LOOK: ${{ github.event.inputs.look || 'calm' }}
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
+          pip install -q edge-tts numpy pillow
+          for id in $(python3 -c "import json; print(' '.join(json.load(open('tools/news/presenters/on-air.json'))['readers']))"); do
+            curl -fsSL -o "tools/news/presenters/clips/$id.mp4" \
+              "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || true
+          done
+      - env:
+          NEWS_LOOK: ${{ env.LOOK }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          python3 tools/news/make_news.py out --kind headlines
+          mv out/news-headlines.mp4 news-sample-$LOOK.mp4
+          gh release upload channel-media news-sample-$LOOK.mp4 -R "$GITHUB_REPOSITORY" --clobber

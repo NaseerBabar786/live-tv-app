@@ -328,6 +328,76 @@ def background(path, secs=8):
         p.stdin.write(np.clip(img, 0, 255).astype(np.uint8).tobytes())
     p.stdin.close(); p.wait()
 
+# ---------- calm look (owner asked 2026-10-07: calmer music and background; NEWS_LOOK=calm) ----------
+LOOK = os.environ.get("NEWS_LOOK", "classic")
+
+def piano(f, n, decay=2.2):
+    """A soft piano-like note: a few harmonics with a gentle attack and a long fade."""
+    t = np.arange(n) / SR
+    w = sum(a * np.sin(2 * np.pi * f * k * t) for k, a in ((1, 1.0), (2, 0.4), (3, 0.18), (4, 0.08)))
+    att = np.minimum(1, t / 0.008)
+    return w * att * np.exp(-t * decay)
+
+def pad(freqs, n):
+    """A warm string-like pad: slightly detuned sines, slow swell in and out."""
+    t = np.arange(n) / SR
+    w = sum(np.sin(2 * np.pi * f * d * t) for f in freqs for d in (0.997, 1.0, 1.003)) / (3 * len(freqs))
+    env = np.minimum(1, t / 1.2) * np.minimum(1, (n / SR - t) / 1.2)
+    return w * env
+
+# D major, I - vi - IV - V, 4 s per chord (60 BPM): calm and steady, like a newsroom bed.
+CALM_CHORDS = [[146.83, 220.0, 293.66, 369.99], [123.47, 185.0, 246.94, 293.66],
+               [98.0, 196.0, 246.94, 293.66], [110.0, 220.0, 277.18, 329.63]]
+
+def calm_bed(secs):
+    n = int(SR * secs); out = np.zeros(n + SR * 5, np.float32); bar = 4.0
+    for k in range(int(secs // bar) + 1):
+        ch = CALM_CHORDS[k % 4]; a = int(k * bar * SR)
+        out[a:a + int(SR * (bar + 1))] += 0.55 * pad(ch[1:], int(SR * (bar + 1)))
+        out[a:a + int(SR * 3)] += 0.45 * piano(ch[0] / 2, int(SR * 3), 1.2)  # soft low note on the bar
+        for j, f in enumerate([ch[1] * 2, ch[2] * 2, ch[3] * 2, ch[2] * 2]):  # slow arpeggio, one note a second
+            b = a + int(j * SR)
+            out[b:b + int(SR * 2.5)] += 0.16 * piano(f, int(SR * 2.5))
+        for j in range(8):  # a very soft clock tick on every half beat
+            b = a + int(j * 0.5 * SR); m = int(SR * 0.03)
+            out[b:b + m] += (0.05 if j % 2 == 0 else 0.03) * np.random.default_rng(j).standard_normal(m) * np.exp(-np.arange(m) / (SR * 0.006))
+    out = out[:n]
+    return out / max(1e-6, np.abs(out).max())
+
+def calm_sting(secs=6.0):
+    """A gentle opening: a rising piano phrase over a swelling chord and one soft low drum."""
+    n = int(SR * secs); out = np.zeros(n, np.float32)
+    for i, f in enumerate([293.66, 369.99, 440.0, 587.33]):
+        a = int(i * 0.45 * SR); out[a:a + int(SR * 3)] += 0.35 * piano(f, min(int(SR * 3), n - a), 1.0)
+    out[:] += 0.5 * pad([146.83, 220.0, 293.66, 369.99], n)
+    a = int(SR * 1.8); m = int(SR * 1.2); t = np.arange(m) / SR
+    out[a:a + m] += 0.6 * np.sin(2 * np.pi * (60 - 15 * t) * t) * np.exp(-t * 4)
+    fade = int(SR * 1.5); out[-fade:] *= np.linspace(1, 0, fade)
+    return out / max(1e-6, np.abs(out).max())
+
+def calm_background(path, secs=40):
+    """A still navy studio backdrop: soft light that breathes very slowly, a faint fixed grid, no sliding parts."""
+    w, h = 640, 360
+    y, x = np.mgrid[0:h, 0:w].astype(np.float32)
+    base = np.stack([np.full((h, w), 6), 12 + 18 * y / h, 30 + 34 * y / h], -1)
+    grid = ((np.abs((x % 48) - 24) < 0.5) | (np.abs((y % 48) - 24) < 0.5))
+    base[grid] += 5
+    glow1 = np.exp(-((x - w * 0.3) ** 2 + (y - h * 0.35) ** 2) / (2 * 190 ** 2))[..., None] * np.array((25, 60, 140), np.float32)
+    glow2 = np.exp(-((x - w * 0.78) ** 2 + (y - h * 0.65) ** 2) / (2 * 210 ** 2))[..., None] * np.array((20, 70, 110), np.float32)
+    p = subprocess.Popen(["ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24",
+                          "-s", f"{w}x{h}", "-r", str(FPS), "-i", "-", "-vf", f"scale={W}:{H}:flags=bicubic",
+                          "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", path],
+                         stdin=subprocess.PIPE)
+    frames = secs * FPS
+    for i in range(frames):
+        a = 2 * np.pi * i / frames
+        img = base + glow1 * (0.75 + 0.15 * math.cos(a)) + glow2 * (0.75 + 0.15 * math.cos(a + math.pi))
+        p.stdin.write(np.clip(img, 0, 255).astype(np.uint8).tobytes())
+    p.stdin.close(); p.wait()
+
+if LOOK == "calm":
+    sting, bed, background = calm_sting, calm_bed, calm_background
+
 # ---------- graphics (right to left) ----------
 RED, BLUE, TEAL, GREEN, GOLD = (210, 30, 45), (25, 110, 220), (20, 150, 140), (20, 130, 70), (245, 190, 40)
 SECTION = {"pakistan": ("پاکستان", GREEN), "world": ("دنیا", BLUE), "canada": ("کینیڈا", RED),
