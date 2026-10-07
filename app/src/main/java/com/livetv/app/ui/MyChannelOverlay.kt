@@ -126,19 +126,23 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
         val shows = remember(card?.untilMs, today) {
             card?.let { runCatching { if (it.today) MyChannel.todaysShows(c, System.currentTimeMillis()) else MyChannel.upNext(c, System.currentTimeMillis()) }.getOrNull() }.orEmpty()
         }
+        // A card keeps its last programmes while it fades out: the list is empty by then (1.9.71 closed the app on it).
+        val last = remember(c) { arrayOf(emptyList<MyChannel.Upcoming>()) }
+        if (shows.isNotEmpty()) last[0] = shows
+        val shown = last[0]
         AnimatedVisibility(
             visible = card != null && today && shows.isNotEmpty(),
             enter = fadeIn() + slideInHorizontally { if (logoLeft) it else -it },
             exit = fadeOut(),
             modifier = Modifier.align(if (logoLeft) Alignment.CenterEnd else Alignment.CenterStart).padding(horizontal = unit * 2.5f),
-        ) { TodayCard(c.name, shows, unit) }
+        ) { TodayCard(c.name, shown, unit) }
         AnimatedVisibility(
             visible = card != null && !today && shows.isNotEmpty(),
             enter = fadeIn() + slideInHorizontally { if (c.logoCorner == "bl") it else -it },
             exit = fadeOut() + slideOutHorizontally { if (c.logoCorner == "bl") it else -it },
             modifier = Modifier.align(if (c.logoCorner == "bl") Alignment.BottomEnd else Alignment.BottomStart)
                 .padding(horizontal = unit * 2.5f).padding(bottom = (if (c.ticker != null) tickerHeight else 0.dp) + unit * 2.5f),
-        ) { NextCard(shows, unit) }
+        ) { NextCard(shown, unit) }
         c.ticker?.let { line ->
             Box(
                 Modifier
@@ -179,14 +183,15 @@ private fun whenText(ms: Long): String {
 /** "UP NEXT" and the programme after it, low on the picture beside the scrolling line. */
 @Composable
 private fun NextCard(shows: List<MyChannel.Upcoming>, unit: Dp) {
+    val first = shows.firstOrNull() ?: return
     Column(
         Modifier.widthIn(max = unit * 46f).background(CardBack, RoundedCornerShape(unit * 1.2f))
             .padding(horizontal = unit * 2f, vertical = unit * 1.3f),
     ) {
         Text("UP NEXT", color = Accent, fontWeight = FontWeight.Black, fontSize = (unit.value * 1.6f).sp)
-        Text(shows[0].title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = (unit.value * 2.6f).sp,
+        Text(first.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = (unit.value * 2.6f).sp,
             maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(whenText(shows[0].at), color = Color(0xFFCBD5E1), fontSize = (unit.value * 1.7f).sp)
+        Text(whenText(first.at), color = Color(0xFFCBD5E1), fontSize = (unit.value * 1.7f).sp)
         shows.getOrNull(1)?.let {
             Text("Later: ${clock(it.at)}  ${it.title}", color = Color(0xFF94A3B8), fontSize = (unit.value * 1.5f).sp,
                 maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = unit * 0.5f))
