@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id  # noqa: E402
 from build_trailers import uploads  # noqa: E402
 from build_youtube_channels import other_language  # noqa: E402
+from titles import screen_title  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "channel", "music-videos.json")
@@ -40,7 +41,7 @@ SKIP = re.compile(r"lyric|lyrical|audio|visuali[sz]er|jukebox|full album|non ?st
                   r"explicit|\buncensored\b|karaoke|instrumental|cover\b|tutorial|dance practice|backstage", re.I)
 
 LANGUAGES = [
-    ("Hindi", "Popular Hindi music", [
+    ("Hindi", "مقبول ہندی گانے", [
         ("T-Series", ["@tseries"], "T-Series"),
         ("Saregama", ["@saregamamusic", "@SaregamaMusic"], "Saregama"),
         ("Zee Music", ["@zeemusiccompany", "@ZeeMusicCompany"], "Zee Music"),
@@ -48,7 +49,7 @@ LANGUAGES = [
         ("Tips", ["@tipsofficial", "@TipsMusic"], "Tips"),
         ("YRF", ["@yrf", "@YRFMusic"], "YRF"),
     ]),
-    ("Urdu", "Popular Urdu music", [
+    ("Urdu", "مقبول اردو گانے", [
         ("Coke Studio Pakistan", ["@cokestudio", "@CokeStudioPakistan"], "Coke Studio"),
         ("Atif Aslam", ["@AtifAslam", "@atifaslam"], "Atif Aslam"),
         ("Asim Azhar", ["@AsimAzharOfficial", "@AsimAzhar"], "Asim Azhar"),
@@ -82,7 +83,7 @@ def language(lang, sources, today, old):
             first = old.get(vid, {}).get("found", today.isoformat())
             if (age if age is not None else (today - dt.date.fromisoformat(first)).days) > MAX_DAYS:
                 continue
-            found.append({"id": vid, "title": title.strip(), "label": source, "lang": lang, "secs": secs,
+            found.append({"id": vid, "title": screen_title(title, source), "label": source, "lang": lang, "secs": secs,
                           "age": age, "found": first, "kind": "music"})
             kept += 1
             print(f"    {age if age is not None else '?':>3} days  {title}")
@@ -132,7 +133,7 @@ def main():
     if len(block) < 8:
         sys.exit(f"Too few music videos ({summary}); keeping the old list.")
     with open(OUT, "w", encoding="utf-8") as f:
-        json.dump({"name": "Popular music videos", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        json.dump({"name": "مقبول گانے", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
                    "secs": total, "videos": block}, f, ensure_ascii=False, indent=1)
         f.write("\n")
     print(f"Wrote {os.path.relpath(OUT, ROOT)}: {summary}")

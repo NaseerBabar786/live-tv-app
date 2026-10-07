@@ -1,9 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="ur">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bazaar TV · On now</title>
+<title>Bazaar TV · اب دیکھیے</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <style>
   /* A run of YouTube videos on Bazaar TV (its upcoming film trailers and popular music videos, 2026-10-06,
      lists built daily by tools/build_trailers.py and tools/build_music_videos.py), played in YouTube's own player and locked like Bazaar Hits: no buttons,
@@ -12,7 +14,9 @@
      ?secs= the videos and their lengths. When the run is over, the channel's own player goes on
      (livetv://done in the app; the Bazaar TV page swaps back on the website).
      The app opens it from MyChannel.blockPage; keep the two in step. */
-  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
+  /* Bazaar TV is an Urdu channel (the owner, 2026-10-07): our writing on screen is Urdu, English only where
+     needed, never Hindi script. */
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: "Noto Nastaliq Urdu", system-ui, sans-serif; }
   :root { --strip: clamp(22px, 3.4vw, 40px); }
   #player, .cover, .shield { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: calc(100% - var(--strip)); }
   #player { pointer-events: none; }
@@ -30,6 +34,9 @@
   .ticker { position: absolute; left: 0; right: 0; bottom: 0; height: var(--strip); line-height: var(--strip); background: #101827; color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); pointer-events: none; }
   .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }
+  /* Urdu runs from left to right across the screen, as on Urdu channels. */
+  .ticker.rtl span { animation-name: tickrtl; }
+  @keyframes tickrtl { from { transform: translateX(-100%); } to { transform: none; } }
   /* Our own card over the player while a trailer loads, between trailers and at each new language. */
   .cover { background: #000; display: grid; place-items: center; align-content: center; gap: 2vh; transition: opacity .4s; pointer-events: none; color: #fff; text-align: center; }
   .cover img { height: 20vh; max-width: 50vw; object-fit: contain; opacity: .9; }
@@ -40,12 +47,12 @@
 </head>
 <body>
 <div id="player"></div>
-<div class="cover" id="cover"><img alt="" id="coverLogo" hidden><b id="coverTitle">Bazaar TV</b><small id="coverSub"></small></div>
+<div class="cover" id="cover"><img alt="" id="coverLogo" hidden><b id="coverTitle" dir="auto">Bazaar TV</b><small id="coverSub" dir="auto"></small></div>
 <div class="shield" id="shield"></div>
 <img class="bug off" id="bug" alt="">
-<div class="now hide" id="now"></div>
-<button class="sound" id="sound" hidden>🔊 Tap for sound</button>
-<div class="ticker"><span id="tick"></span></div>
+<div class="now hide" id="now" dir="auto"></div>
+<button class="sound" id="sound" hidden>🔊 آواز کے لیے ٹیپ کریں</button>
+<div class="ticker" id="ticker"><span id="tick" dir="auto"></span></div>
 <script>
 const q = new URLSearchParams(location.search);
 const $ = id => document.getElementById(id);
@@ -60,13 +67,14 @@ const starts = [];
 ids.reduce((t, _, i) => (starts.push(t), t + (secs[i] || 0) * 1000), at);
 const end = until || (ids.length ? starts[ids.length - 1] + (secs[ids.length - 1] || 0) * 1000 : at);
 
-document.title = name + " · On now";
+document.title = name + " · اب دیکھیے";
 $("coverLogo").src = logo; $("coverLogo").hidden = false;
 $("bug").src = logo;
 // The advertise line always runs here (the owner's ads rule); the channel's own line when it has one.
 const own = q.get("tick") || "";
 $("tick").textContent = /advertise/i.test(own) ? own
-  : `${name} · ${own ? own + " · " : ""}Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+  : `${name} · ${own ? own + " · " : ""}ہمارے ساتھ اشتہار دیں: واٹس ایپ 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+if (/[\u0600-\u06FF]/.test($("tick").textContent)) $("ticker").classList.add("rtl");
 
 // Titles, makers and languages from the day's lists (the address carries only ids and lengths).
 let info = {};
@@ -79,8 +87,10 @@ for (const list of LISTS) {
     if (cur >= 0) showNow();
   }).catch(() => {});
 }
-const KINDS = { trailer: "Coming soon to cinemas", music: "Music videos", kids: "Kids' time", drama: "Drama",
-  cooking: "Cooking", comedy: "Comedy", film: "Hindi film", sports: "Sports highlights", travel: "Travel" };
+const KINDS = { trailer: "جلد سینما میں", music: "میوزک ویڈیوز", kids: "بچوں کا وقت", drama: "ڈرامہ",
+  cooking: "کھانا پکائیں", comedy: "مزاحیہ", film: "ہندی فلم", sports: "کھیل", travel: "سیر و سیاحت" };
+const LANGS = { Hindi: "ہندی", Urdu: "اردو", Pakistani: "پاکستانی" };
+const langOf = v => LANGS[v?.lang] || v?.lang || "";
 const isMusic = v => v?.kind === "music";
 const between = v => KINDS[v?.kind] || name;
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
@@ -99,7 +109,7 @@ function finish() {
   if (finished) return;
   finished = true;
   try { player && player.stopVideo(); } catch {}
-  cover(true, name, "Back to our programmes");
+  cover(true, name, "ہمارے پروگرام جاری ہیں");
   if (app) location.href = "livetv://done";
   else if (parent !== window) parent.postMessage({ blockDone: true }, "*");
 }
@@ -120,9 +130,9 @@ function showNow() {
   const v = info[ids[cur]];
   placeBug();
   $("now").innerHTML = "<span></span><small></small>";
-  $("now").firstChild.textContent = v ? v.title : "On now";
-  $("now").lastChild.textContent = name + (!v ? "" : v.kind === "trailer" ? ` · Coming soon · ${v.lang} · ${v.label}`
-    : isMusic(v) ? ` · Music video · ${v.lang} · ${v.label}` : ` · ${between(v)} · ${v.label}`);
+  $("now").firstChild.textContent = v ? v.title : "اب دیکھیے";
+  $("now").lastChild.textContent = name + (!v ? "" : v.kind === "trailer" ? ` · جلد آرہی ہے · ${langOf(v)} · ${v.label}`
+    : isMusic(v) ? ` · میوزک ویڈیو · ${langOf(v)} · ${v.label}` : ` · ${between(v)} · ${v.label}`);
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
@@ -131,9 +141,9 @@ function load(i, offset) {
   cur = i;
   const v = info[ids[i]];
   const prev = i > 0 ? info[ids[i - 1]] : null;
-  // A new language gets its own card: "Upcoming Hindi movies", "Popular Urdu music".
+  // A new language gets its own card: "آنے والی ہندی فلمیں", "مقبول اردو گانے".
   if (v && v.lang && (!prev || prev.lang !== v.lang || prev.kind !== v.kind))
-    cover(true, isMusic(v) ? `Popular ${v.lang} music` : `Upcoming ${v.lang} movies`, between(v));
+    cover(true, isMusic(v) ? `مقبول ${langOf(v)} گانے` : `آنے والی ${langOf(v)} فلمیں`, between(v));
   else if (v && (!prev || prev.kind !== v.kind)) cover(true, between(v), v.title);
   else cover(true, between(v), v ? v.title : "");
   player.loadVideoById({ videoId: ids[i], startSeconds: Math.max(0, offset) });
@@ -153,7 +163,7 @@ function step() {
 let started = false, lastError = null;
 setTimeout(() => {
   if (started || finished) return;
-  $("coverSub").textContent = `YouTube didn't start here (${lastError ? "error " + lastError : "loading"})`;
+  $("coverSub").textContent = `یوٹیوب یہاں شروع نہیں ہوا (${lastError ? "error " + lastError : "loading"})`;
 }, 15000);
 
 if (!ids.length || Date.now() >= end) finish();
@@ -180,10 +190,10 @@ window.onYouTubeIframeAPIReady = () => {
         else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
         // It never stays paused; at the end of a trailer our card waits for the next one's turn.
         else if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
-        else if (e.data === YT.PlayerState.ENDED) cover(true, between(info[ids[cur]]), "Coming up next");
+        else if (e.data === YT.PlayerState.ENDED) cover(true, between(info[ids[cur]]), "اگلا پروگرام");
       },
       // A video its owner won't let others play: our card until the next one. When none will play, our own player goes on.
-      onError: e => { lastError = e.data; cover(true, between(info[ids[cur]]), "Coming up next"); if (++failures >= 4) fallBack(); },
+      onError: e => { lastError = e.data; cover(true, between(info[ids[cur]]), "اگلا پروگرام"); if (++failures >= 4) fallBack(); },
     },
   });
 };

@@ -24,6 +24,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id, fetch, _text  # noqa: E402
 from build_youtube_channels import other_language  # noqa: E402
+from titles import screen_title  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "channel", "trailers.json")
@@ -51,7 +52,7 @@ MONTH_DAY = re.compile(r"\b" + MON + r"\s*(\d{1,2})(?:st|nd|rd|th)?\b(?:\s*,?\s*
 
 # (label, handles, the channel's name as YouTube shows it). Only a channel whose name fits is used.
 LANGUAGES = [
-    ("Hindi", "Upcoming Hindi movies", [
+    ("Hindi", "آنے والی ہندی فلمیں", [
         ("Yash Raj Films", ["@yrf", "@YRF"], "Yash Raj Films|YRF"),
         ("T-Series", ["@tseries", "@TSeries"], "T-Series"),
         ("Dharma Productions", ["@dharmamovies", "@DharmaProductions"], "Dharma Productions"),
@@ -60,7 +61,7 @@ LANGUAGES = [
         ("Jio Studios", ["@JioStudios", "@jiostudios"], "Jio Studios"),
         ("Pen Movies", ["@PenMovies"], "Pen Movies"),
     ]),
-    ("Pakistani", "Upcoming Pakistani movies", [
+    ("Pakistani", "آنے والی پاکستانی فلمیں", [
         ("ARY Films", ["@ARYFilms", "@aryfilms", "@ARYFilmsOfficial"], "ARY Films"),
         ("Showcase Films", ["@ShowcaseFilms", "@showcasefilms"], "Showcase Films"),
         ("HUM Films", ["@HUMFilms", "@humfilms", "@HUMFilmsOfficial"], "HUM Films"),
@@ -170,7 +171,7 @@ def language(lang, label, sources, today, old):
             if films.get(film, 0) >= PER_FILM or any(v["id"] == vid for v in found):
                 continue
             films[film] = films.get(film, 0) + 1
-            found.append({"id": vid, "title": title.strip(), "label": source, "lang": lang, "secs": secs,
+            found.append({"id": vid, "title": screen_title(title, f"{source} trailer"), "label": source, "lang": lang, "secs": secs,
                           "age": age, "found": first, "kind": "trailer"})
             print(f"    {age if age is not None else '?':>3} days  {title}")
             kept += 1
@@ -219,7 +220,7 @@ def main():
     if len(block) < 6:
         sys.exit(f"Too few trailers ({summary}); keeping the old list.")
     with open(OUT, "w", encoding="utf-8") as f:
-        json.dump({"name": "Upcoming movie trailers", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        json.dump({"name": "آنے والی فلموں کے ٹریلر", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
                    "secs": total, "videos": block}, f, ensure_ascii=False, indent=1)
         f.write("\n")
     print(f"Wrote {os.path.relpath(OUT, ROOT)}: {summary}")

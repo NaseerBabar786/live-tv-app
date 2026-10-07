@@ -20,6 +20,9 @@ import random
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from titles import screen_title  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHANNEL = os.path.join(ROOT, "docs", "channel")
 
@@ -42,7 +45,7 @@ BLOCKS = {
     "film": (["filmein", "hindi"], "film", 90, (80, 150), r"hindi|urdu|[\u0900-\u097F]",
              r"bhojpuri|marathi|punjabi|gujarati|bengali|english|trailer|teaser|scene|songs", None),
 }
-TITLES = {"kids": "Kids' time", "drama": "Drama", "cooking": "Cooking", "comedy": "Comedy", "film": "Hindi film"}
+TITLES = {"kids": "بچوں کا وقت", "drama": "ڈرامہ", "cooking": "کھانا پکائیں", "comedy": "مزاحیہ", "film": "ہندی فلم"}
 
 
 def main():
@@ -70,7 +73,7 @@ def main():
             secs = round(v["mins"] * 60)
             if total and total + secs > mins * 60 * 1.15:
                 continue
-            chosen.append({"id": v["id"], "title": v["title"], "label": v.get("label", ""), "secs": secs, "kind": kind})
+            chosen.append({"id": v["id"], "title": screen_title(v["title"], TITLES[kind]), "label": v.get("label", ""), "secs": secs, "kind": kind})
             taken.add(v["id"])
             total += secs
             if total >= mins * 60 * 0.85:
