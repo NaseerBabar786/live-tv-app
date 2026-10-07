@@ -27,3 +27,6 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 - 1.9.89: ad breaks in Library films. The PC has no Library yet; the PC's breaks already follow the
   5-second ad length rule and keep paid sponsors off YouTube content (our YouTube pages run their own
   promo breaks).
+- 1.9.90: touch in every mode on phones (upright 1+List, sideways full screen). On PC every tile,
+  channel and button already answers a mouse click or a touchscreen tap, and the PC window is
+  always landscape, so nothing more was needed.
