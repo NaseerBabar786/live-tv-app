@@ -1,8 +1,45 @@
 {
  "name": "مقبول گانے",
- "built": "2026-10-07 08:44 UTC",
- "secs": 2999,
+ "built": "2026-10-07 17:48 UTC",
+ "secs": 2857,
  "videos": [
+  {
+   "id": "2mHIX2Px24A",
+   "title": "MESS (Official Video): Arinar Black | Aditya Prakash | T-Series",
+   "label": "T-Series",
+   "lang": "Hindi",
+   "secs": 187,
+   "found": "2026-10-07",
+   "kind": "music",
+   "section": "مقبول ہندی گانے"
+  },
+  {
+   "id": "Bgj-oDQcxac",
+   "title": "Slap Song - Full Video | I'm Game (Hindi) | Dulquer Salmaan & Kayadu | Jakes Bejoy, Bilal Q, Numan K",
+   "label": "Zee Music",
+   "lang": "Hindi",
+   "secs": 227,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "DviUJZYuwiQ",
+   "title": "Navrai Majhi - 8K/4K Music Video | Sridevi | Sunidhi Chauhan, Swanand Kirkire | English Vinglish",
+   "label": "Sony Music India",
+   "lang": "Hindi",
+   "secs": 141,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "vrOCv5SOTrU",
+   "title": "Jaadugari | AMAN | Official Music Video | Raah Records | New Release",
+   "label": "YRF",
+   "lang": "Hindi",
+   "secs": 185,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
   {
    "id": "7V-6AUGBgBY",
    "title": "Achha Sila Diya 8K Video Song | Jaani,B Praak | Nora F,Rajkummar R | Nikhil-Vinay,Yogesh |Bhushan K",
@@ -10,8 +47,7 @@
    "lang": "Hindi",
    "secs": 319,
    "found": "2026-10-07",
-   "kind": "music",
-   "section": "مقبول ہندی گانے"
+   "kind": "music"
   },
   {
    "id": "f0gp7_H-5nE",
@@ -32,47 +68,11 @@
    "kind": "music"
   },
   {
-   "id": "26hCKVkUlF8",
-   "title": "Raat Ka Surma (Official Music Video) | Mika Singh | Afsana Khan | Dot Music | R. D. Burman",
-   "label": "Saregama",
-   "lang": "Hindi",
-   "secs": 193,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "vrOCv5SOTrU",
-   "title": "Jaadugari | AMAN | Official Music Video | Raah Records | New Release",
+   "id": "q5HK8lXE_aE",
+   "title": "Massacre Song | Music Video | ALPHA | Alia Bhatt, Sharvari | Rohansh & Abeer, Shilpa, Jonita, Kausar",
    "label": "YRF",
    "lang": "Hindi",
-   "secs": 185,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "eDf4eomXTao",
-   "title": "Wafa Na Raas Aayee 8K Video Song | Jubin Nautiyal | Himansh K, Arushi N, Meet Bros | Rashmi V",
-   "label": "T-Series",
-   "lang": "Hindi",
-   "secs": 304,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "ylwSKPnFb_8",
-   "title": "Chehra - Official Music Video | Mitta Ror ft. Swara Verma",
-   "label": "Zee Music",
-   "lang": "Hindi",
-   "secs": 227,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "-WlM9FPV8Bs",
-   "title": "Gud Naal Ishq Mitha 8K Video Song | I Love New Year | Sunny Deol | Kangana Ranaut",
-   "label": "T-Series",
-   "lang": "Hindi",
-   "secs": 148,
+   "secs": 175,
    "found": "2026-10-07",
    "kind": "music"
   },

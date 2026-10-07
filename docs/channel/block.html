@@ -18,8 +18,9 @@
      needed, never Hindi script. */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: "Noto Nastaliq Urdu", system-ui, sans-serif; }
   :root { --strip: clamp(22px, 3.4vw, 40px); }
-  #player, .cover, .shield { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: calc(100% - var(--strip)); }
+  #player, #own, .cover, .shield { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: calc(100% - var(--strip)); }
   #player { pointer-events: none; }
+  #own { background: #000; object-fit: contain; pointer-events: none; }
   .shield { background: transparent; }
   .bug { position: absolute; top: 3%; right: 2.5%; height: 9vw; max-width: 26vw; object-fit: contain; opacity: .55; pointer-events: none; }
   .bug.tl { right: auto; left: 2.5%; }
@@ -50,6 +51,7 @@
 </head>
 <body>
 <div id="player"></div>
+<video id="own" playsinline hidden></video>
 <div class="cover" id="cover"><div class="spin"></div><b id="coverTitle" dir="auto">Bazaar TV</b><small id="coverSub" dir="auto"></small></div>
 <div class="shield" id="shield"></div>
 <img class="bug off" id="bug" alt="">
@@ -81,12 +83,14 @@ if (/[\u0600-\u06FF]/.test($("tick").textContent)) $("ticker").classList.add("rt
 
 // Titles, makers and languages from the day's lists (the address carries only ids and lengths).
 let info = {};
+const lists = {};
 // Keep in step with tools/build_trailers.py, build_music_videos.py and build_bazaar_blocks.py.
 const LISTS = ["trailers.json", "music-videos.json", "block-drama-1.json", "block-drama-2.json", "block-drama-3.json",
   "block-cooking.json", "block-comedy.json", "block-film.json"];
 for (const list of LISTS) {
   fetch(list, { cache: "no-store" }).then(r => r.json()).then(d => {
-    for (const v of d.videos || []) info[v.id] = { kind: list === "trailers.json" ? "trailer" : "music", ...v };
+    lists[list] = d;
+    for (const v of [...(d.videos || []), ...(d.spares || [])]) info[v.id] = { kind: list === "trailers.json" ? "trailer" : "music", ...v };
     if (cur >= 0) showNow();
   }).catch(() => {});
 }
@@ -100,12 +104,69 @@ const between = v => KINDS[v?.kind] || name;
 let corners = { labels: {} };
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(); }).catch(() => {});
 function placeBug() {
-  const label = info[ids[cur]]?.label;
+  const label = info[sub || ids[cur]]?.label;
   const c = corners.labels?.[label] || corner;
   $("bug").className = "bug " + c;
 }
 
 let player = null, cur = -1, nowTimer = null, failures = 0, finished = false;
+// A video that won't start on this TV (its owner allows it only on YouTube itself, error 150, or it is gone)
+// never leaves our card up for the rest of its time (the owner, 2026-10-07): another of the same kind takes
+// its place (the list's spares first), and when none will play, our own short shows and ads fill the time.
+const bad = new Set(), played = new Set();
+let sub = null, ownOn = false, ownTurn = 0, fillers = [];
+const slotEnd = i => Math.min(end, starts[i] + (secs[i] || 0) * 1000);
+fetch("test-schedule.json", { cache: "no-store" }).then(r => r.json()).then(c => {
+  const by = Object.fromEntries((c.videos || []).map(v => [v.id, v]));
+  fillers = (c.fillers || []).map(id => by[id]).filter(v => v && v.url && !/youtu/.test(v.url));
+}).catch(() => {});
+function sparesFor(id) {
+  const d = Object.values(lists).find(d => (d.videos || []).some(v => v.id === id));
+  if (!d) return [];
+  return [...(d.spares || []), ...(d.videos || [])].filter(v => !bad.has(v.id) && !played.has(v.id) && !ids.includes(v.id));
+}
+function rescue() {
+  if (finished || cur < 0 || slotEnd(cur) - Date.now() < 5000) return;
+  const s = sparesFor(ids[cur])[0];
+  if (s) {
+    sub = s.id;
+    played.add(s.id);
+    stopOwn();
+    cover(true, between(info[ids[cur]]), s.title);
+    player.loadVideoById({ videoId: s.id, startSeconds: 0 });
+    showNow();
+    return;
+  }
+  playOwn();
+}
+function playOwn() {
+  const v = fillers.length ? fillers[ownTurn++ % fillers.length] : null;
+  if (!v) return;
+  ownOn = true;
+  sub = null;
+  $("now").classList.add("hide");
+  try { player.stopVideo(); } catch {}
+  const el = $("own");
+  el.hidden = false;
+  el.muted = !app && !$("sound").hidden;
+  el.src = v.url;
+  el.play().catch(() => { el.muted = true; el.play().catch(() => {}); });
+  $("cover").classList.add("off");
+}
+function stopOwn() {
+  if (!ownOn) return;
+  ownOn = false;
+  const el = $("own");
+  el.pause(); el.removeAttribute("src"); el.load(); el.hidden = true;
+}
+let ownErrors = 0;
+$("own").onplaying = () => { ownErrors = 0; };
+$("own").onended = $("own").onerror = e => {
+  if (!ownOn) return;
+  const broken = e.type === "error" && ++ownErrors >= fillers.length;
+  if (!broken && slotEnd(cur) - Date.now() > 3000) setTimeout(() => ownOn && playOwn(), e.type === "error" ? 1000 : 0);
+  else { stopOwn(); cover(true, between(info[ids[cur]]), "اگلا پروگرام"); }
+};
 const indexAt = t => { for (let i = 0; i < ids.length; i++) if (t < starts[i] + (secs[i] || 0) * 1000) return i; return -1; };
 
 function finish() {
@@ -130,7 +191,7 @@ function cover(on, title, sub) {
   else coverTimer = setTimeout(() => $("cover").classList.add("off"), 3500);
 }
 function showNow() {
-  const v = info[ids[cur]];
+  const v = info[sub || ids[cur]];
   placeBug();
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = v ? v.title : "اب دیکھیے";
@@ -142,6 +203,8 @@ function showNow() {
 }
 function load(i, offset) {
   cur = i;
+  sub = null;
+  stopOwn();
   const v = info[ids[i]];
   const prev = i > 0 ? info[ids[i - 1]] : null;
   // A new language gets its own card: "آنے والی ہندی فلمیں", "مقبول اردو گانے".
@@ -149,6 +212,7 @@ function load(i, offset) {
     cover(true, isMusic(v) ? `مقبول ${langOf(v)} گانے` : `آنے والی ${langOf(v)} فلمیں`, between(v));
   else if (v && (!prev || prev.kind !== v.kind)) cover(true, between(v), v.title);
   else cover(true, between(v), v ? v.title : "");
+  if (bad.has(ids[i])) return rescue();
   player.loadVideoById({ videoId: ids[i], startSeconds: Math.max(0, offset) });
   showNow();
 }
@@ -189,19 +253,27 @@ window.onYouTubeIframeAPIReady = () => {
         setInterval(step, 1000);
       },
       onStateChange: e => {
-        if (e.data === YT.PlayerState.PLAYING) { cover(false); started = true; failures = 0; }
+        if (e.data === YT.PlayerState.PLAYING) { if (ownOn) { e.target.stopVideo(); return; } cover(false); started = true; failures = 0; }
         else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
         // It never stays paused; at the end of a trailer our card waits for the next one's turn.
         else if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
-        else if (e.data === YT.PlayerState.ENDED) cover(true, between(info[ids[cur]]), "اگلا پروگرام");
+        // A video shorter than its time: the next spare, or our own short shows.
+        else if (e.data === YT.PlayerState.ENDED) { cover(true, between(info[ids[cur]]), "اگلا پروگرام"); rescue(); }
       },
-      // A video its owner won't let others play: our card until the next one. When none will play, our own player goes on.
-      onError: e => { lastError = e.data; cover(true, between(info[ids[cur]]), "اگلا پروگرام"); if (++failures >= 4) fallBack(); },
+      // A video its owner won't let others play: another in its place (rescue). When YouTube never plays here at all,
+      // our own player goes on.
+      onError: e => {
+        lastError = e.data;
+        if (cur >= 0) bad.add(sub || ids[cur]);
+        cover(true, between(info[ids[cur]]), "اگلا پروگرام");
+        if (++failures >= 4 && !started && !fillers.length) fallBack();
+        else rescue();
+      },
     },
   });
 };
 $("shield").onclick = showNow;
-$("sound").onclick = () => { player.unMute(); player.playVideo(); $("sound").hidden = true; };
+$("sound").onclick = () => { player.unMute(); if (ownOn) $("own").muted = false; else player.playVideo(); $("sound").hidden = true; };
 document.addEventListener("keydown", e => {
   if (e.key === "Enter" || e.key === " ") { showNow(); e.preventDefault(); }
   if (e.key === "MediaPlayPause" || e.key === "MediaPause" || e.key === "k") e.preventDefault();
