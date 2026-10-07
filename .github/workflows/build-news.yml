@@ -23,7 +23,10 @@ on:
         description: "headlines, full, both, auto (the one due next) or probe (check feeds only)"
         required: false
         default: "auto"
+  # Only main may rebuild the on-air bulletins on a code change: pushes on other branches used to upload
+  # their own versions and cancel the scheduled runs waiting in the same queue.
   push:
+    branches: [main]
     paths:
       - "tools/news/**"
       - ".github/workflows/build-news.yml"
