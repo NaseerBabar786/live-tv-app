@@ -1,24 +1,24 @@
 {
  "name": "مقبول گانے",
- "built": "2026-10-07 04:28 UTC",
- "secs": 2911,
+ "built": "2026-10-07 08:44 UTC",
+ "secs": 2999,
  "videos": [
   {
-   "id": "ylwSKPnFb_8",
-   "title": "Chehra - Official Music Video | Mitta Ror ft. Swara Verma",
-   "label": "Zee Music",
+   "id": "7V-6AUGBgBY",
+   "title": "Achha Sila Diya 8K Video Song | Jaani,B Praak | Nora F,Rajkummar R | Nikhil-Vinay,Yogesh |Bhushan K",
+   "label": "T-Series",
    "lang": "Hindi",
-   "secs": 227,
+   "secs": 319,
    "found": "2026-10-07",
    "kind": "music",
    "section": "مقبول ہندی گانے"
   },
   {
-   "id": "-WlM9FPV8Bs",
-   "title": "Gud Naal Ishq Mitha 8K Video Song | I Love New Year | Sunny Deol | Kangana Ranaut",
-   "label": "T-Series",
+   "id": "f0gp7_H-5nE",
+   "title": "Main Udega - Official Song | Amit Trivedi | Junaid Ahmed | Sidhant Mago",
+   "label": "Zee Music",
    "lang": "Hindi",
-   "secs": 148,
+   "secs": 215,
    "found": "2026-10-07",
    "kind": "music"
   },
@@ -50,29 +50,29 @@
    "kind": "music"
   },
   {
-   "id": "CNOASnEEc_M",
-   "title": "O Bharat Mere - Full Video | Bharat Bhhagya Viddhaata | Kangana Ranaut | Prabhjee, Krsna Solo, Manoj",
-   "label": "Zee Music",
-   "lang": "Hindi",
-   "secs": 221,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "bTeZIuPjBfA",
-   "title": "INSHALLAH (Official Video) - Samarthh Jurel | Mishikka Chaurasia | Shahzad Ali | Palash Muchhal",
+   "id": "eDf4eomXTao",
+   "title": "Wafa Na Raas Aayee 8K Video Song | Jubin Nautiyal | Himansh K, Arushi N, Meet Bros | Rashmi V",
    "label": "T-Series",
    "lang": "Hindi",
-   "secs": 254,
+   "secs": 304,
    "found": "2026-10-07",
    "kind": "music"
   },
   {
-   "id": "ujtwJ2z7QrY",
-   "title": "Kaho Na Kaho - 8K/4K Music Video | Emraan Hashmi, Mallika Sherawat | Amir Jamal | Anu Malik | Murder",
-   "label": "Sony Music India",
+   "id": "ylwSKPnFb_8",
+   "title": "Chehra - Official Music Video | Mitta Ror ft. Swara Verma",
+   "label": "Zee Music",
    "lang": "Hindi",
-   "secs": 275,
+   "secs": 227,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "-WlM9FPV8Bs",
+   "title": "Gud Naal Ishq Mitha 8K Video Song | I Love New Year | Sunny Deol | Kangana Ranaut",
+   "label": "T-Series",
+   "lang": "Hindi",
+   "secs": 148,
    "found": "2026-10-07",
    "kind": "music"
   },
