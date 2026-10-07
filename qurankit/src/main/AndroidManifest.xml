@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- The recitation audio streams from everyayah.com. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Lets the app find the device's text-to-speech engine for the Qaida letter sounds. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+</manifest>

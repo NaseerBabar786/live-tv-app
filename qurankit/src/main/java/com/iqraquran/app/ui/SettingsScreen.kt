@@ -1,8 +1,5 @@
 package com.iqraquran.app.ui
 
-import com.iqraquran.app.data.OwnerTest
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,8 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iqraquran.app.data.TranslationMode
 
+/** Settings. [footer] adds the hosting app's own lines at the bottom (Iqra Quran: its version and test updates). */
 @Composable
-fun SettingsScreen(vm: AppViewModel, version: String) {
+fun SettingsScreen(vm: AppViewModel, footer: @Composable () -> Unit = {}) {
     Column(Modifier.fillMaxSize()) {
         TopBar(S.settings.get(), onBack = { vm.back() })
         Column(
@@ -36,18 +34,21 @@ fun SettingsScreen(vm: AppViewModel, version: String) {
                 Choice("اردو", vm.lang == Lang.Ur) { vm.setLanguage(Lang.Ur) }
                 Choice("English", vm.lang == Lang.En) { vm.setLanguage(Lang.En) }
             }
-            Heading(S.readingTheme.get())
+            // Inside Cable TV the colours follow Cable TV's theme, so only line spacing is offered.
+            Heading(if (vm.themeLocked) S.lineSpacing.get() else S.readingTheme.get())
             ThemePicker(vm)
-            Heading(S.homeColors.get())
-            listOf("kids" to S.kids, "read" to S.read, "hifz" to S.hifz, "continue" to S.continueReading).forEach { (key, label) ->
-                Text(label.get(), fontWeight = FontWeight.SemiBold)
-                ChoiceRow {
-                    HomeTiles.swatches.forEach { c ->
-                        Swatch(c, vm.tileColor(key) == c) { vm.chooseTileColor(key, c) }
+            if (!vm.themeLocked) {
+                Heading(S.homeColors.get())
+                listOf("kids" to S.kids, "read" to S.read, "hifz" to S.hifz, "continue" to S.continueReading).forEach { (key, label) ->
+                    Text(label.get(), fontWeight = FontWeight.SemiBold)
+                    ChoiceRow {
+                        HomeTiles.swatches.forEach { c ->
+                            Swatch(c, vm.tileColor(key) == c) { vm.chooseTileColor(key, c) }
+                        }
                     }
                 }
+                ChoiceRow { Choice(S.resetColors.get(), false) { vm.chooseTileColor(null, null) } }
             }
-            ChoiceRow { Choice(S.resetColors.get(), false) { vm.chooseTileColor(null, null) } }
             Heading(S.translation.get())
             ChoiceRow {
                 listOf(
@@ -71,13 +72,7 @@ fun SettingsScreen(vm: AppViewModel, version: String) {
             }
             Heading(S.credits.get())
             Text(S.creditsText.get(), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            val context = LocalContext.current
-            Text(
-                "${S.version.get()} $version",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.clickable { OwnerTest.tap(context) }, // 7 taps: owner's test updates
-            )
-            TestVersionButton()
+            footer()
         }
     }
 }

@@ -22,8 +22,8 @@ android {
         create("livetv") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetv"
-            versionCode = 239
-            versionName = "1.10.0"
+            versionCode = 242
+            versionName = "1.10.3"
             // The TV sign-in client secret comes from the TV_CLIENT_SECRET repository secret,
             // so it stays out of the public code.
             buildConfigField("String", "TV_CLIENT_SECRET", "\"${System.getenv("TV_CLIENT_SECRET") ?: ""}\"")
@@ -58,9 +58,14 @@ android {
     sourceSets {
         getByName("player").java.srcDir("src/store/java")
         getByName("plus").java.srcDir("src/store/java")
+        // Iqra Quran is built into Cable TV only (its top-bar button); the other apps get an empty stand-in.
+        getByName("livetv").java.srcDir("src/quran/java")
+        getByName("player").java.srcDir("src/noquran/java")
+        getByName("plus").java.srcDir("src/noquran/java")
         // Live TV Max is built from Cable TV's own code and pictures, plus its icon in src/max.
         getByName("max") {
             java.srcDir("src/livetv/java")
+            java.srcDir("src/noquran/java")
             res.srcDir("src/livetv/res")
             assets.srcDir("src/livetv/assets")
         }
@@ -131,6 +136,8 @@ dependencies {
     "livetvImplementation"("androidx.credentials:credentials-play-services-auth:1.3.0")
     "livetvImplementation"("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     "livetvImplementation"("com.google.zxing:core:3.5.3")
+    // Iqra Quran's screens, text and recitation, shared with the Iqra Quran app.
+    "livetvImplementation"(project(":qurankit"))
     "maxImplementation"("androidx.credentials:credentials:1.3.0")
     "maxImplementation"("androidx.credentials:credentials-play-services-auth:1.3.0")
     "maxImplementation"("com.google.android.libraries.identity.googleid:googleid:1.1.1")

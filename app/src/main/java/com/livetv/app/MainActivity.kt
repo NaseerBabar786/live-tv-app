@@ -51,6 +51,9 @@ class MainActivity : ComponentActivity() {
     /** Cable TV's Games section is open. */
     private var showGames by mutableStateOf(false)
 
+    /** Cable TV's Iqra Quran section is open. */
+    private var showQuran by mutableStateOf(false)
+
     /** Our YouTube-run channels that couldn't play there this session; their free-film schedule plays instead. */
     private var fellBack by mutableStateOf(setOf<String>())
 
@@ -85,6 +88,8 @@ class MainActivity : ComponentActivity() {
         val page = playing?.let { block ?: MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
         if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
+        } else if (showQuran && playing == null) {
+            QuranSection.Screen(onClose = { showQuran = false })
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
         } else if (playing != null && page != null && playing.url !in fellBack && page !in fellBack) {
@@ -134,6 +139,7 @@ class MainActivity : ComponentActivity() {
                 onOpenVod = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) showVod = true }) else null,
                 onOpenVodItem = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) { vodStart = it; showVod = true } }) else null,
                 onOpenGames = if (Edition.LIVE_TV) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
+                onOpenQuran = if (QuranSection.AVAILABLE) ({ showQuran = true }) else null,
                 onWatch = viewModel::watched,
             )
         }

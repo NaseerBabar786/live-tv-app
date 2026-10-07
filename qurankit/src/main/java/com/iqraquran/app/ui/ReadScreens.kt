@@ -299,7 +299,7 @@ private fun ReadOptions(vm: AppViewModel, kids: Boolean) {
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Text(S.theme.get(), fontWeight = FontWeight.SemiBold)
+        if (!vm.themeLocked) Text(S.theme.get(), fontWeight = FontWeight.SemiBold)
         ThemePicker(vm, compact = true)
         Text(S.translation.get(), fontWeight = FontWeight.SemiBold)
         ChoiceRow {

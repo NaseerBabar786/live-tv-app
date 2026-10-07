@@ -114,6 +114,7 @@ import androidx.compose.material.icons.filled.ViewDay
 import androidx.compose.material.icons.filled.VerticalSplit
 import androidx.compose.material.icons.filled.ViewSidebar
 import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -195,6 +196,8 @@ fun ChannelListScreen(
     onOpenVodItem: ((VodTarget) -> Unit)? = null,
     /** Opens the Games section; null hides its button. */
     onOpenGames: (() -> Unit)? = null,
+    /** Opens the Iqra Quran section; null hides its button. */
+    onOpenQuran: (() -> Unit)? = null,
     /** A channel picked to play in 1+List's player, remembered as the last one watched. */
     onWatch: (Channel) -> Unit = {},
 ) {
@@ -626,6 +629,22 @@ fun ChannelListScreen(
                             }
                         }
                     }
+                    if (onOpenQuran != null) {
+                        if (wideScreen) {
+                            TextButton(
+                                onClick = onOpenQuran,
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusGlow(),
+                            ) {
+                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null)
+                                Text("Iqra Quran", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
+                        } else {
+                            IconButton(onClick = onOpenQuran, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = "Iqra Quran")
+                            }
+                        }
+                    }
                     IconButton(
                         onClick = {
                             previewSound = !previewSound
@@ -727,6 +746,7 @@ fun ChannelListScreen(
                         onNextMode = if (wideScreen || phone) ({ modesOpen = true }) else null,
                         onOpen = onPlay,
                         onOpenGames = onOpenGames,
+                        onOpenQuran = onOpenQuran,
                         onOpenVodItem = onOpenVodItem,
                         onOpenSettings = { showSettings = true },
                         onRailFocused = { topBarFocused = it },

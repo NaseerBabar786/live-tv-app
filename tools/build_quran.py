@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Builds the Quran text that Iqra Quran ships inside the app (quran/src/main/assets/quran).
+"""Builds the Quran text that Iqra Quran ships inside the app (qurankit/src/main/assets/quran).
 
 - quran.json: the 114 surahs with their names and the Arabic text in the Indo-Pak script
   (as published by the Quran Foundation, api.quran.com).
@@ -16,7 +16,7 @@ import time
 import urllib.request
 
 API = "https://api.quran.com/api/v4"
-OUT = os.path.join(os.path.dirname(__file__), "..", "quran", "src", "main", "assets", "quran")
+OUT = os.path.join(os.path.dirname(__file__), "..", "qurankit", "src", "main", "assets", "quran")
 
 # Translations, picked by name so a changed resource id can't swap in a different work.
 TRANSLATIONS = {

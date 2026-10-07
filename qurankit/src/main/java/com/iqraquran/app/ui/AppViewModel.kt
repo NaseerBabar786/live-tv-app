@@ -18,8 +18,8 @@ import com.iqraquran.app.data.Store
 import com.iqraquran.app.data.TranslationMode
 import com.iqraquran.app.player.AyahPlayer
 import com.iqraquran.app.player.Speaker
-import java.time.LocalDate
 import java.util.Locale
+import java.util.TimeZone
 import java.util.UUID
 import kotlinx.coroutines.launch
 
@@ -92,8 +92,15 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     var tileColors by mutableStateOf(HomeTiles.keys.associateWith { store.tileColor(it) })
         private set
 
+    /**
+     * Set by an app that hosts these screens with its own look (Cable TV): the colours then follow
+     * that app's theme and the theme choices are hidden.
+     */
+    var fixedPalette by mutableStateOf<Palette?>(null)
+    val themeLocked: Boolean get() = fixedPalette != null
+
     /** The reading theme in use. */
-    val palette: Palette get() = Palettes.byId(themeId, customBackground, customText, customExtra)
+    val palette: Palette get() = fixedPalette ?: Palettes.byId(themeId, customBackground, customText, customExtra)
 
     var profiles by mutableStateOf(store.profiles)
         private set
@@ -115,7 +122,11 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch { quran = Quran.load(app) }
     }
 
-    fun today(): Long = LocalDate.now().toEpochDay()
+    /** Today as days since 1 Jan 1970 in local time (like LocalDate.toEpochDay, which needs Android 8). */
+    fun today(): Long {
+        val now = System.currentTimeMillis()
+        return (now + TimeZone.getDefault().getOffset(now)).floorDiv(86_400_000L)
+    }
 
     // Navigation
 

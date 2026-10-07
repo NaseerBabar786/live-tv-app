@@ -34,6 +34,20 @@ import androidx.compose.ui.unit.sp
 fun ThemePicker(vm: AppViewModel, compact: Boolean = false) {
     val custom = Palettes.custom(vm.customBackground, vm.customText, vm.customExtra)
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (!vm.themeLocked) ThemeChoices(vm, custom, compact)
+        Text(S.lineSpacing.get(), fontWeight = FontWeight.SemiBold)
+        ChoiceRow {
+            listOf(S.normal, S.wide, S.wider).forEachIndexed { i, label ->
+                Choice(label.get(), vm.lineSpacing == i) { vm.chooseLineSpacing(i) }
+            }
+        }
+    }
+}
+
+/** The theme tiles and, for Custom, its colour rows. */
+@Composable
+private fun ThemeChoices(vm: AppViewModel, custom: Palette, compact: Boolean) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ChoiceRow {
             (Palettes.presets + custom).forEach { p ->
                 ThemeTile(p, selected = vm.themeId == p.id, compact = compact) { vm.chooseTheme(p) }
@@ -52,12 +66,6 @@ fun ThemePicker(vm: AppViewModel, compact: Boolean = false) {
             ColourRow(S.barColour.get(), HomeTiles.swatches, p.bar) { vm.chooseCustomColor("bar", it) }
             ColourRow(S.letterCardColour.get(), Palettes.backgrounds, p.letterCard) { vm.chooseCustomColor("letterCard", it) }
             ColourRow(S.letterTextColour.get(), Palettes.textColors, p.letterText) { vm.chooseCustomColor("letterText", it) }
-        }
-        Text(S.lineSpacing.get(), fontWeight = FontWeight.SemiBold)
-        ChoiceRow {
-            listOf(S.normal, S.wide, S.wider).forEachIndexed { i, label ->
-                Choice(label.get(), vm.lineSpacing == i) { vm.chooseLineSpacing(i) }
-            }
         }
     }
 }

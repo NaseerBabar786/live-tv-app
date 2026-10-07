@@ -31,6 +31,7 @@ import com.iqraquran.app.ui.SettingsScreen
 import com.iqraquran.app.ui.SurahListScreen
 import com.iqraquran.app.ui.UpdateDialog
 import com.iqraquran.app.ui.UpdateViewModel
+import com.iqraquran.app.ui.VersionFooter
 import com.iqraquran.app.ui.pendingRelease
 
 class MainActivity : ComponentActivity() {
@@ -63,7 +64,7 @@ class MainActivity : ComponentActivity() {
                         Screen.HifzHome -> HifzHomeScreen(vm)
                         is Screen.HifzSetup -> HifzSetupScreen(vm, s.surah)
                         is Screen.HifzSession -> HifzSessionScreen(vm, s)
-                        Screen.Settings -> SettingsScreen(vm, updates.installedVersion)
+                        Screen.Settings -> SettingsScreen(vm) { VersionFooter(updates.installedVersion) }
                     }
                     val update by updates.update.collectAsStateWithLifecycle()
                     UpdateDialog(

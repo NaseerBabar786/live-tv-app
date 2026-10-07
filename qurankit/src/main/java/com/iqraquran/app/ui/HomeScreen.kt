@@ -48,7 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iqraquran.app.R
+import com.iqraquran.kit.R
 import com.iqraquran.app.data.Profile
 
 @Composable
@@ -69,7 +69,7 @@ fun HomeScreen(vm: AppViewModel) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
             Image(
-                painterResource(R.drawable.ic_logo),
+                painterResource(R.drawable.iqra_logo),
                 contentDescription = null,
                 modifier = Modifier.size(if (wide) 72.dp else 60.dp).clip(RoundedCornerShape(18.dp)),
             )

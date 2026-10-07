@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.iqraquran.app.R
+import com.iqraquran.kit.R
 
 val Green = Color(0xFF0B5D45)
 val GreenDark = Color(0xFF06261D)
