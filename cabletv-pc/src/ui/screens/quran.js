@@ -1,5 +1,5 @@
 // Iqra Quran inside Cable TV (QuranSection.kt in the TV app): the same screens as the Iqra Quran app
-// (qurankit: HomeScreen.kt, QaidaScreens.kt, ReadScreens.kt, HifzScreens.kt, SettingsScreen.kt, kept
+// (qurankit: HomeScreen.kt, QaidaScreens.kt, ReadScreens.kt, HifzScreens.kt, PrayerScreens.kt, SettingsScreen.kt, kept
 // in AppViewModel.kt's order), drawn in Cable TV's colours so it feels part of the app. Recitation is
 // one MP3 per ayah from everyayah.com (AyahPlayer.kt); Qaida letters are read by the PC's own Arabic
 // voice (Speaker.kt). Back steps back through the Quran screens, then from its home to Cable TV.
@@ -7,6 +7,8 @@ import { h, dialog } from '../dom.js';
 import * as nav from '../nav.js';
 import * as store from '../store.js';
 import * as Q from '../quran.js';
+import * as P from '../prayer.js';
+import * as azan from '../azan.js';
 
 // ---------- Words on screen, in English and Urdu (Strings.kt) ----------
 
@@ -98,6 +100,38 @@ const S = {
   wider: ['Wider', 'اور زیادہ'],
   learner: ['Learner', 'طالب علم'],
 };
+
+/** Text for the Namaz screens (PS in PrayerScreens.kt). */
+const PS = {
+  namaz: ['Namaz', 'نماز'],
+  namazSub: ['Prayer times and Azan', 'نماز کے اوقات اور اذان'],
+  now: ['NOW', 'اب'],
+  next: ['Next', 'اگلی'],
+  azanSettings: ['Azan settings', 'اذان کی ترتیبات'],
+  findingPlace: ['Finding your area for the prayer times…', 'نماز کے اوقات کے لیے آپ کا علاقہ معلوم کیا جا رہا ہے…'],
+  tapBell: ['Press the bell beside a prayer to choose: Azan, chime, message or off.', 'ہر نماز کے ساتھ گھنٹی دبا کر چنیں: اذان، گھنٹی، پیغام یا بند۔'],
+  muezzin: ['Muezzin (Azan voice)', 'مؤذن (اذان کی آواز)'],
+  fajrMuezzin: ['Fajr Azan', 'فجر کی اذان'],
+  sameAsOthers: ['Same as the others', 'باقی نمازوں جیسی'],
+  volume: ['Azan volume', 'اذان کی آواز'],
+  reminder: ['Reminder before each prayer', 'ہر نماز سے پہلے یاد دہانی'],
+  off: ['Off', 'بند'],
+  minutesShort: ['min', 'منٹ'],
+  quiet: ['Quiet hours (Azan becomes a message)', 'خاموش اوقات (اذان کی جگہ صرف پیغام)'],
+  method: ['Fajr and Isha calculation', 'فجر اور عشاء کا حساب'],
+  automatic: ['Automatic', 'خودکار'],
+  asr: ['Asr time', 'عصر کا وقت'],
+  hijriAdjust: ['Islamic date: move by days', 'اسلامی تاریخ: دنوں میں تبدیلی'],
+  place: ['Your area', 'آپ کا علاقہ'],
+  findAgain: ['Find my area again', 'علاقہ دوبارہ معلوم کریں'],
+  testAzan: ['Hear it', 'سنیں'],
+  recordings: ['Azan recordings', 'اذان کی ریکارڈنگز'],
+  noVoices: ['The Azan recordings are loading. Check the internet.', 'اذان کی ریکارڈنگز لوڈ ہو رہی ہیں۔ انٹرنیٹ چیک کریں۔'],
+  comingUp: ['coming up in', 'باقی وقت'],
+  pcNote: ['The Azan plays while Cable TV is open on this PC, with a Windows notification.', 'اذان اس وقت چلتی ہے جب یہ کمپیوٹر پر Cable TV کھلا ہو، ساتھ ونڈوز کی اطلاع بھی آتی ہے۔'],
+};
+/** The bell on the timeline for each mode. */
+const MODE_ICON = { Azan: '🔊', Chime: '🔔', Message: '💬', Off: '🔕' };
 
 /** Bright colours for the kids' lesson tiles and learners (KidColors in Theme.kt). */
 const KID_COLORS = ['#26A69A', '#EF6C00', '#7E57C2', '#29B6F6', '#EC407A', '#9CCC65', '#FFA726', '#5C6BC0'];
@@ -339,7 +373,7 @@ export function openQuran({ onClose }) {
 
   // ---------- Moving between screens ----------
 
-  function quiet() { player.stop(); speaker.stop(); }
+  function quiet() { player.stop(); speaker.stop(); azan.stopSample(); }
   function open(s) { quiet(); stack.push(s); render(); }
   /** Replaces the current screen, e.g. lesson to quiz. */
   function replace(s) { quiet(); stack[stack.length - 1] = s; render(); }
@@ -360,7 +394,7 @@ export function openQuran({ onClose }) {
     applyLook();
     const s = stack[stack.length - 1];
     // Qaida needs only its own lessons; the rest waits for the Quran text and the reciters.
-    const needsText = !['home', 'qaidaMap', 'lesson', 'quiz'].includes(s.name);
+    const needsText = !['home', 'qaidaMap', 'lesson', 'quiz', 'prayer', 'azanSettings'].includes(s.name);
     screen = needsText && (!quran || !reciters.length) ? loadingScreen() : SCREENS[s.name](s);
     root.innerHTML = '';
     root.appendChild(screen.el);
@@ -449,11 +483,22 @@ export function openQuran({ onClose }) {
       return chip;
     }), state.profiles.length < 6 ? (() => { const b = btn('button.quran-chip.quran-add', 'add', () => profileDialog(null), '+'); b.title = t(S.addProfile); return b; })() : null);
 
+    // The next prayer and the time left, else what the section is; it moves on every 20 seconds.
+    const namaz = bigTile('namaz', t(PS.namaz), '', KID_COLORS[7], '🕌', () => open({ name: 'prayer', ret: 'namaz' }));
+    const namazSub = () => {
+      const next = P.around(azan.settings())?.[1];
+      const p = next && P.prayerById(next[0]);
+      namaz.querySelector('.quran-tile-sub').textContent = p ? `${tr(p.en, p.ur)} · ${countdown(next[1] - Date.now())}` : t(PS.namazSub);
+    };
+    namazSub();
+    const namazTimer = setInterval(namazSub, 20000);
+    const offAzan = azan.onChange(namazSub);
     const kids = bigTile('kids', t(S.kids), t(S.kidsSub), KID_COLORS[1], '🧒', () => open({ name: 'qaidaMap', ret: 'kids' }));
     const tiles = h('div.quran-tiles',
       kids,
       bigTile('read', t(S.read), t(S.readSub), KID_COLORS[0], '📖', () => open({ name: 'surahs', forHifz: false, kids: false, ret: 'read' })),
-      bigTile('hifz', t(S.hifz), t(S.hifzSub), KID_COLORS[2], '🧠', () => open({ name: 'hifzHome', ret: 'hifz' })));
+      bigTile('hifz', t(S.hifz), t(S.hifzSub), KID_COLORS[2], '🧠', () => open({ name: 'hifzHome', ret: 'hifz' })),
+      namaz);
     const last = state.lastRead;
     let cont = null;
     if (last && quran) {
@@ -465,7 +510,7 @@ export function openQuran({ onClose }) {
     // The Quran text loads in the background, then "Continue reading" appears.
     if (!quran && last) loadQuran().then((q) => { quran = q; if (stack.length === 1 && root.isConnected) redraw(); }).catch(() => {});
     const el = h('div.quran-screen', h('div.quran-body.quran-home', head, verse, heading(t(S.profiles)), chips, tiles, cont));
-    return { el, first: kids };
+    return { el, first: kids, cleanup: () => { clearInterval(namazTimer); offAzan(); } };
   }
 
   function profileDialog(p) {
@@ -838,7 +883,160 @@ export function openQuran({ onClose }) {
     return { el, first: ur };
   }
 
+  // ---------- Namaz (PrayerScreens.kt) ----------
+
+  const countdown = (ms) => P.countdown(ms, t(PS.minutesShort), state.lang === 'ur' ? 'گھنٹے' : null);
+  const minutesOfDay = (ms) => { const d = new Date(ms); return d.getHours() * 60 + d.getMinutes(); };
+
+  /** Redraws the Namaz screens after a setting changes, and every 20 seconds as the clock moves. */
+  function live() {
+    const off = azan.onChange(() => redraw());
+    const timer = setInterval(() => redraw(), 20000);
+    return () => { off(); clearInterval(timer); };
+  }
+
+  /** Today's prayers on a timeline, with a bell per prayer and the time left to the next one. */
+  function prayerScreen() {
+    const s = azan.settings();
+    const now = Date.now();
+    const gear = round('azanSettings', t(PS.azanSettings), '⚙', () => open({ name: 'azanSettings', ret: 'azanSettings' }));
+    gear.classList.add('quran-plain');
+    const bar = topBar(t(PS.namaz), back, gear);
+    const times = P.timesFor(s, 0, now);
+    if (!times) {
+      azan.refreshPlace();
+      const { el } = screenEl(bar, h('p.quran-big', t(PS.findingPlace)));
+      return { el, first: gear, cleanup: live() };
+    }
+    const line = timeline(s, times, now);
+    const { el } = screenEl(bar, h('div.namaz',
+      h('div.namaz-col', line),
+      h('div.namaz-col', dateCard(s, now), nextCard(s, now), h('p.quran-muted', t(PS.tapBell)), h('p.quran-muted', t(PS.pcNote)), placeLine(s))));
+    return { el, first: line.querySelector('[data-focus]'), cleanup: live() };
+  }
+
+  function dateCard(s, now) {
+    const d = new Date(now);
+    const [hd, hm, hy] = P.hijri(d.getFullYear(), d.getMonth() + 1, d.getDate(), s.hijriAdjust);
+    return h('div.namaz-date',
+      h('div.namaz-weekday', d.toLocaleDateString([], { weekday: 'long' })),
+      h('div.quran-muted', d.toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' })),
+      h('div.namaz-hijri', `${hd} ${(state.lang === 'ur' ? P.HIJRI_UR : P.HIJRI_EN)[hm - 1]} ${hy}`));
+  }
+
+  /** The vertical line: a node per prayer, and between the last prayer and the next a coloured bar with "NOW". */
+  function timeline(s, times, now) {
+    const ar = P.around(s, now);
+    const box = h('div.namaz-line');
+    P.PRAYERS.forEach((p, i) => {
+      const at = P.atMs(0, times[p.id], now);
+      const isCurrent = !!ar && ar[0][0] === p.id && ar[0][1] === at;
+      const isNext = !!ar && ar[1][0] === p.id && ar[1][1] === at;
+      box.append(prayerRow(s, p, times[p.id], isCurrent || isNext, at < now && !isCurrent));
+      if (i < P.PRAYERS.length - 1) {
+        box.append(isCurrent ? progressGap(ar, now) : h(`div.namaz-gap${at < now ? '.past' : ''}`, h('div.namaz-side'), h('div.namaz-node')));
+      }
+    });
+    // After Isha (or before Fajr) the bar runs to tomorrow's Fajr.
+    if (ar && ar[0][0] === 'Isha' && ar[0][1] <= now && ar[1][0] === 'Fajr') {
+      box.append(progressGap(ar, now), h('div.namaz-after', `${tr('Fajr', 'فجر')} · ${P.format(P.timesFor(s, 1, now)?.Fajr ?? 0)}`));
+    }
+    return box;
+  }
+
+  function prayerRow(s, p, minutes, highlight, past) {
+    let bell = null;
+    if (p.hasAzan) {
+      const mode = P.MODES.find((m) => m.id === P.modeOf(s, p.id));
+      bell = btn(`button.namaz-bell${mode.id === 'Off' ? '.off' : ''}`, `bell-${p.id}`, () => azan.setMode(p.id, P.nextMode(mode.id)), MODE_ICON[mode.id]);
+      bell.title = tr(mode.en, mode.ur);
+    }
+    return h(`div.namaz-row${highlight ? '.hl' : ''}${past ? '.past' : ''}`,
+      h('div.namaz-side', bell, h('span.namaz-time', P.format(minutes))),
+      h('div.namaz-node', h('i')),
+      h('div.namaz-name', tr(p.en, p.ur)));
+  }
+
+  /** The time between the last prayer and the next: green, then orange, then red as it runs out, "NOW" where we are. */
+  function progressGap(ar, now) {
+    const span = Math.max(1, ar[1][1] - ar[0][1]);
+    const f = Math.min(1, Math.max(0, (now - ar[0][1]) / span));
+    const color = f < 0.5 ? '#43A047' : f < 0.8 ? '#FFA726' : '#E53935';
+    const top = `clamp(0px, calc(${f * 100}% - 12px), calc(100% - 24px))`;
+    const at = (el) => { el.style.top = top; el.style.color = color; return el; };
+    const dot = h('b');
+    dot.style.top = `${f * 100}%`;
+    dot.style.background = color;
+    return h('div.namaz-progress',
+      h('div.namaz-side', at(h('span.namaz-now-time', P.format(minutesOfDay(now))))),
+      h('div.namaz-node.bar', dot),
+      h('div.namaz-now', at(h('span', `${state.lang === 'ur' ? '▸' : '◂'} ${t(PS.now)} · ${countdown(ar[1][1] - now)}`))));
+  }
+
+  /** The next prayer, big, with the time left. */
+  function nextCard(s, now) {
+    const next = P.around(s, now)?.[1];
+    if (!next) return null;
+    const p = P.prayerById(next[0]);
+    return h('div.namaz-next',
+      h('div.namaz-next-label', t(PS.next)),
+      h('div.namaz-next-name', `${tr(p.en, p.ur)} · ${P.format(minutesOfDay(next[1]))}`),
+      h('div.namaz-next-left', `${t(PS.comingUp)} ${countdown(next[1] - now)}`));
+  }
+
+  function placeLine(s) {
+    if (!s.place) return null;
+    const m = P.methodInUse(s);
+    return h('p.quran-muted', `📍 ${[s.place.city, s.place.country].filter(Boolean).join(', ')} · ${tr(m.en, m.ur)}`);
+  }
+
+  /** Muezzin, volume, reminder, quiet hours, calculation and place. */
+  function azanSettingsScreen() {
+    const a = azan.settings();
+    const voices = azan.voices();
+    if (!voices.length) azan.refreshVoices();
+    const body = [heading(t(PS.namaz))];
+    for (const p of P.WITH_AZAN) {
+      body.push(h('div.namaz-mode-label', tr(p.en, p.ur)),
+        choiceRow(P.MODES.map((m) => choice(`mode-${p.id}-${m.id}`, tr(m.en, m.ur), P.modeOf(a, p.id) === m.id, () => azan.setMode(p.id, m.id)))));
+    }
+    const voiceRow = (k, label, selected, id, onPick) => {
+      const playing = azan.samplePlaying() === id;
+      return h('div.quran-choices',
+        round(`${k}-play-${id}`, playing ? t(S.stop) : t(PS.testAzan), playing ? '■' : '▶', () => {
+          if (playing) azan.stopSample(); else azan.playSample(id, () => redraw());
+          redraw();
+        }),
+        choice(`${k}-${id}`, label, selected, onPick));
+    };
+    const chosen = P.voiceById(voices, a.voiceId)?.id;
+    body.push(heading(t(PS.muezzin)));
+    if (!voices.length) body.push(h('p.quran-muted', t(PS.noVoices)));
+    voices.filter((v) => !v.fajr).forEach((v) => body.push(voiceRow('voice', tr(v.en, v.ur), chosen === v.id, v.id, () => azan.set('voiceId', v.id))));
+    body.push(heading(t(PS.fajrMuezzin)), choiceRow(choice('fajr-same', t(PS.sameAsOthers), !a.fajrVoiceId, () => azan.set('fajrVoiceId', ''))));
+    voices.forEach((v) => body.push(voiceRow('fajr', tr(v.en, v.ur), a.fajrVoiceId === v.id, v.id, () => azan.set('fajrVoiceId', v.id))));
+    body.push(stepper('volume', t(PS.volume), Math.round(a.volume / 10), 1, 10, '0%', (x) => azan.set('volume', x * 10)));
+    body.push(heading(t(PS.reminder)), choiceRow([0, 5, 10, 15, 30].map((m) =>
+      choice(`rem-${m}`, m === 0 ? t(PS.off) : `${m} ${t(PS.minutesShort)}`, a.reminder === m, () => azan.set('reminder', m)))));
+    body.push(heading(t(PS.quiet)), choiceRow([[0, 0], [22, 6], [23, 5], [0, 5]].map(([from, to]) =>
+      choice(`quiet-${from}-${to}`, from === to ? t(PS.off) : `${P.format(from * 60)} – ${P.format(to * 60)}`, a.quietFrom === from && a.quietTo === to,
+        () => { azan.set('quietFrom', from); azan.set('quietTo', to); }))));
+    const auto = P.methodForCountry(a.place?.country);
+    body.push(heading(t(PS.method)), choiceRow(
+      choice('method-auto', `${t(PS.automatic)} (${tr(auto.en, auto.ur)})`, !a.method, () => azan.set('method', null)),
+      P.METHODS.map((m) => choice(`method-${m.id}`, tr(m.en, m.ur), a.method === m.id, () => azan.set('method', m.id)))));
+    body.push(heading(t(PS.asr)), choiceRow(P.ASR.map((m) => choice(`asr-${m.id}`, tr(m.en, m.ur), a.asr === m.id, () => azan.set('asr', m.id)))));
+    body.push(stepper('hijri', t(PS.hijriAdjust), a.hijriAdjust, -2, 2, '', (x) => azan.set('hijriAdjust', x)));
+    body.push(heading(t(PS.place)),
+      h('p', a.place ? [a.place.city, a.place.country].filter(Boolean).join(', ') : t(PS.findingPlace)),
+      choiceRow(choice('find', t(PS.findAgain), false, () => azan.refreshPlace(true))));
+    body.push(heading(t(PS.recordings)), ...voices.map((v) => h('p.quran-muted.namaz-credit', `${v.en}: ${v.credit}`)));
+    const { el } = screenEl(topBar(t(PS.azanSettings), back), h('div.quran-form', body));
+    return { el, first: el.querySelector('.quran-form [data-focus]'), cleanup: live() };
+  }
+
   const SCREENS = {
+    prayer: prayerScreen, azanSettings: azanSettingsScreen,
     home: homeScreen, qaidaMap: qaidaMapScreen, lesson: lessonScreen, quiz: quizScreen, surahs: surahsScreen,
     read: readScreen, hifzHome: hifzHomeScreen, hifzSetup: hifzSetupScreen, hifzSession: hifzSessionScreen, settings: settingsScreen,
   };
@@ -860,7 +1058,7 @@ export function openQuran({ onClose }) {
   };
   const onKey = (e) => {
     const typing = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA');
-    if (document.querySelector('.scrim')) return;
+    if (document.querySelector('.scrim, .azan-full')) return;
     if ((e.key === ' ' && !typing) || e.key === 'MediaPlayPause') {
       e.preventDefault();
       e.stopPropagation();
@@ -874,6 +1072,8 @@ export function openQuran({ onClose }) {
   const mediaActions = ['play', 'pause'];
   try { mediaActions.forEach((a) => session?.setActionHandler(a, playPause)); } catch {}
 
+  window.addEventListener('azan-start', quiet);
+
   let closed = false;
   function close() {
     if (closed) return;
@@ -885,6 +1085,7 @@ export function openQuran({ onClose }) {
     document.removeEventListener('keydown', onKey, true);
     document.removeEventListener('keyup', onKey, true);
     try { mediaActions.forEach((a) => session?.setActionHandler(a, null)); } catch {}
+    window.removeEventListener('azan-start', quiet);
     pop();
     root.remove();
     onClose && onClose();

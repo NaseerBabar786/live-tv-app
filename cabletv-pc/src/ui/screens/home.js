@@ -14,6 +14,7 @@ import { fiveMode } from './five.js';
 import { openFull } from './full.js';
 import { openSettings } from './settings.js';
 import { openQuran } from './quran.js';
+import * as azan from '../azan.js';
 
 /** Every mode, in the TV app's order; the ones not on PC yet show as coming soon. */
 export const MODES = [
@@ -213,6 +214,16 @@ export function openHome({ onExit }) {
     });
   }
 
+  // The Azan at prayer time for the whole session (azan.js): the mode on screen pauses while it plays.
+  const stopAzan = azan.startWatcher({
+    pause: () => {
+      if (root.classList.contains('hidden')) return null;
+      current?.pause?.();
+      ads.detach(content);
+      return () => { ads.attach(content, { full: false }); current?.resume?.(); };
+    },
+  });
+
   // ---------- Keys on this screen ----------
   const inTopBar = () => topbar.contains(document.activeElement);
   const pop = nav.push(root, (key) => {
@@ -252,6 +263,7 @@ export function openHome({ onExit }) {
   return {
     destroy() {
       current?.destroy();
+      stopAzan();
       pop();
       unsub();
       unsubPlans();

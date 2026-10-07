@@ -48,4 +48,7 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 - 1.9.96 (PC 1.0.4): packages screen shows Free once (no "Free · free") and Gold at one price a month, $9.99 by default (`settings.js`, `plans.js`).
 - 1.9.100 (PC 1.0.5): the start screen shows only a loading circle while the channels load; no sponsor
   or words, no 5-second countdown (`screens/start.js`).
-- 1.10.3 (PC 1.0.6): Iqra Quran in the top bar: Kids Qaida, Read with recitation, Hifz, in Cable TV's colours (`screens/quran.js`). On PC the Qaida letter sounds use Windows' own Arabic voice when it has one.
+- 1.10.3 (PC 1.0.6): Iqra Quran in the top bar: Kids Qaida, Read with recitation, Hifz, and Namaz (prayer timeline,
+  Azan with muezzin choice, reminders), in Cable TV's colours (`screens/quran.js`, `prayer.js`, `azan.js`). On PC the
+  Qaida letter sounds use Windows' own Arabic voice when it has one, and the Azan plays while the PC app is open
+  (full screen, the channels paused), with a Windows notification for every prayer, chime, message and reminder.

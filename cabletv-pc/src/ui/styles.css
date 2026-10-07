@@ -301,3 +301,58 @@ h2.quran-accent { margin: 6px 0 0; font-size: 22px; }
 .quran-session-ar { font-size: calc(var(--q-size) + 6px); text-align: center; width: 100%; }
 .quran-session-ar.blurred { filter: blur(18px); opacity: .35; }
 .quran-peek { position: absolute; color: var(--secondary); font-weight: 700; font-size: 18px; }
+
+/* ---------- Namaz (PrayerScreens.kt) ---------- */
+.quran-tiles { grid-template-columns: repeat(4, 1fr); }
+.quran-round.quran-plain { background: transparent; color: #fff; }
+.namaz { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+.namaz-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.namaz-line { display: flex; flex-direction: column; --line: color-mix(in srgb, var(--muted) 60%, transparent); }
+.namaz-row, .namaz-gap, .namaz-progress { display: flex; }
+.namaz-row { height: 54px; align-items: center; color: var(--muted); }
+.namaz-row.past { color: color-mix(in srgb, var(--muted) 70%, transparent); }
+.namaz-row.hl { color: var(--text); }
+.namaz-side { width: 170px; flex: none; display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding-inline-end: 10px; position: relative; align-self: stretch; }
+.namaz-time { font-size: 19px; font-weight: 500; }
+.namaz-row.hl .namaz-time { font-size: 22px; font-weight: 700; }
+.namaz-name { padding-inline-start: 12px; font-size: 22px; font-weight: 600; }
+.namaz-row.hl .namaz-name { font-size: 26px; font-weight: 700; }
+.namaz-node { width: 44px; flex: none; position: relative; align-self: stretch; }
+.namaz-node::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; background: var(--line); }
+.namaz-gap.past .namaz-node::before { opacity: .4; }
+.namaz-node i { position: absolute; left: 50%; top: 50%; width: 24px; height: 24px; margin: -12px; border-radius: 50%; border: 3px solid var(--line); background: var(--bg); box-sizing: border-box; }
+.namaz-row.hl .namaz-node i { width: 30px; height: 30px; margin: -15px; border: 4px solid var(--text); }
+.namaz-gap { height: 12px; }
+.namaz-bell { width: 44px; height: 44px; border-radius: 50%; font-size: 20px; }
+.namaz-bell.off { opacity: .55; }
+.namaz-bell:hover { background: var(--surface2); }
+.namaz-progress { height: 120px; font-weight: 700; font-size: 18px; }
+.namaz-node.bar::before { width: 5px; margin-left: -2.5px; background: linear-gradient(#43A047 0 50%, #FFA726 50% 80%, #E53935 80% 100%); }
+.namaz-node.bar b { position: absolute; left: 50%; width: 14px; height: 14px; margin: -7px; border-radius: 50%; }
+.namaz-now-time, .namaz-now span { position: absolute; white-space: nowrap; }
+.namaz-now-time { inset-inline-end: 10px; }
+.namaz-now { flex: 1; position: relative; }
+.namaz-now span { inset-inline-start: 8px; }
+.namaz-after { text-align: center; color: var(--muted); }
+.namaz-date { background: var(--surface2); border-radius: 24px; padding: 12px 20px; text-align: center; }
+.namaz-weekday { font-size: 26px; font-weight: 700; }
+.namaz-hijri { color: var(--secondary); font-size: 17px; font-weight: 600; }
+.namaz-next { background: var(--accent); color: #fff; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 4px; }
+.namaz-next-label { opacity: .8; }
+.namaz-next-name { font-size: 30px; font-weight: 700; }
+.namaz-next-left { color: var(--q-gold); font-size: 20px; font-weight: 600; }
+.namaz-mode-label { font-weight: 600; }
+.namaz-credit { font-size: 13px; margin: 0; }
+
+/* The Azan over everything, and the chime or message banner along the top (azan.js). */
+.azan-full { position: fixed; inset: 0; z-index: 70; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 32px; text-align: center; }
+.azan-akbar { font-family: 'Scheherazade', serif; font-size: 64px; color: var(--secondary); line-height: 1.6; }
+.azan-title { font-size: 36px; font-weight: 700; }
+.azan-time { font-size: 28px; color: var(--muted); }
+.azan-stop { background: var(--secondary); color: #111; font-size: 20px; font-weight: 700; border-radius: 99px; padding: 14px 28px; }
+.azan-stop:focus { box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--focus); }
+.azan-credit { font-size: 12px; color: var(--muted); }
+.azan-banner { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 65; display: flex; align-items: center; gap: 14px; background: var(--accent); color: #fff; border-radius: 20px; padding: 16px 24px; box-shadow: 0 8px 30px rgba(0,0,0,.5); cursor: pointer; }
+.azan-banner-icon { font-size: 30px; }
+.azan-banner-title { font-size: 22px; font-weight: 700; }
+.azan-banner-time { font-size: 17px; opacity: .85; }
