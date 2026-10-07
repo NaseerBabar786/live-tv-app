@@ -88,7 +88,7 @@ function showNow() {
   placeBug(v.label);
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = v.title;
-  $("now").lastChild.textContent = station.name + " · " + (items[cur].trailer ? "Coming soon · " : "") + v.label;
+  $("now").lastChild.textContent = items[cur].clip ? `Coming up on ${station.name}` : station.name + " · " + (items[cur].trailer ? "Coming soon · " : "") + v.label;
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
@@ -109,8 +109,10 @@ function playItem(i, offset = 0) {
     return;
   }
   inBreak = false;
-  target = { id: it.v.id, at: Date.now() - offset * 1000 };
-  player.loadVideoById({ videoId: it.v.id, startSeconds: offset });
+  // A "coming up" clip plays 45 seconds from inside one of the channel's next films.
+  const base = it.clip ? it.start : 0;
+  target = { id: it.v.id, at: Date.now() - offset * 1000, base, item: cur };
+  player.loadVideoById(it.clip ? { videoId: it.v.id, startSeconds: base + offset, endSeconds: base + it.secs } : { videoId: it.v.id, startSeconds: offset });
   showNow();
 }
 /** Like TV, the clock decides what's on: after a programme (or an ad break) the channel goes on wherever it is now. */
@@ -125,8 +127,10 @@ function rejoin(ended) {
 let target = null;
 function keepInStep() {
   if (inBreak || !player || !target || !player.getCurrentTime || player.getPlayerState() !== YT.PlayerState.PLAYING || player.getVideoData?.().video_id !== target.id) return;
-  const want = (Date.now() - target.at) / 1000, have = player.getCurrentTime();
-  if (Math.abs(want - have) > 30 && want < items[cur].secs - 30) player.seekTo(want, true);
+  const want = (Date.now() - target.at) / 1000, have = player.getCurrentTime() - target.base;
+  // A clip that has run its 45 seconds: the channel goes on (some players don't stop at the end point).
+  if (items[cur].clip && have >= items[cur].secs - 0.5) return rejoin(cur);
+  if (Math.abs(want - have) > 30 && want < items[cur].secs - 30) player.seekTo(target.base + want, true);
 }
 // The day's running order with its ad breaks, without the videos the owner took off in Channel Studio (📺 Programmes).
 let all = [], picks = null, promos = [], trailers = [], day = null;
@@ -189,7 +193,7 @@ window.onYouTubeIframeAPIReady = () => {
         // Join where the channel is now, like live TV (an ad break part-way, or the film part-way).
         const offset = (Date.now() - joinAt) / 1000;
         playItem(cur, offset < 5 ? 0 : offset);
-        setInterval(keepInStep, 5000);
+        setInterval(keepInStep, 1000);
       },
       // It never stays paused; the next item follows when one ends.
       onStateChange: e => {
@@ -200,7 +204,7 @@ window.onYouTubeIframeAPIReady = () => {
         if (e.data === YT.PlayerState.PLAYING) started = true;
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
         if (e.data === YT.PlayerState.ENDED) rejoin(cur);
-        else if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
+        else if (e.data === YT.PlayerState.PAUSED) { if (items[cur].clip && e.target.getCurrentTime() >= target.base + items[cur].secs - 2) rejoin(cur); else e.target.playVideo(); }
       },
       // A video its owner won't let others play is skipped; when none will play, the free films take over.
       onError: e => { if (inBreak) return; lastError = e.data; if (++failures >= 5) fallBack(); else setTimeout(() => playItem(cur + 1, 0), 1000); },

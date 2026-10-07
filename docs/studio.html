@@ -1657,16 +1657,18 @@ function renderPicks() {
   const rows = [];
   for (const u of itemsFrom(withBreaks(order, st, breakPromos, pkTrailers), 200)) {
     const last = rows[rows.length - 1];
-    if (u.item.trailer && last?.trailers) { last.count++; last.secs += u.item.secs; continue; }
+    const kind = u.item.clip ? "clips" : u.item.trailer ? "trailers" : null;
+    if (kind && last?.kind === kind) { last.count++; last.secs += u.item.secs; continue; }
     if (rows.length >= 40) break;
-    rows.push(u.item.trailer ? { trailers: true, count: 1, secs: u.item.secs, startMs: u.startMs } : { item: u.item, secs: u.item.secs, startMs: u.startMs });
+    rows.push(kind ? { kind, trailers: true, count: 1, secs: u.item.secs, startMs: u.startMs } : { item: u.item, secs: u.item.secs, startMs: u.startMs });
   }
   rows.forEach((r, k) => {
     const g = document.createElement("div");
     g.className = (k ? "" : "cur") + (r.trailers || r.item.kind === "break" ? " adrow" : "");
     g.innerHTML = "<span></span><span></span><span></span>";
     g.children[0].textContent = k ? timeText(r.startMs) : "Now";
-    g.children[1].textContent = r.trailers ? `🎬 Coming soon: ${r.count} trailers of upcoming films`
+    g.children[1].textContent = r.kind === "clips" ? `🎞 Coming up on ${station.name}: clips of our next ${r.count} films`
+      : r.trailers ? `🎬 Coming soon: ${r.count} trailers of new Hindi films`
       : r.item.kind === "break" ? "📢 Ad break: " + r.item.promos.map(p => p.title || p.src).join(" + ")
       : r.item.v.title;
     g.children[2].textContent = lengthText(r.secs);

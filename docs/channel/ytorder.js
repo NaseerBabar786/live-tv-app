@@ -97,7 +97,7 @@ export function upcoming(order, station, count, fromMs = Date.now()) {
 // videos (music, clips) a break comes before the next video once 10 minutes have run since the last one.
 
 export const BREAK_GAP_SECS = 10 * 60;
-export const TRAILERS_PER_BLOCK = 12;
+export const TRAILERS_PER_BLOCK = 12, TRAILERS_NEW = 8, CLIP_SECS = 45;
 
 /** Trailers of upcoming films for a movie channel (channel/trailers.json, the languages in [trailerLangs]). */
 export async function loadTrailers(station, base = "") {
@@ -123,9 +123,12 @@ export async function loadPromos(base = "../media/") {
 export function withBreaks(order, station, promos, trailers = []) {
   const items = [];
   let since = Infinity, p = 0, t = 0;
-  // Movie channels (owner, 2026-10-07): after every film, 10 to 15 trailers of upcoming films, then the ad break.
-  const perBlock = Math.min(TRAILERS_PER_BLOCK, trailers.length);
-  for (const v of order) {
+  // Movie channels (owner, 2026-10-07): after every film, 12 trailers. First "coming up" clips of the next
+  // films on this channel (45 seconds from inside each film), then trailers of upcoming Hindi films
+  // (channel/trailers.json, refreshed every day), then the ad break and the next film.
+  const news = station.trailerLangs ? Math.min(TRAILERS_NEW, trailers.length) : 0;
+  const ours = station.trailerLangs ? TRAILERS_PER_BLOCK - news : 0;
+  order.forEach((v, i) => {
     const secs = lengthOf(v, station);
     if (promos.length && since >= BREAK_GAP_SECS) {
       const list = [];
@@ -138,14 +141,20 @@ export function withBreaks(order, station, promos, trailers = []) {
     }
     items.push({ kind: "video", v, secs });
     since += secs;
-    if (perBlock >= 5 && secs >= 30 * 60) {
-      for (let k = 0; k < perBlock; k++, t++) {
-        const tr = trailers[t % trailers.length];
-        items.push({ kind: "video", trailer: true, v: { ...tr, mins: tr.secs / 60 }, secs: tr.secs });
-        since += tr.secs;
-      }
+    if (secs < 30 * 60 || !station.trailerLangs) return;
+    for (let k = 1; k <= Math.min(ours, order.length - 1); k++) {
+      const f = order[(i + k) % order.length];
+      // From about a third of the way in: past the opening titles, into the story.
+      const start = Math.round(lengthOf(f, station) * 0.3);
+      items.push({ kind: "video", trailer: true, clip: true, start, v: f, secs: CLIP_SECS });
+      since += CLIP_SECS;
     }
-  }
+    for (let k = 0; k < news; k++, t++) {
+      const tr = trailers[t % trailers.length];
+      items.push({ kind: "video", trailer: true, v: { ...tr, mins: tr.secs / 60 }, secs: tr.secs });
+      since += tr.secs;
+    }
+  });
   return items;
 }
 
