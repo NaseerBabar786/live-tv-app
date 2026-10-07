@@ -7,8 +7,12 @@ name: Build news bulletins
 # Urdu (Bazaar TV is an Urdu/Hindi channel). See tools/news/make_news.py. If a run fails, the last bulletin simply stays on air.
 
 on:
+  # Owner rule (2026-10-07): every bulletin is on the release at least 30 minutes before air time.
+  # The :02 run makes the next hour's bulletin (ready by about :12); the :20 run only builds it if the
+  # first one failed or never started, so a good bulletin is never replaced close to air time.
   schedule:
-    - cron: "25 * * * *"   # every hour at :25, ready well before the next :00
+    - cron: "2 * * * *"
+    - cron: "20 * * * *"
   workflow_dispatch:
     inputs:
       kind:
@@ -50,6 +54,13 @@ jobs:
           python3 -c "from PIL import features; assert features.check('raqm'), 'Urdu text needs raqm'"
           # A code change makes both, so both are fresh with the new look.
           if [ "$EVENT" = "push" ] || [ "$KIND" = "both" ]; then kinds="headlines full"; else kinds="$KIND"; fi
+          if [ "$EVENT" = "schedule" ] && [ "$(date -u +%M)" -ge 15 ]; then
+            read -r due slot <<< "$(python3 tools/news/make_news.py out --kind auto --due)"
+            have=$(curl -fsSL "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-$due.json" \
+                   | python3 -c "import json,sys; print(json.load(sys.stdin).get('slot',''))" || true)
+            if [ "$have" = "$slot" ]; then echo "news-$due for $slot is already up; nothing to do"; exit 0; fi
+            echo "back-up run: news-$due for $slot is missing (have '$have'), building it now"
+          fi
           for k in $kinds; do python3 tools/news/make_news.py out --kind "$k"; done
           ls -la out
 
@@ -57,6 +68,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          ls out/news-*.mp4 >/dev/null 2>&1 || { echo "Nothing new to upload"; exit 0; }
           gh release view channel-media -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
             gh release create channel-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false \
               --title "Channel media" --notes "Videos for the owner's channel."

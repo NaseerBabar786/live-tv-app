@@ -475,7 +475,7 @@ def slot_hour(kind_arg, hour_arg):
     if hour_arg is not None:
         slot = now.replace(hour=hour_arg, minute=0, second=0, microsecond=0)
     else:
-        slot = (now + dt.timedelta(minutes=59)).replace(minute=0, second=0, microsecond=0)
+        slot = now.replace(minute=0, second=0, microsecond=0) + dt.timedelta(hours=1)
     kind = kind_arg if kind_arg != "auto" else ("full" if slot.hour % 3 == 0 else "headlines")
     return kind, slot
 
@@ -544,6 +544,8 @@ def main():
     os.makedirs(out, exist_ok=True)
     if opt("--kind") == "probe": return probe(out)
     kind, slot = slot_hour(opt("--kind", "auto"), int(opt("--hour")) if opt("--hour") else None)
+    if "--due" in args:  # just say which bulletin is due next (the workflow uses it to skip a repeat run)
+        return print(kind, slot.isoformat())
     total = LENGTH[kind]
     work = os.path.join(out, "work-" + kind); os.makedirs(work, exist_ok=True)
     print("making", kind, "for", slot.isoformat())
