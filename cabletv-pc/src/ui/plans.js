@@ -40,7 +40,7 @@ export const DEFAULT_HOW_TO_PAY =
   "(Interac e-Transfer or card), and turn your package on as soon as it's paid. " +
   'Questions? WhatsApp 437 602 6500.';
 
-const DEFAULT_PRICES = { Gold: '$3.99' };
+const DEFAULT_PRICES = { Gold: '$9.99' };
 
 let features = EVERYTHING;
 let current = 'Gold';
