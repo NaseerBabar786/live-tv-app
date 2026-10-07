@@ -19,8 +19,8 @@ import java.util.Date
  *
  * The owner sets each viewer's package and end date on tv.bulkbazaar.ca/packages (plans/{uid});
  * the prices, how to pay, the free trial and whether packages are on at all live in
- * config/plans. While packages are off, everyone has everything (Platinum). New viewers get
- * Platinum free for the trial days after they join; after that, without a package, Free.
+ * config/plans. While packages are off, everyone has everything (Gold). New viewers get
+ * Gold free for the trial days after they join; after that, without a package, Free.
  */
 object Subscription {
     /** One package's prices, as text such as "$1.99". */
@@ -77,9 +77,7 @@ object Subscription {
 
     // Declared before _offer: Offer() reads it while this object starts, and a later one is still null then.
     val DEFAULT_PRICES: Map<Plans.Tier, Prices> = mapOf(
-        Plans.Tier.Silver to Prices("$17.79", "$9.79", "$5.39", "$1.99"),
         Plans.Tier.Gold to Prices("$35.99", "$19.79", "$10.89", "$3.99"),
-        Plans.Tier.Platinum to Prices("$53.79", "$29.59", "$16.29", "$5.99"),
     )
 
     /**
@@ -104,7 +102,7 @@ object Subscription {
     private val _status = MutableStateFlow<Status?>(null)
     val status: StateFlow<Status?> = _status
 
-    /** Packages are on, and this viewer has Platinum: their account works on two devices. */
+    /** Packages are on, and this viewer's package has 2 devices: their account works on two devices. */
     val twoDevices: Boolean get() = _offer.value.enforced && Plans.has(Plans.Feature.TwoDevices)
 
     private const val PREFS = "subscription"
@@ -119,7 +117,7 @@ object Subscription {
         }
         Plans.setExtraChannels(p.getString("extra_channels", "") ?: "")
         p.getString("tier", null)?.let { name ->
-            Plans.Tier.entries.firstOrNull { it.name == name }?.let { tier ->
+            Plans.Tier.of(name)?.let { tier ->
                 val until = p.getLong("until", 0L)
                 // A saved package that has run out since counts as Free until the next check.
                 Plans.set(if (until in 1 until System.currentTimeMillis()) Plans.Tier.Free else tier)
@@ -140,10 +138,10 @@ object Subscription {
             var features = offer.features
             val now = Date()
             val status = if (!offer.enforced) {
-                Status(Plans.Tier.Platinum)
+                Status(Plans.Tier.Gold)
             } else {
                 val plan = getOrNull(Firestore.doc("plans/${u.uid}"), t)?.optJSONObject("fields")
-                val paid = plan?.str("tier")?.let { n -> Plans.Tier.entries.firstOrNull { it.name.equals(n, true) } }
+                val paid = Plans.Tier.of(plan?.str("tier"))
                 val paidUntil = plan?.time("until")
                 val joined = getOrNull(Firestore.doc("users/${u.uid}"), t)?.optJSONObject("fields")?.time("joined") ?: now
                 val trialEnd = Date(joined.time + offer.trialDays * 86_400_000L)
@@ -155,7 +153,7 @@ object Subscription {
                     paid != null && paid != Plans.Tier.Free && paidUntil != null && paidUntil.after(now) ->
                         Status(paid, paidUntil, promoName = promoName)
                     offer.trialDays > 0 && trialEnd.after(now) ->
-                        Status(Plans.Tier.Platinum, trialEnd, trial = true)
+                        Status(Plans.Tier.Gold, trialEnd, trial = true)
                     paid != null && paid != Plans.Tier.Free && paidUntil != null && now.time - paidUntil.time < 7 * 86_400_000L ->
                         Status(Plans.Tier.Free, endedTier = paid, endedAt = paidUntil)
                     else -> Status(Plans.Tier.Free)
@@ -192,7 +190,7 @@ object Subscription {
             ?: return@withContext "There's no promo code $code. Check the letters and numbers and try again."
         val f = doc.optJSONObject("fields") ?: JSONObject()
         fun int(k: String) = f.optJSONObject(k)?.optString("integerValue")?.toIntOrNull() ?: 0
-        val tier = Plans.Tier.entries.firstOrNull { it.name == f.str("tier") && it != Plans.Tier.Free }
+        val tier = Plans.Tier.of(f.str("tier"))?.takeIf { it != Plans.Tier.Free }
             ?: return@withContext "This code isn't set up right. Please message us."
         val days = int("days")
         val usedBy = f.optJSONObject("usedBy")?.optJSONObject("mapValue")?.optJSONObject("fields") ?: JSONObject()
@@ -205,7 +203,7 @@ object Subscription {
         // The same package still running: the code's time comes after it ends, like a renewal.
         val plan = getOrNull(Firestore.doc("plans/${u.uid}"), t)?.optJSONObject("fields")
         val now = Date()
-        val running = plan?.time("until")?.takeIf { plan.str("tier") == tier.name && it.after(now) }
+        val running = plan?.time("until")?.takeIf { Plans.Tier.of(plan.str("tier")) == tier && it.after(now) }
         val until = Date((running ?: now).time + days * 86_400_000L)
         usedBy.put(u.uid, JSONObject().put("mapValue", JSONObject().put("fields", Firestore.encode(mapOf("name" to u.name, "email" to u.email, "at" to now)))))
         val writes = JSONArray()

@@ -96,7 +96,7 @@ fun EditionStartScreen(onDone: () -> Unit) {
     }
     LaunchedEffect(Unit) {
         if (FirebaseConfig.configured) {
-            // The package first: Platinum lets the account stay signed in on a second device.
+            // The package first: 2 devices lets the account stay signed in on a second device.
             Subscription.refresh(context, account)
             account.recordOpen()
         }
