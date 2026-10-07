@@ -33,6 +33,8 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
   same live pages (ytc.html, yt.html, bollywood.html), so it gets the fix without a new PC build.
 - 1.9.94: Settings > My playlists no longer has "Find playlists online" or "+ Add playlist link".
   The PC never had playlist settings, so nothing to remove here.
+- 1.9.98: phone touch fixes (swipes now change channel in full screen and on tiles; a tap on the tile
+  with the sound opens it full screen). Phone-only; the PC uses its mouse and keyboard.
 
 ## In step
 
