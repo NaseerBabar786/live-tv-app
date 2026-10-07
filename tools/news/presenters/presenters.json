@@ -1,0 +1,15 @@
+{
+  "about": "AI newsreaders for Bazaar TV News. Each picture is made once by Pollinations (free, no key) from 'prompt' and 'seed', kept as <id>.jpg on the channel-media release, then made to talk with SadTalker (Apache 2.0) by news-presenters.yml. Voice: edge-tts.",
+  "line": "السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے بازار ٹی وی نیوز۔ پیش ہیں اس وقت کی اہم خبریں۔",
+  "voice": "ur-PK-UzmaNeural",
+  "presenters": [
+    {"id": "presenter-1", "name": "Ayesha", "ur": "عائشہ", "seed": 4101,
+     "prompt": "photorealistic television news studio, a beautiful young Pakistani woman news anchor, elegant light dupatta over her hair and shoulders, soft makeup, looking straight into the camera, calm closed-mouth smile, head and shoulders centred, sitting behind a modern news desk, soft studio lighting, blue studio screens blurred behind her, 4k photo"},
+    {"id": "presenter-2", "name": "Sana", "ur": "ثنا", "seed": 4202,
+     "prompt": "photorealistic television news studio, a beautiful Pakistani woman news anchor in her late twenties, long dark hair, elegant embroidered maroon shalwar kameez, looking straight into the camera, gentle closed-mouth expression, head and shoulders centred, modern news desk, warm studio lighting, blurred city skyline screen behind her, 4k photo"},
+    {"id": "presenter-3", "name": "Priya", "ur": "پریا", "seed": 4303,
+     "prompt": "photorealistic television news studio, a beautiful young Indian woman news anchor, hair tied back neatly, elegant silk saree with a small bindi, looking straight into the camera, friendly closed-mouth smile, head and shoulders centred, modern news desk, bright studio lighting, red and blue screens blurred behind her, 4k photo"},
+    {"id": "presenter-4", "name": "Zara", "ur": "زارا", "seed": 4404,
+     "prompt": "photorealistic television news studio, a beautiful young South Asian woman news anchor, shoulder-length dark hair, smart navy blazer over a white blouse, small earrings, looking straight into the camera, confident closed-mouth expression, head and shoulders centred, modern news desk, cool studio lighting, world map screen blurred behind her, 4k photo"}
+  ]
+}
