@@ -19,6 +19,7 @@ on:
     branches: [main]
     paths:
       - "tools/promos/**"
+      - "tools/music/**"
       - "docs/channel/test-schedule.json"
 
 concurrency:
