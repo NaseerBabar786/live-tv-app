@@ -1,7 +1,56 @@
 {
  "name": "Bazaar Comedy",
- "built": "2026-10-06 21:03 UTC",
+ "built": "2026-10-07 03:14 UTC",
  "videos": [
+  {
+   "id": "iS8X_EyTkmk",
+   "title": "Mr Tiny Saves the Day in Wild Slapstick Chaos | Mr Bean Animated",
+   "label": "Mr Bean",
+   "mins": 24.833333333333332,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "HeIc_iOlLrE",
+   "title": "Iyer ने क्यों काटा Jethalal का हाथ ! | Haste Raho Hasate Raho! | Taarak Mehta ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 11.033333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "4KluHZZHnVY",
+   "title": "Popat किसकी नकल करके चिढ़ा रहा हे Bhide Ko| Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 10.4,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "6ho6ykkHwZM",
+   "title": "क्या मांगने पर Bapuji हुए गुस्सा ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 10.683333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ngHvySd9Gro",
+   "title": "SE 01 EP 355 -  Jethalal Kyu सादी पहन के आया मेहमान के सामने ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "mins": 18.65,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "UEv_3kBbwW8",
+   "title": "SE 01 EP 354 - Bapuji Ko Dekh Kar Jethalal Ko Kyu लगा जोरदार झटका ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "mins": 18.916666666666668,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Czxvn0N0b7Y",
+   "title": "SE 01 EP 353 -  Jethalal Ne Bhide Ko क्यू बोला चपली ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "mins": 17.6,
+   "found": "2026-10-07"
+  },
   {
    "id": "mkI1Ffbx-Iw",
    "title": "Birthday Chaos Sock Monster and a Funny Man Song | Mr Bean Animated",
@@ -290,48 +339,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "ThGTcsh6ZW4",
-   "title": "Popatlal Kiske पैरों Mein पहना Raha Hai पायल !  | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "mins": 37.46666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "0sG69XDzXzE",
-   "title": "Kis गहरी सोच Mein डूबा Hua Hai Jethalal ! | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "mins": 39.86666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "L9VyHkd30lA",
-   "title": "Konsi Baat Se Popatlal Hua Khush ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "mins": 10.333333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "1rzd28DJOXY",
-   "title": "Bapuji Ne Jetha Ko Kyu Roka ?  | Haste Raho Hasate Raho! | Taarak Mehta ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "mins": 10.366666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "rO6hah46pZs",
-   "title": "Kutta Bankar Bhide Kise dara raha hai !  | Haste Raho Hasate Raho| Taarak Mehta ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "mins": 10.15,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "rgrKgvIqM5k",
-   "title": "SE 01 EP 345 - Kya Bhide Ke Scooter Ka Petrol ख़त्म हो गया ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "mins": 18.2,
-   "found": "2026-10-06"
-  },
-  {
    "id": "SAEraJe-8DA",
    "title": "Shaun the Sheep Season 4 Episode 16-20 | Back to School 🔔🚌",
    "label": "Shaun the Sheep",
@@ -441,6 +448,48 @@
    "title": "Shaun the Sheep Season 2 Episode 11-15 | Back to School 🔔🚌",
    "label": "Shaun the Sheep",
    "mins": 31.0,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ThGTcsh6ZW4",
+   "title": "Popatlal Kiske पैरों Mein पहना Raha Hai पायल !  | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 37.46666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "0sG69XDzXzE",
+   "title": "Kis गहरी सोच Mein डूबा Hua Hai Jethalal ! | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 39.86666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "L9VyHkd30lA",
+   "title": "Konsi Baat Se Popatlal Hua Khush ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 10.333333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "1rzd28DJOXY",
+   "title": "Bapuji Ne Jetha Ko Kyu Roka ?  | Haste Raho Hasate Raho! | Taarak Mehta ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 10.366666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "rO6hah46pZs",
+   "title": "Kutta Bankar Bhide Kise dara raha hai !  | Haste Raho Hasate Raho| Taarak Mehta ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 10.15,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "rgrKgvIqM5k",
+   "title": "SE 01 EP 345 - Kya Bhide Ke Scooter Ka Petrol ख़त्म हो गया ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "mins": 18.2,
    "found": "2026-10-06"
   },
   {
