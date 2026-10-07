@@ -191,7 +191,8 @@
   .pkTabs button { font: inherit; font-weight: 700; padding: 8px 14px; border-radius: 10px; border: 2px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; }
   .pkTabs button.sel { border-color: var(--focus); background: var(--focus); color: #111; }
   /* The time now, always in view (owner, 2026-10-07), in Toronto time like the schedules. */
-  .stclock { position: fixed; bottom: 14px; right: 14px; z-index: 50; background: var(--surface); border: 2px solid var(--focus); border-radius: 12px; padding: 6px 12px; font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+  .stclock { position: fixed; top: 76px; right: 14px; z-index: 50; cursor: grab; user-select: none; touch-action: none; background: var(--surface); border: 2px solid var(--focus); border-radius: 12px; padding: 6px 12px; font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+  .stclock.drag { cursor: grabbing; opacity: .9; }
   .stclock small { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
   @media (max-width: 640px) { .pk { grid-template-columns: 60px 1fr; } .pk img { display: none; } .pk .acts { grid-column: 1 / -1; justify-content: flex-start; } }
   .pk.playing { outline: 2px solid var(--focus); }
@@ -221,7 +222,7 @@
   </div>
 </header>
 
-<div class="stclock" id="stClock" aria-live="off"></div>
+<div class="stclock" id="stClock" aria-live="off" title="Drag to move the clock anywhere. Double-click to put it back."></div>
 <main class="wrap studio-main">
   <h1>Channel Studio</h1>
   <p class="lead">Run your own TV channels. They show at the top of every list in Cable TV (Bazaar TV is <b>channel 1</b>, Bazaar Cinema <b>2</b>, Bazaar Music <b>3</b>, Bazaar Hits <b>4</b>, Bazaar Kids <b>5</b>, Bazaar Sports <b>6</b>, Bazaar Travel <b>7</b> and Bazaar Comedy <b>8</b>, from 1.9.45) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
@@ -569,6 +570,32 @@ function tickClock() {
   $("stClock").innerHTML = `🕒 ${now.toLocaleTimeString("en-CA", { timeZone: "America/Toronto", hour: "numeric", minute: "2-digit", second: "2-digit" })}<small>${now.toLocaleDateString("en-CA", { timeZone: "America/Toronto", weekday: "short", month: "short", day: "numeric" })} · Toronto</small>`;
 }
 tickClock(); setInterval(tickClock, 1000);
+// The owner can drag the clock anywhere on the page (2026-10-07); it stays where it was left, on this
+// computer. Double-click puts it back at the top right.
+(() => {
+  const c = $("stClock"), KEY = "studioClockAt";
+  const place = (x, y) => {
+    x = Math.max(0, Math.min(x, innerWidth - c.offsetWidth)); y = Math.max(0, Math.min(y, innerHeight - c.offsetHeight));
+    Object.assign(c.style, { left: x + "px", top: y + "px", right: "auto", bottom: "auto" });
+  };
+  let at = null;
+  try { at = JSON.parse(localStorage.getItem(KEY)); } catch {}
+  // Saved as a share of the window, so it keeps its corner when the window changes size.
+  const restore = () => { if (at) place(at.fx * (innerWidth - c.offsetWidth), at.fy * (innerHeight - c.offsetHeight)); };
+  restore(); addEventListener("resize", restore);
+  let grab = null;
+  c.addEventListener("pointerdown", e => { const r = c.getBoundingClientRect(); grab = { dx: e.clientX - r.left, dy: e.clientY - r.top }; c.setPointerCapture(e.pointerId); c.classList.add("drag"); });
+  c.addEventListener("pointermove", e => { if (grab) place(e.clientX - grab.dx, e.clientY - grab.dy); });
+  const drop = () => {
+    if (!grab) return;
+    grab = null; c.classList.remove("drag");
+    const r = c.getBoundingClientRect();
+    at = { fx: r.left / Math.max(1, innerWidth - c.offsetWidth), fy: r.top / Math.max(1, innerHeight - c.offsetHeight) };
+    try { localStorage.setItem(KEY, JSON.stringify(at)); } catch {}
+  };
+  c.addEventListener("pointerup", drop); c.addEventListener("pointercancel", drop);
+  c.addEventListener("dblclick", () => { at = null; c.removeAttribute("style"); try { localStorage.removeItem(KEY); } catch {} });
+})();
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 
 const V = "10.12.2";
