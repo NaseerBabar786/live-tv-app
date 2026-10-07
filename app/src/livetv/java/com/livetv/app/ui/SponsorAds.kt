@@ -45,6 +45,7 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.foundation.layout.Box
 import com.livetv.app.player.AdBreak
+import com.livetv.app.player.AdTiming
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -110,6 +111,8 @@ private const val SKIP_AFTER_MS = 10_000L
 /** Full-screen channels: an ad break every 10 minutes (owner, 1.9.68): the channel pauses, our own Cable TV
  *  promo plays (a different one each time) with a sponsor's ad when one fits, then the channel carries on. */
 private const val BREAK_EVERY_MS = 10 * 60_000L
+/** [SponsorCard]'s channelId for a Library video ("vod:" + its id). */
+const val LIBRARY_PREFIX = "vod:"
 /** Our Cable TV promos for the breaks, in turn: media/app-promos.json on the website (the owner can add more). */
 private const val PROMO_ID = "promo"
 private const val PROMOS_URL = "https://tv.bulkbazaar.ca/media/app-promos.json"
@@ -574,9 +577,18 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
             }
         }
     }
+    // When the next full-screen break is due, for a Library video in YouTube's player that waits for it (1.9.89).
+    DisposableEffect(Unit) {
+        AdTiming.enabled = true
+        onDispose { AdTiming.enabled = false }
+    }
+    LaunchedEffect(lastCard) { AdTiming.nextFullAt = lastCard + BREAK_EVERY_MS }
     LaunchedEffect(channelId) {
         if (channelId == null || channelId == lastChannel || video != null) return@LaunchedEffect
+        // Back from a Library video to the channel watched before: not a channel change.
+        val fromLibrary = lastChannel?.startsWith(LIBRARY_PREFIX) == true && !channelId.startsWith(LIBRARY_PREFIX)
         lastChannel = channelId
+        if (fromLibrary) return@LaunchedEffect
         val now = SystemClock.elapsedRealtime()
         // Full screen: the ad break every [BREAK_EVERY_MS]; in the other layouts a sponsor's card at most every [CARD_EVERY_MS].
         if (now - lastCard < if (isFullScreen) BREAK_EVERY_MS else CARD_EVERY_MS) return@LaunchedEffect

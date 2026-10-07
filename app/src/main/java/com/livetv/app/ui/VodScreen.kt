@@ -42,6 +42,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +56,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -62,13 +64,20 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.SubcomposeAsyncImage
+import android.os.SystemClock
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 import com.livetv.app.data.Bilibili
 import com.livetv.app.data.Channel
 import com.livetv.app.data.Dailymotion
 import com.livetv.app.data.Vimeo
 import com.livetv.app.data.Vod
 import com.livetv.app.data.YouTube
+import com.livetv.app.player.AdBreak
+import com.livetv.app.player.AdTiming
+import com.livetv.app.player.LibraryAds
+import com.livetv.app.player.LibraryVideo
 import com.livetv.app.player.PlayerScreen
 
 /**
@@ -105,6 +114,26 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     val pickedFocus = remember { FocusRequester() }
 
     playing?.let { channel ->
+        // Cable TV's ad breaks run here too (1.9.89). A video in YouTube's (or another site's) own player
+        // gets its break before it starts, on our own black screen, never over that player.
+        val embed = Bilibili.isVideo(channel.url) || Dailymotion.videoId(channel.url) != null ||
+            Vimeo.videoId(channel.url) != null || YouTube.videoId(channel.url) != null
+        val wide = LocalConfiguration.current.screenWidthDp >= 400
+        var waiting by remember(channel.id) {
+            mutableStateOf(embed && wide && AdTiming.enabled && SystemClock.elapsedRealtime() >= AdTiming.nextFullAt)
+        }
+        DisposableEffect(channel.id) { onDispose { LibraryAds.now.value = null } }
+        LaunchedEffect(channel.id, embed, waiting) { LibraryAds.now.value = LibraryVideo(channel.id, embed, waiting) }
+        if (waiting) {
+            LaunchedEffect(channel.id) {
+                // The break comes up a moment after the video is picked; when it doesn't, the video plays.
+                if (withTimeoutOrNull(5_000) { AdBreak.active.first { it } } != null) AdBreak.active.first { !it }
+                waiting = false
+            }
+            BackHandler(onBack = stopPlaying)
+            Box(Modifier.fillMaxSize().background(Color.Black))
+            return
+        }
         if (Bilibili.isVideo(channel.url)) {
             OpenInApp(url = channel.url, appName = "Bilibili", onDone = stopPlaying)
             return
