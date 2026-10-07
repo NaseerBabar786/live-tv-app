@@ -664,7 +664,7 @@ function renderStations() {
 async function testProgramme() {
   const ready = await (await fetch(station.ready + "?t=" + Date.now())).json();
   // Channels 9 to 11 borrow Bazaar Cinema's free films as their backup, under their own name and logo.
-  return station.backup ? { ...ready, name: station.name, logo: station.logo } : ready;
+  return station.backup ? { ...ready, name: station.name, logo: station.logo, ...(station.noBug ? { logoCorner: "off" } : {}) } : ready;
 }
 
 /** Bazaar Hits: its own page plays inside the player; the editing parts are put away. */

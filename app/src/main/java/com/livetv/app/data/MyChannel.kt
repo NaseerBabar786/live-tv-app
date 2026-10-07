@@ -42,9 +42,11 @@ object MyChannel {
          */
         val backup: String = id,
         val logo: String? = null,
+        /** False for a channel that carries no logo of ours on the picture (Latest Movies, 1.9.81); [logo] is then only for the channel list. */
+        val bug: Boolean = true,
     )
 
-    /** Our channels take numbers 1 to 14 (13 kept for Latest Movies); the other channels are numbered from 15. */
+    /** Our channels take numbers 1 to 14; the other channels are numbered from 15. */
     const val COUNT = 14
 
     /**
@@ -73,6 +75,9 @@ object MyChannel {
         // 1.9.53: cooking shows in Urdu, Hindi, Punjabi and English from the cooks' own channels.
         Station("cooking", 12, "12", "Bazaar Cooking", youtube = true, backup = "filmein", logo = "bazaar-cooking.png"),
         // 1.9.76: science, cartoons and challenge shows for 12 to 16 year olds; Bazaar Kids stays for small children.
+        // 1.9.81: the newest full films in Hindi, English, Punjabi and Urdu from their makers' channels, newest first.
+        // The owner wants just the name "Latest Movies" and no logo of ours on the picture.
+        Station("latest", 13, "13", "Latest Movies", youtube = true, backup = "filmein", logo = "latest-movies.png", bug = false),
         Station("teens", 14, "14", "Bazaar Teens", youtube = true, backup = "filmein", logo = "bazaar-teens.png"),
     )
 

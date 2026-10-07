@@ -65,9 +65,13 @@ let ahead = 0;
 const clock = () => Date.now() + ahead;
 
 document.title = station.name + " · Watch live";
-$("bug").src = station.logo;
-$("coverLogo").src = station.logo;
-$("coverLogo").hidden = false;
+// Latest Movies carries no logo of ours (the owner's wish), not even on the cover between videos.
+if (station.noBug) $("bug").hidden = true;
+else {
+  $("bug").src = station.logo;
+  $("coverLogo").src = station.logo;
+  $("coverLogo").hidden = false;
+}
 $("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (!app) $("back").hidden = false;
 
