@@ -30,7 +30,7 @@ import android.widget.TextView
  * played the sound but kept the picture black (TVs draw the video under the window and the page
  * only leaves a see-through hole in it, which any layer or background in between covers).
  * Back closes it; when the page gives up on YouTube (livetv://fallback) it closes with [RESULT_FALLBACK].
- * Library films ([film], 1.9.95) play here too, on our film page: there the remote's arrows, OK and number
+ * Library films ([film], 1.9.99) play here too, on our film page: there the remote's arrows, OK and number
  * buttons go to the page (pause, back and forward) instead of changing channel, and the media buttons with them.
  */
 class WebChannelActivity : Activity() {
