@@ -1,9 +1,13 @@
 {
-  "note": "Cable TV promo for the app's ad break every 10 minutes on full-screen channels. Owner, 2026-10-07: Ad 6 (60 s) is the only promo on air; the earlier ads are off for now. 720p copy so TVs start it quickly. secs = length in seconds (10-60).",
+  "note": "Cable TV promo for the app's ad break every 10 minutes on full-screen channels. Owner, 2026-10-07: Ad 6 (60 s) and the Gold promo-code ad (30 s, approved 22:19) rotate; the earlier ads are off for now. 720p copy so TVs start it quickly. secs = length in seconds (10-60).",
   "promos": [
     {
       "src": "cabletv-ad-6.mp4",
       "secs": 60
+    },
+    {
+      "src": "cabletv-ad-promo-code.mp4",
+      "secs": 30
     }
   ]
 }
