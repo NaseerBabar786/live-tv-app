@@ -302,8 +302,10 @@ object Subscription {
     /** What [tier] has, in a line for the packages screen. */
     fun describe(tier: Plans.Tier): String = describe(_offer.value.features[tier].orEmpty())
 
-    /** A line listing [has] for the packages screen. */
-    fun describe(has: Set<Plans.Feature>): String {
+    /** A line listing [ticked] (plus Free's features) for the packages screen. */
+    fun describe(ticked: Set<Plans.Feature>): String {
+        // Every package has at least what Free has (Plans.FREE_FEATURES).
+        val has = ticked + Plans.FREE_FEATURES
         val extra = _offer.value.extraChannels
         val channels = when {
             Plans.Feature.AllChannels in has -> "All channels"

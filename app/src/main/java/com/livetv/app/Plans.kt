@@ -43,9 +43,15 @@ object Plans {
         }
     }
 
+    /**
+     * Free is fixed, not ticked: every feature, but only our own Bazaar channels (owner, 2026-10-07). Every
+     * other package has at least this too, so a paid package never has less than Free.
+     */
+    val FREE_FEATURES: Set<Feature> = Feature.entries.toSet() - Feature.AllChannels
+
     /** The owner's packages until they tick their own (owner, 2026-10-06). */
     val DEFAULT_FEATURES: Map<Tier, Set<Feature>> = mapOf(
-        Tier.Free to emptySet(),
+        Tier.Free to FREE_FEATURES,
         Tier.Silver to setOf(Feature.AllChannels, Feature.Browse, Feature.Carousel),
         Tier.Gold to Feature.entries.toSet() - Feature.TwoDevices,
         Tier.Platinum to Feature.entries.toSet(),
@@ -62,7 +68,9 @@ object Plans {
 
     /** The owner's packages while packages are on, or null (packages off) for everything. */
     fun setFeatures(map: Map<Tier, Set<Feature>>?) {
-        _features.value = map ?: EVERYTHING
+        _features.value = map?.let { m ->
+            Tier.entries.associateWith { t -> if (t == Tier.Free) FREE_FEATURES else m[t].orEmpty() + FREE_FEATURES }
+        } ?: EVERYTHING
     }
 
     /** Whether the viewer's package has [feature]. */

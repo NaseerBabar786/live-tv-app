@@ -103,12 +103,12 @@
 
     <div class="panel" style="margin-bottom:20px">
       <h2 style="margin-top:0">Design your packages</h2>
-      <p class="small">Tick what each package gets, then press <b>Save settings</b>. Every package always has 1+List, full screen, favourites, channel numbers and search. Without <b>All channels</b> a package has only our own Bazaar channels (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel, Comedy, Movies, Dramas, Cooking, Latest Movies, Teens). The app follows your ticks the next time each viewer opens it.</p>
+      <p class="small"><b>Free</b> is fixed: every viewer gets every feature, with only our own Bazaar channels, so there is nothing to tick for it. Paid packages have everything Free has (the greyed ticks); tick <b>All channels</b> for the packages that get every channel, then press <b>Save settings</b>. Without <b>All channels</b> a package has only our own Bazaar channels (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel, Comedy, Movies, Dramas, Cooking, Latest Movies, Teens). The app follows your ticks the next time each viewer opens it.</p>
       <div class="table-wrap feats"><table>
-        <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Silver">Silver</span></th><th><span class="pill Gold">Gold</span></th><th><span class="pill Platinum">Platinum</span></th></tr></thead>
+        <thead><tr><th>Feature</th><th><span class="pill Silver">Silver</span></th><th><span class="pill Gold">Gold</span></th><th><span class="pill Platinum">Platinum</span></th></tr></thead>
         <tbody id="featRows"></tbody>
       </table></div>
-      <label class="small" for="extraChannels" style="display:block;margin-top:12px"><b>Extra channels without "All channels"</b>: packages without All channels (like Free) get our own Bazaar channels plus the channels you type here, separated by commas. Leave it empty for only our own channels.</label>
+      <label class="small" for="extraChannels" style="display:block;margin-top:12px"><b>Extra channels without "All channels"</b>: Free, and paid packages without All channels, get our own Bazaar channels plus the channels you type here, separated by commas. Leave it empty for only our own channels.</label>
       <input class="inp" id="extraChannels" placeholder="e.g. Aaj Tak, ARY News" style="width:100%;box-sizing:border-box;margin-top:6px">
       <div class="row" style="margin:10px 0 18px"><button class="btn primary" id="saveFeats">Save settings</button> <button class="btn" id="resetFeats">Start again from our suggestion</button><span class="small" id="featMsg"></span></div>
       <h3>What viewers see in each package</h3>
@@ -117,8 +117,8 @@
       <h3>How it works</h3>
       <ul class="how">
         <li><b>Packages off</b> (the switch in Settings is unticked): every viewer has everything, like Platinum, for free. Nothing is locked.</li>
-        <li><b>Packages on</b>: a viewer without a package has <b>Free</b>. Locked modes show a 🔒 and the package they need; picking one opens the packages screen in the app.</li>
-        <li><b>Free trial</b>: a brand-new viewer gets <b>everything (Platinum)</b> for the trial days in Settings, counted from the day they first signed in. When the trial ends they drop to Free, unless you gave them a package. This is different from the Free package, which only has the basic modes and never ends.</li>
+        <li><b>Packages on</b>: a viewer without a package has <b>Free</b>: every feature, but only our own Bazaar channels. Other channels show a 🔒; picking one opens the packages screen in the app.</li>
+        <li><b>Free trial</b>: a brand-new viewer gets <b>everything (Platinum)</b> for the trial days in Settings, counted from the day they first signed in. When the trial ends they drop to Free, unless you gave them a package. After the trial they keep every feature on Free, with only our own Bazaar channels.</li>
         <li><b>Buying</b>: in the app the viewer picks a package and a length and presses <b>Ask</b>. That sends you a message in ✉ Messages. You reply with how to pay, and once they've paid you give them the package below.</li>
         <li><b>Ending</b>: 5 days before a package (or the trial) ends, the viewer sees a reminder once a day with <b>Renew</b> and <b>Message us</b> buttons. When it ends they drop to Free, and for a week the app tells them it ended.</li>
         <li><b>Renewing</b>: giving the same package again adds the time after the current end date, so paying early loses nothing. Giving a different package starts it today.</li>
@@ -194,14 +194,12 @@ const FEATURES = [
   ["devices", "2 devices", "one account works on two TVs or phones at the same time"],
 ];
 const ALL_TIERS = ["Free", "Silver", "Gold", "Platinum"];
+// Free is fixed, not ticked: every feature but All channels (owner, 2026-10-07). Paid packages always have these too.
 // A promotion is the "Promo" package in the app; each viewer's plan names which promotion (promo, promoName).
 const tierName = (t, p) => t === "Promo" ? (p?.promoName || "Promotion") : t;
 const ALL_KEYS = FEATURES.map(f => f[0]);
-const DEFAULT_FEATURES = {
-  // Free: every feature but All channels, so only our own Bazaar channels (owner, 2026-10-07).
-  free: ALL_KEYS.filter(k => k !== "channels"), silver: ["channels", "browse", "carousel"],
-  gold: ALL_KEYS.filter(k => k !== "devices"), platinum: ALL_KEYS,
-};
+const FREE_KEYS = ALL_KEYS.filter(k => k !== "channels");
+const DEFAULT_FEATURES = { free: FREE_KEYS, silver: ALL_KEYS, gold: ALL_KEYS, platinum: ALL_KEYS };
 const LENGTHS = [["month", "1 month"], ["three", "3 months"], ["six", "6 months"], ["year", "1 year"]];
 const DEFAULTS = {
   silver_month: "$1.99", silver_three: "$5.39", silver_six: "$9.79", silver_year: "$17.79",
@@ -272,10 +270,10 @@ if (!configured) {
     for (const [key, label, what] of FEATURES) {
       const tr = document.createElement("tr");
       tr.innerHTML = `<td><b>${label}</b><br><span class="small">${what}</span></td>`;
-      for (const t of ALL_TIERS) {
-        const id = t.toLowerCase(), saved = c[id + "_features"];
-        const on = (saved === undefined ? DEFAULT_FEATURES[id] : saved.split(",")).includes(key);
-        tr.insertAdjacentHTML("beforeend", `<td><input type="checkbox" data-t="${id}" data-k="${key}" ${on ? "checked" : ""} aria-label="${label} in ${tierName(t)}"></td>`);
+      for (const t of TIERS) {
+        const id = t.toLowerCase(), saved = c[id + "_features"], fixed = FREE_KEYS.includes(key);
+        const on = fixed || (saved === undefined ? DEFAULT_FEATURES[id] : saved.split(",")).includes(key);
+        tr.insertAdjacentHTML("beforeend", `<td><input type="checkbox" data-t="${id}" data-k="${key}" ${on ? "checked" : ""} ${fixed ? 'disabled title="Free has this, so every package has it"' : ""} aria-label="${label} in ${tierName(t)}"></td>`);
       }
       fr.append(tr);
     }
@@ -345,7 +343,7 @@ if (!configured) {
   };
 
   // The ticked features of a package, e.g. "channels,browse".
-  const ticked = t => [...document.querySelectorAll(`#featRows input[data-t="${t}"]:checked`)].map(i => i.dataset.k);
+  const ticked = t => t === "free" ? FREE_KEYS : [...document.querySelectorAll(`#featRows input[data-t="${t}"]:checked`)].map(i => i.dataset.k);
   // The package cards follow the ticks.
   function showCards() {
     $("pkgCards").innerHTML = ALL_TIERS.map(t => {
@@ -361,7 +359,7 @@ if (!configured) {
   $("featRows").addEventListener("change", showCards);
   $("extraChannels").addEventListener("input", showCards);
   $("resetFeats").onclick = () => {
-    document.querySelectorAll("#featRows input").forEach(i => { i.checked = DEFAULT_FEATURES[i.dataset.t].includes(i.dataset.k); });
+    document.querySelectorAll("#featRows input:not(:disabled)").forEach(i => { i.checked = DEFAULT_FEATURES[i.dataset.t].includes(i.dataset.k); });
     showCards();
   };
   $("saveFeats").onclick = () => $("saveCfg").click();
@@ -396,7 +394,7 @@ if (!configured) {
     const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), extra_channels: $("extraChannels").value.split(",").map(x => x.trim()).filter(Boolean).join(", "), updated: fs.serverTimestamp() };
     for (const t of TIERS) for (const [k] of LENGTHS) { const id = `${t.toLowerCase()}_${k}`; data[id] = $(id).value.trim(); }
     for (const t of ALL_TIERS) data[t.toLowerCase() + "_features"] = ticked(t.toLowerCase()).join(",");
-    if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have what you ticked for Free (after their free trial).")) return;
+    if (data.enforce && !confirm("Turn packages on? Viewers without a package will have Free (after their free trial): every feature, but only our own Bazaar channels.")) return;
     const msg = $("cfgMsg"); msg.className = "small"; msg.textContent = "Saving…";
     try {
       await fs.setDoc(fs.doc(db, "config", "plans"), data);
