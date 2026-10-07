@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-07 04:39 UTC",
+ "checked": "2026-10-07 04:46 UTC",
  "problems": [
   {
    "channel": "Bazaar Music",
@@ -31,15 +31,7 @@
   },
   {
    "channel": "Bazaar Cinema",
-   "text": "video DR_Fd5n9OxQ can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Cinema",
    "text": "video lmam9Jm7PvA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Cinema",
-   "text": "video iU2_KY7RxUM can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
@@ -47,15 +39,11 @@
   },
   {
    "channel": "Bazaar Cinema",
-   "text": "video CPXAyvabM54 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video DR_Fd5n9OxQ can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
-   "text": "video NiQ2-ORNY3k can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Cinema",
-   "text": "video VggUigT1akE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video iU2_KY7RxUM can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
@@ -63,11 +51,23 @@
   },
   {
    "channel": "Bazaar Cinema",
-   "text": "video vBW-dH9MQDA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video VggUigT1akE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Cinema",
+   "text": "video CPXAyvabM54 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
    "text": "video NholafkC2gc can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Cinema",
+   "text": "video NiQ2-ORNY3k can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Cinema",
+   "text": "video vBW-dH9MQDA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
@@ -91,11 +91,11 @@
   },
   {
    "channel": "Bazaar Cinema, Bazaar Movies Hindi",
-   "text": "video tKqo-4qAeJA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video 1lFk1LSsI_c can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema, Bazaar Movies Hindi",
-   "text": "video LXXkiUKDK4w can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video tKqo-4qAeJA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema, Bazaar Movies Hindi",
@@ -103,7 +103,7 @@
   },
   {
    "channel": "Bazaar Cinema, Bazaar Movies Hindi",
-   "text": "video 1lFk1LSsI_c can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video LXXkiUKDK4w can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
@@ -111,11 +111,11 @@
   },
   {
    "channel": "Bazaar Cinema",
-   "text": "video USdFRRVL2oU can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video yNamXD_Rfaw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
-   "text": "video yNamXD_Rfaw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video USdFRRVL2oU can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
@@ -127,15 +127,11 @@
   },
   {
    "channel": "Bazaar Cinema",
-   "text": "video 28Ia7wl1V20 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video SOPh8MyfqpA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
    "text": "video Lnh9jlEIt2U can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Cinema",
-   "text": "video SOPh8MyfqpA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
@@ -144,6 +140,10 @@
   {
    "channel": "Bazaar Cinema, Bazaar Movies Hindi",
    "text": "video uoGCXFuDiQo can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Cinema",
+   "text": "video 28Ia7wl1V20 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema",
@@ -158,8 +158,8 @@
    "text": "video rFP_eynbSnA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
-   "channel": "Bazaar Cinema, Bazaar Movies Hindi",
-   "text": "video xlaStrxzW_U can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "channel": "Bazaar Cinema",
+   "text": "video al6mpz3sgkY can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Cinema, Bazaar Movies Hindi",
@@ -170,8 +170,8 @@
    "text": "video egWv3HVXOG8 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
-   "channel": "Bazaar Cinema",
-   "text": "video al6mpz3sgkY can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "channel": "Bazaar Cinema, Bazaar Movies Hindi",
+   "text": "video xlaStrxzW_U can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
@@ -179,15 +179,11 @@
   },
   {
    "channel": "Bazaar Kids",
-   "text": "video b1lGkuE0WbI can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Kids",
    "text": "video Mm-mq5lxuC8 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
-   "text": "video gHhNeHoGGLg can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video b1lGkuE0WbI can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
@@ -195,11 +191,11 @@
   },
   {
    "channel": "Bazaar Kids",
-   "text": "video ptf_gDPb3rw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video gHhNeHoGGLg can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
-   "text": "video rW8hSZihwXQ can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video ptf_gDPb3rw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
@@ -207,15 +203,11 @@
   },
   {
    "channel": "Bazaar Kids",
-   "text": "video yxEPzSxJGCY can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Kids",
    "text": "video syhzsa3ODY8 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
-   "text": "video b3DrypIoIlI can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video rW8hSZihwXQ can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
@@ -223,11 +215,7 @@
   },
   {
    "channel": "Bazaar Kids",
-   "text": "video ltAoKrSzSbE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Kids",
-   "text": "video PYCeKp1L6F8 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video yxEPzSxJGCY can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
@@ -235,11 +223,15 @@
   },
   {
    "channel": "Bazaar Kids",
-   "text": "video roL5ecn2qcw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video b3DrypIoIlI can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
-   "text": "video gYyETqbAw18 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video ltAoKrSzSbE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Kids",
+   "text": "video roL5ecn2qcw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids",
@@ -247,11 +239,19 @@
   },
   {
    "channel": "Bazaar Kids",
+   "text": "video PYCeKp1L6F8 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Kids",
+   "text": "video gYyETqbAw18 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Kids",
    "text": "video 76xddH1Szyg can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids, Bazaar Comedy",
-   "text": "video mkI1Ffbx-Iw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video iS8X_EyTkmk can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids, Bazaar Comedy",
@@ -259,7 +259,7 @@
   },
   {
    "channel": "Bazaar Kids, Bazaar Comedy",
-   "text": "video iS8X_EyTkmk can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video mkI1Ffbx-Iw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids, Bazaar Comedy",
@@ -271,7 +271,7 @@
   },
   {
    "channel": "Bazaar Kids, Bazaar Comedy",
-   "text": "video DyLvQrbxyjk can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video nn40FqPVH20 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids, Bazaar Comedy",
@@ -279,11 +279,15 @@
   },
   {
    "channel": "Bazaar Kids, Bazaar Comedy",
-   "text": "video nn40FqPVH20 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video tYVbgg2BRlE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids, Bazaar Comedy",
    "text": "video 1JD7875Wv-k can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Kids, Bazaar Comedy",
+   "text": "video DyLvQrbxyjk can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Kids, Bazaar Comedy",
@@ -294,20 +298,16 @@
    "text": "video L8Uv0Nc9orw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
-   "channel": "Bazaar Kids, Bazaar Comedy",
-   "text": "video tYVbgg2BRlE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
    "channel": "Bazaar Sports",
    "text": "video ERUVxtoh3T8 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Sports",
-   "text": "video a6L-efvFXiA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video e0SzreAH6Vg can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Sports",
-   "text": "video e0SzreAH6Vg can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video a6L-efvFXiA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Sports",
@@ -331,11 +331,11 @@
   },
   {
    "channel": "Bazaar Sports",
-   "text": "video qA9nzucwh6o can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video KwnUbeDQ0YE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Sports",
-   "text": "video KwnUbeDQ0YE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video qA9nzucwh6o can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Sports",
@@ -347,11 +347,11 @@
   },
   {
    "channel": "Bazaar Sports",
-   "text": "video EY41X9sfxlA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video A-kbmFiCMUI can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Sports",
-   "text": "video A-kbmFiCMUI can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video EY41X9sfxlA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Sports",
@@ -359,11 +359,11 @@
   },
   {
    "channel": "Bazaar Comedy",
-   "text": "video qH6pA0QPNkE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video d1MniYcVMoE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Comedy",
-   "text": "video d1MniYcVMoE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video qH6pA0QPNkE can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Comedy",
@@ -371,11 +371,11 @@
   },
   {
    "channel": "Bazaar Comedy",
-   "text": "video SAEraJe-8DA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video zJGyAWyfs7E can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Comedy",
-   "text": "video zJGyAWyfs7E can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video SAEraJe-8DA can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Comedy",
@@ -383,15 +383,7 @@
   },
   {
    "channel": "Bazaar Comedy",
-   "text": "video MKeC0u1QYns can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Comedy",
    "text": "video DORZxNJo0I8 can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Comedy",
-   "text": "video Te1hhSSz0Yg can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Comedy",
@@ -399,7 +391,15 @@
   },
   {
    "channel": "Bazaar Comedy",
-   "text": "video BHuyuk1tn4s can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video MKeC0u1QYns can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Comedy",
+   "text": "video Te1hhSSz0Yg can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Comedy",
+   "text": "video 7n4Glt2smIs can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Comedy",
@@ -411,7 +411,11 @@
   },
   {
    "channel": "Bazaar Comedy",
-   "text": "video 7n4Glt2smIs can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video BHuyuk1tn4s can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Comedy",
+   "text": "video Agz3knudN6M can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Comedy",
@@ -423,15 +427,11 @@
   },
   {
    "channel": "Bazaar Comedy",
-   "text": "video Agz3knudN6M can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+   "text": "video NyiKw6WcFyw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Comedy",
    "text": "video qZYhSlR3CVw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
-  },
-  {
-   "channel": "Bazaar Comedy",
-   "text": "video NyiKw6WcFyw can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
   },
   {
    "channel": "Bazaar Movies English",
