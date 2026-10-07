@@ -137,14 +137,25 @@ function keepInStep() {
   if (items[cur].clip && have >= items[cur].secs - 0.5) return rejoin(cur);
   if (Math.abs(want - have) > 30 && want < items[cur].secs - 30) player.seekTo(target.base + want, true);
 }
-// The day's running order with its ad breaks: the locked day (channel/locked/<id>.json, written every night,
-// so the day never changes once it has begun), or, when there is none, worked out the same way here from
+// The day's running order with its ad breaks: the locked day (the owner's from Channel Studio, or
+// channel/locked/<id>.json written every night, so the day never changes once it has begun), or, when there is none, worked out the same way here from
 // the programmes the owner approved in Channel Studio (📺 Programmes).
 let all = [], picks = null, promos = [], trailers = [], day = null, locked = null;
 function order() {
   day = torontoDay().date;
   items = locked && locked.date === day ? locked.items : dayPlan(station, { list: all, picks, promos, trailers }, day);
 }
+
+// The owner can unlock today in Channel Studio to fix a mistake: the fixed day comes in within 5 minutes,
+// from the next programme on (what has played and what's on now stay as they were).
+setInterval(() => {
+  if (!day) return;
+  loadLocked(station, "", day).then(lk => {
+    if (!lk || torontoDay().date !== day || JSON.stringify(lk) === JSON.stringify(locked?.items)) return;
+    locked = { date: day, items: lk };
+    order();
+  });
+}, 5 * 60e3);
 
 let joinAt = 0;
 Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station)]).then(([d, p, pr, tr, lk]) => {

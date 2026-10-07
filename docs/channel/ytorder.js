@@ -25,16 +25,19 @@ function shuffled(list, seed) {
 export const lengthOf = (v, station) => Math.round((v.mins || station?.ytMins || 5) * 60);
 
 /**
- * The owner's review (Channel Studio, 2026-10-07): every video is "approved" (on air), "new" (found by the
- * daily search, waiting for the owner) or "removed". Picks for one channel:
- * { on: [approved ids], off: [removed ids], offLabels: [removed sources], mode? }.
+ * The owner's review (Channel Studio, 2026-10-07). Every video found stays in the channel's 📚 Library; the
+ * owner approves the ones for ✅ Next transmission ("approved"), and the 24-hour schedules are made from those.
+ * Others are "new" (found by the daily search, not looked at yet), "library" (kept, not in next transmission)
+ * or "removed" (an old "remove", or a source switched off). Picks for one channel:
+ * { on: [approved ids], out: [ids kept in the library only], off: [removed ids], offLabels: [removed sources] }.
  * Videos found up to [REVIEW_FROM] were on air before the review started, so they count as approved.
  */
 export const REVIEW_FROM = "2026-10-07";
 export function status(v, pick) {
-  const on = pick?.on || [], off = pick?.off || [], offLabels = pick?.offLabels || [];
+  const on = pick?.on || [], out = pick?.out || [], off = pick?.off || [], offLabels = pick?.offLabels || [];
   if (on.includes(v.id)) return "approved";
   if (off.includes(v.id) || offLabels.includes(v.label)) return "removed";
+  if (out.includes(v.id)) return "library";
   if ((v.found || "") > REVIEW_FROM) return "new";
   // The old "wait until I tick them" mode: anything not ticked was off.
   return pick?.mode === "manual" ? "removed" : "approved";
@@ -201,12 +204,49 @@ export function dayPlan(station, { list, picks, promos = [], trailers = [] }, da
   return end < 0 ? items : items.slice(0, end + 1);
 }
 
+// Only what a player needs, so locked days stay small.
+export const slimItem = x => x.kind === "break" ? x : { ...x, v: { id: x.v.id, title: x.v.title, label: x.v.label, mins: x.v.mins } };
+
 /**
- * The locked schedules (owner, 2026-10-07: "lock the schedule for 24 hours"): every night a job
- * (tools/lock_schedules.mjs) writes tomorrow's day for each channel to channel/locked/<id>.json, and
- * that day plays exactly as written, whatever changes during it. Changes in Studio go into the next lock.
+ * A day the owner edits in Studio (📅 Schedule): the programmes before it stay exactly as they were
+ * ([keep], what has played already and the one on now), then [progs] in the owner's order with the ad
+ * breaks, clips and trailers in between, as in any day.
+ */
+export function rebuildDay(station, keep, progs, promos = [], trailers = []) {
+  return keep.concat(withBreaks(progs, station, promos, trailers).map(slimItem));
+}
+
+/**
+ * A film still running at midnight finishes first, like TV: the next day starts with the rest of it.
+ * [items] is the day that started at [startMs]; returns the item that carries over, or null.
+ */
+export function carryOver(items, startMs) {
+  const next = torontoDay(startMs + 25 * 3600e3).start;
+  const w = itemAt(items, next - 1000);
+  const it = items[w.i], rest = Math.round(it.secs - w.offset - 1);
+  return it.kind === "video" && !it.trailer && rest > 120 ? { ...it, secs: rest, start: Math.round((it.start || 0) + w.offset + 1), cont: true } : null;
+}
+
+/** The days the owner locked (or fixed) in Studio: Firestore channel/sched-<id>, { days: { date: { items, at } } }. */
+export const schedDoc = id => "sched-" + id;
+export async function loadOwnerDays(id) {
+  try {
+    const r = await fetch(PICKS_URL.replace(/picks$/, schedDoc(id)), { cache: "no-store" });
+    if (!r.ok) return {};
+    const d = await r.json();
+    return JSON.parse(d.fields?.data?.stringValue || "{}").days || {};
+  } catch { return {}; }
+}
+
+/**
+ * The locked schedules (owner, 2026-10-07: "lock the schedule for 24 hours"). A day the owner locked in
+ * Channel Studio comes first (channel/sched-<id> in Firestore, so a fix shows at once); otherwise the one the
+ * nightly job (tools/lock_schedules.mjs) wrote to channel/locked/<id>.json. A locked day plays exactly as
+ * written; it changes only when the owner unlocks it in Studio to fix a mistake.
  */
 export async function loadLocked(station, base = "", date = torontoDay().date) {
+  const mine = (await loadOwnerDays(station.id))[date]?.items;
+  if (Array.isArray(mine) && mine.length) return mine;
   try {
     const d = await (await fetch(`${base}locked/${station.id}.json`, { cache: "no-store" })).json();
     const items = d.days?.[date];
