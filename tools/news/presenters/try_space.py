@@ -8,15 +8,25 @@ space, pic, wav, out = sys.argv[1:5]
 PROMPT = ("A professional female TV news anchor sitting at a news desk reads the news to the camera with natural "
           "expressions, subtle head movements, blinking and small hand gestures, realistic, static camera.")
 log = {"space": space}
+# Known values for Spaces whose API has no defaults (LongCat demo: resolution, seed, steps, guidance).
+EXTRA = {}
 
 def kind(p):
-    lab = (p.get("label") or "") + " " + (p.get("parameter_name") or "")
-    comp = (p.get("component") or "").lower(); l = lab.lower()
-    if comp == "image" or any(w in l for w in ("image", "portrait", "photo", "picture", "face", "1st")): return "image"
-    if comp == "audio" or any(w in l for w in ("audio", "speech", "voice", "sound", "2nd")): return "audio"
+    comp = (p.get("component") or "").lower()
+    lab = ((p.get("label") or "") + " " + (p.get("parameter_name") or "")).lower()
+    if comp == "image": return "image"
+    if comp == "audio": return "audio"
     if comp == "video": return "video"
-    if comp == "textbox" or "prompt" in l or "text" in l or "3rd" in l: return "text"
+    if comp == "textbox": return "text"
+    if comp == "api":  # no component info: go by position labels / names
+        if "1st" in lab or "image" in lab: return "image"
+        if "2nd" in lab or "audio" in lab: return "audio"
+        if "3rd" in lab or "prompt" in lab: return "text"
     return "other"
+
+def choices(p):
+    t = p.get("type") or {}
+    return t.get("enum") or [x.get("const") for x in t.get("anyOf", []) if isinstance(x, dict) and "const" in x] or None
 
 c = Client(space, verbose=False)
 api = c.view_api(return_format="dict", print_info=False)["named_endpoints"]
@@ -38,6 +48,8 @@ for p in ep["parameters"]:
     elif k == "text" and not p.get("parameter_has_default"): args.append(PROMPT)
     elif k == "text" and isinstance(p.get("parameter_default"), str) and len(p["parameter_default"]) > 25: args.append(PROMPT)
     elif p.get("parameter_has_default"): args.append(p["parameter_default"])
+    elif choices(p): args.append(choices(p)[0])
+    elif p.get("python_type", {}).get("type") in ("int", "float"): args.append(EXTRA.get(len(args), 0))
     else: args.append(None)
 log.update(endpoint=name, args=[a if isinstance(a, (str, int, float, bool, type(None))) else "<file>" for a in args],
            labels=[p.get("label") for p in ep["parameters"]])

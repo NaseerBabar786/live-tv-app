@@ -19,13 +19,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {n: 1, space: "meituan-longcat/LongCat-Video-Avatar-1.5-Demo"}
           - {n: 2, space: "victor/LongCat-Video-Avatar-1.5"}
           - {n: 3, space: "alexnasa/OmniAvatar"}
           - {n: 4, space: "acvlab/FantasyTalking"}
           - {n: 5, space: "fffiloni/EchoMimic"}
-          - {n: 6, space: "multimodalart/MoDA-fast-talking-head"}
-          - {n: 7, space: "fffiloni/KDTalker"}
           - {n: 8, space: "hugging-apps/leaptalk-talking-head"}
     steps:
       - uses: actions/checkout@v4
