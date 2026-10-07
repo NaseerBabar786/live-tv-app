@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Builds Bazaar TV's block of popular music videos (the owner's wish, 2026-10-06): the newest official
-videos in English, Hindi, Urdu and Punjabi from the music labels' and artists' own YouTube channels,
+videos in Hindi and Urdu (since 2026-10-07: the owner wants Bazaar TV 100% Urdu and Hindi) from the music labels' and artists' own YouTube channels,
 played in YouTube's own player, locked like Bazaar Hits (docs/channel/block.html). Nothing is
 downloaded or re-hosted.
 
@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id  # noqa: E402
 from build_trailers import uploads  # noqa: E402
 from build_youtube_channels import other_language  # noqa: E402
+from titles import screen_title  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "channel", "music-videos.json")
@@ -29,8 +30,8 @@ OUT = os.path.join(ROOT, "docs", "channel", "music-videos.json")
 # Songs from the last this many days (new music); a quiet channel's older songs still fill in.
 MAX_DAYS = 180
 SECS = (100, 420)
-# The whole block, about 55 minutes, so Bazaar TV's test programme comes to about three hours.
-TARGET_SECS = 55 * 60
+# The whole block, about 50 minutes.
+TARGET_SECS = 50 * 60
 # At most this many songs from one channel, so the block has variety.
 PER_SOURCE = 4
 
@@ -40,18 +41,7 @@ SKIP = re.compile(r"lyric|lyrical|audio|visuali[sz]er|jukebox|full album|non ?st
                   r"explicit|\buncensored\b|karaoke|instrumental|cover\b|tutorial|dance practice|backstage", re.I)
 
 LANGUAGES = [
-    ("English", "Popular English music", [
-        ("Ed Sheeran", ["@EdSheeran"], "Ed Sheeran"),
-        ("Coldplay", ["@coldplay", "@Coldplay"], "Coldplay"),
-        ("Bruno Mars", ["@brunomars", "@BrunoMars"], "Bruno Mars"),
-        ("Dua Lipa", ["@dualipa", "@DuaLipa"], "Dua Lipa"),
-        ("Taylor Swift", ["@TaylorSwift", "@taylorswift"], "Taylor Swift"),
-        ("Justin Bieber", ["@justinbieber", "@JustinBieber"], "Justin Bieber"),
-        ("Imagine Dragons", ["@ImagineDragons", "@imaginedragons"], "Imagine Dragons"),
-        ("Charlie Puth", ["@charlieputh", "@CharliePuth"], "Charlie Puth"),
-        ("Shawn Mendes", ["@ShawnMendes", "@shawnmendes"], "Shawn Mendes"),
-    ]),
-    ("Hindi", "Popular Hindi music", [
+    ("Hindi", "مقبول ہندی گانے", [
         ("T-Series", ["@tseries"], "T-Series"),
         ("Saregama", ["@saregamamusic", "@SaregamaMusic"], "Saregama"),
         ("Zee Music", ["@zeemusiccompany", "@ZeeMusicCompany"], "Zee Music"),
@@ -59,21 +49,13 @@ LANGUAGES = [
         ("Tips", ["@tipsofficial", "@TipsMusic"], "Tips"),
         ("YRF", ["@yrf", "@YRFMusic"], "YRF"),
     ]),
-    ("Urdu", "Popular Urdu music", [
+    ("Urdu", "مقبول اردو گانے", [
         ("Coke Studio Pakistan", ["@cokestudio", "@CokeStudioPakistan"], "Coke Studio"),
         ("Atif Aslam", ["@AtifAslam", "@atifaslam"], "Atif Aslam"),
         ("Asim Azhar", ["@AsimAzharOfficial", "@AsimAzhar"], "Asim Azhar"),
         ("Ali Zafar", ["@AliZafarOfficial", "@alizafar"], "Ali Zafar"),
         ("Velo Sound Station", ["@VeloSoundStation", "@velosoundstation"], "Velo Sound Station"),
         ("Rahat Fateh Ali Khan", ["@RahatFatehAliKhan", "@RFAKOfficial"], "Rahat Fateh Ali Khan"),
-    ]),
-    ("Punjabi", "Popular Punjabi music", [
-        ("Speed Records", ["@SpeedRecords"], "Speed Records"),
-        ("White Hill Music", ["@WhiteHillMusic"], "White Hill"),
-        ("Desi Melodies", ["@DesiMelodies"], "Desi Melodies"),
-        ("Geet MP3", ["@GeetMP3"], "Geet MP3"),
-        ("Diljit Dosanjh", ["@diljitdosanjh", "@DiljitDosanjh"], "Diljit Dosanjh"),
-        ("AP Dhillon", ["@apdhillon", "@APDhillon"], "AP Dhillon"),
     ]),
 ]
 
@@ -101,7 +83,7 @@ def language(lang, sources, today, old):
             first = old.get(vid, {}).get("found", today.isoformat())
             if (age if age is not None else (today - dt.date.fromisoformat(first)).days) > MAX_DAYS:
                 continue
-            found.append({"id": vid, "title": title.strip(), "label": source, "lang": lang, "secs": secs,
+            found.append({"id": vid, "title": screen_title(title, source), "label": source, "lang": lang, "secs": secs,
                           "age": age, "found": first, "kind": "music"})
             kept += 1
             print(f"    {age if age is not None else '?':>3} days  {title}")
@@ -151,7 +133,7 @@ def main():
     if len(block) < 8:
         sys.exit(f"Too few music videos ({summary}); keeping the old list.")
     with open(OUT, "w", encoding="utf-8") as f:
-        json.dump({"name": "Popular music videos", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        json.dump({"name": "مقبول گانے", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
                    "secs": total, "videos": block}, f, ensure_ascii=False, indent=1)
         f.write("\n")
     print(f"Wrote {os.path.relpath(OUT, ROOT)}: {summary}")

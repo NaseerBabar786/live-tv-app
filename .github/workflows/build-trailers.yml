@@ -1,7 +1,7 @@
 name: Build trailers and music videos
 
-# docs/channel/trailers.json and music-videos.json: Bazaar TV's blocks of upcoming film trailers (English,
-# Hindi, Punjabi, Pakistani) and popular music videos (English, Hindi, Urdu, Punjabi) from the studios',
+# docs/channel/trailers.json and music-videos.json: Bazaar TV's blocks of upcoming film trailers (Hindi,
+# Pakistani) and popular music videos (Hindi, Urdu) from the studios',
 # labels' and artists' own YouTube channels, rebuilt every day. Played in
 # YouTube's player, locked, on tv.bulkbazaar.ca/channel/block.html (also in the app).
 on:
