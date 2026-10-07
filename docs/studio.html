@@ -167,6 +167,21 @@
   .heatmap i { display: block; aspect-ratio: 1.3; border-radius: 3px; background: var(--surface-2); }
   .hitsMode .work, .hitsMode #step5, .hitsMode .savebar, .hitsMode .modes, .hitsMode #soundBtn, .hitsMode #barBtn, .hitsMode #adBtn, .hitsMode .tvbox details { display: none !important; }
   .hitsMode #hitsNote { display: block !important; }
+  /* 📺 Programmes (2026-10-07): which videos our YouTube channels and Bazaar Hits may play. */
+  #picks { display: none; order: 9; }
+  .hitsMode #picks { display: block; }
+  @media (min-width: 1200px) { #picks { grid-column: 2; grid-row: 1; margin: 0; } }
+  .pkSources { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+  .pkSources label { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--line); background: var(--bg); cursor: pointer; font-size: 14px; }
+  .pkSources label.off { opacity: .55; text-decoration: line-through; }
+  #pkList { display: grid; gap: 6px; max-height: 55vh; overflow-y: auto; padding-right: 4px; margin: 10px 0 16px; }
+  .pk { display: grid; grid-template-columns: auto 96px 1fr; gap: 10px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; cursor: pointer; }
+  .pk.off { opacity: .5; }
+  .pk.off b { text-decoration: line-through; }
+  .pk img { width: 96px; height: 54px; object-fit: cover; border-radius: 6px; background: #000; }
+  .pk input, .pkSources input { width: 20px; height: 20px; accent-color: var(--focus); }
+  .pk small { display: block; color: var(--muted); font-size: 13px; }
+  #pkGuide { max-height: 40vh; overflow-y: auto; }
   pre.rule { background: var(--bg); padding: 10px; border-radius: 8px; overflow: auto; font-size: 13px; }
   @media (max-width: 640px) { .two, .three { grid-template-columns: 1fr; } .item { grid-template-columns: 1fr; } .item .acts { justify-content: flex-start; } }
 </style>
@@ -463,6 +478,41 @@
     <p class="small" id="who" style="margin-top:18px"></p>
     <button class="btn" data-signout>Sign out</button>
     </div>
+    <section class="panel" id="picks">
+      <h2 style="margin-top:0;display:block">📺 Programmes on <span id="pkName"></span></h2>
+      <p class="small" style="margin-top:0">This channel runs like real TV: one running order a day, starting at midnight (Toronto time) and going round the clock, so everyone who tunes in joins whatever is on <b>now</b>, part-way through. Untick anything you don't want on air, then press <b>Save programmes</b>. TVs and the website pick it up the next time the channel is opened. The list itself is refreshed every day from the official YouTube channels.</p>
+      <div class="row" style="margin:0 0 12px">
+        <b>New videos found each day:</b>
+        <label><input type="radio" name="pkMode" value="auto" checked> go on air by themselves</label>
+        <label><input type="radio" name="pkMode" value="manual"> wait until I tick them</label>
+      </div>
+      <h3 style="margin:0 0 6px">Sources <span class="small">(untick one to take off everything it uploads)</span></h3>
+      <div class="pkSources" id="pkSources"></div>
+      <div class="row">
+        <input id="pkFind" type="search" placeholder="Find a programme…" style="flex:1;min-width:180px">
+        <select id="pkShow"><option value="all">All</option><option value="on">On air</option><option value="off">Taken off</option></select>
+        <button class="btn" type="button" id="pkAllOn">Tick all</button>
+        <button class="btn" type="button" id="pkAllOff">Untick all</button>
+      </div>
+      <p class="small" id="pkCount" style="margin:8px 0 0"></p>
+      <div id="pkList"></div>
+      <h3 style="margin:0 0 6px">Today's running order from now</h3>
+      <p class="small" style="margin:0 0 6px">With your ticks (saved or not). Times are your computer's time.</p>
+      <div class="guide" id="pkGuide"></div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn primary" type="button" id="pkSave">💾 Save programmes</button>
+        <span id="pkMsg" class="small"></span>
+      </div>
+      <div id="pkRule" class="hidden" style="margin-top:12px">
+        <b>One-time step so TVs see your choices.</b> Add this rule once in Firebase › Firestore › Rules, just above the last two <code>}</code>, then press Publish (it's the same rule as for the channel's public page; if you've already added it, there's nothing to do):
+        <pre class="rule" id="pkRuleText">    // Our channels (Channel Studio): anyone may read them; only you change them.
+    match /channel/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }</pre>
+        <button class="btn" type="button" id="pkCopyRule">Copy the rule</button>
+      </div>
+    </section>
   </div>
   <p class="err" id="err"></p>
 </main>
@@ -470,6 +520,7 @@
 <script type="module">
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand } from "./channel/schedule.js";
+import { playable, runningOrder, upcoming, torontoDay, lengthOf as ytLength } from "./channel/ytorder.js";
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 
@@ -568,7 +619,7 @@ function showHits(on) {
 async function loadSaved() {
   renderStations();
   showHits(!!station.web);
-  if (station.web) { dirty = false; return; }
+  if (station.web) { dirty = false; loadPicksPanel(); return; }
   try {
     const snap = await fs.getDoc(fs.doc(db, "sponsors", station.doc));
     if (snap.exists() && snap.data().data) {
@@ -1501,6 +1552,147 @@ $("save").onclick = async () => {
   } finally {
     $("save").disabled = false;
   }
+};
+// ---------- 📺 Programmes: which videos our YouTube channels and Bazaar Hits may play (2026-10-07) ----------
+// Saved in sponsors/_picks (Studio reads it) and the public copy channel/picks (the channel pages read it,
+// channel/ytorder.js). One doc for all channels: { <station id>: { mode, off: [ids], offLabels: [sources], on: [ids] } }.
+let pkAll = null, pkList = [], pick = null;
+const pkStation = () => station === HITS ? { id: "hits", ytMins: 4 } : station;
+async function loadPicksPanel() {
+  $("pkName").textContent = station.name;
+  $("pkMsg").textContent = "Loading…";
+  $("pkList").innerHTML = ""; $("pkSources").innerHTML = ""; $("pkGuide").innerHTML = "";
+  const wanted = station;
+  try {
+    if (!pkAll) {
+      const snap = await fs.getDoc(fs.doc(db, "sponsors", "_picks"));
+      pkAll = snap.exists() && snap.data().data ? JSON.parse(snap.data().data) : {};
+    }
+    const url = station === HITS ? "channel/bollywood.json" : `channel/yt-${station.id}.json`;
+    const d = await (await fetch(url + "?t=" + Date.now())).json();
+    if (wanted !== station) return;
+    pkList = d.videos || d.songs || [];
+    pick = clone(pkAll[station.id] || { mode: "auto", off: [], offLabels: [], on: [] });
+    pick.off ||= []; pick.offLabels ||= []; pick.on ||= [];
+    $("pkMsg").textContent = `${pkList.length} programmes in today's list (updated ${d.built || "daily"}).`;
+    renderPicks();
+  } catch (e) {
+    $("pkMsg").innerHTML = `<span class="err">Couldn't load the programme list: ${esc(e.message)}</span>`;
+  }
+}
+function pkChanged() { dirty = true; $("pkMsg").innerHTML = `<span class="warn">Not saved yet.</span>`; renderPicks(); }
+function setOn(v, on) {
+  if (pick.mode === "manual") {
+    pick.on = pick.on.filter(id => id !== v.id);
+    if (on) pick.on.push(v.id);
+  } else {
+    pick.off = pick.off.filter(id => id !== v.id);
+    if (!on) pick.off.push(v.id);
+    // Ticking a video whose whole source is off brings the source back, minus its other videos.
+    if (on && pick.offLabels.includes(v.label)) {
+      pick.offLabels = pick.offLabels.filter(l => l !== v.label);
+      pkList.filter(x => x.label === v.label && x.id !== v.id && !pick.off.includes(x.id)).forEach(x => pick.off.push(x.id));
+    }
+  }
+}
+function renderPicks() {
+  document.querySelectorAll("input[name=pkMode]").forEach(r => r.checked = r.value === pick.mode);
+  // Sources
+  const labels = [...new Set(pkList.map(v => v.label))];
+  $("pkSources").innerHTML = "";
+  for (const l of labels) {
+    const items = pkList.filter(v => v.label === l);
+    const onCount = items.filter(v => playable(v, pick)).length;
+    const lab = document.createElement("label");
+    lab.className = onCount ? "" : "off";
+    lab.innerHTML = `<input type="checkbox"><span></span>`;
+    lab.querySelector("span").textContent = `${l} (${onCount}/${items.length})`;
+    const box = lab.querySelector("input");
+    box.checked = onCount > 0;
+    box.indeterminate = onCount > 0 && onCount < items.length;
+    box.onchange = () => {
+      if (pick.mode === "manual") items.forEach(v => setOn(v, box.checked));
+      else {
+        pick.offLabels = pick.offLabels.filter(x => x !== l);
+        pick.off = pick.off.filter(id => !items.some(v => v.id === id));
+        if (!box.checked) pick.offLabels.push(l);
+      }
+      pkChanged();
+    };
+    $("pkSources").appendChild(lab);
+  }
+  // Programmes
+  const find = $("pkFind").value.trim().toLowerCase(), showing = $("pkShow").value;
+  $("pkList").innerHTML = "";
+  let shown = 0;
+  for (const v of pkList) {
+    const on = playable(v, pick);
+    if (showing === "on" && !on || showing === "off" && on) continue;
+    if (find && !(v.title + " " + v.label).toLowerCase().includes(find)) continue;
+    if (++shown > 400) break;
+    const row = document.createElement("label");
+    row.className = "pk" + (on ? "" : " off");
+    row.innerHTML = `<input type="checkbox"><img alt="" loading="lazy"><span><b></b><small></small></span>`;
+    row.querySelector("input").checked = on;
+    row.querySelector("input").onchange = e => { setOn(v, e.target.checked); pkChanged(); };
+    row.querySelector("img").src = `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
+    row.querySelector("b").textContent = v.title;
+    row.querySelector("small").textContent = [v.label, v.mins ? lengthText(v.mins * 60) : "", v.top ? "★ comes round more often" : "", v.found ? "found " + v.found : ""].filter(Boolean).join(" · ");
+    $("pkList").appendChild(row);
+  }
+  const onAir = pkList.filter(v => playable(v, pick));
+  $("pkCount").textContent = `${onAir.length} of ${pkList.length} on air` + (onAir.length ? "" : station === HITS ? " — with nothing ticked, Bazaar Hits plays every song." : " — with nothing on air, the channel plays its free backup films instead.");
+  // Today's running order, as the channel page works it out.
+  const st = pkStation(), order = runningOrder(st, onAir, torontoDay().date);
+  $("pkGuide").innerHTML = "";
+  upcoming(order, st, 30).forEach((u, k) => {
+    const g = document.createElement("div");
+    if (!k) g.className = "cur";
+    g.innerHTML = "<span></span><span></span><span></span>";
+    g.children[0].textContent = k ? timeText(u.startMs) : "Now";
+    g.children[1].textContent = u.v.title;
+    g.children[2].textContent = lengthText(ytLength(u.v, st));
+    $("pkGuide").appendChild(g);
+  });
+}
+document.querySelectorAll("input[name=pkMode]").forEach(r => r.onchange = () => {
+  const wasOn = pkList.filter(v => playable(v, pick)).map(v => v.id);
+  pick.mode = r.value;
+  if (pick.mode === "manual") pick.on = wasOn;
+  else { pick.offLabels = []; pick.off = pkList.filter(v => !wasOn.includes(v.id)).map(v => v.id); }
+  pkChanged();
+});
+$("pkFind").oninput = renderPicks;
+$("pkShow").onchange = renderPicks;
+$("pkAllOn").onclick = () => { pkList.forEach(v => setOn(v, true)); if (pick.mode !== "manual") { pick.off = []; pick.offLabels = []; } pkChanged(); };
+$("pkAllOff").onclick = () => {
+  if (!confirm(`Take every programme off ${station.name}? It will play its free backup films until you tick some again.`)) return;
+  pkList.forEach(v => setOn(v, false)); pkChanged();
+};
+$("pkCopyRule").onclick = () => navigator.clipboard.writeText($("pkRuleText").textContent).then(() => $("pkCopyRule").textContent = "Copied ✓");
+$("pkSave").onclick = async () => {
+  if (!pick) return;
+  const next = { ...pkAll, [station.id]: pick };
+  const data = JSON.stringify(next);
+  $("pkMsg").textContent = "Saving…";
+  try {
+    await fs.setDoc(fs.doc(db, "sponsors", "_picks"), { data, updatedAt: fs.serverTimestamp() });
+    pkAll = next;
+    dirty = false;
+  } catch (e) {
+    $("pkMsg").innerHTML = `<span class="err">Couldn't save: ${esc(e.message)}</span>`;
+    return;
+  }
+  try {
+    await fs.setDoc(fs.doc(db, "channel", "picks"), { data, updatedAt: fs.serverTimestamp() });
+    $("pkRule").classList.add("hidden");
+    $("pkMsg").innerHTML = `<span class="ok">✓ Saved. ${esc(station.name)} plays your choices from the next time it's opened.</span>`;
+  } catch (e) {
+    if (e.code === "permission-denied") $("pkRule").classList.remove("hidden");
+    $("pkMsg").innerHTML = `<span class="warn">Saved for you, but TVs can't see it yet: Firebase needs the one-time rule below.</span>`;
+  }
+  // The player shows the channel with the new choices.
+  showHits(true);
 };
 </script>
 <script type="module" src="assets/ai-help.js"></script>
