@@ -1,0 +1,89 @@
+name: News presenter (moving)
+
+# A MOVING AI newsreader for Bazaar TV News: a waist-up picture made to move (head, shoulders, hands,
+# expressions) by the free Wan 2.2 image-to-video Space, with her Urdu voice (tools/news/presenters/move.py).
+# Two samples go to the channel-media release: news-move-<id>.mp4 (natural movement, voice on top) and
+# news-move-<id>-lips.mp4 (the same with LatentSync lips, made on the CPU, slow).
+
+on:
+  push:
+    paths:
+      - "tools/news/presenters/move.py"
+      - ".github/workflows/news-presenter-move.yml"
+  workflow_dispatch:
+    inputs:
+      id:
+        description: "Anchor id from presenters.json 'moving'"
+        required: false
+        default: "anchor-1"
+      lips:
+        description: "Also make the lip-synced version"
+        type: boolean
+        default: true
+
+concurrency:
+  group: news-presenter-move
+  cancel-in-progress: false
+
+env:
+  ID: ${{ github.event.inputs.id || 'anchor-1' }}
+
+jobs:
+  move:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg libraqm0 libfribidi0 fonts-dejavu-core
+          pip install -q gradio_client edge-tts pillow numpy
+      - name: Make her move
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p mv
+          # Keep the same picture once made, so the lips run and later lines show the same person.
+          curl -fsSL -o mv/$ID.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$ID.jpg" || rm -f mv/$ID.jpg
+          python3 tools/news/presenters/move.py "$ID" mv
+          python3 tools/news/presenters/sample.py mv/$ID-move.mp4 mv/line.mp3 "$ID" news-move-$ID.mp4
+          cp mv/$ID-move.mp4 news-move-$ID-raw.mp4
+          gh release upload channel-media mv/$ID.jpg news-move-$ID.mp4 news-move-$ID-raw.mp4 -R "$GITHUB_REPOSITORY" --clobber
+
+  lips:
+    needs: move
+    if: github.event_name == 'push' || github.event.inputs.lips == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg libraqm0 libfribidi0 fonts-dejavu-core
+          pip install -q edge-tts pillow numpy
+      - name: Lips (LatentSync, CPU)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          mkdir -p out
+          curl -fsSL -o out/$ID.mp4 "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$ID-raw.mp4"
+          python3 -c "import asyncio,json,edge_tts; c=json.load(open('tools/news/presenters/presenters.json')); asyncio.run(edge_tts.Communicate(c['line'], c['voice']).save('line.mp3'))"
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 out/$ID.mp4)
+          ffmpeg -v error -y -i line.mp3 -af "adelay=300|300,apad" -t "$D" -ac 1 -ar 16000 out/$ID-line.wav
+          ffmpeg -v error -y -i out/$ID-line.wav -c:a libmp3lame -q:a 2 line-pad.mp3
+          git clone -q --depth 1 https://github.com/NaseerBabar786/live-tv-app -b ad5-ai-video /tmp/ad5 2>/dev/null || true
+          ONLY=$ID STEPS=20 bash /tmp/ad5/tools/ad5/lips_cpu.sh
+          python3 tools/news/presenters/sample.py out/$ID-lips.mp4 line-pad.mp3 "$ID" news-move-$ID-lips.mp4
+          gh release upload channel-media news-move-$ID-lips.mp4 -R "$GITHUB_REPOSITORY" --clobber

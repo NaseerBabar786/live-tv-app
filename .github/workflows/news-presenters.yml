@@ -8,10 +8,6 @@ name: News presenters
 # fixed lines made once here; the news itself is read over our graphics.
 
 on:
-  push:
-    paths:
-      - "tools/news/presenters/**"
-      - ".github/workflows/news-presenters.yml"
   workflow_dispatch:
     inputs:
       only:
