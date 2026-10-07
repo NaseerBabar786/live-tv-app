@@ -393,6 +393,15 @@ internal object Firestore {
         return r.getString("name").substringAfterLast('/')
     }
 
+    /** The full name of the document at [path], as [commit] writes need it. */
+    fun name(path: String) =
+        "projects/${FirebaseConfig.PROJECT_ID}/databases/(default)/documents/$path"
+
+    /** Applies [writes] together: all of them, or none (Firestore's commit). */
+    fun commit(writes: JSONArray, token: String) {
+        Http.postJson("$base:commit", JSONObject().put("writes", writes), token)
+    }
+
     fun delete(path: String, token: String) {
         Http.request("DELETE", "$base/$path", null, null, token)
     }
@@ -428,7 +437,7 @@ internal object Firestore {
         }
     }
 
-    private fun encode(fields: Map<String, Any>): JSONObject {
+    fun encode(fields: Map<String, Any>): JSONObject {
         val out = JSONObject()
         for ((k, v) in fields) {
             out.put(
