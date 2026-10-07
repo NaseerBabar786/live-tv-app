@@ -190,4 +190,32 @@ class MyChannelTest {
         assertEquals(5, MyChannel.airingsBefore("weekdays", "2026-10-05", "2026-10-12"))
         assertEquals(2, MyChannel.airingsBefore("weekend", "2026-10-02", "2026-10-05"))
     }
+
+    @Test
+    fun cardsComeUpOnTheBreaks() {
+        val c = MyChannel.parse(
+            JSONObject(
+                """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
+                  {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":600,"kind":"programme"},
+                  {"id":"ad","title":"Ad","url":"https://x/ad.mp4","secs":20,"kind":"ad"}],
+                  "slots":[{"day":"all","time":"21:00","video":"a","show":"Night Film"}],"loop":["a","ad"]}""",
+            ),
+        )
+        val w = at(20, 0)
+        val shown = (0 until 600).map { w + it * 1000L }.filter { MyChannel.cardAt(c, it) != null }
+        assertTrue(shown.isNotEmpty())
+        val first = shown.first()
+        val on = MyChannel.whatsOn(c, first) as MyChannel.Now.Playing
+        assertTrue(on.video.isBreak || first == w + 8 * 60_000L)
+        // 20:00 starts an even 10 minutes: today's shows first, then what's next.
+        assertTrue(MyChannel.cardAt(c, first)!!.today)
+        assertEquals(false, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS)!!.today)
+        assertEquals(null, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS + MyChannel.NEXT_CARD_MS))
+        // One booked show left today: the next programmes fill the card up, in time order.
+        val today = MyChannel.todaysShows(c, at(20, 0))
+        assertEquals(listOf("Film A", "Night Film"), today.map { it.title })
+        assertTrue(today.any { it.title == "Night Film" && it.booked })
+        assertEquals(today.sortedBy { it.at }.map { it.at }, today.map { it.at })
+        assertTrue(MyChannel.upNext(c, at(20, 0)).isNotEmpty())
+    }
 }
