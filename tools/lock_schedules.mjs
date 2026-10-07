@@ -15,6 +15,8 @@ const read = name => JSON.parse(readFileSync(new URL(name, DIR), "utf8"));
 const promos = (read("../media/promos.json").promos || []).filter(p => p.src && p.secs >= 10 && p.secs <= 60);
 const allTrailers = existsSync(new URL("trailers.json", DIR)) ? read("trailers.json").videos || [] : [];
 const picks = await loadPicks();
+// Videos that no longer play in an embedded player (tools/check_channels.mjs) stay out of new days.
+const unplayable = existsSync(new URL("unplayable.json", DIR)) ? read("unplayable.json").ids || {} : {};
 if (!Object.keys(picks).length) console.log("::warning::No picks from Firestore (no public-read rule for channel/{id}?): every programme counts as approved.");
 
 const today = torontoDay().date;
@@ -26,7 +28,7 @@ const tomorrow = hour >= 20 || process.argv.includes("--tomorrow") ? torontoDay(
 for (const st of STATIONS.filter(s => s.yt)) {
   const file = new URL(`locked/${st.id}.json`, DIR);
   if (!existsSync(new URL(`yt-${st.id}.json`, DIR))) continue;
-  const list = read(`yt-${st.id}.json`).videos || [];
+  const list = (read(`yt-${st.id}.json`).videos || []).filter(v => !unplayable[v.id]);
   const trailers = st.trailerLangs ? allTrailers.filter(v => v.id && v.secs > 0 && v.secs <= 600 && st.trailerLangs.includes(v.lang)) : [];
   const old = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : { days: {} };
   const days = {};

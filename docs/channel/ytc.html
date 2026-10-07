@@ -59,6 +59,10 @@ const app = q.has("app");
 const $ = id => document.getElementById(id);
 const station = STATIONS.find(s => s.id === q.get("c")) || STATIONS.find(s => s.yt);
 let items = [], cur = 0, inBreak = false, player = null, nowTimer = null, failures = 0;
+// How far this screen runs ahead of the clock (ms): after a programme that ends a long while before its
+// listed end, or won't play at all, the channel goes straight on to the next one instead of standing still.
+let ahead = 0;
+const clock = () => Date.now() + ahead;
 
 document.title = station.name + " · Watch live";
 $("bug").src = station.logo;
@@ -105,10 +109,18 @@ function playItem(i, offset = 0) {
     inBreak = true;
     try { player.stopVideo(); } catch {}
     const at = cur;
-    playBreak(it.promos, offset, player.isMuted(), () => { inBreak = false; rejoin(at); });
+    playBreak(it.promos, offset, player.isMuted(), () => {
+      inBreak = false;
+      // An ad skipped: the channel goes on from there (no second break to make up the time).
+      const w = itemAt(items, clock());
+      if (w.i === at) ahead += (items[at].secs - w.offset) * 1000;
+      rejoin(at);
+    });
     return;
   }
   inBreak = false;
+  // A video our daily check found can't play here (channel/unplayable.json): its time is filled at once.
+  if (unplayable[it.v.id]) return endedEarly(cur);
   // A "coming up" clip plays 45 seconds from inside one of the channel's next films.
   // The rest of last night's film (cont) also starts part-way into its video.
   const base = it.start || 0;
@@ -119,15 +131,48 @@ function playItem(i, offset = 0) {
 /** Like TV, the clock decides what's on: after a programme (or an ad break) the channel goes on wherever it is now. */
 function rejoin(ended) {
   if (torontoDay().date !== day) {
-    // A new day: its locked schedule (or, without one, the day worked out here).
+    // A new day: its locked schedule (or, without one, the day worked out here), back on the clock.
     const date = torontoDay().date;
+    ahead = 0;
     return loadLocked(station, "", date).then(lk => { locked = lk && { date, items: lk }; order(); const w = itemAt(items); playItem(w.i, w.offset); });
   }
-  const w = itemAt(items);
+  let w = itemAt(items, clock());
+  // Never back to a programme that has already finished (ads that couldn't play end at once): on from there.
+  if (items[w.i] === finished && w.i !== ended) { ahead += (items[w.i].secs - w.offset) * 1000; w = itemAt(items, clock()); }
   // The one that just ended (a little early against its listed length, or an ad skipped): the next one, from the top.
   if (w.i === ended) return playItem(ended + 1, 0);
   playItem(w.i, w.offset < 10 ? 0 : w.offset);
 }
+/**
+ * Programme [i] has finished before its listed end (its video is shorter than listed, or it won't play).
+ * Never dead air: a short gap is filled with our promos, then the next programme starts on time; a long
+ * one, or when there's nothing to fill it with, goes straight on to the next programme.
+ */
+const FILL_MAX = 3 * 60;
+let finished = null;
+function endedEarly(i) {
+  finished = items[i];
+  const w = itemAt(items, clock());
+  if (w.i !== i) return rejoin(i);   // ended on time (or late): wherever the clock is now
+  const gap = items[i].secs - w.offset;
+  const fill = [];
+  let total = 0;
+  if (gap >= 20 && gap <= FILL_MAX) {
+    for (let k = 0; promos.length && k < 12; k++) {
+      const p = promos[(fillAt + k) % promos.length];
+      if (total + p.secs > gap + 5) continue;
+      fill.push(p); total += p.secs;
+    }
+  }
+  if (!fill.length) { ahead += Math.max(0, gap) * 1000; return playItem(i + 1, 0); }
+  fillAt += fill.length;
+  inBreak = true;
+  try { player.stopVideo(); } catch {}
+  cover(true);
+  ahead += Math.max(0, gap - total) * 1000;
+  playBreak(fill, 0, player.isMuted(), () => { inBreak = false; rejoin(i); });
+}
+let fillAt = 0;
 // Some TVs ignore where the video was asked to start; once it plays, it's moved to where the channel is.
 let target = null;
 function keepInStep() {
@@ -137,10 +182,27 @@ function keepInStep() {
   if (items[cur].clip && have >= items[cur].secs - 0.5) return rejoin(cur);
   if (Math.abs(want - have) > 30 && want < items[cur].secs - 30) player.seekTo(target.base + want, true);
 }
+/**
+ * A frozen screen never stays: a video stuck loading, or on one frame, for 30 seconds is loaded again
+ * where the channel is; stuck a second time, the channel goes on to the next programme.
+ */
+let lastT = -1, movedAt = Date.now(), stuckItem = -1, stuckTimes = 0;
+function watchStall() {
+  if (inBreak || !player?.getPlayerState || !started) { movedAt = Date.now(); return; }
+  const t = player.getCurrentTime?.() || 0, playing = player.getPlayerState() === YT.PlayerState.PLAYING;
+  if (playing && t !== lastT) { lastT = t; movedAt = Date.now(); return; }
+  lastT = t;
+  if (Date.now() - movedAt < 30000) return;
+  movedAt = Date.now();
+  lastError = "stuck";
+  if (stuckItem !== cur) { stuckItem = cur; stuckTimes = 0; }
+  if (++stuckTimes === 1) { const w = itemAt(items, clock()); return w.i === cur ? playItem(cur, w.offset) : rejoin(cur); }
+  endedEarly(cur);
+}
 // The day's running order with its ad breaks: the locked day (the owner's from Channel Studio, or
 // channel/locked/<id>.json written every night, so the day never changes once it has begun), or, when there is none, worked out the same way here from
 // the programmes the owner approved in Channel Studio (📺 Programmes).
-let all = [], picks = null, promos = [], trailers = [], day = null, locked = null;
+let all = [], unplayable = {}, picks = null, promos = [], trailers = [], day = null, locked = null;
 function order() {
   day = torontoDay().date;
   items = locked && locked.date === day ? locked.items : dayPlan(station, { list: all, picks, promos, trailers }, day);
@@ -158,9 +220,11 @@ setInterval(() => {
 }, 5 * 60e3);
 
 let joinAt = 0;
-Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station)]).then(([d, p, pr, tr, lk]) => {
+Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station),
+  fetch("unplayable.json", { cache: "no-store" }).then(r => r.json()).catch(() => ({}))]).then(([d, p, pr, tr, lk, un]) => {
   if (!d.videos || d.videos.length < 3) return fallBack();
-  all = d.videos;
+  unplayable = un.ids || {};
+  all = d.videos.filter(v => !unplayable[v.id]);
   picks = p[station.id] || null;
   promos = pr;
   trailers = tr;
@@ -212,7 +276,7 @@ window.onYouTubeIframeAPIReady = () => {
         // Join where the channel is now, like live TV (an ad break part-way, or the film part-way).
         const offset = (Date.now() - joinAt) / 1000;
         playItem(cur, offset < 5 ? 0 : offset);
-        setInterval(keepInStep, 1000);
+        setInterval(() => { keepInStep(); watchStall(); }, 1000);
       },
       // It never stays paused; the next item follows when one ends.
       onStateChange: e => {
@@ -222,11 +286,12 @@ window.onYouTubeIframeAPIReady = () => {
         lastState = e.data;
         if (e.data === YT.PlayerState.PLAYING) started = true;
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
-        if (e.data === YT.PlayerState.ENDED) rejoin(cur);
+        if (e.data === YT.PlayerState.ENDED) endedEarly(cur);
         else if (e.data === YT.PlayerState.PAUSED) { if (items[cur].clip && e.target.getCurrentTime() >= target.base + items[cur].secs - 2) rejoin(cur); else e.target.playVideo(); }
       },
       // A video its owner won't let others play is skipped; when none will play, the free films take over.
-      onError: e => { if (inBreak) return; lastError = e.data; if (++failures >= 5) fallBack(); else setTimeout(() => playItem(cur + 1, 0), 1000); },
+      // (its time is filled like any programme that ends early, not by playing the next one over and over).
+      onError: e => { if (inBreak) return; lastError = e.data; if (++failures >= 5) fallBack(); else { const at = cur; setTimeout(() => at === cur && !inBreak && endedEarly(at), 1000); } },
     },
   });
   stillFor(player);
