@@ -164,7 +164,7 @@ fun WebPreview(url: String, modifier: Modifier = Modifier, still: Boolean = true
     var webView by remember { mutableStateOf<WebView?>(null) }
     // TVs play the sound here but leave YouTube's picture black (full screen is fine), so on a TV the page
     // shows the playing video's own picture instead (1.9.60). [still] false: the moving video (every mode but
-    // Browse, whose pictures scroll, since 1.9.82; 1+List since 1.9.79).
+    // Browse, whose pictures scroll, since 1.9.84; 1+List since 1.9.79).
     val context = LocalContext.current
     val tv = remember { context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK) }
     val page = remember(url) { if (still && tv) "$url&still=1" else url }
