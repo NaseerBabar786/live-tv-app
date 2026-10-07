@@ -35,7 +35,7 @@ import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
 import com.livetv.app.ui.LIBRARY_PREFIX
 import com.livetv.app.player.LibraryAds
-import com.livetv.app.ui.SponsorScreen
+import com.livetv.app.ui.StartScreen
 import com.livetv.app.ui.SponsorBox
 import com.livetv.app.ui.SponsorVideoBox
 import com.livetv.app.ui.SponsorStrip
@@ -73,7 +73,7 @@ object Edition {
 }
 
 /**
- * The sponsor screen. Meanwhile it checks for updates and loads the channels, then the
+ * The start screen: a loading circle while it checks for updates and loads the channels, then the
  * Library, so they are ready when the main screen opens.
  */
 @Composable
@@ -101,23 +101,18 @@ fun EditionStartScreen(onDone: () -> Unit) {
             account.recordOpen()
         }
     }
-    // A paying sponsor, in turn, from the saved list; the latest list arrives meanwhile for next time
-    // (or for now, when there was none saved yet).
-    var sponsor by remember { mutableStateOf<Sponsor?>(null) }
+    // The sponsors' latest list arrives meanwhile, for the pop-up ads after a channel change.
     LaunchedEffect(Unit) {
         SponsorViews.init(context)
         Sponsors.init(context)
-        sponsor = Sponsors.next("start")
         Sponsors.refresh(account)
-        if (sponsor == null) sponsor = Sponsors.next("start")
     }
-    LaunchedEffect(sponsor?.id) { sponsor?.let { SponsorViews.count(it, "start") } }
     // The owner's own channel and its schedule (tv.bulkbazaar.ca/studio).
     LaunchedEffect(Unit) {
         MyChannel.init(context)
         MyChannelSync.refresh(account)
     }
-    SponsorScreen(loading = state.loading, sponsor = sponsor, onDone = onDone)
+    StartScreen(loading = state.loading, onDone = onDone)
 }
 
 /**
