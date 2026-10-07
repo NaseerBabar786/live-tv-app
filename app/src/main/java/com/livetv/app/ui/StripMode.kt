@@ -325,7 +325,7 @@ internal fun StripMode(
                 } else if (page != null) {
                     LoadingSpinner()
                     key(page) {
-                        WebPreview(page, Modifier.fillMaxSize(), onFallback = {
+                        WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = {
                             if (MyChannel.webPage(current) != null) pageFailed = true
                         })
                     }

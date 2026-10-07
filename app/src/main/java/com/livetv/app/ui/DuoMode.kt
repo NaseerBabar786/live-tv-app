@@ -602,7 +602,7 @@ private fun DuoPlayer(
         }
         if (page != null || (showVideo && !showing)) LoadingSpinner()
         if (page != null) {
-            key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+            key(page) { WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = onPageFailed) }
         } else if (showVideo) {
             AndroidView(
                 factory = { ctx -> TextureView(ctx).also(attach) },

@@ -19,6 +19,7 @@ on:
   push:
     paths:
       - "tools/stories/**"
+      - "tools/music/**"
       - ".github/workflows/build-story-videos.yml"
 
 concurrency:

@@ -311,7 +311,7 @@ fun NewsMode(
                     modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
                 )
                 if (page != null) key(page) {
-                    WebPreview(page, Modifier.fillMaxSize(), onFallback = { if (MyChannel.webPage(selected) != null) pageFailed = true })
+                    WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = { if (MyChannel.webPage(selected) != null) pageFailed = true })
                 } else if (!showing) {
                     // While it starts: a loading circle (owner, 2026-10-07); a channel that fails says so.
                     val failed = error
@@ -1025,7 +1025,7 @@ private fun SecondChannel(channel: Channel?, playing: Boolean, s: (Float) -> Tex
             modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
         )
         if (page != null) key(page) {
-            WebPreview(page, Modifier.fillMaxSize(), onFallback = { if (MyChannel.webPage(channel) != null) pageFailed = true })
+            WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = { if (MyChannel.webPage(channel) != null) pageFailed = true })
         }
         channel?.let { ch ->
             Text(

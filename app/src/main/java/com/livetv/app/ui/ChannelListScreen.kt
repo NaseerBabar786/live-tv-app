@@ -1550,7 +1550,7 @@ private fun ChannelCard(
                     modifier = Modifier.fillMaxSize(),
                 )
             }
-            if (page != null) key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+            if (page != null) key(page) { WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = onPageFailed) }
             else if (preview != null) PreviewVideo(preview, stretch)
             if (arrows) {
                 Column(
@@ -1664,7 +1664,7 @@ private fun ChannelCard(
                     modifier = Modifier.fillMaxSize(),
                 )
             }
-            if (page != null) key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+            if (page != null) key(page) { WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = onPageFailed) }
             else if (preview != null) PreviewVideo(preview)
             if (arrows) {
                 Column(
