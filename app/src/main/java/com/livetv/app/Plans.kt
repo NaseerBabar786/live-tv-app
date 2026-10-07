@@ -8,14 +8,28 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Cable TV's packages: Free, Silver, Gold and Platinum. The owner ticks which [Feature]s each one has
+ * Cable TV's packages: Free and Gold. The owner ticks which [Feature]s each one has
  * at tv.bulkbazaar.ca/packages (since 1.9.64); 1+List is in every package. Without [Feature.AllChannels] a
  * package has only a few channels ([freeChannel]). Every other app (and Cable TV until the owner turns
- * packages on) has everything, so [current] starts at Platinum and every package has every feature.
+ * packages on) has everything, so [current] starts at Gold and every package has every feature.
  */
 object Plans {
-    /** [Promo] is the Promotional package: not for sale, the owner gives it to chosen viewers for a set time. */
-    enum class Tier(val label: String) { Free("Free"), Silver("Silver"), Gold("Gold"), Platinum("Platinum"), Promo("Promotional") }
+    /**
+     * Free and Gold only (owner, 2026-10-07: Silver and Platinum removed). [Promo] is the Promotional package:
+     * not for sale, the owner gives it to chosen viewers for a set time.
+     */
+    enum class Tier(val label: String) {
+        Free("Free"), Gold("Gold"), Promo("Promotional");
+
+        companion object {
+            /** A saved package name; the old Silver and Platinum count as Gold. */
+            fun of(name: String?): Tier? = when {
+                name.isNullOrBlank() -> null
+                name.equals("Silver", true) || name.equals("Platinum", true) -> Gold
+                else -> entries.firstOrNull { it.name.equals(name, true) }
+            }
+        }
+    }
 
     /** What a package can include. The keys are the ones the packages page saves ("free_features" and so on). */
     enum class Feature(val key: String, val label: String) {
@@ -43,12 +57,16 @@ object Plans {
         }
     }
 
+    /**
+     * Free is fixed, not ticked: every feature, but only our own Bazaar channels (owner, 2026-10-07). Every
+     * other package has at least this too, so a paid package never has less than Free.
+     */
+    val FREE_FEATURES: Set<Feature> = Feature.entries.toSet() - Feature.AllChannels
+
     /** The owner's packages until they tick their own (owner, 2026-10-06). */
     val DEFAULT_FEATURES: Map<Tier, Set<Feature>> = mapOf(
-        Tier.Free to emptySet(),
-        Tier.Silver to setOf(Feature.AllChannels, Feature.Browse, Feature.Carousel),
-        Tier.Gold to Feature.entries.toSet() - Feature.TwoDevices,
-        Tier.Platinum to Feature.entries.toSet(),
+        Tier.Free to FREE_FEATURES,
+        Tier.Gold to Feature.entries.toSet(),
         Tier.Promo to Feature.entries.toSet() - Feature.TwoDevices,
     )
 
@@ -62,7 +80,9 @@ object Plans {
 
     /** The owner's packages while packages are on, or null (packages off) for everything. */
     fun setFeatures(map: Map<Tier, Set<Feature>>?) {
-        _features.value = map ?: EVERYTHING
+        _features.value = map?.let { m ->
+            Tier.entries.associateWith { t -> if (t == Tier.Free) FREE_FEATURES else m[t].orEmpty() + FREE_FEATURES }
+        } ?: EVERYTHING
     }
 
     /** Whether the viewer's package has [feature]. */
@@ -70,11 +90,11 @@ object Plans {
 
     /** The first package for sale with [feature], for "needs Gold" and the packages screen. */
     fun lowestWith(feature: Feature): Tier =
-        Tier.entries.firstOrNull { it != Tier.Promo && feature in (_features.value[it] ?: emptySet()) } ?: Tier.Platinum
+        Tier.entries.firstOrNull { it != Tier.Promo && feature in (_features.value[it] ?: emptySet()) } ?: Tier.Gold
 
-    private val _current = MutableStateFlow(Tier.Platinum)
+    private val _current = MutableStateFlow(Tier.Gold)
 
-    /** The viewer's package right now (Platinum when packages are off). */
+    /** The viewer's package right now (Gold when packages are off). */
     val current: StateFlow<Tier> = _current.asStateFlow()
 
     fun set(tier: Tier) {
@@ -96,7 +116,7 @@ object Plans {
 
     /** Opens the packages screen from Settings. */
     fun showPlans() {
-        _asking.value = Ask("", Tier.Silver)
+        _asking.value = Ask("", Tier.Gold)
     }
 
     fun closeAsk() {

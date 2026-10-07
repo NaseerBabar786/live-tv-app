@@ -92,7 +92,7 @@
     </div>
     <div class="small" id="bAsked"></div>
     <div class="grid2">
-      <label>Package<select id="fPackage"><option value="">Not chosen yet</option><option>Free</option><option>Silver</option><option>Gold</option><option>Platinum</option><option value="Promo">Promotional</option></select></label>
+      <label>Package<select id="fPackage"><option value="">Not chosen yet</option><option>Free</option><option>Gold</option><option value="Promo">Promotional</option></select></label>
       <label>Plan length (how often they pay)<select id="fLength"><option value="">Not chosen yet</option><option value="month">Every month</option><option value="three">Every 3 months</option><option value="six">Every 6 months</option><option value="year">Every year</option></select></label>
       <label>Amount each time<input class="inp" id="fAmount" placeholder="$3.99"></label>
       <label>How they pay<select id="fMethod"><option value="">Not chosen yet</option><option>Interac e-Transfer</option><option>Credit or debit card</option><option>Cash</option><option>Other</option></select></label>
@@ -196,8 +196,8 @@ if (!configured) {
     ["phone", "Phone number", "a phone number to reach them"],
     ["next", "Next payment date", null],
   ];
-  // Only Silver, Gold and Platinum are paid for; a viewer on Free or a promotion only needs a phone number.
-  const PAID = ["Silver", "Gold", "Platinum"];
+  // Only Gold is paid for (Silver and Platinum were removed 2026-10-07); a viewer on Free or a promotion only needs a phone number.
+  const PAID = ["Silver", "Gold", "Platinum"]; // old Silver/Platinum details still count as paid
   const lacking = d => CHECKS.filter(([k]) => !d[k] && (!d.package || PAID.includes(d.package) || k === "phone" || k === "package"));
   // Promotions are stored under their own names in plans/{uid} ("Promo" is the Promotional package).
   const tierName = t => t === "Promo" ? "Promotional" : t;

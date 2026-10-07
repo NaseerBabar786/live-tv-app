@@ -27,7 +27,12 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 - 1.9.89: ad breaks in Library films. The PC has no Library yet; the PC's breaks already follow the
   5-second ad length rule and keep paid sponsors off YouTube content (our YouTube pages run their own
   promo breaks).
-- 1.9.90: the phone version (touch in every mode, upright 1+List, sideways full screen). The PC
-  has its own mouse and keyboard controls and a wide window, so nothing changed here.
+- 1.9.90: phone touch layouts (upright 1+List, sideways full screen). Phone-only; the PC keeps its mouse
+  and keyboard layout.
 - YouTube channels never paused on YouTube's screen (docs/channel/keepplaying.js): the PC loads the
   same live pages (ytc.html, yt.html, bollywood.html), so it gets the fix without a new PC build.
+
+## In step
+
+- 1.9.91 (PC 1.0.1): only Free and Gold packages; Free is fixed (every feature, only our own channels)
+  and every package has at least that; old Silver and Platinum count as Gold (`plans.js`).
