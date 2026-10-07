@@ -310,8 +310,26 @@ export function lengthText(secs) {
 }
 
 /** Plays [c] in [video] (a <video> element) as live TV: joins the current programme at the right spot. */
+/**
+ * Something short to play when a programme ends before the schedule moves on (the owner, 2026-10-07: never a
+ * still picture or dead air): the channel's fillers (or its ads), taking turns by the minute, the first that fits
+ * in [leftMs] and isn't [skip] (the one just played); the shortest when none fits. Same as MyChannel.filler.
+ */
+export function fillerFor(c, leftMs, now = Date.now(), skip = null) {
+  const byId = Object.fromEntries((c.videos || []).map(v => [v.id, v]));
+  let pool = (c.fillers || []).map(id => byId[id]).filter(Boolean);
+  if (!pool.length) pool = (c.videos || []).filter(v => v.kind === "ad");
+  pool = pool.filter((v, i, a) => v.secs >= 1 && v.secs <= 660 && !youtubeId(v.url) && a.findIndex(w => w.url === v.url) === i);
+  if (!pool.length) return null;
+  const start = Math.floor(now / 60000) % pool.length;
+  const turn = pool.slice(start).concat(pool.slice(0, start));
+  const others = turn.filter(v => v.url !== skip);
+  return others.find(v => v.secs * 1000 <= leftMs)
+    || others.reduce((a, v) => (!a || v.secs < a.secs ? v : a), null) || turn[0];
+}
+
 export function tuneIn(video, c, { onChange, onOff, onBlock } = {}) {
-  let timer = null, hls = null, playing = null, stopped = false;
+  let timer = null, hls = null, playing = null, stopped = false, lastFiller = null;
   async function step() {
     clearTimeout(timer);
     if (stopped) return;
@@ -359,7 +377,15 @@ export function tuneIn(video, c, { onChange, onOff, onBlock } = {}) {
     }
     video.play().catch(() => {});
   }
-  video.addEventListener("ended", () => step());
+  // A programme that ends before its time is up: short fillers until the schedule moves on.
+  video.addEventListener("ended", () => {
+    const now = Date.now(), on = whatsOn(c, now);
+    const left = on.off ? 0 : on.until - now;
+    const f = left > 3000 && !youtubeId(on.video.url) ? fillerFor(c, left, now, lastFiller) : null;
+    if (!f) return step();
+    lastFiller = f.url;
+    load(f.url, null);
+  });
   step();
   return {
     update(newConfig) { c = newConfig; playing = null; step(); },
