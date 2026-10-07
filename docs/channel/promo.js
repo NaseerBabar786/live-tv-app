@@ -69,7 +69,11 @@
       guard = setTimeout(next, ((promo.secs || 60) - at + 20) * 1000);
       v.play().catch(() => { v.muted = true; v.play().catch(next); });
     }
+    // A promo stuck on one frame (a TV's player stalling) moves on after 8 seconds: never a frozen screen.
+    let lastT = -1, movedAt = Date.now();
     tick = setInterval(() => {
+      if (v.currentTime !== lastT) { lastT = v.currentTime; movedAt = Date.now(); }
+      else if (Date.now() - movedAt > 8000 && Date.now() - startedAt > 8000) { movedAt = Date.now(); next(); return; }
       const left = Math.ceil((skipFrom - Date.now()) / 1000);
       skip.hidden = false;
       skip.textContent = left > 0 ? `Skip ad in ${left}` : (k < list.length - 1 ? "Skip ad ›" : "Skip ›");
