@@ -2,7 +2,9 @@ package com.livetv.app.ui
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -14,6 +16,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
 import android.webkit.WebSettings
+import android.widget.FrameLayout
 import android.widget.Toast
 import android.webkit.WebView
 import androidx.activity.compose.BackHandler
@@ -33,7 +36,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.livetv.app.data.YouTube
@@ -157,11 +163,17 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
 fun WebPreview(url: String, modifier: Modifier = Modifier, still: Boolean = true, onFallback: (() -> Unit)? = null) {
     var webView by remember { mutableStateOf<WebView?>(null) }
     // TVs play the sound here but leave YouTube's picture black (full screen is fine), so on a TV the page
-    // shows the playing video's own picture instead (1.9.60). [still] false: the moving video, for a box
-    // with nothing around it that covers the TV's video (1+List, 1.9.74).
+    // shows the playing video's own picture instead (1.9.60). [still] false: the moving video (1+List).
     val context = LocalContext.current
-    val page = remember(url) {
-        if (still && context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)) "$url&still=1" else url
+    val tv = remember { context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK) }
+    val page = remember(url) { if (still && tv) "$url&still=1" else url }
+    // The moving video on a TV: the page goes in a plain WebView straight in the window, over this box,
+    // like full screen (WebChannelActivity), where TVs do show the picture. Inside Compose they don't,
+    // even in a square box (1.9.74 test) (1.9.77).
+    val activity = remember { context.findActivity() }
+    if (!still && tv && activity != null) {
+        WindowWebPreview(activity, page, modifier, onFallback)
+        return
     }
     DisposableEffect(Unit) {
         onDispose { webView?.destroy() }
@@ -169,42 +181,84 @@ fun WebPreview(url: String, modifier: Modifier = Modifier, still: Boolean = true
     AndroidView(
         modifier = modifier,
         factory = { ctx ->
-            WebView(ctx).apply {
-                // See-through, so the TV's video under the window shows through the page's hole (see WebChannelActivity).
-                setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                settings.javaScriptEnabled = true
-                settings.domStorageEnabled = true
-                settings.mediaPlaybackRequiresUserGesture = false
-                settings.cacheMode = WebSettings.LOAD_NO_CACHE
-                webViewClient = object : WebViewClient() {
-                    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                        if (request.url.scheme != "livetv") return false
-                        if (request.url.host == "fallback") onFallback?.invoke()
-                        return true
-                    }
-
-                    // A web page that runs out of memory (YouTube on a small TV) loses its renderer; unhandled,
-                    // that closes the whole app (1.9.58).
-                    override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
-                        (view.parent as? ViewGroup)?.removeView(view)
-                        view.destroy()
-                        if (webView === view) webView = null
-                        onFallback?.invoke()
-                        return true
-                    }
-                }
-                webChromeClient = object : WebChromeClient() {
-                    override fun getDefaultVideoPoster(): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
-                }
-                isFocusable = false
-                isFocusableInTouchMode = false
-                // Taps go to the player box around it (OK opens the channel full screen).
-                setOnTouchListener { _, _ -> true }
-                loadUrl(page)
-            }.also { webView = it }
+            previewWebView(ctx, page, onFallback) { if (webView === it) webView = null }.also { webView = it }
         },
     )
 }
+
+/** [page] in a plain WebView added to [activity]'s window and kept over the place [modifier] takes. */
+@Composable
+private fun WindowWebPreview(activity: Activity, page: String, modifier: Modifier, onFallback: (() -> Unit)?) {
+    val root = remember { activity.findViewById<FrameLayout>(android.R.id.content) }
+    // The box's focus border (3 dp) stays in view around it.
+    val inset = with(LocalDensity.current) { 3.dp.roundToPx() }
+    val view = remember(page) { previewWebView(activity, page, onFallback) {} }
+    DisposableEffect(view) {
+        root.addView(view, FrameLayout.LayoutParams(0, 0))
+        onDispose {
+            root.removeView(view)
+            view.destroy()
+        }
+    }
+    Box(modifier.onGloballyPositioned { c ->
+        val b = c.boundsInWindow()
+        val at = IntArray(2).also { root.getLocationInWindow(it) }
+        val lp = view.layoutParams as? FrameLayout.LayoutParams ?: return@onGloballyPositioned
+        val left = b.left.toInt() - at[0] + inset
+        val top = b.top.toInt() - at[1] + inset
+        val width = (b.width.toInt() - 2 * inset).coerceAtLeast(0)
+        val height = (b.height.toInt() - 2 * inset).coerceAtLeast(0)
+        if (lp.leftMargin != left || lp.topMargin != top || lp.width != width || lp.height != height) {
+            lp.leftMargin = left
+            lp.topMargin = top
+            lp.width = width
+            lp.height = height
+            view.layoutParams = lp
+        }
+    })
+}
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
+}
+
+@SuppressLint("SetJavaScriptEnabled")
+private fun previewWebView(ctx: Context, page: String, onFallback: (() -> Unit)?, onGone: (WebView) -> Unit): WebView =
+    WebView(ctx).apply {
+        // See-through, so the TV's video under the window shows through the page's hole (see WebChannelActivity).
+        setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        settings.javaScriptEnabled = true
+        settings.domStorageEnabled = true
+        settings.mediaPlaybackRequiresUserGesture = false
+        settings.cacheMode = WebSettings.LOAD_NO_CACHE
+        webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                if (request.url.scheme != "livetv") return false
+                if (request.url.host == "fallback") onFallback?.invoke()
+                return true
+            }
+
+            // A web page that runs out of memory (YouTube on a small TV) loses its renderer; unhandled,
+            // that closes the whole app (1.9.58).
+            override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+                (view.parent as? ViewGroup)?.removeView(view)
+                view.destroy()
+                onGone(view)
+                onFallback?.invoke()
+                return true
+            }
+        }
+        webChromeClient = object : WebChromeClient() {
+            override fun getDefaultVideoPoster(): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+        }
+        isFocusable = false
+        isFocusableInTouchMode = false
+        // Taps go to the player box around it (OK opens the channel full screen).
+        setOnTouchListener { _, _ -> true }
+        loadUrl(page)
+    }
 
 @SuppressLint("SetJavaScriptEnabled")
 private fun embedView(context: Context, src: String): WebView = WebView(context).apply {
