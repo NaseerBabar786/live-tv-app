@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src * data: blob:; media-src * blob: data:; connect-src * blob: data:; worker-src 'self' blob:;">
+<title>Cable TV</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast hidden"></div>
+<script src="vendor/hls.min.js"></script>
+<script src="vendor/mpegts.js"></script>
+<script src="shared/clock.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

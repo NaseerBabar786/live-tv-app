@@ -1,0 +1,29 @@
+# Cable TV for PC: in step with Cable TV
+
+Owner's rule (2026-10-07): every Cable TV feature goes to every platform together: the TV app,
+this PC app, the phone app, and any platform added later. The check `parity.yml`
+(`tools/parity_check.py`, platforms in `.github/platforms.json`) fails a pull request that changes
+Cable TV (`app/src/main`, `app/src/livetv`, or its version) without changing this folder.
+
+When Cable TV changes:
+
+1. Make the same change here (the files say which Kotlin file each one follows), and raise
+   `version` in `package.json`.
+2. Set `"matches"` in `parity.json` to the new Cable TV version.
+3. If the change doesn't apply to the PC (a TV-only fix, a change for another app that shares
+   `app/src/main`), add a line below saying so instead.
+
+Website code shared with the PC app (`docs/channel/schedule.js`, `cards.js`, `clock.js`) is copied in
+at every build (`scripts/prepare.js`); changing it needs a new PC version too.
+
+## Not on PC yet (second test build)
+
+Browse, Carousel, Strip, Duo, News, CP24, Home and My Screen modes; Movies & Dramas (Library);
+Games; Messages, Suggestions, promo codes and billing details. The Modes menu shows them as
+"coming soon on PC".
+
+## Changes that needed nothing on PC
+
+- 1.9.89: ad breaks in Library films. The PC has no Library yet; the PC's breaks already follow the
+  5-second ad length rule and keep paid sponsors off YouTube content (our YouTube pages run their own
+  promo breaks).
