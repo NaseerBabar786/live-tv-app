@@ -1,0 +1,57 @@
+name: News avatar try
+# Tries free Hugging Face talking-avatar Spaces on our newsreader (one runner each, so each has its own free
+# quota). Results: channel-media/news-try-<n>.mp4 + news-try-<n>.json (also written when a Space fails).
+on:
+  push:
+    paths: ["tools/news/presenters/try_space.py", ".github/workflows/news-avatar-try.yml"]
+  workflow_dispatch:
+    inputs:
+      anchor:
+        description: "Anchor picture to use"
+        default: "anchor-1"
+jobs:
+  try:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {n: 1, space: "meituan-longcat/LongCat-Video-Avatar-1.5-Demo"}
+          - {n: 2, space: "victor/LongCat-Video-Avatar-1.5"}
+          - {n: 3, space: "alexnasa/OmniAvatar"}
+          - {n: 4, space: "acvlab/FantasyTalking"}
+          - {n: 5, space: "fffiloni/EchoMimic"}
+          - {n: 6, space: "multimodalart/MoDA-fast-talking-head"}
+          - {n: 7, space: "fffiloni/KDTalker"}
+          - {n: 8, space: "hugging-apps/leaptalk-talking-head"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q gradio_client edge-tts
+      - name: Try
+        env:
+          ANCHOR: ${{ github.event.inputs.anchor || 'anchor-1' }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -fsSL -o face.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$ANCHOR.jpg"
+          python3 -c "import asyncio,json,edge_tts; c=json.load(open('tools/news/presenters/presenters.json')); asyncio.run(edge_tts.Communicate(c['line'], c['voice']).save('line.mp3'))"
+          ffmpeg -v error -y -i line.mp3 -ac 1 -ar 16000 line.wav
+          set +e
+          timeout 40m python3 tools/news/presenters/try_space.py "${{ matrix.space }}" face.jpg line.wav news-try-${{ matrix.n }}.mp4 > log.txt 2>&1
+          code=$?
+          tail -c 3000 log.txt
+          python3 -c "import json,sys; json.dump({'space': '${{ matrix.space }}', 'code': $code, 'log': open('log.txt').read()[-3000:]}, open('news-try-${{ matrix.n }}.json','w'), indent=1)"
+          files=news-try-${{ matrix.n }}.json
+          if [ -s news-try-${{ matrix.n }}.mp4 ]; then
+            ffmpeg -v error -y -i news-try-${{ matrix.n }}.mp4 -i line.mp3 -map 0:v -map 1:a -c:v copy -c:a aac -shortest news-try-${{ matrix.n }}-v.mp4 && \
+              mv news-try-${{ matrix.n }}-v.mp4 news-try-${{ matrix.n }}.mp4
+            files="$files news-try-${{ matrix.n }}.mp4"
+          fi
+          gh release upload channel-media $files -R "$GITHUB_REPOSITORY" --clobber
