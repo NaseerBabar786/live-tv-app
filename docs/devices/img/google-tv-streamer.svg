@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 420" role="img" aria-label="Drawing of the Google TV Streamer and its remote">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3F1EC"/><stop offset="1" stop-color="#DCD8CF"/></linearGradient>
+    <linearGradient id="dev" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfcac0"/></linearGradient>
+  </defs>
+  <rect width="280" height="420" rx="18" fill="url(#bg2)"/>
+  <text x="140" y="66" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="30" fill="#202124">Google TV</text>
+  <text x="140" y="98" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="30" fill="#202124">Streamer</text>
+  <!-- wedge-shaped streamer -->
+  <ellipse cx="125" cy="272" rx="98" ry="14" fill="#000" opacity=".15"/>
+  <path d="M35 268 L60 175 Q64 162 78 162 L190 162 Q204 162 208 175 L215 268 Z" fill="url(#dev)" stroke="#bdb7aa" stroke-width="2"/>
+  <path d="M35 268 L215 268 L212 276 L38 276 Z" fill="#b8b2a6"/>
+  <circle cx="125" cy="246" r="3" fill="#9aa0a6"/>
+  <!-- remote -->
+  <rect x="222" y="190" width="36" height="160" rx="18" fill="#fbfaf7" stroke="#c9c3b7" stroke-width="2"/>
+  <circle cx="240" cy="225" r="12" fill="none" stroke="#9aa0a6" stroke-width="3"/>
+  <circle cx="240" cy="225" r="5" fill="#9aa0a6"/>
+  <circle cx="232" cy="257" r="4" fill="#9aa0a6"/><circle cx="248" cy="257" r="4" fill="#9aa0a6"/>
+  <circle cx="232" cy="275" r="4" fill="#9aa0a6"/><circle cx="248" cy="275" r="4" fill="#9aa0a6"/>
+  <rect x="231" y="293" width="18" height="34" rx="9" fill="#e4e0d8"/>
+  <g transform="translate(108 360)"><rect width="64" height="28" rx="6" fill="#fff" stroke="#c9c3b7"/><rect x="8" y="7" width="48" height="14" rx="3" fill="none" stroke="#4285F4" stroke-width="3"/></g>
+</svg>
