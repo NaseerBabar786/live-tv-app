@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set up the Onn stick for Cable TV</title>
+<meta name="description" content="Step by step: set up the Onn Full HD Streaming Device (Google TV) and install Cable TV with App Bazaar.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+  .intro { display: grid; grid-template-columns: 150px 1fr; gap: 20px; align-items: start; margin-bottom: 8px; }
+  .intro img { width: 150px; height: auto; border-radius: 10px; border: 3px solid var(--focus); }
+  @media (max-width: 560px) { .intro { grid-template-columns: 1fr; } .intro img { width: 120px; } }
+  .need { margin: 0; padding-left: 20px; }
+  .need li { margin: 0 0 4px; }
+  ol.big { list-style: none; counter-reset: step; margin: 18px 0 0; padding: 0; }
+  ol.big > li { counter-increment: step; position: relative; background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 16px 18px 14px 70px; margin: 0 0 14px; }
+  ol.big > li::before { content: counter(step); position: absolute; left: 16px; top: 14px; width: 38px; height: 38px; border-radius: 50%; background: var(--focus); color: #000; font-weight: 900; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+  ol.big h3 { margin: 4px 0 8px; font-size: 19px; color: #fff; }
+  ol.big ul { margin: 0; padding-left: 20px; }
+  ol.big ul li { margin: 0 0 6px; }
+  ol.big b { color: #fff; }
+  .type { display: inline-block; font: 800 22px/1.3 ui-monospace, Menlo, Consolas, monospace; color: #000; background: var(--focus); padding: 4px 12px; border-radius: 8px; margin: 4px 0; }
+  .note { border-left: 4px solid var(--line); background: #0B0D11; padding: 10px 14px; border-radius: 6px; color: var(--muted); font-size: 15px; margin: 10px 0 0; }
+  .note b { color: var(--text); }
+  .done { border: 2px solid #7BD88F; border-radius: 14px; padding: 14px 18px; margin: 18px 0; }
+  .btns { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+  @media print {
+    :root { --bg: #fff; --surface: #fff; --surface-2: #bbb; --line: #999; --text: #111; --muted: #444; --accent: #0645AD; }
+    body { background: #fff; color: #111; font-size: 13px; }
+    header nav, footer, .noprint { display: none !important; }
+    ol.big h3, ol.big b { color: #000; }
+    ol.big > li { break-inside: avoid; }
+    .note { background: #f4f4f4; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Cable TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Cable TV</span>
+    </a>
+    <nav>
+      <a href="../../">Home</a>
+      <a href="../">Devices</a>
+      <a href="../../suggestions">Suggestions</a>
+      <a href="../../admin" class="admin-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="small noprint" style="margin:0 0 8px"><a href="../">‹ Back to recommended devices</a></p>
+  <h1>Set up your Onn stick</h1>
+  <div class="intro">
+    <img src="../img/onn-fhd-stick.jpg" alt="The Onn Full HD Streaming Device box" width="560" height="840">
+    <div>
+      <p class="lead" style="margin-bottom:10px">For the <b>Onn Full HD Streaming Device</b> (Google TV, with voice remote) from Walmart. Follow these steps once, about 15 minutes, and Cable TV is ready on your TV.</p>
+      <p style="margin:0 0 4px"><b>You need:</b></p>
+      <ul class="need">
+        <li>A TV with a free <b>HDMI</b> port, and a wall socket nearby</li>
+        <li>Your <b>Wi-Fi</b> name and password</li>
+        <li>Your <b>phone</b> and a <b>Google account</b> (Gmail); you can make one for free during setup</li>
+      </ul>
+      <div class="btns noprint"><button class="btn" type="button" onclick="print()">🖨 Print these steps</button></div>
+    </div>
+  </div>
+
+  <ol class="big">
+    <li>
+      <h3>Plug it in</h3>
+      <ul>
+        <li>Push the stick into an <b>HDMI</b> port on the back or side of the TV.</li>
+        <li>Connect the <b>power cable</b> to the stick and its plug to the <b>wall socket</b> (not the TV's USB port, it's too weak).</li>
+        <li>Turn on the TV and press <b>Input</b> or <b>Source</b> on the TV's own remote until you see the Onn / Google TV screen.</li>
+      </ul>
+    </li>
+    <li>
+      <h3>Pair the remote</h3>
+      <ul>
+        <li>Put the batteries in the Onn remote.</li>
+        <li>When the TV asks, hold the buttons it shows (usually <b>Back</b> and <b>Home</b>) for a few seconds until it says <i>Paired</i>.</li>
+      </ul>
+    </li>
+    <li>
+      <h3>Set up Google TV</h3>
+      <ul>
+        <li>Pick your language, then choose <b>Set up Google TV</b>.</li>
+        <li>The TV shows a <b>QR code</b>. Scan it with your phone's camera and follow the steps on the phone: it sends your Wi-Fi and Google account to the TV.</li>
+        <li>No phone handy? Choose <b>Use remote instead</b> and type your Wi-Fi and Google account with the remote.</li>
+        <li>Press <b>Skip</b> on the suggested apps. If it asks to update, let it finish. You now see the Google TV home screen.</li>
+      </ul>
+    </li>
+    <li>
+      <h3>Install the Downloader app</h3>
+      <ul>
+        <li>On the home screen, go to <b>Search</b> (top left) and type <b>Downloader</b>.</li>
+        <li>Choose <b>Downloader by AFTVnews</b> (orange icon) and press <b>Install</b>.</li>
+      </ul>
+    </li>
+    <li>
+      <h3>Allow Downloader to install apps</h3>
+      <ul>
+        <li>Open <b>Settings</b> (the gear, top right) › <b>System</b> › <b>About</b>.</li>
+        <li>Scroll to <b>Android TV OS build</b> and press <b>OK 7 times</b> until it says <i>"You are now a developer"</i>.</li>
+        <li>Press Back to <b>Settings</b> › <b>Apps</b> › <b>Security &amp; restrictions</b> › <b>Unknown sources</b>, and turn on <b>Downloader</b>.</li>
+      </ul>
+    </li>
+    <li>
+      <h3>Get App Bazaar</h3>
+      <ul>
+        <li>Open <b>Downloader</b>. Press <b>Allow</b> if it asks for access to files.</li>
+        <li>In the box, type:<br><span class="type">tv.bulkbazaar.ca/bazaar</span><br>and press <b>Go</b>.</li>
+        <li>When it has downloaded, press <b>Install</b>. If Google Play Protect warns you, choose <b>More details</b> › <b>Install anyway</b>.</li>
+        <li>Press <b>Open</b>. App Bazaar shows all our apps.</li>
+      </ul>
+    </li>
+    <li>
+      <h3>Install Cable TV from App Bazaar</h3>
+      <ul>
+        <li>In App Bazaar, select <b>Cable TV</b> and press <b>Install</b>.</li>
+        <li>The first time, the TV asks to allow App Bazaar to install apps: turn it <b>on</b> and press <b>Back</b>.</li>
+        <li>Press <b>Install</b> (and <b>Install anyway</b> if Play Protect asks), then <b>Open</b>.</li>
+      </ul>
+      <p class="note">Quicker way without App Bazaar: in Downloader type <b>tv.bulkbazaar.ca/get</b> to install Cable TV directly.</p>
+    </li>
+    <li>
+      <h3>Sign in to Cable TV</h3>
+      <ul>
+        <li>Cable TV shows a short code. On your phone, go to <b>google.com/device</b> (or scan the QR code on the TV), enter the code and pick your Google account.</li>
+        <li>Or sign in with the <b>email and password</b> you made for Cable TV.</li>
+        <li>You only do this once. The TV carries on by itself.</li>
+      </ul>
+    </li>
+    <li>
+      <h3>Put Cable TV on the home screen</h3>
+      <ul>
+        <li>Press <b>Home</b>. In <b>Your apps</b>, highlight Cable TV, hold <b>OK</b> and choose <b>Add to favourites</b>.</li>
+        <li>Move it to the front so it's the first app you see when the TV turns on.</li>
+      </ul>
+    </li>
+  </ol>
+
+  <div class="done">
+    <b style="color:#7BD88F">✔ All done!</b> From now on: turn on the TV, press <b>Home</b>, open <b>Cable TV</b>.
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li>This stick is made for <b>one channel at a time</b> (1+List, full screen, Browse). The 4- and 6-channel layouts may stutter on it; for those, the <a href="../">Onn 4K box</a> is better.</li>
+      <li>When a new version is ready, Cable TV shows <i>"New update available"</i>; press it and choose <b>Install</b>. App Bazaar's <b>Update all</b> button updates all our apps at once.</li>
+    </ul>
+  </div>
+
+  <h2>Stuck?</h2>
+  <p>Send us a message on WhatsApp at <b>437 602 6500</b> with a photo of the TV screen, or post on the <a href="../../suggestions">Suggestions page</a>, and we'll help you. Common problems are in the "Problems" tab of the <a href="../../#guide">install guide</a>.</p>
+</main>
+<footer>
+  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="../../privacy">Privacy policy</a></div>
+</footer>
+<script src="../../assets/admin-nav.js"></script>
+<script src="../../assets/visits.js"></script>
+</body>
+</html>

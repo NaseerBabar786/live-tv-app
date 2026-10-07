@@ -10,7 +10,11 @@
 <style>
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 8px 0 12px; }
   .card { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; }
-  .card.best { border: 2px solid var(--focus); }
+  .card.best { border: 3px solid var(--focus); box-shadow: 0 0 0 4px rgba(255,214,0,.25), 0 0 28px rgba(255,214,0,.35); color: var(--text); text-decoration: none; cursor: pointer; transition: transform .15s, box-shadow .15s; animation: glow 2.4s ease-in-out infinite; }
+  .card.best:hover, .card.best:focus-visible { transform: translateY(-3px); box-shadow: 0 0 0 6px rgba(255,214,0,.4), 0 0 36px rgba(255,214,0,.5); }
+  @keyframes glow { 50% { box-shadow: 0 0 0 7px rgba(255,214,0,.12), 0 0 40px rgba(255,214,0,.25); } }
+  @media (prefers-reduced-motion: reduce) { .card.best { animation: none; } }
+  .card .go { margin-top: auto; padding-top: 14px; align-self: flex-start; background: var(--focus); color: #000; font-weight: 800; padding: 9px 16px; border-radius: 999px; margin-top: 14px; }
   .card .tag { align-self: flex-start; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); color: var(--muted); margin-bottom: 8px; }
   .card.best .tag { background: var(--focus); color: #000; }
   .card h3 { margin: 0 0 2px; font-size: 19px; color: #fff; }
@@ -48,6 +52,8 @@
     header nav, footer, .noprint { display: none !important; }
     .card h3, .card .price, .steps b, .guide h3, .big-link { color: #000; }
     .card.best .tag { background: #FFD600; }
+    .card.best { animation: none; box-shadow: none; }
+    .card .go { display: none; }
     .note { background: #f4f4f4; }
     main { padding-top: 8px; }
     h2 { break-after: avoid; }
@@ -82,7 +88,7 @@
 
   <h2>Our recommended devices</h2>
   <div class="cards">
-    <div class="card best">
+    <a class="card best" href="onn-stick/" aria-label="Our pick, Onn Full HD Streaming Stick: open the step-by-step setup guide">
       <span class="tag">Our pick</span>
       <img class="pic" src="img/onn-fhd-stick.jpg" alt="The Onn Full HD Streaming Device box with Google TV and voice remote, as sold at Walmart" width="560" height="840" loading="lazy">
       <h3>Onn Full HD Streaming Stick (Google TV)</h3>
@@ -94,7 +100,8 @@
         <li>Hides behind the TV, no box on the shelf</li>
         <li>The 4- and 6-channel layouts may stutter on it: for those, get the Onn 4K box</li>
       </ul>
-    </div>
+      <span class="go">📖 Tap for step-by-step setup ›</span>
+    </a>
     <div class="card">
       <span class="tag">For many channels at once</span>
       <h3>Onn 4K Streaming Box (Google TV)</h3>
@@ -153,6 +160,7 @@
 
   <section id="setup" class="guide">
     <h2>Set it up yourself, step by step</h2>
+    <p class="noprint" style="margin:0 0 10px"><a class="btn primary" href="onn-stick/">📖 Got our pick, the Onn stick? See its own setup page with every step</a></p>
     <p class="lead">About 15 minutes the first time. You need:</p>
     <table class="need">
       <tr><td>📺</td><td>A TV with a free <b>HDMI</b> port, and a power socket nearby</td></tr>
