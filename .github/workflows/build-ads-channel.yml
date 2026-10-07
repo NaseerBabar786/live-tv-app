@@ -1,0 +1,58 @@
+name: Build Bazaar Ads
+
+# docs/channel/ads-sponsors.json: the sponsors' ads on Bazaar Ads (channel 15), from the list
+# tv.bulkbazaar.ca/sponsors publishes on every change. Rebuilt every hour, so a new, changed or
+# ended sponsor shows on the channel within the hour (tools/build_ads_channel.py).
+on:
+  schedule:
+    - cron: "7 * * * *"   # every hour
+  push:
+    branches: [main]
+    paths: [tools/build_ads_channel.py, .github/workflows/build-ads-channel.yml]
+  pull_request:
+    paths: [tools/build_ads_channel.py, .github/workflows/build-ads-channel.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: build-ads-channel
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the sponsors' ads
+        run: python3 tools/build_ads_channel.py
+
+      - name: Publish
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A docs/channel/ads-sponsors.json docs/channel/ads
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Bazaar Ads sponsors as of $(date -u '+%Y-%m-%d %H:%M')"
+          # Other jobs commit to main too; try again when one got in first.
+          for i in 1 2 3 4; do
+            git pull --rebase origin main && git push origin HEAD:main && break
+            git rebase --abort 2>/dev/null || true
+            [ "$i" = 4 ] && exit 1
+            sleep $((i * 10))
+          done
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

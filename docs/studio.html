@@ -27,7 +27,7 @@
   .item .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
   .item .acts button { padding: 6px 10px; font-size: 14px; }
   .kind { display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
-  .kind.programme { background: #1E3A8A; color: #DBEAFE; } .kind.ad { background: #7C2D12; color: #FFEDD5; } .kind.ident { background: #14532D; color: #DCFCE7; } .kind.live { background: #7F1D1D; color: #FEE2E2; }
+  .kind.programme { background: #1E3A8A; color: #DBEAFE; } .kind.ad { background: #7C2D12; color: #FFEDD5; } .kind.ident { background: #14532D; color: #DCFCE7; } .kind.live { background: #7F1D1D; color: #FEE2E2; } .kind.ads { background: #7C2D12; color: #FFEDD5; }
   /* TV preview: sizes come from the picture's width (cqw), like the app's overlay, so it looks the same as on a TV. */
   .tvbox { margin: 0 0 18px; }
   .tvslot { position: relative; }
@@ -764,7 +764,7 @@ $("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(fal
 
 // ---------- step 2 ----------
 const kindOf = v => v.kind || (v.secs > 0 ? "programme" : "live");
-const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY", music: "MUSIC VIDEOS · NEW EVERY DAY", list: "YOUTUBE BLOCK · NEW EVERY DAY" };
+const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY", music: "MUSIC VIDEOS · NEW EVERY DAY", list: "YOUTUBE BLOCK · NEW EVERY DAY", ads: "ADS · UPDATES BY ITSELF" };
 let justLooped = null;
 // Pop-up ad length rule (owner, 2026-10-07): ads are 5, 10, 15 ... 60 seconds; one break is 60 s at most.
 const AD_RULE = "5, 10, 15, 20 … up to 60 second";
@@ -1009,6 +1009,7 @@ function renderLoop() {
     loopRows[i] = d;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
     d.querySelector(".meta").textContent = v.secs > 0 ? `starts at ${at > 0 ? lengthText(at) : "0:00"} into the loop · ${lengthText(v.secs)} long`
+      : kindOf(v) === "ads" ? (/ads-sponsors/.test(v.url) ? "every sponsor showing today on /sponsors, one after another (updates by itself every hour)" : "our Cable TV promos on air, one after another (the same list as the app's pop-up)")
       : ["trailers", "music", "list"].includes(kindOf(v)) ? "today's YouTube list: its videos play here one after another (the list changes every day)"
       : "live stream: plays until the next time slot (the rest of the loop is skipped)";
     at += v.secs > 0 ? v.secs : 0;
@@ -1018,7 +1019,8 @@ function renderLoop() {
     d.querySelector('[data-a=x]').onclick = () => { c.loop.splice(i, 1); changed(); renderAll(); };
     // A break (ads and promos between two programmes) over 60 s: mark every item in it.
     let st = i; while (st > 0 && !isShowV(byId[c.loop[st - 1]])) st--;
-    if (!isShowV(v)) {
+    // Bazaar Ads is all ads, round the clock: there are no breaks to keep short there.
+    if (!isShowV(v) && station.id !== "ads") {
       let t = 0; for (let j = st; j < c.loop.length && !isShowV(byId[c.loop[j]]); j++) t += byId[c.loop[j]].secs > 0 ? byId[c.loop[j]].secs : 0;
       if (t > 61) {
         if (!longBreak) longBreak = d;

@@ -35,6 +35,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
+import com.livetv.app.data.MyChannel
 import com.livetv.app.SponsorKey
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.focus.onFocusChanged
@@ -462,6 +463,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
     val startedAt = remember { SystemClock.elapsedRealtime() }
     var lastCard by remember { mutableStateOf(startedAt - CARD_EVERY_MS + CARD_NOT_BEFORE_MS) }
     var lastChannel by remember { mutableStateOf(channelId) }
+    val watchingId = rememberUpdatedState(channelId)
     var showing by remember { mutableStateOf<Sponsor?>(null) }
     var video by remember { mutableStateOf<Sponsor?>(null) }
     // Which ad of the break this is ("Ad 1 of 2"), and when the picture ad came up and for how long.
@@ -492,6 +494,8 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
     // [wait] lets a new channel's picture come up first.
     fun popUp(wait: Long) {
         if (podJob?.isActive == true) return
+        // Bazaar Ads (channel 15) is all ads already: no pop-up ads over it (owner, 2026-10-07).
+        if (watchingId.value == MyChannel.ADS_URL) return
         val first = if (onlyPromos) null else Sponsors.next("card")
         val pod = if (isFullScreen) {
             val more = if (first == null) emptyList() else (2..POD_SIZE).mapNotNull { Sponsors.next("card") }

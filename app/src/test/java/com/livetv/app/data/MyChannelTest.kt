@@ -104,8 +104,8 @@ class MyChannelTest {
         assertEquals("mychannel://filmein", films.channel.url)
         assertTrue(MyChannel.isMine(films.channel))
         assertEquals(MyChannel.URL, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.url)
-        assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000", "9", "10", "11", "12", "13", "14"), MyChannel.STATIONS.map { it.dial })
-        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14), MyChannel.STATIONS.map { it.number })
+        assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000", "9", "10", "11", "12", "13", "14", "15"), MyChannel.STATIONS.map { it.dial })
+        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), MyChannel.STATIONS.map { it.number })
         assertEquals(1, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.number)
         assertEquals(2, films.channel.number)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=filmein&app=1", MyChannel.webPage(films.channel))
@@ -151,6 +151,34 @@ class MyChannelTest {
         // Not reachable: the entry is simply skipped, as older apps do.
         val offline = MyChannel.expand(saved) { null }
         assertEquals(listOf("a", "a"), (0 until offline.getJSONArray("loop").length()).map { offline.getJSONArray("loop").getString(it) })
+    }
+
+    @Test
+    fun adsChannelPlaysPromosThenSponsors() {
+        val saved = JSONObject(
+            """{"name":"Bazaar Ads","tz":"America/Toronto","videos":[
+              {"id":"promos","url":"https://tv.bulkbazaar.ca/media/app-promos.json","kind":"ads"},
+              {"id":"sponsors","url":"https://tv.bulkbazaar.ca/channel/ads-sponsors.json","kind":"ads"},
+              {"id":"advertise","title":"Advertise","url":"https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4","secs":15,"kind":"ad"}],
+              "slots":[],"loop":["promos","sponsors","advertise"]}""",
+        )
+        val promos = JSONObject("""{"promos":[{"src":"cabletv-ad-6.mp4","secs":30},{"src":"bad.mp4","secs":3}]}""")
+        val sponsors = JSONObject("""{"ads":[{"src":"https://cdn.example.com/shop.mp4","title":"Shop","secs":75}]}""")
+        val out = MyChannel.expand(saved) { if (it.endsWith("app-promos.json")) promos else sponsors }
+        val c = MyChannel.parse(out, "ads")
+        // Too short an ad is left out; too long a one is cut at a minute (the ad length rule).
+        assertEquals(listOf("promos-0", "sponsors-0", "advertise"), c.loop)
+        val byId = c.videos.associateBy { it.id }
+        assertEquals("https://tv.bulkbazaar.ca/media/cabletv-ad-6.mp4", byId["promos-0"]!!.url)
+        assertEquals(60L, byId["sponsors-0"]!!.seconds)
+        assertTrue(c.videos.all { it.isBreak })
+        assertEquals(15, c.channel.number)
+        assertEquals(MyChannel.ADS_URL, c.channel.url)
+        assertEquals("Bazaar Ads", c.channel.name)
+        // Round and round from midnight: 30 s promo, 60 s sponsor, 15 s advertise.
+        val round = at(0, 0) + 50 * 105_000L
+        assertEquals("sponsors-0", (MyChannel.whatsOn(c, round + 40_000) as MyChannel.Now.Playing).video.id)
+        assertEquals("advertise", (MyChannel.whatsOn(c, round + 95_000) as MyChannel.Now.Playing).video.id)
     }
 
     @Test

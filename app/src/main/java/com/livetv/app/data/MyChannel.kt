@@ -46,8 +46,8 @@ object MyChannel {
         val bug: Boolean = true,
     )
 
-    /** Our channels take numbers 1 to 14; the other channels are numbered from 15. */
-    const val COUNT = 14
+    /** Our channels take numbers 1 to 15; the other channels are numbered from 16. */
+    const val COUNT = 15
 
     /**
      * Our channels, in the order they lead the channel list. Since 1.9.47 all but Bazaar TV run
@@ -79,7 +79,13 @@ object MyChannel {
         // The owner wants just the name "Latest Movies"; its logo says LATEST MOVIES, no Bazaar (shown on the picture since 1.9.83).
         Station("latest", 13, "13", "Latest Movies", youtube = true, backup = "filmein", logo = "latest-movies.png"),
         Station("teens", 14, "14", "Bazaar Teens", youtube = true, backup = "filmein", logo = "bazaar-teens.png"),
+        // 15 (owner, 2026-10-07): ads and promos round the clock in our own player: our Cable TV promos, the
+        // sponsors' ads from /sponsors and "Advertise with us" (docs/channel/ads-schedule.json). No pop-up ads on it.
+        Station("ads", 15, "15", "Bazaar Ads", logo = "bazaar-ads.png"),
     )
+
+    /** Bazaar Ads' address: the channel that is all ads, so no pop-up ad breaks come over it. */
+    const val ADS_URL = "mychannel://ads"
 
     private const val SCHEME = "mychannel://"
 
@@ -237,10 +243,10 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In number order: 1 to 14, Bazaar Hits being 4.
+        // In number order: 1 to 15, Bazaar Hits being 4.
         (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
 
-    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 14, when it's on. */
+    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 15, when it's on. */
     fun byDial(typed: String): Channel? =
         if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
 
@@ -518,7 +524,7 @@ object MyChannel {
      * trailers ("trailers", tools/build_trailers.py), popular music videos ("music", tools/build_music_videos.py)
      * and its other programme blocks: dramas, cartoons, cooking and more ("list", tools/build_bazaar_blocks.py).
      */
-    private val LIST_KINDS = setOf("trailers", "music", "list")
+    private val LIST_KINDS = setOf("trailers", "music", "list", "ads")
 
     /**
      * [o] (a schedule as saved) with each list entry replaced by the videos in its list, as [fetch]
@@ -539,8 +545,26 @@ object MyChannel {
                 newVideos.put(v)
                 continue
             }
-            val list = runCatching { fetch(v.optString("url")) }.getOrNull()?.optJSONArray("videos")
+            val fetched = runCatching { fetch(v.optString("url")) }.getOrNull()
             val parts = mutableListOf<String>()
+            if (v.optString("kind") == "ads") {
+                // Bazaar Ads: our promos or the sponsors' ads, our own videos ([src] beside the list or a full link), 5 to 60 s each.
+                val ads = fetched?.optJSONArray("ads") ?: fetched?.optJSONArray("promos")
+                val base = runCatching { java.net.URI(v.optString("url")) }.getOrNull()
+                for (j in 0 until (ads?.length() ?: 0)) {
+                    val item = ads!!.optJSONObject(j) ?: continue
+                    val src = item.optString("src").trim().takeIf { it.isNotEmpty() } ?: continue
+                    val secs = Math.round(item.optDouble("secs", 0.0)).coerceAtMost(60).takeIf { it >= 5 } ?: continue
+                    val url = runCatching { base?.resolve(src)?.toString() }.getOrNull() ?: continue
+                    val id = "${v.optString("id")}-$j"
+                    newVideos.put(JSONObject().put("id", id).put("title", item.optString("title").ifBlank { v.optString("title").ifBlank { "Ad" } })
+                        .put("url", url).put("secs", secs).put("kind", "ad"))
+                    parts += id
+                }
+                ids[v.optString("id")] = parts
+                continue
+            }
+            val list = fetched?.optJSONArray("videos")
             for (j in 0 until (list?.length() ?: 0)) {
                 val item = list!!.optJSONObject(j) ?: continue
                 val yt = item.optString("id").takeIf { Regex("[A-Za-z0-9_-]{11}").matches(it) } ?: continue
