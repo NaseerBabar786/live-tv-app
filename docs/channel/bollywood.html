@@ -33,8 +33,10 @@
   .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
-  /* The logo sits above the middle, so the loading circle in the middle of the picture stays in view (1.9.60). */
-  .cover img { height: 15vh; max-width: 40vw; object-fit: contain; opacity: .9; transform: translateY(-17vh); }
+  /* While a video starts: only a loading circle in the middle, never our logo (owner, 2026-10-07). */
+  .spin { width: 8vh; height: 8vh; box-sizing: border-box; border: .8vh solid rgba(255,255,255,.18); border-top-color: rgba(255,255,255,.85); border-radius: 50%; animation: spin 1s linear infinite; }
+  .cover.off .spin { animation: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .cover.off { opacity: 0; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
@@ -43,7 +45,7 @@
 </head>
 <body>
 <div id="player"></div>
-<div class="cover" id="cover"><img alt="" src="logos/bazaar-hits.png"></div>
+<div class="cover" id="cover"><div class="spin"></div></div>
 <div class="shield" id="shield"></div>
 <img class="bug" src="logos/bazaar-hits.png" alt="">
 <div class="now hide" id="now"></div>

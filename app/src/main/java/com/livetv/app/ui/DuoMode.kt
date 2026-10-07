@@ -581,7 +581,11 @@ private fun DuoPlayer(
             Text("Choose a channel below", color = Color.White.copy(alpha = 0.8f), modifier = Modifier.align(Alignment.Center))
             return@Box
         }
-        if (channel.logo != null) {
+        // A player that is starting shows a loading circle, not the channel's logo (owner, 2026-10-07).
+        val starting = page != null || showVideo
+        if (starting) {
+            // drawn over the still picture below
+        } else if (channel.logo != null) {
             SubcomposeAsyncImage(
                 model = channel.logo,
                 contentDescription = null,
@@ -596,6 +600,7 @@ private fun DuoPlayer(
         browsePictures[channel.id]?.let {
             Image(it, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
         }
+        if (page != null || (showVideo && !showing)) LoadingSpinner()
         if (page != null) {
             key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
         } else if (showVideo) {

@@ -367,7 +367,11 @@ internal fun CarouselMode(
                         .background(Brush.linearGradient(listOf(palette.surfaceVariant, palette.surface))),
                     contentAlignment = Alignment.Center,
                 ) {
-                    if (channel.logo != null) {
+                    // The playing card shows a loading circle while it starts, not its logo (owner, 2026-10-07).
+                    val starting = middle && playingId == channel.id
+                    if (starting) {
+                        // drawn over the still picture below
+                    } else if (channel.logo != null) {
                         SubcomposeAsyncImage(
                             model = channel.logo,
                             contentDescription = null,
@@ -382,6 +386,7 @@ internal fun CarouselMode(
                     browsePictures[channel.id]?.let {
                         Image(it, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
                     }
+                    if (starting && (page != null || !showing)) LoadingSpinner()
                     if (!middle && grabId == channel.id) {
                         AndroidView(
                             factory = { ctx -> TextureView(ctx).also { grabView.view = it; grabber.player.setVideoTextureView(it) } },

@@ -828,7 +828,11 @@ private fun BrowseCard(
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
-            if (channel.logo != null) {
+            // A card that is starting its channel shows a loading circle, not its logo (owner, 2026-10-07).
+            val starting = page != null || stream != null
+            if (starting) {
+                // drawn over the still picture below
+            } else if (channel.logo != null) {
                 SubcomposeAsyncImage(
                     model = channel.logo,
                     contentDescription = null,
@@ -843,6 +847,7 @@ private fun BrowseCard(
             if (picture != null) {
                 Image(picture, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
             }
+            if (page != null || (stream != null && !showing)) LoadingSpinner(size = 32.dp)
             if (page != null) {
                 key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
             } else if (stream != null) {

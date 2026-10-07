@@ -31,8 +31,10 @@
   .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
-  /* The logo sits above the middle, so the loading circle in the middle of the picture stays in view (1.9.60). */
-  .cover img { height: 15vh; max-width: 40vw; object-fit: contain; opacity: .9; transform: translateY(-17vh); }
+  /* While a video starts: only a loading circle in the middle, never our logo (owner, 2026-10-07). */
+  .spin { width: 8vh; height: 8vh; box-sizing: border-box; border: .8vh solid rgba(255,255,255,.18); border-top-color: rgba(255,255,255,.85); border-radius: 50%; animation: spin 1s linear infinite; }
+  .cover.off .spin { animation: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .cover.off { opacity: 0; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
@@ -41,7 +43,7 @@
 </head>
 <body>
 <div id="player"></div>
-<div class="cover" id="cover"><img alt="" id="coverLogo" hidden></div>
+<div class="cover" id="cover"><div class="spin"></div></div>
 <div class="shield" id="shield"></div>
 <img class="bug" id="bug" alt="">
 <div class="now hide" id="now"></div>
@@ -65,13 +67,9 @@ let ahead = 0;
 const clock = () => Date.now() + ahead;
 
 document.title = station.name + " · Watch live";
-// Latest Movies carries no logo of ours (the owner's wish), not even on the cover between videos.
+// Latest Movies carries no logo of ours (the owner's wish).
 if (station.noBug) $("bug").hidden = true;
-else {
-  $("bug").src = station.logo;
-  $("coverLogo").src = station.logo;
-  $("coverLogo").hidden = false;
-}
+else $("bug").src = station.logo;
 $("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (!app) $("back").hidden = false;
 

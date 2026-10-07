@@ -313,7 +313,10 @@ fun NewsMode(
                 if (page != null) key(page) {
                     WebPreview(page, Modifier.fillMaxSize(), onFallback = { if (MyChannel.webPage(selected) != null) pageFailed = true })
                 } else if (!showing) {
-                    Text(error ?: selected?.name.orEmpty(), color = Color.White, fontSize = s(16f), modifier = Modifier.padding(24.dp))
+                    // While it starts: a loading circle (owner, 2026-10-07); a channel that fails says so.
+                    val failed = error
+                    if (failed != null) Text(failed, color = Color.White, fontSize = s(16f), modifier = Modifier.padding(24.dp))
+                    else if (selected != null) LoadingSpinner()
                 }
                 if (playerFocused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
                 selected?.let { ch ->
@@ -1015,6 +1018,7 @@ private fun SecondChannel(channel: Channel?, playing: Boolean, s: (Float) -> Tex
     }
     LaunchedEffect(playing) { stream.player.playWhenReady = playing }
     Box(Modifier.fillMaxWidth().padding(vertical = d(6f)).aspectRatio(16f / 9f).background(Color.Black)) {
+        if (channel != null && playing && !showing && page == null) LoadingSpinner(size = 32.dp)
         AndroidView(
             factory = { ctx -> TextureView(ctx).also { stream.player.setVideoTextureView(it) } },
             onRelease = { stream.player.clearVideoTextureView(it) },

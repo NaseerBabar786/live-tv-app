@@ -323,12 +323,14 @@ internal fun StripMode(
                 if (current == null) {
                     Text("Loading channels…", color = palette.onSurfaceVariant, modifier = Modifier.align(Alignment.Center))
                 } else if (page != null) {
+                    LoadingSpinner()
                     key(page) {
                         WebPreview(page, Modifier.fillMaxSize(), onFallback = {
                             if (MyChannel.webPage(current) != null) pageFailed = true
                         })
                     }
                 } else {
+                    if (!showing) LoadingSpinner()
                     if (shownId == current.id) {
                         AndroidView(
                             factory = { ctx -> TextureView(ctx).also { view.view = it; stream.player.setVideoTextureView(it) } },
