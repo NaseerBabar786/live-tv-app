@@ -81,7 +81,7 @@
 
 <main class="wrap">
   <h1>Packages</h1>
-  <p class="lead">Free, Silver, Gold and Platinum for Cable TV viewers, plus promotions (Christmas, Labour Day...) with their own dates, price and features. Turn packages on, set prices, and give each viewer a package when they pay.</p>
+  <p class="lead">Free and Gold for Cable TV viewers, plus promotions (Christmas, Labour Day...) with their own dates, price and features. Turn packages on, set prices, and give each viewer a package when they pay.</p>
   <p class="err" id="err"></p>
   <div id="notReady" class="panel hidden">This page works once sign-in is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
@@ -103,12 +103,12 @@
 
     <div class="panel" style="margin-bottom:20px">
       <h2 style="margin-top:0">Design your packages</h2>
-      <p class="small">Tick what each package gets, then press <b>Save settings</b>. Every package always has 1+List, full screen, favourites, channel numbers and search. Without <b>All channels</b> a package has only our own Bazaar channels (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel, Comedy, Movies, Dramas, Cooking, Latest Movies, Teens). The app follows your ticks the next time each viewer opens it.</p>
+      <p class="small"><b>Free</b> is fixed: every viewer gets every feature, with only our own Bazaar channels, so there is nothing to tick for it. Gold has everything Free has (the greyed ticks) plus <b>All channels</b> when it is ticked; press <b>Save settings</b>. Without <b>All channels</b> a package has only our own Bazaar channels (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel, Comedy, Movies, Dramas, Cooking, Latest Movies, Teens). The app follows your ticks the next time each viewer opens it.</p>
       <div class="table-wrap feats"><table>
-        <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Silver">Silver</span></th><th><span class="pill Gold">Gold</span></th><th><span class="pill Platinum">Platinum</span></th></tr></thead>
+        <thead><tr><th>Feature</th><th><span class="pill Gold">Gold</span></th></tr></thead>
         <tbody id="featRows"></tbody>
       </table></div>
-      <label class="small" for="extraChannels" style="display:block;margin-top:12px"><b>Extra channels without "All channels"</b>: packages without All channels (like Free) get our own Bazaar channels plus the channels you type here, separated by commas. Leave it empty for only our own channels.</label>
+      <label class="small" for="extraChannels" style="display:block;margin-top:12px"><b>Extra channels without "All channels"</b>: Free, and paid packages without All channels, get our own Bazaar channels plus the channels you type here, separated by commas. Leave it empty for only our own channels.</label>
       <input class="inp" id="extraChannels" placeholder="e.g. Aaj Tak, ARY News" style="width:100%;box-sizing:border-box;margin-top:6px">
       <div class="row" style="margin:10px 0 18px"><button class="btn primary" id="saveFeats">Save settings</button> <button class="btn" id="resetFeats">Start again from our suggestion</button><span class="small" id="featMsg"></span></div>
       <h3>What viewers see in each package</h3>
@@ -116,9 +116,9 @@
 
       <h3>How it works</h3>
       <ul class="how">
-        <li><b>Packages off</b> (the switch in Settings is unticked): every viewer has everything, like Platinum, for free. Nothing is locked.</li>
-        <li><b>Packages on</b>: a viewer without a package has <b>Free</b>. Locked modes show a 🔒 and the package they need; picking one opens the packages screen in the app.</li>
-        <li><b>Free trial</b>: a brand-new viewer gets <b>everything (Platinum)</b> for the trial days in Settings, counted from the day they first signed in. When the trial ends they drop to Free, unless you gave them a package. This is different from the Free package, which only has the basic modes and never ends.</li>
+        <li><b>Packages off</b> (the switch in Settings is unticked): every viewer has everything, like Gold, for free. Nothing is locked.</li>
+        <li><b>Packages on</b>: a viewer without a package has <b>Free</b>: every feature, but only our own Bazaar channels. Other channels show a 🔒; picking one opens the packages screen in the app.</li>
+        <li><b>Free trial</b>: a brand-new viewer gets <b>everything (Gold)</b> for the trial days in Settings, counted from the day they first signed in. When the trial ends they drop to Free, unless you gave them a package. After the trial they keep every feature on Free, with only our own Bazaar channels.</li>
         <li><b>Buying</b>: in the app the viewer picks a package and a length and presses <b>Ask</b>. That sends you a message in ✉ Messages. You reply with how to pay, and once they've paid you give them the package below.</li>
         <li><b>Ending</b>: 5 days before a package (or the trial) ends, the viewer sees a reminder once a day with <b>Renew</b> and <b>Message us</b> buttons. When it ends they drop to Free, and for a week the app tells them it ended.</li>
         <li><b>Renewing</b>: giving the same package again adds the time after the current end date, so paying early loses nothing. Giving a different package starts it today.</li>
@@ -137,7 +137,7 @@
       <p class="small">Give someone a package for free with a code. Make a code here, send it to them, and they type it in the app: <b>Settings › ⭐ Packages › Promo code</b>. They get the package straight away. Each person can use a code only once, and nobody can use a code you haven't made. If they already have the same package, the code's time is added after it ends. Press <b>Edit</b> on a code to change what it's for, its package, its length or how many people can use it (up to 100,000); people who already used it keep what they got.</p>
       <div class="pcform">
         <label>Code<span class="row" style="gap:6px"><input class="inp" id="pcCode" maxlength="20" placeholder="e.g. EID2026" style="width:150px;text-transform:uppercase"> <button class="btn" id="pcRandom" type="button">Make one up</button></span></label>
-        <label>Package<select id="pcTier"><option>Silver</option><option selected>Gold</option><option>Platinum</option></select></label>
+        <label>Package<select id="pcTier"><option selected>Gold</option></select></label>
         <label>For how long<select id="pcDays"><option value="7">1 week</option><option value="30" selected>1 month</option><option value="90">3 months</option><option value="180">6 months</option><option value="365">1 year</option></select></label>
         <label>How many people<input type="number" class="inp" id="pcUses" value="1" min="1" max="100000" style="width:100px"></label>
         <label style="flex:1;min-width:220px">What it's for<input class="inp" id="pcNote" placeholder="e.g. Free month for my cousin Ali"></label>
@@ -173,7 +173,8 @@
 import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
 const $ = id => document.getElementById(id);
 const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
-const TIERS = ["Silver", "Gold", "Platinum"];
+// Free and Gold only (owner, 2026-10-07): Silver and Platinum were removed; old ones count as Gold.
+const TIERS = ["Gold"];
 // What a package can include; the keys match the app (Plans.Feature). 1+List is in every package.
 const FEATURES = [
   ["channels", "All channels", "every channel from every country (without it: only our own Bazaar channels)"],
@@ -193,20 +194,17 @@ const FEATURES = [
   ["games", "Games", "the 12 retro games played with the TV remote"],
   ["devices", "2 devices", "one account works on two TVs or phones at the same time"],
 ];
-const ALL_TIERS = ["Free", "Silver", "Gold", "Platinum"];
+const ALL_TIERS = ["Free", "Gold"];
+const tierOf = t => t === "Silver" || t === "Platinum" ? "Gold" : t;
+// Free is fixed, not ticked: every feature but All channels (owner, 2026-10-07). Paid packages always have these too.
 // A promotion is the "Promo" package in the app; each viewer's plan names which promotion (promo, promoName).
-const tierName = (t, p) => t === "Promo" ? (p?.promoName || "Promotion") : t;
+const tierName = (t, p) => t === "Promo" ? (p?.promoName || "Promotion") : tierOf(t);
 const ALL_KEYS = FEATURES.map(f => f[0]);
-const DEFAULT_FEATURES = {
-  // Free: every feature but All channels, so only our own Bazaar channels (owner, 2026-10-07).
-  free: ALL_KEYS.filter(k => k !== "channels"), silver: ["channels", "browse", "carousel"],
-  gold: ALL_KEYS.filter(k => k !== "devices"), platinum: ALL_KEYS,
-};
+const FREE_KEYS = ALL_KEYS.filter(k => k !== "channels");
+const DEFAULT_FEATURES = { free: FREE_KEYS, gold: ALL_KEYS };
 const LENGTHS = [["month", "1 month"], ["three", "3 months"], ["six", "6 months"], ["year", "1 year"]];
 const DEFAULTS = {
-  silver_month: "$1.99", silver_three: "$5.39", silver_six: "$9.79", silver_year: "$17.79",
   gold_month: "$3.99", gold_three: "$10.89", gold_six: "$19.79", gold_year: "$35.99",
-  platinum_month: "$5.99", platinum_three: "$16.29", platinum_six: "$29.59", platinum_year: "$53.79",
   trialDays: 7, enforce: false,
   howToPay: "Pick a package below and press Ask. We'll message you back here with how to pay (Interac e-Transfer or card), and turn your package on as soon as it's paid. Questions? WhatsApp 437 602 6500.",
 };
@@ -241,7 +239,7 @@ if (!configured) {
       loadCodes();
       const [u, p] = await Promise.all([fs.getDocs(fs.collection(db, "users")), fs.getDocs(fs.collection(db, "plans"))]);
       users = u.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.lastOpened?.toMillis?.() || 0) - (a.lastOpened?.toMillis?.() || 0));
-      plans = Object.fromEntries(p.docs.map(d => [d.id, { ...d.data(), until: d.data().until?.toDate?.() }]));
+      plans = Object.fromEntries(p.docs.map(d => [d.id, { ...d.data(), tier: tierOf(d.data().tier), until: d.data().until?.toDate?.() }]));
       stats(); render();
     } catch (e) { $("err").textContent = "Couldn't load: " + e.message + " (are the new Firestore rules published?)"; }
   });
@@ -272,10 +270,10 @@ if (!configured) {
     for (const [key, label, what] of FEATURES) {
       const tr = document.createElement("tr");
       tr.innerHTML = `<td><b>${label}</b><br><span class="small">${what}</span></td>`;
-      for (const t of ALL_TIERS) {
-        const id = t.toLowerCase(), saved = c[id + "_features"];
-        const on = (saved === undefined ? DEFAULT_FEATURES[id] : saved.split(",")).includes(key);
-        tr.insertAdjacentHTML("beforeend", `<td><input type="checkbox" data-t="${id}" data-k="${key}" ${on ? "checked" : ""} aria-label="${label} in ${tierName(t)}"></td>`);
+      for (const t of TIERS) {
+        const id = t.toLowerCase(), saved = c[id + "_features"], fixed = FREE_KEYS.includes(key);
+        const on = fixed || (saved === undefined ? DEFAULT_FEATURES[id] : saved.split(",")).includes(key);
+        tr.insertAdjacentHTML("beforeend", `<td><input type="checkbox" data-t="${id}" data-k="${key}" ${on ? "checked" : ""} ${fixed ? 'disabled title="Free has this, so every package has it"' : ""} aria-label="${label} in ${tierName(t)}"></td>`);
       }
       fr.append(tr);
     }
@@ -345,7 +343,7 @@ if (!configured) {
   };
 
   // The ticked features of a package, e.g. "channels,browse".
-  const ticked = t => [...document.querySelectorAll(`#featRows input[data-t="${t}"]:checked`)].map(i => i.dataset.k);
+  const ticked = t => t === "free" ? FREE_KEYS : [...document.querySelectorAll(`#featRows input[data-t="${t}"]:checked`)].map(i => i.dataset.k);
   // The package cards follow the ticks.
   function showCards() {
     $("pkgCards").innerHTML = ALL_TIERS.map(t => {
@@ -361,7 +359,7 @@ if (!configured) {
   $("featRows").addEventListener("change", showCards);
   $("extraChannels").addEventListener("input", showCards);
   $("resetFeats").onclick = () => {
-    document.querySelectorAll("#featRows input").forEach(i => { i.checked = DEFAULT_FEATURES[i.dataset.t].includes(i.dataset.k); });
+    document.querySelectorAll("#featRows input:not(:disabled)").forEach(i => { i.checked = DEFAULT_FEATURES[i.dataset.t].includes(i.dataset.k); });
     showCards();
   };
   $("saveFeats").onclick = () => $("saveCfg").click();
@@ -396,13 +394,13 @@ if (!configured) {
     const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), extra_channels: $("extraChannels").value.split(",").map(x => x.trim()).filter(Boolean).join(", "), updated: fs.serverTimestamp() };
     for (const t of TIERS) for (const [k] of LENGTHS) { const id = `${t.toLowerCase()}_${k}`; data[id] = $(id).value.trim(); }
     for (const t of ALL_TIERS) data[t.toLowerCase() + "_features"] = ticked(t.toLowerCase()).join(",");
-    if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have what you ticked for Free (after their free trial).")) return;
+    if (data.enforce && !confirm("Turn packages on? Viewers without a package will have Free (after their free trial): every feature, but only our own Bazaar channels.")) return;
     const msg = $("cfgMsg"); msg.className = "small"; msg.textContent = "Saving…";
     try {
       await fs.setDoc(fs.doc(db, "config", "plans"), data);
       // Read it back from the server so "Saved" only shows when it really is.
       const back = (await fs.getDocFromServer(fs.doc(db, "config", "plans"))).data() || {};
-      if (back.silver_year !== data.silver_year || back.platinum_month !== data.platinum_month) throw new Error("the saved prices didn't come back");
+      if (back.gold_year !== data.gold_year || back.gold_month !== data.gold_month) throw new Error("the saved prices didn't come back");
       msg.className = "saved"; msg.textContent = "✓ Saved at " + new Date().toLocaleTimeString([], { timeStyle: "short" });
     } catch (e) { msg.className = "bad"; msg.textContent = "Not saved: " + saveHelp(e); }
   };
@@ -411,9 +409,9 @@ if (!configured) {
 
   const active = p => p && p.tier && p.tier !== "Free" && p.until && p.until > new Date();
   function stats() {
-    const counts = { Silver: 0, Gold: 0, Platinum: 0, Promo: 0 }; let soon = 0;
+    const counts = { Gold: 0, Promo: 0 }; let soon = 0;
     for (const p of Object.values(plans)) if (active(p)) { counts[p.tier] = (counts[p.tier] || 0) + 1; if (p.until - Date.now() < 5 * 864e5) soon++; }
-    const items = [["Viewers", users.length], ["Silver", counts.Silver], ["Gold", counts.Gold], ["Platinum", counts.Platinum], ["Promotions", counts.Promo], ["Ending in 5 days", soon]];
+    const items = [["Viewers", users.length], ["Gold", counts.Gold], ["Promotions", counts.Promo], ["Ending in 5 days", soon]];
     $("stats").innerHTML = "";
     for (const [l, n] of items) {
       const el = document.createElement("div"); el.className = "stat";
@@ -432,7 +430,7 @@ if (!configured) {
   async function loadCodes() {
     try {
       const snap = await fs.getDocs(fs.collection(db, "promoCodes"));
-      codes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      codes = snap.docs.map(d => ({ id: d.id, ...d.data(), tier: tierOf(d.data().tier) }));
       codes.sort((a, b) => (b.created?.toMillis?.() || 0) - (a.created?.toMillis?.() || 0));
     } catch (e) { codes = []; pcMsg("Couldn't load your promo codes: " + saveHelp(e), "bad"); }
     showCodes();
@@ -451,7 +449,7 @@ if (!configured) {
         return `<tr data-edit="${i}">
         <td><code>${esc(c.id)}</code></td>
         <td><input class="inp" data-f="note" value="${esc(c.note)}" style="width:100%;box-sizing:border-box"></td>
-        <td><select data-f="tier">${["Silver", "Gold", "Platinum"].map(t => `<option${t === c.tier ? " selected" : ""}>${t}</option>`).join("")}</select>
+        <td><select data-f="tier">${TIERS.map(t => `<option${t === c.tier ? " selected" : ""}>${t}</option>`).join("")}</select>
           <select data-f="days">${days.map(d => `<option value="${d}"${d === c.days ? " selected" : ""}>${esc(DAYS[d] || d + " days")}</option>`).join("")}</select></td>
         <td>${c.used || 0} of <input type="number" class="inp" data-f="uses" min="1" max="100000" value="${c.uses || 1}" style="width:100px"></td>
         <td>${who || '<span class="small">nobody yet</span>'}</td>

@@ -110,8 +110,8 @@ function pickLanguages(onChanged) {
 export function showPackages(label, needed) {
   const body = h('div.packages');
   if (needed) body.appendChild(h('p.need', `${label} needs the ${plans.TIER_LABEL[needed]} package.`));
-  for (const t of ['Silver', 'Gold', 'Platinum']) {
-    body.appendChild(h(`div.package${t === needed ? '.on' : ''}`, h('div.pk-name', `${t}  ·  ${plans.offer.prices[t]} a month`), h('div.pk-has', plans.describe(t))));
+  for (const t of ['Free', 'Gold']) {
+    body.appendChild(h(`div.package${t === needed ? '.on' : ''}`, h('div.pk-name', `${t}  ·  ${plans.offer.prices[t] ? `${plans.offer.prices[t]} a month` : 'free'}`), h('div.pk-has', plans.describe(t))));
   }
   body.appendChild(h('p.howto', plans.offer.howToPay));
   dialog({

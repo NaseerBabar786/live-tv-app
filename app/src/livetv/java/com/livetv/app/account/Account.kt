@@ -204,7 +204,7 @@ class Account private constructor(context: Context) {
             val exists = existing != null
             val claiming = prefs.getBoolean(K_CLAIM, false)
             val accountDevice = existing?.optJSONObject("fields")?.optJSONObject("deviceId")?.optString("stringValue")
-            // Platinum (while packages are on): the account works on two devices, the two newest.
+            // 2 devices (while packages are on): the account works on two devices, the two newest.
             val secondDevice = existing?.optJSONObject("fields")?.optJSONObject("deviceId2")?.optString("stringValue")
             val twoDevices = Subscription.twoDevices
             val known = accountDevice == deviceId || (twoDevices && secondDevice == deviceId)
