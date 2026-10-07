@@ -4,6 +4,7 @@
 import { nameKey } from './util.js';
 import * as store from './store.js';
 import * as mine from './mychannel.js';
+import * as mta from './mta.js';
 import * as fb from './firebase.js';
 
 export const TIERS = ['Free', 'Gold', 'Promo'];
@@ -56,8 +57,8 @@ export const has = (key) => !!features[current]?.has(key);
 export const tier = () => current;
 /** The first package for sale with [key], for "needs Gold". */
 export const lowestWith = (key) => TIERS.find((t) => t !== 'Promo' && features[t]?.has(key)) || 'Gold';
-/** The channels of a package without All channels: our own, plus the ones the owner added. */
-export const freeChannel = (c) => mine.isMine(c) || extra.has(nameKey(c.name));
+/** The channels of a package without All channels: our own, MTA's when the viewer turned MTA on, plus the ones the owner added. */
+export const freeChannel = (c) => mine.isMine(c) || mta.isMta(c) || extra.has(nameKey(c.name));
 export const allowsChannel = (c) => has('channels') || freeChannel(c);
 export const twoDevices = () => offer.enforced && has('devices');
 
