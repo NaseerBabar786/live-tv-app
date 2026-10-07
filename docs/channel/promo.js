@@ -1,4 +1,4 @@
-/* Promo breaks on our YouTube channels (ytc.html, bollywood.html): now and then, between two
+/* Promo breaks on our YouTube channels (ytc.html, bollywood.html): every 10 minutes, between two
    videos (never in the middle of one), one of our own Cable TV promos plays in our own video
    player, outside YouTube's, then the channel carries on. The promos are listed in
    media/promos.json and play in turn. Only our own promos here, never paid
@@ -8,13 +8,13 @@
    promoBreak(muted, done): plays the promo when one is due and calls done() when it ends;
    when none is due, calls done() at once. */
 (function () {
-  const EVERY_MS = 30 * 60 * 1000;   // at most one break every 30 minutes
+  const EVERY_MS = 10 * 60 * 1000;   // a break every 10 minutes (owner, 2026-10-07), at the next change of video
   const KEY = "cabletv-promo-at", NEXT = "cabletv-promo-next";
   let promos = [];
   fetch("../media/promos.json", { cache: "no-store" }).then(r => r.json())
     .then(d => { promos = (d.promos || []).filter(p => p.src); }).catch(() => {});
 
-  // The first break comes 15 to 30 minutes after the channel opens, never on the first video change.
+  // The first break comes 5 to 10 minutes after the channel opens, never on the first video change.
   let last = Date.now();
   try { last = Math.max(last - EVERY_MS / 2, Number(localStorage.getItem(KEY)) || 0); } catch (e) {}
 
