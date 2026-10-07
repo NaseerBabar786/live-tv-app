@@ -54,7 +54,7 @@ object MyChannel {
      * from official YouTube videos (tools/build_youtube_channels.py); the free films below are their backup.
      */
     val STATIONS = listOf(
-        Station("main", 1, "0", "Bazaar TV"),
+        Station("main", 1, "0", "Bazaar TV One"),
         // Public-domain classic films round the clock (built weekly from Movies.m3u).
         Station("filmein", 2, "00", "Bazaar Cinema", youtube = true),
         // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.

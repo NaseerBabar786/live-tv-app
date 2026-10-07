@@ -69,6 +69,7 @@
   .stations button.sel { border-color: var(--focus); }
   .stations img { width: 84px; height: 44px; object-fit: contain; }
   .stations small { display: block; font-weight: 400; color: var(--muted); }
+  .stations .dial { color: var(--focus); font-weight: 800; }
   /* ---------- layout: one column on phones and laptops, side by side on wide screens ---------- */
   .studio { display: flex; flex-direction: column; }
   .studio .side, .studio .work, .studio .steps { display: contents; }
@@ -326,7 +327,7 @@
     <section class="panel" id="step1">
       <h2><span class="num">1</span> Your channel</h2>
       <div class="two">
-        <label class="f">Channel name<input id="name" maxlength="40" placeholder="Bazaar TV"></label>
+        <label class="f">Channel name<input id="name" maxlength="40" placeholder="Bazaar TV One"></label>
         <label class="f">Time zone of your time slots
           <select id="tz">
             <option value="America/Toronto">Toronto / New York (Eastern)</option>
@@ -651,9 +652,11 @@ function stationButton(st, note) {
   const b = document.createElement("button");
   b.type = "button";
   b.className = st === station ? "sel" : "";
-  b.innerHTML = `<img alt=""><span><span></span><small></small></span>`;
+  // The channel number first, as big as the name: "1. Bazaar TV" (owner, 2026-10-07).
+  b.innerHTML = `<img alt=""><span><span><b class="dial"></b> <span class="nm"></span></span><small></small></span>`;
   b.querySelector("img").src = st.logo;
-  b.querySelector("span span").textContent = st.name;
+  b.querySelector(".dial").textContent = st.dial + ".";
+  b.querySelector(".nm").textContent = st.name;
   b.querySelector("small").textContent = note;
   b.onclick = async () => {
     if (st === station) return;
