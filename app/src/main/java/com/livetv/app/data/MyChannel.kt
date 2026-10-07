@@ -19,7 +19,7 @@ object MyChannel {
      * Our logos get redrawn at the same address (1.9.47, 1.9.49), and Coil keeps the old picture on
      * disk for ever, so our own logo links carry this number; raise it whenever the logos change.
      */
-    private const val LOGO_VERSION = 4
+    private const val LOGO_VERSION = 5
 
     fun freshLogo(url: String): String =
         if ("/channel/logos/" in url && '?' !in url) "$url?v=$LOGO_VERSION" else url
@@ -76,8 +76,8 @@ object MyChannel {
         Station("cooking", 12, "12", "Bazaar Cooking", youtube = true, backup = "filmein", logo = "bazaar-cooking.png"),
         // 1.9.76: science, cartoons and challenge shows for 12 to 16 year olds; Bazaar Kids stays for small children.
         // 1.9.81: the newest full films in Hindi, English, Punjabi and Urdu from their makers' channels, newest first.
-        // The owner wants just the name "Latest Movies" and no logo of ours on the picture.
-        Station("latest", 13, "13", "Latest Movies", youtube = true, backup = "filmein", logo = "latest-movies.png", bug = false),
+        // The owner wants just the name "Latest Movies"; its logo says LATEST MOVIES, no Bazaar (shown on the picture since 1.9.83).
+        Station("latest", 13, "13", "Latest Movies", youtube = true, backup = "filmein", logo = "latest-movies.png"),
         Station("teens", 14, "14", "Bazaar Teens", youtube = true, backup = "filmein", logo = "bazaar-teens.png"),
     )
 
