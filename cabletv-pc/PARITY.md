@@ -33,8 +33,16 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
   same live pages (ytc.html, yt.html, bollywood.html), so it gets the fix without a new PC build.
 - 1.9.94: Settings > My playlists no longer has "Find playlists online" or "+ Add playlist link".
   The PC never had playlist settings, so nothing to remove here.
+- 1.9.99: Library YouTube films and episodes play inside Cable TV on our film page
+  (`docs/channel/film.html`: pause, back and forward 10 s, a progress bar, goes on where it was left)
+  instead of the YouTube app. The PC has no Library yet; when it gets one, it loads the same page.
+- 1.10.0: phone touch fixes (swipes now change channel in full screen and on tiles; a tap on the tile
+  with the sound opens it full screen). Phone-only; the PC uses its mouse and keyboard.
 
 ## In step
 
 - 1.9.91 (PC 1.0.1): only Free and Gold packages; Free is fixed (every feature, only our own channels)
   and every package has at least that; old Silver and Platinum count as Gold (`plans.js`).
+- 1.9.96 (PC 1.0.4): packages screen shows Free once (no "Free · free") and Gold at one price a month, $9.99 by default (`settings.js`, `plans.js`).
+- 1.9.100 (PC 1.0.5): the start screen shows only a loading circle while the channels load; no sponsor
+  or words, no 5-second countdown (`screens/start.js`).

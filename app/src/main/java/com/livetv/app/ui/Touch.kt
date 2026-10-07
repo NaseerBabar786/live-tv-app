@@ -6,7 +6,8 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -53,29 +55,38 @@ fun Modifier.tap(onLongPress: (() -> Unit)? = null, onTap: () -> Unit): Modifier
 }
 
 /**
- * Swipes on the finger: [onSwipe] gets the direction like the arrow key it stands for: a swipe up
- * (the finger moves up) is [Swipe.Up]. Short moves (under 48 dp) are ignored, so taps still work.
+ * Swipes on the finger: [onSwipe] gets the direction the finger moved: a swipe up is [Swipe.Up].
+ * Short moves (under 48 dp) are ignored, so taps still work.
+ *
+ * It watches the finger before anything inside gets it (1.9.98): the drag detector used before
+ * lost the swipe to the tap handler on the same spot, so on the phone a swipe on a full-screen
+ * channel did nothing. Once the finger has moved past the touch slop, the move is taken, so a tap
+ * underneath doesn't fire as well.
  */
 fun Modifier.swipe(onSwipe: (Swipe) -> Unit): Modifier = composed {
     val current by rememberUpdatedState(onSwipe)
     val min = with(LocalDensity.current) { 48.dp.toPx() }
     pointerInput(Unit) {
-        var dx = 0f
-        var dy = 0f
-        detectDragGestures(
-            onDragStart = { dx = 0f; dy = 0f },
-            onDrag = { change, amount ->
-                change.consume()
-                dx += amount.x
-                dy += amount.y
-            },
-            onDragEnd = {
-                when {
-                    abs(dy) >= abs(dx) && abs(dy) >= min -> current(if (dy < 0) Swipe.Up else Swipe.Down)
-                    abs(dx) > abs(dy) && abs(dx) >= min -> current(if (dx < 0) Swipe.Left else Swipe.Right)
-                }
-            },
-        )
+        awaitEachGesture {
+            val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+            val start = down.position
+            var end = start
+            var moved = false
+            while (true) {
+                val event = awaitPointerEvent(PointerEventPass.Initial)
+                val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                end = change.position
+                if (!moved && (end - start).getDistance() > viewConfiguration.touchSlop) moved = true
+                if (moved) change.consume()
+                if (!change.pressed) break
+            }
+            val dx = end.x - start.x
+            val dy = end.y - start.y
+            when {
+                abs(dy) >= abs(dx) && abs(dy) >= min -> current(if (dy < 0) Swipe.Up else Swipe.Down)
+                abs(dx) > abs(dy) && abs(dx) >= min -> current(if (dx < 0) Swipe.Left else Swipe.Right)
+            }
+        }
     }
 }
 
