@@ -502,6 +502,44 @@ def probe(out):
               open(os.path.join(out, "news-probe.json"), "w"), ensure_ascii=False, indent=1)
     print("\n".join(NOTES))
 
+def newsreader(slot):
+    """The AI newsreader on camera for this hour (tools/news/presenters/on-air.json takes turns by hour).
+    Her moving clip (news-move-<id>-raw.mp4, made by news-presenter-move.yml) must be in tools/news/presenters/clips/."""
+    here = os.path.join(HERE, "presenters")
+    try:
+        ids = json.load(open(os.path.join(here, "on-air.json")))["readers"]
+        people = {p["id"]: p for p in json.load(open(os.path.join(here, "presenters.json")))["moving"]["people"]}
+    except Exception as e:
+        NOTES.append(f"no newsreader: {e}"); return None
+    ids = [i for i in ids if i in people and os.path.exists(os.path.join(here, "clips", f"{i}.mp4"))]
+    if not ids:
+        NOTES.append("no newsreader clip found"); return None
+    p = dict(people[ids[slot.hour % len(ids)]]); p["clip"] = os.path.join(here, "clips", f"{p['id']}.mp4")
+    return p
+
+def add_reader(body, reader, windows, label, work):
+    """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
+    im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    lower_bar(d, f"{label} • {reader['ur']}")
+    im.save(os.path.join(work, "reader-bar.png"))
+    ins = ["-i", body]
+    for t0, dur in windows:
+        ins += ["-stream_loop", "-1", "-itsoffset", f"{t0:.3f}", "-i", reader["clip"]]
+    ins += ["-loop", "1", "-i", os.path.join(work, "reader-bar.png")]
+    bar = len(windows) + 1
+    graph, last = [], "[0:v]"
+    for k, (t0, dur) in enumerate(windows, 1):
+        on = f"between(t,{t0:.3f},{t0 + dur:.3f})"
+        graph.append(f"[{k}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1[r{k}]")
+        graph.append(f"{last}[r{k}]overlay=0:0:eof_action=pass:enable='{on}'[m{k}]")
+        graph.append(f"[m{k}][{bar}:v]overlay=0:0:shortest=1:enable='{on}'[b{k}]")
+        last = f"[b{k}]"
+    tmp = os.path.join(work, "with-reader.mp4")
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(graph) + f";{last}format=yuv420p[v]",
+        "-map", "[v]", "-map", "0:a", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
+        "-g", str(FPS * 2), "-c:a", "copy", "-movflags", "+faststart", tmp)
+    os.replace(tmp, body)
+
 def add_promos(body, secs, slot, work, mp4):
     """Fills the time after the bulletin with our own Cable TV promos, in turn (a different start each hour)."""
     media = os.path.join(HERE, "..", "..", "docs", "media")
@@ -607,7 +645,7 @@ def main():
     cards, voice_track = [], np.zeros(int(SR * total) + SR, np.float32)
     title_card(os.path.join(work, "c-title.png"), kind, f"{clock(slot)} • {date_ur(slot, True)}", "")
     cards.append(("c-title.png", STING))
-    t = STING; n = 0
+    t = STING; n = 0; on_camera = []
     for i, (sk, text, v, s) in enumerate(segs):
         audio = voice(text, v)
         a = int(t * SR); voice_track[a:a + len(audio)] += audio[:len(voice_track) - a]
@@ -625,6 +663,7 @@ def main():
         else:
             title_card(os.path.join(work, pic), kind, up_next,
                        f"تفصیلی خبرنامہ ہر تین گھنٹے بعد، اگلا {clock(next_full)}")
+        if sk in ("open", "close"): on_camera.append((t, dur))
         cards.append((pic, dur)); t += dur
     left = total - t
     # A short gap stays on the end card; a long one gets promos after a normal-length end card.
@@ -657,6 +696,9 @@ def main():
         "-filter_complex", f"[1:v]fps={FPS},format=rgba[c];[0:v][c]overlay=0:0:format=auto,format=yuv420p[v]",
         "-map", "[v]", "-map", "2:a", "-t", f"{news_len:.3f}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
         "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
+    reader = newsreader(slot)
+    if reader and on_camera:
+        add_reader(body, reader, on_camera, label, work)
     promos = []
     if body != mp4:
         promos = add_promos(body, total - news_len, slot, work, mp4)
@@ -666,6 +708,7 @@ def main():
     info = {"kind": kind, "lang": "ur", "secs": total, "slot": slot.isoformat(),
             "made": dt.datetime.now(dt.timezone.utc).isoformat(), "sources": sources, "weather": bool(wx), "notes": NOTES,
             "news_secs": round(news_len, 1), "promos": promos,
+            "reader": reader["id"] if reader else None,
             "stories": [{"section": s["section"], "headline": s["headline"], "source": s["source"]} for s in shown]}
     json.dump(info, open(os.path.join(out, f"news-{kind}.json"), "w"), ensure_ascii=False, indent=1)
     print("made", mp4, f"{got:.1f} s")

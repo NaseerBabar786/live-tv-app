@@ -1,0 +1,4 @@
+{
+ "about": "AI newsreaders on air, taking turns by hour (hour % count). Owner will pick four; until then Sana (anchor-1). Each needs tools/news/presenters/clips/<id>.mp4, which build-news.yml downloads from channel-media news-move-<id>-raw.mp4.",
+ "readers": ["anchor-1"]
+}

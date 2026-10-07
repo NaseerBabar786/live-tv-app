@@ -42,6 +42,11 @@ jobs:
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
           pip install -q edge-tts numpy pillow
+          # The AI newsreaders' moving clips (made by news-presenter-move.yml); without one the bulletin uses title cards.
+          for id in $(python3 -c "import json; print(' '.join(json.load(open('tools/news/presenters/on-air.json'))['readers']))"); do
+            curl -fsSL -o "tools/news/presenters/clips/$id.mp4" \
+              "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || echo "no clip for $id"
+          done
 
       - name: Make the bulletins
         env:
