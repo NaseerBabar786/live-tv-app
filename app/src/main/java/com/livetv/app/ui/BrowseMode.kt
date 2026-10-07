@@ -667,7 +667,12 @@ internal fun BrowseMode(
                                         sessionRowKey = row.key
                                         sessionCardIndex[row.key] = i
                                     },
-                                    onClick = { openVideo(video) },
+                                    onClick = {
+                                        // A tap: back from the Library, the cursor comes back to this card.
+                                        sessionRowKey = row.key
+                                        sessionCardIndex[row.key] = i
+                                        openVideo(video)
+                                    },
                                 )
                             }
                             itemsIndexed(row.channels, key = { _, c -> c.id }) { i, channel ->
@@ -705,7 +710,12 @@ internal fun BrowseMode(
                                         sessionRowKey = row.key
                                         sessionCardIndex[row.key] = i
                                     },
-                                    onClick = { open(channel) },
+                                    onClick = {
+                                        // A tap: back from full screen, the cursor comes back to this card.
+                                        sessionRowKey = row.key
+                                        sessionCardIndex[row.key] = i
+                                        open(channel)
+                                    },
                                 )
                             }
                         }
@@ -845,6 +855,8 @@ private fun BrowseCard(
             }
             if (page != null) {
                 key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+                // A tap on a phone goes to the card (it opens full screen), not into the web page under it.
+                Box(Modifier.matchParentSize().focusProperties { canFocus = false }.tap(onTap = onClick))
             } else if (stream != null) {
                 AndroidView(
                     factory = { ctx -> TextureView(ctx).also { streamView.view = it; stream.player.setVideoTextureView(it) } },
