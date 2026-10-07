@@ -3,6 +3,18 @@ package com.livetv.app.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.remember
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -63,18 +75,36 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
         val tickerHeight = unit * 4f
         if (c.logoCorner != "off" && c.logo != null) {
             val bottom = c.logoCorner == "bl" || c.logoCorner == "br"
-            AsyncImage(
-                model = c.logo,
-                contentDescription = c.name,
-                modifier = Modifier
+            val left = c.logoCorner == "tl" || c.logoCorner == "bl"
+            val logoHeight = unit * 9f
+            // The time sits with the logo (owner, 2026-10-07): under it in a top corner, above it in a
+            // bottom one, lined up with its outer edge, so it moves wherever the logo has to go.
+            val clock: @Composable () -> Unit = { ChannelClock(unit) }
+            Column(
+                Modifier
                     .align(corner)
                     .padding(horizontal = unit * 2.5f, vertical = unit * 2f)
-                    .padding(bottom = if (bottom && c.ticker != null) tickerHeight else 0.dp)
-                    // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
-                    .height(unit * 9f)
-                    .widthIn(max = unit * 26f)
-                    .alpha(0.55f),
-            )
+                    .padding(bottom = if (bottom && c.ticker != null) tickerHeight else 0.dp),
+                horizontalAlignment = if (left) Alignment.Start else Alignment.End,
+            ) {
+                if (bottom) {
+                    clock()
+                    Spacer(Modifier.height(unit * 0.4f))
+                }
+                AsyncImage(
+                    model = c.logo,
+                    contentDescription = c.name,
+                    modifier = Modifier
+                        // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
+                        .height(logoHeight)
+                        .widthIn(max = unit * 26f)
+                        .alpha(0.55f),
+                )
+                if (!bottom) {
+                    // The lowest fifth of our logo pictures is empty (76 of 393 rows), so the time tucks up into it.
+                    Box(Modifier.offset(y = -logoHeight * (76f / 393f) + unit * 0.4f)) { clock() }
+                }
+            }
         }
         c.ticker?.let { line ->
             Box(
@@ -101,4 +131,28 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             }
         }
     }
+}
+
+/** The viewer's own time, like "8:07 PM", small on a see-through dark pill; sized from the picture like the logo. */
+@Composable
+private fun ChannelClock(unit: Dp) {
+    val format = remember { SimpleDateFormat("h:mm a", Locale.US) }
+    val time by produceState(format.format(Date())) {
+        while (true) {
+            value = format.format(Date())
+            delay(60_000L - System.currentTimeMillis() % 60_000L + 50)
+        }
+    }
+    Text(
+        time,
+        color = Color.White.copy(alpha = 0.92f),
+        fontWeight = FontWeight.Bold,
+        fontSize = (unit.value * 1.45f).sp,
+        maxLines = 1,
+        softWrap = false,
+        style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.65f), Offset(1f, 1f), 3f)),
+        modifier = Modifier
+            .background(Color(0x6E000000), RoundedCornerShape(unit * 0.35f))
+            .padding(horizontal = unit * 0.45f, vertical = unit * 0.15f),
+    )
 }
