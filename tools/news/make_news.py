@@ -179,7 +179,8 @@ def ai_script(stories, kind):
             r = urllib.request.Request("https://models.github.ai/inference/chat/completions",
                                        data=json.dumps(req).encode(), method="POST",
                                        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json",
-                                                "Accept": "application/json", "X-GitHub-Api-Version": "2022-11-28"})
+                                                "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28",
+                                                "User-Agent": "BazaarTV-News/1.0"})
             with urllib.request.urlopen(r, timeout=120) as resp:
                 raw = resp.read().decode(errors="replace")
                 text = f"{resp.status} {resp.geturl()} {raw}"
