@@ -520,6 +520,7 @@
 <script type="module">
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand } from "./channel/schedule.js";
+import { mountCards } from "./channel/cards.js";
 import { playable, runningOrder, upcoming, torontoDay, lengthOf as ytLength } from "./channel/ytorder.js";
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
@@ -925,6 +926,8 @@ $("slotForm").onsubmit = e => {
 let mode = "edit", marquee = null, barTimer = null, adRun = null, tickerNow = "";
 const shown = () => (mode === "air" ? saved : c) || c;
 function stopPreview() { if (preview) { preview.stop(); preview = null; } }
+// "Up next" every 10 minutes and today's shows every 20, with the breaks, as on TVs (not while watching one video).
+mountCards($("stage"), () => (preview ? shown() : null));
 function showLiveButton() {
   if ($("liveBtn")) return;
   const b = document.createElement("button");

@@ -4,7 +4,7 @@ name: Build news bulletins
 # on the "channel-media" pre-release under a FIXED name, so the channel schedule never changes:
 #   news-headlines.mp4  3:00, plays every hour on the hour
 #   news-full.mp4      10:00, plays at 00, 03, 06 ... 21 o'clock (made in the hour before)
-# See tools/news/make_news.py. If a run fails, the last bulletin simply stays on air.
+# Urdu (Bazaar TV is an Urdu/Hindi channel). See tools/news/make_news.py. If a run fails, the last bulletin simply stays on air.
 
 on:
   schedule:
@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       kind:
-        description: "headlines, full, both or auto (the one due next)"
+        description: "headlines, full, both, auto (the one due next) or probe (check feeds only)"
         required: false
         default: "auto"
   push:
@@ -36,7 +36,7 @@ jobs:
 
       - name: Install tools
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
           pip install -q edge-tts numpy pillow
 
       - name: Make the bulletins
@@ -47,6 +47,7 @@ jobs:
         run: |
           set -eu
           mkdir -p out
+          python3 -c "from PIL import features; assert features.check('raqm'), 'Urdu text needs raqm'"
           # A code change makes both, so both are fresh with the new look.
           if [ "$EVENT" = "push" ] || [ "$KIND" = "both" ]; then kinds="headlines full"; else kinds="$KIND"; fi
           for k in $kinds; do python3 tools/news/make_news.py out --kind "$k"; done
@@ -59,4 +60,4 @@ jobs:
           gh release view channel-media -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
             gh release create channel-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false \
               --title "Channel media" --notes "Videos for the owner's channel."
-          gh release upload channel-media out/news-*.mp4 out/news-*.json -R "$GITHUB_REPOSITORY" --clobber
+          gh release upload channel-media out/news-*.json $(ls out/news-*.mp4 2>/dev/null) -R "$GITHUB_REPOSITORY" --clobber
