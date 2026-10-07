@@ -7,6 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.offset
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import android.graphics.Bitmap
+import android.os.Build
+import coil3.toBitmap
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -15,7 +21,6 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
@@ -86,7 +91,11 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             val logoHeight = unit * 9f
             // The time sits with the logo (owner, 2026-10-07): under it in a top corner, above it in a
             // bottom one, lined up with its outer edge, so it moves wherever the logo has to go.
-            val clock: @Composable () -> Unit = { ChannelClock(unit) }
+            // Where the logo picture really has ink (top, bottom as parts of its height): the clock goes
+            // a small gap off that, never on it (owner, 2026-10-07), whatever empty margin a logo has.
+            val logoUrl: String = c.logo
+            var ink by remember(logoUrl) { mutableStateOf(logoInk[logoUrl] ?: (0f to 1f)) }
+            val gap = unit * 0.3f
             Column(
                 Modifier
                     .align(corner)
@@ -94,24 +103,20 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                     .padding(bottom = if (bottom && c.ticker != null) tickerHeight else 0.dp),
                 horizontalAlignment = if (left) Alignment.Start else Alignment.End,
             ) {
-                if (bottom) {
-                    clock()
-                    Spacer(Modifier.height(unit * 0.4f))
-                }
+                if (bottom) Box(Modifier.offset(y = logoHeight * ink.first - gap)) { ChannelClock(unit) }
                 AsyncImage(
-                    model = c.logo,
+                    model = logoUrl,
                     contentDescription = c.name,
+                    onSuccess = { state ->
+                        (logoInk[logoUrl] ?: inkOf(state.result.image)?.also { logoInk[logoUrl] = it })?.let { ink = it }
+                    },
                     modifier = Modifier
                         // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
                         .height(logoHeight)
                         .widthIn(max = unit * 26f)
                         .alpha(0.55f),
                 )
-                if (!bottom) {
-                    // Fully clear of the logo (owner, 2026-10-07): some logos have a second line (ENGLISH, HINDI) at the very bottom.
-                    Spacer(Modifier.height(unit * 0.4f))
-                    clock()
-                }
+                if (!bottom) Box(Modifier.offset(y = -logoHeight * (1f - ink.second) + gap)) { ChannelClock(unit) }
             }
         }
         // Every 10 minutes what's next, every 20 minutes today's shows (owner, 2026-10-07), on the breaks.
@@ -237,16 +242,32 @@ private fun ChannelClock(unit: Dp) {
             delay(60_000L - System.currentTimeMillis() % 60_000L + 50)
         }
     }
+    // See-through like the logo, a watermark (owner, 2026-10-07); a faint shadow keeps it readable on white.
     Text(
         time,
-        color = Color.White.copy(alpha = 0.92f),
+        color = Color.White,
         fontWeight = FontWeight.Bold,
         fontSize = (unit.value * 1.45f).sp,
         maxLines = 1,
         softWrap = false,
-        style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.65f), Offset(1f, 1f), 3f)),
-        modifier = Modifier
-            .background(Color(0x6E000000), RoundedCornerShape(unit * 0.35f))
-            .padding(horizontal = unit * 0.45f, vertical = unit * 0.15f),
+        style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.5f), Offset(1f, 1f), 3f)),
+        modifier = Modifier.alpha(0.55f),
     )
 }
+
+/** Each logo's inked rows, by URL, so it is measured once. */
+private val logoInk = java.util.concurrent.ConcurrentHashMap<String, Pair<Float, Float>>()
+
+/** The first and last rows with something drawn, as parts of the picture's height; null if it can't be read. */
+private fun inkOf(image: coil3.Image): Pair<Float, Float>? = runCatching {
+    var bmp = image.toBitmap()
+    if (Build.VERSION.SDK_INT >= 26 && bmp.config == Bitmap.Config.HARDWARE) bmp = bmp.copy(Bitmap.Config.ARGB_8888, false)
+    val w = bmp.width
+    val h = bmp.height
+    val px = IntArray(w * h)
+    bmp.getPixels(px, 0, w, 0, 0, w, h)
+    fun solid(y: Int) = (0 until w).any { (px[y * w + it] ushr 24) > 40 }
+    val top = (0 until h).firstOrNull { solid(it) } ?: return null
+    val last = (h - 1 downTo 0).first { solid(it) }
+    top.toFloat() / h to (last + 1).toFloat() / h
+}.getOrNull()
