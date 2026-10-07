@@ -207,6 +207,17 @@
     "prompt": "RAW photo, medium shot from the waist up, a graceful Pakistani woman TV news anchor in her mid thirties, dark hair in a neat side braid, a navy blue dupatta over one shoulder, wearing an elegant navy and gold embroidered kurta, modest outfit with a high neckline and long sleeves, fully covered, sitting at a glossy curved news desk, natural skin texture, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind her, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
+   },
+   {
+    "id": "anchor-3c",
+    "name": "Priya",
+    "ur": "پریا",
+    "seed": 5303,
+    "picture": "anchor-3",
+    "edit": "Dress her like a professional office lady in modest clothing: a tailored, fully opaque, long-sleeved navy blue blazer over a high-neck plain white kurta, with a soft opaque pale grey dupatta draped neatly over her head and shoulders, covering her hair; no bindi. Keep her face, skin tone, pose, the news desk and the studio exactly the same; photorealistic.",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Indian woman TV news anchor in her late twenties, hair tied in a neat low bun, small bindi, wearing an elegant royal blue silk saree, sitting at a glossy modern news desk, natural skin texture with pores, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, real television news studio set with blurred blue and red screens behind her, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
    }
   ]
  }
