@@ -54,7 +54,7 @@ CHANNELS = [
     ("Geo Kahani", ["@GeoKahani", "@GeoKahaniOfficial"], "Geo Kahani", "Urdu"),
     ("Taarak Mehta Ka Ooltah Chashmah", ["@TaarakMehtaKaOoltahChashmah", "@tmkoc"], "Taarak Mehta Ka Ooltah Chashmah", "Hindi"),
     ("Prasar Bharati Archives", ["@PrasarBharatiArchives", "@prasarbharatiarchive"], "Prasar Bharati Archives", "Hindi"),
-    ("FilmRise TV", ["@FilmRiseTV", "@FilmRiseClassicTV", "@FilmRiseTelevision"], "FilmRise", "English"),
+    # FilmRise TV (1950s-60s sitcoms such as That Girl) left on 2026-10-07 with the other old English programmes.
 ]
 
 # The same TV channels' own Dailymotion accounts (only verified accounts with exactly that
@@ -85,6 +85,9 @@ SHOW_SEARCHES = [
      ["kapil sharma show full episode", "the kapil sharma show ep"], r"kapil"),
 ]
 MIN_SHOW_EPISODE_MINUTES = 30
+
+# Channels taken out of the Library: what was kept from them goes at once, not after KEEP_DAYS.
+RETIRED = {"FilmRise TV"}
 
 # Channels whose single-episode telefilms go under Urdu Movies.
 TELEFILM_CHANNELS = {"ARY Digital", "HUM TV", "Geo Entertainment"}
@@ -758,7 +761,7 @@ def main():
     # Kept until KEEP_DAYS after a video was last found, so a show still on its channel's
     # page (such as an old PTV classic) stays.
     cutoff = (today - dt.timedelta(days=KEEP_DAYS)).isoformat()
-    kept = {k: v for k, v in kept.items() if v.get("seen", v["added"]) >= cutoff}
+    kept = {k: v for k, v in kept.items() if v.get("seen", v["added"]) >= cutoff and v.get("channel") not in RETIRED}
     episodes = {k: v for k, v in kept.items() if "show" in v}
     movies = {k: v for k, v in kept.items() if "movie" in v}
     telefilms = {k: v for k, v in kept.items() if "telefilm" in v}
