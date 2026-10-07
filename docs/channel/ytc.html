@@ -51,6 +51,7 @@
 <div class="msg" id="msg">Loading…</div>
 <script src="promo.js"></script>
 <script src="still.js"></script>
+<script src="keepplaying.js"></script>
 <script type="module">
 import { STATIONS } from "./schedule.js";
 import { loadPicks, loadPromos, loadTrailers, loadLocked, dayPlan, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
@@ -286,7 +287,7 @@ window.onYouTubeIframeAPIReady = () => {
       onStateChange: e => {
         if (inBreak) return;
         if (e.data === YT.PlayerState.PLAYING) cover(false);
-        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED || e.data === YT.PlayerState.PAUSED) cover(true);
         lastState = e.data;
         if (e.data === YT.PlayerState.PLAYING) started = true;
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
@@ -299,6 +300,7 @@ window.onYouTubeIframeAPIReady = () => {
     },
   });
   stillFor(player);
+  keepPlaying(player, () => inBreak, () => cover(true));
 };
 // A tap or OK only shows what's playing; double-click goes full screen (on the website).
 $("shield").onclick = showNow;
