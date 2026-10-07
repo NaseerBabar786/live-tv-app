@@ -70,7 +70,7 @@ const $ = id => document.getElementById(id);
 const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 const APPS = {
   "com.naseerbabar.livetv": "Cable TV", "com.naseerbabar.livetvmax": "Live TV Max", "com.naseerbabar.appbazaar": "App Bazaar",
-  "com.naseerbabar.iqraquran": "Iqra Quran", "com.naseerbabar.livecam": "Live Cam", "com.naseerbabar.multichat": "Multi Chat",
+  "com.naseerbabar.iqraquran": "Iqra Quran", "com.naseerbabar.livecam": "Live Cam", "com.naseerbabar.multichat": "Multi Chat", "ca.bulkbazaar.cabletv.pc": "Cable TV for PC",
   "com.naseerbabar.claudenotes": "Notes for Claude",
 };
 const appName = id => APPS[id] || id;
@@ -113,7 +113,7 @@ if (!configured) {
         const key = [r.app, r.version, r.error].join("|");
         const g = map.get(key) || { app: r.app, version: r.version, error: r.error || "", stack: r.stack || "", ids: [], devices: new Set(), onStart: 0, last: null };
         g.ids.push(r.id);
-        g.devices.add(`${r.device} · Android ${r.android}`);
+        g.devices.add(`${r.device} · ${/^[0-9.]+$/.test(r.android || '') ? 'Android ' : ''}${r.android}`);
         if (r.onStart) g.onStart++;
         if (!g.last || (r.time && r.time > g.last)) { g.last = r.time; g.stack = r.stack || g.stack; }
         map.set(key, g);
