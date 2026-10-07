@@ -13,7 +13,11 @@
      livetv://blocked (the app then offers YouTube's own app). The last place in each video is kept, so
      it goes on from there next time. */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; color: #fff; }
-  #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  /* YouTube's own bar along the bottom (and its title along the top) still showed on the owner's TV with
+     its buttons off (1.9.99 test). The player is made taller than the screen, so YouTube puts the picture in
+     the middle, exactly on the screen, and draws its own bars above and below it, out of sight. As wide as
+     the picture at full height, so the picture always fits the screen whole. */
+  #player { position: absolute; left: 50%; top: -20vh; transform: translateX(-50%); width: min(100vw, 177.78vh); height: 140vh; pointer-events: none; }
   .shield { position: absolute; inset: 0; }
   /* Our own black card until the video plays, and a still with a pause sign while paused, so YouTube's
      own loading and paused screens (title, "More videos") never show. */
