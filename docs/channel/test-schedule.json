@@ -176,13 +176,6 @@
    "kind": "music"
   },
   {
-   "id": "kids",
-   "title": "بچوں کا وقت: نظمیں اور کہانیاں",
-   "url": "https://tv.bulkbazaar.ca/channel/block-kids.json",
-   "secs": 0,
-   "kind": "list"
-  },
-  {
    "id": "drama-1",
    "title": "ڈرامہ",
    "url": "https://tv.bulkbazaar.ca/channel/block-drama-1.json",
@@ -193,6 +186,13 @@
    "id": "drama-2",
    "title": "ڈرامہ",
    "url": "https://tv.bulkbazaar.ca/channel/block-drama-2.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "drama-3",
+   "title": "ڈرامہ",
+   "url": "https://tv.bulkbazaar.ca/channel/block-drama-3.json",
    "secs": 0,
    "kind": "list"
   },
@@ -392,7 +392,7 @@
  "loop": [
   "welcome",
   "next",
-  "kids",
+  "drama-3",
   "break",
   "adbb",
   "promo",
@@ -416,7 +416,6 @@
   "break",
   "promo",
   "next",
-  "story1",
   "sprite-hi",
   "break",
   "adbb",
@@ -452,6 +451,13 @@
   "next",
   "tos-hi",
   "break",
+  "adhere",
+  "adbb",
+  "next"
+ ],
+ "fillers": [
+  "promo",
+  "terror-hi",
   "adhere",
   "adbb",
   "next"

@@ -80,7 +80,7 @@ if (/[\u0600-\u06FF]/.test($("tick").textContent)) $("ticker").classList.add("rt
 // Titles, makers and languages from the day's lists (the address carries only ids and lengths).
 let info = {};
 // Keep in step with tools/build_trailers.py, build_music_videos.py and build_bazaar_blocks.py.
-const LISTS = ["trailers.json", "music-videos.json", "block-kids.json", "block-drama-1.json", "block-drama-2.json",
+const LISTS = ["trailers.json", "music-videos.json", "block-drama-1.json", "block-drama-2.json", "block-drama-3.json",
   "block-cooking.json", "block-comedy.json", "block-film.json"];
 for (const list of LISTS) {
   fetch(list, { cache: "no-store" }).then(r => r.json()).then(d => {

@@ -9,9 +9,9 @@ on:
     - cron: "30 8 * * *"   # every day, 08:30 UTC
   push:
     branches: [main]
-    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, .github/workflows/build-trailers.yml]
+    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, tools/check_bazaar_tv.py, docs/channel/test-schedule.json, .github/workflows/build-trailers.yml]
   pull_request:
-    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, .github/workflows/build-trailers.yml]
+    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, tools/check_bazaar_tv.py, docs/channel/test-schedule.json, .github/workflows/build-trailers.yml]
   workflow_dispatch:
 
 permissions:
@@ -43,6 +43,11 @@ jobs:
       - name: Pick the day's programme blocks
         if: always()
         run: python3 tools/build_bazaar_blocks.py
+
+      # The owner's rule: only programmes that fit Bazaar TV (no children's shows; those are on Bazaar Kids).
+      - name: Check Bazaar TV's programmes fit the channel
+        if: always()
+        run: python3 tools/check_bazaar_tv.py
 
       - name: Publish the lists
         if: always() && github.ref == 'refs/heads/main'
