@@ -87,6 +87,12 @@
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the admin. <button class="btn" data-signout>Use another account</button></div>
   <div id="dash" class="hidden split">
+    <div class="panel hidden" id="todo" style="margin-bottom:20px;grid-column:1/-1;box-shadow:inset 0 0 0 2px var(--accent, #f5c542)">
+      <h2 style="margin-top:0">✅ Ready to apply</h2>
+      <p class="small">Changes you asked for that need your login. Nothing changes until you press Apply.</p>
+      <ul id="todoList"></ul>
+      <div class="row"><button class="btn primary" id="todoApply" type="button">Apply</button><span class="small" id="todoMsg"></span></div>
+    </div>
     <div class="panel" style="margin-bottom:20px">
       <h2 style="margin-top:0">Settings</h2>
       <p><label><input type="checkbox" id="enforce"> <b>Packages are on</b></label><br>
@@ -237,7 +243,8 @@ if (!configured) {
     try {
       await loadConfig();
       await loadPromos();
-      loadCodes();
+      await loadCodes();
+      showTodo();
       const [u, p] = await Promise.all([fs.getDocs(fs.collection(db, "users")), fs.getDocs(fs.collection(db, "plans"))]);
       users = u.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.lastOpened?.toMillis?.() || 0) - (a.lastOpened?.toMillis?.() || 0));
       plans = Object.fromEntries(p.docs.map(d => [d.id, { ...d.data(), tier: tierOf(d.data().tier), until: d.data().until?.toDate?.() }]));
@@ -427,6 +434,43 @@ if (!configured) {
     } catch (e) { codes = []; pcMsg("Couldn't load your promo codes: " + saveHelp(e), "bad"); }
     showCodes();
   }
+  // Owner's asks (2026-10-07) that only the owner's login can save: Gold $9.99 a month, no "Welcome deal"
+  // promotion, WELCOME with no limit. Shown as one Apply button; nothing is saved without pressing it.
+  function todoItems() {
+    const items = [];
+    if ($("gold_month").value.trim() !== "$9.99") items.push(["price", `Gold's price: ${esc($("gold_month").value.trim() || "not set")} → $9.99 a month`]);
+    const welcome = promos.filter(p => /welcome/i.test(p?.name || ""));
+    if (welcome.length) items.push(["promo", `Delete the promotion ${welcome.map(p => "“" + esc(p.name) + "”").join(", ")}`]);
+    const code = codes.find(c => c.id === "WELCOME");
+    if (code && code.uses < NO_LIMIT) items.push(["code", "Promo code WELCOME: no limit (each account still once)"]);
+    return items;
+  }
+  function showTodo() {
+    const items = todoItems();
+    $("todo").classList.toggle("hidden", !items.length);
+    $("todoList").innerHTML = items.map(([, t]) => `<li>${t}</li>`).join("");
+  }
+  $("todoApply").onclick = async () => {
+    const items = todoItems().map(([k]) => k), msg = $("todoMsg");
+    msg.className = "small"; msg.textContent = "Saving…";
+    try {
+      if (items.includes("price")) {
+        await fs.setDoc(fs.doc(db, "config", "plans"), { gold_month: "$9.99" }, { merge: true });
+        $("gold_month").value = "$9.99"; showPrices();
+      }
+      if (items.includes("promo")) {
+        promos = promos.filter(p => !/welcome/i.test(p?.name || ""));
+        await fs.setDoc(fs.doc(db, "config", "promos"), { items: JSON.stringify(promos), updated: fs.serverTimestamp() });
+        showPromos();
+      }
+      if (items.includes("code")) {
+        await fs.updateDoc(fs.doc(db, "promoCodes", "WELCOME"), { uses: NO_LIMIT });
+        const c = codes.find(x => x.id === "WELCOME"); if (c) c.uses = NO_LIMIT; showCodes();
+      }
+      msg.className = "saved"; msg.textContent = "✓ Done";
+      setTimeout(showTodo, 1500);
+    } catch (e) { msg.className = "bad"; msg.textContent = "Not saved: " + saveHelp(e); }
+  };
   let editingCode = null; // the code whose row is open for editing
   const DAY_OPTIONS = [7, 30, 90, 180, 365];
   function showCodes() {
