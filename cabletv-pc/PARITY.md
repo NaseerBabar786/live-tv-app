@@ -42,7 +42,7 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
   dates each programme (`added="..."`, `tools/first_seen.py`); the Library shows a "Newly added" chip, NEW marks
   and new titles first, in each language and section, on TV and phone (same APK). The PC has no Library yet;
   when it gets one, it reads the same `added` dates and shows the same Newly added section.
-- Library English: the old public-domain classics (Movies.m3u) left the Library; newer English films, shows
+- 1.10.2: Library English: the old public-domain classics (Movies.m3u) left the Library; newer English films, shows
   and cartoons come from their owners' YouTube channels in Dramas.m3u. The PC has no Library yet.
 
 ## In step
