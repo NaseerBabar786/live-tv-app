@@ -9,6 +9,7 @@
 import * as sponsors from './sponsors.js';
 import * as nav from './nav.js';
 import * as store from './store.js';
+import * as mine from './mychannel.js';
 
 const CARD_MS = 5000, CARD_SITE_MS = 8000, CARD_EVERY_MS = 3 * 60000, CARD_NOT_BEFORE_MS = 3 * 60000;
 const VIDEO_EVERY_MS = 30 * 60000;
@@ -157,6 +158,8 @@ function pod() {
 
 async function popUp(wait) {
   if (busy) return;
+  // Bazaar Ads (channel 15) is all ads already: no pop-up ads over it (owner, 2026-10-07).
+  if (lastChannel === mine.ADS_URL) return;
   const ads = pod();
   if (!ads.length) return;
   lastCard = Date.now();

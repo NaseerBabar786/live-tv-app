@@ -1,0 +1,16 @@
+{
+  "note": "Bazaar Ads (channel 15): our Cable TV promos (media/app-promos.json, the app's pop-up list), then our sponsors' ads (ads-sponsors.json, rebuilt hourly from /sponsors), then 'Advertise with us', round and round. The lists are put in place by MyChannel.expand and schedule.js expand.",
+  "name": "Bazaar Ads",
+  "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-ads.png",
+  "logoCorner": "tr",
+  "active": true,
+  "tz": "America/Toronto",
+  "tickerOn": false,
+  "videos": [
+    { "id": "promos", "title": "Cable TV promos", "url": "https://tv.bulkbazaar.ca/media/app-promos.json", "kind": "ads" },
+    { "id": "sponsors", "title": "Our sponsors", "url": "https://tv.bulkbazaar.ca/channel/ads-sponsors.json", "kind": "ads" },
+    { "id": "advertise", "title": "Advertise on Cable TV", "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4", "secs": 15, "kind": "ad" }
+  ],
+  "slots": [],
+  "loop": ["promos", "sponsors", "advertise"]
+}

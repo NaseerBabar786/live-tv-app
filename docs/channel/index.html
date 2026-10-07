@@ -146,7 +146,7 @@ function show() {
   $("tickerText").textContent = tick || "";
   renderGuide();
 }
-const isShow = g => g.slot || !g.video.kind || g.video.kind === "programme" || g.video.kind === "live";
+const isShow = g => station.id === "ads" || g.slot || !g.video.kind || g.video.kind === "programme" || g.video.kind === "live";
 function renderGuide() {
   const tz = c.tz || "America/Toronto";
   const now = Date.now();

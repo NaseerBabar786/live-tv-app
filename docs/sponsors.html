@@ -61,6 +61,7 @@
       <button class="btn primary" id="add">Add a sponsor</button>
       <button class="btn" data-signout>Sign out</button>
     </div>
+    <p class="small" style="margin:0 0 14px">📺 Every sponsor showing today also plays on <b>Bazaar Ads, channel 15</b>, round the clock, with our Cable TV promos: their video (5 to 60 seconds) or else their picture for 10 seconds. Changes reach the channel within the hour.</p>
 
     <form id="form" class="panel hidden" style="margin-bottom:18px">
       <h2 id="formTitle" style="margin-top:0">New sponsor</h2>
@@ -220,7 +221,27 @@ if (!configured) {
         dealNote = e.code === "permission-denied" ? "To keep deal details, add the 'sponsorDeals' rule in Firestore › Rules (see the setup notes)." : "Couldn't load deal details: " + e.message;
       }
       render();
+      publishAds();
     } catch (e) { $("err").textContent = "Couldn't load the sponsors: " + denied(e); }
+  }
+
+  // Bazaar Ads (channel 15) plays every sponsor showing today. The list goes to a public copy
+  // (channel/ads-sponsors) after every change here; tools/build_ads_channel.py picks it up every hour.
+  let publishedAds = null;
+  async function publishAds() {
+    const list = sponsors.filter(s => s.active).map(s => ({
+      id: s.id, name: s.name || "", start: s.start || "", end: s.end || "", active: true,
+      image: s.image || "", video: s.video || "", videoSecs: Number(s.videoSecs) || 0,
+    }));
+    // A Firestore document holds up to 1 MB: pictures past that are left out (their video still plays).
+    let size = 0;
+    for (const s of list) { size += s.image.length; if (size > 900000) s.image = ""; }
+    const data = JSON.stringify({ sponsors: list });
+    if (data === publishedAds) return;
+    try {
+      await fs.setDoc(fs.doc(db, "channel", "ads-sponsors"), { data, updatedAt: fs.serverTimestamp() });
+      publishedAds = data;
+    } catch (e) { console.warn("Bazaar Ads list not saved:", e); }
   }
 
   function status(s) {

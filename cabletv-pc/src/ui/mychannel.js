@@ -1,12 +1,12 @@
-// Our own channels 1 to 14, run from tv.bulkbazaar.ca/studio (MyChannel.kt and MyChannelSync.kt in the
+// Our own channels 1 to 15, run from tv.bulkbazaar.ca/studio (MyChannel.kt and MyChannelSync.kt in the
 // TV app). Their schedule rules come from the website's docs/channel/schedule.js, copied in at build
 // time, so the website, the TV app and this app agree on what's on.
 import { STATIONS, expand, blockAt, youtubeId } from './shared/schedule.js';
 import { FIREBASE } from './config.js';
 
 const SCHEME = 'mychannel://';
-/** Our channels take numbers 1 to 14; the other channels are numbered from 15. */
-export const COUNT = 14;
+/** Our channels take numbers 1 to 15; the other channels are numbered from 16. */
+export const COUNT = 15;
 export const HITS_NUMBER = 4;
 export const BOLLYWOOD_URL = 'https://tv.bulkbazaar.ca/channel/bollywood.html';
 /** Raised whenever our logos are redrawn at the same address (MyChannel.LOGO_VERSION). */
@@ -29,6 +29,8 @@ export const onChange = (fn) => { listeners.add(fn); return () => listeners.dele
 
 export const isMine = (ch) => !!ch && (ch.url.startsWith(SCHEME) || ch.url === BOLLYWOOD_URL);
 const idOf = (ch) => (ch && ch.url.startsWith(SCHEME) ? ch.url.slice(SCHEME.length) : null);
+/** Bazaar Ads (channel 15): all ads already, so no pop-up ads come over it. */
+export const ADS_URL = SCHEME + 'ads';
 export const stationOf = (ch) => STATIONS.find((s) => s.id === idOf(ch)) || null;
 export const configOf = (ch) => (isMine(ch) ? configs[idOf(ch)] || null : null);
 
@@ -38,7 +40,7 @@ export const hasTicker = (ch) => {
   return !!(c && c.tickerOn !== false && String(c.ticker || '').trim());
 };
 
-/** The channels that are on, in number order: 1 to 14, Bazaar Hits being 4. */
+/** The channels that are on, in number order: 1 to 15, Bazaar Hits being 4. */
 export function channels() {
   const mine = STATIONS.filter((s) => configs[s.id]).map((s) => ({
     name: s.name,
@@ -50,7 +52,7 @@ export function channels() {
   return [...mine, hits].sort((a, b) => a.number - b.number);
 }
 
-/** The channel reached by typing [typed] the old way ("0", "00", "0000"), or 9 to 14, when it's on. */
+/** The channel reached by typing [typed] the old way ("0", "00", "0000"), or 9 to 15, when it's on. */
 export function byDial(typed) {
   if (typed === '0000') return hits;
   const id = OLD_DIALS[typed] || (Number(typed) >= 9 ? STATIONS.find((s) => s.dial === typed)?.id : null);
