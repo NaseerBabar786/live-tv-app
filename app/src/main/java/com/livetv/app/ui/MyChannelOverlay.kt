@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
@@ -109,8 +108,9 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                         .alpha(0.55f),
                 )
                 if (!bottom) {
-                    // The lowest fifth of our logo pictures is empty (76 of 393 rows), so the time tucks up into it.
-                    Box(Modifier.offset(y = -logoHeight * (76f / 393f) + unit * 0.4f)) { clock() }
+                    // Fully clear of the logo (owner, 2026-10-07): some logos have a second line (ENGLISH, HINDI) at the very bottom.
+                    Spacer(Modifier.height(unit * 0.4f))
+                    clock()
                 }
             }
         }

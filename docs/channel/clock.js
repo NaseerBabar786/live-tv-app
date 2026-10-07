@@ -29,9 +29,8 @@
     el.style.borderRadius = size * 0.24 + "px";
     const c = bug.className, bottom = /\b(br|bl)\b/.test(c), left = /\b(tl|bl)\b/.test(c);
     const ch = el.offsetHeight, cw = el.offsetWidth, gap = size * 0.28;
-    // The lowest fifth of our wide logo pictures is empty (76 of 393 rows): the time tucks up into it.
-    const inkBottom = dy + dh * (dw / dh > 1.5 ? 317 / 393 : 1);
-    el.style.top = (bottom ? dy - gap - ch : inkBottom + gap) + "px";
+    // Fully clear of the logo (owner, 2026-10-07): some logos have a second line (ENGLISH, HINDI) at the very bottom.
+    el.style.top = (bottom ? dy - gap - ch : dy + dh + gap) + "px";
     el.style.left = (left ? dx : dx + dw - cw) + "px";
   }
   place();
