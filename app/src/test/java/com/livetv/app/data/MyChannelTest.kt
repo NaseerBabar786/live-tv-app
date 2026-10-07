@@ -192,30 +192,52 @@ class MyChannelTest {
     }
 
     @Test
-    fun cardsComeUpOnTheBreaks() {
+    fun cardsComeUpOnOurSlateNotOnAds() {
         val c = MyChannel.parse(
             JSONObject(
                 """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
-                  {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":600,"kind":"programme"},
-                  {"id":"ad","title":"Ad","url":"https://x/ad.mp4","secs":20,"kind":"ad"}],
-                  "slots":[{"day":"all","time":"21:00","video":"a","show":"Night Film"}],"loop":["a","ad"]}""",
+                  {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":300,"kind":"programme"},
+                  {"id":"b","title":"Film B","url":"https://x/b.mp4","secs":300,"kind":"programme"},
+                  {"id":"c","title":"Film C","url":"https://x/c.mp4","secs":300,"kind":"programme"},
+                  {"id":"d","title":"Film D","url":"https://x/d.mp4","secs":300,"kind":"programme"},
+                  {"id":"ad","title":"Ad","url":"https://x/ad.mp4","secs":20,"kind":"ad"},
+                  {"id":"next","title":"Next","url":"https://x/next.mp4","secs":8,"kind":"ident"}],
+                  "slots":[{"day":"all","time":"21:00","video":"a","show":"Night Film"}],
+                  "loop":["a","ad","next","b","ad","next","c","ad","next","d","ad","next"]}""",
             ),
         )
         val w = at(20, 0)
         val shown = (0 until 600).map { w + it * 1000L }.filter { MyChannel.cardAt(c, it) != null }
         assertTrue(shown.isNotEmpty())
         val first = shown.first()
-        val on = MyChannel.whatsOn(c, first) as MyChannel.Now.Playing
-        assertTrue(on.video.isBreak || first == w + 8 * 60_000L)
-        // 20:00 starts an even 10 minutes: today's shows first, then what's next.
+        // It starts on our "next programme" slate, big, and never sits on a sponsor's ad.
+        assertEquals("ident", (MyChannel.whatsOn(c, first) as MyChannel.Now.Playing).video.kind)
+        assertTrue(MyChannel.cardAt(c, first)!!.onSlate)
+        assertTrue(shown.none { (MyChannel.whatsOn(c, it) as MyChannel.Now.Playing).video.kind == "ad" })
+        // 20:00 starts an even 10 minutes: the card carries the rest of today's shows too.
         assertTrue(MyChannel.cardAt(c, first)!!.today)
-        assertEquals(false, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS)!!.today)
-        assertEquals(null, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS + MyChannel.NEXT_CARD_MS))
-        // One booked show left today: the next programmes fill the card up, in time order.
-        val today = MyChannel.todaysShows(c, at(20, 0))
-        assertEquals(listOf("Film A", "Night Film"), today.map { it.title })
-        assertTrue(today.any { it.title == "Night Film" && it.booked })
-        assertEquals(today.sortedBy { it.at }.map { it.at }, today.map { it.at })
-        assertTrue(MyChannel.upNext(c, at(20, 0)).isNotEmpty())
+        assertEquals(null, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS))
+        // Late at night the list fills up past midnight, and never repeats the Up next programme.
+        val now = at(23, 40)
+        val next = MyChannel.upNext(c, now, 1).first()
+        val later = MyChannel.laterShows(c, now, next.title)
+        assertTrue(later.size >= 3)
+        assertTrue(later.none { it.title == next.title })
+        assertTrue(later.any { !MyChannel.sameDay(c, now, it.at) })
+        assertEquals(later.sortedBy { it.at }.map { it.at }, later.map { it.at })
+    }
+
+    @Test
+    fun withoutASlateTheCardIsSmallEightMinutesIn() {
+        val c = MyChannel.parse(
+            JSONObject(
+                """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
+                  {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":3600,"kind":"programme"}],"loop":["a"]}""",
+            ),
+        )
+        val w = at(20, 10)
+        val card = MyChannel.cardAt(c, w + 8 * 60_000L + 1000)
+        assertTrue(card != null && !card.onSlate && !card.today)
+        assertEquals(null, MyChannel.cardAt(c, w + 7 * 60_000L))
     }
 }

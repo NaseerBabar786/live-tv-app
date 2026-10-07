@@ -211,39 +211,41 @@ export function guide(c, from = Date.now(), hours = 12, max = 60) {
 
 /*
  * A card over the picture (owner, 2026-10-07): every 10 minutes what's coming next, and every
- * 20 minutes today's shows first. It comes up with the first ad or ident of each 10 minutes, so
- * it rides on the breaks, or 8 minutes in when there's no break. Worked out from the clock, so
- * every viewer sees it at the same moment. Same as MyChannel.cardAt in the app.
+ * 20 minutes the rest of today's shows with it. It comes up on our own "next programme" slate (the
+ * last ident of a break, just before a programme), big in the middle, so it never covers a sponsor's
+ * ad (owner's photos of 1.9.75). With no slate in the first 8 minutes it comes up small, low on the
+ * picture, 8 minutes in. Worked out from the clock, so every viewer sees it at the same moment.
+ * Same as MyChannel.cardAt in the app.
  */
-export const CARD_WINDOW_MS = 10 * 60000, TODAY_CARD_MS = 20000, NEXT_CARD_MS = 12000;
+export const CARD_WINDOW_MS = 10 * 60000, NEXT_CARD_MS = 10000, TODAY_CARD_MS = 15000;
 const isBreak = v => v && (v.kind === "ad" || v.kind === "ident");
 const cardStarts = new Map();
 
-/** { today: true/false, until } while a card is up at [now], else null. */
+/** { today, until, onSlate } while a card is up at [now], else null. */
 export function cardAt(c, now = Date.now()) {
   const window = now - (((now % CARD_WINDOW_MS) + CARD_WINDOW_MS) % CARD_WINDOW_MS);
   let byWindow = cardStarts.get(c);
   if (!byWindow) { byWindow = new Map(); cardStarts.set(c, byWindow); if (cardStarts.size > 4) cardStarts.delete(cardStarts.keys().next().value); }
   if (!byWindow.has(window)) {
-    byWindow.set(window, firstBreak(c, window, window + 8 * 60000) ?? window + 8 * 60000);
+    const slate = firstSlate(c, window, window + 8 * 60000);
+    byWindow.set(window, slate != null ? { at: slate, onSlate: true } : { at: window + 8 * 60000, onSlate: false });
     if (byWindow.size > 8) byWindow.delete(byWindow.keys().next().value);
   }
-  const at = byWindow.get(window);
+  const { at, onSlate } = byWindow.get(window);
   const today = Math.floor(window / CARD_WINDOW_MS) % 2 === 0;
-  const todayEnd = today ? at + TODAY_CARD_MS : at;
-  if (now < at) return null;
-  if (now < todayEnd) return { today: true, until: todayEnd };
-  if (now < todayEnd + NEXT_CARD_MS) return { today: false, until: todayEnd + NEXT_CARD_MS };
-  return null;
+  const until = at + (today ? TODAY_CARD_MS : NEXT_CARD_MS);
+  return now >= at && now < until ? { today, until, onSlate } : null;
 }
 
-/** When the first ad or ident between [from] and [to] starts (or [from], if one is on); null when none. */
-function firstBreak(c, from, to) {
-  let t = from;
-  for (let i = 0; i < 60 && t < to; i++) {
+/** When the first slate between [from] and [to] starts: an ident with a programme right after it. */
+function firstSlate(c, from, to) {
+  let t = from, slate = null;
+  for (let i = 0; i < 80 && t < to + 60000; i++) {
     const now = whatsOn(c, t);
-    if (now.off) { if (!now.nextAt) return null; t = now.nextAt; continue; }
-    if (isBreak(now.video)) return t;
+    if (now.off) { slate = null; if (!now.nextAt) return null; t = now.nextAt; continue; }
+    const start = t - now.offset;
+    if (!isBreak(now.video) && slate != null) return slate;
+    slate = now.video.kind === "ident" && start >= from && start < to ? start : null;
     if (!isFinite(now.until)) return null;
     t = Math.max(now.until, t + 1000);
   }
@@ -267,36 +269,34 @@ export function upNext(c, now = Date.now(), count = 2) {
 }
 
 /**
- * Today's booked shows (time slots) from the one on now, in the channel's day; a show booked many
- * times today (the hourly news) shows once, at its next time, with how many more follow ([more]).
- * When nothing is booked today, the next programmes instead.
+ * What's on later today, after [skip] (the programme on the Up next line): the booked shows (time
+ * slots) first; a show booked many times today (the hourly news) shows once, at its next time, with
+ * how many more follow ([more]). With fewer than [min] left today, the next programmes fill it up,
+ * past midnight too. Same as MyChannel.laterShows in the app.
  */
-export function todaysShows(c, now = Date.now(), max = 7) {
+export function laterShows(c, now = Date.now(), skip = null, max = 4, min = 3) {
   const tz = c.tz || "America/Toronto";
   const today = parts(now, tz).date;
-  const list = starts(c, now).filter(s => parts(s.at, tz).date === today);
-  if (!list.length) return upNext(c, now, max);
-  let from = -1;
-  list.forEach((s, i) => { if (s.at <= now) from = i; });
-  // From the slot on now (it began before now and is still playing).
-  if (from < 0 || list[from].at + (list[from].video.secs || 0) * 1000 <= now) from += 1;
-  const left = list.slice(from);
   const title = s => s.show || s.video.title;
+  const left = starts(c, now).filter(s => parts(s.at, tz).date === today && s.at > now && title(s) !== skip);
   const counts = {};
   for (const s of left) counts[title(s)] = (counts[title(s)] || 0) + 1;
-  const seen = new Set(), out = [];
+  const out = [];
   for (const s of left) {
-    if (seen.has(title(s))) continue;
-    seen.add(title(s));
-    out.push({ at: s.at, title: title(s), booked: true, more: counts[title(s)] - 1 });
     if (out.length >= max) break;
+    if (!out.some(o => o.title === title(s))) out.push({ at: s.at, title: title(s), booked: true, more: counts[title(s)] - 1 });
   }
-  // Late in the day with few shows left, the next programmes fill it up.
-  if (out.length < 3) for (const u of upNext(c, now, 4)) {
-    if (out.length >= 3) break;
-    if (!seen.has(u.title) && parts(u.at, tz).date === today) { seen.add(u.title); out.push(u); }
+  if (out.length < min) for (const u of upNext(c, now, max + 3)) {
+    if (out.length >= max) break;
+    if (u.title !== skip && !out.some(o => o.title === u.title)) out.push(u);
   }
-  return out.sort((a, b) => a.at - b.at);
+  return out.sort((a, b) => a.at - b.at).slice(0, max);
+}
+
+/** Whether [ms] falls on the same day as [now] in the channel's time zone. */
+export function sameDay(c, now, ms) {
+  const tz = c.tz || "America/Toronto";
+  return parts(now, tz).date === parts(ms, tz).date;
 }
 
 export function timeText(ms, tz) {

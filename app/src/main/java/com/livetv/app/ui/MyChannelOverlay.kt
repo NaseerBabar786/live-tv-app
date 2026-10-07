@@ -10,8 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.scaleIn
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.text.style.TextOverflow
@@ -114,35 +113,36 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                 }
             }
         }
-        // Every 10 minutes what's next, every 20 minutes today's shows (owner, 2026-10-07), on the breaks.
+        // Every 10 minutes what's next, every 20 minutes the rest of today's shows with it (owner,
+        // 2026-10-07): big on our own "next programme" slate, else small low on the picture.
         val card by produceState<MyChannel.Card?>(null, c) {
             while (true) {
                 value = runCatching { MyChannel.cardAt(c, System.currentTimeMillis()) }.getOrNull()
                 delay(1_000)
             }
         }
-        val logoLeft = c.logoCorner == "tl" || c.logoCorner == "bl"
-        val today = card?.today == true
-        val shows = remember(card?.untilMs, today) {
-            card?.let { runCatching { if (it.today) MyChannel.todaysShows(c, System.currentTimeMillis()) else MyChannel.upNext(c, System.currentTimeMillis()) }.getOrNull() }.orEmpty()
+        val info = remember(card?.untilMs) {
+            card?.let { k ->
+                runCatching {
+                    val now = System.currentTimeMillis()
+                    MyChannel.upNext(c, now, 1).firstOrNull()?.let { next ->
+                        CardInfo(next, if (k.today) MyChannel.laterShows(c, now, next.title, if (k.onSlate) 4 else 2) else emptyList(), now)
+                    }
+                }.getOrNull()
+            }
         }
-        // A card keeps its last programmes while it fades out: the list is empty by then (1.9.71 closed the app on it).
-        val last = remember(c) { arrayOf(emptyList<MyChannel.Upcoming>()) }
-        if (shows.isNotEmpty()) last[0] = shows
+        // A card keeps what it showed while it fades out: the info is gone by then (1.9.71 closed the app on it).
+        val last = remember(c) { arrayOf<Pair<CardInfo, Boolean>?>(null) }
+        if (info != null && card != null) last[0] = info to card!!.onSlate
         val shown = last[0]
         AnimatedVisibility(
-            visible = card != null && today && shows.isNotEmpty(),
-            enter = fadeIn() + slideInHorizontally { if (logoLeft) it else -it },
+            visible = card != null && info != null,
+            enter = fadeIn() + scaleIn(initialScale = 0.96f),
             exit = fadeOut(),
-            modifier = Modifier.align(if (logoLeft) Alignment.CenterEnd else Alignment.CenterStart).padding(horizontal = unit * 2.5f),
-        ) { TodayCard(c.name, shown, unit) }
-        AnimatedVisibility(
-            visible = card != null && !today && shows.isNotEmpty(),
-            enter = fadeIn() + slideInHorizontally { if (c.logoCorner == "bl") it else -it },
-            exit = fadeOut() + slideOutHorizontally { if (c.logoCorner == "bl") it else -it },
-            modifier = Modifier.align(if (c.logoCorner == "bl") Alignment.BottomEnd else Alignment.BottomStart)
-                .padding(horizontal = unit * 2.5f).padding(bottom = (if (c.ticker != null) tickerHeight else 0.dp) + unit * 2.5f),
-        ) { NextCard(shown, unit) }
+            modifier = if (shown?.second != false) Modifier.align(Alignment.Center)
+            else Modifier.align(if (c.logoCorner == "bl") Alignment.BottomEnd else Alignment.BottomStart)
+                .padding(horizontal = unit * 2.5f).padding(bottom = (if (c.ticker != null) tickerHeight else 0.dp) + unit * 2f),
+        ) { shown?.let { (i, big) -> ScheduleCard(c, i, big, unit) } }
         c.ticker?.let { line ->
             Box(
                 Modifier
@@ -170,57 +170,46 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
     }
 }
 
-private val CardBack = Color(0xEB0B1220)
+private val CardBack = Color(0xF00B1220)
 private val Accent = Color(0xFFFACC15)
 
 private fun clock(ms: Long): String = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(ms))
 
-private fun whenText(ms: Long): String {
-    val mins = ((ms - System.currentTimeMillis()) / 60_000L).coerceAtLeast(0)
-    return if (mins < 60) "${clock(ms)} · in ${if (mins < 1) "a moment" else "$mins min"}" else clock(ms)
+private fun whenText(ms: Long, now: Long): String {
+    val mins = ((ms - now) / 60_000L).coerceAtLeast(0)
+    return if (mins < 60) "${clock(ms)} · ${if (mins < 1) "starting now" else "in $mins min"}" else clock(ms)
 }
 
-/** "UP NEXT" and the programme after it, low on the picture beside the scrolling line. */
-@Composable
-private fun NextCard(shows: List<MyChannel.Upcoming>, unit: Dp) {
-    val first = shows.firstOrNull() ?: return
-    Column(
-        Modifier.widthIn(max = unit * 46f).background(CardBack, RoundedCornerShape(unit * 1.2f))
-            .padding(horizontal = unit * 2f, vertical = unit * 1.3f),
-    ) {
-        Text("UP NEXT", color = Accent, fontWeight = FontWeight.Black, fontSize = (unit.value * 1.6f).sp)
-        Text(first.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = (unit.value * 2.6f).sp,
-            maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(whenText(first.at), color = Color(0xFFCBD5E1), fontSize = (unit.value * 1.7f).sp)
-        shows.getOrNull(1)?.let {
-            Text("Later: ${clock(it.at)}  ${it.title}", color = Color(0xFF94A3B8), fontSize = (unit.value * 1.5f).sp,
-                maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = unit * 0.5f))
-        }
-    }
-}
+/** What a card shows: the next programme and, every 20 minutes, what's on after it. */
+private class CardInfo(val next: MyChannel.Upcoming, val later: List<MyChannel.Upcoming>, val now: Long)
 
-/** "TODAY ON BAZAAR TV": the rest of today's booked shows, the next one marked. */
+/**
+ * "UP NEXT" and, every 20 minutes, "LATER TODAY" with the shows after it. [big]: in the middle
+ * of our own slate; otherwise small, low on the picture, so it covers little of a programme.
+ */
 @Composable
-private fun TodayCard(name: String, shows: List<MyChannel.Upcoming>, unit: Dp) {
-    val now = System.currentTimeMillis()
-    val nextAt = shows.firstOrNull { it.at > now }?.at
+private fun ScheduleCard(c: MyChannel.Config, info: CardInfo, big: Boolean, unit: Dp) {
+    val s = if (big) 1.35f else 0.85f
+    val sp = { x: Float -> (unit.value * x * s).sp }
     Column(
-        Modifier.width(unit * 40f).background(CardBack, RoundedCornerShape(unit * 1.2f))
-            .padding(horizontal = unit * 2f, vertical = unit * 1.6f),
+        Modifier.widthIn(max = unit * (if (big) 70f else 44f)).background(CardBack, RoundedCornerShape(unit * 1.2f * s))
+            .padding(horizontal = unit * 2.2f * s, vertical = unit * 1.6f * s),
     ) {
-        Text("TODAY ON ${name.uppercase()}", color = Accent, fontWeight = FontWeight.Black, fontSize = (unit.value * 1.7f).sp,
-            maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(bottom = unit * 0.8f))
-        for (s in shows) {
-            val on = s.at <= now
-            val next = s.at == nextAt
-            Row(Modifier.padding(vertical = unit * 0.35f)) {
-                Text(if (on) "NOW" else clock(s.at), color = if (next) Accent else if (on) Color(0xFF4ADE80) else Color(0xFFCBD5E1),
-                    fontWeight = FontWeight.Bold, fontSize = (unit.value * 1.6f).sp, modifier = Modifier.width(unit * 9f))
-                Column {
-                    Text(s.title, color = Color.White,
-                        fontWeight = if (next) FontWeight.Bold else FontWeight.Normal, fontSize = (unit.value * 1.6f).sp,
+        Text("UP NEXT ON ${c.name.uppercase()}", color = Accent, fontWeight = FontWeight.Black, fontSize = sp(1.5f), maxLines = 1,
+            overflow = TextOverflow.Ellipsis)
+        Text(info.next.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = sp(2.5f), maxLines = 2,
+            overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = unit * 0.3f * s))
+        Text(whenText(info.next.at, info.now), color = Color(0xFFCBD5E1), fontSize = sp(1.6f))
+        if (info.later.isNotEmpty()) {
+            val allToday = info.later.all { MyChannel.sameDay(c, info.now, it.at) }
+            Text(if (allToday) "LATER TODAY" else "COMING UP", color = Accent, fontWeight = FontWeight.Black, fontSize = sp(1.3f),
+                modifier = Modifier.padding(top = unit * 1.2f * s, bottom = unit * 0.3f * s))
+            for (u in info.later) {
+                Row(Modifier.padding(vertical = unit * 0.25f * s)) {
+                    Text(clock(u.at), color = Color(0xFFCBD5E1), fontWeight = FontWeight.Bold, fontSize = sp(1.45f),
+                        maxLines = 1, softWrap = false, modifier = Modifier.width(unit * 8.5f * s))
+                    Text(u.title + if (u.more > 0) "  (+${u.more} more)" else "", color = Color.White, fontSize = sp(1.45f),
                         maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    if (s.more > 0) Text("+${s.more} more today", color = Color(0xFF94A3B8), fontSize = (unit.value * 1.3f).sp, maxLines = 1)
                 }
             }
         }
