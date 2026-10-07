@@ -1,5 +1,8 @@
 package com.iqraquran.app.ui
 
+import com.iqraquran.app.data.OwnerTest
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -68,7 +71,13 @@ fun SettingsScreen(vm: AppViewModel, version: String) {
             }
             Heading(S.credits.get())
             Text(S.creditsText.get(), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("${S.version.get()} $version", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            val context = LocalContext.current
+            Text(
+                "${S.version.get()} $version",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.clickable { OwnerTest.tap(context) }, // 7 taps: owner's test updates
+            )
+            TestVersionButton()
         }
     }
 }

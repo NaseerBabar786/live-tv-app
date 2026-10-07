@@ -162,6 +162,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -222,6 +223,10 @@ fun ChannelListScreen(
     // Players are pooled and reused: creating and releasing ExoPlayers while scrolling
     // blocked the main thread (release() waits for the playback thread) and froze the app.
     val rowPreviews = remember { mutableStateMapOf<String, Preview>() }
+    // Tiles of our YouTube channels and Bazaar Hits play their own page (1.9.60), not their backup films;
+    // by channel id. A page that gives up on YouTube drops back to the films.
+    val pageTiles = remember { mutableStateMapOf<String, String>() }
+    val failedPages = remember { mutableStateMapOf<String, Boolean>() }
     val pool = remember { mutableListOf<Preview>() }
     val gridIds by remember {
         derivedStateOf<List<String>?> {
@@ -254,9 +259,10 @@ fun ChannelListScreen(
     }
     // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
-    LaunchedEffect(tier, tileLayout) {
-        if (!Plans.allows(tileLayout.tier)) {
-            tileLayout = if (Edition.MAX) TileLayout.Browse else TileLayout.List
+    val packages by Plans.features.collectAsStateWithLifecycle()
+    LaunchedEffect(tier, packages, tileLayout) {
+        if (!tileLayout.allowed) {
+            tileLayout = if (Edition.MAX && TileLayout.Browse.allowed) TileLayout.Browse else TileLayout.List
             sessionTileLayout = tileLayout
         }
     }
@@ -353,6 +359,7 @@ fun ChannelListScreen(
     val snapshots = remember { mutableStateMapOf<String, ImageBitmap>() }
     // A card that stops playing keeps its last frame as its picture.
     fun release(id: String) {
+        pageTiles.remove(id)
         rowPreviews.remove(id)?.let { p ->
             if (p.showing) p.view?.bitmap?.let { snapshots[id] = it.asImageBitmap() }
             p.stream.stop(); p.showing = false; pool += p
@@ -370,6 +377,7 @@ fun ChannelListScreen(
         val playing = if (playAll) ids.take(tileLayout.columns * tileLayout.rows).toSet() else setOfNotNull(live)
         val allowed = inForeground && !showSettings && !listMode && !newsMode && !browseMode && !carouselMode && !stripMode && !duoMode && !Preview.metered(context)
         for (id in rowPreviews.keys.toList()) if (!allowed || id !in playing) release(id)
+        for (id in pageTiles.keys.toList()) if (!allowed || id !in playing) pageTiles.remove(id)
         if (!allowed) return@LaunchedEffect
         delay(600)
         // With several videos at once, each plays smaller so the TV can decode them all.
@@ -389,6 +397,7 @@ fun ChannelListScreen(
         for ((id, p) in rowPreviews) if (id in playing) p.setQuality(qualityOf(id))
         suspend fun start(id: String) {
             val channel = state.channels.firstOrNull { it.id == id } ?: return
+            if (failedPages[id] != true) MyChannel.pageFor(channel, BuildConfig.VERSION_CODE)?.let { pageTiles[id] = it; return }
             val p = pool.removeLastOrNull() ?: Preview.create(context)
             p.setQuality(qualityOf(id))
             p.setSound(previewSound && id == soundId)
@@ -396,7 +405,7 @@ fun ChannelListScreen(
             p.stream.play(channel)
             if (low) delay(400) // one decoder at a time
         }
-        for (id in playing) if (id !in rowPreviews) start(id)
+        for (id in playing) if (id !in rowPreviews && id !in pageTiles) start(id)
         if (low) {
             // A video that hasn't started yet gets one more try.
             delay(12_000)
@@ -411,6 +420,7 @@ fun ChannelListScreen(
                 if (id in playing || id in snapshots) continue
                 val channel = state.channels.firstOrNull { it.id == id } ?: continue
                 if (YouTube.isYouTube(channel.url)) continue // plays only in YouTube's player; its picture shows
+                if (MyChannel.pageFor(channel, BuildConfig.VERSION_CODE) != null) continue
                 val p = pool.removeLastOrNull() ?: Preview.create(context)
                 p.setQuality(Quality.Normal)
                 p.setSound(false)
@@ -499,7 +509,7 @@ fun ChannelListScreen(
         if (tileLayout == TileLayout.Browse && next != TileLayout.Browse && state.query.isNotBlank()) onQueryChange("")
         if (next.separateTvs && !premium) {
             upsellFor = next
-        } else if (Plans.ask("${next.label} mode", next.tier)) {
+        } else if (next.feature?.let { Plans.ask("${next.label} mode", it) } == true) {
             // Cable TV shows its packages; the mode stays as it was.
         } else {
             tileLayout = next
@@ -668,10 +678,8 @@ fun ChannelListScreen(
                     },
                 )
                 if (!hideBars && !newsMode && !carouselMode && !stripMode && !duoMode && !state.loading && state.channels.isNotEmpty()) {
-                    // The channel count, with Cable TV's "advertise with us" ticker running beside it now and then.
-                    // 1×2 has room for a bigger ticker in its own band above the tiles.
-                    // (1×2 used to have a bigger ticker in its own band; it now matches 2×3.)
-                    val bandTicker = false
+                    // The channel count. (The "advertise with us" ticker used to run beside it; since 1.9.58
+                    // it runs along the bottom of the screen instead, see below.)
                     Row(
                         Modifier.fillMaxWidth().height(24.dp).padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -681,9 +689,7 @@ fun ChannelListScreen(
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        if (!bandTicker) EditionTicker(Modifier.weight(1f).fillMaxHeight().padding(start = 24.dp))
                     }
-                    if (bandTicker) EditionTicker(Modifier.fillMaxWidth().height(36.dp).padding(horizontal = 16.dp), big = true)
                 }
 
                 val channels = state.visibleChannels
@@ -863,11 +869,12 @@ fun ChannelListScreen(
                         if (hasAd) minOf(maxHeight - height * 2 - 8.dp, maxWidth / 8) else 0.dp
                     }.coerceAtLeast(0.dp)
                     val twoBanner = if (sixBanner >= 36.dp) sixBanner else 0.dp
-                    val twoGaps = if (twoBanner > 0.dp) 3 else 2 // vertical gaps: above, (between,) below
-                    val twoGap = if (!evenTwo) 0.dp else
-                        ((maxHeight - twoBanner - maxWidth * 9f / 32f) / (twoGaps - 27f / 32f)).coerceAtLeast(0.dp)
-                    val packedWidth = if (evenTwo) (maxWidth - twoGap * 3) / 2 else sharedWidth
-                    val packedHeight = if (evenTwo) packedWidth * 9f / 16f else sharedHeight
+                    // 1×2 (owner, 1.9.61): the two players fill the whole width, side by side and touching in
+                    // the middle, no black at the sides or between them; centred top to bottom.
+                    val twoGap = 0.dp
+                    val packedWidth = if (evenTwo) maxWidth / 2 else sharedWidth
+                    val packedHeight = if (evenTwo) minOf(packedWidth * 9f / 16f, maxHeight) else sharedHeight
+                    val twoTop = if (evenTwo) ((maxHeight - packedHeight) / 2).coerceAtLeast(0.dp) else 0.dp
                     val bannerSpace = if (evenTwo) maxHeight - twoGap - packedHeight else maxHeight - packedHeight * rows
                     val bannerHeight = if (evenTwo) twoBanner else minOf(bannerSpace - 8.dp, maxWidth / 8)
                     @Composable
@@ -905,6 +912,13 @@ fun ChannelListScreen(
                                 }
                             },
                             preview = rowPreviews[channel.id],
+                            page = pageTiles[channel.id]?.let { if (previewSound && channel.id == soundId) it else "$it&mute=1" },
+                            onPageFailed = {
+                                if (MyChannel.webPage(channel) != null) {
+                                    failedPages[channel.id] = true
+                                    pageTiles.remove(channel.id)
+                                }
+                            },
                             snapshot = snapshots[channel.id],
                             arrows = arrows,
                         )
@@ -1141,7 +1155,7 @@ fun ChannelListScreen(
                         } else
                         Column(
                             when {
-                                evenTwo -> Modifier.fillMaxSize().padding(top = twoGap)
+                                evenTwo -> Modifier.fillMaxSize().padding(top = twoTop)
                                 packed -> Modifier.fillMaxSize()
                                 else -> Modifier.fillMaxSize().padding(vertical = rowGap)
                             },
@@ -1227,6 +1241,16 @@ fun ChannelListScreen(
                     }
                 }
             }
+            // Cable TV's "advertise with us" line along the bottom of every channel screen (owner's rule,
+            // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel, Strip and Duo.
+            // News, CP24, Home and My Screen have their own band at the bottom.
+            if (!newsMode && !state.needsPlaylist) {
+                EditionTicker(
+                    Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(36.dp),
+                    big = true,
+                    band = true,
+                )
+            }
         }
     }
 
@@ -1236,7 +1260,7 @@ fun ChannelListScreen(
         ModesMenu(
             current = tileLayout,
             locked = { it.separateTvs && !premium },
-            needs = { if (Plans.allows(it.tier)) null else it.tier.label },
+            needs = { it.feature?.takeUnless(Plans::has)?.let { f -> Plans.lowestWith(f).label } },
             onPick = ::pickLayout,
             onDismiss = { modesOpen = false },
         )
@@ -1473,6 +1497,9 @@ private fun ChannelCard(
     onKey: (KeyEvent) -> Boolean = { false },
     onFocusChange: (Boolean) -> Unit = {},
     preview: Preview? = null,
+    /** Our YouTube page for the channel, playing in the card instead of [preview] (1.9.60). */
+    page: String? = null,
+    onPageFailed: () -> Unit = {},
     snapshot: ImageBitmap? = null,
     /** Up and down arrows: Up and Down change this card's channel (2×1). */
     arrows: Boolean = false,
@@ -1521,7 +1548,8 @@ private fun ChannelCard(
                     modifier = Modifier.fillMaxSize(),
                 )
             }
-            if (preview != null) PreviewVideo(preview, stretch)
+            if (page != null) key(page) { WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = onPageFailed) }
+            else if (preview != null) PreviewVideo(preview, stretch)
             if (arrows) {
                 Column(
                     Modifier
@@ -1632,7 +1660,8 @@ private fun ChannelCard(
                     modifier = Modifier.fillMaxSize(),
                 )
             }
-            if (preview != null) PreviewVideo(preview)
+            if (page != null) key(page) { WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = onPageFailed) }
+            else if (preview != null) PreviewVideo(preview)
             if (arrows) {
                 Column(
                     Modifier
@@ -1766,7 +1795,9 @@ private fun PlayerWithList(
     // Our YouTube channels, Bazaar Hits and YouTube videos play their locked page right in the picture
     // (1.9.50); our channels' free films play there instead when YouTube won't.
     var pageFailed by remember(selected?.id) { mutableStateOf(false) }
-    val page = selected?.takeIf { !pageFailed }?.let { MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
+    // Bazaar TV's upcoming trailers too, while they're on (then its own player again).
+    val block = rememberBlockPage(selected)
+    val page = selected?.takeIf { !pageFailed }?.let { block ?: MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
     LaunchedEffect(selected?.id, page) {
         showing = false
         error = null
@@ -1804,7 +1835,10 @@ private fun PlayerWithList(
                 Modifier
                     .fillMaxWidth()
                     .aspectRatio(16f / 9f)
-                    .clip(CardShape)
+                    // A YouTube page plays its real video here, which TVs draw under the window, showing
+                    // through a hole in the page; rounded corners put the page in a layer of its own that
+                    // keeps that hole black (sound only), so this box stays square then (1.9.74).
+                    .clip(if (page != null) RectangleShape else CardShape)
                     .background(Color.Black)
                     .onFocusChanged { playerFocused = it.hasFocus }
                     .then(if (playerFocused) Modifier.border(3.dp, FocusColor, CardShape) else Modifier)
@@ -1820,8 +1854,8 @@ private fun PlayerWithList(
                 )
                 if (page != null) {
                     key(page) {
-                        WebPreview(page, Modifier.fillMaxSize(), onFallback = {
-                            if (MyChannel.webPage(selected) != null) pageFailed = true
+                        WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = {
+                            if (block != null || MyChannel.webPage(selected) != null) pageFailed = true
                         })
                     }
                 } else if (!showing) {
@@ -2129,14 +2163,26 @@ private val layouts = TileLayout.entries.filter {
     (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel && it != TileLayout.Strip && it != TileLayout.Duo) || Edition.LIVE_TV
 }
 
-/** Cable TV's package each mode needs (see [Plans]). */
-private val TileLayout.tier: Plans.Tier
+/** The package feature each mode needs (see [Plans]); 1+List is in every package. */
+private val TileLayout.feature: Plans.Feature?
     get() = when (this) {
-        TileLayout.List, TileLayout.Browse, TileLayout.Carousel, TileLayout.Strip -> Plans.Tier.Free
-        TileLayout.Two, TileLayout.Five, TileLayout.Duo -> Plans.Tier.Silver
-        TileLayout.Four, TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine -> Plans.Tier.Gold
-        TileLayout.Six -> Plans.Tier.Platinum
+        TileLayout.List -> null
+        TileLayout.Browse -> Plans.Feature.Browse
+        TileLayout.Carousel -> Plans.Feature.Carousel
+        TileLayout.Strip -> Plans.Feature.Strip
+        TileLayout.Two -> Plans.Feature.Two
+        TileLayout.Five -> Plans.Feature.Five
+        TileLayout.Duo -> Plans.Feature.Duo
+        TileLayout.Four -> Plans.Feature.Four
+        TileLayout.Six -> Plans.Feature.Six
+        TileLayout.News -> Plans.Feature.News
+        TileLayout.Cp24 -> Plans.Feature.Cp24
+        TileLayout.Home -> Plans.Feature.Home
+        TileLayout.Mine -> Plans.Feature.Mine
     }
+
+/** Whether the viewer's package has this mode. */
+private val TileLayout.allowed: Boolean get() = feature?.let(Plans::has) ?: true
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() =

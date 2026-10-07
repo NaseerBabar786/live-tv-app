@@ -2,6 +2,7 @@ package com.livetv.app
 
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
+import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
 import android.util.Rational
@@ -27,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.livetv.app.data.MyChannel
+import com.livetv.app.ui.rememberBlockPage
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (CrashGuard.start(this)) return
         Watching.init(this)
         com.livetv.app.data.Location.init(this)
         com.livetv.app.data.NewsScreen.init(this)
@@ -62,6 +65,9 @@ class MainActivity : ComponentActivity() {
         com.livetv.app.data.ScreenLooks.init(this)
         com.livetv.app.ui.Themes.init(this)
         enableEdgeToEdge()
+        // TVs draw a web page's video (YouTube) underneath the window, showing through a hole in the page;
+        // an opaque window keeps that hole black, with only the sound (1.9.55).
+        window.setFormat(PixelFormat.TRANSLUCENT)
         if (savedInstanceState != null) showStartScreen = false
         setContent {
             LiveTvTheme {
@@ -74,17 +80,27 @@ class MainActivity : ComponentActivity() {
     private fun AppContent() {
         val state by viewModel.state.collectAsStateWithLifecycle()
         val playing = state.playing
+        // Bazaar TV's upcoming trailers play on our locked YouTube page; its own player plays the rest.
+        val block = rememberBlockPage(playing)
+        val page = playing?.let { block ?: MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
         if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
-        } else if (playing != null && playing.url !in fellBack && MyChannel.pageFor(playing, BuildConfig.VERSION_CODE) != null) {
+        } else if (playing != null && page != null && playing.url !in fellBack && page !in fellBack) {
             // Our channels that run like Bazaar Hits, Bazaar Hits itself, and any YouTube channel: YouTube's
             // player with its buttons off, so it can't be paused, skipped or left for YouTube (owner's rule, 1.9.46).
             // Our channels' free-film schedule plays if YouTube won't.
             // It opens in its own plain window (WebChannelActivity, 1.9.51): inside this screen TVs kept the picture black.
-            OpenWebChannel(MyChannel.pageFor(playing, BuildConfig.VERSION_CODE)!!, onBack = viewModel::stop,
-                onFallback = { if (MyChannel.webPage(playing) != null) fellBack = fellBack + playing.url else viewModel.stop() })
+            // When the trailers are over (or won't play) our own player takes over again.
+            OpenWebChannel(page, onBack = viewModel::stop, onDone = {},
+                onFallback = {
+                    when {
+                        block != null -> fellBack = fellBack + page
+                        MyChannel.webPage(playing) != null -> fellBack = fellBack + playing.url
+                        else -> viewModel.stop()
+                    }
+                })
         } else if (playing != null) {
             PlayerScreen(
                 channel = playing,
@@ -114,9 +130,9 @@ class MainActivity : ComponentActivity() {
                 onRefresh = viewModel::reload,
                 settings = { onDismiss -> EditionSettings(state, viewModel, onDismiss) },
                 onTryDemo = viewModel::addDemoPlaylist,
-                onOpenVod = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.LIBRARY)) showVod = true }) else null,
-                onOpenVodItem = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.LIBRARY)) { vodStart = it; showVod = true } }) else null,
-                onOpenGames = if (Edition.LIVE_TV) ({ if (!Plans.ask("Games", Plans.GAMES)) showGames = true }) else null,
+                onOpenVod = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) showVod = true }) else null,
+                onOpenVodItem = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) { vodStart = it; showVod = true } }) else null,
+                onOpenGames = if (Edition.LIVE_TV) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
                 onWatch = viewModel::watched,
             )
         }
@@ -138,9 +154,27 @@ class MainActivity : ComponentActivity() {
 
     /** Opens [url] in [WebChannelActivity] (black here meanwhile); Back there comes back with [onBack]. */
     @Composable
-    private fun OpenWebChannel(url: String, onBack: () -> Unit, onFallback: () -> Unit) {
-        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == WebChannelActivity.RESULT_FALLBACK) onFallback() else onBack()
+    private fun OpenWebChannel(url: String, onBack: () -> Unit, onFallback: () -> Unit, onDone: () -> Unit = onBack) {
+        var launcher: androidx.activity.result.ActivityResultLauncher<android.content.Intent>? = null
+        launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val before = viewModel.state.value.playing?.id
+            when (result.resultCode) {
+                WebChannelActivity.RESULT_FALLBACK -> onFallback()
+                // Bazaar TV's YouTube run (trailers, music, dramas...) is over: its own player goes on.
+                WebChannelActivity.RESULT_DONE -> onDone()
+                // Channel up/down or a typed number in the YouTube window: the next channel opens as usual.
+                WebChannelActivity.RESULT_ZAP -> viewModel.zap(result.data?.getIntExtra(WebChannelActivity.EXTRA_STEP, 1) ?: 1)
+                WebChannelActivity.RESULT_NUMBER -> {
+                    result.data?.getStringExtra(WebChannelActivity.EXTRA_NUMBER).orEmpty().forEach { viewModel.typeDigit(it - '0') }
+                    viewModel.goToTyped()
+                }
+                else -> onBack()
+            }
+            // No such channel (or the same one): this channel opens again.
+            if (result.resultCode != WebChannelActivity.RESULT_FALLBACK && result.resultCode != WebChannelActivity.RESULT_DONE &&
+                result.resultCode != android.app.Activity.RESULT_CANCELED &&
+                viewModel.state.value.playing?.id == before
+            ) launcher?.launch(WebChannelActivity.intent(this@MainActivity, url))
         }
         // Once per channel, also when this screen is rebuilt (a turned phone) while it's open.
         var opened by rememberSaveable(url) { mutableStateOf(false) }

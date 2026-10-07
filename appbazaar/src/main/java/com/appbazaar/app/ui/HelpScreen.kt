@@ -1,5 +1,8 @@
 package com.appbazaar.app.ui
 
+import com.appbazaar.app.data.OwnerTest
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -22,6 +25,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -33,7 +40,7 @@ import androidx.compose.ui.unit.sp
 
 /** The two install guides, the same steps as apps.bulkbazaar.ca/guides/. */
 @Composable
-fun HelpScreen(isTv: Boolean, onBack: () -> Unit, onPermission: () -> Unit) {
+fun HelpScreen(isTv: Boolean, onBack: () -> Unit, onPermission: () -> Unit, onTryTest: () -> Unit) {
     val back = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { back.requestFocus() } }
     val pad = if (isTv) 48.dp else 16.dp
@@ -84,6 +91,29 @@ fun HelpScreen(isTv: Boolean, onBack: () -> Unit, onPermission: () -> Unit) {
             "Full guides with pictures: apps.bulkbazaar.ca/guides/tv.html and apps.bulkbazaar.ca/guides/phone.html",
             color = Muted, fontSize = 13.sp,
         )
+        val context = LocalContext.current
+        val version = remember {
+            runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: ""
+        }
+        Text(
+            "App Bazaar $version",
+            color = Muted, fontSize = 13.sp,
+            // 7 taps: owner's test updates
+            modifier = Modifier.padding(top = 10.dp).clickable { OwnerTest.tap(context) },
+        )
+        // Owner only: lists the newest test build of every app under Updates, App Bazaar's own included.
+        val owner by produceState(false) { value = withContext(Dispatchers.IO) { OwnerTest.isOwner(context) } }
+        if (owner) {
+            Spacer(Modifier.height(10.dp))
+            FocusButton(onClick = {
+                OwnerTest.set(context, true)
+                onTryTest()
+            }) { Text("Try test versions") }
+            Text(
+                "Shows the newest test build of each app under Updates. If one closes by itself, its next start offers the last good version.",
+                color = Muted, fontSize = 13.sp, modifier = Modifier.widthIn(max = 900.dp),
+            )
+        }
     }
 }
 

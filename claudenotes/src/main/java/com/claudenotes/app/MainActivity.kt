@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (CrashGuard.start(this)) return
         enableEdgeToEdge()
         if (savedInstanceState == null) takeSharedText(intent)
         setContent {

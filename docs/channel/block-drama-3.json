@@ -1,0 +1,37 @@
+{
+ "name": "ڈرامہ",
+ "built": "2026-10-07 18:34 UTC",
+ "secs": 2045,
+ "videos": [
+  {
+   "id": "KPUh65_7E0U",
+   "title": "Guru Episode 01 - Ali Rehman & Zhalay Sarhadi - Express TV",
+   "label": "Express TV",
+   "secs": 2045,
+   "kind": "drama"
+  }
+ ],
+ "spares": [
+  {
+   "id": "lWyspJk5FWc",
+   "title": "Madaar Episode 01 (Subtitles) 23rd September 2026 | Humayoun Ashraf - Sumaiyya Bukhsh | Green TV",
+   "label": "Green Entertainment",
+   "secs": 2117,
+   "kind": "drama"
+  },
+  {
+   "id": "WtR6O30Mbt0",
+   "title": "Uswah Episode 10 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 2nd October 2026",
+   "label": "Har Pal Geo",
+   "secs": 2389,
+   "kind": "drama"
+  },
+  {
+   "id": "tEhlpNV-sbE",
+   "title": "Uswah Episode 13 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 5th October 2026",
+   "label": "Har Pal Geo",
+   "secs": 2330,
+   "kind": "drama"
+  }
+ ]
+}

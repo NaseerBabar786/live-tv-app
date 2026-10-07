@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -25,6 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livetv.app.Plans
@@ -53,23 +58,42 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
     val current by Plans.current.collectAsStateWithLifecycle()
     var sent by remember { mutableStateOf<String?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
+    var code by remember { mutableStateOf("") }
+    var codeNote by remember { mutableStateOf<String?>(null) }
+    var redeeming by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { Subscription.refresh(context, account) }
 
-    fun ask(tier: Plans.Tier, length: String, price: String) {
+    fun ask(name: String, length: String, price: String) {
         val me = account.user.value ?: return
         scope.launch {
             error = null
             try {
                 Messages(account).send(
                     me.uid,
-                    "Hi! Please turn on the ${tier.label} package for $length ($price). How do I pay?",
+                    "Hi! Please turn on the $name for $length ($price). How do I pay?",
                 )
-                sent = "Sent. We'll reply in Messages with how to pay, and turn ${tier.label} on as soon as it's paid."
+                sent = "Sent. We'll reply in Messages with how to pay, and turn it on as soon as it's paid."
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 error = "Couldn't send it. Check the internet connection, or WhatsApp 437 602 6500."
             }
+        }
+    }
+
+    // A promo code from the owner (tv.bulkbazaar.ca/packages) turns a package on straight away, free.
+    fun redeem() {
+        if (redeeming) return
+        scope.launch {
+            redeeming = true
+            codeNote = try {
+                Subscription.redeem(context, account, code).also { if (it.startsWith("Done")) code = "" }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                "Couldn't check the code. Check the internet connection and try again."
+            }
+            redeeming = false
         }
     }
 
@@ -87,7 +111,7 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                     val s = status
                     Text(
                         buildString {
-                            append("Your package: ${current.label}")
+                            append("Your package: ${s?.label ?: current.label}")
                             if (s?.trial == true) append(" (free trial)")
                             if (s?.until != null) append(", until ${planDate(s.until)}")
                             if (!offer.enforced) append(". Everything is free for now.")
@@ -95,9 +119,51 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                         fontWeight = FontWeight.Bold,
                     )
                     Text(offer.howToPay, style = MaterialTheme.typography.bodySmall)
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp))
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Text("🎟 Have a promo code?", fontWeight = FontWeight.Bold)
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            OutlinedTextField(
+                                value = code,
+                                onValueChange = { code = it.uppercase().take(20) },
+                                singleLine = true,
+                                placeholder = { Text("Promo code") },
+                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters, imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = { redeem() }),
+                                modifier = Modifier.weight(1f).focusGlow(),
+                            )
+                            OutlinedButton(onClick = { redeem() }, enabled = !redeeming, modifier = Modifier.focusGlow()) {
+                                Text(if (redeeming) "Checking…" else "Use code")
+                            }
+                        }
+                        codeNote?.let { Text(it, color = if (it.startsWith("Done")) FocusColor else Color(0xFFFF8A80)) }
+                    }
                     sent?.let { Text(it, color = FocusColor) }
                     error?.let { Text(it, color = Color(0xFFFF8A80)) }
-                    Plans.Tier.entries.forEach { tier ->
+                    // The owner's promotions on sale today (Christmas, Labour Day...), each with its own price and features.
+                    offer.promos.filter { it.onSale() }.forEach { promo ->
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.22f), RoundedCornerShape(12.dp))
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Text("🎉 ${promo.name} · ${promo.price} for ${promo.length}", fontWeight = FontWeight.Bold)
+                            if (promo.end.isNotBlank()) Text("On sale until ${promo.end}", style = MaterialTheme.typography.bodySmall)
+                            Text(Subscription.describe(promo.features), style = MaterialTheme.typography.bodySmall)
+                            OutlinedButton(onClick = { ask("${promo.name} promotion", promo.length, promo.price) }, modifier = Modifier.focusGlow()) {
+                                Text("Ask for ${promo.name}")
+                            }
+                        }
+                    }
+                    // The Promo package itself is shown above as a promotion, not as a package for sale.
+                    Plans.Tier.entries.filter { it != Plans.Tier.Promo }.forEach { tier ->
                         val prices = offer.prices[tier]
                         Column(
                             Modifier
@@ -115,19 +181,19 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                                     if (tier == current) "  ✓ yours" else "",
                                 fontWeight = FontWeight.Bold,
                             )
-                            Text(Subscription.FEATURES[tier] ?: "", style = MaterialTheme.typography.bodySmall)
+                            Text(Subscription.describe(tier), style = MaterialTheme.typography.bodySmall)
                             if (prices != null) {
-                                // Longest first: the year is the best value.
+                                // Shortest first, like tv.bulkbazaar.ca/packages (owner, 2026-10-06); the year is the best value.
                                 val lengths = listOf(
-                                    "1 year" to prices.year,
-                                    "6 months" to prices.sixMonths,
-                                    "3 months" to prices.threeMonths,
                                     "1 month" to prices.month,
+                                    "3 months" to prices.threeMonths,
+                                    "6 months" to prices.sixMonths,
+                                    "1 year" to prices.year,
                                 )
                                 lengths.chunked(2).forEach { pair ->
                                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                         pair.forEach { (length, price) ->
-                                            OutlinedButton(onClick = { ask(tier, length, price) }, modifier = Modifier.focusGlow()) {
+                                            OutlinedButton(onClick = { ask("${tier.label} package", length, price) }, modifier = Modifier.focusGlow()) {
                                                 Text("$length $price")
                                             }
                                         }
@@ -166,7 +232,7 @@ fun PlanEndingNotice(onRenew: () -> Unit, onMessages: () -> Unit) {
     val text = when {
         s.until != null && s.until.time - now < 5 * day -> {
             val left = ((s.until.time - now + day - 1) / day).coerceAtLeast(0)
-            val what = if (s.trial) "Your free trial" else "Your ${s.tier.label} package"
+            val what = if (s.trial) "Your free trial" else "Your ${s.label} package"
             "$what ends on ${planDate(s.until)}" + when (left) {
                 0L -> " (today)."
                 1L -> " (tomorrow)."

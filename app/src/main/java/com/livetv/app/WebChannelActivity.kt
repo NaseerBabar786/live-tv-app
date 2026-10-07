@@ -7,15 +7,19 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.os.Bundle
+import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
+import android.widget.TextView
 
 /**
  * Our YouTube channels and Bazaar Hits full screen (1.9.51): the locked page in a plain WebView that
@@ -27,6 +31,11 @@ import android.widget.FrameLayout
 class WebChannelActivity : Activity() {
 
     private var webView: WebView? = null
+
+    /** Number buttons typed so far; 2 seconds after the last one the app goes to that channel. */
+    private var typed = ""
+    private lateinit var typedView: TextView
+    private val goToTyped = Runnable { finishWith(RESULT_NUMBER, Intent().putExtra(EXTRA_NUMBER, typed)) }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +59,22 @@ class WebChannelActivity : Activity() {
                         setResult(RESULT_FALLBACK)
                         finish()
                     }
+                    // A run of trailers on Bazaar TV is over: its own player goes on.
+                    if (request.url.host == "done") {
+                        setResult(RESULT_DONE)
+                        finish()
+                    }
+                    return true
+                }
+
+                // A page that runs out of memory (YouTube on a small TV) loses its renderer; unhandled, that
+                // closed the whole app and it started again (1.9.58). Instead the channel's free films play.
+                override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+                    (view.parent as? ViewGroup)?.removeView(view)
+                    view.destroy()
+                    webView = null
+                    setResult(RESULT_FALLBACK)
+                    finish()
                     return true
                 }
             }
@@ -60,13 +85,53 @@ class WebChannelActivity : Activity() {
             isFocusable = true
             layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
-        setContentView(view)
+        typedView = TextView(this).apply {
+            textSize = 40f
+            setTextColor(android.graphics.Color.WHITE)
+            setBackgroundColor(0xCC101827.toInt())
+            setPadding(32, 12, 32, 12)
+            visibility = View.GONE
+            layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP or Gravity.START)
+                .apply { setMargins(48, 48, 0, 0) }
+        }
+        setContentView(FrameLayout(this).apply { addView(view); addView(typedView) })
         @Suppress("DEPRECATION")
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
             View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         view.loadUrl(url)
         view.requestFocus()
         webView = view
+    }
+
+    // Channel up/down and the arrows change channel, and number buttons type one, as on every other
+    // channel (1.9.60); the app then opens the new channel.
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val step = when (event.keyCode) {
+            KeyEvent.KEYCODE_CHANNEL_UP, KeyEvent.KEYCODE_PAGE_UP, KeyEvent.KEYCODE_DPAD_UP -> -1
+            KeyEvent.KEYCODE_CHANNEL_DOWN, KeyEvent.KEYCODE_PAGE_DOWN, KeyEvent.KEYCODE_DPAD_DOWN -> 1
+            else -> 0
+        }
+        if (step != 0) {
+            if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) finishWith(RESULT_ZAP, Intent().putExtra(EXTRA_STEP, step))
+            return true
+        }
+        if (event.keyCode in KeyEvent.KEYCODE_0..KeyEvent.KEYCODE_9) {
+            if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0 && typed.length < 8) {
+                typed += event.keyCode - KeyEvent.KEYCODE_0
+                typedView.text = typed
+                typedView.visibility = View.VISIBLE
+                typedView.removeCallbacks(goToTyped)
+                typedView.postDelayed(goToTyped, 2_000)
+            }
+            return true
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
+    private fun finishWith(code: Int, data: Intent) {
+        if (isFinishing) return
+        setResult(code, data)
+        finish()
     }
 
     override fun onPause() {
@@ -84,6 +149,11 @@ class WebChannelActivity : Activity() {
     companion object {
         const val EXTRA_URL = "url"
         const val RESULT_FALLBACK = RESULT_FIRST_USER + 1
+        const val RESULT_ZAP = RESULT_FIRST_USER + 2
+        const val RESULT_NUMBER = RESULT_FIRST_USER + 3
+        const val EXTRA_STEP = "step"
+        const val EXTRA_NUMBER = "number"
+        const val RESULT_DONE = RESULT_FIRST_USER + 4
 
         fun intent(context: Context, url: String) = Intent(context, WebChannelActivity::class.java).putExtra(EXTRA_URL, url)
     }

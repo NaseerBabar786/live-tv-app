@@ -1,0 +1,77 @@
+name: Show promos for Bazaar TV
+
+# A "coming up" promo for every show booked on Bazaar TV (tools/promos). Runs every hour, so a show
+# the owner books in Channel Studio gets its promo within the hour; bookings already done are skipped.
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+    inputs:
+      remake:
+        description: "Make every promo again"
+        type: boolean
+        default: false
+      samples:
+        description: "Only make the sample promos in tools/promos/samples.json (for the owner to check)"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - "tools/promos/**"
+      - "tools/music/**"
+      - "docs/channel/test-schedule.json"
+
+concurrency:
+  group: show-promos
+  cancel-in-progress: false
+
+jobs:
+  promos:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q edge-tts numpy pillow
+
+      - name: Make promos
+        if: github.event.inputs.samples != 'true'
+        run: python3 tools/promos/make_show_promos.py out ${{ github.event.inputs.remake == 'true' && '--remake' || '' }}
+
+      - name: Make the sample promos
+        if: github.event.inputs.samples == 'true'
+        run: |
+          mkdir -p out
+          python3 - <<'PY'
+          import json, subprocess, sys
+          for s in json.load(open("tools/promos/samples.json")):
+              json.dump(s, open("spec.json", "w"))
+              # One sample that can't be made doesn't stop the others.
+              subprocess.run([sys.executable, "tools/promos/make_promo.py", "spec.json", f"out/{s['name']}.mp4"])
+          PY
+
+      - name: Upload to the channel-media release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A pre-release, so it never becomes "latest" (the app's download link uses latest).
+          gh release view channel-media -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create channel-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false \
+              --title "Channel media" --notes "Videos for the owner's channel."
+          ls out/*.mp4 >/dev/null 2>&1 && gh release upload channel-media out/*.mp4 -R "$GITHUB_REPOSITORY" --clobber || echo "No new promos"
+
+      - name: Save the list
+        if: github.event.inputs.samples != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/media/show-promos.json docs/media/library.json
+          git diff --cached --quiet && { echo "Nothing changed"; exit 0; }
+          git commit -m "Show promos: update the list"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep 5; done
+          exit 1

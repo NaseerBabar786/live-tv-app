@@ -18,6 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import com.livetv.app.account.Account
 import com.livetv.app.account.FirebaseConfig
 import com.livetv.app.account.Messages
+import com.livetv.app.account.Billing
+import com.livetv.app.ui.BillingDialog
 import com.livetv.app.account.Subscription
 import com.livetv.app.ui.PlanEndingNotice
 import com.livetv.app.ui.PlansScreen
@@ -31,6 +33,8 @@ import com.livetv.app.ui.SettingsDialog
 import com.livetv.app.ui.SettingsTheme
 import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
+import com.livetv.app.ui.LIBRARY_PREFIX
+import com.livetv.app.player.LibraryAds
 import com.livetv.app.ui.SponsorScreen
 import com.livetv.app.ui.SponsorBox
 import com.livetv.app.ui.SponsorVideoBox
@@ -155,9 +159,18 @@ fun EditionOverlay() {
     }
     if (FirebaseConfig.configured) NewMessagePrompt()
     if (FirebaseConfig.configured && !Edition.MAX) PlanPrompts()
+    if (FirebaseConfig.configured && !Edition.MAX) BillingPrompt()
     // A sponsor's card after a channel change, now and then.
     val main by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
-    SponsorCard(channelId = main.lastWatchedId, fullScreen = main.playing != null)
+    // Library movies and dramas get the full-screen ad breaks too (1.9.89); a video in YouTube's own
+    // player only our own promo before it starts, no paid sponsor ads (YouTube's rules).
+    val library by LibraryAds.now.collectAsStateWithLifecycle()
+    val vod = library
+    SponsorCard(
+        channelId = vod?.let { LIBRARY_PREFIX + it.id } ?: main.lastWatchedId,
+        fullScreen = main.playing != null || (vod != null && (!vod.embed || vod.waiting)),
+        promosOnly = vod?.embed == true,
+    )
     val updates = viewModel<UpdateViewModel>()
     val prompting by updates.prompting.collectAsStateWithLifecycle()
     val update by updates.update.collectAsStateWithLifecycle()
@@ -207,6 +220,24 @@ private fun PlanPrompts() {
         return
     }
     PlanEndingNotice(onRenew = Plans::showPlans, onMessages = { messages = true })
+}
+
+/**
+ * Opens the billing details form when the owner asked for it on tv.bulkbazaar.ca/users and the
+ * viewer hasn't answered yet: about a minute after start, once per start until they send it.
+ */
+@Composable
+private fun BillingPrompt() {
+    val context = LocalContext.current
+    val account = remember { Account.get(context) }
+    val user by account.user.collectAsStateWithLifecycle()
+    var open by remember { mutableStateOf(false) }
+    LaunchedEffect(user?.uid) {
+        if (user == null || account.isAdmin) return@LaunchedEffect
+        delay(60_000)
+        if (runCatching { Billing.load(account) }.getOrNull()?.waiting == true) open = true
+    }
+    if (open) BillingDialog(asked = true, onDismiss = { open = false })
 }
 
 /**
@@ -285,7 +316,8 @@ fun EditionTicker(
     always: Boolean = false,
     everyMs: Long = 0L,
     skip: () -> Boolean = { false },
-) = SponsorTicker(modifier, big, always, everyMs, skip)
+    band: Boolean = false,
+) = SponsorTicker(modifier, big, always, everyMs, skip, band)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

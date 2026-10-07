@@ -44,6 +44,8 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.foundation.layout.Box
+import com.livetv.app.player.AdBreak
+import com.livetv.app.player.AdTiming
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -59,6 +61,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -89,17 +96,35 @@ private const val STRIP_MS = 60_000L
 private const val CARD_MS = 5_000L
 private const val CARD_SITE_MS = 8_000L
 private const val CARD_EVERY_MS = 3 * 60_000L
-private const val CARD_NOT_BEFORE_MS = 5 * 60_000L
+private const val CARD_NOT_BEFORE_MS = 3 * 60_000L
 /** A sponsor's video pop-up: at most this often (other times their picture card shows). */
 private const val VIDEO_EVERY_MS = 30 * 60_000L
+/** Full screen, YouTube style (1.9.58): up to [POD_SIZE] ads back to back, each picture ad [PICTURE_MS] long,
+ *  with a countdown; Back skips an ad once it has been on for [SKIP_AFTER_MS]. Owner's pop-up ad length
+ *  rule (2026-10-07): ads are 5 to 60 seconds in steps of 5 and a break never runs over [BREAK_MS] (an ad that doesn't fit what's
+ *  left is left out; a video of unknown length is stopped when the minute is up). */
+private const val POD_SIZE = 2
+private const val PICTURE_MS = 20_000L
+private const val BREAK_MS = 60_000L
+private const val SKIP_AFTER_MS = 10_000L
 
-/** The Cable TV promo video from the website's home page (see [SponsorCard]). */
+/** Full-screen channels: an ad break every 10 minutes (owner, 1.9.68): the channel pauses, our own Cable TV
+ *  promo plays (a different one each time) with a sponsor's ad when one fits, then the channel carries on. */
+private const val BREAK_EVERY_MS = 10 * 60_000L
+/** [SponsorCard]'s channelId for a Library video ("vod:" + its id). */
+const val LIBRARY_PREFIX = "vod:"
+/** Our Cable TV promos for the breaks, in turn: media/app-promos.json on the website (the owner can add more). */
 private const val PROMO_ID = "promo"
-private const val PROMO_URL = "https://tv.bulkbazaar.ca/media/livetv-promo.mp4"
-private const val PROMO_EVERY_MS = 60 * 60_000L
-private const val PROMO_NOT_BEFORE_MS = 2 * 60_000L
-/** The promo was shown already since the app started. */
-private var promoShown = false
+private const val PROMOS_URL = "https://tv.bulkbazaar.ca/media/app-promos.json"
+private val DEFAULT_PROMOS = listOf(
+    "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-1.mp4" to 60,
+    "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-2.mp4" to 30,
+    "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-3.mp4" to 30,
+    "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-4.mp4" to 30,
+)
+/** The promo list read from the website, once per start. */
+private var promos: List<Pair<String, Int>> = DEFAULT_PROMOS
+private var promosLoaded = false
 
 /** The "advertise with us" ticker: half a minute after start, then every 30 seconds, scrolling across once. */
 private const val TICKER_FIRST_MS = 30_000L
@@ -115,6 +140,7 @@ private var nextTickerAt = 0L
  * [always] keeps it running without the 30 second wait (News mode's bottom band).
  * [everyMs] above 0 runs it on its own clock instead, once every [everyMs] (the full-screen channel),
  * on a dark band, skipping a turn while [skip] says something else is on screen.
+ * [band] puts the dark band behind it too (the line along the bottom of the channel screens).
  */
 @Composable
 fun SponsorTicker(
@@ -123,6 +149,7 @@ fun SponsorTicker(
     always: Boolean = false,
     everyMs: Long = 0L,
     skip: () -> Boolean = { false },
+    band: Boolean = false,
 ) {
     val text by Sponsors.ticker.collectAsStateWithLifecycle()
     val words = text ?: return
@@ -156,7 +183,7 @@ fun SponsorTicker(
     }
     BoxWithConstraints(modifier.clipToBounds()) {
         if (!running) return@BoxWithConstraints
-        if (everyMs > 0) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.55f)))
+        if (everyMs > 0 || band) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.55f)))
         val boxWidth = constraints.maxWidth.toFloat()
         val pxPerSecond = with(LocalDensity.current) { TICKER_DP_PER_SECOND.dp.toPx() }
         var textWidth by remember { mutableIntStateOf(0) }
@@ -170,7 +197,8 @@ fun SponsorTicker(
         }
         Text(
             words,
-            color = FocusColor,
+            // White, the owner's choice (1.9.61; it was yellow).
+            color = Color.White,
             style = if (big) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
@@ -427,7 +455,7 @@ private fun SponsorVideo(url: String) {
  * promo plays like that once per start. OK opens the sponsor's website; back from it, the video goes on.
  */
 @Composable
-fun SponsorCard(channelId: String?, fullScreen: Boolean) {
+fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = false) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("sponsors", Context.MODE_PRIVATE) }
@@ -436,68 +464,218 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
     var lastChannel by remember { mutableStateOf(channelId) }
     var showing by remember { mutableStateOf<Sponsor?>(null) }
     var video by remember { mutableStateOf<Sponsor?>(null) }
+    // Which ad of the break this is ("Ad 1 of 2"), and when the picture ad came up and for how long.
+    var podAt by remember { mutableIntStateOf(0) }
+    var podSize by remember { mutableIntStateOf(1) }
+    var shownAt by remember { mutableLongStateOf(0L) }
+    var shownFor by remember { mutableLongStateOf(CARD_MS) }
+    var podJob by remember { mutableStateOf<Job?>(null) }
+    // A full-screen break is on: the channel pauses underneath and the ads fill the screen (1.9.66).
+    var fullBreak by remember { mutableStateOf(false) }
+    // A video ad: the most it may play (what's left of the break's minute), and how much it played.
+    var videoMax by remember { mutableLongStateOf(BREAK_MS) }
+    var videoPlayed by remember { mutableLongStateOf(0L) }
     val isFullScreen by rememberUpdatedState(fullScreen)
+    // Before a Library video in YouTube's player: only our own Cable TV promo, no paid sponsor (YouTube's rules, 1.9.89).
+    val onlyPromos by rememberUpdatedState(promosOnly)
     val opener = rememberSiteOpener()
-    // While the card or video shows, OK on the remote (or a tap) opens the sponsor's website.
+    // While the card or video shows on a full-screen channel, OK on the remote (or a tap) opens the
+    // sponsor's website. Not in 1+List and the other layouts: there OK opens the channel picked
+    // (1.9.57; OK on Bazaar Cinema went to the sponsor's website instead).
     val current = showing ?: video
-    DisposableEffect(current) {
-        if (current?.site != null) SponsorKey.onOk = { if (showing === current) showing = null; opener.open(current) }
+    DisposableEffect(current, fullScreen) {
+        if (current?.site != null && fullScreen) SponsorKey.onOk = { if (showing === current) showing = null; opener.open(current) }
         onDispose { SponsorKey.onOk = null }
     }
+    // The next ad break: on a full-screen channel up to [POD_SIZE] sponsors one after the other, like
+    // YouTube's ads (each their picture card, or their video when it's due); otherwise one short card.
+    // [wait] lets a new channel's picture come up first.
+    fun popUp(wait: Long) {
+        if (podJob?.isActive == true) return
+        val first = if (onlyPromos) null else Sponsors.next("card")
+        val pod = if (isFullScreen) {
+            val more = if (first == null) emptyList() else (2..POD_SIZE).mapNotNull { Sponsors.next("card") }
+            // Only as many as fit in the break's minute (a video of unknown length counted as 30 s;
+            // at most one sponsor video per [VIDEO_EVERY_MS]).
+            var total = 0L
+            var videoDue = System.currentTimeMillis() - prefs.getLong("videoAt", 0L) >= VIDEO_EVERY_MS
+            var tookVideo = false
+            val sponsors = (listOfNotNull(first) + more).distinctBy { it.id }.filterIndexed { i, sp ->
+                val asVideo = videoDue && sp.popupVideo && sp.video.isNotEmpty() && sp.videoSecs * 1000L <= BREAK_MS - total
+                val ms = if (asVideo) (sp.videoSecs.takeIf { it > 0 } ?: 30) * 1000L else PICTURE_MS
+                (i == 0 || total + ms <= BREAK_MS).also { if (it) { total += ms; if (asVideo) { videoDue = false; tookVideo = true } } }
+            }
+            // No sponsor video booked for this break: our own promo plays (the next one in turn), with a
+            // sponsor's picture after it when it still fits in the minute.
+            val promo = if (tookVideo || promos.isEmpty()) null else {
+                val n = prefs.getInt("promoNext", 0)
+                prefs.edit().putInt("promoNext", n + 1).apply()
+                val (url, secs) = promos[Math.floorMod(n, promos.size)]
+                Sponsor(
+                    id = "$PROMO_ID:$n", name = "Cable TV", line = "", contact = "", start = "", end = "",
+                    active = true, picture = null, video = url, website = "", popupVideo = true, videoSecs = secs,
+                )
+            }
+            if (promo == null) sponsors else {
+                var used = promo.videoSecs * 1000L
+                listOf(promo) + sponsors.filter { !(it.popupVideo && it.video.isNotEmpty()) }
+                    .filter { (used + PICTURE_MS <= BREAK_MS).also { ok -> if (ok) used += PICTURE_MS } }
+                    .take(POD_SIZE - 1)
+            }
+        } else listOfNotNull(first)
+        if (pod.isEmpty()) return
+        lastCard = SystemClock.elapsedRealtime()
+        val full = isFullScreen
+        podJob = scope.launch {
+            delay(wait)
+            if (full) fullBreak = true
+            try {
+                // What's left of the break's minute: time spent on ads (not on a sponsor's website).
+                var left = BREAK_MS
+                var index = 0
+                for ((i, sponsor) in pod.withIndex()) {
+                    // Leaving the full-screen channel ends the break.
+                    if (full && !isFullScreen) break
+                    if (i > 0) {
+                        // Back from the sponsor's website first, then the next ad.
+                        snapshotFlow { opener.sponsor }.first { it == null }
+                        delay(600)
+                        if (full && !isFullScreen) break
+                    }
+                    if (full && left < 5_000L) break
+                    val wall = System.currentTimeMillis()
+                    val videoMs = sponsor.videoSecs * 1000L
+                    val isPromo = sponsor.id.startsWith(PROMO_ID)
+                    val asVideo = sponsor.popupVideo && sponsor.video.isNotEmpty() && isFullScreen && videoMs <= left &&
+                        (isPromo || wall - prefs.getLong("videoAt", 0L) >= VIDEO_EVERY_MS)
+                    // Our own promo only plays in a full-screen break.
+                    if (isPromo && !asVideo) continue
+                    // A picture ad that doesn't fit what's left of the minute waits for the next break.
+                    if (!asVideo && full && i > 0 && PICTURE_MS > left) continue
+                    podAt = index++
+                    podSize = pod.size
+                    if (!isPromo) SponsorViews.count(sponsor, "card")
+                    if (asVideo) {
+                        if (!isPromo) prefs.edit().putLong("videoAt", wall).apply()
+                        showing = null
+                        videoMax = left
+                        video = sponsor
+                        snapshotFlow { video }.first { it !== sponsor }
+                        left -= videoPlayed.coerceAtLeast(1_000L)
+                        continue
+                    }
+                    // A little longer when OK can open their website, so there's time to press it.
+                    shownFor = if (full) minOf(PICTURE_MS, left) else if (sponsor.site != null) CARD_SITE_MS else CARD_MS
+                    shownAt = SystemClock.elapsedRealtime()
+                    showing = sponsor
+                    withTimeoutOrNull(shownFor) { snapshotFlow { showing }.first { it !== sponsor } }
+                    if (showing === sponsor) showing = null
+                    left -= SystemClock.elapsedRealtime() - shownAt
+                }
+            } finally {
+                fullBreak = false
+                podAt = 0
+                podSize = 1
+            }
+        }
+    }
+    // When the next full-screen break is due, for a Library video in YouTube's player that waits for it (1.9.89).
+    DisposableEffect(Unit) {
+        AdTiming.enabled = true
+        onDispose { AdTiming.enabled = false }
+    }
+    LaunchedEffect(lastCard) { AdTiming.nextFullAt = lastCard + BREAK_EVERY_MS }
     LaunchedEffect(channelId) {
         if (channelId == null || channelId == lastChannel || video != null) return@LaunchedEffect
+        // Back from a Library video to the channel watched before: not a channel change.
+        val fromLibrary = lastChannel?.startsWith(LIBRARY_PREFIX) == true && !channelId.startsWith(LIBRARY_PREFIX)
         lastChannel = channelId
+        if (fromLibrary) return@LaunchedEffect
         val now = SystemClock.elapsedRealtime()
-        val wall = System.currentTimeMillis()
-        // The Cable TV promo: once per start and at most once an hour, when no sponsor has a video pop-up.
-        if (isFullScreen && !promoShown && now - startedAt >= PROMO_NOT_BEFORE_MS &&
-            Sponsors.current().none { it.popupVideo && it.video.isNotEmpty() } &&
-            wall - prefs.getLong("promoAt", 0L) >= PROMO_EVERY_MS
-        ) {
-            promoShown = true
-            prefs.edit().putLong("promoAt", wall).apply()
-            lastCard = now
-            showing = null
-            scope.launch {
-                delay(1_500)
-                if (isFullScreen) video = PromoSponsor
-            }
-            return@LaunchedEffect
+        // Full screen: the ad break every [BREAK_EVERY_MS]; in the other layouts a sponsor's card at most every [CARD_EVERY_MS].
+        if (now - lastCard < if (isFullScreen) BREAK_EVERY_MS else CARD_EVERY_MS) return@LaunchedEffect
+        popUp(1_500)
+    }
+    // Our promo list from the website, once per start.
+    LaunchedEffect(Unit) {
+        if (promosLoaded) return@LaunchedEffect
+        promosLoaded = true
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val arr = org.json.JSONObject(java.net.URL(PROMOS_URL).readText()).getJSONArray("promos")
+                (0 until arr.length()).mapNotNull { i ->
+                    val o = arr.getJSONObject(i)
+                    val src = o.optString("src").takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                    val url = if (src.startsWith("https://")) src else "https://tv.bulkbazaar.ca/media/$src"
+                    url to o.optInt("secs", 30).coerceIn(5, 60)
+                }
+            }.getOrNull()?.takeIf { it.isNotEmpty() }?.let { promos = it }
         }
-        if (now - lastCard < CARD_EVERY_MS) return@LaunchedEffect
-        val sponsor = Sponsors.next("card") ?: return@LaunchedEffect
-        lastCard = now
-        val asVideo = sponsor.popupVideo && sponsor.video.isNotEmpty() && isFullScreen &&
-            wall - prefs.getLong("videoAt", 0L) >= VIDEO_EVERY_MS
-        if (asVideo) prefs.edit().putLong("videoAt", wall).apply()
-        scope.launch {
-            // Let the new channel's picture come up first.
-            delay(1_500)
-            SponsorViews.count(sponsor, "card")
-            if (asVideo && isFullScreen) {
-                showing = null
-                video = sponsor
-                return@launch
+    }
+    // Staying on one channel full screen: the ad break still comes every [BREAK_EVERY_MS] (owner, 1.9.68).
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val screenWidth by rememberUpdatedState(LocalConfiguration.current.screenWidthDp)
+    LaunchedEffect(fullScreen) {
+        if (!fullScreen) return@LaunchedEffect
+        while (true) {
+            delay(maxOf(1_000L, lastCard + BREAK_EVERY_MS - SystemClock.elapsedRealtime()))
+            if (SystemClock.elapsedRealtime() - lastCard < BREAK_EVERY_MS) continue
+            // Not while another window (our YouTube channels) or another app is in front, not in the small
+            // picture-in-picture window, and not over a pop-up.
+            if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) || screenWidth < 400 || showing != null || video != null) {
+                delay(10_000)
+                continue
             }
-            showing = sponsor
-            // A little longer when OK can open their website, so there's time to press it.
-            delay(if (sponsor.site != null) CARD_SITE_MS else CARD_MS)
-            if (showing === sponsor) showing = null
+            popUp(0)
+            // Nothing to show at the moment: look again in a minute.
+            if (SystemClock.elapsedRealtime() - lastCard >= BREAK_EVERY_MS) delay(60_000)
         }
     }
     // Not in the small picture-in-picture window.
     val width = LocalConfiguration.current.screenWidthDp
     // Leaving the full screen channel (or going to the small window) closes the video.
     LaunchedEffect(fullScreen, width) { if (!fullScreen || width < 400) video = null }
+    // YouTube style: while a full-screen break is on, the channel underneath pauses (AdBreak), then goes back to live.
+    val breakOn = fullScreen && width >= 400 && (video != null || fullBreak)
+    LaunchedEffect(breakOn) { AdBreak.set(breakOn) }
+    DisposableEffect(Unit) { onDispose { AdBreak.set(false) } }
     val playing = video
     if (playing != null && fullScreen && width >= 400) {
         key(playing) {
-            VideoPopup(playing, width, paused = opener.sponsor != null, onDone = { if (video === playing) video = null })
+            VideoPopup(playing, width, paused = opener.sponsor != null, label = adLabel(podAt, podSize, playing), big = true,
+                maxMs = videoMax,
+                onDone = { played -> videoPlayed = played; if (video === playing) video = null })
         }
         return
     }
     val sponsor = showing ?: return
     if (width < 400) return
+    // Full screen: the countdown, and Back skips the ad once it has been on for [SKIP_AFTER_MS].
+    var now by remember(sponsor) { mutableLongStateOf(SystemClock.elapsedRealtime()) }
+    LaunchedEffect(sponsor) {
+        while (true) {
+            now = SystemClock.elapsedRealtime()
+            delay(250)
+        }
+    }
+    val shownMs = now - shownAt
+    BackHandler(enabled = fullScreen && shownFor > SKIP_AFTER_MS && shownMs >= SKIP_AFTER_MS) {
+        if (showing === sponsor) showing = null
+    }
+    if (fullScreen && fullBreak) {
+        // The ad fills the screen while the channel waits underneath.
+        Box(Modifier.fillMaxSize().background(Color.Black).sponsorTap(sponsor, opener), contentAlignment = Alignment.Center) {
+            SponsorPicture(sponsor, Modifier.fillMaxHeight().aspectRatio(16f / 9f))
+            AdFooter(
+                sponsor = sponsor,
+                label = adLabel(podAt, podSize, sponsor),
+                secondsLeft = ((shownFor - shownMs + 999) / 1000).toInt().coerceAtLeast(0),
+                skipIn = if (shownFor > SKIP_AFTER_MS) ((SKIP_AFTER_MS - shownMs + 999) / 1000).toInt().coerceAtLeast(0) else -1,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
+        }
+        return
+    }
     Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.BottomEnd) {
         Column(
             Modifier
@@ -521,7 +699,67 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean) {
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                 )
             }
-            if (sponsor.site != null) VisitLine()
+            if (sponsor.site != null && fullScreen) VisitLine()
+            if (fullScreen) AdBar(
+                label = adLabel(podAt, podSize, sponsor),
+                secondsLeft = ((shownFor - shownMs + 999) / 1000).toInt().coerceAtLeast(0),
+                skipIn = if (shownFor > SKIP_AFTER_MS) ((SKIP_AFTER_MS - shownMs + 999) / 1000).toInt().coerceAtLeast(0) else -1,
+            )
+        }
+    }
+}
+
+/** The line along the bottom of a full-screen ad: who it's for, "Press OK to visit", and the countdown and Skip. */
+@Composable
+private fun AdFooter(sponsor: Sponsor, label: String, secondsLeft: Int, skipIn: Int, modifier: Modifier) {
+    Column(modifier.fillMaxWidth().background(Color.Black.copy(alpha = 0.6f))) {
+        Text(
+            sponsor.name,
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 6.dp),
+        )
+        if (sponsor.site != null) VisitLine()
+        AdBar(label = label, secondsLeft = secondsLeft, skipIn = skipIn)
+    }
+}
+
+/** "Ad 1 of 2" during a break of more than one ad, else "Ad" (nothing for our own Cable TV promo). */
+private fun adLabel(at: Int, size: Int, sponsor: Sponsor): String =
+    if (sponsor.id.startsWith(PROMO_ID)) "" else if (size > 1) "Ad ${at + 1} of $size" else "Ad"
+
+/**
+ * YouTube-style line under a full-screen pop-up: "Ad 1 of 2 · 0:12" on the left, and on the right
+ * "Skip in 7" counting down, then "Skip ad ▸ Back" once Back skips it. [skipIn] below 0: no skipping.
+ */
+@Composable
+private fun AdBar(label: String, secondsLeft: Int, skipIn: Int) {
+    Row(
+        Modifier.fillMaxWidth().background(Color.Black).padding(horizontal = 10.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        val time = "${secondsLeft / 60}:${"%02d".format(secondsLeft % 60)}"
+        Text(
+            listOf(label, time).filter { it.isNotEmpty() }.joinToString(" · "),
+            color = FocusColor,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            modifier = Modifier.weight(1f),
+        )
+        when {
+            skipIn > 0 -> Text("Skip in $skipIn", color = Color.White.copy(alpha = 0.8f), fontSize = 10.sp, maxLines = 1)
+            skipIn == 0 -> Text(
+                "Skip ad ▸ Back",
+                color = Color.Black,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                modifier = Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp)).background(Color.White).padding(horizontal = 6.dp, vertical = 1.dp),
+            )
         }
     }
 }
@@ -540,15 +778,6 @@ private fun VisitLine() {
 }
 
 /**
- * The Cable TV promo video from the website's home page, played in the pop-up like a sponsor's video.
- * No website: viewers are already in the app, so OK and taps keep working as usual instead of opening the web page.
- */
-private val PromoSponsor = Sponsor(
-    id = PROMO_ID, name = "Cable TV", line = "", contact = "", start = "", end = "",
-    active = true, picture = null, video = PROMO_URL, website = "", popupVideo = true,
-)
-
-/**
  * [sponsor]'s video in a window in the bottom right corner, muted, played once to the end; then it
  * closes by itself. Back closes it early. It never takes the focus, so the remote keeps changing channels;
  * OK opens the website (see [SponsorCard]) and the video waits, [paused], until the viewer comes back.
@@ -556,17 +785,20 @@ private val PromoSponsor = Sponsor(
  */
 @OptIn(UnstableApi::class)
 @Composable
-private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, onDone: () -> Unit) {
+private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, label: String, maxMs: Long, big: Boolean = false, onDone: (playedMs: Long) -> Unit) {
     val context = LocalContext.current
-    val done by rememberUpdatedState(onDone)
+    val finish by rememberUpdatedState(onDone)
     var showing by remember { mutableStateOf(false) }
     var secondsLeft by remember { mutableIntStateOf(0) }
+    var playedMs by remember { mutableLongStateOf(0L) }
+    val done = { finish(playedMs) }
     val player = remember {
         ExoPlayer.Builder(context).build().apply {
-            volume = 0f
+            // Full screen (the channel is paused): with its sound, a little quieter like the YouTube pages.
+            volume = if (big) 0.6f else 0f
             trackSelectionParameters = trackSelectionParameters.buildUpon()
                 .setMaxVideoSize(1280, 720)
-                .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, true)
+                .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, !big)
                 .build()
             addListener(object : Player.Listener {
                 override fun onRenderedFirstFrame() { showing = true }
@@ -585,12 +817,17 @@ private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, onDo
     }
     LaunchedEffect(showing) {
         while (showing) {
-            val left = player.duration - player.currentPosition
-            if (player.duration > 0) secondsLeft = ((left + 999) / 1000).toInt().coerceAtLeast(0)
-            delay(500)
+            // Never past what's left of the break's minute (owner's pop-up ad length rule).
+            val end = if (player.duration > 0) minOf(player.duration, maxMs) else maxMs
+            secondsLeft = ((end - player.currentPosition + 999) / 1000).toInt().coerceAtLeast(0)
+            playedMs = player.currentPosition
+            if (playedMs >= maxMs) { done(); break }
+            delay(250)
         }
     }
-    BackHandler(enabled = showing && !paused) { done() }
+    // Back skips it once it has played [SKIP_AFTER_MS], like YouTube's "Skip ad" (1.9.58).
+    val skippable = player.duration <= 0 || player.duration > SKIP_AFTER_MS + 1_000
+    BackHandler(enabled = showing && !paused && skippable && playedMs >= SKIP_AFTER_MS) { done() }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         // Leaving the app closes it.
@@ -600,6 +837,23 @@ private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, onDo
             lifecycleOwner.lifecycle.removeObserver(observer)
             player.release()
         }
+    }
+    if (big) {
+        Box(Modifier.fillMaxSize().background(if (showing) Color.Black else Color.Transparent), contentAlignment = Alignment.Center) {
+            AndroidView(
+                factory = { ctx -> TextureView(ctx).also { player.setVideoTextureView(it) } },
+                onRelease = { player.clearVideoTextureView(it) },
+                modifier = Modifier.fillMaxHeight().aspectRatio(16f / 9f).graphicsLayer { alpha = if (showing) 1f else 0f },
+            )
+            if (showing) AdFooter(
+                sponsor = sponsor,
+                label = label,
+                secondsLeft = secondsLeft,
+                skipIn = if (skippable) ((SKIP_AFTER_MS - playedMs + 999) / 1000).toInt().coerceAtLeast(0) else -1,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
+        }
+        return
     }
     Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.BottomEnd) {
         Column(
@@ -614,9 +868,8 @@ private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, onDo
                 onRelease = { player.clearVideoTextureView(it) },
                 modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f).background(Color.Black),
             )
-            val time = if (secondsLeft > 0) "Closes in ${secondsLeft / 60}:${"%02d".format(secondsLeft % 60)} · " else ""
             Text(
-                "${sponsor.name} · ${time}Back to close",
+                sponsor.name,
                 color = Color.White,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
@@ -625,6 +878,11 @@ private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, onDo
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
             )
             if (sponsor.site != null) VisitLine()
+            AdBar(
+                label = label,
+                secondsLeft = secondsLeft,
+                skipIn = if (skippable) ((SKIP_AFTER_MS - playedMs + 999) / 1000).toInt().coerceAtLeast(0) else -1,
+            )
         }
     }
 }
@@ -643,7 +901,7 @@ class SiteOpener {
 
     fun open(s: Sponsor) {
         if (s.site == null) return
-        if (s.id != PROMO_ID) SponsorViews.count(s, "click")
+        if (!s.id.startsWith(PROMO_ID)) SponsorViews.count(s, "click")
         sponsor = s
     }
 }

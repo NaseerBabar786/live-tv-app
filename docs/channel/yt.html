@@ -19,8 +19,17 @@
   .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; font-size: clamp(14px, 2.4vw, 28px); }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
-  .cover img { height: 22vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  /* The logo sits above the middle, so the loading circle in the middle of the picture stays in view (1.9.60). */
+  .cover img { height: 15vh; max-width: 40vw; object-fit: contain; opacity: .9; transform: translateY(-17vh); }
   .cover.off { opacity: 0; }
+  /* The "advertise with us" line in its own strip under the picture, never over YouTube's player
+     (YouTube's rules), the same as ytc.html (owner's ads-everywhere rule). */
+  :root { --strip: clamp(22px, 3.4vw, 40px); }
+  #player, .cover, .shield { top: 0; bottom: auto !important; height: calc(100% - var(--strip)) !important; }
+  .now { bottom: calc(var(--strip) + 5%); }
+  .ticker { position: absolute; left: 0; right: 0; bottom: 0; height: var(--strip); line-height: var(--strip); background: #101827; color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); pointer-events: none; }
+  .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
+  @keyframes tick { to { transform: translateX(-100%); } }
 </style>
 </head>
 <body>
@@ -29,13 +38,16 @@
 <div class="shield" id="shield"></div>
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
+<div class="ticker"><span id="tick"></span></div>
 <div class="msg" id="msg">Loading…</div>
+<script src="still.js"></script>
 <script>
 const q = new URLSearchParams(location.search);
 const app = q.has("app"), id = q.get("v") || "", name = q.get("name") || "";
 const $ = x => document.getElementById(x);
 let player = null, nowTimer = null;
 if (name) document.title = name + " · Watch live";
+$("tick").textContent = `${name ? name + " on Cable TV · " : ""}Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 
 function showNow() {
   if (!name) return;
@@ -70,6 +82,8 @@ window.onYouTubeIframeAPIReady = () => {
         e.target.setVolume(60);
         $("msg").remove();
         if (!app) { e.target.mute(); $("sound").hidden = false; }
+        // The app's silent players (Duo mode) open the page with mute=1 (1.9.60).
+        if (new URLSearchParams(location.search).has("mute")) e.target.mute();
         e.target.playVideo();
         showNow();
       },
@@ -89,6 +103,7 @@ window.onYouTubeIframeAPIReady = () => {
       },
     },
   });
+  stillFor(player);
 };
 // A tap or OK only shows the channel's name; double-click goes full screen (on the website).
 $("shield").onclick = showNow;

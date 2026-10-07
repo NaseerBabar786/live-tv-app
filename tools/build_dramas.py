@@ -257,8 +257,19 @@ def _text(raw):
     return json.loads(f'"{raw}"')
 
 
-def videos_page(url):
-    """Videos on a channel page (its Videos tab or a search in the channel): (id, title, minutes).
+AGE = re.compile(r'"(?:simpleText|content)":"(?:Streamed )?(\d+) (second|minute|hour|day|week|month|year)s? ago"')
+AGE_DAYS = {"second": 0, "minute": 0, "hour": 0, "day": 1, "week": 7, "month": 30, "year": 365}
+
+
+def age_days(chunk):
+    """How many days ago the video in this piece of the page went up ("3 weeks ago"); None when not shown."""
+    m = AGE.search(chunk)
+    return int(m.group(1)) * AGE_DAYS[m.group(2)] if m else None
+
+
+def videos_page(url, with_age=False):
+    """Videos on a channel page (its Videos tab or a search in the channel): (id, title, minutes),
+    and with [with_age] also how many days ago each went up (None when the page doesn't say).
 
     Reads both of the page layouts YouTube serves: the older videoRenderer and the
     newer lockupViewModel.
@@ -271,7 +282,8 @@ def videos_page(url):
         length = re.search(r'"lengthText":\{.*?"simpleText":"([\d:]+)"', chunk)
         if title and m.group(1) not in seen:
             seen.add(m.group(1))
-            out.append((m.group(1), _text(title.group(1)), minutes(length.group(1)) if length else None))
+            out.append((m.group(1), _text(title.group(1)), minutes(length.group(1)) if length else None) +
+                       ((age_days(chunk[:4000]),) if with_age else ()))
     for m in re.finditer(r'"lockupViewModel":\{', page):
         chunk = page[m.end():m.end() + 12000]
         vid = re.search(r'"contentId":"([\w-]{11})"', chunk)
@@ -281,7 +293,8 @@ def videos_page(url):
         length = re.search(r'"text":"(\d{1,2}:\d{2}(?::\d{2})?)"', chunk)
         if title:
             seen.add(vid.group(1))
-            out.append((vid.group(1), _text(title.group(1)), minutes(length.group(1)) if length else None))
+            out.append((vid.group(1), _text(title.group(1)), minutes(length.group(1)) if length else None) +
+                       ((age_days(chunk[:8000]),) if with_age else ()))
     if not out:
         markers = {k: page.count(k) for k in ("videoRenderer", "lockupViewModel", "consent", "ytInitialData")}
         print(f"  no videos read from the page ({len(page)} bytes, {markers})", file=sys.stderr)

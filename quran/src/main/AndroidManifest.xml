@@ -12,6 +12,9 @@
 
     <!-- Lets the app find the phone's text-to-speech engine for the Qaida letter sounds. -->
     <queries>
+        <!-- Asks Cable TV whether this is the owner's device (OwnerTest). -->
+        <package android:name="com.naseerbabar.livetv" />
+        <package android:name="com.naseerbabar.livetvmax" />
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
@@ -45,5 +48,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/update_paths" />
         </provider>
+        <!-- Opens instead of the app when a new version closed by itself while starting (CrashGuard). -->
+        <activity
+            android:name=".RescueActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
     </application>
 </manifest>

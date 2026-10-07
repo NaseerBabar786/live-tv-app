@@ -1,5 +1,8 @@
 package com.livetv.app.ui
 
+import androidx.compose.runtime.key
+import com.livetv.app.BuildConfig
+import com.livetv.app.data.MyChannel
 import android.content.Context
 import android.view.TextureView
 import android.widget.Toast
@@ -96,7 +99,8 @@ private const val K_LEFT = "left"
 private const val K_RIGHT = "right"
 /** Which player the next card goes into (0 left, 1 right). */
 private const val K_NEXT = "next"
-private const val MAX_PER_ROW = 120
+/** The countries whose rows come first, in this order (after Favorites and All channels). */
+private val COUNTRY_ORDER = listOf("pk", "in", "ca", "us")
 
 private val Yellow = Color(0xFFFFD54F)
 private val PlayerShape = RoundedCornerShape(22.dp)
@@ -130,13 +134,17 @@ internal fun DuoMode(
     val prefs = remember { context.getSharedPreferences(PREFS, Context.MODE_PRIVATE) }
     val byId = remember(channels) { channels.associateBy { it.id } }
 
+    // Favorites, then every channel (our own first), then the countries: Pakistan, India, Canada and the
+    // US first, then all the others in list order (owner's order, 1.9.61). Rows scroll through every channel.
     val rows = remember(channels, favorites) {
         buildList {
             val favs = channels.filter { it.id in favorites }
             if (favs.isNotEmpty()) add(DuoRow("favorites", "Favorites", favs))
-            channels.mapNotNull { it.group }.distinct().forEach { group ->
-                add(DuoRow("group:$group", group, channels.filter { it.group == group }.take(MAX_PER_ROW)))
-            }
+            if (channels.isNotEmpty()) add(DuoRow("all", "All channels", channels))
+            val byGroup = channels.filter { it.group != null }.groupBy { it.group!! }
+                    byGroup.entries
+                .sortedBy { (_, list) -> COUNTRY_ORDER.indexOf(list.first().country?.lowercase()).let { if (it < 0) Int.MAX_VALUE else it } }
+                .forEach { (group, list) -> add(DuoRow("group:$group", group, list)) }
         }
     }
 
@@ -209,8 +217,15 @@ internal fun DuoMode(
             }
         }
     }
+    // Our YouTube channels and Bazaar Hits play their own page, silent like the other players (1.9.60),
+    // not their backup films.
+    val pageFailed = remember { mutableStateMapOf<String, Boolean>() }
+    val pages = (0..1).map { i ->
+        players[i]?.takeIf { playing && pageFailed[it.id] != true }
+            ?.let { MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }?.let { "$it&mute=1" }
+    }
     for (i in 0..1) {
-        LaunchedEffect(players[i]?.id, playing) {
+        LaunchedEffect(players[i]?.id, playing, pages[i]) {
             // The channel going away keeps its last frame as its card's picture.
             shownIds[i]?.let { if (showing[i] == true) keepPicture(it, views[i].picture()) }
             streams[i].stop()
@@ -220,7 +235,7 @@ internal fun DuoMode(
             if (!playing) return@LaunchedEffect
             if (i == 1) delay(1_200)
             shownIds[i] = channel.id
-            streams[i].play(channel)
+            if (pages[i] == null) streams[i].play(channel)
         }
     }
 
@@ -277,7 +292,7 @@ internal fun DuoMode(
             }
             val now = System.currentTimeMillis()
             val channel = wanted.firstOrNull { now - (browsePictureAt[it.id] ?: 0L) > PICTURE_FRESH_MS }
-            if (channel == null || YouTube.isYouTube(channel.url)) {
+            if (channel == null || YouTube.isYouTube(channel.url) || MyChannel.pageFor(channel, BuildConfig.VERSION_CODE) != null) {
                 if (channel != null) browsePictureAt[channel.id] = now
                 delay(1_000)
                 continue
@@ -462,6 +477,8 @@ internal fun DuoMode(
                         favorite = players[i]?.id in favorites,
                         showVideo = shownIds[i] != null && shownIds[i] == players[i]?.id,
                         showing = showing[i] == true,
+                        page = pages[i],
+                        onPageFailed = { players[i]?.let { c -> if (MyChannel.webPage(c) != null) pageFailed[c.id] = true } },
                         attach = { view -> views[i].view = view; streams[i].player.setVideoTextureView(view) },
                         detach = { view ->
                             if (views[i].view === view) views[i].view = null
@@ -543,6 +560,9 @@ private fun DuoPlayer(
     favorite: Boolean,
     showVideo: Boolean,
     showing: Boolean,
+    /** Our YouTube page for the channel, when it plays that way. */
+    page: String?,
+    onPageFailed: () -> Unit,
     attach: (TextureView) -> Unit,
     detach: (TextureView) -> Unit,
 ) {
@@ -576,7 +596,9 @@ private fun DuoPlayer(
         browsePictures[channel.id]?.let {
             Image(it, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
         }
-        if (showVideo) {
+        if (page != null) {
+            key(page) { WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = onPageFailed) }
+        } else if (showVideo) {
             AndroidView(
                 factory = { ctx -> TextureView(ctx).also(attach) },
                 onRelease = detach,

@@ -56,6 +56,7 @@ fun EditionTicker(
     always: Boolean = false,
     everyMs: Long = 0L,
     skip: () -> Boolean = { false },
+    band: Boolean = false,
 ) = Unit
 
 @Composable

@@ -73,7 +73,11 @@ fun SponsorScreen(loading: Boolean, sponsor: Sponsor?, onDone: () -> Unit) {
     }
     val focus = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    // An OK pressed just as the screen opens (the app starting again while a channel was being opened)
+    // must not land on the sponsor's website (1.9.58).
+    val openedAt = remember { android.os.SystemClock.uptimeMillis() }
     fun visit() {
+        if (android.os.SystemClock.uptimeMillis() - openedAt < 2_000) return
         if (shown != null) opener.open(shown)
         else opener.sponsor = Sponsor(
             id = "_bulkbazaar", name = "Bulk Bazaar Inc.", line = "", contact = "", start = "", end = "",

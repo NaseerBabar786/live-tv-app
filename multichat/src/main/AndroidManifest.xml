@@ -23,6 +23,12 @@
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
     <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
 
+    <queries>
+        <!-- Asks Cable TV whether this is the owner's device (OwnerTest). -->
+        <package android:name="com.naseerbabar.livetv" />
+        <package android:name="com.naseerbabar.livetvmax" />
+    </queries>
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -60,5 +66,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/update_paths" />
         </provider>
+        <!-- Opens instead of the app when a new version closed by itself while starting (CrashGuard). -->
+        <activity
+            android:name=".RescueActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
     </application>
 </manifest>

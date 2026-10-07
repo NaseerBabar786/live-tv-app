@@ -1,5 +1,7 @@
 package com.livecam.app.ui
 
+import com.livecam.app.data.OwnerTest
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -75,8 +77,15 @@ fun CameraGridScreen(
             Spacer(Modifier.width(10.dp))
             Text("Live Cam", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             Spacer(Modifier.width(8.dp))
-            Text("v$version", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            val context = LocalContext.current
+            Text(
+                "v$version",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.clickable { OwnerTest.tap(context) }, // 7 taps: owner's test updates
+            )
             Spacer(Modifier.weight(1f))
+            TestVersionButton(Modifier.padding(end = 10.dp).focusRing(CircleShape))
             OutlinedButton(onClick = onOpenWyze, modifier = Modifier.focusRing(CircleShape)) {
                 Text("Wyze")
             }

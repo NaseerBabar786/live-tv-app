@@ -60,6 +60,7 @@
   <nav class="tabs" id="tabs" aria-label="Our channels"></nav>
   <div class="stage" id="stage">
     <video id="video" playsinline muted autoplay></video>
+    <iframe id="block" class="hidden" title="Upcoming movie trailers" allow="autoplay; encrypted-media" style="position:absolute;inset:0;width:100%;height:100%;border:0;z-index:5;background:#000"></iframe>
     <img class="bug tr hidden" id="bug" alt="">
     <div class="off hidden" id="off"></div>
     <button class="btn primary sound" id="sound">🔊 Tap for sound</button>
@@ -84,7 +85,8 @@
 
 <script type="module">
 import { firebaseConfig } from "../firebase-config.js";
-import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS } from "./schedule.js";
+import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, expand, blockPage } from "./schedule.js";
+import { mountCards } from "./cards.js";
 const $ = id => document.getElementById(id);
 const video = $("video");
 // Which of our channels: ?c=filmein is Bazaar Cinema, ?c=sur Bazaar Music, ?c=kids Bazaar Kids, ?c=sports Bazaar Sports, ?c=travel Bazaar Travel, ?c=comedy Bazaar Comedy, otherwise Bazaar TV.
@@ -112,18 +114,21 @@ $("dial").textContent = $("dial2").textContent = station.dial;
 $("credits").textContent = station.credits;
 
 /** The owner's public settings (channel/<id>), or the ready-made schedule until there are any. */
-async function load() {
+// Our channels keep their fixed names (owner, 2026-10-07), whatever a saved schedule says.
+const load = async () => Object.assign(await loadSchedule(), { name: station.name });
+async function loadSchedule() {
   try {
     const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/channel/${station.id}?key=${firebaseConfig.apiKey}`;
     const r = await fetch(url, { cache: "no-store" });
     if (r.ok) {
       const data = (await r.json()).fields?.data?.stringValue;
-      if (data) return JSON.parse(data);
+      // Bazaar TV's upcoming trailers: the day's list takes its entry's place.
+      if (data) return expand(JSON.parse(data));
     }
   } catch {}
   const ready = await (await fetch(station.ready, { cache: "no-store" })).json();
   // A channel borrowing another's free films as its backup keeps its own name and logo.
-  return station.backup ? { ...ready, name: station.name, logo: station.logo } : ready;
+  return expand(station.backup ? { ...ready, name: station.name, logo: station.logo, ...(station.noBug ? { logoCorner: "off" } : {}) } : ready);
 }
 
 let c = await load(), tv = null;
@@ -153,7 +158,7 @@ function renderGuide() {
     if (i === 0) d.className = "cur";
     d.innerHTML = `<span class="t"></span><span></span><span class="l"></span>`;
     d.children[0].textContent = i === 0 ? "Now" : timeText(g.at, tz);
-    d.children[1].textContent = g.video.title;
+    d.children[1].textContent = g.video.title + (g.resumed ? " (continues)" : "");
     d.children[2].textContent = lengthText(g.video.secs);
     $("guide").appendChild(d);
   });
@@ -171,8 +176,23 @@ function onOff(on) {
   $("nowText").textContent = "Off air";
 }
 show();
+// Every 10 minutes "Up next", every 20 minutes today's shows, with the ad breaks.
+mountCards($("stage"), () => c);
 if (c.active === false) onOff({});
-else tv = tuneIn(video, c, { onChange, onOff });
+else tv = tuneIn(video, c, { onChange, onOff, onBlock });
+
+/** Bazaar TV's upcoming trailers: our locked YouTube page over the player while they're on. */
+function onBlock(b) {
+  const frame = $("block");
+  if (!b) {
+    frame.classList.add("hidden");
+    if (frame.getAttribute("src")) frame.removeAttribute("src");
+    return;
+  }
+  const src = blockPage(c, b);
+  if (frame.getAttribute("src") !== src) frame.src = src;
+  frame.classList.remove("hidden");
+}
 
 $("sound").onclick = () => { video.muted = false; video.play().catch(() => {}); $("sound").classList.add("hidden"); };
 $("full").onclick = () => $("stage").requestFullscreen?.();
@@ -182,10 +202,11 @@ setInterval(async () => {
     const n = await load();
     if (JSON.stringify(n) === JSON.stringify(c)) return;
     c = n; show();
-    if (tv) tv.update(c); else if (c.active !== false) tv = tuneIn(video, c, { onChange, onOff });
+    if (tv) tv.update(c); else if (c.active !== false) tv = tuneIn(video, c, { onChange, onOff, onBlock });
   } catch {}
 }, 5 * 60000);
 </script>
 <script src="../assets/visits.js"></script>
+<script src="clock.js"></script>
 </body>
 </html>

@@ -30,5 +30,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/update_paths" />
         </provider>
+        <!-- Answers our other apps whether this is the owner's device (OwnerProvider, same signing key only). -->
+        <provider
+            android:name="com.livetv.app.OwnerProvider"
+            android:authorities="${applicationId}.owner"
+            android:exported="true" />
     </application>
 </manifest>

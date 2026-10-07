@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (CrashGuard.start(this)) return
         // White bars with dark icons, like the website, whatever the phone's dark-mode setting.
         val bars = SystemBarStyle.light(android.graphics.Color.WHITE, android.graphics.Color.WHITE)
         enableEdgeToEdge(statusBarStyle = bars, navigationBarStyle = bars)
@@ -67,7 +68,12 @@ class MainActivity : ComponentActivity() {
 
                 Box(Modifier.fillMaxSize().background(Bg).safeDrawingPadding()) {
                     when {
-                        help -> HelpScreen(store.isTv, onBack = { help = false }, onPermission = store::openPermissionSettings)
+                        help -> HelpScreen(
+                            store.isTv,
+                            onBack = { help = false },
+                            onPermission = store::openPermissionSettings,
+                            onTryTest = { help = false; store.refresh(manual = true) },
+                        )
                         open != null -> DetailScreen(
                             open, state, store.isTv,
                             onBack = { openId = null },

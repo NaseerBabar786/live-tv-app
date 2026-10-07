@@ -1,5 +1,7 @@
 package com.multichat.app.ui
 
+import com.multichat.app.data.OwnerTest
+import androidx.compose.foundation.clickable
 import android.content.Intent
 import android.provider.Settings as AndroidSettings
 import androidx.compose.foundation.background
@@ -157,12 +159,14 @@ fun SettingsDialog(activity: MainActivity, version: String, onDismiss: () -> Uni
                     color = Muted,
                     fontSize = 13.sp,
                 )
+                TestVersionButton()
                 Text(
                     "Multi Chat $version. Each account is the official WhatsApp Web in its own separate box, " +
                         "saved only on this phone. Multi Chat is not made by or connected with WhatsApp or Meta.",
                     color = Muted,
                     fontSize = 13.sp,
-                    modifier = Modifier.padding(top = 6.dp, bottom = 24.dp),
+                    // 7 taps: owner's test updates
+                    modifier = Modifier.padding(top = 6.dp, bottom = 24.dp).clickable { OwnerTest.tap(activity) },
                 )
             }
         }

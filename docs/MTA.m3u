@@ -1,5 +1,15 @@
 #EXTM3U
 # MTA (Muslim Television Ahmadiyya) programmes from its own YouTube channel.
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/Ji7Rv2IvMas/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",International Quran Competition | Semi Final
+https://www.youtube.com/watch?v=Ji7Rv2IvMas
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/znNjIzp-RCw/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",International Quran Competition | Final
+https://www.youtube.com/watch?v=znNjIzp-RCw
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/08hGAbU4XXQ/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Shows" group-title="MTA Quran",Holy Qur’an Recitation | Part 5
+https://www.youtube.com/watch?v=08hGAbU4XXQ
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/7Ya8QS8fANA/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Shows" group-title="MTA Quran",Holy Qur’an Recitation | Part 30
+https://www.youtube.com/watch?v=7Ya8QS8fANA
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/EiOmPaQST9U/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Shows" group-title="MTA Quran",Holy Qur’an Recitation | Part 29
+https://www.youtube.com/watch?v=EiOmPaQST9U
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/jWp8aAdRbyI/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 27
 https://www.youtube.com/watch?v=jWp8aAdRbyI
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/194V1YfE93g/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 12
@@ -38,6 +48,12 @@ https://www.youtube.com/watch?v=He4j1tTKycU
 https://www.youtube.com/watch?v=TiJlOFNSc8M
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/YHdqnPRNHxc/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Holy Qur'an Recitation | Mahmud Wardi Sahib
 https://www.youtube.com/watch?v=YHdqnPRNHxc
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/y-Zczf_6xdE/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",FS4KIDS | EP238: The Generosity of the Holy Prophet (sa)
+https://www.youtube.com/watch?v=y-Zczf_6xdE
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/sQGlQ-ylql8/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",FS4KIDS | EP232: The Promised Messiah’s (as) Truthfulness in All Circumstances
+https://www.youtube.com/watch?v=sQGlQ-ylql8
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/xiFSMz5EDlk/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",FS4KIDS | EP 248: The Promised Messiah's (as) Gratitude Towards Allah
+https://www.youtube.com/watch?v=xiFSMz5EDlk
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/FGgcDDgiI7Q/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Rah-e-Huda | 3rd October 2026
 https://www.youtube.com/watch?v=FGgcDDgiI7Q
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/V2innw8_dns/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Fazl: Episode 1 - A mission without a mosque
@@ -90,6 +106,8 @@ https://www.youtube.com/watch?v=fbKxdP2rLNU
 https://www.youtube.com/watch?v=3JTOjhljKL4
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/ECEbZPxdZRE/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Programmes",Deep Dive | Miraculous Lexicon of the Qur’an
 https://www.youtube.com/watch?v=ECEbZPxdZRE
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/n2rmSPPHTmc/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Friday Sermons",Friday Sermon 4 Kids | EP247: Gratefulness to Allah
+https://www.youtube.com/watch?v=n2rmSPPHTmc
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/qyzbOq2OJ_I/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Friday Sermons",Friday Sermon | 8th May 2026
 https://www.youtube.com/watch?v=qyzbOq2OJ_I
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/tqWcUhc91Lk/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Friday Sermons",Friday Sermon | 7th August 2026
@@ -144,6 +162,8 @@ https://www.youtube.com/watch?v=0A-9bWJfhjI
 https://www.youtube.com/watch?v=xv7BoXaARds
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/jSngW2BXaUA/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Friday Sermons",Friday Sermon - 24th July 2026
 https://www.youtube.com/watch?v=jSngW2BXaUA
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/wC696Qtv8tQ/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",FS4 KIDS | EP 249: The Promised Messiah's (as) Gratitude Towards Allah & Others
+https://www.youtube.com/watch?v=wC696Qtv8tQ
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/G6xjgirmIB8/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Real Talk Lajna: Tarbiyyat Of Children   (English)
 https://www.youtube.com/watch?v=G6xjgirmIB8
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/SW4daSovjEA/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Kids Space | Episode 5

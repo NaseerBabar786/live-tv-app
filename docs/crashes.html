@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crash reports</title>
+<meta name="description" content="Crash reports from our apps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="robots" content="noindex">
+<style>
+  .wrap { max-width: 1640px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin: 0 0 20px; }
+  .stat { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 14px 16px; }
+  .stat .n { font-size: 30px; font-weight: 800; color: var(--focus); }
+  .stat .l { color: var(--muted); font-size: 14px; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--surface-2); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--surface-2); white-space: nowrap; }
+  th { background: var(--surface); color: var(--muted); font-weight: 700; position: sticky; top: 0; }
+  td.err { white-space: normal; max-width: 520px; }
+  pre { white-space: pre-wrap; word-break: break-word; font-size: 12px; background: var(--surface); border: 1px solid var(--surface-2); border-radius: 10px; padding: 10px; max-height: 360px; overflow: auto; }
+  details summary { cursor: pointer; color: var(--focus); }
+  select, input[type=search] { width: 100%; max-width: 360px; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Cable TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Cable TV</span>
+    </a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="suggestions">Suggestions</a>
+      <a href="./#download">Download</a>
+      <a href="admin" class="admin-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Crash reports</h1>
+  <p class="lead">When one of our apps closes because of an error, it sends a report the next time it opens. The same problem (same app, version and error) is grouped into one row. Only the owner's account can see this page.</p>
+  <div id="notReady" class="panel hidden">Crash reports will appear here once sign-in is set up.</div>
+  <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
+  <div id="denied" class="panel hidden">This account can't see crash reports. <button class="btn" data-signout>Use another account</button></div>
+  <div id="dash" class="hidden">
+    <div class="stats" id="stats"></div>
+    <div class="row" style="justify-content:space-between;margin-bottom:12px">
+      <div class="row"><select id="app"><option value="">All apps</option></select> <input type="search" id="q" placeholder="Search error, version or device"></div>
+      <div class="row"><button class="btn" id="reload">Refresh</button><button class="btn" data-signout>Sign out</button></div>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>App</th><th>Version</th><th>Times</th><th>Devices</th><th>On start</th><th>Last seen</th><th>Error</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+    <p class="small">"On start" counts crashes in the first 30 seconds: those make the app offer to go back to the last good version. Delete a row once the problem is fixed.</p>
+  </div>
+  <p class="err" id="err"></p>
+</main>
+<footer>
+  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+</footer>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
+const $ = id => document.getElementById(id);
+const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
+const APPS = {
+  "com.naseerbabar.livetv": "Cable TV", "com.naseerbabar.livetvmax": "Live TV Max", "com.naseerbabar.appbazaar": "App Bazaar",
+  "com.naseerbabar.iqraquran": "Iqra Quran", "com.naseerbabar.livecam": "Live Cam", "com.naseerbabar.multichat": "Multi Chat",
+  "com.naseerbabar.claudenotes": "Notes for Claude",
+};
+const appName = id => APPS[id] || id;
+
+window.addEventListener("unhandledrejection", () => { $("err").textContent = "Couldn't load this page. Check your internet connection and refresh."; });
+if (!configured) {
+  show("notReady");
+} else {
+  const V = "10.12.2";
+  const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+  const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
+  const fs = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = fs.getFirestore(app);
+  let groups = [];
+
+  $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
+  document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
+  $("reload").onclick = load;
+  $("q").oninput = render;
+  $("app").onchange = render;
+
+  onAuthStateChanged(auth, async user => {
+    $("err").textContent = "";
+    if (!user) return show("signedOut");
+    if (!ADMIN_EMAIL || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return show("denied");
+    try { localStorage.setItem("lt_admin", "1"); } catch {}
+    show("dash");
+    load();
+  });
+
+  async function load() {
+    try {
+      const snap = await fs.getDocs(fs.collection(db, "crashReports"));
+      const map = new Map();
+      for (const d of snap.docs) {
+        const r = { id: d.id, ...d.data() };
+        r.time = r.time?.toDate?.() || null;
+        const key = [r.app, r.version, r.error].join("|");
+        const g = map.get(key) || { app: r.app, version: r.version, error: r.error || "", stack: r.stack || "", ids: [], devices: new Set(), onStart: 0, last: null };
+        g.ids.push(r.id);
+        g.devices.add(`${r.device} · Android ${r.android}`);
+        if (r.onStart) g.onStart++;
+        if (!g.last || (r.time && r.time > g.last)) { g.last = r.time; g.stack = r.stack || g.stack; }
+        map.set(key, g);
+      }
+      groups = [...map.values()].sort((a, b) => (b.last || 0) - (a.last || 0));
+      const sel = $("app"), keep = sel.value;
+      sel.innerHTML = '<option value="">All apps</option>';
+      [...new Set(groups.map(g => g.app))].forEach(a => { const o = document.createElement("option"); o.value = a; o.textContent = appName(a); sel.append(o); });
+      sel.value = keep;
+      stats(snap.size); render();
+    } catch (e) { $("err").textContent = "Couldn't load crash reports: " + e.message + " (are the Firestore rules for crashReports published?)"; }
+  }
+
+  function stats(total) {
+    const day = 864e5, now = Date.now();
+    const items = [
+      ["Crash reports", total],
+      ["Different problems", groups.length],
+      ["Problems in the last 24 h", groups.filter(g => g.last && now - g.last < day).length],
+      ["Crashed on start", groups.reduce((n, g) => n + g.onStart, 0)],
+    ];
+    $("stats").innerHTML = "";
+    for (const [l, n] of items) {
+      const el = document.createElement("div"); el.className = "stat";
+      el.innerHTML = '<div class="n"></div><div class="l"></div>';
+      el.querySelector(".n").textContent = n; el.querySelector(".l").textContent = l;
+      $("stats").append(el);
+    }
+  }
+
+  const fmt = d => d ? d.toLocaleString([], { dateStyle: "medium", timeStyle: "short" }) : "";
+  function render() {
+    const q = $("q").value.trim().toLowerCase(), a = $("app").value;
+    const tbody = $("rows"); tbody.innerHTML = "";
+    const list = groups.filter(g => (!a || g.app === a) && (!q || [g.error, g.version, [...g.devices].join(" ")].join(" ").toLowerCase().includes(q)));
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="8">No crash reports. 🎉</td></tr>'; return; }
+    for (const g of list) {
+      const tr = document.createElement("tr");
+      [appName(g.app), g.version, g.ids.length, g.devices.size, g.onStart, fmt(g.last)].forEach(v => {
+        const td = document.createElement("td"); td.textContent = v; tr.append(td);
+      });
+      const err = document.createElement("td"); err.className = "err";
+      const det = document.createElement("details");
+      const sum = document.createElement("summary"); sum.textContent = g.error || "(no message)";
+      const pre = document.createElement("pre"); pre.textContent = g.stack + "\n\nDevices:\n" + [...g.devices].join("\n");
+      det.append(sum, pre); err.append(det); tr.append(err);
+      const act = document.createElement("td");
+      const del = document.createElement("button"); del.className = "btn"; del.textContent = "Fixed, delete";
+      del.onclick = async () => {
+        if (!confirm("Delete these " + g.ids.length + " report(s)?")) return;
+        try { await Promise.all(g.ids.map(id => fs.deleteDoc(fs.doc(db, "crashReports", id)))); load(); }
+        catch (e) { $("err").textContent = "Couldn't delete: " + e.message; }
+      };
+      act.append(del); tr.append(act);
+      tbody.append(tr);
+    }
+  }
+}
+</script>
+</body>
+</html>

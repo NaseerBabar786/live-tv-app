@@ -1,5 +1,7 @@
 package com.livetv.app.ui
 
+import com.livetv.app.BuildConfig
+import com.livetv.app.data.MyChannel
 import android.view.TextureView
 import android.widget.Toast
 import androidx.compose.animation.core.Animatable
@@ -185,7 +187,10 @@ internal fun CarouselMode(
         }
     }
     val currentOnWatch by rememberUpdatedState(onWatch)
-    LaunchedEffect(current?.id, playing) {
+    // Our YouTube channels and Bazaar Hits play their own page in the middle card (1.9.60), not their backup films.
+    var pageFailed by remember(current?.id) { mutableStateOf(false) }
+    val page = current?.takeIf { playing && !pageFailed }?.let { MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
+    LaunchedEffect(current?.id, playing, page) {
         movedAt = System.currentTimeMillis()
         // The channel sliding away keeps its last frame as its picture.
         playingId?.let { if (showing) keepPicture(it, view.picture()) }
@@ -197,7 +202,7 @@ internal fun CarouselMode(
         delay(500) // only once the cursor stops
         currentOnWatch(channel)
         playingId = channel.id
-        stream.play(channel)
+        if (page == null) stream.play(channel)
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
     DisposableEffect(playingId, sound, playing) {
@@ -247,7 +252,7 @@ internal fun CarouselMode(
             }
             val now = System.currentTimeMillis()
             val channel = neighbours.firstOrNull { now - (browsePictureAt[it.id] ?: 0L) > PICTURE_FRESH_MS }
-            if (channel == null || YouTube.isYouTube(channel.url)) {
+            if (channel == null || YouTube.isYouTube(channel.url) || MyChannel.pageFor(channel, BuildConfig.VERSION_CODE) != null) {
                 if (channel != null) browsePictureAt[channel.id] = now
                 delay(1_000)
                 continue
@@ -387,7 +392,13 @@ internal fun CarouselMode(
                             modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (grabShowing) 1f else 0f },
                         )
                     }
-                    if (middle && playingId == channel.id) {
+                    if (middle && playingId == channel.id && page != null) {
+                        key(page) {
+                            WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = {
+                                if (MyChannel.webPage(channel) != null) pageFailed = true
+                            })
+                        }
+                    } else if (middle && playingId == channel.id) {
                         AndroidView(
                             factory = { ctx -> TextureView(ctx).also { view.view = it; stream.player.setVideoTextureView(it) } },
                             onRelease = {

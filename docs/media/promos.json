@@ -1,5 +1,5 @@
 {
-  "note": "Our own Cable TV promos for the breaks on our YouTube channels (channel/promo.js). They play in turn. Add a new one by putting the mp4 in docs/media and adding a line here. Never paid sponsor ads.",
+  "note": "Our own Cable TV promos for the breaks on our YouTube channels (channel/promo.js). They play in turn. Add a new one by putting the mp4 in docs/media and adding a line here. Never paid sponsor ads. The owner approved Ads 1-4 for the breaks on 2026-10-07 ('run different ad every time'). Only ads the owner has approved for the breaks go here; the rest wait in the Media Library (Cable TV Promos).",
   "promos": [
     {
       "src": "cabletv-ad-1.mp4",
@@ -8,12 +8,17 @@
     },
     {
       "src": "cabletv-ad-2.mp4",
-      "title": "Cable TV Video Ad 2: Bazaar channels",
+      "title": "Cable TV Video Ad 2",
       "secs": 30
     },
     {
       "src": "cabletv-ad-3.mp4",
-      "title": "Cable TV Video Ad 3: free + install",
+      "title": "Cable TV Video Ad 3",
+      "secs": 30
+    },
+    {
+      "src": "cabletv-ad-4.mp4",
+      "title": "Cable TV Video Ad 4",
       "secs": 30
     }
   ]

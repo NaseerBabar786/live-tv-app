@@ -1,5 +1,6 @@
 package com.livetv.app.ui
 
+import com.livetv.app.data.OwnerTest
 import android.content.ActivityNotFoundException
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
@@ -92,6 +93,7 @@ fun SettingsDialog(
     var showingSuggestions by rememberSaveable { mutableStateOf(false) }
     var showingMessages by rememberSaveable { mutableStateOf(false) }
     var changingPassword by rememberSaveable { mutableStateOf(false) }
+    var editingBilling by rememberSaveable { mutableStateOf(false) }
     val account = remember { Account.get(context) }
     val signedIn by account.user.collectAsState()
     var findingPlaylists by rememberSaveable { mutableStateOf(false) }
@@ -142,6 +144,11 @@ fun SettingsDialog(
         return
     }
 
+    if (editingBilling) {
+        BillingDialog(onDismiss = { editingBilling = false })
+        return
+    }
+
     if (showingAppBazaar) {
         AppBazaarDialog(onDismiss = { showingAppBazaar = false })
         return
@@ -185,6 +192,7 @@ fun SettingsDialog(
                         "Version $appVersion",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.clickable { OwnerTest.tap(context) }, // 7 taps: owner's test updates
                     )
                 }
             }
@@ -194,15 +202,19 @@ fun SettingsDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
-                Text("Channel list", fontWeight = FontWeight.Bold)
-                SourceButton("Main list", provider == ChannelRepository.PROVIDER_FAMELACK) {
-                    onProviderChange(ChannelRepository.PROVIDER_FAMELACK)
-                }
-                SourceButton("Working channels only (checked daily)", provider == ChannelRepository.PROVIDER_CHECKED) {
-                    onProviderChange(ChannelRepository.PROVIDER_CHECKED)
-                }
+                TestVersionButton(Modifier.fillMaxWidth().focusGlow())
+                // Cable TV always uses the working channels (1.9.60); Live TV Max still offers the choice.
+                if (Edition.MAX) {
+                    Text("Channel list", fontWeight = FontWeight.Bold)
+                    SourceButton("Main list", provider == ChannelRepository.PROVIDER_FAMELACK) {
+                        onProviderChange(ChannelRepository.PROVIDER_FAMELACK)
+                    }
+                    SourceButton("Working channels only (checked daily)", provider == ChannelRepository.PROVIDER_CHECKED) {
+                        onProviderChange(ChannelRepository.PROVIDER_CHECKED)
+                    }
 
-                HorizontalDivider()
+                    HorizontalDivider()
+                }
                 Text("Languages", fontWeight = FontWeight.Bold)
                 SourceButton(
                     label = when {
@@ -302,6 +314,12 @@ fun SettingsDialog(
                             onClick = { onDismiss(); Plans.showPlans() },
                             modifier = Modifier.fillMaxWidth().focusGlow(),
                         ) { Text(if (offer.enforced) "⭐ My package: ${tier.label}" else "⭐ Packages") }
+                        if (!account.isAdmin) {
+                            OutlinedButton(
+                                onClick = { editingBilling = true },
+                                modifier = Modifier.fillMaxWidth().focusGlow(),
+                            ) { Text("💳 My billing details") }
+                        }
                     }
                     val u = signedIn!!
                     Text(
@@ -329,9 +347,7 @@ fun SettingsDialog(
                         if (open == null || runCatching { context.startActivity(open) }.isFailure) showingAppBazaar = true
                     },
                     modifier = Modifier.fillMaxWidth().focusGlow(),
-                ) { Text("More free apps: App Bazaar") }
-
-                BulkBazaarBanner()
+                ) { Text("App Bazaar") }
             }
         },
         confirmButton = {
@@ -489,36 +505,6 @@ private fun MultiCountryPicker(
     )
 }
 
-/** Bulk Bazaar Inc.'s banner at 80% width; opens bulkbazaar.ca. Uses the wide banner when there is room. */
-@Composable
-private fun BulkBazaarBanner() {
-    val context = LocalContext.current
-    val shape = RoundedCornerShape(8.dp)
-    BoxWithConstraints(Modifier.fillMaxWidth().padding(vertical = 14.dp), contentAlignment = Alignment.Center) {
-        val wide = maxWidth >= 440.dp
-        Image(
-            painter = painterResource(if (wide) R.drawable.bulkbazaar_wide else R.drawable.bulkbazaar_phone),
-            contentDescription = "Bulk Bazaar Inc.: wholesale T-shirt bags. Visit bulkbazaar.ca",
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .aspectRatio(if (wide) 728f / 90f else 320f / 100f)
-                .focusGlow(shape)
-                .clip(shape)
-                .clickable {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bulkbazaar.ca"))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    try {
-                        context.startActivity(intent)
-                    } catch (e: ActivityNotFoundException) {
-                        // TVs often have no web browser.
-                        Toast.makeText(context, "Visit www.bulkbazaar.ca", Toast.LENGTH_LONG).show()
-                    }
-                },
-        )
-    }
-}
-
 private const val APP_BAZAAR = "apps.bulkbazaar.ca"
 private const val APP_BAZAAR_PACKAGE = "com.naseerbabar.appbazaar"
 private const val APP_BAZAAR_APK = "https://github.com/NaseerBabar786/live-tv-app/releases/download/app-bazaar/AppBazaar.apk"
@@ -555,7 +541,7 @@ private fun AppBazaarDialog(onDismiss: () -> Unit) {
     }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("More free apps: App Bazaar") },
+        title = { Text("App Bazaar") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

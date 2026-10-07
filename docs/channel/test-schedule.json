@@ -1,52 +1,52 @@
 {
- "name": "Bazaar TV",
+ "name": "Bazaar TV One",
  "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png",
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca  ·  This is a 1-hour test programme",
+ "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  News every hour  ·  Urdu and Hindi dramas, music, new movie trailers, a Hindi film, cartoons, cooking and comedy  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
  "tickerOn": true,
  "videos": [
   {
    "id": "welcome",
-   "title": "Welcome to Bazaar TV",
+   "title": "بازار ٹی وی میں خوش آمدید",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-welcome.mp4",
    "secs": 10,
    "kind": "ident"
   },
   {
    "id": "break",
-   "title": "Commercial break",
+   "title": "وقفہ",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-break.mp4",
    "secs": 5,
    "kind": "ident"
   },
   {
    "id": "next",
-   "title": "Coming up next",
+   "title": "اگلا پروگرام",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-coming-up.mp4",
    "secs": 8,
    "kind": "ident"
   },
   {
    "id": "adbb",
-   "title": "Ad: Bulk Bazaar",
+   "title": "اشتہار: بلک بازار",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-bulk-bazaar.mp4",
    "secs": 20,
    "kind": "ad"
   },
   {
    "id": "adhere",
-   "title": "Ad: Advertise on Bazaar TV",
+   "title": "اشتہار: بازار ٹی وی پر اشتہار دیں",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
   },
   {
    "id": "promo",
-   "title": "Promo: Cable TV app",
-   "url": "https://tv.bulkbazaar.ca/channel/media/promo-free-live-tv.mp4",
-   "secs": 15,
+   "title": "کیبل ٹی وی",
+   "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-4.mp4",
+   "secs": 30,
    "kind": "ad"
   },
   {
@@ -142,79 +142,324 @@
   },
   {
    "id": "story1",
-   "title": "Story: The Lion and the Clever Rabbit (Urdu)",
+   "title": "کہانی: شیر اور چالاک خرگوش",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/story-lion-and-rabbit.mp4",
    "secs": 202,
+   "kind": "programme"
+  },
+  {
+   "id": "trailers",
+   "title": "آنے والی ہندی اور پاکستانی فلموں کے ٹریلر",
+   "url": "https://tv.bulkbazaar.ca/channel/trailers.json",
+   "secs": 0,
+   "kind": "trailers"
+  },
+  {
+   "id": "madsci",
+   "title": "سپرمین: پاگل سائنسدان (اردو)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/superman-1941-urdu.mp4",
+   "secs": 628,
+   "kind": "programme"
+  },
+  {
+   "id": "apollo",
+   "title": "Apollo 11: the Moon landing",
+   "url": "https://archive.org/download/PartiallyRestoredVideoEventsFromTheApollo11Mission/Apollo_11_Intro_H264_720p.mp4",
+   "secs": 137,
+   "kind": "programme"
+  },
+  {
+   "id": "music",
+   "title": "مقبول اردو اور ہندی گانے",
+   "url": "https://tv.bulkbazaar.ca/channel/music-videos.json",
+   "secs": 0,
+   "kind": "music"
+  },
+  {
+   "id": "drama-1",
+   "title": "ڈرامہ",
+   "url": "https://tv.bulkbazaar.ca/channel/block-drama-1.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "drama-2",
+   "title": "ڈرامہ",
+   "url": "https://tv.bulkbazaar.ca/channel/block-drama-2.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "drama-3",
+   "title": "ڈرامہ",
+   "url": "https://tv.bulkbazaar.ca/channel/block-drama-3.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "cooking",
+   "title": "کھانا پکائیں",
+   "url": "https://tv.bulkbazaar.ca/channel/block-cooking.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "comedy",
+   "title": "مزاحیہ: تارک مہتا کا الٹا چشمہ",
+   "url": "https://tv.bulkbazaar.ca/channel/block-comedy.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "film",
+   "title": "ہندی فلم",
+   "url": "https://tv.bulkbazaar.ca/channel/block-film.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
+   "id": "sprite-hi",
+   "title": "اسپرائٹ فرائٹ (ہندی)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sprite-fright-hindi.mp4",
+   "secs": 630,
+   "kind": "programme"
+  },
+  {
+   "id": "sintel-ur",
+   "title": "سنٹیل (اردو)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel-urdu.mp4",
+   "secs": 888,
+   "kind": "programme"
+  },
+  {
+   "id": "cosmos-ur",
+   "title": "کاسموس لانڈرومیٹ (اردو)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/cosmos-laundromat-urdu.mp4",
+   "secs": 731,
+   "kind": "programme"
+  },
+  {
+   "id": "terror-hi",
+   "title": "مریخ پر اترنے کے سات منٹ (ہندی)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-hindi.mp4",
+   "secs": 303,
+   "kind": "programme"
+  },
+  {
+   "id": "tos-hi",
+   "title": "ٹیئرز آف اسٹیل (ہندی)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-hindi.mp4",
+   "secs": 734,
+   "kind": "programme"
+  },
+  {
+   "id": "news-headlines",
+   "title": "Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4",
+   "secs": 180,
+   "kind": "programme"
+  },
+  {
+   "id": "news-full",
+   "title": "Bazaar TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4",
+   "secs": 600,
    "kind": "programme"
   }
  ],
  "slots": [
   {
    "day": "all",
+   "time": "00:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "01:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "02:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "03:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "04:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "05:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "06:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "07:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
    "time": "08:00",
-   "video": "popeye"
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "09:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "10:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "11:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "12:00",
+   "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "13:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "14:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "15:00",
+   "video": "news-full"
   },
   {
    "day": "all",
    "time": "16:00",
-   "video": "superman"
+   "video": "news-headlines"
   },
   {
    "day": "all",
    "time": "17:00",
-   "video": "gulliver"
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "18:00",
+   "video": "news-full"
   },
   {
    "day": "all",
    "time": "19:00",
-   "video": "raja"
+   "video": "news-headlines"
   },
   {
    "day": "all",
    "time": "20:00",
-   "video": "sintel"
+   "video": "news-headlines"
   },
   {
    "day": "all",
    "time": "21:00",
-   "video": "safety"
+   "video": "news-full"
   },
   {
    "day": "all",
-   "time": "22:30",
-   "video": "nasaiss"
+   "time": "22:00",
+   "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "23:00",
+   "video": "news-headlines"
   }
  ],
  "loop": [
   "welcome",
-  "bbb",
-  "break",
-  "adbb",
-  "adhere",
   "next",
-  "ed",
-  "break",
-  "promo",
-  "adbb",
-  "next",
-  "tostrailer",
-  "llama",
-  "story1",
-  "break",
-  "adhere",
-  "adbb",
-  "next",
-  "tos",
+  "drama-3",
   "break",
   "adbb",
   "promo",
   "next",
-  "edtrailer",
-  "sintel",
+  "madsci",
+  "break",
+  "adhere",
+  "adbb",
+  "next",
+  "drama-1",
+  "break",
+  "promo",
+  "adbb",
+  "next",
+  "music",
   "break",
   "adbb",
   "adhere",
+  "next",
+  "cooking",
+  "break",
   "promo",
+  "next",
+  "sprite-hi",
+  "break",
+  "adbb",
+  "next",
+  "trailers",
+  "break",
+  "promo",
+  "adhere",
+  "next",
+  "comedy",
+  "break",
+  "adbb",
+  "next",
+  "film",
+  "break",
+  "promo",
+  "adbb",
+  "next",
+  "sintel-ur",
+  "break",
+  "adhere",
+  "next",
+  "drama-2",
+  "break",
+  "adbb",
+  "adhere",
+  "next",
+  "cosmos-ur",
+  "terror-hi",
+  "break",
+  "promo",
+  "adbb",
+  "next",
+  "tos-hi",
+  "break",
+  "adhere",
+  "adbb",
+  "next"
+ ],
+ "fillers": [
+  "promo",
+  "terror-hi",
+  "adhere",
+  "adbb",
   "next"
  ]
 }
