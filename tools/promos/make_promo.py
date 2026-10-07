@@ -2,12 +2,12 @@
 """
 Makes one "coming up" promo for a programme booked on Bazaar TV, like real channels run: fast cuts
 of the programme's own pictures on the beat, its name and time slot, an announcer (Urdu by default)
-and original music, then an end card with our logo. Every second has real video moving.
+and free-licence music (tools/music/library.py), then an end card with our logo. Every second has real video moving.
 
 usage: make_promo.py spec.json out.mp4
 spec: { "title": "Sintel", "when": "Every Friday · 8 PM", "day": "fri", "time": "20:00",
         "videos": ["https://…/ep1.mp4", …] (episodes: pictures come from the first few),
-        "series": true/false, "credit": "Blender Foundation (CC BY)", "mood": "cinematic"|"energetic",
+        "series": true/false, "credit": "Blender Foundation (CC BY)", "mood": "cinematic"|"energetic" (both use tools/music/library.py),
         "secs": 20 or 30, "lang": "ur"|"en", "logo": "docs/channel/logos/bazaar-tv.png" }
 
 Needs ffmpeg/ffprobe, numpy, pillow; edge-tts for the announcer (left out when it can't be reached).
@@ -17,6 +17,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, "..", "music"))
+import library as music_lib  # noqa: E402
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 # Full HD (owner, 2026-10-07: the 720p promos looked soft on a big TV). The layout was drawn for
 # 1280×720; px() scales those numbers.
@@ -308,9 +310,9 @@ def end_card(t, spec, logo):
     k4 = ease((t - 1.2) / 0.4)
     fs = FONT("SemiBold", 30)
     shadow_text(d, (W // 2, y + px(90)), "Channel 1 on the free Cable TV app  ·  tv.bulkbazaar.ca", fs, (255, 255, 255, int(235 * k4)), "ma")
-    if spec.get("credit"):
-        fc = FONT("SemiBold", 18)
-        d.text((W // 2, H - px(34)), spec["credit"], font=fc, fill=(220, 220, 220, int(200 * k4)), anchor="ma")
+    line = "  ·  ".join(x for x in (spec.get("credit"), music_lib.credit("promo")) if x)
+    fc = FONT("SemiBold", 18)
+    d.text((W // 2, H - px(34)), line, font=fc, fill=(220, 220, 220, int(200 * k4)), anchor="ma")
     return L
 
 
@@ -357,20 +359,17 @@ def read_wav(p):
 
 def soundtrack(spec, hits, tmp):
     secs = spec["secs"]
+    # Real free-licence music (tools/music/library.py), cut on the bar at its own 120 BPM, so the
+    # 1-2 s cuts land on the beat. Energetic (kids) and cinematic promos use two different parts of it.
     music = os.path.join(tmp, "music.wav")
-    if spec.get("mood") == "energetic":
-        cfg = os.path.join(tmp, "m.json")
-        bars = int(secs / 2)
-        json.dump({"bpm": 120, "nbars": bars, "dur": float(secs), "seed": 23,
-                   "prog": [[57, [69, 72, 76]], [53, [69, 72, 77]], [48, [67, 72, 76]], [55, [67, 71, 74]]],
-                   "intro": 1, "intro_kick": 0, "full": [[1, bars - 3]], "fill": [bars - 4], "final": bars - 3,
-                   "drops": [1], "arp": [[1, bars - 3]], "risers": [[bars - 4, 1]], "cuts": [], "stamps": [[0, 0.7], [1.75, 0.5]], "blips": []},
-                  open(cfg, "w"))
-        run([sys.executable, os.path.join(HERE, "music_gen.py"), music, cfg], capture_output=True)
-    else:
-        hj = os.path.join(tmp, "hits.json")
-        json.dump(hits, open(hj, "w"))
-        run([sys.executable, os.path.join(HERE, "cinematic.py"), music, str(secs), hj], capture_output=True)
+    x = music_lib.bed("promo", secs, second=spec.get("mood") != "energetic", fade_in=0.2, fade_out=1.2)
+    n = len(x)
+    for h in hits[1:]:  # a soft low hit on each cut
+        i = int(h * 44100); m = min(int(0.6 * 44100), n - i)
+        if m > 0:
+            tt = np.arange(m) / 44100
+            x[i:i + m] += (0.18 * np.sin(2 * np.pi * np.cumsum(40 + 50 * np.exp(-tt / 0.1)) / 44100) * np.exp(-tt / 0.3))[:, None]
+    music_lib.save(music, x / max(np.abs(x).max(), 1e-9) * 0.9)
     mix = read_wav(music)[: int(secs * 44100)]
     vo = np.zeros_like(mix)
     said = False
