@@ -59,12 +59,6 @@ const $ = id => document.getElementById(id);
 if (!app) { $("back").hidden = false; }
 let songs = [], at = 0, player = null, nowTimer = null;
 
-// Everyone joins the same running order: shuffled the same way each day, at a place set by the clock.
-function shuffled(list, seed) {
-  const a = list.slice();
-  for (let i = a.length - 1; i > 0; i--) { seed = (seed * 9301 + 49297) % 233280; const j = Math.floor(seed / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
-  return a;
-}
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
 let corners = { default: "tr", labels: {} }, bugLabel = null;
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(bugLabel); }).catch(() => {});
@@ -89,12 +83,19 @@ function play(step = 0) {
   player.loadVideoById(songs[at].id);
   showNow();
 }
-fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()).then(d => {
-  const day = Math.floor(Date.now() / 86400000);
-  songs = shuffled(d.songs, day);
-  // About four minutes a song.
-  const mins = (Date.now() % 86400000) / 60000;
-  at = Math.floor(mins / 4) % songs.length;
+// Like TV, the day's running order starts at midnight Toronto time (about four minutes a song) and
+// everyone joins the song that's on now, part-way through; songs the owner took off in Channel Studio
+// (📺 Programmes) don't play.
+let joinAt = 0;
+Promise.all([fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()), import("./ytorder.js")]).then(async ([d, yo]) => {
+  const picks = (await yo.loadPicks()).hits || null;
+  const list = d.songs.filter(s => yo.playable(s, picks));
+  // Same running order as Channel Studio's guide (ytorder.js); every song counts as four minutes.
+  const hits = { id: "hits", ytMins: 4 };
+  songs = yo.runningOrder(hits, list.length ? list : d.songs, yo.torontoDay().date);
+  const w = yo.whereNow(songs, hits);
+  at = w.i;
+  joinAt = w.offset;
   const s = document.createElement("script");
   s.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(s);
@@ -139,6 +140,12 @@ window.onYouTubeIframeAPIReady = () => {
         else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
         lastState = e.data;
         if (e.data === YT.PlayerState.PLAYING) started = true;
+        // The first song is joined part-way, where the channel is (not past its last 20 seconds).
+        if (e.data === YT.PlayerState.PLAYING && joinAt > 10) {
+          const len = e.target.getDuration();
+          if (len && joinAt < len - 20) e.target.seekTo(joinAt, true);
+          joinAt = 0;
+        }
         // Between two videos, now and then, our own Cable TV promo (promo.js).
         if (e.data === YT.PlayerState.ENDED) promoBreak(e.target.isMuted(), () => play(1));
         else if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
