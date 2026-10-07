@@ -8,6 +8,8 @@ from PIL import Image, ImageDraw, ImageFont
 
 AD_PICTURE, OUT = sys.argv[1], sys.argv[2]
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from calm_music import calm  # noqa: E402
 LOGO = os.path.join(HERE, "..", "docs", "channel", "logos", "bazaar-tv-square.png")
 B = "/usr/share/fonts/opentype/inter/Inter-Black.otf"
 BD = "/usr/share/fonts/opentype/inter/Inter-Bold.otf"
@@ -47,16 +49,15 @@ def slide(c1, c2, lines, logo=True, y=70):
         y += centered(d, y, text, font, fill) + 26
     return im
 
-def render(still, seconds, name, zoom=True):
+def render(still, seconds, name, zoom=True, key=0):
     tmp = os.path.join(tempfile.mkdtemp(), "s.png"); still.save(tmp)
     frames = seconds * 25
     vf = (f"scale=2560:1440,zoompan=z='min(1+0.0006*on,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={frames}:s={W}x{H}:fps=25,"
           if zoom else f"fps=25,") + f"fade=t=in:st=0:d=0.6,fade=t=out:st={seconds - 0.6}:d=0.6,format=yuv420p"
-    # A soft three-note chord, so the breaks aren't silent.
-    music = (f"aevalsrc='0.08*sin(2*PI*261.6*t)*(1+0.3*sin(2*PI*0.5*t))+0.06*sin(2*PI*329.6*t)+0.05*sin(2*PI*392*t)'"
-             f":s=44100:d={seconds},afade=t=in:d=1,afade=t=out:st={seconds - 1.2}:d=1.2")
+    # Calm music of our own underneath (tools/calm_music.py); the owner found the old buzzing tone horrible (2026-10-07).
+    music = tmp[:-4] + ".wav"; calm(seconds, music, key)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-t", str(seconds), "-i", tmp,
-                    "-f", "lavfi", "-i", music, "-vf", vf, "-t", str(seconds),
+                    "-i", music, "-vf", vf, "-t", str(seconds),
                     "-c:v", "libx264", "-preset", "medium", "-crf", "24", "-r", "25",
                     "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart",
                     os.path.join(OUT, name)], check=True)
@@ -68,16 +69,16 @@ ORANGE, RED, NAVY, BLUE, GREEN, TEAL = (255, 153, 0), (220, 38, 38), (15, 23, 42
 render(slide(ORANGE, RED, [("آپ دیکھ رہے ہیں بازار ٹی وی", f(UR, 54), "white"),
                            ("کیبل ٹی وی پر", f(UR, 34), (255, 236, 179))], logo=False, y=250), 10, "ident-welcome.mp4")
 render(slide(NAVY, BLUE, [("اگلا پروگرام", f(UR, 62), "white"),
-                          ("بازار ٹی وی کے ساتھ رہیے", f(UR, 34), (191, 219, 254))], logo=False, y=250), 8, "ident-coming-up.mp4")
+                          ("بازار ٹی وی کے ساتھ رہیے", f(UR, 34), (191, 219, 254))], logo=False, y=250), 8, "ident-coming-up.mp4", key=-3)
 render(slide(NAVY, BLUE, [("وقفہ", f(UR, 62), "white"),
-                          ("ہم ابھی واپس آتے ہیں", f(UR, 34), (191, 219, 254))], logo=False, y=250), 5, "ident-break.mp4", zoom=False)
+                          ("ہم ابھی واپس آتے ہیں", f(UR, 34), (191, 219, 254))], logo=False, y=250), 5, "ident-break.mp4", zoom=False, key=2)
 
 ad = Image.open(AD_PICTURE).convert("RGB").resize((W, H))
-render(ad, 20, "ad-bulk-bazaar.mp4")
+render(ad, 20, "ad-bulk-bazaar.mp4", key=-5)
 
 render(slide(GREEN, TEAL, [("آپ کا اشتہار یہاں ہو سکتا ہے!", f(UR, 50), "white"),
                            ("بازار ٹی وی پر اشتہار دیں", f(UR, 36), (253, 224, 71)),
-                           ("WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise", f(BD, 32), "white")], logo=False, y=210), 15, "ad-advertise-here.mp4")
+                           ("WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise", f(BD, 32), "white")], logo=False, y=210), 15, "ad-advertise-here.mp4", key=5)
 render(slide(RED, ORANGE, [("Cable TV", f(B, 72), "white"),
                            ("Up to 6 channels at once on one TV. Free.", f(BD, 38), "white"),
                            ("Download at tv.bulkbazaar.ca", f(BD, 38), (255, 236, 179))]), 15, "promo-free-live-tv.mp4")
