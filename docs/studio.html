@@ -62,6 +62,7 @@
   .guide { display: grid; gap: 4px; font-size: 15px; }
   .guide div { display: grid; grid-template-columns: 80px 1fr auto; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--bg); }
   .guide div.cur { outline: 2px solid var(--focus); }
+  .guide div.adrow { color: var(--muted); font-size: .9em; padding: 3px 10px; }
   .stations { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 18px; }
   .stations button, .stations a { text-decoration: none; }
   .stations button, .stations a { display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 14px; border: 3px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
@@ -521,7 +522,9 @@
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand } from "./channel/schedule.js";
 import { mountCards } from "./channel/cards.js";
-import { playable, runningOrder, upcoming, torontoDay, lengthOf as ytLength } from "./channel/ytorder.js";
+import { playable, runningOrder, torontoDay, withBreaks, itemsFrom, loadPromos as loadBreakPromos } from "./channel/ytorder.js";
+let breakPromos = [];
+loadBreakPromos("media/").then(p => { breakPromos = p; setTimeout(() => { try { if (pick) renderPicks(); } catch {} }); });
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 
@@ -1648,13 +1651,16 @@ function renderPicks() {
   // Today's running order, as the channel page works it out.
   const st = pkStation(), order = runningOrder(st, onAir, torontoDay().date);
   $("pkGuide").innerHTML = "";
-  upcoming(order, st, 30).forEach((u, k) => {
+  // With the ad break of our own promos before each programme (media/promos.json, never over 60 seconds).
+  itemsFrom(withBreaks(order, st, breakPromos), 40).forEach((u, k) => {
     const g = document.createElement("div");
-    if (!k) g.className = "cur";
+    g.className = (k ? "" : "cur") + (u.item.kind === "break" ? " adrow" : "");
     g.innerHTML = "<span></span><span></span><span></span>";
     g.children[0].textContent = k ? timeText(u.startMs) : "Now";
-    g.children[1].textContent = u.v.title;
-    g.children[2].textContent = lengthText(ytLength(u.v, st));
+    g.children[1].textContent = u.item.kind === "break"
+      ? "📢 Ad break: " + u.item.promos.map(p => p.title || p.src).join(" + ")
+      : u.item.v.title;
+    g.children[2].textContent = lengthText(u.item.secs);
     $("pkGuide").appendChild(g);
   });
 }
