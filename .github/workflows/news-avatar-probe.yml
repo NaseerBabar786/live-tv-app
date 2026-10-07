@@ -1,0 +1,22 @@
+name: News avatar probe
+# Finds free Hugging Face Spaces for a lifelike talking newsreader; result: channel-media/news-avatar-probe.json
+on:
+  push:
+    paths: ["tools/news/presenters/probe_spaces.py", ".github/workflows/news-avatar-probe.yml"]
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: pip install -q huggingface_hub gradio_client
+      - run: python3 tools/news/presenters/probe_spaces.py news-avatar-probe.json
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload channel-media news-avatar-probe.json -R "$GITHUB_REPOSITORY" --clobber

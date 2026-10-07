@@ -15,7 +15,7 @@ on:
       ids:
         description: 'Anchor ids from presenters.json "moving", as a JSON list'
         required: false
-        default: '["anchor-2","anchor-3","anchor-4"]'
+        default: '["anchor-5","anchor-6","anchor-7","anchor-8"]'
       lips:
         description: "Also make the lip-synced version"
         type: boolean
@@ -28,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        id: ${{ fromJson(github.event.inputs.ids || '["anchor-2","anchor-3","anchor-4"]') }}
+        id: ${{ fromJson(github.event.inputs.ids || '["anchor-5","anchor-6","anchor-7","anchor-8"]') }}
     env:
       ID: ${{ matrix.id }}
     timeout-minutes: 90
@@ -64,7 +64,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        id: ${{ fromJson(github.event.inputs.ids || '["anchor-2","anchor-3","anchor-4"]') }}
+        id: ${{ fromJson(github.event.inputs.ids || '["anchor-5","anchor-6","anchor-7","anchor-8"]') }}
     env:
       ID: ${{ matrix.id }}
     permissions:
