@@ -25,7 +25,11 @@ object MyChannelSync {
     suspend fun refresh(account: Account) = withContext(Dispatchers.IO) {
         val token = if (account.user.value != null) runCatching { account.token() }.getOrNull() else null
         for (station in MyChannel.STATIONS) {
-            runCatching { MyChannel.update(station.id, fetch(station, token)) }
+            runCatching {
+                // Bazaar TV's upcoming trailers: a list rebuilt on the website every day takes its entry's place.
+                val json = fetch(station, token)?.let { o -> MyChannel.expand(o) { JSONObject(Http.request("GET", it, null, null, null)) } }
+                MyChannel.update(station.id, json)
+            }
         }
     }
 

@@ -469,7 +469,7 @@
 
 <script type="module">
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
-import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore } from "./channel/schedule.js";
+import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand } from "./channel/schedule.js";
 const $ = id => document.getElementById(id);
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 
@@ -607,7 +607,7 @@ $("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(fal
 
 // ---------- step 2 ----------
 const kindOf = v => v.kind || (v.secs > 0 ? "programme" : "live");
-const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE" };
+const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY", music: "MUSIC VIDEOS · NEW EVERY DAY", list: "YOUTUBE BLOCK · NEW EVERY DAY" };
 function renderVideos() {
   $("videos").innerHTML = "";
   if (!c.videos.length) $("videos").innerHTML = '<p class="small">No videos yet. Add one below.</p>';
@@ -781,19 +781,21 @@ function renderLibrary() {
     d.className = "item";
     d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts"><button class="btn" data-a="play">▶ Watch</button><button class="btn primary" data-a="add"></button></div>`;
     d.querySelector("b").textContent = show.title;
-    d.querySelector(".meta").textContent = `${show.cat} · ${lengthText(show.secs)} · ${show.licence}`;
+    d.querySelector(".meta").textContent = `${show.cat} · ${show.kind === "trailers" || show.kind === "music" ? "about 50 min, new every day" : lengthText(show.secs)} · ${show.licence}`;
+    if (show.kind === "trailers" || show.kind === "music") d.querySelector('[data-a=play]').remove();
     const add = d.querySelector('[data-a=add]');
     add.textContent = have ? "✓ Added" : "Add";
     add.disabled = have;
     add.onclick = () => {
-      const v = { id: uid(), title: show.title, url: show.url, secs: show.secs, kind: "programme" };
+      const v = { id: uid(), title: show.title, url: show.url, secs: show.secs, kind: show.kind || "programme" };
       c.videos.push(v);
-      // Shorts join the loop; feature films wait for a time slot.
-      if (show.secs <= 30 * 60) c.loop.push(v.id);
+      // Shorts join the loop; feature films wait for a time slot. Upcoming trailers (a list rebuilt
+      // every day, played on our locked YouTube page) and popular music videos always go in the loop.
+      if (show.secs <= 30 * 60 || show.kind === "trailers" || show.kind === "music") c.loop.push(v.id);
       changed(); renderAll();
       $("vMsg").innerHTML = `<span class="ok">✓ Added "${show.title}"` + (show.secs <= 30 * 60 ? " and put it at the end of the loop." : ". It's a long film: give it a time slot in step 4.") + " Press Save to put it on air.</span>";
     };
-    d.querySelector('[data-a=play]').onclick = () => watchOne(show.title, show.url);
+    d.querySelector('[data-a=play]')?.addEventListener("click", () => watchOne(show.title, show.url));
     $("library").appendChild(d);
   }
 }
@@ -1407,15 +1409,23 @@ $("stLoad").onclick = loadStats;
 $("stDays").onchange = loadStats;
 $("stGroup").onchange = loadStats;
 
-function renderGuide() {
-  const list = guide(c, Date.now() - 1, 3, 40);
+/**
+ * The next six hours as viewers will see them: each programme's start and end time. A time slot (the
+ * news) cuts into whatever is on, which carries on where it stopped once the slot is over ("continues").
+ * The day's trailer, music and programme-block lists are filled in as on TV.
+ */
+async function renderGuide() {
+  const shown = c;
+  const e = await expand(shown).catch(() => shown);
+  if (shown !== c) return;
+  const list = guide(e, Date.now() - 1, 6.5, 200);
   $("guide").innerHTML = list.length ? "" : '<p class="small">Nothing to play. Add videos to the loop or a time slot.</p>';
   list.forEach((g, i) => {
     const d = document.createElement("div");
     if (i === 0) d.className = "cur";
     d.innerHTML = "<span></span><span></span><span class='small'></span>";
-    d.children[0].textContent = i === 0 ? "Now" : timeText(g.at, c.tz);
-    d.children[1].textContent = (g.show ? g.show + ": " : "") + g.video.title + (g.slot ? "  (time slot)" : "");
+    d.children[0].textContent = (i === 0 ? "Now" : timeText(g.at, c.tz)) + (isFinite(g.end) ? " – " + timeText(g.end, c.tz) : "");
+    d.children[1].textContent = (g.show ? g.show + ": " : "") + g.video.title + (g.slot ? "  (time slot)" : "") + (g.resumed ? "  (continues)" : "");
     d.children[2].textContent = lengthText(g.video.secs);
     $("guide").appendChild(d);
   });

@@ -1,0 +1,49 @@
+{
+ "name": "Travel",
+ "built": "2026-10-06 23:12 UTC",
+ "secs": 1206,
+ "videos": [
+  {
+   "id": "YqVYsADMH-M",
+   "title": "Chrishell Stause's Travel Rules (Selling Sunset Star Spills)",
+   "label": "Expedia",
+   "secs": 225,
+   "kind": "travel"
+  },
+  {
+   "id": "M17o989NwCA",
+   "title": "Inside India’s REAL Spice Capital | Lonely Planet's Best in Travel 2026",
+   "label": "Lonely Planet",
+   "secs": 156,
+   "kind": "travel"
+  },
+  {
+   "id": "cxKIwKnhzrk",
+   "title": "Heartbound: Turkish Black Sea: Episode 3 – The Shadow Behind Me | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "secs": 178,
+   "kind": "travel"
+  },
+  {
+   "id": "7hb9cD4s8wA",
+   "title": "How to Make Bursa Kebap | Turkish Cuisine",
+   "label": "Türkiye",
+   "secs": 242,
+   "kind": "travel"
+  },
+  {
+   "id": "UkZupj7YAAc",
+   "title": "BEST Beaches in Okinawa, Japan | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "secs": 207,
+   "kind": "travel"
+  },
+  {
+   "id": "30iKq4j3oTg",
+   "title": "How to Make Gözleme | Turkish Cuisine",
+   "label": "Türkiye",
+   "secs": 198,
+   "kind": "travel"
+  }
+ ]
+}

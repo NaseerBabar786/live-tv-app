@@ -1794,7 +1794,9 @@ private fun PlayerWithList(
     // Our YouTube channels, Bazaar Hits and YouTube videos play their locked page right in the picture
     // (1.9.50); our channels' free films play there instead when YouTube won't.
     var pageFailed by remember(selected?.id) { mutableStateOf(false) }
-    val page = selected?.takeIf { !pageFailed }?.let { MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
+    // Bazaar TV's upcoming trailers too, while they're on (then its own player again).
+    val block = rememberBlockPage(selected)
+    val page = selected?.takeIf { !pageFailed }?.let { block ?: MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
     LaunchedEffect(selected?.id, page) {
         showing = false
         error = null
@@ -1849,7 +1851,7 @@ private fun PlayerWithList(
                 if (page != null) {
                     key(page) {
                         WebPreview(page, Modifier.fillMaxSize(), onFallback = {
-                            if (MyChannel.webPage(selected) != null) pageFailed = true
+                            if (block != null || MyChannel.webPage(selected) != null) pageFailed = true
                         })
                     }
                 } else if (!showing) {

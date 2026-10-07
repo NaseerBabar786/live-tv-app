@@ -59,6 +59,11 @@ class WebChannelActivity : Activity() {
                         setResult(RESULT_FALLBACK)
                         finish()
                     }
+                    // A run of trailers on Bazaar TV is over: its own player goes on.
+                    if (request.url.host == "done") {
+                        setResult(RESULT_DONE)
+                        finish()
+                    }
                     return true
                 }
 
@@ -148,6 +153,7 @@ class WebChannelActivity : Activity() {
         const val RESULT_NUMBER = RESULT_FIRST_USER + 3
         const val EXTRA_STEP = "step"
         const val EXTRA_NUMBER = "number"
+        const val RESULT_DONE = RESULT_FIRST_USER + 4
 
         fun intent(context: Context, url: String) = Intent(context, WebChannelActivity::class.java).putExtra(EXTRA_URL, url)
     }
