@@ -394,7 +394,7 @@ internal fun CarouselMode(
                     }
                     if (middle && playingId == channel.id && page != null) {
                         key(page) {
-                            WebPreview(page, Modifier.fillMaxSize(), onFallback = {
+                            WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = {
                                 if (MyChannel.webPage(channel) != null) pageFailed = true
                             })
                         }
