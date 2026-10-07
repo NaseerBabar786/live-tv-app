@@ -52,9 +52,11 @@ jobs:
           # Keep the same picture once made, so the lips run and later lines show the same person.
           PIC=$(python3 -c "import json,os; print(next((p.get('picture', p['id']) for p in json.load(open('tools/news/presenters/presenters.json'))['moving']['people'] if p['id'] == os.environ['ID']), os.environ['ID']))")
           EDIT=$(python3 -c "import json,os; print(next((1 for p in json.load(open('tools/news/presenters/presenters.json'))['moving']['people'] if p['id'] == os.environ['ID'] and p.get('edit')), 0))")
-          curl -fsSL -o mv/$ID.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$ID.jpg" 2>/dev/null || \
-            { [ "$EDIT" = 1 ] && rm -f mv/$ID.jpg; } || \
-            curl -fsSL -o mv/$ID.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$PIC.jpg" || rm -f mv/$ID.jpg
+          # An outfit change ("edit") is always made fresh from the base picture; others reuse their picture.
+          if [ "$EDIT" != 1 ]; then
+            curl -fsSL -o mv/$ID.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$ID.jpg" 2>/dev/null || \
+              curl -fsSL -o mv/$ID.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$PIC.jpg" || rm -f mv/$ID.jpg
+          fi
           python3 tools/news/presenters/move.py "$ID" mv
           python3 tools/news/presenters/sample.py mv/$ID-move.mp4 mv/line.mp3 "$ID" news-move-$ID.mp4
           cp mv/$ID-move.mp4 news-move-$ID-raw.mp4
