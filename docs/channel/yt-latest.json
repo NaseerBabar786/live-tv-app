@@ -1,6 +1,6 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-07 04:57 UTC",
+ "built": "2026-10-07 05:25 UTC",
  "videos": [
   {
    "id": "kUnck5Z3dG4",
@@ -31,6 +31,14 @@
    "title": "KGF (4K Quality) Full Movie | Yash Blockbuster Movie | Srinidhi Shetty, Ananth Nag, Ramachandra Raju",
    "label": "Goldmines",
    "mins": 145.13333333333333,
+   "found": "2026-10-07",
+   "uploaded": "2026-10-07"
+  },
+  {
+   "id": "BzTFg0m1l_8",
+   "title": "DJ (4K ULTRA HD) South Action Hindi Dubbed Movie | Allu Arjun, Pooja Hegde",
+   "label": "Goldmines",
+   "mins": 116.31666666666666,
    "found": "2026-10-07",
    "uploaded": "2026-10-07"
   },
@@ -67,26 +75,10 @@
    "uploaded": "2026-10-07"
   },
   {
-   "id": "I3o-UeFZFKo",
-   "title": "Fidaa (2018) New Released Hindi Dubbed Full Movie | Varun Tej, Sai Pallavi, Sai Chand, Raja Chembolu",
-   "label": "Goldmines",
-   "mins": 122.46666666666667,
-   "found": "2026-10-07",
-   "uploaded": "2026-10-07"
-  },
-  {
    "id": "UBjdi_JXEng",
    "title": "Dangerous Khiladi (Julayi) - Allu Arjun (HD) Action Hindi Dubbed Full Movie | Ileana Dcruz",
    "label": "Goldmines",
    "mins": 107.15,
-   "found": "2026-10-07",
-   "uploaded": "2026-10-07"
-  },
-  {
-   "id": "GzYBZJVzgyY",
-   "title": "DJ (Full HD) Allu Arjun Blockbuster Action Hindi Dubbed Movie | Pooja Hegde",
-   "label": "Goldmines",
-   "mins": 116.31666666666666,
    "found": "2026-10-07",
    "uploaded": "2026-10-07"
   },
@@ -123,18 +115,26 @@
    "uploaded": "2026-10-07"
   },
   {
-   "id": "vkuiI430d_0",
-   "title": "The Super Khiladi 3 (Nenu Sailaja) Telugu Hindi Dubbed Full Movie | Ram Pothineni, Keerthy Suresh",
-   "label": "Goldmines",
-   "mins": 117.58333333333333,
-   "found": "2026-10-07",
-   "uploaded": "2026-10-07"
-  },
-  {
    "id": "9oHsfiQeJ9o",
    "title": "The Super Khiladi (Brindavanam) Telugu Hindi Dubbed Full Movie | Jr NTR, Kajal Aggarwal, Samantha",
    "label": "Goldmines",
    "mins": 146.06666666666666,
+   "found": "2026-10-07",
+   "uploaded": "2026-10-07"
+  },
+  {
+   "id": "I3o-UeFZFKo",
+   "title": "Fidaa (2018) New Released Hindi Dubbed Full Movie | Varun Tej, Sai Pallavi, Sai Chand, Raja Chembolu",
+   "label": "Goldmines",
+   "mins": 122.46666666666667,
+   "found": "2026-10-07",
+   "uploaded": "2026-10-07"
+  },
+  {
+   "id": "vkuiI430d_0",
+   "title": "The Super Khiladi 3 (Nenu Sailaja) Telugu Hindi Dubbed Full Movie | Ram Pothineni, Keerthy Suresh",
+   "label": "Goldmines",
+   "mins": 117.58333333333333,
    "found": "2026-10-07",
    "uploaded": "2026-10-07"
   },
@@ -339,18 +339,18 @@
    "uploaded": "2026-10-07"
   },
   {
-   "id": "hbrXd8T3fE0",
-   "title": "Love Story (1981) Full Hindi Movie | Kumar Gaurav, Vijayta Pandit, Rajendra Kumar, Danny",
-   "label": "Goldmines Bollywood",
-   "mins": 161.31666666666666,
-   "found": "2026-10-07",
-   "uploaded": "2026-10-07"
-  },
-  {
    "id": "i_mZESt-M_s",
    "title": "Bhoot Unkle (2006) Full Hindi Movie | Jackie Shroff, Akhilendra Mishra, Sheela David",
    "label": "Goldmines Bollywood",
    "mins": 104.91666666666667,
+   "found": "2026-10-07",
+   "uploaded": "2026-10-07"
+  },
+  {
+   "id": "hbrXd8T3fE0",
+   "title": "Love Story (1981) Full Hindi Movie | Kumar Gaurav, Vijayta Pandit, Rajendra Kumar, Danny",
+   "label": "Goldmines Bollywood",
+   "mins": 161.31666666666666,
    "found": "2026-10-07",
    "uploaded": "2026-10-07"
   },
@@ -379,10 +379,10 @@
    "uploaded": "2026-10-07"
   },
   {
-   "id": "L4evoCuKzFI",
-   "title": "Love Breakups Zindagi(2011) Full Hindi Movie| Zayed Khan,Dia Mirza|लव ब्रेकअप्स जिंदगी बॉलीवुड फिल्म",
+   "id": "XZ8T_KrHTPM",
+   "title": "Phool (1993) Full Hindi Movie | Sunil Dutt, Rajendra Kumar, Kumar Gaurav, Madhuri Dixit",
    "label": "Goldmines Bollywood",
-   "mins": 148.88333333333333,
+   "mins": 170.5,
    "found": "2026-10-07",
    "uploaded": "2026-10-07"
   },
@@ -395,10 +395,10 @@
    "uploaded": "2026-10-07"
   },
   {
-   "id": "XZ8T_KrHTPM",
-   "title": "Phool (1993) Full Hindi Movie | Sunil Dutt, Rajendra Kumar, Kumar Gaurav, Madhuri Dixit",
+   "id": "L4evoCuKzFI",
+   "title": "Love Breakups Zindagi(2011) Full Hindi Movie| Zayed Khan,Dia Mirza|लव ब्रेकअप्स जिंदगी बॉलीवुड फिल्म",
    "label": "Goldmines Bollywood",
-   "mins": 170.5,
+   "mins": 148.88333333333333,
    "found": "2026-10-07",
    "uploaded": "2026-10-07"
   },
