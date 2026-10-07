@@ -1,0 +1,92 @@
+// Our YouTube channels (ytc.html) and Bazaar Hits run like real TV: one running order a day, starting at
+// midnight Toronto time and repeated round the clock, so everyone who tunes in joins whatever is on now
+// (the owner's wish, 2026-10-07). Channel Studio's 📺 Programmes tab uses the same code to show the day's
+// running order and to choose which videos may play (picks, saved in Firestore channel/picks).
+
+export const TZ = "America/Toronto";
+const PICKS_URL = "https://firestore.googleapis.com/v1/projects/live-tv-b2164/databases/(default)/documents/channel/picks";
+
+/** Today's date "yyyy-mm-dd" in Toronto and the moment (ms) that day started there. */
+export function torontoDay(nowMs = Date.now()) {
+  const f = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
+  const p = Object.fromEntries(f.formatToParts(new Date(nowMs)).map(x => [x.type, x.value]));
+  const date = `${p.year}-${p.month}-${p.day}`;
+  const sinceMidnight = ((+p.hour * 60 + +p.minute) * 60 + +p.second) * 1000 + nowMs % 1000;
+  return { date, start: nowMs - sinceMidnight };
+}
+
+function shuffled(list, seed) {
+  const a = list.slice();
+  for (let i = a.length - 1; i > 0; i--) { seed = (seed * 9301 + 49297) % 233280; const j = Math.floor(seed / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+/** Length of a video in seconds (the list's own length, or the channel's usual one). */
+export const lengthOf = (v, station) => Math.round((v.mins || station?.ytMins || 5) * 60);
+
+/** The owner's picks for one channel: { mode: "auto" | "manual", off: [ids], offLabels: [sources], on: [ids] }. */
+export function playable(v, pick) {
+  if (!pick) return true;
+  if (pick.mode === "manual") return (pick.on || []).includes(v.id);
+  return !(pick.off || []).includes(v.id) && !(pick.offLabels || []).includes(v.label);
+}
+
+/** All channels' picks, from Firestore (public read). Anything wrong: no picks, everything plays. */
+export async function loadPicks() {
+  try {
+    const r = await fetch(PICKS_URL, { cache: "no-store" });
+    if (!r.ok) return {};
+    const d = await r.json();
+    return JSON.parse(d.fields?.data?.stringValue || "{}") || {};
+  } catch { return {}; }
+}
+
+/**
+ * The day's running order for a channel: the same for everyone, shuffled afresh each day.
+ * "Top" videos come round more often: Bazaar Sports' main events and newest highlights after every
+ * third video; on Bazaar Movies Hindi new films ([topRatio] 3) three for every older one.
+ */
+export function runningOrder(station, list, date) {
+  const seed = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000) + station.id.length;
+  const top = shuffled(list.filter(v => v.top), seed + 1);
+  const rest = shuffled(list.filter(v => !v.top), seed);
+  if (top.length && rest.length && station.topRatio) {
+    const out = [];
+    top.forEach((v, i) => { out.push(v); if (i % station.topRatio === station.topRatio - 1) out.push(rest[Math.floor(i / station.topRatio) % rest.length]); });
+    return out;
+  }
+  if (top.length && rest.length) {
+    const out = [];
+    rest.forEach((v, i) => { out.push(v); if (i % 3 === 2) out.push(top[Math.floor(i / 3) % top.length]); });
+    return out;
+  }
+  return top.concat(rest);
+}
+
+/**
+ * What's on at [nowMs]: the running order starts at midnight Toronto time and repeats until the next
+ * midnight. Returns { i, offset (seconds into video i), startMs (when video i started) }.
+ */
+export function whereNow(order, station, nowMs = Date.now()) {
+  const { start } = torontoDay(nowMs);
+  const total = order.reduce((t, v) => t + lengthOf(v, station), 0);
+  if (!total) return { i: 0, offset: 0, startMs: nowMs };
+  const elapsed = (nowMs - start) / 1000;
+  let pos = elapsed % total, i = 0;
+  while (pos >= lengthOf(order[i], station)) { pos -= lengthOf(order[i], station); i++; }
+  return { i, offset: pos, startMs: nowMs - pos * 1000 };
+}
+
+/** The day's guide from [fromMs]: [{ v, startMs }] for the next [count] programmes. */
+export function upcoming(order, station, count, fromMs = Date.now()) {
+  if (!order.length) return [];
+  const w = whereNow(order, station, fromMs);
+  const out = [];
+  let t = w.startMs;
+  for (let k = 0; k < count; k++) {
+    const v = order[(w.i + k) % order.length];
+    out.push({ v, startMs: t });
+    t += lengthOf(v, station) * 1000;
+  }
+  return out;
+}

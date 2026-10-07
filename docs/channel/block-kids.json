@@ -1,48 +1,20 @@
 {
- "name": "Kids' time",
- "built": "2026-10-07 00:04 UTC",
- "secs": 1904,
+ "name": "بچوں کا وقت",
+ "built": "2026-10-07 01:44 UTC",
+ "secs": 1566,
  "videos": [
   {
-   "id": "n88ZW7SXl1w",
-   "title": "Clean Up, Clean Up Song - Let's Keep the Place Clean | Kids Rhymes & Good Habit Songs | Infobells",
-   "label": "Infobells Hindi",
-   "secs": 190,
-   "kind": "kids"
-  },
-  {
-   "id": "BRURfXUFzGE",
-   "title": "The Wheels On The Chocolate Bus Goes Round And Round- Magic Bus | Nursery Rhymes & Songs | Infobells",
-   "label": "Infobells Hindi",
-   "secs": 147,
-   "kind": "kids"
-  },
-  {
-   "id": "qNDkIK-jWZM",
-   "title": "Gifts Gifts Gifts, My Surprise Gifts-Grandma's Gift | Nursery Rhymes Song | Infobells #gifts",
-   "label": "Infobells Hindi",
-   "secs": 229,
-   "kind": "kids"
-  },
-  {
-   "id": "rRuyB3AfmMc",
-   "title": "Animal Going to the Doctor - Sick Song | Kids Rhymes & Baby Rhymes | Infobells #babyrhymes",
-   "label": "Infobells Hindi",
-   "secs": 182,
-   "kind": "kids"
-  },
-  {
-   "id": "vTLfOqEolsk",
-   "title": "Finger Family - Classic Nursery Rhymes | CoComelon Nursery Rhymes & Kids Songs",
-   "label": "Cocomelon",
-   "secs": 157,
-   "kind": "kids"
-  },
-  {
-   "id": "6B-l3YcU45w",
-   "title": "Pat a Cake Song – ChuChu TV Hindi Rhymes in 4K for Kids #ChuChuTV100M",
+   "id": "9xvpQkupllg",
+   "title": "Santa is Coming – ChuChu TV Hindi Rhymes in 4K for Kids #ChuChuTV100M",
    "label": "ChuChu TV Hindi",
-   "secs": 166,
+   "secs": 178,
+   "kind": "kids"
+  },
+  {
+   "id": "qkj7aAmfbIY",
+   "title": "Baby Goes Swimming Song - ChuChu TV Hindi Rhymes in 4K for Kids #ChuChuTV100M",
+   "label": "ChuChu TV Hindi",
+   "secs": 207,
    "kind": "kids"
   },
   {
@@ -53,10 +25,24 @@
    "kind": "kids"
   },
   {
-   "id": "M2-1rNekIWQ",
-   "title": "खाना चोर (Lunch Thief) - ChuChu TV Hindi Kahaniya in 4K for Kids #ChuChuTV100M",
+   "id": "mJ0RZm_fEvM",
+   "title": "Yes Yes Fruits Song - ChuChu TV Hindi Rhymes in 4K for Kids",
    "label": "ChuChu TV Hindi",
-   "secs": 458,
+   "secs": 387,
+   "kind": "kids"
+  },
+  {
+   "id": "UnZBF5xhPwA",
+   "title": "Baby is Sick Song - ChuChu TV Hindi Rhymes in 4K for Kids #ChuChuTV100M",
+   "label": "ChuChu TV Hindi",
+   "secs": 246,
+   "kind": "kids"
+  },
+  {
+   "id": "vOeDezhxb4o",
+   "title": "BUS - BUILDERS – ChuChu TV Hindi Rhymes in 4K for Kids",
+   "label": "ChuChu TV Hindi",
+   "secs": 173,
    "kind": "kids"
   }
  ]

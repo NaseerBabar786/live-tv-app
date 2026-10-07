@@ -1,90 +1,8 @@
 {
- "name": "Upcoming movie trailers",
- "built": "2026-10-07 00:03 UTC",
- "secs": 2999,
+ "name": "آنے والی فلموں کے ٹریلر",
+ "built": "2026-10-07 01:44 UTC",
+ "secs": 2096,
  "videos": [
-  {
-   "id": "l_Ozo1xUgbU",
-   "title": "Ebenezer | Official Trailer 2 (2026 Movie) - Johnny Depp, Ian McKellen, Rupert Grint, Sam Claflin",
-   "label": "Paramount Pictures",
-   "lang": "English",
-   "secs": 156,
-   "found": "2026-10-07",
-   "kind": "trailer",
-   "section": "Upcoming English movies"
-  },
-  {
-   "id": "nzNYomSd5Ls",
-   "title": "The Rescue | Official Trailer (2027 Movie) - Brandon Sklenar, Josh Lucas, Hassie Harrison",
-   "label": "Paramount Pictures",
-   "lang": "English",
-   "secs": 158,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "KCR-rz0YfD4",
-   "title": "Clayface | Final Trailer",
-   "label": "Warner Bros. Pictures",
-   "lang": "English",
-   "secs": 102,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "bhKKR5He_Fo",
-   "title": "Day Drinker (2027) Official Teaser – Johnny Depp, Madelyn Cline, and Penélope Cruz",
-   "label": "Lionsgate",
-   "lang": "English",
-   "secs": 95,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "MQKqgFVU4dQ",
-   "title": "Beware Boiúna (2026) Final Trailer - Kiana Madeira, Jessica Rothe, Logan Marshall-Green",
-   "label": "Lionsgate",
-   "lang": "English",
-   "secs": 90,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "YxPR7fEtutE",
-   "title": "Marvel’s Wolverine | Launch Trailer",
-   "label": "Marvel",
-   "lang": "English",
-   "secs": 31,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "fPwXkk-REKs",
-   "title": "The Teenage Vampire (2026) Official Trailer - Jazlyn Nicolette Sward, Kelly Lynn Reiter",
-   "label": "Lionsgate",
-   "lang": "English",
-   "secs": 85,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "dTFUNq2cCwA",
-   "title": "Toy Story 5: The Great Toy Rescue | Fortnite Launch Trailer",
-   "label": "Pixar",
-   "lang": "English",
-   "secs": 38,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "OetdlSpDkY4",
-   "title": "Marvel’s Wolverine | The Best There Is Trailer",
-   "label": "Marvel",
-   "lang": "English",
-   "secs": 31,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
   {
    "id": "SoTw56f1-OA",
    "title": "#418 Oﬃcial Trailer - The Last Warning (Hindi) | Prashanth Neel | Kirtan N | In Cinemas Oct23rd",
@@ -93,7 +11,7 @@
    "secs": 211,
    "found": "2026-10-07",
    "kind": "trailer",
-   "section": "Upcoming Hindi movies"
+   "section": "آنے والی ہندی فلمیں"
   },
   {
    "id": "qGbvEhKhaWA",
@@ -123,57 +41,20 @@
    "kind": "trailer"
   },
   {
-   "id": "yLrcQbm4T-Y",
-   "title": "Aar Paar (Official Trailer) Moammar Rana | Shamil Khan | Punjabi Movies 2023 | Punjabi Movie Trailer",
-   "label": "White Hill Music",
-   "lang": "Punjabi",
-   "secs": 146,
-   "found": "2026-10-07",
-   "kind": "trailer",
-   "section": "Upcoming Punjabi movies"
-  },
-  {
-   "id": "xw96l194ueA",
-   "title": "Angrej Trailer | Amrinder Gill | Binnu Dhillon | Aditi Sharma | Rhythm Boyz",
-   "label": "Rhythm Boyz",
-   "lang": "Punjabi",
-   "secs": 194,
+   "id": "llLHwxkZ02k",
+   "title": "Namit Malhotra’s Ramayana - Hindi Trailer | Nitesh Tiwari | Ranbir, Yash, Hans Zimmer, A.R.Rahman",
+   "label": "Dharma Productions",
+   "lang": "Hindi",
+   "secs": 250,
    "found": "2026-10-07",
    "kind": "trailer"
   },
   {
-   "id": "0gTZ1bfWNKc",
-   "title": "Ashke | Trailer | Amrinder Gill | Sanjeeda Sheikh | Rhythm Boyz",
-   "label": "Rhythm Boyz",
-   "lang": "Punjabi",
-   "secs": 171,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "1RCLn2iIXGA",
-   "title": "BLACKIA 2 (Official Trailer)- Dev Kharoud | Japji Khaira | Aarushi Sharma| Navaniat Singh| New Movie",
-   "label": "Speed Records",
-   "lang": "Punjabi",
-   "secs": 149,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "T5EL4DJh-48",
-   "title": "IK SANDHU HUNDA SI ( Teaser ) Gippy Grewal | Neha Sharma | Roshan Prince | Rakesh Mehta |",
-   "label": "Humble Music",
-   "lang": "Punjabi",
-   "secs": 61,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "yQduaSVgsFw",
-   "title": "Ik Kudi - Official Teaser | Gippy Grewal | Happy Raikoti | Avvy Sra | Humble Music",
-   "label": "Humble Music",
-   "lang": "Punjabi",
-   "secs": 26,
+   "id": "ZwOeTu6ciP8",
+   "title": "Bloody Daddy Teaser | Shahid Kapoor | Diana Penty | Rajeev Khandelwal | Ronit Roy | Ali Abbas Zafar",
+   "label": "Jio Studios",
+   "lang": "Hindi",
+   "secs": 76,
    "found": "2026-10-07",
    "kind": "trailer"
   },
@@ -185,7 +66,7 @@
    "secs": 67,
    "found": "2026-10-07",
    "kind": "trailer",
-   "section": "Upcoming Pakistani movies"
+   "section": "آنے والی پاکستانی فلمیں"
   },
   {
    "id": "R0NEmXfMZQU",
@@ -225,7 +106,7 @@
   },
   {
    "id": "ZrFGEbvuweo",
-   "title": "3 BAHADUR ⚔️ Rise of The Warriors ⚔️  🎬 | Official Trailer | ARY Films",
+   "title": "3 BAHADUR ⚔️ Rise of The Warriors ⚔️ 🎬 | Official Trailer | ARY Films",
    "label": "ARY Films",
    "lang": "Pakistani",
    "secs": 152,
@@ -243,10 +124,37 @@
   },
   {
    "id": "vhxpwaHbW_Q",
-   "title": "Azaadi | Official Trailer |  ARY Films",
+   "title": "Azaadi | Official Trailer | ARY Films",
    "label": "ARY Films",
    "lang": "Pakistani",
    "secs": 89,
+   "found": "2026-10-07",
+   "kind": "trailer"
+  },
+  {
+   "id": "P25RH1tI6EU",
+   "title": "Baaji | Official Trailer | Meera | Amna Ilyas | Osman Khalid Butt | ARY Films",
+   "label": "ARY Films",
+   "lang": "Pakistani",
+   "secs": 162,
+   "found": "2026-10-07",
+   "kind": "trailer"
+  },
+  {
+   "id": "-pqPuTQWr4g",
+   "title": "FRAUD - MOVIE | TRAILER | Saba Qamar | Ahsan Khan | Mikaal Zulfiqar | ARY FILMS",
+   "label": "ARY Films",
+   "lang": "Pakistani",
+   "secs": 73,
+   "found": "2026-10-07",
+   "kind": "trailer"
+  },
+  {
+   "id": "LeSewoq4uW4",
+   "title": "KUCH ANKAHI - MOVIE | TRAILER | Bilal Abbas | Sajal Aly | ARY FILMS",
+   "label": "ARY Films",
+   "lang": "Pakistani",
+   "secs": 69,
    "found": "2026-10-07",
    "kind": "trailer"
   }
