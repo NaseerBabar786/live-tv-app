@@ -162,6 +162,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -1834,7 +1835,10 @@ private fun PlayerWithList(
                 Modifier
                     .fillMaxWidth()
                     .aspectRatio(16f / 9f)
-                    .clip(CardShape)
+                    // A YouTube page plays its real video here, which TVs draw under the window, showing
+                    // through a hole in the page; rounded corners put the page in a layer of its own that
+                    // keeps that hole black (sound only), so this box stays square then (1.9.74).
+                    .clip(if (page != null) RectangleShape else CardShape)
                     .background(Color.Black)
                     .onFocusChanged { playerFocused = it.hasFocus }
                     .then(if (playerFocused) Modifier.border(3.dp, FocusColor, CardShape) else Modifier)
@@ -1850,7 +1854,7 @@ private fun PlayerWithList(
                 )
                 if (page != null) {
                     key(page) {
-                        WebPreview(page, Modifier.fillMaxSize(), onFallback = {
+                        WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = {
                             if (block != null || MyChannel.webPage(selected) != null) pageFailed = true
                         })
                     }
