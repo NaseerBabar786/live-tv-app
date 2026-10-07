@@ -19,9 +19,54 @@ def length(f):
     return float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration",
                                           "-of", "csv=p=0", f]).decode().strip())
 
+EDIT_SPACES = ["black-forest-labs/FLUX.1-Kontext-Dev", "Qwen/Qwen-Image-Edit", "multimodalart/Qwen-Image-Edit-Fast"]
+
+def edit_with_space(p, out):
+    """Same woman, different clothes: a free image-editing Space (FLUX Kontext / Qwen Image Edit) changes only
+    the outfit of her own picture. Fills each Space's API by component: image -> picture, textbox -> instruction."""
+    from gradio_client import Client, handle_file
+    src = f"https://github.com/{os.environ.get('GITHUB_REPOSITORY', 'NaseerBabar786/live-tv-app')}/releases/download/channel-media/{p['picture']}.jpg"
+    base = out + ".src.jpg"
+    urllib.request.urlretrieve(src, base)
+    for space in EDIT_SPACES:
+        try:
+            c = Client(space, verbose=False)
+            api = c.view_api(return_format="dict", print_info=False)["named_endpoints"]
+            for name, ep in api.items():
+                comps = [(x.get("component") or "").lower() for x in ep["parameters"]]
+                if "image" in comps and "textbox" in comps: break
+            else:
+                print("edit: no image+text endpoint in", space, list(api), flush=True); continue
+            args, text_done = [], False
+            for x, comp in zip(ep["parameters"], comps):
+                if comp == "image": args.append(handle_file(base))
+                elif comp == "textbox" and not text_done: args.append(p["edit"]); text_done = True
+                elif x.get("parameter_has_default"): args.append(x["parameter_default"])
+                else: args.append(None)
+            res = c.predict(*args, api_name=name)
+            def find(r):
+                if isinstance(r, str) and r.lower().endswith((".png", ".jpg", ".jpeg", ".webp")): return r
+                if isinstance(r, dict):
+                    for v in r.values():
+                        f = find(v)
+                        if f: return f
+                if isinstance(r, (list, tuple)):
+                    for v in r:
+                        f = find(v)
+                        if f: return f
+            f = find(res)
+            if not f: print("edit: no picture from", space, repr(res)[:300], flush=True); continue
+            Image.open(f).convert("RGB").resize((1280, 720), Image.LANCZOS).save(out, quality=95)
+            print("edited picture with", space, flush=True); return True
+        except Exception as e:
+            print("edit fail", space, repr(e)[:300], flush=True)
+    return False
+
 def picture(p, out):
     url = ("https://image.pollinations.ai/prompt/" + urllib.parse.quote(p["prompt"]) +
            f"?width=1280&height=768&seed={p['seed']}&nologo=true&model=flux")
+    if p.get("edit") and edit_with_space(p, out):
+        return
     if p.get("edit"):
         # Same woman in a different outfit: edit her own picture (Pollinations kontext), keeping the face.
         src = f"https://github.com/{os.environ.get('GITHUB_REPOSITORY', 'NaseerBabar786/live-tv-app')}/releases/download/channel-media/{p['picture']}.jpg"
