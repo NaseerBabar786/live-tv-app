@@ -23,6 +23,10 @@ data class VodShelf(
     val isEmpty: Boolean get() = movies.isEmpty() && series.isEmpty() && shows.isEmpty() && kids.isEmpty()
     val size: Int get() = movies.size + series.size + shows.size + kids.size
 
+    /** How many titles (films, or shows with a new episode) are newly added since [since]. */
+    fun newCount(since: String): Int =
+        movies.count { Vod.isNew(it, since) } + (series + shows + kids).count { it.newEpisodes(since) > 0 }
+
     /** The folders of the Series, Shows or Kids section (none for Movies). */
     fun folders(section: Vod.Section): List<Vod.Show> = when (section) {
         Vod.Section.MOVIES -> emptyList()
