@@ -56,7 +56,9 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
             override fun onPlaybackStateChanged(state: Int) {
                 // The owner's channel moves on to whatever its schedule has next.
                 if (state == Player.STATE_ENDED && MyChannel.isMine(channel)) {
-                    endedUrl = scheduledUrl
+                    // A filler that finished: the next one (or the next programme). Otherwise the programme
+                    // itself finished, maybe before its time was up.
+                    if (fillerUrl != null) fillerUrl = null else endedUrl = scheduledUrl
                     playScheduled()
                 }
             }
@@ -75,6 +77,9 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
     private var scheduledZero: Long? = null
     /** A video that reached its end early (its length on the website was too long). */
     private var endedUrl: String? = null
+    /** The short video filling the time after [endedUrl] until the schedule moves on, and the last one played. */
+    private var fillerUrl: String? = null
+    private var lastFiller: String? = null
 
     /** Called with a user-facing message when a stream cannot be played; null clears it. */
     var onError: ((String?) -> Unit)? = null
@@ -84,6 +89,8 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
         scheduledUrl = null
         scheduledZero = null
         endedUrl = null
+        fillerUrl = null
+        lastFiller = null
         if (YouTube.isYouTube(channel.url)) {
             // YouTube streams play only in YouTube's player, which opens in full screen.
             stop()
@@ -167,11 +174,28 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
                     return
                 }
                 if (url == endedUrl && now.offsetMs > 0) {
-                    // Already over; wait quietly for the next programme.
+                    // Already over before its time: short fillers (our promos, ads, little shows) until the
+                    // schedule moves on, never a still picture (the owner, 2026-10-07).
                     handler.postDelayed(nextOnSchedule, (now.untilMs - nowMs).coerceIn(1_000, 60_000))
+                    val playingFiller = fillerUrl != null &&
+                        (player.playbackState == Player.STATE_READY || player.playbackState == Player.STATE_BUFFERING)
+                    if (playingFiller) return
+                    val left = now.untilMs - nowMs
+                    val filler = if (left > 3_000) MyChannel.filler(channel, left, nowMs, lastFiller) else null
+                    if (filler != null) {
+                        fillerUrl = filler.url
+                        lastFiller = filler.url
+                        scheduledUrl = filler.url
+                        scheduledZero = nowMs
+                        candidates = mimeCandidates(filler.url).map { filler.url to it }
+                        attempt = 0
+                        onError?.invoke(null)
+                        prepareCurrent()
+                    }
                     return
                 }
                 endedUrl = null
+                fillerUrl = null
                 // Checked at least every minute, so a changed schedule is picked up soon.
                 handler.postDelayed(nextOnSchedule, (now.untilMs - nowMs).coerceIn(1_000, 60_000))
                 val zero = if (now.video.seconds > 0) nowMs - now.offsetMs else null

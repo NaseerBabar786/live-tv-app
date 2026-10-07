@@ -173,6 +173,8 @@ object MyChannel {
         val logoCorner: String = "tr",
         /** Which of [STATIONS] this is. */
         val id: String = "main",
+        /** Short videos (ids) that fill the time when a programme ends before its slot does; ads when empty. */
+        val fillers: List<String> = emptyList(),
     ) {
         val channel: Channel
             get() = Channel(name = name, url = urlOf(id), logo = logo, number = STATIONS.firstOrNull { it.id == id }?.number ?: 0)
@@ -269,8 +271,31 @@ object MyChannel {
             ticker = o.optString("ticker").trim().takeIf { it.isNotEmpty() && o.optBoolean("tickerOn", true) },
             logoCorner = o.optString("logoCorner").ifBlank { "tr" },
             id = id,
+            fillers = o.optJSONArray("fillers")?.let { a -> (0 until a.length()).map { a.optString(it) } }.orEmpty(),
         )
     }
+
+    /**
+     * Something short to play when a programme ends before the schedule moves on (the owner, 2026-10-07:
+     * never a still picture or dead air): the channel's fillers (or its ads), taking turns by the minute,
+     * the first one that fits in [leftMs] and isn't [skip] (the one just played); the shortest when none fits,
+     * cut off when the schedule moves on. Null when the channel has none. Same as fillerFor in schedule.js.
+     */
+    fun filler(c: Config, leftMs: Long, nowMs: Long, skip: String? = null): Video? {
+        val byId = c.videos.associateBy { it.id }
+        val pool = (c.fillers.mapNotNull { byId[it] }.ifEmpty { c.videos.filter { it.kind == "ad" } })
+            .filter { it.seconds in 1..660 && it.youtube == null }
+            .distinctBy { it.url }
+        if (pool.isEmpty()) return null
+        val start = Math.floorMod(nowMs / 60_000, pool.size.toLong()).toInt()
+        val turn = pool.drop(start) + pool.take(start)
+        return turn.firstOrNull { it.seconds * 1000 <= leftMs && it.url != skip }
+            ?: turn.filter { it.url != skip }.minByOrNull { it.seconds }
+            ?: turn.first()
+    }
+
+    fun filler(channel: Channel?, leftMs: Long, nowMs: Long, skip: String? = null): Video? =
+        configOf(channel)?.let { filler(it, leftMs, nowMs, skip) }
 
     /** What [channel]'s current settings put on air at [nowMs]; off air when the channel is off. */
     fun now(channel: Channel?, nowMs: Long = System.currentTimeMillis()): Now =

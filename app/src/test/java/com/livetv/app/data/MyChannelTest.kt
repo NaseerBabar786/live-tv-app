@@ -218,4 +218,28 @@ class MyChannelTest {
         assertEquals(today.sortedBy { it.at }.map { it.at }, today.map { it.at })
         assertTrue(MyChannel.upNext(c, at(20, 0)).isNotEmpty())
     }
+
+    @Test
+    fun fillersTakeTurnsAndFitTheTimeLeft() {
+        val c = MyChannel.parse(
+            JSONObject(
+                """{"name":"Bazaar TV","videos":[
+                  {"id":"a","title":"Film","url":"https://x/a.mp4","secs":600},
+                  {"id":"story","title":"Story","url":"https://x/story.mp4","secs":200},
+                  {"id":"promo","title":"Promo","url":"https://x/promo.mp4","secs":30,"kind":"ad"},
+                  {"id":"ad","title":"Ad","url":"https://x/ad.mp4","secs":20,"kind":"ad"}],
+                  "loop":["a"],"fillers":["story","promo"]}""",
+            ),
+        )
+        // A minute left: the story doesn't fit, the promo does.
+        assertEquals("promo", MyChannel.filler(c, 60_000, at(20, 0))?.id)
+        // Plenty left: they take turns by the minute, and never the one just played.
+        assertEquals("story", MyChannel.filler(c, 600_000, at(20, 0))?.id)
+        assertEquals("promo", MyChannel.filler(c, 600_000, at(20, 0), skip = "https://x/story.mp4")?.id)
+        // No fillers set: the channel's ads.
+        val noFillers = MyChannel.parse(JSONObject(c.let { """{"name":"T","videos":[
+            {"id":"a","title":"Film","url":"https://x/a.mp4","secs":600},
+            {"id":"ad","title":"Ad","url":"https://x/ad.mp4","secs":20,"kind":"ad"}],"loop":["a"]}""" }))
+        assertEquals("ad", MyChannel.filler(noFillers, 60_000, at(20, 0))?.id)
+    }
 }
