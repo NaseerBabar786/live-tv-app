@@ -34,8 +34,8 @@
  ],
  "moving": {
   "about": "Moving newsreaders: a waist-up picture (Pollinations) brought to life with the free Wan 2.2 image-to-video Space (two 5 s parts, the second continues from the last frame of the first), then her voice; a second version also gets LatentSync lips (CPU). Made by news-presenters.yml job 'move'.",
-  "motion": "a professional TV news anchor speaking warmly to the camera, natural lively facial expressions, she blinks, raises her eyebrows slightly, small nods and head tilts, gentle hand gestures above the desk, shoulders move as she breathes and talks, static camera, realistic",
-  "motion2": "the news anchor keeps talking to the camera with a friendly expression, a small smile, a nod, one hand gesture, then looks calmly at the camera, static camera, realistic",
+  "motion": "a calm professional TV news anchor reading the news to the camera, composed friendly and serious expression, she speaks clearly, blinks naturally, subtle head movements and an occasional small nod, slight hand movement on the desk, shoulders move gently as she breathes, no big smile, static camera, realistic broadcast footage",
+  "motion2": "the news anchor keeps reading the news to the camera with a composed, sincere expression, a small nod, a slight hand gesture, then a brief polite smile, static camera, realistic broadcast footage",
   "people": [
    {
     "id": "anchor-1",
@@ -43,6 +43,27 @@
     "ur": "ثنا",
     "seed": 5101,
     "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her late twenties sitting at a glossy news desk, long dark hair, elegant embroidered maroon shalwar kameez with a light dupatta on one shoulder, natural skin texture, both hands resting on the desk, looking into the camera with a gentle closed-mouth smile, real television news studio with blurred blue screens behind her, soft key light, Canon 85mm, shallow depth of field, photographed by a professional, not illustration"
+   },
+   {
+    "id": "anchor-2",
+    "name": "Ayesha",
+    "ur": "عائشہ",
+    "seed": 5202,
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her early thirties with a soft white chiffon dupatta loosely over her hair, light makeup, wearing an elegant pastel green kameez, sitting at a glossy modern news desk, natural skin texture with pores, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, real television news studio set with blurred blue and red screens behind her, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration"
+   },
+   {
+    "id": "anchor-3",
+    "name": "Priya",
+    "ur": "پریا",
+    "seed": 5303,
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Indian woman TV news anchor in her late twenties, hair tied in a neat low bun, small bindi, wearing an elegant royal blue silk saree, sitting at a glossy modern news desk, natural skin texture with pores, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, real television news studio set with blurred blue and red screens behind her, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration"
+   },
+   {
+    "id": "anchor-4",
+    "name": "Zara",
+    "ur": "زارا",
+    "seed": 5404,
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful young South Asian woman TV news anchor, shoulder-length wavy dark hair, small pearl earrings, wearing a smart black blazer over a cream blouse, sitting at a glossy modern news desk, natural skin texture with pores, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, real television news studio set with blurred blue and red screens behind her, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration"
    }
   ]
  }

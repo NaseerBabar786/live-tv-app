@@ -12,25 +12,25 @@ on:
       - ".github/workflows/news-presenter-move.yml"
   workflow_dispatch:
     inputs:
-      id:
-        description: "Anchor id from presenters.json 'moving'"
+      ids:
+        description: 'Anchor ids from presenters.json "moving", as a JSON list'
         required: false
-        default: "anchor-1"
+        default: '["anchor-2","anchor-3","anchor-4"]'
       lips:
         description: "Also make the lip-synced version"
         type: boolean
         default: true
 
-concurrency:
-  group: news-presenter-move
-  cancel-in-progress: false
-
-env:
-  ID: ${{ github.event.inputs.id || 'anchor-1' }}
-
+# One runner per anchor (each runner has its own free video quota).
 jobs:
   move:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        id: ${{ fromJson(github.event.inputs.ids || '["anchor-2","anchor-3","anchor-4"]') }}
+    env:
+      ID: ${{ matrix.id }}
     timeout-minutes: 90
     permissions:
       contents: write
@@ -61,6 +61,12 @@ jobs:
     if: github.event_name == 'push' || github.event.inputs.lips == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      matrix:
+        id: ${{ fromJson(github.event.inputs.ids || '["anchor-2","anchor-3","anchor-4"]') }}
+    env:
+      ID: ${{ matrix.id }}
     permissions:
       contents: write
     steps:
