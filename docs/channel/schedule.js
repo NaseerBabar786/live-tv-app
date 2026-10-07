@@ -15,7 +15,7 @@ export const TEST_SCHEDULE_URL = "https://tv.bulkbazaar.ca/channel/test-schedule
  * locked; their schedule ([ready] or the owner's saved one) is the backup when YouTube won't play.
  */
 export const STATIONS = [
-  { id: "main", name: "Bazaar TV", dial: "1", doc: "_channel", page: "channel/",
+  { id: "main", name: "Bazaar TV One", dial: "1", doc: "_channel", page: "channel/",
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png", ready: TEST_SCHEDULE_URL,
     credits: "Shows are public domain or Creative Commons works. Blender films: Blender Foundation, blender.org (CC BY). Space videos: NASA." },
   { id: "filmein", yt: true, trailerLangs: ["Hindi"], web: "channel/ytc.html?c=filmein", ytMins: 120, tagline: "Full films from the studios' own channels, day and night",
@@ -425,7 +425,7 @@ export function blockAt(c, now = Date.now()) {
 /** The address of channel/block.html playing [b] for channel settings [c]. */
 export function blockPage(c, b) {
   const p = new URLSearchParams({ at: b.start, until: b.end, ids: b.videos.map(v => youtubeId(v.url)).join(","),
-    secs: b.videos.map(v => v.secs).join(","), name: c.name || "Bazaar TV", corner: c.logoCorner || "tr" });
+    secs: b.videos.map(v => v.secs).join(","), name: c.name || "Bazaar TV One", corner: c.logoCorner || "tr" });
   if (c.logo) p.set("logo", c.logo);
   if (c.tickerOn !== false && c.ticker) p.set("tick", c.ticker);
   return "https://tv.bulkbazaar.ca/channel/block.html?" + p;
