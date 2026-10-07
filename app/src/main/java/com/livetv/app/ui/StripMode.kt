@@ -175,6 +175,44 @@ internal fun StripMode(
         if (onTile) cursor = inNext.coerceAtLeast(0)
     }
 
+    // Holding OK on a tile, or a long press on it: adds the channel to Favorites (or takes it off).
+    fun toggleFavorite(channel: Channel) {
+        val adding = channel.id !in favorites
+        onToggleFavorite(channel)
+        Toast.makeText(
+            context,
+            if (adding) "${channel.name} added to Favorites" else "${channel.name} removed from Favorites",
+            Toast.LENGTH_SHORT,
+        ).show()
+    }
+
+    // A tap moves the cursor there and does what OK does there.
+    fun tapPlayer() {
+        touchedAt = System.currentTimeMillis()
+        cursor = AT_PLAYER
+        current?.let(onOpen)
+    }
+    fun tapModes() {
+        touchedAt = System.currentTimeMillis()
+        cursor = AT_MODES
+        onModes()
+    }
+    fun tapGroup() {
+        touchedAt = System.currentTimeMillis()
+        changeGroup(1)
+        cursor = AT_GROUP
+    }
+    fun tapTile(i: Int, channel: Channel) {
+        touchedAt = System.currentTimeMillis()
+        cursor = i
+        playingId = channel.id
+    }
+    fun holdTile(i: Int, channel: Channel) {
+        touchedAt = System.currentTimeMillis()
+        cursor = i
+        toggleFavorite(channel)
+    }
+
     // The big player: the chosen channel, live, with sound.
     val stream = remember { StreamPlayer(context, preview = true) }
     val view = remember { ViewHolder() }
@@ -250,15 +288,7 @@ internal fun StripMode(
                             // Held down on a tile: adds the channel to Favorites (or takes it off).
                             if (onTile && e.nativeKeyEvent.repeatCount >= 6 && !held) {
                                 held = true
-                                list.getOrNull(at)?.let { channel ->
-                                    val adding = channel.id !in favorites
-                                    onToggleFavorite(channel)
-                                    Toast.makeText(
-                                        context,
-                                        if (adding) "${channel.name} added to Favorites" else "${channel.name} removed from Favorites",
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                                }
+                                list.getOrNull(at)?.let { toggleFavorite(it) }
                             }
                         } else if (e.type == KeyEventType.KeyUp) {
                             if (!held) {
@@ -343,6 +373,8 @@ internal fun StripMode(
                         )
                     }
                 }
+                // A tap on the big player: full screen (over the picture, so the web pages don't take the tap).
+                Box(Modifier.matchParentSize().tap { tapPlayer() })
                 // The cursor on the big player: a yellow frame and what OK does.
                 if (cursor == AT_PLAYER) {
                     Box(Modifier.fillMaxSize().border(BorderStroke(4.dp, Yellow)))
@@ -427,6 +459,7 @@ internal fun StripMode(
                             top = "Modes",
                             bottom = "Change mode",
                             icon = true,
+                            onTap = { tapModes() },
                         )
                     }
                     item(key = "group") {
@@ -439,6 +472,7 @@ internal fun StripMode(
                             },
                             icon = false,
                             arrows = groups.size > 1,
+                            onTap = { tapGroup() },
                         )
                     }
                     itemsIndexed(list, key = { _, c -> c.id }) { i, channel ->
@@ -449,6 +483,8 @@ internal fun StripMode(
                             focused = onTile && i == at,
                             live = channel.id == playingId,
                             favorite = channel.id in favorites,
+                            onTap = { tapTile(i, channel) },
+                            onLongPress = { holdTile(i, channel) },
                         )
                     }
                 }
@@ -459,11 +495,20 @@ internal fun StripMode(
 
 /** The Modes button and the group button at the start of the strip. */
 @Composable
-private fun StripButton(height: Dp, focused: Boolean, top: String, bottom: String, icon: Boolean, arrows: Boolean = false) {
+private fun StripButton(
+    height: Dp,
+    focused: Boolean,
+    top: String,
+    bottom: String,
+    icon: Boolean,
+    arrows: Boolean = false,
+    onTap: () -> Unit,
+) {
     val scale by animateFloatAsState(if (focused) 1.08f else 1f, label = "scale")
     Column(
         Modifier
             .graphicsLayer { scaleX = scale; scaleY = scale }
+            .tap(onTap = onTap)
             .height(height)
             .width(if (icon) height * 1.25f else height * 1.9f)
             .clip(TileShape)
@@ -499,11 +544,21 @@ private fun StripButton(height: Dp, focused: Boolean, top: String, bottom: Strin
 
 /** One channel in the strip: its logo, number and name (no pictures, so the strip stays quick). */
 @Composable
-private fun StripTile(channel: Channel, width: Dp, height: Dp, focused: Boolean, live: Boolean, favorite: Boolean) {
+private fun StripTile(
+    channel: Channel,
+    width: Dp,
+    height: Dp,
+    focused: Boolean,
+    live: Boolean,
+    favorite: Boolean,
+    onTap: () -> Unit,
+    onLongPress: () -> Unit,
+) {
     val scale by animateFloatAsState(if (focused) 1.1f else 1f, label = "scale")
     Box(
         Modifier
             .graphicsLayer { scaleX = scale; scaleY = scale }
+            .tap(onLongPress = onLongPress, onTap = onTap)
             .size(width, height)
             .clip(TileShape)
             .background(

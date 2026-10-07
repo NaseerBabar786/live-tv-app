@@ -118,6 +118,7 @@ class MainActivity : ComponentActivity() {
                 onTipDone = { viewModel.favoritesTip = null },
                 barWake = viewModel.channelBarWake,
                 onBarHidden = { viewModel.channelBarHidden = it },
+                onZap = viewModel::zap,
             )
         } else {
             ChannelListScreen(
