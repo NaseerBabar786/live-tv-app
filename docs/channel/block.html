@@ -254,9 +254,11 @@ window.onYouTubeIframeAPIReady = () => {
       },
       onStateChange: e => {
         if (e.data === YT.PlayerState.PLAYING) { if (ownOn) { e.target.stopVideo(); return; } cover(false); started = true; failures = 0; }
-        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
+        // (Not while our own show plays: YouTube is stopped under it then.)
+        else if (!ownOn) cover(true);
         // It never stays paused; at the end of a trailer our card waits for the next one's turn.
-        else if (e.data === YT.PlayerState.PAUSED && !finished) { cover(true); e.target.playVideo(); }
+        if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
         // A video shorter than its time: the next spare, or our own short shows.
         else if (e.data === YT.PlayerState.ENDED) { cover(true, between(info[ids[cur]]), "اگلا پروگرام"); rescue(); }
       },

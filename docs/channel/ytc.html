@@ -287,7 +287,8 @@ window.onYouTubeIframeAPIReady = () => {
       onStateChange: e => {
         if (inBreak) return;
         if (e.data === YT.PlayerState.PLAYING) cover(false);
-        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED || e.data === YT.PlayerState.PAUSED) cover(true);
+        // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
+        else cover(true);
         lastState = e.data;
         if (e.data === YT.PlayerState.PLAYING) started = true;
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
