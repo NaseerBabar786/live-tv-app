@@ -93,10 +93,10 @@
         <span class="small">While this is off, every viewer has everything (like today). When it's on, viewers without a package get Free, and new viewers get a free trial of everything first.</span></p>
       <p><label>Free trial for new viewers: <input class="inp" type="number" id="trialDays" min="0" max="365" style="width:80px"> days</label></p>
       <div class="table-wrap prices"><table>
-        <thead><tr><th>Package</th><th>1 month (you type)</th><th>3 months</th><th>6 months</th><th>1 year</th></tr></thead>
+        <thead><tr><th>Package</th><th>Price a month</th></tr></thead>
         <tbody id="priceRows"></tbody>
       </table></div>
-      <p class="small">Type only the <b>1 month</b> price; the others fill in by themselves. Each longer plan costs about 10% less per month than the one before it, ending in 9 cents. Example: 1 month at $5.99 makes 3 months $16.29 ($5.43 a month), 6 months $29.59 ($4.93 a month) and 1 year $53.79 ($4.48 a month). You can still change any box by hand before saving.</p>
+      <p class="small">Gold is sold by the month only (owner, 2026-10-07): viewers see one choice, this price a month.</p>
       <p><label><b>How to pay</b> (shown to viewers on the packages screen)<br><textarea class="inp" id="howToPay"></textarea></label></p>
       <div class="row"><button class="btn primary" id="saveCfg">Save settings</button><span class="small" id="cfgMsg"></span></div>
     </div>
@@ -203,9 +203,9 @@ const tierName = (t, p) => t === "Promo" ? (p?.promoName || "Promotion") : tierO
 const ALL_KEYS = FEATURES.map(f => f[0]);
 const FREE_KEYS = ALL_KEYS.filter(k => k !== "channels");
 const DEFAULT_FEATURES = { free: FREE_KEYS, gold: ALL_KEYS };
-const LENGTHS = [["month", "1 month"], ["three", "3 months"], ["six", "6 months"], ["year", "1 year"]];
+const LENGTHS = [["month", "1 month"]];
 const DEFAULTS = {
-  gold_month: "$3.99", gold_three: "$10.89", gold_six: "$19.79", gold_year: "$35.99",
+  gold_month: "$9.99",
   trialDays: 7, enforce: false,
   howToPay: "Pick a package below and press Ask. We'll message you back here with how to pay (Interac e-Transfer or card), and turn your package on as soon as it's paid. Questions? WhatsApp 437 602 6500.",
 };
@@ -280,7 +280,6 @@ if (!configured) {
     }
     showCards();
     // Settings saved before 3 months existed: work the others out from the month.
-    for (const t of TIERS) if (saved[t.toLowerCase() + "_month"] && !saved[t.toLowerCase() + "_three"]) fillFromMonth(t.toLowerCase());
     showPrices();
   }
 
@@ -373,21 +372,10 @@ if (!configured) {
     document.querySelectorAll(".price[data-p]").forEach(el => {
       const t = el.dataset.p;
       if (t === "free") return;
-      el.textContent = `${$(t + "_month").value}/month · ${$(t + "_three").value}/3 months · ${$(t + "_six").value}/6 months · ${$(t + "_year").value}/year`;
+      el.textContent = `${$(t + "_month").value} a month`;
     });
   }
-  // From the monthly price: each longer plan costs 10% less per month than the one before it,
-  // rounded to the nearest 10 cents and ending in 9 (the app does the same sums when a box is empty).
-  const round99 = v => Math.max(0.99, Math.round(v * 10) / 10 - 0.01);
-  const money = v => "$" + v.toFixed(2);
-  function fillFromMonth(t) {
-    const m = parseFloat($(t + "_month").value.replace(/[^0-9.]/g, ""));
-    if (!(m > 0)) return;
-    const three = round99(m * 3 / 1.1), six = round99(three * 2 / 1.1), year = round99(six * 2 / 1.1);
-    $(t + "_three").value = money(three); $(t + "_six").value = money(six); $(t + "_year").value = money(year);
-  }
   $("priceRows").addEventListener("input", e => {
-    if (e.target.id?.endsWith("_month")) fillFromMonth(e.target.id.replace("_month", ""));
     showPrices();
   });
 
@@ -401,7 +389,7 @@ if (!configured) {
       await fs.setDoc(fs.doc(db, "config", "plans"), data);
       // Read it back from the server so "Saved" only shows when it really is.
       const back = (await fs.getDocFromServer(fs.doc(db, "config", "plans"))).data() || {};
-      if (back.gold_year !== data.gold_year || back.gold_month !== data.gold_month) throw new Error("the saved prices didn't come back");
+      if (back.gold_month !== data.gold_month) throw new Error("the saved prices didn't come back");
       msg.className = "saved"; msg.textContent = "✓ Saved at " + new Date().toLocaleTimeString([], { timeStyle: "short" });
     } catch (e) { msg.className = "bad"; msg.textContent = "Not saved: " + saveHelp(e); }
   };
