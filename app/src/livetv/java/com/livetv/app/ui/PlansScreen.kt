@@ -177,27 +177,15 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
                             verticalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
                             Text(
-                                tier.label + (prices?.let { " · ${it.month}/month" } ?: " · free") +
+                                tier.label + (prices?.let { " · ${it.month} a month" } ?: "") +
                                     if (tier == current) "  ✓ yours" else "",
                                 fontWeight = FontWeight.Bold,
                             )
                             Text(Subscription.describe(tier), style = MaterialTheme.typography.bodySmall)
                             if (prices != null) {
-                                // Shortest first, like tv.bulkbazaar.ca/packages (owner, 2026-10-06); the year is the best value.
-                                val lengths = listOf(
-                                    "1 month" to prices.month,
-                                    "3 months" to prices.threeMonths,
-                                    "6 months" to prices.sixMonths,
-                                    "1 year" to prices.year,
-                                )
-                                lengths.chunked(2).forEach { pair ->
-                                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                        pair.forEach { (length, price) ->
-                                            OutlinedButton(onClick = { ask("${tier.label} package", length, price) }, modifier = Modifier.focusGlow()) {
-                                                Text("$length $price")
-                                            }
-                                        }
-                                    }
+                                // One choice: by the month (owner, 2026-10-07).
+                                OutlinedButton(onClick = { ask("${tier.label} package", "1 month", prices.month) }, modifier = Modifier.focusGlow()) {
+                                    Text("Get ${tier.label} · ${prices.month} a month")
                                 }
                             }
                         }

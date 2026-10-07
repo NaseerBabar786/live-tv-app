@@ -38,5 +38,6 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 
 - 1.9.91 (PC 1.0.1): only Free and Gold packages; Free is fixed (every feature, only our own channels)
   and every package has at least that; old Silver and Platinum count as Gold (`plans.js`).
+- 1.9.96 (PC 1.0.4): packages screen shows Free once (no "Free · free") and Gold at one price a month, $9.99 by default (`settings.js`, `plans.js`).
 - 1.9.97 (PC 1.0.5): the start screen shows only a loading circle while the channels load; no sponsor
   or words, no 5-second countdown (`screens/start.js`).

@@ -77,7 +77,7 @@ object Subscription {
 
     // Declared before _offer: Offer() reads it while this object starts, and a later one is still null then.
     val DEFAULT_PRICES: Map<Plans.Tier, Prices> = mapOf(
-        Plans.Tier.Gold to Prices("$35.99", "$19.79", "$10.89", "$3.99"),
+        Plans.Tier.Gold to Prices("$89.79", "$49.39", "$27.19", "$9.99"),
     )
 
     /**
