@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Comedy",
- "built": "2026-10-07 05:41 UTC",
+ "built": "2026-10-07 10:03 UTC",
  "videos": [
   {
    "id": "iS8X_EyTkmk",
@@ -220,13 +220,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "n6MfmMy-5dM",
-   "title": "Mr Bean vs the Fly From His Nightmares! 🪰😂 | Mr Bean Animated Season 1 | Funny Clips | Mr Bean",
-   "label": "Mr Bean",
-   "mins": 24.05,
-   "found": "2026-10-06"
-  },
-  {
    "id": "CwGLp8dzy48",
    "title": "SE 01 EP 352 -  Jethalal Kyu चुप चुप के देख रहा हे Society Walo Ko ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
@@ -329,20 +322,6 @@
    "title": "FULL EPISODE 4814 -  Kya Chalu Pandey Karenge Gokuldham ki रखवाली!  | Taarak Mehta ka Ooltah Chasmah",
    "label": "Taarak Mehta",
    "mins": 20.85,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "k_V9aUbyf9U",
-   "title": "Tapu Ne क्यों काटा Jethalal Ka हाथ ! | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "mins": 34.833333333333336,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "vJBuxvDXetk",
-   "title": "Tapu Aur Sonu क्यों कर Rahe Hain इशारों में बात !  | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "mins": 38.61666666666667,
    "found": "2026-10-06"
   },
   {
@@ -455,6 +434,27 @@
    "title": "Shaun the Sheep Season 2 Episode 11-15 | Back to School 🔔🚌",
    "label": "Shaun the Sheep",
    "mins": 31.0,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "n6MfmMy-5dM",
+   "title": "Mr Bean vs the Fly From His Nightmares! 🪰😂 | Mr Bean Animated Season 1 | Funny Clips | Mr Bean",
+   "label": "Mr Bean",
+   "mins": 24.05,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "k_V9aUbyf9U",
+   "title": "Tapu Ne क्यों काटा Jethalal Ka हाथ ! | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 34.833333333333336,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "vJBuxvDXetk",
+   "title": "Tapu Aur Sonu क्यों कर Rahe Hain इशारों में बात !  | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 38.61666666666667,
    "found": "2026-10-06"
   },
   {
