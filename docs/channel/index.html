@@ -114,7 +114,9 @@ $("dial").textContent = $("dial2").textContent = station.dial;
 $("credits").textContent = station.credits;
 
 /** The owner's public settings (channel/<id>), or the ready-made schedule until there are any. */
-async function load() {
+// Our channels keep their fixed names (owner, 2026-10-07), whatever a saved schedule says.
+const load = async () => Object.assign(await loadSchedule(), { name: station.name });
+async function loadSchedule() {
   try {
     const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/channel/${station.id}?key=${firebaseConfig.apiKey}`;
     const r = await fetch(url, { cache: "no-store" });

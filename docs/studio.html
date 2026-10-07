@@ -327,7 +327,7 @@
     <section class="panel" id="step1">
       <h2><span class="num">1</span> Your channel</h2>
       <div class="two">
-        <label class="f">Channel name<input id="name" maxlength="40" placeholder="Bazaar TV One"></label>
+        <label class="f">Channel name (fixed)<input id="name" readonly tabindex="-1" style="opacity:.7;cursor:default"></label>
         <label class="f">Time zone of your time slots
           <select id="tz">
             <option value="America/Toronto">Toronto / New York (Eastern)</option>
@@ -734,6 +734,8 @@ async function loadSaved() {
   }
   // The logo isn't picked here any more: a channel keeps the one already saved, else its own Bazaar logo.
   if (!saved.logo) saved.logo = station.logo;
+  // Each channel keeps its own fixed name (owner, 2026-10-07): "Bazaar TV One", "Bazaar Cinema"...
+  saved.name = station.name;
   c = clone(saved);
   dirty = false;
   renderAll();
@@ -747,7 +749,6 @@ function renderChannel() {
   $("ticker").value = c.ticker || "";
   $("tickerOn").checked = c.tickerOn !== false;
 }
-$("name").oninput = () => { c.name = $("name").value; changed(false); };
 $("tz").onchange = () => { c.tz = $("tz").value; changed(); };
 $("active").onchange = () => { c.active = $("active").checked; changed(); };
 $("ticker").oninput = () => { c.ticker = $("ticker").value; changed(false); };
@@ -1715,7 +1716,7 @@ $("useAuto").onclick = async () => {
 $("copyRule").onclick = () => navigator.clipboard.writeText($("ruleText").textContent).then(() => $("copyRule").textContent = "Copied ✓");
 
 $("save").onclick = async () => {
-  c.name = (c.name || "").trim() || "My Channel";
+  c.name = station.name;
   if (!c.videos.length) { $("saveMsg").innerHTML = '<span class="err">Add at least one video (step 2) before saving.</span>'; return; }
   if (!c.loop.length && !c.slots.length) { $("saveMsg").innerHTML = '<span class="err">Put at least one video in the loop (step 3) or a time slot (step 4).</span>'; return; }
   const data = JSON.stringify(c);
