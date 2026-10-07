@@ -176,15 +176,13 @@ def ai_script(stories, kind):
     text = ""
     for attempt in range(3):
         try:
-            # GitHub Models; the older Azure address (same free token) when the new one answers oddly.
-            url, model = (("https://models.github.ai/inference/chat/completions", req["model"]) if attempt == 0 else
-                          ("https://models.inference.ai.azure.com/chat/completions", req["model"].split("/")[-1]))
-            r = urllib.request.Request(url, data=json.dumps(dict(req, model=model)).encode(), method="POST",
+            r = urllib.request.Request("https://models.github.ai/inference/chat/completions",
+                                       data=json.dumps(req).encode(), method="POST",
                                        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json",
                                                 "Accept": "application/json", "X-GitHub-Api-Version": "2022-11-28"})
             with urllib.request.urlopen(r, timeout=120) as resp:
                 raw = resp.read().decode(errors="replace")
-            text = raw
+                text = f"{resp.status} {resp.geturl()} {raw}"
             text = json.loads(raw)["choices"][0]["message"]["content"] or ""
             text = re.sub(r"^```(json)?|```$", "", text.strip()).strip()
             got = json.loads(text)["stories"]
