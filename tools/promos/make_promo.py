@@ -18,8 +18,11 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-W, H, FPS = 1280, 720, 30
-FONT = lambda w, size: ImageFont.truetype(os.path.join(HERE, "fonts", f"InterDisplay-{w}.otf"), size)
+# Full HD (owner, 2026-10-07: the 720p promos looked soft on a big TV). The layout was drawn for
+# 1280×720; px() scales those numbers.
+W, H, FPS = 1920, 1080, 30
+px = lambda n: int(round(n * W / 1280))
+FONT = lambda w, size: ImageFont.truetype(os.path.join(HERE, "fonts", f"InterDisplay-{w}.otf"), px(size))
 YELLOW = (250, 204, 21)
 
 
@@ -28,9 +31,12 @@ def run(cmd, **kw):
 
 
 def duration(url):
-    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", url],
-                         capture_output=True, text=True, timeout=120).stdout.strip()
-    return float(out or 0)
+    try:
+        out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", url],
+                             capture_output=True, text=True, timeout=120).stdout.strip()
+        return float(out or 0)
+    except (subprocess.TimeoutExpired, ValueError):
+        return 0.0
 
 
 CROPS = {}
@@ -58,9 +64,40 @@ def black_bars(url, d):
     return CROPS[url]
 
 
+SIZES = {}
+
+
+def size_of(url):
+    """The picture's (width, height) once its black bars are cut off."""
+    if url not in SIZES:
+        c = re.match(r"crop=(\d+):(\d+)", CROPS.get(url, ""))
+        if c:
+            SIZES[url] = (int(c[1]), int(c[2]))
+        else:
+            out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
+                                  "-of", "csv=p=0", url], capture_output=True, text=True, timeout=60).stdout.strip().split(",")
+            SIZES[url] = (int(out[0]), int(out[1])) if len(out) >= 2 and out[0].isdigit() else (W, H)
+    return SIZES[url]
+
+
 def frames(url, start, secs, w=W, h=H):
-    """Raw RGB frames of [secs] from [start], filled to w×h (black bars cut off first)."""
-    vf = f"{CROPS.get(url, '')}scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS}"
+    """Raw RGB frames of [secs] from [start], filled to w×h (black bars cut off first).
+    An old, small picture (a 1930s cartoon at 480×360) is cleaned and sharpened instead of blown up
+    as it is; a square one stays whole in the middle over a soft copy of itself, as channels show old
+    films, rather than being cut and zoomed to fill the screen."""
+    sw, sh = size_of(url)
+    small = sh < 600 and w >= 640
+    clean = "hqdn3d=4:3:6:5," if small else ""
+    sharp = ",unsharp=5:5:0.7:5:5:0" if small else ""
+    if small and sw / sh < 1.5:
+        fh = h
+        fw = int(h * sw / sh) // 2 * 2
+        vf = (f"{CROPS.get(url, '')}{clean}split[a][b];"
+              f"[a]scale={w // 8}:{h // 8}:force_original_aspect_ratio=increase,crop={w // 8}:{h // 8},boxblur=4:2,"
+              f"scale={w}:{h},eq=brightness=-0.12:saturation=0.8[bg];"
+              f"[b]scale={fw}:{fh}:flags=lanczos{sharp}[fg];[bg][fg]overlay=(W-w)/2:0,fps={FPS}")
+    else:
+        vf = f"{CROPS.get(url, '')}{clean}scale={w}:{h}:force_original_aspect_ratio=increase:flags=lanczos,crop={w}:{h}{sharp},fps={FPS}"
     p = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{start:.2f}", "-i", url, "-t", f"{secs:.3f}", "-an",
                         "-vf", vf, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True, timeout=300)
     a = np.frombuffer(p.stdout, np.uint8)
@@ -77,9 +114,27 @@ def score(url, t):
     return (min(g.mean(), 140) / 140) * min(g.std() / 50, 1.5)
 
 
+# The Blender Foundation's own full-quality copies of the open films; our channel-media copies are
+# small 720p ones made for streaming, too soft for a promo on a big TV.
+MASTERS = {"sintel": "https://download.blender.org/durian/movies/Sintel.2010.1080p.mkv",
+           "tears": "https://download.blender.org/demo/movies/ToS/tears_of_steel_1080p.mov",
+           "bunny": "https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_1080p_h264.mov"}
+
+
+def best_copy(url):
+    """The sharpest copy of [url] we can open: the film maker's master when there is one."""
+    name = url.rsplit("/", 1)[-1].lower()
+    for key, master in MASTERS.items():
+        # Not the dubbed copies (sintel-urdu.mp4): they carry our own voices.
+        if name.startswith(key) and not re.search(r"-(urdu|hindi|ur|hi)\b", name) and duration(master) > 20:
+            print("Using the master copy:", master, file=sys.stderr)
+            return master
+    return url
+
+
 def pick_moments(videos, count):
     """[count] (url, start) moments spread through the programme, the best-looking in each part."""
-    srcs = [(u, duration(u)) for u in videos[:4]]
+    srcs = [(u, duration(u)) for u in (best_copy(v) for v in videos[:4])]
     srcs = [(u, d) for u, d in srcs if d > 20]
     if not srcs:
         raise RuntimeError("couldn't open the programme's video: " + ", ".join(videos[:4]))
@@ -111,7 +166,7 @@ def text_layer():
 def shadow_text(d, xy, text, font, fill=(255, 255, 255, 255), anchor="la", shadow=6):
     x, y = xy
     for r in (shadow, shadow // 2):
-        d.text((x + 2, y + 3), text, font=font, fill=(0, 0, 0, 90), anchor=anchor)
+        d.text((x + px(2), y + px(3)), text, font=font, fill=(0, 0, 0, 90), anchor=anchor)
     d.text((x, y), text, font=font, fill=fill, anchor=anchor)
 
 
@@ -156,24 +211,25 @@ def overlay_main(t, spec, cut_start):
         a = int(255 * (1 if t < 1.3 else max(0, (1.6 - t) / 0.3)))
         size = int(118 * (1.25 - 0.25 * k))
         f = FONT("Black", size)
-        shadow_text(d, (W // 2, H // 2 - 30), "COMING UP", f, (255, 255, 255, a), "mm")
+        shadow_text(d, (W // 2, H // 2 - px(30)), "COMING UP", f, (255, 255, 255, a), "mm")
         f2 = FONT("Bold", 40)
-        shadow_text(d, (W // 2, H // 2 + 52), "ON BAZAAR TV", f2, YELLOW + (a,), "mm")
+        shadow_text(d, (W // 2, H // 2 + px(52)), "ON BAZAAR TV", f2, YELLOW + (a,), "mm")
     # Name, sliding in from the left (from 3.5 s).
     if t >= 3.5:
         k = ease((t - 3.5) / 0.45)
-        x = int(-700 + (700 + 64) * k)
-        f = fit_font(title.upper(), "Black", 76, W - 200)
-        lines = wrap(title.upper(), f, W - 200)
+        x = px(-700 + (700 + 64) * k)
+        f = fit_font(title.upper(), "Black", 76, W - px(200))
+        lines = wrap(title.upper(), f, W - px(200))
         lh = int(f.size * 1.02)
-        y0 = H - 80 - lh * len(lines)
+        y0 = H - px(80) - lh * len(lines)
         # Dark wash under the words so they read on any picture.
-        grad = Image.new("L", (1, 260), 0)
-        for i in range(260):
-            grad.putpixel((0, i), int(170 * (i / 259) ** 1.6))
-        L.alpha_composite(Image.merge("RGBA", [Image.new("L", (W, 260), 0)] * 3 + [grad.resize((W, 260))]), (0, H - 260))
+        gh = px(260)
+        grad = Image.new("L", (1, gh), 0)
+        for i in range(gh):
+            grad.putpixel((0, i), int(170 * (i / (gh - 1)) ** 1.6))
+        L.alpha_composite(Image.merge("RGBA", [Image.new("L", (W, gh), 0)] * 3 + [grad.resize((W, gh))]), (0, H - gh))
         d = ImageDraw.Draw(L)
-        d.rectangle((x - 22, y0 + 8, x - 12, y0 + lh * len(lines) - 6), fill=YELLOW + (255,))
+        d.rectangle((x - px(22), y0 + px(8), x - px(12), y0 + lh * len(lines) - px(6)), fill=YELLOW + (255,))
         for i, line in enumerate(lines):
             shadow_text(d, (x, y0 + i * lh), line, f)
         # The time slot, above the name (from 7.5 s).
@@ -182,17 +238,17 @@ def overlay_main(t, spec, cut_start):
             fw = FONT("Black", 34)
             label = when.upper()
             tw = int(fw.getlength(label))
-            px = int(-tw - 80 + (tw + 80 + 64) * k2)
-            py = y0 - 66
-            d.rounded_rectangle((px - 16, py - 6, px + tw + 16, py + 46), 10, fill=YELLOW + (255,))
-            d.text((px, py), label, font=fw, fill=(17, 17, 17, 255))
+            bx = int(-tw - px(80) + (tw + px(80 + 64)) * k2)
+            by = y0 - px(66)
+            d.rounded_rectangle((bx - px(16), by - px(6), bx + tw + px(16), by + px(46)), px(10), fill=YELLOW + (255,))
+            d.text((bx, by), label, font=fw, fill=(17, 17, 17, 255))
             if spec.get("series") and t >= 9.5:
                 fs = FONT("Bold", 26)
-                shadow_text(d, (px + tw + 34, py + 8), "A NEW EPISODE EVERY WEEK" if spec.get("day") not in ("all", "weekdays", "weekend") else "A NEW EPISODE EVERY TIME", fs, (255, 255, 255, int(255 * ease((t - 9.5) / 0.3))))
+                shadow_text(d, (bx + tw + px(34), by + px(8)), "A NEW EPISODE EVERY WEEK" if spec.get("day") not in ("all", "weekdays", "weekend") else "A NEW EPISODE EVERY TIME", fs, (255, 255, 255, int(255 * ease((t - 9.5) / 0.3))))
         # Channel line under the name (from 11 s).
         if t >= 11:
             fs = FONT("SemiBold", 26)
-            shadow_text(d, (64, H - 64), "Channel 1  ·  Bazaar TV  ·  free on the Cable TV app", fs,
+            shadow_text(d, (px(64), H - px(64)), "Channel 1  ·  Bazaar TV  ·  free on the Cable TV app", fs,
                         (255, 255, 255, int(230 * ease((t - 11) / 0.4))))
     return L
 
@@ -202,28 +258,28 @@ def end_card(t, spec, logo):
     L = text_layer()
     d = ImageDraw.Draw(L)
     k = ease(t / 0.5)
-    lw = int(330 * (0.85 + 0.15 * k))
+    lw = px(330 * (0.85 + 0.15 * k))
     lg = logo.resize((lw, int(logo.height * lw / logo.width)), Image.LANCZOS)
     a = np.array(lg)
     a[..., 3] = (a[..., 3] * k).astype(np.uint8)
-    L.alpha_composite(Image.fromarray(a), ((W - lw) // 2, 70 + int(20 * (1 - k))))
+    L.alpha_composite(Image.fromarray(a), ((W - lw) // 2, px(70 + 20 * (1 - k))))
     title = spec["_title"]
-    f = fit_font(title, "Black", 72, W - 160)
-    lines = wrap(title, f, W - 160)
-    y = 70 + lg.height + 40
+    f = fit_font(title, "Black", 72, W - px(160))
+    lines = wrap(title, f, W - px(160))
+    y = px(70) + lg.height + px(40)
     k2 = ease((t - 0.3) / 0.5)
     for line in lines:
-        shadow_text(d, (W // 2, y + int(30 * (1 - k2))), line, f, (255, 255, 255, int(255 * k2)), "ma")
+        shadow_text(d, (W // 2, y + px(30 * (1 - k2))), line, f, (255, 255, 255, int(255 * k2)), "ma")
         y += int(f.size * 1.05)
     k3 = ease((t - 0.7) / 0.4)
     fw = FONT("Black", 44)
-    shadow_text(d, (W // 2, y + 18), spec["when"].upper(), fw, YELLOW + (int(255 * k3),), "ma")
+    shadow_text(d, (W // 2, y + px(18)), spec["when"].upper(), fw, YELLOW + (int(255 * k3),), "ma")
     k4 = ease((t - 1.2) / 0.4)
     fs = FONT("SemiBold", 30)
-    shadow_text(d, (W // 2, y + 90), "Channel 1 on the free Cable TV app  ·  tv.bulkbazaar.ca", fs, (255, 255, 255, int(235 * k4)), "ma")
+    shadow_text(d, (W // 2, y + px(90)), "Channel 1 on the free Cable TV app  ·  tv.bulkbazaar.ca", fs, (255, 255, 255, int(235 * k4)), "ma")
     if spec.get("credit"):
         fc = FONT("SemiBold", 18)
-        d.text((W // 2, H - 34), spec["credit"], font=fc, fill=(220, 220, 220, int(200 * k4)), anchor="ma")
+        d.text((W // 2, H - px(34)), spec["credit"], font=fc, fill=(220, 220, 220, int(200 * k4)), anchor="ma")
     return L
 
 
@@ -332,7 +388,7 @@ def make(spec, out):
         sound, said = soundtrack(spec, hits, tmp)
         silent = os.path.join(tmp, "v.mp4")
         enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-                                "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "19",
+                                "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-profile:v", "high",
                                 "-pix_fmt", "yuv420p", silent], stdin=subprocess.PIPE)
         frame_no = 0
         empty = 0
@@ -363,7 +419,7 @@ def make(spec, out):
         bg = frames(u, start, 6.2, W // 2, H // 2)
         for f in range(n):
             src = bg[min(f, len(bg) - 1)] if len(bg) else np.zeros((H // 2, W // 2, 3), np.uint8)
-            img = Image.fromarray(src).filter(ImageFilter.GaussianBlur(3)).resize((W, H), Image.BILINEAR)
+            img = Image.fromarray(src).filter(ImageFilter.GaussianBlur(3)).resize((W, H), Image.LANCZOS)
             img = Image.blend(img, Image.new("RGB", (W, H), (8, 10, 24)), 0.55).convert("RGBA")
             img.alpha_composite(end_card(f / FPS, spec, logo))
             enc.stdin.write(img.convert("RGB").tobytes())

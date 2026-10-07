@@ -1,0 +1,8 @@
+[
+ {"name": "promo-sample-popeye", "title": "Popeye Meets Sindbad the Sailor (1936)", "when": "Every day · 8 AM", "day": "all", "time": "08:00",
+  "videos": ["https://archive.org/download/POPEYEMeetsSindbadTheSailor1936/POPEYE%20meets%20Sindbad%20The%20Sailor%20%281936%29.mp4"],
+  "mood": "energetic", "secs": 20, "lang": "ur", "credit": "Popeye the Sailor Meets Sindbad the Sailor (1936), public domain"},
+ {"name": "promo-sample-sintel", "title": "Sintel", "when": "Every day · 8 PM", "day": "all", "time": "20:00",
+  "videos": ["https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel.mp4"],
+  "mood": "cinematic", "secs": 20, "lang": "ur", "credit": "Sintel © Blender Foundation, sintel.org (CC BY 3.0)"}
+]
