@@ -1,63 +1,7 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-07 10:06 UTC",
+ "built": "2026-10-07 17:52 UTC",
  "videos": [
-  {
-   "id": "5p6Ig_wzdUA",
-   "title": "Samraat (1982) Bollywood Superhit Action Movie | Dharmendra, Jeetendra, Hema Malini, Zeenat Aman",
-   "label": "Goldmines Bollywood",
-   "mins": 143.2,
-   "found": "2026-10-07",
-   "up": "2026-10-07"
-  },
-  {
-   "id": "rP4ShyZYDQc",
-   "title": "Maa Kasam (1999) Full Hindi Movie | Mithun Chakraborty, Mink Singh, Gulshan Grover",
-   "label": "Goldmines Bollywood",
-   "mins": 110.36666666666666,
-   "found": "2026-10-07",
-   "up": "2026-10-06"
-  },
-  {
-   "id": "untflYxWYM4",
-   "title": "Naag Bhoomi FULL MOVIE (HD) | Srikanth, Karunakaran, Rikin Saigal, Raiza Wilson",
-   "label": "Shemaroo Movies",
-   "mins": 126.58333333333333,
-   "found": "2026-10-07",
-   "up": "2026-10-06"
-  },
-  {
-   "id": "HYs-r2KxlpY",
-   "title": "Aakraman (1975) Hindi Full Movie (4K) Sanjeev Kumar & Rakesh Roshan | Rekha | Deshbhakti Movie",
-   "label": "Ultra Movie Parlour",
-   "mins": 146.5,
-   "found": "2026-10-07",
-   "up": "2026-10-06"
-  },
-  {
-   "id": "dKPVwN0FSw0",
-   "title": "ViVaan Superhit Hindi Romantic Thriller Film - Rajkummar Rao - Nushrat Bharucha -Love, S*x Aur Dhoka",
-   "label": "B4U Movies",
-   "mins": 108.78333333333333,
-   "found": "2026-10-07",
-   "up": "2026-10-06"
-  },
-  {
-   "id": "JtpIjYgkBTs",
-   "title": "Koyelaanchal Full Movie | Vinod Khanna, Suniel Shetty, Vipinno | Latest Hindi Action Drama Movie",
-   "label": "Rajshri",
-   "mins": 141.13333333333333,
-   "found": "2026-10-07",
-   "up": "2026-10-06"
-  },
-  {
-   "id": "fv_WxoR2YwY",
-   "title": "Jwalamukhi: Man With Fire Hindi Dubbed Movie | Simbu's Biggest Revenge Action Thriller | Vedhika",
-   "label": "Shemaroo Movies",
-   "mins": 110.3,
-   "found": "2026-10-07",
-   "up": "2026-10-05"
-  },
   {
    "id": "MKpt0zZyT5E",
    "title": "Superhit New Hindi Romantic Thriller Movie - Full HD 2026 - Dino Morea | Gumnaam - The Mystery",
@@ -65,78 +9,6 @@
    "mins": 114.51666666666667,
    "found": "2026-10-07",
    "up": "2026-10-05"
-  },
-  {
-   "id": "BKVgMyS6SGI",
-   "title": "Mera Dushman No.1 Full Movie | Gautham Karthik | Priya Anand | Latest Hindi Action Movies",
-   "label": "Rajshri",
-   "mins": 127.35,
-   "found": "2026-10-07",
-   "up": "2026-10-05"
-  },
-  {
-   "id": "uPBWSFV0PGg",
-   "title": "Wicked Little Things (Zombies) | Full Movie",
-   "label": "FilmRise Movies",
-   "mins": 94.2,
-   "found": "2026-10-07",
-   "up": "2026-10-05"
-  },
-  {
-   "id": "7uXtzVyDFic",
-   "title": "MEIN HARI PIYA - FULL MOVIE | HIRA MANI | SAMI KHAN | SUMBUL IQBAL | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 131.08333333333334,
-   "found": "2026-10-07",
-   "up": "2026-10-05"
-  },
-  {
-   "id": "PSenU7ezoos",
-   "title": "ROBO CHACHA | Full Movie (HD) | K.S.Ravikumar, Tharshan Thiyagarajah | Koogle Kuttappa",
-   "label": "Shemaroo Movies",
-   "mins": 119.81666666666666,
-   "found": "2026-10-07",
-   "up": "2026-10-04"
-  },
-  {
-   "id": "PzDNJyt0Jgs",
-   "title": "Buckasura For Money Full Movie | R.J. Rohith, Kavya Gowda, V. Ravichandran | Hindi Thriller Movies",
-   "label": "Rajshri",
-   "mins": 106.38333333333334,
-   "found": "2026-10-07",
-   "up": "2026-10-04"
-  },
-  {
-   "id": "kGKSKDo3d78",
-   "title": "FBI Agent Tries To Solve A Missing Girl Case | Bent | Full Mystery Thriller Movie",
-   "label": "Movie Central",
-   "mins": 67.83333333333333,
-   "found": "2026-10-07",
-   "up": "2026-10-04"
-  },
-  {
-   "id": "L1HADME4YhI",
-   "title": "Three Years After Losing His Wife He Found Love | Recipe for Love | Full Romantic Comedy Movie",
-   "label": "Movie Central",
-   "mins": 90.26666666666667,
-   "found": "2026-10-07",
-   "up": "2026-10-04"
-  },
-  {
-   "id": "wQtx6nJ6EwM",
-   "title": "Jhooth Bole Kauwa Kaate (1998) Hindi Full Movie (4K) Anil Kapoor & Juhi Chawla | Amrish Puri |Comedy",
-   "label": "Ultra Movie Parlour",
-   "mins": 161.51666666666668,
-   "found": "2026-10-07",
-   "up": "2026-10-03"
-  },
-  {
-   "id": "LUCXlbK01Ww",
-   "title": "Bombai Ka Babu (1960) Full Movie | Dev Anand & Suchitra Sen | B&W Classic Hindi Movie | S.D. Burman",
-   "label": "Ultra Movie Parlour",
-   "mins": 147.53333333333333,
-   "found": "2026-10-07",
-   "up": "2026-10-03"
   },
   {
    "id": "F1Vwc2jC7EA",
@@ -147,78 +19,6 @@
    "up": "2026-10-03"
   },
   {
-   "id": "7tXCmVa7XUE",
-   "title": "A Gift From Santa Changes Her Holiday Forever | Santa Brush | Full Christmas Romance Movie",
-   "label": "Movie Central",
-   "mins": 74.66666666666667,
-   "found": "2026-10-07",
-   "up": "2026-10-03"
-  },
-  {
-   "id": "yya0eDqCn9k",
-   "title": "Zulm Ka Rakshak FULL MOVIE (HD) | Vijay Raghavendra, Prajwal Devaraj, Sai Kumar",
-   "label": "Shemaroo Movies",
-   "mins": 104.25,
-   "found": "2026-10-07",
-   "up": "2026-10-02"
-  },
-  {
-   "id": "yzUsaLTB4ro",
-   "title": "Maine Gandhi Ko Nahin Mara (4K HD) - Award Winning Hindi Full Movie | Anupam Kher & Urmila Matondkar",
-   "label": "Ultra Movie Parlour",
-   "mins": 106.68333333333334,
-   "found": "2026-10-07",
-   "up": "2026-10-02"
-  },
-  {
-   "id": "1VUkiWVenKY",
-   "title": "घरवाली के साथ बाहरवाली भी पटा ली❤️Superhit Hindi Romantic Comedy Movie HD - Pati, Patni Aur Woh",
-   "label": "B4U Movies",
-   "mins": 126.65,
-   "found": "2026-10-07",
-   "up": "2026-10-02"
-  },
-  {
-   "id": "YOTzSceBnyE",
-   "title": "An Unfold Fact Lateef Full Movie | Nawazuddin Siddiqui, Kader Khan, Murli Sharma | Crime Drama Movie",
-   "label": "Rajshri",
-   "mins": 107.15,
-   "found": "2026-10-07",
-   "up": "2026-10-02"
-  },
-  {
-   "id": "zqhNSULfn3g",
-   "title": "Spiders 3D | Full Movie",
-   "label": "FilmRise Movies",
-   "mins": 89.68333333333334,
-   "found": "2026-10-07",
-   "up": "2026-10-02"
-  },
-  {
-   "id": "YTL_RFAuxYA",
-   "title": "A Heartbroken Matchmaker Falls For His Shy Client | The Love Doctor | Full Romantic Movie",
-   "label": "Movie Central",
-   "mins": 92.96666666666667,
-   "found": "2026-10-07",
-   "up": "2026-10-02"
-  },
-  {
-   "id": "qIJ5TMTkoYk",
-   "title": "Paap Ki Kamaee (1990) Hindi Full Movie (4K) Mithun Chakraborty & Kunal Goswami | Sangeeta Bijlani",
-   "label": "Ultra Movie Parlour",
-   "mins": 160.3,
-   "found": "2026-10-07",
-   "up": "2026-10-01"
-  },
-  {
-   "id": "pJwfXdmEic0",
-   "title": "Superhit New Hindi Romantic Comedy Movie | Full HD - Rajpal Yadav - Hello Hum Lallan Bol Rahe Hain",
-   "label": "B4U Movies",
-   "mins": 107.83333333333333,
-   "found": "2026-10-07",
-   "up": "2026-10-01"
-  },
-  {
    "id": "LMXYzhVciOM",
    "title": "सुपरहिट नयी हिंदी धमाकेदार रोमांटिक फिल्म | New Romantic Movie - Full HD 2026 - Tapish",
    "label": "B4U Movies",
@@ -227,112 +27,39 @@
    "up": "2026-09-30"
   },
   {
-   "id": "rFHK5nKQQl0",
-   "title": "Bachelor Party Full Movie | Latest Crime Thriller Movie | Asif Ali, Indrajith Sukumaran, Rahman",
-   "label": "Rajshri",
-   "mins": 98.13333333333334,
+   "id": "YPT0vvZ73xM",
+   "title": "Ini Utharam (2026) SUSPENSE THRILLER Movie | Aparna Balamurali & Kalabhavan | SOUTH BLOCKBUSTER",
+   "label": "Ultra Movie Parlour",
+   "mins": 130.48333333333332,
    "found": "2026-10-07",
-   "up": "2026-09-30"
+   "up": "2026-09-24"
   },
   {
-   "id": "1-DjcP0FaNk",
-   "title": "Paris Je T'aime | Full Movie",
-   "label": "FilmRise Movies",
-   "mins": 120.8,
-   "found": "2026-10-07",
-   "up": "2026-09-30"
-  },
-  {
-   "id": "ML6maJQUpMA",
-   "title": "Shattered City | Full Movie",
-   "label": "FilmRise Movies",
-   "mins": 168.51666666666668,
-   "found": "2026-10-07",
-   "up": "2026-09-25"
-  },
-  {
-   "id": "yLSAAok0uIs",
-   "title": "The Hot Potato | Full Movie",
-   "label": "FilmRise Movies",
-   "mins": 95.95,
-   "found": "2026-10-07",
-   "up": "2026-09-23"
-  },
-  {
-   "id": "F1v5B_9PqoA",
-   "title": "BESHARAM - FULL MOVIE | ZAHID AHMED | SABA QAMAR | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 144.3,
-   "found": "2026-10-07",
-   "up": "2026-09-20"
-  },
-  {
-   "id": "VMhPE9PVeKU",
-   "title": "DIL LAGI - FULL MOVIE | MEHWISH HAYAT | HUMAYUN SAEED | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 145.35,
-   "found": "2026-10-07",
-   "up": "2026-09-06"
-  },
-  {
-   "id": "f0mQbdbVMfQ",
-   "title": "Bloodline of the Jewel | Nothing Deadlier Than Love and Greed! | Full, Free Movie",
-   "label": "Maverick Movies",
-   "mins": 129.78333333333333,
-   "found": "2026-10-07",
-   "up": "2026-09-05"
-  },
-  {
-   "id": "PWbhnFjB5Co",
-   "title": "Smash and Dash | Love Isn't On The Menu- Or Is It? | Full, Free Movie",
-   "label": "Maverick Movies",
-   "mins": 67.05,
-   "found": "2026-10-07",
-   "up": "2026-08-30"
-  },
-  {
-   "id": "XIhlEgkDp1U",
-   "title": "Double Blended | Family is Everything, But Secrets Sever Ties | Full, Free Movie",
-   "label": "Maverick Movies",
-   "mins": 87.56666666666666,
-   "found": "2026-10-07",
-   "up": "2026-08-27"
-  },
-  {
-   "id": "qHaUmAGJl0s",
-   "title": "NEELI ZINDA HAI - FULL MOVIE | URWA HOCANE | MOHIB MIRZA | SONIA MISHAL | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 146.68333333333334,
-   "found": "2026-10-07",
-   "up": "2026-08-23"
-  },
-  {
-   "id": "htZXQ5wIxAg",
-   "title": "SHARPASAND - FULL MOVIE | NAUMAAN IJAZ | HAREEM FAROOQ | HIRA MANI | AFFAN WAHEED | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 143.58333333333334,
-   "found": "2026-10-07",
-   "up": "2026-08-13"
-  },
-  {
-   "id": "PdqMlnl4Kyw",
-   "title": "Ek Khiladi Hindi Dubbed Full Movie | Gopichand, Rakul Preet Singh, Brahmanandam",
+   "id": "uc9wd88XRF8",
+   "title": "Do Khiladi (2026) (SMP) New Released Hindi Dubbed Action Full Movie | Siddharth, G. V. Prakash Kumar",
    "label": "Goldmines",
-   "mins": 125.61666666666666,
+   "mins": 120.35,
    "found": "2026-10-07"
   },
   {
-   "id": "9oHsfiQeJ9o",
-   "title": "The Super Khiladi (Brindavanam) Telugu Hindi Dubbed Full Movie | Jr NTR, Kajal Aggarwal, Samantha",
+   "id": "Xojf144alBo",
+   "title": "Uppena (Hindi) 2026 New Released Hindi Dubbed Full Movie | Panja Vaisshnav Tej, Vijay Sethupathi",
    "label": "Goldmines",
-   "mins": 146.06666666666666,
+   "mins": 116.11666666666666,
    "found": "2026-10-07"
   },
   {
-   "id": "BzTFg0m1l_8",
-   "title": "DJ (4K ULTRA HD) South Action Hindi Dubbed Movie | Allu Arjun, Pooja Hegde",
+   "id": "fmkS85mNZWA",
+   "title": "Oxygen (2026) New Released Hindi Dubbed Movie | Gopichand, Raashii Khanna, Anu Emmanuel, Jagapathi",
    "label": "Goldmines",
-   "mins": 116.31666666666666,
+   "mins": 126.73333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Bon7e5C7KNU",
+   "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
+   "label": "Goldmines",
+   "mins": 108.73333333333333,
    "found": "2026-10-07"
   },
   {
@@ -343,31 +70,10 @@
    "found": "2026-10-07"
   },
   {
-   "id": "wgEbe30ilUQ",
-   "title": "The Return of Rebel 2 (4K ULTRA HD) (Billa) - Prabhas Blockbuster Action Movie | Anushka Shetty",
+   "id": "GYJeCObuuB0",
+   "title": "Ranga Ranga (2025) New Released Hindi Dubbed Movie | Panja Vaisshnav Tej, Ketika Sharma",
    "label": "Goldmines",
-   "mins": 126.46666666666667,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "UEoy2UZXEOY",
-   "title": "Jurrat (1989) Superhit Action Movie | Shatrughan Sinha, Kumar Gaurav, Anita Raj, Aruna Irani",
-   "label": "Goldmines Bollywood",
-   "mins": 104.85,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "TIQ5hrfermg",
-   "title": "Hera Pheri (2000) Full Hindi Comedy Movie | Akshay Kumar, Sunil Shetty, Paresh Rawal, Tabu",
-   "label": "Goldmines Bollywood",
-   "mins": 138.06666666666666,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "_OvFhuQL5Yw",
-   "title": "Nagin (1976) Full Hindi Movie | Sunil Dutt, Reena Roy, Jeetendra, Mumtaz, Rekha",
-   "label": "Goldmines Bollywood",
-   "mins": 138.63333333333333,
+   "mins": 124.75,
    "found": "2026-10-07"
   },
   {
@@ -378,38 +84,101 @@
    "found": "2026-10-07"
   },
   {
-   "id": "1lFk1LSsI_c",
-   "title": "Jaya Janaki Nayaka KHOONKHAR | Full Hindi Dubbed Movie | Bellamkonda Sreenivas, Rakul Preet Singh",
+   "id": "tQtJzzCOiys",
+   "title": "Romeo S3 - Full Movie | Palak Tiwari, Thakur Anoop Singh | Pen Movies | New Hindi Movie 2025",
    "label": "Pen Movies",
-   "mins": 124.23333333333333,
+   "mins": 143.13333333333333,
    "found": "2026-10-07"
   },
   {
-   "id": "tKqo-4qAeJA",
-   "title": "Haseena Parkar Full Movie | Shraddha Kapoor, Siddhanth Kapoor, Apoorva | Bollywood Movie",
-   "label": "Pen Movies",
-   "mins": 117.85,
+   "id": "6X7963xWI-Q",
+   "title": "Dheeram (2025) South Suspense Thriller Movies (4K) Indrajith Sukumaran, Varalaxmi & Divya Pillai",
+   "label": "Ultra Movie Parlour",
+   "mins": 134.61666666666667,
    "found": "2026-10-07"
   },
   {
-   "id": "smLNCbYNQP4",
-   "title": "Entertainment (4k) | Akshay Kumar, Tamannaah Bhatia, Johnny Lever | Pen Movies",
-   "label": "Pen Movies",
-   "mins": 111.91666666666667,
+   "id": "sjMt967hkDE",
+   "title": "Doosri Maa (2026) South Suspense Thriller Movie | Dileesh Pothan & Devadarshini | Hindi Dubbed Movie",
+   "label": "Ultra Movie Parlour",
+   "mins": 101.51666666666667,
    "found": "2026-10-07"
   },
   {
-   "id": "eqT972wZ3ME",
-   "title": "Krack (4K) | New Released Full Hindi Dubbed Movie 2022 | Ravi Teja, Shruti Haasan, Samuthirakani",
-   "label": "Pen Movies",
-   "mins": 123.83333333333333,
+   "id": "vBW-dH9MQDA",
+   "title": "रहस्यमयी हत्या और चौंकाने वाले खुलासे SOUTH SUPERHIT 2025 - Marichi - Suspense Thirller Movie",
+   "label": "Ultra Movie Parlour",
+   "mins": 120.56666666666666,
    "found": "2026-10-07"
   },
   {
-   "id": "MvQRlmRKrsw",
-   "title": "Bhai Ke Liye Bani DON | Shabri | Full Movie (HD) | Isha Koppikar, Pradeep Ram Singh Rawat",
-   "label": "Shemaroo Movies",
-   "mins": 95.13333333333334,
+   "id": "ER5RCwJZsEA",
+   "title": "Nayanthara's ANNAPOORANI (4K) New Release 2026 South Dubbed Full Hindi Movie | Jai & Sathyaraj",
+   "label": "Ultra Movie Parlour",
+   "mins": null,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "XtlbAEfRGRk",
+   "title": "Written & Directed by God (2025) Hindi (4K) Full Movie | South Comedy Drama Movie | Sunny Wayne",
+   "label": "Ultra Movie Parlour",
+   "mins": 108.46666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "t1zclFQj4p0",
+   "title": "SUSPENSE THIRLLER MOVIE - Jilabi (2025) - Swapnil Joshi, Prasad Oak & Shivani Surve | New Release",
+   "label": "Ultra Movie Parlour",
+   "mins": 126.13333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "KHj3oZ9M2Ck",
+   "title": "Antony (2025) New Released Hindi Dubbed Movie | Joju George | Kalyani | Nyla | South Action Movies",
+   "label": "Ultra Movie Parlour",
+   "mins": 142.68333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "K305kyYl1DA",
+   "title": "गरीब बेटी के अमीर ससुराल | New Bhojpuri Movie 2026 | Hindi Dubbed Full HD - RICHA DIXIT",
+   "label": "B4U Movies",
+   "mins": 139.13333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "EhaX-eQmfF4",
+   "title": "JANA NAYAKAM (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL VIJAY THALAPATHY MOVIE MASTER",
+   "label": "B4U Movies",
+   "mins": 171.23333333333332,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "SiR4tmx-YOk",
+   "title": "VIJAY THALAPATHY NEW SOUTH ACTION MOVIE |  DUBBED IN HINDI 2026 FULL HD | VIJAY THE MASTER",
+   "label": "B4U Movies",
+   "mins": 165.7,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "RYaVCM9MeDM",
+   "title": "CRACK MLA (HD) - VIJAY THALAPATHY NEW RELEASE HINDI DUBBED MOVIE 2026 NEW SOUTH HINDI DUBBED MASTER",
+   "label": "B4U Movies",
+   "mins": 175.23333333333332,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "tu8cklEAgoc",
+   "title": "BLAST (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SHIVA RAJKUMAR MOVIE RUSTUM",
+   "label": "B4U Movies",
+   "mins": 101.73333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "c1fQeengVG0",
+   "title": "PAWAN KALYAN NEW RELEASE SOUTH HINDI DUBBED MOVIE 2026 FULL HD - NEW SOUTH MOVIE BHEEMLA NAYAK",
+   "label": "B4U Movies",
+   "mins": 130.0,
    "found": "2026-10-07"
   },
   {
@@ -420,10 +189,31 @@
    "found": "2026-10-07"
   },
   {
-   "id": "9yFOTJJfSqY",
-   "title": "Ragada Hindi Dubbed Full Movie | New South Movie | Nagarjuna, Anushka, Priyamani | Aditya Movies",
+   "id": "VDFys9V9poQ",
+   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
    "label": "Aditya Movies",
-   "mins": 130.3,
+   "mins": 145.35,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "8Vkx70ZaBBQ",
+   "title": "Swathimutyam Hindi Dubbed Movie 2026 Full Movie | Ganesh Bellamkonda, Varsha Bollamma | South Movie",
+   "label": "Aditya Movies",
+   "mins": 108.36666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ftI9RAEuSLo",
+   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
+   "label": "Aditya Movies",
+   "mins": 124.95,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "pBP49rdzP4M",
+   "title": "Intelligent Hindi Dubbed Full Movie | Sai Dharam Tej, Lavanya Tripathi | South Dubbed Movie 2026",
+   "label": "Aditya Movies",
+   "mins": 121.28333333333333,
    "found": "2026-10-07"
   },
   {
@@ -434,136 +224,73 @@
    "found": "2026-10-07"
   },
   {
-   "id": "4yVh92irML4",
-   "title": "Dashing Diljala New Released Full Hindi Dubbed Movie | Naga Chaitanya, Shruti Hassan, Anupama",
+   "id": "gfDhPJUIFFA",
+   "title": "Kotha Kothagaa Hindi Dubbed Full Movie | Ajay, Virti Vaghani | South Movie New 2026 | Aditya Movies",
    "label": "Aditya Movies",
-   "mins": 120.56666666666666,
+   "mins": 110.51666666666667,
    "found": "2026-10-07"
   },
   {
-   "id": "NpJ6lnbgi_s",
-   "title": "\"Check\" Latest Hindi Dubbed Full Movie 2022 [4K Ultra HD] | Nithiin, Rakul Preet, Priya Varrier",
+   "id": "yR9pSZoZ6CY",
+   "title": "Gamblers Hindi Dubbed Movie 2026 Full Movie | Sangeeth Shobhan, Prashanthi | South New Movie 2026",
    "label": "Aditya Movies",
-   "mins": 130.61666666666667,
+   "mins": 97.98333333333333,
    "found": "2026-10-07"
   },
   {
-   "id": "qDd3Wuliw3E",
-   "title": "Call of the Wild (1994) | FULL MOVIE | Classic Adventure, Rick Schroder",
-   "label": "Popcornflix",
-   "mins": 97.3,
+   "id": "M2_LpZyq94g",
+   "title": "Veteran Actors Mentor A Determined Young Director | Ultra Low | Full 2025 Indie Drama Movie",
+   "label": "Movie Central",
+   "mins": 116.86666666666666,
    "found": "2026-10-07"
   },
   {
-   "id": "ztv4mLg0MKE",
-   "title": "Jason & the Argonauts | Part 1 of 2 | FULL MOVIE | Epic Adventure, Myth",
-   "label": "Popcornflix",
-   "mins": 88.18333333333334,
+   "id": "A4rgRr_T4Ow",
+   "title": "His Faith In The Lord Is Being Tested | Broken Church | Full 2026 Faith Drama Movie",
+   "label": "Movie Central",
+   "mins": 86.65,
    "found": "2026-10-07"
   },
   {
-   "id": "XDeqk6oGnvM",
-   "title": "Jason & The Argonauts | Part 2 of 2 | FULL MOVIE | Action, Adventure",
-   "label": "Popcornflix",
-   "mins": 90.16666666666667,
+   "id": "irB4mOZRvoQ",
+   "title": "She Has No Idea He's Secretly A Billionaire | Love Undercover | 2026 Romantic Comedy Movie",
+   "label": "Movie Central",
+   "mins": 87.56666666666666,
    "found": "2026-10-07"
   },
   {
-   "id": "PCoR2-3_Acs",
-   "title": "Safari | FULL MOVIE | Found Footage, Action | Carly Bailey, Carl Beukes, Kim Argetsinger",
-   "label": "Popcornflix",
-   "mins": 80.83333333333333,
+   "id": "fIhM9MiEN50",
+   "title": "Daddy Daughter Trip | Rob Schneider | Full 2025 Comedy Family Movie",
+   "label": "Movie Central",
+   "mins": 96.58333333333333,
    "found": "2026-10-07"
   },
   {
-   "id": "VwdoA0_t2vI",
-   "title": "The Odyssey | PART 1 of 2 | FULL MOVIE | Action, Adventure",
-   "label": "Popcornflix",
-   "mins": 91.25,
+   "id": "ERsURQC8Xxo",
+   "title": "Ruthless Hitman Took On The Chicago Mob | Silent Partners | Full 2026 Action Movie",
+   "label": "Movie Central",
+   "mins": 82.61666666666666,
    "found": "2026-10-07"
   },
   {
-   "id": "7Mr0VALZ4K4",
-   "title": "Sugar Daddy Killer | She's Gotta Pay the Bills Somehow | Full, Free Thriller Movie",
-   "label": "Maverick Movies",
-   "mins": 75.75,
+   "id": "KAouzPF7GII",
+   "title": "She's Hunting The Cartel That Murdered Her Family | She-Vigilante | Full 2026 Action Movie",
+   "label": "Movie Central",
+   "mins": 84.35,
    "found": "2026-10-07"
   },
   {
-   "id": "yIK9eyZUqcI",
-   "title": "Fist of Vengence | The Past's Secrets Change the Future | Full, Free Movie | Action, Drama",
-   "label": "Maverick Movies",
-   "mins": 83.1,
+   "id": "jNdQ6vLND6c",
+   "title": "The Sheriff Hunts A Monster Werewolf In A Small Town | Torn | Full Monster Movie 2026",
+   "label": "Movie Central",
+   "mins": 108.66666666666667,
    "found": "2026-10-07"
   },
   {
-   "id": "qDWJllytQwM",
-   "title": "Toofan Singh (Full Movie) Ranjit Bawa -  Punjabi Full Movies 2018 - New Punjabi Movies",
-   "label": "White Hill",
-   "mins": 142.53333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "BiypWlN2zMo",
-   "title": "Nadhoo Khan | Harish Verma | Punjabi Movie | Punjabi Movie 2022 | Punjabi Movie 2022 Full Movie",
-   "label": "White Hill",
-   "mins": 136.08333333333334,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "DUQYu6wB1TQ",
-   "title": "Arjan | Roshan Prince | Punjabi Movie | Punjabi Movie 2022 Full Movie",
-   "label": "White Hill",
-   "mins": 148.85,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "wzVuAAVzsnI",
-   "title": "Dastaan - E - Miri - Piri Full Movie | Full Punjabi Movie | Punjabi Movie",
-   "label": "White Hill",
-   "mins": 100.75,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "9xPXhAvQoi8",
-   "title": "ਛੜਿਆਂ ਦਾ ਘਰ : Chadeya Da Ghar | Jaswinder Bhalla New Comedy Punjabi Full Movie 2017 | Funny Movie",
-   "label": "Saga",
-   "mins": 87.61666666666666,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "lKO4hWEKSBE",
-   "title": "Gun & Goal - Full Movie",
-   "label": "Speed Records",
-   "mins": 143.85,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "3A3J0xe1zbc",
-   "title": "SAMOSA vs SALAD | EID DAY SPECIAL TELEFILM | DAY 1 | ARY Digital",
+   "id": "-gjHbKrRpig",
+   "title": "Tanka Laga | Eid Special Telefilm | Day 3 | 23 March 2026 | Amar Khan | Yasir Hussain | ARY Digital",
    "label": "ARY Digital",
-   "mins": 79.55,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "b7A9k-uoJ_s",
-   "title": "RISHTA PAKKA | HAVI | FATIMA AMJAD | TELEFILM | ARY DIGITAL",
-   "label": "ARY Digital",
-   "mins": 86.81666666666666,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "69JXkAAEsAU",
-   "title": "MANNAY KI SHADI | AINA ASIF | AHMED RANDHAWA | EID SPECIAL TELEFILM | DAY 1 |  ARY DIGITAL",
-   "label": "ARY Digital",
-   "mins": 82.88333333333334,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "DsXtAxPuwGw",
-   "title": "A- One Travel | Eid Special Telefilm | Nameer Nawaz | Hina Afridi | Nazar Ul Hasan | ARY Digital",
-   "label": "ARY Digital",
-   "mins": 86.5,
+   "mins": 89.61666666666666,
    "found": "2026-10-07"
   },
   {
@@ -574,87 +301,59 @@
    "found": "2026-10-07"
   },
   {
-   "id": "wEkIq22bYaY",
-   "title": "London Wala Dulha - Eid Special Telefilm - Sahar Hashmi, Usama Khan  -  HUM TV",
+   "id": "ZQCRf1Vos18",
+   "title": "Bhaag Sunny Bhaag | Eid Special Telefilm | 23 March 2026 | Muneeb Butt | Zoha Tauqeer | ARY Digital",
+   "label": "ARY Digital",
+   "mins": 79.23333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "k-1W7DxYBvc",
+   "title": "Mulazim Online - Eid Special - TeleFilm - 7th June 2025 - [ Nida Yasir - Yasir Nawaz ] - HUM TV",
    "label": "HUM TV",
-   "mins": 63.68333333333333,
+   "mins": 69.11666666666666,
    "found": "2026-10-07"
   },
   {
-   "id": "N3zsnkxMp5k",
-   "title": "Masti Gate – Full Telefilm | Eid Special 💥 Naeema Butt & Muneeb Butt | HUM TV",
+   "id": "dPNKYab1xHs",
+   "title": "Afrah Tafreeh - Telefilm - Eid Special 2026 - HUM TV",
    "label": "HUM TV",
-   "mins": 69.78333333333333,
+   "mins": 70.4,
    "found": "2026-10-07"
   },
   {
-   "id": "oJYP2YgUqV0",
-   "title": "Baar-e-Wafa 🇵🇰  Special Telefilm  [Hadiqa Kiani, Sidra Niazi, Osman Khalid Butt, Syed Jibran] HUM TV",
+   "id": "PlZS2B_5rqw",
+   "title": "Deewani - Eid Special - TeleFilm - 8th June 2025 - [ Sahar Hashmi - Usama Khan ] - HUM TV",
    "label": "HUM TV",
-   "mins": 68.1,
+   "mins": 72.71666666666667,
    "found": "2026-10-07"
   },
   {
-   "id": "Ygk4Ul1raaw",
-   "title": "Left Right Left | HUM TV | Telefilm",
+   "id": "dFYshPtF1Wg",
+   "title": "V-Logger Da Viyah - Eid Special - TeleFilm - 9th June 2025 - [ Alizeh Shah - Ali Ansari ] - HUM TV",
    "label": "HUM TV",
-   "mins": 75.15,
+   "mins": 64.56666666666666,
    "found": "2026-10-07"
   },
   {
-   "id": "7dvE8eaDnQU",
-   "title": "Tamanna Ki Tamanna | Eid Special Telefilm | Sanam Saeed | Bilal Khan | Mathira",
+   "id": "srfGxDsIv9s",
+   "title": "Love You Dolly - Eid Special - TeleFilm - 7th June 2025 - [ Syed Jibran - Nadia Khan ] - HUM TV",
    "label": "HUM TV",
-   "mins": 65.06666666666666,
+   "mins": 70.55,
    "found": "2026-10-07"
   },
   {
-   "id": "vrzGoUkx4d4",
-   "title": "Jodi Ban Gayi Telefilm | Eid Day 01| Feroze Khan - Sehar Khan - Kinza Malik | Har Pal Geo",
+   "id": "ZkRsxwkBuXA",
+   "title": "Dil Ne Kaha Dil Se - Telefilm - [Eng Sub] - Digitally Presented by Master Paints - 3rd April 2025",
    "label": "Har Pal Geo",
-   "mins": 102.36666666666666,
+   "mins": 83.08333333333333,
    "found": "2026-10-07"
   },
   {
-   "id": "UPsbT3Xi3YM",
-   "title": "Mast Mohabbat Telefilm | Eid Day 3 | Ushna Shah - Muneeb Butt | Har Pal Geo",
+   "id": "U1PMejqRvWc",
+   "title": "Meri Uraan | Telefilm - [Eng Sub] - Anika Zulfikar - Shahroz Sabzwari | 3rd Aug 2025 - HAR PAL GEO",
    "label": "Har Pal Geo",
-   "mins": 80.73333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "irZPTn1wuAU",
-   "title": "Teri Meri Kahani | Telefilm - [Eng Sub] - Haroon Kadwani | Sehar Khan | Har Pal Geo",
-   "label": "Har Pal Geo",
-   "mins": 102.1,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "ZN2OmChtHJM",
-   "title": "RUPOSH | Telefilm - [Eng Sub] - Haroon Kadwani | Kinza Hashmi | Har Pal Geo",
-   "label": "Har Pal Geo",
-   "mins": 141.9,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "_y7DX30nH6k",
-   "title": "Dil Tera Hogaya || Telefilm || Eid Day 2 Special || Har Pal Geo",
-   "label": "Har Pal Geo",
-   "mins": 85.76666666666667,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "lGk__iWAmZQ",
-   "title": "Serial Killer | Telefilm | Murder Mystery | Saba Qamar l Sabeena Farooq | Faiza Gillani | Green TV",
-   "label": "Green Entertainment",
-   "mins": 158.03333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "XnKSX-v3ADE",
-   "title": "College Gate | Telefilm | Mamya Shajaffar | Khaqan Shahnawaz | Hina Chudhary | Washma | Green TV",
-   "label": "Green Entertainment",
-   "mins": 155.7,
+   "mins": 113.58333333333333,
    "found": "2026-10-07"
   },
   {
@@ -672,10 +371,10 @@
    "found": "2026-10-07"
   },
   {
-   "id": "MTRDJj_91vc",
-   "title": "Nauroz Telefilm | Mawra Hocane | Best Pakistani Film | Green TV Entertainment",
-   "label": "Green Entertainment",
-   "mins": 112.65,
+   "id": "1aBXrPbMwcw",
+   "title": "BAYDARDI - FULL MOVIE | AIMAN KHAN | AFFAN WAHEED | 3rd August 2025 | ARY FILMS",
+   "label": "ARY Films",
+   "mins": 149.85,
    "found": "2026-10-07"
   }
  ]
