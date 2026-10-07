@@ -33,6 +33,9 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
   same live pages (ytc.html, yt.html, bollywood.html), so it gets the fix without a new PC build.
 - 1.9.94: Settings > My playlists no longer has "Find playlists online" or "+ Add playlist link".
   The PC never had playlist settings, so nothing to remove here.
+- 1.9.99: Library YouTube films and episodes play inside Cable TV on our film page
+  (`docs/channel/film.html`: pause, back and forward 10 s, a progress bar, goes on where it was left)
+  instead of the YouTube app. The PC has no Library yet; when it gets one, it loads the same page.
 
 ## In step
 
