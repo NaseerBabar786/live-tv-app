@@ -7,7 +7,7 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
 
   2 Bazaar Cinema  full films from the studios' own channels
   3 Bazaar Music   Punjabi, Sufi and qawwali from the labels' channels (film songs are on 4)
-  5 Bazaar Kids    cartoons from the makers' channels
+  5 Bazaar Kids    cartoons and English kids' shows from the makers' channels
   6 Bazaar Sports  mostly cricket (ICC, PCB, BCCI, PSL, IPL...), plus wrestling (WWE, AEW), Canadian favourites (NHL, Sportsnet, TSN, Blue Jays, Raptors, CFL) and other popular sports
   7 Bazaar Travel  tourism boards and travel shows
   8 Bazaar Comedy  comedy shows from their channels
@@ -92,7 +92,26 @@ CHANNELS = {
             ("Masha and the Bear", ["@MashaBearEN", "@MashaandtheBear"], "Masha and The Bear"),
             ("Peppa Pig", ["@PeppaPigOfficial"], "Peppa Pig"),
             ("Kids TV Urdu", ["@KidsTVUrdu"], "Kids TV"),
+            # English programmes for kids (the owner's wish, 2026-10-07), from the shows' own channels.
+            ("Bluey", ["@BlueyOfficialChannel", "@Bluey"], "Bluey"),
+            ("Super Simple Songs", ["@SuperSimpleSongs"], "Super Simple"),
+            ("Pinkfong", ["@Pinkfong", "@PinkfongBabyShark"], "Pinkfong"),
+            ("Little Baby Bum", ["@LittleBabyBum"], "Little Baby Bum"),
+            ("Blippi", ["@Blippi"], "Blippi"),
+            ("Sesame Street", ["@SesameStreet"], "Sesame Street"),
+            ("PBS Kids", ["@pbskids", "@PBSKIDS"], "PBS KIDS|PBS Kids"),
+            ("PAW Patrol", ["@PAWPatrolOfficial", "@pawpatrol"], "PAW Patrol"),
+            ("Pocoyo", ["@PocoyoEnglish", "@Pocoyo"], "Pocoyo"),
+            ("Oddbods", ["@Oddbods"], "Oddbods"),
+            ("Mr Bean Cartoon", ["@MrBeanCartoonWorld", "@MrBeanCartoon"], "Mr Bean"),
+            ("Numberblocks", ["@Numberblocks"], "Numberblocks"),
+            ("Hey Duggee", ["@HeyDuggeeOfficial", "@HeyDuggee"], "Hey Duggee"),
+            ("Thomas & Friends", ["@ThomasAndFriends", "@thomasandfriends"], "Thomas"),
         ],
+        # Each English show gets a share, so the Urdu and Hindi cartoons stay on the channel too.
+        "cap": {label: 20 for label in ("Bluey", "Super Simple Songs", "Pinkfong", "Little Baby Bum", "Blippi",
+                                        "Sesame Street", "PBS Kids", "PAW Patrol", "Pocoyo", "Oddbods",
+                                        "Mr Bean Cartoon", "Numberblocks", "Hey Duggee", "Thomas & Friends")},
     },
     "sports": {
         "name": "Bazaar Sports", "mins": (2, 45), "search": "highlights",
