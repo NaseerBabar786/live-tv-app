@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id, fetch, _text  # noqa: E402
 from build_youtube_channels import other_language  # noqa: E402
 from titles import screen_title  # noqa: E402
+from playable import keep_playable  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "channel", "trailers.json")
@@ -187,6 +188,8 @@ def main():
     if os.path.exists(OUT):
         old = {v["id"]: v for v in json.load(open(OUT, encoding="utf-8")).get("videos", [])}
     lists = [(lang, label, language(lang, label, sources, today, old)) for lang, label, sources in LANGUAGES]
+    # Only videos that play in an embedded player (Bazaar TV's block page): tools/playable.py.
+    lists = [(lang, label, keep_playable(videos)) for lang, label, videos in lists]
     # Each language gets an equal share of the block; a language with too few trailers leaves its
     # share to the others. In the block they follow one another: Hindi, then Pakistani.
     chosen = {lang: [] for lang, _, _ in lists}

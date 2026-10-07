@@ -284,8 +284,11 @@ CHANNELS = {
     # The owner's wish (2026-10-06): just "Latest Movies", newest uploads first, no logo of ours. Only the
     # rights holders' own channels: re-uploads of new films by anyone else are pirated and soon taken down.
     "latest": {
-        "name": "Latest Movies", "mins": (60, 200), "search": "full movie",
-        "newest": True, "max_age": 365, "max": 120,
+        # The owner's rule (2026-10-07): only films released this year or last year. The year must be in
+        # the title ("Do Khiladi (2026)"), and every year named there must be one of the two, so an old film
+        # re-uploaded as "New Released 2026" with "(2018)" in its name stays out.
+        "name": "Latest Movies", "mins": (60, 200), "search": ["full movie %(year)s", "full movie %(last)s", "full movie"],
+        "newest": True, "max_age": 365, "max": 120, "release_years": 1,
         "keep": r"full (movie|film)|movie|film|telefilm",
         "skip": r"scene|song|jukebox|comedy scenes|best of|spoof|clip|horror|slasher|erotic|18\+|review|explained|recap",
         "sources": [
@@ -309,23 +312,30 @@ CHANNELS = {
             ("Moviegrams", ["@Moviegrams", "@moviegrams"], "Moviegrams"),
             ("Maverick Movies", ["@MaverickMovies", "@maverickmovies"], "Maverick"),
             # Punjabi
-            ("White Hill", ["@WhiteHillMusic", "@WhiteHillStudios"], "White Hill", "punjabi full movie"),
-            ("Saga", ["@SagaMusic", "@SagaMusicOfficial", "@SagaHits"], "Saga", "punjabi full movie"),
-            ("Speed Records", ["@SpeedRecords"], "Speed Records", "full movie"),
-            ("Tips Punjabi", ["@TipsPunjabi"], "Tips Punjabi", "full movie"),
+            ("White Hill", ["@WhiteHillMusic", "@WhiteHillStudios"], "White Hill", ["punjabi movie %(year)s", "punjabi movie %(last)s"]),
+            ("Saga", ["@SagaMusic", "@SagaMusicOfficial", "@SagaHits"], "Saga", ["punjabi movie %(year)s", "punjabi movie %(last)s"]),
+            ("Speed Records", ["@SpeedRecords"], "Speed Records", ["full movie %(year)s", "full movie %(last)s"]),
+            ("Tips Punjabi", ["@TipsPunjabi"], "Tips Punjabi", ["full movie %(year)s", "full movie %(last)s"]),
             # Urdu (Pakistani films and telefilms from the TV channels)
-            ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital", "telefilm"),
-            ("HUM TV", ["@HUMTV", "@humtvpk"], "HUM TV", "telefilm"),
-            ("Har Pal Geo", ["@HarPalGeo", "@harpalgeo"], "HAR PAL GEO|Har Pal Geo", "telefilm"),
-            ("Green Entertainment", ["@GreenTVEntertainment", "@greenentertainment"], "Green", "telefilm"),
-            ("ARY Films", ["@ARYFilms", "@aryfilms"], "ARY Films", "full movie"),
+            ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital", ["telefilm %(year)s", "telefilm %(last)s"]),
+            ("HUM TV", ["@HUMTV", "@humtvpk"], "HUM TV", ["telefilm %(year)s", "telefilm %(last)s"]),
+            ("Har Pal Geo", ["@HarPalGeo", "@harpalgeo"], "HAR PAL GEO|Har Pal Geo", ["telefilm %(year)s", "telefilm %(last)s"]),
+            ("Green Entertainment", ["@GreenTVEntertainment", "@greenentertainment"], "Green", ["telefilm %(year)s", "telefilm %(last)s"]),
+            ("ARY Films", ["@ARYFilms", "@aryfilms"], "ARY Films", ["full movie %(year)s", "full movie %(last)s", "full movie"]),
         ],
         # The newest few from each source, so every language gets its share.
-        "cap": {"*": 5},
+        "cap": {"*": 8},
     },
 }
 
 SUMMARIES = []
+YEAR = re.compile(r"\b(19[3-9]\d|20[0-4]\d)\b")
+
+
+def recent_film(title, today, years):
+    """Whether the title names a year, and every year it names is this year or one of the last [years]."""
+    named = [int(y) for y in YEAR.findall(title)]
+    return bool(named) and min(named) >= today.year - years
 
 
 def upload_dates(chan):
@@ -376,6 +386,8 @@ def build(cid, ch, today):
         for vid, title, mins, age in videos:
             if vid in found or skip.search(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
                 continue
+            if ch.get("release_years") is not None and not recent_film(title, today, ch["release_years"]):
+                continue
             # A video with no known length (from the feed) is kept on its title alone.
             if mins is not None and not low <= mins <= high:
                 continue
@@ -403,6 +415,8 @@ def build(cid, ch, today):
         # (Latest Movies keeps only films whose upload day is known.)
         if ch.get("newest") and not v.get("up"):
             continue
+        if ch.get("release_years") is not None and not recent_film(v["title"], today, ch["release_years"]):
+            continue
         if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v.get("up", v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
             found[vid] = v
     # Main events from the last two weeks, and anything found in the last two days, are "top":
@@ -426,7 +440,8 @@ def build(cid, ch, today):
     if ch.get("events") or ch.get("recent_years"):
         summary += f"; {sum(1 for v in videos if v.get('top'))} top ({'main events and newest' if ch.get('events') else 'new films'})"
     SUMMARIES.append(summary)
-    if len(videos) < 5:
+    # (Latest Movies is written even when short: an old list would break the owner's year rule.)
+    if len(videos) < 5 and ch.get("release_years") is None:
         print(f"{ch['name']}: too few videos; keeping the old list.", file=sys.stderr)
         return False
     with open(out, "w", encoding="utf-8") as f:

@@ -298,7 +298,7 @@ object Subscription {
 
     /** A line listing [has] for the packages screen. */
     fun describe(has: Set<Plans.Feature>): String {
-        val channels = if (Plans.Feature.AllChannels in has) "All channels" else "Our own channels plus Aaj Tak and ARY News"
+        val channels = if (Plans.Feature.AllChannels in has) "All channels" else "Only our own Bazaar channels"
         val extras = Plans.Feature.entries.filter { it != Plans.Feature.AllChannels && it in has }.map { it.label }
         return "$channels. 1+List" + extras.joinToString("") { ", $it" } + ", full screen and favourites"
     }

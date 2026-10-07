@@ -33,7 +33,7 @@ def main():
             path = os.path.join(CHANNEL, os.path.basename(v["url"]))
             if not os.path.exists(path):
                 continue
-            for item in json.load(open(path, encoding="utf-8")).get("videos", []):
+            for item in (lambda d: d.get("videos", []) + d.get("spares", []))(json.load(open(path, encoding="utf-8"))):
                 if not for_grown_ups(item):
                     wrong.append(f"{vid} ({os.path.basename(path)}): {item.get('title')} · {item.get('label')}")
     if wrong:
