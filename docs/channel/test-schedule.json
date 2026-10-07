@@ -149,7 +149,7 @@
   },
   {
    "id": "trailers",
-   "title": "Upcoming movie trailers",
+   "title": "Upcoming Hindi and Pakistani movie trailers",
    "url": "https://tv.bulkbazaar.ca/channel/trailers.json",
    "secs": 0,
    "kind": "trailers"
@@ -170,28 +170,28 @@
   },
   {
    "id": "music",
-   "title": "Popular music videos",
+   "title": "Popular Hindi and Urdu music videos",
    "url": "https://tv.bulkbazaar.ca/channel/music-videos.json",
    "secs": 0,
    "kind": "music"
   },
   {
    "id": "kids",
-   "title": "Kids' time: cartoons and rhymes",
+   "title": "Kids' time: Hindi rhymes and stories",
    "url": "https://tv.bulkbazaar.ca/channel/block-kids.json",
    "secs": 0,
    "kind": "list"
   },
   {
    "id": "drama-1",
-   "title": "Pakistani drama",
+   "title": "Drama",
    "url": "https://tv.bulkbazaar.ca/channel/block-drama-1.json",
    "secs": 0,
    "kind": "list"
   },
   {
    "id": "drama-2",
-   "title": "Pakistani drama",
+   "title": "Drama",
    "url": "https://tv.bulkbazaar.ca/channel/block-drama-2.json",
    "secs": 0,
    "kind": "list"
@@ -205,24 +205,52 @@
   },
   {
    "id": "comedy",
-   "title": "Comedy",
+   "title": "Comedy: Taarak Mehta Ka Ooltah Chashmah",
    "url": "https://tv.bulkbazaar.ca/channel/block-comedy.json",
    "secs": 0,
    "kind": "list"
   },
   {
-   "id": "sports",
-   "title": "Sports highlights",
-   "url": "https://tv.bulkbazaar.ca/channel/block-sports.json",
+   "id": "film",
+   "title": "Hindi film",
+   "url": "https://tv.bulkbazaar.ca/channel/block-film.json",
    "secs": 0,
    "kind": "list"
   },
   {
-   "id": "travel",
-   "title": "Travel",
-   "url": "https://tv.bulkbazaar.ca/channel/block-travel.json",
-   "secs": 0,
-   "kind": "list"
+   "id": "sprite-hi",
+   "title": "Sprite Fright (Hindi)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sprite-fright-hindi.mp4",
+   "secs": 630,
+   "kind": "programme"
+  },
+  {
+   "id": "sintel-ur",
+   "title": "Sintel (Urdu)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel-urdu.mp4",
+   "secs": 888,
+   "kind": "programme"
+  },
+  {
+   "id": "cosmos-ur",
+   "title": "Cosmos Laundromat (Urdu)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/cosmos-laundromat-urdu.mp4",
+   "secs": 731,
+   "kind": "programme"
+  },
+  {
+   "id": "terror-hi",
+   "title": "Curiosity's Seven Minutes of Terror (Hindi)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-hindi.mp4",
+   "secs": 303,
+   "kind": "programme"
+  },
+  {
+   "id": "tos-hi",
+   "title": "Tears of Steel (Hindi)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-hindi.mp4",
+   "secs": 734,
+   "kind": "programme"
   },
   {
    "id": "news-headlines",
@@ -369,7 +397,7 @@
   "adbb",
   "promo",
   "next",
-  "popeye",
+  "madsci",
   "break",
   "adhere",
   "adbb",
@@ -389,7 +417,7 @@
   "promo",
   "next",
   "story1",
-  "llama",
+  "sprite-hi",
   "break",
   "adbb",
   "next",
@@ -402,30 +430,29 @@
   "break",
   "adbb",
   "next",
-  "superman",
-  "madsci",
+  "film",
   "break",
   "promo",
   "adbb",
   "next",
-  "sports",
+  "sintel-ur",
   "break",
   "adhere",
-  "next",
-  "travel",
-  "apollo",
-  "break",
-  "adbb",
-  "promo",
   "next",
   "drama-2",
   "break",
   "adbb",
   "adhere",
   "next",
-  "raja",
+  "cosmos-ur",
+  "terror-hi",
   "break",
   "promo",
+  "adbb",
+  "next",
+  "tos-hi",
+  "break",
+  "adhere",
   "adbb",
   "next"
  ]

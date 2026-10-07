@@ -72,7 +72,7 @@ $("tick").textContent = /advertise/i.test(own) ? own
 let info = {};
 // Keep in step with tools/build_trailers.py, build_music_videos.py and build_bazaar_blocks.py.
 const LISTS = ["trailers.json", "music-videos.json", "block-kids.json", "block-drama-1.json", "block-drama-2.json",
-  "block-cooking.json", "block-comedy.json", "block-sports.json", "block-travel.json"];
+  "block-cooking.json", "block-comedy.json", "block-film.json"];
 for (const list of LISTS) {
   fetch(list, { cache: "no-store" }).then(r => r.json()).then(d => {
     for (const v of d.videos || []) info[v.id] = { kind: list === "trailers.json" ? "trailer" : "music", ...v };
@@ -80,7 +80,7 @@ for (const list of LISTS) {
   }).catch(() => {});
 }
 const KINDS = { trailer: "Coming soon to cinemas", music: "Music videos", kids: "Kids' time", drama: "Drama",
-  cooking: "Cooking", comedy: "Comedy", sports: "Sports highlights", travel: "Travel" };
+  cooking: "Cooking", comedy: "Comedy", film: "Hindi film", sports: "Sports highlights", travel: "Travel" };
 const isMusic = v => v?.kind === "music";
 const between = v => KINDS[v?.kind] || name;
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
@@ -131,7 +131,7 @@ function load(i, offset) {
   cur = i;
   const v = info[ids[i]];
   const prev = i > 0 ? info[ids[i - 1]] : null;
-  // A new language gets its own card: "Upcoming Hindi movies", "Popular Punjabi music".
+  // A new language gets its own card: "Upcoming Hindi movies", "Popular Urdu music".
   if (v && v.lang && (!prev || prev.lang !== v.lang || prev.kind !== v.kind))
     cover(true, isMusic(v) ? `Popular ${v.lang} music` : `Upcoming ${v.lang} movies`, between(v));
   else if (v && (!prev || prev.kind !== v.kind)) cover(true, between(v), v.title);

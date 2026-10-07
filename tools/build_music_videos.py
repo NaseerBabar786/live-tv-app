@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Builds Bazaar TV's block of popular music videos (the owner's wish, 2026-10-06): the newest official
-videos in English, Hindi, Urdu and Punjabi from the music labels' and artists' own YouTube channels,
+videos in Hindi and Urdu (since 2026-10-07: the owner wants Bazaar TV about 99% Urdu and Hindi) from the music labels' and artists' own YouTube channels,
 played in YouTube's own player, locked like Bazaar Hits (docs/channel/block.html). Nothing is
 downloaded or re-hosted.
 
@@ -29,8 +29,8 @@ OUT = os.path.join(ROOT, "docs", "channel", "music-videos.json")
 # Songs from the last this many days (new music); a quiet channel's older songs still fill in.
 MAX_DAYS = 180
 SECS = (100, 420)
-# The whole block, about 55 minutes, so Bazaar TV's test programme comes to about three hours.
-TARGET_SECS = 55 * 60
+# The whole block, about 50 minutes.
+TARGET_SECS = 50 * 60
 # At most this many songs from one channel, so the block has variety.
 PER_SOURCE = 4
 
@@ -40,17 +40,6 @@ SKIP = re.compile(r"lyric|lyrical|audio|visuali[sz]er|jukebox|full album|non ?st
                   r"explicit|\buncensored\b|karaoke|instrumental|cover\b|tutorial|dance practice|backstage", re.I)
 
 LANGUAGES = [
-    ("English", "Popular English music", [
-        ("Ed Sheeran", ["@EdSheeran"], "Ed Sheeran"),
-        ("Coldplay", ["@coldplay", "@Coldplay"], "Coldplay"),
-        ("Bruno Mars", ["@brunomars", "@BrunoMars"], "Bruno Mars"),
-        ("Dua Lipa", ["@dualipa", "@DuaLipa"], "Dua Lipa"),
-        ("Taylor Swift", ["@TaylorSwift", "@taylorswift"], "Taylor Swift"),
-        ("Justin Bieber", ["@justinbieber", "@JustinBieber"], "Justin Bieber"),
-        ("Imagine Dragons", ["@ImagineDragons", "@imaginedragons"], "Imagine Dragons"),
-        ("Charlie Puth", ["@charlieputh", "@CharliePuth"], "Charlie Puth"),
-        ("Shawn Mendes", ["@ShawnMendes", "@shawnmendes"], "Shawn Mendes"),
-    ]),
     ("Hindi", "Popular Hindi music", [
         ("T-Series", ["@tseries"], "T-Series"),
         ("Saregama", ["@saregamamusic", "@SaregamaMusic"], "Saregama"),
@@ -66,14 +55,6 @@ LANGUAGES = [
         ("Ali Zafar", ["@AliZafarOfficial", "@alizafar"], "Ali Zafar"),
         ("Velo Sound Station", ["@VeloSoundStation", "@velosoundstation"], "Velo Sound Station"),
         ("Rahat Fateh Ali Khan", ["@RahatFatehAliKhan", "@RFAKOfficial"], "Rahat Fateh Ali Khan"),
-    ]),
-    ("Punjabi", "Popular Punjabi music", [
-        ("Speed Records", ["@SpeedRecords"], "Speed Records"),
-        ("White Hill Music", ["@WhiteHillMusic"], "White Hill"),
-        ("Desi Melodies", ["@DesiMelodies"], "Desi Melodies"),
-        ("Geet MP3", ["@GeetMP3"], "Geet MP3"),
-        ("Diljit Dosanjh", ["@diljitdosanjh", "@DiljitDosanjh"], "Diljit Dosanjh"),
-        ("AP Dhillon", ["@apdhillon", "@APDhillon"], "AP Dhillon"),
     ]),
 ]
 

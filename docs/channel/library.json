@@ -1,7 +1,7 @@
 [
  {
   "cat": "Upcoming movie trailers (new every day)",
-  "title": "Upcoming movie trailers: English, Hindi, Punjabi and Pakistani films",
+  "title": "Upcoming movie trailers: Hindi and Pakistani films",
   "url": "https://tv.bulkbazaar.ca/channel/trailers.json",
   "licence": "Official trailers from the studios' and labels' own YouTube channels, played locked in YouTube's player",
   "secs": 0,
@@ -9,7 +9,7 @@
  },
  {
   "cat": "Popular music videos (new every day)",
-  "title": "Popular music videos: English, Hindi, Urdu and Punjabi",
+  "title": "Popular music videos: Hindi and Urdu",
   "url": "https://tv.bulkbazaar.ca/channel/music-videos.json",
   "licence": "Official videos from the music labels' and artists' own YouTube channels, played locked in YouTube's player",
   "secs": 0,
