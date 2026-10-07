@@ -276,45 +276,47 @@ object MyChannel {
 
     /**
      * A card over the picture (owner, 2026-10-07): every 10 minutes what's coming next, and every
-     * 20 minutes today's shows first. It comes up with the first ad or ident of each 10 minutes, so
-     * it rides on the breaks, or 8 minutes in when there's no break. Worked out from the clock, so
-     * every viewer sees it at the same moment. Same as cardAt in docs/channel/schedule.js.
+     * 20 minutes the rest of today's shows with it. It comes up on our own "next programme" slate
+     * (the last ident of a break, just before a programme), big in the middle, so it never covers a
+     * sponsor's ad (owner's photos of 1.9.75). With no slate in the first 8 minutes it comes up small,
+     * low on the picture, 8 minutes in. Worked out from the clock, so every viewer sees it at the same
+     * moment. Same as cardAt in docs/channel/schedule.js.
      */
-    class Card(val today: Boolean, val untilMs: Long)
+    class Card(val today: Boolean, val untilMs: Long, val onSlate: Boolean)
 
     const val CARD_WINDOW_MS = 10 * 60_000L
-    const val TODAY_CARD_MS = 20_000L
-    const val NEXT_CARD_MS = 12_000L
-    private val cardStarts = object : LinkedHashMap<String, Long>() {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Long>?) = size > 8
+    const val NEXT_CARD_MS = 10_000L
+    const val TODAY_CARD_MS = 15_000L
+    private val cardStarts = object : LinkedHashMap<String, Pair<Long, Boolean>>() {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Pair<Long, Boolean>>?) = size > 8
     }
 
     fun cardAt(c: Config, nowMs: Long): Card? {
         val window = nowMs - Math.floorMod(nowMs, CARD_WINDOW_MS)
         val key = "${System.identityHashCode(c)}|$window"
-        val at = synchronized(cardStarts) { cardStarts.getOrPut(key) { firstBreak(c, window, window + 8 * 60_000L) ?: (window + 8 * 60_000L) } }
-        val today = (window / CARD_WINDOW_MS) % 2 == 0L
-        val todayEnd = if (today) at + TODAY_CARD_MS else at
-        return when {
-            nowMs < at -> null
-            nowMs < todayEnd -> Card(true, todayEnd)
-            nowMs < todayEnd + NEXT_CARD_MS -> Card(false, todayEnd + NEXT_CARD_MS)
-            else -> null
+        val (at, onSlate) = synchronized(cardStarts) {
+            cardStarts.getOrPut(key) { firstSlate(c, window, window + 8 * 60_000L)?.let { it to true } ?: ((window + 8 * 60_000L) to false) }
         }
+        val today = (window / CARD_WINDOW_MS) % 2 == 0L
+        val until = at + if (today) TODAY_CARD_MS else NEXT_CARD_MS
+        return if (nowMs in at until until) Card(today, until, onSlate) else null
     }
 
-    /** When the first ad or ident between [from] and [to] starts (or [from], if one is already on); null when none. */
-    private fun firstBreak(c: Config, from: Long, to: Long): Long? {
+    /** When the first slate between [from] and [to] starts: an ident with a programme right after it. */
+    private fun firstSlate(c: Config, from: Long, to: Long): Long? {
         var t = from
-        repeat(60) {
-            if (t >= to) return null
+        var slate: Long? = null
+        repeat(80) {
+            if (t >= to + 60_000L) return null
             when (val now = whatsOn(c, t)) {
                 is Now.Playing -> {
-                    if (now.video.isBreak) return t
+                    val start = t - now.offsetMs
+                    if (!now.video.isBreak && slate != null) return slate
+                    slate = if (now.video.kind == "ident" && start >= from && start < to) start else null
                     if (now.untilMs == Long.MAX_VALUE) return null
                     t = maxOf(now.untilMs, t + 1000)
                 }
-                is Now.OffAir -> t = now.nextAt ?: return null
+                is Now.OffAir -> { slate = null; t = now.nextAt ?: return null }
             }
         }
         return null
@@ -347,34 +349,31 @@ object MyChannel {
     }
 
     /**
-     * Today's booked shows (time slots) from the one on now, in the channel's day; a show booked
-     * many times today (the hourly news) shows once, at its next time, with how many more follow.
-     * When nothing is booked today, the next programmes instead.
+     * What's on later today, after [skip] (the programme on the Up next line): the booked shows
+     * (time slots) first; a show booked many times today (the hourly news) shows once, at its next
+     * time, with how many more follow. With fewer than [min] left today, the next programmes fill
+     * it up, past midnight too (owner's photo of 1.9.75: one line at 11:24 PM).
      */
-    fun todaysShows(c: Config, nowMs: Long, max: Int = 7): List<Upcoming> {
+    fun laterShows(c: Config, nowMs: Long, skip: String? = null, max: Int = 4, min: Int = 3): List<Upcoming> {
         val byId = c.videos.associateBy { it.id }
         val tz = TimeZone.getTimeZone(c.timeZone)
-        val starts = slotsOn(c, byId, tz, nowMs, 0)
-            .sortedWith(compareBy<Start>({ it.at }, { !it.dated })).distinctBy { it.at }
-        if (starts.isEmpty()) return upNext(c, nowMs, max)
         val title = { s: Start -> s.show.ifEmpty { s.video.title } }
-        // From the slot on now (it began before now and is still playing).
-        val fromIndex = starts.indexOfLast { it.at <= nowMs }.let { i ->
-            if (i >= 0 && starts[i].at + starts[i].video.seconds * 1000 > nowMs) i else i + 1
-        }.coerceAtLeast(0)
-        val left = starts.drop(fromIndex)
+        val left = slotsOn(c, byId, tz, nowMs, 0)
+            .sortedWith(compareBy<Start>({ it.at }, { !it.dated })).distinctBy { it.at }
+            .filter { it.at > nowMs && title(it) != skip }
         val counts = left.groupingBy(title).eachCount()
         val out = left.distinctBy(title).take(max).map { Upcoming(it.at, title(it), true, (counts[title(it)] ?: 1) - 1) }.toMutableList()
-        // Late in the day with few shows left, the next programmes fill it up.
-        if (out.size < 3) {
-            val today = dayKey(nowMs, tz)
-            for (u in upNext(c, nowMs, 4)) {
-                if (out.size >= 3) break
-                if (out.none { it.title == u.title } && dayKey(u.at, tz) == today) out += u
+        if (out.size < min) {
+            for (u in upNext(c, nowMs, max + 3)) {
+                if (out.size >= max) break
+                if (u.title != skip && out.none { it.title == u.title }) out += u
             }
         }
-        return out.sortedBy { it.at }
+        return out.sortedBy { it.at }.take(max)
     }
+
+    /** Whether [ms] falls on the same day as [nowMs] in the channel's time zone. */
+    fun sameDay(c: Config, nowMs: Long, ms: Long): Boolean = TimeZone.getTimeZone(c.timeZone).let { dayKey(nowMs, it) == dayKey(ms, it) }
 
     /**
      * What [c] plays at [nowMs]. A slot plays its video from its start time to the end of the
