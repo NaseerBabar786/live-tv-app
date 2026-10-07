@@ -312,7 +312,10 @@ fun PlayerScreen(
 
         // Live channels: the white "advertise with us" line scrolls once along the bottom every
         // 2 minutes, skipping a turn while the channel bar, number pad, a tip or a sponsor card is up.
-        if (onNumberPad != null && !inPictureInPicture) {
+        // Not on our own channels that run their own line (Bazaar TV): one ticker, never two on top of
+        // each other (the owner, 2026-10-07); their line carries the advertise words.
+        val ownTicker by MyChannel.configs.collectAsStateWithLifecycle()
+        if (onNumberPad != null && !inPictureInPicture && !remember(channel.url, ownTicker) { MyChannel.hasTicker(channel) }) {
             val skipNow by rememberUpdatedState(barShown || numberPadOpen || typedNumber.isNotEmpty() || tip != null || error != null)
             key(channel.id) {
                 EditionTicker(
