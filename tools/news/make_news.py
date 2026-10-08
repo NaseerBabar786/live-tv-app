@@ -591,6 +591,18 @@ def add_opening(body, secs, work):
     except Exception as e:
         NOTES.append(f"opening failed: {e}")
 
+def add_segment(body, clip, t0, work):
+    """Lays a ready-made segment's picture (the weather centre) over the bulletin from t0; its voice is already in the mix."""
+    try:
+        tmp = body + ".seg.mp4"
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", body, "-itsoffset", f"{t0:.3f}", "-i", clip,
+            "-filter_complex", f"[1:v]fps={FPS},setsar=1[s];[0:v][s]overlay=0:0:eof_action=pass,format=yuv420p[v]",
+            "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2),
+            "-c:a", "copy", "-movflags", "+faststart", tmp)
+        os.replace(tmp, body)
+    except Exception as e:
+        NOTES.append(f"weather centre overlay failed: {e}")
+
 def add_reader(body, reader, windows, label, work):
     """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
@@ -712,6 +724,15 @@ def main():
     rv = VOICE_B if reader and reader.get("voice") == VOICE_B else VOICE_A
     VOICE = {sec: rv for sec in ORDER}
 
+    # Owner's pick (2026-10-08, weather idea 1): the weather centre with the same newsreader replaces the weather card.
+    wxvid = None
+    if weather_seg and reader and not offline:
+        try:
+            import weather_ideas
+            wxvid = weather_ideas.segment(work, rv, reader["clip"], kind == "headlines")
+        except Exception as e:
+            NOTES.append(f"weather centre failed: {e}")
+
     def plan(counts):
         segs = []
         for sec in ORDER:
@@ -731,7 +752,7 @@ def main():
     counts = {sec: sum(s["section"] == sec for s in stories) for sec in ORDER}
     while True:
         segs = [("open", head, rv, None)] + plan(counts) + [("close", tail, rv, None)]
-        used = STING + sum(len(voice(t, v)) / SR + GAP for _, t, v, _ in segs)
+        used = STING + sum((wxvid[2] if k == "weather" and wxvid else len(voice(t, v)) / SR) + GAP for k, t, v, _ in segs)
         if used + END_MIN <= total or sum(counts.values()) <= 2: break
         biggest = max(ORDER, key=lambda k: counts[k])
         counts[biggest] -= 1
@@ -746,8 +767,10 @@ def main():
     t = STING; n = 0; on_camera = []; clips = []
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import broll
+    wx_at = None
     for i, (sk, text, v, s) in enumerate(segs):
-        audio = voice(text, v)
+        audio = wxvid[1] if sk == "weather" and wxvid else voice(text, v)
+        if sk == "weather" and wxvid: wx_at = t
         a = int(t * SR); voice_track[a:a + len(audio)] += audio[:len(voice_track) - a]
         dur = len(audio) / SR + GAP
         pic = f"c-{i:02d}.png"
@@ -803,6 +826,7 @@ def main():
         "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
     add_broll(body, clips, work)
     add_opening(body, STING, work)
+    if wx_at is not None: add_segment(body, wxvid[0], wx_at, work)
     if reader and on_camera:
         add_reader(body, reader, on_camera, label, work)
     promos = []
