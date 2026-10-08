@@ -8,6 +8,7 @@ adb install -r "$APK" > "$OUT/install.txt" 2>&1
 adb shell getprop ro.build.version.release > "$OUT/android.txt"
 adb shell dumpsys package com.google.android.webview | grep versionName | head -2 >> "$OUT/android.txt"
 adb shell dumpsys package com.android.webview | grep versionName | head -2 >> "$OUT/android.txt"
+adb shell settings put secure immersive_mode_confirmations confirmed
 run() { # name url ua
   adb logcat -c
   adb shell am force-stop "$PKG"
@@ -19,5 +20,8 @@ run() { # name url ua
 run music "https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999" plain
 run music-nowv "https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999" nowv
 run music-tvua "https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999" tv
-run music-nonav "https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999" nonav
+run music-both "https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999" both
+run music-desk "https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999" desk
+run music-nox "https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999" nox
+run music-again "https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999" plain
 run hits "https://tv.bulkbazaar.ca/channel/bollywood.html?app=1&v=999" plain

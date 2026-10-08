@@ -59,6 +59,12 @@ class WebChannelActivity : Activity() {
             settings.javaScriptEnabled = true
             if (qaUa == "nowv") settings.userAgentString = settings.userAgentString.replace("; wv", "")
             if (qaUa == "tv") settings.userAgentString = settings.userAgentString.replace(" Mobile", "")
+            if (qaUa == "both") settings.userAgentString = settings.userAgentString.replace(" Mobile", "").replace("; wv", "")
+            if (qaUa == "desk") settings.userAgentString = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+            if (qaUa == "nox" && androidx.webkit.WebViewFeature.isFeatureSupported(androidx.webkit.WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST)) androidx.webkit.WebSettingsCompat.setRequestedWithHeaderOriginAllowList(settings, emptySet())
+            android.util.Log.i("QAWEB", "ua " + settings.userAgentString)
+            val qaView = this
+            postDelayed({ qaView.evaluateJavascript("(function(){var d=document.querySelector('.diag');return (d?d.textContent:'no diag')+' | '+document.title})()") { android.util.Log.i("QAWEB", "diag " + it) } }, 25000)
             settings.domStorageEnabled = true
             settings.mediaPlaybackRequiresUserGesture = false
             // Always the newest page, not a copy the TV kept from an earlier version.
