@@ -89,7 +89,7 @@
       <tbody id="rows"></tbody>
     </table></div>
   </div>
-  <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
+  <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
   <p class="err" id="err"></p>
 </main>
@@ -214,7 +214,7 @@ if (!configured) {
     const recs = (usage[u.id] || []).slice().sort((a, b) => (b.updated || 0) - (a.updated || 0));
     if (!recs.length) return null;
     const withNow = recs.filter(r => r.nowName && r.nowAt).sort((a, b) => b.nowAt - a.nowAt)[0];
-    if (withNow && Date.now() - withNow.nowAt < LIVE_MS) return { live: true, name: withNow.nowName, at: withNow.nowAt };
+    if (withNow && withNow.nowLive !== false && Date.now() - withNow.nowAt < LIVE_MS) return { live: true, name: withNow.nowName, at: withNow.nowAt };
     if (withNow) return { live: false, name: withNow.nowName, at: withNow.nowAt };
     const last = recs[0], top = topChannels([last])[0];
     return top ? { live: false, name: top[0], at: last.updated, guess: true } : null;
@@ -232,6 +232,8 @@ if (!configured) {
     return LANG_BY_COUNTRY[(c.c || "").toLowerCase()] || "Other";
   }
   const countryOf = c => isOurs(c) ? "Bazaar (our channels)" : COUNTRY[(c.c || "").toLowerCase()] || (c.c ? c.c.toUpperCase() : "Other");
+  const FEATURE_LABEL = { list: "1+List", browse: "Browse", carousel: "Carousel", strip: "Strip", duo: "Duo", five: "1+3", two: "1×2", four: "2×2", six: "2×3", news: "News", cp24: "CP24", home: "Home", mine: "My Screen", full: "Full screen channel", library: "Movies & Dramas", games: "Games", quran: "Iqra Quran", weather: "Weather" };
+  const featureLabel = k => FEATURE_LABEL[k] || k;
   let watchRange = 7;
   function watchPanel(u) {
     const el = $("bWatch"); el.innerHTML = "";
@@ -255,7 +257,7 @@ if (!configured) {
     const sum = document.createElement("div"); sum.className = "sum";
     sum.textContent = tot ? `Watched ${hm(tot)}` + (watchRange > 1 ? ` on ${activeDays} of ${watchRange} days · about ${hm(tot / Math.max(1, activeDays))} a day they watch` : "") + ` · ${new Set(recs.flatMap(r => Object.keys(r.channels || {}))).size} different channels` : "Nothing watched in this period.";
     el.append(sum);
-    if (!tot) return;
+    if (!tot && !recs.some(r => r.features)) return;
     const group = (keyOf) => {
       const m = {};
       for (const r of recs) for (const [k, c] of Object.entries(r.channels || {})) for (const key of [].concat(keyOf(k, c))) m[key] = (m[key] || 0) + (c.s || 0);
@@ -263,8 +265,11 @@ if (!configured) {
     };
     const progs = {};
     for (const r of recs) for (const p of Object.values(r.programmes || {})) { const k = p.t || "?"; progs[k] = (progs[k] || 0) + (p.s || 0); }
+    const feats = {};
+    for (const r of recs) for (const [k, f] of Object.entries(r.features || {})) { const e = (feats[featureLabel(k)] ||= { s: 0, o: 0 }); e.s += f.s || 0; e.o += f.o || 0; }
     const lists = [
       ["Channels watched most", group((k, c) => chanName(k, c)), 6],
+      ["Features used most", Object.entries(feats).map(([k, f]) => [k, f.s, f.o]).sort((a, b) => b[1] - a[1]), 6],
       ["Languages", group((k, c) => langOf(c)), 5],
       ["Countries", group((k, c) => countryOf(c)), 5],
       ["Kinds of channel", group((k, c) => (c.t || "").split(";").map(x => x.trim()).filter(Boolean).slice(0, 2)), 5],
@@ -276,9 +281,9 @@ if (!configured) {
       const box = document.createElement("div");
       const b = document.createElement("b"); b.textContent = title; box.append(b);
       const ol = document.createElement("ol"), top = list[0][1] || 1;
-      for (const [name, sec] of list.slice(0, n)) {
+      for (const [name, sec, opens] of list.slice(0, n)) {
         const li = document.createElement("li"); li.textContent = name + " ";
-        const sp = document.createElement("span"); sp.textContent = hm(sec) + (title === "Languages" || title === "Countries" ? ` (${Math.round(100 * sec / tot)}%)` : "");
+        const sp = document.createElement("span"); sp.textContent = hm(sec) + (title === "Languages" || title === "Countries" ? ` (${Math.round(100 * sec / tot)}%)` : opens ? ` · opened ${opens}×` : "");
         const bar = document.createElement("i"); bar.className = "bar"; bar.style.width = Math.max(3, Math.round(100 * sec / top)) + "%";
         li.append(sp, bar); ol.append(li);
       }
