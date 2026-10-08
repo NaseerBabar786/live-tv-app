@@ -1,4 +1,4 @@
-// Cable TV Solitaire (1.10.27): Klondike on a card table. Arrows + OK on the TV remote, tap or drag with touch/mouse.
+// Cable TV Solitaire (1.10.28): Klondike on a card table. Arrows + OK on the TV remote, tap or drag with touch/mouse.
 (()=>{
 const $=s=>document.querySelector(s);
 const app=$('#app'), board=$('#board'), cursorEl=$('#cursor');

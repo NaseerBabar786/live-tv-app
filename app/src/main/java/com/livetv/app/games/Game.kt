@@ -123,7 +123,7 @@ val CLASSIC_GAMES = listOf(
 
 /**
  * Classic games that left the menu (1.10.22): the modern remakes in [WEB_GAMES] took their place,
- * and the owner took 2048 and Cricket off. Solitaire left in 1.10.27 for the new card-table Solitaire.
+ * and the owner took 2048 and Cricket off. Solitaire left in 1.10.28 for the new card-table Solitaire.
  */
 private val RETIRED = setOf(
     "snake", "2048", "blocks", "bricks", "space", "paddle", "tictactoe", "four", "mines", "memory", "echo",
