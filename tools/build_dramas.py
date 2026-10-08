@@ -162,7 +162,7 @@ MTA_OTHER_LANGUAGE = re.compile(
     r"japanese|tamil|malayalam|sindhi|pashto|persian|farsi|dutch|italian|portuguese|hausa|yoruba|twi|luganda|"
     r"kirundi|creole|bosnian|albanian|norwegian|swedish|danish|thai|burmese|sinhala|tagalog)\b|"
     r"[\u0980-\u09ff\u0b80-\u0bff\u0d00-\u0d7f\u4e00-\u9fff\u3040-\u30ff\u0400-\u04ff]", re.I)
-MTA_URDU = re.compile(r"\burdu\b|[\u0600-\u06ff]|\b(ki|ka|ke|aur|mein|hain|kya|kaise|hamari|hamare|zindagi|"
+MTA_URDU = re.compile(r"\burdu\b|[\u0600-\u06ff]|\b\w+-e-\w+\b|\b(liqa|tilawat|ki|ka|ke|aur|mein|hain|kya|kaise|hamari|hamare|zindagi|"
                       r"bachon|bachchon|dars|seerat|tarbiyat|tarbiyyat|nazm|nazmen|taleem|baatein)\b", re.I)
 MTA_ENGLISH = re.compile(r"\benglish\b|\b(the|with|and|of|in|what|how|why|is)\b", re.I)
 MTA_TAGS = re.compile(r"\s*[|\-–:]*\s*\b(mta(\s*international)?|muslim television ahmadiyya|in urdu|in english|urdu|english|"
@@ -619,6 +619,20 @@ def playlist_videos(text):
         if title and m.group(1) not in seen:
             seen.add(m.group(1))
             out.append((m.group(1), _text(title.group(1)), int(length.group(1)) / 60 if length else None))
+    # YouTube's newer layout lists a playlist's videos as lockupViewModel cards, like a channel's Videos tab.
+    for m in re.finditer(r'"lockupViewModel":\{', text):
+        chunk = text[m.end():m.end() + 12000]
+        vid = re.search(r'"contentId":"([\w-]{11})"', chunk)
+        if not vid or vid.group(1) in seen or "LOCKUP_CONTENT_TYPE_VIDEO" not in chunk:
+            continue
+        title = re.search(r'"lockupMetadataViewModel":\{"title":\{"content":"((?:[^"\\]|\\.)*)"', chunk)
+        length = re.search(r'"text":"(\d{1,2}:\d{2}(?::\d{2})?)"', chunk)
+        if title:
+            seen.add(vid.group(1))
+            out.append((vid.group(1), _text(title.group(1)), minutes(length.group(1)) if length else None))
+    if not out:
+        markers = {k: text.count(k) for k in ("playlistVideoRenderer", "lockupViewModel", "videoId", "consent", "ytInitialData")}
+        print(f"    no videos read from the playlist page ({len(text)} bytes, {markers})", file=sys.stderr)
     return out
 
 
@@ -682,7 +696,7 @@ def mta(kept, today):
         except Exception as e:  # noqa: BLE001
             print(f"  {name}: playlists failed ({e})", file=sys.stderr)
             lists = []
-        print(f"  {name}: {len(lists)} playlists")
+        print(f"  {name}: {len(lists)} playlists: " + "; ".join(t for _, t in lists[:40]))
         used = 0
         for pid, ptitle in lists:
             if used >= MTA_MAX_PLAYLISTS:
@@ -695,8 +709,10 @@ def mta(kept, today):
             except Exception as e:  # noqa: BLE001
                 print(f"    {ptitle}: failed ({e})", file=sys.stderr)
                 continue
+            found_here = len(videos)
             videos = [v for v in videos if not SHOW_SKIP.search(v[1]) and not MTA_OTHER_LANGUAGE.search(v[1])]
             if not videos:
+                print(f"    {ptitle} ({pid}): {found_here} videos, none kept")
                 continue
             used += 1
             # The programme's language: its playlist title, else what most of its videos' titles say.
