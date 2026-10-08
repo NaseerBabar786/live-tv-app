@@ -72,3 +72,6 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   (full screen, the channels paused), with a Windows notification for every prayer, chime, message and reminder. Translations: up to 3 of 60+ languages, each downloaded when picked (`docs/quran/tr`).
 - 1.10.8: phones only. The phone app has no Games (the games are made for the TV remote; owner's rule 2026-10-08).
   Nothing changes on PC, which keeps its games like the TV.
+- 1.10.9: TV remote only. The sign-in and Change password text boxes no longer trap the remote's cursor
+  (Up/Down always leave them, OK opens the keyboard, yellow outline like buttons). The PC is typed on with a real
+  keyboard and mouse, so nothing changes there.
