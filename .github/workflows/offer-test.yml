@@ -1,0 +1,50 @@
+name: Offer test version
+
+# The owner tests one version a day (owner, 2026-10-08): every push to main builds into the
+# "candidate" pre-release, which nobody's app reads. When all the day's jobs are merged, run this
+# (Claude does, then asks the owner once) to copy the candidate to the owner-only "test" release
+# that "Try test version", App Bazaar's test updates and tv.bulkbazaar.ca/test use. After the
+# owner's yes, release-approved.yml sends that build to everyone.
+on:
+  workflow_dispatch:
+    inputs:
+      build:
+        description: "Only offer it if the candidate is this build number (blank = the current candidate)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-approved
+  cancel-in-progress: false
+
+jobs:
+  offer:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Copy the candidate to "test"
+        run: |
+          mkdir offer && cd offer
+          gh release download candidate --pattern '*' --clobber
+          cat versions.json
+          want="${{ inputs.build }}"
+          have=$(jq -r .build versions.json)
+          if [ -n "$want" ] && [ "$want" != "$have" ]; then
+            echo "::error::The candidate is build $have, not $want."
+            exit 1
+          fi
+          commit=$(jq -r .commit versions.json)
+          cable=$(jq -r '."cable-tv"' versions.json | sed -E 's/^([0-9]+\.[0-9]+\.[0-9]+)\.([0-9]+)$/\1 test \2/')
+          if gh release view test > /dev/null 2>&1; then
+            gh release upload test * --clobber
+          else
+            gh release create test * --prerelease --latest=false --title "TEST build" --notes "Test build."
+          fi
+          notes=$(python3 -c 'import json; d=json.load(open("versions.json")); print("Owner-only TEST build %s from %s. Not sent to users until approved.\n\n" % (d["build"], d["commit"][:7]) + "\n".join("- %s %s" % (k, d[k]) for k in d if k not in ("build", "commit")))')
+          gh release edit test --prerelease --latest=false --title "TEST build $have (Cable TV $cable)" --notes "$notes"
+          echo "Offered candidate build $have (Cable TV $cable, $commit) to the owner as the test version." | tee -a "$GITHUB_STEP_SUMMARY"
