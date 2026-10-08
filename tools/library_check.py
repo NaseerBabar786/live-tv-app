@@ -13,7 +13,8 @@ Then each playlist is rewritten without:
   - still pictures,
   - wrong fits: trailers, teasers, promos, clips, songs, reactions, interviews, Shorts and the like, and
     films, telefilms and drama episodes far too short to be one (FIT_MINUTES),
-  - programmes taken off after viewers' reports or by hand (docs/library-removed.json),
+  - programmes viewers say don't play (more "No" than "Yes" to the app's "Did it play properly?"),
+    and programmes taken off by hand (docs/library-removed.json),
 and the others get mins="95" and desc="..." on their #EXTINF line. Blocked videos (YouTube error 150,
 removed, private) are taken off by the pre-air check (tools/preair_check.py) that runs after this.
 
@@ -223,12 +224,42 @@ def rewrite(path, info, removed, taken):
         f.write("\n".join(out) + "\n")
 
 
+REPORTS = ("https://firestore.googleapis.com/v1/projects/live-tv-b2164/databases/(default)/documents/reports"
+           "?pageSize=300&key=AIzaSyAukJcRHwIV_W3TKtr3_5XiVJZe-7491KE")
+
+
+def reported():
+    """Programmes viewers say don't play: more "No" than "Yes" answers to "Did it play properly?"
+    (Cable TV's Library, LibraryReports.kt). {link or YouTube id: "N said no, M said yes"}."""
+    votes, token = {}, ""
+    try:
+        while True:
+            page = json.loads(get(REPORTS + (f"&pageToken={urllib.parse.quote(token)}" if token else "")))
+            for doc in page.get("documents", []):
+                f = doc.get("fields", {})
+                if f.get("kind", {}).get("stringValue") != "library":
+                    continue
+                url = f.get("url", {}).get("stringValue", "")
+                m = YT.search(url)
+                key = m.group(1) if m else url
+                no, yes = votes.get(key, (0, 0))
+                votes[key] = (no, yes + 1) if f.get("ok", {}).get("booleanValue") else (no + 1, yes)
+            token = page.get("nextPageToken")
+            if not token:
+                break
+    except Exception as e:  # noqa: BLE001
+        print(f"::warning::Viewers' reports could not be read ({e}); are the Firestore rules for 'reports' published?")
+    out = {k: f"{no} said it doesn't play, {yes} said it does" for k, (no, yes) in votes.items() if no > yes}
+    print(f"Viewers' reports: {len(votes)} programmes answered, {len(out)} taken off")
+    return out
+
+
 def main(args):
     if args and args[0] == "--probe":
         for vid in args[1:]:
             print(vid, json.dumps((look_other(vid) if vid.startswith("http") else look(vid))[1], ensure_ascii=False))
         return
-    removed = set(load(REMOVED, {}).get("items", {}))
+    removed = set(load(REMOVED, {}).get("items", {})) | set(reported())
     os.makedirs(INFO_DIR, exist_ok=True)
     taken = []
     for path in args:

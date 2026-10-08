@@ -57,6 +57,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -71,6 +72,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import com.livetv.app.data.Bilibili
 import com.livetv.app.data.Channel
 import com.livetv.app.data.Dailymotion
+import com.livetv.app.data.LibraryReports
 import com.livetv.app.data.Vimeo
 import com.livetv.app.data.Vod
 import com.livetv.app.data.YouTube
@@ -104,8 +106,12 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     var searching by rememberSaveable { mutableStateOf(false) }
     var openShow by rememberSaveable { mutableStateOf(start?.show) }
     var playing by remember { mutableStateOf(start?.play) }
+    // After every video: "Did it play properly?" (owner, 2026-10-08; see LibraryReports).
+    var askAbout by remember { mutableStateOf<Channel?>(null) }
     // Opened from the home screen for one video: Back from it goes straight back there.
-    val stopPlaying: () -> Unit = { if (start?.play != null) onClose() else playing = null }
+    val stopPlaying: () -> Unit = {
+        if (start?.play != null) onClose() else { askAbout = playing; playing = null }
+    }
     val tabFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { vm.refreshIfChanged() }
     // Kept above the player so the lists keep their scroll position while something plays,
@@ -181,6 +187,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
         }
     }
     BackHandler(onBack = back)
+    BackHandler(enabled = askAbout != null) { askAbout = null }
 
     LaunchedEffect(show?.name, language, state.loading) {
         if (state.loading) return@LaunchedEffect
@@ -238,6 +245,8 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                     }
                 }
             }
+
+            askAbout?.let { video -> PlayedProperlyCard(video) { askAbout = null } }
 
             when {
                 !state.hasPlaylists -> VodMessage(
@@ -627,5 +636,67 @@ private fun VodChip(
 private fun VodMessage(text: String) {
     Box(Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
         Text(text, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+/**
+ * "Did it play properly?" after a Library video (owner, 2026-10-08): Yes / No go to the owner
+ * (LibraryReports), and a programme more viewers say No to comes off the Library the next morning.
+ */
+@Composable
+private fun PlayedProperlyCard(video: Channel, onDone: () -> Unit) {
+    val context = LocalContext.current
+    val yes = remember { FocusRequester() }
+    LaunchedEffect(video.id) {
+        delay(300) // after the list has put the highlight back on what was picked
+        runCatching { yes.requestFocus() }
+        delay(30_000)
+        onDone()
+    }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+            .clip(CardShape)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            "Did \"${video.name}\" play properly?",
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            "✓ Yes, it played",
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier
+                .padding(start = 12.dp)
+                .focusRequester(yes)
+                .focusGlow(ChipShape)
+                .clip(ChipShape)
+                .background(Color(0xFF2E7D32))
+                .clickable { LibraryReports.send(context, video, ok = true); onDone() }
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+        )
+        Text(
+            "✗ No, not working",
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier
+                .padding(start = 12.dp)
+                .focusGlow(ChipShape)
+                .clip(ChipShape)
+                .background(Color(0xFFD32F2F))
+                .clickable {
+                    LibraryReports.send(context, video, ok = false)
+                    android.widget.Toast.makeText(context, "Thank you. We'll check it and take it off if it's broken.", android.widget.Toast.LENGTH_LONG).show()
+                    onDone()
+                }
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+        )
     }
 }
