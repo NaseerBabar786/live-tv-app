@@ -86,6 +86,7 @@ fun SettingsDialog(
     val context = LocalContext.current
     val appVersion = remember {
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull()
+            ?.let { com.livetv.app.data.Updater.label(it) }
     }
     var pickingCountries by rememberSaveable { mutableStateOf(false) }
     var pickingLanguages by rememberSaveable { mutableStateOf(false) }

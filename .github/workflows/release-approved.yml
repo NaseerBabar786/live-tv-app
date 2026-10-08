@@ -10,8 +10,9 @@ name: Release approved build
 #
 # The owner's one-release-per-day rule (2026-10-08): a yes that comes after the day's release is
 # kept for the next day. mode "hold" copies the tested build from "test" into the owner-only
-# "approved" pre-release (so new pushes to main can keep replacing "test"); the next day mode
-# "release held build" publishes from "approved" exactly as "release now" publishes from "test".
+# "approved" pre-release (so new pushes to main can keep replacing "test"), with Cable TV rebuilt
+# under its clean public number; the next day mode "release held build" publishes from "approved".
+# "release now" does both at once.
 on:
   workflow_dispatch:
     inputs:
@@ -50,16 +51,19 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  hold:
-    if: inputs.mode == 'hold'
+  # Every approval (release now or hold) goes through "approved": the tested build's files, with
+  # Cable TV rebuilt from the tested commit under its clean public number ("1.11.0.5" -> "1.11.0",
+  # same code, same version code), so test numbers never reach users. "release held build" skips this.
+  approve:
+    if: inputs.mode != 'release held build'
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
     steps:
-      - name: Keep the tested build in "approved"
+      - name: Download the tested build
         run: |
-          mkdir held && cd held
+          mkdir "$RUNNER_TEMP/held" && cd "$RUNNER_TEMP/held"
           gh release download test --pattern '*' --clobber
           want="${{ inputs.build }}"
           have=$(jq -r .build versions.json)
@@ -67,21 +71,71 @@ jobs:
             echo "::error::The test build is now $have, not $want. A newer build replaced the one that was tested; test it first."
             exit 1
           fi
-          commit=$(jq -r .commit versions.json)
+          echo "BUILD=$have" >> "$GITHUB_ENV"
+          echo "COMMIT=$(jq -r .commit versions.json)" >> "$GITHUB_ENV"
+          echo "TESTED=$(jq -r '."cable-tv"' versions.json)" >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMMIT }}
+
+      - name: Clean Cable TV version
+        run: |
+          python3 tools/version_codes.py scale
+          # A tested commit from before tools/public_version.py gets the script from main.
+          [ -f tools/public_version.py ] || gh api "repos/$GH_REPO/contents/tools/public_version.py" --jq .content | base64 -d > tools/public_version.py
+          latest=$(gh release view --json tagName -q .tagName 2>/dev/null || true)
+          echo "PUBLIC=$(python3 tools/public_version.py clean "$TESTED" "$latest")" >> "$GITHUB_ENV"
+
+      - name: Name it
+        if: env.PUBLIC != env.TESTED
+        run: python3 tools/public_version.py apply "$PUBLIC"
+
+      - uses: actions/setup-java@v4
+        if: env.PUBLIC != env.TESTED
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        if: env.PUBLIC != env.TESTED
+
+      - name: Rebuild Cable TV under its public number
+        if: env.PUBLIC != env.TESTED
+        env:
+          SIGNING_KEYSTORE: ${{ secrets.SIGNING_KEYSTORE }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          TV_CLIENT_SECRET: ${{ secrets.TV_CLIENT_SECRET }}
+        run: |
+          python3 tools/build_logo_index.py || true
+          if [ -n "$SIGNING_KEYSTORE" ]; then
+            echo "$SIGNING_KEYSTORE" | base64 -d > "$RUNNER_TEMP/livetv.jks"
+            export SIGNING_KEYSTORE_FILE="$RUNNER_TEMP/livetv.jks"
+          fi
+          ./gradlew assembleLivetvDebug
+          cp app/build/outputs/apk/livetv/debug/app-livetv-debug.apk "$RUNNER_TEMP/held/LiveTV.apk"
+          cd "$RUNNER_TEMP/held"
+          jq --arg v "$PUBLIC" '."cable-tv" = $v | .tested = env.TESTED' versions.json > v.tmp && mv v.tmp versions.json
+
+      - name: Keep it in "approved"
+        run: |
+          cd "$RUNNER_TEMP/held"
+          cat versions.json
           gh release delete approved --cleanup-tag --yes 2>/dev/null || true
-          gh release create approved * --prerelease --target "$commit" \
-            --title "APPROVED build $have (Cable TV $(jq -r '."cable-tv"' versions.json)), waiting for its release day" \
-            --notes "Owner-approved copy of TEST build $have from $commit (apps: ${{ inputs.apps }}). Published by this workflow with mode 'release held build'. Not sent to users yet."
-          echo "Held test build $have in 'approved' for apps: ${{ inputs.apps }}." | tee -a "$GITHUB_STEP_SUMMARY"
+          gh release create approved * --prerelease --latest=false --target "$COMMIT" \
+            --title "APPROVED build $BUILD (Cable TV $PUBLIC), waiting for its release day" \
+            --notes "Owner-approved TEST build $BUILD from $COMMIT (tested as Cable TV $TESTED, apps: ${{ inputs.apps }}). Not sent to users until this workflow runs with mode 'release now' or 'release held build'."
+          echo "Approved test build $BUILD as Cable TV $PUBLIC (tested as $TESTED)." | tee -a "$GITHUB_STEP_SUMMARY"
 
   release:
-    if: inputs.mode != 'hold'
+    needs: approve
+    if: ${{ !cancelled() && inputs.mode != 'hold' && needs.approve.result != 'failure' }}
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
       APPS: ${{ inputs.apps }}
-      FROM: ${{ inputs.mode == 'release held build' && 'approved' || 'test' }}
+      FROM: approved
     steps:
       - name: Download the tested build
         run: |
