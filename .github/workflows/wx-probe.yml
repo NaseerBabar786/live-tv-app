@@ -11,7 +11,10 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           B="https://api.open-meteo.com/v1/forecast?latitude=44.1&longitude=-77.58&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,is_day,wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,uv_index,visibility,cloud_cover,dew_point_2m&hourly=temperature_2m,apparent_temperature,weather_code,precipitation_probability,is_day,wind_speed_10m,uv_index,pressure_msl&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,snowfall_sum,sunrise,sunset,uv_index_max,wind_speed_10m_max,wind_gusts_10m_max&minutely_15=precipitation&past_minutely_15=1&forecast_minutely_15=12&timezone=auto&forecast_days=16&past_days=14"
-          mkdir -p probe && curl -s "$B" > probe/forecast.json
-          curl -s -A "Mozilla/5.0" "https://www.bing.com/news/search?q=Quinte+West+weather&format=rss&setmkt=en-CA&setlang=en" > probe/bing.xml
+          mkdir -p probe
+          curl -s -o probe/hdr.json -w 'HDR %{http_code} %{size_download}\n' -H 'User-Agent: CableTV/1.0 (tv.bulkbazaar.ca)' -H 'Accept: application/geo+json, application/json, application/rss+xml, */*' "$B" | tee probe/hdr.txt
+          head -c 300 probe/hdr.json | tee -a probe/hdr.txt
+          curl -s -o /dev/null -w 'PLAIN %{http_code}\n' "$B" | tee -a probe/hdr.txt
+          true || curl -s "https://www.bing.com/news/search?q=Quinte+West+weather&format=rss&setmkt=en-CA&setlang=en" > probe/bing.xml
           git config user.name probe; git config user.email probe@x
           git add probe && git commit -qm "probe data" && git push origin HEAD:wx-probe
