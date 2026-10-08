@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 tools/probe/spark_music.py
+      - run: bash tools/probe/spark_music.sh
+        timeout-minutes: 15
       - run: |
           tar czf spark-music.tgz -C out m
           gh release delete-asset spark-ad-media spark-music.tgz -y || true
