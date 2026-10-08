@@ -498,6 +498,62 @@
     "picture": "anchor-m6c",
     "edit": "Place him in a modern professional TV news studio: sitting upright behind a glossy curved dark news desk, shoulders square to the camera, both hands resting on the desk; behind him a large glowing blue video wall with a world map, soft bright studio lights, a clear empty dark-blue area on the upper left of the wall. Keep his face, skin tone, hair and his clothes exactly the same; photorealistic broadcast photo.",
     "logo": true
+   },
+   {
+    "id": "anchor-3ha",
+    "name": "Priya",
+    "ur": "پریا",
+    "seed": 5304,
+    "picture": "anchor-3d",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Indian woman TV news anchor in her late twenties, hair tied in a neat low bun, small bindi, wearing an elegant royal blue silk saree, sitting at a glossy modern news desk, natural skin texture with pores, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, real television news studio set with blurred blue and red screens behind her, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "voice": "hi-IN-SwaraNeural",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "logo": true,
+    "edit": "Place her in a modern TV news studio with a large glowing blue video wall showing a world map and soft bright studio lights; she sits upright behind a glossy curved dark news desk, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
+   },
+   {
+    "id": "anchor-3hb",
+    "name": "Priya",
+    "ur": "پریا",
+    "seed": 5304,
+    "picture": "anchor-3d",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Indian woman TV news anchor in her late twenties, hair tied in a neat low bun, small bindi, wearing an elegant royal blue silk saree, sitting at a glossy modern news desk, natural skin texture with pores, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, real television news studio set with blurred blue and red screens behind her, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "voice": "hi-IN-SwaraNeural",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "logo": true,
+    "edit": "Place her in an evening TV news studio with a wide window wall showing a city skyline at night with lights, deep red and dark grey panels and warm studio lights; she sits upright behind a sleek black and red news desk, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
+   },
+   {
+    "id": "anchor-3hc",
+    "name": "Priya",
+    "ur": "پریا",
+    "seed": 5304,
+    "picture": "anchor-3d",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Indian woman TV news anchor in her late twenties, hair tied in a neat low bun, small bindi, wearing an elegant royal blue silk saree, sitting at a glossy modern news desk, natural skin texture with pores, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, real television news studio set with blurred blue and red screens behind her, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "voice": "hi-IN-SwaraNeural",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "logo": true,
+    "edit": "Place her in a bright, airy white and silver newsroom with glass walls, several screens and journalists' desks softly blurred behind her, daylight studio lighting; she sits upright behind a clean white curved news desk with a soft light strip, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
+   },
+   {
+    "id": "anchor-3hd",
+    "name": "Priya",
+    "ur": "پریا",
+    "seed": 5304,
+    "picture": "anchor-3d",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Indian woman TV news anchor in her late twenties, hair tied in a neat low bun, small bindi, wearing an elegant royal blue silk saree, sitting at a glossy modern news desk, natural skin texture with pores, both hands resting on the desk, looking straight into the camera with a calm closed-mouth expression, real television news studio set with blurred blue and red screens behind her, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "voice": "hi-IN-SwaraNeural",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "logo": true,
+    "edit": "Place her in an elegant TV news studio with dark green and gold panels, subtle Islamic geometric patterns on the back wall, large screens and warm golden studio lights; she sits upright behind a polished dark wood and gold news desk, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    }
   ]
  }
