@@ -186,8 +186,13 @@ GENRE_RE = [(g, re.compile(p, re.I)) for g, p in GENRES]
 
 
 # Owner's rule (2026-10-08): no horror anywhere on our channels or in the Library (Kids' friendly ghosts aside).
-HORROR = re.compile(r"horror|haunted|haunting|zombie|exorcis|paranormal|demonic|evil spirit|slasher|bhoot|bhoot|bhootni|"
-                    r"chudail|churail|aseb|آسیب|چڑیل|بھوت|चुड़ैल|भूतिया|भूत|डरावन|हॉरर|ہارر", re.I)
+HORROR = re.compile(r"horror(?!s\b)|zombie|exorcis|demonic|evil spirit|slasher|apparition|haunted (?:house|villa|mansion|hotel)|"
+                    r"ghost story|bhoot|chudail|churail|aseb|آسیب|چڑیل|بھوت|चुड़ैल|भूतिया|डरावन|हॉरर|ہارر", re.I)
+
+
+def story(text):
+    """A description without its link lines ("Horror: https://bit.ly/..." lists every genre a channel has)."""
+    return " ".join(line for line in (text or "").splitlines() if not re.search(r"https?://|www\.|bit\.ly|@\w|#\w|•", line))
 
 
 def genres(text):
@@ -209,7 +214,7 @@ def why_off(attrs, name, known, url, vid, removed):
     """Why a programme doesn't belong in the Library, or None when it does."""
     if url in removed or (vid and vid in removed):
         return "reported / taken off by hand"
-    if attrs.get("tvg-genre") != "Kids" and HORROR.search(f"{name} {known.get('about') or attrs.get('desc') or ''}"):
+    if attrs.get("tvg-genre") != "Kids" and HORROR.search(f"{name} {story(known.get('about')) or attrs.get('desc') or ''}"):
         return "horror (owner's rule: no horror)"
     if known.get("still"):
         return "one still picture"
@@ -249,7 +254,7 @@ def rewrite(path, info, removed, taken):
             continue
         mins = known.get("mins") or attrs.get("mins")
         desc = known.get("desc") or attrs.get("desc")
-        kinds = genres(f"{name} {known.get('about') or desc or ''}")
+        kinds = genres(f"{name} {story(known.get('about')) or desc or ''}")
         extinf = re.sub(r'\s(?:mins|desc|genres)="[^"]*"', "", extinf)
         extra = (f' mins="{mins}"' if mins else "") + (f' genres="{";".join(kinds)}"' if kinds else "") + \
                 (f' desc="{html.unescape(desc)}"' if desc else "")
