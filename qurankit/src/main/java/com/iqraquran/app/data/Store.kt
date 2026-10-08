@@ -7,8 +7,6 @@ import org.json.JSONObject
 /** A learner: each child (or grown-up) keeps their own stars and Hifz. */
 data class Profile(val id: String, val name: String, val color: Int)
 
-enum class TranslationMode { None, Urdu, English, Both }
-
 /** Everything the app remembers, kept on the device only (no sign-in, nothing uploaded). */
 class Store(context: Context) {
 
@@ -26,10 +24,19 @@ class Store(context: Context) {
         get() = prefs.getString("kids_reciter", "husary_muallim") ?: "husary_muallim"
         set(v) = prefs.edit().putString("kids_reciter", v).apply()
 
-    var translation: TranslationMode
-        get() = runCatching { TranslationMode.valueOf(prefs.getString("translation", null)!!) }
-            .getOrDefault(TranslationMode.Urdu)
-        set(v) = prefs.edit().putString("translation", v.name).apply()
+    /** The translations shown under each ayah, in order (language codes; empty = Arabic only). */
+    var translations: List<String>
+        get() {
+            prefs.getString("translations", null)?.let { v -> return v.split(',').filter { it.isNotBlank() } }
+            // Before 1.3.5 there was one setting: None, Urdu, English or Both.
+            return when (prefs.getString("translation", null)) {
+                "None" -> emptyList()
+                "English" -> listOf("en")
+                "Both" -> listOf("ur", "en")
+                else -> listOf("ur")
+            }
+        }
+        set(v) = prefs.edit().putString("translations", v.joinToString(",")).apply()
 
     /** Reading theme id (see Palettes), and the colours of the Custom theme as ARGB. */
     var themeId: String

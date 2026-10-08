@@ -15,7 +15,9 @@ import com.iqraquran.app.data.Quran
 import com.iqraquran.app.data.QuranText
 import com.iqraquran.app.data.Reciter
 import com.iqraquran.app.data.Store
-import com.iqraquran.app.data.TranslationMode
+import com.iqraquran.app.data.TranslationLang
+import com.iqraquran.app.data.Translations
+import androidx.compose.runtime.mutableStateMapOf
 import com.iqraquran.app.data.AsrMethod
 import com.iqraquran.app.data.AzanMode
 import com.iqraquran.app.data.AzanSettings
@@ -92,8 +94,16 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         private set
     var kidsReciter by mutableStateOf(reciters.firstOrNull { it.id == store.kidsReciterId } ?: reciters.first())
         private set
-    var translation by mutableStateOf(store.translation)
+    /** The translations shown under each ayah (language codes, in order). */
+    var translations by mutableStateOf(store.translations)
         private set
+    /** Every language to choose from. */
+    var languages by mutableStateOf(Translations.list(app))
+        private set
+    /** Downloaded languages' text, by code. */
+    val extraText = mutableStateMapOf<String, List<List<String>>>()
+    /** Languages being downloaded right now. */
+    val downloading = mutableStateListOf<String>()
     var textSize by mutableStateOf(store.textSize)
         private set
     var lastRead by mutableStateOf(store.lastRead)
@@ -141,6 +151,8 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         }
         selectProfile(profiles.firstOrNull { it.id == store.currentProfileId } ?: profiles.first())
         viewModelScope.launch { quran = Quran.load(app) }
+        viewModelScope.launch { languages = Translations.refreshList(app) }
+        fetchTranslations()
         viewModelScope.launch {
             azan.refreshPlace()
             voices = azan.refreshVoices()
@@ -197,9 +209,39 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         store.kidsReciterId = r.id
     }
 
-    fun chooseTranslation(t: TranslationMode) {
-        translation = t
-        store.translation = t
+    /** Shows or hides a language under each ayah (up to three at once). */
+    fun toggleTranslation(code: String) {
+        translations = if (code in translations) translations - code else (translations + code).takeLast(3)
+        store.translations = translations
+        fetchTranslations()
+    }
+
+    fun noTranslation() {
+        translations = emptyList()
+        store.translations = translations
+    }
+
+    /** The translation of an ayah in [code], or null while it is downloading. */
+    fun translationOf(code: String, surah: Int, ayah: Int): String? {
+        val q = quran ?: return null
+        val all = when (code) {
+            "ur" -> q.urdu
+            "en" -> q.english
+            else -> extraText[code]
+        } ?: return null
+        return all.getOrNull(surah - 1)?.getOrNull(ayah - 1)
+    }
+
+    fun language(code: String): TranslationLang? = languages.firstOrNull { it.code == code }
+
+    private fun fetchTranslations() {
+        translations.filter { it !in setOf("ur", "en") && it !in extraText && it !in downloading }.forEach { code ->
+            downloading += code
+            viewModelScope.launch {
+                Translations.load(getApplication(), code)?.let { extraText[code] = it }
+                downloading -= code
+            }
+        }
     }
 
     fun chooseTheme(p: Palette) {

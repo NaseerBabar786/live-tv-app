@@ -86,7 +86,6 @@ object QuranSection {
         })
         top = java.lang.ref.WeakReference(activity)
         val settings = AzanSettings(app)
-        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
         kotlinx.coroutines.GlobalScope.launch(kotlinx.coroutines.Dispatchers.Main) {
             launch { settings.refreshPlace(); settings.refreshVoices(); settings.downloadChosen() }
             while (true) {

@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.sp
 import com.iqraquran.app.data.Qaida
 import com.iqraquran.app.data.QuranText
 import com.iqraquran.app.data.Surah
-import com.iqraquran.app.data.TranslationMode
 import com.iqraquran.app.player.AyahPlayer
 import java.util.Locale
 
@@ -264,27 +263,35 @@ private fun AyahCard(
             color = if (highlighted) palette.accent else palette.arabic,
             modifier = Modifier.fillMaxWidth(),
         )
-        val mode = vm.translation
-        if (mode == TranslationMode.Urdu || mode == TranslationMode.Both) {
+        vm.translations.forEach { code ->
+            val lang = vm.language(code)
+            val rtl = lang?.rtl ?: (code == "ur")
+            val t = vm.translationOf(code, surah, ayah)
             Text(
-                q.urdu[surah - 1][ayah - 1],
+                when {
+                    t == null -> "${lang?.native ?: code} …"
+                    rtl -> t
+                    else -> "$ayah. $t"
+                },
                 modifier = Modifier.fillMaxWidth(),
-                fontSize = 19.sp,
-                lineHeight = 34.sp,
-                textAlign = TextAlign.Right,
-                style = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Rtl),
+                fontSize = if (rtl) 19.sp else 17.sp,
+                lineHeight = if (rtl) 34.sp else 26.sp,
+                textAlign = if (rtl) TextAlign.Right else TextAlign.Left,
+                style = MaterialTheme.typography.bodyLarge.copy(textDirection = if (rtl) TextDirection.Rtl else TextDirection.Ltr),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        if (mode == TranslationMode.English || mode == TranslationMode.Both) {
-            Text(
-                "$ayah. ${q.english[surah - 1][ayah - 1]}",
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 17.sp,
-                textAlign = TextAlign.Left,
-                style = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+    }
+}
+
+/** The translation languages: tap one to show or hide it under each ayah (up to three). */
+@Composable
+fun TranslationPicker(vm: AppViewModel) {
+    ChoiceRow {
+        Choice(S.none.get(), vm.translations.isEmpty()) { vm.noTranslation() }
+        vm.languages.forEach { l ->
+            val label = if (l.native == l.en) l.en else "${l.native} · ${l.en}"
+            Choice(if (l.code in vm.downloading) "$label …" else label, l.code in vm.translations) { vm.toggleTranslation(l.code) }
         }
     }
 }
@@ -302,12 +309,7 @@ private fun ReadOptions(vm: AppViewModel, kids: Boolean) {
         if (!vm.themeLocked) Text(S.theme.get(), fontWeight = FontWeight.SemiBold)
         ThemePicker(vm, compact = true)
         Text(S.translation.get(), fontWeight = FontWeight.SemiBold)
-        ChoiceRow {
-            listOf(
-                TranslationMode.None to S.none, TranslationMode.Urdu to S.urdu,
-                TranslationMode.English to S.english, TranslationMode.Both to S.both,
-            ).forEach { (mode, label) -> Choice(label.get(), vm.translation == mode) { vm.chooseTranslation(mode) } }
-        }
+        TranslationPicker(vm)
         Text(S.reciter.get(), fontWeight = FontWeight.SemiBold)
         ChoiceRow {
             vm.reciters.forEach { r ->

@@ -202,8 +202,8 @@ private fun Timeline(vm: AppViewModel, now: Long, compact: Boolean) {
     Column {
         Prayer.entries.forEachIndexed { i, p ->
             val at = vm.azan.at(0, times[p], now)
-            val isCurrent = around?.first?.first == p && around.first.second == at
-            val isNext = around?.second?.first == p && around.second.second == at
+            val isCurrent = around != null && around.first.first == p && around.first.second == at
+            val isNext = around != null && around.second.first == p && around.second.second == at
             PrayerRow(vm, p, times[p], highlight = isCurrent || isNext, past = at < now && !isCurrent, height = rowHeight)
             if (i < Prayer.entries.size - 1) {
                 if (isCurrent && around != null) {
@@ -242,6 +242,8 @@ private fun PrayerRow(vm: AppViewModel, p: Prayer, minutes: Int, highlight: Bool
         else -> palette.muted
     }
     val line = LineColor
+    val back = palette.background
+    val ring = if (highlight) palette.text else line
     Row(Modifier.fillMaxWidth().height(height), verticalAlignment = Alignment.CenterVertically) {
         Row(Modifier.width(SideWidth), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
             if (p.hasAzan) {
@@ -267,8 +269,8 @@ private fun PrayerRow(vm: AppViewModel, p: Prayer, minutes: Int, highlight: Bool
             val cx = size.width / 2
             drawLine(line, Offset(cx, 0f), Offset(cx, size.height), strokeWidth = 3.dp.toPx())
             val r = (if (highlight) 15.dp else 12.dp).toPx()
-            drawCircle(palette.background, r, Offset(cx, size.height / 2))
-            drawCircle(if (highlight) palette.text else line, r, Offset(cx, size.height / 2), style = Stroke((if (highlight) 4.dp else 3.dp).toPx()))
+            drawCircle(back, r, Offset(cx, size.height / 2))
+            drawCircle(ring, r, Offset(cx, size.height / 2), style = Stroke((if (highlight) 4.dp else 3.dp).toPx()))
         }
         Text(
             tr(p.en, p.ur), color = color, fontSize = if (highlight) 26.sp else 22.sp,

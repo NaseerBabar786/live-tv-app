@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.iqraquran.app.data.TranslationMode
 
 /** Settings. [footer] adds the hosting app's own lines at the bottom (Iqra Quran: its version and test updates). */
 @Composable
@@ -50,12 +49,7 @@ fun SettingsScreen(vm: AppViewModel, footer: @Composable () -> Unit = {}) {
                 ChoiceRow { Choice(S.resetColors.get(), false) { vm.chooseTileColor(null, null) } }
             }
             Heading(S.translation.get())
-            ChoiceRow {
-                listOf(
-                    TranslationMode.None to S.none, TranslationMode.Urdu to S.urdu,
-                    TranslationMode.English to S.english, TranslationMode.Both to S.both,
-                ).forEach { (mode, label) -> Choice(label.get(), vm.translation == mode) { vm.chooseTranslation(mode) } }
-            }
+            TranslationPicker(vm)
             Heading(S.reciter.get())
             ChoiceRow {
                 vm.reciters.forEach { r -> Choice(tr(r.en, r.ur), vm.reciter.id == r.id) { vm.chooseReciter(r) } }
