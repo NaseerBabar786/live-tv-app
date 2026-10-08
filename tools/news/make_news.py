@@ -576,6 +576,21 @@ def boomerang(clip):
             NOTES.append(f"boomerang failed: {e}"); return clip
     return out
 
+def add_opening(body, secs, work):
+    """Owner's pick (2026-10-08, opening 3): the headline wall with our logo landing replaces the still title
+    for the first seconds. If it can't be made, the still title simply stays."""
+    try:
+        import intro_ideas
+        intro = os.path.join(work, "opening.mp4")
+        intro_ideas.opening(intro, secs)
+        tmp = body + ".open.mp4"
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", body, "-i", intro, "-filter_complex",
+            "[0:v][1:v]overlay=0:0:eof_action=pass,format=yuv420p[v]", "-map", "[v]", "-map", "0:a", "-c:v", "libx264",
+            "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2), "-c:a", "copy", "-movflags", "+faststart", tmp)
+        os.replace(tmp, body)
+    except Exception as e:
+        NOTES.append(f"opening failed: {e}")
+
 def add_reader(body, reader, windows, label, work):
     """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
@@ -787,6 +802,7 @@ def main():
         "-map", "[v]", "-map", "2:a", "-t", f"{news_len:.3f}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
         "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
     add_broll(body, clips, work)
+    add_opening(body, STING, work)
     if reader and on_camera:
         add_reader(body, reader, on_camera, label, work)
     promos = []

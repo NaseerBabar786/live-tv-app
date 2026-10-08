@@ -147,6 +147,24 @@ def make(out, name, draw, logo_path, work):
     print("made", mp4, library.credit("promo"))
 
 
+def opening(path, secs=6.0, logo_path=None):
+    """The chosen opening (owner 2026-10-08: idea 3, headline wall), silent, for make_news.py to lay over
+    the first seconds of every bulletin; the bulletin's own sting music plays under it."""
+    global SECS
+    SECS = secs
+    logo = Image.open(logo_path or (SPARK if os.environ.get("NEWS_LOGO") == "spark" else BAZAAR)).convert("RGBA")
+    p = subprocess.Popen(["ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgba",
+                          "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "veryfast",
+                          "-crf", "20", "-pix_fmt", "yuv420p", path], stdin=subprocess.PIPE)
+    for f in range(int(secs * FPS)):
+        t = f / FPS
+        im = idea3(t, logo)
+        if t > secs - 0.6:   # fade into the bulletin
+            im.alpha_composite(Image.new("RGBA", (W, H), (0, 0, 0, int(255 * (t - secs + 0.6) / 0.6))))
+        p.stdin.write(im.tobytes())
+    p.stdin.close(); p.wait()
+
+
 def main():
     out = sys.argv[1]; work = os.path.join(out, "work-intro"); os.makedirs(work, exist_ok=True)
     make(out, "news-intro-1", idea1, BAZAAR, work)
