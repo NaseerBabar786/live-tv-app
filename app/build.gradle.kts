@@ -22,8 +22,8 @@ android {
         create("livetv") {
             dimension = "edition"
             applicationId = "com.naseerbabar.livetv"
-            versionCode = 262
-            versionName = "1.10.22"
+            versionCode = 263
+            versionName = "1.10.23"
             // The TV sign-in client secret comes from the TV_CLIENT_SECRET repository secret,
             // so it stays out of the public code.
             buildConfigField("String", "TV_CLIENT_SECRET", "\"${System.getenv("TV_CLIENT_SECRET") ?: ""}\"")

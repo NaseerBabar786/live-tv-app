@@ -9,6 +9,7 @@ import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -78,6 +79,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -96,16 +98,19 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 // The Weather section's own colours (1.10.20): deep blue like the big weather apps, whatever the app theme.
-private val SkyTop = Color(0xFF2E4596)
 private val SkyBottom = Color(0xFF141C48)
-private val Panel = Color(0xE6131A42)
-private val Tile = Color(0xFF1C275A)
+private val Panel = Color(0x730A122D)
 private val TabOn = Color(0xFF2F5BD3)
 private val Yellow = Color(0xFFFFD000)
 private val Soft = Color(0xFFC9D2EE)
 private val Dim = Color(0xFF97A3CC)
 private val PanelShape = RoundedCornerShape(22.dp)
 private val TileShape = RoundedCornerShape(16.dp)
+
+/** See-through glass over the sky, lit a little from the top left (1.10.23). */
+private fun Modifier.glass(shape: androidx.compose.ui.graphics.Shape) = this
+    .background(Brush.linearGradient(listOf(Color.White.copy(alpha = 0.15f), Color.White.copy(alpha = 0.05f))), shape)
+    .border(1.dp, Color.White.copy(alpha = 0.16f), shape)
 
 private enum class Tab(val label: String) {
     Weather("☀️ Weather"),
@@ -208,7 +213,8 @@ fun WeatherScreen(onClose: () -> Unit) {
     val canRemove = place != null && index >= mineCount
 
     CompositionLocalProvider(LocalContentColor provides Color.White) {
-        Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(SkyTop, SkyBottom)))) {
+        Box(Modifier.fillMaxSize().background(SkyBottom)) {
+            SkyBackdrop(r?.current?.code, r?.current?.day ?: true)
             Column(Modifier.fillMaxSize().safeDrawingPadding().padding(horizontal = if (wide) 24.dp else 12.dp, vertical = 10.dp)) {
                 Header(
                     place = place,
@@ -393,7 +399,7 @@ private fun Chip(label: String, on: Boolean, onClick: () -> Unit) {
 
 @Composable
 private fun PanelBox(modifier: Modifier = Modifier, title: String? = null, more: (() -> Unit)? = null, content: @Composable () -> Unit) {
-    Column(modifier.background(Panel, PanelShape).padding(16.dp)) {
+    Column(modifier.glass(PanelShape).padding(16.dp)) {
         if (title != null) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 10.dp)) {
                 Text(title, fontSize = 19.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
@@ -431,12 +437,20 @@ private fun HomeTab(
     ) {
         item {
             if (wide) {
-                Row(Modifier.fillMaxWidth().height(250.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                    NowPanel(r, Modifier.weight(1f).fillMaxHeight()) { onTab(Tab.Hourly) }
-                    PanelBox(Modifier.weight(1f).fillMaxHeight(), "Radar Map", more = { onTab(Tab.Maps) }) {
-                        Radar(r.place, mini = true, modifier = Modifier.fillMaxSize().clip(TileShape))
+                Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    Row(Modifier.fillMaxWidth().height(290.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                        Hero(r, Modifier.weight(1f).fillMaxHeight()) { onTab(Tab.Hourly) }
+                        PanelBox(Modifier.weight(1.4f).fillMaxHeight(), "Next 24 Hours", more = { onTab(Tab.Hourly) }) {
+                            TempGraph(r.hoursFromNow(24), Modifier.fillMaxSize())
+                        }
                     }
-                    PanelBox(Modifier.weight(1f).fillMaxHeight(), "Monthly", more = { onTab(Tab.TwoWeeks) }) { Month(r) }
+                    Row(Modifier.fillMaxWidth().height(270.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                        PanelBox(Modifier.weight(1f).fillMaxHeight(), "7 Days", more = { onTab(Tab.Week) }) { WeekBars(r) }
+                        PanelBox(Modifier.weight(1f).fillMaxHeight(), "Radar Map", more = { onTab(Tab.Maps) }) {
+                            Radar(r.place, mini = true, modifier = Modifier.fillMaxSize().clip(TileShape))
+                        }
+                        PanelBox(Modifier.weight(1f).fillMaxHeight(), "Monthly", more = { onTab(Tab.TwoWeeks) }) { Month(r) }
+                    }
                 }
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -456,7 +470,7 @@ private fun HomeTab(
                 }
             }
         }
-        item {
+        if (!wide) item {
             PanelBox(Modifier.fillMaxWidth(), "Hourly", more = { onTab(Tab.Hourly) }) {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(r.hoursFromNow(24)) { HourChip(it, r) }
@@ -477,13 +491,81 @@ private fun HomeTab(
     }
 }
 
+/** Today's weather straight on the sky, big and thin like the phone weather apps (1.10.23). */
+@Composable
+private fun Hero(r: WeatherApp.Report, modifier: Modifier, onNowcast: () -> Unit) {
+    val c = r.current
+    val today = r.today
+    Column(modifier.padding(horizontal = 6.dp, vertical = 4.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("${c.temperature}°", fontSize = 104.sp, fontWeight = FontWeight.ExtraLight, lineHeight = 104.sp)
+            Spacer(Modifier.width(8.dp))
+            WeatherIcon(c.code, c.day, 112.dp)
+        }
+        Text(c.sky, fontSize = 22.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(
+            "Feels like ${c.feelsLike}°" + (today?.let { " · H ${it.high}° · L ${it.low}°" } ?: ""),
+            fontSize = 15.sp, color = Soft, maxLines = 1,
+        )
+        Spacer(Modifier.weight(1f))
+        r.nowcast()?.let { line ->
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .focusGlow(PillShape)
+                    .glass(PillShape)
+                    .clickable(onClick = onNowcast)
+                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(if (line.startsWith("No ")) "🌂" else "☂️", fontSize = 15.sp)
+                Text("  $line", fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text("›", fontSize = 18.sp, color = Soft)
+            }
+        }
+        Text("👕 ${r.tip()}", fontSize = 13.sp, color = Soft, modifier = Modifier.padding(top = 6.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text("Updated ${WeatherApp.clock(r.now)} local time", fontSize = 11.sp, color = Dim, modifier = Modifier.padding(top = 2.dp))
+    }
+}
+
+/** The week as colour bars from each day's low to high, on the week's whole range. */
+@Composable
+private fun WeekBars(r: WeatherApp.Report) {
+    val days = r.days.take(7)
+    if (days.isEmpty()) return
+    val today = r.now.take(10)
+    val low = days.minOf { it.low }
+    val high = days.maxOf { it.high }
+    val span = (high - low).coerceAtLeast(1).toFloat()
+    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
+        days.forEach { d ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(if (d.date == today) "Today" else WeatherApp.dayName(d.date, "").take(3), fontSize = 13.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(52.dp), maxLines = 1)
+                WeatherIcon(d.code, true, 22.dp)
+                Text("${d.low}°", fontSize = 13.sp, color = Soft, modifier = Modifier.width(36.dp), textAlign = androidx.compose.ui.text.style.TextAlign.End)
+                Canvas(Modifier.weight(1f).height(8.dp).padding(horizontal = 8.dp)) {
+                    val h = size.height
+                    drawRoundRect(Color.White.copy(alpha = 0.14f), cornerRadius = androidx.compose.ui.geometry.CornerRadius(h / 2))
+                    val from = (d.low - low) / span * size.width
+                    val to = ((d.high - low) / span * size.width).coerceAtLeast(from + h)
+                    drawRoundRect(
+                        Brush.horizontalGradient(listOf(Color(0xFF5BC0FF), Color(0xFFFFD23F), Color(0xFFFF8A3D)), 0f, size.width),
+                        Offset(from, 0f), Size(to - from, h), androidx.compose.ui.geometry.CornerRadius(h / 2),
+                    )
+                }
+                Text("${d.high}°", fontSize = 13.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(34.dp))
+            }
+        }
+    }
+}
+
 @Composable
 private fun NowPanel(r: WeatherApp.Report, modifier: Modifier, onNowcast: () -> Unit) {
     val c = r.current
     val today = r.today
-    Column(modifier.background(Panel, PanelShape).padding(16.dp)) {
+    Column(modifier.glass(PanelShape).padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(c.icon, fontSize = 56.sp)
+            WeatherIcon(c.code, c.day, 64.dp)
             Spacer(Modifier.width(10.dp))
             Text("${c.temperature}", fontSize = 76.sp, fontWeight = FontWeight.Light)
             Text("°${r.unit}", fontSize = 26.sp, modifier = Modifier.align(Alignment.Top).padding(top = 14.dp))
@@ -500,7 +582,7 @@ private fun NowPanel(r: WeatherApp.Report, modifier: Modifier, onNowcast: () -> 
                     .padding(top = 8.dp)
                     .fillMaxWidth()
                     .focusGlow(TileShape)
-                    .background(Tile, TileShape)
+                    .glass(TileShape)
                     .clickable(onClick = onNowcast)
                     .padding(horizontal = 12.dp, vertical = 9.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -582,14 +664,14 @@ private fun PartCard(p: WeatherApp.Part, r: WeatherApp.Report) {
         Modifier
             .width(150.dp)
             .focusGlow(TileShape)
-            .background(Tile, TileShape)
+            .glass(TileShape)
             .clickable { }
             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(p.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         Text(WeatherApp.dayName(p.date, today), fontSize = 12.sp, color = Dim)
-        Text(p.icon, fontSize = 34.sp)
+        WeatherIcon(p.code, p.day, 44.dp, Modifier.padding(vertical = 2.dp))
         Text("${p.temperature}°", fontSize = 28.sp, fontWeight = FontWeight.Bold)
         Text("Feels ${p.feelsLike}", fontSize = 12.sp, color = Soft)
         Text(p.sky, fontSize = 13.sp, color = Soft, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -604,13 +686,13 @@ private fun HourChip(h: WeatherApp.Hour, r: WeatherApp.Report) {
         Modifier
             .width(76.dp)
             .focusGlow(TileShape)
-            .background(if (isNow) TabOn else Tile, TileShape)
+            .then(if (isNow) Modifier.background(TabOn, TileShape) else Modifier.glass(TileShape))
             .clickable { }
             .padding(vertical = 10.dp, horizontal = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(if (isNow) "Now" else h.label, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-        Text(h.icon, fontSize = 26.sp)
+        WeatherIcon(h.code, h.day, 34.dp)
         Text("${h.temperature}°", fontSize = 19.sp, fontWeight = FontWeight.Bold)
         Text("☔ ${h.rain}%", fontSize = 11.sp, color = Yellow)
     }
@@ -635,7 +717,9 @@ private fun Observations(r: WeatherApp.Report, wide: Boolean) {
                 c.humidity >= 35 -> "Comfortable"
                 else -> "Dry"
             }
-            ObsTile(m, "Humidity", "${c.humidity}", "%", "$feel · dew point ${c.dewPoint}°") { Drop(c.humidity / 100f) }
+            ObsTile(m, "Humidity", "${c.humidity}", "%", "$feel · dew point ${c.dewPoint}°") {
+                Ring(c.humidity / 100f, listOf(Color(0xFF4FC3F7), Color(0xFF7C8CFF)), 76.dp) { Drop(c.humidity / 100f, 22.dp) }
+            }
         }
         c.visibility?.let { v ->
             add { m ->
@@ -688,7 +772,7 @@ private fun ObsTile(modifier: Modifier, name: String, value: String, unit: Strin
         modifier
             .height(190.dp)
             .focusGlow(TileShape)
-            .background(Tile, TileShape)
+            .glass(TileShape)
             .clickable { }
             .padding(12.dp),
     ) {
@@ -708,7 +792,7 @@ private fun YesterdayTile(modifier: Modifier, y: WeatherApp.Day) {
         modifier
             .height(190.dp)
             .focusGlow(TileShape)
-            .background(Tile, TileShape)
+            .glass(TileShape)
             .clickable { }
             .padding(12.dp),
     ) {
@@ -749,8 +833,8 @@ private fun Gauge(fraction: Double) {
 
 /** A raindrop filled up to the humidity. */
 @Composable
-private fun Drop(fraction: Float) {
-    Canvas(Modifier.size(52.dp, 70.dp)) {
+private fun Drop(fraction: Float, width: Dp = 52.dp) {
+    Canvas(Modifier.size(width, width * 1.35f)) {
         val w = size.width
         val h = size.height
         val path = Path().apply {
@@ -842,18 +926,7 @@ private fun SunArc(now: String, sunrise: String, sunset: String) {
     val up = minutes(sunrise)
     val down = minutes(sunset)
     val fraction = if (up < 0 || down <= up) -1f else ((n - up).toFloat() / (down - up))
-    Canvas(Modifier.size(140.dp, 64.dp)) {
-        val box = Size(size.width - 16.dp.toPx(), (size.height - 10.dp.toPx()) * 2)
-        val topLeft = Offset(8.dp.toPx(), 6.dp.toPx())
-        drawArc(Color.White.copy(alpha = 0.5f), 180f, 180f, false, topLeft, box,
-            style = Stroke(2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f, 8f))))
-        drawLine(Color.White.copy(alpha = 0.35f), Offset(0f, topLeft.y + box.height / 2), Offset(size.width, topLeft.y + box.height / 2), 1.dp.toPx())
-        if (fraction in 0f..1f) {
-            val a = Math.toRadians(180.0 + 180.0 * fraction)
-            val c = Offset(topLeft.x + box.width / 2, topLeft.y + box.height / 2)
-            drawCircle(Yellow, 9.dp.toPx(), Offset(c.x + (box.width / 2 * cos(a)).toFloat(), c.y + (box.height / 2 * sin(a)).toFloat()))
-        }
-    }
+    SunPath(fraction, Modifier.size(150.dp, 70.dp))
 }
 
 // ---------------------------------------------------------------- Outdoor
@@ -862,11 +935,21 @@ private fun SunArc(now: String, sunrise: String, sunset: String) {
 private fun Outdoor(r: WeatherApp.Report, wide: Boolean, onUv: () -> Unit) {
     val uv = r.today?.uv ?: r.current.uv
     val tiles = buildList<@Composable (Modifier) -> Unit> {
-        add { m -> OutdoorTile(m, "🔆 UV index", "$uv · ${WeatherApp.uvLabel(uv)}", "OK for today's UV report", onUv) }
-        r.airQuality?.let { a -> add { m -> OutdoorTile(m, "🫁 Air quality", "${WeatherApp.airLabel(a)} · $a", "US air quality index") {} } }
-        r.pollen?.let { p -> add { m -> OutdoorTile(m, "🌸 Pollen", WeatherApp.pollenLabel(p), "$p grains/m³ at most") {} } }
+        add { m -> OutdoorTile(m, "🔆 UV index", "$uv · ${WeatherApp.uvLabel(uv)}", "OK for today's UV report", onUv) { UvScale(uv, Modifier.fillMaxWidth().height(18.dp)) } }
+        r.airQuality?.let { a ->
+            add { m ->
+                OutdoorTile(m, "🫁 Air quality", "${WeatherApp.airLabel(a)} · $a", "US air quality index", {}) {
+                    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
+                        Ring(a / 200f, listOf(Color(0xFF7BD389), Color(0xFFFFE14D), Color(0xFFFF7043)), 44.dp) {
+                            Text("$a", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+        }
+        r.pollen?.let { p -> add { m -> OutdoorTile(m, "🌸 Pollen", WeatherApp.pollenLabel(p), "$p grains/m³ at most", {}) } }
         r.today?.let { d ->
-            add { m -> OutdoorTile(m, "🌧 Rain today", if (d.rainAmount > 0) amountText(d.rainAmount, r.fahrenheit) else "None", "Chance ${d.rain}%") {} }
+            add { m -> OutdoorTile(m, "🌧 Rain today", if (d.rainAmount > 0) amountText(d.rainAmount, r.fahrenheit) else "None", "Chance ${d.rain}%", {}) }
         }
     }
     PanelBox(Modifier.fillMaxWidth(), "Outdoor") {
@@ -886,16 +969,17 @@ private fun amountText(v: Double, fahrenheit: Boolean) =
     if (fahrenheit) "%.2f in".format(Locale.US, v) else if (v < 1) "Under 1 mm" else "${v.toInt()} mm"
 
 @Composable
-private fun OutdoorTile(modifier: Modifier, name: String, value: String, note: String, onClick: () -> Unit) {
+private fun OutdoorTile(modifier: Modifier, name: String, value: String, note: String, onClick: () -> Unit, picture: (@Composable () -> Unit)? = null) {
     Column(
         modifier
             .focusGlow(TileShape)
-            .background(Tile, TileShape)
+            .glass(TileShape)
             .clickable(onClick = onClick)
             .padding(12.dp),
     ) {
         Text(name, fontSize = 14.sp, color = Soft, fontWeight = FontWeight.Bold)
         Text(value, fontSize = 20.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        picture?.let { Box(Modifier.padding(vertical = 6.dp)) { it() } }
         Text(note, fontSize = 11.sp, color = Dim, maxLines = 1)
     }
 }
@@ -920,7 +1004,7 @@ private fun UvDialog(r: WeatherApp.Report, onDismiss: () -> Unit) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(hours) { h ->
                     Column(
-                        Modifier.width(70.dp).focusGlow(TileShape).background(Tile, TileShape).clickable { }.padding(8.dp),
+                        Modifier.width(70.dp).focusGlow(TileShape).glass(TileShape).clickable { }.padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(h.label, fontSize = 12.sp, fontWeight = FontWeight.Bold)
@@ -954,7 +1038,7 @@ private fun HourlyTab(r: WeatherApp.Report) {
     val hours = r.hoursFromNow(48)
     val today = r.now.take(10)
     LazyColumn(
-        Modifier.fillMaxSize().background(Panel, PanelShape),
+        Modifier.fillMaxSize().glass(PanelShape),
         contentPadding = PaddingValues(14.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
@@ -973,13 +1057,13 @@ private fun HourlyTab(r: WeatherApp.Report) {
                     Modifier
                         .fillMaxWidth()
                         .focusGlow(TileShape)
-                        .background(if (isNow) TabOn.copy(alpha = 0.6f) else Tile, TileShape)
+                        .then(if (isNow) Modifier.background(TabOn.copy(alpha = 0.6f), TileShape) else Modifier.glass(TileShape))
                         .clickable { }
                         .padding(horizontal = 14.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(if (isNow) "Now" else h.label, fontSize = 17.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(80.dp))
-                    Text(h.icon, fontSize = 26.sp, modifier = Modifier.width(48.dp))
+                    WeatherIcon(h.code, h.day, 34.dp, Modifier.padding(end = 14.dp))
                     Text("${h.temperature}°", fontSize = 24.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(70.dp))
                     Text(WeatherApp.describe(h.code), fontSize = 14.sp, color = Soft, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
                     Text("Feels like ${h.feelsLike}", fontSize = 14.sp, color = Soft, modifier = Modifier.width(110.dp))
@@ -996,7 +1080,7 @@ private fun HourlyTab(r: WeatherApp.Report) {
 private fun WeekTab(r: WeatherApp.Report, wide: Boolean, onDay: (String) -> Unit) {
     val today = r.now.take(10)
     LazyColumn(
-        Modifier.fillMaxSize().background(Panel, PanelShape),
+        Modifier.fillMaxSize().glass(PanelShape),
         contentPadding = PaddingValues(14.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -1005,7 +1089,7 @@ private fun WeekTab(r: WeatherApp.Report, wide: Boolean, onDay: (String) -> Unit
                 Modifier
                     .fillMaxWidth()
                     .focusGlow(TileShape)
-                    .background(Tile, TileShape)
+                    .glass(TileShape)
                     .clickable { onDay(d.date) }
                     .padding(horizontal = 14.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -1020,7 +1104,7 @@ private fun WeekTab(r: WeatherApp.Report, wide: Boolean, onDay: (String) -> Unit
                     Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(p.name, fontSize = 12.sp, color = Dim)
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(p.icon, fontSize = 24.sp)
+                            WeatherIcon(p.code, p.day, 30.dp)
                             Text(" ${p.temperature}°", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                         }
                         Text("☔ ${p.rain}%", fontSize = 12.sp, color = Yellow)
@@ -1043,7 +1127,7 @@ private fun TwoWeeksTab(r: WeatherApp.Report, wide: Boolean, onDay: (String) -> 
     val today = r.now.take(10)
     val perRow = if (wide) 7 else 3
     LazyColumn(
-        Modifier.fillMaxSize().background(Panel, PanelShape),
+        Modifier.fillMaxSize().glass(PanelShape),
         contentPadding = PaddingValues(14.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
@@ -1056,14 +1140,14 @@ private fun TwoWeeksTab(r: WeatherApp.Report, wide: Boolean, onDay: (String) -> 
                             Modifier
                                 .weight(1f)
                                 .focusGlow(TileShape)
-                                .background(Tile, TileShape)
+                                .glass(TileShape)
                                 .clickable { onDay(d.date) }
                                 .padding(vertical = 12.dp, horizontal = 6.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(WeatherApp.dayName(d.date, today), fontSize = 16.sp, fontWeight = FontWeight.Bold, maxLines = 1)
                             Text(WeatherApp.shortDate(d.date), fontSize = 12.sp, color = Dim)
-                            Text(d.icon, fontSize = 34.sp, modifier = Modifier.padding(vertical = 4.dp))
+                            WeatherIcon(d.code, true, 46.dp, Modifier.padding(vertical = 4.dp))
                             Text("${d.high}°", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                             Text("${d.low}°", fontSize = 17.sp, color = Soft)
                             Text("☔ ${d.rain}%", fontSize = 12.sp, color = Yellow)
@@ -1187,7 +1271,7 @@ private fun NewsTab(stories: List<WeatherApp.Story>, wide: Boolean, onStory: (We
     val rest = stories - lead
     val perRow = if (wide) 3 else 2
     LazyColumn(
-        Modifier.fillMaxSize().background(Panel, PanelShape),
+        Modifier.fillMaxSize().glass(PanelShape),
         contentPadding = PaddingValues(14.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -1249,7 +1333,7 @@ private fun VideoTab(videos: List<WeatherApp.Video>?, wide: Boolean, onPlay: (We
         else -> {
             val perRow = if (wide) 4 else 2
             LazyColumn(
-                Modifier.fillMaxSize().background(Panel, PanelShape),
+                Modifier.fillMaxSize().glass(PanelShape),
                 contentPadding = PaddingValues(14.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
@@ -1259,7 +1343,7 @@ private fun VideoTab(videos: List<WeatherApp.Video>?, wide: Boolean, onPlay: (We
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             row.forEach { v ->
                                 Column(Modifier.weight(1f).focusGlow(TileShape).clickable { onPlay(v) }.padding(4.dp)) {
-                                    Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(TileShape).background(Tile), contentAlignment = Alignment.Center) {
+                                    Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(TileShape).glass(TileShape), contentAlignment = Alignment.Center) {
                                         AsyncImage(model = v.thumbnail, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
                                         Text("▶", fontSize = 22.sp, modifier = Modifier.background(Color(0x99000000), CircleShape).padding(horizontal = 14.dp, vertical = 6.dp))
                                     }
@@ -1298,7 +1382,7 @@ private fun WeatherDialog(title: String, onDismiss: () -> Unit, content: @Compos
                     Text(
                         "Close",
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.focusRequester(focus).focusGlow(PillShape).background(Tile, PillShape)
+                        modifier = Modifier.focusRequester(focus).focusGlow(PillShape).glass(PillShape)
                             .clickable(onClick = onDismiss).padding(horizontal = 14.dp, vertical = 8.dp),
                     )
                 }
@@ -1313,7 +1397,7 @@ private fun WeatherDialog(title: String, onDismiss: () -> Unit, content: @Compos
 private fun DayDialog(r: WeatherApp.Report, date: String, onDismiss: () -> Unit) {
     val day = r.days.firstOrNull { it.date == date } ?: return
     val today = r.now.take(10)
-    WeatherDialog("${day.icon}  ${WeatherApp.dayName(date, today)}, ${WeatherApp.shortDate(date)}", onDismiss) {
+    WeatherDialog("${WeatherApp.dayName(date, today)}, ${WeatherApp.shortDate(date)}", onDismiss) {
         Text(
             "${day.sky} · High ${day.high}° · Low ${day.low}° · ☔ ${day.rain}% · Wind up to ${day.wind} ${r.speed}" +
                 (if (day.gusts > day.wind) ", gusts ${day.gusts}" else "") +
