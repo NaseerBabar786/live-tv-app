@@ -146,7 +146,9 @@ fun WeatherScreen(onClose: () -> Unit) {
     val tab = Tab.valueOf(tabName)
 
     LaunchedEffect(locationVersion) { mine = withContext(Dispatchers.IO) { Location.current() } }
-    val places = listOfNotNull(mine) + added
+    // A place the viewer added that is where they are already shows first, as their own place, so it isn't listed twice.
+    val others = added.filterNot { p -> mine?.let { WeatherApp.same(it, p) } == true }
+    val places = listOfNotNull(mine) + others
     val index = selected.coerceIn(0, (places.size - 1).coerceAtLeast(0))
     val place = places.getOrNull(index)
     val mineCount = if (mine != null) 1 else 0
@@ -239,6 +241,7 @@ fun WeatherScreen(onClose: () -> Unit) {
                                 CircularProgressIndicator(color = Yellow)
                             } else {
                                 Text("The weather can't be reached right now.", color = Soft)
+                                if (WeatherApp.lastError.isNotBlank()) Text(WeatherApp.lastError, color = Dim, fontSize = 12.sp)
                                 TextButton(onClick = { reload++ }, modifier = Modifier.focusGlow()) { Text("Try again", color = Yellow) }
                             }
                         }
@@ -275,11 +278,16 @@ fun WeatherScreen(onClose: () -> Unit) {
         AddPlaceDialog(
             onDismiss = { adding = false },
             onPick = { p ->
-                WeatherApp.addPlace(p)
-                added = WeatherApp.places()
-                val i = mineCount + added.indexOfFirst { WeatherApp.same(it, p) }
                 adding = false
-                pick(i)
+                val own = mine
+                if (own != null && WeatherApp.same(own, p)) {
+                    // Already there, as the viewer's own place.
+                    pick(0)
+                } else {
+                    WeatherApp.addPlace(p)
+                    added = WeatherApp.places()
+                    pick(mineCount + added.filterNot { a -> own?.let { WeatherApp.same(it, a) } == true }.indexOfFirst { WeatherApp.same(it, p) })
+                }
             },
         )
     }
@@ -348,7 +356,7 @@ private fun Header(
                 Modifier.background(Panel, PillShape).padding(horizontal = 18.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(place?.city?.ifBlank { null } ?: "Weather", fontSize = 22.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                Text(place?.city?.ifBlank { null } ?: "Weather", fontSize = 22.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 val sub = if (mine) "📍 where you are" else place?.region.orEmpty()
                 if (sub.isNotBlank()) Text("  $sub", fontSize = 13.sp, color = Soft, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }

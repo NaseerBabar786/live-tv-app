@@ -189,4 +189,12 @@ class WeatherAppTest {
         assertEquals("https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg", v[0].thumbnail)
         assertEquals(1791000000000L, v[0].published)
     }
+
+    @Test
+    fun hasAShortForecastToFallBackOn() {
+        val full = WeatherApp.forecastUrl(place, false)
+        val short = WeatherApp.forecastUrl(place, false, full = false)
+        assertTrue(full, "past_days=14" in full && "minutely_15" in full)
+        assertTrue(short, "forecast_days=10" in short && "past_days" !in short && "minutely_15" !in short)
+    }
 }
