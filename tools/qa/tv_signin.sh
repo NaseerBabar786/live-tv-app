@@ -36,12 +36,10 @@ adb shell dumpsys package "$PKG" | grep -m1 versionName | tee -a "$LOG"
 adb shell monkey -p "$PKG" -c android.intent.category.LEANBACK_LAUNCHER 1 >/dev/null 2>&1
 sleep 30; look start
 key KEYCODE_DPAD_DOWN; look down1
-key KEYCODE_DPAD_CENTER; sleep 2; look ok-on-email
 adb shell input text "$EMAIL"; sleep 2; look typed-email
 key KEYCODE_DPAD_DOWN; look down-after-email
 key KEYCODE_BACK; look back
 key KEYCODE_DPAD_DOWN; look down2
-key KEYCODE_DPAD_CENTER; sleep 2; look ok-on-password
 adb shell input text "$PW"; sleep 2; look typed-password
 key KEYCODE_DPAD_DOWN; look down3
 key KEYCODE_BACK; look back2

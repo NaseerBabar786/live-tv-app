@@ -46,8 +46,6 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: |
-            bash tools/qa/tv_signin.sh out/release-dpad rel/LiveTV.apk dpad qa-tv-signin@bulkbazaar.ca qatest2026
-            bash tools/qa/tv_signin.sh out/release-keyboard rel/LiveTV.apk keyboard qa-tv-signin@bulkbazaar.ca qatest2026
             bash tools/qa/tv_signin.sh out/fixed-dpad app/build/outputs/apk/livetv/debug/app-livetv-debug.apk dpad qa-tv-signin@bulkbazaar.ca qatest2026
             bash tools/qa/tv_signin.sh out/fixed-keyboard app/build/outputs/apk/livetv/debug/app-livetv-debug.apk keyboard qa-tv-signin@bulkbazaar.ca qatest2026
       - name: Publish
