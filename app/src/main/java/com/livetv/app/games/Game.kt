@@ -128,6 +128,7 @@ val GAMES = listOf(
 class WebGameInfo(val id: String, val name: String, val icon: String, val page: String, val label: (Int) -> String)
 
 val WEB_GAMES = listOf(
+    WebGameInfo("snakerush", "Snake Rush", "🐍", "snakerush.html") { "Best: $it" },
     WebGameInfo("blockburst", "Block Burst", "💥", "blockburst.html") { "Best: $it" },
     WebGameInfo("colorpour", "Color Pour", "🧪", "colorpour.html") { "Level $it done" },
 )
