@@ -1,4 +1,4 @@
-// Games (GamesScreen.kt): the modern games, Snake Rush, Block Burst and Color Pour. They are the very same pages as
+// Games (GamesScreen.kt): the modern games, Block Burst and Color Pour. They are the very same pages as
 // the TV app's (app/src/main/assets/games, copied in by scripts/prepare.js), played here with the
 // keyboard (arrows, Enter; Esc goes back) or the mouse. The TV app's 24 classic games come to PC later.
 import { h } from '../dom.js';
@@ -7,7 +7,6 @@ import * as store from '../store.js';
 
 /** In step with WEB_GAMES in Game.kt. */
 export const GAMES = [
-  { id: 'snakerush', name: 'Snake Rush', icon: '🐍', page: 'snakerush.html', label: (v) => `Best: ${v}` },
   { id: 'blockburst', name: 'Block Burst', icon: '💥', page: 'blockburst.html', label: (v) => `Best: ${v}` },
   { id: 'colorpour', name: 'Color Pour', icon: '🧪', page: 'colorpour.html', label: (v) => `Level ${v} done` },
 ];
