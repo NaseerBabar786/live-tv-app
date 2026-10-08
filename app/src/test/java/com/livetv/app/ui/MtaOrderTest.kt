@@ -44,7 +44,7 @@ class MtaOrderTest {
     fun aLanguageChipShowsThatLanguageOursFirst() {
         val urdu = Channel("Spark Dramas Urdu", "mychannel://dramas", number = 2, language = "Urdu", group = "Spark Urdu")
         val s = UiState(channels = listOf(ours, urdu) + mta + listOf(geo, cbc), language = "Urdu")
-        assertEquals(listOf(urdu, geo), s.visibleChannels)
+        assertEquals(listOf(urdu) + mta.filter { it.language == "Urdu" } + listOf(geo), s.visibleChannels)
     }
 
     @Test
