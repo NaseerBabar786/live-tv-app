@@ -55,10 +55,11 @@ import androidx.compose.ui.viewinterop.AndroidView
  * 2026-10-07: no YouTube screens anywhere in our app).
  */
 @Composable
-fun YouTubePlayer(videoId: String, title: String, onBack: () -> Unit) {
+fun YouTubePlayer(videoId: String, title: String, onBack: () -> Unit, onEnded: () -> Unit = {}) {
     val context = LocalContext.current
     BackHandler(onBack = onBack)
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == WebChannelActivity.RESULT_DONE) onEnded()
         if (result.resultCode == WebChannelActivity.RESULT_BLOCKED) {
             Toast.makeText(context, "This video can't play right now. Please pick another one.", Toast.LENGTH_LONG).show()
         }

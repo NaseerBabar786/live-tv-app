@@ -85,3 +85,5 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   shows the area, calculation method and muezzin, each opening the Azan settings (method and muezzin come first there).
 - 1.10.16: My billing details shows the free credit the owner gave on tv.bulkbazaar.ca/users. The PC has no
   billing details screen yet (viewers send them from a TV or phone), so nothing changes there.
+- Library Favorites: hold OK on a film or series to add it to a ★ Favorites tile at the start of the Library;
+  a favourite series carries on at the episode where the viewer stopped, or the next one. The PC has no Library yet.
