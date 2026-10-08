@@ -328,6 +328,26 @@
     "motion": "a confident, engaging professional TV news anchor, a man, reading the news to the camera with lively natural expression: expressive eyebrows, natural head tilts and nods on key words, slight shoulder and upper-body movement as he speaks, once or twice a small calm open-hand gesture just above the desk then the hand returns to the desk, no waving, no pointing, he speaks clearly with natural mouth movement, gentle blinks, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news to the camera with engaged natural expression, nods and slight head tilts, small natural upper-body movement, hands mostly resting on the desk, no waving, no pointing, static camera, realistic broadcast footage",
     "picture": "anchor-m8c"
+   },
+   {
+    "id": "anchor-m10",
+    "name": "Saad",
+    "ur": "سعد",
+    "seed": 7010,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, well-groomed Pakistani man TV news anchor, 28 years old, slim average build, clean shaven, short neat black hair, wearing a complete tailored dark charcoal suit jacket buttoned, white shirt and a navy blue tie, sitting upright behind a glossy curved news desk, shoulders square to the camera, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a modern professional broadcast TV news studio, large glowing blue video wall with a world map behind him, soft studio lights, Canon 85mm, shallow depth of field, photorealistic broadcast photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
+   },
+   {
+    "id": "anchor-m11",
+    "name": "Hassan",
+    "ur": "حسن",
+    "seed": 7111,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, well-groomed Pakistani man TV news anchor, 29 years old, slim average build, neatly trimmed short black beard, short neat black hair, wearing a complete tailored navy blue suit jacket buttoned, light blue shirt and a dark maroon tie, sitting upright behind a glossy curved news desk, shoulders square to the camera, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a modern professional broadcast TV news studio, large glowing blue video wall with a world map behind him, soft studio lights, Canon 85mm, shallow depth of field, photorealistic broadcast photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
    }
   ]
  }
