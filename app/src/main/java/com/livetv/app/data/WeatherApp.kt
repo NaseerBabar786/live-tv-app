@@ -14,7 +14,7 @@ import java.util.TimeZone
 import kotlin.math.roundToInt
 
 /**
- * The Weather section (1.10.12): a full forecast for each place the viewer adds, like the popular
+ * The Weather section (1.10.13): a full forecast for each place the viewer adds, like the popular
  * weather apps. Open-Meteo gives the weather and air quality, the US weather service its warnings,
  * Google News the weather stories. None of them needs an account or key; a part that can't be
  * reached is left out.

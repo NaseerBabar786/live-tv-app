@@ -198,7 +198,7 @@ fun ChannelListScreen(
     onOpenVodItem: ((VodTarget) -> Unit)? = null,
     /** Opens the Games section; null hides its button. */
     onOpenGames: (() -> Unit)? = null,
-    /** Opens the Weather section (1.10.12); null hides its button. */
+    /** Opens the Weather section (1.10.13); null hides its button. */
     onOpenWeather: (() -> Unit)? = null,
     /** Opens the Iqra Quran section; null hides its button. */
     onOpenQuran: (() -> Unit)? = null,

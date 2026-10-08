@@ -77,7 +77,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * The Weather section (1.10.12), next to Modes, Library and Games: the viewer's own place and any
+ * The Weather section (1.10.13), next to Modes, Library and Games: the viewer's own place and any
  * places they add, each with the weather now, the parts of the day, the next 24 hours, 10 days,
  * details (wind, UV, air quality, sunrise...), warnings and weather stories. The remote's arrows
  * move around and OK opens; on a phone everything is tapped. Back closes a story, then the section.
