@@ -12,4 +12,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install pillow
-      - run: python3 tools/probe_punjabi.py
+      - run: python3 tools/probe_punjabi_shows.py
