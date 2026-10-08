@@ -1,11 +1,35 @@
 {
- "updated": "2026-10-08T12:33Z",
+ "updated": "2026-10-08T15:28Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "KsNciDVzeXU",
+   "title": "Hurricane Isaias and Rachel: A Rare Double U.S. Impact",
+   "channel": "AccuWeather",
+   "published": 1791470973
+  },
+  {
+   "id": "3YfRSf5O2e4",
+   "title": "Wintry mix and chilly temps for Thanksgiving in western Canada | #forecast",
+   "channel": "The Weather Network",
+   "published": 1791470960
+  },
+  {
+   "id": "Izf6JfYpLgs",
+   "title": "Hurricane Isaias, First of 2026 Atlantic Season",
+   "channel": "The Weather Channel",
+   "published": 1791465649
+  },
+  {
+   "id": "gtw5t4LKlFw",
+   "title": "Hurricane Isaias forms in the Gulf, threatens U.S. coast and impacts Canada | #forecast",
+   "channel": "The Weather Network",
+   "published": 1791465214
+  },
   {
    "id": "7IICcogoIjQ",
    "title": "Cottage checklist for closing up ahead of the winter season | #cottage",
@@ -74,7 +98,7 @@
   },
   {
    "id": "6PdtuCBb_xc",
-   "title": "If a puddle confuses a Waymo, how will they fare in B.C.?",
+   "title": "Could self-driving cars work in Canada?",
    "channel": "The Weather Network",
    "published": 1791367207
   },
@@ -127,24 +151,6 @@
    "published": 1791304128
   },
   {
-   "id": "eyVjPMt_4d4",
-   "title": "A ‘perfect storm’ threat for B.C.’s coast? 🌊 | #elnino #kingtides",
-   "channel": "The Weather Network",
-   "published": 1791295208
-  },
-  {
-   "id": "fZmObXtuID0",
-   "title": "Big cooldown and first snowfall in sight heading into the long weekend | #forecast",
-   "channel": "The Weather Network",
-   "published": 1791293421
-  },
-  {
-   "id": "C2FrAKYq2E0",
-   "title": "Could the Atlantic finally get its first hurricane of the season? | #WeatherAM",
-   "channel": "The Weather Network",
-   "published": 1791291029
-  },
-  {
    "id": "A3LM6bHskB0",
    "title": "Flash Floods Devastate Towns in Spain",
    "channel": "AccuWeather",
@@ -167,12 +173,6 @@
    "title": "Tornado Sends Cafe Furniture Flying in Australia",
    "channel": "AccuWeather",
    "published": 1791059504
-  },
-  {
-   "id": "OmMcbGFK73U",
-   "title": "‘Breathing Forest’ Makes the Ground Look Alive",
-   "channel": "AccuWeather",
-   "published": 1791038745
   },
   {
    "id": "ed2fIOYIWms",
