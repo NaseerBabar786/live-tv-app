@@ -101,9 +101,9 @@ const S = {
   learner: ['Learner', 'طالب علم'],
 };
 
-/** Text for the Namaz screens (PS in PrayerScreens.kt). */
+/** Text for the Azan Clock screens (PS in PrayerScreens.kt). */
 const PS = {
-  namaz: ['Namaz', 'نماز'],
+  namaz: ['Azan Clock', 'اذان گھڑی'],
   namazSub: ['Prayer times and Azan', 'نماز کے اوقات اور اذان'],
   now: ['NOW', 'اب'],
   next: ['Next', 'اگلی'],

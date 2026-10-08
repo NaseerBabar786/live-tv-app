@@ -318,6 +318,13 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     fun setAsr(m: AsrMethod) { azan.asr = m; azanChanged() }
     fun setHijriAdjust(d: Int) { azan.hijriAdjust = d; azanChanged() }
 
+    /** A city picked by hand (kept until "Find my area again"). */
+    fun chooseCity(p: com.iqraquran.app.data.Place) {
+        azan.place = p
+        azan.placeFixed = true
+        azanChanged()
+    }
+
     fun findPlaceAgain() {
         azan.placeFixed = false
         viewModelScope.launch { azan.refreshPlace(); azanChanged() }
