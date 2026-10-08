@@ -6,7 +6,7 @@ one ident for the whole network, not one per channel or language.
 Story: four comets of light (the petal colours) spiral in out of the dark, meet in the middle with a flash
 and bloom into the Spark Flower; light rays turn behind it, then the flower glides left while the letters of
 "spark tv" rise up one by one, a glint runs across and the logo shines over a glossy floor.
-Music: "Psychedelic Crater" (CC BY) from tools/music/library.py, credited on screen (no home-made synth).
+Music: "Inspiring Advertising" by Rafael Krux (CC BY 4.0) from tools/music/library.py, credited on screen (no home-made synth).
 
 Usage: python3 tools/make_spark_ident.py OUT.mp4
 Needs Pillow, numpy and ffmpeg. Logo: tools/spark_logos/spark-tv.png (wide M2 Spark Flower).
@@ -21,7 +21,7 @@ from library import bed, credit, lowpass_sweep, save, SR  # noqa: E402
 
 W, H, FPS, SECS = 1920, 1080, 25, 8.0
 N = int(FPS * SECS)
-MOOD = "promo"                 # Psychedelic Crater, 120 BPM: one beat = 0.5 s
+MOOD = "feelgood"              # Inspiring Advertising (Rafael Krux), 120 BPM: one beat = 0.5 s (owner liked it on the Spark ads)
 HIT = 3.0                      # the comets meet on beat 6
 ORG, PNK, VIO, YEL = (255, 106, 0), (255, 45, 120), (124, 58, 237), (255, 196, 0)
 PETALS = (ORG, PNK, VIO, YEL)
@@ -274,9 +274,9 @@ def make(out):
             img = Image.blend(img, Image.new("RGB", (W, H)), clamp((t - (SECS - .45)) / .4))
         img.save(f"{fr}/{n:04d}.png")
     # music: the filter opens as the comets fly in, full sound when they meet
-    x = bed(MOOD, SECS + .3, fade_in=.05, fade_out=.9)[: int(SECS * SR)]
+    x = bed(MOOD, SECS + .3, start_bar=20, fade_in=.05, fade_out=.9)[: int(SECS * SR)]  # from 40 s, like the Spark ads
     a = int(HIT * SR); x[:a] = lowpass_sweep(x[:a], 180, 9000) * np.linspace(.5, 1, a)[:, None]
-    wav = os.path.join(fr, "m.wav"); save(wav, x * .85)
+    wav = os.path.join(fr, "m.wav"); save(wav, x * .72)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", f"{fr}/%04d.png", "-i", wav,
                     "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p", "-tune", "film",
                     "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out], check=True)
