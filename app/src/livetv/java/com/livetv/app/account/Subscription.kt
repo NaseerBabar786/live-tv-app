@@ -70,6 +70,8 @@ object Subscription {
         val endedAt: Date? = null,
         /** The promotion's name when the package is [Plans.Tier.Promo]. */
         val promoName: String? = null,
+        /** The promo code that gave this package (WELCOME...), so the app can remind them when it ends. */
+        val code: String? = null,
     ) {
         /** "Gold", or the promotion's name ("Christmas Sale"). */
         val label: String get() = promoName ?: tier.label
@@ -152,7 +154,7 @@ object Subscription {
                 val promoName = if (paid == Plans.Tier.Promo) promo?.name ?: plan?.str("promoName")?.ifBlank { null } else null
                 when {
                     paid != null && paid != Plans.Tier.Free && paidUntil != null && paidUntil.after(now) ->
-                        Status(paid, paidUntil, promoName = promoName)
+                        Status(paid, paidUntil, promoName = promoName, code = plan?.str("code")?.ifBlank { null })
                     offer.trialDays > 0 && trialEnd.after(now) ->
                         Status(Plans.Tier.Gold, trialEnd, trial = true)
                     paid != null && paid != Plans.Tier.Free && paidUntil != null && now.time - paidUntil.time < 7 * 86_400_000L ->
@@ -205,6 +207,8 @@ object Subscription {
         val plan = getOrNull(Firestore.doc("plans/${u.uid}"), t)?.optJSONObject("fields")
         val now = Date()
         val running = plan?.time("until")?.takeIf { Plans.Tier.of(plan.str("tier")) == tier && it.after(now) }
+            // Used during the free trial: the code's month starts when the trial ends, so no free day is lost.
+            ?: _status.value?.takeIf { it.trial && tier == Plans.Tier.Gold }?.until?.takeIf { it.after(now) }
         val until = Date((running ?: now).time + days * 86_400_000L)
         usedBy.put(u.uid, JSONObject().put("mapValue", JSONObject().put("fields", Firestore.encode(mapOf("name" to u.name, "email" to u.email, "at" to now)))))
         val writes = JSONArray()
