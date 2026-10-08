@@ -117,8 +117,8 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 settings.mediaPlaybackRequiresUserGesture = false
-                // Always the newest page, not a copy the TV kept from an earlier version.
-                settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                // Normal caching, so the player's scripts aren't downloaded again each time (1.10.23).
+                settings.cacheMode = WebSettings.LOAD_DEFAULT
                 webViewClient = object : WebViewClient() {
                     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                         if (YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame)) return true
@@ -240,7 +240,8 @@ private fun previewWebView(ctx: Context, page: String, onFallback: (() -> Unit)?
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.mediaPlaybackRequiresUserGesture = false
-        settings.cacheMode = WebSettings.LOAD_NO_CACHE
+        // Normal caching, so the player's scripts aren't downloaded again for every tile (1.10.23).
+        settings.cacheMode = WebSettings.LOAD_DEFAULT
         webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                 if (YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame)) return true

@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
+<link rel="preconnect" href="https://www.youtube.com">
+<link rel="preconnect" href="https://www.google.com">
+<link rel="preconnect" href="https://i.ytimg.com">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bazaar Hits · Watch live</title>
@@ -66,6 +69,11 @@
 <script src="still.js"></script>
 <script src="keepplaying.js"></script>
 <script>
+// The player's own code loads while the channel's lists are fetched, not after (owner: our channels
+// were slow to start, 1.10.23); the player starts once both are ready.
+let dataReady;
+const ready = new Promise(r => dataReady = r);
+{ const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s); }
 const app = new URLSearchParams(location.search).has("app");
 const $ = id => document.getElementById(id);
 if (!app) { $("back").hidden = false; }
@@ -120,9 +128,7 @@ Promise.all([fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()),
   at = items.slice(0, w.i + 1).filter(x => x.kind === "video").length % songs.length;
   if (items[w.i].kind === "video") { at = (at - 1 + songs.length) % songs.length; joinAt = w.offset; }
   else { pendingBreak = { promos: items[w.i].promos, offset: w.offset }; joinAt = 0; }
-  const s = document.createElement("script");
-  s.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(s);
+  dataReady();
 }).catch(() => { $("msg").textContent = "Bazaar Hits can't load right now. Please try again in a minute."; });
 
 // When the picture hasn't started after 15 s, viewers see only our own short message; why it didn't
@@ -146,7 +152,8 @@ function cover(on) {
   // 3.5 s after it starts, when YouTube's own title, logo and buttons at the start have faded away.
   else coverTimer = setTimeout(() => $("cover").classList.add("off"), 3500);
 }
-window.onYouTubeIframeAPIReady = () => {
+window.onYouTubeIframeAPIReady = () => ready.then(startPlayer);
+function startPlayer() {
   $("msg").remove();
   player = new YT.Player("player", {
     videoId: songs[at].id,

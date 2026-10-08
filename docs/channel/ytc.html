@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
+<link rel="preconnect" href="https://www.youtube.com">
+<link rel="preconnect" href="https://www.google.com">
+<link rel="preconnect" href="https://i.ytimg.com">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cable TV · Watch live</title>
@@ -64,6 +67,11 @@
 <script src="still.js"></script>
 <script src="keepplaying.js"></script>
 <script type="module">
+// The player's own code loads while the channel's lists are fetched, not after (owner: our channels
+// were slow to start, 1.10.23); the player starts once both are ready.
+let dataReady;
+const ready = new Promise(r => dataReady = r);
+{ const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s); }
 import { STATIONS } from "./schedule.js";
 import { loadPicks, loadPromos, loadTrailers, loadLocked, dayPlan, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
 const q = new URLSearchParams(location.search);
@@ -232,9 +240,9 @@ setInterval(() => {
 }, 5 * 60e3);
 
 let joinAt = 0;
-Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station),
+Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-cache" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station),
   // What the nightly check and the hourly pre-air check (tools/preair_check.py) found won't play here.
-  Promise.all(["unplayable.json", "preair-bad.json"].map(f => fetch(f, { cache: "no-store" }).then(r => r.json()).catch(() => ({}))))
+  Promise.all(["unplayable.json", "preair-bad.json"].map(f => fetch(f, { cache: "no-cache" }).then(r => r.json()).catch(() => ({}))))
     .then(([a, b]) => ({ ids: { ...(a.ids || {}), ...(b.ids || {}) } }))]).then(([d, p, pr, tr, lk, un]) => {
   if (!d.videos || d.videos.length < 3) return fallBack();
   unplayable = un.ids || {};
@@ -250,9 +258,7 @@ Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.j
   const w = itemAt(items);
   cur = w.i;
   joinAt = w.startMs;
-  const s = document.createElement("script");
-  s.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(s);
+  dataReady();
 }).catch(fallBack);
 
 // When the picture hasn't started after 15 s, viewers see only our own short message; why it didn't
@@ -276,7 +282,8 @@ function cover(on) {
   // 3.5 s after it starts, when YouTube's own title, logo and buttons at the start have faded away.
   else coverTimer = setTimeout(() => $("cover").classList.add("off"), 3500);
 }
-window.onYouTubeIframeAPIReady = () => {
+window.onYouTubeIframeAPIReady = () => ready.then(startPlayer);
+function startPlayer() {
   // The player starts on the programme that's on (or the one after the ad break that's on).
   const first = items[cur].kind === "video" ? items[cur] : items[(cur + 1) % items.length];
   player = new YT.Player("player", {
