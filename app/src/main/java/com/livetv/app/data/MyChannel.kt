@@ -25,7 +25,7 @@ object MyChannel {
         if ("/channel/logos/" in url && '?' !in url) "${sparkLogo(url)}?v=$LOGO_VERSION" else url
 
     /**
-     * Our channels are called Spark since 1.10.25 (owner, 2026-10-08), with the Spark Flower logos.
+     * Our channels are called Spark since 1.10.26 (owner, 2026-10-08), with the Spark Flower logos.
      * The website and our schedules still say Bazaar until the owner has tried this version, so the
      * app swaps the old names and logo files for the new ones as it reads them.
      */
