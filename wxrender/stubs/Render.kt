@@ -28,3 +28,8 @@ fun main(args: Array<String>) {
     val img = scene.render(1_000_000_000L)
     File(args[1]).writeBytes(org.jetbrains.skia.Image.makeFromBitmap(org.jetbrains.skia.Bitmap.makeFromImage(img)).encodeToData()!!.bytes)
 }
+
+@androidx.compose.runtime.Composable
+fun RadarStub(place: Location.Place, mini: Boolean, modifier: Modifier) {
+    Box(modifier.background(Color(0xFF1C2233)))
+}

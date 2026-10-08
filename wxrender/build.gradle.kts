@@ -15,7 +15,7 @@ dependencies {
 val sync by tasks.registering(Copy::class) {
   from("../app/src/main/java/com/livetv/app") {
     include("data/WeatherApp.kt", "data/Weather.kt", "ui/WeatherScreen.kt", "ui/AppThemes.kt", "ui/Focus.kt", "ui/WeatherArt.kt")
-    filter { it.replace(", decorFitsSystemWindows = false", "").replace("private fun HomeTab(", "internal fun HomeTab(").replace("private enum class Tab(", "internal enum class Tab(").replace("private val SkyBottom", "internal val SkyBottom") }
+    filter { it.replace(", decorFitsSystemWindows = false", "").replace("private fun HomeTab(", "internal fun HomeTab(").replace("private enum class Tab(", "internal enum class Tab(").replace("private val SkyBottom", "internal val SkyBottom").replace("Radar(r.place, mini = true,", "RadarStub(r.place, mini = true,") }
   }
   into("build/gen")
 }
