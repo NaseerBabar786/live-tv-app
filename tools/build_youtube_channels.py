@@ -456,6 +456,13 @@ CHANNELS = {
             ("Tips Punjabi", ["@TipsPunjabi"], "Tips Punjabi"),
             ("PTC Punjabi Gold", ["@PTCPunjabiGold", "@ptcpunjabigold"], "PTC Punjabi"),
             ("Omjee", ["@OmjeeGroup", "@OmjeeStarStudios"], "Omjee"),
+            ("Lokdhun Punjabi", ["@LokdhunPunjabi", "@lokdhunpunjabi"], "Lokdhun"),
+            ("Rhythm Boyz", ["@RhythmBoyz", "@RhythmBoyzEntertainment"], "Rhythm Boyz"),
+            ("T-Series Apna Punjab", ["@TSeriesApnaPunjab", "@tseriesapnapunjab"], "Apna Punjab"),
+            ("Pitaara TV", ["@PitaaraTV"], "Pitaara"),
+            ("Goyal Music", ["@GoyalMusicOfficial"], "Goyal Music"),
+            ("Humble Motion Pictures", ["@HumbleMotionPictures", "@HumbleMusic"], "Humble"),
+            ("Geet MP3", ["@GeetMP3"], "Geet MP3"),
         ],
     },
     "sufi": {
