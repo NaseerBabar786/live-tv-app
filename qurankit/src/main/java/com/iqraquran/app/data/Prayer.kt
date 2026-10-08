@@ -44,7 +44,9 @@ enum class CalcMethod(val en: String, val ur: String, val fajrAngle: Double, val
     Karachi("Karachi (Pakistan, India)", "کراچی (پاکستان، بھارت)", 18.0, 18.0),
     Mwl("Muslim World League", "مسلم ورلڈ لیگ", 18.0, 17.0),
     UmmAlQura("Umm al-Qura (Makkah)", "ام القریٰ (مکہ)", 18.5, 0.0, ishaMinutes = 90),
-    Egypt("Egypt", "مصر", 19.5, 17.5);
+    Egypt("Egypt", "مصر", 19.5, 17.5),
+    /** As the Ahmadiyya Muslim Jama'at's timetables: Fajr and Isha with the sun 18° below the horizon. */
+    Ahmadiyya("Ahmadiyya Muslim Jama'at", "جماعت احمدیہ", 18.0, 18.0);
 
     companion object {
         /** The usual method where the viewer lives (country code from their internet address). */
