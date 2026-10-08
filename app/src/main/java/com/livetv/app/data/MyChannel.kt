@@ -105,7 +105,7 @@ object MyChannel {
         Station("kidshi", 28, "", "Spark Kids Hindi", youtube = true, backup = "kids", logo = "spark-kidshi.png", lang = HINDI),
         Station("teenshi", 30, "", "Spark Teens Hindi", youtube = true, backup = "filmein", logo = "spark-teenshi.png", lang = HINDI),
         // Cars (the owner, 2026-10-08): Hindi car shows' reviews and launches.
-        Station("autohi", 32, "", "Spark Auto Hindi", youtube = true, backup = "sports", logo = "spark-auto-hindi.png", lang = HINDI),
+        Station("autohi", 32, "", "Spark Auto Hindi", youtube = true, backup = "sports", logo = "spark-autohi.png", lang = HINDI),
         // English
         Station("english", 41, "", "Spark Movies English", youtube = true, backup = "filmein", logo = "spark-english.png", lang = ENGLISH),
         Station("kids", 43, "00000", "Spark Kids English", youtube = true, lang = ENGLISH),
