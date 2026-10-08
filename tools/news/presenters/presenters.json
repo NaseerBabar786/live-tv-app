@@ -856,6 +856,29 @@
     "prompt": "RAW photo, medium shot from the waist up, a polished, elegant Pakistani woman TV news anchor, 28 years old, shoulder-length dark brown hair neatly styled, light natural makeup, wearing a tailored royal blue blazer over a modest high-neck ivory silk blouse, small gold earrings and a wrist watch, sitting upright behind a glass and wood curved anchor desk holding a few printed pages, a tablet, a desk microphone and a glass of water on the desk, looking into the camera with a confident warm closed-mouth smile, behind her a real busy modern TV newsroom: journalists working at desks with computer monitors, big wall screens with colourful market charts and world maps without readable words, warm wooden panels and blue lighting, Canon 85mm, shallow depth of field, photorealistic broadcast photograph, not illustration, no text, no logos",
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
+   },
+   {
+    "id": "anchor-1o",
+    "name": "Sana",
+    "ur": "ثنا",
+    "seed": 5101,
+    "picture": "anchor-1c",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her late twenties sitting at a glossy news desk, long dark hair, elegant embroidered maroon shalwar kameez with a light dupatta on one shoulder, natural skin texture, both hands resting on the desk, looking into the camera with a gentle closed-mouth smile, real television news studio with blurred blue screens behind her, soft key light, Canon 85mm, shallow depth of field, photographed by a professional, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "edit": "Place her in a bright symmetrical blue TV news studio: directly behind her a large curved screen showing a glowing white and blue Earth globe, on the left and right two big wall screens with bold red and blue graphic banners (plain colour shapes, no words), white light bands along the ceiling, a clear glass news desk with metal legs and a few printed pages on it, glossy reflections; no words, letters or logos anywhere. She sits upright in the centre behind the glass desk, shoulders square to the camera, both hands resting on the printed pages. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo."
+   },
+   {
+    "id": "anchor-m10o",
+    "name": "Saad",
+    "ur": "سعد",
+    "seed": 7010,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, well-groomed Pakistani man TV news anchor, 28 years old, slim average build, clean shaven, short neat black hair, wearing a complete tailored dark charcoal suit jacket buttoned, white shirt and a navy blue tie, sitting upright behind a glossy curved news desk, shoulders square to the camera, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a modern professional broadcast TV news studio, large glowing blue video wall with a world map behind him, soft studio lights, Canon 85mm, shallow depth of field, photorealistic broadcast photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "picture": "anchor-m10",
+    "edit": "Place him in a bright symmetrical blue TV news studio: directly behind him a large curved screen showing a glowing white and blue Earth globe, on the left and right two big wall screens with bold red and blue graphic banners (plain colour shapes, no words), white light bands along the ceiling, a clear glass news desk with metal legs and a few printed pages on it, glossy reflections; no words, letters or logos anywhere. He sits upright in the centre behind the glass desk, shoulders square to the camera, both hands resting on the printed pages. Keep his face, skin tone, hair, and his clothes exactly the same; photorealistic broadcast photo."
    }
   ]
  }
