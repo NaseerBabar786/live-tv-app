@@ -26,6 +26,14 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.iqraquran.app.data.AzanSettings
+import com.livetv.app.data.Location
+import com.livetv.app.ui.DeviceLocation
+import com.livetv.app.ui.WeatherCityPicker
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import com.iqraquran.app.ui.AppViewModel
 import com.iqraquran.app.ui.AzanActivity
 import kotlinx.coroutines.delay
@@ -67,7 +75,7 @@ object QuranSection {
 
     /**
      * The Azan inside Cable TV: while Cable TV is on screen, each prayer time opens the Azan screen (the
-     * channel pauses under it and comes back after) or a banner, as set in Iqra Quran > Namaz.
+     * channel pauses under it and comes back after) or a banner, as set in Iqra Quran > Azan Clock.
      * When the Iqra Quran app is installed it plays the Azan itself, so Cable TV shows the screen silently.
      */
     fun startAzan(activity: Activity) {
@@ -85,9 +93,17 @@ object QuranSection {
             override fun onActivityDestroyed(a: Activity) = Unit
         })
         top = java.lang.ref.WeakReference(activity)
+        // Prayer times for the same place as the weather: the city typed in Settings, else this device's location.
+        Location.init(app)
+        AzanSettings.placeSource = {
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { Location.current() }
+                ?.let { com.iqraquran.app.data.Place(it.latitude, it.longitude, it.city.ifBlank { it.label }, it.country) }
+        }
         val settings = AzanSettings(app)
         kotlinx.coroutines.GlobalScope.launch(kotlinx.coroutines.Dispatchers.Main) {
             launch { settings.refreshPlace(); settings.refreshVoices(); settings.downloadChosen() }
+            // The weather's place changed (device location found, or a city typed): move the prayer times too.
+            launch { Location.version.collect { settings.refreshPlace() } }
             while (true) {
                 val next = settings.nextEvent()
                 if (next == null) { delay(10 * 60_000L); continue }
@@ -115,6 +131,16 @@ object QuranSection {
         val tv = Themes.current
         val colours = remember(tv) { paletteFor(tv) }
         SideEffect { vm.fixedPalette = colours; AzanActivity.hostPalette = colours }
+        // The place for the prayer times is Cable TV's weather place; its city picker changes both.
+        var pickingCity by remember { mutableStateOf(false) }
+        DisposableEffect(Unit) {
+            AzanSettings.pickPlace = { pickingCity = true }
+            onDispose { AzanSettings.pickPlace = null }
+        }
+        DeviceLocation()
+        val placeVersion by Location.version.collectAsState()
+        LaunchedEffect(placeVersion) { vm.findPlaceAgain() }
+        if (pickingCity) WeatherCityPicker(onDismiss = { pickingCity = false })
         val lifecycle = LocalLifecycleOwner.current.lifecycle
         val view = LocalView.current
         DisposableEffect(lifecycle) {

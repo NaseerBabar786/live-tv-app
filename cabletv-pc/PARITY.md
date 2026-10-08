@@ -78,3 +78,6 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
 - 1.10.10 (PC 1.0.12): new viewers, and viewers who never picked countries, start on every country of the
   working list (about 7,900 channels) instead of the Pakistani, Indian, Canadian, British and American mix.
   Same change on PC.
+- 1.10.11 (PC 1.0.13): Iqra Quran's "Namaz" is now "Azan Clock". On TV and phone its place is the weather's place
+  (the city typed in Settings, else the device's location) with a "Change city" button, and the Azan Clock screen
+  shows the area, calculation method and muezzin, each opening the Azan settings (method and muezzin come first there).

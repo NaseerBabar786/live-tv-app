@@ -167,6 +167,14 @@ class AzanSettings(context: Context) {
     /** Finds the place from the internet address (geojs.io, as Cable TV's weather does), unless picked by hand. */
     suspend fun refreshPlace() = withContext(Dispatchers.IO) {
         if (placeFixed && place != null) return@withContext
+        // An app that knows better where the viewer is (Cable TV: the same place as its weather).
+        placeSource?.let { source ->
+            val p = runCatching { source() }.getOrNull()
+            if (p != null) {
+                if (p != place) place = p
+                return@withContext
+            }
+        }
         runCatching {
             val o = JSONObject(fetch("https://get.geojs.io/v1/ip/geo.json"))
             val lat = o.optString("latitude").toDoubleOrNull() ?: return@runCatching
@@ -216,6 +224,14 @@ class AzanSettings(context: Context) {
     companion object {
         const val BASE = "https://tv.bulkbazaar.ca/quran/azan/"
         const val DEFAULT_VOICE = "makkah"
+
+        /** Where the viewer is, from the host app (Cable TV: the device's location, as its weather uses); null = internet guess. */
+        @Volatile
+        var placeSource: (suspend () -> Place?)? = null
+
+        /** Opens the host app's city picker (Cable TV's weather city); null = no picker. */
+        @Volatile
+        var pickPlace: (() -> Unit)? = null
 
         /** Called after any setting changes (the Iqra Quran app sets the next alarm). */
         @Volatile
