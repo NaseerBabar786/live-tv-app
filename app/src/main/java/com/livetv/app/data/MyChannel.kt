@@ -19,10 +19,24 @@ object MyChannel {
      * Our logos get redrawn at the same address (1.9.47, 1.9.49), and Coil keeps the old picture on
      * disk for ever, so our own logo links carry this number; raise it whenever the logos change.
      */
-    private const val LOGO_VERSION = 5
+    private const val LOGO_VERSION = 6
 
     fun freshLogo(url: String): String =
-        if ("/channel/logos/" in url && '?' !in url) "$url?v=$LOGO_VERSION" else url
+        if ("/channel/logos/" in url && '?' !in url) "${sparkLogo(url)}?v=$LOGO_VERSION" else url
+
+    /**
+     * Our channels are called Spark since 1.10.27 (owner, 2026-10-08), with the Spark Flower logos.
+     * The website and our schedules still say Bazaar until the owner has tried this version, so the
+     * app swaps the old names and logo files for the new ones as it reads them.
+     */
+    fun brand(name: String): String = name.replace(Regex("^Bazaar(?= )"), "Spark")
+
+    private fun sparkLogo(url: String): String =
+        url.replace("/channel/logos/bazaar-", "/channel/logos/spark-")
+            .replace("/channel/logos/latest-movies.png", "/channel/logos/spark-latest.png")
+
+    /** Tells our channel pages to show the Spark names and logos too (they still say Bazaar for everyone else). */
+    private const val BRAND = "&brand=spark"
 
     /**
      * One of our channels: [id] names its saved settings and its stream address, [number] is its
@@ -54,34 +68,34 @@ object MyChannel {
      * from official YouTube videos (tools/build_youtube_channels.py); the free films below are their backup.
      */
     val STATIONS = listOf(
-        Station("main", 1, "0", "Bazaar TV One"),
+        Station("main", 1, "0", "Spark TV One"),
         // Public-domain classic films round the clock (built weekly from Movies.m3u).
-        Station("filmein", 2, "00", "Bazaar Cinema", youtube = true),
+        Station("filmein", 2, "00", "Spark Cinema", youtube = true),
         // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
-        Station("sur", 3, "000", "Bazaar Music", youtube = true),
+        Station("sur", 3, "000", "Spark Music", youtube = true),
         // Public-domain and Creative Commons cartoons for children (1.9.41).
-        Station("kids", 5, "00000", "Bazaar Kids", youtube = true),
+        Station("kids", 5, "00000", "Spark Kids", youtube = true),
         // Public-domain and CC BY sports films from the Internet Archive, built by tools/build_archive_channels.py (1.9.43).
-        Station("sports", 6, "000000", "Bazaar Sports", youtube = true),
+        Station("sports", 6, "000000", "Spark Sports", youtube = true),
         // Public-domain travel films of countries, cities and parks, also by build_archive_channels.py (1.9.44).
-        Station("travel", 7, "0000000", "Bazaar Travel", youtube = true),
+        Station("travel", 7, "0000000", "Spark Travel", youtube = true),
         // Silent and classic comedy (Chaplin, Laurel and Hardy, Keaton), also by build_archive_channels.py (1.9.44).
-        Station("comedy", 8, "00000000", "Bazaar Comedy", youtube = true),
+        Station("comedy", 8, "00000000", "Spark Comedy", youtube = true),
         // 1.9.50: full films in English and in Hindi, and Pakistani dramas, from their makers' channels.
         // They came after the rows of zeros, so they're dialled by number only; Bazaar Cinema's free films are their backup.
-        Station("english", 9, "9", "Bazaar Movies English", youtube = true, backup = "filmein", logo = "bazaar-english.png"),
-        Station("hindi", 10, "10", "Bazaar Movies Hindi", youtube = true, backup = "filmein", logo = "bazaar-hindi.png"),
-        Station("dramas", 11, "11", "Bazaar Dramas", youtube = true, backup = "filmein", logo = "bazaar-dramas.png"),
+        Station("english", 9, "9", "Spark Movies English", youtube = true, backup = "filmein", logo = "spark-english.png"),
+        Station("hindi", 10, "10", "Spark Movies Hindi", youtube = true, backup = "filmein", logo = "spark-hindi.png"),
+        Station("dramas", 11, "11", "Spark Dramas", youtube = true, backup = "filmein", logo = "spark-dramas.png"),
         // 1.9.53: cooking shows in Urdu, Hindi, Punjabi and English from the cooks' own channels.
-        Station("cooking", 12, "12", "Bazaar Cooking", youtube = true, backup = "filmein", logo = "bazaar-cooking.png"),
+        Station("cooking", 12, "12", "Spark Cooking", youtube = true, backup = "filmein", logo = "spark-cooking.png"),
         // 1.9.76: science, cartoons and challenge shows for 12 to 16 year olds; Bazaar Kids stays for small children.
         // 1.9.81: the newest full films in Hindi, English, Punjabi and Urdu from their makers' channels, newest first.
         // The owner wants just the name "Latest Movies"; its logo says LATEST MOVIES, no Bazaar (shown on the picture since 1.9.83).
-        Station("latest", 13, "13", "Latest Movies", youtube = true, backup = "filmein", logo = "latest-movies.png"),
-        Station("teens", 14, "14", "Bazaar Teens", youtube = true, backup = "filmein", logo = "bazaar-teens.png"),
+        Station("latest", 13, "13", "Latest Movies", youtube = true, backup = "filmein", logo = "spark-latest.png"),
+        Station("teens", 14, "14", "Spark Teens", youtube = true, backup = "filmein", logo = "spark-teens.png"),
         // 15 (owner, 2026-10-07): ads and promos round the clock in our own player: our Cable TV promos, the
         // sponsors' ads from /sponsors and "Advertise with us" (docs/channel/ads-schedule.json). No pop-up ads on it.
-        Station("ads", 15, "15", "Bazaar Ads", logo = "bazaar-ads.png"),
+        Station("ads", 15, "15", "Spark Ads", logo = "spark-ads.png"),
     )
 
     /** Bazaar Ads' address: the channel that is all ads, so no pop-up ad breaks come over it. */
@@ -103,9 +117,9 @@ object MyChannel {
      */
     const val BOLLYWOOD_URL = "https://tv.bulkbazaar.ca/channel/bollywood.html"
     private val bollywood = Channel(
-        name = "Bazaar Hits",
+        name = "Spark Hits",
         url = BOLLYWOOD_URL,
-        logo = freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png"),
+        logo = freshLogo("https://tv.bulkbazaar.ca/channel/logos/spark-hits.png"),
         number = HITS_NUMBER,
     )
 
@@ -115,7 +129,7 @@ object MyChannel {
      */
     fun webPage(channel: Channel?): String? {
         val id = channel?.url?.takeIf { it.startsWith(SCHEME) }?.removePrefix(SCHEME) ?: return null
-        return STATIONS.firstOrNull { it.id == id && it.youtube }?.let { "https://tv.bulkbazaar.ca/channel/ytc.html?c=${it.id}&app=1" }
+        return STATIONS.firstOrNull { it.id == id && it.youtube }?.let { "https://tv.bulkbazaar.ca/channel/ytc.html?c=${it.id}&app=1$BRAND" }
     }
 
     /**
@@ -125,7 +139,7 @@ object MyChannel {
     fun pageFor(channel: Channel?, version: Int): String? {
         channel ?: return null
         webPage(channel)?.let { return "$it&v=$version" }
-        if (channel.url == BOLLYWOOD_URL) return "$BOLLYWOOD_URL?app=1&v=$version"
+        if (channel.url == BOLLYWOOD_URL) return "$BOLLYWOOD_URL?app=1$BRAND&v=$version"
         val id = YouTube.videoId(channel.url) ?: return null
         return "https://tv.bulkbazaar.ca/channel/yt.html?app=1&v=$id&name=" +
             java.net.URLEncoder.encode(channel.name, "UTF-8").replace("+", "%20") + "&ver=$version"
@@ -275,7 +289,7 @@ object MyChannel {
         }.orEmpty()
         val loop = o.optJSONArray("loop")?.let { a -> (0 until a.length()).map { a.optString(it) } }.orEmpty()
         return Config(
-            name = o.optString("name").trim().ifEmpty { "My Channel" },
+            name = brand(o.optString("name").trim().ifEmpty { "My Channel" }),
             logo = o.optString("logo").trim().takeIf { it.startsWith("http") }?.let(::freshLogo),
             active = o.optBoolean("active", true),
             timeZone = o.optString("tz").ifBlank { "America/Toronto" },
@@ -515,7 +529,7 @@ object MyChannel {
         return "https://tv.bulkbazaar.ca/channel/block.html?app=1&at=${b.startMs}&until=${b.endMs}" +
             "&ids=" + b.videos.joinToString(",") { it.youtube!! } +
             "&secs=" + b.videos.joinToString(",") { it.seconds.toString() } +
-            "&name=" + enc(c.name) + (c.logo?.let { "&logo=" + enc(it) } ?: "") + "&corner=" + c.logoCorner +
+            "&name=" + enc(c.name) + BRAND + (c.logo?.let { "&logo=" + enc(it) } ?: "") + "&corner=" + c.logoCorner +
             (c.ticker?.let { "&tick=" + enc(it) } ?: "") + "&ver=$version"
     }
 

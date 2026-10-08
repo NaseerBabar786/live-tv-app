@@ -318,8 +318,8 @@ object Subscription {
         val extra = _offer.value.extraChannels
         val channels = when {
             Plans.Feature.AllChannels in has -> "All channels"
-            extra.isNotBlank() -> "Our own Bazaar channels plus $extra"
-            else -> "Only our own Bazaar channels"
+            extra.isNotBlank() -> "Our own Spark channels plus $extra"
+            else -> "Only our own Spark channels"
         }
         val extras = Plans.Feature.entries.filter { it != Plans.Feature.AllChannels && it in has }.map { it.label }
         return "$channels. 1+List" + extras.joinToString("") { ", $it" } + ", full screen and favourites"

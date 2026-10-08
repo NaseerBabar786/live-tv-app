@@ -73,6 +73,13 @@ const ready = new Promise(r => dataReady = r);
 { const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s); }
 const app = new URLSearchParams(location.search).has("app");
 const $ = id => document.getElementById(id);
+// Spark (owner, 2026-10-08): the Cable TV test version asks for the new name and logo; everyone else still sees Bazaar Hits.
+const NAME = new URLSearchParams(location.search).get("brand") === "spark" ? "Spark Hits" : "Bazaar Hits";
+if (NAME !== "Bazaar Hits") {
+  document.querySelector(".bug").src = "logos/spark-hits.png";
+  document.querySelector(".ticker span").textContent = document.querySelector(".ticker span").textContent.replace("Bazaar Hits", NAME);
+  document.title = NAME + " · Watch live";
+}
 if (!app) { $("back").hidden = false; }
 let songs = [], at = 0, player = null, nowTimer = null;
 // Ad breaks from the running order (ytorder.js withBreaks): song index -> the promos that play before it.
@@ -96,7 +103,7 @@ function showNow() {
   placeBug(s.label);
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = s.title;
-  $("now").lastChild.textContent = "Bazaar Hits · " + s.label;
+  $("now").lastChild.textContent = NAME + " · " + s.label;
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
@@ -126,7 +133,7 @@ Promise.all([fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()),
   if (items[w.i].kind === "video") { at = (at - 1 + songs.length) % songs.length; joinAt = w.offset; }
   else { pendingBreak = { promos: items[w.i].promos, offset: w.offset }; joinAt = 0; }
   dataReady();
-}).catch(() => { $("msg").textContent = "Bazaar Hits can't load right now. Please try again in a minute."; });
+}).catch(() => { $("msg").textContent = NAME + " can't load right now. Please try again in a minute."; });
 
 // When the picture hasn't started after 15 s, viewers see only our own short message; why it didn't
 // start (player state or error, browser version) goes to the log (logcat in the app), and shows on
@@ -138,7 +145,7 @@ setTimeout(() => {
   console.warn("Bazaar channel " + why);
   const d = document.createElement("div");
   d.className = "diag";
-  d.textContent = new URLSearchParams(location.search).has("debug") ? why : `${"Bazaar Hits"} is starting, one moment please…`;
+  d.textContent = new URLSearchParams(location.search).has("debug") ? why : `${NAME} is starting, one moment please…`;
   document.body.appendChild(d);
 }, 15000);
 // The cover goes once the video is really playing, and comes back while the next one loads.
