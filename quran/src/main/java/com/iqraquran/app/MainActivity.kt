@@ -119,7 +119,7 @@ class MainActivity : ComponentActivity() {
         requestPermissions(wanted.toTypedArray(), 7)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // Location just allowed: work the prayer times out for here.
         if (requestCode == 7 && com.iqraquran.app.data.DevicePlace.allowed(this)) vm.findPlaceAgain()
