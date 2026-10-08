@@ -835,6 +835,7 @@ fun ChannelListScreen(
                     duoMode -> DuoMode(
                         channels = state.channels.filter { state.languageFilter.isEmpty() || it.language in state.languageFilter },
                         favorites = state.favorites,
+                        favoriteChannels = state.favoriteChannels,
                         lastWatchedId = state.lastWatchedId,
                         playing = inForeground && !showSettings,
                         focus = newsFocus,
