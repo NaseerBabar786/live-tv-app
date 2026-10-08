@@ -244,9 +244,15 @@ class Account private constructor(context: Context) {
      */
     suspend fun reportViewing() = withContext(Dispatchers.IO) {
         val u = _user.value ?: return@withContext
-        val days = Watching.totals().filter { (_, d) -> d.channels.isNotEmpty() || d.programmes.isNotEmpty() }
+        val watched = Watching.totals().toMap()
+        val features = com.livetv.app.Features.totals().filter { (_, m) -> m.isNotEmpty() }
+        val days = (watched.keys + features.keys).sorted()
+            .map { it to (watched[it] ?: Watching.Day(emptyMap(), emptyMap(), emptyMap())) }
+            .filter { (day, d) -> d.channels.isNotEmpty() || d.programmes.isNotEmpty() || features[day] != null }
         val sponsorDays = SponsorViews.totals().filter { (_, m) -> m.isNotEmpty() }
         if (days.isEmpty() && sponsorDays.isEmpty()) return@withContext
+        val now = Watching.now()
+        val today = Watching.today(System.currentTimeMillis())
         runCatching {
             val t = token()
             // How often each sponsor was shown, in sponsorViews/{day}_{uid}, for the stats page.
@@ -281,8 +287,17 @@ class Account private constructor(context: Context) {
                     }
                     fields["hours"] = totals.hours.mapKeys { (k, _) -> k.replace('|', '_') }
                 }
+                // 1.10.x: which parts of the app were used (seconds and opens per mode, Library, Games, full screen),
+                // and on today's record the channel on now (or last watched), for the owner's /users page.
+                features[day]?.let { m -> fields["features"] = m.mapValues { (_, f) -> mapOf<String, Any>("s" to f.seconds, "o" to f.opens) } }
+                if (day == today && now != null) {
+                    fields["nowName"] = now.name
+                    fields["nowAt"] = Date(now.at)
+                    fields["nowLive"] = now.live
+                }
                 Firestore.patch(Firestore.doc("usage/${day}_${u.uid}"), fields, t)
                 Watching.sent(day)
+                com.livetv.app.Features.sent(day)
             }
         }
         Unit

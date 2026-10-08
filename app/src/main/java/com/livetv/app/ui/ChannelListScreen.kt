@@ -260,6 +260,8 @@ fun ChannelListScreen(
                 ?: if (Edition.MAX) TileLayout.Browse else TileLayout.List,
         )
     }
+    // The mode on screen, for the owner's "most used features" (Features).
+    LaunchedEffect(tileLayout) { com.livetv.app.Features.use(tileLayout.feature?.key ?: "list") }
     // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
     val packages by Plans.features.collectAsStateWithLifecycle()

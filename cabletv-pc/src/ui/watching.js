@@ -63,9 +63,12 @@ function addProgrammes(day, ch, from, to) {
   }
 }
 
+let lastName = null, lastAt = 0;
+
 function add() {
   const now = Date.now();
   const ch = current;
+  if (ch && foreground) { lastName = ch.name.slice(0, 80); lastAt = now; }
   if (ch && foreground && since > 0) {
     let from = since;
     while (from < now) {
@@ -97,6 +100,13 @@ export function watch(screen, ch) {
   screens.delete(screen);
   screens.set(screen, ch);
   current = ch;
+  if (foreground) { lastName = ch.name.slice(0, 80); lastAt = Date.now(); }
+}
+
+/** The last channel watched, when it was last on screen and whether it's on now (for the owner's /users page). */
+export function now() {
+  add();
+  return lastName ? { name: lastName, at: lastAt, live: !!current && foreground } : null;
 }
 
 export function stop(screen) {
