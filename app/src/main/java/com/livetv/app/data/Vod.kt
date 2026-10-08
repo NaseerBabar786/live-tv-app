@@ -137,6 +137,11 @@ object Vod {
         /** How long an episode usually is (the middle length of its episodes), or null. */
         val episodeMins: Int? get() = episodes.mapNotNull { it.channel.mins }.sorted().let { it.getOrNull(it.size / 2) }
 
+        /** The show's genres: the ones most of its episodes have (at most two). */
+        val genres: List<String>
+            get() = episodes.flatMap { it.channel.genres }.groupingBy { it }.eachCount()
+                .filter { it.value * 2 >= episodes.size }.entries.sortedByDescending { it.value }.map { it.key }.take(2)
+
         /** A line about the show, from the newest episode that has one. */
         val desc: String? get() = episodes.asReversed().firstNotNullOfOrNull { it.channel.desc }
     }

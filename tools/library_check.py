@@ -118,9 +118,12 @@ def look(vid):
     info = {"checked": dt.date.today().isoformat()}
     try:  # the description, from the watch page's data (this part works without signing in)
         m = re.search(r'"attributedDescription":\{"content":"((?:[^"\\]|\\.)*)"', innertube("next", {"videoId": vid}))
-        desc = describe(json.loads(f'"{m.group(1)}"')) if m else ""
+        full = json.loads(f'"{m.group(1)}"') if m else ""
+        desc = describe(full)
         if desc:
             info["desc"] = desc
+        if full:
+            info["about"] = full[:800]  # for its genres
     except Exception as e:  # noqa: BLE001
         print(f"  {vid}: details failed ({e})", file=sys.stderr)
     try:  # the length, from a search for the video (search results show it)
@@ -159,6 +162,30 @@ def look_other(url):
     except Exception as e:  # noqa: BLE001
         print(f"  {url}: no details ({e})", file=sys.stderr)
     return url, info
+
+
+# Genres for the Library's genre chips (owner, 2026-10-08: "like the 1+List filter row"), from the title and
+# description, in English, Roman Urdu/Hindi and Urdu/Hindi script. At most two per programme, in this order.
+GENRES = [
+    ("Christmas", r"christmas|xmas|santa|holiday romance|hallmark"),
+    ("Horror", r"horror|ghost|haunt|demon|zombie|exorcis|possess|bhoot|bhoot|chudail|aseb|خوف|بھوت|चुड़ैल|भूत|डरावन"),
+    ("Sci-Fi", r"sci-?fi|science fiction|\bspace\b|spaceship|alien|robot|dystop|time travel|asteroid|galaxy|planet"),
+    ("Action", r"\baction|fight|gangster|mafia|revenge|martial|kung fu|commando|assassin|mercenar|heist|shoot-?out|badla|एक्शन|ایکشن"),
+    ("Thriller", r"thriller|suspense|mystery|murder|detective|kidnap|serial killer|kill(?:er|ed|s|ing)?\b|bloodbath|crime|investigat|psycholog|stalker|جرم|قتل|रहस्य"),
+    ("Comedy", r"comedy|comedi|funny|hilarious|laugh|spoof|mazahi|मज़ेदार|कॉमेडी|کامیڈی|مزاح"),
+    ("Romance", r"romance|romantic|love story|in love|falls? for|sweetheart|wedding|pyar|pyaar|ishq|mohabbat|prem\b|محبت|عشق|प्यार|प्रेम"),
+    ("Family", r"family|kids|children|child\b|animated|cartoon|pet\b|dog\b|puppy|parivar|khandan|خاندان|परिवार"),
+    ("War", r"\bwar\b|army|soldier|military|battle|jang\b|فوج|जंग|सेना"),
+    ("Western", r"western|cowboy|outlaw|sheriff|frontier"),
+    ("Sports", r"sports?\b|boxing|football|soccer|cricket|basketball|baseball|wrestl|race car|racing"),
+    ("True story", r"true story|based on (?:a )?true|real events|biopic|biograph|documentar"),
+    ("Religious", r"islam|quran|prophet|naat|hamd|faith|bible|jesus|church|بیان|نعت"),
+]
+GENRE_RE = [(g, re.compile(p, re.I)) for g, p in GENRES]
+
+
+def genres(text):
+    return [g for g, rx in GENRE_RE if rx.search(text or "")][:2]
 
 
 def load(path, default):
@@ -214,8 +241,10 @@ def rewrite(path, info, removed, taken):
             continue
         mins = known.get("mins") or attrs.get("mins")
         desc = known.get("desc") or attrs.get("desc")
-        extinf = re.sub(r'\s(?:mins|desc)="[^"]*"', "", extinf)
-        extra = (f' mins="{mins}"' if mins else "") + (f' desc="{html.unescape(desc)}"' if desc else "")
+        kinds = genres(f"{name} {known.get('about') or desc or ''}")
+        extinf = re.sub(r'\s(?:mins|desc|genres)="[^"]*"', "", extinf)
+        extra = (f' mins="{mins}"' if mins else "") + (f' genres="{";".join(kinds)}"' if kinds else "") + \
+                (f' desc="{html.unescape(desc)}"' if desc else "")
         out.append(re.sub(r"^(#EXTINF:\s*-?\d+)", lambda g: g.group(1) + extra, extinf, count=1))
         out.append(line)
         extinf = None
