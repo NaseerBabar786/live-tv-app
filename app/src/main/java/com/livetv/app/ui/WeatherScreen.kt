@@ -107,7 +107,7 @@ private val Dim = Color(0xFF97A3CC)
 private val PanelShape = RoundedCornerShape(22.dp)
 private val TileShape = RoundedCornerShape(16.dp)
 
-/** See-through glass over the sky, lit a little from the top left (1.10.22). */
+/** See-through glass over the sky, lit a little from the top left (1.10.23). */
 private fun Modifier.glass(shape: androidx.compose.ui.graphics.Shape) = this
     .background(Brush.linearGradient(listOf(Color.White.copy(alpha = 0.15f), Color.White.copy(alpha = 0.05f))), shape)
     .border(1.dp, Color.White.copy(alpha = 0.16f), shape)
@@ -491,7 +491,7 @@ private fun HomeTab(
     }
 }
 
-/** Today's weather straight on the sky, big and thin like the phone weather apps (1.10.22). */
+/** Today's weather straight on the sky, big and thin like the phone weather apps (1.10.23). */
 @Composable
 private fun Hero(r: WeatherApp.Report, modifier: Modifier, onNowcast: () -> Unit) {
     val c = r.current
@@ -540,7 +540,7 @@ private fun WeekBars(r: WeatherApp.Report) {
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
         days.forEach { d ->
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(WeatherApp.dayName(d.date, today).take(5), fontSize = 13.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(52.dp), maxLines = 1)
+                Text(if (d.date == today) "Today" else WeatherApp.dayName(d.date, "").take(3), fontSize = 13.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(52.dp), maxLines = 1)
                 WeatherIcon(d.code, true, 22.dp)
                 Text("${d.low}°", fontSize = 13.sp, color = Soft, modifier = Modifier.width(36.dp), textAlign = androidx.compose.ui.text.style.TextAlign.End)
                 Canvas(Modifier.weight(1f).height(8.dp).padding(horizontal = 8.dp)) {

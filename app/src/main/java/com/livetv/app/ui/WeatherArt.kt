@@ -37,7 +37,7 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 /*
- * The Weather section's drawn graphics (1.10.22): weather pictures instead of emoji, a sky that matches the
+ * The Weather section's drawn graphics (1.10.23): weather pictures instead of emoji, a sky that matches the
  * weather (soft drifting clouds, falling rain or snow, night sky), and the 24-hour temperature graph, like
  * The Weather Network's phone app. All drawn here, so nothing is downloaded.
  */
