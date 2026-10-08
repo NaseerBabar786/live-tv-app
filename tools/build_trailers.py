@@ -166,8 +166,9 @@ def language(lang, label, sources, today, old):
             if secs is None or not SECS[0] <= secs <= SECS[1]:
                 continue
             first = old.get(vid, {}).get("found", today.isoformat())
-            # Without an upload date, a trailer counts from the day we first saw it.
-            if (age if age is not None else (today - dt.date.fromisoformat(first)).days) > MAX_DAYS:
+            # Only trailers whose upload date YouTube shows (2026-10-08): without one, old trailers found by
+            # the channel search (Bodyguard, Kuch Kuch Hota Hai, a TV premiere of an old film) looked new.
+            if age is None or age > MAX_DAYS:
                 continue
             film = film_name(title)
             if films.get(film, 0) >= PER_FILM or any(v["id"] == vid for v in found):
@@ -221,7 +222,7 @@ def main():
         print(f"::notice title=Upcoming trailers::{summary}")
     for v in block:
         print(f"  {v['lang']:9} {v['secs']:4}s  {v['label']:24} {v['title']}  (first seen {v['found']})")
-    if len(block) < 6:
+    if len(block) < 3:
         sys.exit(f"Too few trailers ({summary}); keeping the old list.")
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump({"name": "آنے والی فلموں کے ٹریلر", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
