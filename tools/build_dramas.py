@@ -161,12 +161,14 @@ MTA_FOLDERS = [
     ("Quran", re.compile(r"\bquran|qur'?an|tilawat|recitation|تلاوت", re.I)),
     ("Children's Programmes", re.compile(r"\b(kids?|children|bachon|atfal|waqf-?e-?nau)\b", re.I)),
 ]
+MTA_FOLDER_NAMES = {f for f, _ in MTA_FOLDERS} | {"Programmes"}
 # Each of MTA's playlists is one programme and becomes its own folder in the Library (owner, 2026-10-08:
 # grow the MTA section from MTA's own YouTube, with an Urdu shelf and a folder per programme).
 MTA_MAX_PLAYLISTS = 80
 MTA_PER_PLAYLIST = 40     # newest videos of each programme
 MTA_MAX_VIDEOS = 1500     # in the whole MTA section
-MTA_KIDS = re.compile(r"\b(kids?|children'?s?|bachon|bachchon|atfal|nasirat|waqf-?e-?nau|cartoons?|story time|stories)\b", re.I)
+MTA_KIDS = re.compile(r"\b(kids?|children'?s?|bachon|bachchon|atfal|nasirat|waqf-?e-?nau|cartoons?|story time|stories|"
+                      r"kudak|guld[au]sta|qisse|kahaniyan|kahani)\b", re.I)
 # The Library has Urdu, Hindi, Punjabi and English shelves only: programmes in other languages are left out.
 MTA_OTHER_LANGUAGE = re.compile(
     r"\b(arabic|french|german|deutsch|spanish|bengali|bangla|indonesian|bahasa|swahili|turkish|russian|chinese|"
@@ -612,11 +614,11 @@ def browse(url, max_pages=1):
     version = re.search(r'"INNERTUBE_CLIENT_VERSION":"([\w.-]+)"', page)
     token = re.search(r'"continuationCommand":\{"token":"([^"]+)"', page)
     for _ in range(max_pages - 1):
-        if not (key and version and token):
+        if not (version and token):
             break
         body = json.dumps({"context": {"client": {"clientName": "WEB", "clientVersion": version.group(1), "hl": "en"}},
                            "continuation": token.group(1)}).encode()
-        req = urllib.request.Request(f"https://www.youtube.com/youtubei/v1/browse?key={key.group(1)}", data=body,
+        req = urllib.request.Request("https://www.youtube.com/youtubei/v1/browse" + (f"?key={key.group(1)}" if key else ""), data=body,
                                      headers={"User-Agent": USER_AGENT, "Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req, timeout=60) as r:
@@ -694,8 +696,10 @@ def mta_language(text, default=None, plain=False):
 
 def mta_folder(title):
     """A playlist's title as a short folder name ("Rah-e-Huda | Urdu | MTA" to "Rah-e-Huda")."""
-    name = MTA_TAGS.sub(" ", re.sub(r"#\S+", "", title)).strip(" |-–:,")
+    # Urdu letters go too: the Library's Urdu shelf already says the language ("Friday Sermon | خطبئہِ جمعہ 2011").
+    name = MTA_TAGS.sub(" ", re.sub(r"#\S+|[\u0600-\u06ff]+", "", title)).strip(" |-–:,")
     name = re.sub(r"\s{2,}", " ", re.sub(r"\(\s*\)|\[\s*\]", "", name)).strip(" |-–:,") or title
+    name = re.sub(r"\s*\|\s*(?=\d{4}$)", " ", name)  # "Friday Sermon | 2011" to "Friday Sermon 2011"
     return (name[:37] + "...") if len(name) > 40 else name
 
 
@@ -777,7 +781,8 @@ def mta(kept, today):
         for vid, title, mins, folder, language, kids in found:
             if total >= MTA_MAX_VIDEOS:
                 break
-            if SHOW_SKIP.search(title) or (mins is not None and mins < (5 if kids else shortest)):
+            # A programme's own playlist may have short episodes (a 5-minute Qur'an lesson); other videos need [shortest].
+            if SHOW_SKIP.search(title) or (mins is not None and mins < (5 if kids or folder not in MTA_FOLDER_NAMES else shortest)):
                 continue
             total += 1
             entry = {"item": short_title(title), "folder": folder, "genre": "Kids" if kids else "Shows",
