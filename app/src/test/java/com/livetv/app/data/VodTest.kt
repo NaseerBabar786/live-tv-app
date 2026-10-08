@@ -126,4 +126,19 @@ class VodLanguageTest {
         assertEquals(Vod.newSince(now), Vod.newestSince(sequenceOf("2026-09-01"), now))
         assertEquals(Vod.newSince(now), Vod.newestSince(emptySequence(), now))
     }
+
+    @Test
+    fun lengthAndDescriptionComeFromTheList() {
+        assertEquals("45 min", Vod.length(45))
+        assertEquals("2 h", Vod.length(120))
+        assertEquals("1 h 35 min", Vod.length(95))
+        assertEquals(null, Vod.length(null))
+        val film = M3uParser.parse(
+            "#EXTM3U\n#EXTINF:-1 mins=\"95\" genres=\"Sci-Fi;Thriller\" desc=\"A rescue crew, far from home, finds out why.\" tvg-genre=\"Movies\",Beyond\nhttps://x/1\n"
+        ).single()
+        assertEquals(95, film.mins)
+        assertEquals("A rescue crew, far from home, finds out why.", film.desc)
+        assertEquals("Beyond", film.name)
+        assertEquals(listOf("Sci-Fi", "Thriller"), film.genres)
+    }
 }

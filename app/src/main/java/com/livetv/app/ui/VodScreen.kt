@@ -270,12 +270,26 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(start = 12.dp).width(96.dp),
                             )
-                            if (episode.label != episode.channel.name) {
+                            Column(Modifier.weight(1f, fill = false)) {
+                                if (episode.label != episode.channel.name) {
+                                    Text(episode.channel.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                }
+                                episode.channel.desc?.let {
+                                    Text(
+                                        it,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
+                            Vod.length(episode.channel.mins)?.let {
                                 Text(
-                                    episode.channel.name,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f, fill = false),
+                                    it,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(start = 12.dp),
                                 )
                             }
                             if (Vod.isNew(episode.channel, newSince)) {
@@ -340,6 +354,13 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         .sortedWith(compareBy({ -it.value }, { it.key }))
                         .map { it.key }
                         .takeIf { it.size > 1 }.orEmpty()
+                    // Genre chips (owner, 2026-10-08: like the 1+List filter row), most titles first.
+                    val genreChips = if (weekTab) emptyList() else (if (tab == Vod.Section.MOVIES) movies.flatMap { it.genres } else
+                        folderLists.getValue(tab).flatMap { it.genres })
+                        .groupingBy { it }.eachCount().filter { it.value >= 2 }.entries
+                        .sortedWith(compareBy({ -it.value }, { it.key }))
+                        .map { it.key }
+                        .takeIf { it.size > 1 }.orEmpty()
 
                     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
                         LazyRow(
@@ -368,6 +389,9 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     tabName = section.name; group = null
                                 }
                             }
+                            items(genreChips, key = { "genre:$it" }) { g ->
+                                VodChip(g, GENRE + g == group, outlined = true) { group = (GENRE + g).takeUnless { it == group } }
+                            }
                             items(groups, key = { "group:$it" }) { g ->
                                 VodChip(g, g == group, outlined = true) { group = g.takeUnless { it == group } }
                             }
@@ -376,7 +400,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
 
                     if (weekTab) {
                         // Newest first, every section together; the label under each says what it is.
-                        val week = (weekMovies.map { Triple(it.added.orEmpty(), it.id, Poster(it.id, it.name, it.logo, Vod.Section.MOVIES.label, Vod.isNew(it, newSince), Vod.addedLabel(it.added))) } +
+                        val week = (weekMovies.map { Triple(it.added.orEmpty(), it.id, Poster(it.id, it.name, it.logo, listOfNotNull(Vod.Section.MOVIES.label, Vod.length(it.mins)).joinToString(" · "), Vod.isNew(it, newSince), Vod.addedLabel(it.added), it.desc)) } +
                             weekFolders.map { (section, show) ->
                                 val fresh = show.newEpisodes(weekSince)
                                 Triple(show.added.orEmpty(), show.name, Poster(
@@ -384,6 +408,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     "${section.label} · $fresh new " + if (fresh == 1) "episode" else "episodes",
                                     show.newEpisodes(newSince) > 0,
                                     Vod.addedLabel(show.added),
+                                    show.desc,
                                 ))
                             }).sortedByDescending { it.first }
                         PosterGrid(moviesGrid, week.map { it.third }, lastPicked, pickedFocus) { key ->
@@ -393,14 +418,19 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         }
                     } else if (tab == Vod.Section.MOVIES) {
                         val list = movies.filter {
-                            group == null || it.group == group
+                            inChip(group, it.group, it.genres)
                         }
                         if (list.isEmpty()) {
                             VodMessage("No ${language?.label} movies yet.")
                         } else {
                             PosterGrid(
                                 moviesGrid,
-                                list.map { Poster(it.id, it.name, it.logo, fresh = Vod.isNew(it, newSince), added = Vod.addedLabel(it.added)) },
+                                list.map {
+                                    Poster(
+                                        it.id, it.name, it.logo, Vod.length(it.mins), fresh = Vod.isNew(it, newSince),
+                                        added = Vod.addedLabel(it.added), detail = it.desc,
+                                    )
+                                },
                                 lastPicked,
                                 pickedFocus,
                             ) { id ->
@@ -410,7 +440,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         }
                     } else {
                         val list = folderLists.getValue(tab).filter {
-                            group == null || it.group == group
+                            inChip(group, it.group, it.genres)
                         }
                         if (list.isEmpty()) {
                             VodMessage("No ${language?.label} ${tab.label.lowercase()} yet.")
@@ -421,9 +451,12 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     val fresh = it.newEpisodes(newSince)
                                     Poster(
                                         it.name, it.name, it.logo,
-                                        "${it.episodes.size} episodes" + if (fresh > 0) " · $fresh new" else "",
+                                        "${it.episodes.size} episodes" +
+                                            (Vod.length(it.episodeMins)?.let { len -> " · $len each" } ?: "") +
+                                            if (fresh > 0) " · $fresh new" else "",
                                         fresh = fresh > 0,
                                         added = Vod.addedLabel(it.added),
+                                        detail = it.desc,
                                     )
                                 },
                                 lastPicked,
@@ -445,6 +478,16 @@ private fun sectionItems(state: VodState, language: String, section: Vod.Section
     return if (section == Vod.Section.MOVIES) shelf.movies else shelf.folders(section)
 }
 
+/** Marks a genre chip's filter value (never part of a real group name). */
+private const val GENRE = "\u0000genre:"
+
+/** Whether a title belongs under the picked chip: its genre chip, or its group's chip. */
+private fun inChip(chip: String?, group: String?, genres: List<String>): Boolean = when {
+    chip == null -> true
+    chip.startsWith(GENRE) -> chip.removePrefix(GENRE) in genres
+    else -> group == chip
+}
+
 /** The "Added this week" tab's name (never a real section name). */
 private const val WEEK_TAB = "WEEK"
 
@@ -457,6 +500,8 @@ private data class Poster(
     val fresh: Boolean = false,
     /** "Added Oct 8": the day it (or its newest episode) came into the Library, shown on the picture. */
     val added: String? = null,
+    /** A line or two about it, under the title (owner, 2026-10-08: every title says what it is). */
+    val detail: String? = null,
 )
 
 @Composable
@@ -562,6 +607,16 @@ private fun PosterGrid(
                 )
                 poster.subtitle?.let {
                     Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                poster.detail?.let {
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = 2.dp),
+                    )
                 }
             }
         }

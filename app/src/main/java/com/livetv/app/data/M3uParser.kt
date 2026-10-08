@@ -68,6 +68,9 @@ object M3uParser {
                             userAgent = userAgent ?: attrs["http-user-agent"],
                             referrer = referrer ?: attrs["http-referrer"],
                             added = attrs["added"]?.takeIf { it.isNotBlank() },
+                            mins = attrs["mins"]?.toIntOrNull()?.takeIf { it > 0 },
+                            desc = attrs["desc"]?.trim()?.takeIf { it.isNotBlank() },
+                            genres = attrs["genres"]?.split(';')?.map { it.trim() }?.filter { it.isNotEmpty() }.orEmpty(),
                         )
                         reset()
                     }
