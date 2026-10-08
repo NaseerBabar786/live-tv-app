@@ -1,10 +1,17 @@
 {
- "about": "AI newsreaders on air, taking turns by hour (hour % count). Owner approved five on 2026-10-08: Sana (anchor-1c, calm), Ayesha (anchor-5c, business), Zara (anchor-6c, dupatta), Hina (anchor-7c, office), Mehwish (anchor-8b, green). Each needs tools/news/presenters/clips/<id>.mp4, which build-news.yml downloads from channel-media news-move-<id>-raw.mp4.",
+ "about": "AI newsreaders on air, taking turns by hour (hour % count), lady and man alternating. Owner approved (2026-10-08) ladies Sana, Ayesha, Zara, Hina, Mehwish, Priya (Hindi) and all six men Imran, Faisal, Kamran, Tariq, Saad, Hassan, all in Studio F (no logo). Each needs tools/news/presenters/clips/<id>.mp4, which build-news.yml downloads from channel-media news-move-<id>-raw.mp4.",
  "readers": [
-  "anchor-1c",
-  "anchor-5c",
-  "anchor-6c",
-  "anchor-7c",
-  "anchor-8b"
+  "anchor-1f",
+  "anchor-m1f",
+  "anchor-5f",
+  "anchor-m6f",
+  "anchor-6f",
+  "anchor-m7f",
+  "anchor-7f",
+  "anchor-m8f",
+  "anchor-8f",
+  "anchor-m10f",
+  "anchor-3hf",
+  "anchor-m11f"
  ]
 }

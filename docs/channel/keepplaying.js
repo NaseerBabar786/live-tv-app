@@ -15,3 +15,14 @@ window.keepPlaying = (player, busy, cover) => {
   window.addEventListener("pageshow", kick);
   window.addEventListener("focus", kick);
 };
+
+/* One ticker, never two (the owner's photo: Bazaar Sports, 2026-10-08). Inside the app's own screens
+   (1+List, the tile layouts and their full-screen tiles, Browse, Carousel, Strip, Duo, News) the app runs
+   its "advertise with us" line along the bottom of the screen, so the page's own line stays hidden there
+   (the app adds &noticker=1). Its strip stays, black, so YouTube's bottom bar is still out of sight.
+   Full screen (the app's plain window) and the website keep the page's line. */
+if (new URLSearchParams(location.search).has("noticker")) {
+  const s = document.createElement("style");
+  s.textContent = ".ticker { background: #000 !important; } .ticker span { visibility: hidden !important; animation: none !important; }";
+  document.head.appendChild(s);
+}

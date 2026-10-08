@@ -225,16 +225,16 @@ fun PlanEndingNotice(onRenew: () -> Unit, onMessages: () -> Unit) {
     val text = when {
         s.until != null && s.until.time - now < 5 * day -> {
             val left = ((s.until.time - now + day - 1) / day).coerceAtLeast(0)
-            val what = if (s.trial) "Your free trial" else "Your ${s.label} package"
+            val what = if (s.trial) "Your Gold trial" else "Your ${s.label} package"
             "$what ends on ${planDate(s.until)}" + when (left) {
                 0L -> " (today)."
                 1L -> " (tomorrow)."
                 else -> ", in $left days."
-            } + " Renew now to keep watching with everything you have, or message us."
+            } + " Renew now to keep every mode and feature, or message us. The channels stay free."
         }
         s.endedTier != null && s.endedAt != null ->
-            "Your ${s.endedTier.label} package ended on ${planDate(s.endedAt)}. You're on Free now. " +
-                "Renew to get everything back, or message us."
+            "Your ${s.endedTier.label} package ended on ${planDate(s.endedAt)}. You're on Free now: every channel, in 1+List. " +
+                "Renew to get every mode and feature back, or message us."
         else -> return
     }
     // Once a day.
@@ -267,7 +267,10 @@ fun PlanEndingNotice(onRenew: () -> Unit, onMessages: () -> Unit) {
     }
 }
 
-/** The free trial's daily line: "your 7-day free trial has started", then "N days left", once a day. */
+/**
+ * The Gold trial's daily line: "your 7-day Gold trial has started", then "N days left", once a day. The channels
+ * are always free, so the trial is a trial of the features (owner, 2026-10-08).
+ */
 @Composable
 private fun TrialNotice(until: Date, prefs: android.content.SharedPreferences, onGold: () -> Unit, onDismissed: () -> Unit) {
     val now = System.currentTimeMillis()
@@ -280,17 +283,18 @@ private fun TrialNotice(until: Date, prefs: android.content.SharedPreferences, o
     val left = (localDay(until.time) - today).coerceAtLeast(0)
     val trialDays = Subscription.offer.value.trialDays
     val first = !prefs.getBoolean("trial_started_shown", false)
-    val title = if (first) "🎉 Your $trialDays-day free trial has started" else "⏳ Free trial: " + when (left) {
+    val title = if (first) "🎉 Your $trialDays-day Gold trial has started" else "⏳ Gold trial: " + when (left) {
         0L -> "last day"
         1L -> "1 day left"
         else -> "$left days left"
     }
-    val text = (if (first) "Welcome to Cable TV! For your first $trialDays days everything is free: all channels and every feature. " else "") +
-        "Your free trial ends on ${planDate(until)}" + when (left) {
+    val text = (if (first) "Welcome to Cable TV! Every channel is free, always. For your first $trialDays days you also have Gold " +
+        "free: full screen, Favourites, every mode (Browse, 1+3, 2×2, News...), Movies & Dramas, Games, Iqra Quran, Weather and Themes. " else "") +
+        "Your Gold trial ends on ${planDate(until)}" + when (left) {
             0L -> " (today)."
             1L -> " (tomorrow)."
             else -> ", in $left days."
-        } + " After that you'll be on the Free package, with our own channels, and we'll have a welcome gift for you."
+        } + " After that you'll be on the Free package, every channel in 1+List, and we'll have a welcome gift for you."
     fun close() {
         prefs.edit().putLong("trial_day", today).putBoolean("trial_started_shown", true).apply()
         onDismissed()
@@ -335,7 +339,7 @@ fun CodeEndsReminder() {
         properties = androidx.compose.ui.window.PopupProperties(focusable = false),
     ) {
         Text(
-            "🎁 Your free $label (code $code) ends on ${planDate(until)}. Get Gold in Settings > Packages to keep every channel.",
+            "🎁 Your free $label (code $code) ends on ${planDate(until)}. Get Gold in Settings > Packages to keep every feature.",
             color = Color.White,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier

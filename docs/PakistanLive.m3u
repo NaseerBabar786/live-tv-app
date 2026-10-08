@@ -1,5 +1,7 @@
 #EXTM3U
 # Pakistani channels' own 24/7 live streams on their YouTube channels.
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/B2BCD1MAVu4/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",Geo News
+https://www.youtube.com/watch?v=B2BCD1MAVu4
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/5FW9ZVMR_7M/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",ARY News
 https://www.youtube.com/watch?v=5FW9ZVMR_7M
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/kZK2BiSdC68/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",92 News
@@ -16,5 +18,5 @@ https://www.youtube.com/watch?v=9N6SWn1BQpA
 https://www.youtube.com/watch?v=F6P-BFV6gWM
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/1k5dM9-_DyA/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="Entertainment" group-title="Pakistani",ARY Digital
 https://www.youtube.com/watch?v=1k5dM9-_DyA
-#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/6IJ5r0T6kpE/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="Kids" group-title="Pakistani",Kids Land Urdu
-https://www.youtube.com/watch?v=6IJ5r0T6kpE
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/cT02D49m83g/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="Kids" group-title="Pakistani",Kids Land Urdu
+https://www.youtube.com/watch?v=cT02D49m83g

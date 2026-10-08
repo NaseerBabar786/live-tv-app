@@ -1,6 +1,6 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-08 00:27 UTC",
+ "built": "2026-10-08 10:07 UTC",
  "videos": [
   {
    "id": "MKpt0zZyT5E",
@@ -168,31 +168,10 @@
    "found": "2026-10-07"
   },
   {
-   "id": "RfL11k8Y7G4",
-   "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
-   "label": "Aditya Movies",
-   "mins": 126.08333333333333,
-   "found": "2026-10-08"
-  },
-  {
-   "id": "yR9pSZoZ6CY",
-   "title": "Gamblers Hindi Dubbed Movie 2026 Full Movie | Sangeeth Shobhan, Prashanthi | South New Movie 2026",
-   "label": "Aditya Movies",
-   "mins": 97.98333333333333,
-   "found": "2026-10-07"
-  },
-  {
    "id": "VDFys9V9poQ",
    "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
    "label": "Aditya Movies",
    "mins": 145.35,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "gfDhPJUIFFA",
-   "title": "Kotha Kothagaa Hindi Dubbed Full Movie | Ajay, Virti Vaghani | South Movie New 2026 | Aditya Movies",
-   "label": "Aditya Movies",
-   "mins": 110.51666666666667,
    "found": "2026-10-07"
   },
   {
@@ -210,10 +189,31 @@
    "found": "2026-10-07"
   },
   {
-   "id": "oCwQ5ee7cyg",
-   "title": "F2 Full Movie in Hindi | Hindi Dubbed Movies 2025 Full Movie | Venkatesh, Varun Tej, Tamannaah",
+   "id": "pBP49rdzP4M",
+   "title": "Intelligent Hindi Dubbed Full Movie | Sai Dharam Tej, Lavanya Tripathi | South Dubbed Movie 2026",
    "label": "Aditya Movies",
-   "mins": 109.05,
+   "mins": 121.28333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ftI9RAEuSLo",
+   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
+   "label": "Aditya Movies",
+   "mins": 124.95,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "gfDhPJUIFFA",
+   "title": "Kotha Kothagaa Hindi Dubbed Full Movie | Ajay, Virti Vaghani | South Movie New 2026 | Aditya Movies",
+   "label": "Aditya Movies",
+   "mins": 110.51666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "RfL11k8Y7G4",
+   "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
+   "label": "Aditya Movies",
+   "mins": 126.08333333333333,
    "found": "2026-10-08"
   },
   {
@@ -259,11 +259,11 @@
    "found": "2026-10-07"
   },
   {
-   "id": "KAouzPF7GII",
-   "title": "She's Hunting The Cartel That Murdered Her Family | She-Vigilante | Full 2026 Action Movie",
+   "id": "nW1pVutjpt4",
+   "title": "Escape the Secluded Killing Grounds | Hillwalkers | Full 2026 Survival Movie",
    "label": "Movie Central",
-   "mins": 84.35,
-   "found": "2026-10-07"
+   "mins": 87.26666666666667,
+   "found": "2026-10-08"
   },
   {
    "id": "-gjHbKrRpig",
@@ -294,17 +294,17 @@
    "found": "2026-10-07"
   },
   {
-   "id": "srfGxDsIv9s",
-   "title": "Love You Dolly - Eid Special - TeleFilm - 7th June 2025 - [ Syed Jibran - Nadia Khan ] - HUM TV",
-   "label": "HUM TV",
-   "mins": 70.55,
-   "found": "2026-10-07"
-  },
-  {
    "id": "k-1W7DxYBvc",
    "title": "Mulazim Online - Eid Special - TeleFilm - 7th June 2025 - [ Nida Yasir - Yasir Nawaz ] - HUM TV",
    "label": "HUM TV",
    "mins": 69.11666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "PlZS2B_5rqw",
+   "title": "Deewani - Eid Special - TeleFilm - 8th June 2025 - [ Sahar Hashmi - Usama Khan ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 72.71666666666667,
    "found": "2026-10-07"
   },
   {
@@ -315,10 +315,10 @@
    "found": "2026-10-07"
   },
   {
-   "id": "PlZS2B_5rqw",
-   "title": "Deewani - Eid Special - TeleFilm - 8th June 2025 - [ Sahar Hashmi - Usama Khan ] - HUM TV",
+   "id": "srfGxDsIv9s",
+   "title": "Love You Dolly - Eid Special - TeleFilm - 7th June 2025 - [ Syed Jibran - Nadia Khan ] - HUM TV",
    "label": "HUM TV",
-   "mins": 72.71666666666667,
+   "mins": 70.55,
    "found": "2026-10-07"
   },
   {
@@ -333,20 +333,6 @@
    "title": "Dil Ne Kaha Dil Se - Telefilm - [Eng Sub] - Digitally Presented by Master Paints - 3rd April 2025",
    "label": "Har Pal Geo",
    "mins": 83.08333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "PUASJ0o-oT8",
-   "title": "Pyaar Ka Punch | Eid Special Telefilm (Subtitles) 21st March 2026 | Naeema Butt & Saif Ali Khan",
-   "label": "Green Entertainment",
-   "mins": 129.7,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "V8psurIwxSM",
-   "title": "Saiyyan Thanedaar - Eid Special Telefilm (Subtitles) 8th June 2025 - Presented By Parley Gold Gleam",
-   "label": "Green Entertainment",
-   "mins": 70.5,
    "found": "2026-10-07"
   },
   {

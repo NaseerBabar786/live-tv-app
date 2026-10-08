@@ -303,7 +303,13 @@ object Subscription {
     }.getOrDefault(emptyList())
 
     /** What [tier] has, in a line for the packages screen. */
-    fun describe(tier: Plans.Tier): String = describe(_offer.value.features[tier].orEmpty())
+    fun describe(tier: Plans.Tier): String = when (tier) {
+        // Fixed since 1.10.17 (owner, 2026-10-08): the channels are free, the features are Gold.
+        Plans.Tier.Free -> "Every channel, in 1+List. Full screen, Favourites and the other modes and features: try each for 1 minute."
+        Plans.Tier.Gold -> "Every channel and every feature: " +
+            Plans.Feature.entries.filter { it != Plans.Feature.AllChannels }.joinToString(", ") { it.label } + "."
+        else -> describe(_offer.value.features[tier].orEmpty())
+    }
 
     /** A line listing [ticked] (plus Free's features) for the packages screen. */
     fun describe(ticked: Set<Plans.Feature>): String {

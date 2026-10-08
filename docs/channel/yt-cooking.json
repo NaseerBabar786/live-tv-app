@@ -1,7 +1,21 @@
 {
  "name": "Bazaar Cooking",
- "built": "2026-10-08 00:24 UTC",
+ "built": "2026-10-08 10:05 UTC",
  "videos": [
+  {
+   "id": "UjzwnbbkKB8",
+   "title": "Pineapple Delight | Creamy & Delicious Dessert Recipe | Chef Saad Butt | Masala TV",
+   "label": "Masala TV",
+   "mins": 8.616666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "OnmcF-F1GkQ",
+   "title": "Soya Paneer Kabab and Hummus Recipe | High Protein Recipe | Middle East की फेमस डिश | Kabitaskitchen",
+   "label": "Kabita's Kitchen",
+   "mins": 10.6,
+   "found": "2026-10-08"
+  },
   {
    "id": "XbwR0j5fV9g",
    "title": "First Time Outdoor Kitchen Main Banaye 10kg Gulab Jaman😍Ki Recipe By Kitchen With Amna",
@@ -406,13 +420,6 @@
    "title": "Best Of Tarka | Mustard BBQ Glazed Chicken, Khataai Bharay Fry Baingan | Rida Aftab | Masala Tv",
    "label": "Masala TV",
    "mins": 36.31666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zfOeyD2niXk",
-   "title": "Qeema Bharay Karelay & Mutton Achari Kaleji | Chef A.R. Jamali, Abeel | Riwayati Pakwan | 4 Oct 26",
-   "label": "Masala TV",
-   "mins": 38.25,
    "found": "2026-10-06"
   },
   {
@@ -969,13 +976,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "knX2T_dKTCY",
-   "title": "Instant Ragi idli with Cooker Sambar Recipe | रागी इडली और सांबर | Idli Sambar Recipe Kabitaskitchen",
-   "label": "Kabita's Kitchen",
-   "mins": 7.25,
-   "found": "2026-10-06"
-  },
-  {
    "id": "WxdKcKggg-8",
    "title": "Shireen - Cloudweaver (Official Music Video)",
    "label": "Shireen Anwar",
@@ -1047,7 +1047,7 @@
   },
   {
    "id": "9mSgXNvgFLQ",
-   "title": "Authentic Malaysian Veg Curry Recipe | Easy Malaysian Veg Curry Recipe | Perfect Meal | Chef Varun",
+   "title": "Delicious Malaysian Veg Curry Recipe | Easy Coconut Milk Curry | One Pot Meal | Chef Varun",
    "label": "Get Curried",
    "mins": 5.9,
    "found": "2026-10-06"
@@ -1211,6 +1211,20 @@
    "title": "Kashmiri Sundried Vegetable Curry | Authentic Hokh Syun | Traditional Veg Curry | Chef Varun",
    "label": "Get Curried",
    "mins": 5.483333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "zfOeyD2niXk",
+   "title": "Qeema Bharay Karelay & Mutton Achari Kaleji | Chef A.R. Jamali, Abeel | Riwayati Pakwan | 4 Oct 26",
+   "label": "Masala TV",
+   "mins": 38.25,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "knX2T_dKTCY",
+   "title": "Instant Ragi idli with Cooker Sambar Recipe | रागी इडली और सांबर | Idli Sambar Recipe Kabitaskitchen",
+   "label": "Kabita's Kitchen",
+   "mins": 7.25,
    "found": "2026-10-06"
   },
   {

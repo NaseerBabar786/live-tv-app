@@ -1,15 +1,37 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-08 00:20 UTC",
- "secs": 2021,
+ "built": "2026-10-08 12:35 UTC",
+ "secs": 2241,
  "videos": [
   {
-   "id": "hdKS3CoeG4A",
-   "title": "Ranjish Episode 7 | 5th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
-   "label": "Express TV",
-   "secs": 2021,
+   "id": "qERbsI55UmU",
+   "title": "Tapish Mega Last Episode 34 [Eng Sub] Muneeb Butt - Laiba Khan - Saad Qureshi | 22nd Sep 2026",
+   "label": "Har Pal Geo",
+   "secs": 2241,
    "kind": "drama"
   }
  ],
- "spares": []
+ "spares": [
+  {
+   "id": "05xRmYrkAmw",
+   "title": "Main Tera Episode 53 | 5 October 2026 | Ghana Ali | Yusra Irfan | Arez Ahmed | ARY Digital",
+   "label": "ARY Digital",
+   "secs": 2316,
+   "kind": "drama"
+  },
+  {
+   "id": "3G8B-XDEFyI",
+   "title": "Nizaam Ep 06 (Subtitles) 4th Oct 26 | Presented by VGO Tel | Momina Iqbal - Nauman Ijaz - Usama Khan",
+   "label": "Green Entertainment",
+   "secs": 1985,
+   "kind": "drama"
+  },
+  {
+   "id": "LpbnBVHunZE",
+   "title": "Tark-e-Tamanna - Episode 06 - 7th Oct 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
+   "label": "HUM TV",
+   "secs": 2094,
+   "kind": "drama"
+  }
+ ]
 }

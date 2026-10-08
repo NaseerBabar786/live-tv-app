@@ -103,6 +103,19 @@ class MainActivity : ComponentActivity() {
             else -> null
         }
         LaunchedEffect(screen) { screen?.let(Features::use) }
+        // A Gold section tried on Free closes when its minute is up (or the package no longer has it): 1+List again.
+        val trying by Plans.trying.collectAsStateWithLifecycle()
+        val tier by Plans.current.collectAsStateWithLifecycle()
+        val packages by Plans.features.collectAsStateWithLifecycle()
+        LaunchedEffect(trying, tier, packages) {
+            if (showWeather && !Plans.canUse(Plans.Feature.Weather)) showWeather = false
+            if (showGames && !Plans.canUse(Plans.Feature.Games)) showGames = false
+            if (showQuran && !Plans.canUse(Plans.Feature.Quran)) showQuran = false
+            if (showVod && !Plans.canUse(Plans.Feature.Library)) { showVod = false; vodStart = null }
+            if (viewModel.state.value.playing != null && !Plans.canUse(Plans.Feature.FullScreen)) viewModel.stop()
+            // The theme picked stays saved; without Themes the usual one shows.
+            com.livetv.app.ui.Themes.unlocked = Plans.canUse(Plans.Feature.Themes)
+        }
         if (showWeather && playing == null) {
             com.livetv.app.ui.WeatherScreen(onClose = { showWeather = false })
         } else if (showGames && playing == null) {
@@ -159,8 +172,8 @@ class MainActivity : ComponentActivity() {
                 onOpenVodItem = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) { vodStart = it; showVod = true } }) else null,
                 // The games are made for the TV remote, so the phone app has none (owner's rule, 2026-10-08).
                 onOpenGames = if (Edition.LIVE_TV && isTv(this@MainActivity)) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
-                onOpenQuran = if (QuranSection.AVAILABLE) ({ showQuran = true }) else null,
-                onOpenWeather = if (Edition.LIVE_TV) ({ showWeather = true }) else null,
+                onOpenQuran = if (QuranSection.AVAILABLE) ({ if (!Plans.ask("Iqra Quran", Plans.Feature.Quran)) showQuran = true }) else null,
+                onOpenWeather = if (Edition.LIVE_TV) ({ if (!Plans.ask("Weather", Plans.Feature.Weather)) showWeather = true }) else null,
                 onWatch = viewModel::watched,
             )
         }

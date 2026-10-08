@@ -135,8 +135,13 @@ object Themes {
     /** Text sizes: name to scale. */
     val sizes = listOf("Normal" to 1f, "Large" to 1.15f, "Extra large" to 1.3f)
 
-    var current by mutableStateOf(all.first())
-        private set
+    /** The theme the viewer picked (kept even while their package doesn't have Themes). */
+    private var chosen by mutableStateOf(all.first())
+
+    /** Whether the viewer's package has Themes (Cable TV's Gold, 1.10.17); the first theme shows otherwise. */
+    var unlocked by mutableStateOf(true)
+
+    val current: Palette get() = if (unlocked) chosen else all.first()
     var textScale by mutableFloatStateOf(1f)
         private set
 
@@ -146,12 +151,12 @@ object Themes {
         if (prefs != null) return
         val p = context.applicationContext.getSharedPreferences("theme", Context.MODE_PRIVATE)
         prefs = p
-        current = all.firstOrNull { it.name == p.getString(K_THEME, null) } ?: all.first()
+        chosen = all.firstOrNull { it.name == p.getString(K_THEME, null) } ?: all.first()
         textScale = sizes.firstOrNull { it.first == p.getString(K_SIZE, null) }?.second ?: 1f
     }
 
     fun pick(palette: Palette) {
-        current = palette
+        chosen = palette
         prefs?.edit()?.putString(K_THEME, palette.name)?.apply()
     }
 
@@ -160,6 +165,13 @@ object Themes {
         val next = sizes[(i + 1) % sizes.size]
         textScale = next.second
         prefs?.edit()?.putString(K_SIZE, next.first)?.apply()
+    }
+
+    /** Picks a text size by its name ("Normal", "Large", "Extra large"). */
+    fun setSize(name: String) {
+        val size = sizes.firstOrNull { it.first == name } ?: return
+        textScale = size.second
+        prefs?.edit()?.putString(K_SIZE, size.first)?.apply()
     }
 
     val sizeName get() = sizes.firstOrNull { it.second == textScale }?.first ?: sizes.first().first

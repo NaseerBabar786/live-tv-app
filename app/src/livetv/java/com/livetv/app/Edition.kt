@@ -26,6 +26,10 @@ import com.livetv.app.ui.CodeEndsReminder
 import com.livetv.app.ui.PlansScreen
 import com.livetv.app.ui.MessagesScreen
 import com.livetv.app.ui.WelcomeDialog
+import com.livetv.app.ui.GoldFeatureDialog
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import com.livetv.app.account.Welcome
 import com.livetv.app.ui.SignInScreen
 import androidx.compose.ui.Modifier
@@ -158,6 +162,7 @@ fun EditionOverlay() {
     if (FirebaseConfig.configured) NewMessagePrompt()
     if (FirebaseConfig.configured && !Edition.MAX) WelcomePrompt()
     if (FirebaseConfig.configured && !Edition.MAX) PlanPrompts()
+    if (FirebaseConfig.configured && !Edition.MAX) GoldTry()
     if (FirebaseConfig.configured && !Edition.MAX) CodeEndsReminder()
     if (FirebaseConfig.configured && !Edition.MAX) BillingPrompt()
     // A sponsor's card after a channel change, now and then.
@@ -220,6 +225,51 @@ private fun PlanPrompts() {
         return
     }
     PlanEndingNotice(onRenew = Plans::showPlans, onMessages = { messages = true })
+}
+
+/**
+ * A Free viewer trying a Gold feature (Plans.ask): a short line says it's free to try for a minute; when the
+ * minute is up the feature closes (1+List comes back) and "This is a Gold feature" pops up.
+ */
+@Composable
+private fun GoldTry() {
+    val trying by Plans.trying.collectAsStateWithLifecycle()
+    val over by Plans.tryOver.collectAsStateWithLifecycle()
+    val until = trying?.until
+    var hint by remember { mutableStateOf(false) }
+    LaunchedEffect(until) {
+        hint = false
+        if (until == null) return@LaunchedEffect
+        hint = true
+        delay(minOf(8_000L, (until - System.currentTimeMillis()).coerceAtLeast(0)))
+        hint = false
+        delay((until - System.currentTimeMillis()).coerceAtLeast(0))
+        Plans.endTry()
+    }
+    val t = trying
+    if (hint && t != null) {
+        androidx.compose.ui.window.Popup(
+            alignment = androidx.compose.ui.Alignment.BottomCenter,
+            properties = androidx.compose.ui.window.PopupProperties(focusable = false),
+        ) {
+            Text(
+                "⭐ ${t.label} is a Gold feature. Try it free for 1 minute.",
+                color = androidx.compose.ui.graphics.Color.White,
+                style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .padding(bottom = 28.dp)
+                    .background(androidx.compose.ui.graphics.Color(0xE6000000), androidx.compose.foundation.shape.RoundedCornerShape(50))
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
+            )
+        }
+    }
+    over?.let { feature ->
+        GoldFeatureDialog(
+            feature = feature,
+            onGetGold = { Plans.closeTryOver(); Plans.showPlans() },
+            onDismiss = Plans::closeTryOver,
+        )
+    }
 }
 
 /**
@@ -346,7 +396,8 @@ fun EditionTicker(
     everyMs: Long = 0L,
     skip: () -> Boolean = { false },
     band: Boolean = false,
-) = SponsorTicker(modifier, big, always, everyMs, skip, band)
+    lift: androidx.compose.ui.unit.Dp = androidx.compose.ui.unit.Dp(0f),
+) = SponsorTicker(modifier, big, always, everyMs, skip, band, lift)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

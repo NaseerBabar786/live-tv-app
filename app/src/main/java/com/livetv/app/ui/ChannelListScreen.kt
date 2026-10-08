@@ -261,6 +261,8 @@ fun ChannelListScreen(
     // Phones and tablets have every mode too (1.9.90): 1+List and Browse also fit an upright phone,
     // the other modes turn the phone sideways while they're on.
     val phone = rememberIsPhone()
+    // The "advertise with us" band along the bottom: taller on TVs, its words lifted off the edge.
+    val tickerBand = if (isTv(LocalContext.current)) 52.dp else 36.dp
     var tileLayout by remember {
         mutableStateOf(
             sessionTileLayout
@@ -269,10 +271,12 @@ fun ChannelListScreen(
     }
     // The mode on screen, for the owner's "most used features" (Features).
     LaunchedEffect(tileLayout) { com.livetv.app.Features.use(tileLayout.feature?.key ?: "list") }
-    // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
+    // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, or its minute's try is
+    // over) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
     val packages by Plans.features.collectAsStateWithLifecycle()
-    LaunchedEffect(tier, packages, tileLayout) {
+    val trying by Plans.trying.collectAsStateWithLifecycle()
+    LaunchedEffect(tier, packages, trying, tileLayout) {
         if (!tileLayout.allowed) {
             tileLayout = if (Edition.MAX && TileLayout.Browse.allowed) TileLayout.Browse else TileLayout.List
             sessionTileLayout = tileLayout
@@ -534,8 +538,9 @@ fun ChannelListScreen(
         if (next.separateTvs && !premium) {
             upsellFor = next
         } else if (next.feature?.let { Plans.ask("${next.label} mode", it) } == true) {
-            // Cable TV shows its packages; the mode stays as it was.
+            // Not allowed at all; the mode stays as it was.
         } else {
+            // A Gold mode on Free opens for a minute's try (Plans.ask).
             tileLayout = next
             sessionTileLayout = tileLayout
         }
@@ -703,6 +708,9 @@ fun ChannelListScreen(
                 .fillMaxSize()
                 .padding(padding),
         ) {
+            // On TVs the line is lifted off the bottom edge, which some TVs cut off; pages shown here hide their
+            // own line and stay above this band, so only one line ever runs (the owner's photo, 2026-10-08).
+            CompositionLocalProvider(LocalTickerBand provides if (Edition.LIVE_TV && !newsMode) tickerBand else 0.dp) {
             Column(Modifier.fillMaxSize()) {
                 if (state.needsPlaylist) {
                     Message(
@@ -1327,14 +1335,16 @@ fun ChannelListScreen(
                     }
                 }
             }
+            }
             // Cable TV's "advertise with us" line along the bottom of every channel screen (owner's rule,
             // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel, Strip and Duo.
             // News, CP24, Home and My Screen have their own band at the bottom.
             if (!newsMode && !state.needsPlaylist) {
                 EditionTicker(
-                    Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(36.dp),
+                    Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(tickerBand),
                     big = true,
                     band = true,
+                    lift = tickerBand - 36.dp,
                 )
             }
         }
@@ -1346,7 +1356,7 @@ fun ChannelListScreen(
         ModesMenu(
             current = tileLayout,
             locked = { it.separateTvs && !premium },
-            needs = { it.feature?.takeUnless(Plans::has)?.let { f -> Plans.lowestWith(f).label } },
+            needs = { it.feature?.takeUnless(Plans::has)?.let { f -> Plans.lowestWith(f).label + " · try 1 minute" } },
             onPick = ::pickLayout,
             onDismiss = { modesOpen = false },
         )
@@ -2342,8 +2352,8 @@ private val TileLayout.feature: Plans.Feature?
         TileLayout.Mine -> Plans.Feature.Mine
     }
 
-/** Whether the viewer's package has this mode. */
-private val TileLayout.allowed: Boolean get() = feature?.let(Plans::has) ?: true
+/** Whether the viewer's package has this mode, or they're trying it. */
+private val TileLayout.allowed: Boolean get() = feature?.let(Plans::canUse) ?: true
 
 /** 1+3, 1×2, 2×2 and 2×3: every tile plays and has its own channel, changed with Up and Down. */
 private val TileLayout.separateTvs get() =

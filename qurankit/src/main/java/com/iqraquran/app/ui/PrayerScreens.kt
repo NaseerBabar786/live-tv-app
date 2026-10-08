@@ -162,15 +162,22 @@ fun PrayerScreen(vm: AppViewModel) {
         }
         val dateCard: @Composable () -> Unit = { DateCard(vm, now) }
         if (wide) {
-            Row(Modifier.fillMaxSize().padding(horizontal = 32.dp, vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(32.dp)) {
+            // TVs cut off the screen's edges (overscan), so both columns keep clear of the bottom and scroll if needed.
+            Row(
+                Modifier.fillMaxSize().padding(start = 40.dp, end = 40.dp, top = 8.dp, bottom = 28.dp),
+                horizontalArrangement = Arrangement.spacedBy(32.dp),
+            ) {
                 Column(Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState())) {
                     Timeline(vm, now, compact = true)
                 }
-                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Column(
+                    Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
                     dateCard()
                     NextCard(vm, now)
-                    Text(PS.tapBell.get(), color = palette.muted)
-                    PlaceLine(vm)
+                    PlaceLine(vm, compact = true)
+                    Text(PS.tapBell.get(), color = palette.muted, fontSize = 14.sp)
                 }
             }
         } else {
@@ -211,7 +218,7 @@ private fun DateCard(vm: AppViewModel, now: Long) {
 private fun Timeline(vm: AppViewModel, now: Long, compact: Boolean) {
     val times = vm.azan.times(0, now) ?: return
     val around = vm.azan.around(now)
-    val rowHeight = if (compact) 52.dp else 58.dp
+    val rowHeight = if (compact) 44.dp else 58.dp
     Column {
         Prayer.entries.forEachIndexed { i, p ->
             val at = vm.azan.at(0, times[p], now)
@@ -222,9 +229,9 @@ private fun Timeline(vm: AppViewModel, now: Long, compact: Boolean) {
                 if (isCurrent && around != null) {
                     val span = (around.second.second - around.first.second).coerceAtLeast(1)
                     val f = ((now - around.first.second).toFloat() / span).coerceIn(0f, 1f)
-                    ProgressGap(f, now, around.second.second - now, if (compact) 110.dp else 130.dp)
+                    ProgressGap(f, now, around.second.second - now, if (compact) 84.dp else 130.dp)
                 } else {
-                    LineGap(if (compact) 10.dp else 14.dp, past = at < now)
+                    LineGap(if (compact) 8.dp else 14.dp, past = at < now)
                 }
             }
         }
@@ -234,7 +241,7 @@ private fun Timeline(vm: AppViewModel, now: Long, compact: Boolean) {
         ) {
             val span = (around.second.second - around.first.second).coerceAtLeast(1)
             val f = ((now - around.first.second).toFloat() / span).coerceIn(0f, 1f)
-            ProgressGap(f, now, around.second.second - now, 110.dp)
+            ProgressGap(f, now, around.second.second - now, if (compact) 84.dp else 110.dp)
             Text(
                 "${tr(Prayer.Fajr.en, Prayer.Fajr.ur)} · ${PrayerTimes.format(vm.azan.times(1, now)?.get(Prayer.Fajr) ?: 0)}",
                 modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, color = palette.muted,
@@ -368,7 +375,7 @@ fun NextCard(vm: AppViewModel, now: Long) {
 
 /** Where, how and who: the area, the calculation method and the muezzin, each opening the Azan settings. */
 @Composable
-private fun PlaceLine(vm: AppViewModel) {
+private fun PlaceLine(vm: AppViewModel, compact: Boolean = false) {
     val a = vm.azan
     val place = a.place?.let { listOf(it.city, it.country).filter(String::isNotBlank).joinToString(", ") } ?: PS.findingPlace.get()
     val method = tr(a.methodInUse.en, a.methodInUse.ur) + if (a.method == null) " (${PS.automatic.get()})" else ""
@@ -377,24 +384,24 @@ private fun PlaceLine(vm: AppViewModel) {
         Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(palette.cardAlt).padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        InfoRow(Icons.Filled.LocationOn, PS.place.get(), place) { vm.open(Screen.AzanSettings) }
-        InfoRow(Icons.Filled.Settings, PS.methodShort.get(), method) { vm.open(Screen.AzanSettings) }
-        InfoRow(Icons.AutoMirrored.Filled.VolumeUp, PS.muezzinShort.get(), voice) { vm.open(Screen.AzanSettings) }
+        InfoRow(Icons.Filled.LocationOn, PS.place.get(), place, compact) { vm.open(Screen.AzanSettings) }
+        InfoRow(Icons.Filled.Settings, PS.methodShort.get(), method, compact) { vm.open(Screen.AzanSettings) }
+        InfoRow(Icons.AutoMirrored.Filled.VolumeUp, PS.muezzinShort.get(), voice, compact) { vm.open(Screen.AzanSettings) }
     }
 }
 
 @Composable
-private fun InfoRow(icon: ImageVector, label: String, value: String, onClick: () -> Unit) {
+private fun InfoRow(icon: ImageVector, label: String, value: String, compact: Boolean, onClick: () -> Unit) {
     Row(
         Modifier.fillMaxWidth().focusRing(RoundedCornerShape(14.dp)).clip(RoundedCornerShape(14.dp))
-            .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 8.dp),
+            .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = if (compact) 4.dp else 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Icon(icon, contentDescription = null, tint = palette.accent)
         Column(Modifier.weight(1f)) {
-            Text(label, color = palette.muted, fontSize = 14.sp)
-            Text(value, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+            Text(label, color = palette.muted, fontSize = if (compact) 13.sp else 14.sp)
+            Text(value, fontSize = if (compact) 16.sp else 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
         }
         Text(PS.pressToChange.get(), color = palette.muted, fontSize = 13.sp)
     }

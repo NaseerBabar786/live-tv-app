@@ -55,7 +55,7 @@ PAKISTAN_WORDS = ("پاکستان", "اسلام آباد", "لاہور", "کرا
                   "گلگت", "سٹیٹ بینک", "کرکٹ بورڈ", "پی سی بی")
 # How many stories each bulletin tries to fit (the fitting step drops the last ones if too long).
 WANT = {"headlines": {"pakistan": 4, "world": 4, "canada": 3}, "full": {"pakistan": 8, "world": 8, "canada": 6}}
-ORDER = ("pakistan", "world", "canada")
+ORDER = ("canada", "pakistan", "world")   # owner 2026-10-08: Canada first
 # Spare stories per section: used when the wanted ones are short, so the bulletin fills its slot.
 EXTRA = 6
 # The end card stays at most this long; any time still left is filled with our own Cable TV promos
@@ -608,18 +608,25 @@ def main():
 
     head = (f"السلام علیکم۔ ٹورنٹو میں {period(slot.hour)} کے {slot.hour % 12 or 12} بجے ہیں، اور یہ ہے بازار ٹی وی نیوز۔ "
             + ("تفصیلی خبرنامے میں خوش آمدید۔" if kind == "full" else "پیش ہیں اس وقت کی اہم خبریں۔"))
+    # Owner 2026-10-08: start with the headlines, then the sections.
+    tops = [next(s for s in stories if s["section"] == sec)["headline"] for sec in ORDER if any(s["section"] == sec for s in stories)]
+    if tops: head += " سب سے پہلے اہم سرخیاں۔ " + "۔ ".join(t.rstrip("۔.؟?! ") for t in tops[:4]) + "۔"
     tail = ("یہ تھیں اس وقت کی خبریں۔ خبروں کی سرخیاں ہر گھنٹے، اور تفصیلی خبرنامہ ہر تین گھنٹے بعد، "
             "صرف بازار ٹی وی پر۔ اللہ حافظ۔")
     weather_seg = weather_words(wx, kind == "headlines") if wx else None
-    LEAD = {"pakistan": "سب سے پہلے پاکستان کی خبریں۔ ", "world": "اب دنیا کی خبریں۔ ", "canada": "اور اب کینیڈا کی خبریں۔ "}
-    VOICE = {"pakistan": VOICE_A, "world": VOICE_B, "canada": VOICE_A}
+    NAMES = {"pakistan": "پاکستان", "world": "دنیا", "canada": "کینیڈا"}
+    LEAD = {sec: ("سب سے پہلے " if i == 0 else "اب ") + NAMES[sec] + " کی خبریں۔ " for i, sec in enumerate(ORDER)}
+    # The voice always matches the newsreader on camera: a man reads with a man's voice, a lady with a lady's (owner 2026-10-08).
+    reader = newsreader(slot)
+    rv = VOICE_B if reader and reader.get("voice") == VOICE_B else VOICE_A
+    VOICE = {sec: rv for sec in ORDER}
 
     def plan(counts):
         segs = []
         for sec in ORDER:
             for i, s in enumerate([s for s in stories if s["section"] == sec][:counts[sec]]):
                 segs.append(("story", (LEAD[sec] if i == 0 else "") + s["read"], VOICE[sec], s))
-        if weather_seg: segs.append(("weather", weather_seg, VOICE_B, None))
+        if weather_seg: segs.append(("weather", weather_seg, rv, None))
         return segs
 
     # Speak every possible line once, then drop stories from the end until it fits.
@@ -632,7 +639,7 @@ def main():
     STING, GAP, END_MIN = 6.0, 0.7, 8.0
     counts = {sec: sum(s["section"] == sec for s in stories) for sec in ORDER}
     while True:
-        segs = [("open", head, VOICE_A, None)] + plan(counts) + [("close", tail, VOICE_A, None)]
+        segs = [("open", head, rv, None)] + plan(counts) + [("close", tail, rv, None)]
         used = STING + sum(len(voice(t, v)) / SR + GAP for _, t, v, _ in segs)
         if used + END_MIN <= total or sum(counts.values()) <= 2: break
         biggest = max(ORDER, key=lambda k: counts[k])
@@ -696,7 +703,6 @@ def main():
         "-filter_complex", f"[1:v]fps={FPS},format=rgba[c];[0:v][c]overlay=0:0:format=auto,format=yuv420p[v]",
         "-map", "[v]", "-map", "2:a", "-t", f"{news_len:.3f}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
         "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
-    reader = newsreader(slot)
     if reader and on_camera:
         add_reader(body, reader, on_camera, label, work)
     promos = []
