@@ -1,0 +1,60 @@
+name: Build weather videos
+
+# docs/weather/videos.json: the newest videos from the weather channels' own YouTube channels, for the
+# Video tab of Cable TV's Weather section. Played in YouTube's player inside our locked film page.
+on:
+  schedule:
+    - cron: "15 */3 * * *"   # every 3 hours
+  push:
+    branches: [main]
+    paths: [tools/build_weather_videos.py, .github/workflows/build-weather-videos.yml]
+  pull_request:
+    paths: [tools/build_weather_videos.py, .github/workflows/build-weather-videos.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: build-weather-videos
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the weather videos
+        run: python3 tools/build_weather_videos.py
+
+      # The owner's rule (2026-10-07): no video goes on air until it passes the pre-air check.
+      - name: Pre-air check
+        run: python3 tools/preair_check.py --lists --files docs/weather/videos.json
+
+      - name: Publish the list
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/weather/videos.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Weather videos as of $(date -u '+%Y-%m-%d %H:%M')"
+          for i in 1 2 3 4; do
+            git pull --rebase origin main && git push origin HEAD:main && break
+            git rebase --abort 2>/dev/null || true
+            [ "$i" = 4 ] && exit 1
+            sleep $((i * 10))
+          done
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

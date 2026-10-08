@@ -2,6 +2,7 @@ package com.livetv.app.data
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.json.JSONObject
 import org.junit.Test
 
 class WeatherAppTest {
@@ -108,5 +109,84 @@ class WeatherAppTest {
         assertEquals("Oct 9", WeatherApp.shortDate("2026-10-09"))
         assertEquals("2026-11-01", WeatherApp.nextDate("2026-10-31"))
         assertEquals(57, WeatherApp.parseAir("""{"current":{"us_aqi":57}}"""))
+    }
+
+    /** Past days, 15-minute rain and pressure, as Open-Meteo sends them with past_days. */
+    private fun withPast(rainNow: Boolean): String {
+        val base = JSONObject(json())
+        val daily = base.getJSONObject("daily")
+        fun prepend(name: String, value: Any) {
+            val old = daily.getJSONArray(name)
+            val a = org.json.JSONArray().put(value)
+            for (i in 0 until old.length()) a.put(old.get(i))
+            daily.put(name, a)
+        }
+        prepend("time", "2026-10-06")
+        prepend("weather_code", 3)
+        prepend("temperature_2m_max", 18.4)
+        prepend("temperature_2m_min", 6.2)
+        prepend("precipitation_probability_max", 0)
+        prepend("precipitation_sum", 0.0)
+        prepend("snowfall_sum", 0.0)
+        prepend("sunrise", "2026-10-06T07:18")
+        prepend("sunset", "2026-10-06T18:46")
+        prepend("uv_index_max", 3.0)
+        prepend("wind_speed_10m_max", 20.0)
+        val times = org.json.JSONArray()
+        val rain = org.json.JSONArray()
+        listOf("19:00", "19:15", "19:30", "19:45", "20:00", "20:15", "20:30").forEachIndexed { i, t ->
+            times.put("2026-10-07T$t")
+            rain.put(if (rainNow && i < 3) 0.6 else 0.0)
+        }
+        base.put("minutely_15", JSONObject().put("time", times).put("precipitation", rain))
+        return base.toString()
+    }
+
+    @Test
+    fun keepsThePastApart() {
+        val r = WeatherApp.parse(withPast(rainNow = true), place, fahrenheit = false)
+        assertEquals("2026-10-07", r.today?.date)
+        assertEquals(18, r.yesterday?.high)
+        assertEquals(4, r.calendar.size)
+        assertEquals(3, WeatherApp.weekday("2026-10-07"))
+        assertEquals(0, WeatherApp.weekday("2026-10-11"))
+    }
+
+    @Test
+    fun saysWhenTheRainStops() {
+        assertEquals("Rain stops within the next hour", WeatherApp.parse(withPast(rainNow = true), place, false).nowcast())
+        assertEquals("No rain or snow in the next 2 hours", WeatherApp.parse(withPast(rainNow = false), place, false).nowcast())
+        assertEquals(null, WeatherApp.parse(json(), place, false).nowcast())
+    }
+
+    @Test
+    fun observations() {
+        val r = WeatherApp.parse(json(), place, fahrenheit = false)
+        // 18 °C with a 12 °C dew point: clouds from about 800 m.
+        assertEquals("800" to "m", r.cloudCeiling())
+        assertEquals("101.5" to "kPa", r.pressureText())
+        assertEquals(310, r.current.windDegrees)
+    }
+
+    @Test
+    fun readsBingStoriesWithPictures() {
+        val xml = """<rss xmlns:News="https://www.bing.com/news/search?q=weather&amp;format=rss"><channel>
+            <item><title>Frost warning for Ontario</title>
+            <link>http://www.bing.com/news/apiclick.aspx?ref=FexRss&amp;aid=&amp;tid=1&amp;url=https%3a%2f%2fwww.cbc.ca%2fnews%2ffrost&amp;c=1</link>
+            <pubDate>Wed, 07 Oct 2026 12:00:00 GMT</pubDate><News:Source>CBC</News:Source>
+            <News:Image>https://www.bing.com/th?id=OVFT.abc&amp;pid=News</News:Image></item></channel></rss>"""
+        val s = WeatherApp.parseBing(xml)
+        assertEquals(1, s.size)
+        assertEquals("https://www.cbc.ca/news/frost", s[0].link)
+        assertEquals("CBC", s[0].source)
+        assertEquals("https://www.bing.com/th?id=OVFT.abc&pid=News&w=640&h=360&c=7", s[0].image)
+    }
+
+    @Test
+    fun readsTheVideoList() {
+        val v = WeatherApp.parseVideos("""{"videos":[{"id":"abcdefghijk","title":"Storm","channel":"The Weather Network","published":1791000000},{"id":"bad"}]}""")
+        assertEquals(1, v.size)
+        assertEquals("https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg", v[0].thumbnail)
+        assertEquals(1791000000000L, v[0].published)
     }
 }
