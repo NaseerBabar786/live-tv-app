@@ -350,7 +350,14 @@ object WeatherApp {
         val k = key(place)
         cache[k]?.takeIf { !fresh && System.currentTimeMillis() - it.loadedAt < 15 * 60_000L }?.let { return it }
         val f = fahrenheitChoice ?: (place.country in Weather.FAHRENHEIT)
-        val report = runCatching { parse(get(forecastUrl(place, f)), place, f) }.getOrNull() ?: return null
+        // The full forecast first; if that fails, the shorter one the first Weather section used (10 days,
+        // no past days, no 15-minute rain), so a problem with the extras never leaves the screen empty.
+        val report = runCatching { parse(get(forecastUrl(place, f)), place, f) }
+            .onFailure { lastError = reason(it) }
+            .recoverCatching { parse(get(forecastUrl(place, f, full = false)), place, f) }
+            .onFailure { lastError = reason(it) }
+            .getOrNull() ?: return null
+        lastError = ""
         val airJson = runCatching { get(airUrl(place)) }.getOrNull()
         val air = airJson?.let { runCatching { parseAir(it) }.getOrNull() }
         val pollen = airJson?.let { runCatching { parsePollen(it) }.getOrNull() }
@@ -358,7 +365,19 @@ object WeatherApp {
         return report.copy(airQuality = air, alerts = official, pollen = pollen).also { cache[k] = it }
     }
 
-    fun forecastUrl(p: Location.Place, fahrenheit: Boolean) =
+    /** Why the weather last failed to load ("HTTP 429", "No internet"...), shown small under the message; "" after a success. */
+    @Volatile
+    var lastError: String = ""
+
+    private fun reason(e: Throwable): String = when (e) {
+        is java.net.UnknownHostException -> "No internet (weather server not found)"
+        is java.net.SocketTimeoutException -> "The weather server took too long"
+        is javax.net.ssl.SSLException -> "Secure connection failed (check the TV's date and time)"
+        is org.json.JSONException -> "Unreadable answer from the weather server"
+        else -> e.message?.take(80) ?: e.javaClass.simpleName
+    }
+
+    fun forecastUrl(p: Location.Place, fahrenheit: Boolean, full: Boolean = true) =
         "https://api.open-meteo.com/v1/forecast?latitude=${p.latitude}&longitude=${p.longitude}" +
             "&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,is_day,wind_speed_10m," +
             "wind_direction_10m,wind_gusts_10m,pressure_msl,uv_index,visibility,cloud_cover,dew_point_2m" +
@@ -366,8 +385,8 @@ object WeatherApp {
             "uv_index,pressure_msl" +
             "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum," +
             "snowfall_sum,sunrise,sunset,uv_index_max,wind_speed_10m_max,wind_gusts_10m_max" +
-            "&minutely_15=precipitation&past_minutely_15=1&forecast_minutely_15=12" +
-            "&timezone=auto&forecast_days=16&past_days=14" +
+            (if (full) "&minutely_15=precipitation&past_minutely_15=1&forecast_minutely_15=12&forecast_days=16&past_days=14" else "&forecast_days=10") +
+            "&timezone=auto" +
             if (fahrenheit) "&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch" else ""
 
     private fun airUrl(p: Location.Place) =
@@ -703,11 +722,16 @@ object WeatherApp {
 
     private fun get(url: String): String {
         val conn = URL(url).openConnection() as HttpURLConnection
-        conn.connectTimeout = 10_000
-        conn.readTimeout = 15_000
-        // The US weather service asks every app to name itself.
-        conn.setRequestProperty("User-Agent", "CableTV/1.0 (tv.bulkbazaar.ca)")
-        conn.setRequestProperty("Accept", "application/geo+json, application/json, application/rss+xml, */*")
+        conn.connectTimeout = 15_000
+        conn.readTimeout = 20_000
+        if ("api.weather.gov" in url) {
+            // The US weather service asks every app to name itself.
+            conn.setRequestProperty("User-Agent", "CableTV/1.0 (tv.bulkbazaar.ca)")
+            conn.setRequestProperty("Accept", "application/geo+json")
+        } else {
+            // The same as the top bar's weather (Weather.kt), which works on every TV.
+            conn.setRequestProperty("User-Agent", ChannelRepository.USER_AGENT)
+        }
         return try {
             check(conn.responseCode == 200) { "HTTP ${conn.responseCode}" }
             conn.inputStream.bufferedReader().use { it.readText() }
