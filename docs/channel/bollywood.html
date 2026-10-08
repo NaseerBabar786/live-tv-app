@@ -39,6 +39,13 @@
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
+  /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
+     owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
+     YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
+     (under our ticker strip, or off the screen): only the picture and our own things show. Owner's rule
+     2026-10-07, checked by tools/preair_check.py. */
+  :root { --box: calc(100vh - var(--strip)); }
+  #player { top: calc(var(--box) * -0.2) !important; height: calc(var(--box) * 1.4) !important; left: 50% !important; right: auto !important; width: min(100vw, calc(var(--box) * 16 / 9)) !important; transform: translateX(-50%); }
 </style>
 </head>
 <body>
@@ -171,7 +178,7 @@ window.onYouTubeIframeAPIReady = () => {
         else if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
       },
       // A video its label won't let others play here is skipped.
-      onError: e => { if (inBreak) return; lastError = e.data; setTimeout(() => play(1), 1000); },
+      onError: e => { if (inBreak) return; cover(true); lastError = e.data; setTimeout(() => play(1), 1000); },
     },
   });
   stillFor(player);

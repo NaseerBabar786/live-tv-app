@@ -1,0 +1,65 @@
+name: Pre-air check
+
+# The owner's rule (2026-10-07): "on all our channels, in every programme, no YouTube options show ...
+# also in the Library ... no video goes live until you do a check" (tools/preair_check.py).
+#  - Every change: our YouTube pages are still locked (no YouTube buttons, title, logo, "More videos",
+#    error screen or link to YouTube) and the apps (TV, phone, PC) never hand anything to YouTube.
+#  - Every hour: every YouTube video on our channels' lists, Bazaar TV's lists, the Library and the live
+#    channels is checked; any that won't play embedded comes off the list, and the players skip it
+#    (docs/channel/preair-bad.json). Each build job also runs the check before it publishes.
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths: [docs/**/*.html, docs/channel/*.js, app/src/main/**, cabletv-pc/src/**, tools/preair_check.py, .github/workflows/preair-check.yml]
+  schedule:
+    - cron: "50 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: preair-check-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  pages:
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Our YouTube pages are locked
+        run: python3 tools/preair_check.py --pages
+
+  lists:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Our YouTube pages are locked
+        run: python3 tools/preair_check.py --pages
+      - name: Check every video before it goes on air
+        run: python3 tools/preair_check.py --lists --save
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/channel/preair.json docs/channel/preair-bad.json docs/channel/yt-*.json docs/channel/bollywood.json \
+            docs/channel/trailers.json docs/channel/music-videos.json docs/channel/block-*.json docs/Dramas.m3u docs/PakistanLive.m3u
+          if git diff --cached --quiet; then echo "No changes."; exit 0; fi
+          git commit -m "Pre-air check $(date -u '+%Y-%m-%d %H:%M UTC')"
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((i * 10))
+          done
+          echo "::warning::Could not publish this run's changes; the next hourly run tries again."
