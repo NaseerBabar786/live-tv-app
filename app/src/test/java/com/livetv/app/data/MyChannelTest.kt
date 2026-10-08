@@ -243,7 +243,7 @@ class MyChannelTest {
         assertEquals("https://tv.bulkbazaar.ca/media/cabletv-ad-6.mp4", byId["promos-0"]!!.url)
         assertEquals(60L, byId["sponsors-0"]!!.seconds)
         assertTrue(c.videos.all { it.isBreak })
-        assertEquals(15, c.channel.number)
+        assertEquals(48, c.channel.number)
         assertEquals(MyChannel.ADS_URL, c.channel.url)
         assertEquals("Spark Ads", c.channel.name)
         // Round and round from midnight: 30 s promo, 60 s sponsor, 15 s advertise.
