@@ -25,3 +25,16 @@ while IFS= read -r t; do i=$((i+1)); n=$(printf "%02d" $i)
   sleep 2
 done < list.txt
 wait; cat got.txt || true; ls -la
+# licence and artist for each file
+python3 - <<'P'
+import json,urllib.request,urllib.parse
+out={}
+for l in open('got.txt'):
+    n,t=l.rstrip('\n').split('|',1)
+    q=urllib.parse.urlencode(dict(action='query',format='json',titles='File:'+t,prop='imageinfo',iiprop='url|extmetadata'))
+    d=json.loads(urllib.request.urlopen(urllib.request.Request('https://commons.wikimedia.org/w/api.php?'+q,headers={'User-Agent':'CableTV-ad-maker/1.0 (https://tv.bulkbazaar.ca)'}),timeout=60).read())
+    md=list(d['query']['pages'].values())[0]['imageinfo'][0]['extmetadata']
+    out[n]={k:md.get(k,{}).get('value') for k in ['LicenseShortName','Artist','ObjectName','Credit','AttributionRequired','UsageTerms']}
+    out[n]['title']=t
+json.dump(out,open('meta.json','w'),ensure_ascii=False,indent=1)
+P
