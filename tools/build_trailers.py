@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id, fetch, _text  # noqa: E402
 from build_youtube_channels import other_language  # noqa: E402
 from titles import screen_title  # noqa: E402
+from no_horror import is_horror  # noqa: E402  (the owner's rule 2026-10-08: no horror on our channels)
 from playable import keep_playable  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -160,7 +161,7 @@ def language(lang, label, sources, today, old):
                 print(f"  {url}: {e}", file=sys.stderr)
         kept = 0
         for vid, title, secs, age in videos:
-            if not TRAILER.search(title) or SKIP.search(title) or other_language(title) or released(title, today):
+            if not TRAILER.search(title) or SKIP.search(title) or is_horror(title) or other_language(title) or released(title, today):
                 continue
             if secs is None or not SECS[0] <= secs <= SECS[1]:
                 continue

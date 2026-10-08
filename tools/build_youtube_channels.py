@@ -36,6 +36,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id, fetch, videos_feed, videos_page  # noqa: E402
+from no_horror import is_horror  # noqa: E402  (the owner's rule 2026-10-08: no horror on our channels)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEEP_DAYS = 180
@@ -384,7 +385,7 @@ def build(cid, ch, today):
         kept = dated = 0
         dates = upload_dates(chan) if ch.get("newest") else {}
         for vid, title, mins, age in videos:
-            if vid in found or skip.search(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
+            if vid in found or skip.search(title) or is_horror(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
                 continue
             if ch.get("release_years") is not None and not recent_film(title, today, ch["release_years"]):
                 continue
@@ -422,7 +423,7 @@ def build(cid, ch, today):
             continue
         if ch.get("release_years") is not None and not recent_film(v["title"], today, ch["release_years"]):
             continue
-        if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v.get("up", v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
+        if vid not in found and v.get("label") in labels and not is_horror(v) and not other_language(v["title"]) and (today - dt.date.fromisoformat(v.get("up", v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
             found[vid] = v
     # Main events from the last two weeks, and anything found in the last two days, are "top":
     # the channel page plays them far more often (Bazaar Sports, the owner's wish, 2026-10-06).

@@ -141,13 +141,6 @@
    "kind": "programme"
   },
   {
-   "id": "the-ghost-train",
-   "title": "The Ghost Train",
-   "url": "https://archive.org/download/TheGhostTrain/TheGhostTrain.mp4",
-   "secs": 4882,
-   "kind": "programme"
-  },
-  {
    "id": "the-goat",
    "title": "The Goat",
    "url": "https://archive.org/download/TheGoat/The_Goat_512kb.mp4",
@@ -428,13 +421,6 @@
    "kind": "programme"
   },
   {
-   "id": "the-ghost-walks",
-   "title": "The Ghost Walks",
-   "url": "https://archive.org/download/The.Ghost.Walks/The_Ghost_Walks_512kb.mp4",
-   "secs": 3806,
-   "kind": "programme"
-  },
-  {
    "id": "million-dollar-kid",
    "title": "Million Dollar Kid",
    "url": "https://archive.org/download/the_million_dollar_kid/the_million_dollar_kid.mp4",
@@ -565,13 +551,6 @@
    "title": "Manhattan Love Song",
    "url": "https://archive.org/download/ManhattanLoveSong/ManhattanLoveSong.mp4",
    "secs": 4177,
-   "kind": "programme"
-  },
-  {
-   "id": "bela-lugosi-meets-a-brooklyn-gorilla",
-   "title": "Bela Lugosi Meets a Brooklyn Gorilla",
-   "url": "https://archive.org/download/BelaLugosiMeetsaBrooklynGorilla/BelaLugosiMeetsaBrooklynGorilla.mp4",
-   "secs": 4447,
    "kind": "programme"
   },
   {
@@ -2038,7 +2017,6 @@
   "lost-honeymoon",
   "1960-s-television-ozzie-and-harriet-a-le",
   "topper-henrietta-sells-the-house",
-  "the-ghost-train",
   "romance-on-the-run",
   "neighbors",
   "back-room-boy",
@@ -2111,7 +2089,6 @@
   "betty-boop-snow-white",
   "charlie-chaplin-the-cure-1917-classic-si",
   "a-sammy-in-siberia-1919-directed-by-hal-",
-  "bela-lugosi-meets-a-brooklyn-gorilla",
   "charlie-chaplin-s-the-pawnshop",
   "fireman-save-my-child-1918-directed-by-a",
   "i-remember-mama-mama-s-bad-day",
@@ -2180,7 +2157,6 @@
   "burns-and-allen-episode-title-too-much-o",
   "swing-hostess",
   "early-television-comedy-burns-and-allen-",
-  "the-ghost-walks",
   "love-laughs-at-andy-hardy",
   "the-marathon-1919-directed-by-alfred-j-g",
   "the-nasty-rabbit-1964",
