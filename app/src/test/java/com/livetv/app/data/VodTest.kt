@@ -109,4 +109,35 @@ class VodLanguageTest {
         val oct7 = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.US).parse("2026-10-07 12:00")!!.time
         assertEquals("2026-10-01", Vod.newSince(oct7))
     }
+
+    @Test
+    fun addedLabelShowsTheDay() {
+        assertEquals("Added Oct 8", Vod.addedLabel("2026-10-08"))
+        assertEquals("Added Sep 30", Vod.addedLabel("2026-09-30"))
+        assertEquals(null, Vod.addedLabel(null))
+        assertEquals(null, Vod.addedLabel("soon"))
+    }
+
+    @Test
+    fun onlyTheNewestBatchIsNew() {
+        val now = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).parse("2026-10-08")!!.time
+        assertEquals("2026-10-08", Vod.newestSince(sequenceOf("2026-10-05", "2026-10-08", null), now))
+        // Nothing new for a week: nothing is marked.
+        assertEquals(Vod.newSince(now), Vod.newestSince(sequenceOf("2026-09-01"), now))
+        assertEquals(Vod.newSince(now), Vod.newestSince(emptySequence(), now))
+    }
+
+    @Test
+    fun lengthAndDescriptionComeFromTheList() {
+        assertEquals("45 min", Vod.length(45))
+        assertEquals("2 h", Vod.length(120))
+        assertEquals("1 h 35 min", Vod.length(95))
+        assertEquals(null, Vod.length(null))
+        val film = M3uParser.parse(
+            "#EXTM3U\n#EXTINF:-1 mins=\"95\" desc=\"A rescue crew, far from home, finds out why.\" tvg-genre=\"Movies\",Beyond\nhttps://x/1\n"
+        ).single()
+        assertEquals(95, film.mins)
+        assertEquals("A rescue crew, far from home, finds out why.", film.desc)
+        assertEquals("Beyond", film.name)
+    }
 }
