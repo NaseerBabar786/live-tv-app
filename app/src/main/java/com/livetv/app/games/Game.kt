@@ -93,8 +93,8 @@ class GameInfo(
     val create: () -> Game,
 )
 
+// The classic Snake gave way to Snake Rush (WEB_GAMES); its rules stay for the tests.
 val GAMES = listOf(
-    GameInfo("snake", "Snake", "🐍", "Arrows steer. Eat the red food to grow. Don't hit a wall or your tail.", Scoring.Best) { Snake() },
     GameInfo("blocks", "Falling Blocks", "🟦", "Left and Right move, Up turns, Down drops faster, OK drops straight down. Fill a row to clear it.", Scoring.Best) { Blocks() },
     GameInfo("bricks", "Brick Breaker", "🧱", "Left and Right move the paddle. OK launches the ball. Break every brick.", Scoring.Best) { BrickBreaker() },
     GameInfo("space", "Space Defender", "🚀", "Left and Right move, OK fires. Stop the invaders before they land.", Scoring.Best) { SpaceDefender() },

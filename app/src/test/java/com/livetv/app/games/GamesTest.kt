@@ -20,7 +20,7 @@ class GamesTest {
                 if (game.tickMs > 0) game.tick()
             }
         }
-        assertEquals(24, GAMES.size)
+        assertEquals(23, GAMES.size)
         assertEquals(GAMES.size, GAMES.map { it.id }.toSet().size)
     }
 
