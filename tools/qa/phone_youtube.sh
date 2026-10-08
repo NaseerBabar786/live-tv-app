@@ -12,7 +12,7 @@ adb shell settings put secure immersive_mode_confirmations confirmed
 run() { # name url ua
   adb logcat -c
   adb shell am force-stop "$PKG"
-  adb shell am start -n "$PKG/com.livetv.app.WebChannelActivity" --es url "$2" --es qa_ua "$3" > "$OUT/$1-start.txt" 2>&1
+  adb shell am start -n "$PKG/com.livetv.app.WebChannelActivity" --es url "'$2'" --es qa_ua "$3" > "$OUT/$1-start.txt" 2>&1
   sleep 12; adb exec-out screencap -p > "$OUT/$1-12s.png"
   sleep 18; adb exec-out screencap -p > "$OUT/$1-30s.png"
   adb logcat -d -s QAWEB:I chromium:* cr_*:* > "$OUT/$1-log.txt" 2>&1
