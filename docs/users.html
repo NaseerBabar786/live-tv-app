@@ -10,7 +10,7 @@
 <meta name="robots" content="noindex">
 <style>
   .wrap { max-width: 1640px; }
-  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin: 0 0 20px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 0 0 20px; }
   .stat { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 14px 16px; }
   .stat .n { font-size: 30px; font-weight: 800; color: var(--focus); }
   .stat .l { color: var(--muted); font-size: 14px; }
@@ -21,6 +21,11 @@
   tbody tr { cursor: pointer; }
   tbody tr:hover td { background: var(--surface); }
   .miss { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #5D2B00; color: #FFCC80; }
+  .pkg { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+  .pkg.gold { background: #4A3A00; color: #FFD54F; }
+  .pkg.free { background: var(--surface-2); color: var(--text); }
+  .pkg.promo { background: #2A1F4D; color: #B39DDB; }
+  .pkg-note { color: var(--muted); font-size: 12px; margin-left: 6px; }
   .ok { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #12391A; color: #A5D6A7; }
   dialog#bill { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 24px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 16px; padding: 0; }
   dialog#bill::backdrop { background: rgba(0,0,0,.7); }
@@ -62,12 +67,13 @@
   <div id="denied" class="panel hidden">This account can't see the user list. <button class="btn" data-signout>Use another account</button></div>
   <div id="dash" class="hidden">
     <div class="stats" id="stats"></div>
+    <p class="small hidden" id="pkgOff">⭐ Packages are off right now (at <a href="packages">Packages</a>), so every viewer has everything. The Package column shows what each viewer will have once you turn packages on.</p>
     <div class="row" style="justify-content:space-between;margin-bottom:12px">
-      <input type="search" id="q" placeholder="Search name, email or device">
+      <input type="search" id="q" placeholder="Search name, email, device or package">
       <div class="row"><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Billing</th><th></th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Billing</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
@@ -164,6 +170,7 @@ if (!configured) {
     if (r[1].status === "fulfilled") info = r[1].value; else rulesMissing = true;
     if (r[2].status === "fulfilled") plans = r[2].value;
     if (r[3].status === "fulfilled" && r[3].value.exists()) prices = r[3].value.data();
+    $("pkgOff").classList.toggle("hidden", !!prices.enforce);
     if (rulesMissing) $("err").textContent = "Billing details can't be saved yet: publish the new Firestore rules (billing and billingInfo) in Firebase first.";
   }
 
@@ -199,6 +206,25 @@ if (!configured) {
   // Only Gold is paid for (Silver and Platinum were removed 2026-10-07); a viewer on Free or a promotion only needs a phone number.
   const PAID = ["Silver", "Gold", "Platinum"]; // old Silver/Platinum details still count as paid
   const lacking = d => CHECKS.filter(([k]) => !d[k] && (!d.package || PAID.includes(d.package) || k === "phone" || k === "package"));
+  // The package a viewer has right now, worked out the same way as the app (Subscription.kt):
+  // a package turned on at /packages that hasn't ended, else the free trial after joining (Gold), else Free.
+  // Old Silver and Platinum packages count as Gold.
+  const GOLD = ["Silver", "Gold", "Platinum"];
+  const shortDay = d => d.toLocaleDateString([], { month: "short", day: "numeric", year: d.getFullYear() === new Date().getFullYear() ? undefined : "numeric" });
+  function packageNow(u) {
+    const p = plans[u.id] || {}, until = toDate(p.until), now = new Date();
+    const tier = GOLD.includes(p.tier) ? "Gold" : p.tier;
+    if (tier && tier !== "Free" && until && until > now) {
+      const name = tier === "Promo" ? (p.promoName || "Promotional") : tier;
+      return { tier, name, until, note: `until ${shortDay(until)}` + (p.code ? ` (code ${p.code})` : "") };
+    }
+    const trialDays = Number(prices.trialDays ?? 7);
+    const trialEnd = u.joined && trialDays > 0 ? new Date(u.joined.getTime() + trialDays * 864e5) : null;
+    if (trialEnd && trialEnd > now) return { tier: "Gold", name: "Gold", until: trialEnd, trial: true, note: `free trial until ${shortDay(trialEnd)}` };
+    if (tier && tier !== "Free" && until) return { tier: "Free", name: "Free", note: `${tier === "Promo" ? "promotion" : tier} ended ${shortDay(until)}` };
+    return { tier: "Free", name: "Free", note: "" };
+  }
+
   // Promotions are stored under their own names in plans/{uid} ("Promo" is the Promotional package).
   const tierName = t => t === "Promo" ? "Promotional" : t;
   function ensureOption(v) {
@@ -220,6 +246,9 @@ if (!configured) {
       ["New this week", users.filter(u => within(u.joined, 7 * day)).length],
       ["On TVs", users.filter(u => u.device === "TV").length],
       ["On phones/tablets", users.filter(u => u.device && u.device !== "TV").length],
+      ["On Gold", users.filter(u => packageNow(u).tier === "Gold").length],
+      ["On Free", users.filter(u => packageNow(u).tier === "Free").length],
+      ...(users.some(u => packageNow(u).tier === "Promo") ? [["On a promotion", users.filter(u => packageNow(u).tier === "Promo").length]] : []),
       ["Billing details complete", users.filter(u => !missing(u).length).length],
     ];
     $("stats").innerHTML = "";
@@ -234,13 +263,19 @@ if (!configured) {
   const fmt = d => d ? d.toLocaleString([], { dateStyle: "medium", timeStyle: "short" }) : "";
   function render() {
     const q = $("q").value.trim().toLowerCase();
-    const list = users.filter(u => !q || [u.name, u.email, u.device, u.model].join(" ").toLowerCase().includes(q));
+    const list = users.filter(u => !q || [u.name, u.email, u.device, u.model, packageNow(u).name].join(" ").toLowerCase().includes(q));
     const tbody = $("rows"); tbody.innerHTML = "";
     list.forEach((u, i) => {
       const tr = document.createElement("tr");
       [i + 1, u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, fmt(u.joined), fmt(u.lastOpened)].forEach(v => {
         const td = document.createElement("td"); td.textContent = v ?? ""; tr.append(td);
       });
+      const pk = packageNow(u), pTd = document.createElement("td"), pBadge = document.createElement("span");
+      pBadge.className = "pkg " + (pk.tier === "Gold" ? "gold" : pk.tier === "Promo" ? "promo" : "free");
+      pBadge.textContent = (pk.tier === "Gold" ? "⭐ " : "") + pk.name;
+      pTd.append(pBadge);
+      if (pk.note) { const n = document.createElement("span"); n.className = "pkg-note"; n.textContent = pk.note; pTd.append(n); }
+      tr.append(pTd);
       const bTd = document.createElement("td"); const badge = document.createElement("span");
       const miss = missing(u);
       badge.className = miss.length ? "miss" : "ok";
@@ -438,9 +473,9 @@ if (!configured) {
   $("csv").onclick = () => {
     const esc = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
     const day = d => d ? d.toISOString().slice(0, 10) : "";
-    const lines = [["Name", "Email", "Sign-in", "Device", "Model", "Version", "Joined", "Last opened", "Package", "Pays", "Amount", "Payment method", "Last paid", "Next payment", "Phone", "WhatsApp", "Missing"].map(esc).join(",")]
+    const lines = [["Name", "Email", "Sign-in", "Device", "Model", "Version", "Joined", "Last opened", "Package now", "Package note", "Billing package", "Pays", "Amount", "Payment method", "Last paid", "Next payment", "Phone", "WhatsApp", "Missing"].map(esc).join(",")]
       .concat(users.map(u => { const d = details(u); return [u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, u.joined?.toISOString(), u.lastOpened?.toISOString(),
-        d.package, LENGTH_LABEL[d.length] || "", d.amount, d.method, day(d.lastPaid), day(d.next), d.phone, d.whatsapp, missing(u).map(m => m[1]).join("; ")].map(esc).join(","); }));
+        packageNow(u).name, packageNow(u).note, d.package, LENGTH_LABEL[d.length] || "", d.amount, d.method, day(d.lastPaid), day(d.next), d.phone, d.whatsapp, missing(u).map(m => m[1]).join("; ")].map(esc).join(","); }));
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
     a.download = "live-tv-users.csv"; a.click();
