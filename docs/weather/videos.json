@@ -1,11 +1,17 @@
 {
- "updated": "2026-10-08T08:49Z",
+ "updated": "2026-10-08T09:27Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "FgZ02zAOHcI",
+   "title": "Canada's Daily Forecast - October 8, 2026  | #WeatherAM",
+   "channel": "The Weather Network",
+   "published": 1791450022
+  },
   {
    "id": "mr2ZrWQsWhI",
    "title": "How to Tell If It's a Hurricane or Nor'easter",
@@ -137,12 +143,6 @@
    "title": "Strong winds and snowfall expected in Atlantic Canada | #forecast",
    "channel": "The Weather Network",
    "published": 1791290250
-  },
-  {
-   "id": "7lBIslr8NxM",
-   "title": "Squirrel Sabotage: How rodents cost thousands in car damage",
-   "channel": "The Weather Network",
-   "published": 1791280826
   },
   {
    "id": "A3LM6bHskB0",
