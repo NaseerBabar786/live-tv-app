@@ -46,8 +46,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release download --repo "$GITHUB_REPOSITORY" --pattern LiveTV.apk --dir rel
-          gh api "repos/$GITHUB_REPOSITORY/releases/latest" -q .tag_name > rel/tag.txt
+          gh release download test --repo "$GITHUB_REPOSITORY" --pattern LiveTV.apk --dir rel
+          echo "test build (owner)" > rel/tag.txt
           gh release download v1.9.33-build507 --repo "$GITHUB_REPOSITORY" --pattern LiveTV.apk --output rel/old.apk
       - uses: actions/upload-artifact@v4
         if: always()
@@ -71,11 +71,6 @@ jobs:
             target: android-tv
             arch: x86
             profile: tv_1080p
-          - device: phone
-            api: 34
-            target: google_apis
-            arch: x86_64
-            profile: pixel_6
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
