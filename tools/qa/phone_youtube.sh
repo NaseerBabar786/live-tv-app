@@ -18,13 +18,12 @@ run() { # name url ua
   adb logcat -d -s QAWEB:I chromium:* cr_*:* > "$OUT/$1-log.txt" 2>&1
 }
 U="https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999"
-F="https://tv.bulkbazaar.ca/channel/film.html?app=1&v=dQw4w9WgXcQ&t=Test&b=999"
+H="https://tv.bulkbazaar.ca/channel/bollywood.html?app=1&v=999"
+run hits "$H" plain
+run hits-nox "$H" nox
 run music "$U" plain
-run music-desk "$U" desk
-run music-both "$U" both
-run music-again "$U" plain
-run music-desk2 "$U" desk
-run kids "https://tv.bulkbazaar.ca/channel/ytc.html?c=kids&app=1&v=999" plain
-run kids-desk "https://tv.bulkbazaar.ca/channel/ytc.html?c=kids&app=1&v=999" desk
-run film "$F" plain
-run film-desk "$F" desk
+run music-nox "$U" nox
+run hits-nox2 "$H" nox
+run hits2 "$H" plain
+run music-nox2 "$U" nox
+run music2 "$U" plain
