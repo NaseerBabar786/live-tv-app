@@ -1,28 +1,12 @@
 {
  "name": "Bazaar Shayari (kavi)",
- "built": "2026-10-08 22:14 UTC",
+ "built": "2026-10-08 23:47 UTC",
  "videos": [
   {
    "id": "dep7PmgsxPw",
    "title": "Hindi Hain Hum || Mushaira || Republic Day Special",
    "label": "DD Urdu",
    "mins": 53.5,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "RXArvu_Ug7M",
-   "title": "Rang Barse | Hasya Kavi Sammelan | Holi 2025 | DD National",
-   "label": "Doordarshan",
-   "mins": 52.95,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "Hw7k71fbR0U",
-   "title": "Kavi Sammelan -  Krishi Darshan",
-   "label": "Doordarshan",
-   "mins": 4.25,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -43,10 +27,26 @@
    "lang": "hi"
   },
   {
+   "id": "2eDSts-sBhI",
+   "title": "DD Morning Show | Rang Barse | Hasya Kavi Samelan | Holi Special | 13th March 2025",
+   "label": "Doordarshan",
+   "mins": 4.666666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "L3Ps3iLUlwY",
    "title": "Kavi Samelan | कवि सम्मेलन",
    "label": "Doordarshan",
    "mins": 50.416666666666664,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "RXArvu_Ug7M",
+   "title": "Rang Barse | Hasya Kavi Sammelan | Holi 2025 | DD National",
+   "label": "Doordarshan",
+   "mins": 52.95,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -75,6 +75,14 @@
    "lang": "hi"
   },
   {
+   "id": "Hw7k71fbR0U",
+   "title": "Kavi Sammelan -  Krishi Darshan",
+   "label": "Doordarshan",
+   "mins": 4.25,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "Qg0JQWv-Dro",
    "title": "Kidz Island Kavi Sammelan",
    "label": "Doordarshan",
@@ -95,30 +103,6 @@
    "title": "Krishi Darshan   Kavi Sammelan",
    "label": "Doordarshan",
    "mins": 29.466666666666665,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "okWkI3HkWC4",
-   "title": "Kavi Sammelan - Senior Citizen - Part I (कवि सम्मेलन - वरिष्ठ जन, पहला हिस्सा)",
-   "label": "Doordarshan",
-   "mins": 57.416666666666664,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "d1XWiNCZkyM",
-   "title": "Sanskrit Kavi Sammelan | संस्कृत कवि सम्मेलन",
-   "label": "Doordarshan",
-   "mins": 48.36666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "2eDSts-sBhI",
-   "title": "DD Morning Show | Rang Barse | Hasya Kavi Samelan | Holi Special | 13th March 2025",
-   "label": "Doordarshan",
-   "mins": 4.666666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -221,7 +205,7 @@
   },
   {
    "id": "vs2GEZQh1nE",
-   "title": "Himanshi Babra You Promised to Stand by Me | Himanshi Babra Mushaira | Himanshi Babra Shayari",
+   "title": "Himanshi Babra साथ देने का दिलाया था भरोसा तूने | Himanshi Babra Mushaira | Himanshi Babra Shayari",
    "label": "Sahitya Tak",
    "mins": 10.066666666666666,
    "found": "2026-10-08",
@@ -341,7 +325,7 @@
   },
   {
    "id": "wGZ_RRDfrpE",
-   "title": "Stunning Shayari on 'Life' by Rajesh Reddy | Best Shayari | Sahitya Tak",
+   "title": "Rajesh Reddy की 'ज़िंदग़ी' पर लाजवाब शायरी | Best Shayari | Sahitya Tak",
    "label": "Sahitya Tak",
    "mins": 4.066666666666666,
    "found": "2026-10-08",
@@ -373,7 +357,7 @@
   },
   {
    "id": "jCUHWqnkU1c",
-   "title": "Qamar Ejaz Shayari | Look at yourself first before showing others the mirror... | Latest Mushaira...",
+   "title": "Qamar Ejaz Shayari | पहले ख़ुद देख ले फिर दिखा आईना... | Latest Mushaira | Shayari | Sahitya Tak",
    "label": "Sahitya Tak",
    "mins": 3.35,
    "found": "2026-10-08",
@@ -392,14 +376,6 @@
    "title": "82 साल के Kavi का Matrimonial Ad जबरदस्त Comedy | Sarvesh Asthana Hasya Kavi Sammelan | Sahitya Tak",
    "label": "Sahitya Tak",
    "mins": 8.05,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "zsbJZO3deoE",
-   "title": "Kavi Sammelan in IIT | IIT Bhubaneswar में Vishnu Saxena संग कवियों को सुन प्यार में डूबा IIT Campus",
-   "label": "Sahitya Tak",
-   "mins": 118.5,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -428,6 +404,14 @@
    "lang": "hi"
   },
   {
+   "id": "zsbJZO3deoE",
+   "title": "Kavi Sammelan in IIT | IIT Bhubaneswar में Vishnu Saxena संग कवियों को सुन प्यार में डूबा IIT Campus",
+   "label": "Sahitya Tak",
+   "mins": 118.5,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "1GS8KCZlAtE",
    "title": "Delhi Bomb Blast पर सुनिए Kavita Tiwari की Desh Bhakti Poem | Kavi Sammelan | Sahitya Aaj Tak 2025",
    "label": "Sahitya Tak",
@@ -436,34 +420,10 @@
    "lang": "hi"
   },
   {
-   "id": "rED_5bihG70",
-   "title": "Shivangi Prerna Poetry | I am a flowing river and I see you as the ocean.. | Kavi Sammelan | Sahi...",
-   "label": "Sahitya Tak",
-   "mins": 11.65,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "XoS5CingyFA",
    "title": "Kavi Sammelan में Hariom Panwar और कवियों संग Deshbhakti के रंग । लाल किला Kavi Sammelan",
    "label": "Sahitya Tak",
    "mins": 24.266666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "ojp579hrnXY",
-   "title": "CJP Protest के बीच देखिए Cockroach Kavi Sammelan | Jantar Mantar Protest | Hasya Kavi Sammelan",
-   "label": "Sahitya Tak",
-   "mins": 30.633333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "SqmQKmvdBPQ",
-   "title": "Kumar Vishwas और Shabeena Adeeb एक साथ । Kumar Vishwas Kavi Sammelan । Tumhari Daulat Nayi Nayi Hai",
-   "label": "Sahitya Tak",
-   "mins": 101.63333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -480,6 +440,30 @@
    "title": "Love Poetry | मेरी चूड़ी खनकी रात भर.. Bhuvan Mohini | Kavi Sammelan | Sahitya Tak",
    "label": "Sahitya Tak",
    "mins": 5.633333333333334,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "ojp579hrnXY",
+   "title": "CJP Protest के बीच देखिए Cockroach Kavi Sammelan | Jantar Mantar Protest | Hasya Kavi Sammelan",
+   "label": "Sahitya Tak",
+   "mins": 30.633333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "eBMxAl5zARg",
+   "title": "Anamika Amber ने जब तोड़ा Shambhu Shikhar का दिल  | Hasya Kavi Sammelan | Hasya Kavita | Sahitya Tak",
+   "label": "Sahitya Tak",
+   "mins": 4.183333333333334,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "rED_5bihG70",
+   "title": "Shivangi Prerna Poetry | मैं बहती नदिया हूं तुमको सागर मैंने माना है.. | Kavi Sammelan | Sahitya Tak",
+   "label": "Sahitya Tak",
+   "mins": 11.65,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -509,14 +493,6 @@
    "lang": "hi"
   },
   {
-   "id": "lj0qEYMKL5Y",
-   "title": "Dr Kumar Vishwas - The Best Nazim I Dubai Mushaira 2014",
-   "label": "Kumar Vishwas",
-   "mins": 9.733333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "Sza1Mgq4ofA",
    "title": "बदनाम शायर I Badnaam Shayar I Dr Kumar Vishwas at Jashn-e-Rekhta 2018",
    "label": "Kumar Vishwas",
@@ -525,10 +501,10 @@
    "lang": "hi"
   },
   {
-   "id": "-K0MB_M0Svc",
-   "title": "You need me, I need you | Kumar Vishwas | Kavi Sammelan | Delhi",
+   "id": "lj0qEYMKL5Y",
+   "title": "Dr Kumar Vishwas - The Best Nazim I Dubai Mushaira 2014",
    "label": "Kumar Vishwas",
-   "mins": 14.45,
+   "mins": 9.733333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -541,18 +517,18 @@
    "lang": "hi"
   },
   {
-   "id": "CNSkKEKFOYQ",
-   "title": "Wo Kehte Hain Mat Bolo💔 | Kumar Vishwas Best Poetry | Hindi Shayari | Heartbreak Shayari",
+   "id": "-K0MB_M0Svc",
+   "title": "You need me, I need you | Kumar Vishwas | Kavi Sammelan | Delhi",
    "label": "Kumar Vishwas",
-   "mins": 12.533333333333333,
+   "mins": 14.45,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "LkI56NX2SLk",
-   "title": "Bhilwara महोत्सव | Dr Kumar Vishwas | Kavi Sammelan | Rajasthan",
+   "id": "CNSkKEKFOYQ",
+   "title": "Wo Kehte Hain Mat Bolo💔 | Kumar Vishwas Best Poetry | Hindi Shayari | Heartbreak Shayari",
    "label": "Kumar Vishwas",
-   "mins": 24.816666666666666,
+   "mins": 12.533333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -592,14 +568,6 @@
    "lang": "hi"
   },
   {
-   "id": "ZhG7oB_k0Rc",
-   "title": "#WaseemBarelvi | #Shayari #UrduPoetry | #Shabd 2024 #KommuneIndia",
-   "label": "Kommune",
-   "mins": 24.633333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "HVi4pe6gh4U",
    "title": "Teesri Mohabbat  by Nayab Midha | Hindi Poetry | Shabd 2023",
    "label": "Kommune",
@@ -608,42 +576,18 @@
    "lang": "hi"
   },
   {
-   "id": "gVhpwfFNbPs",
-   "title": "Rang Jab Chaai Ka Badalta Hai | #SupriyaMishra | #HindiKavita | #SpokenWord #Poetry | #SpokenFest",
+   "id": "ZhG7oB_k0Rc",
+   "title": "#WaseemBarelvi | #Shayari #UrduPoetry | #Shabd 2024 #KommuneIndia",
    "label": "Kommune",
-   "mins": 7.483333333333333,
+   "mins": 24.633333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "l_NSHORh49M",
-   "title": "Jaana Hum Ishq Ke Shehar Chahte Hain | #Likhari | #UrduShayari & #Ghazal | #SpokenFest Mumbai 2024",
+   "id": "_Itu-aaVD7w",
+   "title": "Kuch Ishq Kiya, Kuch Kaam Kiya | Piyush Mishra with Divya Prakash Dubey | Hindi Shayari | Shabd 2023",
    "label": "Kommune",
-   "mins": 10.483333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "DyJGi-DAiYc",
-   "title": "Zindagi Tab Samajh Mein Aati Hai | Nidhi Narwal on Life & Adulthood | Hindi Poetry | Spoken Fest",
-   "label": "Kommune",
-   "mins": 4.933333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "rMBi_odzpdE",
-   "title": "Tamanna – A Poem on #Love, #Heartbreak & #LettingGo | Dr. Pallavi Mahajan | #HindiPoetry #SpokenFest",
-   "label": "Kommune",
-   "mins": 9.25,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "RVTX6mABvg0",
-   "title": "#BestOf #HussainHaidry | #HindiPoetry, #UrduPoetry & #SpokenWord | #SpokenFest #KommuneIndia",
-   "label": "Kommune",
-   "mins": 2.9,
+   "mins": 14.15,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -656,10 +600,18 @@
    "lang": "hi"
   },
   {
-   "id": "_Itu-aaVD7w",
-   "title": "Kuch Ishq Kiya, Kuch Kaam Kiya | Piyush Mishra with Divya Prakash Dubey | Hindi Shayari | Shabd 2023",
+   "id": "DyJGi-DAiYc",
+   "title": "Zindagi Tab Samajh Mein Aati Hai | Nidhi Narwal on Life & Adulthood | Hindi Poetry | Spoken Fest",
    "label": "Kommune",
-   "mins": 14.15,
+   "mins": 4.933333333333334,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "gVhpwfFNbPs",
+   "title": "Rang Jab Chaai Ka Badalta Hai | #SupriyaMishra | #HindiKavita | #SpokenWord #Poetry | #SpokenFest",
+   "label": "Kommune",
+   "mins": 7.483333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -787,7 +739,7 @@
   },
   {
    "id": "CbQbb4ZlCFc",
-   "title": "Mohabbat Ki Majboori Samajh @TheSocialHouse Naaz #ishq #majboori #mohobbat #pyaar #lovestory #poet",
+   "title": "Mohabbat Ki Majboori Samajh @The Social House Naaz #ishq #majboori #mohobbat #pyaar #lovestory #poet",
    "label": "The Social House",
    "mins": 3.533333333333333,
    "found": "2026-10-08",
@@ -811,7 +763,7 @@
   },
   {
    "id": "MhZO2PFQED4",
-   "title": "Bete Ki Vidaai | Shailendra Nath Jha @TheSocialHouse #beta #poetry #hearttouching",
+   "title": "Bete Ki Vidaai | Shailendra Nath Jha @The Social House #beta #poetry #hearttouching",
    "label": "The Social House",
    "mins": 4.8,
    "found": "2026-10-08",
@@ -830,6 +782,14 @@
    "title": "EP01 - Tu Itna Yaad Na Aaya Kar | Mohd. Hamza | Main aur Meri Ghazalein #ghazal #lovestatus",
    "label": "The Social House",
    "mins": 8.216666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "3Dqpmvi4aOA",
+   "title": "'Break The Chains' by Himshweta | Poetry | Whatashort | TSH",
+   "label": "The Social House",
+   "mins": 4.633333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -858,26 +818,10 @@
    "lang": "hi"
   },
   {
-   "id": "3Dqpmvi4aOA",
-   "title": "'Break The Chains' by Himshweta | Poetry | Whatashort | TSH",
-   "label": "The Social House",
-   "mins": 4.633333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "hgVPWlbOk4o",
    "title": "EP03 - Ab Mera Intezaar Wo Kyun Karega | Aaditya Mudgal | Main aur Meri Ghazalein #ghazal",
    "label": "The Social House",
    "mins": 11.333333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "spxbtvHdO_8",
-   "title": "Bharat : Sone Ki Chidiya | Veer Ras Kavita | Praveen Kumar | The Social House Poetry | Whatashort",
-   "label": "The Social House",
-   "mins": 4.9,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -890,42 +834,10 @@
    "lang": "hi"
   },
   {
-   "id": "4jA_zotCFz8",
-   "title": "Hai Ek Ladki Jo Shayad Ab Bhi Mujse Pyaar Karti Hai | Kasak | The Social House Poetry | Whatashort",
+   "id": "spxbtvHdO_8",
+   "title": "Bharat : Sone Ki Chidiya | Veer Ras Kavita | Praveen Kumar | The Social House Poetry | Whatashort",
    "label": "The Social House",
-   "mins": 6.566666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "aCmrtQZEhYY",
-   "title": "EP02 - Bewafa Ko Yaad Karna Chhod Do | Rubal | Main aur Meri Ghazalein #ghazal",
-   "label": "The Social House",
-   "mins": 8.766666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "LMk6UbSZY14",
-   "title": "Tu Ishq Hai Ya Khwaab Hai | Gaurav Jha | The Social House Poetry | Whatashort",
-   "label": "The Social House",
-   "mins": 4.05,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "JCFU-BjI-oA",
-   "title": "'Phir Rona Yaad Aaya' by Manjeet Singh | Ghazal | Performer of the Week | Whatashort | TSH",
-   "label": "The Social House",
-   "mins": 6.533333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "-tqsWvRrg1E",
-   "title": "Ab Tum Wapas Aana Mat by Manhar Seth | Heart touching poetry | poetry youtube channel",
-   "label": "The Social House",
-   "mins": 8.133333333333333,
+   "mins": 4.9,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -938,10 +850,42 @@
    "lang": "hi"
   },
   {
-   "id": "j0EorrNg6j8",
-   "title": "Mat Kar Bharosa Main Bewafa Hoon | Anamika Khantwal | The Social House #bewafashayari #bewafa",
+   "id": "4jA_zotCFz8",
+   "title": "Hai Ek Ladki Jo Shayad Ab Bhi Mujse Pyaar Karti Hai | Kasak | The Social House Poetry | Whatashort",
    "label": "The Social House",
-   "mins": 4.466666666666667,
+   "mins": 6.566666666666666,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "LMk6UbSZY14",
+   "title": "Tu Ishq Hai Ya Khwaab Hai | Gaurav Jha | The Social House Poetry | Whatashort",
+   "label": "The Social House",
+   "mins": 4.05,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "-tqsWvRrg1E",
+   "title": "Ab Tum Wapas Aana Mat by Manhar Seth | Heart touching poetry | poetry youtube channel",
+   "label": "The Social House",
+   "mins": 8.133333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "aCmrtQZEhYY",
+   "title": "EP02 - Bewafa Ko Yaad Karna Chhod Do | Rubal | Main aur Meri Ghazalein #ghazal",
+   "label": "The Social House",
+   "mins": 8.766666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "JCFU-BjI-oA",
+   "title": "'Phir Rona Yaad Aaya' by Manjeet Singh | Ghazal | Performer of the Week | Whatashort | TSH",
+   "label": "The Social House",
+   "mins": 6.533333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -954,10 +898,34 @@
    "lang": "hi"
   },
   {
+   "id": "j0EorrNg6j8",
+   "title": "Mat Kar Bharosa Main Bewafa Hoon | Anamika Khantwal | The Social House #bewafashayari #bewafa",
+   "label": "The Social House",
+   "mins": 4.466666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "XtJrdcvxDas",
+   "title": "Bahut Yaad Aate Ho Tum | Main Aur Meri Ghazlein | The Social House Poetry | Whatashort",
+   "label": "The Social House",
+   "mins": 7.566666666666666,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "QnHif9vERBA",
    "title": "'Tum Maano Ya Na Maano' by Maanav | Poetry | Whatashort | Performer of the Week",
    "label": "The Social House",
    "mins": 6.5,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "uxNlhAplcPM",
+   "title": "Bas Dupatta Sambhaal Rakha Hai | Kalam Bijnori | The Social House Poetry | Whatashort",
+   "label": "The Social House",
+   "mins": 5.466666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -970,10 +938,10 @@
    "lang": "hi"
   },
   {
-   "id": "uxNlhAplcPM",
-   "title": "Bas Dupatta Sambhaal Rakha Hai | Kalam Bijnori | The Social House Poetry | Whatashort",
+   "id": "0Bkt9cpjBho",
+   "title": "Woh Mujhe Khone Se Darta Hai | Mansi Soni | The Social House Poetry",
    "label": "The Social House",
-   "mins": 5.466666666666667,
+   "mins": 8.033333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1002,26 +970,10 @@
    "lang": "hi"
   },
   {
-   "id": "fWo-m6dHwfk",
-   "title": "Kya Main Bhi Tumhare Khayalon Se Guzarti Hun? | The Social House Poetry #lovestatus #lovepoetry2022",
+   "id": "zu8UYqK5I2E",
+   "title": "'Thand Hai Baahar' by Mukesh Rishi | ठंड है बाहर | Poetry | Whatashort | TSH",
    "label": "The Social House",
-   "mins": 4.883333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "XtJrdcvxDas",
-   "title": "Bahut Yaad Aate Ho Tum | Main Aur Meri Ghazlein | The Social House Poetry | Whatashort",
-   "label": "The Social House",
-   "mins": 7.566666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "rbeUb_wU3sc",
-   "title": "Usey Bhulana Achchha Hai | Ankush Tiwari |The Social House Poetry | Whatashort",
-   "label": "The Social House",
-   "mins": 5.916666666666667,
+   "mins": 5.983333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1034,16 +986,8 @@
    "lang": "hi"
   },
   {
-   "id": "0Bkt9cpjBho",
-   "title": "Woh Mujhe Khone Se Darta Hai | Mansi Soni | The Social House Poetry",
-   "label": "The Social House",
-   "mins": 8.033333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "smaXZJUPt28",
-   "title": "Aurat | Dr. Farooq@The Social House #aurat #womensday #pyaar #shayari",
+   "title": "Aurat | Dr. Farooq@TheSocialHouse #aurat #womensday #pyaar #shayari",
    "label": "The Social House",
    "mins": 6.316666666666666,
    "found": "2026-10-08",
@@ -1210,6 +1154,14 @@
    "lang": "hi"
   },
   {
+   "id": "OdtHmu8n_bo",
+   "title": "'Yeh Dilli Hai' by Shivesh Jha | Poetry | Whatashort | TSH",
+   "label": "The Social House",
+   "mins": 5.666666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "hB8pJd_OLQg",
    "title": "\"Woh\" by Rashmi Dixit | Poetry | Whatashort | TSH",
    "label": "The Social House",
@@ -1330,7 +1282,7 @@
   },
   {
    "id": "ZzIIsyf60v4",
-   "title": "Hindi Kavita : Adam Gondvi : हिन्दू या मुस्लिम के अहसासात को मत छेड़िये : Surleen Kaur",
+   "title": "Hindi Poetry : Adam Gondvi : Do Not Provoke Hindu or Muslim Sentiments : Surleen Kaur",
    "label": "Hindi Kavita",
    "mins": 2.1333333333333333,
    "found": "2026-10-08",
@@ -1401,18 +1353,18 @@
    "lang": "hi"
   },
   {
-   "id": "mfUahN3rzcw",
-   "title": "हिंदी कविता : सन्नाटा : Sannata : Bhawani Prasad Mishr : Saurabh Shukla with Manish Gupta : Hindi",
-   "label": "Hindi Kavita",
-   "mins": 9.05,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "x3FveLxoSko",
    "title": "Hindi Poetry : Urvashi : Ramdhari Singh Dinkar : Gungun Upreti in Hindi Studio with Manish Gupta",
    "label": "Hindi Kavita",
    "mins": 3.3833333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "mfUahN3rzcw",
+   "title": "हिंदी कविता : सन्नाटा : Sannata : Bhawani Prasad Mishr : Saurabh Shukla with Manish Gupta : Hindi",
+   "label": "Hindi Kavita",
+   "mins": 9.05,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1441,6 +1393,14 @@
    "lang": "hi"
   },
   {
+   "id": "d2OoPeRMRf4",
+   "title": "कविता क्या है? : प्रियदर्शन : What is poetry? : Priy Darshan in Hindi Studio with Manish Gupta",
+   "label": "Hindi Kavita",
+   "mins": 4.8,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "R2JkncjkDV8",
    "title": "Hindi Poetry: Sach Hai : It's True : Kausar Muneer in Hindi Studio with Manish Gupta",
    "label": "Hindi Kavita",
@@ -1449,10 +1409,10 @@
    "lang": "hi"
   },
   {
-   "id": "d2OoPeRMRf4",
-   "title": "What is Poetry? : Priyadarshan : Priyadarshan in Hindi Studio with Manish Gupta",
+   "id": "G8admywihYs",
+   "title": "Death (2 Poems): Vinod Kumar Shukla: Death: Vinod Kumar Shukla in Hindi Studio with Manish Gupta",
    "label": "Hindi Kavita",
-   "mins": 4.8,
+   "mins": 5.516666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1461,22 +1421,6 @@
    "title": "हिंदी कविता : Rashmirathi : Ramdhari Singh Dinkar : Manoj Bajpeyi in Hindi Studio with Manish Gupta",
    "label": "Hindi Kavita",
    "mins": 7.55,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "RTuJ_OFxX3M",
-   "title": "हिंदी कविता : दुष्यंत कुमार - हो गयी है पीर पर्वत सी : मनोज बाजपेयी in Hindi Studio w Manish Gupta",
-   "label": "Hindi Kavita",
-   "mins": 4.283333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "G8admywihYs",
-   "title": "Death (2 Poems): Vinod Kumar Shukla: Death: Vinod Kumar Shukla in Hindi Studio with Manish Gupta",
-   "label": "Hindi Kavita",
-   "mins": 5.516666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1497,10 +1441,18 @@
    "lang": "hi"
   },
   {
-   "id": "aGyPu0REy00",
-   "title": "हिंदी कविता : बंजारानामा : Banjaara-nama : Nazeer Akbarabaadi : Zeeshan Ayub with Manish Gupta",
+   "id": "RTuJ_OFxX3M",
+   "title": "हिंदी कविता : दुष्यंत कुमार - हो गयी है पीर पर्वत सी : मनोज बाजपेयी in Hindi Studio w Manish Gupta",
    "label": "Hindi Kavita",
-   "mins": 7.416666666666667,
+   "mins": 4.283333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "eF9DHkjgm5A",
+   "title": "Hindi Kavita :  Chammach Chammach : Mamta Kaliya     [Neha Singh with Manish Gupta]",
+   "label": "Hindi Kavita",
+   "mins": 2.466666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1521,14 +1473,6 @@
    "lang": "hi"
   },
   {
-   "id": "eF9DHkjgm5A",
-   "title": "Hindi Kavita :  Chammach Chammach : Mamta Kaliya     [Neha Singh with Manish Gupta]",
-   "label": "Hindi Kavita",
-   "mins": 2.466666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "idAtxKeQO40",
    "title": "हिंदी कविता : समर शेष है : रामधारी सिंह दिनकर : Ramdhari Singh Dinkar : Manish Gupta in Hindi Studio",
    "label": "Hindi Kavita",
@@ -1545,50 +1489,26 @@
    "lang": "hi"
   },
   {
-   "id": "Fs-qIY61QQU",
-   "title": "हिंदी कविता : Leave me alone : Sudha Arora : Hindi Studio with Manish Gupta [Mother-Daughter]",
-   "label": "Hindi Kavita",
-   "mins": 3.0833333333333335,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "qHgB7SpevEY",
-   "title": "तेजी ग्रोवर : PART 2 : प्रेम कविताएँ : Teji Grover in Hindi Studio with Manish Gupta",
-   "label": "Hindi Kavita",
-   "mins": 6.333333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "ttOlFdM8ERU",
-   "title": "Hindi Kavita : Main Hun : Sundar Chand Thakur : Nav Bharat Times",
-   "label": "Hindi Kavita",
-   "mins": 3.7333333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "V4vbRprcGHM",
-   "title": "Hindi Kavita : Main Kiski Aurat Hun : Savita Singh   (Feminism / Women's Empowerment)",
-   "label": "Hindi Kavita",
-   "mins": 3.7,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "3kJSdAj_erk",
-   "title": "Kavita kya hai? : Ashok Vajpayee : What is poetry?       (Hindi / Urdu Studio with Manish Gupta)",
-   "label": "Hindi Kavita",
-   "mins": 4.15,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "e2y-EpaC9Z4",
    "title": "Abdullah Abdullah : Salman Akhtar : NRI Poetry : Hindi Studio with Manish Gupta",
    "label": "Hindi Kavita",
    "mins": 6.783333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "EggcxMrALls",
+   "title": "हिन्दी कविता : Padharo Mhare Des : Rajasthani Folk : Hindi Studio : पधारो म्हारे देस",
+   "label": "Hindi Kavita",
+   "mins": 5.15,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "Fs-qIY61QQU",
+   "title": "हिंदी कविता : Leave me alone : Sudha Arora : Hindi Studio with Manish Gupta [Mother-Daughter]",
+   "label": "Hindi Kavita",
+   "mins": 3.0833333333333335,
    "found": "2026-10-08",
    "lang": "hi"
   },

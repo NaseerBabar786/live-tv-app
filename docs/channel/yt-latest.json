@@ -1,6 +1,6 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-08 22:17 UTC",
+ "built": "2026-10-08 23:51 UTC",
  "videos": [
   {
    "id": "MKpt0zZyT5E",
@@ -41,18 +41,18 @@
    "up": "2026-09-24"
   },
   {
-   "id": "uc9wd88XRF8",
-   "title": "Do Khiladi (2026) (SMP) New Released Hindi Dubbed Action Full Movie | Siddharth, G. V. Prakash Kumar",
-   "label": "Goldmines",
-   "mins": 120.35,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
    "id": "Xojf144alBo",
    "title": "Uppena (Hindi) 2026 New Released Hindi Dubbed Full Movie | Panja Vaisshnav Tej, Vijay Sethupathi",
    "label": "Goldmines",
    "mins": 116.11666666666666,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
+   "id": "uc9wd88XRF8",
+   "title": "Do Khiladi (2026) (SMP) New Released Hindi Dubbed Action Full Movie | Siddharth, G. V. Prakash Kumar",
+   "label": "Goldmines",
+   "mins": 120.35,
    "found": "2026-10-07",
    "lang": "hi"
   },
@@ -65,6 +65,14 @@
    "lang": "hi"
   },
   {
+   "id": "7_1ZGFxX3pI",
+   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
+   "label": "Goldmines",
+   "mins": 111.25,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
    "id": "Bon7e5C7KNU",
    "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
    "label": "Goldmines",
@@ -73,11 +81,11 @@
    "lang": "hi"
   },
   {
-   "id": "7_1ZGFxX3pI",
-   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
+   "id": "mJ8cGXi3NoY",
+   "title": "Shikaar (K13) New Released Hindi Dubbed Full Movie 2026 | Arulnithi, Shraddha Srinath",
    "label": "Goldmines",
-   "mins": 111.25,
-   "found": "2026-10-07",
+   "mins": 92.73333333333333,
+   "found": "2026-10-08",
    "lang": "hi"
   },
   {
@@ -129,34 +137,10 @@
    "lang": "hi"
   },
   {
-   "id": "t1zclFQj4p0",
-   "title": "SUSPENSE THIRLLER MOVIE - Jilabi (2025) - Swapnil Joshi, Prasad Oak & Shivani Surve | New Release",
-   "label": "Ultra Movie Parlour",
-   "mins": 126.13333333333334,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
-   "id": "OYm66xupeKc",
-   "title": "Retta Thala (2025) South Dubbed Hindi Movie (4K) Action Thriller Movie - Arun Vijay & Siddhi Idnani",
-   "label": "Ultra Movie Parlour",
-   "mins": 115.73333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "EhaX-eQmfF4",
    "title": "JANA NAYAKAM (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL VIJAY THALAPATHY MOVIE MASTER",
    "label": "B4U Movies",
    "mins": 171.23333333333332,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
-   "id": "RYaVCM9MeDM",
-   "title": "CRACK MLA (HD) - VIJAY THALAPATHY NEW RELEASE HINDI DUBBED MOVIE 2026 NEW SOUTH HINDI DUBBED MASTER",
-   "label": "B4U Movies",
-   "mins": 175.23333333333332,
    "found": "2026-10-07",
    "lang": "hi"
   },
@@ -166,6 +150,14 @@
    "label": "B4U Movies",
    "mins": 101.73333333333333,
    "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
+   "id": "SiR4tmx-YOk",
+   "title": "VIJAY THALAPATHY NEW SOUTH ACTION MOVIE |  DUBBED IN HINDI 2026 FULL HD | VIJAY THE MASTER",
+   "label": "B4U Movies",
+   "mins": 165.7,
+   "found": "2026-10-08",
    "lang": "hi"
   },
   {
@@ -185,11 +177,11 @@
    "lang": "hi"
   },
   {
-   "id": "SiR4tmx-YOk",
-   "title": "VIJAY THALAPATHY NEW SOUTH ACTION MOVIE |  DUBBED IN HINDI 2026 FULL HD | VIJAY THE MASTER",
+   "id": "RYaVCM9MeDM",
+   "title": "CRACK MLA (HD) - VIJAY THALAPATHY NEW RELEASE HINDI DUBBED MOVIE 2026 NEW SOUTH HINDI DUBBED MASTER",
    "label": "B4U Movies",
-   "mins": 165.7,
-   "found": "2026-10-08",
+   "mins": 175.23333333333332,
+   "found": "2026-10-07",
    "lang": "hi"
   },
   {
@@ -201,11 +193,19 @@
    "lang": "hi"
   },
   {
-   "id": "8Vkx70ZaBBQ",
-   "title": "Swathimutyam Hindi Dubbed Movie 2026 Full Movie | Ganesh Bellamkonda, Varsha Bollamma | South Movie",
+   "id": "RfL11k8Y7G4",
+   "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
    "label": "Aditya Movies",
-   "mins": 108.36666666666666,
-   "found": "2026-10-07",
+   "mins": 126.08333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "yR9pSZoZ6CY",
+   "title": "Gamblers Hindi Dubbed Movie 2026 Full Movie | Sangeeth Shobhan, Prashanthi | South New Movie 2026",
+   "label": "Aditya Movies",
+   "mins": 97.98333333333333,
+   "found": "2026-10-08",
    "lang": "hi"
   },
   {
@@ -217,18 +217,10 @@
    "lang": "hi"
   },
   {
-   "id": "ftI9RAEuSLo",
-   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
+   "id": "oCwQ5ee7cyg",
+   "title": "F2 Full Movie in Hindi | Hindi Dubbed Movies 2025 Full Movie | Venkatesh, Varun Tej, Tamannaah",
    "label": "Aditya Movies",
-   "mins": 124.95,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "pBP49rdzP4M",
-   "title": "Intelligent Hindi Dubbed Full Movie | Sai Dharam Tej, Lavanya Tripathi | South Dubbed Movie 2026",
-   "label": "Aditya Movies",
-   "mins": 121.28333333333333,
+   "mins": 109.05,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -241,18 +233,18 @@
    "lang": "hi"
   },
   {
-   "id": "yR9pSZoZ6CY",
-   "title": "Gamblers Hindi Dubbed Movie 2026 Full Movie | Sangeeth Shobhan, Prashanthi | South New Movie 2026",
+   "id": "zgdmQazDOGE",
+   "title": "iSmart Shankar Movie | Ram Pothineni | Nabha Natesh | Nidhhi |New South Full Movie Hindi Dubbed 2025",
    "label": "Aditya Movies",
-   "mins": 97.98333333333333,
+   "mins": 92.96666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "RfL11k8Y7G4",
-   "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
+   "id": "FEAnXYTXVZA",
+   "title": "Wanted Full Movie | Hindi Dubbed Movie 2025 | Gopichand | Deekshaseth | South Movie | Aditya Movies",
    "label": "Aditya Movies",
-   "mins": 126.08333333333333,
+   "mins": 93.26666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -281,14 +273,6 @@
    "lang": "en"
   },
   {
-   "id": "fIhM9MiEN50",
-   "title": "Daddy Daughter Trip | Rob Schneider | Full 2025 Comedy Family Movie",
-   "label": "Movie Central",
-   "mins": 96.58333333333333,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
    "id": "ERsURQC8Xxo",
    "title": "Ruthless Hitman Took On The Chicago Mob | Silent Partners | Full 2026 Action Movie",
    "label": "Movie Central",
@@ -297,18 +281,26 @@
    "lang": "en"
   },
   {
-   "id": "nW1pVutjpt4",
-   "title": "Escape the Secluded Killing Grounds | Hillwalkers | Full 2026 Survival Movie",
+   "id": "fIhM9MiEN50",
+   "title": "Daddy Daughter Trip | Rob Schneider | Full 2025 Comedy Family Movie",
    "label": "Movie Central",
-   "mins": 87.26666666666667,
+   "mins": 96.58333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "KAouzPF7GII",
+   "title": "She's Hunting The Cartel That Murdered Her Family | She-Vigilante | Full 2026 Action Movie",
+   "label": "Movie Central",
+   "mins": 84.35,
    "found": "2026-10-08",
    "lang": "en"
   },
   {
-   "id": "3X6DWCIeO54",
-   "title": "Two Renovators Trapped Together Over Christmas | Renovating Christmas | 2026 Holiday Romance Movie",
+   "id": "nW1pVutjpt4",
+   "title": "Escape the Secluded Killing Grounds | Hillwalkers | Full 2026 Survival Movie",
    "label": "Movie Central",
-   "mins": 86.21666666666667,
+   "mins": 87.26666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -393,14 +385,6 @@
    "lang": "ur"
   },
   {
-   "id": "UkJbuBZ-EOc",
-   "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 144.48333333333332,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "1aBXrPbMwcw",
    "title": "BAYDARDI - FULL MOVIE | AIMAN KHAN | AFFAN WAHEED | 3rd August 2025 | ARY FILMS",
    "label": "ARY Films",
@@ -413,6 +397,14 @@
    "title": "NOOR UL AIN - FULL MOVIE | SAJAL ALY | IMRAN ABBAS | 17th August 2025 | ARY FILMS",
    "label": "ARY Films",
    "mins": 145.06666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "UkJbuBZ-EOc",
+   "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
+   "label": "ARY Films",
+   "mins": 144.48333333333332,
    "found": "2026-10-08",
    "lang": "ur"
   }

@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Kids",
- "built": "2026-10-08 22:09 UTC",
+ "built": "2026-10-08 23:41 UTC",
  "videos": [
   {
    "id": "gHm61z1kUuw",
@@ -10,6 +10,14 @@
    "found": "2026-10-08",
    "lang": "en",
    "posted": "2026-10-08"
+  },
+  {
+   "id": "ZCQjWJuO2YM",
+   "title": "Peppa Pig Tales 2026⏳Peppa Sees BABY Mummy & Daddy Pig! Secret Video❓BRAND NEW Peppa Pig Episodes",
+   "label": "Peppa Pig",
+   "mins": 30.066666666666666,
+   "found": "2026-10-08",
+   "lang": "en"
   },
   {
    "id": "fUwZXN11CW8",
@@ -78,12 +86,13 @@
    "posted": "2026-10-08"
   },
   {
-   "id": "25NdXBbMhfs",
-   "title": "Ninimo's Best Kids Songs | Orange Cat Ninimo | Pinkfong Official",
+   "id": "8EbHr5aIIc8",
+   "title": "[🎃NEW] Halloween Spooky Boo! | Kids' Halloween Songs | Pinkfong Halloween 2026",
    "label": "Pinkfong",
-   "mins": 8.066666666666666,
+   "mins": 3.0833333333333335,
    "found": "2026-10-08",
-   "lang": "en"
+   "lang": "en",
+   "posted": "2026-10-08"
   },
   {
    "id": "oqSDb10xMws",
@@ -127,6 +136,14 @@
    "found": "2026-10-08",
    "lang": "en",
    "posted": "2026-10-07"
+  },
+  {
+   "id": "25NdXBbMhfs",
+   "title": "Ninimo's Best Kids Songs | Orange Cat Ninimo | Pinkfong Official",
+   "label": "Pinkfong",
+   "mins": 8.066666666666666,
+   "found": "2026-10-08",
+   "lang": "en"
   },
   {
    "id": "oVm0kXS_gtk",
@@ -2618,22 +2635,6 @@
    "title": "Peppa Pig Tales 2026 🦷 Peppa Pig Sees Baby Evie's FIRST TOOTH! 🥹 BRAND NEW Peppa Pig Episodes",
    "label": "Peppa Pig",
    "mins": 30.033333333333335,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "aCahKt5wtUQ",
-   "title": "Peppa Pig Learns about the TOOTH FAIRY! 🧚🦷 | Losing a Tooth! | Peppa Pig Official Full Episodes",
-   "label": "Peppa Pig",
-   "mins": 44.96666666666667,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "00iWUnhjm8o",
-   "title": "Peppa Pig Plays CHEESE HOLE IN THE WALL!🧀 BRAND NEW Peppa Pig Tales Full Episodes | 35 Mins",
-   "label": "Peppa Pig",
-   "mins": 35.93333333333333,
    "found": "2026-10-06",
    "lang": "en"
   }
