@@ -55,6 +55,9 @@ jobs:
               curl -fsSL -o mv/$ID.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$PIC.jpg" || rm -f mv/$ID.jpg
           fi
           python3 tools/news/presenters/move.py "$ID" mv
+          # Our own studio: Bazaar TV News logo on the wall behind the reader.
+          LOGO=$(python3 -c "import json,os; print(next((1 for p in json.load(open('tools/news/presenters/presenters.json'))['moving']['people'] if p['id'] == os.environ['ID'] and p.get('logo')), 0))")
+          if [ "$LOGO" = 1 ]; then python3 tools/news/presenters/studio_logo.py mv/$ID-move.mp4 mv/$ID-logo.mp4 && mv mv/$ID-logo.mp4 mv/$ID-move.mp4; fi
           python3 tools/news/presenters/sample.py mv/$ID-move.mp4 mv/line.mp3 "$ID" news-move-$ID.mp4
           cp mv/$ID-move.mp4 news-move-$ID-raw.mp4
           gh release upload channel-media mv/$ID.jpg news-move-$ID.mp4 news-move-$ID-raw.mp4 -R "$GITHUB_REPOSITORY" --clobber
