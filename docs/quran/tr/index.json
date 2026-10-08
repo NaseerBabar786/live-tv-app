@@ -1,0 +1,116 @@
+{
+ "languages": [
+  {
+   "code": "hi",
+   "en": "Hindi",
+   "native": "हिन्दी",
+   "rtl": false,
+   "translator": "Maulana Azizul Haque al-Umari",
+   "file": "hi.json"
+  },
+  {
+   "code": "bn",
+   "en": "Bengali",
+   "native": "বাংলা",
+   "rtl": false,
+   "translator": "Tawheed Publication",
+   "file": "bn.json"
+  },
+  {
+   "code": "sd",
+   "en": "Sindhi",
+   "native": "سنڌي",
+   "rtl": true,
+   "translator": "Taj Mehmood Amroti",
+   "file": "sd.json"
+  },
+  {
+   "code": "ps",
+   "en": "Pashto",
+   "native": "پښتو",
+   "rtl": true,
+   "translator": "Zakaria Abulsalam",
+   "file": "ps.json"
+  },
+  {
+   "code": "fa",
+   "en": "Persian",
+   "native": "فارسی",
+   "rtl": true,
+   "translator": "IslamHouse.com",
+   "file": "fa.json"
+  },
+  {
+   "code": "tr",
+   "en": "Turkish",
+   "native": "Türkçe",
+   "rtl": false,
+   "translator": "Diyanet Isleri",
+   "file": "tr.json"
+  },
+  {
+   "code": "id",
+   "en": "Indonesian",
+   "native": "Bahasa Indonesia",
+   "rtl": false,
+   "translator": "Unknown",
+   "file": "id.json"
+  },
+  {
+   "code": "ms",
+   "en": "Malay",
+   "native": "Bahasa Melayu",
+   "rtl": false,
+   "translator": "Abdullah Muhammad Basmeih",
+   "file": "ms.json"
+  },
+  {
+   "code": "fr",
+   "en": "French",
+   "native": "Français",
+   "rtl": false,
+   "translator": "Muhammad Hamidullah",
+   "file": "fr.json"
+  },
+  {
+   "code": "es",
+   "en": "Spanish",
+   "native": "Español",
+   "rtl": false,
+   "translator": "Sheikh Isa Garcia",
+   "file": "es.json"
+  },
+  {
+   "code": "de",
+   "en": "German",
+   "native": "Deutsch",
+   "rtl": false,
+   "translator": "Frank Bubenheim and Nadeem",
+   "file": "de.json"
+  },
+  {
+   "code": "ru",
+   "en": "Russian",
+   "native": "Русский",
+   "rtl": false,
+   "translator": "Elmir Kuliev",
+   "file": "ru.json"
+  },
+  {
+   "code": "zh",
+   "en": "Chinese",
+   "native": "中文",
+   "rtl": false,
+   "translator": "Ma Jian",
+   "file": "zh.json"
+  },
+  {
+   "code": "sw",
+   "en": "Swahili",
+   "native": "Kiswahili",
+   "rtl": false,
+   "translator": "Ali Muhsin Al-Barwani",
+   "file": "sw.json"
+  }
+ ]
+}
