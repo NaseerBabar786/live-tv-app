@@ -71,7 +71,7 @@ function fill(el, isToday, c, now) {
   if (isToday) {
     const list = todaysShows(c, now);
     if (!list.length) { el.classList.remove("show"); return; }
-    add("h", `TODAY ON ${(c.name || "Bazaar TV").toUpperCase()}`);
+    add("h", `TODAY ON ${(c.name || "Bazaar TV One").toUpperCase()}`);
     let hi = false;
     for (const s of list) {
       const row = add("row", "");

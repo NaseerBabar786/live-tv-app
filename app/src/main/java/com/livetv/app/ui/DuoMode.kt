@@ -189,6 +189,37 @@ internal fun DuoMode(
         rowKey = r.key
     }
 
+    // Holding OK on a card, or a long press on it: adds the channel to Favorites (or takes it off).
+    fun toggleFavorite(channel: Channel) {
+        val adding = channel.id !in favorites
+        onToggleFavorite(channel)
+        Toast.makeText(
+            context,
+            if (adding) "${channel.name} added to Favorites" else "${channel.name} removed from Favorites",
+            Toast.LENGTH_SHORT,
+        ).show()
+    }
+    // OK on a card: the channel goes into the player marked "Next".
+    fun playCard(channel: Channel) {
+        val already = ids.indexOf(channel.id)
+        if (already >= 0) {
+            // Already in a player: nothing to swap, just show it.
+            Toast.makeText(context, "${channel.name} is already playing", Toast.LENGTH_SHORT).show()
+        } else {
+            setPlayer(nextPlayer, channel.id)
+        }
+    }
+    // A tap on a card or a player moves the cursor there (then does what OK does).
+    fun pointAtCard(r: DuoRow, ci: Int) {
+        at = DuoAt.Cards
+        rowKey = r.key
+        sessionDuoCard[r.key] = ci
+    }
+    fun pointAtPlayer(i: Int) {
+        at = DuoAt.Players
+        playerAt = i
+    }
+
     // The two players: silent, low quality, and the right one starts a moment after the left.
     val streams = remember {
         List(2) {
@@ -323,6 +354,7 @@ internal fun DuoMode(
     }
 
     LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    val isPhone = rememberIsPhone()
     var held by remember { mutableStateOf(false) }
 
     BoxWithConstraints(
@@ -344,30 +376,14 @@ internal fun DuoMode(
                             // Held down on a card: adds the channel to Favorites (or takes it off).
                             if (at == DuoAt.Cards && e.nativeKeyEvent.repeatCount >= 6 && !held) {
                                 held = true
-                                row?.channels?.getOrNull(cardAt)?.let { channel ->
-                                    val adding = channel.id !in favorites
-                                    onToggleFavorite(channel)
-                                    Toast.makeText(
-                                        context,
-                                        if (adding) "${channel.name} added to Favorites" else "${channel.name} removed from Favorites",
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                                }
+                                row?.channels?.getOrNull(cardAt)?.let { toggleFavorite(it) }
                             }
                         } else if (e.type == KeyEventType.KeyUp) {
                             if (!held) {
                                 when (at) {
                                     DuoAt.Modes -> onModes()
                                     DuoAt.Players -> players[playerAt]?.let(onOpen)
-                                    DuoAt.Cards -> row?.channels?.getOrNull(cardAt)?.let { channel ->
-                                        val already = ids.indexOf(channel.id)
-                                        if (already >= 0) {
-                                            // Already in a player: nothing to swap, just show it.
-                                            Toast.makeText(context, "${channel.name} is already playing", Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            setPlayer(nextPlayer, channel.id)
-                                        }
-                                    }
+                                    DuoAt.Cards -> row?.channels?.getOrNull(cardAt)?.let { playCard(it) }
                                 }
                             }
                             held = false
@@ -441,6 +457,10 @@ internal fun DuoMode(
                 Row(
                     Modifier
                         .clip(RoundedCornerShape(50))
+                        .tap {
+                            at = DuoAt.Modes
+                            onModes()
+                        }
                         .background(if (modesFocused) Yellow else Color.Transparent)
                         .padding(horizontal = 14.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -484,6 +504,10 @@ internal fun DuoMode(
                             if (views[i].view === view) views[i].view = null
                             streams[i].player.clearVideoTextureView(view)
                         },
+                        onTap = {
+                            pointAtPlayer(i)
+                            players[i]?.let(onOpen)
+                        },
                     )
                 }
             }
@@ -498,7 +522,8 @@ internal fun DuoMode(
                     state = columnState,
                     modifier = Modifier.fillMaxWidth().weight(1f),
                     contentPadding = PaddingValues(top = 10.dp, bottom = 60.dp),
-                    userScrollEnabled = false,
+                    // On a phone the finger scrolls the rows; on a TV only the remote's cursor moves them.
+                    userScrollEnabled = isPhone,
                 ) {
                     itemsIndexed(rows, key = { _, r -> r.key }) { ri, r ->
                         val focusedRow = at == DuoAt.Cards && ri == rowAt
@@ -515,7 +540,7 @@ internal fun DuoMode(
                                 state = stateOf(r.key),
                                 contentPadding = PaddingValues(horizontal = side, vertical = 8.dp),
                                 horizontalArrangement = Arrangement.spacedBy(18.dp),
-                                userScrollEnabled = false,
+                                userScrollEnabled = isPhone,
                             ) {
                                 itemsIndexed(r.channels, key = { _, c -> c.id }) { ci, channel ->
                                     DuoCard(
@@ -525,6 +550,14 @@ internal fun DuoMode(
                                         focused = focusedRow && ci == card,
                                         playingIn = ids.indexOf(channel.id),
                                         favorite = channel.id in favorites,
+                                        onTap = {
+                                            pointAtCard(r, ci)
+                                            playCard(channel)
+                                        },
+                                        onLongPress = {
+                                            pointAtCard(r, ci)
+                                            toggleFavorite(channel)
+                                        },
                                     )
                                 }
                             }
@@ -565,6 +598,8 @@ private fun DuoPlayer(
     onPageFailed: () -> Unit,
     attach: (TextureView) -> Unit,
     detach: (TextureView) -> Unit,
+    /** A tap: opens the channel full screen. */
+    onTap: () -> Unit,
 ) {
     val palette = Themes.current
     val scale by animateFloatAsState(if (focused) 1.03f else 1f, label = "scale")
@@ -579,6 +614,7 @@ private fun DuoPlayer(
     ) {
         if (channel == null) {
             Text("Choose a channel below", color = Color.White.copy(alpha = 0.8f), modifier = Modifier.align(Alignment.Center))
+            Box(Modifier.matchParentSize().tap(onTap = onTap))
             return@Box
         }
         // A player that is starting shows a loading circle, not the channel's logo (owner, 2026-10-07).
@@ -676,17 +712,29 @@ private fun DuoPlayer(
                     .padding(horizontal = 12.dp, vertical = 4.dp),
             )
         }
+        // Over the picture, so the web pages don't take the tap.
+        Box(Modifier.matchParentSize().tap(onTap = onTap))
     }
 }
 
 /** One channel card: its picture (or logo), with the number and name along the bottom. */
 @Composable
-private fun DuoCard(channel: Channel, width: Dp, height: Dp, focused: Boolean, playingIn: Int, favorite: Boolean) {
+private fun DuoCard(
+    channel: Channel,
+    width: Dp,
+    height: Dp,
+    focused: Boolean,
+    playingIn: Int,
+    favorite: Boolean,
+    onTap: () -> Unit,
+    onLongPress: () -> Unit,
+) {
     val palette = Themes.current
     val scale by animateFloatAsState(if (focused) 1.1f else 1f, label = "scale")
     Box(
         Modifier
             .graphicsLayer { scaleX = scale; scaleY = scale }
+            .tap(onLongPress = onLongPress, onTap = onTap)
             .size(width, height)
             .then(if (focused) Modifier.border(BorderStroke(3.dp, Yellow), CardShape) else Modifier)
             .padding(if (focused) 3.dp else 0.dp)

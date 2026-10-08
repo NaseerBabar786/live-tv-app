@@ -69,6 +69,10 @@ import com.livetv.app.data.Channel
 import com.livetv.app.data.MyChannel
 import com.livetv.app.ui.MyChannelOverlay
 import com.livetv.app.ui.focusGlow
+import com.livetv.app.ui.LandscapeOnPhone
+import com.livetv.app.ui.Swipe
+import com.livetv.app.ui.swipe
+import com.livetv.app.ui.tap
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -95,6 +99,8 @@ fun PlayerScreen(
     barWake: Int = 0,
     /** Told whether the channel bar is currently hidden. */
     onBarHidden: (Boolean) -> Unit = {},
+    /** Phones: a swipe changes channel (+1 next, -1 previous); null for movies. */
+    onZap: ((Int) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -171,6 +177,8 @@ fun PlayerScreen(
     }
 
     BackHandler(onBack = onBack)
+    // Phones watch full screen sideways.
+    LandscapeOnPhone()
 
     Box(
         Modifier
@@ -200,6 +208,27 @@ fun PlayerScreen(
             update = { view -> view.useController = !inPictureInPicture && onNumberPad == null },
             modifier = Modifier.fillMaxSize(),
         )
+        // Phones, live channels: a tap brings the channel bar back (or hides it), and a swipe up goes to
+        // the next channel, down to the one before, as Down and Up do on a remote.
+        if (onNumberPad != null && !inPictureInPicture) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .tap {
+                        if (barShown) {
+                            barShown = false
+                            onBarHidden(true)
+                        } else controlsWake++
+                    }
+                    .swipe { dir ->
+                        when (dir) {
+                            Swipe.Up -> onZap?.invoke(1)
+                            Swipe.Down -> onZap?.invoke(-1)
+                            else -> Unit
+                        }
+                    },
+            )
+        }
         // The owner's channel: its logo in the corner and its scrolling line.
         if (MyChannel.isMine(channel)) MyChannelOverlay(channel)
 

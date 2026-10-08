@@ -1,36 +1,29 @@
 {
  "name": "کھانا پکائیں",
- "built": "2026-10-07 17:48 UTC",
- "secs": 1376,
+ "built": "2026-10-08 00:20 UTC",
+ "secs": 1157,
  "videos": [
   {
-   "id": "2mtDUTRCsM8",
-   "title": "Ganesh Chaturthi Special! 4 Delicious Bhog Recipes for Bappa By Chef@sanjeevkapoorkhazana",
+   "id": "Mf87rLIL4dM",
+   "title": "4 Delicious Sandwiches You Need to Try! | Easy & Tasty Recipes By Chef @sanjeevkapoorkhazana",
    "label": "Sanjeev Kapoor",
-   "secs": 722,
+   "secs": 703,
    "kind": "cooking"
   },
   {
-   "id": "4M9Cvo73Oq4",
-   "title": "5 Café Favourites You Can Make at Home | Easy & Delicious Recipes By Chef@sanjeevkapoorkhazana",
-   "label": "Sanjeev Kapoor",
-   "secs": 654,
+   "id": "ic2v_-gEVyg",
+   "title": "High Protein Breakfast | Paneer stuffed Moong Dal Cheela",
+   "label": "Kabita's Kitchen",
+   "secs": 454,
    "kind": "cooking"
   }
  ],
  "spares": [
   {
-   "id": "dUL-hgIyUz8",
-   "title": "Mutton Lasagna Recipe By Kitchen With Amna",
-   "label": "Kitchen with Amna",
-   "secs": 397,
-   "kind": "cooking"
-  },
-  {
-   "id": "S8EG6L9wHok",
-   "title": "Best Mushroom recipe | | Dhaba Mushroom Masala | Chef Ranveer Brar",
-   "label": "Ranveer Brar",
-   "secs": 557,
+   "id": "5uCrk-7TWu4",
+   "title": "4 Vegetarian Recipes Packed With Flavour | Cutlet, Handi, Pulao & More With Chef Sanjeev Kapoor",
+   "label": "Sanjeev Kapoor",
+   "secs": 568,
    "kind": "cooking"
   },
   {
@@ -38,6 +31,13 @@
    "title": "Kadhi Pakoda recipe | Kadhi Chawal",
    "label": "Kabita's Kitchen",
    "secs": 599,
+   "kind": "cooking"
+  },
+  {
+   "id": "QB2KDtoN4-s",
+   "title": "High protein Low carbs Breakfast recipe | Kabitaskitchen",
+   "label": "Kabita's Kitchen",
+   "secs": 441,
    "kind": "cooking"
   }
  ]

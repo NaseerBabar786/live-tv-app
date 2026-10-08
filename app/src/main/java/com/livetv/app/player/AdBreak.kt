@@ -13,3 +13,22 @@ object AdBreak {
 
     fun set(on: Boolean) { _active.value = on }
 }
+
+/**
+ * When the next full-screen ad break is due (elapsed realtime), kept by Cable TV's sponsor pop-up;
+ * [enabled] is false in the editions without ads. A Library video in a site's own player (YouTube)
+ * waits for the break before it starts, since no ad may cover that player (1.9.89).
+ */
+object AdTiming {
+    @Volatile var enabled = false
+    @Volatile var nextFullAt = Long.MAX_VALUE
+}
+
+/** A Library video playing now, so its ad breaks run like a channel's (1.9.89). [embed]: in YouTube's
+ *  (or another site's) own player, where an ad may only come before it starts ([waiting] for it). */
+data class LibraryVideo(val id: String, val embed: Boolean, val waiting: Boolean)
+
+object LibraryAds {
+    val now = MutableStateFlow<LibraryVideo?>(null)
+}
+

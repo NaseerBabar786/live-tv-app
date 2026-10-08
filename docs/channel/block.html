@@ -22,7 +22,7 @@
   #player { pointer-events: none; }
   #own { background: #000; object-fit: contain; pointer-events: none; }
   .shield { background: transparent; }
-  .bug { position: absolute; top: 3%; right: 2.5%; height: 9vw; max-width: 26vw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: .55; pointer-events: none; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
@@ -47,6 +47,13 @@
   .cover b { font-size: clamp(18px, 4vw, 52px); }
   .cover small { font-size: clamp(12px, 1.8vw, 22px); opacity: .8; }
   .cover.off { opacity: 0; }
+  /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
+     owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
+     YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
+     (under our ticker strip, or off the screen): only the picture and our own things show. Owner's rule
+     2026-10-07, checked by tools/preair_check.py. */
+  :root { --box: calc(100vh - var(--strip)); }
+  #player { top: calc(var(--box) * -0.2) !important; height: calc(var(--box) * 1.4) !important; left: 50% !important; right: auto !important; width: min(100vw, calc(var(--box) * 16 / 9)) !important; transform: translateX(-50%); }
 </style>
 </head>
 <body>
@@ -58,6 +65,7 @@
 <div class="now hide" id="now" dir="auto"></div>
 <button class="sound" id="sound" hidden>🔊 آواز کے لیے ٹیپ کریں</button>
 <div class="ticker" id="ticker"><span id="tick" dir="auto"></span></div>
+<script src="keepplaying.js"></script>
 <script>
 const q = new URLSearchParams(location.search);
 const $ = id => document.getElementById(id);
@@ -65,7 +73,7 @@ const app = q.has("app");
 const ids = (q.get("ids") || "").split(",").filter(id => /^[\w-]{11}$/.test(id));
 const secs = (q.get("secs") || "").split(",").map(Number);
 const at = +q.get("at") || Date.now(), until = +q.get("until") || 0;
-const name = q.get("name") || "Bazaar TV";
+const name = q.get("name") || "Bazaar TV One";
 const logo = q.get("logo") || "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png";
 const corner = q.get("corner") || "tr";
 const starts = [];
@@ -114,6 +122,10 @@ let player = null, cur = -1, nowTimer = null, failures = 0, finished = false;
 // never leaves our card up for the rest of its time (the owner, 2026-10-07): another of the same kind takes
 // its place (the list's spares first), and when none will play, our own short shows and ads fill the time.
 const bad = new Set(), played = new Set();
+// Videos the nightly check or the hourly pre-air check (tools/preair_check.py) found won't play here are skipped
+// before YouTube can show its error screen.
+for (const f of ["unplayable.json", "preair-bad.json"])
+  fetch(f, { cache: "no-store" }).then(r => r.json()).then(d => Object.keys(d.ids || {}).forEach(id => bad.add(id))).catch(() => {});
 let sub = null, ownOn = false, ownTurn = 0, fillers = [];
 const slotEnd = i => Math.min(end, starts[i] + (secs[i] || 0) * 1000);
 fetch("test-schedule.json", { cache: "no-store" }).then(r => r.json()).then(c => {
@@ -251,12 +263,15 @@ window.onYouTubeIframeAPIReady = () => {
         if (!app) { e.target.mute(); $("sound").hidden = false; }
         load(i, (Date.now() - starts[i]) / 1000);
         setInterval(step, 1000);
+        keepPlaying(e.target, () => finished || ownOn, () => cover(true));
       },
       onStateChange: e => {
         if (e.data === YT.PlayerState.PLAYING) { if (ownOn) { e.target.stopVideo(); return; } cover(false); started = true; failures = 0; }
-        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
+        // (Not while our own show plays: YouTube is stopped under it then.)
+        else if (!ownOn) cover(true);
         // It never stays paused; at the end of a trailer our card waits for the next one's turn.
-        else if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
+        if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
         // A video shorter than its time: the next spare, or our own short shows.
         else if (e.data === YT.PlayerState.ENDED) { cover(true, between(info[ids[cur]]), "اگلا پروگرام"); rescue(); }
       },

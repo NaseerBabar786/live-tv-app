@@ -1,5 +1,6 @@
 package com.livetv.app.ui
 
+import com.livetv.app.data.YouTube
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.app.Activity
@@ -20,12 +21,14 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import android.webkit.WebView
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.livetv.app.BuildConfig
+import com.livetv.app.WebChannelActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -33,7 +36,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInWindow
@@ -42,42 +44,34 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.livetv.app.data.YouTube
 
 /**
- * Plays a YouTube video in YouTube's own player, as YouTube's terms require. TVs hand it to
- * the YouTube app (it handles the remote); phones and tablets play it in YouTube's embedded
- * player, with a button to open the YouTube app for videos their channel won't let others embed.
+ * Plays a Library video from YouTube inside Cable TV (1.9.99): our film page (docs/channel/film.html) with
+ * YouTube's embedded player under our own pause, back and forward buttons, in its own plain window
+ * (WebChannelActivity), where TVs show YouTube's picture. Until 1.9.94 TVs handed it to the YouTube app,
+ * which kept the viewer there. Back (or the video's end) comes back here, to the Library. A video its owner
+ * won't let others play just says so and comes back: nothing of ours ever opens YouTube (owner's rule
+ * 2026-10-07: no YouTube screens anywhere in our app).
  */
 @Composable
-fun YouTubePlayer(videoId: String, onBack: () -> Unit) {
+fun YouTubePlayer(videoId: String, title: String, onBack: () -> Unit) {
     val context = LocalContext.current
-    val tv = remember { context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK) }
-    var embedded by remember(videoId) { mutableStateOf(!tv) }
     BackHandler(onBack = onBack)
-
-    if (!embedded) {
-        LaunchedEffect(videoId) {
-            if (openYouTubeApp(context, videoId)) onBack() else embedded = true
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == WebChannelActivity.RESULT_BLOCKED) {
+            Toast.makeText(context, "This video can't play right now. Please pick another one.", Toast.LENGTH_LONG).show()
         }
-        Box(Modifier.fillMaxSize().background(Color.Black))
-        return
+        onBack()
     }
-
-    var webView by remember { mutableStateOf<WebView?>(null) }
-    DisposableEffect(videoId) {
-        onDispose { webView?.destroy() }
+    // Once per video, also when this screen is rebuilt while it's open.
+    var opened by rememberSaveable(videoId) { mutableStateOf(false) }
+    LaunchedEffect(videoId) {
+        if (!opened) {
+            opened = true
+            launcher.launch(WebChannelActivity.filmIntent(context, videoId, title, BuildConfig.VERSION_CODE))
+        }
     }
-    Box(Modifier.fillMaxSize().background(Color.Black)) {
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { ctx -> embedView(ctx, "https://www.youtube.com/embed/$videoId?autoplay=1&playsinline=1&rel=0").also { webView = it } },
-        )
-        Button(
-            onClick = { if (openYouTubeApp(context, videoId)) onBack() },
-            modifier = Modifier.align(Alignment.TopEnd).padding(12.dp).focusGlow(),
-        ) { Text("Open in YouTube") }
-    }
+    Box(Modifier.fillMaxSize().background(Color.Black))
 }
 
 /**
@@ -126,6 +120,7 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
                 settings.cacheMode = WebSettings.LOAD_NO_CACHE
                 webViewClient = object : WebViewClient() {
                     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                        if (YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame)) return true
                         if (request.url.scheme != "livetv") return false
                         if (request.url.host == "fallback") onFallback?.invoke()
                         return true
@@ -236,6 +231,7 @@ private fun previewWebView(ctx: Context, page: String, onFallback: (() -> Unit)?
         settings.cacheMode = WebSettings.LOAD_NO_CACHE
         webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                if (YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame)) return true
                 if (request.url.scheme != "livetv") return false
                 if (request.url.host == "fallback") onFallback?.invoke()
                 return true
@@ -284,24 +280,6 @@ private fun embedView(context: Context, src: String): WebView = WebView(context)
         allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe></body></html>
     """.trimIndent()
     loadDataWithBaseURL("https://tv.bulkbazaar.ca/", html, "text/html", "utf-8", null)
-}
-
-/** Opens the video in the YouTube app (the TV app first on TVs); false when there's none. */
-private fun openYouTubeApp(context: Context, videoId: String): Boolean {
-    val uri = Uri.parse(YouTube.watchUrl(videoId))
-    for (pkg in listOf("com.google.android.youtube.tv", "com.google.android.youtube", null)) {
-        try {
-            context.startActivity(
-                Intent(Intent.ACTION_VIEW, uri).apply {
-                    if (pkg != null) setPackage(pkg)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                },
-            )
-            return true
-        } catch (_: ActivityNotFoundException) {
-        }
-    }
-    return false
 }
 
 /** Hands a link to the app that plays it (Bilibili's own app); says so when it isn't installed. */

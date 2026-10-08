@@ -4,7 +4,7 @@ name: Build movies playlist
 # and TV series from the Internet Archive, for Cable TV's Movies & Series screen.
 on:
   schedule:
-    - cron: "0 10 * * 1"   # Mondays, 10:00 UTC
+    - cron: "5 9 * * *"   # every day at 09:05 UTC: 5 am in Toronto (4 am in winter)
   workflow_dispatch:
 
 permissions:
@@ -28,6 +28,10 @@ jobs:
 
       - name: Build the playlist
         run: python3 tools/build_movies.py
+
+      # The day each programme first showed up, for the Library's "Newly added" section.
+      - name: Mark newly added programmes
+        run: python3 tools/first_seen.py docs/Movies.m3u
 
       - name: Show a sample
         run: |

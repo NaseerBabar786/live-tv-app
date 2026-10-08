@@ -67,6 +67,7 @@ object M3uParser {
                             country = attrs["tvg-country"]?.substringBefore(';')?.lowercase()?.takeIf { it.isNotBlank() },
                             userAgent = userAgent ?: attrs["http-user-agent"],
                             referrer = referrer ?: attrs["http-referrer"],
+                            added = attrs["added"]?.takeIf { it.isNotBlank() },
                         )
                         reset()
                     }

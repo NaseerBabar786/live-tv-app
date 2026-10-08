@@ -1,0 +1,30 @@
+{
+  "about": "Owner's rule (2026-10-07): every Cable TV feature ships on every platform together (TV, PC, phone and any later one). tools/parity_check.py (parity.yml) fails a pull request that changes Cable TV without changing each platform listed here. Add a new platform's entry when it is created.",
+  "source": {
+    "name": "Cable TV (Android TV)",
+    "paths": [
+      "app/src/main/",
+      "app/src/livetv/"
+    ],
+    "version_file": "app/build.gradle.kts",
+    "version_regex": "create\\(\"livetv\"\\)[\\s\\S]*?versionName = \"([^\"]+)\""
+  },
+  "platforms": [
+    {
+      "name": "Cable TV for PC",
+      "folder": "cabletv-pc/",
+      "parity_file": "cabletv-pc/parity.json",
+      "package_file": "cabletv-pc/package.json",
+      "code": [
+        "cabletv-pc/src/"
+      ],
+      "shared": [
+        "docs/channel/schedule.js",
+        "docs/channel/cards.js",
+        "docs/channel/clock.js"
+      ],
+      "notes": "cabletv-pc/PARITY.md",
+      "paused": "Owner, 2026-10-08: PC app on hold while we focus on the TV app; Cable TV changes no longer have to change the PC app. Remove this line when the owner brings the PC app back."
+    }
+  ]
+}

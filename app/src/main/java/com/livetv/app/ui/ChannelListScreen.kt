@@ -114,6 +114,7 @@ import androidx.compose.material.icons.filled.ViewDay
 import androidx.compose.material.icons.filled.VerticalSplit
 import androidx.compose.material.icons.filled.ViewSidebar
 import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -196,6 +197,8 @@ fun ChannelListScreen(
     onOpenVodItem: ((VodTarget) -> Unit)? = null,
     /** Opens the Games section; null hides its button. */
     onOpenGames: (() -> Unit)? = null,
+    /** Opens the Iqra Quran section; null hides its button. */
+    onOpenQuran: (() -> Unit)? = null,
     /** A channel picked to play in 1+List's player, remembered as the last one watched. */
     onWatch: (Channel) -> Unit = {},
 ) {
@@ -252,12 +255,17 @@ fun ChannelListScreen(
     // TV and tablet layout, picked with the button in the top bar. Each time the app opens, Live TV Max
     // starts on the Browse home screen; Cable TV and the other apps start in 1+List (user's choice, 1.9.41).
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
+    // Phones and tablets have every mode too (1.9.90): 1+List and Browse also fit an upright phone,
+    // the other modes turn the phone sideways while they're on.
+    val phone = rememberIsPhone()
     var tileLayout by remember {
         mutableStateOf(
             sessionTileLayout
                 ?: if (Edition.MAX) TileLayout.Browse else TileLayout.List,
         )
     }
+    // The mode on screen, for the owner's "most used features" (Features).
+    LaunchedEffect(tileLayout) { com.livetv.app.Features.use(tileLayout.feature?.key ?: "list") }
     // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
     val packages by Plans.features.collectAsStateWithLifecycle()
@@ -282,13 +290,21 @@ fun ChannelListScreen(
     // The weather follows the device's location; phones ask for it here, TVs when News mode opens.
     DeviceLocation(ask = !wideScreen)
     // "1+List": the channel playing on the left, kept when coming back from full screen.
-    val listMode = wideScreen && tileLayout == TileLayout.List
+    val listMode = (wideScreen || phone) && tileLayout == TileLayout.List
+    LandscapeOnPhone(on = phone && tileLayout != TileLayout.List && tileLayout != TileLayout.Browse)
     // "News": the top bar and filters hide; Back brings them back (newsBar) until the player is highlighted again.
     val newsMode = wideScreen && tileLayout in INFO_LAYOUTS
     var newsBar by remember { mutableStateOf(false) }
+    // Phones: the top bar that Back brought back hides again by itself (nothing takes the cursor there).
+    LaunchedEffect(newsBar) {
+        if (phone && newsBar) {
+            delay(10_000)
+            newsBar = false
+        }
+    }
     // "Browse": its own rail and search bar take the place of the top bar and filters.
     // Live TV Max shows it on phones too (the other layouts are for TVs and tablets).
-    val browseMode = (wideScreen || Edition.MAX) && tileLayout == TileLayout.Browse
+    val browseMode = (wideScreen || Edition.MAX || phone) && tileLayout == TileLayout.Browse
     // "Carousel": like News, the top bar hides; Back brings it back (newsBar).
     val carouselMode = wideScreen && tileLayout == TileLayout.Carousel
     // "Strip": a big player on top and a strip of channel tiles along the bottom; Back on its Modes button shows the top bar.
@@ -319,6 +335,10 @@ fun ChannelListScreen(
             (twoChosen + state.visibleChannels.drop(start) + state.visibleChannels).distinctBy { it.id }.take(slots)
         tileLayout.separateTvs && twoChosen.size == slots && twoChosen.distinctBy { it.id }.size == slots -> twoChosen
         else -> state.visibleChannels.drop(start).take(slots)
+    }
+    // Phones: a tap picks the tile with the sound (there's no remote cursor); the first tile has it to begin with.
+    LaunchedEffect(phone, windowed, window.map { it.id }) {
+        if (phone && windowed && window.none { it.id == focusedId }) focusedId = window.firstOrNull()?.id
     }
     val rowIds: List<String>? = if (windowed) {
         // The highlighted row first, so its pictures come first.
@@ -524,6 +544,10 @@ fun ChannelListScreen(
     BackHandler(enabled = !searching) {
         when {
             fullTiles -> tilesFull = false
+            // Phones: Back shows the top bar in the modes that hide it, then asks before closing.
+            phone && (newsMode || carouselMode || stripMode || duoMode) && !newsBar -> newsBar = true
+            phone && browseMode && !Edition.MAX -> modesOpen = true
+            phone -> exitOpen = true
             wideScreen && !topBarFocused -> runCatching { layoutButtonFocus.requestFocus() }
             // Browse never closes the app: Back on its rail opens the Modes menu instead.
             browseMode && !Edition.MAX -> modesOpen = true
@@ -572,7 +596,7 @@ fun ChannelListScreen(
                     }
                 },
                 actions = {
-                    if (wideScreen) {
+                    if (wideScreen || phone) {
                         TextButton(
                             onClick = { modesOpen = true },
                             colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
@@ -605,6 +629,22 @@ fun ChannelListScreen(
                         } else {
                             IconButton(onClick = onOpenGames, modifier = Modifier.focusGlow()) {
                                 Icon(Icons.Filled.SportsEsports, contentDescription = "Games")
+                            }
+                        }
+                    }
+                    if (onOpenQuran != null) {
+                        if (wideScreen) {
+                            TextButton(
+                                onClick = onOpenQuran,
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusGlow(),
+                            ) {
+                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null)
+                                Text("Iqra Quran", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
+                        } else {
+                            IconButton(onClick = onOpenQuran, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = "Iqra Quran")
                             }
                         }
                     }
@@ -706,9 +746,10 @@ fun ChannelListScreen(
                         modeFocus = layoutButtonFocus,
                         modeLabel = "Modes",
                         // Phones have no other layout to go to.
-                        onNextMode = if (wideScreen) ({ modesOpen = true }) else null,
+                        onNextMode = if (wideScreen || phone) ({ modesOpen = true }) else null,
                         onOpen = onPlay,
                         onOpenGames = onOpenGames,
+                        onOpenQuran = onOpenQuran,
                         onOpenVodItem = onOpenVodItem,
                         onOpenSettings = { showSettings = true },
                         onRailFocused = { topBarFocused = it },
@@ -812,6 +853,7 @@ fun ChannelListScreen(
                         onFocused = { newsBar = false },
                     )
                     listMode -> PlayerWithList(
+                        portrait = !wideScreen,
                         channels = channels,
                         all = state.channels,
                         selectedId = listChannelId ?: state.lastWatchedId,
@@ -890,6 +932,8 @@ fun ChannelListScreen(
                         keepName: Boolean = false,
                         favoriteBadge: Boolean = false,
                         stretch: Boolean = false,
+                        onSwipe: ((Swipe) -> Unit)? = null,
+                        onArrow: ((Int) -> Unit)? = null,
                         onClick: () -> Unit = { onOpen(); onPlay(channel) },
                     ) =
                         ChannelCard(
@@ -922,6 +966,9 @@ fun ChannelListScreen(
                             },
                             snapshot = snapshots[channel.id],
                             arrows = arrows,
+                            marked = if (phone) channel.id == focusedId else null,
+                            onSwipe = if (phone) onSwipe else null,
+                            onArrow = if (phone) onArrow else null,
                         )
                     if (wide) {
                         // A fixed window of tiles that slides along the list. Only Left and Right
@@ -932,6 +979,16 @@ fun ChannelListScreen(
                         // move the highlight (and the sound) between the two
                         // sides, Up and Down change the highlighted side's channel, holding Up goes to
                         // the filter row, and Back goes up to the top bar.
+                        // Puts the next (+1) or previous (-1) channel not already on another tile on this tile.
+                        fun changeTile(channel: Channel, step: Int): Channel? {
+                            val others = window.map { it.id }.toSet() - channel.id
+                            var j = channels.indexOfFirst { it.id == channel.id } + step
+                            while (channels.getOrNull(j)?.id.let { it != null && it in others }) j += step
+                            return channels.getOrNull(j)?.also { next ->
+                                twoIds = window.map { if (it.id == channel.id) next.id else it.id }
+                                if (phone && focusedId == channel.id) focusedId = next.id
+                            }
+                        }
                         fun twoKey(channel: Channel): (KeyEvent) -> Boolean = onKey@{ event ->
                             if (event.key == Key.Back) {
                                 // Taken on both press and release, so the app doesn't also go back.
@@ -956,7 +1013,6 @@ fun ChannelListScreen(
                             }
                             if (!up && event.type != KeyEventType.KeyDown) return@onKey false
                             val side = window.indexOfFirst { it.id == channel.id }
-                            val others = window.map { it.id }.toSet() - channel.id
                             // 2×2 and 2×3: Left and Right go round all the tiles in reading order.
                             val loop = window.size > 2
                             val target = when {
@@ -965,12 +1021,7 @@ fun ChannelListScreen(
                                 event.key == Key.DirectionRight ->
                                     window.getOrNull(if (loop) (side + 1) % window.size else side + 1)
                                 up || event.key == Key.DirectionDown -> {
-                                    val step = if (up) -1 else 1
-                                    var j = channels.indexOfFirst { it.id == channel.id } + step
-                                    while (channels.getOrNull(j)?.id.let { it != null && it in others }) j += step
-                                    channels.getOrNull(j)?.also { next ->
-                                        twoIds = window.map { if (it.id == channel.id) next.id else it.id }
-                                    }
+                                    changeTile(channel, if (up) -1 else 1)
                                 }
                                 else -> return@onKey false
                             }
@@ -1081,7 +1132,10 @@ fun ChannelListScreen(
                             @Composable
                             fun SmallTile(index: Int, small: Channel) = key(small.id) {
                                 Box(Modifier.width(smallWidth)) {
-                                    Tile(0, small, smallKey(index), height = smallHeight, keepName = true, stretch = true, onClick = {
+                                    Tile(0, small, smallKey(index), height = smallHeight, keepName = true, stretch = true,
+                                        // Phones: a swipe up brings the next channels in from below, a swipe down the ones before.
+                                        onSwipe = { when (it) { Swipe.Up -> slide(1); Swipe.Down -> slide(-1); else -> Unit } },
+                                        onClick = {
                                         val bigId = big?.id
                                         twoIds = window.map {
                                             when (it.id) {
@@ -1184,7 +1238,18 @@ fun ChannelListScreen(
                                                         height = if (packed) packedHeight else cardHeight,
                                                         keepName = packed,
                                                         stretch = packed,
-                                                        onClick = { if (fullTiles) { open(); onPlay(channel) } else tilesFull = true })
+                                                        // Phones: a swipe up or down changes this tile's channel, as Up and Down do.
+                                                        onSwipe = { when (it) { Swipe.Up -> changeTile(channel, 1); Swipe.Down -> changeTile(channel, -1); else -> null } },
+                                                        onArrow = { step -> changeTile(channel, step) },
+                                                        onClick = {
+                                                            when {
+                                                                // Phones: the first tap gives a tile the sound; a tap on the tile with
+                                                                // the sound opens it full screen (1.9.98; it only filled the screen with the tiles).
+                                                                phone && focusedId != channel.id -> focusedId = channel.id
+                                                                phone || fullTiles -> { open(); onPlay(channel) }
+                                                                else -> tilesFull = true
+                                                            }
+                                                        })
                                                 } else {
                                                     // A grid where only the highlighted tile plays (no layout uses this now).
                                                     Tile(start + r * columns + c, channel, onKey(start + r * columns + c),
@@ -1519,9 +1584,16 @@ private fun ChannelCard(
     favoriteBadge: Boolean = false,
     /** Stretches the picture to fill the tile, whatever its shape (the 1+3 side tiles). */
     stretch: Boolean = false,
+    /** Phones: whether this tile has the sound (picked with a tap), in place of the remote's highlight. */
+    marked: Boolean? = null,
+    /** Phones: swipes on the tile. */
+    onSwipe: ((Swipe) -> Unit)? = null,
+    /** Phones: the up (-1) and down (+1) arrows on the tile were tapped. */
+    onArrow: ((Int) -> Unit)? = null,
 ) {
     if (bare) {
-        var focused by remember { mutableStateOf(false) }
+        var hasFocus by remember { mutableStateOf(false) }
+        val focused = marked ?: hasFocus
         var showName by remember { mutableStateOf(true) }
         LaunchedEffect(Unit) { delay(3_000); showName = false }
         Box(
@@ -1531,7 +1603,8 @@ private fun ChannelCard(
                 .background(Color.Black)
                 .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
                 .onPreviewKeyEvent(onKey)
-                .onFocusChanged { focused = it.hasFocus; onFocusChange(it.hasFocus) }
+                .onFocusChanged { hasFocus = it.hasFocus; onFocusChange(it.hasFocus) }
+                .then(if (onSwipe != null) Modifier.swipe(onSwipe) else Modifier)
                 // No highlight tint over the picture; the thin border below marks the tile.
                 .combinedClickable(
                     interactionSource = remember { MutableInteractionSource() },
@@ -1561,8 +1634,12 @@ private fun ChannelCard(
                         .padding(4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Icon(Icons.Filled.KeyboardArrowUp, contentDescription = null, tint = Color.White)
-                    Icon(Icons.Filled.KeyboardArrowDown, contentDescription = null, tint = Color.White)
+                    // Phones: the arrows are buttons, bigger for a finger.
+                    val arrowSize = if (onArrow != null) Modifier.size(36.dp) else Modifier
+                    Icon(Icons.Filled.KeyboardArrowUp, contentDescription = null, tint = Color.White,
+                        modifier = arrowSize.then(if (onArrow != null) Modifier.tap { onArrow(-1) } else Modifier))
+                    Icon(Icons.Filled.KeyboardArrowDown, contentDescription = null, tint = Color.White,
+                        modifier = arrowSize.then(if (onArrow != null) Modifier.tap { onArrow(1) } else Modifier))
                 }
             }
             if (keepName) {
@@ -1593,6 +1670,20 @@ private fun ChannelCard(
             }
             // A thin, soft yellow line marks the tile with the sound.
             if (focused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
+            // Phones: what the finger does on the tile with the sound.
+            if (focused && onSwipe != null) {
+                Text(
+                    "Tap: full screen · Swipe: channel",
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(6.dp)
+                        .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+                        .padding(horizontal = 6.dp, vertical = 2.dp),
+                )
+            }
             if (sound ?: focused) SoundBadge(Modifier.align(Alignment.TopEnd))
             if (favoriteBadge && favorite) {
                 Icon(
@@ -1763,6 +1854,8 @@ internal fun AppLogo(size: Dp = 40.dp) {
  */
 @Composable
 private fun PlayerWithList(
+    /** An upright phone: the player across the top and the list under it. */
+    portrait: Boolean = false,
     channels: List<Channel>,
     /** Every channel: the one playing keeps playing when the filters leave it out of the list. */
     all: List<Channel>,
@@ -1828,13 +1921,8 @@ private fun PlayerWithList(
         }
     }
     var playerFocused by remember { mutableStateOf(false) }
-    Row(
-        Modifier
-            .fillMaxSize()
-            .padding(14.dp),
-        horizontalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        Box(Modifier.weight(3f).fillMaxHeight(), contentAlignment = Alignment.Center) {
+    val player: @Composable (Modifier) -> Unit = { area ->
+        Box(area, contentAlignment = Alignment.Center) {
             Box(
                 Modifier
                     .fillMaxWidth()
@@ -1872,14 +1960,30 @@ private fun PlayerWithList(
                     )
                 }
                 if (showing && MyChannel.isMine(selected)) MyChannelOverlay(selected)
+                // Phones: a tap on the picture opens it full screen (as above); a hint says so.
+                if (portrait && showing) {
+                    Text(
+                        "Tap for full screen",
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(6.dp)
+                            .background(Color.Black.copy(alpha = 0.5f), ChipShape)
+                            .padding(horizontal = 6.dp, vertical = 2.dp),
+                    )
+                }
             }
         }
+    }
+    val list: @Composable (Modifier) -> Unit = { area ->
         // The list fills the whole right side (no sponsor strip under it since 1.9.22).
-        Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(area, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         LazyColumn(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(6.dp),
-            contentPadding = PaddingValues(6.dp),
+            // Upright phones: room at the bottom for the advertise line over the end of the list.
+            contentPadding = if (portrait) PaddingValues(start = 6.dp, end = 6.dp, top = 6.dp, bottom = 44.dp) else PaddingValues(6.dp),
             modifier = Modifier.weight(1f).fillMaxWidth(),
         ) {
             items(channels, key = { it.id }) { channel ->
@@ -1894,7 +1998,8 @@ private fun PlayerWithList(
                         .clip(ChipShape)
                         .background(if (current) AccentBlue else MaterialTheme.colorScheme.surface)
                         .combinedClickable(onClick = { onSelect(channel) }, onLongClick = { menu = true })
-                        .padding(horizontal = 10.dp, vertical = 8.dp),
+                        // Taller rows on an upright phone, for a finger.
+                        .padding(horizontal = 10.dp, vertical = if (portrait) 12.dp else 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     val color = if (current) Color.White else MaterialTheme.colorScheme.onSurface
@@ -1942,6 +2047,22 @@ private fun PlayerWithList(
                 }
             }
         }
+        }
+    }
+    if (portrait) {
+        Column(Modifier.fillMaxSize().padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            player(Modifier.fillMaxWidth())
+            list(Modifier.weight(1f).fillMaxWidth())
+        }
+    } else {
+        Row(
+            Modifier
+                .fillMaxSize()
+                .padding(14.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            player(Modifier.weight(3f).fillMaxHeight())
+            list(Modifier.weight(1f).fillMaxHeight())
         }
     }
 }

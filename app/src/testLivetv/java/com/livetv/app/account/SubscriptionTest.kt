@@ -8,6 +8,6 @@ class SubscriptionTest {
     @Test
     fun startsWithDefaultPrices() {
         assertEquals(Subscription.DEFAULT_PRICES, Subscription.offer.value.prices)
-        assertEquals(3, Subscription.offer.value.prices.size)
+        assertEquals(1, Subscription.offer.value.prices.size) // Gold only since 1.9.91
     }
 }

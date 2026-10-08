@@ -1,36 +1,36 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-07 17:48 UTC",
- "secs": 2112,
+ "built": "2026-10-08 00:20 UTC",
+ "secs": 2291,
  "videos": [
   {
-   "id": "0wjIwluU3B4",
-   "title": "Guru Episode 06 - Ali Rehman & Zhalay Sarhadi - Express TV",
-   "label": "Express TV",
-   "secs": 2112,
+   "id": "gz73tNAo-Qs",
+   "title": "Kaisa Yeh Ishq Episode 56 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 6th October 2026 | HAR PAL GEO",
+   "label": "Har Pal Geo",
+   "secs": 2291,
    "kind": "drama"
   }
  ],
  "spares": [
   {
-   "id": "CY13BKICq1Q",
-   "title": "Raja London Ka Episode 19 [ENG SUB] 3rd Aug 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
-   "label": "Express TV",
-   "secs": 2174,
-   "kind": "drama"
-  },
-  {
-   "id": "OS6GL5U-fa8",
-   "title": "Khushi - Episode 24 - [ENG SUB] 6th Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "id": "4T5D7NkzbVM",
+   "title": "Aangan - Episode 02 - [ENG SUB] 3rd Oct 2026 [ Sajal Ali, Ahad Raza Mir, Ahsan Khan, Mawra Hussain ]",
    "label": "HUM TV",
-   "secs": 2041,
+   "secs": 2282,
    "kind": "drama"
   },
   {
-   "id": "qERbsI55UmU",
-   "title": "Tapish Mega Last Episode 34 [Eng Sub] Muneeb Butt - Laiba Khan - Saad Qureshi | 22nd Sep 2026",
-   "label": "Har Pal Geo",
-   "secs": 2241,
+   "id": "VaAMUteKlw4",
+   "title": "Mein Kahani Hun S- 3 | Episode 2 | Saanjh | Sunita Marshall | Syed Jibran | 4 Oct 2026 | Express TV",
+   "label": "Express TV",
+   "secs": 2108,
+   "kind": "drama"
+  },
+  {
+   "id": "KFRbDVR47xk",
+   "title": "Izzat Episode 17 | 6 October 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ARY Digital",
+   "label": "ARY Digital",
+   "secs": 2344,
    "kind": "drama"
   }
  ]

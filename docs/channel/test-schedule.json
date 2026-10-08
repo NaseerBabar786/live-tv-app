@@ -1,5 +1,5 @@
 {
- "name": "Bazaar TV",
+ "name": "Bazaar TV One",
  "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png",
  "logoCorner": "tr",
  "active": true,
@@ -45,7 +45,14 @@
   {
    "id": "promo",
    "title": "کیبل ٹی وی",
-   "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-4.mp4",
+   "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-6.mp4",
+   "secs": 60,
+   "kind": "ad"
+  },
+  {
+   "id": "promo2",
+   "title": "کیبل ٹی وی گولڈ",
+   "url": "https://tv.bulkbazaar.ca/media/cable-tv-promotion-ad-promo-code.mp4",
    "secs": 30,
    "kind": "ad"
   },

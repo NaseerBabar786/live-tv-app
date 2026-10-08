@@ -88,14 +88,15 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
         if (c.logoCorner != "off" && c.logo != null) {
             val bottom = c.logoCorner == "bl" || c.logoCorner == "br"
             val left = c.logoCorner == "tl" || c.logoCorner == "bl"
-            val logoHeight = unit * 9f
+            // 25% smaller than before (owner, 2026-10-07): 9 -> 6.75 of the width; the clock and gap follow.
+            val logoHeight = unit * 6.75f
             // The time sits with the logo (owner, 2026-10-07): under it in a top corner, above it in a
             // bottom one, lined up with its outer edge, so it moves wherever the logo has to go.
             // Where the logo picture really has ink (top, bottom as parts of its height): the clock goes
             // a small gap off that, never on it (owner, 2026-10-07), whatever empty margin a logo has.
             val logoUrl: String = c.logo
             var ink by remember(logoUrl) { mutableStateOf(logoInk[logoUrl] ?: (0f to 1f)) }
-            val gap = unit * 0.3f
+            val gap = logoHeight * 0.3f / 9f
             Column(
                 Modifier
                     .align(corner)
@@ -103,7 +104,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                     .padding(bottom = if (bottom && c.ticker != null) tickerHeight else 0.dp),
                 horizontalAlignment = if (left) Alignment.Start else Alignment.End,
             ) {
-                if (bottom) Box(Modifier.offset(y = logoHeight * ink.first - gap)) { ChannelClock(unit) }
+                if (bottom) Box(Modifier.offset(y = logoHeight * ink.first - gap)) { ChannelClock(logoHeight) }
                 AsyncImage(
                     model = logoUrl,
                     contentDescription = c.name,
@@ -113,10 +114,10 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                     modifier = Modifier
                         // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
                         .height(logoHeight)
-                        .widthIn(max = unit * 26f)
+                        .widthIn(max = unit * 19.5f)
                         .alpha(0.55f),
                 )
-                if (!bottom) Box(Modifier.offset(y = -logoHeight * (1f - ink.second) + gap)) { ChannelClock(unit) }
+                if (!bottom) Box(Modifier.offset(y = -logoHeight * (1f - ink.second) + gap)) { ChannelClock(logoHeight) }
             }
         }
         // Every 10 minutes what's next, every 20 minutes today's shows (owner, 2026-10-07), on the breaks.
@@ -234,7 +235,7 @@ private fun TodayCard(name: String, shows: List<MyChannel.Upcoming>, unit: Dp) {
 
 /** The viewer's own time, like "8:07 PM", small on a see-through dark pill; sized from the picture like the logo. */
 @Composable
-private fun ChannelClock(unit: Dp) {
+private fun ChannelClock(logoHeight: Dp) {
     val format = remember { SimpleDateFormat("h:mm a", Locale.US) }
     val time by produceState(format.format(Date())) {
         while (true) {
@@ -247,7 +248,7 @@ private fun ChannelClock(unit: Dp) {
         time,
         color = Color.White,
         fontWeight = FontWeight.Bold,
-        fontSize = (unit.value * 1.45f).sp,
+        fontSize = (logoHeight.value * 1.45f / 9f).sp,
         maxLines = 1,
         softWrap = false,
         style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.5f), Offset(1f, 1f), 3f)),

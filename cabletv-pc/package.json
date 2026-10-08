@@ -1,0 +1,54 @@
+{
+  "name": "cabletv-pc",
+  "productName": "Cable TV",
+  "version": "1.0.12",
+  "description": "Cable TV for Windows: free live TV channels, the same as the Cable TV app on Android TV.",
+  "author": "Bulk Bazaar Inc.",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/main.js",
+  "devDependencies": {
+    "electron": "^38.8.6",
+    "electron-builder": "^26.15.3",
+    "hls.js": "^1.5.20",
+    "mpegts.js": "^1.8.0"
+  },
+  "scripts": {
+    "prepare-ui": "node scripts/prepare.js",
+    "start": "node scripts/prepare.js && electron .",
+    "check": "node scripts/prepare.js && node scripts/check.js && node --test",
+    "dist": "node scripts/prepare.js && electron-builder --win --x64 --publish never"
+  },
+  "build": {
+    "appId": "ca.bulkbazaar.cabletv.pc",
+    "productName": "Cable TV",
+    "copyright": "Bulk Bazaar Inc.",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "assets/icon.png",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Cable TV",
+      "artifactName": "CableTV-PC-Setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "CableTV-PC-Portable.${ext}"
+    }
+  }
+}

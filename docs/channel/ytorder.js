@@ -130,11 +130,11 @@ export async function loadTrailers(station, base = "") {
   } catch { return []; }
 }
 
-/** Our approved promos for the breaks, 10 to 60 seconds each. */
+/** Our approved promos for the breaks, 5 to 60 seconds each (owner, 2026-10-07). */
 export async function loadPromos(base = "../media/") {
   try {
     const d = await (await fetch(base + "promos.json", { cache: "no-store" })).json();
-    return (d.promos || []).filter(p => p.src && p.secs >= 10 && p.secs <= 60);
+    return (d.promos || []).filter(p => p.src && p.secs >= 5 && p.secs <= 60);
   } catch { return []; }
 }
 

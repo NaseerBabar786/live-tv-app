@@ -1,0 +1,500 @@
+{
+ "languages": [
+  {
+   "code": "hi",
+   "en": "Hindi",
+   "native": "हिन्दी",
+   "rtl": false,
+   "translator": "Maulana Azizul Haque al-Umari",
+   "file": "hi.json"
+  },
+  {
+   "code": "bn",
+   "en": "Bengali",
+   "native": "বাংলা",
+   "rtl": false,
+   "translator": "Tawheed Publication",
+   "file": "bn.json"
+  },
+  {
+   "code": "sd",
+   "en": "Sindhi",
+   "native": "سنڌي",
+   "rtl": true,
+   "translator": "Taj Mehmood Amroti",
+   "file": "sd.json"
+  },
+  {
+   "code": "ps",
+   "en": "Pashto",
+   "native": "پښتو",
+   "rtl": true,
+   "translator": "Zakaria Abulsalam",
+   "file": "ps.json"
+  },
+  {
+   "code": "fa",
+   "en": "Persian",
+   "native": "فارسی",
+   "rtl": true,
+   "translator": "IslamHouse.com",
+   "file": "fa.json"
+  },
+  {
+   "code": "tr",
+   "en": "Turkish",
+   "native": "Türkçe",
+   "rtl": false,
+   "translator": "Diyanet Isleri",
+   "file": "tr.json"
+  },
+  {
+   "code": "id",
+   "en": "Indonesian",
+   "native": "Bahasa Indonesia",
+   "rtl": false,
+   "translator": "Unknown",
+   "file": "id.json"
+  },
+  {
+   "code": "ms",
+   "en": "Malay",
+   "native": "Bahasa Melayu",
+   "rtl": false,
+   "translator": "Abdullah Muhammad Basmeih",
+   "file": "ms.json"
+  },
+  {
+   "code": "fr",
+   "en": "French",
+   "native": "Français",
+   "rtl": false,
+   "translator": "Muhammad Hamidullah",
+   "file": "fr.json"
+  },
+  {
+   "code": "es",
+   "en": "Spanish",
+   "native": "Español",
+   "rtl": false,
+   "translator": "Sheikh Isa Garcia",
+   "file": "es.json"
+  },
+  {
+   "code": "de",
+   "en": "German",
+   "native": "Deutsch",
+   "rtl": false,
+   "translator": "Frank Bubenheim and Nadeem",
+   "file": "de.json"
+  },
+  {
+   "code": "ru",
+   "en": "Russian",
+   "native": "Русский",
+   "rtl": false,
+   "translator": "Elmir Kuliev",
+   "file": "ru.json"
+  },
+  {
+   "code": "zh",
+   "en": "Chinese",
+   "native": "中文",
+   "rtl": false,
+   "translator": "Ma Jian",
+   "file": "zh.json"
+  },
+  {
+   "code": "sw",
+   "en": "Swahili",
+   "native": "Kiswahili",
+   "rtl": false,
+   "translator": "Ali Muhsin Al-Barwani",
+   "file": "sw.json"
+  },
+  {
+   "code": "sq",
+   "en": "Albanian",
+   "native": "Shqip",
+   "rtl": false,
+   "translator": "Hasan Efendi Nahi",
+   "file": "sq.json"
+  },
+  {
+   "code": "zgh",
+   "en": "Amazigh",
+   "native": "Tamaziɣt",
+   "rtl": false,
+   "translator": "Ramdane At Mansour",
+   "file": "zgh.json"
+  },
+  {
+   "code": "am",
+   "en": "Amharic",
+   "native": "Amharic",
+   "rtl": false,
+   "translator": "Sadiq and Sani",
+   "file": "am.json"
+  },
+  {
+   "code": "as",
+   "en": "Assamese",
+   "native": "অসমীয়া",
+   "rtl": false,
+   "translator": "Shaykh Rafeequl Islam Habibur-Rahman",
+   "file": "as.json"
+  },
+  {
+   "code": "az",
+   "en": "Azeri",
+   "native": "Azərbaycan dili",
+   "rtl": false,
+   "translator": "Alikhan Musayev",
+   "file": "az.json"
+  },
+  {
+   "code": "bm",
+   "en": "Bambara",
+   "native": "Bambara",
+   "rtl": false,
+   "translator": "Suliman Kanti",
+   "file": "bm.json"
+  },
+  {
+   "code": "bs",
+   "en": "Bosnian",
+   "native": "Bosanski",
+   "rtl": false,
+   "translator": "Dar Al-Salam Center",
+   "file": "bs.json"
+  },
+  {
+   "code": "bg",
+   "en": "Bulgarian",
+   "native": "Български",
+   "rtl": false,
+   "translator": "Tzvetan Theophanov",
+   "file": "bg.json"
+  },
+  {
+   "code": "km",
+   "en": "Central Khmer",
+   "native": "Central Khmer",
+   "rtl": false,
+   "translator": "Cambodian Muslim Community Development",
+   "file": "km.json"
+  },
+  {
+   "code": "cs",
+   "en": "Czech",
+   "native": "Čeština",
+   "rtl": false,
+   "translator": "Czech",
+   "file": "cs.json"
+  },
+  {
+   "code": "prs",
+   "en": "Dari",
+   "native": "دری",
+   "rtl": true,
+   "translator": "Mawlawi Muhammad Anwar Badkhashani",
+   "file": "prs.json"
+  },
+  {
+   "code": "div",
+   "en": "Divehi",
+   "native": "Divehi",
+   "rtl": false,
+   "translator": "Abu Bakr Ibrahim Ali",
+   "file": "div.json"
+  },
+  {
+   "code": "nl",
+   "en": "Dutch",
+   "native": "Nederlands",
+   "rtl": false,
+   "translator": "Malak Faris Abdalsalaam",
+   "file": "nl.json"
+  },
+  {
+   "code": "fi",
+   "en": "Finnish",
+   "native": "Suomi",
+   "rtl": false,
+   "translator": "Finnish",
+   "file": "fi.json"
+  },
+  {
+   "code": "lg",
+   "en": "Ganda",
+   "native": "Ganda",
+   "rtl": false,
+   "translator": "African Development Foundation",
+   "file": "lg.json"
+  },
+  {
+   "code": "gu",
+   "en": "Gujarati",
+   "native": "ગુજરાતી",
+   "rtl": false,
+   "translator": "Rabila Al-Umry",
+   "file": "gu.json"
+  },
+  {
+   "code": "ha",
+   "en": "Hausa",
+   "native": "Hausa",
+   "rtl": false,
+   "translator": "Abubakar Mahmoud Gumi",
+   "file": "ha.json"
+  },
+  {
+   "code": "he",
+   "en": "Hebrew",
+   "native": "עברית",
+   "rtl": true,
+   "translator": "Dar Al-Salam Center",
+   "file": "he.json"
+  },
+  {
+   "code": "it",
+   "en": "Italian",
+   "native": "Italiano",
+   "rtl": false,
+   "translator": "Hamza Roberto Piccardo",
+   "file": "it.json"
+  },
+  {
+   "code": "ja",
+   "en": "Japanese",
+   "native": "日本語",
+   "rtl": false,
+   "translator": "Ryoichi Mita",
+   "file": "ja.json"
+  },
+  {
+   "code": "kn",
+   "en": "Kannada",
+   "native": "Kannada",
+   "rtl": false,
+   "translator": "Kannada Translation",
+   "file": "kn.json"
+  },
+  {
+   "code": "kk",
+   "en": "Kazakh",
+   "native": "Қазақ",
+   "rtl": false,
+   "translator": "Khalifa Altay",
+   "file": "kk.json"
+  },
+  {
+   "code": "rw",
+   "en": "Kinyarwanda",
+   "native": "Ikinyarwanda",
+   "rtl": false,
+   "translator": "The Rwanda Muslims Association team",
+   "file": "rw.json"
+  },
+  {
+   "code": "ko",
+   "en": "Korean",
+   "native": "한국어",
+   "rtl": false,
+   "translator": "Korean",
+   "file": "ko.json"
+  },
+  {
+   "code": "ml",
+   "en": "Malayalam",
+   "native": "മലയാളം",
+   "rtl": false,
+   "translator": "Muhammad Karakunnu and Vanidas Elayavoor",
+   "file": "ml.json"
+  },
+  {
+   "code": "mrn",
+   "en": "Maranao",
+   "native": "Maranao",
+   "rtl": false,
+   "translator": "Maranao",
+   "file": "mrn.json"
+  },
+  {
+   "code": "mr",
+   "en": "Marathi",
+   "native": "मराठी",
+   "rtl": false,
+   "translator": "Muhammad Shafi’i Ansari",
+   "file": "mr.json"
+  },
+  {
+   "code": "ne",
+   "en": "Nepali",
+   "native": "नेपाली",
+   "rtl": false,
+   "translator": "Ahl Al-Hadith Central Society of Nepal",
+   "file": "ne.json"
+  },
+  {
+   "code": "no",
+   "en": "Norwegian",
+   "native": "Norsk",
+   "rtl": false,
+   "translator": "Norwegian",
+   "file": "no.json"
+  },
+  {
+   "code": "om",
+   "en": "Oromo",
+   "native": "Oromo",
+   "rtl": false,
+   "translator": "Ghali Apapur Apaghuna",
+   "file": "om.json"
+  },
+  {
+   "code": "pl",
+   "en": "Polish",
+   "native": "Polski",
+   "rtl": false,
+   "translator": "Józef Bielawski",
+   "file": "pl.json"
+  },
+  {
+   "code": "pt",
+   "en": "Portuguese",
+   "native": "Português",
+   "rtl": false,
+   "translator": "Helmi Nasr",
+   "file": "pt.json"
+  },
+  {
+   "code": "ro",
+   "en": "Romanian",
+   "native": "Română",
+   "rtl": false,
+   "translator": "George Grigore",
+   "file": "ro.json"
+  },
+  {
+   "code": "si",
+   "en": "Sinhala",
+   "native": "සිංහල",
+   "rtl": false,
+   "translator": "Translation Pioneers Center",
+   "file": "si.json"
+  },
+  {
+   "code": "so",
+   "en": "Somali",
+   "native": "Somali",
+   "rtl": false,
+   "translator": "Mahmud Muhammad Abduh",
+   "file": "so.json"
+  },
+  {
+   "code": "sv",
+   "en": "Swedish",
+   "native": "Svenska",
+   "rtl": false,
+   "translator": "Knut Bernström",
+   "file": "sv.json"
+  },
+  {
+   "code": "tl",
+   "en": "Tagalog",
+   "native": "Tagalog",
+   "rtl": false,
+   "translator": "Dar Al-Salam Center",
+   "file": "tl.json"
+  },
+  {
+   "code": "tg",
+   "en": "Tajik",
+   "native": "Tajik",
+   "rtl": false,
+   "translator": "Khawaja Mirof & Khawaja Mir",
+   "file": "tg.json"
+  },
+  {
+   "code": "ta",
+   "en": "Tamil",
+   "native": "தமிழ்",
+   "rtl": false,
+   "translator": "Sheikh Omar Sharif bin Abdul Salam",
+   "file": "ta.json"
+  },
+  {
+   "code": "tt",
+   "en": "Tatar",
+   "native": "Tatar",
+   "rtl": false,
+   "translator": "Tatar",
+   "file": "tt.json"
+  },
+  {
+   "code": "te",
+   "en": "Telugu",
+   "native": "తెలుగు",
+   "rtl": false,
+   "translator": "Maulana Abder-Rahim ibn Muhammad",
+   "file": "te.json"
+  },
+  {
+   "code": "th",
+   "en": "Thai",
+   "native": "ภาษาไทย",
+   "rtl": false,
+   "translator": "Society of Institutes and Universities",
+   "file": "th.json"
+  },
+  {
+   "code": "ug",
+   "en": "Uighur",
+   "native": "Uighur",
+   "rtl": true,
+   "translator": "Muhammad Saleh",
+   "file": "ug.json"
+  },
+  {
+   "code": "uk",
+   "en": "Ukrainian",
+   "native": "Українська",
+   "rtl": false,
+   "translator": "Dr. Mikhailo Yaqubovic",
+   "file": "uk.json"
+  },
+  {
+   "code": "uz",
+   "en": "Uzbek",
+   "native": "Uzbek",
+   "rtl": false,
+   "translator": "Muhammad Sodiq Muhammad Yusuf",
+   "file": "uz.json"
+  },
+  {
+   "code": "vi",
+   "en": "Vietnamese",
+   "native": "Tiếng Việt",
+   "rtl": false,
+   "translator": "Translation Pioneers Center",
+   "file": "vi.json"
+  },
+  {
+   "code": "yau",
+   "en": "Yau",
+   "native": "Yau",
+   "rtl": false,
+   "translator": "Abdul Hamid Silika",
+   "file": "yau.json"
+  },
+  {
+   "code": "yo",
+   "en": "Yoruba",
+   "native": "Yoruba",
+   "rtl": false,
+   "translator": "Shaykh Abu Rahimah Mikael Aykyuni",
+   "file": "yo.json"
+  }
+ ]
+}

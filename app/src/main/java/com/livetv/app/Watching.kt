@@ -83,6 +83,7 @@ object Watching {
         screens.remove(screen)
         screens[screen] = channel
         current = channel
+        if (inForeground) { lastName = channel.name.take(80); lastAt = System.currentTimeMillis() }
     }
 
     /** [screen] no longer shows a channel. */
@@ -99,6 +100,18 @@ object Watching {
         add()
         inForeground = on
         if (!on) save()
+    }
+
+    /** The last channel watched, when it was last on screen, and whether it's on screen now (for the owner's /users page). */
+    class Now(val name: String, val at: Long, val live: Boolean)
+    private var lastName: String? = null
+    private var lastAt = 0L
+
+    @Synchronized
+    fun now(): Now? {
+        add()
+        val name = lastName ?: return null
+        return Now(name, lastAt, current != null && inForeground)
     }
 
     /** Every day's totals so far, oldest first, including what's on screen right now. */
@@ -130,6 +143,7 @@ object Watching {
     private fun add() {
         val now = System.currentTimeMillis()
         val channel = current
+        if (channel != null && inForeground) { lastName = channel.name.take(80); lastAt = now }
         if (channel != null && inForeground && since > 0) {
             var from = since
             while (from < now) {

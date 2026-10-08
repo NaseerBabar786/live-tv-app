@@ -22,6 +22,7 @@ on:
           - live-cam
           - multi-chat
           - notes-for-claude
+          - cable-tv-pc
           - all
       build:
         description: "Only release if the test build is this build number (blank = the current test build)"
@@ -131,6 +132,38 @@ jobs:
             gh release create claude-notes NotesForClaude.apk --title "Notes for Claude $version" --notes "Newest approved Notes for Claude." --latest=false
           fi
           gh release edit claude-notes --title "Notes for Claude $version" --notes "Newest approved Notes for Claude build (now $version), from $COMMIT."
+
+      # Cable TV for PC (cabletv-pc/, build-cabletv-pc.yml): one fixed "cable-tv-pc" release; the app reads its
+      # version from the title ("Cable TV for PC 1.0.0") and its update installs CableTV-PC-Setup.exe from it.
+      # The version approved before goes to the "rollback" release, for the app's crash rollback.
+      - name: Cable TV for PC
+        if: inputs.apps == 'cable-tv-pc' || inputs.apps == 'all'
+        run: |
+          if [ ! -f versions-pc.json ] || [ ! -f CableTV-PC-Setup.exe ]; then
+            if [ "$APPS" = cable-tv-pc ]; then echo "::error::There is no Cable TV for PC test build yet."; exit 1; fi
+            echo "::warning::No Cable TV for PC test build; skipped."; exit 0
+          fi
+          version=$(jq -r '."cable-tv-pc"' versions-pc.json)
+          pc_commit=$(jq -r .commit versions-pc.json)
+          if ! gh release view rollback > /dev/null 2>&1; then
+            echo '{}' > approved-empty.json
+            gh release create rollback approved-empty.json --title "Last good versions (crash rollback)" \
+              --notes "If a new version closes by itself on start, the apps offer to go back to these." --latest=false
+          fi
+          if gh release view cable-tv-pc > /dev/null 2>&1; then
+            old=$(gh release view cable-tv-pc --json name -q .name)
+            if [ "$old" != "Cable TV for PC $version" ]; then
+              mkdir -p rbpc
+              gh release download cable-tv-pc --pattern CableTV-PC-Setup.exe --dir rbpc --clobber && \
+                gh release upload rollback rbpc/CableTV-PC-Setup.exe --clobber
+            fi
+            gh release upload cable-tv-pc CableTV-PC-Setup.exe CableTV-PC-Portable.exe --clobber
+          else
+            gh release create cable-tv-pc CableTV-PC-Setup.exe CableTV-PC-Portable.exe \
+              --title "Cable TV for PC $version" --notes "Newest approved Cable TV for Windows." --latest=false
+          fi
+          gh release edit cable-tv-pc --title "Cable TV for PC $version" \
+            --notes "Newest approved Cable TV for Windows (now $version), from $pc_commit. Setup installs it with Start menu and desktop shortcuts; Portable runs without installing."
 
       # Crash rollback: this test build came with the previously approved version of each app rebuilt
       # with a higher version code (Rollback-*.apk). Users of the version approved now go back to that

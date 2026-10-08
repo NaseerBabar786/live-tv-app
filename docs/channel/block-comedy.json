@@ -1,36 +1,43 @@
 {
  "name": "مزاحیہ",
- "built": "2026-10-07 17:48 UTC",
- "secs": 1348,
+ "built": "2026-10-08 00:20 UTC",
+ "secs": 1716,
  "videos": [
   {
-   "id": "Y-tsg0SzjJA",
-   "title": "FULL EPISODE 4815 - Bagha ka idea sunke Jethalal ke kyu !| Taarak Mehta ka Ooltah Chasmah",
+   "id": "4KluHZZHnVY",
+   "title": "Popat Bhide Ko| Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
    "label": "Taarak Mehta",
-   "secs": 1348,
+   "secs": 624,
+   "kind": "comedy"
+  },
+  {
+   "id": "rgrKgvIqM5k",
+   "title": "SE 01 EP 345 - Kya Bhide Ke Scooter Ka Petrol ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "secs": 1092,
    "kind": "comedy"
   }
  ],
  "spares": [
   {
-   "id": "8u-eYij5e-0",
-   "title": "SE 01 EP 343 - Bhide Ne Jetha Ke Saamne Khola Tapu Ke Padhai Ka Raaz!| Taarak Mehta Ka oltah hashmah",
+   "id": "3op1G5oQsFM",
+   "title": "SE 01 EP 350 - Jethalal Ne Bhide Ka Mazak ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
-   "secs": 1051,
+   "secs": 1199,
    "kind": "comedy"
   },
   {
-   "id": "OwEFkNr0Zc4",
-   "title": "SE 01 EP 348 - Bhide Ki Sonu Gayi ! | Taarak Mehta Ka oltah hashmah",
+   "id": "HeIc_iOlLrE",
+   "title": "Iyer Jethalal ! | Haste Raho Hasate Raho! | Taarak Mehta ka Ooltah Chashmah",
    "label": "Taarak Mehta",
-   "secs": 1140,
+   "secs": 662,
    "kind": "comedy"
   },
   {
-   "id": "ngHvySd9Gro",
-   "title": "SE 01 EP 355 - Jethalal Kyu ! | Taarak Mehta Ka oltah hashmah",
+   "id": "2xWd48clt0g",
+   "title": "SE 01 EP 344 - Jethalal Ne Bhide Ko ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
-   "secs": 1119,
+   "secs": 1047,
    "kind": "comedy"
   }
  ]

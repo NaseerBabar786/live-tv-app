@@ -27,14 +27,14 @@
   .item .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
   .item .acts button { padding: 6px 10px; font-size: 14px; }
   .kind { display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
-  .kind.programme { background: #1E3A8A; color: #DBEAFE; } .kind.ad { background: #7C2D12; color: #FFEDD5; } .kind.ident { background: #14532D; color: #DCFCE7; } .kind.live { background: #7F1D1D; color: #FEE2E2; }
+  .kind.programme { background: #1E3A8A; color: #DBEAFE; } .kind.ad { background: #7C2D12; color: #FFEDD5; } .kind.ident { background: #14532D; color: #DCFCE7; } .kind.live { background: #7F1D1D; color: #FEE2E2; } .kind.ads { background: #7C2D12; color: #FFEDD5; }
   /* TV preview: sizes come from the picture's width (cqw), like the app's overlay, so it looks the same as on a TV. */
   .tvbox { margin: 0 0 18px; }
   .tvslot { position: relative; }
   .stage { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; container-type: inline-size; }
   .stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; background: #000; }
   .stage video.keep { object-fit: contain; }
-  .stage .bug { position: absolute; height: 9cqw; width: auto; max-width: 26cqw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .stage .bug { position: absolute; height: 6.75cqw; width: auto; max-width: 19.5cqw; object-fit: contain; opacity: .55; pointer-events: none; }
   .bug.tr { top: 2cqw; right: 2.5cqw; } .bug.tl { top: 2cqw; left: 2.5cqw; } .bug.br { bottom: 2cqw; right: 2.5cqw; } .bug.bl { bottom: 2cqw; left: 2.5cqw; }
   .stage.ticking .bug.br, .stage.ticking .bug.bl { bottom: 6cqw; }
   .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: 1.9cqw; line-height: 1.25; padding: .6cqw 0; }
@@ -69,6 +69,7 @@
   .stations button.sel { border-color: var(--focus); }
   .stations img { width: 84px; height: 44px; object-fit: contain; }
   .stations small { display: block; font-weight: 400; color: var(--muted); }
+  .stations .dial { color: var(--focus); font-weight: 800; }
   /* ---------- layout: one column on phones and laptops, side by side on wide screens ---------- */
   .studio { display: flex; flex-direction: column; }
   .studio .side, .studio .work, .studio .steps { display: contents; }
@@ -326,7 +327,7 @@
     <section class="panel" id="step1">
       <h2><span class="num">1</span> Your channel</h2>
       <div class="two">
-        <label class="f">Channel name<input id="name" maxlength="40" placeholder="Bazaar TV"></label>
+        <label class="f">Channel name (fixed)<input id="name" readonly tabindex="-1" style="opacity:.7;cursor:default"></label>
         <label class="f">Time zone of your time slots
           <select id="tz">
             <option value="America/Toronto">Toronto / New York (Eastern)</option>
@@ -373,6 +374,7 @@
         <div class="row" style="margin-bottom:10px"><select id="libCat" style="padding:8px;border-radius:10px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit"></select></div>
         <div class="items" id="library"></div>
       </details>
+      <div id="adWarn" class="hidden" style="margin:8px 0;padding:10px 12px;border-radius:12px;border:1.5px solid #E53935;background:rgba(229,57,53,.12)"></div>
       <div class="items" id="videos"></div>
       <form id="videoForm" class="panel" style="margin-top:12px;background:var(--surface-2)">
         <b id="videoFormTitle">Add a video</b>
@@ -398,16 +400,23 @@
       <p class="small" style="margin-top:0">Plays from top to bottom, then starts again, all day and night. A video can be in the loop more than once (handy for ads). Total: <b id="loopTotal">0:00</b></p>
       <details class="help"><summary>How the loop works</summary>
         <ul>
-          <li>Use ▲ ▼ to change the order and ✕ to take a video out of the loop (it stays in your Videos list).</li>
+          <li>Use ▲ ▼ to change the order and <b>✕ Remove</b> to take a video out of the loop (it stays in your Videos list).</li>
+          <li>The row with <b>▶ ON TV NOW</b> is what viewers are watching at this moment.</li>
           <li>The loop is timed by the clock, so all viewers are at the same place in it.</li>
           <li>If the loop is empty and no time slot is on, the channel shows "off air" with what's next.</li>
         </ul>
       </details>
-      <div class="items" id="loop"></div>
-      <div class="row" style="margin-top:12px">
+      <div id="breakWarn" class="hidden" style="margin:8px 0;padding:10px 12px;border-radius:12px;border:1.5px solid #E53935;background:rgba(229,57,53,.12)"></div>
+      <div class="row" style="margin:8px 0 12px;padding:10px 12px;border-radius:12px;background:var(--surface-2)">
+        <b>＋ Add a video:</b>
         <select id="loopAdd" style="padding:10px;border-radius:12px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit;max-width:100%"></select>
-        <button class="btn" id="loopAddBtn" type="button">Add to the loop</button>
+        <select id="loopWhere" aria-label="Where" style="padding:10px;border-radius:12px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit">
+          <option value="end">at the end</option><option value="next">right after what's on now</option><option value="top">at the top</option>
+        </select>
+        <button class="btn primary" id="loopAddBtn" type="button">Add to the loop</button>
       </div>
+      <p id="loopNow" class="small" style="margin:0 0 8px;font-weight:700"></p>
+      <div class="items" id="loop"></div>
     </section>
 
     <section class="panel" id="step4">
@@ -651,9 +660,11 @@ function stationButton(st, note) {
   const b = document.createElement("button");
   b.type = "button";
   b.className = st === station ? "sel" : "";
-  b.innerHTML = `<img alt=""><span><span></span><small></small></span>`;
+  // The channel number first, as big as the name: "1. Bazaar TV" (owner, 2026-10-07).
+  b.innerHTML = `<img alt=""><span><span><b class="dial"></b> <span class="nm"></span></span><small></small></span>`;
   b.querySelector("img").src = st.logo;
-  b.querySelector("span span").textContent = st.name;
+  b.querySelector(".dial").textContent = st.dial + ".";
+  b.querySelector(".nm").textContent = st.name;
   b.querySelector("small").textContent = note;
   b.onclick = async () => {
     if (st === station) return;
@@ -731,6 +742,8 @@ async function loadSaved() {
   }
   // The logo isn't picked here any more: a channel keeps the one already saved, else its own Bazaar logo.
   if (!saved.logo) saved.logo = station.logo;
+  // Each channel keeps its own fixed name (owner, 2026-10-07): "Bazaar TV One", "Bazaar Cinema"...
+  saved.name = station.name;
   c = clone(saved);
   dirty = false;
   renderAll();
@@ -744,7 +757,6 @@ function renderChannel() {
   $("ticker").value = c.ticker || "";
   $("tickerOn").checked = c.tickerOn !== false;
 }
-$("name").oninput = () => { c.name = $("name").value; changed(false); };
 $("tz").onchange = () => { c.tz = $("tz").value; changed(); };
 $("active").onchange = () => { c.active = $("active").checked; changed(); };
 $("ticker").oninput = () => { c.ticker = $("ticker").value; changed(false); };
@@ -752,7 +764,17 @@ $("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(fal
 
 // ---------- step 2 ----------
 const kindOf = v => v.kind || (v.secs > 0 ? "programme" : "live");
-const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY", music: "MUSIC VIDEOS · NEW EVERY DAY", list: "YOUTUBE BLOCK · NEW EVERY DAY" };
+const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY", music: "MUSIC VIDEOS · NEW EVERY DAY", list: "YOUTUBE BLOCK · NEW EVERY DAY", ads: "ADS · UPDATES BY ITSELF" };
+let justLooped = null;
+// Pop-up ad length rule (owner, 2026-10-07): ads are 5, 10, 15 ... 60 seconds; one break is 60 s at most.
+const AD_RULE = "5, 10, 15, 20 … up to 60 second";
+function adProblem(v) {
+  if (kindOf(v) !== "ad" || !(v.secs > 0)) return "";
+  const near = Math.round(v.secs / 5) * 5;
+  if (v.secs > 61) return `This ad is ${lengthText(v.secs)} long. Ads can be at most 60 seconds.`;
+  if (Math.abs(v.secs - near) > 1 || near < 5) return `This ad is ${Math.round(v.secs)} seconds. Ads must be 5, 10, 15, 20 … 60 seconds (nearest: ${Math.min(60, Math.max(5, near))}).`;
+  return "";
+}
 function renderVideos() {
   $("videos").innerHTML = "";
   if (!c.videos.length) $("videos").innerHTML = '<p class="small">No videos yet. Add one below.</p>';
@@ -761,14 +783,35 @@ function renderVideos() {
     d.className = "item";
     const uses = c.loop.filter(x => x === v.id).length + c.slots.filter(s => s.video === v.id || (s.episodes || []).includes(v.id)).length;
     d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts">
-      <button class="btn" data-a="play">▶ Watch</button><button class="btn" data-a="edit">Edit</button><button class="btn" data-a="del">Delete</button></div>`;
+      <button class="btn" data-a="play">▶ Watch</button><button class="btn" data-a="loop" title="Put it at the end of the non-stop loop">＋ Loop</button><button class="btn" data-a="slot" title="Give it a time slot">🕗 Time slot</button><button class="btn" data-a="edit">Edit</button><button class="btn" data-a="del">Delete</button></div>`;
     d.querySelector("b").textContent = v.title;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
     d.querySelector(".meta").textContent = `${lengthText(v.secs)} · ${uses ? "used " + uses + "×" : "not used yet"} · ${v.url}`;
-    // Ad length rule: a reminder on an ad that isn't 10, 20, 30, 40, 50 or 60 seconds.
-    if (kindOf(v) === "ad" && v.secs && (v.secs > 61 || Math.abs(v.secs - Math.round(v.secs / 10) * 10) > 1 || v.secs < 9))
-      d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="err">⚠ Ads should be 10, 20, 30, 40, 50 or 60 seconds · </span>');
+    // Ad length rule: an ad that isn't 5, 10, 15 ... 60 seconds gets a fix bar: change it, take it off air, or delete it.
+    const problem = adProblem(v);
+    if (problem) {
+      d.id = "v-" + v.id;
+      d.style.flexWrap = "wrap";
+      d.insertAdjacentHTML("beforeend", `<div class="adfix" style="flex-basis:100%;margin-top:8px"><span class="err"></span>
+        <div class="row" style="margin-top:6px"><button class="btn" data-a="fix">✏️ Change link or length</button>${uses ? '<button class="btn" data-a="off">Keep it, take it off air</button>' : ""}<button class="btn" data-a="del2">🗑 Delete it</button></div></div>`);
+      d.querySelector(".adfix .err").textContent = "⚠ " + problem;
+      d.querySelector('[data-a=fix]').onclick = () => { editVideo(v); $("vMsg").innerHTML = `<span class="warn">Paste the link of a ${AD_RULE} version, or fix the length, then tap Save video.</span>`; };
+      d.querySelector('[data-a=off]')?.addEventListener("click", () => {
+        c.loop = c.loop.filter(x => x !== v.id);
+        c.slots = c.slots.filter(s => s.video !== v.id);
+        changed(); renderAll();
+      });
+      d.querySelector('[data-a=del2]').onclick = () => d.querySelector('[data-a=del]').click();
+    }
+    if (justLooped === v.id) d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="ok">✓ Added at the end of the loop. Press Save to put it on air · </span>');
     d.querySelector('[data-a=play]').onclick = () => watchOne(v.title, v.url);
+    d.querySelector('[data-a=loop]').onclick = () => { c.loop.push(v.id); justLooped = v.id; changed(); renderAll(); };
+    d.querySelector('[data-a=slot]').onclick = () => {
+      setTab("step4");
+      $("sVideo").value = v.id;
+      $("sMsg").innerHTML = `Pick the day and start time for "${esc(v.title)}", then tap <b>Add time slot</b>.`;
+      $("slotForm").scrollIntoView({ behavior: "smooth", block: "center" });
+    };
     d.querySelector('[data-a=edit]').onclick = () => editVideo(v);
     d.querySelector('[data-a=del]').onclick = () => {
       if (uses && !confirm(`"${v.title}" is used ${uses} time(s) in the loop or time slots. Delete it from those too?`)) return;
@@ -783,6 +826,12 @@ function renderVideos() {
       changed(); renderAll();
     };
     $("videos").appendChild(d);
+  }
+  const bad = c.videos.filter(adProblem);
+  $("adWarn").classList.toggle("hidden", !bad.length);
+  if (bad.length) {
+    $("adWarn").innerHTML = `<b class="err">⚠ ${bad.length === 1 ? "1 ad breaks" : bad.length + " ads break"} the ad length rule</b> (5, 10, 15 … 60 seconds). Each one has buttons to fix it: change the link, take it off air, or delete it. <button class="btn" type="button" id="adWarnGo">Show me</button>`;
+    $("adWarnGo").onclick = () => document.getElementById("v-" + bad[0].id)?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
   const opts = c.videos.map(v => `<option value="${v.id}"></option>`).join("");
   for (const sel of [$("loopAdd"), $("sVideo")]) {
@@ -880,12 +929,7 @@ $("videoForm").onsubmit = async e => {
     if (kind !== "live") c.loop.push(v.id);
     $("vMsg").innerHTML = `<span class="ok">✓ Added "${title}"` + (kind !== "live" ? " and put it at the end of the loop." : ". Give it a time slot in step 4.") + "</span>";
   } else $("vMsg").innerHTML = `<span class="ok">✓ Saved "${title}".</span>`;
-  // Ad length rule (owner, 2026-10-06): ads are 10, 20, 30, 40, 50 or 60 seconds; a reminder when one isn't.
-  if (kind === "ad") {
-    const near = Math.round(secs / 10) * 10;
-    if (secs > 61) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${lengthText(secs)} long. Ads should be at most 1 minute (10, 20, 30, 40, 50 or 60 seconds).</span>`;
-    else if (Math.abs(secs - near) > 1 || near < 10) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${secs} seconds. Ads should be 10, 20, 30, 40, 50 or 60 seconds (nearest: ${Math.min(60, Math.max(10, near))}).</span>`;
-  }
+  if (adProblem(v)) $("vMsg").innerHTML += `<br><span class="err">⚠ ${adProblem(v)}</span>`;
   resetVideoForm();
   changed(); renderAll();
 };
@@ -952,27 +996,100 @@ function renderLoop() {
   const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
   c.loop = c.loop.filter(id => byId[id]);
   $("loop").innerHTML = "";
-  let at = 0;
+  let at = 0, longBreak = null;
+  loopRows = [];
+  const isShowV = x => ["programme", "live", "trailers", "music", "list"].includes(kindOf(x || {}));
   c.loop.forEach((id, i) => {
     const v = byId[id];
     const d = document.createElement("div");
     d.className = "item";
     d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts">
-      <button class="btn" data-a="up" title="Move up">▲</button><button class="btn" data-a="down" title="Move down">▼</button><button class="btn" data-a="x" title="Take out of the loop">✕</button></div>`;
+      <button class="btn" data-a="up" title="Move up">▲</button><button class="btn" data-a="down" title="Move down">▼</button><button class="btn" data-a="x" title="Take out of the loop" style="color:#FF8A80;border-color:#E53935">✕ Remove</button></div>`;
     d.querySelector("b").textContent = `${i + 1}. ${v.title}`;
+    loopRows[i] = d;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
-    d.querySelector(".meta").textContent = v.secs > 0 ? `starts at ${lengthText(at)} into the loop · ${lengthText(v.secs)} long` : "live stream: plays until the next time slot (the rest of the loop is skipped)";
+    d.querySelector(".meta").textContent = v.secs > 0 ? `starts at ${at > 0 ? lengthText(at) : "0:00"} into the loop · ${lengthText(v.secs)} long`
+      : kindOf(v) === "ads" ? (/ads-sponsors/.test(v.url) ? "every sponsor showing today on /sponsors, one after another (updates by itself every hour)" : "our Cable TV promos on air, one after another (the same list as the app's pop-up)")
+      : ["trailers", "music", "list"].includes(kindOf(v)) ? "today's YouTube list: its videos play here one after another (the list changes every day)"
+      : "live stream: plays until the next time slot (the rest of the loop is skipped)";
     at += v.secs > 0 ? v.secs : 0;
     const move = to => { if (to < 0 || to >= c.loop.length) return; [c.loop[i], c.loop[to]] = [c.loop[to], c.loop[i]]; changed(); renderAll(); };
     d.querySelector('[data-a=up]').onclick = () => move(i - 1);
     d.querySelector('[data-a=down]').onclick = () => move(i + 1);
     d.querySelector('[data-a=x]').onclick = () => { c.loop.splice(i, 1); changed(); renderAll(); };
+    // A break (ads and promos between two programmes) over 60 s: mark every item in it.
+    let st = i; while (st > 0 && !isShowV(byId[c.loop[st - 1]])) st--;
+    // Bazaar Ads is all ads, round the clock: there are no breaks to keep short there.
+    if (!isShowV(v) && station.id !== "ads") {
+      let t = 0; for (let j = st; j < c.loop.length && !isShowV(byId[c.loop[j]]); j++) t += byId[c.loop[j]].secs > 0 ? byId[c.loop[j]].secs : 0;
+      if (t > 61) {
+        if (!longBreak) longBreak = d;
+        d.querySelector(".meta").insertAdjacentHTML("afterbegin", `<span class="err">⚠ This break is ${Math.round(t)} s, over 60 s: tap ✕ on one of its ads, or ▲ ▼ to move one next to another programme · </span>`);
+      }
+    }
     $("loop").appendChild(d);
   });
+  $("breakWarn").classList.toggle("hidden", !longBreak);
+  if (longBreak) {
+    $("breakWarn").innerHTML = `<b class="err">⚠ An ad break in the loop is over 60 seconds.</b> Its ads are marked in red. <button class="btn" type="button" id="breakWarnGo">Show me</button>`;
+    $("breakWarnGo").onclick = () => longBreak.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
   if (!c.loop.length) $("loop").innerHTML = '<p class="small">The loop is empty. Between time slots the channel will be off air.</p>';
   $("loopTotal").textContent = lengthText(at) || "0:00";
+  markLoopNow();
 }
-$("loopAddBtn").onclick = () => { const id = $("loopAdd").value; if (!id) return; c.loop.push(id); changed(); renderAll(); };
+/**
+ * Highlights the loop row playing right now (the same clock the TVs use). YouTube lists are filled in
+ * first, so a row that is a whole list is found from the video inside it that's on.
+ */
+let loopRows = [], loopNowTimer = null;
+async function markLoopNow() {
+  clearTimeout(loopNowTimer);
+  loopNowTimer = setTimeout(markLoopNow, 15000);
+  const cfg = c;
+  if (!cfg) return;
+  const e = await expand(cfg).catch(() => cfg);
+  if (cfg !== c) return;
+  const on = whatsOn(e);
+  // Which row of c.loop each playing entry of the filled-in loop comes from (as whatsOn counts it).
+  const eById = Object.fromEntries(e.videos.map(v => [v.id, v]));
+  const per = {};
+  for (const id of new Set(cfg.loop)) if (!eById[id]) per[id] = e.loop.filter(x => x.startsWith(id + "-")).length / Math.max(1, cfg.loop.filter(x => x === id).length);
+  const rowOf = [];
+  cfg.loop.forEach((id, i) => { for (let k = 0; k < (eById[id] ? 1 : per[id] || 0); k++) rowOf.push(i); });
+  const playing = e.loop.map((id, k) => [id, rowOf[k]]).filter(([id]) => eById[id]?.secs > 0).map(([, r]) => r);
+  const row = !on.off && !on.slot ? (on.loopIndex != null ? playing[on.loopIndex] : cfg.loop.findIndex(id => id === on.video.id)) : -1;
+  const label = dirty ? "▶ PLAYING NOW (with your unsaved changes)" : "▶ ON TV NOW";
+  loopRows.forEach((d, i) => {
+    d.style.outline = i === row ? "3px solid var(--focus)" : "";
+    d.querySelector(".nowtag")?.remove();
+    if (i === row) {
+      const t = document.createElement("div");
+      t.className = "nowtag"; t.style.cssText = "color:var(--focus);font-weight:800;margin-top:4px";
+      const inside = on.video.title !== cfg.videos.find(v => v.id === cfg.loop[i])?.title ? `: ${on.video.title}` : "";
+      t.textContent = label + inside + (isFinite(on.until) ? ` · until ${timeText(on.until, cfg.tz)}` : "");
+      d.firstElementChild.appendChild(t);
+    }
+  });
+  $("loopNow").textContent = on.off ? "Nothing is on air right now."
+    : on.slot ? `Right now a time slot is on: ${on.show ? on.show + ": " : ""}${on.video.title}. The loop carries on after it.`
+    : row >= 0 ? `${dirty ? "Playing now (your changes)" : "On TV now"}: row ${row + 1}, ${on.video.title}.` + (row > 2 ? " " : "") : "";
+  if (row > 2 && $("loopNow").textContent) {
+    const go = document.createElement("button"); go.className = "btn"; go.type = "button"; go.textContent = "Show me";
+    go.onclick = () => loopRows[row]?.scrollIntoView({ behavior: "smooth", block: "center" });
+    $("loopNow").append(go);
+  }
+}
+$("loopAddBtn").onclick = async () => {
+  const id = $("loopAdd").value; if (!id) return;
+  const where = $("loopWhere").value;
+  let at = c.loop.length;
+  if (where === "top") at = 0;
+  if (where === "next") { const r = loopRows.findIndex(d => d.querySelector(".nowtag")); at = r >= 0 ? r + 1 : c.loop.length; }
+  c.loop.splice(at, 0, id);
+  changed(); renderAll();
+  loopRows[at]?.scrollIntoView({ behavior: "smooth", block: "center" });
+};
 
 // ---------- step 4 ----------
 const DAY_TEXT = { all: "Every day", weekdays: "Mon–Fri", weekend: "Sat & Sun", mon: "Mondays", tue: "Tuesdays", wed: "Wednesdays", thu: "Thursdays", fri: "Fridays", sat: "Saturdays", sun: "Sundays" };
@@ -1712,7 +1829,7 @@ $("useAuto").onclick = async () => {
 $("copyRule").onclick = () => navigator.clipboard.writeText($("ruleText").textContent).then(() => $("copyRule").textContent = "Copied ✓");
 
 $("save").onclick = async () => {
-  c.name = (c.name || "").trim() || "My Channel";
+  c.name = station.name;
   if (!c.videos.length) { $("saveMsg").innerHTML = '<span class="err">Add at least one video (step 2) before saving.</span>'; return; }
   if (!c.loop.length && !c.slots.length) { $("saveMsg").innerHTML = '<span class="err">Put at least one video in the loop (step 3) or a time slot (step 4).</span>'; return; }
   const data = JSON.stringify(c);
