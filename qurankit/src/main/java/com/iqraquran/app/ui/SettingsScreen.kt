@@ -38,7 +38,7 @@ fun SettingsScreen(vm: AppViewModel, footer: @Composable () -> Unit = {}) {
             ThemePicker(vm)
             if (!vm.themeLocked) {
                 Heading(S.homeColors.get())
-                listOf("kids" to S.kids, "read" to S.read, "hifz" to S.hifz, "namaz" to PS.namaz, "continue" to S.continueReading).forEach { (key, label) ->
+                listOf("kids" to S.kids, "read" to S.read, "hifz" to S.hifz, "namaz" to PS.namaz, "learn" to NS.learnNamaz, "continue" to S.continueReading).forEach { (key, label) ->
                     Text(label.get(), fontWeight = FontWeight.SemiBold)
                     ChoiceRow {
                         HomeTiles.swatches.forEach { c ->
