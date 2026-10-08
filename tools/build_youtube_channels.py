@@ -405,7 +405,8 @@ def build(cid, ch, today):
                 print(f"  feed: {e}", file=sys.stderr)
         only = re.compile(ch.get("only", {}).get(label, ""), re.I) if label in ch.get("only", {}) else None
         kept = dated = 0
-        dates = upload_dates(chan) if ch.get("newest") else {}
+        # Upload days from the channel feed (its 15 newest): Latest Movies, and Bazaar TV One's new-only blocks.
+        dates = upload_dates(chan)
         for vid, title, mins, age in videos:
             if vid in found or skip.search(title) or is_horror(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
                 continue
