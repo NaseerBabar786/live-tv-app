@@ -24,7 +24,7 @@ TRANSLATIONS = {
     "en": ("en", ["saheeh", "sahih"], "Saheeh International"),
 }
 
-# More languages, downloaded by the apps only when picked (docs/quran/tr, served at tv.bulkbazaar.ca/quran/tr/).
+# More languages (every one quran.com has; these first, the rest A-Z), downloaded by the apps only when picked (docs/quran/tr, served at tv.bulkbazaar.ca/quran/tr/).
 # code: (quran.com language_name, preferred translators (first match wins, else the first listed), English
 # name, own name, written right to left)
 EXTRA_DIR = os.path.join(os.path.dirname(__file__), "..", "docs", "quran", "tr")
@@ -156,12 +156,29 @@ def main():
 
 
 def build_extra(surahs):
-    """The other languages: one file each plus index.json listing them (a language with no translation is left out)."""
+    """Every language quran.com has a translation in: one file each plus index.json listing them.
+    The languages in EXTRA come first (with the translator picked there), then all the others A-Z.
+    Urdu and English are built into the apps, so they are left out here."""
     os.makedirs(EXTRA_DIR, exist_ok=True)
     all_tr = get(f"{API}/resources/translations")["translations"]
-    index = []
+    langs = {l["name"].lower(): l for l in get(f"{API}/resources/languages")["languages"]}
+    plan = []  # (code, language_name, preferred translators, English name, own name, rtl)
     for code, (lang, keys, en, native, rtl) in EXTRA.items():
-        found = [r for r in all_tr if r.get("language_name", "").lower() == lang]
+        plan.append((code, lang, keys, en, native, rtl))
+    taken = set(EXTRA) | {"ur", "en"}
+    named = {p[1] for p in plan} | {"urdu", "english"}
+    for lang in sorted({(r.get("language_name") or "").lower() for r in all_tr} - named - {""}):
+        info = langs.get(lang, {})
+        code = (info.get("iso_code") or lang[:3]).lower()
+        if code in taken:
+            code = lang.replace(" ", "-")
+        taken.add(code)
+        en = lang.title()
+        native = info.get("native_name") or en
+        plan.append((code, lang, [], en, native, info.get("direction") == "rtl"))
+    index = []
+    for code, lang, keys, en, native, rtl in plan:
+        found = [r for r in all_tr if (r.get("language_name") or "").lower() == lang]
         if not found:
             print(f"{code}: no {lang} translation on quran.com, left out")
             continue
@@ -172,6 +189,9 @@ def build_extra(surahs):
             print(f"{code}: {pick['name']} has {len(verses)} ayahs, left out")
             continue
         texts = [clean(v["text"]) for v in verses]
+        if sum(1 for t in texts if t.strip()) < 6000:
+            print(f"{code}: {pick['name']} is mostly empty, left out")
+            continue
         per, i = [], 0
         for s in surahs:
             per.append(texts[i:i + len(s["ayahs"])])
@@ -180,9 +200,10 @@ def build_extra(surahs):
         with open(os.path.join(EXTRA_DIR, f"{code}.json"), "w", encoding="utf-8") as f:
             json.dump({"name": name, "surahs": per}, f, ensure_ascii=False, separators=(",", ":"))
         index.append({"code": code, "en": en, "native": native, "rtl": rtl, "translator": name, "file": f"{code}.json"})
-        print(f"{code}.json: {pick['name']} (id {pick['id']}); 1:1 = {per[0][0][:60]}")
+        print(f"{code}.json ({lang}): {pick['name']} (id {pick['id']}); 1:1 = {per[0][0][:60]}")
     with open(os.path.join(EXTRA_DIR, "index.json"), "w", encoding="utf-8") as f:
         json.dump({"languages": index}, f, ensure_ascii=False, indent=1)
+    print(f"{len(index)} languages")
 
 
 if __name__ == "__main__":
