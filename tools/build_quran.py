@@ -171,9 +171,9 @@ def build_extra(surahs):
         info = langs.get(lang, {})
         code = (info.get("iso_code") or lang[:3]).lower()
         if code in taken:
-            code = lang.replace(" ", "-")
+            continue  # the same language under another name (e.g. "Divehi" and "Divehi, Dhivehi, Maldivian")
         taken.add(code)
-        en = lang.title()
+        en = lang.split(",")[0].strip().title()
         native = info.get("native_name") or en
         plan.append((code, lang, [], en, native, info.get("direction") == "rtl"))
     index = []
@@ -203,6 +203,10 @@ def build_extra(surahs):
         print(f"{code}.json ({lang}): {pick['name']} (id {pick['id']}); 1:1 = {per[0][0][:60]}")
     with open(os.path.join(EXTRA_DIR, "index.json"), "w", encoding="utf-8") as f:
         json.dump({"languages": index}, f, ensure_ascii=False, indent=1)
+    keep = {l["file"] for l in index} | {"index.json"}
+    for name in os.listdir(EXTRA_DIR):
+        if name not in keep:
+            os.remove(os.path.join(EXTRA_DIR, name))
     print(f"{len(index)} languages")
 
 
