@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +59,53 @@ private fun rememberWelcomeUse(): Pair<WelcomeUse, () -> Unit> {
             }
             use.using = false
         }
+    }
+}
+
+/**
+ * A Free viewer's minute with a Gold feature is up (owner, 2026-10-08): 1+List is back, and this says it's a
+ * Gold feature, with Get Gold (the packages screen) and, while they still can, the WELCOME month in one press.
+ */
+@Composable
+fun GoldFeatureDialog(feature: String, onGetGold: () -> Unit, onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    val account = remember { Account.get(context) }
+    var canWelcome by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { canWelcome = runCatching { Welcome.state(account)?.canUse }.getOrNull() == true }
+    val (use, press) = rememberWelcomeUse()
+    val done = use.result?.startsWith("Done") == true
+    SettingsTheme {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("⭐ This is a Gold feature") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        "Your minute with $feature is up. Your Free package has every channel in 1+List. " +
+                            "Gold opens every mode, Movies & Dramas, Games, Iqra Quran & Azan Clock, Weather and Themes." +
+                            if (canWelcome) "\n\nNew here? Use code ${Welcome.CODE} for one month of Gold, free." else "",
+                    )
+                    use.result?.let { Text(it, fontWeight = FontWeight.Bold, color = AccentBlue) }
+                }
+            },
+            confirmButton = {
+                when {
+                    done -> TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("OK") }
+                    canWelcome -> TextButton(onClick = press, enabled = !use.using, modifier = Modifier.focusGlow()) {
+                        Text(if (use.using) "Please wait…" else "🎁 Use code ${Welcome.CODE}")
+                    }
+                    else -> TextButton(onClick = onGetGold, modifier = Modifier.focusGlow()) { Text("Get Gold") }
+                }
+            },
+            dismissButton = {
+                if (!done) {
+                    Row {
+                        if (canWelcome) TextButton(onClick = onGetGold, modifier = Modifier.focusGlow()) { Text("Get Gold") }
+                        TextButton(onClick = onDismiss, modifier = Modifier.focusGlow()) { Text("OK") }
+                    }
+                }
+            },
+        )
     }
 }
 

@@ -9,10 +9,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Cable TV's packages: Free and Gold. The owner ticks which [Feature]s each one has
- * at tv.bulkbazaar.ca/packages (since 1.9.64); 1+List is in every package. Without [Feature.AllChannels] a
- * package has only a few channels ([freeChannel]). Every other app (and Cable TV until the owner turns
- * packages on) has everything, so [current] starts at Gold and every package has every feature.
+ * Cable TV's packages: Free and Gold. Since 1.10.16 (owner, 2026-10-08) the channels are free and only the
+ * app's features are paid: Free is every channel in 1+List, Gold is every mode and feature. A Free viewer can
+ * try a Gold feature for [TRY_MS] ([ask]); then it closes, 1+List comes back and the app says it's a Gold
+ * feature ([tryOver]). Every other app (and Cable TV until the owner turns packages on) has everything, so
+ * [current] starts at Gold and every package has every feature.
  */
 object Plans {
     /**
@@ -49,6 +50,9 @@ object Plans {
         Mine("mine", "My Screen"),
         Library("library", "Movies & Dramas"),
         Games("games", "Games"),
+        Quran("quran", "Iqra Quran & Azan Clock"),
+        Weather("weather", "Weather"),
+        Themes("themes", "Themes"),
         TwoDevices("devices", "2 devices");
 
         companion object {
@@ -59,10 +63,10 @@ object Plans {
     }
 
     /**
-     * Free is fixed, not ticked: every feature, but only our own Bazaar channels (owner, 2026-10-07). Every
-     * other package has at least this too, so a paid package never has less than Free.
+     * Free is fixed, not ticked: every channel, in 1+List only (owner, 2026-10-08: "channels are free, we charge
+     * for the features"). Every other package has at least this too, so a paid package never has less than Free.
      */
-    val FREE_FEATURES: Set<Feature> = Feature.entries.toSet() - Feature.AllChannels
+    val FREE_FEATURES: Set<Feature> = setOf(Feature.AllChannels)
 
     /** The owner's packages until they tick their own (owner, 2026-10-06). */
     val DEFAULT_FEATURES: Map<Tier, Set<Feature>> = mapOf(
@@ -82,12 +86,49 @@ object Plans {
     /** The owner's packages while packages are on, or null (packages off) for everything. */
     fun setFeatures(map: Map<Tier, Set<Feature>>?) {
         _features.value = map?.let { m ->
-            Tier.entries.associateWith { t -> if (t == Tier.Free) FREE_FEATURES else m[t].orEmpty() + FREE_FEATURES }
+            // Free and Gold are fixed (owner, 2026-10-08): Free is every channel in 1+List, Gold is everything,
+            // also features added after the owner last saved the packages page.
+            Tier.entries.associateWith { t ->
+                when (t) {
+                    Tier.Free -> FREE_FEATURES
+                    Tier.Gold -> Feature.entries.toSet()
+                    else -> m[t].orEmpty() + FREE_FEATURES
+                }
+            }
         } ?: EVERYTHING
     }
 
     /** Whether the viewer's package has [feature]. */
     fun has(feature: Feature): Boolean = feature in (_features.value[_current.value] ?: emptySet())
+
+    /** Whether [feature] can be used right now: the viewer's package has it, or they're trying it. */
+    fun canUse(feature: Feature): Boolean = has(feature) || _trying.value?.features?.contains(feature) == true
+
+    /** How long a Free viewer may try a Gold feature (owner, 2026-10-08: "maybe just one minute"). */
+    const val TRY_MS = 60_000L
+
+    /** A Gold feature being tried: what was opened first, everything opened since, and when the minute is up. */
+    data class Trying(val label: String, val features: Set<Feature>, val until: Long)
+
+    private val _trying = MutableStateFlow<Trying?>(null)
+    val trying: StateFlow<Trying?> = _trying.asStateFlow()
+
+    private val _tryOver = MutableStateFlow<String?>(null)
+
+    /** The Gold feature whose minute just ended, for "This is a Gold feature"; null once that's closed. */
+    val tryOver: StateFlow<String?> = _tryOver.asStateFlow()
+
+    /** The minute is up: the tried features close (1+List comes back) and the app says they're Gold. */
+    fun endTry() {
+        val t = _trying.value ?: return
+        _trying.value = null
+        // Gold bought (or a code used) during the minute: nothing closes, nothing to say.
+        if (t.features.any { !has(it) }) _tryOver.value = t.label
+    }
+
+    fun closeTryOver() {
+        _tryOver.value = null
+    }
 
     /** The first package for sale with [feature], for "needs Gold" and the packages screen. */
     fun lowestWith(feature: Feature): Tier =
@@ -108,11 +149,21 @@ object Plans {
     private val _asking = MutableStateFlow<Ask?>(null)
     val asking: StateFlow<Ask?> = _asking.asStateFlow()
 
-    /** Shows the packages (true is returned) when the viewer's package doesn't have [needed]. */
+    /**
+     * Whether [feature] may not be opened (true): only a channel outside the viewer's package. A Gold feature
+     * the package doesn't have opens for a minute's try instead (false); anything else opened during that
+     * minute joins the same try, so the minute doesn't start again.
+     */
     fun ask(feature: String, needed: Feature): Boolean {
-        if (has(needed)) return false
-        _asking.value = Ask(feature, lowestWith(needed))
-        return true
+        if (canUse(needed)) return false
+        if (needed == Feature.AllChannels) {
+            _asking.value = Ask(feature, lowestWith(needed))
+            return true
+        }
+        val t = _trying.value
+        _trying.value = t?.copy(features = t.features + needed)
+            ?: Trying(feature, setOf(needed), System.currentTimeMillis() + TRY_MS)
+        return false
     }
 
     /** Opens the packages screen from Settings. */
