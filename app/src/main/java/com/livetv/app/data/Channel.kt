@@ -26,6 +26,8 @@ data class Channel(
     val mins: Int? = null,
     /** Library programmes: a line or two about it (desc="..."), or null. */
     val desc: String? = null,
+    /** Library programmes: its genres for the genre chips ("Action", "Comedy"; genres="Action;Comedy"). */
+    val genres: List<String> = emptyList(),
 ) {
     /** Stable key used for favorites and list keys. */
     val id: String get() = url

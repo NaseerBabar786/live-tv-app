@@ -70,6 +70,7 @@ object M3uParser {
                             added = attrs["added"]?.takeIf { it.isNotBlank() },
                             mins = attrs["mins"]?.toIntOrNull()?.takeIf { it > 0 },
                             desc = attrs["desc"]?.trim()?.takeIf { it.isNotBlank() },
+                            genres = attrs["genres"]?.split(';')?.map { it.trim() }?.filter { it.isNotEmpty() }.orEmpty(),
                         )
                         reset()
                     }

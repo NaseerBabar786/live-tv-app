@@ -134,10 +134,11 @@ class VodLanguageTest {
         assertEquals("1 h 35 min", Vod.length(95))
         assertEquals(null, Vod.length(null))
         val film = M3uParser.parse(
-            "#EXTM3U\n#EXTINF:-1 mins=\"95\" desc=\"A rescue crew, far from home, finds out why.\" tvg-genre=\"Movies\",Beyond\nhttps://x/1\n"
+            "#EXTM3U\n#EXTINF:-1 mins=\"95\" genres=\"Sci-Fi;Thriller\" desc=\"A rescue crew, far from home, finds out why.\" tvg-genre=\"Movies\",Beyond\nhttps://x/1\n"
         ).single()
         assertEquals(95, film.mins)
         assertEquals("A rescue crew, far from home, finds out why.", film.desc)
         assertEquals("Beyond", film.name)
+        assertEquals(listOf("Sci-Fi", "Thriller"), film.genres)
     }
 }

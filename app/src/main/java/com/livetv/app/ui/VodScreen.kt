@@ -363,6 +363,13 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         .sortedWith(compareBy({ -it.value }, { it.key }))
                         .map { it.key }
                         .takeIf { it.size > 1 }.orEmpty()
+                    // Genre chips (owner, 2026-10-08: like the 1+List filter row), most titles first.
+                    val genreChips = if (weekTab) emptyList() else (if (tab == Vod.Section.MOVIES) movies.flatMap { it.genres } else
+                        folderLists.getValue(tab).flatMap { it.genres })
+                        .groupingBy { it }.eachCount().filter { it.value >= 2 }.entries
+                        .sortedWith(compareBy({ -it.value }, { it.key }))
+                        .map { it.key }
+                        .takeIf { it.size > 1 }.orEmpty()
 
                     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
                         LazyRow(
@@ -391,6 +398,9 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     tabName = section.name; group = null
                                 }
                             }
+                            items(genreChips, key = { "genre:$it" }) { g ->
+                                VodChip(g, GENRE + g == group, outlined = true) { group = (GENRE + g).takeUnless { it == group } }
+                            }
                             items(groups, key = { "group:$it" }) { g ->
                                 VodChip(g, g == group, outlined = true) { group = g.takeUnless { it == group } }
                             }
@@ -417,7 +427,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         }
                     } else if (tab == Vod.Section.MOVIES) {
                         val list = movies.filter {
-                            group == null || it.group == group
+                            inChip(group, it.group, it.genres)
                         }
                         if (list.isEmpty()) {
                             VodMessage("No ${language?.label} movies yet.")
@@ -439,7 +449,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         }
                     } else {
                         val list = folderLists.getValue(tab).filter {
-                            group == null || it.group == group
+                            inChip(group, it.group, it.genres)
                         }
                         if (list.isEmpty()) {
                             VodMessage("No ${language?.label} ${tab.label.lowercase()} yet.")
@@ -475,6 +485,16 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
 private fun sectionItems(state: VodState, language: String, section: Vod.Section): List<Any> {
     val shelf = state.shelves[Vod.Language.valueOf(language)] ?: return emptyList()
     return if (section == Vod.Section.MOVIES) shelf.movies else shelf.folders(section)
+}
+
+/** Marks a genre chip's filter value (never part of a real group name). */
+private const val GENRE = "\u0000genre:"
+
+/** Whether a title belongs under the picked chip: its genre chip, or its group's chip. */
+private fun inChip(chip: String?, group: String?, genres: List<String>): Boolean = when {
+    chip == null -> true
+    chip.startsWith(GENRE) -> chip.removePrefix(GENRE) in genres
+    else -> group == chip
 }
 
 /** The "Added this week" tab's name (never a real section name). */
