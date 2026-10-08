@@ -515,6 +515,9 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
         if (podJob?.isActive == true) return
         // Bazaar Ads (channel 15) is all ads already: no pop-up ads over it (owner, 2026-10-07).
         if (watchingId.value == MyChannel.ADS_URL) return
+        // Bazaar TV (channel 1) is our own live channel: its ads run in its own schedule breaks, never during
+        // the news, so the app adds no pop-up ads or breaks over it (owner, 2026-10-08).
+        if (watchingId.value == MyChannel.URL) return
         val first = if (onlyPromos) null else Sponsors.next("card")
         val pod = if (isFullScreen) {
             val more = if (first == null) emptyList() else (2..POD_SIZE).mapNotNull { Sponsors.next("card") }

@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Kids",
- "built": "2026-10-08 10:02 UTC",
+ "built": "2026-10-08 20:14 UTC",
  "videos": [
   {
    "id": "gHm61z1kUuw",
@@ -17,6 +17,41 @@
    "found": "2026-10-08"
   },
   {
+   "id": "59eVyyC0FX0",
+   "title": "Bluey and Bingo Have Magic Powers! 🪄🔮 | Magic + MORE! ✨ | Bluey",
+   "label": "Bluey",
+   "mins": 36.53333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Ne-ZcF58px4",
+   "title": "Halloween Night | 🍕 Dress Up As Food You Like for Halloween Night! | Super Simple Songs",
+   "label": "Super Simple Songs",
+   "mins": 2.7333333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "oqSDb10xMws",
+   "title": "The Dam Is Breaking! 🌊 Big Truck Rescue Mission | Compilation | PAW Patrol",
+   "label": "PAW Patrol",
+   "mins": 34.71666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "HOlxzttlAtE",
+   "title": "Wedding Day | Mr Bean Animated | Season 2 Episode 20 | Full Episode | Mr Bean",
+   "label": "Mr Bean Cartoon",
+   "mins": 11.0,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "c1X2u9LNkDU",
+   "title": "The Sounds of Nature! | Thomas & Friends: Sounds of Sodor | Low Stimulation ASMR for Kids",
+   "label": "Thomas & Friends",
+   "mins": 4.716666666666667,
+   "found": "2026-10-08"
+  },
+  {
    "id": "oVm0kXS_gtk",
    "title": "George LOVES Dancing to Squashpuff Shake! 🕺🎶 Peppa Pig Tales Episodes | 20 Minutes",
    "label": "Peppa Pig",
@@ -28,13 +63,6 @@
    "title": "Peppa Pig Plays Dress Up! 👗 EXTREME MAKEOVER 💄 Peppa Pig Tales Episodes | 20 Minutes",
    "label": "Peppa Pig",
    "mins": 21.383333333333333,
-   "found": "2026-10-08"
-  },
-  {
-   "id": "c1X2u9LNkDU",
-   "title": "The Sounds of Nature! | Thomas & Friends: Sounds of Sodor | Low Stimulation ASMR for Kids",
-   "label": "Thomas & Friends",
-   "mins": 4.716666666666667,
    "found": "2026-10-08"
   },
   {
@@ -185,13 +213,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "KpOe3SISRKQ",
-   "title": "Bluey helps Indy with her Early Baby💙🍼🥹 | ﻿35 MINUTES | Bluey",
-   "label": "Bluey",
-   "mins": 36.31666666666667,
-   "found": "2026-10-07"
-  },
-  {
    "id": "LuJe0ad1Ygk",
    "title": "When We Play Hockey 🏒 | Super Simple Songs & ‪@NHL Hockey Song for Kids",
    "label": "Super Simple Songs",
@@ -322,13 +343,6 @@
    "title": "Healthy Eating Song for Kids | I Love Eating Vegetables 🥕 | Bumble Nums & Super Simple Songs",
    "label": "Super Simple Songs",
    "mins": 2.15,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "8msljf_aMDs",
-   "title": "Top 20 Family Songs | Super Simple’s 20th Anniversary! | Super Simple Songs",
-   "label": "Super Simple Songs",
-   "mins": 46.983333333333334,
    "found": "2026-10-07"
   },
   {
@@ -1207,13 +1221,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "pVkQ93QDKqY",
-   "title": "Slick The Accidental Hero?! 🦸‍♂️🤫 | Oddbods Full Episode | Funny Cartoons for Kids",
-   "label": "Oddbods",
-   "mins": 7.666666666666667,
-   "found": "2026-10-07"
-  },
-  {
    "id": "hDsI-cyMZLw",
    "title": "Mr Bean's Most AWKWARD Bathroom Moment! 👖 | Bean: the Movie | Mr Bean",
    "label": "Mr Bean Cartoon",
@@ -1253,13 +1260,6 @@
    "title": "Mr Bean's First EVER First Class Flight to America ✈️ | Bean: the Movie | Mr Bean",
    "label": "Mr Bean Cartoon",
    "mins": 10.016666666666667,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "LjKbQ5CCkEc",
-   "title": "Car Wars | Mr Bean Animated | Season 2 Episode 19 | Full Episode | Mr Bean",
-   "label": "Mr Bean Cartoon",
-   "mins": 11.0,
    "found": "2026-10-07"
   },
   {
@@ -1589,6 +1589,34 @@
    "title": "The Grand Opening | Thomas & Friends | Season 7 Episode 21",
    "label": "Thomas & Friends",
    "mins": 5.6,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "KpOe3SISRKQ",
+   "title": "Bluey helps Indy with her Early Baby💙🍼🥹 | ﻿35 MINUTES | Bluey",
+   "label": "Bluey",
+   "mins": 36.31666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "8msljf_aMDs",
+   "title": "Top 20 Family Songs | Super Simple’s 20th Anniversary! | Super Simple Songs",
+   "label": "Super Simple Songs",
+   "mins": 46.983333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "pVkQ93QDKqY",
+   "title": "Slick The Accidental Hero?! 🦸‍♂️🤫 | Oddbods Full Episode | Funny Cartoons for Kids",
+   "label": "Oddbods",
+   "mins": 7.666666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "LjKbQ5CCkEc",
+   "title": "Car Wars | Mr Bean Animated | Season 2 Episode 19 | Full Episode | Mr Bean",
+   "label": "Mr Bean Cartoon",
+   "mins": 11.0,
    "found": "2026-10-07"
   },
   {
@@ -2138,13 +2166,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "E3k-qYMaSbM",
-   "title": "Yes Yes Fruits Song + Apple, Mango, Banana & Fruit Songs for Kids | 20 Min | ChuChu TV",
-   "label": "ChuChu TV",
-   "mins": 20.433333333333334,
-   "found": "2026-10-06"
-  },
-  {
    "id": "IeHRi_xqTmc",
    "title": "Color Song | Best Color Run - Obstacle Course | CoComelon Nursery Rhymes & Kids Songs",
    "label": "Cocomelon",
@@ -2513,34 +2534,6 @@
    "title": "Peppa Pig Tales⏰ Peppa & Evie WAIT for the TRAIN! 🚂 LEGO DUPLO Peppa Pig Episodes",
    "label": "Peppa Pig",
    "mins": 30.533333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "GYzdBK-rkPw",
-   "title": "Peppa Pig Learns How to Make DONUTS! 🍩 Food Factory | BRAND NEW Peppa Pig Tales Episodes | 35 Mins",
-   "label": "Peppa Pig",
-   "mins": 35.916666666666664,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "lJ12IsECFfo",
-   "title": "Peppa Pig Tales 2026 🫣 Peppa Plays CAMOUFLAGE HIDE AND SEEK! 👀 BRAND NEW Peppa Pig Episodes",
-   "label": "Peppa Pig",
-   "mins": 30.166666666666668,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "bT1VTJB6G9A",
-   "title": "Peppa Pig Tales 2026 😱 Peppa's LATE Morning Routine with BABY EVIE! 🎒 BRAND NEW Peppa Pig Episodes",
-   "label": "Peppa Pig",
-   "mins": 30.533333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "CO7UBkoPHhk",
-   "title": "Peppa Pig Tales 2026 🤫 Peppa Finds a SECRET Shop Passageway 🔒 BRAND NEW Peppa Pig Episodes",
-   "label": "Peppa Pig",
-   "mins": 30.166666666666668,
    "found": "2026-10-06"
   }
  ]

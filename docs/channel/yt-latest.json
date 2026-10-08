@@ -1,6 +1,6 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-08 10:07 UTC",
+ "built": "2026-10-08 20:19 UTC",
  "videos": [
   {
    "id": "MKpt0zZyT5E",
@@ -8,6 +8,7 @@
    "label": "B4U Movies",
    "mins": 114.51666666666667,
    "found": "2026-10-07",
+   "posted": "2026-10-05",
    "up": "2026-10-05"
   },
   {
@@ -32,6 +33,7 @@
    "label": "Ultra Movie Parlour",
    "mins": 130.48333333333332,
    "found": "2026-10-07",
+   "posted": "2026-09-24",
    "up": "2026-09-24"
   },
   {
@@ -119,13 +121,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "K305kyYl1DA",
-   "title": "गरीब बेटी के अमीर ससुराल | New Bhojpuri Movie 2026 | Hindi Dubbed Full HD - RICHA DIXIT",
-   "label": "B4U Movies",
-   "mins": 139.13333333333333,
-   "found": "2026-10-07"
-  },
-  {
    "id": "EhaX-eQmfF4",
    "title": "JANA NAYAKAM (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL VIJAY THALAPATHY MOVIE MASTER",
    "label": "B4U Movies",
@@ -161,17 +156,17 @@
    "found": "2026-10-08"
   },
   {
+   "id": "SiR4tmx-YOk",
+   "title": "VIJAY THALAPATHY NEW SOUTH ACTION MOVIE |  DUBBED IN HINDI 2026 FULL HD | VIJAY THE MASTER",
+   "label": "B4U Movies",
+   "mins": 165.7,
+   "found": "2026-10-08"
+  },
+  {
    "id": "Mpf1IYpOpF4",
    "title": "Crazy Fellow Hindi Dubbed Movie 2026 Full Movie | Aadi Saikumar, Digangana Suryavanshi |Mirnaa Menon",
    "label": "Aditya Movies",
    "mins": 122.28333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "VDFys9V9poQ",
-   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
-   "label": "Aditya Movies",
-   "mins": 145.35,
    "found": "2026-10-07"
   },
   {
@@ -182,18 +177,11 @@
    "found": "2026-10-07"
   },
   {
-   "id": "gJpoFk6HXug",
-   "title": "Butta Bomma Hindi Dubbed Full Movie 2025 | Anikha Surendran, Arjun Das, Surya Vashistta |South Movie",
+   "id": "VDFys9V9poQ",
+   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
    "label": "Aditya Movies",
-   "mins": 105.76666666666667,
+   "mins": 145.35,
    "found": "2026-10-07"
-  },
-  {
-   "id": "pBP49rdzP4M",
-   "title": "Intelligent Hindi Dubbed Full Movie | Sai Dharam Tej, Lavanya Tripathi | South Dubbed Movie 2026",
-   "label": "Aditya Movies",
-   "mins": 121.28333333333333,
-   "found": "2026-10-08"
   },
   {
    "id": "ftI9RAEuSLo",
@@ -203,6 +191,20 @@
    "found": "2026-10-08"
   },
   {
+   "id": "pBP49rdzP4M",
+   "title": "Intelligent Hindi Dubbed Full Movie | Sai Dharam Tej, Lavanya Tripathi | South Dubbed Movie 2026",
+   "label": "Aditya Movies",
+   "mins": 121.28333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "gJpoFk6HXug",
+   "title": "Butta Bomma Hindi Dubbed Full Movie 2025 | Anikha Surendran, Arjun Das, Surya Vashistta |South Movie",
+   "label": "Aditya Movies",
+   "mins": 105.76666666666667,
+   "found": "2026-10-07"
+  },
+  {
    "id": "gfDhPJUIFFA",
    "title": "Kotha Kothagaa Hindi Dubbed Full Movie | Ajay, Virti Vaghani | South Movie New 2026 | Aditya Movies",
    "label": "Aditya Movies",
@@ -210,10 +212,10 @@
    "found": "2026-10-07"
   },
   {
-   "id": "RfL11k8Y7G4",
-   "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
+   "id": "yR9pSZoZ6CY",
+   "title": "Gamblers Hindi Dubbed Movie 2026 Full Movie | Sangeeth Shobhan, Prashanthi | South New Movie 2026",
    "label": "Aditya Movies",
-   "mins": 126.08333333333333,
+   "mins": 97.98333333333333,
    "found": "2026-10-08"
   },
   {
@@ -238,13 +240,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "fIhM9MiEN50",
-   "title": "Daddy Daughter Trip | Rob Schneider | Full 2025 Comedy Family Movie",
-   "label": "Movie Central",
-   "mins": 96.58333333333333,
-   "found": "2026-10-07"
-  },
-  {
    "id": "ERsURQC8Xxo",
    "title": "Ruthless Hitman Took On The Chicago Mob | Silent Partners | Full 2026 Action Movie",
    "label": "Movie Central",
@@ -252,10 +247,24 @@
    "found": "2026-10-07"
   },
   {
-   "id": "nW1pVutjpt4",
-   "title": "Escape the Secluded Killing Grounds | Hillwalkers | Full 2026 Survival Movie",
+   "id": "fIhM9MiEN50",
+   "title": "Daddy Daughter Trip | Rob Schneider | Full 2025 Comedy Family Movie",
    "label": "Movie Central",
-   "mins": 87.26666666666667,
+   "mins": 96.58333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "KAouzPF7GII",
+   "title": "She's Hunting The Cartel That Murdered Her Family | She-Vigilante | Full 2026 Action Movie",
+   "label": "Movie Central",
+   "mins": 84.35,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7YkoXDuYxgA",
+   "title": "The Mermaid Who Changed The World | Mermaids' Lament | Full 2025 Drama Sci-Fi Movie",
+   "label": "Movie Central",
+   "mins": 89.41666666666667,
    "found": "2026-10-08"
   },
   {
@@ -280,17 +289,17 @@
    "found": "2026-10-07"
   },
   {
-   "id": "dPNKYab1xHs",
-   "title": "Afrah Tafreeh - Telefilm - Eid Special 2026 - HUM TV",
-   "label": "HUM TV",
-   "mins": 70.4,
-   "found": "2026-10-07"
-  },
-  {
    "id": "k-1W7DxYBvc",
    "title": "Mulazim Online - Eid Special - TeleFilm - 7th June 2025 - [ Nida Yasir - Yasir Nawaz ] - HUM TV",
    "label": "HUM TV",
    "mins": 69.11666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "dPNKYab1xHs",
+   "title": "Afrah Tafreeh - Telefilm - Eid Special 2026 - HUM TV",
+   "label": "HUM TV",
+   "mins": 70.4,
    "found": "2026-10-07"
   },
   {
@@ -327,6 +336,20 @@
    "label": "Har Pal Geo",
    "mins": 83.08333333333333,
    "found": "2026-10-07"
+  },
+  {
+   "id": "PUASJ0o-oT8",
+   "title": "Pyaar Ka Punch | Eid Special Telefilm (Subtitles) 21st March 2026 | Naeema Butt & Saif Ali Khan",
+   "label": "Green Entertainment",
+   "mins": 129.7,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "V8psurIwxSM",
+   "title": "Saiyyan Thanedaar - Eid Special Telefilm (Subtitles) 8th June 2025 - Presented By Parley Gold Gleam",
+   "label": "Green Entertainment",
+   "mins": 70.5,
+   "found": "2026-10-08"
   },
   {
    "id": "1aBXrPbMwcw",
