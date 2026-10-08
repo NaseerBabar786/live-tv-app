@@ -209,14 +209,6 @@
    "file": "div.json"
   },
   {
-   "code": "dv",
-   "en": "Divehi",
-   "native": "ދިވެހި",
-   "rtl": false,
-   "translator": "Office of the president of Maldives",
-   "file": "dv.json"
-  },
-  {
    "code": "nl",
    "en": "Dutch",
    "native": "Nederlands",
