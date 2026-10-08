@@ -51,10 +51,11 @@ export const STATIONS = [
     name: "Bazaar Movies Hindi", dial: "10", doc: "_channel_hindi", page: "channel/?c=hindi", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: full Hindi films from the studios' own YouTube channels. Backup: public-domain classics from the Internet Archive." },
-  { id: "dramas", yt: true, web: "channel/ytc.html?c=dramas", ytMins: 40, tagline: "Pakistani dramas, day and night",
-    name: "Bazaar Dramas", dial: "11", doc: "_channel_dramas", page: "channel/?c=dramas", auto: true, backup: true,
+  // 11 is Urdu dramas and 16 Hindi dramas (the owner, 2026-10-08).
+  { id: "dramas", yt: true, web: "channel/ytc.html?c=dramas", ytMins: 40, tagline: "Pakistani dramas in Urdu, day and night",
+    name: "Bazaar Dramas Urdu", dial: "11", doc: "_channel_dramas", page: "channel/?c=dramas", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-dramas.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
-    credits: "Dramas: full episodes from the TV channels' own YouTube channels (HUM TV, ARY Digital, Geo, Green). Backup: public-domain classic films." },
+    credits: "Dramas: full episodes from the TV channels' own YouTube channels (HUM TV, ARY Digital, Geo, Green, Express, ARY Zindagi, Geo Kahani, LTN Family, PTV Home, Aaj). Backup: public-domain classic films." },
   { id: "cooking", yt: true, web: "channel/ytc.html?c=cooking", ytMins: 15, tagline: "Recipes and cooking shows, day and night",
     name: "Bazaar Cooking", dial: "12", doc: "_channel_cooking", page: "channel/?c=cooking", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cooking.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
@@ -74,6 +75,11 @@ export const STATIONS = [
   { id: "ads", name: "Bazaar Ads", dial: "15", doc: "_channel_ads", page: "channel/?c=ads", auto: true, noPopup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-ads.png", ready: "https://tv.bulkbazaar.ca/channel/ads-schedule.json",
     credits: "Ads: our own Cable TV promos and our sponsors' ads. Advertise your business here: WhatsApp 437 602 6500 or tv.bulkbazaar.ca/advertise." },
+  // 16 (owner, 2026-10-08): Hindi serials, full episodes from the Indian TV channels' own YouTube channels.
+  { id: "hindidramas", yt: true, web: "channel/ytc.html?c=hindidramas", ytMins: 25, tagline: "Hindi dramas, day and night",
+    name: "Bazaar Dramas Hindi", dial: "16", doc: "_channel_hindidramas", page: "channel/?c=hindidramas", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-dramas-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Hindi dramas: full episodes from the TV channels' own YouTube channels (StarPlus, Sony SAB, Sony Pal, Sony TV, Colors, &TV, Dangal, Shemaroo, Sun Neo, Doordarshan). Backup: public-domain classic films." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
