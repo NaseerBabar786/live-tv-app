@@ -333,8 +333,8 @@ object MyChannel {
     fun isNews(v: Video) = v.id.startsWith("news-")
 
     /**
-     * Owner rule (2026-10-08): no ads of any kind on Bazaar TV (channel 1) while a news bulletin is on,
-     * nor a break that would run into one starting within [aheadMs]; ads come before or after the news.
+     * Owner rule (2026-10-08): no ads of any kind on Bazaar TV (channel 1) while a news bulletin is on
+     * (or one starts within [aheadMs]); ads come before or after the news, in the channel's own breaks.
      */
     fun newsOn(channelUrl: String?, nowMs: Long = System.currentTimeMillis(), aheadMs: Long = 0L): Boolean {
         if (channelUrl != URL) return false
