@@ -10,3 +10,10 @@ test('parity.json names the Cable TV version in app/build.gradle.kts', () => {
   const parity = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'parity.json'), 'utf8'));
   assert.equal(parity.matches, tv, `Cable TV is ${tv} but cabletv-pc/parity.json says ${parity.matches}: bring the PC app in step (see cabletv-pc/PARITY.md)`);
 });
+
+test('the PC Games screen has the same modern games as the TV app (WEB_GAMES in Game.kt)', async () => {
+  const kt = fs.readFileSync(path.join(__dirname, '..', '..', 'app', 'src', 'main', 'java', 'com', 'livetv', 'app', 'games', 'Game.kt'), 'utf8');
+  const tv = [...kt.matchAll(/WebGameInfo\("([^"]+)", "([^"]+)", "[^"]+", "([^"]+)"\)/g)].map((m) => [m[1], m[2], m[3]]);
+  const { GAMES } = await import('../src/ui/screens/games.js');
+  assert.deepEqual(GAMES.map((g) => [g.id, g.name, g.page]), tv);
+});

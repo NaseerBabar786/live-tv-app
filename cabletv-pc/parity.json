@@ -1,4 +1,4 @@
 {
   "about": "The Cable TV (Android) version whose features this PC app has. Every change to the TV app (app/src/main, app/src/livetv) also changes the PC app in the same pull request, and when the TV app gets a new versionName this line gets it too. See PARITY.md.",
-  "matches": "1.10.2"
+  "matches": "1.10.14"
 }

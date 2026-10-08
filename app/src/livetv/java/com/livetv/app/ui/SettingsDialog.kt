@@ -265,7 +265,7 @@ fun SettingsDialog(
                     Column(Modifier.padding(start = 8.dp)) {
                         Text("Show MTA channels and programmes")
                         Text(
-                            "Muslim Television Ahmadiyya: 8 live channels and its programmes in the Library.",
+                            "Muslim Television Ahmadiyya: 8 free live channels (16 to 23, right after our Bazaar channels) and its programmes in the Library.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.secondary,
                         )
@@ -379,9 +379,11 @@ private fun LanguagePicker(
     onDismiss: () -> Unit,
     onDone: (Set<String>) -> Unit,
 ) {
-    var chosen by remember { mutableStateOf(initial) }
+    // Nothing saved means every language, so the list opens with every box ticked.
+    var chosen by remember { mutableStateOf(initial.ifEmpty { languages.toSet() }) }
     // Languages that were picked but aren't in the current channels stay listed so they can be unticked.
     val shown = languages + (initial - languages.toSet()).sorted()
+    val all = chosen.containsAll(languages)
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -405,12 +407,15 @@ private fun LanguagePicker(
             }
         },
         confirmButton = {
-            AccentButton(onClick = { onDone(chosen) }, modifier = Modifier.focusGlow()) {
-                Text(if (chosen.isEmpty()) "Show all languages" else "Show ${chosen.size} languages")
+            // Every language (or none) ticked is saved as "all", so new languages show up too.
+            AccentButton(onClick = { onDone(if (all || chosen.isEmpty()) emptySet() else chosen) }, modifier = Modifier.focusGlow()) {
+                Text(if (all || chosen.isEmpty()) "Show all languages" else "Show ${chosen.size} languages")
             }
         },
         dismissButton = {
-            TextButton(onClick = { chosen = emptySet() }, modifier = Modifier.focusGlow()) { Text("Clear") }
+            TextButton(onClick = { chosen = if (all) emptySet() else languages.toSet() }, modifier = Modifier.focusGlow()) {
+                Text(if (all) "Clear" else "Select all")
+            }
         },
     )
 }

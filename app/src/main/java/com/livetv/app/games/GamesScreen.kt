@@ -83,6 +83,17 @@ class GameScores(context: Context) {
         prefs.edit().putInt(info.id, new).apply()
     }
 
+    /** The modern games keep only their best: a score, or the highest level done. */
+    fun recordWeb(id: String, value: Int) {
+        val key = "web_$id"
+        if (value > prefs.getInt(key, 0)) prefs.edit().putInt(key, value).apply()
+    }
+
+    fun label(info: WebGameInfo): String {
+        val v = prefs.getInt("web_${info.id}", 0)
+        return if (v > 0) info.label(v) else "New"
+    }
+
     fun label(info: GameInfo): String {
         val v = get(info.id) ?: return "New"
         return when (info.scoring) {
@@ -102,23 +113,24 @@ fun GamesScreen(onClose: () -> Unit) {
     val context = LocalContext.current
     val scores = remember { GameScores(context) }
     var openId by rememberSaveable { mutableStateOf<String?>(null) }
-    var lastId by rememberSaveable { mutableStateOf(GAMES.first().id) }
+    var lastId by rememberSaveable { mutableStateOf(WEB_GAMES.first().id) }
     val open = GAMES.firstOrNull { it.id == openId }
-    BackHandler { if (open != null) openId = null else onClose() }
+    val openWeb = WEB_GAMES.firstOrNull { it.id == openId }
+    BackHandler { if (openId != null) openId = null else onClose() }
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Box(Modifier.fillMaxSize().safeDrawingPadding()) {
-            if (open == null) {
-                GameMenu(scores, lastId, onPick = { lastId = it.id; openId = it.id }, onClose = onClose)
-            } else {
-                GamePlay(open, scores)
+            when {
+                openWeb != null -> WebGamePlay(openWeb, scores, onExit = { openId = null })
+                open != null -> GamePlay(open, scores)
+                else -> GameMenu(scores, lastId, onPick = { lastId = it; openId = it }, onClose = onClose)
             }
         }
     }
 }
 
 @Composable
-private fun GameMenu(scores: GameScores, lastId: String, onPick: (GameInfo) -> Unit, onClose: () -> Unit) {
-    val focus = remember { GAMES.associate { it.id to FocusRequester() } }
+private fun GameMenu(scores: GameScores, lastId: String, onPick: (String) -> Unit, onClose: () -> Unit) {
+    val focus = remember { (WEB_GAMES.map { it.id } + GAMES.map { it.id }).associateWith { FocusRequester() } }
     LaunchedEffect(Unit) {
         delay(50)
         runCatching { focus.getValue(lastId).requestFocus() }
@@ -144,9 +156,41 @@ private fun GameMenu(scores: GameScores, lastId: String, onPick: (GameInfo) -> U
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            // The modern games come first, marked NEW.
+            itemsIndexed(WEB_GAMES, key = { _, g -> g.id }) { _, g ->
+                Surface(
+                    onClick = { onPick(g.id) },
+                    shape = CardShape,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    modifier = Modifier.focusRequester(focus.getValue(g.id)).focusGlow(CardShape),
+                ) {
+                    Box {
+                        Column(
+                            Modifier.fillMaxWidth().padding(vertical = 18.dp, horizontal = 8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text(g.icon, fontSize = 44.sp)
+                            Spacer(Modifier.height(8.dp))
+                            Text(g.name, fontWeight = FontWeight.Bold, fontSize = 17.sp, textAlign = TextAlign.Center, maxLines = 1)
+                            Text(scores.label(g), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        Text(
+                            "NEW",
+                            color = Color.Black,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(8.dp)
+                                .background(FocusColor, RoundedCornerShape(6.dp))
+                                .padding(horizontal = 6.dp, vertical = 2.dp),
+                        )
+                    }
+                }
+            }
             itemsIndexed(GAMES, key = { _, g -> g.id }) { _, g ->
                 Surface(
-                    onClick = { onPick(g) },
+                    onClick = { onPick(g.id) },
                     shape = CardShape,
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     modifier = Modifier.focusRequester(focus.getValue(g.id)).focusGlow(CardShape),

@@ -1,4 +1,4 @@
-// Settings: account and package, countries, languages, equal volume, updates and About.
+// Settings: account and package, countries, languages, MTA, equal volume, updates and About.
 import { h, button, dialog, toast } from '../dom.js';
 import * as nav from '../nav.js';
 import * as channels from '../channels.js';
@@ -8,6 +8,8 @@ import * as store from '../store.js';
 import { BUILD, signInConfigured } from '../config.js';
 import { checkForUpdate } from './update.js';
 import { openSignIn } from './signin.js';
+import { openWelcome } from './welcome.js';
+import * as welcome from '../welcome.js';
 
 export function openSettings({ onChanged, onExit }) {
   const body = h('div.settings');
@@ -30,6 +32,15 @@ export function openSettings({ onChanged, onExit }) {
     const until = st.until ? ` until ${new Date(st.until).toLocaleDateString()}` : '';
     body.appendChild(row(`Package: ${st.promoName || plans.TIER_LABEL[st.tier]}${st.trial ? ' (free trial)' : ''}${until}`, plans.describe(st.tier), () => showPackages('', null)));
   }
+  if (u) {
+    // The welcome invitation, while WELCOME still works for this viewer.
+    const slot = h('div');
+    body.appendChild(slot);
+    welcome.state(account).then((w) => {
+      if (w && w.canUse) slot.appendChild(row(welcome.TITLE, `Use promo code ${welcome.CODE}: one free month per account`, () => { close(); openWelcome(true); }));
+    });
+    body.appendChild(row('🎟 Have a promo code?', 'Type it to get its package straight away, free', () => { close(); enterPromoCode(); }));
+  }
   body.appendChild(row('Choose countries', countriesLabel(), () => { close(); pickCountries(onChanged); }));
   body.appendChild(row('Languages', channels.state.languageFilter.size ? [...channels.state.languageFilter].join(', ') : 'All languages', () => { close(); pickLanguages(onChanged); }));
   const eq = store.get('equalVolume', true);
@@ -37,6 +48,12 @@ export function openSettings({ onChanged, onExit }) {
     store.set('equalVolume', !eq);
     close();
     toast(`Equal volume is ${eq ? 'off' : 'on'}. It applies from the next channel.`);
+  }));
+  const showMta = channels.state.showMta;
+  body.appendChild(row(`MTA channels: ${showMta ? 'On' : 'Off'}`, 'Muslim Television Ahmadiyya: 8 free live channels (16 to 23, right after our Bazaar channels)', () => {
+    close();
+    channels.setShowMta(!showMta);
+    toast(showMta ? 'MTA channels are off.' : 'MTA channels are on: numbers 16 to 23.');
   }));
   body.appendChild(row('Reload the channel list', 'Fetch the newest working channels', () => { close(); channels.reload(); toast('Loading the newest channels…'); }));
   body.appendChild(row('Check for updates', `Cable TV for PC ${BUILD.version}`, () => { close(); checkForUpdate({ manual: true }); }));
@@ -104,6 +121,25 @@ function pickLanguages(onChanged) {
   draw();
   dialog({ title: 'Languages', body, wide: true, buttons: [['Save', () => { channels.setLanguages(chosen); onChanged && onChanged(); }], ['Cancel', null]] });
   if (btns[0]) nav.focus(btns[0]);
+}
+
+/** Types a promo code from the owner (tv.bulkbazaar.ca/packages) and uses it (PlansScreen.kt). */
+function enterPromoCode() {
+  const field = h('input.field', { type: 'text', placeholder: 'Promo code', 'data-focus': '' });
+  const result = h('p.need');
+  let busy = false;
+  const use = async () => {
+    if (busy) return;
+    busy = true;
+    result.textContent = 'Please wait…';
+    let msg;
+    try { msg = await plans.redeem(account, field.value); } catch (e) { msg = `Couldn't use the code: ${e.message || 'check the internet connection'}`; }
+    busy = false;
+    if (msg.startsWith('Done')) { close(); toast(msg, 6000); } else result.textContent = msg;
+  };
+  field.addEventListener('keydown', (e) => { if (e.key === 'Enter') use(); });
+  const close = dialog({ title: '🎟 Promo code', body: h('div', field, result), buttons: [['Use code', use, true], ['Cancel', null]] });
+  nav.focus(field);
 }
 
 /** "[label] needs the Gold package": what each package has, the prices and how to pay (PlansScreen.kt). */

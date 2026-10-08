@@ -53,13 +53,13 @@ fun ChangePasswordDialog(onDismiss: () -> Unit) {
                             value = current, onValueChange = { current = it }, singleLine = true,
                             label = { Text("Current password") }, visualTransformation = visual,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().remoteTextField(),
                         )
                         OutlinedTextField(
                             value = new, onValueChange = { new = it }, singleLine = true,
                             label = { Text("New password (6 or more characters)") }, visualTransformation = visual,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().remoteTextField(),
                         )
                         TextButton(onClick = { show = !show }, modifier = Modifier.focusGlow()) {
                             Text(if (show) "🙈 Hide passwords" else "👁 Show passwords")

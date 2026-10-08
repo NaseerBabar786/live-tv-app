@@ -27,28 +27,37 @@
   .ticker { position: absolute; left: 0; right: 0; bottom: 0; height: var(--strip); line-height: var(--strip); background: #101827; color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); pointer-events: none; }
   .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }
-  .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
+  .msg { position: absolute; inset: 0; display: grid; place-items: center; padding-top: 22vh !important; color: #fff; text-align: center; padding: 20px; }
   .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
-  /* The logo sits above the middle, so the loading circle in the middle of the picture stays in view (1.9.60). */
-  .cover img { height: 15vh; max-width: 40vw; object-fit: contain; opacity: .9; transform: translateY(-17vh); }
+  /* While a video starts: only a loading circle in the middle, never our logo (owner, 2026-10-07). */
+  .spin { width: 8vh; height: 8vh; box-sizing: border-box; border: .8vh solid rgba(255,255,255,.18); border-top-color: rgba(255,255,255,.85); border-radius: 50%; animation: spin 1s linear infinite; }
+  .cover.off .spin { animation: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .cover.off { opacity: 0; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
+  /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
+     owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
+     YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
+     (under our ticker strip, or off the screen): only the picture and our own things show. Owner's rule
+     2026-10-07, checked by tools/preair_check.py. */
+  :root { --box: calc(100vh - var(--strip)); }
+  #player { top: calc(var(--box) * -0.2) !important; height: calc(var(--box) * 1.4) !important; left: 50% !important; right: auto !important; width: min(100vw, calc(var(--box) * 16 / 9)) !important; transform: translateX(-50%); }
 </style>
 </head>
 <body>
 <div id="player"></div>
-<div class="cover" id="cover"><img alt="" id="coverLogo" hidden></div>
+<div class="cover" id="cover"><div class="spin"></div></div>
 <div class="shield" id="shield"></div>
 <img class="bug" id="bug" alt="">
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
 <a class="back" id="back" href="./" hidden>Our channels</a>
 <div class="ticker"><span id="tick"></span></div>
-<div class="msg" id="msg">Loading…</div>
+<div class="msg" id="msg"></div>
 <script src="promo.js"></script>
 <script src="still.js"></script>
 <script src="keepplaying.js"></script>
@@ -66,13 +75,9 @@ let ahead = 0;
 const clock = () => Date.now() + ahead;
 
 document.title = station.name + " · Watch live";
-// Latest Movies carries no logo of ours (the owner's wish), not even on the cover between videos.
+// Latest Movies carries no logo of ours (the owner's wish).
 if (station.noBug) $("bug").hidden = true;
-else {
-  $("bug").src = station.logo;
-  $("coverLogo").src = station.logo;
-  $("coverLogo").hidden = false;
-}
+else $("bug").src = station.logo;
 $("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (!app) $("back").hidden = false;
 
@@ -226,7 +231,9 @@ setInterval(() => {
 
 let joinAt = 0;
 Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station),
-  fetch("unplayable.json", { cache: "no-store" }).then(r => r.json()).catch(() => ({}))]).then(([d, p, pr, tr, lk, un]) => {
+  // What the nightly check and the hourly pre-air check (tools/preair_check.py) found won't play here.
+  Promise.all(["unplayable.json", "preair-bad.json"].map(f => fetch(f, { cache: "no-store" }).then(r => r.json()).catch(() => ({}))))
+    .then(([a, b]) => ({ ids: { ...(a.ids || {}), ...(b.ids || {}) } }))]).then(([d, p, pr, tr, lk, un]) => {
   if (!d.videos || d.videos.length < 3) return fallBack();
   unplayable = un.ids || {};
   all = d.videos.filter(v => !unplayable[v.id]);
@@ -297,7 +304,7 @@ window.onYouTubeIframeAPIReady = () => {
       },
       // A video its owner won't let others play is skipped; when none will play, the free films take over.
       // (its time is filled like any programme that ends early, not by playing the next one over and over).
-      onError: e => { if (inBreak) return; lastError = e.data; if (++failures >= 5) fallBack(); else { const at = cur; setTimeout(() => at === cur && !inBreak && endedEarly(at), 1000); } },
+      onError: e => { if (inBreak) return; cover(true); lastError = e.data; if (++failures >= 5) fallBack(); else { const at = cur; setTimeout(() => at === cur && !inBreak && endedEarly(at), 1000); } },
     },
   });
   stillFor(player);

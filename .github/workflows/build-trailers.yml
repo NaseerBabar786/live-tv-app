@@ -50,6 +50,11 @@ jobs:
         if: always()
         run: python3 tools/check_bazaar_tv.py
 
+      # The owner's rule (2026-10-07): no video goes on air until it passes the pre-air check; one that
+      # would show YouTube's error or "Watch on YouTube" screen is taken off the list first.
+      - name: Pre-air check
+        run: python3 tools/preair_check.py --lists --files docs/channel/trailers.json docs/channel/music-videos.json docs/channel/block-*.json
+
       - name: Publish the lists
         # Never lists that break the owner's rule (the check above).
         if: always() && github.ref == 'refs/heads/main' && steps.fit.outcome == 'success'

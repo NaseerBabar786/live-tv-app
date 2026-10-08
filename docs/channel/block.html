@@ -40,16 +40,26 @@
   @keyframes tickrtl { from { transform: translateX(-100%); } to { transform: none; } }
   /* Our own card over the player while a trailer loads, between trailers and at each new language. */
   .cover { background: #000; display: grid; place-items: center; align-content: center; gap: 2vh; transition: opacity .4s; pointer-events: none; color: #fff; text-align: center; }
-  .cover img { height: 20vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  /* While a video starts: only a loading circle in the middle, never our logo (owner, 2026-10-07). */
+  .spin { width: 8vh; height: 8vh; box-sizing: border-box; border: .8vh solid rgba(255,255,255,.18); border-top-color: rgba(255,255,255,.85); border-radius: 50%; animation: spin 1s linear infinite; }
+  .cover.off .spin { animation: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .cover b { font-size: clamp(18px, 4vw, 52px); }
   .cover small { font-size: clamp(12px, 1.8vw, 22px); opacity: .8; }
   .cover.off { opacity: 0; }
+  /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
+     owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
+     YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
+     (under our ticker strip, or off the screen): only the picture and our own things show. Owner's rule
+     2026-10-07, checked by tools/preair_check.py. */
+  :root { --box: calc(100vh - var(--strip)); }
+  #player { top: calc(var(--box) * -0.2) !important; height: calc(var(--box) * 1.4) !important; left: 50% !important; right: auto !important; width: min(100vw, calc(var(--box) * 16 / 9)) !important; transform: translateX(-50%); }
 </style>
 </head>
 <body>
 <div id="player"></div>
 <video id="own" playsinline hidden></video>
-<div class="cover" id="cover"><img alt="" id="coverLogo" hidden><b id="coverTitle" dir="auto">Bazaar TV</b><small id="coverSub" dir="auto"></small></div>
+<div class="cover" id="cover"><div class="spin"></div><b id="coverTitle" dir="auto">Bazaar TV</b><small id="coverSub" dir="auto"></small></div>
 <div class="shield" id="shield"></div>
 <img class="bug off" id="bug" alt="">
 <div class="now hide" id="now" dir="auto"></div>
@@ -71,7 +81,6 @@ ids.reduce((t, _, i) => (starts.push(t), t + (secs[i] || 0) * 1000), at);
 const end = until || (ids.length ? starts[ids.length - 1] + (secs[ids.length - 1] || 0) * 1000 : at);
 
 document.title = name + " · اب دیکھیے";
-$("coverLogo").src = logo; $("coverLogo").hidden = false;
 $("bug").src = logo;
 // The advertise line always runs here (the owner's ads rule); the channel's own line when it has one.
 // The ticker stays in English (the owner, 2026-10-07), though the rest of Bazaar TV's writing is Urdu.
@@ -113,6 +122,10 @@ let player = null, cur = -1, nowTimer = null, failures = 0, finished = false;
 // never leaves our card up for the rest of its time (the owner, 2026-10-07): another of the same kind takes
 // its place (the list's spares first), and when none will play, our own short shows and ads fill the time.
 const bad = new Set(), played = new Set();
+// Videos the nightly check or the hourly pre-air check (tools/preair_check.py) found won't play here are skipped
+// before YouTube can show its error screen.
+for (const f of ["unplayable.json", "preair-bad.json"])
+  fetch(f, { cache: "no-store" }).then(r => r.json()).then(d => Object.keys(d.ids || {}).forEach(id => bad.add(id))).catch(() => {});
 let sub = null, ownOn = false, ownTurn = 0, fillers = [];
 const slotEnd = i => Math.min(end, starts[i] + (secs[i] || 0) * 1000);
 fetch("test-schedule.json", { cache: "no-store" }).then(r => r.json()).then(c => {

@@ -1,5 +1,6 @@
 package com.livetv.app
 
+import com.livetv.app.data.YouTube
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -63,6 +64,7 @@ class WebChannelActivity : Activity() {
             setBackgroundColor(android.graphics.Color.TRANSPARENT)
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                    if (YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame)) return true
                     if (request.url.scheme != "livetv") return false
                     if (request.url.host == "fallback") {
                         setResult(RESULT_FALLBACK)
@@ -73,7 +75,7 @@ class WebChannelActivity : Activity() {
                         setResult(RESULT_DONE)
                         finish()
                     }
-                    // A Library video its owner won't let others play: the app offers YouTube's own app.
+                    // A Library video its owner won't let others play: the Library says so (never YouTube's app).
                     if (request.url.host == "blocked") {
                         setResult(RESULT_BLOCKED)
                         finish()
@@ -183,6 +185,25 @@ class WebChannelActivity : Activity() {
         if (isFinishing) return
         setResult(code, data)
         finish()
+    }
+
+    /** The Azan screen covers this channel: its sound pauses until the Azan is over. */
+    private var pausedForAzan = false
+
+    override fun onStop() {
+        super.onStop()
+        if (QuranSection.azanShowing && !isFinishing) {
+            pausedForAzan = true
+            webView?.onPause()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (pausedForAzan) {
+            pausedForAzan = false
+            webView?.onResume()
+        }
     }
 
     override fun onPause() {

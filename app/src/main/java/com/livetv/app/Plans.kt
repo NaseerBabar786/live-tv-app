@@ -2,6 +2,7 @@ package com.livetv.app
 
 import com.livetv.app.data.Channel
 import com.livetv.app.data.ChannelRepository
+import com.livetv.app.data.Mta
 import com.livetv.app.data.MyChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -125,10 +126,10 @@ object Plans {
 
     /**
      * The channels of a package without [Feature.AllChannels]: only our own Bazaar channels (owner, 2026-10-07;
-     * Aaj Tak and ARY News were dropped).
+     * Aaj Tak and ARY News were dropped), plus MTA's when the viewer turned MTA on (owner, 2026-10-07).
      */
     fun freeChannel(channel: Channel): Boolean =
-        MyChannel.isMine(channel) || ChannelRepository.nameKey(channel.name) in _extraChannels.value
+        MyChannel.isMine(channel) || Mta.isMta(channel) || ChannelRepository.nameKey(channel.name) in _extraChannels.value
 
     private val _extraChannels = MutableStateFlow<Set<String>>(emptySet())
 

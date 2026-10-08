@@ -114,6 +114,7 @@ import androidx.compose.material.icons.filled.ViewDay
 import androidx.compose.material.icons.filled.VerticalSplit
 import androidx.compose.material.icons.filled.ViewSidebar
 import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -121,6 +122,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -195,6 +197,8 @@ fun ChannelListScreen(
     onOpenVodItem: ((VodTarget) -> Unit)? = null,
     /** Opens the Games section; null hides its button. */
     onOpenGames: (() -> Unit)? = null,
+    /** Opens the Iqra Quran section; null hides its button. */
+    onOpenQuran: (() -> Unit)? = null,
     /** A channel picked to play in 1+List's player, remembered as the last one watched. */
     onWatch: (Channel) -> Unit = {},
 ) {
@@ -260,6 +264,8 @@ fun ChannelListScreen(
                 ?: if (Edition.MAX) TileLayout.Browse else TileLayout.List,
         )
     }
+    // The mode on screen, for the owner's "most used features" (Features).
+    LaunchedEffect(tileLayout) { com.livetv.app.Features.use(tileLayout.feature?.key ?: "list") }
     // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
     val packages by Plans.features.collectAsStateWithLifecycle()
@@ -626,6 +632,22 @@ fun ChannelListScreen(
                             }
                         }
                     }
+                    if (onOpenQuran != null) {
+                        if (wideScreen) {
+                            TextButton(
+                                onClick = onOpenQuran,
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusGlow(),
+                            ) {
+                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null)
+                                Text("Iqra Quran", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
+                        } else {
+                            IconButton(onClick = onOpenQuran, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = "Iqra Quran")
+                            }
+                        }
+                    }
                     IconButton(
                         onClick = {
                             previewSound = !previewSound
@@ -727,6 +749,7 @@ fun ChannelListScreen(
                         onNextMode = if (wideScreen || phone) ({ modesOpen = true }) else null,
                         onOpen = onPlay,
                         onOpenGames = onOpenGames,
+                        onOpenQuran = onOpenQuran,
                         onOpenVodItem = onOpenVodItem,
                         onOpenSettings = { showSettings = true },
                         onRailFocused = { topBarFocused = it },
@@ -1591,6 +1614,7 @@ private fun ChannelCard(
                 ),
             contentAlignment = Alignment.Center,
         ) {
+            if (page != null || preview != null) LoadingSpinner(size = 32.dp)
             if (snapshot != null) {
                 Image(
                     snapshot,
@@ -1707,7 +1731,9 @@ private fun ChannelCard(
                 .background(if (glow) MaterialTheme.colorScheme.surfaceVariant else Color.Black),
             contentAlignment = Alignment.Center,
         ) {
-            if (channel.logo != null) {
+            if (page != null || preview != null) {
+                LoadingSpinner(size = 32.dp)
+            } else if (channel.logo != null) {
                 SubcomposeAsyncImage(
                     model = channel.logo,
                     contentDescription = null,
@@ -1911,6 +1937,7 @@ private fun PlayerWithList(
                     .clickable { selected?.let(onOpen) },
                 contentAlignment = Alignment.Center,
             ) {
+                if (selected != null && !showing) LoadingSpinner()
                 AndroidView(
                     factory = { ctx -> TextureView(ctx).also { stream.player.setVideoTextureView(it) } },
                     onRelease = { stream.player.clearVideoTextureView(it) },
@@ -2044,6 +2071,21 @@ private fun PlayerWithList(
 private fun countryName(channel: Channel): String? =
     channel.country?.takeIf { it.length == 2 && it.all(Char::isLetter) }?.uppercase()
         ?.let { if (it == "GB") "UK" else it }
+
+/**
+ * A channel that is starting shows only a white loading circle in the middle, never its logo
+ * (owner, 2026-10-07); the small corner logo comes once it plays.
+ */
+@Composable
+internal fun LoadingSpinner(modifier: Modifier = Modifier, size: Dp = 44.dp) {
+    Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator(
+            color = Color.White.copy(alpha = 0.85f),
+            strokeWidth = size / 11,
+            modifier = Modifier.size(size),
+        )
+    }
+}
 
 @Composable
 internal fun Initials(name: String) {

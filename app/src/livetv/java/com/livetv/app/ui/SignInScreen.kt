@@ -262,14 +262,14 @@ private fun EmailSignIn(busy: Boolean, onBusy: (Boolean) -> Unit, onError: (Stri
                 value = name, onValueChange = { name = it }, singleLine = true,
                 label = { Text("Your name") },
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Next),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().remoteTextField(),
             )
         }
         OutlinedTextField(
             value = email, onValueChange = { email = it.trim() }, singleLine = true,
             label = { Text("Email") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().remoteTextField(),
         )
         OutlinedTextField(
             value = password, onValueChange = { password = it }, singleLine = true,
@@ -277,7 +277,7 @@ private fun EmailSignIn(busy: Boolean, onBusy: (Boolean) -> Unit, onError: (Stri
             visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { go() }),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().remoteTextField(),
         )
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             TextButton(onClick = { showPassword = !showPassword }, modifier = Modifier.focusGlow()) {

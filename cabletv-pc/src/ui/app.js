@@ -7,11 +7,13 @@ import * as plans from './plans.js';
 import * as account from './account.js';
 import * as sponsors from './sponsors.js';
 import * as watching from './watching.js';
+import * as features from './features.js';
 import { signInConfigured } from './config.js';
 import { openStart } from './screens/start.js';
 import { openSignIn } from './screens/signin.js';
 import { openHome } from './screens/home.js';
 import { checkForUpdate } from './screens/update.js';
+import { scheduleWelcome } from './screens/welcome.js';
 
 // Errors in the screens are reported (tv.bulkbazaar.ca/crashes); they don't close the app.
 window.addEventListener('error', (e) => window.pc?.error(e.message, e.error && e.error.stack));
@@ -28,6 +30,7 @@ async function signedInWork() {
   await account.recordOpen();
   await plans.refresh(account);
   await sponsors.refresh(account);
+  scheduleWelcome();
 }
 
 async function main() {
@@ -43,7 +46,7 @@ async function main() {
 
   const showHome = () => {
     if (home) return;
-    home = openHome({ onExit: () => { watching.setForeground(false); account.reportViewing(sponsors.viewsStore).finally(() => window.pc?.quit()); } });
+    home = openHome({ onExit: () => { watching.setForeground(false); features.setForeground(false); account.reportViewing(sponsors.viewsStore).finally(() => window.pc?.quit()); } });
     checkForUpdate();
   };
   openStart(() => {
@@ -62,9 +65,10 @@ async function main() {
   setInterval(() => account.reportViewing(sponsors.viewsStore), 10 * 60000);
   document.addEventListener('visibilitychange', () => {
     watching.setForeground(!document.hidden);
+    features.setForeground(!document.hidden);
     if (document.hidden) account.reportViewing(sponsors.viewsStore);
   });
-  window.addEventListener('beforeunload', () => watching.setForeground(false));
+  window.addEventListener('beforeunload', () => { watching.setForeground(false); features.setForeground(false); });
 }
 
 main();
