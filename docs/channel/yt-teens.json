@@ -1,12 +1,68 @@
 {
  "name": "Bazaar Teens",
- "built": "2026-10-08 10:06 UTC",
+ "built": "2026-10-08 20:18 UTC",
  "videos": [
+  {
+   "id": "_y9JuojAIg0",
+   "title": "We Finally Know More About Humanity’s First Civilization",
+   "label": "Kurzgesagt",
+   "mins": 17.516666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "h6CmKF-mN2U",
+   "title": "Which is better: Buying or renting a home? - Ella Feldman",
+   "label": "TED-Ed",
+   "mins": 6.066666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "mg6JlaaynMk",
+   "title": "Haunted Estate Sale 📹 | Regular Show: The Lost Tapes | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 3.9,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "pH_os5vj08E",
+   "title": "Miley and Jackson Make a $250,000 Mistake 😱 | Hannah Montana | Disney Channel",
+   "label": "Disney Channel",
+   "mins": 3.283333333333333,
+   "found": "2026-10-08"
+  },
   {
    "id": "Jtpd0qsU5Sg",
    "title": "FULL EPISODE #4: Nick Explains the NFL with Dora 🏈 ft. Kyren Williams | Nickelodeon",
    "label": "Nickelodeon",
    "mins": 10.483333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "0-uz89xx1uA",
+   "title": "Rudra & friends are trapped by Ms. Snow! | Watch Rudra only on Nick.",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "i67iClWqg-k",
+   "title": "Window seat kya mil gayi natak dekho😤",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "DRlPTE_eCiY",
+   "title": "Taj Mahal dekhke Motu bana photographer!",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "PP4i-AuUuFw",
+   "title": "Taffy ko mil gaya tasty food ka treasure!",
+   "label": "Nick India",
+   "mins": null,
    "found": "2026-10-08"
   },
   {
@@ -203,13 +259,6 @@
    "title": "Alcohol is AMAZING",
    "label": "Kurzgesagt",
    "mins": 14.2,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "7wK4peez9zE",
-   "title": "Let's Kill You a Billion Times to Make You Immortal",
-   "label": "Kurzgesagt",
-   "mins": 11.833333333333334,
    "found": "2026-10-07"
   },
   {
@@ -942,7 +991,7 @@
   },
   {
    "id": "KibgDxh68I8",
-   "title": "Crash Course Big Questions on U.S. Government Preview",
+   "title": "Crash Course Big Questions on US Government Preview",
    "label": "CrashCourse",
    "mins": 3.5,
    "found": "2026-10-07"
@@ -1536,13 +1585,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "SlTK0gZc-cM",
-   "title": "Chowder’s Weirdest Recipes EVER! 🍦🤪 Chowder | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 18.9,
-   "found": "2026-10-07"
-  },
-  {
    "id": "gpEmKWV3Hh8",
    "title": "Vampirina: Teenage Vampire Full Episode! \"Second to Breathe\" 🦇💜 | Season 2 | Disney Channel",
    "label": "Disney Channel",
@@ -1645,13 +1687,6 @@
    "title": "Liamani Segura from Camp Rock 3 and Descendants Explores Her Locker! 🤩💖 | Lock In | Disney Channel",
    "label": "Disney Channel",
    "mins": 9.25,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "PjPnYMc6H9w",
-   "title": "Alex & Harper Bestie Moments ✨💖 | Wizards of and Wizards Beyond Waverly Place | Disney Channel",
-   "label": "Disney Channel",
-   "mins": 10.333333333333334,
    "found": "2026-10-07"
   },
   {
@@ -1811,34 +1846,6 @@
   {
    "id": "PvkQY28CsoA",
    "title": "Saal bhar ka workout ho gaya😭",
-   "label": "Nick India",
-   "mins": null,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "-ik483nWGDg",
-   "title": "Shiva learns about the langoor gang’s new crime! | Watch Shiva only on Sonic.",
-   "label": "Nick India",
-   "mins": null,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "NePyGshyGEA",
-   "title": "Why does it feel like prepping for a battle? 😭",
-   "label": "Nick India",
-   "mins": null,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "H6M75-_C4jA",
-   "title": "Situations aati jaati rehti hai, entertainment nahi rukhni chahiye.",
-   "label": "Nick India",
-   "mins": null,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "5MmOlRQ3Em0",
-   "title": "Who will get the first haircut? Chikoo or Bunty? | Watch Chikoo Aur Bunty on Nick!",
    "label": "Nick India",
    "mins": null,
    "found": "2026-10-07"
@@ -2282,6 +2289,55 @@
    "title": "14-Year-Old Singer Wins Her SECOND Golden Buzzer on America's Got Talent! 🤩",
    "label": "Got Talent Global",
    "mins": 5.083333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "7wK4peez9zE",
+   "title": "Let's Kill You a Billion Times to Make You Immortal",
+   "label": "Kurzgesagt",
+   "mins": 11.833333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "SlTK0gZc-cM",
+   "title": "Chowder’s Weirdest Recipes EVER! 🍦🤪 Chowder | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 18.9,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "PjPnYMc6H9w",
+   "title": "Alex & Harper Bestie Moments ✨💖 | Wizards of and Wizards Beyond Waverly Place | Disney Channel",
+   "label": "Disney Channel",
+   "mins": 10.333333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "-ik483nWGDg",
+   "title": "Shiva learns about the langoor gang’s new crime! | Watch Shiva only on Sonic.",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "NePyGshyGEA",
+   "title": "Why does it feel like prepping for a battle? 😭",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "H6M75-_C4jA",
+   "title": "Situations aati jaati rehti hai, entertainment nahi rukhni chahiye.",
+   "label": "Nick India",
+   "mins": null,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "5MmOlRQ3Em0",
+   "title": "Who will get the first haircut? Chikoo or Bunty? | Watch Chikoo Aur Bunty on Nick!",
+   "label": "Nick India",
+   "mins": null,
    "found": "2026-10-07"
   },
   {
