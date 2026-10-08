@@ -35,6 +35,9 @@ import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from no_horror import is_horror  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(ROOT, "docs")
 CHANNEL = os.path.join(DOCS, "channel")
@@ -141,6 +144,8 @@ def lookup(video_id):
 JSON_LISTS = ["channel/yt-*.json", "channel/bollywood.json", "channel/trailers.json", "channel/music-videos.json",
               "channel/block-*.json", "weather/videos.json"]
 M3U_LISTS = ["Dramas.m3u", "PakistanLive.m3u"]
+# Lists of songs and weather clips rather than programmes: the no-horror rule doesn't take songs off them.
+NOT_PROGRAMMES = {"bollywood.json", "music-videos.json", "sur.json", "videos.json"}
 
 
 def all_lists():
@@ -231,6 +236,17 @@ def check_lists(files, save):
             gone[i] = nightly[i].get("why", "can't play here")
         elif i in bad and i not in answers:
             gone[i] = bad[i]["why"]
+    # The owner's rule (2026-10-08): no horror on our channels (tools/no_horror.py). Songs from a horror
+    # film's soundtrack are not horror programmes, so the music lists keep them; the Library is not part of it.
+    for f in files:
+        if f.endswith(".m3u") or os.path.basename(f) in NOT_PROGRAMMES:
+            continue
+        for key in ("videos", "spares"):
+            for v in load(f, {}).get(key, []) or []:
+                if isinstance(v, dict) and v.get("id") in where and is_horror(v):
+                    gone[v["id"]] = "horror (no horror on our channels)"
+                    bad[v["id"]] = {"why": gone[v["id"]], "where": sorted(where[v["id"]]),
+                                    "since": bad.get(v["id"], {}).get("since", today.isoformat())}
     total = 0
     for f in files:
         mine = {i for i in gone if os.path.basename(f) in where.get(i, ())}

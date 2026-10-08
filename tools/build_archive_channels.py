@@ -27,6 +27,9 @@ import time
 import urllib.parse
 import urllib.request
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from no_horror import is_horror  # noqa: E402  (the owner's rule 2026-10-08: no horror on our channels)
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 USER_AGENT = "LiveTV-playlist-builder/1.0 (+https://tv.bulkbazaar.ca)"
 SEARCH = "https://archive.org/advancedsearch.php?"
@@ -228,7 +231,8 @@ def main():
 
     videos, ids, titles = [], set(), set()
     for d, f in zip(found, files):
-        if not f or skip.search(f[0]) or f[0].lower() in titles:
+        # No horror on our channels (the owner, 2026-10-08): tools/no_horror.py.
+        if not f or skip.search(f[0]) or is_horror(f[0]) or f[0].lower() in titles:
             continue
         titles.add(f[0].lower())
         vid = re.sub(r"[^a-z0-9]+", "-", f[0].lower()).strip("-")[:40] or args.channel

@@ -9,7 +9,7 @@
  "videos": [
   {
    "id": "battleship-potemkin-1925",
-   "title": "Battleship Potemkin (1925)",
+   "title": "Raat Ki Film: Battleship Potemkin (1925)",
    "url": "https://archive.org/download/BattleshipPotemkin/Battleship_Potemkin_512kb.mp4",
    "secs": 4381,
    "kind": "programme"
@@ -19,13 +19,6 @@
    "title": "The Birth of a Nation (1915)",
    "url": "https://archive.org/download/dw_griffith_birth_of_a_nation/birth_of_a_nation_512kb.mp4",
    "secs": 10823,
-   "kind": "programme"
-  },
-  {
-   "id": "the-cabinet-of-dr-caligari-1920",
-   "title": "The Cabinet of Dr. Caligari (1920)",
-   "url": "https://archive.org/download/DasKabinettdesDoktorCaligariTheCabinetofDrCaligari/The_Cabinet_of_Dr._Caligari_512kb.mp4",
-   "secs": 3061,
    "kind": "programme"
   },
   {
@@ -50,13 +43,6 @@
    "kind": "programme"
   },
   {
-   "id": "the-phantom-of-the-opera-1925",
-   "title": "The Phantom of the Opera (1925)",
-   "url": "https://archive.org/download/ThePhantomoftheOpera/Phantom_of_the_Opera_512kb.mp4",
-   "secs": 6388,
-   "kind": "programme"
-  },
-  {
    "id": "his-girl-friday-1940",
    "title": "His Girl Friday (1940)",
    "url": "https://archive.org/download/GirlFriday/The_Saint%27s_Girl_Friday_1953.mp4",
@@ -68,13 +54,6 @@
    "title": "The Thief of Bagdad (1924)",
    "url": "https://archive.org/download/ThiefOfBagdad1924/ThiefofBagdad1924_512kb.mp4",
    "secs": 8374,
-   "kind": "programme"
-  },
-  {
-   "id": "the-golem-how-he-came-into-the-world-192",
-   "title": "The Golem: How He Came into the World (1920)",
-   "url": "https://archive.org/download/TheGolem_893/TheGolem_512kb.mp4",
-   "secs": 6083,
    "kind": "programme"
   },
   {
@@ -169,24 +148,10 @@
    "kind": "programme"
   },
   {
-   "id": "the-cat-and-the-canary-1927",
-   "title": "The Cat and the Canary (1927)",
-   "url": "https://archive.org/download/The_Cat_and_the_Canary/The_Cat_and_the_Canary_512kb.mp4",
-   "secs": 5039,
-   "kind": "programme"
-  },
-  {
    "id": "the-hunchback-of-notre-dame-1923",
    "title": "The Hunchback of Notre Dame (1923)",
    "url": "https://archive.org/download/The_Hunchback_of_Notre_Dame/The_Hunchback_of_Notre_Dame_512kb.mp4",
    "secs": 6043,
-   "kind": "programme"
-  },
-  {
-   "id": "the-little-shop-of-horrors-1960",
-   "title": "The Little Shop of Horrors (1960)",
-   "url": "https://archive.org/download/The_Little_Shop_of_Horrors_60/The_Little_Shop_of_Horrors_60.mp4",
-   "secs": 4385,
    "kind": "programme"
   },
   {
@@ -208,13 +173,6 @@
    "title": "Algiers (1938)",
    "url": "https://archive.org/download/Algiers_/Algiers.mp4",
    "secs": 5946,
-   "kind": "programme"
-  },
-  {
-   "id": "h-xan-1922",
-   "title": "Häxan (1922)",
-   "url": "https://archive.org/download/Haxan1922SpanishSubtitles/HaxanSpanishSubs.mp4",
-   "secs": 6314,
    "kind": "programme"
   },
   {
@@ -288,13 +246,6 @@
    "kind": "programme"
   },
   {
-   "id": "white-zombie-1932",
-   "title": "White Zombie (1932)",
-   "url": "https://archive.org/download/VictorHalperinsWhiteZombie1932/WhiteZombie.mp4",
-   "secs": 4005,
-   "kind": "programme"
-  },
-  {
    "id": "robin-hood-1922",
    "title": "Robin Hood (1922)",
    "url": "https://archive.org/download/FairbanksRobinHood1922/FairbanksRobinHood1922/FairbanksRobinHood1922_512kb.mp4",
@@ -320,13 +271,6 @@
    "title": "The Man with the Golden Arm (1955)",
    "url": "https://archive.org/download/themanwiththegoldenarm1955_202001/The%20Man%20with%20the%20Golden%20Arm%20%281955%2C%20USA%29%20Featuring%20Frank%20Sinatra%2C%20Kim%20Novak%20-%20Film%20Noir%20Full%20Movies.mp4",
    "secs": 7158,
-   "kind": "programme"
-  },
-  {
-   "id": "house-on-haunted-hill-1958",
-   "title": "House on Haunted Hill (1958)",
-   "url": "https://archive.org/download/house_on_haunted_hill_ipod/house_on_haunted_hill_512kb.mp4",
-   "secs": 4483,
    "kind": "programme"
   },
   {
@@ -376,13 +320,6 @@
    "title": "Becky Sharp (1935)",
    "url": "https://archive.org/download/Becky_Sharp_/Becky_Sharp.mp4",
    "secs": 5004,
-   "kind": "programme"
-  },
-  {
-   "id": "carnival-of-souls-1962",
-   "title": "Carnival of Souls (1962)",
-   "url": "https://archive.org/download/CarnivalofSouls/CarnivalOfSouls.mp4",
-   "secs": 4979,
    "kind": "programme"
   },
   {
@@ -523,13 +460,6 @@
    "title": "The Flapper (1920)",
    "url": "https://archive.org/download/The_Flapper/The_Flapper_512kb.mp4",
    "secs": 5128,
-   "kind": "programme"
-  },
-  {
-   "id": "the-terror-1963",
-   "title": "The Terror (1963)",
-   "url": "https://archive.org/download/TheTerror/TheTerror.mp4",
-   "secs": 4743,
    "kind": "programme"
   },
   {
@@ -680,13 +610,6 @@
    "kind": "programme"
   },
   {
-   "id": "the-brain-that-wouldn-t-die-1962",
-   "title": "The Brain That Wouldn't Die (1962)",
-   "url": "https://archive.org/download/brain_that_wouldnt_die/brain_that_wouldnt_die.mp4",
-   "secs": 4255,
-   "kind": "programme"
-  },
-  {
    "id": "the-wedding-march-1926",
    "title": "The Wedding March (1926)",
    "url": "https://archive.org/download/ErichVonStroheimsTheWeddingMarch1928/WeddingMarchmuet_512kb.mp4",
@@ -698,13 +621,6 @@
    "title": "The Deadly Companions (1961)",
    "url": "https://archive.org/download/tdc1104552/tdc1104552.mp4",
    "secs": 5375,
-   "kind": "programme"
-  },
-  {
-   "id": "a-bucket-of-blood-1959",
-   "title": "A Bucket of Blood (1959)",
-   "url": "https://archive.org/download/ABucketOfBlood1959/A_Bucket_Of_Blood.mp4",
-   "secs": 3893,
    "kind": "programme"
   },
   {
@@ -796,13 +712,6 @@
    "title": "The Toll of the Sea (1922)",
    "url": "https://archive.org/download/TheTollOfTheSeanovember261922/TheTollOfTheSeachesterM.Franklin1922.mp4",
    "secs": 3273,
-   "kind": "programme"
-  },
-  {
-   "id": "the-hands-of-orlac-1924",
-   "title": "The Hands of Orlac (1924)",
-   "url": "https://archive.org/download/the-hands-of-orlac_1928/the-hands-of-orlac_1928.ia.mp4",
-   "secs": 9317,
    "kind": "programme"
   },
   {
@@ -929,13 +838,6 @@
    "title": "The Canary Murder Case (1929)",
    "url": "https://archive.org/download/CanaryMurderCase/The_Canary_Murder_Case_1929.mp4",
    "secs": 4615,
-   "kind": "programme"
-  },
-  {
-   "id": "the-devil-bat-1940",
-   "title": "The Devil Bat (1940)",
-   "url": "https://archive.org/download/Devil_Bat_1940/Devil_Bat_1940.mp4",
-   "secs": 4094,
    "kind": "programme"
   },
   {
@@ -1212,13 +1114,6 @@
    "kind": "programme"
   },
   {
-   "id": "the-ghoul-1933",
-   "title": "The Ghoul (1933)",
-   "url": "https://archive.org/download/TheGhoul/TheGhoul_1933.mp4",
-   "secs": 4127,
-   "kind": "programme"
-  },
-  {
    "id": "the-amazing-adventure-1936",
    "title": "The Amazing Adventure (1936)",
    "url": "https://archive.org/download/amazing_adventure/amazing_adventuarchive.mp4",
@@ -1317,13 +1212,6 @@
    "kind": "programme"
   },
   {
-   "id": "city-of-the-dead-horror-hotel-1960",
-   "title": "City of the Dead/Horror Hotel (1960)",
-   "url": "https://archive.org/download/Horror_Hotel/Horror_Hotel.mp4",
-   "secs": 4554,
-   "kind": "programme"
-  },
-  {
    "id": "angel-on-my-shoulder-1946",
    "title": "Angel on My Shoulder (1946)",
    "url": "https://archive.org/download/angel_on_my_shoulder/angel_on_my_shoulder.mp4",
@@ -1415,13 +1303,6 @@
    "kind": "programme"
   },
   {
-   "id": "attack-of-the-giant-leeches-1959",
-   "title": "Attack of the Giant Leeches (1959)",
-   "url": "https://archive.org/download/cco_attackofthegiantleeches/ccoPublicDomainAttack_of_the_Giant_Leeches.mp4",
-   "secs": 3739,
-   "kind": "programme"
-  },
-  {
    "id": "assignment-outer-space-1960",
    "title": "Assignment Outer Space (1960)",
    "url": "https://archive.org/download/Assignment_Outer_Space/Assignment_Outer_Space.mp4",
@@ -1468,13 +1349,6 @@
    "title": "Battle Of The Worlds 1961",
    "url": "https://archive.org/download/BattleOfTheWorldsWidesceen/Battle%20of%20the%20Worlds%20NTSC_1.mp4",
    "secs": 5006,
-   "kind": "programme"
-  },
-  {
-   "id": "the-phantom-creeps-1939",
-   "title": "The Phantom Creeps (1939)",
-   "url": "https://archive.org/download/ThePhantomCreeps/ThePhantomCreeps.mp4",
-   "secs": 4700,
    "kind": "programme"
   },
   {
@@ -1541,13 +1415,6 @@
    "kind": "programme"
   },
   {
-   "id": "the-house-on-bare-mountain-1962",
-   "title": "The House On Bare Mountain (1962)",
-   "url": "https://archive.org/download/HouseOnBareMountain/House%20on%20Bare%20Mountain.mp4",
-   "secs": 3719,
-   "kind": "programme"
-  },
-  {
    "id": "the-magic-sword-1962",
    "title": "The Magic Sword (1962)",
    "url": "https://archive.org/download/TheMagicSword/TheMagicSword.mp4",
@@ -1559,13 +1426,6 @@
    "title": "Paradise Canyon (1935)",
    "url": "https://archive.org/download/ParadiseCanyon/ParadiseCanyon.mp4",
    "secs": 3187,
-   "kind": "programme"
-  },
-  {
-   "id": "the-ghost-train-1941",
-   "title": "The Ghost Train (1941)",
-   "url": "https://archive.org/download/TheGhostTrain/TheGhostTrain.mp4",
-   "secs": 4882,
    "kind": "programme"
   },
   {
@@ -1587,13 +1447,6 @@
    "title": "Abilene Town (1946)",
    "url": "https://archive.org/download/AbileneTown/AbileneTown.mp4",
    "secs": 5361,
-   "kind": "programme"
-  },
-  {
-   "id": "atom-age-vampire-1960",
-   "title": "Atom Age Vampire (1960)",
-   "url": "https://archive.org/download/AtomAgeVampire/AtomAgeVampire.mp4",
-   "secs": 5172,
    "kind": "programme"
   },
   {
@@ -1678,13 +1531,6 @@
    "title": "Rogue's Tavern (1936)",
    "url": "https://archive.org/download/rogues_tavern/rogues_tavern.mp4",
    "secs": 4158,
-   "kind": "programme"
-  },
-  {
-   "id": "king-of-the-zombies-1941",
-   "title": "King of the Zombies (1941)",
-   "url": "https://archive.org/download/King_of_the_Zombies/King_of_the_Zombies_512kb.mp4",
-   "secs": 4030,
    "kind": "programme"
   },
   {
@@ -1828,13 +1674,6 @@
    "kind": "programme"
   },
   {
-   "id": "the-wasp-woman-1960",
-   "title": "The Wasp Woman (1960)",
-   "url": "https://archive.org/download/The_Wasp_Women/The_Wasp_Women.mp4",
-   "secs": 4352,
-   "kind": "programme"
-  },
-  {
    "id": "rocky-mountain-mystery-1935",
    "title": "Rocky Mountain Mystery (1935)",
    "url": "https://archive.org/download/Rocky_Mountain_Mystery_1935/Rocky_Mountain_Mystery_1935.mp4",
@@ -1881,13 +1720,6 @@
    "title": "Topper Returns (1941)",
    "url": "https://archive.org/download/Topper_Returns_41/Topper_Returns_41_512kb.mp4",
    "secs": 5301,
-   "kind": "programme"
-  },
-  {
-   "id": "creature-from-the-haunted-sea-1961",
-   "title": "Creature from the Haunted Sea (1961)",
-   "url": "https://archive.org/download/CreatureFromTheHauntedSea/CreatureFromTheHauntedSea.mp4",
-   "secs": 4473,
    "kind": "programme"
   },
   {
@@ -1951,13 +1783,6 @@
    "title": "The Invincible Gladiator (1962)",
    "url": "https://archive.org/download/AteneaFilmsPublicDomainTheInvincibleGladiator/Invincible_Gladiator.mp4",
    "secs": 5455,
-   "kind": "programme"
-  },
-  {
-   "id": "the-sadist-1963",
-   "title": "The Sadist (1963)",
-   "url": "https://archive.org/download/The_Sadist/THE_SADIST.mp4",
-   "secs": 5498,
    "kind": "programme"
   },
   {
@@ -2042,13 +1867,6 @@
    "title": "Heartbeat (1946)",
    "url": "https://archive.org/download/heartbeat/heartbeat.mp4",
    "secs": 6002,
-   "kind": "programme"
-  },
-  {
-   "id": "daughter-of-horror-1955",
-   "title": "Raat Ki Film: Daughter of Horror (1955)",
-   "url": "https://archive.org/download/daughter_of_horror/daughter_of_horror.mp4",
-   "secs": 3282,
    "kind": "programme"
   },
   {
@@ -2157,13 +1975,6 @@
    "kind": "programme"
   },
   {
-   "id": "bowery-at-midnight-1942",
-   "title": "Bowery at Midnight (1942)",
-   "url": "https://archive.org/download/Bowery_at_Midnight/Bowery_at_Midnight_1942.mp4",
-   "secs": 3695,
-   "kind": "programme"
-  },
-  {
    "id": "the-lawless-frontier-1934",
    "title": "The Lawless Frontier (1934)",
    "url": "https://archive.org/download/TheLawlessFrontier1934/TheLawlessFrontier1934.mp4",
@@ -2203,13 +2014,6 @@
    "title": "The Quiet One (1948)",
    "url": "https://archive.org/download/the_quiet_one/the_quiet_one.mp4",
    "secs": 3836,
-   "kind": "programme"
-  },
-  {
-   "id": "the-corpse-vanishes-1942",
-   "title": "The Corpse Vanishes (1942)",
-   "url": "https://archive.org/download/TheCorpseVanishes/TheCorpseVanishes.mp4",
-   "secs": 3789,
    "kind": "programme"
   },
   {
@@ -2563,13 +2367,6 @@
    "kind": "programme"
   },
   {
-   "id": "werewolf-in-a-girls-dormitory-1962",
-   "title": "Werewolf in a Girls' Dormitory (1962)",
-   "url": "https://archive.org/download/Werewolf_In_A_Girls_Dormitory/Werewolf_In_A_Girls_Dormitory.mp4",
-   "secs": 4989,
-   "kind": "programme"
-  },
-  {
    "id": "billy-the-kid-wanted-1941",
    "title": "Billy the Kid Wanted (1941)",
    "url": "https://archive.org/download/Billy_the_Kid_Wanted_1941/Billy_the_Kid_Wanted_1941.mp4",
@@ -2731,13 +2528,6 @@
    "kind": "programme"
   },
   {
-   "id": "the-screaming-skull-1958",
-   "title": "The Screaming Skull (1958)",
-   "url": "https://archive.org/download/TheScreamingSkull/TheScreamingSkull.mp4",
-   "secs": 4041,
-   "kind": "programme"
-  },
-  {
    "id": "uncle-joe-1941",
    "title": "Uncle Joe (1941)",
    "url": "https://archive.org/download/UncleJoe/Uncle_Joe.mp4",
@@ -2801,13 +2591,6 @@
    "kind": "programme"
   },
   {
-   "id": "sweeney-todd-the-demon-barber-of-fleet-s",
-   "title": "Sweeney Todd: The Demon Barber of Fleet Street (1936)",
-   "url": "https://archive.org/download/sweeney.todd/sweeney.todd.mp4",
-   "secs": 4049,
-   "kind": "programme"
-  },
-  {
    "id": "ghost-town-gold-1936",
    "title": "Ghost-Town Gold (1936)",
    "url": "https://archive.org/download/three_mesquiteers/three_mesquiteers.mp4",
@@ -2833,13 +2616,6 @@
    "title": "Northwest Trail (1945)",
    "url": "https://archive.org/download/northwest_trail/northwest_trail.mp4",
    "secs": 3610,
-   "kind": "programme"
-  },
-  {
-   "id": "horror-hotel-1960",
-   "title": "Horror Hotel (1960)",
-   "url": "https://archive.org/download/HorrorHotel1960/horror-hotel_512kb.mp4",
-   "secs": 4587,
    "kind": "programme"
   },
   {
@@ -3144,13 +2920,6 @@
    "kind": "programme"
   },
   {
-   "id": "dead-men-walk-1943",
-   "title": "Dead Men Walk (1943)",
-   "url": "https://archive.org/download/DeadMenWalk/DeadMenWalk.mp4",
-   "secs": 3784,
-   "kind": "programme"
-  },
-  {
    "id": "the-thirteenth-guest-1932",
    "title": "The Thirteenth Guest (1932)",
    "url": "https://archive.org/download/The_Thirteenth_Guest/The_Thirteenth_Guest_512kb.mp4",
@@ -3190,13 +2959,6 @@
    "title": "I'll Give My Life (1960)",
    "url": "https://archive.org/download/ill_give_my_life/illgivemylife_512kb.mp4",
    "secs": 4262,
-   "kind": "programme"
-  },
-  {
-   "id": "dracula-1931-colorized-bela-lugosi",
-   "title": "Dracula 1931 colorized (Bela Lugosi)",
-   "url": "https://archive.org/download/dracula-colorized/Dracula%201931.mp4",
-   "secs": 4467,
    "kind": "programme"
   },
   {
@@ -3302,13 +3064,6 @@
    "title": "C-Man (1949)",
    "url": "https://archive.org/download/C-Man/C-Man.mp4",
    "secs": 4586,
-   "kind": "programme"
-  },
-  {
-   "id": "ghosts-on-the-loose-1943",
-   "title": "Ghosts on the Loose (1943)",
-   "url": "https://archive.org/download/GhostsontheLoose/GhostsontheLoose.mp4",
-   "secs": 3882,
    "kind": "programme"
   },
   {
@@ -3431,13 +3186,6 @@
    "kind": "programme"
   },
   {
-   "id": "bloodlust-1961",
-   "title": "Bloodlust! (1961)",
-   "url": "https://archive.org/download/Bloodlust.mpeg/Bloodlust.mp4",
-   "secs": 4087,
-   "kind": "programme"
-  },
-  {
    "id": "bowery-blitzkrieg-1941",
    "title": "Bowery Blitzkrieg (1941)",
    "url": "https://archive.org/download/bowery_blitzkrieg/bowery_blitzkrieg.mp4",
@@ -3470,13 +3218,6 @@
    "title": "The Panther's Claw (1942)",
    "url": "https://archive.org/download/panthers_claw/panthers_claw.mp4",
    "secs": 4233,
-   "kind": "programme"
-  },
-  {
-   "id": "the-ghost-walks-1934",
-   "title": "The Ghost Walks (1934)",
-   "url": "https://archive.org/download/the_ghost_walks/the_ghost_walks.mp4",
-   "secs": 3806,
    "kind": "programme"
   },
   {
@@ -3662,20 +3403,6 @@
    "kind": "programme"
   },
   {
-   "id": "killer-shrews-1959",
-   "title": "Killer Shrews (1959)",
-   "url": "https://archive.org/download/The_Killer_Shrews/The_Killer_Shrews.mp4",
-   "secs": 4134,
-   "kind": "programme"
-  },
-  {
-   "id": "the-ghost-walks-1934-2",
-   "title": "The Ghost Walks (1934)",
-   "url": "https://archive.org/download/The.Ghost.Walks/The_Ghost_Walks_512kb.mp4",
-   "secs": 3806,
-   "kind": "programme"
-  },
-  {
    "id": "delightfully-dangerous-1945",
    "title": "Delightfully Dangerous (1945)",
    "url": "https://archive.org/download/delightfully_dangerous/delightfully_dangerous.mp4",
@@ -3750,7 +3477,7 @@
   {
    "day": "mon",
    "time": "20:00",
-   "video": "daughter-of-horror-1955"
+   "video": "battleship-potemkin-1925"
   },
   {
    "day": "tue",
@@ -3786,7 +3513,6 @@
  "loop": [
   "aces-and-eights-1936",
   "charade-1953",
-  "werewolf-in-a-girls-dormitory-1962",
   "america-1924",
   "battle-of-the-worlds-1961",
   "tarzan-s-revenge-1938",
@@ -3799,7 +3525,6 @@
   "fear-in-the-night-1947",
   "steamboat-bill-jr-1928",
   "the-hitch-hiker-1953",
-  "the-screaming-skull-1958",
   "missing-corpse-1945",
   "david-and-goliath-1960",
   "svengali-1931",
@@ -3818,7 +3543,6 @@
   "delightfully-dangerous-1945",
   "saddle-mountain-roundup-1941",
   "grandma-s-boy-1922",
-  "the-ghost-walks-1934-2",
   "for-better-for-worse-1919",
   "yellowstone-1936",
   "my-favorite-brunette-1947",
@@ -3829,23 +3553,19 @@
   "salt-of-the-earth-1954",
   "que-viva-mexico-1931",
   "a-romance-of-the-redwoods-1917",
-  "white-zombie-1932",
   "queen-of-the-amazons-1946",
   "million-dollar-weekend-1948",
   "fatal-hour-1940",
   "phantom-of-42nd-st-1945",
   "20-000-leagues-under-the-sea-1916",
-  "the-devil-bat-1940",
   "the-extraordinary-adventures-of-mr-west-",
   "uncle-joe-1941",
   "airborne-1962",
   "sex-madness-1938",
-  "king-of-the-zombies-1941",
   "they-raid-by-night-1942",
   "the-big-trees-1952",
   "swamp-women-1955",
   "jack-and-the-beanstalk-1952",
-  "horror-hotel-1960",
   "the-white-warrior-1961",
   "winds-of-the-wasteland-1936",
   "a-fool-there-was-1915",
@@ -3854,7 +3574,6 @@
   "secret-agent-1936",
   "c-man-1949",
   "the-blood-of-jesus-1941",
-  "the-ghost-walks-1934",
   "sky-patrol-1939",
   "the-great-commandment-1939",
   "abraham-lincoln-1930",
@@ -3870,28 +3589,24 @@
   "a-man-there-was-1917",
   "he-who-gets-slapped-1924",
   "the-most-dangerous-game-1932",
-  "the-little-shop-of-horrors-1960",
   "our-town-1940-film",
   "the-pay-off-1935",
   "daddy-long-legs-1919",
   "the-italian-1915",
   "the-limping-man-1953",
   "kismet-1943",
-  "a-bucket-of-blood-1959",
   "the-saga-of-gosta-berling-1924",
   "civilization-1916",
   "test-tube-babies-1948",
   "the-sons-of-hercules-land-of-darkness-19",
   "bowery-blitzkrieg-1941",
   "the-painted-hills-1951",
-  "the-ghost-train-1941",
   "german-snipertraining-video1944",
   "bluebeard-1944",
   "the-invincible-gladiator-1962",
   "romola-1924",
   "dr-mabuse-the-gambler-1922",
   "range-warfare-1935",
-  "the-phantom-of-the-opera-1925",
   "the-strange-love-of-martha-ivers-1946",
   "a-close-call-for-boston-blackie-1946",
   "convict-s-code-1939",
@@ -3931,7 +3646,6 @@
   "girl-shy-1924",
   "trapped-1949",
   "cyrano-de-bergerac-1950",
-  "the-sadist-1963",
   "six-gun-trail-1938",
   "last-of-the-mohicans-1920",
   "way-down-east-1920",
@@ -3945,12 +3659,10 @@
   "greed-1924",
   "angel-on-my-shoulder-1946",
   "they-made-me-a-killer-1946",
-  "the-brain-that-wouldn-t-die-1962",
   "sword-of-lancelot-1963",
   "danger-flight-1939",
   "girl-o-my-dreams-1934",
   "topper-returns-1941",
-  "carnival-of-souls-1962",
   "scarlet-street-1945",
   "boys-of-the-city-1940",
   "hot-rod-girl-1956",
@@ -3987,7 +3699,6 @@
   "teenage-devil-dolls-1955",
   "nevada-city-1941",
   "texas-terror-1935",
-  "bowery-at-midnight-1942",
   "my-love-for-your-aka-honeymoon-in-bali-1",
   "the-scarlet-letter-1934",
   "kansas-city-confidential-1952",
@@ -3998,7 +3709,6 @@
   "home-sweet-home-1914",
   "algiers-1938",
   "the-arizona-kid-1939",
-  "creature-from-the-haunted-sea-1961",
   "ma-barker-s-killer-brood-1960",
   "the-wizard-of-oz-1925",
   "sherlock-holmes-the-woman-in-green-1945",
@@ -4008,7 +3718,6 @@
   "of-human-bondage-1934",
   "five-minutes-to-live-1961",
   "the-panther-s-claw-1942",
-  "city-of-the-dead-horror-hotel-1960",
   "penny-serenade-1941",
   "raiders-of-old-california-1957",
   "a-study-in-scarlet-1933",
@@ -4055,7 +3764,6 @@
   "go-down-death-1944",
   "made-for-each-other-1939",
   "diary-of-a-nudist-1961",
-  "dead-men-walk-1943",
   "ghost-town-gold-1936",
   "beat-the-devil-1953",
   "gangsters-of-the-frontier-1944",
@@ -4065,7 +3773,6 @@
   "his-girl-friday-1940",
   "farewell-to-arms-1932",
   "cleopatra-1912",
-  "the-wasp-woman-1960",
   "the-silver-trail-1937",
   "killer-diller-1948",
   "renegade-girl-1946",
@@ -4073,12 +3780,10 @@
   "the-last-of-the-mohicans-1920",
   "billy-the-kid-returns-1938",
   "call-of-the-yukon-1938",
-  "killer-shrews-1959",
   "waterfront-1944",
   "rebecca-of-sunnybrook-farm-1917",
   "impact-1949",
   "the-toll-of-the-sea-1922",
-  "the-house-on-bare-mountain-1962",
   "tol-able-david-1921",
   "battle-of-blood-island-1960",
   "rogue-s-tavern-1936",
@@ -4087,13 +3792,11 @@
   "life-with-father-1947",
   "cheers-for-miss-bishop-1941",
   "a-sailor-made-man-1921",
-  "ghosts-on-the-loose-1943",
   "hell-town-1937",
   "water-rustlers-1938",
   "parlor-bedroom-and-bath-1931",
   "they-made-me-a-criminal-1939",
   "angel-and-the-badman-1947",
-  "the-hands-of-orlac-1924",
   "the-arizona-raiders-1936",
   "go-for-broke-1951",
   "the-amazing-transparent-man-1960",
@@ -4105,16 +3808,12 @@
   "all-night-1918",
   "daniel-boone-1936",
   "beau-ideal-1931",
-  "the-phantom-creeps-1939",
   "mclintock-1963",
   "teenagers-from-outer-space-1959",
   "the-young-land-1959",
   "parole-inc-1948",
-  "the-cabinet-of-dr-caligari-1920",
   "child-bride-1938",
-  "attack-of-the-giant-leeches-1959",
   "the-admiral-was-a-lady-1950",
-  "the-terror-1963",
   "the-end-of-the-world-1916",
   "the-flapper-1920",
   "little-lord-fauntleroy-1921",
@@ -4122,11 +3821,9 @@
   "doomed-to-die-1940",
   "rain-1932",
   "roarin-lead-1936",
-  "h-xan-1922",
   "the-phantom-ship-1936",
   "the-grapes-of-wrath-1940",
   "border-patrol-1943",
-  "bloodlust-1961",
   "the-divorce-of-lady-x-1938",
   "second-chorus-1940",
   "oliver-twist-1933",
@@ -4169,8 +3866,6 @@
   "calendar-girl-1948",
   "paradise-canyon-1935",
   "the-hunchback-of-notre-dame-1923",
-  "atom-age-vampire-1960",
-  "sweeney-todd-the-demon-barber-of-fleet-s",
   "the-flying-deuces-1939",
   "the-conquering-power-1921",
   "under-western-stars-1938",
@@ -4181,9 +3876,7 @@
   "the-prisoner-of-zenda-1922",
   "reefer-madness-1936",
   "the-long-shot-1939",
-  "the-corpse-vanishes-1942",
   "eegah-1962",
-  "dracula-1931-colorized-bela-lugosi",
   "harakiri-1919",
   "the-incredible-petrified-world-1957",
   "tillie-s-punctured-romance-1914",
@@ -4213,7 +3906,6 @@
   "leaves-from-satan-s-book-1921",
   "murder-on-the-campus-1933",
   "here-is-germany-1945",
-  "the-golem-how-he-came-into-the-world-192",
   "renfrew-of-the-royal-mounted-1937",
   "pygmalion-1938",
   "she-gods-of-shark-reef-1958",
@@ -4289,12 +3981,9 @@
   "lady-in-the-death-house-1944",
   "the-great-dan-patch-1949",
   "santa-fe-trail-1940",
-  "the-cat-and-the-canary-1927",
   "big-bluff-1955",
   "shame-1962",
   "the-gorilla-1939",
-  "the-ghoul-1933",
-  "house-on-haunted-hill-1958",
   "abe-lincoln-of-the-ninth-avenue-1939",
   "mesa-of-lost-women-1953",
   "the-parson-s-widow-1920",
