@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -62,6 +63,7 @@ import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /** Text for the Azan Clock screens. */
 object PS {
@@ -91,7 +93,11 @@ object PS {
     val findAgain = L("Find my area again", "علاقہ دوبارہ معلوم کریں")
     val eachPrayer = L("At each prayer time", "ہر نماز کے وقت")
     val changeCity = L("Change city", "شہر بدلیں")
-    val placeFromDevice = L("From this device's location, the same as the weather.", "اس آلے کی جگہ سے، موسم کی طرح۔")
+    val placeFromDevice = L("From this device's location.", "اس آلے کی جگہ سے۔")
+    val placeTyped = L("Picked by hand. \"Find my area again\" goes back to automatic.", "ہاتھ سے چنا گیا۔ \"علاقہ دوبارہ معلوم کریں\" سے خودکار۔")
+    val typeCity = L("Type your city", "اپنا شہر لکھیں")
+    val search = L("Search", "تلاش")
+    val noCities = L("No city found. Try another spelling.", "کوئی شہر نہیں ملا۔ دوسرے ہجے آزمائیں۔")
     val methodShort = L("Calculation", "حساب کا طریقہ")
     val muezzinShort = L("Muezzin", "مؤذن")
     val pressToChange = L("Press to change", "بدلنے کے لیے دبائیں")
@@ -429,11 +435,14 @@ fun AzanSettingsScreen(vm: AppViewModel) {
             Stepper(PS.hijriAdjust.get(), a.hijriAdjust, -2..2) { vm.setHijriAdjust(it) }
             Heading(PS.place.get())
             Text(a.place?.let { listOf(it.city, it.country).filter(String::isNotBlank).joinToString(", ") } ?: PS.findingPlace.get())
-            if (AzanSettings.placeSource != null) Text(PS.placeFromDevice.get(), color = palette.muted, fontSize = 14.sp)
+            if (AzanSettings.placeSource != null && !a.placeFixed) Text(PS.placeFromDevice.get(), color = palette.muted, fontSize = 14.sp)
+            if (a.placeFixed) Text(PS.placeTyped.get(), color = palette.muted, fontSize = 14.sp)
+            var picking by remember { mutableStateOf(false) }
             ChoiceRow {
-                AzanSettings.pickPlace?.let { pick -> Choice(PS.changeCity.get(), false) { pick() } }
+                Choice(PS.changeCity.get(), false) { AzanSettings.pickPlace?.invoke() ?: run { picking = true } }
                 Choice(PS.findAgain.get(), false) { vm.findPlaceAgain() }
             }
+            if (picking) CityDialog(onPick = { vm.chooseCity(it); picking = false }, onDismiss = { picking = false })
             Heading(PS.eachPrayer.get())
             Prayer.withAzan.forEach { p ->
                 Text(tr(p.en, p.ur), fontWeight = FontWeight.SemiBold)
@@ -459,6 +468,40 @@ fun AzanSettingsScreen(vm: AppViewModel) {
             vm.voices.forEach { v -> Text("${v.en}: ${v.credit}", color = palette.muted, fontSize = 13.sp) }
         }
     }
+}
+
+/** Type a city and pick it from the matches (Open-Meteo place search). */
+@Composable
+private fun CityDialog(onPick: (com.iqraquran.app.data.Place) -> Unit, onDismiss: () -> Unit) {
+    var query by remember { mutableStateOf("") }
+    var results by remember { mutableStateOf<List<com.iqraquran.app.data.Place>?>(null) }
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    fun go() {
+        if (query.isBlank()) return
+        scope.launch { results = com.iqraquran.app.data.DevicePlace.search(query) }
+    }
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(PS.typeCity.get()) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                androidx.compose.material3.OutlinedTextField(
+                    value = query, onValueChange = { query = it }, singleLine = true,
+                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Search),
+                    keyboardActions = androidx.compose.foundation.text.KeyboardActions(onSearch = { go() }),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Choice(PS.search.get(), false) { go() }
+                val found = results
+                if (found != null && found.isEmpty()) Text(PS.noCities.get(), color = palette.muted)
+                found?.forEach { p ->
+                    Choice(listOf(p.city, p.country).filter(String::isNotBlank).joinToString(", "), false) { onPick(p) }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = { androidx.compose.material3.TextButton(onClick = onDismiss) { Text(S.cancel.get()) } },
+    )
 }
 
 @Composable

@@ -53,6 +53,8 @@ class MainActivity : ComponentActivity() {
         if (CrashGuard.start(this)) return
         // Any Azan setting change sets the next alarm; so does every start.
         AzanSettings.changed = { AzanAlarms.schedule(it) }
+        // Prayer times for where the device is (when allowed), else a guess from the internet connection.
+        AzanSettings.placeSource = { com.iqraquran.app.data.DevicePlace.find(applicationContext) }
         AzanAlarms.schedule(this)
         if (intent?.getBooleanExtra(EXTRA_OPEN_NAMAZ, false) == true) vm.open(Screen.Prayer)
         askForNotifications()
@@ -98,14 +100,29 @@ class MainActivity : ComponentActivity() {
         if (intent.getBooleanExtra(EXTRA_OPEN_NAMAZ, false) && vm.screen != Screen.Prayer) vm.open(Screen.Prayer)
     }
 
-    /** Android 13 and later ask before an app may show notifications; the Azan needs them when the app is closed. */
+    /**
+     * Asks once for what the Azan needs: notifications (Android 13 and later), so it can play when the app is
+     * closed, and the approximate location, so the prayer times are for the viewer's own town.
+     */
     private fun askForNotifications() {
-        if (android.os.Build.VERSION.SDK_INT < 33) return
-        if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) return
         val prefs = getSharedPreferences("iqra_quran", MODE_PRIVATE)
-        if (prefs.getBoolean("asked_notifications", false)) return
-        prefs.edit().putBoolean("asked_notifications", true).apply()
-        requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 7)
+        val wanted = buildList {
+            if (android.os.Build.VERSION.SDK_INT >= 33 && !prefs.getBoolean("asked_notifications", false) &&
+                checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) add(android.Manifest.permission.POST_NOTIFICATIONS)
+            if (!prefs.getBoolean("asked_location", false) &&
+                checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) add(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+        if (wanted.isEmpty()) return
+        prefs.edit().putBoolean("asked_notifications", true).putBoolean("asked_location", true).apply()
+        requestPermissions(wanted.toTypedArray(), 7)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // Location just allowed: work the prayer times out for here.
+        if (requestCode == 7 && com.iqraquran.app.data.DevicePlace.allowed(this)) vm.findPlaceAgain()
     }
 
     /** The remote's Play/Pause key controls the recitation anywhere in the app. */
