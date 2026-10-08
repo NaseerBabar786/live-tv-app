@@ -204,3 +204,42 @@ export function newQuestion(pool, previous = null, rnd = Math.random) {
 
 /** Items with the same text (e.g. the same word twice) would make two right answers. */
 export const quizPool = (l) => l.items.filter((it, i, all) => all.findIndex((x) => x.text === it.text) === i);
+
+// ---------- Translations (Translations.kt, Store.translations) ----------
+// Urdu and English ship with the app; the other languages are downloaded the first time they're picked.
+
+export const TR_BASE = 'https://tv.bulkbazaar.ca/quran/tr/';
+
+/** A language: { code, en, native, rtl, translator }. */
+export const BUILT_IN_LANGS = [
+  { code: 'ur', en: 'Urdu', native: 'اردو', rtl: true, translator: 'Fateh Muhammad Jalandhari' },
+  { code: 'en', en: 'English', native: 'English', rtl: false, translator: 'Saheeh International' },
+];
+
+/** The downloadable languages from index.json (the built-in two left out); empty when the text isn't a list. */
+export function parseTrIndex(text) {
+  try {
+    const o = typeof text === 'string' ? JSON.parse(text) : text;
+    return o.languages
+      .map((l) => ({ code: l.code, en: l.en, native: l.native || l.en, rtl: !!l.rtl, translator: l.translator || '' }))
+      .filter((l) => l.code && !BUILT_IN_LANGS.some((b) => b.code === l.code));
+  } catch {
+    return [];
+  }
+}
+
+/** The translations to show, from before there were languages: None, Urdu, English or Both. */
+export function migrateTranslations(old) {
+  if (old === 'None') return [];
+  if (old === 'English') return ['en'];
+  if (old === 'Both') return ['ur', 'en'];
+  return ['ur'];
+}
+
+/** Shows or hides [code] under each ayah; at most three at once (the oldest pick goes). */
+export function toggleTranslation(list, code) {
+  return list.includes(code) ? list.filter((c) => c !== code) : [...list, code].slice(-3);
+}
+
+/** A translation file's text, per surah and ayah. */
+export const parseTranslation = (text) => (typeof text === 'string' ? JSON.parse(text) : text).surahs;

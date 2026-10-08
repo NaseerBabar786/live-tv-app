@@ -135,7 +135,6 @@ const MODE_ICON = { Azan: '🔊', Chime: '🔔', Message: '💬', Off: '🔕' };
 
 /** Bright colours for the kids' lesson tiles and learners (KidColors in Theme.kt). */
 const KID_COLORS = ['#26A69A', '#EF6C00', '#7E57C2', '#29B6F6', '#EC407A', '#9CCC65', '#FFA726', '#5C6BC0'];
-const TRANSLATIONS = [['None', S.none], ['Urdu', S.urdu], ['English', S.english], ['Both', S.both]];
 
 // ---------- The Quran text, loaded once ----------
 
@@ -161,6 +160,57 @@ function loadQuran() {
     .catch((e) => { quranPromise = null; throw e; });
   return quranPromise;
 }
+// ---------- Translations in more languages (Translations.kt) ----------
+
+/** The downloadable languages, kept for offline use (store.fetchCached keeps the last list). */
+let trLanguages = (() => { try { return Q.parseTrIndex(localStorage.getItem('ctv.cache.quranTrIndex') || ''); } catch { return []; } })();
+let trListAsked = false;
+function refreshTrLanguages() {
+  if (trListAsked) return Promise.resolve();
+  trListAsked = true;
+  return store.fetchCached('quranTrIndex', `${Q.TR_BASE}index.json`)
+    .then((text) => { const l = Q.parseTrIndex(text); if (l.length) trLanguages = l; })
+    .catch(() => { trListAsked = false; });
+}
+
+/** Downloaded translation files, kept in IndexedDB (each is 1-2 MB, too big for localStorage). */
+function trDb(mode, fn) {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('iqra-translations', 1);
+    req.onupgradeneeded = () => req.result.createObjectStore('tr');
+    req.onerror = () => reject(req.error);
+    req.onsuccess = () => {
+      const tx = req.result.transaction('tr', mode);
+      const r = fn(tx.objectStore('tr'));
+      tx.oncomplete = () => { req.result.close(); resolve(r.result); };
+      tx.onerror = () => { req.result.close(); reject(tx.error); };
+    };
+  });
+}
+
+/** Translation text per surah and ayah, by language code, for the languages loaded so far. */
+const trText = {};
+const trLoading = new Map();
+/** A downloadable language's text: from this PC, else downloaded now (rejects when offline). */
+function loadTranslation(code) {
+  if (trText[code]) return Promise.resolve(trText[code]);
+  if (!trLoading.has(code)) {
+    trLoading.set(code, (async () => {
+      let text = await trDb('readonly', (st) => st.get(code)).catch(() => null);
+      if (!text) {
+        const r = await fetch(`${Q.TR_BASE}${code}.json`);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        text = await r.text();
+        Q.parseTranslation(text); // a broken download isn't kept
+        await trDb('readwrite', (st) => st.put(text, code)).catch(() => {});
+      }
+      trText[code] = Q.parseTranslation(text);
+      return trText[code];
+    })().finally(() => trLoading.delete(code)));
+  }
+  return trLoading.get(code);
+}
+
 let recitersPromise = null;
 const loadReciters = () => (recitersPromise ??= readText('shared/quran/reciters.json').then(JSON.parse));
 
@@ -287,7 +337,8 @@ export function openQuran({ onClose }) {
     lang: store.get(`${K}language`) || (/^ur/i.test(navigator.language || '') ? 'ur' : 'en'),
     reciterId: store.get(`${K}reciter`, 'husary_muallim'),
     kidsReciterId: store.get(`${K}kidsReciter`, 'husary_muallim'),
-    translation: store.get(`${K}translation`, 'Urdu'),
+    // Before languages there was one setting: None, Urdu, English or Both.
+    translations: store.get(`${K}translations`) || Q.migrateTranslations(store.get(`${K}translation`)),
     textSize: store.get(`${K}textSize`, 30),
     lineSpacing: store.get(`${K}lineSpacing`, 0),
     lastRead: store.get(`${K}lastRead`), // [surah, ayah]
@@ -322,6 +373,50 @@ export function openQuran({ onClose }) {
   const reciter = (kids) => reciters.find((r) => r.id === (kids ? state.kidsReciterId : state.reciterId)) || reciters[0];
   function setPref(key, storeKey, value) { state[key] = value; store.set(K + storeKey, value); applyLook(); }
   const changeTextSize = (delta) => setPref('textSize', 'textSize', Math.min(64, Math.max(20, state.textSize + delta)));
+  // The translations under each ayah (TranslationPicker in ReadScreens.kt).
+  const languages = () => [...Q.BUILT_IN_LANGS, ...trLanguages];
+  const language = (code) => languages().find((l) => l.code === code);
+  const builtIn = (code) => code === 'ur' || code === 'en';
+  /** The translation of an ayah in [code], or null while it is downloading. */
+  function translationOf(code, surah, ayah) {
+    const all = code === 'ur' ? quran?.urdu : code === 'en' ? quran?.english : trText[code];
+    return all?.[surah - 1]?.[ayah - 1] ?? null;
+  }
+  function fetchTranslations() {
+    for (const code of state.translations) {
+      if (builtIn(code) || trText[code] || trLoading.has(code)) continue;
+      loadTranslation(code).catch(() => {}).finally(() => {
+        const name = stack[stack.length - 1].name;
+        if (!closed && (name === 'read' || name === 'settings')) redraw();
+      });
+    }
+  }
+  function setTranslations(list) {
+    state.translations = list;
+    store.set(`${K}translations`, list);
+    fetchTranslations();
+    redraw();
+  }
+  /**
+   * The translation languages (up to three). There can be 50 or more, so the chosen ones come first in a
+   * row of their own, then every other language in a wrapping grid that scrolls on its own.
+   */
+  function translationPicker() {
+    const pick = (l) => {
+      const label = l.native === l.en ? l.en : `${l.native} · ${l.en}`;
+      const b = choice(`tr-${l.code}`, trLoading.has(l.code) ? `${label} …` : label, state.translations.includes(l.code),
+        () => setTranslations(Q.toggleTranslation(state.translations, l.code)));
+      if (l.translator) b.title = l.translator;
+      return b;
+    };
+    const chosen = state.translations.map((code) => language(code) || { code, en: code, native: code });
+    const rest = [...Q.BUILT_IN_LANGS, ...[...trLanguages].sort((x, y) => x.en.localeCompare(y.en))]
+      .filter((l) => !state.translations.includes(l.code));
+    return h('div.quran-tr-picker',
+      choiceRow(choice('tr-none', t(S.none), !state.translations.length, () => setTranslations([])), chosen.map(pick)),
+      h('div.quran-langs', rest.map(pick)));
+  }
+
   function markRead(surah, ayah) { setPref('lastRead', 'lastRead', [surah, ayah]); }
 
   function selectProfile(p) {
@@ -670,7 +765,7 @@ export function openQuran({ onClose }) {
       heading(t(S.lineSpacing)),
       choiceRow([S.normal, S.wide, S.wider].map((label, i) => choice(`ls-${i}`, t(label), state.lineSpacing === i, () => { setPref('lineSpacing', 'lineSpacing', i); redraw(); }))),
       heading(t(S.translation)),
-      choiceRow(TRANSLATIONS.map(([mode, label]) => choice(`tr-${mode}`, t(label), state.translation === mode, () => { setPref('translation', 'translation', mode); redraw(); }))),
+      translationPicker(),
       heading(t(S.reciter)),
       choiceRow(recChoices(settingsPage ? false : kids)));
     if (settingsPage) box.append(heading(t(S.kidsReciter)), choiceRow(recChoices(true)));
@@ -706,13 +801,20 @@ export function openQuran({ onClose }) {
       arabic(`سُوۡرَةُ ${su.nameAr}`, '.quran-head-ar'),
       h('div.quran-head-sub', `${tr(su.meaningEn, su.meaningUr)} · ${su.ayahs.length} ${t(S.ayahs)} · ${tr(rec.en, rec.ur)}`),
       su.number !== 1 && su.number !== 9 ? arabic(quran.surahs[0].ayahs[0], '.quran-bismillah') : null);
-    const mode = state.translation;
+    const langs = state.translations.map((code) => {
+      const l = language(code);
+      return { code, rtl: l ? l.rtl : code === 'ur', native: l ? l.native : code };
+    });
     const cards = su.ayahs.map((text, i) => {
       const n = i + 1;
       return btn('button.quran-ayah', `ayah-${n}`, () => playFrom(n),
         arabic(`${text} ${Q.ayahMark(n)}`),
-        mode === 'Urdu' || mode === 'Both' ? h('div.quran-ur', { dir: 'rtl' }, quran.urdu[su.number - 1][i]) : null,
-        mode === 'English' || mode === 'Both' ? h('div.quran-en', { dir: 'ltr' }, `${n}. ${quran.english[su.number - 1][i]}`) : null);
+        // Each chosen translation, right to left where the language is; "<name> …" while it downloads.
+        langs.map((l) => {
+          const tx = translationOf(l.code, su.number, n);
+          return h(`div.${l.rtl ? 'quran-ur' : 'quran-en'}`, { dir: l.rtl ? 'rtl' : 'ltr', lang: l.code },
+            tx == null ? `${l.native} …` : l.rtl ? tx : `${n}. ${tx}`);
+        }));
     });
 
     const playingAyah = () => { const c = player.current(); return c && c.track.surah === su.number ? c.track.ayah : null; };
@@ -1090,6 +1192,10 @@ export function openQuran({ onClose }) {
     root.remove();
     onClose && onClose();
   }
+
+  // The language list and the chosen translations load in the background.
+  refreshTrLanguages().then(() => { if (!closed && stack[stack.length - 1].name === 'settings') redraw(); });
+  fetchTranslations();
 
   // The Quran text and reciters load while the home screen shows.
   loadReciters().then((r) => { reciters = r; }).catch(() => {});

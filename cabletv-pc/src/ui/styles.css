@@ -370,3 +370,8 @@ h2.quran-accent { margin: 6px 0 0; font-size: 22px; }
 .game-new { position: absolute; top: 8px; right: 8px; background: var(--focus); color: #000; font-size: 11px; font-weight: 800; border-radius: 6px; padding: 2px 6px; }
 .games-more { color: var(--muted); margin-top: 26px; font-size: 14px; }
 .game-frame { position: fixed; inset: 0; width: 100vw; height: 100vh; border: 0; z-index: 60; background: #000; }
+
+/* Translation languages: the chosen ones on top, every other language in a grid that scrolls by itself. */
+.quran-tr-picker { display: flex; flex-direction: column; gap: 10px; }
+.quran-langs { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; max-height: 236px; overflow-y: auto; padding: 4px; scrollbar-color: var(--surface2) transparent; }
+.quran-langs .quran-choice { text-align: start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

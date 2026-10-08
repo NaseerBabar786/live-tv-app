@@ -83,3 +83,18 @@ test('recitation links and ayah marks', () => {
   assert.equal(Q.audioUrl('Husary_128kbps', 2, 255), 'https://everyayah.com/data/Husary_128kbps/002255.mp3');
   assert.equal(Q.ayahMark(12), '﴿١٢﴾');
 });
+
+test('translation languages: up to three, and the old single setting carried over', () => {
+  assert.deepEqual(['None', 'English', 'Both', 'Urdu', undefined].map(Q.migrateTranslations), [[], ['en'], ['ur', 'en'], ['ur'], ['ur']]);
+  let list = ['ur'];
+  for (const c of ['en', 'hi', 'fa']) list = Q.toggleTranslation(list, c);
+  assert.deepEqual(list, ['en', 'hi', 'fa']);
+  assert.deepEqual(Q.toggleTranslation(list, 'hi'), ['en', 'fa']);
+  const langs = Q.parseTrIndex(JSON.stringify({ languages: [
+    { code: 'ur', en: 'Urdu', native: 'اردو', rtl: true, file: 'ur.json' },
+    { code: 'fa', en: 'Persian', native: 'فارسی', rtl: true, translator: 'IslamHouse.com', file: 'fa.json' },
+  ] }));
+  assert.deepEqual(langs.map((l) => [l.code, l.rtl]), [['fa', true]]);
+  assert.deepEqual(Q.parseTrIndex('not json'), []);
+  assert.deepEqual(Q.parseTranslation('{"name":"x","surahs":[["a","b"]]}'), [['a', 'b']]);
+});
