@@ -270,8 +270,10 @@ def idea2(out, voice, presenter, work):
                 on = 0.6 + i * 0.6 <= t < 1.2 + (i + 1) * 0.6   # the newest city pulses on the map
                 r = 7 + (4 * abs(math.sin(t * 6)) if on else 0)
                 d.ellipse([x - r, y - r, x + r, y + r], fill=GOLD, outline="white")
-                nw = N.line_len(d, N.tokens(name), N.fonts(20))
-                text(d, x - 12 if lon < (bbox[0] + bbox[2]) / 2 else x + 12 + nw, y, name, 20, "white")
+                if on:   # only the city being read gets its name on the map, so names never pile up
+                    nw = N.line_len(d, N.tokens(name), N.fonts(22))
+                    d.rounded_rectangle([x - nw / 2 - 10, y - 52, x + nw / 2 + 10, y - 16], 8, fill=(8, 16, 40, 235))
+                    text(d, x, y - 34, name, 22, "white", "m")
                 y0 = my0 + 10 + i * rh; xo = (1 - a) * 80
                 d.rounded_rectangle([lx0 + 10 + xo, y0 + 4, lx1 - 10 + xo, y0 + rh - 4], 10,
                                     fill=(30, 70, 120, 255) if on else (20, 40, 80, 240))
@@ -287,7 +289,7 @@ def idea2(out, voice, presenter, work):
         ("اور اب پاکستان۔ " + "، ".join(f"{c[0]} میں {deg(t)}" for c, t, _ in pk) + " ڈگری۔ یہ تھا نقشے پر موسم، بازار ٹی وی کے ساتھ۔",
          map_scene("Pakistan", (60.5, 23.5, 78.5, 37.3), ["India", "Afghanistan", "Iran", "China"], pk, "پاکستان • ابھی")),
     ]
-    render(out, scenes, voice, presenter, (60, 410, 220, 156), (240, 20, 800, 568), work, "weather-idea-2")
+    render(out, scenes, voice, presenter, (60, 120, 220, 156), (240, 20, 800, 568), work, "weather-idea-2")
 
 
 # ---------- idea 3: day planner + week graph ----------
