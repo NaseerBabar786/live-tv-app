@@ -281,6 +281,30 @@
     "prompt": "RAW photo, medium shot from the waist up, a smart, mature-looking Pakistani man TV news anchor, 27 years old, neat short stubble, short neat dark brown hair, wearing a perfectly tailored mid-grey suit with natural realistic sleeves, crisp white shirt and a dark green silk tie, sitting at a glossy curved news desk, natural skin texture, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind him, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
     "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
+   },
+   {
+    "id": "anchor-m6c",
+    "name": "Faisal",
+    "ur": "فیصل",
+    "seed": 6606,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, mature-looking Pakistani man TV news anchor, 28 years old, clean shaven, short neat black hair combed to the side, wearing a perfectly tailored charcoal grey suit with natural realistic sleeves, crisp white shirt and a navy silk tie, sitting at a glossy curved news desk, natural skin texture, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind him, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "picture": "anchor-m6b",
+    "edit": "Make him look like a mature 28-year-old professional with a neat light stubble, and put him in a complete, perfectly tailored charcoal grey suit JACKET with full matching long sleeves down to the wrists, white shirt cuffs just visible, crisp white shirt and a navy silk tie, realistic fabric. Keep his face, hairstyle, skin tone, pose, hands and the background exactly the same; photorealistic."
+   },
+   {
+    "id": "anchor-m8c",
+    "name": "Tariq",
+    "ur": "طارق",
+    "seed": 6808,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, mature-looking Pakistani man TV news anchor, 29 years old, clean shaven, short neat black hair, thin rimless glasses, wearing a perfectly tailored black suit with natural realistic sleeves, light blue shirt and a dark grey silk tie, sitting at a glossy curved news desk, natural skin texture, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind him, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "picture": "anchor-m8b",
+    "edit": "Put him in a complete, perfectly tailored dark navy suit JACKET with full matching long sleeves down to the wrists, white shirt cuffs just visible, crisp white shirt and a burgundy silk tie, realistic fabric. Keep his face, hairstyle, skin tone, pose, hands and the background exactly the same; photorealistic."
    }
   ]
  }
