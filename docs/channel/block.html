@@ -240,11 +240,13 @@ function step() {
   if (i >= 0 && i !== cur) load(i, (now - starts[i]) / 1000);
 }
 
-// When YouTube hasn't started after 15 s, the screen says why.
+// When the picture hasn't started after 15 s, viewers see only "starting, please wait" in Urdu; why
+// (error code) goes to the log for us and never on screen (owner, 1.10.24).
 let started = false, lastError = null;
 setTimeout(() => {
   if (started || finished) return;
-  $("coverSub").textContent = `یوٹیوب یہاں شروع نہیں ہوا (${lastError ? "error " + lastError : "loading"})`;
+  console.warn(`Bazaar TV block not started (${lastError ? "error " + lastError : "loading"})`);
+  $("coverSub").textContent = "پروگرام شروع ہو رہا ہے، ذرا انتظار کریں";
 }, 15000);
 
 if (!ids.length || Date.now() >= end) finish();

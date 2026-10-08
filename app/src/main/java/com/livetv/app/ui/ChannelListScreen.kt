@@ -323,9 +323,15 @@ fun ChannelListScreen(
     // TVs and tablets show a fixed window of tiles that slides along the list one channel at a
     // time; [windowStart] is the channel in the first tile.
     val windowed = wideScreen && !listMode && !newsMode && !browseMode && !carouselMode && !stripMode && !duoMode
+    // The tiles fill from MTA (when it's on) or the next channels in the viewer's list first: our own
+    // channels play web pages that take a while to start, so in the tile layouts they come after the
+    // others and the screen fills fast (owner, 1.10.24). They're still there, further along.
+    val tileChannels = remember(state.visibleChannels, windowed) {
+        if (windowed) state.visibleChannels.sortedBy { MyChannel.isMine(it) } else state.visibleChannels
+    }
     val slots = tileLayout.columns * tileLayout.rows
     var windowStart by rememberSaveable { mutableIntStateOf(0) }
-    val start = windowStart.coerceIn(0, max(0, state.visibleChannels.size - slots))
+    val start = windowStart.coerceIn(0, max(0, tileChannels.size - slots))
     // 1×2, 2×2 and 2×3 are separate TVs: Up and Down change the channel on the highlighted tile only.
     // [twoIds] holds the tiles' channels once one has been changed.
     var twoIds by remember { mutableStateOf(sessionTileIds) }
@@ -333,15 +339,17 @@ fun ChannelListScreen(
     SideEffect { sessionTileIds = twoIds; sessionTilesFull = tilesFull }
     // 1+3 has no full screen view: OK on its big player opens the channel straight away.
     val fullTiles = tilesFull && windowed && tileLayout != TileLayout.Five
+    // The "advertise with us" band along the bottom of the screen (Strip mode has its own, News its own lines).
+    val bottomBand = Edition.LIVE_TV && !newsMode && !stripMode && !state.needsPlaylist
     val hideBars = fullTiles || ((newsMode || carouselMode || stripMode || duoMode) && !newsBar) || browseMode
-    val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
+    val twoChosen = twoIds.mapNotNull { id -> tileChannels.firstOrNull { it.id == id } }
     val window = when {
         !windowed -> emptyList()
         // 1+3 keeps its chosen channels, topped up from the list if any are missing.
         tileLayout == TileLayout.Five ->
-            (twoChosen + state.visibleChannels.drop(start) + state.visibleChannels).distinctBy { it.id }.take(slots)
+            (twoChosen + tileChannels.drop(start) + tileChannels).distinctBy { it.id }.take(slots)
         tileLayout.separateTvs && twoChosen.size == slots && twoChosen.distinctBy { it.id }.size == slots -> twoChosen
-        else -> state.visibleChannels.drop(start).take(slots)
+        else -> tileChannels.drop(start).take(slots)
     }
     // Phones: a tap picks the tile with the sound (there's no remote cursor); the first tile has it to begin with.
     LaunchedEffect(phone, windowed, window.map { it.id }) {
@@ -365,7 +373,7 @@ fun ChannelListScreen(
                 return@LaunchedEffect
             }
         }
-        val index = state.visibleChannels.indexOfFirst { it.id == state.lastWatchedId }
+        val index = tileChannels.indexOfFirst { it.id == state.lastWatchedId }
         if (index >= 0) {
             if (windowed) {
                 val opened = sessionOpenedTile
@@ -373,7 +381,10 @@ fun ChannelListScreen(
                 if (tileLayout.separateTvs && opened in window.indices && window.none { it.id == state.lastWatchedId }) {
                     // Back from full screen: the tile that was opened shows the channel watched last.
                     twoIds = window.mapIndexed { i, c -> if (i == opened) state.lastWatchedId!! else c.id }
-                } else if (window.none { it.id == state.lastWatchedId }) {
+                } else if (window.none { it.id == state.lastWatchedId } &&
+                    // The tiles don't jump to one of our own channels: they start on the quick ones.
+                    !MyChannel.isMine(tileChannels[index])
+                ) {
                     windowStart = index
                     twoIds = emptyList()
                 }
@@ -710,8 +721,10 @@ fun ChannelListScreen(
         ) {
             // On TVs the line is lifted off the bottom edge, which some TVs cut off; pages shown here hide their
             // own line and stay above this band, so only one line ever runs (the owner's photo, 2026-10-08).
+            // Every screen ends above the band, so the line never runs over channels, names or tiles (the
+            // owner, 2026-10-08); Strip mode puts the line in its own band between its player and its strip.
             CompositionLocalProvider(LocalTickerBand provides if (Edition.LIVE_TV && !newsMode) tickerBand else 0.dp) {
-            Column(Modifier.fillMaxSize()) {
+            Column(Modifier.fillMaxSize().padding(bottom = if (bottomBand) tickerBand else 0.dp)) {
                 if (state.needsPlaylist) {
                     Message(
                         text = "Add a playlist to start watching.\n\nPaste a playlist link (M3U) from your TV " +
@@ -760,7 +773,7 @@ fun ChannelListScreen(
                     }
                 }
 
-                val channels = state.visibleChannels
+                val channels = tileChannels
                 when {
                     browseMode -> BrowseMode(
                         channels = state.channels.filter { state.languageFilter.isEmpty() || it.language in state.languageFilter },
@@ -1337,9 +1350,9 @@ fun ChannelListScreen(
             }
             }
             // Cable TV's "advertise with us" line along the bottom of every channel screen (owner's rule,
-            // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel, Strip and Duo.
-            // News, CP24, Home and My Screen have their own band at the bottom.
-            if (!newsMode && !state.needsPlaylist) {
+            // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel and Duo.
+            // Strip mode has its own band above its strip; News, CP24, Home and My Screen their own lines.
+            if (bottomBand) {
                 EditionTicker(
                     Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(tickerBand),
                     big = true,
