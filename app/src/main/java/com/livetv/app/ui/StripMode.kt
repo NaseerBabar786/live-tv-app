@@ -74,6 +74,7 @@ import androidx.media3.common.Player
 import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.BuildConfig
 import com.livetv.app.Edition
+import com.livetv.app.EditionTicker
 import com.livetv.app.Watching
 import com.livetv.app.data.Channel
 import com.livetv.app.data.MyChannel
@@ -438,6 +439,14 @@ internal fun StripMode(
                     }
                 }
             }
+
+            // The "advertise with us" line in its own band between the player and the strip, covering
+            // neither (the owner, 2026-10-08).
+            if (Edition.LIVE_TV) EditionTicker(
+                Modifier.fillMaxWidth().height(40.dp).background(Color.Black),
+                big = true,
+                band = true,
+            )
 
             // The strip: Modes, the group, then the group's channels.
             Row(
