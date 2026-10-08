@@ -21,7 +21,7 @@ logo (`docs/quran/logo.svg`) are copied the same way.
 ## Not on PC yet (second test build)
 
 Browse, Carousel, Strip, Duo, News, CP24, Home and My Screen modes; Movies & Dramas (Library);
-Games; Messages, Suggestions, promo codes and billing details. The Modes menu shows them as
+the 24 classic games (the PC has the two modern ones); Messages, Suggestions, promo codes and billing details. The Modes menu shows them as
 "coming soon on PC".
 
 ## Changes that needed nothing on PC
@@ -40,6 +40,10 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
   instead of the YouTube app. The PC has no Library yet; when it gets one, it loads the same page.
 - 1.10.0: phone touch fixes (swipes now change channel in full screen and on tiles; a tap on the tile
   with the sound opens it full screen). Phone-only; the PC uses its mouse and keyboard.
+- 1.10.1: every Library list (Dramas, Movies, Free) is rebuilt every morning at about 5 am Toronto time and
+  dates each programme (`added="..."`, `tools/first_seen.py`); the Library shows a "Newly added" chip, NEW marks
+  and new titles first, in each language and section, on TV and phone (same APK). The PC has no Library yet;
+  when it gets one, it reads the same `added` dates and shows the same Newly added section.
 
 ## In step
 
@@ -48,7 +52,12 @@ Games; Messages, Suggestions, promo codes and billing details. The Modes menu sh
 - 1.9.96 (PC 1.0.4): packages screen shows Free once (no "Free · free") and Gold at one price a month, $9.99 by default (`settings.js`, `plans.js`).
 - 1.9.100 (PC 1.0.5): the start screen shows only a loading circle while the channels load; no sponsor
   or words, no 5-second countdown (`screens/start.js`).
-- 1.10.3 (PC 1.0.6): Iqra Quran in the top bar: Kids Qaida, Read with recitation, Hifz, and Namaz (prayer timeline,
+- 1.10.2 (PC 1.0.6): Settings has "MTA channels" (off by default). When on, MTA's 8 live channels come
+  right after our Bazaar channels as 16 to 23 (the other channels from 24), also in Favorites and in
+  every language, and they are free in every package (`mta.js`, `channels.js`, `plans.js`).
+- 1.10.3 (PC 1.0.7): two modern games, Block Burst and Color Pour, in a 🎮 Games screen. Both apps open the
+  very same pages (`app/src/main/assets/games`, copied in by `scripts/prepare.js`; `screens/games.js`).
+- 1.10.4 (PC 1.0.8): Iqra Quran in the top bar: Kids Qaida, Read with recitation, Hifz, and Namaz (prayer timeline,
   Azan with muezzin choice, reminders), in Cable TV's colours (`screens/quran.js`, `prayer.js`, `azan.js`). On PC the
   Qaida letter sounds use Windows' own Arabic voice when it has one, and the Azan plays while the PC app is open
   (full screen, the channels paused), with a Windows notification for every prayer, chime, message and reminder.
