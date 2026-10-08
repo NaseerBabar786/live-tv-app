@@ -32,7 +32,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if ! curl -fsIL -m 30 "https://github.com/$GITHUB_REPOSITORY/releases/download/news-broll/news-broll.json" >/dev/null; then
+          have=$(curl -fsSL -m 30 "https://github.com/$GITHUB_REPOSITORY/releases/download/news-broll/news-broll.json" | python3 -c "import json,sys; print(json.load(sys.stdin).get('version', 1))" || echo 0)
+          want=$(python3 -c "import sys; sys.path.insert(0, 'tools/news'); import broll; print(broll.VERSION)")
+          echo "clip library version $have, code wants $want"
+          if [ "$have" != "$want" ]; then
             gh release view news-broll -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
               gh release create news-broll --prerelease -t "News topic clips" -n "Free CC0 / public-domain / CC BY clips from Wikimedia Commons for Bazaar TV News, credited on screen." -R "$GITHUB_REPOSITORY"
             python3 tools/news/broll.py build broll-out

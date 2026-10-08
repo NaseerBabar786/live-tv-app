@@ -15,19 +15,19 @@ UA = {"User-Agent": "BazaarTV-News/1.0 (https://tv.bulkbazaar.ca; news b-roll)"}
 # topic -> Commons searches. Topics are matched to stories by section and by words in the headline.
 TOPICS = {
     "pakistan": ["Islamabad", "Lahore city", "Karachi city", "Faisal Mosque"],
-    "parliament-pk": ["Parliament House Islamabad", "Pakistan flag"],
+    "parliament-pk": ["Parliament Islamabad", "Pakistan flag"],
     "india": ["New Delhi", "Mumbai city", "India Gate", "Kolkata street"],
-    "world": ["United Nations headquarters", "city skyline timelapse", "world globe", "airport airplane"],
+    "world": ["globe", "Earth ISS", "skyline timelapse", "airport airplane"],
     "canada": ["Toronto skyline", "Parliament Hill Ottawa", "Vancouver city", "Montreal city"],
-    "court": ["courthouse", "gavel"],
-    "election": ["ballot box", "voting election"],
-    "weather-rain": ["rain street", "flood water", "storm clouds timelapse"],
+    "court": ["courthouse", "gavel", "court building"],
+    "election": ["ballot box", "ballot"],
+    "weather-rain": ["rain drops", "rain timelapse", "clouds timelapse", "rain street"],
     "cricket": ["cricket match", "cricket stadium", "cricket batting"],
     "football": ["football match stadium", "soccer match"],
-    "sports": ["stadium crowd", "athletics race"],
-    "film": ["cinema theatre", "film camera", "red carpet", "movie projector"],
-    "money": ["stock exchange", "currency banknotes", "shopping market"],
-    "health": ["hospital", "doctor stethoscope"],
+    "sports": ["stadium", "athletics", "running track"],
+    "film": ["projector", "cinema hall", "film reel", "clapperboard", "movie theater"],
+    "money": ["banknotes", "coins", "stock ticker", "market bazaar"],
+    "health": ["hospital corridor", "stethoscope", "ambulance"],
 }
 # Urdu words in a headline -> topic (first match wins); otherwise the story's section.
 WORDS = [
@@ -42,6 +42,12 @@ WORDS = [
 ]
 SECTION_TOPIC = {"pakistan": "pakistan", "india": "india", "world": "world", "canada": "canada",
                  "sports": "sports", "film": "film"}
+# Scenery only: no other broadcasters' footage, no real people or real events that could be mistaken for the story.
+BLOCK = re.compile(r"news|bbc|cnn|cnbc|abc |nbc|fox|al jazeera|voa|reuters|cramer|interview|press conf|speech|address|"
+                   r"president|minister|candidate|senator|governor|mayor|king |queen|prince|trump|biden|bush|obama|trudeau|"
+                   r"modi|khan|sharif|bhutto|shoot|bomb|attack|kill|dead|death|war|army|military|soldier|navy|riot|"
+                   r"protest|funeral|crash|fire|terror|police|arrest|covid|corona|nara|\(1[89]\d\d\)|film \d{3,}", re.I)
+VERSION = 2   # bump to rebuild the clip library
 OK_LICENCE = re.compile(r"^(cc0|public domain|pd|cc by( \d\.\d)?|cc-by( \d\.\d)?)$", re.I)
 
 
@@ -51,15 +57,17 @@ def get(url, timeout=60):
 
 def search(term, limit=12):
     q = urllib.parse.urlencode({"action": "query", "format": "json", "generator": "search", "gsrnamespace": 6,
-                                "gsrsearch": f"filetype:video {term}", "gsrlimit": limit, "prop": "imageinfo",
+                                "gsrsearch": "filetype:video " + " ".join(f"intitle:{w}" for w in term.split()), "gsrlimit": limit, "prop": "imageinfo",
                                 "iiprop": "url|extmetadata|size|mediatype"})
     pages = json.loads(get("https://commons.wikimedia.org/w/api.php?" + q)).get("query", {}).get("pages", {})
     out = []
     for p in pages.values():
         ii = (p.get("imageinfo") or [{}])[0]; md = ii.get("extmetadata", {})
         lic = (md.get("LicenseShortName", {}).get("value") or "").strip()
-        if not OK_LICENCE.match(lic): continue
-        artist = re.sub(r"<[^>]+>", "", html.unescape(md.get("Artist", {}).get("value") or "")).strip() or "Wikimedia Commons"
+        desc = re.sub(r"<[^>]+>", " ", html.unescape(md.get("ImageDescription", {}).get("value") or ""))
+        if not OK_LICENCE.match(lic) or BLOCK.search(p["title"]) or BLOCK.search(desc[:400]): continue
+        artist = re.sub(r"<[^>]+>", "", html.unescape(md.get("Artist", {}).get("value") or "")).strip()
+        if not artist or "unknown" in artist.lower(): artist = "Wikimedia Commons contributor"
         dur = float(ii.get("duration") or 0)
         out.append({"title": p["title"], "url": ii.get("url"), "licence": lic, "artist": artist[:60],
                     "page": "https://commons.wikimedia.org/wiki/" + urllib.parse.quote(p["title"].replace(" ", "_")),
@@ -99,7 +107,7 @@ def build(out, per_topic=3):
                 finally:
                     if os.path.exists(src): os.remove(src)
         print(topic, got)
-    json.dump({"clips": index}, open(os.path.join(out, "news-broll.json"), "w"), indent=1, ensure_ascii=False)
+    json.dump({"version": VERSION, "clips": index}, open(os.path.join(out, "news-broll.json"), "w"), indent=1, ensure_ascii=False)
 
 
 _INDEX = None
