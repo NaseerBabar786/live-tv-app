@@ -5,8 +5,12 @@ name: News presenter (moving)
 # Two samples go to the channel-media release: news-move-<id>.mp4 (natural movement, voice on top) and
 # news-move-<id>-lips.mp4 (the same with LatentSync lips, made on the CPU, slow).
 
-# Run by hand only (a push must never remake the approved, on-air newsreaders).
+# Run by hand, or by pushing tools/news/presenters/move-request.json with the ids to make (only those ids;
+# a push must never remake the approved, on-air newsreaders).
 on:
+  push:
+    branches-ignore: [main]
+    paths: ["tools/news/presenters/move-request.json"]
   workflow_dispatch:
     inputs:
       ids:
@@ -20,12 +24,25 @@ on:
 
 # One runner per anchor (each runner has its own free video quota).
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      ids: ${{ steps.ids.outputs.ids }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: ids
+        env:
+          INPUT: ${{ github.event.inputs.ids }}
+        run: |
+          if [ -n "$INPUT" ]; then echo "ids=$INPUT" >> "$GITHUB_OUTPUT"
+          else echo "ids=$(python3 -c "import json; print(json.dumps(json.load(open('tools/news/presenters/move-request.json'))['ids']))")" >> "$GITHUB_OUTPUT"; fi
   move:
+    needs: plan
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        id: ${{ fromJson(github.event.inputs.ids || '["anchor-3c","anchor-5c","anchor-6c","anchor-7c","anchor-8b","anchor-8c"]') }}
+        id: ${{ fromJson(needs.plan.outputs.ids) }}
     env:
       ID: ${{ matrix.id }}
     timeout-minutes: 90
