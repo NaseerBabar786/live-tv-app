@@ -260,7 +260,7 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In number order: 1 to 15, Bazaar Hits being 4.
+        // In number order: 1 to 18, Bazaar Hits being 4.
         (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
 
     /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 15, when it's on. */
