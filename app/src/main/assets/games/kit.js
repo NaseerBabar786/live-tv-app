@@ -298,7 +298,7 @@ const Kit = (() => {
 
   return {
     canvas, ctx, get W() { return W; }, get H() { return H; }, onResize: (f) => resizeHooks.push(f),
-    clamp, lerp, ease, shade, rgba, roundRect, sfx, toggleMute, get muted() { return muted; },
+    clamp, lerp, ease, shade, rgba, roundRect, sfx, tone, noise, toggleMute, get muted() { return muted; },
     burst, confetti, float, background, onKeys, onPointer, record, exit, store, touchFirst, shake, run,
   };
 })();
