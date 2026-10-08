@@ -2007,8 +2007,10 @@ private fun PlayerWithList(
         }
     }
     val list: @Composable (Modifier) -> Unit = { area ->
-        // The list fills the whole right side (no sponsor strip under it since 1.9.22).
-        Column(area, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // The list fills the right side (no sponsor strip under it since 1.9.22), ending above the
+        // "advertise with us" band so the line never runs over channel names (the owner, 2026-10-08).
+        val band = if (portrait) 0.dp else LocalTickerBand.current
+        Column(area.padding(bottom = band), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         LazyColumn(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(6.dp),
