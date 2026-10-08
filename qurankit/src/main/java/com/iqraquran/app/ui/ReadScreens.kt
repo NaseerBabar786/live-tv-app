@@ -4,9 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -285,13 +289,17 @@ private fun AyahCard(
 }
 
 /** The translation languages: tap one to show or hide it under each ayah (up to three). */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TranslationPicker(vm: AppViewModel) {
-    ChoiceRow {
-        Choice(S.none.get(), vm.translations.isEmpty()) { vm.noTranslation() }
-        vm.languages.forEach { l ->
-            val label = if (l.native == l.en) l.en else "${l.native} · ${l.en}"
-            Choice(if (l.code in vm.downloading) "$label …" else label, l.code in vm.translations) { vm.toggleTranslation(l.code) }
+    // Many languages: they wrap onto lines, in a box that scrolls when there are more than fit.
+    Box(Modifier.fillMaxWidth().heightIn(max = 240.dp).verticalScroll(rememberScrollState())) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Choice(S.none.get(), vm.translations.isEmpty()) { vm.noTranslation() }
+            vm.languages.forEach { l ->
+                val label = if (l.native == l.en) l.en else "${l.native} · ${l.en}"
+                Choice(if (l.code in vm.downloading) "$label …" else label, l.code in vm.translations) { vm.toggleTranslation(l.code) }
+            }
         }
     }
 }
