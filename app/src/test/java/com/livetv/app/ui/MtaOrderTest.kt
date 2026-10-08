@@ -8,12 +8,12 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** MTA's channels, when on, come right after our Bazaar channels (owner, 2026-10-07). */
+/** MTA's channels, when on, come right after our Spark channels (owner, 2026-10-07), as 81 to 88 (2026-10-08). */
 class MtaOrderTest {
     private val ours = Channel("Bazaar TV", "mychannel://main", number = 1)
-    private val mta = Mta.CHANNELS.mapIndexed { i, c -> c.copy(number = MyChannel.COUNT + i + 1) }
-    private val geo = Channel("Geo News", "https://x/geo.m3u8", language = "Urdu", country = "pk", number = MyChannel.COUNT + 9)
-    private val cbc = Channel("CBC", "https://x/cbc.m3u8", language = "English", country = "ca", number = MyChannel.COUNT + 10)
+    private val mta = Mta.CHANNELS.mapIndexed { i, c -> c.copy(number = MyChannel.MTA_FIRST + i) }
+    private val geo = Channel("Geo News", "https://x/geo.m3u8", language = "Urdu", country = "pk", number = MyChannel.OTHERS_FIRST)
+    private val cbc = Channel("CBC", "https://x/cbc.m3u8", language = "English", country = "ca", number = MyChannel.OTHERS_FIRST + 1)
 
     @Test
     fun mtaComesAfterOursAndBeforeFavorites() {
@@ -22,7 +22,7 @@ class MtaOrderTest {
         assertEquals(ours, shown.first())
         assertEquals(mta, shown.subList(1, 9))
         assertEquals(listOf(cbc, geo), shown.drop(9))
-        assertEquals(listOf(19, 26, 27), listOf(mta.first().number, mta.last().number, geo.number))
+        assertEquals(listOf(81, 88, 101), listOf(mta.first().number, mta.last().number, geo.number))
     }
 
     @Test
@@ -31,13 +31,20 @@ class MtaOrderTest {
         val shown = s.visibleChannels
         assertEquals(listOf(ours) + mta, shown.take(9))
         assertEquals("CBC", shown[9].name)
-        assertEquals(27, shown[9].number)
+        assertEquals(101, shown[9].number)
     }
 
     @Test
     fun mtaIgnoresTheLanguagePicker() {
         val s = UiState(channels = listOf(ours) + mta + listOf(geo, cbc), languageFilter = setOf("Urdu"))
         assertEquals(listOf(ours) + mta + listOf(geo), s.visibleChannels)
+    }
+
+    @Test
+    fun aLanguageChipShowsThatLanguageOursFirst() {
+        val urdu = Channel("Spark Dramas Urdu", "mychannel://dramas", number = 2, language = "Urdu", group = "Spark Urdu")
+        val s = UiState(channels = listOf(ours, urdu) + mta + listOf(geo, cbc), language = "Urdu")
+        assertEquals(listOf(urdu) + mta.filter { it.language == "Urdu" } + listOf(geo), s.visibleChannels)
     }
 
     @Test

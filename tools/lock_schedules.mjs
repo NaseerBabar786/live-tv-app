@@ -30,9 +30,12 @@ for (const st of STATIONS.filter(s => s.yt)) {
   if (!existsSync(new URL(`yt-${st.id}.json`, DIR))) continue;
   const list = (read(`yt-${st.id}.json`).videos || []).filter(v => !unplayable[v.id]);
   const trailers = st.trailerLangs ? allTrailers.filter(v => v.id && v.secs > 0 && v.secs <= 600 && st.trailerLangs.includes(v.lang)) : [];
+  // A channel's own short clips (Spark Shayari's hourly "Aaj ka Sher", tools/shayari).
+  const own = st.ownClips && existsSync(new URL(st.ownClips, DIR))
+    ? (read(st.ownClips).clips || []).filter(c => c.src && c.secs > 0 && c.secs <= 120).map(c => ({ ...c, own: true })) : [];
   const old = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : { days: {} };
   const days = {};
-  const make = date => dayPlan(st, { list, picks: picks[st.id] || null, promos, trailers }, date).map(slim);
+  const make = date => dayPlan(st, { list, picks: picks[st.id] || null, promos, trailers, own }, date).map(slim);
   const mine = await loadOwnerDays(st.id);
   days[today] = mine[today]?.items || old.days?.[today] || make(today);
   const nextDay = torontoDay(Date.now() + 24 * 3600e3).date;

@@ -1,0 +1,10 @@
+{
+  "note": "Spark TV ads, approved by the owner 2026-10-08 (ad A = channel tour; one ad per language). STAGED: nothing reads this file yet. They go on air only when the Spark rename and the channel-by-language plan go live. Placement (owner said yes 21:30): each language ad plays in breaks on its own language's channels; the tour ad plays on every channel, taking turns with Cable TV Ads 7, 8 and 9; all five play on Spark Ads. Breaks stay at 60 s or less, paid sponsors unchanged, no ads during news on channel 1. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0 (credit on each end card). Spark ads never mention Cable TV's 7,800+ channels.",
+  "everyChannel": [{"src": "spark-ad-tour.mp4", "title": "Spark TV Ad, channel tour", "secs": 60}],
+  "byLanguage": {
+    "ur": [{"src": "spark-ad-urdu.mp4", "title": "Spark TV Ad, Urdu", "secs": 30}],
+    "hi": [{"src": "spark-ad-hindi.mp4", "title": "Spark TV Ad, Hindi", "secs": 30}],
+    "en": [{"src": "spark-ad-english.mp4", "title": "Spark TV Ad, English", "secs": 35}],
+    "pa": [{"src": "spark-ad-punjabi.mp4", "title": "Spark TV Ad, Punjabi", "secs": 20}]
+  }
+}

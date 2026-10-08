@@ -31,9 +31,14 @@ TRACKS = {
     "vadodora-chill": dict(file="sur-vadodora-chill-mix-isrc-usuan1400050.mp4", title="Vadodora Chill Mix",
                            artist="Kevin MacLeod (incompetech.com)", licence="CC BY 3.0", bpm=97.0,
                            downbeat=0.6, best=(2, 70), best2=(2, 70)),
+    # Owner picked this one for the Spark TV ads (2026-10-08). CC BY 4.0.
+    "inspiring-advertising": dict(file="sur-inspiring-advertising-rafael-krux.mp4", title="Inspiring Advertising",
+                                  artist="Rafael Krux", licence="CC BY 4.0", bpm=120.0, downbeat=0.07,
+                                  best=(20, 35), best2=(52, 82)),
 }
 # what each mood uses
-MOODS = {"energetic": "upbeat-sitar", "promo": "psychedelic-crater", "happy": "happy-sitar", "calm": "vadodora-chill"}
+MOODS = {"energetic": "upbeat-sitar", "promo": "psychedelic-crater", "happy": "happy-sitar", "calm": "vadodora-chill",
+         "feelgood": "inspiring-advertising"}
 
 
 def track(name):

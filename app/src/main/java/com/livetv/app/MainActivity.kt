@@ -165,6 +165,7 @@ class MainActivity : ComponentActivity() {
                 onQueryChange = viewModel::setQuery,
                 onFilterChange = viewModel::setFilter,
                 onCategoryChange = viewModel::setCategory,
+                onLanguageChange = viewModel::setLanguage,
                 onRefresh = viewModel::reload,
                 settings = { onDismiss -> EditionSettings(state, viewModel, onDismiss) },
                 onTryDemo = viewModel::addDemoPlaylist,

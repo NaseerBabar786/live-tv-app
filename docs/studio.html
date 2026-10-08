@@ -242,7 +242,7 @@
   <div id="dash" class="hidden studio">
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
-    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 4)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span>. Choose its programmes and lock its schedule on the right. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
+    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 23)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span>. Choose its programmes and lock its schedule on the right. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -587,8 +587,8 @@
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand, zonedTime } from "./channel/schedule.js";
 import { mountCards } from "./channel/cards.js";
-import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
-let breakPromos = [], pkTrailers = [];
+import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
+let breakPromos = [], pkTrailers = [], pkOwn = [];
 loadBreakPromos("media/").then(p => { breakPromos = p; setTimeout(() => { try { if (pick) renderPicks(); } catch {} }); });
 const $ = id => document.getElementById(id);
 // The clock in the corner: Toronto time, the time our channels' schedules run on.
@@ -638,7 +638,7 @@ let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
 let stats = null; // the Most watched numbers, once loaded
 // The channel being worked on (?c=filmein opens Bazaar Cinema).
 // Bazaar Hits is a web page (the music labels' YouTube videos), not a schedule: Studio only plays it.
-const HITS = { id: "hits", name: "Bazaar Hits", dial: "4", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/bazaar-hits.png" };
+const HITS = { id: "hits", name: "Bazaar Hits", dial: "23", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/bazaar-hits.png" };
 let station = [...STATIONS, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Math.random().toString(36).slice(2, 9);
@@ -679,9 +679,9 @@ function stationButton(st, note) {
 function renderStations() {
   $("stations").innerHTML = "";
   for (const st of STATIONS) {
-    // Bazaar Hits (4) sits between 3 and 5. It runs by itself from the music labels'
+    // Bazaar Hits (23) sits between 22 and 25 in the Hindi block. It runs by itself from the music labels'
     // song list (no schedule to edit), so picking it just plays it in the player.
-    if (st.dial === "5") stationButton(HITS, "Channel 4 · runs by itself");
+    if (st.dial === "25") stationButton(HITS, "Channel 23 · runs by itself");
     stationButton(st, st.web ? `Channel ${st.dial} · runs by itself` : `Channel ${st.dial} in the app`);
   }
   $("publicLink").href = station.page;
@@ -1894,6 +1894,7 @@ async function loadPicksPanel() {
     if (wanted !== station) return;
     pkList = d.videos || d.songs || [];
     pkTrailers = station === HITS ? [] : await loadTrailers(station, "channel/");
+    pkOwn = station === HITS ? [] : await loadOwnClips(station, "channel/");
     try { pkLocked = station === HITS ? null : await (await fetch(`channel/locked/${station.id}.json?t=${Date.now()}`)).json(); } catch { pkLocked = null; }
     pkOwner = {};
     if (station !== HITS) {
@@ -2014,7 +2015,7 @@ function pkDayNow(date) {
   return { items: pkDraft(date), by: null };
 }
 function pkDraft(date) {
-  const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers }, date).map(slimItem);
+  const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers, own: pkOwn }, date).map(slimItem);
   // Tomorrow begins with the rest of a film still running at midnight.
   if (date !== torontoDay().date) {
     const today = pkDayNow(torontoDay().date).items, cont = today.length && carryOver(today, torontoDay().start);
