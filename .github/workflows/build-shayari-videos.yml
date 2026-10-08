@@ -1,8 +1,9 @@
 name: Build Aaj ka Sher videos
 
-# Spark Shayari (5)'s hourly "Aaj ka Sher" clips (tools/shayari): a classic sher in calligraphy, read by a
-# free AI voice over library music. The videos go on the "channel-media" pre-release and their list to
-# docs/channel/shayari-clips.json, which the channel page plays once an hour between programmes.
+# Spark Shayari (5)'s "Aaj ka Sher" clips (tools/shayari): a classic sher in Urdu calligraphy, read by a
+# free AI voice over library music, and the music under the channel's own today and weather cards. They go on
+# the "channel-media" pre-release and their list to docs/channel/shayari-clips.json; the channel plays a clip
+# in the 5-minute break of every half hour.
 # They are made again only when shers.json, the maker or the music library changes.
 # On a pull request one clip is made, to check the voice and the maker still work.
 
@@ -74,7 +75,7 @@ jobs:
           set -eu
           gh release view channel-media >/dev/null 2>&1 || \
             gh release create channel-media --prerelease --latest=false --title "Channel media" --notes "Videos for our channels."
-          gh release upload channel-media out/shayari-sher-*.mp4 --clobber
+          gh release upload channel-media out/shayari-sher-*.mp4 out/shayari-bed.m4a --clobber
           cp out/shayari-clips.json docs/channel/shayari-clips.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

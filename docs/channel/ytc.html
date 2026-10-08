@@ -48,7 +48,32 @@
      2026-10-07, checked by tools/preair_check.py. */
   :root { --box: calc(100vh - var(--strip)); }
   #player { top: calc(var(--box) * -0.2) !important; height: calc(var(--box) * 1.4) !important; left: 50% !important; right: auto !important; width: min(100vw, calc(var(--box) * 16 / 9)) !important; transform: translateX(-50%); }
+  /* Half-hour channels (Spark Shayari): our own "today on the channel" and weather cards in the 5-minute break,
+     drawn here so they're always right; Urdu in Nastaliq, over calm library music (credited). */
+  .card { position: absolute; left: 0; right: 0; top: 0; height: calc(100% - var(--strip)); z-index: 4; color: #fff; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 20%, #4a2050 0%, #241030 45%, #0e0a1e 100%); font-family: system-ui, sans-serif; }
+  .card .frame { position: absolute; inset: 2.2vh 1.6vw; border: 2px solid rgba(232,190,110,.55); border-radius: 18px; }
+  .card .ur { font-family: "Noto Nastaliq Urdu", serif; direction: rtl; }
+  .card h1 { position: absolute; top: 5vh; left: 0; right: 0; margin: 0; text-align: center; color: #e8be6e; font-weight: 700; font-size: 5.4vh; line-height: 2.1; }
+  .card .logo { position: absolute; top: 5.5vh; right: 4vw; height: 7vh; }
+  .card .sub { position: absolute; top: 17.5vh; left: 0; right: 0; text-align: center; font-size: 2.6vh; color: #e9dcc4; line-height: 2; }
+  .card .rows { position: absolute; top: 26vh; left: 6vw; right: 6vw; bottom: 9vh; display: flex; flex-direction: column; justify-content: space-evenly; }
+  .card .row { display: flex; align-items: center; gap: 2vw; border-bottom: 1px solid rgba(232,190,110,.18); padding: .2vh 0; }
+  .card .row .t { flex: 0 0 auto; min-width: 14vw; font-weight: 700; font-size: 3vh; color: #e8be6e; direction: rtl; text-align: right; }
+  .card .row .w { flex: 1; min-width: 0; font-size: 2.6vh; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: right; line-height: 2.2; }
+  .card .row.now .w, .card .row.now .t { color: #fff6d8; }
+  .card .row { flex-direction: row-reverse; }
+  .card .cities { position: absolute; top: 27vh; left: 6vw; right: 6vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vw; direction: rtl; }
+  .card .city { background: rgba(255,255,255,.07); border: 1px solid rgba(232,190,110,.35); border-radius: 16px; text-align: center; padding: 2.5vh 1vw; }
+  .card .city .n { font-size: 3.6vh; color: #e8be6e; line-height: 2.1; }
+  .card .city .i { font-size: 8vh; line-height: 1.2; }
+  .card .city .d { font-size: 6.5vh; font-weight: 800; }
+  .card .city .c { font-size: 2.5vh; color: #e9dcc4; line-height: 2.2; }
+  .card .city .r { font-size: 2.2vh; color: #cbbfa8; }
+  .card .credit { position: absolute; bottom: 4vh; left: 0; right: 0; text-align: center; font-size: 1.7vh; color: rgba(233,220,196,.75); }
 </style>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="player"></div>
@@ -70,7 +95,7 @@ let dataReady;
 const ready = new Promise(r => dataReady = r);
 { const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s); }
 import { STATIONS } from "./schedule.js";
-import { loadPicks, loadPromos, loadTrailers, loadLocked, loadOwnClips, dayPlan, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
+import { loadPicks, loadPromos, loadTrailers, loadLocked, loadOwnClips, dayPlan, itemAt, torontoDay, lengthOf as lengthIn, HALF, TZ } from "./ytorder.js";
 const q = new URLSearchParams(location.search);
 const app = q.has("app");
 const $ = id => document.getElementById(id);
@@ -115,7 +140,8 @@ function showNow() {
   if (!v) return;
   placeBug(v.label);
   $("now").innerHTML = "<span></span><small></small>";
-  $("now").firstChild.textContent = v.title;
+  // A long mushaira in 25-minute parts: "Part 2" (in Urdu on our Urdu channel).
+  $("now").firstChild.textContent = v.title + (items[cur].part ? (station.nameUrdu ? ` · حصہ ${items[cur].part}` : ` · Part ${items[cur].part}`) : "");
   const name = station.shownName || station.name;
   $("now").lastChild.textContent = items[cur].clip ? `Coming up on ${name}` : name + " · " + (items[cur].trailer ? "Coming soon · " : "") + v.label;
   $("now").classList.remove("hide");
@@ -130,6 +156,9 @@ function playItem(i, offset = 0) {
   cur = (i + items.length) % items.length;
   const it = items[cur];
   cover(true);
+  if (it.card) return playCard(it, offset, cur);
+  document.querySelector(".card")?.remove();
+  bedAudio?.pause();
   if (it.kind === "break") {
     inBreak = true;
     try { player.stopVideo(); } catch {}
@@ -150,9 +179,117 @@ function playItem(i, offset = 0) {
   // The rest of last night's film (cont) also starts part-way into its video.
   const base = it.start || 0;
   target = { id: it.v.id, at: Date.now() - offset * 1000, base, item: cur };
-  player.loadVideoById(it.clip ? { videoId: it.v.id, startSeconds: base + offset, endSeconds: base + it.secs } : { videoId: it.v.id, startSeconds: base + offset });
+  // A part of a long programme stops where the break comes, like a clip.
+  player.loadVideoById(it.clip || it.cut ? { videoId: it.v.id, startSeconds: base + offset, endSeconds: base + it.secs } : { videoId: it.v.id, startSeconds: base + offset });
   showNow();
 }
+// ---------- The cards in a half-hour channel's 5-minute break: today's programmes and the weather ----------
+const URDU_LABELS = { "Rekhta": "ریختہ", "Urdu Studio": "اردو اسٹوڈیو", "PTV Home": "پی ٹی وی ہوم", "PTV National": "پی ٹی وی نیشنل",
+  "DD Urdu": "ڈی ڈی اردو", "Sahitya Akademi": "ساہتیہ اکادمی", "Lahore Literary Festival": "لاہور ادبی میلہ", "Faiz Festival": "فیض میلہ",
+  "Mushaira Media": "مشاعرہ", "Sahitya Tak": "ساہتیہ تک", "Kommune": "کمیون", "The Social House": "دی سوشل ہاؤس" };
+const urduTime = ms => {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: TZ, hour: "numeric", minute: "2-digit", hourCycle: "h23" }).formatToParts(ms).map(x => [x.type, x.value]));
+  const h = +p.hour, when = h < 4 ? "رات" : h < 12 ? "صبح" : h < 16 ? "دوپہر" : h < 19 ? "شام" : "رات";
+  return `${when} ${(h % 12) || 12}:${p.minute}`;
+};
+const shortTitle = t => (t || "").split(/\s[|｜#]\s?|\s-\s|\s:\s/)[0].trim().slice(0, 70);
+let bed = null;
+if (station.ownClips) fetch(station.ownClips, { cache: "no-cache" }).then(r => r.json()).then(d => { bed = d.bed || null; }).catch(() => {});
+let bedAudio = null;
+function cardShell(title) {
+  const c = document.createElement("div");
+  c.className = "card";
+  c.innerHTML = `<div class="frame"></div><img class="logo" alt=""><h1 class="ur"></h1><div class="credit"></div>`;
+  c.querySelector("h1").textContent = title;
+  c.querySelector(".logo").src = station.bug || station.logo;
+  c.querySelector(".credit").textContent = bed?.credit || "";
+  return c;
+}
+/** The next 8 half hours: what starts in each (a programme carrying on says so). */
+function todayCard(fromIdx) {
+  const c = cardShell("آج کے پروگرام");
+  const sub = document.createElement("div");
+  sub.className = "sub ur";
+  sub.textContent = "ہر آدھے گھنٹے: پچیس منٹ شاعری، پھر آج کا شعر اور موسم · ٹورنٹو کا وقت";
+  const rows = document.createElement("div");
+  rows.className = "rows";
+  c.append(sub, rows);
+  const { start } = torontoDay(clock());
+  let t = 0;
+  const begins = items.map(x => { const at = t; t += x.secs; return at; });
+  const firstHalf = Math.floor((begins[fromIdx] || 0) / HALF) + 1;
+  for (let h = firstHalf; h < firstHalf + 8; h++) {
+    const k = items.findIndex((x, n) => x.kind === "video" && begins[n] >= h * HALF && begins[n] < h * HALF + HALF - 300);
+    if (k < 0) continue;
+    const it = items[k];
+    const r = document.createElement("div");
+    r.className = "row";
+    r.innerHTML = `<span class="t ur"></span><span class="w ur"></span>`;
+    r.firstChild.textContent = urduTime(start + h * HALF * 1000);
+    r.lastChild.textContent = `${URDU_LABELS[it.v.label] || it.v.label}: ${shortTitle(it.v.title)}${it.part ? " (جاری)" : ""}`;
+    rows.appendChild(r);
+  }
+  return c;
+}
+const CITIES = [["ٹورنٹو", 43.65, -79.38], ["لاہور", 31.55, 74.34], ["کراچی", 24.86, 67.01], ["دہلی", 28.61, 77.21]];
+const SKY = c => c === 0 ? ["☀️", "صاف آسمان"] : c <= 2 ? ["⛅", "کچھ بادل"] : c === 3 ? ["☁️", "بادل"] : c <= 48 ? ["🌫️", "دھند"]
+  : c <= 57 ? ["🌦️", "ہلکی بوندا باندی"] : c <= 67 ? ["🌧️", "بارش"] : c <= 77 ? ["❄️", "برف"] : c <= 82 ? ["🌧️", "بارش کی بوچھاڑ"] : c <= 86 ? ["🌨️", "برف باری"] : ["⛈️", "گرج چمک"];
+let weather = null, weatherAt = 0;
+async function loadWeather() {
+  if (weather && Date.now() - weatherAt < 20 * 60e3) return weather;
+  const q = `latitude=${CITIES.map(x => x[1]).join(",")}&longitude=${CITIES.map(x => x[2]).join(",")}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`;
+  const d = await (await fetch("https://api.open-meteo.com/v1/forecast?" + q)).json();
+  weather = Array.isArray(d) ? d : [d]; weatherAt = Date.now();
+  return weather;
+}
+function weatherCard(w) {
+  const c = cardShell("موسم");
+  const g = document.createElement("div");
+  g.className = "cities";
+  CITIES.forEach(([name], k) => {
+    const x = w[k];
+    if (!x?.current) return;
+    const [icon, words] = SKY(x.current.weather_code);
+    const b = document.createElement("div");
+    b.className = "city";
+    b.innerHTML = `<div class="n ur"></div><div class="i"></div><div class="d"></div><div class="c ur"></div><div class="r"></div>`;
+    b.children[0].textContent = name;
+    b.children[1].textContent = icon;
+    b.children[2].textContent = Math.round(x.current.temperature_2m) + "°";
+    b.children[3].textContent = words;
+    b.children[4].textContent = `${Math.round(x.daily.temperature_2m_max[0])}° / ${Math.round(x.daily.temperature_2m_min[0])}°`;
+    g.appendChild(b);
+  });
+  c.appendChild(g);
+  return c;
+}
+/** A card plays for its time in the running order, with the calm music under it; then the channel goes on. */
+async function playCard(it, offset, at) {
+  inBreak = true;
+  try { player.stopVideo(); } catch {}
+  cover(true);
+  let el = null;
+  if (it.card === "weather") { try { el = weatherCard(await loadWeather()); } catch { el = null; } }
+  // No weather (it couldn't be fetched): today's programmes stay up instead.
+  if (!el) el = todayCard(at);
+  if (cur !== at) return;
+  document.querySelector(".card")?.remove();
+  document.body.appendChild(el);
+  if (bed?.src && !player.isMuted()) {
+    if (!bedAudio) { bedAudio = new Audio(bed.src); bedAudio.loop = true; bedAudio.volume = 0.5; }
+    // The music runs on through both cards: started once, at a point that follows the clock.
+    if (bedAudio.paused) { try { bedAudio.currentTime = (Date.now() / 1000) % (bed.secs || 300); } catch {} bedAudio.play().catch(() => {}); }
+  }
+  setTimeout(() => {
+    if (cur !== at) return;
+    el.remove();
+    const next = items[(at + 1) % items.length];
+    if (!next?.card && bedAudio) bedAudio.pause();
+    inBreak = false;
+    rejoin(at);
+  }, Math.max(0.5, it.secs - offset) * 1000);
+}
+
 /** Like TV, the clock decides what's on: after a programme (or an ad break) the channel goes on wherever it is now. */
 function rejoin(ended) {
   if (torontoDay().date !== day) {
@@ -204,7 +341,7 @@ function keepInStep() {
   if (inBreak || !player || !target || !player.getCurrentTime || player.getPlayerState() !== YT.PlayerState.PLAYING || player.getVideoData?.().video_id !== target.id) return;
   const want = (Date.now() - target.at) / 1000, have = player.getCurrentTime() - target.base;
   // A clip that has run its 45 seconds: the channel goes on (some players don't stop at the end point).
-  if (items[cur].clip && have >= items[cur].secs - 0.5) return rejoin(cur);
+  if ((items[cur].clip || items[cur].cut) && have >= items[cur].secs - 0.5) return rejoin(cur);
   if (Math.abs(want - have) > 30 && want < items[cur].secs - 30) player.seekTo(target.base + want, true);
 }
 /**
@@ -292,7 +429,9 @@ function cover(on) {
 window.onYouTubeIframeAPIReady = () => ready.then(startPlayer);
 function startPlayer() {
   // The player starts on the programme that's on (or the one after the ad break that's on).
-  const first = items[cur].kind === "video" ? items[cur] : items[(cur + 1) % items.length];
+  let f = cur;
+  while (items[f % items.length].kind !== "video" && f < cur + items.length) f++;
+  const first = items[f % items.length];
   player = new YT.Player("player", {
     videoId: first.v.id,
     playerVars: { autoplay: items[cur].kind === "video" ? 1 : 0, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, origin: location.origin },
@@ -320,7 +459,7 @@ function startPlayer() {
         if (e.data === YT.PlayerState.PLAYING) { started = true; document.querySelector(".diag")?.remove(); }
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
         if (e.data === YT.PlayerState.ENDED) endedEarly(cur);
-        else if (e.data === YT.PlayerState.PAUSED) { if (items[cur].clip && e.target.getCurrentTime() >= target.base + items[cur].secs - 2) rejoin(cur); else e.target.playVideo(); }
+        else if (e.data === YT.PlayerState.PAUSED) { if ((items[cur].clip || items[cur].cut) && e.target.getCurrentTime() >= target.base + items[cur].secs - 2) rejoin(cur); else e.target.playVideo(); }
       },
       // A video its owner won't let others play is skipped; when none will play, the free films take over.
       // (its time is filled like any programme that ends early, not by playing the next one over and over).
