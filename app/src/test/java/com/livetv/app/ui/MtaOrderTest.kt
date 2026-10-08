@@ -22,7 +22,7 @@ class MtaOrderTest {
         assertEquals(ours, shown.first())
         assertEquals(mta, shown.subList(1, 9))
         assertEquals(listOf(cbc, geo), shown.drop(9))
-        assertEquals(listOf(17, 24, 25), listOf(mta.first().number, mta.last().number, geo.number))
+        assertEquals(listOf(18, 25, 26), listOf(mta.first().number, mta.last().number, geo.number))
     }
 
     @Test
@@ -31,7 +31,7 @@ class MtaOrderTest {
         val shown = s.visibleChannels
         assertEquals(listOf(ours) + mta, shown.take(9))
         assertEquals("CBC", shown[9].name)
-        assertEquals(25, shown[9].number)
+        assertEquals(26, shown[9].number)
     }
 
     @Test

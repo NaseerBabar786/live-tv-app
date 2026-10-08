@@ -19,7 +19,7 @@ object MyChannel {
      * Our logos get redrawn at the same address (1.9.47, 1.9.49), and Coil keeps the old picture on
      * disk for ever, so our own logo links carry this number; raise it whenever the logos change.
      */
-    private const val LOGO_VERSION = 7
+    private const val LOGO_VERSION = 8
 
     fun freshLogo(url: String): String =
         if ("/channel/logos/" in url && '?' !in url) "${sparkLogo(url)}?v=$LOGO_VERSION" else url
@@ -60,8 +60,8 @@ object MyChannel {
         val bug: Boolean = true,
     )
 
-    /** Our channels take numbers 1 to 16; the other channels are numbered from 17 (MTA's first, when it's on). */
-    const val COUNT = 16
+    /** Our channels take numbers 1 to 17; the other channels are numbered from 18 (MTA's first, when it's on). */
+    const val COUNT = 17
 
     /**
      * Our channels, in the order they lead the channel list. Since 1.9.47 all but Bazaar TV run
@@ -99,6 +99,9 @@ object MyChannel {
         Station("ads", 15, "15", "Spark Ads", logo = "spark-ads.png"),
         // 16 (owner, 2026-10-08): full episodes of Hindi serials from the Indian TV channels' own YouTube channels.
         Station("hindidramas", 16, "16", "Spark Dramas Hindi", youtube = true, backup = "filmein", logo = "spark-dramas-hindi.png"),
+        // 17 (owner, 2026-10-08): Urdu and Hindi poetry, mushairas and kavi sammelan from the organisers', TV channels'
+        // and poets' own channels, with our own hourly "Aaj ka Sher". Its number may move with the channels-by-language plan.
+        Station("shayari", 17, "17", "Spark Shayari", youtube = true, backup = "filmein", logo = "spark-shayari.png"),
     )
 
     /** Bazaar Ads' address: the channel that is all ads, so no pop-up ad breaks come over it. */
@@ -260,10 +263,10 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In number order: 1 to 16, Bazaar Hits being 4.
+        // In number order: 1 to 17, Bazaar Hits being 4.
         (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
 
-    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 16, when it's on. */
+    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 17, when it's on. */
     fun byDial(typed: String): Channel? =
         if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
 

@@ -61,7 +61,8 @@
     function start(at) {
       const promo = list[k];
       clearTimeout(guard);
-      v.src = "../media/" + promo.src;
+      // Our own clips (Spark Shayari's "Aaj ka Sher") come from the channel-media release: a full address.
+      v.src = /^https?:/.test(promo.src) ? promo.src : "../media/" + promo.src;
       v.onloadedmetadata = () => { if (at > 1 && at < v.duration - 1) v.currentTime = at; };
       startedAt = Date.now();
       // Skippable 10 seconds after this ad started (counted from its beginning, also when joined part-way).
@@ -77,7 +78,8 @@
       const left = Math.ceil((skipFrom - Date.now()) / 1000);
       // An ad of 10 seconds or less just plays to the end: nothing to skip.
       skip.hidden = (list[k] && list[k].secs || 30) <= 10;
-      skip.textContent = left > 0 ? `Skip ad in ${left}` : (k < list.length - 1 ? "Skip ad ›" : "Skip ›");
+      skip.textContent = list[k] && list[k].own ? (left > 0 ? `Skip in ${left}` : "Skip ›")
+        : left > 0 ? `Skip ad in ${left}` : (k < list.length - 1 ? "Skip ad ›" : "Skip ›");
     }, 250);
     skip.onclick = () => { if (canSkip()) next(); };
     function onKey(e) {

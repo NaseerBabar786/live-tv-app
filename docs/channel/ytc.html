@@ -70,7 +70,7 @@ let dataReady;
 const ready = new Promise(r => dataReady = r);
 { const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s); }
 import { STATIONS } from "./schedule.js";
-import { loadPicks, loadPromos, loadTrailers, loadLocked, dayPlan, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
+import { loadPicks, loadPromos, loadTrailers, loadLocked, loadOwnClips, dayPlan, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
 const q = new URLSearchParams(location.search);
 const app = q.has("app");
 const $ = id => document.getElementById(id);
@@ -79,6 +79,8 @@ const station = STATIONS.find(s => s.id === q.get("c")) || STATIONS.find(s => s.
 if (q.get("brand") === "spark") Object.assign(station, {
   name: station.name.replace(/^Bazaar(?= )/, "Spark"),
   logo: station.logo.replace("/logos/bazaar-", "/logos/spark-").replace("/logos/latest-movies.png", "/logos/spark-latest.png"),
+  // Spark Shayari has an Urdu look: its corner logo and name in Urdu.
+  ...(station.urduBug ? { bug: station.urduBug, shownName: station.nameUrdu } : {}),
 });
 let items = [], cur = 0, inBreak = false, player = null, nowTimer = null, failures = 0;
 // How far this screen runs ahead of the clock (ms): after a programme that ends a long while before its
@@ -89,7 +91,7 @@ const clock = () => Date.now() + ahead;
 document.title = station.name + " · Watch live";
 // Latest Movies carries no logo of ours (the owner's wish).
 if (station.noBug) $("bug").hidden = true;
-else $("bug").src = station.logo;
+else $("bug").src = station.bug || station.logo;
 $("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (!app) $("back").hidden = false;
 
@@ -114,7 +116,8 @@ function showNow() {
   placeBug(v.label);
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = v.title;
-  $("now").lastChild.textContent = items[cur].clip ? `Coming up on ${station.name}` : station.name + " · " + (items[cur].trailer ? "Coming soon · " : "") + v.label;
+  const name = station.shownName || station.name;
+  $("now").lastChild.textContent = items[cur].clip ? `Coming up on ${name}` : name + " · " + (items[cur].trailer ? "Coming soon · " : "") + v.label;
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
@@ -224,10 +227,10 @@ function watchStall() {
 // The day's running order with its ad breaks: the locked day (the owner's from Channel Studio, or
 // channel/locked/<id>.json written every night, so the day never changes once it has begun), or, when there is none, worked out the same way here from
 // the programmes the owner approved in Channel Studio (📺 Programmes).
-let all = [], unplayable = {}, picks = null, promos = [], trailers = [], day = null, locked = null;
+let all = [], unplayable = {}, picks = null, promos = [], trailers = [], own = [], day = null, locked = null;
 function order() {
   day = torontoDay().date;
-  items = locked && locked.date === day ? locked.items : dayPlan(station, { list: all, picks, promos, trailers }, day);
+  items = locked && locked.date === day ? locked.items : dayPlan(station, { list: all, picks, promos, trailers, own }, day);
 }
 
 // The owner can unlock today in Channel Studio to fix a mistake: the fixed day comes in within 5 minutes,
@@ -242,16 +245,17 @@ setInterval(() => {
 }, 5 * 60e3);
 
 let joinAt = 0;
-Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-cache" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station),
+Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-cache" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station), loadOwnClips(station),
   // What the nightly check and the hourly pre-air check (tools/preair_check.py) found won't play here.
   Promise.all(["unplayable.json", "preair-bad.json"].map(f => fetch(f, { cache: "no-cache" }).then(r => r.json()).catch(() => ({}))))
-    .then(([a, b]) => ({ ids: { ...(a.ids || {}), ...(b.ids || {}) } }))]).then(([d, p, pr, tr, lk, un]) => {
+    .then(([a, b]) => ({ ids: { ...(a.ids || {}), ...(b.ids || {}) } }))]).then(([d, p, pr, tr, lk, oc, un]) => {
   if (!d.videos || d.videos.length < 3) return fallBack();
   unplayable = un.ids || {};
   all = d.videos.filter(v => !unplayable[v.id]);
   picks = p[station.id] || null;
   promos = pr;
   trailers = tr;
+  own = oc;
   locked = lk && { date: torontoDay().date, items: lk };
   order();
   // Nothing left to play (every programme taken off): the free films take over.
