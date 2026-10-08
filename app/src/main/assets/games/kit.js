@@ -1,4 +1,4 @@
-// Shared by the modern games (Block Burst, Color Pour): a sharp full-screen canvas, the remote's
+// Shared by the modern games (Block Burst, Color Pour and the newer web games): a sharp full-screen canvas, the remote's
 // keys / touch / mouse, short sound effects made in the browser, particles, easing, and the bridge
 // that keeps each game's record in the app (Android: window.CableGames, PC: the parent window).
 'use strict';
@@ -298,7 +298,7 @@ const Kit = (() => {
 
   return {
     canvas, ctx, get W() { return W; }, get H() { return H; }, onResize: (f) => resizeHooks.push(f),
-    clamp, lerp, ease, shade, rgba, roundRect, sfx, toggleMute, get muted() { return muted; },
+    clamp, lerp, ease, shade, rgba, roundRect, sfx, tone, noise, toggleMute, get muted() { return muted; },
     burst, confetti, float, background, onKeys, onPointer, record, exit, store, touchFirst, shake, run,
   };
 })();
