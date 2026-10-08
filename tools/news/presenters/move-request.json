@@ -1,11 +1,15 @@
 {
- "about": "Newsrooms Q (day windows), R (evening screens), T (two-level), like N",
+ "about": "Owner picked newsroom N (2026-10-08 20:50): every on-air reader in N (Sana 1n and Saad m10n already made)",
  "ids": [
-  "anchor-1q",
-  "anchor-m10q",
-  "anchor-1r",
-  "anchor-m10r",
-  "anchor-1t",
-  "anchor-m10t"
+  "anchor-m1n",
+  "anchor-5n",
+  "anchor-m6n",
+  "anchor-6n",
+  "anchor-m7n",
+  "anchor-7n",
+  "anchor-m8n",
+  "anchor-8n",
+  "anchor-3hn",
+  "anchor-m11n"
  ]
 }
