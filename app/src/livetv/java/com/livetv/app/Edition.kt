@@ -24,6 +24,8 @@ import com.livetv.app.account.Subscription
 import com.livetv.app.ui.PlanEndingNotice
 import com.livetv.app.ui.PlansScreen
 import com.livetv.app.ui.MessagesScreen
+import com.livetv.app.ui.WelcomeDialog
+import com.livetv.app.account.Welcome
 import com.livetv.app.ui.SignInScreen
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -153,6 +155,7 @@ fun EditionOverlay() {
         }
     }
     if (FirebaseConfig.configured) NewMessagePrompt()
+    if (FirebaseConfig.configured && !Edition.MAX) WelcomePrompt()
     if (FirebaseConfig.configured && !Edition.MAX) PlanPrompts()
     if (FirebaseConfig.configured && !Edition.MAX) BillingPrompt()
     // A sponsor's card after a channel change, now and then.
@@ -233,6 +236,30 @@ private fun BillingPrompt() {
         if (runCatching { Billing.load(account) }.getOrNull()?.waiting == true) open = true
     }
     if (open) BillingDialog(asked = true, onDismiss = { open = false })
+}
+
+/**
+ * The welcome invitation (owner, 2026-10-08): Gold free for one month with promo code WELCOME, and
+ * please leave us a good review. Pops up once per account, about 25 seconds after start, for every
+ * viewer who hasn't used the code yet (new viewers on their first start, Free viewers on their next).
+ * It stays at the top of their Messages afterwards.
+ */
+@Composable
+private fun WelcomePrompt() {
+    val context = LocalContext.current
+    val account = remember { Account.get(context) }
+    val user by account.user.collectAsStateWithLifecycle()
+    var open by remember { mutableStateOf(false) }
+    LaunchedEffect(user?.uid) {
+        if (user == null || account.isAdmin) return@LaunchedEffect
+        delay(25_000)
+        val state = runCatching { Welcome.state(account) }.getOrNull() ?: return@LaunchedEffect
+        if (state.sentAt == null && state.canUse) {
+            Welcome.markSent(account)
+            open = true
+        }
+    }
+    if (open) WelcomeDialog(onDismiss = { open = false })
 }
 
 /**
