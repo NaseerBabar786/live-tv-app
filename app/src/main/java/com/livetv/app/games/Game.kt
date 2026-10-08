@@ -148,6 +148,7 @@ class WebGameInfo(
 )
 
 val WEB_GAMES = listOf(
+    WebGameInfo("spades", "Spades", "♠️", "spades.html") { "Wins: $it" },
     WebGameInfo("snakerush", "Snake Rush", "🐍", "snakerush.html") { "Best: $it" },
     WebGameInfo("blockburst", "Block Burst", "💥", "blockburst.html") { "Best: $it" },
     WebGameInfo("colorpour", "Color Pour", "🧪", "colorpour.html") { "Level $it done" },
