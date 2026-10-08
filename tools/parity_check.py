@@ -44,6 +44,9 @@ def main(base):
 
     for p in config["platforms"]:
         name = p["name"]
+        if p.get("paused"):
+            print(f"{name} is paused ({p['paused']}), not checked.")
+            continue
         touched = [f for f in changed if f.startswith(p["folder"])]
         if tv_changed and not touched:
             errors.append(

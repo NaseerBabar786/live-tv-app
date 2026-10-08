@@ -9,6 +9,7 @@
   "platforms": [
     {
       "name": "Cable TV for PC",
+      "paused": "owner, 2026-10-08: TV app only for now; PC and phone come back when the owner says they are ready. Remove this line to check PC again.",
       "folder": "cabletv-pc/",
       "parity_file": "cabletv-pc/parity.json",
       "package_file": "cabletv-pc/package.json",
