@@ -291,17 +291,17 @@ private fun LineGap(height: Dp, past: Boolean) {
     }
 }
 
-private val Green = Color(0xFF43A047)
-private val Orange = Color(0xFFFFA726)
-private val Red = Color(0xFFE53935)
+private val TimeGreen = Color(0xFF43A047)
+private val TimeOrange = Color(0xFFFFA726)
+private val TimeRed = Color(0xFFE53935)
 
 /** The time between the last prayer and the next: green, then orange, then red as it runs out, "NOW" where we are. */
 @Composable
 private fun ProgressGap(fraction: Float, now: Long, left: Long, height: Dp) {
     val nowColor = when {
-        fraction < 0.5f -> Green
-        fraction < 0.8f -> Orange
-        else -> Red
+        fraction < 0.5f -> TimeGreen
+        fraction < 0.8f -> TimeOrange
+        else -> TimeRed
     }
     Row(Modifier.fillMaxWidth().height(height)) {
         Box(Modifier.width(SideWidth).fillMaxHeight()) {
@@ -316,9 +316,9 @@ private fun ProgressGap(fraction: Float, now: Long, left: Long, height: Dp) {
             val cx = size.width / 2
             val w = 5.dp.toPx()
             val h = size.height
-            drawLine(Green, Offset(cx, 0f), Offset(cx, h * 0.5f), strokeWidth = w)
-            drawLine(Orange, Offset(cx, h * 0.5f), Offset(cx, h * 0.8f), strokeWidth = w)
-            drawLine(Red, Offset(cx, h * 0.8f), Offset(cx, h), strokeWidth = w)
+            drawLine(TimeGreen, Offset(cx, 0f), Offset(cx, h * 0.5f), strokeWidth = w)
+            drawLine(TimeOrange, Offset(cx, h * 0.5f), Offset(cx, h * 0.8f), strokeWidth = w)
+            drawLine(TimeRed, Offset(cx, h * 0.8f), Offset(cx, h), strokeWidth = w)
             drawCircle(nowColor, 7.dp.toPx(), Offset(cx, h * fraction))
         }
         Box(Modifier.weight(1f).fillMaxHeight()) {

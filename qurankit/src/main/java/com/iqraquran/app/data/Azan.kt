@@ -178,7 +178,7 @@ class AzanSettings(context: Context) {
     // ---------- Recordings ----------
 
     /** The recordings to choose from (the list is kept, so it's there offline). */
-    fun voices(): List<AzanVoice> = parseVoices(prefs.getString("voices", null) ?: return emptyList())
+    fun voices(): List<AzanVoice> = prefs.getString("voices", null)?.let { parseVoices(it) } ?: emptyList()
 
     suspend fun refreshVoices(): List<AzanVoice> = withContext(Dispatchers.IO) {
         runCatching {
