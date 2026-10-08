@@ -170,10 +170,11 @@ def build_extra(surahs):
     for lang in sorted({(r.get("language_name") or "").lower() for r in all_tr} - named - {""}):
         info = langs.get(lang, {})
         code = (info.get("iso_code") or lang[:3]).lower()
-        if code in taken:
+        en = lang.split(",")[0].strip().title()
+        if code in taken or en.lower() in named:
             continue  # the same language under another name (e.g. "Divehi" and "Divehi, Dhivehi, Maldivian")
         taken.add(code)
-        en = lang.split(",")[0].strip().title()
+        named.add(en.lower())
         native = info.get("native_name") or en
         plan.append((code, lang, [], en, native, info.get("direction") == "rtl"))
     index = []
