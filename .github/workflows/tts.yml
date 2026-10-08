@@ -1,0 +1,26 @@
+name: name-clips
+on:
+  push:
+    branches: [tts-name-clips]
+permissions:
+  contents: write
+jobs:
+  tts:
+    if: "!contains(github.event.head_commit.message, 'clips made')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install edge-tts
+      - run: |
+          mkdir -p clips
+          say() { edge-tts --voice "$1" --rate=-10% --text "$2" --write-media "clips/$3.mp3"; }
+          say en-US-GuyNeural "Vibe TV" vibe-en
+          say hi-IN-MadhurNeural "वाइब टीवी" vibe-hi
+          say ur-PK-AsadNeural "وائب ٹی وی" vibe-ur
+          say en-US-GuyNeural "Spark TV" spark-en
+          say hi-IN-MadhurNeural "स्पार्क टीवी" spark-hi
+          say ur-PK-AsadNeural "اسپارک ٹی وی" spark-ur
+          ls -la clips
+      - run: |
+          git config user.name github-actions; git config user.email actions@github.com
+          git add clips && git commit -m "clips made" && git push
