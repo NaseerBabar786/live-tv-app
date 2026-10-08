@@ -64,3 +64,18 @@ class VimeoTest {
     }
 }
 
+class YouTubeNavigationTest {
+    // Owner's rule (2026-10-07): no page of ours can take its window to YouTube or hand it to another app.
+    @Test
+    fun neverLeavesForYouTube() {
+        assertEquals(true, YouTube.blocksNavigation("https", "www.youtube.com", mainFrame = true))
+        assertEquals(true, YouTube.blocksNavigation("https", "m.youtube.com", mainFrame = true))
+        assertEquals(true, YouTube.blocksNavigation("https", "youtu.be", mainFrame = true))
+        assertEquals(true, YouTube.blocksNavigation("intent", null, mainFrame = true))
+        assertEquals(true, YouTube.blocksNavigation("vnd.youtube", "abc", mainFrame = false))
+        // YouTube's player itself (a frame inside our page), our own pages and our signals stay.
+        assertEquals(false, YouTube.blocksNavigation("https", "www.youtube.com", mainFrame = false))
+        assertEquals(false, YouTube.blocksNavigation("https", "tv.bulkbazaar.ca", mainFrame = true))
+        assertEquals(false, YouTube.blocksNavigation("livetv", "fallback", mainFrame = true))
+    }
+}
