@@ -95,7 +95,7 @@ import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.sin
 
-// The Weather section's own colours (1.10.19): deep blue like the big weather apps, whatever the app theme.
+// The Weather section's own colours (1.10.20): deep blue like the big weather apps, whatever the app theme.
 private val SkyTop = Color(0xFF2E4596)
 private val SkyBottom = Color(0xFF141C48)
 private val Panel = Color(0xE6131A42)
@@ -118,7 +118,7 @@ private enum class Tab(val label: String) {
 }
 
 /**
- * The Weather section, next to Modes, Library and Games. Since 1.10.19 it looks and works like The Weather
+ * The Weather section, next to Modes, Library and Games. Since 1.10.20 it looks and works like The Weather
  * Network's app (owner's screenshots, 2026-10-08), without ads: tabs for the weather now, Hourly, 7 Days
  * (parts of the day), 14 Days, a moving rain radar, weather news with pictures and weather videos, for the
  * viewer's own place and any places they add. The remote's arrows move around and OK opens; on a phone

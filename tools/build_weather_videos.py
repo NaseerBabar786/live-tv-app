@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-The Weather section's videos (Cable TV 1.10.19): the newest weather videos from the weather channels'
+The Weather section's videos (Cable TV 1.10.20): the newest weather videos from the weather channels'
 own YouTube channels (The Weather Network, The Weather Channel, AccuWeather), for the Video tab.
 
 The app plays them in YouTube's embedded player inside our locked film page (docs/channel/film.html),
