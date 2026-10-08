@@ -47,7 +47,7 @@ BLOCK = re.compile(r"news|bbc|cnn|cnbc|abc |nbc|fox|al jazeera|voa|reuters|crame
                    r"president|minister|candidate|senator|governor|mayor|king |queen|prince|trump|biden|bush|obama|trudeau|"
                    r"modi|khan|sharif|bhutto|shoot|bomb|attack|kill|dead|death|war|army|military|soldier|navy|riot|"
                    r"protest|funeral|crash|fire|terror|police|arrest|covid|corona|nara|\(1[89]\d\d\)|film \d{3,}", re.I)
-VERSION = 2   # bump to rebuild the clip library
+VERSION = 3   # bump to rebuild the clip library
 OK_LICENCE = re.compile(r"^(cc0|public domain|pd|cc by( \d\.\d)?|cc-by( \d\.\d)?)$", re.I)
 
 
@@ -75,37 +75,76 @@ def search(term, limit=12):
     return out
 
 
-def build(out, per_topic=3):
+# Hand-picked by looking at contact sheets (news-broll-candidates.yml): neutral scenery only, nothing that
+# shows a real person or event the story could be mistaken for. Topics with no good free clip simply get none.
+CURATED = {
+    "cricket": ["File:Pakistan v Sri Lanka in UAE, 2017 (1st ODI) October 13.ogv", "File:WACA 2012 India vs Sri Lanka ODI.webm",
+                "File:2011-03-30 - India v Pakistan.ogv"],
+    "india": ["File:Street in Mumbai (video) 01.webm", "File:Street in Mumbai (video) 02.webm", "File:Street in Mumbai (video) 03.webm",
+              "File:Mumbai Local Train.webm", "File:Mumbai Timelapse - Movement Prevails Here.webm",
+              "File:The changing colours of Mumbai CST railway station.webm", "File:Toward northern mumbai from window of taxi 2022 Dec.webm"],
+    "canada": ["File:Toronto Skyline.webm", "File:Toronto Skyline2.webm", "File:Google Timelapse- Toronto, Canada.webm",
+               "File:Snowstorm in Quebec City.webm", "File:Old Québec City Tours , Canada (UNESCO’s World Heritage ).webm"],
+    "world": ["File:BlackMarble 2016 rotating globe at night.webm", "File:Earth 360 animation.webm",
+              "File:City Timelapse - Free video.webm", "File:City timelapse video.webm"],
+    "weather-rain": ["File:Rain in Kenwood - September 30 2023 - Sarah Stierch.webm", "File:Rain in Sonoma - December 2025 - Sarah Stierch.webm",
+                     "File:Rain drops - Japan -2016 July 20.webm", "File:Timelapse of Clouds over Bellevue Canyon.webm",
+                     "File:Wolken Zeitraffer - Clouds Timelapse 4K HD 24FPS.webm"],
+    "football": ["File:2021-08-29 - FIFA Beach Soccer World Cup - Match 31 - Switzerland v Senegal.webm"],
+    "sports": ["File:UNC chapel hill kenan football stadium aerial.webm", "File:Golakganj Stadium.webm"],
+    "film": ["File:Cinemeccanica projector Victoria 9 running.webm", "File:DGB (large feed reels) - Cinema projector.webm",
+             "File:Reels and Lights (2012).webm", "File:Reversal film projector..webm"],
+    "health": ["File:Video en el interior del Centro de salud urbano de Mazatlán, 13 de agosto de 2018.webm",
+               "File:Helicopter landing at King’s College Hospital Helipad (2025-07-08).webm"],
+    "court": ["File:U.S. Post Office & Courthouse, Pittsburgh, PA.ogv", "File:Gov.gsa.historic.denver.ogv",
+              "File:Gov.gsa.historic.portland.1.ogv"],
+}
+
+
+def lookup(titles):
+    """Commons file info (url, licence, artist) for exact titles; prefix matches let a cut-off title still resolve."""
+    q = urllib.parse.urlencode({"action": "query", "format": "json", "titles": "|".join(titles), "prop": "imageinfo",
+                                "iiprop": "url|extmetadata|size"})
+    out = []
+    for p in json.loads(get("https://commons.wikimedia.org/w/api.php?" + q)).get("query", {}).get("pages", {}).values():
+        ii = (p.get("imageinfo") or [{}])[0]; md = ii.get("extmetadata", {})
+        if not ii.get("url"): print("missing", p.get("title")); continue
+        lic = (md.get("LicenseShortName", {}).get("value") or "").strip()
+        if not OK_LICENCE.match(lic): print("licence not ok", p["title"], lic); continue
+        artist = re.sub(r"<[^>]+>", "", html.unescape(md.get("Artist", {}).get("value") or "")).strip()
+        if not artist or "unknown" in artist.lower(): artist = "Wikimedia Commons contributor"
+        out.append({"title": p["title"], "url": ii["url"], "licence": lic, "artist": artist[:60], "size": ii.get("size", 0),
+                    "page": "https://commons.wikimedia.org/wiki/" + urllib.parse.quote(p["title"].replace(" ", "_"))})
+    return out
+
+
+def build(out):
     os.makedirs(out, exist_ok=True)
-    index, seen = [], set()
-    for topic, terms in TOPICS.items():
+    index = []
+    for topic, titles in CURATED.items():
         got = 0
-        for term in terms:
-            if got >= per_topic: break
-            try: found = search(term)
-            except Exception as e: print("search failed", term, e); continue
-            for c in found:
-                if got >= per_topic: break
-                if c["title"] in seen or not c["url"] or c["size"] > 400e6: continue
-                seen.add(c["title"])
-                name = f"broll-{topic}-{hashlib.md5(c['title'].encode()).hexdigest()[:8]}.mp4"
-                src = os.path.join(out, "src" + os.path.splitext(c["url"])[1])
-                try:
-                    with open(src, "wb") as f: f.write(get(c["url"], 300))
-                    d = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
-                                              "csv=p=0", src], capture_output=True, text=True).stdout or 0)
-                    if d < 6: continue
-                    ss = max(0.0, min(d - 10, d * 0.3))
-                    subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", f"{ss:.1f}", "-i", src, "-t", "10",
-                                    "-vf", "scale=640:360:force_original_aspect_ratio=increase,crop=640:360,fps=25,format=yuv420p",
-                                    "-an", "-c:v", "libx264", "-crf", "24", "-preset", "veryfast",
-                                    os.path.join(out, name)], check=True, timeout=600)
-                    index.append({"file": name, "topic": topic, **{k: c[k] for k in ("title", "licence", "artist", "page")}})
-                    got += 1; print("clip", topic, c["title"], c["licence"])
-                except Exception as e:
-                    print("clip failed", c["title"], e)
-                finally:
-                    if os.path.exists(src): os.remove(src)
+        for c in lookup(titles):
+            if c["size"] > 600e6: continue
+            name = f"broll-{topic}-{hashlib.md5(c['title'].encode()).hexdigest()[:8]}.mp4"
+            src = os.path.join(out, "src" + os.path.splitext(c["url"])[1])
+            try:
+                with open(src, "wb") as f: f.write(get(c["url"], 600))
+                d = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
+                                          "csv=p=0", src], capture_output=True, text=True).stdout or 0)
+                if d < 6: continue
+                ss = max(0.0, min(d - 10, d * 0.3))
+                subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", f"{ss:.1f}", "-i", src, "-t", "10",
+                                "-vf", "scale=640:360:force_original_aspect_ratio=increase,crop=640:360,fps=25,format=yuv420p",
+                                "-an", "-c:v", "libx264", "-crf", "24", "-preset", "veryfast",
+                                os.path.join(out, name)], check=True, timeout=900)
+                subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", "5", "-i", os.path.join(out, name),
+                                "-frames:v", "1", os.path.join(out, name[:-4] + ".jpg")])
+                index.append({"file": name, "topic": topic, **{k: c[k] for k in ("title", "licence", "artist", "page")}})
+                got += 1; print("clip", topic, c["title"], c["licence"])
+            except Exception as e:
+                print("clip failed", c["title"], e)
+            finally:
+                if os.path.exists(src): os.remove(src)
         print(topic, got)
     json.dump({"version": VERSION, "clips": index}, open(os.path.join(out, "news-broll.json"), "w"), indent=1, ensure_ascii=False)
 

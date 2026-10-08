@@ -39,7 +39,7 @@ jobs:
             gh release view news-broll -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
               gh release create news-broll --prerelease -t "News topic clips" -n "Free CC0 / public-domain / CC BY clips from Wikimedia Commons for Bazaar TV News, credited on screen." -R "$GITHUB_REPOSITORY"
             python3 tools/news/broll.py build broll-out
-            gh release upload news-broll broll-out/*.mp4 broll-out/news-broll.json -R "$GITHUB_REPOSITORY" --clobber
+            gh release upload news-broll broll-out/*.mp4 broll-out/*.jpg broll-out/news-broll.json -R "$GITHUB_REPOSITORY" --clobber
           fi
       - env:
           NEWS_LOOK: ${{ env.LOOK }}
