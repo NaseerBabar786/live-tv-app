@@ -18,14 +18,20 @@ import java.util.Date
 object Welcome {
     const val CODE = "WELCOME"
     const val TITLE = "🎁 Try Gold free for one month"
-    const val TEXT = "Welcome to Cable TV! As a thank-you for joining us, try Gold free for one month: " +
+    const val TEXT = "Thank you for joining Cable TV! Here is your welcome gift: Gold free for one more month, " +
         "every channel and every feature. Press \"Use code $CODE\", or type promo code $CODE in Settings > Packages. " +
         "One free month per account.\n\n" +
         "Look around, enjoy the app, and if you like it, please leave us a good review ★★★★★ and tell your friends. " +
         "Thank you! The Cable TV team"
 
-    /** [sentAt]: when it first popped up for this account. [canUse]: the WELCOME button still works for them. */
-    data class State(val sentAt: Date?, val canUse: Boolean)
+    /** Hours after the free trial ends before the gift pops up (owner, 2026-10-08). */
+    const val AFTER_TRIAL_HOURS = 8
+
+    /**
+     * [sentAt]: when it first popped up for this account. [canUse]: the WELCOME button still works for them.
+     * [offerAt]: when it pops up, 8 hours after the free trial ends (they can type the code before that).
+     */
+    data class State(val sentAt: Date?, val canUse: Boolean, val offerAt: Date)
 
     /**
      * Null when there's nothing to show: the owner, not signed in, Live TV Max, the code missing or
@@ -43,8 +49,12 @@ object Welcome {
         val status = Subscription.status.value
         val paying = status != null && !status.trial && status.tier != Plans.Tier.Free && status.until != null
         val canUse = active && !used && int("used") < int("uses") && !paying
-        val sentAt = getOrNull(Firestore.doc("users/${u.uid}"), t)?.optJSONObject("fields")?.time("welcomeAt")
-        if (!canUse && sentAt == null) null else State(sentAt, canUse)
+        val me = getOrNull(Firestore.doc("users/${u.uid}"), t)?.optJSONObject("fields")
+        val sentAt = me?.time("welcomeAt")
+        val joined = me?.time("joined") ?: Date()
+        val trialMs = Subscription.offer.value.trialDays * 86_400_000L
+        val offerAt = Date(joined.time + trialMs + AFTER_TRIAL_HOURS * 3_600_000L)
+        if (!canUse && sentAt == null) null else State(sentAt, canUse, offerAt)
     }
 
     /** Remembers that the invitation popped up for this account, so it doesn't pop up again. */
