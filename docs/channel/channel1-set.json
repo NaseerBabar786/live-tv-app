@@ -1,0 +1,108 @@
+{
+ "date": "2026-10-09",
+ "episode": 1,
+ "hours": [
+  {
+   "hour": 1,
+   "full_news": true,
+   "programmes": [
+    {
+     "id": "c1-1-LpbnBVHunZE",
+     "urdu": "ڈرامہ",
+     "title": "Tark-e-Tamanna",
+     "secs": 2094
+    }
+   ]
+  },
+  {
+   "hour": 2,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-2-ptDYBfgtUiE",
+     "urdu": "ڈرامہ",
+     "title": "Mitti De Baway Ep 06",
+     "secs": 2005
+    }
+   ]
+  },
+  {
+   "hour": 3,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-3-2W9Q-3X5Dyg",
+     "urdu": "کھانا پکائیں",
+     "title": "Beef & Garlic Stir Fry Recipe",
+     "secs": 242
+    },
+    {
+     "id": "c1-3-Y-tsg0SzjJA",
+     "urdu": "مزاحیہ",
+     "title": "Taarak Mehta · Episode 4815",
+     "secs": 1348
+    }
+   ]
+  },
+  {
+   "hour": 4,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-4-k_g1KAVgci4",
+     "urdu": "ڈرامہ",
+     "title": "Mere Pass Raho Tum",
+     "secs": 2060
+    }
+   ]
+  },
+  {
+   "hour": 5,
+   "full_news": true,
+   "programmes": [
+    {
+     "id": "c1-5-6kITzssrw-g",
+     "urdu": "ڈرامہ",
+     "title": "Mitti De Baway Ep 04",
+     "secs": 2149
+    }
+   ]
+  },
+  {
+   "hour": 6,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-6-gzRqeSZdqq4",
+     "urdu": "ڈرامہ",
+     "title": "Dastoor Episode 43",
+     "secs": 2179
+    }
+   ]
+  },
+  {
+   "hour": 7,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-7-gw3Qya-AaS4",
+     "urdu": "ڈرامہ",
+     "title": "Mohabbat Episode 04",
+     "secs": 2359
+    }
+   ]
+  },
+  {
+   "hour": 8,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-8-f0gp7_H-5nE",
+     "urdu": "نئے گانے اور فلموں کے ٹریلر",
+     "title": "New songs and film trailers",
+     "secs": 0
+    }
+   ]
+  }
+ ]
+}
