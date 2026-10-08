@@ -19,10 +19,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "music"))
 from library import bed, credit, lowpass_sweep, save, SR  # noqa: E402
 
-W, H, FPS, SECS = 1920, 1080, 25, 8.0
+W, H, FPS, SECS = 1920, 1080, 25, 18.0
 N = int(FPS * SECS)
 MOOD = "feelgood"              # Inspiring Advertising (Rafael Krux), 120 BPM: one beat = 0.5 s (owner liked it on the Spark ads)
-HIT = 3.0                      # the comets meet on beat 6
+HIT = 3.0                      # on the logo part's clock (OFF later): the comets meet on a bar line
 ORG, PNK, VIO, YEL = (255, 106, 0), (255, 45, 120), (124, 58, 237), (255, 196, 0)
 PETALS = (ORG, PNK, VIO, YEL)
 LOGO = os.path.join(HERE, "spark_logos", "spark-tv.png")
@@ -187,7 +187,117 @@ def comp(f, layer, a=1.0):
     return f * (1 - al) + x[..., :3] * al, x
 
 
-def make(out):
+# ---------- part 1: flying through space and a tunnel of our channels' pictures ----------
+OFF = 9.0          # the logo part (comets, bloom, letters) starts here; the comets meet at OFF + HIT = 12 s
+FOC = 900.0        # camera focal length in pixels
+TW, TH = 1.6, .9   # a picture is 16:9 in world units
+
+
+def travel(speed):
+    """Camera position over time for a speed curve: cumulative sum frame by frame."""
+    z, out = 0.0, []
+    for n in range(N + 1):
+        out.append(z); z += speed(n / FPS) / FPS
+    return out
+def bump(t, a, b, c, d):
+    """0 before a, rises to 1 by b, stays until c, falls to 0 by d."""
+    return inout((t - a) / (b - a)) * (1 - inout((t - c) / (d - c)))
+STAR_Z = travel(lambda t: 2 + 30 * bump(t, 0, 1.6, 2.4, 4.2) + 6 * bump(t, 3, 4, 6.5, 8))
+TILE_Z = travel(lambda t: 4.0 * bump(t, 1.8, 3.2, 5.6, 7.6) + .4 * bump(t, 6, 7, 9, 10))
+STARS = [(rnd.uniform(-3, 3), rnd.uniform(-1.8, 1.8), rnd.uniform(0, 24), rnd.choice(PETALS + ((255, 255, 255),) * 3)) for _ in range(520)]
+
+
+def stars_layer(t, n):
+    """Light streaks rushing past: the camera flies forward through space."""
+    a = clamp(t / .4) * (1 - .6 * clamp((t - 3.5) / 1.5)) * (1 - clamp((t - 11.2) / .8))
+    if a <= 0: return None
+    L = Image.new("RGB", (W // 2, H // 2)); d = ImageDraw.Draw(L)
+    zc, zp = STAR_Z[n], STAR_Z[max(0, n - 3)]
+    roll = t * .15
+    for x, y, z0, col in STARS:
+        r1 = (z0 - zc) % 24 + .15; r0 = r1 + (zc - zp)
+        if r0 > 24: continue
+        cr, sr = math.cos(roll), math.sin(roll); xr, yr = x * cr - y * sr, x * sr + y * cr
+        p1 = (W / 4 + FOC / 2 * xr / r1, H / 4 + FOC / 2 * yr / r1); p0 = (W / 4 + FOC / 2 * xr / r0, H / 4 + FOC / 2 * yr / r0)
+        b = a * clamp(1.6 / r1) * clamp((24 - r1) / 6)
+        if b < .02: continue
+        d.line([p0, p1], fill=tuple(int(v * b) for v in col), width=max(1, int(3.2 / r1 + .5)))
+    return arr(L)
+
+
+def load_tiles(folder):
+    """Our channels' real pictures as 16:9 screens with a thin bright edge."""
+    files = sorted(os.path.join(dp, f) for dp, _, fs in os.walk(folder) for f in fs if f.lower().endswith((".jpg", ".png")))
+    rnd2 = random.Random(5); rnd2.shuffle(files)
+    out = []
+    for p in files[:40]:
+        im = Image.open(p).convert("RGB").resize((640, 360), Image.LANCZOS).convert("RGBA")
+        d = ImageDraw.Draw(im); d.rectangle([0, 0, 639, 359], outline=(255, 255, 255, 200), width=4)
+        out.append(im)
+    while len(out) < 40: out += out[: 40 - len(out)]
+    return out
+
+
+def tile_positions(t, n):
+    """Camera-space (x, y, z, alpha, glow) of the 40 pictures at time t."""
+    zc = TILE_Z[n]; roll = .35 * t; res = []
+    g = inout((t - 6.2) / 1.9)                         # pictures gather into a wall
+    ex = clamp((t - 9.0) / .85) ** 2                    # ...then burst past the camera
+    for i in range(40):
+        th = i * 2.399 + roll
+        x, y, z = 1.55 * math.cos(th) * 1.3, 1.55 * math.sin(th) * .82, 3 + i * .62 - zc
+        a = clamp((z - .35) / .5) * clamp((16 - z) / 5) * clamp((t - 1.7) / .8)
+        glow = 0.0
+        if i >= 24:
+            k = i - 24; c, r = k % 4, k // 4
+            push = .35 * clamp((t - 7.6) / 1.5)
+            gx, gy, gz = (c - 1.5) * 1.78, (r - 1.5) * 1.02, 3.5 - push
+            x, y, z = x + (gx - x) * g, y + (gy - y) * g, z + (gz - z) * g
+            a = a + (1 - a) * g
+            if ex > 0:
+                x, y, z = x * (1 + ex * 2.2), y * (1 + ex * 2.2), z * (1 - ex * .8)
+                a *= 1 - ex
+            beat = int((t - 7.0) / .5)                   # on every beat one picture lights up
+            if 7.0 < t < 9.0 and (beat * 7) % 16 == k: glow = 1 - ((t - 7.0) % .5) / .5
+        else:
+            a *= 1 - g
+        if a > .02 and z > .3: res.append((z, x, y, a, glow, i))
+    return sorted(res, reverse=True)
+
+
+def tiles_layer(t, n, tiles):
+    if t < 1.6 or t > 10.0: return None
+    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    for z, x, y, a, glow, i in tile_positions(t, n):
+        s = FOC / z; w, h = int(TW * s), int(TH * s)
+        if w < 6 or w > 3200: continue
+        q = tiles[i].resize((w, h), Image.BILINEAR)
+        fog = .55 + .45 * clamp(2.6 / z)
+        if glow > 0 or fog < 1:
+            px = np.asarray(q, np.float32)
+            px[..., :3] = px[..., :3] * fog + (255 - px[..., :3] * fog) * glow * .45
+            px[..., 3] *= a
+            q = Image.fromarray(np.clip(px, 0, 255).astype(np.uint8), "RGBA")
+        else:
+            q.putalpha(q.split()[3].point(lambda v: int(v * a)))
+        lay.alpha_composite(q, (int(W / 2 + x * s - w / 2), int(H / 2 + y * s - h / 2))) if -w < W / 2 + x * s < W + w else None
+    return lay
+
+
+def wall_layer(t, tiles):
+    """While the logo stands: a far wall of our pictures drifting slowly behind it."""
+    a = .2 * clamp((t - 12.6) / 1.2) * (1 - clamp((t - (SECS - .6)) / .5))
+    if a <= 0: return None
+    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); s = FOC / 7.5; w, h = int(TW * s), int(TH * s)
+    for r in range(5):
+        for c in range(9):
+            x = (c - 4) * 1.75 - (t - 12) * (.25 if r % 2 else -.25); y = (r - 2) * 1.0
+            q = tiles[(r * 9 + c) % 40].resize((w, h), Image.BILINEAR); q.putalpha(q.split()[3].point(lambda v: int(v * a)))
+            lay.alpha_composite(q, (int(W / 2 + x * s - w / 2), int(H / 2 + y * s - h / 2)))
+    return lay
+
+
+def make(out, pictures):
     wide = Image.open(LOGO).convert("RGBA")
     a = np.array(wide)[..., 3]; cols = (a > 40).any(0)
     runs, s = [], None
@@ -210,46 +320,50 @@ def make(out):
     probe = Image.new("RGBA", (400, 400)); [probe.alpha_composite(petal(400, i, c)) for i, c in enumerate(PETALS)]
     bb = probe.getbbox(); Sfin = int(mark_w / ((bb[2] - bb[0]) / 400)); Sbig = int(Sfin * 2.1)
     PET = [petal(Sbig, i, c) for i, c in enumerate(PETALS)]
+    tiles = load_tiles(pictures)
     sparks = [(rnd.uniform(0, 2 * math.pi), rnd.uniform(160, 620), rnd.choice(PETALS + ((255, 240, 220),)), rnd.uniform(1.5, 3.5)) for _ in range(110)]
     cf = ImageFont.truetype(LATIN if os.path.exists(LATIN) else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
     fr = tempfile.mkdtemp()
     for n in range(N):
-        t = n / FPS
+        t = n / FPS; tl = t - OFF                      # tl: time on the logo part's clock
         cam = (math.sin(t * .35) * .6 + t * .05, math.cos(t * .27) * .4)      # slow camera drift (parallax)
-        mv = inout((t - 4.3) / .9)                                             # flower glides to its place
+        mv = inout((tl - 4.3) / .9)                                            # flower glides to its place
         c = (W / 2 + (end_c[0] - W / 2) * mv, H / 2 + (end_c[1] - H / 2) * mv)
         f = background(t, cam)
+        for wl in (wall_layer(t, tiles), tiles_layer(t, n, tiles)):
+            if wl is not None: f, _ = comp(f, wl)
         # light + its bloom
-        light = draw_light(t, c)
-        for extra in (flare(t, c), sparks_layer(t, c, sparks)):
+        light = draw_light(tl, c)
+        for extra in (flare(tl, c), sparks_layer(tl, c, sparks), stars_layer(t, n)):
             if extra is not None: light = light + extra
         lf = up(np.clip(light, 0, 1))
         bloom = up(blur(np.clip(light, 0, 1)[::2, ::2], 10), W, H)
         f = f + lf * .8 + bloom * 1.6
         # the flower
         lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-        if t >= HIT - .02:
-            k = t - HIT
+        if tl >= HIT - .02:
+            k = tl - HIT
             grow = [out_back((k - .05 * i) / .55, 2.4) for i in range(4)]
-            pulse = 1 + .05 * math.sin(k * 6) * math.exp(-k * 1.8)
+            pulse = 1 + .05 * math.sin(k * 6) * math.exp(-k * 1.8) + .025 * math.sin(max(0, tl - 6) * math.pi * 2) * clamp(tl - 6)
             S = int((Sbig + (Sfin - Sbig) * mv) * pulse)
-            rot = -70 * (1 - out_quint(k / 1.1)) + 4 * math.sin(t * 1.1) * (1 - mv)
+            rot = -70 * (1 - out_quint(k / 1.1)) + 4 * math.sin(tl * 1.1) * (1 - mv)
             fl = flower(PET, S, rot, grow)
             lay.alpha_composite(fl, (int(c[0] - S / 2), int(c[1] - S / 2)))
         # the letters rise one by one, "tv" drops in last
         for j, (g, gx) in enumerate(glyphs):
-            k = clamp((t - (4.75 + .09 * j + (.2 if j >= 5 else 0))) / .55)
+            k = clamp((tl - (4.75 + .09 * j + (.2 if j >= 5 else 0))) / .55)
             if k <= 0: continue
             e = out_back(k, 1.8); dy = (1 - e) * (70 if j < 5 else -70)
             q = g.copy(); q.putalpha(q.split()[3].point(lambda v, a=clamp(k * 2.2): int(v * a)))
             lay.alpha_composite(q, (gx, int(ly + dy)))
-        # glint across the whole logo
-        gk = (t - 6.1) / .8
-        if 0 < gk < 1:
-            la = np.asarray(lay, np.float32)
-            band = np.exp(-(((xx + yy * .35) - (lx - 300 + gk * (LW + 900))) / 55) ** 2)[..., None]
-            la[..., :3] = la[..., :3] + (255 - la[..., :3]) * band * .85
-            lay = Image.fromarray(la.astype(np.uint8), "RGBA")
+        # glint across the whole logo, twice
+        for g0 in (6.1, 8.0):
+            gk = (tl - g0) / .8
+            if 0 < gk < 1:
+                la = np.asarray(lay, np.float32).copy()
+                band = np.exp(-(((xx + yy * .35) - (lx - 300 + gk * (LW + 900))) / 55) ** 2)[..., None]
+                la[..., :3] = la[..., :3] + (255 - la[..., :3]) * band * .85
+                lay = Image.fromarray(la.astype(np.uint8), "RGBA")
         # glossy floor: a faint mirror image under the logo
         top = ly + LH + 6
         refl = lay.crop((0, 2 * top - H, W, top)).transpose(Image.FLIP_TOP_BOTTOM) if 2 * top - H > 0 else None
@@ -263,7 +377,7 @@ def make(out):
         f = f + up(blur(la[::4, ::4, :3] * la[::4, ::4, 3:4], 6), W, H) * .35
         f = f * VIGN
         # music credit
-        ck = clamp((t - 5.6) / .5) * (1 - clamp((t - 7.5) / .4))
+        ck = clamp((tl - 5.6) / .5) * (1 - clamp((t - (SECS - .6)) / .4))
         img = Image.fromarray((np.clip(f, 0, 1) * 255).astype(np.uint8), "RGB")
         if ck > 0:
             d = ImageDraw.Draw(img, "RGBA"); txt = credit(MOOD)
@@ -273,16 +387,18 @@ def make(out):
         if t > SECS - .45:
             img = Image.blend(img, Image.new("RGB", (W, H)), clamp((t - (SECS - .45)) / .4))
         img.save(f"{fr}/{n:04d}.png")
-    # music: the filter opens as the comets fly in, full sound when they meet
-    x = bed(MOOD, SECS + .3, start_bar=20, fade_in=.05, fade_out=.9)[: int(SECS * SR)]  # from 40 s, like the Spark ads
-    a = int(HIT * SR); x[:a] = lowpass_sweep(x[:a], 180, 9000) * np.linspace(.5, 1, a)[:, None]
+    # music: full from the start; the filter closes and opens again while the comets fly in, full hit when they meet
+    x = bed(MOOD, SECS + .3, start_bar=20, fade_in=.05, fade_out=1.2)[: int(SECS * SR)]  # from 40 s, like the Spark ads
+    a, b = int((OFF + .35) * SR), int((OFF + HIT) * SR)
+    x[a:b] = lowpass_sweep(x[a:b], 400, 12000)
     wav = os.path.join(fr, "m.wav"); save(wav, x * .72)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", f"{fr}/%04d.png", "-i", wav,
                     "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p", "-tune", "film",
                     "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out], check=True)
-    Image.open(f"{fr}/{int(6.0 * FPS):04d}.png").convert("RGB").save(out[:-4] + "-poster.jpg", quality=88)
+    Image.open(f"{fr}/{int(16.0 * FPS):04d}.png").convert("RGB").save(out[:-4] + "-poster.jpg", quality=88)
     print("made", out)
 
 
 if __name__ == "__main__":
-    make(sys.argv[1])
+    # python3 tools/make_spark_ident.py OUT.mp4 PICTURES_DIR   (our channels' real pictures, any sub-folders)
+    make(sys.argv[1], sys.argv[2])
