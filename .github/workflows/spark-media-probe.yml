@@ -8,12 +8,11 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: bash tools/probe/spark_music.sh
-        timeout-minutes: 15
       - run: |
-          tar czf spark-music.tgz -C out m
-          gh release delete-asset spark-ad-media spark-music.tgz -y || true
-          gh release upload spark-ad-media spark-music.tgz --clobber
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          curl -sL -o m.tgz https://github.com/${{ github.repository }}/releases/download/spark-ad-media/spark-music.tgz
+          tar xzf m.tgz
+          ffmpeg -v error -y -i m/04.mp3 -vn -c:a aac -b:a 192k sur-inspiring-advertising-rafael-krux.mp4
+          gh release upload sur-media sur-inspiring-advertising-rafael-krux.mp4 -R ${{ github.repository }} --clobber
         env:
           GH_TOKEN: ${{ github.token }}
