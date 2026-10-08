@@ -11,6 +11,7 @@ For each YouTube programme in the given playlists, once (kept in docs/library-in
     the way through) are compared; all the same, or all black, means one still picture with sound.
 Then each playlist is rewritten without:
   - still pictures,
+  - horror (owner's rule, 2026-10-08: no horror on any of our channels or in the Library),
   - wrong fits: trailers, teasers, promos, clips, songs, reactions, interviews, Shorts and the like, and
     films, telefilms and drama episodes far too short to be one (FIT_MINUTES),
   - programmes viewers say don't play (more "No" than "Yes" to the app's "Did it play properly?"),
@@ -169,7 +170,6 @@ def look_other(url):
 # description, in English, Roman Urdu/Hindi and Urdu/Hindi script. At most two per programme, in this order.
 GENRES = [
     ("Christmas", r"christmas|xmas|santa|holiday romance|hallmark"),
-    ("Horror", r"horror|ghost|haunt|demon|zombie|exorcis|possess|bhoot|bhoot|chudail|aseb|خوف|بھوت|चुड़ैल|भूत|डरावन"),
     ("Sci-Fi", r"sci-?fi|science fiction|\bspace\b|spaceship|alien|robot|dystop|time travel|asteroid|galaxy|planet"),
     ("Action", r"\baction|fight|gangster|mafia|revenge|martial|kung fu|commando|assassin|mercenar|heist|shoot-?out|badla|एक्शन|ایکشن"),
     ("Thriller", r"thriller|suspense|mystery|murder|detective|kidnap|serial killer|kill(?:er|ed|s|ing)?\b|bloodbath|crime|investigat|psycholog|stalker|جرم|قتل|रहस्य"),
@@ -183,6 +183,11 @@ GENRES = [
     ("Religious", r"islam|quran|prophet|naat|hamd|faith|bible|jesus|church|بیان|نعت"),
 ]
 GENRE_RE = [(g, re.compile(p, re.I)) for g, p in GENRES]
+
+
+# Owner's rule (2026-10-08): no horror anywhere on our channels or in the Library (Kids' friendly ghosts aside).
+HORROR = re.compile(r"horror|haunted|haunting|zombie|exorcis|paranormal|demonic|evil spirit|slasher|bhoot|bhoot|bhootni|"
+                    r"chudail|churail|aseb|آسیب|چڑیل|بھوت|चुड़ैल|भूतिया|भूत|डरावन|हॉरर|ہارر", re.I)
 
 
 def genres(text):
@@ -204,6 +209,8 @@ def why_off(attrs, name, known, url, vid, removed):
     """Why a programme doesn't belong in the Library, or None when it does."""
     if url in removed or (vid and vid in removed):
         return "reported / taken off by hand"
+    if attrs.get("tvg-genre") != "Kids" and HORROR.search(f"{name} {known.get('about') or attrs.get('desc') or ''}"):
+        return "horror (owner's rule: no horror)"
     if known.get("still"):
         return "one still picture"
     section = attrs.get("tvg-genre", "")
