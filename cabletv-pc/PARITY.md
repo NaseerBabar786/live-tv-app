@@ -55,3 +55,7 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   every language, and they are free in every package (`mta.js`, `channels.js`, `plans.js`).
 - 1.10.3 (PC 1.0.7): two modern games, Block Burst and Color Pour, in a 🎮 Games screen. Both apps open the
   very same pages (`app/src/main/assets/games`, copied in by `scripts/prepare.js`; `screens/games.js`).
+- Next Cable TV build (PC 1.0.8): no YouTube screen ever shows (owner's rule, 2026-10-07). Our pages in a
+  `<webview>` can't be taken to YouTube's own site (`main.js`), as on Android (`YouTube.blocksNavigation`).
+  The locked YouTube pages themselves (player taller than its box, cover on errors) are the website's,
+  shared by both apps. The Library's "open in the YouTube app" is gone on Android; the PC has no Library yet.

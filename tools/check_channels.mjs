@@ -82,6 +82,10 @@ if (!offline) {
     console.log(`::warning::${failedLookups} of ${all.length} look-ups failed; unplayable.json left as it was.`);
     Object.assign(unplayable, before);
   }
+  // What the hourly pre-air check found (tools/preair_check.py) stays out of new days too.
+  if (existsSync(new URL("preair-bad.json", DIR)))
+    for (const [id, b] of Object.entries(read("preair-bad.json").ids || {}))
+      if (ids.has(id) && !unplayable[id]) unplayable[id] = { why: b.why, channels: [...ids.get(id)], since: b.since };
   for (const [id, u] of Object.entries(unplayable)) warn(u.channels.join(", "), `video ${id} can't play here (${u.why}); new schedules leave it out, and today's fills its time.`);
   writeFileSync(new URL("unplayable.json", DIR), JSON.stringify({ checked: new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC", ids: unplayable }, null, 1) + "\n");
 }

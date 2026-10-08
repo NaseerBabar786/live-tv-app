@@ -26,6 +26,23 @@ object YouTube {
 
     fun watchUrl(id: String) = "https://www.youtube.com/watch?v=$id"
 
+    /**
+     * Whether a page of ours must not go to this link in its window. Owner's rule (2026-10-07): no YouTube
+     * screen ever shows in our app, so neither our page nor YouTube's player inside it can take the window
+     * to YouTube's site, or hand it to another app (intent: links). Our livetv:// signals and other
+     * web pages are fine.
+     */
+    fun blocksNavigation(scheme: String?, host: String?, mainFrame: Boolean): Boolean = when (scheme?.lowercase()) {
+        "livetv" -> false
+        "http", "https" -> mainFrame && isSite(host)
+        else -> true
+    }
+
+    private fun isSite(host: String?): Boolean {
+        val h = host?.lowercase()?.removePrefix("www.")?.removePrefix("m.") ?: return false
+        return h == "youtu.be" || listOf("youtube.com", "youtube-nocookie.com").any { h == it || h.endsWith(".$it") }
+    }
+
     /** Whether the link plays in YouTube's player (a video, a channel's live stream, or Bazaar Hits). */
     fun isYouTube(url: String): Boolean = videoId(url) != null || url == MyChannel.BOLLYWOOD_URL
 }

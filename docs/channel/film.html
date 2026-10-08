@@ -10,7 +10,7 @@
      our own on top (pause, back and forward 10 s, a progress bar). ?v=<video id>&t=<title>; the app adds
      &app=1. Remote: OK pauses and plays, Left/Right go back and forward (held: faster), Up/Down show the
      bar. When the video ends the page opens livetv://done; a video its owner won't let others play opens
-     livetv://blocked (the app then offers YouTube's own app). The last place in each video is kept, so
+     livetv://blocked (the app says so and goes back to the Library; never to YouTube, owner's rule 2026-10-07). The last place in each video is kept, so
      it goes on from there next time. */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; color: #fff; }
   /* YouTube's own bar along the bottom (and its title along the top) still showed on the owner's TV with
@@ -242,8 +242,9 @@ window.onYouTubeIframeAPIReady = () => {
       // 101 and 150: its owner won't let it play outside YouTube.
       onError: e => {
         if (app && (e.data === 101 || e.data === 150)) { location.href = "livetv://blocked"; return; }
-        document.body.insertAdjacentHTML("beforeend",
-          `<div class="msg"><div>This video won't play here.<br><br><a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">Watch it on YouTube</a></div></div>`);
+        // Our own card only, never a way out to YouTube (owner's rule 2026-10-07).
+        cover(true);
+        document.body.insertAdjacentHTML("beforeend", `<div class="msg"><div>This video can't play right now. Please pick another one.</div></div>`);
       },
     },
   });

@@ -257,7 +257,12 @@ app.on('web-contents-created', (_e, contents) => {
     e.preventDefault();
     send('web-signal', { id: contents.id, signal: s });
   };
-  contents.on('will-navigate', signal);
+  // Owner's rule (2026-10-07): no YouTube screen ever shows in our app, so neither our page nor YouTube's
+  // player inside it can take the window to YouTube's own site (YouTubePlayer.kt does the same on Android).
+  contents.on('will-navigate', (e, url) => {
+    if (/^https?:\/\/([\w-]+\.)*(youtube\.com|youtube-nocookie\.com|youtu\.be)(\/|$|[?#])/i.test(url || e.url || '')) { e.preventDefault(); return; }
+    signal(e, url);
+  });
   contents.on('will-frame-navigate', (e) => signal(e, e.url));
   contents.on('render-process-gone', () => send('web-signal', { id: contents.id, signal: 'fallback' }));
   contents.on('before-input-event', (e, input) => {
