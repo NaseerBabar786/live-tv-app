@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
     /** Cable TV's Games section is open. */
     private var showGames by mutableStateOf(false)
 
-    /** Cable TV's Weather section is open (1.10.11). */
+    /** Cable TV's Weather section is open (1.10.12). */
     private var showWeather by mutableStateOf(false)
 
     /** Cable TV's Iqra Quran section is open. */
