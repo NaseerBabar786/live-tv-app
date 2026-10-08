@@ -54,8 +54,11 @@ class WebChannelActivity : Activity() {
         // The video is drawn underneath the window; an opaque window keeps it black (1.9.55).
         window.setFormat(PixelFormat.TRANSLUCENT)
         val url = intent.getStringExtra(EXTRA_URL) ?: return finish()
+        val qaUa = intent.getStringExtra("qa_ua")
         val view = WebView(this).apply {
             settings.javaScriptEnabled = true
+            if (qaUa == "nowv") settings.userAgentString = settings.userAgentString.replace("; wv", "")
+            if (qaUa == "tv") settings.userAgentString = settings.userAgentString.replace(" Mobile", "")
             settings.domStorageEnabled = true
             settings.mediaPlaybackRequiresUserGesture = false
             // Always the newest page, not a copy the TV kept from an earlier version.
@@ -64,7 +67,8 @@ class WebChannelActivity : Activity() {
             setBackgroundColor(android.graphics.Color.TRANSPARENT)
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                    if (YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame)) return true
+                    android.util.Log.i("QAWEB", "nav " + request.url + " main=" + request.isForMainFrame + " block=" + YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame))
+                    if (qaUa != "nonav" && YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame)) return true
                     if (request.url.scheme != "livetv") return false
                     if (request.url.host == "fallback") {
                         setResult(RESULT_FALLBACK)
@@ -95,6 +99,7 @@ class WebChannelActivity : Activity() {
                 }
             }
             webChromeClient = object : WebChromeClient() {
+                override fun onConsoleMessage(m: android.webkit.ConsoleMessage): Boolean { android.util.Log.i("QAWEB", m.message() + " @" + m.sourceId() + ":" + m.lineNumber()); return true }
                 // No grey placeholder picture over the video while it starts.
                 override fun getDefaultVideoPoster(): Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
             }
