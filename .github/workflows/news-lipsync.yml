@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        id: ["anchor-m1b", "anchor-m6c", "anchor-m8d"]
+        id: ["anchor-m7c", "anchor-m10", "anchor-m11"]
         sp:
           - {n: 5, space: "local"}
     env:
