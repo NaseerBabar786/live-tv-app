@@ -415,7 +415,7 @@ def lib_bed(secs):
 def music_credit():
     import library
     t = library.track(MUSIC)
-    return f"موسیقی {t['title']} از {t['artist']} ({t['licence']})"
+    return f"Music: {t['title']} by {t['artist']} ({t['licence']})"
 
 if LOOK == "calm":
     sting, bed, background = lib_sting, lib_bed, calm_background
@@ -802,9 +802,9 @@ def main():
     end_secs = left if left <= END_MAX + 3 else END_MAX
     news_len = t + end_secs
     credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • کینیڈا کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
-    if LOOK == "calm": credits += " • " + music_credit()
-    title_card(os.path.join(work, "c-end.png"), kind, up_next, credits,
-               "Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else "AI voice")
+    latin = "Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else "AI voice"
+    if LOOK == "calm": latin = music_credit() + " · " + latin
+    title_card(os.path.join(work, "c-end.png"), kind, up_next, credits, latin)
     cards.append(("c-end.png", end_secs))
 
     music = np.zeros_like(voice_track)
