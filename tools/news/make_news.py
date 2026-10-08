@@ -49,13 +49,19 @@ CANADA_FEEDS = [
     ("سٹی نیوز", "https://toronto.citynews.ca/feed/"),
     ("سی بی سی نیوز", "https://www.cbc.ca/cmlink/rss-canada"),
 ]
+# India (owner asked 2026-10-08): official Hindi services, translated Hindi -> Urdu like the Canadian news.
+INDIA_FEEDS = [
+    ("بی بی سی ہندی", "https://feeds.bbci.co.uk/hindi/rss.xml"),
+    ("ڈی ڈبلیو ہندی", "https://rss.dw.com/rdf/rss-hin-all"),
+]
 PAKISTAN_WORDS = ("پاکستان", "اسلام آباد", "لاہور", "کراچی", "پشاور", "کوئٹہ", "پنجاب", "سندھ", "خیبر", "بلوچستان",
                   "کشمیر", "شہباز", "عمران خان", "تحریک انصاف", "پی ٹی آئی", "مسلم لیگ", "پیپلز پارٹی", "بلاول",
                   "مریم نواز", "نواز شریف", "آرمی چیف", "عاصم منیر", "سپریم کورٹ", "راولپنڈی", "ملتان", "فیصل آباد",
                   "گلگت", "سٹیٹ بینک", "کرکٹ بورڈ", "پی سی بی")
 # How many stories each bulletin tries to fit (the fitting step drops the last ones if too long).
-WANT = {"headlines": {"pakistan": 4, "world": 4, "canada": 3}, "full": {"pakistan": 8, "world": 8, "canada": 6}}
-ORDER = ("pakistan", "world", "canada")
+WANT = {"headlines": {"pakistan": 4, "india": 3, "world": 4, "canada": 3},
+        "full": {"pakistan": 8, "india": 6, "world": 8, "canada": 6}}
+ORDER = ("pakistan", "india", "world", "canada")
 # Spare stories per section: used when the wanted ones are short, so the bulletin fills its slot.
 EXTRA = 6
 # The end card stays at most this long; any time still left is filled with our own Cable TV promos
@@ -128,9 +134,9 @@ def same_story(a, b):
     x, y = words(a["title"]), words(b["title"])
     return bool(x and y) and len(x & y) / min(len(x), len(y)) >= 0.5
 
-def translate(text):
-    """English to Urdu with Google's free translate address (no key)."""
-    url = ("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ur&dt=t&q="
+def translate(text, src="en"):
+    """English (or Hindi: src="hi") to Urdu with Google's free translate address (no key)."""
+    url = (f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl=ur&dt=t&q="
            + urllib.parse.quote(text))
     data = json.loads(fetch(url))
     return clean("".join(part[0] for part in data[0] if part and part[0]))
@@ -167,18 +173,18 @@ def gather(kind):
     for s in urdu:
         s["section"] = "pakistan" if any(w in s["title"] + " " + s["desc"][:200] for w in PAKISTAN_WORDS) else "world"
     picked = {sec: [s for s in urdu if s["section"] == sec][:want[sec] + EXTRA] for sec in ("pakistan", "world")}
-    canada = take_turns(read_feeds(CANADA_FEEDS), want["canada"] + EXTRA, seen, "canada")
-    done = []
-    for s in canada:
-        try:
-            s["title"] = translate(s["title"])
-            first = re.split(r"(?<=[.!?])\s+", s["desc"])[0] if s["desc"] else ""
-            s["desc"] = translate(first) if first else ""
-            done.append(s)
-        except Exception as e:
-            NOTES.append(f"translate failed: {e}")
-            break
-    picked["canada"] = done
+    for sec, feeds, lang in (("india", INDIA_FEEDS, "hi"), ("canada", CANADA_FEEDS, "en")):
+        done = []
+        for s in take_turns(read_feeds(feeds), want[sec] + EXTRA, seen, sec):
+            try:
+                s["title"] = translate(s["title"], lang)
+                first = re.split(r"(?<=[.!?।])\s+", s["desc"])[0] if s["desc"] else ""
+                s["desc"] = translate(first, lang) if first else ""
+                done.append(s)
+            except Exception as e:
+                NOTES.append(f"translate failed ({sec}): {e}")
+                break
+        picked[sec] = done
     NOTES.append("stories: " + ", ".join(f"{k} {len(v)}" for k, v in picked.items()))
     return picked
 
@@ -330,7 +336,8 @@ def background(path, secs=8):
 
 # ---------- graphics (right to left) ----------
 RED, BLUE, TEAL, GREEN, GOLD = (210, 30, 45), (25, 110, 220), (20, 150, 140), (20, 130, 70), (245, 190, 40)
-SECTION = {"pakistan": ("پاکستان", GREEN), "world": ("دنیا", BLUE), "canada": ("کینیڈا", RED),
+SAFFRON = (215, 105, 20)
+SECTION = {"pakistan": ("پاکستان", GREEN), "world": ("دنیا", BLUE), "canada": ("کینیڈا", RED), "india": ("بھارت", SAFFRON),
            "weather": ("موسم", TEAL)}
 RIGHT = 1170  # right edge of the text inside the panel
 LIGHT, DIM = (205, 215, 235), (150, 170, 205)
@@ -493,7 +500,7 @@ def date_ur(slot, year=False):
     return f"{WEEKDAYS[slot.weekday()]}، {slot.day} {MONTHS[slot.month - 1]}" + (f" {slot.year}" if year else "")
 
 def probe(out):
-    read_feeds(URDU_FEEDS + CANADA_FEEDS)
+    read_feeds(URDU_FEEDS + INDIA_FEEDS + CANADA_FEEDS)
     try: NOTES.append("translate: " + translate("Canada's prime minister met provincial leaders in Ottawa."))
     except Exception as e: NOTES.append(f"translate failed: {e}")
     try: NOTES.append(f"weather: {weather()[0]}")
@@ -611,8 +618,9 @@ def main():
     tail = ("یہ تھیں اس وقت کی خبریں۔ خبروں کی سرخیاں ہر گھنٹے، اور تفصیلی خبرنامہ ہر تین گھنٹے بعد، "
             "صرف بازار ٹی وی پر۔ اللہ حافظ۔")
     weather_seg = weather_words(wx, kind == "headlines") if wx else None
-    LEAD = {"pakistan": "سب سے پہلے پاکستان کی خبریں۔ ", "world": "اب دنیا کی خبریں۔ ", "canada": "اور اب کینیڈا کی خبریں۔ "}
-    VOICE = {"pakistan": VOICE_A, "world": VOICE_B, "canada": VOICE_A}
+    LEAD = {"pakistan": "سب سے پہلے پاکستان کی خبریں۔ ", "india": "اب بھارت کی خبریں۔ ", "world": "اب دنیا کی خبریں۔ ",
+            "canada": "اور اب کینیڈا کی خبریں۔ "}
+    VOICE = {"pakistan": VOICE_A, "india": VOICE_B, "world": VOICE_A, "canada": VOICE_B}
 
     def plan(counts):
         segs = []
@@ -653,7 +661,7 @@ def main():
         pic = f"c-{i:02d}.png"
         if sk == "story":
             n += 1
-            src = "ذریعہ " + s["source"] + (" • ترجمہ" if s["section"] == "canada" else "")
+            src = "ذریعہ " + s["source"] + (" • ترجمہ" if s["section"] in ("canada", "india") else "")
             card(os.path.join(work, pic), label, s["section"], s["headline"],
                  first_sentence(s["desc"]), src, f"خبر {n} • کل {len(shown)}")
         elif sk == "weather":
@@ -669,7 +677,7 @@ def main():
     # A short gap stays on the end card; a long one gets promos after a normal-length end card.
     end_secs = left if left <= END_MAX + 3 else END_MAX
     news_len = t + end_secs
-    credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • کینیڈا کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
+    credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • بھارت اور کینیڈا کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
     title_card(os.path.join(work, "c-end.png"), kind, up_next, credits,
                "Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else "AI voice")
     cards.append(("c-end.png", end_secs))

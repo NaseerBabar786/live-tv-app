@@ -1,0 +1,41 @@
+name: News look sample
+# Makes a SAMPLE headlines bulletin in a new look for the owner to approve (never touches the on-air files).
+# Result: channel-media/news-sample-<look>-headlines.mp4 and news-sample-<look>-full.mp4
+on:
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/news-sample.yml", "tools/news/make_news.py"]
+  workflow_dispatch:
+    inputs:
+      look:
+        default: "calm"
+env:
+  LOOK: ${{ github.event.inputs.look || 'india' }}   # any name but calm = the on-air look
+  READERS: ""   # empty = the on-air readers
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          timeout 300 sudo apt-get update -qq || true
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
+          pip install -q edge-tts numpy pillow
+          for id in ${READERS:-$(python3 -c "import json; print(' '.join(json.load(open('tools/news/presenters/on-air.json'))['readers']))")}; do
+            curl -fsSL -m 120 -o "tools/news/presenters/clips/$id.mp4" \
+              "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || true
+          done
+      - env:
+          NEWS_LOOK: ${{ env.LOOK }}
+          NEWS_READERS: ${{ env.READERS }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          for k in headlines full; do
+            python3 tools/news/make_news.py out --kind $k
+            mv out/news-$k.mp4 news-sample-$LOOK-$k.mp4
+          done
+          gh release upload channel-media news-sample-$LOOK-headlines.mp4 news-sample-$LOOK-full.mp4 -R "$GITHUB_REPOSITORY" --clobber
