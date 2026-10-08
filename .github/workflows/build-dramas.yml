@@ -18,7 +18,7 @@ permissions:
   pages: write
 
 concurrency:
-  group: build-dramas
+  group: build-dramas-${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
   cancel-in-progress: false
 
 jobs:
