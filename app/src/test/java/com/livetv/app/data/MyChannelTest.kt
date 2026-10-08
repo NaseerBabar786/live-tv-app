@@ -37,6 +37,27 @@ class MyChannelTest {
     }
 
     @Test
+    fun noAdsOnBazaarTvWhileTheNewsIsOn() {
+        MyChannel.update("main", JSONObject(
+            """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
+              {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":600},
+              {"id":"news-headlines","title":"News","url":"https://x/n.mp4","secs":180}],
+              "slots":[{"day":"all","time":"20:00","video":"news-headlines"}],"loop":["a"]}""",
+        ))
+        try {
+            assertTrue(MyChannel.newsOn(MyChannel.URL, at(20, 1)))
+            assertTrue(!MyChannel.newsOn(MyChannel.URL, at(20, 5)))
+            // A break that would run into the news doesn't start.
+            assertTrue(!MyChannel.newsOn(MyChannel.URL, at(19, 58)))
+            assertTrue(MyChannel.newsOn(MyChannel.URL, at(19, 59, 30), aheadMs = 60_000L))
+            // Other channels are not affected.
+            assertTrue(!MyChannel.newsOn(MyChannel.ADS_URL, at(20, 1)))
+        } finally {
+            MyChannel.update("main", null)
+        }
+    }
+
+    @Test
     fun nextSlotCutsTheOneBefore() {
         val c = config("""[{"day":"all","time":"20:00","video":"b"},{"day":"tue","time":"20:10","video":"a"}]""")
         assertEquals(at(20, 10), (MyChannel.whatsOn(c, at(20, 5)) as MyChannel.Now.Playing).untilMs)
