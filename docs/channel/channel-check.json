@@ -1,9 +1,9 @@
 {
- "checked": "2026-10-08 20:47 UTC",
+ "checked": "2026-10-08 21:49 UTC",
  "problems": [
   {
    "channel": "Bazaar Music",
-   "text": "2 programme(s) have no length; each gets 5 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
+   "text": "1 programme(s) have no length; each gets 5 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
   },
   {
    "channel": "Bazaar Music",
@@ -14,8 +14,20 @@
    "text": "2026-10-08: only 15.6 hours of programmes; the day starts again from the top (not dead air, but repeats)."
   },
   {
+   "channel": "Bazaar Dramas Urdu",
+   "text": "1 programme(s) have no length; each gets 40 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
+  },
+  {
    "channel": "Bazaar Teens",
    "text": "23 programme(s) have no length; each gets 12 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
+  },
+  {
+   "channel": "Bazaar Dramas Hindi",
+   "text": "no locked schedule yet."
+  },
+  {
+   "channel": "Bazaar Shayari",
+   "text": "no locked schedule yet."
   },
   {
    "channel": "Bazaar Comedy",
