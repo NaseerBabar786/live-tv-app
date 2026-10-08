@@ -1,0 +1,57 @@
+name: News lip-sync
+# Makes a newsreader's lips match the words: their moving clip + their voice line -> free lip-sync Spaces
+# (one runner each). Results: channel-media news-lips-<id>-<n>.mp4 and .json (also when a Space fails).
+on:
+  workflow_dispatch:
+    inputs:
+      id:
+        description: "Anchor id from presenters.json moving"
+        default: "anchor-m1b"
+jobs:
+  lips:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {n: 1, space: "fffiloni/LatentSync"}
+          - {n: 2, space: "manavisrani07/gradio-lipsync-wav2lip"}
+          - {n: 3, space: "banao-tech/musetalk-avatar"}
+          - {n: 4, space: "peterpeter8585/LipSyncer"}
+    env:
+      ID: ${{ github.event.inputs.id || 'anchor-m1b' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg libraqm0 libfribidi0 fonts-dejavu-core
+          pip install -q gradio_client edge-tts pillow numpy
+      - name: Lip-sync
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -fsSL -o raw.mp4 "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$ID-raw.mp4"
+          python3 -c "
+          import asyncio,json,os,edge_tts
+          c=json.load(open('tools/news/presenters/presenters.json'))
+          p=next(x for x in c['moving']['people'] if x['id']==os.environ['ID'])
+          asyncio.run(edge_tts.Communicate(c['line'], p.get('voice', c['voice'])).save('line.mp3'))"
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 raw.mp4)
+          ffmpeg -v error -y -i line.mp3 -af "adelay=300|300,apad" -t "$D" -ac 1 -ar 16000 line.wav
+          ffmpeg -v error -y -i line.wav -c:a libmp3lame -q:a 2 line-pad.mp3
+          O=news-lips-$ID-${{ matrix.n }}
+          set +e
+          timeout 45m python3 tools/news/presenters/lipsync_space.py "${{ matrix.space }}" raw.mp4 line.wav lips.mp4 > log.txt 2>&1
+          code=$?
+          tail -c 2000 log.txt
+          python3 -c "import json; json.dump({'space': '${{ matrix.space }}', 'code': $code, 'log': open('log.txt').read()[-3000:]}, open('$O.json','w'), indent=1)"
+          files=$O.json
+          if [ -s lips.mp4 ]; then
+            python3 tools/news/presenters/sample.py lips.mp4 line-pad.mp3 "$ID" $O.mp4 && files="$files $O.mp4"
+          fi
+          gh release upload channel-media $files -R "$GITHUB_REPOSITORY" --clobber
