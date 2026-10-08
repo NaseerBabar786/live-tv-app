@@ -1,5 +1,5 @@
 {
-  "note": "Our own Cable TV promo for the breaks on our YouTube channels (channel/promo.js) and the locked day schedules. Owner, 2026-10-07: Ad 6 is on air; earlier ads are off for now. 2026-10-07 22:19: owner approved the Gold promo-code ad (WELCOME) for every channel; the two rotate. Never paid sponsor ads. Only ads the owner has approved go here.",
+  "note": "Our own Cable TV promo for the breaks on our YouTube channels (channel/promo.js) and the locked day schedules. Owner, 2026-10-07: Ad 6 is on air; earlier ads are off for now. 2026-10-07 22:19: owner approved the Gold promo-code ad (WELCOME) for every channel; the two rotate. Never paid sponsor ads. Only ads the owner has approved go here. 2026-10-08 05:49: owner approved Cable TV Video Ad 8 (new Gold promo for the Free/Gold packages); it replaces the promo-code ad. Ad 9 (15 s channel wall, approved 2026-10-08 05:50) added.",
   "promos": [
     {
       "src": "cabletv-ad-6.mp4",
@@ -7,9 +7,14 @@
       "secs": 60
     },
     {
-      "src": "cabletv-ad-promo-code.mp4",
-      "title": "Cable TV Promotion Ad with Promo Code",
+      "src": "cabletv-ad-8.mp4",
+      "title": "Cable TV Video Ad 8",
       "secs": 30
+    },
+    {
+      "src": "cabletv-ad-9.mp4",
+      "title": "Cable TV Video Ad 9",
+      "secs": 15
     }
   ]
 }

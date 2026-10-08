@@ -83,3 +83,5 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
 - 1.10.11 (PC 1.0.13): Iqra Quran's "Namaz" is now "Azan Clock". On TV and phone its place is the weather's place
   (the city typed in Settings, else the device's location) with a "Change city" button, and the Azan Clock screen
   shows the area, calculation method and muezzin, each opening the Azan settings (method and muezzin come first there).
+- 1.10.16: My billing details shows the free credit the owner gave on tv.bulkbazaar.ca/users. The PC has no
+  billing details screen yet (viewers send them from a TV or phone), so nothing changes there.

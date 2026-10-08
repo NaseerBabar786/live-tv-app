@@ -1,43 +1,43 @@
 {
  "name": "کھانا پکائیں",
- "built": "2026-10-08 00:20 UTC",
- "secs": 1157,
+ "built": "2026-10-08 06:03 UTC",
+ "secs": 1353,
  "videos": [
   {
-   "id": "Mf87rLIL4dM",
-   "title": "4 Delicious Sandwiches You Need to Try! | Easy & Tasty Recipes By Chef @sanjeevkapoorkhazana",
-   "label": "Sanjeev Kapoor",
-   "secs": 703,
+   "id": "Z5yljD7BgJw",
+   "title": "Dhaba Style Chapli Kabab Recipe Ab Ghar Main Banayein Amna Ke Style Main",
+   "label": "Kitchen with Amna",
+   "secs": 699,
    "kind": "cooking"
   },
   {
-   "id": "ic2v_-gEVyg",
-   "title": "High Protein Breakfast | Paneer stuffed Moong Dal Cheela",
-   "label": "Kabita's Kitchen",
-   "secs": 454,
+   "id": "4M9Cvo73Oq4",
+   "title": "5 Café Favourites You Can Make at Home | Easy & Delicious Recipes By Chef@sanjeevkapoorkhazana",
+   "label": "Sanjeev Kapoor",
+   "secs": 654,
    "kind": "cooking"
   }
  ],
  "spares": [
   {
-   "id": "5uCrk-7TWu4",
-   "title": "4 Vegetarian Recipes Packed With Flavour | Cutlet, Handi, Pulao & More With Chef Sanjeev Kapoor",
-   "label": "Sanjeev Kapoor",
-   "secs": 568,
+   "id": "G6w6gTNj1Yc",
+   "title": "Aloo Paneer Dum Biryani | | Veg Dum Biryani & Raita | Chef Ranveer Brar",
+   "label": "Ranveer Brar",
+   "secs": 679,
    "kind": "cooking"
   },
   {
-   "id": "k-XWayH760U",
-   "title": "Kadhi Pakoda recipe | Kadhi Chawal",
-   "label": "Kabita's Kitchen",
-   "secs": 599,
+   "id": "3yxE7UhnVxE",
+   "title": "Creamy Macaroni Fruit Salad Jo Dil Chahe Bar Bar Khanay Ko",
+   "label": "Kitchen with Amna",
+   "secs": 250,
    "kind": "cooking"
   },
   {
-   "id": "QB2KDtoN4-s",
-   "title": "High protein Low carbs Breakfast recipe | Kabitaskitchen",
+   "id": "GHvBKTrB2BM",
+   "title": "Mohanthal recipe | Besan Barfi Recipe | Kabitaskitchen",
    "label": "Kabita's Kitchen",
-   "secs": 441,
+   "secs": 812,
    "kind": "cooking"
   }
  ]

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Cable TV's packages: Free and Gold. Since 1.10.16 (owner, 2026-10-08) the channels are free and only the
+ * Cable TV's packages: Free and Gold. Since 1.10.17 (owner, 2026-10-08) the channels are free and only the
  * app's features are paid: Free is every channel in 1+List, Gold is every mode and feature. A Free viewer can
  * try a Gold feature for [TRY_MS] ([ask]); then it closes, 1+List comes back and the app says it's a Gold
  * feature ([tryOver]). Every other app (and Cable TV until the owner turns packages on) has everything, so

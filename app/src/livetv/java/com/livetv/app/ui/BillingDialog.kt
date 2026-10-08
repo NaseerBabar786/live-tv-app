@@ -53,10 +53,13 @@ fun BillingDialog(asked: Boolean = false, onDismiss: () -> Unit) {
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     var done by remember { mutableStateOf(false) }
+    var credit by remember { mutableStateOf(0.0) }
+    var creditNote by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         runCatching { Billing.load(account) }.getOrNull()?.let {
             phone = it.phone; whatsapp = it.whatsapp; pkg = Plans.Tier.of(it.wantPackage)?.takeIf { t -> t != Plans.Tier.Promo }?.label ?: ""
             length = it.wantLength; method = it.payMethod; note = it.note
+            credit = it.credit; creditNote = it.creditNote
         }
         loaded = true
     }
@@ -74,6 +77,13 @@ fun BillingDialog(asked: Boolean = false, onDismiss: () -> Unit) {
                     CircularProgressIndicator()
                 } else {
                     Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        if (credit > 0) {
+                            Text(
+                                "🎁 You have $" + String.format(java.util.Locale.US, "%.2f", credit) + " free credit from the Cable TV team" +
+                                    (if (creditNote.isNotBlank()) " ($creditNote)" else "") + ". It comes off your next payment.",
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
                         Text(
                             if (asked) "The free period has ended. To keep watching, please tell us how you'd like to pay. Only the Cable TV team sees this."
                             else "Tell us how you'd like to pay for Cable TV. Only the Cable TV team sees this.",

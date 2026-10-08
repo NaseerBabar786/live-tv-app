@@ -112,7 +112,7 @@ object QuranSection {
                 if (wait > 60_000L) { delay(minOf(wait - 1000L, 10 * 60_000L)); continue }
                 delay(wait.coerceAtLeast(0))
                 val a = top?.get()
-                // The Azan Clock is part of Iqra Quran, a Gold feature in Cable TV (1.10.16).
+                // The Azan Clock is part of Iqra Quran, a Gold feature in Cable TV (1.10.17).
                 if (a != null && !a.isFinishing && a !is AzanActivity && com.livetv.app.Plans.has(com.livetv.app.Plans.Feature.Quran)) {
                     AzanActivity.hostPalette = paletteFor(Themes.current)
                     val silent = installed(app, AzanActivity.IQRA_PACKAGE)
