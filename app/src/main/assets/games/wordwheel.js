@@ -7,7 +7,7 @@
 'use strict';
 
 (() => {
-  const { sfx, ease, shade, roundRect, clamp, lerp } = Kit;
+  const { sfx, ease, shade, roundRect, clamp, lerp, rgba } = Kit;
 
   // ---------- Levels ----------
   // Made offline by a script from a hand-picked list of common, family-friendly words.
@@ -207,16 +207,16 @@
       tilesY = H * 0.52; tileS = Math.min(H * 0.06, W * 0.9 / 7.6);
       bw = Math.min(W * 0.29, 190); bh = Math.max(44, Math.min(H * 0.06, 60)); by = WH.y + WH.r + H * 0.03; bcx = W / 2;
     }
-    const cs = Math.min(gwid / L.gw, ghei / L.gh, H * 0.135);
+    const cs = Math.min(gwid / (L.gw + 0.9), ghei / (L.gh + 0.9), H * 0.13); // room for the frame
     G.cs = cs; G.x = gx + (gwid - cs * L.gw) / 2; G.y = gy + (ghei - cs * L.gh) / 2;
     const n = L.letters.length;
     WH.rr = WH.r * (n <= 4 ? 0.56 : 0.64);
     WH.lr = Math.min(WH.r * 0.27, WH.rr * Math.sin(Math.PI / n) * 0.84);
     const gap = Math.min(16, W * 0.012), total = BUTTONS.length * bw + (BUTTONS.length - 1) * gap;
     buttons = BUTTONS.map((b, i) => ({ ...b, x: bcx - total / 2 + i * (bw + gap), y: by, w: bw, h: bh }));
-    sprites.clear();
+    board = null; wheelImg = null; sprites.clear(); glassCache.clear();
   }
-  Kit.onResize(layout);
+  Kit.onResize(() => { scene = null; layout(); });
   const slotAngle = (s) => -Math.PI / 2 + (s * Math.PI * 2) / L.letters.length;
   function slotPos(s) { const a = slotAngle(s); return { x: WH.x + Math.cos(a) * WH.rr, y: WH.y + Math.sin(a) * WH.rr }; }
   function letterPos(li) {
@@ -327,6 +327,8 @@
       coins += LEVEL_COINS; save();
       Kit.record('wordwheel', level);
       sfx.win(); Kit.confetti(140);
+      const ph = Math.min(Kit.H * 0.6, 360);
+      for (let i = 0; i < 3; i++) setTimeout(() => sparkle(Kit.W / 2 + (i - 1) * ph * 0.27, Kit.H / 2 - ph * 0.1, 16, '#ffe066', 1.2), 1050 + i * 250);
     }, wait * 1000);
   }
   function hint() {
@@ -350,7 +352,7 @@
     c.hint = true; c.at = now();
     coins -= HINT_COST; coinBump = 1;
     const p = cellXY(c);
-    Kit.burst(p.x, p.y, '#ffd23f', 12, 0.6);
+    sparkle(p.x, p.y, 14, '#ffe066');
     sfx.chime();
     autoFind();
     save();
@@ -435,44 +437,402 @@
   });
 
   // ---------- Drawing ----------
-  // Grid tiles are drawn once per size and kind; gradients every frame are slow on TV boxes.
+  // Everything heavy (the landscape, the framed board with its empty sockets, the wheel, tiles and
+  // letter balls) is painted once into offscreen pictures and re-baked on resize; a frame is mostly
+  // drawImage plus a few glowing strokes.
+  const F = Kit.FONT, U = Kit.UI;
+  const DPR = () => Math.min(window.devicePixelRatio || 1, 2);
+  function mk(w, h, dpr = DPR()) {
+    const cv = document.createElement('canvas');
+    cv.width = Math.max(1, Math.ceil(w * dpr)); cv.height = Math.max(1, Math.ceil(h * dpr));
+    const c = cv.getContext('2d'); c.scale(dpr, dpr);
+    return { cv, c };
+  }
+
+  // Kit.glass and Kit.title use shadowBlur, which is slow on TV boxes: bake each once, then drawImage.
+  const glassCache = new Map();
+  function glass(c, x, y, w, h, r, o = {}) {
+    if (glassCache.size > 80) glassCache.clear();
+    const key = [Math.round(w), Math.round(h), Math.round(r), o.tint, o.edge].join('|');
+    let g = glassCache.get(key);
+    if (!g) {
+      const m = 40, b = mk(w + m * 2, h + m * 2);
+      Kit.glass(b.c, m, m, w, h, r, { tint: o.tint, edge: o.edge });
+      g = { cv: b.cv, m }; glassCache.set(key, g);
+    }
+    c.drawImage(g.cv, x - g.m, y - g.m, w + g.m * 2, h + g.m * 2);
+    if (o.focus || o.glow) {
+      const col = o.glow || '#ffd23f', pulse = 0.6 + 0.4 * Math.sin((o.t || 0) * 5);
+      c.save(); c.globalCompositeOperation = 'lighter';
+      roundRect(c, x - 3, y - 3, w + 6, h + 6, r + 3);
+      c.strokeStyle = rgba(col, 0.25 * pulse); c.lineWidth = 14; c.stroke();
+      c.strokeStyle = rgba(col, 0.35 * pulse); c.lineWidth = 7; c.stroke();
+      c.restore();
+      roundRect(c, x - 2, y - 2, w + 4, h + 4, r + 2); c.strokeStyle = col; c.lineWidth = 3; c.stroke();
+    }
+  }
+  function title(c, text, x, y, size, o = {}) {
+    const key = ['T', text, Math.round(size), o.color, o.glow].join('|');
+    let g = glassCache.get(key);
+    if (!g) {
+      c.font = `700 ${size}px ${Kit.FONT}`;
+      const w = c.measureText(text).width + size * 2, h = size * 2.4, b = mk(w, h);
+      Kit.title(b.c, text, w / 2, h / 2, size, o);
+      g = { cv: b.cv, w, h }; glassCache.set(key, g);
+    }
+    c.drawImage(g.cv, x - g.w / 2, y - g.h / 2, g.w, g.h);
+  }
+
+  // Pictures with text are baked; bake them again once the bundled fonts have arrived.
+  let fontsReady = false, fontCheckT = 0;
+  function checkFonts(time) {
+    if (fontsReady || time - fontCheckT < 0.25) return;
+    fontCheckT = time;
+    let ok = time > 6;
+    try { if (!document.fonts) ok = true; else document.fonts.forEach((f) => { if (f.family.replace(/["']/g, '') === 'Fredoka' && f.status === 'loaded') ok = true; }); } catch (e) { ok = true; }
+    if (ok) { fontsReady = true; sprites.clear(); glassCache.clear(); }
+  }
+  let scene = null, board = null, wheelImg = null, rays = null, glowDot = null;
   const sprites = new Map();
-  function tileSprite(kind, size) {
-    const key = kind + Math.round(size);
+  // A rounded rectangle added to the current path (no beginPath), for cut-outs.
+  function rrAdd(c, x, y, w, h, r) {
+    c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+  }
+  function invalidate() { scene = null; board = null; wheelImg = null; sprites.clear(); glassCache.clear(); }
+  let seedN = 1;
+  const srand = () => { seedN = (seedN * 16807) % 2147483647; return seedN / 2147483647; };
+
+  // The magical landscape: dusk sky, stars, a low sun, misty mountains, rolling hills with trees.
+  function bakeScene(W, H) {
+    const { cv, c } = mk(W, H, 1);
+    seedN = 4242;
+    const sky = c.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, '#1d1450'); sky.addColorStop(0.3, '#4b2a8c'); sky.addColorStop(0.55, '#b0569e');
+    sky.addColorStop(0.68, '#f39a8a'); sky.addColorStop(0.78, '#ffd39a'); sky.addColorStop(1, '#ffd39a');
+    c.fillStyle = sky; c.fillRect(0, 0, W, H);
+    for (let i = 0; i < 110; i++) {
+      const x = srand() * W, y = srand() * H * 0.45, r = 0.5 + srand() * 1.4;
+      c.globalAlpha = (0.25 + srand() * 0.6) * (1 - y / (H * 0.5));
+      c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+    }
+    c.globalAlpha = 1;
+    const sx = W * 0.62, sy = H * 0.66;
+    let g = c.createRadialGradient(sx, sy, 0, sx, sy, H * 0.75);
+    g.addColorStop(0, 'rgba(255,240,200,0.85)'); g.addColorStop(0.15, 'rgba(255,200,150,0.45)'); g.addColorStop(1, 'rgba(255,160,160,0)');
+    c.fillStyle = g; c.fillRect(0, 0, W, H);
+    c.fillStyle = '#fff6e0'; c.beginPath(); c.arc(sx, sy, H * 0.06, 0, Math.PI * 2); c.fill();
+    // a layer of hills: a wavy ridge filled with a lit gradient and a bright rim
+    const ridge = (base, amp, waves, top, bottom, rim, trees) => {
+      const ph = srand() * 10, pts = [];
+      for (let x = -10; x <= W + 10; x += 8) {
+        let y = base;
+        waves.forEach(([f, a], i) => { y -= Math.sin(x / W * Math.PI * f + ph * (i + 1)) * amp * a; });
+        pts.push([x, y]);
+      }
+      c.beginPath(); c.moveTo(-10, H + 10);
+      pts.forEach(([x, y]) => c.lineTo(x, y)); c.lineTo(W + 10, H + 10); c.closePath();
+      const hg = c.createLinearGradient(0, base - amp, 0, H);
+      hg.addColorStop(0, top); hg.addColorStop(1, bottom);
+      c.fillStyle = hg; c.fill();
+      c.beginPath(); pts.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y)));
+      c.strokeStyle = rim; c.lineWidth = 2.5; c.stroke();
+      if (trees) {
+        for (let k = 0; k < trees; k++) {
+          const [x, y] = pts[Math.floor(srand() * pts.length)], s = H * (0.018 + srand() * 0.02);
+          c.fillStyle = shade(bottom, -0.25);
+          c.fillRect(x - s * 0.12, y - s * 0.4, s * 0.24, s * 0.8);
+          const tg = c.createRadialGradient(x - s * 0.3, y - s * 1.3, s * 0.1, x, y - s, s * 1.1);
+          tg.addColorStop(0, shade(top, 0.15)); tg.addColorStop(1, shade(bottom, -0.15));
+          c.fillStyle = tg; c.beginPath(); c.ellipse(x, y - s * 1.05, s * 0.75, s * 1.0, 0, 0, Math.PI * 2); c.fill();
+        }
+      }
+    };
+    ridge(H * 0.64, H * 0.12, [[3, 1], [7, 0.35]], '#9a6fb8', '#d99aa8', 'rgba(255,220,230,0.35)', 0);
+    ridge(H * 0.72, H * 0.06, [[2, 1], [5, 0.5]], '#5f8fb0', '#4c6f8e', 'rgba(255,230,200,0.45)', 0);
+    // mist
+    g = c.createLinearGradient(0, H * 0.66, 0, H * 0.82);
+    g.addColorStop(0, 'rgba(255,230,240,0)'); g.addColorStop(0.5, 'rgba(255,230,240,0.35)'); g.addColorStop(1, 'rgba(255,230,240,0)');
+    c.fillStyle = g; c.fillRect(0, H * 0.66, W, H * 0.16);
+    ridge(H * 0.8, H * 0.05, [[2.5, 1], [6, 0.4]], '#4fae7a', '#2c7354', 'rgba(255,240,180,0.6)', 14);
+    ridge(H * 0.9, H * 0.05, [[1.6, 1], [4, 0.5]], '#3b8f5e', '#1b4a35', 'rgba(255,240,180,0.55)', 10);
+    // vignette
+    g = c.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75);
+    g.addColorStop(0, 'rgba(10,0,25,0)'); g.addColorStop(1, 'rgba(10,0,25,0.6)');
+    c.fillStyle = g; c.fillRect(0, 0, W, H);
+    scene = { cv, sx, sy };
+    // soft sun rays, turned slowly each frame
+    const R = Math.max(W, H) * 0.5, rr = mk(R * 2, R * 2, 0.5);
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2, w = 0.07 + (i % 3) * 0.03;
+      const rg = rr.c.createRadialGradient(R, R, 0, R, R, R);
+      rg.addColorStop(0, 'rgba(255,240,200,0.5)'); rg.addColorStop(1, 'rgba(255,240,200,0)');
+      rr.c.fillStyle = rg; rr.c.beginPath(); rr.c.moveTo(R, R); rr.c.arc(R, R, R, a - w, a + w); rr.c.closePath(); rr.c.fill();
+    }
+    rays = { cv: rr.cv, R };
+    c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.12;
+    c.drawImage(rr.cv, sx - R, sy - R, R * 2, R * 2); c.restore();
+    const gd = mk(32, 32);
+    const dg = gd.c.createRadialGradient(16, 16, 0, 16, 16, 16);
+    dg.addColorStop(0, 'rgba(255,255,230,1)'); dg.addColorStop(0.25, 'rgba(255,230,150,0.6)'); dg.addColorStop(1, 'rgba(255,200,120,0)');
+    gd.c.fillStyle = dg; gd.c.fillRect(0, 0, 32, 32);
+    glowDot = gd.cv;
+  }
+  // Clouds drift across the sky: three soft cloud pictures.
+  let clouds = null;
+  function bakeClouds(H) {
+    clouds = [0, 1, 2].map((k) => {
+      const w = H * (0.42 + k * 0.08), h = w * 0.5, { cv, c } = mk(w, h, 0.5);
+      seedN = 77 + k * 13;
+      // puffs: a wide base row and a few bigger ones on top, each with a soft edge
+      const puffs = [];
+      for (let i = 0; i < 6; i++) puffs.push([w * (0.14 + i * 0.145), h * 0.7, h * (0.16 + srand() * 0.05)]);
+      for (let i = 0; i < 3; i++) puffs.push([w * (0.3 + i * 0.2 + (srand() - 0.5) * 0.06), h * (0.5 - (i === 1 ? 0.08 : 0)), h * (0.24 + srand() * 0.06)]);
+      c.fillStyle = 'rgba(255,248,252,0.92)';
+      c.beginPath();
+      for (const [x, y, r] of puffs) { c.moveTo(x + r, y); c.arc(x, y, r, 0, Math.PI * 2); }
+      c.shadowColor = 'rgba(255,240,248,0.95)'; c.shadowBlur = h * 0.05; // soft, feathered edge (baked once)
+      c.fill('nonzero'); c.fill('nonzero');
+      c.shadowColor = 'transparent';
+      // sunlit tops of the puffs
+      c.globalCompositeOperation = 'source-atop';
+      for (const [x, y, r] of puffs) {
+        const g = c.createRadialGradient(x - r * 0.2, y - r * 0.55, 0, x - r * 0.2, y - r * 0.55, r * 0.8);
+        g.addColorStop(0, 'rgba(255,255,240,0.9)'); g.addColorStop(1, 'rgba(255,255,240,0)');
+        c.fillStyle = g; c.fillRect(x - r, y - r, r * 2, r * 2);
+      }
+      // shade the underside with the sunset tint, only where there is cloud
+      const sh = c.createLinearGradient(0, h * 0.3, 0, h * 0.95);
+      sh.addColorStop(0, 'rgba(255,255,255,0)'); sh.addColorStop(0.55, 'rgba(230,160,200,0.45)'); sh.addColorStop(1, 'rgba(170,110,170,0.75)');
+      c.fillStyle = sh; c.fillRect(0, 0, w, h);
+      c.globalCompositeOperation = 'source-over';
+      return { cv, w, h, y: H * (0.06 + k * 0.1), speed: 6 + k * 4, x0: k * 0.37 };
+    });
+  }
+  const motes = Array.from({ length: 16 }, () => ({ x: Math.random(), y: 0.3 + Math.random() * 0.7, s: 0.3 + Math.random() * 0.7, p: Math.random() * 6 }));
+
+  // The framed board: a thick polished-wood frame with gold studs, a dark glass inlay and recessed sockets.
+  function bakeBoard() {
+    const cs = G.cs, fp = cs * 0.42, ft = cs * 0.26;
+    const bw = cs * L.gw + fp * 2, bh = cs * L.gh + fp * 2, m = cs * 0.6;
+    const { cv, c } = mk(bw + m * 2, bh + m * 2);
+    c.translate(m, m);
+    seedN = 99;
+    c.save(); c.shadowColor = 'rgba(20,0,30,0.55)'; c.shadowBlur = cs * 0.6; c.shadowOffsetY = cs * 0.22;
+    roundRect(c, 0, 0, bw, bh, cs * 0.35); c.fillStyle = '#6b3a1c'; c.fill(); c.restore();
+    let g = c.createLinearGradient(0, 0, bw, bh);
+    g.addColorStop(0, '#c98a4f'); g.addColorStop(0.45, '#9a5a2c'); g.addColorStop(1, '#6e3a18');
+    roundRect(c, 0, 0, bw, bh, cs * 0.35); c.fillStyle = g; c.fill();
+    c.save(); roundRect(c, 0, 0, bw, bh, cs * 0.35); c.clip();
+    for (let i = 0; i < 40; i++) { // wood grain
+      const y = srand() * bh; c.strokeStyle = `rgba(60,25,5,${0.08 + srand() * 0.12})`; c.lineWidth = 1 + srand() * 2;
+      c.beginPath(); c.moveTo(0, y);
+      c.bezierCurveTo(bw * 0.3, y + (srand() - 0.5) * cs * 0.4, bw * 0.6, y + (srand() - 0.5) * cs * 0.4, bw, y + (srand() - 0.5) * cs * 0.3); c.stroke();
+    }
+    c.restore();
+    c.lineWidth = Math.max(2, cs * 0.04); c.strokeStyle = 'rgba(255,220,170,0.6)';
+    roundRect(c, 1.5, 1.5, bw - 3, bh - 3, cs * 0.34); c.stroke();
+    // inlay
+    const ix = ft, iy = ft, iw = bw - ft * 2, ih = bh - ft * 2, ir = cs * 0.22;
+    g = c.createLinearGradient(0, iy, 0, iy + ih);
+    g.addColorStop(0, '#2b1650'); g.addColorStop(1, '#170a2c');
+    roundRect(c, ix, iy, iw, ih, ir); c.fillStyle = g; c.fill();
+    c.save(); roundRect(c, ix, iy, iw, ih, ir); c.clip();
+    c.shadowColor = 'rgba(0,0,0,0.85)'; c.shadowBlur = cs * 0.35; c.shadowOffsetY = cs * 0.08;
+    c.beginPath(); c.rect(ix - cs, iy - cs, iw + cs * 2, ih + cs * 2); rrAdd(c, ix, iy, iw, ih, ir);
+    c.fillStyle = '#000'; c.fill('evenodd');
+    c.shadowColor = 'transparent';
+    g = c.createLinearGradient(ix, iy, ix + iw * 0.6, iy + ih);
+    g.addColorStop(0, 'rgba(255,255,255,0.10)'); g.addColorStop(0.5, 'rgba(255,255,255,0.02)'); g.addColorStop(0.51, 'rgba(255,255,255,0)');
+    c.fillStyle = g; c.fillRect(ix, iy, iw, ih);
+    c.restore();
+    c.lineWidth = 2; c.strokeStyle = 'rgba(60,25,5,0.8)'; roundRect(c, ix, iy, iw, ih, ir); c.stroke();
+    // gold studs
+    [[ft / 2, ft / 2], [bw - ft / 2, ft / 2], [ft / 2, bh - ft / 2], [bw - ft / 2, bh - ft / 2]].forEach(([x, y]) => {
+      const sg = c.createRadialGradient(x - ft * 0.12, y - ft * 0.12, 1, x, y, ft * 0.32);
+      sg.addColorStop(0, '#fff6c8'); sg.addColorStop(0.5, '#f0b93a'); sg.addColorStop(1, '#8a5a0e');
+      c.fillStyle = sg; c.beginPath(); c.arc(x, y, ft * 0.3, 0, Math.PI * 2); c.fill();
+    });
+    // empty sockets
+    for (const cell of L.cells.values()) {
+      const x = fp + cell.c * cs + cs * 0.06, y = fp + cell.r * cs + cs * 0.06, s = cs * 0.88, r = s * 0.2;
+      roundRect(c, x, y, s, s, r); c.fillStyle = 'rgba(8,2,20,0.55)'; c.fill();
+      c.save(); roundRect(c, x, y, s, s, r); c.clip();
+      c.shadowColor = 'rgba(0,0,0,0.9)'; c.shadowBlur = s * 0.18; c.shadowOffsetY = s * 0.07;
+      c.beginPath(); c.rect(x - s, y - s, s * 3, s * 3); rrAdd(c, x, y, s, s, r); c.fillStyle = '#000'; c.fill('evenodd');
+      c.restore();
+      c.lineWidth = Math.max(1.5, s * 0.025); c.strokeStyle = 'rgba(200,170,255,0.22)'; roundRect(c, x, y + 1, s, s, r); c.stroke();
+    }
+    board = { cv, x: G.x - fp - m, y: G.y - fp - m, w: bw + m * 2, h: bh + m * 2, fx: G.x - fp, fy: G.y - fp, bw, bh };
+  }
+
+  // A thick glossy letter tile with a side, contact shadow and specular; [kind] picks the material.
+  const TILE = {
+    found: ['#ffe08a', '#ffa83a', '#e8650f', '#a8400a'],
+    hint: ['#fffdf6', '#f5ead6', '#d9c6a6', '#9c845e'],
+    word: ['#fffdf6', '#f5ead6', '#d9c6a6', '#9c845e'],
+    bad: ['#ff9aa8', '#ff4d6d', '#c81e43', '#7d0f28'],
+    again: ['#fff2a8', '#ffd23f', '#e0a400', '#8a6200'],
+  };
+  function tileSprite(kind, size, ch = '') {
+    const key = kind + Math.round(size) + ch;
     let s = sprites.get(key);
     if (s) return s;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    s = document.createElement('canvas');
-    s.width = s.height = Math.ceil(size * dpr);
-    const c = s.getContext('2d');
-    c.scale(dpr, dpr);
-    const p = size * 0.05, r = size * 0.18;
-    roundRect(c, p, p, size - 2 * p, size - 2 * p, r);
-    if (kind === 'empty') {
-      c.fillStyle = 'rgba(255,255,255,0.13)'; c.fill();
-      c.lineWidth = Math.max(1.5, size * 0.03); c.strokeStyle = 'rgba(255,255,255,0.28)'; c.stroke();
-    } else {
-      const g = c.createLinearGradient(0, 0, 0, size);
-      if (kind === 'found') { g.addColorStop(0, '#ffc06b'); g.addColorStop(0.5, ACCENT); g.addColorStop(1, '#d9480f'); }
-      else { g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#e6dcf5'); }
-      c.fillStyle = g; c.fill();
-      c.lineWidth = size * 0.045; c.strokeStyle = kind === 'found' ? '#a8370a' : '#b9a7d6'; c.stroke();
-      roundRect(c, p + size * 0.1, p + size * 0.07, size - 2 * p - size * 0.2, size * 0.26, r * 0.6);
-      c.fillStyle = 'rgba(255,255,255,0.35)'; c.fill();
+    if (sprites.size > 400) sprites.clear();
+    const pad = size * 0.2, { cv, c } = mk(size + pad * 2, size + pad * 2);
+    c.translate(pad, pad);
+    const [hi, mid, lo, side] = TILE[kind], r = size * 0.2, th = size * 0.08;
+    const x = size * 0.04, w = size * 0.92, y = size * 0.02, h = size * 0.88;
+    // contact shadow
+    const sg = c.createRadialGradient(size / 2, y + h + th, 0, size / 2, y + h + th, w * 0.6);
+    sg.addColorStop(0, 'rgba(0,0,0,0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = sg; c.fillRect(-pad, y + h * 0.5, size + pad * 2, h);
+    roundRect(c, x, y + th, w, h, r); c.fillStyle = side; c.fill();
+    const g = c.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, hi); g.addColorStop(0.45, mid); g.addColorStop(1, lo);
+    roundRect(c, x, y, w, h, r); c.fillStyle = g; c.fill();
+    c.lineWidth = size * 0.03; c.strokeStyle = 'rgba(255,255,255,0.7)'; roundRect(c, x + size * 0.03, y + size * 0.03, w - size * 0.06, h - size * 0.06, r * 0.85); c.stroke();
+    const sp = c.createLinearGradient(0, y, 0, y + h * 0.5);
+    sp.addColorStop(0, 'rgba(255,255,255,0.75)'); sp.addColorStop(1, 'rgba(255,255,255,0)');
+    roundRect(c, x + w * 0.1, y + h * 0.06, w * 0.8, h * 0.36, r * 0.7); c.fillStyle = sp; c.fill();
+    c.fillStyle = 'rgba(255,255,255,0.9)'; c.beginPath(); c.arc(x + w * 0.2, y + h * 0.2, size * 0.035, 0, Math.PI * 2); c.fill();
+    if (ch) { // the letter is baked in too
+      const [fill, stroke] = INK[kind];
+      c.font = `700 ${Math.round(size * 0.58)}px ${F}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
+      if (stroke) { c.lineWidth = size * 0.07; c.strokeStyle = stroke; c.strokeText(ch, size / 2, size * 0.45); }
+      c.fillStyle = fill; c.fillText(ch, size / 2, size * 0.45);
     }
+    s = { cv, pad };
     sprites.set(key, s);
     return s;
   }
-  function drawTile(c, kind, x, y, size, ch, scale = 1) {
-    const s = tileSprite(kind, size), d = size * scale;
-    c.drawImage(s, x - d / 2, y - d / 2, d, d);
-    if (!ch) return;
-    c.font = `900 ${Math.round(d * 0.6)}px system-ui, sans-serif`;
-    if (kind === 'found') {
-      c.lineWidth = d * 0.07; c.strokeStyle = 'rgba(120,30,0,0.55)'; c.strokeText(ch, x, y + d * 0.04);
-      c.fillStyle = '#fff';
-    } else c.fillStyle = kind === 'hint' ? '#c2410c' : '#3b1d5e';
-    c.fillText(ch, x, y + d * 0.04);
+  const INK = { found: ['#fff', 'rgba(140,40,0,0.75)'], hint: ['#d9480f', null], word: ['#3b1d5e', null], bad: ['#fff', 'rgba(120,0,20,0.6)'], again: ['#5a3a00', null] };
+  function drawTile(c, kind, x, y, size, ch, sx = 1, sy = 1) {
+    // sizes are rounded so flying letters reuse a few pictures
+    const s = tileSprite(kind, Math.round(size / 4) * 4 || 4, ch), full = size * (1 + (s.pad * 2) / (Math.round(size / 4) * 4 || 4));
+    if (sx === 1 && sy === 1) { c.drawImage(s.cv, x - full / 2, y - full / 2, full, full); return; }
+    c.save(); c.translate(x, y + size * 0.45); c.scale(sx, sy);
+    c.drawImage(s.cv, -full / 2, -full / 2 - size * 0.45, full, full);
+    c.restore();
+  }
+
+  // The wheel: a gold-rimmed velvet disc with studs and an engraved star.
+  function bakeWheel() {
+    const R = WH.r, m = R * 0.25, { cv, c } = mk((R + m) * 2, (R + m) * 2);
+    c.translate(R + m, R + m);
+    c.save(); c.shadowColor = 'rgba(20,0,30,0.6)'; c.shadowBlur = R * 0.25; c.shadowOffsetY = R * 0.08;
+    c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.fillStyle = '#7a4a10'; c.fill(); c.restore();
+    let g = c.createLinearGradient(-R, -R, R, R);
+    g.addColorStop(0, '#fff3c0'); g.addColorStop(0.25, '#f2c04a'); g.addColorStop(0.5, '#9c6614'); g.addColorStop(0.72, '#f5cf62'); g.addColorStop(1, '#7a4a0c');
+    c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.fillStyle = g; c.fill();
+    const ri = R * 0.88;
+    g = c.createRadialGradient(-R * 0.3, -R * 0.35, R * 0.05, 0, 0, ri);
+    g.addColorStop(0, '#8a4fd0'); g.addColorStop(0.6, '#4a1f88'); g.addColorStop(1, '#2a0d52');
+    c.beginPath(); c.arc(0, 0, ri, 0, Math.PI * 2); c.fillStyle = g; c.fill();
+    c.save(); c.beginPath(); c.arc(0, 0, ri, 0, Math.PI * 2); c.clip();
+    c.shadowColor = 'rgba(0,0,0,0.85)'; c.shadowBlur = R * 0.12; c.shadowOffsetY = R * 0.03;
+    c.beginPath(); c.arc(0, 0, ri + R, 0, Math.PI * 2); c.arc(0, 0, ri, 0, Math.PI * 2, true); c.fillStyle = '#000'; c.fill();
+    c.restore();
+    // engraved rings and star
+    c.strokeStyle = 'rgba(255,215,120,0.22)'; c.lineWidth = Math.max(1.5, R * 0.012);
+    [0.3, 0.78].forEach((k) => { c.beginPath(); c.arc(0, 0, ri * k, 0, Math.PI * 2); c.stroke(); });
+    c.beginPath();
+    for (let i = 0; i < 16; i++) { const a = (i / 16) * Math.PI * 2 - Math.PI / 2, rr = i % 2 ? ri * 0.1 : ri * 0.26; c.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+    c.closePath(); c.fillStyle = 'rgba(255,215,120,0.16)'; c.fill();
+    // studs round the rim
+    const sr = R * 0.032;
+    for (let i = 0; i < 24; i++) {
+      const a = (i / 24) * Math.PI * 2, x = Math.cos(a) * R * 0.94, y = Math.sin(a) * R * 0.94;
+      const sg = c.createRadialGradient(x - sr * 0.4, y - sr * 0.4, 0.5, x, y, sr);
+      sg.addColorStop(0, '#ffffff'); sg.addColorStop(0.5, '#ffd66b'); sg.addColorStop(1, '#8a5a0e');
+      c.fillStyle = sg; c.beginPath(); c.arc(x, y, sr, 0, Math.PI * 2); c.fill();
+    }
+    c.lineWidth = Math.max(2, R * 0.015); c.strokeStyle = 'rgba(255,250,220,0.8)';
+    c.beginPath(); c.arc(0, 0, R - 1, Math.PI * 1.05, Math.PI * 1.6); c.stroke();
+    wheelImg = { cv, s: (R + m) * 2 };
+  }
+  // A glossy letter ball: pearl when free, gold when chosen.
+  function ballSprite(kind, r) {
+    const key = 'ball' + kind + Math.round(r);
+    let s = sprites.get(key);
+    if (s) return s;
+    const m = r * 0.35, { cv, c } = mk((r + m) * 2, (r + m) * 2);
+    c.translate(r + m, r + m);
+    const sh = c.createRadialGradient(0, r * 0.75, 0, 0, r * 0.75, r * 1.1);
+    sh.addColorStop(0, 'rgba(0,0,0,0.5)'); sh.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = sh; c.beginPath(); c.ellipse(0, r * 0.8, r * 1.05, r * 0.45, 0, 0, Math.PI * 2); c.fill();
+    const g = c.createRadialGradient(-r * 0.35, -r * 0.4, r * 0.05, 0, 0, r);
+    if (kind === 'gold') { g.addColorStop(0, '#fff6c8'); g.addColorStop(0.35, '#ffbe45'); g.addColorStop(0.85, '#e0620f'); g.addColorStop(1, '#9c3a06'); }
+    else { g.addColorStop(0, '#ffffff'); g.addColorStop(0.45, '#f6efff'); g.addColorStop(0.85, '#c7b2ea'); g.addColorStop(1, '#8d74b8'); }
+    c.fillStyle = g; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = kind === 'gold' ? 'rgba(255,220,150,0.45)' : 'rgba(255,255,255,0.5)'; c.lineWidth = r * 0.045;
+    c.beginPath(); c.arc(0, 0, r * 0.93, Math.PI * 0.15, Math.PI * 0.85); c.stroke();
+    const sp = c.createLinearGradient(0, -r, 0, -r * 0.1);
+    sp.addColorStop(0, 'rgba(255,255,255,0.85)'); sp.addColorStop(1, 'rgba(255,255,255,0)');
+    c.fillStyle = sp; c.beginPath(); c.ellipse(-r * 0.1, -r * 0.52, r * 0.62, r * 0.36, -0.2, 0, Math.PI * 2); c.fill();
+    s = { cv, size: (r + m) * 2 };
+    sprites.set(key, s);
+    return s;
+  }
+  // A drawn gold coin with a star.
+  function coinSprite(r) {
+    const key = 'coin' + Math.round(r);
+    let s = sprites.get(key);
+    if (s) return s;
+    const { cv, c } = mk(r * 2.4, r * 2.4);
+    c.translate(r * 1.2, r * 1.2);
+    c.fillStyle = '#9c6200'; c.beginPath(); c.arc(0, r * 0.1, r, 0, Math.PI * 2); c.fill();
+    const g = c.createRadialGradient(-r * 0.35, -r * 0.4, 1, 0, 0, r);
+    g.addColorStop(0, '#fffbe0'); g.addColorStop(0.45, '#ffd23f'); g.addColorStop(1, '#d08a00');
+    c.fillStyle = g; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(160,100,0,0.8)'; c.lineWidth = r * 0.1; c.beginPath(); c.arc(0, 0, r * 0.74, 0, Math.PI * 2); c.stroke();
+    starPath(c, 0, 0, r * 0.48, r * 0.2); c.fillStyle = '#c07a00'; c.fill();
+    starPath(c, -r * 0.03, -r * 0.05, r * 0.44, r * 0.18); c.fillStyle = '#fff1a8'; c.fill();
+    s = { cv, size: r * 2.4 };
+    sprites.set(key, s);
+    return s;
+  }
+  function starPath(c, x, y, R, r) {
+    c.beginPath();
+    for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2 - Math.PI / 2, d = i % 2 ? r : R; c.lineTo(x + Math.cos(a) * d, y + Math.sin(a) * d); }
+    c.closePath();
+  }
+  // Star-shaped sparkles that glow (added light).
+  const sparks = [];
+  function sparkle(x, y, n, color = '#ffe08a', speed = 1) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, v = (40 + Math.random() * 200) * speed;
+      sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 60, life: 0, max: 0.5 + Math.random() * 0.5, s: 5 + Math.random() * 9, color, rot: Math.random() * 3 });
+    }
+  }
+  // Canvas-drawn button icons.
+  function icon(c, id, x, y, s, col) {
+    c.save(); c.translate(x, y); c.strokeStyle = col; c.fillStyle = col; c.lineWidth = s * 0.14; c.lineCap = 'round'; c.lineJoin = 'round';
+    if (id === 'shuffle') {
+      c.beginPath(); c.moveTo(-s * 0.5, -s * 0.3); c.bezierCurveTo(0, -s * 0.3, 0, s * 0.3, s * 0.45, s * 0.3); c.stroke();
+      c.beginPath(); c.moveTo(-s * 0.5, s * 0.3); c.bezierCurveTo(0, s * 0.3, 0, -s * 0.3, s * 0.45, -s * 0.3); c.stroke();
+      [[s * 0.45, -s * 0.3], [s * 0.45, s * 0.3]].forEach(([ax, ay]) => { c.beginPath(); c.moveTo(ax + s * 0.12, ay); c.lineTo(ax - s * 0.1, ay - s * 0.16); c.lineTo(ax - s * 0.1, ay + s * 0.16); c.closePath(); c.fill(); });
+    } else if (id === 'hint') {
+      c.beginPath(); c.arc(0, -s * 0.12, s * 0.32, Math.PI * 0.8, Math.PI * 2.2); c.lineTo(s * 0.12, s * 0.28); c.lineTo(-s * 0.12, s * 0.28); c.closePath(); c.stroke();
+      c.beginPath(); c.moveTo(-s * 0.12, s * 0.44); c.lineTo(s * 0.12, s * 0.44); c.stroke();
+    } else {
+      c.beginPath(); c.moveTo(-s * 0.3, -s * 0.3); c.lineTo(s * 0.3, s * 0.3); c.moveTo(s * 0.3, -s * 0.3); c.lineTo(-s * 0.3, s * 0.3); c.stroke();
+    }
+    c.restore();
+  }
+  // A ribbon banner with folded ends.
+  function ribbon(c, x, y, w, h, text, size) {
+    const e = h * 0.7;
+    c.fillStyle = '#8f1d4a';
+    [-1, 1].forEach((d) => {
+      c.beginPath(); c.moveTo(x + d * (w / 2 - e * 0.3), y - h * 0.2); c.lineTo(x + d * (w / 2 + e), y - h * 0.2);
+      c.lineTo(x + d * (w / 2 + e * 0.6), y + h * 0.3); c.lineTo(x + d * (w / 2 + e), y + h * 0.8); c.lineTo(x + d * (w / 2 - e * 0.3), y + h * 0.8); c.closePath(); c.fill();
+    });
+    const g = c.createLinearGradient(0, y - h / 2, 0, y + h / 2);
+    g.addColorStop(0, '#ff7aa8'); g.addColorStop(0.5, '#e8336f'); g.addColorStop(1, '#a8174c');
+    roundRect(c, x - w / 2, y - h / 2, w, h, h * 0.18); c.fillStyle = g; c.fill();
+    c.fillStyle = 'rgba(255,255,255,0.25)'; roundRect(c, x - w / 2 + 6, y - h / 2 + 4, w - 12, h * 0.32, h * 0.12); c.fill();
+    title(c, text, x, y + 2, size, { color: '#fff4d6' });
   }
 
   function update(dt) {
@@ -488,61 +848,79 @@
       flying.splice(i, 1);
       if (f.cell) {
         if (!f.cell.found) { f.cell.found = true; f.cell.at = t; }
-        Kit.burst(f.x1, f.y1, ACCENT, 5, 0.5);
+        sparkle(f.x1, f.y1, 6, '#ffd27a', 0.7);
         Kit.tone(1046 + Math.random() * 300, { type: 'sine', dur: 0.06, vol: 0.07 });
         if (!flying.some((g) => g.cell)) { autoFind(); save(); }
-      } else if (f.coin) { coinBump = 1; Kit.burst(f.x1, f.y1, '#ffd23f', 10, 0.6); }
+      } else if (f.coin) { coinBump = 1; sparkle(f.x1, f.y1, 12, '#ffe066', 0.8); }
+    }
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const p = sparks[i]; p.life += dt;
+      if (p.life > p.max) { sparks.splice(i, 1); continue; }
+      p.vy += 300 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.97; p.rot += dt * 4;
     }
   }
 
   function draw(c, time) {
+    checkFonts(time);
     const W = Kit.W, H = Kit.H, t = now();
-    Kit.background(c, time, '#6a2c70', '#1b0b2e', 'rgba(255,160,90,0.10)');
+    if (!scene) { bakeScene(W, H); bakeClouds(H); }
+    if (!board) bakeBoard();
+    if (!wheelImg) bakeWheel();
+    c.drawImage(scene.cv, 0, 0, W, H);
+    // slow sun rays and drifting clouds
+    c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.12 + 0.04 * Math.sin(time * 0.8);
+    c.translate(scene.sx, scene.sy); c.rotate(time * 0.05);
+    const hr = H * 0.22; c.drawImage(rays.cv, -hr, -hr, hr * 2, hr * 2);
+    c.restore();
+    for (const cl of clouds) {
+      const span = W + cl.w * 2, x = ((cl.x0 * span + time * cl.speed) % span) - cl.w;
+      c.drawImage(cl.cv, x, cl.y, cl.w, cl.h);
+    }
+    c.globalAlpha = 1;
     c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
 
     // Title
     const titleX = wide ? G.x + (G.cs * L.gw) / 2 : W / 2;
-    const tSize = Math.round(Math.min(H * 0.07, 46));
-    c.font = `900 ${tSize}px system-ui, sans-serif`;
-    c.lineWidth = 6; c.strokeStyle = 'rgba(30,5,40,0.8)';
-    const titleY = wide ? H * 0.075 : H * 0.12;
-    c.strokeText(`Level ${level}`, titleX, titleY);
-    const lg = c.createLinearGradient(0, titleY - tSize / 2, 0, titleY + tSize / 2);
-    lg.addColorStop(0, '#ffffff'); lg.addColorStop(1, '#ffc06b');
-    c.fillStyle = lg; c.fillText(`Level ${level}`, titleX, titleY);
+    const titleY = wide ? Math.max(H * 0.07, board.fy - H * 0.06) : H * 0.12;
+    title(c, `Level ${level}`, titleX, titleY, Math.round(Math.min(H * 0.07, 50)), { color: '#ffd27a', glow: 'rgba(255,160,80,0.6)' });
 
     // Coins and bonus words
     const cb = coinBox();
     c.save();
     c.translate(cb.x + cb.w / 2, cb.y + cb.h / 2); c.scale(1 + coinBump * 0.12, 1 + coinBump * 0.12);
-    roundRect(c, -cb.w / 2, -cb.h / 2, cb.w, cb.h, cb.h / 2);
-    c.fillStyle = 'rgba(20,5,35,0.55)'; c.fill(); c.lineWidth = 2; c.strokeStyle = 'rgba(255,210,63,0.6)'; c.stroke();
-    const coinR = cb.h * 0.36, coinX = -cb.w / 2 + cb.h * 0.5;
-    const cg = c.createRadialGradient(coinX - coinR * 0.3, -coinR * 0.3, 1, coinX, 0, coinR);
-    cg.addColorStop(0, '#fff3b0'); cg.addColorStop(0.6, '#ffd23f'); cg.addColorStop(1, '#d99a00');
-    c.fillStyle = cg; c.beginPath(); c.arc(coinX, 0, coinR, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#b07800'; c.font = `900 ${Math.round(coinR * 1.1)}px system-ui, sans-serif`; c.fillText('★', coinX, coinR * 0.05);
-    c.fillStyle = '#fff'; c.font = `900 ${Math.round(cb.h * 0.5)}px system-ui, sans-serif`;
-    c.fillText(Math.round(shownCoins), coinX + (cb.w - cb.h) / 2 + coinR * 0.3, 2);
+    glass(c, -cb.w / 2, -cb.h / 2, cb.w, cb.h, cb.h / 2, { tint: 'rgba(60,20,90,0.35)', edge: 'rgba(255,220,140,0.6)' });
+    const coin = coinSprite(cb.h * 0.42), coinX = -cb.w / 2 + cb.h * 0.48;
+    c.drawImage(coin.cv, coinX - coin.size / 2, -coin.size / 2, coin.size, coin.size);
+    title(c, String(Math.round(shownCoins)), coinX + (cb.w - cb.h) / 2 + cb.h * 0.15, 2, Math.round(cb.h * 0.52), { color: '#fff1b0' });
     c.restore();
-    c.font = `700 ${Math.round(Math.max(18, Math.min(H * 0.032, 24)))}px system-ui, sans-serif`;
-    c.fillStyle = 'rgba(255,255,255,0.75)';
-    c.textAlign = 'right';
-    const bl = `Bonus words ${bonusFound.size}/${L.bonus.size}`;
-    if (c.measureText(bl).width < cb.x - 30) c.fillText(bl, cb.x - 18, cb.y + cb.h / 2 + 1);
-    else { c.textAlign = 'left'; c.fillText(bl, 14, cb.y + cb.h / 2 + 1); }
-    c.textAlign = 'center';
+    const bfs = Math.round(Math.max(18, Math.min(H * 0.03, 24)));
+    c.font = `600 ${bfs}px ${U}`;
+    const bl = `Bonus ${bonusFound.size}/${L.bonus.size}`, blw = c.measureText(bl).width + bfs * 2.4;
+    const blx = cb.x - blw - 14 > 10 ? cb.x - blw - 14 : 12;
+    glass(c, blx, cb.y + (cb.h - bfs * 1.9) / 2, blw, bfs * 1.9, bfs * 0.95, { tint: 'rgba(60,20,90,0.35)' });
+    starPath(c, blx + bfs * 1.05, cb.y + cb.h / 2, bfs * 0.5, bfs * 0.22); c.fillStyle = '#ffd23f'; c.fill();
+    c.fillStyle = '#fff'; c.textAlign = 'left'; c.fillText(bl, blx + bfs * 1.8, cb.y + cb.h / 2 + 1); c.textAlign = 'center';
 
-    // The crossword
+    // The framed crossword
+    c.drawImage(board.cv, board.x, board.y, board.w, board.h);
     const cs = G.cs;
-    roundRect(c, G.x - cs * 0.2, G.y - cs * 0.2, cs * L.gw + cs * 0.4, cs * L.gh + cs * 0.4, cs * 0.3);
-    c.fillStyle = 'rgba(20,5,35,0.35)'; c.fill();
+    const sweep = ((time % 5) / 1.4) * (board.bw + board.bh) - board.bh; // a shine passes every few seconds
     for (const cell of L.cells.values()) {
+      if (!cell.found && !cell.hint) continue;
       const p = cellXY(cell), age = t - cell.at;
-      const pop = age >= 0 && age < 0.35 ? 1 + Math.sin((age / 0.35) * Math.PI) * 0.16 : 1;
-      if (cell.found) drawTile(c, 'found', p.x, p.y, cs, cell.ch, pop);
-      else if (cell.hint) drawTile(c, 'hint', p.x, p.y, cs, cell.ch, pop);
-      else drawTile(c, 'empty', p.x, p.y, cs, '', 1);
+      let sx = 1, sy = 1;
+      if (age >= 0 && age < 0.45) { const k = age / 0.45, w = Math.sin(k * Math.PI) * (1 - k); sx = 1 + w * 0.35; sy = 1 - w * 0.3; }
+      drawTile(c, cell.found ? 'found' : 'hint', p.x, p.y, cs, cell.ch, sx, sy);
+      const d = (p.x - board.fx) + (p.y - board.fy) - sweep;
+      if (cell.found && Math.abs(d) < cs * 0.7) {
+        c.save(); roundRect(c, p.x - cs * 0.42, p.y - cs * 0.42, cs * 0.84, cs * 0.8, cs * 0.18); c.clip();
+        c.globalCompositeOperation = 'lighter';
+        c.translate(p.x - d / 2, p.y - d / 2); c.rotate(-Math.PI / 4);
+        const g = c.createLinearGradient(-cs * 0.3, 0, cs * 0.3, 0);
+        g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,255,230,0.55)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+        c.fillStyle = g; c.fillRect(-cs * 0.3, -cs, cs * 0.6, cs * 2);
+        c.restore();
+      }
     }
 
     // The word being spelled
@@ -550,131 +928,183 @@
     if (n) {
       const fx = wordFx;
       const shakeX = fx && fx.kind === 'bad' && t - fx.t < 0.35 ? Math.sin((t - fx.t) * 60) * tileS * 0.12 : 0;
+      const kind = fx && fx.kind === 'bad' ? 'bad' : fx && fx.kind === 'again' ? 'again' : 'word';
       for (let i = 0; i < n; i++) {
         const p = tilePos(i, n), age = t - (addT[i] || 0);
         const s = age < 0.25 ? ease.back(clamp(age / 0.25, 0, 1)) : 1;
-        const kind = fx && fx.kind === 'bad' ? 'bad' : fx && fx.kind === 'again' ? 'hint' : 'word';
-        c.save(); c.translate(p.x + shakeX, p.y); c.scale(s, s);
-        roundRect(c, -tileS / 2, -tileS / 2, tileS, tileS, tileS * 0.2);
-        c.fillStyle = kind === 'bad' ? '#ff4d6d' : kind === 'hint' ? '#ffd23f' : '#ffffff'; c.fill();
-        c.lineWidth = tileS * 0.05; c.strokeStyle = kind === 'bad' ? '#a3122f' : kind === 'hint' ? '#b07800' : '#c9b6e8'; c.stroke();
-        c.fillStyle = kind === 'bad' ? '#fff' : '#3b1d5e';
-        c.font = `900 ${Math.round(tileS * 0.62)}px system-ui, sans-serif`;
-        c.fillText(L.letters[word[i]], 0, tileS * 0.04);
-        c.restore();
+        drawTile(c, kind, p.x + shakeX, p.y, tileS, L.letters[word[i]], s, s);
       }
     } else if (!won) {
-      c.font = `700 ${Math.round(Math.max(20, tileS * 0.38))}px system-ui, sans-serif`;
-      c.fillStyle = 'rgba(255,255,255,0.45)';
-      c.fillText(`${found.size} of ${L.words.length} words found`, WH.x, tilesY);
+      const fs = Math.round(Math.max(20, tileS * 0.36));
+      c.font = `600 ${fs}px ${U}`;
+      const msg = `${found.size} of ${L.words.length} words found`, mw = c.measureText(msg).width + fs * 1.6;
+      glass(c, WH.x - mw / 2, tilesY - fs * 0.95, mw, fs * 1.9, fs * 0.95, { tint: 'rgba(40,10,70,0.35)' });
+      c.fillStyle = 'rgba(255,255,255,0.9)'; c.fillText(msg, WH.x, tilesY + 1);
     }
 
     // The wheel
     const R = WH.r;
-    c.save();
-    c.beginPath(); c.arc(WH.x, WH.y + R * 0.04, R, 0, Math.PI * 2); c.fillStyle = 'rgba(10,0,20,0.35)'; c.fill();
-    const wg = c.createRadialGradient(WH.x - R * 0.3, WH.y - R * 0.35, R * 0.1, WH.x, WH.y, R);
-    wg.addColorStop(0, 'rgba(255,255,255,0.97)'); wg.addColorStop(1, 'rgba(232,220,250,0.93)');
-    c.beginPath(); c.arc(WH.x, WH.y, R, 0, Math.PI * 2); c.fillStyle = wg; c.fill();
-    c.lineWidth = Math.max(3, R * 0.025); c.strokeStyle = 'rgba(255,255,255,0.8)'; c.stroke();
-    c.restore();
-    // The line through the chosen letters
+    c.drawImage(wheelImg.cv, WH.x - wheelImg.s / 2, WH.y - wheelImg.s / 2, wheelImg.s, wheelImg.s);
+    // the glowing line through the chosen letters
     if (n) {
-      c.lineCap = 'round'; c.lineJoin = 'round';
+      c.save(); c.lineCap = 'round'; c.lineJoin = 'round';
       c.beginPath();
       word.forEach((li, i) => { const p = letterPos(li); if (i) c.lineTo(p.x, p.y); else c.moveTo(p.x, p.y); });
-      c.strokeStyle = 'rgba(255,123,41,0.85)'; c.lineWidth = WH.lr * 0.32; c.stroke();
+      c.globalCompositeOperation = 'lighter';
+      c.strokeStyle = 'rgba(255,150,60,0.28)'; c.lineWidth = WH.lr * 0.9; c.stroke();
+      c.strokeStyle = 'rgba(255,190,90,0.5)'; c.lineWidth = WH.lr * 0.5; c.stroke();
+      c.globalCompositeOperation = 'source-over';
+      c.strokeStyle = '#ffb347'; c.lineWidth = WH.lr * 0.26; c.stroke();
+      c.strokeStyle = 'rgba(255,255,230,0.9)'; c.lineWidth = WH.lr * 0.08; c.stroke();
+      c.restore();
     }
     const n2 = L.letters.length;
     for (let li = 0; li < n2; li++) {
       const p = letterPos(li), used = word.indexOf(li);
-      if (used >= 0) {
-        const age = t - (addT[used] || 0), s = age < 0.25 ? 1 + Math.sin((age / 0.25) * Math.PI) * 0.15 : 1;
-        c.beginPath(); c.arc(p.x, p.y, WH.lr * s, 0, Math.PI * 2);
-        const g = c.createLinearGradient(0, p.y - WH.lr, 0, p.y + WH.lr);
-        g.addColorStop(0, '#ffb066'); g.addColorStop(1, '#e8590c');
-        c.fillStyle = g; c.fill();
-      }
-      c.font = `900 ${Math.round(WH.lr * 1.25)}px system-ui, sans-serif`;
-      c.fillStyle = used >= 0 ? '#fff' : '#3b1d5e';
-      c.fillText(L.letters[li], p.x, p.y + WH.lr * 0.07);
+      let s = 1 + Math.sin(time * 2 + li) * 0.02; // breathing
+      if (used >= 0) { const age = t - (addT[used] || 0); if (age < 0.3) s *= 1 + Math.sin((age / 0.3) * Math.PI) * 0.18; }
+      const b = ballSprite(used >= 0 ? 'gold' : 'pearl', WH.lr), d = b.size * s;
+      c.drawImage(b.cv, p.x - d / 2, p.y - d / 2, d, d);
+      c.font = `700 ${Math.round(WH.lr * 1.15 * s)}px ${F}`;
+      if (used >= 0) { c.lineWidth = WH.lr * 0.12; c.strokeStyle = 'rgba(140,50,0,0.7)'; c.strokeText(L.letters[li], p.x, p.y + WH.lr * 0.06); }
+      c.fillStyle = used >= 0 ? '#fff' : '#3b1d6e';
+      c.fillText(L.letters[li], p.x, p.y + WH.lr * 0.06);
     }
-    // The remote's focus: a glowing ring on a letter, or round a button.
+    // The remote's focus: a glowing, turning ring on a letter.
     const showFocus = !won && !Kit.touchFirst();
     if (showFocus && focus < n2 && !spin) {
-      const p = slotPos(focus), pr = WH.lr * 1.12 + Math.sin(time * 6) * 2;
-      c.beginPath(); c.arc(p.x, p.y, pr + 4, 0, Math.PI * 2); c.strokeStyle = 'rgba(255,210,63,0.35)'; c.lineWidth = 10; c.stroke();
-      c.beginPath(); c.arc(p.x, p.y, pr, 0, Math.PI * 2); c.strokeStyle = '#ffd23f'; c.lineWidth = 4; c.stroke();
+      const p = slotPos(focus), pr = WH.lr * 1.14 + Math.sin(time * 6) * 2;
+      c.save(); c.globalCompositeOperation = 'lighter';
+      c.beginPath(); c.arc(p.x, p.y, pr + 5, 0, Math.PI * 2); c.strokeStyle = 'rgba(255,220,90,0.35)'; c.lineWidth = 12; c.stroke();
+      c.globalCompositeOperation = 'source-over';
+      c.beginPath(); c.arc(p.x, p.y, pr, 0, Math.PI * 2); c.strokeStyle = '#ffe066'; c.lineWidth = 4; c.stroke();
+      c.lineWidth = 5; c.strokeStyle = '#fff';
+      for (let k = 0; k < 3; k++) { const a = time * 2.5 + (k * Math.PI * 2) / 3; c.beginPath(); c.arc(p.x, p.y, pr, a, a + 0.5); c.stroke(); }
+      c.restore();
     }
 
     // Letters on their way into the grid (or to the coins)
     for (const f of flying) {
       const k = clamp((t - f.t0) / f.dur, 0, 1);
-      if (t < f.t0) { drawTile(c, 'hint', f.x0, f.y0, f.s0, f.ch); continue; }
+      if (t < f.t0) { drawTile(c, 'word', f.x0, f.y0, f.s0, f.ch); continue; }
       const e = ease.inOut(k);
       const x = lerp(f.x0, f.x1, e), y = lerp(f.y0, f.y1, e) - Math.sin(k * Math.PI) * H * 0.08;
-      drawTile(c, f.cell ? 'found' : 'hint', x, y, lerp(f.s0, f.s1, e), f.ch);
+      c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.5;
+      const gs = lerp(f.s0, f.s1, e) * 2.2; c.drawImage(glowDot, x - gs / 2, y - gs / 2, gs, gs); c.restore();
+      drawTile(c, f.cell ? 'found' : 'again', x, y, lerp(f.s0, f.s1, e), f.ch);
     }
 
-    // Buttons
+    // Buttons: glass pills with drawn icons
     buttons.forEach((b, i) => {
       const on = showFocus && focus === n2 + i;
       const off = (b.id === 'clear' && !n) || (b.id === 'hint' && coins < HINT_COST);
-      roundRect(c, b.x, b.y, b.w, b.h, b.h / 2);
-      const g = c.createLinearGradient(0, b.y, 0, b.y + b.h);
-      g.addColorStop(0, on ? '#ffe45c' : 'rgba(255,255,255,0.18)'); g.addColorStop(1, on ? '#ffb703' : 'rgba(255,255,255,0.07)');
-      c.fillStyle = g; c.fill();
-      c.lineWidth = on ? 3 : 2; c.strokeStyle = on ? '#fff' : 'rgba(255,255,255,0.28)'; c.stroke();
-      const label = b.id === 'hint' ? `${b.label} ${HINT_COST}` : b.label;
-      c.font = `800 ${Math.round(Math.min(b.h * 0.4, b.w * 0.15))}px system-ui, sans-serif`;
-      c.fillStyle = on ? '#2b1600' : off ? 'rgba(255,255,255,0.4)' : '#fff';
-      c.fillText(label, b.x + b.w / 2, b.y + b.h / 2 + 1);
+      glass(c, b.x, b.y, b.w, b.h, b.h / 2, { tint: on ? 'rgba(255,190,60,0.55)' : 'rgba(60,20,90,0.4)', edge: on ? '#fff3c0' : 'rgba(255,255,255,0.3)', focus: on, t: time });
+      const label = b.id === 'shuffle' ? 'Shuffle' : b.id === 'hint' ? 'Hint' : 'Clear';
+      const fs = Math.round(Math.min(b.h * 0.4, b.w * 0.15));
+      c.font = `700 ${fs}px ${U}`;
+      const col = off ? 'rgba(255,255,255,0.4)' : on ? '#3a1800' : '#fff';
+      const extra = b.id === 'hint' ? fs * 1.9 : 0;
+      const tw = c.measureText(label).width, total = fs * 1.3 + tw + extra;
+      const x0 = b.x + b.w / 2 - total / 2, cy = b.y + b.h / 2;
+      icon(c, b.id, x0 + fs * 0.5, cy, fs * 1.05, b.id === 'hint' && !off && !on ? '#ffe066' : col);
+      c.fillStyle = col; c.textAlign = 'left'; c.fillText(label, x0 + fs * 1.3, cy + 1);
+      if (extra) {
+        const cn = coinSprite(fs * 0.42); c.drawImage(cn.cv, x0 + fs * 1.45 + tw, cy - cn.size / 2, cn.size, cn.size);
+        c.font = `700 ${Math.round(fs * 0.8)}px ${F}`; c.fillText(String(HINT_COST), x0 + fs * 2.45 + tw, cy + 1);
+      }
+      c.textAlign = 'center';
     });
 
+    // Fireflies
+    c.save(); c.globalCompositeOperation = 'lighter';
+    for (const m of motes) {
+      const x = ((m.x + time * 0.01 * m.s) % 1) * W + Math.sin(time * 0.7 + m.p) * 20;
+      const y = m.y * H + Math.cos(time * 0.5 + m.p) * 16, a = 0.35 + 0.35 * Math.sin(time * 2 + m.p * 3), s = 10 + m.s * 16;
+      c.globalAlpha = Math.max(0, a); c.drawImage(glowDot, x - s / 2, y - s / 2, s, s);
+    }
+    // star sparkles
+    for (const p of sparks) {
+      const k = 1 - p.life / p.max;
+      c.globalAlpha = k; c.save(); c.translate(p.x, p.y); c.rotate(p.rot);
+      starPath(c, 0, 0, p.s * k + 2, (p.s * k + 2) * 0.38); c.fillStyle = p.color; c.fill();
+      c.restore();
+    }
+    c.restore();
+
     // How to play
-    const hs = Math.round(Math.max(18, Math.min(H * 0.032, 24)));
-    c.font = `700 ${hs}px system-ui, sans-serif`;
-    c.fillStyle = 'rgba(255,255,255,0.62)';
+    const hs = Math.round(Math.max(18, Math.min(H * 0.03, 24)));
+    c.font = `600 ${hs}px ${U}`;
     const tip = Kit.touchFirst() ? 'Swipe or tap letters · tap the word to enter it'
       : focus >= n2 ? '◀ ▶ move · OK press · ▲ back to the letters · Back exits'
         : '◀ ▶ choose a letter · OK add · ▼ enter word · ▲ remove letter · Back exits';
-    const tw = c.measureText(tip).width;
-    if (tw > W * 0.95) c.font = `700 ${Math.floor(hs * (W * 0.95) / tw)}px system-ui, sans-serif`;
-    c.fillText(tip, W / 2, H - hs * 1.1);
+    let tw = c.measureText(tip).width;
+    if (tw > W * 0.9) { c.font = `600 ${Math.floor(hs * (W * 0.9) / tw)}px ${U}`; tw = W * 0.9; }
+    glass(c, W / 2 - tw / 2 - hs, H - hs * 2.3, tw + hs * 2, hs * 1.8, hs * 0.9, { tint: 'rgba(20,10,40,0.45)' });
+    c.fillStyle = 'rgba(255,255,255,0.9)';
+    c.fillText(tip, W / 2, H - hs * 1.4 + 1);
 
-    const m = muteBox();
-    c.font = `${Math.round(m.h * 0.55)}px system-ui, sans-serif`;
-    c.globalAlpha = 0.7; c.fillStyle = '#fff';
-    c.fillText(Kit.muted ? '🔇' : '🔊', m.x + m.w / 2, m.y + m.h / 2);
+    const mb = muteBox();
+    c.font = `${Math.round(mb.h * 0.55)}px ${U}`;
+    c.globalAlpha = 0.8; c.fillStyle = '#fff';
+    c.fillText(Kit.muted ? '🔇' : '🔊', mb.x + mb.w / 2, mb.y + mb.h / 2);
     c.globalAlpha = 1;
 
-    if (introT < 6 && level <= 2 && found.size === 0 && !n) {
-      c.globalAlpha = Math.min(1, introT * 2, (6 - introT) * 2);
-      c.font = `800 ${Math.round(Math.max(20, Math.min(H * 0.036, 26)))}px system-ui, sans-serif`;
+    // Level intro banner
+    if (introT < 1.8 && !won) {
+      const a = introT < 0.35 ? ease.back(introT / 0.35) : introT > 1.4 ? 1 - (introT - 1.4) / 0.4 : 1;
+      c.save(); c.globalAlpha = clamp(a, 0, 1); c.translate(W / 2, H * 0.45); c.scale(clamp(a, 0, 1.2), clamp(a, 0, 1.2));
+      ribbon(c, 0, 0, Math.min(W * 0.5, 460), Math.min(H * 0.13, 90), `Level ${level}`, Math.round(Math.min(H * 0.075, 54)));
+      c.restore();
+    } else if (introT < 7 && level <= 2 && found.size === 0 && !n) {
+      c.globalAlpha = Math.min(1, (introT - 1.8) * 2, (7 - introT) * 2);
+      c.font = `700 ${Math.round(Math.max(20, Math.min(H * 0.034, 26)))}px ${U}`;
       c.fillStyle = '#fff59d';
-      c.fillText('Make words from the wheel to fill the grid!', titleX, G.y - G.cs * 0.2 - Math.max(20, H * 0.03));
+      c.fillText('Make words from the wheel to fill the grid!', titleX, board.fy + board.bh + H * 0.035);
       c.globalAlpha = 1;
     }
 
-    if (won && t - wonT > 0.6) {
-      const a = clamp((t - wonT - 0.6) / 0.4, 0, 1);
-      c.fillStyle = `rgba(20,4,30,${0.6 * a})`; c.fillRect(0, 0, W, H);
-      c.save(); c.translate(W / 2, H / 2); const k = ease.back(a); c.scale(k, k);
-      const pw = Math.min(W * 0.84, 560), ph = Math.min(H * 0.56, 320);
-      roundRect(c, -pw / 2, -ph / 2, pw, ph, 28);
-      const g = c.createLinearGradient(0, -ph / 2, 0, ph / 2);
-      g.addColorStop(0, '#c2417a'); g.addColorStop(1, '#5a1a6e');
-      c.fillStyle = g; c.fill(); c.lineWidth = 4; c.strokeStyle = '#ffd23f'; c.stroke();
-      c.font = `900 ${Math.round(ph * 0.14)}px system-ui, sans-serif`; c.fillStyle = '#fff';
-      c.fillText('Level complete!', 0, -ph * 0.28);
-      c.font = `800 ${Math.round(ph * 0.09)}px system-ui, sans-serif`; c.fillStyle = '#ffd23f';
-      c.fillText(`★ +${LEVEL_COINS} coins`, 0, -ph * 0.07);
-      c.font = `700 ${Math.round(ph * 0.075)}px system-ui, sans-serif`; c.fillStyle = 'rgba(255,255,255,0.85)';
-      c.fillText(`Bonus words found: ${bonusFound.size} of ${L.bonus.size}`, 0, ph * 0.1);
-      c.fillStyle = '#fff59d';
-      c.fillText(Kit.touchFirst() ? 'Tap for the next level' : 'Press OK for the next level', 0, ph * 0.31);
+    if (won && t - wonT > 0.6) drawWin(c, W, H, t, time);
+  }
+
+  function drawWin(c, W, H, t, time) {
+    const a = clamp((t - wonT - 0.6) / 0.4, 0, 1);
+    c.fillStyle = `rgba(20,4,30,${0.6 * a})`; c.fillRect(0, 0, W, H);
+    c.save(); c.translate(W / 2, H / 2);
+    // glow burst behind the panel
+    c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.35 * a; c.rotate(time * 0.2);
+    const rs = Math.min(W, H) * 0.9; c.drawImage(rays.cv, -rs, -rs, rs * 2, rs * 2); c.restore();
+    const k = ease.back(a); c.scale(k, k);
+    const pw = Math.min(W * 0.84, 580), ph = Math.min(H * 0.6, 360);
+    const pg = c.createLinearGradient(0, -ph / 2, 0, ph / 2);
+    pg.addColorStop(0, '#6a2a96'); pg.addColorStop(1, '#2a0c48');
+    roundRect(c, -pw / 2, -ph / 2, pw, ph, 30); c.fillStyle = pg; c.fill();
+    glass(c, -pw / 2, -ph / 2, pw, ph, 30, { tint: 'rgba(160,80,200,0.2)', edge: 'rgba(255,220,140,0.85)' });
+    ribbon(c, 0, -ph / 2 + 4, pw * 0.78, Math.min(80, ph * 0.22), 'Level complete!', Math.round(Math.min(ph * 0.13, 44)));
+    let hintsUsed = 0;
+    for (const cell of L.cells.values()) if (cell.hint) hintsUsed++;
+    const stars = hintsUsed === 0 ? 3 : hintsUsed <= 2 ? 2 : 1;
+    for (let i = 0; i < 3; i++) {
+      const st = clamp((t - wonT - 1.0 - i * 0.25) / 0.35, 0, 1), sk = st > 0 ? ease.back(st) : 0;
+      const sx = (i - 1) * ph * 0.27, sy = -ph * 0.1 - (i === 1 ? ph * 0.05 : 0), R = ph * (i === 1 ? 0.13 : 0.11);
+      c.save(); c.translate(sx, sy); c.scale(Math.max(0.001, sk), Math.max(0.001, sk));
+      starPath(c, 0, R * 0.08, R, R * 0.48); c.fillStyle = 'rgba(40,0,40,0.5)'; c.fill();
+      starPath(c, 0, 0, R, R * 0.48);
+      if (i < stars) {
+        const g = c.createLinearGradient(0, -R, 0, R); g.addColorStop(0, '#fff6b0'); g.addColorStop(0.5, '#ffd23f'); g.addColorStop(1, '#e08a00');
+        c.fillStyle = g; c.fill(); c.lineWidth = 3; c.strokeStyle = '#fff3c0'; c.stroke();
+      } else { c.fillStyle = 'rgba(255,255,255,0.15)'; c.fill(); }
       c.restore();
     }
+    c.font = `700 ${Math.round(ph * 0.075)}px ${F}`; c.fillStyle = '#ffe08a';
+    const cn = coinSprite(ph * 0.04);
+    c.fillText(`+${LEVEL_COINS}`, ph * 0.04, ph * 0.13);
+    c.drawImage(cn.cv, -ph * 0.11 - cn.size / 2, ph * 0.13 - cn.size / 2, cn.size, cn.size);
+    c.font = `600 ${Math.round(ph * 0.062)}px ${U}`; c.fillStyle = 'rgba(255,255,255,0.88)';
+    c.fillText(`Bonus words found: ${bonusFound.size} of ${L.bonus.size}`, 0, ph * 0.24);
+    c.globalAlpha = 0.75 + 0.25 * Math.sin(time * 4);
+    c.font = `700 ${Math.round(ph * 0.068)}px ${U}`; c.fillStyle = '#fff59d';
+    c.fillText(Kit.touchFirst() ? 'Tap for the next level' : 'Press OK for the next level', 0, ph * 0.38);
+    c.restore();
   }
 
   // ---------- Start ----------

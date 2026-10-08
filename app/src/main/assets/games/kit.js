@@ -51,6 +51,53 @@ const Kit = (() => {
     c.closePath();
   }
 
+
+  // ---------- Fonts: bundled modern faces (OFL), so every TV shows the same type ----------
+  const FONT = '"Fredoka", "Baloo 2", "Arial Rounded MT Bold", system-ui, sans-serif'; // display: titles, numbers
+  const UI = '"Outfit", "Nunito", system-ui, sans-serif'; // labels, buttons, help lines
+  try {
+    if (window.FontFace && document.fonts) {
+      [['Fredoka', 'fonts/fredoka.woff2'], ['Outfit', 'fonts/outfit.woff2']].forEach(([name, url]) => {
+        const f = new FontFace(name, `url(${url})`, { weight: '300 900' });
+        f.load().then((ff) => document.fonts.add(ff)).catch(() => { /* falls back to system faces */ });
+      });
+    }
+  } catch (e) { /* old WebView: system faces */ }
+
+  // ---------- Glass panels: frosted, lit from above, for score boxes and buttons ----------
+  function glass(c, x, y, w, h, r, { tint = 'rgba(255,255,255,0.10)', edge = 'rgba(255,255,255,0.28)', glow = null, focus = false, t = 0 } = {}) {
+    c.save();
+    // soft drop shadow
+    c.shadowColor = 'rgba(0,0,0,0.35)'; c.shadowBlur = 24; c.shadowOffsetY = 8;
+    roundRect(c, x, y, w, h, r); c.fillStyle = 'rgba(10,8,30,0.35)'; c.fill();
+    c.shadowColor = 'transparent';
+    // body: tint plus a top-lit sheen
+    const g = c.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, 'rgba(255,255,255,0.16)'); g.addColorStop(0.5, tint); g.addColorStop(1, 'rgba(255,255,255,0.03)');
+    roundRect(c, x, y, w, h, r); c.fillStyle = g; c.fill();
+    // light rim
+    c.lineWidth = 1.5; c.strokeStyle = edge; roundRect(c, x + 0.75, y + 0.75, w - 1.5, h - 1.5, r); c.stroke();
+    if (focus || glow) {
+      const col = glow || '#ffd23f';
+      const pulse = 0.6 + 0.4 * Math.sin(t * 5);
+      c.shadowColor = col; c.shadowBlur = 18 + 10 * pulse;
+      c.lineWidth = 3; c.strokeStyle = col; roundRect(c, x - 2, y - 2, w + 4, h + 4, r + 2); c.stroke();
+    }
+    c.restore();
+  }
+  // Big gradient title text with outline and glow.
+  function title(c, text, x, y, size, { color = '#ffd23f', glow = null, align = 'center', font = FONT, weight = 700 } = {}) {
+    c.save();
+    c.font = `${weight} ${size}px ${font}`; c.textAlign = align; c.textBaseline = 'middle'; c.lineJoin = 'round';
+    if (glow) { c.shadowColor = glow; c.shadowBlur = size * 0.5; }
+    c.lineWidth = size * 0.14; c.strokeStyle = 'rgba(15,8,40,0.9)'; c.strokeText(text, x, y);
+    c.shadowColor = 'transparent';
+    const g = c.createLinearGradient(0, y - size / 2, 0, y + size / 2);
+    g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, color); g.addColorStop(1, shade(color.startsWith('#') ? color : '#ffffff', -0.3));
+    c.fillStyle = g; c.fillText(text, x, y);
+    c.restore();
+  }
+
   // ---------- Sound effects (short tones and noise; no music) ----------
   let ac = null, master = null, muted = false;
   try { muted = localStorage.getItem('games.muted') === '1'; } catch (e) { /* no storage */ }
@@ -186,7 +233,7 @@ const Kit = (() => {
       c.globalAlpha = Math.max(0, a);
       c.translate(t.x, t.y - (t.big ? 0 : k * 60));
       c.scale(pop, pop);
-      c.font = `900 ${t.size}px "Baloo 2", "Arial Rounded MT Bold", system-ui, sans-serif`;
+      c.font = `700 ${t.size}px ${FONT}`;
       c.textAlign = 'center'; c.textBaseline = 'middle';
       c.lineJoin = 'round';
       c.lineWidth = t.size * 0.18; c.strokeStyle = 'rgba(20,10,40,0.85)';
@@ -299,6 +346,6 @@ const Kit = (() => {
   return {
     canvas, ctx, get W() { return W; }, get H() { return H; }, onResize: (f) => resizeHooks.push(f),
     clamp, lerp, ease, shade, rgba, roundRect, sfx, tone, noise, toggleMute, get muted() { return muted; },
-    burst, confetti, float, background, onKeys, onPointer, record, exit, store, touchFirst, shake, run,
+    burst, confetti, float, background, FONT, UI, glass, title, onKeys, onPointer, record, exit, store, touchFirst, shake, run,
   };
 })();
