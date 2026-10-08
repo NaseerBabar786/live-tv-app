@@ -362,18 +362,6 @@
     "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।"
    },
    {
-    "id": "anchor-1s",
-    "name": "Sana",
-    "ur": "ثنا",
-    "seed": 5101,
-    "picture": "anchor-1c",
-    "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her late twenties sitting at a glossy news desk, long dark hair, elegant embroidered maroon shalwar kameez with a light dupatta on one shoulder, natural skin texture, both hands resting on the desk, looking into the camera with a gentle closed-mouth smile, real television news studio with blurred blue screens behind her, soft key light, Canon 85mm, shallow depth of field, photographed by a professional, not illustration",
-    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
-    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
-    "logo": true,
-    "edit": "Place her in a modern professional TV news studio: sitting upright behind a glossy curved dark news desk, shoulders square to the camera, both hands resting on the desk; behind her a large glowing blue video wall with a world map, soft bright studio lights, a clear empty dark-blue area on the upper left of the wall. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo."
-   },
-   {
     "id": "anchor-5s",
     "name": "Ayesha",
     "ur": "عائشہ",
@@ -446,19 +434,6 @@
     "picture": "anchor-m8d",
     "logo": true,
     "edit": "Place him in a modern professional TV news studio: sitting upright behind a glossy curved dark news desk, shoulders square to the camera, both hands resting on the desk; behind him a large glowing blue video wall with a world map, soft bright studio lights, a clear empty dark-blue area on the upper left of the wall. Keep his face, skin tone, hair, glasses and his clothes exactly the same; photorealistic broadcast photo."
-   },
-   {
-    "id": "anchor-m10s",
-    "name": "Saad",
-    "ur": "سعد",
-    "seed": 7010,
-    "voice": "ur-PK-AsadNeural",
-    "prompt": "RAW photo, medium shot from the waist up, a smart, well-groomed Pakistani man TV news anchor, 28 years old, slim average build, clean shaven, short neat black hair, wearing a complete tailored dark charcoal suit jacket buttoned, white shirt and a navy blue tie, sitting upright behind a glossy curved news desk, shoulders square to the camera, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a modern professional broadcast TV news studio, large glowing blue video wall with a world map behind him, soft studio lights, Canon 85mm, shallow depth of field, photorealistic broadcast photograph, not illustration",
-    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
-    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
-    "picture": "anchor-m10",
-    "logo": true,
-    "edit": "Place him in a modern professional TV news studio: sitting upright behind a glossy curved dark news desk, shoulders square to the camera, both hands resting on the desk; behind him a large glowing blue video wall with a world map, soft bright studio lights, a clear empty dark-blue area on the upper left of the wall. Keep his face, skin tone, hair and his clothes exactly the same; photorealistic broadcast photo."
    },
    {
     "id": "anchor-m11s",
@@ -922,6 +897,75 @@
     "motion2": "the news anchor keeps speaking to the camera with clear mouth movement, small nods and natural expressions, static camera, realistic broadcast footage",
     "picture": "anchor-m10",
     "edit": "Show him in a close chest-up shot in a bright blue TV news studio: behind him two large video screens show a glowing blue world map with bold red and white banners (plain shapes, no words), a white glossy desk edge in the lower corners, soft white studio light; he stands facing the camera, close framing from the chest up, a small black lapel microphone clipped on; no words, letters or logos anywhere. Keep his face, skin tone, hair, and his clothes exactly the same; photorealistic broadcast photo."
+   },
+   {
+    "id": "anchor-1q",
+    "name": "Sana",
+    "ur": "ثنا",
+    "seed": 5101,
+    "picture": "anchor-1c",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her late twenties sitting at a glossy news desk, long dark hair, elegant embroidered maroon shalwar kameez with a light dupatta on one shoulder, natural skin texture, both hands resting on the desk, looking into the camera with a gentle closed-mouth smile, real television news studio with blurred blue screens behind her, soft key light, Canon 85mm, shallow depth of field, photographed by a professional, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "edit": "Place her in a real, busy modern TV newsroom by day: tall glass windows behind the newsroom show a city skyline in daylight, journalists work at rows of desks with computer monitors, some walk past carrying papers, a large wall screen shows a world map and colourful charts (no readable words), white and light wood surfaces with blue accent lights, a glass and wood curved anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. She sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
+   },
+   {
+    "id": "anchor-m10q",
+    "name": "Saad",
+    "ur": "سعد",
+    "seed": 7010,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, well-groomed Pakistani man TV news anchor, 28 years old, slim average build, clean shaven, short neat black hair, wearing a complete tailored dark charcoal suit jacket buttoned, white shirt and a navy blue tie, sitting upright behind a glossy curved news desk, shoulders square to the camera, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a modern professional broadcast TV news studio, large glowing blue video wall with a world map behind him, soft studio lights, Canon 85mm, shallow depth of field, photorealistic broadcast photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "picture": "anchor-m10",
+    "edit": "Place him in a real, busy modern TV newsroom by day: tall glass windows behind the newsroom show a city skyline in daylight, journalists work at rows of desks with computer monitors, some walk past carrying papers, a large wall screen shows a world map and colourful charts (no readable words), white and light wood surfaces with blue accent lights, a glass and wood curved anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. He sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep his face, skin tone, hair, and his clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
+   },
+   {
+    "id": "anchor-1r",
+    "name": "Sana",
+    "ur": "ثنا",
+    "seed": 5101,
+    "picture": "anchor-1c",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her late twenties sitting at a glossy news desk, long dark hair, elegant embroidered maroon shalwar kameez with a light dupatta on one shoulder, natural skin texture, both hands resting on the desk, looking into the camera with a gentle closed-mouth smile, real television news studio with blurred blue screens behind her, soft key light, Canon 85mm, shallow depth of field, photographed by a professional, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "edit": "Place her in a real, busy modern TV newsroom in the evening: a deep open newsroom with many journalists at desks lit by computer monitors, an editor standing and talking on a phone, a curved wall of many video screens showing world maps, weather maps and charts (no readable words), dark navy and warm amber lighting, a glossy dark anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. She sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
+   },
+   {
+    "id": "anchor-m10r",
+    "name": "Saad",
+    "ur": "سعد",
+    "seed": 7010,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, well-groomed Pakistani man TV news anchor, 28 years old, slim average build, clean shaven, short neat black hair, wearing a complete tailored dark charcoal suit jacket buttoned, white shirt and a navy blue tie, sitting upright behind a glossy curved news desk, shoulders square to the camera, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a modern professional broadcast TV news studio, large glowing blue video wall with a world map behind him, soft studio lights, Canon 85mm, shallow depth of field, photorealistic broadcast photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "picture": "anchor-m10",
+    "edit": "Place him in a real, busy modern TV newsroom in the evening: a deep open newsroom with many journalists at desks lit by computer monitors, an editor standing and talking on a phone, a curved wall of many video screens showing world maps, weather maps and charts (no readable words), dark navy and warm amber lighting, a glossy dark anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. He sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep his face, skin tone, hair, and his clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
+   },
+   {
+    "id": "anchor-1s",
+    "name": "Sana",
+    "ur": "ثنا",
+    "seed": 5101,
+    "picture": "anchor-1c",
+    "prompt": "RAW photo, medium shot from the waist up, a beautiful Pakistani woman TV news anchor in her late twenties sitting at a glossy news desk, long dark hair, elegant embroidered maroon shalwar kameez with a light dupatta on one shoulder, natural skin texture, both hands resting on the desk, looking into the camera with a gentle closed-mouth smile, real television news studio with blurred blue screens behind her, soft key light, Canon 85mm, shallow depth of field, photographed by a professional, not illustration",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "edit": "Place her in a real, busy two-level TV newsroom: behind her an open newsroom floor with journalists at desks and monitors and an upper balcony level with more staff and glass railings, big wall screens with a globe, maps and colourful market charts (no readable words), clean white, grey and red accent lighting, a modern white anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. She sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
+   },
+   {
+    "id": "anchor-m10s",
+    "name": "Saad",
+    "ur": "سعد",
+    "seed": 7010,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, well-groomed Pakistani man TV news anchor, 28 years old, slim average build, clean shaven, short neat black hair, wearing a complete tailored dark charcoal suit jacket buttoned, white shirt and a navy blue tie, sitting upright behind a glossy curved news desk, shoulders square to the camera, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a modern professional broadcast TV news studio, large glowing blue video wall with a world map behind him, soft studio lights, Canon 85mm, shallow depth of field, photorealistic broadcast photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "picture": "anchor-m10",
+    "edit": "Place him in a real, busy two-level TV newsroom: behind him an open newsroom floor with journalists at desks and monitors and an upper balcony level with more staff and glass railings, big wall screens with a globe, maps and colourful market charts (no readable words), clean white, grey and red accent lighting, a modern white anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. He sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep his face, skin tone, hair, and his clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
    }
   ]
  }

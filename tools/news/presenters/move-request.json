@@ -1,7 +1,11 @@
 {
- "about": "Pushing this file makes these readers' moving clips (news-presenter-move.yml). Owner's reference video 2026-10-08 14:43: close chest-up talking anchor in front of two world-map screens (look P).",
+ "about": "Newsrooms Q (day windows), R (evening screens), S (two-level), like N",
  "ids": [
-  "anchor-1p",
-  "anchor-m10p"
+  "anchor-1q",
+  "anchor-m10q",
+  "anchor-1r",
+  "anchor-m10r",
+  "anchor-1s",
+  "anchor-m10s"
  ]
 }
