@@ -4,7 +4,7 @@ name: News lip-sync
 on:
   push:
     branches: [news-presenters]
-    paths: ["tools/news/presenters/lipsync_space.py", ".github/workflows/news-lipsync.yml"]
+    paths: ["tools/news/presenters/lipsync_space.py", "tools/news/presenters/lips_cpu.sh", ".github/workflows/news-lipsync.yml"]
   workflow_dispatch:
     inputs:
       id:
@@ -13,16 +13,15 @@ on:
 jobs:
   lips:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 300
     permissions:
       contents: write
     strategy:
       fail-fast: false
       matrix:
-        id: ["anchor-m1b", "anchor-m6c", "anchor-m7c"]
+        id: ["anchor-m1b", "anchor-m6c", "anchor-m8d"]
         sp:
-          - {n: 1, space: "fffiloni/LatentSync"}
-          - {n: 2, space: "manavisrani07/gradio-lipsync-wav2lip"}
+          - {n: 5, space: "local"}
     env:
       ID: ${{ github.event.inputs.id || matrix.id }}
     steps:
@@ -48,8 +47,15 @@ jobs:
           ffmpeg -v error -y -i line.wav -c:a libmp3lame -q:a 2 line-pad.mp3
           O=news-lips-$ID-${{ matrix.sp.n }}
           set +e
-          timeout 45m python3 tools/news/presenters/lipsync_space.py "${{ matrix.sp.space }}" raw.mp4 line.wav lips.mp4 > log.txt 2>&1
-          code=$?
+          if [ "${{ matrix.sp.space }}" = local ]; then
+            # LatentSync 1.5 on this runner's CPU (free GPU Spaces refuse the job for anonymous users)
+            mkdir -p out && cp raw.mp4 out/$ID.mp4 && cp line.wav out/$ID-line.wav
+            ONLY=$ID STEPS=25 timeout 280m bash tools/news/presenters/lips_cpu.sh > log.txt 2>&1
+            code=$?; [ -s out/$ID-lips.mp4 ] && cp out/$ID-lips.mp4 lips.mp4
+          else
+            timeout 45m python3 tools/news/presenters/lipsync_space.py "${{ matrix.sp.space }}" raw.mp4 line.wav lips.mp4 > log.txt 2>&1
+            code=$?
+          fi
           tail -c 2000 log.txt
           python3 -c "import json; json.dump({'space': '${{ matrix.sp.space }}', 'code': $code, 'log': open('log.txt').read()[-3000:]}, open('$O.json','w'), indent=1)"
           files=$O.json
