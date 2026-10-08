@@ -221,8 +221,6 @@
   @media (max-width: 480px) { .history dl { grid-template-columns: 1fr; } .history dd { margin-bottom: 6px; } }
   .copy { margin-left: 8px; padding: 4px 12px; font-size: 14px; vertical-align: middle; }
   .warn { border-left-color: var(--focus); color: var(--text); }
-  .playlists { margin-top: 16px; }
-  .playlists code { font-size: 14px; }
   footer nav { margin: 0 0 12px; flex-wrap: wrap; }
   footer nav a { padding: 6px 10px 6px 0; color: var(--muted); }
   footer { border-top: 1px solid var(--surface-2); padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
@@ -269,7 +267,6 @@
     .col-main .gallery { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
     .col-main #grid { max-height: min(780px, 75vh); overflow-y: auto; scrollbar-width: thin; padding: 4px; margin: -4px; }
     .hero figure { max-width: 680px; }
-    .col-side .playlists { margin-bottom: 4px; }
   }
 </style>
 </head>
@@ -430,11 +427,6 @@
             <code>github.com/NaseerBabar786/live-tv-app/releases/latest/download/LiveTV.apk</code><button class="icon-btn copy" data-copy="https://github.com/NaseerBabar786/live-tv-app/releases/latest/download/LiveTV.apk">Copy</button></p>
         </div>
         <div class="qr"><img src="qr.svg" alt="QR code for the download link"></div>
-      </div>
-      <div class="playlists small">
-        <b style="color:#fff">Using another player, like VLC or TiviMate?</b> Add our daily-checked playlists:
-        <a href="LiveTV.m3u">LiveTV.m3u</a> (Pakistani, Indian, Canadian, British and American<span id="pl1"></span>) or
-        <a href="AllChannels.m3u">AllChannels.m3u</a> (every country<span id="pl2"></span>).<span id="plDate"></span>
       </div>
     </section>
 
@@ -1072,14 +1064,6 @@
   const ua = navigator.userAgent;
   if (/Android/i.test(ua)) $("heroApk").href = $("apk").href;
   if (/iPhone|iPad|iPod|Macintosh/.test(ua) && navigator.maxTouchPoints > 1) $("appleNote").classList.remove("hidden");
-
-  // Channel counts for the daily-checked playlists.
-  fetch("playlists.json").then(r => r.json()).then(p => {
-    const n = x => x ? `, ${x.toLocaleString()} channels` : "";
-    $("pl1").textContent = n(p.livetv_channels);
-    $("pl2").textContent = n(p.working_channels);
-    if (p.checked_at) $("plDate").textContent = ` Last checked ${p.checked_at.slice(0, 10)}.`;
-  }).catch(() => {});
 
   // Anonymous watch-time counting for the owner's Stats page (assets/visits.js).
   const playing = v => v && !v.paused && !v.ended && v.readyState >= 3;
