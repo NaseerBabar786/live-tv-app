@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#46c45a"/><stop offset="1" stop-color="#0b5a32"/></linearGradient>
+    <radialGradient id="shine" cx="0.3" cy="0.2" r="0.8"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient><clipPath id="sq"><rect width="512" height="512" rx="112"/></clipPath>
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a4a12"/><stop offset=".4" stop-color="#f0a850"/><stop offset="1" stop-color="#7a3e0c"/></linearGradient>
+    <linearGradient id="snk" gradientUnits="userSpaceOnUse" x1="100" y1="440" x2="400" y2="90"><stop offset="0" stop-color="#ffb21a"/><stop offset=".5" stop-color="#ff6a1a"/><stop offset="1" stop-color="#e8213a"/></linearGradient>
+    <radialGradient id="head" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#ff8a6a"/><stop offset=".5" stop-color="#ee2a3a"/><stop offset="1" stop-color="#9a0d1c"/></radialGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#002a12" flood-opacity=".5"/></filter>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+    <g opacity=".1" fill="#fff"><path d="M0 0h102v102H0zM204 0h102v102H204zM408 0h104v102H408zM102 102h102v102H102zM306 102h102v102H306zM0 204h102v102H0zM204 204h102v102H204zM408 204h104v102H408zM102 306h102v102H102zM306 306h102v102H306zM0 408h102v104H0zM204 408h102v104H204zM408 408h104v104H408z"/></g>
+    <rect width="512" height="512" fill="url(#shine)"/>
+  </g>
+  <!-- ladder -->
+  <g filter="url(#sh)" transform="rotate(28 256 256)">
+    <g fill="#c87a2c" stroke="#7a3e0c" stroke-width="3">
+      <rect x="196" y="110" width="120" height="20" rx="8"/><rect x="196" y="180" width="120" height="20" rx="8"/><rect x="196" y="250" width="120" height="20" rx="8"/><rect x="196" y="320" width="120" height="20" rx="8"/><rect x="196" y="390" width="120" height="20" rx="8"/>
+    </g>
+    <rect x="176" y="56" width="32" height="410" rx="14" fill="url(#wood)"/>
+    <rect x="304" y="56" width="32" height="410" rx="14" fill="url(#wood)"/>
+  </g>
+  <!-- snake -->
+  <g filter="url(#sh)">
+    <path d="M90 440 C160 470 220 410 190 350 C160 290 230 250 290 280 C350 310 400 270 380 210 C366 170 330 160 316 130" stroke="url(#snk)" stroke-width="46" stroke-linecap="round" fill="none"/>
+    <path d="M90 440 C160 470 220 410 190 350 C160 290 230 250 290 280 C350 310 400 270 380 210 C366 170 330 160 316 130" stroke="#ffe27a" stroke-width="16" stroke-linecap="round" fill="none" stroke-dasharray="14 26" opacity=".85"/>
+    <path d="M100 430 C160 452 204 410 180 356" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none" opacity=".4"/>
+    <path d="M326 104 q8 -30 -6 -40 m6 40 q20 -20 36 -14" stroke="#e8264a" stroke-width="0" fill="none"/>
+    <ellipse cx="318" cy="112" rx="48" ry="40" fill="url(#head)" transform="rotate(-20 318 112)"/>
+    
+    <ellipse cx="300" cy="98" rx="14" ry="16" fill="#fff"/><ellipse cx="336" cy="88" rx="14" ry="16" fill="#fff"/>
+    <circle cx="303" cy="97" r="7" fill="#10221a"/><circle cx="339" cy="87" r="7" fill="#10221a"/>
+    <circle cx="305" cy="94" r="2.5" fill="#fff"/><circle cx="341" cy="84" r="2.5" fill="#fff"/>
+    <ellipse cx="296" cy="128" rx="10" ry="6" fill="#fff" opacity=".35" transform="rotate(-20 296 128)"/>
+  </g>
+  <path d="M436 400 l8 20 20 8 -20 8 -8 20 -8 -20 -20 -8 20 -8z" fill="#fff7b0"/>
+</svg>
