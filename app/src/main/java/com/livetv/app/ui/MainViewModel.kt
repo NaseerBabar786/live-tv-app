@@ -173,6 +173,12 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 }
             }
         }
+        // Favourites without it in the package (a Free viewer's minute is up): back to All, favourites kept.
+        viewModelScope.launch {
+            combine(Plans.current, Plans.features, Plans.trying) { _, _, _ -> Plans.canUse(Plans.Feature.Favorites) }.collect { can ->
+                if (!can) _state.update { s -> if (s.filter == FILTER_FAVORITES) s.copy(filter = FILTER_ALL, category = null) else s }
+            }
+        }
         // The owner's own channels (tv.bulkbazaar.ca/studio) join the list when they're switched on.
         if (Edition.LIVE_TV) {
             MyChannel.init(app)
@@ -213,7 +219,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     opened = true
                     _state.update {
                         val favorites = numbered.filter { c -> c.id in it.favorites }
-                        val onFavorites = opening && favorites.isNotEmpty()
+                        // Favourites is Gold: on Free the app opens on All (the saved favourites are kept).
+                        val onFavorites = opening && favorites.isNotEmpty() && Plans.has(Plans.Feature.Favorites)
                         val last = repo.lastChannelUrl?.let { url -> numbered.firstOrNull { c -> c.url == url } }
                             ?.takeIf { c -> !it.freeOnly || Plans.freeChannel(c) }
                         val start = when {
@@ -286,7 +293,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setQuery(query: String) = _state.update { it.copy(query = query) }
 
-    fun setFilter(filter: String) = _state.update { it.copy(filter = filter, category = null) }
+    fun setFilter(filter: String) {
+        // Favourites is Gold (owner, 2026-10-08): on Free, a minute's try.
+        if (filter == FILTER_FAVORITES) Plans.ask("Favourites", Plans.Feature.Favorites)
+        _state.update { it.copy(filter = filter, category = null) }
+    }
 
     fun setLanguages(languages: Set<String>) {
         repo.languages = languages
@@ -296,6 +307,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun setCategory(category: String?) = _state.update { it.copy(category = category) }
 
     fun toggleFavorite(channel: Channel) {
+        Plans.ask("Favourites", Plans.Feature.Favorites)
         val current = repo.favorites
         // Favorites holds at most MAX_FAVORITES channels (the user's choice).
         if (channel.id !in current && current.size >= MAX_FAVORITES) {
@@ -322,7 +334,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             Plans.ask(channel.name, Plans.Feature.AllChannels)
             return
         }
-        if (!tipChecked) {
+        // Full screen is Gold (owner, 2026-10-08): on Free it's a minute's try, then 1+List again.
+        Plans.ask("Full screen", Plans.Feature.FullScreen)
+        if (!tipChecked && Plans.canUse(Plans.Feature.Favorites)) {
             tipChecked = true
             if (_state.value.favorites.size < 6) {
                 favoritesTip = "Save at least 6 channels in Favourites. Press ☆ at the top of this screen, " +

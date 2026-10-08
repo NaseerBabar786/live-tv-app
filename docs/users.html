@@ -385,9 +385,10 @@ if (!configured) {
     }
     const trialDays = Number(prices.trialDays ?? 7);
     const trialEnd = u.joined && trialDays > 0 ? new Date(u.joined.getTime() + trialDays * 864e5) : null;
-    if (trialEnd && trialEnd > now) return { tier: "Gold", name: "Gold", until: trialEnd, trial: true, note: `free trial until ${shortDay(trialEnd)}` };
-    if (tier && tier !== "Free" && until) return { tier: "Free", name: "Free", note: `${tier === "Promo" ? "promotion" : tier} ended ${shortDay(until)}` };
-    return { tier: "Free", name: "Free", note: "" };
+    if (trialEnd && trialEnd > now) return { tier: "Gold", name: "Gold", until: trialEnd, trial: true, note: `Gold feature trial until ${shortDay(trialEnd)}` };
+    // Free (since 1.10.16): every channel, but only the 1+List mode; Gold features are a 1-minute try.
+    if (tier && tier !== "Free" && until) return { tier: "Free", name: "Free", note: `${tier === "Promo" ? "promotion" : tier} ended ${shortDay(until)}; all channels, 1+List only` };
+    return { tier: "Free", name: "Free", note: "all channels, 1+List only" };
   }
 
   // Promotions are stored under their own names in plans/{uid} ("Promo" is the Promotional package).

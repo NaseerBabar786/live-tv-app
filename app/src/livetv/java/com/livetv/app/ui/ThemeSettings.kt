@@ -26,13 +26,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.livetv.app.Plans
 
 /** Settings: the theme in use (the list opens in its own menu) and the text size. */
 @Composable
 fun ThemeSection(onPick: () -> Unit) {
     Text("Themes and styles", fontWeight = FontWeight.Bold)
     Text(
-        "Colours for the whole app, ${Themes.all.size} to choose from.",
+        "Colours for the whole app, ${Themes.all.size} to choose from." +
+            if (Plans.has(Plans.Feature.Themes)) "" else " A Gold feature: try one for 1 minute.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.secondary,
     )
@@ -68,7 +70,8 @@ fun ThemePicker(onDismiss: () -> Unit) {
                         Modifier
                             .fillMaxWidth()
                             .focusGlow(ChipShape)
-                            .clickable { Themes.pick(p) }
+                            // A theme on Free: a minute's try (Plans.ask), then the usual theme comes back.
+                            .clickable { Plans.ask("Themes", Plans.Feature.Themes); Themes.pick(p) }
                             .padding(horizontal = 8.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {

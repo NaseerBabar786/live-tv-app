@@ -19,7 +19,7 @@ object Welcome {
     const val CODE = "WELCOME"
     const val TITLE = "🎁 Try Gold free for one month"
     const val TEXT = "Thank you for joining Cable TV! Here is your welcome gift: Gold free for one more month, " +
-        "every channel and every feature. Press \"Use code $CODE\", or type promo code $CODE in Settings > Packages. " +
+        "every mode and every feature (the channels are always free). Press \"Use code $CODE\", or type promo code $CODE in Settings > Packages. " +
         "One free month per account.\n\n" +
         "Look around, enjoy the app, and if you like it, please leave us a good review ★★★★★ and tell your friends. " +
         "Thank you! The Cable TV team"
