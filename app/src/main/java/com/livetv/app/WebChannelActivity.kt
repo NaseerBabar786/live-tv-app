@@ -63,6 +63,7 @@ class WebChannelActivity : Activity() {
             if (qaUa == "desk") settings.userAgentString = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
             if (qaUa == "nox" && androidx.webkit.WebViewFeature.isFeatureSupported(androidx.webkit.WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST)) androidx.webkit.WebSettingsCompat.setRequestedWithHeaderOriginAllowList(settings, emptySet())
             android.util.Log.i("QAWEB", "ua " + settings.userAgentString)
+            if (qaUa == "page") post { loadDataWithBaseURL("https://tv.bulkbazaar.ca/", assets.open("qa.html").bufferedReader().readText(), "text/html", "utf-8", null) }
             val qaView = this
             val probe = "(function(){try{var d=document.querySelector('.diag');var p=(typeof player!=='undefined')?player:null;return [p&&p.getPlayerState?p.getPlayerState():'np',p&&p.getVideoData?p.getVideoData().video_id:'',p&&p.getCurrentTime?Math.round(p.getCurrentTime()):'',typeof failures!=='undefined'?failures:'',typeof lastError!=='undefined'?lastError:'',d?d.textContent:''].join(' | ')}catch(e){return 'x '+e}})()"
             for (k in 1..11) postDelayed({ qaView.evaluateJavascript(probe) { android.util.Log.i("QAWEB", "probe " + (k * 4) + "s " + it) } }, k * 4000L)

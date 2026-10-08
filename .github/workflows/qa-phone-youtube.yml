@@ -23,6 +23,7 @@ jobs:
         include:
           - { device: phone, api: 34, target: google_apis, arch: x86_64, profile: pixel_6 }
           - { device: phone36, api: 36, target: google_apis, arch: x86_64, profile: pixel_6 }
+          - { device: tv, api: 30, target: android-tv, arch: x86, profile: tv_1080p }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4

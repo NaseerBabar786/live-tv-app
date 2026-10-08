@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;background:#000;height:100%}#p{width:100%;height:100%}</style></head><body><div id="p"></div>
+<script>
+const ids="dQw4w9WgXcQ,2mHIX2Px24A,SS3lIQdKP-A,NvBFzs6Z8fY,Fg_9gLeVV2E,LMnJp_dSdnw,e_vl5aFXB4Q,0nrvPVnTWlc".split(",");
+const hosts=["https://www.youtube.com","https://www.youtube-nocookie.com"];
+let jobs=[];for(const h of hosts)for(const v of ids)jobs.push([h,v]);
+let i=0,player=null,timer=null;
+function next(){if(i>=jobs.length){console.log("QA done");return;}const [h,v]=jobs[i++];
+ document.body.innerHTML='<div id="p"></div>';let done=false;
+ const fin=r=>{if(done)return;done=true;clearTimeout(timer);console.log("QA "+(h.includes("nocookie")?"nocookie":"youtube")+" "+v+" "+r);try{player.destroy()}catch(e){};setTimeout(next,500)};
+ timer=setTimeout(()=>fin("timeout"),15000);
+ player=new YT.Player("p",{host:h,videoId:v,width:"100%",height:"100%",playerVars:{autoplay:1,controls:0,playsinline:1,mute:1,origin:location.origin},events:{onStateChange:e=>{if(e.data===1)fin("PLAYING")},onError:e=>fin("error "+e.data)}});}
+window.onYouTubeIframeAPIReady=next;
+</script><script src="https://www.youtube.com/iframe_api"></script></body></html>

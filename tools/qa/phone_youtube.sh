@@ -17,13 +17,5 @@ run() { # name url ua
   sleep 18; adb exec-out screencap -p > "$OUT/$1-30s.png"; sleep 16
   adb logcat -d -s QAWEB:I chromium:* cr_*:* > "$OUT/$1-log.txt" 2>&1
 }
-U="https://tv.bulkbazaar.ca/channel/ytc.html?c=music&app=1&v=999"
-H="https://tv.bulkbazaar.ca/channel/bollywood.html?app=1&v=999"
-run hits "$H" plain
-run hits-nox "$H" nox
-run music "$U" plain
-run music-nox "$U" nox
-run hits-nox2 "$H" nox
-run hits2 "$H" plain
-run music-nox2 "$U" nox
-run music2 "$U" plain
+run matrix "https://tv.bulkbazaar.ca/" page
+sleep 200; adb logcat -d -s QAWEB:I > "$OUT/matrix-full-log.txt" 2>&1
