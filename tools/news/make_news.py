@@ -284,7 +284,25 @@ def speak(text, voice, base, offline):
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", base + ".mp3", "-ac", "1", "-ar", str(SR), wav)
     return read_wav(wav)
 
-# ---------- music (made here, free to use) ----------
+# ---------- music: real recordings from tools/music/library.py (CC BY, credited on the end card) ----------
+STING_MUSIC = os.environ.get("NEWS_STING", "promo")   # opening and end card
+BED_MUSIC = os.environ.get("NEWS_BED", "calm")        # very low under the stories
+
+def lib_music(mood, secs, fin, fout):
+    sys.path.insert(0, os.path.join(HERE, "..", "music"))
+    import library
+    x = library.bed(mood, secs, fade_in=fin, fade_out=fout).mean(axis=1).astype(np.float32)
+    return x / max(1e-6, np.abs(x).max())
+
+def music_credit():
+    sys.path.insert(0, os.path.join(HERE, "..", "music"))
+    import library
+    names = []
+    for mood in dict.fromkeys((STING_MUSIC, BED_MUSIC)):
+        t = library.track(mood); names.append(f"{t['title']} by {t['artist']} ({t['licence']})")
+    return "Music: " + ", ".join(names)
+
+# ---------- old home-made music (no longer used: owner rule, real recordings only) ----------
 def tone(f, n, decay=0.0):
     t = np.arange(n) / SR
     w = np.sin(2 * np.pi * f * t) + 0.35 * np.sin(4 * np.pi * f * t) + 0.15 * np.sin(6 * np.pi * f * t)
@@ -543,26 +561,34 @@ def newsreader(slot):
     ids = [i for i in ids if i in people and os.path.exists(os.path.join(here, "clips", f"{i}.mp4"))]
     if not ids:
         NOTES.append("no newsreader clip found"); return None
-    p = dict(people[ids[slot.hour % len(ids)]]); p["clip"] = os.path.join(here, "clips", f"{p['id']}.mp4")
+    p = dict(people[ids[slot.hour % len(ids)]]); p["clip"] = boomerang(os.path.join(here, "clips", f"{p['id']}.mp4"))
     return p
+
+def boomerang(clip):
+    """The clip played forward then backward, so when it loops the hands never jump back (owner 2026-10-08)."""
+    out = clip[:-4] + "-loop.mp4"
+    if not os.path.exists(out):
+        try:
+            run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", clip, "-filter_complex",
+                "[0:v]fps=25,setpts=PTS-STARTPTS,split[a][b];[b]reverse,trim=start_frame=1,setpts=PTS-STARTPTS[r];[a][r]concat=n=2:v=1:a=0[v]",
+                "-map", "[v]", "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", out)
+        except Exception as e:
+            NOTES.append(f"boomerang failed: {e}"); return clip
+    return out
 
 def add_reader(body, reader, windows, label, work):
     """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     lower_bar(d, f"{label} • {reader['ur']}")
     im.save(os.path.join(work, "reader-bar.png"))
-    ins = ["-i", body]
-    for t0, dur in windows:
-        ins += ["-stream_loop", "-1", "-itsoffset", f"{t0:.3f}", "-i", reader["clip"]]
-    ins += ["-loop", "1", "-i", os.path.join(work, "reader-bar.png")]
-    bar = len(windows) + 1
-    graph, last = [], "[0:v]"
-    for k, (t0, dur) in enumerate(windows, 1):
-        on = f"between(t,{t0:.3f},{t0 + dur:.3f})"
-        graph.append(f"[{k}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1[r{k}]")
-        graph.append(f"{last}[r{k}]overlay=0:0:eof_action=pass:enable='{on}'[m{k}]")
-        graph.append(f"[m{k}][{bar}:v]overlay=0:0:shortest=1:enable='{on}'[b{k}]")
-        last = f"[b{k}]"
+    # One continuous copy of the (looping, forward-and-back) clip runs under the whole bulletin and shows only in
+    # the windows, so the newsreader never restarts mid-gesture between segments.
+    ins = ["-i", body, "-stream_loop", "-1", "-i", reader["clip"], "-loop", "1", "-i", os.path.join(work, "reader-bar.png")]
+    on = "+".join(f"between(t,{t0:.3f},{t0 + dur:.3f})" for t0, dur in windows)
+    graph = [f"[1:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1[r]",
+             f"[0:v][r]overlay=0:0:shortest=1:enable='{on}'[m]",
+             f"[m][2:v]overlay=0:0:shortest=1:enable='{on}'[b]"]
+    last = "[b]"
     tmp = os.path.join(work, "with-reader.mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(graph) + f";{last}format=yuv420p[v]",
         "-map", "[v]", "-map", "0:a", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
@@ -574,10 +600,12 @@ def add_broll(body, clips, work):
     if not clips: return
     x, y, w, h = BROLL_BOX
     ins, chain, last = ["-i", body], [], "0:v"
-    for i, (t0, secs, f) in enumerate(clips, 1):
-        ins += ["-stream_loop", "-1", "-itsoffset", f"{t0:.3f}", "-i", f]
-        chain.append(f"[{i}:v]scale={w}:{h},setsar=1[b{i}]")
-        chain.append(f"[{last}][b{i}]overlay={x}:{y}:eof_action=pass:enable='between(t,{t0:.3f},{t0 + secs:.3f})'[v{i}]")
+    files = list(dict.fromkeys(f for _, _, f in clips))   # each file is one continuous input (the newsreader never restarts)
+    for i, f in enumerate(files, 1):
+        ins += ["-stream_loop", "-1", "-i", f]
+        on = "+".join(f"between(t,{t0:.3f},{t0 + secs:.3f})" for t0, secs, g in clips if g == f)
+        chain.append(f"[{i}:v]scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS},setsar=1[b{i}]")
+        chain.append(f"[{last}][b{i}]overlay={x}:{y}:shortest=1:enable='{on}'[v{i}]")
         last = f"v{i}"
     tmp = os.path.join(work, "broll.mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(chain), "-map", f"[{last}]",
@@ -711,7 +739,9 @@ def main():
         if sk == "story":
             n += 1
             src = "ذریعہ " + s["source"] + (" • ترجمہ" if s["section"] in ("canada", "india", "sports", "film") else "")
-            clip = None if offline or os.environ.get("NEWS_BROLL", "1") == "0" else broll.pick(s, work)
+            # Owner 2026-10-08: scenery that doesn't match the story feels wrong, so the box shows the newsreader
+            # unless NEWS_BROLL=1 asks for the topic clips.
+            clip = broll.pick(s, work) if os.environ.get("NEWS_BROLL") == "1" and not offline else None
             if not clip and reader: clip = (reader["clip"], " ")   # no scene clip: the newsreader reads in the window
             if clip: clips.append((t, len(audio) / SR + GAP, clip[0]))
             card(os.path.join(work, pic), label, s["section"], s["headline"],
@@ -731,13 +761,13 @@ def main():
     news_len = t + end_secs
     credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • بھارت، کینیڈا، کھیل اور شوبز کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
     title_card(os.path.join(work, "c-end.png"), kind, up_next, credits,
-               "Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else "AI voice")
+               music_credit() + (" · Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else " · AI voice"))
     cards.append(("c-end.png", end_secs))
 
     music = np.zeros_like(voice_track)
-    st = sting(STING); music[:len(st)] += 0.9 * st
-    b = bed(total); music[int(STING * SR) - SR:int(STING * SR) - SR + len(b)] += 0.10 * b[:len(music) - int(STING * SR) + SR]
-    e0 = int(t * SR); m_end = bed(end_secs + 1)
+    st = lib_music(STING_MUSIC, STING, 0.2, 1.2); music[:len(st)] += 0.9 * st
+    b = lib_music(BED_MUSIC, total, 1.0, 1.5); music[int(STING * SR) - SR:int(STING * SR) - SR + len(b)] += 0.10 * b[:len(music) - int(STING * SR) + SR]
+    e0 = int(t * SR); m_end = lib_music(STING_MUSIC, end_secs + 1, 1.0, 1.5)
     ramp = np.minimum(1, np.arange(len(m_end)) / (SR * 1.5))
     music[e0:e0 + len(m_end)] += 0.25 * ramp * m_end[:len(music) - e0]
     fade = int(SR * 2); music[int(news_len * SR) - fade:int(news_len * SR)] *= np.linspace(1, 0, fade)

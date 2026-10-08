@@ -4,7 +4,7 @@ name: News look sample
 on:
   push:
     branches-ignore: [main]
-    paths: [".github/workflows/news-sample.yml", "tools/news/make_news.py", "tools/news/broll.py"]
+    paths: [".github/workflows/news-sample.yml", "tools/news/make_news.py", "tools/news/broll.py", "tools/news/intro_ideas.py"]
   workflow_dispatch:
     inputs:
       look:
@@ -51,4 +51,6 @@ jobs:
             python3 tools/news/make_news.py out --kind $k
             mv out/news-$k.mp4 news-sample-$LOOK-$k.mp4
           done
+          python3 tools/news/intro_ideas.py intro-out
+          gh release upload channel-media intro-out/news-intro-*.mp4 -R "$GITHUB_REPOSITORY" --clobber
           gh release upload channel-media news-sample-$LOOK-headlines.mp4 news-sample-$LOOK-full.mp4 -R "$GITHUB_REPOSITORY" --clobber
