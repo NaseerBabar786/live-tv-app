@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Shayari",
- "built": "2026-10-08 20:40 UTC",
+ "built": "2026-10-08 22:14 UTC",
  "videos": [
   {
    "id": "YI90MThRif8",
@@ -8,7 +8,8 @@
    "label": "Rekhta",
    "mins": 12.7,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-10-04"
   },
   {
    "id": "gKOtfNKMoZo",
@@ -16,7 +17,8 @@
    "label": "Rekhta",
    "mins": 11.733333333333333,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-09-27"
   },
   {
    "id": "iPhLdWOCsWU",
@@ -67,34 +69,10 @@
    "lang": "ur"
   },
   {
-   "id": "YSU8njtRia4",
-   "title": "Ameer Imam | Mushaira Jashn-e-Rekhta 4th Edition 2017",
-   "label": "Rekhta",
-   "mins": 10.2,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "jKnPPhFyMOI",
-   "title": "Ro Pa Rahe Hain Aap Badhai Hai Roiye ! Abbas Qamar Shayari | @JashneRekhtaOfficial 2019",
-   "label": "Rekhta",
-   "mins": 11.083333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "L2rKhYp9XV4",
    "title": "Waseem Barelvi | Grand Mushaira | 5th Jashn-e-Rekhta 2018",
    "label": "Rekhta",
    "mins": 14.983333333333333,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "jDSGawCVDyk",
-   "title": "ABRAR KASHIF | REKHTA GRAND MUSHAIRA | JASHN-E-REKHTA 2023 | #urdupoetry #jashnerekhta",
-   "label": "Rekhta",
-   "mins": 13.616666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -107,26 +85,26 @@
    "lang": "ur"
   },
   {
-   "id": "fVqQ6u1RcqQ",
-   "title": "Poonam Yadav | Khawateen Ka Mushaira | Jashn-e-Rekhta 4th Edition 2017",
+   "id": "YSU8njtRia4",
+   "title": "Ameer Imam | Mushaira Jashn-e-Rekhta 4th Edition 2017",
    "label": "Rekhta",
-   "mins": 4.033333333333333,
+   "mins": 10.2,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "C79dWo7z9vw",
-   "title": "Raat Bhi Jab Tumhara Phone Aaya | Fehmi Badauni Shayari | Jashn-e-Rekhta 2022",
+   "id": "jDSGawCVDyk",
+   "title": "ABRAR KASHIF | REKHTA GRAND MUSHAIRA | JASHN-E-REKHTA 2023 | #urdupoetry #jashnerekhta",
    "label": "Rekhta",
-   "mins": 11.733333333333333,
+   "mins": 13.616666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "R36CT8W9DIA",
-   "title": "Mushaira | Iqbal Ashhar, Nusrat Mehdi, Manish Shukla | Saturday Spotlight on Jashn-e-Rekhta",
+   "id": "RFw0hg79F2g",
+   "title": "Grand Mushaira | Jashn-e-Rekhta 2017",
    "label": "Rekhta",
-   "mins": 32.25,
+   "mins": 140.58333333333334,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -139,18 +117,10 @@
    "lang": "ur"
   },
   {
-   "id": "ZAF-cwBdWYQ",
-   "title": "Usko Paana Hai To Poora Pagal Ban | Varun Anand Ki Shayari | Jashn-e-Rekhta",
+   "id": "jKnPPhFyMOI",
+   "title": "Ro Pa Rahe Hain Aap Badhai Hai Roiye ! Abbas Qamar Shayari | @JashneRekhtaOfficial 2019",
    "label": "Rekhta",
-   "mins": 14.933333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "H7z3H_n6ns4",
-   "title": "Jashn-e-Rekhta 2016: Mushaira",
-   "label": "Rekhta",
-   "mins": 130.28333333333333,
+   "mins": 11.083333333333334,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -163,10 +133,50 @@
    "lang": "ur"
   },
   {
-   "id": "TGvcLditN_8",
-   "title": "6 Motivational Shayaris To Overcome Challenges | Iqbal Ashar, Subhan Asad , Malka Naseem",
+   "id": "5pIIQy4tQXk",
+   "title": "WASEEM BARELVI | REKHTA MUSHAIRA | JASHN-E-REKHTA 2023",
    "label": "Rekhta",
-   "mins": 2.0,
+   "mins": 14.166666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "C79dWo7z9vw",
+   "title": "Raat Bhi Jab Tumhara Phone Aaya | Fehmi Badauni Shayari | Jashn-e-Rekhta 2022",
+   "label": "Rekhta",
+   "mins": 11.733333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "KXPUCchpfe0",
+   "title": "Munawwar Rana & Rahat Indori : Mushaira Aur Hum | Jashn-e-Rekhta",
+   "label": "Rekhta",
+   "mins": 63.81666666666667,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "Th-xzBSpZFI",
+   "title": "Urdu Poetry Mushaira | Javed Akhtar, Dr. Rahat Indori, Shariq Kaifi | Jashn-e-Rekhta",
+   "label": "Rekhta",
+   "mins": 106.36666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "ZAF-cwBdWYQ",
+   "title": "Usko Paana Hai To Poora Pagal Ban | Varun Anand Ki Shayari | Jashn-e-Rekhta",
+   "label": "Rekhta",
+   "mins": 14.933333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "8oGn24XVcW8",
+   "title": "Urdu Shayari on Lost Love with Himanshi Babra & Abbas Qamar | Jashn-e-Rekhta | Saturday Spotlight",
+   "label": "Rekhta",
+   "mins": 17.716666666666665,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -179,10 +189,34 @@
    "lang": "ur"
   },
   {
-   "id": "N6myDseM28Y",
-   "title": "आवा‌‌ज़ दे मुझको मोहब्बत से | Munawwar Rana Ki Shayari | Jashn-e-Rekhta",
+   "id": "Whv_rFJ8GhI",
+   "title": "Ye Urooj Hai Ki Zawal Hai Ye Sawal Hai   Abbas Qamar Shayari | Jashn-e-Rekhta",
    "label": "Rekhta",
-   "mins": 15.05,
+   "mins": 2.466666666666667,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "ngC7vQebbL4",
+   "title": "Gulzar and Divya Dutta on Urdu Poetry, Nazm, and Life Stories | Sunday Special at Jashn-e-Rekhta",
+   "label": "Rekhta",
+   "mins": 72.8,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "mVPQjGPxRbw",
+   "title": "Fazaon Mein Jahan Zeher Ghula Ho | Khushbir Singh Shayari | Jashn-e-Rekhta",
+   "label": "Rekhta",
+   "mins": 8.733333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "TBj2GDuGeJQ",
+   "title": "Zindagi Pe Waseem Barelvi Ke Kuch Sher | Urdu Shayari | Jashn-e-Rekhta",
+   "label": "Rekhta",
+   "mins": 2.6166666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -195,26 +229,26 @@
    "lang": "ur"
   },
   {
+   "id": "TGvcLditN_8",
+   "title": "6 Motivational Shayaris To Overcome Challenges | Iqbal Ashar, Subhan Asad , Malka Naseem",
+   "label": "Rekhta",
+   "mins": 2.0,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "N6myDseM28Y",
+   "title": "आवा‌‌ज़ दे मुझको मोहब्बत से | Munawwar Rana Ki Shayari | Jashn-e-Rekhta",
+   "label": "Rekhta",
+   "mins": 15.05,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "rZViyXbA5Io",
    "title": "तू दिल की धड़कनों में धड़कता है बार बार | Hina Abbas Amazing Shayari | Jashn-e-Rekhta #latestshayari",
    "label": "Rekhta",
    "mins": 14.166666666666666,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "5pIIQy4tQXk",
-   "title": "WASEEM BARELVI | REKHTA MUSHAIRA | JASHN-E-REKHTA 2023",
-   "label": "Rekhta",
-   "mins": 14.166666666666666,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "f4wVOCf2490",
-   "title": "Salamat Rahe Hamari Padosan 😂 | Funny Poetry | Mushaira at Jashn-e-Rekhta",
-   "label": "Rekhta",
-   "mins": 2.2333333333333334,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -291,6 +325,22 @@
    "lang": "ur"
   },
   {
+   "id": "WEDKftlQFI8",
+   "title": "Urdu Poets' Meet, 16 June, 2020",
+   "label": "Sahitya Akademi",
+   "mins": 38.18333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "hzXx121CTzg",
+   "title": "Weaving a New World: Multilingual Poetry Readings | UNMESHA 2023 | Bhopal |",
+   "label": "Sahitya Akademi",
+   "mins": 108.18333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "oXben2ZhUR4",
    "title": "Urdu-Hindi Poetry Reading, 4.00 pm, 08 May 2018, Meerut",
    "label": "Sahitya Akademi",
@@ -307,10 +357,10 @@
    "lang": "ur"
   },
   {
-   "id": "-yMr2mOHYKA",
-   "title": "Poets' Meet: Poetry Reading under Ek Bharat Shreshtha Bharat on 14 December 2022",
+   "id": "SSvlCozR7Bg",
+   "title": "Literary Forum : Poetry Readings in Urdu and Kannada on 30 July 2025",
    "label": "Sahitya Akademi",
-   "mins": 62.45,
+   "mins": 61.766666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -323,34 +373,26 @@
    "lang": "ur"
   },
   {
+   "id": "2lnf0mcxFHE",
+   "title": "Multilingual Poets' Meet | World Poetry Day | 21 March 2025 | Rabindra Bhavan, New Delhi",
+   "label": "Sahitya Akademi",
+   "mins": 82.98333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "-yMr2mOHYKA",
+   "title": "Poets' Meet: Poetry Reading under Ek Bharat Shreshtha Bharat on 14 December 2022",
+   "label": "Sahitya Akademi",
+   "mins": 62.45,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "ON_t5qkjyuQ",
    "title": "Poetry Reading (Urdu) on 5 March, 2021",
    "label": "Sahitya Akademi",
    "mins": 60.6,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "E6qicCHr80A",
-   "title": "Nari Chetna (Multilingual Poetry Reading Programme) on 8 March, 2021",
-   "label": "Sahitya Akademi",
-   "mins": 94.85,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "krQBOY1c66k",
-   "title": "Poetry Readings on “India @75” - Session 4 | UNMESHA 2023 | Bhopal |",
-   "label": "Sahitya Akademi",
-   "mins": 103.18333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "2FbceIicqkA",
-   "title": "Poetry Readings on “India @75” - Session 2 | UNMESHA 2023 | Bhopal |",
-   "label": "Sahitya Akademi",
-   "mins": 81.51666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -363,42 +405,50 @@
    "lang": "ur"
   },
   {
-   "id": "RiUJ_P7vEFA",
-   "title": "Poetry Reading on the occasion of World Poetry Day on 21 March, 2021",
+   "id": "xQgWpSQhH3A",
+   "title": "\"Literary Forum - Poetry Reading in Urdu and Kannada\" on 27 November 2024 at 3:00 PM.",
    "label": "Sahitya Akademi",
-   "mins": 100.1,
+   "mins": 59.11666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "SSvlCozR7Bg",
-   "title": "Literary Forum : Poetry Readings in Urdu and Kannada on 30 July 2025",
+   "id": "E6qicCHr80A",
+   "title": "Nari Chetna (Multilingual Poetry Reading Programme) on 8 March, 2021",
    "label": "Sahitya Akademi",
-   "mins": 61.766666666666666,
+   "mins": 94.85,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "jgjw21E_qNk",
-   "title": "Multilingual Poetry Readings - Session 2 | UNMESHA 2023 | Bhopal |",
+   "id": "FMUEQmhzbDI",
+   "title": "Multilingual Poetry Reading under Ek Bharat Shreshth Bharat  on 21 November 2024 at 10 AM",
    "label": "Sahitya Akademi",
-   "mins": 80.85,
+   "mins": 62.68333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "w-fvtsseD60",
-   "title": "Multilingual Poetry Readings - Session 6 | UNMESHA 2023 | Bhopal |",
+   "id": "Lcp6dQAgeAI",
+   "title": "Yuva Sahiti - Multilingual Poetry Reading | 16 May 2024 | New Delhi",
    "label": "Sahitya Akademi",
-   "mins": 135.53333333333333,
+   "mins": 60.43333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "WEDKftlQFI8",
-   "title": "Urdu Poets' Meet, 16 June, 2020",
+   "id": "2FbceIicqkA",
+   "title": "Poetry Readings on “India @75” - Session 2 | UNMESHA 2023 | Bhopal |",
    "label": "Sahitya Akademi",
-   "mins": 38.18333333333333,
+   "mins": 81.51666666666667,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "krQBOY1c66k",
+   "title": "Poetry Readings on “India @75” - Session 4 | UNMESHA 2023 | Bhopal |",
+   "label": "Sahitya Akademi",
+   "mins": 103.18333333333334,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -411,34 +461,27 @@
    "lang": "ur"
   },
   {
-   "id": "9iT1dRU4hV8",
-   "title": "Maithili Poets' Meet on 23 June 2020",
-   "label": "Sahitya Akademi",
-   "mins": 38.416666666666664,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "MU82uYtcYbg",
-   "title": "Bodo Poets' Meet  on 22 September, 2020",
-   "label": "Sahitya Akademi",
-   "mins": 16.6,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "gBX2JGW0OrI",
    "title": "The Poet is Present: Dr. Syed Nazam Iqbal",
    "label": "DD Urdu",
    "mins": 10.55,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-10-07"
   },
   {
    "id": "d0THRe29wcU",
    "title": "Mushaira - Jashn-E-Eid",
    "label": "DD Urdu",
    "mins": 57.516666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "I8cNh0kM_Wg",
+   "title": "Parwaz-e-Adab || Mushaira || #EP 06",
+   "label": "DD Urdu",
+   "mins": 53.68333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -451,42 +494,10 @@
    "lang": "ur"
   },
   {
-   "id": "YKT-LUgIKJU",
-   "title": "Mushaira | मुशायरा  | DD Urdu  | February 22, 2023",
+   "id": "N5zlzJ3rKXI",
+   "title": "Bazm-E-Aqeedat | बज़्म-ए-अक़ीदत | Natiya Mushaira | DD Urdu | March 28, 2022",
    "label": "DD Urdu",
-   "mins": 49.85,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "LTkf-XwWqwg",
-   "title": "Mushaira Bahar-E-Sukhan | मुशायरा बहार-ए-सुखन | Episode- 01 | DD Urdu | January 08, 2024",
-   "label": "DD Urdu",
-   "mins": 50.35,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "elsGgEtLbD0",
-   "title": "The Poet Is Present: Dr. Syed Nazam Iqbal",
-   "label": "DD Urdu",
-   "mins": 2.05,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "I1f3KBSKrl8",
-   "title": "Sher-O-Sukhan | शेर-ओ-सुखन | Famous Urdu Poet : Kaif Bhopali | April 12, 2024",
-   "label": "DD Urdu",
-   "mins": 27.85,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "R0gfi_gvHPw",
-   "title": "Sher-O-Sukhan | शेर-ओ-सुखन | DD Urdu | Naresh Kumar Shaad",
-   "label": "DD Urdu",
-   "mins": 25.583333333333332,
+   "mins": 54.766666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -499,26 +510,106 @@
    "lang": "ur"
   },
   {
-   "id": "nbKjQR00UFo",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 79 | December 25, 2023",
+   "id": "dNGxwqFS0Rg",
+   "title": "Urdu Shayari Ka Badalta Manzarnama #EP 02",
    "label": "DD Urdu",
-   "mins": 29.433333333333334,
+   "mins": 28.283333333333335,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "BooQo-umvZ8",
-   "title": "Kavi Hazir Hai l कवि हाज़िर है l Episode- 194 l DD Urdu l June 06, 2026",
+   "id": "Ej_P2jtqrno",
+   "title": "Urdu Shayari Ka Badalta Manzarnama #EP 01",
    "label": "DD Urdu",
-   "mins": 58.25,
+   "mins": 29.266666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "yqz91VFnGdE",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 40 | January 07, 2023",
+   "id": "OLsR5BP0GWM",
+   "title": "Urdu Shayari Ka Badalta Manzarnama | उर्दू शायरी का बदलता मंज़रनामा | DD Urdu | February 10, 2022",
    "label": "DD Urdu",
-   "mins": 28.25,
+   "mins": 26.35,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "I1f3KBSKrl8",
+   "title": "Sher-O-Sukhan | शेर-ओ-सुखन | Famous Urdu Poet : Kaif Bhopali | April 12, 2024",
+   "label": "DD Urdu",
+   "mins": 27.85,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "LsIU87ZuW_A",
+   "title": "Urdu Shayari Ka Badalta Manzarnama | उर्दू शायरी का बदलता मंज़रनामा | DD Urdu | February 17, 2022",
+   "label": "DD Urdu",
+   "mins": 30.1,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "PB1O8koJZzQ",
+   "title": "Urdu Shayari Ka Badalta Manzarnama | उर्दू शायरी का बदलता मंज़रनामा | DD Urdu | 08January, 2022",
+   "label": "DD Urdu",
+   "mins": 28.916666666666668,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "i-o-D_NgYaU",
+   "title": "Urdu Shayari Ka Badalta Manzarnama | उर्दू शायरी का बदलता मंज़रनामा | DD Urdu | March 27, 2024",
+   "label": "DD Urdu",
+   "mins": 28.266666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "jGeH_p6qLZg",
+   "title": "Urdu Shayari Ka Badalta Manzarnama | उर्दू शायरी का बदलता मंज़रनामा | DD Urdu | February 24, 2022",
+   "label": "DD Urdu",
+   "mins": 28.183333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "PLCHTqShiiw",
+   "title": "Urdu Shayari Ka Badalta Manzarnama | उर्दू शायरी का बदलता मंज़रनामा | Epi-13 | DD Urdu | Jan 13, 2022",
+   "label": "DD Urdu",
+   "mins": 28.916666666666668,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "R0gfi_gvHPw",
+   "title": "Sher-O-Sukhan | शेर-ओ-सुखन | DD Urdu | Naresh Kumar Shaad",
+   "label": "DD Urdu",
+   "mins": 25.583333333333332,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "BLVJ87DsRck",
+   "title": "Sher-O-Sukhan || शेर-ओ-सुखन || Famous Poet Wali Aasi || DD Urdu",
+   "label": "DD Urdu",
+   "mins": 27.483333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "UB3odQjiQNA",
+   "title": "Urdu Shairi Ka Badalta Manzarnama | उर्दू शायरी का बदलता मंज़रनामा | DD Urdu | 30 December, 2021",
+   "label": "DD Urdu",
+   "mins": 28.15,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "e_vZeBGH94M",
+   "title": "1857 Aur Zafar Ki Shayari | Bahadur Shah Zafar | Ek Shahar Ek Shayer | Episode- 08 | March 23, 2026",
+   "label": "DD Urdu",
+   "mins": 25.433333333333334,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -531,42 +622,18 @@
    "lang": "ur"
   },
   {
+   "id": "yqz91VFnGdE",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 40 | January 07, 2023",
+   "label": "DD Urdu",
+   "mins": 28.25,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "piDCtkeZXbg",
    "title": "Kavi Hazir Hai l कवि हाज़िर है l Episode- 195 l DD Urdu l June 13, 2026",
    "label": "DD Urdu",
    "mins": 58.2,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "tb8vyj5nn2E",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 63 | June 18, 2023",
-   "label": "DD Urdu",
-   "mins": 28.683333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "OmCjPSvrb8k",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 80 | January 01, 2024",
-   "label": "DD Urdu",
-   "mins": 26.516666666666666,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "h9EFKW_Cc6I",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 46 | February 18, 2023",
-   "label": "DD Urdu",
-   "mins": 28.35,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "906N1Uw_mM0",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | Episode- 202 | DD Urdu | 01/08/2026",
-   "label": "DD Urdu",
-   "mins": 54.666666666666664,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -579,58 +646,18 @@
    "lang": "ur"
   },
   {
-   "id": "ZkhsFiqIYJA",
-   "title": "Kavi Hazir Hai l कवि हाज़िर है l Episode- 196 l DD Urdu l June 20, 2026",
+   "id": "fmoVrGE9pHc",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 26 | October 01, 2022",
    "label": "DD Urdu",
-   "mins": 51.35,
+   "mins": 29.1,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "btkuq_2VkFk",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 69 | September 23, 2023",
+   "id": "vTSgiS83LUk",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 27 | October 01, 2022",
    "label": "DD Urdu",
-   "mins": 29.933333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "zUr2HvJZ4pY",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 23 | September 10, 2022",
-   "label": "DD Urdu",
-   "mins": 28.1,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "UFS9At0OYhI",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 43 | January 28, 2023",
-   "label": "DD Urdu",
-   "mins": 29.016666666666666,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "qFoToDtq_Vk",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 37 | December 17, 2022",
-   "label": "DD Urdu",
-   "mins": 29.266666666666666,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "ivU2mj3_Cmw",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 42 | January 21, 2023",
-   "label": "DD Urdu",
-   "mins": 28.433333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "rWfDQc033l4",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 08 | May 29, 2022",
-   "label": "DD Urdu",
-   "mins": 29.683333333333334,
+   "mins": 28.516666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -643,18 +670,18 @@
    "lang": "ur"
   },
   {
-   "id": "4BQ6_vir7H0",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 3 |  July 29, 2023",
+   "id": "N7WwtC_dONk",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 31 | November 05, 2022",
    "label": "DD Urdu",
-   "mins": 29.35,
+   "mins": 27.266666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "tgX4rfCQ4KM",
-   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode- 67 | September 09, 2023",
+   "id": "hSJbkKJbsDM",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 03 | April 25 2022",
    "label": "DD Urdu",
-   "mins": 29.683333333333334,
+   "mins": 29.183333333333334,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -667,10 +694,50 @@
    "lang": "ur"
   },
   {
-   "id": "uW0orC-Jvnc",
-   "title": "Mazahia Mushaira 2026 | Eid Special | Programe-1 | PTV Home |",
-   "label": "PTV Home",
-   "mins": 30.1,
+   "id": "25rHyZBWq4c",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 25 | September 24, 2022",
+   "label": "DD Urdu",
+   "mins": 31.516666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "zUr2HvJZ4pY",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 23 | September 10, 2022",
+   "label": "DD Urdu",
+   "mins": 28.1,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "coH8KwVt9AY",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | Episode - 99 ||  DD Urdu | May 13, 2024",
+   "label": "DD Urdu",
+   "mins": 29.6,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "TfaUKZ60evk",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 15 | July 16, 2022",
+   "label": "DD Urdu",
+   "mins": 29.933333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "4BQ6_vir7H0",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 3 |  July 29, 2023",
+   "label": "DD Urdu",
+   "mins": 29.35,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "9hBkSyDimT8",
+   "title": "Kavi Hazir Hai | कवि हाज़िर है | DD Urdu | Episode - 12 | June 25, 2022",
+   "label": "DD Urdu",
+   "mins": 29.766666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -683,18 +750,18 @@
    "lang": "ur"
   },
   {
-   "id": "Tswrv59PH-8",
-   "title": "Mazahia Mushaira 2026 | Eid Special | Programe-2 | PTV Home |",
+   "id": "uW0orC-Jvnc",
+   "title": "Mazahia Mushaira 2026 | Eid Special | Programe-1 | PTV Home |",
    "label": "PTV Home",
-   "mins": 29.366666666666667,
+   "mins": 30.1,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "6KsLJXkLhZM",
-   "title": "KISHWAR E HASEEN SHAAD BAAD | JASHAN E AZAADI KA MUSHAIRA |14th AUGUST 2024 | PTV HOME",
+   "id": "Tswrv59PH-8",
+   "title": "Mazahia Mushaira 2026 | Eid Special | Programe-2 | PTV Home |",
    "label": "PTV Home",
-   "mins": 42.81666666666667,
+   "mins": 29.366666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -707,10 +774,10 @@
    "lang": "ur"
   },
   {
-   "id": "dmuyqER1goQ",
-   "title": "Mushaira  | 14 Aug 2021",
+   "id": "6KsLJXkLhZM",
+   "title": "KISHWAR E HASEEN SHAAD BAAD | JASHAN E AZAADI KA MUSHAIRA |14th AUGUST 2024 | PTV HOME",
    "label": "PTV Home",
-   "mins": 52.083333333333336,
+   "mins": 42.81666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -719,14 +786,6 @@
    "title": "Eid Ul Azha Mushaira | Ep - 02 | PTV Home |",
    "label": "PTV Home",
    "mins": 35.18333333333333,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "SA8iL4QYKgU",
-   "title": "Kalam-e-Shair Ba Zuban-e-Shair  ( Farhat Abbas Shah )",
-   "label": "PTV Home",
-   "mins": 2.3333333333333335,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -747,22 +806,6 @@
    "lang": "ur"
   },
   {
-   "id": "rURYSs4EUFI",
-   "title": "Kalam-e-Shair Ba Zuban-e-Shair ( Dr Sugra Sadaf )",
-   "label": "PTV Home",
-   "mins": 2.7,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "AbuxwU0Vo6w",
-   "title": "Kalam-e-Shair Ba Zuban-e-Shair ( Ashraf Javed )",
-   "label": "PTV Home",
-   "mins": 3.6,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "gbicSWx4QTc",
    "title": "Sukhanwar | Nauman Ali Lasharie |  Iftikhar Arif Poetry Diar e Noor Main |",
    "label": "PTV Home",
@@ -771,10 +814,10 @@
    "lang": "ur"
   },
   {
-   "id": "shjTMh3oAPc",
-   "title": "Sada-E-Kashmir Mushaira",
+   "id": "dmuyqER1goQ",
+   "title": "Mushaira  | 14 Aug 2021",
    "label": "PTV Home",
-   "mins": 56.083333333333336,
+   "mins": 52.083333333333336,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -867,34 +910,10 @@
    "lang": "ur"
   },
   {
-   "id": "Wa0faofjnvc",
-   "title": "Poet Zehra Nigah in Mushaira at Faiz Festival",
-   "label": "Faiz Festival",
-   "mins": 12.783333333333333,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "1-hXJh8ZXfI",
    "title": "Mushaira| Clip: Poet- Kishwar Nahid | Nizamat by: Sumera Khalil",
    "label": "Faiz Festival",
    "mins": 8.6,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "TbKZVSbr2Rk",
-   "title": "Sarmad Sehbai at Mushaira Faiz Festival",
-   "label": "Faiz Festival",
-   "mins": 6.583333333333333,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "nKlIYHX0NrE",
-   "title": "Poet Kishwar Naheed in Mushaira at Faiz Festival",
-   "label": "Faiz Festival",
-   "mins": 6.233333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -907,18 +926,26 @@
    "lang": "ur"
   },
   {
-   "id": "g1kKxLnGtT8",
-   "title": "Arvinder Chamak at Mushaira Faiz Festival",
+   "id": "Wa0faofjnvc",
+   "title": "Poet Zehra Nigah in Mushaira at Faiz Festival",
    "label": "Faiz Festival",
-   "mins": 7.916666666666667,
+   "mins": 12.783333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "43KmqUNz6kQ",
-   "title": "Poet Yasmeen Hameed in Mushaira at Faiz Festival",
+   "id": "nKlIYHX0NrE",
+   "title": "Poet Kishwar Naheed in Mushaira at Faiz Festival",
    "label": "Faiz Festival",
-   "mins": 11.083333333333334,
+   "mins": 6.233333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "TbKZVSbr2Rk",
+   "title": "Sarmad Sehbai at Mushaira Faiz Festival",
+   "label": "Faiz Festival",
+   "mins": 6.583333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -931,26 +958,26 @@
    "lang": "ur"
   },
   {
-   "id": "5aBvoFLcLaQ",
-   "title": "Pirzada Qasim at Mushaira Faiz Festival",
+   "id": "43KmqUNz6kQ",
+   "title": "Poet Yasmeen Hameed in Mushaira at Faiz Festival",
    "label": "Faiz Festival",
-   "mins": 11.116666666666667,
+   "mins": 11.083333333333334,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "HEGUMG-WFo8",
-   "title": "Anwar Shaoor in Mushaira Faiz Festival",
+   "id": "g1kKxLnGtT8",
+   "title": "Arvinder Chamak at Mushaira Faiz Festival",
    "label": "Faiz Festival",
-   "mins": 10.516666666666667,
+   "mins": 7.916666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "NbWi2zG3HA0",
-   "title": "Iftikhar Arif at Mushaira Faiz Festival",
+   "id": "eBBcrWo1ZpY",
+   "title": "Mushaira- Poet: Khursheed Rizvi",
    "label": "Faiz Festival",
-   "mins": 14.233333333333333,
+   "mins": 9.383333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -963,14 +990,6 @@
    "lang": "ur"
   },
   {
-   "id": "n-sIXXzG2GU",
-   "title": "Abbas Tabish Mushaira Faiz Festival",
-   "label": "Faiz Festival",
-   "mins": 10.683333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "XMWqTgvIP44",
    "title": "Poet Ghazanfar Hashmi in Mushaira at Faiz Festival",
    "label": "Faiz Festival",
@@ -979,26 +998,10 @@
    "lang": "ur"
   },
   {
-   "id": "8kYrI18xWD4",
-   "title": "6th Faiz Festival - Mushaira , Clip: Poet- Sarbjot Singh Behl",
+   "id": "5aBvoFLcLaQ",
+   "title": "Pirzada Qasim at Mushaira Faiz Festival",
    "label": "Faiz Festival",
-   "mins": 12.083333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "Nn0CpOGT_DA",
-   "title": "Mushaira- Poet: Yasmeen Hameed",
-   "label": "Faiz Festival",
-   "mins": 10.816666666666666,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "WI39woaieFk",
-   "title": "Poet Mohsin Shakeel at Mushaira Faiz Festival",
-   "label": "Faiz Festival",
-   "mins": 9.3,
+   "mins": 11.116666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1016,7 +1019,8 @@
    "label": "Mushaira Media",
    "mins": 10.283333333333333,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-10-08"
   },
   {
    "id": "pCYisBQVeBE",
@@ -1024,7 +1028,8 @@
    "label": "Mushaira Media",
    "mins": 8.783333333333333,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-10-08"
   },
   {
    "id": "EosArndg9J4",
@@ -1032,7 +1037,8 @@
    "label": "Mushaira Media",
    "mins": 4.516666666666667,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-10-08"
   },
   {
    "id": "WuleMgB6gaA",
@@ -1040,7 +1046,8 @@
    "label": "Mushaira Media",
    "mins": 8.633333333333333,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-10-07"
   },
   {
    "id": "t6LIc5sHHEQ",
@@ -1048,7 +1055,8 @@
    "label": "Mushaira Media",
    "mins": 13.316666666666666,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-10-07"
   },
   {
    "id": "27-D5QBOZik",
@@ -1163,18 +1171,18 @@
    "lang": "ur"
   },
   {
-   "id": "Jubpvj42SEI",
-   "title": "Arif Saifi |  All India Mushaira Kavi Sammelan | Accord Foundation Warud 2024 | Warud Mushaira",
+   "id": "-421iwdfFxA",
+   "title": "Sumbul Faizani, Mushaira-E-Shayrat, 1991, Convener SAMEER FAIZI",
    "label": "Mushaira Media",
-   "mins": 25.033333333333335,
+   "mins": 13.4,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "3KNLETYqjB0",
-   "title": "तरन्नुम का शहज़ादा | Shadab Javed | All India Mushaira | Pihani | 26 Juny 2026",
+   "id": "Jubpvj42SEI",
+   "title": "Arif Saifi |  All India Mushaira Kavi Sammelan | Accord Foundation Warud 2024 | Warud Mushaira",
    "label": "Mushaira Media",
-   "mins": 23.383333333333333,
+   "mins": 25.033333333333335,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1187,6 +1195,14 @@
    "lang": "ur"
   },
   {
+   "id": "cxWGQKuQoLs",
+   "title": "Tajwar Sultana, Mushaira-E-Shayrat, 1991, Convener SAMEER FAIZI",
+   "label": "Mushaira Media",
+   "mins": 9.633333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "TZGnoPfCQTw",
    "title": "Himanshi Babra | All India Mushaira | 128 Wa Salana Urs 2026 | Pinjra Vamanpuri | Pilibhit |2026",
    "label": "Mushaira Media",
@@ -1195,10 +1211,10 @@
    "lang": "ur"
   },
   {
-   "id": "-421iwdfFxA",
-   "title": "Sumbul Faizani, Mushaira-E-Shayrat, 1991, Convener SAMEER FAIZI",
+   "id": "3KNLETYqjB0",
+   "title": "तरन्नुम का शहज़ादा | Shadab Javed | All India Mushaira | Pihani | 26 Juny 2026",
    "label": "Mushaira Media",
-   "mins": 13.4,
+   "mins": 23.383333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1211,30 +1227,6 @@
    "lang": "ur"
   },
   {
-   "id": "G8Tcc5IDIXA",
-   "title": "Qamar Ejaz, Ahmednagar Mushaira, 10/09/2016, Con. Dr QAMAR SUROOR, Mushaira Media",
-   "label": "Mushaira Media",
-   "mins": 17.666666666666668,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "-MYv2661VcI",
-   "title": "नाज़िम ने दिया मुँह तोड़ ज़वाब | Sultan Jahan | Mushaira & Kavi Sammelan | Fatehpur Sikri | Agra | 2022",
-   "label": "Mushaira Media",
-   "mins": 14.466666666666667,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "Tz7WHfBmuhI",
-   "title": "New Ghazal | Danish Ghazal | Saleem Siddiqui | All India Mushaira | Mainpuri Mushaira 2026",
-   "label": "Mushaira Media",
-   "mins": 15.533333333333333,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "CxfK6rL_cN4",
    "title": "दम है तो क़ुदरत से टकराकर दिखा | Arif Saifi | Latest Shayari | Mushaira Media | 2024",
    "label": "Mushaira Media",
@@ -1243,66 +1235,18 @@
    "lang": "ur"
   },
   {
-   "id": "rEGqb0XELOA",
-   "title": "Anjum Rahbar | All India mushaira | Org. Abid Taji | Kamthee Mushaira | Nagpur | 2024",
+   "id": "G8Tcc5IDIXA",
+   "title": "Qamar Ejaz, Ahmednagar Mushaira, 10/09/2016, Con. Dr QAMAR SUROOR, Mushaira Media",
    "label": "Mushaira Media",
-   "mins": 17.066666666666666,
+   "mins": 17.666666666666668,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "ijtxiAAFPk8",
-   "title": "HASHIM FIROZABADI, MUMBRA MUSHAIRA 2020, Mushaira Media",
+   "id": "9BOtlxIey6c",
+   "title": "Rahi Bastavi - Tere Payal Ki Jhankaar, MUSHAIRA MEDIA",
    "label": "Mushaira Media",
-   "mins": 22.466666666666665,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "t7qBASo36CU",
-   "title": "Arif Saifi Shayari I Tajbag Sharif Dargah Mushaira | Nagpur 25 July 2025",
-   "label": "Mushaira Media",
-   "mins": 23.5,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "_JlBbbUlOHc",
-   "title": "Roshan Habiba Roshni | All India Mushaira | Sukhpur Kasia | Warisnagar | Samastipur | 02 April 2026",
-   "label": "Mushaira Media",
-   "mins": 34.06666666666667,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "ET_Fs1gFMD0",
-   "title": "Iqbal Ashar |Talent Search 2026 | Mushaira | Adabi Sangam Ganj Dundwara | Aiwan e Ghalib, Delhi 2026",
-   "label": "Mushaira Media",
-   "mins": 12.033333333333333,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "fhAzZRT8djI",
-   "title": "नात ए पाक सुनकर झूम उठे लोग | Ali Barabankvi | All India Mushaira | Pihani | 26 Juny 2026",
-   "label": "Mushaira Media",
-   "mins": 17.916666666666668,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "Rvo6Q5-I4LU",
-   "title": "Saba Balrampuri, Jabalpur Mushaira, 13/05/2016, Con. SARDAR HAMID HUSSAIN, Mushaira Media",
-   "label": "Mushaira Media",
-   "mins": 30.683333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "p80sk23h1-Q",
-   "title": "Hina Anjum | तुम्हारे चेहरों का दीदार करने आई हूँ | Ghazal | Geet | Mushaira & Kavi Sammelan 2024",
-   "label": "Mushaira Media",
-   "mins": 7.733333333333333,
+   "mins": 9.383333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1315,26 +1259,82 @@
    "lang": "ur"
   },
   {
-   "id": "T-eCAzIXAac",
-   "title": "Dil Khairabadi, Nugpur Jalalpur Mushaira, Ek Sham ASAD AZMI Ke Naam, Mushaira Media",
+   "id": "rEGqb0XELOA",
+   "title": "Anjum Rahbar | All India mushaira | Org. Abid Taji | Kamthee Mushaira | Nagpur | 2024",
    "label": "Mushaira Media",
-   "mins": 45.96666666666667,
+   "mins": 17.066666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "Zign9AEOdw0",
-   "title": "Shivani Swami | International Mushaira | Abdul Razzaq @Baba Chaudhary Basavakalyan | 2023",
+   "id": "P8bJzH7-iUg",
+   "title": "Anjum Rahbar, Mushaira-E-Shayrat, 1991, Convener SAMEER FAIZI",
    "label": "Mushaira Media",
-   "mins": 20.8,
+   "mins": 16.333333333333332,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "QkFsAeXJxMw",
-   "title": "बेवफाई का हुनर नहीं आया | Saba Balrampuri |  Latest Shayari | Fatehpur Mela Mushaira | 2022",
+   "id": "FUy9_WREDNM",
+   "title": "Shaista Sana,मेरी दो दो सहेलियां है सना,All India Mushaira,Mujar, Machli Seher,Jaunpur,2020.",
    "label": "Mushaira Media",
-   "mins": 18.866666666666667,
+   "mins": 42.916666666666664,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "7OiQrUrUkFE",
+   "title": "Rubina Ayaz | Lumbini Nepal Mushaira | Organized - Urdu Foundation Nepal | 2024",
+   "label": "Mushaira Media",
+   "mins": 15.283333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "tgfCiV-ZjdY",
+   "title": "Imran Pratapgarhi on Missing JNU Student NAJEEB AHMED, Mushaira Media",
+   "label": "Mushaira Media",
+   "mins": 13.883333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "-MYv2661VcI",
+   "title": "नाज़िम ने दिया मुँह तोड़ ज़वाब | Sultan Jahan | Mushaira & Kavi Sammelan | Fatehpur Sikri | Agra | 2022",
+   "label": "Mushaira Media",
+   "mins": 14.466666666666667,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "Rvo6Q5-I4LU",
+   "title": "Saba Balrampuri, Jabalpur Mushaira, 13/05/2016, Con. SARDAR HAMID HUSSAIN, Mushaira Media",
+   "label": "Mushaira Media",
+   "mins": 30.683333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "ijtxiAAFPk8",
+   "title": "HASHIM FIROZABADI, MUMBRA MUSHAIRA 2020, Mushaira Media",
+   "label": "Mushaira Media",
+   "mins": 22.466666666666665,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "r9hw5i3D1-I",
+   "title": "Lata Haya, Mushaira-E-Shayrat, 1991, Convener SAMEER FAIZI",
+   "label": "Mushaira Media",
+   "mins": 9.566666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "J6S_eIN9zBo",
+   "title": "Imran Pratapgarhi, MAIN FALASTEEN HU, Mushaira Media",
+   "label": "Mushaira Media",
+   "mins": 14.566666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1343,6 +1343,22 @@
    "title": "Manzar Bhopali at Jabalpur Mushaira, Jashne Rukhsar Balrampuri, 04/12/2015",
    "label": "Mushaira Media",
    "mins": 47.6,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "ET_Fs1gFMD0",
+   "title": "Iqbal Ashar |Talent Search 2026 | Mushaira | Adabi Sangam Ganj Dundwara | Aiwan e Ghalib, Delhi 2026",
+   "label": "Mushaira Media",
+   "mins": 12.033333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "6kJLPytF73Q",
+   "title": "या मेरा यहाँ कोई खरीदार नहीं है | Altaf Ziya | Latest Shayari | Mushaira Media | 2024",
+   "label": "Mushaira Media",
+   "mins": 16.766666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1371,10 +1387,10 @@
    "lang": "ur"
   },
   {
-   "id": "WNyizMLfGFg",
-   "title": "मर कर भी तो चैन की नींद नसीब नहीं | Hashim Nomani | Shayari | ALL INDIA MUSHAIRA | LUCKNOW | 2024",
+   "id": "t7qBASo36CU",
+   "title": "Arif Saifi Shayari I Tajbag Sharif Dargah Mushaira | Nagpur 25 July 2025",
    "label": "Mushaira Media",
-   "mins": 14.35,
+   "mins": 23.5,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1383,6 +1399,14 @@
    "title": "Usman Minai Shayari | All India Mushaira | Lucknow New Mushaira | 2025",
    "label": "Mushaira Media",
    "mins": 19.35,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "WNyizMLfGFg",
+   "title": "मर कर भी तो चैन की नींद नसीब नहीं | Hashim Nomani | Shayari | ALL INDIA MUSHAIRA | LUCKNOW | 2024",
+   "label": "Mushaira Media",
+   "mins": 14.35,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1427,18 +1451,18 @@
    "lang": "ur"
   },
   {
-   "id": "NyMHZBinP8Y",
-   "title": "Chandra Shekhar Varma | सम्वर्धन | Kavi Sammelan | Purania Chauraha | Lucknow | 14 June 2026",
-   "label": "Mushaira Media",
-   "mins": 4.85,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "hNvbWSaywRs",
    "title": "Brahma Dev Shastri Pankaj, Akhil Bhartiya kavi Sammelan, Siddharth Nagar, On, 29.12.2020.",
    "label": "Mushaira Media",
    "mins": 8.566666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "NyMHZBinP8Y",
+   "title": "Chandra Shekhar Varma | सम्वर्धन | Kavi Sammelan | Purania Chauraha | Lucknow | 14 June 2026",
+   "label": "Mushaira Media",
+   "mins": 4.85,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1475,26 +1499,18 @@
    "lang": "ur"
   },
   {
-   "id": "JEXxTmTYEDI",
-   "title": "Gule Saba Fatehpuri | Mushaira | Kavi Sammelan | Ekta Seva Sansthan  Tulsipur | 30 Aug 2026",
-   "label": "Mushaira Media",
-   "mins": 25.4,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "D3nhLJF40m8",
-   "title": "Sunita Keshwa, Hasya Kavi Sammelan, AKHIL BHARTIYA AGNISHIKHA MANCH, Mushaira Media",
-   "label": "Mushaira Media",
-   "mins": 9.7,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "xinDzqrbUHY",
-   "title": "Waseem Barelvi | जहां ख़ामोश रहना हो वहां बोला नहीं जाता | Urdu Shayari | Mushaira | Sahitya Tak",
+   "id": "K4Nky50BK8c",
+   "title": "Azm Shakri | मुझसे बिछड़ते वक्त वो ,थोड़ा सा मुस्कुरा गया... | Mushaira| Urdu Poetry | Sahitya Tak",
    "label": "Sahitya Tak",
-   "mins": 4.033333333333333,
+   "mins": 8.166666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "bIdx67S735o",
+   "title": "Shabeena Adeeb Shayari | उसी के दिल में खटक रही हूं | Latest Mushaira | Urdu Poetry | Sahitya Tak",
+   "label": "Sahitya Tak",
+   "mins": 13.716666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -1507,28 +1523,13 @@
    "lang": "ur"
   },
   {
-   "id": "jfL9wUIg_4Q",
-   "title": "Javed Qamar Mushaira | टूट न जाए आस, मैं कैसे गीत लिखूं | Latest Urdu Mushaira | Sahitya Tak",
-   "label": "Sahitya Tak",
-   "mins": 3.95,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "FaoGrUSPSFU",
-   "title": "तू मेरा है तो ज़रा ध्यान रखा कर मेरा... Nusrat Mehdi Mushaira | Urdu Mushaira | Sahitya Tak",
-   "label": "Sahitya Tak",
-   "mins": 11.8,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "_bMZiYWuCAA",
    "title": "Zamana Mushkilon Mein aa Raha Hai | Waseem Barelvi | Urdu Shayari | Spoken Fest Mumbai 2026",
    "label": "Kommune",
    "mins": 31.616666666666667,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-05-23"
   },
   {
    "id": "7PcEGs3Aoic",
@@ -1552,7 +1553,8 @@
    "label": "Urdu Studio",
    "mins": 16.016666666666666,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2021-06-24"
   },
   {
    "id": "wROPR6wcODM",
@@ -1560,7 +1562,8 @@
    "label": "Urdu Studio",
    "mins": 5.0,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2021-03-16"
   },
   {
    "id": "m27Q9fKJ_j0",
@@ -1568,7 +1571,8 @@
    "label": "Urdu Studio",
    "mins": 6.833333333333333,
    "found": "2026-10-08",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2020-12-14"
   },
   {
    "id": "cKQ3ZpCiwMk",
@@ -1623,30 +1627,6 @@
    "title": "Akbar Allahbadi : AamNaama : Anjum Sharma in Urdu Studio with Manish Gupta : Funny Shayri",
    "label": "Urdu Studio",
    "mins": 3.033333333333333,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "Z6LLf-zdCAo",
-   "title": "Urdu Studio : Maulana Azad's Shayri : Rare : Tom Alter in Urdu Studio with Manish Gupta",
-   "label": "Urdu Studio",
-   "mins": 4.0,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "8BrWoBspq54",
-   "title": "Akhtar Ul Iman's poetry :  Mehru Jaffer in Urdu Studio with Manish Gupta",
-   "label": "Urdu Studio",
-   "mins": 3.966666666666667,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "CDCSfkY6d-Y",
-   "title": "Ibne Insha's Flirtatious Poem : Farz Karo : Priyanka Setia with Manish Gupta in Urdu Studio",
-   "label": "Urdu Studio",
-   "mins": 3.15,
    "found": "2026-10-08",
    "lang": "ur"
   }

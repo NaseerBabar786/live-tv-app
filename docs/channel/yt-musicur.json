@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Music (musicur)",
- "built": "2026-10-08 21:40 UTC",
+ "built": "2026-10-08 22:08 UTC",
  "videos": [
   {
    "id": "o7ROM_GKA4k",
@@ -211,18 +211,18 @@
    "lang": "ur"
   },
   {
-   "id": "rfMUt2Xw6rM",
-   "title": "Hairan Hua Hairan Hua | Abida Parveen | complete full version | official HD video | OSA Worldwide",
+   "id": "ZplZheDzfjw",
+   "title": "Aukhay Painday | Sain Zahoor | complete official HD video | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 7.166666666666667,
+   "mins": 8.3,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "kCAd04Td-_8",
-   "title": "Ve Perdesia | Nusrat Fateh Ali Khan | complete full version | official HD video | OSA Worldwide",
+   "id": "rfMUt2Xw6rM",
+   "title": "Hairan Hua Hairan Hua | Abida Parveen | complete full version | official HD video | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 6.266666666666667,
+   "mins": 7.166666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -243,6 +243,14 @@
    "lang": "ur"
   },
   {
+   "id": "XXM36nxnYOg",
+   "title": "Ishq Buley Nou | Sain Zahoor | complete official HD video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 8.55,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "iKPwf03DJE0",
    "title": "Ik Nukte Wich Gal Mukdi Ae | Abida Parveen | complete official full version | OSA Worldwide",
    "label": "Oriental Star Agencies",
@@ -251,18 +259,26 @@
    "lang": "ur"
   },
   {
-   "id": "ZplZheDzfjw",
-   "title": "Aukhay Painday | Sain Zahoor | complete official HD video | OSA Worldwide",
-   "label": "Oriental Star Agencies",
-   "mins": 8.3,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "8h5bgmdGE2U",
    "title": "Wich Pardesan I Dr  Zeus & Nusrat Fateh Ali Khan Ft.  Shortie | complete version| OSA Worldwide",
    "label": "Oriental Star Agencies",
    "mins": 4.733333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "srHIPbzAQi0",
+   "title": "Gal Sun Dildara | Naseebo Lal Her Best | Superhit Song | official HD video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 6.383333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "QmlsIQ4VmIE",
+   "title": "Aj Nachan De Menon Nachan De - Naseebo Lal - Best Superhit Song | official video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 5.316666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -291,34 +307,10 @@
    "lang": "ur"
   },
   {
-   "id": "srHIPbzAQi0",
-   "title": "Gal Sun Dildara | Naseebo Lal Her Best | Superhit Song | official HD video | OSA Worldwide",
-   "label": "Oriental Star Agencies",
-   "mins": 6.383333333333334,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "KX_3IiRLAhU",
    "title": "Mein Yaar Yaar (Akhiyan Lar Gaiyan) | Nusrat Fateh Ali Khan & Dr Zeus Ft. Shortie | OSA Worldwide",
    "label": "Oriental Star Agencies",
    "mins": 3.15,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "QPkx4lTjNwg",
-   "title": "Mae Ni Mae Mere Geetan De Nainan Wich | Ustad Nusrat Fateh Ali Khan |OSA Worldwide",
-   "label": "Oriental Star Agencies",
-   "mins": 8.166666666666666,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "KO4RyJJl14A",
-   "title": "Aaja Nachle | Bally Sagoo Feat. Hans Raj Hans | Full Song | OSA Official",
-   "label": "Oriental Star Agencies",
-   "mins": 6.633333333333334,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -331,10 +323,10 @@
    "lang": "ur"
   },
   {
-   "id": "FWgqQHu9REo",
-   "title": "Gur Nalon Ishq Mitha (Boliyaan Hardcore Mix) Bally Sagoo Ft. Malkit Singh | Full Song | OSA Official",
+   "id": "KO4RyJJl14A",
+   "title": "Aaja Nachle | Bally Sagoo Feat. Hans Raj Hans | Full Song | OSA Official",
    "label": "Oriental Star Agencies",
-   "mins": 11.833333333333334,
+   "mins": 6.633333333333334,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -347,6 +339,22 @@
    "lang": "ur"
   },
   {
+   "id": "FWgqQHu9REo",
+   "title": "Gur Nalon Ishq Mitha (Boliyaan Hardcore Mix) Bally Sagoo Ft. Malkit Singh | Full Song | OSA Official",
+   "label": "Oriental Star Agencies",
+   "mins": 11.833333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "QPkx4lTjNwg",
+   "title": "Mae Ni Mae Mere Geetan De Nainan Wich | Ustad Nusrat Fateh Ali Khan |OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 8.166666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "ocMEmQ3s8qE",
    "title": "Kise Da Yaar Na Vichre | Ustad Nusrat Fateh Ali Khan | Official Version | OSA Worldwide",
    "label": "Oriental Star Agencies",
@@ -355,26 +363,26 @@
    "lang": "ur"
   },
   {
-   "id": "QmlsIQ4VmIE",
-   "title": "Aj Nachan De Menon Nachan De - Naseebo Lal - Best Superhit Song | official video | OSA Worldwide",
+   "id": "kCAd04Td-_8",
+   "title": "Ve Perdesia | Nusrat Fateh Ali Khan | complete full version | official HD video | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 5.316666666666666,
+   "mins": 6.266666666666667,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "KqFUj9rFZL0",
-   "title": "Ho Jaye Je Pyar Te Sona Bhul Janda | Ustad Nusrat Fateh Ali Khan | Complete Version | OSA Worldwide",
+   "id": "of0qOoMDOlY",
+   "title": "Punjabiyan Di Shaan | Bally Sagoo Feat.Hans Raj Hans | Full Song | OSA Official",
    "label": "Oriental Star Agencies",
-   "mins": 6.933333333333334,
+   "mins": 5.8,
    "found": "2026-10-08",
    "lang": "ur"
   },
   {
-   "id": "Pk_Wlnmtx8E",
-   "title": "Akhian Noon Chain Na Awe | Nusrat Fateh Ali Khan | Original Version | OSA Worldwide",
+   "id": "EIFSWw8OMtY",
+   "title": "Mahi Ve Sanon Bhul Na Javin - Naseebo Lal Best Superhit Sad Song | official HD video | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 6.733333333333333,
+   "mins": 5.333333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -384,8 +392,8 @@
    "label": "Coke Studio Pakistan",
    "mins": 4.15,
    "found": "2026-10-08",
-   "posted": "2026-10-02",
-   "lang": "ur"
+   "lang": "ur",
+   "posted": "2026-10-02"
   },
   {
    "id": "8Ix-ekSoEdY",
@@ -468,6 +476,22 @@
    "lang": "ur"
   },
   {
+   "id": "rmwD76EqjUk",
+   "title": "Coke Studio x Quick Style | Kana Yaari | Official Dance Video",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.033333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "9dcwnIgBrCk",
+   "title": "Turri Jandi | Coke Studio Pakistan | Season 15 | Shazia Manzoor x Hasan Raheem",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.75,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "azhwDQsYD8c",
    "title": "Piya Piya Calling | Coke Studio Pakistan | S15 | Karpe | Kaifi Khalil | Amanda Delara | Quick Style",
    "label": "Coke Studio Pakistan",
@@ -476,10 +500,18 @@
    "lang": "ur"
   },
   {
-   "id": "rmwD76EqjUk",
-   "title": "Coke Studio x Quick Style | Kana Yaari | Official Dance Video",
+   "id": "K364wKMGwF0",
+   "title": "Maghron La | Coke Studio Pakistan | Season 15 | Sabri Sisters x Rozeo",
    "label": "Coke Studio Pakistan",
-   "mins": 4.033333333333333,
+   "mins": 4.366666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "-urTPhh7gNk",
+   "title": "Blockbuster | Coke Studio Pakistan | Season 15 | Faris Shafi x Umair Butt x Gharwi Group",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.783333333333333,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -500,26 +532,10 @@
    "lang": "ur"
   },
   {
-   "id": "K364wKMGwF0",
-   "title": "Maghron La | Coke Studio Pakistan | Season 15 | Sabri Sisters x Rozeo",
+   "id": "w3s8cjG2WYY",
+   "title": "Coke Studio Season 11| Hawa Hawa| Gul Panrra & Hassan Jahangir",
    "label": "Coke Studio Pakistan",
-   "mins": 4.366666666666666,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "9dcwnIgBrCk",
-   "title": "Turri Jandi | Coke Studio Pakistan | Season 15 | Shazia Manzoor x Hasan Raheem",
-   "label": "Coke Studio Pakistan",
-   "mins": 4.75,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "-urTPhh7gNk",
-   "title": "Blockbuster | Coke Studio Pakistan | Season 15 | Faris Shafi x Umair Butt x Gharwi Group",
-   "label": "Coke Studio Pakistan",
-   "mins": 4.783333333333333,
+   "mins": 4.2,
    "found": "2026-10-08",
    "lang": "ur"
   },
@@ -556,6 +572,22 @@
    "lang": "ur"
   },
   {
+   "id": "JTJ6q-cGs-o",
+   "title": "Coke Studio | Season 14 | Beparwah | Momina Mustehsan",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.633333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "zQDAi8tI-cU",
+   "title": "Coke Studio | Season 14 | Kana Yaari | Kaifi Khalil x Eva B x Abdul Wahab Bugti",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.0,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "EZVPRe5jRs4",
    "title": "Aye Rah-e-Haq Ke Shaheedo",
    "label": "Coke Studio Pakistan",
@@ -564,10 +596,306 @@
    "lang": "ur"
   },
   {
-   "id": "w3s8cjG2WYY",
-   "title": "Coke Studio Season 11| Hawa Hawa| Gul Panrra & Hassan Jahangir",
+   "id": "HrFlFMK1mKI",
+   "title": "Coke Studio | Season 14 | Sajan Das Na | Atif Aslam x Momina Mustehsan",
    "label": "Coke Studio Pakistan",
-   "mins": 4.2,
+   "mins": 4.116666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "KDJL2FyRDeA",
+   "title": "Coke Studio Season 8 | Aaj Jane Ki Zid Na Karo | Farida Khanum",
+   "label": "Coke Studio Pakistan",
+   "mins": 3.3333333333333335,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "EnChosxHmUw",
+   "title": "Coke Studio Explorer 2018| Ha Gulo| Qasamir",
+   "label": "Coke Studio Pakistan",
+   "mins": 3.1,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "O3pUsXxCfEk",
+   "title": "Coke Studio | Season 14 | Muaziz Saarif | Faris Shafi x Meesha Shafi",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.883333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "WzlO79d3S8c",
+   "title": "Coke Studio Season 11| Piya Ghar Aaya| Fareed Ayaz| Abu Muhammad Qawwal and Brothers",
+   "label": "Coke Studio Pakistan",
+   "mins": 12.933333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "a18py61_F_w",
+   "title": "Coke Studio Season 8| Tajdar-e-Haram| Atif Aslam",
+   "label": "Coke Studio Pakistan",
+   "mins": 10.466666666666667,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "ZQMn5wIoAno",
+   "title": "Coke Studio Season 9| Tu Kuja Man Kuja| Shiraz Uppal & Rafaqat Ali Khan",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.85,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "Uks8psEpmB4",
+   "title": "Coke Studio Season 9| Rang | Rahat Fateh Ali Khan & Amjad Sabri",
+   "label": "Coke Studio Pakistan",
+   "mins": 11.983333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "dYPWLlfD05Q",
+   "title": "Coke Studio Season 11| Balaghal Ula Be Kamalihi| Abida Parveen",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.05,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "kw4tT7SCmaY",
+   "title": "Coke Studio Season 9| Afreen Afreen| Rahat Fateh Ali Khan & Momina Mustehsan",
+   "label": "Coke Studio Pakistan",
+   "mins": 6.75,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "7D4vNcK6D38",
+   "title": "Coke Studio | Season 14 | Tu Jhoom | Naseebo Lal x Abida Parveen",
+   "label": "Coke Studio Pakistan",
+   "mins": 6.683333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "7SDrjwtfKMk",
+   "title": "Coke Studio Season 7| Chaap Tilak| Abida Parveen & Rahat Fateh Ali Khan",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.05,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "LekqDjknArc",
+   "title": "Coke Studio Season 9| Aaqa| Abida Parveen & Ali Sethi",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.566666666666666,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "I3tS2oTUvHI",
+   "title": "Coke Studio Season 9| Lagi Bina/Chal Mele Noon Challiye| Saieen Zahoor & Sanam Marvi",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.383333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "LrCek73_e_M",
+   "title": "Coke Studio Season 11| Shikwa/Jawab-e-Shikwa| Natasha Baig, Fareed Ayaz & Abu Muhammad Qawwal",
+   "label": "Coke Studio Pakistan",
+   "mins": 13.233333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "BQ74szweuZw",
+   "title": "Coke Studio Season 12 | Aadam | Fareed Ayaz & Abu Muhammad with Humnawa",
+   "label": "Coke Studio Pakistan",
+   "mins": 12.25,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "74cVT_tUpck",
+   "title": "Coke Studio Season 12 | Wohi Khuda Hai | Atif Aslam",
+   "label": "Coke Studio Pakistan",
+   "mins": 6.95,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "oJaO4JdFWB8",
+   "title": "Coke Studio Season 10| Allahu Akbar| Ahmed Jehanzeb & Shafqat Amanat",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.95,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "lgm3puP3tMA",
+   "title": "Coke Studio Special | Asma-ul-Husna | The 99 Names | Atif Aslam",
+   "label": "Coke Studio Pakistan",
+   "mins": 3.4,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "QqI5pMJuFbE",
+   "title": "Coke Studio Season 12 | Hairaan Hua | Sanam Marvi",
+   "label": "Coke Studio Pakistan",
+   "mins": 10.15,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "nNZvaMoiATE",
+   "title": "Coke Studio | Season 14 | Thagyan | Zain Zohaib x Quratulain Balouch",
+   "label": "Coke Studio Pakistan",
+   "mins": 5.283333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "SCOKysMnH50",
+   "title": "Coke Studio Season 10| Latthay Di Chaadar| Quratulain Balouch & Farhan Saeed",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.183333333333334,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "hR8FEdC6aAs",
+   "title": "Coke Studio Season 12 | Gulon Main Rang | Ali Sethi",
+   "label": "Coke Studio Pakistan",
+   "mins": 6.516666666666667,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "qOgZJJmLfhA",
+   "title": "Coke Studio Season 7| Mein Sufi Hoon| Ustaad Raees Khan & Abida Parveen",
+   "label": "Coke Studio Pakistan",
+   "mins": 10.483333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "_FvMSp4BoL4",
+   "title": "Coke Studio Season 11| Ghoom Charakhra| Abida Parveen and Ali Azmat",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.266666666666667,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "3CJQGf7ldZU",
+   "title": "Coke Studio Season 11| Ilallah| Sounds of Kolachi",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.633333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "p3D-oqGdW9o",
+   "title": "Coke Studio Season 10| Maula Tera Noor| Shafqat Amanat Ali Khan",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.75,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "OCCXUwKMH4s",
+   "title": "Coke Studio Season 12 | Daachi Waaliya | Hadiqa Kiani",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.15,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "Ciim7-hZPb0",
+   "title": "Coke Studio Season 10| Sayonee| Junoon Feat Rahat Fateh Ali Khan & Ali Noor",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.1,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "YahQn3RJMAg",
+   "title": "Coke Studio Season 9| Khaki Banda| Ahmed Jahanzeb & Umair Jaswal",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.733333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "GoJ9EO9CTZk",
+   "title": "Coke Studio Season 9| Maula-e-Kull| Abida Parveen",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.9,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "SBxEvrorLf4",
+   "title": "Coke Studio Season 11| Wah Jo Kalaam| Asrar Shah, Shamu Bai & Vishnu",
+   "label": "Coke Studio Pakistan",
+   "mins": 5.666666666666667,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "U_DSCLqgZCo",
+   "title": "Coke Studio Season 8| Man Aamadeh Am| Gul Panrra & Atif Aslam",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.15,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "8367ETnagHo",
+   "title": "Coke Studio Season 9| Tera Woh Pyar| Momina Mustehsan & Asim Azhar",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.2,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "ZYzUKdDunyI",
+   "title": "Coke Studio Season 10| Baazi| Sahir Ali Bagga & Aima Baig",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.45,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "zVnbojCYPxU",
+   "title": "Coke Studio Season 9| Aaya Laariye| Meesha Shafi & Naeem Abbas Rufi",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.5,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "TzdMLhGOIhA",
+   "title": "Coke Studio Season 10| Sab Maya Hai| Attaullah Esakhelvi & Sanwal Esakhelvi",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.033333333333333,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "REhOKUs_2wM",
+   "title": "Coke Studio Season 8| Umran Langiyaan| Ali Sethi & Nabeel Shaukat",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.166666666666666,
    "found": "2026-10-08",
    "lang": "ur"
   }
