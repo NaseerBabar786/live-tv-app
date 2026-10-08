@@ -1,7 +1,7 @@
 {
  "name": "آنے والی فلموں کے ٹریلر",
- "built": "2026-10-08 20:23 UTC",
- "secs": 955,
+ "built": "2026-10-08 20:47 UTC",
+ "secs": 1472,
  "videos": [
   {
    "id": "A36nagDzugo",
@@ -47,6 +47,52 @@
    "lang": "Hindi",
    "secs": 127,
    "found": "2026-10-07",
+   "kind": "trailer"
+  },
+  {
+   "id": "llLHwxkZ02k",
+   "title": "Namit Malhotra’s Ramayana - Hindi Trailer | Nitesh Tiwari | Ranbir, Yash, Hans Zimmer, A.R.Rahman",
+   "label": "Dharma Productions",
+   "lang": "Hindi",
+   "secs": 250,
+   "found": "2026-10-08",
+   "kind": "trailer"
+  },
+  {
+   "id": "A5WCg26ZKx0",
+   "title": "TRAILER: BESHARAM | RELEASING THIS SUNDAY, AT 8:00 PM | ARY FILMS",
+   "label": "ARY Films",
+   "lang": "Pakistani",
+   "secs": 67,
+   "found": "2026-10-08",
+   "kind": "trailer",
+   "section": "آنے والی پاکستانی فلمیں"
+  },
+  {
+   "id": "R0NEmXfMZQU",
+   "title": "TRAILER: DIL LAGI | RELEASING THIS SUNDAY, AT 8:00 PM | ARY FILMS",
+   "label": "ARY Films",
+   "lang": "Pakistani",
+   "secs": 60,
+   "found": "2026-10-08",
+   "kind": "trailer"
+  },
+  {
+   "id": "BDW1BbR99rM",
+   "title": "TRAILER: NEELI ZINDA HAI | RELEASING THIS SUNDAY, AT 8:00 PM | ARY FILMS",
+   "label": "ARY Films",
+   "lang": "Pakistani",
+   "secs": 72,
+   "found": "2026-10-08",
+   "kind": "trailer"
+  },
+  {
+   "id": "a6m3p2T_klo",
+   "title": "TRAILER: PARWARISH | RELEASING THIS SUNDAY, AT 8:00 PM | ARY FILMS",
+   "label": "ARY Films",
+   "lang": "Pakistani",
+   "secs": 68,
+   "found": "2026-10-08",
    "kind": "trailer"
   }
  ]
