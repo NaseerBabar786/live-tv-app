@@ -96,7 +96,7 @@ let info = {};
 const lists = {};
 // Keep in step with tools/build_trailers.py, build_music_videos.py and build_bazaar_blocks.py.
 const LISTS = ["trailers.json", "music-videos.json", "block-drama-1.json", "block-drama-2.json", "block-drama-3.json",
-  "block-cooking.json", "block-comedy.json", "block-film.json"];
+  "block-cooking.json", "block-comedy.json"];
 for (const list of LISTS) {
   fetch(list, { cache: "no-store" }).then(r => r.json()).then(d => {
     lists[list] = d;
