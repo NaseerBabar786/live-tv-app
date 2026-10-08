@@ -1,7 +1,7 @@
 name: Build Cable TV for PC
 
 # Cable TV for Windows (Electron, cabletv-pc/). Builds the installer and the portable .exe on a
-# Windows runner. On main they go to the owner-only "test" pre-release only (owner's release rule),
+# Windows runner. On main they go to the "candidate" pre-release (copied to the owner-only "test" by offer-test.yml) (owner's release rule),
 # with versions-pc.json saying which version they are; release-approved.yml (cable-tv-pc) sends
 # them to everyone after the owner's yes, in the fixed "cable-tv-pc" release:
 # https://github.com/NaseerBabar786/live-tv-app/releases/download/cable-tv-pc/CableTV-PC-Setup.exe
@@ -77,9 +77,9 @@ jobs:
           printf '{\n  "cable-tv-pc": "%s",\n  "run": %s,\n  "commit": "%s"\n}\n' "$version" "${{ github.run_number }}" "${{ github.sha }}" > versions-pc.json
           cat versions-pc.json
           files="CableTV-PC-Setup.exe CableTV-PC-Portable.exe versions-pc.json"
-          if gh release view test > /dev/null 2>&1; then
-            gh release upload test $files --clobber
+          if gh release view candidate > /dev/null 2>&1; then
+            gh release upload candidate $files --clobber
           else
-            gh release create test $files --prerelease --latest=false --title "TEST build (owner only)" --notes "Test build."
+            gh release create candidate $files --prerelease --latest=false --title "CANDIDATE build" --notes "Candidate build."
           fi
-          echo "Cable TV for PC $version is in the owner's test release." >> "$GITHUB_STEP_SUMMARY"
+          echo "Cable TV for PC $version is in the candidate release (offered to the owner by offer-test.yml)." >> "$GITHUB_STEP_SUMMARY"
