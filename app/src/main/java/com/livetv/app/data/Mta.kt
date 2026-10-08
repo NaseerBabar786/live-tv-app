@@ -38,7 +38,7 @@ object Mta {
 
     /**
      * Whether [channel] is one of MTA's live channels. When MTA is on they come right after our
-     * Bazaar channels (numbers 18 to 25 since 2026-10-08, the other channels from 26) and are free in every package.
+     * Spark channels (numbers 81 to 88, the other channels from 101) and are free in every package.
      */
     fun isMta(channel: Channel) = channel.url in urls
 

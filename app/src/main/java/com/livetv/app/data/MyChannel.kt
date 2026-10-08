@@ -19,7 +19,7 @@ object MyChannel {
      * Our logos get redrawn at the same address (1.9.47, 1.9.49), and Coil keeps the old picture on
      * disk for ever, so our own logo links carry this number; raise it whenever the logos change.
      */
-    private const val LOGO_VERSION = 8
+    private const val LOGO_VERSION = 9
 
     fun freshLogo(url: String): String =
         if ("/channel/logos/" in url && '?' !in url) "${sparkLogo(url)}?v=$LOGO_VERSION" else url
@@ -40,8 +40,8 @@ object MyChannel {
 
     /**
      * One of our channels: [id] names its saved settings and its stream address, [number] is its
-     * channel number (our channels are 1 to [COUNT], 1.9.45), and [dial] the row of zeros that
-     * reached it before then, which still works.
+     * channel number, [lang] its one language, and [dial] the row of zeros that reached it before
+     * 1.9.45, which still works ("" for none).
      */
     class Station(
         val id: String,
@@ -56,53 +56,73 @@ object MyChannel {
          */
         val backup: String = id,
         val logo: String? = null,
-        /** False for a channel that carries no logo of ours on the picture (Latest Movies, 1.9.81); [logo] is then only for the channel list. */
+        /** False for a channel that carries no logo of ours on the picture; [logo] is then only for the channel list. */
         val bug: Boolean = true,
+        /** The one language its programmes are in (the owner, 2026-10-08): [URDU], [HINDI], [ENGLISH] or [PUNJABI]. */
+        val lang: String = URDU,
     )
 
-    /** Our channels take numbers 1 to 17; the other channels are numbered from 18 (MTA's first, when it's on). */
-    const val COUNT = 17
+    const val URDU = "Urdu"
+    const val HINDI = "Hindi"
+    const val ENGLISH = "English"
+    const val PUNJABI = "Punjabi"
 
     /**
-     * Our channels, in the order they lead the channel list. Since 1.9.47 all but Bazaar TV run
-     * from official YouTube videos (tools/build_youtube_channels.py); the free films below are their backup.
+     * Every channel of ours is in one language, and each language has its block of numbers (the owner,
+     * 2026-10-08): Urdu 1 to 19, Hindi 21 to 39, English 41 to 59, Punjabi 61 to 79. MTA's channels are
+     * [MTA_FIRST] on and every other channel [OTHERS_FIRST] on.
+     */
+    val LANGUAGES = listOf(URDU, HINDI, ENGLISH, PUNJABI)
+    const val MTA_FIRST = 81
+    const val OTHERS_FIRST = 101
+
+    /** The heading over a language's block of our channels, also the channel's group ("Spark Urdu"). */
+    fun groupOf(lang: String) = "Spark $lang"
+
+    /**
+     * Our channels, in number order. All but Spark TV One run from official YouTube videos
+     * (tools/build_youtube_channels.py); a channel that was mixed before 2026-10-08 is split by language
+     * there, and the free films below are the backup.
      */
     val STATIONS = listOf(
+        // Urdu
         Station("main", 1, "0", "Spark TV One"),
-        // Public-domain classic films round the clock (built weekly from Movies.m3u).
-        Station("filmein", 2, "00", "Spark Cinema", youtube = true),
-        // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
-        Station("sur", 3, "000", "Spark Music", youtube = true),
-        // Public-domain and Creative Commons cartoons for children (1.9.41).
-        Station("kids", 5, "00000", "Spark Kids", youtube = true),
-        // Public-domain and CC BY sports films from the Internet Archive, built by tools/build_archive_channels.py (1.9.43).
-        Station("sports", 6, "000000", "Spark Sports", youtube = true),
-        // Public-domain travel films of countries, cities and parks, also by build_archive_channels.py (1.9.44).
-        Station("travel", 7, "0000000", "Spark Travel", youtube = true),
-        // Silent and classic comedy (Chaplin, Laurel and Hardy, Keaton), also by build_archive_channels.py (1.9.44).
-        Station("comedy", 8, "00000000", "Spark Comedy", youtube = true),
-        // 1.9.50: full films in English and in Hindi, and Pakistani dramas, from their makers' channels.
-        // They came after the rows of zeros, so they're dialled by number only; Bazaar Cinema's free films are their backup.
-        Station("english", 9, "9", "Spark Movies English", youtube = true, backup = "filmein", logo = "spark-english.png"),
-        Station("hindi", 10, "10", "Spark Movies Hindi", youtube = true, backup = "filmein", logo = "spark-hindi.png"),
-        // 2026-10-08: 11 carries Urdu dramas, and the Hindi ones have their own channel, 16 (the owner's wish).
-        Station("dramas", 11, "11", "Spark Dramas Urdu", youtube = true, backup = "filmein", logo = "spark-dramas.png"),
-        // 1.9.53: cooking shows in Urdu, Hindi, Punjabi and English from the cooks' own channels.
-        Station("cooking", 12, "12", "Spark Cooking", youtube = true, backup = "filmein", logo = "spark-cooking.png"),
-        // 1.9.76: science, cartoons and challenge shows for 12 to 16 year olds; Bazaar Kids stays for small children.
-        // 1.9.81: the newest full films in Hindi, English, Punjabi and Urdu from their makers' channels, newest first.
-        // The owner wants just the name "Latest Movies"; its logo says LATEST MOVIES, no Bazaar (shown on the picture since 1.9.83).
-        Station("latest", 13, "13", "Latest Movies", youtube = true, backup = "filmein", logo = "spark-latest.png"),
-        Station("teens", 14, "14", "Spark Teens", youtube = true, backup = "filmein", logo = "spark-teens.png"),
-        // 15 (owner, 2026-10-07): ads and promos round the clock in our own player: our Cable TV promos, the
+        Station("dramas", 2, "", "Spark Dramas Urdu", youtube = true, backup = "filmein", logo = "spark-dramas.png"),
+        // Urdu songs (Coke Studio, qawwali) from the music channel's sources; its free songs are the backup.
+        Station("musicur", 3, "", "Spark Music Urdu", youtube = true, backup = "sur", logo = "spark-musicur.png"),
+        Station("cookingur", 4, "", "Spark Cooking Urdu", youtube = true, backup = "filmein", logo = "spark-cookingur.png"),
+        // Urdu poetry and mushairas, with our own hourly "Aaj ka Sher" (17 before the language blocks).
+        Station("shayari", 5, "", "Spark Shayari", youtube = true, backup = "filmein", logo = "spark-shayari.png"),
+        // Hindi (Spark Hits, 23, is [bollywood] below)
+        Station("filmein", 21, "00", "Spark Cinema", youtube = true, lang = HINDI),
+        Station("hindi", 22, "", "Spark Movies Hindi", youtube = true, backup = "filmein", logo = "spark-hindi.png", lang = HINDI),
+        // Full episodes of Hindi serials from the Indian TV channels' own YouTube channels (16 before the language blocks).
+        Station("hindidramas", 24, "", "Spark Dramas Hindi", youtube = true, backup = "filmein", logo = "spark-dramas-hindi.png", lang = HINDI),
+        Station("comedy", 25, "00000000", "Spark Comedy Hindi", youtube = true, lang = HINDI),
+        Station("cooking", 26, "", "Spark Cooking Hindi", youtube = true, backup = "filmein", logo = "spark-cooking.png", lang = HINDI),
+        // The Hindi half of Shayari: kavi sammelan and Hindi poetry.
+        Station("kavi", 27, "", "Spark Kavi Sammelan", youtube = true, backup = "filmein", logo = "spark-kavi.png", lang = HINDI),
+        Station("kidshi", 28, "", "Spark Kids Hindi", youtube = true, backup = "kids", logo = "spark-kidshi.png", lang = HINDI),
+        Station("teenshi", 30, "", "Spark Teens Hindi", youtube = true, backup = "filmein", logo = "spark-teenshi.png", lang = HINDI),
+        // English
+        Station("english", 41, "", "Spark Movies English", youtube = true, backup = "filmein", logo = "spark-english.png", lang = ENGLISH),
+        Station("kids", 43, "00000", "Spark Kids English", youtube = true, lang = ENGLISH),
+        Station("teens", 44, "", "Spark Teens English", youtube = true, backup = "filmein", logo = "spark-teens.png", lang = ENGLISH),
+        Station("travel", 45, "0000000", "Spark Travel", youtube = true, lang = ENGLISH),
+        Station("sports", 46, "000000", "Spark Sports", youtube = true, lang = ENGLISH),
+        // Ads and promos round the clock in our own player (owner, 2026-10-07): our Cable TV promos, the
         // sponsors' ads from /sponsors and "Advertise with us" (docs/channel/ads-schedule.json). No pop-up ads on it.
-        Station("ads", 15, "15", "Spark Ads", logo = "spark-ads.png"),
-        // 16 (owner, 2026-10-08): full episodes of Hindi serials from the Indian TV channels' own YouTube channels.
-        Station("hindidramas", 16, "16", "Spark Dramas Hindi", youtube = true, backup = "filmein", logo = "spark-dramas-hindi.png"),
-        // 17 (owner, 2026-10-08): Urdu and Hindi poetry, mushairas and kavi sammelan from the organisers', TV channels'
-        // and poets' own channels, with our own hourly "Aaj ka Sher". Its number may move with the channels-by-language plan.
-        Station("shayari", 17, "17", "Spark Shayari", youtube = true, backup = "filmein", logo = "spark-shayari.png"),
+        Station("ads", 48, "", "Spark Ads", logo = "spark-ads.png", lang = ENGLISH),
+        Station("comedyen", 49, "", "Spark Comedy English", youtube = true, backup = "comedy", logo = "spark-comedyen.png", lang = ENGLISH),
+        // Punjabi
+        Station("sur", 61, "000", "Spark Music Punjabi", youtube = true, lang = PUNJABI),
     )
+
+    /**
+     * Channels that went away, and where a favourite or the last channel watched on them now goes
+     * (Latest Movies' newest films lead each language's Movies channel since 2026-10-08).
+     */
+    val MOVED = mapOf("mychannel://latest" to "mychannel://hindi")
 
     /** Bazaar Ads' address: the channel that is all ads, so no pop-up ad breaks come over it. */
     const val ADS_URL = "mychannel://ads"
@@ -114,8 +134,8 @@ object MyChannel {
 
     fun urlOf(id: String) = SCHEME + id
 
-    /** Bazaar Hits' channel number, between Bazaar Music (3) and Bazaar Kids (5). */
-    const val HITS_NUMBER = 4
+    /** Spark Hits' channel number, in the Hindi block. */
+    const val HITS_NUMBER = 23
 
     /**
      * Bazaar Hits (channel 4, dialled 0000 before 1.9.45): the music labels' own YouTube uploads, one after another in
@@ -127,6 +147,8 @@ object MyChannel {
         url = BOLLYWOOD_URL,
         logo = freshLogo("https://tv.bulkbazaar.ca/channel/logos/spark-hits.png"),
         number = HITS_NUMBER,
+        language = HINDI,
+        group = groupOf(HINDI),
     )
 
     /**
@@ -210,7 +232,10 @@ object MyChannel {
         val channel: Channel
             // Our channels keep their fixed names (owner, 2026-10-07), whatever name a saved schedule carries.
             get() = STATIONS.firstOrNull { it.id == id }.let { st ->
-                Channel(name = st?.name ?: name, url = urlOf(id), logo = logo, number = st?.number ?: 0)
+                Channel(
+                    name = st?.name ?: name, url = urlOf(id), logo = logo, number = st?.number ?: 0,
+                    language = st?.lang, group = st?.lang?.let(::groupOf),
+                )
             }
     }
 
@@ -263,12 +288,12 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In number order: 1 to 17, Bazaar Hits being 4.
+        // In number order, language by language (Spark Hits is 23).
         (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
 
-    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 17, when it's on. */
+    /** The channel a viewer reaches by typing a row of zeros as before 1.9.45 ("0", "00"), when it's on. */
     fun byDial(typed: String): Channel? =
-        if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
+        if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial.isNotEmpty() && it.dial == typed }?.let { _configs.value[it.id]?.channel }
 
     /** [channel]'s settings when it's one of ours and on. */
     fun configOf(channel: Channel?): Config? = channel?.takeIf(::isMine)?.let { _configs.value[it.url.removePrefix(SCHEME)] }
