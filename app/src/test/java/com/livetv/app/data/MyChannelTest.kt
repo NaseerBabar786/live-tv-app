@@ -125,8 +125,8 @@ class MyChannelTest {
         assertEquals("mychannel://filmein", films.channel.url)
         assertTrue(MyChannel.isMine(films.channel))
         assertEquals(MyChannel.URL, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.url)
-        assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000", "9", "10", "11", "12", "13", "14", "15", "16"), MyChannel.STATIONS.map { it.dial })
-        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16), MyChannel.STATIONS.map { it.number })
+        assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000", "9", "10", "11", "12", "13", "14", "15", "16", "17"), MyChannel.STATIONS.map { it.dial })
+        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17), MyChannel.STATIONS.map { it.number })
         assertEquals(1, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.number)
         assertEquals(2, films.channel.number)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=filmein&app=1&brand=spark", MyChannel.webPage(films.channel))
@@ -140,6 +140,11 @@ class MyChannelTest {
         assertEquals("Spark Dramas Hindi", hindiDramas.channel.name)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=hindidramas&app=1&brand=spark", MyChannel.webPage(hindiDramas.channel))
         assertEquals("filmein", MyChannel.STATIONS.first { it.id == "hindidramas" }.backup)
+        // 17 (2026-10-08): Urdu and Hindi poetry.
+        val shayari = MyChannel.parse(JSONObject("""{"name":"Bazaar Shayari","videos":[]}"""), "shayari")
+        assertEquals(17, shayari.channel.number)
+        assertEquals("Spark Shayari", shayari.channel.name)
+        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=shayari&app=1&brand=spark", MyChannel.webPage(shayari.channel))
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1&brand=spark", MyChannel.webPage(dramas.channel))
         assertEquals("filmein", MyChannel.STATIONS.first { it.id == "english" }.backup)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1&brand=spark&v=188", MyChannel.pageFor(dramas.channel, 188))
@@ -164,8 +169,8 @@ class MyChannelTest {
 
     @Test
     fun ourLogosCarryAVersionSoTvsFetchTheNewPicture() {
-        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-tv.png?v=7", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
-        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-latest.png?v=7", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/latest-movies.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-tv.png?v=8", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-latest.png?v=8", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/latest-movies.png"))
         assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
         assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
     }

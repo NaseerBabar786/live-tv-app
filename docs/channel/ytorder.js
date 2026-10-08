@@ -61,6 +61,7 @@ export async function loadPicks() {
  */
 export function runningOrder(station, list, date) {
   const seed = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000) + station.id.length;
+  if (station.dayparts) return byDayparts(station, list, seed);
   if (station.newest) {
     // Latest Movies: each day opens with the films that went up on YouTube in the last week, newest first,
     // then goes on through the older ones from where the day before left off (the list comes newest first).
@@ -83,6 +84,30 @@ export function runningOrder(station, list, date) {
     return out;
   }
   return top.concat(rest);
+}
+
+/**
+ * A day with a shape (Spark Shayari, 2026-10-08): each part of the day ([dayparts]: { from: hour, labels })
+ * is filled with its own sources' videos, shuffled afresh each day, then the next part begins. A part whose
+ * sources have nothing takes from the whole list, so the day never has a gap.
+ */
+function byDayparts(station, list, seed) {
+  const parts = station.dayparts;
+  const out = [], used = new Set();
+  parts.forEach((part, k) => {
+    const want = ((parts[k + 1]?.from ?? 24) - part.from) * 3600;
+    let pool = shuffled(list.filter(v => part.labels.includes(v.label)), seed + k);
+    if (!pool.length) pool = shuffled(list, seed + k);
+    // Fresh ones first; a part that runs out goes round its own sources again.
+    pool = pool.filter(v => !used.has(v.id)).concat(pool.filter(v => used.has(v.id)));
+    let t = 0;
+    for (let i = 0; pool.length && t < want; i++) {
+      const v = pool[i % pool.length];
+      // (About a minute between programmes for the ad break or our own clip, so each part starts on time.)
+      out.push(v); used.add(v.id); t += lengthOf(v, station) + 60;
+    }
+  });
+  return out;
 }
 
 /**
@@ -130,6 +155,15 @@ export async function loadTrailers(station, base = "") {
   } catch { return []; }
 }
 
+/** A channel's own short videos ([ownClips], e.g. Spark Shayari's "Aaj ka Sher"): [{ src, secs, title }]. */
+export async function loadOwnClips(station, base = "") {
+  if (!station.ownClips) return [];
+  try {
+    const d = await (await fetch(base + station.ownClips, { cache: "no-cache" })).json();
+    return (d.clips || []).filter(c => c.src && c.secs > 0 && c.secs <= 120).map(c => ({ ...c, own: true }));
+  } catch { return []; }
+}
+
 /** Our approved promos for the breaks, 5 to 60 seconds each (owner, 2026-10-07). */
 export async function loadPromos(base = "../media/") {
   try {
@@ -142,9 +176,9 @@ export async function loadPromos(base = "../media/") {
  * The running order with its ad breaks: [{ kind: "break", promos, secs } | { kind: "video", v, secs }].
  * Breaks take the promos in turn, as many as fit in 60 seconds, so each break shows different ones.
  */
-export function withBreaks(order, station, promos, trailers = []) {
+export function withBreaks(order, station, promos, trailers = [], own = []) {
   const items = [];
-  let since = Infinity, p = 0, t = 0;
+  let since = Infinity, p = 0, t = 0, hour = 0, o = 0;
   // Movie channels (owner, 2026-10-07): after every film, 12 trailers. First "coming up" clips of the next
   // films on this channel (45 seconds from inside each film), then trailers of upcoming Hindi films
   // (channel/trailers.json, refreshed every day), then the ad break and the next film.
@@ -152,6 +186,15 @@ export function withBreaks(order, station, promos, trailers = []) {
   const ours = station.trailerLangs ? TRAILERS_PER_BLOCK - news : 0;
   order.forEach((v, i) => {
     const secs = lengthOf(v, station);
+    // Our own short video once an hour, between programmes (Spark Shayari's "Aaj ka Sher"), in place of
+    // that hour's ad break, so viewers never sit through two breaks in a row.
+    const clock = own.length ? items.reduce((n, x) => n + x.secs, 0) : 0;
+    if (own.length && clock >= hour * 3600) {
+      const c = own[o++ % own.length];
+      items.push({ kind: "break", own: true, promos: [c], secs: c.secs });
+      hour = Math.floor(clock / 3600) + 1;
+      since = 0;
+    }
     if (promos.length && since >= BREAK_GAP_SECS) {
       const list = [];
       let total = 0;
@@ -205,8 +248,12 @@ export function itemsFrom(items, count, fromMs = Date.now()) {
 }
 
 /** A channel's whole day: running order, ad breaks, clips and trailers. */
-export function dayPlan(station, { list, picks, promos = [], trailers = [] }, date) {
-  const items = withBreaks(runningOrder(station, list.filter(v => playable(v, picks)), date), station, promos, trailers);
+export function dayPlan(station, { list, picks, promos = [], trailers = [], own = [] }, date) {
+  // Own clips start each day further along, so the hours don't show the same ones every day.
+  const day = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000);
+  const from = own.length ? (day * 24) % own.length : 0;
+  own = own.slice(from).concat(own.slice(0, from));
+  const items = withBreaks(runningOrder(station, list.filter(v => playable(v, picks)), date), station, promos, trailers, own);
   // One day is enough (25 hours covers the day the clocks go back); a shorter list repeats round the clock.
   let t = 0;
   const end = items.findIndex(x => (t += x.secs) >= 25 * 3600);

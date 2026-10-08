@@ -80,6 +80,21 @@ export const STATIONS = [
     name: "Bazaar Dramas Hindi", dial: "16", doc: "_channel_hindidramas", page: "channel/?c=hindidramas", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-dramas-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Hindi dramas: full episodes from the TV channels' own YouTube channels (StarPlus, Sony SAB, Sony Pal, Sony TV, Colors, &TV, Dangal, Shemaroo, Sun Neo, Doordarshan). Backup: public-domain classic films." },
+  // 17 (owner, 2026-10-08): Urdu and Hindi poetry. The day has a shape ([dayparts], Toronto time: classic readings
+  // in the morning, TV mushairas in the afternoon, the big mushairas in the evening, young poets at night), and
+  // every hour our own "Aaj ka Sher" ([ownClips], tools/shayari) plays between programmes.
+  { id: "shayari", yt: true, web: "channel/ytc.html?c=shayari", ytMins: 20, tagline: "Urdu and Hindi poetry, mushaira and kavi sammelan, day and night",
+    name: "Bazaar Shayari", nameUrdu: "سپارک شاعری", urduBug: "https://tv.bulkbazaar.ca/channel/logos/spark-shayari-urdu.png",
+    dial: "17", doc: "_channel_shayari", page: "channel/?c=shayari", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-shayari.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    ownClips: "shayari-clips.json",
+    dayparts: [
+      { from: 0, labels: ["The Social House", "Kommune", "Rekhta"] },
+      { from: 6, labels: ["Hindi Kavita", "Urdu Studio", "Sahitya Tak", "Rekhta"] },
+      { from: 12, labels: ["PTV Home", "PTV National", "DD Urdu", "Doordarshan", "Sahitya Akademi"] },
+      { from: 18, labels: ["Rekhta", "Lahore Literary Festival", "Faiz Festival", "Mushaira Media", "Kumar Vishwas", "Kommune"] },
+    ],
+    credits: "Poetry: mushairas, kavi sammelan and recitations from the organisers', TV channels' and poets' own YouTube channels (Rekhta, Sahitya Akademi, DD Urdu, Doordarshan, PTV, Lahore Literary Festival, Faiz Festival, Mushaira Media, Sahitya Tak, Kumar Vishwas, Kommune, The Social House, Hindi Kavita). Aaj ka Sher: classic poets whose work is free to use, read by an AI voice. Backup: public-domain classic films." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */

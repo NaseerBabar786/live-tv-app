@@ -1,0 +1,25 @@
+name: Probe shayari channels (temporary)
+on:
+  push:
+    branches: [probe/shayari]
+    paths: [probe/frames.py, .github/workflows/probe-shayari.yml]
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 tools/build_youtube_channels.py --channel shayari
+      - run: python3 tools/preair_check.py --lists --files docs/channel/yt-shayari.json 2>&1 | tail -20 || true
+      - run: python3 probe/frames.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A probe docs/channel/yt-shayari.json docs/channel/preair-bad.json || true
+          git commit -m "Probe results [skip ci]"
+          git push -f origin HEAD:probe/shayari

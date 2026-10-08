@@ -587,8 +587,8 @@
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand, zonedTime } from "./channel/schedule.js";
 import { mountCards } from "./channel/cards.js";
-import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
-let breakPromos = [], pkTrailers = [];
+import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
+let breakPromos = [], pkTrailers = [], pkOwn = [];
 loadBreakPromos("media/").then(p => { breakPromos = p; setTimeout(() => { try { if (pick) renderPicks(); } catch {} }); });
 const $ = id => document.getElementById(id);
 // The clock in the corner: Toronto time, the time our channels' schedules run on.
@@ -1894,6 +1894,7 @@ async function loadPicksPanel() {
     if (wanted !== station) return;
     pkList = d.videos || d.songs || [];
     pkTrailers = station === HITS ? [] : await loadTrailers(station, "channel/");
+    pkOwn = station === HITS ? [] : await loadOwnClips(station, "channel/");
     try { pkLocked = station === HITS ? null : await (await fetch(`channel/locked/${station.id}.json?t=${Date.now()}`)).json(); } catch { pkLocked = null; }
     pkOwner = {};
     if (station !== HITS) {
@@ -2014,7 +2015,7 @@ function pkDayNow(date) {
   return { items: pkDraft(date), by: null };
 }
 function pkDraft(date) {
-  const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers }, date).map(slimItem);
+  const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers, own: pkOwn }, date).map(slimItem);
   // Tomorrow begins with the rest of a film still running at midnight.
   if (date !== torontoDay().date) {
     const today = pkDayNow(torontoDay().date).items, cont = today.length && carryOver(today, torontoDay().start);
