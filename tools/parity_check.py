@@ -8,6 +8,8 @@ For a pull request, compares the changed files with .github/platforms.json:
 - A platform's own code (or the website code it shares) changed: its version must go up, so the
   installed copies are offered the update.
 
+A platform with "paused" in platforms.json is skipped (the owner put it on hold).
+
 Run: python3 tools/parity_check.py <base-ref>   (CI: the pull request's base commit)
 """
 import json
@@ -45,7 +47,7 @@ def main(base):
     for p in config["platforms"]:
         name = p["name"]
         if p.get("paused"):
-            print(f"{name} is paused ({p['paused']}), not checked.")
+            print(f"{name} is paused: {p['paused']}")
             continue
         touched = [f for f in changed if f.startswith(p["folder"])]
         if tv_changed and not touched:
