@@ -203,8 +203,9 @@ fun PlansScreen(feature: String, needed: Plans.Tier, onMessages: () -> Unit, onD
 }
 
 /**
- * Says when the package (or the free trial) ends within 5 days, or has just ended, at most once a
- * day, with buttons to renew (the packages screen) or message the team.
+ * Says when the package ends within 5 days, or has just ended, at most once a day, with buttons to
+ * renew (the packages screen) or message the team. During the free trial (owner, 2026-10-08): on the
+ * first start that it has begun, then once a day how many days are left ("6 days left" ... "last day").
  */
 @Composable
 fun PlanEndingNotice(onRenew: () -> Unit, onMessages: () -> Unit) {
@@ -217,6 +218,10 @@ fun PlanEndingNotice(onRenew: () -> Unit, onMessages: () -> Unit) {
     if (!offer.enforced || dismissed) return
     val now = System.currentTimeMillis()
     val day = 86_400_000L
+    if (s.trial && s.until != null) {
+        TrialNotice(s.until, prefs, onGold = onRenew, onDismissed = { dismissed = true })
+        return
+    }
     val text = when {
         s.until != null && s.until.time - now < 5 * day -> {
             val left = ((s.until.time - now + day - 1) / day).coerceAtLeast(0)
@@ -258,6 +263,85 @@ fun PlanEndingNotice(onRenew: () -> Unit, onMessages: () -> Unit) {
                     ) { Text("Later") }
                 }
             },
+        )
+    }
+}
+
+/** The free trial's daily line: "your 7-day free trial has started", then "N days left", once a day. */
+@Composable
+private fun TrialNotice(until: Date, prefs: android.content.SharedPreferences, onGold: () -> Unit, onDismissed: () -> Unit) {
+    val now = System.currentTimeMillis()
+    val day = 86_400_000L
+    // Days counted by the calendar on this device, so the number goes down by one each day.
+    val zone = java.util.TimeZone.getDefault()
+    fun localDay(ms: Long) = (ms + zone.getOffset(ms)) / day
+    val today = localDay(now)
+    if (prefs.getLong("trial_day", -1L) == today) return
+    val left = (localDay(until.time) - today).coerceAtLeast(0)
+    val trialDays = Subscription.offer.value.trialDays
+    val first = !prefs.getBoolean("trial_started_shown", false)
+    val title = if (first) "🎉 Your $trialDays-day free trial has started" else "⏳ Free trial: " + when (left) {
+        0L -> "last day"
+        1L -> "1 day left"
+        else -> "$left days left"
+    }
+    val text = (if (first) "Welcome to Cable TV! For your first $trialDays days everything is free: all channels and every feature. " else "") +
+        "Your free trial ends on ${planDate(until)}" + when (left) {
+            0L -> " (today)."
+            1L -> " (tomorrow)."
+            else -> ", in $left days."
+        } + " After that you'll be on the Free package, with our own channels, and we'll have a welcome gift for you."
+    fun close() {
+        prefs.edit().putLong("trial_day", today).putBoolean("trial_started_shown", true).apply()
+        onDismissed()
+    }
+    SettingsTheme {
+        AlertDialog(
+            onDismissRequest = { close() },
+            title = { Text(title) },
+            text = { Text(text) },
+            confirmButton = { TextButton(onClick = { close() }, modifier = Modifier.focusGlow()) { Text("OK") } },
+            dismissButton = { TextButton(onClick = { close(); onGold() }, modifier = Modifier.focusGlow()) { Text("See packages") } },
+        )
+    }
+}
+
+/**
+ * While Gold comes from a promo code (WELCOME and the like), a short line at the bottom every 30 minutes
+ * says when it ends (owner, 2026-10-08), for about 12 seconds. It doesn't take the remote's focus.
+ */
+@Composable
+fun CodeEndsReminder() {
+    val status by Subscription.status.collectAsStateWithLifecycle()
+    val s = status
+    val until = s?.until
+    val code = if (s != null && !s.trial) s.code else null
+    val label = s?.label.orEmpty()
+    var showing by remember { mutableStateOf(false) }
+    LaunchedEffect(code, until) {
+        showing = false
+        if (code == null || until == null) return@LaunchedEffect
+        kotlinx.coroutines.delay(60_000)
+        while (until.after(Date())) {
+            showing = true
+            kotlinx.coroutines.delay(12_000)
+            showing = false
+            kotlinx.coroutines.delay(30 * 60_000L - 12_000)
+        }
+    }
+    if (!showing || code == null || until == null) return
+    androidx.compose.ui.window.Popup(
+        alignment = androidx.compose.ui.Alignment.BottomCenter,
+        properties = androidx.compose.ui.window.PopupProperties(focusable = false),
+    ) {
+        Text(
+            "🎁 Your free $label (code $code) ends on ${planDate(until)}. Get Gold in Settings > Packages to keep every channel.",
+            color = Color.White,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .padding(bottom = 28.dp)
+                .background(Color(0xE6000000), RoundedCornerShape(50))
+                .padding(horizontal = 20.dp, vertical = 10.dp),
         )
     }
 }
