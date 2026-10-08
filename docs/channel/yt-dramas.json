@@ -1,12 +1,12 @@
 {
  "name": "Bazaar Dramas",
- "built": "2026-10-08 00:24 UTC",
+ "built": "2026-10-08 10:05 UTC",
  "videos": [
   {
-   "id": "5RYAVL6uAto",
-   "title": "Buzz EP 73 | Tamasha S5 11th Elimination: King Hassan | 7 October 2026 | ARY Digital",
-   "label": "ARY Digital",
-   "mins": 38.0,
+   "id": "wJ1BQB3y_gw",
+   "title": "Khushi - Episode 21 - [ENG SUB] 3rd Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "label": "HUM TV",
+   "mins": 35.1,
    "found": "2026-10-08"
   },
   {
@@ -14,6 +14,13 @@
    "title": "TAMASHA SEASON 5 | EPISODE 61 | 7 OCT 2026 | REALITY SHOW | ARY DIGITAL",
    "label": "ARY Digital",
    "mins": 60.8,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "5RYAVL6uAto",
+   "title": "Buzz EP 73 | Tamasha S5 11th Elimination: King Hassan | 7 October 2026 | ARY Digital",
+   "label": "ARY Digital",
+   "mins": 38.0,
    "found": "2026-10-08"
   },
   {
@@ -31,13 +38,6 @@
    "found": "2026-10-08"
   },
   {
-   "id": "LpbnBVHunZE",
-   "title": "Tark-e-Tamanna - Episode 06 - 7th Oct 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
-   "label": "HUM TV",
-   "mins": 34.9,
-   "found": "2026-10-07"
-  },
-  {
    "id": "kMeOWpVas4U",
    "title": "Gulbahar - Episode 07 - [ENG SUB] - 7th Oct 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
    "label": "HUM TV",
@@ -52,10 +52,17 @@
    "found": "2026-10-07"
   },
   {
-   "id": "MimJDdqvde0",
-   "title": "Khushi - Episode 25 - [Eng Sub] 7th Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "id": "LpbnBVHunZE",
+   "title": "Tark-e-Tamanna - Episode 06 - 7th Oct 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
    "label": "HUM TV",
-   "mins": 32.03333333333333,
+   "mins": 34.9,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "w-DG2bTLywY",
+   "title": "Udaari Episode 12 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
+   "label": "HUM TV",
+   "mins": 38.166666666666664,
    "found": "2026-10-07"
   },
   {
@@ -80,20 +87,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "AiaHb2pD6sg",
-   "title": "Khafa Episode 19 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 7th Oct 2026 | HAR PAL GEO",
-   "label": "Har Pal Geo",
-   "mins": 39.65,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "-Yvzn8PuaOo",
-   "title": "Uswah Episode 15 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 7th October 2026",
-   "label": "Har Pal Geo",
-   "mins": 39.56666666666667,
-   "found": "2026-10-07"
-  },
-  {
    "id": "N6ss-wL7rFI",
    "title": "Ranjish Episode 9 | 7th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
    "label": "Express TV",
@@ -115,6 +108,34 @@
    "found": "2026-10-07"
   },
   {
+   "id": "go6OQVMtwEs",
+   "title": "Nikammay | Episode 8 | 6th April 2026 | Javeria Saud | Saud Qasmi | Junaid Jamshaid | Hafsa Butt",
+   "label": "Express TV",
+   "mins": 34.75,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "MimJDdqvde0",
+   "title": "Khushi - Episode 25 - [Eng Sub] 7th Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "label": "HUM TV",
+   "mins": 32.03333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "AiaHb2pD6sg",
+   "title": "Khafa Episode 19 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 7th Oct 2026 | HAR PAL GEO",
+   "label": "Har Pal Geo",
+   "mins": 39.65,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "-Yvzn8PuaOo",
+   "title": "Uswah Episode 15 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 7th October 2026",
+   "label": "Har Pal Geo",
+   "mins": 39.56666666666667,
+   "found": "2026-10-07"
+  },
+  {
    "id": "4ih77KxuHQI",
    "title": "Hey Fam | EP  7 | 7 October 2026 | Zaviyar Ejaz | Duaa Zahra | Zarrar Khan | ENG SUB | ARY Digital",
    "label": "ARY Digital",
@@ -126,13 +147,6 @@
    "title": "Aap Ki Izzat - Episode 20 [Eng Sub] - 19 Sep 2026 [ Urwa Hocane, Ahsan Khan & Saif Ali Khan ] HUM TV",
    "label": "HUM TV",
    "mins": 36.11666666666667,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "w-DG2bTLywY",
-   "title": "Udaari Episode 12 - [Enhanced Version] - Urwa Hocane, Farhan Saeed, Ahsan Khan - HUM TV",
-   "label": "HUM TV",
-   "mins": 38.166666666666664,
    "found": "2026-10-07"
   },
   {
@@ -182,13 +196,6 @@
    "title": "Raqaas Ep 09 (Subtitle) 5th October 26, Digitally Presented by Parley Cosmetics | Danyal Z - Komal M",
    "label": "Green Entertainment",
    "mins": 34.11666666666667,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "go6OQVMtwEs",
-   "title": "Nikammay | Episode 8 | 6th April 2026 | Javeria Saud | Saud Qasmi | Junaid Jamshaid | Hafsa Butt",
-   "label": "Express TV",
-   "mins": 34.75,
    "found": "2026-10-07"
   },
   {
@@ -332,6 +339,20 @@
    "found": "2026-10-06"
   },
   {
+   "id": "4N-6yDmcuLM",
+   "title": "Bombay Tailors - Episode 26 | - 06 Oct 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 35.05,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "K1sqwLwga9o",
+   "title": "Bombay Tailors - Episode 25 | [ENG SUB] - 05 Oct 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 35.28333333333333,
+   "found": "2026-10-06"
+  },
+  {
    "id": "OS6GL5U-fa8",
    "title": "Khushi - Episode 24 - [ENG SUB] 6th Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
    "label": "HUM TV",
@@ -343,13 +364,6 @@
    "title": "Mohabbat Mukhtasir - Episode 02 [Eng Sub] - 4th Oct 2026 - [ Usama Khan & Madiha Imam ] HUM TV",
    "label": "HUM TV",
    "mins": 35.21666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "4N-6yDmcuLM",
-   "title": "Bombay Tailors - Episode 26 | - 06 Oct 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
-   "label": "HUM TV",
-   "mins": 35.05,
    "found": "2026-10-06"
   },
   {
@@ -388,38 +402,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "3G8B-XDEFyI",
-   "title": "Nizaam Ep 06 (Subtitles) 4th Oct 26 | Presented by VGO Tel | Momina Iqbal - Nauman Ijaz - Usama Khan",
-   "label": "Green Entertainment",
-   "mins": 33.083333333333336,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "gf4aGQ7nRkc",
-   "title": "Madaar Episode 10 (Subtitles) 6th October 2026 | Humayoun Ashraf - Sumaiyya Bukhsh | Green TV",
-   "label": "Green Entertainment",
-   "mins": 36.2,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "sf8fuDLoYkw",
-   "title": "Circle Episode 01 | Pressure | Subtitles | 2nd October 2026 | Momina Iqbal - Affan Waheed | Green TV",
-   "label": "Green Entertainment",
-   "mins": 38.1,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "kVHKqKSR6Fs",
-   "title": "Nizaam Ep 05 (Subtitles) 3rd Oct 26 | Presented by VGO Tel | Momina Iqbal - Nauman Ijaz - Usama Khan",
-   "label": "Green Entertainment",
-   "mins": 32.2,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "drpktyutx5c",
-   "title": "Raja London Ka Last Episode [ENG SUB] 15th Sep 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
-   "label": "Express TV",
-   "mins": 30.183333333333334,
+   "id": "GGwU3PM7Ei0",
+   "title": "Mohabbat Episode 03 [Eng Sub] Feroze Khan - Nawal Saeed | 5th October 2026 - HAR PAL GEO",
+   "label": "Har Pal Geo",
+   "mins": 41.266666666666666,
    "found": "2026-10-06"
   },
   {
@@ -427,13 +413,6 @@
    "title": "Mein Kahani Hun S- 3 | Episode 2 | Saanjh | Sunita Marshall | Syed Jibran | 4 Oct 2026 | Express TV",
    "label": "Express TV",
    "mins": 35.13333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "q5h9DpvUWNo",
-   "title": "Hum Bhi Ji Lain Episode 6 | 3rd oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
-   "label": "Express TV",
-   "mins": 34.68333333333333,
    "found": "2026-10-06"
   },
   {
@@ -448,6 +427,13 @@
    "title": "Raja London Ka Episode 1 [ENG SUB] 1st June 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
    "label": "Express TV",
    "mins": 38.28333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "q5h9DpvUWNo",
+   "title": "Hum Bhi Ji Lain Episode 6 | 3rd oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
+   "label": "Express TV",
+   "mins": 34.68333333333333,
    "found": "2026-10-06"
   },
   {
@@ -500,10 +486,45 @@
    "found": "2026-10-06"
   },
   {
-   "id": "K1sqwLwga9o",
-   "title": "Bombay Tailors - Episode 25 | [ENG SUB] - 05 Oct 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
-   "label": "HUM TV",
-   "mins": 35.28333333333333,
+   "id": "KPUh65_7E0U",
+   "title": "Guru Episode 01 - Ali Rehman & Zhalay Sarhadi - Express TV",
+   "label": "Express TV",
+   "mins": 34.083333333333336,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "3G8B-XDEFyI",
+   "title": "Nizaam Ep 06 (Subtitles) 4th Oct 26 | Presented by VGO Tel | Momina Iqbal - Nauman Ijaz - Usama Khan",
+   "label": "Green Entertainment",
+   "mins": 33.083333333333336,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "gf4aGQ7nRkc",
+   "title": "Madaar Episode 10 (Subtitles) 6th October 2026 | Humayoun Ashraf - Sumaiyya Bukhsh | Green TV",
+   "label": "Green Entertainment",
+   "mins": 36.2,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "sf8fuDLoYkw",
+   "title": "Circle Episode 01 | Pressure | Subtitles | 2nd October 2026 | Momina Iqbal - Affan Waheed | Green TV",
+   "label": "Green Entertainment",
+   "mins": 38.1,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "kVHKqKSR6Fs",
+   "title": "Nizaam Ep 05 (Subtitles) 3rd Oct 26 | Presented by VGO Tel | Momina Iqbal - Nauman Ijaz - Usama Khan",
+   "label": "Green Entertainment",
+   "mins": 32.2,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "drpktyutx5c",
+   "title": "Raja London Ka Last Episode [ENG SUB] 15th Sep 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
+   "label": "Express TV",
+   "mins": 30.183333333333334,
    "found": "2026-10-06"
   },
   {
@@ -511,13 +532,6 @@
    "title": "Bas Tera Saath Ho Last EP 45 | 5 October 2026 | Farhan Saeed | Sana Javed | ENG SUB | ARY Digital",
    "label": "ARY Digital",
    "mins": 40.666666666666664,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "GGwU3PM7Ei0",
-   "title": "Mohabbat Episode 03 [Eng Sub] Feroze Khan - Nawal Saeed | 5th October 2026 - HAR PAL GEO",
-   "label": "Har Pal Geo",
-   "mins": 41.266666666666666,
    "found": "2026-10-06"
   },
   {
@@ -693,13 +707,6 @@
    "title": "Uswah Episode 01 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 23rd September 2026",
    "label": "Har Pal Geo",
    "mins": 42.61666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "KPUh65_7E0U",
-   "title": "Guru Episode 01 - Ali Rehman & Zhalay Sarhadi - Express TV",
-   "label": "Express TV",
-   "mins": 34.083333333333336,
    "found": "2026-10-06"
   },
   {

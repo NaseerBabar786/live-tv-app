@@ -83,10 +83,13 @@ class GameScores(context: Context) {
         prefs.edit().putInt(info.id, new).apply()
     }
 
-    /** The modern games keep only their best: a score, or the highest level done. */
+    /** The modern games keep only their best: a score, the highest level done, or the fewest shots. */
     fun recordWeb(id: String, value: Int) {
         val key = "web_$id"
-        if (value > prefs.getInt(key, 0)) prefs.edit().putInt(key, value).apply()
+        val old = prefs.getInt(key, 0)
+        val fewest = WEB_GAMES.firstOrNull { it.id == id }?.fewest == true
+        val better = if (fewest) value > 0 && (old == 0 || value < old) else value > old
+        if (better) prefs.edit().putInt(key, value).apply()
     }
 
     fun label(info: WebGameInfo): String {

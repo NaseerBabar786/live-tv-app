@@ -562,6 +562,9 @@ fun NewsMode(
                     val panels = listOf(NewsScreen.Slot.RightTop, NewsScreen.Slot.RightMiddle, NewsScreen.Slot.RightBottom)
                         .map { choices[it] }.filter { it != NewsScreen.Panel.Empty }
                     val anyFill = panels.any { it in fills }
+                    // With the traffic cameras in the column, the clock and prayer panels are drawn tighter so
+                    // the camera keeps a proper picture instead of a thin strip (the owner's photo, 2026-10-08).
+                    val compact = NewsScreen.Panel.Traffic in panels
                     panels.forEachIndexed { i, panel ->
                         if (i > 0) {
                             // Nothing to stretch: the last panel still sits at the bottom.
@@ -570,9 +573,9 @@ fun NewsMode(
                         }
                         Box(if (panel in fills) Modifier.fillMaxWidth().weight(1f) else Modifier.fillMaxWidth()) {
                             when (panel) {
-                                NewsScreen.Panel.Clock -> ClockWeather(::s, ::d)
+                                NewsScreen.Panel.Clock -> ClockWeather(::s, ::d, compact)
                                 NewsScreen.Panel.Markets -> Markets(Modifier.fillMaxSize(), markets, ::s, ::d)
-                                NewsScreen.Panel.Prayers -> Prayers(::s, ::d)
+                                NewsScreen.Panel.Prayers -> Prayers(::s, ::d, compact)
                                 NewsScreen.Panel.Currencies -> CurrencyList(Modifier.fillMaxSize(), rates, gold, ::s, ::d)
                                 NewsScreen.Panel.Stories -> StoryList(Modifier.fillMaxSize(), ::s, ::d)
                                 NewsScreen.Panel.Second -> SecondChannel(second, secondPlaying, ::s, ::d, onStep = { stepSecond(it) })
@@ -632,7 +635,7 @@ private fun <T> rememberLoaded(everyMs: Long, load: () -> T?): T? {
 }
 
 @Composable
-private fun ClockWeather(s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun ClockWeather(s: (Float) -> TextUnit, d: (Float) -> Dp, compact: Boolean = false) {
     val context = LocalContext.current
     var now by remember { mutableStateOf(Date()) }
     LaunchedEffect(Unit) {
@@ -660,10 +663,17 @@ private fun ClockWeather(s: (Float) -> TextUnit, d: (Float) -> Dp) {
             Text(date, color = Soft, fontSize = s(11f), maxLines = 1, modifier = Modifier.weight(1f))
             forecast?.let { Text("feels ${it.feelsLike}°", color = Soft, fontSize = s(11f)) }
         }
-        city?.let { Text("📍 $it", color = FocusColor, fontSize = s(11f), maxLines = 1) }
+        if (!compact) city?.let { Text("📍 $it", color = FocusColor, fontSize = s(11f), maxLines = 1) }
         forecast?.days?.take(4)?.takeIf { it.isNotEmpty() }?.let { days ->
-            Row(Modifier.fillMaxWidth().padding(top = d(6f)), horizontalArrangement = Arrangement.SpaceBetween) {
-                days.forEach { day ->
+            Row(Modifier.fillMaxWidth().padding(top = d(if (compact) 3f else 6f)), horizontalArrangement = Arrangement.SpaceBetween) {
+                // Compact: each day on one line (name, icon, high), no rain line.
+                if (compact) days.forEach { day ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(day.name, color = Soft, fontWeight = FontWeight.Bold, fontSize = s(10f), lineHeight = s(12f))
+                        Text(day.icon, fontSize = s(12f), lineHeight = s(14f))
+                        Text("${day.high}°", color = Color.White, fontWeight = FontWeight.Bold, fontSize = s(11f), lineHeight = s(13f))
+                    }
+                } else days.forEach { day ->
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(day.name, color = Soft, fontWeight = FontWeight.Bold, fontSize = s(10f))
                         Text(day.icon, fontSize = s(16f))
@@ -708,7 +718,7 @@ private fun Markets(modifier: Modifier, markets: List<News.Market>?, s: (Float) 
 }
 
 @Composable
-private fun Prayers(s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun Prayers(s: (Float) -> TextUnit, d: (Float) -> Dp, compact: Boolean = false) {
     val context = LocalContext.current
     // Reloaded every few hours, so it moves on to the next day's times overnight.
     val today = rememberLoaded(3 * 60 * 60_000L) { News.today() }
@@ -726,7 +736,7 @@ private fun Prayers(s: (Float) -> TextUnit, d: (Float) -> Dp) {
     fun shown(t: String) = if (is24) t else minutes(t).let { m -> "${(m / 60 + 11) % 12 + 1}:${"%02d".format(m % 60)}" }
     val prayers = today?.prayers.orEmpty()
     val next = prayers.indexOfFirst { minutes(it.time) > minute }
-    Column(Modifier.fillMaxWidth().padding(top = d(6f), bottom = d(8f))) {
+    Column(Modifier.fillMaxWidth().padding(top = d(if (compact) 4f else 6f), bottom = d(if (compact) 4f else 8f))) {
         Text(
             "PRAYER TIMES" + (city?.let { " · ${it.uppercase()}" } ?: ""),
             color = Muted,
@@ -748,7 +758,8 @@ private fun Prayers(s: (Float) -> TextUnit, d: (Float) -> Dp) {
                 }
             }
         }
-        today?.hijri?.let { h ->
+        // Compact (traffic cameras below): the Islamic date lines make room for the camera.
+        if (!compact) today?.hijri?.let { h ->
             Text("☪ ${h.label}", color = Soft, fontSize = s(10f), maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = d(4f)))
             islamicNote(h, prayers.firstOrNull { it.name == "Fajr" }?.time?.let(::shown), prayers.firstOrNull { it.name == "Maghrib" }?.time?.let(::shown))?.let {
                 Text(it, color = FocusColor, fontSize = s(10f), maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -1978,13 +1989,16 @@ private fun MyLayout(
         val availH = maxHeight - pad * 2 - tickerHeight - sep
         val big = layout == MyScreen.BIG
         val hasUnder = under != MyScreen.NOTHING
-        // The channel gets about three quarters of the width (more with "Big channel"). With a
-        // panel under it the picture stays 16:9 and the panel takes the rest of the height;
-        // without one the channel takes the whole height (stretched a little).
+        // The channel gets about three quarters of the width (more with "Big channel"), or the
+        // share the viewer picked under Channel size. With a panel under it the picture stays 16:9
+        // and the panel takes the rest of the height; without one the channel takes the whole
+        // height (stretched a little).
+        val picked = choices.size
+        val roomy = big || (picked ?: 0f) >= 0.85f
         val playerW = if (hasUnder) {
-            minOf(availW * (if (big) 0.85f else 0.75f), (availH - sep - d(if (big) 72f else 86f)) * 16f / 9f)
+            minOf(availW * (picked ?: if (big) 0.85f else 0.75f), (availH - sep - d(if (roomy) 72f else 86f)) * 16f / 9f)
         } else {
-            minOf(availH * 16f / 9f, availW * (if (big) 0.88f else 0.8f))
+            minOf(availH * 16f / 9f, availW * (picked ?: if (big) 0.88f else 0.8f))
         }
         val sideW = availW - playerW
         val underH = availH - sep - playerW * 9f / 16f

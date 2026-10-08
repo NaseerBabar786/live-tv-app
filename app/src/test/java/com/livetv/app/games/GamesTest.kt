@@ -9,7 +9,7 @@ import org.junit.Test
 class GamesTest {
     @Test
     fun everyGameStartsAndTakesEveryButton() {
-        for (info in GAMES) {
+        for (info in CLASSIC_GAMES) {
             val game = info.create()
             if (!game.ready) game.begin()
             assertFalse(info.name, game.over)
@@ -20,8 +20,9 @@ class GamesTest {
                 if (game.tickMs > 0) game.tick()
             }
         }
-        assertEquals(24, GAMES.size)
-        assertEquals(GAMES.size, GAMES.map { it.id }.toSet().size)
+        assertEquals(24, CLASSIC_GAMES.size)
+        assertEquals(listOf("slide", "solitaire"), GAMES.map { it.id })
+        assertEquals(CLASSIC_GAMES.size, CLASSIC_GAMES.map { it.id }.toSet().size)
     }
 
     @Test

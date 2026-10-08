@@ -118,6 +118,8 @@ internal fun DuoMode(
     /** Every channel, already limited to the languages chosen in Settings. */
     channels: List<Channel>,
     favorites: Set<String>,
+    /** The Favorites row (the same channels as 1+List's Favorites): always the first row. */
+    favoriteChannels: List<Channel>,
     lastWatchedId: String?,
     playing: Boolean,
     focus: FocusRequester,
@@ -134,12 +136,11 @@ internal fun DuoMode(
     val prefs = remember { context.getSharedPreferences(PREFS, Context.MODE_PRIVATE) }
     val byId = remember(channels) { channels.associateBy { it.id } }
 
-    // Favorites, then every channel (our own first), then the countries: Pakistan, India, Canada and the
+    // Favorites (as in 1+List: our own channels, MTA, the saved favourites), then every channel, then the countries: Pakistan, India, Canada and the
     // US first, then all the others in list order (owner's order, 1.9.61). Rows scroll through every channel.
-    val rows = remember(channels, favorites) {
+    val rows = remember(channels, favoriteChannels) {
         buildList {
-            val favs = channels.filter { it.id in favorites }
-            if (favs.isNotEmpty()) add(DuoRow("favorites", "Favorites", favs))
+            if (favoriteChannels.isNotEmpty()) add(DuoRow("favorites", "Favorites", favoriteChannels))
             if (channels.isNotEmpty()) add(DuoRow("all", "All channels", channels))
             val byGroup = channels.filter { it.group != null }.groupBy { it.group!! }
                     byGroup.entries
@@ -161,7 +162,9 @@ internal fun DuoMode(
     LaunchedEffect(channels.isNotEmpty()) {
         if (channels.isEmpty()) return@LaunchedEffect
         // First time (or a saved channel is gone): the last channel watched and the next favourite.
-        val pool = (listOfNotNull(lastWatchedId) + channels.filter { it.id in favorites }.map { it.id } + channels.map { it.id })
+        // Our own channels come last here: their pages take a while to start (owner, 1.10.24).
+        val quickFirst = channels.sortedBy { MyChannel.isMine(it) }
+        val pool = (listOfNotNull(lastWatchedId) + quickFirst.filter { it.id in favorites }.map { it.id } + quickFirst.map { it.id })
             .filter { it in byId }.distinct()
         val left = ids[0]?.takeIf { it in byId } ?: pool.firstOrNull { it != ids[1] }
         val right = ids[1]?.takeIf { it in byId } ?: pool.firstOrNull { it != left }

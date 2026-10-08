@@ -80,6 +80,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -151,6 +152,7 @@ fun SponsorTicker(
     everyMs: Long = 0L,
     skip: () -> Boolean = { false },
     band: Boolean = false,
+    lift: Dp = 0.dp,
 ) {
     val text by Sponsors.ticker.collectAsStateWithLifecycle()
     val words = text ?: return
@@ -206,6 +208,8 @@ fun SponsorTicker(
             softWrap = false,
             modifier = Modifier
                 .align(Alignment.CenterStart)
+                // Lifted off the screen's edge, which some TVs cut off (the owner's photo, 2026-10-08).
+                .padding(bottom = lift)
                 .wrapContentWidth(Alignment.Start, unbounded = true)
                 .onSizeChanged { textWidth = it.width }
                 .graphicsLayer { translationX = offset.value },

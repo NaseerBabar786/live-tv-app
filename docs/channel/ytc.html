@@ -28,7 +28,9 @@
   .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }
   .msg { position: absolute; inset: 0; display: grid; place-items: center; padding-top: 22vh !important; color: #fff; text-align: center; padding: 20px; }
-  .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
+  /* Shown when the picture hasn't started: only our own name, never where the video comes from or
+     any technical detail (owner, 1.10.24); those go to the log for us. */
+  .diag { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); max-width: 80%; text-align: center; background: rgba(0,0,0,.75); color: #fff; padding: .6em 1.1em; border-radius: 10px; font-size: clamp(12px, 2vw, 24px); pointer-events: none; }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
   /* While a video starts: only a loading circle in the middle, never our logo (owner, 2026-10-07). */
@@ -62,6 +64,11 @@
 <script src="still.js"></script>
 <script src="keepplaying.js"></script>
 <script type="module">
+// The player's own code loads while the channel's lists are fetched, not after (owner: our channels
+// were slow to start, 1.10.24); the player starts once both are ready.
+let dataReady;
+const ready = new Promise(r => dataReady = r);
+{ const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s); }
 import { STATIONS } from "./schedule.js";
 import { loadPicks, loadPromos, loadTrailers, loadLocked, dayPlan, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
 const q = new URLSearchParams(location.search);
@@ -230,9 +237,9 @@ setInterval(() => {
 }, 5 * 60e3);
 
 let joinAt = 0;
-Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station),
+Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-cache" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station),
   // What the nightly check and the hourly pre-air check (tools/preair_check.py) found won't play here.
-  Promise.all(["unplayable.json", "preair-bad.json"].map(f => fetch(f, { cache: "no-store" }).then(r => r.json()).catch(() => ({}))))
+  Promise.all(["unplayable.json", "preair-bad.json"].map(f => fetch(f, { cache: "no-cache" }).then(r => r.json()).catch(() => ({}))))
     .then(([a, b]) => ({ ids: { ...(a.ids || {}), ...(b.ids || {}) } }))]).then(([d, p, pr, tr, lk, un]) => {
   if (!d.videos || d.videos.length < 3) return fallBack();
   unplayable = un.ids || {};
@@ -248,18 +255,20 @@ Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.j
   const w = itemAt(items);
   cur = w.i;
   joinAt = w.startMs;
-  const s = document.createElement("script");
-  s.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(s);
+  dataReady();
 }).catch(fallBack);
 
-// When YouTube hasn't started after 15 s, the screen says why (a photo of it tells us what to fix).
+// When the picture hasn't started after 15 s, viewers see only our own short message; why it didn't
+// start (player state or error, browser version) goes to the log (logcat in the app), and shows on
+// screen only with ?debug=1, for us.
 let started = false, lastError = null, lastState = "none";
 setTimeout(() => {
   if (started || inBreak) return;
+  const why = `not started (${lastError ? "error " + lastError : "state " + lastState}) · ${(navigator.userAgent.match(/Chrome\/[\d.]+/) || ["?"])[0]}`;
+  console.warn("Bazaar channel " + why);
   const d = document.createElement("div");
   d.className = "diag";
-  d.textContent = `YouTube didn't start here (${lastError ? "error " + lastError : "state " + lastState}) · ${(navigator.userAgent.match(/Chrome\/[\d.]+/) || ["?"])[0]}`;
+  d.textContent = new URLSearchParams(location.search).has("debug") ? why : `${station.name} is starting, one moment please…`;
   document.body.appendChild(d);
 }, 15000);
 // The cover goes once the video is really playing, and comes back while the next one loads.
@@ -270,7 +279,8 @@ function cover(on) {
   // 3.5 s after it starts, when YouTube's own title, logo and buttons at the start have faded away.
   else coverTimer = setTimeout(() => $("cover").classList.add("off"), 3500);
 }
-window.onYouTubeIframeAPIReady = () => {
+window.onYouTubeIframeAPIReady = () => ready.then(startPlayer);
+function startPlayer() {
   // The player starts on the programme that's on (or the one after the ad break that's on).
   const first = items[cur].kind === "video" ? items[cur] : items[(cur + 1) % items.length];
   player = new YT.Player("player", {
@@ -297,7 +307,7 @@ window.onYouTubeIframeAPIReady = () => {
         // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
         else cover(true);
         lastState = e.data;
-        if (e.data === YT.PlayerState.PLAYING) started = true;
+        if (e.data === YT.PlayerState.PLAYING) { started = true; document.querySelector(".diag")?.remove(); }
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
         if (e.data === YT.PlayerState.ENDED) endedEarly(cur);
         else if (e.data === YT.PlayerState.PAUSED) { if (items[cur].clip && e.target.getCurrentTime() >= target.base + items[cur].secs - 2) rejoin(cur); else e.target.playVideo(); }
