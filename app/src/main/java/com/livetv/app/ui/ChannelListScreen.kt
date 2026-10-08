@@ -333,6 +333,8 @@ fun ChannelListScreen(
     SideEffect { sessionTileIds = twoIds; sessionTilesFull = tilesFull }
     // 1+3 has no full screen view: OK on its big player opens the channel straight away.
     val fullTiles = tilesFull && windowed && tileLayout != TileLayout.Five
+    // The "advertise with us" band along the bottom of the screen (Strip mode has its own, News its own lines).
+    val bottomBand = Edition.LIVE_TV && !newsMode && !stripMode && !state.needsPlaylist
     val hideBars = fullTiles || ((newsMode || carouselMode || stripMode || duoMode) && !newsBar) || browseMode
     val twoChosen = twoIds.mapNotNull { id -> state.visibleChannels.firstOrNull { it.id == id } }
     val window = when {
@@ -710,8 +712,10 @@ fun ChannelListScreen(
         ) {
             // On TVs the line is lifted off the bottom edge, which some TVs cut off; pages shown here hide their
             // own line and stay above this band, so only one line ever runs (the owner's photo, 2026-10-08).
+            // Every screen ends above the band, so the line never runs over channels, names or tiles (the
+            // owner, 2026-10-08); Strip mode puts the line in its own band between its player and its strip.
             CompositionLocalProvider(LocalTickerBand provides if (Edition.LIVE_TV && !newsMode) tickerBand else 0.dp) {
-            Column(Modifier.fillMaxSize()) {
+            Column(Modifier.fillMaxSize().padding(bottom = if (bottomBand) tickerBand else 0.dp)) {
                 if (state.needsPlaylist) {
                     Message(
                         text = "Add a playlist to start watching.\n\nPaste a playlist link (M3U) from your TV " +
@@ -1337,9 +1341,9 @@ fun ChannelListScreen(
             }
             }
             // Cable TV's "advertise with us" line along the bottom of every channel screen (owner's rule,
-            // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel, Strip and Duo.
-            // News, CP24, Home and My Screen have their own band at the bottom.
-            if (!newsMode && !state.needsPlaylist) {
+            // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel and Duo.
+            // Strip mode has its own band above its strip; News, CP24, Home and My Screen their own lines.
+            if (bottomBand) {
                 EditionTicker(
                     Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(tickerBand),
                     big = true,
@@ -2007,10 +2011,8 @@ private fun PlayerWithList(
         }
     }
     val list: @Composable (Modifier) -> Unit = { area ->
-        // The list fills the right side (no sponsor strip under it since 1.9.22), ending above the
-        // "advertise with us" band so the line never runs over channel names (the owner, 2026-10-08).
-        val band = if (portrait) 0.dp else LocalTickerBand.current
-        Column(area.padding(bottom = band), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // The list fills the whole right side (no sponsor strip under it since 1.9.22).
+        Column(area, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         LazyColumn(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(6.dp),
