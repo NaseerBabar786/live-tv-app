@@ -12,10 +12,16 @@ block changes every day without the owner saving anything in the Studio.
 Each video's exact length matters: every viewer joins the block at the same moment, worked out
 from the clock. Only uploads from the last MAX_DAYS days count as "upcoming".
 
-Writes docs/channel/trailers.json. Standard library only.
+Since 2026-10-08 the same run also builds Movie Trailers, our channel of nothing but upcoming film
+trailers (the owner's wish): mostly English, from the Hollywood studios' own channels (ENGLISH), with
+the Hindi and Pakistani ones above making up about a fifth. It plays like Bazaar Hits, locked, on
+docs/channel/ytc.html?c=trailers, in a new order every day.
+
+Writes docs/channel/trailers.json and docs/channel/yt-trailers.json. Standard library only.
 Run: python3 tools/build_trailers.py
 """
 import datetime as dt
+from itertools import zip_longest
 import json
 import os
 import re
@@ -70,6 +76,31 @@ LANGUAGES = [
         ("IMGC Global", ["@IMGCGlobal", "@imgcglobal"], "IMGC"),
     ]),
 ]
+
+# Movie Trailers' English half: the Hollywood studios' own channels only.
+ENGLISH = [
+    ("Warner Bros. Pictures", ["@WarnerBrosPictures", "@warnerbrospictures"], "Warner Bros"),
+    ("Universal Pictures", ["@UniversalPictures", "@universalpictures"], "Universal Pictures"),
+    ("Sony Pictures", ["@SonyPictures", "@sonypictures"], "Sony Pictures"),
+    ("Paramount Pictures", ["@ParamountPictures", "@paramountpictures"], "Paramount Pictures"),
+    ("Walt Disney Studios", ["@DisneyStudios", "@WaltDisneyStudios"], "Walt Disney Studios|Disney Studios"),
+    ("Marvel", ["@marvel", "@MarvelEntertainment"], "Marvel Entertainment|Marvel"),
+    ("Pixar", ["@Pixar", "@pixar"], "Pixar"),
+    ("20th Century Studios", ["@20thCenturyStudios", "@20thcenturystudios"], "20th Century Studios"),
+    ("Lionsgate", ["@Lionsgate", "@LionsgateMovies"], "Lionsgate"),
+    ("Amazon MGM Studios", ["@AmazonMGMStudios", "@amazonmgmstudios"], "Amazon MGM Studios"),
+    ("Focus Features", ["@FocusFeatures", "@focusfeatures"], "Focus Features"),
+    ("DreamWorks Animation", ["@DreamWorksAnimation", "@dreamworksanimation"], "DreamWorks"),
+]
+CHANNEL_OUT = os.path.join(ROOT, "docs", "channel", "yt-trailers.json")
+# The channel keeps trailers a little longer than Bazaar TV's block: new films are still showing then.
+CHANNEL_DAYS = 90
+# English is about four in five of the channel's trailers.
+OTHER_SHARE = 0.25
+# Red-band (grown-ups only) trailers and horror never go on the channel.
+ADULT = re.compile(r"red[- ]?band|restricted|\brated r\b|\br-rated\b|uncensored|explicit|18\+|nsfw|"
+                   r"horror|slasher|haunt|ghost|zombie|demon|exorcis|possess|terrifier|\bsaw\b|conjuring|annabelle|"
+                   r"insidious|smile 2|final destination|scream \d|\bthe nun\b|5 nights|five nights", re.I)
 
 AGO = re.compile(r"(\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago", re.I)
 DAYS = {"second": 0, "minute": 0, "hour": 0, "day": 1, "week": 7, "month": 30, "year": 365}
@@ -144,7 +175,7 @@ def film_name(title):
     return re.sub(r"[^a-z]", "", name.lower()) or title.lower()
 
 
-def language(lang, label, sources, today, old):
+def language(lang, label, sources, today, old, max_days=MAX_DAYS):
     found, films = [], {}
     for source, handles, name in sources:
         _, chan = channel_id(handles, name)
@@ -166,7 +197,7 @@ def language(lang, label, sources, today, old):
                 continue
             first = old.get(vid, {}).get("found", today.isoformat())
             # Without an upload date, a trailer counts from the day we first saw it.
-            if (age if age is not None else (today - dt.date.fromisoformat(first)).days) > MAX_DAYS:
+            if (age if age is not None else (today - dt.date.fromisoformat(first)).days) > max_days:
                 continue
             film = film_name(title)
             if films.get(film, 0) >= PER_FILM or any(v["id"] == vid for v in found):
@@ -182,6 +213,42 @@ def language(lang, label, sources, today, old):
     return found
 
 
+def channel(today, others):
+    """Movie Trailers (docs/channel/yt-trailers.json): every English trailer found, and the Hindi and
+    Pakistani ones [others] up to about a quarter of that. The page plays them in a new order each day."""
+    old = {}
+    if os.path.exists(CHANNEL_OUT):
+        old = {v["id"]: v for v in json.load(open(CHANNEL_OUT, encoding="utf-8")).get("videos", [])}
+    english = [v for v in language("English", "", ENGLISH, today, old, CHANNEL_DAYS) if not ADULT.search(v["title"])]
+    english = keep_playable(english)
+    # Hindi and Pakistani take turns, so a short share still has both.
+    by = {}
+    for v in others:
+        if not ADULT.search(v["title"]):
+            by.setdefault(v["lang"], []).append(v)
+    turns = [v for row in zip_longest(*by.values()) for v in row if v]
+    rest = turns[:max(4, round(len(english) * OTHER_SHARE))]
+    videos = [{"id": v["id"], "title": v["title"], "label": v["label"], "lang": v["lang"], "mins": round(v["secs"] / 60, 2),
+               "found": old.get(v["id"], {}).get("found", v["found"]),
+               **({"up": (today - dt.timedelta(days=v["age"])).isoformat()} if v.get("age") is not None else {})}
+              for v in english + rest]
+    langs = {}
+    for v in videos:
+        langs[v["lang"]] = langs.get(v["lang"], 0) + 1
+    summary = f"Movie Trailers: {len(videos)} trailers, {round(sum(v['mins'] for v in videos))} min (" + \
+        ", ".join(f"{k} {n}" for k, n in langs.items()) + ")"
+    if os.environ.get("GITHUB_ACTIONS"):
+        print(f"::notice title=Movie Trailers channel::{summary}")
+    if len(videos) < 10:
+        print(f"{summary}: too few; keeping the old list.", file=sys.stderr)
+        return
+    with open(CHANNEL_OUT, "w", encoding="utf-8") as f:
+        json.dump({"name": "Movie Trailers", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+                   "videos": videos}, f, ensure_ascii=False, indent=1)
+        f.write("\n")
+    print(f"Wrote {os.path.relpath(CHANNEL_OUT, ROOT)}: {summary}")
+
+
 def main():
     today = dt.date.today()
     old = {}
@@ -190,6 +257,8 @@ def main():
     lists = [(lang, label, language(lang, label, sources, today, old)) for lang, label, sources in LANGUAGES]
     # Only videos that play in an embedded player (Bazaar TV's block page): tools/playable.py.
     lists = [(lang, label, keep_playable(videos)) for lang, label, videos in lists]
+    # Movie Trailers takes the Hindi and Pakistani ones too, before the block below drops its "age".
+    channel(today, [dict(v) for _, _, videos in lists for v in videos])
     # Each language gets an equal share of the block; a language with too few trailers leaves its
     # share to the others. In the block they follow one another: Hindi, then Pakistani.
     chosen = {lang: [] for lang, _, _ in lists}

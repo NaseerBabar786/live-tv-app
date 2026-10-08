@@ -74,6 +74,12 @@ export const STATIONS = [
   { id: "ads", name: "Bazaar Ads", dial: "15", doc: "_channel_ads", page: "channel/?c=ads", auto: true, noPopup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-ads.png", ready: "https://tv.bulkbazaar.ca/channel/ads-schedule.json",
     credits: "Ads: our own Cable TV promos and our sponsors' ads. Advertise your business here: WhatsApp 437 602 6500 or tv.bulkbazaar.ca/advertise." },
+  // 18 (owner, 2026-10-08): upcoming film trailers, mostly English from the Hollywood studios' own channels,
+  // with Hindi and Pakistani ones; rebuilt daily by tools/build_trailers.py. Its own logo, no Bazaar word.
+  { id: "trailers", yt: true, web: "channel/ytc.html?c=trailers", ytMins: 3, tagline: "Trailers of the newest and upcoming films",
+    name: "Movie Trailers", dial: "18", doc: "_channel_trailers", page: "channel/?c=trailers", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/movie-trailers.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Movie Trailers: official trailers from the studios' own YouTube channels (Warner Bros, Universal, Sony Pictures, Paramount, Disney, Marvel, Pixar, 20th Century, Lionsgate, Yash Raj, T-Series, ARY Films and others). Backup: public-domain classic films." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */

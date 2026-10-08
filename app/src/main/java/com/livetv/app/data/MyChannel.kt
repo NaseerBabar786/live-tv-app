@@ -60,8 +60,8 @@ object MyChannel {
         val bug: Boolean = true,
     )
 
-    /** Our channels take numbers 1 to 15; the other channels are numbered from 16. */
-    const val COUNT = 15
+    /** Our channels take numbers 1 to 18 (17 is kept for Spark Shayari); the other channels are numbered from 19. */
+    const val COUNT = 18
 
     /**
      * Our channels, in the order they lead the channel list. Since 1.9.47 all but Bazaar TV run
@@ -96,6 +96,9 @@ object MyChannel {
         // 15 (owner, 2026-10-07): ads and promos round the clock in our own player: our Cable TV promos, the
         // sponsors' ads from /sponsors and "Advertise with us" (docs/channel/ads-schedule.json). No pop-up ads on it.
         Station("ads", 15, "15", "Spark Ads", logo = "spark-ads.png"),
+        // 18 (owner, 2026-10-08): trailers of new and upcoming films, mostly English from the Hollywood studios'
+        // own channels plus Hindi and Pakistani ones (tools/build_trailers.py, daily). Its own logo, no Spark word.
+        Station("trailers", 18, "18", "Movie Trailers", youtube = true, backup = "filmein", logo = "movie-trailers.png"),
     )
 
     /** Bazaar Ads' address: the channel that is all ads, so no pop-up ad breaks come over it. */
