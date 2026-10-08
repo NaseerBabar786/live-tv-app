@@ -167,6 +167,13 @@ object Themes {
         prefs?.edit()?.putString(K_SIZE, next.first)?.apply()
     }
 
+    /** Picks a text size by its name ("Normal", "Large", "Extra large"). */
+    fun setSize(name: String) {
+        val size = sizes.firstOrNull { it.first == name } ?: return
+        textScale = size.second
+        prefs?.edit()?.putString(K_SIZE, size.first)?.apply()
+    }
+
     val sizeName get() = sizes.firstOrNull { it.second == textScale }?.first ?: sizes.first().first
 
     private const val K_THEME = "theme"
