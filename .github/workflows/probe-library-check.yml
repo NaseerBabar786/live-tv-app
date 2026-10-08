@@ -2,7 +2,7 @@ name: Probe library check (temporary)
 on:
   push:
     branches: [library-quality]
-    paths: [tools/library_check.py, .github/workflows/probe-library-check.yml]
+    paths: [tools/library_check.py, tools/probe_yt.py, .github/workflows/probe-library-check.yml]
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -13,6 +13,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install pillow
+      - run: for v in 2xL-zwKVr80 zeVJK-yO2WE 2fuEQ2IT7Tw; do python3 tools/probe_yt.py $v; done
       - run: >
           python3 tools/library_check.py --probe 2xL-zwKVr80 zeVJK-yO2WE Y5Z3ye_Enrg 3nZUNt-qJbY 2KA-zeHYG0A
           https://vimeo.com/1228694119
