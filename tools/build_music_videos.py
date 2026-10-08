@@ -28,8 +28,9 @@ from playable import keep_playable  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "channel", "music-videos.json")
 
-# Songs from the last this many days (new music); a quiet channel's older songs still fill in.
-MAX_DAYS = 180
+# Songs from the last this many days only: Bazaar TV One is a newly launched channel with fresh content
+# (the owner, 2026-10-08). Was 180.
+MAX_DAYS = 90
 SECS = (100, 420)
 # The whole block, about 50 minutes.
 TARGET_SECS = 50 * 60
@@ -39,7 +40,11 @@ PER_SOURCE = 4
 KEEP = re.compile(r"official (music )?video|\(official\)|music video|full video|video song|official song|coke studio|\| ?video\b", re.I)
 SKIP = re.compile(r"lyric|lyrical|audio|visuali[sz]er|jukebox|full album|non ?stop|mashup|remix|slowed|reverb|8d|"
                   r"behind the scenes|\bbts\b|making|teaser|trailer|reaction|interview|\blive\b|concert|#shorts?\b|\bshorts\b|"
-                  r"explicit|\buncensored\b|karaoke|instrumental|cover\b|tutorial|dance practice|backstage", re.I)
+                  r"explicit|\buncensored\b|karaoke|instrumental|cover\b|tutorial|dance practice|backstage|"
+                  # Old songs the labels put up again in a new picture quality, or as golden oldies.
+                  r"8k ?/ ?4k|4k ?/ ?8k|remaster|evergreen|old is gold|golden era|retro|classic|throwback|\b[6-9]0'?s\b", re.I)
+# A song whose title names a year before last year is an old song.
+OLD_YEAR = re.compile(r"\b(19[3-9]\d|20[0-4]\d)\b")
 
 LANGUAGES = [
     ("Hindi", "مقبول ہندی گانے", [
@@ -77,7 +82,8 @@ def language(lang, sources, today, old):
         for vid, title, secs, age in videos:
             if kept >= PER_SOURCE:
                 break
-            if not KEEP.search(title) or SKIP.search(title) or other_language(title):
+            if not KEEP.search(title) or SKIP.search(title) or other_language(title) or \
+                    any(int(y) < today.year - 1 for y in OLD_YEAR.findall(title)):
                 continue
             if secs is None or not SECS[0] <= secs <= SECS[1] or any(v["id"] == vid for v in found):
                 continue

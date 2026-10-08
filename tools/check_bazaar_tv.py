@@ -12,7 +12,8 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_bazaar_blocks import KIDS, for_grown_ups  # noqa: E402
+import datetime as dt  # noqa: E402
+from build_bazaar_blocks import KIDS, for_grown_ups, is_new  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHANNEL = os.path.join(ROOT, "docs", "channel")
@@ -22,7 +23,8 @@ def main():
     c = json.load(open(os.path.join(CHANNEL, "test-schedule.json"), encoding="utf-8"))
     by_id = {v["id"]: v for v in c.get("videos", [])}
     on_air = list(dict.fromkeys(c.get("loop", []) + c.get("fillers", []) + [s.get("video") for s in c.get("slots", [])]))
-    wrong = []
+    wrong, old = [], []
+    today = dt.date.today()
     for vid in on_air:
         v = by_id.get(vid)
         if not v:
@@ -36,6 +38,12 @@ def main():
             for item in (lambda d: d.get("videos", []) + d.get("spares", []))(json.load(open(path, encoding="utf-8"))):
                 if not for_grown_ups(item):
                     wrong.append(f"{vid} ({os.path.basename(path)}): {item.get('title')} · {item.get('label')}")
+                # Only new programmes on Bazaar TV One (the owner, 2026-10-08); a block kept from an earlier
+                # day may still hold an older one, so this only warns.
+                if v["kind"] == "list" and not is_new(item, item.get("kind"), today):
+                    old.append(f"{vid}: {item.get('title')}")
+    for line in old:
+        print(f"::warning title=Not a new programme on Bazaar TV One::{line}")
     if wrong:
         print("Not for Bazaar TV (move children's programmes to Bazaar Kids):", *wrong, sep="\n  ")
         sys.exit(1)
