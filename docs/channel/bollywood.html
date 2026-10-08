@@ -66,6 +66,13 @@
 <script>
 const app = new URLSearchParams(location.search).has("app");
 const $ = id => document.getElementById(id);
+// Spark (owner, 2026-10-08): the Cable TV test version asks for the new name and logo; everyone else still sees Bazaar Hits.
+const NAME = new URLSearchParams(location.search).get("brand") === "spark" ? "Spark Hits" : "Bazaar Hits";
+if (NAME !== "Bazaar Hits") {
+  document.querySelector(".bug").src = "logos/spark-hits.png";
+  document.querySelector(".ticker span").textContent = document.querySelector(".ticker span").textContent.replace("Bazaar Hits", NAME);
+  document.title = NAME + " · Watch live";
+}
 if (!app) { $("back").hidden = false; }
 let songs = [], at = 0, player = null, nowTimer = null;
 // Ad breaks from the running order (ytorder.js withBreaks): song index -> the promos that play before it.
@@ -89,7 +96,7 @@ function showNow() {
   placeBug(s.label);
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = s.title;
-  $("now").lastChild.textContent = "Bazaar Hits · " + s.label;
+  $("now").lastChild.textContent = NAME + " · " + s.label;
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
@@ -121,7 +128,7 @@ Promise.all([fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()),
   const s = document.createElement("script");
   s.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(s);
-}).catch(() => { $("msg").textContent = "Bazaar Hits can't load right now. Please try again in a minute."; });
+}).catch(() => { $("msg").textContent = NAME + " can't load right now. Please try again in a minute."; });
 
 // When YouTube hasn't started after 15 s, the screen says why (a photo of it tells us what to fix).
 let started = false, lastError = null, lastState = "none";

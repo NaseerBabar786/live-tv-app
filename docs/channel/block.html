@@ -74,6 +74,8 @@ const ids = (q.get("ids") || "").split(",").filter(id => /^[\w-]{11}$/.test(id))
 const secs = (q.get("secs") || "").split(",").map(Number);
 const at = +q.get("at") || Date.now(), until = +q.get("until") || 0;
 const name = q.get("name") || "Bazaar TV One";
+// Spark (owner, 2026-10-08): the Cable TV test version sends the new name; the cover says it too.
+if (q.get("brand") === "spark") $("coverTitle").textContent = "Spark TV";
 const logo = q.get("logo") || "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png";
 const corner = q.get("corner") || "tr";
 const starts = [];

@@ -108,14 +108,14 @@ class MyChannelTest {
         assertEquals(listOf(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), MyChannel.STATIONS.map { it.number })
         assertEquals(1, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.number)
         assertEquals(2, films.channel.number)
-        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=filmein&app=1", MyChannel.webPage(films.channel))
+        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=filmein&app=1&brand=spark", MyChannel.webPage(films.channel))
         assertEquals(null, MyChannel.webPage(MyChannel.parse(JSONObject("""{"videos":[]}""")).channel))
         val dramas = MyChannel.parse(JSONObject("""{"name":"Bazaar Dramas","videos":[]}"""), "dramas")
         assertEquals(11, dramas.channel.number)
-        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1", MyChannel.webPage(dramas.channel))
+        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1&brand=spark", MyChannel.webPage(dramas.channel))
         assertEquals("filmein", MyChannel.STATIONS.first { it.id == "english" }.backup)
-        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1&v=188", MyChannel.pageFor(dramas.channel, 188))
-        assertEquals("${MyChannel.BOLLYWOOD_URL}?app=1&v=188", MyChannel.pageFor(Channel(name = "Bazaar Hits", url = MyChannel.BOLLYWOOD_URL), 188))
+        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1&brand=spark&v=188", MyChannel.pageFor(dramas.channel, 188))
+        assertEquals("${MyChannel.BOLLYWOOD_URL}?app=1&brand=spark&v=188", MyChannel.pageFor(Channel(name = "Bazaar Hits", url = MyChannel.BOLLYWOOD_URL), 188))
         assertEquals(
             "https://tv.bulkbazaar.ca/channel/yt.html?app=1&v=abcdefghijk&name=Geo%20News&ver=188",
             MyChannel.pageFor(Channel(name = "Geo News", url = "https://www.youtube.com/watch?v=abcdefghijk"), 188),
@@ -125,8 +125,19 @@ class MyChannelTest {
     }
 
     @Test
+    fun ourChannelsAreCalledSpark() {
+        assertEquals("Spark TV One", MyChannel.brand("Bazaar TV One"))
+        assertEquals("Spark Movies Hindi", MyChannel.brand("Bazaar Movies Hindi"))
+        assertEquals("Latest Movies", MyChannel.brand("Latest Movies"))
+        assertEquals("Bulk Bazaar Deals", MyChannel.brand("Bulk Bazaar Deals"))
+        assertTrue(MyChannel.STATIONS.none { "Bazaar" in it.name })
+        assertEquals("Spark Cinema", MyChannel.parse(JSONObject("""{"name":"Bazaar Cinema","videos":[]}"""), "filmein").channel.name)
+    }
+
+    @Test
     fun ourLogosCarryAVersionSoTvsFetchTheNewPicture() {
-        assertEquals("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png?v=5", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-tv.png?v=6", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-latest.png?v=6", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/latest-movies.png"))
         assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
         assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
     }
@@ -174,7 +185,7 @@ class MyChannelTest {
         assertTrue(c.videos.all { it.isBreak })
         assertEquals(15, c.channel.number)
         assertEquals(MyChannel.ADS_URL, c.channel.url)
-        assertEquals("Bazaar Ads", c.channel.name)
+        assertEquals("Spark Ads", c.channel.name)
         // Round and round from midnight: 30 s promo, 60 s sponsor, 15 s advertise.
         val round = at(0, 0) + 50 * 105_000L
         assertEquals("sponsors-0", (MyChannel.whatsOn(c, round + 40_000) as MyChannel.Now.Playing).video.id)

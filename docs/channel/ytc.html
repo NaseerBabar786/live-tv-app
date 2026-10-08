@@ -68,6 +68,11 @@ const q = new URLSearchParams(location.search);
 const app = q.has("app");
 const $ = id => document.getElementById(id);
 const station = STATIONS.find(s => s.id === q.get("c")) || STATIONS.find(s => s.yt);
+// Spark (owner, 2026-10-08): the Cable TV test version asks for the new names and logos; everyone else still sees Bazaar.
+if (q.get("brand") === "spark") Object.assign(station, {
+  name: station.name.replace(/^Bazaar(?= )/, "Spark"),
+  logo: station.logo.replace("/logos/bazaar-", "/logos/spark-").replace("/logos/latest-movies.png", "/logos/spark-latest.png"),
+});
 let items = [], cur = 0, inBreak = false, player = null, nowTimer = null, failures = 0;
 // How far this screen runs ahead of the clock (ms): after a programme that ends a long while before its
 // listed end, or won't play at all, the channel goes straight on to the next one instead of standing still.
