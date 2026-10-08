@@ -107,7 +107,7 @@ val GAMES = listOf(
     GameInfo("echo", "Color Echo", "🎨", "Watch the colours light up, then repeat them with the arrows.", Scoring.Best) { ColorEcho() },
     GameInfo("ludo", "Ludo", "🎲", "OK rolls the dice. Left and Right pick a piece, OK moves it. A 6 brings a piece out and rolls again. Get all four home.", Scoring.Wins) { Ludo() },
     GameInfo("cricket", "Cricket", "🏏", "Press OK to swing as the ball reaches the yellow zone. Perfect timing hits a six. Chase the target before the overs or wickets run out.", Scoring.Best) { Cricket() },
-    GameInfo("snakes", "Snakes & Ladders", "🐍", "OK rolls the dice. Ladders take you up, snakes bring you down. First to 100 wins.", Scoring.Wins) { SnakesLadders() },
+    GameInfo("snakes", "Snakes & Ladders", "🪜", "OK rolls the dice. Ladders take you up, snakes bring you down. First to 100 wins.", Scoring.Wins) { SnakesLadders() },
     GameInfo("chess", "Chess", "♟️", "Arrows move, OK picks a piece and OK again moves it to a highlighted square.", Scoring.Wins) { Chess() },
     GameInfo("quiz", "Quiz Time", "❓", "Arrows pick an answer, OK locks it in. Answer fast for bonus points. 10 questions a round.", Scoring.Best) { Quiz() },
     GameInfo("sudoku", "Sudoku", "🔢", "Arrows move. Number buttons fill a square (0 clears), or OK counts up 1 to 9. Every row, column and box needs 1 to 9 once.", Scoring.Wins) { Sudoku() },
