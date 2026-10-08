@@ -60,10 +60,11 @@ SPORTS_FEEDS = [
     ("بی بی سی سپورٹ", "https://feeds.bbci.co.uk/sport/cricket/rss.xml"),
     ("بی بی سی سپورٹ", "https://feeds.bbci.co.uk/sport/rss.xml"),
 ]
-# Film and showbiz (owner asked 2026-10-08): Pakistani showbiz in Urdu + BBC entertainment, translated when needed.
+# Film and showbiz (owner asked 2026-10-08): Lollywood/Bollywood in Urdu, Hollywood (Variety) + BBC entertainment, translated when needed.
 FILM_FEEDS = [
     ("ایکسپریس شوبز", "https://www.express.pk/showbiz/feed/"),
     ("ایکسپریس شوبز", "https://www.express.pk/entertainment/feed/"),
+    ("ورائٹی", "https://variety.com/feed/"),   # Hollywood (owner asked 2026-10-08)
     ("بی بی سی", "https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml"),
 ]
 PAKISTAN_WORDS = ("پاکستان", "اسلام آباد", "لاہور", "کراچی", "پشاور", "کوئٹہ", "پنجاب", "سندھ", "خیبر", "بلوچستان",
@@ -71,8 +72,8 @@ PAKISTAN_WORDS = ("پاکستان", "اسلام آباد", "لاہور", "کرا
                   "مریم نواز", "نواز شریف", "آرمی چیف", "عاصم منیر", "سپریم کورٹ", "راولپنڈی", "ملتان", "فیصل آباد",
                   "گلگت", "سٹیٹ بینک", "کرکٹ بورڈ", "پی سی بی")
 # How many stories each bulletin tries to fit (the fitting step drops the last ones if too long).
-WANT = {"headlines": {"pakistan": 4, "india": 3, "world": 4, "canada": 3, "sports": 2, "film": 2},
-        "full": {"pakistan": 8, "india": 6, "world": 8, "canada": 6, "sports": 5, "film": 4}}
+WANT = {"headlines": {"pakistan": 4, "india": 3, "world": 4, "canada": 3, "sports": 2, "film": 3},
+        "full": {"pakistan": 8, "india": 6, "world": 8, "canada": 6, "sports": 5, "film": 6}}
 ORDER = ("pakistan", "india", "world", "canada", "sports", "film")
 # Spare stories per section: used when the wanted ones are short, so the bulletin fills its slot.
 EXTRA = 6
