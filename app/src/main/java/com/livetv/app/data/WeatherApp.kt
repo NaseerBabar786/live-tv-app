@@ -36,6 +36,10 @@ object WeatherApp {
         val visibility: Int?,
         val clouds: Int,
         val dewPoint: Int,
+        /** Where the wind comes from, in degrees (0 = north). */
+        val windDegrees: Int = 0,
+        /** Hectopascals at sea level, unrounded (for kPa and inHg). */
+        val pressureHpa: Double = 0.0,
     ) {
         val icon get() = Weather.icon(code, day)
         val sky get() = describe(code)
@@ -51,6 +55,8 @@ object WeatherApp {
         /** Chance of rain or snow, 0..100. */
         val rain: Int,
         val wind: Int,
+        val uv: Int = 0,
+        val pressure: Double = 0.0,
     ) {
         val icon get() = Weather.icon(code, day)
         val hour get() = time.substring(11, 13).toInt()
@@ -72,6 +78,7 @@ object WeatherApp {
         val sunset: String,
         val uv: Int,
         val wind: Int,
+        val gusts: Int = 0,
     ) {
         val icon get() = Weather.icon(code)
         val sky get() = describe(code)
@@ -85,7 +92,13 @@ object WeatherApp {
 
     data class Alert(val title: String, val text: String, val severe: Boolean, val source: String)
 
-    data class Story(val title: String, val source: String, val link: String, val published: Long)
+    /** A weather story; [image] is its picture ("" when it has none). */
+    data class Story(val title: String, val source: String, val link: String, val published: Long, val image: String = "")
+
+    /** A weather video (YouTube, checked before it's listed and played locked in our film page). */
+    data class Video(val id: String, val title: String, val channel: String, val published: Long) {
+        val thumbnail get() = "https://i.ytimg.com/vi/$id/hqdefault.jpg"
+    }
 
     data class Report(
         val place: Location.Place,
@@ -98,11 +111,84 @@ object WeatherApp {
         val airQuality: Int? = null,
         val alerts: List<Alert> = emptyList(),
         val loadedAt: Long = System.currentTimeMillis(),
+        /** The days before today (two weeks), for the monthly calendar and yesterday's high and low. */
+        val past: List<Day> = emptyList(),
+        /** Rain or snow (mm) every 15 minutes around now: (local time, amount). */
+        val minutes: List<Pair<String, Double>> = emptyList(),
+        /** The most pollen in the air (grains per m³); null where it isn't measured (outside Europe). */
+        val pollen: Int? = null,
     ) {
         val unit get() = if (fahrenheit) "F" else "C"
         val speed get() = if (fahrenheit) "mph" else "km/h"
         val distance get() = if (fahrenheit) "mi" else "km"
         val today get() = days.firstOrNull()
+        val yesterday get() = past.lastOrNull()
+
+        /** "Rain stops within the next hour", like the weather apps' short-term line; null with no 15-minute forecast. */
+        fun nowcast(): String? {
+            if (minutes.size < 2) return null
+            val first = minutes.indexOfLast { it.first <= now.take(16) }.coerceAtLeast(0)
+            val next = minutes.drop(first).take(9)
+            if (next.size < 2) return null
+            val wet = { mm: Double -> mm >= 0.1 }
+            val snowy = (listOf(current.code) + hoursFromNow(3).map { it.code }).any { it in 71..77 || it in 85..86 }
+            val what = if (snowy) "Snow" else "Rain"
+            return if (wet(next[0].second)) {
+                val stop = next.indexOfFirst { !wet(it.second) }
+                when {
+                    stop < 0 -> "$what for at least the next 2 hours"
+                    stop <= 4 -> "$what stops within the next hour"
+                    else -> "$what stops in about 2 hours"
+                }
+            } else {
+                val start = next.indexOfFirst { wet(it.second) }
+                when {
+                    start < 0 -> "No rain or snow in the next 2 hours"
+                    start <= 4 -> "$what starts within the next hour"
+                    else -> "$what starts in about 2 hours"
+                }
+            }
+        }
+
+        /** The air pressure as the place's own weather service shows it: (value, unit). */
+        fun pressureText(): Pair<String, String> {
+            val hpa = if (current.pressureHpa > 0) current.pressureHpa else current.pressure.toDouble()
+            return when {
+                fahrenheit -> "%.2f".format(Locale.US, hpa * 0.02953) to "inHg"
+                place.country == "CA" -> "%.1f".format(Locale.US, hpa / 10) to "kPa"
+                else -> hpa.roundToInt().toString() to "hPa"
+            }
+        }
+
+        /** "Rising", "Falling" or "Steady", over the last 3 hours. */
+        fun pressureTrend(): String {
+            val i = hours.indexOfFirst { it.time.take(13) == now.take(13) }
+            if (i < 3 || hours[i].pressure <= 0 || hours[i - 3].pressure <= 0) return "Steady"
+            val change = hours[i].pressure - hours[i - 3].pressure
+            return when {
+                change >= 1 -> "Rising"
+                change <= -1 -> "Falling"
+                else -> "Steady"
+            }
+        }
+
+        /**
+         * How high the clouds start, worked out from the temperature and the dew point (the gap shrinks
+         * about 8 °C per kilometre of height): (value, unit), or ("Unlimited", "") under a clear sky.
+         */
+        fun cloudCeiling(): Pair<String, String> {
+            if (current.clouds < 10) return "Unlimited" to ""
+            val gap = (current.temperature - current.dewPoint).coerceAtLeast(0)
+            val height = if (fahrenheit) gap * 228 else gap * 125
+            val rounded = ((height + 50) / 100) * 100
+            return rounded.toString() to (if (fahrenheit) "ft" else "m")
+        }
+
+        /** Today's hours with sun (UV above 0), for the UV report. */
+        fun uvHours(): List<Hour> = hoursOf(now.take(10)).filter { it.uv > 0 }
+
+        /** The past two weeks and the days ahead, for the monthly calendar. */
+        val calendar get() = past + days
 
         /** The hours from now on (the current hour first). */
         fun hoursFromNow(count: Int = 24): List<Hour> {
@@ -265,23 +351,28 @@ object WeatherApp {
         cache[k]?.takeIf { !fresh && System.currentTimeMillis() - it.loadedAt < 15 * 60_000L }?.let { return it }
         val f = fahrenheitChoice ?: (place.country in Weather.FAHRENHEIT)
         val report = runCatching { parse(get(forecastUrl(place, f)), place, f) }.getOrNull() ?: return null
-        val air = runCatching { parseAir(get(airUrl(place))) }.getOrNull()
+        val airJson = runCatching { get(airUrl(place)) }.getOrNull()
+        val air = airJson?.let { runCatching { parseAir(it) }.getOrNull() }
+        val pollen = airJson?.let { runCatching { parsePollen(it) }.getOrNull() }
         val official = if (place.country == "US") runCatching { parseNws(get(nwsUrl(place))) }.getOrDefault(emptyList()) else emptyList()
-        return report.copy(airQuality = air, alerts = official).also { cache[k] = it }
+        return report.copy(airQuality = air, alerts = official, pollen = pollen).also { cache[k] = it }
     }
 
     fun forecastUrl(p: Location.Place, fahrenheit: Boolean) =
         "https://api.open-meteo.com/v1/forecast?latitude=${p.latitude}&longitude=${p.longitude}" +
             "&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,is_day,wind_speed_10m," +
             "wind_direction_10m,wind_gusts_10m,pressure_msl,uv_index,visibility,cloud_cover,dew_point_2m" +
-            "&hourly=temperature_2m,apparent_temperature,weather_code,precipitation_probability,is_day,wind_speed_10m" +
+            "&hourly=temperature_2m,apparent_temperature,weather_code,precipitation_probability,is_day,wind_speed_10m," +
+            "uv_index,pressure_msl" +
             "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum," +
-            "snowfall_sum,sunrise,sunset,uv_index_max,wind_speed_10m_max" +
-            "&timezone=auto&forecast_days=10" +
+            "snowfall_sum,sunrise,sunset,uv_index_max,wind_speed_10m_max,wind_gusts_10m_max" +
+            "&minutely_15=precipitation&past_minutely_15=1&forecast_minutely_15=12" +
+            "&timezone=auto&forecast_days=16&past_days=14" +
             if (fahrenheit) "&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch" else ""
 
     private fun airUrl(p: Location.Place) =
-        "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${p.latitude}&longitude=${p.longitude}&current=us_aqi"
+        "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${p.latitude}&longitude=${p.longitude}" +
+            "&current=us_aqi,${POLLEN.joinToString(",")}"
 
     private fun nwsUrl(p: Location.Place) =
         "https://api.weather.gov/alerts/active?point=%.4f,%.4f".format(Locale.US, p.latitude, p.longitude)
@@ -305,6 +396,8 @@ object WeatherApp {
             visibility = visibility,
             clouds = c.optInt("cloud_cover"),
             dewPoint = c.optDouble("dew_point_2m", 0.0).roundToInt(),
+            windDegrees = c.optDouble("wind_direction_10m", 0.0).roundToInt(),
+            pressureHpa = c.optDouble("pressure_msl", 0.0),
         )
         val h = o.getJSONObject("hourly")
         val times = h.getJSONArray("time")
@@ -317,6 +410,8 @@ object WeatherApp {
                 day = num(h, "is_day", i, 1.0) == 1.0,
                 rain = num(h, "precipitation_probability", i).roundToInt(),
                 wind = num(h, "wind_speed_10m", i).roundToInt(),
+                uv = num(h, "uv_index", i).roundToInt(),
+                pressure = num(h, "pressure_msl", i),
             )
         }
         val d = o.getJSONObject("daily")
@@ -334,9 +429,17 @@ object WeatherApp {
                 sunset = d.optJSONArray("sunset")?.optString(i).orEmpty(),
                 uv = num(d, "uv_index_max", i).roundToInt(),
                 wind = num(d, "wind_speed_10m_max", i).roundToInt(),
+                gusts = num(d, "wind_gusts_10m_max", i).roundToInt(),
             )
         }
-        return Report(place, fahrenheit, c.optString("time", hours.firstOrNull()?.time.orEmpty()), current, hours, days)
+        val now = c.optString("time", hours.firstOrNull()?.time.orEmpty())
+        val (past, ahead) = days.partition { now.isNotEmpty() && it.date < now.take(10) }
+        val m = o.optJSONObject("minutely_15")
+        val minuteTimes = m?.optJSONArray("time")
+        val minutes = if (m == null || minuteTimes == null) emptyList() else (0 until minuteTimes.length()).map { i ->
+            minuteTimes.getString(i) to num(m, "precipitation", i)
+        }
+        return Report(place, fahrenheit, now, current, hours, ahead, past = past, minutes = minutes)
     }
 
     private fun num(o: JSONObject, name: String, i: Int, default: Double = 0.0): Double =
@@ -344,6 +447,21 @@ object WeatherApp {
 
     fun parseAir(json: String): Int? =
         JSONObject(json).optJSONObject("current")?.optDouble("us_aqi")?.takeUnless { it.isNaN() }?.roundToInt()
+
+    /** The most pollen of any kind in the air; null where none is measured. */
+    fun parsePollen(json: String): Int? {
+        val c = JSONObject(json).optJSONObject("current") ?: return null
+        return POLLEN.mapNotNull { c.optDouble(it).takeUnless { v -> v.isNaN() } }.maxOrNull()?.roundToInt()
+    }
+
+    private val POLLEN = listOf("alder_pollen", "birch_pollen", "grass_pollen", "mugwort_pollen", "olive_pollen", "ragweed_pollen")
+
+    fun pollenLabel(grains: Int): String = when {
+        grains <= 20 -> "Low"
+        grains <= 80 -> "Moderate"
+        grains <= 200 -> "High"
+        else -> "Very high"
+    }
 
     /** The US National Weather Service's warnings for a point. */
     fun parseNws(json: String): List<Alert> {
@@ -362,8 +480,27 @@ object WeatherApp {
 
     // ---------- Stories ----------
 
-    /** Weather stories about [place] first, then weather news from the rest of the country and the world. */
+    /**
+     * Weather stories about [place] first, then weather news from the rest of the country and the world.
+     * Bing News gives them with pictures; Google News (no pictures) fills in when Bing can't be reached.
+     */
     fun stories(place: Location.Place): List<Story> {
+        val market = when (place.country) {
+            "CA", "US", "GB", "IN", "AU" -> "en-${place.country}"
+            else -> "en-US"
+        }
+        fun bing(q: String) = runCatching {
+            parseBing(get("https://www.bing.com/news/search?q=" + URLEncoder.encode(q, "UTF-8") + "&format=rss&setmkt=$market&setlang=en"))
+        }.getOrDefault(emptyList())
+        val pictured = (if (place.city.isNotBlank()) bing("${place.city} weather") else emptyList()).take(12) + bing("weather forecast")
+        val withPictures = pictured.filter { it.image.isNotBlank() }.distinctBy { it.title.lowercase() }
+        if (withPictures.size >= 6) {
+            return (withPictures + pictured).distinctBy { it.title.lowercase() }.take(24)
+        }
+        return (pictured + googleStories(place)).distinctBy { it.title.lowercase() }.take(24)
+    }
+
+    private fun googleStories(place: Location.Place): List<Story> {
         val (hl, gl) = when (place.country) {
             "CA" -> "en-CA" to "CA"
             "US" -> "en-US" to "US"
@@ -394,6 +531,48 @@ object WeatherApp {
             } ?: 0L
             Story(title, source, link, published)
         }.toList()
+
+    /** Bing News RSS: each item's picture is in News:Image, its source in News:Source, its link goes through Bing. */
+    fun parseBing(xml: String): List<Story> =
+        Regex("<item[\\s>].*?</item>", RegexOption.DOT_MATCHES_ALL).findAll(xml).mapNotNull { m ->
+            fun tag(name: String) = Regex("<$name[^>]*>(.*?)</$name>", RegexOption.DOT_MATCHES_ALL).find(m.value)?.groupValues?.get(1)
+                ?.replace("<![CDATA[", "")?.replace("]]>", "")?.let(::unescape)?.replace(Regex("\\s+"), " ")?.trim()
+            val title = tag("title") ?: return@mapNotNull null
+            var link = tag("link") ?: return@mapNotNull null
+            // Straight to the story, not through Bing's counter.
+            Regex("[?&]url=([^&]+)").find(link)?.groupValues?.get(1)
+                ?.let { runCatching { java.net.URLDecoder.decode(it, "UTF-8") }.getOrNull() }
+                ?.takeIf { it.startsWith("http") }?.let { link = it }
+            val published = tag("pubDate")?.let { d ->
+                runCatching { SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US).parse(d)?.time }.getOrNull()
+            } ?: 0L
+            // Bing's pictures come in the size asked for.
+            val image = tag("News:Image").orEmpty().let { if ("/th?" in it && "&w=" !in it) "$it&w=640&h=360&c=7" else it }
+            Story(title, tag("News:Source").orEmpty(), link, published, image)
+        }.toList()
+
+    // ---------- Videos ----------
+
+    private var videoCache: Pair<Long, List<Video>>? = null
+
+    /** The newest weather videos, from our own checked list (tools/build_weather_videos.py). Off the main thread. */
+    fun videos(): List<Video> {
+        videoCache?.takeIf { System.currentTimeMillis() - it.first < 30 * 60_000L }?.let { return it.second }
+        val list = runCatching { parseVideos(get(VIDEOS_URL)) }.getOrNull() ?: return videoCache?.second.orEmpty()
+        videoCache = System.currentTimeMillis() to list
+        return list
+    }
+
+    fun parseVideos(json: String): List<Video> {
+        val a = JSONObject(json).optJSONArray("videos") ?: return emptyList()
+        return (0 until a.length()).mapNotNull { i ->
+            val v = a.optJSONObject(i) ?: return@mapNotNull null
+            val id = v.optString("id").takeIf { it.length == 11 } ?: return@mapNotNull null
+            Video(id, v.optString("title"), v.optString("channel"), v.optLong("published") * 1000)
+        }
+    }
+
+    private const val VIDEOS_URL = "https://tv.bulkbazaar.ca/weather/videos.json"
 
     private fun unescape(s: String): String = s
         .replace(Regex("&#(\\d+);")) { it.groupValues[1].toIntOrNull()?.let { c -> String(Character.toChars(c)) } ?: it.value }
@@ -490,6 +669,9 @@ object WeatherApp {
         nextDate(today) -> "Tomorrow"
         else -> calendar(date)?.let { SimpleDateFormat("EEE", Locale.US).apply { timeZone = UTC }.format(it.time) } ?: date
     }
+
+    /** The day of the week of [date]: 0 = Sunday ... 6 = Saturday. */
+    fun weekday(date: String): Int = (calendar(date)?.get(Calendar.DAY_OF_WEEK) ?: Calendar.SUNDAY) - Calendar.SUNDAY
 
     /** "Oct 8". */
     fun shortDate(date: String): String =

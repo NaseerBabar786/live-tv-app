@@ -139,7 +139,7 @@ def lookup(video_id):
 
 # Lists whose items carry a YouTube video id ("id"): taken off the list when it fails.
 JSON_LISTS = ["channel/yt-*.json", "channel/bollywood.json", "channel/trailers.json", "channel/music-videos.json",
-              "channel/block-*.json"]
+              "channel/block-*.json", "weather/videos.json"]
 M3U_LISTS = ["Dramas.m3u", "PakistanLive.m3u"]
 
 

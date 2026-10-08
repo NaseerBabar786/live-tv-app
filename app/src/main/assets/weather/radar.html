@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- The Weather section's rain radar (Cable TV 1.10.19): RainViewer's free radar frames over a dark map,
+     played as a loop. The app fills in __LAT__, __LON__, __ZOOM__ and __MINI__ and steers it with
+     step(n) and toggle(); the page itself takes no keys or taps. -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  html, body, #map { margin: 0; height: 100%; background: #1c2233; overflow: hidden; }
+  .leaflet-container { background: #1c2233; font-family: sans-serif; }
+  .leaflet-control-attribution { background: rgba(0,0,0,.45) !important; color: #cfd6e6 !important; font-size: 9px; }
+  .leaflet-control-attribution a { color: #cfd6e6 !important; }
+  #bar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; gap: 12px;
+         padding: 8px 14px 14px; background: linear-gradient(transparent, rgba(8,14,40,.85)); color: #fff; font: 600 14px sans-serif; }
+  #track { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.25); position: relative; }
+  #fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: #ffd000; width: 0; }
+  #now { position: absolute; top: -4px; width: 2px; height: 14px; background: #fff; }
+  #msg { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; color: #cfd6e6;
+         font: 600 16px sans-serif; z-index: 1001; text-align: center; padding: 20px; }
+  .mini #bar { padding: 4px 10px 8px; font-size: 12px; }
+  .mini .leaflet-control-attribution { display: none; }
+  .me { width: 14px; height: 14px; border-radius: 50%; background: #2f6bff; border: 3px solid #fff; box-shadow: 0 0 6px #000; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="bar"><span id="time">…</span><div id="track"><div id="fill"></div><div id="now"></div></div></div>
+<div id="msg">The radar can't be reached right now.</div>
+<script>
+var LAT = __LAT__, LON = __LON__, ZOOM = __ZOOM__, MINI = __MINI__;
+if (MINI) document.body.className = 'mini';
+var map = L.map('map', { zoomControl: false, keyboard: false, dragging: false, touchZoom: false, scrollWheelZoom: false,
+  doubleClickZoom: false, boxZoom: false, tap: false, attributionControl: true }).setView([LAT, LON], ZOOM);
+map.createPane('labels');
+map.getPane('labels').style.zIndex = 450;
+map.getPane('labels').style.pointerEvents = 'none';
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+  { subdomains: 'abcd', maxZoom: 12, attribution: '© OpenStreetMap © CARTO · Radar © RainViewer' }).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',
+  { subdomains: 'abcd', maxZoom: 12, pane: 'labels' }).addTo(map);
+L.marker([LAT, LON], { icon: L.divIcon({ className: '', html: '<div class="me"></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
+  pane: 'labels', interactive: false }).addTo(map);
+
+var frames = [], layers = [], at = 0, nowAt = 0, playing = true, timer = null;
+
+function label(t) {
+  var d = new Date(t * 1000), h = d.getHours(), m = d.getMinutes();
+  var s = (h % 12 || 12) + ':' + (m < 10 ? '0' : '') + m + (h < 12 ? ' AM' : ' PM');
+  return at === nowAt ? 'Now · ' + s : s;
+}
+function show(i) {
+  if (!frames.length) return;
+  at = (i + frames.length) % frames.length;
+  for (var k = 0; k < layers.length; k++) layers[k].setOpacity(k === at ? 0.8 : 0);
+  document.getElementById('time').textContent = label(frames[at].time);
+  document.getElementById('fill').style.width = (frames.length > 1 ? at / (frames.length - 1) * 100 : 100) + '%';
+}
+function tick() {
+  // A longer stop on the newest picture, then round again.
+  show(at + 1);
+  timer = setTimeout(tick, at === frames.length - 1 ? 1800 : 600);
+}
+window.step = function (n) { playing = false; clearTimeout(timer); show(at + n); };
+window.toggle = function () {
+  playing = !playing;
+  clearTimeout(timer);
+  if (playing) tick();
+  return playing;
+};
+
+fetch('https://api.rainviewer.com/public/weather-maps.json').then(function (r) { return r.json(); }).then(function (d) {
+  var past = (d.radar && d.radar.past) || [], ahead = (d.radar && d.radar.nowcast) || [];
+  frames = past.concat(ahead);
+  nowAt = Math.max(0, past.length - 1);
+  if (!frames.length) throw new Error('no frames');
+  document.getElementById('now').style.left = (frames.length > 1 ? nowAt / (frames.length - 1) * 100 : 100) + '%';
+  layers = frames.map(function (f) {
+    // RainViewer's free radar: up to zoom 7, its "Universal Blue" colours (2), smoothed, snow shown.
+    return L.tileLayer(d.host + f.path + '/256/{z}/{x}/{y}/2/1_1.png', { opacity: 0, maxNativeZoom: 7, maxZoom: 12, zIndex: 300 }).addTo(map);
+  });
+  show(nowAt);
+  timer = setTimeout(tick, 1500);
+}).catch(function () {
+  document.getElementById('msg').style.display = 'flex';
+  document.getElementById('bar').style.display = 'none';
+});
+</script>
+</body>
+</html>
