@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Date
 
@@ -18,8 +19,8 @@ import java.util.Date
  *
  * The owner sets each viewer's package and end date on tv.bulkbazaar.ca/packages (plans/{uid});
  * the prices, how to pay, the free trial and whether packages are on at all live in
- * config/plans. While packages are off, everyone has everything (Platinum). New viewers get
- * Platinum free for the trial days after they join; after that, without a package, Free.
+ * config/plans. While packages are off, everyone has everything (Gold). New viewers get
+ * Gold free for the trial days after they join; after that, without a package, Free.
  */
 object Subscription {
     /** One package's prices, as text such as "$1.99". */
@@ -34,6 +35,8 @@ object Subscription {
         val features: Map<Plans.Tier, Set<Plans.Feature>> = Plans.DEFAULT_FEATURES,
         /** The owner's promotions (Christmas, Labour Day...), from config/promos. */
         val promos: List<Promo> = emptyList(),
+        /** Channels the owner adds to packages without All channels, as typed: "Aaj Tak, ARY News". */
+        val extraChannels: String = "",
     )
 
     /**
@@ -74,9 +77,7 @@ object Subscription {
 
     // Declared before _offer: Offer() reads it while this object starts, and a later one is still null then.
     val DEFAULT_PRICES: Map<Plans.Tier, Prices> = mapOf(
-        Plans.Tier.Silver to Prices("$17.79", "$9.79", "$5.39", "$1.99"),
-        Plans.Tier.Gold to Prices("$35.99", "$19.79", "$10.89", "$3.99"),
-        Plans.Tier.Platinum to Prices("$53.79", "$29.59", "$16.29", "$5.99"),
+        Plans.Tier.Gold to Prices("$89.79", "$49.39", "$27.19", "$9.99"),
     )
 
     /**
@@ -101,7 +102,7 @@ object Subscription {
     private val _status = MutableStateFlow<Status?>(null)
     val status: StateFlow<Status?> = _status
 
-    /** Packages are on, and this viewer has Platinum: their account works on two devices. */
+    /** Packages are on, and this viewer's package has 2 devices: their account works on two devices. */
     val twoDevices: Boolean get() = _offer.value.enforced && Plans.has(Plans.Feature.TwoDevices)
 
     private const val PREFS = "subscription"
@@ -114,8 +115,9 @@ object Subscription {
         if (p.contains("features_free")) {
             Plans.setFeatures(Plans.Tier.entries.associateWith { Plans.Feature.parse(p.getString("features_${it.name.lowercase()}", "") ?: "") })
         }
+        Plans.setExtraChannels(p.getString("extra_channels", "") ?: "")
         p.getString("tier", null)?.let { name ->
-            Plans.Tier.entries.firstOrNull { it.name == name }?.let { tier ->
+            Plans.Tier.of(name)?.let { tier ->
                 val until = p.getLong("until", 0L)
                 // A saved package that has run out since counts as Free until the next check.
                 Plans.set(if (until in 1 until System.currentTimeMillis()) Plans.Tier.Free else tier)
@@ -135,11 +137,12 @@ object Subscription {
             _offer.value = offer
             var features = offer.features
             val now = Date()
-            val status = if (!offer.enforced) {
-                Status(Plans.Tier.Platinum)
+            // The owner's admin account always has everything, whatever its package says (owner, 2026-10-08).
+            val status = if (!offer.enforced || account.isAdmin) {
+                Status(Plans.Tier.Gold)
             } else {
                 val plan = getOrNull(Firestore.doc("plans/${u.uid}"), t)?.optJSONObject("fields")
-                val paid = plan?.str("tier")?.let { n -> Plans.Tier.entries.firstOrNull { it.name.equals(n, true) } }
+                val paid = Plans.Tier.of(plan?.str("tier"))
                 val paidUntil = plan?.time("until")
                 val joined = getOrNull(Firestore.doc("users/${u.uid}"), t)?.optJSONObject("fields")?.time("joined") ?: now
                 val trialEnd = Date(joined.time + offer.trialDays * 86_400_000L)
@@ -151,7 +154,7 @@ object Subscription {
                     paid != null && paid != Plans.Tier.Free && paidUntil != null && paidUntil.after(now) ->
                         Status(paid, paidUntil, promoName = promoName)
                     offer.trialDays > 0 && trialEnd.after(now) ->
-                        Status(Plans.Tier.Platinum, trialEnd, trial = true)
+                        Status(Plans.Tier.Gold, trialEnd, trial = true)
                     paid != null && paid != Plans.Tier.Free && paidUntil != null && now.time - paidUntil.time < 7 * 86_400_000L ->
                         Status(Plans.Tier.Free, endedTier = paid, endedAt = paidUntil)
                     else -> Status(Plans.Tier.Free)
@@ -159,9 +162,11 @@ object Subscription {
             }
             _status.value = status
             Plans.setFeatures(if (offer.enforced) features else null)
+            Plans.setExtraChannels(offer.extraChannels)
             Plans.set(status.tier)
             context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().apply {
                 putString("tier", status.tier.name)
+                putString("extra_channels", offer.extraChannels)
                 putLong("until", status.until?.time ?: 0L)
                 Plans.Tier.entries.forEach { t ->
                     val key = "features_${t.name.lowercase()}"
@@ -170,6 +175,74 @@ object Subscription {
             }.apply()
         }
         Unit
+    }
+
+    /**
+     * Uses a promo code the owner made on tv.bulkbazaar.ca/packages (promoCodes/{CODE}): the code's package for its
+     * length, once per viewer. The Firestore rules only allow it in one save that also counts the code as used by them.
+     * Returns what to tell the viewer.
+     */
+    suspend fun redeem(context: Context, account: Account, typed: String): String = withContext(Dispatchers.IO) {
+        val u = account.user.value ?: return@withContext "Please sign in first."
+        val code = typed.uppercase().filter { it.isLetterOrDigit() || it == '-' }
+        if (code.length < 4) return@withContext "Type the promo code first."
+        val t = account.token()
+        val doc = getOrNull(Firestore.doc("promoCodes/$code"), t)
+            ?: return@withContext "There's no promo code $code. Check the letters and numbers and try again."
+        val f = doc.optJSONObject("fields") ?: JSONObject()
+        fun int(k: String) = f.optJSONObject(k)?.optString("integerValue")?.toIntOrNull() ?: 0
+        val tier = Plans.Tier.of(f.str("tier"))?.takeIf { it != Plans.Tier.Free }
+            ?: return@withContext "This code isn't set up right. Please message us."
+        val days = int("days")
+        val usedBy = f.optJSONObject("usedBy")?.optJSONObject("mapValue")?.optJSONObject("fields") ?: JSONObject()
+        when {
+            f.optJSONObject("active")?.optBoolean("booleanValue", true) == false -> return@withContext "This promo code has been turned off."
+            usedBy.has(u.uid) -> return@withContext "You've already used this promo code."
+            int("used") >= int("uses") -> return@withContext "This promo code has been used up."
+            days <= 0 -> return@withContext "This code isn't set up right. Please message us."
+        }
+        // The same package still running: the code's time comes after it ends, like a renewal.
+        val plan = getOrNull(Firestore.doc("plans/${u.uid}"), t)?.optJSONObject("fields")
+        val now = Date()
+        val running = plan?.time("until")?.takeIf { Plans.Tier.of(plan.str("tier")) == tier && it.after(now) }
+        val until = Date((running ?: now).time + days * 86_400_000L)
+        usedBy.put(u.uid, JSONObject().put("mapValue", JSONObject().put("fields", Firestore.encode(mapOf("name" to u.name, "email" to u.email, "at" to now)))))
+        val writes = JSONArray()
+            .put(
+                JSONObject()
+                    .put(
+                        "update",
+                        JSONObject()
+                            .put("name", Firestore.name("promoCodes/$code"))
+                            .put(
+                                "fields",
+                                JSONObject()
+                                    .put("used", JSONObject().put("integerValue", (int("used") + 1).toString()))
+                                    .put("usedBy", JSONObject().put("mapValue", JSONObject().put("fields", usedBy))),
+                            ),
+                    )
+                    .put("updateMask", JSONObject().put("fieldPaths", JSONArray().put("used").put("usedBy")))
+                    // Someone else using it at the same moment: try again rather than count over the limit.
+                    .put("currentDocument", JSONObject().put("updateTime", doc.optString("updateTime"))),
+            )
+            .put(
+                JSONObject()
+                    .put(
+                        "update",
+                        JSONObject()
+                            .put("name", Firestore.name("plans/${u.uid}"))
+                            .put("fields", Firestore.encode(mapOf("tier" to tier.name, "until" to until, "code" to code, "name" to u.name, "email" to u.email))),
+                    )
+                    .put("updateTransforms", JSONArray().put(JSONObject().put("fieldPath", "updated").put("setToServerValue", "REQUEST_TIME"))),
+            )
+        try {
+            Firestore.commit(writes, t)
+        } catch (e: Http.Status) {
+            return@withContext if (e.code == 400 || e.code == 409 || e.code == 412) "Someone else used it at the same moment. Please try again."
+            else "This promo code can't be used. Please message us."
+        }
+        refresh(context, account)
+        "Done! You have ${tier.label} until ${java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM).format(until)}. Enjoy!"
     }
 
     private fun getOrNull(url: String, token: String): JSONObject? = try {
@@ -199,6 +272,7 @@ object Subscription {
             trialDays = trial.coerceIn(0, 365),
             prices = prices,
             howToPay = f.str("howToPay").ifBlank { DEFAULT_HOW_TO_PAY },
+            extraChannels = f.str("extra_channels").trim(),
             // "free_features" and so on: what the owner ticked; a package never saved keeps its default.
             features = Plans.Tier.entries.associateWith { t ->
                 val key = "${t.name.lowercase()}_features"
@@ -227,9 +301,16 @@ object Subscription {
     /** What [tier] has, in a line for the packages screen. */
     fun describe(tier: Plans.Tier): String = describe(_offer.value.features[tier].orEmpty())
 
-    /** A line listing [has] for the packages screen. */
-    fun describe(has: Set<Plans.Feature>): String {
-        val channels = if (Plans.Feature.AllChannels in has) "All channels" else "Our own channels plus Aaj Tak and ARY News"
+    /** A line listing [ticked] (plus Free's features) for the packages screen. */
+    fun describe(ticked: Set<Plans.Feature>): String {
+        // Every package has at least what Free has (Plans.FREE_FEATURES).
+        val has = ticked + Plans.FREE_FEATURES
+        val extra = _offer.value.extraChannels
+        val channels = when {
+            Plans.Feature.AllChannels in has -> "All channels"
+            extra.isNotBlank() -> "Our own Bazaar channels plus $extra"
+            else -> "Only our own Bazaar channels"
+        }
         val extras = Plans.Feature.entries.filter { it != Plans.Feature.AllChannels && it in has }.map { it.label }
         return "$channels. 1+List" + extras.joinToString("") { ", $it" } + ", full screen and favourites"
     }

@@ -36,6 +36,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -251,6 +252,8 @@ internal fun BrowseMode(
     onNextMode: (() -> Unit)?,
     onOpen: (Channel) -> Unit,
     onOpenGames: (() -> Unit)?,
+    /** Opens the Iqra Quran section; null hides it. */
+    onOpenQuran: (() -> Unit)? = null,
     /** Live TV Max: opens a movie or show in the Library. */
     onOpenVodItem: ((VodTarget) -> Unit)?,
     onOpenSettings: () -> Unit,
@@ -667,7 +670,12 @@ internal fun BrowseMode(
                                         sessionRowKey = row.key
                                         sessionCardIndex[row.key] = i
                                     },
-                                    onClick = { openVideo(video) },
+                                    onClick = {
+                                        // A tap: back from the Library, the cursor comes back to this card.
+                                        sessionRowKey = row.key
+                                        sessionCardIndex[row.key] = i
+                                        openVideo(video)
+                                    },
                                 )
                             }
                             itemsIndexed(row.channels, key = { _, c -> c.id }) { i, channel ->
@@ -705,7 +713,12 @@ internal fun BrowseMode(
                                         sessionRowKey = row.key
                                         sessionCardIndex[row.key] = i
                                     },
-                                    onClick = { open(channel) },
+                                    onClick = {
+                                        // A tap: back from full screen, the cursor comes back to this card.
+                                        sessionRowKey = row.key
+                                        sessionCardIndex[row.key] = i
+                                        open(channel)
+                                    },
                                 )
                             }
                         }
@@ -755,6 +768,7 @@ internal fun BrowseMode(
                 }
             }
             if (onOpenGames != null) RailItem(Icons.Filled.SportsEsports, "Games", railFocused, right = back, onClick = onOpenGames)
+            if (onOpenQuran != null) RailItem(Icons.AutoMirrored.Filled.MenuBook, "Iqra Quran", railFocused, right = back, onClick = onOpenQuran)
             if (onNextMode != null) RailItem(Icons.Filled.Tv, modeLabel, railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
             RailItem(Icons.Filled.Settings, "Settings", railFocused, right = back, onClick = onOpenSettings)
         }
@@ -828,7 +842,11 @@ private fun BrowseCard(
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
-            if (channel.logo != null) {
+            // A card that is starting its channel shows a loading circle, not its logo (owner, 2026-10-07).
+            val starting = page != null || stream != null
+            if (starting) {
+                // drawn over the still picture below
+            } else if (channel.logo != null) {
                 SubcomposeAsyncImage(
                     model = channel.logo,
                     contentDescription = null,
@@ -843,8 +861,11 @@ private fun BrowseCard(
             if (picture != null) {
                 Image(picture, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
             }
+            if (page != null || (stream != null && !showing)) LoadingSpinner(size = 32.dp)
             if (page != null) {
                 key(page) { WebPreview(page, Modifier.fillMaxSize(), onFallback = onPageFailed) }
+                // A tap on a phone goes to the card (it opens full screen), not into the web page under it.
+                Box(Modifier.matchParentSize().focusProperties { canFocus = false }.tap(onTap = onClick))
             } else if (stream != null) {
                 AndroidView(
                     factory = { ctx -> TextureView(ctx).also { streamView.view = it; stream.player.setVideoTextureView(it) } },

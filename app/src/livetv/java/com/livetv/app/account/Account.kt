@@ -204,7 +204,7 @@ class Account private constructor(context: Context) {
             val exists = existing != null
             val claiming = prefs.getBoolean(K_CLAIM, false)
             val accountDevice = existing?.optJSONObject("fields")?.optJSONObject("deviceId")?.optString("stringValue")
-            // Platinum (while packages are on): the account works on two devices, the two newest.
+            // 2 devices (while packages are on): the account works on two devices, the two newest.
             val secondDevice = existing?.optJSONObject("fields")?.optJSONObject("deviceId2")?.optString("stringValue")
             val twoDevices = Subscription.twoDevices
             val known = accountDevice == deviceId || (twoDevices && secondDevice == deviceId)
@@ -244,9 +244,15 @@ class Account private constructor(context: Context) {
      */
     suspend fun reportViewing() = withContext(Dispatchers.IO) {
         val u = _user.value ?: return@withContext
-        val days = Watching.totals().filter { (_, d) -> d.channels.isNotEmpty() || d.programmes.isNotEmpty() }
+        val watched = Watching.totals().toMap()
+        val features = com.livetv.app.Features.totals().filter { (_, m) -> m.isNotEmpty() }
+        val days = (watched.keys + features.keys).sorted()
+            .map { it to (watched[it] ?: Watching.Day(emptyMap(), emptyMap(), emptyMap())) }
+            .filter { (day, d) -> d.channels.isNotEmpty() || d.programmes.isNotEmpty() || features[day] != null }
         val sponsorDays = SponsorViews.totals().filter { (_, m) -> m.isNotEmpty() }
         if (days.isEmpty() && sponsorDays.isEmpty()) return@withContext
+        val now = Watching.now()
+        val today = Watching.today(System.currentTimeMillis())
         runCatching {
             val t = token()
             // How often each sponsor was shown, in sponsorViews/{day}_{uid}, for the stats page.
@@ -281,8 +287,17 @@ class Account private constructor(context: Context) {
                     }
                     fields["hours"] = totals.hours.mapKeys { (k, _) -> k.replace('|', '_') }
                 }
+                // 1.10.x: which parts of the app were used (seconds and opens per mode, Library, Games, full screen),
+                // and on today's record the channel on now (or last watched), for the owner's /users page.
+                features[day]?.let { m -> fields["features"] = m.mapValues { (_, f) -> mapOf<String, Any>("s" to f.seconds, "o" to f.opens) } }
+                if (day == today && now != null) {
+                    fields["nowName"] = now.name
+                    fields["nowAt"] = Date(now.at)
+                    fields["nowLive"] = now.live
+                }
                 Firestore.patch(Firestore.doc("usage/${day}_${u.uid}"), fields, t)
                 Watching.sent(day)
+                com.livetv.app.Features.sent(day)
             }
         }
         Unit
@@ -393,6 +408,15 @@ internal object Firestore {
         return r.getString("name").substringAfterLast('/')
     }
 
+    /** The full name of the document at [path], as [commit] writes need it. */
+    fun name(path: String) =
+        "projects/${FirebaseConfig.PROJECT_ID}/databases/(default)/documents/$path"
+
+    /** Applies [writes] together: all of them, or none (Firestore's commit). */
+    fun commit(writes: JSONArray, token: String) {
+        Http.postJson("$base:commit", JSONObject().put("writes", writes), token)
+    }
+
     fun delete(path: String, token: String) {
         Http.request("DELETE", "$base/$path", null, null, token)
     }
@@ -428,7 +452,7 @@ internal object Firestore {
         }
     }
 
-    private fun encode(fields: Map<String, Any>): JSONObject {
+    fun encode(fields: Map<String, Any>): JSONObject {
         val out = JSONObject()
         for ((k, v) in fields) {
             out.put(

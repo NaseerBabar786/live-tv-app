@@ -1,0 +1,4 @@
+node_modules/
+dist/
+src/ui/vendor/
+src/ui/shared/

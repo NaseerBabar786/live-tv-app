@@ -24,6 +24,8 @@ import com.livetv.app.account.Subscription
 import com.livetv.app.ui.PlanEndingNotice
 import com.livetv.app.ui.PlansScreen
 import com.livetv.app.ui.MessagesScreen
+import com.livetv.app.ui.WelcomeDialog
+import com.livetv.app.account.Welcome
 import com.livetv.app.ui.SignInScreen
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,7 +35,9 @@ import com.livetv.app.ui.SettingsDialog
 import com.livetv.app.ui.SettingsTheme
 import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
-import com.livetv.app.ui.SponsorScreen
+import com.livetv.app.ui.LIBRARY_PREFIX
+import com.livetv.app.player.LibraryAds
+import com.livetv.app.ui.StartScreen
 import com.livetv.app.ui.SponsorBox
 import com.livetv.app.ui.SponsorVideoBox
 import com.livetv.app.ui.SponsorStrip
@@ -71,7 +75,7 @@ object Edition {
 }
 
 /**
- * The sponsor screen. Meanwhile it checks for updates and loads the channels, then the
+ * The start screen: a loading circle while it checks for updates and loads the channels, then the
  * Library, so they are ready when the main screen opens.
  */
 @Composable
@@ -94,28 +98,23 @@ fun EditionStartScreen(onDone: () -> Unit) {
     }
     LaunchedEffect(Unit) {
         if (FirebaseConfig.configured) {
-            // The package first: Platinum lets the account stay signed in on a second device.
+            // The package first: 2 devices lets the account stay signed in on a second device.
             Subscription.refresh(context, account)
             account.recordOpen()
         }
     }
-    // A paying sponsor, in turn, from the saved list; the latest list arrives meanwhile for next time
-    // (or for now, when there was none saved yet).
-    var sponsor by remember { mutableStateOf<Sponsor?>(null) }
+    // The sponsors' latest list arrives meanwhile, for the pop-up ads after a channel change.
     LaunchedEffect(Unit) {
         SponsorViews.init(context)
         Sponsors.init(context)
-        sponsor = Sponsors.next("start")
         Sponsors.refresh(account)
-        if (sponsor == null) sponsor = Sponsors.next("start")
     }
-    LaunchedEffect(sponsor?.id) { sponsor?.let { SponsorViews.count(it, "start") } }
     // The owner's own channel and its schedule (tv.bulkbazaar.ca/studio).
     LaunchedEffect(Unit) {
         MyChannel.init(context)
         MyChannelSync.refresh(account)
     }
-    SponsorScreen(loading = state.loading, sponsor = sponsor, onDone = onDone)
+    StartScreen(loading = state.loading, onDone = onDone)
 }
 
 /**
@@ -156,11 +155,20 @@ fun EditionOverlay() {
         }
     }
     if (FirebaseConfig.configured) NewMessagePrompt()
+    if (FirebaseConfig.configured && !Edition.MAX) WelcomePrompt()
     if (FirebaseConfig.configured && !Edition.MAX) PlanPrompts()
     if (FirebaseConfig.configured && !Edition.MAX) BillingPrompt()
     // A sponsor's card after a channel change, now and then.
     val main by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
-    SponsorCard(channelId = main.lastWatchedId, fullScreen = main.playing != null)
+    // Library movies and dramas get the full-screen ad breaks too (1.9.89); a video in YouTube's own
+    // player only our own promo before it starts, no paid sponsor ads (YouTube's rules).
+    val library by LibraryAds.now.collectAsStateWithLifecycle()
+    val vod = library
+    SponsorCard(
+        channelId = vod?.let { LIBRARY_PREFIX + it.id } ?: main.lastWatchedId,
+        fullScreen = main.playing != null || (vod != null && (!vod.embed || vod.waiting)),
+        promosOnly = vod?.embed == true,
+    )
     val updates = viewModel<UpdateViewModel>()
     val prompting by updates.prompting.collectAsStateWithLifecycle()
     val update by updates.update.collectAsStateWithLifecycle()
@@ -228,6 +236,30 @@ private fun BillingPrompt() {
         if (runCatching { Billing.load(account) }.getOrNull()?.waiting == true) open = true
     }
     if (open) BillingDialog(asked = true, onDismiss = { open = false })
+}
+
+/**
+ * The welcome invitation (owner, 2026-10-08): Gold free for one month with promo code WELCOME, and
+ * please leave us a good review. Pops up once per account, about 25 seconds after start, for every
+ * viewer who hasn't used the code yet (new viewers on their first start, Free viewers on their next).
+ * It stays at the top of their Messages afterwards.
+ */
+@Composable
+private fun WelcomePrompt() {
+    val context = LocalContext.current
+    val account = remember { Account.get(context) }
+    val user by account.user.collectAsStateWithLifecycle()
+    var open by remember { mutableStateOf(false) }
+    LaunchedEffect(user?.uid) {
+        if (user == null || account.isAdmin) return@LaunchedEffect
+        delay(25_000)
+        val state = runCatching { Welcome.state(account) }.getOrNull() ?: return@LaunchedEffect
+        if (state.sentAt == null && state.canUse) {
+            Welcome.markSent(account)
+            open = true
+        }
+    }
+    if (open) WelcomeDialog(onDismiss = { open = false })
 }
 
 /**

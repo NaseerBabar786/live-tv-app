@@ -1,9 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="ur">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bazaar TV · On now</title>
+<title>Bazaar TV · اب دیکھیے</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <style>
   /* A run of YouTube videos on Bazaar TV (its upcoming film trailers and popular music videos, 2026-10-06,
      lists built daily by tools/build_trailers.py and tools/build_music_videos.py), played in YouTube's own player and locked like Bazaar Hits: no buttons,
@@ -12,12 +14,15 @@
      ?secs= the videos and their lengths. When the run is over, the channel's own player goes on
      (livetv://done in the app; the Bazaar TV page swaps back on the website).
      The app opens it from MyChannel.blockPage; keep the two in step. */
-  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
+  /* Bazaar TV is an Urdu channel (the owner, 2026-10-07): our writing on screen is Urdu, English only where
+     needed, never Hindi script. */
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: "Noto Nastaliq Urdu", system-ui, sans-serif; }
   :root { --strip: clamp(22px, 3.4vw, 40px); }
-  #player, .cover, .shield { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: calc(100% - var(--strip)); }
+  #player, #own, .cover, .shield { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: calc(100% - var(--strip)); }
   #player { pointer-events: none; }
+  #own { background: #000; object-fit: contain; pointer-events: none; }
   .shield { background: transparent; }
-  .bug { position: absolute; top: 3%; right: 2.5%; height: 9vw; max-width: 26vw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: .55; pointer-events: none; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
@@ -30,22 +35,37 @@
   .ticker { position: absolute; left: 0; right: 0; bottom: 0; height: var(--strip); line-height: var(--strip); background: #101827; color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); pointer-events: none; }
   .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }
+  /* Urdu runs from left to right across the screen, as on Urdu channels. */
+  .ticker.rtl span { animation-name: tickrtl; }
+  @keyframes tickrtl { from { transform: translateX(-100%); } to { transform: none; } }
   /* Our own card over the player while a trailer loads, between trailers and at each new language. */
   .cover { background: #000; display: grid; place-items: center; align-content: center; gap: 2vh; transition: opacity .4s; pointer-events: none; color: #fff; text-align: center; }
-  .cover img { height: 20vh; max-width: 50vw; object-fit: contain; opacity: .9; }
+  /* While a video starts: only a loading circle in the middle, never our logo (owner, 2026-10-07). */
+  .spin { width: 8vh; height: 8vh; box-sizing: border-box; border: .8vh solid rgba(255,255,255,.18); border-top-color: rgba(255,255,255,.85); border-radius: 50%; animation: spin 1s linear infinite; }
+  .cover.off .spin { animation: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .cover b { font-size: clamp(18px, 4vw, 52px); }
   .cover small { font-size: clamp(12px, 1.8vw, 22px); opacity: .8; }
   .cover.off { opacity: 0; }
+  /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
+     owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
+     YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
+     (under our ticker strip, or off the screen): only the picture and our own things show. Owner's rule
+     2026-10-07, checked by tools/preair_check.py. */
+  :root { --box: calc(100vh - var(--strip)); }
+  #player { top: calc(var(--box) * -0.2) !important; height: calc(var(--box) * 1.4) !important; left: 50% !important; right: auto !important; width: min(100vw, calc(var(--box) * 16 / 9)) !important; transform: translateX(-50%); }
 </style>
 </head>
 <body>
 <div id="player"></div>
-<div class="cover" id="cover"><img alt="" id="coverLogo" hidden><b id="coverTitle">Bazaar TV</b><small id="coverSub"></small></div>
+<video id="own" playsinline hidden></video>
+<div class="cover" id="cover"><div class="spin"></div><b id="coverTitle" dir="auto">Bazaar TV</b><small id="coverSub" dir="auto"></small></div>
 <div class="shield" id="shield"></div>
 <img class="bug off" id="bug" alt="">
-<div class="now hide" id="now"></div>
-<button class="sound" id="sound" hidden>🔊 Tap for sound</button>
-<div class="ticker"><span id="tick"></span></div>
+<div class="now hide" id="now" dir="auto"></div>
+<button class="sound" id="sound" hidden>🔊 آواز کے لیے ٹیپ کریں</button>
+<div class="ticker" id="ticker"><span id="tick" dir="auto"></span></div>
+<script src="keepplaying.js"></script>
 <script>
 const q = new URLSearchParams(location.search);
 const $ = id => document.getElementById(id);
@@ -53,53 +73,119 @@ const app = q.has("app");
 const ids = (q.get("ids") || "").split(",").filter(id => /^[\w-]{11}$/.test(id));
 const secs = (q.get("secs") || "").split(",").map(Number);
 const at = +q.get("at") || Date.now(), until = +q.get("until") || 0;
-const name = q.get("name") || "Bazaar TV";
+const name = q.get("name") || "Bazaar TV One";
 const logo = q.get("logo") || "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png";
 const corner = q.get("corner") || "tr";
 const starts = [];
 ids.reduce((t, _, i) => (starts.push(t), t + (secs[i] || 0) * 1000), at);
 const end = until || (ids.length ? starts[ids.length - 1] + (secs[ids.length - 1] || 0) * 1000 : at);
 
-document.title = name + " · On now";
-$("coverLogo").src = logo; $("coverLogo").hidden = false;
+document.title = name + " · اب دیکھیے";
 $("bug").src = logo;
 // The advertise line always runs here (the owner's ads rule); the channel's own line when it has one.
+// The ticker stays in English (the owner, 2026-10-07), though the rest of Bazaar TV's writing is Urdu.
 const own = q.get("tick") || "";
 $("tick").textContent = /advertise/i.test(own) ? own
   : `${name} · ${own ? own + " · " : ""}Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+if (/[\u0600-\u06FF]/.test($("tick").textContent)) $("ticker").classList.add("rtl");
 
 // Titles, makers and languages from the day's lists (the address carries only ids and lengths).
 let info = {};
+const lists = {};
 // Keep in step with tools/build_trailers.py, build_music_videos.py and build_bazaar_blocks.py.
-const LISTS = ["trailers.json", "music-videos.json", "block-kids.json", "block-drama-1.json", "block-drama-2.json",
-  "block-cooking.json", "block-comedy.json", "block-sports.json", "block-travel.json"];
+const LISTS = ["trailers.json", "music-videos.json", "block-drama-1.json", "block-drama-2.json", "block-drama-3.json",
+  "block-cooking.json", "block-comedy.json", "block-film.json"];
 for (const list of LISTS) {
   fetch(list, { cache: "no-store" }).then(r => r.json()).then(d => {
-    for (const v of d.videos || []) info[v.id] = { kind: list === "trailers.json" ? "trailer" : "music", ...v };
+    lists[list] = d;
+    for (const v of [...(d.videos || []), ...(d.spares || [])]) info[v.id] = { kind: list === "trailers.json" ? "trailer" : "music", ...v };
     if (cur >= 0) showNow();
   }).catch(() => {});
 }
-const KINDS = { trailer: "Coming soon to cinemas", music: "Music videos", kids: "Kids' time", drama: "Drama",
-  cooking: "Cooking", comedy: "Comedy", sports: "Sports highlights", travel: "Travel" };
+const KINDS = { trailer: "جلد سینما میں", music: "میوزک ویڈیوز", kids: "بچوں کا وقت", drama: "ڈرامہ",
+  cooking: "کھانا پکائیں", comedy: "مزاحیہ", film: "ہندی فلم", sports: "کھیل", travel: "سیر و سیاحت" };
+const LANGS = { Hindi: "ہندی", Urdu: "اردو", Pakistani: "پاکستانی" };
+const langOf = v => LANGS[v?.lang] || v?.lang || "";
 const isMusic = v => v?.kind === "music";
 const between = v => KINDS[v?.kind] || name;
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
 let corners = { labels: {} };
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(); }).catch(() => {});
 function placeBug() {
-  const label = info[ids[cur]]?.label;
+  const label = info[sub || ids[cur]]?.label;
   const c = corners.labels?.[label] || corner;
   $("bug").className = "bug " + c;
 }
 
 let player = null, cur = -1, nowTimer = null, failures = 0, finished = false;
+// A video that won't start on this TV (its owner allows it only on YouTube itself, error 150, or it is gone)
+// never leaves our card up for the rest of its time (the owner, 2026-10-07): another of the same kind takes
+// its place (the list's spares first), and when none will play, our own short shows and ads fill the time.
+const bad = new Set(), played = new Set();
+// Videos the nightly check or the hourly pre-air check (tools/preair_check.py) found won't play here are skipped
+// before YouTube can show its error screen.
+for (const f of ["unplayable.json", "preair-bad.json"])
+  fetch(f, { cache: "no-store" }).then(r => r.json()).then(d => Object.keys(d.ids || {}).forEach(id => bad.add(id))).catch(() => {});
+let sub = null, ownOn = false, ownTurn = 0, fillers = [];
+const slotEnd = i => Math.min(end, starts[i] + (secs[i] || 0) * 1000);
+fetch("test-schedule.json", { cache: "no-store" }).then(r => r.json()).then(c => {
+  const by = Object.fromEntries((c.videos || []).map(v => [v.id, v]));
+  fillers = (c.fillers || []).map(id => by[id]).filter(v => v && v.url && !/youtu/.test(v.url));
+}).catch(() => {});
+function sparesFor(id) {
+  const d = Object.values(lists).find(d => (d.videos || []).some(v => v.id === id));
+  if (!d) return [];
+  return [...(d.spares || []), ...(d.videos || [])].filter(v => !bad.has(v.id) && !played.has(v.id) && !ids.includes(v.id));
+}
+function rescue() {
+  if (finished || cur < 0 || slotEnd(cur) - Date.now() < 5000) return;
+  const s = sparesFor(ids[cur])[0];
+  if (s) {
+    sub = s.id;
+    played.add(s.id);
+    stopOwn();
+    cover(true, between(info[ids[cur]]), s.title);
+    player.loadVideoById({ videoId: s.id, startSeconds: 0 });
+    showNow();
+    return;
+  }
+  playOwn();
+}
+function playOwn() {
+  const v = fillers.length ? fillers[ownTurn++ % fillers.length] : null;
+  if (!v) return;
+  ownOn = true;
+  sub = null;
+  $("now").classList.add("hide");
+  try { player.stopVideo(); } catch {}
+  const el = $("own");
+  el.hidden = false;
+  el.muted = !app && !$("sound").hidden;
+  el.src = v.url;
+  el.play().catch(() => { el.muted = true; el.play().catch(() => {}); });
+  $("cover").classList.add("off");
+}
+function stopOwn() {
+  if (!ownOn) return;
+  ownOn = false;
+  const el = $("own");
+  el.pause(); el.removeAttribute("src"); el.load(); el.hidden = true;
+}
+let ownErrors = 0;
+$("own").onplaying = () => { ownErrors = 0; };
+$("own").onended = $("own").onerror = e => {
+  if (!ownOn) return;
+  const broken = e.type === "error" && ++ownErrors >= fillers.length;
+  if (!broken && slotEnd(cur) - Date.now() > 3000) setTimeout(() => ownOn && playOwn(), e.type === "error" ? 1000 : 0);
+  else { stopOwn(); cover(true, between(info[ids[cur]]), "اگلا پروگرام"); }
+};
 const indexAt = t => { for (let i = 0; i < ids.length; i++) if (t < starts[i] + (secs[i] || 0) * 1000) return i; return -1; };
 
 function finish() {
   if (finished) return;
   finished = true;
   try { player && player.stopVideo(); } catch {}
-  cover(true, name, "Back to our programmes");
+  cover(true, name, "ہمارے پروگرام جاری ہیں");
   if (app) location.href = "livetv://done";
   else if (parent !== window) parent.postMessage({ blockDone: true }, "*");
 }
@@ -117,25 +203,28 @@ function cover(on, title, sub) {
   else coverTimer = setTimeout(() => $("cover").classList.add("off"), 3500);
 }
 function showNow() {
-  const v = info[ids[cur]];
+  const v = info[sub || ids[cur]];
   placeBug();
   $("now").innerHTML = "<span></span><small></small>";
-  $("now").firstChild.textContent = v ? v.title : "On now";
-  $("now").lastChild.textContent = name + (!v ? "" : v.kind === "trailer" ? ` · Coming soon · ${v.lang} · ${v.label}`
-    : isMusic(v) ? ` · Music video · ${v.lang} · ${v.label}` : ` · ${between(v)} · ${v.label}`);
+  $("now").firstChild.textContent = v ? v.title : "اب دیکھیے";
+  $("now").lastChild.textContent = name + (!v ? "" : v.kind === "trailer" ? ` · جلد آرہی ہے · ${langOf(v)} · ${v.label}`
+    : isMusic(v) ? ` · میوزک ویڈیو · ${langOf(v)} · ${v.label}` : ` · ${between(v)} · ${v.label}`);
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
 }
 function load(i, offset) {
   cur = i;
+  sub = null;
+  stopOwn();
   const v = info[ids[i]];
   const prev = i > 0 ? info[ids[i - 1]] : null;
-  // A new language gets its own card: "Upcoming Hindi movies", "Popular Punjabi music".
+  // A new language gets its own card: "آنے والی ہندی فلمیں", "مقبول اردو گانے".
   if (v && v.lang && (!prev || prev.lang !== v.lang || prev.kind !== v.kind))
-    cover(true, isMusic(v) ? `Popular ${v.lang} music` : `Upcoming ${v.lang} movies`, between(v));
+    cover(true, isMusic(v) ? `مقبول ${langOf(v)} گانے` : `آنے والی ${langOf(v)} فلمیں`, between(v));
   else if (v && (!prev || prev.kind !== v.kind)) cover(true, between(v), v.title);
   else cover(true, between(v), v ? v.title : "");
+  if (bad.has(ids[i])) return rescue();
   player.loadVideoById({ videoId: ids[i], startSeconds: Math.max(0, offset) });
   showNow();
 }
@@ -153,7 +242,7 @@ function step() {
 let started = false, lastError = null;
 setTimeout(() => {
   if (started || finished) return;
-  $("coverSub").textContent = `YouTube didn't start here (${lastError ? "error " + lastError : "loading"})`;
+  $("coverSub").textContent = `یوٹیوب یہاں شروع نہیں ہوا (${lastError ? "error " + lastError : "loading"})`;
 }, 15000);
 
 if (!ids.length || Date.now() >= end) finish();
@@ -174,21 +263,32 @@ window.onYouTubeIframeAPIReady = () => {
         if (!app) { e.target.mute(); $("sound").hidden = false; }
         load(i, (Date.now() - starts[i]) / 1000);
         setInterval(step, 1000);
+        keepPlaying(e.target, () => finished || ownOn, () => cover(true));
       },
       onStateChange: e => {
-        if (e.data === YT.PlayerState.PLAYING) { cover(false); started = true; failures = 0; }
-        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        if (e.data === YT.PlayerState.PLAYING) { if (ownOn) { e.target.stopVideo(); return; } cover(false); started = true; failures = 0; }
+        // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
+        // (Not while our own show plays: YouTube is stopped under it then.)
+        else if (!ownOn) cover(true);
         // It never stays paused; at the end of a trailer our card waits for the next one's turn.
-        else if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
-        else if (e.data === YT.PlayerState.ENDED) cover(true, between(info[ids[cur]]), "Coming up next");
+        if (e.data === YT.PlayerState.PAUSED && !finished) e.target.playVideo();
+        // A video shorter than its time: the next spare, or our own short shows.
+        else if (e.data === YT.PlayerState.ENDED) { cover(true, between(info[ids[cur]]), "اگلا پروگرام"); rescue(); }
       },
-      // A video its owner won't let others play: our card until the next one. When none will play, our own player goes on.
-      onError: e => { lastError = e.data; cover(true, between(info[ids[cur]]), "Coming up next"); if (++failures >= 4) fallBack(); },
+      // A video its owner won't let others play: another in its place (rescue). When YouTube never plays here at all,
+      // our own player goes on.
+      onError: e => {
+        lastError = e.data;
+        if (cur >= 0) bad.add(sub || ids[cur]);
+        cover(true, between(info[ids[cur]]), "اگلا پروگرام");
+        if (++failures >= 4 && !started && !fillers.length) fallBack();
+        else rescue();
+      },
     },
   });
 };
 $("shield").onclick = showNow;
-$("sound").onclick = () => { player.unMute(); player.playVideo(); $("sound").hidden = true; };
+$("sound").onclick = () => { player.unMute(); if (ownOn) $("own").muted = false; else player.playVideo(); $("sound").hidden = true; };
 document.addEventListener("keydown", e => {
   if (e.key === "Enter" || e.key === " ") { showNow(); e.preventDefault(); }
   if (e.key === "MediaPlayPause" || e.key === "MediaPause" || e.key === "k") e.preventDefault();

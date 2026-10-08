@@ -43,6 +43,7 @@ object MyChannelSync {
         if (station.backup != id) {
             ready.put("name", station.name)
             station.logo?.let { ready.put("logo", "https://tv.bulkbazaar.ca/channel/logos/$it") }
+            if (!station.bug) ready.put("logoCorner", "off")
         }
         return ready
     }

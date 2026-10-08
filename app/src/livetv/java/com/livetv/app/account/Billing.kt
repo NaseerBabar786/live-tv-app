@@ -27,7 +27,7 @@ data class BillingInfo(
  * The owner's own record of payments (billing/{uid}) is never read by the app.
  */
 object Billing {
-    val PACKAGES = listOf("Free", "Silver", "Gold", "Platinum")
+    val PACKAGES = listOf("Free", "Gold")
     val LENGTHS = listOf("1 month", "3 months", "6 months", "1 year")
     val METHODS = listOf("Interac e-Transfer", "Credit or debit card", "Cash", "Other")
 

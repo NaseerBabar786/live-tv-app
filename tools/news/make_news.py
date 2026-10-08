@@ -56,6 +56,11 @@ PAKISTAN_WORDS = ("پاکستان", "اسلام آباد", "لاہور", "کرا
 # How many stories each bulletin tries to fit (the fitting step drops the last ones if too long).
 WANT = {"headlines": {"pakistan": 4, "world": 4, "canada": 3}, "full": {"pakistan": 8, "world": 8, "canada": 6}}
 ORDER = ("pakistan", "world", "canada")
+# Spare stories per section: used when the wanted ones are short, so the bulletin fills its slot.
+EXTRA = 6
+# The end card stays at most this long; any time still left is filled with our own Cable TV promos
+# (docs/media/app-promos.json), so the channel never sits on a still slide (owner, 2026-10-07).
+END_MAX = 12.0
 CITIES = [("ٹورنٹو", 43.65, -79.38), ("وینکوور", 49.28, -123.12), ("کیلگری", 51.05, -114.07),
           ("مونٹریال", 45.50, -73.57), ("اوٹاوا", 45.42, -75.70), ("ہیلی فیکس", 44.65, -63.58)]
 
@@ -158,11 +163,11 @@ def take_turns(lists, want, seen, section=None):
 def gather(kind):
     want = WANT[kind]
     seen = []
-    urdu = take_turns(read_feeds(URDU_FEEDS), 3 * (want["pakistan"] + want["world"]), seen)
+    urdu = take_turns(read_feeds(URDU_FEEDS), 3 * (want["pakistan"] + want["world"]) + 2 * EXTRA, seen)
     for s in urdu:
         s["section"] = "pakistan" if any(w in s["title"] + " " + s["desc"][:200] for w in PAKISTAN_WORDS) else "world"
-    picked = {sec: [s for s in urdu if s["section"] == sec][:want[sec] + 2] for sec in ("pakistan", "world")}
-    canada = take_turns(read_feeds(CANADA_FEEDS), want["canada"] + 2, seen, "canada")
+    picked = {sec: [s for s in urdu if s["section"] == sec][:want[sec] + EXTRA] for sec in ("pakistan", "world")}
+    canada = take_turns(read_feeds(CANADA_FEEDS), want["canada"] + EXTRA, seen, "canada")
     done = []
     for s in canada:
         try:
@@ -470,7 +475,7 @@ def slot_hour(kind_arg, hour_arg):
     if hour_arg is not None:
         slot = now.replace(hour=hour_arg, minute=0, second=0, microsecond=0)
     else:
-        slot = (now + dt.timedelta(minutes=59)).replace(minute=0, second=0, microsecond=0)
+        slot = now.replace(minute=0, second=0, microsecond=0) + dt.timedelta(hours=1)
     kind = kind_arg if kind_arg != "auto" else ("full" if slot.hour % 3 == 0 else "headlines")
     return kind, slot
 
@@ -497,6 +502,78 @@ def probe(out):
               open(os.path.join(out, "news-probe.json"), "w"), ensure_ascii=False, indent=1)
     print("\n".join(NOTES))
 
+def newsreader(slot):
+    """The AI newsreader on camera for this hour (tools/news/presenters/on-air.json takes turns by hour).
+    Her moving clip (news-move-<id>-raw.mp4, made by news-presenter-move.yml) must be in tools/news/presenters/clips/."""
+    here = os.path.join(HERE, "presenters")
+    try:
+        ids = json.load(open(os.path.join(here, "on-air.json")))["readers"]
+        people = {p["id"]: p for p in json.load(open(os.path.join(here, "presenters.json")))["moving"]["people"]}
+    except Exception as e:
+        NOTES.append(f"no newsreader: {e}"); return None
+    ids = [i for i in ids if i in people and os.path.exists(os.path.join(here, "clips", f"{i}.mp4"))]
+    if not ids:
+        NOTES.append("no newsreader clip found"); return None
+    p = dict(people[ids[slot.hour % len(ids)]]); p["clip"] = os.path.join(here, "clips", f"{p['id']}.mp4")
+    return p
+
+def add_reader(body, reader, windows, label, work):
+    """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
+    im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    lower_bar(d, f"{label} • {reader['ur']}")
+    im.save(os.path.join(work, "reader-bar.png"))
+    ins = ["-i", body]
+    for t0, dur in windows:
+        ins += ["-stream_loop", "-1", "-itsoffset", f"{t0:.3f}", "-i", reader["clip"]]
+    ins += ["-loop", "1", "-i", os.path.join(work, "reader-bar.png")]
+    bar = len(windows) + 1
+    graph, last = [], "[0:v]"
+    for k, (t0, dur) in enumerate(windows, 1):
+        on = f"between(t,{t0:.3f},{t0 + dur:.3f})"
+        graph.append(f"[{k}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1[r{k}]")
+        graph.append(f"{last}[r{k}]overlay=0:0:eof_action=pass:enable='{on}'[m{k}]")
+        graph.append(f"[m{k}][{bar}:v]overlay=0:0:shortest=1:enable='{on}'[b{k}]")
+        last = f"[b{k}]"
+    tmp = os.path.join(work, "with-reader.mp4")
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(graph) + f";{last}format=yuv420p[v]",
+        "-map", "[v]", "-map", "0:a", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
+        "-g", str(FPS * 2), "-c:a", "copy", "-movflags", "+faststart", tmp)
+    os.replace(tmp, body)
+
+def add_promos(body, secs, slot, work, mp4):
+    """Fills the time after the bulletin with our own Cable TV promos, in turn (a different start each hour)."""
+    media = os.path.join(HERE, "..", "..", "docs", "media")
+    cfg = json.load(open(os.path.join(media, "app-promos.json")))["promos"]
+    files = [os.path.join(media, p["src"]) for p in cfg if os.path.exists(os.path.join(media, p["src"]))]
+    if not files: raise SystemExit("no promos to fill the end of the bulletin")
+    start = slot.hour % len(files)
+    order = (files[start:] + files[:start]) * 4
+    picked, have = [], 0.0
+    for f in order:
+        if have >= secs: break
+        d = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", f],
+                                 capture_output=True, text=True, check=True).stdout)
+        picked.append(f); have += d
+    ins, parts = ["-i", body], ["[0:v][0:a]"]
+    pre = []
+    for i, f in enumerate(picked, 1):
+        ins += ["-i", f]
+        pre.append(f"[{i}:v]scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2,"
+                   f"fps={FPS},setsar=1,format=yuv420p[v{i}];"
+                   f"[{i}:a]aformat=sample_rates={SR}:channel_layouts=mono,loudnorm=I=-16:TP=-1.5[a{i}]")
+        parts.append(f"[v{i}][a{i}]")
+    total = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", body],
+                                 capture_output=True, text=True, check=True).stdout) + secs
+    fade = max(0.0, total - 1.0)
+    graph = (";".join(pre) + ";[0:v]format=yuv420p,setsar=1[bv];[0:a]aformat=sample_rates=" + str(SR) +
+             ":channel_layouts=mono[ba];" + "".join(["[bv][ba]"] + parts[1:]) + f"concat=n={len(parts)}:v=1:a=1[cv][ca];"
+             f"[cv]trim=0:{total:.3f},setpts=PTS-STARTPTS,fade=t=out:st={fade:.3f}:d=1[v];"
+             f"[ca]atrim=0:{total:.3f},asetpts=PTS-STARTPTS,afade=t=out:st={fade:.3f}:d=1[a]")
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", graph, "-map", "[v]", "-map", "[a]",
+        "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac",
+        "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", mp4)
+    return [os.path.basename(f) for f in picked]
+
 def main():
     args = sys.argv[1:]
     if not args: raise SystemExit(__doc__)
@@ -505,6 +582,8 @@ def main():
     os.makedirs(out, exist_ok=True)
     if opt("--kind") == "probe": return probe(out)
     kind, slot = slot_hour(opt("--kind", "auto"), int(opt("--hour")) if opt("--hour") else None)
+    if "--due" in args:  # just say which bulletin is due next (the workflow uses it to skip a repeat run)
+        return print(kind, slot.isoformat())
     total = LENGTH[kind]
     work = os.path.join(out, "work-" + kind); os.makedirs(work, exist_ok=True)
     print("making", kind, "for", slot.isoformat())
@@ -551,7 +630,7 @@ def main():
             cache[key] = speak(text, v, os.path.join(work, f"v{len(cache):02d}"), offline)
         return cache[key]
     STING, GAP, END_MIN = 6.0, 0.7, 8.0
-    counts = {sec: min(WANT[kind][sec], sum(s["section"] == sec for s in stories)) for sec in ORDER}
+    counts = {sec: sum(s["section"] == sec for s in stories) for sec in ORDER}
     while True:
         segs = [("open", head, VOICE_A, None)] + plan(counts) + [("close", tail, VOICE_A, None)]
         used = STING + sum(len(voice(t, v)) / SR + GAP for _, t, v, _ in segs)
@@ -566,7 +645,7 @@ def main():
     cards, voice_track = [], np.zeros(int(SR * total) + SR, np.float32)
     title_card(os.path.join(work, "c-title.png"), kind, f"{clock(slot)} • {date_ur(slot, True)}", "")
     cards.append(("c-title.png", STING))
-    t = STING; n = 0
+    t = STING; n = 0; on_camera = []
     for i, (sk, text, v, s) in enumerate(segs):
         audio = voice(text, v)
         a = int(t * SR); voice_track[a:a + len(audio)] += audio[:len(voice_track) - a]
@@ -584,8 +663,12 @@ def main():
         else:
             title_card(os.path.join(work, pic), kind, up_next,
                        f"تفصیلی خبرنامہ ہر تین گھنٹے بعد، اگلا {clock(next_full)}")
+        if sk in ("open", "close"): on_camera.append((t, dur))
         cards.append((pic, dur)); t += dur
-    end_secs = total - t
+    left = total - t
+    # A short gap stays on the end card; a long one gets promos after a normal-length end card.
+    end_secs = left if left <= END_MAX + 3 else END_MAX
+    news_len = t + end_secs
     credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • کینیڈا کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
     title_card(os.path.join(work, "c-end.png"), kind, up_next, credits,
                "Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else "AI voice")
@@ -597,9 +680,9 @@ def main():
     e0 = int(t * SR); m_end = bed(end_secs + 1)
     ramp = np.minimum(1, np.arange(len(m_end)) / (SR * 1.5))
     music[e0:e0 + len(m_end)] += 0.25 * ramp * m_end[:len(music) - e0]
-    fade = int(SR * 2); music[int(total * SR) - fade:int(total * SR)] *= np.linspace(1, 0, fade)
+    fade = int(SR * 2); music[int(news_len * SR) - fade:int(news_len * SR)] *= np.linspace(1, 0, fade)
     mix = voice_track + music
-    mix = mix[:int(total * SR)] / max(1.0, np.abs(mix).max() / 0.95)
+    mix = mix[:int(news_len * SR)] / max(1.0, np.abs(mix).max() / 0.95)
     write_wav(os.path.join(work, "sound.wav"), mix)
 
     with open(os.path.join(work, "cards.txt"), "w") as f:
@@ -607,16 +690,25 @@ def main():
             f.write(f"file '{pic}'\nduration {dur:.3f}\n")
         f.write(f"file '{cards[-1][0]}'\n")
     mp4 = os.path.join(out, f"news-{kind}.mp4")
+    body = mp4 if news_len >= total - 0.01 else os.path.join(work, "body.mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-stream_loop", "-1", "-i", os.path.join(work, "bg.mp4"),
         "-f", "concat", "-safe", "0", "-i", os.path.join(work, "cards.txt"), "-i", os.path.join(work, "sound.wav"),
         "-filter_complex", f"[1:v]fps={FPS},format=rgba[c];[0:v][c]overlay=0:0:format=auto,format=yuv420p[v]",
-        "-map", "[v]", "-map", "2:a", "-t", str(total), "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
-        "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", mp4)
+        "-map", "[v]", "-map", "2:a", "-t", f"{news_len:.3f}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
+        "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
+    reader = newsreader(slot)
+    if reader and on_camera:
+        add_reader(body, reader, on_camera, label, work)
+    promos = []
+    if body != mp4:
+        promos = add_promos(body, total - news_len, slot, work, mp4)
     got = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", mp4],
                                capture_output=True, text=True, check=True).stdout)
     if abs(got - total) > 1.0: raise SystemExit(f"{mp4} is {got:.1f} s, wanted {total} s")
     info = {"kind": kind, "lang": "ur", "secs": total, "slot": slot.isoformat(),
             "made": dt.datetime.now(dt.timezone.utc).isoformat(), "sources": sources, "weather": bool(wx), "notes": NOTES,
+            "news_secs": round(news_len, 1), "promos": promos,
+            "reader": reader["id"] if reader else None,
             "stories": [{"section": s["section"], "headline": s["headline"], "source": s["source"]} for s in shown]}
     json.dump(info, open(os.path.join(out, f"news-{kind}.json"), "w"), ensure_ascii=False, indent=1)
     print("made", mp4, f"{got:.1f} s")

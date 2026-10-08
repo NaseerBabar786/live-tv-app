@@ -18,7 +18,7 @@ import com.livetv.app.data.NewsScreen
 import com.livetv.app.data.ScreenLooks
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -61,6 +62,7 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -214,6 +216,16 @@ fun NewsMode(
         secondId = next.id
         NewsScreen.secondId = next.id
     }
+    // The main channel: Up and Down (or a swipe on it) move [by] channels along the list.
+    fun stepChannel(by: Int) {
+        val i = channels.indexOfFirst { it.id == selected?.id }
+        val next = when {
+            channels.isEmpty() -> null
+            i < 0 -> channels.first()
+            else -> channels[Math.floorMod(i + by, channels.size)]
+        }
+        next?.let(onSelect)
+    }
     // The second channel pauses while the main one is struggling, like the sponsor video.
     val secondPlaying = playing && now >= videoOkAt
 
@@ -228,6 +240,13 @@ fun NewsMode(
     val tileFocus = remember { mutableMapOf<String, FocusRequester>() }
     var held by remember { mutableStateOf(false) }
     var hint by remember { mutableStateOf(customizable) }
+    val phone = rememberIsPhone()
+    // Holding the channel on a phone (or ⚙): this screen's settings, like holding OK.
+    fun openSettings() {
+        hint = false
+        runCatching { focus.requestFocus() }
+        customizing = true
+    }
     LaunchedEffect(Unit) {
         delay(10_000)
         hint = false
@@ -260,15 +279,6 @@ fun NewsMode(
                         if (it.isFocused) onFocused()
                     }
                     .onPreviewKeyEvent { e ->
-                        fun step(by: Int) {
-                            val i = channels.indexOfFirst { it.id == selected?.id }
-                            val next = when {
-                                channels.isEmpty() -> null
-                                i < 0 -> channels.first()
-                                else -> channels[Math.floorMod(i + by, channels.size)]
-                            }
-                            next?.let(onSelect)
-                        }
                         when {
                             e.key == Key.Back -> { if (e.type == KeyEventType.KeyUp) onBack(); true }
                             customizable && (e.key == Key.Menu || e.key == Key.Settings) -> {
@@ -290,8 +300,8 @@ fun NewsMode(
                                 true
                             }
                             e.type != KeyEventType.KeyDown -> false
-                            e.key == Key.DirectionUp || e.key == Key.ChannelUp -> { step(-1); true }
-                            e.key == Key.DirectionDown || e.key == Key.ChannelDown -> { step(1); true }
+                            e.key == Key.DirectionUp || e.key == Key.ChannelUp -> { stepChannel(-1); true }
+                            e.key == Key.DirectionDown || e.key == Key.ChannelDown -> { stepChannel(1); true }
                             // Home and My Screen: Left and Right move onto the tiles.
                             tiles && (e.key == Key.DirectionLeft || e.key == Key.DirectionRight) -> false
                             e.key == Key.DirectionLeft -> { if (usesSecond) stepSecond(-1); true }
@@ -299,10 +309,8 @@ fun NewsMode(
                             else -> false
                         }
                     }
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                    ) { selected?.let(onOpen) },
+                    // Taps land on the layer over the picture (below), so this only takes the remote's cursor.
+                    .focusable(),
                 contentAlignment = Alignment.Center,
             ) {
                 AndroidView(
@@ -311,10 +319,33 @@ fun NewsMode(
                     modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
                 )
                 if (page != null) key(page) {
-                    WebPreview(page, Modifier.fillMaxSize(), onFallback = { if (MyChannel.webPage(selected) != null) pageFailed = true })
+                    WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = { if (MyChannel.webPage(selected) != null) pageFailed = true })
                 } else if (!showing) {
-                    Text(error ?: selected?.name.orEmpty(), color = Color.White, fontSize = s(16f), modifier = Modifier.padding(24.dp))
+                    // While it starts: a loading circle (owner, 2026-10-07); a channel that fails says so.
+                    val failed = error
+                    if (failed != null) Text(failed, color = Color.White, fontSize = s(16f), modifier = Modifier.padding(24.dp))
+                    else if (selected != null) LoadingSpinner()
                 }
+                // The finger, over the picture so the web pages don't take it: a tap opens the channel
+                // full screen and holding it opens this screen's settings, like OK; a swipe up or down
+                // changes the channel, left or right the second channel (when one shows).
+                Box(
+                    Modifier
+                        .matchParentSize()
+                        .focusProperties { canFocus = false }
+                        .swipe { dir ->
+                            when (dir) {
+                                Swipe.Up -> stepChannel(1)
+                                Swipe.Down -> stepChannel(-1)
+                                Swipe.Left -> if (usesSecond) stepSecond(1)
+                                Swipe.Right -> if (usesSecond) stepSecond(-1)
+                            }
+                        }
+                        .tap(onLongPress = { openSettings() }) {
+                            runCatching { focus.requestFocus() }
+                            selected?.let(onOpen)
+                        },
+                )
                 if (playerFocused) Box(Modifier.fillMaxSize().border(1.dp, FocusColor.copy(alpha = 0.7f)))
                 selected?.let { ch ->
                     Row(
@@ -352,15 +383,22 @@ fun NewsMode(
                         tint = Color.White,
                         modifier = Modifier
                             .align(Alignment.TopStart)
+                            // Phones: the corner around the small icon takes the tap too.
+                            .then(if (phone) Modifier.clickable { openSettings() } else Modifier)
                             .padding(d(10f))
                             .background(Color.Black.copy(alpha = 0.5f), ChipShape)
-                            .clickable { customizing = true }
+                            .then(if (phone) Modifier else Modifier.clickable { customizing = true })
                             .padding(d(4f))
                             .size(d(16f)),
                     )
                     if (hint) {
                         Text(
-                            if (tiles) "Hold OK to customize this screen · arrows to pick a tile" else "Hold OK to customize this screen",
+                            when {
+                                phone && tiles -> "Swipe up or down to change channel · hold to customize · tap a tile to change it"
+                                phone -> "Swipe up or down to change channel · hold to customize this screen"
+                                tiles -> "Hold OK to customize this screen · arrows to pick a tile"
+                                else -> "Hold OK to customize this screen"
+                            },
                             color = Color.Black,
                             fontWeight = FontWeight.Bold,
                             fontSize = s(12f),
@@ -453,10 +491,8 @@ fun NewsMode(
                     .background(background)
                     .then(edge?.let { (w, c) -> Modifier.border(w, c, shape) } ?: Modifier)
                     .then(if (focused) Modifier.border(3.dp, FocusColor, shape) else Modifier)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                    ) { tileOpen = ref },
+                    // OK or a tap: the tile's own settings.
+                    .tap { tileOpen = ref },
             ) {
                 when (usual.header) {
                     MyScreen.BOLD -> Box(
@@ -500,6 +536,7 @@ fun NewsMode(
             s = ::s,
             d = ::d,
             onSponsorBack = { runCatching { focus.requestFocus() } },
+            onStepSecond = { stepSecond(it) },
         ) else if (cp24) Cp24Layout(
             live = { Live(it) },
             selected = selected,
@@ -512,6 +549,7 @@ fun NewsMode(
             allowVideo = now >= videoOkAt,
             s = ::s,
             d = ::d,
+            onStepSecond = { stepSecond(it) },
         ) else
         Column(Modifier.fillMaxSize()) {
             Row(Modifier.fillMaxWidth().height(playerHeight)) {
@@ -537,7 +575,7 @@ fun NewsMode(
                                 NewsScreen.Panel.Prayers -> Prayers(::s, ::d)
                                 NewsScreen.Panel.Currencies -> CurrencyList(Modifier.fillMaxSize(), rates, gold, ::s, ::d)
                                 NewsScreen.Panel.Stories -> StoryList(Modifier.fillMaxSize(), ::s, ::d)
-                                NewsScreen.Panel.Second -> SecondChannel(second, secondPlaying, ::s, ::d)
+                                NewsScreen.Panel.Second -> SecondChannel(second, secondPlaying, ::s, ::d, onStep = { stepSecond(it) })
                                 // Like CP24 (prayer times show here if the cameras can't be reached).
                                 NewsScreen.Panel.Traffic -> TrafficCameras(Modifier.fillMaxSize().padding(vertical = d(6f)), ::s) {
                                     Prayers(::s, ::d)
@@ -979,11 +1017,17 @@ private fun StoryList(modifier: Modifier, s: (Float) -> TextUnit, d: (Float) -> 
 
 /**
  * A second channel, small and silent (its sound isn't even decoded). Left and Right on the main
- * channel change it.
+ * channel change it; on a phone, [onStep] (when given) takes a swipe on it (or a tap: the next one).
  */
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
-private fun SecondChannel(channel: Channel?, playing: Boolean, s: (Float) -> TextUnit, d: (Float) -> Dp) {
+private fun SecondChannel(
+    channel: Channel?,
+    playing: Boolean,
+    s: (Float) -> TextUnit,
+    d: (Float) -> Dp,
+    onStep: ((Int) -> Unit)? = null,
+) {
     val context = LocalContext.current
     val stream = remember {
         com.livetv.app.player.StreamPlayer(context, preview = true).also {
@@ -1015,14 +1059,35 @@ private fun SecondChannel(channel: Channel?, playing: Boolean, s: (Float) -> Tex
     }
     LaunchedEffect(playing) { stream.player.playWhenReady = playing }
     Box(Modifier.fillMaxWidth().padding(vertical = d(6f)).aspectRatio(16f / 9f).background(Color.Black)) {
+        if (channel != null && playing && !showing && page == null) LoadingSpinner(size = 32.dp)
         AndroidView(
             factory = { ctx -> TextureView(ctx).also { stream.player.setVideoTextureView(it) } },
             onRelease = { stream.player.clearVideoTextureView(it) },
             modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
         )
         if (page != null) key(page) {
-            WebPreview(page, Modifier.fillMaxSize(), onFallback = { if (MyChannel.webPage(channel) != null) pageFailed = true })
+            WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = { if (MyChannel.webPage(channel) != null) pageFailed = true })
         }
+        // The finger, over the picture so the web page doesn't take it: a swipe left is the next
+        // channel, right the one before, a tap the next one. Without [onStep] the tap goes on to
+        // the tile around it (its settings).
+        Box(
+            Modifier
+                .matchParentSize()
+                .then(
+                    if (onStep == null) Modifier.pointerInput(Unit) {}
+                    else Modifier
+                        .focusProperties { canFocus = false }
+                        .swipe { dir ->
+                            when (dir) {
+                                Swipe.Left -> onStep(1)
+                                Swipe.Right -> onStep(-1)
+                                else -> Unit
+                            }
+                        }
+                        .tap { onStep(1) },
+                ),
+        )
         channel?.let { ch ->
             Text(
                 (if (ch.number > 0) "${ch.number}  " else "") + ch.name + "   ◀ ▶",
@@ -1065,6 +1130,8 @@ private fun Cp24Layout(
     allowVideo: Boolean,
     s: (Float) -> TextUnit,
     d: (Float) -> Dp,
+    /** A swipe or tap on the second channel (the finger's Left and Right). */
+    onStepSecond: (Int) -> Unit = {},
 ) {
     val context = LocalContext.current
     val forecast = if (Edition.HAS_WEATHER) rememberLoaded(30 * 60_000L) { News.forecast() } else null
@@ -1153,7 +1220,7 @@ private fun Cp24Layout(
                             Cp24Screen.CURRENCIES -> CurrencyList(Modifier.fillMaxSize().padding(horizontal = rd(10f)), rates, gold, rs, rd)
                             Cp24Screen.STORIES -> StoryList(Modifier.fillMaxSize().padding(horizontal = rd(10f)), rs, rd)
                             Cp24Screen.SECOND -> Box(Modifier.fillMaxSize().padding(horizontal = rd(8f)), contentAlignment = Alignment.Center) {
-                                SecondChannel(second, secondPlaying, rs, rd)
+                                SecondChannel(second, secondPlaying, rs, rd, onStep = onStepSecond)
                             }
                         }
                     }
@@ -1564,7 +1631,7 @@ private fun InfoTile(
             CurrencyList(padded, info.rates, info.gold, s, d, accent, rows)
         }
         MyScreen.SECOND -> Box(fill.background(Color.Black), contentAlignment = Alignment.Center) {
-            SecondChannel(info.second, info.secondPlaying, s) { 0.dp }
+            SecondChannel(info.second, info.secondPlaying, s, { 0.dp })
         }
     }
 }
@@ -1586,6 +1653,8 @@ private fun HomeLayout(
     s: (Float) -> TextUnit,
     d: (Float) -> Dp,
     onSponsorBack: () -> Unit = {},
+    /** A swipe or tap on the second channel in the corner. */
+    onStepSecond: (Int) -> Unit = {},
 ) {
     val shape = androidx.compose.foundation.shape.RoundedCornerShape(d(14f))
     val usual = TileUsual(shape, Glass, GlassEdge, FocusColor)
@@ -1635,7 +1704,7 @@ private fun HomeLayout(
                                 .clip(androidx.compose.foundation.shape.RoundedCornerShape(d(8f)))
                                 .border(2.dp, Color.White.copy(alpha = 0.8f), androidx.compose.foundation.shape.RoundedCornerShape(d(8f))),
                         ) {
-                            SecondChannel(info.second, info.secondPlaying, s) { 0.dp }
+                            SecondChannel(info.second, info.secondPlaying, s, { 0.dp }, onStep = onStepSecond)
                         }
                     }
                 }

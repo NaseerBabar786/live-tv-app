@@ -1,7 +1,7 @@
 name: Build trailers and music videos
 
-# docs/channel/trailers.json and music-videos.json: Bazaar TV's blocks of upcoming film trailers (English,
-# Hindi, Punjabi, Pakistani) and popular music videos (English, Hindi, Urdu, Punjabi) from the studios',
+# docs/channel/trailers.json and music-videos.json: Bazaar TV's blocks of upcoming film trailers (Hindi,
+# Pakistani) and popular music videos (Hindi, Urdu) from the studios',
 # labels' and artists' own YouTube channels, rebuilt every day. Played in
 # YouTube's player, locked, on tv.bulkbazaar.ca/channel/block.html (also in the app).
 on:
@@ -9,9 +9,9 @@ on:
     - cron: "30 8 * * *"   # every day, 08:30 UTC
   push:
     branches: [main]
-    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, .github/workflows/build-trailers.yml]
+    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, tools/playable.py, tools/check_bazaar_tv.py, docs/channel/test-schedule.json, .github/workflows/build-trailers.yml]
   pull_request:
-    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, .github/workflows/build-trailers.yml]
+    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, tools/playable.py, tools/check_bazaar_tv.py, docs/channel/test-schedule.json, .github/workflows/build-trailers.yml]
   workflow_dispatch:
 
 permissions:
@@ -44,8 +44,20 @@ jobs:
         if: always()
         run: python3 tools/build_bazaar_blocks.py
 
+      # The owner's rule: only programmes that fit Bazaar TV (no children's shows; those are on Bazaar Kids).
+      - name: Check Bazaar TV's programmes fit the channel
+        id: fit
+        if: always()
+        run: python3 tools/check_bazaar_tv.py
+
+      # The owner's rule (2026-10-07): no video goes on air until it passes the pre-air check; one that
+      # would show YouTube's error or "Watch on YouTube" screen is taken off the list first.
+      - name: Pre-air check
+        run: python3 tools/preair_check.py --lists --files docs/channel/trailers.json docs/channel/music-videos.json docs/channel/block-*.json
+
       - name: Publish the lists
-        if: always() && github.ref == 'refs/heads/main'
+        # Never lists that break the owner's rule (the check above).
+        if: always() && github.ref == 'refs/heads/main' && steps.fit.outcome == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -57,6 +69,11 @@ jobs:
             exit 0
           fi
           git commit -m "Trailers and music videos as of $(date -u '+%Y-%m-%d')"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          # Other jobs commit to main too; try again when one got in first.
+          for i in 1 2 3 4; do
+            git pull --rebase origin main && git push origin HEAD:main && break
+            git rebase --abort 2>/dev/null || true
+            [ "$i" = 4 ] && exit 1
+            sleep $((i * 10))
+          done
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

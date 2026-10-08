@@ -27,14 +27,14 @@
   .item .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
   .item .acts button { padding: 6px 10px; font-size: 14px; }
   .kind { display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
-  .kind.programme { background: #1E3A8A; color: #DBEAFE; } .kind.ad { background: #7C2D12; color: #FFEDD5; } .kind.ident { background: #14532D; color: #DCFCE7; } .kind.live { background: #7F1D1D; color: #FEE2E2; }
+  .kind.programme { background: #1E3A8A; color: #DBEAFE; } .kind.ad { background: #7C2D12; color: #FFEDD5; } .kind.ident { background: #14532D; color: #DCFCE7; } .kind.live { background: #7F1D1D; color: #FEE2E2; } .kind.ads { background: #7C2D12; color: #FFEDD5; }
   /* TV preview: sizes come from the picture's width (cqw), like the app's overlay, so it looks the same as on a TV. */
   .tvbox { margin: 0 0 18px; }
   .tvslot { position: relative; }
   .stage { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; container-type: inline-size; }
   .stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; background: #000; }
   .stage video.keep { object-fit: contain; }
-  .stage .bug { position: absolute; height: 9cqw; width: auto; max-width: 26cqw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .stage .bug { position: absolute; height: 6.75cqw; width: auto; max-width: 19.5cqw; object-fit: contain; opacity: .55; pointer-events: none; }
   .bug.tr { top: 2cqw; right: 2.5cqw; } .bug.tl { top: 2cqw; left: 2.5cqw; } .bug.br { bottom: 2cqw; right: 2.5cqw; } .bug.bl { bottom: 2cqw; left: 2.5cqw; }
   .stage.ticking .bug.br, .stage.ticking .bug.bl { bottom: 6cqw; }
   .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: 1.9cqw; line-height: 1.25; padding: .6cqw 0; }
@@ -62,12 +62,14 @@
   .guide { display: grid; gap: 4px; font-size: 15px; }
   .guide div { display: grid; grid-template-columns: 80px 1fr auto; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--bg); }
   .guide div.cur { outline: 2px solid var(--focus); }
+  .guide div.adrow { color: var(--muted); font-size: .9em; padding: 3px 10px; }
   .stations { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 18px; }
   .stations button, .stations a { text-decoration: none; }
   .stations button, .stations a { display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 14px; border: 3px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
   .stations button.sel { border-color: var(--focus); }
   .stations img { width: 84px; height: 44px; object-fit: contain; }
   .stations small { display: block; font-weight: 400; color: var(--muted); }
+  .stations .dial { color: var(--focus); font-weight: 800; }
   /* ---------- layout: one column on phones and laptops, side by side on wide screens ---------- */
   .studio { display: flex; flex-direction: column; }
   .studio .side, .studio .work, .studio .steps { display: contents; }
@@ -165,23 +167,50 @@
   .heatmap { display: grid; grid-template-columns: 44px repeat(24, 1fr); gap: 2px; font-size: 11px; margin-bottom: 8px; }
   .heatmap span { text-align: center; color: var(--muted); }
   .heatmap i { display: block; aspect-ratio: 1.3; border-radius: 3px; background: var(--surface-2); }
-  .hitsMode .work, .hitsMode #step5, .hitsMode .savebar, .hitsMode .modes, .hitsMode #soundBtn, .hitsMode #barBtn, .hitsMode #adBtn, .hitsMode .tvbox details { display: none !important; }
+  .hitsMode #step5, .hitsMode .savebar, .hitsMode .modes, .hitsMode #soundBtn, .hitsMode #barBtn, .hitsMode #adBtn, .hitsMode .tvbox details { display: none !important; }
   .hitsMode #hitsNote { display: block !important; }
   /* 📺 Programmes (2026-10-07): which videos our YouTube channels and Bazaar Hits may play. */
-  #picks { display: none; order: 9; }
+  #picks, #chHelp { display: none; }
   .hitsMode #picks { display: block; }
-  @media (min-width: 1200px) { #picks { grid-column: 2; grid-row: 1; margin: 0; } }
+  /* Our YouTube channels and Bazaar Hits (2026-10-07): the same dashboard as Bazaar TV, with their own tabs
+     (Overview, Library, Next transmission, Schedule, Most watched, Help) instead of Bazaar TV's steps. */
+  .hitsMode .work > #howTo, .hitsMode .steps > section:not(#stats) { display: none !important; }
+  @media (max-width: 1199px) { .hitsMode .work > :not(#picks) { display: none !important; } }
+  @media (min-width: 1200px) {
+    .hitsMode .work[data-tab] #picks, .hitsMode #pkTabs, .hitsMode #picks > h2 + p { display: none; }
+    .hitsMode .work[data-tab=library] #picks, .hitsMode .work[data-tab=approved] #picks, .hitsMode .work[data-tab=schedule] #picks { display: block; }
+    .hitsMode .work[data-tab=help] #chHelp { display: block; }
+  }
   .pkSources { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
   .pkSources label { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--line); background: var(--bg); cursor: pointer; font-size: 14px; }
   .pkSources label.off { opacity: .55; text-decoration: line-through; }
   #pkList { display: grid; gap: 6px; max-height: 55vh; overflow-y: auto; padding-right: 4px; margin: 10px 0 16px; }
-  .pk { display: grid; grid-template-columns: auto 96px 1fr; gap: 10px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; cursor: pointer; }
+  .pk { display: grid; grid-template-columns: 74px 96px 1fr auto; gap: 10px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; cursor: pointer; }
   .pk.off { opacity: .5; }
   .pk.off b { text-decoration: line-through; }
   .pk img { width: 96px; height: 54px; object-fit: cover; border-radius: 6px; background: #000; }
   .pk input, .pkSources input { width: 20px; height: 20px; accent-color: var(--focus); }
   .pk small { display: block; color: var(--muted); font-size: 13px; }
   #pkGuide { max-height: 40vh; overflow-y: auto; }
+  .pk .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .pk .acts .btn { padding: 6px 12px; font-size: 14px; white-space: nowrap; }
+  .pk .acts .ok { border-color: #66BB6A; } .pk .acts .no { border-color: #EF5350; }
+  .pk .len { font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; }
+  .pkTabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 12px; }
+  .pkTabs button { font: inherit; font-weight: 700; padding: 8px 14px; border-radius: 10px; border: 2px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; }
+  .pkTabs button.sel { border-color: var(--focus); background: var(--focus); color: #111; }
+  /* The time now, always in view (owner, 2026-10-07), in Toronto time like the schedules. */
+  .stclock { position: fixed; top: 76px; right: 14px; z-index: 50; cursor: grab; user-select: none; touch-action: none; background: var(--surface); border: 2px solid var(--focus); border-radius: 12px; padding: 6px 12px; font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+  .stclock.drag { cursor: grabbing; opacity: .9; }
+  .stclock small { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+  @media (max-width: 640px) { .pk { grid-template-columns: 60px 1fr; } .pk img { display: none; } .pk .acts { grid-column: 1 / -1; justify-content: flex-start; } }
+  .pk.playing { outline: 2px solid var(--focus); }
+  .pk .tag { display: inline-block; font-size: 12px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-right: 6px; background: var(--surface); border: 1px solid var(--line); }
+  .pk .tag.on { border-color: #66BB6A; color: #66BB6A; } .pk .tag.nw { border-color: var(--focus); }
+  #pkAddPick, #pkFilter { font: inherit; padding: 8px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); color: var(--text); }
+  #pkGuide div.edit { grid-template-columns: 80px 1fr auto auto; }
+  #pkGuide div.ins { outline: 2px dashed #66BB6A; }
+  #pkGuide .mv { display: flex; gap: 4px; } #pkGuide .mv button { padding: 2px 8px; font-size: 13px; }
   pre.rule { background: var(--bg); padding: 10px; border-radius: 8px; overflow: auto; font-size: 13px; }
   @media (max-width: 640px) { .two, .three { grid-template-columns: 1fr; } .item { grid-template-columns: 1fr; } .item .acts { justify-content: flex-start; } }
 </style>
@@ -202,6 +231,7 @@
   </div>
 </header>
 
+<div class="stclock" id="stClock" aria-live="off" title="Drag to move the clock anywhere. Double-click to put it back."></div>
 <main class="wrap studio-main">
   <h1>Channel Studio</h1>
   <p class="lead">Run your own TV channels. They show at the top of every list in Cable TV (Bazaar TV is <b>channel 1</b>, Bazaar Cinema <b>2</b>, Bazaar Music <b>3</b>, Bazaar Hits <b>4</b>, Bazaar Kids <b>5</b>, Bazaar Sports <b>6</b>, Bazaar Travel <b>7</b> and Bazaar Comedy <b>8</b>, from 1.9.45) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
@@ -212,7 +242,7 @@
   <div id="dash" class="hidden studio">
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
-    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 4)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span> and picks them by itself, so it has no schedule to edit. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
+    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 4)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span>. Choose its programmes and lock its schedule on the right. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -272,6 +302,16 @@
       <!-- Wide screens: a software-style dashboard. The tabs (or a tile in the overview) open one part at a time. -->
       <nav class="snav" id="snav" aria-label="Studio sections"></nav>
       <div class="overview" id="overview"></div>
+      <section class="panel" id="chHelp">
+        <h2 style="margin-top:0">How <span class="chName"></span> works</h2>
+        <ol>
+          <li><b>📚 Library</b>: every programme our daily search finds on this channel's official YouTube sources. Watch any with ▶ Preview. Nothing ever leaves the Library.</li>
+          <li><b>✅ Next transmission</b>: the programmes you approve from the Library. Only these go on air. Press 💾 Save programmes after changes.</li>
+          <li><b>📅 Schedule</b>: the next 24 hours, made from Next transmission and mixed with our ad breaks (and trailers on movie channels). Change the order if you like, then 🔒 Lock it. A locked day plays exactly as shown; 🔓 Unlock only to fix a mistake. Days you don't lock lock by themselves at 10 PM (Toronto time).</li>
+          <li><b>On air</b>: everyone joins what's on now, like real TV. A programme that ends early is filled with our promos, a video that won't play is skipped, and a frozen picture is restarted.</li>
+        </ol>
+        <p class="small">Public page: <a class="chPage" target="_blank" rel="noopener"></a></p>
+      </section>
     <details class="help panel" id="howTo" style="padding:14px 18px" open>
       <summary>How it works (read this first)</summary>
       <ol>
@@ -287,7 +327,7 @@
     <section class="panel" id="step1">
       <h2><span class="num">1</span> Your channel</h2>
       <div class="two">
-        <label class="f">Channel name<input id="name" maxlength="40" placeholder="Bazaar TV"></label>
+        <label class="f">Channel name (fixed)<input id="name" readonly tabindex="-1" style="opacity:.7;cursor:default"></label>
         <label class="f">Time zone of your time slots
           <select id="tz">
             <option value="America/Toronto">Toronto / New York (Eastern)</option>
@@ -334,6 +374,7 @@
         <div class="row" style="margin-bottom:10px"><select id="libCat" style="padding:8px;border-radius:10px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit"></select></div>
         <div class="items" id="library"></div>
       </details>
+      <div id="adWarn" class="hidden" style="margin:8px 0;padding:10px 12px;border-radius:12px;border:1.5px solid #E53935;background:rgba(229,57,53,.12)"></div>
       <div class="items" id="videos"></div>
       <form id="videoForm" class="panel" style="margin-top:12px;background:var(--surface-2)">
         <b id="videoFormTitle">Add a video</b>
@@ -359,16 +400,23 @@
       <p class="small" style="margin-top:0">Plays from top to bottom, then starts again, all day and night. A video can be in the loop more than once (handy for ads). Total: <b id="loopTotal">0:00</b></p>
       <details class="help"><summary>How the loop works</summary>
         <ul>
-          <li>Use ▲ ▼ to change the order and ✕ to take a video out of the loop (it stays in your Videos list).</li>
+          <li>Use ▲ ▼ to change the order and <b>✕ Remove</b> to take a video out of the loop (it stays in your Videos list).</li>
+          <li>The row with <b>▶ ON TV NOW</b> is what viewers are watching at this moment.</li>
           <li>The loop is timed by the clock, so all viewers are at the same place in it.</li>
           <li>If the loop is empty and no time slot is on, the channel shows "off air" with what's next.</li>
         </ul>
       </details>
-      <div class="items" id="loop"></div>
-      <div class="row" style="margin-top:12px">
+      <div id="breakWarn" class="hidden" style="margin:8px 0;padding:10px 12px;border-radius:12px;border:1.5px solid #E53935;background:rgba(229,57,53,.12)"></div>
+      <div class="row" style="margin:8px 0 12px;padding:10px 12px;border-radius:12px;background:var(--surface-2)">
+        <b>＋ Add a video:</b>
         <select id="loopAdd" style="padding:10px;border-radius:12px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit;max-width:100%"></select>
-        <button class="btn" id="loopAddBtn" type="button">Add to the loop</button>
+        <select id="loopWhere" aria-label="Where" style="padding:10px;border-radius:12px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit">
+          <option value="end">at the end</option><option value="next">right after what's on now</option><option value="top">at the top</option>
+        </select>
+        <button class="btn primary" id="loopAddBtn" type="button">Add to the loop</button>
       </div>
+      <p id="loopNow" class="small" style="margin:0 0 8px;font-weight:700"></p>
+      <div class="items" id="loop"></div>
     </section>
 
     <section class="panel" id="step4">
@@ -480,25 +528,43 @@
     </div>
     <section class="panel" id="picks">
       <h2 style="margin-top:0;display:block">📺 Programmes on <span id="pkName"></span></h2>
-      <p class="small" style="margin-top:0">This channel runs like real TV: one running order a day, starting at midnight (Toronto time) and going round the clock, so everyone who tunes in joins whatever is on <b>now</b>, part-way through. Untick anything you don't want on air, then press <b>Save programmes</b>. TVs and the website pick it up the next time the channel is opened. The list itself is refreshed every day from the official YouTube channels.</p>
-      <div class="row" style="margin:0 0 12px">
-        <b>New videos found each day:</b>
-        <label><input type="radio" name="pkMode" value="auto" checked> go on air by themselves</label>
-        <label><input type="radio" name="pkMode" value="manual"> wait until I tick them</label>
+      <p class="small" style="margin-top:0">How it works, in three steps. <b>📚 Library</b>: every programme we've found for this channel (our daily search adds new ones); nothing ever leaves it. <b>✅ Next transmission</b>: the programmes you approve from the Library; only these go on air. <b>📅 Schedule</b>: the next 24 hours made from Next transmission, mixed with our ad breaks (and trailers on movie channels). Change the order if you like, then press 🔒 Lock. A locked day plays exactly as shown and changes only if you unlock it to fix a mistake. Anything you haven't locked yourself is locked automatically at 10 PM (Toronto time).</p>
+      <div class="pkTabs" id="pkTabs" role="tablist">
+        <button type="button" data-t="library">📚 Library <span></span></button>
+        <button type="button" data-t="approved">✅ Next transmission <span></span></button>
+        <button type="button" data-t="schedule">📅 Schedule</button>
       </div>
-      <h3 style="margin:0 0 6px">Sources <span class="small">(untick one to take off everything it uploads)</span></h3>
-      <div class="pkSources" id="pkSources"></div>
-      <div class="row">
-        <input id="pkFind" type="search" placeholder="Find a programme…" style="flex:1;min-width:180px">
-        <select id="pkShow"><option value="all">All</option><option value="on">On air</option><option value="off">Taken off</option></select>
-        <button class="btn" type="button" id="pkAllOn">Tick all</button>
-        <button class="btn" type="button" id="pkAllOff">Untick all</button>
+      <div id="pkLists">
+        <p class="small" id="pkTabHelp" style="margin:0 0 8px"></p>
+        <h3 style="margin:0 0 6px">Sources on air <span class="small">(untick one to keep everything it uploads off the air; its programmes stay in the Library)</span></h3>
+        <div class="pkSources" id="pkSources"></div>
+        <div class="row">
+          <input id="pkFind" type="search" placeholder="Find a programme…" style="flex:1;min-width:180px">
+          <select id="pkFilter" aria-label="Show">
+            <option value="all">Show all</option>
+            <option value="new">🆕 New only</option>
+            <option value="approved">✅ In next transmission</option>
+            <option value="not">Not in next transmission</option>
+          </select>
+          <button class="btn" type="button" id="pkAllNew">✓ Approve all new</button>
+        </div>
+        <p class="small" id="pkCount" style="margin:8px 0 0"></p>
+        <div id="pkList"></div>
       </div>
-      <p class="small" id="pkCount" style="margin:8px 0 0"></p>
-      <div id="pkList"></div>
-      <h3 style="margin:0 0 6px">Today's running order from now</h3>
-      <p class="small" style="margin:0 0 6px">With your ticks (saved or not). Times are your computer's time.</p>
-      <div class="guide" id="pkGuide"></div>
+      <div id="pkSched" class="hidden">
+        <div class="row" style="margin:0 0 8px">
+          <button class="btn" type="button" id="pkDayToday">Today</button>
+          <button class="btn" type="button" id="pkDayTomorrow">Tomorrow</button>
+        </div>
+        <p id="pkLockNote" style="margin:0 0 8px;font-weight:700"></p>
+        <div class="row" id="pkSchedActs" style="margin:0 0 10px"></div>
+        <div class="row hidden" id="pkAddBar" style="margin:0 0 10px">
+          <select id="pkAddPick" style="flex:1;min-width:200px" aria-label="Programme to add"></select>
+          <button class="btn ok" type="button" id="pkAddBtn">＋ Add</button>
+          <span class="small" id="pkAddWhere"></span>
+        </div>
+        <div class="guide" id="pkGuide"></div>
+      </div>
       <div class="row" style="margin-top:14px">
         <button class="btn primary" type="button" id="pkSave">💾 Save programmes</button>
         <span id="pkMsg" class="small"></span>
@@ -519,9 +585,44 @@
 
 <script type="module">
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
-import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand } from "./channel/schedule.js";
-import { playable, runningOrder, upcoming, torontoDay, lengthOf as ytLength } from "./channel/ytorder.js";
+import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand, zonedTime } from "./channel/schedule.js";
+import { mountCards } from "./channel/cards.js";
+import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
+let breakPromos = [], pkTrailers = [];
+loadBreakPromos("media/").then(p => { breakPromos = p; setTimeout(() => { try { if (pick) renderPicks(); } catch {} }); });
 const $ = id => document.getElementById(id);
+// The clock in the corner: Toronto time, the time our channels' schedules run on.
+function tickClock() {
+  const now = new Date();
+  $("stClock").innerHTML = `🕒 ${now.toLocaleTimeString("en-CA", { timeZone: "America/Toronto", hour: "numeric", minute: "2-digit", second: "2-digit" })}<small>${now.toLocaleDateString("en-CA", { timeZone: "America/Toronto", weekday: "short", month: "short", day: "numeric" })} · Toronto</small>`;
+}
+tickClock(); setInterval(tickClock, 1000);
+// The owner can drag the clock anywhere on the page (2026-10-07); it stays where it was left, on this
+// computer. Double-click puts it back at the top right.
+(() => {
+  const c = $("stClock"), KEY = "studioClockAt";
+  const place = (x, y) => {
+    x = Math.max(0, Math.min(x, innerWidth - c.offsetWidth)); y = Math.max(0, Math.min(y, innerHeight - c.offsetHeight));
+    Object.assign(c.style, { left: x + "px", top: y + "px", right: "auto", bottom: "auto" });
+  };
+  let at = null;
+  try { at = JSON.parse(localStorage.getItem(KEY)); } catch {}
+  // Saved as a share of the window, so it keeps its corner when the window changes size.
+  const restore = () => { if (at) place(at.fx * (innerWidth - c.offsetWidth), at.fy * (innerHeight - c.offsetHeight)); };
+  restore(); addEventListener("resize", restore);
+  let grab = null;
+  c.addEventListener("pointerdown", e => { const r = c.getBoundingClientRect(); grab = { dx: e.clientX - r.left, dy: e.clientY - r.top }; c.setPointerCapture(e.pointerId); c.classList.add("drag"); });
+  c.addEventListener("pointermove", e => { if (grab) place(e.clientX - grab.dx, e.clientY - grab.dy); });
+  const drop = () => {
+    if (!grab) return;
+    grab = null; c.classList.remove("drag");
+    const r = c.getBoundingClientRect();
+    at = { fx: r.left / Math.max(1, innerWidth - c.offsetWidth), fy: r.top / Math.max(1, innerHeight - c.offsetHeight) };
+    try { localStorage.setItem(KEY, JSON.stringify(at)); } catch {}
+  };
+  c.addEventListener("pointerup", drop); c.addEventListener("pointercancel", drop);
+  c.addEventListener("dblclick", () => { at = null; c.removeAttribute("style"); try { localStorage.removeItem(KEY); } catch {} });
+})();
 const show = id => ["signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
 
 const V = "10.12.2";
@@ -559,9 +660,11 @@ function stationButton(st, note) {
   const b = document.createElement("button");
   b.type = "button";
   b.className = st === station ? "sel" : "";
-  b.innerHTML = `<img alt=""><span><span></span><small></small></span>`;
+  // The channel number first, as big as the name: "1. Bazaar TV" (owner, 2026-10-07).
+  b.innerHTML = `<img alt=""><span><span><b class="dial"></b> <span class="nm"></span></span><small></small></span>`;
   b.querySelector("img").src = st.logo;
-  b.querySelector("span span").textContent = st.name;
+  b.querySelector(".dial").textContent = st.dial + ".";
+  b.querySelector(".nm").textContent = st.name;
   b.querySelector("small").textContent = note;
   b.onclick = async () => {
     if (st === station) return;
@@ -590,7 +693,7 @@ function renderStations() {
 async function testProgramme() {
   const ready = await (await fetch(station.ready + "?t=" + Date.now())).json();
   // Channels 9 to 11 borrow Bazaar Cinema's free films as their backup, under their own name and logo.
-  return station.backup ? { ...ready, name: station.name, logo: station.logo } : ready;
+  return station.backup ? { ...ready, name: station.name, logo: station.logo, ...(station.noBug ? { logoCorner: "off" } : {}) } : ready;
 }
 
 /** Bazaar Hits: its own page plays inside the player; the editing parts are put away. */
@@ -610,15 +713,17 @@ function showHits(on) {
   f.src = station.web;
   $("hitsName").textContent = `${station.name} (channel ${station.dial})`;
   $("hitsAbout").textContent = station === HITS ? "plays the music labels' official YouTube songs round the clock"
-    : `plays official videos from well-known YouTube channels round the clock (${station.tagline.toLowerCase()}); its free-film schedule is only the backup`;
+    : `plays official videos from well-known YouTube channels round the clock (${station.tagline.toLowerCase()})`;
   $("hitsLink").href = station.page.startsWith("channel/?") ? station.web : station.page;
   $("nowText").textContent = station === HITS ? "Bazaar Hits: film songs from the music labels' own YouTube channels, one after another."
     : `${station.name}: official videos from YouTube channels, one after another, locked like Bazaar Hits.`;
-  $("modeText").textContent = "It runs by itself from its list (updated every day), so there's nothing to edit here. Tap 🔊 for sound.";
+  $("modeText").textContent = "It runs by itself from its locked schedule. Choose its programmes in the Library and Next transmission. Tap 🔊 for sound.";
 }
 async function loadSaved() {
   renderStations();
   showHits(!!station.web);
+  // Every channel opens on its Overview first (owner, 2026-10-07).
+  if (wide.matches) setTab("overview");
   if (station.web) { dirty = false; loadPicksPanel(); return; }
   try {
     const snap = await fs.getDoc(fs.doc(db, "sponsors", station.doc));
@@ -637,6 +742,8 @@ async function loadSaved() {
   }
   // The logo isn't picked here any more: a channel keeps the one already saved, else its own Bazaar logo.
   if (!saved.logo) saved.logo = station.logo;
+  // Each channel keeps its own fixed name (owner, 2026-10-07): "Bazaar TV One", "Bazaar Cinema"...
+  saved.name = station.name;
   c = clone(saved);
   dirty = false;
   renderAll();
@@ -650,7 +757,6 @@ function renderChannel() {
   $("ticker").value = c.ticker || "";
   $("tickerOn").checked = c.tickerOn !== false;
 }
-$("name").oninput = () => { c.name = $("name").value; changed(false); };
 $("tz").onchange = () => { c.tz = $("tz").value; changed(); };
 $("active").onchange = () => { c.active = $("active").checked; changed(); };
 $("ticker").oninput = () => { c.ticker = $("ticker").value; changed(false); };
@@ -658,7 +764,17 @@ $("tickerOn").onchange = () => { c.tickerOn = $("tickerOn").checked; changed(fal
 
 // ---------- step 2 ----------
 const kindOf = v => v.kind || (v.secs > 0 ? "programme" : "live");
-const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY", music: "MUSIC VIDEOS · NEW EVERY DAY", list: "YOUTUBE BLOCK · NEW EVERY DAY" };
+const kindLabel = { programme: "PROGRAMME", ad: "AD", ident: "PROMO", live: "LIVE", trailers: "TRAILERS · NEW EVERY DAY", music: "MUSIC VIDEOS · NEW EVERY DAY", list: "YOUTUBE BLOCK · NEW EVERY DAY", ads: "ADS · UPDATES BY ITSELF" };
+let justLooped = null;
+// Pop-up ad length rule (owner, 2026-10-07): ads are 5, 10, 15 ... 60 seconds; one break is 60 s at most.
+const AD_RULE = "5, 10, 15, 20 … up to 60 second";
+function adProblem(v) {
+  if (kindOf(v) !== "ad" || !(v.secs > 0)) return "";
+  const near = Math.round(v.secs / 5) * 5;
+  if (v.secs > 61) return `This ad is ${lengthText(v.secs)} long. Ads can be at most 60 seconds.`;
+  if (Math.abs(v.secs - near) > 1 || near < 5) return `This ad is ${Math.round(v.secs)} seconds. Ads must be 5, 10, 15, 20 … 60 seconds (nearest: ${Math.min(60, Math.max(5, near))}).`;
+  return "";
+}
 function renderVideos() {
   $("videos").innerHTML = "";
   if (!c.videos.length) $("videos").innerHTML = '<p class="small">No videos yet. Add one below.</p>';
@@ -667,14 +783,35 @@ function renderVideos() {
     d.className = "item";
     const uses = c.loop.filter(x => x === v.id).length + c.slots.filter(s => s.video === v.id || (s.episodes || []).includes(v.id)).length;
     d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts">
-      <button class="btn" data-a="play">▶ Watch</button><button class="btn" data-a="edit">Edit</button><button class="btn" data-a="del">Delete</button></div>`;
+      <button class="btn" data-a="play">▶ Watch</button><button class="btn" data-a="loop" title="Put it at the end of the non-stop loop">＋ Loop</button><button class="btn" data-a="slot" title="Give it a time slot">🕗 Time slot</button><button class="btn" data-a="edit">Edit</button><button class="btn" data-a="del">Delete</button></div>`;
     d.querySelector("b").textContent = v.title;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
     d.querySelector(".meta").textContent = `${lengthText(v.secs)} · ${uses ? "used " + uses + "×" : "not used yet"} · ${v.url}`;
-    // Ad length rule: a reminder on an ad that isn't 10, 20, 30, 40, 50 or 60 seconds.
-    if (kindOf(v) === "ad" && v.secs && (v.secs > 61 || Math.abs(v.secs - Math.round(v.secs / 10) * 10) > 1 || v.secs < 9))
-      d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="err">⚠ Ads should be 10, 20, 30, 40, 50 or 60 seconds · </span>');
+    // Ad length rule: an ad that isn't 5, 10, 15 ... 60 seconds gets a fix bar: change it, take it off air, or delete it.
+    const problem = adProblem(v);
+    if (problem) {
+      d.id = "v-" + v.id;
+      d.style.flexWrap = "wrap";
+      d.insertAdjacentHTML("beforeend", `<div class="adfix" style="flex-basis:100%;margin-top:8px"><span class="err"></span>
+        <div class="row" style="margin-top:6px"><button class="btn" data-a="fix">✏️ Change link or length</button>${uses ? '<button class="btn" data-a="off">Keep it, take it off air</button>' : ""}<button class="btn" data-a="del2">🗑 Delete it</button></div></div>`);
+      d.querySelector(".adfix .err").textContent = "⚠ " + problem;
+      d.querySelector('[data-a=fix]').onclick = () => { editVideo(v); $("vMsg").innerHTML = `<span class="warn">Paste the link of a ${AD_RULE} version, or fix the length, then tap Save video.</span>`; };
+      d.querySelector('[data-a=off]')?.addEventListener("click", () => {
+        c.loop = c.loop.filter(x => x !== v.id);
+        c.slots = c.slots.filter(s => s.video !== v.id);
+        changed(); renderAll();
+      });
+      d.querySelector('[data-a=del2]').onclick = () => d.querySelector('[data-a=del]').click();
+    }
+    if (justLooped === v.id) d.querySelector(".meta").insertAdjacentHTML("afterbegin", '<span class="ok">✓ Added at the end of the loop. Press Save to put it on air · </span>');
     d.querySelector('[data-a=play]').onclick = () => watchOne(v.title, v.url);
+    d.querySelector('[data-a=loop]').onclick = () => { c.loop.push(v.id); justLooped = v.id; changed(); renderAll(); };
+    d.querySelector('[data-a=slot]').onclick = () => {
+      setTab("step4");
+      $("sVideo").value = v.id;
+      $("sMsg").innerHTML = `Pick the day and start time for "${esc(v.title)}", then tap <b>Add time slot</b>.`;
+      $("slotForm").scrollIntoView({ behavior: "smooth", block: "center" });
+    };
     d.querySelector('[data-a=edit]').onclick = () => editVideo(v);
     d.querySelector('[data-a=del]').onclick = () => {
       if (uses && !confirm(`"${v.title}" is used ${uses} time(s) in the loop or time slots. Delete it from those too?`)) return;
@@ -689,6 +826,12 @@ function renderVideos() {
       changed(); renderAll();
     };
     $("videos").appendChild(d);
+  }
+  const bad = c.videos.filter(adProblem);
+  $("adWarn").classList.toggle("hidden", !bad.length);
+  if (bad.length) {
+    $("adWarn").innerHTML = `<b class="err">⚠ ${bad.length === 1 ? "1 ad breaks" : bad.length + " ads break"} the ad length rule</b> (5, 10, 15 … 60 seconds). Each one has buttons to fix it: change the link, take it off air, or delete it. <button class="btn" type="button" id="adWarnGo">Show me</button>`;
+    $("adWarnGo").onclick = () => document.getElementById("v-" + bad[0].id)?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
   const opts = c.videos.map(v => `<option value="${v.id}"></option>`).join("");
   for (const sel of [$("loopAdd"), $("sVideo")]) {
@@ -786,12 +929,7 @@ $("videoForm").onsubmit = async e => {
     if (kind !== "live") c.loop.push(v.id);
     $("vMsg").innerHTML = `<span class="ok">✓ Added "${title}"` + (kind !== "live" ? " and put it at the end of the loop." : ". Give it a time slot in step 4.") + "</span>";
   } else $("vMsg").innerHTML = `<span class="ok">✓ Saved "${title}".</span>`;
-  // Ad length rule (owner, 2026-10-06): ads are 10, 20, 30, 40, 50 or 60 seconds; a reminder when one isn't.
-  if (kind === "ad") {
-    const near = Math.round(secs / 10) * 10;
-    if (secs > 61) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${lengthText(secs)} long. Ads should be at most 1 minute (10, 20, 30, 40, 50 or 60 seconds).</span>`;
-    else if (Math.abs(secs - near) > 1 || near < 10) $("vMsg").innerHTML += `<br><span class="err">⚠ This ad is ${secs} seconds. Ads should be 10, 20, 30, 40, 50 or 60 seconds (nearest: ${Math.min(60, Math.max(10, near))}).</span>`;
-  }
+  if (adProblem(v)) $("vMsg").innerHTML += `<br><span class="err">⚠ ${adProblem(v)}</span>`;
   resetVideoForm();
   changed(); renderAll();
 };
@@ -858,27 +996,100 @@ function renderLoop() {
   const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
   c.loop = c.loop.filter(id => byId[id]);
   $("loop").innerHTML = "";
-  let at = 0;
+  let at = 0, longBreak = null;
+  loopRows = [];
+  const isShowV = x => ["programme", "live", "trailers", "music", "list"].includes(kindOf(x || {}));
   c.loop.forEach((id, i) => {
     const v = byId[id];
     const d = document.createElement("div");
     d.className = "item";
     d.innerHTML = `<div><b></b><span class="meta"></span></div><div class="acts">
-      <button class="btn" data-a="up" title="Move up">▲</button><button class="btn" data-a="down" title="Move down">▼</button><button class="btn" data-a="x" title="Take out of the loop">✕</button></div>`;
+      <button class="btn" data-a="up" title="Move up">▲</button><button class="btn" data-a="down" title="Move down">▼</button><button class="btn" data-a="x" title="Take out of the loop" style="color:#FF8A80;border-color:#E53935">✕ Remove</button></div>`;
     d.querySelector("b").textContent = `${i + 1}. ${v.title}`;
+    loopRows[i] = d;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
-    d.querySelector(".meta").textContent = v.secs > 0 ? `starts at ${lengthText(at)} into the loop · ${lengthText(v.secs)} long` : "live stream: plays until the next time slot (the rest of the loop is skipped)";
+    d.querySelector(".meta").textContent = v.secs > 0 ? `starts at ${at > 0 ? lengthText(at) : "0:00"} into the loop · ${lengthText(v.secs)} long`
+      : kindOf(v) === "ads" ? (/ads-sponsors/.test(v.url) ? "every sponsor showing today on /sponsors, one after another (updates by itself every hour)" : "our Cable TV promos on air, one after another (the same list as the app's pop-up)")
+      : ["trailers", "music", "list"].includes(kindOf(v)) ? "today's YouTube list: its videos play here one after another (the list changes every day)"
+      : "live stream: plays until the next time slot (the rest of the loop is skipped)";
     at += v.secs > 0 ? v.secs : 0;
     const move = to => { if (to < 0 || to >= c.loop.length) return; [c.loop[i], c.loop[to]] = [c.loop[to], c.loop[i]]; changed(); renderAll(); };
     d.querySelector('[data-a=up]').onclick = () => move(i - 1);
     d.querySelector('[data-a=down]').onclick = () => move(i + 1);
     d.querySelector('[data-a=x]').onclick = () => { c.loop.splice(i, 1); changed(); renderAll(); };
+    // A break (ads and promos between two programmes) over 60 s: mark every item in it.
+    let st = i; while (st > 0 && !isShowV(byId[c.loop[st - 1]])) st--;
+    // Bazaar Ads is all ads, round the clock: there are no breaks to keep short there.
+    if (!isShowV(v) && station.id !== "ads") {
+      let t = 0; for (let j = st; j < c.loop.length && !isShowV(byId[c.loop[j]]); j++) t += byId[c.loop[j]].secs > 0 ? byId[c.loop[j]].secs : 0;
+      if (t > 61) {
+        if (!longBreak) longBreak = d;
+        d.querySelector(".meta").insertAdjacentHTML("afterbegin", `<span class="err">⚠ This break is ${Math.round(t)} s, over 60 s: tap ✕ on one of its ads, or ▲ ▼ to move one next to another programme · </span>`);
+      }
+    }
     $("loop").appendChild(d);
   });
+  $("breakWarn").classList.toggle("hidden", !longBreak);
+  if (longBreak) {
+    $("breakWarn").innerHTML = `<b class="err">⚠ An ad break in the loop is over 60 seconds.</b> Its ads are marked in red. <button class="btn" type="button" id="breakWarnGo">Show me</button>`;
+    $("breakWarnGo").onclick = () => longBreak.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
   if (!c.loop.length) $("loop").innerHTML = '<p class="small">The loop is empty. Between time slots the channel will be off air.</p>';
   $("loopTotal").textContent = lengthText(at) || "0:00";
+  markLoopNow();
 }
-$("loopAddBtn").onclick = () => { const id = $("loopAdd").value; if (!id) return; c.loop.push(id); changed(); renderAll(); };
+/**
+ * Highlights the loop row playing right now (the same clock the TVs use). YouTube lists are filled in
+ * first, so a row that is a whole list is found from the video inside it that's on.
+ */
+let loopRows = [], loopNowTimer = null;
+async function markLoopNow() {
+  clearTimeout(loopNowTimer);
+  loopNowTimer = setTimeout(markLoopNow, 15000);
+  const cfg = c;
+  if (!cfg) return;
+  const e = await expand(cfg).catch(() => cfg);
+  if (cfg !== c) return;
+  const on = whatsOn(e);
+  // Which row of c.loop each playing entry of the filled-in loop comes from (as whatsOn counts it).
+  const eById = Object.fromEntries(e.videos.map(v => [v.id, v]));
+  const per = {};
+  for (const id of new Set(cfg.loop)) if (!eById[id]) per[id] = e.loop.filter(x => x.startsWith(id + "-")).length / Math.max(1, cfg.loop.filter(x => x === id).length);
+  const rowOf = [];
+  cfg.loop.forEach((id, i) => { for (let k = 0; k < (eById[id] ? 1 : per[id] || 0); k++) rowOf.push(i); });
+  const playing = e.loop.map((id, k) => [id, rowOf[k]]).filter(([id]) => eById[id]?.secs > 0).map(([, r]) => r);
+  const row = !on.off && !on.slot ? (on.loopIndex != null ? playing[on.loopIndex] : cfg.loop.findIndex(id => id === on.video.id)) : -1;
+  const label = dirty ? "▶ PLAYING NOW (with your unsaved changes)" : "▶ ON TV NOW";
+  loopRows.forEach((d, i) => {
+    d.style.outline = i === row ? "3px solid var(--focus)" : "";
+    d.querySelector(".nowtag")?.remove();
+    if (i === row) {
+      const t = document.createElement("div");
+      t.className = "nowtag"; t.style.cssText = "color:var(--focus);font-weight:800;margin-top:4px";
+      const inside = on.video.title !== cfg.videos.find(v => v.id === cfg.loop[i])?.title ? `: ${on.video.title}` : "";
+      t.textContent = label + inside + (isFinite(on.until) ? ` · until ${timeText(on.until, cfg.tz)}` : "");
+      d.firstElementChild.appendChild(t);
+    }
+  });
+  $("loopNow").textContent = on.off ? "Nothing is on air right now."
+    : on.slot ? `Right now a time slot is on: ${on.show ? on.show + ": " : ""}${on.video.title}. The loop carries on after it.`
+    : row >= 0 ? `${dirty ? "Playing now (your changes)" : "On TV now"}: row ${row + 1}, ${on.video.title}.` + (row > 2 ? " " : "") : "";
+  if (row > 2 && $("loopNow").textContent) {
+    const go = document.createElement("button"); go.className = "btn"; go.type = "button"; go.textContent = "Show me";
+    go.onclick = () => loopRows[row]?.scrollIntoView({ behavior: "smooth", block: "center" });
+    $("loopNow").append(go);
+  }
+}
+$("loopAddBtn").onclick = async () => {
+  const id = $("loopAdd").value; if (!id) return;
+  const where = $("loopWhere").value;
+  let at = c.loop.length;
+  if (where === "top") at = 0;
+  if (where === "next") { const r = loopRows.findIndex(d => d.querySelector(".nowtag")); at = r >= 0 ? r + 1 : c.loop.length; }
+  c.loop.splice(at, 0, id);
+  changed(); renderAll();
+  loopRows[at]?.scrollIntoView({ behavior: "smooth", block: "center" });
+};
 
 // ---------- step 4 ----------
 const DAY_TEXT = { all: "Every day", weekdays: "Mon–Fri", weekend: "Sat & Sun", mon: "Mondays", tue: "Tuesdays", wed: "Wednesdays", thu: "Thursdays", fri: "Fridays", sat: "Saturdays", sun: "Sundays" };
@@ -925,6 +1136,8 @@ $("slotForm").onsubmit = e => {
 let mode = "edit", marquee = null, barTimer = null, adRun = null, tickerNow = "";
 const shown = () => (mode === "air" ? saved : c) || c;
 function stopPreview() { if (preview) { preview.stop(); preview = null; } }
+// "Up next" every 10 minutes and today's shows every 20, with the breaks, as on TVs (not while watching one video).
+mountCards($("stage"), () => (preview ? shown() : null));
 function showLiveButton() {
   if ($("liveBtn")) return;
   const b = document.createElement("button");
@@ -1065,11 +1278,15 @@ new IntersectionObserver(([e]) => {
   $("tvslot").classList.toggle("docked", away && !undocked && !document.fullscreenElement);
 }, { threshold: 0 }).observe($("tvslot"));
 // ---------- the dashboard (wide screens) ----------
+// Our YouTube channels' Programmes panel sits in the dashboard, after the Overview (its tabs are dashboard tabs).
+$("chHelp").after($("picks"));
 const TABS = [["overview", "▦ Overview"], ["step1", "1 · Your channel"], ["step2", "2 · Videos"], ["step3", "3 · Loop"], ["step4", "4 · Time slots"], ["week", "📅 Week"], ["stats", "📊 Most watched"], ["help", "? Help"]];
+// Channels that play YouTube (Cinema, Music, Hits, Kids...): the same dashboard, with the Programmes steps.
+const WEB_TABS = [["overview", "▦ Overview"], ["library", "📚 Library"], ["approved", "✅ Next transmission"], ["schedule", "📅 Schedule"], ["stats", "📊 Most watched"], ["help", "? Help"]];
 let tab = "overview";
 function renderNav() {
   $("snav").innerHTML = "";
-  for (const [id, label] of TABS) {
+  for (const [id, label] of station.web ? WEB_TABS : TABS) {
     const b = document.createElement("button");
     b.type = "button";
     b.textContent = label;
@@ -1079,18 +1296,22 @@ function renderNav() {
   }
 }
 function setTab(id) {
+  // A tab the other kind of channel doesn't have: its Overview.
+  if (!(station.web ? WEB_TABS : TABS).some(([t]) => t === id)) id = "overview";
   tab = id;
   document.querySelector(".work").dataset.tab = id;
+  if (station.web && ["library", "approved", "schedule"].includes(id) && pick) { pkTab = id; renderPicks(); }
   if (id === "help") $("howTo").open = true;
   renderNav();
   if (id === "overview") renderOverview();
   if (id === "week") renderWeek();
-  if (id === "stats" && !stats) loadStats();
+  if (id === "stats" && stats?.of !== station.name) loadStats();
   if (wide.matches) window.scrollTo({ top: 0 });
 }
 const esc = t => String(t ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
 /** One tile per part of the channel, with what's in it; a click opens that part. */
 function renderOverview() {
+  if (station.web) return renderWebOverview();
   if (!c || !wide.matches) return;
   const byId = Object.fromEntries(c.videos.map(v => [v.id, v]));
   const count = k => c.videos.filter(v => kindOf(v) === k).length;
@@ -1148,7 +1369,87 @@ function renderOverview() {
     $("overview").appendChild(b);
   }
 }
-if (wide.matches) setTab("overview");
+/** The Overview of a channel that plays YouTube: one tile per part, like Bazaar TV's (owner, 2026-10-07). */
+function renderWebOverview() {
+  if (!wide.matches) return;
+  document.querySelectorAll(".chName").forEach(e => e.textContent = station.name);
+  document.querySelectorAll(".chPage").forEach(a => { a.href = station.page.startsWith("channel/?") ? station.web : station.page; a.textContent = "tv.bulkbazaar.ca/" + station.page; });
+  const st = pkStation(), ready = !!pick;
+  const secsOf = v => Math.round((v.mins || st.ytMins || 4) * 60);
+  const approved = ready ? pkList.filter(v => status(v, pick) === "approved") : [];
+  const fresh = ready ? pkList.filter(v => status(v, pick) === "new") : [];
+  const newest = pkList.slice().sort((a, b) => (b.found || "").localeCompare(a.found || "")).slice(0, 4);
+  const hours = secs => secs >= 3600 ? `${Math.floor(secs / 3600)} h ${Math.round(secs % 3600 / 60)} min` : lengthText(secs);
+  const onAirSecs = approved.reduce((t, v) => t + secsOf(v), 0);
+  const today = torontoDay().date, tomorrow = torontoDate(Date.now() + 24 * 3600e3);
+  const dayState = date => { if (station === HITS || !ready) return "Made by itself"; const d = pkDayNow(date); return d.by === "you" ? "🔒 Locked by you" : d.by === "auto" ? "🔒 Locked" : "Draft, locks at 10 PM"; };
+  // What's on now and next (programmes only; ad breaks, clips and trailers in between).
+  let upNext = [];
+  if (ready && station !== HITS) {
+    const items = pkDayNow(today).items, w = itemAt(items);
+    let t = w.startMs;
+    for (let k = 0; k < items.length && upNext.length < 6; k++) {
+      const it = items[(w.i + k) % items.length];
+      if (it.kind === "video" && !it.trailer) upNext.push({ at: t, title: (it.cont ? "(continued) " : "") + it.v.title, secs: it.secs, now: k === 0 });
+      t += (k === 0 ? it.secs - w.offset : it.secs) * 1000;
+    }
+  } else if (ready) upNext = approved.slice(0, 6).map(v => ({ title: v.title, secs: secsOf(v) }));
+  const labels = [...new Set(pkList.map(v => v.label))];
+  const sourcesOn = ready ? labels.filter(l => !pick.offLabels.includes(l)) : labels;
+  const mine = (pkCheck?.problems || []).filter(p => p.channel.split(", ").includes(station.name));
+  const cantPlay = mine.filter(p => /can't play/.test(p.text)).length;
+  const watched = stats?.of === station.name ? stats.chans?.find(x => x.name === station.name) : null;
+  const li = (a, b) => `<li><span>${a}</span><span class="sub">${b}</span></li>`;
+  const tiles = [
+    ["help", `<h3>${station.logo ? `<img class="lg" alt="" src="${esc(station.logo)}">` : ""}<span>Your channel</span></h3>
+      <div class="big">${esc(station.name)}</div>
+      <div><span class="pill on">ON AIR</span> <span class="sub">Channel ${esc(station.dial)} · Toronto time</span></div>
+      <div class="sub">${esc(station.tagline || "Official videos from YouTube channels, round the clock")}</div>
+      <span class="go">How it works ›</span>`],
+    ["library", `<h3>📚 Library</h3>
+      <div class="big">${pkList.length}</div>
+      <div class="sub">programmes found · ${fresh.length ? `<b>${fresh.length} new</b> waiting for you` : "nothing new waiting"}</div>
+      <ul>${newest.map(v => li(esc(v.title), lengthText(secsOf(v)))).join("")}</ul>
+      <span class="go">${fresh.length ? "Review the new ones ›" : "Open the Library ›"}</span>`],
+    ["approved", `<h3>✅ Next transmission</h3>
+      <div class="big">${approved.length}</div>
+      <div class="sub">programmes on air · ${hours(onAirSecs)} in all${onAirSecs && onAirSecs < 24 * 3600 && station !== HITS ? " (less than a day: it repeats)" : ""}</div>
+      <ul>${approved.slice(0, 4).map(v => li(esc(v.title), lengthText(secsOf(v)))).join("")}${approved.length > 4 ? `<li class="sub">+ ${approved.length - 4} more</li>` : ""}</ul>
+      <span class="go">Choose what goes on air ›</span>`],
+    ["schedule", `<h3>📅 Schedule</h3>
+      <ul>${li("<b>Today</b> " + today, dayState(today))}${li("<b>Tomorrow</b> " + tomorrow, dayState(tomorrow))}</ul>
+      <div class="sub">${station === HITS ? "Bazaar Hits makes its day by itself from the approved songs." : "24 hours from Next transmission, with our ad breaks" + (station.trailerLangs ? " and trailers" : "") + ". Lock it, or unlock to fix a mistake."}</div>
+      <span class="go">Open the schedule ›</span>`],
+    ["schedule", `<h3>📺 Coming up</h3>
+      <ul>${upNext.map(u => li((u.now ? "<b>Now</b> · " : u.at ? timeText(u.at, TORONTO) + " · " : "") + esc(u.title), lengthText(u.secs))).join("") || '<li class="sub">Loading…</li>'}</ul>
+      <span class="go">See the whole day ›</span>`],
+    ["library", `<h3>🎬 Sources</h3>
+      <div class="big">${sourcesOn.length}<span class="sub" style="font-size:16px"> of ${labels.length} on air</span></div>
+      <ul>${labels.slice(0, 5).map(l => li(esc(l), `${pkList.filter(v => v.label === l).length} videos`)).join("")}${labels.length > 5 ? `<li class="sub">+ ${labels.length - 5} more</li>` : ""}</ul>
+      <span class="go">Switch a source on or off ›</span>`],
+    ["stats", `<h3>📊 Most watched</h3>
+      ${watched ? `<div class="big">${fmtTime(watched.secs)}</div><div class="sub">watched on ${esc(station.name)} by ${watched.users.size} viewer${watched.users.size === 1 ? "" : "s"} in the last ${stats.days} days</div>`
+        : stats?.of === station.name ? `<div class="sub">Nobody counted on ${esc(station.name)} in the last ${stats.days} days yet</div>` : '<div class="sub">See how much people watch this channel, and when</div>'}
+      <span class="go">Open the numbers ›</span>`],
+    ["help", `<h3>${dirty ? '<span class="pill unsaved">NOT SAVED</span>' : '<span class="pill on">SAVED</span>'} Status</h3>
+      <div class="sub">${dirty ? "You have changes to Next transmission that aren't saved. Press 💾 Save programmes." : "Next transmission is saved."}</div>
+      <div class="sub">${pkCheck ? (cantPlay ? `Daily check (${esc(pkCheck.checked)}): ${cantPlay} video${cantPlay === 1 ? "" : "s"} can't play outside YouTube and are left out.` : `Daily check (${esc(pkCheck.checked)}): no problems.`) : ""}</div>
+      <span class="go">How it works ›</span>`],
+  ];
+  $("overview").innerHTML = "";
+  for (const [to, html] of tiles) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tile"; b.innerHTML = html;
+    b.onclick = () => {
+      if (to === "schedule") pkDay = "today";
+      if (to === "library" && fresh.length) $("pkFilter").value = "new";
+      setTab(to);
+    };
+    $("overview").appendChild(b);
+  }
+}
+// After the whole page script has run (the Programmes parts below must exist first).
+if (wide.matches) queueMicrotask(() => setTab("overview"));
 // Moving the window between a big and a small screen switches between the dashboard and the long page.
 wide.addEventListener("change", () => { if (wide.matches) setTab(tab); else delete document.querySelector(".work").dataset.tab; });
 
@@ -1387,7 +1688,7 @@ $("promoAll").onclick = () => {
 const fmtTime = secs => { const m = Math.round(secs / 60); return m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`; };
 async function loadStats() {
   const days = +$("stDays").value;
-  const st = station.web ? STATIONS[0] : station;
+  const st = station === HITS ? { id: "hits", name: "Bazaar Hits" } : station;
   const from = addDays(todayIn(), -(days - 1));
   $("stMsg").textContent = "Loading…";
   try {
@@ -1418,7 +1719,7 @@ async function loadStats() {
     });
     const pl = [...progs.values()].sort((a, b) => b.secs - a.secs);
     const cl = [...chans.values()].sort((a, b) => b.secs - a.secs);
-    stats = { days, heat, top: pl[0] || null };
+    stats = { days, heat, top: pl[0] || null, chans: cl, total, of: station.name };
     document.querySelectorAll(".stName").forEach(e => e.textContent = st.name);
     const best = Object.entries(heat).sort((a, b) => b[1] - a[1])[0];
     const bestText = best ? (() => { const [w, h] = best[0].split("-").map(Number); return `${["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][w]}s around ${clock(h * 60)}`; })() : "–";
@@ -1528,7 +1829,7 @@ $("useAuto").onclick = async () => {
 $("copyRule").onclick = () => navigator.clipboard.writeText($("ruleText").textContent).then(() => $("copyRule").textContent = "Copied ✓");
 
 $("save").onclick = async () => {
-  c.name = (c.name || "").trim() || "My Channel";
+  c.name = station.name;
   if (!c.videos.length) { $("saveMsg").innerHTML = '<span class="err">Add at least one video (step 2) before saving.</span>'; return; }
   if (!c.loop.length && !c.slots.length) { $("saveMsg").innerHTML = '<span class="err">Put at least one video in the loop (step 3) or a time slot (step 4).</span>'; return; }
   const data = JSON.stringify(c);
@@ -1553,12 +1854,32 @@ $("save").onclick = async () => {
     $("save").disabled = false;
   }
 };
-// ---------- 📺 Programmes: which videos our YouTube channels and Bazaar Hits may play (2026-10-07) ----------
-// Saved in sponsors/_picks (Studio reads it) and the public copy channel/picks (the channel pages read it,
-// channel/ytorder.js). One doc for all channels: { <station id>: { mode, off: [ids], offLabels: [sources], on: [ids] } }.
-let pkAll = null, pkList = [], pick = null;
+// ---------- 📺 Programmes: 📚 Library → ✅ Next transmission → 📅 locked 24-hour schedule (owner, 2026-10-07) ----------
+// Approvals are saved in sponsors/_picks (Studio reads it) and the public copy channel/picks (the nightly lock
+// job and the channel pages read it, channel/ytorder.js). One doc for all channels:
+// { <station id>: { on: [approved ids], out: [library only], off: [taken off], offLabels: [sources off] } }.
+// Days the owner locks here: sponsorDeals/_sched_<id> (Studio's copy) and channel/sched-<id> (public, what the
+// channel pages and the lock job read): { days: { "<date>": { items, at } } }.
+let pkAll = null, pkList = [], pick = null, previewing = null, pkTab = "library", pkDay = "tomorrow", pkLocked = null;
+let pkOwner = {}, pkEdit = null, pkCheck = null;
+const TORONTO = "America/Toronto";
+/** ▶ Preview: one video from the list plays in the player above, with YouTube's buttons so you can skip
+ *  through it (Studio only; viewers still get the locked channel). "Back to the channel" puts the channel back. */
+function previewVideo(v) {
+  const f = $("hitsFrame");
+  if (!f) return;
+  previewing = v.id;
+  f.src = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+  $("nowText").textContent = "Preview: " + v.title;
+  $("modeText").innerHTML = `Only you see this preview. If it says the video is unavailable, it can't play on our channel either: leave it out of Next transmission. <button class="btn" type="button" id="pkBack">◀ Back to the channel</button>`;
+  $("pkBack").onclick = () => { previewing = null; showHits(true); renderPicks(); };
+  $("tvbox").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  renderPicks();
+}
 const pkStation = () => station === HITS ? { id: "hits", ytMins: 4 } : station;
+const pkLen = v => lengthText(Math.round((v.mins || pkStation().ytMins || 4) * 60));
 async function loadPicksPanel() {
+  previewing = null; pkEdit = null;
   $("pkName").textContent = station.name;
   $("pkMsg").textContent = "Loading…";
   $("pkList").innerHTML = ""; $("pkSources").innerHTML = ""; $("pkGuide").innerHTML = "";
@@ -1572,31 +1893,64 @@ async function loadPicksPanel() {
     const d = await (await fetch(url + "?t=" + Date.now())).json();
     if (wanted !== station) return;
     pkList = d.videos || d.songs || [];
-    pick = clone(pkAll[station.id] || { mode: "auto", off: [], offLabels: [], on: [] });
-    pick.off ||= []; pick.offLabels ||= []; pick.on ||= [];
-    $("pkMsg").textContent = `${pkList.length} programmes in today's list (updated ${d.built || "daily"}).`;
+    pkTrailers = station === HITS ? [] : await loadTrailers(station, "channel/");
+    try { pkLocked = station === HITS ? null : await (await fetch(`channel/locked/${station.id}.json?t=${Date.now()}`)).json(); } catch { pkLocked = null; }
+    pkOwner = {};
+    if (station !== HITS) {
+      try {
+        const snap = await fs.getDoc(fs.doc(db, "sponsorDeals", "_sched_" + station.id));
+        pkOwner = snap.exists() && snap.data().data ? JSON.parse(snap.data().data).days || {} : {};
+      } catch {}
+    }
+    if (wanted !== station) return;
+    pick = clone(pkAll[station.id] || {});
+    pick.off ||= []; pick.offLabels ||= []; pick.on ||= []; pick.out ||= [];
+    // The old "wait until I tick them" setting becomes plain approvals.
+    if (pick.mode === "manual") { pkList.forEach(v => { if (status(v, pick) === "removed" && !pick.off.includes(v.id)) pick.off.push(v.id); }); }
+    delete pick.mode;
+    pkTab = "library";
+    $("pkFilter").value = pkList.some(v => status(v, pick) === "new") ? "new" : "all";
+    $("pkMsg").textContent = `${pkList.length} programmes in the Library (list updated ${d.built || "daily"}).`;
+    try { pkCheck = await (await fetch("channel/channel-check.json?t=" + Date.now())).json(); } catch { pkCheck = null; }
     renderPicks();
+    if (tab === "overview") renderOverview();
+    if (stats?.of !== station.name && wide.matches) loadStats();
   } catch (e) {
     $("pkMsg").innerHTML = `<span class="err">Couldn't load the programme list: ${esc(e.message)}</span>`;
   }
 }
 function pkChanged() { dirty = true; $("pkMsg").innerHTML = `<span class="warn">Not saved yet.</span>`; renderPicks(); }
-function setOn(v, on) {
-  if (pick.mode === "manual") {
-    pick.on = pick.on.filter(id => id !== v.id);
-    if (on) pick.on.push(v.id);
-  } else {
-    pick.off = pick.off.filter(id => id !== v.id);
-    if (!on) pick.off.push(v.id);
-    // Ticking a video whose whole source is off brings the source back, minus its other videos.
-    if (on && pick.offLabels.includes(v.label)) {
+/** "approved" puts a programme in Next transmission; "library" takes it out again (it stays in the Library). */
+function setStatus(v, to) {
+  pick.on = pick.on.filter(id => id !== v.id);
+  pick.out = pick.out.filter(id => id !== v.id);
+  pick.off = pick.off.filter(id => id !== v.id);
+  if (to === "approved") {
+    pick.on.push(v.id);
+    // Approving one video of a source that's off brings the source back, minus its other videos.
+    if (pick.offLabels.includes(v.label)) {
       pick.offLabels = pick.offLabels.filter(l => l !== v.label);
-      pkList.filter(x => x.label === v.label && x.id !== v.id && !pick.off.includes(x.id)).forEach(x => pick.off.push(x.id));
+      pkList.filter(x => x.label === v.label && x.id !== v.id && !pick.on.includes(x.id)).forEach(x => pick.out.push(x.id));
     }
-  }
+  } else if (to === "library") pick.out.push(v.id);
 }
+const TAB_HELP = {
+  library: "Everything found for this channel. Watch with ▶ Preview, then ＋ Add the ones you want to Next transmission. Nothing is ever deleted from here.",
+  approved: "What goes on air: the next 24-hour schedule is made from these. − Take out keeps a programme in the Library but off the air.",
+};
 function renderPicks() {
-  document.querySelectorAll("input[name=pkMode]").forEach(r => r.checked = r.value === pick.mode);
+  const counts = { library: pkList.length, approved: 0, fresh: 0 };
+  pkList.forEach(v => { const s = status(v, pick); if (s === "approved") counts.approved++; if (s === "new") counts.fresh++; });
+  document.querySelectorAll("#pkTabs button").forEach(b => {
+    b.classList.toggle("sel", b.dataset.t === pkTab);
+    if (counts[b.dataset.t] !== undefined) b.querySelector("span").textContent = `(${counts[b.dataset.t]})`;
+  });
+  $("pkLists").classList.toggle("hidden", pkTab === "schedule");
+  $("pkSched").classList.toggle("hidden", pkTab !== "schedule");
+  if (pkTab === "schedule") return renderSchedule();
+  $("pkTabHelp").textContent = TAB_HELP[pkTab] + (pkTab === "library" && counts.fresh ? ` ${counts.fresh} new waiting for you.` : "");
+  $("pkFilter").classList.toggle("hidden", pkTab !== "library");
+  $("pkAllNew").classList.toggle("hidden", pkTab !== "library" || !counts.fresh);
   // Sources
   const labels = [...new Set(pkList.map(v => v.label))];
   $("pkSources").innerHTML = "";
@@ -1604,75 +1958,235 @@ function renderPicks() {
     const items = pkList.filter(v => v.label === l);
     const onCount = items.filter(v => playable(v, pick)).length;
     const lab = document.createElement("label");
-    lab.className = onCount ? "" : "off";
+    const isOff = pick.offLabels.includes(l);
+    lab.className = isOff ? "off" : "";
     lab.innerHTML = `<input type="checkbox"><span></span>`;
-    lab.querySelector("span").textContent = `${l} (${onCount}/${items.length})`;
+    lab.querySelector("span").textContent = `${l} (${onCount} on air of ${items.length})`;
     const box = lab.querySelector("input");
-    box.checked = onCount > 0;
-    box.indeterminate = onCount > 0 && onCount < items.length;
+    box.checked = !isOff;
     box.onchange = () => {
-      if (pick.mode === "manual") items.forEach(v => setOn(v, box.checked));
-      else {
-        pick.offLabels = pick.offLabels.filter(x => x !== l);
-        pick.off = pick.off.filter(id => !items.some(v => v.id === id));
-        if (!box.checked) pick.offLabels.push(l);
-      }
+      pick.offLabels = pick.offLabels.filter(x => x !== l);
+      if (!box.checked) pick.offLabels.push(l);
       pkChanged();
     };
     $("pkSources").appendChild(lab);
   }
-  // Programmes
-  const find = $("pkFind").value.trim().toLowerCase(), showing = $("pkShow").value;
+  // Programmes in this tab, each with its length in front.
+  const find = $("pkFind").value.trim().toLowerCase(), filter = $("pkFilter").value;
   $("pkList").innerHTML = "";
   let shown = 0;
   for (const v of pkList) {
-    const on = playable(v, pick);
-    if (showing === "on" && !on || showing === "off" && on) continue;
+    const st = status(v, pick);
+    if (pkTab === "approved" && st !== "approved") continue;
+    if (pkTab === "library" && (filter === "new" && st !== "new" || filter === "approved" && st !== "approved" || filter === "not" && st === "approved")) continue;
     if (find && !(v.title + " " + v.label).toLowerCase().includes(find)) continue;
     if (++shown > 400) break;
-    const row = document.createElement("label");
-    row.className = "pk" + (on ? "" : " off");
-    row.innerHTML = `<input type="checkbox"><img alt="" loading="lazy"><span><b></b><small></small></span>`;
-    row.querySelector("input").checked = on;
-    row.querySelector("input").onchange = e => { setOn(v, e.target.checked); pkChanged(); };
+    const row = document.createElement("div");
+    row.className = "pk" + (v.id === previewing ? " playing" : "");
+    row.innerHTML = `<span class="len"></span><img alt="" loading="lazy"><span><b></b><small></small></span><span class="acts"></span>`;
+    row.querySelector(".len").textContent = pkLen(v);
     row.querySelector("img").src = `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
     row.querySelector("b").textContent = v.title;
-    row.querySelector("small").textContent = [v.label, v.mins ? lengthText(v.mins * 60) : "", v.top ? "★ comes round more often" : "", v.found ? "found " + v.found : ""].filter(Boolean).join(" · ");
+    const small = row.querySelector("small");
+    if (pkTab === "library") {
+      const tag = document.createElement("span");
+      tag.className = "tag" + (st === "approved" ? " on" : st === "new" ? " nw" : "");
+      tag.textContent = st === "approved" ? "✅ In next transmission" : st === "new" ? "🆕 New" : st === "removed" ? "Off the air" : "In the Library";
+      small.appendChild(tag);
+    }
+    small.appendChild(document.createTextNode([v.label, v.top ? "★ comes round more often" : "", v.found ? "found " + v.found : ""].filter(Boolean).join(" · ")));
+    const acts = row.querySelector(".acts");
+    const btn = (text, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn " + cls; b.textContent = text; b.onclick = fn; acts.appendChild(b); };
+    btn("▶ Preview", "pv", () => previewVideo(v));
+    if (st === "approved") btn(pkTab === "approved" ? "− Take out (stays in Library)" : "− Take out", "no", () => { setStatus(v, "library"); pkChanged(); });
+    else btn("＋ Add to next transmission", "ok", () => { setStatus(v, "approved"); pkChanged(); });
     $("pkList").appendChild(row);
   }
-  const onAir = pkList.filter(v => playable(v, pick));
-  $("pkCount").textContent = `${onAir.length} of ${pkList.length} on air` + (onAir.length ? "" : station === HITS ? " — with nothing ticked, Bazaar Hits plays every song." : " — with nothing on air, the channel plays its free backup films instead.");
-  // Today's running order, as the channel page works it out.
-  const st = pkStation(), order = runningOrder(st, onAir, torontoDay().date);
+  $("pkCount").textContent = shown ? `${shown} programme${shown === 1 ? "" : "s"} here.` : pkTab === "library" && filter === "new" ? "Nothing new waiting. New finds show up here every day." : "None.";
+  if (pkTab === "approved" && !counts.approved) $("pkCount").textContent = station === HITS ? "Nothing approved: Bazaar Hits plays every song." : "Nothing in Next transmission: the channel plays its free backup films instead.";
+}
+function torontoDate(ms) { return new Intl.DateTimeFormat("en-CA", { timeZone: TORONTO, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(ms)); }
+const isProg = x => x.kind === "video" && !x.trailer && !x.cont;
+/** The day as it stands: the one you locked here, the one locked at 10 PM, or a draft from Next transmission. */
+function pkDayNow(date) {
+  if (pkOwner[date]?.items) return { items: pkOwner[date].items, by: "you", at: pkOwner[date].at };
+  if (pkLocked?.days?.[date]) return { items: pkLocked.days[date], by: "auto" };
+  return { items: pkDraft(date), by: null };
+}
+function pkDraft(date) {
+  const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers }, date).map(slimItem);
+  // Tomorrow begins with the rest of a film still running at midnight.
+  if (date !== torontoDay().date) {
+    const today = pkDayNow(torontoDay().date).items, cont = today.length && carryOver(today, torontoDay().start);
+    if (cont) items.unshift(cont);
+  }
+  return items;
+}
+/** ✏️ Change the order (or 🔓 unlock): what has played and what's on now stay; everything after can change. */
+function startEdit(date, items) {
+  let keep = 0;
+  if (date === torontoDay().date) {
+    keep = itemAt(items).i + 1;
+    while (items[keep]?.kind === "video" && items[keep].trailer) keep++;   // the trailers after the film on now
+  } else while (items[keep]?.cont) keep++;
+  pkEdit = { date, keep: items.slice(0, keep), progs: items.slice(keep).filter(isProg).map(x => x.v), insertAt: null };
+  renderSchedule();
+}
+function editedItems() {
+  return rebuildDay(pkStation(), pkEdit.keep, pkEdit.progs, breakPromos, pkTrailers);
+}
+async function lockDay(date, items) {
+  const label = date === torontoDay().date ? "today" : "tomorrow";
+  if (!confirm(`Lock ${station.name}'s schedule for ${label}? It will play exactly as shown.`)) return;
+  // Keep yesterday onwards only, so the saved schedule stays small.
+  const from = torontoDate(Date.now() - 24 * 3600e3);
+  const days = Object.fromEntries(Object.entries(pkOwner).filter(([d]) => d >= from));
+  days[date] = { items, at: new Date().toISOString() };
+  const data = JSON.stringify({ days });
+  $("pkMsg").textContent = "Locking…";
+  try {
+    await fs.setDoc(fs.doc(db, "sponsorDeals", "_sched_" + station.id), { data, updatedAt: fs.serverTimestamp() });
+    pkOwner = days; pkEdit = null;
+  } catch (e) {
+    $("pkMsg").innerHTML = `<span class="err">Couldn't lock: ${esc(e.message)}</span>`;
+    return;
+  }
+  try {
+    await fs.setDoc(fs.doc(db, "channel", schedDoc(station.id)), { data, updatedAt: fs.serverTimestamp() });
+    $("pkRule").classList.add("hidden");
+    $("pkMsg").innerHTML = `<span class="ok">🔒 Locked. ${esc(station.name)} plays ${label}'s schedule exactly like this${label === "today" ? " (TVs pick up the change within 5 minutes)" : ""}.</span>`;
+  } catch (e) {
+    if (e.code === "permission-denied") $("pkRule").classList.remove("hidden");
+    $("pkMsg").innerHTML = `<span class="warn">Locked for you, but TVs can't see it yet: Firebase needs the one-time rule below.</span>`;
+  }
+  renderSchedule();
+}
+/** 📅 Schedule: today from the programme on now, or tomorrow. Lock it, or unlock it to fix a mistake. */
+function renderSchedule() {
+  const today = torontoDay().date, tomorrow = torontoDate(Date.now() + 24 * 3600e3);
+  const date = pkDay === "today" ? today : tomorrow;
+  $("pkDayToday").classList.toggle("primary", pkDay === "today");
+  $("pkDayTomorrow").classList.toggle("primary", pkDay !== "today");
+  if (pkEdit && pkEdit.date !== date) pkEdit = null;
+  const hits = station === HITS, now = pkDayNow(date), editing = !!pkEdit;
+  const items = editing ? editedItems() : now.items;
+  const acts = $("pkSchedActs");
+  acts.innerHTML = "";
+  const btn = (text, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn " + cls; b.textContent = text; b.onclick = fn; acts.appendChild(b); };
+  const when = now.at ? ` at ${timeText(Date.parse(now.at), TORONTO)}` + (torontoDate(Date.parse(now.at)) !== today ? " yesterday" : "") : "";
+  if (hits) $("pkLockNote").textContent = "Bazaar Hits makes its day by itself from the approved songs.";
+  else if (editing) {
+    $("pkLockNote").textContent = now.by ? "🔓 Unlocked for changes. TVs still play the locked day until you lock it again." : "✏️ Changing the order. Lock it when it looks right.";
+    btn("🔒 Lock " + (pkDay === "today" ? "today" : "tomorrow"), "primary", () => lockDay(date, editedItems()));
+    btn("↻ Start again from Next transmission", "", () => {
+      if (pkDay !== "today" || confirm("Start the rest of today again from Next transmission? What has played and the programme on now stay.")) {
+        const fresh = pkDraft(date);
+        // Today: keep what has played, then Next transmission's order from the programme after the one on now.
+        if (pkDay === "today") { const ids = new Set(pkEdit.keep.map(x => x.v?.id)); pkEdit.progs = fresh.filter(isProg).map(x => x.v).filter(v => !ids.has(v.id)); renderSchedule(); }
+        else startEdit(date, fresh);
+      }
+    });
+    btn("Cancel", "", () => { pkEdit = null; renderSchedule(); });
+  } else if (now.by) {
+    $("pkLockNote").textContent = now.by === "you" ? `🔒 Locked by you${when}: plays exactly like this.` : "🔒 Locked automatically at 10 PM: plays exactly like this.";
+    btn("🔓 Unlock to fix a mistake", "", () => {
+      if (confirm(pkDay === "today" ? "Unlock today? What has already played and the programme on now stay as they are; you can change what comes after, then lock it again." : "Unlock tomorrow to change it? Lock it again when you're done.")) startEdit(date, now.items);
+    });
+  } else {
+    $("pkLockNote").textContent = pkDay === "today" ? "Not locked: worked out from Next transmission." : "Draft from Next transmission (with your unsaved changes). It locks by itself at 10 PM Toronto time, or lock it now.";
+    btn("🔒 Lock " + (pkDay === "today" ? "today" : "tomorrow"), "primary", () => lockDay(date, now.items));
+    btn("✏️ Change the order", "", () => startEdit(date, now.items));
+  }
+  // Adding a programme from Next transmission (at the end, or after the one you pick with ＋).
+  $("pkAddBar").classList.toggle("hidden", !editing);
+  if (editing) {
+    const sel = $("pkAddPick"), was = sel.value;
+    sel.innerHTML = "";
+    pkList.filter(v => status(v, pick) === "approved").sort((a, b) => a.title.localeCompare(b.title)).forEach(v => {
+      const o = document.createElement("option"); o.value = v.id; o.textContent = `${pkLen(v)} · ${v.title}`; sel.appendChild(o);
+    });
+    if (was) sel.value = was;
+    const at = pkEdit.insertAt;
+    $("pkAddWhere").textContent = at === null ? "goes at the end of the day" : `goes after “${pkEdit.progs[at]?.title || ""}”`;
+  }
+  // From midnight Toronto time; today starts at the programme that's on now.
+  const start = zonedTime(date, 0, 0, TORONTO);
+  let t = start;
+  const all = items.map((item, n) => { const r = { item, n, startMs: t }; t += item.secs * 1000; return r; });
+  const total = t - start;
+  let from = 0;
+  if (pkDay === "today") from = itemAt(items).i;
+  const rows = [];
+  const dayEnd = zonedTime(torontoDate(start + 26 * 3600e3), 0, 0, TORONTO);
+  const keepN = editing ? pkEdit.keep.length : 0;
+  let p = 0;   // programme number among the ones that can change
+  for (const u of all) {
+    const prog = editing && u.n >= keepN && isProg(u.item) ? p++ : null;
+    if (u.n < from) continue;
+    if (u.startMs >= dayEnd) break;   // the day ends at midnight (a film running then finishes first)
+    const last = rows[rows.length - 1];
+    const kind = u.item.clip ? "clips" : u.item.trailer ? "trailers" : null;
+    if (kind && last?.kind === kind) { last.count++; last.secs += u.item.secs; continue; }
+    if (rows.length >= (editing ? 600 : 200)) break;
+    rows.push(kind ? { kind, count: 1, secs: u.item.secs, startMs: u.startMs } : { item: u.item, secs: u.item.secs, startMs: u.startMs, prog });
+  }
   $("pkGuide").innerHTML = "";
-  upcoming(order, st, 30).forEach((u, k) => {
+  if (!hits && total < 23 * 3600e3 && items.length) {
+    const w = document.createElement("p");
+    w.className = "small warn";
+    w.textContent = `These programmes fill ${lengthText(Math.round(total / 1000))}, less than a day: the list starts again from the top until midnight. Add more to Next transmission for a full day.`;
+    $("pkGuide").appendChild(w);
+  }
+  rows.forEach((r, k) => {
     const g = document.createElement("div");
-    if (!k) g.className = "cur";
+    g.className = (k || pkDay !== "today" ? "" : "cur") + (r.kind || r.item.kind === "break" ? " adrow" : "") + (r.prog != null ? " edit" : "") + (r.prog != null && r.prog === pkEdit?.insertAt ? " ins" : "");
     g.innerHTML = "<span></span><span></span><span></span>";
-    g.children[0].textContent = k ? timeText(u.startMs) : "Now";
-    g.children[1].textContent = u.v.title;
-    g.children[2].textContent = lengthText(ytLength(u.v, st));
+    g.children[0].textContent = timeText(r.startMs, TORONTO);
+    g.children[1].textContent = r.kind === "clips" ? `🎞 Coming up on ${station.name}: clips of our next ${r.count} films`
+      : r.kind === "trailers" ? `🎬 Coming soon: ${r.count} trailers of new Hindi films`
+      : r.item.kind === "break" ? "📢 Ad break: " + r.item.promos.map(p => p.title || p.src).join(" + ")
+      : (r.item.cont ? "(continued) " : "") + r.item.v.title;
+    g.children[2].textContent = lengthText(r.secs);
+    if (r.prog != null) {
+      const mv = document.createElement("span");
+      mv.className = "mv";
+      const b = (text, title, fn) => { const x = document.createElement("button"); x.type = "button"; x.className = "btn"; x.textContent = text; x.title = title; x.onclick = fn; mv.appendChild(x); };
+      const i = r.prog, list = pkEdit.progs;
+      b("↑", "Move up", () => { if (i > 0) { [list[i - 1], list[i]] = [list[i], list[i - 1]]; renderSchedule(); } });
+      b("↓", "Move down", () => { if (i < list.length - 1) { [list[i + 1], list[i]] = [list[i], list[i + 1]]; renderSchedule(); } });
+      b("＋", "Add a programme after this one", () => { pkEdit.insertAt = pkEdit.insertAt === i ? null : i; renderSchedule(); });
+      b("✕", "Take out of this day", () => { list.splice(i, 1); if (pkEdit.insertAt !== null && pkEdit.insertAt >= list.length) pkEdit.insertAt = null; renderSchedule(); });
+      g.appendChild(mv);
+    }
     $("pkGuide").appendChild(g);
   });
 }
-document.querySelectorAll("input[name=pkMode]").forEach(r => r.onchange = () => {
-  const wasOn = pkList.filter(v => playable(v, pick)).map(v => v.id);
-  pick.mode = r.value;
-  if (pick.mode === "manual") pick.on = wasOn;
-  else { pick.offLabels = []; pick.off = pkList.filter(v => !wasOn.includes(v.id)).map(v => v.id); }
-  pkChanged();
-});
+document.querySelectorAll("#pkTabs button").forEach(b => b.onclick = () => { pkTab = b.dataset.t; renderPicks(); });
+$("pkDayToday").onclick = () => { pkDay = "today"; renderPicks(); };
+$("pkDayTomorrow").onclick = () => { pkDay = "tomorrow"; renderPicks(); };
 $("pkFind").oninput = renderPicks;
-$("pkShow").onchange = renderPicks;
-$("pkAllOn").onclick = () => { pkList.forEach(v => setOn(v, true)); if (pick.mode !== "manual") { pick.off = []; pick.offLabels = []; } pkChanged(); };
-$("pkAllOff").onclick = () => {
-  if (!confirm(`Take every programme off ${station.name}? It will play its free backup films until you tick some again.`)) return;
-  pkList.forEach(v => setOn(v, false)); pkChanged();
+$("pkFilter").onchange = renderPicks;
+$("pkAddBtn").onclick = () => {
+  const v = pkList.find(x => x.id === $("pkAddPick").value);
+  if (!v || !pkEdit) return;
+  const at = pkEdit.insertAt === null ? pkEdit.progs.length : pkEdit.insertAt + 1;
+  pkEdit.progs.splice(at, 0, { id: v.id, title: v.title, label: v.label, mins: v.mins });
+  if (pkEdit.insertAt !== null) pkEdit.insertAt = at;
+  renderSchedule();
+};
+$("pkAllNew").onclick = () => {
+  const fresh = pkList.filter(v => status(v, pick) === "new");
+  if (!confirm(`Add all ${fresh.length} new programmes to ${station.name}'s Next transmission?`)) return;
+  fresh.forEach(v => setStatus(v, "approved")); pkChanged();
 };
 $("pkCopyRule").onclick = () => navigator.clipboard.writeText($("pkRuleText").textContent).then(() => $("pkCopyRule").textContent = "Copied ✓");
 $("pkSave").onclick = async () => {
   if (!pick) return;
-  const next = { ...pkAll, [station.id]: pick };
+  // Only ids still in the list are kept, so the saved lists don't grow for ever.
+  const ids = new Set(pkList.map(v => v.id));
+  const keep = l => l.filter(id => ids.has(id));
+  const clean = { on: keep(pick.on), out: keep(pick.out), off: keep(pick.off), offLabels: pick.offLabels };
+  const next = { ...pkAll, [station.id]: clean };
   const data = JSON.stringify(next);
   $("pkMsg").textContent = "Saving…";
   try {
@@ -1686,13 +2200,14 @@ $("pkSave").onclick = async () => {
   try {
     await fs.setDoc(fs.doc(db, "channel", "picks"), { data, updatedAt: fs.serverTimestamp() });
     $("pkRule").classList.add("hidden");
-    $("pkMsg").innerHTML = `<span class="ok">✓ Saved. ${esc(station.name)} plays your choices from the next time it's opened.</span>`;
+    $("pkMsg").innerHTML = `<span class="ok">✓ Saved. Next transmission goes into ${esc(station.name)}'s next schedule you lock (or the one locked at 10 PM tonight).</span>`;
   } catch (e) {
     if (e.code === "permission-denied") $("pkRule").classList.remove("hidden");
-    $("pkMsg").innerHTML = `<span class="warn">Saved for you, but TVs can't see it yet: Firebase needs the one-time rule below.</span>`;
+    $("pkMsg").innerHTML = `<span class="warn">Saved for you, but the schedule maker can't see it yet: Firebase needs the one-time rule below.</span>`;
   }
-  // The player shows the channel with the new choices.
+  previewing = null;
   showHits(true);
+  renderPicks();
 };
 </script>
 <script type="module" src="assets/ai-help.js"></script>

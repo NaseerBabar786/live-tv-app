@@ -1,24 +1,14 @@
 {
-  "note": "Our own Cable TV promos for the breaks on our YouTube channels (channel/promo.js). They play in turn. Add a new one by putting the mp4 in docs/media and adding a line here. Never paid sponsor ads. The owner approved Ads 1-4 for the breaks on 2026-10-07 ('run different ad every time'). Only ads the owner has approved for the breaks go here; the rest wait in the Media Library (Cable TV Promos).",
+  "note": "Our own Cable TV promo for the breaks on our YouTube channels (channel/promo.js) and the locked day schedules. Owner, 2026-10-07: Ad 6 is on air; earlier ads are off for now. 2026-10-07 22:19: owner approved the Gold promo-code ad (WELCOME) for every channel; the two rotate. Never paid sponsor ads. Only ads the owner has approved go here.",
   "promos": [
     {
-      "src": "cabletv-ad-1.mp4",
-      "title": "Cable TV Video Ad 1",
+      "src": "cabletv-ad-6.mp4",
+      "title": "Cable TV Video Ad 6",
       "secs": 60
     },
     {
-      "src": "cabletv-ad-2.mp4",
-      "title": "Cable TV Video Ad 2",
-      "secs": 30
-    },
-    {
-      "src": "cabletv-ad-3.mp4",
-      "title": "Cable TV Video Ad 3",
-      "secs": 30
-    },
-    {
-      "src": "cabletv-ad-4.mp4",
-      "title": "Cable TV Video Ad 4",
+      "src": "cabletv-ad-promo-code.mp4",
+      "title": "Cable TV Promotion Ad with Promo Code",
       "secs": 30
     }
   ]

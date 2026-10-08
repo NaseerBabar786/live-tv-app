@@ -11,10 +11,15 @@ on:
         description: "Make every promo again"
         type: boolean
         default: false
+      samples:
+        description: "Only make the sample promos in tools/promos/samples.json (for the owner to check)"
+        type: boolean
+        default: false
   push:
     branches: [main]
     paths:
       - "tools/promos/**"
+      - "tools/music/**"
       - "docs/channel/test-schedule.json"
 
 concurrency:
@@ -35,7 +40,20 @@ jobs:
           pip install -q edge-tts numpy pillow
 
       - name: Make promos
+        if: github.event.inputs.samples != 'true'
         run: python3 tools/promos/make_show_promos.py out ${{ github.event.inputs.remake == 'true' && '--remake' || '' }}
+
+      - name: Make the sample promos
+        if: github.event.inputs.samples == 'true'
+        run: |
+          mkdir -p out
+          python3 - <<'PY'
+          import json, subprocess, sys
+          for s in json.load(open("tools/promos/samples.json")):
+              json.dump(s, open("spec.json", "w"))
+              # One sample that can't be made doesn't stop the others.
+              subprocess.run([sys.executable, "tools/promos/make_promo.py", "spec.json", f"out/{s['name']}.mp4"])
+          PY
 
       - name: Upload to the channel-media release
         env:
@@ -48,6 +66,7 @@ jobs:
           ls out/*.mp4 >/dev/null 2>&1 && gh release upload channel-media out/*.mp4 -R "$GITHUB_REPOSITORY" --clobber || echo "No new promos"
 
       - name: Save the list
+        if: github.event.inputs.samples != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -35,6 +35,11 @@
     .split > .panel:first-child { margin-bottom: 0 !important; }
     .split > .pk-main { grid-column: 1 / -1; }
   }
+  .codes code { font-size: 15px; font-weight: 800; letter-spacing: 1px; }
+  .codes td:first-child { white-space: nowrap; }
+  .pcform { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; margin: 10px 0 14px; }
+  .pcform label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+  #pcMsg { font-weight: 700; } #pcMsg.saved { color: #69f0ae; } #pcMsg.bad { color: #ff8a80; }
   #cfgMsg, #featMsg, #promoMsg { margin-left: 12px; font-weight: 700; }
   .promo label { display: block; margin: 6px 0; } .promo .inp { width: 100%; box-sizing: border-box; }
   .promo .ticks label { display: inline-block; margin: 3px 10px 3px 0; font-size: 13px; }
@@ -43,6 +48,13 @@
   .feats td, .feats th { text-align: center; padding: 7px 10px; }
   .feats td:first-child, .feats th:first-child { text-align: left; }
   .feats input { width: 20px; height: 20px; }
+  /* Everything fits: descriptions wrap, the tick columns stay narrow, nothing scrolls sideways. */
+  .feats table { table-layout: fixed; }
+  .feats th:not(:first-child), .feats td:not(:first-child) { width: 84px; padding: 7px 2px; }
+  .feats td:first-child { white-space: normal; }
+  .users td { white-space: normal; overflow-wrap: anywhere; }
+  .users td:nth-child(5), .users td:nth-child(6) { white-space: nowrap; }
+  @media (max-width: 600px) { .users td:nth-child(5) { white-space: normal; } .users select { max-width: 150px; } .feats td:first-child { overflow-wrap: anywhere; } .feats th:not(:first-child), .feats td:not(:first-child) { width: 54px; } .feats .pill { padding: 2px 5px; font-size: 11px; } }
   .pkgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
   .pkg { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 12px 16px; }
   .pkg h3 { margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; }
@@ -69,42 +81,50 @@
 
 <main class="wrap">
   <h1>Packages</h1>
-  <p class="lead">Free, Silver, Gold and Platinum for Cable TV viewers, plus promotions (Christmas, Labour Day...) with their own dates, price and features. Turn packages on, set prices, and give each viewer a package when they pay.</p>
+  <p class="lead">Free and Gold for Cable TV viewers, plus promotions (Christmas, Labour Day...) with their own dates, price and features. Turn packages on, set prices, and give each viewer a package when they pay.</p>
   <p class="err" id="err"></p>
   <div id="notReady" class="panel hidden">This page works once sign-in is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the admin. <button class="btn" data-signout>Use another account</button></div>
   <div id="dash" class="hidden split">
+    <div class="panel hidden" id="todo" style="margin-bottom:20px;grid-column:1/-1;box-shadow:inset 0 0 0 2px var(--accent, #f5c542)">
+      <h2 style="margin-top:0">✅ Ready to apply</h2>
+      <p class="small">Changes you asked for that need your login. Nothing changes until you press Apply.</p>
+      <ul id="todoList"></ul>
+      <div class="row"><button class="btn primary" id="todoApply" type="button">Apply</button><span class="small" id="todoMsg"></span></div>
+    </div>
     <div class="panel" style="margin-bottom:20px">
       <h2 style="margin-top:0">Settings</h2>
       <p><label><input type="checkbox" id="enforce"> <b>Packages are on</b></label><br>
         <span class="small">While this is off, every viewer has everything (like today). When it's on, viewers without a package get Free, and new viewers get a free trial of everything first.</span></p>
       <p><label>Free trial for new viewers: <input class="inp" type="number" id="trialDays" min="0" max="365" style="width:80px"> days</label></p>
       <div class="table-wrap prices"><table>
-        <thead><tr><th>Package</th><th>1 month (you type)</th><th>3 months</th><th>6 months</th><th>1 year</th></tr></thead>
+        <thead><tr><th>Package</th><th>Price a month</th></tr></thead>
         <tbody id="priceRows"></tbody>
       </table></div>
-      <p class="small">Type only the <b>1 month</b> price; the others fill in by themselves. Each longer plan costs about 10% less per month than the one before it, ending in 9 cents. Example: 1 month at $5.99 makes 3 months $16.29 ($5.43 a month), 6 months $29.59 ($4.93 a month) and 1 year $53.79 ($4.48 a month). You can still change any box by hand before saving.</p>
+      <p class="small">Gold is sold by the month only (owner, 2026-10-07): viewers see one choice, this price a month.</p>
       <p><label><b>How to pay</b> (shown to viewers on the packages screen)<br><textarea class="inp" id="howToPay"></textarea></label></p>
       <div class="row"><button class="btn primary" id="saveCfg">Save settings</button><span class="small" id="cfgMsg"></span></div>
     </div>
 
     <div class="panel" style="margin-bottom:20px">
       <h2 style="margin-top:0">Design your packages</h2>
-      <p class="small">Tick what each package gets, then press <b>Save settings</b>. Every package always has 1+List, full screen, favourites, channel numbers and search. Without <b>All channels</b> a package has only our own channels plus Aaj Tak and ARY News. The app follows your ticks the next time each viewer opens it.</p>
+      <p class="small"><b>Free</b> is fixed: every viewer gets every feature, with only our own Bazaar channels, so there is nothing to tick for it. Gold has everything Free has (the greyed ticks) plus <b>All channels</b> when it is ticked; press <b>Save settings</b>. Without <b>All channels</b> a package has only our own Bazaar channels (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel, Comedy, Movies, Dramas, Cooking, Latest Movies, Teens). The app follows your ticks the next time each viewer opens it.</p>
       <div class="table-wrap feats"><table>
-        <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Silver">Silver</span></th><th><span class="pill Gold">Gold</span></th><th><span class="pill Platinum">Platinum</span></th></tr></thead>
+        <thead><tr><th>Feature</th><th><span class="pill Gold">Gold</span></th></tr></thead>
         <tbody id="featRows"></tbody>
       </table></div>
+      <label class="small" for="extraChannels" style="display:block;margin-top:12px"><b>Extra channels without "All channels"</b>: Free, and paid packages without All channels, get our own Bazaar channels plus the channels you type here, separated by commas. Leave it empty for only our own channels.</label>
+      <input class="inp" id="extraChannels" placeholder="e.g. Aaj Tak, ARY News" style="width:100%;box-sizing:border-box;margin-top:6px">
       <div class="row" style="margin:10px 0 18px"><button class="btn primary" id="saveFeats">Save settings</button> <button class="btn" id="resetFeats">Start again from our suggestion</button><span class="small" id="featMsg"></span></div>
       <h3>What viewers see in each package</h3>
       <div class="pkgs" id="pkgCards"></div>
 
       <h3>How it works</h3>
       <ul class="how">
-        <li><b>Packages off</b> (the switch in Settings is unticked): every viewer has everything, like Platinum, for free. Nothing is locked.</li>
-        <li><b>Packages on</b>: a viewer without a package has <b>Free</b>. Locked modes show a 🔒 and the package they need; picking one opens the packages screen in the app.</li>
-        <li><b>Free trial</b>: a brand-new viewer gets <b>everything (Platinum)</b> for the trial days in Settings, counted from the day they first signed in. When the trial ends they drop to Free, unless you gave them a package. This is different from the Free package, which only has the basic modes and never ends.</li>
+        <li><b>Packages off</b> (the switch in Settings is unticked): every viewer has everything, like Gold, for free. Nothing is locked.</li>
+        <li><b>Packages on</b>: a viewer without a package has <b>Free</b>: every feature, but only our own Bazaar channels. Other channels show a 🔒; picking one opens the packages screen in the app.</li>
+        <li><b>Free trial</b>: a brand-new viewer gets <b>everything (Gold)</b> for the trial days in Settings, counted from the day they first signed in. When the trial ends they drop to Free, unless you gave them a package. After the trial they keep every feature on Free, with only our own Bazaar channels.</li>
         <li><b>Buying</b>: in the app the viewer picks a package and a length and presses <b>Ask</b>. That sends you a message in ✉ Messages. You reply with how to pay, and once they've paid you give them the package below.</li>
         <li><b>Ending</b>: 5 days before a package (or the trial) ends, the viewer sees a reminder once a day with <b>Renew</b> and <b>Message us</b> buttons. When it ends they drop to Free, and for a week the app tells them it ended.</li>
         <li><b>Renewing</b>: giving the same package again adds the time after the current end date, so paying early loses nothing. Giving a different package starts it today.</li>
@@ -118,6 +138,25 @@
       <div class="row" style="margin-top:12px"><button class="btn" id="addPromo">+ Add a promotion</button> <button class="btn primary" id="savePromos">Save promotions</button><span class="small" id="promoMsg"></span></div>
     </div>
 
+    <div class="panel" style="margin-bottom:20px">
+      <h2 style="margin-top:0">Promo codes</h2>
+      <p class="small">Give someone a package for free with a code. Make a code here, send it to them, and they type it in the app: <b>Settings › ⭐ Packages › Promo code</b>. They get the package straight away. Each person can use a code only once, and nobody can use a code you haven't made. If they already have the same package, the code's time is added after it ends. Press <b>Edit</b> on a code to change what it's for, its package, its length or how many people can use it (up to 100,000, or <b>No limit</b> for a code that runs all the time, like a welcome offer); people who already used it keep what they got.</p>
+      <div class="pcform">
+        <label>Code<span class="row" style="gap:6px"><input class="inp" id="pcCode" maxlength="20" placeholder="e.g. EID2026" style="width:150px;text-transform:uppercase"> <button class="btn" id="pcRandom" type="button">Make one up</button></span></label>
+        <label>Package<select id="pcTier"><option selected>Gold</option></select></label>
+        <label>For how long<select id="pcDays"><option value="7">1 week</option><option value="30" selected>1 month</option><option value="90">3 months</option><option value="180">6 months</option><option value="365">1 year</option></select></label>
+        <label>How many people<input type="number" class="inp" id="pcUses" value="1" min="1" max="100000" style="width:100px"></label>
+        <label style="align-self:flex-end;padding-bottom:8px;white-space:nowrap"><input type="checkbox" id="pcNoLimit"> No limit</label>
+        <label style="flex:1;min-width:220px">What it's for<input class="inp" id="pcNote" placeholder="e.g. Free month for my cousin Ali"></label>
+        <button class="btn primary" id="pcAdd" type="button">Make code</button>
+      </div>
+      <p class="small" id="pcMsg"></p>
+      <div class="table-wrap codes users"><table>
+        <thead><tr><th>Code</th><th>What it's for</th><th>Package</th><th>Used</th><th>Who used it</th><th></th></tr></thead>
+        <tbody id="pcRows"></tbody>
+      </table></div>
+    </div>
+
     <div class="pk-main">
     <div class="stats" id="stats"></div>
     <div class="row" style="justify-content:space-between;margin-bottom:12px">
@@ -125,7 +164,7 @@
       <label class="small"><input type="checkbox" id="onlyPaid"> Only viewers with a package</label>
       <button class="btn" data-signout>Sign out</button>
     </div>
-    <div class="table-wrap"><table>
+    <div class="table-wrap users"><table>
       <thead><tr><th>Name</th><th>Email</th><th>Package</th><th>Until</th><th>Give package</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
@@ -141,10 +180,11 @@
 import { firebaseConfig, ADMIN_EMAIL, configured } from "./firebase-config.js";
 const $ = id => document.getElementById(id);
 const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x).classList.toggle("hidden", x !== id));
-const TIERS = ["Silver", "Gold", "Platinum"];
+// Free and Gold only (owner, 2026-10-07): Silver and Platinum were removed; old ones count as Gold.
+const TIERS = ["Gold"];
 // What a package can include; the keys match the app (Plans.Feature). 1+List is in every package.
 const FEATURES = [
-  ["channels", "All channels", "every channel from every country (without it: our own channels plus Aaj Tak and ARY News)"],
+  ["channels", "All channels", "every channel from every country (without it: only our own Bazaar channels)"],
   ["browse", "Browse", "the home screen with rows of big channel cards"],
   ["carousel", "Carousel", "one big channel, slide left and right to the next"],
   ["strip", "Strip", "a big channel on top, small channel tiles along the bottom"],
@@ -161,19 +201,17 @@ const FEATURES = [
   ["games", "Games", "the 12 retro games played with the TV remote"],
   ["devices", "2 devices", "one account works on two TVs or phones at the same time"],
 ];
-const ALL_TIERS = ["Free", "Silver", "Gold", "Platinum"];
+const ALL_TIERS = ["Free", "Gold"];
+const tierOf = t => t === "Silver" || t === "Platinum" ? "Gold" : t;
+// Free is fixed, not ticked: every feature but All channels (owner, 2026-10-07). Paid packages always have these too.
 // A promotion is the "Promo" package in the app; each viewer's plan names which promotion (promo, promoName).
-const tierName = (t, p) => t === "Promo" ? (p?.promoName || "Promotion") : t;
+const tierName = (t, p) => t === "Promo" ? (p?.promoName || "Promotion") : tierOf(t);
 const ALL_KEYS = FEATURES.map(f => f[0]);
-const DEFAULT_FEATURES = {
-  free: [], silver: ["channels", "browse", "carousel"],
-  gold: ALL_KEYS.filter(k => k !== "devices"), platinum: ALL_KEYS,
-};
-const LENGTHS = [["month", "1 month"], ["three", "3 months"], ["six", "6 months"], ["year", "1 year"]];
+const FREE_KEYS = ALL_KEYS.filter(k => k !== "channels");
+const DEFAULT_FEATURES = { free: FREE_KEYS, gold: ALL_KEYS };
+const LENGTHS = [["month", "1 month"]];
 const DEFAULTS = {
-  silver_month: "$1.99", silver_three: "$5.39", silver_six: "$9.79", silver_year: "$17.79",
-  gold_month: "$3.99", gold_three: "$10.89", gold_six: "$19.79", gold_year: "$35.99",
-  platinum_month: "$5.99", platinum_three: "$16.29", platinum_six: "$29.59", platinum_year: "$53.79",
+  gold_month: "$9.99",
   trialDays: 7, enforce: false,
   howToPay: "Pick a package below and press Ask. We'll message you back here with how to pay (Interac e-Transfer or card), and turn your package on as soon as it's paid. Questions? WhatsApp 437 602 6500.",
 };
@@ -205,9 +243,11 @@ if (!configured) {
     try {
       await loadConfig();
       await loadPromos();
+      await loadCodes();
+      showTodo();
       const [u, p] = await Promise.all([fs.getDocs(fs.collection(db, "users")), fs.getDocs(fs.collection(db, "plans"))]);
       users = u.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.lastOpened?.toMillis?.() || 0) - (a.lastOpened?.toMillis?.() || 0));
-      plans = Object.fromEntries(p.docs.map(d => [d.id, { ...d.data(), until: d.data().until?.toDate?.() }]));
+      plans = Object.fromEntries(p.docs.map(d => [d.id, { ...d.data(), tier: tierOf(d.data().tier), until: d.data().until?.toDate?.() }]));
       stats(); render();
     } catch (e) { $("err").textContent = "Couldn't load: " + e.message + " (are the new Firestore rules published?)"; }
   });
@@ -221,6 +261,7 @@ if (!configured) {
     $("enforce").checked = !!c.enforce;
     $("trialDays").value = c.trialDays;
     $("howToPay").value = c.howToPay;
+    $("extraChannels").value = c.extra_channels || "";
     const tb = $("priceRows"); tb.innerHTML = "";
     for (const t of TIERS) {
       const tr = document.createElement("tr");
@@ -237,16 +278,15 @@ if (!configured) {
     for (const [key, label, what] of FEATURES) {
       const tr = document.createElement("tr");
       tr.innerHTML = `<td><b>${label}</b><br><span class="small">${what}</span></td>`;
-      for (const t of ALL_TIERS) {
-        const id = t.toLowerCase(), saved = c[id + "_features"];
-        const on = (saved === undefined ? DEFAULT_FEATURES[id] : saved.split(",")).includes(key);
-        tr.insertAdjacentHTML("beforeend", `<td><input type="checkbox" data-t="${id}" data-k="${key}" ${on ? "checked" : ""} aria-label="${label} in ${tierName(t)}"></td>`);
+      for (const t of TIERS) {
+        const id = t.toLowerCase(), saved = c[id + "_features"], fixed = FREE_KEYS.includes(key);
+        const on = fixed || (saved === undefined ? DEFAULT_FEATURES[id] : saved.split(",")).includes(key);
+        tr.insertAdjacentHTML("beforeend", `<td><input type="checkbox" data-t="${id}" data-k="${key}" ${on ? "checked" : ""} ${fixed ? 'disabled title="Free has this, so every package has it"' : ""} aria-label="${label} in ${tierName(t)}"></td>`);
       }
       fr.append(tr);
     }
     showCards();
     // Settings saved before 3 months existed: work the others out from the month.
-    for (const t of TIERS) if (saved[t.toLowerCase() + "_month"] && !saved[t.toLowerCase() + "_three"]) fillFromMonth(t.toLowerCase());
     showPrices();
   }
 
@@ -310,12 +350,12 @@ if (!configured) {
   };
 
   // The ticked features of a package, e.g. "channels,browse".
-  const ticked = t => [...document.querySelectorAll(`#featRows input[data-t="${t}"]:checked`)].map(i => i.dataset.k);
+  const ticked = t => t === "free" ? FREE_KEYS : [...document.querySelectorAll(`#featRows input[data-t="${t}"]:checked`)].map(i => i.dataset.k);
   // The package cards follow the ticks.
   function showCards() {
     $("pkgCards").innerHTML = ALL_TIERS.map(t => {
       const id = t.toLowerCase(), has = ticked(id);
-      const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : "<li><b>Our own channels</b>, plus Aaj Tak and ARY News</li>",
+      const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : ($("extraChannels").value.trim() ? `<li><b>Our own Bazaar channels</b> plus ${esc($("extraChannels").value.trim())}</li>` : "<li><b>Only our own Bazaar channels</b></li>"),
         "<li><b>1+List</b>, full screen, favourites and search</li>",
         ...FEATURES.filter(f => f[0] !== "channels" && has.includes(f[0])).map(f => `<li><b>${f[1]}</b>: ${f[2]}</li>`)];
       const price = id === "free" ? "$0" : "";
@@ -324,8 +364,9 @@ if (!configured) {
     showPrices();
   }
   $("featRows").addEventListener("change", showCards);
+  $("extraChannels").addEventListener("input", showCards);
   $("resetFeats").onclick = () => {
-    document.querySelectorAll("#featRows input").forEach(i => { i.checked = DEFAULT_FEATURES[i.dataset.t].includes(i.dataset.k); });
+    document.querySelectorAll("#featRows input:not(:disabled)").forEach(i => { i.checked = DEFAULT_FEATURES[i.dataset.t].includes(i.dataset.k); });
     showCards();
   };
   $("saveFeats").onclick = () => $("saveCfg").click();
@@ -338,35 +379,24 @@ if (!configured) {
     document.querySelectorAll(".price[data-p]").forEach(el => {
       const t = el.dataset.p;
       if (t === "free") return;
-      el.textContent = `${$(t + "_month").value}/month · ${$(t + "_three").value}/3 months · ${$(t + "_six").value}/6 months · ${$(t + "_year").value}/year`;
+      el.textContent = `${$(t + "_month").value} a month`;
     });
   }
-  // From the monthly price: each longer plan costs 10% less per month than the one before it,
-  // rounded to the nearest 10 cents and ending in 9 (the app does the same sums when a box is empty).
-  const round99 = v => Math.max(0.99, Math.round(v * 10) / 10 - 0.01);
-  const money = v => "$" + v.toFixed(2);
-  function fillFromMonth(t) {
-    const m = parseFloat($(t + "_month").value.replace(/[^0-9.]/g, ""));
-    if (!(m > 0)) return;
-    const three = round99(m * 3 / 1.1), six = round99(three * 2 / 1.1), year = round99(six * 2 / 1.1);
-    $(t + "_three").value = money(three); $(t + "_six").value = money(six); $(t + "_year").value = money(year);
-  }
   $("priceRows").addEventListener("input", e => {
-    if (e.target.id?.endsWith("_month")) fillFromMonth(e.target.id.replace("_month", ""));
     showPrices();
   });
 
   $("saveCfg").onclick = async () => {
-    const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), updated: fs.serverTimestamp() };
+    const data = { enforce: $("enforce").checked, trialDays: Math.max(0, Math.min(365, parseInt($("trialDays").value || "0", 10))), howToPay: $("howToPay").value.trim(), extra_channels: $("extraChannels").value.split(",").map(x => x.trim()).filter(Boolean).join(", "), updated: fs.serverTimestamp() };
     for (const t of TIERS) for (const [k] of LENGTHS) { const id = `${t.toLowerCase()}_${k}`; data[id] = $(id).value.trim(); }
     for (const t of ALL_TIERS) data[t.toLowerCase() + "_features"] = ticked(t.toLowerCase()).join(",");
-    if (data.enforce && !confirm("Turn packages on? Viewers without a package will only have what you ticked for Free (after their free trial).")) return;
+    if (data.enforce && !confirm("Turn packages on? Viewers without a package will have Free (after their free trial): every feature, but only our own Bazaar channels.")) return;
     const msg = $("cfgMsg"); msg.className = "small"; msg.textContent = "Saving…";
     try {
       await fs.setDoc(fs.doc(db, "config", "plans"), data);
       // Read it back from the server so "Saved" only shows when it really is.
       const back = (await fs.getDocFromServer(fs.doc(db, "config", "plans"))).data() || {};
-      if (back.silver_year !== data.silver_year || back.platinum_month !== data.platinum_month) throw new Error("the saved prices didn't come back");
+      if (back.gold_month !== data.gold_month) throw new Error("the saved prices didn't come back");
       msg.className = "saved"; msg.textContent = "✓ Saved at " + new Date().toLocaleTimeString([], { timeStyle: "short" });
     } catch (e) { msg.className = "bad"; msg.textContent = "Not saved: " + saveHelp(e); }
   };
@@ -375,9 +405,9 @@ if (!configured) {
 
   const active = p => p && p.tier && p.tier !== "Free" && p.until && p.until > new Date();
   function stats() {
-    const counts = { Silver: 0, Gold: 0, Platinum: 0, Promo: 0 }; let soon = 0;
+    const counts = { Gold: 0, Promo: 0 }; let soon = 0;
     for (const p of Object.values(plans)) if (active(p)) { counts[p.tier] = (counts[p.tier] || 0) + 1; if (p.until - Date.now() < 5 * 864e5) soon++; }
-    const items = [["Viewers", users.length], ["Silver", counts.Silver], ["Gold", counts.Gold], ["Platinum", counts.Platinum], ["Promotions", counts.Promo], ["Ending in 5 days", soon]];
+    const items = [["Viewers", users.length], ["Gold", counts.Gold], ["Promotions", counts.Promo], ["Ending in 5 days", soon]];
     $("stats").innerHTML = "";
     for (const [l, n] of items) {
       const el = document.createElement("div"); el.className = "stat";
@@ -388,6 +418,149 @@ if (!configured) {
   }
 
   const fmt = d => d ? d.toLocaleDateString([], { dateStyle: "medium" }) : "";
+  // Promo codes (promoCodes/{CODE}): a free package for a set time; the viewer types the code in the app.
+  // The Firestore rules let a viewer read a code only by its exact name and use it once (see firestore-rules.txt).
+  let codes = [];
+  // "No limit": a count nobody reaches, so the app and the Firestore rules (used < uses) need no change.
+  // Each account can still use a code only once (usedBy).
+  const NO_LIMIT = 1000000000;
+  const DAYS = { 7: "1 week", 30: "1 month", 90: "3 months", 180: "6 months", 365: "1 year" };
+  const pcMsg = (t, cls) => { $("pcMsg").textContent = t; $("pcMsg").className = "small " + (cls || ""); };
+  async function loadCodes() {
+    try {
+      const snap = await fs.getDocs(fs.collection(db, "promoCodes"));
+      codes = snap.docs.map(d => ({ id: d.id, ...d.data(), tier: tierOf(d.data().tier) }));
+      codes.sort((a, b) => (b.created?.toMillis?.() || 0) - (a.created?.toMillis?.() || 0));
+    } catch (e) { codes = []; pcMsg("Couldn't load your promo codes: " + saveHelp(e), "bad"); }
+    showCodes();
+  }
+  // Owner's asks (2026-10-07) that only the owner's login can save: Gold $9.99 a month, no "Welcome deal"
+  // promotion, WELCOME with no limit. Shown as one Apply button; nothing is saved without pressing it.
+  function todoItems() {
+    const items = [];
+    if ($("gold_month").value.trim() !== "$9.99") items.push(["price", `Gold's price: ${esc($("gold_month").value.trim() || "not set")} → $9.99 a month`]);
+    const welcome = promos.filter(p => /welcome/i.test(p?.name || ""));
+    if (welcome.length) items.push(["promo", `Delete the promotion ${welcome.map(p => "“" + esc(p.name) + "”").join(", ")}`]);
+    const code = codes.find(c => c.id === "WELCOME");
+    if (code && code.uses < NO_LIMIT) items.push(["code", "Promo code WELCOME: no limit (each account still once)"]);
+    return items;
+  }
+  function showTodo() {
+    const items = todoItems();
+    $("todo").classList.toggle("hidden", !items.length);
+    $("todoList").innerHTML = items.map(([, t]) => `<li>${t}</li>`).join("");
+  }
+  $("todoApply").onclick = async () => {
+    const items = todoItems().map(([k]) => k), msg = $("todoMsg");
+    msg.className = "small"; msg.textContent = "Saving…";
+    try {
+      if (items.includes("price")) {
+        await fs.setDoc(fs.doc(db, "config", "plans"), { gold_month: "$9.99" }, { merge: true });
+        $("gold_month").value = "$9.99"; showPrices();
+      }
+      if (items.includes("promo")) {
+        promos = promos.filter(p => !/welcome/i.test(p?.name || ""));
+        await fs.setDoc(fs.doc(db, "config", "promos"), { items: JSON.stringify(promos), updated: fs.serverTimestamp() });
+        showPromos();
+      }
+      if (items.includes("code")) {
+        await fs.updateDoc(fs.doc(db, "promoCodes", "WELCOME"), { uses: NO_LIMIT });
+        const c = codes.find(x => x.id === "WELCOME"); if (c) c.uses = NO_LIMIT; showCodes();
+      }
+      msg.className = "saved"; msg.textContent = "✓ Done";
+      setTimeout(showTodo, 1500);
+    } catch (e) { msg.className = "bad"; msg.textContent = "Not saved: " + saveHelp(e); }
+  };
+  let editingCode = null; // the code whose row is open for editing
+  const DAY_OPTIONS = [7, 30, 90, 180, 365];
+  function showCodes() {
+    const tb = $("pcRows");
+    if (!codes.length) { tb.innerHTML = `<tr><td colspan="6" class="small">No promo codes yet.</td></tr>`; return; }
+    tb.innerHTML = codes.map((c, i) => {
+      // A no-limit code can have many people: show the 20 newest.
+      const all = Object.values(c.usedBy || {}).sort((a, b) => (a.at?.toMillis?.() || 0) - (b.at?.toMillis?.() || 0));
+      const who = (all.length > 20 ? `<span class="small">…and ${all.length - 20} earlier</span><br>` : "") + all.slice(-20)
+        .map(w => esc(w.name || w.email || "someone") + (w.at?.toDate ? ` <span class="small">(${fmt(w.at.toDate())})</span>` : "")).join("<br>");
+      const off = c.active === false, full = (c.used || 0) >= (c.uses || 1), open = c.uses >= NO_LIMIT;
+      if (editingCode === c.id) {
+        const days = DAY_OPTIONS.includes(c.days) ? DAY_OPTIONS : [...DAY_OPTIONS, c.days];
+        return `<tr data-edit="${i}">
+        <td><code>${esc(c.id)}</code></td>
+        <td><input class="inp" data-f="note" value="${esc(c.note)}" style="width:100%;box-sizing:border-box"></td>
+        <td><select data-f="tier">${TIERS.map(t => `<option${t === c.tier ? " selected" : ""}>${t}</option>`).join("")}</select>
+          <select data-f="days">${days.map(d => `<option value="${d}"${d === c.days ? " selected" : ""}>${esc(DAYS[d] || d + " days")}</option>`).join("")}</select></td>
+        <td>${c.used || 0} of <input type="number" class="inp" data-f="uses" min="1" max="100000" value="${open ? 1 : c.uses || 1}" style="width:100px"${open ? " disabled" : ""}>
+          <label class="small" style="display:block"><input type="checkbox" data-nolimit${open ? " checked" : ""}> No limit</label></td>
+        <td>${who || '<span class="small">nobody yet</span>'}</td>
+        <td><button class="btn primary" type="button" data-save="${i}">Save</button> <a href="#" data-cancel="${i}" style="margin-left:8px">Cancel</a></td></tr>`;
+      }
+      return `<tr${off ? ' style="opacity:.55"' : ""}>
+        <td><code>${esc(c.id)}</code> <a href="#" data-copy="${i}" class="small">copy</a></td>
+        <td>${esc(c.note)}</td>
+        <td><span class="pill ${esc(c.tier)}">${esc(c.tier)}</span> ${esc(DAYS[c.days] || c.days + " days")}</td>
+        <td>${open ? `${c.used || 0} used · no limit` : `${c.used || 0} of ${c.uses || 1}`}${off ? " · <b>turned off</b>" : full ? " · <b>used up</b>" : ""}</td>
+        <td>${who || '<span class="small">nobody yet</span>'}</td>
+        <td><a href="#" data-edit-code="${i}">Edit</a> <a href="#" data-toggle="${i}" style="margin-left:12px">${off ? "Turn on" : "Turn off"}</a> <a href="#" data-del="${i}" style="margin-left:12px">Delete</a></td></tr>`;
+    }).join("");
+  }
+  $("pcRows").addEventListener("click", async e => {
+    const a = e.target.closest("a, button[data-save]"); if (!a) return; e.preventDefault();
+    const c = codes[a.dataset.copy ?? a.dataset.toggle ?? a.dataset.del ?? a.dataset.editCode ?? a.dataset.save ?? a.dataset.cancel]; if (!c) return;
+    try {
+      if (a.dataset.editCode !== undefined) {
+        editingCode = c.id; showCodes();
+      } else if (a.dataset.cancel !== undefined) {
+        editingCode = null; showCodes();
+      } else if (a.dataset.save !== undefined) {
+        // Changes apply to people who use the code from now on; those who already used it keep what they got.
+        const row = a.closest("tr"), f = k => row.querySelector(`[data-f="${k}"]`).value;
+        const noLimit = row.querySelector("[data-nolimit]").checked;
+        const note = f("note").trim(), uses = noLimit ? NO_LIMIT : parseInt(f("uses"), 10);
+        if (!note) return pcMsg("Write what the code is for.", "bad");
+        if (!noLimit && !(uses >= 1 && uses <= 100000)) return pcMsg("How many people: a number from 1 to 100,000.", "bad");
+        const change = { note, tier: f("tier"), days: parseInt(f("days"), 10), uses };
+        await fs.updateDoc(fs.doc(db, "promoCodes", c.id), change);
+        Object.assign(c, change); editingCode = null; showCodes();
+        pcMsg(`Saved ${c.id}: ${c.tier} for ${DAYS[c.days] || c.days + " days"}, ` + (noLimit ? `no limit (${c.used || 0} used so far), once per account.` : `${c.used || 0} of ${c.uses} used.`) + ((c.used || 0) >= c.uses ? " It's used up now; raise the number to let more people in." : ""), "saved");
+      } else if (a.dataset.copy !== undefined) {
+        await navigator.clipboard.writeText(c.id); pcMsg(`Copied ${c.id}.`, "saved");
+      } else if (a.dataset.toggle !== undefined) {
+        await fs.updateDoc(fs.doc(db, "promoCodes", c.id), { active: c.active === false });
+        c.active = c.active === false; showCodes();
+        pcMsg(c.active ? `${c.id} works again.` : `${c.id} is turned off; nobody new can use it.`, "saved");
+      } else if (confirm(`Delete ${c.id}? People who already used it keep their package.`)) {
+        await fs.deleteDoc(fs.doc(db, "promoCodes", c.id));
+        codes = codes.filter(x => x !== c); showCodes(); pcMsg(`Deleted ${c.id}.`, "saved");
+      }
+    } catch (err) { pcMsg("Couldn't save: " + saveHelp(err), "bad"); }
+  });
+  $("pcNoLimit").onchange = () => { $("pcUses").disabled = $("pcNoLimit").checked; };
+  // In the edit row, No limit greys out the number.
+  $("pcRows").addEventListener("change", e => {
+    if (e.target.matches("[data-nolimit]")) e.target.closest("td").querySelector('[data-f="uses"]').disabled = e.target.checked;
+  });
+  $("pcRandom").onclick = () => {
+    const abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    $("pcCode").value = Array.from(crypto.getRandomValues(new Uint32Array(8)), n => abc[n % abc.length]).join("");
+  };
+  $("pcAdd").onclick = async () => {
+    const id = $("pcCode").value.trim().toUpperCase();
+    const noLimit = $("pcNoLimit").checked;
+    const uses = noLimit ? NO_LIMIT : Math.max(1, Math.min(100000, parseInt($("pcUses").value, 10) || 1));
+    const note = $("pcNote").value.trim();
+    if (!/^[A-Z0-9-]{4,20}$/.test(id)) return pcMsg("A code needs 4 to 20 letters or numbers (a dash is fine). Or press Make one up.", "bad");
+    if (!note) return pcMsg("Write what the code is for, so you remember later.", "bad");
+    try {
+      const ref = fs.doc(db, "promoCodes", id);
+      if ((await fs.getDoc(ref)).exists()) return pcMsg(`${id} already exists. Pick another code.`, "bad");
+      const c = { tier: $("pcTier").value, days: parseInt($("pcDays").value, 10), uses, used: 0, usedBy: {}, note, active: true, created: fs.serverTimestamp() };
+      await fs.setDoc(ref, c);
+      codes.unshift({ id, ...c, created: null }); showCodes();
+      $("pcCode").value = ""; $("pcNote").value = ""; $("pcUses").value = 1; $("pcNoLimit").checked = false; $("pcUses").disabled = false;
+      pcMsg(`Made ${id}: ${c.tier} for ${DAYS[c.days]}, ${noLimit ? "with no limit, once per account" : "for " + (uses === 1 ? "1 person" : uses + " people")}. Send it to them; they type it in Settings › ⭐ Packages.`, "saved");
+    } catch (err) { pcMsg("Couldn't make the code: " + saveHelp(err), "bad"); }
+  };
+
   function render() {
     const q = $("q").value.trim().toLowerCase();
     const list = users.filter(u => (!q || [u.name, u.email].join(" ").toLowerCase().includes(q)) && (!$("onlyPaid").checked || active(plans[u.id])));
@@ -398,6 +571,7 @@ if (!configured) {
       const cell = (v, cls) => { const td = document.createElement("td"); td.textContent = v ?? ""; if (cls) td.className = cls; tr.append(td); return td; };
       cell(u.name); cell(u.email);
       const tierTd = cell(""); const pill = document.createElement("span"); pill.className = "pill " + (on ? p.tier : "Free"); pill.textContent = on ? tierName(p.tier, p) : "Free"; tierTd.append(pill);
+      if (on && p.code) tierTd.append(" 🎟 " + p.code);
       cell(on ? fmt(p.until) : (p?.until ? "ended " + fmt(p.until) : ""), on && p.until - Date.now() < 5 * 864e5 ? "soon" : "");
       const give = cell("");
       const sel = document.createElement("select");

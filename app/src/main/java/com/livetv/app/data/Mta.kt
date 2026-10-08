@@ -34,6 +34,14 @@ object Mta {
         channel("MTA8 America", "mta8_america", "English", "CF6X9wB"),
     )
 
+    private val urls by lazy { CHANNELS.map { it.url }.toSet() }
+
+    /**
+     * Whether [channel] is one of MTA's live channels. When MTA is on they come right after our
+     * Bazaar channels (numbers 16 to 23, the other channels from 24) and are free in every package.
+     */
+    fun isMta(channel: Channel) = channel.url in urls
+
     /**
      * MTA's old Akamai links, still in the public lists: MTA moved to the CDN above in 2026,
      * and the old ones are refused or all play MTA1, so they are left out.

@@ -1,0 +1,10 @@
+{
+  "note": "Bazaar Ads' sponsors (channel 15), built by tools/build_ads_channel.py from tv.bulkbazaar.ca/sponsors. Do not edit by hand.",
+  "ads": [
+    {
+      "src": "https://tv.bulkbazaar.ca/channel/media/ad-bulk-bazaar.mp4",
+      "title": "Bulk Bazaar",
+      "secs": 20
+    }
+  ]
+}

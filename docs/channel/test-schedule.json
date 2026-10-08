@@ -1,51 +1,58 @@
 {
- "name": "Bazaar TV",
+ "name": "Bazaar TV One",
  "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png",
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  News every hour  ·  Dramas, music, movie trailers, cartoons, cooking, comedy, sports and travel  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
+ "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  News every hour  ·  Urdu and Hindi dramas, music, new movie trailers, a Hindi film, cartoons, cooking and comedy  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
  "tickerOn": true,
  "videos": [
   {
    "id": "welcome",
-   "title": "Welcome to Bazaar TV",
+   "title": "بازار ٹی وی میں خوش آمدید",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-welcome.mp4",
    "secs": 10,
    "kind": "ident"
   },
   {
    "id": "break",
-   "title": "Commercial break",
+   "title": "وقفہ",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-break.mp4",
    "secs": 5,
    "kind": "ident"
   },
   {
    "id": "next",
-   "title": "Coming up next",
+   "title": "اگلا پروگرام",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-coming-up.mp4",
    "secs": 8,
    "kind": "ident"
   },
   {
    "id": "adbb",
-   "title": "Ad: Bulk Bazaar",
+   "title": "اشتہار: بلک بازار",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-bulk-bazaar.mp4",
    "secs": 20,
    "kind": "ad"
   },
   {
    "id": "adhere",
-   "title": "Ad: Advertise on Bazaar TV",
+   "title": "اشتہار: بازار ٹی وی پر اشتہار دیں",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
   },
   {
    "id": "promo",
-   "title": "Promo: Cable TV Video Ad 4",
-   "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-4.mp4",
+   "title": "کیبل ٹی وی",
+   "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-6.mp4",
+   "secs": 60,
+   "kind": "ad"
+  },
+  {
+   "id": "promo2",
+   "title": "کیبل ٹی وی گولڈ",
+   "url": "https://tv.bulkbazaar.ca/media/cable-tv-promotion-ad-promo-code.mp4",
    "secs": 30,
    "kind": "ad"
   },
@@ -142,21 +149,21 @@
   },
   {
    "id": "story1",
-   "title": "Story: The Lion and the Clever Rabbit (Urdu)",
+   "title": "کہانی: شیر اور چالاک خرگوش",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/story-lion-and-rabbit.mp4",
    "secs": 202,
    "kind": "programme"
   },
   {
    "id": "trailers",
-   "title": "Upcoming movie trailers",
+   "title": "آنے والی ہندی اور پاکستانی فلموں کے ٹریلر",
    "url": "https://tv.bulkbazaar.ca/channel/trailers.json",
    "secs": 0,
    "kind": "trailers"
   },
   {
    "id": "madsci",
-   "title": "Superman: The Mad Scientist (Urdu)",
+   "title": "سپرمین: پاگل سائنسدان (اردو)",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/superman-1941-urdu.mp4",
    "secs": 628,
    "kind": "programme"
@@ -170,59 +177,87 @@
   },
   {
    "id": "music",
-   "title": "Popular music videos",
+   "title": "مقبول اردو اور ہندی گانے",
    "url": "https://tv.bulkbazaar.ca/channel/music-videos.json",
    "secs": 0,
    "kind": "music"
   },
   {
-   "id": "kids",
-   "title": "Kids' time: cartoons and rhymes",
-   "url": "https://tv.bulkbazaar.ca/channel/block-kids.json",
-   "secs": 0,
-   "kind": "list"
-  },
-  {
    "id": "drama-1",
-   "title": "Pakistani drama",
+   "title": "ڈرامہ",
    "url": "https://tv.bulkbazaar.ca/channel/block-drama-1.json",
    "secs": 0,
    "kind": "list"
   },
   {
    "id": "drama-2",
-   "title": "Pakistani drama",
+   "title": "ڈرامہ",
    "url": "https://tv.bulkbazaar.ca/channel/block-drama-2.json",
    "secs": 0,
    "kind": "list"
   },
   {
+   "id": "drama-3",
+   "title": "ڈرامہ",
+   "url": "https://tv.bulkbazaar.ca/channel/block-drama-3.json",
+   "secs": 0,
+   "kind": "list"
+  },
+  {
    "id": "cooking",
-   "title": "Cooking",
+   "title": "کھانا پکائیں",
    "url": "https://tv.bulkbazaar.ca/channel/block-cooking.json",
    "secs": 0,
    "kind": "list"
   },
   {
    "id": "comedy",
-   "title": "Comedy",
+   "title": "مزاحیہ: تارک مہتا کا الٹا چشمہ",
    "url": "https://tv.bulkbazaar.ca/channel/block-comedy.json",
    "secs": 0,
    "kind": "list"
   },
   {
-   "id": "sports",
-   "title": "Sports highlights",
-   "url": "https://tv.bulkbazaar.ca/channel/block-sports.json",
+   "id": "film",
+   "title": "ہندی فلم",
+   "url": "https://tv.bulkbazaar.ca/channel/block-film.json",
    "secs": 0,
    "kind": "list"
   },
   {
-   "id": "travel",
-   "title": "Travel",
-   "url": "https://tv.bulkbazaar.ca/channel/block-travel.json",
-   "secs": 0,
-   "kind": "list"
+   "id": "sprite-hi",
+   "title": "اسپرائٹ فرائٹ (ہندی)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sprite-fright-hindi.mp4",
+   "secs": 630,
+   "kind": "programme"
+  },
+  {
+   "id": "sintel-ur",
+   "title": "سنٹیل (اردو)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel-urdu.mp4",
+   "secs": 888,
+   "kind": "programme"
+  },
+  {
+   "id": "cosmos-ur",
+   "title": "کاسموس لانڈرومیٹ (اردو)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/cosmos-laundromat-urdu.mp4",
+   "secs": 731,
+   "kind": "programme"
+  },
+  {
+   "id": "terror-hi",
+   "title": "مریخ پر اترنے کے سات منٹ (ہندی)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-hindi.mp4",
+   "secs": 303,
+   "kind": "programme"
+  },
+  {
+   "id": "tos-hi",
+   "title": "ٹیئرز آف اسٹیل (ہندی)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-hindi.mp4",
+   "secs": 734,
+   "kind": "programme"
   },
   {
    "id": "news-headlines",
@@ -364,12 +399,12 @@
  "loop": [
   "welcome",
   "next",
-  "kids",
+  "drama-3",
   "break",
   "adbb",
   "promo",
   "next",
-  "popeye",
+  "madsci",
   "break",
   "adhere",
   "adbb",
@@ -388,8 +423,7 @@
   "break",
   "promo",
   "next",
-  "story1",
-  "llama",
+  "sprite-hi",
   "break",
   "adbb",
   "next",
@@ -402,30 +436,36 @@
   "break",
   "adbb",
   "next",
-  "superman",
-  "madsci",
+  "film",
   "break",
   "promo",
   "adbb",
   "next",
-  "sports",
+  "sintel-ur",
   "break",
   "adhere",
-  "next",
-  "travel",
-  "apollo",
-  "break",
-  "adbb",
-  "promo",
   "next",
   "drama-2",
   "break",
   "adbb",
   "adhere",
   "next",
-  "raja",
+  "cosmos-ur",
+  "terror-hi",
   "break",
   "promo",
+  "adbb",
+  "next",
+  "tos-hi",
+  "break",
+  "adhere",
+  "adbb",
+  "next"
+ ],
+ "fillers": [
+  "promo",
+  "terror-hi",
+  "adhere",
   "adbb",
   "next"
  ]

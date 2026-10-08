@@ -7,7 +7,7 @@ Each scene has an English picture prompt and Urdu lines. The script
   2. gets one AI picture per scene from Pollinations (free, no key), or reuses
      <story folder>/images/NN.jpg when it is already there,
   3. moves slowly over each picture (pan and zoom), timed to the voice,
-  4. adds soft background music it makes itself (no copyright) and Urdu subtitles.
+  4. adds soft background music (Kevin MacLeod, CC BY 3.0, credited at the end) and Urdu subtitles.
 --offline skips the internet (silent voice of guessed length, plain pictures) to test the layout.
 Needs ffmpeg, numpy, Pillow and (online) edge-tts.
 """
@@ -85,31 +85,15 @@ def ai_picture(prompt, seed, path):
             time.sleep(20 * (attempt + 1))
     return False
 
-# ---------- music (made here, free to use) ----------
+# ---------- music (free-licence recording, tools/music/library.py; credited at the end) ----------
+sys.path.insert(0, os.path.join(HERE, "..", "music"))
+import library as music_lib  # noqa: E402
+MUSIC_CREDIT = 'Music: "Vadodora Chill Mix" by Kevin MacLeod (incompetech.com), CC BY 3.0'
+
 def music(total):
-    t = np.arange(int(SR * total)) / SR
-    out = np.zeros_like(t, dtype=np.float32)
-    chords = [[220.0, 261.63, 329.63], [174.61, 220.0, 261.63], [196.0, 246.94, 293.66], [164.81, 207.65, 246.94]]
-    bar = 8.0
-    for k in range(int(total // bar) + 2):
-        start = k * bar - 1.5
-        a, b = max(0, int(start * SR)), min(len(t), int((start + bar + 3) * SR))
-        if a >= b: continue
-        tt = t[a:b] - start
-        env = np.minimum(1, tt / 2.0) * np.minimum(1, np.maximum(0, (bar + 3 - tt) / 2.0))
-        for f in chords[k % 4]:
-            out[a:b] += env * (np.sin(2 * np.pi * f * tt) + 0.3 * np.sin(4 * np.pi * f * tt) + 0.5 * np.sin(np.pi * f * tt)) / 6
-        # a soft plucked note on top, like a santoor
-        for n, f in enumerate(chords[k % 4]):
-            s = start + 1.5 + n * 2.0
-            pa, pb = int(s * SR), min(len(t), int((s + 2.5) * SR))
-            if 0 <= pa < pb:
-                pt = t[pa:pb] - s
-                out[pa:pb] += 0.35 * np.exp(-pt * 2.2) * np.sin(2 * np.pi * f * 2 * pt)
-    out *= 0.5 + 0.1 * np.sin(2 * np.pi * 0.07 * t)
-    fade = int(SR * 3)
-    out[:fade] *= np.linspace(0, 1, fade); out[-fade:] *= np.linspace(1, 0, fade)
-    return out / max(1e-6, np.abs(out).max())
+    """Soft background music for the whole story (loops on the bar), mono at SR, peak 1."""
+    m = music_lib.bed("calm", total, fade_in=3.0, fade_out=3.0).mean(1)
+    return (m / max(1e-6, np.abs(m).max())).astype(np.float32)
 
 # ---------- subtitles ----------
 def ts(s):
@@ -127,6 +111,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Style: Sub,Noto Nastaliq Urdu,44,&H00FFFFFF,&H00FFFFFF,&H00101010,&H99000000,0,0,0,0,100,100,0,0,1,3.5,2,2,90,90,26,1
 Style: Big,Noto Nastaliq Urdu,74,&H0066E0FF,&H0066E0FF,&H00101010,&HAA000000,0,0,0,0,100,100,0,0,1,5,3,8,60,60,70,1
 Style: Small,Noto Nastaliq Urdu,40,&H00FFFFFF,&H00FFFFFF,&H00101010,&HAA000000,0,0,0,0,100,100,0,0,1,3,2,8,60,60,215,1
+Style: Credit,DejaVu Sans,16,&H00DDDDDD,&H00DDDDDD,&H00101010,&H99000000,0,0,0,0,100,100,0,0,1,1.5,1,2,40,40,10,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -136,7 +121,7 @@ def source_hash(folder):
     """Changes when the story or this script changes, so the workflow knows to make the video again."""
     import hashlib
     h = hashlib.sha256()
-    for p in (os.path.join(folder, "story.json"), os.path.abspath(__file__)):
+    for p in (os.path.join(folder, "story.json"), os.path.abspath(__file__), os.path.join(HERE, "..", "music", "library.py")):
         h.update(open(p, "rb").read())
     return h.hexdigest()[:16]
 
@@ -205,7 +190,7 @@ def main():
     ass = os.path.join(work, "subs.ass")
     with open(ass, "w", encoding="utf-8") as f:
         f.write(ASS_HEAD)
-        for a, b, style, text in events:
+        for a, b, style, text in events + [(max(0, total - 6), total, "Credit", MUSIC_CREDIT)]:
             f.write(f"Dialogue: 0,{ts(a)},{ts(b)},{style},,0,0,0,,{text}\n")
     mp4 = os.path.join(out, story["id"] + ".mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-f", "concat", "-safe", "0", "-i", os.path.join(work, "list.txt"),

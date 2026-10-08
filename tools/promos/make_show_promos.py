@@ -52,9 +52,15 @@ def slug(t):
     return re.sub(r"[^a-z0-9]+", "-", t.lower()).strip("-")[:40] or "show"
 
 
+def music_credit():
+    sys.path.insert(0, os.path.join(HERE, "..", "music"))
+    import library
+    return library.credit("promo")
+
+
 def maker_version():
     h = hashlib.sha1()
-    for f in ("make_promo.py", "cinematic.py", "music_gen.py"):
+    for f in ("make_promo.py", "../music/library.py"):
         h.update(open(os.path.join(HERE, f), "rb").read())
     return h.hexdigest()[:10]
 
@@ -146,7 +152,7 @@ def main():
     for k, p in promos.items():
         lib["items"].append({"id": "show-promo-" + k, "cat": "promos", "lang": "ur", "title": f"Promo: {p['title']}",
                              "url": p["url"], "secs": p["secs"], "about": f"Coming up on Bazaar TV: {p['title']}, {p['when']}.",
-                             "credit": "Our own promo with original music" + (f". Pictures: {p['credit']}" if p["credit"] else "") + "."})
+                             "credit": "Our own promo. " + music_credit() + (f". Pictures: {p['credit']}" if p["credit"] else "") + "."})
     json.dump(lib, open(LIBRARY, "w"), indent=1, ensure_ascii=False)
     print(f"{made} new promo(s); {len(promos)} booked show(s) have one.")
 

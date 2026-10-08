@@ -1,0 +1,18 @@
+name: Cable TV platforms in step
+
+# Owner's rule (2026-10-07): every Cable TV feature goes to every platform together (TV, PC, phone,
+# and any platform added later). This check fails a pull request that changes Cable TV without
+# changing each platform in .github/platforms.json (see tools/parity_check.py).
+
+on:
+  pull_request:
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check every platform is in step
+        run: python3 tools/parity_check.py "${{ github.event.pull_request.base.sha }}"

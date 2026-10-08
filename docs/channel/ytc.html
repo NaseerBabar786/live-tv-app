@@ -14,7 +14,7 @@
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
   #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .shield { position: absolute; inset: 0; background: transparent; }
-  .bug { position: absolute; top: 3%; right: 2.5%; height: 9vw; max-width: 26vw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: .55; pointer-events: none; }
   .now { position: absolute; left: 3%; bottom: calc(var(--strip) + 5%); max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; pointer-events: none; }
   .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
   .hide { opacity: 0; }
@@ -27,43 +27,57 @@
   .ticker { position: absolute; left: 0; right: 0; bottom: 0; height: var(--strip); line-height: var(--strip); background: #101827; color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); pointer-events: none; }
   .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }
-  .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
+  .msg { position: absolute; inset: 0; display: grid; place-items: center; padding-top: 22vh !important; color: #fff; text-align: center; padding: 20px; }
   .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
-  /* The logo sits above the middle, so the loading circle in the middle of the picture stays in view (1.9.60). */
-  .cover img { height: 15vh; max-width: 40vw; object-fit: contain; opacity: .9; transform: translateY(-17vh); }
+  /* While a video starts: only a loading circle in the middle, never our logo (owner, 2026-10-07). */
+  .spin { width: 8vh; height: 8vh; box-sizing: border-box; border: .8vh solid rgba(255,255,255,.18); border-top-color: rgba(255,255,255,.85); border-radius: 50%; animation: spin 1s linear infinite; }
+  .cover.off .spin { animation: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .cover.off { opacity: 0; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
+  /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
+     owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
+     YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
+     (under our ticker strip, or off the screen): only the picture and our own things show. Owner's rule
+     2026-10-07, checked by tools/preair_check.py. */
+  :root { --box: calc(100vh - var(--strip)); }
+  #player { top: calc(var(--box) * -0.2) !important; height: calc(var(--box) * 1.4) !important; left: 50% !important; right: auto !important; width: min(100vw, calc(var(--box) * 16 / 9)) !important; transform: translateX(-50%); }
 </style>
 </head>
 <body>
 <div id="player"></div>
-<div class="cover" id="cover"><img alt="" id="coverLogo" hidden></div>
+<div class="cover" id="cover"><div class="spin"></div></div>
 <div class="shield" id="shield"></div>
 <img class="bug" id="bug" alt="">
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
 <a class="back" id="back" href="./" hidden>Our channels</a>
 <div class="ticker"><span id="tick"></span></div>
-<div class="msg" id="msg">Loading…</div>
+<div class="msg" id="msg"></div>
 <script src="promo.js"></script>
 <script src="still.js"></script>
+<script src="keepplaying.js"></script>
 <script type="module">
 import { STATIONS } from "./schedule.js";
-import { loadPicks, playable, runningOrder, whereNow, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
+import { loadPicks, loadPromos, loadTrailers, loadLocked, dayPlan, itemAt, torontoDay, lengthOf as lengthIn } from "./ytorder.js";
 const q = new URLSearchParams(location.search);
 const app = q.has("app");
 const $ = id => document.getElementById(id);
 const station = STATIONS.find(s => s.id === q.get("c")) || STATIONS.find(s => s.yt);
-let videos = [], at = 0, player = null, nowTimer = null, failures = 0;
+let items = [], cur = 0, inBreak = false, player = null, nowTimer = null, failures = 0;
+// How far this screen runs ahead of the clock (ms): after a programme that ends a long while before its
+// listed end, or won't play at all, the channel goes straight on to the next one instead of standing still.
+let ahead = 0;
+const clock = () => Date.now() + ahead;
 
 document.title = station.name + " · Watch live";
-$("bug").src = station.logo;
-$("coverLogo").src = station.logo;
-$("coverLogo").hidden = false;
+// Latest Movies carries no logo of ours (the owner's wish).
+if (station.noBug) $("bug").hidden = true;
+else $("bug").src = station.logo;
 $("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (!app) $("back").hidden = false;
 
@@ -83,59 +97,157 @@ function placeBug(label) {
   document.querySelector(".bug").className = "bug " + corner;
 }
 function showNow() {
-  const v = videos[at];
+  const v = items[cur]?.v;
   if (!v) return;
   placeBug(v.label);
   $("now").innerHTML = "<span></span><small></small>";
   $("now").firstChild.textContent = v.title;
-  $("now").lastChild.textContent = station.name + " · " + v.label;
+  $("now").lastChild.textContent = items[cur].clip ? `Coming up on ${station.name}` : station.name + " · " + (items[cur].trailer ? "Coming soon · " : "") + v.label;
   $("now").classList.remove("hide");
   clearTimeout(nowTimer);
   nowTimer = setTimeout(() => $("now").classList.add("hide"), 8000);
 }
-function play(step, start = 0) {
-  at = (at + step + videos.length) % videos.length;
+/**
+ * Plays item [i] of the running order from [offset] seconds in: a programme in YouTube's player, or an
+ * ad break of our own promos (promo.js playBreak) before it.
+ */
+function playItem(i, offset = 0) {
+  cur = (i + items.length) % items.length;
+  const it = items[cur];
   cover(true);
-  target = { id: videos[at].id, at: Date.now() - start * 1000 };
-  player.loadVideoById({ videoId: videos[at].id, startSeconds: start });
+  if (it.kind === "break") {
+    inBreak = true;
+    try { player.stopVideo(); } catch {}
+    const at = cur;
+    playBreak(it.promos, offset, player.isMuted(), () => {
+      inBreak = false;
+      // An ad skipped: the channel goes on from there (no second break to make up the time).
+      const w = itemAt(items, clock());
+      if (w.i === at) ahead += (items[at].secs - w.offset) * 1000;
+      rejoin(at);
+    });
+    return;
+  }
+  inBreak = false;
+  // A video our daily check found can't play here (channel/unplayable.json): its time is filled at once.
+  if (unplayable[it.v.id]) return endedEarly(cur);
+  // A "coming up" clip plays 45 seconds from inside one of the channel's next films.
+  // The rest of last night's film (cont) also starts part-way into its video.
+  const base = it.start || 0;
+  target = { id: it.v.id, at: Date.now() - offset * 1000, base, item: cur };
+  player.loadVideoById(it.clip ? { videoId: it.v.id, startSeconds: base + offset, endSeconds: base + it.secs } : { videoId: it.v.id, startSeconds: base + offset });
   showNow();
 }
-/** Like TV, the clock decides what's on: after a video (or a promo) the channel goes on wherever it is now. */
-function rejoin(justEnded) {
-  if (torontoDay().date !== day) order();
-  const w = whereNow(videos, station);
-  // The one that just ended (a little early or late against its listed length): the next one, from the top.
-  if (videos[w.i].id === justEnded) return play(1);
-  at = w.i;
-  play(0, w.offset < 10 ? 0 : w.offset);
+/** Like TV, the clock decides what's on: after a programme (or an ad break) the channel goes on wherever it is now. */
+function rejoin(ended) {
+  if (torontoDay().date !== day) {
+    // A new day: its locked schedule (or, without one, the day worked out here), back on the clock.
+    const date = torontoDay().date;
+    ahead = 0;
+    return loadLocked(station, "", date).then(lk => { locked = lk && { date, items: lk }; order(); const w = itemAt(items); playItem(w.i, w.offset); });
+  }
+  let w = itemAt(items, clock());
+  // Never back to a programme that has already finished (ads that couldn't play end at once): on from there.
+  if (items[w.i] === finished && w.i !== ended) { ahead += (items[w.i].secs - w.offset) * 1000; w = itemAt(items, clock()); }
+  // The one that just ended (a little early against its listed length, or an ad skipped): the next one, from the top.
+  if (w.i === ended) return playItem(ended + 1, 0);
+  playItem(w.i, w.offset < 10 ? 0 : w.offset);
 }
+/**
+ * Programme [i] has finished before its listed end (its video is shorter than listed, or it won't play).
+ * Never dead air: a short gap is filled with our promos, then the next programme starts on time; a long
+ * one, or when there's nothing to fill it with, goes straight on to the next programme.
+ */
+const FILL_MAX = 3 * 60;
+let finished = null;
+function endedEarly(i) {
+  finished = items[i];
+  const w = itemAt(items, clock());
+  if (w.i !== i) return rejoin(i);   // ended on time (or late): wherever the clock is now
+  const gap = items[i].secs - w.offset;
+  const fill = [];
+  let total = 0;
+  if (gap >= 20 && gap <= FILL_MAX) {
+    for (let k = 0; promos.length && k < 12; k++) {
+      const p = promos[(fillAt + k) % promos.length];
+      if (total + p.secs > gap + 5) continue;
+      fill.push(p); total += p.secs;
+    }
+  }
+  if (!fill.length) { ahead += Math.max(0, gap) * 1000; return playItem(i + 1, 0); }
+  fillAt += fill.length;
+  inBreak = true;
+  try { player.stopVideo(); } catch {}
+  cover(true);
+  ahead += Math.max(0, gap - total) * 1000;
+  playBreak(fill, 0, player.isMuted(), () => { inBreak = false; rejoin(i); });
+}
+let fillAt = 0;
 // Some TVs ignore where the video was asked to start; once it plays, it's moved to where the channel is.
 let target = null;
 function keepInStep() {
-  if (!player || !target || !player.getCurrentTime || player.getPlayerState() !== YT.PlayerState.PLAYING || player.getVideoData?.().video_id !== target.id) return;
-  const want = (Date.now() - target.at) / 1000, have = player.getCurrentTime();
-  if (Math.abs(want - have) > 30 && want < lengthOf(videos[at]) - 30) player.seekTo(want, true);
+  if (inBreak || !player || !target || !player.getCurrentTime || player.getPlayerState() !== YT.PlayerState.PLAYING || player.getVideoData?.().video_id !== target.id) return;
+  const want = (Date.now() - target.at) / 1000, have = player.getCurrentTime() - target.base;
+  // A clip that has run its 45 seconds: the channel goes on (some players don't stop at the end point).
+  if (items[cur].clip && have >= items[cur].secs - 0.5) return rejoin(cur);
+  if (Math.abs(want - have) > 30 && want < items[cur].secs - 30) player.seekTo(target.base + want, true);
 }
-// The day's running order, without the videos the owner took off in Channel Studio (📺 Programmes).
-let all = [], picks = null, day = null;
+/**
+ * A frozen screen never stays: a video stuck loading, or on one frame, for 30 seconds is loaded again
+ * where the channel is; stuck a second time, the channel goes on to the next programme.
+ */
+let lastT = -1, movedAt = Date.now(), stuckItem = -1, stuckTimes = 0;
+function watchStall() {
+  if (inBreak || !player?.getPlayerState || !started) { movedAt = Date.now(); return; }
+  const t = player.getCurrentTime?.() || 0, playing = player.getPlayerState() === YT.PlayerState.PLAYING;
+  if (playing && t !== lastT) { lastT = t; movedAt = Date.now(); return; }
+  lastT = t;
+  if (Date.now() - movedAt < 30000) return;
+  movedAt = Date.now();
+  lastError = "stuck";
+  if (stuckItem !== cur) { stuckItem = cur; stuckTimes = 0; }
+  if (++stuckTimes === 1) { const w = itemAt(items, clock()); return w.i === cur ? playItem(cur, w.offset) : rejoin(cur); }
+  endedEarly(cur);
+}
+// The day's running order with its ad breaks: the locked day (the owner's from Channel Studio, or
+// channel/locked/<id>.json written every night, so the day never changes once it has begun), or, when there is none, worked out the same way here from
+// the programmes the owner approved in Channel Studio (📺 Programmes).
+let all = [], unplayable = {}, picks = null, promos = [], trailers = [], day = null, locked = null;
 function order() {
   day = torontoDay().date;
-  const list = all.filter(v => playable(v, picks));
-  videos = runningOrder(station, list, day);
+  items = locked && locked.date === day ? locked.items : dayPlan(station, { list: all, picks, promos, trailers }, day);
 }
 
-Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks()]).then(([d, p]) => {
+// The owner can unlock today in Channel Studio to fix a mistake: the fixed day comes in within 5 minutes,
+// from the next programme on (what has played and what's on now stay as they were).
+setInterval(() => {
+  if (!day) return;
+  loadLocked(station, "", day).then(lk => {
+    if (!lk || torontoDay().date !== day || JSON.stringify(lk) === JSON.stringify(locked?.items)) return;
+    locked = { date: day, items: lk };
+    order();
+  });
+}, 5 * 60e3);
+
+let joinAt = 0;
+Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station),
+  // What the nightly check and the hourly pre-air check (tools/preair_check.py) found won't play here.
+  Promise.all(["unplayable.json", "preair-bad.json"].map(f => fetch(f, { cache: "no-store" }).then(r => r.json()).catch(() => ({}))))
+    .then(([a, b]) => ({ ids: { ...(a.ids || {}), ...(b.ids || {}) } }))]).then(([d, p, pr, tr, lk, un]) => {
   if (!d.videos || d.videos.length < 3) return fallBack();
-  all = d.videos;
+  unplayable = un.ids || {};
+  all = d.videos.filter(v => !unplayable[v.id]);
   picks = p[station.id] || null;
+  promos = pr;
+  trailers = tr;
+  locked = lk && { date: torontoDay().date, items: lk };
   order();
   // Nothing left to play (every programme taken off): the free films take over.
-  if (!videos.length) return fallBack();
+  if (!items.some(x => x.kind === "video")) return fallBack();
   // Where the channel is now: the day's running order from midnight, round the clock.
-  const w = whereNow(videos, station);
-  at = w.i;
-  window.startAt = w.offset;
-  target = { id: videos[at].id, at: Date.now() - w.offset * 1000 };
+  const w = itemAt(items);
+  cur = w.i;
+  joinAt = w.startMs;
   const s = document.createElement("script");
   s.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(s);
@@ -144,7 +256,7 @@ Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-store" }).then(r => r.j
 // When YouTube hasn't started after 15 s, the screen says why (a photo of it tells us what to fix).
 let started = false, lastError = null, lastState = "none";
 setTimeout(() => {
-  if (started) return;
+  if (started || inBreak) return;
   const d = document.createElement("div");
   d.className = "diag";
   d.textContent = `YouTube didn't start here (${lastError ? "error " + lastError : "state " + lastState}) · ${(navigator.userAgent.match(/Chrome\/[\d.]+/) || ["?"])[0]}`;
@@ -159,9 +271,11 @@ function cover(on) {
   else coverTimer = setTimeout(() => $("cover").classList.add("off"), 3500);
 }
 window.onYouTubeIframeAPIReady = () => {
+  // The player starts on the programme that's on (or the one after the ad break that's on).
+  const first = items[cur].kind === "video" ? items[cur] : items[(cur + 1) % items.length];
   player = new YT.Player("player", {
-    videoId: videos[at].id,
-    playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, start: Math.floor(window.startAt || 0), origin: location.origin },
+    videoId: first.v.id,
+    playerVars: { autoplay: items[cur].kind === "video" ? 1 : 0, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, origin: location.origin },
     events: {
       onReady: e => {
         // YouTube's own leveling leaves videos a little louder than Cable TV's leveled channels;
@@ -171,28 +285,30 @@ window.onYouTubeIframeAPIReady = () => {
         if (!app) { e.target.mute(); $("sound").hidden = false; }
         // The app's silent players (Duo mode) open the page with mute=1 (1.9.60).
         if (new URLSearchParams(location.search).has("mute")) e.target.mute();
-        // Join the film where the channel is now, like live TV: some TVs ignore the player's start setting.
-        if (window.startAt > 5) e.target.loadVideoById({ videoId: videos[at].id, startSeconds: (Date.now() - target.at) / 1000 });
-        else e.target.playVideo();
-        setInterval(keepInStep, 5000);
-        showNow();
+        // Join where the channel is now, like live TV (an ad break part-way, or the film part-way).
+        const offset = (Date.now() - joinAt) / 1000;
+        playItem(cur, offset < 5 ? 0 : offset);
+        setInterval(() => { keepInStep(); watchStall(); }, 1000);
       },
-      // It never stays paused; the next video follows when one ends.
+      // It never stays paused; the next item follows when one ends.
       onStateChange: e => {
+        if (inBreak) return;
         if (e.data === YT.PlayerState.PLAYING) cover(false);
-        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
+        else cover(true);
         lastState = e.data;
         if (e.data === YT.PlayerState.PLAYING) started = true;
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
-        // Between two videos, now and then, our own Cable TV promo (promo.js).
-        if (e.data === YT.PlayerState.ENDED) { const ended = videos[at].id; promoBreak(e.target.isMuted(), () => rejoin(ended)); }
-        else if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
+        if (e.data === YT.PlayerState.ENDED) endedEarly(cur);
+        else if (e.data === YT.PlayerState.PAUSED) { if (items[cur].clip && e.target.getCurrentTime() >= target.base + items[cur].secs - 2) rejoin(cur); else e.target.playVideo(); }
       },
       // A video its owner won't let others play is skipped; when none will play, the free films take over.
-      onError: e => { lastError = e.data; if (++failures >= 5) fallBack(); else setTimeout(() => play(1), 1000); },
+      // (its time is filled like any programme that ends early, not by playing the next one over and over).
+      onError: e => { if (inBreak) return; cover(true); lastError = e.data; if (++failures >= 5) fallBack(); else { const at = cur; setTimeout(() => at === cur && !inBreak && endedEarly(at), 1000); } },
     },
   });
   stillFor(player);
+  keepPlaying(player, () => inBreak, () => cover(true));
 };
 // A tap or OK only shows what's playing; double-click goes full screen (on the website).
 $("shield").onclick = showNow;

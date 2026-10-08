@@ -7,15 +7,26 @@ name: Build news bulletins
 # Urdu (Bazaar TV is an Urdu/Hindi channel). See tools/news/make_news.py. If a run fails, the last bulletin simply stays on air.
 
 on:
+  # Owner rule (2026-10-07): every bulletin is on the release at least 30 minutes before air time.
+  # GitHub often starts scheduled runs 20-30 minutes late, so several start times are queued; the first
+  # to run makes the next hour's bulletin and the others see it is already up and stop. (The file for
+  # the coming hour can't be made earlier: the same file is still playing until :03.)
   schedule:
-    - cron: "25 * * * *"   # every hour at :25, ready well before the next :00
+    - cron: "4 * * * *"
+    - cron: "7 * * * *"
+    - cron: "10 * * * *"
+    - cron: "15 * * * *"
+    - cron: "20 * * * *"
   workflow_dispatch:
     inputs:
       kind:
         description: "headlines, full, both, auto (the one due next) or probe (check feeds only)"
         required: false
         default: "auto"
+  # Only main may rebuild the on-air bulletins on a code change: pushes on other branches used to upload
+  # their own versions and cancel the scheduled runs waiting in the same queue.
   push:
+    branches: [main]
     paths:
       - "tools/news/**"
       - ".github/workflows/build-news.yml"
@@ -38,6 +49,11 @@ jobs:
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
           pip install -q edge-tts numpy pillow
+          # The AI newsreaders' moving clips (made by news-presenter-move.yml); without one the bulletin uses title cards.
+          for id in $(python3 -c "import json; print(' '.join(json.load(open('tools/news/presenters/on-air.json'))['readers']))"); do
+            curl -fsSL -o "tools/news/presenters/clips/$id.mp4" \
+              "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || echo "no clip for $id"
+          done
 
       - name: Make the bulletins
         env:
@@ -50,6 +66,15 @@ jobs:
           python3 -c "from PIL import features; assert features.check('raqm'), 'Urdu text needs raqm'"
           # A code change makes both, so both are fresh with the new look.
           if [ "$EVENT" = "push" ] || [ "$KIND" = "both" ]; then kinds="headlines full"; else kinds="$KIND"; fi
+          if [ "$EVENT" = "schedule" ]; then
+            # Never replace the file while the hour's bulletin is still playing (:00-:03).
+            while [ "$(date -u +%M)" -lt 4 ]; do sleep 20; done
+            read -r due slot <<< "$(python3 tools/news/make_news.py out --kind auto --due)"
+            have=$(curl -fsSL "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-$due.json" \
+                   | python3 -c "import json,sys; print(json.load(sys.stdin).get('slot',''))" || true)
+            if [ "$have" = "$slot" ]; then echo "news-$due for $slot is already up; nothing to do"; exit 0; fi
+            echo "news-$due for $slot is not up yet (have '$have'), building it now"
+          fi
           for k in $kinds; do python3 tools/news/make_news.py out --kind "$k"; done
           ls -la out
 
@@ -57,6 +82,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          ls out/news-*.mp4 >/dev/null 2>&1 || { echo "Nothing new to upload"; exit 0; }
           gh release view channel-media -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
             gh release create channel-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false \
               --title "Channel media" --notes "Videos for the owner's channel."

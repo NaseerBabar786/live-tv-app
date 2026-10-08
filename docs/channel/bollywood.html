@@ -16,7 +16,7 @@
      over the player takes every click and tap; YouTube's own buttons are switched off below. */
   #player, iframe#player { pointer-events: none; }
   .shield { position: absolute; inset: 0; background: transparent; }
-  .bug { position: absolute; top: 3%; right: 2.5%; height: 9vw; max-width: 26vw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: .55; pointer-events: none; }
   .now { position: absolute; left: 3%; bottom: calc(var(--strip) + 5%); max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; }
   .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
   .hide { opacity: 0; }
@@ -29,35 +29,52 @@
   .ticker { position: absolute; left: 0; right: 0; bottom: 0; height: var(--strip); line-height: var(--strip); background: #101827; color: #fff; overflow: hidden; white-space: nowrap; font-size: clamp(12px, 1.8vw, 22px); pointer-events: none; }
   .ticker span { display: inline-block; padding-left: 100%; animation: tick 40s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }
-  .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
+  .msg { position: absolute; inset: 0; display: grid; place-items: center; padding-top: 22vh !important; color: #fff; text-align: center; padding: 20px; }
   .diag { position: absolute; left: 3%; top: 12%; max-width: 70%; background: rgba(229,57,53,.9); color: #fff; padding: .5em .9em; border-radius: 8px; font-size: clamp(12px, 1.6vw, 20px); pointer-events: none; }
   /* Our own black card over the player until the video really plays: no YouTube loading screen or logo first. */
   .cover { position: absolute; inset: 0; background: #000; display: grid; place-items: center; transition: opacity .4s; pointer-events: none; }
-  /* The logo sits above the middle, so the loading circle in the middle of the picture stays in view (1.9.60). */
-  .cover img { height: 15vh; max-width: 40vw; object-fit: contain; opacity: .9; transform: translateY(-17vh); }
+  /* While a video starts: only a loading circle in the middle, never our logo (owner, 2026-10-07). */
+  .spin { width: 8vh; height: 8vh; box-sizing: border-box; border: .8vh solid rgba(255,255,255,.18); border-top-color: rgba(255,255,255,.85); border-radius: 50%; animation: spin 1s linear infinite; }
+  .cover.off .spin { animation: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .cover.off { opacity: 0; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
+  /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
+     owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
+     YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
+     (under our ticker strip, or off the screen): only the picture and our own things show. Owner's rule
+     2026-10-07, checked by tools/preair_check.py. */
+  :root { --box: calc(100vh - var(--strip)); }
+  #player { top: calc(var(--box) * -0.2) !important; height: calc(var(--box) * 1.4) !important; left: 50% !important; right: auto !important; width: min(100vw, calc(var(--box) * 16 / 9)) !important; transform: translateX(-50%); }
 </style>
 </head>
 <body>
 <div id="player"></div>
-<div class="cover" id="cover"><img alt="" src="logos/bazaar-hits.png"></div>
+<div class="cover" id="cover"><div class="spin"></div></div>
 <div class="shield" id="shield"></div>
 <img class="bug" src="logos/bazaar-hits.png" alt="">
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
 <a class="back" id="back" href="./" hidden>Our channels</a>
 <div class="ticker"><span>Bazaar Hits · Film songs, day and night, from the music labels' own channels · Channel 4 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
-<div class="msg" id="msg">Loading Bazaar Hits…</div>
+<div class="msg" id="msg"></div>
 <script src="promo.js"></script>
 <script src="still.js"></script>
+<script src="keepplaying.js"></script>
 <script>
 const app = new URLSearchParams(location.search).has("app");
 const $ = id => document.getElementById(id);
 if (!app) { $("back").hidden = false; }
 let songs = [], at = 0, player = null, nowTimer = null;
+// Ad breaks from the running order (ytorder.js withBreaks): song index -> the promos that play before it.
+let breakBefore = new Map(), inBreak = false, pendingBreak = null;
+function adBreak(list, offset, done) {
+  inBreak = true;
+  try { player.stopVideo(); } catch (e) {}
+  playBreak(list, offset, player.isMuted(), () => { inBreak = false; done(); });
+}
 
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
 let corners = { default: "tr", labels: {} }, bugLabel = null;
@@ -88,14 +105,19 @@ function play(step = 0) {
 // (📺 Programmes) don't play.
 let joinAt = 0;
 Promise.all([fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()), import("./ytorder.js")]).then(async ([d, yo]) => {
+  const promos = await yo.loadPromos();
   const picks = (await yo.loadPicks()).hits || null;
   const list = d.songs.filter(s => yo.playable(s, picks));
   // Same running order as Channel Studio's guide (ytorder.js); every song counts as four minutes.
   const hits = { id: "hits", ytMins: 4 };
   songs = yo.runningOrder(hits, list.length ? list : d.songs, yo.torontoDay().date);
-  const w = yo.whereNow(songs, hits);
-  at = w.i;
-  joinAt = w.offset;
+  const items = yo.withBreaks(songs, hits, promos);
+  let si = -1;
+  items.forEach(x => { if (x.kind === "video") si++; else breakBefore.set((si + 1) % songs.length, x.promos); });
+  const w = yo.itemAt(items);
+  at = items.slice(0, w.i + 1).filter(x => x.kind === "video").length % songs.length;
+  if (items[w.i].kind === "video") { at = (at - 1 + songs.length) % songs.length; joinAt = w.offset; }
+  else { pendingBreak = { promos: items[w.i].promos, offset: w.offset }; joinAt = 0; }
   const s = document.createElement("script");
   s.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(s);
@@ -104,7 +126,7 @@ Promise.all([fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()),
 // When YouTube hasn't started after 15 s, the screen says why (a photo of it tells us what to fix).
 let started = false, lastError = null, lastState = "none";
 setTimeout(() => {
-  if (started) return;
+  if (started || inBreak) return;
   const d = document.createElement("div");
   d.className = "diag";
   d.textContent = `YouTube didn't start here (${lastError ? "error " + lastError : "state " + lastState}) · ${(navigator.userAgent.match(/Chrome\/[\d.]+/) || ["?"])[0]}`;
@@ -122,7 +144,7 @@ window.onYouTubeIframeAPIReady = () => {
   $("msg").remove();
   player = new YT.Player("player", {
     videoId: songs[at].id,
-    playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, origin: location.origin },
+    playerVars: { autoplay: pendingBreak ? 0 : 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, origin: location.origin },
     events: {
       onReady: e => {
         // YouTube's own leveling leaves videos a little louder than Cable TV's leveled channels;
@@ -131,13 +153,17 @@ window.onYouTubeIframeAPIReady = () => {
         if (!app) { e.target.mute(); $("sound").hidden = false; }
         // The app's silent players (Duo mode) open the page with mute=1 (1.9.60).
         if (new URLSearchParams(location.search).has("mute")) e.target.mute();
+        // Joined during an ad break: the rest of it first, then the song.
+        if (pendingBreak) { const b = pendingBreak; pendingBreak = null; adBreak(b.promos, b.offset, () => { e.target.playVideo(); showNow(); }); return; }
         e.target.playVideo();
         showNow();
       },
       // It never stays paused: a channel keeps playing.
       onStateChange: e => {
+        if (inBreak) return;
         if (e.data === YT.PlayerState.PLAYING) cover(false);
-        else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) cover(true);
+        // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
+        else cover(true);
         lastState = e.data;
         if (e.data === YT.PlayerState.PLAYING) started = true;
         // The first song is joined part-way, where the channel is (not past its last 20 seconds).
@@ -146,16 +172,34 @@ window.onYouTubeIframeAPIReady = () => {
           if (len && joinAt < len - 20) e.target.seekTo(joinAt, true);
           joinAt = 0;
         }
-        // Between two videos, now and then, our own Cable TV promo (promo.js).
-        if (e.data === YT.PlayerState.ENDED) promoBreak(e.target.isMuted(), () => play(1));
+        // The ad break in the running order before the next song, if it has one (promo.js).
+        if (e.data === YT.PlayerState.ENDED) {
+          const list = breakBefore.get((at + 1) % songs.length);
+          if (list) adBreak(list, 0, () => play(1)); else play(1);
+        }
         else if (e.data === YT.PlayerState.PAUSED) e.target.playVideo();
       },
       // A video its label won't let others play here is skipped.
-      onError: e => { lastError = e.data; setTimeout(() => play(1), 1000); },
+      onError: e => { if (inBreak) return; cover(true); lastError = e.data; setTimeout(() => play(1), 1000); },
     },
   });
   stillFor(player);
+  keepPlaying(player, () => inBreak, () => cover(true));
 };
+// A frozen screen never stays: a song stuck loading, or on one frame, for 30 seconds is loaded again;
+// stuck a second time, the next song plays.
+let lastT = -1, movedAt = Date.now(), stuckSong = -1, stuckTimes = 0;
+setInterval(() => {
+  if (inBreak || !player?.getPlayerState || !started) { movedAt = Date.now(); return; }
+  const t = player.getCurrentTime?.() || 0;
+  if (player.getPlayerState() === YT.PlayerState.PLAYING && t !== lastT) { lastT = t; movedAt = Date.now(); return; }
+  lastT = t;
+  if (Date.now() - movedAt < 30000) return;
+  movedAt = Date.now();
+  lastError = "stuck";
+  if (stuckSong !== at) { stuckSong = at; stuckTimes = 0; }
+  if (++stuckTimes === 1) play(0); else play(1);
+}, 1000);
 $("sound").onclick = () => { player.unMute(); player.playVideo(); $("sound").hidden = true; };
 // A tap or OK only shows what's playing; the songs run on by themselves, like a TV channel.
 $("shield").onclick = () => songs.length && showNow();

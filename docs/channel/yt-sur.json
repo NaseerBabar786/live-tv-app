@@ -1,1168 +1,2792 @@
 {
  "name": "Bazaar Music",
- "built": "2026-10-06 21:01 UTC",
+ "built": "2026-10-08 00:20 UTC",
  "videos": [
-  {
-   "id": "jsBCSNnQpuo",
-   "title": "Mahiya (Official Video) Gurmanter | Daoud Music | New Punjabi Song 2026  #emotionalsong #newsadsong",
-   "label": "White Hill Music",
-   "mins": 3.7333333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "eI_s34ktN8A",
-   "title": "Zora Zori (Official Video) Honey Dhillon | Sandeep Aulakh | New Punjabi Song 2026 #newsong",
-   "label": "White Hill Music",
-   "mins": 3.6166666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "HtnW_0Py_6g",
-   "title": "Madhubala ❤️ | Chandra Brar x Heer | 80s Retro Love Vibes | Punjabi Song 2026 #80smusic",
-   "label": "White Hill Music",
-   "mins": 3.15,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "_NGP0mVcd4k",
-   "title": "KI LAGDA TERA? (Official Video) Khushi Pandher | Savi Nain | Punjabi Song 2026",
-   "label": "White Hill Music",
-   "mins": 2.7333333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "s7fP2zWtq3w",
-   "title": "VICKY DHILLON: KALA KALA SUIT (Official Video) Nikita Kanwar |  Punjabi Song 2026",
-   "label": "White Hill Music",
-   "mins": 2.433333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "0HtFa_n9DHw",
-   "title": "MANINDER BUTTAR: TUTT GAYE AA | Ft. Pranjal Dahiya |  Punjabi Song 2026 #latestpunjabisong",
-   "label": "White Hill Music",
-   "mins": 3.25,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "yHX3FvgtVBw",
-   "title": "DEEP BAJWA: SAFFRA'N CH (Official Video) Verse | Gurjit Gill |  Punjabi Song 2026",
-   "label": "White Hill Music",
-   "mins": 3.3333333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "TykkvoYaIQg",
-   "title": "Jigar Da Totta: Ricky Khan (Official Video) Dastaar Movie Songs | Tarsem Jassar | Punjabi Song",
-   "label": "White Hill Music",
-   "mins": 2.5833333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "p5Pw-hxxia0",
-   "title": "TARSEM JASSAR: SOORME | Dastaar Movie Songs | Avvy Sra | Ricky Khan #newpunjabisong2026",
-   "label": "White Hill Music",
-   "mins": 2.566666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "14NNGD39nx8",
-   "title": "Himmat Sandhu: Khande Di Dhaar | Dastaar Movie Songs | Tarsem Jassar | MXRCI |  Punjabi Song",
-   "label": "White Hill Music",
-   "mins": 2.183333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "QKwDMuMQnHY",
-   "title": "ਨਸਲਵਾਦ ਵਿਰੁੱਧ ਇੱਕ ਲੜਾਈ | ਇਹ ਸਿਰਫ਼ ਇੱਕ ਫ਼ਿਲਮ ਨਹੀਂ... ਇਹ ਹੈ 'ਦਸਤਾਰ | Dastaar",
-   "label": "White Hill Music",
-   "mins": 3.4833333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "1i_wz3defDs",
-   "title": "The Fight Against Racism | This Is More Than a Film. This Is DASTAAR",
-   "label": "White Hill Music",
-   "mins": 2.783333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "hPW4dJR1XWE",
-   "title": "Pardhan | Karan Sehmbi | Aatish | Chaupal | New Punjabi Web Series 2026 | Watch Now",
-   "label": "White Hill Music",
-   "mins": 2.25,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "T98vV2xTrVw",
-   "title": "SHARRY MANN: PIND | Dastaar Movie Songs | Tarsem Jassar | Avvy Sra | Punjabi Song 2026",
-   "label": "White Hill Music",
-   "mins": 3.3333333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Ah__P903CEg",
-   "title": "KAMAL KHAN : VE SOHNEYA | Tarsem Jassar | DASTAAR Movie Song | Geet Goraaya #punjabisong",
-   "label": "White Hill Music",
-   "mins": 2.45,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "5CHiDUlOMDE",
-   "title": "JORDAN SANDHU: DASTAAR ANTHEM | TARSEM JASSAR | Mandeep Maavi | Punjabi Song 2026",
-   "label": "White Hill Music",
-   "mins": 2.75,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "2oqKYgMR7N4",
-   "title": "DILJIT DOSANJH : DAARU MUKGI (Official Video) MixSingh | Neeru Bajwa, Hania Aamir | SARDAAR JI 3",
-   "label": "White Hill Music",
-   "mins": 2.6166666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "m-emfIulcmY",
-   "title": "DILJIT DOSANJH : DAARU MUKGI (Official Video)  Jasmeen Akhtar | Hania Aamir | SARDAAR JI 3 Songs",
-   "label": "White Hill Music",
-   "mins": 2.6166666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "sS_WyjSkt3U",
-   "title": "HIMMAT SANDHU : KANGNI (Official Video) SWEETAJ BRAR | MANDEEP MAAVI | Punjabi Bhangra Songs",
-   "label": "White Hill Music",
-   "mins": 3.2,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "vjLFhu3WLms",
-   "title": "My World 2 (Official Video) Raman Lakhesar | Vipan | Punjabi Songs |#trendingshorts #trendingsong",
-   "label": "White Hill Music",
-   "mins": 3.1333333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "nqXnWAI-2Lk",
-   "title": "SIMIRAN KAUR DHADLI : KAUN AE TU? (Official Video) Mand | Desi Trap Music | Punjabi Beat Song 2025",
-   "label": "White Hill Music",
-   "mins": 2.716666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Oy6LzTNJy3g",
-   "title": "R NAIT X GURLEZ AKHTAR: MIRZAPUR🔥Punjabi Song 2026 | R Nait Song | Punjabi Songs",
-   "label": "White Hill Music",
-   "mins": 4.466666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "4t3CO6zGtA0",
-   "title": "KULBIR JHINJER: KALLA KALLA TAARA | Deep Jandu | Geet Goraya | Punjabi Song 2026",
-   "label": "White Hill Music",
-   "mins": 3.316666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Geaf62lt70c",
-   "title": "Shareek (Official Video) | Zafar | Mani Sheoran | Jatt castle | New  Punjabi Songs 2024 |",
-   "label": "White Hill Music",
-   "mins": 2.75,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "p-J9Ix8vK04",
-   "title": "My World (Official Video) Raman Lakhesar | Punjabi Song 2024 | Punjabi Gaane",
-   "label": "White Hill Music",
-   "mins": 2.4833333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Z_4pWhUX-Vk",
-   "title": "AMMY VIRK : Booster (Official Video) Kaptaan | Geet | Punjabi Songs | RISE & THRIVE",
-   "label": "White Hill Music",
-   "mins": 3.566666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "5g0UEE2t_70",
-   "title": "BAHANA : DILJIT DOSANJH  | MixSingh | Zafar Sandhu | Hania Aamir | Punjabi Song",
-   "label": "White Hill Music",
-   "mins": 2.1333333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "cPghi_tY8ac",
-   "title": "HAYE MAIN LUTTI GYI (Official Video) Gurjas Sidhu & Deepak Dhillon | Punjabi Songs",
-   "label": "White Hill Music",
-   "mins": 3.55,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "x-PvBG9akKQ",
-   "title": "DILJIT DOSANJH: CHILL MARDI (Official Video) JAANI | Hania Aamir | Diljit Dosanjh Punjabi Song 2025",
-   "label": "White Hill Music",
-   "mins": 3.183333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "RjmXDumaUw4",
-   "title": "LEFT BEHIND (Official Video) Zafar | Punjabi Song 2026 | Punjabi Songs | Zafar Song",
-   "label": "White Hill Music",
-   "mins": 3.783333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "8nbRySWHYAo",
-   "title": "DILJIT DOSANJH: CHILL MARDI (Official Video) Neeru Bajwa, Hania Aamir | SARDAAR JI 3 | Punjabi Song",
-   "label": "White Hill Music",
-   "mins": 3.0,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "mt2VUNWBZp0",
-   "title": "JASSA DHILLON : Mulaqaat (Official Video) Josh Sidhu | Punjabi Songs 2025 | Romantic Songs",
-   "label": "White Hill Music",
-   "mins": 2.3333333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "scH_es8bE_8",
-   "title": "DILJIT DOSANJH : CHILL MARDI (Official Video) Jaani | Bunny | Sardaar Ji 3 Songs | Hania Aamir",
-   "label": "White Hill Music",
-   "mins": 3.0,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "cRXYFwBjs6M",
-   "title": "JE SOHNI HUNDI (Official Video) Zafar | Gurlej Akhtar |  Baljinder Bains| Gaiphy #newpunjabisong2026",
-   "label": "White Hill Music",
-   "mins": 3.5166666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "f5uLI6G4i5c",
-   "title": "R NAIT : Bande Ni Theek (Official Video) Shipra Goyal | Mix Singh | Punjabi Songs 2024",
-   "label": "White Hill Music",
-   "mins": 3.05,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "EKptWm2tF_Q",
-   "title": "RAMAN LAKHESAR : THIRD WAVE (Official Video) Punjabi Song 2026 #latestpunjabisong",
-   "label": "White Hill Music",
-   "mins": 3.216666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "MumafyEqjmw",
-   "title": "RAGDE (Official Video) R Nait | Deepak Dhillon | Himani Dave |  Punjabi Songs 2024",
-   "label": "White Hill Music",
-   "mins": 2.6166666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "-WeW_3-VubE",
-   "title": "AMMY VIRK & JASMINE SANDLAS : CURRENT | RISE & THRIVE (Official Video) Punjabi Songs",
-   "label": "White Hill Music",
-   "mins": 4.016666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "cgmo1S2QAHM",
-   "title": "CHANDRA BRAR: RISHTA SONG (Official Video) Sargi Maan | Geet Goraya| Punjabi Song",
-   "label": "White Hill Music",
-   "mins": 3.55,
-   "found": "2026-10-06"
-  },
   {
    "id": "NivX4UDOags",
    "title": "Chunni 2 (Official Video) Akash Walia | Awal Hoor | Punjabi Songs 2024 | Punjabi Song",
    "label": "White Hill Music",
    "mins": 4.333333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-08"
   },
   {
-   "id": "5_1TiBvYD0A",
-   "title": "Sagar, Bunny - Tere Layi | Jaani | Arvvindr S Khaira | Alex | Desi Melodies | Latest Punjabi Songs",
-   "label": "Desi Melodies",
-   "mins": 4.166666666666667,
-   "found": "2026-10-06"
+   "id": "H-DP2NBEPjU",
+   "title": "Halataan – Sultana Nooran | Tadbeer Movie Song | Punjabi Sad Song Songs",
+   "label": "White Hill Music",
+   "mins": 4.683333333333334,
+   "found": "2026-10-08"
   },
   {
-   "id": "283OEmZItUA",
-   "title": "Jass Manak - Raho Bachke | Jaani | Shanaya | Bunny | Amanninder Singh | Latest Punjabi Songs 2026",
-   "label": "Desi Melodies",
-   "mins": 2.45,
-   "found": "2026-10-06"
+   "id": "04r06PDlusk",
+   "title": "Ishq De Mareya Nu : Shabnam Majeed | Aoun Ali Khan | Rang Ishqay Da | Punjabi Song 2022",
+   "label": "White Hill Music",
+   "mins": 4.366666666666666,
+   "found": "2026-10-08"
   },
   {
-   "id": "SBiBFfDfMi0",
-   "title": "Romaana - Joban Rutte | Jaydden | Jaani | Arvvindr S Khaira | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 3.75,
-   "found": "2026-10-06"
+   "id": "_KzWz4QbJGQ",
+   "title": "Nachi Jo Saade Naal (Remix) | DJ Harshit Shah | Sangtar | Hans Raj Hans |  Punjabi Remix 2023",
+   "label": "White Hill Music",
+   "mins": 2.966666666666667,
+   "found": "2026-10-08"
   },
   {
-   "id": "JPPfXRj4JO4",
-   "title": "Jasmine Sandlas - Jee Nai Lagda | Jaani | Bunny | Piyush Shazia | Desi Melodies | New Punjabi Songs",
-   "label": "Desi Melodies",
-   "mins": 2.783333333333333,
-   "found": "2026-10-06"
+   "id": "ex7AKBn0b-Y",
+   "title": "Bullah (Official Video) Arif Lohar | Amna Rahi & Ali Abbas Syed | Rang Ishqay Da |",
+   "label": "White Hill Music",
+   "mins": 4.483333333333333,
+   "found": "2026-10-08"
   },
   {
-   "id": "0Fneh6aqkR4",
-   "title": "Europe Di Gali – Jaani | Asees Kaur | Bunny | Arvvindr S Khaira | Latest Punjabi Songs",
-   "label": "Desi Melodies",
-   "mins": 6.566666666666666,
-   "found": "2026-10-06"
+   "id": "QibhwJliF_c",
+   "title": "Rang Ishqay Da \"Title Song\"(Official Video) Humara Channa | Aoun Ali Khan |  Punjabi Song 2022",
+   "label": "White Hill Music",
+   "mins": 4.383333333333334,
+   "found": "2026-10-08"
   },
   {
-   "id": "uBq3pK1v8VA",
-   "title": "Sukh-E - 4x4 | Mahira Sharma | Jaani | Bunny | Sharvi Yadav | Arvvindr S Khaira | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 2.5833333333333335,
-   "found": "2026-10-06"
+   "id": "eIPCXtoueDI",
+   "title": "Kafla (Full Video) Manpreet | Taj | Mehraaj S | Isha Gupta |  Punjabi Songs 2023 | Romantic Songs",
+   "label": "White Hill Music",
+   "mins": 2.3666666666666667,
+   "found": "2026-10-08"
   },
   {
-   "id": "821LsmYClK4",
-   "title": "Annewahh - Harsh Nussi | Deep Klair | Uptown Slick | Jaani | Arvvindr S Khaira | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 3.2333333333333334,
-   "found": "2026-10-06"
+   "id": "e9WYXkk1UxE",
+   "title": "AMMY VIRK: YAADAAN SAHAARE (Official Video) | Drishhty Talwar | Punjabi Song #ammyvirk",
+   "label": "White Hill Music",
+   "mins": 4.2,
+   "found": "2026-10-08"
   },
   {
-   "id": "mYRV_B_QVGw",
-   "title": "B Praak x Jaani - Dil Kaat Ke | Sakshi | Rajniesh | Piyush Shazia | Bunny | Desi Melodies",
+   "id": "f8xMD2jeOGk",
+   "title": "Charkha : Shabnam Majeed | Ali Abbas Syed & Amna Rahi | Rang Ishqay Da |  Punjabi Song 2023",
+   "label": "White Hill Music",
+   "mins": 4.5,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "bK5gP4aeSUQ",
+   "title": "Tutda Badan (Official Video) Humara Channa | Zariya Khan & Ali Abbas Syed | Rang Ishqay Da | NewSong",
+   "label": "White Hill Music",
+   "mins": 4.133333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "wLO0jfgXNbk",
+   "title": "Ishq Malanga Da (Full Video) Hashmat Sultana | Taj | Mehraaj S | Isha Gupta | Punjabi Songs 2023",
+   "label": "White Hill Music",
+   "mins": 3.1666666666666665,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "vqbXYe6Hkts",
+   "title": "Chandi Da Challa (Remix) | Gurdas Maan | DJ Harshit Shah |  Punjabi Remix 2023",
+   "label": "White Hill Music",
+   "mins": 2.9,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "TUsJ047-3fU",
+   "title": "DILPREET DHILLON  Ft GUR SIDHU : Hu Jattiye | Pranjal Dahiya | Kaptaan | Punjabi Song",
+   "label": "White Hill Music",
+   "mins": 3.1,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "60Mb06Wk1y4",
+   "title": "B Praak : Hath Chumme (Cover) Ft. Jaani | Ammy Virk | DM",
    "label": "Desi Melodies",
    "mins": 4.9,
-   "found": "2026-10-06"
+   "found": "2026-10-08"
   },
   {
-   "id": "oveAR-i8dZA",
-   "title": "The PropheC - Aundi Jandi | Yahvi | Abeer | Desi Trap | Amanninder Singh | Jaani | Arvvindr S Khaira",
-   "label": "Desi Melodies",
-   "mins": 2.6,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "guyRr0FVJmk",
-   "title": "Jyoti Nooran - Saasu Maa | Aditi Rao Hydari | Anjumm Shharma | Jaani | Arvvindr S Khaira",
-   "label": "Desi Melodies",
-   "mins": 4.5,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "EW7SHWYNmxY",
-   "title": "Jaani - Apsraa 2 | Asees Kaur | Bunny | Arvvindr S Khaira | Desi Melodies | Latest Punjabi Song 2025",
-   "label": "Desi Melodies",
-   "mins": 9.05,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "y8VUibzNwjE",
-   "title": "BPraak - Zohrajabeen (8K Video) Randeep Hooda, Priyanka Chahar Choudhary | Jaani | Arvindr Khaira",
-   "label": "Desi Melodies",
-   "mins": 4.183333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "m959uS1EbeQ",
-   "title": "Akshay Kumar - Filhaal2 Mohabbat (8K Video) ft. Nupur Sanon | Ammy Virk | BPraak | Jaani | Arvindr K",
-   "label": "Desi Melodies",
-   "mins": 5.333333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zzjFyw8UkyU",
-   "title": "Aiti Maar Payi Kurlane - Jimmy Sheirgill | Manav Vij | Maa Jaye in Theatres | Latest Punjabi Songs",
-   "label": "Desi Melodies",
-   "mins": 2.716666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "oZx3mk8nPpo",
-   "title": "B Praak - Lagey Rabb Warga | Isha Malviya | Akshay Kharodia | Arvvindr S Khaira | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 3.316666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ze-a_bGcgd4",
-   "title": "Tere Ishq Vich - Sunidhi Chauhan | Jimmy Sheirgill | Manav Vij | Maa Jaye | Salamat Ali Matoi",
-   "label": "Desi Melodies",
-   "mins": 3.3333333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "RqRzeioQz-E",
-   "title": "Baarish Ki Jaaye (8K Video) - BPraak | Nawazuddin Siddiqui | Sunanda Sharma | Jaani | Arvindr Khaira",
-   "label": "Desi Melodies",
-   "mins": 4.866666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "NbaTLdFtm9c",
-   "title": "Brother's Anthem - Jimmy Sheirgill | Manav Vij | Himmat S, Navi S | Maa Jaye | Latest Punjabi Songs",
-   "label": "Desi Melodies",
-   "mins": 2.5833333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "MOlx_CQq8Ek",
-   "title": "Stebin Ben - Koi Koi Karda | Sana Makbul | Bunny | Sagar | New Romantic Song 2025",
-   "label": "Desi Melodies",
-   "mins": 3.35,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "MBO5Q_zL3Yg",
-   "title": "Matt Jaao | Md Faiz Song | New Sad Song 2025 | New Hindi Song | Mat Jao Mohammed Faiz",
-   "label": "Desi Melodies",
-   "mins": 4.816666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "7gc5PvjdgWk",
-   "title": "Sultaan - Shikari | Faris Shafi | Avvy Sra | Arvvindr S Khaira | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 2.8833333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Y1ixFdnkITg",
-   "title": "HATH CHUMME - AMMY VIRK (Official Video) B Praak | Jaani | Arvindr Khaira | DM",
-   "label": "Desi Melodies",
-   "mins": 4.7,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "TF8KIcV8lvs",
-   "title": "FILHALL Cover by Nupur Sanon Ft Akshay Kumar | Jaani | Aditya Dev | Official Video",
-   "label": "Desi Melodies",
-   "mins": 3.8333333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "8yAqOqHvugY",
-   "title": "B Praak - Aate Rehte Hain (Official Video ) | Kangna Sharma | Rohit Khandelwal | Jaani | Zohrajabeen",
-   "label": "Desi Melodies",
-   "mins": 3.683333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "gkds6yVdDLI",
-   "title": "Paon Ki Jutti - Jyoti Nooran | Isha Malviya | Shiv Panditt | Jaani | Arvvindr S Khaira | Bunny",
-   "label": "Desi Melodies",
-   "mins": 3.933333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "TpzYCCHyzGo",
-   "title": "Harrdy Sandhu - Tu Ru Ruu | Sagar | Bunny | Arvvindr S Khaira | Jaani | Yahvi Chavan",
-   "label": "Desi Melodies",
-   "mins": 3.7,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Tq3LW8ZQ91w",
-   "title": "Coco | Official Video | Sukh-E ft. Shweta Sharda | Jaani | Arvindr Khaira | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 2.9166666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "kxeACXtiZNQ",
-   "title": "Ittar - Jasmine Sandlas | BPraak | Jaani | Arvindr Khaira | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 3.316666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "BtQp2U6hJII",
-   "title": "White Brown Black - Avvy Sra | Karan Aujla | Jaani | Amanninder Singh | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 2.85,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "YPohR_9v6HA",
-   "title": "Titliaan | Harrdy Sandhu | Sargun Mehta | Afsana Khan | Jaani | Avvy Sra | Arvindr Khaira",
-   "label": "Desi Melodies",
-   "mins": 4.35,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "FMJCjRU1W_s",
-   "title": "Mohammad Faiz - Tu Hi Tu | Jitendra Kumar | Zahrah S Khan | Arvvindr S Khaira | Bunny | Sagar",
-   "label": "Desi Melodies",
-   "mins": 4.233333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "5KkHLDkPcq8",
-   "title": "BPraak - Zohrajabeen (Video) | Randeep Hooda, Priyanka Chahar Choudhary | Jaani | Arvindr Khaira",
-   "label": "Desi Melodies",
-   "mins": 4.366666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "AVeMlyEjuzg",
-   "title": "Tod Da e Dil (Vertical Video) Ammy Virk | Mandy Takhar | Maninder Buttar | Avvy Sra | Arvindr  | DM",
-   "label": "Desi Melodies",
-   "mins": 4.083333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "hMy5za-m5Ew",
-   "title": "FILHALL | Akshay Kumar Ft Nupur Sanon | BPraak | Jaani | Arvindr Khaira | Ammy Virk | DESI MELODIES",
-   "label": "Desi Melodies",
-   "mins": 5.5,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "JQDHOIxoIwo",
-   "title": "Mohammad Faiz, Asees Kaur - Tu Hi Tu (Unplugged) | Sagar | Bunny | Jaani | Arvvindr S Khaira",
-   "label": "Desi Melodies",
-   "mins": 3.183333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "DUwlGduupRI",
-   "title": "Filhaal2 Mohabbat | Akshay Kumar Ft Nupur Sanon | Ammy Virk | BPraak | Jaani | Arvindr Khaira",
-   "label": "Desi Melodies",
-   "mins": 5.416666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "cAMHx-m9oh8",
-   "title": "Kya Loge Tum | Akshay Kumar | Amyra Dastur | BPraak | Jaani | Arvindr Khaira | Zohrajabeen",
-   "label": "Desi Melodies",
-   "mins": 4.016666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "7lWeQs8Firo",
-   "title": "COKA : Sukh-E Muzical Doctorz | Alankrita Sahai | Jaani | Arvindr Khaira | DM",
-   "label": "Desi Melodies",
-   "mins": 3.0166666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "DZC7zzgtPwM",
-   "title": "Titliaan Warga | Harrdy Sandhu ft Jaani | Sargun Mehta  | Arvindr Khaira | Avvy Sra | Desi Melodies",
-   "label": "Desi Melodies",
-   "mins": 4.016666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "s89tjDD4YIs",
-   "title": "DEEWANE: ARJUN SAHOTA (Full Video) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
+   "id": "tSg1YnEucLI",
+   "title": "GURI : Sone Diya Waliyan (Full Video) Satti Dhillon | MixSingh | Romantic Song | Geet MP3",
    "label": "Geet MP3",
-   "mins": 3.2666666666666666,
-   "found": "2026-10-06"
+   "mins": 3.816666666666667,
+   "found": "2026-10-08"
   },
   {
-   "id": "xTYmWN35U_Y",
-   "title": "HEERIYE : ARJUN SAHOTA (Full Video) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
-   "label": "Geet MP3",
-   "mins": 3.3333333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "aDBmY2ut2xA",
-   "title": "ONLY YOU: ARJUN SAHOTA (Full Video) Gagan Dhillon | Latest Punjabi Songs 2026 - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 2.95,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "1i4R6TDpsKw",
-   "title": "Remember This (Full Song) : Nav Singh | Latest Punjabi Song 2026 - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.55,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "xd4sv-bLhIw",
-   "title": "MA ZAMEEN : KANWAR GREWAL (Full Video) Jagjeet Sandhu | Oye Bhole Oye 2 | Latest Punjabi Songs 2026",
-   "label": "Geet MP3",
-   "mins": 5.116666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "FkfLMTe41HM",
-   "title": "YOUR THOUGHTS : NAV SINGH (Full Video) Arjan Gill | Latest Punjabi Songs 2026 - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.1666666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "oe0mfWwTHdM",
-   "title": "NASHA PATTA : VEET BALJIT (Full Video) Jagjeet Sandhu | Oye Bhole Oye 2 | Latest Punjabi Songs 2026",
-   "label": "Geet MP3",
-   "mins": 4.133333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "aePOwEBVLIw",
-   "title": "SIDHA JATT : SAJJAN ADEEB (Full Video) Jagjeet Sandhu | Oye Bhole Oye 2 | New Punjabi Songs 2026",
-   "label": "Geet MP3",
-   "mins": 2.4166666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "yjNU9XUIFNY",
-   "title": "LOST IN YOU: ARJUN SAHOTA (Full Video) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
-   "label": "Geet MP3",
-   "mins": 3.783333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "p_yXn0RbFoE",
-   "title": "FLOW: SULTAAN (Full Video) : Jagjeet Sandhu | Oye Bhole Oye 2 | New Punjabi Songs 2026 - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 2.55,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "eBfr-43K7Ps",
-   "title": "Your Thoughts (Full Song) : Nav Singh | Arjan Gill | Latest Punjabi Songs 2026 - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.1,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "DQRuAdAwwHE",
-   "title": "SAKHIYO: ARJUN SAHOTA (FULL VIDEO) : Geet | Satti Dhillon | Latest Punjabi Songs 2026 - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 2.6166666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "bhPp7fKgFxs",
-   "title": "In Love (Full Video) : Arjun Sahota | Gagan Dhillon | Latest Romantic Punjabi Songs 2026 - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 2.6666666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "vBEvUtr-MJQ",
-   "title": "ZULFAN : ARJUN SAHOTA (Full VIdeo) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
-   "label": "Geet MP3",
-   "mins": 2.85,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "B7T31Czm3GU",
-   "title": "BABY NO : DEEP JANDU (Full Song) : Gurlez Akhtar | Latest Punjabi Song 2026 - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.033333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "CtADeVqIpKM",
-   "title": "Forever Love : Arjun Sahota (Official Video) Satti Dhillon | Latest Punjabi Song 2026 - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.033333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Bluw60mT-mc",
-   "title": "MAGIC LOVE: DEEP JANDU (Full Video) Shweta Sharda | Satti Dhillon | Latest Punjabi Songs 2026",
-   "label": "Geet MP3",
-   "mins": 2.6666666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "dYp-QfJ_aTI",
-   "title": "Sharab Wargi (Full Video): Nishawn Bhullar Ft. Maahi Sharma | Gurlez Akhtar | New Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 4.85,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "7agSpY_ogoA",
-   "title": "Nukri (Full Song) : Nishawn Bhullar | Zafar Brar | Old Skool | Latest Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 3.716666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "jE0bI2b82FY",
-   "title": "Pinda Wale (Full Song) : Nishawn Bhullar | Gurlez Akhtar | Old Skool | Latest Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 2.3833333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "N9fk4vvmo9E",
-   "title": "Bahli Sohni (Full Song) : Nishawn Bhullar | Sargi Maan | Old Skool | Latest Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 3.1666666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "-L4jQ1KPW48",
-   "title": "Vardaat (Full Song) : Nishawn Bhullar | Gurlez Akhtar | Old Skool | Latest Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 3.533333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "lGJEjgQeUaw",
-   "title": "Supari (Full Song) : Nishawn Bhullar | Jasmeen Akhtar | Old Skool | Latest Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 4.25,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Lxcpvichf3M",
-   "title": "Sharab Wargi (Full Song) : Nishawn Bhullar | Gurlez Akhtar | Old Skool | Latest Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 4.116666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "EqbYuRg7DXI",
-   "title": "Telephone (Full Video) : Nishawn Bhullar Ft. Maahi Sharma | Miss Pooja | New Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 4.7,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ddmCGx2CpJM",
-   "title": "Mukable (Full Video) : Hardeep Grewal Ft. Maahi Sharma | Gurlez Akhtar | Latest Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 3.2,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "PKNjJPruF00",
-   "title": "Dalle (Full Video): Deep Jandu | Lehmber Hussainpuri | Satti Dhillon | Latest Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 4.333333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "PjTU0DmBWiU",
-   "title": "PRADA - JASS MANAK (Official Video) Satti Dhillon | Latest Punjabi Song 2018 | GK.DIGITAL | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.2,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "5RZws-BEl4s",
-   "title": "Yaar Beli : Guri (Official Video) Deep Jandu | Parmish Verma | Punjabi Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.783333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ehVeTFMGFxM",
-   "title": "Halla Gulla (Official Video) - Harf Cheema - Gurlez Akhtar - Hit Punjabi Song - Latest Punjabi Songs",
-   "label": "Geet MP3",
-   "mins": 3.4833333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "AjLnRjx7rgM",
-   "title": "Guri : Billian Billian (Official Video) Sukhe | Satti Dhillon | Punjabi Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.3,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "OKDGEYVzIGI",
-   "title": "Defender (Full Video) Harf Cheema - Sudesh Kumari - Sruishty Mann - Latest Punjabi Song - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.533333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "RKioDWlajvo",
-   "title": "Lehanga : Jass Manak (Official Video) Satti Dhillon - India's Most Viewed Song - Hit Punjabi Song",
-   "label": "Geet MP3",
-   "mins": 3.7666666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "cdR7tzSOhtE",
-   "title": "Bombay To Punjab : DEEP JANDU Ft. DIVINE (Full Video) Karan Aujla | Satti Dhillon | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 4.2,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "HG96KYzCnbY",
-   "title": "Suit Punjabi : Jass Manak (Official Video) Satti Dhillon | Punjabi Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.6333333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "gY0et3otYbc",
-   "title": "Phulkari : Karan Randhawa (Official Video) Simar Kaur | Rav Dhillon | Punjabi Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.4166666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "6xx1zWr5XqQ",
-   "title": "Jhanjra : Karan Randhawa (Official Video) Satti Dhillon | Punjabi Songs | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.6166666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "yW10irX4BDI",
-   "title": "Jattwaad : Harf Cheema & Gurlez Akhtar (Official Song) Punjabi Songs | Punjabi Hit Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.6333333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "htbsYO3nfQQ",
-   "title": "REEL (Official Video) : Deep Jandu | Simar Kaur | Isha Malviya | Latest Punjabi Songs 2025",
-   "label": "Geet MP3",
-   "mins": 3.4,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "JkYJmXYreeA",
-   "title": "VIAH : JASS MANAK (Official Video) Satti Dhillon | Hit Punjabi Song - Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.1666666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "rv9qC2mMRjo",
-   "title": "Boss : Jass Manak (Official Video) Satti Dhillon | Ri | Punjabi Songs | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 2.8333333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "-HuyP7JyR5A",
-   "title": "Bewafa Tu : Guri  (Official Video) Satti Dhillon | Punjabi Sad Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.9166666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "SAOqZUCdMhg",
-   "title": "Salama Hundiyan : Jass Manak, Banny A (Full Song) Vadda Grewal | Prince Bhullar | Punjabi Songs",
-   "label": "Geet MP3",
-   "mins": 2.933333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "haYm5k6h5yc",
-   "title": "Yaari : Guri (Official Video) Sehnaz Gill | Deep Jandu | Arvindr Khaira | Punjabi Songs | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 4.233333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "LnSVh-0nPao",
-   "title": "Gede : Karan Randhawa (Official Video) Rav Dhillon | Simar Kaur | Punjabi Song Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.35,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "FTjZGbVCWX0",
-   "title": "Vibe : Satbir Aujla (Full Song) Punjabi Songs | Punjabi Songs | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.0833333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "o7ROM_GKA4k",
-   "title": "Sochta Hoon | Divya Kumar | Nusrat Fateh Ali Khan | Shafaat Ali & Sajjad Ali Chandwani",
+   "id": "0FWk6AUDlyk",
+   "title": "Khawaja Eh Khajagaan Hamiye Bekasaan | Ustad Nusrat Fateh Ali Khan | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 4.0,
-   "found": "2026-10-06"
+   "mins": 11.65,
+   "found": "2026-10-08"
   },
   {
-   "id": "HyQWuIdVoG8",
-   "title": "Tere Bin Nahin Lagda | Shahzad Ali | Music by Nusrat Fateh Ali Khan",
+   "id": "QIBircpNZP4",
+   "title": "Kehna Galat Galat Lofi - Madhur Sharma | Ustad Nusrat Fateh Ali Khan | Sufi Romance | Cover version",
    "label": "Oriental Star Agencies",
-   "mins": 3.3666666666666667,
-   "found": "2026-10-06"
+   "mins": 2.183333333333333,
+   "found": "2026-10-08"
   },
   {
-   "id": "NqqXS-P0uBM",
-   "title": "Sanson ki Mala (Mirzapur The Movie) Nusrat Fateh Ali Khan & Madhur Sharma | Pritam Ka Kuch Dosh Nahi",
+   "id": "tFUKzmvv9zk",
+   "title": "Kehna Galat Galat × Halka Halka Suroor | Madhur Sharma Tribute to Nusrat | Sufi Classics",
    "label": "Oriental Star Agencies",
-   "mins": 3.1,
-   "found": "2026-10-06"
+   "mins": 8.033333333333333,
+   "found": "2026-10-08"
   },
   {
-   "id": "sCJkkHoP30U",
-   "title": "Kise Da Yaar Na Vichre (Music Video) Divya Kumar x Nusrat Fateh Ali Khan | Recreation",
+   "id": "mis8DRqkKsg",
+   "title": "Lagian De Dukh Wakhre | Nusrat Fateh Ali Khan | complete version | official HD video | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 3.066666666666667,
-   "found": "2026-10-06"
+   "mins": 7.416666666666667,
+   "found": "2026-10-08"
   },
   {
-   "id": "-p5aX_x6Ozk",
-   "title": "Wich Pardesan I Ustad Nusrat Fateh Ali Khan & Dr. Zeus I OSA official HD video",
+   "id": "KqFUj9rFZL0",
+   "title": "Ho Jaye Je Pyar Te Sona Bhul Janda | Ustad Nusrat Fateh Ali Khan | Complete Version | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 3.95,
-   "found": "2026-10-06"
+   "mins": 6.933333333333334,
+   "found": "2026-10-08"
   },
   {
-   "id": "yW9mLaPt1_E",
-   "title": "Meri Zindagi Tera Pyar | Noor Jehan & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
+   "id": "Pk_Wlnmtx8E",
+   "title": "Akhian Noon Chain Na Awe | Nusrat Fateh Ali Khan | Original Version | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 5.833333333333333,
-   "found": "2026-10-06"
+   "mins": 6.733333333333333,
+   "found": "2026-10-08"
   },
   {
-   "id": "eYSaHXXFIBU",
-   "title": "Sanson Ki Mala Pe Simron Mein - Ustad Nusrat Fateh Ali Khan - OSA Official HD Video",
+   "id": "mjH8v6UFt5w",
+   "title": "Haqeeqat Ka Agar Afsana Ban Jaye | Ustad Nusrat Fateh Ali Khan | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 13.533333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "yTkaKSVu_xU",
-   "title": "Chandni Raatein - Partners in Rhyme Ft. Shamsa Kanwal - OSA Official HD Video",
-   "label": "Oriental Star Agencies",
-   "mins": 4.433333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Lmv_WI0aLQE",
-   "title": "Man Atkeya Beparwah De Naal | Nusrat Fateh Ali Khan | complete full version | OSA Worldwide",
-   "label": "Oriental Star Agencies",
-   "mins": 14.583333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "oQ7UYptPRQs",
-   "title": "Sanu Ek Pal Chain Video I Ustad Nusrat Fateh Ali Khan I original version I OSA official HD video",
-   "label": "Oriental Star Agencies",
-   "mins": 9.566666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ocMEmQ3s8qE",
-   "title": "Kise Da Yaar Na Vichre | Ustad Nusrat Fateh Ali Khan | Official Version | OSA Worldwide",
-   "label": "Oriental Star Agencies",
-   "mins": 7.216666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "e6_etTvN2do",
-   "title": "DEFERNULL: RUDE BRAWLER (ft. @RazFraz)",
-   "label": "Saga Music",
-   "mins": 3.216666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "sKukSYZv8_g",
-   "title": "DEFERNULL: CAGE MATCH (feat. @PootStablook)",
-   "label": "Saga Music",
-   "mins": 4.433333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "3pth6IS2YhY",
-   "title": "DARK ROOTS",
-   "label": "Saga Music",
-   "mins": 3.4166666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "SU6GjUxorKk",
-   "title": "DEFERNULL: UNWANTED MALICE (VS SUSIE)",
-   "label": "Saga Music",
-   "mins": 2.433333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "tb7T-TrN2Ow",
-   "title": "If This Road Was Mine",
-   "label": "Saga Music",
-   "mins": 2.7333333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "oXAsTfj9IR4",
-   "title": "DEFERNULL: DOWNWARD SPIRAL (The World Revolving)",
-   "label": "Saga Music",
-   "mins": 2.433333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "8Esu8ZmXndg",
-   "title": "DEFERNULL: TV TIME!",
-   "label": "Saga Music",
-   "mins": 3.6666666666666665,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "y06McYhRfkI",
-   "title": "Defernull: All Spamton Songs (EPILEPSY WARNING)",
-   "label": "Saga Music",
-   "mins": 9.183333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "LMxRavn4H3Y",
-   "title": "TALES OF THE CURSED ONE",
-   "label": "Saga Music",
-   "mins": 2.4,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "twkyPzTpY_s",
-   "title": "WHAT I GOT YOU WANT IT - [[DEFERNULL UST]]",
-   "label": "Saga Music",
-   "mins": 2.95,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "onah8bFui78",
-   "title": "Entry Funkin' OST - Reality",
-   "label": "Saga Music",
-   "mins": 2.0833333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "mdncNLfjE1I",
-   "title": "DILJIT DOSANJH: SOHNI LAGDI | Sardaar Ji 3 | Neeru Bajwa, Hania Aamir | Punjabi Love Song 2026",
-   "label": "White Hill Music",
-   "mins": 2.716666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "fGvJlXexoh4",
-   "title": "Yeah! Its Me (Official Video) Parry Sarpanch | Punjabi Songs 2023 | Punjabi Songs This Week",
-   "label": "White Hill Music",
-   "mins": 3.3333333333333335,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "n6XSGFNYw_I",
-   "title": "JASSA DHILLON : Tangy (Official Video) Gurlez Akhtar | Star Boy X | Party Punjabi Songs",
-   "label": "White Hill Music",
-   "mins": 2.05,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "OKuGTy7D52c",
-   "title": "Kuch Bhi Ho Jaye | B Praak | Jaani | Arvindr Khaira | DM | New Romantic song 2020",
-   "label": "Desi Melodies",
-   "mins": 5.016666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "sNhAQzopNRM",
-   "title": "Tu Te Kehndi C : BOHEMIA Ft. Divine (Official Video) Deep Jandu | New Punjabi Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.4,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ltEqVQoK2gs",
-   "title": "Sun Sajna - Deep Jandu & Chitralekha Sen (Official Video) Punjabi Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.283333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "CWpUtO80UzU",
-   "title": "Ajnabi : BOHEMIA (Official Video) Punjabi Rap Songs 2021 | GK Digital | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 2.933333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "PFUGyV46AuM",
-   "title": "TOM And JERRY (Official Video) Satbir Aujla | Satti Dhillon | Divya Puri | Punjabi Songs | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.75,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "mBcGSdafEHc",
-   "title": "Tere Bina Rogi Hoye Pyase Nain | Noor Jehan & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
-   "label": "Oriental Star Agencies",
-   "mins": 8.15,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "FJRBjGqrizI",
-   "title": "Kangna - Shahzad Roy - OSA Official HD Video",
-   "label": "Oriental Star Agencies",
-   "mins": 3.5166666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "lNyr6xs-EM8",
-   "title": "TERI YAAD - SAJJAD ALI - OSA OFFICIAL",
-   "label": "Oriental Star Agencies",
-   "mins": 5.733333333333333,
-   "found": "2026-10-06"
+   "mins": 12.483333333333333,
+   "found": "2026-10-08"
   },
   {
    "id": "Crwo6Tuhtw0",
    "title": "Meri Zindagi Hai Tu (Remix) | Nusrat Fateh Ali Khan | official HD video | OSA Worldwide",
    "label": "Oriental Star Agencies",
    "mins": 7.95,
-   "found": "2026-10-06"
+   "found": "2026-10-08"
   },
   {
-   "id": "zbDLkWOprVE",
-   "title": "Sanware Tore Bin Jiya | Humera Channa & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
+   "id": "Lmv_WI0aLQE",
+   "title": "Man Atkeya Beparwah De Naal | Nusrat Fateh Ali Khan | complete full version | OSA Worldwide",
    "label": "Oriental Star Agencies",
-   "mins": 7.05,
-   "found": "2026-10-06"
+   "mins": 14.583333333333334,
+   "found": "2026-10-08"
   },
   {
-   "id": "f-s4mM9ls8o",
-   "title": "Nit Khair Mangan Sohnia Mein Teri - Ustad Nusrat Fateh Ali Khan - OSA Official HD Video",
-   "label": "Oriental Star Agencies",
-   "mins": 14.416666666666666,
-   "found": "2026-10-06"
+   "id": "ZdTD9aewyhI",
+   "title": "Akhil Feat Adah Sharma | Life Official Video | Preet Hundal | Arvindr Khaira | Latest Punjabi Songs",
+   "label": "Speed Records",
+   "mins": 3.466666666666667,
+   "found": "2026-10-08"
   },
   {
-   "id": "Stkx7UrtiBs",
-   "title": "Girlfriend : Jass Manak (Official Video) Satti Dhillon | Snappy | Punjabi Song | Geet MP3",
-   "label": "Geet MP3",
-   "mins": 3.6333333333333333,
-   "found": "2026-10-06"
+   "id": "U65TWIP3mpQ",
+   "title": "Gaal Ni Kadni (Official Video) | Parmish Verma | Desi Crew | Superhit Punjabi Song | Speed Records",
+   "label": "Speed Records",
+   "mins": 4.233333333333333,
+   "found": "2026-10-08"
   },
   {
-   "id": "mGLocpX09mU",
-   "title": "Splendor : Satbir Aujla (Official Video) Sharry Nexus | Rav Dhillon | Punjabi Songs | Geet MP3",
-   "label": "Geet MP3",
+   "id": "MsTW5cyWKj4",
+   "title": "5 Taara (Full Song) | Diljit Dosanjh | Jatinder Shah | Superhit Punjabi Song | Speed Records",
+   "label": "Speed Records",
    "mins": 3.75,
-   "found": "2026-10-06"
+   "found": "2026-10-08"
   },
   {
-   "id": "Mwaje9YCnNg",
-   "title": "Jhoole Jhoole Lal (Magic Touch) Bally Sagoo & Nusrat Fateh Ali Khan official video | OSA Worldwide",
-   "label": "Oriental Star Agencies",
-   "mins": 7.933333333333334,
-   "found": "2026-10-06"
+   "id": "aPV6iJBcSoE",
+   "title": "Shreaam Apni - Full Song | Dilpreet Dhillon | Punjabi Romantic Songs 2016 | Speed Records",
+   "label": "Speed Records",
+   "mins": 3.6,
+   "found": "2026-10-08"
   },
   {
-   "id": "OdBhx5F0fTI",
-   "title": "LALKARA JATTI DA (Official Video) Ammy , Sonam, Gulab Sidhu , Gurlej Akhtar | In Cinemas 2nd Oct",
+   "id": "iQShS4b9paM",
+   "title": "Shining Koka(HD Video) - Dilpreet Dhillon Meharvaani | Mandeep Maavi | Latest Punjabi Song 2021",
+   "label": "Speed Records",
+   "mins": 3.216666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "-FPIV-z9GR0",
+   "title": "Sohna Sohni | Sabba | Gurlez Akhtar | Geet Goraya | New Punjabi Song 2025 | Latest Punjabi Song 2025",
+   "label": "Speed Records",
+   "mins": 4.083333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ODaWO5eYQgI",
+   "title": "Dasi Na Mere Bare (Full Video) | Goldy | Latest Punjabi Song 2016 | Speed Records",
+   "label": "Speed Records",
+   "mins": 4.866666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "-Nbm1vFsr7Q",
+   "title": "Coke Studio Season 9| Uddi Ja| Mohsin Abbas Haider",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.216666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "w3s8cjG2WYY",
+   "title": "Coke Studio Season 11| Hawa Hawa| Gul Panrra & Hassan Jahangir",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.2,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "unOqa2tnzSM",
+   "title": "Coke Studio Season 11| Hum Dekhenge",
+   "label": "Coke Studio Pakistan",
+   "mins": 2.65,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "EZVPRe5jRs4",
+   "title": "Aye Rah-e-Haq Ke Shaheedo",
+   "label": "Coke Studio Pakistan",
+   "mins": 3.0833333333333335,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "zQDAi8tI-cU",
+   "title": "Coke Studio | Season 14 | Kana Yaari | Kaifi Khalil x Eva B x Abdul Wahab Bugti",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.0,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "HrFlFMK1mKI",
+   "title": "Coke Studio | Season 14 | Sajan Das Na | Atif Aslam x Momina Mustehsan",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.116666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "JTJ6q-cGs-o",
+   "title": "Coke Studio | Season 14 | Beparwah | Momina Mustehsan",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.633333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "O3pUsXxCfEk",
+   "title": "Coke Studio | Season 14 | Muaziz Saarif | Faris Shafi x Meesha Shafi",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.883333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "KDJL2FyRDeA",
+   "title": "Coke Studio Season 8 | Aaj Jane Ki Zid Na Karo | Farida Khanum",
+   "label": "Coke Studio Pakistan",
+   "mins": 3.3333333333333335,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "3pPUJE76V1s",
+   "title": "Coke Studio Season 9| Tu Hi Tu| Mehwish Hayat & Shiraz Uppal",
+   "label": "Coke Studio Pakistan",
+   "mins": 5.566666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "OCCXUwKMH4s",
+   "title": "Coke Studio Season 12 | Daachi Waaliya | Hadiqa Kiani",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.15,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "WzlO79d3S8c",
+   "title": "Coke Studio Season 11| Piya Ghar Aaya| Fareed Ayaz| Abu Muhammad Qawwal and Brothers",
+   "label": "Coke Studio Pakistan",
+   "mins": 12.933333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Uks8psEpmB4",
+   "title": "Coke Studio Season 9| Rang | Rahat Fateh Ali Khan & Amjad Sabri",
+   "label": "Coke Studio Pakistan",
+   "mins": 11.983333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "a18py61_F_w",
+   "title": "Coke Studio Season 8| Tajdar-e-Haram| Atif Aslam",
+   "label": "Coke Studio Pakistan",
+   "mins": 10.466666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "dYPWLlfD05Q",
+   "title": "Coke Studio Season 11| Balaghal Ula Be Kamalihi| Abida Parveen",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ZQMn5wIoAno",
+   "title": "Coke Studio Season 9| Tu Kuja Man Kuja| Shiraz Uppal & Rafaqat Ali Khan",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.85,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "kw4tT7SCmaY",
+   "title": "Coke Studio Season 9| Afreen Afreen| Rahat Fateh Ali Khan & Momina Mustehsan",
+   "label": "Coke Studio Pakistan",
+   "mins": 6.75,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7SDrjwtfKMk",
+   "title": "Coke Studio Season 7| Chaap Tilak| Abida Parveen & Rahat Fateh Ali Khan",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "LrCek73_e_M",
+   "title": "Coke Studio Season 11| Shikwa/Jawab-e-Shikwa| Natasha Baig, Fareed Ayaz & Abu Muhammad Qawwal",
+   "label": "Coke Studio Pakistan",
+   "mins": 13.233333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "BQ74szweuZw",
+   "title": "Coke Studio Season 12 | Aadam | Fareed Ayaz & Abu Muhammad with Humnawa",
+   "label": "Coke Studio Pakistan",
+   "mins": 12.25,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "LekqDjknArc",
+   "title": "Coke Studio Season 9| Aaqa| Abida Parveen & Ali Sethi",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.566666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "GoJ9EO9CTZk",
+   "title": "Coke Studio Season 9| Maula-e-Kull| Abida Parveen",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.9,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7D4vNcK6D38",
+   "title": "Coke Studio | Season 14 | Tu Jhoom | Naseebo Lal x Abida Parveen",
+   "label": "Coke Studio Pakistan",
+   "mins": 6.683333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "QqI5pMJuFbE",
+   "title": "Coke Studio Season 12 | Hairaan Hua | Sanam Marvi",
+   "label": "Coke Studio Pakistan",
+   "mins": 10.15,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "I3tS2oTUvHI",
+   "title": "Coke Studio Season 9| Lagi Bina/Chal Mele Noon Challiye| Saieen Zahoor & Sanam Marvi",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.383333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "74cVT_tUpck",
+   "title": "Coke Studio Season 12 | Wohi Khuda Hai | Atif Aslam",
+   "label": "Coke Studio Pakistan",
+   "mins": 6.95,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Gar-Vw9UzVs",
+   "title": "Coke Studio Season 10| Dam Mast Qalandar| Umair Jaswal & Jabar Abbas",
+   "label": "Coke Studio Pakistan",
+   "mins": 6.916666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "oJaO4JdFWB8",
+   "title": "Coke Studio Season 10| Allahu Akbar| Ahmed Jehanzeb & Shafqat Amanat",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.95,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "TpeWLXYtCgI",
+   "title": "Coke Studio Season 8| Sakal Ban| Rizwan & Muazzam Ali Khan",
+   "label": "Coke Studio Pakistan",
+   "mins": 6.933333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "6XcMiqJGkQE",
+   "title": "Coke Studio Season 9| Man Kunto Maula| Javed Bashir & Ali Azmat",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.583333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "e6o8GhoofzE",
+   "title": "Coke Studio Season 12 | Dam Mastam | Rahat Fateh Ali Khan",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "qOgZJJmLfhA",
+   "title": "Coke Studio Season 7| Mein Sufi Hoon| Ustaad Raees Khan & Abida Parveen",
+   "label": "Coke Studio Pakistan",
+   "mins": 10.483333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "_FvMSp4BoL4",
+   "title": "Coke Studio Season 11| Ghoom Charakhra| Abida Parveen and Ali Azmat",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.266666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "3CJQGf7ldZU",
+   "title": "Coke Studio Season 11| Ilallah| Sounds of Kolachi",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.633333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "p3D-oqGdW9o",
+   "title": "Coke Studio Season 10| Maula Tera Noor| Shafqat Amanat Ali Khan",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.75,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Ciim7-hZPb0",
+   "title": "Coke Studio Season 10| Sayonee| Junoon Feat Rahat Fateh Ali Khan & Ali Noor",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.1,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "YahQn3RJMAg",
+   "title": "Coke Studio Season 9| Khaki Banda| Ahmed Jahanzeb & Umair Jaswal",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.733333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "lgm3puP3tMA",
+   "title": "Coke Studio Special | Asma-ul-Husna | The 99 Names | Atif Aslam",
+   "label": "Coke Studio Pakistan",
+   "mins": 3.4,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "U_DSCLqgZCo",
+   "title": "Coke Studio Season 8| Man Aamadeh Am| Gul Panrra & Atif Aslam",
+   "label": "Coke Studio Pakistan",
+   "mins": 9.15,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "SBxEvrorLf4",
+   "title": "Coke Studio Season 11| Wah Jo Kalaam| Asrar Shah, Shamu Bai & Vishnu",
+   "label": "Coke Studio Pakistan",
+   "mins": 5.666666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ZYzUKdDunyI",
+   "title": "Coke Studio Season 10| Baazi| Sahir Ali Bagga & Aima Baig",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.45,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "8367ETnagHo",
+   "title": "Coke Studio Season 9| Tera Woh Pyar| Momina Mustehsan & Asim Azhar",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.2,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "zVnbojCYPxU",
+   "title": "Coke Studio Season 9| Aaya Laariye| Meesha Shafi & Naeem Abbas Rufi",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.5,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "SCOKysMnH50",
+   "title": "Coke Studio Season 10| Latthay Di Chaadar| Quratulain Balouch & Farhan Saeed",
+   "label": "Coke Studio Pakistan",
+   "mins": 8.183333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "TzdMLhGOIhA",
+   "title": "Coke Studio Season 10| Sab Maya Hai| Attaullah Esakhelvi & Sanwal Esakhelvi",
+   "label": "Coke Studio Pakistan",
+   "mins": 7.033333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "diGJy8eFbWw",
+   "title": "Coke Studio | Season 14 | Neray Neray Vas | Soch The Band x Butt Brothers",
+   "label": "Coke Studio Pakistan",
+   "mins": 4.0,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "my-ZeVNkv4A",
+   "title": "La Princesa de Mis Sueños.wmv",
+   "label": "Jass Records",
+   "mins": 2.5,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "BK9hWwhmInE",
+   "title": "Gulab Sidhu | 5'7 (Panj Satt) | Dhol Remix | Latest Punjabi Song 2026",
+   "label": "Humble Music",
+   "mins": 2.8333333333333335,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "kSts7aHaiww",
+   "title": "Garari (Official Video) Preet Armaan | Joy Atul | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.433333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "v4bfNZe5ZK4",
+   "title": "Dhakka (Official Video) - Jahid Bhaini - Sukh Simran - Humble Music",
+   "label": "Humble Music",
+   "mins": 2.3833333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Kef0r-q7OiY",
+   "title": "Barkat Kaur | Gagan Sarao | Kulshan Sandhu | Humble Music | New Punjabi Songs 2026",
+   "label": "Humble Music",
+   "mins": 3.45,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "P0n6nO8o2IU",
+   "title": "Same Same - Singga - Mix Singh - Humble Music - Punjabi Songs 2026",
+   "label": "Humble Music",
+   "mins": 2.6,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "8ewsHkl6YuI",
+   "title": "Pagal | Happy Raikoti  | Humble Music | Punjabi Songs 2026",
+   "label": "Humble Music",
+   "mins": 3.4833333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Z0zaqu-FQTA",
+   "title": "Vcr - Gippy Grewal - Punjabi Songs 2026 - Humble Music",
+   "label": "Humble Music",
+   "mins": 4.083333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "-wfkkj1Qj1A",
+   "title": "Fark  - Gippy Grewal - New Punjabi Songs 2026 - Humble Music",
+   "label": "Humble Music",
+   "mins": 3.216666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "9zB6bTG0IcI",
+   "title": "So High - Sidhu Moosewala - Humble Music - Punjabi Songs 2026",
+   "label": "Humble Music",
+   "mins": 3.55,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "du-Zg2iWil8",
+   "title": "Combination Choti Da - Amrit Maan - Punjabi Song 2026",
+   "label": "Humble Music",
+   "mins": 3.966666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "jf7hXVPGZHg",
+   "title": "Top Da Munda - Jordan Sandhu - New Punjabi Song 2026 - Humble Music",
+   "label": "Humble Music",
+   "mins": 3.3666666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "1L5ntQxHGSI",
+   "title": "Galib (Full Video) - B Praak - Humble Music - New Punjabi Songs 2026",
+   "label": "Humble Music",
+   "mins": 4.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "OhScU8J36zY",
+   "title": "Banje Daaru (Official Video) | Shehnaaz Gill | Kaptaan | Punjabi Songs 2026",
+   "label": "Humble Music",
+   "mins": 2.533333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "a8RQUvcN1bk",
+   "title": "Chidi Udd (Official Video) - Gippy Grewal - Princekanwaljit Singh - Panchhi 2 -New Punjabi Song2026",
+   "label": "Humble Music",
+   "mins": 2.35,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "myATUN_Z0n8",
+   "title": "Mull Koi Na (Official Video) | Gippy Grewal & Nimrat Khaira | Viyaah Kartaare Da | Punjabi Song",
+   "label": "Humble Music",
+   "mins": 2.6,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "I2bPe5abalI",
+   "title": "Tappe (Official Video) - Gippy Grewal - Nimrat Khaira - Viyaah Kartaare Da in cinemas 27th Feb",
+   "label": "Humble Music",
+   "mins": 2.9166666666666665,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Yp-vYHUZncs",
+   "title": "Gunaah (Official Video) Sikandar | Gippy Grewal | Nimrat | Viyaah Kartare Da | Punjabi Song 2026",
+   "label": "Humble Music",
+   "mins": 3.0,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "NgNSPG4Yfak",
+   "title": "Vlog (Official Video) | Gippy Grewal X Nimrat Khaira X Arjan Dhillon X Mxrci | Viyaah Kartaare Da",
+   "label": "Humble Music",
+   "mins": 2.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "MKuxAFMmTIk",
+   "title": "Tera Hassa - Gippy Grewal - Nimrat Khaira - Viyaah Kartaare Da - Punjabi Songs 2026",
+   "label": "Humble Music",
+   "mins": 2.3666666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "PjSvoUZiZ7o",
+   "title": "Saahaan Wargiye (Official Video) | Gippy Grewal | Shehnaaz Gill |  Roach Killa | Deep Jandu",
+   "label": "Humble Music",
+   "mins": 3.183333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "6VUt9T0VAdY",
+   "title": "Scratch | Gursewak Dhillon | Karan Aujla | Deep Jandu | Sukh Sanghera | Official Video Humble Music",
+   "label": "Humble Music",
+   "mins": 3.3333333333333335,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "-R8IxY_e3bs",
+   "title": "Blackberry ( Full Video ) | Cheema Y | Anker Deol | Punjabi Song 2020 | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.75,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "J3LkpLD_GAQ",
+   "title": "Duniya (Official Video) - Sikandar X Gulab Sidhu | Punjabi Songs 2025",
+   "label": "Humble Music",
+   "mins": 3.3666666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "48XJJFZTHQ4",
+   "title": "Sheesha (Official Video) Gippy Grewal | Jatinder Shah | Happy Raikoti | Desi Rockstar 3",
+   "label": "Humble Music",
+   "mins": 3.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "biSlq81saGA",
+   "title": "Jaan Jaan (Official Video) | Happy Raikoti | Jasmine Bhasin | Punjabi Song 2025",
+   "label": "Humble Music",
+   "mins": 3.15,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "gv_d2UoJp54",
+   "title": "DESIGNER | OFFICIAL VIDEO | NIMRAT KHAIRA | DEEP JANDU | HAPPY RAIKOTI | HUMBLE MUSIC",
+   "label": "Humble Music",
+   "mins": 3.3333333333333335,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "hqTsRwd7Nc4",
+   "title": "Hathyar 2 (Full Video) | Gippy Grewal | Navpreet Banga | Happy Raikoti | Bal Deo | Laddi Gill |",
+   "label": "Humble Music",
+   "mins": 4.25,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "q5HUNJtB3G8",
+   "title": "Jean(Full Video)Gippy Grewal |Neeru Bajwa|Jatinder Shah | Afsana Khan|Happy Raikoti |PaaniChMadhaani",
+   "label": "Humble Music",
+   "mins": 3.7333333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Kj7GU8_kOg4",
+   "title": "Ghora III | Benny Dhaliwal | Aman Hayer | 2018 | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.316666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "qrd4NhKrM-0",
+   "title": "Where Baby Where (Full Video) Gippy Grewal ft. Amanda Cerny | Jaani | Sukhe | Bal Deo | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.8833333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "bCEGK_1yLJo",
+   "title": "Jagirdar | Full Video | R-Nait, Gurlez Akhtar Ft. Jaggi Singh | Humble Music",
+   "label": "Humble Music",
+   "mins": 5.116666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7qxPqKnSbpE",
+   "title": "Chill Mode | Dilpreet Dhillon ft. Jaggi Singh & Bhana La | Official Music Video | Humble Music",
+   "label": "Humble Music",
+   "mins": 2.65,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "rMQ_TUEwQEs",
+   "title": "Just Listen | Official Music Video | Sidhu Moose Wala ft. Sunny Malton | BYG BYRD | Humble Music",
+   "label": "Humble Music",
+   "mins": 4.8,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "GgmFC8y8q3k",
+   "title": "So High | Official Music Video | Sidhu Moose Wala ft. BYG BYRD | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.9,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "S-lq0f60az0",
+   "title": "Fuel | Gippy Grewal | Raghveer Boli | Snappy | Rav Hanjra | Mar Gaye Oye Loko | Humble Music",
+   "label": "Humble Music",
+   "mins": 2.566666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "GmS6fe2IxZA",
+   "title": "ISSA JATT  | SIDHU MOOSE WALA | SUNNY MALTON | BYG BYRD | HUMBLE MUSIC",
+   "label": "Humble Music",
+   "mins": 4.083333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "o2Q0ZFAIK44",
+   "title": "VCR (Full Video) Gippy Grewal | Neeru Bajwa|Jatinder Shah|Happy Raikoti |Afsana Khan|PaaniChMadhaani",
+   "label": "Humble Music",
+   "mins": 4.083333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "gafV3Pj_S2Q",
+   "title": "Pe Lay Mast Malnga Wali | Zaakir Hussain | Qawwali | Humble Music",
+   "label": "Humble Music",
+   "mins": 6.116666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "UW5KuKHP0dc",
+   "title": "Jatt Nal Yaariyan (Full Video) Gippy Grewal | Himanshi Khurana|Sara Gurpal |Kamal Khan|Jatinder Shah",
+   "label": "Humble Music",
+   "mins": 3.5166666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "MtHugZNPC4Y",
+   "title": "Dark Love (Full Video) | Sidhu Moosewala | Intense | Baljit Singh Deo | Punjabi Songs 2018",
+   "label": "Humble Music",
+   "mins": 5.1,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "2112cKB7QPo",
+   "title": "Jatt Bukda Fire (Official Video) | Gippy Grewal | Sultaan | Bhinda Aujla | Punjabi Songs 2021",
+   "label": "Humble Music",
+   "mins": 3.4166666666666665,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7y-tqkSsXEM",
+   "title": "IK SANDHU HUNDA SI ( Full Video ) Gippy Grewal | Neha Sharma | Angrej Ali | Jay K | Humble Music",
+   "label": "Humble Music",
+   "mins": 2.5,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "SRtnRCauh_c",
+   "title": "PANJ SATT (5-7) - Official Video | Gulab Sidhu | Sukh Lotey | Gungun Bakshi | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.2666666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "rcFYjpb4MPc",
+   "title": "KOOM KALAN KABADDI CUP | SIDHU MOOSE WALA | HUMBLE MUSIC",
+   "label": "Humble Music",
+   "mins": 3.1,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "bE2M9fFbiEo",
+   "title": "Rabba Ve | Rahat Fateh Ali Khan | Jay K | Gippy Grewal | Mar Gaye Oye Loko | Releasing 31 August",
+   "label": "Humble Music",
+   "mins": 3.683333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "WwMiiIS3Odo",
+   "title": "Hey Ree Sakhi | Sukhbir Rana | Sachin Ahuja | Punjabi Sufi Song 2018 | Humble Music",
+   "label": "Humble Music",
+   "mins": 4.166666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "VWs4MHENovA",
+   "title": "Shikaar | Parry Sarpanch | Official Music Video | Punjabi Songs 2018 | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.716666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "BlOtve47ya4",
+   "title": "Shava Ni Girdhari Lal (Title Track) Gippy Grewal | Satinder Sartaj | Jatinder Shah | Humble Music",
+   "label": "Humble Music",
+   "mins": 2.7,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "lfjuB6w-L4c",
+   "title": "Tha Tha | Gagan Tung feat. Mr. VGrooves | Punjabi Song 2018 | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.7,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "9K-ZVRLDueM",
+   "title": "Vigdeyan Da Peer ( Full Song ) | Anddy Dhuri | Punjabi Song 2020 | Humble Music 2020",
+   "label": "Humble Music",
+   "mins": 3.066666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "EfYl-FMXVZo",
+   "title": "Peaceful Warrior 2018 ( Full Song ) Shakina Khan | Punjabi Song 2020 | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.0166666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "q1V11tjdP-Y",
+   "title": "Limited Edition Intro (Full Video) | Gippy Grewal | Humble Music",
+   "label": "Humble Music",
+   "mins": 2.95,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "uIYHrlomkVc",
+   "title": "Dil Todan Walya Nu | Himmat Sandhu | Gippy Grewal | Neha Sharma | Roshan Prince | Humble Music |",
+   "label": "Humble Music",
+   "mins": 4.55,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ctJ4RiCRpH8",
+   "title": "Combination (Full Video) | Amrit Maan | Dr Zeus | Punjabi Song 2019 | Humble Music",
+   "label": "Humble Music",
+   "mins": 4.316666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7sDgJi9z4Us",
+   "title": "Diljaniya | Ranjit Bawa | Jay K | Official Music Video | Humble Music",
+   "label": "Humble Music",
+   "mins": 4.45,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ho9nSXvusZE",
+   "title": "NACH NACH (Video) Gippy Grewal | Sidhu Moose Wala | Parmish Verma | Sargun Mehta | Neeru Bajwa",
+   "label": "Humble Music",
+   "mins": 2.6333333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "D4fC4HVpP3M",
+   "title": "Its All About You | Sidhu Moose Wala | Intense | Valentines Day Special Song | Humble Music",
+   "label": "Humble Music",
+   "mins": 4.25,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Rx6th9oz9JE",
+   "title": "Yours Forever | Fateh Shergill | Laddi Gill | Mahi Sharma | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.6,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "2lK68a5MqhQ",
+   "title": "BLAMES ( Full Video ) Dilpreet Dhillon | Desi Crew | Rammy Chahal | Daas Films | Humble Music 2020",
+   "label": "Humble Music",
+   "mins": 2.466666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "z61dsUw8rnM",
+   "title": "Fark (Full Video) | Gippy Grewal | Limited Edition | Desi Crew | Punjabi Songs | Humble Music",
+   "label": "Humble Music",
+   "mins": 3.75,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "3cZ7BmHQl2c",
+   "title": "Same Same - Official Video | Singga | Mix Singh | Humble Music | Punjabi Songs 2022",
+   "label": "Humble Music",
+   "mins": 2.85,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "4BaS-_SfinY",
+   "title": "Moge Di Barfi | Amrit Maan | Gippy Grewal | Neeru Bajwa | Surilie Gautam | Yami Gautam",
+   "label": "Humble Music",
+   "mins": 2.9166666666666665,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "3I5UnkRyPN8",
+   "title": "Scratch | Gursewak Dhillon X Karan Aujla | Punjabi Songs 2025",
+   "label": "Humble Music",
+   "mins": 3.283333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "jsBCSNnQpuo",
+   "title": "Mahiya (Official Video) Gurmanter | Daoud Music | New Punjabi Song 2026  #emotionalsong #newsadsong",
    "label": "White Hill Music",
-   "mins": 2.966666666666667,
-   "found": "2026-10-06"
+   "mins": 3.7333333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "eI_s34ktN8A",
+   "title": "Zora Zori (Official Video) Honey Dhillon | Sandeep Aulakh | New Punjabi Song 2026 #newsong",
+   "label": "White Hill Music",
+   "mins": 3.6166666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "HtnW_0Py_6g",
+   "title": "Madhubala ❤️ | Chandra Brar x Heer | 80s Retro Love Vibes | Punjabi Song 2026 #80smusic",
+   "label": "White Hill Music",
+   "mins": 3.15,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "_NGP0mVcd4k",
+   "title": "KI LAGDA TERA? (Official Video) Khushi Pandher | Savi Nain | Punjabi Song 2026",
+   "label": "White Hill Music",
+   "mins": 2.7333333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "s7fP2zWtq3w",
+   "title": "VICKY DHILLON: KALA KALA SUIT (Official Video) Nikita Kanwar |  Punjabi Song 2026",
+   "label": "White Hill Music",
+   "mins": 2.433333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "0HtFa_n9DHw",
+   "title": "MANINDER BUTTAR: TUTT GAYE AA | Ft. Pranjal Dahiya |  Punjabi Song 2026 #latestpunjabisong",
+   "label": "White Hill Music",
+   "mins": 3.25,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "yHX3FvgtVBw",
+   "title": "DEEP BAJWA: SAFFRA'N CH (Official Video) Verse | Gurjit Gill |  Punjabi Song 2026",
+   "label": "White Hill Music",
+   "mins": 3.3333333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "TykkvoYaIQg",
+   "title": "Jigar Da Totta: Ricky Khan (Official Video) Dastaar Movie Songs | Tarsem Jassar | Punjabi Song",
+   "label": "White Hill Music",
+   "mins": 2.5833333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "p5Pw-hxxia0",
+   "title": "TARSEM JASSAR: SOORME | Dastaar Movie Songs | Avvy Sra | Ricky Khan #newpunjabisong2026",
+   "label": "White Hill Music",
+   "mins": 2.566666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "14NNGD39nx8",
+   "title": "Himmat Sandhu: Khande Di Dhaar | Dastaar Movie Songs | Tarsem Jassar | MXRCI |  Punjabi Song",
+   "label": "White Hill Music",
+   "mins": 2.183333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "QKwDMuMQnHY",
+   "title": "ਨਸਲਵਾਦ ਵਿਰੁੱਧ ਇੱਕ ਲੜਾਈ | ਇਹ ਸਿਰਫ਼ ਇੱਕ ਫ਼ਿਲਮ ਨਹੀਂ... ਇਹ ਹੈ 'ਦਸਤਾਰ | Dastaar",
+   "label": "White Hill Music",
+   "mins": 3.4833333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "1i_wz3defDs",
+   "title": "The Fight Against Racism | This Is More Than a Film. This Is DASTAAR",
+   "label": "White Hill Music",
+   "mins": 2.783333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "hPW4dJR1XWE",
+   "title": "Pardhan | Karan Sehmbi | Aatish | Chaupal | New Punjabi Web Series 2026 | Watch Now",
+   "label": "White Hill Music",
+   "mins": 2.25,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "T98vV2xTrVw",
+   "title": "SHARRY MANN: PIND | Dastaar Movie Songs | Tarsem Jassar | Avvy Sra | Punjabi Song 2026",
+   "label": "White Hill Music",
+   "mins": 3.3333333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Ah__P903CEg",
+   "title": "KAMAL KHAN : VE SOHNEYA | Tarsem Jassar | DASTAAR Movie Song | Geet Goraaya #punjabisong",
+   "label": "White Hill Music",
+   "mins": 2.45,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "5CHiDUlOMDE",
+   "title": "JORDAN SANDHU: DASTAAR ANTHEM | TARSEM JASSAR | Mandeep Maavi | Punjabi Song 2026",
+   "label": "White Hill Music",
+   "mins": 2.75,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "vjLFhu3WLms",
+   "title": "My World 2 (Official Video) Raman Lakhesar | Vipan | Punjabi Songs |#trendingshorts #trendingsong",
+   "label": "White Hill Music",
+   "mins": 3.1333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "2oqKYgMR7N4",
+   "title": "DILJIT DOSANJH : DAARU MUKGI (Official Video) MixSingh | Neeru Bajwa, Hania Aamir | SARDAAR JI 3",
+   "label": "White Hill Music",
+   "mins": 2.6166666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "sS_WyjSkt3U",
+   "title": "HIMMAT SANDHU : KANGNI (Official Video) SWEETAJ BRAR | MANDEEP MAAVI | Punjabi Bhangra Songs",
+   "label": "White Hill Music",
+   "mins": 3.2,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "nqXnWAI-2Lk",
+   "title": "SIMIRAN KAUR DHADLI : KAUN AE TU? (Official Video) Mand | Desi Trap Music | Punjabi Beat Song 2025",
+   "label": "White Hill Music",
+   "mins": 2.716666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Oy6LzTNJy3g",
+   "title": "R NAIT X GURLEZ AKHTAR: MIRZAPUR🔥Punjabi Song 2026 | R Nait Song | Punjabi Songs",
+   "label": "White Hill Music",
+   "mins": 4.466666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "cPghi_tY8ac",
+   "title": "HAYE MAIN LUTTI GYI (Official Video) Gurjas Sidhu & Deepak Dhillon | Punjabi Songs",
+   "label": "White Hill Music",
+   "mins": 3.55,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "m-emfIulcmY",
+   "title": "DILJIT DOSANJH : DAARU MUKGI (Official Video)  Jasmeen Akhtar | Hania Aamir | SARDAAR JI 3 Songs",
+   "label": "White Hill Music",
+   "mins": 2.6166666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "p-J9Ix8vK04",
+   "title": "My World (Official Video) Raman Lakhesar | Punjabi Song 2024 | Punjabi Gaane",
+   "label": "White Hill Music",
+   "mins": 2.4833333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Z_4pWhUX-Vk",
+   "title": "AMMY VIRK : Booster (Official Video) Kaptaan | Geet | Punjabi Songs | RISE & THRIVE",
+   "label": "White Hill Music",
+   "mins": 3.566666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "P-FF3wqE69Y",
+   "title": "Tareefan | JORDAN SANDHU | Mehar Vaani | Sargun Mehta | Sidhus Of Southall",
+   "label": "White Hill Music",
+   "mins": 3.283333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "4t3CO6zGtA0",
+   "title": "KULBIR JHINJER: KALLA KALLA TAARA | Deep Jandu | Geet Goraya | Punjabi Song 2026",
+   "label": "White Hill Music",
+   "mins": 3.316666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "RjmXDumaUw4",
+   "title": "LEFT BEHIND (Official Video) Zafar | Punjabi Song 2026 | Punjabi Songs | Zafar Song",
+   "label": "White Hill Music",
+   "mins": 3.783333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "x-PvBG9akKQ",
+   "title": "DILJIT DOSANJH: CHILL MARDI (Official Video) JAANI | Hania Aamir | Diljit Dosanjh Punjabi Song 2025",
+   "label": "White Hill Music",
+   "mins": 3.183333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "5g0UEE2t_70",
+   "title": "BAHANA : DILJIT DOSANJH  | MixSingh | Zafar Sandhu | Hania Aamir | Punjabi Song",
+   "label": "White Hill Music",
+   "mins": 2.1333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Geaf62lt70c",
+   "title": "Shareek (Official Video) | Zafar | Mani Sheoran | Jatt castle | New  Punjabi Songs 2024 |",
+   "label": "White Hill Music",
+   "mins": 2.75,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "EKptWm2tF_Q",
+   "title": "RAMAN LAKHESAR : THIRD WAVE (Official Video) Punjabi Song 2026 #latestpunjabisong",
+   "label": "White Hill Music",
+   "mins": 3.216666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "n6XSGFNYw_I",
+   "title": "JASSA DHILLON : Tangy (Official Video) Gurlez Akhtar | Star Boy X | Party Punjabi Songs",
+   "label": "White Hill Music",
+   "mins": 2.05,
+   "found": "2026-10-07"
   },
   {
    "id": "-Ilbf4xziiM",
    "title": "Baazi (Official Video) | Punjabi Songs 2024 | Allar Vres | Punjabi Songs | White Hill Music",
    "label": "White Hill Music",
    "mins": 3.3666666666666667,
-   "found": "2026-10-06"
+   "found": "2026-10-07"
+  },
+  {
+   "id": "cgmo1S2QAHM",
+   "title": "CHANDRA BRAR: RISHTA SONG (Official Video) Sargi Maan | Geet Goraya| Punjabi Song",
+   "label": "White Hill Music",
+   "mins": 3.55,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "-WeW_3-VubE",
+   "title": "AMMY VIRK & JASMINE SANDLAS : CURRENT | RISE & THRIVE (Official Video) Punjabi Songs",
+   "label": "White Hill Music",
+   "mins": 4.016666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "scH_es8bE_8",
+   "title": "DILJIT DOSANJH : CHILL MARDI (Official Video) Jaani | Bunny | Sardaar Ji 3 Songs | Hania Aamir",
+   "label": "White Hill Music",
+   "mins": 3.0,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "MumafyEqjmw",
+   "title": "RAGDE (Official Video) R Nait | Deepak Dhillon | Himani Dave |  Punjabi Songs 2024",
+   "label": "White Hill Music",
+   "mins": 2.6166666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "fGvJlXexoh4",
+   "title": "Yeah! Its Me (Official Video) Parry Sarpanch | Punjabi Songs 2023 | Punjabi Songs This Week",
+   "label": "White Hill Music",
+   "mins": 3.3333333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "UniBeCGiVJg",
+   "title": "R NAIT : Kuwari (Official Video) Sharry Nexus | Punjabi Songs 2024 | EP : Naitflix",
+   "label": "White Hill Music",
+   "mins": 2.9833333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ugXo_5Z2-js",
+   "title": "JYOTI NOORAN: MERIYAN IBADTAAN | DSP DEV 2 | PUNJABI SONG 2026 | In Cinemas 13th Feb",
+   "label": "White Hill Music",
+   "mins": 4.066666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "HCpm285VOlg",
+   "title": "JYOTI NOORAN: IK TU HI SI | Nikka Zaildar 4 Songs | Avvy Sra | #newpunjabisong2025 #punjabisadsong",
+   "label": "White Hill Music",
+   "mins": 3.35,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "UgByL1Y-_2g",
+   "title": "GULAB SIDHU : Baba Bhali Kare | Amrit Mangwalia | Punjabi Songs 2023 | Tera Jatt Marzi Da Malik Ni",
+   "label": "White Hill Music",
+   "mins": 3.3833333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "AQXS9q94cCA",
+   "title": "SHARRY MANN : Hawa De Bulle (Official Video) Raj Ranjodh | Punjabi Song",
+   "label": "White Hill Music",
+   "mins": 3.566666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "OdBhx5F0fTI",
+   "title": "LALKARA JATTI DA (Official Video) Ammy , Sonam, Gulab Sidhu , Gurlej Akhtar | In Cinemas 2nd Oct",
+   "label": "White Hill Music",
+   "mins": 2.966666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ggNdsv_J9JY",
+   "title": "Aahi Gal (Official Video) Himmat Sandhu | Gurlez Akhtar | Dusk N Dawn | Punjabi Song | Party Hits",
+   "label": "White Hill Music",
+   "mins": 2.9833333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "zLnXcgfcqW4",
+   "title": "Gal Gabru Di (Full Video) Korala Maan | Desi Crew | Punjabi Songs 2023 | Punjabi Songs This Week",
+   "label": "White Hill Music",
+   "mins": 3.1166666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "T7etE35wZEY",
+   "title": "Ishq (Full Song) Salamat Ali Matoi | Lehmberginni | Ranjit Bawa | Sad Song | Punjabi Songs This Week",
+   "label": "White Hill Music",
+   "mins": 2.7333333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "qBSQZatCij8",
+   "title": "Mahiya (Full Video) Gill Brothers | Punjabi Song 2023 |  Punjabi Song | Punjabi Sufi Songs",
+   "label": "White Hill Music",
+   "mins": 3.966666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "2i4K6nUpTFc",
+   "title": "AMMY VIRK: PEG PUGG LAAKE | Nikka Zaildar 4 | Sonam Bajwa | Punjabi Song #punjabisongs",
+   "label": "White Hill Music",
+   "mins": 2.65,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "8nbRySWHYAo",
+   "title": "DILJIT DOSANJH: CHILL MARDI (Official Video) Neeru Bajwa, Hania Aamir | SARDAAR JI 3 | Punjabi Song",
+   "label": "White Hill Music",
+   "mins": 3.0,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "XxcGxK_pqr0",
+   "title": "SOHNI LAGDI : DILJIT DOSANJH | MixSingh | Hania Aamir | Sardaar Ji 3 Songs",
+   "label": "White Hill Music",
+   "mins": 2.716666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "o6SprqssXHk",
+   "title": "GULAB SIDHU : Chobbar (Full Video) feat. Gurlez Akhtar | Punjabi Song 2023 | Fresh Punjabi Song",
+   "label": "White Hill Music",
+   "mins": 3.65,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "apiCItKUrZY",
+   "title": "AMMY VIRK : Kya Hi Baataan | Happy Raikoti | Jasmeen Akhtar | Teriyan Meriyan Gallan | Punjabi Love",
+   "label": "White Hill Music",
+   "mins": 2.6333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "vmzDQwqdGgI",
+   "title": "HARF CHEEMA X GURLEZ AKHTAR: PARDHANGI | Ft. Geet Goraya | Punjabi Song 2026 #harfcheemasong",
+   "label": "White Hill Music",
+   "mins": 3.033333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "aVwin68VrvA",
+   "title": "MANAVGEET GILL : 3-17 (Official Video) Sobit | Kanji Porh | Punjabi Songs 2024",
+   "label": "White Hill Music",
+   "mins": 2.9166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "TCRyjfH9WHg",
+   "title": "DILJIT DOSANJH : PASOORIAN (Full Video) MixSingh | Happy Raikoti | Neeru Bajwa | Hania Aamir",
+   "label": "White Hill Music",
+   "mins": 2.45,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "yKoZuM4-y8c",
+   "title": "CHANDRA BRAR: MADHUBALA | Heer | Rumman Shahrukh | Punjabi Song 2026 | Punjabi Love Songs",
+   "label": "White Hill Music",
+   "mins": 3.3666666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "5_1TiBvYD0A",
+   "title": "Sagar, Bunny - Tere Layi | Jaani | Arvvindr S Khaira | Alex | Desi Melodies | Latest Punjabi Songs",
+   "label": "Desi Melodies",
+   "mins": 4.166666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "283OEmZItUA",
+   "title": "Jass Manak - Raho Bachke | Jaani | Shanaya | Bunny | Amanninder Singh | Latest Punjabi Songs 2026",
+   "label": "Desi Melodies",
+   "mins": 2.45,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "SBiBFfDfMi0",
+   "title": "Romaana - Joban Rutte | Jaydden | Jaani | Arvvindr S Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 3.75,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "JPPfXRj4JO4",
+   "title": "Jasmine Sandlas - Jee Nai Lagda | Jaani | Bunny | Piyush Shazia | Desi Melodies | New Punjabi Songs",
+   "label": "Desi Melodies",
+   "mins": 2.783333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "0Fneh6aqkR4",
+   "title": "Europe Di Gali – Jaani | Asees Kaur | Bunny | Arvvindr S Khaira | Latest Punjabi Songs",
+   "label": "Desi Melodies",
+   "mins": 6.566666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "uBq3pK1v8VA",
+   "title": "Sukh-E - 4x4 | Mahira Sharma | Jaani | Bunny | Sharvi Yadav | Arvvindr S Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 2.5833333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "821LsmYClK4",
+   "title": "Annewahh - Harsh Nussi | Deep Klair | Uptown Slick | Jaani | Arvvindr S Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 3.2333333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "mYRV_B_QVGw",
+   "title": "B Praak x Jaani - Dil Kaat Ke | Sakshi | Rajniesh | Piyush Shazia | Bunny | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 4.9,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "oveAR-i8dZA",
+   "title": "The PropheC - Aundi Jandi | Yahvi | Abeer | Desi Trap | Amanninder Singh | Jaani | Arvvindr S Khaira",
+   "label": "Desi Melodies",
+   "mins": 2.6,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "guyRr0FVJmk",
+   "title": "Jyoti Nooran - Saasu Maa | Aditi Rao Hydari | Anjumm Shharma | Jaani | Arvvindr S Khaira",
+   "label": "Desi Melodies",
+   "mins": 4.5,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "EW7SHWYNmxY",
+   "title": "Jaani - Apsraa 2 | Asees Kaur | Bunny | Arvvindr S Khaira | Desi Melodies | Latest Punjabi Song 2025",
+   "label": "Desi Melodies",
+   "mins": 9.05,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "y8VUibzNwjE",
+   "title": "BPraak - Zohrajabeen (8K Video) Randeep Hooda, Priyanka Chahar Choudhary | Jaani | Arvindr Khaira",
+   "label": "Desi Melodies",
+   "mins": 4.183333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "m959uS1EbeQ",
+   "title": "Akshay Kumar - Filhaal2 Mohabbat (8K Video) ft. Nupur Sanon | Ammy Virk | BPraak | Jaani | Arvindr K",
+   "label": "Desi Melodies",
+   "mins": 5.333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "zzjFyw8UkyU",
+   "title": "Aiti Maar Payi Kurlane - Jimmy Sheirgill | Manav Vij | Maa Jaye in Theatres | Latest Punjabi Songs",
+   "label": "Desi Melodies",
+   "mins": 2.716666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "oZx3mk8nPpo",
+   "title": "B Praak - Lagey Rabb Warga | Isha Malviya | Akshay Kharodia | Arvvindr S Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 3.316666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ze-a_bGcgd4",
+   "title": "Tere Ishq Vich - Sunidhi Chauhan | Jimmy Sheirgill | Manav Vij | Maa Jaye | Salamat Ali Matoi",
+   "label": "Desi Melodies",
+   "mins": 3.3333333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "RqRzeioQz-E",
+   "title": "Baarish Ki Jaaye (8K Video) - BPraak | Nawazuddin Siddiqui | Sunanda Sharma | Jaani | Arvindr Khaira",
+   "label": "Desi Melodies",
+   "mins": 4.866666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "NbaTLdFtm9c",
+   "title": "Brother's Anthem - Jimmy Sheirgill | Manav Vij | Himmat S, Navi S | Maa Jaye | Latest Punjabi Songs",
+   "label": "Desi Melodies",
+   "mins": 2.5833333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "MOlx_CQq8Ek",
+   "title": "Stebin Ben - Koi Koi Karda | Sana Makbul | Bunny | Sagar | New Romantic Song 2025",
+   "label": "Desi Melodies",
+   "mins": 3.35,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "MBO5Q_zL3Yg",
+   "title": "Matt Jaao | Md Faiz Song | New Sad Song 2025 | New Hindi Song | Mat Jao Mohammed Faiz",
+   "label": "Desi Melodies",
+   "mins": 4.816666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "7gc5PvjdgWk",
+   "title": "Sultaan - Shikari | Faris Shafi | Avvy Sra | Arvvindr S Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 2.8833333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Y1ixFdnkITg",
+   "title": "HATH CHUMME - AMMY VIRK (Official Video) B Praak | Jaani | Arvindr Khaira | DM",
+   "label": "Desi Melodies",
+   "mins": 4.7,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "TpzYCCHyzGo",
+   "title": "Harrdy Sandhu - Tu Ru Ruu | Sagar | Bunny | Arvvindr S Khaira | Jaani | Yahvi Chavan",
+   "label": "Desi Melodies",
+   "mins": 3.7,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "gkds6yVdDLI",
+   "title": "Paon Ki Jutti - Jyoti Nooran | Isha Malviya | Shiv Panditt | Jaani | Arvvindr S Khaira | Bunny",
+   "label": "Desi Melodies",
+   "mins": 3.933333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "TF8KIcV8lvs",
+   "title": "FILHALL Cover by Nupur Sanon Ft Akshay Kumar | Jaani | Aditya Dev | Official Video",
+   "label": "Desi Melodies",
+   "mins": 3.8333333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "BtQp2U6hJII",
+   "title": "White Brown Black - Avvy Sra | Karan Aujla | Jaani | Amanninder Singh | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 2.85,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "kxeACXtiZNQ",
+   "title": "Ittar - Jasmine Sandlas | BPraak | Jaani | Arvindr Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 3.316666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "8yAqOqHvugY",
+   "title": "B Praak - Aate Rehte Hain (Official Video ) | Kangna Sharma | Rohit Khandelwal | Jaani | Zohrajabeen",
+   "label": "Desi Melodies",
+   "mins": 3.683333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "JQDHOIxoIwo",
+   "title": "Mohammad Faiz, Asees Kaur - Tu Hi Tu (Unplugged) | Sagar | Bunny | Jaani | Arvvindr S Khaira",
+   "label": "Desi Melodies",
+   "mins": 3.183333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "7lWeQs8Firo",
+   "title": "COKA : Sukh-E Muzical Doctorz | Alankrita Sahai | Jaani | Arvindr Khaira | DM",
+   "label": "Desi Melodies",
+   "mins": 3.0166666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "YPohR_9v6HA",
+   "title": "Titliaan | Harrdy Sandhu | Sargun Mehta | Afsana Khan | Jaani | Avvy Sra | Arvindr Khaira",
+   "label": "Desi Melodies",
+   "mins": 4.35,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "5KkHLDkPcq8",
+   "title": "BPraak - Zohrajabeen (Video) | Randeep Hooda, Priyanka Chahar Choudhary | Jaani | Arvindr Khaira",
+   "label": "Desi Melodies",
+   "mins": 4.366666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Tq3LW8ZQ91w",
+   "title": "Coco | Official Video | Sukh-E ft. Shweta Sharda | Jaani | Arvindr Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 2.9166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "DUwlGduupRI",
+   "title": "Filhaal2 Mohabbat | Akshay Kumar Ft Nupur Sanon | Ammy Virk | BPraak | Jaani | Arvindr Khaira",
+   "label": "Desi Melodies",
+   "mins": 5.416666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "hMy5za-m5Ew",
+   "title": "FILHALL | Akshay Kumar Ft Nupur Sanon | BPraak | Jaani | Arvindr Khaira | Ammy Virk | DESI MELODIES",
+   "label": "Desi Melodies",
+   "mins": 5.5,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "DZC7zzgtPwM",
+   "title": "Titliaan Warga | Harrdy Sandhu ft Jaani | Sargun Mehta  | Arvindr Khaira | Avvy Sra | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 4.016666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "OBEOPnAO1hc",
+   "title": "Yaar Ka Sataya Hua Hai - B Praak | Nawazuddin Siddiqui | Shehnaaz Gill | Jaani | Arvindr Khaira",
+   "label": "Desi Melodies",
+   "mins": 5.35,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "TYaNfLLOLNY",
+   "title": "Baarish Ki Jaaye | B Praak Ft Nawazuddin Siddiqui & Sunanda Sharma | Jaani | Arvindr Khaira | DM",
+   "label": "Desi Melodies",
+   "mins": 5.083333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "FMJCjRU1W_s",
+   "title": "Mohammad Faiz - Tu Hi Tu | Jitendra Kumar | Zahrah S Khan | Arvvindr S Khaira | Bunny | Sagar",
+   "label": "Desi Melodies",
+   "mins": 4.233333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "AVeMlyEjuzg",
+   "title": "Tod Da e Dil (Vertical Video) Ammy Virk | Mandy Takhar | Maninder Buttar | Avvy Sra | Arvindr  | DM",
+   "label": "Desi Melodies",
+   "mins": 4.083333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "fO9xunnaEVc",
+   "title": "Apsraa | Jaani Ft Asees Kaur | Arvindr Khaira | Desi Melodies | Latest Punjabi Songs 2021",
+   "label": "Desi Melodies",
+   "mins": 8.433333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "M6fBm6c9A4k",
+   "title": "Banglow | Avvy Sra ft Afsana khan | Sukh-E | Jaani | Arvindr Khaira | New Punjabi Song 2020",
+   "label": "Desi Melodies",
+   "mins": 3.15,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "2n9Tkkktq4c",
+   "title": "Roohedaariyaan - BPraak, Neeti Mohan | Akashdeep Sengupta | Shloke Lal | Jaani | Arvindr Khaira",
+   "label": "Desi Melodies",
+   "mins": 5.45,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "i-IDjR8Rr2I",
+   "title": "B Praak - Mal Mal | Sonal Chauhan | Siddharth Gupta | Jaani | Amanninder Singh | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 4.766666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "n_1wsLxT6Lk",
+   "title": "Kaali Shirt Waleyaa | Simran Raj | Sanchit | Gunjan | Jaani | Avvy Sra | Arvindr Khaira | DM",
+   "label": "Desi Melodies",
+   "mins": 4.033333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "tKWWF2XpH8o",
+   "title": "Goriyaan Goriyaan | Romaana ft Jasmin bajwa & Ieshaan Sehgaal | Jaani | Bpraak | Arvindr Khaira |",
+   "label": "Desi Melodies",
+   "mins": 3.9,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Olbp-vWTZkc",
+   "title": "Ik Mili Mainu Apsraa | BPraak ft. Asees Kaur, Sandeepa Dhar | Jaani | Arvindr Khaira",
+   "label": "Desi Melodies",
+   "mins": 4.416666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "fBzMJAuaycQ",
+   "title": "Kya Karoon - Sanam Puri | Jaani | Jasmin Bhasin | Arvindr Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 5.283333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "O47CzgB5LXE",
+   "title": "Krishna Teri Ho Gyi - Asees Kaur | Jaani |  Arvindr Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 5.133333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "fYbCl5_8nDg",
+   "title": "Diljit Dosanjh - Mombattiye | Harnaaz Sandhu | Jaani | Arvvindr S Khaira | Bunny | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 3.2666666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "wD2LsBsFJOI",
+   "title": "Allah De Bandeya - B Praak | Jaani | Aly Goni, Jasmine Bhasin | Arvindr Khaira | Zohrajabeen",
+   "label": "Desi Melodies",
+   "mins": 4.816666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "fBWUSK-AedE",
+   "title": "Harrdy Sandhu - Kudiyan Lahore Diyan | Aisha Sharma | Jaani | B Praak | Arvindr Khaira | DM",
+   "label": "Desi Melodies",
+   "mins": 3.566666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "m01AZQa-TuA",
+   "title": "Peacock - Avvy Sra ft. Gima Ashi | Sultaan | Jaani | Arvindr Khaira | Desi Melodies",
+   "label": "Desi Melodies",
+   "mins": 3.3,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "cAMHx-m9oh8",
+   "title": "Kya Loge Tum | Akshay Kumar | Amyra Dastur | BPraak | Jaani | Arvindr Khaira | Zohrajabeen",
+   "label": "Desi Melodies",
+   "mins": 4.016666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "YjjLZpeIEN8",
+   "title": "Tod Da E Dil | Ammy Virk | Maninder Buttar | Avvy Sra | Latest Romantic  Song 2020 | DM",
+   "label": "Desi Melodies",
+   "mins": 2.65,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "OKuGTy7D52c",
+   "title": "Kuch Bhi Ho Jaye | B Praak | Jaani | Arvindr Khaira | DM | New Romantic song 2020",
+   "label": "Desi Melodies",
+   "mins": 5.016666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "s89tjDD4YIs",
+   "title": "DEEWANE: ARJUN SAHOTA (Full Video) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
+   "label": "Geet MP3",
+   "mins": 3.2666666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "xTYmWN35U_Y",
+   "title": "HEERIYE : ARJUN SAHOTA (Full Video) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
+   "label": "Geet MP3",
+   "mins": 3.3333333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "aDBmY2ut2xA",
+   "title": "ONLY YOU: ARJUN SAHOTA (Full Video) Gagan Dhillon | Latest Punjabi Songs 2026 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.95,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "1i4R6TDpsKw",
+   "title": "Remember This (Full Song) : Nav Singh | Latest Punjabi Song 2026 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.55,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "xd4sv-bLhIw",
+   "title": "MA ZAMEEN : KANWAR GREWAL (Full Video) Jagjeet Sandhu | Oye Bhole Oye 2 | Latest Punjabi Songs 2026",
+   "label": "Geet MP3",
+   "mins": 5.116666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "FkfLMTe41HM",
+   "title": "YOUR THOUGHTS : NAV SINGH (Full Video) Arjan Gill | Latest Punjabi Songs 2026 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.1666666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "oe0mfWwTHdM",
+   "title": "NASHA PATTA : VEET BALJIT (Full Video) Jagjeet Sandhu | Oye Bhole Oye 2 | Latest Punjabi Songs 2026",
+   "label": "Geet MP3",
+   "mins": 4.133333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "aePOwEBVLIw",
+   "title": "SIDHA JATT : SAJJAN ADEEB (Full Video) Jagjeet Sandhu | Oye Bhole Oye 2 | New Punjabi Songs 2026",
+   "label": "Geet MP3",
+   "mins": 2.4166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "yjNU9XUIFNY",
+   "title": "LOST IN YOU: ARJUN SAHOTA (Full Video) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
+   "label": "Geet MP3",
+   "mins": 3.783333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "p_yXn0RbFoE",
+   "title": "FLOW: SULTAAN (Full Video) : Jagjeet Sandhu | Oye Bhole Oye 2 | New Punjabi Songs 2026 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.55,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "eBfr-43K7Ps",
+   "title": "Your Thoughts (Full Song) : Nav Singh | Arjan Gill | Latest Punjabi Songs 2026 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.1,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "DQRuAdAwwHE",
+   "title": "SAKHIYO: ARJUN SAHOTA (FULL VIDEO) : Geet | Satti Dhillon | Latest Punjabi Songs 2026 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.6166666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "bhPp7fKgFxs",
+   "title": "In Love (Full Video) : Arjun Sahota | Gagan Dhillon | Latest Romantic Punjabi Songs 2026 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.6666666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "vBEvUtr-MJQ",
+   "title": "ZULFAN : ARJUN SAHOTA (Full VIdeo) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
+   "label": "Geet MP3",
+   "mins": 2.85,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "B7T31Czm3GU",
+   "title": "BABY NO : DEEP JANDU (Full Song) : Gurlez Akhtar | Latest Punjabi Song 2026 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.033333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "CtADeVqIpKM",
+   "title": "Forever Love : Arjun Sahota (Official Video) Satti Dhillon | Latest Punjabi Song 2026 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.033333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Bluw60mT-mc",
+   "title": "MAGIC LOVE: DEEP JANDU (Full Video) Shweta Sharda | Satti Dhillon | Latest Punjabi Songs 2026",
+   "label": "Geet MP3",
+   "mins": 2.6666666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "dYp-QfJ_aTI",
+   "title": "Sharab Wargi (Full Video): Nishawn Bhullar Ft. Maahi Sharma | Gurlez Akhtar | New Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 4.85,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "7agSpY_ogoA",
+   "title": "Nukri (Full Song) : Nishawn Bhullar | Zafar Brar | Old Skool | Latest Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 3.716666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "jE0bI2b82FY",
+   "title": "Pinda Wale (Full Song) : Nishawn Bhullar | Gurlez Akhtar | Old Skool | Latest Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 2.3833333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "N9fk4vvmo9E",
+   "title": "Bahli Sohni (Full Song) : Nishawn Bhullar | Sargi Maan | Old Skool | Latest Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 3.1666666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "-L4jQ1KPW48",
+   "title": "Vardaat (Full Song) : Nishawn Bhullar | Gurlez Akhtar | Old Skool | Latest Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 3.533333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "lGJEjgQeUaw",
+   "title": "Supari (Full Song) : Nishawn Bhullar | Jasmeen Akhtar | Old Skool | Latest Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 4.25,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Lxcpvichf3M",
+   "title": "Sharab Wargi (Full Song) : Nishawn Bhullar | Gurlez Akhtar | Old Skool | Latest Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 4.116666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "EqbYuRg7DXI",
+   "title": "Telephone (Full Video) : Nishawn Bhullar Ft. Maahi Sharma | Miss Pooja | New Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 4.7,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ddmCGx2CpJM",
+   "title": "Mukable (Full Video) : Hardeep Grewal Ft. Maahi Sharma | Gurlez Akhtar | Latest Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 3.2,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "PKNjJPruF00",
+   "title": "Dalle (Full Video): Deep Jandu | Lehmber Hussainpuri | Satti Dhillon | Latest Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 4.333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "PjTU0DmBWiU",
+   "title": "PRADA - JASS MANAK (Official Video) Satti Dhillon | Latest Punjabi Song 2018 | GK.DIGITAL | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.2,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "htbsYO3nfQQ",
+   "title": "REEL (Official Video) : Deep Jandu | Simar Kaur | Isha Malviya | Latest Punjabi Songs 2025",
+   "label": "Geet MP3",
+   "mins": 3.4,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "5RZws-BEl4s",
+   "title": "Yaar Beli : Guri (Official Video) Deep Jandu | Parmish Verma | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.783333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "AjLnRjx7rgM",
+   "title": "Guri : Billian Billian (Official Video) Sukhe | Satti Dhillon | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.3,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ehVeTFMGFxM",
+   "title": "Halla Gulla (Official Video) - Harf Cheema - Gurlez Akhtar - Hit Punjabi Song - Latest Punjabi Songs",
+   "label": "Geet MP3",
+   "mins": 3.4833333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "OKDGEYVzIGI",
+   "title": "Defender (Full Video) Harf Cheema - Sudesh Kumari - Sruishty Mann - Latest Punjabi Song - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.533333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "haYm5k6h5yc",
+   "title": "Yaari : Guri (Official Video) Sehnaz Gill | Deep Jandu | Arvindr Khaira | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 4.233333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "HG96KYzCnbY",
+   "title": "Suit Punjabi : Jass Manak (Official Video) Satti Dhillon | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.6333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "cdR7tzSOhtE",
+   "title": "Bombay To Punjab : DEEP JANDU Ft. DIVINE (Full Video) Karan Aujla | Satti Dhillon | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 4.2,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "rv9qC2mMRjo",
+   "title": "Boss : Jass Manak (Official Video) Satti Dhillon | Ri | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.8333333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Nqil-nNoHJE",
+   "title": "Landcruiser : Veet Baljit & Gurlez Akhtar (Full Song) MixSingh | Satti Dhillon | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.15,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ltEqVQoK2gs",
+   "title": "Sun Sajna - Deep Jandu & Chitralekha Sen (Official Video) Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.283333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "-HuyP7JyR5A",
+   "title": "Bewafa Tu : Guri  (Official Video) Satti Dhillon | Punjabi Sad Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.9166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "-NGg43b2g2c",
+   "title": "Daaru (Full Song) Deep Jandu | Sardar Ali | Latest Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.716666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "RKioDWlajvo",
+   "title": "Lehanga : Jass Manak (Official Video) Satti Dhillon - India's Most Viewed Song - Hit Punjabi Song",
+   "label": "Geet MP3",
+   "mins": 3.7666666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "gY0et3otYbc",
+   "title": "Phulkari : Karan Randhawa (Official Video) Simar Kaur | Rav Dhillon | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.4166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "yW10irX4BDI",
+   "title": "Jattwaad : Harf Cheema & Gurlez Akhtar (Official Song) Punjabi Songs | Punjabi Hit Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.6333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "LnSVh-0nPao",
+   "title": "Gede : Karan Randhawa (Official Video) Rav Dhillon | Simar Kaur | Punjabi Song Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.35,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Cy2Itv5CMho",
+   "title": "Tumhara Pyar : Bohemia (Official Music Video) Deep Jandu | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.933333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "PFUGyV46AuM",
+   "title": "TOM And JERRY (Official Video) Satbir Aujla | Satti Dhillon | Divya Puri | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.75,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "K578_c0EQHs",
+   "title": "Kabba Subaah : Kaad 6 Foot 2 | Deep Dosanjh ( Full Song ) Punjabi Songs 2020 | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.8333333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "RIBa-gD64FA",
+   "title": "Nagni 2 (Full Video) Vadda Grewal - Pranjal Dahiya - Deepak Dhillon - Punjabi Song - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.683333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "D0KWSF699Zg",
+   "title": "Rabba Ve (Full Song) Jyoti Nooran - Dev Kharoud - Roopi Gill - New Punajbi Songs - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.65,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "dc4C0VGSZo0",
+   "title": "Khuda : Satbir Aujla (Official Song) Rav Dhillon | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 4.283333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "0HK-a_nk1AY",
+   "title": "Bandook - Jass Manak (Full Video) Guri | Kartar Cheema | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.95,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Xod5R0BQLM8",
+   "title": "Hathyar - Sidhu Moose Wala (Full Video)  Punjabi Song | Punjabi Hit Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.1333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "cY01n9kHtcE",
+   "title": "Badmashi (Full Song) : Deep Jandu | KS Makhan | LEGENDS | Latest Punjabi Songs 2025 | Punjabi Songs",
+   "label": "Geet MP3",
+   "mins": 3.4166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "tYtD3Muqi4c",
+   "title": "JATTI : Karan Randhawa (Offical Video) Satti Dhillon | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.716666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "AAQBcPoAfWs",
+   "title": "Na Sun Mitran Da : Karan Randhawa (Full Video) Satti Dhilon | PrinceBhullar | Punjabi Song | GeetMP3",
+   "label": "Geet MP3",
+   "mins": 4.116666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "tBXnd8cn1KE",
+   "title": "Tere Naal : Jass Manak (Official Song) Punjabi Songs | GK.DIGITAL | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.8,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "YLOgP7dWEFw",
+   "title": "Nikaah : Satbir Aujla (Official Video) Priya | Rav Dhillon | Punjabi Songs 2021 | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.566666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "VkB3m3uOebw",
+   "title": "Teriyaan Yaadan : Sharry Nexus (Full Song) Punjabi Songs 2020 | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.8,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "k8MsKn2QPEg",
+   "title": "GYM - HARF CHEEMA (Full Song) Western Pendu | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.1166666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "KvJ2lOB-Zqw",
+   "title": "MAA : Veet Baljit (Full Song) Jayy Randhawa | Deep Jandu | Shooter Releasing 14 January 2022",
+   "label": "Geet MP3",
+   "mins": 3.0833333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "iA7apsvlz20",
+   "title": "Dard Viah Da : Vadda Grewal (Official Video) Deepak Dhillon | Rav Dhillon | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.8,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "G5X8UsuGhpc",
+   "title": "Chhote Chhote Laal : karaj Randhawa ( Full Video ) Prince Rakhdi | Punjabi Song  | Geet Mp3",
+   "label": "Geet MP3",
+   "mins": 4.566666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "p0xqSaPW5Ic",
+   "title": "Feel : Sanj (Official Song) Punjabi Songs 2018 | GK.DIGITAL | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.9166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "UUl7QeoXd5g",
+   "title": "Goli : Karaj Randhawa (Official Song) Punjabi Songs 2018 | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.1,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "mmnBXGLT_8s",
+   "title": "MAHIYA (Official Video) : Deep Jandu - Rukhsar - Soundous - Latest Punjabi Songs 2025 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.2,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "OhgCfPc5xCk",
+   "title": "Hitler : GURI (Full Song) | Jayy Randhawa | Shooter | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.7,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "XBVL9mJeae8",
+   "title": "Shoot Da Order : Jass Manak (Full Song) Jagpal Sandhu | Jayy Randhawa | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.4166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "uFBMZoEmFKA",
+   "title": "Veham (Full Video) Harf Cheema Ft. Maahi Sharma - Deep Jandu - Latest Punjabi Song 2024 - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.6666666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "p4tYgex9yMA",
+   "title": "Jail : Labh Heera (Full Song) Sippy Gill | Harf Cheema | Nishawn Bhullar | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.183333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "yFFL1we4j_Y",
+   "title": "Mill Lo Na : Guri Ft. Sukhe (Official Video) Jaani | Satti Dhillon | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.0166666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "p5Mu1KnMi-g",
+   "title": "Maajhe Diye Mombatiye : Balkar Sidhu & Jenny Johal (Full Song) Rav Dhillon | Prince Bhullar| Nasha",
+   "label": "Geet MP3",
+   "mins": 6.233333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "vFxJpDOBlME",
+   "title": "Majhail Anthem (Full Song) Karan Randhawa - Dev Kharoud - Roopi Gill - New Punjabi Songs - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.6333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "VO7Vu207-e8",
+   "title": "NIRA ISHQ : GURI (Official Song) Satti Dhillon | Romantic Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.25,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "JkYJmXYreeA",
+   "title": "VIAH : JASS MANAK (Official Video) Satti Dhillon | Hit Punjabi Song - Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.1666666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "FTjZGbVCWX0",
+   "title": "Vibe : Satbir Aujla (Full Song) Punjabi Songs | Punjabi Songs | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.0833333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "FjataF0pwF4",
+   "title": "Tere Bare : Karan Randhawa (Official Song) Satti Dhillon | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.2333333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Stkx7UrtiBs",
+   "title": "Girlfriend : Jass Manak (Official Video) Satti Dhillon | Snappy | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 3.6333333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "7N-D4hDscEw",
+   "title": "Toronto : Jass Manak | Priya (Official Song) Gangland In Motherland | Punjabi Song | Geet MP3",
+   "label": "Geet MP3",
+   "mins": 2.95,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "o7ROM_GKA4k",
+   "title": "Sochta Hoon | Divya Kumar | Nusrat Fateh Ali Khan | Shafaat Ali & Sajjad Ali Chandwani",
+   "label": "Oriental Star Agencies",
+   "mins": 4.0,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "HyQWuIdVoG8",
+   "title": "Tere Bin Nahin Lagda | Shahzad Ali | Music by Nusrat Fateh Ali Khan",
+   "label": "Oriental Star Agencies",
+   "mins": 3.3666666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "NqqXS-P0uBM",
+   "title": "Sanson ki Mala (Mirzapur The Movie) Nusrat Fateh Ali Khan & Madhur Sharma | Pritam Ka Kuch Dosh Nahi",
+   "label": "Oriental Star Agencies",
+   "mins": 3.1,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "sCJkkHoP30U",
+   "title": "Kise Da Yaar Na Vichre (Music Video) Divya Kumar x Nusrat Fateh Ali Khan | Recreation",
+   "label": "Oriental Star Agencies",
+   "mins": 3.066666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "-p5aX_x6Ozk",
+   "title": "Wich Pardesan I Ustad Nusrat Fateh Ali Khan & Dr. Zeus I OSA official HD video",
+   "label": "Oriental Star Agencies",
+   "mins": 3.95,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "yW9mLaPt1_E",
+   "title": "Meri Zindagi Tera Pyar | Noor Jehan & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 5.833333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "yTkaKSVu_xU",
+   "title": "Chandni Raatein - Partners in Rhyme Ft. Shamsa Kanwal - OSA Official HD Video",
+   "label": "Oriental Star Agencies",
+   "mins": 4.433333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "mBcGSdafEHc",
+   "title": "Tere Bina Rogi Hoye Pyase Nain | Noor Jehan & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 8.15,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "zbDLkWOprVE",
+   "title": "Sanware Tore Bin Jiya | Humera Channa & Nusrat Fateh Ali Khan | official video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 7.05,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "FJRBjGqrizI",
+   "title": "Kangna - Shahzad Roy - OSA Official HD Video",
+   "label": "Oriental Star Agencies",
+   "mins": 3.5166666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "oQ7UYptPRQs",
+   "title": "Sanu Ek Pal Chain Video I Ustad Nusrat Fateh Ali Khan I original version I OSA official HD video",
+   "label": "Oriental Star Agencies",
+   "mins": 9.566666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "eYSaHXXFIBU",
+   "title": "Sanson Ki Mala Pe Simron Mein - Ustad Nusrat Fateh Ali Khan - OSA Official HD Video",
+   "label": "Oriental Star Agencies",
+   "mins": 13.533333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Mwaje9YCnNg",
+   "title": "Jhoole Jhoole Lal (Magic Touch) Bally Sagoo & Nusrat Fateh Ali Khan official video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 7.933333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "tPMFdacglBI",
+   "title": "Samunder Main Samunder Ka - Ustad Nusrat Fateh Ali Khan - OSA Official HD Video",
+   "label": "Oriental Star Agencies",
+   "mins": 5.3,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "93YWG5v3N9o",
+   "title": "Jaon Gee Ban Ke Jogan - Qari M. Saeed Chishti - Best Superhit Qawwali | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 13.7,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "XMa_EVn4yJQ",
+   "title": "Baba Ji Sada Hajj Hogaya | Nusrat Fateh Ali Khan | complete full version | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 10.95,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "BDMeT9UoNpw",
+   "title": "Kithe Ishq Da Rog Na La Bethin Nusrat fateh ali khan qawwali | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 13.55,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "-bL6iPzIS4s",
+   "title": "Dil Mar Jane Nu Ki Hoya Sajna Nusrat fateh ali khan qawwali دِل مر جانے نوں کی ہویا سجنا  | OSA",
+   "label": "Oriental Star Agencies",
+   "mins": 8.066666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "lsqsggtTZfs",
+   "title": "Kali Kali Zulfon Ke Phande Na | Nusrat Fateh Ali Khan | complete full version | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 14.45,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "f-s4mM9ls8o",
+   "title": "Nit Khair Mangan Sohnia Mein Teri - Ustad Nusrat Fateh Ali Khan - OSA Official HD Video",
+   "label": "Oriental Star Agencies",
+   "mins": 14.416666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "XbMM9_W4Wsg",
+   "title": "Main Sufi Hoon Sarmasta | Abida Parveen | complete full version | official HD video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 4.9,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "fR7uUNgwqrE",
+   "title": "Kehna Galat Galat x Halka Halka Suroor Medley - Madhur Sharma | Nusrat Fateh Ali Khan | Sufi Romance",
+   "label": "Oriental Star Agencies",
+   "mins": 8.183333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "SfSviDgtyUk",
+   "title": "Kali Kali Zulfon Ke - Madhur Sharma | Ustad Nusrat Fateh Ali Khan | Cover Version | Sufi Romance",
+   "label": "Oriental Star Agencies",
+   "mins": 5.85,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "qukndaVkDuU",
+   "title": "Saadgi - Madhur Sharma | Ustad Nusrat Fateh Ali Khan | Cover Version | Sufi Romance",
+   "label": "Oriental Star Agencies",
+   "mins": 3.683333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "8h5bgmdGE2U",
+   "title": "Wich Pardesan I Dr  Zeus & Nusrat Fateh Ali Khan Ft.  Shortie | complete version| OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 4.733333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "srHIPbzAQi0",
+   "title": "Gal Sun Dildara | Naseebo Lal Her Best | Superhit Song | official HD video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 6.383333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "zJv5_1BH18M",
+   "title": "Sukh Mahi Naal Le Gaya | Nusrat Fateh Ali Khan | complete official full version | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 6.766666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "KX_3IiRLAhU",
+   "title": "Mein Yaar Yaar (Akhiyan Lar Gaiyan) | Nusrat Fateh Ali Khan & Dr Zeus Ft. Shortie | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 3.15,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "QmlsIQ4VmIE",
+   "title": "Aj Nachan De Menon Nachan De - Naseebo Lal - Best Superhit Song | official video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 5.316666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ocMEmQ3s8qE",
+   "title": "Kise Da Yaar Na Vichre | Ustad Nusrat Fateh Ali Khan | Official Version | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 7.216666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "QPkx4lTjNwg",
+   "title": "Mae Ni Mae Mere Geetan De Nainan Wich | Ustad Nusrat Fateh Ali Khan |OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 8.166666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "jDPf_DZOXC0",
+   "title": "Dil Nu Soch Vichar Baray Ne | Nusrat Fateh Ali Khan | official HD video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 8.75,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "BNOGTUJqMHg",
+   "title": "Jinne Tukre Hone Dil De - Naseebo Lal Her Best - Superhit Song | official HD video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 4.883333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "kCAd04Td-_8",
+   "title": "Ve Perdesia | Nusrat Fateh Ali Khan | complete full version | official HD video | OSA Worldwide",
+   "label": "Oriental Star Agencies",
+   "mins": 6.266666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "e6_etTvN2do",
+   "title": "DEFERNULL: RUDE BRAWLER (ft. @RazFraz)",
+   "label": "Saga Music",
+   "mins": 3.216666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "sKukSYZv8_g",
+   "title": "DEFERNULL: CAGE MATCH (feat. @PootStablook)",
+   "label": "Saga Music",
+   "mins": 4.433333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "3pth6IS2YhY",
+   "title": "DARK ROOTS",
+   "label": "Saga Music",
+   "mins": 3.4166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "SU6GjUxorKk",
+   "title": "DEFERNULL: UNWANTED MALICE (VS SUSIE)",
+   "label": "Saga Music",
+   "mins": 2.433333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "tb7T-TrN2Ow",
+   "title": "If This Road Was Mine",
+   "label": "Saga Music",
+   "mins": 2.7333333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "oXAsTfj9IR4",
+   "title": "DEFERNULL: DOWNWARD SPIRAL (The World Revolving)",
+   "label": "Saga Music",
+   "mins": 2.433333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "8Esu8ZmXndg",
+   "title": "DEFERNULL: TV TIME!",
+   "label": "Saga Music",
+   "mins": 3.6666666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "y06McYhRfkI",
+   "title": "Defernull: All Spamton Songs (EPILEPSY WARNING)",
+   "label": "Saga Music",
+   "mins": 9.183333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "LMxRavn4H3Y",
+   "title": "TALES OF THE CURSED ONE",
+   "label": "Saga Music",
+   "mins": 2.4,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "twkyPzTpY_s",
+   "title": "WHAT I GOT YOU WANT IT - [[DEFERNULL UST]]",
+   "label": "Saga Music",
+   "mins": 2.95,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "onah8bFui78",
+   "title": "Entry Funkin' OST - Reality",
+   "label": "Saga Music",
+   "mins": 2.0833333333333335,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "cOzW3fnIQ5M",
+   "title": "Red Eyes (8K Video) | Karan Aujla | Gurlej Akhtar | Punjabi Songs 2026 | Latest Punjabi Songs 2026",
+   "label": "Speed Records",
+   "mins": 2.716666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "M6y465iXQPk",
+   "title": "Adab Subah | Happy Raikoti | Latest Punjabi Song 2026 | New Punjabi Songs 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 3.4166666666666665,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "nDyBxXdr2h8",
+   "title": "Akhiyan (8K Video) | Diljit Dosanjh | Neeru Bajwa | Latest Punjabi Songs 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 2.2666666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "2feT29ZgJgA",
+   "title": "Baby | Yo Yo Honey Singh | Mika Singh | Latest Punjabi Songs 2026 | New Punjabi Song 2026",
+   "label": "Speed Records",
+   "mins": 2.7666666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "tpo0PkqBXoc",
+   "title": "Allah Hoo | Kanwar Grewal | Kaur B | Latest Punjabi Songs 2026 | New Punjabi Songs 2026",
+   "label": "Speed Records",
+   "mins": 5.816666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "GOztjZak_lU",
+   "title": "Sohnea (8K Video) | Miss Pooja Feat. Millind Gaba | Happy Raikoti | Latest Punjabi Songs 2026",
+   "label": "Speed Records",
+   "mins": 4.516666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "J0wrE6y3fC8",
+   "title": "Just Me (Official Video) | Tansaj Powar | New Punjabi Song 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 2.2,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "B2BkZWcmlZE",
+   "title": "Tu Te Main (Official Video) | Prince Kapil | New Punjabi Song 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 3.3833333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "5qZfhUXmLWY",
+   "title": "Yaadan | Gurdas Maan | Jatinder Shah | Latest Punjabi Songs 2026 | Punjabi Song 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 4.633333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "oqndWBM6yu8",
+   "title": "Pyar | Garry Sandhu | Latest Punjabi Song 2026 | New Punjabi Songs 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 4.583333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "bkr7YlQKink",
+   "title": "Dholna | Salamat Ali Matoi | Mahi Sharma | New Punjabi Song 2026 | Latest Punjabi Songs 2026",
+   "label": "Speed Records",
+   "mins": 10.766666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "yg-M53YhZPA",
+   "title": "Nooh Bebe Di | Dilpreet Dhillon | Latest Punjabi Songs 2026 | New Punjabi Songs 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 3.95,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "KAqlmi7THEc",
+   "title": "21 Saal | Jassi Gill | Karan Aujla | Latest Punjabi Song 2026 | Punjabi Songs 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 4.15,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "4bd4gtnxcRY",
+   "title": "Dil Lagda | Sabba | MXRCI | New Punjabi Song 2026 | Latest Punjabi Song 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 2.6166666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "QL5gOJ7a7F4",
+   "title": "Jannat (8K Video) | Sufna | B Praak | Jaani | Ammy Virk | Tania | Latest Punjabi Songs 2026",
+   "label": "Speed Records",
+   "mins": 3.4,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "BU3g6B1Oi5U",
+   "title": "90 Lakh | Amrit Maan | Desi Crew | Latest Punjabi Songs 2026 | Punjabi Songs 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 3.05,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "M2y0Pq86ceE",
+   "title": "Pari Lagdi | Singh Vs Kaur 2 | Gippy Grewal | Shehnaaz Gill | New Punjabi Song 2026",
+   "label": "Speed Records",
+   "mins": 2.4833333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "z9nZHyYaL50",
+   "title": "Tera Mera Sath | Rahat Fateh Ali Khan | New Punjabi Songs 2026 | Latest Punjabi Songs 2026",
+   "label": "Speed Records",
+   "mins": 4.9,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "6WZuihChihU",
+   "title": "Gulab | Jordan Sandhu | MXRCI | Latest Punjabi Songs 2026 | New Punjabi Songs 2026 | Speed Records",
+   "label": "Speed Records",
+   "mins": 3.033333333333333,
+   "found": "2026-10-07"
   }
  ]
 }

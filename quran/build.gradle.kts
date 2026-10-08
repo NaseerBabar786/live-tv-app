@@ -5,7 +5,7 @@ plugins {
 }
 
 // Iqra Quran: learn to read the Quran (kids' Qaida), read it with audio, and memorize it (Hifz).
-// A separate app from Live TV; it shares only the Gradle setup and library versions.
+// A separate app from Live TV; its Quran screens and text live in :qurankit, which Cable TV also uses.
 android {
     namespace = "com.iqraquran.app"
     compileSdk = 36
@@ -14,8 +14,8 @@ android {
         applicationId = "com.naseerbabar.iqraquran"
         minSdk = 26
         targetSdk = 36
-        versionCode = 8
-        versionName = "1.3.4"
+        versionCode = 10
+        versionName = "1.3.6"
     }
 
     // Same shared signing key as Live TV when CI has it, so updates install over the old app.
@@ -59,6 +59,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":qurankit"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)

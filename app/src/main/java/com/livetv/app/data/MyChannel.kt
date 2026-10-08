@@ -19,7 +19,7 @@ object MyChannel {
      * Our logos get redrawn at the same address (1.9.47, 1.9.49), and Coil keeps the old picture on
      * disk for ever, so our own logo links carry this number; raise it whenever the logos change.
      */
-    private const val LOGO_VERSION = 4
+    private const val LOGO_VERSION = 5
 
     fun freshLogo(url: String): String =
         if ("/channel/logos/" in url && '?' !in url) "$url?v=$LOGO_VERSION" else url
@@ -42,17 +42,19 @@ object MyChannel {
          */
         val backup: String = id,
         val logo: String? = null,
+        /** False for a channel that carries no logo of ours on the picture (Latest Movies, 1.9.81); [logo] is then only for the channel list. */
+        val bug: Boolean = true,
     )
 
-    /** Our channels take numbers 1 to 12; the other channels are numbered from 13. */
-    const val COUNT = 12
+    /** Our channels take numbers 1 to 15; the other channels are numbered from 16. */
+    const val COUNT = 15
 
     /**
      * Our channels, in the order they lead the channel list. Since 1.9.47 all but Bazaar TV run
      * from official YouTube videos (tools/build_youtube_channels.py); the free films below are their backup.
      */
     val STATIONS = listOf(
-        Station("main", 1, "0", "Bazaar TV"),
+        Station("main", 1, "0", "Bazaar TV One"),
         // Public-domain classic films round the clock (built weekly from Movies.m3u).
         Station("filmein", 2, "00", "Bazaar Cinema", youtube = true),
         // Free-to-use music (public domain and CC BY, from Wikimedia Commons), built by tools/build_sur.py.
@@ -72,7 +74,18 @@ object MyChannel {
         Station("dramas", 11, "11", "Bazaar Dramas", youtube = true, backup = "filmein", logo = "bazaar-dramas.png"),
         // 1.9.53: cooking shows in Urdu, Hindi, Punjabi and English from the cooks' own channels.
         Station("cooking", 12, "12", "Bazaar Cooking", youtube = true, backup = "filmein", logo = "bazaar-cooking.png"),
+        // 1.9.76: science, cartoons and challenge shows for 12 to 16 year olds; Bazaar Kids stays for small children.
+        // 1.9.81: the newest full films in Hindi, English, Punjabi and Urdu from their makers' channels, newest first.
+        // The owner wants just the name "Latest Movies"; its logo says LATEST MOVIES, no Bazaar (shown on the picture since 1.9.83).
+        Station("latest", 13, "13", "Latest Movies", youtube = true, backup = "filmein", logo = "latest-movies.png"),
+        Station("teens", 14, "14", "Bazaar Teens", youtube = true, backup = "filmein", logo = "bazaar-teens.png"),
+        // 15 (owner, 2026-10-07): ads and promos round the clock in our own player: our Cable TV promos, the
+        // sponsors' ads from /sponsors and "Advertise with us" (docs/channel/ads-schedule.json). No pop-up ads on it.
+        Station("ads", 15, "15", "Bazaar Ads", logo = "bazaar-ads.png"),
     )
+
+    /** Bazaar Ads' address: the channel that is all ads, so no pop-up ad breaks come over it. */
+    const val ADS_URL = "mychannel://ads"
 
     private const val SCHEME = "mychannel://"
 
@@ -120,7 +133,21 @@ object MyChannel {
 
     fun isMine(channel: Channel?) = channel?.url?.let { it.startsWith(SCHEME) || it == BOLLYWOOD_URL } == true
 
-    class Video(val id: String, val title: String, val url: String, /** 0 for a live stream. */ val seconds: Long) {
+    /** True when [channel] is one of ours with its own scrolling line along the bottom (MyChannelOverlay). */
+    fun hasTicker(channel: Channel?) =
+        isMine(channel) && configs.value[channel!!.url.removePrefix(SCHEME)]?.ticker != null
+
+    class Video(
+        val id: String,
+        val title: String,
+        val url: String,
+        /** 0 for a live stream. */ val seconds: Long,
+        /** "programme", "ad", "ident" (a channel ident or promo) or "live", as set in Channel Studio. */
+        val kind: String = "programme",
+    ) {
+        /** An ad, ident or promo: part of a break, not a programme. */
+        val isBreak: Boolean get() = kind == "ad" || kind == "ident"
+
         /** The YouTube video this is, when it is one (Bazaar TV's upcoming trailers): it plays on our locked page. */
         val youtube: String? = YouTube.videoId(url)
     }
@@ -157,9 +184,14 @@ object MyChannel {
         val logoCorner: String = "tr",
         /** Which of [STATIONS] this is. */
         val id: String = "main",
+        /** Short videos (ids) that fill the time when a programme ends before its slot does; ads when empty. */
+        val fillers: List<String> = emptyList(),
     ) {
         val channel: Channel
-            get() = Channel(name = name, url = urlOf(id), logo = logo, number = STATIONS.firstOrNull { it.id == id }?.number ?: 0)
+            // Our channels keep their fixed names (owner, 2026-10-07), whatever name a saved schedule carries.
+            get() = STATIONS.firstOrNull { it.id == id }.let { st ->
+                Channel(name = st?.name ?: name, url = urlOf(id), logo = logo, number = st?.number ?: 0)
+            }
     }
 
     /** What to show at a moment. */
@@ -211,10 +243,10 @@ object MyChannel {
 
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
-        // In number order: 1 to 12, Bazaar Hits being 4.
+        // In number order: 1 to 15, Bazaar Hits being 4.
         (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
 
-    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 12, when it's on. */
+    /** The channel a viewer reaches by typing [typed] as before 1.9.45 ("0", "00"), or 9 to 15, when it's on. */
     fun byDial(typed: String): Channel? =
         if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial == typed }?.let { _configs.value[it.id]?.channel }
 
@@ -230,7 +262,8 @@ object MyChannel {
                 val v = a.optJSONObject(i) ?: return@mapNotNull null
                 val url = v.optString("url").trim()
                 if (url.isEmpty()) return@mapNotNull null
-                Video(v.optString("id"), v.optString("title").ifBlank { "My channel" }, url, v.optLong("secs").coerceAtLeast(0))
+                val secs = v.optLong("secs").coerceAtLeast(0)
+                Video(v.optString("id"), v.optString("title").ifBlank { "My channel" }, url, secs, v.optString("kind").ifBlank { if (secs > 0) "programme" else "live" })
             }
         }.orEmpty()
         val slots = o.optJSONArray("slots")?.let { a ->
@@ -252,14 +285,139 @@ object MyChannel {
             ticker = o.optString("ticker").trim().takeIf { it.isNotEmpty() && o.optBoolean("tickerOn", true) },
             logoCorner = o.optString("logoCorner").ifBlank { "tr" },
             id = id,
+            fillers = o.optJSONArray("fillers")?.let { a -> (0 until a.length()).map { a.optString(it) } }.orEmpty(),
         )
     }
+
+    /**
+     * Something short to play when a programme ends before the schedule moves on (the owner, 2026-10-07:
+     * never a still picture or dead air): the channel's fillers (or its ads), taking turns by the minute,
+     * the first one that fits in [leftMs] and isn't [skip] (the one just played); the shortest when none fits,
+     * cut off when the schedule moves on. Null when the channel has none. Same as fillerFor in schedule.js.
+     */
+    fun filler(c: Config, leftMs: Long, nowMs: Long, skip: String? = null): Video? {
+        val byId = c.videos.associateBy { it.id }
+        val pool = (c.fillers.mapNotNull { byId[it] }.ifEmpty { c.videos.filter { it.kind == "ad" } })
+            .filter { it.seconds in 1..660 && it.youtube == null }
+            .distinctBy { it.url }
+        if (pool.isEmpty()) return null
+        val start = Math.floorMod(nowMs / 60_000, pool.size.toLong()).toInt()
+        val turn = pool.drop(start) + pool.take(start)
+        return turn.firstOrNull { it.seconds * 1000 <= leftMs && it.url != skip }
+            ?: turn.filter { it.url != skip }.minByOrNull { it.seconds }
+            ?: turn.first()
+    }
+
+    fun filler(channel: Channel?, leftMs: Long, nowMs: Long, skip: String? = null): Video? =
+        configOf(channel)?.let { filler(it, leftMs, nowMs, skip) }
 
     /** What [channel]'s current settings put on air at [nowMs]; off air when the channel is off. */
     fun now(channel: Channel?, nowMs: Long = System.currentTimeMillis()): Now =
         configOf(channel)?.let { whatsOn(it, nowMs) } ?: Now.OffAir(null, null)
 
     private class Start(val at: Long, val video: Video, val dated: Boolean, val show: String = "")
+
+    /**
+     * A card over the picture (owner, 2026-10-07): every 10 minutes what's coming next, and every
+     * 20 minutes today's shows first. It comes up with the first ad or ident of each 10 minutes, so
+     * it rides on the breaks, or 8 minutes in when there's no break. Worked out from the clock, so
+     * every viewer sees it at the same moment. Same as cardAt in docs/channel/schedule.js.
+     */
+    class Card(val today: Boolean, val untilMs: Long)
+
+    const val CARD_WINDOW_MS = 10 * 60_000L
+    const val TODAY_CARD_MS = 20_000L
+    const val NEXT_CARD_MS = 12_000L
+    private val cardStarts = object : LinkedHashMap<String, Long>() {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Long>?) = size > 8
+    }
+
+    fun cardAt(c: Config, nowMs: Long): Card? {
+        val window = nowMs - Math.floorMod(nowMs, CARD_WINDOW_MS)
+        val key = "${System.identityHashCode(c)}|$window"
+        val at = synchronized(cardStarts) { cardStarts.getOrPut(key) { firstBreak(c, window, window + 8 * 60_000L) ?: (window + 8 * 60_000L) } }
+        val today = (window / CARD_WINDOW_MS) % 2 == 0L
+        val todayEnd = if (today) at + TODAY_CARD_MS else at
+        return when {
+            nowMs < at -> null
+            nowMs < todayEnd -> Card(true, todayEnd)
+            nowMs < todayEnd + NEXT_CARD_MS -> Card(false, todayEnd + NEXT_CARD_MS)
+            else -> null
+        }
+    }
+
+    /** When the first ad or ident between [from] and [to] starts (or [from], if one is already on); null when none. */
+    private fun firstBreak(c: Config, from: Long, to: Long): Long? {
+        var t = from
+        repeat(60) {
+            if (t >= to) return null
+            when (val now = whatsOn(c, t)) {
+                is Now.Playing -> {
+                    if (now.video.isBreak) return t
+                    if (now.untilMs == Long.MAX_VALUE) return null
+                    t = maxOf(now.untilMs, t + 1000)
+                }
+                is Now.OffAir -> t = now.nextAt ?: return null
+            }
+        }
+        return null
+    }
+
+    private fun dayKey(ms: Long, tz: TimeZone) = Calendar.getInstance(tz).run { timeInMillis = ms; get(Calendar.YEAR) * 1000 + get(Calendar.DAY_OF_YEAR) }
+
+    /** A programme in the guide: [title] (the show's name when it has one) starting at [at]. */
+    class Upcoming(val at: Long, val title: String, val booked: Boolean = false, val more: Int = 0)
+
+    /** The next [count] programmes after [nowMs] (ads and idents left out). */
+    fun upNext(c: Config, nowMs: Long, count: Int = 2): List<Upcoming> {
+        val out = mutableListOf<Upcoming>()
+        var t = nowMs
+        var guard = 0
+        while (out.size < count && guard++ < 120 && t < nowMs + 24 * 3600_000L) {
+            when (val now = whatsOn(c, t)) {
+                is Now.Playing -> {
+                    val start = t - now.offsetMs
+                    if (start > nowMs && !now.video.isBreak && out.lastOrNull()?.at != start) {
+                        out += Upcoming(start, now.show.ifEmpty { now.video.title }, now.loopIndex < 0)
+                    }
+                    if (now.untilMs == Long.MAX_VALUE) break
+                    t = maxOf(now.untilMs, t + 1000)
+                }
+                is Now.OffAir -> t = now.nextAt ?: break
+            }
+        }
+        return out
+    }
+
+    /**
+     * Today's booked shows (time slots) from the one on now, in the channel's day; a show booked
+     * many times today (the hourly news) shows once, at its next time, with how many more follow.
+     * When nothing is booked today, the next programmes instead.
+     */
+    fun todaysShows(c: Config, nowMs: Long, max: Int = 7): List<Upcoming> {
+        val byId = c.videos.associateBy { it.id }
+        val tz = TimeZone.getTimeZone(c.timeZone)
+        val starts = slotsOn(c, byId, tz, nowMs, 0)
+            .sortedWith(compareBy<Start>({ it.at }, { !it.dated })).distinctBy { it.at }
+        if (starts.isEmpty()) return upNext(c, nowMs, max)
+        val title = { s: Start -> s.show.ifEmpty { s.video.title } }
+        // From the slot on now (it began before now and is still playing).
+        val fromIndex = starts.indexOfLast { it.at <= nowMs }.let { i ->
+            if (i >= 0 && starts[i].at + starts[i].video.seconds * 1000 > nowMs) i else i + 1
+        }.coerceAtLeast(0)
+        val left = starts.drop(fromIndex)
+        val counts = left.groupingBy(title).eachCount()
+        val out = left.distinctBy(title).take(max).map { Upcoming(it.at, title(it), true, (counts[title(it)] ?: 1) - 1) }.toMutableList()
+        // Late in the day with few shows left, the next programmes fill it up.
+        if (out.size < 3) {
+            val today = dayKey(nowMs, tz)
+            for (u in upNext(c, nowMs, 4)) {
+                if (out.size >= 3) break
+                if (out.none { it.title == u.title } && dayKey(u.at, tz) == today) out += u
+            }
+        }
+        return out.sortedBy { it.at }
+    }
 
     /**
      * What [c] plays at [nowMs]. A slot plays its video from its start time to the end of the
@@ -366,7 +524,7 @@ object MyChannel {
      * trailers ("trailers", tools/build_trailers.py), popular music videos ("music", tools/build_music_videos.py)
      * and its other programme blocks: dramas, cartoons, cooking and more ("list", tools/build_bazaar_blocks.py).
      */
-    private val LIST_KINDS = setOf("trailers", "music", "list")
+    private val LIST_KINDS = setOf("trailers", "music", "list", "ads")
 
     /**
      * [o] (a schedule as saved) with each list entry replaced by the videos in its list, as [fetch]
@@ -387,8 +545,26 @@ object MyChannel {
                 newVideos.put(v)
                 continue
             }
-            val list = runCatching { fetch(v.optString("url")) }.getOrNull()?.optJSONArray("videos")
+            val fetched = runCatching { fetch(v.optString("url")) }.getOrNull()
             val parts = mutableListOf<String>()
+            if (v.optString("kind") == "ads") {
+                // Bazaar Ads: our promos or the sponsors' ads, our own videos ([src] beside the list or a full link), 5 to 60 s each.
+                val ads = fetched?.optJSONArray("ads") ?: fetched?.optJSONArray("promos")
+                val base = runCatching { java.net.URI(v.optString("url")) }.getOrNull()
+                for (j in 0 until (ads?.length() ?: 0)) {
+                    val item = ads!!.optJSONObject(j) ?: continue
+                    val src = item.optString("src").trim().takeIf { it.isNotEmpty() } ?: continue
+                    val secs = Math.round(item.optDouble("secs", 0.0)).coerceAtMost(60).takeIf { it >= 5 } ?: continue
+                    val url = runCatching { base?.resolve(src)?.toString() }.getOrNull() ?: continue
+                    val id = "${v.optString("id")}-$j"
+                    newVideos.put(JSONObject().put("id", id).put("title", item.optString("title").ifBlank { v.optString("title").ifBlank { "Ad" } })
+                        .put("url", url).put("secs", secs).put("kind", "ad"))
+                    parts += id
+                }
+                ids[v.optString("id")] = parts
+                continue
+            }
+            val list = fetched?.optJSONArray("videos")
             for (j in 0 until (list?.length() ?: 0)) {
                 val item = list!!.optJSONObject(j) ?: continue
                 val yt = item.optString("id").takeIf { Regex("[A-Za-z0-9_-]{11}").matches(it) } ?: continue

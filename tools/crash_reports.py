@@ -46,7 +46,7 @@ def main():
     print(f"{len(docs)} crash reports, {len(groups)} different problems")
     newest = lambda items: max(i.get("time") or "" for i in items)
     for (app, version, error), items in sorted(groups.items(), key=lambda kv: newest(kv[1]), reverse=True):
-        devices = sorted({f"{i.get('device')} / Android {i.get('android')}" for i in items})
+        devices = sorted({f"{i.get('device')} / {'Android ' if str(i.get('android', '')).replace('.', '').isdigit() else ''}{i.get('android')}" for i in items})
         on_start = sum(1 for i in items if i.get("onStart"))
         print(f"\n{app} {version}: {len(items)}x (on start {on_start}), last {newest(items)}\n  {error}\n  devices: {'; '.join(devices)}")
         if "--stacks" in sys.argv:

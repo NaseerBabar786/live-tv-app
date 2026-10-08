@@ -166,6 +166,16 @@ internal fun CarouselMode(
             fade.animateTo(1f, tween(300))
         }
     }
+    // Holding OK, or a long press on the middle card: adds the channel to Favorites (or takes it off).
+    fun toggleFavorite(channel: Channel) {
+        val adding = channel.id !in favorites
+        onToggleFavorite(channel)
+        Toast.makeText(
+            context,
+            if (adding) "${channel.name} added to Favorites" else "${channel.name} removed from Favorites",
+            Toast.LENGTH_SHORT,
+        ).show()
+    }
 
     // The middle channel plays live, with sound, once the cursor rests on it.
     val stream = remember { StreamPlayer(context, preview = true) }
@@ -297,15 +307,7 @@ internal fun CarouselMode(
                         if (e.type == KeyEventType.KeyDown) {
                             if (e.nativeKeyEvent.repeatCount >= 6 && !held) {
                                 held = true
-                                current?.let { channel ->
-                                    val adding = channel.id !in favorites
-                                    onToggleFavorite(channel)
-                                    Toast.makeText(
-                                        context,
-                                        if (adding) "${channel.name} added to Favorites" else "${channel.name} removed from Favorites",
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                                }
+                                current?.let { toggleFavorite(it) }
                             }
                         } else if (e.type == KeyEventType.KeyUp) {
                             if (!held) current?.let(onOpen)
@@ -319,6 +321,16 @@ internal fun CarouselMode(
                     e.key == Key.DirectionUp || e.key == Key.ChannelUp -> { changeGroup(-1); true }
                     e.key == Key.DirectionDown || e.key == Key.ChannelDown -> { changeGroup(1); true }
                     else -> false
+                }
+            }
+            // Swipes, like scrolling: left brings the next channel, right the previous one;
+            // up brings the next group, down the previous one.
+            .swipe { dir ->
+                when (dir) {
+                    Swipe.Left -> step(1)
+                    Swipe.Right -> step(-1)
+                    Swipe.Up -> changeGroup(1)
+                    Swipe.Down -> changeGroup(-1)
                 }
             }
             .focusable(),
@@ -367,7 +379,11 @@ internal fun CarouselMode(
                         .background(Brush.linearGradient(listOf(palette.surfaceVariant, palette.surface))),
                     contentAlignment = Alignment.Center,
                 ) {
-                    if (channel.logo != null) {
+                    // The playing card shows a loading circle while it starts, not its logo (owner, 2026-10-07).
+                    val starting = middle && playingId == channel.id
+                    if (starting) {
+                        // drawn over the still picture below
+                    } else if (channel.logo != null) {
                         SubcomposeAsyncImage(
                             model = channel.logo,
                             contentDescription = null,
@@ -382,6 +398,7 @@ internal fun CarouselMode(
                     browsePictures[channel.id]?.let {
                         Image(it, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
                     }
+                    if (starting && (page != null || !showing)) LoadingSpinner()
                     if (!middle && grabId == channel.id) {
                         AndroidView(
                             factory = { ctx -> TextureView(ctx).also { grabView.view = it; grabber.player.setVideoTextureView(it) } },
@@ -394,7 +411,7 @@ internal fun CarouselMode(
                     }
                     if (middle && playingId == channel.id && page != null) {
                         key(page) {
-                            WebPreview(page, Modifier.fillMaxSize(), onFallback = {
+                            WebPreview(page, Modifier.fillMaxSize(), still = false, onFallback = {
                                 if (MyChannel.webPage(channel) != null) pageFailed = true
                             })
                         }
@@ -411,6 +428,17 @@ internal fun CarouselMode(
                                 .graphicsLayer { alpha = if (showing) 1f else 0f },
                         )
                     }
+                    // A tap on the middle card: full screen (held: Favorites); on a side card: slides to it.
+                    // Over the picture, so the web pages don't take the tap.
+                    Box(
+                        Modifier.matchParentSize().then(
+                            if (middle) {
+                                Modifier.tap(onLongPress = { toggleFavorite(channel) }) { onOpen(channel) }
+                            } else {
+                                Modifier.tap { step(k) }
+                            },
+                        ),
+                    )
                     if (middle && channel.id in favorites) {
                         Icon(
                             Icons.Filled.Star,
@@ -459,7 +487,13 @@ internal fun CarouselMode(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (groups.size > 1) {
-                    Text("▲ ${groups[Math.floorMod(groupAt - 1, groups.size)].title}", color = palette.onSurfaceVariant, fontSize = 13.sp, maxLines = 1)
+                    Text(
+                        "▲ ${groups[Math.floorMod(groupAt - 1, groups.size)].title}",
+                        color = palette.onSurfaceVariant,
+                        fontSize = 13.sp,
+                        maxLines = 1,
+                        modifier = Modifier.tap { changeGroup(-1) },
+                    )
                 }
                 Text(
                     "${group.title}  ${at + 1} / ${list.size}",
@@ -473,7 +507,13 @@ internal fun CarouselMode(
                         .padding(horizontal = 16.dp, vertical = 5.dp),
                 )
                 if (groups.size > 1) {
-                    Text("▼ ${groups[Math.floorMod(groupAt + 1, groups.size)].title}", color = palette.onSurfaceVariant, fontSize = 13.sp, maxLines = 1)
+                    Text(
+                        "▼ ${groups[Math.floorMod(groupAt + 1, groups.size)].title}",
+                        color = palette.onSurfaceVariant,
+                        fontSize = 13.sp,
+                        maxLines = 1,
+                        modifier = Modifier.tap { changeGroup(1) },
+                    )
                 }
                 Text("Hold OK: Favorites", color = palette.onSurfaceVariant.copy(alpha = 0.7f), fontSize = 12.sp, maxLines = 1)
             }

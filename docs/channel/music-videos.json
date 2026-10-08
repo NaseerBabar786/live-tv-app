@@ -1,61 +1,60 @@
 {
- "name": "Popular music videos",
- "built": "2026-10-07 00:04 UTC",
- "secs": 3233,
+ "name": "مقبول گانے",
+ "built": "2026-10-08 00:20 UTC",
+ "secs": 2857,
  "videos": [
   {
-   "id": "1l7wbZmdtys",
-   "title": "Bruno Mars - Dance With Me [Official Music Video]",
-   "label": "Bruno Mars",
-   "lang": "English",
-   "secs": 220,
+   "id": "2mHIX2Px24A",
+   "title": "MESS (Official Video): Arinar Black | Aditya Prakash | T-Series",
+   "label": "T-Series",
+   "lang": "Hindi",
+   "secs": 187,
    "found": "2026-10-07",
    "kind": "music",
-   "section": "Popular English music"
+   "section": "مقبول ہندی گانے"
   },
   {
-   "id": "mw3kSNIxjqo",
-   "title": "Taylor Swift - Patient Zero (Official Music Video)",
-   "label": "Taylor Swift",
-   "lang": "English",
-   "secs": 313,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "yAUedzRJMpw",
-   "title": "Charlie Puth - Sideways (feat. Coco Jones) [Official Video]",
-   "label": "Charlie Puth",
-   "lang": "English",
-   "secs": 235,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "XwCWKSO0F8s",
-   "title": "Taylor Swift - I Knew It, I Knew You (Piano Version) (Official Music Video)",
-   "label": "Taylor Swift",
-   "lang": "English",
-   "secs": 196,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "ylwSKPnFb_8",
-   "title": "Chehra - Official Music Video | Mitta Ror ft. Swara Verma",
+   "id": "Bgj-oDQcxac",
+   "title": "Slap Song - Full Video | I'm Game (Hindi) | Dulquer Salmaan & Kayadu | Jakes Bejoy, Bilal Q, Numan K",
    "label": "Zee Music",
    "lang": "Hindi",
    "secs": 227,
    "found": "2026-10-07",
-   "kind": "music",
-   "section": "Popular Hindi music"
+   "kind": "music"
   },
   {
-   "id": "-WlM9FPV8Bs",
-   "title": "Gud Naal Ishq Mitha 8K Video Song | I Love New Year | Sunny Deol | Kangana Ranaut",
+   "id": "DviUJZYuwiQ",
+   "title": "Navrai Majhi - 8K/4K Music Video | Sridevi | Sunidhi Chauhan, Swanand Kirkire | English Vinglish",
+   "label": "Sony Music India",
+   "lang": "Hindi",
+   "secs": 141,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "vrOCv5SOTrU",
+   "title": "Jaadugari | AMAN | Official Music Video | Raah Records | New Release",
+   "label": "YRF",
+   "lang": "Hindi",
+   "secs": 185,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "7V-6AUGBgBY",
+   "title": "Achha Sila Diya 8K Video Song | Jaani,B Praak | Nora F,Rajkummar R | Nikhil-Vinay,Yogesh |Bhushan K",
    "label": "T-Series",
    "lang": "Hindi",
-   "secs": 148,
+   "secs": 319,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "f0gp7_H-5nE",
+   "title": "Main Udega - Official Song | Amit Trivedi | Junaid Ahmed | Sidhant Mago",
+   "label": "Zee Music",
+   "lang": "Hindi",
+   "secs": 215,
    "found": "2026-10-07",
    "kind": "music"
   },
@@ -69,11 +68,11 @@
    "kind": "music"
   },
   {
-   "id": "26hCKVkUlF8",
-   "title": "Raat Ka Surma (Official Music Video) | Mika Singh | Afsana Khan | Dot Music | R. D. Burman",
-   "label": "Saregama",
+   "id": "q5HK8lXE_aE",
+   "title": "Massacre Song | Music Video | ALPHA | Alia Bhatt, Sharvari | Rohansh & Abeer, Shilpa, Jonita, Kausar",
+   "label": "YRF",
    "lang": "Hindi",
-   "secs": 193,
+   "secs": 175,
    "found": "2026-10-07",
    "kind": "music"
   },
@@ -85,7 +84,7 @@
    "secs": 249,
    "found": "2026-10-07",
    "kind": "music",
-   "section": "Popular Urdu music"
+   "section": "مقبول اردو گانے"
   },
   {
    "id": "WRcIwPwlxbw",
@@ -106,48 +105,29 @@
    "kind": "music"
   },
   {
+   "id": "8Ix-ekSoEdY",
+   "title": "Rangeen | Coke Studio Nu.WAV | Hasan Raheem x Izzchughtai x Umair",
+   "label": "Coke Studio Pakistan",
+   "lang": "Urdu",
+   "secs": 235,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
+   "id": "e-1zjovjWiA",
+   "title": "Dil | Coke Studio Nu.WAV | Afusic x Zoha Waseem x Ali Soomro",
+   "label": "Coke Studio Pakistan",
+   "lang": "Urdu",
+   "secs": 189,
+   "found": "2026-10-07",
+   "kind": "music"
+  },
+  {
    "id": "4o5508kTdT8",
    "title": "Coke Studio Nu.WAV",
    "label": "Coke Studio Pakistan",
    "lang": "Urdu",
    "secs": 149,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "4SltcOfhauo",
-   "title": "Hazaaran Jailaan (Official Video) | Gurnam Bhullar | Isha Malviya | Romantic Punjabi Song 2026",
-   "label": "Speed Records",
-   "lang": "Punjabi",
-   "secs": 104,
-   "found": "2026-10-07",
-   "kind": "music",
-   "section": "Popular Punjabi music"
-  },
-  {
-   "id": "eI_s34ktN8A",
-   "title": "Zora Zori (Official Video) Honey Dhillon | Sandeep Aulakh | New Punjabi Song 2026 #newsong",
-   "label": "White Hill Music",
-   "lang": "Punjabi",
-   "secs": 217,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "s89tjDD4YIs",
-   "title": "DEEWANE: ARJUN SAHOTA (Full Video) Gagan Dhillon | Satti Dhillon | Latest Punjabi Songs 2026",
-   "label": "Geet MP3",
-   "lang": "Punjabi",
-   "secs": 196,
-   "found": "2026-10-07",
-   "kind": "music"
-  },
-  {
-   "id": "jL57dghpf50",
-   "title": "Diljit Dosanjh : Devil (Official Video) Intense : Hizzy : I'm an Artist Bro",
-   "label": "Diljit Dosanjh",
-   "lang": "Punjabi",
-   "secs": 200,
    "found": "2026-10-07",
    "kind": "music"
   }

@@ -1,7 +1,451 @@
 {
  "name": "Bazaar Hits",
- "built": "2026-10-06 18:38 UTC",
+ "built": "2026-10-08 00:20 UTC",
  "songs": [
+  {
+   "id": "2mHIX2Px24A",
+   "title": "MESS (Official Video): Arinar Black | Aditya Prakash | T-Series",
+   "label": "T-Series",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "SS3lIQdKP-A",
+   "title": "Full Video: Masakali | Delhi 6 | Abhishek Bachchan, Sonam Kapoor | A.R. Rahman |  Mohit Chauhan",
+   "label": "T-Series",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "NvBFzs6Z8fY",
+   "title": "Tu Hi Tu FULL VIDEO Song | Kick | Neeti Mohan | Salman Khan | Jacqueline Fernandez",
+   "label": "T-Series",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Fg_9gLeVV2E",
+   "title": "Daddy Mummy FULL VIDEO Song | Urvashi Rautela | Kunal Khemu | DSP | Bhaag Johnny | T-Series",
+   "label": "T-Series",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "LMnJp_dSdnw",
+   "title": "DARKHAAST Full Video Song |  SHIVAAY | Arijit Singh & Sunidhi Chauhan | Ajay Devgn | T-Series",
+   "label": "T-Series",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "e_vl5aFXB4Q",
+   "title": "Full Video: Akh Lad Jaave | Loveyatri | Aayush S|Warina H |Badshah, Tanishk Bagchi,Jubin N, ,Asees K",
+   "label": "T-Series",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "0nrvPVnTWlc",
+   "title": "Aayi Nai - 8K Video | Stree 2 | Shraddha Kapoor, Rajkummar, Sachin-Jigar, Pawan Singh, Simran, Divya",
+   "label": "Saregama",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "vjsnZHhI2Z0",
+   "title": "Koi Sehri Babu | Divya Agarwal | Shruti Rane | Official Music Video | Latest Songs 2022",
+   "label": "Saregama",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "g5WZLO8BAC8",
+   "title": "Tere Vaaste | Full Video | Zara Hatke Zara Bachke | Vicky, Sara, Varun J, Sachin-Jigar, Amitabh B",
+   "label": "Saregama",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "0uR45roIGA4",
+   "title": "Jab Saiyaan |Full Video| Gangubai Kathiawadi |Sanjay Leela Bhansali| Alia Bhatt |Shreya G|Shantanu M",
+   "label": "Saregama",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Bgj-oDQcxac",
+   "title": "Slap Song - Full Video | I'm Game (Hindi) | Dulquer Salmaan & Kayadu | Jakes Bejoy, Bilal Q, Numan K",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "tZlKWXZqDfA",
+   "title": "Tere Jism - Official Music Video | Sara Khan & Angad Hasija",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "PO6aRK62WYk",
+   "title": "Zindagi - Official Music Video | Jaey Gajera | Lav Poddar",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ey2rU8npQQ8",
+   "title": "Kangna Vilayati - Virgin Bhanupriya | Urvashi Rautela | Jyotica Tangri | Kumaar, Ramji Gulati",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "c4ZteOtHWQ0",
+   "title": "Raazi - Title Track | Full Video | Alia Bhatt | Arijit Singh | Shankar Ehsaan Loy | Gulzar",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "CbNw5F_XB4M",
+   "title": "Aao Na | Kuch Kuch Locha Hai | Sunny Leone | Arko | Ankit Tiwari |Shraddha Pandit | Jane do Na Paas",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "q5gGKGyQM9Y",
+   "title": "Jogi | Shaadi Mein Zaroor Aana | Rajkummar Rao,Kriti Kharbanda|Arko ft Aakanksha Sharma",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "A7KFnWmEkUI",
+   "title": "Hafiz Hafiz - Full Video | Laila Majnu | Avinash Tiwary & Tripti Dimri | Mohit Chauhan",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "XyZ0aXrpJIc",
+   "title": "Main Kaun Hoon - Secret Superstar | Zaira Wasim | Aamir Khan | Amit Trivedi | Kausar Munir | Meghna",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "nQ8FbHoAYPg",
+   "title": "Shivam Full Video Song | Baahubali 2 The Conclusion | Prabhas, Anushka Shetty,  Rana | S S Rajamouli",
+   "label": "Zee Music",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "DviUJZYuwiQ",
+   "title": "Navrai Majhi - 8K/4K Music Video | Sridevi | Sunidhi Chauhan, Swanand Kirkire | English Vinglish",
+   "label": "Sony Music India",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "VAJK04HOLd0",
+   "title": "Jee Karda - Official Video Song | Badlapur | Varun Dhawan & Yami Gautam | Sachin-Jigar",
+   "label": "Sony Music India",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "dUaCEs3HfdI",
+   "title": "Aastha Gill - Buzz feat Badshah | Priyank Sharma | Official Music Video",
+   "label": "Sony Music India",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "vCxVELoXIu0",
+   "title": "Aaj Zid - Song Video | Aksar 2 | Arijit Singh, Mithoon | Zareen Khan, Gautam Rode",
+   "label": "Tips",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "e7zOqGrF_WY",
+   "title": "Baarishen (Official Video) | Paras Arora, Aakriti Singh | Ankit Tiwari, Saurabh Singh |Romantic Song",
+   "label": "Tips",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "GeKqVO7FlV4",
+   "title": "Jaana Ve Full Song Video - Aksar 2 | Arijit Singh, Mithoon | Zareen Khan, Abhinav | Bollywood Song",
+   "label": "Tips",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "fT--5F9jW_I",
+   "title": "Shake That Booty - Video Song | Balwinder Singh Famous Ho Gaya | Mika Singh, Sunny Leone",
+   "label": "Tips",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "e8W2ByH9BCk",
+   "title": "Is Tarah Aashiqui Ka - (Official Video) Siddharth Gupta, Zaara Y | Dev Negi | Chirantann B | Manoj Y",
+   "label": "Tips",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "kTZW4eU3o7s",
+   "title": "Ishq Mein Full Song Video - No Entry | Fardeen Khan & Celina Jaitley | KK, Alisha Chinai & Anu Malik",
+   "label": "Tips",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "aQWMuqnAvnk",
+   "title": "Ek Bewafaa Hai - Video Song | Bewafaa | Akshay Kumar & Kareena Kapoor | Sonu Nigam",
+   "label": "Tips",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "9_BUZaTcozs",
+   "title": "Mashallah Song | Ek Tha Tiger | Salman Khan, Katrina Kaif, Shreya Ghoshal, Sajid-Wajid, Kausar Munir",
+   "label": "YRF",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "lZ2PhyBF3GQ",
+   "title": "Dil To Pagal Hai Song | Shah Rukh Khan, Madhuri, Karisma, Akshay | Lata Mangeshkar, Udit Narayan",
+   "label": "YRF",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "KHLNSxe5Y8A",
+   "title": "Coke Studio Season 8| Sammi Meri Waar| Umair Jaswal & Quratulain Balouch",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7D4vNcK6D38",
+   "title": "Coke Studio | Season 14 | Tu Jhoom | Naseebo Lal x Abida Parveen",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ZQMn5wIoAno",
+   "title": "Coke Studio Season 9| Tu Kuja Man Kuja| Shiraz Uppal & Rafaqat Ali Khan",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7rAeOw_9DcA",
+   "title": "Chal Chaliye | Coke Studio Pakistan | Season 15 | Sajjad Ali x Farheen Raza Jaffry",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "SCOKysMnH50",
+   "title": "Coke Studio Season 10| Latthay Di Chaadar| Quratulain Balouch & Farhan Saeed",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "8367ETnagHo",
+   "title": "Coke Studio Season 9| Tera Woh Pyar| Momina Mustehsan & Asim Azhar",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "tXDyixkgShI",
+   "title": "Note Muqabla (Official Video) | Goldy Desi Crew ft Gurlej Akhtar | Sara Gurpal | Latest Songs 2018",
+   "label": "Speed Records",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "17lcKZf0iNc",
+   "title": "Careless (Official Video) Korala Maan | Desi Crew | Latest Punjabi Song 2022 | New Punjabi Song 2022",
+   "label": "Speed Records",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "gkXmwAovM-w",
+   "title": "Aa Zra (Official Video) | Maninder Kailey | Latest Punjabi Songs | New Punjabi Songs | Speed Records",
+   "label": "Speed Records",
+   "found": "2026-10-08"
+  },
+  {
+   "id": "mRB6Hsw5L0E",
+   "title": "Jhoomo (Lyrical Video) | Don't Be Shy | Saahel | Jonita Gandhi | Ram Sampath | Devansh Vaidya",
+   "label": "T-Series",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "7V-6AUGBgBY",
+   "title": "Achha Sila Diya 8K Video Song | Jaani,B Praak | Nora F,Rajkummar R | Nikhil-Vinay,Yogesh |Bhushan K",
+   "label": "T-Series",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "eDf4eomXTao",
+   "title": "Wafa Na Raas Aayee 8K Video Song | Jubin Nautiyal | Himansh K, Arushi N, Meet Bros | Rashmi V",
+   "label": "T-Series",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "gwqenR0crHo",
+   "title": "ROCK THA PARTY Full Video Song | ROCKY HANDSOME | John Abraham, Nora Fatehi | BOMBAY ROCKERS",
+   "label": "T-Series",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "5CLPMHB3l3M",
+   "title": "Nakhre | Tum Mere Ho | Gurmeet Choudhary | Isha Malviya | Sanju Rathod | 23rd Oct 2026",
+   "label": "Saregama",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "hxMNYkLN7tI",
+   "title": "Aaj Ki Raat - Full Song | Stree 2| Tamannaah Bhatia, Rajkummar Rao, Sachin-Jigar, Madhubanti,Divya K",
+   "label": "Saregama",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "f0gp7_H-5nE",
+   "title": "Main Udega - Official Song | Amit Trivedi | Junaid Ahmed | Sidhant Mago",
+   "label": "Zee Music",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "BDcTLQJbbTU",
+   "title": "Uyi Amma - 8K Video | Rasha Thadani & Aaman Dev | Madhubanti Bagchi & Amit Trivedi | Azaad | Bosco",
+   "label": "Zee Music",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "yt4-qlU__iM",
+   "title": "Chandigarh Mein | Good Newwz | Akshay Kumar, Kareena, Diljit, Kiara| Badshah, Harrdy, Asees, Tanishk",
+   "label": "Zee Music",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ziTHTlmPdhQ",
+   "title": "Jeena Jeena - Video Song | Sachin-Jigar | Badlapur",
+   "label": "Sony Music India",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Uq1M-OzFiMY",
+   "title": "Raaton Mein Aana - Lyrical | Vibe | Kunal Kemmu | Vanshika Dhir | Amit Trivedi | Hindi Song New",
+   "label": "Tips",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ox2Mtg7QzSw",
+   "title": "Yeh Dil Aashiqana - Video Song | Yeh Dil Aashiqana | Karan Nath & Jividha | Kumar Sanu & Alka Yagnik",
+   "label": "Tips",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "kQBtlb9gl5s",
+   "title": "Jashn-e-Ishqa | Full Song | Gunday | Ranveer | Arjun Kapoor | Priyanka | Javed Ali | Shadab Faridi",
+   "label": "YRF",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "smn3mDBOUy4",
+   "title": "Jiya Re Song | Jab Tak Hai Jaan | Shah Rukh Khan, Anushka Sharma | A R Rahman | Gulzar | Neeti Mohan",
+   "label": "YRF",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "2I3NgxDAiqE",
+   "title": "Tune Maari Entriyaan | Full Song | Gunday | Priyanka Chopra, Ranveer Singh, Arjun Kapoor, Sohail Sen",
+   "label": "YRF",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "cOzW3fnIQ5M",
+   "title": "Red Eyes (8K Video) | Karan Aujla | Gurlej Akhtar | Punjabi Songs 2026 | Latest Punjabi Songs 2026",
+   "label": "Speed Records",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "_BgrJ4k5FtE",
+   "title": "Kadar (Official Video) | Mankirt Aulakh | Desi Routz | Sukh Sanghera | Superhit Punjabi Song",
+   "label": "Speed Records",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "jTO8G202Giw",
+   "title": "Jassi Gill | True Talk (Official Video) | Sukh E | Karan Aujla | New Song 2018",
+   "label": "Speed Records",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "nDOpAEW2q2w",
+   "title": "Arijit Singh - Pal | Official Video | Nawazuddin Siddiqui | Monsoon Shootout | Rochak Kohli",
+   "label": "Saregama",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "VhRwuWp4MQ8",
+   "title": "Jeene Laga Hoon Song Video | Ramaiya Vastavaiya | Girish Kumar & Shruti Haasan | Atif & Shreya",
+   "label": "Tips",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "AlvUuGJccKs",
+   "title": "Tere Liye - Lyrical - Prince | Vivek Oberoi | Atif Aslam, Shreya Ghoshal | Sachin Gupta |Dance Songs",
+   "label": "Tips",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "OGGHKpV01cs",
+   "title": "OSCAR - Video Song | Kaptaan | Gippy Grewal feat. Badshah | Jaani, B Praak",
+   "label": "Tips",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "1sZDVp4RHrE",
+   "title": "Aaj Zid Full Video - Aksar 2 | Arijit Singh, Mithoon | Zareen Khan, Gautam Rode",
+   "label": "Tips",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "PGm6aw5BkyE",
+   "title": "Seeti Te Seeti - Official Video Song | Kamaljit Neeru | Indipop Song | Charanjit Ahuja",
+   "label": "Tips",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "-UgrS_B53Yc",
+   "title": "Ek Dilruba Hai | Bewafaa | Akshay Kumar, Kareena Kapoor | Udit Narayan |Mera Dil Jis Dil Pe Fida Hai",
+   "label": "Tips",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "_rRHFeqGjvk",
+   "title": "Phool Maangu Na Bahaar Maangu - Video Song | Raja | Madhuri Dixit & Sanjay Kapoor",
+   "label": "Tips",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "kzTWRX9Dhrg",
+   "title": "Chalte Chalte | Full Song | Mohabbatein | Shah Rukh Khan, Uday Chopra, Jugal Hansraj, Jimmy Shergill",
+   "label": "YRF",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "cUmUOb7j3dc",
+   "title": "Dhun Song | Saiyaara | Ahaan Panday, Aneet Padda | Mithoon | Arijit Singh",
+   "label": "YRF",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "A5pSnIwbpaM",
+   "title": "Saiyaara Full Song | Ek Tha Tiger | Salman Khan, Katrina Kaif | Mohit Chauhan, Tarannum, Sohail Sen",
+   "label": "YRF",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "HoCwa6gnmM0",
+   "title": "Nashe Si Chadh Gayi | Full Song | Befikre, Ranveer Singh, Vaani Kapoor, Arijit Singh, Vishal-Shekhar",
+   "label": "YRF",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "3pPUJE76V1s",
+   "title": "Coke Studio Season 9| Tu Hi Tu| Mehwish Hayat & Shiraz Uppal",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "BdBEEU4uPa4",
+   "title": "Attt Karti (Full Song) | Jassi Gill | Desi Crew | Latest Punjabi Songs 2016 | Speed Records",
+   "label": "Speed Records",
+   "found": "2026-10-07"
+  },
+  {
+   "id": "RBvbgqw--kE",
+   "title": "Silver Box (Official Video) Jigar Ft Gurlez Akhtar | Latest Punjabi Song 2022| New Punjabi Song 2022",
+   "label": "Speed Records",
+   "found": "2026-10-07"
+  },
   {
    "id": "8nADC2z5JKE",
    "title": "Tum Ho Wahi (Song) | Don't Be Shy | Armaan Malik, Shreya Karmakar | Ram Sampath | Munna Dhiman",
@@ -117,18 +561,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "gmcbekfFYxw",
-   "title": "NOOR-E-JAHAN (Official Visualizer): Pathak | Prod. by ABS | New Hindi Song | T-Series",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "NzXkwhZJe78",
-   "title": "Main Na Raha Mera (Lyrical): Adhyayan Suman | Divita Rai | Arijit Singh | Rahul Nair",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
    "id": "1dVqLG88cMU",
    "title": "AADAT 8K Full Video: YO YO HONEY SINGH | AP DHILLON | VAANI KAPOOR | 51 GLORIOUS DAYS | BHUSHAN K",
    "label": "T-Series",
@@ -137,6 +569,12 @@
   {
    "id": "eTl-FnVvGu0",
    "title": "Vaaste 8K Video Song: Dhvani B, Siddharth G | Tanishk B,Nikhil D'Souza| Bhushan K| Radhika R,Vinay S",
+   "label": "T-Series",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ibwcsrdrUt8",
+   "title": "Kusu Kusu 8K Video Song | Nora Fatehi | Satyameva Jayate 2 | John A, Divya K | Tanishk, Zahrah, Dev",
    "label": "T-Series",
    "found": "2026-10-06"
   },
@@ -153,74 +591,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "ibwcsrdrUt8",
-   "title": "Kusu Kusu 8K Video Song | Nora Fatehi | Satyameva Jayate 2 | John A, Divya K | Tanishk, Zahrah, Dev",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
    "id": "mwFGCLIJJ7k",
    "title": "KGF: Gali Gali 8K Video Song | Neha Kakkar | Mouni Roy | Tanishk Bagchi | Rashmi Virag | T-Series",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Hievfejv90c",
-   "title": "\"Dil Tu Hi Bataa Krrish 3\" Full Video Song | Hrithik Roshan, Kangana Ranaut | Zubeen Garg",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "COUSCnFazzc",
-   "title": "SAJAN RE (Official Music Video): NORA FATEHI | BADSHAH | SANJOY | BHUSHAN KUMAR",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "2_yF-McB55o",
-   "title": "Luka Chuppi: Duniyaa - 8K Full Video Song | Kartik Aaryan Kriti Sanon | Akhil | Dhvani B",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "XdKSX7Ff4tc",
-   "title": "Pyaar Manga Hai Tumhi Se (Official Video) | Pehla Pyaar Doosri Baar | Rochak K, Jubin N, Raj S",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "31IFZcn4Jew",
-   "title": "Akh Da Kasoor (Official Video): Aparshakti Khurana | Rochak Kohli | New Punjabi Song | Bhushan Kumar",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "uBaqgt5V0mU",
-   "title": "Official Video: Nikle Currant Song | Jassi Gill | Neha Kakkar | Sukh-E Muzical Doctorz | Jaani",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "uKHlnmepnNA",
-   "title": "Nayan Video Song | Dhvani B Jubin N | Lijo G Dj Chetas Manoj M Manhar U | Radhika Vinay |  Bhushan K",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "rKqXICP719A",
-   "title": "Daddy Mummy 8K Full Video Song | Urvashi Rautela | Kunal Kemmu | DSP | Bhaag Johnny | T-Series",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "JAXkwpamrgg",
-   "title": "YAAD HAI NA 8K Video Song | Raaz Reboot | Arijit Singh | Emraan Hashmi,Kriti Kharbanda,Gaurav Arora",
-   "label": "T-Series",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "cSOvELyZbYY",
-   "title": "Kabhi Kabhi Aditi 8K Video Song | Jaane Tu Ya Jaane Na | Imran Khan, Genelia Dsouza | A.R. Rahman",
    "label": "T-Series",
    "found": "2026-10-06"
   },
@@ -231,14 +603,14 @@
    "found": "2026-10-06"
   },
   {
-   "id": "QqlQQ98BNrA",
-   "title": "KICK: Devil - Yaar Naa Miley 8K Full Video Song | Salman Khan | Yo Yo Honey Singh | Jasmine Sandlas",
+   "id": "Hievfejv90c",
+   "title": "\"Dil Tu Hi Bataa Krrish 3\" Full Video Song | Hrithik Roshan, Kangana Ranaut | Zubeen Garg",
    "label": "T-Series",
    "found": "2026-10-06"
   },
   {
-   "id": "q_jFvF9pzzw",
-   "title": "Mere Humnava (Official Video): Jubin Nautiyal| The Rish| Rocky Khanna| Vartika Singh| Bhushan Kumar",
+   "id": "JAXkwpamrgg",
+   "title": "YAAD HAI NA 8K Video Song | Raaz Reboot | Arijit Singh | Emraan Hashmi,Kriti Kharbanda,Gaurav Arora",
    "label": "T-Series",
    "found": "2026-10-06"
   },
@@ -249,14 +621,56 @@
    "found": "2026-10-06"
   },
   {
-   "id": "CXxkOAE1gPw",
-   "title": "Kabhi Jo Baadal Barse - 8K Video Song | Arijit Singh | Sunny Leone | Sharib & Toshi | Jackpot",
+   "id": "COUSCnFazzc",
+   "title": "SAJAN RE (Official Music Video): NORA FATEHI | BADSHAH | SANJOY | BHUSHAN KUMAR",
+   "label": "T-Series",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "cSOvELyZbYY",
+   "title": "Kabhi Kabhi Aditi 8K Video Song | Jaane Tu Ya Jaane Na | Imran Khan, Genelia Dsouza | A.R. Rahman",
+   "label": "T-Series",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "rKqXICP719A",
+   "title": "Daddy Mummy 8K Full Video Song | Urvashi Rautela | Kunal Kemmu | DSP | Bhaag Johnny | T-Series",
+   "label": "T-Series",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "XdKSX7Ff4tc",
+   "title": "Pyaar Manga Hai Tumhi Se (Official Video) | Pehla Pyaar Doosri Baar | Rochak K, Jubin N, Raj S",
+   "label": "T-Series",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "uKHlnmepnNA",
+   "title": "Nayan Video Song | Dhvani B Jubin N | Lijo G Dj Chetas Manoj M Manhar U | Radhika Vinay |  Bhushan K",
+   "label": "T-Series",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "2_yF-McB55o",
+   "title": "Luka Chuppi: Duniyaa - 8K Full Video Song | Kartik Aaryan Kriti Sanon | Akhil | Dhvani B",
+   "label": "T-Series",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "QqlQQ98BNrA",
+   "title": "KICK: Devil - Yaar Naa Miley 8K Full Video Song | Salman Khan | Yo Yo Honey Singh | Jasmine Sandlas",
    "label": "T-Series",
    "found": "2026-10-06"
   },
   {
    "id": "MXJCnccDLA0",
    "title": "\"Sunny Sunny Yaariyan\" Full Video Song (Film Version) |Divya Khosla Kumar|Himansh Kohli, Rakul Preet",
+   "label": "T-Series",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "CXxkOAE1gPw",
+   "title": "Kabhi Jo Baadal Barse - 8K Video Song | Arijit Singh | Sunny Leone | Sharib & Toshi | Jackpot",
    "label": "T-Series",
    "found": "2026-10-06"
   },
@@ -411,26 +825,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "miwzEaiQ_bg",
-   "title": "Dilrooba | Arya Rajurkar | I-Popstar Hindi Vol.2 | EP 1 | Alright TV | Netflix",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "26hCKVkUlF8",
-   "title": "Raat Ka Surma (Official Music Video) | Mika Singh | Afsana Khan | Dot Music | R. D. Burman",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "LRALHGfE7yY",
-   "title": "Moh Maya | Saah Goswami | I-Popstar Hindi Vol.2 | EP 1 | Alright TV | Netflix",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ri1Ar5nEq4s",
-   "title": "Aaj Ki Raat - 8K Video | Stree 2 | Tamannaah Bhatia, Rajkummar Rao, Sachin-Jigar, Madhubanti B,Divya",
+   "id": "MxIEUzBJn8U",
+   "title": "Gehra Hua - 8K Video | Dhurandhar | Ranveer Singh, Sara A, Shashwat Sachdev, Arijit Singh, Irshad K",
    "label": "Saregama",
    "found": "2026-10-06"
   },
@@ -441,8 +837,14 @@
    "found": "2026-10-06"
   },
   {
-   "id": "MxIEUzBJn8U",
-   "title": "Gehra Hua - 8K Video | Dhurandhar | Ranveer Singh, Sara A, Shashwat Sachdev, Arijit Singh, Irshad K",
+   "id": "LK7-_dgAVQE",
+   "title": "Tauba Tauba | Bad Newz | Vicky Kaushal | Triptii Dimri | Karan Aujla",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "Jh_VKJAEnUY",
+   "title": "Gangubai Kathiawadi | Dholida | Sanjay Leela Bhansali | Alia Bhatt | Official Video | Ajay Devgn",
    "label": "Saregama",
    "found": "2026-10-06"
   },
@@ -453,32 +855,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "LK7-_dgAVQE",
-   "title": "Tauba Tauba | Bad Newz | Vicky Kaushal | Triptii Dimri | Karan Aujla",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "nWeax5joZFw",
-   "title": "Breathless (Official Music Video) | Shankar Mahadevan | Javed Akhtar",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ZQkUYmaVwgs",
-   "title": "Diljit Dosanjh: Love Ya (Official Music Video) | Mouni Roy",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "nFjVlf2r9_Q",
-   "title": "BADSHAH - Paani Paani (Official Video) | Jacqueline Fernandez | Official Music Video | Aastha Gill",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Jh_VKJAEnUY",
-   "title": "Gangubai Kathiawadi | Dholida | Sanjay Leela Bhansali | Alia Bhatt | Official Video | Ajay Devgn",
+   "id": "GX9x62kFsVU",
+   "title": "Gehra Hua | Dhurandhar | Ranveer Singh, Sara Arjun, Shashwat Sachdev, Arijit Singh, Irshad Kamil",
    "label": "Saregama",
    "found": "2026-10-06"
   },
@@ -495,32 +873,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "GX9x62kFsVU",
-   "title": "Gehra Hua | Dhurandhar | Ranveer Singh, Sara Arjun, Shashwat Sachdev, Arijit Singh, Irshad Kamil",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "yehE83hDQcA",
-   "title": "Tiger Shroff | I Am A Disco Dancer 2.0 | Benny Dayal |Salim Sulaiman | Bosco | Official Music Video",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "rqODKtPX5rk",
-   "title": "Nigaah (Official Music Video) | Pragati Nagpal | Showkidd | Diljan",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "c2jqN2xfO6A",
-   "title": "Kabhi Aar Kabhi Paar - Remix | Full Video Song | Sona Mahapatra | Majorooh",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "nsKEmZt8uxo",
-   "title": "Nasha Hi Nasha Hai | Aarti Chabria | Official Music Video | Sukhwinder Singh",
+   "id": "nFjVlf2r9_Q",
+   "title": "BADSHAH - Paani Paani (Official Video) | Jacqueline Fernandez | Official Music Video | Aastha Gill",
    "label": "Saregama",
    "found": "2026-10-06"
   },
@@ -531,20 +885,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "czgm5uaO3gI",
-   "title": "Lutt Le Gaya - Lyrical | Dhurandhar | Ranveer Singh, Akshaye Khanna, Shashwat Sachdev, Simran C",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "8qCVXCFREkQ",
-   "title": "Ishq Jalakar - Karvaan | Dhurandhar | Ranveer Singh, Shashwat Sachdev, Aditya Dhar",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "GVizJ_jpUnw",
-   "title": "Gehra Hua - Lyrical (Full Version) | Dhurandhar, Ranveer Singh, Sara A,Shashwat Sachdev,Arijit Singh",
+   "id": "nWeax5joZFw",
+   "title": "Breathless (Official Music Video) | Shankar Mahadevan | Javed Akhtar",
    "label": "Saregama",
    "found": "2026-10-06"
   },
@@ -555,8 +897,44 @@
    "found": "2026-10-06"
   },
   {
+   "id": "ZQkUYmaVwgs",
+   "title": "Diljit Dosanjh: Love Ya (Official Music Video) | Mouni Roy",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "8qCVXCFREkQ",
+   "title": "Ishq Jalakar - Karvaan | Dhurandhar | Ranveer Singh, Shashwat Sachdev, Aditya Dhar",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "czgm5uaO3gI",
+   "title": "Lutt Le Gaya - Lyrical | Dhurandhar | Ranveer Singh, Akshaye Khanna, Shashwat Sachdev, Simran C",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "c2jqN2xfO6A",
+   "title": "Kabhi Aar Kabhi Paar - Remix | Full Video Song | Sona Mahapatra | Majorooh",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
    "id": "aT4N7jn2Eww",
    "title": "Run Down The City - Monica | Dhurandhar | Ranveer, Sara, Shashwat, Reble, Asha Bhosle, R.D. Burman",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "26hCKVkUlF8",
+   "title": "Raat Ka Surma (Official Music Video) | Mika Singh | Afsana Khan | Dot Music | R. D. Burman",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "rqODKtPX5rk",
+   "title": "Nigaah (Official Music Video) | Pragati Nagpal | Showkidd | Diljan",
    "label": "Saregama",
    "found": "2026-10-06"
   },
@@ -567,26 +945,26 @@
    "found": "2026-10-06"
   },
   {
+   "id": "nsKEmZt8uxo",
+   "title": "Nasha Hi Nasha Hai | Aarti Chabria | Official Music Video | Sukhwinder Singh",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "yehE83hDQcA",
+   "title": "Tiger Shroff | I Am A Disco Dancer 2.0 | Benny Dayal |Salim Sulaiman | Bosco | Official Music Video",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "GVizJ_jpUnw",
+   "title": "Gehra Hua - Lyrical (Full Version) | Dhurandhar, Ranveer Singh, Sara A,Shashwat Sachdev,Arijit Singh",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
    "id": "FNrel_Utspk",
    "title": "Taki Taki Official Song Video | HIMMATWALA | Ajay Devgn | Tamannaah",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ldWFpeu36K0",
-   "title": "Meri Jaan | Full Video |Gangubai Kathiawadi|Sanjay Leela Bhansali| Alia Bhatt | Neeti Mohan|Shantanu",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "8mYeTuzBQr4",
-   "title": "Aaj Sajeya | Alaya F | Goldie Sohel | Punit Malhotra | Official Video |#SneakerSong | Dharma 2.0",
-   "label": "Saregama",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "xwUV6AMd5cM",
-   "title": "Main Hoon Punjab | Ishq Mitaye-Full Video | Amar Singh Chamkila | Diljit Dosanjh,A.R.Rahman, Mohit C",
    "label": "Saregama",
    "found": "2026-10-06"
   },
@@ -663,116 +1041,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "-K5WJ6eUXss",
-   "title": "Ladki Ke Daddy - Tera Yaar Hoon Main | Aman, Akanksha, Paresh R | Udit N, Aditya N, Anand Raaj Anand",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "W9mU_iKY0KI",
-   "title": "Thummak Thummak - THE VVAAN | Sidharth Malhotra & Tamannaah | Dev Negi, Akasa, Tanishk B, Shabbir A",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "323pQPstb3k",
-   "title": "Chand - Official Music Video | Rego B & Adrija Sinha | Salil Bhayani | Pankaj Dixit",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Ezsb5afVXQQ",
-   "title": "Ud-daa Punjab - Full Video | Udta Punjab | Vishal Dadlani & Amit Trivedi | Shahid Kapoor",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "_iktURk0X-A",
-   "title": "𝐏𝐡𝐢𝐫 𝐁𝐡𝐢 𝐓𝐮𝐦𝐤𝐨 𝐂𝐡𝐚𝐚𝐡𝐮𝐧𝐠𝐚💖 – 𝐅𝐮𝐥𝐥 𝐒𝐨𝐧𝐠 | Arijit Singh | Arjun Kapoor & Shraddha K | Mithoon | Manoj M",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "k4yXQkG2s1E",
-   "title": "𝐊𝐚𝐥𝐚 𝐂𝐡𝐚𝐬𝐡𝐦𝐚 🕶️ | Baar Baar Dekho | Sidharth M & Katrina Kaif | Badshah, Neha Kakkar, Prem & Hardeep",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "95I5VaR7GeU",
-   "title": "Laila Main Laila | Raees | Shah Rukh Khan | Sunny Leone | Pawni Pandey | Ram Sampath",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "jZyAB2KFDls",
-   "title": "Bang Bang Title Track Full Video | BANG BANG|Hrithik Roshan Katrina Kaif |Vishal Shekhar,Benny,Neeti",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ElZfdU54Cp8",
-   "title": "Apna Bana Le - Bhediya | Varun Dhawan, Kriti Sanon| Sachin-Jigar, Arijit Singh, Amitabh Bhattacharya",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "AvgFmr-ckpk",
-   "title": "Jitni Dafa - Lyrical | PARMANU | John Abraham & Diana Penty | Jeet Gannguli | RashmiVirag",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "PKIlSv9yMTY",
-   "title": "Tu Itni Khoobsurat Hai Full Video | Barkhaa | Sara Lorren | Amjad Nadeem",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "7y47GtGpOzU",
-   "title": "Adnan Sami - Ishq Tamasha | Official Music Video | New Song 2026",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "lpdRqn6xwiM",
-   "title": "Zaalima | Raees | Shah Rukh Khan | Arijit Singh & Harshdeep Kaur | JAM8 | Pritam",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "j6muwUGdvXw",
-   "title": "Ve Maahi | Kesari | Akshay Kumar & Parineeti Chopra | Arijit Singh & Asees Kaur | Tanishk Bagchi",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "5gwy0gcjIkI",
-   "title": "Tere Sang Yaara - Rustom | Akshay Kumar & Ileana D'cruz | Arko | Manoj Muntashir",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "snpV6awcBPo",
-   "title": "Manohari - Full Video | Baahubali - The Beginning | Prabhas & Rana | Divya Kumar | M M Kreem , Manoj",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "5IdGjLg6m5Q",
-   "title": "Da Da Dasse - Full Video | Udta Punjab | Kareena | Amit Trivedi, Kanika Kapoor, Babu Haabi, Shellee",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Grr0FlC8SQA",
-   "title": "Kalank Title Track - Lyrical | Alia Bhatt , Varun Dhawan | Arijit Singh | Pritam| Amitabh",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zuaLWHiRXkg",
-   "title": "Hook Up Song -  Student Of The Year 2 | Tiger Shroff & Alia Bhatt | Vishal & Shekhar | Neha Kakkar",
+   "id": "Mi3GdCyzHCY",
+   "title": "Jaha Tum Rahoge | Maheruh | Amit Dolawat & Drisha More | Altamash Faridi | Kalyan Bhardhan",
    "label": "Zee Music",
    "found": "2026-10-06"
   },
@@ -783,44 +1053,20 @@
    "found": "2026-10-06"
   },
   {
-   "id": "8WGJV2N08eQ",
-   "title": "Dhoonde Akhiyaan - Full Video | Jabariya Jodi | Sidharth Malhotra, Parineeti C | Yasser & Altamash",
+   "id": "Ezsb5afVXQQ",
+   "title": "Ud-daa Punjab - Full Video | Udta Punjab | Vishal Dadlani & Amit Trivedi | Shahid Kapoor",
    "label": "Zee Music",
    "found": "2026-10-06"
   },
   {
-   "id": "HexFqifusOk",
-   "title": "Jogi - Lyrical | Shaadi Mein Zaroor Aana | Rajkummar Rao, Kriti Kharbanda | Arko, Yasser, Aakanksha",
+   "id": "zUqcsv1_0es",
+   "title": "EK MULAQAT Official Video | Sonali Cable | Ali Fazal & Rhea Chakraborty | Jubin | Amjad Nadeem",
    "label": "Zee Music",
    "found": "2026-10-06"
   },
   {
-   "id": "ZWAGn4yyRMM",
-   "title": "Teri Meri Kahaani Hai Baarishon Ka Paani - Arijit Singh | Gabbar Is Back | Akshay Kumar & Kareena K",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "7OGSeZP0sc8",
-   "title": "Ishq De Fanniyar | Fukrey Returns | Pulkit Samrat & Priya Anand | Jyotica Tangri | Shaarib & Toshi",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Mi3GdCyzHCY",
-   "title": "Jaha Tum Rahoge | Maheruh | Amit Dolawat & Drisha More | Altamash Faridi | Kalyan Bhardhan",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "e8B0AzmXPV8",
-   "title": "First Class - Full Video | Kalank | Varun Dhawan, Alia Bhatt, Kiara | Arijit Singh, Neeti M, Pritam",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ZmcBC9-wAXM",
-   "title": "Qaafirana | Kedarnath | Sushant Rajput | Sara Ali Khan | Arijit Singh & Nikhita | Amit Trivedi",
+   "id": "AtUh3lJeac8",
+   "title": "Raftaar x Nora Fatehi - Baby Marvake Maanegi | Remo D'souza | Hot Dance Song",
    "label": "Zee Music",
    "found": "2026-10-06"
   },
@@ -831,8 +1077,68 @@
    "found": "2026-10-06"
   },
   {
-   "id": "tRScKDcYxlk",
-   "title": "Jaikal Mahakal - Full Video | Goodbye | Amitabh Bachchan, Rashmika Mandanna| Amit Trivedi, Swanand K",
+   "id": "jZyAB2KFDls",
+   "title": "Bang Bang Title Track Full Video | BANG BANG|Hrithik Roshan Katrina Kaif |Vishal Shekhar,Benny,Neeti",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "k4yXQkG2s1E",
+   "title": "𝐊𝐚𝐥𝐚 𝐂𝐡𝐚𝐬𝐡𝐦𝐚 🕶️ | Baar Baar Dekho | Sidharth M & Katrina Kaif | Badshah, Neha Kakkar, Prem & Hardeep",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "7y47GtGpOzU",
+   "title": "Adnan Sami - Ishq Tamasha | Official Music Video | New Song 2026",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "e8B0AzmXPV8",
+   "title": "First Class - Full Video | Kalank | Varun Dhawan, Alia Bhatt, Kiara | Arijit Singh, Neeti M, Pritam",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "zuaLWHiRXkg",
+   "title": "Hook Up Song -  Student Of The Year 2 | Tiger Shroff & Alia Bhatt | Vishal & Shekhar | Neha Kakkar",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "hFzv38RVjd8",
+   "title": "Move | Raftaar | Mr Nair | Saurabh Lokhande",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "73q3_tWbV4U",
+   "title": "Aahista - Full Video | Laila Majnu | Arijit Singh & Jonita Gandhi | Avinash Tiwary & Tripti Dimri",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ccw-bhwtLTw",
+   "title": "Yeh Fitoor Mera - Full Video | Fitoor | Aditya Roy Kapur, Katrina Kaif | Arijit Singh | Amit Trivedi",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "snpV6awcBPo",
+   "title": "Manohari - Full Video | Baahubali - The Beginning | Prabhas & Rana | Divya Kumar | M M Kreem , Manoj",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "j6muwUGdvXw",
+   "title": "Ve Maahi | Kesari | Akshay Kumar & Parineeti Chopra | Arijit Singh & Asees Kaur | Tanishk Bagchi",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "5IdGjLg6m5Q",
+   "title": "Da Da Dasse - Full Video | Udta Punjab | Kareena | Amit Trivedi, Kanika Kapoor, Babu Haabi, Shellee",
    "label": "Zee Music",
    "found": "2026-10-06"
   },
@@ -843,14 +1149,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "cyKZXbxx2lc",
-   "title": "Ikk Kudi - Full Video | Udta Punjab | Shahid Mallya | Alia Bhatt & Shahid Kapoor | Amit Trivedi",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "HFX6AZ5bDDo",
-   "title": "Namo Namo - Full Video | Kedarnath | Sushant Rajput | Sara Ali Khan | Amit Trivedi | Amitabh B",
+   "id": "95I5VaR7GeU",
+   "title": "Laila Main Laila | Raees | Shah Rukh Khan | Sunny Leone | Pawni Pandey | Ram Sampath",
    "label": "Zee Music",
    "found": "2026-10-06"
   },
@@ -999,12 +1299,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "DCbTWwpJUOU",
-   "title": "Laado | Lyrical Video | Awarapan 2 | Emraan, Disha |Jeet Gannguli, Jubin Nautiyal, Rashmi Virag",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
    "id": "O4GorB4N2Kg",
    "title": "Shake Karaan - 8K/4K Music Video | Nidhhi Agerwal | Meet Bros Ft. Kanika Kapoor | Munna Michael",
    "label": "Sony Music India",
@@ -1023,8 +1317,14 @@
    "found": "2026-10-06"
   },
   {
-   "id": "8wJHm69q4ss",
-   "title": "Alif Se - 8K/4K Music Video | Gurmeet, Emraan Hashmi, Nora Fatehi | Ankit Tiwari, Neeti M | Mr. X",
+   "id": "g0eO74UmRBs",
+   "title": "Kal Ho Naa Ho (Title Track) - Full Video | Shah Rukh Khan, Saif Ali Khan, Preity Zinta | Sonu Nigam",
+   "label": "Sony Music India",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "cgmhimjsczk",
+   "title": "Janam Janam Full Video, Arijit Singh - Dilwale | Shah Rukh Khan | Kajol | Antara Mitra |Pritam",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
@@ -1041,36 +1341,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "cgmhimjsczk",
-   "title": "Janam Janam Full Video, Arijit Singh - Dilwale | Shah Rukh Khan | Kajol | Antara Mitra |Pritam",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "33nflsSHHqM",
-   "title": "The Humma Song - 8K/4K Music Video | Shraddha, Aditya | OK Jaanu | Badshah | Tanishk Bagchi",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "g0eO74UmRBs",
-   "title": "Kal Ho Naa Ho (Title Track) - Full Video | Shah Rukh Khan, Saif Ali Khan, Preity Zinta | Sonu Nigam",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "jbKv8n7Kg6I",
-   "title": "Saanson Ko Full Video - ZiD | Mannara, Karanvir | Arijit Singh | Sharib Toshi",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Ci0WbaUH3no",
-   "title": "She Move It Like - Official Video | Badshah | Warina Hussain | ONE Album",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
    "id": "V7LwfY5U5WI",
    "title": "Ranjha – Official Video | Shershaah | Sidharth–Kiara | B Praak | Jasleen Royal | Romy | Anvita Dutt",
    "label": "Sony Music India",
@@ -1083,8 +1353,14 @@
    "found": "2026-10-06"
   },
   {
-   "id": "kd5KqlmcHNo",
-   "title": "The Breakup Song - Full Video | Ranbir, Anushka | Arijit, Badshah, Jonita, Nakash | Pritam | ADHM",
+   "id": "Ci0WbaUH3no",
+   "title": "She Move It Like - Official Video | Badshah | Warina Hussain | ONE Album",
+   "label": "Sony Music India",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "8wJHm69q4ss",
+   "title": "Alif Se - 8K/4K Music Video | Gurmeet, Emraan Hashmi, Nora Fatehi | Ankit Tiwari, Neeti M | Mr. X",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
@@ -1095,20 +1371,26 @@
    "found": "2026-10-06"
   },
   {
+   "id": "mrdRHsIkK_c",
+   "title": "Enna Sona - Official Music Video | OK Jaanu | Arijit Singh | Shraddha Kapoor | Aditya Roy Kapoor",
+   "label": "Sony Music India",
+   "found": "2026-10-06"
+  },
+  {
    "id": "pO-b3u3DCCs",
    "title": "Kheech Meri Photo - Official Video Song | Sanam Teri Kasam | Harshvardhan, Mawra | Himesh Reshammiya",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
   {
-   "id": "N8refaSnaD8",
-   "title": "Tu Hi Mera - 8K/4K Music Video | Emraan Hashmi, Esha Gupta | Jannat 2 | Shafqat Amanat Ali | Pritam",
+   "id": "jbKv8n7Kg6I",
+   "title": "Saanson Ko Full Video - ZiD | Mannara, Karanvir | Arijit Singh | Sharib Toshi",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
   {
-   "id": "L3HabXRXfmw",
-   "title": "Ek Dafaa - Arjun Kanungo | Chinnamma | Official Video",
+   "id": "33nflsSHHqM",
+   "title": "The Humma Song - 8K/4K Music Video | Shraddha, Aditya | OK Jaanu | Badshah | Tanishk Bagchi",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
@@ -1119,14 +1401,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "k09uvR5eUao",
-   "title": "Tum Tak - Full Video Song | Raanjhanaa | Dhanush | Sonam Kapoor | A. R. Rahman",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "bi5PhlIQpwU",
-   "title": "Nadiyon Paar - Nadiyon Paar - Full Song | Roohi | Janhvi Kapoor | Sachin-Jigar | Shamur | Rashmeet K",
+   "id": "i0_m90T04uw",
+   "title": "Kamariya - Official Music Video | Jackky Bhagnani, Kritika | Darshan Raval | Lijo Gorge | Dj Chetas",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
@@ -1137,44 +1413,38 @@
    "found": "2026-10-06"
   },
   {
+   "id": "k09uvR5eUao",
+   "title": "Tum Tak - Full Video Song | Raanjhanaa | Dhanush | Sonam Kapoor | A. R. Rahman",
+   "label": "Sony Music India",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "L3HabXRXfmw",
+   "title": "Ek Dafaa - Arjun Kanungo | Chinnamma | Official Video",
+   "label": "Sony Music India",
+   "found": "2026-10-06"
+  },
+  {
    "id": "w4ClQO0FFQg",
    "title": "Param Sundari -Official Video | Mimi | Kriti Sanon, Pankaj Tripathi | @ARRahman| Shreya Ghoshal",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
   {
-   "id": "bqGtrvcR5ls",
-   "title": "Harrdy Sandhu - Backbone | Jaani | B Praak | Zenith Sidhu | Official Music Video",
+   "id": "kd5KqlmcHNo",
+   "title": "The Breakup Song - Full Video | Ranbir, Anushka | Arijit, Badshah, Jonita, Nakash | Pritam | ADHM",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
   {
-   "id": "mrdRHsIkK_c",
-   "title": "Enna Sona - Official Music Video | OK Jaanu | Arijit Singh | Shraddha Kapoor | Aditya Roy Kapoor",
+   "id": "N8refaSnaD8",
+   "title": "Tu Hi Mera - 8K/4K Music Video | Emraan Hashmi, Esha Gupta | Jannat 2 | Shafqat Amanat Ali | Pritam",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
   {
-   "id": "qxsQe2EAk40",
-   "title": "City Slums - Raja Kumari ft. DIVINE | Official Video",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "NMsvr4txH_g",
-   "title": "Kuch To Hua Hai 4K Official Music Video | Alka Yagnik | Shaan | Saif Ali Khan | Preity Zinta",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "i0_m90T04uw",
-   "title": "Kamariya - Official Music Video | Jackky Bhagnani, Kritika | Darshan Raval | Lijo Gorge | Dj Chetas",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "rxdMjVyimqE",
-   "title": "Tu Jo Hain Toh Main Hoon - 8K/4K Music Video | Emraan Hashmi, Amyra Dastur | Ankit Tiwari | Mr. X",
+   "id": "bi5PhlIQpwU",
+   "title": "Nadiyon Paar - Nadiyon Paar - Full Song | Roohi | Janhvi Kapoor | Sachin-Jigar | Shamur | Rashmeet K",
    "label": "Sony Music India",
    "found": "2026-10-06"
   },
@@ -1222,7 +1492,7 @@
   },
   {
    "id": "aW78cnFjTGA",
-   "title": "Maine Koi Jadoo Nahin Kiya - 8K | Mujhe Kuch Kehna Hai | Tusshar, Kareena,Babul Supriyo,Preeti,Pinky",
+   "title": "Maine Koi Jadu Nahin Kiya - 8K | Mujhe Kuch Kehna Hai | Tusshar, Kareena,Babul Supriyo,Preeti,Pinky",
    "label": "Tips",
    "found": "2026-10-06"
   },
@@ -1239,26 +1509,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "kDhS2aHgt1M",
-   "title": "Jaam Woh Hai Jo Bhar Ke Chalakta Hai - 8K | Sainik | Akshay Kumar, Ashwini | Kumar Sanu | 90s Hits",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "NnydFMEUcak",
-   "title": "Dhak Chik Dana - Lyrical | Yeh Dil Aashiqana | Karan Nath, Jividha | Kumar Sanu, Anuradha Paudwal",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
    "id": "tqHENdlpLLw",
    "title": "@King - High Hukku (Official Video) @nikhita  Ft. Shweta Sharda | Punit J Pathak @adityadevmusic",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "6_RjqNWs5PY",
-   "title": "Fukre - Video Song | Jihne Mera Dil Luteya | Diljit Dosanjh & Neeru Bajwa | Diljit Dosanjh",
    "label": "Tips",
    "found": "2026-10-06"
   },
@@ -1275,56 +1527,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "kNvJ_XSXHpE",
-   "title": "Something Something - Video Song | Feat. Urvashi Sharma | Mika Singh, Bella | Blockbuster Hindi Song",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "rNXmANj72ps",
-   "title": "Tere Paas Main|Main Vaapas Aaunga|@diljitdosanjh,@ARRahman,Imtiaz Ali,Irshad,Vedang,Sharvari,Deepali",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "W31LlujrB08",
-   "title": "Sajni - Official Video Song | Boondh A Drop of Jal | Jal - The Band",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "hP2p-yH1tGU",
-   "title": "Doorie - Video Song feat. Urvashi Sharma | Album - Doorie | Atif Aslam | Sachin Gupta",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "2j-8MxtW5TA",
-   "title": "Nazar Nazar - Video Song | Fida | Shahid Kapoor & Kareena Kapoor | Udit N & Sapna | Anu Malik",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "3u6lLWGjFLY",
-   "title": "Naina | Crew | Diljit Dosanjh, Ft. Badshah | Tabu, Kareena Kapoor Khan, Kriti Sanon | Raj Ranjodh",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Jv2Z9KJgYjU",
-   "title": "Doorie Lyrical Video - Doorie | Atif Aslam | Urvashi Sharrma | Sachin Gupta | Bollywood Songs",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "jFmi69lb8sQ",
-   "title": "Hona Tha Pyar Full Video - Bol | Atif Aslam & Mahira Khan | Atif Aslam & Hadiqa Kiani",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "U0nfYIIT4cU",
-   "title": "Full Video: #TuMuskura - Yuvvraaj | Katrina Kaif, Salman Khan | Alka Yagnik, Javed Ali | A.R. Rahman",
+   "id": "6_RjqNWs5PY",
+   "title": "Fukre - Video Song | Jihne Mera Dil Luteya | Diljit Dosanjh & Neeru Bajwa | Diljit Dosanjh",
    "label": "Tips",
    "found": "2026-10-06"
   },
@@ -1335,50 +1539,44 @@
    "found": "2026-10-06"
   },
   {
-   "id": "NWdasSZcvHY",
-   "title": "Tu Meri Dost Hain Full Video - Yuvvraaj |Salman Khan, Katrina Kaif| Shreya Ghoshal, Benny|A.R Rahman",
+   "id": "kNvJ_XSXHpE",
+   "title": "Something Something - Video Song | Feat. Urvashi Sharma | Mika Singh, Bella | Blockbuster Hindi Song",
    "label": "Tips",
    "found": "2026-10-06"
   },
   {
-   "id": "7ljLqyuQSdI",
-   "title": "Karle Baby Dance Wance - Video Song | Hello | Sohail Khan | Daler Mehndi & Sunidhi Chauhan",
+   "id": "hP2p-yH1tGU",
+   "title": "Doorie - Video Song feat. Urvashi Sharma | Album - Doorie | Atif Aslam | Sachin Gupta",
    "label": "Tips",
    "found": "2026-10-06"
   },
   {
-   "id": "QGn8Ww4euTA",
-   "title": "Chahenge Tumhein - Video Song | Vaah! Life Ho Toh Aisi | Shahid Kapoor & Amrita Rao",
+   "id": "W31LlujrB08",
+   "title": "Sajni - Official Video Song | Boondh A Drop of Jal | Jal - The Band",
    "label": "Tips",
    "found": "2026-10-06"
   },
   {
-   "id": "W1GNGlaFKYw",
-   "title": "Tanha Tanha Yahan Pe Jeena | Urmila Matondkar | Jackie Shroff | Asha Bhosle | Rangeela | 90's Songs",
+   "id": "jFmi69lb8sQ",
+   "title": "Hona Tha Pyar Full Video - Bol | Atif Aslam & Mahira Khan | Atif Aslam & Hadiqa Kiani",
    "label": "Tips",
    "found": "2026-10-06"
   },
   {
-   "id": "LX2zshAgECQ",
-   "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
+   "id": "2j-8MxtW5TA",
+   "title": "Nazar Nazar - Video Song | Fida | Shahid Kapoor & Kareena Kapoor | Udit N & Sapna | Anu Malik",
    "label": "Tips",
    "found": "2026-10-06"
   },
   {
-   "id": "4-Joa2I7fVg",
-   "title": "Johnny Johnny - Entertainment | Akshay Kumar & Tamannaah - Official HD Video Song 2014",
+   "id": "rNXmANj72ps",
+   "title": "Tere Paas Main|Main Vaapas Aaunga|@diljitdosanjh,@ARRahman,Imtiaz Ali,Irshad,Vedang,Sharvari,Deepali",
    "label": "Tips",
    "found": "2026-10-06"
   },
   {
-   "id": "5DkkCDk1lpU",
-   "title": "O Bhavre - Daud | Sanjay Dutt, Urmila Matondkar | A R Rahman | Yeshudas, Asha Bhosle",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "5MGzKmcCsAQ",
-   "title": "Maine Jisko Chaaha - Video Song | Fida I Kareena Kapoor & Fardeen Khan | Sonu Nigam & Alisha Chinai",
+   "id": "Jv2Z9KJgYjU",
+   "title": "Doorie Lyrical Video - Doorie | Atif Aslam | Urvashi Sharrma | Sachin Gupta | Bollywood Songs",
    "label": "Tips",
    "found": "2026-10-06"
   },
@@ -1455,26 +1653,20 @@
    "found": "2026-10-06"
   },
   {
-   "id": "tGv6Ce9mMWA",
-   "title": "Kajra Re Lyrical Song | Aishwarya, Abhishek, Amitabh | Shankar-Ehsaan-Loy, Alisha, Javed, Gulzar",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
    "id": "bY8bEaJp3x8",
    "title": "Top Tucker Song | Uchana Amit | Ft. | Badshah, Yuvan Shankar Raja, Rashmika Mandanna | Jonita Gandhi",
    "label": "YRF",
    "found": "2026-10-06"
   },
   {
-   "id": "CGn0Ww_WvME",
-   "title": "Dhoom Dhoom Song | Tata Young | Abhishek Bachchan, John Abraham, Uday Chopra | Pritam, Asif Ali Baig",
+   "id": "qFkNATtc3mc",
+   "title": "Ghungroo Song | WAR | Hrithik Roshan, Vaani Kapoor | Arijit Singh, Shilpa | Vishal & Shekhar, Kumaar",
    "label": "YRF",
    "found": "2026-10-06"
   },
   {
-   "id": "qFkNATtc3mc",
-   "title": "Ghungroo Song | WAR | Hrithik Roshan, Vaani Kapoor | Arijit Singh, Shilpa | Vishal & Shekhar, Kumaar",
+   "id": "CGn0Ww_WvME",
+   "title": "Dhoom Dhoom Song | Tata Young | Abhishek Bachchan, John Abraham, Uday Chopra | Pritam, Asif Ali Baig",
    "label": "YRF",
    "found": "2026-10-06"
   },
@@ -1491,12 +1683,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "d4_szl5EEww",
-   "title": "Jabra Fan Song | Shah Rukh Khan | Nakash Aziz | Vishal and Shekhar | Varun Grover | SRK Fan Song",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
    "id": "caySD0OJJvk",
    "title": "Lyrical | Ghungroo Full Song | WAR | Hrithik, Vaani, Arijit Singh, Shilpa | Vishal & Shekhar, Kumaar",
    "label": "YRF",
@@ -1509,14 +1695,20 @@
    "found": "2026-10-06"
   },
   {
+   "id": "d4_szl5EEww",
+   "title": "Jabra Fan Song | Shah Rukh Khan | Nakash Aziz | Vishal and Shekhar | Varun Grover | SRK Fan Song",
+   "label": "YRF",
+   "found": "2026-10-06"
+  },
+  {
    "id": "cmMiyZaSELo",
    "title": "Khuda Jaane | Full Song | Bachna Ae Haseeno | Ranbir Kapoor, Deepika | Vishal & Shekhar, KK, Shilpa",
    "label": "YRF",
    "found": "2026-10-06"
   },
   {
-   "id": "enjkcCdAlXc",
-   "title": "Aavan Jaavan Song | WAR 2 | Hrithik Roshan, Kiara Advani | Pritam, Arijit Singh, Nikhita | Amitabh B",
+   "id": "qoq8B8ThgEM",
+   "title": "Tujh Mein Rab Dikhta Hai Song | Rab Ne Bana Di Jodi | Shah Rukh Khan, Anushka Sharma | Roop Kumar",
    "label": "YRF",
    "found": "2026-10-06"
   },
@@ -1527,8 +1719,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "qoq8B8ThgEM",
-   "title": "Tujh Mein Rab Dikhta Hai Song | Rab Ne Bana Di Jodi | Shah Rukh Khan, Anushka Sharma | Roop Kumar",
+   "id": "pElk1ShPrcE",
+   "title": "Ainvayi Ainvayi Song | Band Baaja Baaraat | Ranveer Singh, Anushka Sharma |  Sunidhi Chauhan, Salim",
    "label": "YRF",
    "found": "2026-10-06"
   },
@@ -1545,32 +1737,14 @@
    "found": "2026-10-06"
   },
   {
+   "id": "enjkcCdAlXc",
+   "title": "Aavan Jaavan Song | WAR 2 | Hrithik Roshan, Kiara Advani | Pritam, Arijit Singh, Nikhita | Amitabh B",
+   "label": "YRF",
+   "found": "2026-10-06"
+  },
+  {
    "id": "vxVsDSB5UWw",
    "title": "Hey Shona | Full Song | Ta Ra Rum Pum | Saif Ali Khan, Rani Mukerji | Shaan, Sunidhi, Vishal-Shekhar",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ZPSUimDt7N8",
-   "title": "Kamaal Song | Uchana Amit | Ft. | Badshah | Alina | Punjabi Song | Romantic Song",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "pElk1ShPrcE",
-   "title": "Ainvayi Ainvayi Song | Band Baaja Baaraat | Ranveer Singh, Anushka Sharma |  Sunidhi Chauhan, Salim",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "P-0EiCkAFnE",
-   "title": "Dil To Pagal Hai Song | Shah Rukh Khan, Madhuri, Karisma, Akshay | Lata Mangeshkar, Udit Narayan",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "0AqZzax9_Og",
-   "title": "Lucky Boy Song | Bachna Ae Haseeno | Bipasha Basu | Sunidhi Chauhan, Hard Kaur, Raja, Vishal-Shekhar",
    "label": "YRF",
    "found": "2026-10-06"
   },
@@ -1587,6 +1761,12 @@
    "found": "2026-10-06"
   },
   {
+   "id": "ZPSUimDt7N8",
+   "title": "Kamaal Song | Uchana Amit | Ft. | Badshah | Alina | Punjabi Song | Romantic Song",
+   "label": "YRF",
+   "found": "2026-10-06"
+  },
+  {
    "id": "XgdY_s1LsZc",
    "title": "Haule Haule - Full Song | Rab Ne Bana Di Jodi | Shah Rukh Khan | Anushka Sharma | Sukhwinder Singh",
    "label": "YRF",
@@ -1599,38 +1779,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "zWPsjhBaRb0",
-   "title": "Humko Humise Chura Lo Song | Mohabbatein | Shah Rukh Khan, Aishwarya Rai | Lata Mangeshkar, Udit N",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
    "id": "7jhSVtC6Axs",
    "title": "Shikdum | Full Song | Dhoom | Abhishek Bachchan | Rimi Sen | Shaan, Shreya Ghoshal | Pritam | Sameer",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "lZ2PhyBF3GQ",
-   "title": "Dil To Pagal Hai Song | Shah Rukh Khan, Madhuri, Karisma, Akshay | Lata Mangeshkar, Udit Narayan",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "w3MMMgxjLFk",
-   "title": "Dum Dum | Full Song | Band Baaja Baaraat | Ranveer Singh, Anushka Sharma, Benny Dayal, Himani Kapoor",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "jXwg9l9D51A",
-   "title": "Bol Na Halke Halke | Full Song | Jhoom Barabar Jhoom | Abhishek, Preity | Shankar-Ehsaan-Loy, Gulzar",
-   "label": "YRF",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "oGneAab3e88",
-   "title": "Jai Jai Shivshankar | Full Song | WAR | Hrithik, Tiger | Vishal & Shekhar, Benny | Holi Song",
    "label": "YRF",
    "found": "2026-10-06"
   },
@@ -1689,98 +1839,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "rmwD76EqjUk",
-   "title": "Coke Studio x Quick Style | Kana Yaari | Official Dance Video",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "K364wKMGwF0",
-   "title": "Maghron La | Coke Studio Pakistan | Season 15 | Sabri Sisters x Rozeo",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "azhwDQsYD8c",
-   "title": "Piya Piya Calling | Coke Studio Pakistan | S15 | Karpe | Kaifi Khalil | Amanda Delara | Quick Style",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "dB0AFSUl2Vk",
-   "title": "Coke Studio | Season 14 | Peechay Hutt | Justin Bibis x Talal Qureshi x Hasan Raheem",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "9dcwnIgBrCk",
-   "title": "Turri Jandi | Coke Studio Pakistan | Season 15 | Shazia Manzoor x Hasan Raheem",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
    "id": "-2RAq5o5pwc",
    "title": "Jhol | Coke Studio Pakistan | Season 15 | Maanu x Annural Khalid",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zQDAi8tI-cU",
-   "title": "Coke Studio | Season 14 | Kana Yaari | Kaifi Khalil x Eva B x Abdul Wahab Bugti",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "-Nbm1vFsr7Q",
-   "title": "Coke Studio Season 9| Uddi Ja| Mohsin Abbas Haider",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "4DVDFxiZKCg",
-   "title": "O Yaara | Coke Studio Pakistan | Season 15 |  Abdul Hannan x Kaavish",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "BUm_hFMlsgg",
-   "title": "Coke Studio | Season 14 | Mehram | Asfar Hussain x Arooj Aftab",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "JTJ6q-cGs-o",
-   "title": "Coke Studio | Season 14 | Beparwah | Momina Mustehsan",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "unOqa2tnzSM",
-   "title": "Coke Studio Season 11| Hum Dekhenge",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "7rAeOw_9DcA",
-   "title": "Chal Chaliye | Coke Studio Pakistan | Season 15 | Sajjad Ali x Farheen Raza Jaffry",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "O3pUsXxCfEk",
-   "title": "Coke Studio | Season 14 | Muaziz Saarif | Faris Shafi x Meesha Shafi",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "EnChosxHmUw",
-   "title": "Coke Studio Explorer 2018| Ha Gulo| Qasamir",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "yzmr-3OkBZA",
-   "title": "Coke Studio Nu.WAV | Rangeen | Coming Soon",
    "label": "Coke Studio Pakistan",
    "found": "2026-10-06"
   },
@@ -1791,8 +1851,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "HrFlFMK1mKI",
-   "title": "Coke Studio | Season 14 | Sajan Das Na | Atif Aslam x Momina Mustehsan",
+   "id": "o1VvgO7RNXg",
+   "title": "Coke Studio Season 8| Bewajah| Nabeel Shaukat Ali",
    "label": "Coke Studio Pakistan",
    "found": "2026-10-06"
   },
@@ -1803,14 +1863,44 @@
    "found": "2026-10-06"
   },
   {
-   "id": "o1VvgO7RNXg",
-   "title": "Coke Studio Season 8| Bewajah| Nabeel Shaukat Ali",
+   "id": "4DVDFxiZKCg",
+   "title": "O Yaara | Coke Studio Pakistan | Season 15 |  Abdul Hannan x Kaavish",
    "label": "Coke Studio Pakistan",
    "found": "2026-10-06"
   },
   {
-   "id": "w3s8cjG2WYY",
-   "title": "Coke Studio Season 11| Hawa Hawa| Gul Panrra & Hassan Jahangir",
+   "id": "zQDAi8tI-cU",
+   "title": "Coke Studio | Season 14 | Kana Yaari | Kaifi Khalil x Eva B x Abdul Wahab Bugti",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "K364wKMGwF0",
+   "title": "Maghron La | Coke Studio Pakistan | Season 15 | Sabri Sisters x Rozeo",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "BUm_hFMlsgg",
+   "title": "Coke Studio | Season 14 | Mehram | Asfar Hussain x Arooj Aftab",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "azhwDQsYD8c",
+   "title": "Piya Piya Calling | Coke Studio Pakistan | S15 | Karpe | Kaifi Khalil | Amanda Delara | Quick Style",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "-Nbm1vFsr7Q",
+   "title": "Coke Studio Season 9| Uddi Ja| Mohsin Abbas Haider",
+   "label": "Coke Studio Pakistan",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "rmwD76EqjUk",
+   "title": "Coke Studio x Quick Style | Kana Yaari | Official Dance Video",
    "label": "Coke Studio Pakistan",
    "found": "2026-10-06"
   },
@@ -2031,8 +2121,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "WC-XVmYsGSI",
-   "title": "Bai Ji Bai Ji | Dilpreet Dhillon | Desi Crew | Narinder Batth | Punjabi Songs 2026 | Speed Records",
+   "id": "UKQ3TUJgI9Q",
+   "title": "Taj (Official Video) | Veet Baljit | Reel Purani Reejh | New Punjabi Song | Latest Punjabi Song",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
@@ -2049,32 +2139,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "UKQ3TUJgI9Q",
-   "title": "Taj (Official Video) | Veet Baljit | Reel Purani Reejh | New Punjabi Song | Latest Punjabi Song",
-   "label": "Speed Records",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "lKB2AoDopM4",
-   "title": "Sohne Mukhde Da (Official Video) | Sharry Mann | Aate Di Chiri  | Latest Punjabi Songs 2012",
-   "label": "Speed Records",
-   "found": "2026-10-06"
-  },
-  {
    "id": "Sus0nvGo9Ck",
    "title": "Jatt Kaim (Official Video) | Jazzy B | Best Of Luck | Latest Punjabi Song 2013 | New Punjabi Song",
-   "label": "Speed Records",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "tGbKhMg0ijA",
-   "title": "AMRIT MAAN - JOURNEY (Official Video) | Mxrci | Latest Punjabi Song 2023 | New Punjabi Song 2024",
-   "label": "Speed Records",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "BieQQq1TS3M",
-   "title": "Rattan Chitian (Official Video) | Bilal Saeed | New Punjabi Song | Latest Punjabi Song",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
@@ -2085,14 +2151,14 @@
    "found": "2026-10-06"
   },
   {
-   "id": "HX8YBnmq5gU",
-   "title": "Sira (Official Video)| Dilpreet Dhillon Ft Shipra Goyal | Desi Crew | Latest Punjabi Songs 2024",
+   "id": "lKB2AoDopM4",
+   "title": "Sohne Mukhde Da (Official Video) | Sharry Mann | Aate Di Chiri  | Latest Punjabi Songs 2012",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
   {
-   "id": "5X7WWVTrBvM",
-   "title": "Lamberghini (Full Video) | The Doorbeen Feat Ragini | Latest Punjabi Song 2018 | Speed Records",
+   "id": "BieQQq1TS3M",
+   "title": "Rattan Chitian (Official Video) | Bilal Saeed | New Punjabi Song | Latest Punjabi Song",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
@@ -2103,8 +2169,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "5GAQYlouVbs",
-   "title": "Guitar Sikhda (Official Video) | Jassie Gill | Jaani | B Praak | Arvindr Khaira | Speed Records",
+   "id": "5Encf8VR2Rs",
+   "title": "Mini Cooper (Video Song) | Ammy Virk | Sonam Bajwa | Nikka Zaildar | Latest Punjabi Song 2018",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
@@ -2115,26 +2181,14 @@
    "found": "2026-10-06"
   },
   {
-   "id": "fx3KYCLWVUI",
-   "title": "FRANCE (Official Video) Amrit Maan Ft Gurlej Akhtar| New Punjabi Song 2021| Latest Punjabi Song 2021",
+   "id": "HX8YBnmq5gU",
+   "title": "Sira (Official Video)| Dilpreet Dhillon Ft Shipra Goyal | Desi Crew | Latest Punjabi Songs 2024",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
   {
-   "id": "i2GC06euEDE",
-   "title": "Jaguar (Official Video) | Muzical Doctorz Sukhe Feat Bohemia | Jaani | Superhit Punjabi Song",
-   "label": "Speed Records",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "FNxD8nRCCms",
-   "title": "Gani (Official Video) | Akhil Feat Manni Sandhu | Superhit Punjabi Love Song | Speed Records",
-   "label": "Speed Records",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "gbtU3NzNd94",
-   "title": "Gurnam Bhullar | Jhalle | Official Song | Sargun Mehta | Binnu Dhillon | Latest Punjabi Song 2020",
+   "id": "tGbKhMg0ijA",
+   "title": "AMRIT MAAN - JOURNEY (Official Video) | Mxrci | Latest Punjabi Song 2023 | New Punjabi Song 2024",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
@@ -2145,26 +2199,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "jOYR3k1VhUQ",
-   "title": "Bapu Zimidar | Jassie Gill | Replay ( Return Of Melody ) |  Latest Punjabi Songs | New Punjabi Songs",
-   "label": "Speed Records",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "yIeTNqyvtHg",
-   "title": "Churai Janda Eh (Official B&W Video) | Jassie Gill | Goldboy | High End Yaariyan | Speed Records",
-   "label": "Speed Records",
-   "found": "2026-10-06"
-  },
-  {
    "id": "ZdTD9aewyhI",
    "title": "Akhil Feat Adah Sharma | Life Official Video | Preet Hundal | Arvindr Khaira | Latest Punjabi Songs",
-   "label": "Speed Records",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ODaWO5eYQgI",
-   "title": "Dasi Na Mere Bare (Full Video) | Goldy | Latest Punjabi Song 2016 | Speed Records",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
@@ -2181,8 +2217,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "4OeQhAZaQbc",
-   "title": "Chann Chann (Official Video)| Jordan Sandhu Ft Zareen Khan | Desi Crew | Latest Punjabi Song 2021",
+   "id": "fx3KYCLWVUI",
+   "title": "FRANCE (Official Video) Amrit Maan Ft Gurlej Akhtar| New Punjabi Song 2021| Latest Punjabi Song 2021",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
@@ -2193,8 +2229,8 @@
    "found": "2026-10-06"
   },
   {
-   "id": "5Encf8VR2Rs",
-   "title": "Mini Cooper (Video Song) | Ammy Virk | Sonam Bajwa | Nikka Zaildar | Latest Punjabi Song 2018",
+   "id": "FNxD8nRCCms",
+   "title": "Gani (Official Video) | Akhil Feat Manni Sandhu | Superhit Punjabi Love Song | Speed Records",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
@@ -2205,188 +2241,68 @@
    "found": "2026-10-06"
   },
   {
-   "id": "gkXmwAovM-w",
-   "title": "Aa Zra (Official Video) | Maninder Kailey | Latest Punjabi Songs | New Punjabi Songs | Speed Records",
+   "id": "5X7WWVTrBvM",
+   "title": "Lamberghini (Full Video) | The Doorbeen Feat Ragini | Latest Punjabi Song 2018 | Speed Records",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
   {
-   "id": "AtUh3lJeac8",
-   "title": "Raftaar x Nora Fatehi - Baby Marvake Maanegi | Remo D'souza | Hot Dance Song",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "73q3_tWbV4U",
-   "title": "Aahista - Full Video | Laila Majnu | Arijit Singh & Jonita Gandhi | Avinash Tiwary & Tripti Dimri",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zUqcsv1_0es",
-   "title": "EK MULAQAT Official Video | Sonali Cable | Ali Fazal & Rhea Chakraborty | Jubin | Amjad Nadeem",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "hFzv38RVjd8",
-   "title": "Move | Raftaar | Mr Nair | Saurabh Lokhande",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "PqGn1GTmEJs",
-   "title": "Sharabi - Pyaar Ka Punchnama 2 | Kartik Aaryan, Omkar Kapoor, Sunny Singh | Sharib Toshi, Raja Hasan",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "c4ZteOtHWQ0",
-   "title": "Raazi - Title Track | Full Video | Alia Bhatt | Arijit Singh | Shankar Ehsaan Loy | Gulzar",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "BKx_B1VZ2kw",
-   "title": "Ae Watan - Full Video | Raazi | Alia Bhatt | Sunidhi Chauhan | Shankar Ehsaan Loy | Gulzar",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Q3JMD4oaXlI",
-   "title": "Shaabaashiyaan - Full Video | Mission Mangal | Akshay | Vidya | Sonakshi | Taapsee",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "nQ8FbHoAYPg",
-   "title": "Shivam Full Video Song | Baahubali 2 The Conclusion | Prabhas, Anushka Shetty,  Rana | S S Rajamouli",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "39YYW9tW9YA",
-   "title": "O Soniye Full Video | Titoo MBA | Arijit Singh | Nishant Dahiya & Pragya Jaiswal",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "0z2nw0TrCy0",
-   "title": "Panchhi Boley - Full Video | Baahubali - The Beginning | Prabhas & Tamannaah",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "b4hrUSBP4nc",
-   "title": "Kalank Title Track - Full Video | Madhuri Sonakshi Alia Sanjay Aditya Varun | Arijit | Pritam",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "q5gGKGyQM9Y",
-   "title": "Jogi | Shaadi Mein Zaroor Aana | Rajkummar Rao,Kriti Kharbanda|Arko ft Aakanksha Sharma",
-   "label": "Zee Music",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "YmXJp4RtBCM",
-   "title": "Proper Patola - Official Video | Namaste England | Arjun | Parineeti | Badshah | Diljit | Aastha",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "dUaCEs3HfdI",
-   "title": "Aastha Gill - Buzz feat Badshah | Priyank Sharma | Official Music Video",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "l_MyUGq7pgs",
-   "title": "Malhari - Full Video Song | Bajirao Mastani | Ranveer Singh | Vishal Dadlani | Sanjay Leela Bhansali",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "9JDSGhhiOwI",
-   "title": "Tere Bina - Full Video | A. R. Rahman | Aishwarya Rai | Abhishek Bachchan | Guru",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "XLJCtZK0x5M",
-   "title": "Beedi Jalaile - Full Video Song | Omkara | Bipasha Basu | Sukhwinder Singh | Vishal Bhardwaj",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "284Ov7ysmfA",
-   "title": "Channa Mereya Full Video - ADHM | Ranbir Kapoor, Anushka | Arijit Singh | Pritam | Karan Johar",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "1Z_cClBsABE",
-   "title": "Daryaa | Full Video Song | Manmarziyaan | Vicky, Taapsee | Ammy Virk, Shahid Mallya | Amit Trivedi",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "GtNrQy90Ih4",
-   "title": "Saibo Full Video - Shor In The City |Radhika Apte,Tusshar | Shreya Ghoshal,Tochi Raina",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "SlHnlxDt2TQ",
-   "title": "Mann Mera - Full Video Song | Table No.21 | Tina Desai, Rajeev Khandelwal | Gajendra Verma",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "tKBa64-w4XA",
-   "title": "Aala Re Aala - Full Video | John Abraham | Mika Singh, Sunidhi Chauhan | Shootout At Wadala",
-   "label": "Sony Music India",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Hj3LHCr4ieA",
-   "title": "Supna - Video Song | Jihne Mera Dil Luteya | Gippy Grewal | Diljit Dosanjh | Yo Yo Honey Singh",
-   "label": "Tips",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "EZVPRe5jRs4",
-   "title": "Aye Rah-e-Haq Ke Shaheedo",
-   "label": "Coke Studio Pakistan",
-   "found": "2026-10-06"
-  },
-  {
-   "id": "mDVoEbcEBmg",
-   "title": "Tera Naam (Official Video) | Babbal Rai | New Punjabi Song | Latest Punjabi Song | Speed Records",
+   "id": "jOYR3k1VhUQ",
+   "title": "Bapu Zimidar | Jassie Gill | Replay ( Return Of Melody ) |  Latest Punjabi Songs | New Punjabi Songs",
    "label": "Speed Records",
    "found": "2026-10-06"
   },
   {
-   "id": "kqh7WidGwc4",
-   "title": "Heavy Weight Bhangra (Official Video)| Ranjit Bawa Ft. Bunty Bains | Jassi X | New Punjabi Song 2017",
-   "label": "Speed Records",
+   "id": "q_jFvF9pzzw",
+   "title": "Mere Humnava (Official Video): Jubin Nautiyal| The Rish| Rocky Khanna| Vartika Singh| Bhushan Kumar",
+   "label": "T-Series",
    "found": "2026-10-06"
   },
   {
-   "id": "Lc7FmrMaEbE",
-   "title": "Mehboob Ji (Official Video) - Satinder Sartaaj | Neeru Bajwa | Shayar | Latest Punjabi Songs 2024",
-   "label": "Speed Records",
+   "id": "31IFZcn4Jew",
+   "title": "Akh Da Kasoor (Official Video): Aparshakti Khurana | Rochak Kohli | New Punjabi Song | Bhushan Kumar",
+   "label": "T-Series",
    "found": "2026-10-06"
   },
   {
-   "id": "ccw-bhwtLTw",
-   "title": "Yeh Fitoor Mera - Full Video | Fitoor | Aditya Roy Kapur, Katrina Kaif | Arijit Singh | Amit Trivedi",
+   "id": "miwzEaiQ_bg",
+   "title": "Dilrooba | Arya Rajurkar | I-Popstar Hindi Vol.2 | EP 1 | Alright TV | Netflix",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ri1Ar5nEq4s",
+   "title": "Aaj Ki Raat - 8K Video | Stree 2 | Tamannaah Bhatia, Rajkummar Rao, Sachin-Jigar, Madhubanti B,Divya",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ldWFpeu36K0",
+   "title": "Meri Jaan | Full Video |Gangubai Kathiawadi|Sanjay Leela Bhansali| Alia Bhatt | Neeti Mohan|Shantanu",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "8mYeTuzBQr4",
+   "title": "Aaj Sajeya | Alaya F | Goldie Sohel | Punit Malhotra | Official Video |#SneakerSong | Dharma 2.0",
+   "label": "Saregama",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "-K5WJ6eUXss",
+   "title": "Ladki Ke Daddy - Tera Yaar Hoon Main | Aman, Akanksha, Paresh R | Udit N, Aditya N, Anand Raaj Anand",
    "label": "Zee Music",
    "found": "2026-10-06"
   },
   {
-   "id": "49x8GA2axfc",
-   "title": "O Meri Laila | Laila Majnu | Jyotica Tangri | Avinash Tiwary & Tripti Dimri | Joi, Irshad",
+   "id": "lpdRqn6xwiM",
+   "title": "Zaalima | Raees | Shah Rukh Khan | Arijit Singh & Harshdeep Kaur | JAM8 | Pritam",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "AvgFmr-ckpk",
+   "title": "Jitni Dafa - Lyrical | PARMANU | John Abraham & Diana Penty | Jeet Gannguli | RashmiVirag",
    "label": "Zee Music",
    "found": "2026-10-06"
   },
@@ -2397,9 +2313,93 @@
    "found": "2026-10-06"
   },
   {
-   "id": "P-B3DF-yaiQ",
-   "title": "Nora Fatehi 💃 | Manohari Song | Baahubali The Beginning | Prabhas | 8K Video",
+   "id": "ZWAGn4yyRMM",
+   "title": "Teri Meri Kahaani Hai Baarishon Ka Paani - Arijit Singh | Gabbar Is Back | Akshay Kumar & Kareena K",
    "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ElZfdU54Cp8",
+   "title": "Apna Bana Le - Bhediya | Varun Dhawan, Kriti Sanon| Sachin-Jigar, Arijit Singh, Amitabh Bhattacharya",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "PqGn1GTmEJs",
+   "title": "Sharabi - Pyaar Ka Punchnama 2 | Kartik Aaryan, Omkar Kapoor, Sunny Singh | Sharib Toshi, Raja Hasan",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "cyKZXbxx2lc",
+   "title": "Ikk Kudi - Full Video | Udta Punjab | Shahid Mallya | Alia Bhatt & Shahid Kapoor | Amit Trivedi",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "49x8GA2axfc",
+   "title": "O Meri Laila | Laila Majnu | Jyotica Tangri | Avinash Tiwary & Tripti Dimri | Joi, Irshad",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "_iktURk0X-A",
+   "title": "𝐏𝐡𝐢𝐫 𝐁𝐡𝐢 𝐓𝐮𝐦𝐤𝐨 𝐂𝐡𝐚𝐚𝐡𝐮𝐧𝐠𝐚💖 – 𝐅𝐮𝐥𝐥 𝐒𝐨𝐧𝐠 | Arijit Singh | Arjun Kapoor & Shraddha K | Mithoon | Manoj M",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "5gwy0gcjIkI",
+   "title": "Tere Sang Yaara - Rustom | Akshay Kumar & Ileana D'cruz | Arko | Manoj Muntashir",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ZmcBC9-wAXM",
+   "title": "Qaafirana | Kedarnath | Sushant Rajput | Sara Ali Khan | Arijit Singh & Nikhita | Amit Trivedi",
+   "label": "Zee Music",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "bqGtrvcR5ls",
+   "title": "Harrdy Sandhu - Backbone | Jaani | B Praak | Zenith Sidhu | Official Music Video",
+   "label": "Sony Music India",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "NMsvr4txH_g",
+   "title": "Kuch To Hua Hai 4K Official Music Video | Alka Yagnik | Shaan | Saif Ali Khan | Preity Zinta",
+   "label": "Sony Music India",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "kDhS2aHgt1M",
+   "title": "Jaam Woh Hai Jo Bhar Ke Chalakta Hai - 8K | Sainik | Akshay Kumar, Ashwini | Kumar Sanu | 90s Hits",
+   "label": "Tips",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "3u6lLWGjFLY",
+   "title": "Naina | Crew | Diljit Dosanjh, Ft. Badshah | Tabu, Kareena Kapoor Khan, Kriti Sanon | Raj Ranjodh",
+   "label": "Tips",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "LX2zshAgECQ",
+   "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
+   "label": "Tips",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "QGn8Ww4euTA",
+   "title": "Chahenge Tumhein - Video Song | Vaah! Life Ho Toh Aisi | Shahid Kapoor & Amrita Rao",
+   "label": "Tips",
+   "found": "2026-10-06"
+  },
+  {
+   "id": "NWdasSZcvHY",
+   "title": "Tu Meri Dost Hain Full Video - Yuvvraaj |Salman Khan, Katrina Kaif| Shreya Ghoshal, Benny|A.R Rahman",
+   "label": "Tips",
    "found": "2026-10-06"
   }
  ]

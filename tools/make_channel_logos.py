@@ -78,7 +78,11 @@ CHANNELS = [  # file, word, main colour, second colour, tag under the slab
     ("bazaar-hindi", "MOVIES", (255, 140, 0), (0, 140, 70), "HINDI"),
     ("bazaar-dramas", "DRAMAS", (190, 70, 230), (230, 40, 110)),
     ("bazaar-cooking", "COOKING", (240, 70, 30), (255, 185, 0)),
+    ("bazaar-teens", "TEENS", (0, 200, 220), (150, 60, 255)),
+    ("bazaar-ads", "ADS", (255, 210, 0), (230, 30, 90)),  # 15: ads and promos round the clock (2026-10-07)
+    ("latest-movies", "MOVIES", (255, 190, 0), (200, 30, 40)),  # 13: the owner's wish, no BAZAAR on it
 ]
+TOP_TAB = {"latest-movies": "LATEST"}  # the dark tab on top, for a channel not called Bazaar ...
 OLD_NAMES = {"bazaar-cinema": "sunehra-daur", "bazaar-music": "sur-sukoon", "bazaar-hits": "geet-bahar"}  # links saved before 1.9.41
 
 def mix(a, b, t): return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
@@ -153,7 +157,7 @@ def action_logo(key, word, c1, c2, tag=None):
     t = Image.new("L", out.size, 0); t.paste(tw, (ox + (sm.width - tw.width) // 2 + 10, oy + (sm.height - tw.height) // 2))
     out.alpha_composite(paint(shift(t, 10, 12), dark(c2, .5)))
     out.alpha_composite(paint(t, (255, 255, 255)))
-    tabs = [] if word == "BAZAAR" else [("BAZAAR", 235, 6, False)]  # big enough to read in the TV corner (1.9.49)
+    tabs = [] if word == "BAZAAR" else [(TOP_TAB.get(key, "BAZAAR"), 235, 6, False)]  # big enough to read in the TV corner (1.9.49)
     if tag: tabs.append((tag, 190 if len(tag) <= 2 else 175, 0 if len(tag) <= 2 else 6, True))
     for text, size, track, under in tabs:  # dark BAZAAR tab on top, coloured tag (TV, ENGLISH) under the slab
         tm = word_mask(text, size, track=track)

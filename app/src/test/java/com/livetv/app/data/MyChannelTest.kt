@@ -104,8 +104,8 @@ class MyChannelTest {
         assertEquals("mychannel://filmein", films.channel.url)
         assertTrue(MyChannel.isMine(films.channel))
         assertEquals(MyChannel.URL, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.url)
-        assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000", "9", "10", "11", "12"), MyChannel.STATIONS.map { it.dial })
-        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12), MyChannel.STATIONS.map { it.number })
+        assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000", "9", "10", "11", "12", "13", "14", "15"), MyChannel.STATIONS.map { it.dial })
+        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), MyChannel.STATIONS.map { it.number })
         assertEquals(1, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.number)
         assertEquals(2, films.channel.number)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=filmein&app=1", MyChannel.webPage(films.channel))
@@ -126,7 +126,7 @@ class MyChannelTest {
 
     @Test
     fun ourLogosCarryAVersionSoTvsFetchTheNewPicture() {
-        assertEquals("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png?v=4", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png?v=5", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
         assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
         assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
     }
@@ -151,6 +151,34 @@ class MyChannelTest {
         // Not reachable: the entry is simply skipped, as older apps do.
         val offline = MyChannel.expand(saved) { null }
         assertEquals(listOf("a", "a"), (0 until offline.getJSONArray("loop").length()).map { offline.getJSONArray("loop").getString(it) })
+    }
+
+    @Test
+    fun adsChannelPlaysPromosThenSponsors() {
+        val saved = JSONObject(
+            """{"name":"Bazaar Ads","tz":"America/Toronto","videos":[
+              {"id":"promos","url":"https://tv.bulkbazaar.ca/media/app-promos.json","kind":"ads"},
+              {"id":"sponsors","url":"https://tv.bulkbazaar.ca/channel/ads-sponsors.json","kind":"ads"},
+              {"id":"advertise","title":"Advertise","url":"https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4","secs":15,"kind":"ad"}],
+              "slots":[],"loop":["promos","sponsors","advertise"]}""",
+        )
+        val promos = JSONObject("""{"promos":[{"src":"cabletv-ad-6.mp4","secs":30},{"src":"bad.mp4","secs":3}]}""")
+        val sponsors = JSONObject("""{"ads":[{"src":"https://cdn.example.com/shop.mp4","title":"Shop","secs":75}]}""")
+        val out = MyChannel.expand(saved) { if (it.endsWith("app-promos.json")) promos else sponsors }
+        val c = MyChannel.parse(out, "ads")
+        // Too short an ad is left out; too long a one is cut at a minute (the ad length rule).
+        assertEquals(listOf("promos-0", "sponsors-0", "advertise"), c.loop)
+        val byId = c.videos.associateBy { it.id }
+        assertEquals("https://tv.bulkbazaar.ca/media/cabletv-ad-6.mp4", byId["promos-0"]!!.url)
+        assertEquals(60L, byId["sponsors-0"]!!.seconds)
+        assertTrue(c.videos.all { it.isBreak })
+        assertEquals(15, c.channel.number)
+        assertEquals(MyChannel.ADS_URL, c.channel.url)
+        assertEquals("Bazaar Ads", c.channel.name)
+        // Round and round from midnight: 30 s promo, 60 s sponsor, 15 s advertise.
+        val round = at(0, 0) + 50 * 105_000L
+        assertEquals("sponsors-0", (MyChannel.whatsOn(c, round + 40_000) as MyChannel.Now.Playing).video.id)
+        assertEquals("advertise", (MyChannel.whatsOn(c, round + 95_000) as MyChannel.Now.Playing).video.id)
     }
 
     @Test
@@ -189,5 +217,57 @@ class MyChannelTest {
         assertEquals(0, MyChannel.airingsBefore("tue", "2026-10-13", "2026-10-06"))
         assertEquals(5, MyChannel.airingsBefore("weekdays", "2026-10-05", "2026-10-12"))
         assertEquals(2, MyChannel.airingsBefore("weekend", "2026-10-02", "2026-10-05"))
+    }
+
+    @Test
+    fun cardsComeUpOnTheBreaks() {
+        val c = MyChannel.parse(
+            JSONObject(
+                """{"name":"Bazaar TV","tz":"America/Toronto","videos":[
+                  {"id":"a","title":"Film A","url":"https://x/a.mp4","secs":600,"kind":"programme"},
+                  {"id":"ad","title":"Ad","url":"https://x/ad.mp4","secs":20,"kind":"ad"}],
+                  "slots":[{"day":"all","time":"21:00","video":"a","show":"Night Film"}],"loop":["a","ad"]}""",
+            ),
+        )
+        val w = at(20, 0)
+        val shown = (0 until 600).map { w + it * 1000L }.filter { MyChannel.cardAt(c, it) != null }
+        assertTrue(shown.isNotEmpty())
+        val first = shown.first()
+        val on = MyChannel.whatsOn(c, first) as MyChannel.Now.Playing
+        assertTrue(on.video.isBreak || first == w + 8 * 60_000L)
+        // 20:00 starts an even 10 minutes: today's shows first, then what's next.
+        assertTrue(MyChannel.cardAt(c, first)!!.today)
+        assertEquals(false, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS)!!.today)
+        assertEquals(null, MyChannel.cardAt(c, first + MyChannel.TODAY_CARD_MS + MyChannel.NEXT_CARD_MS))
+        // One booked show left today: the next programmes fill the card up, in time order.
+        val today = MyChannel.todaysShows(c, at(20, 0))
+        assertEquals(listOf("Film A", "Night Film"), today.map { it.title })
+        assertTrue(today.any { it.title == "Night Film" && it.booked })
+        assertEquals(today.sortedBy { it.at }.map { it.at }, today.map { it.at })
+        assertTrue(MyChannel.upNext(c, at(20, 0)).isNotEmpty())
+    }
+
+    @Test
+    fun fillersTakeTurnsAndFitTheTimeLeft() {
+        val c = MyChannel.parse(
+            JSONObject(
+                """{"name":"Bazaar TV","videos":[
+                  {"id":"a","title":"Film","url":"https://x/a.mp4","secs":600},
+                  {"id":"story","title":"Story","url":"https://x/story.mp4","secs":200},
+                  {"id":"promo","title":"Promo","url":"https://x/promo.mp4","secs":30,"kind":"ad"},
+                  {"id":"ad","title":"Ad","url":"https://x/ad.mp4","secs":20,"kind":"ad"}],
+                  "loop":["a"],"fillers":["story","promo"]}""",
+            ),
+        )
+        // A minute left: the story doesn't fit, the promo does.
+        assertEquals("promo", MyChannel.filler(c, 60_000, at(20, 0))?.id)
+        // Plenty left: they take turns by the minute, and never the one just played.
+        assertEquals("story", MyChannel.filler(c, 600_000, at(20, 0))?.id)
+        assertEquals("promo", MyChannel.filler(c, 600_000, at(20, 0), skip = "https://x/story.mp4")?.id)
+        // No fillers set: the channel's ads.
+        val noFillers = MyChannel.parse(JSONObject(c.let { """{"name":"T","videos":[
+            {"id":"a","title":"Film","url":"https://x/a.mp4","secs":600},
+            {"id":"ad","title":"Ad","url":"https://x/ad.mp4","secs":20,"kind":"ad"}],"loop":["a"]}""" }))
+        assertEquals("ad", MyChannel.filler(noFillers, 60_000, at(20, 0))?.id)
     }
 }
