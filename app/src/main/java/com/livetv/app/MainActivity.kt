@@ -34,6 +34,7 @@ import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
 import com.livetv.app.ui.VodScreen
 import com.livetv.app.ui.VodTarget
+import com.livetv.app.ui.isTv
 
 class MainActivity : ComponentActivity() {
 
@@ -149,7 +150,8 @@ class MainActivity : ComponentActivity() {
                 onTryDemo = viewModel::addDemoPlaylist,
                 onOpenVod = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) showVod = true }) else null,
                 onOpenVodItem = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) { vodStart = it; showVod = true } }) else null,
-                onOpenGames = if (Edition.LIVE_TV) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
+                // The games are made for the TV remote, so the phone app has none (owner's rule, 2026-10-08).
+                onOpenGames = if (Edition.LIVE_TV && isTv(this@MainActivity)) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
                 onOpenQuran = if (QuranSection.AVAILABLE) ({ showQuran = true }) else null,
                 onWatch = viewModel::watched,
             )
