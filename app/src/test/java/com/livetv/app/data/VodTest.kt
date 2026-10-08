@@ -117,4 +117,13 @@ class VodLanguageTest {
         assertEquals(null, Vod.addedLabel(null))
         assertEquals(null, Vod.addedLabel("soon"))
     }
+
+    @Test
+    fun onlyTheNewestBatchIsNew() {
+        val now = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).parse("2026-10-08")!!.time
+        assertEquals("2026-10-08", Vod.newestSince(sequenceOf("2026-10-05", "2026-10-08", null), now))
+        // Nothing new for a week: nothing is marked.
+        assertEquals(Vod.newSince(now), Vod.newestSince(sequenceOf("2026-09-01"), now))
+        assertEquals(Vod.newSince(now), Vod.newestSince(emptySequence(), now))
+    }
 }

@@ -114,7 +114,13 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     val episodeList = rememberLazyListState()
     var lastPicked by rememberSaveable { mutableStateOf<String?>(null) }
     val pickedFocus = remember { FocusRequester() }
-    val newSince = remember { Vod.newSince() }
+    // Only the newest batch is marked NEW; older titles show just their "Added" day.
+    val newSince = remember(state.shelves) {
+        Vod.newestSince(state.shelves.values.asSequence().flatMap { shelf ->
+            shelf.movies.asSequence().map { it.added } +
+                (shelf.series + shelf.shows + shelf.kids).asSequence().flatMap { show -> show.episodes.asSequence().map { it.channel.added } }
+        })
+    }
 
     playing?.let { channel ->
         // Cable TV's ad breaks run here too (1.9.89). A video in YouTube's (or another site's) own player

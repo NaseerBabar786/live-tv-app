@@ -71,6 +71,16 @@ object Vod {
         return format.format(java.util.Date(now - (NEW_DAYS - 1) * 24L * 60 * 60 * 1000))
     }
 
+    /**
+     * The first day that counts as new: only the newest batch in the Library gets the NEW mark
+     * (older titles show just their "Added" day, owner 2026-10-08), and nothing older than [NEW_DAYS].
+     */
+    fun newestSince(added: Sequence<String?>, now: Long = System.currentTimeMillis()): String {
+        val window = newSince(now)
+        val newest = added.filterNotNull().maxOrNull() ?: return window
+        return maxOf(window, newest)
+    }
+
     /** "Added Oct 8" for the day a programme first showed up in its list ("2026-10-08"), or null. */
     fun addedLabel(added: String?): String? {
         val day = runCatching {
