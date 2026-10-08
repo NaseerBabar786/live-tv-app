@@ -117,7 +117,7 @@ class ChannelRepository(context: Context) {
             }
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
             // MTA's own channels lead the list when they're on (right after our Bazaar channels,
-            // so 16 to 23), and replace any copy of them further down.
+            // so 17 to 24), and replace any copy of them further down.
             val withMta = withPakistaniLive(channels.filterNot { Mta.isOldLink(it.url) })
                 .let { if (showMta) Mta.CHANNELS + it else it }
             // Lists can repeat a stream (e.g. one channel filed under two names). The
