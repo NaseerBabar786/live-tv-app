@@ -181,6 +181,10 @@ object MyScreen {
     const val STORIES = "Top stories"
     const val SECOND = "Second channel"
     const val NOTHING = "Nothing"
+    const val USUAL_SIZE = "Usual"
+
+    /** Channel sizes: the share of the screen's width the channel takes. "Usual" keeps the layout's own size. */
+    val SIZES = linkedMapOf(USUAL_SIZE to null, "60%" to 0.6f, "70%" to 0.7f, "75%" to 0.75f, "85%" to 0.85f)
 
     /** Accent colours, by name (ARGB). */
     val ACCENTS = linkedMapOf(
@@ -195,6 +199,7 @@ object MyScreen {
 
     enum class Section(val label: String, val options: List<String>) {
         Layout("Layout", listOf(RIGHT, LEFT, BIG)),
+        Size("Channel size", SIZES.keys.toList()),
         Style("Style", listOf(GLASS, FLAT, BOLD)),
         Accent("Accent colour", ACCENTS.keys.toList()),
         Spot1("Spot 1", listOf(CLOCK) + (SPOT - CLOCK)),
@@ -209,6 +214,8 @@ object MyScreen {
         val spots get() = listOf(Section.Spot1, Section.Spot2, Section.Spot3, Section.Spot4).map { get(it) }.filter { it != NOTHING }
         val usesSecond get() = SECOND in spots
         val accent get() = ACCENTS[get(Section.Accent)] ?: ACCENTS.values.first()
+        /** The channel's share of the width the viewer picked, or null for the layout's usual size. */
+        val size: Float? get() = SIZES[get(Section.Size)]
     }
 
     private var prefs: SharedPreferences? = null
