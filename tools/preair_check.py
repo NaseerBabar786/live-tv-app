@@ -11,7 +11,7 @@ show ... also in the Library ... no video goes live until you do a check". Two p
 
   --lists   Every YouTube video on our lists is checked before it goes on air: our channels (yt-*.json,
             Bazaar Hits, Bazaar TV's trailers, music videos and programme blocks), the Library
-            (Dramas.m3u) and the live channels (PakistanLive.m3u). A video that won't play in an embedded
+            (Dramas.m3u, MTA.m3u) and the live channels (PakistanLive.m3u). A video that won't play in an embedded
             player (YouTube's oEmbed: 401 = embedding turned off, 404 = removed or private; or found by the
             nightly check, unplayable.json) is taken off the list, so it never shows YouTube's error or
             "Watch on YouTube" screen. A new video whose check gets no answer is held back until it passes.
@@ -143,7 +143,7 @@ def lookup(video_id):
 # Lists whose items carry a YouTube video id ("id"): taken off the list when it fails.
 JSON_LISTS = ["channel/yt-*.json", "channel/bollywood.json", "channel/trailers.json", "channel/music-videos.json",
               "channel/block-*.json", "weather/videos.json"]
-M3U_LISTS = ["Dramas.m3u", "PakistanLive.m3u"]
+M3U_LISTS = ["Dramas.m3u", "MTA.m3u", "PakistanLive.m3u"]
 # Lists of songs and weather clips rather than programmes: the no-horror rule doesn't take songs off them.
 NOT_PROGRAMMES = {"bollywood.json", "music-videos.json", "sur.json", "videos.json"}
 
