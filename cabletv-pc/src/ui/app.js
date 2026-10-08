@@ -12,6 +12,7 @@ import { openStart } from './screens/start.js';
 import { openSignIn } from './screens/signin.js';
 import { openHome } from './screens/home.js';
 import { checkForUpdate } from './screens/update.js';
+import { scheduleWelcome } from './screens/welcome.js';
 
 // Errors in the screens are reported (tv.bulkbazaar.ca/crashes); they don't close the app.
 window.addEventListener('error', (e) => window.pc?.error(e.message, e.error && e.error.stack));
@@ -28,6 +29,7 @@ async function signedInWork() {
   await account.recordOpen();
   await plans.refresh(account);
   await sponsors.refresh(account);
+  scheduleWelcome();
 }
 
 async function main() {

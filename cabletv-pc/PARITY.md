@@ -55,3 +55,8 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   every language, and they are free in every package (`mta.js`, `channels.js`, `plans.js`).
 - 1.10.3 (PC 1.0.7): two modern games, Block Burst and Color Pour, in a 🎮 Games screen. Both apps open the
   very same pages (`app/src/main/assets/games`, copied in by `scripts/prepare.js`; `screens/games.js`).
+- 1.10.4 (PC 1.0.8): the welcome invitation. Every viewer who hasn't used promo code WELCOME gets "Try Gold free
+  for one month" from the Cable TV team, with a one-press "Use code WELCOME" and a request for a good review. It pops
+  up once per account (users/{uid}.welcomeAt) about 25 s after start; TV and phone keep it at the top of Messages,
+  the PC (no Messages screen yet) in Settings. The PC also gets "🎟 Have a promo code?" in Settings (`welcome.js`,
+  `screens/welcome.js`, `plans.redeem`).

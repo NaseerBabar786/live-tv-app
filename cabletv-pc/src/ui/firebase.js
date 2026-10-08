@@ -96,3 +96,21 @@ export async function list(collection, { limit = 50, token, orderBy, newestFirst
   const arr = await request('POST', `${base()}:runQuery`, { body: { structuredQuery: q }, bearer: token });
   return arr.filter((x) => x.document).map((x) => [x.document.name.split('/').pop(), fields(x.document)]);
 }
+
+/** The document at [path] as Firestore returns it (with its updateTime), or null when there is none. */
+export async function getRaw(path, token) {
+  try {
+    return await request('GET', doc(path), { bearer: token });
+  } catch (e) {
+    if (e.code === 404) return null;
+    throw e;
+  }
+}
+
+/** A document's full name, for [commit] (Firestore.name). */
+export const name = (path) => `projects/${FIREBASE.projectId}/databases/(default)/documents/${path}`;
+
+/** Several writes saved together or not at all (Firestore.commit). */
+export async function commit(writes, token) {
+  await request('POST', `${base()}:commit`, { body: { writes }, bearer: token });
+}

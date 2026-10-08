@@ -142,3 +142,56 @@ export function ask(label, key) {
   if (asker) asker(label, lowestWith(key));
   return true;
 }
+
+/**
+ * Uses a promo code the owner made on tv.bulkbazaar.ca/packages (promoCodes/{CODE}): the code's package for its
+ * length, once per viewer, in one save that also counts the code as used by them (Subscription.redeem).
+ * Returns what to tell the viewer ("Done! ..." when it worked).
+ */
+export async function redeem(account, typed) {
+  const u = account.user();
+  if (!u) return 'Please sign in first.';
+  const code = String(typed || '').toUpperCase().replace(/[^A-Z0-9-]/g, '');
+  if (code.length < 4) return 'Type the promo code first.';
+  const t = await account.token();
+  const raw = await fb.getRaw(`promoCodes/${code}`, t);
+  if (!raw) return `There's no promo code ${code}. Check the letters and numbers and try again.`;
+  const f = fb.fields(raw);
+  const tier = tierOf(f.tier);
+  if (!tier || tier === 'Free') return "This code isn't set up right. Please message us.";
+  const days = Number(f.days) || 0;
+  const usedBy = (f.usedBy && typeof f.usedBy === 'object') ? f.usedBy : {};
+  if (f.active === false) return 'This promo code has been turned off.';
+  if (usedBy[u.uid]) return "You've already used this promo code.";
+  if ((Number(f.used) || 0) >= (Number(f.uses) || 0)) return 'This promo code has been used up.';
+  if (days <= 0) return "This code isn't set up right. Please message us.";
+  // The same package still running: the code's time comes after it ends, like a renewal.
+  const plan = await fb.get(`plans/${u.uid}`, t);
+  const now = new Date();
+  const runningUntil = plan && tierOf(plan.tier) === tier && plan.until instanceof Date && plan.until > now ? plan.until : null;
+  const until = new Date((runningUntil || now).getTime() + days * 86400000);
+  usedBy[u.uid] = { name: u.name, email: u.email, at: now };
+  const writes = [
+    {
+      update: {
+        name: fb.name(`promoCodes/${code}`),
+        fields: { used: { integerValue: String((Number(f.used) || 0) + 1) }, usedBy: { mapValue: { fields: fb.encode(usedBy) } } },
+      },
+      updateMask: { fieldPaths: ['used', 'usedBy'] },
+      // Someone else using it at the same moment: try again rather than count over the limit.
+      currentDocument: { updateTime: raw.updateTime },
+    },
+    {
+      update: { name: fb.name(`plans/${u.uid}`), fields: fb.encode({ tier, until, code, name: u.name, email: u.email }) },
+      updateTransforms: [{ fieldPath: 'updated', setToServerValue: 'REQUEST_TIME' }],
+    },
+  ];
+  try {
+    await fb.commit(writes, t);
+  } catch (e) {
+    return [400, 409, 412].includes(e.code) ? 'Someone else used it at the same moment. Please try again.'
+      : "This promo code can't be used. Please message us.";
+  }
+  await refresh(account);
+  return `Done! You have ${TIER_LABEL[tier]} until ${until.toLocaleDateString()}. Enjoy!`;
+}
