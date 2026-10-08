@@ -5,6 +5,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- The updater downloads new versions and hands them to the system installer. -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- The Azan at prayer time, also when the app is closed: an alarm, then a sound with a notification. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- Installs on phones, tablets and Google TV / Android TV. -->
     <uses-feature android:name="android.software.leanback" android:required="false" />
@@ -48,6 +56,26 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/update_paths" />
         </provider>
+        <!-- Azan: the alarm, the player and its notification, and setting the alarm again after a restart. -->
+        <receiver android:name=".azan.AzanReceiver" android:exported="false" />
+        <receiver android:name=".azan.AzanRescheduleReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <!-- Stop from the notification, or from Cable TV's Azan screen (which stays silent while this app plays). -->
+        <receiver android:name=".azan.AzanStopReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.iqraquran.app.STOP_AZAN" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".azan.AzanService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
         <!-- Opens instead of the app when a new version closed by itself while starting (CrashGuard). -->
         <activity
             android:name=".RescueActivity"

@@ -187,6 +187,25 @@ class WebChannelActivity : Activity() {
         finish()
     }
 
+    /** The Azan screen covers this channel: its sound pauses until the Azan is over. */
+    private var pausedForAzan = false
+
+    override fun onStop() {
+        super.onStop()
+        if (QuranSection.azanShowing && !isFinishing) {
+            pausedForAzan = true
+            webView?.onPause()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (pausedForAzan) {
+            pausedForAzan = false
+            webView?.onResume()
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         // Leaving the channel (Home, another app) stops it, like the other channels.

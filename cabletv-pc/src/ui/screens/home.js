@@ -1,5 +1,5 @@
-// The main screen (ChannelListScreen.kt): the top bar (logo, clock and weather, Modes, sound, search,
-// Settings), the filter row (All, Favorites, genres), the channel count, the mode, and the
+// The main screen (ChannelListScreen.kt): the top bar (logo, clock and weather, Modes, Iqra Quran, sound,
+// search, Settings), the filter row (All, Favorites, genres), the channel count, the mode, and the
 // "advertise with us" line along the bottom.
 import { h, button, toast, dialog } from '../dom.js';
 import * as nav from '../nav.js';
@@ -13,6 +13,8 @@ import { tilesMode } from './tiles.js';
 import { fiveMode } from './five.js';
 import { openFull } from './full.js';
 import { openSettings } from './settings.js';
+import { openQuran } from './quran.js';
+import * as azan from '../azan.js';
 import { openGames } from './games.js';
 import * as features from '../features.js';
 
@@ -47,6 +49,7 @@ export function openHome({ onExit }) {
   const weatherEl = h('span.weather');
   const search = h('input.search.hidden', { type: 'search', placeholder: 'Search channels' });
   const modesBtn = button('▦  Modes', () => openModes(), 'top');
+  const quranBtn = button('📖  Iqra Quran', () => openQuranSection(), 'top');
   const soundBtn = button('', () => { sound = !sound; store.set('previewSound', sound); renderSound(); current?.setSound?.(sound); }, 'icon');
   const searchBtn = button('🔍', () => toggleSearch(), 'icon');
   const gamesBtn = button('🎮', () => showGames(), 'icon');
@@ -54,7 +57,7 @@ export function openHome({ onExit }) {
   const settingsBtn = button('⚙', () => openSettings({ onChanged: refreshAll, onExit: askExit }), 'icon');
   const topbar = h('header.topbar',
     h('div.brand', h('div.brandline', h('img.logo', { src: 'logo.svg', alt: '' }), title), h('div.brandline.sub', clock, weatherEl)),
-    search, h('div.spacer'), modesBtn, gamesBtn, soundBtn, searchBtn, settingsBtn);
+    search, h('div.spacer'), modesBtn, quranBtn, gamesBtn, soundBtn, searchBtn, settingsBtn);
   const chips = h('div.chips');
   const count = h('div.count');
   const content = h('div.content');
@@ -220,6 +223,31 @@ export function openHome({ onExit }) {
     });
   }
 
+  // ---------- Iqra Quran (QuranSection.kt): over the whole screen, the mode paused meanwhile ----------
+  function openQuranSection() {
+    current?.pause?.();
+    ads.detach(content);
+    root.classList.add('hidden');
+    openQuran({
+      onClose: () => {
+        root.classList.remove('hidden');
+        ads.attach(content, { full: false });
+        current?.resume?.();
+        nav.focus(quranBtn);
+      },
+    });
+  }
+
+  // The Azan at prayer time for the whole session (azan.js): the mode on screen pauses while it plays.
+  const stopAzan = azan.startWatcher({
+    pause: () => {
+      if (root.classList.contains('hidden')) return null;
+      current?.pause?.();
+      ads.detach(content);
+      return () => { ads.attach(content, { full: false }); current?.resume?.(); };
+    },
+  });
+
   // ---------- Keys on this screen ----------
   const inTopBar = () => topbar.contains(document.activeElement);
   const pop = nav.push(root, (key) => {
@@ -259,6 +287,7 @@ export function openHome({ onExit }) {
   return {
     destroy() {
       current?.destroy();
+      stopAzan();
       pop();
       unsub();
       unsubPlans();

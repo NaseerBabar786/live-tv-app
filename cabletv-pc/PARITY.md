@@ -15,6 +15,8 @@ When Cable TV changes:
 
 Website code shared with the PC app (`docs/channel/schedule.js`, `cards.js`, `clock.js`) is copied in
 at every build (`scripts/prepare.js`); changing it needs a new PC version too.
+Iqra Quran's text, translations, reciters and font (`qurankit/src/main/assets/quran`, `res/font`) and
+logo (`docs/quran/logo.svg`) are copied the same way.
 
 ## Not on PC yet (second test build)
 
@@ -55,7 +57,7 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   every language, and they are free in every package (`mta.js`, `channels.js`, `plans.js`).
 - 1.10.3 (PC 1.0.7): two modern games, Block Burst and Color Pour, in a 🎮 Games screen. Both apps open the
   very same pages (`app/src/main/assets/games`, copied in by `scripts/prepare.js`; `screens/games.js`).
-- Next Cable TV build (PC 1.0.8): no YouTube screen ever shows (owner's rule, 2026-10-07). Our pages in a
+- 1.10.5 (PC 1.0.9): no YouTube screen ever shows (owner's rule, 2026-10-07). Our pages in a
   `<webview>` can't be taken to YouTube's own site (`main.js`), as on Android (`YouTube.blocksNavigation`).
   The locked YouTube pages themselves (player taller than its box, cover on errors) are the website's,
   shared by both apps. The Library's "open in the YouTube app" is gone on Android; the PC has no Library yet.
@@ -64,3 +66,7 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   up once per account (users/{uid}.welcomeAt) about 25 s after start; TV and phone keep it at the top of Messages,
   the PC (no Messages screen yet) in Settings. The PC also gets "🎟 Have a promo code?" in Settings (`welcome.js`,
   `screens/welcome.js`, `plans.redeem`).
+- 1.10.7 (PC 1.0.11): Iqra Quran in the top bar: Kids Qaida, Read with recitation, Hifz, and Namaz (prayer timeline,
+  Azan with muezzin choice, reminders), in Cable TV's colours (`screens/quran.js`, `prayer.js`, `azan.js`). On PC the
+  Qaida letter sounds use Windows' own Arabic voice when it has one, and the Azan plays while the PC app is open
+  (full screen, the channels paused), with a Windows notification for every prayer, chime, message and reminder. Translations: up to 3 of 60+ languages, each downloaded when picked (`docs/quran/tr`).
