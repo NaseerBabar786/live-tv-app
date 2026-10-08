@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 tools/probe/spark_media.py
+      - run: python3 tools/probe/spark_music.py
       - run: |
-          tar czf spark-media.tgz -C out .
-          gh release delete spark-ad-media -y --cleanup-tag || true
-          gh release create spark-ad-media spark-media.tgz --prerelease --title "Spark ad media (temporary)" --notes "Thumbnails and CC BY music candidates for the Spark network ad" --target spark-media-probe
+          tar czf spark-music.tgz -C out m
+          gh release delete-asset spark-ad-media spark-music.tgz -y || true
+          gh release upload spark-ad-media spark-music.tgz --clobber
         env:
           GH_TOKEN: ${{ github.token }}
