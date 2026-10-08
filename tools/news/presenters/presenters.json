@@ -879,6 +879,15 @@
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "picture": "anchor-m10",
     "edit": "Place him in a bright symmetrical blue TV news studio: directly behind him a large curved screen showing a glowing white and blue Earth globe, on the left and right two big wall screens with bold red and blue graphic banners (plain colour shapes, no words), white light bands along the ceiling, a clear glass news desk with metal legs and a few printed pages on it, glossy reflections; no words, letters or logos anywhere. He sits upright in the centre behind the glass desk, shoulders square to the camera, both hands resting on the printed pages. Keep his face, skin tone, hair, and his clothes exactly the same; photorealistic broadcast photo."
+   },
+   {
+    "id": "anchor-10p",
+    "name": "Mahnoor",
+    "ur": "ماہ نور",
+    "seed": 10101,
+    "prompt": "RAW photo, cinematic medium close shot from the chest up, a strikingly realistic Pakistani woman TV news anchor, 30 years old, long dark wavy hair over her shoulders, natural makeup, wearing a tailored dark navy blazer over a modest high-neck black top, small pearl earrings, sitting upright at a news desk looking straight into the camera with a calm confident closed-mouth expression, at night in a dark modern TV studio: on the left a big window with a blurred city skyline full of lights at night, on the right a large glowing blue world map video wall, soft key light on her face, Canon 85mm, very shallow depth of field, photorealistic broadcast photograph, not illustration, no text, no logos",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
    }
   ]
  }
