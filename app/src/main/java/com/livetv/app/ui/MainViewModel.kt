@@ -127,6 +127,20 @@ data class UiState(
                 .mapIndexed { i, channel -> channel.copy(number = MyChannel.COUNT + mta + i + 1) }
         }
 
+    /**
+     * The Favorites row of Duo mode, the same channels 1+List shows under Favorites: our own channels,
+     * MTA's (when on), then the saved favourites grouped by country. Channels keep their own numbers.
+     */
+    val favoriteChannels: List<Channel>
+        get() {
+            val (lead, rest) = channels
+                .filter { it.id in favorites || leads(it) }
+                .filter { languageFilter.isEmpty() || it.language in languageFilter || leads(it) }
+                .partition { leads(it) }
+            return lead.sortedBy { !MyChannel.isMine(it) } +
+                rest.sortedWith(compareBy({ countryRank(it) }, { countryName(it) }, { it.number }))
+        }
+
     /** Our Bazaar channels and MTA's (when on): always listed first, in every language and in Favorites. */
     private fun leads(channel: Channel) = MyChannel.isMine(channel) || Mta.isMta(channel)
 
