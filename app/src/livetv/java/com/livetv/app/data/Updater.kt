@@ -51,7 +51,7 @@ class Updater(context: Context) {
         val version = runCatching {
             JSONObject(fetchText(OwnerTest.VERSIONS)).optString(if (Edition.MAX) "live-tv-max" else "cable-tv")
         }.getOrNull()?.takeIf { it.isNotBlank() && isNewer(it, installedVersion) } ?: return null
-        return Release("$version (test)", OwnerTest.BASE + if (Edition.MAX) "LiveTVMax.apk" else "LiveTV.apk", 0)
+        return Release(label(version).let { if ("test" in it) it else "$it (test)" }, OwnerTest.BASE + if (Edition.MAX) "LiveTVMax.apk" else "LiveTV.apk", 0)
     }
 
     /** Downloads the release's APK, reporting progress from 0 to 1. */
@@ -164,6 +164,15 @@ class Updater(context: Context) {
 
         /** "v1.6.2-build31" -> "1.6.2". */
         fun versionFromTag(tag: String): String = tag.removePrefix("v").substringBefore("-")
+
+        /**
+         * How a version is shown. Test builds are named "<coming public version>.<test number>" by CI
+         * (tools/public_version.py), so "1.11.0.5" reads "1.11.0 test 5"; public versions show as they are.
+         */
+        fun label(version: String): String {
+            val parts = version.split(".")
+            return if (parts.size == 4) parts.take(3).joinToString(".") + " test " + parts[3] else version
+        }
 
         /** Compares dotted versions number by number, so "1.10.0" is newer than "1.9.9". */
         fun isNewer(candidate: String, installed: String): Boolean {

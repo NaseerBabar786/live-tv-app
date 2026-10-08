@@ -43,7 +43,7 @@ object OwnerTest {
         set(context, true)
         val updater = Updater(context)
         val release = withContext(Dispatchers.IO) { updater.testRelease() }
-            ?: return "No newer test version right now. You have ${updater.installedVersion}."
+            ?: return "No newer test version right now. You have ${Updater.label(updater.installedVersion)}."
         val apk = runCatching { updater.download(release, onProgress = onProgress) }
             .getOrElse { return it.message ?: "The test version could not be downloaded." }
         if (!updater.ensureInstallAllowed()) return "Allow installing apps, then press Try test version again."

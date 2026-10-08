@@ -19,6 +19,18 @@ jobs:
       - name: Version codes x10
         run: python3 tools/version_codes.py scale
 
+      # Cable TV is named by CI, not by the gradle file: the coming public version + this build's test
+      # number ("1.11.0.5", shown as "1.11.0 test 5"), so test numbers never show up in a released
+      # version (owner, 2026-10-08). See tools/public_version.py.
+      - name: Cable TV version name
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          latest=$(gh release view --json tagName -q .tagName 2>/dev/null || true)
+          held=$(gh release view approved --json name -q .name 2>/dev/null || true)
+          python3 tools/public_version.py apply "$(python3 tools/public_version.py test ${{ github.run_number }} "$latest" "$held")"
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -174,7 +186,7 @@ jobs:
           fi
           notes=$(python3 -c 'import json; d=json.load(open("versions.json")); print("Owner-only TEST build %s from %s. Not sent to users until approved.\n\n" % (d["build"], d["commit"][:7]) + "\n".join("- %s %s" % (k, d[k]) for k in d if k not in ("build", "commit")))')
           gh release edit test --prerelease --latest=false \
-            --title "TEST build ${{ github.run_number }} (Cable TV $(v app/build.gradle.kts 1))" --notes "$notes"
+            --title "TEST build ${{ github.run_number }} (Cable TV $(v app/build.gradle.kts 1 | sed -E 's/^([0-9]+\.[0-9]+\.[0-9]+)\.([0-9]+)$/\1 test \2/'))" --notes "$notes"
 
       # Stream Player Plus goes in its own release, one per version, never marked
       # "latest", so Cable TV's download link and update check keep finding Cable TV.
