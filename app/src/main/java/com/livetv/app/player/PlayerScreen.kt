@@ -354,7 +354,7 @@ fun PlayerScreen(
                         .height(44.dp),
                     big = true,
                     everyMs = 2 * 60_000L,
-                    skip = { skipNow || SponsorKey.onOk != null || AdBreak.active.value },
+                    skip = { skipNow || SponsorKey.onOk != null || AdBreak.active.value || MyChannel.newsOn(channel.url) },
                 )
             }
         }

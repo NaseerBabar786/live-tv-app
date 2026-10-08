@@ -332,6 +332,20 @@ object MyChannel {
     fun now(channel: Channel?, nowMs: Long = System.currentTimeMillis()): Now =
         configOf(channel)?.let { whatsOn(it, nowMs) } ?: Now.OffAir(null, null)
 
+    /** A Bazaar TV News bulletin (news-headlines, news-full). */
+    fun isNews(v: Video) = v.id.startsWith("news-")
+
+    /**
+     * Owner rule (2026-10-08): no ads of any kind on Bazaar TV (channel 1) while a news bulletin is on
+     * (or one starts within [aheadMs]); ads come before or after the news, in the channel's own breaks.
+     */
+    fun newsOn(channelUrl: String?, nowMs: Long = System.currentTimeMillis(), aheadMs: Long = 0L): Boolean {
+        if (channelUrl != URL) return false
+        val c = usable(_configs.value[URL.removePrefix(SCHEME)]) ?: return false
+        fun at(t: Long) = (runCatching { whatsOn(c, t) }.getOrNull() as? Now.Playing)?.video?.let(::isNews) == true
+        return at(nowMs) || (aheadMs > 0 && at(nowMs + aheadMs))
+    }
+
     private class Start(val at: Long, val video: Video, val dated: Boolean, val show: String = "")
 
     /**

@@ -1,44 +1,22 @@
 {
  "name": "مزاحیہ",
- "built": "2026-10-08 12:35 UTC",
- "secs": 1356,
+ "built": "2026-10-08 20:06 UTC",
+ "secs": 1254,
  "videos": [
   {
-   "id": "GLdxDpmwHP4",
-   "title": "Mara Popatlal Ko ! | Haste Raho Hasate Raho! | Taarak Mehta ka Ooltah Chashmah",
+   "id": "NogFgN9HGJc",
+   "title": "NEW Episode 4833 - Jethalal ! Taarak Mehta Ka Ooltah Chashmah",
    "label": "Taarak Mehta",
-   "secs": 673,
+   "secs": 614,
    "kind": "comedy"
   },
   {
-   "id": "uyY_bAjId6U",
-   "title": "Bhootni Ko Dekh Popatlal ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
+   "id": "_NjImGHkTug",
+   "title": "NEW Episode 4835 - Daya Ko Dekhke Jethalal Hua Shock ! Taarak Mehta Ka Ooltah Chashmah",
    "label": "Taarak Mehta",
-   "secs": 683,
+   "secs": 640,
    "kind": "comedy"
   }
  ],
- "spares": [
-  {
-   "id": "cX1VNQ-bOec",
-   "title": "SE 01 EP 357 - Jethalal Ne Mara Daya Ke ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "secs": 1248,
-   "kind": "comedy"
-  },
-  {
-   "id": "ZpD231WC-M4",
-   "title": "SE 01 EP 346 - Tapu Ka Result Dekh Ke Khush Hue Jetha Daya ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "secs": 938,
-   "kind": "comedy"
-  },
-  {
-   "id": "4TL0vvUsmqE",
-   "title": "NEW Episode 4834 - Jetha Ne Babita Ko Bataye Raaz ! Taarak Mehta Ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "secs": 619,
-   "kind": "comedy"
-  }
- ]
+ "spares": []
 }

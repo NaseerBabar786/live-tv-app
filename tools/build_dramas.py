@@ -32,6 +32,7 @@ import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from playable import plays  # noqa: E402
+import hindi_serials  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(ROOT, "docs")
@@ -775,6 +776,7 @@ def main():
     films(kept, today)
     channel_shows(kept, today, SHOW_CHANNELS, "Shows")
     channel_shows(kept, today, KIDS_CHANNELS, "Kids")
+    hindi_serials.add(kept, today)  # StarPlus, Sony, Colors, &TV, Dangal... (show name anywhere in the title)
     mta(kept, today)
 
     # Kept until KEEP_DAYS after a video was last found, so a show still on its channel's

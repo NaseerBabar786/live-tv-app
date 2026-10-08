@@ -134,10 +134,21 @@ private const val TICKER_EVERY_MS = 30_000L
 private const val TICKER_DP_PER_SECOND = 110f
 /** When the ticker runs next (elapsed realtime), kept across screens so going in and out of a channel doesn't reset it. */
 private var nextTickerAt = 0L
+/**
+ * The packages line (owner, 2026-10-08): it takes turns with the "advertise with us" words, one run each.
+ * Free = every channel in 1+List; Gold = full screen and every other feature.
+ */
+private const val PACKAGE_LINE =
+    "All 7,800+ channels free on Cable TV  ·  Gold \$9.99/month adds full screen, every mode, Library, Games & more  ·  New? 7 days free + code WELCOME"
+/** How many runs the ticker has made since start, across screens, so the two lines keep taking turns. */
+private var tickerRuns = 0
+
+/** The words for the ticker's next run: the sponsors' line and the packages line, in turn. */
+private fun nextTickerLine(advertise: String): String = if (tickerRuns++ % 2 == 0) advertise else PACKAGE_LINE
 
 /**
- * One line of text that scrolls from right to left across [modifier]'s space every 30 seconds,
- * inviting businesses to advertise. The owner sets the words on tv.bulkbazaar.ca/sponsors.
+ * One line of text that scrolls from right to left across [modifier]'s space every 30 seconds:
+ * the invitation to advertise (the owner sets the words on tv.bulkbazaar.ca/sponsors) and the packages line, in turn.
  * [big] is the band above the tiles of 1×2 and 2×2; otherwise it's the line beside the channel count.
  * [always] keeps it running without the 30 second wait (News mode's bottom band).
  * [everyMs] above 0 runs it on its own clock instead, once every [everyMs] (the full-screen channel),
@@ -157,10 +168,12 @@ fun SponsorTicker(
     val text by Sponsors.ticker.collectAsStateWithLifecycle()
     val words = text ?: return
     var running by remember { mutableStateOf(false) }
+    var line by remember { mutableStateOf(words) }
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(words) {
         // News mode: the line runs again and again, with a short pause between.
         if (always) while (true) {
+            line = nextTickerLine(words)
             running = true
             snapshotFlow { running }.first { !it }
             delay(2_000)
@@ -169,6 +182,7 @@ fun SponsorTicker(
         if (everyMs > 0) while (true) {
             delay(everyMs)
             if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) || skip()) continue
+            line = nextTickerLine(words)
             running = true
             snapshotFlow { running }.first { !it }
         }
@@ -180,6 +194,7 @@ fun SponsorTicker(
                 continue
             }
             nextTickerAt = SystemClock.elapsedRealtime() + TICKER_EVERY_MS
+            line = nextTickerLine(words)
             running = true
             snapshotFlow { running }.first { !it }
         }
@@ -199,7 +214,7 @@ fun SponsorTicker(
             running = false
         }
         Text(
-            words,
+            line,
             // White, the owner's choice (1.9.61; it was yellow).
             color = Color.White,
             style = if (big) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleSmall,
@@ -500,6 +515,9 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
         if (podJob?.isActive == true) return
         // Bazaar Ads (channel 15) is all ads already: no pop-up ads over it (owner, 2026-10-07).
         if (watchingId.value == MyChannel.ADS_URL) return
+        // Bazaar TV (channel 1) is our own live channel: its ads run in its own schedule breaks, never during
+        // the news, so the app adds no pop-up ads or breaks over it (owner, 2026-10-08).
+        if (watchingId.value == MyChannel.URL) return
         val first = if (onlyPromos) null else Sponsors.next("card")
         val pod = if (isFullScreen) {
             val more = if (first == null) emptyList() else (2..POD_SIZE).mapNotNull { Sponsors.next("card") }

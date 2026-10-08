@@ -427,6 +427,11 @@ def build(cid, ch, today):
                 break
             found[vid] = {"id": vid, "title": title.strip(), "label": label, "mins": mins,
                           "found": old.get(vid, {}).get("found", today.isoformat())}
+            # When it went up on YouTube, as far as the page says ("3 weeks ago"): Bazaar TV One's blocks
+            # take only new uploads (tools/build_bazaar_blocks.py, the owner's wish 2026-10-08).
+            posted = dates.get(vid) or ((today - dt.timedelta(days=age)).isoformat() if age is not None else old.get(vid, {}).get("posted"))
+            if posted:
+                found[vid]["posted"] = posted
             if ch.get("newest"):
                 # When it went up on YouTube: the channel's feed (its 15 newest), else "3 weeks ago" on the
                 # page, else as known before; a film with no known date goes after the dated ones.

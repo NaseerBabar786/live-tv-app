@@ -1,7 +1,35 @@
 {
  "name": "Bazaar Cooking",
- "built": "2026-10-08 10:05 UTC",
+ "built": "2026-10-08 20:17 UTC",
  "videos": [
+  {
+   "id": "xLyVet1CRGE",
+   "title": "Schezwan Chicken Lollipop Recipe By Food Fusion",
+   "label": "Food Fusion",
+   "mins": 4.066666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "963raw1N5q8",
+   "title": "Injected Broast, Twister | Fusion Food | Saad Butt | 7 Oct 26 | Masala Tv",
+   "label": "Masala TV",
+   "mins": 38.11666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "fjyz7Bhdo2A",
+   "title": "Doli Roti, Tawa Masala Fish | Rida Aftab | Tarka | 8 Oct 26 | Masala Tv",
+   "label": "Masala TV",
+   "mins": 41.6,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "JGp9Pci2nqU",
+   "title": "Butter Garlic Prawns, Mumbai Daal Gosht  | Shireen Anwar | Masala Mornings | 8 Oct 26 | Masala TV",
+   "label": "Masala TV",
+   "mins": 42.45,
+   "found": "2026-10-08"
+  },
   {
    "id": "UjzwnbbkKB8",
    "title": "Pineapple Delight | Creamy & Delicious Dessert Recipe | Chef Saad Butt | Masala TV",
@@ -399,27 +427,6 @@
    "title": "Fruit Cocktail Delight, Fresh Chilli Garlic Prawns | Rida Aftab | Tarka | 5 Oct 26 | Masala Tv",
    "label": "Masala TV",
    "mins": 44.45,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "gdwhU9uMmqQ",
-   "title": "Hyderabadi Tinday, Victoria Chicken | Shireen Anwar | Masala Mornings | 5 Oct 26 | Masala TV",
-   "label": "Masala TV",
-   "mins": 40.75,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "tKj6pt5NWEA",
-   "title": "One Pot Biryani Recipe | Easy, Flavorful & Delicious Pakistani Biryani | Chef Saad Butt | Masala TV",
-   "label": "Masala TV",
-   "mins": 10.55,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "pUwq8WWylV0",
-   "title": "Best Of Tarka | Mustard BBQ Glazed Chicken, Khataai Bharay Fry Baingan | Rida Aftab | Masala Tv",
-   "label": "Masala TV",
-   "mins": 36.31666666666667,
    "found": "2026-10-06"
   },
   {
@@ -1211,6 +1218,27 @@
    "title": "Kashmiri Sundried Vegetable Curry | Authentic Hokh Syun | Traditional Veg Curry | Chef Varun",
    "label": "Get Curried",
    "mins": 5.483333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "gdwhU9uMmqQ",
+   "title": "Hyderabadi Tinday, Victoria Chicken | Shireen Anwar | Masala Mornings | 5 Oct 26 | Masala TV",
+   "label": "Masala TV",
+   "mins": 40.75,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "tKj6pt5NWEA",
+   "title": "One Pot Biryani Recipe | Easy, Flavorful & Delicious Pakistani Biryani | Chef Saad Butt | Masala TV",
+   "label": "Masala TV",
+   "mins": 10.55,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "pUwq8WWylV0",
+   "title": "Best Of Tarka | Mustard BBQ Glazed Chicken, Khataai Bharay Fry Baingan | Rida Aftab | Masala Tv",
+   "label": "Masala TV",
+   "mins": 36.31666666666667,
    "found": "2026-10-06"
   },
   {

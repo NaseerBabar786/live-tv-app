@@ -1,8 +1,18 @@
 {
  "name": "آنے والی فلموں کے ٹریلر",
- "built": "2026-10-08 12:35 UTC",
- "secs": 2095,
+ "built": "2026-10-08 20:06 UTC",
+ "secs": 2092,
  "videos": [
+  {
+   "id": "A36nagDzugo",
+   "title": "Ranabaali Official Trailer (Hindi) | Vijay Deverakonda | Rashmika | Rahul Sankrityan | Ajay-Atul",
+   "label": "T-Series",
+   "lang": "Hindi",
+   "secs": 233,
+   "found": "2026-10-08",
+   "kind": "trailer",
+   "section": "آنے والی ہندی فلمیں"
+  },
   {
    "id": "SoTw56f1-OA",
    "title": "#418 Oﬃcial Trailer - The Last Warning (Hindi) | Prashanth Neel | Kirtan N | In Cinemas Oct23rd",
@@ -10,8 +20,7 @@
    "lang": "Hindi",
    "secs": 211,
    "found": "2026-10-07",
-   "kind": "trailer",
-   "section": "آنے والی ہندی فلمیں"
+   "kind": "trailer"
   },
   {
    "id": "qGbvEhKhaWA",
@@ -41,21 +50,12 @@
    "kind": "trailer"
   },
   {
-   "id": "llLHwxkZ02k",
-   "title": "Namit Malhotra’s Ramayana - Hindi Trailer | Nitesh Tiwari | Ranbir, Yash, Hans Zimmer, A.R.Rahman",
-   "label": "Dharma Productions",
+   "id": "FzlWYkckA24",
+   "title": "'Bodyguard' (Official Trailer) Salman Khan",
+   "label": "T-Series",
    "lang": "Hindi",
-   "secs": 250,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "ZwOeTu6ciP8",
-   "title": "Bloody Daddy Teaser | Shahid Kapoor | Diana Penty | Rajeev Khandelwal | Ronit Roy | Ali Abbas Zafar",
-   "label": "Jio Studios",
-   "lang": "Hindi",
-   "secs": 76,
-   "found": "2026-10-07",
+   "secs": 90,
+   "found": "2026-10-08",
    "kind": "trailer"
   },
   {

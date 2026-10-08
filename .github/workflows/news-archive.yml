@@ -1,0 +1,39 @@
+name: News archive
+
+# Owner (2026-10-08): keep the day's full news report in the Library under the channel's name, one a day,
+# the newest 30. Runs after the 9 PM (Toronto) full report is up and before the midnight one replaces it.
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: news-archive
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Archive today's full report
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          base="https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media"
+          curl -fsSL -o news-full.mp4 "$base/news-full.mp4"
+          curl -fsSL -o news-full.json "$base/news-full.json"
+          python3 tools/news/archive.py news-full.mp4 news-full.json
+      - name: Save the Library list
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git add docs/NewsArchive.m3u
+          git diff --cached --quiet && exit 0
+          git commit -m "News archive: today's full report in the Library"
+          for i in 1 2 3 4; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep $((i * 5)); done
+          exit 1

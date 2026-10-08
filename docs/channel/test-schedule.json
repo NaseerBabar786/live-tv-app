@@ -4,7 +4,7 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  News every hour  ·  Urdu and Hindi dramas, music, new movie trailers, a Hindi film, cartoons, cooking and comedy  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
+ "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  News every hour  ·  Urdu and Hindi dramas, music, new movie trailers, a new Hindi film, cooking and comedy  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
  "tickerOn": true,
  "videos": [
   {
@@ -57,123 +57,11 @@
    "kind": "ad"
   },
   {
-   "id": "bbb",
-   "title": "Big Buck Bunny (cartoon)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/big-buck-bunny.mp4",
-   "secs": 596,
-   "kind": "programme"
-  },
-  {
-   "id": "ed",
-   "title": "Elephants Dream (short film)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream.mp4",
-   "secs": 653,
-   "kind": "programme"
-  },
-  {
-   "id": "tos",
-   "title": "Tears of Steel (sci-fi short)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel.mp4",
-   "secs": 734,
-   "kind": "programme"
-  },
-  {
-   "id": "sintel",
-   "title": "Sintel (fantasy short)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel.mp4",
-   "secs": 888,
-   "kind": "programme"
-  },
-  {
-   "id": "llama",
-   "title": "Caminandes: Gran Dillama (kids)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/caminandes-gran-dillama.mp4",
-   "secs": 146,
-   "kind": "programme"
-  },
-  {
-   "id": "tostrailer",
-   "title": "Trailer: Tears of Steel",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-teaser.mp4",
-   "secs": 39,
-   "kind": "ident"
-  },
-  {
-   "id": "edtrailer",
-   "title": "Trailer: Elephants Dream",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-teaser.mp4",
-   "secs": 75,
-   "kind": "ident"
-  },
-  {
-   "id": "popeye",
-   "title": "Popeye Meets Sindbad the Sailor (1936)",
-   "url": "https://archive.org/download/POPEYEMeetsSindbadTheSailor1936/POPEYE%20meets%20Sindbad%20The%20Sailor%20%281936%29.mp4",
-   "secs": 993,
-   "kind": "programme"
-  },
-  {
-   "id": "superman",
-   "title": "Superman: The Mechanical Monsters (1941)",
-   "url": "https://archive.org/download/superman_the_mechanical_monsters/superman_the_mechanical_monsters_512kb.mp4",
-   "secs": 614,
-   "kind": "programme"
-  },
-  {
-   "id": "gulliver",
-   "title": "Gulliver's Travels (1939, full cartoon film)",
-   "url": "https://archive.org/download/GulliversTravels720p_652/GulliversTravels.mp4",
-   "secs": 4582,
-   "kind": "programme"
-  },
-  {
-   "id": "raja",
-   "title": "Raja Harishchandra (1913), India's first feature film, by Dadasaheb Phalke (silent)",
-   "url": "https://archive.org/download/RajaHarishchandra1913/raja-harishchandra-1913.mp4",
-   "secs": 678,
-   "kind": "programme"
-  },
-  {
-   "id": "safety",
-   "title": "Safety Last! (1923), Harold Lloyd",
-   "url": "https://archive.org/download/SafetyLastHaroldLloyd1923.FullMovieexcellentQuality./Safety%20Last%20-%20Harold%20Lloyd%201923.%20Full%20movie%2Cexcellent%20quality..mp4",
-   "secs": 4413,
-   "kind": "programme"
-  },
-  {
-   "id": "nasaiss",
-   "title": "NASA: Tour the International Space Station",
-   "url": "https://archive.org/download/TourTheInternationalSpaceStation/finckeHD_compress1.mp4",
-   "secs": 601,
-   "kind": "programme"
-  },
-  {
-   "id": "story1",
-   "title": "کہانی: شیر اور چالاک خرگوش",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/story-lion-and-rabbit.mp4",
-   "secs": 202,
-   "kind": "programme"
-  },
-  {
    "id": "trailers",
    "title": "آنے والی ہندی اور پاکستانی فلموں کے ٹریلر",
    "url": "https://tv.bulkbazaar.ca/channel/trailers.json",
    "secs": 0,
    "kind": "trailers"
-  },
-  {
-   "id": "madsci",
-   "title": "سپرمین: پاگل سائنسدان (اردو)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/superman-1941-urdu.mp4",
-   "secs": 628,
-   "kind": "programme"
-  },
-  {
-   "id": "apollo",
-   "title": "Apollo 11: the Moon landing",
-   "url": "https://archive.org/download/PartiallyRestoredVideoEventsFromTheApollo11Mission/Apollo_11_Intro_H264_720p.mp4",
-   "secs": 137,
-   "kind": "programme"
   },
   {
    "id": "music",
@@ -223,41 +111,6 @@
    "url": "https://tv.bulkbazaar.ca/channel/block-film.json",
    "secs": 0,
    "kind": "list"
-  },
-  {
-   "id": "sprite-hi",
-   "title": "اسپرائٹ فرائٹ (ہندی)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sprite-fright-hindi.mp4",
-   "secs": 630,
-   "kind": "programme"
-  },
-  {
-   "id": "sintel-ur",
-   "title": "سنٹیل (اردو)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel-urdu.mp4",
-   "secs": 888,
-   "kind": "programme"
-  },
-  {
-   "id": "cosmos-ur",
-   "title": "کاسموس لانڈرومیٹ (اردو)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/cosmos-laundromat-urdu.mp4",
-   "secs": 731,
-   "kind": "programme"
-  },
-  {
-   "id": "terror-hi",
-   "title": "مریخ پر اترنے کے سات منٹ (ہندی)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-hindi.mp4",
-   "secs": 303,
-   "kind": "programme"
-  },
-  {
-   "id": "tos-hi",
-   "title": "ٹیئرز آف اسٹیل (ہندی)",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-hindi.mp4",
-   "secs": 734,
-   "kind": "programme"
   },
   {
    "id": "news-headlines",
@@ -402,17 +255,11 @@
   "drama-3",
   "break",
   "adbb",
-  "promo",
-  "next",
-  "madsci",
-  "break",
-  "adhere",
-  "adbb",
+  "promo2",
   "next",
   "drama-1",
   "break",
   "promo",
-  "adbb",
   "next",
   "music",
   "break",
@@ -421,50 +268,29 @@
   "next",
   "cooking",
   "break",
-  "promo",
-  "next",
-  "sprite-hi",
-  "break",
+  "promo2",
   "adbb",
   "next",
   "trailers",
   "break",
   "promo",
-  "adhere",
   "next",
   "comedy",
   "break",
   "adbb",
+  "adhere",
   "next",
   "film",
   "break",
   "promo",
-  "adbb",
-  "next",
-  "sintel-ur",
-  "break",
-  "adhere",
   "next",
   "drama-2",
   "break",
   "adbb",
-  "adhere",
-  "next",
-  "cosmos-ur",
-  "terror-hi",
-  "break",
-  "promo",
-  "adbb",
-  "next",
-  "tos-hi",
-  "break",
-  "adhere",
-  "adbb",
-  "next"
+  "adhere"
  ],
  "fillers": [
   "promo",
-  "terror-hi",
   "adhere",
   "adbb",
   "next"
