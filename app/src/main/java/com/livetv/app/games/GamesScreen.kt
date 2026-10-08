@@ -120,7 +120,7 @@ fun GamesScreen(onClose: () -> Unit) {
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Box(Modifier.fillMaxSize().safeDrawingPadding()) {
             when {
-                openWeb != null -> WebGamePlay(openWeb, scores, onExit = { openId = null })
+                openWeb != null -> WebGamePlay(openWeb, onExit = { openId = null })
                 open != null -> GamePlay(open, scores)
                 else -> GameMenu(scores, lastId, onPick = { lastId = it; openId = it }, onClose = onClose)
             }
