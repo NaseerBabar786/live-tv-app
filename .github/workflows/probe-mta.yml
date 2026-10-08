@@ -1,0 +1,27 @@
+name: Probe MTA library
+# One-off probe for PR #330 (never merged): runs only the MTA part of build_dramas.py.
+on:
+  push:
+    branches: [probe/mta]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: MTA only
+        run: |
+          python3 - <<'PY'
+          import collections, datetime, sys
+          sys.path.insert(0, "tools")
+          import build_dramas as b
+          kept = {}
+          b.mta(kept, datetime.date.today())
+          c = collections.Counter((v["language"], v["genre"], v["folder"]) for v in kept.values())
+          print(len(kept), "MTA videos")
+          for k, n in sorted(c.items()):
+              print(f"{n:5} {' | '.join(k)}")
+          PY
