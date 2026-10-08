@@ -118,6 +118,8 @@ internal fun DuoMode(
     /** Every channel, already limited to the languages chosen in Settings. */
     channels: List<Channel>,
     favorites: Set<String>,
+    /** The Favorites row (the same channels as 1+List's Favorites): always the first row. */
+    favoriteChannels: List<Channel>,
     lastWatchedId: String?,
     playing: Boolean,
     focus: FocusRequester,
@@ -134,12 +136,11 @@ internal fun DuoMode(
     val prefs = remember { context.getSharedPreferences(PREFS, Context.MODE_PRIVATE) }
     val byId = remember(channels) { channels.associateBy { it.id } }
 
-    // Favorites, then every channel (our own first), then the countries: Pakistan, India, Canada and the
+    // Favorites (as in 1+List: our own channels, MTA, the saved favourites), then every channel, then the countries: Pakistan, India, Canada and the
     // US first, then all the others in list order (owner's order, 1.9.61). Rows scroll through every channel.
-    val rows = remember(channels, favorites) {
+    val rows = remember(channels, favoriteChannels) {
         buildList {
-            val favs = channels.filter { it.id in favorites }
-            if (favs.isNotEmpty()) add(DuoRow("favorites", "Favorites", favs))
+            if (favoriteChannels.isNotEmpty()) add(DuoRow("favorites", "Favorites", favoriteChannels))
             if (channels.isNotEmpty()) add(DuoRow("all", "All channels", channels))
             val byGroup = channels.filter { it.group != null }.groupBy { it.group!! }
                     byGroup.entries
