@@ -46,7 +46,9 @@ SKIP = re.compile(r"reaction|review|breakdown|explained|recap|behind the scenes|
                   r"full (movie|film)|#shorts?\b|\bshorts\b|song|lyric|jukebox|\baudio\b|fan[- ]?made|concept|"
                   r"\bspoof\b|parody|re-?release|anniversary|\bgame\b|gameplay|season \d|series|\bep(isode)?\b|"
                   r"tv spot|\bspot\b|featurette|clip|scene|restor|remaster|television|netflix|prime video|disney\+|"
-                  r"jiohotstar|hotstar|zee5|\bott\b|streaming|out tomorrow|out now|trailer out|announcement|countdown", re.I)
+                  r"jiohotstar|hotstar|zee5|\bott\b|streaming|out tomorrow|out now|trailer out|announcement|countdown|"
+                  # A TV channel's promo for showing an old film ("RELEASING THIS SUNDAY, AT 8:00 PM"), not a new film.
+                  r"releasing (?:this|next|tomorrow|today)|at \d{1,2}(?::\d\d)? ?[ap]\.?m\b", re.I)
 MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
 MON = r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?"
 DAY_MONTH = re.compile(r"\b(\d{1,2})(?:st|nd|rd|th)?\s*" + MON + r"(?:\s*,?\s*(20\d\d))?", re.I)
