@@ -1,26 +1,75 @@
 {
- "name": "Bazaar Dramas",
- "built": "2026-10-08 10:05 UTC",
+ "name": "Bazaar Dramas Urdu",
+ "built": "2026-10-08 19:51 UTC",
  "videos": [
   {
-   "id": "wJ1BQB3y_gw",
-   "title": "Khushi - Episode 21 - [ENG SUB] 3rd Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "id": "sMhd1Ip0L-Q",
+   "title": "Tark-e-Tamanna - Episode 07 - [Eng Sub] 8th Oct 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
    "label": "HUM TV",
-   "mins": 35.1,
+   "mins": 35.05,
    "found": "2026-10-08"
   },
   {
-   "id": "o3tpgo-oeIw",
-   "title": "TAMASHA SEASON 5 | EPISODE 61 | 7 OCT 2026 | REALITY SHOW | ARY DIGITAL",
-   "label": "ARY Digital",
-   "mins": 60.8,
+   "id": "CNEBX95WaRw",
+   "title": "Khushi - Episode 26 - [ENG SUB] 8th Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "label": "HUM TV",
+   "mins": 32.35,
    "found": "2026-10-08"
   },
   {
-   "id": "5RYAVL6uAto",
-   "title": "Buzz EP 73 | Tamasha S5 11th Elimination: King Hassan | 7 October 2026 | ARY Digital",
+   "id": "sQAazBmVQZ8",
+   "title": "Gulbahar - Episode 08 - [ENG SUB] - 8th Oct 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 34.46666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "5d-BfcnSy00",
+   "title": "Main Tera Episode 56 | 8 October 2026 | Ghana Ali | Yusra Irfan | Arez Ahmed | ARY Digital",
    "label": "ARY Digital",
-   "mins": 38.0,
+   "mins": 37.266666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "PfcanRCvCVE",
+   "title": "Kaisa Yeh Ishq Episode 58 [Eng Sub] Zoha Tauqeer - Hashaam Khan | 8th October 2026 | HAR PAL GEO",
+   "label": "Har Pal Geo",
+   "mins": 41.31666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "vphL1UqzDSU",
+   "title": "Khafa Episode 20 [Eng Sub] Mikaal Zulfiqar - Hira Mani - Saif Ali Khan | 8th Oct 2026 | HAR PAL GEO",
+   "label": "Har Pal Geo",
+   "mins": 39.06666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "n0U6Pw8Cyag",
+   "title": "Uswah Episode 16 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 8th October 2026",
+   "label": "Har Pal Geo",
+   "mins": 36.5,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "8kGiIkRirH0",
+   "title": "Madaar Episode 12 (Subtitles) 8th October 2026 | Humayoun Ashraf - Sumaiyya Bukhsh | Green TV",
+   "label": "Green Entertainment",
+   "mins": 37.333333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ptDYBfgtUiE",
+   "title": "Mitti De Baway Ep 06 (Sub) 8th Oct 26, Digitally VGO TEL, Happilac Paints & Vince Shampoo | Green TV",
+   "label": "Green Entertainment",
+   "mins": 33.416666666666664,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "i0tbGRAssN4",
+   "title": "Dastoor Episode 48 (Subtitle) 8th Oct 26, Hiba Aziz - Danial Afzal - Areej Mohyudin - Faraz Farooqui",
+   "label": "Green Entertainment",
+   "mins": 35.86666666666667,
    "found": "2026-10-08"
   },
   {
@@ -31,18 +80,1173 @@
    "found": "2026-10-08"
   },
   {
+   "id": "Y4htmnMjL5Y",
+   "title": "Intekhab Episode 37 (Subtitles) 4th August 2026 | Sukaina Khan - Fahad Sheikh | Green Entertainment",
+   "label": "Green Entertainment",
+   "mins": 37.4,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7tRxCMJxebg",
+   "title": "Intekhab Episode 65 (Subtitles) 11th September 2026 | Sukaina Khan - Fahad Sheikh | Green TV",
+   "label": "Green Entertainment",
+   "mins": 36.95,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "wNDpztDPqDg",
+   "title": "College Gate | Episode 02 | Green TV Entertainment",
+   "label": "Green Entertainment",
+   "mins": 40.733333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "fttH2Gsrld0",
+   "title": "Intekhab Episode 15 (Subtitles) 3rd July 2026 | Sukaina Khan - Fahad Sheikh | Green Entertainment",
+   "label": "Green Entertainment",
+   "mins": 36.88333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "3UzD79cOE9w",
+   "title": "Dastoor Episode 47 (Subtitle) 7th Oct 26, Hiba Aziz - Danial Afzal - Areej Mohyudin - Faraz Farooqui",
+   "label": "Green Entertainment",
+   "mins": 35.63333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "1Y4pLQIxnXo",
+   "title": "Humnava Episode 102 (Subtitles) 13th April 2026 | Sumaiya Bukhsh - Hunain Shahid - Mahnoor Pervaiz",
+   "label": "Green Entertainment",
+   "mins": 36.31666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "qBiew43VXYw",
+   "title": "Standup Girl Episode 29 | Digitally Powered By Master Paints | Presented By Telenor & Dettol",
+   "label": "Green Entertainment",
+   "mins": 38.766666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "IcaivBjzahI",
+   "title": "Maa Episode 29 (Subtitles) 2nd March 2026 | Aina Asif - Ahmed Rafique - Sunita Marshall | Green TV",
+   "label": "Green Entertainment",
+   "mins": 37.1,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "xo-ldXRG3O4",
+   "title": "Iqtidar Episode 37 (Subtitles) 23rd January 2025 | Anmol Baloch - Ali Raza | Green TV Entertainment",
+   "label": "Green Entertainment",
+   "mins": 35.2,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "tkeKW1mQrx4",
+   "title": "Intekhab Episode 44 (Subtitles) 13th August 2026 | Sukaina Khan - Fahad Sheikh | Green Entertainment",
+   "label": "Green Entertainment",
+   "mins": 35.9,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "_64yHJyUTDI",
+   "title": "Ishq Di Chashni Mega Last Episode 34(Subtitle)1st April 2025 (Sehar Khan, Khushhal Khan) Mezan & Lux",
+   "label": "Green Entertainment",
+   "mins": 37.2,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "eiRw7mvHwrQ",
+   "title": "Kabli Pulao | Episode 02 | Sabeena Farooq | Ehteshamuddin | Green TV",
+   "label": "Green Entertainment",
+   "mins": 37.6,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "t3VVyZgf2gw",
+   "title": "Hum Bhi Ji Lain Episode 7 | 8th oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
+   "label": "Express TV",
+   "mins": 35.46666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "YDu9akegEHU",
+   "title": "Raja London Ka Episode 25 [ENG SUB] 24th Aug 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
+   "label": "Express TV",
+   "mins": 33.65,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "v6URzqhk61g",
+   "title": "Betiyaan Episode 37 | Fatima Effendi | Mah-e-Noor Haider | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 37.85,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "X_XRZew3RTA",
+   "title": "Ehsaan Faramosh Episode 43 | Momina Iqbal | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 37.9,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Wvvw2153AII",
+   "title": "Betiyaan Episode 36 | Fatima Effendi | Mah-e-Noor Haider | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 39.3,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "fXeCo1tairA",
+   "title": "Ehsaan Faramosh Episode 42 | Momina Iqbal | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 38.416666666666664,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "uRemP6530p0",
+   "title": "Betiyaan Episode 35 | Fatima Effendi | Mah-e-Noor Haider | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 38.8,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "VZjSNKSjTSk",
+   "title": "Ehsaan Faramosh Episode 41 | Momina Iqbal | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 38.483333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "_5NS90Bcu0I",
+   "title": "Betiyaan Episode 34 | Fatima Effendi | Mah-e-Noor Haider | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 38.65,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "GSyM0-OO_iU",
+   "title": "Ehsaan Faramosh Episode 40 | Momina Iqbal | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 38.55,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "r2eTKaBqlxc",
+   "title": "Desi Kuriyan Season 07 | Episode 34 | 6th August 2019 | Ahmed Ali Butt",
+   "label": "ARY Zindagi",
+   "mins": 32.36666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "OZT6iZ-Hvik",
+   "title": "Jaisay Aapki Marzi Episode 34 | Dur e Fishan | Mikaal Zulfiqar | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 39.11666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "N_7yUBIDPhw",
+   "title": "Quddusi Sahab Ki Bewah Episode 113 |  ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 35.8,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "j8urcv0Sbo4",
+   "title": "Ehsaan Faramosh Episode 38 | Momina Iqbal | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 38.583333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "1EThFjasU0k",
+   "title": "Quddusi Sahab Ki Bewah Episode 87 - ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 38.1,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "vpOSbNSHf7k",
+   "title": "Pardes Episode 32 - Durr e Fishan - Affan Waheed - ARY Zindagi",
+   "label": "ARY Zindagi",
+   "mins": 37.88333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "twDZDA64l9M",
+   "title": "Quddusi Sahab Ki Bewah Episode 86 - ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "mins": 38.38333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "qGEJlm_BYss",
+   "title": "Maa Nahi Saas Hoon Main EP 26 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.93333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "qQHFIEqtTC8",
+   "title": "Ehraam-e-Junoon Episode 24 | Neelam Muneer - Imran Abbas - Nimra Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 38.38333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "zesfKkpHqvE",
+   "title": "Ehraam-e-Junoon Episode 21 | Neelam Muneer - Imran Abbas - Nimra Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 38.416666666666664,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "zIa_77El_Qc",
+   "title": "Ehraam-e-Junoon Episode 19 | Neelam Muneer - Imran Abbas - Nimra Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 38.333333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "xLBnYCJLudI",
+   "title": "Ehraam-e-Junoon Episode 18 | Neelam Muneer - Imran Abbas - Nimra Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.766666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "KFDq6OQVaJc",
+   "title": "Fasiq Episode 90 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 36.93333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "zXwOcp7Mo0A",
+   "title": "Jaan Nisar Episode 15 | Danish Taimoor - Hiba Bukhari | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.733333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Vb5yqAnAfjM",
+   "title": "Maa Nahi Saas Hoon Main EP 25 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.68333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "sr8BLalTs6s",
+   "title": "Fasiq Episode 89 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 36.6,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "bER6Y2CZWEw",
+   "title": "Jaan Nisar Episode 14 | Danish Taimoor - Hiba Bukhari | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.55,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "-WlhomltLGA",
+   "title": "Maa Nahi Saas Hoon Main EP 24 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 36.75,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "gFN4NoBeSbg",
+   "title": "Fasiq Episode 88 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 36.9,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "F629xx3JEUs",
+   "title": "Jaan Nisar Episode 13 | Danish Taimoor - Hiba Bukhari | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.71666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "y1r0F851WCU",
+   "title": "Maa Nahi Saas Hoon Main EP 23 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.46666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "SH6DmE7iJuo",
+   "title": "Fasiq Episode 87 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 36.7,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "P1EQqMQ8ECE",
+   "title": "Maa Nahi Saas Hoon Main EP 22 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.2,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "eG-vIP7jjKE",
+   "title": "Fasiq Episode 86 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 36.56666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "pHlrznTzIqw",
+   "title": "Maa Nahi Saas Hoon Main EP 21 |  Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.15,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "TmFmZ0l5U2U",
+   "title": "Fasiq Episode 85 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.733333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "DPa025jhjT0",
+   "title": "Maa Nahi Saas Hoon Main EP 20 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.75,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "kS7tNq_BipU",
+   "title": "Fasiq Episode 84 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 35.75,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "z252o2EOvOQ",
+   "title": "Maa Nahi Saas Hoon Main EP 19 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.18333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "pk-OrgEcnVE",
+   "title": "Fasiq Episode 83 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 36.75,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "kONYo1EIXeU",
+   "title": "Maa Nahi Saas Hoon Main EP 18 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.25,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "N1C951mYyPw",
+   "title": "Fasiq Episode 82 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 36.2,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "P5ykib5LSpE",
+   "title": "Maa Nahi Saas Hoon Main EP 17 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.21666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "DsM-2QrPjEg",
+   "title": "Fasiq Episode 81 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.333333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "zsLiYf5jGmg",
+   "title": "Maa Nahi Saas Hoon Main EP 16 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.333333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "19P9eU4qtT8",
+   "title": "Fasiq Episode 80 | Sehar Khan - Adeel Chaudhry - Haroon Shahid - Sukaina Khan | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 36.65,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "1YwLo1f2WRU",
+   "title": "Tere Aany Se Last Episode 37 (Part 02) Komal Meer - Muneeb Butt - Sidra Niazi | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 34.85,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7sZAkIgLKP4",
+   "title": "Ru Baru Ishq Tha - Last Episode 26 | Danish Taimoor | Ushna Shah | @GeoKahani",
+   "label": "Geo Kahani",
+   "mins": 37.61666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "bZtnlCWo9Z4",
+   "title": "Aas Paas Episode 09 | Laiba Khan - Ali Ansari - Samina Ahmed | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 39.733333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "zd4vACnueB4",
+   "title": "Saaya - Episode 01 | Sohail Sameer | Maham Amir | @GeoKahani",
+   "label": "Geo Kahani",
+   "mins": 37.583333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "TXnAcfw_yiU",
+   "title": "Sirf Tum Episode 02 | Anmol Baloch - Hamza Sohail - Mohsin Abbas - Hiba Aziz | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 40.35,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "MV3yD5ykZHQ",
+   "title": "Shahrukh Ki Saaliyan - Episode 01 | Ahsan Khan | Ramsha Khan |@GeoKahani",
+   "label": "Geo Kahani",
+   "mins": 40.71666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "qAOIQnKkx1c",
+   "title": "Nadaniyaan - Episode 51  | GEO KAHANI",
+   "label": "Geo Kahani",
+   "mins": 24.466666666666665,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "1KTVigUyU5E",
+   "title": "Silsilay - Episode 01 | Junaid Khan | Hiba Bukhari | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.18333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "hWCSs88ZAlA",
+   "title": "Saaya - Episode 16 | Sohail Sameer | Maham Amir | @GeoKahani",
+   "label": "Geo Kahani",
+   "mins": 39.36666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "8orXXEFuBNg",
+   "title": "Aas Paas Episode 26 | Laiba Khan - Ali Ansari - Samina Ahmed | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.38333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "xS0XhJzbjQs",
+   "title": "Aas Paas Episode 11 | Laiba Khan - Ali Ansari - Samina Ahmed | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 38.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "wVjMRbatPXg",
+   "title": "Munafiq Episode 17 | Ft. Fatima Effendi - Adeel Chaudary - Bilal Qureshi | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 32.85,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Dy27MXwPnbo",
+   "title": "Dolly Ki Ayegi Baraat - Episode 1 | Javed Shiekh | Natasha Ali | Ali Safina | GEO KAHANI",
+   "label": "Geo Kahani",
+   "mins": 38.5,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "8dvmzrCFA7Y",
+   "title": "Tere Aany Se Episode 05 | Ft. Komal Meer - Muneeb Butt | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 37.75,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "r93LkTfW8DM",
+   "title": "Khaali Haath Episode 01 | Shahzad Sheikh - Aimen Khan | @GeoKahani",
+   "label": "Geo Kahani",
+   "mins": 38.18333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "y30Mknev318",
+   "title": "Saaya - Episode 06 | Sohail Sameer | Maham Amir | @GeoKahani",
+   "label": "Geo Kahani",
+   "mins": 37.45,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "5T_s3Od2Nc8",
+   "title": "Aas Paas Episode 15 | Laiba Khan - Ali Ansari - Samina Ahmed | Geo Kahani",
+   "label": "Geo Kahani",
+   "mins": 38.03333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "zpIc3rJtX_k",
+   "title": "Dard Episode 01 | Full Episode | Nawaz Anjum, Komal Raja, Qasim Ali | New Pakistani Drama 2026",
+   "label": "LTN Family",
+   "mins": 37.63333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "zSlMwIqVof4",
+   "title": "Khabt Episode 18 | Azfar Rehman, Areeba Habib | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.56666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "kzr_tBskYFY",
+   "title": "Ishq E Natamam Last Episode 20 | Sajal Aly, Aagha Ali | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 34.333333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "o-qGGFEItHI",
+   "title": "Aakhri Sahara Episode 19 | Areej Mohyudin, Noor Hassan | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.0,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Ad_euKMQNZc",
+   "title": "Kis Ka Qasoor Episode 16 |  Usama Khan, Nawal Saeed, Junaid Akhter | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 50.78333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "PmznA05vASU",
+   "title": "Khabt Episode 17 | Azfar Rehman, Areeba Habib | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 35.766666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "75dvEHO8-BY",
+   "title": "Ishq E Natamam Episode 19 | Sajal Aly, Aagha Ali | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 34.416666666666664,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "2l0YhWbZl3M",
+   "title": "Aakhri Sahara Episode 18 | Areej Mohyudin, Noor Hassan | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 36.016666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "GsZBfJh9AR4",
+   "title": "Kis Ka Qasoor Episode 15 |  Usama Khan, Nawal Saeed, Junaid Akhter | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 49.93333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "iDI_DU9-BXw",
+   "title": "Khabt Episode 16 | Azfar Rehman, Areeba Habib | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 36.3,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "B655mQBZCMM",
+   "title": "Ishq E Natamam Episode 18 | Sajal Aly, Aagha Ali | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 34.583333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "VkPqMABRJpg",
+   "title": "Aakhri Sahara Episode 17 | Areej Mohyudin, Noor Hassan | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 38.483333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "eAP6NMPsvmE",
+   "title": "Kis Ka Qasoor Episode 14 |  Usama Khan, Nawal Saeed, Junaid Akhter | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 51.93333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Kh0ZPbx-GGQ",
+   "title": "Khabt Episode 15 | Azfar Rehman, Areeba Habib | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 36.7,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "1LD7nNZka18",
+   "title": "Ishq E Natamam Episode 17 | Sajal Aly, Aagha Ali | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 33.86666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "VcfLtYRm7-E",
+   "title": "Aakhri Sahara Episode 16 | Areej Mohyudin, Noor Hassan | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 36.86666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "qP_aS8wstAE",
+   "title": "Kis Ka Qasoor Episode 13 |  Usama Khan, Nawal Saeed, Junaid Akhter | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 51.333333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "9JrGh0WVCpM",
+   "title": "Khabt Episode 14 | Azfar Rehman, Areeba Habib | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 36.36666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "97zfFs6qwFo",
+   "title": "Ishq E Natamam Episode 16 | Sajal Aly, Aagha Ali | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 32.13333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "OakbNuea6k8",
+   "title": "Aakhri Sahara Episode 15 | Areej Mohyudin, Noor Hassan | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.4,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "RMKsm9BOASs",
+   "title": "Kis Ka Qasoor Episode 12 |  Usama Khan, Nawal Saeed, Junaid Akhter | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 51.766666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "HSsEMx5LYMQ",
+   "title": "Khabt Episode 13 | Azfar Rehman, Areeba Habib | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.21666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "NUWfZuUQV-M",
+   "title": "Ishq E Natamam Episode 15 | Sajal Aly, Aagha Ali | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 29.133333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "g0hNp2OMi0Q",
+   "title": "Aakhri Sahara Episode 14 | Areej Mohyudin, Noor Hassan | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 36.9,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ORGU6Pr_9Pw",
+   "title": "Kis Ka Qasoor Episode 11 |  Usama Khan, Nawal Saeed, Junaid Akhter | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 49.916666666666664,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "4ClgsteYzQY",
+   "title": "Khabt Episode 12 | Azfar Rehman, Areeba Habib | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.31666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "F9UBoZWshZg",
+   "title": "Ishq E Natamam Episode 14 | Sajal Aly, Aagha Ali | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 34.46666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Th9EE-IM_uQ",
+   "title": "Aakhri Sahara Episode 13 | Areej Mohyudin, Noor Hassan | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.0,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "0Ro5bEfxAPg",
+   "title": "Kis Ka Qasoor Episode 10 |  Usama Khan, Nawal Saeed, Junaid Akhter | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 51.733333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "qRrd5Hdc-VU",
+   "title": "Pachtawa Episode 2 Full HD | Noman Ijaz, Yumna Zaidi, Jaana Malik | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 36.18333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "pfhebAQXQVk",
+   "title": "Mera Ghar - Episode 01 | Saba Qamar, Saleem Sheikh & Firdous Jamal | Comedy Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 22.283333333333335,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "AR3cs90hgWs",
+   "title": "Pachtawa Episode 6 Full HD | Noman Ijaz, Yumna Zaidi, Jaana Malik | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.3,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "UlWpQO75tI8",
+   "title": "Alvida Episode 3 | Fahad Mustafa, Mehwish Hayat | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 26.016666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "KiBkdin9FrI",
+   "title": "Aas Na Pass - Episode 17 | Ahsan Khan, Urwa Hocane | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 36.233333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "LD9o_mrJdSQ",
+   "title": "Tu Aashiqui Meri - Episode 01 | Hiba Bukhari, Junaid Khan | New Pakistani Drama | HD Drama",
+   "label": "LTN Family",
+   "mins": null,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "eS6_UOzQDhc",
+   "title": "Alvida Episode 2 | Fahad Mustafa, Mehwish Hayat | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 28.566666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "dOaVV5-H2qk",
+   "title": "Pachtawa Episode 15 Full HD | Noman Ijaz, Yumna Zaidi, Jaana Malik | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.483333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "vVeO10pCoMA",
+   "title": "Ishq E Nayaab - Episode 01 | Ahsan Khan,  Sajal Ali,  Sarah Khan | Latest Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 36.93333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "-bfC6CMWL5Y",
+   "title": "Pachtawa Episode 12 Full HD | Noman Ijaz, Yumna Zaidi, Jaana Malik | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.3,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "Xa3-LMASccU",
+   "title": "Pachtawa Episode 8 Full HD | Noman Ijaz, Yumna Zaidi, Jaana Malik | New Pakistani Drama",
+   "label": "LTN Family",
+   "mins": 37.15,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "b1GM8uCHdws",
+   "title": "Nayi Soch | Episode 06",
+   "label": "PTV Home",
+   "mins": 20.65,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ao9QyLZF1ks",
+   "title": "Rasm e Ulfat |Episode#21| PTV Home",
+   "label": "PTV Home",
+   "mins": 24.15,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "s4qeh8Oyi44",
+   "title": "Bas Aik Tum Hi  - Episode 01 [ Ramdan Special ] - PTV Home",
+   "label": "PTV Home",
+   "mins": 29.716666666666665,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "rupRypkCWGQ",
+   "title": "Rasm e Ulfat |Episode#20| PTV Home",
+   "label": "PTV Home",
+   "mins": 23.633333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "_Q5_kxyiWwY",
+   "title": "Rasm e Ulfat |Episode 01| Ptv Home",
+   "label": "PTV Home",
+   "mins": 21.8,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "88LVaxJOe1I",
+   "title": "TOOTAY PATTAY EPISODE 04 PTV HOME",
+   "label": "PTV Home",
+   "mins": 40.833333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "37pIcxgd9yk",
+   "title": "Rasm e Ulfat | Episode#13 | PTV Home",
+   "label": "PTV Home",
+   "mins": 23.566666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "EaMtZ6dGoXg",
+   "title": "Sotailay - Episode 02 [ Urdu Drama ] - PTV Home",
+   "label": "PTV Home",
+   "mins": 23.0,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ckDb0F1lkUc",
+   "title": "Rasm e Ulfat |Episode#17| PTV Home",
+   "label": "PTV Home",
+   "mins": 23.716666666666665,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "aOYUVaJ48p0",
+   "title": "Sotailay - Episode 01 [ Urdu Drama ] - PTV Home",
+   "label": "PTV Home",
+   "mins": 21.583333333333332,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "fMoJgse8d8w",
+   "title": "TOOTAY PATTAY EPISODE 03 PTV HOME",
+   "label": "PTV Home",
+   "mins": 40.483333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "A1Aa55TdaRI",
+   "title": "Mayanaz | Episode 15 | PTV Home",
+   "label": "PTV Home",
+   "mins": 40.53333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "t7Ri746iQxs",
+   "title": "TOOTAY PATTAY EPISODE 01",
+   "label": "PTV Home",
+   "mins": 46.583333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "C2v3Elc3hQY",
+   "title": "TOOTAY PATTAY EPISODE 02",
+   "label": "PTV Home",
+   "mins": 39.016666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "MA1vkLOc2qQ",
+   "title": "Mayanaz | Episode 21 | PTV HOME",
+   "label": "PTV Home",
+   "mins": 41.3,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "UKx5OdmzXts",
+   "title": "Babu Ke Dulhaniyan  Last Episode | 13th  April  2024 - Ptv Home",
+   "label": "PTV Home",
+   "mins": 34.03333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "IvS9Nht_G6w",
+   "title": "Mohabbat ya Aitebar | Episode 5 | Adnan Siddiqui, Samia & Nausheen | New Pakistani Drama",
+   "label": "Aaj Entertainment",
+   "mins": 32.15,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "1t7ENf-rFsE",
+   "title": "Mohabbat ya Aitebar | Episode 4 | Adnan Siddiqui, Samia & Nausheen | New Pakistani Drama",
+   "label": "Aaj Entertainment",
+   "mins": 32.416666666666664,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "GfvCoApX86c",
+   "title": "Mohabbat ya Aitebar | Episode 3 | Adnan Siddiqui, Samia & Nausheen | New Pakistani Drama",
+   "label": "Aaj Entertainment",
+   "mins": 31.35,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "myWZTHsKcRg",
+   "title": "Mohabbat ya Aitebar | Episode 2 | Adnan Siddiqui, Samia & Nausheen | New Pakistani Drama",
+   "label": "Aaj Entertainment",
+   "mins": 31.583333333333332,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "5U6xxaGYpbw",
+   "title": "Mohabbat ya Aitebar | Episode 1 | Adnan Siddiqui, Samia & Nausheen | New Pakistani Drama",
+   "label": "Aaj Entertainment",
+   "mins": 31.766666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7oS54M_g0eM",
+   "title": "Filhal - Last Episode - Ft Hira Soomro, Afraz Rasool, Zeba Shehnaz, Fajar Sheikh - Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 38.1,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "SjGSd3ai0Xs",
+   "title": "UNCHAHEE | Episode 02 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 34.13333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "hB-VZo3kYuQ",
+   "title": "UNCHAHEE | Episode 24 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 34.766666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "pWVGs6BJuvE",
+   "title": "UNCHAHEE | Episode 26 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 32.983333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "gsnadEg5zWI",
+   "title": "Aitebaar - Episode 15 | Aaj Entertainment | Adnan Siddiqui, Sania Shamshad, Nausheen Shah",
+   "label": "Aaj Entertainment",
+   "mins": 20.583333333333332,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "YvVVuVGr0vA",
+   "title": "UNCHAHEE | Episode 23 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 33.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "tvS4TyVAftc",
+   "title": "UNCHAHEE | Episode 14 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 35.93333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "SYCsZfV-6OM",
+   "title": "Aitebaar - Episode 25  Aaj Entertainment Drama  Adnan Siddiqui, Samia Shamshed, Nausheen Shah",
+   "label": "Aaj Entertainment",
+   "mins": 32.1,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "P-LGoAxesAU",
+   "title": "UNCHAHEE | Episode 56 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 29.433333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "TR5pFvXJugY",
+   "title": "UNCHAHEE | Episode 06 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 34.983333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "OkuSopOv4D4",
+   "title": "UNCHAHEE | Episode 04 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 35.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "8RPknYvYswE",
+   "title": "UNCHAHEE | Episode 17 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 36.61666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "aNUoCQSQRY4",
+   "title": "Filhal - Episode 1 - Ft. Hira Soomro, Afraz Rasool, Zeba Shehnaz, Fajar Sheikh - Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 31.633333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "kQ4ie_-9aVA",
+   "title": "Aitebaar - Episode 14 | Aaj Entertainment | Adnan Siddiqui, Sania Shamshad, Nausheen Shah",
+   "label": "Aaj Entertainment",
+   "mins": 29.016666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "7hvl8ubLM4I",
+   "title": "Hum Sab Ajeeb Se Hain I Episode 31 | Aaj Entertainment I Pakistani Comedy Drama",
+   "label": "Aaj Entertainment",
+   "mins": 36.65,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "FslAoFWpPYA",
+   "title": "Dharkan | Episode 20 | Ft. Shuja Asad, Kanwal Khan | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 28.866666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "J6iY2T6ZYQ8",
+   "title": "Taaluq | Episode 06 | New Drama Serial | Junaid Akhtar | Nawal Saeed | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 32.56666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "EoEbs4OM5Sk",
+   "title": "Filhal - Episode 14 - Ft. Hira Soomro, Afraz Rasool, Zeba Shehnaz, Fajar Sheikh - Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 31.683333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "FJmBpgdoZBk",
+   "title": "Taaluq | Episode 05 | New Drama Serial | Junaid Akhtar | Nawal Saeed | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 33.583333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "p-EQhYjuQJ0",
+   "title": "UNCHAHEE | Episode 01 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 34.05,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "pyWgB2geH9Q",
+   "title": "Taaluq | Episode 01 | New Drama Serial | Junaid Akhtar | Nawal Saeed | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 34.766666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "6RPLO-gcsTk",
+   "title": "Pakistani Drama | Lal Mai - Episode 19 | Aaj Entertainment Dramas",
+   "label": "Aaj Entertainment",
+   "mins": 33.25,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "pw-tNiiFXVs",
+   "title": "Pakistani Drama | Lal Mai - Episode 15 | Aaj Entertainment Dramas",
+   "label": "Aaj Entertainment",
+   "mins": 34.516666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "hwpJ8YiTHqk",
+   "title": "UNCHAHEE | Episode 43 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 30.733333333333334,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "gQghjJmgc6g",
+   "title": "Pakistani Drama | Lal Mai - Episode 6 | Aaj Entertainment Dramas",
+   "label": "Aaj Entertainment",
+   "mins": 31.65,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "mseO4A4Ri7o",
+   "title": "Dharkan | Episode 25 | Ft. Shuja Asad, Kanwal Khan | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 32.833333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "ib0nqWiaXG8",
+   "title": "UNCHAHEE | Episode 29 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 31.316666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "1gvn_wwppOM",
+   "title": "UNCHAHEE | Episode 15 [English Subtitle] | Aaj Entertainment",
+   "label": "Aaj Entertainment",
+   "mins": 32.4,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "-hGp-b4_XyM",
+   "title": "Drama | Aitebaar - Episode 26 | Aaj Entertainment Dramas | Adnan Siddiqui, Shamshed, Nausheen Shah",
+   "label": "Aaj Entertainment",
+   "mins": 32.333333333333336,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "wJ1BQB3y_gw",
+   "title": "Khushi - Episode 21 - [ENG SUB] 3rd Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "label": "HUM TV",
+   "mins": 35.1,
+   "found": "2026-10-08"
+  },
+  {
    "id": "SkUExQp0I1c",
    "title": "Madaar Episode 11 (Subtitles) 7th October 2026 | Humayoun Ashraf - Sumaiyya Bukhsh | Green TV",
    "label": "Green Entertainment",
    "mins": 34.25,
    "found": "2026-10-08"
-  },
-  {
-   "id": "kMeOWpVas4U",
-   "title": "Gulbahar - Episode 07 - [ENG SUB] - 7th Oct 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
-   "label": "HUM TV",
-   "mins": 34.0,
-   "found": "2026-10-07"
   },
   {
    "id": "xGyrqCi8EuM",
@@ -56,6 +1260,41 @@
    "title": "Tark-e-Tamanna - Episode 06 - 7th Oct 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
    "label": "HUM TV",
    "mins": 34.9,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "MimJDdqvde0",
+   "title": "Khushi - Episode 25 - [Eng Sub] 7th Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "label": "HUM TV",
+   "mins": 32.03333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "kMeOWpVas4U",
+   "title": "Gulbahar - Episode 07 - [ENG SUB] - 7th Oct 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 34.0,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "s_Dkb9CkuxE",
+   "title": "Mohalla Episode 14 | Shahzad Sheikh, Maha Hasan | New Pakistani Drama 2025 | Express TV",
+   "label": "Express TV",
+   "mins": 33.266666666666666,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "N6ss-wL7rFI",
+   "title": "Ranjish Episode 9 | 7th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
+   "label": "Express TV",
+   "mins": 31.866666666666667,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "cdqhhLnN8bQ",
+   "title": "Raja London Ka Episode 4 [ENG SUB] 9th June 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
+   "label": "Express TV",
+   "mins": 33.43333333333333,
    "found": "2026-10-07"
   },
   {
@@ -87,20 +1326,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "N6ss-wL7rFI",
-   "title": "Ranjish Episode 9 | 7th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
-   "label": "Express TV",
-   "mins": 31.866666666666667,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "s_Dkb9CkuxE",
-   "title": "Mohalla Episode 14 | Shahzad Sheikh, Maha Hasan | New Pakistani Drama 2025 | Express TV",
-   "label": "Express TV",
-   "mins": 33.266666666666666,
-   "found": "2026-10-07"
-  },
-  {
    "id": "7P_gla5yEfU",
    "title": "Paradise Episode 15 - Iqra Aziz & Shuja Asad - Express TV",
    "label": "Express TV",
@@ -112,13 +1337,6 @@
    "title": "Nikammay | Episode 8 | 6th April 2026 | Javeria Saud | Saud Qasmi | Junaid Jamshaid | Hafsa Butt",
    "label": "Express TV",
    "mins": 34.75,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "MimJDdqvde0",
-   "title": "Khushi - Episode 25 - [Eng Sub] 7th Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
-   "label": "HUM TV",
-   "mins": 32.03333333333333,
    "found": "2026-10-07"
   },
   {
@@ -164,24 +1382,10 @@
    "found": "2026-10-07"
   },
   {
-   "id": "6CE7dVCP3e8",
-   "title": "TAMASHA SEASON 5 | EPISODE 59 | 5 OCT 2026 | REALITY SHOW | ARY DIGITAL",
-   "label": "ARY Digital",
-   "mins": 71.48333333333333,
-   "found": "2026-10-07"
-  },
-  {
    "id": "o_JLuP5pDVM",
    "title": "Dar-e-Nijaat Episode 19 | 3 October 2026 | Sheheryar Munawar | Dur-e-Fishan | ENG SUB | ARY Digital",
    "label": "ARY Digital",
    "mins": 36.46666666666667,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "cdqhhLnN8bQ",
-   "title": "Raja London Ka Episode 4 [ENG SUB] 9th June 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
-   "label": "Express TV",
-   "mins": 33.43333333333333,
    "found": "2026-10-07"
   },
   {
@@ -332,6 +1536,13 @@
    "found": "2026-10-06"
   },
   {
+   "id": "YXWuZKn452A",
+   "title": "Hurmat - Episode 01 [ Eng Sub ] - 5th Oct 2026 - [ Dananeer Mobeen & Shahveer Jafry ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 35.68333333333333,
+   "found": "2026-10-06"
+  },
+  {
    "id": "Rb55pU43mw0",
    "title": "Hurmat - Episode 02 - [ Eng Sub ] 6th Oct 2026 - [ Dananeer Mobeen & Shahveer Jafry ] - HUM TV",
    "label": "HUM TV",
@@ -343,6 +1554,104 @@
    "title": "Bombay Tailors - Episode 26 | - 06 Oct 2026 [ Anika Zulfikar & Ali Ansari ] - HUM TV",
    "label": "HUM TV",
    "mins": 35.05,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "DmRTk96s6FY",
+   "title": "Rutba Episode 1 | 6 Oct 2026 | Hiba Bukhari |  Talha Chahour | Zahid Ahmed | Mehwish Hayat | ENG SUB",
+   "label": "ARY Digital",
+   "mins": 40.45,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ZtYTnxdOoX8",
+   "title": "RAZIA Last Episode 06 - Mahira Khan - Momal Sheikh & Mohib Mirza - Express TV",
+   "label": "Express TV",
+   "mins": 41.21666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "clfHXf3dToQ",
+   "title": "Raja London Ka Episode 1 [ENG SUB] 1st June 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
+   "label": "Express TV",
+   "mins": 38.28333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "oJgB1s6a5Q8",
+   "title": "Aik Thi Laila  Episode 01 [Eng Sub] | Iqra Aziz, Faysal Quraishi, Yasir Hussain | Express TV",
+   "label": "Express TV",
+   "mins": 30.666666666666668,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "VaAMUteKlw4",
+   "title": "Mein Kahani Hun S- 3 | Episode 2 | Saanjh | Sunita Marshall | Syed Jibran | 4 Oct 2026 | Express TV",
+   "label": "Express TV",
+   "mins": 35.13333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "nvubn-XSxzw",
+   "title": "Kaisi Hai Ye Ruswai | Episode 15 [Eng Sub] | Hania Aamir, Farhan Saeed & Kinza Hashmi | Express TV",
+   "label": "Express TV",
+   "mins": 35.766666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "qccwScodZ3I",
+   "title": "Aik Thi Laila - Last Episode | Iqra Aziz, Faysal Quraishi | 12th January 2023 | Express TV",
+   "label": "Express TV",
+   "mins": 36.2,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "q5h9DpvUWNo",
+   "title": "Hum Bhi Ji Lain Episode 6 [ENG SUB] | 3rd oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
+   "label": "Express TV",
+   "mins": 34.68333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "2LOyi3cpi7Y",
+   "title": "Guru Episode 05 - Ali Rehman & Zhalay Sarhadi - Express TV",
+   "label": "Express TV",
+   "mins": 35.733333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "0wjIwluU3B4",
+   "title": "Guru Episode 06 - Ali Rehman & Zhalay Sarhadi - Express TV",
+   "label": "Express TV",
+   "mins": 35.2,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "xJ-uP4G1gbc",
+   "title": "Hum Bhi Ji Lain Episode 5[ENG SUB] | 2nd oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
+   "label": "Express TV",
+   "mins": 32.78333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "drpktyutx5c",
+   "title": "Raja London Ka Last Episode [ENG SUB] 15th Sep 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
+   "label": "Express TV",
+   "mins": 30.183333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "Sb6hF05wT0s",
+   "title": "Hum Bhi Ji Lain Episode 4 [ENG SUB] | 1st oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
+   "label": "Express TV",
+   "mins": 35.4,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "KPUh65_7E0U",
+   "title": "Guru Episode 01 - Ali Rehman & Zhalay Sarhadi - Express TV",
+   "label": "Express TV",
+   "mins": 34.083333333333336,
    "found": "2026-10-06"
   },
   {
@@ -364,20 +1673,6 @@
    "title": "Mohabbat Mukhtasir - Episode 02 [Eng Sub] - 4th Oct 2026 - [ Usama Khan & Madiha Imam ] HUM TV",
    "label": "HUM TV",
    "mins": 35.21666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "YXWuZKn452A",
-   "title": "Hurmat - Episode 01 [ Eng Sub ] - 5th Oct 2026 - [ Dananeer Mobeen & Shahveer Jafry ] - HUM TV",
-   "label": "HUM TV",
-   "mins": 35.68333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "DmRTk96s6FY",
-   "title": "Rutba Episode 1 | 6 Oct 2026 | Hiba Bukhari |  Talha Chahour | Zahid Ahmed | Mehwish Hayat | ENG SUB",
-   "label": "ARY Digital",
-   "mins": 40.45,
    "found": "2026-10-06"
   },
   {
@@ -409,55 +1704,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "VaAMUteKlw4",
-   "title": "Mein Kahani Hun S- 3 | Episode 2 | Saanjh | Sunita Marshall | Syed Jibran | 4 Oct 2026 | Express TV",
-   "label": "Express TV",
-   "mins": 35.13333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "ZtYTnxdOoX8",
-   "title": "RAZIA Last Episode 06 - Mahira Khan - Momal Sheikh & Mohib Mirza - Express TV",
-   "label": "Express TV",
-   "mins": 41.21666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "clfHXf3dToQ",
-   "title": "Raja London Ka Episode 1 [ENG SUB] 1st June 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
-   "label": "Express TV",
-   "mins": 38.28333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "q5h9DpvUWNo",
-   "title": "Hum Bhi Ji Lain Episode 6 | 3rd oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
-   "label": "Express TV",
-   "mins": 34.68333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "oJgB1s6a5Q8",
-   "title": "Aik Thi Laila  Episode 01 [Eng Sub] | Iqra Aziz, Faysal Quraishi, Yasir Hussain | Express TV",
-   "label": "Express TV",
-   "mins": 30.666666666666668,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "nvubn-XSxzw",
-   "title": "Kaisi Hai Ye Ruswai | Episode 15 [Eng Sub] | Hania Aamir, Farhan Saeed & Kinza Hashmi | Express TV",
-   "label": "Express TV",
-   "mins": 35.766666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "xJ-uP4G1gbc",
-   "title": "Hum Bhi Ji Lain Episode 5 | 2nd oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
-   "label": "Express TV",
-   "mins": 32.78333333333333,
-   "found": "2026-10-06"
-  },
-  {
    "id": "hdKS3CoeG4A",
    "title": "Ranjish Episode 7 | 5th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
    "label": "Express TV",
@@ -469,27 +1715,6 @@
    "title": "Ranjish Episode 8 | 6th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
    "label": "Express TV",
    "mins": 34.43333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "qccwScodZ3I",
-   "title": "Aik Thi Laila - Last Episode | Iqra Aziz, Faysal Quraishi | 12th January 2023 | Express TV",
-   "label": "Express TV",
-   "mins": 36.2,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "2LOyi3cpi7Y",
-   "title": "Guru Episode 05 - Ali Rehman & Zhalay Sarhadi - Express TV",
-   "label": "Express TV",
-   "mins": 35.733333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "KPUh65_7E0U",
-   "title": "Guru Episode 01 - Ali Rehman & Zhalay Sarhadi - Express TV",
-   "label": "Express TV",
-   "mins": 34.083333333333336,
    "found": "2026-10-06"
   },
   {
@@ -518,13 +1743,6 @@
    "title": "Nizaam Ep 05 (Subtitles) 3rd Oct 26 | Presented by VGO Tel | Momina Iqbal - Nauman Ijaz - Usama Khan",
    "label": "Green Entertainment",
    "mins": 32.2,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "drpktyutx5c",
-   "title": "Raja London Ka Last Episode [ENG SUB] 15th Sep 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
-   "label": "Express TV",
-   "mins": 30.183333333333334,
    "found": "2026-10-06"
   },
   {
@@ -567,13 +1785,6 @@
    "title": "Main Tera Episode 54 | 6 October 2026 | Ghana Ali | Yusra Irfan | Arez Ahmed | ARY Digital",
    "label": "ARY Digital",
    "mins": 39.21666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "EYqV14pxwdg",
-   "title": "TAMASHA SEASON 5 | EPISODE 60 | 6 OCT 2026 | REALITY SHOW | ARY DIGITAL",
-   "label": "ARY Digital",
-   "mins": 75.0,
    "found": "2026-10-06"
   },
   {
@@ -696,13 +1907,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "Sb6hF05wT0s",
-   "title": "Hum Bhi Ji Lain Episode 4 | 1st oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
-   "label": "Express TV",
-   "mins": 35.4,
-   "found": "2026-10-06"
-  },
-  {
    "id": "v94Gz57T0UY",
    "title": "Uswah Episode 01 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 23rd September 2026",
    "label": "Har Pal Geo",
@@ -714,13 +1918,6 @@
    "title": "Mitti De Baway Ep 01 (Sub) 23 Sep 26 | Digitally VGO TEL, Happilac Paints & Vince Shampoo | Green TV",
    "label": "Green Entertainment",
    "mins": 32.0,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "0wjIwluU3B4",
-   "title": "Guru Episode 06 - Ali Rehman & Zhalay Sarhadi - Express TV",
-   "label": "Express TV",
-   "mins": 35.2,
    "found": "2026-10-06"
   }
  ]

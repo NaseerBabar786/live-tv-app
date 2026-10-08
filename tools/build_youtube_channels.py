@@ -58,7 +58,8 @@ def other_language(title):
 # Never on our channels, whatever the source.
 # Reality, game, talent, chat and cooking shows: never on the drama channels (the channel-fit rule, 2026-10-08).
 NOT_DRAMA = (r"reality|tamasha|\bbuzz\b|bigg boss|game show|jeeto|laughter chefs|kapil|khatron|indian idol|superstar singer|dance|"
-             r"talent|got latent|shark tank|masterchef|cooking|recipe|kitchen|mix plate|morning|talk show|podcast|elimination")
+             r"talent|got latent|shark tank|masterchef|cooking|recipe|kitchen|mix plate|morning|talk show|podcast|elimination|"
+             r"pati patni aur panga|the journalist")
 
 NEVER = r"trailer|teaser|#shorts?\b|\bshorts\b|promo|reaction|announcement|first look|motion poster|\blive\b|livestream|premiere"
 
