@@ -5,11 +5,8 @@ name: News presenter (moving)
 # Two samples go to the channel-media release: news-move-<id>.mp4 (natural movement, voice on top) and
 # news-move-<id>-lips.mp4 (the same with LatentSync lips, made on the CPU, slow).
 
+# Run by hand only (a push must never remake the approved, on-air newsreaders).
 on:
-  push:
-    paths:
-      - "tools/news/presenters/move.py"
-      - ".github/workflows/news-presenter-move.yml"
   workflow_dispatch:
     inputs:
       ids:
