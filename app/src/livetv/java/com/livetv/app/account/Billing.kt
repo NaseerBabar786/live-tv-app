@@ -1,5 +1,6 @@
 package com.livetv.app.account
 
+import com.livetv.app.account.Firestore.num
 import com.livetv.app.account.Firestore.str
 import com.livetv.app.account.Firestore.time
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +18,9 @@ data class BillingInfo(
     /** When the owner asked for these details from tv.bulkbazaar.ca/users (null if never). */
     val askedAt: Date? = null,
     val answeredAt: Date? = null,
+    /** Free credit in dollars the owner gave on tv.bulkbazaar.ca/users; it comes off the next payment. */
+    val credit: Double = 0.0,
+    val creditNote: String = "",
 ) {
     /** The owner asked and the viewer hasn't answered since. */
     val waiting: Boolean get() = askedAt != null && (answeredAt == null || answeredAt.before(askedAt))
@@ -45,6 +49,8 @@ object Billing {
             note = f.str("note"),
             askedAt = f.time("askedAt"),
             answeredAt = f.time("answeredAt"),
+            credit = f.num("credit").coerceAtLeast(0.0),
+            creditNote = f.str("creditNote"),
         )
     }
 
