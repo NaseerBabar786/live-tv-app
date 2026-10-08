@@ -28,7 +28,8 @@
   .pkg-note { color: var(--muted); font-size: 12px; margin-left: 6px; }
   .ok { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #12391A; color: #A5D6A7; }
   dialog#bill { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 24px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 16px; padding: 0; }
-  dialog#bill::backdrop { background: rgba(0,0,0,.7); }
+  dialog#bill::backdrop, dialog#addUser::backdrop { background: rgba(0,0,0,.7); }
+  dialog#addUser { width: min(520px, calc(100vw - 24px)); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 16px; padding: 0; }
   .bill-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; padding: 18px 20px 6px; }
   .bill-head h2 { margin: 0; }
   .bill-body { padding: 0 20px 20px; }
@@ -82,7 +83,7 @@
     <p class="small hidden" id="pkgOff">⭐ Packages are off right now (at <a href="packages">Packages</a>), so every viewer has everything. The Package column shows what each viewer will have once you turn packages on.</p>
     <div class="row" style="justify-content:space-between;margin-bottom:12px">
       <input type="search" id="q" placeholder="Search name, email, device or package">
-      <div class="row"><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
+      <div class="row"><button class="btn primary" id="addBtn">➕ Add user</button><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
       <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Watching</th><th>Billing</th><th></th></tr></thead>
@@ -91,8 +92,22 @@
   </div>
   <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
+  <p class="small">➕ <b>Add user</b> makes a Cable TV account for someone before they install the app: type their name, email and a password you choose, then tell them. They open Cable TV, choose email sign-in and type the same email and password. They can change the password later in the app's Settings.</p>
   <p class="err" id="err"></p>
 </main>
+
+<dialog id="addUser">
+  <div class="bill-head"><h2>Add user</h2><button class="btn" id="auClose" aria-label="Close">✕</button></div>
+  <form class="bill-body" id="auForm" method="dialog">
+    <div class="grid2">
+      <label>Name<input class="inp" id="auName" autocomplete="off" required></label>
+      <label>Email<input class="inp" id="auEmail" type="email" autocomplete="off" required></label>
+      <label>Password (6 or more characters)<input class="inp" id="auPw" type="text" autocomplete="off" minlength="6" required></label>
+    </div>
+    <p class="err" id="auErr"></p>
+    <div class="row"><button class="btn primary" id="auSave" type="submit">Create account</button></div>
+  </form>
+</dialog>
 <dialog id="bill">
   <div class="bill-head">
     <div><h2 id="bName"></h2><div class="small" id="bSub"></div></div>
@@ -597,6 +612,44 @@ if (!configured) {
       $("bMsg").textContent = "Sent. Their app shows the message and a form to fill in (app 1.9.63 or newer; older apps show the message only).";
       $("bAsked").textContent = `You asked in the app just now.`;
     } catch (e) { $("bMsg").textContent = "Couldn't send: " + e.message + (e.code === "permission-denied" ? " (publish the new Firestore rules first)" : ""); }
+  };
+
+  // Add user: creates the email + password account with the same public sign-up call the app uses
+  // (plain fetch, so the owner stays signed in here), then saves the new account's own users/{uid}
+  // entry with its own sign-in so it shows in this list at once (the rules let only that user write it).
+  const ERRORS = { EMAIL_EXISTS: "There's already an account with this email. Use 🔑 Set password on their row instead.",
+    INVALID_EMAIL: "That email doesn't look right.", OPERATION_NOT_ALLOWED: "Email sign-in is turned off in Firebase." };
+  $("addBtn").onclick = () => { $("auForm").reset(); $("auErr").textContent = ""; $("addUser").showModal(); };
+  $("auClose").onclick = () => $("addUser").close();
+  $("auForm").onsubmit = async e => {
+    e.preventDefault();
+    const name = $("auName").value.trim(), email = $("auEmail").value.trim().toLowerCase(), pw = $("auPw").value;
+    if (!name || !email) return;
+    if (pw.length < 6) return $("auErr").textContent = "The password needs at least 6 characters.";
+    $("auErr").textContent = ""; $("auSave").disabled = true;
+    try {
+      const call = async (url, body, headers = {}) => {
+        const res = await fetch(url, { method: body.method || "POST", headers: { "Content-Type": "application/json", ...headers }, body: JSON.stringify(body.json) });
+        const j = await res.json().catch(() => ({}));
+        if (!res.ok) { const m = String(j?.error?.message || "HTTP " + res.status); throw new Error(ERRORS[m.split(" ")[0]] || m); }
+        return j;
+      };
+      const idt = "https://identitytoolkit.googleapis.com/v1/accounts:";
+      const key = "?key=" + firebaseConfig.apiKey;
+      const made = await call(idt + "signUp" + key, { json: { email, password: pw, returnSecureToken: true } });
+      await call(idt + "update" + key, { json: { idToken: made.idToken, displayName: name } });
+      const joined = new Date();
+      const fields = ["name", "email", "signIn", "joined"];
+      await call(`https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/users/${made.localId}?` + fields.map(f => "updateMask.fieldPaths=" + f).join("&"),
+        { method: "PATCH", json: { fields: { name: { stringValue: name }, email: { stringValue: email }, signIn: { stringValue: "Email" }, joined: { timestampValue: joined.toISOString() } } } },
+        { Authorization: "Bearer " + made.idToken });
+      users.unshift({ id: made.localId, name, email, signIn: "Email", joined });
+      stats(); render();
+      $("addUser").close();
+      alert(`Done. ${name} can now sign in to Cable TV with email sign-in:\n\nEmail: ${email}\nPassword: ${pw}\n\nThey can change it in the app's Settings › Change password.`);
+    } catch (err) {
+      $("auErr").textContent = "Couldn't create the account: " + err.message;
+    } finally { $("auSave").disabled = false; }
   };
 
   $("csv").onclick = () => {
