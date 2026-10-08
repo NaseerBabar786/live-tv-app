@@ -51,9 +51,15 @@ class ChannelRepository(context: Context) {
         get() = prefs.getStringSet(KEY_FAVORITES, emptySet())?.toSet() ?: emptySet()
         set(value) = prefs.edit { putStringSet(KEY_FAVORITES, value) }
 
-    /** Languages chosen in Settings; empty means every language. */
+    /** Languages chosen in Settings; empty means every language. Cable TV 1.10.11 clears earlier picks once,
+     *  so every viewer starts on all languages with the all-countries list (owner's choice). */
     var languages: Set<String>
-        get() = prefs.getStringSet(KEY_LANGUAGES, emptySet())?.toSet() ?: emptySet()
+        get() {
+            if (Edition.LIVE_TV && !Edition.MAX && !prefs.getBoolean(KEY_LANGUAGES_RESET, false)) {
+                prefs.edit { remove(KEY_LANGUAGES); putBoolean(KEY_LANGUAGES_RESET, true) }
+            }
+            return prefs.getStringSet(KEY_LANGUAGES, emptySet())?.toSet() ?: emptySet()
+        }
         set(value) = prefs.edit { putStringSet(KEY_LANGUAGES, value) }
 
     /** Playlists the viewer added (Stream Player Plus). */
@@ -281,6 +287,7 @@ class ChannelRepository(context: Context) {
         private const val KEY_FAVORITES = "favorites"
         private const val KEY_LAST_CHANNEL = "last_channel"
         private const val KEY_LANGUAGES = "languages"
+        private const val KEY_LANGUAGES_RESET = "languages_reset_11011"
         private const val KEY_PLAYLISTS = "playlists"
         private const val KEY_PROVIDER = "provider"
         private const val KEY_MTA = "mta"
