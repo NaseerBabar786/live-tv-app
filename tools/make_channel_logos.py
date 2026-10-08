@@ -81,6 +81,7 @@ CHANNELS = [  # file, word, main colour, second colour, tag under the slab
     ("bazaar-cooking", "COOKING", (240, 70, 30), (255, 185, 0)),
     ("bazaar-teens", "TEENS", (0, 200, 220), (150, 60, 255)),
     ("bazaar-ads", "ADS", (255, 210, 0), (230, 30, 90)),  # 15: ads and promos round the clock (2026-10-07)
+    ("bazaar-shayari", "SHAYARI", (235, 140, 120), (120, 30, 90)),  # 17: Urdu and Hindi poetry (2026-10-08)
     ("latest-movies", "MOVIES", (255, 190, 0), (200, 30, 40)),  # 13: the owner's wish, no BAZAAR on it
 ]
 TOP_TAB = {"latest-movies": "LATEST"}  # the dark tab on top, for a channel not called Bazaar ...

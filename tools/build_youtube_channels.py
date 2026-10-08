@@ -19,6 +19,8 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
                    labels' and TV channels' own uploads, newest first (no logo of ours on it)
  14 Bazaar Teens  science, cartoons, challenges and talent shows for 12 to 16 year olds
  16 Bazaar Dramas Hindi  full episodes of Hindi serials from the Indian TV channels' own channels
+ 17 Bazaar Shayari  Urdu and Hindi poetry: mushairas, kavi sammelan and poets reciting, from the
+                    organisers', TV channels' and poets' own channels
 
 Only the channel that really owns each handle is used (its name must match). Videos found on
 earlier runs are kept for KEEP_DAYS, so each list builds up. The public-domain schedules
@@ -291,6 +293,47 @@ CHANNELS = {
             ("Sun Neo", ["@SunNeo", "@SunNeoTV"], "Sun Neo"),
             ("Doordarshan", ["@DoordarshanNational", "@ddnational"], "Doordarshan|DD National"),
         ],
+    },
+    # 17 Spark Shayari (owner, 2026-10-08): Urdu and Hindi poetry recited, never sung (sung ghazals belong on
+    # Spark Music), no lessons, talks or panels, no politics, no horror, no other languages.
+    "shayari": {
+        "name": "Bazaar Shayari", "mins": (2, 150), "search": ["mushaira", "shayari", "kavi sammelan"],
+        "keep": r"mushair|musha'?era|mushayra|shayari|shayri|shaayri|\bsher\b|ghazal|nazm|kavi ?sammelan|kavi samm?elan|kavita|kavya|"
+                r"poet|poem|recit|kalam|kalaam|مشاعر|شاعر|غزل|نظم|کلام|कवि|कविता|शायर|मुशायर|ग़ज़ल|गज़ल|नज़्म",
+        "skip": r"\bsong\b|singer|singing|sung|qawwal|music video|musical|jukebox|\bost\b|lyrical|cover|unplugged|concert|non-?stop|"
+                r"learning|module|lesson|lecture|explained|seminar|panel|discussion|in conversation|book launch|rekhta books|dastak|"
+                r"tribute|speaks|\btalk\b|podcast|interview|storytelling|aftermovie|\bwhy\b|history of|who shaped|lives|rivalr|prose|nobel|"
+                r"by children|school|"
+                r"marathi|kashmiri|punjabi|pashto|sindhi|mushairo|angrezi|english mushaira|gujarati|bengali|dogri|"
+                r"noha|marsiya|majlis|horror|bhoot|bhut|ghost|chudail|\bdarr?\b|daravn|"
+                r"news|debate|politic|election|chunav|चुनाव|modi|rahul gandhi|kejriwal|yogi|imran khan|nawaz|shehbaz|maryam|bjp|"
+                r"congress|\bpti\b|pml|gyanesh|reaction|roast|stand ?up|comedy show|meme",
+        # Festivals and the Akademi upload much more than poetry: only their mushairas and readings.
+        "only": {
+            "Sahitya Akademi": r"mushaira|urdu|hindi|kavi|poets'? meet|ghazal|poetry reading",
+            "Faiz Festival": r"mushaira|in mushaira|poetry performed|recit",
+            "Lahore Literary Festival": r"mushaira",
+            "Doordarshan": r"kavi|mushaira|sammelan|kavita",
+            "Kumar Vishwas": r"kavi ?sammelan|mushaira|jashn|shayar|ghazal",
+        },
+        "sources": [
+            ("Rekhta", ["@JashneRekhta"], "Jashn-e-Rekhta|Jashn e Rekhta|JashneRekhta"),
+            ("Sahitya Akademi", ["@SahityaAkademi"], "Sahitya Akademi"),
+            ("DD Urdu", ["@DDUrdu", "@DDUrduOfficial"], "DD Urdu"),
+            ("Doordarshan", ["@DoordarshanNational", "@ddnational"], "Doordarshan|DD National"),
+            ("PTV Home", ["@PTVHomeOfficial", "@PTVHome"], "PTV Home|PTV"),
+            ("PTV National", ["@PTVNationalOfficial", "@PTVNational"], "PTV National|PTV"),
+            ("Lahore Literary Festival", ["@LahoreLiteraryFestival"], "Lahore Literary"),
+            ("Faiz Festival", ["@FaizFestival"], "Faiz"),
+            ("Mushaira Media", ["@MushairaMedia"], "Mushaira Media|Mushaira"),
+            ("Sahitya Tak", ["@SahityaTak"], "Sahitya Tak|Sahitya"),
+            ("Kumar Vishwas", ["@KumarVishwas"], "Kumar Vishwas"),
+            ("Kommune", ["@KommuneIndia"], "Kommune"),
+            ("The Social House", ["@TheSocialHouse"], "Social House"),
+            ("Hindi Kavita", ["@HindiKavita"], "Hindi Kavita"),
+            ("Urdu Studio", ["@UrduStudio"], "Urdu Studio"),
+        ],
+        "cap": {"*": 60},
     },
     "cooking": {
         "name": "Bazaar Cooking", "mins": (4, 45),

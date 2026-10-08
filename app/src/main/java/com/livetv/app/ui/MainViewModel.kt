@@ -108,14 +108,14 @@ data class UiState(
     /**
      * Our channels, then MTA's (when on), then favorites, then the rest in list order; channels keep their numbers.
      * Inside Favorites the other channels are grouped by country (Pakistan, India, Canada, UK, USA,
-     * then the rest) and numbered on from the top, after our own channels 1 to 16 and MTA's 17 to 24.
+     * then the rest) and numbered on from the top, after our own channels 1 to 17 and MTA's 18 to 25.
      */
     val visibleChannels: List<Channel>
         get() {
             val shown = inLanguage
                 .filter { category == null || it.category == category }
                 .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-            // The owner's own channels (numbers 1 to 16) always lead, then MTA's when they're on.
+            // The owner's own channels (numbers 1 to 17) always lead, then MTA's when they're on.
             if (filter != FILTER_FAVORITES) {
                 return shown.sortedWith(compareBy({ !MyChannel.isMine(it) }, { !Mta.isMta(it) }, { it.id !in favorites }))
             }
@@ -411,8 +411,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val number = typed.toIntOrNull()
         typedNumber = ""
         if (number == null) return
-        // The owner's own channels are 1 to 16 (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel,
-        // Comedy, Movies English, Movies Hindi, Dramas, Cooking, Latest Movies, Teens, Ads, Dramas Hindi); the rows of zeros that reached them before 1.9.45 (0 to 00000000) still work.
+        // The owner's own channels are 1 to 17 (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel,
+        // Comedy, Movies English, Movies Hindi, Dramas, Cooking, Latest Movies, Teens, Ads, Dramas Hindi, Shayari); the rows of zeros that reached them before 1.9.45 (0 to 00000000) still work.
         MyChannel.byDial(typed)?.takeIf { Edition.LIVE_TV }?.let {
             numberPadOpen = false
             play(it)
