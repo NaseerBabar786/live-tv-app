@@ -13,11 +13,12 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
   8 Bazaar Comedy  comedy shows from their channels
   9 Bazaar Movies English  full English films from studios' and distributors' free-movie channels
  10 Bazaar Movies Hindi    full Hindi films from the studios' channels
- 11 Bazaar Dramas  full episodes of Pakistani dramas from the TV channels' own channels
+ 11 Bazaar Dramas Urdu  full episodes of Pakistani dramas from the TV channels' own channels
  12 Bazaar Cooking recipes and cooking shows from the cooks' own channels
  13 Latest Movies  the newest full films in Hindi, English, Punjabi and Urdu from the studios',
                    labels' and TV channels' own uploads, newest first (no logo of ours on it)
  14 Bazaar Teens  science, cartoons, challenges and talent shows for 12 to 16 year olds
+ 16 Bazaar Dramas Hindi  full episodes of Hindi serials from the Indian TV channels' own channels
 
 Only the channel that really owns each handle is used (its name must match). Videos found on
 earlier runs are kept for KEEP_DAYS, so each list builds up. The public-domain schedules
@@ -55,6 +56,10 @@ def other_language(title):
 
 
 # Never on our channels, whatever the source.
+# Reality, game, talent, chat and cooking shows: never on the drama channels (the channel-fit rule, 2026-10-08).
+NOT_DRAMA = (r"reality|tamasha|\bbuzz\b|bigg boss|game show|jeeto|laughter chefs|kapil|khatron|indian idol|superstar singer|dance|"
+             r"talent|got latent|shark tank|masterchef|cooking|recipe|kitchen|mix plate|morning|talk show|podcast|elimination")
+
 NEVER = r"trailer|teaser|#shorts?\b|\bshorts\b|promo|reaction|announcement|first look|motion poster|\blive\b|livestream|premiere"
 
 CHANNELS = {
@@ -223,11 +228,12 @@ CHANNELS = {
             ("Pen Movies", ["@PenMovies"], "Pen Movies"),
         ],
     },
+    # 11 is Urdu dramas and 16 Hindi dramas (the owner, 2026-10-08): two channels, one language each.
     "dramas": {
-        "name": "Bazaar Dramas", "mins": (18, 75), "search": "episode",
-        # Full episodes only, no teasers, OSTs or clips.
+        "name": "Bazaar Dramas Urdu", "mins": (18, 75), "search": "episode",
+        # Full episodes only, no teasers, OSTs or clips; no reality or game shows (Tamasha) or cooking shows (channel-fit rule).
         "keep": r"episode|\bep\b|\bepi\b|ep\s*\d|قسط",
-        "skip": r"\bost\b|title song|scene|best moment|clip|bts|behind the scenes|review|highlights|recap|interview|morning show|news",
+        "skip": rf"\bost\b|title song|scene|best moment|clip|bts|behind the scenes|review|highlights|recap|interview|morning show|news|{NOT_DRAMA}",
         "sources": [
             ("HUM TV", ["@HUMTV", "@humtvpk"], "HUM TV"),
             ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
@@ -235,6 +241,31 @@ CHANNELS = {
             ("Green Entertainment", ["@GreenTVEntertainment", "@greenentertainment"], "Green"),
             ("Express TV", ["@ExpressTV", "@expresstv"], "Express TV"),
             ("Geo Entertainment", ["@GeoEntertainment"], "Geo"),
+            ("ARY Zindagi", ["@ARYZindagiOfficial", "@ARYZindagi"], "ARY Zindagi"),
+            ("Geo Kahani", ["@GeoKahani"], "Geo Kahani"),
+            ("LTN Family", ["@LTNFamily", "@ltnfamily"], "LTN Family"),
+            ("PTV Home", ["@PTVHomeOfficial", "@PTVHome"], "PTV Home"),
+            ("Aaj Entertainment", ["@AajEntertainment"], "Aaj Entertainment"),
+        ],
+    },
+    "hindidramas": {
+        "name": "Bazaar Dramas Hindi", "mins": (15, 75), "search": ["full episode", "episode"],
+        "keep": r"episode|\bep\b|\bepi\b|ep\.?\s*\d|एपिसोड",
+        "skip": rf"\bost\b|title (song|track)|best moment|bts|behind the scenes|review|highlights|recap|interview|news|promo|precap|{NOT_DRAMA}",
+        # Doordarshan uploads much more than drama: only its serials.
+        "only": {"Doordarshan": r"byomkesh|ye hawayein|flop show|tenali|malgudi|hum log|buniyaad|circus|fauji|tehkikaat|surabhi|serial"},
+        "sources": [
+            ("StarPlus", ["@StarPlus"], "StarPlus|Star Plus"),
+            ("Sony SAB", ["@SonySAB"], "Sony SAB"),
+            ("Sony Pal", ["@SonyPal"], "Sony Pal"),
+            ("SET India", ["@SETIndia", "@SonyTV"], "Sony Entertainment Television|SET India", ["crime patrol full episode", "full episode"]),
+            ("Colors TV", ["@ColorsTV"], "Colors"),
+            ("And TV", ["@andtvchannel"], "&TV|And TV"),
+            ("Dangal TV", ["@DangalTVChannel", "@DangalTV"], "Dangal"),
+            ("Shemaroo TV", ["@ShemarooTV", "@shemarootv"], "Shemaroo"),
+            ("Shemaroo Umang", ["@ShemarooUmang"], "Shemaroo Umang"),
+            ("Sun Neo", ["@SunNeo", "@SunNeoTV"], "Sun Neo"),
+            ("Doordarshan", ["@DoordarshanNational", "@ddnational"], "Doordarshan|DD National"),
         ],
     },
     "cooking": {
@@ -417,7 +448,8 @@ def build(cid, ch, today):
             continue
         if ch.get("release_years") is not None and not recent_film(v["title"], today, ch["release_years"]):
             continue
-        if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v.get("up", v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
+        # (A title the channel now skips goes too, so a rule added later also clears what came before it.)
+        if vid not in found and v.get("label") in labels and not other_language(v["title"]) and not skip.search(v["title"]) and (today - dt.date.fromisoformat(v.get("up", v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
             found[vid] = v
     # Main events from the last two weeks, and anything found in the last two days, are "top":
     # the channel page plays them far more often (Bazaar Sports, the owner's wish, 2026-10-06).

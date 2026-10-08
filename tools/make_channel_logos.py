@@ -76,7 +76,8 @@ CHANNELS = [  # file, word, main colour, second colour, tag under the slab
     ("bazaar-comedy", "COMEDY", (255, 200, 0), (255, 80, 60)),
     ("bazaar-english", "MOVIES", (230, 40, 60), (25, 45, 140), "ENGLISH"),
     ("bazaar-hindi", "MOVIES", (255, 140, 0), (0, 140, 70), "HINDI"),
-    ("bazaar-dramas", "DRAMAS", (190, 70, 230), (230, 40, 110)),
+    ("bazaar-dramas", "DRAMAS", (190, 70, 230), (230, 40, 110), "URDU"),  # 11: Urdu dramas (2026-10-08)
+    ("bazaar-dramas-hindi", "DRAMAS", (255, 70, 150), (120, 40, 200), "HINDI"),  # 16: Hindi dramas (2026-10-08)
     ("bazaar-cooking", "COOKING", (240, 70, 30), (255, 185, 0)),
     ("bazaar-teens", "TEENS", (0, 200, 220), (150, 60, 255)),
     ("bazaar-ads", "ADS", (255, 210, 0), (230, 30, 90)),  # 15: ads and promos round the clock (2026-10-07)

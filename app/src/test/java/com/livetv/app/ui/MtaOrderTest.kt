@@ -22,7 +22,7 @@ class MtaOrderTest {
         assertEquals(ours, shown.first())
         assertEquals(mta, shown.subList(1, 9))
         assertEquals(listOf(cbc, geo), shown.drop(9))
-        assertEquals(listOf(16, 23, 24), listOf(mta.first().number, mta.last().number, geo.number))
+        assertEquals(listOf(17, 24, 25), listOf(mta.first().number, mta.last().number, geo.number))
     }
 
     @Test
