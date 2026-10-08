@@ -60,6 +60,24 @@ export async function loadPicks() {
  * third video; on Bazaar Movies Hindi new films ([topRatio] 3) three for every older one.
  */
 export function runningOrder(station, list, date) {
+  const order = baseOrder(station, list, date);
+  return station.mix ? mixShows(order) : order;
+}
+
+/**
+ * The shows take turns (Bazaar Comedy, the owner's wish 2026-10-08: not Taarak Mehta again and again):
+ * one video from each source in turn, keeping each source's own order; a source with more videos
+ * comes round again once the others have had theirs.
+ */
+export function mixShows(order) {
+  const by = new Map();
+  order.forEach(v => { const k = v.label || ""; if (!by.has(k)) by.set(k, []); by.get(k).push(v); });
+  const rows = [...by.values()], out = [];
+  for (let i = 0; out.length < order.length; i++) rows.forEach(r => { if (i < r.length) out.push(r[i]); });
+  return out;
+}
+
+function baseOrder(station, list, date) {
   const seed = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000) + station.id.length;
   if (station.newest) {
     // Latest Movies: each day opens with the films that went up on YouTube in the last week, newest first,

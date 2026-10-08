@@ -181,17 +181,39 @@ CHANNELS = {
         ],
     },
     "comedy": {
-        "name": "Bazaar Comedy", "mins": (2, 45),
-        "skip": r"podcast|interview|news|vlog|reaction|roast|adult|18\+",
+        "name": "Bazaar Comedy", "mins": (2, 50),
         "sources": [
             ("Mr Bean", ["@MrBean"], "Mr Bean"),
             ("Taarak Mehta", ["@TaarakMehtaKaOoltahChashmah", "@SonySAB"], "Taarak Mehta|Sony SAB"),
             ("Bulbulay", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
             ("The Kapil Sharma Show", ["@SonyTV", "@SETIndia"], "Sony Entertainment Television|SET India"),
             ("Shaun the Sheep", ["@shaunthesheep"], "Shaun the Sheep"),
+            # More variety (the owner, 2026-10-08: "so many times Taarak Mehta ... English comedy programs
+            # ... stand-up comedy shows"). Family-friendly shows from their own channels only.
+            # Hindi and Urdu sitcoms and comedy shows
+            ("Bhabiji Ghar Par Hain", ["@andtvchannel", "@AndTV"], "&TV|And TV"),
+            ("Wagle Ki Duniya", ["@SonySAB", "@sonysab"], "Sony SAB"),
+            ("Sawa Teen", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
+            ("Hum Sab Umeed Se Hain", ["@HarPalGeo", "@GeoEntertainment"], "HAR PAL GEO|Har Pal Geo|Geo Entertainment"),
+            ("Mazaaq Raat", ["@DunyaNews", "@dunyanewsofficial"], "Dunya News"),
+            # English comedy
+            ("Just For Laughs Gags", ["@JustForLaughsGags", "@justforlaughsgags"], "Just For Laughs Gags"),
+            ("The Pink Panther", ["@ThePinkPanther", "@officialpinkpanther"], "Pink Panther"),
+            ("Laurel and Hardy", ["@LaurelandHardyOfficial", "@laurelandhardy"], "Laurel and Hardy|Laurel & Hardy"),
+            # Clean stand-up comedy
+            ("Dry Bar Comedy", ["@DryBarComedy", "@drybarcomedy"], "Dry Bar Comedy"),
+            ("Zakir Khan", ["@ZakirKhan", "@zakirkhan"], "Zakir Khan"),
+            ("Gaurav Kapoor", ["@GauravKapoor", "@gauravkapoorcomedy"], "Gaurav Kapoor"),
         ],
         # A source channel with many kinds of shows: only these shows are taken from it.
-        "only": {"Bulbulay": r"bulbulay", "The Kapil Sharma Show": r"kapil", "Taarak Mehta": r"taarak|tmkoc|mehta"},
+        "only": {"Bulbulay": r"bulbulay", "The Kapil Sharma Show": r"kapil", "Taarak Mehta": r"taarak|tmkoc|mehta",
+                 "Bhabiji Ghar Par Hain": r"bhabi ?ji", "Wagle Ki Duniya": r"wagle", "Sawa Teen": r"sawa teen",
+                 "Hum Sab Umeed Se Hain": r"hum sab umeed", "Mazaaq Raat": r"mazaa?q raat"},
+        # Stand-up must be clean: nothing marked for grown-ups only.
+        "skip": r"podcast|interview|breaking news|news (?:bulletin|headlines)|vlog|reaction|roast|adult|18\+|explicit|uncensored|not for kids|a rated|nsfw",
+        # No one show fills the channel: at most this many videos from each (newest kept); the page also
+        # lets the shows take turns (mix: true in docs/channel/schedule.js).
+        "most": {"*": 25},
     },
     "english": {
         "name": "Bazaar Movies English", "mins": (70, 200), "search": "full movie",
@@ -441,7 +463,17 @@ def build(cid, ch, today):
         newest = lambda v: (bool(v.get("up")), v.get("up", ""))  # noqa: E731
     else:
         newest = lambda v: (bool(v.get("top")), v["found"])  # noqa: E731
-    videos = sorted(found.values(), key=newest, reverse=True)[:ch.get("max", MAX_VIDEOS)]
+    videos = sorted(found.values(), key=newest, reverse=True)
+    if ch.get("most"):
+        # Balance: the newest few of each source, so one show doesn't fill the channel.
+        per, counted = ch["most"], {}
+        balanced = []
+        for v in videos:
+            counted[v["label"]] = counted.get(v["label"], 0) + 1
+            if counted[v["label"]] <= per.get(v["label"], per.get("*", MAX_VIDEOS)):
+                balanced.append(v)
+        videos = balanced
+    videos = videos[:ch.get("max", MAX_VIDEOS)]
     summary = f"{ch['name']}: {len(videos)} videos ({', '.join(counts)})"
     if ch.get("events") or ch.get("recent_years"):
         summary += f"; {sum(1 for v in videos if v.get('top'))} top ({'main events and newest' if ch.get('events') else 'new films'})"
