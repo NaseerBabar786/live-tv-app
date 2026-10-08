@@ -1,11 +1,11 @@
 {
- "about": "Newsrooms Q (day windows), R (evening screens), S (two-level), like N",
+ "about": "Newsrooms Q (day windows), R (evening screens), T (two-level), like N",
  "ids": [
   "anchor-1q",
   "anchor-m10q",
   "anchor-1r",
   "anchor-m10r",
-  "anchor-1s",
-  "anchor-m10s"
+  "anchor-1t",
+  "anchor-m10t"
  ]
 }
