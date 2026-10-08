@@ -130,5 +130,41 @@ def pick(story, work):
         print("broll:", e); return None
 
 
+
+def candidates(out, queries):
+    """Contact sheets for hand-picking: out/cand-<n>.jpg (numbered thumbnails) + out/candidates.txt."""
+    from PIL import Image, ImageDraw, ImageFont
+    os.makedirs(out, exist_ok=True)
+    lines, n = [], 0
+    for qi, term in enumerate(queries):
+        q = urllib.parse.urlencode({"action": "query", "format": "json", "generator": "search", "gsrnamespace": 6,
+                                    "gsrsearch": "filetype:video " + term, "gsrlimit": 24, "prop": "imageinfo",
+                                    "iiprop": "url|extmetadata|size", "iiurlwidth": 320})
+        try: pages = json.loads(get("https://commons.wikimedia.org/w/api.php?" + q)).get("query", {}).get("pages", {})
+        except Exception as e: print("failed", term, e); continue
+        tiles = []
+        for p in sorted(pages.values(), key=lambda p: p.get("index", 0)):
+            ii = (p.get("imageinfo") or [{}])[0]; md = ii.get("extmetadata", {})
+            lic = (md.get("LicenseShortName", {}).get("value") or "").strip()
+            if not OK_LICENCE.match(lic): continue
+            n += 1
+            lines.append(f"{n}\t{term}\t{lic}\t{p['title']}")
+            try:
+                im = Image.open(__import__("io").BytesIO(get(ii["thumburl"], 30))).convert("RGB")
+                im.thumbnail((320, 180))
+            except Exception: im = Image.new("RGB", (320, 180), "gray")
+            tiles.append((n, im))
+        if not tiles: continue
+        cols = 4; rows = (len(tiles) + cols - 1) // cols
+        sheet = Image.new("RGB", (cols * 330, rows * 190 + 40), "white"); d = ImageDraw.Draw(sheet)
+        f = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 22)
+        d.text((10, 8), term, fill="black", font=f)
+        for i, (num, im) in enumerate(tiles):
+            x, y = (i % cols) * 330 + 5, (i // cols) * 190 + 40
+            sheet.paste(im, (x, y)); d.rectangle((x, y, x + 60, y + 30), fill="yellow"); d.text((x + 6, y + 3), str(num), fill="black", font=f)
+        sheet.save(os.path.join(out, f"cand-{qi:02d}.jpg"), quality=80)
+    open(os.path.join(out, "candidates.txt"), "w").write("\n".join(lines) + "\n")
+
 if __name__ == "__main__":
     if sys.argv[1:2] == ["build"]: build(sys.argv[2] if len(sys.argv) > 2 else "out")
+    if sys.argv[1:2] == ["candidates"]: candidates(sys.argv[2], sys.argv[3:])
