@@ -222,9 +222,18 @@ FILM_CHANNELS = [
     ("Lokdhun Punjabi", [], "Lokdhun Punjabi|Lokdhun", "Punjabi"),
     ("Rhythm Boyz", ["@RhythmBoyz"], "Rhythm Boyz", "Punjabi"),
     ("Ultra Punjabi", ["@UltraPunjabi"], "Ultra Punjabi", "Punjabi"),
+    # More Punjabi film labels (owner asked for many more Punjabi films, 2026-10-08; probe run 37851429617).
+    ("T-Series Apna Punjab", ["channel/UCcvNYxWXR_5TjVK7cSCdW-g"], "T-Series Apna Punjab", "Punjabi"),
+    ("Pitaara TV", ["@PitaaraTV"], "Pitaara", "Punjabi"),
+    ("Goyal Music", ["@GoyalMusicOfficial", "channel/UCCnJqOskTbrUVcYVyda39PA"], "Goyal Music", "Punjabi"),
+    ("Humble Motion Pictures", ["@HumbleMotionPictures"], "Humble Motion Pictures", "Punjabi"),
+    ("Geet MP3", ["@GeetMP3"], "Geet MP3", "Punjabi"),
 ]
 # Punjabi film channels that post only Punjabi films, so their titles needn't say "Punjabi".
-ALL_PUNJABI = {"Shemaroo Punjabi", "Lokdhun Punjabi", "Rhythm Boyz", "Ultra Punjabi"}
+ALL_PUNJABI = {"Shemaroo Punjabi", "Lokdhun Punjabi", "Rhythm Boyz", "Ultra Punjabi",
+               "T-Series Apna Punjab", "Pitaara TV", "Humble Motion Pictures"}
+# Punjabi channels have many more films than their /videos page shows, so these searches run too.
+PUNJABI_SEARCHES = ["punjabi movie", "full film", "comedy movie", "new punjabi movie"]
 # Channels whose titles start with a one-line story and put the film's name second:
 # "He Fell In Love With A Fake Princess | Princess for a Day | Full 2026 Romance Movie".
 NAME_SECOND = {"Movie Central"}
@@ -806,8 +815,9 @@ def films(kept, today):
             print(f"{name}: channel not found", file=sys.stderr)
             continue
         videos, seen = [], set()
-        for url in (f"https://www.youtube.com/channel/{cid}/videos",
-                    f"https://www.youtube.com/channel/{cid}/search?query=full+movie"):
+        searches = ["full movie"] + (PUNJABI_SEARCHES if language == "Punjabi" else [])
+        for url in [f"https://www.youtube.com/channel/{cid}/videos"] + [
+                f"https://www.youtube.com/channel/{cid}/search?" + urllib.parse.urlencode({"query": q}) for q in searches]:
             try:
                 for v in videos_page(url):
                     if v[0] not in seen:
