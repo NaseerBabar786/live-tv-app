@@ -10,14 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: pip install edge-tts
+      - run: pip install edge-tts gTTS
       - run: |
           mkdir -p clips
-          say() { edge-tts --voice "$1" --rate=-10% --text "$2" --write-media "clips/$3.mp3"; }
-          say ur-PK-UzmaNeural "السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔" news-ur
-          say hi-IN-SwaraNeural "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़।" news-hi
-          say ur-PK-AsadNeural "آپ دیکھ رہے ہیں اسپارک ٹی وی۔ اسپارک ٹی وی کے ساتھ رہیے۔" ident-ur
-          say ur-PK-AsadNeural "صرف اسپارک ٹی وی پر، کیبل ٹی وی ایپ میں، بالکل مفت۔" promo-ur
+          say() { edge-tts --voice "$1" --rate=-12% --text "$2" --write-media "clips/$3.mp3"; }
+          say ur-PK-UzmaNeural "اَلسَّلَامُ عَلَیْکُمْ۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔" v1-uzma-pk
+          say ur-IN-GulNeural "السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔" v2-gul-in
+          say ur-IN-GulNeural "اَلسَّلَامُ عَلَیْکُمْ۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔" v3-gul-in-marked
+          say hi-IN-SwaraNeural "अस्सलामु अलैकुम। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़।" v4-swara
+          say en-US-AvaMultilingualNeural "السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔" v5-ava || true
+          say en-US-EmmaMultilingualNeural "السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔" v6-emma || true
+          say en-US-SeraphinaMultilingualNeural "السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔" v7-seraphina || true
+          python3 -c "from gtts import gTTS; gTTS('السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔', lang='ur').save('clips/v8-google.mp3')" || true
+          say ur-PK-UzmaNeural "السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔" v0-uzma-today
           ls -la clips
       - run: |
           git config user.name github-actions; git config user.email actions@github.com
