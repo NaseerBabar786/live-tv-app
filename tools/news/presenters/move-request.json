@@ -1,15 +1,16 @@
 {
- "about": "Owner picked newsroom N (2026-10-08 20:50): every on-air reader in N (Sana 1n and Saad m10n already made)",
+ "about": "Owner also keeps newsroom Q (daytime, city windows): every on-air reader in Q for the daytime bulletins",
  "ids": [
-  "anchor-m1n",
-  "anchor-5n",
-  "anchor-m6n",
-  "anchor-6n",
-  "anchor-m7n",
-  "anchor-7n",
-  "anchor-m8n",
-  "anchor-8n",
-  "anchor-3hn",
-  "anchor-m11n"
+  "anchor-m1q",
+  "anchor-5q",
+  "anchor-m6q",
+  "anchor-6q",
+  "anchor-m7q",
+  "anchor-7q",
+  "anchor-m8q",
+  "anchor-8q",
+  "anchor-3hq",
+  "anchor-m11q",
+  "anchor-9q"
  ]
 }
