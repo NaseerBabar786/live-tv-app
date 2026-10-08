@@ -17,7 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 
 /**
- * A modern game (Snake Rush, Block Burst, Color Pour) opens in [WebGameActivity]; when it closes, the Games menu
+ * A modern web game (Snake Rush, Block Burst, Gem Swap, ...) opens in [WebGameActivity]; when it closes, the Games menu
  * is back (with the new record on its card).
  */
 @Composable

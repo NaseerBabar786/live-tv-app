@@ -1989,13 +1989,16 @@ private fun MyLayout(
         val availH = maxHeight - pad * 2 - tickerHeight - sep
         val big = layout == MyScreen.BIG
         val hasUnder = under != MyScreen.NOTHING
-        // The channel gets about three quarters of the width (more with "Big channel"). With a
-        // panel under it the picture stays 16:9 and the panel takes the rest of the height;
-        // without one the channel takes the whole height (stretched a little).
+        // The channel gets about three quarters of the width (more with "Big channel"), or the
+        // share the viewer picked under Channel size. With a panel under it the picture stays 16:9
+        // and the panel takes the rest of the height; without one the channel takes the whole
+        // height (stretched a little).
+        val picked = choices.size
+        val roomy = big || (picked ?: 0f) >= 0.85f
         val playerW = if (hasUnder) {
-            minOf(availW * (if (big) 0.85f else 0.75f), (availH - sep - d(if (big) 72f else 86f)) * 16f / 9f)
+            minOf(availW * (picked ?: if (big) 0.85f else 0.75f), (availH - sep - d(if (roomy) 72f else 86f)) * 16f / 9f)
         } else {
-            minOf(availH * 16f / 9f, availW * (if (big) 0.88f else 0.8f))
+            minOf(availH * 16f / 9f, availW * (picked ?: if (big) 0.88f else 0.8f))
         }
         val sideW = availW - playerW
         val underH = availH - sep - playerW * 9f / 16f
