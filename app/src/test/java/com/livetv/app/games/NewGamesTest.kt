@@ -25,7 +25,7 @@ class NewGamesTest {
     @Test
     fun everyNewGameSurvivesRandomPlay() {
         for (seed in 0 until 3) {
-            for (info in GAMES.drop(11)) {
+            for (info in GAMES.drop(10)) {
                 val g = info.create()
                 for (choice in g.options.indices.take(2)) {
                     val game = info.create()

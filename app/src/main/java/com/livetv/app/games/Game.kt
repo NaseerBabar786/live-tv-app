@@ -93,13 +93,12 @@ class GameInfo(
     val create: () -> Game,
 )
 
-// The classic Snake gave way to Snake Rush (WEB_GAMES); its rules stay for the tests.
+// The classic Snake gave way to Snake Rush (WEB_GAMES) and 2048 left the menu (owner); their rules stay for the tests.
 val GAMES = listOf(
     GameInfo("blocks", "Falling Blocks", "🟦", "Left and Right move, Up turns, Down drops faster, OK drops straight down. Fill a row to clear it.", Scoring.Best) { Blocks() },
     GameInfo("bricks", "Brick Breaker", "🧱", "Left and Right move the paddle. OK launches the ball. Break every brick.", Scoring.Best) { BrickBreaker() },
     GameInfo("space", "Space Defender", "🚀", "Left and Right move, OK fires. Stop the invaders before they land.", Scoring.Best) { SpaceDefender() },
     GameInfo("paddle", "Paddle Ball", "🏓", "Up and Down move your paddle on the left. First to 7 points wins.", Scoring.Wins) { PaddleBall() },
-    GameInfo("2048", "2048", "🔢", "Arrows slide all tiles. Two equal tiles join into one. Reach 2048!", Scoring.Best) { Game2048() },
     GameInfo("tictactoe", "Tic-Tac-Toe", "❌", "Arrows pick a square, OK places your X. Get three in a row before the TV.", Scoring.Wins) { TicTacToe() },
     GameInfo("four", "Four in a Row", "🔴", "Left and Right pick a column, OK drops your red disc. Line up four.", Scoring.Wins) { FourInRow() },
     GameInfo("mines", "Mines", "💣", "Arrows move, OK opens a square, hold OK to plant a flag. Numbers count the mines around.", Scoring.Wins) { Mines() },
