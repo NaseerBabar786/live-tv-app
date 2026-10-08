@@ -24,6 +24,11 @@ def _unplayable():
             _known = set(json.load(open(os.path.join(CHANNEL, "unplayable.json"), encoding="utf-8")).get("ids", {}))
         except (OSError, ValueError):
             _known = set()
+        # And what the hourly pre-air check found (tools/preair_check.py).
+        try:
+            _known |= set(json.load(open(os.path.join(CHANNEL, "preair-bad.json"), encoding="utf-8")).get("ids", {}))
+        except (OSError, ValueError):
+            pass
     return _known
 
 
