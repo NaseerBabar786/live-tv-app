@@ -16,7 +16,6 @@ on:
       - 'docs/channel/schedule.js'
       - 'docs/channel/cards.js'
       - 'docs/channel/clock.js'
-      - 'app/build.gradle.kts'
       - '.github/workflows/build-cabletv-pc.yml'
   pull_request:
     paths:
@@ -24,7 +23,6 @@ on:
       - 'docs/channel/schedule.js'
       - 'docs/channel/cards.js'
       - 'docs/channel/clock.js'
-      - 'app/build.gradle.kts'
       - '.github/workflows/build-cabletv-pc.yml'
   workflow_dispatch:
 
