@@ -7,6 +7,8 @@ import * as store from './store.js';
 import * as fb from './firebase.js';
 import * as plans from './plans.js';
 import * as watching from './watching.js';
+import { today } from './util.js';
+import * as features from './features.js';
 
 const IDENTITY = 'https://identitytoolkit.googleapis.com/v1';
 const SECURE_TOKEN = 'https://securetoken.googleapis.com/v1';
@@ -191,7 +193,13 @@ export async function recordOpen() {
 export async function reportViewing(sponsorViews) {
   const u = user();
   if (!u) return;
-  const days = watching.totals().filter(([, d]) => Object.keys(d.channels).length || Object.keys(d.programmes).length);
+  const watched = Object.fromEntries(watching.totals());
+  const used = features.totals();
+  const days = [...new Set([...Object.keys(watched), ...Object.keys(used)])].sort()
+    .map((d) => [d, watched[d] || { channels: {}, programmes: {}, hours: {} }])
+    .filter(([d, t]) => Object.keys(t.channels).length || Object.keys(t.programmes).length || Object.keys(used[d] || {}).length);
+  const now = watching.now();
+  const todayKey = today(Date.now());
   const sponsorDays = sponsorViews.totals().filter(([, m]) => Object.keys(m).length);
   if (!days.length && !sponsorDays.length) return;
   try {
@@ -210,8 +218,12 @@ export async function reportViewing(sponsorViews) {
         fields.programmes = totals.programmes;
         fields.hours = Object.fromEntries(Object.entries(totals.hours).map(([k, v]) => [k.replace('|', '_'), v]));
       }
+      // Which parts of the app were used, and on today's record the channel on now (Account.reportViewing).
+      if (Object.keys(used[day] || {}).length) fields.features = used[day];
+      if (day === todayKey && now) { fields.nowName = now.name; fields.nowAt = new Date(now.at); fields.nowLive = now.live; }
       await fb.patch(`usage/${day}_${u.uid}`, fields, t);
       watching.sent(day);
+      features.sent(day);
     }
   } catch {}
 }

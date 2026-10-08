@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (CrashGuard.start(this)) return
         Watching.init(this)
+        Features.init(this)
         com.livetv.app.data.Location.init(this)
         com.livetv.app.data.NewsScreen.init(this)
         com.livetv.app.data.Cp24Screen.init(this)
@@ -83,6 +84,14 @@ class MainActivity : ComponentActivity() {
         // Bazaar TV's upcoming trailers play on our locked YouTube page; its own player plays the rest.
         val block = rememberBlockPage(playing)
         val page = playing?.let { block ?: MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
+        // Which part of the app is on screen, for the owner's "most used features" (the modes report themselves).
+        val screen = when {
+            showGames && playing == null -> "games"
+            showVod && playing == null -> "library"
+            playing != null -> "full"
+            else -> null
+        }
+        LaunchedEffect(screen) { screen?.let(Features::use) }
         if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
         } else if (showVod && playing == null) {
@@ -240,11 +249,13 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         Watching.foreground(true)
+        Features.foreground(true)
     }
 
     override fun onStop() {
         super.onStop()
         Watching.foreground(false)
+        Features.foreground(false)
     }
 
     override fun onUserLeaveHint() {
