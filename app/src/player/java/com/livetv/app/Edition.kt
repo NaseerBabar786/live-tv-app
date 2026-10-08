@@ -57,6 +57,7 @@ fun EditionTicker(
     everyMs: Long = 0L,
     skip: () -> Boolean = { false },
     band: Boolean = false,
+    lift: androidx.compose.ui.unit.Dp = androidx.compose.ui.unit.Dp(0f),
 ) = Unit
 
 @Composable

@@ -396,7 +396,8 @@ fun EditionTicker(
     everyMs: Long = 0L,
     skip: () -> Boolean = { false },
     band: Boolean = false,
-) = SponsorTicker(modifier, big, always, everyMs, skip, band)
+    lift: androidx.compose.ui.unit.Dp = androidx.compose.ui.unit.Dp(0f),
+) = SponsorTicker(modifier, big, always, everyMs, skip, band, lift)
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {
