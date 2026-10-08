@@ -395,8 +395,30 @@ def calm_background(path, secs=40):
         p.stdin.write(np.clip(img, 0, 255).astype(np.uint8).tobytes())
     p.stdin.close(); p.wait()
 
+# Real recorded music from our free-licence library (owner rule 2026-10-07: no home-made synth music;
+# owner 2026-10-08 asked to try different news music). NEWS_MUSIC = a mood or track from tools/music/library.py.
+MUSIC = os.environ.get("NEWS_MUSIC", "calm")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "music"))
+
+def lib_mono(x):
+    x = x.mean(axis=1).astype(np.float32)
+    return x / max(1e-6, np.abs(x).max())
+
+def lib_sting(secs=6.0):
+    import library
+    return lib_mono(library.bed(MUSIC, secs, fade_in=0.2, fade_out=1.2))
+
+def lib_bed(secs):
+    import library
+    return lib_mono(library.bed(MUSIC, secs, fade_in=1.0, fade_out=1.5, second=True))
+
+def music_credit():
+    import library
+    t = library.track(MUSIC)
+    return f"موسیقی {t['title']} از {t['artist']} ({t['licence']})"
+
 if LOOK == "calm":
-    sting, bed, background = calm_sting, calm_bed, calm_background
+    sting, bed, background = lib_sting, lib_bed, calm_background
 
 # ---------- graphics (right to left) ----------
 RED, BLUE, TEAL, GREEN, GOLD = (210, 30, 45), (25, 110, 220), (20, 150, 140), (20, 130, 70), (245, 190, 40)
@@ -780,6 +802,7 @@ def main():
     end_secs = left if left <= END_MAX + 3 else END_MAX
     news_len = t + end_secs
     credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • کینیڈا کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
+    if LOOK == "calm": credits += " • " + music_credit()
     title_card(os.path.join(work, "c-end.png"), kind, up_next, credits,
                "Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else "AI voice")
     cards.append(("c-end.png", end_secs))
