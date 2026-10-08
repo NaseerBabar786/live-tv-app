@@ -34,6 +34,7 @@ export const METHODS = [
   { id: 'Mwl', en: 'Muslim World League', ur: 'مسلم ورلڈ لیگ', fajr: 18, isha: 17, ishaMinutes: 0 },
   { id: 'UmmAlQura', en: 'Umm al-Qura (Makkah)', ur: 'ام القریٰ (مکہ)', fajr: 18.5, isha: 0, ishaMinutes: 90 },
   { id: 'Egypt', en: 'Egypt', ur: 'مصر', fajr: 19.5, isha: 17.5, ishaMinutes: 0 },
+  { id: 'Ahmadiyya', en: "Ahmadiyya Muslim Jama'at", ur: 'جماعت احمدیہ', fajr: 18, isha: 18, ishaMinutes: 0 },
 ];
 const method = (id) => METHODS.find((m) => m.id === id);
 
