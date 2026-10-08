@@ -1,76 +1,86 @@
 {
  "name": "Bazaar Cooking",
- "built": "2026-10-08 20:17 UTC",
+ "built": "2026-10-08 21:04 UTC",
  "videos": [
   {
    "id": "xLyVet1CRGE",
-   "title": "Schezwan Chicken Lollipop Recipe By Food Fusion",
+   "title": "Schezwan Chicken Lollipop | The Perfect Party Appetizer Recipe By Food Fusion",
    "label": "Food Fusion",
    "mins": 4.066666666666666,
-   "found": "2026-10-08"
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
   },
   {
    "id": "963raw1N5q8",
    "title": "Injected Broast, Twister | Fusion Food | Saad Butt | 7 Oct 26 | Masala Tv",
    "label": "Masala TV",
    "mins": 38.11666666666667,
-   "found": "2026-10-08"
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
   },
   {
    "id": "fjyz7Bhdo2A",
    "title": "Doli Roti, Tawa Masala Fish | Rida Aftab | Tarka | 8 Oct 26 | Masala Tv",
    "label": "Masala TV",
    "mins": 41.6,
-   "found": "2026-10-08"
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
   },
   {
    "id": "JGp9Pci2nqU",
    "title": "Butter Garlic Prawns, Mumbai Daal Gosht  | Shireen Anwar | Masala Mornings | 8 Oct 26 | Masala TV",
    "label": "Masala TV",
    "mins": 42.45,
-   "found": "2026-10-08"
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
   },
   {
    "id": "UjzwnbbkKB8",
    "title": "Pineapple Delight | Creamy & Delicious Dessert Recipe | Chef Saad Butt | Masala TV",
    "label": "Masala TV",
    "mins": 8.616666666666667,
-   "found": "2026-10-08"
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
   },
   {
    "id": "OnmcF-F1GkQ",
    "title": "Soya Paneer Kabab and Hummus Recipe | High Protein Recipe | Middle East की फेमस डिश | Kabitaskitchen",
    "label": "Kabita's Kitchen",
    "mins": 10.6,
-   "found": "2026-10-08"
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
   },
   {
    "id": "XbwR0j5fV9g",
    "title": "First Time Outdoor Kitchen Main Banaye 10kg Gulab Jaman😍Ki Recipe By Kitchen With Amna",
    "label": "Kitchen with Amna",
    "mins": 21.433333333333334,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "A6JlBu1MrrM",
    "title": "Mushroom Puff Pie, Mutton Pulao | Fusion Food | Saad Butt | 6 Oct 26 | Masala Tv",
    "label": "Masala TV",
    "mins": 37.31666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "8eDdd4uPG1A",
    "title": "Makhni Gravy Boneless, Masala Aalu Pulao | Rida Aftab | Tarka | 7 Oct 26 | Masala Tv",
    "label": "Masala TV",
    "mins": 38.06666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "EqClWzqjKG0",
    "title": "Reshmi Smokey Qeema, Tandoori Chicken Gravy | Shireen Anwar | Masala Mornings | 7 Oct 26 | Masala TV",
    "label": "Masala TV",
    "mins": 43.1,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "YPlxK_xX3qU",
@@ -84,35 +94,40 @@
    "title": "One Egg, 4 Delicious Recipes! The Ultimate Egg Special Recipes By Chef@sanjeevkapoorkhazana",
    "label": "Sanjeev Kapoor",
    "mins": 8.95,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "lLo5UU5UQm8",
    "title": "Chatkhara Malai Tawa Chicken Recipe by Asad Memon - Food Fusion",
    "label": "Food Fusion",
    "mins": 5.316666666666666,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-29"
   },
   {
    "id": "jyb0C3Dz4TU",
    "title": "Marble Cake in Sandwich Maker Recipe by Asad Memon -  Food Fusion",
    "label": "Food Fusion",
    "mins": 5.75,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-28"
   },
   {
    "id": "2W9Q-3X5Dyg",
    "title": "Beef & Garlic Stir Fry Recipe By Asad Memon - Food Fusion",
    "label": "Food Fusion",
    "mins": 4.033333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-25"
   },
   {
    "id": "0pgQmenUjcE",
    "title": "Hot Chicken Crunchy Roll (Make & Freeze) Recipe  By Food Fusion",
    "label": "Food Fusion",
    "mins": 4.033333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-22"
   },
   {
    "id": "36u1_c-bDao",
@@ -189,70 +204,80 @@
    "title": "Restaurant Style Chicken Chilli with Egg Fried Rice Recipe By Kitchen With Amna",
    "label": "Kitchen with Amna",
    "mins": 10.683333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-03"
   },
   {
    "id": "N8z9qR0n-kQ",
    "title": "Crispy Chicken Cones Recipe l Tea Time Snack Easy & Quick Chicken Cones Recipe By Kitchen With Amna",
    "label": "Kitchen with Amna",
    "mins": 11.816666666666666,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-29"
   },
   {
    "id": "TMYKt8sDQy0",
    "title": "Quick Fajita Chicken Mac & Cheese Recipe By Kitchen With Amna",
    "label": "Kitchen with Amna",
    "mins": 5.133333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-23"
   },
   {
    "id": "RSYS5vOIX0M",
    "title": "Shawarma Sandwich For Cheese Lovers l Pizza Sandwich Recipe By Kitchen With Amna",
    "label": "Kitchen with Amna",
    "mins": 7.866666666666666,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-19"
   },
   {
    "id": "T3x7VRkGPPc",
    "title": "New Kitchen Ki First Recipe Main Meethay Main Banaya Degi Mutanjan",
    "label": "Kitchen with Amna",
    "mins": 14.366666666666667,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-18"
   },
   {
    "id": "POaWxI_KXUQ",
    "title": "Kitchen With Amna Last Shoot Chicken Cheese Paratha l Kids Easy Lunch Box Ideas",
    "label": "Kitchen with Amna",
    "mins": 9.2,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-02"
   },
   {
    "id": "9lkYR3mTQac",
    "title": "Viral Tortilla Roll Recipe l Pinwheel Recipe By Kitchen With Amna",
    "label": "Kitchen with Amna",
    "mins": 8.016666666666667,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-23"
   },
   {
    "id": "VzAJk_Zjf3c",
    "title": "Quick & Easy Loaded Tandoori Rice Recipe By Kitchen With Amna l Perfect For Dinner",
    "label": "Kitchen with Amna",
    "mins": 7.25,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-18"
   },
   {
    "id": "as8KnzfBuls",
    "title": "Viral Egg Piyaz Pakora Recipe l Barsat Main Banayein Garma Garam Chaye Ke Sath Yeh Viral Pakora",
    "label": "Kitchen with Amna",
    "mins": 7.216666666666667,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-17"
   },
   {
    "id": "9IpyaLhbP6k",
    "title": "Creamy Cheesy Chicken Dilkhush Kabab Recipe l How To Make Chicke Dilkhush Kabab",
    "label": "Kitchen with Amna",
    "mins": 6.716666666666667,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-13"
   },
   {
    "id": "x3nbQiYoK7s",
@@ -434,7 +459,8 @@
    "title": "5 Regional Breakfast Recipes From Across India | Misal, Dhokla & More By Chef Sanjeev Kapoor",
    "label": "Sanjeev Kapoor",
    "mins": 14.083333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-05"
   },
   {
    "id": "LsPfmu4iupE",
@@ -630,7 +656,8 @@
    "title": "नाश्ते में बनाएं आसान ढोकला | 2 Spl Tiffin recipes | Corn Dhokla & Uthappam | Chef Ranveer Brar",
    "label": "Ranveer Brar",
    "mins": 13.65,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-06"
   },
   {
    "id": "3Y7oGbggCl8",
@@ -798,35 +825,40 @@
    "title": "हाई प्रोटीन मसूर दाल तड़का सिर्फ २ चमम्च घी में | High protein Low Carbs recipe | Masoor Dal recipe",
    "label": "Kabita's Kitchen",
    "mins": 7.183333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-06"
   },
   {
    "id": "rIw7g_2JZ9k",
    "title": "Soya Chilli Recipe No deep fry | कम तेल में सोया चिल्ली कैसे बनाये | Soya Chilli Recipe | Kabita",
    "label": "Kabita's Kitchen",
    "mins": 6.866666666666666,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-03"
   },
   {
    "id": "QB2KDtoN4-s",
    "title": "मसूर दाल और पनीर का हाई प्रोटीन नाश्ता | High protein Low carbs Breakfast recipe | Kabitaskitchen",
    "label": "Kabita's Kitchen",
    "mins": 7.35,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-01"
   },
   {
    "id": "k-XWayH760U",
    "title": "एकदम माँ के हाथो के स्वाद वाला कढ़ी पकोड़ा बहुत आसान तरीके से | Kadhi Pakoda recipe | Kadhi Chawal",
    "label": "Kabita's Kitchen",
    "mins": 9.983333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-26"
   },
   {
    "id": "jPwJVpzw4DM",
    "title": "Protein Paratha recipe | एक पराठा खाने के बाद देर तक भूख न लगे | Healthy Paneer Paratha by Kabita",
    "label": "Kabita's Kitchen",
    "mins": 8.083333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-24"
   },
   {
    "id": "TZDmoBaXLD8",
@@ -1057,77 +1089,88 @@
    "title": "Delicious Malaysian Veg Curry Recipe | Easy Coconut Milk Curry | One Pot Meal | Chef Varun",
    "label": "Get Curried",
    "mins": 5.9,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-02"
   },
   {
    "id": "kXHeQi1UQuw",
    "title": "Caribbean Eggplant Curry Recipe | Smoky & Delicious Eggplant Curry | Berenjena Guisada | Chef Varun",
    "label": "Get Curried",
    "mins": 4.816666666666666,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-25"
   },
   {
    "id": "8iPFmHEPwjo",
    "title": "How to Make Coconut Milk Rasam | Thengai Paal Rasam | South Indian Rasam Meal | Chef Varun",
    "label": "Get Curried",
    "mins": 4.916666666666667,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-18"
   },
   {
    "id": "cDM52jWEZgI",
    "title": "How to Make Kashmiri Khatte Baingan | Restaurant Style Delicious Eggplant Curry | Chef Sherie",
    "label": "Get Curried",
    "mins": 4.2,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-16"
   },
   {
    "id": "n3zRJ1PylgE",
    "title": "South African Green Beans Curry | Quick & Easy Vegetable Curry | One Pot Delicious Meal | Chef Varun",
    "label": "Get Curried",
    "mins": 4.75,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-11"
   },
   {
    "id": "LjkEE8hfFYs",
    "title": "How to Make Calabacitas | Creamy Mexican Zucchini & Corn With Cheese | One Pot Meal | Chef Varun",
    "label": "Get Curried",
    "mins": 6.083333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-28"
   },
   {
    "id": "IcjyvosH5jA",
    "title": "Famous Jammu Style Rajma Chawal | How to Make Quick & Easy Rajma Curry With Paneer | Chef Sherie",
    "label": "Get Curried",
    "mins": 4.783333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-26"
   },
   {
    "id": "vl97Diuc_KI",
    "title": "Authentic Horsegram Rasam Recipe | Quick & Easy South Indian Rasam | Healthy Meal | Chef Varun",
    "label": "Get Curried",
    "mins": 4.9,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-21"
   },
   {
    "id": "Ma7G-Ci8lFc",
    "title": "How To Make Patyud Sabzi | Traditional Alu Vadi With Arbi Leaves | Indian Food Diaries | Chef Sherie",
    "label": "Get Curried",
    "mins": 6.183333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-19"
   },
   {
    "id": "5dRmZzIRZ2w",
    "title": "Easiest Butter Garlic Mushroom | Creamy & Delicious Mushroom Recipe | Perfect Starter | Chef Varun",
    "label": "Get Curried",
    "mins": 5.333333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-14"
   },
   {
    "id": "C-wJZXLKz1c",
    "title": "How to Make Restaurant Style Khandwiyon Ka Salan | Khandvi Ka Salan | Quick Besan Curry | Chef Varun",
    "label": "Get Curried",
    "mins": 6.116666666666666,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-07"
   },
   {
    "id": "pdhJ04uKLYc",
