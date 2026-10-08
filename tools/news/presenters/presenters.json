@@ -243,7 +243,7 @@
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
    },
    {
-    "id": "anchor-m6",
+    "id": "anchor-m6b",
     "name": "Faisal",
     "ur": "فیصل",
     "seed": 6606,
@@ -253,7 +253,7 @@
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
    },
    {
-    "id": "anchor-m7",
+    "id": "anchor-m7b",
     "name": "Kamran",
     "ur": "کامران",
     "seed": 6707,
@@ -263,7 +263,7 @@
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
    },
    {
-    "id": "anchor-m8",
+    "id": "anchor-m8b",
     "name": "Tariq",
     "ur": "طارق",
     "seed": 6808,
