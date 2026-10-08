@@ -22,6 +22,10 @@ data class Channel(
     val number: Int = 0,
     /** The day it first showed up in its Library list ("2026-10-07", from added="..."), or null. */
     val added: String? = null,
+    /** Library programmes: how long it is, in minutes (mins="95", tools/library_check.py), or null. */
+    val mins: Int? = null,
+    /** Library programmes: a line or two about it (desc="..."), or null. */
+    val desc: String? = null,
 ) {
     /** Stable key used for favorites and list keys. */
     val id: String get() = url

@@ -261,12 +261,26 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(start = 12.dp).width(96.dp),
                             )
-                            if (episode.label != episode.channel.name) {
+                            Column(Modifier.weight(1f, fill = false)) {
+                                if (episode.label != episode.channel.name) {
+                                    Text(episode.channel.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                }
+                                episode.channel.desc?.let {
+                                    Text(
+                                        it,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
+                            Vod.length(episode.channel.mins)?.let {
                                 Text(
-                                    episode.channel.name,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f, fill = false),
+                                    it,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(start = 12.dp),
                                 )
                             }
                             if (Vod.isNew(episode.channel, newSince)) {
@@ -358,7 +372,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         } else {
                             PosterGrid(
                                 moviesGrid,
-                                list.map { Poster(it.id, it.name, it.logo, fresh = Vod.isNew(it, newSince)) },
+                                list.map { Poster(it.id, it.name, it.logo, Vod.length(it.mins), fresh = Vod.isNew(it, newSince), detail = it.desc) },
                                 lastPicked,
                                 pickedFocus,
                             ) { id ->
@@ -379,8 +393,11 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     val fresh = it.newEpisodes(newSince)
                                     Poster(
                                         it.name, it.name, it.logo,
-                                        "${it.episodes.size} episodes" + if (fresh > 0) " · $fresh new" else "",
+                                        "${it.episodes.size} episodes" +
+                                            (Vod.length(it.episodeMins)?.let { len -> " · $len each" } ?: "") +
+                                            if (fresh > 0) " · $fresh new" else "",
                                         fresh = fresh > 0,
+                                        detail = it.desc,
                                     )
                                 },
                                 lastPicked,
@@ -412,6 +429,8 @@ private data class Poster(
     val subtitle: String? = null,
     /** Newly added: a NEW mark on the picture. */
     val fresh: Boolean = false,
+    /** A line or two about it, under the title (owner, 2026-10-08: every title says what it is). */
+    val detail: String? = null,
 )
 
 @Composable
@@ -504,6 +523,16 @@ private fun PosterGrid(
                 )
                 poster.subtitle?.let {
                     Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                poster.detail?.let {
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = 2.dp),
+                    )
                 }
             }
         }
