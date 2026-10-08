@@ -1,7 +1,42 @@
 {
  "name": "Bazaar Cinema",
- "built": "2026-10-07 17:45 UTC",
+ "built": "2026-10-08 00:20 UTC",
  "videos": [
+  {
+   "id": "aUuhpI1WkZE",
+   "title": "Amrit (1986) (HD & Eng Subs) Hindi Full Movie - Rajesh Khanna - Smita Patil - Aruna Irani",
+   "label": "Shemaroo",
+   "mins": 138.56666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "FHZlfXM15So",
+   "title": "Jab We Met (Full Movie) | Shahid Kapoor & Kareena Kapoor | Superhit Romantic Film",
+   "label": "Shemaroo",
+   "mins": 136.78333333333333,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "jzaJKiq4rSc",
+   "title": "Ek Aur Qayamat (Kantri) (4K ULTRA HD) - Hindi Dubbed Movie | Jr. NTR, Hansika Motwani, Tanisha",
+   "label": "Goldmines",
+   "mins": 136.21666666666667,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "B6h-kQLQqec",
+   "title": "Sarrainodu (4K ULTRA HD) Full Hindi Dubbed Movie | Allu Arjun, Rakul Preet Singh, Catherine Tresa",
+   "label": "Goldmines",
+   "mins": 123.61666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "SL1lH0GZ4Sw",
+   "title": "Heart Attack 2 (Gunde Jaari Gallanthayyinde) Hindi Dubbed Full Movie | Nithin, Nithya Menen",
+   "label": "Goldmines",
+   "mins": 124.11666666666666,
+   "found": "2026-10-08"
+  },
   {
    "id": "MvQRlmRKrsw",
    "title": "Bhai Ke Liye Bani DON | Shabri | Full Movie (HD) | Isha Koppikar, Pradeep Ram Singh Rawat",
@@ -17,10 +52,10 @@
    "found": "2026-10-07"
   },
   {
-   "id": "9ybk5loaCZ8",
-   "title": "Ek Haseena Thi Ek Deewana Tha Full Romantic Movie | Shiv Darshan, Natasha Fernandez & Upen Patel",
+   "id": "lQ-OEq0k75c",
+   "title": "Guide (1965) Full Movie | Dev Anand & Waheeda Rehman | Evergreen Bollywood Classic",
    "label": "Shemaroo",
-   "mins": 100.63333333333334,
+   "mins": 166.88333333333333,
    "found": "2026-10-07"
   },
   {
@@ -31,17 +66,52 @@
    "found": "2026-10-07"
   },
   {
-   "id": "fKjjwYk14A8",
-   "title": "Sparsh (HD & Eng Subs) Hindi Full Movie - Naseeruddin Shah - Shabana Azmi - Bollywood Classic Movies",
-   "label": "Shemaroo",
-   "mins": 134.56666666666666,
-   "found": "2026-10-07"
-  },
-  {
    "id": "Cq4pDq-MKhQ",
    "title": "दाऊद के खिलाफ: एक गुप्त  मिशन | Irrfan Khan Film | Rishi Kapoor | Arjun Rampal | D Day | Indian Army",
    "label": "Shemaroo",
    "mins": 142.9,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "ouEUPPygh-k",
+   "title": "Haan Maine Bhi Pyaar Kiya (HD) Hindi Full Movie - Akshay Kumar - Abhishek Bachchan - Krisma Kapoor",
+   "label": "Shemaroo",
+   "mins": 167.8,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "n90Q0UIFkdE",
+   "title": "24 Ghante In Chennai Full Movie | R. Sarathkumar, Suhasini, Napolean | Latest Crime Thriller Movie",
+   "label": "Rajshri",
+   "mins": 89.68333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "haJZUVwqkrM",
+   "title": "Hafta Vasuli (1998) Hindi Full Movie (4K) Jackie Shroff & Aditya Pancholi & Madhoo | 90s Action",
+   "label": "Ultra",
+   "mins": 147.03333333333333,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "rNg6u84TpSc",
+   "title": "Ab Tak Chhappan (HD) - Ram Gopal Varma's Bollywood Superhit Action Film | Nana Patekar, Mohan Agashe",
+   "label": "Goldmines",
+   "mins": 113.13333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "9ybk5loaCZ8",
+   "title": "Ek Haseena Thi Ek Deewana Tha Full Romantic Movie | Shiv Darshan, Natasha Fernandez & Upen Patel",
+   "label": "Shemaroo",
+   "mins": 100.63333333333334,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "fKjjwYk14A8",
+   "title": "Sparsh (HD & Eng Subs) Hindi Full Movie - Naseeruddin Shah - Shabana Azmi - Bollywood Classic Movies",
+   "label": "Shemaroo",
+   "mins": 134.56666666666666,
    "found": "2026-10-07"
   },
   {
@@ -63,20 +133,6 @@
    "title": "Rishtey (2002) (HD) Hindi Full Movie - Anil Kapoor | Karisma Kapoor | Shilpa Shetty",
    "label": "Shemaroo",
    "mins": 155.01666666666668,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "ouEUPPygh-k",
-   "title": "Haan Maine Bhi Pyaar Kiya (HD) Hindi Full Movie - Akshay Kumar - Abhishek Bachchan - Krisma Kapoor",
-   "label": "Shemaroo",
-   "mins": 167.8,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "lQ-OEq0k75c",
-   "title": "Guide (1965) Full Movie | Dev Anand & Waheeda Rehman | Evergreen Bollywood Classic",
-   "label": "Shemaroo",
-   "mins": 166.88333333333333,
    "found": "2026-10-07"
   },
   {
@@ -115,55 +171,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "y4nYf9j04Nk",
-   "title": "Banjaran Hindi Full Movie - Rishi Kapoor - Sridevi - Kulbhushan Kharbanda - 90's Hit Movie",
-   "label": "Shemaroo",
-   "mins": 145.26666666666668,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "n90Q0UIFkdE",
-   "title": "24 Ghante In Chennai Full Movie | R. Sarathkumar, Suhasini, Napolean | Latest Crime Thriller Movie",
-   "label": "Rajshri",
-   "mins": 89.68333333333334,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "haJZUVwqkrM",
-   "title": "Hafta Vasuli (1998) Hindi Full Movie (4K) Jackie Shroff & Aditya Pancholi & Madhoo | 90s Action",
-   "label": "Ultra",
-   "mins": 147.03333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "7gqCU86EDiA",
-   "title": "Bareilly Ki Barfi (2017) Full Hindi Movie (4K) Ayushmann Khurrana & Kriti Sanon | Rajkummar Rao",
-   "label": "Ultra",
-   "mins": 118.13333333333334,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "VaVFF83WJgQ",
-   "title": "Pardes Full Movie | Shahrukh Khan Hindi Romantic Movie | Mahima Chaudhry | शाहरूख खान रोमांटिक मूवी",
-   "label": "Ultra",
-   "mins": 181.25,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "UM54pRjkfos",
-   "title": "Pad Man (2018) Full Hindi Movie (4K) | Akshay Kumar, Radhika Apte & Sonam Kapoor | Inspring Movie",
-   "label": "Ultra",
-   "mins": 138.05,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "rNg6u84TpSc",
-   "title": "Ab Tak Chhappan (HD) - Ram Gopal Varma's Bollywood Superhit Action Film | Nana Patekar, Mohan Agashe",
-   "label": "Goldmines",
-   "mins": 113.13333333333334,
-   "found": "2026-10-07"
-  },
-  {
    "id": "zR52MgYhm_Q",
    "title": "Mr. Majnu (2020) New Released Hindi Dubbed Full Movie | Akhil Akkineni, Nidhhi Agerwal, Rao Ramesh",
    "label": "Goldmines",
@@ -189,27 +196,6 @@
    "title": "Ranbir Kapoor's Best Comedy Movie Ever! Besharam (Full Film 4K)",
    "label": "Shemaroo",
    "mins": 142.5,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "laDP-Tu8S9M",
-   "title": "Intaquam Full Movie | Sanjay Khan Hindi Suspense Movie  | Sadhana | Bollywood Suspense Movie",
-   "label": "Ultra",
-   "mins": 148.61666666666667,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "yn4Ea4JAjO0",
-   "title": "Alibaba And 40 Thieves Full Movie | Sanjeev Kumar Hindi Movie | Hindi Adventure Movie",
-   "label": "Ultra",
-   "mins": 153.53333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "LbunRaqLzZY",
-   "title": "Mahabali Hanuman Full Movie | Hindi Devotional Movie",
-   "label": "Ultra",
-   "mins": 135.63333333333333,
    "found": "2026-10-07"
   },
   {
@@ -479,17 +465,24 @@
    "found": "2026-10-06"
   },
   {
-   "id": "wc7l_UJ1CgI",
-   "title": "24 -Time Story (2016) Full Hindi Dubbed Movie | Suriya, Samantha Ruth Prabhu & Nithya Menen | SciFI",
+   "id": "HomXjXjVJb0",
+   "title": "Highway - Full Movie | Alia Bhatt, Randeep Hooda's Best Film | Imtiaz Ali film | A R Rahman Music",
    "label": "Shemaroo",
-   "mins": 149.13333333333333,
+   "mins": 127.93333333333334,
    "found": "2026-10-06"
   },
   {
-   "id": "_pBF4vSqKS4",
-   "title": "Namak Halaal (1982)(HD) Hindi Full Movie - Shashi Kapoor |Amitabh Bachchan| Smita Patil |Ranjeet",
+   "id": "XaXKh-s9zws",
+   "title": "Golmaal 3 Full Movie - Ajay Devgan - Kareena Kapoor - Arshad Warsi - Shreyas - Kunal - Tushar",
    "label": "Shemaroo",
-   "mins": 172.03333333333333,
+   "mins": 127.56666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "ChZo64C5gfQ",
+   "title": "Bahurani {HD} - Hindi Full Movies - Rekha - Rakesh Roshan - Bollywood Movie - (With Eng Subtitles)",
+   "label": "Shemaroo",
+   "mins": 146.1,
    "found": "2026-10-06"
   },
   {
@@ -500,24 +493,17 @@
    "found": "2026-10-06"
   },
   {
-   "id": "aO-F8JsXG2g",
-   "title": "Amar Akbar Anthony (HD) - Hindi Full Movie - Amitabh Bachchan, Vinod Khanna, Rishi Kapoor,",
+   "id": "_pBF4vSqKS4",
+   "title": "Namak Halaal (1982)(HD) Hindi Full Movie - Shashi Kapoor |Amitabh Bachchan| Smita Patil |Ranjeet",
    "label": "Shemaroo",
-   "mins": 166.88333333333333,
+   "mins": 172.03333333333333,
    "found": "2026-10-06"
   },
   {
-   "id": "bTNBl35Z0jY",
-   "title": "Jai Vikraanta (HD)-  Hindi Full Movie - Sanjay Dutt - Zeba Bakhtiyar - (With Eng Subtitles)",
+   "id": "KXUZUkxuza0",
+   "title": "Maine Dil Tujhko Diya (Eng Subs) Hindi Full Movie - Sohail Khan, Sanjay Dutt, Sameera Reddy",
    "label": "Shemaroo",
-   "mins": 186.95,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "HsjZIGOXs2U",
-   "title": "Aap To Aise Na The (HD & Eng SRT) Hindi Full Movie - Raj Babbar - Ranjeeta Kaur - Hit Hindi Movie",
-   "label": "Shemaroo",
-   "mins": 145.36666666666667,
+   "mins": 164.43333333333334,
    "found": "2026-10-06"
   },
   {
@@ -528,24 +514,17 @@
    "found": "2026-10-06"
   },
   {
-   "id": "AFg_yHje-NI",
-   "title": "Dil Ka Rishta (HD) Hindi Full Movie - Arjun Rampal, Aishwarya Rai - Hit Movie-(With Eng Subtitles)",
+   "id": "HsjZIGOXs2U",
+   "title": "Aap To Aise Na The (HD & Eng SRT) Hindi Full Movie - Raj Babbar - Ranjeeta Kaur - Hit Hindi Movie",
    "label": "Shemaroo",
-   "mins": 143.56666666666666,
+   "mins": 145.36666666666667,
    "found": "2026-10-06"
   },
   {
-   "id": "xtqog_hNsjA",
-   "title": "Raja Hindustani Full Movie - Aamir Khan - Karishma Kapoor - 90's Popular Hindi Movie",
+   "id": "6zWErKTcMw8",
+   "title": "Waqt Ki Awaz (1988) - Hindi Full Movie - Mithun Chakraborty | Sridevi | Kader Khan - 80's Hit Movie",
    "label": "Shemaroo",
-   "mins": 170.45,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "CF35-vCIKfY",
-   "title": "Baiju Bawra (1952)(HD & Eng Subs) - Hindi Full Movie - Meena Kumari - Bharat Bhushan -B M Vyas",
-   "label": "Shemaroo",
-   "mins": 154.86666666666667,
+   "mins": 155.13333333333333,
    "found": "2026-10-06"
   },
   {
@@ -553,6 +532,83 @@
    "title": "Zila Ghaziabad Full Movie | Sanjay Dutt, Arshad Warsi, Vivek Oberoi | Trending Movies 2024",
    "label": "Shemaroo",
    "mins": 137.25,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "qUnczRjPkXM",
+   "title": "Doli Saja Ke Rakhna - Hindi Full Movie - Jyothika - Akshaye Khanna - 90's Hit Movie",
+   "label": "Shemaroo",
+   "mins": 166.86666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "aO-F8JsXG2g",
+   "title": "Amar Akbar Anthony (HD) - Hindi Full Movie - Amitabh Bachchan, Vinod Khanna, Rishi Kapoor,",
+   "label": "Shemaroo",
+   "mins": 166.88333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "cnw-1omX1tk",
+   "title": "Best Comedy Thriller - Bobby Jasoos [Full Movie 4K] - Vidya Balan, Ali Fazal, Arjan Bajwa",
+   "label": "Shemaroo",
+   "mins": 116.73333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "2Ey-qxhyfn4",
+   "title": "Vinashak {1998} - Hindi Full Movie - Sunil Shetty - Raveena Tandon - Danny Denzongpa- 90's Hit Movie",
+   "label": "Shemaroo",
+   "mins": 131.83333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "wc7l_UJ1CgI",
+   "title": "24 -Time Story (2016) Full Hindi Dubbed Movie | Suriya, Samantha Ruth Prabhu & Nithya Menen | SciFI",
+   "label": "Shemaroo",
+   "mins": 149.13333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "CXfb0uFSXXU",
+   "title": "No Smoking - Anurag Kashyap Movie | John Abraham, Paresh Rawal, Ayesha Takia | Full Film -HD",
+   "label": "Shemaroo",
+   "mins": 121.68333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "AFg_yHje-NI",
+   "title": "Dil Ka Rishta (HD) Hindi Full Movie - Arjun Rampal, Aishwarya Rai - Hit Movie-(With Eng Subtitles)",
+   "label": "Shemaroo",
+   "mins": 143.56666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "3HoiKIM97CA",
+   "title": "Housefull 2 Full Movie | Akshay, John, Riteish, Mithun, Rishi, Randhir | Best Hindi Comedy Film",
+   "label": "Shemaroo",
+   "mins": 153.43333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "eu3QDY5z0d0",
+   "title": "Raghuveer {HD} - Bollywood Action Movie - Sunil Shetty - Shilpa Shirodkar  - With Eng Subtitles",
+   "label": "Shemaroo",
+   "mins": 156.0,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "zlvxD0Ym1XU",
+   "title": "FIDA (HD) Hindi Full Movie - Fardeen Khan - Kareena Kapoor - Shahid Kapoor - (With Eng Subtitles)",
+   "label": "Shemaroo",
+   "mins": 121.75,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "59WFr5VzhxQ",
+   "title": "GUPT (1997) Full Movie -  Bobby Deol, Kajol and Manisha Koirala Superhit Suspense Thriller film - 4K",
+   "label": "Shemaroo",
+   "mins": 164.18333333333334,
    "found": "2026-10-06"
   },
   {
@@ -619,13 +675,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "D4dsSqRuQsg",
-   "title": "Nadiya Ke Paar Full Movie HD | Sachin, Sadhana Singh, Mitali | Classic Romantic Hindi Movies",
-   "label": "Rajshri",
-   "mins": 149.96666666666667,
-   "found": "2026-10-06"
-  },
-  {
    "id": "nhTk1jZotRs",
    "title": "शुभ मंगल सावधान मूवी | Shubh Mangal Saavdhan Full Movie HD | Ayushmann Khurrana | Bhumi Pednekar",
    "label": "Rajshri",
@@ -644,13 +693,6 @@
    "title": "रांझणा | Raanjhanaa Full Movie in HD | Dhanush’s Superhit Romantic Movie | Sonam Kapoor | Abhay Deol",
    "label": "Rajshri",
    "mins": 131.11666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "eevIK0_FEpM",
-   "title": "English Vinglish Full Movie HD | Sridevi's Inspirational Hindi Movie | Enगlish Vinglisश मूवी",
-   "label": "Rajshri",
-   "mins": 129.5,
    "found": "2026-10-06"
   },
   {
@@ -745,13 +787,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "pvIbCo-IAPE",
-   "title": "Ghutan (2007) Hindi Full Movie (4K) HORROR THRILLER | Ramsay Horror Movies | Aryan Vaid & Heena",
-   "label": "Ultra",
-   "mins": 127.66666666666667,
-   "found": "2026-10-06"
-  },
-  {
    "id": "rzBSzSzmHmk",
    "title": "Arpan (1983) Hindi Full Movie (4K) Jeetendra & Reena Roy | Parveen Babi | Raj B | Bollywood Movies",
    "label": "Ultra",
@@ -829,6 +864,13 @@
    "found": "2026-10-06"
   },
   {
+   "id": "zJKmjDpKvCE",
+   "title": "Aandhi (1975) Hindi (4K) Full Movie | Sanjeev Kumar & Suchitra Sen | Bollywood Political Drama Movie",
+   "label": "Ultra",
+   "mins": 138.75,
+   "found": "2026-10-06"
+  },
+  {
    "id": "EocGGWtaqPY",
    "title": "420 IPC Hindi (4K) Full Movie | Vinay Pathak, Ranvir Shorey & Gul Panag | Bharatiya Nyaya Sanhita",
    "label": "Ultra",
@@ -836,94 +878,73 @@
    "found": "2026-10-06"
   },
   {
-   "id": "DR_Fd5n9OxQ",
-   "title": "Loafer Full Movie |  Dharmendra Hindi Movie | Mumtaz | Superhit Bollywood Movie",
+   "id": "tHvbPAtDM40",
+   "title": "Kanjoos Makhichoos Full Hindi Movie (4K) Kunal Khemu & Shweta Tripathi | Piyush Mishra | Bollywood",
    "label": "Ultra",
-   "mins": 138.4,
+   "mins": 120.86666666666666,
    "found": "2026-10-06"
   },
   {
-   "id": "vBW-dH9MQDA",
-   "title": "रहस्यमयी हत्या और चौंकाने वाले खुलासे SOUTH SUPERHIT 2025 - Marichi - Suspense Thirller Movie",
+   "id": "2gmlrD1shAA",
+   "title": "Suspense Thriller Movies - Raat Baaki Hai Full Hindi Movie (4K) Paoli Dam, Anup Soni & Rahul Dev",
    "label": "Ultra",
-   "mins": 120.56666666666666,
+   "mins": 95.35,
    "found": "2026-10-06"
   },
   {
-   "id": "lmam9Jm7PvA",
-   "title": "Hifazat Full Movie | Vinod Mehra | Asha Sachdev | Superhit Hindi Movie",
-   "label": "Ultra",
-   "mins": 137.76666666666668,
+   "id": "ULEQb_l-N08",
+   "title": "K.G.F Full Movie | Yash, Srinidhi Shetty, Ananth Nag, Ramachandra Raju, Achyuth Kumar, Malavika",
+   "label": "Goldmines",
+   "mins": 141.21666666666667,
    "found": "2026-10-06"
   },
   {
-   "id": "iU2_KY7RxUM",
-   "title": "Sampoorna Ramayan Full Movie | Hindi Devotional Movie",
-   "label": "Ultra",
-   "mins": 158.26666666666668,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "NiQ2-ORNY3k",
-   "title": "Madaari (2016) Full Hindi Movie (4K) | Irfaan Khan & Vishesh Bhansal | Jimmy Sheirgill | Best Movie",
-   "label": "Ultra",
-   "mins": 125.63333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zqeJTI0C8yI",
-   "title": "Govinda & Chunky Pandey Zabardast Comedy Movie in 4K | Aankhen Full Movie | बड़े काम का बंदर",
-   "label": "Ultra",
-   "mins": 167.48333333333332,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "VggUigT1akE",
-   "title": "Bindiya Chamkegi Full Movie | Rekha Hindi Movie | Vinod Mehra | Superhit Bollywood Movie",
-   "label": "Ultra",
-   "mins": 139.35,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "USdFRRVL2oU",
-   "title": "Genius 2018 Full Movie (4K) Utkarsh Sharma, Nawazuddin Siddiqui, Ishitha Chauhan | Full Hindi Movie",
-   "label": "Ultra",
-   "mins": 144.05,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "CPXAyvabM54",
-   "title": "Shatranj Full Movie | Rajendra Kumar Hindi Action Movie | Waheeda Rehman | Superhit Bollywood Movie",
-   "label": "Ultra",
-   "mins": 168.51666666666668,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "NholafkC2gc",
-   "title": "Zabak Full Movie | Mahipal | Shyama | Superhit Bollywood Movie",
-   "label": "Ultra",
-   "mins": 158.08333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "x0dQST05AuA",
-   "title": "Ghar Aaya Mera Pardesi Full Movie | Bhagyashree Hindi Movie | Avinash Wadhavan | Varsha Usgaonkar",
-   "label": "Ultra",
-   "mins": 130.66666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "4rBRZC9oOEc",
-   "title": "Baharen Phir Bhi Aayengi Full Movie | Dharmendra | Tanuja | Mala Sinha | Old Classic Hindi Movie",
-   "label": "Ultra",
-   "mins": 136.41666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "EJMzac_LgRY",
-   "title": "DJ (Full HD) - Ganesh Chaturthi Special Blockbuster Movie | Allu Arjun, Pooja Hegde",
+   "id": "GzYBZJVzgyY",
+   "title": "DJ (Full HD) Allu Arjun Blockbuster Action Hindi Dubbed Movie | Pooja Hegde",
    "label": "Goldmines",
    "mins": 116.31666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "PdqMlnl4Kyw",
+   "title": "Ek Khiladi Hindi Dubbed Full Movie | Gopichand, Rakul Preet Singh, Brahmanandam",
+   "label": "Goldmines",
+   "mins": 125.61666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "5PwI3p6BXvY",
+   "title": "Hebbuli (2018) Hindi Dubbed Full Movie | Sudeep, Amala Paul, V. Ravichandran",
+   "label": "Goldmines",
+   "mins": 116.48333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "uc9wd88XRF8",
+   "title": "Do Khiladi (2026) (SMP) New Released Hindi Dubbed Action Full Movie | Siddharth, G. V. Prakash Kumar",
+   "label": "Goldmines",
+   "mins": 120.35,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "kUnck5Z3dG4",
+   "title": "Maska - मस्का (FULL HD) Ram Pothineni & Hansika Motwani Superhit Romantic Movie",
+   "label": "Goldmines",
+   "mins": 119.61666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "krCpn6RrNX8",
+   "title": "Madam Geeta Rani (Raatchasi) 2020 New Released Hindi Dubbed Full Movie | Jyothika, Hareesh Peradi",
+   "label": "Goldmines",
+   "mins": 115.43333333333334,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "zzhfvt5vZHI",
+   "title": "Dear Comrade (2020) New Released Hindi Dubbed Full Movie | Vijay Devarakonda, Rashmika, Shruti",
+   "label": "Goldmines",
+   "mins": 150.91666666666666,
    "found": "2026-10-06"
   },
   {
@@ -934,10 +955,136 @@
    "found": "2026-10-06"
   },
   {
+   "id": "nixrJul6WKI",
+   "title": "Mera Pyar (Madatha Kaja) Hindi Dubbed Full Movie | Allari Naresh, Sneha Ullal, Maryam Zakaria",
+   "label": "Goldmines",
+   "mins": 120.31666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "WG1tq6BUFKM",
+   "title": "VIP 2 (4K ULTRA HD) - Full Movie | Dhanush, Kajol, Amala Paul, Vivek, Hrishikesh, Samuthirakani",
+   "label": "Goldmines",
+   "mins": 96.11666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "7s9lsmnYLUw",
+   "title": "Dangerous Khiladi 2 (Iddarammayilatho) Hindi Dubbed Full Movie | Allu Arjun, Amala Paul, Catherine",
+   "label": "Goldmines",
+   "mins": 101.8,
+   "found": "2026-10-06"
+  },
+  {
    "id": "gKizDojsdvs",
    "title": "KGF (4K Quality) Full Movie | Yash Blockbuster Movie | Srinidhi Shetty, Ananth Nag, Ramachandra Raju",
    "label": "Goldmines",
    "mins": 145.13333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "XzNvUNt-q5A",
+   "title": "Phoonk 2 (HD) Bollywood Horror Hindi Full Movie | Sudeep, Ahsaas Channa",
+   "label": "Goldmines",
+   "mins": 100.66666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "EJMzac_LgRY",
+   "title": "DJ (Full HD) - Ganesh Chaturthi Special Blockbuster Movie | Allu Arjun, Pooja Hegde",
+   "label": "Goldmines",
+   "mins": 116.31666666666666,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "HntqNeGjcvQ",
+   "title": "Dhruva Full Action Hindi Dubbed Movie In HD Quality | Ram Charan, Rakul Preet Singh, Arvind Swamy",
+   "label": "Goldmines",
+   "mins": 150.51666666666668,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "v9QpKYed3f4",
+   "title": "Puli Hindi Dubbed Full Movie | Vijay, Shruti Haasan, Hansika Motwani, Sridevi, Sudeep",
+   "label": "Goldmines",
+   "mins": 131.53333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "6UeLU0uWGbU",
+   "title": "Red (Remake Of Thadam) 2023 New Released South Hindi Dubbed Movie | Ram Pothineni, Nivetha Pethuraj",
+   "label": "Goldmines",
+   "mins": 121.96666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "Bon7e5C7KNU",
+   "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
+   "label": "Goldmines",
+   "mins": 108.73333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "6jjf5MqMwpY",
+   "title": "Controll (2025) | Full Hindi Movie | Stylish Action Thriller | Anoop Singh, Rohit Roy | Pen Studios",
+   "label": "Pen Movies",
+   "mins": 109.53333333333333,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "smLNCbYNQP4",
+   "title": "Entertainment (4k) | Akshay Kumar, Tamannaah Bhatia, Johnny Lever | Pen Movies",
+   "label": "Pen Movies",
+   "mins": 111.91666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "H7JqAM8_Qeo",
+   "title": "The Accidental Prime Minister | Full Movie | Anupam Kher, Akshaye Khanna, Suzanne Bernert, Aahana",
+   "label": "Pen Movies",
+   "mins": 98.1,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "J4nBcaYMuI4",
+   "title": "Tholi Prema (4K) | Romantic Hindi Dubbed Full Movie | Varun Tej, Raashi Khanna",
+   "label": "Pen Movies",
+   "mins": 105.21666666666667,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "MZGKv-UqD4c",
+   "title": "Acharya Full Movie | 2024 New Released Hindi Dubbed Movie | Chiranjeevi, Ram Charan, Pooja Hegde",
+   "label": "Pen Movies",
+   "mins": 123.95,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "WTGnTI3-lGQ",
+   "title": "Aparichit (Anniyan) Vikram, Sadha, Vivek, Prakash Raj, Nassar | Full Hindi Dubbed Movie",
+   "label": "Pen Movies",
+   "mins": 135.51666666666668,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "bTNBl35Z0jY",
+   "title": "Jai Vikraanta (HD)-  Hindi Full Movie - Sanjay Dutt - Zeba Bakhtiyar - (With Eng Subtitles)",
+   "label": "Shemaroo",
+   "mins": 186.95,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "xtqog_hNsjA",
+   "title": "Raja Hindustani Full Movie - Aamir Khan - Karishma Kapoor - 90's Popular Hindi Movie",
+   "label": "Shemaroo",
+   "mins": 170.45,
+   "found": "2026-10-06"
+  },
+  {
+   "id": "eevIK0_FEpM",
+   "title": "English Vinglish Full Movie HD | Sridevi's Inspirational Hindi Movie | Enगlish Vinglisश मूवी",
+   "label": "Rajshri",
+   "mins": 129.5,
    "found": "2026-10-06"
   },
   {
@@ -955,52 +1102,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "ULEQb_l-N08",
-   "title": "K.G.F Full Movie | Yash, Srinidhi Shetty, Ananth Nag, Ramachandra Raju, Achyuth Kumar, Malavika",
-   "label": "Goldmines",
-   "mins": 141.21666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "krCpn6RrNX8",
-   "title": "Madam Geeta Rani (Raatchasi) 2020 New Released Hindi Dubbed Full Movie | Jyothika, Hareesh Peradi",
-   "label": "Goldmines",
-   "mins": 115.43333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "PdqMlnl4Kyw",
-   "title": "Ek Khiladi Hindi Dubbed Full Movie | Gopichand, Rakul Preet Singh, Brahmanandam",
-   "label": "Goldmines",
-   "mins": 125.61666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "GzYBZJVzgyY",
-   "title": "DJ (Full HD) Allu Arjun Blockbuster Action Hindi Dubbed Movie | Pooja Hegde",
-   "label": "Goldmines",
-   "mins": 116.31666666666666,
-   "found": "2026-10-06"
-  },
-  {
    "id": "vkuiI430d_0",
    "title": "The Super Khiladi 3 (Nenu Sailaja) Telugu Hindi Dubbed Full Movie | Ram Pothineni, Keerthy Suresh",
    "label": "Goldmines",
    "mins": 117.58333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "5PwI3p6BXvY",
-   "title": "Hebbuli (2018) Hindi Dubbed Full Movie | Sudeep, Amala Paul, V. Ravichandran",
-   "label": "Goldmines",
-   "mins": 116.48333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "uc9wd88XRF8",
-   "title": "Do Khiladi (2026) (SMP) New Released Hindi Dubbed Action Full Movie | Siddharth, G. V. Prakash Kumar",
-   "label": "Goldmines",
-   "mins": 120.35,
    "found": "2026-10-06"
   },
   {
@@ -1039,80 +1144,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "v9QpKYed3f4",
-   "title": "Puli Hindi Dubbed Full Movie | Vijay, Shruti Haasan, Hansika Motwani, Sridevi, Sudeep",
-   "label": "Goldmines",
-   "mins": 131.53333333333333,
-   "found": "2026-10-06"
-  },
-  {
    "id": "OrfYe3Xki1M",
    "title": "Ruler (Full HD) Balakrishna Hindi Dubbed Full Movie | Vedhika, Sonal Chauhan",
    "label": "Goldmines",
    "mins": 115.9,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "6UeLU0uWGbU",
-   "title": "Red (Remake Of Thadam) 2023 New Released South Hindi Dubbed Movie | Ram Pothineni, Nivetha Pethuraj",
-   "label": "Goldmines",
-   "mins": 121.96666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Bon7e5C7KNU",
-   "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
-   "label": "Goldmines",
-   "mins": 108.73333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "6jjf5MqMwpY",
-   "title": "Controll (2025) | Full Hindi Movie | Stylish Action Thriller | Anoop Singh, Rohit Roy | Pen Studios",
-   "label": "Pen Movies",
-   "mins": 109.53333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "tKqo-4qAeJA",
-   "title": "Haseena Parkar Full Movie | Shraddha Kapoor, Siddhanth Kapoor, Apoorva | Bollywood Movie",
-   "label": "Pen Movies",
-   "mins": 117.85,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "1lFk1LSsI_c",
-   "title": "Jaya Janaki Nayaka KHOONKHAR | Full Hindi Dubbed Movie | Bellamkonda Sreenivas, Rakul Preet Singh",
-   "label": "Pen Movies",
-   "mins": 124.23333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "lg2i2oqnoy0",
-   "title": "Singh Is Bliing | Full Movie | Akshay Kumar, Amy Jackson, Lara Dutta",
-   "label": "Pen Movies",
-   "mins": 138.8,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "smLNCbYNQP4",
-   "title": "Entertainment (4k) | Akshay Kumar, Tamannaah Bhatia, Johnny Lever | Pen Movies",
-   "label": "Pen Movies",
-   "mins": 111.91666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "LXXkiUKDK4w",
-   "title": "Entertainment | Full Movie | Akshay Kumar, Tamannaah Bhatia, Johnny Lever",
-   "label": "Pen Movies",
-   "mins": 138.93333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "H7JqAM8_Qeo",
-   "title": "The Accidental Prime Minister | Full Movie | Anupam Kher, Akshaye Khanna, Suzanne Bernert, Aahana",
-   "label": "Pen Movies",
-   "mins": 98.1,
    "found": "2026-10-06"
   },
   {
@@ -1123,45 +1158,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "xlaStrxzW_U",
-   "title": "Dayaalu (HD) New Hindi Dubbed Movie | Nagarjuna Akkineni, Naga Chaitanya, Samantha Akkineni",
-   "label": "Pen Movies",
-   "mins": 132.18333333333334,
-   "found": "2026-10-06"
-  },
-  {
    "id": "TDl3apO9M3k",
    "title": "Love | Salman Khan, Revathi, Rita Bhaduri, Shafi Inamdar, Amjad Khan | Full Hindi Movie",
    "label": "Pen Movies",
    "mins": 122.51666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "6H4ezbf86vQ",
-   "title": "Machine Full Movie With English Subtitles | Kiara Advani, Mustafa Burmawala, Johnny Lever",
-   "label": "Pen Movies",
-   "mins": 107.96666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "AVc9MsVDG-Q",
-   "title": "Gujjubhai Most Wanted Full Movie With Subtitles | HD 1080p | Siddharth Randeria & Jimit Trivedi",
-   "label": "Pen Movies",
-   "mins": 141.71666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "J4nBcaYMuI4",
-   "title": "Tholi Prema (4K) | Romantic Hindi Dubbed Full Movie | Varun Tej, Raashi Khanna",
-   "label": "Pen Movies",
-   "mins": 105.21666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "RCIDz5D5zVs",
-   "title": "Tathagatha Buddha | Full Movie | Sunil Sharma, Kausha Rach, Suman | HD 1080p | English Subtitles",
-   "label": "Pen Movies",
-   "mins": 127.23333333333333,
    "found": "2026-10-06"
   },
   {
@@ -1179,94 +1179,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "ChZo64C5gfQ",
-   "title": "Bahurani {HD} - Hindi Full Movies - Rekha - Rakesh Roshan - Bollywood Movie - (With Eng Subtitles)",
-   "label": "Shemaroo",
-   "mins": 146.1,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "HomXjXjVJb0",
-   "title": "Highway - Full Movie | Alia Bhatt, Randeep Hooda's Best Film | Imtiaz Ali film | A R Rahman Music",
-   "label": "Shemaroo",
-   "mins": 127.93333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "KXUZUkxuza0",
-   "title": "Maine Dil Tujhko Diya (Eng Subs) Hindi Full Movie - Sohail Khan, Sanjay Dutt, Sameera Reddy",
-   "label": "Shemaroo",
-   "mins": 164.43333333333334,
-   "found": "2026-10-06"
-  },
-  {
    "id": "JtRBRHIiDdg",
    "title": "Ajay Devgn's Singham Returns Full Movie 4K - MUST WATCH Action Blockbuster💥",
    "label": "Shemaroo",
    "mins": 133.13333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "XaXKh-s9zws",
-   "title": "Golmaal 3 Full Movie - Ajay Devgan - Kareena Kapoor - Arshad Warsi - Shreyas - Kunal - Tushar",
-   "label": "Shemaroo",
-   "mins": 127.56666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "j8w7DzNgShg",
-   "title": "Mann (HD & Eng Subs)Hindi Full Movie - Aamir Khan, Manisha Koirala, Anil Kapoor - 90's Romantic Film",
-   "label": "Shemaroo",
-   "mins": 173.23333333333332,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "3HoiKIM97CA",
-   "title": "Housefull 2 Full Movie | Akshay, John, Riteish, Mithun, Rishi, Randhir | Best Hindi Comedy Film",
-   "label": "Shemaroo",
-   "mins": 153.43333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "6zWErKTcMw8",
-   "title": "Waqt Ki Awaz (1988) - Hindi Full Movie - Mithun Chakraborty | Sridevi | Kader Khan - 80's Hit Movie",
-   "label": "Shemaroo",
-   "mins": 155.13333333333333,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "59WFr5VzhxQ",
-   "title": "GUPT (1997) Full Movie -  Bobby Deol, Kajol and Manisha Koirala Superhit Suspense Thriller film - 4K",
-   "label": "Shemaroo",
-   "mins": 164.18333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "qUnczRjPkXM",
-   "title": "Doli Saja Ke Rakhna - Hindi Full Movie - Jyothika - Akshaye Khanna - 90's Hit Movie",
-   "label": "Shemaroo",
-   "mins": 166.86666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "2Ey-qxhyfn4",
-   "title": "Vinashak {1998} - Hindi Full Movie - Sunil Shetty - Raveena Tandon - Danny Denzongpa- 90's Hit Movie",
-   "label": "Shemaroo",
-   "mins": 131.83333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "CXfb0uFSXXU",
-   "title": "No Smoking - Anurag Kashyap Movie | John Abraham, Paresh Rawal, Ayesha Takia | Full Film -HD",
-   "label": "Shemaroo",
-   "mins": 121.68333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zlvxD0Ym1XU",
-   "title": "FIDA (HD) Hindi Full Movie - Fardeen Khan - Kareena Kapoor - Shahid Kapoor - (With Eng Subtitles)",
-   "label": "Shemaroo",
-   "mins": 121.75,
    "found": "2026-10-06"
   },
   {
@@ -1281,13 +1197,6 @@
    "title": "Funtoosh (HD & Eng Srt) - Hindi Full Movie - Paresh Rawal - Gulshan Grover - Superhit Hindi Movie",
    "label": "Shemaroo",
    "mins": 150.41666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "cnw-1omX1tk",
-   "title": "Best Comedy Thriller - Bobby Jasoos [Full Movie 4K] - Vidya Balan, Ali Fazal, Arjan Bajwa",
-   "label": "Shemaroo",
-   "mins": 116.73333333333333,
    "found": "2026-10-06"
   },
   {
@@ -1319,45 +1228,10 @@
    "found": "2026-10-06"
   },
   {
-   "id": "qwbplAADzG0",
-   "title": "Saboot Full Movie | Hindi Horror Movie | Navin Nischol | Kajal Kiran | Bollywood Horror Movie",
-   "label": "Ultra",
-   "mins": 132.36666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zJKmjDpKvCE",
-   "title": "Aandhi (1975) Hindi (4K) Full Movie | Sanjeev Kumar & Suchitra Sen | Bollywood Political Drama Movie",
-   "label": "Ultra",
-   "mins": 138.75,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "jiM1220-PaE",
-   "title": "Aitraaz Full Movie | Akshay Kumar | Priyanka Chopra | Kareena Kapoor | Bollywood Court Thriller",
-   "label": "Ultra",
-   "mins": 153.36666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "2gmlrD1shAA",
-   "title": "Suspense Thriller Movies - Raat Baaki Hai Full Hindi Movie (4K) Paoli Dam, Anup Soni & Rahul Dev",
-   "label": "Ultra",
-   "mins": 95.35,
-   "found": "2026-10-06"
-  },
-  {
    "id": "BzTFg0m1l_8",
    "title": "DJ (4K ULTRA HD) South Action Hindi Dubbed Movie | Allu Arjun, Pooja Hegde",
    "label": "Goldmines",
    "mins": 116.31666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "XzNvUNt-q5A",
-   "title": "Phoonk 2 (HD) Bollywood Horror Hindi Full Movie | Sudeep, Ahsaas Channa",
-   "label": "Goldmines",
-   "mins": 100.66666666666667,
    "found": "2026-10-06"
   },
   {
@@ -1389,20 +1263,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "WTGnTI3-lGQ",
-   "title": "Aparichit (Anniyan) Vikram, Sadha, Vivek, Prakash Raj, Nassar | Full Hindi Dubbed Movie",
-   "label": "Pen Movies",
-   "mins": 135.51666666666668,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "MZGKv-UqD4c",
-   "title": "Acharya Full Movie | 2024 New Released Hindi Dubbed Movie | Chiranjeevi, Ram Charan, Pooja Hegde",
-   "label": "Pen Movies",
-   "mins": 123.95,
-   "found": "2026-10-06"
-  },
-  {
    "id": "i-qb9TUlSRk",
    "title": "Griha Pravesh (HD & Eng Subs) - Hindi Full Movie - Sanjeev Kumar | Sharmila Tagore | Sarika",
    "label": "Shemaroo",
@@ -1431,62 +1291,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "yNamXD_Rfaw",
-   "title": "Baazi Full Movie | Dharmendra | Waheeda Rehman | Hindi Thriller Movie",
-   "label": "Ultra",
-   "mins": 134.96666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "Lnh9jlEIt2U",
-   "title": "Shriman Satyawadi Full Movie | Raj Kapoor Old Hindi Movie | Classic Hindi Movie",
-   "label": "Ultra",
-   "mins": 146.35,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "kUnck5Z3dG4",
-   "title": "Maska - मस्का (FULL HD) Ram Pothineni & Hansika Motwani Superhit Romantic Movie",
-   "label": "Goldmines",
-   "mins": 119.61666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "zzhfvt5vZHI",
-   "title": "Dear Comrade (2020) New Released Hindi Dubbed Full Movie | Vijay Devarakonda, Rashmika, Shruti",
-   "label": "Goldmines",
-   "mins": 150.91666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "nGNmyt9Ywqc",
-   "title": "बॉर्डर: Border (1997) Full Movie | Blockbuster Hindi Patriotic Movie | Sunny Deol | Suniel Shetty",
-   "label": "Ultra",
-   "mins": 170.83333333333334,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "28Ia7wl1V20",
-   "title": "Teen Bahuraniyan Full Movie | Prithviraj Kapoor | Bollywood Movie",
-   "label": "Ultra",
-   "mins": 147.48333333333332,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "E3iDYvO-KyE",
-   "title": "Lipstick Under My Burkha Full Movie (4K) Ratna Pathak & Konkona Sen Sharma | Aahana Kumra |  Plabita",
-   "label": "Ultra",
-   "mins": 115.4,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "uoGCXFuDiQo",
-   "title": "Ad5s.com | Tholi Prema (HD) | New Romantic Hindi Dubbed Full Movie | Varun Tej, Raashi Khanna",
-   "label": "Pen Movies",
-   "mins": 105.65,
-   "found": "2026-10-06"
-  },
-  {
    "id": "yFb5S10sGl0",
    "title": "Kitaab Full Movie | Uttam Kumar, Vidya Sinha, Shreeram Lagoo, Master Tito | School Life Movie",
    "label": "Rajshri",
@@ -1498,13 +1302,6 @@
    "title": "Khatarnak Khiladi 3 (Jaggu Dada) Hindi Dubbed Full Movie | Darshan, Deeksha Seth",
    "label": "Goldmines",
    "mins": 129.01666666666668,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "7s9lsmnYLUw",
-   "title": "Dangerous Khiladi 2 (Iddarammayilatho) Hindi Dubbed Full Movie | Allu Arjun, Amala Paul, Catherine",
-   "label": "Goldmines",
-   "mins": 101.8,
    "found": "2026-10-06"
   },
   {
@@ -1543,20 +1340,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "816x1zN9IXs",
-   "title": "Paap ki Duniya Full Movie | Sunny Deol Hindi Action Movie | Chunky Pandey | Bollywood Action Movie",
-   "label": "Ultra",
-   "mins": 168.16666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "eu3QDY5z0d0",
-   "title": "Raghuveer {HD} - Bollywood Action Movie - Sunil Shetty - Shilpa Shirodkar  - With Eng Subtitles",
-   "label": "Shemaroo",
-   "mins": 156.0,
-   "found": "2026-10-06"
-  },
-  {
    "id": "CcwW3HJcyvQ",
    "title": "Bhagam Bhag Full Comedy Movie- Akshay Kumar, Govinda, Jacky Shroff, Paresh Rawal, Rajpal Yadav",
    "label": "Shemaroo",
@@ -1578,13 +1361,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "SOPh8MyfqpA",
-   "title": "Surya Ki Gang | Thaanaa Serndha Koottam | New Tamil Hindi Dubbed Full Movie | Suriya, Keerthy Suresh",
-   "label": "Pen Movies",
-   "mins": 118.66666666666667,
-   "found": "2026-10-06"
-  },
-  {
    "id": "vYB-kvwKPc4",
    "title": "Get Ready for NONSTOP Comedy with Bheja Fry 2 (Full Hindi Movie)",
    "label": "Shemaroo",
@@ -1596,48 +1372,6 @@
    "title": "Jigar Kaleja - Full Length Bollywood Action Film - Mahesh Babu, Anushka Shetty",
    "label": "Rajshri",
    "mins": 159.35,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "tHvbPAtDM40",
-   "title": "Kanjoos Makhichoos Full Hindi Movie (4K) Kunal Khemu & Shweta Tripathi | Piyush Mishra | Bollywood",
-   "label": "Ultra",
-   "mins": 120.86666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "__VBnFtu0Lo",
-   "title": "Good Boy Bad Boy ( गुड बॉय बेड बॉय ) 4K Full Movie | Emraan Hashmi & Tanushree Dutta | Tushar Kapoor",
-   "label": "Ultra",
-   "mins": 110.25,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "rFP_eynbSnA",
-   "title": "UMRAO JAAN Full Movie | उमराव जान मूवी | Aishwarya Rai | Abhishek Bachchan | Hindi Romantic Movie",
-   "label": "Ultra",
-   "mins": 180.95,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "WG1tq6BUFKM",
-   "title": "VIP 2 (4K ULTRA HD) - Full Movie | Dhanush, Kajol, Amala Paul, Vivek, Hrishikesh, Samuthirakani",
-   "label": "Goldmines",
-   "mins": 96.11666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "nixrJul6WKI",
-   "title": "Mera Pyar (Madatha Kaja) Hindi Dubbed Full Movie | Allari Naresh, Sneha Ullal, Maryam Zakaria",
-   "label": "Goldmines",
-   "mins": 120.31666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "HntqNeGjcvQ",
-   "title": "Dhruva Full Action Hindi Dubbed Movie In HD Quality | Ram Charan, Rakul Preet Singh, Arvind Swamy",
-   "label": "Goldmines",
-   "mins": 150.51666666666668,
    "found": "2026-10-06"
   },
   {
@@ -1666,27 +1400,6 @@
    "title": "Odiyan (4K) New Released Full Hindi Dubbed Movie | Mohanlal, Manju Warrier, Prakash Raj",
    "label": "Pen Movies",
    "mins": 139.75,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "IeSbSGWJxEQ",
-   "title": "Lakshmi | Full Movie | Nagesh Kukunoor, Monali Thakur, Satish Kaushik",
-   "label": "Pen Movies",
-   "mins": 100.51666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "egWv3HVXOG8",
-   "title": "Neeya 2 Full Movie | Raai Laxmi, Varalaxmi Sarathkumar, Jai, Catherine Tresa |New Hindi Dubbed Movie",
-   "label": "Pen Movies",
-   "mins": 96.41666666666667,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "al6mpz3sgkY",
-   "title": "Jawab The Justice Full Movie | 2023 New Released Hindi Dubbed Movie | Vijay Anthony, Anjali | Kaali",
-   "label": "Pen Movies",
-   "mins": 109.31666666666666,
    "found": "2026-10-06"
   },
   {

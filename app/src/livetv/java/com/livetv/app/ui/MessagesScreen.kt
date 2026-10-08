@@ -43,6 +43,7 @@ import com.livetv.app.account.Conversation
 import com.livetv.app.account.Message
 import com.livetv.app.account.Messages
 import com.livetv.app.account.User
+import com.livetv.app.account.Welcome
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
@@ -75,6 +76,9 @@ fun MessagesScreen(onClose: () -> Unit) {
     var reload by remember { mutableIntStateOf(0) }
     // The owner picking a viewer to start a conversation with.
     var picking by remember { mutableStateOf(false) }
+    // A viewer's welcome invitation (Gold free for a month with code WELCOME), above their messages.
+    var welcome by remember { mutableStateOf<Welcome.State?>(null) }
+    LaunchedEffect(Unit) { if (!admin) welcome = runCatching { Welcome.state(account) }.getOrNull() }
 
     LaunchedEffect(open, reload) {
         error = null
@@ -157,14 +161,17 @@ fun MessagesScreen(onClose: () -> Unit) {
                     } else {
                         val list = thread
                         val listState = rememberLazyListState()
-                        LaunchedEffect(list) { if (!list.isNullOrEmpty()) listState.scrollToItem(list.size - 1) }
+                        val invite = welcome?.takeIf { !admin }
+                        LaunchedEffect(list) { if (!list.isNullOrEmpty()) listState.scrollToItem(list.size - 1 + if (invite != null) 1 else 0) }
                         when {
                             list == null && error == null -> CircularProgressIndicator()
+                            list != null && list.isEmpty() && invite != null -> WelcomeCard(invite)
                             list != null && list.isEmpty() -> Text(
                                 if (admin) "No messages yet." else "No messages yet. Choose ＋ Write to send the Cable TV team a message, and we'll answer here.",
                                 style = MaterialTheme.typography.bodyLarge,
                             )
                             list != null -> LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                if (invite != null) item(key = "welcome") { WelcomeCard(invite) }
                                 items(list, key = { it.id }) { m -> Bubble(m, mine = m.fromAdmin == admin, admin = admin) }
                             }
                         }

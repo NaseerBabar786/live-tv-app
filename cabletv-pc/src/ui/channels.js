@@ -4,6 +4,7 @@ import { parseM3u, convertChecked, nameKey, youtubeId, compareVersions } from '.
 import * as store from './store.js';
 import * as mine from './mychannel.js';
 import * as plans from './plans.js';
+import * as mta from './mta.js';
 
 export const FILTER_ALL = 'All';
 export const FILTER_FAVORITES = 'Favorites';
@@ -45,9 +46,12 @@ export const state = {
   filter: FILTER_ALL,
   category: null,
   languageFilter: new Set(store.get('languages', [])),
-  source: store.get('source', SOURCE_MIX) || SOURCE_MIX,
+  /** Every country of the working list unless the viewer picked countries (owner's choice, 1.10.10). */
+  source: store.get('source', SOURCE_ALL) || SOURCE_ALL,
   lastWatchedId: store.get('lastChannel', null),
   countries: [],
+  /** MTA's channels, right after ours (Settings, off unless the viewer turns it on). */
+  showMta: store.get('mta', false) === true,
 };
 
 const listeners = new Set();
@@ -99,7 +103,9 @@ async function loadList() {
   else if (country) list = (await checkedAll()).filter((c) => c.country === country);
   else list = convertChecked(parseM3u(await store.fetchCached('checked:mix', MIX_URL)));
   if (!list.length) throw new Error('No playable channels found for this source.');
-  list = await withPakistaniLive(list);
+  list = await withPakistaniLive(list.filter((c) => !mta.isOldLink(c.url)));
+  // MTA's channels lead when they're on (16 to 23, after our own), replacing any copy further down.
+  if (state.showMta) list = [...mta.CHANNELS, ...list];
   // A stream listed twice would be one channel twice.
   const seen = new Set();
   return list.filter((c) => (seen.has(c.url) ? false : seen.add(c.url)));
@@ -161,18 +167,30 @@ export async function loadCountries() {
 
 const freeOnly = () => !plans.has('channels');
 
+/** Our Bazaar channels and MTA's (when on): always listed first, in every language and in Favorites. */
+const leads = (c) => mine.isMine(c) || mta.isMta(c);
+
+/** Turns MTA's channels on or off and reloads the list. */
+export function setShowMta(show) {
+  if (show === state.showMta) return;
+  state.showMta = show;
+  store.set('mta', show);
+  state.category = null;
+  reload();
+}
+
 function inGroup() {
   return state.channels.filter((c) => {
     if (freeOnly() && !plans.freeChannel(c)) return false;
     if (state.filter === FILTER_ALL) return true;
-    if (state.filter === FILTER_FAVORITES) return state.favorites.has(c.url) || mine.isMine(c);
+    if (state.filter === FILTER_FAVORITES) return state.favorites.has(c.url) || leads(c);
     return c.group === state.filter;
   });
 }
 
 function inLanguage() {
   const langs = state.languageFilter;
-  return inGroup().filter((c) => !langs.size || langs.has(c.language) || mine.isMine(c));
+  return inGroup().filter((c) => !langs.size || langs.has(c.language) || leads(c));
 }
 
 function byCount(values) {
@@ -198,9 +216,9 @@ function countryRank(c) {
 }
 
 /**
- * The channels shown: our own first, then favorites, then the rest in list order. Inside Favorites
- * the channels are grouped by country (Pakistan, India, Canada, UK, USA, then the rest) and numbered
- * from 15, after our own channels.
+ * The channels shown: our own first, then MTA's (when on), then favorites, then the rest in list order.
+ * Inside Favorites the other channels are grouped by country (Pakistan, India, Canada, UK, USA, then
+ * the rest) and numbered on after our own channels 1 to 15 and MTA's 16 to 23.
  */
 export function visibleChannels() {
   const q = state.query.trim().toLowerCase();
@@ -210,15 +228,16 @@ export function visibleChannels() {
   if (state.filter !== FILTER_FAVORITES) {
     // A stable sort, like Kotlin's sortedWith.
     return shown.map((c, i) => [c, i]).sort((a, b) => (!mine.isMine(a[0]) - !mine.isMine(b[0])) ||
-      (!state.favorites.has(a[0].url) - !state.favorites.has(b[0].url)) || a[1] - b[1]).map(([c]) => c);
+      (!mta.isMta(a[0]) - !mta.isMta(b[0])) || (!state.favorites.has(a[0].url) - !state.favorites.has(b[0].url)) || a[1] - b[1]).map(([c]) => c);
   }
-  const own = shown.filter((c) => mine.isMine(c));
-  const rest = shown.filter((c) => !mine.isMine(c))
+  const own = [...shown.filter((c) => mine.isMine(c)), ...shown.filter((c) => mta.isMta(c))];
+  const mtaCount = state.channels.filter((c) => mta.isMta(c)).length;
+  const rest = shown.filter((c) => !leads(c))
     .map((c, i) => [c, i])
     .sort((a, b) => countryRank(a[0]) - countryRank(b[0]) ||
       String(a[0].group || a[0].country || '').localeCompare(String(b[0].group || b[0].country || '')) ||
       a[0].number - b[0].number || a[1] - b[1])
-    .map(([c], i) => ({ ...c, number: mine.COUNT + i + 1 }));
+    .map(([c], i) => ({ ...c, number: mine.COUNT + mtaCount + i + 1 }));
   return [...own, ...rest];
 }
 
@@ -240,7 +259,7 @@ export function setLanguages(set) {
   changed();
 }
 export function setSource(source) {
-  state.source = source || SOURCE_MIX;
+  state.source = source || SOURCE_ALL;
   store.set('source', state.source);
   state.filter = FILTER_ALL;
   state.category = null;

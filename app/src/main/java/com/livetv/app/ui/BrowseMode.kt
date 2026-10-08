@@ -36,6 +36,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -254,6 +255,8 @@ internal fun BrowseMode(
     onOpenGames: (() -> Unit)?,
     /** Opens the Weather section; null hides it. */
     onOpenWeather: (() -> Unit)? = null,
+    /** Opens the Iqra Quran section; null hides it. */
+    onOpenQuran: (() -> Unit)? = null,
     /** Live TV Max: opens a movie or show in the Library. */
     onOpenVodItem: ((VodTarget) -> Unit)?,
     onOpenSettings: () -> Unit,
@@ -769,6 +772,7 @@ internal fun BrowseMode(
             }
             if (onOpenGames != null) RailItem(Icons.Filled.SportsEsports, "Games", railFocused, right = back, onClick = onOpenGames)
             if (onOpenWeather != null) RailItem(Icons.Filled.WbSunny, "Weather", railFocused, right = back, onClick = onOpenWeather)
+            if (onOpenQuran != null) RailItem(Icons.AutoMirrored.Filled.MenuBook, "Iqra Quran", railFocused, right = back, onClick = onOpenQuran)
             if (onNextMode != null) RailItem(Icons.Filled.Tv, modeLabel, railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
             RailItem(Icons.Filled.Settings, "Settings", railFocused, right = back, onClick = onOpenSettings)
         }

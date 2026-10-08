@@ -114,6 +114,7 @@ import androidx.compose.material.icons.filled.ViewDay
 import androidx.compose.material.icons.filled.VerticalSplit
 import androidx.compose.material.icons.filled.ViewSidebar
 import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material.icons.filled.Search
@@ -196,8 +197,10 @@ fun ChannelListScreen(
     onOpenVodItem: ((VodTarget) -> Unit)? = null,
     /** Opens the Games section; null hides its button. */
     onOpenGames: (() -> Unit)? = null,
-    /** Opens the Weather section (1.10.4); null hides its button. */
+    /** Opens the Weather section (1.10.11); null hides its button. */
     onOpenWeather: (() -> Unit)? = null,
+    /** Opens the Iqra Quran section; null hides its button. */
+    onOpenQuran: (() -> Unit)? = null,
     /** A channel picked to play in 1+List's player, remembered as the last one watched. */
     onWatch: (Channel) -> Unit = {},
 ) {
@@ -263,6 +266,8 @@ fun ChannelListScreen(
                 ?: if (Edition.MAX) TileLayout.Browse else TileLayout.List,
         )
     }
+    // The mode on screen, for the owner's "most used features" (Features).
+    LaunchedEffect(tileLayout) { com.livetv.app.Features.use(tileLayout.feature?.key ?: "list") }
     // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, say) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
     val packages by Plans.features.collectAsStateWithLifecycle()
@@ -645,6 +650,22 @@ fun ChannelListScreen(
                             }
                         }
                     }
+                    if (onOpenQuran != null) {
+                        if (wideScreen) {
+                            TextButton(
+                                onClick = onOpenQuran,
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusGlow(),
+                            ) {
+                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null)
+                                Text("Iqra Quran", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
+                        } else {
+                            IconButton(onClick = onOpenQuran, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = "Iqra Quran")
+                            }
+                        }
+                    }
                     IconButton(
                         onClick = {
                             previewSound = !previewSound
@@ -747,6 +768,7 @@ fun ChannelListScreen(
                         onOpen = onPlay,
                         onOpenGames = onOpenGames,
                         onOpenWeather = onOpenWeather,
+                        onOpenQuran = onOpenQuran,
                         onOpenVodItem = onOpenVodItem,
                         onOpenSettings = { showSettings = true },
                         onRailFocused = { topBarFocused = it },

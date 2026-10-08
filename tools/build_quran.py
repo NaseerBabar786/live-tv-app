@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Builds the Quran text that Iqra Quran ships inside the app (quran/src/main/assets/quran).
+"""Builds the Quran text that Iqra Quran ships inside the app (qurankit/src/main/assets/quran).
 
 - quran.json: the 114 surahs with their names and the Arabic text in the Indo-Pak script
   (as published by the Quran Foundation, api.quran.com).
@@ -16,12 +16,34 @@ import time
 import urllib.request
 
 API = "https://api.quran.com/api/v4"
-OUT = os.path.join(os.path.dirname(__file__), "..", "quran", "src", "main", "assets", "quran")
+OUT = os.path.join(os.path.dirname(__file__), "..", "qurankit", "src", "main", "assets", "quran")
 
 # Translations, picked by name so a changed resource id can't swap in a different work.
 TRANSLATIONS = {
     "ur": ("ur", ["jalandh"], "Fateh Muhammad Jalandhry"),
     "en": ("en", ["saheeh", "sahih"], "Saheeh International"),
+}
+
+# More languages (every one quran.com has; these first, the rest A-Z), downloaded by the apps only when picked (docs/quran/tr, served at tv.bulkbazaar.ca/quran/tr/).
+# code: (quran.com language_name, preferred translators (first match wins, else the first listed), English
+# name, own name, written right to left)
+EXTRA_DIR = os.path.join(os.path.dirname(__file__), "..", "docs", "quran", "tr")
+EXTRA = {
+    "hi": ("hindi", ["farooq"], "Hindi", "हिन्दी", False),
+    "pa": ("punjabi", [], "Punjabi", "ਪੰਜਾਬੀ", False),
+    "bn": ("bengali", ["muhiuddin", "taisirul"], "Bengali", "বাংলা", False),
+    "sd": ("sindhi", [], "Sindhi", "سنڌي", True),
+    "ps": ("pashto", [], "Pashto", "پښتو", True),
+    "fa": ("persian", ["ansarian", "fooladvand"], "Persian", "فارسی", True),
+    "tr": ("turkish", ["diyanet"], "Turkish", "Türkçe", False),
+    "id": ("indonesian", ["kementerian", "ministry", "affairs"], "Indonesian", "Bahasa Indonesia", False),
+    "ms": ("malay", ["basmeih"], "Malay", "Bahasa Melayu", False),
+    "fr": ("french", ["hamidullah"], "French", "Français", False),
+    "es": ("spanish", ["garcia", "garcía"], "Spanish", "Español", False),
+    "de": ("german", ["bubenheim"], "German", "Deutsch", False),
+    "ru": ("russian", ["kuliev"], "Russian", "Русский", False),
+    "zh": ("chinese", ["ma jian"], "Chinese", "中文", False),
+    "sw": ("swahili", ["barwani"], "Swahili", "Kiswahili", False),
 }
 
 
@@ -122,6 +144,8 @@ def main():
                       f, ensure_ascii=False, separators=(",", ":"))
         print(f"{code}.json: {res['name']} (id {res['id']}); 1:1 = {per[0][0][:80]}")
 
+    build_extra(surahs)
+
     with open(os.path.join(OUT, "reciters.json"), encoding="utf-8") as f:
         reciters = json.load(f)
     missing = [r["folder"] for r in reciters
@@ -129,6 +153,62 @@ def main():
     if missing:
         sys.exit(f"No audio on everyayah.com for: {missing}")
     print(f"reciters ok: {[r['folder'] for r in reciters]}")
+
+
+def build_extra(surahs):
+    """Every language quran.com has a translation in: one file each plus index.json listing them.
+    The languages in EXTRA come first (with the translator picked there), then all the others A-Z.
+    Urdu and English are built into the apps, so they are left out here."""
+    os.makedirs(EXTRA_DIR, exist_ok=True)
+    all_tr = get(f"{API}/resources/translations")["translations"]
+    langs = {l["name"].lower(): l for l in get(f"{API}/resources/languages")["languages"]}
+    plan = []  # (code, language_name, preferred translators, English name, own name, rtl)
+    for code, (lang, keys, en, native, rtl) in EXTRA.items():
+        plan.append((code, lang, keys, en, native, rtl))
+    taken = set(EXTRA) | {"ur", "en"}
+    named = {p[1] for p in plan} | {"urdu", "english"}
+    for lang in sorted({(r.get("language_name") or "").lower() for r in all_tr} - named - {""}):
+        info = langs.get(lang, {})
+        code = (info.get("iso_code") or lang[:3]).lower()
+        en = lang.split(",")[0].strip().title()
+        if code in taken or en.lower() in named:
+            continue  # the same language under another name (e.g. "Divehi" and "Divehi, Dhivehi, Maldivian")
+        taken.add(code)
+        named.add(en.lower())
+        native = info.get("native_name") or en
+        plan.append((code, lang, [], en, native, info.get("direction") == "rtl"))
+    index = []
+    for code, lang, keys, en, native, rtl in plan:
+        found = [r for r in all_tr if (r.get("language_name") or "").lower() == lang]
+        if not found:
+            print(f"{code}: no {lang} translation on quran.com, left out")
+            continue
+        pick = next((r for k in keys for r in found
+                     if k in (r["name"] + " " + (r.get("author_name") or "")).lower()), found[0])
+        verses = get(f"{API}/quran/translations/{pick['id']}")["translations"]
+        if len(verses) != 6236:
+            print(f"{code}: {pick['name']} has {len(verses)} ayahs, left out")
+            continue
+        texts = [clean(v["text"]) for v in verses]
+        if sum(1 for t in texts if t.strip()) < 6000:
+            print(f"{code}: {pick['name']} is mostly empty, left out")
+            continue
+        per, i = [], 0
+        for s in surahs:
+            per.append(texts[i:i + len(s["ayahs"])])
+            i += len(s["ayahs"])
+        name = pick.get("author_name") or pick["name"]
+        with open(os.path.join(EXTRA_DIR, f"{code}.json"), "w", encoding="utf-8") as f:
+            json.dump({"name": name, "surahs": per}, f, ensure_ascii=False, separators=(",", ":"))
+        index.append({"code": code, "en": en, "native": native, "rtl": rtl, "translator": name, "file": f"{code}.json"})
+        print(f"{code}.json ({lang}): {pick['name']} (id {pick['id']}); 1:1 = {per[0][0][:60]}")
+    with open(os.path.join(EXTRA_DIR, "index.json"), "w", encoding="utf-8") as f:
+        json.dump({"languages": index}, f, ensure_ascii=False, indent=1)
+    keep = {l["file"] for l in index} | {"index.json"}
+    for name in os.listdir(EXTRA_DIR):
+        if name not in keep:
+            os.remove(os.path.join(EXTRA_DIR, name))
+    print(f"{len(index)} languages")
 
 
 if __name__ == "__main__":

@@ -34,6 +34,7 @@ import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
 import com.livetv.app.ui.VodScreen
 import com.livetv.app.ui.VodTarget
+import com.livetv.app.ui.isTv
 
 class MainActivity : ComponentActivity() {
 
@@ -51,8 +52,11 @@ class MainActivity : ComponentActivity() {
     /** Cable TV's Games section is open. */
     private var showGames by mutableStateOf(false)
 
-    /** Cable TV's Weather section is open (1.10.4). */
+    /** Cable TV's Weather section is open (1.10.11). */
     private var showWeather by mutableStateOf(false)
+
+    /** Cable TV's Iqra Quran section is open. */
+    private var showQuran by mutableStateOf(false)
 
     /** Our YouTube-run channels that couldn't play there this session; their free-film schedule plays instead. */
     private var fellBack by mutableStateOf(setOf<String>())
@@ -61,6 +65,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (CrashGuard.start(this)) return
         Watching.init(this)
+        Features.init(this)
         com.livetv.app.data.Location.init(this)
         com.livetv.app.data.WeatherApp.init(this)
         com.livetv.app.data.NewsScreen.init(this)
@@ -68,6 +73,8 @@ class MainActivity : ComponentActivity() {
         com.livetv.app.data.MyScreen.init(this)
         com.livetv.app.data.ScreenLooks.init(this)
         com.livetv.app.ui.Themes.init(this)
+        // Azan at prayer times while Cable TV is on screen (Iqra Quran > Namaz settings).
+        QuranSection.startAzan(this)
         enableEdgeToEdge()
         // TVs draw a web page's video (YouTube) underneath the window, showing through a hole in the page;
         // an opaque window keeps that hole black, with only the sound (1.9.55).
@@ -87,10 +94,21 @@ class MainActivity : ComponentActivity() {
         // Bazaar TV's upcoming trailers play on our locked YouTube page; its own player plays the rest.
         val block = rememberBlockPage(playing)
         val page = playing?.let { block ?: MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
+        // Which part of the app is on screen, for the owner's "most used features" (the modes report themselves).
+        val screen = when {
+            showWeather && playing == null -> "weather"
+            showGames && playing == null -> "games"
+            showVod && playing == null -> "library"
+            playing != null -> "full"
+            else -> null
+        }
+        LaunchedEffect(screen) { screen?.let(Features::use) }
         if (showWeather && playing == null) {
             com.livetv.app.ui.WeatherScreen(onClose = { showWeather = false })
         } else if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
+        } else if (showQuran && playing == null) {
+            QuranSection.Screen(onClose = { showQuran = false })
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
         } else if (playing != null && page != null && playing.url !in fellBack && page !in fellBack) {
@@ -139,7 +157,9 @@ class MainActivity : ComponentActivity() {
                 onTryDemo = viewModel::addDemoPlaylist,
                 onOpenVod = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) showVod = true }) else null,
                 onOpenVodItem = if (Edition.HAS_VOD) ({ if (!Plans.ask("Movies & Dramas", Plans.Feature.Library)) { vodStart = it; showVod = true } }) else null,
-                onOpenGames = if (Edition.LIVE_TV) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
+                // The games are made for the TV remote, so the phone app has none (owner's rule, 2026-10-08).
+                onOpenGames = if (Edition.LIVE_TV && isTv(this@MainActivity)) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
+                onOpenQuran = if (QuranSection.AVAILABLE) ({ showQuran = true }) else null,
                 onOpenWeather = if (Edition.LIVE_TV) ({ showWeather = true }) else null,
                 onWatch = viewModel::watched,
             )
@@ -247,11 +267,13 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         Watching.foreground(true)
+        Features.foreground(true)
     }
 
     override fun onStop() {
         super.onStop()
         Watching.foreground(false)
+        Features.foreground(false)
     }
 
     override fun onUserLeaveHint() {

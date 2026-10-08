@@ -265,7 +265,7 @@ fun SettingsDialog(
                     Column(Modifier.padding(start = 8.dp)) {
                         Text("Show MTA channels and programmes")
                         Text(
-                            "Muslim Television Ahmadiyya: 8 live channels and its programmes in the Library.",
+                            "Muslim Television Ahmadiyya: 8 free live channels (16 to 23, right after our Bazaar channels) and its programmes in the Library.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.secondary,
                         )

@@ -79,4 +79,34 @@ class VodLanguageTest {
         assertEquals(true, Vod.isShow(ch("Jeeto Pakistan Episode 3")))
         assertEquals(false, Vod.isShow(ch("Ishq Murshid Episode 30", group = "HUM TV dramas")))
     }
+
+    @Test
+    fun newlyAddedFromTheListsAddedDay() {
+        val list = M3uParser.parse(
+            """
+            #EXTM3U
+            #EXTINF:-1 added="2026-10-07" tvg-language="English" tvg-genre="Movies" group-title="FilmRise",New Film
+            https://www.youtube.com/watch?v=aaaaaaaaaaa
+            #EXTINF:-1 added="2026-09-07" tvg-language="English" tvg-genre="Movies" group-title="FilmRise",Old Film
+            https://www.youtube.com/watch?v=bbbbbbbbbbb
+            #EXTINF:-1 tvg-language="English",No Date
+            https://www.youtube.com/watch?v=ccccccccccc
+            """.trimIndent()
+        )
+        assertEquals("2026-10-07", list[0].added)
+        val since = "2026-10-01"
+        assertEquals(listOf(true, false, false), list.map { Vod.isNew(it, since) })
+        val show = Vod.Show("Kaffara", null, null, listOf(
+            Vod.Episode(Channel(name = "Kaffara Episode 1", url = "u1", added = "2026-09-01"), null, 1),
+            Vod.Episode(Channel(name = "Kaffara Episode 2", url = "u2", added = "2026-10-06"), null, 2),
+        ))
+        assertEquals("2026-10-06", show.added)
+        assertEquals(1, show.newEpisodes(since))
+    }
+
+    @Test
+    fun newSinceCountsTodayAsTheSeventhDay() {
+        val oct7 = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.US).parse("2026-10-07 12:00")!!.time
+        assertEquals("2026-10-01", Vod.newSince(oct7))
+    }
 }
