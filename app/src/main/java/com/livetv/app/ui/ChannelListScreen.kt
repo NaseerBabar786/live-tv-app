@@ -122,6 +122,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -1613,6 +1614,7 @@ private fun ChannelCard(
                 ),
             contentAlignment = Alignment.Center,
         ) {
+            if (page != null || preview != null) LoadingSpinner(size = 32.dp)
             if (snapshot != null) {
                 Image(
                     snapshot,
@@ -1729,7 +1731,9 @@ private fun ChannelCard(
                 .background(if (glow) MaterialTheme.colorScheme.surfaceVariant else Color.Black),
             contentAlignment = Alignment.Center,
         ) {
-            if (channel.logo != null) {
+            if (page != null || preview != null) {
+                LoadingSpinner(size = 32.dp)
+            } else if (channel.logo != null) {
                 SubcomposeAsyncImage(
                     model = channel.logo,
                     contentDescription = null,
@@ -1933,6 +1937,7 @@ private fun PlayerWithList(
                     .clickable { selected?.let(onOpen) },
                 contentAlignment = Alignment.Center,
             ) {
+                if (selected != null && !showing) LoadingSpinner()
                 AndroidView(
                     factory = { ctx -> TextureView(ctx).also { stream.player.setVideoTextureView(it) } },
                     onRelease = { stream.player.clearVideoTextureView(it) },
@@ -2066,6 +2071,21 @@ private fun PlayerWithList(
 private fun countryName(channel: Channel): String? =
     channel.country?.takeIf { it.length == 2 && it.all(Char::isLetter) }?.uppercase()
         ?.let { if (it == "GB") "UK" else it }
+
+/**
+ * A channel that is starting shows only a white loading circle in the middle, never its logo
+ * (owner, 2026-10-07); the small corner logo comes once it plays.
+ */
+@Composable
+internal fun LoadingSpinner(modifier: Modifier = Modifier, size: Dp = 44.dp) {
+    Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator(
+            color = Color.White.copy(alpha = 0.85f),
+            strokeWidth = size / 11,
+            modifier = Modifier.size(size),
+        )
+    }
+}
 
 @Composable
 internal fun Initials(name: String) {
