@@ -137,7 +137,8 @@ object Subscription {
             _offer.value = offer
             var features = offer.features
             val now = Date()
-            val status = if (!offer.enforced) {
+            // The owner's admin account always has everything, whatever its package says (owner, 2026-10-08).
+            val status = if (!offer.enforced || account.isAdmin) {
                 Status(Plans.Tier.Gold)
             } else {
                 val plan = getOrNull(Firestore.doc("plans/${u.uid}"), t)?.optJSONObject("fields")
