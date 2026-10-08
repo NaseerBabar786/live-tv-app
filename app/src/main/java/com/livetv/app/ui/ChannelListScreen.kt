@@ -298,6 +298,10 @@ fun ChannelListScreen(
     DeviceLocation(ask = !wideScreen)
     // "1+List": the channel playing on the left, kept when coming back from full screen.
     val listMode = (wideScreen || phone) && tileLayout == TileLayout.List
+    // Cable TV's Free package on a TV: 1+List shows as "Info Corner" (the owner's pick, 2026-10-08), the player at
+    // about 40% of the screen with clock, weather, next prayer and our own promos beside it. Only how it looks
+    // changes: the saved mode stays 1+List, so Gold (or a Gold trial) shows the normal 1+List again.
+    val freeScreen = Edition.LIVE_TV && wideScreen && !phone && listMode && tier == Plans.Tier.Free
     LandscapeOnPhone(on = phone && tileLayout != TileLayout.List && tileLayout != TileLayout.Browse)
     // "News": the top bar and filters hide; Back brings them back (newsBar) until the player is highlighted again.
     val newsMode = wideScreen && tileLayout in INFO_LAYOUTS
@@ -739,7 +743,8 @@ fun ChannelListScreen(
                 }
                 // One row: All, Favorites, then genres (countries are picked in Settings; favorites
                 // also lead the list). All clears every filter; tapping a selected chip clears it.
-                if (!hideBars) ChipRow(
+                // Info Corner has no filter row (Favourites is Gold); the search in the top bar still finds any channel.
+                if (!hideBars && !freeScreen) ChipRow(
                     focus = chipFocus,
                     items = listOf(FILTER_ALL, FILTER_FAVORITES) + state.categories,
                     selected = setOfNotNull(
@@ -907,6 +912,7 @@ fun ChannelListScreen(
                         focus = lastWatchedFocus,
                         onSelect = { listChannelId = it.id; onWatch(it) },
                         onOpen = onPlay,
+                        free = freeScreen,
                     )
                     else -> BoxWithConstraints(Modifier.fillMaxSize().then(if (fullTiles || bigPlayer) Modifier.background(Color.Black) else Modifier)) {
                     // TVs and tablets: the chosen layout (16, 6, 4 or 2 tiles). Phones: as many as fit.
@@ -1353,7 +1359,13 @@ fun ChannelListScreen(
             // Cable TV's "advertise with us" line along the bottom of every channel screen (owner's rule,
             // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel and Duo.
             // Strip mode has its own band above its strip; News, CP24, Home and My Screen their own lines.
-            if (bottomBand) {
+            if (bottomBand && freeScreen) {
+                // Info Corner: only our own news along the bottom, no paid sponsors (owner, 2026-10-08).
+                FreeTicker(
+                    Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(tickerBand),
+                    lift = tickerBand - 36.dp,
+                )
+            } else if (bottomBand) {
                 EditionTicker(
                     Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(tickerBand),
                     big = true,
@@ -1912,6 +1924,8 @@ private fun PlayerWithList(
     focus: FocusRequester,
     onSelect: (Channel) -> Unit,
     onOpen: (Channel) -> Unit,
+    /** Cable TV's Free package on a TV: the "Info Corner" layout ([FreeInfoPanel]). */
+    free: Boolean = false,
 ) {
     val context = LocalContext.current
     val selected = all.firstOrNull { it.id == selectedId } ?: channels.firstOrNull()
@@ -2093,7 +2107,55 @@ private fun PlayerWithList(
         }
         }
     }
-    if (portrait) {
+    if (free && !portrait) {
+        // Info Corner: the player top left (16:9, about 40% of the screen), the info panel beside it, and a row of
+        // channels under it with the Gold button. Left and Right move along the row, OK plays a channel; Up goes
+        // to the player, where OK opens full screen (Gold, with its minute's try).
+        val rowState = rememberLazyListState(
+            initialFirstVisibleItemIndex = max(0, channels.indexOfFirst { it.id == selected?.id } - 2),
+        )
+        // A new search shows the row from its start.
+        var rowList by remember { mutableStateOf(channels.map { it.id }.toSet()) }
+        LaunchedEffect(channels) {
+            val ids = channels.map { it.id }.toSet()
+            if (ids != rowList) {
+                rowList = ids
+                rowState.scrollToItem(0)
+            }
+        }
+        BoxWithConstraints(Modifier.fillMaxSize().padding(14.dp)) {
+            val gap = 12.dp
+            val rowHeight = 60.dp
+            val playerWidth = minOf(maxWidth * 0.63f, (maxHeight - rowHeight - gap) * 16f / 9f)
+            Column(verticalArrangement = Arrangement.spacedBy(gap)) {
+                Row(Modifier.fillMaxWidth().height(playerWidth * 9f / 16f), horizontalArrangement = Arrangement.spacedBy(gap)) {
+                    player(Modifier.width(playerWidth).fillMaxHeight())
+                    FreeInfoPanel(Modifier.weight(1f).fillMaxHeight())
+                }
+                Row(Modifier.fillMaxWidth().height(rowHeight), horizontalArrangement = Arrangement.spacedBy(gap)) {
+                    LazyRow(
+                        state = rowState,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.width(playerWidth).fillMaxHeight(),
+                    ) {
+                        items(channels, key = { it.id }) { channel ->
+                            FreeChannelCard(
+                                number = channel.number,
+                                name = countryName(channel)?.let { "$it · ${channel.name}" } ?: channel.name,
+                                current = channel.id == selected?.id,
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .then(if (channel.id == focusId) Modifier.focusRequester(focus) else Modifier)
+                                    .focusGlow(ChipShape)
+                                    .clickable { onSelect(channel) },
+                            )
+                        }
+                    }
+                    FreeGoldButton(Modifier.weight(1f).fillMaxHeight())
+                }
+            }
+        }
+    } else if (portrait) {
         Column(Modifier.fillMaxSize().padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             player(Modifier.fillMaxWidth())
             list(Modifier.weight(1f).fillMaxWidth())

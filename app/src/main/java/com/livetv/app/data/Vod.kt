@@ -71,8 +71,34 @@ object Vod {
         return format.format(java.util.Date(now - (NEW_DAYS - 1) * 24L * 60 * 60 * 1000))
     }
 
+    /**
+     * The first day that counts as new: only the newest batch in the Library gets the NEW mark
+     * (older titles show just their "Added" day, owner 2026-10-08), and nothing older than [NEW_DAYS].
+     */
+    fun newestSince(added: Sequence<String?>, now: Long = System.currentTimeMillis()): String {
+        val window = newSince(now)
+        val newest = added.filterNotNull().maxOrNull() ?: return window
+        return maxOf(window, newest)
+    }
+
+    /** "Added Oct 8" for the day a programme first showed up in its list ("2026-10-08"), or null. */
+    fun addedLabel(added: String?): String? {
+        val day = runCatching {
+            java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).apply { isLenient = false }.parse(added ?: return null)
+        }.getOrNull() ?: return null
+        return "Added " + java.text.SimpleDateFormat("MMM d", java.util.Locale.US).format(day)
+    }
+
     /** Whether a programme first showed up in its list on or after [since] (see tools/first_seen.py). */
     fun isNew(channel: Channel, since: String): Boolean = channel.added?.let { it >= since } == true
+
+    /** A programme's length for its tile: "45 min", "1 h 35 min" (null when unknown). */
+    fun length(mins: Int?): String? = when {
+        mins == null || mins <= 0 -> null
+        mins < 60 -> "$mins min"
+        mins % 60 == 0 -> "${mins / 60} h"
+        else -> "${mins / 60} h ${mins % 60} min"
+    }
 
     /** Free public-domain films and TV, rebuilt every morning by tools/build_movies.py. */
     const val FREE_MOVIES_URL = "https://tv.bulkbazaar.ca/Movies.m3u"
@@ -107,6 +133,17 @@ object Vod {
 
         /** Its episodes that are newly added (see [isNew]). */
         fun newEpisodes(since: String): Int = episodes.count { isNew(it.channel, since) }
+
+        /** How long an episode usually is (the middle length of its episodes), or null. */
+        val episodeMins: Int? get() = episodes.mapNotNull { it.channel.mins }.sorted().let { it.getOrNull(it.size / 2) }
+
+        /** The show's genres: the ones most of its episodes have (at most two). */
+        val genres: List<String>
+            get() = episodes.flatMap { it.channel.genres }.groupingBy { it }.eachCount()
+                .filter { it.value * 2 >= episodes.size }.entries.sortedByDescending { it.value }.map { it.key }.take(2)
+
+        /** A line about the show, from the newest episode that has one. */
+        val desc: String? get() = episodes.asReversed().firstNotNullOfOrNull { it.channel.desc }
     }
 
     data class Episode(val channel: Channel, val season: Int?, val number: Int?) {

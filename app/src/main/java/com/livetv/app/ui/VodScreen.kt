@@ -57,6 +57,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -71,6 +72,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import com.livetv.app.data.Bilibili
 import com.livetv.app.data.Channel
 import com.livetv.app.data.Dailymotion
+import com.livetv.app.data.LibraryReports
 import com.livetv.app.data.Vimeo
 import com.livetv.app.data.Vod
 import com.livetv.app.data.YouTube
@@ -86,7 +88,7 @@ import com.livetv.app.player.PlayerScreen
  * drama or show is a folder that opens its episode list; anything picked plays full
  * screen (YouTube videos in our film window with YouTube's embedded player, 1.9.99).
  * The lists are rebuilt every morning; what first showed up in the last [Vod.NEW_DAYS] days comes
- * first with a NEW mark, and the "Newly added" chip shows only those (1.10.1).
+ * first with a NEW mark (1.10.1); "Added this week" collects every section's last 7 days.
  */
 @Composable
 fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget? = null) {
@@ -96,14 +98,20 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     var languageName by rememberSaveable { mutableStateOf(start?.language?.name) }
     val language = languageName?.let { Vod.Language.valueOf(it) }
     var tabName by rememberSaveable { mutableStateOf((start?.section ?: Vod.Section.MOVIES).name) }
-    val tab = Vod.Section.valueOf(tabName)
+    // "Added this week" is its own first tab: everything that came in during the last 7 days, all sections together.
+    val weekTab = tabName == WEEK_TAB
+    val tab = if (weekTab) Vod.Section.MOVIES else Vod.Section.valueOf(tabName)
     var group by rememberSaveable { mutableStateOf<String?>(null) }
     var query by rememberSaveable { mutableStateOf("") }
     var searching by rememberSaveable { mutableStateOf(false) }
     var openShow by rememberSaveable { mutableStateOf(start?.show) }
     var playing by remember { mutableStateOf(start?.play) }
+    // After every video: "Did it play properly?" (owner, 2026-10-08; see LibraryReports).
+    var askAbout by remember { mutableStateOf<Channel?>(null) }
     // Opened from the home screen for one video: Back from it goes straight back there.
-    val stopPlaying: () -> Unit = { if (start?.play != null) onClose() else playing = null }
+    val stopPlaying: () -> Unit = {
+        if (start?.play != null) onClose() else { askAbout = playing; playing = null }
+    }
     val tabFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { vm.refreshIfChanged() }
     // Kept above the player so the lists keep their scroll position while something plays,
@@ -114,7 +122,14 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     val episodeList = rememberLazyListState()
     var lastPicked by rememberSaveable { mutableStateOf<String?>(null) }
     val pickedFocus = remember { FocusRequester() }
-    val newSince = remember { Vod.newSince() }
+    val weekSince = remember { Vod.newSince() }
+    // Only the newest batch is marked NEW; older titles show just their "Added" day.
+    val newSince = remember(state.shelves) {
+        Vod.newestSince(state.shelves.values.asSequence().flatMap { shelf ->
+            shelf.movies.asSequence().map { it.added } +
+                (shelf.series + shelf.shows + shelf.kids).asSequence().flatMap { show -> show.episodes.asSequence().map { it.channel.added } }
+        })
+    }
 
     playing?.let { channel ->
         // Cable TV's ad breaks run here too (1.9.89). A video in YouTube's (or another site's) own player
@@ -161,7 +176,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     }
 
     val shelf = language?.let { state.shelves[it] } ?: VodShelf()
-    val folders = shelf.folders(tab)
+    val folders = if (weekTab) Vod.Section.entries.flatMap { shelf.folders(it) } else shelf.folders(tab)
     val show = openShow?.let { name -> folders.firstOrNull { it.name == name } }
     val back: () -> Unit = {
         when {
@@ -172,6 +187,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
         }
     }
     BackHandler(onBack = back)
+    BackHandler(enabled = askAbout != null) { askAbout = null }
 
     LaunchedEffect(show?.name, language, state.loading) {
         if (state.loading) return@LaunchedEffect
@@ -230,6 +246,8 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                 }
             }
 
+            askAbout?.let { video -> PlayedProperlyCard(video) { askAbout = null } }
+
             when {
                 !state.hasPlaylists -> VodMessage(
                     "No playlists yet.\n\nAdd your provider's playlist in Settings > My playlists. " +
@@ -261,12 +279,26 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(start = 12.dp).width(96.dp),
                             )
-                            if (episode.label != episode.channel.name) {
+                            Column(Modifier.weight(1f, fill = false)) {
+                                if (episode.label != episode.channel.name) {
+                                    Text(episode.channel.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                }
+                                episode.channel.desc?.let {
+                                    Text(
+                                        it,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
+                            Vod.length(episode.channel.mins)?.let {
                                 Text(
-                                    episode.channel.name,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f, fill = false),
+                                    it,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(start = 12.dp),
                                 )
                             }
                             if (Vod.isNew(episode.channel, newSince)) {
@@ -277,6 +309,14 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     modifier = Modifier.padding(start = 12.dp),
                                 )
                             }
+                            Vod.addedLabel(episode.channel.added)?.let {
+                                Text(
+                                    it,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(start = 12.dp),
+                                )
+                            }
                         }
                     }
                 }
@@ -284,7 +324,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                     languageGrid,
                     Vod.Language.entries.map { lang ->
                         val size = state.shelves[lang]?.size ?: 0
-                        val fresh = state.shelves[lang]?.newCount(newSince) ?: 0
+                        val fresh = state.shelves[lang]?.newCount(weekSince) ?: 0
                         Poster(
                             lang.name, lang.label, null,
                             (if (size == 1) "1 title" else "$size titles") + if (fresh > 0) " · $fresh newly added" else "",
@@ -296,7 +336,8 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                     tile = true,
                 ) { name ->
                     languageName = name
-                    tabName = Vod.Section.entries.firstOrNull { sectionItems(state, name, it).isNotEmpty() }?.name ?: Vod.Section.MOVIES.name
+                    tabName = if ((state.shelves[Vod.Language.valueOf(name)]?.newCount(weekSince) ?: 0) > 0) WEEK_TAB else
+                        Vod.Section.entries.firstOrNull { sectionItems(state, name, it).isNotEmpty() }?.name ?: Vod.Section.MOVIES.name
                     group = null
                     lastPicked = null
                 }
@@ -309,14 +350,23 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         shelf.folders(section).filter { q.isBlank() || it.name.contains(q, true) }
                             .sortedByDescending { if (it.newEpisodes(newSince) > 0) it.added.orEmpty() else "" }
                     }
-                    val newInTab = if (tab == Vod.Section.MOVIES) movies.count { Vod.isNew(it, newSince) } else
-                        folderLists.getValue(tab).count { it.newEpisodes(newSince) > 0 }
+                    val weekMovies = movies.filter { Vod.isNew(it, weekSince) }
+                    val weekFolders = Vod.Section.entries.flatMap { section ->
+                        folderLists.getValue(section).filter { it.newEpisodes(weekSince) > 0 }.map { section to it }
+                    }
                     val sections = Vod.Section.entries.filter { section ->
                         section == Vod.Section.MOVIES || (language != Vod.Language.PUNJABI && shelf.folders(section).isNotEmpty())
                     }
-                    val groups = (if (tab == Vod.Section.MOVIES) movies.mapNotNull { it.group } else
+                    val groups = if (weekTab) emptyList() else (if (tab == Vod.Section.MOVIES) movies.mapNotNull { it.group } else
                         folderLists.getValue(tab).mapNotNull { it.group })
                         .groupingBy { it }.eachCount().entries
+                        .sortedWith(compareBy({ -it.value }, { it.key }))
+                        .map { it.key }
+                        .takeIf { it.size > 1 }.orEmpty()
+                    // Genre chips (owner, 2026-10-08: like the 1+List filter row), most titles first.
+                    val genreChips = if (weekTab) emptyList() else (if (tab == Vod.Section.MOVIES) movies.flatMap { it.genres } else
+                        folderLists.getValue(tab).flatMap { it.genres })
+                        .groupingBy { it }.eachCount().filter { it.value >= 2 }.entries
                         .sortedWith(compareBy({ -it.value }, { it.key }))
                         .map { it.key }
                         .takeIf { it.size > 1 }.orEmpty()
@@ -326,22 +376,30 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                             horizontalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
+                            val weekCount = weekMovies.size + weekFolders.size
+                            if (weekCount > 0) {
+                                item(key = "week") {
+                                    VodChip(
+                                        "★ Added this week ($weekCount)",
+                                        weekTab,
+                                        Modifier.focusRequester(tabFocus),
+                                    ) {
+                                        tabName = WEEK_TAB; group = null
+                                    }
+                                }
+                            }
                             items(sections, key = { "tab:${it.name}" }) { section ->
                                 val count = if (section == Vod.Section.MOVIES) movies.size else folderLists.getValue(section).size
                                 VodChip(
                                     "${section.label} ($count)",
-                                    tab == section,
-                                    if (section == sections.first()) Modifier.focusRequester(tabFocus) else Modifier,
+                                    !weekTab && tab == section,
+                                    if (section == sections.first() && weekMovies.isEmpty() && weekFolders.isEmpty()) Modifier.focusRequester(tabFocus) else Modifier,
                                 ) {
                                     tabName = section.name; group = null
                                 }
                             }
-                            if (newInTab > 0) {
-                                item(key = "new") {
-                                    VodChip("★ Newly added ($newInTab)", group == NEW_GROUP) {
-                                        group = NEW_GROUP.takeUnless { it == group }
-                                    }
-                                }
+                            items(genreChips, key = { "genre:$it" }) { g ->
+                                VodChip(g, GENRE + g == group, outlined = true) { group = (GENRE + g).takeUnless { it == group } }
                             }
                             items(groups, key = { "group:$it" }) { g ->
                                 VodChip(g, g == group, outlined = true) { group = g.takeUnless { it == group } }
@@ -349,16 +407,39 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         }
                     }
 
-                    if (tab == Vod.Section.MOVIES) {
+                    if (weekTab) {
+                        // Newest first, every section together; the label under each says what it is.
+                        val week = (weekMovies.map { Triple(it.added.orEmpty(), it.id, Poster(it.id, it.name, it.logo, listOfNotNull(Vod.Section.MOVIES.label, Vod.length(it.mins)).joinToString(" · "), Vod.isNew(it, newSince), Vod.addedLabel(it.added), it.desc)) } +
+                            weekFolders.map { (section, show) ->
+                                val fresh = show.newEpisodes(weekSince)
+                                Triple(show.added.orEmpty(), show.name, Poster(
+                                    show.name, show.name, show.logo,
+                                    "${section.label} · $fresh new " + if (fresh == 1) "episode" else "episodes",
+                                    show.newEpisodes(newSince) > 0,
+                                    Vod.addedLabel(show.added),
+                                    show.desc,
+                                ))
+                            }).sortedByDescending { it.first }
+                        PosterGrid(moviesGrid, week.map { it.third }, lastPicked, pickedFocus) { key ->
+                            lastPicked = key
+                            val movie = weekMovies.firstOrNull { it.id == key }
+                            if (movie != null) playing = movie else openShow = key
+                        }
+                    } else if (tab == Vod.Section.MOVIES) {
                         val list = movies.filter {
-                            group == null || it.group == group || (group == NEW_GROUP && Vod.isNew(it, newSince))
+                            inChip(group, it.group, it.genres)
                         }
                         if (list.isEmpty()) {
                             VodMessage("No ${language?.label} movies yet.")
                         } else {
                             PosterGrid(
                                 moviesGrid,
-                                list.map { Poster(it.id, it.name, it.logo, fresh = Vod.isNew(it, newSince)) },
+                                list.map {
+                                    Poster(
+                                        it.id, it.name, it.logo, Vod.length(it.mins), fresh = Vod.isNew(it, newSince),
+                                        added = Vod.addedLabel(it.added), detail = it.desc,
+                                    )
+                                },
                                 lastPicked,
                                 pickedFocus,
                             ) { id ->
@@ -368,7 +449,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         }
                     } else {
                         val list = folderLists.getValue(tab).filter {
-                            group == null || it.group == group || (group == NEW_GROUP && it.newEpisodes(newSince) > 0)
+                            inChip(group, it.group, it.genres)
                         }
                         if (list.isEmpty()) {
                             VodMessage("No ${language?.label} ${tab.label.lowercase()} yet.")
@@ -379,8 +460,12 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     val fresh = it.newEpisodes(newSince)
                                     Poster(
                                         it.name, it.name, it.logo,
-                                        "${it.episodes.size} episodes" + if (fresh > 0) " · $fresh new" else "",
+                                        "${it.episodes.size} episodes" +
+                                            (Vod.length(it.episodeMins)?.let { len -> " · $len each" } ?: "") +
+                                            if (fresh > 0) " · $fresh new" else "",
                                         fresh = fresh > 0,
+                                        added = Vod.addedLabel(it.added),
+                                        detail = it.desc,
                                     )
                                 },
                                 lastPicked,
@@ -402,8 +487,18 @@ private fun sectionItems(state: VodState, language: String, section: Vod.Section
     return if (section == Vod.Section.MOVIES) shelf.movies else shelf.folders(section)
 }
 
-/** The "Newly added" chip's filter value (never a real group name). */
-private const val NEW_GROUP = "\u0000new"
+/** Marks a genre chip's filter value (never part of a real group name). */
+private const val GENRE = "\u0000genre:"
+
+/** Whether a title belongs under the picked chip: its genre chip, or its group's chip. */
+private fun inChip(chip: String?, group: String?, genres: List<String>): Boolean = when {
+    chip == null -> true
+    chip.startsWith(GENRE) -> chip.removePrefix(GENRE) in genres
+    else -> group == chip
+}
+
+/** The "Added this week" tab's name (never a real section name). */
+private const val WEEK_TAB = "WEEK"
 
 private data class Poster(
     val key: String,
@@ -412,6 +507,10 @@ private data class Poster(
     val subtitle: String? = null,
     /** Newly added: a NEW mark on the picture. */
     val fresh: Boolean = false,
+    /** "Added Oct 8": the day it (or its newest episode) came into the Library, shown on the picture. */
+    val added: String? = null,
+    /** A line or two about it, under the title (owner, 2026-10-08: every title says what it is). */
+    val detail: String? = null,
 )
 
 @Composable
@@ -493,6 +592,19 @@ private fun PosterGrid(
                                 .padding(horizontal = 6.dp, vertical = 2.dp),
                         )
                     }
+                    poster.added?.let { added ->
+                        Text(
+                            added,
+                            color = Color.White,
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(6.dp)
+                                .clip(ChipShape)
+                                .background(Color.Black.copy(alpha = 0.7f))
+                                .padding(horizontal = 6.dp, vertical = 2.dp),
+                        )
+                    }
                 }
                 if (!tile) Text(
                     poster.title,
@@ -504,6 +616,16 @@ private fun PosterGrid(
                 )
                 poster.subtitle?.let {
                     Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                poster.detail?.let {
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = 2.dp),
+                    )
                 }
             }
         }
@@ -534,5 +656,67 @@ private fun VodChip(
 private fun VodMessage(text: String) {
     Box(Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
         Text(text, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+/**
+ * "Did it play properly?" after a Library video (owner, 2026-10-08): Yes / No go to the owner
+ * (LibraryReports), and a programme more viewers say No to comes off the Library the next morning.
+ */
+@Composable
+private fun PlayedProperlyCard(video: Channel, onDone: () -> Unit) {
+    val context = LocalContext.current
+    val yes = remember { FocusRequester() }
+    LaunchedEffect(video.id) {
+        delay(300) // after the list has put the highlight back on what was picked
+        runCatching { yes.requestFocus() }
+        delay(30_000)
+        onDone()
+    }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+            .clip(CardShape)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            "Did \"${video.name}\" play properly?",
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            "✓ Yes, it played",
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier
+                .padding(start = 12.dp)
+                .focusRequester(yes)
+                .focusGlow(ChipShape)
+                .clip(ChipShape)
+                .background(Color(0xFF2E7D32))
+                .clickable { LibraryReports.send(context, video, ok = true); onDone() }
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+        )
+        Text(
+            "✗ No, not working",
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier
+                .padding(start = 12.dp)
+                .focusGlow(ChipShape)
+                .clip(ChipShape)
+                .background(Color(0xFFD32F2F))
+                .clickable {
+                    LibraryReports.send(context, video, ok = false)
+                    android.widget.Toast.makeText(context, "Thank you. We'll check it and take it off if it's broken.", android.widget.Toast.LENGTH_LONG).show()
+                    onDone()
+                }
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+        )
     }
 }

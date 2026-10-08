@@ -11,6 +11,7 @@ on:
   pull_request:
     paths:
       - tools/build_dramas.py
+      - tools/library_check.py
       - .github/workflows/build-dramas.yml
 
 permissions:
@@ -24,7 +25,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -38,6 +39,13 @@ jobs:
       # The day each programme first showed up, for the Library's "Newly added" section.
       - name: Mark newly added programmes
         run: python3 tools/first_seen.py docs/Dramas.m3u docs/MTA.m3u
+
+      # Owner's rule (2026-10-08): every Library video is checked before it's listed (no still pictures,
+      # no trailers or clips, nothing viewers reported), and every title gets its length and a line about it.
+      - name: Check the programmes, add lengths and descriptions
+        run: |
+          pip install --quiet pillow
+          python3 tools/library_check.py docs/Dramas.m3u docs/MTA.m3u
 
       - name: Show a sample
         run: |
@@ -67,7 +75,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/Dramas.m3u docs/dramas.json docs/MTA.m3u
+          git add docs/Dramas.m3u docs/dramas.json docs/MTA.m3u docs/library-info
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0
