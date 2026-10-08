@@ -41,7 +41,7 @@ jobs:
           import asyncio,json,os,edge_tts
           c=json.load(open('tools/news/presenters/presenters.json'))
           p=next(x for x in c['moving']['people'] if x['id']==os.environ['ID'])
-          asyncio.run(edge_tts.Communicate(c['line'], p.get('voice', c['voice'])).save('line.mp3'))"
+          asyncio.run(edge_tts.Communicate(p.get('line', c['line']), p.get('voice', c['voice'])).save('line.mp3'))"
           D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 raw.mp4)
           ffmpeg -v error -y -i line.mp3 -af "adelay=300|300,apad" -t "$D" -ac 1 -ar 16000 line.wav
           ffmpeg -v error -y -i line.wav -c:a libmp3lame -q:a 2 line-pad.mp3
