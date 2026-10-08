@@ -100,6 +100,14 @@
         </table></div>
       </div>
       <div>
+        <h2>Features used most</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Feature</th><th class="num">Viewers</th><th class="num">Opened</th><th class="num">Hours</th><th>Share</th></tr></thead>
+          <tbody id="features"></tbody>
+        </table></div>
+        <p class="small">Modes, full screen, Movies &amp; Dramas and Games (from Cable TV 1.10.5 and PC 1.0.9).</p>
+      </div>
+      <div>
         <h2>By genre</h2>
         <div class="table-wrap"><table>
           <thead><tr><th>Genre</th><th class="num">Viewers</th><th class="num">Hours</th><th>Share</th></tr></thead>
@@ -387,6 +395,8 @@ if (!configured) {
     if (!pages.size) $("webPages").innerHTML = `<tr><td colspan="3" class="small"></td></tr>`, $("webPages").querySelector("td").textContent = note;
   }
 
+  const FEATURE_LABEL = { list: "1+List", browse: "Browse", carousel: "Carousel", strip: "Strip", duo: "Duo", five: "1+3", two: "1×2", four: "2×2", six: "2×3", news: "News", cp24: "CP24", home: "Home", mine: "My Screen", full: "Full screen channel", library: "Movies & Dramas", games: "Games", quran: "Iqra Quran", weather: "Weather" };
+  const featureLabel = k => FEATURE_LABEL[k] || k;
   function renderChannels() {
     const n = Number($("period").value);
     const from = n ? daysAgo(n - 1) : "";
@@ -417,6 +427,16 @@ if (!configured) {
       { html: `<span class="share" style="width:${Math.round(e.s / Math.max(1, total) * 120)}px"></span> ${Math.round(e.s / Math.max(1, total) * 100)}%` }];
     fill("countries", [...countries.values()].sort((a, b) => b.s - a.s), shareRow, "Nothing yet.");
     fill("genres", [...genres.values()].sort((a, b) => b.s - a.s).slice(0, 20), shareRow, "Nothing yet.");
+    const feats = new Map(); let featTotal = 0;
+    for (const r of rows) {
+      if (r.day < from) continue;
+      for (const [k, f] of Object.entries(r.features || {})) {
+        if (!feats.has(k)) feats.set(k, { label: featureLabel(k), users: new Set(), s: 0, o: 0 });
+        const e = feats.get(k); e.users.add(r.uid); e.s += f.s || 0; e.o += f.o || 0; featTotal += f.s || 0;
+      }
+    }
+    fill("features", [...feats.values()].sort((a, b) => b.s - a.s), e => [e.label, { cls: "num", text: e.users.size }, { cls: "num", text: e.o.toLocaleString() }, { cls: "num", text: hours(e.s) },
+      { html: `<span class="share" style="width:${Math.round(e.s / Math.max(1, featTotal) * 120)}px"></span> ${Math.round(e.s / Math.max(1, featTotal) * 100)}%` }], "Shows once viewers have Cable TV 1.10.5 or PC 1.0.9.");
 
     const sponsors = new Map();
     for (const r of sponsorRows) {
