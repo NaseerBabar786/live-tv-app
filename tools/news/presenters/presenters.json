@@ -888,6 +888,17 @@
     "prompt": "RAW photo, cinematic medium close shot from the chest up, a strikingly realistic Pakistani woman TV news anchor, 30 years old, long dark wavy hair over her shoulders, natural makeup, wearing a tailored dark navy blazer over a modest high-neck black top, small pearl earrings, sitting upright at a news desk looking straight into the camera with a calm confident closed-mouth expression, at night in a dark modern TV studio: on the left a big window with a blurred city skyline full of lights at night, on the right a large glowing blue world map video wall, soft key light on her face, Canon 85mm, very shallow depth of field, photorealistic broadcast photograph, not illustration, no text, no logos",
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage"
+   },
+   {
+    "id": "anchor-9n2",
+    "name": "Areeba",
+    "ur": "اریبہ",
+    "seed": 9101,
+    "prompt": "RAW photo, medium shot from the waist up, a polished, elegant Pakistani woman TV news anchor, 28 years old, shoulder-length dark brown hair neatly styled, light natural makeup, wearing a tailored royal blue blazer over a modest high-neck ivory silk blouse, small gold earrings and a wrist watch, sitting upright behind a glass and wood curved anchor desk holding a few printed pages, a tablet, a desk microphone and a glass of water on the desk, looking into the camera with a confident warm closed-mouth smile, behind her a real busy modern TV newsroom: journalists working at desks with computer monitors, big wall screens with colourful market charts and world maps without readable words, warm wooden panels and blue lighting, Canon 85mm, shallow depth of field, photorealistic broadcast photograph, not illustration, no text, no logos",
+    "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "picture": "anchor-9n",
+    "edit": "Place her in a real, busy modern TV newsroom studio: behind her journalists work at desks with computer monitors in a large open newsroom, big wall screens show colourful stock market line charts and world maps (no readable words), warm wooden panels and blue lighting, a glass and wood curved anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. She sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
    }
   ]
  }
