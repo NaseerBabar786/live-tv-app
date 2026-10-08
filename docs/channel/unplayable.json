@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-08 16:07 UTC",
+ "checked": "2026-10-08 20:47 UTC",
  "ids": {
   "zJGyAWyfs7E": {
    "why": "embedding turned off by its owner",
@@ -7,6 +7,20 @@
     "Bazaar Comedy"
    ],
    "since": "2026-10-07"
+  },
+  "GzIhZX_v9HM": {
+   "why": "horror (no horror on our channels)",
+   "channels": [
+    "Bazaar Comedy"
+   ],
+   "since": "2026-10-08"
+  },
+  "gpEmKWV3Hh8": {
+   "why": "horror (no horror on our channels)",
+   "channels": [
+    "Bazaar Teens"
+   ],
+   "since": "2026-10-08"
   }
  }
 }

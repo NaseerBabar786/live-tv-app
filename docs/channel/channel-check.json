@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-08 16:07 UTC",
+ "checked": "2026-10-08 20:47 UTC",
  "problems": [
   {
    "channel": "Bazaar Music",
@@ -10,20 +10,24 @@
    "text": "2026-10-08: only 18.6 hours of programmes; the day starts again from the top (not dead air, but repeats)."
   },
   {
-   "channel": "Bazaar Sports",
-   "text": "1 programme(s) have no length; each gets 8 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
-  },
-  {
    "channel": "Bazaar Comedy",
    "text": "2026-10-08: only 15.6 hours of programmes; the day starts again from the top (not dead air, but repeats)."
   },
   {
    "channel": "Bazaar Teens",
-   "text": "21 programme(s) have no length; each gets 12 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
+   "text": "23 programme(s) have no length; each gets 12 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
   },
   {
    "channel": "Bazaar Comedy",
    "text": "video zJGyAWyfs7E can't play here (embedding turned off by its owner); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Comedy",
+   "text": "video GzIhZX_v9HM can't play here (horror (no horror on our channels)); new schedules leave it out, and today's fills its time."
+  },
+  {
+   "channel": "Bazaar Teens",
+   "text": "video gpEmKWV3Hh8 can't play here (horror (no horror on our channels)); new schedules leave it out, and today's fills its time."
   }
  ]
 }

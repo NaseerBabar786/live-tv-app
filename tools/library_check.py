@@ -11,6 +11,7 @@ For each YouTube programme in the given playlists, once (kept in docs/library-in
     the way through) are compared; all the same, or all black, means one still picture with sound.
 Then each playlist is rewritten without:
   - still pictures,
+  - horror (owner's rule, 2026-10-08: no horror on any of our channels or in the Library),
   - wrong fits: trailers, teasers, promos, clips, songs, reactions, interviews, Shorts and the like, and
     films, telefilms and drama episodes far too short to be one (FIT_MINUTES),
   - programmes viewers say don't play (more "No" than "Yes" to the app's "Did it play properly?"),
@@ -169,7 +170,6 @@ def look_other(url):
 # description, in English, Roman Urdu/Hindi and Urdu/Hindi script. At most two per programme, in this order.
 GENRES = [
     ("Christmas", r"christmas|xmas|santa|holiday romance|hallmark"),
-    ("Horror", r"horror|ghost|haunt|demon|zombie|exorcis|possess|bhoot|bhoot|chudail|aseb|خوف|بھوت|चुड़ैल|भूत|डरावन"),
     ("Sci-Fi", r"sci-?fi|science fiction|\bspace\b|spaceship|alien|robot|dystop|time travel|asteroid|galaxy|planet"),
     ("Action", r"\baction|fight|gangster|mafia|revenge|martial|kung fu|commando|assassin|mercenar|heist|shoot-?out|badla|एक्शन|ایکشن"),
     ("Thriller", r"thriller|suspense|mystery|murder|detective|kidnap|serial killer|kill(?:er|ed|s|ing)?\b|bloodbath|crime|investigat|psycholog|stalker|جرم|قتل|रहस्य"),
@@ -183,6 +183,16 @@ GENRES = [
     ("Religious", r"islam|quran|prophet|naat|hamd|faith|bible|jesus|church|بیان|نعت"),
 ]
 GENRE_RE = [(g, re.compile(p, re.I)) for g, p in GENRES]
+
+
+# Owner's rule (2026-10-08): no horror anywhere on our channels or in the Library (Kids' friendly ghosts aside).
+HORROR = re.compile(r"horror(?!s\b)|zombie|exorcis|demonic|evil spirit|slasher|apparition|haunted (?:house|villa|mansion|hotel)|"
+                    r"ghost story|bhoot|chudail|churail|aseb|آسیب|چڑیل|بھوت|चुड़ैल|भूतिया|डरावन|हॉरर|ہارر", re.I)
+
+
+def story(text):
+    """A description without its link lines ("Horror: https://bit.ly/..." lists every genre a channel has)."""
+    return " ".join(line for line in (text or "").splitlines() if not re.search(r"https?://|www\.|bit\.ly|@\w|#\w|•", line))
 
 
 def genres(text):
@@ -204,6 +214,8 @@ def why_off(attrs, name, known, url, vid, removed):
     """Why a programme doesn't belong in the Library, or None when it does."""
     if url in removed or (vid and vid in removed):
         return "reported / taken off by hand"
+    if attrs.get("tvg-genre") != "Kids" and HORROR.search(f"{name} {story(known.get('about')) or attrs.get('desc') or ''}"):
+        return "horror (owner's rule: no horror)"
     if known.get("still"):
         return "one still picture"
     section = attrs.get("tvg-genre", "")
@@ -242,7 +254,7 @@ def rewrite(path, info, removed, taken):
             continue
         mins = known.get("mins") or attrs.get("mins")
         desc = known.get("desc") or attrs.get("desc")
-        kinds = genres(f"{name} {known.get('about') or desc or ''}")
+        kinds = genres(f"{name} {story(known.get('about')) or desc or ''}")
         extinf = re.sub(r'\s(?:mins|desc|genres)="[^"]*"', "", extinf)
         extra = (f' mins="{mins}"' if mins else "") + (f' genres="{";".join(kinds)}"' if kinds else "") + \
                 (f' desc="{html.unescape(desc)}"' if desc else "")

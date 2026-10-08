@@ -31,6 +31,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id, fetch, _text  # noqa: E402
 from build_youtube_channels import other_language  # noqa: E402
 from titles import screen_title  # noqa: E402
+from no_horror import is_horror  # noqa: E402  (the owner's rule 2026-10-08: no horror on our channels)
 from playable import keep_playable  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,7 +52,9 @@ SKIP = re.compile(r"reaction|review|breakdown|explained|recap|behind the scenes|
                   r"full (movie|film)|#shorts?\b|\bshorts\b|song|lyric|jukebox|\baudio\b|fan[- ]?made|concept|"
                   r"\bspoof\b|parody|re-?release|anniversary|\bgame\b|gameplay|season \d|series|\bep(isode)?\b|"
                   r"tv spot|\bspot\b|featurette|clip|scene|restor|remaster|television|netflix|prime video|disney\+|"
-                  r"jiohotstar|hotstar|zee5|\bott\b|streaming|out tomorrow|out now|trailer out|announcement|countdown", re.I)
+                  r"jiohotstar|hotstar|zee5|\bott\b|streaming|out tomorrow|out now|trailer out|announcement|countdown|"
+                  # A TV channel's promo for showing an old film ("RELEASING THIS SUNDAY, AT 8:00 PM"), not a new film.
+                  r"releasing (?:this|next|tomorrow|today)|at \d{1,2}(?::\d\d)? ?[ap]\.?m\b", re.I)
 MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
 MON = r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?"
 DAY_MONTH = re.compile(r"\b(\d{1,2})(?:st|nd|rd|th)?\s*" + MON + r"(?:\s*,?\s*(20\d\d))?", re.I)
@@ -191,13 +194,14 @@ def language(lang, label, sources, today, old, max_days=MAX_DAYS):
                 print(f"  {url}: {e}", file=sys.stderr)
         kept = 0
         for vid, title, secs, age in videos:
-            if not TRAILER.search(title) or SKIP.search(title) or other_language(title) or released(title, today):
+            if not TRAILER.search(title) or SKIP.search(title) or is_horror(title) or other_language(title) or released(title, today):
                 continue
             if secs is None or not SECS[0] <= secs <= SECS[1]:
                 continue
             first = old.get(vid, {}).get("found", today.isoformat())
-            # Without an upload date, a trailer counts from the day we first saw it.
-            if (age if age is not None else (today - dt.date.fromisoformat(first)).days) > max_days:
+            # Only trailers whose upload date YouTube shows (2026-10-08): without one, old trailers found by
+            # the channel search (Bodyguard, Kuch Kuch Hota Hai, a TV premiere of an old film) looked new.
+            if age is None or age > max_days:
                 continue
             film = film_name(title)
             if films.get(film, 0) >= PER_FILM or any(v["id"] == vid for v in found):
@@ -289,7 +293,7 @@ def main():
         print(f"::notice title=Upcoming trailers::{summary}")
     for v in block:
         print(f"  {v['lang']:9} {v['secs']:4}s  {v['label']:24} {v['title']}  (first seen {v['found']})")
-    if len(block) < 6:
+    if len(block) < 3:
         sys.exit(f"Too few trailers ({summary}); keeping the old list.")
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump({"name": "آنے والی فلموں کے ٹریلر", "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),

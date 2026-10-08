@@ -16,7 +16,8 @@ Writes (in docs/, served at tv.bulkbazaar.ca):
   Dramas.m3u     the playlist (built into Cable TV's Movies & Series)
   dramas.json    every episode kept, with the day it was found, and counts
                  (the day also goes in the playlist as added="...", for the Library's Newly added)
-  MTA.m3u        MTA's own videos (an optional Library section, off unless the viewer turns it on)
+  MTA.m3u        MTA's own videos, a folder per programme, in Urdu and English (an optional Library
+                 section, off unless the viewer turns MTA on)
 
 Standard library only. Run: python3 tools/build_dramas.py
 """
@@ -154,11 +155,32 @@ MTA_CHANNELS = [
     ("MTA International", ["@mtaonline1", "@MTAInternational"],
      "mtaOnline1|MTA International|Muslim Television Ahmadiyya|MTA TV", 10),
 ]
+# Folders for videos found outside a playlist (the Videos tab and searches).
 MTA_FOLDERS = [
     ("Friday Sermons", re.compile(r"friday sermon|khutba|خطبہ", re.I)),
     ("Quran", re.compile(r"\bquran|qur'?an|tilawat|recitation|تلاوت", re.I)),
     ("Children's Programmes", re.compile(r"\b(kids?|children|bachon|atfal|waqf-?e-?nau)\b", re.I)),
 ]
+MTA_FOLDER_NAMES = {f for f, _ in MTA_FOLDERS} | {"Programmes"}
+# Each of MTA's playlists is one programme and becomes its own folder in the Library (owner, 2026-10-08:
+# grow the MTA section from MTA's own YouTube, with an Urdu shelf and a folder per programme).
+MTA_MAX_PLAYLISTS = 80
+MTA_PER_PLAYLIST = 40     # newest videos of each programme
+MTA_MAX_VIDEOS = 1500     # in the whole MTA section
+MTA_KIDS = re.compile(r"\b(kids?|children'?s?|bachon|bachchon|atfal|nasirat|waqf-?e-?nau|cartoons?|story time|stories|"
+                      r"kudak|guld[au]sta|qisse|kahaniyan|kahani)\b", re.I)
+# The Library has Urdu, Hindi, Punjabi and English shelves only: programmes in other languages are left out.
+MTA_OTHER_LANGUAGE = re.compile(
+    r"\b(arabic|french|german|deutsch|spanish|bengali|bangla|indonesian|bahasa|swahili|turkish|russian|chinese|"
+    r"japanese|tamil|malayalam|sindhi|pashto|persian|farsi|dutch|italian|portuguese|hausa|yoruba|twi|luganda|"
+    r"kirundi|creole|bosnian|albanian|norwegian|swedish|danish|thai|burmese|sinhala|tagalog)\b|"
+    r"[\u0980-\u09ff\u0b80-\u0bff\u0d00-\u0d7f\u4e00-\u9fff\u3040-\u30ff\u0400-\u04ff]", re.I)
+MTA_URDU = re.compile(r"\burdu\b|[\u0600-\u06ff]|\b\w+-e-\w+\b|\b(liqa|tilawat|ki|ka|ke|aur|mein|hain|kya|kaise|hamari|hamare|zindagi|"
+                      r"bachon|bachchon|dars|seerat|tarbiyat|tarbiyyat|nazm|nazmen|taleem|baatein)\b", re.I)
+MTA_ENGLISH = re.compile(r"\benglish\b|\b(the|with|and|of|in|what|how|why|is)\b", re.I)
+MTA_TAGS = re.compile(r"\s*[|\-–:]*\s*\b(mta(\s*international)?|muslim television ahmadiyya|in urdu|in english|urdu|english|"
+                      r"playlist|full episodes?|all episodes?)\b\s*[|\-–:]*\s*", re.I)
+
 SHOW_SKIP = re.compile(r"\b(teaser|promo|trailer|shorts|live stream|live)\b|#shorts", re.IGNORECASE)
 # Channels of one show only, whose titles name the story arc instead ("Flats Ki Renovation Episode 1778").
 SINGLE_SHOW = {"Taarak Mehta Ka Ooltah Chashmah"}
@@ -583,47 +605,196 @@ def channel_shows(kept, today, channels, genre):
         print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new {genre.lower()}")
 
 
+def browse(url, max_pages=1):
+    """A YouTube page and up to max_pages - 1 more of what follows it when scrolled (YouTube's own
+    "continuation" requests), as one text to read videos or playlists from."""
+    page = fetch(url)
+    texts = [page]
+    key = re.search(r'"INNERTUBE_API_KEY":"([\w-]+)"', page)
+    version = re.search(r'"INNERTUBE_CLIENT_VERSION":"([\w.-]+)"', page)
+    token = re.search(r'"continuationCommand":\{"token":"([^"]+)"', page)
+    for _ in range(max_pages - 1):
+        if not (version and token):
+            break
+        body = json.dumps({"context": {"client": {"clientName": "WEB", "clientVersion": version.group(1), "hl": "en"}},
+                           "continuation": token.group(1)}).encode()
+        req = urllib.request.Request("https://www.youtube.com/youtubei/v1/browse" + (f"?key={key.group(1)}" if key else ""), data=body,
+                                     headers={"User-Agent": USER_AGENT, "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                more = r.read().decode("utf-8", "replace")
+        except Exception as e:  # noqa: BLE001
+            print(f"  more of {url} failed ({e})", file=sys.stderr)
+            break
+        texts.append(more)
+        token = re.search(r'"continuationCommand":\{"token":"([^"]+)"', more)
+    return "\n".join(texts)
+
+
+def playlist_videos(text):
+    """(id, title, minutes) of each video on a playlist page."""
+    out, seen = [], set()
+    for m in re.finditer(r'"playlistVideoRenderer":\{"videoId":"([\w-]{11})"', text):
+        chunk = text[m.end():m.end() + 6000]
+        title = re.search(r'"title":\{"runs":\[\{"text":"((?:[^"\\]|\\.)*)"', chunk)
+        length = re.search(r'"lengthSeconds":"(\d+)"', chunk)
+        if title and m.group(1) not in seen:
+            seen.add(m.group(1))
+            out.append((m.group(1), _text(title.group(1)), int(length.group(1)) / 60 if length else None))
+    # YouTube's newer layout lists a playlist's videos as lockupViewModel cards, like a channel's Videos tab.
+    for m in re.finditer(r'"lockupViewModel":\{', text):
+        chunk = text[m.end():m.end() + 12000]
+        vid = re.search(r'"contentId":"([\w-]{11})"', chunk)
+        if not vid or vid.group(1) in seen or "LOCKUP_CONTENT_TYPE_VIDEO" not in chunk:
+            continue
+        title = re.search(r'"lockupMetadataViewModel":\{"title":\{"content":"((?:[^"\\]|\\.)*)"', chunk)
+        length = re.search(r'"text":"(\d{1,2}:\d{2}(?::\d{2})?)"', chunk)
+        if title:
+            seen.add(vid.group(1))
+            out.append((vid.group(1), _text(title.group(1)), minutes(length.group(1)) if length else None))
+    if not out:
+        markers = {k: text.count(k) for k in ("playlistVideoRenderer", "lockupViewModel", "videoId", "consent", "ytInitialData")}
+        print(f"    no videos read from the playlist page ({len(text)} bytes, {markers})", file=sys.stderr)
+    return out
+
+
+def channel_playlists(text):
+    """(playlist id, title) of each playlist on a channel's Playlists tab."""
+    out, seen = [], set()
+    for m in re.finditer(r'"lockupViewModel":\{', text):
+        chunk = text[m.end():m.end() + 12000]
+        if "LOCKUP_CONTENT_TYPE_PLAYLIST" not in chunk[:12000]:
+            continue
+        pid = re.search(r'"contentId":"((?:PL|UU)[\w-]{10,})"', chunk)
+        title = re.search(r'"lockupMetadataViewModel":\{"title":\{"content":"((?:[^"\\]|\\.)*)"', chunk)
+        if pid and title and pid.group(1) not in seen:
+            seen.add(pid.group(1))
+            out.append((pid.group(1), _text(title.group(1))))
+    for m in re.finditer(r'"gridPlaylistRenderer":\{"playlistId":"(PL[\w-]{10,})"', text):
+        title = re.search(r'"(?:simpleText|text)":"((?:[^"\\]|\\.)*)"', text[m.end():m.end() + 3000])
+        if title and m.group(1) not in seen:
+            seen.add(m.group(1))
+            out.append((m.group(1), _text(title.group(1))))
+    return out
+
+
+def mta_language(text, default=None, plain=False):
+    """Urdu or English from a title (Urdu letters or words, "English"); default when it doesn't say.
+    With plain, only a title that names its language or is written in Urdu letters counts."""
+    if re.search(r"\benglish\b", text, re.I):
+        return "English"
+    if re.search(r"\burdu\b|[؀-ۿ]", text, re.I):
+        return "Urdu"
+    if plain:
+        return default
+    if MTA_URDU.search(text):
+        return "Urdu"
+    if MTA_ENGLISH.search(text):
+        return "English"
+    return default
+
+
+def mta_folder(title):
+    """A playlist's title as a short folder name ("Rah-e-Huda | Urdu | MTA" to "Rah-e-Huda")."""
+    # Urdu letters go too: the Library's Urdu shelf already says the language ("Friday Sermon | خطبئہِ جمعہ 2011").
+    name = MTA_TAGS.sub(" ", re.sub(r"#\S+|[\u0600-\u06ff]+", "", title)).strip(" |-–:,")
+    name = re.sub(r"\s{2,}", " ", re.sub(r"\(\s*\)|\[\s*\]", "", name)).strip(" |-–:,") or title
+    name = re.sub(r"\s*\|\s*(?=\d{4}$)", " ", name)  # "Friday Sermon | 2011" to "Friday Sermon 2011"
+    return (name[:37] + "...") if len(name) > 40 else name
+
+
 def mta(kept, today):
-    """Adds MTA's full videos to kept, each in a folder by programme and in Urdu or English."""
+    """Adds MTA's full videos to kept: each of its programmes (a playlist on its channel) in its own
+    folder, plus the newest uploads and searches filed under Friday Sermons, Quran, Children's
+    Programmes or Programmes; each in Urdu or English."""
+    total = 0
     for name, handles, query, shortest in MTA_CHANNELS:
         handle, cid = channel_id(handles, query)
         if not cid:
             print(f"{name}: channel not found", file=sys.stderr)
             continue
-        videos, seen = [], set()
+        # (id, title, minutes, folder, language, kids) for every video found, programmes first.
+        found, seen = [], set()
+        try:
+            lists = channel_playlists(browse(f"https://www.youtube.com/channel/{cid}/playlists", max_pages=4))
+        except Exception as e:  # noqa: BLE001
+            print(f"  {name}: playlists failed ({e})", file=sys.stderr)
+            lists = []
+        print(f"  {name}: {len(lists)} playlists: " + "; ".join(t for _, t in lists[:40]))
+        used = 0
+        for pid, ptitle in lists:
+            if used >= MTA_MAX_PLAYLISTS:
+                break
+            if MTA_OTHER_LANGUAGE.search(ptitle) and not re.search(r"\b(urdu|english)\b", ptitle, re.I):
+                print(f"    skipped (language): {ptitle}")
+                continue
+            try:
+                videos = playlist_videos(browse(f"https://www.youtube.com/playlist?list={pid}", max_pages=3))
+            except Exception as e:  # noqa: BLE001
+                print(f"    {ptitle}: failed ({e})", file=sys.stderr)
+                continue
+            found_here = len(videos)
+            videos = [v for v in videos if not SHOW_SKIP.search(v[1]) and not MTA_OTHER_LANGUAGE.search(v[1])]
+            if not videos:
+                print(f"    {ptitle} ({pid}): {found_here} videos, none kept")
+                continue
+            used += 1
+            # The programme's language: its playlist title, else what most of its videos' titles say.
+            language = mta_language(ptitle)
+            if not language:
+                votes = [mta_language(t) for _, t, _ in videos]
+                language = "Urdu" if votes.count("Urdu") > votes.count("English") else "English"
+            kids = bool(MTA_KIDS.search(ptitle))
+            folder = mta_folder(ptitle)
+            # Playlists mostly run oldest first: the newest of each programme are at the end.
+            newest = videos[-MTA_PER_PLAYLIST:][::-1] if len(videos) > MTA_PER_PLAYLIST else videos[::-1]
+            n = 0
+            for vid, title, mins in newest:
+                if vid not in seen:
+                    seen.add(vid)
+                    found.append((vid, title, mins, folder, mta_language(title, language, plain=True), kids))
+                    n += 1
+            print(f"    {folder} ({language}{', kids' if kids else ''}): {len(videos)} videos, {n} taken")
         for url in (f"https://www.youtube.com/channel/{cid}/videos",
                     f"https://www.youtube.com/channel/{cid}/search?query=friday+sermon",
                     f"https://www.youtube.com/channel/{cid}/search?query=quran",
+                    f"https://www.youtube.com/channel/{cid}/search?query=urdu",
                     f"https://www.youtube.com/channel/{cid}/search?query=children"):
             try:
-                for v in videos_page(url):
-                    if v[0] not in seen:
-                        seen.add(v[0])
-                        videos.append(v)
+                for vid, title, mins in videos_page(url):
+                    if vid not in seen:
+                        seen.add(vid)
+                        folder = next((f for f, pattern in MTA_FOLDERS if pattern.search(title)), "Programmes")
+                        found.append((vid, title, mins, folder, mta_language(title, "English"),
+                                      folder == "Children's Programmes"))
             except Exception as e:  # noqa: BLE001
                 print(f"  {name}: {url} failed ({e})", file=sys.stderr)
-        if not videos:
+        if not found:
             try:
-                videos = videos_feed(cid)
-                print(f"  {name}: {len(videos)} videos from the feed")
+                for vid, title, mins in videos_feed(cid):
+                    folder = next((f for f, pattern in MTA_FOLDERS if pattern.search(title)), "Programmes")
+                    found.append((vid, title, mins, folder, mta_language(title, "English"), folder == "Children's Programmes"))
+                print(f"  {name}: {len(found)} videos from the feed")
             except Exception as e:  # noqa: BLE001
                 print(f"  {name} feed failed ({e})", file=sys.stderr)
         new = 0
-        for vid, title, mins in videos:
-            if SHOW_SKIP.search(title) or (mins is not None and mins < shortest):
+        for vid, title, mins, folder, language, kids in found:
+            if total >= MTA_MAX_VIDEOS:
+                break
+            # A programme's own playlist may have short episodes (a 5-minute Qur'an lesson); other videos need [shortest].
+            if SHOW_SKIP.search(title) or (mins is not None and mins < (5 if kids or folder not in MTA_FOLDER_NAMES else shortest)):
                 continue
-            folder = next((f for f, pattern in MTA_FOLDERS if pattern.search(title)), "Programmes")
-            genre = "Kids" if folder == "Children's Programmes" else "Shows"
-            language = "Urdu" if re.search(r"urdu|[\u0600-\u06ff]", title, re.I) else "English"
+            total += 1
+            entry = {"item": short_title(title), "folder": folder, "genre": "Kids" if kids else "Shows",
+                     "channel": name, "language": language, "title": title, "mta": True}
             if vid in kept:
-                kept[vid]["seen"] = today.isoformat()
+                kept[vid].update(entry, seen=today.isoformat())
             else:
-                kept[vid] = {"item": short_title(title), "folder": folder, "genre": genre, "channel": name,
-                             "language": language, "title": title, "mta": True, "added": today.isoformat()}
+                kept[vid] = dict(entry, added=today.isoformat())
                 new += 1
-        print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new")
-        for _, title, mins in videos[:5]:
-            print(f"    e.g. {title} ({mins and round(mins)} min)")
+        print(f"{name} ({handle} {cid}): {len(found)} videos, {total} kept, {new} new")
+        for _, title, mins, folder, language, _ in found[:8]:
+            print(f"    e.g. {folder} | {language} | {title} ({mins and round(mins)} min)")
 
 
 def films(kept, today):

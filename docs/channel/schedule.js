@@ -38,7 +38,7 @@ export const STATIONS = [
     name: "Bazaar Travel", dial: "7", doc: "_channel_travel", page: "channel/?c=travel", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-travel.png", ready: "https://tv.bulkbazaar.ca/channel/travel-schedule.json",
     credits: "Travel: public-domain and CC BY travel films of countries, cities and parks from the Internet Archive." },
-  { id: "comedy", yt: true, web: "channel/ytc.html?c=comedy", ytMins: 15, tagline: "Laughs day and night",
+  { id: "comedy", yt: true, web: "channel/ytc.html?c=comedy", ytMins: 15, tagline: "Laughs day and night", mix: true,
     name: "Bazaar Comedy", dial: "8", doc: "_channel_comedy", page: "channel/?c=comedy", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedy.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
     credits: "Comedy: public-domain silent and classic comedies (Chaplin, Laurel and Hardy, Keaton) and early TV comedies from the Internet Archive." },
