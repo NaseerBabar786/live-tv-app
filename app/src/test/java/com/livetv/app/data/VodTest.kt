@@ -109,4 +109,12 @@ class VodLanguageTest {
         val oct7 = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.US).parse("2026-10-07 12:00")!!.time
         assertEquals("2026-10-01", Vod.newSince(oct7))
     }
+
+    @Test
+    fun addedLabelShowsTheDay() {
+        assertEquals("Added Oct 8", Vod.addedLabel("2026-10-08"))
+        assertEquals("Added Sep 30", Vod.addedLabel("2026-09-30"))
+        assertEquals(null, Vod.addedLabel(null))
+        assertEquals(null, Vod.addedLabel("soon"))
+    }
 }

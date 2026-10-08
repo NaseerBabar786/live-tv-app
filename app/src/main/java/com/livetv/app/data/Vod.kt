@@ -71,6 +71,14 @@ object Vod {
         return format.format(java.util.Date(now - (NEW_DAYS - 1) * 24L * 60 * 60 * 1000))
     }
 
+    /** "Added Oct 8" for the day a programme first showed up in its list ("2026-10-08"), or null. */
+    fun addedLabel(added: String?): String? {
+        val day = runCatching {
+            java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).apply { isLenient = false }.parse(added ?: return null)
+        }.getOrNull() ?: return null
+        return "Added " + java.text.SimpleDateFormat("MMM d", java.util.Locale.US).format(day)
+    }
+
     /** Whether a programme first showed up in its list on or after [since] (see tools/first_seen.py). */
     fun isNew(channel: Channel, since: String): Boolean = channel.added?.let { it >= since } == true
 

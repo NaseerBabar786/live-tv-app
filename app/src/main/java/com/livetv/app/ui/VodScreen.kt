@@ -277,6 +277,14 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     modifier = Modifier.padding(start = 12.dp),
                                 )
                             }
+                            Vod.addedLabel(episode.channel.added)?.let {
+                                Text(
+                                    it,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(start = 12.dp),
+                                )
+                            }
                         }
                     }
                 }
@@ -358,7 +366,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         } else {
                             PosterGrid(
                                 moviesGrid,
-                                list.map { Poster(it.id, it.name, it.logo, fresh = Vod.isNew(it, newSince)) },
+                                list.map { Poster(it.id, it.name, it.logo, fresh = Vod.isNew(it, newSince), added = Vod.addedLabel(it.added)) },
                                 lastPicked,
                                 pickedFocus,
                             ) { id ->
@@ -381,6 +389,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                         it.name, it.name, it.logo,
                                         "${it.episodes.size} episodes" + if (fresh > 0) " · $fresh new" else "",
                                         fresh = fresh > 0,
+                                        added = Vod.addedLabel(it.added),
                                     )
                                 },
                                 lastPicked,
@@ -412,6 +421,8 @@ private data class Poster(
     val subtitle: String? = null,
     /** Newly added: a NEW mark on the picture. */
     val fresh: Boolean = false,
+    /** "Added Oct 8": the day it (or its newest episode) came into the Library, shown on the picture. */
+    val added: String? = null,
 )
 
 @Composable
@@ -490,6 +501,19 @@ private fun PosterGrid(
                                 .padding(6.dp)
                                 .clip(ChipShape)
                                 .background(Color(0xFFD32F2F))
+                                .padding(horizontal = 6.dp, vertical = 2.dp),
+                        )
+                    }
+                    poster.added?.let { added ->
+                        Text(
+                            added,
+                            color = Color.White,
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(6.dp)
+                                .clip(ChipShape)
+                                .background(Color.Black.copy(alpha = 0.7f))
                                 .padding(horizontal = 6.dp, vertical = 2.dp),
                         )
                     }
