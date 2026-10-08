@@ -1,0 +1,18 @@
+name: spark media probe (temporary)
+on:
+  push:
+    branches: [spark-media-probe]
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/probe/spark_media.py
+      - run: |
+          tar czf spark-media.tgz -C out .
+          gh release delete spark-ad-media -y --cleanup-tag || true
+          gh release create spark-ad-media spark-media.tgz --prerelease --title "Spark ad media (temporary)" --notes "Thumbnails and CC BY music candidates for the Spark network ad" --target spark-media-probe
+        env:
+          GH_TOKEN: ${{ github.token }}
