@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iqraquran.app.data.AsrMethod
 import com.iqraquran.app.data.AzanMode
+import com.iqraquran.app.data.AzanSettings
 import com.iqraquran.app.data.CalcMethod
 import com.iqraquran.app.data.Hijri
 import com.iqraquran.app.data.Prayer
@@ -62,9 +63,9 @@ import java.util.Calendar
 import java.util.Date
 import kotlinx.coroutines.delay
 
-/** Text for the Namaz screens. */
+/** Text for the Azan Clock screens. */
 object PS {
-    val namaz = L("Namaz", "نماز")
+    val namaz = L("Azan Clock", "اذان گھڑی")
     val namazSub = L("Prayer times and Azan", "نماز کے اوقات اور اذان")
     val now = L("NOW", "اب")
     val inWord = L("in", "میں")
@@ -88,6 +89,12 @@ object PS {
     val hijriAdjust = L("Islamic date: move by days", "اسلامی تاریخ: دنوں میں تبدیلی")
     val place = L("Your area", "آپ کا علاقہ")
     val findAgain = L("Find my area again", "علاقہ دوبارہ معلوم کریں")
+    val eachPrayer = L("At each prayer time", "ہر نماز کے وقت")
+    val changeCity = L("Change city", "شہر بدلیں")
+    val placeFromDevice = L("From this device's location, the same as the weather.", "اس آلے کی جگہ سے، موسم کی طرح۔")
+    val methodShort = L("Calculation", "حساب کا طریقہ")
+    val muezzinShort = L("Muezzin", "مؤذن")
+    val pressToChange = L("Press to change", "بدلنے کے لیے دبائیں")
     val testAzan = L("Hear it", "سنیں")
     val stopAzan = L("Stop Azan", "اذان بند کریں")
     val recordings = L("Azan recordings", "اذان کی ریکارڈنگز")
@@ -353,16 +360,37 @@ fun NextCard(vm: AppViewModel, now: Long) {
     }
 }
 
+/** Where, how and who: the area, the calculation method and the muezzin, each opening the Azan settings. */
 @Composable
 private fun PlaceLine(vm: AppViewModel) {
-    val place = vm.azan.place ?: return
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        Icon(Icons.Filled.LocationOn, contentDescription = null, tint = palette.muted)
-        Text(
-            listOf(place.city, place.country).filter { it.isNotBlank() }.joinToString(", ") +
-                " · " + tr(vm.azan.methodInUse.en, vm.azan.methodInUse.ur),
-            color = palette.muted, fontSize = 15.sp,
-        )
+    val a = vm.azan
+    val place = a.place?.let { listOf(it.city, it.country).filter(String::isNotBlank).joinToString(", ") } ?: PS.findingPlace.get()
+    val method = tr(a.methodInUse.en, a.methodInUse.ur) + if (a.method == null) " (${PS.automatic.get()})" else ""
+    val voice = a.voice(a.voiceId)?.let { tr(it.en, it.ur) } ?: "…"
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(palette.cardAlt).padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        InfoRow(Icons.Filled.LocationOn, PS.place.get(), place) { vm.open(Screen.AzanSettings) }
+        InfoRow(Icons.Filled.Settings, PS.methodShort.get(), method) { vm.open(Screen.AzanSettings) }
+        InfoRow(Icons.AutoMirrored.Filled.VolumeUp, PS.muezzinShort.get(), voice) { vm.open(Screen.AzanSettings) }
+    }
+}
+
+@Composable
+private fun InfoRow(icon: ImageVector, label: String, value: String, onClick: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().focusRing(RoundedCornerShape(14.dp)).clip(RoundedCornerShape(14.dp))
+            .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Icon(icon, contentDescription = null, tint = palette.accent)
+        Column(Modifier.weight(1f)) {
+            Text(label, color = palette.muted, fontSize = 14.sp)
+            Text(value, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+        }
+        Text(PS.pressToChange.get(), color = palette.muted, fontSize = 13.sp)
     }
 }
 
@@ -381,13 +409,6 @@ fun AzanSettingsScreen(vm: AppViewModel) {
                 .padding(horizontal = if (isWide()) 80.dp else 16.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Heading(PS.namaz.get())
-            Prayer.withAzan.forEach { p ->
-                Text(tr(p.en, p.ur), fontWeight = FontWeight.SemiBold)
-                ChoiceRow {
-                    AzanMode.entries.forEach { m -> Choice(tr(m.en, m.ur), a.mode(p) == m) { vm.setAzanMode(p, m) } }
-                }
-            }
             Heading(PS.muezzin.get())
             if (vm.voices.isEmpty()) Text(PS.noVoices.get(), color = palette.muted)
             vm.voices.filter { !it.fajr }.forEach { v ->
@@ -397,6 +418,28 @@ fun AzanSettingsScreen(vm: AppViewModel) {
             ChoiceRow { Choice(PS.sameAsOthers.get(), a.fajrVoiceId.isEmpty()) { vm.chooseFajrVoice("") } }
             vm.voices.forEach { v ->
                 VoiceRow(vm, tr(v.en, v.ur), a.fajrVoiceId == v.id, v.id) { vm.chooseFajrVoice(v.id) }
+            }
+            Heading(PS.method.get())
+            ChoiceRow {
+                Choice("${PS.automatic.get()} (${tr(CalcMethod.forCountry(a.place?.country).en, CalcMethod.forCountry(a.place?.country).ur)})", a.method == null) { vm.setMethod(null) }
+                CalcMethod.entries.forEach { m -> Choice(tr(m.en, m.ur), a.method == m) { vm.setMethod(m) } }
+            }
+            Heading(PS.asr.get())
+            ChoiceRow { AsrMethod.entries.forEach { m -> Choice(tr(m.en, m.ur), a.asr == m) { vm.setAsr(m) } } }
+            Stepper(PS.hijriAdjust.get(), a.hijriAdjust, -2..2) { vm.setHijriAdjust(it) }
+            Heading(PS.place.get())
+            Text(a.place?.let { listOf(it.city, it.country).filter(String::isNotBlank).joinToString(", ") } ?: PS.findingPlace.get())
+            if (AzanSettings.placeSource != null) Text(PS.placeFromDevice.get(), color = palette.muted, fontSize = 14.sp)
+            ChoiceRow {
+                AzanSettings.pickPlace?.let { pick -> Choice(PS.changeCity.get(), false) { pick() } }
+                Choice(PS.findAgain.get(), false) { vm.findPlaceAgain() }
+            }
+            Heading(PS.eachPrayer.get())
+            Prayer.withAzan.forEach { p ->
+                Text(tr(p.en, p.ur), fontWeight = FontWeight.SemiBold)
+                ChoiceRow {
+                    AzanMode.entries.forEach { m -> Choice(tr(m.en, m.ur), a.mode(p) == m) { vm.setAzanMode(p, m) } }
+                }
             }
             Stepper(PS.volume.get(), a.volume / 10, 1..10, suffix = "0%") { vm.setAzanVolume(it * 10) }
             Heading(PS.reminder.get())
@@ -412,17 +455,6 @@ fun AzanSettingsScreen(vm: AppViewModel) {
                     Choice(label, a.quietFrom == from && a.quietTo == to) { vm.setQuiet(from, to) }
                 }
             }
-            Heading(PS.method.get())
-            ChoiceRow {
-                Choice("${PS.automatic.get()} (${tr(CalcMethod.forCountry(a.place?.country).en, CalcMethod.forCountry(a.place?.country).ur)})", a.method == null) { vm.setMethod(null) }
-                CalcMethod.entries.forEach { m -> Choice(tr(m.en, m.ur), a.method == m) { vm.setMethod(m) } }
-            }
-            Heading(PS.asr.get())
-            ChoiceRow { AsrMethod.entries.forEach { m -> Choice(tr(m.en, m.ur), a.asr == m) { vm.setAsr(m) } } }
-            Stepper(PS.hijriAdjust.get(), a.hijriAdjust, -2..2) { vm.setHijriAdjust(it) }
-            Heading(PS.place.get())
-            Text(a.place?.let { listOf(it.city, it.country).filter(String::isNotBlank).joinToString(", ") } ?: PS.findingPlace.get())
-            ChoiceRow { Choice(PS.findAgain.get(), false) { vm.findPlaceAgain() } }
             Heading(PS.recordings.get())
             vm.voices.forEach { v -> Text("${v.en}: ${v.credit}", color = palette.muted, fontSize = 13.sp) }
         }
