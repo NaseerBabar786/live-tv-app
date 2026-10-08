@@ -1,0 +1,26 @@
+name: News weather ideas
+# Three SAMPLE weather segments for the owner to choose from (never touches the on-air files).
+on:
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/news-weather-ideas.yml", "tools/news/weather_ideas.py"]
+jobs:
+  ideas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          timeout 300 sudo apt-get update -qq || true
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
+          pip install -q edge-tts numpy pillow
+          curl -fsSL -m 120 -o tools/news/presenters/clips/anchor-1f.mp4 \
+            "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-anchor-1f-raw.mp4"
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 tools/news/weather_ideas.py out --reader anchor-1f
+          ls -la out
+          gh release upload channel-media out/weather-idea-*.mp4 -R "$GITHUB_REPOSITORY" --clobber
