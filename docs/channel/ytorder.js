@@ -125,7 +125,7 @@ export const TRAILERS_PER_BLOCK = 12, TRAILERS_NEW = 8, CLIP_SECS = 45;
 export async function loadTrailers(station, base = "") {
   if (!station.trailerLangs) return [];
   try {
-    const d = await (await fetch(base + "trailers.json", { cache: "no-store" })).json();
+    const d = await (await fetch(base + "trailers.json", { cache: "no-cache" })).json();
     return (d.videos || []).filter(v => v.id && v.secs > 0 && v.secs <= 600 && station.trailerLangs.includes(v.lang));
   } catch { return []; }
 }
@@ -133,7 +133,7 @@ export async function loadTrailers(station, base = "") {
 /** Our approved promos for the breaks, 5 to 60 seconds each (owner, 2026-10-07). */
 export async function loadPromos(base = "../media/") {
   try {
-    const d = await (await fetch(base + "promos.json", { cache: "no-store" })).json();
+    const d = await (await fetch(base + "promos.json", { cache: "no-cache" })).json();
     return (d.promos || []).filter(p => p.src && p.secs >= 5 && p.secs <= 60);
   } catch { return []; }
 }
@@ -254,11 +254,10 @@ export async function loadOwnerDays(id) {
  * written; it changes only when the owner unlocks it in Studio to fix a mistake.
  */
 export async function loadLocked(station, base = "", date = torontoDay().date) {
+  // Both asked for at once, so the channel starts sooner (1.10.24); the owner's day still wins.
+  const nightly = fetch(`${base}locked/${station.id}.json`, { cache: "no-cache" }).then(r => r.json()).catch(() => null);
   const mine = (await loadOwnerDays(station.id))[date]?.items;
   if (Array.isArray(mine) && mine.length) return mine;
-  try {
-    const d = await (await fetch(`${base}locked/${station.id}.json`, { cache: "no-store" })).json();
-    const items = d.days?.[date];
-    return Array.isArray(items) && items.length ? items : null;
-  } catch { return null; }
+  const items = (await nightly)?.days?.[date];
+  return Array.isArray(items) && items.length ? items : null;
 }
