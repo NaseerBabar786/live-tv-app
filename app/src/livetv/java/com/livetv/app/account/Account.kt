@@ -481,6 +481,9 @@ internal object Firestore {
     }.getOrNull()
 
     fun JSONObject.str(field: String): String = optJSONObject(field)?.optString("stringValue") ?: ""
+    fun JSONObject.num(field: String): Double = optJSONObject(field)?.let {
+        it.optString("integerValue").toDoubleOrNull() ?: it.optDouble("doubleValue", 0.0)
+    } ?: 0.0
     fun JSONObject.bool(field: String): Boolean = optJSONObject(field)?.optBoolean("booleanValue") ?: false
     fun JSONObject.time(field: String): Date? = optJSONObject(field)?.optString("timestampValue")?.let(::parseIso)
 }

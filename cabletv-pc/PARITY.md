@@ -75,3 +75,5 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
 - 1.10.9: TV remote only. The sign-in and Change password text boxes no longer trap the remote's cursor
   (Up/Down always leave them, OK opens the keyboard, yellow outline like buttons). The PC is typed on with a real
   keyboard and mouse, so nothing changes there.
+- 1.10.10: My billing details shows the free credit the owner gave on tv.bulkbazaar.ca/users. The PC has no
+  billing details screen yet (viewers send them from a TV or phone), so nothing changes there.
