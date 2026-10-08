@@ -75,3 +75,6 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
 - 1.10.9: TV remote only. The sign-in and Change password text boxes no longer trap the remote's cursor
   (Up/Down always leave them, OK opens the keyboard, yellow outline like buttons). The PC is typed on with a real
   keyboard and mouse, so nothing changes there.
+- 1.10.10 (PC 1.0.12): new viewers, and viewers who never picked countries, start on every country of the
+  working list (about 7,900 channels) instead of the Pakistani, Indian, Canadian, British and American mix.
+  Same change on PC.
