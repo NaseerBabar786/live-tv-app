@@ -7,6 +7,11 @@ name: Release approved build
 # "New update available" reminder; they never update by themselves.
 # App Bazaar's list (apps.bulkbazaar.ca/apps.json) follows within the hour (its sync job reads these
 # public downloads), or at once by running "Sync app versions" in NaseerBabar786/app-store.
+#
+# The owner's one-release-per-day rule (2026-10-08): a yes that comes after the day's release is
+# kept for the next day. mode "hold" copies the tested build from "test" into the owner-only
+# "approved" pre-release (so new pushes to main can keep replacing "test"); the next day mode
+# "release held build" publishes from "approved" exactly as "release now" publishes from "test".
 on:
   workflow_dispatch:
     inputs:
@@ -28,6 +33,14 @@ on:
         description: "Only release if the test build is this build number (blank = the current test build)"
         required: false
         default: ""
+      mode:
+        description: "release now (from test) | hold (keep the approved test build for the next day) | release held build (from approved)"
+        type: choice
+        default: release now
+        options:
+          - release now
+          - hold
+          - release held build
 
 permissions:
   contents: write
@@ -37,21 +50,47 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  hold:
+    if: inputs.mode == 'hold'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Keep the tested build in "approved"
+        run: |
+          mkdir held && cd held
+          gh release download test --pattern '*' --clobber
+          want="${{ inputs.build }}"
+          have=$(jq -r .build versions.json)
+          if [ -n "$want" ] && [ "$want" != "$have" ]; then
+            echo "::error::The test build is now $have, not $want. A newer build replaced the one that was tested; test it first."
+            exit 1
+          fi
+          commit=$(jq -r .commit versions.json)
+          gh release delete approved --cleanup-tag --yes 2>/dev/null || true
+          gh release create approved * --prerelease --target "$commit" \
+            --title "APPROVED build $have (Cable TV $(jq -r '."cable-tv"' versions.json)), waiting for its release day" \
+            --notes "Owner-approved copy of TEST build $have from $commit (apps: ${{ inputs.apps }}). Published by this workflow with mode 'release held build'. Not sent to users yet."
+          echo "Held test build $have in 'approved' for apps: ${{ inputs.apps }}." | tee -a "$GITHUB_STEP_SUMMARY"
+
   release:
+    if: inputs.mode != 'hold'
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
       APPS: ${{ inputs.apps }}
+      FROM: ${{ inputs.mode == 'release held build' && 'approved' || 'test' }}
     steps:
       - name: Download the tested build
         run: |
-          gh release download test --pattern '*' --clobber
+          gh release download "$FROM" --pattern '*' --clobber
           cat versions.json
           want="${{ inputs.build }}"
           have=$(jq -r .build versions.json)
           if [ -n "$want" ] && [ "$want" != "$have" ]; then
-            echo "::error::The test build is now $have, not $want. A newer build replaced the one that was tested; test it first."
+            echo "::error::The $FROM build is $have, not $want. A newer build replaced the one that was tested; test it first."
             exit 1
           fi
           echo "BUILD=$have" >> "$GITHUB_ENV"
@@ -192,4 +231,4 @@ jobs:
 
       - name: Summary
         run: |
-          echo "Released ($APPS) from test build $BUILD. Apps show 'New update available' on their next start." | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "Released ($APPS) from $FROM build $BUILD. Apps show 'New update available' on their next start." | tee -a "$GITHUB_STEP_SUMMARY"
