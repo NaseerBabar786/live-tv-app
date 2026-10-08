@@ -93,12 +93,14 @@ class GameInfo(
     val create: () -> Game,
 )
 
-// The classic Snake gave way to Snake Rush (WEB_GAMES) and 2048 left the menu (owner); their rules stay for the tests.
-val GAMES = listOf(
+/** Every classic game's rules; the tests play them all. [GAMES] is what the menu still shows. */
+val CLASSIC_GAMES = listOf(
+    GameInfo("snake", "Snake", "🐍", "Arrows steer. Eat the red food to grow. Don't hit a wall or your tail.", Scoring.Best) { Snake() },
     GameInfo("blocks", "Falling Blocks", "🟦", "Left and Right move, Up turns, Down drops faster, OK drops straight down. Fill a row to clear it.", Scoring.Best) { Blocks() },
     GameInfo("bricks", "Brick Breaker", "🧱", "Left and Right move the paddle. OK launches the ball. Break every brick.", Scoring.Best) { BrickBreaker() },
     GameInfo("space", "Space Defender", "🚀", "Left and Right move, OK fires. Stop the invaders before they land.", Scoring.Best) { SpaceDefender() },
     GameInfo("paddle", "Paddle Ball", "🏓", "Up and Down move your paddle on the left. First to 7 points wins.", Scoring.Wins) { PaddleBall() },
+    GameInfo("2048", "2048", "🔢", "Arrows slide all tiles. Two equal tiles join into one. Reach 2048!", Scoring.Best) { Game2048() },
     GameInfo("tictactoe", "Tic-Tac-Toe", "❌", "Arrows pick a square, OK places your X. Get three in a row before the TV.", Scoring.Wins) { TicTacToe() },
     GameInfo("four", "Four in a Row", "🔴", "Left and Right pick a column, OK drops your red disc. Line up four.", Scoring.Wins) { FourInRow() },
     GameInfo("mines", "Mines", "💣", "Arrows move, OK opens a square, hold OK to plant a flag. Numbers count the mines around.", Scoring.Wins) { Mines() },
@@ -120,14 +122,52 @@ val GAMES = listOf(
 )
 
 /**
+ * Classic games that left the menu (1.10.22): the modern remakes in [WEB_GAMES] took their place,
+ * and the owner took 2048 and Cricket off.
+ */
+private val RETIRED = setOf(
+    "snake", "2048", "blocks", "bricks", "space", "paddle", "tictactoe", "four", "mines", "memory", "echo",
+    "ludo", "cricket", "snakes", "chess", "quiz", "sudoku", "race", "maze", "checkers", "words", "carrom",
+)
+
+val GAMES = CLASSIC_GAMES.filter { it.id !in RETIRED }
+
+/**
  * One of the modern games (1.10.x): drawn by a page in assets/games with smooth animation, effects and
  * sound, played with the remote, touch or a mouse. The PC app opens the same pages.
  * The page reports its record (best score, highest level done) and [label] shows it on the menu.
  */
-class WebGameInfo(val id: String, val name: String, val icon: String, val page: String, val label: (Int) -> String)
+class WebGameInfo(
+    val id: String,
+    val name: String,
+    val icon: String,
+    val page: String,
+    /** True when a lower record is better (Carrom: fewest shots). */
+    val fewest: Boolean = false,
+    val label: (Int) -> String,
+)
 
 val WEB_GAMES = listOf(
     WebGameInfo("snakerush", "Snake Rush", "🐍", "snakerush.html") { "Best: $it" },
     WebGameInfo("blockburst", "Block Burst", "💥", "blockburst.html") { "Best: $it" },
     WebGameInfo("colorpour", "Color Pour", "🧪", "colorpour.html") { "Level $it done" },
+    WebGameInfo("blockdrop", "Block Drop", "🟦", "blockdrop.html") { "Best: $it" },
+    WebGameInfo("brickblast", "Brick Blast", "🧱", "brickblast.html") { "Best: $it" },
+    WebGameInfo("galaxyguard", "Galaxy Guard", "🚀", "galaxyguard.html") { "Best: $it" },
+    WebGameInfo("neonpong", "Neon Pong", "🏓", "neonpong.html") { "Wins: $it" },
+    WebGameInfo("highwayrush", "Highway Rush", "🏎️", "highwayrush.html") { "Best: $it" },
+    WebGameInfo("mazemunch", "Maze Munch", "👾", "mazemunch.html") { "Best: $it" },
+    WebGameInfo("gemmines", "Mine Field", "💣", "gemmines.html") { "Wins: $it" },
+    WebGameInfo("memorymatch", "Memory Match", "🃏", "memorymatch.html") { "Level $it done" },
+    WebGameInfo("echopads", "Echo Pads", "🎨", "echopads.html") { "Best: $it" },
+    WebGameInfo("sudokuzen", "Sudoku Zen", "🔢", "sudokuzen.html") { "Wins: $it" },
+    WebGameInfo("wordrescue", "Word Rescue", "🔤", "wordrescue.html") { "Best: $it" },
+    WebGameInfo("chessroyale", "Chess", "♟️", "chessroyale.html") { "Wins: $it" },
+    WebGameInfo("ludostar", "Ludo Star", "🎲", "ludostar.html") { "Wins: $it" },
+    WebGameInfo("checkersplus", "Checkers", "⚫", "checkersplus.html") { "Wins: $it" },
+    WebGameInfo("carrompro", "Carrom", "⚪", "carrompro.html", fewest = true) { "Best: $it shots" },
+    WebGameInfo("quizshow", "Quiz Show", "❓", "quizshow.html") { "Best: $it" },
+    WebGameInfo("laddersnakes", "Snakes & Ladders", "🪜", "laddersnakes.html") { "Wins: $it" },
+    WebGameInfo("fourdrop", "Four Drop", "🔴", "fourdrop.html") { "Wins: $it" },
+    WebGameInfo("tictacglow", "Tic-Tac-Toe Glow", "❌", "tictacglow.html") { "Wins: $it" },
 )
