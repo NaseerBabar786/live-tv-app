@@ -43,4 +43,12 @@ class MyScreenTest {
         assertEquals(listOf(MyScreen.SECOND, MyScreen.PRAYERS, MyScreen.MARKETS), picked.spots)
         assertTrue(picked.usesSecond)
     }
+
+    @Test
+    fun channelSizeStartsUsualAndReadsTheShare() {
+        assertEquals(MyScreen.USUAL_SIZE, MyScreen.Choices(emptyMap())[MyScreen.Section.Size])
+        assertEquals(null, MyScreen.Choices(emptyMap()).size)
+        assertEquals(0.7f, MyScreen.Choices(mapOf(MyScreen.Section.Size to "70%")).size)
+        assertEquals(0.6f, MyScreen.Choices(mapOf(MyScreen.Section.Size to "60%")).size)
+    }
 }
