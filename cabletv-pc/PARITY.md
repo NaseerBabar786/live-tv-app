@@ -59,3 +59,8 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   `<webview>` can't be taken to YouTube's own site (`main.js`), as on Android (`YouTube.blocksNavigation`).
   The locked YouTube pages themselves (player taller than its box, cover on errors) are the website's,
   shared by both apps. The Library's "open in the YouTube app" is gone on Android; the PC has no Library yet.
+- 1.10.6 (PC 1.0.10): the welcome invitation. Every viewer who hasn't used promo code WELCOME gets "Try Gold free
+  for one month" from the Cable TV team, with a one-press "Use code WELCOME" and a request for a good review. It pops
+  up once per account (users/{uid}.welcomeAt) about 25 s after start; TV and phone keep it at the top of Messages,
+  the PC (no Messages screen yet) in Settings. The PC also gets "🎟 Have a promo code?" in Settings (`welcome.js`,
+  `screens/welcome.js`, `plans.redeem`).
