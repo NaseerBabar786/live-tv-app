@@ -54,6 +54,8 @@ CHANNELS = [
     ("Geo Kahani", ["@GeoKahani", "@GeoKahaniOfficial"], "Geo Kahani", "Urdu"),
     ("Taarak Mehta Ka Ooltah Chashmah", ["@TaarakMehtaKaOoltahChashmah", "@tmkoc"], "Taarak Mehta Ka Ooltah Chashmah", "Hindi"),
     ("Prasar Bharati Archives", ["@PrasarBharatiArchives", "@prasarbharatiarchive"], "Prasar Bharati Archives", "Hindi"),
+    # More free sources the owner approved (2026-10-08, "more free movie sources" thread; probed from Actions).
+    ("Aaj Entertainment", ["@AajEntertainment"], "Aaj Entertainment", "Urdu"),
     # FilmRise TV (1950s-60s sitcoms such as That Girl) left on 2026-10-07 with the other old English programmes.
 ]
 
@@ -115,6 +117,9 @@ SHOW_CHANNELS = [
     ("Shark Tank", ["@SharkTankGlobal"], "Shark Tank Global", "English", 30),
     ("Dragons' Den", ["@DragonsDen"], "Dragons' Den|Dragons Den", "English", 30),
     ("Border Security", ["@BorderSecurity"], "Border Security", "English", 20),
+    ("Free Documentary", ["@FreeDocumentary"], "Free Documentary", "English", 20),
+    ("Free Documentary Nature", ["@FreeDocumentaryNature"], "Free Documentary - Nature|Free Documentary Nature", "English", 20),
+    ("BBC Earth", ["@bbcearth"], "BBC Earth", "English", 40),
 ]
 # Cartoons from their makers' own channels, filed under Kids.
 KIDS_CHANNELS = [
@@ -130,6 +135,11 @@ KIDS_CHANNELS = [
     ("Oddbods", ["@Oddbods"], "Oddbods", "English", 10),
     ("Thomas & Friends", ["@ThomasAndFriends"], "Thomas & Friends|Thomas and Friends", "English", 10),
     ("Pokémon", ["@pokemon"], "Pokémon|Pokemon", "English", 15),
+    ("Motu Patlu", [], "Motu Patlu", "Hindi", 5),
+    ("Sesame Street", ["@SesameStreet"], "Sesame Street", "English", 20),
+    ("Teletubbies", ["@teletubbies"], "Teletubbies", "English", 10),
+    ("Blippi", ["@Blippi"], "Blippi", "English", 10),
+    ("Super Wings", [], "Super Wings", "English", 10),
 ]
 # Channels that also post other things: only titles with these words are kept.
 ONLY_TITLES = {
@@ -181,7 +191,16 @@ FILM_CHANNELS = [
     ("Popcornflix", ["@Popcornflix"], "Popcornflix", "English"),
     ("Maverick Movies", ["@MaverickMovies"], "Maverick Movies", "English"),
     ("Gravitas Movies", ["@GravitasMovies"], "Gravitas", "English"),
+    # More free sources the owner approved (2026-10-08, "more free movie sources" thread; probed from Actions).
+    ("ARY Films", ["@ARYFilms"], "ARY Films", "Urdu"),
+    ("NH Studioz", ["@NHStudioz"], "NH Studioz", "Hindi"),
+    ("Shemaroo Punjabi", ["@ShemarooPunjabi"], "Shemaroo Punjabi", "Punjabi"),
+    ("Lokdhun Punjabi", [], "Lokdhun Punjabi|Lokdhun", "Punjabi"),
+    ("Rhythm Boyz", ["@RhythmBoyz"], "Rhythm Boyz", "Punjabi"),
+    ("Ultra Punjabi", ["@UltraPunjabi"], "Ultra Punjabi", "Punjabi"),
 ]
+# Punjabi film channels that post only Punjabi films, so their titles needn't say "Punjabi".
+ALL_PUNJABI = {"Shemaroo Punjabi", "Lokdhun Punjabi", "Rhythm Boyz", "Ultra Punjabi"}
 # Channels whose titles start with a one-line story and put the film's name second:
 # "He Fell In Love With A Fake Princess | Princess for a Day | Full 2026 Romance Movie".
 NAME_SECOND = {"Movie Central"}
@@ -627,7 +646,7 @@ def films(kept, today):
         for vid, title, mins in videos:
             if FILM_SKIP.search(title) or (mins or 0) < MIN_FILM_MINUTES:
                 continue
-            if language == "Punjabi" and not re.search(r"punjabi", title, re.I):
+            if language == "Punjabi" and name not in ALL_PUNJABI and not re.search(r"punjabi", title, re.I):
                 continue
             if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
                 continue
@@ -637,7 +656,7 @@ def films(kept, today):
                 continue
             if vid in kept:
                 kept[vid]["seen"] = today.isoformat()
-            elif language == "English" and not plays(vid):
+            elif not plays(vid):
                 continue  # its owner doesn't let it play in other apps
             else:
                 kept[vid] = {"movie": movie, "channel": name, "group": name, "language": language,
