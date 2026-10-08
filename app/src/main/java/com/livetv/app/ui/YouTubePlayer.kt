@@ -1,5 +1,6 @@
 package com.livetv.app.ui
 
+import com.livetv.app.data.YouTube
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.app.Activity
@@ -43,14 +44,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.livetv.app.data.YouTube
 
 /**
  * Plays a Library video from YouTube inside Cable TV (1.9.99): our film page (docs/channel/film.html) with
  * YouTube's embedded player under our own pause, back and forward buttons, in its own plain window
  * (WebChannelActivity), where TVs show YouTube's picture. Until 1.9.94 TVs handed it to the YouTube app,
  * which kept the viewer there. Back (or the video's end) comes back here, to the Library. A video its owner
- * won't let others play opens in the YouTube app, as before.
+ * won't let others play just says so and comes back: nothing of ours ever opens YouTube (owner's rule
+ * 2026-10-07: no YouTube screens anywhere in our app).
  */
 @Composable
 fun YouTubePlayer(videoId: String, title: String, onBack: () -> Unit) {
@@ -58,8 +59,7 @@ fun YouTubePlayer(videoId: String, title: String, onBack: () -> Unit) {
     BackHandler(onBack = onBack)
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == WebChannelActivity.RESULT_BLOCKED) {
-            Toast.makeText(context, "This video's owner only lets it play on YouTube.", Toast.LENGTH_LONG).show()
-            openYouTubeApp(context, videoId)
+            Toast.makeText(context, "This video can't play right now. Please pick another one.", Toast.LENGTH_LONG).show()
         }
         onBack()
     }
@@ -120,6 +120,7 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
                 settings.cacheMode = WebSettings.LOAD_NO_CACHE
                 webViewClient = object : WebViewClient() {
                     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                        if (YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame)) return true
                         if (request.url.scheme != "livetv") return false
                         if (request.url.host == "fallback") onFallback?.invoke()
                         return true
@@ -230,6 +231,7 @@ private fun previewWebView(ctx: Context, page: String, onFallback: (() -> Unit)?
         settings.cacheMode = WebSettings.LOAD_NO_CACHE
         webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                if (YouTube.blocksNavigation(request.url.scheme, request.url.host, request.isForMainFrame)) return true
                 if (request.url.scheme != "livetv") return false
                 if (request.url.host == "fallback") onFallback?.invoke()
                 return true
@@ -278,24 +280,6 @@ private fun embedView(context: Context, src: String): WebView = WebView(context)
         allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe></body></html>
     """.trimIndent()
     loadDataWithBaseURL("https://tv.bulkbazaar.ca/", html, "text/html", "utf-8", null)
-}
-
-/** Opens the video in the YouTube app (the TV app first on TVs); false when there's none. */
-private fun openYouTubeApp(context: Context, videoId: String): Boolean {
-    val uri = Uri.parse(YouTube.watchUrl(videoId))
-    for (pkg in listOf("com.google.android.youtube.tv", "com.google.android.youtube", null)) {
-        try {
-            context.startActivity(
-                Intent(Intent.ACTION_VIEW, uri).apply {
-                    if (pkg != null) setPackage(pkg)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                },
-            )
-            return true
-        } catch (_: ActivityNotFoundException) {
-        }
-    }
-    return false
 }
 
 /** Hands a link to the app that plays it (Bilibili's own app); says so when it isn't installed. */

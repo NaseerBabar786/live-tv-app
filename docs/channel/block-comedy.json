@@ -1,24 +1,8 @@
 {
  "name": "مزاحیہ",
- "built": "2026-10-07 22:35 UTC",
- "secs": 1670,
+ "built": "2026-10-08 00:20 UTC",
+ "secs": 1716,
  "videos": [
-  {
-   "id": "Czxvn0N0b7Y",
-   "title": "SE 01 EP 353 - Jethalal Ne Bhide Ko ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "secs": 1056,
-   "kind": "comedy"
-  },
-  {
-   "id": "NogFgN9HGJc",
-   "title": "NEW Episode 4833 - Jethalal ! Taarak Mehta Ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "secs": 614,
-   "kind": "comedy"
-  }
- ],
- "spares": [
   {
    "id": "4KluHZZHnVY",
    "title": "Popat Bhide Ko| Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
@@ -27,17 +11,33 @@
    "kind": "comedy"
   },
   {
-   "id": "L9VyHkd30lA",
-   "title": "Konsi Baat Se Popatlal Hua Khush ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
+   "id": "rgrKgvIqM5k",
+   "title": "SE 01 EP 345 - Kya Bhide Ke Scooter Ka Petrol ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
-   "secs": 620,
+   "secs": 1092,
+   "kind": "comedy"
+  }
+ ],
+ "spares": [
+  {
+   "id": "3op1G5oQsFM",
+   "title": "SE 01 EP 350 - Jethalal Ne Bhide Ka Mazak ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "secs": 1199,
    "kind": "comedy"
   },
   {
-   "id": "cmt_LaEXC0A",
-   "title": "Kis Hai Abdul ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
+   "id": "HeIc_iOlLrE",
+   "title": "Iyer Jethalal ! | Haste Raho Hasate Raho! | Taarak Mehta ka Ooltah Chashmah",
    "label": "Taarak Mehta",
-   "secs": 559,
+   "secs": 662,
+   "kind": "comedy"
+  },
+  {
+   "id": "2xWd48clt0g",
+   "title": "SE 01 EP 344 - Jethalal Ne Bhide Ko ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "secs": 1047,
    "kind": "comedy"
   }
  ]

@@ -1,7 +1,7 @@
 {
  "name": "آنے والی فلموں کے ٹریلر",
- "built": "2026-10-07 22:34 UTC",
- "secs": 2087,
+ "built": "2026-10-08 00:20 UTC",
+ "secs": 2095,
  "videos": [
   {
    "id": "SoTw56f1-OA",
@@ -150,12 +150,30 @@
    "kind": "trailer"
   },
   {
-   "id": "UyAll2hOch0",
-   "title": "Janaan Official Trailer | Armeena Khan | Bilal Ashraf | Hania Aamir | Usman Mukhtar | ARY Films",
+   "id": "QZ2zrfK0A90",
+   "title": "HABS - MOVIE | TRAILER | Feroze Khan | Ushna Shah | Ayesha Omar | ARY FILMS",
    "label": "ARY Films",
    "lang": "Pakistani",
-   "secs": 179,
-   "found": "2026-10-07",
+   "secs": 54,
+   "found": "2026-10-08",
+   "kind": "trailer"
+  },
+  {
+   "id": "LeSewoq4uW4",
+   "title": "KUCH ANKAHI - MOVIE | TRAILER | Bilal Abbas | Sajal Aly | ARY FILMS",
+   "label": "ARY Films",
+   "lang": "Pakistani",
+   "secs": 69,
+   "found": "2026-10-08",
+   "kind": "trailer"
+  },
+  {
+   "id": "cngAbi_zmbk",
+   "title": "TRAILER: BALAA | RELEASING TOMORROW, AT 8:00 PM | ARY FILMS",
+   "label": "ARY Films",
+   "lang": "Pakistani",
+   "secs": 64,
+   "found": "2026-10-08",
    "kind": "trailer"
   }
  ]
