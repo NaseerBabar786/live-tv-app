@@ -47,7 +47,7 @@ BLOCK = re.compile(r"news|bbc|cnn|cnbc|abc |nbc|fox|al jazeera|voa|reuters|crame
                    r"president|minister|candidate|senator|governor|mayor|king |queen|prince|trump|biden|bush|obama|trudeau|"
                    r"modi|khan|sharif|bhutto|shoot|bomb|attack|kill|dead|death|war|army|military|soldier|navy|riot|"
                    r"protest|funeral|crash|fire|terror|police|arrest|covid|corona|nara|\(1[89]\d\d\)|film \d{3,}", re.I)
-VERSION = 3   # bump to rebuild the clip library
+VERSION = 4   # bump to rebuild the clip library
 OK_LICENCE = re.compile(r"^(cc0|public domain|pd|cc by( \d\.\d)?|cc-by( \d\.\d)?)$", re.I)
 
 
@@ -78,11 +78,10 @@ def search(term, limit=12):
 # Hand-picked by looking at contact sheets (news-broll-candidates.yml): neutral scenery only, nothing that
 # shows a real person or event the story could be mistaken for. Topics with no good free clip simply get none.
 CURATED = {
-    "cricket": ["File:Pakistan v Sri Lanka in UAE, 2017 (1st ODI) October 13.ogv", "File:WACA 2012 India vs Sri Lanka ODI.webm",
+    "cricket": ["File:WACA 2012 India vs Sri Lanka ODI.webm",
                 "File:2011-03-30 - India v Pakistan.ogv"],
     "india": ["File:Street in Mumbai (video) 01.webm", "File:Street in Mumbai (video) 02.webm", "File:Street in Mumbai (video) 03.webm",
-              "File:Mumbai Local Train.webm", "File:Mumbai Timelapse - Movement Prevails Here.webm",
-              "File:The changing colours of Mumbai CST railway station.webm", "File:Toward northern mumbai from window of taxi 2022 Dec.webm"],
+              "File:Mumbai Local Train.webm", "File:The changing colours of Mumbai CST railway station.webm", "File:Toward northern mumbai from window of taxi 2022 Dec.webm"],
     "canada": ["File:Toronto Skyline.webm", "File:Toronto Skyline2.webm", "File:Google Timelapse- Toronto, Canada.webm",
                "File:Snowstorm in Quebec City.webm", "File:Old Québec City Tours , Canada (UNESCO’s World Heritage ).webm"],
     "world": ["File:BlackMarble 2016 rotating globe at night.webm", "File:Earth 360 animation.webm",
@@ -90,13 +89,11 @@ CURATED = {
     "weather-rain": ["File:Rain in Kenwood - September 30 2023 - Sarah Stierch.webm", "File:Rain in Sonoma - December 2025 - Sarah Stierch.webm",
                      "File:Rain drops - Japan -2016 July 20.webm", "File:Timelapse of Clouds over Bellevue Canyon.webm",
                      "File:Wolken Zeitraffer - Clouds Timelapse 4K HD 24FPS.webm"],
-    "football": ["File:2021-08-29 - FIFA Beach Soccer World Cup - Match 31 - Switzerland v Senegal.webm"],
     "sports": ["File:UNC chapel hill kenan football stadium aerial.webm", "File:Golakganj Stadium.webm"],
     "film": ["File:Cinemeccanica projector Victoria 9 running.webm", "File:DGB (large feed reels) - Cinema projector.webm",
              "File:Reels and Lights (2012).webm", "File:Reversal film projector..webm"],
-    "health": ["File:Video en el interior del Centro de salud urbano de Mazatlán, 13 de agosto de 2018.webm",
-               "File:Helicopter landing at King’s College Hospital Helipad (2025-07-08).webm"],
-    "court": ["File:U.S. Post Office & Courthouse, Pittsburgh, PA.ogv", "File:Gov.gsa.historic.denver.ogv",
+    "health": ["File:Helicopter landing at King’s College Hospital Helipad (2025-07-08).webm"],
+    "court": ["File:Gov.gsa.historic.denver.ogv",
               "File:Gov.gsa.historic.portland.1.ogv"],
 }
 
@@ -112,7 +109,7 @@ def lookup(titles):
         lic = (md.get("LicenseShortName", {}).get("value") or "").strip()
         if not OK_LICENCE.match(lic): print("licence not ok", p["title"], lic); continue
         artist = re.sub(r"<[^>]+>", "", html.unescape(md.get("Artist", {}).get("value") or "")).strip()
-        if not artist or "unknown" in artist.lower(): artist = "Wikimedia Commons contributor"
+        if not artist or "unknown" in artist.lower() or "http" in artist: artist = "Wikimedia Commons contributor"
         out.append({"title": p["title"], "url": ii["url"], "licence": lic, "artist": artist[:60], "size": ii.get("size", 0),
                     "page": "https://commons.wikimedia.org/wiki/" + urllib.parse.quote(p["title"].replace(" ", "_"))})
     return out
