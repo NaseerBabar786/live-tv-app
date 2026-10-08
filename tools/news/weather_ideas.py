@@ -3,12 +3,11 @@
     python3 tools/news/weather_ideas.py out/ [--reader anchor-1f]
       -> out/weather-idea-1.mp4  Weather centre: presenter beside live cards (now, next 12 hours, 7 days)
          out/weather-idea-2.mp4  Map tour: Canada map then Pakistan map, city temperatures pop in
-         out/weather-idea-3.mp4  Radar and week ahead: moving rain radar around Toronto, then a temperature graph
+         out/weather-idea-3.mp4  Day planner: sunrise/sunset arc, wind compass, UV gauge, then the week's temperature graph
 
-One presenter reads the whole segment in her (or his) own voice. Data: Open-Meteo (CC BY 4.0), radar: RainViewer,
-maps: Natural Earth (public domain) and CARTO/OpenStreetMap tiles, all credited on screen.
+One presenter reads the whole segment in her (or his) own voice. Data: Open-Meteo (CC BY 4.0), maps: Natural Earth (public domain) and CARTO/OpenStreetMap tiles, all credited on screen.
 """
-import io, json, math, os, subprocess, sys
+import json, math, os, subprocess, sys
 
 import numpy as np
 from PIL import Image, ImageDraw
@@ -246,29 +245,39 @@ def make_proj(bbox, area):
 def idea2(out, voice, presenter, work):
     shapes = country_shapes({"Canada", "Pakistan", "United States of America", "India", "Afghanistan", "Iran", "China"})
     ca, pk = many(CA), many(PK)
-    area = (60, 110, W - 60, 575)
+    mx0, my0, mx1, my1 = 40, 100, 830, 590          # map window
+    lx0, lx1 = 850, W - 40                           # city list on the right
 
     def map_scene(focus, bbox, others, cities, title):
-        proj = make_proj(bbox, area)
+        proj = make_proj(bbox, (mx0 + 20, my0 + 20, mx1 - 20, my1 - 20))
+        layer = Image.new("RGBA", (W, H), (0, 0, 0, 0)); md = ImageDraw.Draw(layer)
+        md.rounded_rectangle([mx0, my0, mx1, my1], 16, fill=(10, 30, 60, 245))
+        for n in others:
+            for ring in shapes.get(n, []): md.polygon([proj(*p) for p in ring], fill=(28, 50, 80), outline=(60, 90, 130))
+        for ring in shapes.get(focus, []): md.polygon([proj(*p) for p in ring], fill=(30, 95, 85), outline=(120, 220, 200))
+        mask = Image.new("L", (W, H), 0); ImageDraw.Draw(mask).rounded_rectangle([mx0, my0, mx1, my1], 16, fill=255)
+        clipped = Image.new("RGBA", (W, H), (0, 0, 0, 0)); clipped.paste(layer, (0, 0), mask)
+        rh = (my1 - my0 - 20) / len(cities)
+
         def draw(d, t, secs):
-            d.rounded_rectangle([40, 100, W - 40, 590], 16, fill=(10, 30, 60, 240))
-            for n in others:
-                for ring in shapes.get(n, []):
-                    d.polygon([proj(*p) for p in ring], fill=(28, 50, 80), outline=(60, 90, 130))
-            for ring in shapes.get(focus, []):
-                d.polygon([proj(*p) for p in ring], fill=(30, 95, 85), outline=(120, 220, 200))
+            d._image.alpha_composite(clipped)
             header(d, title)
+            d.rounded_rectangle([lx0, my0, lx1, my1], 16, fill=NAVY)
             for i, ((name, lat, lon), temp, code) in enumerate(cities):
-                a = ease((t - 0.8 - i * 0.7) / 0.5)
+                a = ease((t - 0.6 - i * 0.6) / 0.5)
                 if a <= 0: continue
                 x, y = proj(lon, lat)
-                d.ellipse([x - 6, y - 6, x + 6, y + 6], fill=GOLD)
-                bw, bh = 150 * a, 64 * a
-                d.rounded_rectangle([x - bw / 2, y - 18 - bh, x + bw / 2, y - 18], 10, fill=(8, 16, 40, 240))
-                if a > 0.9:
-                    icon(d, code, x + 42, y - 50, 40, t)
-                    d.text((x - 10, y - 50), f"{temp}°", font=font(True, 30), fill="white", anchor="rm")
-                    text(d, x, y - 96, name, 22, "white", "m")
+                on = 0.6 + i * 0.6 <= t < 1.2 + (i + 1) * 0.6   # the newest city pulses on the map
+                r = 7 + (4 * abs(math.sin(t * 6)) if on else 0)
+                d.ellipse([x - r, y - r, x + r, y + r], fill=GOLD, outline="white")
+                nw = N.line_len(d, N.tokens(name), N.fonts(20))
+                text(d, x - 12 if lon < (bbox[0] + bbox[2]) / 2 else x + 12 + nw, y, name, 20, "white")
+                y0 = my0 + 10 + i * rh; xo = (1 - a) * 80
+                d.rounded_rectangle([lx0 + 10 + xo, y0 + 4, lx1 - 10 + xo, y0 + rh - 4], 10,
+                                    fill=(30, 70, 120, 255) if on else (20, 40, 80, 240))
+                text(d, lx1 - 26 + xo, y0 + rh / 2, name, 26, "white")
+                icon(d, code, lx0 + 130 + xo, y0 + rh / 2, min(56, rh * 0.8), t)
+                d.text((lx0 + 30 + xo, y0 + rh / 2), f"{temp}°", font=font(True, 32), fill="white", anchor="lm")
             credit(d, "Open-Meteo.com (CC BY 4.0) · Natural Earth")
         return draw
 
@@ -278,73 +287,81 @@ def idea2(out, voice, presenter, work):
         ("اور اب پاکستان۔ " + "، ".join(f"{c[0]} میں {deg(t)}" for c, t, _ in pk) + " ڈگری۔ یہ تھا نقشے پر موسم، بازار ٹی وی کے ساتھ۔",
          map_scene("Pakistan", (60.5, 23.5, 78.5, 37.3), ["India", "Afghanistan", "Iran", "China"], pk, "پاکستان • ابھی")),
     ]
-    render(out, scenes, voice, presenter, (60, 400, 240, 170), (240, 20, 800, 566), work, "weather-idea-2")
+    render(out, scenes, voice, presenter, (60, 410, 220, 156), (240, 20, 800, 568), work, "weather-idea-2")
 
 
-# ---------- idea 3: radar + week graph ----------
-def tile(url):
-    try: return Image.open(io.BytesIO(fetch(url, 30))).convert("RGBA")
-    except Exception as e: print("tile failed", url, e); return Image.new("RGBA", (256, 256), (0, 0, 0, 0))
-
-
-def radar_frames(lat=43.65, lon=-79.38, z=6, nx=4, ny=3):
-    n = 2 ** z
-    fx = (lon + 180) / 360 * n
-    fy = (1 - math.log(math.tan(math.radians(lat)) + 1 / math.cos(math.radians(lat))) / math.pi) / 2 * n
-    tx0, ty0 = int(fx) - nx // 2, int(fy) - ny // 2
-    base = Image.new("RGBA", (256 * nx, 256 * ny))
-    for i in range(nx):
-        for j in range(ny):
-            base.paste(tile(f"https://a.basemaps.cartocdn.com/dark_all/{z}/{tx0 + i}/{ty0 + j}.png"), (256 * i, 256 * j))
-    meta = json.loads(fetch("https://api.rainviewer.com/public/weather-maps.json", 30))
-    frames = []
-    for fr in meta["radar"]["past"][-10:]:
-        im = base.copy()
-        for i in range(nx):
-            for j in range(ny):
-                t = tile(f"{meta['host']}{fr['path']}/256/{z}/{tx0 + i}/{ty0 + j}/2/1_1.png")
-                im.alpha_composite(t, (256 * i, 256 * j))
-        frames.append((fr["time"], im))
-    px, py = (fx - tx0) * 256, (fy - ty0) * 256
-    return frames, (px, py)
-
-
+# ---------- idea 3: day planner + week graph ----------
 def idea3(out, voice, presenter, work):
-    w = toronto(); dy = w["daily"]
+    u = ("https://api.open-meteo.com/v1/forecast?latitude=43.65&longitude=-79.38"
+         "&current=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code"
+         "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,weather_code"
+         "&timezone=America%2FToronto&forecast_days=7")
+    w = json.loads(fetch(u, 30)); c = w["current"]; dy = w["daily"]
     import datetime as dt
     wd = [DAYS[dt.date.fromisoformat(s).weekday()] for s in dy["time"]]
     hi = [round(x) for x in dy["temperature_2m_max"]]; lo = [round(x) for x in dy["temperature_2m_min"]]
-    try: frames, (cx, cy) = radar_frames()
-    except Exception as e: print("radar failed", e); frames, cx, cy = [], 0, 0
-    box = (60, 110, 840, 470)  # radar picture area
+    rise, sset = dy["sunrise"][0][11:16], dy["sunset"][0][11:16]
+    mins = lambda hm: int(hm[:2]) * 60 + int(hm[3:])
+    now_m = mins(c["time"][11:16]); day_frac = min(1, max(0, (now_m - mins(rise)) / max(1, mins(sset) - mins(rise))))
+    uv = round(dy["uv_index_max"][0] or 0); wdir = c["wind_direction_10m"]; wspd = round(c["wind_speed_10m"])
+    gust = round(c["wind_gusts_10m"])
+    DIRS = ["شمال", "شمال مشرق", "مشرق", "جنوب مشرق", "جنوب", "جنوب مغرب", "مغرب", "شمال مغرب"]
+    wname = DIRS[int((wdir + 22.5) % 360 // 45)]
+    uvname = "کم" if uv < 3 else "درمیانہ" if uv < 6 else "زیادہ" if uv < 8 else "بہت زیادہ"
 
-    def radar(d, t, secs):
-        header(d, "ریڈار • ٹورنٹو")
-        d.rounded_rectangle([40, 100, 920, 590], 16, fill=(8, 16, 40, 240))
-        if frames:
-            k = int(t * 4) % len(frames); ts, im = frames[k]
-            x0, y0, x1, y1 = box; wv, hv = x1 - x0, y1 - y0
-            crop = im.crop((int(cx - wv / 2), int(cy - hv / 2), int(cx + wv / 2), int(cy + hv / 2)))
-            d._image.paste(crop, (x0, y0))
-            d.ellipse([x0 + wv / 2 - 7, y0 + hv / 2 - 7, x0 + wv / 2 + 7, y0 + hv / 2 + 7], fill=GOLD)
-            text(d, x0 + wv / 2 - 14, y0 + hv / 2, "ٹورنٹو", 24, "white")
-            stamp = dt.datetime.fromtimestamp(ts, N.TZ).strftime("%H:%M")
-            d.rounded_rectangle([x0 + 10, y0 + 10, x0 + 110, y0 + 46], 8, fill=(0, 0, 0, 180))
-            d.text((x0 + 60, y0 + 28), stamp, font=font(True, 22), fill="white", anchor="mm")
-            # progress line under the picture: the last two hours
-            d.rectangle([x0, y1 + 8, x0 + wv * (k + 1) / len(frames), y1 + 12], fill=TEAL)
-        credit(d, "RainViewer · © OpenStreetMap contributors © CARTO · Open-Meteo.com (CC BY 4.0)")
+    def planner(d, t, secs):
+        header(d, "آج کا دن • ٹورنٹو")
+        cards = [(870, 100, W - 40, 590), (300, 100, 855, 340), (300, 350, 855, 590)]
+        # sunrise / sunset arc with the sun moving to now
+        x0, y0, x1, y1 = cards[0]; d.rounded_rectangle(cards[0], 16, fill=NAVY)
+        text(d, x1 - 20, y0 + 34, "طلوع اور غروب آفتاب", 26, "white")
+        cx, cy, r = (x0 + x1) / 2, y0 + 330, 130
+        d.arc([cx - r, cy - r, cx + r, cy + r], 180, 360, fill=(90, 110, 150), width=4)
+        a = ease(t / 2.5) * day_frac; ang = math.pi * (1 - a)
+        sx, sy = cx + r * math.cos(ang), cy - r * math.sin(ang)
+        icon(d, 0, sx, sy, 70, t)
+        d.line([x0 + 20, cy, x1 - 20, cy], fill=(90, 110, 150), width=2)
+        d.text((cx - r, cy + 30), rise, font=font(True, 26), fill=GOLD, anchor="mm")
+        d.text((cx + r, cy + 30), sset, font=font(True, 26), fill=(255, 140, 80), anchor="mm")
+        text(d, cx - r + 30, cy + 75, "طلوع", 20, LIGHT, "m"); text(d, cx + r + 30, cy + 75, "غروب", 20, LIGHT, "m")
+        # wind compass
+        if t > 1.0:
+            x0, y0, x1, y1 = cards[1]; d.rounded_rectangle(cards[1], 16, fill=NAVY)
+            text(d, x1 - 20, y0 + 30, "ہوا", 24, "white")
+            cx, cy, r = x0 + 90, y0 + 135, 70
+            d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=(90, 110, 150), width=3)
+            for k, lab in enumerate("NESW"):
+                aa = math.radians(k * 90 - 90)
+                d.text((cx + (r - 14) * math.cos(aa), cy + (r - 14) * math.sin(aa)), lab, font=font(True, 14), fill=DIM, anchor="mm")
+            aa = math.radians(wdir + 180 - 90 + 8 * math.sin(t * 2))   # arrow points where the wind blows to
+            d.line([cx - 50 * math.cos(aa), cy - 50 * math.sin(aa), cx + 50 * math.cos(aa), cy + 50 * math.sin(aa)], fill=GOLD, width=5)
+            hx, hy = cx + 50 * math.cos(aa), cy + 50 * math.sin(aa)
+            d.polygon([(hx + 14 * math.cos(aa), hy + 14 * math.sin(aa)), (hx + 10 * math.cos(aa + 2.2), hy + 10 * math.sin(aa + 2.2)),
+                       (hx + 10 * math.cos(aa - 2.2), hy + 10 * math.sin(aa - 2.2))], fill=GOLD)
+            d.text((x1 - 20, y0 + 110), f"{wspd} km/h", font=font(True, 30), fill="white", anchor="rm")
+            text(d, x1 - 20, y0 + 160, wname + " سے", 22, LIGHT)
+            d.text((x1 - 20, y0 + 205), f"gusts {gust}", font=font(False, 18), fill=DIM, anchor="rm")
+        # UV gauge
+        if t > 2.0:
+            x0, y0, x1, y1 = cards[2]; d.rounded_rectangle(cards[2], 16, fill=NAVY)
+            text(d, x1 - 20, y0 + 30, "الٹرا وائلٹ", 24, "white")
+            gx0, gx1, gy = x0 + 25, x1 - 25, y0 + 130
+            cols = [(60, 170, 80), (230, 200, 40), (240, 130, 40), (220, 50, 50), (150, 70, 200)]
+            for k, col in enumerate(cols):
+                d.rectangle([gx0 + (gx1 - gx0) * k / 5, gy, gx0 + (gx1 - gx0) * (k + 1) / 5, gy + 22], fill=col)
+            px = gx0 + (gx1 - gx0) * min(uv, 11) / 11 * ease((t - 2.0) / 1.0)
+            d.polygon([(px, gy - 4), (px - 10, gy - 20), (px + 10, gy - 20)], fill="white")
+            d.text((x0 + 60, gy + 80), str(uv), font=font(True, 48), fill="white", anchor="mm")
+            text(d, x1 - 20, gy + 80, uvname, 28, GOLD)
+        credit(d, "Open-Meteo.com (CC BY 4.0)")
 
     def graph(d, t, secs):
         header(d, "ہفتے کا رجحان")
-        d.rounded_rectangle([40, 100, 920, 590], 16, fill=(8, 16, 40, 240))
-        x0, x1, y0, y1 = 100, 880, 170, 500
+        d.rounded_rectangle([300, 100, W - 40, 590], 16, fill=NAVY)
+        x0, x1, y0, y1 = 370, W - 90, 190, 500
         lo_v, hi_v = min(lo) - 3, max(hi) + 3
         Y = lambda v: y1 - (v - lo_v) / max(1, hi_v - lo_v) * (y1 - y0)
         X = lambda i: x1 - i * (x1 - x0) / 6
-        for v in range(int(lo_v), int(hi_v) + 1, 5):
-            d.line([x0, Y(v), x1, Y(v)], fill=(40, 60, 95), width=1)
-            d.text((x0 - 12, Y(v)), f"{v}°", font=font(False, 15), fill=DIM, anchor="rm")
         a = ease(t / 3.0) * 6
         for series, col in ((hi, (255, 150, 60)), (lo, (90, 170, 255))):
             pts = [(X(i), Y(series[i])) for i in range(7)]
@@ -355,17 +372,19 @@ def idea3(out, voice, presenter, work):
             for i in range(min(7, n + 1)):
                 x, y = pts[i]; d.ellipse([x - 7, y - 7, x + 7, y + 7], fill=col)
                 d.text((x, y - 22), f"{series[i]}°", font=font(True, 20), fill="white", anchor="mm")
-        for i in range(7): text(d, X(i), 535, "آج" if i == 0 else wd[i], 22, LIGHT, "m")
+        for i in range(7):
+            text(d, X(i), 535, "آج" if i == 0 else wd[i], 22, LIGHT, "m")
+            icon(d, dy["weather_code"][i], X(i), 140, 34, t)
         credit(d, "Open-Meteo.com (CC BY 4.0)")
 
     warm = int(np.argmax(hi))
     scenes = [
-        ("ریڈار پر دیکھیں، پچھلے دو گھنٹوں میں ٹورنٹو اور اس کے آس پاس بادل اور بارش کس طرح گزرے۔ "
-         "نیلا اور سبز رنگ ہلکی بارش، اور پیلا اور لال رنگ تیز بارش دکھاتا ہے۔", radar),
+        (f"آج ٹورنٹو میں سورج {rise} پر طلوع ہوا اور {sset} پر غروب ہوگا۔ ہوا {wname} سے {wspd} کلومیٹر فی گھنٹہ کی رفتار سے چل رہی ہے، "
+         f"اور جھونکے {gust} تک جا سکتے ہیں۔ الٹرا وائلٹ انڈیکس {uv} ہے، یعنی {uvname}۔", planner),
         (f"اور یہ ہے اس ہفتے کا رجحان۔ نارنجی لکیر دن کا زیادہ سے زیادہ اور نیلی لکیر رات کا کم سے کم درجہ حرارت ہے۔ "
          f"سب سے گرم دن {wd[warm]} ہوگا، {deg(hi[warm])} ڈگری۔ یہ تھا موسم کا حال، بازار ٹی وی کے ساتھ۔", graph),
     ]
-    render(out, scenes, voice, presenter, (950, 100, 290, 490), (470, 20, 340, 574), work, "weather-idea-3")
+    render(out, scenes, voice, presenter, (60, 100, 210, 490), (500, 20, 280, 653), work, "weather-idea-3")
 
 
 def main():
