@@ -21,7 +21,7 @@ L
 i=0
 while IFS= read -r t; do i=$((i+1)); n=$(printf "%02d" $i)
   ( u="https://commons.wikimedia.org/wiki/Special:FilePath/$(python3 -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.argv[1].replace(" ","_")))' "$t")"
-    curl -sSL -A "$UA" --retry 4 --retry-delay 5 --max-time 150 -o "$n.src" "$u" && ffmpeg -v error -y -i "$n.src" -t 240 -ac 2 -ar 44100 -b:a 192k "$n.mp3" && echo "$n|$t" >> got.txt; rm -f "$n.src"; echo "done $n $(stat -c%s $n.mp3 2>/dev/null)" ) &
+    curl -sSL -A "$UA" --retry 4 --retry-delay 5 --max-time 150 -o "$n.${t##*.}" "$u" && echo "$n|$t" >> got.txt; echo "done $n" ) &
   sleep 2
 done < list.txt
-wait; cat got.txt
+wait; cat got.txt || true; ls -la
