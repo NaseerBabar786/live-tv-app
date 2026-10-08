@@ -472,6 +472,32 @@
     "picture": "anchor-m11",
     "logo": true,
     "edit": "Place him in a modern professional TV news studio: sitting upright behind a glossy curved dark news desk, shoulders square to the camera, both hands resting on the desk; behind him a large glowing blue video wall with a world map, soft bright studio lights, a clear empty dark-blue area on the upper left of the wall. Keep his face, skin tone, hair, beard and his clothes exactly the same; photorealistic broadcast photo."
+   },
+   {
+    "id": "anchor-m1s",
+    "name": "Imran",
+    "ur": "عمران",
+    "seed": 6102,
+    "voice": "ur-PK-AsadNeural",
+    "picture": "anchor-m1b",
+    "edit": "Place him in a modern professional TV news studio: sitting upright behind a glossy curved dark news desk, shoulders square to the camera, both hands resting on the desk; behind him a large glowing blue video wall with a world map, soft bright studio lights, a clear empty dark-blue area on the upper left of the wall. Keep his face, skin tone, hair, beard and his clothes exactly the same; photorealistic broadcast photo.",
+    "prompt": "RAW photo, medium shot from the waist up, a handsome Pakistani man TV news anchor in his late thirties with a neatly trimmed short beard, wearing a dark navy suit, white shirt and a maroon tie, sitting at a glossy curved news desk, natural skin texture, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind him, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "logo": true
+   },
+   {
+    "id": "anchor-m6s",
+    "name": "Faisal",
+    "ur": "فیصل",
+    "seed": 6606,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, mature-looking Pakistani man TV news anchor, 28 years old, clean shaven, short neat black hair combed to the side, wearing a perfectly tailored charcoal grey suit with natural realistic sleeves, crisp white shirt and a navy silk tie, sitting at a glossy curved news desk, natural skin texture, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind him, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a calm professional TV news anchor, a man, reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, he speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
+    "picture": "anchor-m6c",
+    "edit": "Place him in a modern professional TV news studio: sitting upright behind a glossy curved dark news desk, shoulders square to the camera, both hands resting on the desk; behind him a large glowing blue video wall with a world map, soft bright studio lights, a clear empty dark-blue area on the upper left of the wall. Keep his face, skin tone, hair and his clothes exactly the same; photorealistic broadcast photo.",
+    "logo": true
    }
   ]
  }
