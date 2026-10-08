@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8582a"/><stop offset="1" stop-color="#4a160c"/></linearGradient>
+    <radialGradient id="shine" cx="0.3" cy="0.2" r="0.8"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient><clipPath id="sq"><rect width="512" height="512" rx="112"/></clipPath>
+    <linearGradient id="rs" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a0a14"/><stop offset=".35" stop-color="#e8323f"/><stop offset="1" stop-color="#6a0610"/></linearGradient>
+    <radialGradient id="rt" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#ff8a80"/><stop offset=".5" stop-color="#f02a3a"/><stop offset="1" stop-color="#a50f1d"/></radialGradient>
+    <linearGradient id="ks" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a0a10"/><stop offset=".35" stop-color="#4a4a58"/><stop offset="1" stop-color="#0a0a10"/></linearGradient>
+    <radialGradient id="kt" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#6e6e80"/><stop offset=".5" stop-color="#2a2a34"/><stop offset="1" stop-color="#101016"/></radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0a0"/><stop offset=".5" stop-color="#ffc233"/><stop offset="1" stop-color="#b8780e"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#1a0500" flood-opacity=".55"/></filter>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+    <g opacity=".12" fill="#000"><path d="M0 0h128v128H0zM256 0h128v128H256zM128 128h128v128H128zM384 128h128v128H384zM0 256h128v128H0zM256 256h128v128H256zM128 384h128v128H128zM384 384h128v128H384z"/></g>
+    <rect width="512" height="512" fill="url(#shine)"/>
+  </g>
+  <!-- black piece back -->
+  <g filter="url(#sh)">
+    <path d="M52 196 V232 A104 42 0 0 0 260 232 V196Z" fill="url(#ks)"/>
+    <ellipse cx="156" cy="196" rx="104" ry="42" fill="url(#kt)"/>
+    <ellipse cx="156" cy="196" rx="74" ry="29" fill="none" stroke="#000" stroke-opacity=".5" stroke-width="6"/>
+    <ellipse cx="156" cy="196" rx="44" ry="17" fill="none" stroke="#000" stroke-opacity=".4" stroke-width="5"/>
+    <ellipse cx="124" cy="180" rx="30" ry="9" fill="#fff" opacity=".25"/>
+  </g>
+  <!-- red king stack -->
+  <g filter="url(#sh)">
+    <path d="M150 346 V388 A126 50 0 0 0 402 388 V346Z" fill="url(#rs)"/>
+    <ellipse cx="276" cy="346" rx="126" ry="50" fill="#c81a28"/>
+    <path d="M150 290 V332 A126 50 0 0 0 402 332 V290Z" fill="url(#rs)"/>
+    <path d="M150 340 A126 50 0 0 0 402 340" fill="none" stroke="#3a0006" stroke-opacity=".5" stroke-width="4"/>
+    <ellipse cx="276" cy="290" rx="126" ry="50" fill="url(#rt)"/>
+    <ellipse cx="276" cy="290" rx="92" ry="36" fill="none" stroke="#7a0a14" stroke-opacity=".55" stroke-width="7"/>
+    <ellipse cx="236" cy="270" rx="40" ry="11" fill="#fff" opacity=".35"/>
+    <!-- crown -->
+    <path d="M226 300 L216 238 L250 262 L276 224 L302 262 L336 238 L326 300Z" fill="url(#gold)" stroke="#8a5408" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="216" cy="236" r="8" fill="#ffe27a"/><circle cx="276" cy="222" r="9" fill="#ffe27a"/><circle cx="336" cy="236" r="8" fill="#ffe27a"/>
+    <rect x="228" y="288" width="96" height="14" rx="6" fill="#b8780e"/>
+  </g>
+  <path d="M420 110 l8 20 20 8 -20 8 -8 20 -8 -20 -20 -8 20 -8z" fill="#fff3b0"/>
+</svg>
