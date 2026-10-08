@@ -16,7 +16,7 @@ object Weather {
     }
 
     /** Fahrenheit where people use it; Celsius everywhere else. */
-    private val FAHRENHEIT = setOf("US", "LR", "MM", "BS", "BZ", "KY", "PW", "FM", "MH")
+    val FAHRENHEIT = setOf("US", "LR", "MM", "BS", "BZ", "KY", "PW", "FM", "MH")
 
     /** Looks up the weather now, or null when either service can't be reached. */
     fun load(): Now? = runCatching {
