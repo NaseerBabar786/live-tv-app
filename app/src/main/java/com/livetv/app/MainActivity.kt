@@ -52,6 +52,9 @@ class MainActivity : ComponentActivity() {
     /** Cable TV's Games section is open. */
     private var showGames by mutableStateOf(false)
 
+    /** Cable TV's Weather section is open (1.10.13). */
+    private var showWeather by mutableStateOf(false)
+
     /** Cable TV's Iqra Quran section is open. */
     private var showQuran by mutableStateOf(false)
 
@@ -64,6 +67,7 @@ class MainActivity : ComponentActivity() {
         Watching.init(this)
         Features.init(this)
         com.livetv.app.data.Location.init(this)
+        com.livetv.app.data.WeatherApp.init(this)
         com.livetv.app.data.NewsScreen.init(this)
         com.livetv.app.data.Cp24Screen.init(this)
         com.livetv.app.data.MyScreen.init(this)
@@ -92,13 +96,16 @@ class MainActivity : ComponentActivity() {
         val page = playing?.let { block ?: MyChannel.pageFor(it, BuildConfig.VERSION_CODE) }
         // Which part of the app is on screen, for the owner's "most used features" (the modes report themselves).
         val screen = when {
+            showWeather && playing == null -> "weather"
             showGames && playing == null -> "games"
             showVod && playing == null -> "library"
             playing != null -> "full"
             else -> null
         }
         LaunchedEffect(screen) { screen?.let(Features::use) }
-        if (showGames && playing == null) {
+        if (showWeather && playing == null) {
+            com.livetv.app.ui.WeatherScreen(onClose = { showWeather = false })
+        } else if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
         } else if (showQuran && playing == null) {
             QuranSection.Screen(onClose = { showQuran = false })
@@ -153,6 +160,7 @@ class MainActivity : ComponentActivity() {
                 // The games are made for the TV remote, so the phone app has none (owner's rule, 2026-10-08).
                 onOpenGames = if (Edition.LIVE_TV && isTv(this@MainActivity)) ({ if (!Plans.ask("Games", Plans.Feature.Games)) showGames = true }) else null,
                 onOpenQuran = if (QuranSection.AVAILABLE) ({ showQuran = true }) else null,
+                onOpenWeather = if (Edition.LIVE_TV) ({ showWeather = true }) else null,
                 onWatch = viewModel::watched,
             )
         }

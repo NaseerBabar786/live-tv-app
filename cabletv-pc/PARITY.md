@@ -44,6 +44,8 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   dates each programme (`added="..."`, `tools/first_seen.py`); the Library shows a "Newly added" chip, NEW marks
   and new titles first, in each language and section, on TV and phone (same APK). The PC has no Library yet;
   when it gets one, it reads the same `added` dates and shows the same Newly added section.
+- 1.10.14: Library English: the old public-domain classics (Movies.m3u) left the Library; newer English films, shows
+  and cartoons come from their owners' YouTube channels in Dramas.m3u. The PC has no Library yet.
 
 ## In step
 
@@ -75,5 +77,11 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
 - 1.10.9: TV remote only. The sign-in and Change password text boxes no longer trap the remote's cursor
   (Up/Down always leave them, OK opens the keyboard, yellow outline like buttons). The PC is typed on with a real
   keyboard and mouse, so nothing changes there.
-- 1.10.10: My billing details shows the free credit the owner gave on tv.bulkbazaar.ca/users. The PC has no
+- 1.10.10 (PC 1.0.12): new viewers, and viewers who never picked countries, start on every country of the
+  working list (about 7,900 channels) instead of the Pakistani, Indian, Canadian, British and American mix.
+  Same change on PC.
+- 1.10.11 (PC 1.0.13): Iqra Quran's "Namaz" is now "Azan Clock". On TV and phone its place is the weather's place
+  (the city typed in Settings, else the device's location) with a "Change city" button, and the Azan Clock screen
+  shows the area, calculation method and muezzin, each opening the Azan settings (method and muezzin come first there).
+- 1.10.16: My billing details shows the free credit the owner gave on tv.bulkbazaar.ca/users. The PC has no
   billing details screen yet (viewers send them from a TV or phone), so nothing changes there.

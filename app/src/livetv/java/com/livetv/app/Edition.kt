@@ -22,6 +22,7 @@ import com.livetv.app.account.Billing
 import com.livetv.app.ui.BillingDialog
 import com.livetv.app.account.Subscription
 import com.livetv.app.ui.PlanEndingNotice
+import com.livetv.app.ui.CodeEndsReminder
 import com.livetv.app.ui.PlansScreen
 import com.livetv.app.ui.MessagesScreen
 import com.livetv.app.ui.WelcomeDialog
@@ -157,6 +158,7 @@ fun EditionOverlay() {
     if (FirebaseConfig.configured) NewMessagePrompt()
     if (FirebaseConfig.configured && !Edition.MAX) WelcomePrompt()
     if (FirebaseConfig.configured && !Edition.MAX) PlanPrompts()
+    if (FirebaseConfig.configured && !Edition.MAX) CodeEndsReminder()
     if (FirebaseConfig.configured && !Edition.MAX) BillingPrompt()
     // A sponsor's card after a channel change, now and then.
     val main by viewModel<MainViewModel>().state.collectAsStateWithLifecycle()
@@ -239,10 +241,10 @@ private fun BillingPrompt() {
 }
 
 /**
- * The welcome invitation (owner, 2026-10-08): Gold free for one month with promo code WELCOME, and
- * please leave us a good review. Pops up once per account, about 25 seconds after start, for every
- * viewer who hasn't used the code yet (new viewers on their first start, Free viewers on their next).
- * It stays at the top of their Messages afterwards.
+ * The welcome gift (owner, 2026-10-08): one more month of Gold free with promo code WELCOME, and
+ * please leave us a good review. New viewers first get the 7-day free trial; the gift pops up once per
+ * account 8 hours after the trial ends (checked at start and every hour), for every viewer who hasn't
+ * used the code yet. It stays at the top of their Messages, and they can type the code any time.
  */
 @Composable
 private fun WelcomePrompt() {
@@ -253,10 +255,15 @@ private fun WelcomePrompt() {
     LaunchedEffect(user?.uid) {
         if (user == null || account.isAdmin) return@LaunchedEffect
         delay(25_000)
-        val state = runCatching { Welcome.state(account) }.getOrNull() ?: return@LaunchedEffect
-        if (state.sentAt == null && state.canUse) {
-            Welcome.markSent(account)
-            open = true
+        while (true) {
+            val state = runCatching { Welcome.state(account) }.getOrNull() ?: return@LaunchedEffect
+            if (state.sentAt != null || !state.canUse) return@LaunchedEffect
+            if (!state.offerAt.after(java.util.Date())) {
+                Welcome.markSent(account)
+                open = true
+                return@LaunchedEffect
+            }
+            delay(60 * 60_000L)
         }
     }
     if (open) WelcomeDialog(onDismiss = { open = false })

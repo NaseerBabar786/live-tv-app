@@ -1,51 +1,67 @@
 package com.livetv.app.games
 
 import android.annotation.SuppressLint
-import android.graphics.Color as AndroidColor
-import android.os.Handler
-import android.os.Looper
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.view.WindowManager
 import android.webkit.JavascriptInterface
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.viewinterop.AndroidView
 
 /**
- * A modern game (Block Burst, Color Pour): its page from assets/games fills the screen. The remote's
- * arrows and OK, touch and a mouse all go straight to the page. The page tells us its record through
- * `CableGames.record(id, value)`; Back (the screen's BackHandler) or the page's own exit closes it.
+ * A modern game (Block Burst, Color Pour) opens in [WebGameActivity]; when it closes, the Games menu
+ * is back (with the new record on its card).
  */
-@SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebGamePlay(info: WebGameInfo, scores: GameScores, onExit: () -> Unit) {
+fun WebGamePlay(info: WebGameInfo, onExit: () -> Unit) {
     val context = LocalContext.current
-    val exitNow = rememberUpdatedState(onExit)
-    val web = remember(info.id) {
-        WebView(context).apply {
-            setBackgroundColor(AndroidColor.BLACK)
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { onExit() }
+    LaunchedEffect(info.id) { launcher.launch(WebGameActivity.intent(context, info)) }
+}
+
+/**
+ * A modern game's page from assets/games, in a plain opaque window of its own. Inside the Compose
+ * screen (1.10.3) a VIZIO TV showed only blue: the main window is see-through for the TV's video
+ * plane, and the page's picture never reached the screen (as with YouTube, 1.9.51). The remote's
+ * arrows and OK, touch and a mouse go straight to the page; Back, or the page's own exit, closes it.
+ * The page reports its record through `CableGames.record(id, value)`.
+ */
+class WebGameActivity : Activity() {
+
+    private var webView: WebView? = null
+
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        val id = intent.getStringExtra(EXTRA_ID)
+        val info = WEB_GAMES.firstOrNull { it.id == id } ?: return finish()
+        val scores = GameScores(this)
+        val view = WebView(this).apply {
+            setBackgroundColor(android.graphics.Color.BLACK)
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             // Sound effects start on the first key press, which a TV remote doesn't count as a "gesture".
             settings.mediaPlaybackRequiresUserGesture = false
             isFocusable = true
             isFocusableInTouchMode = true
-            val main = Handler(Looper.getMainLooper())
             addJavascriptInterface(object {
                 @JavascriptInterface
-                fun record(id: String, value: Int) {
-                    if (id == info.id) main.post { scores.recordWeb(id, value) }
+                fun record(game: String, value: Int) {
+                    if (game == info.id) runOnUiThread { scores.recordWeb(game, value) }
                 }
 
                 @JavascriptInterface
                 fun exit() {
-                    main.post { exitNow.value() }
+                    runOnUiThread { finish() }
                 }
             }, "CableGames")
             webViewClient = object : WebViewClient() {
@@ -55,19 +71,41 @@ fun WebGamePlay(info: WebGameInfo, scores: GameScores, onExit: () -> Unit) {
 
                 // A TV short of memory may stop the page's process; without this the whole app would close.
                 override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
-                    main.post { exitNow.value() }
+                    webView = null
+                    finish()
                     return true
                 }
             }
-            loadUrl("file:///android_asset/games/${info.page}")
         }
+        webView = view
+        setContentView(view)
+        view.requestFocus()
+        view.loadUrl("file:///android_asset/games/${info.page}")
     }
-    DisposableEffect(web) {
-        web.requestFocus()
-        onDispose {
-            web.stopLoading()
-            web.destroy()
+
+    override fun onPause() {
+        super.onPause()
+        webView?.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webView?.onResume()
+    }
+
+    override fun onDestroy() {
+        webView?.apply {
+            stopLoading()
+            destroy()
         }
+        webView = null
+        super.onDestroy()
     }
-    AndroidView(factory = { web }, modifier = Modifier.fillMaxSize())
+
+    companion object {
+        private const val EXTRA_ID = "game"
+
+        fun intent(context: Context, info: WebGameInfo): Intent =
+            Intent(context, WebGameActivity::class.java).putExtra(EXTRA_ID, info.id)
+    }
 }

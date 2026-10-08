@@ -19,8 +19,8 @@ import java.net.URL
  * Loads channels from the configured playlist source and stores user settings.
  *
  * The playlist source is one of:
- *  - "famelack:mix": Pakistani, Indian, Canadian, UK and USA channels from [Famelack] (the default)
- *  - "famelack:all": every country from [Famelack]
+ *  - "famelack:mix": Pakistani, Indian, Canadian, UK and USA channels from [Famelack] (Live TV Max's default)
+ *  - "famelack:all": every country from [Famelack] (Cable TV's default)
  *  - "famelack:pick:<cc>,<cc>": the countries the user ticked, one section each
  *  - "famelack:<country>": free channels for one country from [Famelack]
  *  - "sample": the bundled sample playlist (assets/sample.m3u)
@@ -32,7 +32,7 @@ class ChannelRepository(context: Context) {
     private val appContext = context.applicationContext
     private val prefs = appContext.getSharedPreferences("live_tv", Context.MODE_PRIVATE)
 
-    /** Defaults to the combined Pakistani, Indian, Canadian, UK and USA channels. */
+    /** Defaults to every country in Cable TV, and to the Pakistani, Indian, Canadian, UK and USA mix in Max. */
     var playlistSource: String
         get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
         set(value) = prefs.edit { putString(KEY_SOURCE, value.trim()) }
@@ -233,8 +233,13 @@ class ChannelRepository(context: Context) {
         }
     }
 
-    /** Cable TV starts on its built-in channels; Stream Player Plus has none until a playlist is added. */
-    private fun defaultSource(): String = if (Edition.LIVE_TV) Famelack.SOURCE_MIX else ""
+    /** Cable TV starts on every country of the working list (owner's choice, 1.10.10); Live TV Max on the
+     *  Pakistani, Indian, Canadian, UK and USA mix; Stream Player Plus has none until a playlist is added. */
+    private fun defaultSource(): String = when {
+        Edition.LIVE_TV && !Edition.MAX -> Famelack.SOURCE_ALL
+        Edition.LIVE_TV -> Famelack.SOURCE_MIX
+        else -> ""
+    }
 
     private fun readAsset(): String =
         appContext.assets.open("sample.m3u").bufferedReader().use { it.readText() }

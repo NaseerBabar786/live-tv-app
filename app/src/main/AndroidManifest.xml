@@ -35,6 +35,12 @@
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
             android:exported="false"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+        <!-- The modern games (Block Burst, Color Pour), in a plain opaque window of their own (1.10.x). -->
+        <activity
+            android:name=".games.WebGameActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:exported="false"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
         <!-- Opens instead of the app when a new version closed by itself while starting (CrashGuard). -->
         <activity
             android:name=".RescueActivity"

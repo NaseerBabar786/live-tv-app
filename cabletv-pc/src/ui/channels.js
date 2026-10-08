@@ -46,7 +46,8 @@ export const state = {
   filter: FILTER_ALL,
   category: null,
   languageFilter: new Set(store.get('languages', [])),
-  source: store.get('source', SOURCE_MIX) || SOURCE_MIX,
+  /** Every country of the working list unless the viewer picked countries (owner's choice, 1.10.10). */
+  source: store.get('source', SOURCE_ALL) || SOURCE_ALL,
   lastWatchedId: store.get('lastChannel', null),
   countries: [],
   /** MTA's channels, right after ours (Settings, off unless the viewer turns it on). */
@@ -258,7 +259,7 @@ export function setLanguages(set) {
   changed();
 }
 export function setSource(source) {
-  state.source = source || SOURCE_MIX;
+  state.source = source || SOURCE_ALL;
   store.set('source', state.source);
   state.filter = FILTER_ALL;
   state.category = null;

@@ -25,6 +25,10 @@
   .pkg.gold { background: #4A3A00; color: #FFD54F; }
   .pkg.free { background: var(--surface-2); color: var(--text); }
   .pkg.promo { background: #2A1F4D; color: #B39DDB; }
+  .gift { background: var(--bg); border: 1px solid #4A3A00; border-radius: 12px; padding: 10px 14px; margin: 6px 0 14px; }
+  .gift h3 { margin: 0 0 6px; font-size: 16px; }
+  .gift .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
+  .gift select, .gift .inp { padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
   .pkg-note { color: var(--muted); font-size: 12px; margin-left: 6px; }
   .ok { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #12391A; color: #A5D6A7; }
   dialog#bill { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 24px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 16px; padding: 0; }
@@ -91,6 +95,7 @@
     </table></div>
   </div>
   <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
+  <p class="small">🎁 <b>Gifts</b>: in a viewer's panel, <b>Give free Gold</b> turns on Gold for 1 week to 1 year, or forever, with no payment (a Gold package that's still on is made longer). <b>Add free credit</b> gives them dollars that ✓ Paid today takes off their next payment; their app shows it in 💳 My billing details.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
   <p class="small">➕ <b>Add user</b> makes a Cable TV account for someone before they install the app: type their name, email and a password you choose, then tell them. They open Cable TV, choose email sign-in and type the same email and password. They can change the password later in the app's Settings.</p>
   <p class="err" id="err"></p>
@@ -125,6 +130,24 @@
       <a class="btn" id="bWa" target="_blank" rel="noopener">🟢 WhatsApp</a>
     </div>
     <div class="small" id="bAsked"></div>
+    <div class="gift">
+      <h3>🎁 Gifts</h3>
+      <div class="small" id="gNow"></div>
+      <div class="row">
+        <b>Give free Gold for</b>
+        <select id="gLen"><option value="7d">1 week</option><option value="1m" selected>1 month</option><option value="3m">3 months</option><option value="6m">6 months</option><option value="12m">1 year</option><option value="forever">Forever</option></select>
+        <button class="btn primary" id="gGive">⭐ Give free Gold</button>
+        <button class="btn hidden" id="gEnd">End it now</button>
+      </div>
+      <div class="row">
+        <b>Add free credit</b>
+        <input class="inp" id="cAmount" placeholder="$5.00" inputmode="decimal" style="width:100px">
+        <input class="inp" id="cNote" placeholder="Why (optional, they see it)" style="flex:1;min-width:160px">
+        <button class="btn" id="cAdd">＋ Add credit</button>
+        <button class="btn hidden" id="cClear">Clear credit</button>
+      </div>
+      <div class="small" id="gMsg"></div>
+    </div>
     <div class="grid2">
       <label>Package<select id="fPackage"><option value="">Not chosen yet</option><option>Free</option><option>Gold</option><option value="Promo">Promotional</option></select></label>
       <label>Plan length (how often they pay)<select id="fLength"><option value="">Not chosen yet</option><option value="month">Every month</option><option value="three">Every 3 months</option><option value="six">Every 6 months</option><option value="year">Every year</option></select></label>
@@ -347,11 +370,17 @@ if (!configured) {
   // Old Silver and Platinum packages count as Gold.
   const GOLD = ["Silver", "Gold", "Platinum"];
   const shortDay = d => d.toLocaleDateString([], { month: "short", day: "numeric", year: d.getFullYear() === new Date().getFullYear() ? undefined : "numeric" });
+  const FOREVER_YEAR = 2099;
+  /** Free credit you gave a viewer, in dollars (billingInfo/{uid}.credit, so their app can show it too). */
+  const creditOf = uid => Math.max(0, Number(info[uid]?.credit) || 0);
+  const money = n => "$" + n.toFixed(2);
+  const dollars = s => { const n = parseFloat(String(s || "").replace(/[^0-9.]/g, "")); return isFinite(n) ? n : 0; };
   function packageNow(u) {
     const p = plans[u.id] || {}, until = toDate(p.until), now = new Date();
     const tier = GOLD.includes(p.tier) ? "Gold" : p.tier;
     if (tier && tier !== "Free" && until && until > now) {
       const name = tier === "Promo" ? (p.promoName || "Promotional") : tier;
+      if (p.gift) return { tier, name, until, gift: true, note: until.getFullYear() >= FOREVER_YEAR ? "free gift, forever" : `free gift until ${shortDay(until)}` };
       return { tier, name, until, note: `until ${shortDay(until)}` + (p.code ? ` (code ${p.code})` : "") };
     }
     const trialDays = Number(prices.trialDays ?? 7);
@@ -410,7 +439,8 @@ if (!configured) {
       pBadge.className = "pkg " + (pk.tier === "Gold" ? "gold" : pk.tier === "Promo" ? "promo" : "free");
       pBadge.textContent = (pk.tier === "Gold" ? "⭐ " : "") + pk.name;
       pTd.append(pBadge);
-      if (pk.note) { const n = document.createElement("span"); n.className = "pkg-note"; n.textContent = pk.note; pTd.append(n); }
+      const pkNote = [pk.note, creditOf(u.id) ? `${money(creditOf(u.id))} credit` : ""].filter(Boolean).join(" · ");
+      if (pkNote) { const n = document.createElement("span"); n.className = "pkg-note"; n.textContent = pkNote; pTd.append(n); }
       tr.append(pTd);
       const w = watching(u), wTd = document.createElement("td");
       if (w) {
@@ -551,9 +581,79 @@ if (!configured) {
     $("bAsked").textContent = asked ? (answered && answered > asked ? `You asked on ${asked.toLocaleString()}; they answered.` : `You asked in the app on ${asked.toLocaleString()}; no answer yet.`) : "";
     $("bMsg").textContent = "";
     watchPanel(u);
+    giftPanel(u);
     fillLinks(u);
     $("bill").showModal();
   }
+
+  // ---- Gifts: free Gold (plans/{uid}, like /packages, marked gift) and free credit (billingInfo/{uid}.credit) ----
+  function giftPanel(u) {
+    const pk = packageNow(u), c = creditOf(u.id), v = info[u.id] || {};
+    const p = plans[u.id] || {};
+    $("gNow").textContent = `Now: ${pk.name}${pk.note ? " (" + pk.note + ")" : ""}` + (c ? ` · Credit ${money(c)}${v.creditNote ? ` ("${v.creditNote}")` : ""}, taken off their next payment` : " · No credit");
+    $("gEnd").classList.toggle("hidden", !(p.gift && pk.until && !pk.trial && pk.tier !== "Free"));
+    $("cClear").classList.toggle("hidden", !c);
+    $("gMsg").textContent = "";
+  }
+  function giftUntil(len, from) {
+    if (len === "forever") return new Date(FOREVER_YEAR, 11, 31, 23, 59);
+    const d = new Date(from);
+    if (len.endsWith("d")) d.setDate(d.getDate() + parseInt(len)); else d.setMonth(d.getMonth() + parseInt(len));
+    return d;
+  }
+  $("gGive").onclick = async () => {
+    const u = cur; if (!u) return;
+    const len = $("gLen").value, label = $("gLen").selectedOptions[0].textContent;
+    // A Gold package that's still on is made longer, not cut short.
+    const p = plans[u.id] || {}, curUntil = toDate(p.until), now = new Date();
+    const from = GOLD.includes(p.tier) && curUntil && curUntil > now ? curUntil : now;
+    const until = giftUntil(len, from);
+    const who = u.name || u.email || "this viewer";
+    if (!confirm(`Give ${who} free Gold ${len === "forever" ? "forever" : "for " + label + `, until ${until.toLocaleDateString()}`}? No payment is needed.`)) return;
+    $("gMsg").textContent = "Saving…";
+    try {
+      const data = { tier: "Gold", until: fs.Timestamp.fromDate(until), gift: true, giftLength: label, giftAt: fs.serverTimestamp(), name: u.name || "", email: u.email || "", updated: fs.serverTimestamp() };
+      await fs.setDoc(fs.doc(db, "plans", u.id), data);
+      plans[u.id] = { ...data, until: fs.Timestamp.fromDate(until) };
+      stats(); render(); giftPanel(u);
+      $("bSub").textContent = [u.email, u.device, `Gold until ${until.toLocaleDateString()}`].filter(Boolean).join(" · ");
+      $("gMsg").textContent = `Done: ${who} has Gold ${len === "forever" ? "forever" : "until " + until.toLocaleDateString()}. Their app picks it up the next time it starts (or within the hour).`;
+    } catch (e) { $("gMsg").textContent = "Couldn't save: " + e.message; }
+  };
+  $("gEnd").onclick = async () => {
+    const u = cur; if (!u) return;
+    if (!confirm("End their free Gold now? They go back to Free.")) return;
+    try {
+      const now = new Date();
+      await fs.setDoc(fs.doc(db, "plans", u.id), { tier: "Gold", until: fs.Timestamp.fromDate(now), gift: true, name: u.name || "", email: u.email || "", updated: fs.serverTimestamp() });
+      plans[u.id] = { ...(plans[u.id] || {}), tier: "Gold", until: fs.Timestamp.fromDate(now) };
+      stats(); render(); giftPanel(u);
+      $("gMsg").textContent = "Ended. They're on Free now.";
+    } catch (e) { $("gMsg").textContent = "Couldn't save: " + e.message; }
+  };
+  async function setCredit(u, amount, note) {
+    const data = { credit: Math.round(amount * 100) / 100, creditNote: note, creditAt: fs.serverTimestamp() };
+    await fs.setDoc(fs.doc(db, "billingInfo", u.id), data, { merge: true });
+    info[u.id] = { ...(info[u.id] || {}), ...data };
+    stats(); render(); giftPanel(u);
+  }
+  $("cAdd").onclick = async () => {
+    const u = cur; if (!u) return;
+    const add = dollars($("cAmount").value);
+    if (!(add > 0)) return alert("Type how many dollars of credit to give, for example 5 or 9.99.");
+    const total = creditOf(u.id) + add;
+    try {
+      await setCredit(u, total, $("cNote").value.trim().slice(0, 200) || info[u.id]?.creditNote || "");
+      $("cAmount").value = ""; $("cNote").value = "";
+      $("gMsg").textContent = `Added ${money(add)}. They now have ${money(total)} credit; ✓ Paid today takes it off what they owe.`;
+    } catch (e) { $("gMsg").textContent = "Couldn't save: " + e.message; }
+  };
+  $("cClear").onclick = async () => {
+    const u = cur; if (!u) return;
+    if (!confirm("Remove all their credit?")) return;
+    try { await setCredit(u, 0, ""); $("gMsg").textContent = "Credit removed."; }
+    catch (e) { $("gMsg").textContent = "Couldn't save: " + e.message; }
+  };
   for (const id of ["fPackage", "fLength", "fAmount", "fMethod", "fLastPaid", "fNext", "fPhone", "fWhatsapp", "fEmail"]) {
     $(id).addEventListener("input", () => {
       if ((id === "fPackage" || id === "fLength") && cur) { const pr = priceFor($("fPackage").value, $("fLength").value); if (pr) $("fAmount").value = pr; }
@@ -590,8 +690,15 @@ if (!configured) {
     base.setMonth(base.getMonth() + LENGTH_MONTHS[d.length]);
     d.lastPaid = today; d.next = base;
     $("fLastPaid").value = dayStr(today); $("fNext").value = dayStr(base);
+    // Their free credit pays for this payment first.
+    const owed = dollars(d.amount), credit = creditOf(u.id), used = Math.min(credit, owed);
+    if (used > 0 && !confirm(`They have ${money(credit)} credit. Use ${money(used)} of it, so they pay ${money(owed - used)} this time?`)) return;
     $("bMsg").textContent = "Saving…";
-    try { await saveBilling(u, d); $("bMsg").textContent = `Saved. Next payment due ${base.toLocaleDateString()}. Remember to extend their package at Packages.`; fillLinks(u); }
+    try {
+      await saveBilling(u, d);
+      if (used > 0) await setCredit(u, credit - used, info[u.id]?.creditNote || "");
+      $("bMsg").textContent = `Saved. ${used > 0 ? `Used ${money(used)} credit (they paid ${money(owed - used)}). ` : ""}Next payment due ${base.toLocaleDateString()}. Remember to extend their package at Packages.`; fillLinks(u);
+    }
     catch (e) { $("bMsg").textContent = "Couldn't save: " + e.message; }
   };
 
