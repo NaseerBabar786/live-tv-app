@@ -48,6 +48,8 @@ data class UiState(
     val languageFilter: Set<String> = emptySet(),
     /** Third-row filter (genre); null shows every genre. */
     val category: String? = null,
+    /** A language chip (Urdu, Hindi, English, Punjabi): only channels in that language, ours first; null for all. */
+    val language: String? = null,
     val playlistSource: String = "",
     val playing: Channel? = null,
     /** The channel watched most recently, so going back lands on it in the list. */
@@ -108,23 +110,23 @@ data class UiState(
     /**
      * Our channels, then MTA's (when on), then favorites, then the rest in list order; channels keep their numbers.
      * Inside Favorites the other channels are grouped by country (Pakistan, India, Canada, UK, USA,
-     * then the rest) and numbered on from the top, after our own channels 1 to 17 and MTA's 18 to 25.
+     * then the rest) and numbered from [MyChannel.OTHERS_FIRST], after our language blocks (1 to 79) and MTA's 81 to 88.
      */
     val visibleChannels: List<Channel>
         get() {
             val shown = inLanguage
+                .filter { language == null || it.language == language }
                 .filter { category == null || it.category == category }
                 .filter { query.isBlank() || it.name.contains(query.trim(), ignoreCase = true) }
-            // The owner's own channels (numbers 1 to 17) always lead, then MTA's when they're on.
+            // The owner's own channels (by language, 1 to 79) always lead, then MTA's when they're on.
             if (filter != FILTER_FAVORITES) {
                 return shown.sortedWith(compareBy({ !MyChannel.isMine(it) }, { !Mta.isMta(it) }, { it.id !in favorites }))
             }
             val (lead, rest) = shown.partition { leads(it) }
             val first = lead.sortedBy { !MyChannel.isMine(it) }
-            val mta = channels.count { Mta.isMta(it) }
             return first + rest
                 .sortedWith(compareBy({ countryRank(it) }, { countryName(it) }, { it.number }))
-                .mapIndexed { i, channel -> channel.copy(number = MyChannel.COUNT + mta + i + 1) }
+                .mapIndexed { i, channel -> channel.copy(number = MyChannel.OTHERS_FIRST + i) }
         }
 
     /**
@@ -202,6 +204,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /** MTA's channels (when on, first in [list]) take 81 to 88 and every other channel 101 on, after our language blocks. */
+    private fun numberOthers(list: List<Channel>): List<Channel> {
+        val (mta, rest) = list.partition { Mta.isMta(it) }
+        return mta.mapIndexed { i, c -> c.copy(number = MyChannel.MTA_FIRST + i) } +
+            rest.mapIndexed { i, c -> c.copy(number = MyChannel.OTHERS_FIRST + i) }
+    }
+
     /** [list] with the owner's channels first (those that are on): Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel and Comedy. */
     private fun withMyChannel(list: List<Channel>): List<Channel> {
         val rest = list.filterNot { MyChannel.isMine(it) }
@@ -226,7 +235,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             repo.loadChannels()
                 .onSuccess { list ->
-                    val numbered = withMyChannel(list.mapIndexed { i, channel -> channel.copy(number = MyChannel.COUNT + i + 1) })
+                    val numbered = withMyChannel(numberOthers(list))
                     // The app opens on Favorites (when there are any) and on the channel watched
                     // last time, or the first favorite when that one isn't a favorite.
                     val opening = !opened
@@ -310,8 +319,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun setFilter(filter: String) {
         // Favourites is Gold (owner, 2026-10-08): on Free, a minute's try.
         if (filter == FILTER_FAVORITES) Plans.ask("Favourites", Plans.Feature.Favorites)
-        _state.update { it.copy(filter = filter, category = null) }
+        _state.update { it.copy(filter = filter, category = null, language = if (filter == FILTER_ALL) null else it.language) }
     }
+
+    /** A language chip in 1+List: our channels in that language first, then the others in it; null for every language. */
+    fun setLanguage(language: String?) = _state.update { it.copy(language = language) }
 
     fun setLanguages(languages: Set<String>) {
         repo.languages = languages
@@ -411,8 +423,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val number = typed.toIntOrNull()
         typedNumber = ""
         if (number == null) return
-        // The owner's own channels are 1 to 17 (Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel,
-        // Comedy, Movies English, Movies Hindi, Dramas, Cooking, Latest Movies, Teens, Ads, Dramas Hindi, Shayari); the rows of zeros that reached them before 1.9.45 (0 to 00000000) still work.
+        // The owner's own channels are in language blocks (Urdu 1 to 19, Hindi 21 to 39, English 41 to 59,
+        // Punjabi 61 to 79); the rows of zeros that reached them before 1.9.45 (0 to 00000000) still work.
         MyChannel.byDial(typed)?.takeIf { Edition.LIVE_TV }?.let {
             numberPadOpen = false
             play(it)

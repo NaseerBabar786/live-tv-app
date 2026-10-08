@@ -96,11 +96,11 @@ const station = STATIONS.find(x => x.id === new URLSearchParams(location.search)
 function hitsTab() {
   const a = document.createElement("a");
   a.href = "bollywood.html";
-  a.innerHTML = `<img alt="" src="logos/bazaar-hits.png"><span>4  Bazaar Hits</span>`;
+  a.innerHTML = `<img alt="" src="logos/bazaar-hits.png"><span>23  Bazaar Hits</span>`;
   $("tabs").appendChild(a);
 }
 for (const st of STATIONS) {
-  if (st.dial === "5") hitsTab();
+  if (st.dial === "25") hitsTab();  // Hits is 23, in the Hindi block
   const a = document.createElement("a");
   // Channels that run like Bazaar Hits open their YouTube page (this page is their backup).
   a.href = st.yt ? `ytc.html?c=${st.id}` : st.id === "main" ? "./" : `./?c=${st.id}`;

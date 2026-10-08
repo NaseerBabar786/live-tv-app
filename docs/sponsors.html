@@ -61,7 +61,7 @@
       <button class="btn primary" id="add">Add a sponsor</button>
       <button class="btn" data-signout>Sign out</button>
     </div>
-    <p class="small" style="margin:0 0 14px">📺 Every sponsor showing today also plays on <b>Bazaar Ads, channel 15</b>, round the clock, with our Cable TV promos: their video (5 to 60 seconds) or else their picture for 10 seconds. Changes reach the channel within the hour.</p>
+    <p class="small" style="margin:0 0 14px">📺 Every sponsor showing today also plays on <b>Bazaar Ads, channel 48</b>, round the clock, with our Cable TV promos: their video (5 to 60 seconds) or else their picture for 10 seconds. Changes reach the channel within the hour.</p>
 
     <form id="form" class="panel hidden" style="margin-bottom:18px">
       <h2 id="formTitle" style="margin-top:0">New sponsor</h2>
@@ -225,7 +225,7 @@ if (!configured) {
     } catch (e) { $("err").textContent = "Couldn't load the sponsors: " + denied(e); }
   }
 
-  // Bazaar Ads (channel 15) plays every sponsor showing today. The list goes to a public copy
+  // Bazaar Ads (channel 48) plays every sponsor showing today. The list goes to a public copy
   // (channel/ads-sponsors) after every change here; tools/build_ads_channel.py picks it up every hour.
   let publishedAds = null;
   async function publishAds() {

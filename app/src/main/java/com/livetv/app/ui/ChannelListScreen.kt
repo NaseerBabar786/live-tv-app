@@ -88,6 +88,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.gestures.BringIntoViewSpec
 import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.material.icons.Icons
@@ -187,6 +188,7 @@ fun ChannelListScreen(
     onQueryChange: (String) -> Unit,
     onFilterChange: (String) -> Unit,
     onCategoryChange: (String?) -> Unit,
+    onLanguageChange: (String?) -> Unit = {},
     onRefresh: () -> Unit,
     /** This app's Settings dialog; it calls the given function to close. */
     settings: @Composable (onDismiss: () -> Unit) -> Unit,
@@ -741,22 +743,29 @@ fun ChannelListScreen(
                     )
                     return@Column
                 }
-                // One row: All, Favorites, then genres (countries are picked in Settings; favorites
-                // also lead the list). All clears every filter; tapping a selected chip clears it.
+                // One row: All, Favorites, our four languages (2026-10-08), then genres (countries are picked in
+                // Settings; favorites also lead the list). All clears every filter; tapping a selected chip clears it.
                 // Info Corner has no filter row (Favourites is Gold); the search in the top bar still finds any channel.
                 if (!hideBars && !freeScreen) ChipRow(
                     focus = chipFocus,
-                    items = listOf(FILTER_ALL, FILTER_FAVORITES) + state.categories,
+                    items = (listOf(FILTER_ALL, FILTER_FAVORITES) + (if (Edition.LIVE_TV) MyChannel.LANGUAGES else emptyList()) +
+                        state.categories).distinct(),
                     selected = setOfNotNull(
-                        FILTER_ALL.takeIf { state.filter == FILTER_ALL && state.category == null },
+                        FILTER_ALL.takeIf { state.filter == FILTER_ALL && state.category == null && state.language == null },
                         FILTER_FAVORITES.takeIf { state.filter == FILTER_FAVORITES },
                         state.category,
+                        state.language,
                     ),
                     onSelect = {
                         windowStart = 0
                         twoIds = emptyList()
                         when (it) {
-                            FILTER_ALL -> onFilterChange(FILTER_ALL)
+                            FILTER_ALL -> {
+                                onFilterChange(FILTER_ALL)
+                                onLanguageChange(null)
+                            }
+                            in MyChannel.LANGUAGES.takeIf { Edition.LIVE_TV }.orEmpty() ->
+                                onLanguageChange(it.takeUnless { l -> l == state.language })
                             FILTER_FAVORITES ->
                                 onFilterChange(if (state.filter == FILTER_FAVORITES) FILTER_ALL else FILTER_FAVORITES)
                             else -> onCategoryChange(it.takeUnless { c -> c == state.category })
@@ -2044,9 +2053,21 @@ private fun PlayerWithList(
             contentPadding = if (portrait) PaddingValues(start = 6.dp, end = 6.dp, top = 6.dp, bottom = 44.dp) else PaddingValues(6.dp),
             modifier = Modifier.weight(1f).fillMaxWidth(),
         ) {
-            items(channels, key = { it.id }) { channel ->
+            itemsIndexed(channels, key = { _, it -> it.id }) { index, channel ->
                 val current = channel.id == selected?.id
                 var menu by remember { mutableStateOf(false) }
+                // A heading over each language's block of our channels (Spark Urdu, Spark Hindi...).
+                val heading = channel.group?.takeIf { MyChannel.isMine(channel) && channels.getOrNull(index - 1)?.group != it }
+                if (heading != null) {
+                    Text(
+                        heading.uppercase(),
+                        color = AccentBlue,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 11.sp,
+                        letterSpacing = 1.sp,
+                        modifier = Modifier.padding(start = 10.dp, top = if (index == 0) 0.dp else 6.dp, bottom = 2.dp),
+                    )
+                }
                 Box {
                 Row(
                     Modifier

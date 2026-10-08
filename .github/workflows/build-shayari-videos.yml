@@ -1,6 +1,6 @@
 name: Build Aaj ka Sher videos
 
-# Spark Shayari (17)'s hourly "Aaj ka Sher" clips (tools/shayari): a classic sher in calligraphy, read by a
+# Spark Shayari (5)'s hourly "Aaj ka Sher" clips (tools/shayari): a classic sher in calligraphy, read by a
 # free AI voice over library music. The videos go on the "channel-media" pre-release and their list to
 # docs/channel/shayari-clips.json, which the channel page plays once an hour between programmes.
 # They are made again only when shers.json, the maker or the music library changes.

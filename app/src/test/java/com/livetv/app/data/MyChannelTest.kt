@@ -125,24 +125,27 @@ class MyChannelTest {
         assertEquals("mychannel://filmein", films.channel.url)
         assertTrue(MyChannel.isMine(films.channel))
         assertEquals(MyChannel.URL, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.url)
-        assertEquals(listOf("0", "00", "000", "00000", "000000", "0000000", "00000000", "9", "10", "11", "12", "13", "14", "15", "16", "17"), MyChannel.STATIONS.map { it.dial })
-        assertEquals(listOf(1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17), MyChannel.STATIONS.map { it.number })
         assertEquals(1, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.number)
-        assertEquals(2, films.channel.number)
+        assertEquals(21, films.channel.number)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=filmein&app=1&brand=spark", MyChannel.webPage(films.channel))
         assertEquals(null, MyChannel.webPage(MyChannel.parse(JSONObject("""{"videos":[]}""")).channel))
         val dramas = MyChannel.parse(JSONObject("""{"name":"Bazaar Dramas","videos":[]}"""), "dramas")
-        assertEquals(11, dramas.channel.number)
+        assertEquals(2, dramas.channel.number)
         assertEquals("Spark Dramas Urdu", dramas.channel.name)
-        // 16 (2026-10-08): Hindi dramas, a channel of their own, with the free films as backup.
+        // Hindi dramas, a channel of their own (2026-10-08), with the free films as backup.
         val hindiDramas = MyChannel.parse(JSONObject("""{"name":"Bazaar Dramas Hindi","videos":[]}"""), "hindidramas")
-        assertEquals(16, hindiDramas.channel.number)
+        assertEquals(24, hindiDramas.channel.number)
         assertEquals("Spark Dramas Hindi", hindiDramas.channel.name)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=hindidramas&app=1&brand=spark", MyChannel.webPage(hindiDramas.channel))
         assertEquals("filmein", MyChannel.STATIONS.first { it.id == "hindidramas" }.backup)
-        // 17 (2026-10-08): Urdu and Hindi poetry.
+        // 5 (2026-10-08): Urdu poetry; its Hindi half is Kavi Sammelan, 27.
         val shayari = MyChannel.parse(JSONObject("""{"name":"Bazaar Shayari","videos":[]}"""), "shayari")
-        assertEquals(17, shayari.channel.number)
+        assertEquals(5, shayari.channel.number)
+        assertEquals("Urdu", shayari.channel.language)
+        val kavi = MyChannel.parse(JSONObject("""{"name":"Bazaar Kavi Sammelan","videos":[]}"""), "kavi")
+        assertEquals(27, kavi.channel.number)
+        assertEquals("Spark Kavi Sammelan", kavi.channel.name)
+        assertEquals("Spark Hindi", kavi.channel.group)
         assertEquals("Spark Shayari", shayari.channel.name)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=shayari&app=1&brand=spark", MyChannel.webPage(shayari.channel))
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=dramas&app=1&brand=spark", MyChannel.webPage(dramas.channel))
@@ -158,6 +161,30 @@ class MyChannelTest {
     }
 
     @Test
+    fun everyChannelIsInItsLanguagesBlock() {
+        val blocks = mapOf(MyChannel.URDU to 1..19, MyChannel.HINDI to 21..39, MyChannel.ENGLISH to 41..59, MyChannel.PUNJABI to 61..79)
+        MyChannel.STATIONS.forEach { assertTrue("${it.id} ${it.number}", it.number in blocks.getValue(it.lang)) }
+        assertTrue(MyChannel.HITS_NUMBER in blocks.getValue(MyChannel.HINDI))
+        val numbers = MyChannel.STATIONS.map { it.number } + MyChannel.HITS_NUMBER
+        assertEquals(numbers.size, numbers.toSet().size)
+        assertEquals(MyChannel.STATIONS.map { it.number }.sorted(), MyChannel.STATIONS.map { it.number })
+        // Only the rows of zeros from before 1.9.45 still dial a channel; a plain number is its block number.
+        val dials = MyChannel.STATIONS.map { it.dial }.filter { it.isNotEmpty() }
+        assertTrue(dials.all { d -> d.all { it == '0' } })
+        assertEquals(dials.size, dials.toSet().size)
+        assertEquals(null, MyChannel.byDial("9"))
+        assertTrue(MyChannel.STATIONS.map { it.number }.max() < MyChannel.MTA_FIRST)
+    }
+
+    @Test
+    fun aChannelsLanguageIsItsGroup() {
+        val c = MyChannel.parse(JSONObject("""{"videos":[]}"""), "sur").channel
+        assertEquals(MyChannel.PUNJABI, c.language)
+        assertEquals("Spark Punjabi", c.group)
+        assertEquals("Spark Music Punjabi", c.name)
+    }
+
+    @Test
     fun ourChannelsAreCalledSpark() {
         assertEquals("Spark TV One", MyChannel.brand("Bazaar TV One"))
         assertEquals("Spark Movies Hindi", MyChannel.brand("Bazaar Movies Hindi"))
@@ -169,8 +196,8 @@ class MyChannelTest {
 
     @Test
     fun ourLogosCarryAVersionSoTvsFetchTheNewPicture() {
-        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-tv.png?v=8", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
-        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-latest.png?v=8", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/latest-movies.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-tv.png?v=9", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png"))
+        assertEquals("https://tv.bulkbazaar.ca/channel/logos/spark-latest.png?v=9", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/latest-movies.png"))
         assertEquals("https://x/l.png", MyChannel.freshLogo("https://x/l.png"))
         assertEquals("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1", MyChannel.freshLogo("https://tv.bulkbazaar.ca/channel/logos/a.png?v=1"))
     }
@@ -216,7 +243,7 @@ class MyChannelTest {
         assertEquals("https://tv.bulkbazaar.ca/media/cabletv-ad-6.mp4", byId["promos-0"]!!.url)
         assertEquals(60L, byId["sponsors-0"]!!.seconds)
         assertTrue(c.videos.all { it.isBreak })
-        assertEquals(15, c.channel.number)
+        assertEquals(48, c.channel.number)
         assertEquals(MyChannel.ADS_URL, c.channel.url)
         assertEquals("Spark Ads", c.channel.name)
         // Round and round from midnight: 30 s promo, 60 s sponsor, 15 s advertise.
