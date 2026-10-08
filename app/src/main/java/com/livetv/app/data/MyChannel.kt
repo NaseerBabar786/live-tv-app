@@ -116,6 +116,10 @@ object MyChannel {
         Station("comedyen", 49, "", "Spark Comedy English", youtube = true, backup = "comedy", logo = "spark-comedyen.png", lang = ENGLISH),
         // Punjabi
         Station("sur", 61, "000", "Spark Music Punjabi", youtube = true, lang = PUNJABI),
+        // More Punjabi (the owner, 2026-10-08): Gurbani carries no ads of ours (out of respect), films, Sufi qawwali.
+        Station("gurbani", 62, "", "Spark Gurbani", youtube = true, backup = "sur", logo = "spark-gurbani.png", lang = PUNJABI),
+        Station("moviespa", 63, "", "Spark Movies Punjabi", youtube = true, backup = "filmein", logo = "spark-moviespa.png", lang = PUNJABI),
+        Station("sufi", 64, "", "Spark Sufi Qawwali", youtube = true, backup = "sur", logo = "spark-sufi.png", lang = PUNJABI),
     )
 
     /**
@@ -126,6 +130,9 @@ object MyChannel {
 
     /** Bazaar Ads' address: the channel that is all ads, so no pop-up ad breaks come over it. */
     const val ADS_URL = "mychannel://ads"
+
+    /** Spark Gurbani (62): no pop-up ads, breaks or ticker over it, out of respect (the owner, 2026-10-08). */
+    const val GURBANI_URL = "mychannel://gurbani"
 
     private const val SCHEME = "mychannel://"
 
