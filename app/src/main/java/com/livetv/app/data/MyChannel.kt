@@ -104,12 +104,16 @@ object MyChannel {
         Station("kavi", 27, "", "Spark Kavi Sammelan", youtube = true, backup = "filmein", logo = "spark-kavi.png", lang = HINDI),
         Station("kidshi", 28, "", "Spark Kids Hindi", youtube = true, backup = "kids", logo = "spark-kidshi.png", lang = HINDI),
         Station("teenshi", 30, "", "Spark Teens Hindi", youtube = true, backup = "filmein", logo = "spark-teenshi.png", lang = HINDI),
+        // Cars (the owner, 2026-10-08): Hindi car shows' reviews and launches.
+        Station("autohi", 32, "", "Spark Auto Hindi", youtube = true, backup = "sports", logo = "spark-auto-hindi.png", lang = HINDI),
         // English
         Station("english", 41, "", "Spark Movies English", youtube = true, backup = "filmein", logo = "spark-english.png", lang = ENGLISH),
         Station("kids", 43, "00000", "Spark Kids English", youtube = true, lang = ENGLISH),
         Station("teens", 44, "", "Spark Teens English", youtube = true, backup = "filmein", logo = "spark-teens.png", lang = ENGLISH),
         Station("travel", 45, "0000000", "Spark Travel", youtube = true, lang = ENGLISH),
         Station("sports", 46, "000000", "Spark Sports", youtube = true, lang = ENGLISH),
+        // Cars (the owner, 2026-10-08): reviews, launches, top 10s, supercars and motorsport, in blocks through the day.
+        Station("auto", 47, "", "Spark Auto", youtube = true, backup = "sports", logo = "spark-auto.png", lang = ENGLISH),
         // Ads and promos round the clock in our own player (owner, 2026-10-07): our Cable TV promos, the
         // sponsors' ads from /sponsors and "Advertise with us" (docs/channel/ads-schedule.json). No pop-up ads on it.
         Station("ads", 48, "", "Spark Ads", logo = "spark-ads.png", lang = ENGLISH),
