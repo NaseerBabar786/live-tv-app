@@ -10,7 +10,7 @@
 <meta name="robots" content="noindex">
 <style>
   .wrap { max-width: 1640px; }
-  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin: 0 0 20px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 0 0 20px; }
   .stat { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 14px 16px; }
   .stat .n { font-size: 30px; font-weight: 800; color: var(--focus); }
   .stat .l { color: var(--muted); font-size: 14px; }
@@ -21,6 +21,11 @@
   tbody tr { cursor: pointer; }
   tbody tr:hover td { background: var(--surface); }
   .miss { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #5D2B00; color: #FFCC80; }
+  .pkg { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+  .pkg.gold { background: #4A3A00; color: #FFD54F; }
+  .pkg.free { background: var(--surface-2); color: var(--text); }
+  .pkg.promo { background: #2A1F4D; color: #B39DDB; }
+  .pkg-note { color: var(--muted); font-size: 12px; margin-left: 6px; }
   .ok { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #12391A; color: #A5D6A7; }
   dialog#bill { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 24px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 16px; padding: 0; }
   dialog#bill::backdrop { background: rgba(0,0,0,.7); }
@@ -35,6 +40,18 @@
   .checklist li.yes { color: #A5D6A7; }
   .said { background: var(--bg); border: 1px dashed var(--line); border-radius: 12px; padding: 10px 14px; font-size: 14px; margin: 10px 0; }
   .contact { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .watch { background: var(--bg); border: 1px solid var(--surface-2); border-radius: 12px; padding: 10px 14px; margin: 6px 0 14px; }
+  .watch h3 { margin: 0 0 6px; font-size: 16px; }
+  .watch .now { font-size: 15px; margin-bottom: 8px; }
+  .watch .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 20px; margin-top: 8px; }
+  .watch .tabs { display: flex; gap: 6px; margin: 4px 0 8px; }
+  .watch .tabs button { padding: 4px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+  .watch .tabs button.on { background: var(--focus); color: #000; border-color: var(--focus); }
+  .watch .sum { font-size: 14px; color: var(--muted); }
+  .watch .bar { display: block; height: 4px; border-radius: 2px; background: var(--focus); margin: 2px 0 4px; opacity: .6; }
+  .watch ol { margin: 4px 0 0; padding-left: 22px; font-size: 14px; }
+  .watch ol li span { color: var(--muted); }
+  .live { color: #81C784; font-weight: 700; }
   input[type=search] { width: 100%; max-width: 360px; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
 </style>
 </head>
@@ -62,16 +79,17 @@
   <div id="denied" class="panel hidden">This account can't see the user list. <button class="btn" data-signout>Use another account</button></div>
   <div id="dash" class="hidden">
     <div class="stats" id="stats"></div>
+    <p class="small hidden" id="pkgOff">⭐ Packages are off right now (at <a href="packages">Packages</a>), so every viewer has everything. The Package column shows what each viewer will have once you turn packages on.</p>
     <div class="row" style="justify-content:space-between;margin-bottom:12px">
-      <input type="search" id="q" placeholder="Search name, email or device">
+      <input type="search" id="q" placeholder="Search name, email, device or package">
       <div class="row"><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Billing</th><th></th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Watching</th><th>Billing</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
-  <p class="small">💳 Click any user to open their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
+  <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
   <p class="err" id="err"></p>
 </main>
@@ -81,6 +99,7 @@
     <button class="btn" id="bClose" aria-label="Close">✕</button>
   </div>
   <div class="bill-body">
+    <div class="watch" id="bWatch"></div>
     <b>Missing</b>
     <ul class="checklist" id="bCheck"></ul>
     <div class="said hidden" id="bSaid"></div>
@@ -134,7 +153,7 @@ if (!configured) {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = fs.getFirestore(app);
-  let users = [], billing = {}, info = {}, plans = {}, prices = {}, rulesMissing = false;
+  let users = [], billing = {}, info = {}, plans = {}, prices = {}, usage = {}, rulesMissing = false;
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
   document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
@@ -151,7 +170,7 @@ if (!configured) {
         .map(u => ({ ...u, joined: u.joined?.toDate?.(), lastOpened: u.lastOpened?.toDate?.() }))
         .sort((a, b) => (b.lastOpened || 0) - (a.lastOpened || 0));
     } catch (e) { $("err").textContent = "Couldn't load users: " + e.message; }
-    await loadBilling();
+    await Promise.all([loadBilling(), loadUsage()]);
     stats(); render();
   });
 
@@ -164,7 +183,116 @@ if (!configured) {
     if (r[1].status === "fulfilled") info = r[1].value; else rulesMissing = true;
     if (r[2].status === "fulfilled") plans = r[2].value;
     if (r[3].status === "fulfilled" && r[3].value.exists()) prices = r[3].value.data();
+    $("pkgOff").classList.toggle("hidden", !!prices.enforce);
     if (rulesMissing) $("err").textContent = "Billing details can't be saved yet: publish the new Firestore rules (billing and billingInfo) in Firebase first.";
+  }
+
+  // What each viewer watched: the app sends usage/{day}_{uid} (seconds per channel that day) every
+  // 10 minutes while it's open and when it closes; apps that also send nowName/nowAt say what's on right now.
+  const pad = n => String(n).padStart(2, "0");
+  const dayKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const daysAgo = n => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - n); return dayKey(d); };
+  async function loadUsage() {
+    try {
+      const snap = await fs.getDocs(fs.query(fs.collection(db, "usage"), fs.where("day", ">=", daysAgo(29))));
+      usage = {};
+      for (const d of snap.docs) { const r = d.data(); if (r.uid && r.day) (usage[r.uid] ||= []).push({ ...r, updated: toDate(r.updated), nowAt: toDate(r.nowAt) }); }
+    } catch (e) { usage = {}; }
+  }
+  const LIVE_MS = 15 * 60e3;
+  const chanName = (k, c) => c.n || k;
+  const topChannels = (records) => {
+    const m = {};
+    for (const r of records) for (const [k, c] of Object.entries(r.channels || {})) {
+      const name = chanName(k, c); m[name] = (m[name] || 0) + (c.s || 0);
+    }
+    return Object.entries(m).sort((a, b) => b[1] - a[1]);
+  };
+  const hm = s => { const m = Math.round(s / 60); return m < 60 ? `${Math.max(1, m)} min` : `${Math.floor(m / 60)} h ${pad(m % 60)} min`; };
+  /** What they're watching now (if the app said so in the last 15 min), else the last channel we know of and when. */
+  function watching(u) {
+    const recs = (usage[u.id] || []).slice().sort((a, b) => (b.updated || 0) - (a.updated || 0));
+    if (!recs.length) return null;
+    const withNow = recs.filter(r => r.nowName && r.nowAt).sort((a, b) => b.nowAt - a.nowAt)[0];
+    if (withNow && withNow.nowLive !== false && Date.now() - withNow.nowAt < LIVE_MS) return { live: true, name: withNow.nowName, at: withNow.nowAt };
+    if (withNow) return { live: false, name: withNow.nowName, at: withNow.nowAt };
+    const last = recs[0], top = topChannels([last])[0];
+    return top ? { live: false, name: top[0], at: last.updated, guess: true } : null;
+  }
+  const ago = d => { const m = Math.round((Date.now() - d) / 60e3); return m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : d.toLocaleDateString([], { month: "short", day: "numeric" }); };
+  // Languages aren't sent by the app, so they're worked out from the channel: our own Bazaar channels
+  // by name, other channels by their country (Pakistan = Urdu, India = Hindi, and so on).
+  const LANG_BY_COUNTRY = { pk: "Urdu", in: "Hindi", ca: "English", us: "English", gb: "English", uk: "English", au: "English", bd: "Bengali", ae: "Arabic", sa: "Arabic", af: "Pashto/Dari", ir: "Persian", tr: "Turkish", np: "Nepali", lk: "Sinhala" };
+  const COUNTRY = { pk: "Pakistan", in: "India", ca: "Canada", gb: "UK", uk: "UK", us: "USA", bd: "Bangladesh", ae: "UAE", sa: "Saudi Arabia", af: "Afghanistan", au: "Australia" };
+  const isOurs = c => /^bazaar\b/i.test(c.n || "");
+  function langOf(c) {
+    const n = c.n || "";
+    if (isOurs(c)) return /english/i.test(n) ? "English" : /hindi/i.test(n) ? "Hindi" : /hits|music|cinema/i.test(n) ? "Urdu/Hindi" : "Urdu";
+    if (/punjabi/i.test(n + " " + (c.t || ""))) return "Punjabi";
+    return LANG_BY_COUNTRY[(c.c || "").toLowerCase()] || "Other";
+  }
+  const countryOf = c => isOurs(c) ? "Bazaar (our channels)" : COUNTRY[(c.c || "").toLowerCase()] || (c.c ? c.c.toUpperCase() : "Other");
+  const FEATURE_LABEL = { list: "1+List", browse: "Browse", carousel: "Carousel", strip: "Strip", duo: "Duo", five: "1+3", two: "1×2", four: "2×2", six: "2×3", news: "News", cp24: "CP24", home: "Home", mine: "My Screen", full: "Full screen channel", library: "Movies & Dramas", games: "Games", quran: "Iqra Quran", weather: "Weather" };
+  const featureLabel = k => FEATURE_LABEL[k] || k;
+  let watchRange = 7;
+  function watchPanel(u) {
+    const el = $("bWatch"); el.innerHTML = "";
+    const h = document.createElement("h3"); h.textContent = "📺 What they watch"; el.append(h);
+    const all = usage[u.id] || [], w = watching(u);
+    const now = document.createElement("div"); now.className = "now";
+    if (!w) now.textContent = "Nothing watched in the last 30 days (or their app is older than 1.8.88).";
+    else if (w.live) now.innerHTML = `<span class="live">● Watching now:</span> <b></b> <span class="small"></span>`;
+    else now.innerHTML = `${w.guess ? "Last watched (most that day)" : "Last watched"}: <b></b> <span class="small"></span>`;
+    if (w) { now.querySelector("b").textContent = w.name; now.querySelector(".small").textContent = `(${w.guess ? "app last sent " : ""}${ago(w.at)})`; }
+    el.append(now);
+    if (!all.length) return;
+    const tabs = document.createElement("div"); tabs.className = "tabs";
+    for (const [n, label] of [[1, "Today"], [7, "Last 7 days"], [30, "Last 30 days"]]) {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = label; b.className = n === watchRange ? "on" : "";
+      b.onclick = () => { watchRange = n; watchPanel(u); }; tabs.append(b);
+    }
+    el.append(tabs);
+    const from = daysAgo(watchRange - 1), recs = all.filter(r => r.day >= from);
+    const tot = recs.reduce((a, r) => a + (r.seconds || 0), 0), activeDays = new Set(recs.filter(r => r.seconds > 0).map(r => r.day)).size;
+    const sum = document.createElement("div"); sum.className = "sum";
+    sum.textContent = tot ? `Watched ${hm(tot)}` + (watchRange > 1 ? ` on ${activeDays} of ${watchRange} days · about ${hm(tot / Math.max(1, activeDays))} a day they watch` : "") + ` · ${new Set(recs.flatMap(r => Object.keys(r.channels || {}))).size} different channels` : "Nothing watched in this period.";
+    el.append(sum);
+    if (!tot && !recs.some(r => r.features)) return;
+    const group = (keyOf) => {
+      const m = {};
+      for (const r of recs) for (const [k, c] of Object.entries(r.channels || {})) for (const key of [].concat(keyOf(k, c))) m[key] = (m[key] || 0) + (c.s || 0);
+      return Object.entries(m).filter(([k]) => k).sort((a, b) => b[1] - a[1]);
+    };
+    const progs = {};
+    for (const r of recs) for (const p of Object.values(r.programmes || {})) { const k = p.t || "?"; progs[k] = (progs[k] || 0) + (p.s || 0); }
+    const feats = {};
+    for (const r of recs) for (const [k, f] of Object.entries(r.features || {})) { const e = (feats[featureLabel(k)] ||= { s: 0, o: 0 }); e.s += f.s || 0; e.o += f.o || 0; }
+    const lists = [
+      ["Channels watched most", group((k, c) => chanName(k, c)), 6],
+      ["Features used most", Object.entries(feats).map(([k, f]) => [k, f.s, f.o]).sort((a, b) => b[1] - a[1]), 6],
+      ["Languages", group((k, c) => langOf(c)), 5],
+      ["Countries", group((k, c) => countryOf(c)), 5],
+      ["Kinds of channel", group((k, c) => (c.t || "").split(";").map(x => x.trim()).filter(Boolean).slice(0, 2)), 5],
+      ["Shows on our Bazaar channels", Object.entries(progs).sort((a, b) => b[1] - a[1]), 5],
+    ];
+    const cols = document.createElement("div"); cols.className = "cols";
+    for (const [title, list, n] of lists) {
+      if (!list.length) continue;
+      const box = document.createElement("div");
+      const b = document.createElement("b"); b.textContent = title; box.append(b);
+      const ol = document.createElement("ol"), top = list[0][1] || 1;
+      for (const [name, sec, opens] of list.slice(0, n)) {
+        const li = document.createElement("li"); li.textContent = name + " ";
+        const sp = document.createElement("span"); sp.textContent = hm(sec) + (title === "Languages" || title === "Countries" ? ` (${Math.round(100 * sec / tot)}%)` : opens ? ` · opened ${opens}×` : "");
+        const bar = document.createElement("i"); bar.className = "bar"; bar.style.width = Math.max(3, Math.round(100 * sec / top)) + "%";
+        li.append(sp, bar); ol.append(li);
+      }
+      box.append(ol); cols.append(box);
+    }
+    el.append(cols);
+    const note = document.createElement("div"); note.className = "small"; note.style.marginTop = "6px";
+    note.textContent = "Languages are worked out from each channel's country (Pakistan = Urdu, India = Hindi, Canada/USA/UK = English) and our Bazaar channels' names.";
+    el.append(note);
   }
 
   const LENGTH_LABEL = { month: "every month", three: "every 3 months", six: "every 6 months", year: "every year" };
@@ -199,6 +327,25 @@ if (!configured) {
   // Only Gold is paid for (Silver and Platinum were removed 2026-10-07); a viewer on Free or a promotion only needs a phone number.
   const PAID = ["Silver", "Gold", "Platinum"]; // old Silver/Platinum details still count as paid
   const lacking = d => CHECKS.filter(([k]) => !d[k] && (!d.package || PAID.includes(d.package) || k === "phone" || k === "package"));
+  // The package a viewer has right now, worked out the same way as the app (Subscription.kt):
+  // a package turned on at /packages that hasn't ended, else the free trial after joining (Gold), else Free.
+  // Old Silver and Platinum packages count as Gold.
+  const GOLD = ["Silver", "Gold", "Platinum"];
+  const shortDay = d => d.toLocaleDateString([], { month: "short", day: "numeric", year: d.getFullYear() === new Date().getFullYear() ? undefined : "numeric" });
+  function packageNow(u) {
+    const p = plans[u.id] || {}, until = toDate(p.until), now = new Date();
+    const tier = GOLD.includes(p.tier) ? "Gold" : p.tier;
+    if (tier && tier !== "Free" && until && until > now) {
+      const name = tier === "Promo" ? (p.promoName || "Promotional") : tier;
+      return { tier, name, until, note: `until ${shortDay(until)}` + (p.code ? ` (code ${p.code})` : "") };
+    }
+    const trialDays = Number(prices.trialDays ?? 7);
+    const trialEnd = u.joined && trialDays > 0 ? new Date(u.joined.getTime() + trialDays * 864e5) : null;
+    if (trialEnd && trialEnd > now) return { tier: "Gold", name: "Gold", until: trialEnd, trial: true, note: `free trial until ${shortDay(trialEnd)}` };
+    if (tier && tier !== "Free" && until) return { tier: "Free", name: "Free", note: `${tier === "Promo" ? "promotion" : tier} ended ${shortDay(until)}` };
+    return { tier: "Free", name: "Free", note: "" };
+  }
+
   // Promotions are stored under their own names in plans/{uid} ("Promo" is the Promotional package).
   const tierName = t => t === "Promo" ? "Promotional" : t;
   function ensureOption(v) {
@@ -220,6 +367,9 @@ if (!configured) {
       ["New this week", users.filter(u => within(u.joined, 7 * day)).length],
       ["On TVs", users.filter(u => u.device === "TV").length],
       ["On phones/tablets", users.filter(u => u.device && u.device !== "TV").length],
+      ["On Gold", users.filter(u => packageNow(u).tier === "Gold").length],
+      ["On Free", users.filter(u => packageNow(u).tier === "Free").length],
+      ...(users.some(u => packageNow(u).tier === "Promo") ? [["On a promotion", users.filter(u => packageNow(u).tier === "Promo").length]] : []),
       ["Billing details complete", users.filter(u => !missing(u).length).length],
     ];
     $("stats").innerHTML = "";
@@ -234,13 +384,26 @@ if (!configured) {
   const fmt = d => d ? d.toLocaleString([], { dateStyle: "medium", timeStyle: "short" }) : "";
   function render() {
     const q = $("q").value.trim().toLowerCase();
-    const list = users.filter(u => !q || [u.name, u.email, u.device, u.model].join(" ").toLowerCase().includes(q));
+    const list = users.filter(u => !q || [u.name, u.email, u.device, u.model, packageNow(u).name].join(" ").toLowerCase().includes(q));
     const tbody = $("rows"); tbody.innerHTML = "";
     list.forEach((u, i) => {
       const tr = document.createElement("tr");
       [i + 1, u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, fmt(u.joined), fmt(u.lastOpened)].forEach(v => {
         const td = document.createElement("td"); td.textContent = v ?? ""; tr.append(td);
       });
+      const pk = packageNow(u), pTd = document.createElement("td"), pBadge = document.createElement("span");
+      pBadge.className = "pkg " + (pk.tier === "Gold" ? "gold" : pk.tier === "Promo" ? "promo" : "free");
+      pBadge.textContent = (pk.tier === "Gold" ? "⭐ " : "") + pk.name;
+      pTd.append(pBadge);
+      if (pk.note) { const n = document.createElement("span"); n.className = "pkg-note"; n.textContent = pk.note; pTd.append(n); }
+      tr.append(pTd);
+      const w = watching(u), wTd = document.createElement("td");
+      if (w) {
+        const nm = document.createElement("span"); nm.textContent = (w.live ? "● " : "") + w.name; if (w.live) nm.className = "live";
+        const n = document.createElement("span"); n.className = "pkg-note"; n.textContent = w.live ? "now" : ago(w.at);
+        wTd.append(nm, n);
+      }
+      tr.append(wTd);
       const bTd = document.createElement("td"); const badge = document.createElement("span");
       const miss = missing(u);
       badge.className = miss.length ? "miss" : "ok";
@@ -358,7 +521,7 @@ if (!configured) {
     cur = u;
     const d = details(u), v = info[u.id] || {}, plan = activePlan(u.id);
     $("bName").textContent = u.name || u.email || "Viewer";
-    $("bSub").textContent = [u.email, u.device, plan ? `${tierName(plan.tier)} until ${plan.until.toLocaleDateString()}` : "No paid package on"].filter(Boolean).join(" · ");
+    $("bSub").textContent = [u.email, u.device, plan ? `${tierName(GOLD.includes(plan.tier) ? "Gold" : plan.tier)} until ${plan.until.toLocaleDateString()}` : "No paid package on"].filter(Boolean).join(" · ");
     ensureOption(d.package); $("fPackage").value = d.package; $("fLength").value = d.length; $("fMethod").value = d.method;
     $("fAmount").value = d.amount || priceFor(d.package, d.length);
     $("fLastPaid").value = dayStr(d.lastPaid); $("fNext").value = dayStr(d.next);
@@ -372,6 +535,7 @@ if (!configured) {
     const asked = toDate(v.askedAt), answered = toDate(v.answeredAt);
     $("bAsked").textContent = asked ? (answered && answered > asked ? `You asked on ${asked.toLocaleString()}; they answered.` : `You asked in the app on ${asked.toLocaleString()}; no answer yet.`) : "";
     $("bMsg").textContent = "";
+    watchPanel(u);
     fillLinks(u);
     $("bill").showModal();
   }
@@ -438,9 +602,9 @@ if (!configured) {
   $("csv").onclick = () => {
     const esc = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
     const day = d => d ? d.toISOString().slice(0, 10) : "";
-    const lines = [["Name", "Email", "Sign-in", "Device", "Model", "Version", "Joined", "Last opened", "Package", "Pays", "Amount", "Payment method", "Last paid", "Next payment", "Phone", "WhatsApp", "Missing"].map(esc).join(",")]
+    const lines = [["Name", "Email", "Sign-in", "Device", "Model", "Version", "Joined", "Last opened", "Package now", "Package note", "Billing package", "Pays", "Amount", "Payment method", "Last paid", "Next payment", "Phone", "WhatsApp", "Missing"].map(esc).join(",")]
       .concat(users.map(u => { const d = details(u); return [u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, u.joined?.toISOString(), u.lastOpened?.toISOString(),
-        d.package, LENGTH_LABEL[d.length] || "", d.amount, d.method, day(d.lastPaid), day(d.next), d.phone, d.whatsapp, missing(u).map(m => m[1]).join("; ")].map(esc).join(","); }));
+        packageNow(u).name, packageNow(u).note, d.package, LENGTH_LABEL[d.length] || "", d.amount, d.method, day(d.lastPaid), day(d.next), d.phone, d.whatsapp, missing(u).map(m => m[1]).join("; ")].map(esc).join(","); }));
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
     a.download = "live-tv-users.csv"; a.click();

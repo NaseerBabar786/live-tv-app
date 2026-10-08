@@ -57,11 +57,11 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   every language, and they are free in every package (`mta.js`, `channels.js`, `plans.js`).
 - 1.10.3 (PC 1.0.7): two modern games, Block Burst and Color Pour, in a 🎮 Games screen. Both apps open the
   very same pages (`app/src/main/assets/games`, copied in by `scripts/prepare.js`; `screens/games.js`).
-- 1.10.4 (PC 1.0.9): Iqra Quran in the top bar: Kids Qaida, Read with recitation, Hifz, and Namaz (prayer timeline,
-  Azan with muezzin choice, reminders), in Cable TV's colours (`screens/quran.js`, `prayer.js`, `azan.js`). On PC the
-  Qaida letter sounds use Windows' own Arabic voice when it has one, and the Azan plays while the PC app is open
-  (full screen, the channels paused), with a Windows notification for every prayer, chime, message and reminder. Translations: up to 3 of 60+ languages, each downloaded when picked (`docs/quran/tr`).
-  Also in 1.10.4: no YouTube screen ever shows (owner's rule, 2026-10-07). Our pages in a
+- 1.10.5 (PC 1.0.9): no YouTube screen ever shows (owner's rule, 2026-10-07). Our pages in a
   `<webview>` can't be taken to YouTube's own site (`main.js`), as on Android (`YouTube.blocksNavigation`).
   The locked YouTube pages themselves (player taller than its box, cover on errors) are the website's,
   shared by both apps. The Library's "open in the YouTube app" is gone on Android; the PC has no Library yet.
+- 1.10.6 (PC 1.0.10): Iqra Quran in the top bar: Kids Qaida, Read with recitation, Hifz, and Namaz (prayer timeline,
+  Azan with muezzin choice, reminders), in Cable TV's colours (`screens/quran.js`, `prayer.js`, `azan.js`). On PC the
+  Qaida letter sounds use Windows' own Arabic voice when it has one, and the Azan plays while the PC app is open
+  (full screen, the channels paused), with a Windows notification for every prayer, chime, message and reminder. Translations: up to 3 of 60+ languages, each downloaded when picked (`docs/quran/tr`).

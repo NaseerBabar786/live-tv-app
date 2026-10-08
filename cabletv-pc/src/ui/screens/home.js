@@ -16,6 +16,7 @@ import { openSettings } from './settings.js';
 import { openQuran } from './quran.js';
 import * as azan from '../azan.js';
 import { openGames } from './games.js';
+import * as features from '../features.js';
 
 /** Every mode, in the TV app's order; the ones not on PC yet show as coming soon. */
 export const MODES = [
@@ -160,6 +161,7 @@ export function openHome({ onExit }) {
     else if (id === 'five') current = fiveMode(ctx);
     else current = tilesMode(ctx, { two: 2, four: 4, six: 6 }[id]);
     root.dataset.mode = id;
+    features.use(id);
     setTimeout(() => current?.focusFirst?.(), 0);
   }
 
@@ -194,9 +196,11 @@ export function openHome({ onExit }) {
     current?.pause?.();
     ads.detach(content);
     root.classList.add('hidden');
+    features.use('games');
     openGames({
       onClose: () => {
         root.classList.remove('hidden');
+        features.use(mode);
         ads.attach(content, { full: false });
         current?.resume?.();
         nav.focus(gamesBtn);
@@ -210,8 +214,10 @@ export function openHome({ onExit }) {
     current?.pause?.();
     ads.detach(content);
     root.classList.add('hidden');
+    features.use('full');
     openFull(ch, (last) => {
       root.classList.remove('hidden');
+      features.use(mode);
       ads.attach(content, { full: false });
       current?.resume?.(last);
     });
