@@ -334,6 +334,12 @@ CHANNELS = {
             ("Urdu Studio", ["@UrduStudio"], "Urdu Studio"),
         ],
         "cap": {"*": 60},
+        # Each source's main language, kept on every video ("lang"), so the channel can be split into an Urdu and a
+        # Hindi channel later (the channels-by-language plan) without searching again.
+        "langs": {"Rekhta": "ur", "Sahitya Akademi": "ur", "DD Urdu": "ur", "Doordarshan": "hi", "PTV Home": "ur",
+                  "PTV National": "ur", "Lahore Literary Festival": "ur", "Faiz Festival": "ur", "Mushaira Media": "ur",
+                  "Sahitya Tak": "hi", "Kumar Vishwas": "hi", "Kommune": "hi", "The Social House": "hi",
+                  "Hindi Kavita": "hi", "Urdu Studio": "ur"},
     },
     "cooking": {
         "name": "Bazaar Cooking", "mins": (4, 45),
@@ -494,6 +500,8 @@ def build(cid, ch, today):
                 break
             found[vid] = {"id": vid, "title": title.strip(), "label": label, "mins": mins,
                           "found": old.get(vid, {}).get("found", today.isoformat())}
+            if label in ch.get("langs", {}):
+                found[vid]["lang"] = ch["langs"][label]
             # When it went up on YouTube, as far as the page says ("3 weeks ago"): Bazaar TV One's blocks
             # take only new uploads (tools/build_bazaar_blocks.py, the owner's wish 2026-10-08).
             posted = dates.get(vid) or ((today - dt.timedelta(days=age)).isoformat() if age is not None else old.get(vid, {}).get("posted"))
