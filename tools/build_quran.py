@@ -24,6 +24,28 @@ TRANSLATIONS = {
     "en": ("en", ["saheeh", "sahih"], "Saheeh International"),
 }
 
+# More languages, downloaded by the apps only when picked (docs/quran/tr, served at tv.bulkbazaar.ca/quran/tr/).
+# code: (quran.com language_name, preferred translators (first match wins, else the first listed), English
+# name, own name, written right to left)
+EXTRA_DIR = os.path.join(os.path.dirname(__file__), "..", "docs", "quran", "tr")
+EXTRA = {
+    "hi": ("hindi", ["farooq"], "Hindi", "हिन्दी", False),
+    "pa": ("punjabi", [], "Punjabi", "ਪੰਜਾਬੀ", False),
+    "bn": ("bengali", ["muhiuddin", "taisirul"], "Bengali", "বাংলা", False),
+    "sd": ("sindhi", [], "Sindhi", "سنڌي", True),
+    "ps": ("pashto", [], "Pashto", "پښتو", True),
+    "fa": ("persian", ["ansarian", "fooladvand"], "Persian", "فارسی", True),
+    "tr": ("turkish", ["diyanet"], "Turkish", "Türkçe", False),
+    "id": ("indonesian", ["kementerian", "ministry", "affairs"], "Indonesian", "Bahasa Indonesia", False),
+    "ms": ("malay", ["basmeih"], "Malay", "Bahasa Melayu", False),
+    "fr": ("french", ["hamidullah"], "French", "Français", False),
+    "es": ("spanish", ["garcia", "garcía"], "Spanish", "Español", False),
+    "de": ("german", ["bubenheim"], "German", "Deutsch", False),
+    "ru": ("russian", ["kuliev"], "Russian", "Русский", False),
+    "zh": ("chinese", ["ma jian"], "Chinese", "中文", False),
+    "sw": ("swahili", ["barwani"], "Swahili", "Kiswahili", False),
+}
+
 
 def get(url, tries=4):
     for i in range(tries):
@@ -122,6 +144,8 @@ def main():
                       f, ensure_ascii=False, separators=(",", ":"))
         print(f"{code}.json: {res['name']} (id {res['id']}); 1:1 = {per[0][0][:80]}")
 
+    build_extra(surahs)
+
     with open(os.path.join(OUT, "reciters.json"), encoding="utf-8") as f:
         reciters = json.load(f)
     missing = [r["folder"] for r in reciters
@@ -129,6 +153,36 @@ def main():
     if missing:
         sys.exit(f"No audio on everyayah.com for: {missing}")
     print(f"reciters ok: {[r['folder'] for r in reciters]}")
+
+
+def build_extra(surahs):
+    """The other languages: one file each plus index.json listing them (a language with no translation is left out)."""
+    os.makedirs(EXTRA_DIR, exist_ok=True)
+    all_tr = get(f"{API}/resources/translations")["translations"]
+    index = []
+    for code, (lang, keys, en, native, rtl) in EXTRA.items():
+        found = [r for r in all_tr if r.get("language_name", "").lower() == lang]
+        if not found:
+            print(f"{code}: no {lang} translation on quran.com, left out")
+            continue
+        pick = next((r for k in keys for r in found
+                     if k in (r["name"] + " " + (r.get("author_name") or "")).lower()), found[0])
+        verses = get(f"{API}/quran/translations/{pick['id']}")["translations"]
+        if len(verses) != 6236:
+            print(f"{code}: {pick['name']} has {len(verses)} ayahs, left out")
+            continue
+        texts = [clean(v["text"]) for v in verses]
+        per, i = [], 0
+        for s in surahs:
+            per.append(texts[i:i + len(s["ayahs"])])
+            i += len(s["ayahs"])
+        name = pick.get("author_name") or pick["name"]
+        with open(os.path.join(EXTRA_DIR, f"{code}.json"), "w", encoding="utf-8") as f:
+            json.dump({"name": name, "surahs": per}, f, ensure_ascii=False, separators=(",", ":"))
+        index.append({"code": code, "en": en, "native": native, "rtl": rtl, "translator": name, "file": f"{code}.json"})
+        print(f"{code}.json: {pick['name']} (id {pick['id']}); 1:1 = {per[0][0][:60]}")
+    with open(os.path.join(EXTRA_DIR, "index.json"), "w", encoding="utf-8") as f:
+        json.dump({"languages": index}, f, ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":
