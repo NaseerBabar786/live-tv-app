@@ -70,3 +70,5 @@ the 24 classic games (the PC has the two modern ones); Messages, Suggestions, pr
   Azan with muezzin choice, reminders), in Cable TV's colours (`screens/quran.js`, `prayer.js`, `azan.js`). On PC the
   Qaida letter sounds use Windows' own Arabic voice when it has one, and the Azan plays while the PC app is open
   (full screen, the channels paused), with a Windows notification for every prayer, chime, message and reminder. Translations: up to 3 of 60+ languages, each downloaded when picked (`docs/quran/tr`).
+- 1.10.8: phones only. The phone app has no Games (the games are made for the TV remote; owner's rule 2026-10-08).
+  Nothing changes on PC, which keeps its games like the TV.
