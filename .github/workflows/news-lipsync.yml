@@ -19,12 +19,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        id: ["anchor-m1b", "anchor-m6c"]
+        id: ["anchor-m1b", "anchor-m6c", "anchor-m7c"]
         sp:
           - {n: 1, space: "fffiloni/LatentSync"}
           - {n: 2, space: "manavisrani07/gradio-lipsync-wav2lip"}
-          - {n: 3, space: "banao-tech/musetalk-avatar"}
-          - {n: 4, space: "peterpeter8585/LipSyncer"}
     env:
       ID: ${{ github.event.inputs.id || matrix.id }}
     steps:

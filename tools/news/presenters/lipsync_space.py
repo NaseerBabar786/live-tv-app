@@ -20,16 +20,30 @@ api = c.view_api(return_format="dict", print_info=False)["named_endpoints"]
 best = next(((n, ep) for n, ep in api.items() if {"video", "audio"} <= {kind(p) for p in ep["parameters"]}), None)
 if not best: raise SystemExit("no video+audio endpoint: " + json.dumps({n: [p.get("label") for p in ep["parameters"]] for n, ep in api.items()}, ensure_ascii=False)[:1500])
 name, ep = best
-args = []
-for p in ep["parameters"]:
-    k = kind(p)
-    if k == "video": args.append({"video": handle_file(vid)} if (p.get("component") or "").lower() == "video" else handle_file(vid))
-    elif k == "audio": args.append(handle_file(wav))
-    elif p.get("parameter_has_default"): args.append(p["parameter_default"])
-    else: args.append(None)
+def choices(p):
+    t = p.get("type") or {}
+    return t.get("enum") or [x.get("const") for x in t.get("anyOf", []) if isinstance(x, dict) and "const" in x] or None
+
+def build(wrap):
+    args = []
+    for p in ep["parameters"]:
+        k = kind(p)
+        if k == "video": args.append({"video": handle_file(vid)} if wrap else handle_file(vid))
+        elif k == "audio": args.append(handle_file(wav))
+        elif p.get("parameter_has_default") and p["parameter_default"] is not None: args.append(p["parameter_default"])
+        elif choices(p): args.append(choices(p)[-1])
+        else: args.append(p.get("parameter_default"))
+    return args
 print(json.dumps({"endpoint": name, "labels": [p.get("label") for p in ep["parameters"]]}, ensure_ascii=False), flush=True)
 t = time.time()
-res = c.predict(*args, api_name=name)
+res = None
+for wrap in (False, True):
+    try:
+        res = c.predict(*build(wrap), api_name=name)
+        if res: break
+    except Exception as e:
+        print("try wrap=%s failed: %r" % (wrap, e)[:600], flush=True)
+print("args", [a if isinstance(a, (str, int, float, bool, type(None))) else "<file>" for a in build(False)], flush=True)
 print("secs", round(time.time() - t), str(res)[:500], flush=True)
 def find(r):
     if isinstance(r, str) and r.endswith((".mp4", ".webm", ".mov")): return r
