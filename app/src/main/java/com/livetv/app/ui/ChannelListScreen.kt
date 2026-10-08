@@ -325,7 +325,7 @@ fun ChannelListScreen(
     val windowed = wideScreen && !listMode && !newsMode && !browseMode && !carouselMode && !stripMode && !duoMode
     // The tiles fill from MTA (when it's on) or the next channels in the viewer's list first: our own
     // channels play web pages that take a while to start, so in the tile layouts they come after the
-    // others and the screen fills fast (owner, 1.10.23). They're still there, further along.
+    // others and the screen fills fast (owner, 1.10.24). They're still there, further along.
     val tileChannels = remember(state.visibleChannels, windowed) {
         if (windowed) state.visibleChannels.sortedBy { MyChannel.isMine(it) } else state.visibleChannels
     }

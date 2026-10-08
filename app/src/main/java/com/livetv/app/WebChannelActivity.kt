@@ -58,7 +58,7 @@ class WebChannelActivity : Activity() {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.mediaPlaybackRequiresUserGesture = false
-            // Normal caching (1.10.23): the player's big scripts no longer download again for every
+            // Normal caching (1.10.24): the player's big scripts no longer download again for every
             // channel, so our channels start much faster. The page stays fresh: its address carries the
             // app version, our site lets copies live only 10 minutes, and the lists are always fetched new.
             settings.cacheMode = WebSettings.LOAD_DEFAULT

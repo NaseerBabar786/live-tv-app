@@ -34,7 +34,7 @@ fun StartScreen(loading: Boolean, onDone: () -> Unit) {
     val stillLoading by rememberUpdatedState(loading)
     // While the circle turns, the TV's web engine starts up and fetches the video player's code once,
     // so our own channels (1-15, web pages) open quickly afterwards instead of starting it all
-    // from scratch (owner, 1.10.23: our channels were slow at startup). Nothing shows or plays.
+    // from scratch (owner, 1.10.24: our channels were slow at startup). Nothing shows or plays.
     val context = LocalContext.current
     DisposableEffect(Unit) {
         val warm = runCatching {

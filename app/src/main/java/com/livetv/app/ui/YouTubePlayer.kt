@@ -117,7 +117,7 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 settings.mediaPlaybackRequiresUserGesture = false
-                // Normal caching, so the player's scripts aren't downloaded again each time (1.10.23).
+                // Normal caching, so the player's scripts aren't downloaded again each time (1.10.24).
                 settings.cacheMode = WebSettings.LOAD_DEFAULT
                 webViewClient = object : WebViewClient() {
                     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
@@ -240,7 +240,7 @@ private fun previewWebView(ctx: Context, page: String, onFallback: (() -> Unit)?
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.mediaPlaybackRequiresUserGesture = false
-        // Normal caching, so the player's scripts aren't downloaded again for every tile (1.10.23).
+        // Normal caching, so the player's scripts aren't downloaded again for every tile (1.10.24).
         settings.cacheMode = WebSettings.LOAD_DEFAULT
         webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {

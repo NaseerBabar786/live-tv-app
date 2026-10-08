@@ -93,7 +93,7 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
         lastFiller = null
         if (YouTube.isYouTube(channel.url)) {
             // YouTube streams play only in YouTube's player, which opens in full screen.
-            // Viewers never see where a channel comes from (owner, 1.10.23).
+            // Viewers never see where a channel comes from (owner, 1.10.24).
             stop()
             onError?.invoke("Open this channel in full screen to watch.")
             return

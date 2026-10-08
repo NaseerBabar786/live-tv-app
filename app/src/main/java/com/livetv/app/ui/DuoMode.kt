@@ -161,7 +161,7 @@ internal fun DuoMode(
     LaunchedEffect(channels.isNotEmpty()) {
         if (channels.isEmpty()) return@LaunchedEffect
         // First time (or a saved channel is gone): the last channel watched and the next favourite.
-        // Our own channels come last here: their pages take a while to start (owner, 1.10.23).
+        // Our own channels come last here: their pages take a while to start (owner, 1.10.24).
         val quickFirst = channels.sortedBy { MyChannel.isMine(it) }
         val pool = (listOfNotNull(lastWatchedId) + quickFirst.filter { it.id in favorites }.map { it.id } + quickFirst.map { it.id })
             .filter { it in byId }.distinct()

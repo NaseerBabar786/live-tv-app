@@ -254,7 +254,7 @@ export async function loadOwnerDays(id) {
  * written; it changes only when the owner unlocks it in Studio to fix a mistake.
  */
 export async function loadLocked(station, base = "", date = torontoDay().date) {
-  // Both asked for at once, so the channel starts sooner (1.10.23); the owner's day still wins.
+  // Both asked for at once, so the channel starts sooner (1.10.24); the owner's day still wins.
   const nightly = fetch(`${base}locked/${station.id}.json`, { cache: "no-cache" }).then(r => r.json()).catch(() => null);
   const mine = (await loadOwnerDays(station.id))[date]?.items;
   if (Array.isArray(mine) && mine.length) return mine;
