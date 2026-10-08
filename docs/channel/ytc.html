@@ -253,8 +253,9 @@ Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-cache" }).then(r => r.j
   unplayable = un.ids || {};
   all = d.videos.filter(v => !unplayable[v.id]);
   picks = p[station.id] || null;
-  promos = pr;
-  trailers = tr;
+  // A channel with noAds (Spark Gurbani, owner 2026-10-08) has no breaks at all.
+  promos = station.noAds ? [] : pr;
+  trailers = station.noAds ? [] : tr;
   own = oc;
   locked = lk && { date: torontoDay().date, items: lk };
   order();

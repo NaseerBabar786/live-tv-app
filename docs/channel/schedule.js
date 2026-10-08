@@ -113,6 +113,19 @@ export const STATIONS = [
     name: "Bazaar Music Punjabi", dial: "61", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-music.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
     credits: "Music: recordings that are free to use (public domain, CC0 and CC BY) from Wikimedia Commons; each song's credit and licence show on screen. No film songs." },
+  // More Punjabi (the owner, 2026-10-08). Gurbani has no ads of ours at all (noAds), out of respect.
+  { id: "gurbani", yt: true, web: "channel/ytc.html?c=gurbani", ytMins: 30, tagline: "Shabad kirtan and Gurbani, day and night", noAds: true,
+    name: "Bazaar Gurbani", dial: "62", doc: "_channel_gurbani", page: "channel/?c=gurbani", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-gurbani.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
+    credits: "Gurbani: shabad kirtan and paths from the labels' and SGPC's own YouTube channels (T-Series Shabad Gurbani, Amritt Saagar, SGPC). Backup: free-to-use Sufi and devotional music from Wikimedia Commons." },
+  { id: "moviespa", yt: true, web: "channel/ytc.html?c=moviespa", ytMins: 100, tagline: "Full Punjabi films, day and night",
+    name: "Bazaar Movies Punjabi", dial: "63", doc: "_channel_moviespa", page: "channel/?c=moviespa", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-moviespa.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Films: full Punjabi films from the studios' and labels' own YouTube channels (White Hill, Yellow Music, Speed Punjabi, Shemaroo, Saga and others). Backup: public-domain classic films." },
+  { id: "sufi", yt: true, web: "channel/ytc.html?c=sufi", ytMins: 12, tagline: "Sufi kalam and qawwali, day and night",
+    name: "Bazaar Sufi Qawwali", dial: "64", doc: "_channel_sufi", page: "channel/?c=sufi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-sufi.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
+    credits: "Qawwali: Sufi kalam and qawwali from the label's and singers' own YouTube channels (OSA Islamic, Nusrat Fateh Ali Khan). Backup: free-to-use music from Wikimedia Commons." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */

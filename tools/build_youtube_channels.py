@@ -425,6 +425,52 @@ CHANNELS = {
     },
     # The owner's wish (2026-10-06): just "Latest Movies", newest uploads first, no logo of ours. Only the
     # rights holders' own channels: re-uploads of new films by anyone else are pirated and soon taken down.
+    # Punjabi (the owner, 2026-10-08: "a couple more Punjabi channels"). Each goes on air with 50+ programmes.
+    "gurbani": {
+        # 62: shabad kirtan and paths from the labels' and SGPC's own channels. No ads over it (owner's channel rule).
+        "lang": "pa",
+        "name": "Bazaar Gurbani", "mins": (5, 180), "search": ["shabad kirtan", "gurbani", "nitnem", "sukhmani sahib"],
+        "skip": r"status|whatsapp|ringtone|reels?\b|vlog|interview|news|debate|speech|controvers",
+        "sources": [
+            ("T-Series Shabad Gurbani", ["@tseriesshabad", "@TSeriesShabadGurbani"], "Shabad Gurbani"),
+            ("Amritt Saagar", ["@amrittsaagar", "@AmrittSaagar"], "Amritt Saagar"),
+            ("SGPC", ["@officialsgpc", "@SGPCSriAmritsar"], "SGPC|Shiromani"),
+            ("Finetouch Gurbani", ["@FinetouchGurbani", "@FinetouchMusic"], "Finetouch"),
+        ],
+        "most": {"*": 150},
+    },
+    "moviespa": {
+        # 63: full Punjabi films (older years too), comedies included, from the studios' and labels' own channels.
+        # The newest ones (Latest Movies' Punjabi films) are put at the front by merge_latest.
+        "lang": "pa",
+        "name": "Bazaar Movies Punjabi", "mins": (70, 200), "search": ["punjabi full movie", "full punjabi movie", "full movie"],
+        "keep": r"punjabi",
+        "skip": r"scene|song|jukebox|comedy scenes|best of|spoof|clip|review|explained|recap|hindi dubbed|horror|slasher|erotic|18\+",
+        "sources": [
+            ("White Hill Studios", ["@WhiteHillStudios", "@WhiteHillDhol", "@WhiteHillMusic"], "White Hill"),
+            ("Yellow Music", ["@YellowMusicOfficial", "@YellowMusic"], "Yellow Music"),
+            ("Speed Punjabi", ["@SpeedPunjabi", "@speedpunjabi"], "Speed Punjabi"),
+            ("ShemarooMe Punjabi", ["@ShemarooMePunjabi", "@ShemarooPunjabi"], "Shemaroo"),
+            ("Punjabi Hits", ["@PunjabiHits"], "Punjabi Hits"),
+            ("Saga Hits", ["@sagahits", "@SagaMusic"], "Saga"),
+            ("Tips Punjabi", ["@TipsPunjabi"], "Tips Punjabi"),
+            ("PTC Punjabi Gold", ["@PTCPunjabiGold", "@ptcpunjabigold"], "PTC Punjabi"),
+            ("Omjee", ["@OmjeeGroup", "@OmjeeStarStudios"], "Omjee"),
+        ],
+    },
+    "sufi": {
+        # 64: Sufi kalam and qawwali, mostly Nusrat Fateh Ali Khan, from the label's own channels.
+        "lang": "pa",
+        "name": "Bazaar Sufi Qawwali", "mins": (4, 120), "search": ["qawwali", "sufi kalam", "nusrat fateh ali khan"],
+        "keep": r"qawwal|kalam|sufi|kafi|dhamal|nusrat|sabri|abida|bulleh|heer|naat|manqabat",
+        "skip": r"jukebox|non ?stop|mashup|remix|lyric|status|whatsapp|reels?\b|interview|bts|behind the scenes|#shorts",
+        "sources": [
+            ("OSA Islamic", ["@OSAIslamic", "@osaislamic"], "OSA Islamic|Oriental Star"),
+            ("Nusrat Fateh Ali Khan", ["@NusratFatehAliKhanOfficial", "@NFAKOfficial"], "Nusrat Fateh Ali Khan"),
+            ("Sabri Brothers", ["@SabriBrothersOfficial"], "Sabri Brothers"),
+            ("Abida Parveen", ["@AbidaParveenOfficial"], "Abida Parveen"),
+        ],
+    },
     "latest": {
         # Since 2026-10-08 Latest Movies is no channel of its own: each language's newest films lead that
         # language's Movies channel (merge_latest below).
