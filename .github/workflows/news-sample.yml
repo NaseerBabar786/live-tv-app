@@ -10,7 +10,7 @@ on:
         default: "calm"
 env:
   LOOK: ${{ github.event.inputs.look || 'calm' }}
-  READERS: "anchor-1s anchor-m7s"   # newsreader(s) for the sample (space separated): studio versions
+  READERS: "anchor-1s anchor-m7s"   # newsreader(s) for the sample (space separated): studio versions, Sana + Kamran
 jobs:
   sample:
     runs-on: ubuntu-latest
