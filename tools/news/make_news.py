@@ -432,14 +432,23 @@ def pill(d, name, col):
     d.rounded_rectangle([RIGHT - pw, 128, RIGHT, 176], 8, fill=col)
     text(d, RIGHT - pw / 2, 150, name, 24, "white", "m")
 
-def card(path, label, section, headline, body, source, count):
+# Scene clip box on story cards (left of the text), when a free clip fits the story; see broll.py.
+BROLL_BOX = (100, 196, 448, 252)
+
+def card(path, label, section, headline, body, source, count, video_credit=None):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     name, col = SECTION[section]
     panel(d, col); pill(d, name, col)
     if count: text(d, 110, 150, count, 20, (170, 185, 215), "l")
+    tw = 1050
+    if video_credit:
+        x, y, w, h = BROLL_BOX; tw = RIGHT - (x + w) - 40
+        d.rectangle((x - 3, y - 3, x + w + 2, y + h + 2), outline=col, width=3)
+        d.rectangle((x, y, x + w - 1, y + h - 1), fill=(0, 0, 0, 0))
+        d.text((x, y + h + 10), video_credit, font=font(False, 15), fill=DIM)
     size = 44
     while True:
-        lines = wrap(d, headline, size, 1050, 3)
+        lines = wrap(d, headline, size, tw, 3)
         if len(lines) <= 2 or size <= 34: break
         size -= 4
     step = int(size * 1.75)
@@ -447,7 +456,7 @@ def card(path, label, section, headline, body, source, count):
     for ln in lines:
         draw_line(d, RIGHT, y, ln, fonts(size), "white"); y += step
     y += 6
-    for ln in wrap(d, body, 25, 1050, max(1, (545 - y) // 46)):
+    for ln in wrap(d, body, 25, tw, max(1, (545 - y) // 46)):
         draw_line(d, RIGHT, y, ln, fonts(25, False), LIGHT); y += 46
     if source: text(d, RIGHT, 562, source, 19, DIM)
     lower_bar(d, label)
@@ -560,6 +569,23 @@ def add_reader(body, reader, windows, label, work):
         "-g", str(FPS * 2), "-c:a", "copy", "-movflags", "+faststart", tmp)
     os.replace(tmp, body)
 
+def add_broll(body, clips, work):
+    """Plays each story's scene clip inside its card's box (clips: (start, secs, file))."""
+    if not clips: return
+    x, y, w, h = BROLL_BOX
+    ins, chain, last = ["-i", body], [], "0:v"
+    for i, (t0, secs, f) in enumerate(clips, 1):
+        ins += ["-stream_loop", "-1", "-itsoffset", f"{t0:.3f}", "-i", f]
+        chain.append(f"[{i}:v]scale={w}:{h},setsar=1[b{i}]")
+        chain.append(f"[{last}][b{i}]overlay={x}:{y}:eof_action=pass:enable='between(t,{t0:.3f},{t0 + secs:.3f})'[v{i}]")
+        last = f"v{i}"
+    tmp = os.path.join(work, "broll.mp4")
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(chain), "-map", f"[{last}]",
+        "-map", "0:a", "-t", f"{float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', body], capture_output=True, text=True).stdout):.3f}",
+        "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2), "-c:a", "copy",
+        "-movflags", "+faststart", tmp)
+    os.replace(tmp, body)
+
 def add_promos(body, secs, slot, work, mp4):
     """Fills the time after the bulletin with our own Cable TV promos, in turn (a different start each hour)."""
     media = os.path.join(HERE, "..", "..", "docs", "media")
@@ -666,7 +692,9 @@ def main():
     cards, voice_track = [], np.zeros(int(SR * total) + SR, np.float32)
     title_card(os.path.join(work, "c-title.png"), kind, f"{clock(slot)} • {date_ur(slot, True)}", "")
     cards.append(("c-title.png", STING))
-    t = STING; n = 0; on_camera = []
+    t = STING; n = 0; on_camera = []; clips = []
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import broll
     for i, (sk, text, v, s) in enumerate(segs):
         audio = voice(text, v)
         a = int(t * SR); voice_track[a:a + len(audio)] += audio[:len(voice_track) - a]
@@ -675,8 +703,10 @@ def main():
         if sk == "story":
             n += 1
             src = "ذریعہ " + s["source"] + (" • ترجمہ" if s["section"] in ("canada", "india", "sports", "film") else "")
+            clip = None if offline or os.environ.get("NEWS_BROLL", "1") == "0" else broll.pick(s, work)
+            if clip: clips.append((t, len(audio) / SR + GAP, clip[0]))
             card(os.path.join(work, pic), label, s["section"], s["headline"],
-                 first_sentence(s["desc"]), src, f"خبر {n} • کل {len(shown)}")
+                 first_sentence(s["desc"]), src, f"خبر {n} • کل {len(shown)}", clip[1] if clip else None)
         elif sk == "weather":
             weather_card(os.path.join(work, pic), label, wx)
         elif sk == "open":
@@ -717,6 +747,7 @@ def main():
         "-filter_complex", f"[1:v]fps={FPS},format=rgba[c];[0:v][c]overlay=0:0:format=auto,format=yuv420p[v]",
         "-map", "[v]", "-map", "2:a", "-t", f"{news_len:.3f}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
         "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
+    add_broll(body, clips, work)
     reader = newsreader(slot)
     if reader and on_camera:
         add_reader(body, reader, on_camera, label, work)

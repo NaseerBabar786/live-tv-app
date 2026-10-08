@@ -4,7 +4,7 @@ name: News look sample
 on:
   push:
     branches-ignore: [main]
-    paths: [".github/workflows/news-sample.yml", "tools/news/make_news.py"]
+    paths: [".github/workflows/news-sample.yml", "tools/news/make_news.py", "tools/news/broll.py"]
   workflow_dispatch:
     inputs:
       look:
@@ -28,6 +28,16 @@ jobs:
             curl -fsSL -m 120 -o "tools/news/presenters/clips/$id.mp4" \
               "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || true
           done
+      - name: Topic clip library (free Wikimedia Commons clips), built once
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! curl -fsIL -m 30 "https://github.com/$GITHUB_REPOSITORY/releases/download/news-broll/news-broll.json" >/dev/null; then
+            gh release view news-broll -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+              gh release create news-broll --prerelease -t "News topic clips" -n "Free CC0 / public-domain / CC BY clips from Wikimedia Commons for Bazaar TV News, credited on screen." -R "$GITHUB_REPOSITORY"
+            python3 tools/news/broll.py build broll-out
+            gh release upload news-broll broll-out/*.mp4 broll-out/news-broll.json -R "$GITHUB_REPOSITORY" --clobber
+          fi
       - env:
           NEWS_LOOK: ${{ env.LOOK }}
           NEWS_READERS: ${{ env.READERS }}
