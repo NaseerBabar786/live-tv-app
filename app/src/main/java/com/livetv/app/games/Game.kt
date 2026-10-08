@@ -123,11 +123,12 @@ val CLASSIC_GAMES = listOf(
 
 /**
  * Classic games that left the menu (1.10.22): the modern remakes in [WEB_GAMES] took their place,
- * and the owner took 2048 and Cricket off.
+ * and the owner took 2048 and Cricket off. Solitaire left in 1.10.28 for the new card-table Solitaire.
  */
 private val RETIRED = setOf(
     "snake", "2048", "blocks", "bricks", "space", "paddle", "tictactoe", "four", "mines", "memory", "echo",
     "ludo", "cricket", "snakes", "chess", "quiz", "sudoku", "race", "maze", "checkers", "words", "carrom",
+    "solitaire",
 )
 
 val GAMES = CLASSIC_GAMES.filter { it.id !in RETIRED }
@@ -148,6 +149,7 @@ class WebGameInfo(
 )
 
 val WEB_GAMES = listOf(
+    WebGameInfo("solitaireplus", "Solitaire", "🂡", "solitaire.html") { "Wins: $it" },
     WebGameInfo("spades", "Spades", "♠️", "spades.html") { "Wins: $it" },
     WebGameInfo("snakerush", "Snake Rush", "🐍", "snakerush.html") { "Best: $it" },
     WebGameInfo("blockburst", "Block Burst", "💥", "blockburst.html") { "Best: $it" },

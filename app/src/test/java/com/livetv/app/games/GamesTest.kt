@@ -21,7 +21,7 @@ class GamesTest {
             }
         }
         assertEquals(24, CLASSIC_GAMES.size)
-        assertEquals(listOf("slide", "solitaire"), GAMES.map { it.id })
+        assertEquals(listOf("slide"), GAMES.map { it.id })
         assertEquals(CLASSIC_GAMES.size, CLASSIC_GAMES.map { it.id }.toSet().size)
     }
 
