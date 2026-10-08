@@ -75,6 +75,10 @@ fun rememberBlockPage(channel: Channel?): String? {
 fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
     val configs by MyChannel.configs.collectAsStateWithLifecycle()
     val c = channel?.takeIf(MyChannel::isMine)?.let { configs[it.url.removePrefix("mychannel://")] } ?: return
+    // Inside 1+List and the other channel screens the app's own "advertise with us" line runs along the
+    // bottom, so the channel's line stays off there: one line, never two (the owner, 2026-10-08).
+    val band = LocalTickerBand.current
+    val ownLine = c.ticker?.takeIf { band == 0.dp }
     BoxWithConstraints(modifier.fillMaxSize()) {
         // Sized from the picture, so it looks the same in full screen and in a smaller player.
         val unit = maxWidth / 100
@@ -101,7 +105,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                 Modifier
                     .align(corner)
                     .padding(horizontal = unit * 2.5f, vertical = unit * 2f)
-                    .padding(bottom = if (bottom && c.ticker != null) tickerHeight else 0.dp),
+                    .padding(bottom = if (bottom && ownLine != null) tickerHeight else 0.dp),
                 horizontalAlignment = if (left) Alignment.Start else Alignment.End,
             ) {
                 if (bottom) Box(Modifier.offset(y = logoHeight * ink.first - gap)) { ChannelClock(logoHeight) }
@@ -147,9 +151,9 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             enter = fadeIn() + slideInHorizontally { if (c.logoCorner == "bl") it else -it },
             exit = fadeOut() + slideOutHorizontally { if (c.logoCorner == "bl") it else -it },
             modifier = Modifier.align(if (c.logoCorner == "bl") Alignment.BottomEnd else Alignment.BottomStart)
-                .padding(horizontal = unit * 2.5f).padding(bottom = (if (c.ticker != null) tickerHeight else 0.dp) + unit * 2.5f),
+                .padding(horizontal = unit * 2.5f).padding(bottom = (if (ownLine != null) tickerHeight else 0.dp) + unit * 2.5f),
         ) { NextCard(shown, unit) }
-        c.ticker?.let { line ->
+        ownLine?.let { line ->
             Box(
                 Modifier
                     .align(Alignment.BottomCenter)

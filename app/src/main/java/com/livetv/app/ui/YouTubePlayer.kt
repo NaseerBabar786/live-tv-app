@@ -25,6 +25,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.livetv.app.BuildConfig
+import androidx.compose.runtime.compositionLocalOf
 import com.livetv.app.WebChannelActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -149,6 +150,13 @@ fun WebChannel(url: String, onBack: () -> Unit, onFallback: (() -> Unit)? = null
 }
 
 /**
+ * How much of the screen's bottom edge the app's "advertise with us" band takes on this screen (0 where
+ * there is none). A page shown inside it hides its own line (one ticker, never two on top of each other:
+ * the owner's photo, 2026-10-08), and on a TV the page's window stays clear of the band.
+ */
+val LocalTickerBand = compositionLocalOf { 0.dp }
+
+/**
  * [url] (one of our YouTube pages) playing inside a small player, such as the 1+List picture, without
  * taking the remote: the arrows and OK stay with the screen around it. [onFallback] runs when the page
  * gives up on YouTube (livetv://fallback).
@@ -162,7 +170,8 @@ fun WebPreview(url: String, modifier: Modifier = Modifier, still: Boolean = true
     // Browse, whose pictures scroll, since 1.9.84; 1+List since 1.9.79).
     val context = LocalContext.current
     val tv = remember { context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK) }
-    val page = remember(url) { if (still && tv) "$url&still=1" else url }
+    val band = LocalTickerBand.current
+    val page = remember(url, band) { (if (still && tv) "$url&still=1" else url) + if (band > 0.dp) "&noticker=1" else "" }
     // The moving video on a TV: the page goes in a plain WebView straight in the window, over this box,
     // like full screen (WebChannelActivity), where TVs do show the picture. Inside Compose they don't,
     // even in a square box (1.9.74 test) (1.9.78).
@@ -188,6 +197,8 @@ private fun WindowWebPreview(activity: Activity, page: String, modifier: Modifie
     val root = remember { activity.findViewById<FrameLayout>(android.R.id.content) }
     // The box's focus border (3 dp) stays in view around it.
     val inset = with(LocalDensity.current) { 3.dp.roundToPx() }
+    // The WebView sits over everything in the window, so it stops above the app's ticker band.
+    val band = with(LocalDensity.current) { LocalTickerBand.current.roundToPx() }
     val view = remember(page) { previewWebView(activity, page, onFallback) {} }
     DisposableEffect(view) {
         root.addView(view, FrameLayout.LayoutParams(0, 0))
@@ -203,7 +214,8 @@ private fun WindowWebPreview(activity: Activity, page: String, modifier: Modifie
         val left = b.left.toInt() - at[0] + inset
         val top = b.top.toInt() - at[1] + inset
         val width = (b.width.toInt() - 2 * inset).coerceAtLeast(0)
-        val height = (b.height.toInt() - 2 * inset).coerceAtLeast(0)
+        val bottomLimit = if (band > 0) root.height - band else Int.MAX_VALUE
+        val height = (minOf(b.height.toInt() - 2 * inset, bottomLimit - top)).coerceAtLeast(0)
         if (lp.leftMargin != left || lp.topMargin != top || lp.width != width || lp.height != height) {
             lp.leftMargin = left
             lp.topMargin = top

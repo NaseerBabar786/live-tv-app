@@ -261,6 +261,8 @@ fun ChannelListScreen(
     // Phones and tablets have every mode too (1.9.90): 1+List and Browse also fit an upright phone,
     // the other modes turn the phone sideways while they're on.
     val phone = rememberIsPhone()
+    // The "advertise with us" band along the bottom: taller on TVs, its words lifted off the edge.
+    val tickerBand = if (isTv(LocalContext.current)) 52.dp else 36.dp
     var tileLayout by remember {
         mutableStateOf(
             sessionTileLayout
@@ -706,6 +708,9 @@ fun ChannelListScreen(
                 .fillMaxSize()
                 .padding(padding),
         ) {
+            // On TVs the line is lifted off the bottom edge, which some TVs cut off; pages shown here hide their
+            // own line and stay above this band, so only one line ever runs (the owner's photo, 2026-10-08).
+            CompositionLocalProvider(LocalTickerBand provides if (Edition.LIVE_TV && !newsMode) tickerBand else 0.dp) {
             Column(Modifier.fillMaxSize()) {
                 if (state.needsPlaylist) {
                     Message(
@@ -1330,14 +1335,16 @@ fun ChannelListScreen(
                     }
                 }
             }
+            }
             // Cable TV's "advertise with us" line along the bottom of every channel screen (owner's rule,
             // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel, Strip and Duo.
             // News, CP24, Home and My Screen have their own band at the bottom.
             if (!newsMode && !state.needsPlaylist) {
                 EditionTicker(
-                    Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(36.dp),
+                    Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(tickerBand),
                     big = true,
                     band = true,
+                    lift = tickerBand - 36.dp,
                 )
             }
         }
