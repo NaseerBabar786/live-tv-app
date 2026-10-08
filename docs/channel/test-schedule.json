@@ -4,7 +4,7 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  News every hour  ·  Urdu and Hindi dramas, music, new movie trailers, a new Hindi film, cooking and comedy  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
+ "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  News every hour  ·  Urdu and Hindi dramas, music, new movie trailers, cooking and comedy  ·  Today's programmes every half hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
  "tickerOn": true,
  "videos": [
   {
@@ -106,13 +106,6 @@
    "kind": "list"
   },
   {
-   "id": "film",
-   "title": "ہندی فلم",
-   "url": "https://tv.bulkbazaar.ca/channel/block-film.json",
-   "secs": 0,
-   "kind": "list"
-  },
-  {
    "id": "news-headlines",
    "title": "Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4",
@@ -125,6 +118,20 @@
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4",
    "secs": 600,
    "kind": "programme"
+  },
+  {
+   "id": "adbreak",
+   "title": "اشتہارات",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-b.mp4",
+   "secs": 60,
+   "kind": "ad"
+  },
+  {
+   "id": "today",
+   "title": "آج کے پروگرام",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/today.mp4",
+   "secs": 240,
+   "kind": "programme"
   }
  ],
  "slots": [
@@ -135,8 +142,48 @@
   },
   {
    "day": "all",
+   "time": "00:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "00:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "00:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "00:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "01:00",
    "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "01:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "01:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "01:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "01:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -145,8 +192,48 @@
   },
   {
    "day": "all",
+   "time": "02:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "02:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "02:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "02:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "03:00",
    "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "03:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "03:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "03:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "03:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -155,8 +242,48 @@
   },
   {
    "day": "all",
+   "time": "04:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "04:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "04:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "04:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "05:00",
    "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "05:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "05:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "05:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "05:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -165,8 +292,48 @@
   },
   {
    "day": "all",
+   "time": "06:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "06:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "06:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "06:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "07:00",
    "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "07:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "07:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "07:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "07:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -175,8 +342,48 @@
   },
   {
    "day": "all",
+   "time": "08:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "08:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "08:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "08:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "09:00",
    "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "09:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "09:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "09:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "09:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -185,8 +392,48 @@
   },
   {
    "day": "all",
+   "time": "10:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "10:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "10:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "10:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "11:00",
    "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "11:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "11:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "11:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "11:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -195,8 +442,48 @@
   },
   {
    "day": "all",
+   "time": "12:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "12:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "12:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "12:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "13:00",
    "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "13:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "13:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "13:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "13:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -205,8 +492,48 @@
   },
   {
    "day": "all",
+   "time": "14:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "14:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "14:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "14:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "15:00",
    "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "15:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "15:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "15:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "15:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -215,8 +542,48 @@
   },
   {
    "day": "all",
+   "time": "16:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "16:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "16:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "16:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "17:00",
    "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "17:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "17:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "17:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "17:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -225,8 +592,48 @@
   },
   {
    "day": "all",
+   "time": "18:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "18:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "18:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "18:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "19:00",
    "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "19:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "19:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "19:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "19:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -235,8 +642,48 @@
   },
   {
    "day": "all",
+   "time": "20:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "20:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "20:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "20:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "21:00",
    "video": "news-full"
+  },
+  {
+   "day": "all",
+   "time": "21:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "21:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "21:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "21:56",
+   "video": "today"
   },
   {
    "day": "all",
@@ -245,49 +692,66 @@
   },
   {
    "day": "all",
+   "time": "22:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "22:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "22:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "22:56",
+   "video": "today"
+  },
+  {
+   "day": "all",
    "time": "23:00",
    "video": "news-headlines"
+  },
+  {
+   "day": "all",
+   "time": "23:25",
+   "video": "promo"
+  },
+  {
+   "day": "all",
+   "time": "23:26",
+   "video": "today"
+  },
+  {
+   "day": "all",
+   "time": "23:55",
+   "video": "adbreak"
+  },
+  {
+   "day": "all",
+   "time": "23:56",
+   "video": "today"
   }
  ],
  "loop": [
   "welcome",
   "next",
   "drama-3",
-  "break",
-  "adbb",
-  "promo2",
   "next",
   "drama-1",
-  "break",
-  "promo",
   "next",
   "music",
-  "break",
-  "adbb",
-  "adhere",
   "next",
   "cooking",
-  "break",
-  "promo2",
-  "adbb",
   "next",
   "trailers",
-  "break",
-  "promo",
   "next",
   "comedy",
-  "break",
-  "adbb",
-  "adhere",
   "next",
-  "film",
-  "break",
-  "promo",
-  "next",
-  "drama-2",
-  "break",
-  "adbb",
-  "adhere"
+  "drama-2"
  ],
  "fillers": [
   "promo",
