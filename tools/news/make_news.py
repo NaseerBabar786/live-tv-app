@@ -49,13 +49,32 @@ CANADA_FEEDS = [
     ("سٹی نیوز", "https://toronto.citynews.ca/feed/"),
     ("سی بی سی نیوز", "https://www.cbc.ca/cmlink/rss-canada"),
 ]
+# India (owner asked 2026-10-08): official Hindi services, translated Hindi -> Urdu like the Canadian news.
+INDIA_FEEDS = [
+    ("بی بی سی ہندی", "https://feeds.bbci.co.uk/hindi/rss.xml"),
+    ("ڈی ڈبلیو ہندی", "https://rss.dw.com/rdf/rss-hin-all"),
+]
+# Sports (owner asked 2026-10-08), cricket first: official English feeds, translated to Urdu.
+SPORTS_FEEDS = [
+    ("ای ایس پی این کرک انفو", "https://www.espncricinfo.com/rss/content/story/feeds/0.xml"),
+    ("بی بی سی سپورٹ", "https://feeds.bbci.co.uk/sport/cricket/rss.xml"),
+    ("بی بی سی سپورٹ", "https://feeds.bbci.co.uk/sport/rss.xml"),
+]
+# Film and showbiz (owner asked 2026-10-08): Lollywood/Bollywood in Urdu, Hollywood (Variety) + BBC entertainment, translated when needed.
+FILM_FEEDS = [
+    ("ایکسپریس شوبز", "https://www.express.pk/showbiz/feed/"),
+    ("ایکسپریس شوبز", "https://www.express.pk/entertainment/feed/"),
+    ("ورائٹی", "https://variety.com/feed/"),   # Hollywood (owner asked 2026-10-08)
+    ("بی بی سی", "https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml"),
+]
 PAKISTAN_WORDS = ("پاکستان", "اسلام آباد", "لاہور", "کراچی", "پشاور", "کوئٹہ", "پنجاب", "سندھ", "خیبر", "بلوچستان",
                   "کشمیر", "شہباز", "عمران خان", "تحریک انصاف", "پی ٹی آئی", "مسلم لیگ", "پیپلز پارٹی", "بلاول",
                   "مریم نواز", "نواز شریف", "آرمی چیف", "عاصم منیر", "سپریم کورٹ", "راولپنڈی", "ملتان", "فیصل آباد",
                   "گلگت", "سٹیٹ بینک", "کرکٹ بورڈ", "پی سی بی")
 # How many stories each bulletin tries to fit (the fitting step drops the last ones if too long).
-WANT = {"headlines": {"pakistan": 4, "world": 4, "canada": 3}, "full": {"pakistan": 8, "world": 8, "canada": 6}}
-ORDER = ("canada", "pakistan", "world")   # owner 2026-10-08: Canada first
+WANT = {"headlines": {"pakistan": 4, "india": 3, "world": 4, "canada": 3, "sports": 2, "film": 3},
+        "full": {"pakistan": 8, "india": 6, "world": 8, "canada": 6, "sports": 5, "film": 6}}
+ORDER = ("canada", "pakistan", "india", "world", "film", "sports")   # owner 2026-10-08
 # Spare stories per section: used when the wanted ones are short, so the bulletin fills its slot.
 EXTRA = 6
 # The end card stays at most this long; any time still left is filled with our own Cable TV promos
@@ -128,9 +147,9 @@ def same_story(a, b):
     x, y = words(a["title"]), words(b["title"])
     return bool(x and y) and len(x & y) / min(len(x), len(y)) >= 0.5
 
-def translate(text):
-    """English to Urdu with Google's free translate address (no key)."""
-    url = ("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ur&dt=t&q="
+def translate(text, src="en"):
+    """English (or Hindi: src="hi") to Urdu with Google's free translate address (no key)."""
+    url = (f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl=ur&dt=t&q="
            + urllib.parse.quote(text))
     data = json.loads(fetch(url))
     return clean("".join(part[0] for part in data[0] if part and part[0]))
@@ -167,18 +186,18 @@ def gather(kind):
     for s in urdu:
         s["section"] = "pakistan" if any(w in s["title"] + " " + s["desc"][:200] for w in PAKISTAN_WORDS) else "world"
     picked = {sec: [s for s in urdu if s["section"] == sec][:want[sec] + EXTRA] for sec in ("pakistan", "world")}
-    canada = take_turns(read_feeds(CANADA_FEEDS), want["canada"] + EXTRA, seen, "canada")
-    done = []
-    for s in canada:
-        try:
-            s["title"] = translate(s["title"])
-            first = re.split(r"(?<=[.!?])\s+", s["desc"])[0] if s["desc"] else ""
-            s["desc"] = translate(first) if first else ""
-            done.append(s)
-        except Exception as e:
-            NOTES.append(f"translate failed: {e}")
-            break
-    picked["canada"] = done
+    for sec, feeds, lang in (("india", INDIA_FEEDS, "hi"), ("canada", CANADA_FEEDS, "en"), ("sports", SPORTS_FEEDS, "en"), ("film", FILM_FEEDS, "auto")):
+        done = []
+        for s in take_turns(read_feeds(feeds), want[sec] + EXTRA, seen, sec):
+            try:
+                s["title"] = translate(s["title"], lang)
+                first = re.split(r"(?<=[.!?।])\s+", s["desc"])[0] if s["desc"] else ""
+                s["desc"] = translate(first, lang) if first else ""
+                done.append(s)
+            except Exception as e:
+                NOTES.append(f"translate failed ({sec}): {e}")
+                break
+        picked[sec] = done
     NOTES.append("stories: " + ", ".join(f"{k} {len(v)}" for k, v in picked.items()))
     return picked
 
@@ -265,7 +284,25 @@ def speak(text, voice, base, offline):
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", base + ".mp3", "-ac", "1", "-ar", str(SR), wav)
     return read_wav(wav)
 
-# ---------- music (made here, free to use) ----------
+# ---------- music: real recordings from tools/music/library.py (CC BY, credited on the end card) ----------
+STING_MUSIC = os.environ.get("NEWS_STING", "promo")   # opening and end card
+BED_MUSIC = os.environ.get("NEWS_BED", "calm")        # very low under the stories
+
+def lib_music(mood, secs, fin, fout):
+    sys.path.insert(0, os.path.join(HERE, "..", "music"))
+    import library
+    x = library.bed(mood, secs, fade_in=fin, fade_out=fout).mean(axis=1).astype(np.float32)
+    return x / max(1e-6, np.abs(x).max())
+
+def music_credit():
+    sys.path.insert(0, os.path.join(HERE, "..", "music"))
+    import library
+    names = []
+    for mood in dict.fromkeys((STING_MUSIC, BED_MUSIC)):
+        t = library.track(mood); names.append(f"{t['title']} by {t['artist']} ({t['licence']})")
+    return "Music: " + ", ".join(names)
+
+# ---------- old home-made music (no longer used: owner rule, real recordings only) ----------
 def tone(f, n, decay=0.0):
     t = np.arange(n) / SR
     w = np.sin(2 * np.pi * f * t) + 0.35 * np.sin(4 * np.pi * f * t) + 0.15 * np.sin(6 * np.pi * f * t)
@@ -330,7 +367,8 @@ def background(path, secs=8):
 
 # ---------- graphics (right to left) ----------
 RED, BLUE, TEAL, GREEN, GOLD = (210, 30, 45), (25, 110, 220), (20, 150, 140), (20, 130, 70), (245, 190, 40)
-SECTION = {"pakistan": ("پاکستان", GREEN), "world": ("دنیا", BLUE), "canada": ("کینیڈا", RED),
+SAFFRON, PURPLE, PINK = (215, 105, 20), (125, 60, 190), (200, 40, 120)
+SECTION = {"pakistan": ("پاکستان", GREEN), "world": ("دنیا", BLUE), "canada": ("کینیڈا", RED), "india": ("بھارت", SAFFRON), "sports": ("کھیل", PURPLE), "film": ("شوبز", PINK),
            "weather": ("موسم", TEAL)}
 RIGHT = 1170  # right edge of the text inside the panel
 LIGHT, DIM = (205, 215, 235), (150, 170, 205)
@@ -412,14 +450,23 @@ def pill(d, name, col):
     d.rounded_rectangle([RIGHT - pw, 128, RIGHT, 176], 8, fill=col)
     text(d, RIGHT - pw / 2, 150, name, 24, "white", "m")
 
-def card(path, label, section, headline, body, source, count):
+# Scene clip box on story cards (left of the text), when a free clip fits the story; see broll.py.
+BROLL_BOX = (100, 196, 448, 252)
+
+def card(path, label, section, headline, body, source, count, video_credit=None):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     name, col = SECTION[section]
     panel(d, col); pill(d, name, col)
     if count: text(d, 110, 150, count, 20, (170, 185, 215), "l")
+    tw = 1050
+    if video_credit:
+        x, y, w, h = BROLL_BOX; tw = RIGHT - (x + w) - 40
+        d.rectangle((x - 3, y - 3, x + w + 2, y + h + 2), outline=col, width=3)
+        d.rectangle((x, y, x + w - 1, y + h - 1), fill=(0, 0, 0, 0))
+        d.text((x, y + h + 10), video_credit, font=font(False, 15), fill=DIM)
     size = 44
     while True:
-        lines = wrap(d, headline, size, 1050, 3)
+        lines = wrap(d, headline, size, tw, 3)
         if len(lines) <= 2 or size <= 34: break
         size -= 4
     step = int(size * 1.75)
@@ -427,7 +474,7 @@ def card(path, label, section, headline, body, source, count):
     for ln in lines:
         draw_line(d, RIGHT, y, ln, fonts(size), "white"); y += step
     y += 6
-    for ln in wrap(d, body, 25, 1050, max(1, (545 - y) // 46)):
+    for ln in wrap(d, body, 25, tw, max(1, (545 - y) // 46)):
         draw_line(d, RIGHT, y, ln, fonts(25, False), LIGHT); y += 46
     if source: text(d, RIGHT, 562, source, 19, DIM)
     lower_bar(d, label)
@@ -493,7 +540,7 @@ def date_ur(slot, year=False):
     return f"{WEEKDAYS[slot.weekday()]}، {slot.day} {MONTHS[slot.month - 1]}" + (f" {slot.year}" if year else "")
 
 def probe(out):
-    read_feeds(URDU_FEEDS + CANADA_FEEDS)
+    read_feeds(URDU_FEEDS + INDIA_FEEDS + CANADA_FEEDS + SPORTS_FEEDS + FILM_FEEDS)
     try: NOTES.append("translate: " + translate("Canada's prime minister met provincial leaders in Ottawa."))
     except Exception as e: NOTES.append(f"translate failed: {e}")
     try: NOTES.append(f"weather: {weather()[0]}")
@@ -514,30 +561,84 @@ def newsreader(slot):
     ids = [i for i in ids if i in people and os.path.exists(os.path.join(here, "clips", f"{i}.mp4"))]
     if not ids:
         NOTES.append("no newsreader clip found"); return None
-    p = dict(people[ids[slot.hour % len(ids)]]); p["clip"] = os.path.join(here, "clips", f"{p['id']}.mp4")
+    p = dict(people[ids[slot.hour % len(ids)]]); p["clip"] = boomerang(os.path.join(here, "clips", f"{p['id']}.mp4"))
     return p
+
+def boomerang(clip):
+    """The clip played forward then backward, so when it loops the hands never jump back (owner 2026-10-08)."""
+    out = clip[:-4] + "-loop.mp4"
+    if not os.path.exists(out):
+        try:
+            run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", clip, "-filter_complex",
+                "[0:v]fps=25,setpts=PTS-STARTPTS,split[a][b];[b]reverse,trim=start_frame=1,setpts=PTS-STARTPTS[r];[a][r]concat=n=2:v=1:a=0[v]",
+                "-map", "[v]", "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", out)
+        except Exception as e:
+            NOTES.append(f"boomerang failed: {e}"); return clip
+    return out
+
+def add_opening(body, secs, work):
+    """Owner's pick (2026-10-08, opening 3): the headline wall with our logo landing replaces the still title
+    for the first seconds. If it can't be made, the still title simply stays."""
+    try:
+        import intro_ideas
+        intro = os.path.join(work, "opening.mp4")
+        intro_ideas.opening(intro, secs)
+        tmp = body + ".open.mp4"
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", body, "-i", intro, "-filter_complex",
+            "[0:v][1:v]overlay=0:0:eof_action=pass,format=yuv420p[v]", "-map", "[v]", "-map", "0:a", "-c:v", "libx264",
+            "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2), "-c:a", "copy", "-movflags", "+faststart", tmp)
+        os.replace(tmp, body)
+    except Exception as e:
+        NOTES.append(f"opening failed: {e}")
+
+def add_segment(body, clip, t0, work):
+    """Lays a ready-made segment's picture (the weather centre) over the bulletin from t0; its voice is already in the mix."""
+    try:
+        tmp = body + ".seg.mp4"
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", body, "-itsoffset", f"{t0:.3f}", "-i", clip,
+            "-filter_complex", f"[1:v]fps={FPS},setsar=1[s];[0:v][s]overlay=0:0:eof_action=pass,format=yuv420p[v]",
+            "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2),
+            "-c:a", "copy", "-movflags", "+faststart", tmp)
+        os.replace(tmp, body)
+    except Exception as e:
+        NOTES.append(f"weather centre overlay failed: {e}")
 
 def add_reader(body, reader, windows, label, work):
     """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     lower_bar(d, f"{label} • {reader['ur']}")
     im.save(os.path.join(work, "reader-bar.png"))
-    ins = ["-i", body]
-    for t0, dur in windows:
-        ins += ["-stream_loop", "-1", "-itsoffset", f"{t0:.3f}", "-i", reader["clip"]]
-    ins += ["-loop", "1", "-i", os.path.join(work, "reader-bar.png")]
-    bar = len(windows) + 1
-    graph, last = [], "[0:v]"
-    for k, (t0, dur) in enumerate(windows, 1):
-        on = f"between(t,{t0:.3f},{t0 + dur:.3f})"
-        graph.append(f"[{k}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1[r{k}]")
-        graph.append(f"{last}[r{k}]overlay=0:0:eof_action=pass:enable='{on}'[m{k}]")
-        graph.append(f"[m{k}][{bar}:v]overlay=0:0:shortest=1:enable='{on}'[b{k}]")
-        last = f"[b{k}]"
+    # One continuous copy of the (looping, forward-and-back) clip runs under the whole bulletin and shows only in
+    # the windows, so the newsreader never restarts mid-gesture between segments.
+    ins = ["-i", body, "-stream_loop", "-1", "-i", reader["clip"], "-loop", "1", "-i", os.path.join(work, "reader-bar.png")]
+    on = "+".join(f"between(t,{t0:.3f},{t0 + dur:.3f})" for t0, dur in windows)
+    graph = [f"[1:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1[r]",
+             f"[0:v][r]overlay=0:0:shortest=1:enable='{on}'[m]",
+             f"[m][2:v]overlay=0:0:shortest=1:enable='{on}'[b]"]
+    last = "[b]"
     tmp = os.path.join(work, "with-reader.mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(graph) + f";{last}format=yuv420p[v]",
         "-map", "[v]", "-map", "0:a", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
         "-g", str(FPS * 2), "-c:a", "copy", "-movflags", "+faststart", tmp)
+    os.replace(tmp, body)
+
+def add_broll(body, clips, work):
+    """Plays each story's scene clip inside its card's box (clips: (start, secs, file))."""
+    if not clips: return
+    x, y, w, h = BROLL_BOX
+    ins, chain, last = ["-i", body], [], "0:v"
+    files = list(dict.fromkeys(f for _, _, f in clips))   # each file is one continuous input (the newsreader never restarts)
+    for i, f in enumerate(files, 1):
+        ins += ["-stream_loop", "-1", "-i", f]
+        on = "+".join(f"between(t,{t0:.3f},{t0 + secs:.3f})" for t0, secs, g in clips if g == f)
+        chain.append(f"[{i}:v]scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS},setsar=1[b{i}]")
+        chain.append(f"[{last}][b{i}]overlay={x}:{y}:shortest=1:enable='{on}'[v{i}]")
+        last = f"v{i}"
+    tmp = os.path.join(work, "broll.mp4")
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(chain), "-map", f"[{last}]",
+        "-map", "0:a", "-t", f"{float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', body], capture_output=True, text=True).stdout):.3f}",
+        "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2), "-c:a", "copy",
+        "-movflags", "+faststart", tmp)
     os.replace(tmp, body)
 
 def add_promos(body, secs, slot, work, mp4):
@@ -614,12 +715,23 @@ def main():
     tail = ("یہ تھیں اس وقت کی خبریں۔ خبروں کی سرخیاں ہر گھنٹے، اور تفصیلی خبرنامہ ہر تین گھنٹے بعد، "
             "صرف بازار ٹی وی پر۔ اللہ حافظ۔")
     weather_seg = weather_words(wx, kind == "headlines") if wx else None
-    NAMES = {"pakistan": "پاکستان", "world": "دنیا", "canada": "کینیڈا"}
-    LEAD = {sec: ("سب سے پہلے " if i == 0 else "اب ") + NAMES[sec] + " کی خبریں۔ " for i, sec in enumerate(ORDER)}
+    NAMES = {"canada": "کینیڈا", "pakistan": "پاکستان", "india": "بھارت", "world": "دنیا", "film": "فلم اور شوبز", "sports": "کھیلوں"}
+    present = [sec for sec in ORDER if any(s["section"] == sec for s in stories)]
+    LEAD = {sec: ("اب " if 0 < i < len(present) - 1 else "اور آخر میں " if i else "") + NAMES[sec] + " کی خبریں۔ "
+            for i, sec in enumerate(present)}
     # The voice always matches the newsreader on camera: a man reads with a man's voice, a lady with a lady's (owner 2026-10-08).
     reader = newsreader(slot)
     rv = VOICE_B if reader and reader.get("voice") == VOICE_B else VOICE_A
     VOICE = {sec: rv for sec in ORDER}
+
+    # Owner's pick (2026-10-08, weather idea 1): the weather centre with the same newsreader replaces the weather card.
+    wxvid = None
+    if weather_seg and reader and not offline:
+        try:
+            import weather_ideas
+            wxvid = weather_ideas.segment(work, rv, reader["clip"], kind == "headlines")
+        except Exception as e:
+            NOTES.append(f"weather centre failed: {e}")
 
     def plan(counts):
         segs = []
@@ -640,7 +752,7 @@ def main():
     counts = {sec: sum(s["section"] == sec for s in stories) for sec in ORDER}
     while True:
         segs = [("open", head, rv, None)] + plan(counts) + [("close", tail, rv, None)]
-        used = STING + sum(len(voice(t, v)) / SR + GAP for _, t, v, _ in segs)
+        used = STING + sum((wxvid[2] if k == "weather" and wxvid else len(voice(t, v)) / SR) + GAP for k, t, v, _ in segs)
         if used + END_MIN <= total or sum(counts.values()) <= 2: break
         biggest = max(ORDER, key=lambda k: counts[k])
         counts[biggest] -= 1
@@ -652,17 +764,26 @@ def main():
     cards, voice_track = [], np.zeros(int(SR * total) + SR, np.float32)
     title_card(os.path.join(work, "c-title.png"), kind, f"{clock(slot)} • {date_ur(slot, True)}", "")
     cards.append(("c-title.png", STING))
-    t = STING; n = 0; on_camera = []
+    t = STING; n = 0; on_camera = []; clips = []
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import broll
+    wx_at = None
     for i, (sk, text, v, s) in enumerate(segs):
-        audio = voice(text, v)
+        audio = wxvid[1] if sk == "weather" and wxvid else voice(text, v)
+        if sk == "weather" and wxvid: wx_at = t
         a = int(t * SR); voice_track[a:a + len(audio)] += audio[:len(voice_track) - a]
         dur = len(audio) / SR + GAP
         pic = f"c-{i:02d}.png"
         if sk == "story":
             n += 1
-            src = "ذریعہ " + s["source"] + (" • ترجمہ" if s["section"] == "canada" else "")
+            src = "ذریعہ " + s["source"] + (" • ترجمہ" if s["section"] in ("canada", "india", "sports", "film") else "")
+            # Owner 2026-10-08: scenery that doesn't match the story feels wrong, so the box shows the newsreader
+            # unless NEWS_BROLL=1 asks for the topic clips.
+            clip = broll.pick(s, work) if os.environ.get("NEWS_BROLL") == "1" and not offline else None
+            if not clip and reader: clip = (reader["clip"], " ")   # no scene clip: the newsreader reads in the window
+            if clip: clips.append((t, len(audio) / SR + GAP, clip[0]))
             card(os.path.join(work, pic), label, s["section"], s["headline"],
-                 first_sentence(s["desc"]), src, f"خبر {n} • کل {len(shown)}")
+                 first_sentence(s["desc"]), src, f"خبر {n} • کل {len(shown)}", clip[1] if clip else None)
         elif sk == "weather":
             weather_card(os.path.join(work, pic), label, wx)
         elif sk == "open":
@@ -676,15 +797,15 @@ def main():
     # A short gap stays on the end card; a long one gets promos after a normal-length end card.
     end_secs = left if left <= END_MAX + 3 else END_MAX
     news_len = t + end_secs
-    credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • کینیڈا کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
+    credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • بھارت، کینیڈا، کھیل اور شوبز کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
     title_card(os.path.join(work, "c-end.png"), kind, up_next, credits,
-               "Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else "AI voice")
+               music_credit() + (" · Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else " · AI voice"))
     cards.append(("c-end.png", end_secs))
 
     music = np.zeros_like(voice_track)
-    st = sting(STING); music[:len(st)] += 0.9 * st
-    b = bed(total); music[int(STING * SR) - SR:int(STING * SR) - SR + len(b)] += 0.10 * b[:len(music) - int(STING * SR) + SR]
-    e0 = int(t * SR); m_end = bed(end_secs + 1)
+    st = lib_music(STING_MUSIC, STING, 0.2, 1.2); music[:len(st)] += 0.9 * st
+    b = lib_music(BED_MUSIC, total, 1.0, 1.5); music[int(STING * SR) - SR:int(STING * SR) - SR + len(b)] += 0.10 * b[:len(music) - int(STING * SR) + SR]
+    e0 = int(t * SR); m_end = lib_music(STING_MUSIC, end_secs + 1, 1.0, 1.5)
     ramp = np.minimum(1, np.arange(len(m_end)) / (SR * 1.5))
     music[e0:e0 + len(m_end)] += 0.25 * ramp * m_end[:len(music) - e0]
     fade = int(SR * 2); music[int(news_len * SR) - fade:int(news_len * SR)] *= np.linspace(1, 0, fade)
@@ -703,6 +824,9 @@ def main():
         "-filter_complex", f"[1:v]fps={FPS},format=rgba[c];[0:v][c]overlay=0:0:format=auto,format=yuv420p[v]",
         "-map", "[v]", "-map", "2:a", "-t", f"{news_len:.3f}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
         "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
+    add_broll(body, clips, work)
+    add_opening(body, STING, work)
+    if wx_at is not None: add_segment(body, wxvid[0], wx_at, work)
     if reader and on_camera:
         add_reader(body, reader, on_camera, label, work)
     promos = []

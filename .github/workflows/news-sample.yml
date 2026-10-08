@@ -1,0 +1,56 @@
+name: News look sample
+# Makes a SAMPLE headlines bulletin in a new look for the owner to approve (never touches the on-air files).
+# Result: channel-media/news-sample-<look>-headlines.mp4 and news-sample-<look>-full.mp4
+on:
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/news-sample.yml", "tools/news/make_news.py", "tools/news/broll.py", "tools/news/intro_ideas.py"]
+  workflow_dispatch:
+    inputs:
+      look:
+        default: "calm"
+env:
+  LOOK: ${{ github.event.inputs.look || 'india' }}   # any name but calm = the on-air look
+  READERS: ""   # empty = the on-air readers
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          timeout 300 sudo apt-get update -qq || true
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
+          pip install -q edge-tts numpy pillow
+          for id in ${READERS:-$(python3 -c "import json; print(' '.join(json.load(open('tools/news/presenters/on-air.json'))['readers']))")}; do
+            curl -fsSL -m 120 -o "tools/news/presenters/clips/$id.mp4" \
+              "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || true
+          done
+      - name: Topic clip library (free Wikimedia Commons clips), built once
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          have=$(curl -fsSL -m 30 "https://github.com/$GITHUB_REPOSITORY/releases/download/news-broll/news-broll.json" | python3 -c "import json,sys; print(json.load(sys.stdin).get('version', 1))" || echo 0)
+          want=$(python3 -c "import sys; sys.path.insert(0, 'tools/news'); import broll; print(broll.VERSION)")
+          echo "clip library version $have, code wants $want"
+          if [ "$have" != "$want" ]; then
+            gh release view news-broll -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+              gh release create news-broll --prerelease -t "News topic clips" -n "Free CC0 / public-domain / CC BY clips from Wikimedia Commons for Bazaar TV News, credited on screen." -R "$GITHUB_REPOSITORY"
+            python3 tools/news/broll.py build broll-out
+            gh release upload news-broll broll-out/*.mp4 broll-out/*.jpg broll-out/news-broll.json -R "$GITHUB_REPOSITORY" --clobber
+          fi
+      - env:
+          NEWS_LOOK: ${{ env.LOOK }}
+          NEWS_READERS: ${{ env.READERS }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          for k in headlines full; do
+            python3 tools/news/make_news.py out --kind $k
+            mv out/news-$k.mp4 news-sample-$LOOK-$k.mp4
+          done
+          python3 tools/news/intro_ideas.py intro-out
+          gh release upload channel-media intro-out/news-intro-*.mp4 -R "$GITHUB_REPOSITORY" --clobber
+          gh release upload channel-media news-sample-$LOOK-headlines.mp4 news-sample-$LOOK-full.mp4 -R "$GITHUB_REPOSITORY" --clobber
