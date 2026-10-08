@@ -54,7 +54,7 @@ https://www.youtube.com/watch?v=EiOmPaQST9U
 https://www.youtube.com/watch?v=jWp8aAdRbyI
 #EXTINF:-1 mins="147" desc="Recitation of the Holy Qur'an by Maulana Feroz Alam with Urdu translation. Part 12." added="2026-10-06" tvg-logo="https://i.ytimg.com/vi/194V1YfE93g/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 12
 https://www.youtube.com/watch?v=194V1YfE93g
-#EXTINF:-1 mins="132" desc="Recitation of the Holy Qur'an by Maulana Feroz Alam with Urdu translation. Part 15." added="2026-10-03" tvg-logo="https://i.ytimg.com/vi/8FQ5svNHy5I/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 15
+#EXTINF:-1 mins="132" desc="Recitation of the Holy Qur'an by Maulana Feroz Alam with Urdu translation. Part 15." added="2026-10-03" tvg-logo="https://i.ytimg.com/vi/8FQ5svNHy5I/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 15
 https://www.youtube.com/watch?v=8FQ5svNHy5I
 #EXTINF:-1 mins="145" desc="Recitation of the Holy Qur'an by Maulana Feroz Alam with Urdu translation. Part 3." added="2026-10-02" tvg-logo="https://i.ytimg.com/vi/Qb9b-ClwJXg/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 4
 https://www.youtube.com/watch?v=Qb9b-ClwJXg
@@ -1226,6 +1226,8 @@ https://www.youtube.com/watch?v=d5giwhHa4io
 https://www.youtube.com/watch?v=SMX07-3YWl4
 #EXTINF:-1 mins="57" desc="An in-depth explanation of Qur'anic verses 1-7 of Surah Al-Faatiha by Hazrat Mirza Tahir Ahmad, Khalifatul-Masih IV (ra) in English and Arabic. Class no." added="2026-10-08" tvg-logo="https://i.ytimg.com/vi/LAVOmfLDcPM/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Darsul Qur'an",Darsul Qur'an - 1 - 3rd June 1984 (Surah Al-Faatiha 1-7)
 https://www.youtube.com/watch?v=LAVOmfLDcPM
+#EXTINF:-1 mins="17" genres="Family" desc="Jalsa Salana Germany 2018 - Kids studio session" added="2026-10-08" tvg-logo="https://i.ytimg.com/vi/O9uFzdljfSk/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Jalsa Salana Germany 2018 - Kids studio session
+https://www.youtube.com/watch?v=O9uFzdljfSk
 #EXTINF:-1 mins="8" genres="Family" desc="Part 1 of an educational class with Hadhrat Mirza Masroor Ahmad, Head of the Ahmadiyya Muslim Community. Recorded on 17th January 2010." added="2026-10-08" tvg-logo="https://i.ytimg.com/vi/fdJy4v89yhY/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Children's Class: 17th January 2010 - Part 1
 https://www.youtube.com/watch?v=fdJy4v89yhY
 #EXTINF:-1 mins="15" genres="Family" desc="In this week's episode of Friday Sermon for Kids, host Yaser Ahmed is joined by kid presenters Ahla, Rohaan, and Rayyan as they discuss the lofty standards of gratitude set by the…" added="2026-10-07" tvg-logo="https://i.ytimg.com/vi/wC696Qtv8tQ/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",FS4 KIDS | EP 249: The Promised Messiah's (as) Gratitude Towards Allah & Others
