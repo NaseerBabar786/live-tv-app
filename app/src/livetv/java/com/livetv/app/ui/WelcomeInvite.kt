@@ -82,7 +82,7 @@ fun GoldFeatureDialog(feature: String, onGetGold: () -> Unit, onDismiss: () -> U
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
                         "Your minute with $feature is up. Your Free package has every channel in 1+List. " +
-                            "Gold opens every mode, Movies & Dramas, Games, Iqra Quran & Azan Clock, Weather and Themes." +
+                            "Gold opens full screen, every mode, Movies & Dramas, Games, Iqra Quran & Azan Clock, Weather and Themes." +
                             if (canWelcome) "\n\nNew here? Use code ${Welcome.CODE} for one month of Gold, free." else "",
                     )
                     use.result?.let { Text(it, fontWeight = FontWeight.Bold, color = AccentBlue) }

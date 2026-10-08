@@ -53,6 +53,7 @@ object Plans {
         Quran("quran", "Iqra Quran & Azan Clock"),
         Weather("weather", "Weather"),
         Themes("themes", "Themes"),
+        FullScreen("full", "Full screen"),
         TwoDevices("devices", "2 devices");
 
         companion object {
@@ -63,8 +64,8 @@ object Plans {
     }
 
     /**
-     * Free is fixed, not ticked: every channel, in 1+List only (owner, 2026-10-08: "channels are free, we charge
-     * for the features"). Every other package has at least this too, so a paid package never has less than Free.
+     * Free is fixed, not ticked: every channel, in 1+List only, not even full screen (owner, 2026-10-08: "channels
+     * are free, we charge for the features"). Every other package has at least this too, so a paid package never has less than Free.
      */
     val FREE_FEATURES: Set<Feature> = setOf(Feature.AllChannels)
 

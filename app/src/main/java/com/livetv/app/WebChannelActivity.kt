@@ -206,7 +206,23 @@ class WebChannelActivity : Activity() {
         }
     }
 
+    // A Gold try on Free (full screen, or the Library for a film) closes this window when its minute is up.
+    private val goldCheck = object : Runnable {
+        override fun run() {
+            val t = Plans.trying.value
+            if (t != null && System.currentTimeMillis() >= t.until) Plans.endTry()
+            if (!Plans.canUse(if (film) Plans.Feature.Library else Plans.Feature.FullScreen)) finish()
+            else window.decorView.postDelayed(this, 1000)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        window.decorView.post(goldCheck)
+    }
+
     override fun onPause() {
+        window.decorView.removeCallbacks(goldCheck)
         super.onPause()
         // Leaving the channel (Home, another app) stops it, like the other channels.
         if (isFinishing) webView?.loadUrl("about:blank")

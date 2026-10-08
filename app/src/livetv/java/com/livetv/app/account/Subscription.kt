@@ -305,7 +305,7 @@ object Subscription {
     /** What [tier] has, in a line for the packages screen. */
     fun describe(tier: Plans.Tier): String = when (tier) {
         // Fixed since 1.10.16 (owner, 2026-10-08): the channels are free, the features are Gold.
-        Plans.Tier.Free -> "Every channel, in 1+List, full screen and favourites. Other modes and features: try each for 1 minute."
+        Plans.Tier.Free -> "Every channel, in 1+List, with favourites. Full screen and the other modes and features: try each for 1 minute."
         Plans.Tier.Gold -> "Every channel and every feature: " +
             Plans.Feature.entries.filter { it != Plans.Feature.AllChannels }.joinToString(", ") { it.label } + "."
         else -> describe(_offer.value.features[tier].orEmpty())

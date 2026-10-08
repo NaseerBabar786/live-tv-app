@@ -322,6 +322,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             Plans.ask(channel.name, Plans.Feature.AllChannels)
             return
         }
+        // Full screen is Gold (owner, 2026-10-08): on Free it's a minute's try, then 1+List again.
+        Plans.ask("Full screen", Plans.Feature.FullScreen)
         if (!tipChecked) {
             tipChecked = true
             if (_state.value.favorites.size < 6) {

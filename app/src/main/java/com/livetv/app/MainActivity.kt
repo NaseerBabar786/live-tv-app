@@ -112,6 +112,7 @@ class MainActivity : ComponentActivity() {
             if (showGames && !Plans.canUse(Plans.Feature.Games)) showGames = false
             if (showQuran && !Plans.canUse(Plans.Feature.Quran)) showQuran = false
             if (showVod && !Plans.canUse(Plans.Feature.Library)) { showVod = false; vodStart = null }
+            if (viewModel.state.value.playing != null && !Plans.canUse(Plans.Feature.FullScreen)) viewModel.stop()
             // The theme picked stays saved; without Themes the usual one shows.
             com.livetv.app.ui.Themes.unlocked = Plans.canUse(Plans.Feature.Themes)
         }

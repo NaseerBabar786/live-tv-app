@@ -289,7 +289,7 @@ private fun TrialNotice(until: Date, prefs: android.content.SharedPreferences, o
         else -> "$left days left"
     }
     val text = (if (first) "Welcome to Cable TV! Every channel is free, always. For your first $trialDays days you also have Gold " +
-        "free: every mode (Browse, 1+3, 2×2, News...), Movies & Dramas, Games, Iqra Quran, Weather and Themes. " else "") +
+        "free: full screen, every mode (Browse, 1+3, 2×2, News...), Movies & Dramas, Games, Iqra Quran, Weather and Themes. " else "") +
         "Your Gold trial ends on ${planDate(until)}" + when (left) {
             0L -> " (today)."
             1L -> " (tomorrow)."

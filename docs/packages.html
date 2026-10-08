@@ -109,7 +109,7 @@
 
     <div class="panel" style="margin-bottom:20px">
       <h2 style="margin-top:0">Design your packages</h2>
-      <p class="small">The channels are free; we charge for the app's features (owner, 2026-10-08). <b>Free</b> is fixed: <b>every channel</b>, watched in <b>1+List</b> (and full screen), nothing else. <b>Gold</b> is fixed too: every channel and <b>every feature</b> below. When a Free viewer opens a Gold feature they can try it for <b>1 minute</b>; then the app goes back to 1+List and tells them it's a Gold feature, with Get Gold and the WELCOME code. Promotions still have their own ticks (below).</p>
+      <p class="small">The channels are free; we charge for the app's features (owner, 2026-10-08). <b>Free</b> is fixed: <b>every channel</b>, watched in <b>1+List</b> only, not even full screen. <b>Gold</b> is fixed too: every channel and <b>every feature</b> below. When a Free viewer opens a Gold feature they can try it for <b>1 minute</b>; then the app goes back to 1+List and tells them it's a Gold feature, with Get Gold and the WELCOME code. Promotions still have their own ticks (below).</p>
       <div class="table-wrap feats"><table>
         <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Gold">Gold</span></th></tr></thead>
         <tbody id="featRows"></tbody>
@@ -123,7 +123,7 @@
       <h3>How it works</h3>
       <ul class="how">
         <li><b>Packages off</b> (the switch in Settings is unticked): every viewer has everything, like Gold, for free. Nothing is locked.</li>
-        <li><b>Packages on</b>: a viewer without a package has <b>Free</b>: every channel, in 1+List only. Every other mode, Movies &amp; Dramas, Games, Iqra Quran &amp; Azan Clock, Weather and Themes are Gold. A Free viewer who opens one can try it for 1 minute, then the app goes back to 1+List and says "This is a Gold feature" with <b>Get Gold</b> and <b>Use code WELCOME</b>.</li>
+        <li><b>Packages on</b>: a viewer without a package has <b>Free</b>: every channel, in 1+List only. Full screen, every other mode, Movies &amp; Dramas, Games, Iqra Quran &amp; Azan Clock, Weather and Themes are Gold. A Free viewer who opens one can try it for 1 minute, then the app goes back to 1+List and says "This is a Gold feature" with <b>Get Gold</b> and <b>Use code WELCOME</b>.</li>
         <li><b>Free trial</b>: a brand-new viewer gets <b>every feature (Gold)</b> for the trial days in Settings, counted from the day they first signed in. When the trial ends they drop to Free (every channel, 1+List only), unless you gave them a package, and 8 hours later the app offers them the WELCOME month of Gold.</li>
         <li><b>Buying</b>: in the app the viewer picks a package and a length and presses <b>Ask</b>. That sends you a message in ✉ Messages. You reply with how to pay, and once they've paid you give them the package below.</li>
         <li><b>Ending</b>: 5 days before a package (or the trial) ends, the viewer sees a reminder once a day with <b>Renew</b> and <b>Message us</b> buttons. When it ends they drop to Free, and for a week the app tells them it ended.</li>
@@ -202,6 +202,7 @@ const FEATURES = [
   ["quran", "Iqra Quran & Azan Clock", "the Quran section (Qaida, recitation, Hifz) and the Azan at prayer times"],
   ["weather", "Weather", "the Weather section in the top bar"],
   ["themes", "Themes", "the colour themes in Settings"],
+  ["full", "Full screen", "a channel on the whole screen"],
   ["devices", "2 devices", "one account works on two TVs or phones at the same time"],
 ];
 const ALL_TIERS = ["Free", "Gold"];
@@ -359,7 +360,7 @@ if (!configured) {
     $("pkgCards").innerHTML = ALL_TIERS.map(t => {
       const id = t.toLowerCase(), has = ticked(id);
       const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : ($("extraChannels").value.trim() ? `<li><b>Our own Bazaar channels</b> plus ${esc($("extraChannels").value.trim())}</li>` : "<li><b>Only our own Bazaar channels</b></li>"),
-        id === "free" ? "<li><b>1+List</b> only, full screen, favourites and search (other features: a 1-minute try)</li>" : "<li><b>1+List</b>, full screen, favourites and search</li>",
+        id === "free" ? "<li><b>1+List</b> only, favourites and search (full screen and every other feature: a 1-minute try)</li>" : "<li><b>1+List</b>, full screen, favourites and search</li>",
         ...FEATURES.filter(f => f[0] !== "channels" && has.includes(f[0])).map(f => `<li><b>${f[1]}</b>: ${f[2]}</li>`)];
       const price = id === "free" ? "$0" : "";
       return `<div class="pkg"><h3><span class="pill ${t}">${tierName(t)}</span> <span class="price" data-p="${id}">${price}</span></h3><ul>${items.join("")}</ul></div>`;
