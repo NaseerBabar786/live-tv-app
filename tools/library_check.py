@@ -186,7 +186,7 @@ GENRE_RE = [(g, re.compile(p, re.I)) for g, p in GENRES]
 
 
 # Owner's rule (2026-10-08): no horror anywhere on our channels or in the Library (Kids' friendly ghosts aside).
-HORROR = re.compile(r"horror(?!s\b)|zombie|exorcis|demonic|evil spirit|slasher|apparition|haunted (?:house|villa|mansion|hotel)|"
+HORROR = re.compile(r"horror(?!s\b)|zombie|exorcis|demonic|evil spirit|dakini|डाकिनी|daayan|डायन|slasher|apparition|haunted (?:house|villa|mansion|hotel)|"
                     r"ghost story|bhoot|chudail|churail|aseb|آسیب|چڑیل|بھوت|चुड़ैल|भूतिया|डरावन|हॉरर|ہارر", re.I)
 
 
