@@ -40,6 +40,13 @@
   .checklist li.yes { color: #A5D6A7; }
   .said { background: var(--bg); border: 1px dashed var(--line); border-radius: 12px; padding: 10px 14px; font-size: 14px; margin: 10px 0; }
   .contact { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .watch { background: var(--bg); border: 1px solid var(--surface-2); border-radius: 12px; padding: 10px 14px; margin: 6px 0 14px; }
+  .watch h3 { margin: 0 0 6px; font-size: 16px; }
+  .watch .now { font-size: 15px; margin-bottom: 8px; }
+  .watch .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px 20px; }
+  .watch ol { margin: 4px 0 0; padding-left: 22px; font-size: 14px; }
+  .watch ol li span { color: var(--muted); }
+  .live { color: #81C784; font-weight: 700; }
   input[type=search] { width: 100%; max-width: 360px; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
 </style>
 </head>
@@ -73,11 +80,11 @@
       <div class="row"><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Billing</th><th></th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Watching</th><th>Billing</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
-  <p class="small">💳 Click any user to open their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
+  <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and their top channels today and in the last 7 days) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
   <p class="err" id="err"></p>
 </main>
@@ -87,6 +94,7 @@
     <button class="btn" id="bClose" aria-label="Close">✕</button>
   </div>
   <div class="bill-body">
+    <div class="watch" id="bWatch"></div>
     <b>Missing</b>
     <ul class="checklist" id="bCheck"></ul>
     <div class="said hidden" id="bSaid"></div>
@@ -140,7 +148,7 @@ if (!configured) {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = fs.getFirestore(app);
-  let users = [], billing = {}, info = {}, plans = {}, prices = {}, rulesMissing = false;
+  let users = [], billing = {}, info = {}, plans = {}, prices = {}, usage = {}, rulesMissing = false;
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
   document.querySelectorAll("[data-signout]").forEach(b => b.onclick = () => { try { localStorage.removeItem("lt_admin"); } catch {} signOut(auth); });
@@ -157,7 +165,7 @@ if (!configured) {
         .map(u => ({ ...u, joined: u.joined?.toDate?.(), lastOpened: u.lastOpened?.toDate?.() }))
         .sort((a, b) => (b.lastOpened || 0) - (a.lastOpened || 0));
     } catch (e) { $("err").textContent = "Couldn't load users: " + e.message; }
-    await loadBilling();
+    await Promise.all([loadBilling(), loadUsage()]);
     stats(); render();
   });
 
@@ -172,6 +180,63 @@ if (!configured) {
     if (r[3].status === "fulfilled" && r[3].value.exists()) prices = r[3].value.data();
     $("pkgOff").classList.toggle("hidden", !!prices.enforce);
     if (rulesMissing) $("err").textContent = "Billing details can't be saved yet: publish the new Firestore rules (billing and billingInfo) in Firebase first.";
+  }
+
+  // What each viewer watched: the app sends usage/{day}_{uid} (seconds per channel that day) every
+  // 10 minutes while it's open and when it closes; apps that also send nowName/nowAt say what's on right now.
+  const pad = n => String(n).padStart(2, "0");
+  const dayKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const daysAgo = n => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - n); return dayKey(d); };
+  async function loadUsage() {
+    try {
+      const snap = await fs.getDocs(fs.query(fs.collection(db, "usage"), fs.where("day", ">=", daysAgo(6))));
+      usage = {};
+      for (const d of snap.docs) { const r = d.data(); if (r.uid && r.day) (usage[r.uid] ||= []).push({ ...r, updated: toDate(r.updated), nowAt: toDate(r.nowAt) }); }
+    } catch (e) { usage = {}; }
+  }
+  const LIVE_MS = 15 * 60e3;
+  const chanName = (k, c) => c.n || k;
+  const topChannels = (records) => {
+    const m = {};
+    for (const r of records) for (const [k, c] of Object.entries(r.channels || {})) {
+      const name = chanName(k, c); m[name] = (m[name] || 0) + (c.s || 0);
+    }
+    return Object.entries(m).sort((a, b) => b[1] - a[1]);
+  };
+  const hm = s => { const m = Math.round(s / 60); return m < 60 ? `${Math.max(1, m)} min` : `${Math.floor(m / 60)} h ${pad(m % 60)} min`; };
+  /** What they're watching now (if the app said so in the last 15 min), else the last channel we know of and when. */
+  function watching(u) {
+    const recs = (usage[u.id] || []).slice().sort((a, b) => (b.updated || 0) - (a.updated || 0));
+    if (!recs.length) return null;
+    const withNow = recs.filter(r => r.nowName && r.nowAt).sort((a, b) => b.nowAt - a.nowAt)[0];
+    if (withNow && Date.now() - withNow.nowAt < LIVE_MS) return { live: true, name: withNow.nowName, at: withNow.nowAt };
+    if (withNow) return { live: false, name: withNow.nowName, at: withNow.nowAt };
+    const last = recs[0], top = topChannels([last])[0];
+    return top ? { live: false, name: top[0], at: last.updated, guess: true } : null;
+  }
+  const ago = d => { const m = Math.round((Date.now() - d) / 60e3); return m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : d.toLocaleDateString([], { month: "short", day: "numeric" }); };
+  function watchPanel(u) {
+    const el = $("bWatch"); el.innerHTML = "";
+    const h = document.createElement("h3"); h.textContent = "📺 What they watch"; el.append(h);
+    const recs = usage[u.id] || [], w = watching(u);
+    const now = document.createElement("div"); now.className = "now";
+    if (!w) now.textContent = "Nothing watched in the last 7 days (or their app is older than 1.8.88).";
+    else if (w.live) now.innerHTML = `<span class="live">● Watching now:</span> <b></b> <span class="small"></span>`;
+    else now.innerHTML = `${w.guess ? "Mostly watched" : "Last watched"}: <b></b> <span class="small"></span>`;
+    if (w) { now.querySelector("b").textContent = w.name; now.querySelector(".small").textContent = `(${w.guess ? "app last sent " : ""}${ago(w.at)})`; }
+    el.append(now);
+    const cols = document.createElement("div"); cols.className = "cols";
+    for (const [title, list] of [["Today", recs.filter(r => r.day === daysAgo(0))], ["Last 7 days", recs]]) {
+      const box = document.createElement("div");
+      const tot = list.reduce((a, r) => a + (r.seconds || 0), 0);
+      const b = document.createElement("b"); b.textContent = `${title}: ${tot ? hm(tot) : "nothing"}`; box.append(b);
+      const ol = document.createElement("ol");
+      for (const [name, sec] of topChannels(list).slice(0, 5)) {
+        const li = document.createElement("li"); li.textContent = name + " "; const sp = document.createElement("span"); sp.textContent = hm(sec); li.append(sp); ol.append(li);
+      }
+      box.append(ol); cols.append(box);
+    }
+    el.append(cols);
   }
 
   const LENGTH_LABEL = { month: "every month", three: "every 3 months", six: "every 6 months", year: "every year" };
@@ -276,6 +341,13 @@ if (!configured) {
       pTd.append(pBadge);
       if (pk.note) { const n = document.createElement("span"); n.className = "pkg-note"; n.textContent = pk.note; pTd.append(n); }
       tr.append(pTd);
+      const w = watching(u), wTd = document.createElement("td");
+      if (w) {
+        const nm = document.createElement("span"); nm.textContent = (w.live ? "● " : "") + w.name; if (w.live) nm.className = "live";
+        const n = document.createElement("span"); n.className = "pkg-note"; n.textContent = w.live ? "now" : ago(w.at);
+        wTd.append(nm, n);
+      }
+      tr.append(wTd);
       const bTd = document.createElement("td"); const badge = document.createElement("span");
       const miss = missing(u);
       badge.className = miss.length ? "miss" : "ok";
@@ -393,7 +465,7 @@ if (!configured) {
     cur = u;
     const d = details(u), v = info[u.id] || {}, plan = activePlan(u.id);
     $("bName").textContent = u.name || u.email || "Viewer";
-    $("bSub").textContent = [u.email, u.device, plan ? `${tierName(plan.tier)} until ${plan.until.toLocaleDateString()}` : "No paid package on"].filter(Boolean).join(" · ");
+    $("bSub").textContent = [u.email, u.device, plan ? `${tierName(GOLD.includes(plan.tier) ? "Gold" : plan.tier)} until ${plan.until.toLocaleDateString()}` : "No paid package on"].filter(Boolean).join(" · ");
     ensureOption(d.package); $("fPackage").value = d.package; $("fLength").value = d.length; $("fMethod").value = d.method;
     $("fAmount").value = d.amount || priceFor(d.package, d.length);
     $("fLastPaid").value = dayStr(d.lastPaid); $("fNext").value = dayStr(d.next);
@@ -407,6 +479,7 @@ if (!configured) {
     const asked = toDate(v.askedAt), answered = toDate(v.answeredAt);
     $("bAsked").textContent = asked ? (answered && answered > asked ? `You asked on ${asked.toLocaleString()}; they answered.` : `You asked in the app on ${asked.toLocaleString()}; no answer yet.`) : "";
     $("bMsg").textContent = "";
+    watchPanel(u);
     fillLinks(u);
     $("bill").showModal();
   }
