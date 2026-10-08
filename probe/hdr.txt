@@ -1,0 +1,2 @@
+HDR 200 41856
+{"latitude":44.11383,"longitude":-77.57169,"generationtime_ms":61.02728843688965,"utc_offset_seconds":-14400,"timezone":"America/Toronto","timezone_abbreviation":"GMT-4","elevation":83.0,"current_units":{"time":"iso8601","interval":"seconds","temperature_2m":"°C","apparent_temperature":"°C","relatPLAIN 200
