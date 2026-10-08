@@ -317,6 +317,17 @@
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "picture": "anchor-m7b",
     "edit": "Place him in a modern professional TV news studio: he sits upright and straight behind a glossy curved news desk, shoulders square to the camera, both hands resting flat on the desk; behind him a large glowing blue video wall with a world map and soft studio lights. Keep his face, beard, hairstyle, skin tone and his dark navy suit, white shirt and tie exactly the same; photorealistic broadcast photo."
+   },
+   {
+    "id": "anchor-m8d",
+    "name": "Tariq",
+    "ur": "طارق",
+    "seed": 6808,
+    "voice": "ur-PK-AsadNeural",
+    "prompt": "RAW photo, medium shot from the waist up, a smart, mature-looking Pakistani man TV news anchor, 29 years old, clean shaven, short neat black hair, thin rimless glasses, wearing a perfectly tailored black suit with natural realistic sleeves, light blue shirt and a dark grey silk tie, sitting at a glossy curved news desk, natural skin texture, both hands resting still on the desk, looking straight into the camera with a calm closed-mouth expression, inside a large professional broadcast TV news studio, big glowing video wall with a world map behind him, studio lights, soft broadcast key light, Canon 85mm, shallow depth of field, professional photograph, not illustration",
+    "motion": "a confident, engaging professional TV news anchor, a man, reading the news to the camera with lively natural expression: expressive eyebrows, natural head tilts and nods on key words, slight shoulder and upper-body movement as he speaks, once or twice a small calm open-hand gesture just above the desk then the hand returns to the desk, no waving, no pointing, he speaks clearly with natural mouth movement, gentle blinks, static camera, realistic broadcast footage",
+    "motion2": "the news anchor keeps reading the news to the camera with engaged natural expression, nods and slight head tilts, small natural upper-body movement, hands mostly resting on the desk, no waving, no pointing, static camera, realistic broadcast footage",
+    "picture": "anchor-m8c"
    }
   ]
  }
