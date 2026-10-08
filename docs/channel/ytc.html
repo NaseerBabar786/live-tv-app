@@ -97,8 +97,20 @@ if (!app) $("back").hidden = false;
 
 /** YouTube won't play here: the channel's free-film schedule plays instead. */
 function fallBack() {
+  // Spark Gurbani (noBackup): never another channel's music in its place; a wait card, then try again.
+  if (station.noBackup) return holdOn();
   if (app) location.href = "livetv://fallback";
   else location.replace(`./?c=${station.id}`);
+}
+
+function holdOn() {
+  const d = document.createElement("div");
+  d.style.cssText = "position:fixed;inset:0;z-index:50;background:#0b0b14;color:#fff;display:flex;flex-direction:column;" +
+    "align-items:center;justify-content:center;gap:18px;font:600 4vh system-ui,sans-serif;text-align:center";
+  d.innerHTML = `<img alt="" src="${station.logo}" style="height:18vh"><div>${station.name}</div>` +
+    `<div style="font-weight:400;font-size:2.6vh;opacity:.75">Back in a moment</div>`;
+  document.body.appendChild(d);
+  setTimeout(() => location.reload(), 120000);
 }
 
 const lengthOf = v => lengthIn(v, station);

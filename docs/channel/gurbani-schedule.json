@@ -1,0 +1,11 @@
+{
+ "name": "Bazaar Gurbani",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-gurbani.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "videos": [],
+ "slots": [],
+ "loop": [],
+ "note": "Spark Gurbani has no backup of other music (the owner, 2026-10-08): only Gurbani, or a wait card until its list loads."
+}
