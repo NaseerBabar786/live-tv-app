@@ -43,7 +43,9 @@ jobs:
           script: bash tools/qa/phone_youtube.sh qa-out/${{ matrix.device }} apk/app-livetv-debug.apk
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: qa-${{ matrix.device }}, path: qa-out/${{ matrix.device }} }
+        with:
+          name: qa-${{ matrix.device }}
+          path: qa-out/${{ matrix.device }}
   publish:
     needs: emulator
     if: always()
@@ -52,7 +54,8 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with: { path: all }
-      - env: { GH_TOKEN: "${{ github.token }}" }
+      - env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir up
           for d in phone tv; do [ -d all/qa-$d ] && for f in all/qa-$d/*; do [ -s "$f" ] && cp "$f" "up/$d-$(basename "$f")"; done; done
