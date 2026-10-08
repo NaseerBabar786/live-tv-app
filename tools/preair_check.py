@@ -11,7 +11,7 @@ show ... also in the Library ... no video goes live until you do a check". Two p
 
   --lists   Every YouTube video on our lists is checked before it goes on air: our channels (yt-*.json,
             Bazaar Hits, Bazaar TV's trailers, music videos and programme blocks), the Library
-            (Dramas.m3u) and the live channels (PakistanLive.m3u). A video that won't play in an embedded
+            (Dramas.m3u, MTA.m3u) and the live channels (PakistanLive.m3u). A video that won't play in an embedded
             player (YouTube's oEmbed: 401 = embedding turned off, 404 = removed or private; or found by the
             nightly check, unplayable.json) is taken off the list, so it never shows YouTube's error or
             "Watch on YouTube" screen. A new video whose check gets no answer is held back until it passes.
@@ -34,6 +34,9 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from no_horror import is_horror  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(ROOT, "docs")
@@ -140,7 +143,9 @@ def lookup(video_id):
 # Lists whose items carry a YouTube video id ("id"): taken off the list when it fails.
 JSON_LISTS = ["channel/yt-*.json", "channel/bollywood.json", "channel/trailers.json", "channel/music-videos.json",
               "channel/block-*.json", "weather/videos.json"]
-M3U_LISTS = ["Dramas.m3u", "PakistanLive.m3u"]
+M3U_LISTS = ["Dramas.m3u", "MTA.m3u", "PakistanLive.m3u"]
+# Lists of songs and weather clips rather than programmes: the no-horror rule doesn't take songs off them.
+NOT_PROGRAMMES = {"bollywood.json", "music-videos.json", "sur.json", "videos.json"}
 
 
 def all_lists():
@@ -231,6 +236,17 @@ def check_lists(files, save):
             gone[i] = nightly[i].get("why", "can't play here")
         elif i in bad and i not in answers:
             gone[i] = bad[i]["why"]
+    # The owner's rule (2026-10-08): no horror on our channels (tools/no_horror.py). Songs from a horror
+    # film's soundtrack are not horror programmes, so the music lists keep them; the Library is not part of it.
+    for f in files:
+        if f.endswith(".m3u") or os.path.basename(f) in NOT_PROGRAMMES:
+            continue
+        for key in ("videos", "spares"):
+            for v in load(f, {}).get(key, []) or []:
+                if isinstance(v, dict) and v.get("id") in where and is_horror(v):
+                    gone[v["id"]] = "horror (no horror on our channels)"
+                    bad[v["id"]] = {"why": gone[v["id"]], "where": sorted(where[v["id"]]),
+                                    "since": bad.get(v["id"], {}).get("since", today.isoformat())}
     total = 0
     for f in files:
         mine = {i for i in gone if os.path.basename(f) in where.get(i, ())}

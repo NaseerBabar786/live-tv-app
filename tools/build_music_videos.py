@@ -88,7 +88,8 @@ def language(lang, sources, today, old):
             if secs is None or not SECS[0] <= secs <= SECS[1] or any(v["id"] == vid for v in found):
                 continue
             first = old.get(vid, {}).get("found", today.isoformat())
-            if (age if age is not None else (today - dt.date.fromisoformat(first)).days) > MAX_DAYS:
+            # Only songs whose upload date YouTube shows (2026-10-08), so an old song never counts as new.
+            if age is None or age > MAX_DAYS:
                 continue
             found.append({"id": vid, "title": screen_title(title, source), "label": source, "lang": lang, "secs": secs,
                           "age": age, "found": first, "kind": "music"})

@@ -27,6 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from titles import screen_title  # noqa: E402
 from playable import plays  # noqa: E402
 from build_youtube_channels import recent_film  # noqa: E402
+from no_horror import is_horror  # noqa: E402  (the owner's rule 2026-10-08: no horror on our channels)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHANNEL = os.path.join(ROOT, "docs", "channel")
@@ -124,7 +125,7 @@ def main():
             if m:
                 NEWEST_EPISODE[v.get("label")] = max(NEWEST_EPISODE.get(v.get("label"), 0), int(m.group(1)))
         pool = [v for v in videos if v.get("mins") and low <= v["mins"] <= high and v["id"] not in taken
-                and (labels is None or v.get("label") in labels) and for_grown_ups(v) and is_new(v, kind, today)
+                and (labels is None or v.get("label") in labels) and for_grown_ups(v) and not is_horror(v) and is_new(v, kind, today)
                 and (not keep or re.search(keep, v["title"], re.I)) and not (skip and re.search(skip, v["title"], re.I))]
         # The newest (or main events) first, in a different order each day.
         top = [v for v in pool if v.get("top") or v.get("found", "") >= (today - dt.timedelta(days=7)).isoformat()]

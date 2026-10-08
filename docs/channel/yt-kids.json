@@ -1,12 +1,41 @@
 {
  "name": "Bazaar Kids",
- "built": "2026-10-08 20:14 UTC",
+ "built": "2026-10-08 20:58 UTC",
  "videos": [
   {
    "id": "gHm61z1kUuw",
    "title": "Itsy Bitsy Spider Adventure | Lemonade Stand Disaster | CoComelon Nursery Rhymes & Kids Songs",
    "label": "Cocomelon",
    "mins": 5.833333333333333,
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
+  },
+  {
+   "id": "GYzdBK-rkPw",
+   "title": "Peppa Pig Learns How to Make DONUTS! 🍩 Food Factory | BRAND NEW Peppa Pig Tales Episodes | 35 Mins",
+   "label": "Peppa Pig",
+   "mins": 35.916666666666664,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "lJ12IsECFfo",
+   "title": "Peppa Pig Tales 2026 🫣 Peppa Plays CAMOUFLAGE HIDE AND SEEK! 👀 BRAND NEW Peppa Pig Episodes",
+   "label": "Peppa Pig",
+   "mins": 30.166666666666668,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "bT1VTJB6G9A",
+   "title": "Peppa Pig Tales 2026 😱 Peppa's LATE Morning Routine with BABY EVIE! 🎒 BRAND NEW Peppa Pig Episodes",
+   "label": "Peppa Pig",
+   "mins": 30.533333333333335,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "CO7UBkoPHhk",
+   "title": "Peppa Pig Tales 2026 🤫 Peppa Finds a SECRET Shop Passageway 🔒 BRAND NEW Peppa Pig Episodes",
+   "label": "Peppa Pig",
+   "mins": 30.166666666666668,
    "found": "2026-10-08"
   },
   {
@@ -21,13 +50,22 @@
    "title": "Bluey and Bingo Have Magic Powers! 🪄🔮 | Magic + MORE! ✨ | Bluey",
    "label": "Bluey",
    "mins": 36.53333333333333,
-   "found": "2026-10-08"
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
   },
   {
    "id": "Ne-ZcF58px4",
    "title": "Halloween Night | 🍕 Dress Up As Food You Like for Halloween Night! | Super Simple Songs",
    "label": "Super Simple Songs",
    "mins": 2.7333333333333334,
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
+  },
+  {
+   "id": "25NdXBbMhfs",
+   "title": "Ninimo's Best Kids Songs | Orange Cat Ninimo | Pinkfong Official",
+   "label": "Pinkfong",
+   "mins": 8.066666666666666,
    "found": "2026-10-08"
   },
   {
@@ -35,13 +73,21 @@
    "title": "The Dam Is Breaking! 🌊 Big Truck Rescue Mission | Compilation | PAW Patrol",
    "label": "PAW Patrol",
    "mins": 34.71666666666667,
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
+  },
+  {
+   "id": "nNNP2iRt61A",
+   "title": "Slick's DOUBLE Date Disaster! 😱🤫 | Oddbods Full Episode | Funny Cartoons for Kids",
+   "label": "Oddbods",
+   "mins": 42.55,
    "found": "2026-10-08"
   },
   {
-   "id": "S4AEDxi8jwg",
-   "title": "A Witch's Curse Transforms The Oddbods! 🫢😱 | Oddbods Halloween Full Episode | Funny Cartoons",
+   "id": "vQk1drG5fhU",
+   "title": "Bubbles is a BABY! Jeff's Messy Mistake 👶🍼 | Oddbods Full Episode | Funny Cartoons for Kids",
    "label": "Oddbods",
-   "mins": 45.55,
+   "mins": 21.616666666666667,
    "found": "2026-10-08"
   },
   {
@@ -49,14 +95,16 @@
    "title": "Wedding Day | Mr Bean Animated | Season 2 Episode 20 | Full Episode | Mr Bean",
    "label": "Mr Bean Cartoon",
    "mins": 11.0,
-   "found": "2026-10-08"
+   "found": "2026-10-08",
+   "posted": "2026-10-08"
   },
   {
    "id": "c1X2u9LNkDU",
    "title": "The Sounds of Nature! | Thomas & Friends: Sounds of Sodor | Low Stimulation ASMR for Kids",
    "label": "Thomas & Friends",
    "mins": 4.716666666666667,
-   "found": "2026-10-08"
+   "found": "2026-10-08",
+   "posted": "2026-10-07"
   },
   {
    "id": "oVm0kXS_gtk",
@@ -77,42 +125,48 @@
    "title": "🎒🔎 Where is Everyone? 🐻🌿 Best Episodes Cartoon Collection 🎬 Masha and the Bear 2026",
    "label": "Masha and the Bear",
    "mins": 34.1,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "x6Xau6pDJ-M",
    "title": "Peppa Pig is SICK! 🤒 | Learning How to REST & GET BETTER | Peppa Pig Official Full Episodes",
    "label": "Peppa Pig",
    "mins": 44.916666666666664,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "cJpPDoTvTwo",
    "title": "BBQ Bluey Book Read Aloud by Julia Stiles | Bluey Book Reads 💙",
    "label": "Bluey",
    "mins": 5.6,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-06"
   },
   {
    "id": "uMzriID81qA",
    "title": "Let's Play…Relax ☺️ 🫧 | Bluey and Bingo Playtime | Bluey",
    "label": "Bluey",
    "mins": 2.4833333333333334,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-05"
   },
   {
    "id": "nWC1TulOPJ4",
    "title": "Let's Play…Seesaw 💙 | Bluey and Bingo Playtime | Bluey",
    "label": "Bluey",
    "mins": 2.3,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-02"
   },
   {
    "id": "4AIl54tH89U",
    "title": "Reading A Childhood Letter 💌💙 | 40 Minutes of Family Time | Bluey",
    "label": "Bluey",
    "mins": 42.11666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-01"
   },
   {
    "id": "a68c5IEFuWw",
@@ -224,84 +278,96 @@
    "title": "When We Play Hockey 🏒 | Super Simple Songs & ‪@NHL Hockey Song for Kids",
    "label": "Super Simple Songs",
    "mins": 2.25,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-24"
   },
   {
    "id": "GzIObE7uR8Q",
    "title": "Top 20 Anniversary Hit Songs 🎶 | \"20 Years of Super Simple\" now on Vinyl!",
    "label": "Super Simple Songs",
    "mins": 47.85,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-17"
   },
   {
    "id": "uBweptmCYZg",
    "title": "Our Listening Ears 👂 | Animal Sounds & Guessing Game for Kids! | Super Simple Songs",
    "label": "Super Simple Songs",
    "mins": 2.316666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-10"
   },
   {
    "id": "2QtoaV22rpY",
    "title": "Top 20 Circle Time Songs ⭕️ | Kids Classroom Favorites | Super Simple's 20th Anniversary!",
    "label": "Super Simple Songs",
    "mins": 46.95,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-03"
   },
   {
    "id": "iHP8FGwzjJg",
    "title": "🎉 Everybody Celebrate 🎉 | Best Celebration Song for Kids | 20 Years of Super Simple Songs!",
    "label": "Super Simple Songs",
    "mins": 2.55,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-27"
   },
   {
    "id": "LLgTFZP3IQQ",
    "title": "Top 20 Back To School Songs | 🍎 📚 Learn and Sing ABCs + More! | Super Simple’s 20th Anniversary!",
    "label": "Super Simple Songs",
    "mins": 55.03333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-20"
   },
   {
    "id": "YaFSwBg1qvg",
    "title": "Put on Your Shoes | Featuring Tobee and the Super Simple Puppets! | Super Simple Songs",
    "label": "Super Simple Songs",
    "mins": 3.0833333333333335,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-13"
   },
   {
    "id": "BG8HLIvuK24",
    "title": "Top 20 Counting Songs | Numbers Practice for Preschool + Up | 20th Anniversary of Super Simple Songs",
    "label": "Super Simple Songs",
    "mins": 49.56666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-06"
   },
   {
    "id": "-HOQGg7uuQQ",
    "title": "Counting Up To 20 | Sea Animals Kids Math Song with @NoodleAndPals | Super Simple Songs",
    "label": "Super Simple Songs",
    "mins": 2.566666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-07-30"
   },
   {
    "id": "jZnBNf0GJyU",
    "title": "Top 20 Book Songs 📚 | Super Simple’s 20th Anniversary! | Let's Read!",
    "label": "Super Simple Songs",
    "mins": 56.95,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-07-23"
   },
   {
    "id": "wtX9hMdLuew",
    "title": "I'm Going On A Trip | 🗺️ 🎒 Pack your bag for your adventure! | Super Simple Songs",
    "label": "Super Simple Songs",
    "mins": 3.2666666666666666,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-07-16"
   },
   {
    "id": "q1DinydBRNE",
    "title": "Top 20 Summer Songs 🌞 | Best of Super Simple Hits of 2026!",
    "label": "Super Simple Songs",
    "mins": 50.78333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-07-09"
   },
   {
    "id": "hDqWTltrGJ8",
@@ -353,32 +419,28 @@
    "found": "2026-10-07"
   },
   {
-   "id": "lboUGzSRxiE",
-   "title": "Boo! Hoi’s Halloween Playground Compilation | Zombie Finger Family & More | Pinkfong Halloween",
-   "label": "Pinkfong",
-   "mins": 22.583333333333332,
-   "found": "2026-10-07"
-  },
-  {
    "id": "hhKuZCs3Hjc",
    "title": "[🎃NEW] Where Is My Mama? | Kids' Halloween Songs | Pinkfong Halloween 2026",
    "label": "Pinkfong",
    "mins": 3.3833333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-01"
   },
   {
    "id": "tFgCMSyIT_M",
    "title": "[🎃NEW] Spooky Monsters in the Alley | Kids' Halloween Songs | Pinkfong Halloween 2026",
    "label": "Pinkfong",
    "mins": 3.3,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-27"
   },
   {
    "id": "E2FXQ-Vb50I",
    "title": "[🎃NEW] Police Baby Shark's Big Halloween Chase! | Kids' Halloween Stories | Pinkfong Halloween 2026",
    "label": "Pinkfong",
    "mins": 9.7,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-24"
   },
   {
    "id": "nG8D54ti1JI",
@@ -497,28 +559,32 @@
    "title": "Animal Sounds Song 🐶🍎 | Little Baby Bum",
    "label": "Little Baby Bum",
    "mins": 4.816666666666666,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "1OIqNRMHtHo",
    "title": "Kindness Song 💖Friend Song Collection | Little Baby Bum",
    "label": "Little Baby Bum",
    "mins": 6.816666666666666,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-02"
   },
   {
    "id": "IzfZNhQXDCM",
    "title": "Pumpkin Painting & Carving Kids Songs 🎨🎃 | Halloween DIY Crafts & Rhymes | Little Baby Bum",
    "label": "Little Baby Bum",
    "mins": 3.8833333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-30"
   },
   {
    "id": "d_Xj3WZ1mxg",
    "title": "ABC & Color Balloons 🎈🔤 Alphabet Song & Learn Colors | Little Baby Bum",
    "label": "Little Baby Bum",
    "mins": 5.883333333333334,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-25"
   },
   {
    "id": "2zKGKARPTiE",
@@ -637,21 +703,24 @@
    "title": "Blippi & Meekah Silly Spooky Stories for the Halloween King! 👑🎃",
    "label": "Blippi",
    "mins": 19.45,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-03"
   },
   {
    "id": "TdDTTG2PH70",
    "title": "Blippi vs. The Halloween King! 👑 Trick-or-Treat Mystery Box!🎃",
    "label": "Blippi",
    "mins": 14.683333333333334,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-26"
   },
   {
    "id": "G_yyQ1_RgUQ",
    "title": "Blippi Wonderful World Tour Dance & Sing-Along! 🎶",
    "label": "Blippi",
    "mins": 57.13333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-24"
   },
   {
    "id": "v6_wC6upYNU",
@@ -777,35 +846,40 @@
    "title": "Monster on the Street: Nursery Rhyme Karaoke 🎤  | Sesame Street Songs 🎵",
    "label": "Sesame Street",
    "mins": 2.816666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "l9OM8aEfuoQ",
    "title": "Get Ready to Go Song with Elmo & the Cat in the Hat  👕 👖 | Sesame Street Songs 🎵",
    "label": "Sesame Street",
    "mins": 3.033333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-30"
   },
   {
    "id": "IKZYdLG87zU",
    "title": "Let's Play Sesame Street Games with Elmo and Friends! 🤩 | 35 Mins | Sesame Street",
    "label": "Sesame Street",
    "mins": 35.31666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-27"
   },
   {
    "id": "BxdnuLKCDbs",
    "title": "Storm on Sesame Street ⛈️ | Full Special",
    "label": "Sesame Street",
    "mins": 26.666666666666668,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-25"
   },
   {
    "id": "RgLsdBgJqbQ",
    "title": "Let's Find Shapes with Elmo! 🔴 🟦 ⭐  | 60 Mins | Sesame Street",
    "label": "Sesame Street",
    "mins": 56.13333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-23"
   },
   {
    "id": "YDZ4uRzE77c",
@@ -875,21 +949,24 @@
    "title": "Clifford the Big Red Dog FULL EPISODE | Things That Go Bump / Sherlock Bones 👻 👀 | PBS KIDS",
    "label": "PBS Kids",
    "mins": 23.866666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-02"
   },
   {
    "id": "3rtYYZgqn0c",
    "title": "Xavier Riddle and the Secret Museum FULL EPISODE | I am Mary Shelley 🎃 | PBS KIDS",
    "label": "PBS Kids",
    "mins": 12.35,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-28"
   },
   {
    "id": "J6NCneLtMgg",
    "title": "Clifford the Big Red Dog FULL EP | The Halloween Costume Crisis / Clifford's Howl-o-ween! | PBS KIDS",
    "label": "PBS Kids",
    "mins": 23.866666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-25"
   },
   {
    "id": "7SNAEQVbnPM",
@@ -1015,21 +1092,24 @@
    "title": "Can the Pirate Pups Save Adventure Bay Before Time Runs Out?! ⏱️🏴‍☠️ | PAW Patrol: PAWse & Play",
    "label": "PAW Patrol",
    "mins": 3.066666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "xp-RIuEDhgM",
    "title": "Rocky and Marshall Create a Super Recycling Upgrade! 🚒 | Rocky's Garage | PAW Patrol",
    "label": "PAW Patrol",
    "mins": 33.483333333333334,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-05"
   },
   {
    "id": "9y6Qx0mlwQg",
    "title": "Mayor Goodway Is Stuck in a Jungle Cave! Can Tracker Save Her? | To The Rescue | PAW Patrol",
    "label": "PAW Patrol",
    "mins": 34.7,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-04"
   },
   {
    "id": "uetORmysBvc",
@@ -1113,42 +1193,40 @@
    "title": "Pocoyo Meets Ozzy Fox! 🦊💙 Hide & Seek with New Friends | Full Episode | Pocoyo English | Cartoon",
    "label": "Pocoyo",
    "mins": 3.5,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "TmOCj0HmazI",
-   "title": "Ghost Dusters! 🧹👻 | Oddbods Halloween Full Episode | Funny Cartoons for Kids",
-   "label": "Oddbods",
-   "mins": 21.15,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-16"
   },
   {
    "id": "Pm9_SqHU5NA",
    "title": "Chickie & Hyde 🐣👹 Oddbods Halloween Spooktacular | Full Episodes",
    "label": "Oddbods",
    "mins": 7.183333333333334,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-04"
   },
   {
    "id": "8vlRXk0HTqk",
    "title": "Fuse & Pogo's Accidental Space Odyssey! 🚀 | Oddbods Full Episode | Funny Cartoons for Kids",
    "label": "Oddbods",
    "mins": 49.3,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-01"
   },
   {
    "id": "LvAtCKIcZoY",
    "title": "Zee Grows HUGE! Trapped in His Own House! 🤯 | Oddbods Full Episode | Funny Cartoons for Kids",
    "label": "Oddbods",
    "mins": 21.383333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-29"
   },
   {
    "id": "X-iZuhuzy5s",
    "title": "Killer Marrow! Jeff's Pet Project Goes WILD! 🥕😬 | Oddbods Full Episode | Funny Cartoons for Kids",
    "label": "Oddbods",
    "mins": 7.666666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-27"
   },
   {
    "id": "97oVp1bJL8s",
@@ -1176,13 +1254,6 @@
    "title": "Jeff Forces Zee to Clean! 😱 It Gets Messy! | Oddbods Full Episode | Funny Cartoons for Kids",
    "label": "Oddbods",
    "mins": 49.53333333333333,
-   "found": "2026-10-07"
-  },
-  {
-   "id": "v6P9siufQy8",
-   "title": "Zombie Ice Cream Apocalypse! Panic! 🍦🧟 | Oddbods Full Episode | Funny Cartoons for Kids",
-   "label": "Oddbods",
-   "mins": 21.366666666666667,
    "found": "2026-10-07"
   },
   {
@@ -1249,18 +1320,27 @@
    "found": "2026-10-07"
   },
   {
+   "id": "pVkQ93QDKqY",
+   "title": "Slick The Accidental Hero?! 🦸‍♂️🤫 | Oddbods Full Episode | Funny Cartoons for Kids",
+   "label": "Oddbods",
+   "mins": 7.666666666666667,
+   "found": "2026-10-07"
+  },
+  {
    "id": "hDsI-cyMZLw",
    "title": "Mr Bean's Most AWKWARD Bathroom Moment! 👖 | Bean: the Movie | Mr Bean",
    "label": "Mr Bean Cartoon",
    "mins": 3.283333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "XTsqlMW4i4c",
    "title": "Can Mr Bean Finally Master the Piano? 🎹 | Mr Bean Animated Season 1 | Funny Clips | Mr Bean",
    "label": "Mr Bean Cartoon",
    "mins": 24.583333333333332,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-07"
   },
   {
    "id": "YwnBnWFA8j4",
@@ -1295,14 +1375,16 @@
    "title": "I’m a Number Detective | Learn to Count | Numberblocks",
    "label": "Numberblocks",
    "mins": 7.516666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-02"
   },
   {
    "id": "-dKDf6im0C4",
    "title": "The Rise of Infinaughty! Full 25-Minute Movie (All 5 Episodes) | Numberblocks S9",
    "label": "Numberblocks",
    "mins": 23.3,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-26"
   },
   {
    "id": "5fD79cjS9XA",
@@ -1386,84 +1468,96 @@
    "title": "Let's Sing with the Squirrels 🎤 | Kids Songs & Nursery Rhymes | Learning Songs | Hey Duggee",
    "label": "Hey Duggee",
    "mins": 47.75,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-30"
   },
   {
    "id": "asYFjPNbsJY",
    "title": "Roly's BEST BITS! | Hey Duggee",
    "label": "Hey Duggee",
    "mins": 20.0,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-29"
   },
   {
    "id": "Aarp8wMaAv8",
    "title": "Duggee's Animal Friends 🐆 | 59-Minute MARATHON | Hey Duggee",
    "label": "Hey Duggee",
    "mins": 59.03333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-16"
   },
   {
    "id": "mGRgf_BF0Rk",
    "title": "The Stick Song: Around the World 🌍🎤 | 60-Minute MARATHON! | Hey Duggee Official",
    "label": "Hey Duggee",
    "mins": 59.983333333333334,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-15"
   },
   {
    "id": "Kr9LM1WLwaY",
    "title": "45+ Mins of Kids' Songs & Nursery Rhymes | The Wheels on the Bus & More! | Hey Duggee Official",
    "label": "Hey Duggee",
    "mins": 47.36666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-08"
   },
   {
    "id": "SL6ANbbguXE",
    "title": "Baby Squirrel Adventures and MORE! 🐿️ | Hey Duggee",
    "label": "Hey Duggee",
    "mins": 27.883333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-07"
   },
   {
    "id": "ytjAUy5r_VA",
    "title": "Let's Get Arty! 🎨 | Making Marathon | Hey Duggee",
    "label": "Hey Duggee",
    "mins": 47.21666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-08-01"
   },
   {
    "id": "9TpBgOpALFQ",
    "title": "Can You Spot STICK and MORE! | Hey Duggee's Squirrel Club",
    "label": "Hey Duggee",
    "mins": 28.45,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-07-29"
   },
   {
    "id": "FF90QXoa8n4",
    "title": "Bake Delicious Dishes With Duggee 🍰 | Hey Duggee",
    "label": "Hey Duggee",
    "mins": 30.366666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-07-28"
   },
   {
    "id": "5ewzE2_K8AE",
    "title": "The Squirrels' Amazing Space Adventure! 🪐 | Hey Duggee",
    "label": "Hey Duggee",
    "mins": 36.56666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-07-26"
   },
   {
    "id": "YCuLYC-cVs0",
    "title": "Duggee's Ultimate Art Marathon! 🎨 🖼️ | Hey Duggee",
    "label": "Hey Duggee",
    "mins": 38.46666666666667,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-07-25"
   },
   {
    "id": "jmeAgCM3VfI",
    "title": "Duggee's Best Picnic & Outdoor Adventures! 🧺 | Hey Duggee",
    "label": "Hey Duggee",
    "mins": 54.016666666666666,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-07-24"
   },
   {
    "id": "LyiiPSZzf5U",
@@ -1526,35 +1620,40 @@
    "title": "🚂 Percy's Unexpected Adventure! | Watch Out Thomas! | 15 Minutes",
    "label": "Thomas & Friends",
    "mins": 14.0,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-06"
   },
   {
    "id": "Iql4nEECtnA",
    "title": "Percy & The Trousers | Thomas & Friends: Storybook Workshop | Episode 6",
    "label": "Thomas & Friends",
    "mins": 2.0166666666666666,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-05"
   },
   {
    "id": "VEGHwkrgVGc",
    "title": "Last Train for Christmas | Thomas & Friends | S18 E18 | Full Episode | Kids Stories!",
    "label": "Thomas & Friends",
    "mins": 10.916666666666666,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-10-02"
   },
   {
    "id": "EL8GKss62q0",
    "title": "Are Trains Afraid of the Dark?? | Thomas & Friends: Trains in Real Life",
    "label": "Thomas & Friends",
    "mins": 2.033333333333333,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-30"
   },
   {
    "id": "CYf92jtdh5g",
    "title": "Diesel Needs a Wash! | Thomas & Friends",
    "label": "Thomas & Friends",
    "mins": 14.15,
-   "found": "2026-10-07"
+   "found": "2026-10-07",
+   "posted": "2026-09-29"
   },
   {
    "id": "CGfKF5cQBHo",
@@ -1634,13 +1733,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "pVkQ93QDKqY",
-   "title": "Slick The Accidental Hero?! 🦸‍♂️🤫 | Oddbods Full Episode | Funny Cartoons for Kids",
-   "label": "Oddbods",
-   "mins": 7.666666666666667,
-   "found": "2026-10-07"
-  },
-  {
    "id": "LjKbQ5CCkEc",
    "title": "Car Wars | Mr Bean Animated | Season 2 Episode 19 | Full Episode | Mr Bean",
    "label": "Mr Bean Cartoon",
@@ -1687,49 +1779,56 @@
    "title": "Squeaky Mouse - Storytime Adventures - ChuChu TV Hindi Stories in 4K for Kids #ChuChuTV100M",
    "label": "ChuChu TV Hindi",
    "mins": 10.5,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-27"
   },
   {
    "id": "hPEIau5k5Ks",
    "title": "बच्चों की गाड़ियां जादुई अंडे ( Baby Vehicles) -ChuChu TV Hindi Surprise Eggs for Kids #ChuChuTV100M",
    "label": "ChuChu TV Hindi",
    "mins": 7.183333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-13"
   },
   {
    "id": "M2-1rNekIWQ",
    "title": "खाना चोर (Lunch Thief) - ChuChu TV Hindi Kahaniya in 4K for Kids #ChuChuTV100M",
    "label": "ChuChu TV Hindi",
    "mins": 7.633333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-30"
   },
   {
    "id": "o2Wm0lOcWEM",
    "title": "नखरीला कस्सली (Fussy Cussly) - ChuChu TV Hindi Kahaniya in 4K for Kids #ChuChuTV100M",
    "label": "ChuChu TV Hindi",
    "mins": 6.133333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-16"
   },
   {
    "id": "HXA3jWwbmgA",
    "title": "Chika and His Homework - ChuChu TV Hindi Stories in 4K for Kids #ChuChuTV100M",
    "label": "ChuChu TV Hindi",
    "mins": 6.25,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-07-05"
   },
   {
    "id": "j-BBj6pRQo0",
    "title": "Daddy Finger Daddy Finger - ChuChu TV Hindi Rhymes in 4K for Kids #ChuChuTV100M",
    "label": "ChuChu TV Hindi",
    "mins": 5.716666666666667,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-06-21"
   },
   {
    "id": "YSE-AJLQ2As",
    "title": "I Love, Love, Love, Baby – ChuChu TV Hindi Rhymes in 4K for Kids #ChuChuTV100M",
    "label": "ChuChu TV Hindi",
    "mins": 4.433333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-03-01"
   },
   {
    "id": "jgS-1cIrQC0",
@@ -1876,21 +1975,24 @@
    "title": "Wheels on the Bus Go Round and Round🚌Theme Park Adventure! | Kids Songs & Nursery Rhymes | Infobells",
    "label": "Infobells Hindi",
    "mins": 3.1,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-07"
   },
   {
    "id": "n88ZW7SXl1w",
    "title": "Clean Up, Clean Up Song - Let's Keep the Place Clean | Kids Rhymes & Good Habit Songs | Infobells",
    "label": "Infobells Hindi",
    "mins": 3.1666666666666665,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-07-24"
   },
   {
    "id": "5qN7k3gFlEY",
    "title": "Humpty Dumpty Sat on a Wall - Babies Playing Song | Nursery Rhymes & Baby Songs | Infobells",
    "label": "Infobells Hindi",
    "mins": 2.033333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-07-11"
   },
   {
    "id": "9beIqOKAL7I",
@@ -1991,13 +2093,6 @@
    "found": "2026-10-06"
   },
   {
-   "id": "8EgFXWIS96w",
-   "title": "Where Is Little Baby's Ice-Cream - Halloween Ghost Song | Nursery Rhymes & Kids Song | Infobells",
-   "label": "Infobells Hindi",
-   "mins": 3.316666666666667,
-   "found": "2026-10-06"
-  },
-  {
    "id": "aXP1CBTnvHw",
    "title": "🌙 Hush-a-Bye, Don’t You Cry | All the Pretty Little Horses | Lullaby & Baby Night Song | Infobells",
    "label": "Infobells Hindi",
@@ -2044,77 +2139,88 @@
    "title": "How to Draw Superheroes for Kids | Superman, Spider-Man & Super Girl | 57 Min | ChuChu TV",
    "label": "ChuChu TV",
    "mins": 57.1,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-02"
   },
   {
    "id": "IpzXFiguLzU",
    "title": "We Are Superheroes + Girl Power & Inspirational Songs for Kids | 38 Min | ChuChu TV",
    "label": "ChuChu TV",
    "mins": 37.93333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-25"
   },
   {
    "id": "aEDbIWNiQsQ",
    "title": "Animal Homes + Zoo Friends, Sea Otter, Blue Whale & Animal Songs | 19 Min | ChuChu TV",
    "label": "ChuChu TV",
    "mins": 19.516666666666666,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-18"
   },
   {
    "id": "TOIjngU_1N0",
    "title": "Bestie and Friends - The Great Candy Robbery! 🚨🍭 | Funny Kids Cartoon | ChuChu TV Police",
    "label": "ChuChu TV",
    "mins": 4.75,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-13"
   },
   {
    "id": "CBF_9YjorYg",
    "title": "Learn Numbers 1-10 with Surprise Eggs | Counting Songs for Kids | 56 Min | ChuChu TV",
    "label": "ChuChu TV",
    "mins": 55.75,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-11"
   },
   {
    "id": "V7wCvKx_nzU",
    "title": "Nursery Rhymes & Kids Songs | Teeki Taaki + Baby Shark Funzone 3D Songs | 28 Min | ChuChu TV",
    "label": "ChuChu TV",
    "mins": 27.65,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-04"
   },
   {
    "id": "eAlSvyrXsD4",
    "title": "Together We Can | Stories About Teamwork & Friendship for Kids | 27 Min | ChuChu TV",
    "label": "ChuChu TV",
    "mins": 26.516666666666666,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-28"
   },
   {
    "id": "XDX_trF4M5o",
    "title": "Learn the Letter Z with Fun Activities & Songs 🎶 | ChuChu TV Alphabet Learning for Toddlers",
    "label": "ChuChu TV",
    "mins": 5.45,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-27"
   },
   {
    "id": "jgYSNnDEVuA",
    "title": "Letter A to H Songs | ABC Phonics Song - Learn the Alphabet | 22 Min | ChuChu TV",
    "label": "ChuChu TV",
    "mins": 22.35,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-14"
   },
   {
    "id": "7cIKO4ZuXHw",
    "title": "How to Draw Savanna Animals for Kids | Zebra, Hippo, Rhino Step by Step | 44 Min | ChuChu TV",
    "label": "ChuChu TV",
    "mins": 43.68333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-08-07"
   },
   {
    "id": "QTa-tX3UaJs",
    "title": "Dinosaur Songs for Kids | Dino Nursery Rhymes & Jumblikans Learning Videos | 30 Min | ChuChu TV",
    "label": "ChuChu TV",
    "mins": 30.083333333333332,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-07-31"
   },
   {
    "id": "aYbFaVgJLYU",
@@ -2205,42 +2311,40 @@
    "title": "Color Song | Best Color Run - Obstacle Course | CoComelon Nursery Rhymes & Kids Songs",
    "label": "Cocomelon",
    "mins": 2.716666666666667,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-06"
   },
   {
    "id": "eNo3X23tFn0",
    "title": "Ten in the Bed Counting Song & Five Little Animals! | CoComelon Nursery Rhymes & Kids Songs",
    "label": "Cocomelon",
    "mins": 5.633333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-03"
   },
   {
    "id": "idzvY4nyK3k",
    "title": "Halloween Dance Song | Spooky Mix For Kids  | CoComelon Nursery Rhymes & Kids Songs",
    "label": "Cocomelon",
    "mins": 5.25,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-01"
   },
   {
    "id": "KPh2Efv66Aw",
    "title": "Mary Had a Little Lamb | Adventure on the Farm | CoComelon Nursery Rhymes and Kids Songs",
    "label": "Cocomelon",
    "mins": 2.933333333333333,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-29"
   },
   {
    "id": "WjZ2f71dFck",
    "title": "Jump in the Puddles | Rainy Day with Toddlers | CoComelon Nursery Rhymes & Kids Songs",
    "label": "Cocomelon",
    "mins": 6.3,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "O7-GZ_xOAg8",
-   "title": "Finger Family + Emmy's Haunted House | CoComelon Halloween Mix | Nursery Rhymes & Kids Songs",
-   "label": "Cocomelon",
-   "mins": 5.45,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-26"
   },
   {
    "id": "Goau5pVgjTM",
@@ -2401,7 +2505,8 @@
    "title": "🎉 NEW EPISODE 2026 🧚‍♂️ Anything for a Tooth 🦷😅 (Episode 155) 🎬 Masha and the Bear",
    "label": "Masha and the Bear",
    "mins": 26.3,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-10-02"
   },
   {
    "id": "Iqlk1-Ornkg",
@@ -2513,21 +2618,24 @@
    "title": "Peppa Pig Tales 🍼 Baby Evie COPIES Peppa at LUNCHTIME! 🥣 | LEGO DUPLO Peppa Pig Episodes",
    "label": "Peppa Pig",
    "mins": 30.433333333333334,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-30"
   },
   {
    "id": "1SJYioPHgW4",
    "title": "Peppa Pig Tries Cousin Chloe's CRAZY MAKEOVER! 😲 | Sleepover Fun | Tales Full Episodes | 30 Mins",
    "label": "Peppa Pig",
    "mins": 36.11666666666667,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-29"
   },
   {
    "id": "fGZGMB6syK4",
    "title": "George Pig's Full Hearing Aid Story!💙🦻| Mini Movie | Peppa Pig Tales Episodes | 24 Minutes",
    "label": "Peppa Pig",
    "mins": 24.016666666666666,
-   "found": "2026-10-06"
+   "found": "2026-10-06",
+   "posted": "2026-09-27"
   },
   {
    "id": "uFXJ-50SEqY",
@@ -2569,13 +2677,6 @@
    "title": "Peppa Pig Tales 2026⏳Peppa Sees BABY Mummy & Daddy Pig! Secret Video❓BRAND NEW Peppa Pig Episodes",
    "label": "Peppa Pig",
    "mins": 30.066666666666666,
-   "found": "2026-10-06"
-  },
-  {
-   "id": "fUwZXN11CW8",
-   "title": "Peppa Pig Tales⏰ Peppa & Evie WAIT for the TRAIN! 🚂 LEGO DUPLO Peppa Pig Episodes",
-   "label": "Peppa Pig",
-   "mins": 30.533333333333335,
    "found": "2026-10-06"
   }
  ]
