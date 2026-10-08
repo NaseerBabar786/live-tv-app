@@ -43,7 +43,12 @@
   .watch { background: var(--bg); border: 1px solid var(--surface-2); border-radius: 12px; padding: 10px 14px; margin: 6px 0 14px; }
   .watch h3 { margin: 0 0 6px; font-size: 16px; }
   .watch .now { font-size: 15px; margin-bottom: 8px; }
-  .watch .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px 20px; }
+  .watch .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 20px; margin-top: 8px; }
+  .watch .tabs { display: flex; gap: 6px; margin: 4px 0 8px; }
+  .watch .tabs button { padding: 4px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+  .watch .tabs button.on { background: var(--focus); color: #000; border-color: var(--focus); }
+  .watch .sum { font-size: 14px; color: var(--muted); }
+  .watch .bar { display: block; height: 4px; border-radius: 2px; background: var(--focus); margin: 2px 0 4px; opacity: .6; }
   .watch ol { margin: 4px 0 0; padding-left: 22px; font-size: 14px; }
   .watch ol li span { color: var(--muted); }
   .live { color: #81C784; font-weight: 700; }
@@ -84,7 +89,7 @@
       <tbody id="rows"></tbody>
     </table></div>
   </div>
-  <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and their top channels today and in the last 7 days) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
+  <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
   <p class="err" id="err"></p>
 </main>
@@ -189,7 +194,7 @@ if (!configured) {
   const daysAgo = n => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() - n); return dayKey(d); };
   async function loadUsage() {
     try {
-      const snap = await fs.getDocs(fs.query(fs.collection(db, "usage"), fs.where("day", ">=", daysAgo(6))));
+      const snap = await fs.getDocs(fs.query(fs.collection(db, "usage"), fs.where("day", ">=", daysAgo(29))));
       usage = {};
       for (const d of snap.docs) { const r = d.data(); if (r.uid && r.day) (usage[r.uid] ||= []).push({ ...r, updated: toDate(r.updated), nowAt: toDate(r.nowAt) }); }
     } catch (e) { usage = {}; }
@@ -215,28 +220,74 @@ if (!configured) {
     return top ? { live: false, name: top[0], at: last.updated, guess: true } : null;
   }
   const ago = d => { const m = Math.round((Date.now() - d) / 60e3); return m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : d.toLocaleDateString([], { month: "short", day: "numeric" }); };
+  // Languages aren't sent by the app, so they're worked out from the channel: our own Bazaar channels
+  // by name, other channels by their country (Pakistan = Urdu, India = Hindi, and so on).
+  const LANG_BY_COUNTRY = { pk: "Urdu", in: "Hindi", ca: "English", us: "English", gb: "English", uk: "English", au: "English", bd: "Bengali", ae: "Arabic", sa: "Arabic", af: "Pashto/Dari", ir: "Persian", tr: "Turkish", np: "Nepali", lk: "Sinhala" };
+  const COUNTRY = { pk: "Pakistan", in: "India", ca: "Canada", gb: "UK", uk: "UK", us: "USA", bd: "Bangladesh", ae: "UAE", sa: "Saudi Arabia", af: "Afghanistan", au: "Australia" };
+  const isOurs = c => /^bazaar\b/i.test(c.n || "");
+  function langOf(c) {
+    const n = c.n || "";
+    if (isOurs(c)) return /english/i.test(n) ? "English" : /hindi/i.test(n) ? "Hindi" : /hits|music|cinema/i.test(n) ? "Urdu/Hindi" : "Urdu";
+    if (/punjabi/i.test(n + " " + (c.t || ""))) return "Punjabi";
+    return LANG_BY_COUNTRY[(c.c || "").toLowerCase()] || "Other";
+  }
+  const countryOf = c => isOurs(c) ? "Bazaar (our channels)" : COUNTRY[(c.c || "").toLowerCase()] || (c.c ? c.c.toUpperCase() : "Other");
+  let watchRange = 7;
   function watchPanel(u) {
     const el = $("bWatch"); el.innerHTML = "";
     const h = document.createElement("h3"); h.textContent = "📺 What they watch"; el.append(h);
-    const recs = usage[u.id] || [], w = watching(u);
+    const all = usage[u.id] || [], w = watching(u);
     const now = document.createElement("div"); now.className = "now";
-    if (!w) now.textContent = "Nothing watched in the last 7 days (or their app is older than 1.8.88).";
+    if (!w) now.textContent = "Nothing watched in the last 30 days (or their app is older than 1.8.88).";
     else if (w.live) now.innerHTML = `<span class="live">● Watching now:</span> <b></b> <span class="small"></span>`;
-    else now.innerHTML = `${w.guess ? "Mostly watched" : "Last watched"}: <b></b> <span class="small"></span>`;
+    else now.innerHTML = `${w.guess ? "Last watched (most that day)" : "Last watched"}: <b></b> <span class="small"></span>`;
     if (w) { now.querySelector("b").textContent = w.name; now.querySelector(".small").textContent = `(${w.guess ? "app last sent " : ""}${ago(w.at)})`; }
     el.append(now);
+    if (!all.length) return;
+    const tabs = document.createElement("div"); tabs.className = "tabs";
+    for (const [n, label] of [[1, "Today"], [7, "Last 7 days"], [30, "Last 30 days"]]) {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = label; b.className = n === watchRange ? "on" : "";
+      b.onclick = () => { watchRange = n; watchPanel(u); }; tabs.append(b);
+    }
+    el.append(tabs);
+    const from = daysAgo(watchRange - 1), recs = all.filter(r => r.day >= from);
+    const tot = recs.reduce((a, r) => a + (r.seconds || 0), 0), activeDays = new Set(recs.filter(r => r.seconds > 0).map(r => r.day)).size;
+    const sum = document.createElement("div"); sum.className = "sum";
+    sum.textContent = tot ? `Watched ${hm(tot)}` + (watchRange > 1 ? ` on ${activeDays} of ${watchRange} days · about ${hm(tot / Math.max(1, activeDays))} a day they watch` : "") + ` · ${new Set(recs.flatMap(r => Object.keys(r.channels || {}))).size} different channels` : "Nothing watched in this period.";
+    el.append(sum);
+    if (!tot) return;
+    const group = (keyOf) => {
+      const m = {};
+      for (const r of recs) for (const [k, c] of Object.entries(r.channels || {})) for (const key of [].concat(keyOf(k, c))) m[key] = (m[key] || 0) + (c.s || 0);
+      return Object.entries(m).filter(([k]) => k).sort((a, b) => b[1] - a[1]);
+    };
+    const progs = {};
+    for (const r of recs) for (const p of Object.values(r.programmes || {})) { const k = p.t || "?"; progs[k] = (progs[k] || 0) + (p.s || 0); }
+    const lists = [
+      ["Channels watched most", group((k, c) => chanName(k, c)), 6],
+      ["Languages", group((k, c) => langOf(c)), 5],
+      ["Countries", group((k, c) => countryOf(c)), 5],
+      ["Kinds of channel", group((k, c) => (c.t || "").split(";").map(x => x.trim()).filter(Boolean).slice(0, 2)), 5],
+      ["Shows on our Bazaar channels", Object.entries(progs).sort((a, b) => b[1] - a[1]), 5],
+    ];
     const cols = document.createElement("div"); cols.className = "cols";
-    for (const [title, list] of [["Today", recs.filter(r => r.day === daysAgo(0))], ["Last 7 days", recs]]) {
+    for (const [title, list, n] of lists) {
+      if (!list.length) continue;
       const box = document.createElement("div");
-      const tot = list.reduce((a, r) => a + (r.seconds || 0), 0);
-      const b = document.createElement("b"); b.textContent = `${title}: ${tot ? hm(tot) : "nothing"}`; box.append(b);
-      const ol = document.createElement("ol");
-      for (const [name, sec] of topChannels(list).slice(0, 5)) {
-        const li = document.createElement("li"); li.textContent = name + " "; const sp = document.createElement("span"); sp.textContent = hm(sec); li.append(sp); ol.append(li);
+      const b = document.createElement("b"); b.textContent = title; box.append(b);
+      const ol = document.createElement("ol"), top = list[0][1] || 1;
+      for (const [name, sec] of list.slice(0, n)) {
+        const li = document.createElement("li"); li.textContent = name + " ";
+        const sp = document.createElement("span"); sp.textContent = hm(sec) + (title === "Languages" || title === "Countries" ? ` (${Math.round(100 * sec / tot)}%)` : "");
+        const bar = document.createElement("i"); bar.className = "bar"; bar.style.width = Math.max(3, Math.round(100 * sec / top)) + "%";
+        li.append(sp, bar); ol.append(li);
       }
       box.append(ol); cols.append(box);
     }
     el.append(cols);
+    const note = document.createElement("div"); note.className = "small"; note.style.marginTop = "6px";
+    note.textContent = "Languages are worked out from each channel's country (Pakistan = Urdu, India = Hindi, Canada/USA/UK = English) and our Bazaar channels' names.";
+    el.append(note);
   }
 
   const LENGTH_LABEL = { month: "every month", three: "every 3 months", six: "every 6 months", year: "every year" };
