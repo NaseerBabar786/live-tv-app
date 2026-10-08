@@ -1,7 +1,7 @@
 {
  "name": "آنے والی فلموں کے ٹریلر",
- "built": "2026-10-08 20:06 UTC",
- "secs": 2092,
+ "built": "2026-10-08 20:47 UTC",
+ "secs": 1472,
  "videos": [
   {
    "id": "A36nagDzugo",
@@ -50,21 +50,12 @@
    "kind": "trailer"
   },
   {
-   "id": "FzlWYkckA24",
-   "title": "'Bodyguard' (Official Trailer) Salman Khan",
-   "label": "T-Series",
-   "lang": "Hindi",
-   "secs": 90,
-   "found": "2026-10-08",
-   "kind": "trailer"
-  },
-  {
-   "id": "IR5ReWgs-iQ",
-   "title": "Kuch Kuch Hota Hai - Trailer",
+   "id": "llLHwxkZ02k",
+   "title": "Namit Malhotra’s Ramayana - Hindi Trailer | Nitesh Tiwari | Ranbir, Yash, Hans Zimmer, A.R.Rahman",
    "label": "Dharma Productions",
    "lang": "Hindi",
-   "secs": 33,
-   "found": "2026-10-07",
+   "secs": 250,
+   "found": "2026-10-08",
    "kind": "trailer"
   },
   {
@@ -73,7 +64,7 @@
    "label": "ARY Films",
    "lang": "Pakistani",
    "secs": 67,
-   "found": "2026-10-07",
+   "found": "2026-10-08",
    "kind": "trailer",
    "section": "آنے والی پاکستانی فلمیں"
   },
@@ -83,7 +74,7 @@
    "label": "ARY Films",
    "lang": "Pakistani",
    "secs": 60,
-   "found": "2026-10-07",
+   "found": "2026-10-08",
    "kind": "trailer"
   },
   {
@@ -92,7 +83,7 @@
    "label": "ARY Films",
    "lang": "Pakistani",
    "secs": 72,
-   "found": "2026-10-07",
+   "found": "2026-10-08",
    "kind": "trailer"
   },
   {
@@ -101,78 +92,6 @@
    "label": "ARY Films",
    "lang": "Pakistani",
    "secs": 68,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "mc41OtXlXtE",
-   "title": "3 BAHADUR OFFICIAL TRAILER – ARY FILMS",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 95,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "Y5Q8z66aV9U",
-   "title": "Aag Lagay Basti Mein | Official Trailer | Fahad Mustafa & Mahira Khan | This Eid",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 141,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "vhxpwaHbW_Q",
-   "title": "Azaadi | Official Trailer | ARY Films",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 89,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "P25RH1tI6EU",
-   "title": "Baaji | Official Trailer | Meera | Amna Ilyas | Osman Khalid Butt | ARY Films",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 162,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "-pqPuTQWr4g",
-   "title": "FRAUD - MOVIE | TRAILER | Saba Qamar | Ahsan Khan | Mikaal Zulfiqar | ARY FILMS",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 73,
-   "found": "2026-10-07",
-   "kind": "trailer"
-  },
-  {
-   "id": "QZ2zrfK0A90",
-   "title": "HABS - MOVIE | TRAILER | Feroze Khan | Ushna Shah | Ayesha Omar | ARY FILMS",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 54,
-   "found": "2026-10-08",
-   "kind": "trailer"
-  },
-  {
-   "id": "LeSewoq4uW4",
-   "title": "KUCH ANKAHI - MOVIE | TRAILER | Bilal Abbas | Sajal Aly | ARY FILMS",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 69,
-   "found": "2026-10-08",
-   "kind": "trailer"
-  },
-  {
-   "id": "cngAbi_zmbk",
-   "title": "TRAILER: BALAA | RELEASING TOMORROW, AT 8:00 PM | ARY FILMS",
-   "label": "ARY Films",
-   "lang": "Pakistani",
-   "secs": 64,
    "found": "2026-10-08",
    "kind": "trailer"
   }

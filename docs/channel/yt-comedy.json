@@ -1,7 +1,28 @@
 {
  "name": "Bazaar Comedy",
- "built": "2026-10-08 10:04 UTC",
+ "built": "2026-10-08 20:15 UTC",
  "videos": [
+  {
+   "id": "HOlxzttlAtE",
+   "title": "Wedding Day | Mr Bean Animated | Season 2 Episode 20 | Full Episode | Mr Bean",
+   "label": "Mr Bean",
+   "mins": 11.0,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "3PK7OOzNhaI",
+   "title": "SE 01 EP 361 -  Rickshaw Waale Ne Kyu Reject Kiya Jethalal Ko ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "mins": 20.016666666666666,
+   "found": "2026-10-08"
+  },
+  {
+   "id": "VxeEcRfx2DI",
+   "title": "NEW Episode 4836 - Tapu Sonu Ki जोड़ी देख Jethalal Hua बहुत खुश  Taarak Mehta Ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 10.233333333333333,
+   "found": "2026-10-08"
+  },
   {
    "id": "RMo3FaSqcyU",
    "title": "Popatlal Ne Subh Kyu Li Bhide Master Ki Class ! | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
@@ -21,13 +42,6 @@
    "title": "आखिर Jethalal Ka पैर केसे फंसा घड़े में ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
    "label": "Taarak Mehta",
    "mins": 11.183333333333334,
-   "found": "2026-10-08"
-  },
-  {
-   "id": "uyY_bAjId6U",
-   "title": "Bhootni Ko Dekh Popatlal हो गया बेहोश ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "mins": 11.383333333333333,
    "found": "2026-10-08"
   },
   {
@@ -80,13 +94,6 @@
    "found": "2026-10-07"
   },
   {
-   "id": "GzIhZX_v9HM",
-   "title": "Mr Bean’s HORROR Movie Nightmare Comes to Life! 😱 | Mr Bean Animated",
-   "label": "Mr Bean",
-   "mins": 3.95,
-   "found": "2026-10-07"
-  },
-  {
    "id": "_NjImGHkTug",
    "title": "NEW Episode 4835 - Daya Ko Dekhke Jethalal Hua Shock ! Taarak Mehta Ka Ooltah Chashmah",
    "label": "Taarak Mehta",
@@ -136,17 +143,17 @@
    "found": "2026-10-07"
   },
   {
-   "id": "Czxvn0N0b7Y",
-   "title": "SE 01 EP 353 -  Jethalal Ne Bhide Ko क्यू बोला चपली ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "mins": 17.6,
-   "found": "2026-10-07"
-  },
-  {
    "id": "AnSAYpbCwDw",
    "title": "Shaun the Class Clown! 🐑 Shaun the Sheep 🐑  - Cartoons for Kids 🐑 Full Episodes Compilation",
    "label": "Shaun the Sheep",
    "mins": 30.0,
+   "found": "2026-10-07"
+  },
+  {
+   "id": "Czxvn0N0b7Y",
+   "title": "SE 01 EP 353 -  Jethalal Ne Bhide Ko क्यू बोला चपली ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "mins": 17.6,
    "found": "2026-10-07"
   },
   {

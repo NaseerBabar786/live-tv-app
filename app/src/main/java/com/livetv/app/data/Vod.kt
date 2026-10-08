@@ -109,6 +109,9 @@ object Vod {
     /** Free films and shows from Wikimedia Commons, NASA, Vimeo and PeerTube, rebuilt every morning by tools/build_free.py. */
     const val FREE_SOURCES_URL = "https://tv.bulkbazaar.ca/Free.m3u"
 
+    /** Spark TV One's full news report of each day, the newest 30 (owner, 2026-10-08), by tools/news/archive.py. */
+    const val NEWS_ARCHIVE_URL = "https://tv.bulkbazaar.ca/NewsArchive.m3u"
+
     /**
      * The playlists Movies & Series always shows: the free lists in Cable TV, none in the store editions.
      * The old public-domain classics ([FREE_MOVIES_URL]) left the Library at the owner's wish (2026-10-07):
@@ -121,6 +124,7 @@ object Vod {
             listOf(
                 Playlist("Pakistani dramas", DRAMAS_URL),
                 Playlist("Free films and shows", FREE_SOURCES_URL),
+                Playlist("Spark TV One News", NEWS_ARCHIVE_URL),
             )
         } else {
             emptyList()

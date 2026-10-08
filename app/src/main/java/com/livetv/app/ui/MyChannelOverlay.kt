@@ -78,7 +78,14 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
     // Inside 1+List and the other channel screens the app's own "advertise with us" line runs along the
     // bottom, so the channel's line stays off there: one line, never two (the owner, 2026-10-08).
     val band = LocalTickerBand.current
-    val ownLine = c.ticker?.takeIf { band == 0.dp }
+    // Its line carries the "advertise with us" words, so it stays off while the news is on (owner, 2026-10-08).
+    val newsOn by produceState(false, channel?.url) {
+        while (true) {
+            value = MyChannel.newsOn(channel?.url)
+            delay(1_000)
+        }
+    }
+    val ownLine = c.ticker?.takeIf { band == 0.dp && !newsOn }
     BoxWithConstraints(modifier.fillMaxSize()) {
         // Sized from the picture, so it looks the same in full screen and in a smaller player.
         val unit = maxWidth / 100
