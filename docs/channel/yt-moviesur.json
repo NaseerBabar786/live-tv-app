@@ -2,20 +2,20 @@
  "name": "Latest Movies (moviesur)",
  "videos": [
   {
-   "id": "9elghQz-JwY",
-   "title": "Dadi Ki Shadi | Eid Special Telefilm | Eid Day 1 | 21st March 2026 | Aleezay Shah  | ARY Digital",
+   "id": "-gjHbKrRpig",
+   "title": "Tanka Laga | Eid Special Telefilm | Day 3 | 23 March 2026 | Amar Khan | Yasir Hussain | ARY Digital",
    "label": "ARY Digital",
-   "mins": 80.21666666666667,
+   "mins": 89.61666666666666,
    "found": "2026-10-07",
    "lang": "ur",
    "top": true,
    "latest": true
   },
   {
-   "id": "-gjHbKrRpig",
-   "title": "Tanka Laga | Eid Special Telefilm | Day 3 | 23 March 2026 | Amar Khan | Yasir Hussain | ARY Digital",
+   "id": "9elghQz-JwY",
+   "title": "Dadi Ki Shadi | Eid Special Telefilm | Eid Day 1 | 21st March 2026 | Aleezay Shah  | ARY Digital",
    "label": "ARY Digital",
-   "mins": 89.61666666666666,
+   "mins": 80.21666666666667,
    "found": "2026-10-07",
    "lang": "ur",
    "top": true,
@@ -42,20 +42,20 @@
    "latest": true
   },
   {
-   "id": "k-1W7DxYBvc",
-   "title": "Mulazim Online - Eid Special - TeleFilm - 7th June 2025 - [ Nida Yasir - Yasir Nawaz ] - HUM TV",
+   "id": "PlZS2B_5rqw",
+   "title": "Deewani - Eid Special - TeleFilm - 8th June 2025 - [ Sahar Hashmi - Usama Khan ] - HUM TV",
    "label": "HUM TV",
-   "mins": 69.11666666666666,
+   "mins": 72.71666666666667,
    "found": "2026-10-07",
    "lang": "ur",
    "top": true,
    "latest": true
   },
   {
-   "id": "PlZS2B_5rqw",
-   "title": "Deewani - Eid Special - TeleFilm - 8th June 2025 - [ Sahar Hashmi - Usama Khan ] - HUM TV",
+   "id": "k-1W7DxYBvc",
+   "title": "Mulazim Online - Eid Special - TeleFilm - 7th June 2025 - [ Nida Yasir - Yasir Nawaz ] - HUM TV",
    "label": "HUM TV",
-   "mins": 72.71666666666667,
+   "mins": 69.11666666666666,
    "found": "2026-10-07",
    "lang": "ur",
    "top": true,
@@ -67,6 +67,16 @@
    "label": "HUM TV",
    "mins": 64.56666666666666,
    "found": "2026-10-07",
+   "lang": "ur",
+   "top": true,
+   "latest": true
+  },
+  {
+   "id": "srfGxDsIv9s",
+   "title": "Love You Dolly - Eid Special - TeleFilm - 7th June 2025 - [ Syed Jibran - Nadia Khan ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 70.55,
+   "found": "2026-10-09",
    "lang": "ur",
    "top": true,
    "latest": true
@@ -112,21 +122,21 @@
    "latest": true
   },
   {
-   "id": "1aBXrPbMwcw",
-   "title": "BAYDARDI - FULL MOVIE | AIMAN KHAN | AFFAN WAHEED | 3rd August 2025 | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 149.85,
-   "found": "2026-10-07",
-   "lang": "ur",
-   "top": true,
-   "latest": true
-  },
-  {
    "id": "UkJbuBZ-EOc",
    "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
    "label": "ARY Films",
    "mins": 144.48333333333332,
    "found": "2026-10-08",
+   "lang": "ur",
+   "top": true,
+   "latest": true
+  },
+  {
+   "id": "1aBXrPbMwcw",
+   "title": "BAYDARDI - FULL MOVIE | AIMAN KHAN | AFFAN WAHEED | 3rd August 2025 | ARY FILMS",
+   "label": "ARY Films",
+   "mins": 149.85,
+   "found": "2026-10-07",
    "lang": "ur",
    "top": true,
    "latest": true
@@ -142,5 +152,5 @@
    "latest": true
   }
  ],
- "built": "2026-10-09 21:26 UTC"
+ "built": "2026-10-09 22:54 UTC"
 }

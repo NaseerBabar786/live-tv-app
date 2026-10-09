@@ -1,7 +1,34 @@
 {
  "name": "Spark Cooking (cookingur)",
- "built": "2026-10-09 13:09 UTC",
+ "built": "2026-10-09 22:46 UTC",
  "videos": [
+  {
+   "id": "TeZMEo3K-94",
+   "title": "Moroccan Sauce, London Viral Cake | Food Diaries | Zarnak Sidhwa  | 8 Oct 26 | Masala TV",
+   "label": "Masala TV",
+   "mins": 37.45,
+   "found": "2026-10-09",
+   "lang": "ur",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "pv8xeOeF-7Q",
+   "title": "Best Of Tarka | Katwa Gosht, Arvi Kay Patton Ka Salan | Rida Aftab | Masala Tv",
+   "label": "Masala TV",
+   "mins": 40.55,
+   "found": "2026-10-09",
+   "lang": "ur",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "p6L_-bRMnwQ",
+   "title": "Hara Masalaq Qeema, Hummus With Pulled Grilled Chicken | Shireen Anwar | Masala Mornings | 9 Oct 26",
+   "label": "Masala TV",
+   "mins": 41.166666666666664,
+   "found": "2026-10-09",
+   "lang": "ur",
+   "posted": "2026-10-09"
+  },
   {
    "id": "Bdd5koD98RA",
    "title": "Lab-e-Shireen Recipe |  Delicious Pakistani Dessert | Chef A.R. Jamali | Masala TV",
@@ -13,7 +40,7 @@
   },
   {
    "id": "xLyVet1CRGE",
-   "title": "Schezwan Chicken Lollipop | The Perfect Party Appetizer Recipe By Food Fusion",
+   "title": "Schezwan Chicken Lollipop Recipe By Food Fusion",
    "label": "Food Fusion",
    "mins": 4.066666666666666,
    "found": "2026-10-08",
@@ -475,14 +502,6 @@
    "lang": "ur"
   },
   {
-   "id": "PJWZugP3gaw",
-   "title": "Garlic & Scallion Wontons | Delicious Asian-Style Wonton Recipe | Chef Saad Butt | Masala TV",
-   "label": "Masala TV",
-   "mins": 8.933333333333334,
-   "found": "2026-10-06",
-   "lang": "ur"
-  },
-  {
    "id": "WxdKcKggg-8",
    "title": "Shireen - Cloudweaver (Official Music Video)",
    "label": "Shireen Anwar",
@@ -559,6 +578,14 @@
    "title": "Shireen - TASTE THE FLAMES [official quarantine edition]",
    "label": "Shireen Anwar",
    "mins": 4.816666666666666,
+   "found": "2026-10-06",
+   "lang": "ur"
+  },
+  {
+   "id": "PJWZugP3gaw",
+   "title": "Garlic & Scallion Wontons | Delicious Asian-Style Wonton Recipe | Chef Saad Butt | Masala TV",
+   "label": "Masala TV",
+   "mins": 8.933333333333334,
    "found": "2026-10-06",
    "lang": "ur"
   },
