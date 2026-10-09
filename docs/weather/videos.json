@@ -1,11 +1,35 @@
 {
- "updated": "2026-10-09T15:26Z",
+ "updated": "2026-10-09T18:28Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "_I5amnCUNvI",
+   "title": "Feel like you're seeing more spiders this fall? Here's why",
+   "channel": "The Weather Network",
+   "published": 1791568835
+  },
+  {
+   "id": "tL_YfyCloGQ",
+   "title": "Multiple powerful waterspouts spotted in Sicily. Damage reported after at least one came onshore",
+   "channel": "The Weather Network",
+   "published": 1791565215
+  },
+  {
+   "id": "hgyzv2P_tRY",
+   "title": "Flash Flood Sweeps Away Cars and Buses in Chile",
+   "channel": "AccuWeather",
+   "published": 1791562980
+  },
+  {
+   "id": "RqYhUpQER0w",
+   "title": "First snowfall of the season to Western Canada Thankgiving weekend | #forecast",
+   "channel": "The Weather Network",
+   "published": 1791559202
+  },
   {
    "id": "9REL4BUYjMk",
    "title": "Isaias upgraded to a major Hurricane, Canadian impacts possible | #forecast",
@@ -73,12 +97,6 @@
    "published": 1791482418
   },
   {
-   "id": "zxwY0E0xSHk",
-   "title": "Canada's new time zones are complicated, here's our best clarification | #timechange",
-   "channel": "The Weather Network",
-   "published": 1791478826
-  },
-  {
    "id": "KsNciDVzeXU",
    "title": "Hurricane Isaias and Rachel: A Rare Double U.S. Impact",
    "channel": "AccuWeather",
@@ -89,12 +107,6 @@
    "title": "Hurricane Isaias, First of 2026 Atlantic Season",
    "channel": "The Weather Channel",
    "published": 1791465649
-  },
-  {
-   "id": "gtw5t4LKlFw",
-   "title": "Hurricane Isaias forms in the Gulf, threatens U.S. coast and impacts Canada | #forecast",
-   "channel": "The Weather Network",
-   "published": 1791465214
   },
   {
    "id": "mr2ZrWQsWhI",
@@ -161,12 +173,6 @@
    "title": "Flash Floods Devastate Towns in Spain",
    "channel": "AccuWeather",
    "published": 1791223346
-  },
-  {
-   "id": "wZ6Ls9ur944",
-   "title": "Widespread frost expected: Who will be affected this week?",
-   "channel": "AccuWeather",
-   "published": 1791223136
   },
   {
    "id": "ed2fIOYIWms",
