@@ -7,13 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          set -x
-          curl -s -m 20 https://api.rainviewer.com/public/weather-maps.json | head -c 1500; echo
+                    echo "::notice::api $(curl -s -m 20 https://api.rainviewer.com/public/weather-maps.json | head -c 900)"
           host=$(curl -s https://api.rainviewer.com/public/weather-maps.json | jq -r .host)
           path=$(curl -s https://api.rainviewer.com/public/weather-maps.json | jq -r '.radar.past[-1].path')
-          curl -s -o /dev/null -w "tile6 %{http_code} %{size_download}\n" "$host$path/256/6/17/23/2/1_1.png"
-          curl -s -o /dev/null -w "tile7 %{http_code} %{size_download}\n" "$host$path/256/7/35/46/2/1_1.png"
-          curl -s -o /dev/null -w "tile6 c4 %{http_code} %{size_download}\n" "$host$path/256/6/17/23/4/1_1.png"
-          curl -s -o /dev/null -w "carto %{http_code}\n" "https://a.basemaps.cartocdn.com/dark_nolabels/6/17/23.png"
-          curl -s -o /dev/null -w "leaflet %{http_code}\n" https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js
-          curl -s -o /dev/null -w "leafletcss %{http_code}\n" https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css
+          echo "::notice::$(curl -s -o /dev/null -w 'tile6 %{http_code} %{size_download}' "$host$path/256/6/17/23/2/1_1.png")"
+          echo "::notice::$(curl -s -o /dev/null -w 'tile7 %{http_code} %{size_download}' "$host$path/256/7/35/46/2/1_1.png")"
+          echo "::notice::$(curl -s -o /dev/null -w 'tile6 c4 %{http_code} %{size_download}' "$host$path/256/6/17/23/4/1_1.png")"
+          echo "::notice::$(curl -s -o /dev/null -w 'carto %{http_code}' "https://a.basemaps.cartocdn.com/dark_nolabels/6/17/23.png")"
+          echo "::notice::$(curl -s -o /dev/null -w 'leaflet %{http_code}' https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js)"
+          echo "::notice::$(curl -s -o /dev/null -w 'leafletcss %{http_code}' https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css)"
