@@ -253,7 +253,7 @@ def main():
     random.Random(year * 100 + week).shuffle(loop)
     schedule = {
         "name": ch["name"],
-        "logo": f"https://tv.bulkbazaar.ca/channel/logos/bazaar-{args.channel}.png",
+        "logo": f"https://tv.bulkbazaar.ca/channel/logos/spark-{args.channel}.png",
         "logoCorner": "tr",
         "active": True,
         "tz": "America/Toronto",
