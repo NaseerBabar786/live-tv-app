@@ -98,7 +98,7 @@ import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.sin
 
-// The Weather section's colours come from the Cable TV theme the viewer picked (1.10.30), so it looks
+// The Weather section's colours come from the Cable TV theme the viewer picked (1.11), so it looks
 // like the rest of the app; only the weather pictures and the sky's weather touches keep their own colours.
 private val SkyBottom: Color get() = Themes.current.background
 private val Panel: Color get() = Themes.current.panel.copy(alpha = 0.85f)
@@ -603,7 +603,7 @@ private fun NowPanel(r: WeatherApp.Report, modifier: Modifier, onNowcast: () -> 
     }
 }
 
-/** The weeks around today: what each past day reached (white) and the forecast highs (yellow). */
+/** The weeks around today: what each past day reached (plain) and the forecast highs (in the theme colour). */
 @Composable
 private fun Month(r: WeatherApp.Report) {
     val today = r.now.take(10)
@@ -642,7 +642,7 @@ private fun Month(r: WeatherApp.Report) {
                 repeat(7 - week.size) { Spacer(Modifier.weight(1f)) }
             }
         }
-        Text("White: what it reached · Yellow: forecast high", fontSize = 10.sp, color = Dim, modifier = Modifier.padding(top = 2.dp))
+        Text("Plain: what it reached · Coloured: forecast high", fontSize = 10.sp, color = Dim, modifier = Modifier.padding(top = 2.dp))
     }
 }
 

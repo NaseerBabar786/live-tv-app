@@ -203,7 +203,11 @@ class MainActivity : ComponentActivity() {
         } else if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
         } else if (showQuran && playing == null) {
-            QuranSection.Screen(onClose = { showQuran = false })
+            QuranSection.Screen(
+                onClose = { showQuran = false },
+                // The Weather section draws over the Azan Clock (checked first above), so closing it comes back here.
+                onWeather = if (Edition.LIVE_TV) ({ if (!Plans.ask("Weather", Plans.Feature.Weather)) showWeather = true }) else null,
+            )
         } else if (showVod && playing == null) {
             VodScreen(inPictureInPicture = inPictureInPicture, onClose = { showVod = false; vodStart = null }, start = vodStart)
         } else if (playing != null && page != null && playing.url !in fellBack && page !in fellBack) {
