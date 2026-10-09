@@ -50,7 +50,9 @@ scroll_tap() { # x text...
   local x="$1"; shift
   for i in $(seq 1 14); do
     tap_text "$@" && return 0
-    adb shell input swipe "$x" 900 "$x" 450 400; sleep 1
+    adb shell input swipe "$x" 800 "$x" 400 600; sleep 1
+    # Dialogs on TV scroll with the focus too.
+    adb shell input keyevent KEYCODE_DPAD_DOWN KEYCODE_DPAD_DOWN KEYCODE_DPAD_DOWN; sleep 1
   done
   return 1
 }
