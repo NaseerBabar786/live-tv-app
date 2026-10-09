@@ -9,7 +9,12 @@ like the approved v5 montage (tools/make_spark_montage.py, whose clips and drawi
   carousel   Channel surfing. Our shows glide past on a carousel of screens, one per beat, faster and faster,
              then rapid-fire cuts and sliding strips before the flower blooms.
 
-Usage: python3 tools/make_spark_montage_ideas.py languages|carousel OUT.mp4
+  remote     The remote. A TV switches on and flips through the Spark channels, faster and faster, with the channel
+             banner each time; the channel list scrolls, the TV switches off to a dot of light, and the flower blooms.
+  mosaic     Every screen makes the flower. One show full screen, the camera pulls back and back: it is one of
+             hundreds of screens, and the screens in the four petals take on the petal colours until they are the flower.
+
+Usage: python3 tools/make_spark_montage_ideas.py languages|carousel|remote|mosaic OUT.mp4
 """
 import math, os, subprocess, sys, tempfile
 import numpy as np
@@ -308,17 +313,177 @@ def carousel(clips, outro):
     return frame
 
 
+# ------------------------------------------------------------------ idea 3: the remote, flipping through Spark channels
+FLIPS = [("SPARK TV ONE", "anchor", "NEWS"), ("SPARK CINEMA", "sintel-snow", "MOVIES"), ("SPARK KIDS", "bunny-fly", "KIDS"),
+         ("SPARK SPORTS", "cricket", "SPORTS"), ("SPARK TRAVEL", "plane", "TRAVEL"), ("SPARK COMEDY", "wing-cat", "KIDS"),
+         ("SPARK MOVIES ENGLISH", "tos-robot", "MOVIES"), ("SPARK DRAMAS", "story", "STORIES"), ("SPARK TV NEWS", "earth", "NEWS"),
+         ("SPARK TEENS", "cosmos-sheep", "MOVIES"), ("SPARK SPORTS", "football", "SPORTS"), ("SPARK KIDS", "llama", "KIDS"),
+         ("SPARK CINEMA", "superman-zap", "CLASSICS"), ("SPARK TRAVEL", "toronto", "TRAVEL"), ("SPARK CINEMA", "sintel-face", "MOVIES"),
+         ("SPARK KIDS", "bunny", "KIDS"), ("SPARK TV NEWS", "city", "NEWS"), ("SPARK SPORTS", "stadium", "SPORTS")]
+NOISE = [np.random.default_rng(90 + s).random((H // 4, W // 4, 1)).astype(np.float32) for s in range(6)]
+
+
+def flip_index(t):
+    """Which channel is on at time t: a new one every beat from 1 s, every half beat from 8 s, then it rests at 12 s."""
+    if t < 8: return int((t - 1) / .5), (t - 1) % .5
+    if t < 12: return 14 + int((t - 8) / .25), (t - 8) % .25
+    return 30, t - 12
+
+
+def remote(clips, outro):
+    big = ImageFont.truetype(M.WORD_FONT, 64); small = ImageFont.truetype(FONT, 30); listf = ImageFont.truetype(M.WORD_FONT, 58)
+
+    def osd(name, genre, j, a):
+        """The channel banner a TV shows after you press CH+: coloured bar, the channel's name, what's on."""
+        col = PETALS[j % 4]; lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        w = int(max(d.textlength(name, font=big), 420) + 150); x, y = 90, H - 250
+        d.rounded_rectangle([x, y, x + w, y + 150], 26, fill=(8, 9, 20, int(205 * a)))
+        d.rounded_rectangle([x, y, x + 18, y + 150], 9, fill=col + (int(255 * a),))
+        d.text((x + 52, y + 18), name, font=big, fill=(255, 255, 255, int(255 * a)))
+        d.text((x + 54, y + 100), "▲ CH+   ·   NOW ON  " + genre, font=small, fill=GCOL[genre] + (int(255 * a),))
+        return lay
+
+    def static(n, a):
+        g = NOISE[n % 6]; f = np.repeat(g, 3, 2) * .9
+        f = f * (.75 + .25 * np.sin(np.arange(H // 4)[:, None, None] * .9 + n))
+        return up(f) * a
+
+    def screen(t):
+        i, k = flip_index(t)
+        name, nm, genre = FLIPS[i % len(FLIPS)]
+        f = arr(push(clips[nm].frame(k + .4 + (i % 3) * .5), clamp(k / 2), 1.04, 1.1))
+        n = int(t * FPS)
+        sn = .06 if t < 8 else .03                                    # the snow between channels, shorter when flipping fast
+        if k < sn: f = f * .25 + static(n, .9)
+        elif k < 2 * sn: f = f + static(n, .35 * (1 - (k - sn) / sn))
+        if k < 1.6 * sn: f = np.roll(f, int((1 - k / (1.6 * sn)) * 140), axis=0)  # a little vertical roll as the picture locks
+        return f, name, genre, i, k
+
+    def frame(t):
+        lay = None
+        if t < 1:                                                     # power on: a line of light opens into the picture
+            f, *_ = screen(1.3)
+            o = out_cubic((t - .2) / .7); hh = max(2, int(H * o)); line = np.zeros((H, W, 3), np.float32)
+            y0 = (H - hh) // 2; line[y0:y0 + hh] = f[y0:y0 + hh] if hh > 4 else 1
+            core = np.exp(-((yy[:, :1] - H / 2) / (6 + 40 * o)) ** 2)[..., None] * (1 - o) * 1.5
+            f = line + core * clamp(t / .2)
+        elif t < 12:
+            f, name, genre, i, k = screen(t)
+            a = clamp((k - .06) / .08) if t < 8 else clamp((k - .03) / .04)
+            lay = osd(name, genre, i, a)
+        elif t < 13.6:                                                 # the channel list scrolls past, more and more
+            k = t - 12; f, *_ = screen(t); f = up(blur(f[::4, ::4], 4)) * .35 + DARK * .65
+            lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+            names = [n for n, _, _ in FLIPS] * 3; off = (k / 1.6) ** 2 * 1400
+            for r, nm in enumerate(names):
+                y = 300 + r * 104 - off
+                if 170 < y < H + 20:
+                    hi = abs(y + 30 - H / 2) < 52
+                    d.text((W // 2 - d.textlength(nm, font=listf) / 2, y), nm, font=listf,
+                           fill=(PETALS[r % 4] if hi else (215, 220, 232)) + (255 if hi else int(110 + 100 * clamp((y - 170) / 120)),))
+            d.text((W // 2 - d.textlength("ALL ON SPARK TV", font=big) / 2, 110), "ALL ON SPARK TV", font=big, fill=(255, 255, 255, 235))
+        else:                                                          # switch off: the picture folds into a line, then a dot
+            k = t - 13.6; f, *_ = screen(t)
+            v = in_cubic(k / .5); hh = max(2, int(H * (1 - v)))
+            out = np.zeros((H, W, 3), np.float32) + DARK
+            y0 = (H - hh) // 2; sub = f[y0:y0 + hh] if hh > 2 else np.ones((2, W, 3), np.float32)
+            hz = in_cubic((k - .5) / .45); ww = max(4, int(W * (1 - hz)))
+            img = to_img(sub * (1 + v * 1.4)).resize((ww, hh), Image.BILINEAR)
+            out[y0:y0 + hh, (W - ww) // 2:(W - ww) // 2 + ww] = arr(img)
+            dot = np.exp(-(((xx[::2, ::2] - W / 2) ** 2 + (yy[::2, ::2] - H / 2) ** 2) / (2 * (10 + 30 * clamp((k - .9) / .5)) ** 2)))[..., None]
+            f = out + up(dot * np.array((1, .9, .85), np.float32)) * clamp((k - .75) / .2) * (1.6 + .6 * math.sin(k * 30))
+        if lay is not None: f, _ = comp(f, lay)
+        for t0 in (8,):
+            lk = leak(t, t0)
+            if lk is not None: f = f + lk
+        return f * (.35 + .65 * VIGN)
+
+    return frame
+
+
+# ------------------------------------------------------------------ idea 4: every screen makes the flower
+MOSAIC = ["sintel-face", "bunny-fly", "cricket", "toronto", "anchor", "tos-robot", "llama", "football", "earth", "wing-rocket",
+          "superman-zap", "plane", "cosmos-sheep", "story", "stadium", "sintel-snow", "bunny", "city", "wing-cat", "tos-dome",
+          "traffic", "llama2", "sintel-roof", "superman-lab"]
+TW, TH, GAP = 34, 19, 3                      # a screen's size in the finished flower picture
+SF = 940                                     # the flower's size there
+WORDS4 = [(2.5, "EVERY STORY"), (5.5, "EVERY MATCH"), (8.5, "EVERY SMILE"), (11.5, "ONE SPARK")]
+
+
+def mosaic(clips, outro):
+    cols, rows = W // (TW + GAP) + 3, H // (TH + GAP) + 3
+    gx0 = W / 2 - cols * (TW + GAP) / 2; gy0 = H / 2 - rows * (TH + GAP) / 2
+    masks = [np.asarray(M.petal_mask(SF, i), np.float32) / 255 for i in range(4)]
+    tiles = []
+    rnd = M.rnd
+    for r in range(rows):
+        for c in range(cols):
+            x, y = gx0 + c * (TW + GAP), gy0 + r * (TH + GAP); cx, cy = x + TW / 2 - (W / 2 - SF / 2), y + TH / 2 - (H / 2 - SF / 2)
+            pet = -1
+            if 0 <= cx < SF and 0 <= cy < SF:
+                for i in range(4):
+                    if masks[i][int(cy), int(cx)] > .5: pet = i
+            tiles.append((x, y, pet, rnd.randrange(len(MOSAIC)), rnd.uniform(0, 2)))
+    # the first screen we see full screen: a tile in the top petal, near its middle
+    focus = min((t for t in tiles if t[2] == 0), key=lambda t: abs(t[0] + TW / 2 - W / 2) + abs(t[1] + TH / 2 - (H / 2 - SF * .25)))
+    fi = tiles.index(focus); tiles[fi] = focus[:3] + (0, 0.0)
+    fcx, fcy = focus[0] + TW / 2, focus[1] + TH / 2
+    words = {w: word_img(w, PETALS[i % 4], 150) for i, (_, w) in enumerate(WORDS4)}
+
+    def frame(t):
+        p = inout(clamp((t - .6) / 13.6)) * .55 + clamp((t - .6) / 13.6) * .45   # how far the camera has pulled back
+        z = (W / TW) ** (1 - p)                                                  # screen pixels per picture pixel
+        m = (1 - p) ** 2.2                                                      # the camera drifts from that screen to the flower's centre
+        cx, cy = W / 2 + (fcx - W / 2) * m, H / 2 + (fcy - H / 2) * m
+        tw, th = max(1, int(round(TW * z))), max(1, int(round(TH * z)))
+        cv = Image.new("RGB", (W, H), tuple(int(v * 255) for v in DARK))
+        tint = clamp((t - 6) / 8) ** 1.5; dim = clamp((t - 3) / 7)
+        cache = {}
+        for x, y, pet, ci, ph in tiles:
+            sx, sy = (x - cx) * z + W / 2, (y - cy) * z + H / 2
+            if sx > W or sy > H or sx + tw < 0 or sy + th < 0: continue
+            key = (ci, pet)
+            if key not in cache:
+                src = clips[MOSAIC[ci]].frame((t + ci * .3) % 3.0)
+                if tw > 400: src = push(src, 0, 1.0, 1.0)
+                im = src.resize((tw, th), Image.BILINEAR if tw > 200 else Image.BOX)
+                if pet >= 0 and tint > 0: im = Image.blend(im, Image.new("RGB", (tw, th), PETALS[pet]), .82 * tint)
+                if pet < 0: im = Image.blend(im, Image.new("RGB", (tw, th), tuple(int(v * 255) for v in DARK)), .88 * dim)
+                cache[key] = im
+            cv.paste(cache[key], (int(sx), int(sy)))
+        f = arr(cv)
+        if t > 13.8: f = f + ((t - 13.8) / 1.2) ** 2 * .9                     # the flower shines into the bloom
+        lay = None
+        for t0, w in WORDS4:
+            k = t - t0
+            if 0 <= k < 2.2:
+                wi = words[w]; a = clamp(k / .25) * (1 - clamp((k - 1.8) / .4)); s = .9 + .1 * out_cubic(k / .5)
+                q = fade_img(wi.resize((int(wi.width * s), int(wi.height * s)), Image.BILINEAR), a)
+                lay = lay or Image.new("RGBA", (W, H), (0, 0, 0, 0))
+                lay.alpha_composite(q, (W // 2 - q.width // 2, int(H * .78) - q.height // 2))
+        if lay is not None: f, _ = comp(f, lay)
+        return f * (.4 + .6 * VIGN)
+
+    return frame
+
+
 def make(kind, out):
     print("fetching clips", flush=True)
     if kind == "languages":
         names = {n for v in LANG_CLIPS.values() for n in v} | {"sintel-cliff"}
         tagline = "URDU   ·   HINDI   ·   ENGLISH   ·   PUNJABI"
-    else:
+    elif kind == "carousel":
         names = set(REEL) | {n for n, _ in FIRE} | set(STRIPS) | {"sintel-cliff"}
         tagline = "MOVIES   ·   KIDS   ·   SPORTS   ·   NEWS   ·   TRAVEL"
+    elif kind == "remote":
+        names = {n for _, n, _ in FLIPS} | {"sintel-cliff"}
+        tagline = "ONE REMOTE   ·   EVERY SPARK CHANNEL"
+    else:
+        names = set(MOSAIC) | {"sintel-cliff"}
+        tagline = "EVERY STORY   ·   ONE SPARK"
     clips = {n: Clip(n, 9.0 if n == "sintel-cliff" else 3.2) for n in names}
     outro = Outro(tagline, clips["sintel-cliff"])
-    body = (languages if kind == "languages" else carousel)(clips, outro)
+    body = {"languages": languages, "carousel": carousel, "remote": remote, "mosaic": mosaic}[kind](clips, outro)
     bug = Image.open(M.BUG).convert("RGBA"); bug = fade_img(bug.resize((230, int(230 * bug.height / bug.width)), Image.LANCZOS), .8)
     cf = ImageFont.truetype(FONT, 21)
     fr = tempfile.mkdtemp()
