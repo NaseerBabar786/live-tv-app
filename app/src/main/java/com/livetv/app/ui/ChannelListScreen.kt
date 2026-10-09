@@ -303,7 +303,7 @@ fun ChannelListScreen(
     // Cable TV's Free package on a TV: 1+List shows as "Info Corner" (the owner's pick, 2026-10-08), the player at
     // about 40% of the screen with clock, weather, next prayer and our own promos beside it. Only how it looks
     // changes: the saved mode stays 1+List, so Gold (or a Gold trial) shows the normal 1+List again.
-    val freeScreen = Edition.LIVE_TV && wideScreen && !phone && listMode && tier == Plans.Tier.Free
+    val freeScreen = Edition.LIVE_TV && wideScreen && !phone && listMode // QA ONLY: forced on
     LandscapeOnPhone(on = phone && tileLayout != TileLayout.List && tileLayout != TileLayout.Browse)
     // "News": the top bar and filters hide; Back brings them back (newsBar) until the player is highlighted again.
     val newsMode = wideScreen && tileLayout in INFO_LAYOUTS
