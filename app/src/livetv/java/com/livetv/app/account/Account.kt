@@ -69,7 +69,11 @@ class Account private constructor(context: Context) {
             .put("requestUri", "https://tv.bulkbazaar.ca")
             .put("returnSecureToken", true)
             .put("returnIdpCredential", true)
-        val r = Http.postJson("$IDENTITY/accounts:signInWithIdp?key=${FirebaseConfig.API_KEY}", body)
+        val r = try {
+            Http.postJson("$IDENTITY/accounts:signInWithIdp?key=${FirebaseConfig.API_KEY}", body)
+        } catch (e: Http.Status) {
+            throw IOException(friendly(e.message))
+        }
         remember(r, r.optString("displayName").ifBlank { r.optString("fullName") }, PROVIDER_GOOGLE)
     }
 
@@ -176,8 +180,13 @@ class Account private constructor(context: Context) {
                 mapOf("grant_type" to "refresh_token", "refresh_token" to refresh),
             )
         } catch (e: Http.Status) {
-            // The account was removed or disabled: ask to sign in again.
-            if (e.code in 400..403) signOut()
+            // The account was removed or disabled: ask to sign in again, saying why.
+            if (e.code in 400..403) {
+                signOut()
+                val m = e.message ?: ""
+                if (m.startsWith("USER_DISABLED")) _notice.value = friendly(m)
+                else if (m.startsWith("USER_NOT_FOUND")) _notice.value = "This account was removed. Sign in again or make a new account to watch."
+            }
             throw e
         }
         prefs.edit().putString(K_REFRESH, r.getString("refresh_token")).apply()

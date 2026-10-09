@@ -1,12 +1,475 @@
 {
  "name": "Bazaar Travel",
- "built": "2026-10-08 23:43 UTC",
+ "built": "2026-10-09 02:09 UTC",
  "videos": [
   {
-   "id": "8OGDQPn_U8s",
-   "title": "Tourist Visa on Arrival | India",
+   "id": "5h27x35Oi70",
+   "title": "Pampore, the land of Saffron | Jammu and Kashmir",
    "label": "Incredible India",
-   "mins": 2.3,
+   "mins": 2.1666666666666665,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "wAD9uO9YAQw",
+   "title": "Incredible India - Director's Cut - Travel | CNN",
+   "label": "Incredible India",
+   "mins": 2.6166666666666667,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "O8mV-lHMqB8",
+   "title": "Darjeeling - West Bengal | India",
+   "label": "Incredible India",
+   "mins": 5.35,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "UkZupj7YAAc",
+   "title": "BEST Beaches in Okinawa, Japan | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 3.45,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-10-04"
+  },
+  {
+   "id": "CtBOoHuk0Bo",
+   "title": "Inside Morocco’s UNDERRATED Capital | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 4.133333333333334,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-10-02"
+  },
+  {
+   "id": "DLGm_-GvDw4",
+   "title": "Inside Mexico’s BOOMING Wine Country | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 4.166666666666667,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-10-01"
+  },
+  {
+   "id": "H6_l9hNAYUI",
+   "title": "The BEST Way to Explore California’s Redwoods | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 2.5166666666666666,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-09-30"
+  },
+  {
+   "id": "crh_-z7jJ5k",
+   "title": "How to REALLY SEE Veneto, Italy | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 3.85,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-09-27"
+  },
+  {
+   "id": "rfCqMbzmyzE",
+   "title": "Is This France's Most EPIC Road Trip? | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 4.216666666666667,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-09-26"
+  },
+  {
+   "id": "vHUd1AtPklM",
+   "title": "One of the Pacific’s Most UNIQUE Islands | Lonely Planet’s Best in Travel 2027",
+   "label": "Lonely Planet",
+   "mins": 3.9,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-09-25"
+  },
+  {
+   "id": "XZUCeHq33t8",
+   "title": "BANGKOK on a BUDGET: Top Free Activities and Expert Travel Tips",
+   "label": "Lonely Planet",
+   "mins": 2.0833333333333335,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "BlMy-kmBqP0",
+   "title": "Weekend Wanderlust: On the road in New Orleans, LA | Lonely Planet",
+   "label": "Lonely Planet",
+   "mins": 4.033333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "dIuBre7YiRU",
+   "title": "Discover Dubai's KID-FRIENDLY Summer with Joe Cooper from the UK | Episode 2",
+   "label": "Visit Dubai",
+   "mins": 7.933333333333334,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "MbtV-L7IqGM",
+   "title": "See New and Old Dubai with Vanessa Geens from France | Episode 1",
+   "label": "Visit Dubai",
+   "mins": 13.1,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "xcZ_YLMUYb8",
+   "title": "Explore Dubai History with Nina & Shuman from China | Episode 3",
+   "label": "Visit Dubai",
+   "mins": 11.533333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "CkXni11FpYU",
+   "title": "Life in Istanbul | Go Türkiye",
+   "label": "Türkiye",
+   "mins": 2.066666666666667,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "eMBnmx9pty0",
+   "title": "Hidden Lover - The Series, Episode 1: Impromptu Meeting",
+   "label": "Türkiye",
+   "mins": 2.9166666666666665,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "_zy95Fc6ayA",
+   "title": "Heartbound: Turkish Black Sea: Episode 9 –  The Truth | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.9166666666666665,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "xF_8rBVPSDo",
+   "title": "Heartbound: Turkish Black Sea: Episode 10 –  Our Story | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 3.0,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "CeqGWA_SjgM",
+   "title": "Whisper of Origins Episode 1 - Destined Paths | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 3.0,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "4ZxgBQA7cuY",
+   "title": "Bolivia Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 7.65,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "lf4ZoAJsgnk",
+   "title": "Cairns Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 4.6,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "OrIDTJH2ZZM",
+   "title": "SYDNEY VACATION TRAVEL GUIDE | Expedia",
+   "label": "Expedia",
+   "mins": 6.65,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "iB4XbL_PmzQ",
+   "title": "Atlanta Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 5.85,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "MEle9Vfxoh0",
+   "title": "Maui Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 4.383333333333334,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "kf3_U0MLs9A",
+   "title": "Adelaide Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 5.25,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "TZ3M3bt22v4",
+   "title": "Darwin Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 5.783333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "Sj-VzFlJ14o",
+   "title": "Canberra Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 8.583333333333334,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "k7ZqiSKIB9g",
+   "title": "Glasgow Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 8.3,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "MRI8ffYKA8c",
+   "title": "Vienna Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 6.8,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "BfKtlsUU0D0",
+   "title": "Belfast Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 3.8833333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "UQgcBiAztjs",
+   "title": "Frankfurt Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 8.116666666666667,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "fqWW6Z383Ak",
+   "title": "The rhythms, flavors and hues of Montego Bay, Jamaica | Eats & Beats",
+   "label": "Expedia",
+   "mins": 8.1,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "qYj2Zgb_tfY",
+   "title": "Lots to do in Ottawa - Ontario, Canada",
+   "label": "Destination Canada",
+   "mins": 2.7,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "3uQ6TlgAZoA",
+   "title": "Saskatoon: an LGBTQ destination | Explore Canada",
+   "label": "Destination Canada",
+   "mins": 4.366666666666666,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "spECegc9PL4",
+   "title": "More than just vast landscapes in Ontario | Explore Canada",
+   "label": "Destination Canada",
+   "mins": 2.5166666666666666,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "EpOQYgHXS2M",
+   "title": "What to do in Winnipeg, Manitoba with Natalie Bell | Explore Canada",
+   "label": "Destination Canada",
+   "mins": 3.0166666666666666,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "fdpRi5k35XU",
+   "title": "Richmond Night Market, North America's Largest Food Truck Market | Explore Canada",
+   "label": "Destination Canada",
+   "mins": 4.016666666666667,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "FN9CeKFA-pI",
+   "title": "Experience North America's largest Caribbean Festival in Toronto | Explore Canada",
+   "label": "Destination Canada",
+   "mins": 4.166666666666667,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "Fes6d61riW8",
+   "title": "Tom Landis visits Toronto and beyond in Ontario | Explore Canada",
+   "label": "Destination Canada",
+   "mins": 23.033333333333335,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "GP0ecDyOATA",
+   "title": "Hear from the cast and crew of the Paddington film about VisitBritain's marketing campaign",
+   "label": "VisitBritain",
+   "mins": 3.433333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "esb-rdjGKeM",
+   "title": "LIVING IN CHIANG MAI | $750 Apartment Tour & Thailand Tourist Visa Extension",
+   "label": "Kara and Nate",
+   "mins": 12.683333333333334,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "G_O24aopFRs",
+   "title": "Barcelona Free Walking Tour",
+   "label": "Kara and Nate",
+   "mins": 9.316666666666666,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "yzxX5XUto-o",
+   "title": "THIS IS AZERBAIJAN? | Baku Travel Vlog",
+   "label": "Kara and Nate",
+   "mins": 9.233333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "0tASt6xcKAA",
+   "title": "TEL AVIV TO JERUSALEM BY BUS (don't make this mistake)",
+   "label": "Kara and Nate",
+   "mins": 12.516666666666667,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "K95XAJFOTNQ",
+   "title": "OUR 52nd COUNTRY | San Marino Day Trip!",
+   "label": "Kara and Nate",
+   "mins": 10.183333333333334,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "zeQ4qrFwePM",
+   "title": "JORDAN Travel Vlog | Jesus Was Baptized HERE (Jerash & Mt. Nebo)",
+   "label": "Kara and Nate",
+   "mins": 14.95,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "yLoR7btSxtg",
+   "title": "WHAT IT'S LIKE INSIDE CHERNOBYL (is it safe?)",
+   "label": "Kara and Nate",
+   "mins": 16.7,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "EsPG6HIFT-U",
+   "title": "Independent Travel in Cuba? LOST in the Mountains of Vinales",
+   "label": "Kara and Nate",
+   "mins": 14.6,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "etHlf7Pj6vc",
+   "title": "FIRST TIME IN VENICE! (traveling with family)",
+   "label": "Kara and Nate",
+   "mins": 9.183333333333334,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "VgoHMrFjQN0",
+   "title": "ISTANBUL TRAVEL VLOG | Blue Mosque & Grand Bazaar",
+   "label": "Kara and Nate",
+   "mins": 10.233333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "A6gSZ_CP5d4",
+   "title": "9 Days Overlanding Oman (Part 2)",
+   "label": "Kara and Nate",
+   "mins": 49.4,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "4KSwXAJbiZE",
+   "title": "LEARNING TO SURVIVE ON A DESERTED ISLAND",
+   "label": "Kara and Nate",
+   "mins": 28.35,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "zz-fvGU9PBk",
+   "title": "AN UNEXPECTED ENDING TO OUR NORTH POLE CRUISE",
+   "label": "Kara and Nate",
+   "mins": 22.7,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "V_boUAHCU4M",
+   "title": "ROAD TRIP WITH US (back to van life)",
+   "label": "Kara and Nate",
+   "mins": 27.133333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "cfs_cam_4rQ",
+   "title": "Spending 24 Hours in Silence (ASMR camping)",
+   "label": "Kara and Nate",
+   "mins": 22.233333333333334,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "POFfk5l-wHo",
+   "title": "72 Hours Living in NEW CyberTruck Basecamp",
+   "label": "Kara and Nate",
+   "mins": 35.43333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "lFBsUj2AJOI",
+   "title": "Choose Your Own Adventure | EP02 - Mountain Trekking ft. Blogger Nicole Eddy",
+   "label": "Incredible India",
+   "mins": 2.1333333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -19,10 +482,26 @@
    "lang": "en"
   },
   {
-   "id": "ve0a5mOmvkQ",
-   "title": "A Tasteful Journey | The India 100",
+   "id": "GFTjNH_O-J4",
+   "title": "Karnataka - India",
    "label": "Incredible India",
-   "mins": 2.9,
+   "mins": 3.0,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "8OGDQPn_U8s",
+   "title": "Tourist Visa on Arrival | India",
+   "label": "Incredible India",
+   "mins": 2.3,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "DTuguaTDEWk",
+   "title": "Documentary - North East India",
+   "label": "Incredible India",
+   "mins": 11.383333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -35,10 +514,10 @@
    "lang": "en"
   },
   {
-   "id": "DTuguaTDEWk",
-   "title": "Documentary - North East India",
+   "id": "ve0a5mOmvkQ",
+   "title": "A Tasteful Journey | The India 100",
    "label": "Incredible India",
-   "mins": 11.383333333333333,
+   "mins": 2.9,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -324,18 +803,18 @@
    "lang": "en"
   },
   {
-   "id": "Zsanb60vYUI",
-   "title": "The Maritime Lemonade Stand - Episode 6: The Seasickness",
-   "label": "Lonely Planet",
-   "mins": 7.683333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "4PVpTySbfxs",
    "title": "The Maritime Lemonade Stand - Episode 5:  The Trial",
    "label": "Lonely Planet",
    "mins": 8.383333333333333,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "Zsanb60vYUI",
+   "title": "The Maritime Lemonade Stand - Episode 6: The Seasickness",
+   "label": "Lonely Planet",
+   "mins": 7.683333333333334,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -396,18 +875,10 @@
    "lang": "en"
   },
   {
-   "id": "TXRsmRRh3po",
-   "title": "How do sky scrapers work? - Lonely Planet Kids",
+   "id": "TrecED3wnnw",
+   "title": "The Thrill-Seeker's Guide To Abu Dhabi",
    "label": "Lonely Planet",
-   "mins": 2.65,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "FpTzEus93i0",
-   "title": "Southern Germany Road Trip: Driving in Deutschland",
-   "label": "Lonely Planet",
-   "mins": 3.5166666666666666,
+   "mins": 5.033333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -420,10 +891,18 @@
    "lang": "en"
   },
   {
-   "id": "TrecED3wnnw",
-   "title": "The Thrill-Seeker's Guide To Abu Dhabi",
+   "id": "FpTzEus93i0",
+   "title": "Southern Germany Road Trip: Driving in Deutschland",
    "label": "Lonely Planet",
-   "mins": 5.033333333333333,
+   "mins": 3.5166666666666666,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "ipvdG0JEqMM",
+   "title": "Emma Sparks is just back from...Sri Lanka",
+   "label": "Lonely Planet",
+   "mins": 2.0833333333333335,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -589,18 +1068,18 @@
    "lang": "en"
   },
   {
-   "id": "m3ISH4Pu1QU",
-   "title": "Things to Do in Dubai with 150 AED | The Ultimate Budget Challenge",
-   "label": "Visit Dubai",
-   "mins": 2.1666666666666665,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "cZjG6XiQOWg",
    "title": "Quick stopover in Dubai? Here’s what you MUST do!",
    "label": "Visit Dubai",
    "mins": 8.333333333333334,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "m3ISH4Pu1QU",
+   "title": "Things to Do in Dubai with 150 AED | The Ultimate Budget Challenge",
+   "label": "Visit Dubai",
+   "mins": 2.1666666666666665,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -613,34 +1092,10 @@
    "lang": "en"
   },
   {
-   "id": "ZcPMlAxZe10",
-   "title": "Where the world celebrates with Brian Laudrup",
-   "label": "Visit Dubai",
-   "mins": 5.583333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "NhsbGFu4bYU",
-   "title": "Experiential things to do in Dubai with Erik Hedenfalk",
-   "label": "Visit Dubai",
-   "mins": 8.816666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "3n4XU7usSGU",
    "title": "Best things to do in Dubai with the Sobolev family from Russia | Episode 2",
    "label": "Visit Dubai",
    "mins": 8.766666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "CoOrjw2xyqU",
-   "title": "Family Fun in Dubai Vlog with AbdulKareem from KSA | Episode 2",
-   "label": "Visit Dubai",
-   "mins": 8.6,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -653,10 +1108,10 @@
    "lang": "en"
   },
   {
-   "id": "IdjmBnsgprE",
-   "title": "Outdoor things to do in Dubai - Mohit & Tamanna from India | Episode 2",
+   "id": "NhsbGFu4bYU",
+   "title": "Experiential things to do in Dubai with Erik Hedenfalk",
    "label": "Visit Dubai",
-   "mins": 10.816666666666666,
+   "mins": 8.816666666666666,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -677,14 +1132,6 @@
    "lang": "en"
   },
   {
-   "id": "Ij0KrgFOdm0",
-   "title": "Explore Old Dubai with Manar from Kuwait | Episode 1",
-   "label": "Visit Dubai",
-   "mins": 8.416666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "jOuY8j-fdxA",
    "title": "Discover Luxury & Serenity with Priti Malik from the USA | Episode 3",
    "label": "Visit Dubai",
@@ -693,10 +1140,10 @@
    "lang": "en"
   },
   {
-   "id": "8OMg1L51Eac",
-   "title": "Discover Dubai’s Culture with Julia from the Netherlands | Episode 1",
+   "id": "Ij0KrgFOdm0",
+   "title": "Explore Old Dubai with Manar from Kuwait | Episode 1",
    "label": "Visit Dubai",
-   "mins": 5.916666666666667,
+   "mins": 8.416666666666666,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -705,6 +1152,22 @@
    "title": "Discover Dubai with Chiara from Italy | Episode 3",
    "label": "Visit Dubai",
    "mins": 3.8666666666666667,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "U7kwKul5iV4",
+   "title": "Dubai Food Diaries with Mark Wiens | Episode 1",
+   "label": "Visit Dubai",
+   "mins": 14.4,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "8OMg1L51Eac",
+   "title": "Discover Dubai’s Culture with Julia from the Netherlands | Episode 1",
+   "label": "Visit Dubai",
+   "mins": 5.916666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -725,82 +1188,10 @@
    "lang": "en"
   },
   {
-   "id": "U7kwKul5iV4",
-   "title": "Dubai Food Diaries with Mark Wiens | Episode 1",
-   "label": "Visit Dubai",
-   "mins": 14.4,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "hXHTIWGGo8A",
-   "title": "Discover Dubai with Broda Shaggi & Chigul from Nigeria | Episode 2",
-   "label": "Visit Dubai",
-   "mins": 10.033333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "OKxwKM7a4NM",
-   "title": "The DUBAI CHALLENGE with Faisal & Bilal from Strings | Pakistan Episode 2",
-   "label": "Visit Dubai",
-   "mins": 7.783333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "dsKn1URJk20",
-   "title": "Discover Dubai on a Budget with Joe Cooper from the UK | Episode 3",
-   "label": "Visit Dubai",
-   "mins": 7.3,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "E3zskItnyt8",
    "title": "Discover Dubai With Trevor and Marischka from South Africa | Episode 2",
    "label": "Visit Dubai",
    "mins": 10.783333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "eCnvlUAeO4I",
-   "title": "Ep2 - Dubai, Who's ready? ft. Park Shin-Hye and Park Hyung-Sik",
-   "label": "Visit Dubai",
-   "mins": 2.066666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "naQQLRpOIFY",
-   "title": "Dubai Food: Dine out with Vanessa Geens from France | Episode 4",
-   "label": "Visit Dubai",
-   "mins": 14.033333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "vOS181c1TDQ",
-   "title": "Discover Dubai’s Sun and Sand with Julia from the Netherlands | Episode 2",
-   "label": "Visit Dubai",
-   "mins": 7.15,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "Z_rj6dBF0SE",
-   "title": "Discover The DUBAI VIBE with Broda Shaggi & Chigul from Nigeria | Episode 1",
-   "label": "Visit Dubai",
-   "mins": 11.0,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "nCsGHBGIrA8",
-   "title": "Discover Bucket-list Activities with Priti Malik from USA | Episode 4",
-   "label": "Visit Dubai",
-   "mins": 9.216666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -813,10 +1204,66 @@
    "lang": "en"
   },
   {
-   "id": "NI0DHghB4sM",
-   "title": "حواس السعودية | جدة",
-   "label": "Visit Saudi",
-   "mins": 5.016666666666667,
+   "id": "OKxwKM7a4NM",
+   "title": "The DUBAI CHALLENGE with Faisal & Bilal from Strings | Pakistan Episode 2",
+   "label": "Visit Dubai",
+   "mins": 7.783333333333333,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "vOS181c1TDQ",
+   "title": "Discover Dubai’s Sun and Sand with Julia from the Netherlands | Episode 2",
+   "label": "Visit Dubai",
+   "mins": 7.15,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "hXHTIWGGo8A",
+   "title": "Discover Dubai with Broda Shaggi & Chigul from Nigeria | Episode 2",
+   "label": "Visit Dubai",
+   "mins": 10.033333333333333,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "naQQLRpOIFY",
+   "title": "Dubai Food: Dine out with Vanessa Geens from France | Episode 4",
+   "label": "Visit Dubai",
+   "mins": 14.033333333333333,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "eCnvlUAeO4I",
+   "title": "Ep2 - Dubai, Who's ready? ft. Park Shin-Hye and Park Hyung-Sik",
+   "label": "Visit Dubai",
+   "mins": 2.066666666666667,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "dsKn1URJk20",
+   "title": "Discover Dubai on a Budget with Joe Cooper from the UK | Episode 3",
+   "label": "Visit Dubai",
+   "mins": 7.3,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "Z_rj6dBF0SE",
+   "title": "Discover The DUBAI VIBE with Broda Shaggi & Chigul from Nigeria | Episode 1",
+   "label": "Visit Dubai",
+   "mins": 11.0,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "CoOrjw2xyqU",
+   "title": "Family Fun in Dubai Vlog with AbdulKareem from KSA | Episode 2",
+   "label": "Visit Dubai",
+   "mins": 8.6,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1070,18 +1517,18 @@
    "lang": "en"
   },
   {
-   "id": "IN-Gg8RVa14",
-   "title": "Pamukkale - Only In Türkiye | Go Türkiye",
+   "id": "gDGM985zYWg",
+   "title": "PassSport Istanbul: Vol.3 with Burcu Dolunay | Go Türkiye",
    "label": "Türkiye",
-   "mins": 8.15,
+   "mins": 2.25,
    "found": "2026-10-08",
    "lang": "en"
   },
   {
-   "id": "hRPAMexKzus",
-   "title": "Archaeological Site of Troy - Only In Türkiye | Go Türkiye",
+   "id": "IN-Gg8RVa14",
+   "title": "Pamukkale - Only In Türkiye | Go Türkiye",
    "label": "Türkiye",
-   "mins": 7.033333333333333,
+   "mins": 8.15,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1102,6 +1549,14 @@
    "lang": "en"
   },
   {
+   "id": "hRPAMexKzus",
+   "title": "Archaeological Site of Troy - Only In Türkiye | Go Türkiye",
+   "label": "Türkiye",
+   "mins": 7.033333333333333,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
    "id": "UP7j3tAq8ys",
    "title": "Turkish Riviera, East Mediterranean #2",
    "label": "Türkiye",
@@ -1110,18 +1565,10 @@
    "lang": "en"
   },
   {
-   "id": "gDGM985zYWg",
-   "title": "PassSport Istanbul: Vol.3 with Burcu Dolunay | Go Türkiye",
+   "id": "voFQHeQ5Zt0",
+   "title": "Aphrodisias - Uncovering #1 | Go Türkiye",
    "label": "Türkiye",
-   "mins": 2.25,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "gVe4UjlGKGQ",
-   "title": "Luxury Travel in İstanbul: Michelin-Starred Dining and Elegant Hotels by the Bosphorus",
-   "label": "Türkiye",
-   "mins": 5.316666666666666,
+   "mins": 5.266666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1142,26 +1589,10 @@
    "lang": "en"
   },
   {
-   "id": "oBEe9qQHHFw",
-   "title": "Experience Türkiye’s Unique Luxury in Cappadocia",
-   "label": "Türkiye",
-   "mins": 5.316666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "LR_f2pq44DE",
    "title": "Eat your Way Around Istanbul | Go Türkiye",
    "label": "Türkiye",
    "mins": 3.7,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "voFQHeQ5Zt0",
-   "title": "Aphrodisias - Uncovering #1 | Go Türkiye",
-   "label": "Türkiye",
-   "mins": 5.266666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1190,18 +1621,10 @@
    "lang": "en"
   },
   {
-   "id": "YDU80w0e7Xk",
-   "title": "İstanbul My Love – Mini Series I Episode 2: High Pulse",
+   "id": "csQYTEiSNMg",
+   "title": "Heartbound: Turkish Black Sea: Episode 8 –  The Awakening | Go Türkiye Original Mini-Series",
    "label": "Türkiye",
-   "mins": 2.15,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "BLvS4gxdNRo",
-   "title": "Cappadocia Fairytale Episode 2: The Unexpected Guest | Go Türkiye Original Mini-Series",
-   "label": "Türkiye",
-   "mins": 2.05,
+   "mins": 2.816666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1214,90 +1637,10 @@
    "lang": "en"
   },
   {
-   "id": "VFs9ZdSYYI0",
-   "title": "İstanbul My Love – Mini Series I Episode 10: İstanbul Love",
+   "id": "BLvS4gxdNRo",
+   "title": "Cappadocia Fairytale Episode 2: The Unexpected Guest | Go Türkiye Original Mini-Series",
    "label": "Türkiye",
-   "mins": 2.283333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "o29FCk-RxF8",
-   "title": "İstanbul My Love – Mini Series I Episode 5: The Illusion",
-   "label": "Türkiye",
-   "mins": 3.1333333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "IKDA86ky5DQ",
-   "title": "An İstanbul Story – Episode 3: “A DELICIOUS COMPETITION”",
-   "label": "Türkiye",
-   "mins": 3.0,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "Oo4c7fs364s",
-   "title": "Whisper of Origins Episode 9 - Pieces of the Puzzle | Go Türkiye Original Mini-Series",
-   "label": "Türkiye",
-   "mins": 2.6333333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "u6T9zZ2dtJw",
-   "title": "Antalya Gambit Mini Series | Episode 10: One last dance",
-   "label": "Türkiye",
-   "mins": 2.2666666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "csQYTEiSNMg",
-   "title": "Heartbound: Turkish Black Sea: Episode 8 –  The Awakening | Go Türkiye Original Mini-Series",
-   "label": "Türkiye",
-   "mins": 2.816666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "-o6Ni-IjI5c",
-   "title": "An İstanbul Story – Episode 2: “DUSTY PAGES FROM HISTORY”",
-   "label": "Türkiye",
-   "mins": 2.9833333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "0BQnXAfGEfg",
-   "title": "İstanbul My Love – Mini Series I Episode 3: Endless Blue",
-   "label": "Türkiye",
-   "mins": 3.2333333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "F1dBSpEmoRw",
-   "title": "An İstanbul Story – Episode 4: “WHISPER OF MEMORIES”",
-   "label": "Türkiye",
-   "mins": 2.45,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "zp7mmXlox9Y",
-   "title": "An İstanbul Story – Episode 6: “OUT OF BREATH”",
-   "label": "Türkiye",
-   "mins": 2.15,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "zf8fJNqKVDE",
-   "title": "Cappadocia Fairytale Episode 8: The Allure of the Sky | Go Türkiye Original Mini-Series",
-   "label": "Türkiye",
-   "mins": 2.55,
+   "mins": 2.05,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1306,6 +1649,14 @@
    "title": "İstanbul My Love – Mini Series I Episode 1: Eyes to Heart",
    "label": "Türkiye",
    "mins": 3.85,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "zf8fJNqKVDE",
+   "title": "Cappadocia Fairytale Episode 8: The Allure of the Sky | Go Türkiye Original Mini-Series",
+   "label": "Türkiye",
+   "mins": 2.55,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1423,106 +1774,10 @@
    "lang": "en"
   },
   {
-   "id": "huTUpPE9J4M",
-   "title": "OREGON COAST ROAD TRIP VACATION TRAVEL GUIDE | EXPEDIA",
+   "id": "45ETZ1xvHS0",
+   "title": "London Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 18.333333333333332,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "e5cm2SDuHxA",
-   "title": "Boston Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 5.966666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "AQ6GmpMu5L8",
-   "title": "Paris Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 6.483333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "VFPckJkcaPk",
-   "title": "Denver Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 6.066666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "gEhzMmlahUg",
-   "title": "Florida Keys Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 10.8,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "bTvr_2v-0HI",
-   "title": "Los Angeles Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 8.833333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "Ik9NeDDnd5Q",
-   "title": "Antigua Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 6.9,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "JRaakIL-N_s",
-   "title": "Fiji Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 5.733333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "-KMZW_zwRfc",
-   "title": "San Diego Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 5.866666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "bme0rs75Z3E",
-   "title": "Yellowstone National Park Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 8.566666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "dZYpHr1wDmY",
-   "title": "Budapest Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 9.783333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "QSwvg9Rv2EI",
-   "title": "Chicago Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 6.65,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "fQqC5sYXRbQ",
-   "title": "Discover the AMAZING Things to Do in Tahiti | Travel Guide",
-   "label": "Expedia",
-   "mins": 12.25,
+   "mins": 6.233333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1535,30 +1790,6 @@
    "lang": "en"
   },
   {
-   "id": "YXz-erPr8B8",
-   "title": "Montevideo Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 9.516666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "O_9TgmIg1nA",
-   "title": "Bora Bora Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 6.3,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "8d896SkuLyc",
-   "title": "Ultimate New York City Travel Guide 2025: Top Neighborhoods for First-Timers to Explore | Expedia",
-   "label": "Expedia",
-   "mins": 8.95,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "DtW0VqNkM9U",
    "title": "Ottawa Vacation Travel Guide | Expedia",
    "label": "Expedia",
@@ -1567,74 +1798,26 @@
    "lang": "en"
   },
   {
-   "id": "yHZlNfWuA7g",
-   "title": "Copenhagen Vacation Travel Guide | Expedia",
+   "id": "JRaakIL-N_s",
+   "title": "Fiji Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 3.9833333333333334,
+   "mins": 5.733333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
   {
-   "id": "fCsSLb11RUQ",
-   "title": "Amalfi Coast Vacation Travel Guide | Expedia",
+   "id": "QSwvg9Rv2EI",
+   "title": "Chicago Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 5.133333333333334,
+   "mins": 6.65,
    "found": "2026-10-08",
    "lang": "en"
   },
   {
-   "id": "idg6vW3vXtE",
-   "title": "Prague Vacation Travel Guide | Expedia",
+   "id": "dZYpHr1wDmY",
+   "title": "Budapest Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 4.4,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "45ETZ1xvHS0",
-   "title": "London Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 6.233333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "UgmoTP3EZ6g",
-   "title": "The ULTIMATE Seattle Guide: What to see and where to stay in 2026",
-   "label": "Expedia",
-   "mins": 10.833333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "pnN2BNrSrXY",
-   "title": "Moscow Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 7.016666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "9J4a37-h9Y8",
-   "title": "Long Island Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 11.75,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "apUaujhzCpk",
-   "title": "Jersey Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 10.933333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "mTLirXkbGYk",
-   "title": "Monterey Vacation Travel Guide | Expedia",
-   "label": "Expedia",
-   "mins": 7.766666666666667,
+   "mins": 9.783333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1647,26 +1830,90 @@
    "lang": "en"
   },
   {
-   "id": "AabjlgUFdsw",
-   "title": "Ultimate Miami Travel Guide 2025: Top Neighborhoods to Explore | Expedia",
+   "id": "0Mv48ZM7gu4",
+   "title": "Brisbane Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 6.666666666666667,
+   "mins": 4.483333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
   {
-   "id": "-VQJpKmvkzg",
-   "title": "Anchorage Vacation Travel Guide | Expedia",
+   "id": "fCsSLb11RUQ",
+   "title": "Amalfi Coast Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 6.683333333333334,
+   "mins": 5.133333333333334,
    "found": "2026-10-08",
    "lang": "en"
   },
   {
-   "id": "SAtEodJdK0k",
-   "title": "Phoenix Vacation Travel Guide | Expedia",
+   "id": "VFPckJkcaPk",
+   "title": "Denver Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 4.55,
+   "mins": 6.066666666666666,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "XXhmblzSAeU",
+   "title": "Quebec Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 4.9,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "AQ6GmpMu5L8",
+   "title": "Paris Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 6.483333333333333,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "O_9TgmIg1nA",
+   "title": "Bora Bora Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 6.3,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "UgmoTP3EZ6g",
+   "title": "The ULTIMATE Seattle Guide: What to see and where to stay in 2026",
+   "label": "Expedia",
+   "mins": 10.833333333333334,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "fQqC5sYXRbQ",
+   "title": "Discover the AMAZING Things to Do in Tahiti | Travel Guide",
+   "label": "Expedia",
+   "mins": 12.25,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "pnN2BNrSrXY",
+   "title": "Moscow Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 7.016666666666667,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "apUaujhzCpk",
+   "title": "Jersey Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 10.933333333333334,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "9J4a37-h9Y8",
+   "title": "Long Island Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 11.75,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1679,18 +1926,34 @@
    "lang": "en"
   },
   {
-   "id": "0Mv48ZM7gu4",
-   "title": "Brisbane Vacation Travel Guide | Expedia",
+   "id": "YXz-erPr8B8",
+   "title": "Montevideo Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 4.483333333333333,
+   "mins": 9.516666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
   {
-   "id": "EBIZynHdLRc",
-   "title": "Toulouse Vacation Travel Guide | Expedia",
+   "id": "SAtEodJdK0k",
+   "title": "Phoenix Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 6.533333333333333,
+   "mins": 4.55,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "AabjlgUFdsw",
+   "title": "Ultimate Miami Travel Guide 2025: Top Neighborhoods to Explore | Expedia",
+   "label": "Expedia",
+   "mins": 6.666666666666667,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "e5cm2SDuHxA",
+   "title": "Boston Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 5.966666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1711,10 +1974,34 @@
    "lang": "en"
   },
   {
-   "id": "XXhmblzSAeU",
-   "title": "Quebec Vacation Travel Guide | Expedia",
+   "id": "mTLirXkbGYk",
+   "title": "Monterey Vacation Travel Guide | Expedia",
    "label": "Expedia",
-   "mins": 4.9,
+   "mins": 7.766666666666667,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "huTUpPE9J4M",
+   "title": "OREGON COAST ROAD TRIP VACATION TRAVEL GUIDE | EXPEDIA",
+   "label": "Expedia",
+   "mins": 18.333333333333332,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "-VQJpKmvkzg",
+   "title": "Anchorage Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 6.683333333333334,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "Ik9NeDDnd5Q",
+   "title": "Antigua Vacation Travel Guide | Expedia",
+   "label": "Expedia",
+   "mins": 6.9,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1735,14 +2022,6 @@
    "lang": "en"
   },
   {
-   "id": "HEuwZQXxQjI",
-   "title": "Panama's Customs & Cuisine:  Embera Quera, Casco Viejo, and Punta Chame | The Next Turn",
-   "label": "Expedia",
-   "mins": 15.95,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "c2mnt4D1rR8",
    "title": "Where to eat in Canada | Where to",
    "label": "Expedia",
@@ -1751,10 +2030,26 @@
    "lang": "en"
   },
   {
+   "id": "iwnee77G1Kc",
+   "title": "Croatia with Josh Guvi: Island Hopping, Truffle Tasting, and Ancient History | The Next Turn",
+   "label": "Expedia",
+   "mins": 14.483333333333333,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
    "id": "YKS1CQv0KdM",
    "title": "Explore Northern Jordan with Chef Sara Aqel | Super Supper Clubs",
    "label": "Expedia",
    "mins": 12.183333333333334,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "HEuwZQXxQjI",
+   "title": "Panama's Customs & Cuisine:  Embera Quera, Casco Viejo, and Punta Chame | The Next Turn",
+   "label": "Expedia",
+   "mins": 15.95,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -1775,22 +2070,6 @@
    "lang": "en"
   },
   {
-   "id": "iwnee77G1Kc",
-   "title": "Croatia with Josh Guvi: Island Hopping, Truffle Tasting, and Ancient History | The Next Turn",
-   "label": "Expedia",
-   "mins": 14.483333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "iCZDo7sGAJc",
-   "title": "Where to get outdoors in Canada | Where to",
-   "label": "Expedia",
-   "mins": 6.3,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "FmiRdsuV-V4",
    "title": "Where to ski in Canada | Where to",
    "label": "Expedia",
@@ -1799,10 +2078,10 @@
    "lang": "en"
   },
   {
-   "id": "kTth-Zln9LQ",
-   "title": "Osaka Travel Guide 2025: Where To Go, What To See, What To Eat | Expedia",
+   "id": "iCZDo7sGAJc",
+   "title": "Where to get outdoors in Canada | Where to",
    "label": "Expedia",
-   "mins": 8.383333333333333,
+   "mins": 6.3,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2107,14 +2386,6 @@
    "lang": "en"
   },
   {
-   "id": "muIA62aFJKo",
-   "title": "Visit Maldives Destination Video",
-   "label": "Visit Maldives",
-   "mins": 2.3666666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "CRk9dNmu8hI",
    "title": "A Dozen Must Do Experiences in the Maldives",
    "label": "Visit Maldives",
@@ -2131,10 +2402,10 @@
    "lang": "en"
   },
   {
-   "id": "T7HHUKwPJGY",
-   "title": "South of Maldives - Fuvahmulah",
+   "id": "muIA62aFJKo",
+   "title": "Visit Maldives Destination Video",
    "label": "Visit Maldives",
-   "mins": 3.283333333333333,
+   "mins": 2.3666666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2252,58 +2523,10 @@
    "lang": "en"
   },
   {
-   "id": "9mOAkM8z5kw",
-   "title": "Thousand Islands Cruise in Kingston - Ontario, Canada",
-   "label": "Destination Canada",
-   "mins": 2.3666666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "VOg9a-nC28M",
    "title": "Nigel’s Montreal Top 3 Places to  Visit",
    "label": "Destination Canada",
    "mins": 2.2,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "YW2NRmyXHzA",
-   "title": "Canadian Road Trip of a Lifetime #ExploreCanada",
-   "label": "Destination Canada",
-   "mins": 2.433333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "7F06cchNs6s",
-   "title": "Katie Pix Cooks a Shore Lunch with Ontario Produce | Explore Canada",
-   "label": "Destination Canada",
-   "mins": 5.566666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "wWM3qDi1JVI",
-   "title": "Inuit Culture in Gjoa Haven | Nunavut, Canada | Explore Canada",
-   "label": "Destination Canada",
-   "mins": 2.3833333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "mhnJg7GnyZc",
-   "title": "Staying at Fogo Island Inn in Newfoundland | Explore Canada",
-   "label": "Destination Canada",
-   "mins": 4.533333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "l-2-KRCymH8",
-   "title": "Table Setting Canada - Prince Edward Island",
-   "label": "Destination Canada",
-   "mins": 7.45,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2316,26 +2539,10 @@
    "lang": "en"
   },
   {
-   "id": "yJ6oYWj8gUg",
-   "title": "Joshua and Chad in Vancouver and Whistler  -- #ExploreCanada? Yes, Please.",
+   "id": "jTaiTAQXDJM",
+   "title": "Learn the traditional Hoop Dance on Manitoulin Island, Ontario | Explore Canada",
    "label": "Destination Canada",
-   "mins": 2.05,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "ypZP67IlVcg",
-   "title": "Whale Watching and Black Bears in Nimmo Bay British Columbia | Explore Canada",
-   "label": "Destination Canada",
-   "mins": 3.8,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "07QdWrVgsoE",
-   "title": "Tour of Trinity - Newfoundland and Labrador, Canada",
-   "label": "Destination Canada",
-   "mins": 3.4833333333333334,
+   "mins": 4.95,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2348,18 +2555,18 @@
    "lang": "en"
   },
   {
-   "id": "A45ftCu3HfA",
-   "title": "Mountain Biking in Quebec and British Columbia with Vaea Verbeeck | Episode 3 | Explore Canada",
-   "label": "Destination Canada",
-   "mins": 2.966666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "k8P_iji_gB8",
    "title": "Biking with Andréane Lanthier Nadeau in Quebec and British Columbia | Episode 2 | Explore Canada",
    "label": "Destination Canada",
    "mins": 2.25,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "A45ftCu3HfA",
+   "title": "Mountain Biking in Quebec and British Columbia with Vaea Verbeeck | Episode 3 | Explore Canada",
+   "label": "Destination Canada",
+   "mins": 2.966666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2376,14 +2583,6 @@
    "title": "Dining on the Ocean Floor in Burntcoat Head Park | Explore Canada",
    "label": "Destination Canada",
    "mins": 4.333333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "jTaiTAQXDJM",
-   "title": "Learn the traditional Hoop Dance on Manitoulin Island, Ontario | Explore Canada",
-   "label": "Destination Canada",
-   "mins": 4.95,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2481,18 +2680,18 @@
    "lang": "en"
   },
   {
-   "id": "cUx8F7l5NmE",
-   "title": "Daily Telegraph Business Club film - VisitBritain",
-   "label": "VisitBritain",
-   "mins": 8.533333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "f-Gk8aS90VQ",
    "title": "The Value of the Youth Travel Market to Britain",
    "label": "VisitBritain",
    "mins": 3.85,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "cUx8F7l5NmE",
+   "title": "Daily Telegraph Business Club film - VisitBritain",
+   "label": "VisitBritain",
+   "mins": 8.533333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2505,14 +2704,6 @@
    "lang": "en"
   },
   {
-   "id": "TZFBdkbYfs0",
-   "title": "Inbound Tourism To Britain in April 2014",
-   "label": "VisitBritain",
-   "mins": 2.85,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "0YEkJWUqKdI",
    "title": "Destination Britain North America | Market Insights",
    "label": "VisitBritain",
@@ -2521,10 +2712,10 @@
    "lang": "en"
   },
   {
-   "id": "ilxjnYEFKf4",
-   "title": "Inbound tourism to Britain in September 2014",
+   "id": "TZFBdkbYfs0",
+   "title": "Inbound Tourism To Britain in April 2014",
    "label": "VisitBritain",
-   "mins": 2.3,
+   "mins": 2.85,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2537,18 +2728,10 @@
    "lang": "en"
   },
   {
-   "id": "wX3xuEAT0QI",
-   "title": "This is GREAT Britain 2012",
+   "id": "ilxjnYEFKf4",
+   "title": "Inbound tourism to Britain in September 2014",
    "label": "VisitBritain",
-   "mins": 2.55,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "wpesAvkONis",
-   "title": "VisitBritain/VisitEngland Annual Review 2017-18",
-   "label": "VisitBritain",
-   "mins": 2.0,
+   "mins": 2.3,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2565,6 +2748,30 @@
    "title": "VisitBritain Marketing Showreel 2012",
    "label": "VisitBritain",
    "mins": 3.0833333333333335,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "YyugdU2pVTw",
+   "title": "Destination Britain China 2014",
+   "label": "VisitBritain",
+   "mins": 2.933333333333333,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "wX3xuEAT0QI",
+   "title": "This is GREAT Britain 2012",
+   "label": "VisitBritain",
+   "mins": 2.55,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "wpesAvkONis",
+   "title": "VisitBritain/VisitEngland Annual Review 2017-18",
+   "label": "VisitBritain",
+   "mins": 2.0,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2593,14 +2800,6 @@
    "lang": "en"
   },
   {
-   "id": "YyugdU2pVTw",
-   "title": "Destination Britain China 2014",
-   "label": "VisitBritain",
-   "mins": 2.933333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "CaLzSg7u_ho",
    "title": "Events are GREAT",
    "label": "VisitBritain",
@@ -2625,6 +2824,14 @@
    "lang": "en"
   },
   {
+   "id": "bG8XaULkFDE",
+   "title": "Countryside is GREAT launch in New York",
+   "label": "VisitBritain",
+   "mins": 4.816666666666666,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
    "id": "RNsVwEXpusc",
    "title": "Big British Invite in USA Sizzle Reel",
    "label": "VisitBritain",
@@ -2641,10 +2848,10 @@
    "lang": "en"
   },
   {
-   "id": "bG8XaULkFDE",
-   "title": "Countryside is GREAT launch in New York",
+   "id": "3e_MChv2wNM",
+   "title": "The Tourism Statistics 12 Days of Christmas",
    "label": "VisitBritain",
-   "mins": 4.816666666666666,
+   "mins": 3.3666666666666667,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2657,10 +2864,10 @@
    "lang": "en"
   },
   {
-   "id": "3e_MChv2wNM",
-   "title": "The Tourism Statistics 12 Days of Christmas",
+   "id": "qRfUfPjl4TA",
+   "title": "VisitBritain Partnership testimonial video",
    "label": "VisitBritain",
-   "mins": 3.3666666666666667,
+   "mins": 3.6,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2669,14 +2876,6 @@
    "title": "Destination Britain North America 2013",
    "label": "VisitBritain",
    "mins": 4.133333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "qRfUfPjl4TA",
-   "title": "VisitBritain Partnership testimonial video",
-   "label": "VisitBritain",
-   "mins": 3.6,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2892,6 +3091,14 @@
    "lang": "en"
   },
   {
+   "id": "IJZAHy4JtZo",
+   "title": "JERUSALEM, ISRAEL'S OLD CITY (not what we expected)",
+   "label": "Kara and Nate",
+   "mins": 18.783333333333335,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
    "id": "GSckl93XqKg",
    "title": "OUR PERFECT VACATION (Better Than Our Honeymoon)",
    "label": "Kara and Nate",
@@ -2908,66 +3115,10 @@
    "lang": "en"
   },
   {
-   "id": "48a30v6Kec0",
-   "title": "4 Nights on Scotland's Most Luxurious Train (Royal Scotsman Whisky Train)",
-   "label": "Kara and Nate",
-   "mins": 45.7,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "IJZAHy4JtZo",
-   "title": "JERUSALEM, ISRAEL'S OLD CITY (not what we expected)",
-   "label": "Kara and Nate",
-   "mins": 18.783333333333335,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "QCIWGp1JEaU",
    "title": "EGYPTIAN PYRAMIDS | Top 11 Tips for Visiting the Pyramids of Giza",
    "label": "Kara and Nate",
    "mins": 11.433333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "pps8hh5Aq-c",
-   "title": "THAILAND CAPSULE HOTEL (sleeping in the Bangkok airport)",
-   "label": "Kara and Nate",
-   "mins": 12.65,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "AWAY1AETHiQ",
-   "title": "EXPLORING EPHESUS | How to Avoid the Crowds!",
-   "label": "Kara and Nate",
-   "mins": 12.816666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "H7IMrYA5Tas",
-   "title": "Exploring The Lost City of PETRA | A Rollercoaster of Emotions",
-   "label": "Kara and Nate",
-   "mins": 13.483333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "G9Xh95FO0i4",
-   "title": "95 hours on Canada’s BEST train! (Vancouver to Toronto on Via Rail)",
-   "label": "Kara and Nate",
-   "mins": 32.9,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "FMsOu6XCTQs",
-   "title": "THE ULTIMATE MARRIAGE TEST (450 miles on a tandem bicycle)",
-   "label": "Kara and Nate",
-   "mins": 33.78333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2980,10 +3131,18 @@
    "lang": "en"
   },
   {
-   "id": "DcQirGief28",
-   "title": "World's Newest Overwater Villas (Saudi Arabia)",
+   "id": "48a30v6Kec0",
+   "title": "4 Nights on Scotland's Most Luxurious Train (Royal Scotsman Whisky Train)",
    "label": "Kara and Nate",
-   "mins": 35.583333333333336,
+   "mins": 45.7,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "PqbbirVfoRI",
+   "title": "TOP THINGS TO DO IN MARRAKECH, MORROCO!",
+   "label": "Kara and Nate",
+   "mins": 2.283333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -2996,18 +3155,34 @@
    "lang": "en"
   },
   {
-   "id": "eZKTBcY_0cA",
-   "title": "24 HOURS on the SMALLEST ISLAND in the Caribbean | Saba Travel Vlog",
+   "id": "AWAY1AETHiQ",
+   "title": "EXPLORING EPHESUS | How to Avoid the Crowds!",
    "label": "Kara and Nate",
-   "mins": 10.0,
+   "mins": 12.816666666666666,
    "found": "2026-10-08",
    "lang": "en"
   },
   {
-   "id": "PqbbirVfoRI",
-   "title": "TOP THINGS TO DO IN MARRAKECH, MORROCO!",
+   "id": "ShQfM6EuNxs",
+   "title": "29 Hours of Travel | Koh Tao to Chiang Mai",
    "label": "Kara and Nate",
-   "mins": 2.283333333333333,
+   "mins": 12.8,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "DcQirGief28",
+   "title": "World's Newest Overwater Villas (Saudi Arabia)",
+   "label": "Kara and Nate",
+   "mins": 35.583333333333336,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "eZKTBcY_0cA",
+   "title": "24 HOURS on the SMALLEST ISLAND in the Caribbean | Saba Travel Vlog",
+   "label": "Kara and Nate",
+   "mins": 10.0,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -3048,174 +3223,6 @@
    "title": "Daily Life in the World's Northernmost Town (24 hours of darkness)",
    "label": "Kara and Nate",
    "mins": 27.166666666666668,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "YP4EFOZMsHU",
-   "title": "DIY Danish Food Tour (what to eat in Copenhagen)",
-   "label": "Kara and Nate",
-   "mins": 19.183333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "vwCGgWZFAyk",
-   "title": "Inside the World's Largest Retirement Community (The Villages)",
-   "label": "Kara and Nate",
-   "mins": 31.416666666666668,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "AJlnzYWc0oU",
-   "title": "RIVERSIDE VILLAGE LIFE IN MYANMAR!",
-   "label": "Kara and Nate",
-   "mins": 9.85,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "lBr-2Xa8txg",
-   "title": "DIY DUTCH FOOD TOUR",
-   "label": "Kara and Nate",
-   "mins": 12.033333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "nicMudN877M",
-   "title": "We Explored the Secret Village in the Grand Canyon",
-   "label": "Kara and Nate",
-   "mins": 31.25,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "ShQfM6EuNxs",
-   "title": "29 Hours of Travel | Koh Tao to Chiang Mai",
-   "label": "Kara and Nate",
-   "mins": 12.8,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "lFBsUj2AJOI",
-   "title": "Choose Your Own Adventure | EP02 - Mountain Trekking ft. Blogger Nicole Eddy",
-   "label": "Incredible India",
-   "mins": 2.1333333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "GFTjNH_O-J4",
-   "title": "Karnataka - India",
-   "label": "Incredible India",
-   "mins": 3.0,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "Fq_dn2Of3Ec",
-   "title": "Gulmarg | Jammu and Kashmir",
-   "label": "Incredible India",
-   "mins": 2.5833333333333335,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "6LAuDuUNCDc",
-   "title": "Discover the heavenly Srinagar: The paradise on Earth",
-   "label": "Incredible India",
-   "mins": 2.783333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "osYT2oZAhJs",
-   "title": "7 popular tourist destinations and their gorgeous, quiet alternatives",
-   "label": "Lonely Planet",
-   "mins": 2.3,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "GIimOIZy-RA",
-   "title": "Introducing the Maldives",
-   "label": "Lonely Planet",
-   "mins": 2.716666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "ipvdG0JEqMM",
-   "title": "Emma Sparks is just back from...Sri Lanka",
-   "label": "Lonely Planet",
-   "mins": 2.0833333333333335,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "RFk_bvPxorg",
-   "title": "AFFORDABLE Hotels in Dubai 🏨",
-   "label": "Visit Dubai",
-   "mins": 3.4833333333333334,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "E_VuJFM4IoY",
-   "title": "Discover Dubai with Laura & Family from Brazil | Episode 3",
-   "label": "Visit Dubai",
-   "mins": 8.266666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "A5JRqgDfMnU",
-   "title": "Discover Dubai On A Budget With Trevor and Marischka from South Africa | Episode 1",
-   "label": "Visit Dubai",
-   "mins": 8.633333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "haSHPN3Xf8Q",
-   "title": "Travel Dubai Vlog: Ankit Bhatia",
-   "label": "Visit Dubai",
-   "mins": 20.133333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "n0j_6HleeNQ",
-   "title": "Dubai Tastemakers: Chef Reif Othman - Reif Kushiyaki | Michelin’s Bib Gourmand 2022",
-   "label": "Visit Dubai",
-   "mins": 6.116666666666666,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "aLCmXe6Myeg",
-   "title": "Antalya Gambit Mini Series | Episode 1: A Little Accident",
-   "label": "Türkiye",
-   "mins": 2.6166666666666667,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "WfK9eIh6yKo",
-   "title": "Antalya Gambit Mini Series | Episode 6: Lady in Red",
-   "label": "Türkiye",
-   "mins": 2.5,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "6LsxkzCLMpk",
-   "title": "Antalya Gambit Mini Series | Episode 5: Secrets of the Night",
-   "label": "Türkiye",
-   "mins": 3.0,
    "found": "2026-10-08",
    "lang": "en"
   }

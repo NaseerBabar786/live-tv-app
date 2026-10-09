@@ -1,5 +1,5 @@
 {
- "date": "2026-10-08",
+ "date": "2026-10-09",
  "episode": 1,
  "hours": [
   {
@@ -12,6 +12,10 @@
      "title": "Mitti De Baway · Episode 1",
      "secs": 1920
     }
+   ],
+   "segments": [
+    60,
+    300
    ]
   },
   {
@@ -24,6 +28,10 @@
      "title": "Uswah · Episode 1",
      "secs": 2557
     }
+   ],
+   "segments": [
+    60,
+    300
    ]
   },
   {
@@ -42,6 +50,10 @@
      "title": "Taarak Mehta · Episode 4835",
      "secs": 640
     }
+   ],
+   "segments": [
+    300,
+    300
    ]
   },
   {
@@ -54,6 +66,10 @@
      "title": "Tark-e-Tamanna · Episode 1",
      "secs": 2079
     }
+   ],
+   "segments": [
+    60,
+    300
    ]
   },
   {
@@ -66,6 +82,10 @@
      "title": "Mohabbat ya Aitebar · Episode 1",
      "secs": 1906
     }
+   ],
+   "segments": [
+    60,
+    300
    ]
   },
   {
@@ -78,6 +98,10 @@
      "title": "Madaar · Episode 1",
      "secs": 2117
     }
+   ],
+   "segments": [
+    60,
+    300
    ]
   },
   {
@@ -90,6 +114,10 @@
      "title": "Raqaas · Episode 1",
      "secs": 2014
     }
+   ],
+   "segments": [
+    60,
+    300
    ]
   },
   {
@@ -97,11 +125,15 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-8-vrOCv5SOTrU",
+     "id": "c1-8r-7V-6AUGBgBY",
      "urdu": "نئے گانے اور فلموں کے ٹریلر",
      "title": "New songs and film trailers",
      "secs": 0
     }
+   ],
+   "segments": [
+    300,
+    300
    ]
   }
  ]

@@ -24,6 +24,11 @@ each slot. Each hour leaves 43 minutes of programme (37 after the full news), so
 is filled to exactly that with new songs and trailers, then our own short clips. The loop then lines up
 with the clock in every set.
 
+Long programmes (the owner, 2026-10-09): a programme longer than its 25 minutes runs on through the
+segment, and that segment shrinks to a 1-minute ad break, so the programme carries on after the ads and
+the next one starts a few minutes later. The minutes it gains come out of the hour's songs and trailers,
+so the next hour's news still starts on the hour and the set lines up again every hour.
+
 Run in .github/workflows/build-trailers.yml after the day's lists:
   python3 tools/build_channel1_set.py --find [YYYY-MM-DD]    finds today's episodes (YouTube) -> channel1-episodes.json
   (the pre-air check runs on channel1-episodes.json)
@@ -34,6 +39,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -61,6 +67,39 @@ HOUR = 3600
 HEADLINES, FULL, AD, SEGMENT = 180, 600, 60, 300
 # Programme time in an hour: what the slots (news, ad breaks, two segments) leave.
 BUDGET = {h: HOUR - (FULL + 3 * AD if h in FULL_NEWS else HEADLINES + 4 * AD) - 2 * SEGMENT for h in range(1, 9)}
+SEGMENTS = (25 * 60, 55 * 60)  # the 5-minute segments, in seconds from the hour
+
+
+def hour_slots(h, segs):
+    """One hour's slots as (start, secs) from the hour: the news, the ad breaks and the two segments
+    (segs: their lengths, 300 s or 60 s when a programme runs through)."""
+    at = [(0, FULL if h in FULL_NEWS else HEADLINES)]
+    at += [(mm * 60, AD) for mm in ([17] if h in FULL_NEWS else [10, 18]) + [38, 47]]
+    return sorted(at + list(zip(SEGMENTS, segs)))
+
+
+def on_clock(c, slots):
+    """Where in the hour the programme time c (seconds of loop played this hour) falls."""
+    clock = done = 0
+    for start, secs in slots:
+        if done + start - clock >= c:
+            break
+        done += max(0, start - clock)
+        clock = start + secs
+    return clock + c - done
+
+
+def segment_lengths(h, spans):
+    """The owner's rule for long programmes (2026-10-09): a segment that would cut into a programme with
+    more than a minute of it still to come becomes a 1-minute ad break. spans: the hour's programmes as
+    (start, end) in programme time."""
+    segs = [SEGMENT, SEGMENT]
+    for i, at in enumerate(SEGMENTS):
+        slots = hour_slots(h, segs)
+        for a, b in spans:
+            if on_clock(a, slots) < at < on_clock(b, slots) and on_clock(b, slots) - at > SEGMENT + AD:
+                segs[i] = AD
+    return segs
 NOT_EPISODE = re.compile(r"teaser|promo|\bost\b|review|scene|highlight|recap|clip|bts|behind|reaction|preview|"
                          r"\bnext\b|making|interview|title song|best moment", re.I)
 EPISODE_NO = re.compile(r"\b(?:episode|epi|ep)\.?\s*0*(\d{1,3})\b", re.I)
@@ -97,16 +136,27 @@ def find(today):
     for s in SERIALS:
         eps = known.setdefault(s["show"], {})
         label, handles, name = s["source"]
-        _, chan = channel_id(handles, name)
+        # YouTube sometimes answers a request with an empty page (the first live run found nothing on
+        # Green's channel, the test run an hour earlier found most of it), so each look is tried 3 times.
+        chan = None
+        for attempt in range(3):
+            _, chan = channel_id(handles, name)
+            if chan:
+                break
+            time.sleep(5 * (attempt + 1))
         if chan:
             show = s["show"].replace("-", " ")
-            for q in (f"{show} episode {n:02d}", f"{show} episode {n}", f"{show} episode"):
+            for q in (f"{show} episode {n:02d}", f"{show} episode {n}", f"{show} episode", show):
                 url = f"https://www.youtube.com/channel/{chan}/search?query=" + urllib.parse.quote_plus(q)
-                try:
-                    found = videos_page(url)
-                except Exception as e:  # noqa: BLE001
-                    print(f"  {url}: {e}", file=sys.stderr)
-                    continue
+                found = []
+                for attempt in range(3):
+                    try:
+                        found = videos_page(url)
+                    except Exception as e:  # noqa: BLE001
+                        print(f"  {url}: {e}", file=sys.stderr)
+                    if found:
+                        break
+                    time.sleep(5 * (attempt + 1))
                 for vid, title, mins in found:
                     m = EPISODE_NO.search(title)
                     if not m or NOT_EPISODE.search(title) or key(s["show"]) not in key(title[:60]):
@@ -165,8 +215,8 @@ def layout(today):
     pads = sorted([own[k] for k in ("promo2", "adbb", "adhere", "welcome", "next", "break")] + [base["ad9"]], key=lambda v: -v["secs"])
 
     loop, videos, hours, t, target = [], [], [], 0, 0
+    segs = {}
     for h in range(1, 9):
-        target += BUDGET[h]
         main = []
         serial = next((s for s in SERIALS if s["hour"] == h), None)
         if serial:
@@ -188,14 +238,22 @@ def layout(today):
                 m = re.search(r"episode\s*(\d+)", comedy["title"], re.I)
                 main.append((comedy, "مزاحیہ", (comedy.get("label") or "Comedy") + (f" · Episode {m.group(1)}" if m else "")))
         hour = {"hour": h, "full_news": h in FULL_NEWS, "programmes": []}
+        # A programme too long for its half hour shortens the segment it runs through (owner, 2026-10-09).
+        spans, c = [], t - target + own["next"]["secs"]  # (the last hour may have run a few seconds over)
+        for v, _, _ in main:
+            spans.append((c, c + int(v["secs"]))); c += int(v["secs"])
+        segs[h] = segment_lengths(h, spans)
+        target += BUDGET[h] + sum(SEGMENT - x for x in segs[h])
+        hour["segments"] = segs[h]
         loop.append("next"); t += own["next"]["secs"]
+        start = len(loop)
         for v, urdu, title in main:
             item = yt(v, f"c1-{h}")
             videos.append(item); loop.append(item["id"]); used.add(v["id"]); t += item["secs"]
             hour["programmes"].append({"id": item["id"], "urdu": urdu, "title": title, "secs": item["secs"]})
         # Fill to the hour's end: new songs and trailers (hour 8 is all of them), then our own short clips.
         # (A song can come back in a later hour when the day's list runs short, never twice in one hour.)
-        here = set()
+        here, last_song = set(), None
         for again in (False, True):
             for v in songs:
                 if target - t < 150:
@@ -203,12 +261,34 @@ def layout(today):
                 if v["id"] in here or (v["id"] in used and not again) or v["secs"] > target - t:
                     continue
                 item = yt(v, f"c1-{h}{'r' if v['id'] in used else ''}")
+                last_song = item
                 videos.append(item); loop.append(item["id"]); used.add(v["id"]); here.add(v["id"]); t += item["secs"]
                 if h == 8 and not hour["programmes"]:
                     hour["programmes"].append({"id": item["id"], "urdu": "نئے گانے اور فلموں کے ٹریلر", "title": "New songs and film trailers", "secs": 0})
+        # Our clips go in the gaps between this hour's programmes and songs, at most 30 s in a gap, so
+        # no ad break in the loop runs over 60 s (owner's rule; three 30 s promos back to back broke it,
+        # 2026-10-08). Whatever doesn't fit carries on into the next hour's filling.
+        gaps = [i + 1 for i in range(start, len(loop)) if loop[i] != "next"]
+        room = {g: (22 if g == len(loop) else 30) for g in gaps}  # the next hour opens with the 8 s "next"
+        put = {g: [] for g in gaps}
         for p in pads:
-            while target - t >= p["secs"]:
+            for g in sorted(gaps, key=lambda g: len(put[g])):
+                if target - t < p["secs"]:
+                    break
+                if room[g] >= p["secs"] and p["id"] not in put[g]:
+                    put[g].append(p["id"]); room[g] -= p["secs"]; t += p["secs"]
+        for g in sorted(gaps, reverse=True):
+            loop[g:g] = put[g]
+        # The hour ends on the second: a few seconds short gets one more short clip, and whatever that
+        # runs over comes off the end of the hour's last song. So the next hour's programme never starts
+        # a moment before the :55 segment (a long programme shifts the hour's minutes around).
+        short = target - t
+        if last_song and short > 0:
+            p = next((p for p in sorted(pads, key=lambda p: p["secs"]) if p["secs"] >= short), None)
+            if p:
                 loop.append(p["id"]); t += p["secs"]
+        if last_song and 0 < t - target < last_song["secs"] - 60:
+            last_song["secs"] -= t - target; t = target
         hours.append(hour)
     # A few seconds can be left over (or an episode ran long): the last song ends that much early or late,
     # so the set is exactly 8 hours of slots and programmes and lines up again at 8 am and 4 pm.
@@ -229,10 +309,15 @@ def layout(today):
         for mm in ([17] if h in FULL_NEWS else [10, 18]) + [38, 47]:
             slots.append({"day": "all", "time": f"{hh:02d}:{mm:02d}", "video": ads[turn % len(ads)]})
             turn += 1
-        slots.append({"day": "all", "time": f"{hh:02d}:25", "video": "segment"})
-        slots.append({"day": "all", "time": f"{hh:02d}:55", "video": "segment"})
+        for at, secs in zip(SEGMENTS, segs[h]):
+            if secs == SEGMENT:
+                slots.append({"day": "all", "time": f"{hh:02d}:{at // 60:02d}", "video": "segment"})
+            else:  # a programme runs through: a 1-minute ad break, and the programme carries on after it
+                slots.append({"day": "all", "time": f"{hh:02d}:{at // 60:02d}", "video": ads[turn % len(ads)]})
+                turn += 1
     slots.sort(key=lambda s: s["time"])
     sched["videos"] = list(base.values()) + videos
+    loop = apart_from_slot_ads(loop, slots, {v["id"]: v for v in sched["videos"]})
     sched["loop"] = loop
     sched["slots"] = slots
     sched["fillers"] = ["promo2", "adhere", "adbb", "next"]
@@ -242,6 +327,51 @@ def layout(today):
     save(SCHEDULE, sched)
     save(SET_FILE, {"date": today.isoformat(), "episode": n, "hours": hours})
     print(f"Wrote {os.path.relpath(SCHEDULE, ROOT)}: {len(loop)} loop items, {len(slots)} slots.")
+
+
+def on_air(loop, slots, by_id, hours=8):
+    """What one set plays, as schedule.js plays it (a time slot plays its video and the loop waits, then
+    carries on): [(start, end, id, loop index or None for a slot)], in seconds from the set's start."""
+    at = sorted((int(s["time"][:2]) * 3600 + int(s["time"][3:]) * 60, s["video"]) for s in slots)
+    out, t, k, done = [], 0, 0, 0  # done: seconds of loop item k already played
+    for start, vid in [x for x in at if x[0] < hours * 3600] + [(hours * 3600, None)]:
+        while t < start:
+            secs = by_id[loop[k % len(loop)]]["secs"]
+            end = min(t + secs - done, start)
+            out.append((t, end, loop[k % len(loop)], k % len(loop)))
+            done += end - t
+            t = end
+            if done >= secs:
+                k, done = k + 1, 0
+        if vid:
+            out.append((start, start + by_id[vid]["secs"], vid, None))
+            t = start + by_id[vid]["secs"]
+    return out
+
+
+def apart_from_slot_ads(loop, slots, by_id):
+    """Our short clips in the loop can land right next to a time-slot ad break and make it longer than
+    60 s (the owner's rule). Such a clip swaps places with the programme after it until none does."""
+    is_ad = lambda i: by_id[i]["kind"] in ("ad", "ident")  # noqa: E731
+    loop = list(loop)
+    for _ in range(100):
+        run, bad = [], None
+        for piece in on_air(loop, slots, by_id) + [(0, 0, None, None)]:
+            if piece[2] and is_ad(piece[2]):
+                run.append(piece)
+                continue
+            if sum(p[1] - p[0] for p in run) > 61 and any(p[3] is not None for p in run):
+                bad = next(p[3] for p in run if p[3] is not None)
+                break
+            run = []
+        if bad is None:
+            return loop
+        nxt = next((k for k in range(bad + 1, len(loop)) if not is_ad(loop[k])), None)
+        if nxt is None:
+            break
+        loop.insert(nxt, loop.pop(bad))  # the clip now plays after that programme
+    print("::warning title=Channel 1::an ad break next to a time slot is still over 60 s.")
+    return loop
 
 
 def main():

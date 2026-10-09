@@ -32,6 +32,21 @@ class ChannelRepository(context: Context) {
     private val appContext = context.applicationContext
     private val prefs = appContext.getSharedPreferences("live_tv", Context.MODE_PRIVATE)
 
+    init {
+        // Cable TV's starting settings (owner, 2026-10-09) go in on a first install only: an update never
+        // changes what a viewer already has, so older installs keep every language they had.
+        if (Edition.LIVE_TV && !Edition.MAX && !prefs.contains(KEY_DEFAULTS)) {
+            val fresh = runCatching {
+                appContext.packageManager.getPackageInfo(appContext.packageName, 0)
+                    .let { it.firstInstallTime == it.lastUpdateTime }
+            }.getOrDefault(false)
+            prefs.edit {
+                if (fresh && !prefs.contains(KEY_LANGUAGES)) putStringSet(KEY_LANGUAGES, DEFAULT_LANGUAGES)
+                putBoolean(KEY_DEFAULTS, true)
+            }
+        }
+    }
+
     /** Defaults to every country in Cable TV, and to the Pakistani, Indian, Canadian, UK and USA mix in Max. */
     var playlistSource: String
         get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
@@ -56,6 +71,12 @@ class ChannelRepository(context: Context) {
     var languages: Set<String>
         get() = prefs.getStringSet(KEY_LANGUAGES, emptySet())?.toSet() ?: emptySet()
         set(value) = prefs.edit { putStringSet(KEY_LANGUAGES, value) }
+
+    /** Settings' "Default settings" button: the starting languages and every country (Cable TV). */
+    fun resetToDefaults() = prefs.edit {
+        putStringSet(KEY_LANGUAGES, if (Edition.LIVE_TV && !Edition.MAX) DEFAULT_LANGUAGES else emptySet())
+        remove(KEY_SOURCE)
+    }
 
     /** Playlists the viewer added (Stream Player Plus). */
     var playlists: List<Playlist>
@@ -285,6 +306,10 @@ class ChannelRepository(context: Context) {
         private const val KEY_PLAYLISTS = "playlists"
         private const val KEY_PROVIDER = "provider"
         private const val KEY_MTA = "mta"
+        private const val KEY_DEFAULTS = "defaults_v1"
+
+        /** The languages a new Cable TV install starts with, and what "Default settings" goes back to. */
+        val DEFAULT_LANGUAGES = setOf("English", "Hindi", "Urdu", "Punjabi")
         const val PROVIDER_FAMELACK = "famelack"
         const val PROVIDER_CHECKED = "checked"
         const val PAKISTAN_LIVE_URL = "https://tv.bulkbazaar.ca/PakistanLive.m3u"
