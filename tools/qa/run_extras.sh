@@ -109,14 +109,15 @@ alive "guide"
 # ---- 2. Settings: TV extras ----
 section "2 settings"
 tap_text "Settings" && {
-  sleep 3
-  scroll_tap 960 "Sleep timer" && { sleep 2; shot sleep-dialog; tap_text "15 minutes"; sleep 2; }
+  sleep 3; shot settings
+  sx=$(find_text "TV extras" "Settings" | cut -d' ' -f1); sx=${sx:-660}
+  scroll_tap $sx "Sleep timer" && { sleep 2; shot sleep-dialog; tap_text "15 minutes"; sleep 2; }
   tap_text "Settings"; sleep 3
-  scroll_tap 960 "Widgets on full screen" && { sleep 2
+  scroll_tap $sx "Widgets on full screen" && { sleep 2
     for w in "Clock and weather" "Next Azan" "Cricket score" "Gold and dollar rates" "Up next"; do tap_text "$w"; done
     shot widgets-dialog; tap_text "Done"; sleep 2; }
   tap_text "Settings"; sleep 3
-  scroll_tap 960 "Family profiles" && { sleep 2; shot profiles-dialog
+  scroll_tap $sx "Family profiles" && { sleep 2; shot profiles-dialog
     tap_text "＋ Add a profile" "Add a profile" && { sleep 2; shot profiles-add; tap_text "Dad"; sleep 2; shot profiles-two; }
     tap_text "Done"; sleep 2; }
 }
@@ -125,10 +126,9 @@ alive "settings"
 # ---- 3. Full screen: widgets, channel bar, last channel ----
 section "3 full screen"
 fresh 20
-# Into full screen: a tap on the picture (twice if the first only picks it).
-adb shell input tap 700 600; sleep 4
-[ -z "$(find_text "123")" ] && { adb shell input tap 700 600; sleep 4; }
-sleep 20; shot full-widgets-25s
+# Into full screen through the guide: row 3 (our music channel, our own player), OK on "what's on now".
+tap_text "Guide" && { sleep 10; key KEYCODE_DPAD_DOWN; key KEYCODE_DPAD_DOWN; key KEYCODE_DPAD_CENTER; }
+sleep 25; shot full-widgets-25s
 key KEYCODE_DPAD_CENTER; sleep 1; shot full-channel-bar
 dial 5; sleep 12; shot full-dial-5
 adb shell input keyevent KEYCODE_LAST_CHANNEL; sleep 10; shot full-last-channel
@@ -140,8 +140,8 @@ crashes "full screen"
 # ---- 4. Report a channel in 1+List (hold OK) ----
 section "4 report"
 fresh 20
-b=$(find_text "Spark Dramas Urdu" "Dramas")
-[ -n "$b" ] && adb shell input swipe $b $b 1500
+b=$(find_text "Spark Shayari" "Shayari")
+[ -n "$b" ] && adb shell input swipe $b $b 2500
 sleep 2; shot hold-ok-menu
 tap_text "Channel not working" && { sleep 2; shot after-report; }
 alive "report"
