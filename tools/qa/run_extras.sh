@@ -102,6 +102,8 @@ tap_text "Guide" && {
   tap_text "Later ▶" && { sleep 3; shot guide-later; }
   key KEYCODE_BACK; sleep 3; shot guide-back
 }
+# Back from a channel opened in the guide returns to the guide: one more Back closes it.
+[ -n "$(find_text "TV Guide")" ] && { key KEYCODE_BACK; sleep 3; shot guide-closed; }
 alive "guide"
 
 # ---- 2. Settings: TV extras ----
@@ -123,7 +125,10 @@ alive "settings"
 # ---- 3. Full screen: widgets, channel bar, last channel ----
 section "3 full screen"
 fresh 20
-key KEYCODE_DPAD_CENTER; sleep 25; shot full-widgets-25s
+# Into full screen: a tap on the picture (twice if the first only picks it).
+adb shell input tap 700 600; sleep 4
+[ -z "$(find_text "123")" ] && { adb shell input tap 700 600; sleep 4; }
+sleep 20; shot full-widgets-25s
 key KEYCODE_DPAD_CENTER; sleep 1; shot full-channel-bar
 dial 5; sleep 12; shot full-dial-5
 adb shell input keyevent KEYCODE_LAST_CHANNEL; sleep 10; shot full-last-channel
@@ -135,7 +140,9 @@ crashes "full screen"
 # ---- 4. Report a channel in 1+List (hold OK) ----
 section "4 report"
 fresh 20
-adb shell input keyevent --longpress KEYCODE_DPAD_CENTER; sleep 2; shot hold-ok-menu
+b=$(find_text "Spark Dramas Urdu" "Dramas")
+[ -n "$b" ] && adb shell input swipe $b $b 1500
+sleep 2; shot hold-ok-menu
 tap_text "Channel not working" && { sleep 2; shot after-report; }
 alive "report"
 
