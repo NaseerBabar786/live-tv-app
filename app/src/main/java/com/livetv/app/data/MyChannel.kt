@@ -95,10 +95,10 @@ object MyChannel {
     val PLAY_STATIONS = listOf(
         Station("pnews", 1, "", "Spark TV News", logo = "spark-news.png"),
         Station("pclassics", 2, "", "Spark Classics", logo = "spark-cinema.png", lang = ENGLISH),
-        Station("pcomedy", 3, "", "Spark Comedy Classics", logo = "spark-comedy.png", lang = ENGLISH),
+        Station("pcomedy", 3, "", "Spark Comedy Classics", logo = "spark-comedy-play.png", lang = ENGLISH),
         Station("psports", 4, "", "Spark Sports Classics", logo = "spark-sports.png", lang = ENGLISH),
         Station("ptravel", 5, "", "Spark Travel Classics", logo = "spark-travel.png", lang = ENGLISH),
-        Station("pmusic", 6, "", "Spark Music", logo = "spark-music.png", lang = ENGLISH),
+        Station("pmusic", 6, "", "Spark Music", logo = "spark-music-play.png", lang = ENGLISH),
         Station("pads", 7, "", "Spark Ads", logo = "spark-ads.png", lang = ENGLISH),
     )
 

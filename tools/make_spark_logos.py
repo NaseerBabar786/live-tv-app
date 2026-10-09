@@ -35,6 +35,8 @@ CHANNELS = {
     "sports": ("SPORTS", None), "auto": ("AUTO", None), "ads": ("ADS", None), "comedyen": ("COMEDY", "ENGLISH"),
     "music": ("MUSIC", "PUNJABI"), "gurbani": ("GURBANI", None), "moviespa": ("MOVIES", "PUNJABI"), "sufi": ("SUFI QAWWALI", None),
     "news": ("NEWS", None),
+    # Spark TV on Google Play (2026-10-09): its comedy and music channels are in no one language.
+    "comedy-play": ("COMEDY", None), "music-play": ("MUSIC", None),
 }
 
 

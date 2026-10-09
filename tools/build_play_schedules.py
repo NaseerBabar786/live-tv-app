@@ -42,13 +42,13 @@ ADHERE = {"id": "adhere", "title": "Advertise on Spark TV",
 CLASSICS = {
     "pclassics": ("filmein-schedule.json", "Spark Classics", "spark-cinema.png",
                   "Spark Classics · Classic films, free, day and night · A film every night at 8 PM (Toronto)"),
-    "pcomedy": ("comedy-schedule.json", "Spark Comedy Classics", "spark-comedy.png",
+    "pcomedy": ("comedy-schedule.json", "Spark Comedy Classics", "spark-comedy-play.png",
                 "Spark Comedy Classics · Classic comedy films and TV shows, day and night"),
     "psports": ("sports-schedule.json", "Spark Sports Classics", "spark-sports.png",
                 "Spark Sports Classics · Great moments and classic sports films"),
     "ptravel": ("travel-schedule.json", "Spark Travel Classics", "spark-travel.png",
                 "Spark Travel Classics · Classic travel films from around the world"),
-    "pmusic": ("sur-schedule.json", "Spark Music", "spark-music.png",
+    "pmusic": ("sur-schedule.json", "Spark Music", "spark-music-play.png",
                "Spark Music · Free-licence recordings from Wikimedia Commons · Artist and licence on screen"),
 }
 
