@@ -32,6 +32,10 @@ jobs:
         with:
           python-version: "3.12"
 
+      # A sponsor's picture ad is turned into a short video with ffmpeg, which the runner no longer has.
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
       - name: Build the sponsors' ads
         run: python3 tools/build_ads_channel.py
 
