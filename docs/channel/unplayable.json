@@ -1,26 +1,4 @@
 {
- "checked": "2026-10-09 05:42 UTC",
- "ids": {
-  "zJGyAWyfs7E": {
-   "why": "embedding turned off by its owner",
-   "channels": [
-    "Spark Comedy Hindi"
-   ],
-   "since": "2026-10-07"
-  },
-  "GzIhZX_v9HM": {
-   "why": "horror (no horror on our channels)",
-   "channels": [
-    "Spark Comedy Hindi"
-   ],
-   "since": "2026-10-08"
-  },
-  "gpEmKWV3Hh8": {
-   "why": "horror (no horror on our channels)",
-   "channels": [
-    "Spark Teens English"
-   ],
-   "since": "2026-10-08"
-  }
- }
+ "checked": "2026-10-09 07:00 UTC",
+ "ids": {}
 }
