@@ -621,12 +621,14 @@ def add_opening(body, secs, work):
     except Exception as e:
         NOTES.append(f"opening failed: {e}")
 
-def add_segment(body, clip, t0, work):
-    """Lays a ready-made segment's picture (the weather centre) over the bulletin from t0; its voice is already in the mix."""
+def add_segment(body, clip, t0, work, secs=None):
+    """Lays a ready-made segment's picture (the weather centre) over the bulletin from t0; its voice is already in the mix.
+    secs: how long its slot lasts; the last picture holds to the end, so the plain weather card never peeks out."""
     try:
         tmp = body + ".seg.mp4"
         run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", body, "-itsoffset", f"{t0:.3f}", "-i", clip,
-            "-filter_complex", f"[1:v]fps={FPS},setsar=1[s];[0:v][s]overlay=0:0:eof_action=pass,format=yuv420p[v]",
+            "-filter_complex", f"[1:v]fps={FPS},setsar=1[s];[0:v][s]overlay=0:0:" + (f"eof_action=repeat:enable='between(t,{t0:.3f},{t0 + secs:.3f})'"
+                                                                  if secs else "eof_action=pass") + ",format=yuv420p[v]",
             "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2),
             "-c:a", "copy", "-movflags", "+faststart", tmp)
         os.replace(tmp, body)
@@ -812,12 +814,13 @@ def main():
     t = STING; n = 0; on_camera = []; clips = []
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import broll
-    wx_at = None
+    wx_at = wx_dur = None
     for i, (sk, text, v, s) in enumerate(segs):
         audio = wxvid[1] if sk == "weather" and wxvid else voice(text, v)
         if sk == "weather" and wxvid: wx_at = t
         a = int(t * SR); voice_track[a:a + len(audio)] += audio[:len(voice_track) - a]
         dur = len(audio) / SR + GAP
+        if sk == "weather" and wxvid: wx_dur = dur
         pic = f"c-{i:02d}.png"
         if sk == "story":
             n += 1
@@ -871,7 +874,7 @@ def main():
         "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
     add_broll(body, clips, work)
     add_opening(body, STING, work)
-    if wx_at is not None: add_segment(body, wxvid[0], wx_at, work)
+    if wx_at is not None: add_segment(body, wxvid[0], wx_at, work, wx_dur)
     if reader and on_camera:
         add_reader(body, reader, on_camera, label, work)
     promos = []
