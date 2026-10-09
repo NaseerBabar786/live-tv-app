@@ -1,6 +1,6 @@
 {
  "name": "Movie Trailers",
- "built": "2026-10-09 01:30 UTC",
+ "built": "2026-10-09 01:44 UTC",
  "videos": [
   {
    "id": "l_Ozo1xUgbU",
@@ -30,24 +30,6 @@
    "up": "2026-09-29"
   },
   {
-   "id": "mTLkEWMk3CY",
-   "title": "THE KILLER ELITE (1975) | Official Trailer | Amazon MGM",
-   "label": "Amazon MGM Studios",
-   "lang": "English",
-   "mins": 2.3,
-   "found": "2026-10-09",
-   "up": "2026-09-29"
-  },
-  {
-   "id": "CL1EFACsWag",
-   "title": "WERWULF - Official Trailer 2 [HD] - Only In Theaters This Christmas",
-   "label": "Focus Features",
-   "lang": "English",
-   "mins": 2.77,
-   "found": "2026-10-09",
-   "up": "2026-09-27"
-  },
-  {
    "id": "nzNYomSd5Ls",
    "title": "The Rescue | Official Trailer (2027 Movie) - Brandon Sklenar, Josh Lucas, Hassie Harrison",
    "label": "Paramount Pictures",
@@ -57,47 +39,11 @@
    "up": "2026-09-26"
   },
   {
-   "id": "MQKqgFVU4dQ",
-   "title": "Beware Boiúna (2026) Final Trailer - Kiana Madeira, Jessica Rothe, Logan Marshall-Green",
-   "label": "Lionsgate",
-   "lang": "English",
-   "mins": 1.5,
-   "found": "2026-10-09",
-   "up": "2026-09-25"
-  },
-  {
-   "id": "KCR-rz0YfD4",
-   "title": "Clayface | Final Trailer",
-   "label": "Warner Bros. Pictures",
-   "lang": "English",
-   "mins": 1.7,
-   "found": "2026-10-09",
-   "up": "2026-09-25"
-  },
-  {
    "id": "bhKKR5He_Fo",
    "title": "Day Drinker (2027) Official Teaser – Johnny Depp, Madelyn Cline, and Penélope Cruz",
    "label": "Lionsgate",
    "lang": "English",
    "mins": 1.58,
-   "found": "2026-10-09",
-   "up": "2026-09-25"
-  },
-  {
-   "id": "Us0oKwwJOjk",
-   "title": "REVENGE OF THE NINJA (1983) | Official Trailer | Amazon MGM",
-   "label": "Amazon MGM Studios",
-   "lang": "English",
-   "mins": 1.92,
-   "found": "2026-10-09",
-   "up": "2026-09-25"
-  },
-  {
-   "id": "dTFUNq2cCwA",
-   "title": "Toy Story 5: The Great Toy Rescue | Fortnite Launch Trailer",
-   "label": "Pixar",
-   "lang": "English",
-   "mins": 0.63,
    "found": "2026-10-09",
    "up": "2026-09-25"
   },
@@ -111,29 +57,11 @@
    "up": "2026-09-18"
   },
   {
-   "id": "YxPR7fEtutE",
-   "title": "Marvel’s Wolverine | Launch Trailer",
-   "label": "Marvel",
-   "lang": "English",
-   "mins": 0.52,
-   "found": "2026-10-09",
-   "up": "2026-09-18"
-  },
-  {
    "id": "cwVE1qf6Ixs",
    "title": "Mr. Irrelevant | Official Trailer (2026 Movie) - David Corenswet, Isabel May",
    "label": "Paramount Pictures",
    "lang": "English",
    "mins": 3.0,
-   "found": "2026-10-09",
-   "up": "2026-09-18"
-  },
-  {
-   "id": "-mnTITqqiT0",
-   "title": "Other Mommy | Official Trailer 2",
-   "label": "Universal Pictures",
-   "lang": "English",
-   "mins": 1.78,
    "found": "2026-10-09",
    "up": "2026-09-18"
   },
@@ -183,15 +111,6 @@
    "up": "2026-09-09"
   },
   {
-   "id": "4fn4UcgzRhg",
-   "title": "Beware Boiúna (2026) Official Trailer - Kiana Madeira, Jessica Rothe, Logan Marshall-Green",
-   "label": "Lionsgate",
-   "lang": "English",
-   "mins": 1.8,
-   "found": "2026-10-09",
-   "up": "2026-09-09"
-  },
-  {
    "id": "fvnyrBnUx4E",
    "title": "By Any Means | Final Trailer (2026 Movie) – Yahya Abdul-Mateen II, Mark Wahlberg",
    "label": "Paramount Pictures",
@@ -201,47 +120,11 @@
    "up": "2026-09-09"
   },
   {
-   "id": "TU1tvjHPq4g",
-   "title": "Creators React to KINGDOM HEARTS IV Trailer | D23: The Ultimate Disney Fan Event",
-   "label": "Pixar",
-   "lang": "English",
-   "mins": 2.55,
-   "found": "2026-10-09",
-   "up": "2026-09-09"
-  },
-  {
    "id": "bfCgu83suHs",
    "title": "Heart of the Beast | Official Trailer 2 (2026 Movie) - Brad Pitt, J.K. Simmons, Anna Lambe",
    "label": "Paramount Pictures",
    "lang": "English",
    "mins": 2.02,
-   "found": "2026-10-09",
-   "up": "2026-09-09"
-  },
-  {
-   "id": "CJw0xx6UW3Y",
-   "title": "Inside | Official Trailer | Stream Only on Lionsgate+",
-   "label": "Lionsgate",
-   "lang": "English",
-   "mins": 1.0,
-   "found": "2026-10-09",
-   "up": "2026-09-09"
-  },
-  {
-   "id": "54eFEhlnIjg",
-   "title": "KINGDOM HEARTS IV | D23 2026 Showcase Trailer",
-   "label": "Pixar",
-   "lang": "English",
-   "mins": 1.52,
-   "found": "2026-10-09",
-   "up": "2026-09-09"
-  },
-  {
-   "id": "h969bLwxgKc",
-   "title": "Remain | Official Teaser",
-   "label": "Warner Bros. Pictures",
-   "lang": "English",
-   "mins": 2.3,
    "found": "2026-10-09",
    "up": "2026-09-09"
   },
@@ -305,15 +188,6 @@
    "label": "Sony Pictures",
    "lang": "English",
    "mins": 3.92,
-   "found": "2026-10-09",
-   "up": "2026-08-10"
-  },
-  {
-   "id": "mNd1gb19A-c",
-   "title": "RESIDENT EVIL – Official Trailer (4K)",
-   "label": "Sony Pictures",
-   "lang": "English",
-   "mins": 2.55,
    "found": "2026-10-09",
    "up": "2026-08-10"
   },
