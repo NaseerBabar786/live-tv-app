@@ -1,11 +1,17 @@
 {
- "updated": "2026-10-09T09:28Z",
+ "updated": "2026-10-09T12:30Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "uWMrNuOKyKw",
+   "title": "Swap out these 4 foods to help boost your immune system this season",
+   "channel": "The Weather Network",
+   "published": 1791540021
+  },
   {
    "id": "Wu90UrxA0v4",
    "title": "Canada's Daily Forecast - October 9, 2026  | #WeatherAM",
@@ -55,12 +61,6 @@
    "published": 1791470973
   },
   {
-   "id": "3YfRSf5O2e4",
-   "title": "Wintry mix and chilly temps for Thanksgiving in western Canada | #forecast",
-   "channel": "The Weather Network",
-   "published": 1791470960
-  },
-  {
    "id": "Izf6JfYpLgs",
    "title": "Hurricane Isaias, First of 2026 Atlantic Season",
    "channel": "The Weather Channel",
@@ -101,12 +101,6 @@
    "title": "Isaias Update: Gulf Hurricane With Inland Tornado Threat",
    "channel": "AccuWeather",
    "published": 1791417897
-  },
-  {
-   "id": "5Auc9DkCBBU",
-   "title": "Who has the best chance to see the northern lights this week? | #forecast",
-   "channel": "The Weather Network",
-   "published": 1791395421
   },
   {
    "id": "3FrNFgvqnbk",
