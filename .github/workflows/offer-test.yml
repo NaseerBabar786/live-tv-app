@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       build:
-        description: "Only offer it if the candidate is this build number (blank = the current candidate)"
+        description: "Build number to offer (blank = the current candidate). If a later push replaced the candidate, that build's own APKs are taken from its Build APK run."
         required: false
         default: ""
 
@@ -35,8 +35,44 @@ jobs:
           want="${{ inputs.build }}"
           have=$(jq -r .build versions.json)
           if [ -n "$want" ] && [ "$want" != "$have" ]; then
-            echo "::error::The candidate is build $have, not $want."
-            exit 1
+            # A later push to main replaced the candidate. Take build $want's own APKs from its
+            # Build APK run instead (artifacts are kept 90 days), so the exact build that was
+            # checked on the emulator is the one the owner gets.
+            echo "The candidate is build $have; taking build $want from its Build APK run."
+            run=$(gh api "repos/$GH_REPO/actions/workflows/build-apk.yml/runs?branch=main&event=push&per_page=100" \
+              --jq ".workflow_runs[] | select(.run_number == $want and .conclusion == \"success\") | .id" | head -1)
+            if [ -z "$run" ]; then
+              echo "::error::No successful Build APK run on main with number $want."
+              exit 1
+            fi
+            commit=$(gh api "repos/$GH_REPO/actions/runs/$run" --jq .head_sha)
+            rm -f LiveTV.apk LiveTVMax.apk AppBazaar.apk IqraQuran.apk LiveCam.apk MultiChat.apk NotesForClaude.apk versions.json
+            get() { mkdir -p "a/$1"; gh run download "$run" -n "$1" -D "a/$1"; cp "a/$1"/*.apk "$2"; }
+            get live-tv-debug-apk LiveTV.apk
+            get live-tv-max-debug-apk LiveTVMax.apk
+            get app-bazaar-apk AppBazaar.apk
+            get iqra-quran-debug-apk IqraQuran.apk
+            get live-cam-debug-apk LiveCam.apk
+            get multi-chat-debug-apk MultiChat.apk
+            get notes-for-claude-apk NotesForClaude.apk
+            rm -rf a
+            aapt="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/aapt"
+            vn() { "$aapt" dump badging "$1" | grep -oP "versionName='\K[^']+"; }
+            cat > versions.json <<JSON
+          {
+            "build": $want,
+            "commit": "$commit",
+            "cable-tv": "$(vn LiveTV.apk)",
+            "live-tv-max": "$(vn LiveTVMax.apk)",
+            "app-bazaar": "$(vn AppBazaar.apk)",
+            "iqra-quran": "$(vn IqraQuran.apk)",
+            "live-cam": "$(vn LiveCam.apk)",
+            "multi-chat": "$(vn MultiChat.apk)",
+            "notes-for-claude": "$(vn NotesForClaude.apk)"
+          }
+          JSON
+            cat versions.json
+            have=$want
           fi
           commit=$(jq -r .commit versions.json)
           cable=$(jq -r '."cable-tv"' versions.json | sed -E 's/^([0-9]+\.[0-9]+\.[0-9]+)\.([0-9]+)$/\1 test \2/')
