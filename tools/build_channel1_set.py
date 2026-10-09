@@ -193,6 +193,12 @@ def find(today):
     save(EPISODES_FILE, {"name": "Channel 1 serials", "built": today.isoformat(), "videos": picks})
 
 
+BOTH = {"welcome": "Welcome to Spark TV · اسپارک ٹی وی میں خوش آمدید", "break": "Break · وقفہ", "next": "Up next · اگلا پروگرام",
+        "adhere": "Advertise on Spark TV · اسپارک ٹی وی پر اشتہار دیں", "promo": "Cable TV · کیبل ٹی وی",
+        "promo2": "Cable TV Gold · کیبل ٹی وی گولڈ", "news-headlines": "Spark TV News: Headlines · خبروں کی سرخیاں",
+        "news-full": "Spark TV News: The Full Report · تفصیلی خبرنامہ"}
+
+
 def yt(v, prefix):
     return {"id": f"{prefix}-{v['id']}", "title": v["title"], "url": "https://www.youtube.com/watch?v=" + v["id"],
             "secs": int(v["secs"]), "kind": "programme"}
@@ -205,20 +211,25 @@ def layout(today):
     # No Bulk Bazaar ads for now (owner, 2026-10-09): its 20 s ad is out, and the 1-minute break that carried it
     # (ad-break-b) is now ad-break-d, with the Urdu Spark ad and a short Spark logo in its place.
     base.pop("adbb", None)
-    base["adbreak"] = {"id": "adbreak", "title": "اشتہارات", "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-d.mp4", "secs": 60, "kind": "ad"}
+    base["adbreak"] = {"id": "adbreak", "title": "Ads · اشتہارات", "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-d.mp4", "secs": 60, "kind": "ad"}
+    # Every writing on channel 1 shows Urdu and English together (owner, 2026-10-09): the titles the app's
+    # "Up next" and "Today" cards and the now-playing line show, too.
+    for k, title in BOTH.items():
+        if k in base:
+            base[k]["title"] = title
     own = {k: base[k] for k in ("welcome", "break", "next", "adhere", "promo", "promo2", "adbreak")}
-    base["ad9"] = {"id": "ad9", "title": "کیبل ٹی وی", "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-9.mp4", "secs": 15, "kind": "ad"}
-    base["adbreak-c"] = {"id": "adbreak-c", "title": "اشتہارات", "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-c.mp4", "secs": 60, "kind": "ad"}
+    base["ad9"] = {"id": "ad9", "title": "Cable TV · کیبل ٹی وی", "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-9.mp4", "secs": 15, "kind": "ad"}
+    base["adbreak-c"] = {"id": "adbreak-c", "title": "Ads · اشتہارات", "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-c.mp4", "secs": 60, "kind": "ad"}
     # Spark TV's moving logo opens every hour's programmes, and the network montage and the Urdu Spark ad
     # take turns with our other short clips in the gaps (owner, 2026-10-09; media/spark-promos.json).
     M = "https://tv.bulkbazaar.ca/media/"
-    base["spark-ident"] = {"id": "spark-ident", "title": "اسپارک ٹی وی", "url": M + "spark-ident.mp4", "secs": 20, "kind": "ident"}
-    base["spark-montage"] = {"id": "spark-montage", "title": "اسپارک ٹی وی", "url": M + "spark-montage.mp4", "secs": 30, "kind": "ad"}
-    base["spark-montage-2"] = {"id": "spark-montage-2", "title": "اسپارک ٹی وی", "url": M + "spark-montage-2.mp4", "secs": 20, "kind": "ad"}
+    base["spark-ident"] = {"id": "spark-ident", "title": "Spark TV · اسپارک ٹی وی", "url": M + "spark-ident.mp4", "secs": 20, "kind": "ident"}
+    base["spark-montage"] = {"id": "spark-montage", "title": "Spark TV · اسپارک ٹی وی", "url": M + "spark-montage.mp4", "secs": 30, "kind": "ad"}
+    base["spark-montage-2"] = {"id": "spark-montage-2", "title": "Spark TV · اسپارک ٹی وی", "url": M + "spark-montage-2.mp4", "secs": 20, "kind": "ad"}
     for n in (3, 4, 5, 6, 7):
-        base[f"spark-montage-{n}"] = {"id": f"spark-montage-{n}", "title": "اسپارک ٹی وی", "url": M + f"spark-montage-{n}.mp4", "secs": 20, "kind": "ad"}
-    base["spark-ad-urdu"] = {"id": "spark-ad-urdu", "title": "اسپارک ٹی وی", "url": M + "spark-ad-urdu.mp4", "secs": 30, "kind": "ad"}
-    base["segment"] = {"id": "segment", "title": "وقفہ: آج کے پروگرام اور موسم", "url": REL + "segment.mp4", "secs": SEGMENT, "kind": "programme"}
+        base[f"spark-montage-{n}"] = {"id": f"spark-montage-{n}", "title": "Spark TV · اسپارک ٹی وی", "url": M + f"spark-montage-{n}.mp4", "secs": 20, "kind": "ad"}
+    base["spark-ad-urdu"] = {"id": "spark-ad-urdu", "title": "Spark TV · اسپارک ٹی وی", "url": M + "spark-ad-urdu.mp4", "secs": 30, "kind": "ad"}
+    base["segment"] = {"id": "segment", "title": "Break: today's programmes and weather · وقفہ: آج کے پروگرام اور موسم", "url": REL + "segment.mp4", "secs": SEGMENT, "kind": "programme"}
     for kind, secs in (("headlines", HEADLINES), ("full", FULL)):
         plain = base[f"news-{kind}"]
         for room in ("day", "night"):
@@ -244,6 +255,7 @@ def layout(today):
     # Never another episode of a serial we run from episode 1 (it would give the story away).
     spare_dramas = [v for v in spare_dramas if not any(same_show(x["show"], v["title"]) for x in SERIALS)]
     songs = sorted(lists["music-videos.json"] + lists["trailers.json"], key=lambda v: -v["secs"])
+    trailer_ids = {v["id"] for v in lists["trailers.json"]}
     used = set()
     pads = sorted([own[k] for k in ("promo2", "adhere", "welcome", "next", "break")] + [base["ad9"], base["spark-ad-urdu"]] + [base[m] for m in MONTAGES],
                   key=lambda v: -v["secs"])
@@ -278,6 +290,7 @@ def layout(today):
         start = len(loop)
         for v, urdu, title in main:
             item = yt(v, f"c1-{h}")
+            item["title"] = f"{title} · {urdu}"
             videos.append(item); loop.append(item["id"]); used.add(v["id"]); t += item["secs"]
             hour["programmes"].append({"id": item["id"], "urdu": urdu, "title": title, "secs": item["secs"]})
         # Fill to the hour's end: new songs and trailers, then our own short clips.
@@ -290,6 +303,7 @@ def layout(today):
                 if v["id"] in here or (v["id"] in used and not again) or v["secs"] > target - t:
                     continue
                 item = yt(v, f"c1-{h}{'r' if v['id'] in used else ''}")
+                item["title"] = ("Trailer · فلم کا ٹریلر · " if v["id"] in trailer_ids else "Song · گانا · ") + v["title"]
                 last_song = item
                 videos.append(item); loop.append(item["id"]); used.add(v["id"]); here.add(v["id"]); t += item["secs"]
         # Our clips go in the gaps between this hour's programmes and songs, at most 30 s in a gap, so
@@ -355,9 +369,12 @@ def layout(today):
     sched["loop"] = loop
     sched["slots"] = slots
     sched["fillers"] = ["promo2", "adhere", "spark-ad-urdu", "next"]
+    sched["bilingual"] = True  # the website's cards show Urdu headings beside the English ones (owner, 2026-10-09)
+    # English first, so the line reads left to right; the Urdu parts follow (owner, 2026-10-09).
     sched["ticker"] = ("Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  "
                        "Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  "
-                       "tv.bulkbazaar.ca/advertise")
+                       "tv.bulkbazaar.ca/advertise  ·  اسپارک ٹی وی میں خوش آمدید  ·  نئے پاکستانی ڈرامے پہلی قسط سے، ہر روز نئی قسط  ·  "
+                       "اپنا اشتہار دیں: واٹس ایپ 437 602 6500")
     save(SCHEDULE, sched)
     save(SET_FILE, {"date": today.isoformat(), "episode": n, "hours": hours})
     print(f"Wrote {os.path.relpath(SCHEDULE, ROOT)}: {len(loop)} loop items, {len(slots)} slots.")

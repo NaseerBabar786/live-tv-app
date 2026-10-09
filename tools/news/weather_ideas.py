@@ -85,10 +85,18 @@ def bigtemp(d, x, y, v, size, anchor="mm", fill="white"):
     d.text((x, y), f"{v}°", font=font(True, size), fill=fill, anchor=anchor)
 
 
+# Channel 1 writes Urdu and English together (owner, 2026-10-09): each heading gets its English beside it.
+HEAD_EN = {"ٹورنٹو • ابھی": "TORONTO NOW", "اگلے ۱۲ گھنٹے": "NEXT 12 HOURS", "اگلے سات دن": "NEXT 7 DAYS",
+           "آج کا دن • ٹورنٹو": "TODAY IN TORONTO", "ہفتے کا رجحان": "THIS WEEK", "کینیڈا • ابھی": "CANADA NOW",
+           "پاکستان • ابھی": "PAKISTAN NOW"}
+DAYS_EN = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+
 def header(d, title, sub=None):
     d.rounded_rectangle([W - 470, 40, W - 60, 92], 10, fill=TEAL)
     text(d, W - 265, 66, title, 28, "white", "m")
-    if sub: text(d, W - 490, 66, sub, 24, LIGHT)
+    if HEAD_EN.get(title): d.text((W - 490, 68), HEAD_EN[title], font=font(True, 24), fill="white", anchor="rm")
+    elif sub: text(d, W - 490, 66, sub, 24, LIGHT)
 
 
 def credit(d, s):
@@ -132,7 +140,7 @@ def render(out, scenes, voice, presenter, box, crop, work, name):
             x, y, w, h = box
             d.rectangle([x - 4, y - 4, x + w + 3, y + h + 3], outline=TEAL, width=4)
             d.rectangle([x, y, x + w - 1, y + h - 1], fill=(0, 0, 0, 0))
-        lower_bar(d, "موسم • اسپارک ٹی وی")
+        lower_bar(d, "موسم • اسپارک ٹی وی", "WEATHER · SPARK TV")
         p.stdin.write(im.tobytes())
     p.stdin.close(); p.wait()
     mp4 = os.path.join(out, f"{name}.mp4")
@@ -160,6 +168,7 @@ def idea1(out, voice, presenter, work, short=False, start=None):
     hcode = hr["weather_code"][now_i:now_i + 12]; hours = [int(s[11:13]) for s in hr["time"][now_i:now_i + 12]]
     import datetime as dt
     wd = [DAYS[dt.date.fromisoformat(s).weekday()] for s in dy["time"]]
+    wd_en = [DAYS_EN[dt.date.fromisoformat(s).weekday()] for s in dy["time"]]
     hi = [round(x) for x in dy["temperature_2m_max"]]; lo = [round(x) for x in dy["temperature_2m_min"]]
     warm, cold = int(np.argmax(hi)), int(np.argmin(lo))
     R = W - 60; L = 580
@@ -170,15 +179,17 @@ def idea1(out, voice, presenter, work, short=False, start=None):
         d.rounded_rectangle([L, 120, R, 570], 18, fill=NAVY)
         icon(d, c["weather_code"], L + 150, 260, 190 * a, t)
         bigtemp(d, R - 170, 250, round(c["temperature_2m"]), int(120 * a + 1))
-        text(d, R - 40, 360, WMO.get(c["weather_code"], ""), 34, GOLD)
-        for j, (lab, val) in enumerate([("محسوس", f"{round(c['apparent_temperature'])}°"),
-                                        ("ہوا", f"{round(c['wind_speed_10m'])} km/h"),
-                                        ("نمی", f"{c['relative_humidity_2m']}%")]):
+        text(d, R - 40, 350, WMO.get(c["weather_code"], ""), 34, GOLD)
+        d.text((R - 40, 392), N.WMO_EN.get(c["weather_code"], ""), font=font(True, 20), fill=GOLD, anchor="rm")
+        for j, (lab, en, val) in enumerate([("محسوس", "Feels like", f"{round(c['apparent_temperature'])}°"),
+                                            ("ہوا", "Wind", f"{round(c['wind_speed_10m'])} km/h"),
+                                            ("نمی", "Humidity", f"{c['relative_humidity_2m']}%")]):
             if t < 1.2 + j * 0.6: continue
             x0 = R - 30 - j * 205
-            d.rounded_rectangle([x0 - 190, 420, x0, 540], 12, fill=(20, 40, 80, 240))
-            text(d, x0 - 95, 450, lab, 24, (190, 205, 230), "m")
-            d.text((x0 - 95, 505), val, font=font(True, 34), fill="white", anchor="mm")
+            d.rounded_rectangle([x0 - 190, 420, x0, 550], 12, fill=(20, 40, 80, 240))
+            text(d, x0 - 95, 446, lab, 24, (190, 205, 230), "m")
+            d.text((x0 - 95, 478), en, font=font(False, 15), fill=(190, 205, 230), anchor="mm")
+            d.text((x0 - 95, 518), val, font=font(True, 32), fill="white", anchor="mm")
         credit(d, "Open-Meteo.com (CC BY 4.0)")
 
     def hours_card(d, t, secs):
@@ -196,6 +207,7 @@ def idea1(out, voice, presenter, work, short=False, start=None):
             d.text((x, 225), f"{rain[i]}%", font=font(False, 15), fill=(120, 190, 255), anchor="mm")
             d.text((x, 500), f"{hours[i]:02d}:00", font=font(False, 15), fill=LIGHT, anchor="mm")
         text(d, R - 30, 545, "بارش کا امکان نیلے رنگ میں", 20, DIM)
+        d.text((L + 30, 548), "Chance of rain in blue", font=font(False, 15), fill=DIM, anchor="lm")
         credit(d, "Open-Meteo.com (CC BY 4.0)")
 
     def week_card(d, t, secs):
@@ -208,7 +220,8 @@ def idea1(out, voice, presenter, work, short=False, start=None):
             col = (60, 40, 20, 245) if i == warm else (20, 40, 80, 245) if i != cold else (15, 50, 90, 245)
             d.rounded_rectangle([x0, 130 + yo, x1, 560 + yo], 12, fill=col)
             xm = (x0 + x1) / 2
-            text(d, xm, 165 + yo, "آج" if i == 0 else wd[i], 24, "white", "m")
+            text(d, xm, 160 + yo, "آج" if i == 0 else wd[i], 24, "white", "m")
+            d.text((xm, 196 + yo), "Today" if i == 0 else wd_en[i], font=font(False, 15), fill=LIGHT, anchor="mm")
             icon(d, dy["weather_code"][i], xm, 260 + yo, 70, t)
             bigtemp(d, xm, 360 + yo, hi[i], 34)
             bigtemp(d, xm, 420 + yo, lo[i], 26, fill=(150, 180, 220))
@@ -321,6 +334,7 @@ def idea3(out, voice, presenter, work):
     w = json.loads(fetch(u, 30)); c = w["current"]; dy = w["daily"]
     import datetime as dt
     wd = [DAYS[dt.date.fromisoformat(s).weekday()] for s in dy["time"]]
+    wd_en = [DAYS_EN[dt.date.fromisoformat(s).weekday()] for s in dy["time"]]
     hi = [round(x) for x in dy["temperature_2m_max"]]; lo = [round(x) for x in dy["temperature_2m_min"]]
     rise, sset = dy["sunrise"][0][11:16], dy["sunset"][0][11:16]
     mins = lambda hm: int(hm[:2]) * 60 + int(hm[3:])
