@@ -153,7 +153,10 @@ class ChannelRepository(context: Context) {
      * A playlist that can't be loaded is skipped; each item's group gets the playlist's
      * name when the playlist gives none.
      */
-    suspend fun loadVod(): List<Channel> = coroutineScope {
+    suspend fun loadVod(): List<Channel> = loadVodLists().flatMap { it.second }.distinctBy { it.id }
+
+    /** The Library's videos, each playlist's on its own (Spark TV's and MTA's go in their own folders). */
+    suspend fun loadVodLists(): List<Pair<Playlist, List<Channel>>> = coroutineScope {
         val mta = if (showMta) listOf(Playlist("MTA", Mta.VIDEOS_URL)) else emptyList()
         (playlists + Vod.builtIn() + mta).map { playlist ->
             async(Dispatchers.IO) {
@@ -166,9 +169,9 @@ class ChannelRepository(context: Context) {
                     M3uParser.parse(text)
                         .filter { Vod.kind(it) != Vod.Kind.LIVE }
                         .map { if (it.group == null) it.copy(group = playlist.name) else it }
-                }.getOrDefault(emptyList())
+                }.getOrDefault(emptyList()).let { playlist to it }
             }
-        }.awaitAll().flatten().distinctBy { it.id }
+        }.awaitAll()
     }
 
     /**

@@ -2,6 +2,7 @@ package com.livetv.app.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -60,6 +61,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import com.livetv.app.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -93,7 +96,8 @@ import com.livetv.app.player.PlayerScreen
  * The lists are rebuilt every morning; what first showed up in the last [Vod.NEW_DAYS] days comes
  * first with a NEW mark (1.10.1); "Added this week" collects every section's last 7 days.
  * Holding OK on a film or series adds it to Favorites (owner, 2026-10-08), the first tile of the Library;
- * a favourite series carries on where the viewer stopped (see [LibraryFavorites]).
+ * a favourite series carries on where the viewer stopped (see [LibraryFavorites]). Spark TV and MTA have
+ * their own folder tiles with a picture after the languages (owner, 2026-10-09).
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -107,7 +111,12 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     var languageName by rememberSaveable { mutableStateOf(start?.language?.name) }
     // The ★ Favorites tile opens its own page, in place of a language.
     val favView = languageName == FAV
-    val language = languageName?.takeIf { it != FAV }?.let { Vod.Language.valueOf(it) }
+    // Spark TV and MTA are folders of their own on the main page, opened like a language (owner, 2026-10-09).
+    val folder = Vod.Folder.entries.firstOrNull { it.name == languageName }
+    val language = languageName?.takeIf { it != FAV && folder == null }?.let { Vod.Language.valueOf(it) }
+    // Inside a language or a folder: its tabs and titles.
+    val page = language != null || folder != null
+    val pageLabel = folder?.label ?: language?.label
     // A series opened from Favorites: Back from its episodes goes back to Favorites.
     var fromFav by rememberSaveable { mutableStateOf(false) }
     var tabName by rememberSaveable { mutableStateOf((start?.section ?: Vod.Section.MOVIES).name) }
@@ -140,7 +149,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
         ).show()
     }
     // Worked out again after something plays, so the last one watched comes first.
-    val favorites = remember(state.shelves, favKeys, playing) { favoriteItems(context, state.shelves, favKeys) }
+    val favorites = remember(state.shelves, state.folders, favKeys, playing) { favoriteItems(context, state, favKeys) }
     // After every video: "Did it play properly?" (owner, 2026-10-08; see LibraryReports).
     var askAbout by remember { mutableStateOf<Channel?>(null) }
     // Opened from the home screen for one video: Back from it goes straight back there.
@@ -216,10 +225,12 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
         return
     }
 
-    val shelf = language?.let { state.shelves[it] } ?: VodShelf()
+    val shelf = folder?.let { state.folders[it] } ?: language?.let { state.shelves[it] } ?: VodShelf()
+    // A series' favourites key keeps its own language, also inside a folder, so saved favourites stay put.
+    val keyLanguage: (Vod.Show) -> Vod.Language = { language ?: it.episodes.firstOrNull()?.let { e -> Vod.language(e.channel) } ?: Vod.Language.URDU }
     val folders = if (weekTab) Vod.Section.entries.flatMap { shelf.folders(it) } else shelf.folders(tab)
     val show = openShow?.let { name -> folders.firstOrNull { it.name == name } }
-    val showKey = if (show != null && language != null) LibraryFavorites.showKey(language, show) else null
+    val showKey = if (show != null && page) LibraryFavorites.showKey(keyLanguage(show), show) else null
     val back: () -> Unit = {
         when {
             show != null -> when {
@@ -229,14 +240,14 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
             }
             searching -> { searching = false; query = "" }
             favView -> { lastPicked = FAV; languageName = null }
-            language != null -> { lastPicked = languageName; languageName = null; group = null }
+            page -> { lastPicked = languageName; languageName = null; group = null }
             else -> onClose()
         }
     }
     BackHandler(onBack = back)
     BackHandler(enabled = askAbout != null) { askAbout = null }
 
-    LaunchedEffect(show?.name, language, favView, state.loading) {
+    LaunchedEffect(show?.name, languageName, state.loading) {
         if (state.loading) return@LaunchedEffect
         delay(100) // let the list lay out its items first
         if (runCatching { pickedFocus.requestFocus() }.isFailure) runCatching { tabFocus.requestFocus() }
@@ -255,13 +266,13 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                 Column(Modifier.weight(1f).padding(start = 4.dp)) {
                     Text(
                         show?.name?.let { if (showKey in favKeys) "★ $it" else it }
-                            ?: language?.label ?: if (favView) "★ Favorites" else "Library",
+                            ?: pageLabel ?: if (favView) "★ Favorites" else "Library",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
-                    if (show == null && language == null) {
+                    if (show == null && !page) {
                         Text(
                             if (favView) "Hold OK on a film or series to add or remove it" else "Updated every morning",
                             style = MaterialTheme.typography.bodySmall,
@@ -269,7 +280,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         )
                     }
                 }
-                if (show == null && language != null) {
+                if (show == null && page) {
                     if (searching) {
                         OutlinedTextField(
                             value = query,
@@ -385,11 +396,11 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                             val series = fav.show
                             if (movie != null) Poster(
                                 fav.key, movie.name, movie.logo,
-                                listOfNotNull(fav.language.label, Vod.Section.MOVIES.label, Vod.length(movie.mins)).joinToString(" · "),
+                                listOfNotNull(fav.folder?.label ?: fav.language.label, Vod.Section.MOVIES.label, Vod.length(movie.mins)).joinToString(" · "),
                                 favorite = true,
                             ) else Poster(
                                 fav.key, series!!.name, series.logo,
-                                "${fav.language.label} · ${fav.section.label} · ${series.episodes.size} episodes",
+                                "${fav.folder?.label ?: fav.language.label} · ${fav.section.label} · ${series.episodes.size} episodes",
                                 favorite = true,
                             )
                         },
@@ -402,7 +413,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         fav.movie?.let(playMovie)
                         fav.show?.let { series ->
                             // Straight into the episode to carry on with; Back from it shows the series' episodes.
-                            languageName = fav.language.name
+                            languageName = fav.folder?.name ?: fav.language.name
                             tabName = fav.section.name
                             group = null
                             openShow = series.name
@@ -414,17 +425,14 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         }
                     }
                 }
-                language == null -> PosterGrid(
+                !page -> PosterGrid(
                     languageGrid,
                     (if (favorites.isEmpty()) emptyList() else listOf(
                         Poster(FAV, "★ Favorites", null, if (favorites.size == 1) "1 title" else "${favorites.size} titles"),
                     )) + Vod.Language.entries.map { lang ->
-                        val size = state.shelves[lang]?.size ?: 0
-                        val fresh = state.shelves[lang]?.newCount(weekSince) ?: 0
-                        Poster(
-                            lang.name, lang.label, null,
-                            (if (size == 1) "1 title" else "$size titles") + if (fresh > 0) " · $fresh newly added" else "",
-                        )
+                        Poster(lang.name, lang.label, null, countLine(state.shelves[lang], weekSince))
+                    } + state.folders.map { (f, folderShelf) ->
+                        Poster(f.name, f.label, null, countLine(folderShelf, weekSince), picture = folderPicture(f))
                     },
                     lastPicked ?: Vod.Language.URDU.name,
                     pickedFocus,
@@ -437,13 +445,13 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         return@PosterGrid
                     }
                     languageName = name
-                    tabName = if ((state.shelves[Vod.Language.valueOf(name)]?.newCount(weekSince) ?: 0) > 0) WEEK_TAB else
-                        Vod.Section.entries.firstOrNull { sectionItems(state, name, it).isNotEmpty() }?.name ?: Vod.Section.MOVIES.name
+                    val opened = shelfOf(state, name)
+                    tabName = if ((opened?.newCount(weekSince) ?: 0) > 0) WEEK_TAB else
+                        Vod.Section.entries.firstOrNull { sectionItems(opened, it).isNotEmpty() }?.name ?: Vod.Section.MOVIES.name
                     group = null
                     lastPicked = null
                 }
                 else -> {
-                    val shelfLanguage = language ?: Vod.Language.ENGLISH // always set here
                     val q = query.trim()
                     // Newly added first (newest on top), the rest in their usual order.
                     val movies = shelf.movies.filter { q.isBlank() || it.name.contains(q, true) }
@@ -520,7 +528,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     show.newEpisodes(newSince) > 0,
                                     Vod.addedLabel(show.added),
                                     show.desc,
-                                    LibraryFavorites.showKey(shelfLanguage, show) in favKeys,
+                                    LibraryFavorites.showKey(keyLanguage(show), show) in favKeys,
                                 ))
                             }).sortedByDescending { it.first }
                         PosterGrid(
@@ -530,7 +538,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                 val series = weekFolders.firstOrNull { it.second.name == key }?.second
                                 when {
                                     movie != null -> toggleFavorite(LibraryFavorites.movieKey(movie))
-                                    series != null -> toggleFavorite(LibraryFavorites.showKey(shelfLanguage, series))
+                                    series != null -> toggleFavorite(LibraryFavorites.showKey(keyLanguage(series), series))
                                 }
                             },
                         ) { key ->
@@ -543,7 +551,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                             inChip(group, it.group, it.genres)
                         }
                         if (list.isEmpty()) {
-                            VodMessage("No ${language?.label} movies yet.")
+                            VodMessage("No $pageLabel movies yet.")
                         } else {
                             PosterGrid(
                                 moviesGrid,
@@ -567,7 +575,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                             inChip(group, it.group, it.genres)
                         }
                         if (list.isEmpty()) {
-                            VodMessage("No ${language?.label} ${tab.label.lowercase()} yet.")
+                            VodMessage("No $pageLabel ${tab.label.lowercase()} yet.")
                         } else {
                             PosterGrid(
                                 seriesGrid,
@@ -581,12 +589,12 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                         fresh = fresh > 0,
                                         added = Vod.addedLabel(it.added),
                                         detail = it.desc,
-                                        favorite = LibraryFavorites.showKey(shelfLanguage, it) in favKeys,
+                                        favorite = LibraryFavorites.showKey(keyLanguage(it), it) in favKeys,
                                     )
                                 },
                                 lastPicked,
                                 pickedFocus,
-                                onHold = { name -> list.firstOrNull { it.name == name }?.let { toggleFavorite(LibraryFavorites.showKey(shelfLanguage, it)) } },
+                                onHold = { name -> list.firstOrNull { it.name == name }?.let { toggleFavorite(LibraryFavorites.showKey(keyLanguage(it), it)) } },
                             ) { name ->
                                 lastPicked = name
                                 openShow = name
@@ -599,9 +607,27 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     }
 }
 
-private fun sectionItems(state: VodState, language: String, section: Vod.Section): List<Any> {
-    val shelf = state.shelves[Vod.Language.valueOf(language)] ?: return emptyList()
+/** The shelf of a main-page tile: a language's, or the Spark TV or MTA folder's. */
+private fun shelfOf(state: VodState, name: String): VodShelf? =
+    Vod.Folder.entries.firstOrNull { it.name == name }?.let { state.folders[it] }
+        ?: Vod.Language.entries.firstOrNull { it.name == name }?.let { state.shelves[it] }
+
+private fun sectionItems(shelf: VodShelf?, section: Vod.Section): List<Any> {
+    shelf ?: return emptyList()
     return if (section == Vod.Section.MOVIES) shelf.movies else shelf.folders(section)
+}
+
+/** "120 titles · 3 newly added" under a main-page tile. */
+private fun countLine(shelf: VodShelf?, weekSince: String): String {
+    val size = shelf?.size ?: 0
+    val fresh = shelf?.newCount(weekSince) ?: 0
+    return (if (size == 1) "1 title" else "$size titles") + if (fresh > 0) " · $fresh newly added" else ""
+}
+
+/** The folder's own picture (tools/make_library_folders.py). */
+private fun folderPicture(folder: Vod.Folder): Int = when (folder) {
+    Vod.Folder.SPARK -> R.drawable.library_spark_tv
+    Vod.Folder.MTA -> R.drawable.library_mta
 }
 
 /** Marks a genre chip's filter value (never part of a real group name). */
@@ -627,24 +653,29 @@ private class FavItem(
     val section: Vod.Section,
     val movie: Channel? = null,
     val show: Vod.Show? = null,
+    /** In the Spark TV or MTA folder rather than a language. */
+    val folder: Vod.Folder? = null,
 )
 
 /**
  * The saved favourites found in today's lists, the last one watched (or added) first. One that has left
  * the lists stays saved and shows again if it comes back.
  */
-private fun favoriteItems(context: android.content.Context, shelves: Map<Vod.Language, VodShelf>, keys: Set<String>): List<FavItem> {
+private fun favoriteItems(context: android.content.Context, state: VodState, keys: Set<String>): List<FavItem> {
     if (keys.isEmpty()) return emptyList()
     val found = mutableListOf<FavItem>()
-    for ((language, shelf) in shelves) {
+    val all = state.shelves.map { (language, shelf) -> Triple(language, null as Vod.Folder?, shelf) } +
+        state.folders.map { (folder, shelf) -> Triple(null, folder, shelf) }
+    for ((shelfLanguage, folder, shelf) in all) {
         shelf.movies.forEach { movie ->
             val key = LibraryFavorites.movieKey(movie)
-            if (key in keys) found += FavItem(key, language, Vod.Section.MOVIES, movie = movie)
+            if (key in keys) found += FavItem(key, shelfLanguage ?: Vod.language(movie), Vod.Section.MOVIES, movie = movie, folder = folder)
         }
         Vod.Section.entries.forEach { section ->
             shelf.folders(section).forEach { show ->
+                val language = shelfLanguage ?: show.episodes.firstOrNull()?.let { Vod.language(it.channel) } ?: Vod.Language.URDU
                 val key = LibraryFavorites.showKey(language, show)
-                if (key in keys) found += FavItem(key, language, section, show = show)
+                if (key in keys) found += FavItem(key, language, section, show = show, folder = folder)
             }
         }
     }
@@ -664,6 +695,8 @@ private data class Poster(
     val detail: String? = null,
     /** In the viewer's Library Favorites: a gold star on the picture. */
     val favorite: Boolean = false,
+    /** A picture drawn into the app (the Spark TV and MTA folders), in place of the tile's coloured box. */
+    val picture: Int? = null,
 )
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -708,6 +741,15 @@ private fun PosterGrid(
                         .background(if (tile) AccentBlue else MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center,
                 ) {
+                    if (tile && poster.picture != null) {
+                        Image(
+                            painterResource(poster.picture),
+                            contentDescription = poster.title,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        return@Box
+                    }
                     if (tile) {
                         Text(
                             poster.title,

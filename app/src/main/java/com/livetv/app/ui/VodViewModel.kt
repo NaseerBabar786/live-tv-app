@@ -52,6 +52,8 @@ data class VodTarget(
 data class VodState(
     val loading: Boolean = true,
     val shelves: Map<Vod.Language, VodShelf> = emptyMap(),
+    /** The Spark TV and MTA folders' own shelves (none when they're empty). */
+    val folders: Map<Vod.Folder, VodShelf> = emptyMap(),
     /** False until a playlist has been saved in Settings > My playlists. */
     val hasPlaylists: Boolean = true,
 )
@@ -73,6 +75,21 @@ fun shelves(items: List<Channel>): Map<Vod.Language, VodShelf> =
             kids = Vod.shows(kids),
         )
     }
+
+/**
+ * The language shelves and the main-page folders' shelves: Spark TV's and MTA's lists go in their own
+ * folders, everything else by language. A video in two lists counts once, the first list's copy.
+ */
+fun library(lists: List<Pair<Playlist, List<Channel>>>): Pair<Map<Vod.Language, VodShelf>, Map<Vod.Folder, VodShelf>> {
+    val seen = HashSet<String>()
+    val byFolder = lists.map { (playlist, items) -> Vod.folder(playlist.source) to items.filter { seen.add(it.id) } }
+    val folders = Vod.Folder.entries.associateWith { folder ->
+        shelves(byFolder.filter { it.first == folder }.flatMap { it.second }).values
+            .fold(VodShelf()) { all, s -> VodShelf(all.movies + s.movies, all.series + s.series, all.shows + s.shows, all.kids + s.kids) }
+            .let { s -> VodShelf(s.movies.sortedBy { it.name.lowercase() }, s.series.sortedBy { it.name.lowercase() }, s.shows.sortedBy { it.name.lowercase() }, s.kids.sortedBy { it.name.lowercase() }) }
+    }.filterValues { !it.isEmpty }
+    return shelves(byFolder.filter { it.first == null }.flatMap { it.second }) to folders
+}
 
 /** Cable TV's Movies & Series: the movies and episodes in the viewer's saved playlists. */
 class VodViewModel(app: Application) : AndroidViewModel(app) {
@@ -98,8 +115,9 @@ class VodViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             // Sorting tens of thousands of titles takes seconds on a Chromecast: off the main thread, or
             // the remote's keys wait and Android closes the app as "not responding" (2026-10-08).
-            val shelves = withContext(Dispatchers.Default) { shelves(repo.loadVod()) }
-            _state.update { it.copy(loading = false, shelves = shelves) }
+            val lists = repo.loadVodLists()
+            val (shelves, folders) = withContext(Dispatchers.Default) { library(lists) }
+            _state.update { it.copy(loading = false, shelves = shelves, folders = folders) }
         }
     }
 }
