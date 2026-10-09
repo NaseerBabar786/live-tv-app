@@ -459,6 +459,7 @@
         <label class="small" style="margin-left:auto"><input type="checkbox" id="wkHeat"> Shade the hours where people watch most (last 30 days)</label>
       </div>
       <div class="wk" id="wk"></div>
+      <p class="small hidden" id="wkInfo" style="margin:8px 0 0"></p>
       <details class="help" id="promoBox" open style="margin-top:12px">
         <summary>🎬 Coming-up promos for your shows</summary>
         <p class="small" style="margin:6px 0">Every booked show gets its own 20-second promo, like real channels run: quick cuts of the show itself, its name and time, an announcer and our own music. Promos are made by themselves within about an hour after you Save a booking. Add them to the loop and they play in the breaks (each break stays at 60 seconds or less).</p>
@@ -1173,7 +1174,7 @@ function startPreview() {
   preview = tuneIn($("pv"), cfg, {
     onChange: on => {
       $("offBox").classList.add("hidden");
-      $("nowText").textContent = `${mode === "air" ? "On TVs now" : "Playing now"}: ${on.video.title}` + (on.slot ? " (time slot)" : " (loop)");
+      $("nowText").textContent = `${mode === "air" ? "On TVs now" : "Playing now"}: ${on.video.title}` + (on.slot ? " (time slot)" : busyWeek() ? "" : " (loop)");
       $("chbarNow").textContent = on.video.title;
       renderGuide();
     },
@@ -1491,6 +1492,35 @@ function bookingsOn(date) {
   list.forEach((b, i) => { if (list[i + 1]) b.end = Math.min(b.end, list[i + 1].start); b.end = Math.min(b.end, 24 * 60); });
   return list;
 }
+/**
+ * A channel with time slots every few minutes (channel 1's 8-hour set: news, ad breaks and segments every
+ * half hour) can't be drawn slot by slot: the week was hundreds of tiny blocks on top of each other.
+ * There the week shows what actually plays: one block per programme, songs and trailers in a row as one,
+ * from the same guide the TVs use. News, ad breaks and segments are left out of the picture.
+ */
+const busyWeek = () => c.slots.length > 48;
+function programmesOn(date) {
+  const tz = c.tz || "America/Toronto";
+  const from = zonedTime(date, 0, 0, tz), to = zonedTime(addDays(date, 1), 0, 0, tz);
+  const blocks = [];
+  for (const e of guide(c, from, (to - from) / 3600000, 5000)) {
+    if (e.slot || ["ad", "ident"].includes(kindOf(e.video))) continue;
+    const songs = e.video.secs < 600, key = songs ? "songs" : e.video.id;
+    const last = blocks[blocks.length - 1];
+    if (last && last.key === key) {
+      last.endMs = e.end;
+      if (!last.items.some(v => v.id === e.video.id)) last.items.push(e.video);
+    } else blocks.push({ key, songs, startMs: e.at, endMs: e.end, items: [e.video] });
+  }
+  // A few minutes of songs after an episode join that episode's block, so no sliver is left too thin to read.
+  for (let i = blocks.length - 1; i > 0; i--) {
+    const b = blocks[i], prev = blocks[i - 1];
+    if (b.songs && !prev.songs && b.endMs - b.startMs < 15 * 60000) { prev.endMs = b.endMs; prev.items.push(...b.items); blocks.splice(i, 1); }
+  }
+  return blocks.map(b => ({ ...b, start: Math.max(0, (b.startMs - from) / 60000), end: Math.min(24 * 60, (Math.min(b.endMs, to) - from) / 60000) }))
+    .filter(b => b.end > b.start);
+}
+const shortTitle = t => (t || "").split(/\s+\|\s+|\s+-\s+|\s*\[/)[0].trim() || t;
 function weekBookings() { return weekDates().reduce((t, d) => t + bookingsOn(d).length, 0); }
 function renderWeek() {
   if (!c) return;
@@ -1505,6 +1535,8 @@ function renderWeek() {
   hrs.className = "hrs";
   hrs.innerHTML = [...Array(24)].map((_, h) => h ? `<span style="top:calc(${h} * var(--hh))">${clock(h * 60).replace(":00", "")}</span>` : "").join("");
   wk.appendChild(hrs);
+  $("wkInfo").classList.toggle("hidden", !busyWeek());
+  if (busyWeek()) $("wkInfo").textContent = "This channel has a time slot every few minutes (news, ad breaks, segments), so the week shows its programmes instead: purple = a programme, blue = new songs and trailers in a row. Click a block to see what's in it.";
   const heat = $("wkHeat").checked && stats ? stats.heat : null;
   const top = heat ? Math.max(1, ...Object.values(heat)) : 1;
   const nowParts = new Intl.DateTimeFormat("en-GB", { timeZone: tz, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date()).split(":").map(Number);
@@ -1517,7 +1549,24 @@ function renderWeek() {
       const v = heat[`${wd}-${String(h).padStart(2, "0")}`];
       if (v) col.insertAdjacentHTML("beforeend", `<div class="heat" style="top:calc(${h} * var(--hh));opacity:${(0.08 + 0.5 * v / top).toFixed(2)}"></div>`);
     }
-    for (const b of bookingsOn(date)) {
+    if (busyWeek()) for (const b of programmesOn(date)) {
+      const el = document.createElement("div");
+      el.className = "blk" + (b.songs ? "" : " series");
+      el.style.top = `calc(${b.start / 60} * var(--hh))`;
+      el.style.height = `calc(${Math.max(0.3, (b.end - b.start) / 60)} * var(--hh) - 2px)`;
+      el.innerHTML = "<b></b><span></span>";
+      const name = b.songs ? `New songs and trailers (${b.items.length})` : shortTitle(b.items[0].title);
+      el.querySelector("b").textContent = name;
+      el.querySelector("span").textContent = clock(Math.round(b.start));
+      const when = `${clock(Math.round(b.start))} to ${clock(Math.round(b.end) % (24 * 60))}`;
+      el.title = `${name}, ${when}`;
+      el.onclick = e => {
+        e.stopPropagation();
+        $("wkInfo").textContent = `${WD_TEXT[wd]} ${when}: ` + b.items.map(v => v.title).join(" · ") + " (the news, ad breaks and segments play in between)";
+      };
+      col.appendChild(el);
+    }
+    else for (const b of bookingsOn(date)) {
       const el = document.createElement("div");
       el.className = "blk" + (b.ep ? " series" : "");
       el.style.top = `calc(${b.start / 60} * var(--hh))`;
