@@ -81,6 +81,25 @@ class Messages(private val account: Account) {
         }
     }
 
+    /**
+     * The team's messages the viewer hasn't answered yet (the ones after their own last message),
+     * oldest first, at most [max]: what the pop-up over the channel shows.
+     */
+    suspend fun unanswered(uid: String, max: Int = 3): List<String> = withContext(Dispatchers.IO) {
+        Firestore.list("inbox/$uid", "messages", newestFirst = true, limit = 10, token = account.token())
+            .map { (_, f) -> (f.str("from") == "admin") to f.str("text") }
+            .takeWhile { it.first }
+            .take(max)
+            .map { it.second }
+            .reversed()
+    }
+
+    /** Tells the owner's Users page the pop-up of the message sent at [of] was on the viewer's screen ("Seen"). */
+    suspend fun markSeen(uid: String, of: Date) = withContext(Dispatchers.IO) {
+        runCatching { Firestore.patch(Firestore.doc("inbox/$uid"), mapOf("seenAt" to Date(), "seenOf" to of), account.token()) }
+        Unit
+    }
+
     /** Sends [text] to the conversation of viewer [uid] (the viewer's own uid when they write). */
     suspend fun send(uid: String, text: String, toName: String = "", quote: String = "", toEmail: String = "") = withContext(Dispatchers.IO) {
         val me = account.user.value ?: error("Not signed in")

@@ -25,6 +25,7 @@ import com.livetv.app.ui.PlanEndingNotice
 import com.livetv.app.ui.CodeEndsReminder
 import com.livetv.app.ui.PlansScreen
 import com.livetv.app.ui.MessagesScreen
+import com.livetv.app.ui.MessagePopupDialog
 import com.livetv.app.ui.WelcomeDialog
 import com.livetv.app.ui.GoldFeatureDialog
 import androidx.compose.foundation.background
@@ -160,6 +161,7 @@ fun EditionOverlay() {
         }
     }
     if (FirebaseConfig.configured) NewMessagePrompt()
+    MessagePopupShown()
     if (FirebaseConfig.configured && !Edition.MAX) WelcomePrompt()
     if (FirebaseConfig.configured && !Edition.MAX) PlanPrompts()
     if (FirebaseConfig.configured && !Edition.MAX) GoldTry()
@@ -320,8 +322,11 @@ private fun WelcomePrompt() {
 }
 
 /**
- * Says when a private message has arrived (for a viewer, from the Cable TV team; for the owner,
- * from a viewer): soon after start, then every 30 minutes. Each message is announced only once.
+ * Private messages. A viewer gets the Cable TV team's message as a pop-up over whatever is playing,
+ * within about a minute while the app is open, or a few seconds after the next start if the TV was off
+ * (owner, 2026-10-09), and can answer it right there with one press of the remote. The owner gets
+ * "New message from a viewer" soon after start and then every 30 minutes (their list costs more to check).
+ * Each message pops up only once; it stays in ✉ Messages.
  */
 @Composable
 private fun NewMessagePrompt() {
@@ -331,16 +336,42 @@ private fun NewMessagePrompt() {
     val prefs = remember { context.getSharedPreferences("messages", android.content.Context.MODE_PRIVATE) }
     var preview by remember { mutableStateOf<String?>(null) }
     var reading by remember { mutableStateOf(false) }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    // Coming back to the app checks at once.
+    val kick = remember { kotlinx.coroutines.channels.Channel<Unit>(kotlinx.coroutines.channels.Channel.CONFLATED) }
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event -> if (event == Lifecycle.Event.ON_START) kick.trySend(Unit) }
+        lifecycle.addObserver(observer)
+        onDispose { lifecycle.removeObserver(observer) }
+    }
+    val appScope = rememberCoroutineScope()
     LaunchedEffect(user?.uid) {
-        if (user == null) return@LaunchedEffect
-        delay(15_000)
+        val me = user ?: return@LaunchedEffect
+        val messages = Messages(account)
+        if (!account.isAdmin) {
+            MessagePopup.sendReply = { text -> messages.send(me.uid, text) }
+            MessagePopup.markRead = { appScope.launch { messages.markRead(me.uid) } }
+        }
+        delay(10_000)
+        kick.tryReceive()
         while (true) {
-            val newest = runCatching { Messages(account).newest() }.getOrNull()
-            if (newest != null && newest.second.time > prefs.getLong("announced", 0L)) {
-                prefs.edit().putLong("announced", newest.second.time).apply()
-                preview = newest.first
+            // Only while the app is on screen (or one of our channels full screen in front of it).
+            val visible = lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) || MessagePopup.webInFront
+            if (visible) {
+                val newest = runCatching { messages.newest() }.getOrNull()
+                if (newest != null && newest.second.time > prefs.getLong("announced", 0L)) {
+                    prefs.edit().putLong("announced", newest.second.time).apply()
+                    if (account.isAdmin) {
+                        preview = newest.first
+                    } else {
+                        val lines = runCatching { messages.unanswered(me.uid) }.getOrNull().orEmpty().ifEmpty { listOf(newest.first) }
+                        MessagePopup.show(MessagePopup.Incoming(lines, newest.second.time))
+                        messages.markSeen(me.uid, newest.second)
+                    }
+                }
             }
-            delay(30 * 60_000L)
+            val wait = if (account.isAdmin) 30 * 60_000L else CHECK_MESSAGES_MS
+            kotlinx.coroutines.withTimeoutOrNull(wait) { kick.receive() }
         }
     }
     if (reading) {
@@ -351,7 +382,7 @@ private fun NewMessagePrompt() {
     SettingsTheme {
         AlertDialog(
             onDismissRequest = { preview = null },
-            title = { Text(if (account.isAdmin) "✉ New message from a viewer" else "✉ New message from the Cable TV team") },
+            title = { Text("✉ New message from a viewer") },
             text = { Text(text.take(200) + if (text.length > 200) "…" else "") },
             confirmButton = {
                 TextButton(onClick = { preview = null; reading = true }, modifier = Modifier.focusGlow()) { Text("Read and reply") }
@@ -362,6 +393,16 @@ private fun NewMessagePrompt() {
         )
     }
 }
+
+/** The team's message over the main screen, while one is waiting (NewMessagePrompt fills it in). */
+@Composable
+private fun MessagePopupShown() {
+    val popup by MessagePopup.shown.collectAsStateWithLifecycle()
+    popup?.let { MessagePopupDialog(it) }
+}
+
+/** How often a viewer's app looks for a new message while it's open: one small read each time. */
+private const val CHECK_MESSAGES_MS = 60_000L
 
 /** The paying sponsors' strip under the 1+List channel list. */
 @Composable
