@@ -75,6 +75,9 @@ android {
         // Google Play billing, shared by the two editions that sell a subscription.
         getByName("plus").java.srcDir("src/playbilling/java")
         getByName("spark").java.srcDir("src/playbilling/java")
+        // Spark TV ships with its channels' schedules as they were at build time, so a first start
+        // (or a start without internet) has channels at once; the newest come from the website.
+        getByName("spark").assets.srcDir("../docs/channel/play")
         // Live TV Max is built from Cable TV's own code and pictures, plus its icon in src/max.
         getByName("max") {
             java.srcDir("src/livetv/java")

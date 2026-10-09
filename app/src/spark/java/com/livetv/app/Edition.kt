@@ -53,6 +53,7 @@ fun EditionOverlay() {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         PlayBilling.start(context)
+        SparkSync.seed(context)
         while (true) {
             SparkSync.refresh()
             kotlinx.coroutines.delay(10 * 60_000L)

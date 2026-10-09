@@ -1,5 +1,6 @@
 package com.livetv.app
 
+import android.content.Context
 import com.livetv.app.data.MyChannel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,6 +15,21 @@ import java.net.URL
  */
 object SparkSync {
     private const val BASE = "https://tv.bulkbazaar.ca/channel/play/"
+
+    /**
+     * The schedules built into the app (docs/channel/play at build time), for each channel the app has no
+     * saved schedule for yet: a first start, or one without internet, still has every channel.
+     */
+    suspend fun seed(context: Context) = withContext(Dispatchers.IO) {
+        MyChannel.init(context)
+        for (station in MyChannel.PLAY_STATIONS) {
+            if (MyChannel.configs.value.containsKey(station.id)) continue
+            runCatching {
+                val json = context.assets.open("${station.id}.json").bufferedReader().use { it.readText() }
+                MyChannel.update(station.id, JSONObject(json))
+            }
+        }
+    }
 
     suspend fun refresh() = withContext(Dispatchers.IO) {
         for (station in MyChannel.PLAY_STATIONS) {
