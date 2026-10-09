@@ -89,7 +89,7 @@ jobs:
   emulator:
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 170
     strategy:
       fail-fast: false
       matrix:
@@ -151,7 +151,7 @@ jobs:
             [ -d all/qa-$d ] || continue
             for sub in all/qa-$d/*/; do
               n=$(basename "$sub")
-              for f in "$sub"*; do [ -f "$f" ] && [ -s "$f" ] && cp "$f" "up/$n-$(basename "$f")"; done
+              for f in "$sub"*; do if [ -f "$f" ] && [ -s "$f" ]; then cp "$f" "up/$n-$(basename "$f")"; fi; done
             done
           done
           (cd all && zip -qr ../up/qa-everything.zip .)
