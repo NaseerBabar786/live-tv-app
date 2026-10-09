@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-                    echo "::notice::api $(curl -s -m 20 https://api.rainviewer.com/public/weather-maps.json | head -c 900)"
+          echo "::notice::api $(curl -s -m 20 https://api.rainviewer.com/public/weather-maps.json | head -c 900)"
           host=$(curl -s https://api.rainviewer.com/public/weather-maps.json | jq -r .host)
           path=$(curl -s https://api.rainviewer.com/public/weather-maps.json | jq -r '.radar.past[-1].path')
           echo "::notice::$(curl -s -o /dev/null -w 'tile6 %{http_code} %{size_download}' "$host$path/256/6/17/23/2/1_1.png")"
