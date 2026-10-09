@@ -1,7 +1,7 @@
 {
  "name": "Spark Ads",
  "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-ads.png",
- "logoCorner": "tr",
+ "logoCorner": "tl",
  "active": true,
  "tz": "America/Toronto",
  "ticker": "Spark Ads · Our sponsors' ads round the clock · Advertise on Spark TV: WhatsApp 437 602 6500",
@@ -21,20 +21,12 @@
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
-  },
-  {
-   "id": "sponsor-0",
-   "title": "Bulk Bazaar Inc.",
-   "url": "https://tv.bulkbazaar.ca/channel/ads/sp-110a39aa555d.mp4",
-   "secs": 10,
-   "kind": "ad"
   }
  ],
  "slots": [],
  "loop": [
   "spark-ident",
-  "adhere",
-  "sponsor-0"
+  "adhere"
  ],
  "fillers": [
   "adhere",

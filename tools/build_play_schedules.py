@@ -71,9 +71,9 @@ def ok(v):
     return bool(v.get("url")) and not YOUTUBE.search(v["url"]) and v.get("kind") not in ("trailers", "music", "list", "ads")
 
 
-def channel(pid, name, logo, ticker, videos, loop, slots=(), fillers=("adhere", "spark-ident")):
+def channel(pid, name, logo, ticker, videos, loop, slots=(), fillers=("adhere", "spark-ident"), corner="tr"):
     return {
-        "name": name, "logo": LOGOS + logo, "logoCorner": "tr", "active": True, "tz": TZ,
+        "name": name, "logo": LOGOS + logo, "logoCorner": corner, "active": True, "tz": TZ,
         "ticker": f"{ticker} · {ADVERTISE}", "tickerOn": True,
         "credits": CREDITS[pid], "videos": videos, "slots": list(slots), "loop": loop, "fillers": list(fillers),
     }
@@ -122,7 +122,8 @@ def ads():
             continue
         videos.append({"id": f"sponsor-{j}", "title": a.get("title") or "Ad", "url": url, "secs": secs, "kind": "ad"})
         loop.append(f"sponsor-{j}")
-    return channel("pads", "Spark Ads", "spark-ads.png", "Spark Ads · Our sponsors' ads round the clock", videos, loop)
+    # Our logo top left: the Spark ident carries its own logo top right (logo placement rule).
+    return channel("pads", "Spark Ads", "spark-ads.png", "Spark Ads · Our sponsors' ads round the clock", videos, loop, corner="tl")
 
 
 def check(pid, o):
