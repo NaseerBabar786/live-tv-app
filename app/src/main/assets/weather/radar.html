@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-  html, body, #map { margin: 0; height: 100%; background: #1c2233; overflow: hidden; }
-  .leaflet-container { background: #1c2233; font-family: sans-serif; }
+  html, body, #map { margin: 0; height: 100%; background: __BG__; overflow: hidden; }
+  .leaflet-container { background: __BG__; font-family: sans-serif; }
   .leaflet-control-attribution { background: rgba(0,0,0,.45) !important; color: #cfd6e6 !important; font-size: 9px; }
   .leaflet-control-attribution a { color: #cfd6e6 !important; }
   #bar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; gap: 12px;
@@ -32,13 +32,26 @@
 <script>
 var LAT = __LAT__, LON = __LON__, ZOOM = __ZOOM__, MINI = __MINI__;
 if (MINI) document.body.className = 'mini';
+function fail(why) {
+  console.log('radar: ' + why);
+  document.getElementById('msg').style.display = 'flex';
+  document.getElementById('bar').style.display = 'none';
+}
+window.onerror = function (m) { console.log('radar error: ' + m); };
+if (typeof L === 'undefined') { fail('map library did not load'); throw new Error('no leaflet'); }
 var map = L.map('map', { zoomControl: false, keyboard: false, dragging: false, touchZoom: false, scrollWheelZoom: false,
   doubleClickZoom: false, boxZoom: false, tap: false, attributionControl: true }).setView([LAT, LON], ZOOM);
 map.createPane('labels');
 map.getPane('labels').style.zIndex = 450;
 map.getPane('labels').style.pointerEvents = 'none';
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+var base = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
   { subdomains: 'abcd', maxZoom: 12, attribution: '© OpenStreetMap © CARTO · Radar © RainViewer' }).addTo(map);
+var tileErrors = 0;
+base.on('tileerror', function (e) { if (++tileErrors <= 3) console.log('radar: map tile failed ' + (e.tile && e.tile.src)); });
+// The TV can lay the page out before the box has its size; measure again once it has one (1.10.30).
+function fit() { map.invalidateSize(false); }
+window.addEventListener('resize', fit);
+[300, 1000, 2500, 5000].forEach(function (ms) { setTimeout(fit, ms); });
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',
   { subdomains: 'abcd', maxZoom: 12, pane: 'labels' }).addTo(map);
 L.marker([LAT, LON], { icon: L.divIcon({ className: '', html: '<div class="me"></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
@@ -83,9 +96,8 @@ fetch('https://api.rainviewer.com/public/weather-maps.json').then(function (r) {
   });
   show(nowAt);
   timer = setTimeout(tick, 1500);
-}).catch(function () {
-  document.getElementById('msg').style.display = 'flex';
-  document.getElementById('bar').style.display = 'none';
+}).catch(function (e) {
+  fail('radar frames failed: ' + e);
 });
 </script>
 </body>

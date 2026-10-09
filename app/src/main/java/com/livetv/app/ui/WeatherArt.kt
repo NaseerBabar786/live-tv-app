@@ -169,21 +169,27 @@ private fun DrawScope.flake(c: Offset, r: Float) {
 }
 
 /**
- * The sky behind the Weather section: its colours follow the weather and the time of day, with slowly
- * drifting clouds and falling rain or snow when it's wet.
+ * The sky behind the Weather section: the Cable TV theme's own colours (1.10.30), touched by the weather
+ * and the time of day (a warm glow in sunshine, darker under rain), with slowly drifting clouds, stars at
+ * night and falling rain or snow when it's wet.
  */
 @Composable
 fun SkyBackdrop(code: Int?, day: Boolean, modifier: Modifier = Modifier) {
     val sky = code?.let(::skyOf) ?: Sky.Cloudy
-    val colors = when {
-        !day && sky == Sky.Clear -> listOf(Color(0xFF0F1B3D), Color(0xFF070C22))
-        !day -> listOf(Color(0xFF1C2647), Color(0xFF090E24))
-        sky == Sky.Clear -> listOf(Color(0xFF3F86E0), Color(0xFF1D3F86))
-        sky == Sky.Partly -> listOf(Color(0xFF4677C4), Color(0xFF1E356E))
-        sky == Sky.Storm -> listOf(Color(0xFF2E3250), Color(0xFF0D0F21))
-        sky == Sky.Snow -> listOf(Color(0xFF7586A8), Color(0xFF2F3A5A))
-        sky == Sky.Rain -> listOf(Color(0xFF3B4F78), Color(0xFF16213F))
-        else -> listOf(Color(0xFF55658A), Color(0xFF222C4C))
+    val theme = Themes.current
+    val colors = listOf(theme.homeTop, theme.homeBottom)
+    // The weather's touch on the theme: a glow from the top right, or a shade over everything.
+    val glow: Color? = when {
+        !day -> null
+        sky == Sky.Clear -> Color(0x47FFC85A)
+        sky == Sky.Partly -> Color(0x2EFFD27A)
+        sky == Sky.Snow -> Color(0x26FFFFFF)
+        else -> null
+    }
+    val shade = when (sky) {
+        Sky.Storm -> 0.35f
+        Sky.Rain, Sky.Fog, Sky.Cloudy -> 0.18f
+        else -> 0f
     }
     val time = rememberInfiniteTransition(label = "sky")
     val drift by time.animateFloat(0f, 1f, infiniteRepeatable(tween(90_000, easing = LinearEasing)), label = "drift")
@@ -192,6 +198,8 @@ fun SkyBackdrop(code: Int?, day: Boolean, modifier: Modifier = Modifier) {
     Box(modifier.fillMaxSize()) {
         Canvas(Modifier.fillMaxSize()) {
             drawRect(Brush.verticalGradient(colors))
+            glow?.let { drawRect(Brush.radialGradient(listOf(it, Color.Transparent), Offset(size.width * 0.85f, 0f), size.maxDimension * 0.7f)) }
+            if (shade > 0f) drawRect(Color.Black.copy(alpha = shade))
             // Big soft clouds (fewer under a clear sky), drifting across.
             val clouds = when (sky) {
                 Sky.Clear -> 1
@@ -202,7 +210,7 @@ fun SkyBackdrop(code: Int?, day: Boolean, modifier: Modifier = Modifier) {
                 val r = size.height * (0.32f + 0.08f * (i % 2))
                 val x = ((i * 0.31f + drift) % 1.3f - 0.15f) * size.width
                 val y = size.height * (0.05f + 0.12f * i)
-                val alpha = if (!day) 0.18f else if (sky == Sky.Clear) 0.12f else 0.32f
+                val alpha = if (!day) 0.10f else if (sky == Sky.Clear) 0.06f else 0.16f
                 drawCircle(Brush.radialGradient(listOf(Color.White.copy(alpha = alpha), Color.Transparent), Offset(x, y), r), r, Offset(x, y))
             }
             // Stars on a clear night.
@@ -234,10 +242,10 @@ fun SkyBackdrop(code: Int?, day: Boolean, modifier: Modifier = Modifier) {
  * and the chance of rain as bars along the bottom with the hour under them.
  */
 @Composable
-fun TempGraph(hours: List<WeatherApp.Hour>, modifier: Modifier = Modifier) {
+fun TempGraph(hours: List<WeatherApp.Hour>, modifier: Modifier = Modifier, lineColor: Color = Color(0xFFFFD23F)) {
     val measurer = rememberTextMeasurer()
-    val label = TextStyle(color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-    val small = TextStyle(color = Color.White.copy(alpha = 0.75f), fontSize = 11.sp)
+    val label = TextStyle(color = Themes.current.onSurface, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+    val small = TextStyle(color = Themes.current.soft, fontSize = 11.sp)
     val rainStyle = TextStyle(color = Color(0xFF8FD3FF), fontSize = 10.sp)
     Canvas(modifier) {
         if (hours.size < 2) return@Canvas
@@ -263,8 +271,8 @@ fun TempGraph(hours: List<WeatherApp.Hour>, modifier: Modifier = Modifier) {
             lineTo(points.first().x, bottom + size.height * 0.08f)
             close()
         }
-        drawPath(fill, Brush.verticalGradient(listOf(Color(0x8CFFD23F), Color(0x00FFD23F)), top, bottom + size.height * 0.08f))
-        drawPath(line, Color(0xFFFFD23F), style = Stroke(3.dp.toPx(), cap = StrokeCap.Round))
+        drawPath(fill, Brush.verticalGradient(listOf(lineColor.copy(alpha = 0.55f), lineColor.copy(alpha = 0f)), top, bottom + size.height * 0.08f))
+        drawPath(line, lineColor, style = Stroke(3.dp.toPx(), cap = StrokeCap.Round))
         val barBase = size.height * 0.88f
         hours.forEachIndexed { i, h ->
             val p = points[i]
@@ -273,7 +281,7 @@ fun TempGraph(hours: List<WeatherApp.Hour>, modifier: Modifier = Modifier) {
                 drawRoundRect(Color(0x8C6EC6FF), Offset(p.x - step * 0.3f, barBase - barH), Size(step * 0.6f, barH), androidx.compose.ui.geometry.CornerRadius(3.dp.toPx()))
             }
             if (i % 2 == 0) {
-                drawCircle(if (i == 0) Color.White else Color(0xFFFFD23F), if (i == 0) 5.dp.toPx() else 3.dp.toPx(), p)
+                drawCircle(if (i == 0) Color.White else lineColor, if (i == 0) 5.dp.toPx() else 3.dp.toPx(), p)
                 val t = measurer.measure("${h.temperature}°", label)
                 drawText(t, topLeft = Offset(p.x - t.size.width / 2f, p.y - t.size.height - 6.dp.toPx()))
                 val name = measurer.measure(if (i == 0) "Now" else h.label, small)
