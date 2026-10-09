@@ -19,10 +19,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -93,6 +95,8 @@ fun GuideScreen(channels: List<Channel>, onPlay: (Channel) -> Unit, onClose: () 
     LaunchedEffect(rows.isNotEmpty()) { if (rows.isNotEmpty()) runCatching { delay(150); firstCell.requestFocus() } }
     val timeFormat = remember { SimpleDateFormat("h:mm a", Locale.getDefault()) }
 
+    // Outside a Surface the text would be black on the dark guide (seen on the emulator).
+    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(horizontal = 24.dp, vertical = 16.dp)) {
         // Top: what the cursor is on, and the Earlier / Later buttons.
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -196,6 +200,7 @@ fun GuideScreen(channels: List<Channel>, onPlay: (Channel) -> Unit, onClose: () 
                 }
             }
         }
+    }
     }
 }
 
