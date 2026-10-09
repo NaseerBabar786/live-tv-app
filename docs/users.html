@@ -34,6 +34,11 @@
   .pkg.free { background: var(--surface-2); color: var(--text); }
   .pkg.promo { background: #2A1F4D; color: #B39DDB; }
   .gift { background: var(--bg); border: 1px solid #4A3A00; border-radius: 12px; padding: 10px 14px; margin: 6px 0 14px; }
+  .acct { background: var(--bg); border: 1px solid #5D1F1F; border-radius: 12px; padding: 10px 14px; margin: 14px 0 6px; }
+  .acct h3 { margin: 0 0 6px; font-size: 16px; }
+  .acct .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
+  .btn.danger { background: #B71C1C; border-color: #B71C1C; color: #fff; }
+  .off-badge { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #5D1F1F; color: #FFCDD2; margin-left: 6px; }
   .gift h3 { margin: 0 0 6px; font-size: 16px; }
   .gift .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
   .gift select, .gift .inp { padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
@@ -112,6 +117,7 @@
   <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🎁 <b>Gifts</b>: in a viewer's panel, <b>Give free Gold</b> turns on Gold for 1 week to 1 year, or forever, with no payment (a Gold package that's still on is made longer). <b>Add free credit</b> gives them dollars that ✓ Paid today takes off their next payment; their app shows it in 💳 My billing details.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
+  <p class="small">⚙ <b>Account</b> (at the bottom of a viewer's panel): <b>⛔ Deactivate</b> turns their sign-in off. Their app signs them out within about an hour (or when it next starts) and they can't sign back in until you press <b>✓ Reactivate</b>; nothing is deleted. <b>🗑 Delete permanently</b> (you type DELETE to confirm) removes their sign-in, package, billing details, messages, forum posts and viewing history for good. Both use your Google owner permission, like Set password.</p>
   <p class="small">➕ <b>Add user</b> makes a Cable TV account for someone before they install the app: type their name, email and a password you choose, then tell them. They open Cable TV, choose email sign-in and type the same email and password. They can change the password later in the app's Settings.</p>
   <p class="err" id="err"></p>
 </main>
@@ -180,6 +186,16 @@
       <button class="btn" id="bPaid">✓ Paid today</button>
       <a class="btn" id="bPlan" href="packages">⭐ Turn on their package</a>
       <span class="small" id="bMsg"></span>
+    </div>
+    <div class="acct">
+      <h3>⚙ Account</h3>
+      <div class="small" id="aNow"></div>
+      <div class="row">
+        <button class="btn" id="aOff">⛔ Deactivate account</button>
+        <button class="btn primary hidden" id="aOn">✓ Reactivate account</button>
+        <button class="btn danger" id="aDel">🗑 Delete permanently</button>
+      </div>
+      <div class="small" id="aMsg"></div>
     </div>
     <p class="small">The package they can actually use is turned on at <a href="packages">Packages</a> (that sets their end date). <b>✓ Paid today</b> sets "last paid" to today and moves "next payment due" forward by one plan length. Phone numbers are only seen by you and are used to contact the viewer about their package.</p>
   </div>
@@ -463,6 +479,7 @@ if (!configured) {
       ["On Free", users.filter(u => packageNow(u).tier === "Free").length],
       ...(users.some(u => packageNow(u).tier === "Promo") ? [["On a promotion", users.filter(u => packageNow(u).tier === "Promo").length]] : []),
       ["Billing details complete", users.filter(u => !missing(u).length).length],
+      ...(users.some(u => u.disabled) ? [["Deactivated", users.filter(u => u.disabled).length]] : []),
     ];
     analysis();
     $("stats").innerHTML = "";
@@ -557,6 +574,7 @@ if (!configured) {
         if (v && typeof v === "object") { td.textContent = v.text; td.className = v.cls; td.title = v.title; } else td.textContent = v ?? "";
         tr.append(td);
       });
+      if (u.disabled) { const b = document.createElement("span"); b.className = "off-badge"; b.textContent = "⛔ Deactivated"; tr.children[1].append(b); }
       const pk = packageNow(u), pTd = document.createElement("td"), pBadge = document.createElement("span");
       pBadge.className = "pkg " + (pk.tier === "Gold" ? "gold" : pk.tier === "Promo" ? "promo" : "free");
       pBadge.textContent = (pk.tier === "Gold" ? "⭐ " : "") + pk.name;
@@ -704,9 +722,85 @@ if (!configured) {
     $("bMsg").textContent = "";
     watchPanel(u);
     giftPanel(u);
+    acctPanel(u);
     fillLinks(u);
     $("bill").showModal();
   }
+
+  // ---- Account: deactivate (Firebase turns the sign-in off; the app signs them out and says the account is
+  // turned off) or delete for good (the sign-in and everything we keep about them). These use your Google
+  // owner permission (like 🔑 Set password), so no server is needed and Firestore rules don't change.
+  const FS_BASE = () => `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents`;
+  async function ownerCall(url, body, method = "POST") {
+    const token = await getOwnerToken();
+    const res = await fetch(url, {
+      method, headers: { "Content-Type": "application/json", Authorization: "Bearer " + token, "X-Goog-User-Project": firebaseConfig.projectId },
+      body: body == null ? undefined : JSON.stringify(body),
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) { if (res.status === 401) ownerToken = null; const e = new Error(j?.error?.message || ("HTTP " + res.status)); e.status = res.status; throw e; }
+    return j;
+  }
+  const authUpdate = body => ownerCall(`https://identitytoolkit.googleapis.com/v1/projects/${firebaseConfig.projectId}/accounts:update`, body);
+  function acctPanel(u) {
+    const off = !!u.disabled, when = u.disabledAt instanceof Date ? u.disabledAt : toDate(u.disabledAt);
+    $("aNow").textContent = off ? `⛔ Deactivated${when ? " on " + when.toLocaleString() : ""}. They can't sign in or watch until you reactivate the account.` : "Active. They can sign in and watch.";
+    $("aOff").classList.toggle("hidden", off); $("aOn").classList.toggle("hidden", !off);
+    $("aMsg").textContent = "";
+  }
+  async function setActive(u, active) {
+    const who = u.name || u.email || "this viewer";
+    if (!confirm(active ? `Reactivate ${who}? They can sign in and watch again.`
+      : `Deactivate ${who}?\n\nTheir app signs them out within about an hour (or at once when it next starts) and says "This account has been turned off. Please contact us." Nothing is deleted: their package, billing details and history stay, and you can reactivate them any time.`)) return;
+    $("aMsg").textContent = "Working…";
+    try {
+      await authUpdate({ localId: u.id, disableUser: !active });
+      const now = new Date().toISOString();
+      await ownerCall(`${FS_BASE()}/users/${u.id}?updateMask.fieldPaths=disabled&updateMask.fieldPaths=disabledAt`,
+        { fields: { disabled: { booleanValue: !active }, disabledAt: active ? { nullValue: null } : { timestampValue: now } } }, "PATCH");
+      u.disabled = !active; u.disabledAt = active ? null : new Date(now);
+      acctPanel(u); stats(); render();
+      $("aMsg").textContent = active ? `✓ ${who} is active again. They sign in as before.` : `✓ ${who} is deactivated.`;
+    } catch (e) { $("aMsg").textContent = "Couldn't change the account: " + e.message; }
+  }
+  $("aOff").onclick = () => cur && setActive(cur, false);
+  $("aOn").onclick = () => cur && setActive(cur, true);
+  /** Every document name in a collection (or all collections with that id) whose uid field is this viewer. */
+  async function docsOf(collectionId, uid, allDescendants = false) {
+    const r = await ownerCall(`${FS_BASE()}:runQuery`, { structuredQuery: {
+      from: [{ collectionId, allDescendants }], select: { fields: [{ fieldPath: "__name__" }] },
+      where: { fieldFilter: { field: { fieldPath: "uid" }, op: "EQUAL", value: { stringValue: uid } } } } });
+    return r.map(x => x.document?.name).filter(Boolean);
+  }
+  async function deleteForever(u) {
+    const who = u.name || u.email || "this viewer";
+    const typed = prompt(`Delete ${who} (${u.email || u.id}) permanently?\n\nThis removes their sign-in, package, billing details, messages, forum posts and viewing history. It can't be undone. If you only want to stop them for now, use Deactivate instead.\n\nType DELETE to confirm:`);
+    if (typed == null) return;
+    if (typed.trim().toUpperCase() !== "DELETE") return alert("Nothing was deleted (you didn't type DELETE).");
+    $("aMsg").textContent = "Deleting…";
+    const root = `projects/${firebaseConfig.projectId}/databases/(default)/documents`, skipped = [];
+    try {
+      // 1. The sign-in itself: their app can't refresh its sign-in and signs them out.
+      try { await ownerCall(`https://identitytoolkit.googleapis.com/v1/projects/${firebaseConfig.projectId}/accounts:delete`, { localId: u.id }); }
+      catch (e) { if (!/USER_NOT_FOUND/.test(e.message)) throw e; }
+      // 2. Everything we keep about them.
+      const names = [`users`, `plans`, `billing`, `billingInfo`, `inbox`].map(c => `${root}/${c}/${u.id}`);
+      try {
+        const m = await ownerCall(`${FS_BASE()}/inbox/${u.id}/messages?pageSize=300&mask.fieldPaths=uid`, null, "GET");
+        names.push(...(m.documents || []).map(d => d.name));
+      } catch (e) { skipped.push("messages"); }
+      for (const [c, all] of [["usage"], ["sponsorViews"], ["posts"], ["replies", true]]) {
+        try { names.push(...await docsOf(c, u.id, !!all)); } catch (e) { skipped.push(c === "replies" ? "forum replies" : c); }
+      }
+      for (let i = 0; i < names.length; i += 400)
+        await ownerCall(`${FS_BASE()}:commit`, { writes: names.slice(i, i + 400).map(n => ({ delete: n })) });
+      users = users.filter(x => x.id !== u.id); delete usage[u.id]; delete billing[u.id]; delete info[u.id]; delete plans[u.id];
+      $("bill").close(); stats(); render();
+      alert(`${who} was deleted.` + (skipped.length ? `\n\nThese couldn't be checked and may still be there: ${skipped.join(", ")}.` : "") +
+        `\n\nIf they sign in again or make a new account, it starts empty. To keep someone out, use Deactivate instead.`);
+    } catch (e) { $("aMsg").textContent = "Couldn't delete: " + e.message + ". Part of it may already be gone; press Delete permanently again to finish."; }
+  }
+  $("aDel").onclick = () => cur && deleteForever(cur);
 
   // ---- Gifts: free Gold (plans/{uid}, like /packages, marked gift) and free credit (billingInfo/{uid}.credit) ----
   function giftPanel(u) {
