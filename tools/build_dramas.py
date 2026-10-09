@@ -807,6 +807,20 @@ def mta(kept, today):
             print(f"    e.g. {folder} | {language} | {title} ({mins and round(mins)} min)")
 
 
+def uploaded_by(vid, cid, handle, query):
+    """Whether the label's own channel put the video up (None when YouTube didn't answer). A
+    search inside a channel also shows YouTube's paid films (Coco, Minions, Anora), which never
+    belong in the Library."""
+    url = "https://www.youtube.com/oembed?format=json&url=" + urllib.parse.quote(f"https://www.youtube.com/watch?v={vid}")
+    try:
+        info = json.loads(fetch(url, tries=2))
+    except Exception:  # noqa: BLE001
+        return None
+    author_url = info.get("author_url", "")
+    return (cid in author_url or (handle.startswith("@") and author_url.lower().endswith(handle.lower()))
+            or is_owner(info.get("author_name", ""), query))
+
+
 def films(kept, today):
     """Adds full films from FILM_CHANNELS to kept."""
     for name, handles, query, language in FILM_CHANNELS:
@@ -837,13 +851,23 @@ def films(kept, today):
             movie = movie_name(parts[1] if name in NAME_SECOND and len(parts) >= 3 else title)
             if not movie:
                 continue
+            if vid in kept and kept[vid].get("owner_ok"):
+                kept[vid]["seen"] = today.isoformat()
+                continue
+            own = uploaded_by(vid, cid, handle, query)
+            if own is False:
+                kept.pop(vid, None)  # a paid YouTube film that a channel search shows, not the label's own
+                continue
+            if own is None:
+                continue  # ask again tomorrow
             if vid in kept:
                 kept[vid]["seen"] = today.isoformat()
+                kept[vid]["owner_ok"] = True
             elif not plays(vid):
                 continue  # its owner doesn't let it play in other apps
             else:
                 kept[vid] = {"movie": movie, "channel": name, "group": name, "language": language,
-                             "title": title, "added": today.isoformat()}
+                             "title": title, "added": today.isoformat(), "owner_ok": True}
                 new += 1
         print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new {language} films")
         for _, title, mins in videos[:3]:
