@@ -133,7 +133,7 @@
   <p class="small">🎁 <b>Gifts</b>: in a viewer's panel, <b>Give free Gold</b> turns on Gold for 1 week to 1 year, or forever, with no payment (a Gold package that's still on is made longer). <b>Add free credit</b> gives them dollars that ✓ Paid today takes off their next payment; their app shows it in 💳 My billing details.</p>
   <p class="small">✉ <b>Send message</b> writes to a viewer: the message pops up on their TV over whatever they're watching (within a minute if Cable TV is open, otherwise the next time they open it), and they can answer right away with the remote. Their answer shows here, with 💬 <b>New reply</b> on their row, and in <a href="suggestions#messages">Suggestions › Messages</a>.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
-  <p class="small">⚙ <b>Account</b> (at the bottom of a viewer's panel): <b>⛔ Deactivate</b> turns their sign-in off. Their app signs them out within about an hour (or when it next starts) and they can't sign back in until you press <b>✓ Reactivate</b>; nothing is deleted. <b>🗑 Delete permanently</b> (you type DELETE to confirm) removes their sign-in, package, billing details, messages, forum posts and viewing history for good. Delete only works for accounts not seen for more than 2 months. 💌 <b>Come back reminders</b>: viewers away 7+ days get a friendly message, one more each week, and a final notice with the closing date 2 weeks before the 2-month mark (the banner at the top lists who is due and who is ready to delete; deleting keeps only their email and name on the 📧 Mailing list), in the app (they see it when they next open Cable TV) with promo code COMEBACK (the same gift as WELCOME, each account once); the Activity summary sends them all with one button, and WhatsApp / Email open a ready message on your device. Both use your Google owner permission, like Set password.</p>
+  <p class="small">⚙ <b>Account</b> (at the bottom of a viewer's panel): <b>⛔ Deactivate</b> turns their sign-in off. Their app signs them out within about an hour (or when it next starts) and they can't sign back in until you press <b>✓ Reactivate</b>; nothing is deleted. <b>🗑 Delete permanently</b> (you type DELETE to confirm) removes their sign-in, package, billing details, messages, forum posts and viewing history for good. Delete only works for accounts not seen for more than 2 months. 💌 <b>Come back reminders</b> (sent automatically each time you open this page): viewers away 7+ days get a friendly message, one more each week, and a final notice with the closing date 2 weeks before the 2-month mark (the banner at the top lists who is due and who is ready to delete; deleting keeps only their email and name on the 📧 Mailing list), in the app (they see it when they next open Cable TV) with promo code COMEBACK (the same gift as WELCOME, each account once); the Activity summary sends them all with one button, and WhatsApp / Email open a ready message on your device. Both use your Google owner permission, like Set password.</p>
   <p class="small">➕ <b>Add user</b> makes a Cable TV account for someone before they install the app: type their name, email and a password you choose, then tell them. They open Cable TV, choose email sign-in and type the same email and password. They can change the password later in the app's Settings.</p>
   <p class="err" id="err"></p>
 </main>
@@ -289,6 +289,7 @@ if (!configured) {
     users.sort((a, b) => (lastSeen(b).at || 0) - (lastSeen(a).at || 0));
     stats(); render(); dueBanner();
     watchInbox();
+    autoComebacks();
   });
 
   // Private messages (inbox/{uid}, as on Suggestions > Messages). Kept live, so "💬 New reply" shows as soon as a viewer answers.
@@ -1077,12 +1078,26 @@ if (!configured) {
     try { await sendComeback(cur); comebackPanel(cur); stats(); render(); dueBanner(); $("cbMsg").textContent = "✓ Sent. They'll see it when they next open Cable TV."; }
     catch (e) { $("cbMsg").textContent = "Couldn't send: " + e.message; }
   };
+  // Owner's choice (2026-10-09): reminders go out automatically, each time this page is opened, to everyone due.
+  const AUTO_COMEBACK = true;
+  let autoNote = "";
+  async function autoComebacks() {
+    if (!AUTO_COMEBACK) return;
+    const due = users.filter(needsComeback);
+    if (!due.length) return;
+    try { await ensureComeback(); } catch (e) { autoNote = "Couldn't send the come back reminders automatically: " + e.message; return dueBanner(); }
+    const sent = [], failed = [];
+    for (const u of due) { try { const step = stepDue(u); await sendComeback(u); sent.push(`${u.name || u.email} (${stepName(step)})`); } catch (e) { failed.push(u.name || u.email); } }
+    autoNote = (sent.length ? `💌 Sent automatically just now: ${sent.join(", ")}.` : "") + (failed.length ? ` Not sent (will try again next time): ${failed.join(", ")}.` : "");
+    stats(); render(); dueBanner();
+  }
   /** The pop-up at the top when you open the page: reminders due today, and accounts that aren't coming back. */
   function dueBanner() {
     const el = $("due"); el.innerHTML = ""; el.classList.add("hidden");
     const due = users.filter(needsComeback), gone = users.filter(readyToDelete);
-    if (!due.length && !gone.length) return;
+    if (!due.length && !gone.length && !autoNote) return;
     el.classList.remove("hidden");
+    if (autoNote) { const p = document.createElement("div"); p.textContent = autoNote; el.append(p); }
     if (due.length) {
       const p = document.createElement("div");
       p.innerHTML = `💌 <b>${due.length} come back reminder${due.length > 1 ? "s" : ""} due:</b> `;
