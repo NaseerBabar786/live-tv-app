@@ -188,6 +188,12 @@ def layout(today):
     own = {k: base[k] for k in ("welcome", "break", "next", "adbb", "adhere", "promo", "promo2", "adbreak")}
     base["ad9"] = {"id": "ad9", "title": "کیبل ٹی وی", "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-9.mp4", "secs": 15, "kind": "ad"}
     base["adbreak-c"] = {"id": "adbreak-c", "title": "اشتہارات", "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-c.mp4", "secs": 60, "kind": "ad"}
+    # Spark TV's moving logo opens every hour's programmes, and the network montage and the Urdu Spark ad
+    # take turns with our other short clips in the gaps (owner, 2026-10-09; media/spark-promos.json).
+    M = "https://tv.bulkbazaar.ca/media/"
+    base["spark-ident"] = {"id": "spark-ident", "title": "اسپارک ٹی وی", "url": M + "spark-ident.mp4", "secs": 20, "kind": "ident"}
+    base["spark-montage"] = {"id": "spark-montage", "title": "اسپارک ٹی وی", "url": M + "spark-montage.mp4", "secs": 30, "kind": "ad"}
+    base["spark-ad-urdu"] = {"id": "spark-ad-urdu", "title": "اسپارک ٹی وی", "url": M + "spark-ad-urdu.mp4", "secs": 30, "kind": "ad"}
     base["segment"] = {"id": "segment", "title": "وقفہ: آج کے پروگرام اور موسم", "url": REL + "segment.mp4", "secs": SEGMENT, "kind": "programme"}
     for kind, secs in (("headlines", HEADLINES), ("full", FULL)):
         plain = base[f"news-{kind}"]
@@ -212,7 +218,9 @@ def layout(today):
                      if v.get("mins") and v["id"] not in bad]
     songs = sorted(lists["music-videos.json"] + lists["trailers.json"], key=lambda v: -v["secs"])
     used = set()
-    pads = sorted([own[k] for k in ("promo2", "adbb", "adhere", "welcome", "next", "break")] + [base["ad9"]], key=lambda v: -v["secs"])
+    pads = sorted([own[k] for k in ("promo2", "adbb", "adhere", "welcome", "next", "break")] + [base["ad9"], base["spark-montage"], base["spark-ad-urdu"]],
+                  key=lambda v: -v["secs"])
+    opening = own["next"]["secs"] + base["spark-ident"]["secs"]
 
     loop, videos, hours, t, target = [], [], [], 0, 0
     segs = {}
@@ -239,13 +247,13 @@ def layout(today):
                 main.append((comedy, "مزاحیہ", (comedy.get("label") or "Comedy") + (f" · Episode {m.group(1)}" if m else "")))
         hour = {"hour": h, "full_news": h in FULL_NEWS, "programmes": []}
         # A programme too long for its half hour shortens the segment it runs through (owner, 2026-10-09).
-        spans, c = [], t - target + own["next"]["secs"]  # (the last hour may have run a few seconds over)
+        spans, c = [], t - target + opening  # (the last hour may have run a few seconds over)
         for v, _, _ in main:
             spans.append((c, c + int(v["secs"]))); c += int(v["secs"])
         segs[h] = segment_lengths(h, spans)
         target += BUDGET[h] + sum(SEGMENT - x for x in segs[h])
         hour["segments"] = segs[h]
-        loop.append("next"); t += own["next"]["secs"]
+        loop += ["spark-ident", "next"]; t += opening
         start = len(loop)
         for v, urdu, title in main:
             item = yt(v, f"c1-{h}")
@@ -269,9 +277,12 @@ def layout(today):
         # no ad break in the loop runs over 60 s (owner's rule; three 30 s promos back to back broke it,
         # 2026-10-08). Whatever doesn't fit carries on into the next hour's filling.
         gaps = [i + 1 for i in range(start, len(loop)) if loop[i] != "next"]
-        room = {g: (22 if g == len(loop) else 30) for g in gaps}  # the next hour opens with the 8 s "next"
+        room = {g: (2 if g == len(loop) else 30) for g in gaps}  # the next hour opens with the 20 s logo and the 8 s "next"
         put = {g: [] for g in gaps}
-        for p in pads:
+        # The 30 s clips take turns hour by hour: our Cable TV promo, the Spark montage, the Spark Urdu ad.
+        turns = ["promo2", "spark-montage", "spark-ad-urdu"]
+        first = lambda v: (turns.index(v["id"]) - h) % len(turns) if v["id"] in turns else 0  # noqa: E731
+        for p in sorted(pads, key=lambda v: (-v["secs"], first(v))):
             for g in sorted(gaps, key=lambda g: len(put[g])):
                 if target - t < p["secs"]:
                     break
