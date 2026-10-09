@@ -1,15 +1,15 @@
 {
- "name": "Bazaar TV One",
- "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png",
+ "name": "Spark TV One",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-tv.png",
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Bazaar TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
+ "ticker": "Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
  "tickerOn": true,
  "videos": [
   {
    "id": "welcome",
-   "title": "بازار ٹی وی میں خوش آمدید",
+   "title": "اسپارک ٹی وی میں خوش آمدید",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-welcome.mp4",
    "secs": 10,
    "kind": "ident"
@@ -37,7 +37,7 @@
   },
   {
    "id": "adhere",
-   "title": "اشتہار: بازار ٹی وی پر اشتہار دیں",
+   "title": "اشتہار: اسپارک ٹی وی پر اشتہار دیں",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
@@ -58,14 +58,14 @@
   },
   {
    "id": "news-headlines",
-   "title": "Bazaar TV News: Headlines",
+   "title": "Spark TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4",
    "secs": 180,
    "kind": "programme"
   },
   {
    "id": "news-full",
-   "title": "Bazaar TV News: The Full Report",
+   "title": "Spark TV News: The Full Report",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4",
    "secs": 600,
    "kind": "programme"
@@ -100,28 +100,28 @@
   },
   {
    "id": "news-headlines-day",
-   "title": "Bazaar TV News: Headlines",
+   "title": "Spark TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-day.mp4",
    "secs": 180,
    "kind": "programme"
   },
   {
    "id": "news-headlines-night",
-   "title": "Bazaar TV News: Headlines",
+   "title": "Spark TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-night.mp4",
    "secs": 180,
    "kind": "programme"
   },
   {
    "id": "news-full-day",
-   "title": "Bazaar TV News: The Full Report",
+   "title": "Spark TV News: The Full Report",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full-day.mp4",
    "secs": 600,
    "kind": "programme"
   },
   {
    "id": "news-full-night",
-   "title": "Bazaar TV News: The Full Report",
+   "title": "Spark TV News: The Full Report",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full-night.mp4",
    "secs": 600,
    "kind": "programme"

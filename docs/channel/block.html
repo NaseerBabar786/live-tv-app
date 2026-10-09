@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bazaar TV · اب دیکھیے</title>
+<title>Spark TV · اب دیکھیے</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  /* A run of YouTube videos on Bazaar TV (its upcoming film trailers and popular music videos, 2026-10-06,
-     lists built daily by tools/build_trailers.py and tools/build_music_videos.py), played in YouTube's own player and locked like Bazaar Hits: no buttons,
+  /* A run of YouTube videos on Spark TV (its upcoming film trailers and popular music videos, 2026-10-06,
+     lists built daily by tools/build_trailers.py and tools/build_music_videos.py), played in YouTube's own player and locked like Spark Hits: no buttons,
      no pausing, no skipping, no leaving for YouTube; a tap only shows what's on.
      Everyone is at the same place: ?at= is when the run started and ?until= when it ends (ms), ?ids= and
      ?secs= the videos and their lengths. When the run is over, the channel's own player goes on
-     (livetv://done in the app; the Bazaar TV page swaps back on the website).
+     (livetv://done in the app; the Spark TV page swaps back on the website).
      The app opens it from MyChannel.blockPage; keep the two in step. */
-  /* Bazaar TV is an Urdu channel (the owner, 2026-10-07): our writing on screen is Urdu, English only where
+  /* Spark TV is an Urdu channel (the owner, 2026-10-07): our writing on screen is Urdu, English only where
      needed, never Hindi script. */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: "Noto Nastaliq Urdu", system-ui, sans-serif; }
   :root { --strip: clamp(22px, 3.4vw, 40px); }
@@ -59,7 +59,7 @@
 <body>
 <div id="player"></div>
 <video id="own" playsinline hidden></video>
-<div class="cover" id="cover"><div class="spin"></div><b id="coverTitle" dir="auto">Bazaar TV</b><small id="coverSub" dir="auto"></small></div>
+<div class="cover" id="cover"><div class="spin"></div><b id="coverTitle" dir="auto">Spark TV</b><small id="coverSub" dir="auto"></small></div>
 <div class="shield" id="shield"></div>
 <img class="bug off" id="bug" alt="">
 <div class="now hide" id="now" dir="auto"></div>
@@ -74,10 +74,8 @@ const app = q.has("app");
 const ids = (q.get("ids") || "").split(",").filter(id => /^[\w-]{11}$/.test(id));
 const secs = (q.get("secs") || "").split(",").map(Number);
 const at = +q.get("at") || Date.now(), until = +q.get("until") || 0;
-const name = q.get("name") || "Bazaar TV One";
-// Spark (owner, 2026-10-08): the Cable TV test version sends the new name; the cover says it too.
-if (q.get("brand") === "spark") $("coverTitle").textContent = "Spark TV";
-const logo = q.get("logo") || "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png";
+const name = q.get("name") || "Spark TV One";
+const logo = q.get("logo") || "https://tv.bulkbazaar.ca/channel/logos/spark-tv.png";
 const corner = q.get("corner") || "tr";
 const starts = [];
 ids.reduce((t, _, i) => (starts.push(t), t + (secs[i] || 0) * 1000), at);
@@ -86,7 +84,7 @@ const end = until || (ids.length ? starts[ids.length - 1] + (secs[ids.length - 1
 document.title = name + " · اب دیکھیے";
 $("bug").src = logo;
 // The advertise line always runs here (the owner's ads rule); the channel's own line when it has one.
-// The ticker stays in English (the owner, 2026-10-07), though the rest of Bazaar TV's writing is Urdu.
+// The ticker stays in English (the owner, 2026-10-07), though the rest of Spark TV's writing is Urdu.
 const own = q.get("tick") || "";
 $("tick").textContent = /advertise/i.test(own) ? own
   : `${name} · ${own ? own + " · " : ""}Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
@@ -246,7 +244,7 @@ function step() {
 let started = false, lastError = null;
 setTimeout(() => {
   if (started || finished) return;
-  console.warn(`Bazaar TV block not started (${lastError ? "error " + lastError : "loading"})`);
+  console.warn(`Spark TV block not started (${lastError ? "error " + lastError : "loading"})`);
   $("coverSub").textContent = "پروگرام شروع ہو رہا ہے، ذرا انتظار کریں";
 }, 15000);
 

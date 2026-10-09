@@ -1,4 +1,4 @@
-// Our YouTube channels (ytc.html) and Bazaar Hits run like real TV: one running order a day, starting at
+// Our YouTube channels (ytc.html) and Spark Hits run like real TV: one running order a day, starting at
 // midnight Toronto time and repeated round the clock, so everyone who tunes in joins whatever is on now
 // (the owner's wish, 2026-10-07). Channel Studio's 📺 Programmes tab uses the same code to show the day's
 // running order and to choose which videos may play (picks, saved in Firestore channel/picks).
@@ -56,8 +56,8 @@ export async function loadPicks() {
 
 /**
  * The day's running order for a channel: the same for everyone, shuffled afresh each day.
- * "Top" videos come round more often: Bazaar Sports' main events and newest highlights after every
- * third video; on Bazaar Movies Hindi new films ([topRatio] 3) three for every older one.
+ * "Top" videos come round more often: Spark Sports' main events and newest highlights after every
+ * third video; on Spark Movies Hindi new films ([topRatio] 3) three for every older one.
  */
 export function runningOrder(station, list, date) {
   const order = baseOrder(station, list, date);
@@ -65,7 +65,7 @@ export function runningOrder(station, list, date) {
 }
 
 /**
- * The shows take turns (Bazaar Comedy, the owner's wish 2026-10-08: not Taarak Mehta again and again):
+ * The shows take turns (Spark Comedy, the owner's wish 2026-10-08: not Taarak Mehta again and again):
  * one video from each source in turn, keeping each source's own order; a source with more videos
  * comes round again once the others have had theirs.
  */

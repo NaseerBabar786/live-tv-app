@@ -129,7 +129,7 @@
     </table></div>
   </div>
   <p class="small">🟢 <b>Last seen</b> works like WhatsApp: <span class="seen on">online now</span> means their app is open (it checks in every 10 minutes while open), then "last seen 5 min ago", "today at 3:40 PM", "yesterday at 8:40 PM", a weekday, or a date. <span class="seen old">Grey</span> = not seen for over a week, <span class="seen gone">red</span> = not seen for over 30 days. The list is sorted with the most recently seen at the top; hover over a time to see the exact date.</p>
-  <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
+  <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Spark channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🎁 <b>Gifts</b>: in a viewer's panel, <b>Give free Gold</b> turns on Gold for 1 week to 1 year, or forever, with no payment (a Gold package that's still on is made longer). <b>Add free credit</b> gives them dollars that ✓ Paid today takes off their next payment; their app shows it in 💳 My billing details.</p>
   <p class="small">✉ <b>Send message</b> writes to a viewer: the message pops up on their TV over whatever they're watching (within a minute if Cable TV is open, otherwise the next time they open it), and they can answer right away with the remote. Their answer shows here, with 💬 <b>New reply</b> on their row, and in <a href="suggestions#messages">Suggestions › Messages</a>.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
@@ -432,7 +432,7 @@ if (!configured) {
   /** on = online, week = seen in the last 7 days, old = 7-30 days, gone = over 30 days or never. */
   const seenClass = s => !s.at ? "gone" : s.online ? "on" : Date.now() - s.at < 7 * 864e5 ? "week" : Date.now() - s.at < 30 * 864e5 ? "old" : "gone";
   const ago = d => { const m = Math.round((Date.now() - d) / 60e3); return m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : d.toLocaleDateString([], { month: "short", day: "numeric" }); };
-  // Languages aren't sent by the app, so they're worked out from the channel: our own Bazaar channels
+  // Languages aren't sent by the app, so they're worked out from the channel: our own Spark channels
   // by name, other channels by their country (Pakistan = Urdu, India = Hindi, and so on).
   const LANG_BY_COUNTRY = { pk: "Urdu", in: "Hindi", ca: "English", us: "English", gb: "English", uk: "English", au: "English", bd: "Bengali", ae: "Arabic", sa: "Arabic", af: "Pashto/Dari", ir: "Persian", tr: "Turkish", np: "Nepali", lk: "Sinhala" };
   const COUNTRY = { pk: "Pakistan", in: "India", ca: "Canada", gb: "UK", uk: "UK", us: "USA", bd: "Bangladesh", ae: "UAE", sa: "Saudi Arabia", af: "Afghanistan", au: "Australia" };
@@ -443,7 +443,7 @@ if (!configured) {
     if (/punjabi/i.test(n + " " + (c.t || ""))) return "Punjabi";
     return LANG_BY_COUNTRY[(c.c || "").toLowerCase()] || "Other";
   }
-  const countryOf = c => isOurs(c) ? "Bazaar (our channels)" : COUNTRY[(c.c || "").toLowerCase()] || (c.c ? c.c.toUpperCase() : "Other");
+  const countryOf = c => isOurs(c) ? "Spark (our channels)" : COUNTRY[(c.c || "").toLowerCase()] || (c.c ? c.c.toUpperCase() : "Other");
   const FEATURE_LABEL = { list: "1+List", browse: "Browse", carousel: "Carousel", strip: "Strip", duo: "Duo", five: "1+3", two: "1×2", four: "2×2", six: "2×3", news: "News", cp24: "CP24", home: "Home", mine: "My Screen", full: "Full screen channel", library: "Movies & Dramas", games: "Games", quran: "Iqra Quran", weather: "Weather", guide: "TV guide" };
   const featureLabel = k => FEATURE_LABEL[k] || k;
   let watchRange = 7;
@@ -485,7 +485,7 @@ if (!configured) {
       ["Languages", group((k, c) => langOf(c)), 5],
       ["Countries", group((k, c) => countryOf(c)), 5],
       ["Kinds of channel", group((k, c) => (c.t || "").split(";").map(x => x.trim()).filter(Boolean).slice(0, 2)), 5],
-      ["Shows on our Bazaar channels", Object.entries(progs).sort((a, b) => b[1] - a[1]), 5],
+      ["Shows on our Spark channels", Object.entries(progs).sort((a, b) => b[1] - a[1]), 5],
     ];
     const cols = document.createElement("div"); cols.className = "cols";
     for (const [title, list, n] of lists) {
@@ -503,7 +503,7 @@ if (!configured) {
     }
     el.append(cols);
     const note = document.createElement("div"); note.className = "small"; note.style.marginTop = "6px";
-    note.textContent = "Languages are worked out from each channel's country (Pakistan = Urdu, India = Hindi, Canada/USA/UK = English) and our Bazaar channels' names.";
+    note.textContent = "Languages are worked out from each channel's country (Pakistan = Urdu, India = Hindi, Canada/USA/UK = English) and our Spark channels' names.";
     el.append(note);
   }
 

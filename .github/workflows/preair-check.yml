@@ -4,7 +4,7 @@ name: Pre-air check
 # also in the Library ... no video goes live until you do a check" (tools/preair_check.py).
 #  - Every change: our YouTube pages are still locked (no YouTube buttons, title, logo, "More videos",
 #    error screen or link to YouTube) and the apps (TV, phone, PC) never hand anything to YouTube.
-#  - Every hour: every YouTube video on our channels' lists, Bazaar TV's lists, the Library and the live
+#  - Every hour: every YouTube video on our channels' lists, Spark TV's lists, the Library and the live
 #    channels is checked; any that won't play embedded comes off the list, and the players skip it
 #    (docs/channel/preair-bad.json). Each build job also runs the check before it publishes.
 on:

@@ -1,10 +1,10 @@
 {
- "name": "Bazaar Music",
- "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-music.png",
+ "name": "Spark Music",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-music.png",
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Bazaar Music · Free music, day and night · Classical, qawwali, ghazal and more, all free to use (public domain and Creative Commons, from Wikimedia Commons) · Channel 3 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
+ "ticker": "Spark Music · Free music, day and night · Classical, qawwali, ghazal and more, all free to use (public domain and Creative Commons, from Wikimedia Commons) · Channel 3 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
  "tickerOn": true,
  "videos": [
   {

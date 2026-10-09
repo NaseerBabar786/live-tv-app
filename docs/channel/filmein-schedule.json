@@ -1,10 +1,10 @@
 {
- "name": "Bazaar Cinema",
- "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-cinema.png",
+ "name": "Spark Cinema",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-cinema.png",
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Bazaar Cinema · Classic films, free, day and night · Raat Ki Film: a film every night at 8 PM (Toronto) · Channel 2 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca",
+ "ticker": "Spark Cinema · Classic films, free, day and night · Raat Ki Film: a film every night at 8 PM (Toronto) · Channel 2 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca",
  "tickerOn": true,
  "videos": [
   {

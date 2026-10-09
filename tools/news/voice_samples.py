@@ -17,7 +17,7 @@ def main(out):
     os.makedirs(out, exist_ok=True)
     clips = os.path.join(N.HERE, "presenters", "clips")
     for name, ur, cid in READERS:
-        say = (f"السلام علیکم، میں {ur} ہوں، اور بازار ٹی وی نیوز میں آپ کا خیر مقدم ہے۔ "
+        say = (f"السلام علیکم، میں {ur} ہوں، اور اسپارک ٹی وی نیوز میں آپ کا خیر مقدم ہے۔ "
                "آج کی اہم خبروں میں، ٹورنٹو میں موسم خوشگوار رہے گا، اور پاکستان میں کرکٹ کی تیاریاں زور و شور سے جاری ہیں۔")
         voice = N.voice_of({"name": name})
         base = os.path.join(out, f"v-{name}")

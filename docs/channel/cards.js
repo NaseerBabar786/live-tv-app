@@ -1,4 +1,4 @@
-// The "Up next" and "Today on Bazaar TV" cards over the picture (owner, 2026-10-07): every 10 minutes
+// The "Up next" and "Today on Spark TV" cards over the picture (owner, 2026-10-07): every 10 minutes
 // what's coming next, every 20 minutes today's shows first, coming up with the ad breaks. When they
 // show comes from cardAt in schedule.js, so the website, Channel Studio and the app agree.
 // Same look as MyChannelOverlay.kt in the app.
@@ -71,7 +71,7 @@ function fill(el, isToday, c, now) {
   if (isToday) {
     const list = todaysShows(c, now);
     if (!list.length) { el.classList.remove("show"); return; }
-    add("h", `TODAY ON ${(c.name || "Bazaar TV One").toUpperCase()}`);
+    add("h", `TODAY ON ${(c.name || "Spark TV One").toUpperCase()}`);
     let hi = false;
     for (const s of list) {
       const row = add("row", "");

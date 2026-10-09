@@ -11,34 +11,34 @@ export const TEST_SCHEDULE_URL = "https://tv.bulkbazaar.ca/channel/test-schedule
 /**
  * Our channels. [doc] is the owner's copy in Firestore sponsors/ (the app reads it) and channel/[id]
  * the public copy; [ready] plays until the owner saves anything. Keep in step with MyChannel.STATIONS.
- * [yt] channels run like Bazaar Hits (1.9.47): official YouTube videos on [web] (channel/ytc.html),
+ * [yt] channels run like Spark Hits (1.9.47): official YouTube videos on [web] (channel/ytc.html),
  * locked; their schedule ([ready] or the owner's saved one) is the backup when YouTube won't play.
  */
 export const STATIONS = [
   // Every channel of ours is in one language (the owner, 2026-10-08). Urdu: 1 to 19
-  { id: "main", name: "Bazaar TV One", dial: "1", doc: "_channel", page: "channel/",
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png", ready: TEST_SCHEDULE_URL,
+  { id: "main", name: "Spark TV One", dial: "1", doc: "_channel", page: "channel/",
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-tv.png", ready: TEST_SCHEDULE_URL,
     credits: "Shows are public domain or Creative Commons works. Blender films: Blender Foundation, blender.org (CC BY). Space videos: NASA." },
   { id: "dramas", yt: true, web: "channel/ytc.html?c=dramas", ytMins: 40, tagline: "Pakistani dramas in Urdu, day and night",
-    name: "Bazaar Dramas Urdu", dial: "2", doc: "_channel_dramas", page: "channel/?c=dramas", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-dramas.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Dramas Urdu", dial: "2", doc: "_channel_dramas", page: "channel/?c=dramas", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-dramas.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Dramas: full episodes from the TV channels' own YouTube channels (HUM TV, ARY Digital, Geo, Green, Express, ARY Zindagi, Geo Kahani, LTN Family, PTV Home, Aaj). Backup: public-domain classic films." },
   { id: "musicur", yt: true, web: "channel/ytc.html?c=musicur", ytMins: 5, tagline: "Urdu songs, Coke Studio and qawwali, day and night",
-    name: "Bazaar Music Urdu", dial: "3", doc: "_channel_musicur", page: "channel/?c=musicur", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-musicur.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
+    name: "Spark Music Urdu", dial: "3", doc: "_channel_musicur", page: "channel/?c=musicur", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-musicur.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
     credits: "Music: official videos from the labels' own YouTube channels (Coke Studio Pakistan, Oriental Star Agencies). Backup: free-to-use recordings from Wikimedia Commons." },
   { id: "cookingur", yt: true, web: "channel/ytc.html?c=cookingur", ytMins: 15, tagline: "Pakistani recipes and cooking shows, day and night",
-    name: "Bazaar Cooking Urdu", dial: "4", doc: "_channel_cookingur", page: "channel/?c=cookingur", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cookingur.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Cooking Urdu", dial: "4", doc: "_channel_cookingur", page: "channel/?c=cookingur", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-cookingur.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Cooking: recipes from the cooks' own YouTube channels (Food Fusion, Kitchen with Amna, Masala TV, Shireen Anwar). Backup: public-domain classic films." },
   // 5 (owner, 2026-10-08): Urdu poetry (the Hindi half is Kavi Sammelan, 27). Runs in half hours like channel 1
   // ([halfHours], ytorder.js halfHourDay): an 8-hour set played three times a day (12 AM, 8 AM, 4 PM Toronto time),
   // classic readings first, then TV mushairas, then the big mushairas; every half hour a 25-minute programme with two
   // 1-minute breaks, then 5 minutes of ads, our own "Aaj ka Sher" ([ownClips], tools/shayari), today's list and the weather.
   { id: "shayari", yt: true, web: "channel/ytc.html?c=shayari", ytMins: 20, tagline: "Urdu poetry and mushaira, day and night",
-    name: "Bazaar Shayari", nameUrdu: "سپارک شاعری", urduBug: "https://tv.bulkbazaar.ca/channel/logos/spark-shayari-urdu.png",
+    name: "Spark Shayari", nameUrdu: "سپارک شاعری", urduBug: "https://tv.bulkbazaar.ca/channel/logos/spark-shayari-urdu.png",
     dial: "5", doc: "_channel_shayari", page: "channel/?c=shayari", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-shayari.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-shayari.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     ownClips: "shayari-clips.json",
     halfHours: { setHours: 8, set: [
       { hours: 2, maxMins: 20, labels: ["Urdu Studio", "Rekhta", "Faiz Festival", "Mushaira Media", "Sahitya Tak", "Kommune", "The Social House"] },
@@ -46,43 +46,43 @@ export const STATIONS = [
       { hours: 3, labels: ["Rekhta", "Lahore Literary Festival", "Faiz Festival", "Mushaira Media"] },
     ] },
     credits: "Poetry: mushairas and recitations from the organisers', TV channels' and poets' own YouTube channels (Rekhta, Sahitya Akademi, DD Urdu, PTV, Lahore Literary Festival, Faiz Festival, Mushaira Media, Urdu Studio). Aaj ka Sher: classic poets whose work is free to use, read by an AI voice. Backup: public-domain classic films." },
-  // Hindi: 21 to 39 (Bazaar Hits, 23, is channel/bollywood.html)
+  // Hindi: 21 to 39 (Spark Hits, 23, is channel/bollywood.html)
   { id: "filmein", yt: true, trailerLangs: ["Hindi"], web: "channel/ytc.html?c=filmein", ytMins: 120, tagline: "Full films from the studios' own channels, day and night",
-    name: "Bazaar Cinema", dial: "21", doc: "_channel_filmein", page: "channel/?c=filmein", auto: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cinema.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Cinema", dial: "21", doc: "_channel_filmein", page: "channel/?c=filmein", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-cinema.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: public-domain classics from the Internet Archive (archive.org). A film every night at 8 PM Toronto time." },
   { id: "hindi", yt: true, trailerLangs: ["Hindi"], web: "channel/ytc.html?c=hindi", ytMins: 140, tagline: "New Hindi films, day and night", topRatio: 3,
-    name: "Bazaar Movies Hindi", dial: "22", doc: "_channel_hindi", page: "channel/?c=hindi", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Movies Hindi", dial: "22", doc: "_channel_hindi", page: "channel/?c=hindi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: full Hindi films from the studios' own YouTube channels. Backup: public-domain classics from the Internet Archive." },
   { id: "hindidramas", yt: true, web: "channel/ytc.html?c=hindidramas", ytMins: 25, tagline: "Hindi dramas, day and night",
-    name: "Bazaar Dramas Hindi", dial: "24", doc: "_channel_hindidramas", page: "channel/?c=hindidramas", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-dramas-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Dramas Hindi", dial: "24", doc: "_channel_hindidramas", page: "channel/?c=hindidramas", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-dramas-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Hindi dramas: full episodes from the TV channels' own YouTube channels (StarPlus, Sony SAB, Sony Pal, Sony TV, Colors, &TV, Dangal, Shemaroo, Sun Neo, Doordarshan). Backup: public-domain classic films." },
   { id: "comedy", yt: true, web: "channel/ytc.html?c=comedy", ytMins: 15, tagline: "Laughs day and night", mix: true,
-    name: "Bazaar Comedy Hindi", dial: "25", doc: "_channel_comedy", page: "channel/?c=comedy", auto: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedy.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
+    name: "Spark Comedy Hindi", dial: "25", doc: "_channel_comedy", page: "channel/?c=comedy", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-comedy.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
     credits: "Comedy: public-domain silent and classic comedies (Chaplin, Laurel and Hardy, Keaton) and early TV comedies from the Internet Archive." },
   { id: "cooking", yt: true, web: "channel/ytc.html?c=cooking", ytMins: 15, tagline: "Recipes and cooking shows, day and night",
-    name: "Bazaar Cooking Hindi", dial: "26", doc: "_channel_cooking", page: "channel/?c=cooking", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cooking.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Cooking Hindi", dial: "26", doc: "_channel_cooking", page: "channel/?c=cooking", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-cooking.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Cooking: recipes and shows from the cooks' own YouTube channels (Food Fusion, Kitchen with Amna, Sanjeev Kapoor, Masala TV and others). Backup: public-domain classic films." },
   // 27: Hindi poetry and kavi sammelan, the Hindi half of Shayari's sources.
   { id: "kavi", yt: true, web: "channel/ytc.html?c=kavi", ytMins: 20, tagline: "Hindi poetry and kavi sammelan, day and night",
-    name: "Bazaar Kavi Sammelan", dial: "27", doc: "_channel_kavi", page: "channel/?c=kavi", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-kavi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Kavi Sammelan", dial: "27", doc: "_channel_kavi", page: "channel/?c=kavi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-kavi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Poetry: kavi sammelan and recitations from the organisers', TV channels' and poets' own YouTube channels (Doordarshan, Sahitya Tak, Kumar Vishwas, Kommune, The Social House, Hindi Kavita). Backup: public-domain classic films." },
   { id: "kidshi", yt: true, web: "channel/ytc.html?c=kidshi", ytMins: 10, tagline: "Hindi cartoons and rhymes for children, day and night",
-    name: "Bazaar Kids Hindi", dial: "28", doc: "_channel_kidshi", page: "channel/?c=kidshi", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-kidshi.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
+    name: "Spark Kids Hindi", dial: "28", doc: "_channel_kidshi", page: "channel/?c=kidshi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-kidshi.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
     credits: "Kids: cartoons and rhymes from the makers' own YouTube channels (ChuChu TV Hindi, Infobells Hindi). Backup: public-domain cartoons." },
   { id: "teenshi", yt: true, web: "channel/ytc.html?c=teenshi", ytMins: 12, tagline: "Science and cartoons in Hindi for teens, day and night",
-    name: "Bazaar Teens Hindi", dial: "30", doc: "_channel_teenshi", page: "channel/?c=teenshi", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-teenshi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Teens Hindi", dial: "30", doc: "_channel_teenshi", page: "channel/?c=teenshi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-teenshi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Teens: shows from their makers' own YouTube channels (Fact Tech, Nick India). Backup: public-domain classic films." },
   { id: "autohi", yt: true, web: "channel/ytc.html?c=autohi", ytMins: 12, tagline: "Cars and bikes in Hindi: reviews, launches and top 5s",
-    name: "Bazaar Auto Hindi", dial: "32", doc: "_channel_autohi", page: "channel/?c=autohi", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-auto-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
+    name: "Spark Auto Hindi", dial: "32", doc: "_channel_autohi", page: "channel/?c=autohi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-auto-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
     // The day in blocks (owner, 2026-10-08), from midnight Toronto time; ytorder.js blockOrder.
     blocks: [{ from: 0, kind: "any", name: "Hafte ki behtareen" }, { from: 6, kind: "new", name: "Nayi Gaadiyan" },
              { from: 9, kind: "review", name: "Review" }, { from: 13, kind: "top10", name: "Top 5" },
@@ -91,42 +91,42 @@ export const STATIONS = [
     credits: "Cars: reviews and launches from the car shows' own YouTube channels (Gagan Choudhary, Auto Yogi, CarDekho, ZigWheels, MotorOctane, 91Wheels, V3Cars). Backup: public-domain sports films." },
   // English: 41 to 59
   { id: "english", yt: true, trailerLangs: ["English"], web: "channel/ytc.html?c=english", ytMins: 100, tagline: "Full English films, day and night",
-    name: "Bazaar Movies English", dial: "41", doc: "_channel_english", page: "channel/?c=english", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-english.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Movies English", dial: "41", doc: "_channel_english", page: "channel/?c=english", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-english.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: full films from the studios' and distributors' own YouTube channels. Backup: public-domain classics from the Internet Archive." },
   // 42 (owner, 2026-10-08): trailers of new and upcoming films, mostly English from the Hollywood studios' own
-  // channels, with Hindi and Pakistani ones; rebuilt daily by tools/build_trailers.py. Its own logo, no Bazaar word.
+  // channels, with Hindi and Pakistani ones; rebuilt daily by tools/build_trailers.py. Its own logo, no Spark word.
   { id: "trailers", yt: true, web: "channel/ytc.html?c=trailers", ytMins: 3, tagline: "Trailers of the newest and upcoming films",
     name: "Movie Trailers", dial: "42", doc: "_channel_trailers", page: "channel/?c=trailers", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/movie-trailers.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Movie Trailers: official trailers from the studios' own YouTube channels (Warner Bros, Universal, Sony Pictures, Paramount, Disney, Marvel, Pixar, 20th Century, Lionsgate, Yash Raj, T-Series, ARY Films and others). Backup: public-domain classic films." },
   { id: "kids", yt: true, web: "channel/ytc.html?c=kids", ytMins: 10, tagline: "Cartoons and songs for children, day and night",
-    name: "Bazaar Kids English", dial: "43", doc: "_channel_kids", page: "channel/?c=kids", auto: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-kids.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
+    name: "Spark Kids English", dial: "43", doc: "_channel_kids", page: "channel/?c=kids", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-kids.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
     credits: "Cartoons: public-domain classics (Popeye, Superman, Felix the Cat) from the Internet Archive, Blender Foundation shorts (CC BY) and NASA videos." },
   { id: "teens", yt: true, web: "channel/ytc.html?c=teens", ytMins: 12, tagline: "Science, cartoons and challenges for teens, day and night",
-    name: "Bazaar Teens English", dial: "44", doc: "_channel_teens", page: "channel/?c=teens", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-teens.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Teens English", dial: "44", doc: "_channel_teens", page: "channel/?c=teens", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-teens.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Teens: science, cartoons and challenge shows from their makers' own YouTube channels (Kurzgesagt, TED-Ed, Mark Rober, Cartoon Network, Dude Perfect and others). Backup: public-domain classic films." },
   { id: "travel", yt: true, web: "channel/ytc.html?c=travel", ytMins: 10, tagline: "See the world, day and night",
-    name: "Bazaar Travel", dial: "45", doc: "_channel_travel", page: "channel/?c=travel", auto: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-travel.png", ready: "https://tv.bulkbazaar.ca/channel/travel-schedule.json",
+    name: "Spark Travel", dial: "45", doc: "_channel_travel", page: "channel/?c=travel", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-travel.png", ready: "https://tv.bulkbazaar.ca/channel/travel-schedule.json",
     credits: "Travel: public-domain and CC BY travel films of countries, cities and parks from the Internet Archive." },
   { id: "sports", yt: true, web: "channel/ytc.html?c=sports", ytMins: 8, tagline: "Cricket, wrestling, hockey and more, day and night",
-    name: "Bazaar Sports", dial: "46", doc: "_channel_sports", page: "channel/?c=sports", auto: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-sports.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
+    name: "Spark Sports", dial: "46", doc: "_channel_sports", page: "channel/?c=sports", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-sports.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
     credits: "Sport: public-domain and CC BY sports films (classic boxing, cricket, football, athletics) from the Internet Archive. No modern leagues or tournaments." },
-  { id: "ads", name: "Bazaar Ads", dial: "48", doc: "_channel_ads", page: "channel/?c=ads", auto: true, noPopup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-ads.png", ready: "https://tv.bulkbazaar.ca/channel/ads-schedule.json",
+  { id: "ads", name: "Spark Ads", dial: "48", doc: "_channel_ads", page: "channel/?c=ads", auto: true, noPopup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-ads.png", ready: "https://tv.bulkbazaar.ca/channel/ads-schedule.json",
     credits: "Ads: our own Cable TV promos and our sponsors' ads. Advertise your business here: WhatsApp 437 602 6500 or tv.bulkbazaar.ca/advertise." },
   { id: "comedyen", yt: true, web: "channel/ytc.html?c=comedyen", ytMins: 15, tagline: "English comedy and clean stand-up, day and night", mix: true,
-    name: "Bazaar Comedy English", dial: "49", doc: "_channel_comedyen", page: "channel/?c=comedyen", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedyen.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
+    name: "Spark Comedy English", dial: "49", doc: "_channel_comedyen", page: "channel/?c=comedyen", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-comedyen.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
     credits: "Comedy: shows from their own YouTube channels (Mr Bean, Just For Laughs Gags, Laurel and Hardy, Dry Bar Comedy and others). Backup: public-domain classic comedies." },
   // 47 (owner, 2026-10-08): cars, supercars and motorsport in English.
   { id: "auto", yt: true, web: "channel/ytc.html?c=auto", ytMins: 15, tagline: "Car reviews, new launches, supercars and racing",
-    name: "Bazaar Auto", dial: "47", doc: "_channel_auto", page: "channel/?c=auto", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-auto.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
+    name: "Spark Auto", dial: "47", doc: "_channel_auto", page: "channel/?c=auto", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-auto.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
     // Our own weekly "Top 10 of the week" (tools/auto/make_top10.py) plays in a break once an hour.
     ownClips: "auto-clips.json",
     // The day in blocks (owner, 2026-10-08), from midnight Toronto time; ytorder.js blockOrder.
@@ -138,22 +138,22 @@ export const STATIONS = [
     credits: "Cars: reviews, launches and racing highlights from their own YouTube channels (Top Gear, carwow, MotorTrend, Autocar, Throttle House, Formula 1, MotoGP, WRC and others). Backup: public-domain sports films." },
   // Punjabi: 61 to 79. MTA's channels are 81 to 88 in the app, every other channel 101 on.
   { id: "sur", yt: true, web: "channel/ytc.html?c=sur", ytMins: 5, tagline: "Punjabi, Sufi and qawwali, day and night",
-    name: "Bazaar Music Punjabi", dial: "61", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-music.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
+    name: "Spark Music Punjabi", dial: "61", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-music.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
     credits: "Music: recordings that are free to use (public domain, CC0 and CC BY) from Wikimedia Commons; each song's credit and licence show on screen. No film songs." },
   // More Punjabi (the owner, 2026-10-08). Gurbani has no ads of ours at all (noAds), out of respect, and no
   // backup of other music (noBackup): when its list can't play, a wait card shows until it can.
   { id: "gurbani", yt: true, web: "channel/ytc.html?c=gurbani", ytMins: 30, tagline: "Shabad kirtan and Gurbani, day and night", noAds: true,
-    name: "Bazaar Gurbani", dial: "62", doc: "_channel_gurbani", page: "channel/?c=gurbani", auto: true, noBackup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-gurbani.png", ready: "https://tv.bulkbazaar.ca/channel/gurbani-schedule.json",
+    name: "Spark Gurbani", dial: "62", doc: "_channel_gurbani", page: "channel/?c=gurbani", auto: true, noBackup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-gurbani.png", ready: "https://tv.bulkbazaar.ca/channel/gurbani-schedule.json",
     credits: "Gurbani: shabad kirtan and paths from the labels' and SGPC's own YouTube channels (T-Series Shabad Gurbani, Amritt Saagar, SGPC). No other music ever plays in its place." },
   { id: "moviespa", yt: true, web: "channel/ytc.html?c=moviespa", ytMins: 100, tagline: "Full Punjabi films, day and night",
-    name: "Bazaar Movies Punjabi", dial: "63", doc: "_channel_moviespa", page: "channel/?c=moviespa", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-moviespa.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    name: "Spark Movies Punjabi", dial: "63", doc: "_channel_moviespa", page: "channel/?c=moviespa", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-moviespa.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: full Punjabi films from the studios' and labels' own YouTube channels (White Hill, Yellow Music, Speed Punjabi, Shemaroo, Saga and others). Backup: public-domain classic films." },
   { id: "sufi", yt: true, web: "channel/ytc.html?c=sufi", ytMins: 12, tagline: "Sufi kalam and qawwali, day and night",
-    name: "Bazaar Sufi Qawwali", dial: "64", doc: "_channel_sufi", page: "channel/?c=sufi", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-sufi.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
+    name: "Spark Sufi Qawwali", dial: "64", doc: "_channel_sufi", page: "channel/?c=sufi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-sufi.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
     credits: "Qawwali: Sufi kalam and qawwali from the label's and singers' own YouTube channels (OSA Islamic, Nusrat Fateh Ali Khan). Backup: free-to-use music from Wikimedia Commons." },
 ];
 
@@ -455,7 +455,7 @@ export function tuneIn(video, c, { onChange, onOff, onBlock } = {}) {
     const key = on.video.url + "|" + zero;
     if (key !== playing) {
       playing = key;
-      // Bazaar TV's upcoming trailers play on our locked YouTube page (onBlock), not in this player.
+      // Spark TV's upcoming trailers play on our locked YouTube page (onBlock), not in this player.
       const block = youtubeId(on.video.url) ? blockAt(c, now) : null;
       if (block) {
         if (hls) { hls.destroy(); hls = null; }
@@ -500,14 +500,14 @@ export function tuneIn(video, c, { onChange, onOff, onBlock } = {}) {
   };
 }
 
-/** The YouTube video id of [url] (Bazaar TV's upcoming trailers), or null. */
+/** The YouTube video id of [url] (Spark TV's upcoming trailers), or null. */
 export function youtubeId(url) {
   const m = /^https?:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/.exec(url || "");
   return m ? m[1] : null;
 }
 
 /**
- * The run of YouTube videos [c] has on at [now] (Bazaar TV's upcoming trailers): { videos, start, end },
+ * The run of YouTube videos [c] has on at [now] (Spark TV's upcoming trailers): { videos, start, end },
  * played on channel/block.html; null while our own player plays. Same as MyChannel.block in the app.
  */
 export function blockAt(c, now = Date.now()) {
@@ -527,7 +527,7 @@ export function blockAt(c, now = Date.now()) {
 /** The address of channel/block.html playing [b] for channel settings [c]. */
 export function blockPage(c, b) {
   const p = new URLSearchParams({ at: b.start, until: b.end, ids: b.videos.map(v => youtubeId(v.url)).join(","),
-    secs: b.videos.map(v => v.secs).join(","), name: c.name || "Bazaar TV One", corner: c.logoCorner || "tr" });
+    secs: b.videos.map(v => v.secs).join(","), name: c.name || "Spark TV One", corner: c.logoCorner || "tr" });
   if (c.logo) p.set("logo", c.logo);
   if (c.tickerOn !== false && c.ticker) p.set("tick", c.ticker);
   return "https://tv.bulkbazaar.ca/channel/block.html?" + p;
@@ -557,7 +557,7 @@ export async function expand(c) {
     } catch {}
     ids[v.id] = [];
     if (v.kind === "ads") {
-      // Bazaar Ads: our promos or the sponsors' ads, our own videos ([src] beside the list or a full link), 5 to 60 s each.
+      // Spark Ads: our promos or the sponsors' ads, our own videos ([src] beside the list or a full link), 5 to 60 s each.
       list.forEach((t, i) => {
         const secs = Math.min(60, Math.round(t.secs || 0));
         if (!t.src || secs < 5) return;

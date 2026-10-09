@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds the ready-made schedule for Bazaar Cinema, our classic-films channel (channel 2 in Cable TV).
+Builds the ready-made schedule for Spark Cinema, our classic-films channel (channel 2 in Cable TV).
 
 Takes the public-domain films in docs/Movies.m3u (made by build_movies.py from the Internet
 Archive), reads each film's length from the Archive, and writes a channel schedule in the
@@ -41,7 +41,7 @@ DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 SOUTH_ASIAN = {"Hindi", "Urdu", "Punjabi"}
 RIP = re.compile(r"www\.|\.com|@|\bCD ?\d\b|xclusive|dvdrip|x264", re.I)
 
-TICKER = ("Bazaar Cinema · Classic films, free, day and night · Raat Ki Film: a film every night at 8 PM (Toronto) "
+TICKER = ("Spark Cinema · Classic films, free, day and night · Raat Ki Film: a film every night at 8 PM (Toronto) "
           "· Channel 2 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca")
 
 
@@ -156,7 +156,7 @@ def main():
         videos.append({"id": vid, "title": title, "url": url, "secs": secs, "kind": "programme", "lang": lang})
     swapped = sum(url != f[1] for f, (_, url) in zip(films, found))
     if os.environ.get("GITHUB_ACTIONS"):
-        print(f"::notice title=Bazaar Cinema::{swapped} of {len(films)} films now play the Archive's H.264 copy")
+        print(f"::notice title=Spark Cinema::{swapped} of {len(films)} films now play the Archive's H.264 copy")
     print(f"{len(videos)} of {len(films)} films have a known length of at least {MIN_SECONDS // 60} minutes")
     if len(videos) < 10:
         sys.exit("Too few films; keeping the old schedule.")
@@ -177,8 +177,8 @@ def main():
         v.pop("lang")
 
     schedule = {
-        "name": "Bazaar Cinema",
-        "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-cinema.png",
+        "name": "Spark Cinema",
+        "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-cinema.png",
         "logoCorner": "tr",
         "active": True,
         "tz": "America/Toronto",

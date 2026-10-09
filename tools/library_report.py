@@ -16,8 +16,8 @@ import sys
 from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LISTS = ["Dramas.m3u", "Free.m3u"]  # Movies.m3u left the Library on 2026-10-08 (Bazaar Cinema only)
-BUILDS = [("Dramas and shows", "build-dramas.yml"), ("Classic films (Bazaar Cinema)", "build-movies.yml"),
+LISTS = ["Dramas.m3u", "Free.m3u"]  # Movies.m3u left the Library on 2026-10-08 (Spark Cinema only)
+BUILDS = [("Dramas and shows", "build-dramas.yml"), ("Classic films (Spark Cinema)", "build-movies.yml"),
           ("Free films", "build-free.yml")]
 LANGUAGES = ["Urdu", "Hindi", "Punjabi", "English"]
 SECTIONS = {"Movies": "Movies", "Series": "Series", "Shows": "Shows", "Kids": "Kids"}

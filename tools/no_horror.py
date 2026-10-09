@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 The owner's rule (2026-10-08): no horror programmes on any of our own channels (Bazaar/Spark 1-16: the
-YouTube-built ones like Cinema, Movies and Dramas, the free-film schedules, Bazaar TV One's blocks, the
+YouTube-built ones like Cinema, Movies and Dramas, the free-film schedules, Spark TV One's blocks, the
 music and trailer lists). The Library is not part of this rule.
 
 is_horror(item) looks at an item's title, and its description or genre when it has them. Every channel
@@ -64,7 +64,7 @@ def clean_schedule(path):
                 continue
             v = spare.pop(0)
             s = dict(s, video=v["id"])
-            # Bazaar Cinema's evening film is named "Raat Ki Film" on screen (tools/build_filmein.py).
+            # Spark Cinema's evening film is named "Raat Ki Film" on screen (tools/build_filmein.py).
             if any(x["title"].startswith("Raat Ki Film: ") for x in d["videos"]) and not v["title"].startswith("Raat Ki Film: "):
                 v["title"] = "Raat Ki Film: " + v["title"]
         slots.append(s)

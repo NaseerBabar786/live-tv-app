@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Builds the programme blocks that make Bazaar TV's six-hour day feel like a real channel (the owner's
-wish, 2026-10-06): dramas, cooking, comedy and a Hindi film (no children's shows: those are on Bazaar Kids), picked each day from the
+Builds the programme blocks that make Spark TV's six-hour day feel like a real channel (the owner's
+wish, 2026-10-06): dramas, cooking, comedy and a Hindi film (no children's shows: those are on Spark Kids), picked each day from the
 official YouTube lists our other channels already use (docs/channel/yt-<id>.json, built daily by
-tools/build_youtube_channels.py). They play in YouTube's player, locked like Bazaar Hits
+tools/build_youtube_channels.py). They play in YouTube's player, locked like Spark Hits
 (docs/channel/block.html), between our own ads, idents and free shows.
 
-Bazaar TV's schedule holds one entry of kind "list" per block, pointing at docs/channel/block-<name>.json;
+Spark TV's schedule holds one entry of kind "list" per block, pointing at docs/channel/block-<name>.json;
 the app (MyChannel.expand) and the website (schedule.js expand) put the day's videos in its place.
 A different choice each day (seeded by the date), the same for every viewer.
 
@@ -32,10 +32,10 @@ from no_horror import is_horror  # noqa: E402  (the owner's rule 2026-10-08: no 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHANNEL = os.path.join(ROOT, "docs", "channel")
 
-# Since 2026-10-07 the owner wants Bazaar TV 100% Urdu and Hindi: only Hindi and Urdu uploaders
+# Since 2026-10-07 the owner wants Spark TV 100% Urdu and Hindi: only Hindi and Urdu uploaders
 # (the English kids' channels, Get Curried and the English sports and travel channels are left out),
 # and a Hindi film in place of sports and travel.
-# Bazaar TV carries no programmes for small children (the owner, 2026-10-07): they belong on Bazaar Kids
+# Spark TV carries no programmes for small children (the owner, 2026-10-07): they belong on Spark Kids
 # (channel 5). Nothing whose uploader or title looks like children's TV gets into any block.
 KIDS = re.compile(r"chuchu|cocomelon|infobells|peppa|masha|nursery|rhymes?\b|kids?\b|toddler|cartoon|"
                   r"lullab|abc song|phonics|bal geet|bachon|bacho", re.I)
@@ -45,7 +45,7 @@ COOKING = (r"recipe|banaye|banane|bana(?:ein|yen)|kitchen|cook|karahi|biryani|cu
            r"chicken|mutton|beef|paneer|masala|sandwich|cake|pakor|tikka|kebab|salad|pulao|nihari|haleem|chutney|"
            r"dessert|breakfast|lunch|dinner|snack|qeema|keema|korma|paratha|samosa|chaat|modak|laddu|barfi")
 
-# Bazaar TV One is a newly launched channel (the owner, 2026-10-08: "only keep the new programs, so we get
+# Spark TV One is a newly launched channel (the owner, 2026-10-08: "only keep the new programs, so we get
 # the feeling of a new channel"): a drama episode, cooking show or comedy episode must have gone up in the
 # last NEW_DAYS days (the date in its title, else the day YouTube shows), and a film must be one released
 # this year or last year (the year in its title, as on Latest Movies). Old episodes re-uploaded today

@@ -1,3 +1,5 @@
+# Old Bazaar-style logos (bazaar-*.png), kept for the record. Since the Spark go-live (2026-10-09) our channels
+# use the Spark Flower logos from tools/make_spark_logos.py (spark-*.png).
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import math, os, sys
 OUT = sys.argv[1]

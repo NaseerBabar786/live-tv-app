@@ -37,7 +37,7 @@ jobs:
           echo "clip library version $have, code wants $want"
           if [ "$have" != "$want" ]; then
             gh release view news-broll -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
-              gh release create news-broll --prerelease -t "News topic clips" -n "Free CC0 / public-domain / CC BY clips from Wikimedia Commons for Bazaar TV News, credited on screen." -R "$GITHUB_REPOSITORY"
+              gh release create news-broll --prerelease -t "News topic clips" -n "Free CC0 / public-domain / CC BY clips from Wikimedia Commons for Spark TV News, credited on screen." -R "$GITHUB_REPOSITORY"
             python3 tools/news/broll.py build broll-out
             gh release upload news-broll broll-out/*.mp4 broll-out/*.jpg broll-out/news-broll.json -R "$GITHUB_REPOSITORY" --clobber
           fi

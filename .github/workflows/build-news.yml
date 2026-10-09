@@ -1,6 +1,6 @@
 name: Build news bulletins
 
-# Bazaar TV News for channel 1 (owner's plan, 2026-10-08): the channel runs one 8-hour set three times a day,
+# Spark TV News for channel 1 (owner's plan, 2026-10-08): the channel runs one 8-hour set three times a day,
 # starting 12 am, 8 am and 4 pm Toronto time. Each set gets ONE fresh headlines (3:00) and ONE fresh full report
 # (10:00), made just before the set starts and left unchanged through it (full at the set's start and 4 hours in,
 # headlines at every other hour). They go on the "channel-media" pre-release under FIXED names:
@@ -8,7 +8,7 @@ name: Build news bulletins
 #     the day newsroom airs 06:00-17:59, the night one the other hours (owner rule: never the wrong one);
 #     when both copies would look the same, the night one is a plain copy
 #   news-headlines.mp4 / news-full.mp4   the copy for the set's start hour (older schedules and the archive)
-# Urdu (Bazaar TV is an Urdu/Hindi channel). See tools/news/make_news.py. If a run fails, the last bulletins stay on air.
+# Urdu (Spark TV is an Urdu/Hindi channel). See tools/news/make_news.py. If a run fails, the last bulletins stay on air.
 
 on:
   # GitHub often starts scheduled runs 20-30 minutes late, so several start times are queued every hour; a run

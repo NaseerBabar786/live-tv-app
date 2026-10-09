@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Media Library</title>
-<meta name="description" content="Videos for Bazaar TV, sorted by category and language.">
-<link rel="icon" href="channel/logos/bazaar-tv-square.png">
+<meta name="description" content="Videos for Spark TV, sorted by category and language.">
+<link rel="icon" href="channel/logos/spark-tv-square.png">
 <link rel="stylesheet" href="assets/site.css">
 <meta name="robots" content="noindex">
 <style>
@@ -65,7 +65,7 @@
 <main class="wrap">
   <a href="admin" class="back-admin">← Back to Admin</a>
   <h1>🎬 Media Library</h1>
-  <p class="lead">Videos for Bazaar TV, sorted into sections. Press a picture to watch, move videos between sections, and send any of them to your channel.</p>
+  <p class="lead">Videos for Spark TV, sorted into sections. Press a picture to watch, move videos between sections, and send any of them to your channel.</p>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't an admin. <button class="btn" data-signout>Use another account</button></div>
   <div id="dash" class="hidden">
@@ -221,7 +221,7 @@ function card(i, options) {
       ${i.about ? `<div class="small">${esc(i.about)}</div>` : ""}
       ${i.credit ? `<div class="credit">${esc(i.credit)}</div>` : ""}
       <div class="acts">
-        <button class="btn primary" data-send="${esc(i.id)}">＋ Bazaar TV</button>
+        <button class="btn primary" data-send="${esc(i.id)}">＋ Spark TV</button>
         <select data-move="${esc(i.id)}" title="Move to section">${options}</select>
         ${i.srt ? `<a class="btn" href="${esc(i.srt)}" title="Subtitles file">Subtitles</a>` : ""}
         <button class="btn" data-del="${esc(i.id)}" title="Remove from library">✕</button>
@@ -239,7 +239,7 @@ $("player").addEventListener("close", () => { $("video").pause(); $("video").rem
 // Adds the video to the channel's video list and to the end of the non-stop loop, the same
 // way the Studio saves (sponsors/_channel for the app, channel/main for the public page).
 async function sendToChannel(i, btn) {
-  if (!confirm(`Add "${i.title}" to Bazaar TV? It goes at the end of the non-stop loop. You can move it in the Studio.`)) return;
+  if (!confirm(`Add "${i.title}" to Spark TV? It goes at the end of the non-stop loop. You can move it in the Studio.`)) return;
   btn.disabled = true;
   try {
     const snap = await fs.getDoc(fs.doc(db, "sponsors", "_channel"));
@@ -253,9 +253,9 @@ async function sendToChannel(i, btn) {
     }
     ch.loop.push(v.id);
     const data = JSON.stringify(ch);
-    await fs.setDoc(fs.doc(db, "sponsors", "_channel"), { name: ch.name || "Bazaar TV One", active: ch.active !== false, data, updatedAt: fs.serverTimestamp() });
+    await fs.setDoc(fs.doc(db, "sponsors", "_channel"), { name: ch.name || "Spark TV One", active: ch.active !== false, data, updatedAt: fs.serverTimestamp() });
     try { await fs.setDoc(fs.doc(db, "channel", "main"), { data, updatedAt: fs.serverTimestamp() }); } catch {}
-    $("saveMsg").innerHTML = `<span class="ok">✓ "${esc(i.title)}" is now on Bazaar TV (end of the loop). TVs pick it up within about 10 minutes. <a href="studio">Open the Studio</a> to move it or give it a time slot.</span>`;
+    $("saveMsg").innerHTML = `<span class="ok">✓ "${esc(i.title)}" is now on Spark TV (end of the loop). TVs pick it up within about 10 minutes. <a href="studio">Open the Studio</a> to move it or give it a time slot.</span>`;
   } catch (e) {
     $("saveMsg").innerHTML = `<span class="err">Couldn't add it: ${esc(e.message)}</span>`;
   } finally { btn.disabled = false; }

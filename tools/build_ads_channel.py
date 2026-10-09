@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Builds the sponsors' part of Bazaar Ads (channel 15, the owner's wish, 2026-10-07): a channel that
+Builds the sponsors' part of Spark Ads (channel 15, the owner's wish, 2026-10-07): a channel that
 plays our Cable TV promos and our sponsors' ads round the clock.
 
-Bazaar Ads' schedule (docs/channel/ads-schedule.json) holds list entries of kind "ads": our promos
+Spark Ads' schedule (docs/channel/ads-schedule.json) holds list entries of kind "ads": our promos
 (docs/media/app-promos.json, the same list as the app's pop-up) and the sponsors (this file's output,
 docs/channel/ads-sponsors.json). The apps and the website (MyChannel.expand, schedule.js expand) put
 the lists in their places, so the channel follows the promos and the sponsors without anyone saving it.
@@ -112,7 +112,7 @@ def main():
             if f.endswith(".mp4") and f not in used:
                 os.remove(os.path.join(MEDIA, f))
     out = {
-        "note": "Bazaar Ads' sponsors (channel 15), built by tools/build_ads_channel.py from tv.bulkbazaar.ca/sponsors. Do not edit by hand.",
+        "note": "Spark Ads' sponsors (channel 15), built by tools/build_ads_channel.py from tv.bulkbazaar.ca/sponsors. Do not edit by hand.",
         "ads": ads,
     }
     with open(OUT, "w") as f:

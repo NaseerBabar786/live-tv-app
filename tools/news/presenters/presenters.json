@@ -1,6 +1,6 @@
 {
- "about": "AI newsreaders for Bazaar TV News. Each picture is made once by Pollinations (free, no key) from 'prompt' and 'seed', kept as <id>.jpg on the channel-media release, then made to talk with SadTalker (Apache 2.0) by news-presenters.yml. Voice: edge-tts.",
- "line": "السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے بازار ٹی وی نیوز۔ پیش ہیں اس وقت کی اہم خبریں۔",
+ "about": "AI newsreaders for Spark TV News. Each picture is made once by Pollinations (free, no key) from 'prompt' and 'seed', kept as <id>.jpg on the channel-media release, then made to talk with SadTalker (Apache 2.0) by news-presenters.yml. Voice: edge-tts.",
+ "line": "السلام علیکم۔ ٹورنٹو میں رات کے نو بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔ پیش ہیں اس وقت کی اہم خبریں۔",
  "voice": "ur-PK-UzmaNeural",
  "presenters": [
   {
@@ -359,7 +359,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।"
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।"
    },
    {
     "id": "anchor-5s",
@@ -484,7 +484,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a modern TV news studio with a large glowing blue video wall showing a world map and soft bright studio lights; she sits upright behind a glossy curved dark news desk, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -497,7 +497,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in an evening TV news studio with a wide window wall showing a city skyline at night with lights, deep red and dark grey panels and warm studio lights; she sits upright behind a sleek black and red news desk, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -510,7 +510,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a bright, airy white and silver newsroom with glass walls, several screens and journalists' desks softly blurred behind her, daylight studio lighting; she sits upright behind a clean white curved news desk with a soft light strip, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -523,7 +523,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in an elegant TV news studio with dark green and gold panels, subtle Islamic geometric patterns on the back wall, large screens and warm golden studio lights; she sits upright behind a polished dark wood and gold news desk, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -536,7 +536,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a contemporary TV news studio with warm orange and white accents, large LED screens behind her showing soft abstract orange light, bright clean studio lighting; she sits upright behind a glossy white news desk with an orange light strip, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -549,7 +549,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a large classic TV news studio with a huge curved LED wall behind her showing abstract blue and orange light streaks, studio cameras' soft lights; she sits upright behind a glossy curved dark-blue news desk, shoulders square to the camera, both hands resting on the desk, a clear empty area on the upper left of the background. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -689,7 +689,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a TV news studio set in a room with a large glass wall behind her; through the glass a busy newsroom where journalists work at desks with computer monitors, softly out of focus; she sits upright behind a modern light-grey news desk, shoulders square to the camera, both hands resting on the desk. Balanced lighting, not too dark and not too bright. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -702,7 +702,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a TV news studio with a big wall of many TV monitors behind her, each screen showing different news pictures and maps, and a few journalists working at desks nearby, softly out of focus; she sits upright behind a glossy curved news desk, shoulders square to the camera, both hands resting on the desk. Balanced lighting, not too dark and not too bright. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -715,7 +715,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a TV news studio in front of a glass-walled newsroom: behind the glass people work at desks, and along the glass hang several screens showing news footage and maps; she sits upright behind a sleek dark-grey news desk with a soft blue light strip, shoulders square to the camera, both hands resting on the desk. Balanced lighting, not too dark and not too bright. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -728,7 +728,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a modern open-plan TV newsroom: behind her rows of journalists at desks with computer screens, a large screen on the back wall showing world news and a map, warm and cool lights mixed; she sits upright behind an anchor desk raised slightly above the newsroom floor, shoulders square to the camera, both hands resting on the desk. Balanced lighting, not too dark and not too bright. Keep her face, skin tone, hair bun and her navy blazer and white blouse exactly the same; photorealistic broadcast photo."
    },
    {
@@ -1094,7 +1094,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a real, busy modern TV newsroom studio: behind her journalists work at desks with computer monitors in a large open newsroom, big wall screens show colourful stock market line charts and world maps (no readable words), warm wooden panels and blue lighting, a glass and wood curved anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. She sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
    },
    {
@@ -1211,7 +1211,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a real, busy modern TV newsroom by day: tall glass windows behind the newsroom show a city skyline in daylight, journalists work at rows of desks with computer monitors, some walk past carrying papers, a large wall screen shows a world map and colourful charts (no readable words), white and light wood surfaces with blue accent lights, a glass and wood curved anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. She sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
    },
    {
@@ -1339,7 +1339,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a real, busy modern TV newsroom in the evening: a deep open newsroom with many journalists at desks lit by computer monitors, an editor standing and talking on a phone, a curved wall of many video screens showing world maps, weather maps and charts (no readable words), dark navy and warm amber lighting, a glossy dark anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. She sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
    },
    {
@@ -1467,7 +1467,7 @@
     "motion": "a calm professional TV news anchor reading the news to the camera, both hands stay still and folded on the desk the whole time, no hand gestures, no waving, she speaks clearly with natural mouth movement, steady composed expression, gentle blinks, very small natural head movements, static camera, realistic broadcast footage",
     "motion2": "the news anchor keeps reading the news calmly to the camera, hands resting still on the desk, no hand movement, small nod, composed sincere expression, static camera, realistic broadcast footage",
     "voice": "hi-IN-SwaraNeural",
-    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है बाज़ार टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
+    "line": "नमस्कार। टोरंटो में रात के नौ बजे हैं, और यह है स्पार्क टीवी न्यूज़। पेश हैं इस वक़्त की अहम ख़बरें।",
     "edit": "Place her in a real, busy two-level TV newsroom: behind her an open newsroom floor with journalists at desks and monitors and an upper balcony level with more staff and glass railings, big wall screens with a globe, maps and colourful market charts (no readable words), clean white, grey and red accent lighting, a modern white anchor desk with printed news papers, a tablet, a desk microphone and a glass of water; no words, letters or logos anywhere. She sits upright behind the desk holding a few printed pages, shoulders square to the camera. Keep her face, skin tone, hair, head covering and her clothes exactly the same; photorealistic broadcast photo, shallow depth of field."
    },
    {

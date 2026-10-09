@@ -1,4 +1,4 @@
-"""Free scene clips ("b-roll") for Bazaar TV News stories (owner asked 2026-10-08 for video in the news).
+"""Free scene clips ("b-roll") for Spark TV News stories (owner asked 2026-10-08 for video in the news).
 
 We may not use other broadcasters' footage, so stories get a general clip of their topic (a parliament, a
 cricket ground, a city, a cinema...) from Wikimedia Commons, only public domain, CC0 or CC BY (no SA/NC),

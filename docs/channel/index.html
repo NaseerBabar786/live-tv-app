@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bazaar TV · Watch live</title>
+<title>Spark TV · Watch live</title>
 <meta name="description" content="Watch our channel live, free, on Cable TV.">
-<meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/bazaar-tv.png">
-<link rel="icon" href="logos/bazaar-tv-square.png" id="favicon">
+<meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/spark-tv.png">
+<link rel="icon" href="logos/spark-tv-square.png" id="favicon">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
   .stage { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; }
@@ -89,20 +89,20 @@ import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, expand, blockPa
 import { mountCards } from "./cards.js";
 const $ = id => document.getElementById(id);
 const video = $("video");
-// Which of our channels: ?c=filmein is Bazaar Cinema, ?c=sur Bazaar Music, ?c=kids Bazaar Kids, ?c=sports Bazaar Sports, ?c=travel Bazaar Travel, ?c=comedy Bazaar Comedy, otherwise Bazaar TV.
+// Which of our channels: ?c=filmein is Spark Cinema, ?c=sur Spark Music, ?c=kids Spark Kids, ?c=sports Spark Sports, ?c=travel Spark Travel, ?c=comedy Spark Comedy, otherwise Spark TV.
 const station = STATIONS.find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
-// Bazaar Hits (0000) is its own page (the music labels' YouTube videos, one after another),
+// Spark Hits (0000) is its own page (the music labels' YouTube videos, one after another),
 // so it gets a tab between 3 and 5.
 function hitsTab() {
   const a = document.createElement("a");
   a.href = "bollywood.html";
-  a.innerHTML = `<img alt="" src="logos/bazaar-hits.png"><span>23  Bazaar Hits</span>`;
+  a.innerHTML = `<img alt="" src="logos/spark-hits.png"><span>23  Spark Hits</span>`;
   $("tabs").appendChild(a);
 }
 for (const st of STATIONS) {
   if (st.dial === "24") hitsTab();  // Hits is 23: its tab goes between 22 and 24 (schedule.js)
   const a = document.createElement("a");
-  // Channels that run like Bazaar Hits open their YouTube page (this page is their backup).
+  // Channels that run like Spark Hits open their YouTube page (this page is their backup).
   a.href = st.yt ? `ytc.html?c=${st.id}` : st.id === "main" ? "./" : `./?c=${st.id}`;
   if (st === station) a.className = "sel";
   a.innerHTML = `<img alt=""><span></span>`;
@@ -122,7 +122,7 @@ async function loadSchedule() {
     const r = await fetch(url, { cache: "no-store" });
     if (r.ok) {
       const data = (await r.json()).fields?.data?.stringValue;
-      // Bazaar TV's upcoming trailers: the day's list takes its entry's place.
+      // Spark TV's upcoming trailers: the day's list takes its entry's place.
       if (data) return expand(JSON.parse(data));
     }
   } catch {}
@@ -183,7 +183,7 @@ mountCards($("stage"), () => c);
 if (c.active === false) onOff({});
 else tv = tuneIn(video, c, { onChange, onOff, onBlock });
 
-/** Bazaar TV's upcoming trailers: our locked YouTube page over the player while they're on. */
+/** Spark TV's upcoming trailers: our locked YouTube page over the player while they're on. */
 function onBlock(b) {
   const frame = $("block");
   if (!b) {

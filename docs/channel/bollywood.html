@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bazaar Hits · Watch live</title>
-<meta name="description" content="Bazaar Hits: film songs round the clock, from the music labels' own YouTube channels.">
-<meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/bazaar-hits.png">
-<link rel="icon" href="logos/bazaar-hits-square.png">
+<title>Spark Hits · Watch live</title>
+<meta name="description" content="Spark Hits: film songs round the clock, from the music labels' own YouTube channels.">
+<meta property="og:image" content="https://tv.bulkbazaar.ca/channel/logos/spark-hits.png">
+<link rel="icon" href="logos/spark-hits-square.png">
 <style>
   /* Plays the music labels' own YouTube uploads in YouTube's player, one after another, like a
      channel. Opened full screen by the Cable TV app (?app=1) and linked from /channel. */
@@ -56,11 +56,11 @@
 <div id="player"></div>
 <div class="cover" id="cover"><div class="spin"></div></div>
 <div class="shield" id="shield"></div>
-<img class="bug" src="logos/bazaar-hits.png" alt="">
+<img class="bug" src="logos/spark-hits.png" alt="">
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
 <a class="back" id="back" href="./" hidden>Our channels</a>
-<div class="ticker"><span>Bazaar Hits · Film songs, day and night, from the music labels' own channels · Channel 23 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
+<div class="ticker"><span>Spark Hits · Film songs, day and night, from the music labels' own channels · Channel 23 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
 <div class="msg" id="msg"></div>
 <script src="promo.js"></script>
 <script src="still.js"></script>
@@ -74,13 +74,7 @@ const ready = new Promise(r => dataReady = r);
 { const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s); }
 const app = new URLSearchParams(location.search).has("app");
 const $ = id => document.getElementById(id);
-// Spark (owner, 2026-10-08): the Cable TV test version asks for the new name and logo; everyone else still sees Bazaar Hits.
-const NAME = new URLSearchParams(location.search).get("brand") === "spark" ? "Spark Hits" : "Bazaar Hits";
-if (NAME !== "Bazaar Hits") {
-  document.querySelector(".bug").src = "logos/spark-hits.png";
-  document.querySelector(".ticker span").textContent = document.querySelector(".ticker span").textContent.replace("Bazaar Hits", NAME);
-  document.title = NAME + " · Watch live";
-}
+const NAME = "Spark Hits";
 if (!app) { $("back").hidden = false; }
 let songs = [], at = 0, player = null, nowTimer = null;
 // Ad breaks from the running order (ytorder.js withBreaks): song index -> the promos that play before it.
@@ -143,7 +137,7 @@ let started = false, lastError = null, lastState = "none";
 setTimeout(() => {
   if (started || inBreak) return;
   const why = `not started (${lastError ? "error " + lastError : "state " + lastState}) · ${(navigator.userAgent.match(/Chrome\/[\d.]+/) || ["?"])[0]}`;
-  console.warn("Bazaar channel " + why);
+  console.warn("Spark channel " + why);
   const d = document.createElement("div");
   d.className = "diag";
   d.textContent = new URLSearchParams(location.search).has("debug") ? why : `${NAME} is starting, one moment please…`;

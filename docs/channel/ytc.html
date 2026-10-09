@@ -6,7 +6,7 @@
 <title>Cable TV · Watch live</title>
 <meta name="description" content="Our channels on Cable TV: official videos from well-known YouTube channels, round the clock.">
 <style>
-  /* Our channels that run like Bazaar Hits (1.9.47): official uploads from well-known YouTube
+  /* Our channels that run like Spark Hits (1.9.47): official uploads from well-known YouTube
      channels (list built by tools/build_youtube_channels.py), one after another in YouTube's own
      player, locked so nobody can pause, skip or leave for YouTube (the owner's rule for every
      YouTube channel). ?c=<station id>; the app adds &app=1. When YouTube won't play, the channel's
@@ -101,13 +101,6 @@ const q = new URLSearchParams(location.search);
 const app = q.has("app");
 const $ = id => document.getElementById(id);
 const station = STATIONS.find(s => s.id === q.get("c")) || STATIONS.find(s => s.yt);
-// Spark (owner, 2026-10-08): the Cable TV test version asks for the new names and logos; everyone else still sees Bazaar.
-if (q.get("brand") === "spark") Object.assign(station, {
-  name: station.name.replace(/^Bazaar(?= )/, "Spark"),
-  logo: station.logo.replace("/logos/bazaar-", "/logos/spark-").replace("/logos/latest-movies.png", "/logos/spark-latest.png"),
-  // Spark Shayari has an Urdu look: its corner logo and name in Urdu.
-  ...(station.urduBug ? { bug: station.urduBug, shownName: station.nameUrdu } : {}),
-});
 let items = [], cur = 0, inBreak = false, player = null, nowTimer = null, failures = 0;
 // How far this screen runs ahead of the clock (ms): after a programme that ends a long while before its
 // listed end, or won't play at all, the channel goes straight on to the next one instead of standing still.
@@ -425,7 +418,7 @@ let started = false, lastError = null, lastState = "none";
 setTimeout(() => {
   if (started || inBreak) return;
   const why = `not started (${lastError ? "error " + lastError : "state " + lastState}) · ${(navigator.userAgent.match(/Chrome\/[\d.]+/) || ["?"])[0]}`;
-  console.warn("Bazaar channel " + why);
+  console.warn("Spark channel " + why);
   const d = document.createElement("div");
   d.className = "diag";
   d.textContent = new URLSearchParams(location.search).has("debug") ? why : `${station.name} is starting, one moment please…`;

@@ -3,7 +3,7 @@
    player, outside YouTube's, then the channel carries on. The promos are listed in
    media/promos.json and play in turn. Only our own promos here, never paid
    sponsor ads: YouTube's rules don't allow selling ads around its videos. Paid ads run on
-   Bazaar TV (channel 1) only.
+   Spark TV (channel 1) only.
 
    promoBreak(muted, done): plays the promo when one is due and calls done() when it ends;
    when none is due, calls done() at once.

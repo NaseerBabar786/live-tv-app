@@ -1,5 +1,5 @@
 """Owner picked idea 1 (2026-10-08): make_news.py uses it as the bulletin's weather segment (segment() below).
-Three SAMPLE weather segments for Bazaar TV News, for the owner to choose from (2026-10-08).
+Three SAMPLE weather segments for Spark TV News, for the owner to choose from (2026-10-08).
 
     python3 tools/news/weather_ideas.py out/ [--reader anchor-1f]
       -> out/weather-idea-1.mp4  Weather centre: presenter beside live cards (now, next 12 hours, 7 days)
@@ -132,7 +132,7 @@ def render(out, scenes, voice, presenter, box, crop, work, name):
             x, y, w, h = box
             d.rectangle([x - 4, y - 4, x + w + 3, y + h + 3], outline=TEAL, width=4)
             d.rectangle([x, y, x + w - 1, y + h - 1], fill=(0, 0, 0, 0))
-        lower_bar(d, "موسم • بازار ٹی وی")
+        lower_bar(d, "موسم • اسپارک ٹی وی")
         p.stdin.write(im.tobytes())
     p.stdin.close(); p.wait()
     mp4 = os.path.join(out, f"{name}.mp4")
@@ -217,16 +217,16 @@ def idea1(out, voice, presenter, work, short=False, start=None):
         credit(d, "Open-Meteo.com (CC BY 4.0)")
 
     scenes = [
-        (f"السلام علیکم، بازار ٹی وی کے موسم مرکز میں خوش آمدید۔ ٹورنٹو میں اس وقت درجہ حرارت {deg(round(c['temperature_2m']))} ڈگری ہے، "
+        (f"السلام علیکم، اسپارک ٹی وی کے موسم مرکز میں خوش آمدید۔ ٹورنٹو میں اس وقت درجہ حرارت {deg(round(c['temperature_2m']))} ڈگری ہے، "
          f"لیکن محسوس {deg(round(c['apparent_temperature']))} ڈگری ہو رہا ہے، اور موسم {WMO.get(c['weather_code'], 'ملا جلا')} ہے۔ "
          f"ہوا کی رفتار {round(c['wind_speed_10m'])} کلومیٹر فی گھنٹہ اور نمی {c['relative_humidity_2m']} فیصد ہے۔", now_card),
         (f"اگلے بارہ گھنٹوں میں درجہ حرارت {deg(min(temps))} سے {deg(max(temps))} ڈگری کے درمیان رہے گا، "
          f"اور بارش کا امکان زیادہ سے زیادہ {max(rain)} فیصد ہے۔", hours_card),
         (f"اور اب اگلے سات دن۔ سب سے گرم دن {wd[warm]} ہوگا، {deg(hi[warm])} ڈگری کے ساتھ، "
-         f"اور سب سے ٹھنڈی رات {wd[cold]} کو، {deg(lo[cold])} ڈگری۔ یہ تھا موسم کا حال، بازار ٹی وی کے ساتھ۔", week_card),
+         f"اور سب سے ٹھنڈی رات {wd[cold]} کو، {deg(lo[cold])} ڈگری۔ یہ تھا موسم کا حال، اسپارک ٹی وی کے ساتھ۔", week_card),
     ]
     if start is not None:   # a set: welcome, then the 12 hours and the week (no "right now")
-        scenes = [("السلام علیکم، بازار ٹی وی کے موسم مرکز میں خوش آمدید۔ ٹورنٹو میں " + scenes[1][0], hours_card), scenes[2]]
+        scenes = [("السلام علیکم، اسپارک ٹی وی کے موسم مرکز میں خوش آمدید۔ ٹورنٹو میں " + scenes[1][0], hours_card), scenes[2]]
     elif short: scenes = [scenes[0], scenes[2]]   # headlines: now and the week only
     render(out, scenes, voice, presenter, (60, 120, 480, 450), (400, 40, 480, 450 * 480 // 480), work, "weather-idea-1")
 
@@ -306,7 +306,7 @@ def idea2(out, voice, presenter, work):
     scenes = [
         ("آئیے نقشے پر موسم دیکھتے ہیں۔ کینیڈا میں اس وقت " + "، ".join(f"{c[0]} {deg(t)}" for c, t, _ in ca) + " ڈگری ہے۔",
          map_scene("Canada", (-141, 41, -52, 70), ["United States of America"], ca, "کینیڈا • ابھی")),
-        ("اور اب پاکستان۔ " + "، ".join(f"{c[0]} میں {deg(t)}" for c, t, _ in pk) + " ڈگری۔ یہ تھا نقشے پر موسم، بازار ٹی وی کے ساتھ۔",
+        ("اور اب پاکستان۔ " + "، ".join(f"{c[0]} میں {deg(t)}" for c, t, _ in pk) + " ڈگری۔ یہ تھا نقشے پر موسم، اسپارک ٹی وی کے ساتھ۔",
          map_scene("Pakistan", (60.5, 23.5, 78.5, 37.3), ["India", "Afghanistan", "Iran", "China"], pk, "پاکستان • ابھی")),
     ]
     render(out, scenes, voice, presenter, (60, 120, 220, 156), (240, 20, 800, 568), work, "weather-idea-2")
@@ -404,7 +404,7 @@ def idea3(out, voice, presenter, work):
         (f"آج ٹورنٹو میں سورج {rise} پر طلوع ہوا اور {sset} پر غروب ہوگا۔ ہوا {wname} سے {wspd} کلومیٹر فی گھنٹہ کی رفتار سے چل رہی ہے، "
          f"اور جھونکے {gust} تک جا سکتے ہیں۔ الٹرا وائلٹ انڈیکس {uv} ہے، یعنی {uvname}۔", planner),
         (f"اور یہ ہے اس ہفتے کا رجحان۔ نارنجی لکیر دن کا زیادہ سے زیادہ اور نیلی لکیر رات کا کم سے کم درجہ حرارت ہے۔ "
-         f"سب سے گرم دن {wd[warm]} ہوگا، {deg(hi[warm])} ڈگری۔ یہ تھا موسم کا حال، بازار ٹی وی کے ساتھ۔", graph),
+         f"سب سے گرم دن {wd[warm]} ہوگا، {deg(hi[warm])} ڈگری۔ یہ تھا موسم کا حال، اسپارک ٹی وی کے ساتھ۔", graph),
     ]
     render(out, scenes, voice, presenter, (60, 100, 210, 490), (500, 20, 280, 653), work, "weather-idea-3")
 

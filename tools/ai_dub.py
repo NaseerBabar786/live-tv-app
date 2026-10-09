@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AI dubbing test for the owner's channel (Bazaar TV).
+"""AI dubbing test for the owner's channel (Spark TV).
 
 Only for films we may change and show again: the Blender open movies (CC BY) already on the
 "channel-media" release. Two steps, run by .github/workflows/ai-dub.yml:
@@ -149,7 +149,7 @@ def to_lines(words):
 
 def credit_line(film, lang_name):
     title, holder, licence = credits(film)
-    return f"{title} {holder}, {licence}. AI {lang_name} voices added by Bazaar TV."
+    return f"{title} {holder}, {licence}. AI {lang_name} voices added by Spark TV."
 
 
 # ---------------------------------------------------------------- voice
@@ -228,7 +228,7 @@ def voice(film, lang):
     font = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
     # The credit sits on screen for the first 8 seconds (CC BY asks for credit and a note of what changed).
     with open(f"{film}-{lang}-credit.txt", "w", encoding="utf-8") as f:
-        f.write(f"{title} - AI {lang_name} dub (test)\n{holder}\n{licence}  -  voices changed by Bazaar TV")
+        f.write(f"{title} - AI {lang_name} dub (test)\n{holder}\n{licence}  -  voices changed by Spark TV")
     draw = (f"drawtext=fontfile={font}:textfile={film}-{lang}-credit.txt:fontcolor=white:fontsize=22:line_spacing=6:"
             f"box=1:boxcolor=black@0.55:boxborderw=12:x=30:y=h-th-40:enable='lt(t,8)'")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-i", f"{film}-{lang}-mix.wav",
