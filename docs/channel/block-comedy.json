@@ -1,6 +1,6 @@
 {
  "name": "مزاحیہ",
- "built": "2026-10-09 07:18 UTC",
+ "built": "2026-10-09 19:59 UTC",
  "secs": 1311,
  "videos": [
   {
@@ -13,17 +13,17 @@
  ],
  "spares": [
   {
-   "id": "VxeEcRfx2DI",
-   "title": "NEW Episode 4836 - Tapu Sonu Ki Jethalal Hua Taarak Mehta Ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "secs": 614,
-   "kind": "comedy"
-  },
-  {
    "id": "_NjImGHkTug",
    "title": "NEW Episode 4835 - Daya Ko Dekhke Jethalal Hua Shock ! Taarak Mehta Ka Ooltah Chashmah",
    "label": "Taarak Mehta",
    "secs": 640,
+   "kind": "comedy"
+  },
+  {
+   "id": "VxeEcRfx2DI",
+   "title": "NEW Episode 4836 - Tapu Sonu Ki Jethalal Hua Taarak Mehta Ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "secs": 614,
    "kind": "comedy"
   }
  ]
