@@ -128,6 +128,8 @@ alive "settings"
 # ---- 3. Full screen: widgets, channel bar, last channel ----
 section "3 full screen"
 fresh 20
+# Two profiles now: "Who's watching?" comes first; it must show above the start-up ad.
+shot whos-watching-over-ad; [ -n "$(find_text "Who's watching?")" ] && note "OK: Who's watching shows" && tap_text "Me"
 # Into full screen through the guide: row 3 (our music channel, our own player), OK on "what's on now".
 tap_text "Guide" && { sleep 10; key KEYCODE_DPAD_DOWN; key KEYCODE_DPAD_DOWN; key KEYCODE_DPAD_CENTER; }
 sleep 25; shot full-widgets-25s
@@ -142,6 +144,7 @@ crashes "full screen"
 # ---- 4. Report a channel in 1+List (hold OK) ----
 section "4 report"
 fresh 20
+tap_text "Me"
 b=$(find_text "Spark Shayari" "Shayari")
 [ -n "$b" ] && adb shell input swipe $b $b 2500
 sleep 2; shot hold-ok-menu

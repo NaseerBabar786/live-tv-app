@@ -163,6 +163,7 @@ fun WhoIsWatching(onPick: (String) -> Unit) {
     if (!asking || all.size < 2) return
     val first = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { delay(150); first.requestFocus() } }
+    OnTop(onBack = { Profiles.asking.value = false }) {
     Box(Modifier.fillMaxSize().background(Color(0xF0080C14)), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Who's watching?", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 32.sp)
@@ -187,6 +188,7 @@ fun WhoIsWatching(onPick: (String) -> Unit) {
                 }
             }
         }
+    }
     }
 }
 
