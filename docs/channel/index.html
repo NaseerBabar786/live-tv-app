@@ -131,12 +131,22 @@ async function loadSchedule() {
   return expand(station.backup ? { ...ready, name: station.name, logo: station.logo, ...(station.noBug ? { logoCorner: "off" } : {}) } : ready);
 }
 
-let c = await load(), tv = null;
+// The network is Spark since 2026-10-09: settings saved before then still say Bazaar (Bulk Bazaar, the sponsor, keeps its name).
+function spark(cfg) {
+  const fix = t => typeof t !== "string" ? t : t
+    .replace(/(?<!Bulk |App |Bubble )\bBazaar (?=[A-Z])/g, "Spark ")
+    .replace(/(?<!بلک )بازار ٹی وی/g, "اسپارک ٹی وی");
+  cfg.name = fix(cfg.name); cfg.ticker = fix(cfg.ticker);
+  (cfg.videos || []).forEach(v => { v.title = fix(v.title); });
+  if (typeof cfg.logo === "string") cfg.logo = cfg.logo.replace(/\/logos\/bazaar-/, "/logos/spark-");
+  return cfg;
+}
+let c = spark(await load()), tv = null;
 function show() {
   document.title = `${c.name || "My Channel"} · Watch live`;
   $("name").textContent = c.name || "My Channel";
   if (c.logo) {
-    $("logo").src = c.logo; $("logo").classList.remove("hidden"); $("favicon").href = /\/channel\/logos\/bazaar-[a-z]+\.png$/.test(c.logo) ? c.logo.replace(/\.png$/, "-square.png") : c.logo;
+    $("logo").src = c.logo; $("logo").classList.remove("hidden"); $("favicon").href = /\/channel\/logos\/(bazaar|spark)-[a-z-]+\.png$/.test(c.logo) ? c.logo.replace(/\.png$/, "-square.png") : c.logo;
     $("bug").src = c.logo;
   }
   const corner = c.logoCorner || "tr";
@@ -201,7 +211,7 @@ $("full").onclick = () => $("stage").requestFullscreen?.();
 // New settings from the owner arrive within 5 minutes.
 setInterval(async () => {
   try {
-    const n = await load();
+    const n = spark(await load());
     if (JSON.stringify(n) === JSON.stringify(c)) return;
     c = n; show();
     if (tv) tv.update(c); else if (c.active !== false) tv = tuneIn(video, c, { onChange, onOff, onBlock });
