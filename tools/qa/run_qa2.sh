@@ -10,7 +10,7 @@ mkdir -p "$OUT"
 LOG="$OUT/steps.txt"; : > "$LOG"
 N=0
 note() { echo "$(date -u +%H:%M:%S) $*" | tee -a "$LOG"; }
-dump() { adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 && adb pull /sdcard/ui.xml "$1" >/dev/null 2>&1; }
+dump() { timeout 45 adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 && timeout 20 adb pull /sdcard/ui.xml "$1" >/dev/null 2>&1; }
 shot() { # name
   N=$((N+1)); local f; f="$(printf '%03d' $N)-$1"
   adb exec-out screencap -p > "$OUT/$f.png" 2>/dev/null
@@ -156,7 +156,7 @@ for th in "Emerald" "Royal" "Midnight"; do
   printf '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>\n<map><string name="theme">%s</string></map>\n' "$th" > /tmp/theme.xml
   adb push /tmp/theme.xml /data/local/tmp/theme.xml >/dev/null
   adb shell "run-as $PKG mkdir -p shared_prefs; run-as $PKG cp /data/local/tmp/theme.xml shared_prefs/theme.xml"
-  adb shell run-as $PKG cat shared_prefs/theme.xml | grep -q "$th" || adb exec-in "run-as $PKG sh -c 'cat > shared_prefs/theme.xml'" < /tmp/theme.xml
+  adb shell run-as $PKG cat shared_prefs/theme.xml | grep -q "$th" || timeout 20 adb exec-in "run-as $PKG sh -c 'cat > shared_prefs/theme.xml'" < /tmp/theme.xml
   note "theme set to $th: $(adb shell run-as $PKG cat shared_prefs/theme.xml | tr -d '\n')"
   fresh 15
   tap_text "Weather" && { sleep 12; shot "weather-$th"

@@ -124,7 +124,7 @@ jobs:
           ram-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: bash tools/qa/run_qa.sh qa-out/${{ matrix.device }} apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk apks/rel/public.apk; bash tools/qa/run_qa2.sh qa-out/${{ matrix.device }}-b apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk apks/rel/public.apk
+          script: timeout 80m bash tools/qa/run_qa.sh qa-out/${{ matrix.device }} apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk apks/rel/public.apk; timeout 70m bash tools/qa/run_qa2.sh qa-out/${{ matrix.device }}-b apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk apks/rel/public.apk
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -151,12 +151,14 @@ jobs:
             [ -d all/qa-$d ] || continue
             for sub in all/qa-$d/*/; do
               n=$(basename "$sub")
-              for f in "$sub"*; do if [ -f "$f" ] && [ -s "$f" ]; then cp "$f" "up/$n-$(basename "$f")"; fi; done
+              for f in "$sub"*; do if [ -f "$f" ] && [ -s "$f" ] && [ "${f%.xml}" = "$f" ]; then cp "$f" "up/$n-$(basename "$f")"; fi; done
             done
           done
           (cd all && zip -qr ../up/qa-everything.zip .)
           gh release delete qa-results-1390 --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
           gh release create qa-results-1390 --repo "$GITHUB_REPOSITORY" --prerelease --latest=false \
             --target "$GITHUB_SHA" --title "QA results (emulators)" \
-            --notes "Tested: $(tr '\n' ' ' < all/qa-apks/rel/tag.txt 2>/dev/null). Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
-            up/*
+            --notes "Tested: $(tr '\n' ' ' < all/qa-apks/rel/tag.txt 2>/dev/null). Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          # Upload in small batches with retries, so one failed upload doesn't lose everything.
+          ls up | wc -l
+          (cd up && ls | xargs -n 40 sh -c 'for t in 1 2 3; do gh release upload qa-results-1390 --repo "$GITHUB_REPOSITORY" --clobber "$@" && exit 0; sleep 10; done; exit 0' _)

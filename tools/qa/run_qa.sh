@@ -10,7 +10,7 @@ mkdir -p "$OUT"
 LOG="$OUT/steps.txt"; : > "$LOG"
 N=0
 note() { echo "$(date -u +%H:%M:%S) $*" | tee -a "$LOG"; }
-dump() { adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 && adb pull /sdcard/ui.xml "$1" >/dev/null 2>&1; }
+dump() { timeout 45 adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 && timeout 20 adb pull /sdcard/ui.xml "$1" >/dev/null 2>&1; }
 shot() { # name
   N=$((N+1)); local f; f="$(printf '%03d' $N)-$1"
   adb exec-out screencap -p > "$OUT/$f.png" 2>/dev/null
