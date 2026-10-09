@@ -46,6 +46,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Density
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import android.view.TextureView
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.runtime.DisposableEffect
@@ -273,20 +276,37 @@ private fun SparkAdSlide() {
 
 @Composable
 private fun Slide(top: Color, edge: Color, content: @Composable () -> Unit) {
-    Column(
+    BoxWithConstraints(
         Modifier
             .fillMaxSize()
             .clip(CardShape)
             .background(Brush.verticalGradient(listOf(top, Color(0xFF12141C))))
-            .border(1.dp, edge, CardShape)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp),
-    ) { content() }
+            .border(1.dp, edge, CardShape),
+    ) {
+        // The words shrink to fit a short box (a 1080p TV gives it only about 120 dp), so no line is cut off.
+        val density = LocalDensity.current
+        val scale = (maxHeight / SLIDE_FULL_HEIGHT).coerceIn(0.6f, 1f)
+        CompositionLocalProvider(
+            LocalDensity provides Density(density.density, density.fontScale * scale),
+            LocalSlideScale provides scale,
+        ) {
+            Column(
+                Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 8.dp * scale),
+                verticalArrangement = Arrangement.spacedBy(4.dp * scale),
+            ) { content() }
+        }
+    }
 }
+
+/** How much a slide's words and logos are shrunk to fit its box. */
+private val LocalSlideScale = compositionLocalOf { 1f }
+
+/** The height the slides are laid out for; shorter boxes get smaller words. */
+private val SLIDE_FULL_HEIGHT = 170.dp
 
 @Composable
 private fun Logo(name: String, height: Dp) {
-    AsyncImage(model = "$LOGOS$name.png", contentDescription = null, modifier = Modifier.height(height))
+    AsyncImage(model = "$LOGOS$name.png", contentDescription = null, modifier = Modifier.height(height * LocalSlideScale.current))
 }
 
 @Composable
