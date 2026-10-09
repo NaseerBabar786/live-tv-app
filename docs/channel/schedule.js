@@ -432,7 +432,7 @@ export function tuneIn(video, c, { onChange, onOff, onBlock } = {}) {
         s.src = "https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js";
         s.onload = ok; s.onerror = fail; document.head.appendChild(s);
       });
-      hls = new window.Hls();
+      hls = new window.Hls({ startLevel: 0 }); // lowest picture first, then up as the connection allows (owner, 2026-10-09)
       hls.loadSource(url);
       hls.attachMedia(video);
     } else {
