@@ -1,6 +1,6 @@
 {
  "name": "Spark Comedy",
- "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-comedy.png",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedy.png",
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
@@ -267,17 +267,17 @@
    "kind": "programme"
   },
   {
-   "id": "the-bashful-bachelor",
-   "title": "The Bashful Bachelor",
-   "url": "https://archive.org/download/the_bashful_bachelor/the_bashful_bachelor.mp4",
-   "secs": 4575,
-   "kind": "programme"
-  },
-  {
    "id": "steamboat-bill-jr",
    "title": "Steamboat Bill Jr.",
    "url": "https://archive.org/download/steamboat_bill_ipod/steamboat_bill_512kb.mp4",
    "secs": 4147,
+   "kind": "programme"
+  },
+  {
+   "id": "the-bashful-bachelor",
+   "title": "The Bashful Bachelor",
+   "url": "https://archive.org/download/the_bashful_bachelor/the_bashful_bachelor.mp4",
+   "secs": 4575,
    "kind": "programme"
   },
   {
@@ -288,17 +288,17 @@
    "kind": "programme"
   },
   {
-   "id": "little-men",
-   "title": "Little Men",
-   "url": "https://archive.org/download/little_men/little_men.mp4",
-   "secs": 4986,
-   "kind": "programme"
-  },
-  {
    "id": "pot-o-gold",
    "title": "Pot o' Gold",
    "url": "https://archive.org/download/pot_o_gold/pot_o_gold_512kb.mp4",
    "secs": 5130,
+   "kind": "programme"
+  },
+  {
+   "id": "little-men",
+   "title": "Little Men",
+   "url": "https://archive.org/download/little_men/little_men.mp4",
+   "secs": 4986,
    "kind": "programme"
   },
   {
@@ -610,17 +610,17 @@
    "kind": "programme"
   },
   {
-   "id": "angel-on-my-shoulder",
-   "title": "Angel on My Shoulder",
-   "url": "https://archive.org/download/angelOnMyShoulder/angel_on_my_shoulder.mp4",
-   "secs": 5396,
-   "kind": "programme"
-  },
-  {
    "id": "so-this-is-washingtom",
    "title": "So This is Washingtom",
    "url": "https://archive.org/download/so_this_is_washington_ipod/so_this_is_washington_512kb.mp4",
    "secs": 3763,
+   "kind": "programme"
+  },
+  {
+   "id": "angel-on-my-shoulder",
+   "title": "Angel on My Shoulder",
+   "url": "https://archive.org/download/angelOnMyShoulder/angel_on_my_shoulder.mp4",
+   "secs": 5396,
    "kind": "programme"
   },
   {
@@ -1765,6 +1765,13 @@
    "kind": "programme"
   },
   {
+   "id": "somewhere-in-turkey-1918-directed-by-alf",
+   "title": "Somewhere In Turkey (1918) Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/somewhere-in-turkey-1918-directed-by-alfred-j.-goulding/Somewhere%20in%20Turkey%20%281918%29%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
+   "secs": 611,
+   "kind": "programme"
+  },
+  {
    "id": "the-rajah-1919-directed-by-hal-roach",
    "title": "The Rajah (1919) Directed By Hal Roach",
    "url": "https://archive.org/download/the-rajah-1919-directed-by-hal-roach/The%20Rajah%20%281919%29%20%20Directed%20by%20Hal%20Roach.mp4",
@@ -1772,10 +1779,10 @@
    "kind": "programme"
   },
   {
-   "id": "somewhere-in-turkey-1918-directed-by-alf",
-   "title": "Somewhere In Turkey (1918) Directed By Alfred J. Goulding",
-   "url": "https://archive.org/download/somewhere-in-turkey-1918-directed-by-alfred-j.-goulding/Somewhere%20in%20Turkey%20%281918%29%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
-   "secs": 611,
+   "id": "rainbow-island-1917-directed-by-billy-gi",
+   "title": "Rainbow Island (1917) Directed By Billy Gilbert",
+   "url": "https://archive.org/download/rainbow-island-1917-directed-by-billy-gilbert/Rainbow%20Island%20%281917%29%20%20Directed%20by%20Billy%20Gilbert.mp4",
+   "secs": 351,
    "kind": "programme"
   },
   {
@@ -1811,13 +1818,6 @@
    "title": "From Hand To Mouth (1919) Directed By Alfred J. Goulding, Hal Roach",
    "url": "https://archive.org/download/from-hand-to-mouth-1919-directed-by-alfred-j.-goulding-hal-roach/From%20Hand%20to%20Mouth%20%281919%29%20Directed%20by%20Alfred%20J.%20Goulding%2C%20Hal%20Roach%20.mp4",
    "secs": 1305,
-   "kind": "programme"
-  },
-  {
-   "id": "rainbow-island-1917-directed-by-billy-gi",
-   "title": "Rainbow Island (1917) Directed By Billy Gilbert",
-   "url": "https://archive.org/download/rainbow-island-1917-directed-by-billy-gilbert/Rainbow%20Island%20%281917%29%20%20Directed%20by%20Billy%20Gilbert.mp4",
-   "secs": 351,
    "kind": "programme"
   },
   {
@@ -1874,6 +1874,13 @@
    "title": "Fireman, Save My Child (1918) Directed By Alfred J. Goulding",
    "url": "https://archive.org/download/fireman-save-my-child-1918-directed-by-alfred-j.-goulding/FIREMAN%2C%20SAVE%20MY%20CHILD%20%281918%29%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
    "secs": 492,
+   "kind": "programme"
+  },
+  {
+   "id": "ring-up-the-curtain-1919-directed-by-alf",
+   "title": "Ring Up The Curtain (1919) Directed By Alfred J. Goulding",
+   "url": "https://archive.org/download/ring-up-the-curtain-1919-directed-by-alfred-j.-goulding/Ring%20Up%20the%20Curtain%20%281919%29%20%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
+   "secs": 711,
    "kind": "programme"
   },
   {
@@ -1940,13 +1947,6 @@
    "kind": "programme"
   },
   {
-   "id": "ring-up-the-curtain-1919-directed-by-alf",
-   "title": "Ring Up The Curtain (1919) Directed By Alfred J. Goulding",
-   "url": "https://archive.org/download/ring-up-the-curtain-1919-directed-by-alfred-j.-goulding/Ring%20Up%20the%20Curtain%20%281919%29%20%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
-   "secs": 711,
-   "kind": "programme"
-  },
-  {
    "id": "the-marathon-1919-directed-by-alfred-j-g",
    "title": "The Marathon (1919) Directed By Alfred J. Goulding",
    "url": "https://archive.org/download/the-marathon-1919-directed-by-alfred-j.-goulding/The%20Marathon%20%281919%29%20Directed%20by%20Alfred%20J.%20Goulding.mp4",
@@ -1971,7 +1971,7 @@
  "slots": [],
  "loop": [
   "mud-and-sand",
-  "so-this-is-washingtom",
+  "angel-on-my-shoulder",
   "charlie-chaplin-s-kids-auto-race-at-veni",
   "flying-wild",
   "jack-and-the-beanstalk",
@@ -2000,7 +2000,7 @@
   "the-sin-of-harold-diddlebock",
   "charlie-chaplin-s-the-good-for-nothing",
   "1950-s-pop-culture-ozzie-and-harriet-epi",
-  "the-bashful-bachelor",
+  "steamboat-bill-jr",
   "burns-and-allen-space-patrol-kids-visit-",
   "steamboat-bill-jr-2",
   "the-nut",
@@ -2011,7 +2011,7 @@
   "let-s-get-tough",
   "lost-in-the-stratosphere",
   "betty-boop-house-cleaning-blues",
-  "look-out-below-1919-directed-by-hal-roac",
+  "rainbow-island-1917-directed-by-billy-gi",
   "the-goat",
   "charlie-chaplin-s-face-on-the-barroom-fl",
   "classic-1960-s-television-ozzie-and-harr",
@@ -2032,7 +2032,7 @@
   "classic-television-comedy-the-pajama-gam",
   "love-island",
   "charlie-chaplin-s-laffing-gas-aka-laughi",
-  "on-the-fire-1919-directed-by-hal-roach",
+  "ring-up-the-curtain-1919-directed-by-alf",
   "betty-boop-snow-white",
   "1960-s-television-ozzie-and-harriet-a-la",
   "classic-tv-comedy-burns-and-allen-title-",
@@ -2047,14 +2047,14 @@
   "charlie-chaplin-s-making-a-living",
   "meet-corliss-archer-no-clothes-for-the-p",
   "q-planes",
-  "young-mr-jazz-1919-directed-by-hal-roach",
+  "a-jazzed-honeymoon-1919-directed-by-hal-",
   "charlie-chaplin-s-a-fair-exchange",
   "betty-boop-morning-noon-and-night",
   "charlie-chaplin-s-his-trysting-place",
   "the-marathon-1919-directed-by-alfred-j-g",
   "early-television-comedy-burns-and-allen-",
   "mush-and-milk",
-  "a-jazzed-honeymoon-1919-directed-by-hal-",
+  "a-sammy-in-siberia-1919-directed-by-hal-",
   "there-goes-the-bride",
   "the-milky-way",
   "ask-father-1919",
@@ -2067,7 +2067,7 @@
   "ask-dad",
   "swing-hostess",
   "eternally-yours",
-  "never-touched-me-1919-directed-by-alfred",
+  "on-the-fire-1919-directed-by-hal-roach",
   "charlie-chaplin-s-caught-in-a-caberet",
   "war-babies",
   "betty-boop-betty-in-blunderland",
@@ -2075,7 +2075,7 @@
   "charlie-chaplin-s-tillies-punctured-roma",
   "charlie-chaplin-s-the-masquerader",
   "private-buckaroo",
-  "going-going-gone-1919",
+  "i-m-on-my-way-1919-directed-by-hal-roach",
   "as-you-like-it",
   "my-wifes-relations",
   "the-general",
@@ -2107,7 +2107,7 @@
   "his-new-profession",
   "classic-tv-comedy-burns-and-allen-episod-2",
   "disorder-in-the-court",
-  "rainbow-island-1917-directed-by-billy-gi",
+  "from-hand-to-mouth-1919-directed-by-alfr",
   "charlie-chaplin-the-champion-1915-classi",
   "i-remember-mama-mama-s-bad-day",
   "convict-13",
@@ -2116,7 +2116,7 @@
   "escape-to-paradise",
   "santa-s-surprise",
   "your-name-here",
-  "pot-o-gold",
+  "little-men",
   "topper-returns",
   "i-married-joan-the-jailbird-1955-nbc-tv-",
   "one-body-too-many",
@@ -2127,23 +2127,23 @@
   "neighbors",
   "at-war-with-the-army",
   "pardon-my-pups",
-  "their-social-splash-1915-directed-by-cha",
+  "young-mr-jazz-1919-directed-by-hal-roach",
   "malice-in-the-palace",
   "oh-mr-porter",
   "the-golf-specialist",
   "charlie-chaplin-s-his-prehistoric-past",
   "charlie-chaplin-s-the-bond",
   "mama-the-parade-grandstand-1955",
-  "captain-kidd-s-kids-1919-directed-by-hal",
+  "look-out-below-1919-directed-by-hal-roac",
   "love-affair",
   "charlie-chaplin-s-the-floorwalker",
   "kid-dynamite",
   "1954-i-married-joan-the-clothes-budget-n",
   "private-snuffy-smith",
   "big-news",
-  "the-city-slicker-1918-directed-by-gilber",
+  "going-going-gone-1919",
   "love-laughs-at-andy-hardy",
-  "steamboat-bill-jr",
+  "the-bashful-bachelor",
   "betty-boop-and-the-little-king",
   "ozzie-and-harriet-season-8-episode-7-tit",
   "the-bell-boy",
@@ -2157,13 +2157,13 @@
   "the-gorilla",
   "topper-henrietta-sells-the-house",
   "charlie-chaplin-s-charolot-gargon-de-the",
-  "little-men",
+  "pot-o-gold",
   "fifties-television-bev-s-boyfriend-i-mar",
   "dora-s-dunkin-donuts",
   "charlie-chaplin-s-charlott-mabel-aux-cou",
   "charlie-chaplin-in-making-a-living-1914-",
   "his-royal-slyness-1920-directed-by-alfre",
-  "back-to-the-woods-1919-directed-by-hal-r",
+  "just-neighbors-1919-directed-by-harold-l",
   "half-shot-at-sunrse",
   "mr-robinson-crusoe",
   "girl-o-my-dreams",
@@ -2172,7 +2172,7 @@
   "betty-boop-minnie-the-moocher",
   "daydreams",
   "my-dear-secretary",
-  "the-rajah-1919-directed-by-hal-roach",
+  "somewhere-in-turkey-1918-directed-by-alf",
   "charlie-chaplin-s-the-immigrant",
   "that-uncertain-feeling",
   "betty-boop-and-grampy",
@@ -2184,12 +2184,12 @@
   "manhattan-love-song",
   "king-kelly-of-the-u-s-a",
   "the-boat",
-  "from-hand-to-mouth-1919-directed-by-alfr",
+  "back-to-the-woods-1919-directed-by-hal-r",
   "the-amazing-adventure",
   "the-flying-deuces",
   "one-week",
   "so-s-your-aunt-emma",
-  "just-neighbors-1919-directed-by-harold-l",
+  "captain-kidd-s-kids-1919-directed-by-hal",
   "where-there-s-a-will",
   "charlie-chaplin-the-cure-1917-classic-si",
   "charlie-chaplin-s-mabel-s-busy-day",
@@ -2207,7 +2207,7 @@
   "meet-corliss-archer-dexter-the-helper",
   "burns-and-allen-episode-title-too-much-o",
   "irish-luck",
-  "i-m-on-my-way-1919-directed-by-hal-roach",
+  "their-social-splash-1915-directed-by-cha",
   "fifties-popular-culture-burns-and-allen-",
   "lmao-the-trouble-with-father-leave-it-to",
   "mabel-s-dramatic-career",
@@ -2221,11 +2221,11 @@
   "royal-wedding",
   "charlie-chaplin-s-musical-tramps",
   "bumping-into-broadway-1919-directed-by-h",
-  "somewhere-in-turkey-1918-directed-by-alf",
+  "the-rajah-1919-directed-by-hal-roach",
   "fifties-television-home-of-the-week-i-ma",
-  "ring-up-the-curtain-1919-directed-by-alf",
+  "the-city-slicker-1918-directed-by-gilber",
   "million-dollar-weekend",
-  "angel-on-my-shoulder",
+  "so-this-is-washingtom",
   "1960-s-mainstream-culture-ozzie-and-harr",
   "my-love-for-your-aka-honeymoon-in-bali",
   "the-divorce-of-lady-x",
@@ -2249,7 +2249,7 @@
   "the-larkins-1x-07-christmas-with-the-lar",
   "uncle-joe",
   "his-girl-friday",
-  "a-sammy-in-siberia-1919-directed-by-hal-"
+  "never-touched-me-1919-directed-by-alfred"
  ],
- "built": "2026-10-08 20:48 UTC"
+ "built": "2026-10-09 07:01 UTC"
 }
