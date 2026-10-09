@@ -696,6 +696,21 @@ def newsreader(slot, room=None, in_set=False, kind="headlines"):
     # Sets: everyone gets a turn across the days (an hour-based turn would give the same 3 readers every day).
     turn = (slot.toordinal() * len(SETS) + SETS.index(slot.hour)) if in_set and slot.hour in SETS else slot.hour
     p = dict(people[ids[turn % len(ids)]]); p["clip"] = boomerang(os.path.join(here, "clips", f"{p['id']}.mp4"))
+    p["_room_ids"], p["_turn"], p["_people"] = ids, turn, people
+    return p
+
+def weather_presenter(reader):
+    """Owner rule (2026-10-09): in the full news, the weather is presented by someone other than the newsreader,
+    a lady when one is on air (the men's clip ids start with "anchor-m"). Same newsroom, taking turns like the readers.
+    None when nobody else has a clip (the newsreader then presents the weather as before)."""
+    if not reader: return None
+    ids, people = reader["_room_ids"], reader["_people"]
+    others = [i for i in ids if people[i]["name"] != reader["name"]]
+    ladies = [i for i in others if not i.startswith("anchor-m")]
+    pick = ladies or others
+    if not pick: return None
+    p = dict(people[pick[(reader["_turn"] + 1) % len(pick)]])
+    p["clip"] = boomerang(os.path.join(HERE, "presenters", "clips", f"{p['id']}.mp4"))
     return p
 
 def boomerang(clip):
@@ -883,13 +898,17 @@ def main():
     reader = newsreader(slot, room, in_set, kind)
     rv = voice_of(reader)
     VOICE = {sec: rv for sec in ORDER}
+    # Full news: a second presenter, a lady when possible, does the weather (owner, 2026-10-09).
+    wx_reader = (weather_presenter(reader) if kind == "full" else None) or reader
+    wv = voice_of(wx_reader)
+    if wx_reader is not reader: NOTES.append(f"weather presenter: {wx_reader['name']}")
 
     # Owner's pick (2026-10-08, weather idea 1): the weather centre with the same newsreader replaces the weather card.
     wxvid = None
     if weather_seg and reader and not offline:
         try:
             import weather_ideas
-            wxvid = weather_ideas.segment(work, rv, reader["clip"], kind == "headlines", slot if in_set else None)
+            wxvid = weather_ideas.segment(work, wv, wx_reader["clip"], kind == "headlines", slot if in_set else None)
         except Exception as e:
             NOTES.append(f"weather centre failed: {e}")
 
@@ -898,7 +917,7 @@ def main():
         for sec in ORDER:
             for i, s in enumerate([s for s in stories if s["section"] == sec][:counts[sec]]):
                 segs.append(("story", (LEAD[sec] if i == 0 else "") + s["read"], VOICE[sec], s))
-        if weather_seg: segs.append(("weather", weather_seg, rv, None))
+        if weather_seg: segs.append(("weather", weather_seg, wv, None))
         return segs
 
     # Speak every possible line once, then drop stories from the end until it fits.
@@ -1007,6 +1026,7 @@ def main():
             "made": dt.datetime.now(dt.timezone.utc).isoformat(), "sources": sources, "weather": bool(wx), "notes": NOTES,
             "news_secs": round(news_len, 1), "promos": promos,
             "reader": reader["id"] if reader else None,
+            "weather_presenter": wx_reader["id"] if wx_reader else None,
             "stories": [{"section": s["section"], "headline": s["headline"], "headline_en": s.get("headline_en", ""),
                          "source": s["source"]} for s in shown]}
     json.dump(info, open(os.path.join(out, f"{name}.json"), "w"), ensure_ascii=False, indent=1)
