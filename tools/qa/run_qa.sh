@@ -123,6 +123,7 @@ weather_round() { # name
   sleep 25; shot "20-weather-$1"
   for i in 1 2 3; do key KEYCODE_DPAD_DOWN; done
   sleep 12; shot "21-weather-$1-down"
+  tap_text "Maps" && { sleep 20; shot "22-weather-$1-maps"; }
   adb logcat -d | grep -i "Radar\|chromium" > "$OUT/weather-$1-radar-log.txt"
   running && note "weather $1: app running" || note "WEATHER $1: APP NOT RUNNING"
 }
