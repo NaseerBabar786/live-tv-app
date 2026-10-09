@@ -132,6 +132,11 @@ class Store(context: Context) {
         prefs.edit().putString("hifz_$profileId", arr.toString()).apply()
     }
 
+    /** Learn Namaz teacher voice (see Namaz.voices). */
+    var namazVoice: String
+        get() = prefs.getString("namaz_voice", Namaz.DEFAULT_VOICE) ?: Namaz.DEFAULT_VOICE
+        set(v) = prefs.edit().putString("namaz_voice", v).apply()
+
     /** A learner's Learn Namaz record (see NamazProgress), as JSON. */
     fun namaz(profileId: String): NamazProgress =
         NamazProgress.fromJson(prefs.getString("namaz_$profileId", null))

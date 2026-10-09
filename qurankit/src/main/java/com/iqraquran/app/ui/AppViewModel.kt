@@ -423,6 +423,15 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         return Namaz.covers(hifz.filter { it.surah == n }.map { it.from..it.to }, count)
     }
 
+    /** Learn Namaz teacher voice for the duas (Quran verses keep the chosen reciter). */
+    var namazVoice by mutableStateOf(store.namazVoice)
+        private set
+
+    fun chooseNamazVoice(id: String) {
+        namazVoice = id
+        store.namazVoice = id
+    }
+
     fun markSurah(n: Int, memorized: Boolean) {
         val p = profile ?: return
         namaz = namaz.copy(surahs = if (memorized) namaz.surahs + (n to today()) else namaz.surahs - n)
