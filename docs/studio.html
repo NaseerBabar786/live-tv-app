@@ -119,6 +119,7 @@
     .work[data-tab=adlib] #adlib { display: block; }
     #adlib .alGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 8px 0 22px; }
     #adlib .alCard { background: var(--surface); border: 2px solid var(--surface-2); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+    #adlib .alCard img { width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #000; display: block; }
     #adlib .alCard video { width: 100%; aspect-ratio: 16 / 9; background: #000; display: block; }
     #adlib .alCard div { padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
     #adlib .alCard b { font-size: 16px; }
@@ -527,7 +528,7 @@
 
     <section class="panel" id="adlib">
       <h2>🎞 Ads &amp; montages</h2>
-      <p class="small" style="margin-top:0">Every ad, montage and moving logo we have, with where it plays. Press play to watch one. Only ads the owner approved are here; montages take turns, so each break shows a different one.</p>
+      <p class="small" style="margin-top:0">Our ads library: montages and the moving logo, Spark TV ads, Cable TV ads and our customers' ads, each in its own folder, with where it plays. Press play to watch one. Only ads the owner approved are here; montages take turns, so each break shows a different one.</p>
       <div id="alList"><p class="small">Loading…</p></div>
     </section>
 
@@ -1761,12 +1762,17 @@ let adLibDone = false;
 async function renderAdLibrary() {
   if (adLibDone) return;
   const get = async f => { try { return await (await fetch("media/" + f, { cache: "no-cache" })).json(); } catch { return null; } };
-  const [spark, promos, lib] = await Promise.all([get("spark-promos.json"), get("promos.json"), get("library.json")]);
+  // Customers' ads come from /sponsors (the same list and order that page shows; "_ticker" is the scrolling line).
+  const sponsorList = async () => {
+    try { return (await fs.getDocs(fs.query(fs.collection(db, "sponsors"), fs.orderBy("createdAt")))).docs.map(d => ({ id: d.id, ...d.data() })).filter(x => x.id !== "_ticker" && x.name); }
+    catch { return null; }
+  };
+  const [spark, promos, lib, sponsors] = await Promise.all([get("spark-promos.json"), get("promos.json"), get("library.json"), sponsorList()]);
   const poster = src => "media/" + src.replace(/\.mp4$/, "-poster.jpg");
-  const card = (url, img, title, secs, where, on = true) => `<div class="alCard">
-      <video controls preload="none" playsinline src="${esc(url)}"${img ? ` poster="${esc(img)}"` : ""}></video>
+  const card = (url, img, title, secs, where, on = true, pill = on ? "ON AIR" : "IN THE LIBRARY") => `<div class="alCard">
+      ${url ? `<video controls preload="none" playsinline src="${esc(url)}"${img ? ` poster="${esc(img)}"` : ""}></video>` : `<img alt="" src="${esc(img)}">`}
       <div><b>${esc(title)}</b><span class="small">${secs ? secs + " s · " : ""}${esc(where)}</span>
-      <span class="alPill${on ? "" : " off"}">${on ? "ON AIR" : "IN THE LIBRARY"}</span></div></div>`;
+      <span class="alPill${on ? "" : " off"}">${esc(pill)}</span></div></div>`;
   const group = (title, cards) => cards.length ? `<h3>${title} <span class="small">(${cards.length})</span></h3><div class="alGrid">${cards.join("")}</div>` : "";
   // Two folders (owner, 2026-10-09): Spark TV ads and Cable TV ads.
   const folder = (title, groups) => `<details class="alFolder" open><summary>${title}</summary>${groups.join("") || '<p class="small">Nothing here yet.</p>'}</details>`;
@@ -1789,9 +1795,24 @@ async function renderAdLibrary() {
   // Our older ads, kept on the site but off the air (replaced by newer ones).
   const old = [["1", 60], ["2", 30], ["3", 30], ["4", 30], ["6", 60]].filter(([n]) => !onAir.has("Cable TV Video Ad " + n))
     .map(([n, secs]) => card(`media/cable-tv-video-ad-${n}.mp4`, `media/cable-tv-ad-${n}-poster.jpg`, "Cable TV Video Ad " + n, secs, "Older ad, replaced by a newer one", false));
+  // One folder per customer: their video ad and their pictures, with the same status /sponsors shows.
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Toronto" });
+  const state = x => !x.active ? "OFF" : x.end && x.end < today ? "ENDED" : x.start && x.start > today ? "STARTS " + x.start : "ON AIR";
+  const customers = (sponsors || []).map(x => {
+    const st = state(x), on = st === "ON AIR", when = [x.start && "from " + x.start, x.end && "until " + x.end].filter(Boolean).join(" ");
+    const cards = [
+      ...(x.video ? [card(x.video, x.image, "Video ad", x.videoSecs, x.popup === "video" ? "Pop-up and Spark Ads" : "Spark Ads (pop-up shows the picture)", on, st)] : []),
+      ...(x.image ? [card("", x.image, "Picture", 0, "Pop-up picture" + (when ? " · " + when : ""), on, st)] : []),
+      ...(x.banner && x.banner !== x.image ? [card("", x.banner, "Banner", 0, "Wide banner", on, st)] : []),
+    ];
+    return `<details class="alFolder"><summary>📁 ${esc(x.name)} <span class="alPill${on ? "" : " off"}" style="vertical-align:middle">${esc(st)}</span></summary>${cards.length ? `<div class="alGrid">${cards.join("")}</div>` : '<p class="small">No picture or video yet. Add them on the Sponsors page.</p>'}</details>`;
+  });
   $("alList").innerHTML = spark || promos || lib
-    ? folder("📁 Spark TV ads", [group("✨ Montages &amp; moving logo", shapes), group("📣 Spark ads", sparkAds)])
+    ? folder("📁 Montages &amp; moving logo", [group("✨ Spark TV", shapes)])
+      + folder("📁 Spark TV ads", [group("📣 On air", sparkAds)])
       + folder("📁 Cable TV ads", [group("📺 On air", cableOn), group("🗄 Older ads", [...cableOff, ...old])])
+      + folder("📁 Customer ads", sponsors === null ? ['<p class="small">Couldn\'t load the customers. Sign in with the admin account and open this tab again.</p>']
+        : customers.length ? [`<p class="small">Our advertisers, from the <a href="sponsors">Sponsors page</a>. Open a folder to see what we run for them.</p>`, ...customers] : ['<p class="small">No customers yet. Add them on the <a href="sponsors">Sponsors page</a>.</p>'])
     : '<p class="small">Could not load the list. Check your connection and open this tab again.</p>';
   adLibDone = !!(spark || promos || lib);
 }
