@@ -10,21 +10,21 @@
  "videos": [
   {
    "id": "break",
-   "title": "وقفہ",
+   "title": "Break · وقفہ",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-break.mp4",
    "secs": 5,
    "kind": "ident"
   },
   {
    "id": "next",
-   "title": "اگلا پروگرام",
+   "title": "Up next · اگلا پروگرام",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-coming-up.mp4",
    "secs": 8,
    "kind": "ident"
   },
   {
    "id": "adhere",
-   "title": "اشتہار: اسپارک ٹی وی پر اشتہار دیں",
+   "title": "Advertise on Spark TV · اسپارک ٹی وی پر اشتہار دیں",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
