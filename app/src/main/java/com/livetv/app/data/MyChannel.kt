@@ -130,6 +130,8 @@ object MyChannel {
         Station("gurbani", 62, "", "Spark Gurbani", youtube = true, logo = "spark-gurbani.png", lang = PUNJABI),
         Station("moviespa", 63, "", "Spark Movies Punjabi", youtube = true, backup = "filmein", logo = "spark-moviespa.png", lang = PUNJABI),
         Station("sufi", 64, "", "Spark Sufi Qawwali", youtube = true, backup = "sur", logo = "spark-sufi.png", lang = PUNJABI),
+        // Punjabi comedy films and stage dramas from the producers' and labels' own channels (2026-10-09).
+        Station("comedypa", 65, "", "Spark Comedy Punjabi", youtube = true, backup = "comedy", logo = "spark-comedypa.png", lang = PUNJABI),
     )
 
     /**

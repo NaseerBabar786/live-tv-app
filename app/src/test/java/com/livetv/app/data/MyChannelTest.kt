@@ -196,7 +196,7 @@ class MyChannelTest {
 
     @Test
     fun morePunjabiChannels() {
-        assertEquals(listOf(61, 62, 63, 64), MyChannel.STATIONS.filter { it.lang == MyChannel.PUNJABI }.map { it.number })
+        assertEquals(listOf(61, 62, 63, 64, 65), MyChannel.STATIONS.filter { it.lang == MyChannel.PUNJABI }.map { it.number })
         val gurbani = MyChannel.parse(JSONObject("""{"name":"Bazaar Gurbani","videos":[]}"""), "gurbani").channel
         assertEquals("Spark Gurbani", gurbani.name)
         assertEquals(MyChannel.GURBANI_URL, gurbani.url)

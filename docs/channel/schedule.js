@@ -158,6 +158,11 @@ export const STATIONS = [
     name: "Bazaar Sufi Qawwali", dial: "64", doc: "_channel_sufi", page: "channel/?c=sufi", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-sufi.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
     credits: "Qawwali: Sufi kalam and qawwali from the label's and singers' own YouTube channels (OSA Islamic, Nusrat Fateh Ali Khan). Backup: free-to-use music from Wikimedia Commons." },
+  // 65 (2026-10-09): Punjabi comedy films and stage dramas.
+  { id: "comedypa", yt: true, web: "channel/ytc.html?c=comedypa", ytMins: 30, tagline: "Punjabi comedy films and stage dramas, day and night",
+    name: "Bazaar Comedy Punjabi", dial: "65", doc: "_channel_comedypa", page: "channel/?c=comedypa", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedypa.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
+    credits: "Comedy: Punjabi comedy films and stage dramas from the producers' and labels' own YouTube channels. Backup: public-domain classic comedies." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
