@@ -55,6 +55,16 @@ scroll_tap() { # x text...
   return 1
 }
 running() { adb shell pidof "$PKG" >/dev/null 2>&1; }
+grant() { for p in ACCESS_COARSE_LOCATION ACCESS_FINE_LOCATION POST_NOTIFICATIONS; do adb shell pm grant "$PKG" android.permission.$p >/dev/null 2>&1; done; }
+launch() {
+  adb shell monkey -p "$PKG" -c android.intent.category.LEANBACK_LAUNCHER 1 >/dev/null 2>&1 \
+    || adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
+}
+fresh() { # clean start in 1+List
+  adb shell am force-stop "$PKG"; launch; sleep "${1:-25}"
+}
+alive() { running && note "OK: app running ($1)" || note "PROBLEM: APP NOT RUNNING ($1)"; }
+section() { note "===== $* ====="; }
 
 has() { [ -n "$(find_text "$@")" ]; }
 check() { # name text...
