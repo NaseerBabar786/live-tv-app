@@ -51,8 +51,13 @@ https://tv.bulkbazaar.ca/sparktv/privacy.html (App content > Privacy policy)
   - **Location > Approximate location:** collected, not shared. Purpose: App functionality (local weather).
     Processed ephemerally: **Yes**. Required: **Yes**. This is the IP-based city lookup for the weather
     (geojs.io, then open-meteo.com); nothing is stored.
+  - **App info and performance > Crash logs** and **> Diagnostics:** collected, not shared. Purpose: App
+    functionality (fixing crashes). Processed ephemerally: **No**. Required: **Yes** (no switch in the app).
+    Not linked to the user: the report holds only the error, app version, device model and Android version
+    (app/src/main/java/com/livetv/app/CrashGuard.kt), kept in our Firebase project.
 - Is all of the user data collected by your app encrypted in transit? **Yes** (HTTPS)
-- Do you provide a way for users to request that their data is deleted? **No** (nothing is stored)
+- Do you provide a way for users to request that their data is deleted? **No** (nothing about a person is
+  stored: crash reports carry no identifier)
 
 ## Content rating questionnaire
 - Category: **Entertainment** (not a game)
