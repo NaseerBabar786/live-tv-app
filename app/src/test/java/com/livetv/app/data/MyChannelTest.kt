@@ -195,6 +195,16 @@ class MyChannelTest {
     }
 
     @Test
+    fun morePunjabiChannels() {
+        assertEquals(listOf(61, 62, 63, 64), MyChannel.STATIONS.filter { it.lang == MyChannel.PUNJABI }.map { it.number })
+        val gurbani = MyChannel.parse(JSONObject("""{"name":"Bazaar Gurbani","videos":[]}"""), "gurbani").channel
+        assertEquals("Spark Gurbani", gurbani.name)
+        assertEquals(MyChannel.GURBANI_URL, gurbani.url)
+        assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=sufi&app=1&brand=spark",
+            MyChannel.webPage(MyChannel.parse(JSONObject("""{"name":"Bazaar Sufi Qawwali","videos":[]}"""), "sufi").channel))
+    }
+
+    @Test
     fun ourChannelsAreCalledSpark() {
         assertEquals("Spark TV One", MyChannel.brand("Bazaar TV One"))
         assertEquals("Spark Movies Hindi", MyChannel.brand("Bazaar Movies Hindi"))

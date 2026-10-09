@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.view.KeyEvent
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
@@ -48,12 +49,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -172,7 +176,7 @@ private fun GameMenu(scores: GameScores, lastId: String, onPick: (String) -> Uni
                             Modifier.fillMaxWidth().padding(vertical = 18.dp, horizontal = 8.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            Text(g.icon, fontSize = 44.sp)
+                            GameIcon(g.id, g.icon)
                             Spacer(Modifier.height(8.dp))
                             Text(g.name, fontWeight = FontWeight.Bold, fontSize = 17.sp, textAlign = TextAlign.Center, maxLines = 1)
                             Text(scores.label(g), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -202,7 +206,7 @@ private fun GameMenu(scores: GameScores, lastId: String, onPick: (String) -> Uni
                         Modifier.fillMaxWidth().padding(vertical = 18.dp, horizontal = 8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Text(g.icon, fontSize = 44.sp)
+                        GameIcon(g.id, g.icon)
                         Spacer(Modifier.height(8.dp))
                         Text(g.name, fontWeight = FontWeight.Bold, fontSize = 17.sp, textAlign = TextAlign.Center, maxLines = 1)
                         Text(scores.label(g), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -211,6 +215,22 @@ private fun GameMenu(scores: GameScores, lastId: String, onPick: (String) -> Uni
             }
         }
     }
+}
+
+/** The game's modern picture on its menu card, or its emoji when it has none. */
+@Composable
+private fun GameIcon(id: String, emoji: String) {
+    val art = gameArt(id)
+    if (art == null) {
+        Text(emoji, fontSize = 44.sp)
+        return
+    }
+    val shape = RoundedCornerShape(24.dp)
+    Image(
+        painter = painterResource(art),
+        contentDescription = null,
+        modifier = Modifier.size(108.dp).shadow(8.dp, shape).clip(shape),
+    )
 }
 
 private val OK_KEYS = setOf(

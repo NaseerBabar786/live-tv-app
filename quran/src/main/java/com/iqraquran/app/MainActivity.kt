@@ -20,6 +20,12 @@ import com.iqraquran.app.ui.HifzHomeScreen
 import com.iqraquran.app.ui.HifzSessionScreen
 import com.iqraquran.app.ui.HifzSetupScreen
 import com.iqraquran.app.ui.HomeScreen
+import com.iqraquran.app.ui.NamazAddSurahScreen
+import com.iqraquran.app.ui.NamazDuasScreen
+import com.iqraquran.app.ui.NamazHomeScreen
+import com.iqraquran.app.ui.NamazRakatsScreen
+import com.iqraquran.app.ui.NamazStepScreen
+import com.iqraquran.app.ui.NamazSurahsScreen
 import com.iqraquran.app.ui.IqraTheme
 import com.iqraquran.app.ui.Lang
 import com.iqraquran.app.ui.LocalLang
@@ -83,6 +89,12 @@ class MainActivity : ComponentActivity() {
                         Screen.Settings -> SettingsScreen(vm) { VersionFooter(updates.installedVersion) }
                         Screen.Prayer -> PrayerScreen(vm)
                         Screen.AzanSettings -> AzanSettingsScreen(vm)
+                        Screen.NamazHome -> NamazHomeScreen(vm)
+                        is Screen.NamazStep -> NamazStepScreen(vm, s.index)
+                        Screen.NamazRakats -> NamazRakatsScreen(vm)
+                        Screen.NamazDuas -> NamazDuasScreen(vm)
+                        Screen.NamazSurahs -> NamazSurahsScreen(vm)
+                        Screen.NamazAddSurah -> NamazAddSurahScreen(vm)
                     }
                     val update by updates.update.collectAsStateWithLifecycle()
                     UpdateDialog(

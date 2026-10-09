@@ -90,6 +90,9 @@ CHANNELS = [  # file, word, main colour, second colour, tag under the slab
     ("bazaar-teenshi", "TEENS", (0, 200, 220), (150, 60, 255), "HINDI"),
     ("bazaar-comedyen", "COMEDY", (255, 200, 0), (255, 80, 60), "ENGLISH"),
     ("bazaar-kavi", "KAVI", (235, 140, 120), (120, 30, 90), "HINDI"),  # 27: Hindi poetry, kavi sammelan
+    ("bazaar-gurbani", "GURBANI", (255, 150, 0), (20, 60, 160), "PUNJABI"),  # 62
+    ("bazaar-moviespa", "MOVIES", (235, 50, 70), (255, 170, 0), "PUNJABI"),  # 63
+    ("bazaar-sufi", "SUFI", (0, 170, 140), (40, 40, 120), "PUNJABI"),  # 64: Sufi qawwali
     # Cars (the owner, 2026-10-08): 47 in English, 32 in Hindi.
     ("bazaar-auto", "AUTO", (120, 140, 255), (20, 30, 90)),
     ("bazaar-auto-hindi", "AUTO", (120, 140, 255), (20, 30, 90), "HINDI"),

@@ -99,9 +99,8 @@ BLOCKS = {
     # Only this week's Taarak Mehta episodes ("NEW Episode 4835", "FULL EPISODE 4816"), not the old ones
     # the channel re-uploads ("SE 01 EP 360") or its compilations of old scenes.
     "comedy": (["comedy"], "comedy", 25, (3, 26), r"(new|full) episode \d{4}", r"\bse \d+ ep\b|haste raho|full movie", {"Taarak Mehta"}),
-    # One whole Hindi film, an hour and a half to two and a half hours.
-    "film": (["latest", "hindi", "filmein"], "film", 90, (75, 150), r"hindi|urdu|telefilm|[\u0900-\u097F]",
-             r"bhojpuri|marathi|punjabi|gujarati|bengali|english|trailer|teaser|scene|songs", None),
+    # No whole films (owner, 2026-10-08): a 2.5-hour film made channel 1 slow; it now runs in half hours
+    # (programmes, then a 5-minute break at :25 and :55 with ads and today's list, docs/channel/test-schedule.json).
 }
 # Spare videos for each block, in case one won't start on a viewer's TV (docs/channel/block.html).
 SPARES = 3

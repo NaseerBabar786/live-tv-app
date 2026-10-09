@@ -344,7 +344,10 @@ fun PlayerScreen(
         // Not on our own channels that run their own line (Bazaar TV): one ticker, never two on top of
         // each other (the owner, 2026-10-07); their line carries the advertise words.
         val ownTicker by MyChannel.configs.collectAsStateWithLifecycle()
-        if (onNumberPad != null && !inPictureInPicture && !remember(channel.url, ownTicker) { MyChannel.hasTicker(channel) }) {
+        // Nor on Spark Gurbani, which carries no ads at all (the owner, 2026-10-08).
+        if (onNumberPad != null && !inPictureInPicture && channel.url != MyChannel.GURBANI_URL &&
+            !remember(channel.url, ownTicker) { MyChannel.hasTicker(channel) }
+        ) {
             val skipNow by rememberUpdatedState(barShown || numberPadOpen || typedNumber.isNotEmpty() || tip != null || error != null)
             key(channel.id) {
                 EditionTicker(

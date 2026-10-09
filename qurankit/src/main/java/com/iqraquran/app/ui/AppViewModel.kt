@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.iqraquran.app.data.Hifz
+import com.iqraquran.app.data.Namaz
+import com.iqraquran.app.data.NamazProgress
 import com.iqraquran.app.data.Profile
 import com.iqraquran.app.data.Quran
 import com.iqraquran.app.data.QuranText
@@ -53,6 +55,12 @@ sealed interface Screen {
     data object Settings : Screen
     data object Prayer : Screen
     data object AzanSettings : Screen
+    data object NamazHome : Screen
+    data class NamazStep(val index: Int) : Screen
+    data object NamazRakats : Screen
+    data object NamazDuas : Screen
+    data object NamazSurahs : Screen
+    data object NamazAddSurah : Screen
 }
 
 class AppViewModel(app: Application) : AndroidViewModel(app) {
@@ -140,6 +148,9 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     var stars by mutableStateOf<Map<Int, Int>>(emptyMap())
         private set
     var hifz by mutableStateOf<List<Hifz.Item>>(emptyList())
+        private set
+    /** What this learner has memorized in Learn Namaz. */
+    var namaz by mutableStateOf(NamazProgress())
         private set
 
     init {
@@ -348,6 +359,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         store.currentProfileId = p.id
         stars = store.stars(p.id)
         hifz = store.hifz(p.id)
+        namaz = store.namaz(p.id)
     }
 
     fun saveProfile(id: String?, name: String) {
@@ -400,6 +412,45 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         val p = profile ?: return
         hifz = hifz.filter { it.key != item.key }
         store.saveHifz(p.id, hifz)
+    }
+
+    // Learn Namaz
+
+    /** A surah counts as memorized when marked so, or when Hifz lessons cover every ayah of it. */
+    fun surahMemorized(n: Int): Boolean {
+        if (n in namaz.surahs) return true
+        val count = quran?.ayahCounts?.getOrNull(n - 1) ?: return false
+        return Namaz.covers(hifz.filter { it.surah == n }.map { it.from..it.to }, count)
+    }
+
+    fun markSurah(n: Int, memorized: Boolean) {
+        val p = profile ?: return
+        namaz = namaz.copy(surahs = if (memorized) namaz.surahs + (n to today()) else namaz.surahs - n)
+        // Unmarking also clears Hifz lessons for it, else it would still count as memorized.
+        if (!memorized && hifz.any { it.surah == n }) {
+            hifz = hifz.filter { it.surah != n }
+            store.saveHifz(p.id, hifz)
+        }
+        store.saveNamaz(p.id, namaz)
+    }
+
+    fun markDua(id: String, memorized: Boolean) {
+        val p = profile ?: return
+        namaz = namaz.copy(duas = if (memorized) namaz.duas + (id to today()) else namaz.duas - id)
+        store.saveNamaz(p.id, namaz)
+    }
+
+    fun addToPlan(n: Int) {
+        val p = profile ?: return
+        if (n in namaz.plan) return
+        namaz = namaz.copy(extra = namaz.extra + n)
+        store.saveNamaz(p.id, namaz)
+    }
+
+    fun removeFromPlan(n: Int) {
+        val p = profile ?: return
+        namaz = namaz.copy(extra = namaz.extra - n)
+        store.saveNamaz(p.id, namaz)
     }
 
     override fun onCleared() {

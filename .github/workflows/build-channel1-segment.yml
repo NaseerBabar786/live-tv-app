@@ -1,0 +1,45 @@
+name: Build channel 1's 5-minute segment
+
+# Channel 1 (owner, 2026-10-08): the 5-minute segment at :25 and :55 every hour: ads, today's programmes with
+# their times (from docs/channel/channel1-set.json), the weather and Cable TV tips (tools/make_channel1_segment.py).
+# Made every hour so the weather stays fresh, at :40, when no segment is playing, and put on the
+# channel-media pre-release under a fixed name (segment.mp4), which docs/channel/test-schedule.json books.
+on:
+  schedule:
+    - cron: "40 * * * *"
+  push:
+    branches: [main]
+    paths: [tools/make_channel1_segment.py, .github/workflows/build-channel1-segment.yml]
+  pull_request:
+    paths: [tools/make_channel1_segment.py, .github/workflows/build-channel1-segment.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-channel1-segment
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Make the segment
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
+          pip install -q numpy pillow
+          python3 tools/make_channel1_segment.py out/segment.mp4 "$(TZ=America/Toronto date +%F)"
+
+      - name: Put it on air
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload channel-media out/segment.mp4 -R "$GITHUB_REPOSITORY" --clobber

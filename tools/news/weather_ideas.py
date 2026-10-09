@@ -31,7 +31,7 @@ def toronto():
          "&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code"
          "&hourly=temperature_2m,precipitation_probability,weather_code"
          "&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max"
-         "&timezone=America%2FToronto&forecast_days=7")
+         "&timezone=America%2FToronto&forecast_days=8")
     return json.loads(fetch(u, 30))
 
 
@@ -145,9 +145,16 @@ def render(out, scenes, voice, presenter, box, crop, work, name):
 
 
 # ---------- idea 1: weather centre ----------
-def idea1(out, voice, presenter, work, short=False):
+def idea1(out, voice, presenter, work, short=False, start=None):
+    """start: the 8-hour set's start (a Toronto datetime). The segment is replayed through the set, so it shows the
+    12 hours and 7 days from the set's start and says nothing about "right now"."""
     w = toronto(); c = w["current"]; hr = w["hourly"]; dy = w["daily"]
-    now_i = next(i for i, s in enumerate(hr["time"]) if s >= c["time"][:13])
+    d0 = 0
+    if start is not None and start.date().isoformat() in dy["time"]:
+        d0 = dy["time"].index(start.date().isoformat())
+    dy = {k: v[d0:d0 + 7] for k, v in dy.items()}
+    at = start.strftime("%Y-%m-%dT%H") if start is not None else c["time"][:13]
+    now_i = next(i for i, s in enumerate(hr["time"]) if s >= at)
     temps = [round(x) for x in hr["temperature_2m"][now_i:now_i + 12]]
     rain = [x or 0 for x in hr["precipitation_probability"][now_i:now_i + 12]]
     hcode = hr["weather_code"][now_i:now_i + 12]; hours = [int(s[11:13]) for s in hr["time"][now_i:now_i + 12]]
@@ -218,13 +225,15 @@ def idea1(out, voice, presenter, work, short=False):
         (f"اور اب اگلے سات دن۔ سب سے گرم دن {wd[warm]} ہوگا، {deg(hi[warm])} ڈگری کے ساتھ، "
          f"اور سب سے ٹھنڈی رات {wd[cold]} کو، {deg(lo[cold])} ڈگری۔ یہ تھا موسم کا حال، بازار ٹی وی کے ساتھ۔", week_card),
     ]
-    if short: scenes = [scenes[0], scenes[2]]   # headlines: now and the week only
+    if start is not None:   # a set: welcome, then the 12 hours and the week (no "right now")
+        scenes = [("السلام علیکم، بازار ٹی وی کے موسم مرکز میں خوش آمدید۔ ٹورنٹو میں " + scenes[1][0], hours_card), scenes[2]]
+    elif short: scenes = [scenes[0], scenes[2]]   # headlines: now and the week only
     render(out, scenes, voice, presenter, (60, 120, 480, 450), (400, 40, 480, 450 * 480 // 480), work, "weather-idea-1")
 
 
-def segment(work, voice, presenter, short):
+def segment(work, voice, presenter, short, start=None):
     """The weather centre for a bulletin: (mp4 with picture only used, voice samples, seconds)."""
-    idea1(work, voice, presenter, work, short)
+    idea1(work, voice, presenter, work, short, start)
     mp4 = os.path.join(work, "weather-idea-1.mp4")
     secs = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", mp4],
                                 capture_output=True, text=True, check=True).stdout)

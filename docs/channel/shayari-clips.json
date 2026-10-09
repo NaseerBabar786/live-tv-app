@@ -1,5 +1,5 @@
 {
- "source": "2cbbb9108c79ed97",
+ "source": "d2a8c0e3df7c171e",
  "clips": [
   {
    "n": 1,
@@ -53,9 +53,9 @@
   {
    "n": 8,
    "src": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-08.mp4",
-   "secs": 30,
-   "title": "Aaj ka Sher · Kabir",
-   "poet": "Kabir"
+   "secs": 28,
+   "title": "Aaj ka Sher · Bahadur Shah Zafar",
+   "poet": "Bahadur Shah Zafar"
   },
   {
    "n": 9,
@@ -116,9 +116,9 @@
   {
    "n": 17,
    "src": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-17.mp4",
-   "secs": 30,
-   "title": "Aaj ka Sher · Rahim",
-   "poet": "Rahim"
+   "secs": 29,
+   "title": "Aaj ka Sher · Altaf Hussain Hali",
+   "poet": "Altaf Hussain Hali"
   },
   {
    "n": 18,
@@ -151,9 +151,9 @@
   {
    "n": 22,
    "src": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-22.mp4",
-   "secs": 30,
-   "title": "Aaj ka Sher · Kabir",
-   "poet": "Kabir"
+   "secs": 29,
+   "title": "Aaj ka Sher · Ibrahim Zauq",
+   "poet": "Ibrahim Zauq"
   },
   {
    "n": 23,
@@ -211,5 +211,10 @@
    "title": "Aaj ka Sher · Bahadur Shah Zafar",
    "poet": "Bahadur Shah Zafar"
   }
- ]
+ ],
+ "bed": {
+  "src": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-bed.m4a",
+  "secs": 300,
+  "credit": "Music: \"Vadodora Chill Mix\" by Kevin MacLeod (incompetech.com), CC BY 3.0"
+ }
 }

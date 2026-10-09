@@ -1,50 +1,97 @@
 name: Build news bulletins
 
-# Bazaar TV News: every hour makes the bulletin due at the next full hour (Toronto time) and puts it
-# on the "channel-media" pre-release under a FIXED name, so the channel schedule never changes:
-#   news-headlines.mp4  3:00, plays every hour on the hour
-#   news-full.mp4      10:00, plays at 00, 03, 06 ... 21 o'clock (made in the hour before)
-# Urdu (Bazaar TV is an Urdu/Hindi channel). See tools/news/make_news.py. If a run fails, the last bulletin simply stays on air.
+# Bazaar TV News for channel 1 (owner's plan, 2026-10-08): the channel runs one 8-hour set three times a day,
+# starting 12 am, 8 am and 4 pm Toronto time. Each set gets ONE fresh headlines (3:00) and ONE fresh full report
+# (10:00), made just before the set starts and left unchanged through it (full at the set's start and 4 hours in,
+# headlines at every other hour). They go on the "channel-media" pre-release under FIXED names:
+#   news-headlines-day.mp4 / news-headlines-night.mp4 / news-full-day.mp4 / news-full-night.mp4
+#     the day newsroom airs 06:00-17:59, the night one the other hours (owner rule: never the wrong one);
+#     when both copies would look the same, the night one is a plain copy
+#   news-headlines.mp4 / news-full.mp4   the copy for the set's start hour (older schedules and the archive)
+# Urdu (Bazaar TV is an Urdu/Hindi channel). See tools/news/make_news.py. If a run fails, the last bulletins stay on air.
 
 on:
-  # Owner rule (2026-10-07): every bulletin is on the release at least 30 minutes before air time.
-  # GitHub often starts scheduled runs 20-30 minutes late, so several start times are queued; the first
-  # to run makes the next hour's bulletin and the others see it is already up and stop. (The file for
-  # the coming hour can't be made earlier: the same file is still playing until :03.)
+  # GitHub often starts scheduled runs 20-30 minutes late, so several start times are queued every hour; a run
+  # only builds when the next set starts within 150 minutes and is not up yet, so a set is made in the 2 hours
+  # before it starts (at least 30 minutes ahead, owner rule 2026-10-07) and the other runs stop at once.
   schedule:
     - cron: "4 * * * *"
-    - cron: "7 * * * *"
-    - cron: "10 * * * *"
-    - cron: "15 * * * *"
     - cron: "20 * * * *"
+    - cron: "40 * * * *"
   workflow_dispatch:
     inputs:
-      kind:
-        description: "headlines, full, both, auto (the one due next) or probe (check feeds only)"
+      set:
+        description: "next (the set due next), current (remake the set on air now) or probe (check feeds only)"
         required: false
-        default: "auto"
-  # Only main may rebuild the on-air bulletins on a code change: pushes on other branches used to upload
-  # their own versions and cancel the scheduled runs waiting in the same queue.
-  push:
-    branches: [main]
-    paths:
-      - "tools/news/**"
-      - ".github/workflows/build-news.yml"
+        default: "next"
 
 concurrency:
   group: news-bulletins
   cancel-in-progress: false
 
 jobs:
-  news:
+  plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    permissions:
-      contents: write
-      models: read
+    timeout-minutes: 15
+    outputs:
+      build: ${{ steps.due.outputs.build }}
+      slot: ${{ steps.due.outputs.slot }}
+      rooms: ${{ steps.due.outputs.rooms }}
     steps:
       - uses: actions/checkout@v4
+      - name: Is a set due?
+        id: due
+        env:
+          WHICH: ${{ github.event.inputs.set || 'next' }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -eu
+          pip install -q numpy pillow
+          if [ "$WHICH" = "probe" ]; then python3 tools/news/make_news.py out --kind probe; echo "build=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          slot=$(python3 tools/news/make_news.py out --set "$WHICH" --kind full --due | cut -d' ' -f2)
+          echo "slot=$slot" >> "$GITHUB_OUTPUT"
+          # Day and night copies differ only when on-air.json gives the newsrooms by time of day.
+          rooms=$(python3 -c "import json; print('[\"day\",\"night\"]' if json.load(open('tools/news/presenters/on-air.json')).get('rooms') else '[\"day\"]')")
+          echo "rooms=$rooms" >> "$GITHUB_OUTPUT"
+          if [ "$EVENT" = "schedule" ]; then
+            mins=$(python3 -c "import datetime as d; print(int((d.datetime.fromisoformat('$slot') - d.datetime.now(d.timezone.utc)).total_seconds() // 60))")
+            have=$(curl -fsSL "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-full-day.json" \
+                   | python3 -c "import json,sys; print(json.load(sys.stdin).get('slot',''))" || true)
+            if [ "$mins" -gt 150 ] || [ "$have" = "$slot" ]; then
+              echo "set $slot: $mins minutes away, on the release: '$have'; nothing to do"; echo "build=false" >> "$GITHUB_OUTPUT"; exit 0
+            fi
+          fi
+          echo "building the set starting $slot"; echo "build=true" >> "$GITHUB_OUTPUT"
+      - name: Gather the stories (once, so every copy reads the same news)
+        if: steps.due.outputs.build == 'true'
+        env:
+          SLOT: ${{ steps.due.outputs.slot }}
+        run: |
+          set -eu
+          mkdir -p stories
+          for k in headlines full; do python3 tools/news/make_news.py stories --set "$SLOT" --kind "$k" --gather; done
+      - uses: actions/upload-artifact@v4
+        if: steps.due.outputs.build == 'true'
+        with:
+          name: stories
+          path: stories/stories-*.json
 
+  make:
+    needs: plan
+    if: needs.plan.outputs.build == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [headlines, full]
+        room: ${{ fromJSON(needs.plan.outputs.rooms) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: stories
+          path: stories
       - name: Install tools
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
@@ -54,36 +101,56 @@ jobs:
             curl -fsSL -o "tools/news/presenters/clips/$id.mp4" \
               "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || echo "no clip for $id"
           done
-
-      - name: Make the bulletins
+      - name: Make the bulletin
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-          KIND: ${{ github.event.inputs.kind || 'auto' }}
-          EVENT: ${{ github.event_name }}
+          SLOT: ${{ needs.plan.outputs.slot }}
         run: |
           set -eu
-          mkdir -p out
           python3 -c "from PIL import features; assert features.check('raqm'), 'Urdu text needs raqm'"
-          # A code change makes both, so both are fresh with the new look.
-          if [ "$EVENT" = "push" ] || [ "$KIND" = "both" ]; then kinds="headlines full"; else kinds="$KIND"; fi
-          if [ "$EVENT" = "schedule" ]; then
-            # Never replace the file while the hour's bulletin is still playing (:00-:03).
-            while [ "$(date -u +%M)" -lt 4 ]; do sleep 20; done
-            read -r due slot <<< "$(python3 tools/news/make_news.py out --kind auto --due)"
-            have=$(curl -fsSL "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-$due.json" \
-                   | python3 -c "import json,sys; print(json.load(sys.stdin).get('slot',''))" || true)
-            if [ "$have" = "$slot" ]; then echo "news-$due for $slot is already up; nothing to do"; exit 0; fi
-            echo "news-$due for $slot is not up yet (have '$have'), building it now"
-          fi
-          for k in $kinds; do python3 tools/news/make_news.py out --kind "$k"; done
-          ls -la out
+          python3 tools/news/make_news.py out --set "$SLOT" --kind ${{ matrix.kind }} --room ${{ matrix.room }} \
+            --stories stories/stories-${{ matrix.kind }}.json
+          rm -rf out/work-*; ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: news-${{ matrix.kind }}-${{ matrix.room }}
+          path: out/news-*
 
+  publish:
+    needs: [plan, make]
+    if: always() && needs.plan.outputs.build == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: news-*
+          path: out
+          merge-multiple: true
       - name: Upload to the channel-media release
         env:
           GH_TOKEN: ${{ github.token }}
+          SLOT: ${{ needs.plan.outputs.slot }}
         run: |
-          ls out/news-*.mp4 >/dev/null 2>&1 || { echo "Nothing new to upload"; exit 0; }
+          set -eu
+          cd out; ls -la
+          start=$(python3 -c "import datetime as d; print(d.datetime.fromisoformat('$SLOT').hour)")
+          if [ "$start" -ge 6 ] && [ "$start" -lt 18 ]; then first=day; else first=night; fi
+          files=""
+          for k in headlines full; do
+            [ -f "news-$k-day.mp4" ] || { echo "news-$k was not made; the last one stays on air"; continue; }
+            if [ ! -f "news-$k-night.mp4" ]; then   # the same newsroom day and night: a plain copy
+              cp "news-$k-day.mp4" "news-$k-night.mp4"
+              python3 -c "import json; d=json.load(open('news-$k-day.json')); d['room']='night'; json.dump(d, open('news-$k-night.json','w'), ensure_ascii=False, indent=1)"
+            fi
+            cp "news-$k-$first.mp4" "news-$k.mp4"; cp "news-$k-$first.json" "news-$k.json"
+            files="$files news-$k-day.mp4 news-$k-night.mp4 news-$k.mp4 news-$k-day.json news-$k-night.json news-$k.json"
+          done
+          [ -n "$files" ] || { echo "Nothing new to upload"; exit 1; }
+          # Never replace a file while it may be playing: headlines air in the first 3 minutes of every hour.
+          while [ "$(TZ=America/Toronto date +%M)" -lt 4 ]; do sleep 20; done
           gh release view channel-media -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
             gh release create channel-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false \
               --title "Channel media" --notes "Videos for the owner's channel."
-          gh release upload channel-media out/news-*.json $(ls out/news-*.mp4 2>/dev/null) -R "$GITHUB_REPOSITORY" --clobber
+          gh release upload channel-media $files -R "$GITHUB_REPOSITORY" --clobber
