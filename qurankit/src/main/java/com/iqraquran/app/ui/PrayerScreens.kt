@@ -23,7 +23,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material.icons.filled.PlayArrow
@@ -55,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import com.iqraquran.app.data.AsrMethod
 import com.iqraquran.app.data.AzanMode
 import com.iqraquran.app.data.AzanSettings
+import com.iqraquran.app.data.AzanWeather
 import com.iqraquran.app.data.CalcMethod
 import com.iqraquran.app.data.Hijri
 import com.iqraquran.app.data.Prayer
@@ -98,9 +98,14 @@ object PS {
     val typeCity = L("Type your city", "اپنا شہر لکھیں")
     val search = L("Search", "تلاش")
     val noCities = L("No city found. Try another spelling.", "کوئی شہر نہیں ملا۔ دوسرے ہجے آزمائیں۔")
-    val methodShort = L("Calculation", "حساب کا طریقہ")
-    val muezzinShort = L("Muezzin", "مؤذن")
-    val pressToChange = L("Press to change", "بدلنے کے لیے دبائیں")
+    val weather = L("Weather", "موسم")
+    val weatherLoading = L("Checking the weather…", "موسم دیکھا جا رہا ہے…")
+    val weatherOff = L("Weather can't be reached right now", "اس وقت موسم معلوم نہیں ہو سکا")
+    val feelsLike = L("Feels like", "محسوس")
+    val high = L("High", "زیادہ")
+    val low = L("Low", "کم")
+    val rain = L("Rain", "بارش")
+    val wind = L("Wind", "ہوا")
     val testAzan = L("Hear it", "سنیں")
     val stopAzan = L("Stop Azan", "اذان بند کریں")
     val recordings = L("Azan recordings", "اذان کی ریکارڈنگز")
@@ -176,7 +181,7 @@ fun PrayerScreen(vm: AppViewModel) {
                 ) {
                     dateCard()
                     NextCard(vm, now)
-                    PlaceLine(vm, compact = true)
+                    WeatherTile(vm, compact = true)
                     Text(PS.tapBell.get(), color = palette.muted, fontSize = 14.sp)
                 }
             }
@@ -189,7 +194,7 @@ fun PrayerScreen(vm: AppViewModel) {
                 Timeline(vm, now, compact = false)
                 NextCard(vm, now)
                 Text(PS.tapBell.get(), color = palette.muted)
-                PlaceLine(vm)
+                WeatherTile(vm)
             }
         }
     }
@@ -373,37 +378,61 @@ fun NextCard(vm: AppViewModel, now: Long) {
     }
 }
 
-/** Where, how and who: the area, the calculation method and the muezzin, each opening the Azan settings. */
+/**
+ * The weather now at the prayer times' place (owner, 2026-10-09: replaces the area / calculation / muezzin tile;
+ * those stay under the gear button). Pressing it opens the host app's Weather section when it has one (Cable TV).
+ */
 @Composable
-private fun PlaceLine(vm: AppViewModel, compact: Boolean = false) {
-    val a = vm.azan
-    val place = a.place?.let { listOf(it.city, it.country).filter(String::isNotBlank).joinToString(", ") } ?: PS.findingPlace.get()
-    val method = tr(a.methodInUse.en, a.methodInUse.ur) + if (a.method == null) " (${PS.automatic.get()})" else ""
-    val voice = a.voice(a.voiceId)?.let { tr(it.en, it.ur) } ?: "…"
-    Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(palette.cardAlt).padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
-        InfoRow(Icons.Filled.LocationOn, PS.place.get(), place, compact) { vm.open(Screen.AzanSettings) }
-        InfoRow(Icons.Filled.Settings, PS.methodShort.get(), method, compact) { vm.open(Screen.AzanSettings) }
-        InfoRow(Icons.AutoMirrored.Filled.VolumeUp, PS.muezzinShort.get(), voice, compact) { vm.open(Screen.AzanSettings) }
-    }
-}
-
-@Composable
-private fun InfoRow(icon: ImageVector, label: String, value: String, compact: Boolean, onClick: () -> Unit) {
-    Row(
-        Modifier.fillMaxWidth().focusRing(RoundedCornerShape(14.dp)).clip(RoundedCornerShape(14.dp))
-            .clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = if (compact) 4.dp else 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-        Icon(icon, contentDescription = null, tint = palette.accent)
-        Column(Modifier.weight(1f)) {
-            Text(label, color = palette.muted, fontSize = if (compact) 13.sp else 14.sp)
-            Text(value, fontSize = if (compact) 16.sp else 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
+private fun WeatherTile(vm: AppViewModel, compact: Boolean = false) {
+    val place = vm.azan.place
+    var weather by remember { mutableStateOf<AzanWeather.Now?>(null) }
+    var failed by remember { mutableStateOf(false) }
+    LaunchedEffect(place) {
+        if (place == null) return@LaunchedEffect
+        while (true) {
+            val w = AzanWeather.load(place)
+            if (w != null) weather = w
+            failed = w == null && weather == null
+            delay(if (w == null) 60_000L else 15 * 60_000L)
         }
-        Text(PS.pressToChange.get(), color = palette.muted, fontSize = 13.sp)
+    }
+    val area = place?.let { listOf(it.city, it.country).filter(String::isNotBlank).joinToString(", ") } ?: PS.findingPlace.get()
+    val open = AzanSettings.openWeather
+    val shape = RoundedCornerShape(20.dp)
+    var m = Modifier.fillMaxWidth()
+    if (open != null) m = m.focusRing(shape).clip(shape).clickable(onClick = open)
+    Row(
+        m.clip(shape).background(palette.cardAlt).padding(horizontal = 20.dp, vertical = if (compact) 12.dp else 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        val w = weather
+        Text(w?.icon ?: "🌡️", fontSize = if (compact) 44.sp else 48.sp)
+        Column(Modifier.weight(1f)) {
+            Text(
+                PS.weather.get() + " · " + area,
+                color = palette.muted, fontSize = 14.sp, maxLines = 1,
+            )
+            if (w == null) {
+                Text(if (failed) PS.weatherOff.get() else PS.weatherLoading.get(), fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+            } else {
+                Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text("${w.temperature}°${w.unit}", fontSize = if (compact) 30.sp else 34.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        tr(w.en, w.ur), color = palette.accent, fontSize = 18.sp, fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(bottom = 4.dp), maxLines = 1,
+                    )
+                }
+                Text(
+                    "${PS.feelsLike.get()} ${w.feelsLike}° · ${PS.high.get()} ${w.high}° ${PS.low.get()} ${w.low}°",
+                    fontSize = 15.sp, maxLines = 1,
+                )
+                Text(
+                    "${PS.rain.get()} ${w.rainChance}% · ${PS.wind.get()} ${w.wind} ${w.speed}",
+                    color = palette.muted, fontSize = 14.sp, maxLines = 1,
+                )
+            }
+        }
     }
 }
 
