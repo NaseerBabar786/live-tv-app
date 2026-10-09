@@ -1,7 +1,7 @@
 name: QA on emulators
 
 # Tonight's candidate test build on Android TV emulators: the owner's checklist, with screenshots.
-# Results go to the "qa-results-1288" pre-release (never "latest").
+# Results go to the "qa-results-1288b" pre-release (never "latest").
 on:
   workflow_dispatch:
   push:
@@ -87,11 +87,6 @@ jobs:
             target: android-tv
             arch: x86
             profile: tv_1080p
-          - device: tv34
-            api: 34
-            target: android-tv
-            arch: x86
-            profile: tv_1080p
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -112,7 +107,7 @@ jobs:
           ram-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: bash tools/qa/run_qa.sh qa-out/${{ matrix.device }} apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk apks/rel/public.apk
+          script: bash tools/qa/run_qa2.sh qa-out/${{ matrix.device }} apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk apks/rel/public.apk
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -129,19 +124,19 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: all
-      - name: Publish to the qa-results-1288 pre-release
+      - name: Publish to the qa-results-1288b pre-release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir up
           cp all/qa-apks/unit-summary.txt up/ 2>/dev/null || true
-          for d in tv30 tv34; do
+          for d in tv30; do
             [ -d all/qa-$d ] || continue
             for f in all/qa-$d/*; do [ -s "$f" ] && cp "$f" "up/$d-$(basename "$f")"; done
           done
           (cd all && zip -qr ../up/qa-everything.zip .)
-          gh release delete qa-results-1288 --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
-          gh release create qa-results-1288 --repo "$GITHUB_REPOSITORY" --prerelease --latest=false \
+          gh release delete qa-results-1288b --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
+          gh release create qa-results-1288b --repo "$GITHUB_REPOSITORY" --prerelease --latest=false \
             --target "$GITHUB_SHA" --title "QA results (emulators)" \
             --notes "Tested: $(tr '\n' ' ' < all/qa-apks/rel/tag.txt 2>/dev/null). Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             up/*
