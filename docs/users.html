@@ -35,6 +35,8 @@
   .pkg.promo { background: #2A1F4D; color: #B39DDB; }
   .gift { background: var(--bg); border: 1px solid #4A3A00; border-radius: 12px; padding: 10px 14px; margin: 6px 0 14px; }
   .acct { background: var(--bg); border: 1px solid #5D1F1F; border-radius: 12px; padding: 10px 14px; margin: 14px 0 6px; }
+  .due { background: #102A33; border: 1px solid #1F4D5D; border-radius: 14px; padding: 12px 16px; margin: 0 0 16px; display: grid; gap: 10px; }
+  .due .btn { margin-left: 8px; padding: 6px 14px; }
   .acct.come { border-color: #1F4D5D; }
   .acct h3 { margin: 0 0 6px; font-size: 16px; }
   .acct .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
@@ -103,12 +105,13 @@
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account can't see the user list. <button class="btn" data-signout>Use another account</button></div>
   <div id="dash" class="hidden">
+    <div class="due hidden" id="due"></div>
     <div class="stats" id="stats"></div>
     <div class="analysis" id="analysis"></div>
     <p class="small hidden" id="pkgOff">⭐ Packages are off right now (at <a href="packages">Packages</a>), so every viewer has everything. The Package column shows what each viewer will have once you turn packages on.</p>
     <div class="row" style="justify-content:space-between;margin-bottom:12px">
       <input type="search" id="q" placeholder="Search name, email, device or package">
-      <div class="row"><button class="btn primary" id="addBtn">➕ Add user</button><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
+      <div class="row"><button class="btn primary" id="addBtn">➕ Add user</button><button class="btn" id="csv">Download list (CSV)</button><button class="btn" id="mlBtn">📧 Mailing list</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
       <thead><tr><th>#</th><th>Name</th><th>Last seen</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Watching</th><th>Billing</th><th></th></tr></thead>
@@ -119,7 +122,7 @@
   <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🎁 <b>Gifts</b>: in a viewer's panel, <b>Give free Gold</b> turns on Gold for 1 week to 1 year, or forever, with no payment (a Gold package that's still on is made longer). <b>Add free credit</b> gives them dollars that ✓ Paid today takes off their next payment; their app shows it in 💳 My billing details.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
-  <p class="small">⚙ <b>Account</b> (at the bottom of a viewer's panel): <b>⛔ Deactivate</b> turns their sign-in off. Their app signs them out within about an hour (or when it next starts) and they can't sign back in until you press <b>✓ Reactivate</b>; nothing is deleted. <b>🗑 Delete permanently</b> (you type DELETE to confirm) removes their sign-in, package, billing details, messages, forum posts and viewing history for good. Delete only works for accounts not seen for more than 2 months. 💌 <b>Come back reminder</b>: viewers away 7+ days get one friendly message per time away, in the app (they see it when they next open Cable TV) with promo code COMEBACK (the same gift as WELCOME, each account once); the Activity summary sends them all with one button, and WhatsApp / Email open a ready message on your device. Both use your Google owner permission, like Set password.</p>
+  <p class="small">⚙ <b>Account</b> (at the bottom of a viewer's panel): <b>⛔ Deactivate</b> turns their sign-in off. Their app signs them out within about an hour (or when it next starts) and they can't sign back in until you press <b>✓ Reactivate</b>; nothing is deleted. <b>🗑 Delete permanently</b> (you type DELETE to confirm) removes their sign-in, package, billing details, messages, forum posts and viewing history for good. Delete only works for accounts not seen for more than 2 months. 💌 <b>Come back reminders</b>: viewers away 7+ days get a friendly message, one more each week, and a final notice with the closing date 2 weeks before the 2-month mark (the banner at the top lists who is due and who is ready to delete; deleting keeps only their email and name on the 📧 Mailing list), in the app (they see it when they next open Cable TV) with promo code COMEBACK (the same gift as WELCOME, each account once); the Activity summary sends them all with one button, and WhatsApp / Email open a ready message on your device. Both use your Google owner permission, like Set password.</p>
   <p class="small">➕ <b>Add user</b> makes a Cable TV account for someone before they install the app: type their name, email and a password you choose, then tell them. They open Cable TV, choose email sign-in and type the same email and password. They can change the password later in the app's Settings.</p>
   <p class="err" id="err"></p>
 </main>
@@ -135,6 +138,13 @@
     <p class="err" id="auErr"></p>
     <div class="row"><button class="btn primary" id="auSave" type="submit">Create account</button></div>
   </form>
+</dialog>
+<dialog id="ml">
+  <div class="bill-head"><div><h2>📧 Mailing list</h2><div class="small">Closed accounts whose email you kept for offers. Remove anyone who asks; under Canada's anti-spam law every offer email must say how to stop getting them.</div></div><button class="btn" id="mlClose" aria-label="Close">✕</button></div>
+  <div class="bill-body">
+    <div class="row"><button class="btn" id="mlCsv">Download (CSV)</button><span class="small" id="mlMsg"></span></div>
+    <div class="table-wrap"><table><thead><tr><th>Email</th><th>Name</th><th>Account closed</th><th></th></tr></thead><tbody id="mlRows"></tbody></table></div>
+  </div>
 </dialog>
 <dialog id="bill">
   <div class="bill-head">
@@ -253,7 +263,7 @@ if (!configured) {
     } catch (e) { $("err").textContent = "Couldn't load users: " + e.message; }
     await Promise.all([loadBilling(), loadUsage()]);
     users.sort((a, b) => (lastSeen(b).at || 0) - (lastSeen(a).at || 0));
-    stats(); render();
+    stats(); render(); dueBanner();
   });
 
   // Billing details: billing/{uid} is yours only; billingInfo/{uid} is what the viewer filled in
@@ -554,10 +564,10 @@ if (!configured) {
     };
     const comebackBox = () => {
       const due = users.filter(needsComeback);
-      const d = box(`💌 <b>Away ${AWAY_DAYS}+ days, no come back reminder yet:</b> ${due.length}`, due);
+      const d = box(`💌 <b>Come back reminders due:</b> ${due.length} (away ${AWAY_DAYS}+ days; one a week, then a final notice 2 weeks before closing)`, due);
       if (due.length) {
         const b = document.createElement("button"); b.className = "btn primary"; b.style.marginTop = "6px";
-        b.textContent = `💌 Send come back reminders (${due.length})`; b.onclick = () => sendComebacks(due); d.append(b);
+        b.textContent = `💌 Send reminders (${due.length})`; b.onclick = () => sendComebacks(due); d.append(b);
       }
       return d;
     };
@@ -807,60 +817,122 @@ if (!configured) {
     const ok = new Date(s.at.getTime() + (DELETE_AFTER_DAYS + 1) * 864e5);
     return `Can't delete yet: ${seenText(s)}. An account can only be deleted after more than 2 months without using Cable TV (from ${ok.toLocaleDateString([], { dateStyle: "medium" })}). To stop them now, use Deactivate.`;
   };
+  /**
+   * Removes an account for good: the sign-in, then everything we keep about them. Only their email and name are
+   * kept, in mailingList/{email} (owner-only), for offers (owner, 2026-10-09). Throws if something failed; pressing
+   * Delete again finishes the job.
+   */
+  async function removeAccount(u) {
+    const root = `projects/${firebaseConfig.projectId}/databases/(default)/documents`, skipped = [];
+    // 1. The sign-in itself: their app can't refresh its sign-in and signs them out.
+    try { await ownerCall(`https://identitytoolkit.googleapis.com/v1/projects/${firebaseConfig.projectId}/accounts:delete`, { localId: u.id }); }
+    catch (e) { if (!/USER_NOT_FOUND/.test(e.message)) throw e; }
+    // 2. Everything we keep about them, and their email on the mailing list (in the same save).
+    const names = [`users`, `plans`, `billing`, `billingInfo`, `inbox`].map(c => `${root}/${c}/${u.id}`);
+    try {
+      const m = await ownerCall(`${FS_BASE()}/inbox/${u.id}/messages?pageSize=300&mask.fieldPaths=uid`, null, "GET");
+      names.push(...(m.documents || []).map(d => d.name));
+    } catch (e) { skipped.push("messages"); }
+    for (const [c, all] of [["usage"], ["sponsorViews"], ["posts"], ["replies", true]]) {
+      try { names.push(...await docsOf(c, u.id, !!all)); } catch (e) { skipped.push(c === "replies" ? "forum replies" : c); }
+    }
+    const writes = names.map(n => ({ delete: n })), email = (u.email || "").trim().toLowerCase();
+    if (email.includes("@") && !email.includes("/")) writes.unshift({ update: { name: `${root}/mailingList/${email}`, fields: {
+      email: { stringValue: email }, name: { stringValue: u.name || "" }, deletedAt: { timestampValue: new Date().toISOString() }, source: { stringValue: "closed account" } } } });
+    for (let i = 0; i < writes.length; i += 400) await ownerCall(`${FS_BASE()}:commit`, { writes: writes.slice(i, i + 400) });
+    users = users.filter(x => x.id !== u.id); delete usage[u.id]; delete billing[u.id]; delete info[u.id]; delete plans[u.id];
+    return skipped;
+  }
   async function deleteForever(u) {
     const who = u.name || u.email || "this viewer";
     const block = deleteBlock(u);
     if (block) { $("aMsg").textContent = block; return alert(block); }
-    const typed = prompt(`Delete ${who} (${u.email || u.id}) permanently?\n\nThis removes their sign-in, package, billing details, messages, forum posts and viewing history. It can't be undone. If you only want to stop them for now, use Deactivate instead.\n\nType DELETE to confirm:`);
+    const typed = prompt(`Delete ${who} (${u.email || u.id}) permanently?\n\nThis removes their sign-in, package, billing details, messages, forum posts and viewing history. Only their email and name are kept, on your 📧 Mailing list for offers. It can't be undone. If you only want to stop them for now, use Deactivate instead.\n\nType DELETE to confirm:`);
     if (typed == null) return;
     if (typed.trim().toUpperCase() !== "DELETE") return alert("Nothing was deleted (you didn't type DELETE).");
     $("aMsg").textContent = "Deleting…";
-    const root = `projects/${firebaseConfig.projectId}/databases/(default)/documents`, skipped = [];
     try {
-      // 1. The sign-in itself: their app can't refresh its sign-in and signs them out.
-      try { await ownerCall(`https://identitytoolkit.googleapis.com/v1/projects/${firebaseConfig.projectId}/accounts:delete`, { localId: u.id }); }
-      catch (e) { if (!/USER_NOT_FOUND/.test(e.message)) throw e; }
-      // 2. Everything we keep about them.
-      const names = [`users`, `plans`, `billing`, `billingInfo`, `inbox`].map(c => `${root}/${c}/${u.id}`);
-      try {
-        const m = await ownerCall(`${FS_BASE()}/inbox/${u.id}/messages?pageSize=300&mask.fieldPaths=uid`, null, "GET");
-        names.push(...(m.documents || []).map(d => d.name));
-      } catch (e) { skipped.push("messages"); }
-      for (const [c, all] of [["usage"], ["sponsorViews"], ["posts"], ["replies", true]]) {
-        try { names.push(...await docsOf(c, u.id, !!all)); } catch (e) { skipped.push(c === "replies" ? "forum replies" : c); }
-      }
-      for (let i = 0; i < names.length; i += 400)
-        await ownerCall(`${FS_BASE()}:commit`, { writes: names.slice(i, i + 400).map(n => ({ delete: n })) });
-      users = users.filter(x => x.id !== u.id); delete usage[u.id]; delete billing[u.id]; delete info[u.id]; delete plans[u.id];
-      $("bill").close(); stats(); render();
-      alert(`${who} was deleted.` + (skipped.length ? `\n\nThese couldn't be checked and may still be there: ${skipped.join(", ")}.` : "") +
+      const skipped = await removeAccount(u);
+      $("bill").close(); stats(); render(); dueBanner();
+      alert(`${who} was deleted. Their email is on your mailing list.` + (skipped.length ? `\n\nThese couldn't be checked and may still be there: ${skipped.join(", ")}.` : "") +
         `\n\nIf they sign in again or make a new account, it starts empty. To keep someone out, use Deactivate instead.`);
     } catch (e) { $("aMsg").textContent = "Couldn't delete: " + e.message + ". Part of it may already be gone; press Delete permanently again to finish."; }
   }
+  // ---- Mailing list: mailingList/{email}, read and changed with your owner permission (no Firestore rule needed).
+  let mailing = [];
+  async function showMailing() {
+    $("mlMsg").textContent = "Loading…"; $("mlRows").innerHTML = ""; $("ml").showModal();
+    try {
+      mailing = [];
+      let page = "";
+      do {
+        const r = await ownerCall(`${FS_BASE()}/mailingList?pageSize=300${page ? "&pageToken=" + page : ""}`, null, "GET");
+        for (const d of r.documents || []) { const f = d.fields || {}; mailing.push({ name: d.name, email: f.email?.stringValue || "", who: f.name?.stringValue || "", at: f.deletedAt?.timestampValue ? new Date(f.deletedAt.timestampValue) : null }); }
+        page = r.nextPageToken || "";
+      } while (page);
+      mailing.sort((a, b) => (b.at || 0) - (a.at || 0));
+      $("mlMsg").textContent = mailing.length ? `${mailing.length} email${mailing.length > 1 ? "s" : ""}` : "Nobody yet. Deleted accounts' emails land here.";
+      for (const m of mailing) {
+        const tr = document.createElement("tr");
+        for (const v of [m.email, m.who, m.at ? m.at.toLocaleDateString() : ""]) { const td = document.createElement("td"); td.textContent = v; tr.append(td); }
+        const td = document.createElement("td"), a = document.createElement("a"); a.href = "#"; a.textContent = "✕ Remove";
+        a.onclick = async e => { e.preventDefault(); if (!confirm(`Remove ${m.email} from the mailing list for good?`)) return;
+          try { await ownerCall(`https://firestore.googleapis.com/v1/${m.name}`, null, "DELETE"); showMailing(); } catch (err) { $("mlMsg").textContent = "Couldn't remove: " + err.message; } };
+        td.append(a); tr.append(td); $("mlRows").append(tr);
+      }
+    } catch (e) { $("mlMsg").textContent = "Couldn't load it: " + e.message; }
+  }
+  $("mlBtn").onclick = showMailing;
+  $("mlClose").onclick = () => $("ml").close();
+  $("mlCsv").onclick = () => {
+    const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const csv = [["Email", "Name", "Account closed"].map(q).join(",")].concat(mailing.map(m => [m.email, m.who, m.at?.toISOString()].map(q).join(","))).join("\n");
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "cable-tv-mailing-list.csv"; a.click();
+  };
   $("aDel").onclick = () => cur && deleteForever(cur);
 
-  // ---- Come back reminders (owner, 2026-10-09): a viewer not seen for 7+ days gets one friendly message
-  // per time away, with promo code COMEBACK (the same gift as WELCOME, made on first use). In the app it's a
-  // private message they see when they next open Cable TV; WhatsApp and Email open on your own device.
-  // billing/{uid}.comebackAt (only you can read it) remembers when it was sent.
-  const AWAY_DAYS = 7, COMEBACK = "COMEBACK";
+  // ---- Come back reminders (owner, 2026-10-09). A viewer away 7 days gets a friendly message with promo code
+  // COMEBACK (the same gift as WELCOME, made on first use); then one more every week; when 2 weeks are left before
+  // the 2-month mark, a final notice with the date the account will be closed. After that the page suggests
+  // deleting the account (you confirm; nothing is deleted by itself). In the app it's a private message they see
+  // when they next open Cable TV; WhatsApp and Email open the same text on your own device.
+  // billing/{uid} (only you can read it) remembers comebackStep (1-6 weekly, 7 final), comebackFor (the "last
+  // seen" time that time away started from) and comebackAt; coming back starts a fresh count.
+  const AWAY_DAYS = 7, FINAL_DAYS = DELETE_AFTER_DAYS - 14, FINAL_STEP = 7, COMEBACK = "COMEBACK";
   let comebackCode;
-  const comebackSentAt = u => { const t = billing[u.id]?.comebackAt; return t instanceof Date ? t : toDate(t); };
-  /** Away 7+ days, not deactivated, not you, and no reminder since they were last seen. */
-  function needsComeback(u) {
-    const s = lastSeen(u), sent = comebackSentAt(u);
-    if (!s.at || u.disabled || (u.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase()) return false;
-    return Date.now() - s.at >= AWAY_DAYS * 864e5 && !(sent && sent > s.at);
+  const asDate = t => t instanceof Date ? t : toDate(t);
+  const awayDays = u => { const s = lastSeen(u); return s.at ? Math.floor((Date.now() - s.at) / 864e5) : 0; };
+  const closeDate = u => { const s = lastSeen(u); return s.at ? new Date(s.at.getTime() + (DELETE_AFTER_DAYS + 1) * 864e5) : null; };
+  const longDay = d => d.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" });
+  /** Which message they should have had by now: 0 none, 1-6 the weekly ones, 7 the final notice. */
+  const stepDue = u => { const d = awayDays(u); return d >= FINAL_DAYS ? FINAL_STEP : Math.min(6, Math.floor(d / AWAY_DAYS)); };
+  /** Which one they got in this time away (0 if they've been back since). */
+  function stepSent(u) {
+    const b = billing[u.id] || {}, s = lastSeen(u);
+    return b.comebackFor && s.at && Math.abs(b.comebackFor - s.at.getTime()) < 1000 ? (b.comebackStep || 1) : 0;
   }
+  const isOwner = u => (u.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  const needsComeback = u => !u.disabled && !isOwner(u) && stepDue(u) > stepSent(u);
+  /** Not seen for over 2 months and had the final notice: time to tidy up. */
+  const readyToDelete = u => !isOwner(u) && !deleteBlock(u) && !!lastSeen(u).at && stepSent(u) >= FINAL_STEP;
   const usedComeback = u => !!comebackCode?.usedBy?.[u.id];
-  function comebackText(u) {
-    const first = (u.name || "").trim().split(/\s+/)[0] || "there";
-    const gift = comebackCode && comebackCode.active !== false && !usedComeback(u)
-      ? `As a welcome back gift, here's ${giftLen(comebackCode.days)} of Gold free: open Settings › Packages in Cable TV and type promo code ${COMEBACK}. `
-      : "";
-    return `Hi ${first}, we miss you on Cable TV! 📺 We've added new channels, shows and features since you last watched. ${gift}Have a look at our latest promotions too. See you soon! – Cable TV`;
-  }
   const giftLen = days => days >= 360 ? "a year" : days >= 28 ? `${Math.round(days / 30)} month${Math.round(days / 30) > 1 ? "s" : ""}` : `${days} days`;
+  function comebackText(u, step = stepDue(u)) {
+    const first = (u.name || "").trim().split(/\s+/)[0] || "there";
+    const giftOn = comebackCode && comebackCode.active !== false && !usedComeback(u);
+    const howTo = `open Settings › Packages in Cable TV and type promo code ${COMEBACK}`;
+    if (step >= FINAL_STEP) {
+      const when = closeDate(u);
+      return `Hi ${first}, we haven't seen you on Cable TV for almost 2 months. To keep things tidy, your Cable TV account will be closed for good on ${when ? longDay(when) : "the date shown in the app"}. ` +
+        `To keep it, just open Cable TV before then, or reply to this message. ` + (giftOn ? `Your welcome back gift is still waiting: ${giftLen(comebackCode.days)} of Gold free, ${howTo}. ` : "") + `We'd love to have you back! – Cable TV`;
+    }
+    if (step <= 1)
+      return `Hi ${first}, we miss you on Cable TV! 📺 We've added new channels, shows and features since you last watched. ` +
+        (giftOn ? `As a welcome back gift, here's ${giftLen(comebackCode.days)} of Gold free: ${howTo}. ` : "") + `Have a look at our latest promotions too. See you soon! – Cable TV`;
+    return `Hi ${first}, it's been ${step} weeks since you last watched Cable TV. 📺 New shows and channels are waiting for you, and so are our latest promotions. ` +
+      (giftOn ? `Your welcome back gift is still there: ${giftLen(comebackCode.days)} of Gold free (${howTo}). ` : "") + `Hope to see you soon! – Cable TV`;
+  }
+  const stepName = n => n >= FINAL_STEP ? "final notice" : n === 1 ? "first reminder" : `week ${n} reminder`;
   /** Reads COMEBACK; makes it the first time, copying WELCOME's package and length (each account can use it once). */
   async function ensureComeback() {
     if (comebackCode) return comebackCode;
@@ -875,39 +947,72 @@ if (!configured) {
   }
   async function sendComeback(u) {
     await ensureComeback();
-    const text = comebackText(u);
+    const step = stepDue(u), text = comebackText(u, step), from = lastSeen(u).at.getTime();
     await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: auth.currentUser.uid, name: "Cable TV", text, createdAt: fs.serverTimestamp() });
     await fs.setDoc(fs.doc(db, "inbox", u.id), { uid: u.id, lastText: text.slice(0, 200), lastAt: fs.serverTimestamp(), lastFrom: "admin", userUnread: true, name: u.name || "", email: u.email || "" }, { merge: true });
-    await fs.setDoc(fs.doc(db, "billing", u.id), { comebackAt: fs.serverTimestamp() }, { merge: true });
-    (billing[u.id] ||= {}).comebackAt = new Date();
+    await fs.setDoc(fs.doc(db, "billing", u.id), { comebackAt: fs.serverTimestamp(), comebackStep: step, comebackFor: from }, { merge: true });
+    Object.assign(billing[u.id] ||= {}, { comebackAt: new Date(), comebackStep: step, comebackFor: from });
   }
   async function sendComebacks(list) {
     list = list.filter(needsComeback);
-    if (!list.length) return alert("They've all had a come back message already.");
+    if (!list.length) return alert("Nobody is due a reminder right now.");
     try { await ensureComeback(); } catch (e) { return alert("Couldn't get the COMEBACK code ready: " + e.message); }
-    if (!confirm(`Send a come back message to ${list.length} viewer${list.length > 1 ? "s" : ""} in the app?\n\n${list.map(u => u.name || u.email).join(", ")}\n\nThey see it when they next open Cable TV. Example:\n\n"${comebackText(list[0])}"\n\nEach viewer gets one per time away.`)) return;
+    const lines = list.map(u => `• ${u.name || u.email}: ${stepName(stepDue(u))} (away ${awayDays(u)} days)`).join("\n");
+    if (!confirm(`Send ${list.length} reminder${list.length > 1 ? "s" : ""} in the app?\n\n${lines}\n\nThey see it when they next open Cable TV. For example:\n\n"${comebackText(list[0])}"`)) return;
     let ok = 0; const failed = [];
     for (const u of list) { try { await sendComeback(u); ok++; } catch (e) { failed.push((u.name || u.email) + ": " + e.message); } }
-    stats(); render();
-    alert(`Sent to ${ok}.` + (failed.length ? `\n\nNot sent:\n${failed.join("\n")}` : ""));
+    stats(); render(); dueBanner();
+    alert(`Sent ${ok}.` + (failed.length ? `\n\nNot sent:\n${failed.join("\n")}` : ""));
   }
   function comebackPanel(u) {
-    const s = lastSeen(u), sent = comebackSentAt(u), need = needsComeback(u);
-    $("cbNow").textContent = sent && (!s.at || sent > s.at) ? `Sent ${sent.toLocaleString()}; they haven't been back since.`
-      : need ? `Away for ${Math.floor((Date.now() - s.at) / 864e5)} days, no reminder yet.` : `Not needed: ${seenText(s)}. It's for viewers away ${AWAY_DAYS}+ days (one per time away).`;
+    const sent = stepSent(u), due = stepDue(u), need = needsComeback(u), at = asDate(billing[u.id]?.comebackAt);
+    const close = closeDate(u);
+    $("cbNow").textContent = !due ? `Not needed: ${seenText(lastSeen(u))}. Reminders start after ${AWAY_DAYS} days away.`
+      : (sent ? `Sent the ${stepName(sent)} ${at ? at.toLocaleDateString() : ""}. ` : "") + (need ? `Due now: the ${stepName(due)} (away ${awayDays(u)} days).` : "Nothing more due this week.") +
+        (close && due ? ` Account can be closed from ${close.toLocaleDateString([], { dateStyle: "medium" })}.` : "");
     $("cbSend").disabled = !need; $("cbSend").classList.toggle("dim", !need);
-    const d = details(u), wa = intl(d.whatsapp || d.phone || ""), email = d.email || u.email, text = comebackText(u);
+    const d = details(u), wa = intl(d.whatsapp || d.phone || ""), email = d.email || u.email, text = comebackText(u, Math.max(1, due));
     $("cbWa").classList.toggle("hidden", !wa); $("cbWa").href = `https://wa.me/${wa}?text=${encodeURIComponent(text)}`;
-    $("cbEmail").classList.toggle("hidden", !email); $("cbEmail").href = `mailto:${encodeURIComponent(email || "")}?subject=${encodeURIComponent("We miss you on Cable TV")}&body=${encodeURIComponent(text)}`;
+    $("cbEmail").classList.toggle("hidden", !email); $("cbEmail").href = `mailto:${encodeURIComponent(email || "")}?subject=${encodeURIComponent(due >= FINAL_STEP ? "Your Cable TV account" : "We miss you on Cable TV")}&body=${encodeURIComponent(text)}`;
     $("cbMsg").textContent = "";
   }
   $("cbSend").onclick = async () => {
     if (!cur || !needsComeback(cur)) return;
     try { await ensureComeback(); } catch (e) { return $("cbMsg").textContent = "Couldn't get the COMEBACK code ready: " + e.message; }
-    if (!confirm(`Send this to ${cur.name || cur.email} in the app?\n\n"${comebackText(cur)}"`)) return;
-    try { await sendComeback(cur); comebackPanel(cur); stats(); render(); $("cbMsg").textContent = "✓ Sent. They'll see it when they next open Cable TV."; }
+    if (!confirm(`Send the ${stepName(stepDue(cur))} to ${cur.name || cur.email} in the app?\n\n"${comebackText(cur)}"`)) return;
+    try { await sendComeback(cur); comebackPanel(cur); stats(); render(); dueBanner(); $("cbMsg").textContent = "✓ Sent. They'll see it when they next open Cable TV."; }
     catch (e) { $("cbMsg").textContent = "Couldn't send: " + e.message; }
   };
+  /** The pop-up at the top when you open the page: reminders due today, and accounts that aren't coming back. */
+  function dueBanner() {
+    const el = $("due"); el.innerHTML = ""; el.classList.add("hidden");
+    const due = users.filter(needsComeback), gone = users.filter(readyToDelete);
+    if (!due.length && !gone.length) return;
+    el.classList.remove("hidden");
+    if (due.length) {
+      const p = document.createElement("div");
+      p.innerHTML = `💌 <b>${due.length} come back reminder${due.length > 1 ? "s" : ""} due:</b> `;
+      p.append(due.map(u => `${u.name || u.email} (${stepName(stepDue(u))})`).join(", "), " ");
+      const b = document.createElement("button"); b.className = "btn primary"; b.textContent = "Send them"; b.onclick = () => sendComebacks(due);
+      p.append(b); el.append(p);
+    }
+    if (gone.length) {
+      const p = document.createElement("div");
+      p.innerHTML = `🗑 <b>${gone.length} viewer${gone.length > 1 ? "s aren't" : " isn't"} coming back</b> (2 months away, final notice sent). Delete to keep the list tidy (their email is kept for offers): `;
+      p.append(gone.map(u => u.name || u.email).join(", "), " ");
+      const b = document.createElement("button"); b.className = "btn danger"; b.textContent = `Delete ${gone.length > 1 ? "them" : "it"}`; b.onclick = () => deleteMany(gone);
+      p.append(b); el.append(p);
+    }
+  }
+  async function deleteMany(list) {
+    const typed = prompt(`Delete ${list.length > 1 ? `these ${list.length} accounts` : "this account"} permanently?\n\n${list.map(u => `• ${u.name || ""} ${u.email || ""}`).join("\n")}\n\nOnly their email address and name are kept, on your mailing list for offers. Everything else is removed for good.\n\nType DELETE to confirm:`);
+    if (typed == null) return;
+    if (typed.trim().toUpperCase() !== "DELETE") return alert("Nothing was deleted (you didn't type DELETE).");
+    const done = [], failed = [];
+    for (const u of list) { try { await removeAccount(u); done.push(u.name || u.email); } catch (e) { failed.push(`${u.name || u.email}: ${e.message}`); } }
+    stats(); render(); dueBanner();
+    alert(`Deleted ${done.length}.` + (failed.length ? `\n\nNot deleted:\n${failed.join("\n")}` : ""));
+  }
 
   // ---- Gifts: free Gold (plans/{uid}, like /packages, marked gift) and free credit (billingInfo/{uid}.credit) ----
   function giftPanel(u) {
