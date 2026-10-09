@@ -1,6 +1,31 @@
 package com.livetv.app
 
 import android.app.PictureInPictureParams
+import android.content.Intent
+import android.speech.RecognizerIntent
+import android.widget.Toast
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Widgets
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
+import com.livetv.app.extras.Extras
+import com.livetv.app.extras.GuideScreen
+import com.livetv.app.extras.HomeScreenRow
+import com.livetv.app.extras.Profiles
+import com.livetv.app.extras.ReminderPopup
+import com.livetv.app.extras.Screensaver
+import com.livetv.app.extras.SleepTimerDialog
+import com.livetv.app.extras.SleepWarning
+import com.livetv.app.extras.WhoIsWatching
+import com.livetv.app.extras.WidgetStack
+import com.livetv.app.extras.WidgetsDialog
+import com.livetv.app.ui.focusGlow
 import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.os.Build
@@ -58,6 +83,48 @@ class MainActivity : ComponentActivity() {
     /** Cable TV's Iqra Quran section is open. */
     private var showQuran by mutableStateOf(false)
 
+    /** Cable TV's TV guide is open (2026-10-09). */
+    private var showGuide by mutableStateOf(false)
+
+    /** The sleep timer and widget pickers, from the full-screen channel bar. */
+    private var showSleep by mutableStateOf(false)
+    private var showWidgets by mutableStateOf(false)
+
+    /** Voice search: the TV's speech screen, then [MainViewModel.spoken] with what was said. */
+    // The plain activity-result call: the newer API needs a Fragment library this app doesn't carry (lint).
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == VOICE_SEARCH) {
+            data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()?.let(viewModel::spoken)
+        }
+    }
+
+    private fun startVoiceSearch() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            .putExtra(RecognizerIntent.EXTRA_PROMPT, "Say a channel name")
+        @Suppress("DEPRECATION")
+        val started = runCatching { startActivityForResult(intent, VOICE_SEARCH) }.isSuccess
+        if (!started) {
+            Toast.makeText(this, "Voice search isn't available on this TV. Use the search button instead.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /** A click on a channel on the TV's home screen opens it (HomeScreenRow). */
+    private fun takeChannelFrom(intent: Intent?) {
+        intent?.getStringExtra(HomeScreenRow.EXTRA_CHANNEL)?.let {
+            viewModel.pendingUrl = it
+            viewModel.openPending()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        takeChannelFrom(intent)
+    }
+
     /** Our YouTube-run channels that couldn't play there this session; their free-film schedule plays instead. */
     private var fellBack by mutableStateOf(setOf<String>())
 
@@ -73,6 +140,8 @@ class MainActivity : ComponentActivity() {
         com.livetv.app.data.MyScreen.init(this)
         com.livetv.app.data.ScreenLooks.init(this)
         com.livetv.app.ui.Themes.init(this)
+        Extras.init(this)
+        if (savedInstanceState == null) takeChannelFrom(intent)
         // Azan at prayer times while Cable TV is on screen (Iqra Quran > Namaz settings).
         QuranSection.startAzan(this)
         enableEdgeToEdge()
@@ -112,12 +181,25 @@ class MainActivity : ComponentActivity() {
             if (showGames && !Plans.canUse(Plans.Feature.Games)) showGames = false
             if (showQuran && !Plans.canUse(Plans.Feature.Quran)) showQuran = false
             if (showVod && !Plans.canUse(Plans.Feature.Library)) { showVod = false; vodStart = null }
+            if (showGuide && !Plans.canUse(Plans.Feature.Guide)) showGuide = false
             if (viewModel.state.value.playing != null && !Plans.canUse(Plans.Feature.FullScreen)) viewModel.stop()
             // The theme picked stays saved; without Themes the usual one shows.
             com.livetv.app.ui.Themes.unlocked = Plans.canUse(Plans.Feature.Themes)
         }
+        // A channel clicked on the TV's home screen opens once the channels are in.
+        LaunchedEffect(state.channels) { viewModel.openPending() }
+        // Our channels and the viewer's favourites in the TV home screen's "Cable TV" row (older Android TV).
+        LaunchedEffect(state.channels.size, state.favorites) {
+            if (Edition.LIVE_TV && state.channels.isNotEmpty()) HomeScreenRow.update(this@MainActivity, state.channels, state.favorites)
+        }
         if (showWeather && playing == null) {
             com.livetv.app.ui.WeatherScreen(onClose = { showWeather = false })
+        } else if (showGuide && playing == null) {
+            GuideScreen(
+                channels = state.visibleChannels.ifEmpty { state.channels },
+                onPlay = viewModel::play,
+                onClose = { showGuide = false },
+            )
         } else if (showGames && playing == null) {
             GamesScreen(onClose = { showGames = false })
         } else if (showQuran && playing == null) {
@@ -156,6 +238,9 @@ class MainActivity : ComponentActivity() {
                 barWake = viewModel.channelBarWake,
                 onBarHidden = { viewModel.channelBarHidden = it },
                 onZap = viewModel::zap,
+                onReport = if (Edition.LIVE_TV) ({ Extras.reportBroken(this@MainActivity, playing); viewModel.zap(1) }) else null,
+                barButtons = { if (Edition.LIVE_TV) ChannelBarExtras() },
+                overlay = { if (Edition.LIVE_TV) FloatingWidgets(playing) },
             )
         } else {
             ChannelListScreen(
@@ -176,9 +261,62 @@ class MainActivity : ComponentActivity() {
                 onOpenQuran = if (QuranSection.AVAILABLE) ({ if (!Plans.ask("Iqra Quran", Plans.Feature.Quran)) showQuran = true }) else null,
                 onOpenWeather = if (Edition.LIVE_TV) ({ if (!Plans.ask("Weather", Plans.Feature.Weather)) showWeather = true }) else null,
                 onWatch = viewModel::watched,
+                onOpenGuide = if (Edition.LIVE_TV) ({ if (!Plans.ask("TV guide", Plans.Feature.Guide)) showGuide = true }) else null,
+                onVoiceSearch = if (Edition.LIVE_TV) ::startVoiceSearch else null,
+                searchWake = viewModel.searchWake,
+                onReport = if (Edition.LIVE_TV) ({ Extras.reportBroken(this@MainActivity, it) }) else null,
             )
         }
         EditionOverlay()
+        if (Edition.LIVE_TV) {
+            if (showSleep) SleepTimerDialog(onDismiss = { showSleep = false })
+            if (showWidgets) WidgetsDialog(onDismiss = { showWidgets = false })
+            ReminderPopup(onWatch = { url ->
+                state.channels.firstOrNull { it.url == url }?.let { c ->
+                    showGuide = false
+                    if (Plans.has(Plans.Feature.FullScreen)) viewModel.play(c) else viewModel.watched(c)
+                }
+            })
+            SleepWarning(onSleep = { finishAffinity() })
+            if (Plans.has(Plans.Feature.Profiles)) {
+                WhoIsWatching(onPick = { if (Profiles.switchTo(it)) viewModel.profileChanged() })
+            }
+            Screensaver()
+        }
+    }
+
+    /** Cable TV's buttons on the full-screen channel bar: last channel, sleep timer, widgets. */
+    @Composable
+    private fun ChannelBarExtras() {
+        IconButton(onClick = viewModel::lastChannel, modifier = Modifier.focusGlow()) {
+            Icon(Icons.Filled.History, contentDescription = "Last channel", tint = Color.White)
+        }
+        val sleepAt by Extras.sleepAt.collectAsStateWithLifecycle()
+        IconButton(onClick = { showSleep = true }, modifier = Modifier.focusGlow()) {
+            Icon(Icons.Filled.Bedtime, contentDescription = "Sleep timer", tint = if (sleepAt != null) Color(0xFFFFD54F) else Color.White)
+        }
+        IconButton(onClick = { showWidgets = true }, modifier = Modifier.focusGlow()) {
+            Icon(Icons.Filled.Widgets, contentDescription = "Widgets", tint = Color.White)
+        }
+    }
+
+    /** The floating widgets in the corner the viewer picked, clear of the channel bar and the bottom line. */
+    @Composable
+    private fun BoxScope.FloatingWidgets(channel: com.livetv.app.data.Channel) {
+        val corner by Extras.corner.collectAsStateWithLifecycle()
+        val align = when (corner) {
+            Extras.Corner.TopRight -> Alignment.TopEnd
+            Extras.Corner.TopLeft -> Alignment.TopStart
+            Extras.Corner.BottomRight -> Alignment.BottomEnd
+            Extras.Corner.BottomLeft -> Alignment.BottomStart
+        }
+        val top = corner == Extras.Corner.TopRight || corner == Extras.Corner.TopLeft
+        WidgetStack(
+            channel,
+            Modifier
+                .align(align)
+                .padding(start = 24.dp, end = 24.dp, top = if (top) 72.dp else 0.dp, bottom = if (top) 0.dp else 64.dp),
+        )
     }
 
     /**
@@ -229,7 +367,34 @@ class MainActivity : ComponentActivity() {
         Box(Modifier.fillMaxSize().background(Color.Black))
     }
 
+    override fun dispatchTouchEvent(ev: android.view.MotionEvent): Boolean {
+        Extras.touch()
+        if (Extras.screensaverOn.value) {
+            if (ev.actionMasked == android.view.MotionEvent.ACTION_UP) Extras.screensaverOn.value = false
+            return true
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        Extras.touch()
+        // The screensaver is up: this press only closes it.
+        if (Extras.screensaverOn.value) {
+            if (event.action == KeyEvent.ACTION_UP) Extras.screensaverOn.value = false
+            return true
+        }
+        if (Edition.LIVE_TV) {
+            // The remote's Last / Recall key goes back to the channel before.
+            if (event.keyCode == KeyEvent.KEYCODE_LAST_CHANNEL) {
+                if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) viewModel.lastChannel()
+                return true
+            }
+            // The search or microphone key, on remotes that pass it to the app: voice search.
+            if (event.keyCode == KeyEvent.KEYCODE_SEARCH || event.keyCode == KeyEvent.KEYCODE_VOICE_ASSIST) {
+                if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) startVoiceSearch()
+                return true
+            }
+        }
         // A sponsor card is showing: OK opens the sponsor's website.
         if (event.keyCode in okKeys) {
             if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0 && SponsorKey.onOk != null) okForSponsor = true
@@ -309,3 +474,6 @@ class MainActivity : ComponentActivity() {
         inPictureInPicture = isInPictureInPictureMode
     }
 }
+
+/** Request code for the TV speech screen (voice search). */
+private const val VOICE_SEARCH = 4207

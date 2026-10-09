@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -101,6 +102,12 @@ fun PlayerScreen(
     onBarHidden: (Boolean) -> Unit = {},
     /** Phones: a swipe changes channel (+1 next, -1 previous); null for movies. */
     onZap: ((Int) -> Unit)? = null,
+    /** "Report and go to the next channel" when the channel won't play; null hides it (movies). */
+    onReport: (() -> Unit)? = null,
+    /** More buttons on the channel bar, before 123 (Cable TV's Last channel, Sleep timer and Widgets). */
+    barButtons: @Composable () -> Unit = {},
+    /** Drawn over the picture, under the channel bar (Cable TV's floating widgets). */
+    overlay: @Composable BoxScope.() -> Unit = {},
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -231,6 +238,7 @@ fun PlayerScreen(
         }
         // The owner's channel: its logo in the corner and its scrolling line.
         if (MyChannel.isMine(channel)) MyChannelOverlay(channel)
+        if (!inPictureInPicture && !adBreak) overlay()
 
         AnimatedVisibility(
             visible = barShown && !inPictureInPicture,
@@ -261,6 +269,7 @@ fun PlayerScreen(
                         Text(it, color = Color.White.copy(alpha = 0.7f), style = MaterialTheme.typography.bodySmall)
                     }
                 }
+                barButtons()
                 if (onNumberPad != null) {
                     TextButton(onClick = { onNumberPad(true) }, modifier = Modifier.focusGlow()) {
                         Text("123", color = Color.White, fontWeight = FontWeight.Bold)
@@ -384,6 +393,12 @@ fun PlayerScreen(
                 Text(message, color = Color.White)
                 Spacer(Modifier.height(16.dp))
                 Button(onClick = { streamPlayer.retry() }, modifier = Modifier.focusGlow()) { Text("Try again") }
+                if (onReport != null) {
+                    Spacer(Modifier.height(8.dp))
+                    TextButton(onClick = onReport, modifier = Modifier.focusGlow()) {
+                        Text("⚠ Report and go to the next channel", color = Color.White)
+                    }
+                }
             }
         }
     }

@@ -100,6 +100,9 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material.icons.filled.CalendarViewWeek
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.ReportProblem
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Home
@@ -206,6 +209,14 @@ fun ChannelListScreen(
     onOpenQuran: (() -> Unit)? = null,
     /** A channel picked to play in 1+List's player, remembered as the last one watched. */
     onWatch: (Channel) -> Unit = {},
+    /** Opens the TV guide (Cable TV, 2026-10-09); null hides its button. */
+    onOpenGuide: (() -> Unit)? = null,
+    /** Voice search with the remote's microphone; null hides the mic button. */
+    onVoiceSearch: (() -> Unit)? = null,
+    /** Bumped when voice search filled in the search: the search bar opens. */
+    searchWake: Int = 0,
+    /** "Channel not working" from a channel's menu in 1+List; null hides it. */
+    onReport: ((Channel) -> Unit)? = null,
 ) {
     var searching by rememberSaveable { mutableStateOf(false) }
     val searchButtonFocus = remember { FocusRequester() }
@@ -326,6 +337,8 @@ fun ChannelListScreen(
     val duoMode = wideScreen && tileLayout == TileLayout.Duo
     val newsFocus = remember { FocusRequester() }
     var listChannelId by rememberSaveable { mutableStateOf(state.lastWatchedId) }
+    // The Last channel button and voice search change the channel watched: 1+List's player follows.
+    LaunchedEffect(state.lastWatchedId) { state.lastWatchedId?.let { listChannelId = it } }
     // TVs and tablets show a fixed window of tiles that slides along the list one channel at a
     // time; [windowStart] is the channel in the first tile.
     val windowed = wideScreen && !listMode && !newsMode && !browseMode && !carouselMode && !stripMode && !duoMode
@@ -539,6 +552,7 @@ fun ChannelListScreen(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
+    LaunchedEffect(searchWake) { if (searchWake > 0) searching = true }
     // Back closes the search bar (and clears the search) instead of closing the app.
     BackHandler(enabled = searching) {
         onQueryChange("")
@@ -641,6 +655,22 @@ fun ChannelListScreen(
                             Text("Library", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
                         }
                     }
+                    if (onOpenGuide != null) {
+                        if (wideScreen) {
+                            TextButton(
+                                onClick = onOpenGuide,
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusGlow(),
+                            ) {
+                                Icon(Icons.Filled.CalendarViewWeek, contentDescription = null)
+                                Text("Guide", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
+                        } else {
+                            IconButton(onClick = onOpenGuide, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.Filled.CalendarViewWeek, contentDescription = "TV guide")
+                            }
+                        }
+                    }
                     if (onOpenGames != null) {
                         if (wideScreen) {
                             TextButton(
@@ -700,6 +730,11 @@ fun ChannelListScreen(
                             if (previewSound) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff,
                             contentDescription = if (previewSound) "Mute previews" else "Unmute previews",
                         )
+                    }
+                    if (onVoiceSearch != null) {
+                        IconButton(onClick = onVoiceSearch, modifier = Modifier.focusGlow()) {
+                            Icon(Icons.Filled.Mic, contentDescription = "Voice search")
+                        }
                     }
                     IconButton(modifier = Modifier.focusRequester(searchButtonFocus).focusGlow(), onClick = {
                         if (searching) onQueryChange("")
@@ -922,6 +957,7 @@ fun ChannelListScreen(
                         onSelect = { listChannelId = it.id; onWatch(it) },
                         onOpen = onPlay,
                         free = freeScreen,
+                        onReport = onReport,
                     )
                     else -> BoxWithConstraints(Modifier.fillMaxSize().then(if (fullTiles || bigPlayer) Modifier.background(Color.Black) else Modifier)) {
                     // TVs and tablets: the chosen layout (16, 6, 4 or 2 tiles). Phones: as many as fit.
@@ -1935,6 +1971,8 @@ private fun PlayerWithList(
     onOpen: (Channel) -> Unit,
     /** Cable TV's Free package on a TV: the "Info Corner" layout ([FreeInfoPanel]). */
     free: Boolean = false,
+    /** "Channel not working" in a channel's menu (hold OK); null hides it. */
+    onReport: ((Channel) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val selected = all.firstOrNull { it.id == selectedId } ?: channels.firstOrNull()
@@ -2122,6 +2160,18 @@ private fun PlayerWithList(
                             onToggleFavorite(channel)
                         },
                     )
+                    if (onReport != null) {
+                        DropdownMenuItem(
+                            text = { Text("Channel not working") },
+                            leadingIcon = { Icon(Icons.Filled.ReportProblem, contentDescription = null) },
+                            onClick = {
+                                menu = false
+                                onReport(channel)
+                                // On to the next channel in the list.
+                                channels.getOrNull(index + 1)?.let(onSelect)
+                            },
+                        )
+                    }
                 }
                 }
             }

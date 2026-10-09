@@ -444,7 +444,7 @@ if (!configured) {
     return LANG_BY_COUNTRY[(c.c || "").toLowerCase()] || "Other";
   }
   const countryOf = c => isOurs(c) ? "Spark (our channels)" : COUNTRY[(c.c || "").toLowerCase()] || (c.c ? c.c.toUpperCase() : "Other");
-  const FEATURE_LABEL = { list: "1+List", browse: "Browse", carousel: "Carousel", strip: "Strip", duo: "Duo", five: "1+3", two: "1×2", four: "2×2", six: "2×3", news: "News", cp24: "CP24", home: "Home", mine: "My Screen", full: "Full screen channel", library: "Movies & Dramas", games: "Games", quran: "Iqra Quran", weather: "Weather" };
+  const FEATURE_LABEL = { list: "1+List", browse: "Browse", carousel: "Carousel", strip: "Strip", duo: "Duo", five: "1+3", two: "1×2", four: "2×2", six: "2×3", news: "News", cp24: "CP24", home: "Home", mine: "My Screen", full: "Full screen channel", library: "Movies & Dramas", games: "Games", quran: "Iqra Quran", weather: "Weather", guide: "TV guide" };
   const featureLabel = k => FEATURE_LABEL[k] || k;
   let watchRange = 7;
   function watchPanel(u) {

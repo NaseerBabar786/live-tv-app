@@ -1230,6 +1230,11 @@ private fun Radar(place: Location.Place, mini: Boolean, modifier: Modifier, onWe
                             .replace("__ZOOM__", if (mini) "6" else "7")
                             .replace("__MINI__", if (mini) "1" else "0")
                         WebView(context).apply {
+                            // Without this the page's height is its content's (none), so the map is 0 px tall.
+                            layoutParams = android.view.ViewGroup.LayoutParams(
+                                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                            )
                             settings.javaScriptEnabled = true
                             settings.domStorageEnabled = true
                             isFocusable = false
