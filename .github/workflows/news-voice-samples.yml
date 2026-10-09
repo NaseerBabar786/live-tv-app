@@ -1,0 +1,29 @@
+name: News voice samples
+# Every newsreader saying a few lines in their own voice (tools/news/presenters/voices.json), for the owner to approve.
+# Result: channel-media/news-voice-<Name>.mp4 (never touches the on-air files).
+on:
+  push:
+    branches-ignore: [main]
+    paths: ["tools/news/presenters/voices.json", "tools/news/voice_samples.py", ".github/workflows/news-voice-samples.yml"]
+  workflow_dispatch:
+jobs:
+  voices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q edge-tts numpy pillow
+          for id in anchor-1f anchor-5f anchor-6f anchor-7f anchor-8f anchor-9n2 anchor-3hf anchor-m1f anchor-m6f anchor-m7f anchor-m8f anchor-m10f anchor-m11f; do
+            curl -fsSL -m 120 -o "tools/news/presenters/clips/$id.mp4" \
+              "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || echo "no clip for $id"
+          done
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          python3 tools/news/voice_samples.py out
+          gh release upload channel-media out/news-voice-*.mp4 -R "$GITHUB_REPOSITORY" --clobber

@@ -1,0 +1,18 @@
+{
+ "about": "Each newsreader's own voice (owner 2026-10-09: different voices for different people). Microsoft Edge's free Urdu voices: ur-PK Uzma and Asad, ur-IN Gul and Salman; pitch and speed make each person sound different. Keyed by the reader's name, so every newsroom version of a person sounds the same.",
+ "voices": {
+  "Sana":    {"voice": "ur-PK-UzmaNeural",   "pitch": "+0Hz",  "rate": "+0%"},
+  "Ayesha":  {"voice": "ur-IN-GulNeural",    "pitch": "+0Hz",  "rate": "+0%"},
+  "Zara":    {"voice": "ur-PK-UzmaNeural",   "pitch": "+12Hz", "rate": "+6%"},
+  "Hina":    {"voice": "ur-IN-GulNeural",    "pitch": "-8Hz",  "rate": "-4%"},
+  "Mehwish": {"voice": "ur-PK-UzmaNeural",   "pitch": "-10Hz", "rate": "-5%"},
+  "Areeba":  {"voice": "ur-IN-GulNeural",    "pitch": "+12Hz", "rate": "+5%"},
+  "Priya":   {"voice": "ur-IN-GulNeural",    "pitch": "+5Hz",  "rate": "-2%"},
+  "Imran":   {"voice": "ur-PK-AsadNeural",   "pitch": "+0Hz",  "rate": "+0%"},
+  "Faisal":  {"voice": "ur-IN-SalmanNeural", "pitch": "+0Hz",  "rate": "+0%"},
+  "Kamran":  {"voice": "ur-PK-AsadNeural",   "pitch": "-10Hz", "rate": "-4%"},
+  "Tariq":   {"voice": "ur-IN-SalmanNeural", "pitch": "+8Hz",  "rate": "+6%"},
+  "Saad":    {"voice": "ur-PK-AsadNeural",   "pitch": "+10Hz", "rate": "+5%"},
+  "Hassan":  {"voice": "ur-IN-SalmanNeural", "pitch": "-8Hz",  "rate": "-3%"}
+ }
+}

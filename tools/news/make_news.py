@@ -278,7 +278,18 @@ def read_wav(path):
 
 async def _tts(text, voice, path):
     import edge_tts
-    await edge_tts.Communicate(text, voice, rate=RATE).save(path)
+    name, pitch, rate = (voice.split("|") + ["+0Hz", RATE])[:3]   # "voice|pitch|rate", see voice_of()
+    await edge_tts.Communicate(text, name, rate=rate, pitch=pitch).save(path)
+
+def voice_of(reader):
+    """The newsreader's own voice (tools/news/presenters/voices.json, by name; owner 2026-10-09: a different voice
+    for each person), as "voice|pitch|rate". A reader not listed gets the plain lady's or man's voice."""
+    plain = VOICE_B if reader and reader.get("voice") == VOICE_B else VOICE_A
+    try:
+        v = json.load(open(os.path.join(HERE, "presenters", "voices.json")))["voices"][reader["name"]]
+        return f"{v['voice']}|{v.get('pitch', '+0Hz')}|{v.get('rate', RATE)}"
+    except Exception:
+        return plain
 
 def speak(text, voice, base, offline):
     wav = base + ".wav"
@@ -766,7 +777,7 @@ def main():
             for i, sec in enumerate(present)}
     # The voice always matches the newsreader on camera: a man reads with a man's voice, a lady with a lady's (owner 2026-10-08).
     reader = newsreader(slot, room, in_set)
-    rv = VOICE_B if reader and reader.get("voice") == VOICE_B else VOICE_A
+    rv = voice_of(reader)
     VOICE = {sec: rv for sec in ORDER}
 
     # Owner's pick (2026-10-08, weather idea 1): the weather centre with the same newsreader replaces the weather card.
