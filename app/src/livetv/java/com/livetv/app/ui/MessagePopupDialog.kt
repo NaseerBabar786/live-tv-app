@@ -47,9 +47,9 @@ fun MessagePopupDialog(message: MessagePopup.Incoming) {
     val first = remember { FocusRequester() }
     // The remote starts on "👍 OK, got it". The dialog's window may not be ready at first, so try again a few times.
     LaunchedEffect(message.at) {
-        repeat(5) {
-            delay(200)
-            if (runCatching { first.requestFocus() }.isSuccess) return@LaunchedEffect
+        for (wait in listOf(100L, 300L, 600L)) {
+            delay(wait)
+            runCatching { first.requestFocus() }
         }
     }
 
