@@ -66,6 +66,14 @@ class MainActivity : ComponentActivity() {
         if (CrashGuard.start(this)) return
         Watching.init(this)
         Features.init(this)
+        // QA branch only (emulator): adb shell am broadcast -a com.livetv.QA_MESSAGE --es text "..."
+        androidx.core.content.ContextCompat.registerReceiver(applicationContext, object : android.content.BroadcastReceiver() {
+            override fun onReceive(c: android.content.Context, i: android.content.Intent) {
+                MessagePopup.sendReply = { kotlinx.coroutines.delay(500); android.util.Log.i("QA-MSG", "reply sent: $it") }
+                MessagePopup.markRead = { android.util.Log.i("QA-MSG", "marked read") }
+                MessagePopup.show(MessagePopup.Incoming(listOf(i.getStringExtra("text") ?: "Hello"), System.currentTimeMillis()))
+            }
+        }, android.content.IntentFilter("com.livetv.QA_MESSAGE"), androidx.core.content.ContextCompat.RECEIVER_EXPORTED)
         com.livetv.app.data.Location.init(this)
         com.livetv.app.data.WeatherApp.init(this)
         com.livetv.app.data.NewsScreen.init(this)
