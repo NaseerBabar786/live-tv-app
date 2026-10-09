@@ -64,6 +64,11 @@
     </div>
     <p class="small" style="margin:0 0 14px">📺 Every sponsor showing today also plays on <b>Spark Ads, channel 48</b>, round the clock, with our Cable TV promos: their video (5 to 60 seconds) or else their picture for 10 seconds. Changes reach the channel within the hour.</p>
 
+    <div id="bookings" class="panel hidden" style="margin-bottom:18px">
+      <h2 style="margin-top:0">📩 Booking requests</h2>
+      <p class="small">Sent by businesses from the Spark TV website (tv.bulkbazaar.ca/spark/advertise). Call or WhatsApp them, then tap <b>Make sponsor</b> to start their sponsor with these details filled in.</p>
+      <div id="bookingList"></div>
+    </div>
     <form id="form" class="panel hidden" style="margin-bottom:18px">
       <h2 id="formTitle" style="margin-top:0">New sponsor</h2>
       <label class="f">Picture (a wide 16:9 picture works best, for example 1280 × 720)
@@ -223,6 +228,7 @@ if (!configured) {
       }
       render();
       publishAds();
+      loadBookings();
     } catch (e) { $("err").textContent = "Couldn't load the sponsors: " + denied(e); }
   }
 
@@ -243,6 +249,45 @@ if (!configured) {
       await fs.setDoc(fs.doc(db, "channel", "ads-sponsors"), { data, updatedAt: fs.serverTimestamp() });
       publishedAds = data;
     } catch (e) { console.warn("Spark Ads list not saved:", e); }
+  }
+
+  // Booking requests from the Spark website: adBookings/{id} (anyone may add one, only the admin reads them).
+  async function loadBookings() {
+    let list = [];
+    try {
+      const snap = await fs.getDocs(fs.query(fs.collection(db, "adBookings"), fs.orderBy("createdAt", "desc")));
+      list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch (e) {
+      $("bookings").classList.remove("hidden");
+      $("bookingList").innerHTML = `<p class="small">${e.code === "permission-denied" ? "To see booking requests here, add the 'adBookings' rule in Firestore › Rules (see the setup notes)." : "Couldn't load booking requests: " + e.message}</p>`;
+      return;
+    }
+    $("bookings").classList.toggle("hidden", !list.length);
+    $("bookingList").innerHTML = "";
+    for (const b of list) {
+      const el = document.createElement("div"); el.className = "panel"; el.style.margin = "10px 0";
+      el.innerHTML = `<b></b><div class="small who"></div><div class="small what"></div><div class="small notes"></div>
+        <div class="row" style="margin-top:8px"><a class="btn wa" target="_blank" rel="noopener">WhatsApp</a><button class="btn primary make">Make sponsor</button><button class="btn del">Delete</button></div>`;
+      el.querySelector("b").textContent = `${b.business || "(no name)"}${b.kind ? " · " + b.kind : ""}`;
+      el.querySelector(".who").textContent = [b.person, b.phone, b.email, b.website].filter(Boolean).join(" · ");
+      const when = b.createdAt?.toDate ? b.createdAt.toDate().toLocaleString() : "";
+      el.querySelector(".what").textContent = [b.spot, b.length, b.creative, b.start ? "from " + b.start : "", b.months, when ? "sent " + when : ""].filter(Boolean).join(" · ");
+      el.querySelector(".notes").textContent = b.notes || "";
+      el.querySelector(".wa").href = "https://wa.me/" + (b.phone || "").replace(/\D/g, "").replace(/^(\d{10})$/, "1$1");
+      el.querySelector(".make").onclick = () => {
+        openForm(null);
+        $("name").value = b.business || ""; $("contact").value = b.phone || ""; $("website").value = b.website || "";
+        $("start").value = /^\d{4}-\d{2}-\d{2}$/.test(b.start || "") ? b.start : "";
+        $("dPerson").value = b.person || ""; $("dPhone").value = b.phone || ""; $("dEmail").value = b.email || "";
+        $("dPackage").value = [b.spot, b.length, b.months].filter(Boolean).join(", ");
+        $("dNotes").value = [b.creative, b.notes].filter(Boolean).join(". ");
+      };
+      el.querySelector(".del").onclick = async () => {
+        if (!confirm(`Delete the request from ${b.business || "this business"}?`)) return;
+        try { await fs.deleteDoc(fs.doc(db, "adBookings", b.id)); loadBookings(); } catch (e) { $("err").textContent = e.message; }
+      };
+      $("bookingList").append(el);
+    }
   }
 
   function status(s) {

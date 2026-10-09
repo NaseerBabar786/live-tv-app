@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spark TV · Free channels in Urdu, Hindi, English and Punjabi</title>
+<meta name="description" content="Spark TV is a network of free TV channels in Urdu, Hindi, English and Punjabi: films, dramas, music, kids, cooking, poetry, sports and more, day and night. Watch free and advertise your business.">
+<meta property="og:title" content="Spark TV network">
+<meta property="og:description" content="Free TV channels in Urdu, Hindi, English and Punjabi, day and night.">
+<meta property="og:image" content="https://tv.bulkbazaar.ca/media/spark-montage-poster.jpg">
+<link rel="icon" href="../channel/logos/spark-tv-square.png">
+<link rel="stylesheet" href="spark.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="./" aria-label="Spark TV home"><img src="../channel/logos/spark-tv.png" alt="spark tv"></a>
+    <nav>
+      <a href="./" class="on">Home</a>
+      <a href="channels">Channels</a>
+      <a href="../channel/" class="hide-sm">Watch</a>
+      <a href="advertise" class="cta">Advertise</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <img class="poster" src="hero.jpg" alt="">
+  <video autoplay muted loop playsinline poster="hero.jpg" aria-hidden="true">
+    <source src="../media/spark-montage.mp4" type="video/mp4">
+  </video>
+  <div class="wrap">
+    <div class="eyebrow">The Spark TV network</div>
+    <h1>Free TV for every family,<br><span class="grad">in your own language</span></h1>
+    <p class="lead">Films, dramas, music, kids, cooking, poetry, cars, sports and travel, on air day and night in Urdu, Hindi, English and Punjabi. Every channel is free to watch.</p>
+    <div class="facts">
+      <span class="chip"><b id="count">30</b> channels</span>
+      <span class="chip"><b>4</b> languages</span>
+      <span class="chip"><b>24/7</b> on air</span>
+      <span class="chip"><b>Free</b> to watch</span>
+    </div>
+    <div class="row">
+      <a class="btn primary" href="#live">▶ Watch live now</a>
+      <a class="btn" href="advertise">Advertise on Spark</a>
+    </div>
+  </div>
+</section>
+
+<section id="live">
+  <div class="wrap">
+    <div class="eyebrow">On air right now</div>
+    <h2>Pick a channel and watch</h2>
+    <p class="lead" style="margin-bottom:22px">These are our channels as they play this minute. Tap one to watch it here; the full-screen player and today's guide are one tap away.</p>
+    <div class="live-box">
+      <div>
+        <div class="player">
+          <span class="badge live-dot">LIVE</span>
+          <iframe id="player" title="Spark TV live" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+        </div>
+        <div class="row" style="margin-top:12px;justify-content:space-between">
+          <div><b id="liveName">Spark Dramas Urdu</b> <span class="small" id="liveDial"></span></div>
+          <a class="btn" id="liveOpen" href="../channel/">Open full player ›</a>
+        </div>
+      </div>
+      <div class="picker" id="picker" aria-label="Channels on air"></div>
+    </div>
+  </div>
+</section>
+
+<section id="channels" style="background:linear-gradient(180deg, transparent, rgba(124,58,237,.08), transparent)">
+  <div class="wrap">
+    <div class="eyebrow">Our channels</div>
+    <h2>Something for everyone at home</h2>
+    <div class="lang-tabs" id="langTabs" role="tablist"></div>
+    <div class="cards" id="cards"></div>
+    <p style="margin-top:20px"><a class="btn" href="channels">See every channel and what each one plays ›</a></p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">How to watch</div>
+    <h2>On your TV, phone or computer</h2>
+    <div class="grid3" style="margin-top:20px">
+      <div class="panel feature"><div class="ic">📺</div><h3>On the big TV</h3><p>Spark channels are in the free Cable TV app for Google TV and Android TV. Type the channel number on the remote, or find them under Spark in the channel list.</p><p><a href="../#download">Get the free app ›</a></p></div>
+      <div class="panel feature"><div class="ic">💻</div><h3>In your browser</h3><p>Every channel also plays right here on the website, on any computer or phone, with no sign-in.</p><p><a href="../channel/">Open the player ›</a></p></div>
+      <div class="panel feature"><div class="ic">🗓️</div><h3>Real TV, not playlists</h3><p>Each channel runs a fixed schedule from midnight Toronto time, so everyone who tunes in sees the same show, just like cable.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="panel" style="display:grid;gap:20px;align-items:center;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));padding:30px">
+      <div>
+        <div class="eyebrow">For businesses</div>
+        <h2>Put your business on Spark TV</h2>
+        <p class="lead">Reach Pakistani, Indian and Punjabi families in their living rooms. Your ad plays in our breaks and round the clock on Spark Ads. We can even make the video for you.</p>
+        <div class="row"><a class="btn primary" href="advertise#book">Book an ad</a><a class="btn" href="advertise">Prices and ad spots</a></div>
+      </div>
+      <video controls preload="none" poster="../media/spark-ad-tour-poster.jpg" style="width:100%;border-radius:14px;aspect-ratio:16/9;background:#000"><source src="../media/spark-ad-tour.mp4" type="video/mp4"></video>
+    </div>
+  </div>
+</section>
+
+<footer class="bottom">
+  <div class="wrap cols">
+    <div><img src="../channel/logos/spark-tv.png" alt="spark tv" style="height:44px"><p>Free channels in Urdu, Hindi, English and Punjabi. Part of the free Cable TV app, brought to you by <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener" style="display:inline">Bulk Bazaar Inc.</a></p></div>
+    <div><b>Watch</b><a href="channels">All channels</a><a href="../channel/">Live player</a><a href="../#download">Get the Cable TV app</a></div>
+    <div><b>Advertise</b><a href="advertise">Ad spots and prices</a><a href="advertise#book">Book an ad</a><a href="../channel/?c=ads">Spark Ads channel</a></div>
+    <div><b>Contact</b><a href="https://wa.me/14376026500">WhatsApp 437 602 6500</a><a href="mailto:naseerahmadbabar@gmail.com?subject=Spark%20TV">Email us</a><a href="../privacy">Privacy policy</a></div>
+  </div>
+</footer>
+
+<script type="module">
+import { sparkChannels, onNow, LANGS } from "./channels.js";
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const all = sparkChannels();
+$("count").textContent = all.length;
+const now = {};
+
+// Live now: the channels that play on our own locked page, with what's on.
+const liveList = all.filter(c => c.live);
+function play(c) {
+  $("player").src = c.live;
+  $("liveName").textContent = c.name;
+  $("liveDial").textContent = "· channel " + c.dial;
+  $("liveOpen").href = c.watch;
+  document.querySelectorAll(".pick").forEach(b => b.classList.toggle("sel", b.dataset.id === c.id));
+}
+$("picker").innerHTML = liveList.map(c => `<button class="pick" data-id="${c.id}"><img alt="" src="${esc(c.logo)}" style="object-fit:contain;padding:10px"><div><b>${c.dial} · ${esc(c.name)}</b><span>${esc(c.tagline)}</span></div></button>`).join("");
+$("picker").onclick = e => { const b = e.target.closest(".pick"); if (b) play(all.find(c => c.id === b.dataset.id)); };
+play(liveList.find(c => c.id === "dramas") || liveList[0]);
+
+// Channel cards by language.
+let lang = "ur";
+$("langTabs").innerHTML = LANGS.map(l => `<button role="tab" data-l="${l.key}">${l.name} <span class="small">${l.native}</span></button>`).join("");
+$("langTabs").onclick = e => { const b = e.target.closest("button"); if (b) { lang = b.dataset.l; cards(); } };
+function card(c) {
+  const n = now[c.id];
+  return `<a class="card" href="${c.watch}"><div class="art">${n ? `<img class="thumb" alt="" loading="lazy" onerror="this.remove()" src="${n.thumb}">` : ""}<img class="lg" alt="${esc(c.name)}" src="${esc(c.logo)}"><span class="dial">${c.dial}</span></div>
+    <div class="body"><b>${esc(c.name)}</b><span class="tl">${esc(c.tagline)}</span>${n ? `<span class="now">${esc(n.title)}</span>` : ""}</div></a>`;
+}
+function cards() {
+  document.querySelectorAll("#langTabs button").forEach(b => b.classList.toggle("sel", b.dataset.l === lang));
+  $("cards").innerHTML = all.filter(c => c.lang === lang).map(card).join("");
+}
+cards();
+
+// What's on now, filled in as each channel's day loads.
+all.forEach(c => onNow(c).then(n => {
+  if (!n) return;
+  now[c.id] = n;
+  const img = document.querySelector(`.pick[data-id="${c.id}"] img`);
+  if (img) { const t = new Image(); t.onload = () => { img.src = n.thumb; img.style.objectFit = "cover"; img.style.padding = "0"; }; t.src = n.thumb; }
+  const sp = document.querySelector(`.pick[data-id="${c.id}"] span`);
+  if (sp) sp.textContent = "On now: " + n.title;
+  if (c.lang === lang) cards();
+}));
+</script>
+<script src="../assets/visits.js"></script>
+</body>
+</html>
