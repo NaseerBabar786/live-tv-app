@@ -8,11 +8,18 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-          curl -sL -o m.tgz https://github.com/${{ github.repository }}/releases/download/spark-ad-media/spark-music.tgz
-          tar xzf m.tgz
-          ffmpeg -v error -y -i m/04.mp3 -vn -c:a aac -b:a 192k sur-inspiring-advertising-rafael-krux.mp4
-          gh release upload sur-media sur-inspiring-advertising-rafael-krux.mp4 -R ${{ github.repository }} --clobber
+          mkdir -p out/t
+          for c in gurbani moviespa sufi; do
+            mkdir -p out/t/$c
+            python3 -c "import json;[print(v['id']) for v in json.load(open('docs/channel/yt-$c.json'))['videos'][:14]]" | while read id; do
+              curl -sfL -o out/t/$c/$id.jpg https://i.ytimg.com/vi/$id/maxresdefault.jpg || curl -sfL -o out/t/$c/$id.jpg https://i.ytimg.com/vi/$id/hqdefault.jpg || true
+            done
+          done
+          ls -R out/t | head -60
+      - run: |
+          tar czf spark-thumbs-pa.tgz -C out t
+          gh release upload spark-ad-media spark-thumbs-pa.tgz --clobber
         env:
           GH_TOKEN: ${{ github.token }}
