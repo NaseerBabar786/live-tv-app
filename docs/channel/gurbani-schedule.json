@@ -4,8 +4,18 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "videos": [],
+ "videos": [
+  {
+   "id": "wait",
+   "title": "Gurbani will begin in a moment",
+   "url": "https://tv.bulkbazaar.ca/channel/media/gurbani-wait.mp4",
+   "secs": 20,
+   "kind": "ident"
+  }
+ ],
  "slots": [],
- "loop": [],
- "note": "Spark Gurbani has no backup of other music (the owner, 2026-10-08): only Gurbani, or a wait card until its list loads."
+ "loop": [
+  "wait"
+ ],
+ "note": "Spark Gurbani has no backup of other music (the owner, 2026-10-08): only Gurbani, or this silent wait card until its list loads. The app hides a channel whose schedule has no videos, so the card must stay."
 }
