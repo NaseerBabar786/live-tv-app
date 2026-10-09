@@ -376,14 +376,97 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     "or hold OK on a channel in the list."
             }
         }
+        rememberPrevious(channel)
         repo.lastChannelUrl = channel.url
         _state.update { it.copy(playing = channel, lastWatchedId = channel.id) }
+        com.livetv.app.extras.HomeScreenRow.watched(getApplication(), channel)
     }
 
     /** Remembers a channel watched without full screen (1+List's player) as the last one watched. */
     fun watched(channel: Channel) {
+        rememberPrevious(channel)
         repo.lastChannelUrl = channel.url
         _state.update { it.copy(lastWatchedId = channel.id) }
+        com.livetv.app.extras.HomeScreenRow.watched(getApplication(), channel)
+    }
+
+    /** The channel watched before the one on now, for the Last channel button (owner, 2026-10-09). */
+    private var previousId: String? = null
+
+    private fun rememberPrevious(next: Channel) {
+        val now = _state.value.playing?.id ?: _state.value.lastWatchedId
+        if (now != null && now != next.id) previousId = now
+    }
+
+    /** Back to the channel watched before (the remote's Last / Recall key, or the ↺ button); full screen stays full screen. */
+    fun lastChannel() {
+        val s = _state.value
+        val previous = s.channels.firstOrNull { it.id == previousId } ?: return
+        if (!Plans.allowsChannel(previous)) return
+        if (s.playing != null) play(previous) else watched(previous)
+    }
+
+    /** Bumped to open 1+List's search bar (voice search filled it in). */
+    var searchWake by mutableIntStateOf(0)
+
+    /**
+     * What the viewer said (voice search): while a channel is full screen the best match opens at once; otherwise the
+     * list shows the channels that match, with the best one in the player.
+     */
+    fun spoken(text: String) {
+        val said = text.trim()
+        if (said.isEmpty()) return
+        val best = bestMatch(said, _state.value.channels.filter(Plans::allowsChannel)) ?: run {
+            Toast.makeText(getApplication(), "No channel called \"$said\"", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (_state.value.playing != null) {
+            play(best)
+            return
+        }
+        val matches = _state.value.channels.count { it.name.contains(said, ignoreCase = true) }
+        setQuery(if (matches > 0) said else best.name)
+        searchWake++
+        watched(best)
+    }
+
+    /** The channel whose name best fits [said]: the whole phrase in the name first, then the most words, ours first. */
+    private fun bestMatch(said: String, channels: List<Channel>): Channel? {
+        val words = said.lowercase().split(Regex("\\s+")).filter { it.length > 1 && it != "channel" && it != "tv" }
+        val key = ChannelRepository.nameKey(said)
+        fun score(c: Channel): Int {
+            val name = c.name.lowercase()
+            val nameKey = ChannelRepository.nameKey(c.name)
+            var s = 0
+            if (nameKey == key) s += 1000
+            if (key.isNotEmpty() && nameKey.startsWith(key)) s += 500
+            if (name.contains(said.lowercase())) s += 300
+            s += words.count { name.contains(it) } * 50
+            if (MyChannel.isMine(c)) s += 5
+            return s
+        }
+        return channels.maxByOrNull(::score)?.takeIf { score(it) >= 50 }
+    }
+
+    /** Another family profile was picked: its favourites, last channel and languages are read again. */
+    fun profileChanged() {
+        previousId = null
+        opened = false
+        _state.update {
+            it.copy(favorites = repo.favorites, languageFilter = repo.languages, playing = null, lastWatchedId = null, filter = FILTER_ALL, category = null)
+        }
+        reload()
+    }
+
+    /** A channel to open once the channels have loaded (a click on the TV's home screen). */
+    var pendingUrl: String? = null
+
+    /** Opens [pendingUrl] when its channel is in the list: full screen with Gold, in 1+List's player otherwise. */
+    fun openPending() {
+        val url = pendingUrl ?: return
+        val channel = _state.value.channels.firstOrNull { it.url == url } ?: return
+        pendingUrl = null
+        if (Plans.has(Plans.Feature.FullScreen)) play(channel) else watched(channel)
     }
 
     fun stop() {
