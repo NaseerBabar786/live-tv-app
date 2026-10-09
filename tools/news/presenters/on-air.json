@@ -1,17 +1,20 @@
 {
- "about": "AI newsreaders on air, taking turns by hour (hour % count), lady and man alternating. Owner approved (2026-10-08) ladies Sana, Ayesha, Zara, Hina, Mehwish, Priya (Hindi) and all six men Imran, Faisal, Kamran, Tariq, Saad, Hassan, all in Studio F (no logo). Each needs tools/news/presenters/clips/<id>.mp4, which build-news.yml downloads from channel-media news-move-<id>-raw.mp4.",
+ "about": "AI newsreaders on air, taking turns by hour (hour % count). Owner approved (2026-10-08) ladies Sana, Ayesha, Zara, Hina, Mehwish, Priya (Hindi), Areeba and the six men Imran, Faisal, Kamran, Tariq, Saad, Hassan. Owner kept four newsrooms (2026-10-08): each reader's clip in a room is <reader><room letter>; headlines by day Q (daytime, city windows), at night N (busy newsroom); full report by day T (two floors), at night R (evening, wall of screens). Day = 06:00-17:59 Toronto. build-news.yml downloads every clip (make_news.py --reader-ids) from channel-media news-move-<id>-raw.mp4.",
  "readers": [
-  "anchor-1f",
-  "anchor-m1f",
-  "anchor-5f",
-  "anchor-m6f",
-  "anchor-6f",
-  "anchor-m7f",
-  "anchor-7f",
-  "anchor-m8f",
-  "anchor-8f",
-  "anchor-m10f",
-  "anchor-3hf",
-  "anchor-m11f"
- ]
+  "anchor-1",
+  "anchor-m1",
+  "anchor-5",
+  "anchor-m6",
+  "anchor-6",
+  "anchor-m7",
+  "anchor-7",
+  "anchor-m8",
+  "anchor-8",
+  "anchor-m10",
+  "anchor-3h",
+  "anchor-m11",
+  "anchor-9"
+ ],
+ "rooms": {"headlines-day": "q", "headlines-night": "n", "full-day": "t", "full-night": "r"},
+ "same": {"anchor-9n": "anchor-9n2"}
 }

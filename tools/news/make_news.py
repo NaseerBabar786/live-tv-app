@@ -278,7 +278,18 @@ def read_wav(path):
 
 async def _tts(text, voice, path):
     import edge_tts
-    await edge_tts.Communicate(text, voice, rate=RATE).save(path)
+    name, pitch, rate = (voice.split("|") + ["+0Hz", RATE])[:3]   # "voice|pitch|rate", see voice_of()
+    await edge_tts.Communicate(text, name, rate=rate, pitch=pitch).save(path)
+
+def voice_of(reader):
+    """The newsreader's own voice (tools/news/presenters/voices.json, by name; owner 2026-10-09: a different voice
+    for each person), as "voice|pitch|rate". A reader not listed gets the plain lady's or man's voice."""
+    plain = VOICE_B if reader and reader.get("voice") == VOICE_B else VOICE_A
+    try:
+        v = json.load(open(os.path.join(HERE, "presenters", "voices.json")))["voices"][reader["name"]]
+        return f"{v['voice']}|{v.get('pitch', '+0Hz')}|{v.get('rate', RATE)}"
+    except Exception:
+        return plain
 
 def speak(text, voice, base, offline):
     wav = base + ".wav"
@@ -577,12 +588,26 @@ def probe(out):
               open(os.path.join(out, "news-probe.json"), "w"), ensure_ascii=False, indent=1)
     print("\n".join(NOTES))
 
-def newsreader(slot, room=None, in_set=False):
-    """The AI newsreader on camera for this hour (tools/news/presenters/on-air.json takes turns by hour).
+def reader_ids(onair, kind=None, room=None):
+    """The clip ids on air. on-air.json lists each newsreader once ("readers") and, since the owner kept four
+    newsrooms (2026-10-08), which room each kind of bulletin uses ("rooms": headlines/full by day 06-17 and night;
+    never the day room at night or the night room by day): a reader's clip in a room is their id + the room letter
+    ("same" maps exceptions). Without "rooms", the readers are the clip ids themselves. kind=None lists every clip
+    any bulletin may need."""
+    readers, rooms = onair["readers"], onair.get("rooms")
+    if not rooms: return list(readers)
+    same = onair.get("same", {})
+    def ids(letter): return [same.get(r + letter, r + letter) for r in readers]
+    if kind is None: return [i for letter in dict.fromkeys(rooms.values()) for i in ids(letter)]
+    return ids(rooms[f"{kind}-{room}"])
+
+def newsreader(slot, room=None, in_set=False, kind="headlines"):
+    """The AI newsreader on camera (tools/news/presenters/on-air.json takes turns), in the newsroom for this kind of
+    bulletin at this time of day (room day/night; default from the slot's hour).
     Her moving clip (news-move-<id>-raw.mp4, made by news-presenter-move.yml) must be in tools/news/presenters/clips/."""
     here = os.path.join(HERE, "presenters")
     try:
-        ids = json.load(open(os.path.join(here, "on-air.json")))["readers"]
+        ids = reader_ids(json.load(open(os.path.join(here, "on-air.json"))), kind, room or day_room(slot.hour))
         people = {p["id"]: p for p in json.load(open(os.path.join(here, "presenters.json")))["moving"]["people"]}
     except Exception as e:
         NOTES.append(f"no newsreader: {e}"); return None
@@ -708,6 +733,8 @@ def add_promos(body, secs, slot, work, mp4):
     return [os.path.basename(f) for f in picked]
 
 def main():
+    if "--reader-ids" in sys.argv:   # every clip a bulletin may need, for the workflows to download
+        print(" ".join(reader_ids(json.load(open(os.path.join(HERE, "presenters", "on-air.json")))))); return
     args = sys.argv[1:]
     if not args: raise SystemExit(__doc__)
     out = args[0]; offline = "--offline" in args
@@ -767,8 +794,8 @@ def main():
     LEAD = {sec: ("اب " if 0 < i < len(present) - 1 else "اور آخر میں " if i else "") + NAMES[sec] + " کی خبریں۔ "
             for i, sec in enumerate(present)}
     # The voice always matches the newsreader on camera: a man reads with a man's voice, a lady with a lady's (owner 2026-10-08).
-    reader = newsreader(slot, room, in_set)
-    rv = VOICE_B if reader and reader.get("voice") == VOICE_B else VOICE_A
+    reader = newsreader(slot, room, in_set, kind)
+    rv = voice_of(reader)
     VOICE = {sec: rv for sec in ORDER}
 
     # Owner's pick (2026-10-08, weather idea 1): the weather centre with the same newsreader replaces the weather card.
