@@ -579,7 +579,7 @@ CHANNELS = {
         # Spark Comedy Punjabi (probe 2026-10-09): Punjabi comedy from the producers' and labels' own channels.
         # Stage dramas only from the label's official channel; the owner approves each in Studio before air.
         "lang": "pa",
-        "name": "Bazaar Comedy Punjabi", "mins": (15, 180), "search": ["punjabi comedy full", "stage drama full", "chhankata"],
+        "name": "Spark Comedy Punjabi", "mins": (15, 180), "search": ["punjabi comedy full", "stage drama full", "chhankata"],
         "keep": r"comedy|stage drama|chhankata|funny|hasya|mazahiya|jugtan|full movie",
         "skip": r"mujra|dance|hot\b|item song|adult|18\+|vulgar|double meaning|interview|podcast|news|#shorts|status",
         "sources": [
