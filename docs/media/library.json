@@ -235,50 +235,6 @@
    "srt": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-hindi.srt"
   },
   {
-   "id": "cable-tv-video-ad-1",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 1",
-   "url": "media/cable-tv-video-ad-1.mp4",
-   "secs": 60,
-   "poster": "media/cable-tv-ad-1-poster.jpg",
-   "about": "One minute: no cable bill, 100% free, layouts, Bazaar channels, easy install, tv.bulkbazaar.ca.",
-   "credit": "Our own ad with original music. Not on any channel yet. Off air for now (owner chose Ad 6, 2026-10-07)."
-  },
-  {
-   "id": "cable-tv-video-ad-2",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 2",
-   "url": "media/cable-tv-video-ad-2.mp4",
-   "secs": 30,
-   "poster": "media/cable-tv-ad-2-poster.jpg",
-   "about": "30 seconds: the Bazaar channels one by one.",
-   "credit": "Our own ad. Music: \"Upbeat Sitar\" by Antti Luode, CC BY 3.0. Off air for now (owner chose Ad 6, 2026-10-07)."
-  },
-  {
-   "id": "cable-tv-video-ad-3",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 3",
-   "url": "media/cable-tv-video-ad-3.mp4",
-   "secs": 30,
-   "poster": "media/cable-tv-ad-3-poster.jpg",
-   "about": "30 s promo: 15 free channels to watch, 3 easy install steps, what you get",
-   "credit": "Our own ad with original music. Off air for now (owner chose Ad 6, 2026-10-07)."
-  },
-  {
-   "id": "cable-tv-video-ad-4",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 4",
-   "url": "media/cable-tv-video-ad-4.mp4",
-   "secs": 30,
-   "poster": "media/cable-tv-ad-4-poster.jpg",
-   "about": "30 s promo: 15 free channels, today's app modes (1+List, Browse, Carousel, 2×2, 1+3, News) playing our own channels' shows, our Bazaar channels, 3 easy install steps",
-   "credit": "Our own ad with original music. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Off air for now (owner chose Ad 6, 2026-10-07)."
-  },
-  {
    "id": "cable-tv-video-ad-7",
    "cat": "promos",
    "lang": "en",
@@ -288,17 +244,6 @@
    "poster": "media/cable-tv-ad-7-poster.jpg",
    "about": "60 s TV-remote tour for the new packages: all 7,800+ channels free in 1+List, then every Gold feature (full screen, Favorites, every mode, Library, Games, Iqra Quran, Azan Clock, Weather, Themes), Free vs Gold, 7 days of Gold free + code WELCOME, and 3 install steps",
    "credit": "Our own ad. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Upbeat Sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08, rotating with Ads 8 and 9; also the home page video and the app pop-up promo."
-  },
-  {
-   "id": "cable-tv-video-ad-6",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 6",
-   "url": "media/cable-tv-video-ad-6.mp4",
-   "secs": 60,
-   "poster": "media/cable-tv-ad-6-poster.jpg",
-   "about": "60 s promo: one app, every screen. 15 free channels, every TV mode playing our shows, the app on phone and PC, the remote, what you get and 3 easy install steps",
-   "credit": "Our own ad with original music. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Replaced by Ad 7 on 2026-10-08 (old package wording)."
   },
   {
    "id": "cable-tv-video-ad-9",
@@ -320,29 +265,7 @@
    "secs": 30,
    "poster": "media/cable-tv-ad-8-poster.jpg",
    "about": "30 s Gold promo for the new packages: 7,800+ channels free, Gold $9.99/month adds full screen, every mode, Library, Games, Iqra Quran, Azan Clock, Weather and Themes; 7 days of Gold free, then code WELCOME for one more month, and how to use the code",
-   "credit": "Our own ad. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Upbeat Sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08, rotating with Ad 6."
-  },
-  {
-   "id": "cable-tv-promotion-ad-promo-code",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Promotion Ad with Promo Code",
-   "url": "media/cable-tv-promotion-ad-promo-code.mp4",
-   "secs": 30,
-   "poster": "media/cable-tv-promo-code-ad-poster.jpg",
-   "about": "30 s Gold promo: $9.99/month, 6,800+ channels from 170+ countries, every mode, movies & dramas, games; code WELCOME = one free month of Gold per account, and how to use it in the app",
-   "credit": "Our own ad with original music (Ad 4's). Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Was on air 2026-10-07 to 2026-10-08; replaced by Ad 8 after the package change."
-  },
-  {
-   "id": "cable-tv-layouts-tour",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV layouts tour",
-   "url": "media/livetv-tour.mp4",
-   "secs": 100,
-   "poster": "media/livetv-tour-poster.jpg",
-   "about": "100 s: every layout and feature on a Chromecast with Google TV (the old home page video).",
-   "credit": "Our own video."
+   "credit": "Our own ad. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Upbeat Sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08, rotating with Ads 7 and 9."
   },
   {
    "id": "show-promo-bazaar-tv-news-the-full-report-all-0000",
