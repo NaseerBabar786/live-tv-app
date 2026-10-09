@@ -1,50 +1,42 @@
 {
  "name": "Spark Sports (sportshi)",
- "built": "2026-10-09 15:28 UTC",
+ "built": "2026-10-09 18:29 UTC",
  "videos": [
   {
-   "id": "yC9NfyI7yR8",
-   "title": "भारत पहुँचा फाइनल में | Hindi Highlights | IND v ENG | Men’s T20 World Cup 2026",
+   "id": "CUCGM_92DMQ",
+   "title": "मेज़बान इंग्लैंड की फाइनल में एंट्री | Hindi Highlights | ENG v SA | Women’s T20 World Cup 2026",
    "label": "ICC",
-   "mins": 5.0,
+   "mins": 6.983333333333333,
    "found": "2026-10-09",
    "lang": "hi",
    "top": true
   },
   {
-   "id": "7o883RQzbh0",
-   "title": "भारत की T20 इतिहास की सबसे बड़ी जीत | Hindi Highlights | IND v NAM | Men’s T20 World Cup 2026",
+   "id": "5wrT3BL-E4w",
+   "title": "फ़ाइनल में पहुँची ऑस्ट्रेलिया | Hindi Highlights | AUS V WI | Women’s T20 World Cup 2026",
    "label": "ICC",
-   "mins": 5.016666666666667,
+   "mins": 6.45,
    "found": "2026-10-09",
    "lang": "hi",
    "top": true
   },
   {
-   "id": "PNdu5pXGSDw",
-   "title": "भारत की ज़िम्बाब्वे पर अहम जीत | Hindi Highlights | IND v ZIM | Men’s T20 World Cup 2026",
+   "id": "8FXH5I1kmh4",
+   "title": "ऑस्ट्रेलिया की एक और दमदार जीत | Hindi Highlights | IND V AUS | Women’s T20 World Cup 2026",
    "label": "ICC",
-   "mins": 5.016666666666667,
+   "mins": 7.0,
    "found": "2026-10-09",
    "lang": "hi",
    "top": true
   },
   {
-   "id": "5ACv6Yp_rDo",
-   "title": "भारत बना चैंपियन | Hindi Highlights | IND v NZ | Men’s T20 World Cup Final",
-   "label": "ICC",
-   "mins": 5.016666666666667,
+   "id": "DY45NChXK-k",
+   "title": "india women vs south africa women test match highlight |cricket|highlight in hindi|",
+   "label": "BCCI",
+   "mins": 16.716666666666665,
    "found": "2026-10-09",
    "lang": "hi",
-   "top": true
-  },
-  {
-   "id": "OC8t9A_y00U",
-   "title": "भारत की लगातार चौथी जीत | Hindi Highlights | IND v NED | Men’s T20 World Cup 2026",
-   "label": "ICC",
-   "mins": 5.016666666666667,
-   "found": "2026-10-09",
-   "lang": "hi",
+   "posted": "2024-06-29",
    "top": true
   },
   {
@@ -180,25 +172,6 @@
    "label": "Pro Kabaddi",
    "mins": 4.6,
    "found": "2026-10-09",
-   "lang": "hi",
-   "top": true
-  },
-  {
-   "id": "DY45NChXK-k",
-   "title": "india women vs south africa women test match highlight |cricket|highlight in hindi|",
-   "label": "BCCI",
-   "mins": 16.716666666666665,
-   "found": "2026-10-09",
-   "lang": "hi",
-   "posted": "2024-06-29",
-   "top": true
-  },
-  {
-   "id": "SdWQobyzbWk",
-   "title": "ऑस्ट्रेलिया ने जीता विश्व कप | Hindi Highlights | ENG v AUS | Women’s T20 World Cup 2026 Final",
-   "label": "ICC",
-   "mins": 7.0,
-   "found": "2026-10-08",
    "lang": "hi",
    "top": true
   }
