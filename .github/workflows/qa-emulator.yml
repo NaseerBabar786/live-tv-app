@@ -1,0 +1,162 @@
+name: QA on emulators
+
+# The 1.11.1 candidate (build 1390) on Android TV emulators: the owner's checklist, with screenshots.
+# Results go to the "qa-results-1390" pre-release (never "latest").
+on:
+  workflow_dispatch:
+  push:
+    branches: ['qa/**']
+
+concurrency:
+  group: qa-emulator-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Run unit tests
+        run: ./gradlew testLivetvDebugUnitTest --continue 2>&1 | tee unit-tests.txt; exit ${PIPESTATUS[0]}
+        continue-on-error: true
+      - name: Summarise unit tests
+        if: always()
+        run: |
+          python3 - <<'PY' > unit-summary.txt
+          import glob, xml.etree.ElementTree as ET
+          t = f = e = s = 0; failed = []
+          for p in glob.glob("app/build/test-results/testLivetvDebugUnitTest/*.xml"):
+              r = ET.parse(p).getroot()
+              t += int(r.get("tests")); f += int(r.get("failures")); e += int(r.get("errors")); s += int(r.get("skipped"))
+              for c in r.iter("testcase"):
+                  if c.find("failure") is not None or c.find("error") is not None:
+                      failed.append(f"{c.get('classname')}.{c.get('name')}")
+          print(f"Unit tests: {t} run, {f} failed, {e} errors, {s} skipped")
+          for x in failed: print("FAILED", x)
+          PY
+          cat unit-summary.txt
+      # Same version name and code as the candidate (as build-apk.yml does), so the no-sign-in copy
+      # doesn't see the public 1.11.0 as an update and cover every screen with "New update available".
+      - name: Cable TV version name, as build 1390
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          python3 tools/version_codes.py scale
+          latest=$(gh release view --json tagName -q .tagName 2>/dev/null || true)
+          held=$(gh release view approved --json name -q .name 2>/dev/null || true)
+          python3 tools/public_version.py apply "$(python3 tools/public_version.py test 1390 "$latest" "$held")"
+          grep -m2 versionName app/build.gradle.kts
+      # Built without the TV sign-in secret, so the app skips sign-in on the emulator.
+      - name: Build no-sign-in APK
+        run: ./gradlew assembleLivetvDebug
+      # Build 1390 (commit 209d0e5), the 1.11.1 candidate, straight from its own Build APK run.
+      - uses: actions/download-artifact@v4
+        with:
+          name: live-tv-debug-apk
+          run-id: 37968395771
+          github-token: ${{ github.token }}
+          path: built1390
+      - name: Get the test APK and the public one
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir rel
+          ls -la built1390
+          cp "$(find built1390 -name '*.apk' | head -1)" rel/LiveTV.apk
+          echo "Build APK #1390 (209d0e5) artifact live-tv-debug-apk" > rel/tag.txt
+          gh release download --repo "$GITHUB_REPOSITORY" --pattern LiveTV.apk --output rel/public.apk
+          gh api "repos/$GITHUB_REPOSITORY/releases/latest" -q .tag_name >> rel/tag.txt
+          cat rel/tag.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa-apks
+          path: |
+            rel/
+            app/build/outputs/apk/livetv/debug/app-livetv-debug.apk
+            unit-summary.txt
+            unit-tests.txt
+
+  emulator:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - device: tv30
+            api: 30
+            target: android-tv
+            arch: x86
+            profile: tv_1080p
+          - device: tv34
+            api: 34
+            target: android-tv
+            arch: x86
+            profile: tv_1080p
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: qa-apks
+          path: apks
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api }}
+          target: ${{ matrix.target }}
+          arch: ${{ matrix.arch }}
+          profile: ${{ matrix.profile }}
+          ram-size: 4096M
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash tools/qa/run_qa.sh qa-out/${{ matrix.device }} apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk apks/rel/public.apk; bash tools/qa/run_qa2.sh qa-out/${{ matrix.device }}-b apks/rel/LiveTV.apk apks/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk apks/rel/public.apk
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa-${{ matrix.device }}
+          path: qa-out/
+
+  publish:
+    needs: emulator
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: all
+      - name: Publish to the qa-results-1390 pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir up
+          cp all/qa-apks/unit-summary.txt up/ 2>/dev/null || true
+          for d in tv30 tv34; do
+            [ -d all/qa-$d ] || continue
+            for sub in all/qa-$d/*/; do
+              n=$(basename "$sub")
+              for f in "$sub"*; do if [ -f "$f" ] && [ -s "$f" ]; then cp "$f" "up/$n-$(basename "$f")"; fi; done
+            done
+          done
+          (cd all && zip -qr ../up/qa-everything.zip .)
+          gh release delete qa-results-1390 --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
+          gh release create qa-results-1390 --repo "$GITHUB_REPOSITORY" --prerelease --latest=false \
+            --target "$GITHUB_SHA" --title "QA results (emulators)" \
+            --notes "Tested: $(tr '\n' ' ' < all/qa-apks/rel/tag.txt 2>/dev/null). Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            up/*
