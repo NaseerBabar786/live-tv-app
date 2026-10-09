@@ -1,11 +1,23 @@
 {
- "updated": "2026-10-08T21:26Z",
+ "updated": "2026-10-09T00:38Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "oIeP3pAayno",
+   "title": "Canada's Thanksgiving long weekend forecast: snow, rain or sunshine? | #thanksgiving",
+   "channel": "The Weather Network",
+   "published": 1791505816
+  },
+  {
+   "id": "F_n-wrg9kZA",
+   "title": "Thanksgiving weekend to bring first flakes to the Prairies | #snow",
+   "channel": "The Weather Network",
+   "published": 1791504074
+  },
   {
    "id": "hAo3Pxyyb5w",
    "title": "October's drastic daylight change across Canada | #darkwinter",
@@ -107,12 +119,6 @@
    "title": "Isaias Could Become a Major Hurricane Before Landfall on Gulf Coast",
    "channel": "AccuWeather",
    "published": 1791386983
-  },
-  {
-   "id": "lYvk9oOV7Vc",
-   "title": "Tropical storm Isaias expected to become first Atlantic hurricane",
-   "channel": "The Weather Network",
-   "published": 1791375783
   },
   {
    "id": "5NQ8nFgwvBw",
