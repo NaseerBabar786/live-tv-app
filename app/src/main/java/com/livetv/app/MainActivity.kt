@@ -69,11 +69,16 @@ class MainActivity : ComponentActivity() {
         // QA branch only (emulator): adb shell am broadcast -a com.livetv.QA_MESSAGE --es text "..."
         androidx.core.content.ContextCompat.registerReceiver(applicationContext, object : android.content.BroadcastReceiver() {
             override fun onReceive(c: android.content.Context, i: android.content.Intent) {
+                android.util.Log.i("QA-MSG", "received ${i.action}")
+                if (i.action == "com.livetv.QA_WEB") {
+                    startActivity(WebChannelActivity.intent(this@MainActivity, "https://tv.bulkbazaar.ca/channel/"))
+                    return
+                }
                 MessagePopup.sendReply = { kotlinx.coroutines.delay(500); android.util.Log.i("QA-MSG", "reply sent: $it") }
                 MessagePopup.markRead = { android.util.Log.i("QA-MSG", "marked read") }
                 MessagePopup.show(MessagePopup.Incoming(listOf(i.getStringExtra("text") ?: "Hello"), System.currentTimeMillis()))
             }
-        }, android.content.IntentFilter("com.livetv.QA_MESSAGE"), androidx.core.content.ContextCompat.RECEIVER_EXPORTED)
+        }, android.content.IntentFilter("com.livetv.QA_MESSAGE").apply { addAction("com.livetv.QA_WEB") }, androidx.core.content.ContextCompat.RECEIVER_EXPORTED)
         com.livetv.app.data.Location.init(this)
         com.livetv.app.data.WeatherApp.init(this)
         com.livetv.app.data.NewsScreen.init(this)

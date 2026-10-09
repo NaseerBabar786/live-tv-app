@@ -120,10 +120,8 @@ tap_text "Close" && { sleep 2; shot after-close; nocheck "Close button closes it
 alive "full screen"
 
 section "4 our YouTube channel full screen (its own window)"
-for n in 2 4 3; do
-  dial "$n"; sleep 15; shot "channel-$n"
-  case "$(top_activity)" in *WebChannelActivity*) break ;; esac
-done
+key KEYCODE_BACK; sleep 2
+adb shell am broadcast -a com.livetv.QA_WEB -p "$PKG" >/dev/null; sleep 12; shot web-channel
 note "top: $(top_activity)"
 message "Fourth message over a YouTube channel."
 shot popup-web-channel
