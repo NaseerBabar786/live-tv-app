@@ -1808,8 +1808,10 @@ async function renderAdLibrary() {
     ];
     return `<details class="alFolder"><summary>📁 ${esc(x.name)} <span class="alPill${on ? "" : " off"}" style="vertical-align:middle">${esc(st)}</span></summary>${cards.length ? `<div class="alGrid">${cards.join("")}</div>` : '<p class="small">No picture or video yet. Add them on the Sponsors page.</p>'}</details>`;
   });
+  const ideas = (sp.ideas?.list || []).map(m => card("media/" + m.src, poster(m.src), m.title, m.secs, "Not on air yet", false, "WAITING FOR YOUR OK"));
   $("alList").innerHTML = spark || promos || lib
-    ? folder("📁 Montages &amp; moving logo", [group("✨ Spark TV", shapes)])
+    ? (ideas.length ? folder("📁 Waiting for your approval", [group("💡 New montage ideas", ideas)]) : "")
+      + folder("📁 Montages &amp; moving logo", [group("✨ Spark TV", shapes)])
       + folder("📁 Spark TV ads", [group("📣 On air", sparkAds)])
       + folder("📁 Cable TV ads", [group("📺 On air", cableOn), group("🗄 Older ads", [...cableOff, ...old])])
       + folder("📁 Customer ads", sponsors === null ? ['<p class="small">Couldn\'t load the customers. Sign in with the admin account and open this tab again.</p>']
