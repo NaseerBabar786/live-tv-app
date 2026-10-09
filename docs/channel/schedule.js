@@ -127,6 +127,8 @@ export const STATIONS = [
   { id: "auto", yt: true, web: "channel/ytc.html?c=auto", ytMins: 15, tagline: "Car reviews, new launches, supercars and racing",
     name: "Spark Auto", dial: "47", doc: "_channel_auto", page: "channel/?c=auto", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/spark-auto.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
+    // Our own weekly "Top 10 of the week" (tools/auto/make_top10.py) plays in a break once an hour.
+    ownClips: "auto-clips.json",
     // The day in blocks (owner, 2026-10-08), from midnight Toronto time; ytorder.js blockOrder.
     blocks: [{ from: 0, kind: "any", name: "Best of the Week" }, { from: 6, kind: "new", name: "New Launches" },
              { from: 9, kind: "review", name: "Reviews" }, { from: 12, kind: "top10", name: "Top 10" },

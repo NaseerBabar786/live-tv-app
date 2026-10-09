@@ -218,9 +218,12 @@ object Vod {
      */
     fun titleKey(name: String): String =
         name.lowercase()
-            .replace(Regex("""\(.*?\)|\[.*?]"""), " ")
-            .replace(Regex("""\b(the|full movie|full episode|hd|4k)\b"""), " ")
+            .replace(bracketed, " ")
+            .replace(fillerWords, " ")
             .filter { it.isLetterOrDigit() }
+
+    private val bracketed = Regex("""\(.*?\)|\[.*?]""")
+    private val fillerWords = Regex("""\b(the|full movie|full episode|hd|4k)\b""")
 
     /**
      * The same for one film, or one episode of a show, listed twice (in two lists, or from two

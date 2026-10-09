@@ -7,11 +7,13 @@ import com.livetv.app.data.Channel
 import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.Playlist
 import com.livetv.app.data.Vod
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** One language's movies, drama series, shows and kids' programmes (each show a folder of episodes). */
 data class VodShelf(
@@ -94,7 +96,9 @@ class VodViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(loading = hasPlaylists, hasPlaylists = hasPlaylists) }
         if (!hasPlaylists) return
         viewModelScope.launch {
-            val shelves = shelves(repo.loadVod())
+            // Sorting tens of thousands of titles takes seconds on a Chromecast: off the main thread, or
+            // the remote's keys wait and Android closes the app as "not responding" (2026-10-08).
+            val shelves = withContext(Dispatchers.Default) { shelves(repo.loadVod()) }
             _state.update { it.copy(loading = false, shelves = shelves) }
         }
     }
