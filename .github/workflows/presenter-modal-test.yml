@@ -40,10 +40,10 @@ jobs:
           ffprobe -v error -show_entries format=duration -of csv=p=0 job/voice.mp3
       - name: Make the clip on Modal
         run: |
-          set -eu
+          set -euo pipefail
           modal run tools/news/modal/longcat_avatar.py --image job/reader.jpg --audio job/voice.mp3 \
             --resolution "$RES" --out "job/news-longcat-test-$READER.mp4" \
-            --prompt "A beautiful Pakistani woman TV news anchor in her late twenties with long dark hair, wearing an elegant embroidered maroon shalwar kameez with a light dupatta, sits upright at a glossy news desk in a bright modern television news studio and is speaking calmly and clearly to the camera, reading the news with natural lip movements, gentle head movements and blinks, small natural hand movements on the desk, static camera, realistic broadcast footage"
+            --prompt "A beautiful Pakistani woman TV news anchor in her late twenties with long dark hair, wearing an elegant embroidered maroon shalwar kameez with a light dupatta, sits upright at a glossy news desk in a bright modern television news studio and is speaking calmly and clearly to the camera, reading the news with natural lip movements, gentle head movements and blinks, small natural hand movements on the desk, static camera, realistic broadcast footage" 2>&1 | tee "job/news-longcat-test-$READER.log"
       - name: Upload
         if: always()
         run: |
