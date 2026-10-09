@@ -96,7 +96,6 @@ fun SettingsDialog(
     }
     var pickingCountries by rememberSaveable { mutableStateOf(false) }
     var pickingLanguages by rememberSaveable { mutableStateOf(false) }
-    var showingAppBazaar by rememberSaveable { mutableStateOf(false) }
     var showingSuggestions by rememberSaveable { mutableStateOf(false) }
     var showingMessages by rememberSaveable { mutableStateOf(false) }
     var changingPassword by rememberSaveable { mutableStateOf(false) }
@@ -200,11 +199,6 @@ fun SettingsDialog(
 
     if (editingBilling) {
         BillingDialog(onDismiss = { editingBilling = false })
-        return
-    }
-
-    if (showingAppBazaar) {
-        AppBazaarDialog(onDismiss = { showingAppBazaar = false })
         return
     }
 
@@ -423,15 +417,6 @@ fun SettingsDialog(
                         modifier = Modifier.focusGlow(),
                     ) { Text("Sign out") }
                 }
-
-                HorizontalDivider()
-                OutlinedButton(
-                    onClick = {
-                        val open = context.appBazaarLaunchIntent()
-                        if (open == null || runCatching { context.startActivity(open) }.isFailure) showingAppBazaar = true
-                    },
-                    modifier = Modifier.fillMaxWidth().focusGlow(),
-                ) { Text("App Bazaar") }
             }
         },
         confirmButton = {
@@ -599,7 +584,7 @@ private const val APP_BAZAAR_PACKAGE = "com.naseerbabar.appbazaar"
 private const val APP_BAZAAR_APK = "https://github.com/NaseerBabar786/live-tv-app/releases/download/app-bazaar/AppBazaar.apk"
 
 /** The App Bazaar app's start screen (the TV one on TVs), or null when it isn't installed. */
-private fun android.content.Context.appBazaarLaunchIntent(): Intent? {
+internal fun android.content.Context.appBazaarLaunchIntent(): Intent? {
     val pm = packageManager
     val tv = pm.hasSystemFeature(android.content.pm.PackageManager.FEATURE_LEANBACK)
     return (pm.getLeanbackLaunchIntentForPackage(APP_BAZAAR_PACKAGE)?.takeIf { tv }
@@ -614,7 +599,7 @@ private fun android.content.Context.appBazaarLaunchIntent(): Intent? {
  * code stay for phones without it.
  */
 @Composable
-private fun AppBazaarDialog(onDismiss: () -> Unit) {
+internal fun AppBazaarDialog(onDismiss: () -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var bazaar by remember { mutableStateOf(context.appBazaarLaunchIntent()) }

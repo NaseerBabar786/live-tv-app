@@ -95,6 +95,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.foundation.verticalScroll
@@ -177,6 +178,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
+import com.livetv.app.EditionAppBazaar
 import com.livetv.app.EditionSponsorBar
 import com.livetv.app.EditionTicker
 import com.livetv.app.Watching
@@ -221,6 +223,7 @@ fun ChannelListScreen(
     var searching by rememberSaveable { mutableStateOf(false) }
     val searchButtonFocus = remember { FocusRequester() }
     var showSettings by rememberSaveable { mutableStateOf(false) }
+    var showAppBazaar by rememberSaveable { mutableStateOf(false) }
     val gridState = rememberLazyGridState()
     val lastWatchedFocus = remember { FocusRequester() }
     // Lets 1×2 move the highlight to a card or the layout button directly.
@@ -745,6 +748,22 @@ fun ChannelListScreen(
                             contentDescription = if (searching) "Close search" else "Search",
                         )
                     }
+                    if (Edition.HAS_APP_BAZAAR) {
+                        if (wideScreen) {
+                            TextButton(
+                                onClick = { showAppBazaar = true },
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusGlow(),
+                            ) {
+                                Icon(Icons.Filled.Storefront, contentDescription = null)
+                                Text("App Bazaar", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
+                        } else {
+                            IconButton(onClick = { showAppBazaar = true }, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.Filled.Storefront, contentDescription = "App Bazaar")
+                            }
+                        }
+                    }
                     IconButton(onClick = { showSettings = true }, modifier = Modifier.focusGlow()) {
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
@@ -841,6 +860,7 @@ fun ChannelListScreen(
                         onOpenWeather = onOpenWeather,
                         onOpenQuran = onOpenQuran,
                         onOpenVodItem = onOpenVodItem,
+                        onOpenAppBazaar = if (Edition.HAS_APP_BAZAAR) ({ showAppBazaar = true }) else null,
                         onOpenSettings = { showSettings = true },
                         onRailFocused = { topBarFocused = it },
                     )
@@ -1422,6 +1442,7 @@ fun ChannelListScreen(
     }
 
     if (showSettings) settings { showSettings = false }
+    if (showAppBazaar) EditionAppBazaar { showAppBazaar = false }
     if (exitOpen) ExitDialog(onExit = { (context as? Activity)?.finish() }, onDismiss = { exitOpen = false })
     if (modesOpen) {
         ModesMenu(

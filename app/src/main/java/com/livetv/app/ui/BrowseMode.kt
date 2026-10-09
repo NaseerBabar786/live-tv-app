@@ -40,6 +40,7 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material.icons.filled.Star
@@ -259,6 +260,8 @@ internal fun BrowseMode(
     onOpenQuran: (() -> Unit)? = null,
     /** Live TV Max: opens a movie or show in the Library. */
     onOpenVodItem: ((VodTarget) -> Unit)?,
+    /** Opens our app store, App Bazaar; null hides it. */
+    onOpenAppBazaar: (() -> Unit)? = null,
     onOpenSettings: () -> Unit,
     /** Whether the rail has the remote's cursor (Back there asks to exit). */
     onRailFocused: (Boolean) -> Unit,
@@ -774,6 +777,7 @@ internal fun BrowseMode(
             if (onOpenWeather != null) RailItem(Icons.Filled.WbSunny, "Weather", railFocused, right = back, onClick = onOpenWeather)
             if (onOpenQuran != null) RailItem(Icons.AutoMirrored.Filled.MenuBook, "Iqra Quran", railFocused, right = back, onClick = onOpenQuran)
             if (onNextMode != null) RailItem(Icons.Filled.Tv, modeLabel, railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
+            if (onOpenAppBazaar != null) RailItem(Icons.Filled.Storefront, "App Bazaar", railFocused, right = back, onClick = onOpenAppBazaar)
             RailItem(Icons.Filled.Settings, "Settings", railFocused, right = back, onClick = onOpenSettings)
         }
     }
