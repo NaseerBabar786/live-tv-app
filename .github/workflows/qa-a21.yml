@@ -1,0 +1,54 @@
+name: QA ad breaks in Strip and Carousel
+
+# A21 check on an Android TV emulator: the big picture in Strip and Carousel pauses for the ad break,
+# the ad shows, Back skips it after 10 s and the mode carries on. The break interval is cut to 1 minute
+# for this run only. Own concurrency group and release, so tonight's test QA is never cancelled or overwritten.
+on:
+  push:
+    branches: ['qa/a21-breaks']
+  workflow_dispatch:
+
+concurrency:
+  group: qa-a21
+  cancel-in-progress: true
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Break every minute (this run only)
+        run: |
+          sed -i 's/private const val BREAK_EVERY_MS = 10 \* 60_000L/private const val BREAK_EVERY_MS = 60_000L/' app/src/livetv/java/com/livetv/app/ui/SponsorAds.kt
+          grep -n "BREAK_EVERY_MS =" app/src/livetv/java/com/livetv/app/ui/SponsorAds.kt
+      - name: Build no-sign-in APK
+        run: ./gradlew assembleLivetvDebug
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: android-tv
+          arch: x86
+          profile: tv_1080p
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash tools/qa/run_a21.sh qa-out app/build/outputs/apk/livetv/debug/app-livetv-debug.apk
+      - name: Publish to the qa-a21 pre-release
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd qa-out 2>/dev/null || exit 0
+          gh release delete qa-a21 --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
+          gh release create qa-a21 --repo "$GITHUB_REPOSITORY" --prerelease --latest=false \
+            --target "$GITHUB_SHA" --title "QA A21 ad breaks (emulator)" \
+            --notes "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" ./*
