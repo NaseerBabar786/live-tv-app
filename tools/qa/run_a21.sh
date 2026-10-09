@@ -49,11 +49,25 @@ open_mode() { # mode name
 check_mode() { # mode name
   local m="$1" seen=""
   open_mode "$m" || { note "FAIL: could not open $m"; return; }
-  # A regular channel in the big picture (our YouTube channels have no breaks): move along a few.
-  for i in 1 2 3 4; do adb shell input keyevent KEYCODE_DPAD_RIGHT; sleep 1; done
-  adb shell input keyevent KEYCODE_DPAD_CENTER; sleep 10; shot "$m-regular-channel"
+  # A regular channel in the big picture: our own channels are YouTube pages, which have the
+  # website's promo breaks instead. Go to "All channels" and well past our own channels.
+  if [ "$m" = Strip ]; then
+    for i in $(seq 1 8); do adb shell input keyevent KEYCODE_DPAD_LEFT; sleep 0.5; done
+    adb shell input keyevent KEYCODE_DPAD_RIGHT; sleep 1   # Modes -> group chip
+    for i in $(seq 1 14); do
+      dump "$OUT/_g.xml"; grep -q "All channels" "$OUT/_g.xml" && break
+      adb shell input keyevent KEYCODE_DPAD_CENTER; sleep 2
+    done
+  else
+    for i in $(seq 1 6); do dump "$OUT/_g.xml"; grep -q "▲ All channels" "$OUT/_g.xml" || break; adb shell input keyevent KEYCODE_DPAD_UP; sleep 2; done
+  fi
+  for i in $(seq 1 25); do adb shell input keyevent KEYCODE_DPAD_RIGHT; sleep 0.4; done
+  [ "$m" = Strip ] && adb shell input keyevent KEYCODE_DPAD_CENTER
+  sleep 12; shot "$m-regular-channel"
+  if has "YouTube Video Player"; then note "WARN: big picture is a YouTube page in $m, not a regular channel"; fi
+  # Our app's ad bar says "Skip in N" / "Skip ad ▸ Back" / "Ad 1 of 2"; the website promo says "Skip ad in N" / "Skip ad ›".
   for i in $(seq 1 30); do
-    if has "skip in|ad 1 of|skip ad"; then seen=1; break; fi
+    if has "skip in [0-9]|skip ad ▸|ad [0-9] of"; then seen=1; break; fi
     sleep 5
   done
   if [ -z "$seen" ]; then note "FAIL: no ad break in $m within 150 s"; shot "$m-no-break"; return; fi
@@ -63,7 +77,7 @@ check_mode() { # mode name
   shot "$m-keys-during-break"
   sleep 10
   adb shell input keyevent KEYCODE_BACK; sleep 3; shot "$m-after-back"
-  if has "skip ad"; then note "FAIL: Back did not skip the ad in $m"; elif has "skip in"; then note "INFO: next ad of the break showing after Back"; else note "PASS: Back skipped the ad in $m"; fi
+  if has "skip ad ▸"; then note "FAIL: Back did not skip the ad in $m"; elif has "skip in [0-9]|ad [0-9] of"; then note "INFO: next ad of the break showing after Back"; else note "PASS: Back skipped the ad in $m"; fi
   sleep 30
   shot "$m-after-break"
   alive "$m after the break"
@@ -72,5 +86,5 @@ check_mode() { # mode name
 check_mode Strip
 check_mode Carousel
 adb logcat -d > "$OUT/logcat.txt"
-grep -E "FATAL EXCEPTION|AndroidRuntime" -A15 "$OUT/logcat.txt" > "$OUT/crashes-found.txt" || echo "none" > "$OUT/crashes-found.txt"
+grep -E "FATAL EXCEPTION" -A15 "$OUT/logcat.txt" > "$OUT/crashes-found.txt" || echo "none" > "$OUT/crashes-found.txt"
 rm -f "$OUT"/_*.xml
