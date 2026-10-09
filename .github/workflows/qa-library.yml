@@ -1,0 +1,54 @@
+name: QA Library folders
+
+# Library main page with the Spark TV and MTA folders, on an Android TV emulator. Results go to the
+# "qa-library-folders" pre-release (never "latest").
+on:
+  push:
+    branches: ['qa/library-folders']
+
+concurrency:
+  group: qa-library-folders
+  cancel-in-progress: true
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Unit tests
+        run: ./gradlew testLivetvDebugUnitTest --tests 'com.livetv.app.ui.VodShelvesTest' 2>&1 | tail -30
+      - name: Build no-sign-in APK
+        run: ./gradlew assembleLivetvDebug
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: android-tv
+          arch: x86
+          profile: tv_1080p
+          ram-size: 4096M
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash tools/qa/run_library.sh qa-out app/build/outputs/apk/livetv/debug/app-livetv-debug.apk
+      - name: Publish
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -f qa-out/_tap.xml
+          gh release delete qa-library-folders --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
+          gh release create qa-library-folders --repo "$GITHUB_REPOSITORY" --prerelease --latest=false \
+            --target "$GITHUB_SHA" --title "QA: Library folders" --notes "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            qa-out/*.png qa-out/steps.txt qa-out/crashes-found.txt
