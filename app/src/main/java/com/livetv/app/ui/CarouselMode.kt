@@ -300,8 +300,11 @@ internal fun CarouselMode(
             .focusRequester(focus)
             .onFocusChanged { if (it.isFocused) onFocused() }
             .onPreviewKeyEvent { e ->
-                // An ad break is on: the remote belongs to the ad; Back goes through only once it skips the ad.
-                if (adOn) return@onPreviewKeyEvent !(e.key == Key.Back && AdBreak.backSkips)
+                // An ad break is on: the remote belongs to the ad; Back skips it once it may.
+                if (adOn) {
+                    if (e.key == Key.Back && e.type == KeyEventType.KeyUp) AdBreak.skip()
+                    return@onPreviewKeyEvent true
+                }
                 when {
                     e.key == Key.Back -> {
                         if (e.type == KeyEventType.KeyUp) onBack()
