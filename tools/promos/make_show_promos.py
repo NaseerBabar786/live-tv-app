@@ -146,11 +146,11 @@ def main():
                             "credit": b["credit"], "hash": h}
     json.dump({"about": f"Coming-up promos for the shows booked on Spark TV (from {source}), made by tools/promos.",
                "promos": promos}, open(MANIFEST, "w"), indent=1, ensure_ascii=False)
-    # Media Library › Cable TV Promos: one item per show promo, old ones taken out.
+    # Media Library › Spark TV Ads: one item per show promo, old ones taken out.
     lib = json.load(open(LIBRARY))
     lib["items"] = [x for x in lib["items"] if not x.get("id", "").startswith("show-promo-")]
     for k, p in promos.items():
-        lib["items"].append({"id": "show-promo-" + k, "cat": "promos", "lang": "ur", "title": f"Promo: {p['title']}",
+        lib["items"].append({"id": "show-promo-" + k, "cat": "spark-promos", "lang": "ur", "title": f"Promo: {p['title']}",
                              "url": p["url"], "secs": p["secs"], "about": f"Coming up on Spark TV: {p['title']}, {p['when']}.",
                              "credit": "Our own promo. " + music_credit() + (f". Pictures: {p['credit']}" if p["credit"] else "") + "."})
     json.dump(lib, open(LIBRARY, "w"), indent=1, ensure_ascii=False)
