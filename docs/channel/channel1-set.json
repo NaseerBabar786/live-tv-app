@@ -1,5 +1,5 @@
 {
- "date": "2026-10-09",
+ "date": "2026-10-08",
  "episode": 1,
  "hours": [
   {
@@ -7,10 +7,10 @@
    "full_news": true,
    "programmes": [
     {
-     "id": "c1-1-LpbnBVHunZE",
+     "id": "c1-1-wJ1BQB3y_gw",
      "urdu": "ڈرامہ",
-     "title": "Tark-e-Tamanna",
-     "secs": 2094
+     "title": "Khushi",
+     "secs": 2106
     }
    ]
   },
@@ -19,10 +19,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-2-ptDYBfgtUiE",
-     "urdu": "ڈرامہ",
-     "title": "Mitti De Baway Ep 06",
-     "secs": 2005
+     "id": "c1-2-v94Gz57T0UY",
+     "urdu": "اسوہ: قسط 1",
+     "title": "Uswah · Episode 1",
+     "secs": 2557
     }
    ]
   },
@@ -31,16 +31,16 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-3-2W9Q-3X5Dyg",
+     "id": "c1-3-lPI-sodBzg8",
      "urdu": "کھانا پکائیں",
-     "title": "Beef & Garlic Stir Fry Recipe",
-     "secs": 242
+     "title": "High protein Low Carbs recipe",
+     "secs": 431
     },
     {
-     "id": "c1-3-Y-tsg0SzjJA",
+     "id": "c1-3-_NjImGHkTug",
      "urdu": "مزاحیہ",
-     "title": "Taarak Mehta · Episode 4815",
-     "secs": 1348
+     "title": "Taarak Mehta · Episode 4835",
+     "secs": 640
     }
    ]
   },
@@ -49,10 +49,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-4-k_g1KAVgci4",
-     "urdu": "ڈرامہ",
-     "title": "Mere Pass Raho Tum",
-     "secs": 2060
+     "id": "c1-4-xNqlw__CeSA",
+     "urdu": "ترکِ تمنا: قسط 1",
+     "title": "Tark-e-Tamanna · Episode 1",
+     "secs": 2079
     }
    ]
   },
@@ -61,10 +61,10 @@
    "full_news": true,
    "programmes": [
     {
-     "id": "c1-5-6kITzssrw-g",
-     "urdu": "ڈرامہ",
-     "title": "Mitti De Baway Ep 04",
-     "secs": 2149
+     "id": "c1-5-5U6xxaGYpbw",
+     "urdu": "محبت یا اعتبار: قسط 1",
+     "title": "Mohabbat ya Aitebar · Episode 1",
+     "secs": 1906
     }
    ]
   },
@@ -73,10 +73,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-6-gzRqeSZdqq4",
+     "id": "c1-6-gz73tNAo-Qs",
      "urdu": "ڈرامہ",
-     "title": "Dastoor Episode 43",
-     "secs": 2179
+     "title": "Kaisa Yeh Ishq Episode 56",
+     "secs": 2291
     }
    ]
   },
@@ -85,10 +85,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-7-gw3Qya-AaS4",
+     "id": "c1-7-v6URzqhk61g",
      "urdu": "ڈرامہ",
-     "title": "Mohabbat Episode 04",
-     "secs": 2359
+     "title": "Betiyaan Episode 37",
+     "secs": 2271
     }
    ]
   },
@@ -97,7 +97,7 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-8-f0gp7_H-5nE",
+     "id": "c1-8-WRcIwPwlxbw",
      "urdu": "نئے گانے اور فلموں کے ٹریلر",
      "title": "New songs and film trailers",
      "secs": 0
