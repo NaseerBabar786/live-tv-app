@@ -48,8 +48,9 @@ for i in 1 2 3 4 5 6; do key KEYCODE_DPAD_DOWN; done; shot 02b-settings-scrolled
 
 note "== 2. change languages by hand, then Default settings"
 adb shell am force-stop "$PKG"
-adb shell run-as "$PKG" sh -c "sed -i 's#<string>Hindi</string>##; s#<string>Urdu</string>##; s#<string>Punjabi</string>##' shared_prefs/live_tv.xml" 
+adb shell "run-as $PKG sed -i -e 's#<string>Hindi</string>##' -e 's#<string>Urdu</string>##' -e 's#<string>Punjabi</string>##' shared_prefs/live_tv.xml"
 prefs prefs-02-only-english
+grep -q 'Hindi' "$OUT/prefs-02-only-english.xml" && note "FAIL could not change languages for the test" || note "OK languages changed to English only"
 settings; shot 03-settings-only-english
 tap_text "Default settings"; shot 04-confirm
 tap_text "Yes, use defaults"; sleep 10; shot 05-after-defaults
