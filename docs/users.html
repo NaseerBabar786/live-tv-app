@@ -35,8 +35,10 @@
   .pkg.promo { background: #2A1F4D; color: #B39DDB; }
   .gift { background: var(--bg); border: 1px solid #4A3A00; border-radius: 12px; padding: 10px 14px; margin: 6px 0 14px; }
   .acct { background: var(--bg); border: 1px solid #5D1F1F; border-radius: 12px; padding: 10px 14px; margin: 14px 0 6px; }
+  .acct.come { border-color: #1F4D5D; }
   .acct h3 { margin: 0 0 6px; font-size: 16px; }
   .acct .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
+  .btn.dim { opacity: .45; }
   .btn.danger { background: #B71C1C; border-color: #B71C1C; color: #fff; }
   .off-badge { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #5D1F1F; color: #FFCDD2; margin-left: 6px; }
   .gift h3 { margin: 0 0 6px; font-size: 16px; }
@@ -117,7 +119,7 @@
   <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🎁 <b>Gifts</b>: in a viewer's panel, <b>Give free Gold</b> turns on Gold for 1 week to 1 year, or forever, with no payment (a Gold package that's still on is made longer). <b>Add free credit</b> gives them dollars that ✓ Paid today takes off their next payment; their app shows it in 💳 My billing details.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
-  <p class="small">⚙ <b>Account</b> (at the bottom of a viewer's panel): <b>⛔ Deactivate</b> turns their sign-in off. Their app signs them out within about an hour (or when it next starts) and they can't sign back in until you press <b>✓ Reactivate</b>; nothing is deleted. <b>🗑 Delete permanently</b> (you type DELETE to confirm) removes their sign-in, package, billing details, messages, forum posts and viewing history for good. Both use your Google owner permission, like Set password.</p>
+  <p class="small">⚙ <b>Account</b> (at the bottom of a viewer's panel): <b>⛔ Deactivate</b> turns their sign-in off. Their app signs them out within about an hour (or when it next starts) and they can't sign back in until you press <b>✓ Reactivate</b>; nothing is deleted. <b>🗑 Delete permanently</b> (you type DELETE to confirm) removes their sign-in, package, billing details, messages, forum posts and viewing history for good. Delete only works for accounts not seen for more than 2 months. 💌 <b>Come back reminder</b>: viewers away 7+ days get one friendly message per time away, in the app (they see it when they next open Cable TV) with promo code COMEBACK (the same gift as WELCOME, each account once); the Activity summary sends them all with one button, and WhatsApp / Email open a ready message on your device. Both use your Google owner permission, like Set password.</p>
   <p class="small">➕ <b>Add user</b> makes a Cable TV account for someone before they install the app: type their name, email and a password you choose, then tell them. They open Cable TV, choose email sign-in and type the same email and password. They can change the password later in the app's Settings.</p>
   <p class="err" id="err"></p>
 </main>
@@ -186,6 +188,16 @@
       <button class="btn" id="bPaid">✓ Paid today</button>
       <a class="btn" id="bPlan" href="packages">⭐ Turn on their package</a>
       <span class="small" id="bMsg"></span>
+    </div>
+    <div class="acct come">
+      <h3>💌 Come back reminder</h3>
+      <div class="small" id="cbNow"></div>
+      <div class="row">
+        <button class="btn primary" id="cbSend">📲 Send in the app</button>
+        <a class="btn" id="cbWa" target="_blank" rel="noopener">🟢 WhatsApp</a>
+        <a class="btn" id="cbEmail" target="_blank" rel="noopener">✉ Email</a>
+      </div>
+      <div class="small" id="cbMsg"></div>
     </div>
     <div class="acct">
       <h3>⚙ Account</h3>
@@ -540,6 +552,15 @@ if (!configured) {
       if (list.length > 8) span.append(` and ${list.length - 8} more`);
       return span;
     };
+    const comebackBox = () => {
+      const due = users.filter(needsComeback);
+      const d = box(`💌 <b>Away ${AWAY_DAYS}+ days, no come back reminder yet:</b> ${due.length}`, due);
+      if (due.length) {
+        const b = document.createElement("button"); b.className = "btn primary"; b.style.marginTop = "6px";
+        b.textContent = `💌 Send come back reminders (${due.length})`; b.onclick = () => sendComebacks(due); d.append(b);
+      }
+      return d;
+    };
     const box = (html, list) => { const d = document.createElement("div"); d.innerHTML = html; if (list?.length) d.append(who(list)); return d; };
     const h = document.createElement("h2"); h.textContent = "📊 Activity summary";
     const head = document.createElement("p"); head.className = "headline";
@@ -551,6 +572,7 @@ if (!configured) {
       box(`✅ <b>Active this week:</b> ${week.length} (${pct(week.length)}) · this month: ${month.length} (${pct(month.length)})`),
       box(`😴 <b>Quiet for 1 to 4 weeks:</b> ${quiet.length}`, quiet),
       box(`🔴 <b>Not seen for 30+ days:</b> ${gone.length}`, gone),
+      comebackBox(),
       box(`📉 <b>Stopped coming:</b> ${stopped.length} watched the week before but not this week`, stopped),
       box(`🆕 <b>New this week:</b> ${newWk.length} · new this month: ${newMonth.length}` + (newMonth.length ? `, and ${cameBack.length} of them came back after their first day` : ""), newWk),
       box(`⏱ <b>Watch time this week:</b> ${totalSecs ? hm(totalSecs) + " in total" : "none yet"}` + (viewerDays ? ` · about ${hm(totalSecs / viewerDays)} a day for each viewer on the days they watch` : "")),
@@ -723,6 +745,7 @@ if (!configured) {
     watchPanel(u);
     giftPanel(u);
     acctPanel(u);
+    comebackPanel(u);
     fillLinks(u);
     $("bill").showModal();
   }
@@ -746,7 +769,9 @@ if (!configured) {
     const off = !!u.disabled, when = u.disabledAt instanceof Date ? u.disabledAt : toDate(u.disabledAt);
     $("aNow").textContent = off ? `⛔ Deactivated${when ? " on " + when.toLocaleString() : ""}. They can't sign in or watch until you reactivate the account.` : "Active. They can sign in and watch.";
     $("aOff").classList.toggle("hidden", off); $("aOn").classList.toggle("hidden", !off);
-    $("aMsg").textContent = "";
+    const block = deleteBlock(u);
+    $("aDel").classList.toggle("dim", !!block); $("aDel").title = block || "";
+    $("aMsg").textContent = block ? "🗑 " + block : "";
   }
   async function setActive(u, active) {
     const who = u.name || u.email || "this viewer";
@@ -772,8 +797,20 @@ if (!configured) {
       where: { fieldFilter: { field: { fieldPath: "uid" }, op: "EQUAL", value: { stringValue: uid } } } } });
     return r.map(x => x.document?.name).filter(Boolean);
   }
+  // Owner rule (2026-10-09): only accounts not seen for more than 2 months can be deleted.
+  const DELETE_AFTER_DAYS = 60;
+  const deleteBlock = u => {
+    const s = lastSeen(u);
+    if (!s.at) return null;
+    const days = Math.floor((Date.now() - s.at) / 864e5);
+    if (days > DELETE_AFTER_DAYS) return null;
+    const ok = new Date(s.at.getTime() + (DELETE_AFTER_DAYS + 1) * 864e5);
+    return `Can't delete yet: ${seenText(s)}. An account can only be deleted after more than 2 months without using Cable TV (from ${ok.toLocaleDateString([], { dateStyle: "medium" })}). To stop them now, use Deactivate.`;
+  };
   async function deleteForever(u) {
     const who = u.name || u.email || "this viewer";
+    const block = deleteBlock(u);
+    if (block) { $("aMsg").textContent = block; return alert(block); }
     const typed = prompt(`Delete ${who} (${u.email || u.id}) permanently?\n\nThis removes their sign-in, package, billing details, messages, forum posts and viewing history. It can't be undone. If you only want to stop them for now, use Deactivate instead.\n\nType DELETE to confirm:`);
     if (typed == null) return;
     if (typed.trim().toUpperCase() !== "DELETE") return alert("Nothing was deleted (you didn't type DELETE).");
@@ -801,6 +838,76 @@ if (!configured) {
     } catch (e) { $("aMsg").textContent = "Couldn't delete: " + e.message + ". Part of it may already be gone; press Delete permanently again to finish."; }
   }
   $("aDel").onclick = () => cur && deleteForever(cur);
+
+  // ---- Come back reminders (owner, 2026-10-09): a viewer not seen for 7+ days gets one friendly message
+  // per time away, with promo code COMEBACK (the same gift as WELCOME, made on first use). In the app it's a
+  // private message they see when they next open Cable TV; WhatsApp and Email open on your own device.
+  // billing/{uid}.comebackAt (only you can read it) remembers when it was sent.
+  const AWAY_DAYS = 7, COMEBACK = "COMEBACK";
+  let comebackCode;
+  const comebackSentAt = u => { const t = billing[u.id]?.comebackAt; return t instanceof Date ? t : toDate(t); };
+  /** Away 7+ days, not deactivated, not you, and no reminder since they were last seen. */
+  function needsComeback(u) {
+    const s = lastSeen(u), sent = comebackSentAt(u);
+    if (!s.at || u.disabled || (u.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase()) return false;
+    return Date.now() - s.at >= AWAY_DAYS * 864e5 && !(sent && sent > s.at);
+  }
+  const usedComeback = u => !!comebackCode?.usedBy?.[u.id];
+  function comebackText(u) {
+    const first = (u.name || "").trim().split(/\s+/)[0] || "there";
+    const gift = comebackCode && comebackCode.active !== false && !usedComeback(u)
+      ? `As a welcome back gift, here's ${giftLen(comebackCode.days)} of Gold free: open Settings › Packages in Cable TV and type promo code ${COMEBACK}. `
+      : "";
+    return `Hi ${first}, we miss you on Cable TV! 📺 We've added new channels, shows and features since you last watched. ${gift}Have a look at our latest promotions too. See you soon! – Cable TV`;
+  }
+  const giftLen = days => days >= 360 ? "a year" : days >= 28 ? `${Math.round(days / 30)} month${Math.round(days / 30) > 1 ? "s" : ""}` : `${days} days`;
+  /** Reads COMEBACK; makes it the first time, copying WELCOME's package and length (each account can use it once). */
+  async function ensureComeback() {
+    if (comebackCode) return comebackCode;
+    const ref = fs.doc(db, "promoCodes", COMEBACK), snap = await fs.getDoc(ref);
+    if (snap.exists()) return comebackCode = snap.data();
+    const w = await fs.getDoc(fs.doc(db, "promoCodes", "WELCOME"));
+    const base = w.exists() ? w.data() : { tier: "Gold", days: 30 };
+    const c = { tier: base.tier || "Gold", days: base.days || 30, uses: 1000000000, used: 0, usedBy: {}, active: true,
+      note: "Come back gift for viewers away 7+ days (same as WELCOME), sent from the Users page", created: fs.serverTimestamp() };
+    await fs.setDoc(ref, c);
+    return comebackCode = c;
+  }
+  async function sendComeback(u) {
+    await ensureComeback();
+    const text = comebackText(u);
+    await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: auth.currentUser.uid, name: "Cable TV", text, createdAt: fs.serverTimestamp() });
+    await fs.setDoc(fs.doc(db, "inbox", u.id), { uid: u.id, lastText: text.slice(0, 200), lastAt: fs.serverTimestamp(), lastFrom: "admin", userUnread: true, name: u.name || "", email: u.email || "" }, { merge: true });
+    await fs.setDoc(fs.doc(db, "billing", u.id), { comebackAt: fs.serverTimestamp() }, { merge: true });
+    (billing[u.id] ||= {}).comebackAt = new Date();
+  }
+  async function sendComebacks(list) {
+    list = list.filter(needsComeback);
+    if (!list.length) return alert("They've all had a come back message already.");
+    try { await ensureComeback(); } catch (e) { return alert("Couldn't get the COMEBACK code ready: " + e.message); }
+    if (!confirm(`Send a come back message to ${list.length} viewer${list.length > 1 ? "s" : ""} in the app?\n\n${list.map(u => u.name || u.email).join(", ")}\n\nThey see it when they next open Cable TV. Example:\n\n"${comebackText(list[0])}"\n\nEach viewer gets one per time away.`)) return;
+    let ok = 0; const failed = [];
+    for (const u of list) { try { await sendComeback(u); ok++; } catch (e) { failed.push((u.name || u.email) + ": " + e.message); } }
+    stats(); render();
+    alert(`Sent to ${ok}.` + (failed.length ? `\n\nNot sent:\n${failed.join("\n")}` : ""));
+  }
+  function comebackPanel(u) {
+    const s = lastSeen(u), sent = comebackSentAt(u), need = needsComeback(u);
+    $("cbNow").textContent = sent && (!s.at || sent > s.at) ? `Sent ${sent.toLocaleString()}; they haven't been back since.`
+      : need ? `Away for ${Math.floor((Date.now() - s.at) / 864e5)} days, no reminder yet.` : `Not needed: ${seenText(s)}. It's for viewers away ${AWAY_DAYS}+ days (one per time away).`;
+    $("cbSend").disabled = !need; $("cbSend").classList.toggle("dim", !need);
+    const d = details(u), wa = intl(d.whatsapp || d.phone || ""), email = d.email || u.email, text = comebackText(u);
+    $("cbWa").classList.toggle("hidden", !wa); $("cbWa").href = `https://wa.me/${wa}?text=${encodeURIComponent(text)}`;
+    $("cbEmail").classList.toggle("hidden", !email); $("cbEmail").href = `mailto:${encodeURIComponent(email || "")}?subject=${encodeURIComponent("We miss you on Cable TV")}&body=${encodeURIComponent(text)}`;
+    $("cbMsg").textContent = "";
+  }
+  $("cbSend").onclick = async () => {
+    if (!cur || !needsComeback(cur)) return;
+    try { await ensureComeback(); } catch (e) { return $("cbMsg").textContent = "Couldn't get the COMEBACK code ready: " + e.message; }
+    if (!confirm(`Send this to ${cur.name || cur.email} in the app?\n\n"${comebackText(cur)}"`)) return;
+    try { await sendComeback(cur); comebackPanel(cur); stats(); render(); $("cbMsg").textContent = "✓ Sent. They'll see it when they next open Cable TV."; }
+    catch (e) { $("cbMsg").textContent = "Couldn't send: " + e.message; }
+  };
 
   // ---- Gifts: free Gold (plans/{uid}, like /packages, marked gift) and free credit (billingInfo/{uid}.credit) ----
   function giftPanel(u) {
