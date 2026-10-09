@@ -32,7 +32,9 @@ image = (
     .run_commands(
         "git clone --depth 1 https://github.com/meituan-longcat/LongCat-Video /repo",
         "grep -v -E '^(torch|flash-attn|streamlit)==' /repo/requirements.txt > /tmp/req.txt",
-        "pip install -r /tmp/req.txt -r /repo/requirements_avatar.txt 'huggingface_hub[cli]' hf_transfer",
+        # requirements_avatar.txt lists apt/system names (libsndfile1, tritonserverclient) that pip can't install.
+        "grep -v -E '^(libsndfile1|tritonserverclient)==' /repo/requirements_avatar.txt >> /tmp/req.txt",
+        "pip install -r /tmp/req.txt 'huggingface_hub[cli]' hf_transfer",
     )
     .env({"HF_HUB_ENABLE_HF_TRANSFER": "1"})
 )
