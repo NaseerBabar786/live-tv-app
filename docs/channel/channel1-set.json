@@ -39,16 +39,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-3-QB2KDtoN4-s",
-     "urdu": "کھانا پکائیں",
-     "title": "High protein Low carbs Breakfast recipe",
-     "secs": 441
-    },
-    {
-     "id": "c1-3-noUVHO6p7N8",
-     "urdu": "مزاحیہ",
-     "title": "Taarak Mehta · Episode 4816",
-     "secs": 1311
+     "id": "c1-3-v6URzqhk61g",
+     "urdu": "ڈرامہ",
+     "title": "Betiyaan Episode 37",
+     "secs": 2271
     }
    ],
    "segments": [
@@ -125,14 +119,14 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-8r-7V-6AUGBgBY",
-     "urdu": "نئے گانے اور فلموں کے ٹریلر",
-     "title": "New songs and film trailers",
-     "secs": 0
+     "id": "c1-8-FKNyF8MXByk",
+     "urdu": "ڈرامہ",
+     "title": "Izzat Episode 18",
+     "secs": 2379
     }
    ],
    "segments": [
-    300,
+    60,
     300
    ]
   }

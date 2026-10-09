@@ -1,6 +1,11 @@
 {
   "about": "Where OUR logo goes on our YouTube channels and Spark Hits, by uploader (the label in the channel lists): tr top right (the default), br bottom right (above the ticker), bl bottom left, tl top left. The owner's rule (2026-10-06): our logo never sits on the uploader's own logo, nor on our own channel number and name (top left in the app), so when an uploader's logo is top right ours goes bottom right. Change a line here when one overlaps; no rebuild needed.",
   "default": "tr",
+  "hideOnSourceLogo": [
+    "block"
+  ],
+  "hideAbout": "Owner's rule (2026-10-09): when a video shows its own logo, our logo is hidden for that video. Pages listed in hideOnSourceLogo follow it (block = channel 1; add ytc, bollywood for the other channels). noLogo: uploader labels whose videos carry no logo, so ours stays.",
+  "noLogo": [],
   "labels": {
     "Saregama": "br",
     "Zee Music": "br",

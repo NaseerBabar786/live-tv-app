@@ -1,0 +1,135 @@
+{
+ "name": "Spark Kitchen Classics",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-cooking.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Spark Kitchen Classics · Classic cooking films: recipes, baking and kitchens from the film archives",
+ "tickerOn": true,
+ "videos": [
+  {
+   "id": "jay-can-do-it",
+   "title": "Jay Can Do It",
+   "url": "https://archive.org/download/JayCanDoIt/JayCanDoIt.mp4",
+   "secs": 749,
+   "kind": "programme"
+  },
+  {
+   "id": "valiant-lady-8-december-1953",
+   "title": "'Valiant Lady' - 8/December/1953",
+   "url": "https://archive.org/download/Valiant_Lady/Valiant_Lady.mp4",
+   "secs": 642,
+   "kind": "programme"
+  },
+  {
+   "id": "touch-of-magic-a",
+   "title": "Touch of Magic, A",
+   "url": "https://archive.org/download/TouchofM1961/TouchofM1961.mp4",
+   "secs": 635,
+   "kind": "programme"
+  },
+  {
+   "id": "frigidaire-imperial-line",
+   "title": "[Frigidaire Imperial Line]",
+   "url": "https://archive.org/download/Frigidai1956/Frigidai1956.mp4",
+   "secs": 1207,
+   "kind": "programme"
+  },
+  {
+   "id": "practical-dreamer",
+   "title": "Practical Dreamer",
+   "url": "https://archive.org/download/Practica1957/Practica1957.mp4",
+   "secs": 797,
+   "kind": "programme"
+  },
+  {
+   "id": "wonderful-world-of-wash-n-wear-the",
+   "title": "Wonderful World of Wash 'n' Wear, The",
+   "url": "https://archive.org/download/Wonderfu1958/Wonderfu1958.mp4",
+   "secs": 1350,
+   "kind": "programme"
+  },
+  {
+   "id": "mother-takes-a-holiday-part-ii",
+   "title": "Mother Takes a Holiday (Part II)",
+   "url": "https://archive.org/download/MotherTa1952_2/MotherTa1952_2.mp4",
+   "secs": 910,
+   "kind": "programme"
+  },
+  {
+   "id": "making-a-new-day-out-of-tuesday-part-ii",
+   "title": "Making a New Day Out of Tuesday (Part II)",
+   "url": "https://archive.org/download/MakingaN1946_2/MakingaN1946_2.mp4",
+   "secs": 698,
+   "kind": "programme"
+  },
+  {
+   "id": "mother-takes-a-holiday-part-i",
+   "title": "Mother Takes a Holiday (Part I)",
+   "url": "https://archive.org/download/MotherTa1952/MotherTa1952.mp4",
+   "secs": 809,
+   "kind": "programme"
+  },
+  {
+   "id": "home-economics-story-the-part-i",
+   "title": "Home Economics Story, The (Part I)",
+   "url": "https://archive.org/download/HomeEcon1951/HomeEcon1951.mp4",
+   "secs": 748,
+   "kind": "programme"
+  },
+  {
+   "id": "a-better-new-jersey-1937",
+   "title": "A Better New Jersey 1937",
+   "url": "https://archive.org/download/ABetterNewJersey1937/69.46%20A%20Better%20New%20Jersey%201937.mp4",
+   "secs": 532,
+   "kind": "programme"
+  },
+  {
+   "id": "nya-and-negro-youth",
+   "title": "NYA And Negro Youth",
+   "url": "https://archive.org/download/NYAAndNegroYouth/119.11%20NYA%20and%20Negro%20Youth.mp4",
+   "secs": 1253,
+   "kind": "programme"
+  },
+  {
+   "id": "nya-on-the-farm",
+   "title": "NYA On The Farm",
+   "url": "https://archive.org/download/NYAOnTheFarm/119.23%20NYA%20on%20the%20Farm.mp4",
+   "secs": 509,
+   "kind": "programme"
+  },
+  {
+   "id": "a-better-minnesota-1937",
+   "title": "A Better Minnesota 1937",
+   "url": "https://archive.org/download/ABetterMinnesota1937/69.44%20A%20Better%20Minnesota%201937.mp4",
+   "secs": 559,
+   "kind": "programme"
+  },
+  {
+   "id": "dr-christian-4-remedy-for-riches-1940-dr",
+   "title": "Dr. Christian # 4 Remedy For Riches (1940 +++++ Drama)",
+   "url": "https://archive.org/download/dr.-christian-4-remedy-for-riches-1940-drama/Dr.%20Christian%20%234%20-%20Remedy%20for%20Riches%20%281940%20%2B%2B%2B%2B%2B%20Drama%29.mp4",
+   "secs": 3937,
+   "kind": "programme"
+  }
+ ],
+ "slots": [],
+ "loop": [
+  "nya-and-negro-youth",
+  "dr-christian-4-remedy-for-riches-1940-dr",
+  "touch-of-magic-a",
+  "a-better-new-jersey-1937",
+  "making-a-new-day-out-of-tuesday-part-ii",
+  "a-better-minnesota-1937",
+  "practical-dreamer",
+  "mother-takes-a-holiday-part-ii",
+  "frigidaire-imperial-line",
+  "home-economics-story-the-part-i",
+  "wonderful-world-of-wash-n-wear-the",
+  "valiant-lady-8-december-1953",
+  "jay-can-do-it",
+  "mother-takes-a-holiday-part-i",
+  "nya-on-the-farm"
+ ],
+ "built": "2026-10-09 22:39 UTC"
+}

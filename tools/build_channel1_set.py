@@ -7,16 +7,17 @@ One 8-hour set plays three times a day, from 12 am, 8 am and 4 pm (Toronto). Eac
 (ads, today's programmes, weather, tips: tools/make_channel1_segment.py). The news goes with the set:
 the full news at the start of each set and 4 hours in (12, 4 and 8, morning and evening), the headlines
 at the other hours. The dramas are serials from episode 1, one episode further each day; all three
-sets of a day show the same episodes. No whole films.
+sets of a day show the same episodes. No whole films. Pakistani dramas only (owner, 2026-10-09): no comedy,
+cooking or song hour (Taarak Mehta is out); songs and trailers only fill the minutes left after the drama.
 
     hour 1  Mitti De Baway        (after the full news)
     hour 2  Uswah
-    hour 3  a new recipe, then comedy (Taarak Mehta's newest episode: it began in 2008)
+    hour 3  Mohabbat              (from 2026-10-10, episode 1)
     hour 4  Tark-e-Tamanna
     hour 5  Mohabbat ya Aitebar   (after the full news)
     hour 6  Madaar
     hour 7  Raqaas
-    hour 8  new songs and new film trailers
+    hour 8  Humrahi               (from 2026-10-10, episode 1)
 
 How it plays on every TV and the website with no app update (docs/channel/schedule.js, MyChannel.kt):
 the news, the ad breaks and the segments are time slots; the programmes are the loop, which waits during
@@ -53,14 +54,19 @@ SET_FILE = os.path.join(CHANNEL, "channel1-set.json")            # today's set, 
 
 # Day 1 of the serials: episode 1 plays on this day, episode 2 the next day, and so on.
 START = dt.date(2026, 10, 9)
+HARPALGEO = ("Har Pal Geo", ["@HarPalGeo", "@harpalgeo"], "HAR PAL GEO|Har Pal Geo")
 GREEN = ("Green Entertainment", ["@GreenTVEntertainment", "@greenentertainment"], "Green")
 SERIALS = [
     dict(hour=1, show="Mitti De Baway", urdu="مٹی دے باوے", source=GREEN),
-    dict(hour=2, show="Uswah", urdu="اسوہ", source=("Har Pal Geo", ["@HarPalGeo", "@harpalgeo"], "HAR PAL GEO|Har Pal Geo")),
+    dict(hour=2, show="Uswah", urdu="اسوہ", source=HARPALGEO),
+    # The comedy and cooking hour became a drama (owner, 2026-10-09); episode 1 from the next day.
+    dict(hour=3, show="Mohabbat", urdu="محبت", source=HARPALGEO, start=dt.date(2026, 10, 10)),
     dict(hour=4, show="Tark-e-Tamanna", urdu="ترکِ تمنا", source=("HUM TV", ["@HUMTV", "@humtvpk"], "HUM TV")),
     dict(hour=5, show="Mohabbat ya Aitebar", urdu="محبت یا اعتبار", source=("Aaj Entertainment", ["@AajEntertainment"], "Aaj Entertainment")),
     dict(hour=6, show="Madaar", urdu="مدار", source=GREEN),
     dict(hour=7, show="Raqaas", urdu="رقاص", source=GREEN),
+    # The songs and trailers hour became a drama too (owner, 2026-10-09).
+    dict(hour=8, show="Humrahi", urdu="ہم راہی", source=HARPALGEO, start=dt.date(2026, 10, 10)),
 ]
 FULL_NEWS = {1, 5}  # the set's hours (1-8) that open with the full news
 HOUR = 3600
@@ -120,8 +126,16 @@ def save(path, data):
         f.write("\n")
 
 
-def episode_today(today):
-    return max(1, (today - START).days + 1)
+def episode_today(today, serial=None):
+    """Today's episode of [serial] (its own start day, else START): 1 on its first day."""
+    return max(1, (today - ((serial or {}).get("start") or START)).days + 1)
+
+
+def same_show(show, title):
+    """The title is this show's episode, not another show whose name begins the same ("Mohabbat" is not
+    "Mohabbat ya Aitebar"): the show's name, then straight on to the episode."""
+    rest = key(title)
+    return rest.startswith(key(show)) and re.match(r"(last|final)?(episode|epi|ep)", rest[len(key(show)):]) is not None
 
 
 def key(text):
@@ -132,9 +146,11 @@ def find(today):
     """Looks up each serial's episodes on its TV channel's own YouTube channel and keeps every one found."""
     from build_dramas import channel_id, videos_page
     known = load(SERIALS_FILE, {})
-    n = episode_today(today)
     picks = []
     for s in SERIALS:
+        n = episode_today(today, s)
+        if today < s.get("start", START):
+            continue  # it starts at episode 1 on its own day
         eps = known.setdefault(s["show"], {})
         label, handles, name = s["source"]
         # YouTube sometimes answers a request with an empty page (the first live run found nothing on
@@ -160,7 +176,7 @@ def find(today):
                     time.sleep(5 * (attempt + 1))
                 for vid, title, mins in found:
                     m = EPISODE_NO.search(title)
-                    if not m or NOT_EPISODE.search(title) or key(s["show"]) not in key(title[:60]):
+                    if not m or NOT_EPISODE.search(title) or not same_show(s["show"], title):
                         continue
                     if mins is not None and not 15 <= mins <= 60:
                         continue
@@ -222,11 +238,12 @@ def layout(today):
         base.pop(gone, None)
 
     n = episode_today(today)
-    episodes = {v["show"]: v for v in load(EPISODES_FILE, {}).get("videos", []) if v.get("episode") == n}
+    episodes = {v["show"]: v for v in load(EPISODES_FILE, {}).get("videos", [])
+                if any(s["show"] == v["show"] and v.get("episode") == episode_today(today, s) for s in SERIALS)}
     bad = set(load(os.path.join(CHANNEL, "preair-bad.json"), {}).get("ids", {}))
     fine = lambda v: v["id"] not in bad and v.get("secs", 0) > 0  # noqa: E731
     lists = {name: [v for v in load(os.path.join(CHANNEL, name), {}).get("videos", []) if fine(v)]
-             for name in ("music-videos.json", "trailers.json", "block-cooking.json", "block-comedy.json",
+             for name in ("music-videos.json", "trailers.json",
                           "block-drama-1.json", "block-drama-2.json", "block-drama-3.json")}
     # In case a serial's episode isn't there: today's new drama episodes (the blocks, their spares, then Spark Dramas).
     spare_dramas = []
@@ -235,6 +252,8 @@ def layout(today):
         spare_dramas += [v for v in d.get("videos", []) + d.get("spares", []) if fine(v)]
     spare_dramas += [dict(v, secs=round(v["mins"] * 60)) for v in load(os.path.join(CHANNEL, "yt-dramas.json"), {}).get("videos", [])
                      if v.get("mins") and v["id"] not in bad]
+    # Never another episode of a serial we run from episode 1 (it would give the story away).
+    spare_dramas = [v for v in spare_dramas if not any(same_show(x["show"], v["title"]) for x in SERIALS)]
     songs = sorted(lists["music-videos.json"] + lists["trailers.json"], key=lambda v: -v["secs"])
     trailer_ids = {v["id"] for v in lists["trailers.json"]}
     used = set()
@@ -249,22 +268,16 @@ def layout(today):
         serial = next((s for s in SERIALS if s["hour"] == h), None)
         if serial:
             ep = episodes.get(serial["show"])
+            k = episode_today(today, serial)
             if ep and fine(ep):
-                main.append((dict(ep), f"{serial['urdu']}: قسط {n}", f"{serial['show']} · Episode {n}"))
+                main.append((dict(ep), f"{serial['urdu']}: قسط {k}", f"{serial['show']} · Episode {k}"))
             else:
                 # Not on YouTube yet (or failed the check): a new drama episode from today's lists instead.
-                print(f"::warning title=Channel 1::{serial['show']} episode {n} not available; a new drama episode plays in its place.")
+                if today >= serial.get("start", START):
+                    print(f"::warning title=Channel 1::{serial['show']} episode {k} not available; a new drama episode plays in its place.")
                 alt = next((v for v in spare_dramas if v["id"] not in used and v["secs"] <= BUDGET[h]), None)
                 if alt:
                     main.append((alt, "ڈرامہ", re.split(r"\s*[|\[(]\s*|\s+-\s+", alt["title"])[0]))
-        elif h == 3:
-            cook = next((v for v in lists["block-cooking.json"] if v["secs"] <= 15 * 60), None)
-            if cook:
-                main.append((cook, "کھانا پکائیں", re.split(r"\s+(?:\||by|-)\s+", cook["title"], maxsplit=1, flags=re.I)[0]))
-            comedy = next(iter(lists["block-comedy.json"]), None)
-            if comedy:
-                m = re.search(r"episode\s*(\d+)", comedy["title"], re.I)
-                main.append((comedy, "مزاحیہ", (comedy.get("label") or "Comedy") + (f" · Episode {m.group(1)}" if m else "")))
         hour = {"hour": h, "full_news": h in FULL_NEWS, "programmes": []}
         # A programme too long for its half hour shortens the segment it runs through (owner, 2026-10-09).
         spans, c = [], t - target + opening  # (the last hour may have run a few seconds over)
@@ -280,7 +293,7 @@ def layout(today):
             item["title"] = f"{title} · {urdu}"
             videos.append(item); loop.append(item["id"]); used.add(v["id"]); t += item["secs"]
             hour["programmes"].append({"id": item["id"], "urdu": urdu, "title": title, "secs": item["secs"]})
-        # Fill to the hour's end: new songs and trailers (hour 8 is all of them), then our own short clips.
+        # Fill to the hour's end: new songs and trailers, then our own short clips.
         # (A song can come back in a later hour when the day's list runs short, never twice in one hour.)
         here, last_song = set(), None
         for again in (False, True):
@@ -293,8 +306,6 @@ def layout(today):
                 item["title"] = ("Trailer · فلم کا ٹریلر · " if v["id"] in trailer_ids else "Song · گانا · ") + v["title"]
                 last_song = item
                 videos.append(item); loop.append(item["id"]); used.add(v["id"]); here.add(v["id"]); t += item["secs"]
-                if h == 8 and not hour["programmes"]:
-                    hour["programmes"].append({"id": item["id"], "urdu": "نئے گانے اور فلموں کے ٹریلر", "title": "New songs and film trailers", "secs": 0})
         # Our clips go in the gaps between this hour's programmes and songs, at most 30 s in a gap, so
         # no ad break in the loop runs over 60 s (owner's rule; three 30 s promos back to back broke it,
         # 2026-10-08). Whatever doesn't fit carries on into the next hour's filling.

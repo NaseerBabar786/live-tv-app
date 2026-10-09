@@ -1,6 +1,6 @@
 {
  "name": "Spark Comedy",
- "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedy.png",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-comedy.png",
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
@@ -267,17 +267,17 @@
    "kind": "programme"
   },
   {
-   "id": "steamboat-bill-jr",
-   "title": "Steamboat Bill Jr.",
-   "url": "https://archive.org/download/steamboat_bill_ipod/steamboat_bill_512kb.mp4",
-   "secs": 4147,
-   "kind": "programme"
-  },
-  {
    "id": "the-bashful-bachelor",
    "title": "The Bashful Bachelor",
    "url": "https://archive.org/download/the_bashful_bachelor/the_bashful_bachelor.mp4",
    "secs": 4575,
+   "kind": "programme"
+  },
+  {
+   "id": "steamboat-bill-jr",
+   "title": "Steamboat Bill Jr.",
+   "url": "https://archive.org/download/steamboat_bill_ipod/steamboat_bill_512kb.mp4",
+   "secs": 4147,
    "kind": "programme"
   },
   {
@@ -2000,7 +2000,7 @@
   "the-sin-of-harold-diddlebock",
   "charlie-chaplin-s-the-good-for-nothing",
   "1950-s-pop-culture-ozzie-and-harriet-epi",
-  "steamboat-bill-jr",
+  "the-bashful-bachelor",
   "burns-and-allen-space-patrol-kids-visit-",
   "steamboat-bill-jr-2",
   "the-nut",
@@ -2143,7 +2143,7 @@
   "big-news",
   "going-going-gone-1919",
   "love-laughs-at-andy-hardy",
-  "the-bashful-bachelor",
+  "steamboat-bill-jr",
   "betty-boop-and-the-little-king",
   "ozzie-and-harriet-season-8-episode-7-tit",
   "the-bell-boy",
@@ -2251,5 +2251,5 @@
   "his-girl-friday",
   "never-touched-me-1919-directed-by-alfred"
  ],
- "built": "2026-10-09 07:01 UTC"
+ "built": "2026-10-09 22:39 UTC"
 }

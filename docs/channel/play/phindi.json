@@ -1,0 +1,88 @@
+{
+ "name": "Spark Cinema Hindi",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-cinema-hindi.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Spark Cinema Hindi · Films in Hindi, dubbed by our AI voices · Advertise on Spark TV: WhatsApp 437 602 6500",
+ "tickerOn": true,
+ "credits": "Films: Blender Foundation (CC BY) and public-domain films, dubbed into Hindi by our AI voices; credits on screen.",
+ "videos": [
+  {
+   "id": "cosmos-laundromat-hindi",
+   "title": "Cosmos Laundromat",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/cosmos-laundromat-hindi.mp4",
+   "secs": 731,
+   "kind": "programme"
+  },
+  {
+   "id": "tears-of-steel-hindi",
+   "title": "Tears of Steel",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-hindi.mp4",
+   "secs": 734,
+   "kind": "programme"
+  },
+  {
+   "id": "sintel-hindi",
+   "title": "Sintel",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel-hindi.mp4",
+   "secs": 888,
+   "kind": "programme"
+  },
+  {
+   "id": "seven-minutes-of-terror-hindi",
+   "title": "Curiosity's Seven Minutes of Terror",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-hindi.mp4",
+   "secs": 303,
+   "kind": "programme"
+  },
+  {
+   "id": "superman-1941-hindi",
+   "title": "Superman: The Mad Scientist (1941)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/superman-1941-hindi.mp4",
+   "secs": 628,
+   "kind": "programme"
+  },
+  {
+   "id": "sprite-fright-hindi",
+   "title": "Sprite Fright",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sprite-fright-hindi.mp4",
+   "secs": 630,
+   "kind": "programme"
+  },
+  {
+   "id": "elephants-dream-hindi",
+   "title": "Elephants Dream",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-hindi.mp4",
+   "secs": 654,
+   "kind": "programme"
+  },
+  {
+   "id": "adhere",
+   "title": "Advertise on Spark TV",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
+   "secs": 15,
+   "kind": "ad"
+  }
+ ],
+ "slots": [],
+ "loop": [
+  "cosmos-laundromat-hindi",
+  "adhere",
+  "tears-of-steel-hindi",
+  "adhere",
+  "sintel-hindi",
+  "adhere",
+  "seven-minutes-of-terror-hindi",
+  "adhere",
+  "superman-1941-hindi",
+  "adhere",
+  "sprite-fright-hindi",
+  "adhere",
+  "elephants-dream-hindi",
+  "adhere"
+ ],
+ "fillers": [
+  "adhere"
+ ]
+}

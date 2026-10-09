@@ -301,13 +301,6 @@
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
-  },
-  {
-   "id": "spark-ident",
-   "title": "Spark TV",
-   "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
-   "secs": 20,
-   "kind": "ident"
   }
  ],
  "slots": [],
@@ -322,7 +315,6 @@
   "adhere",
   "1949-roller-derby-new-york-vs-philadelph",
   "adhere",
-  "spark-ident",
   "oakland-oaks-baseball-season-opens",
   "adhere",
   "let-s-go-bowling-part-ii",
@@ -333,7 +325,6 @@
   "adhere",
   "stunt-compilation",
   "adhere",
-  "spark-ident",
   "kid-monk-baroni",
   "adhere",
   "two-dollar-bettor",
@@ -344,7 +335,6 @@
   "adhere",
   "this-is-your-life-duke-kahanamoku-father",
   "adhere",
-  "spark-ident",
   "making-of-a-shooter",
   "adhere",
   "1952-roller-derby-the-jolters-vs-the-wes",
@@ -355,7 +345,6 @@
   "adhere",
   "getting-ready-physically",
   "adhere",
-  "spark-ident",
   "magic-in-the-air-1955",
   "adhere",
   "gilette-cavalcade-of-sports-marciano-vs-",
@@ -366,7 +355,6 @@
   "adhere",
   "magoo-goes-skiing-1954",
   "adhere",
-  "spark-ident",
   "katie-did-it-1951-classic-film-noir-come",
   "adhere",
   "winter-sports-in-white-mountains",
@@ -377,7 +365,6 @@
   "adhere",
   "1950-roller-derby-new-jersey-vs-philadel",
   "adhere",
-  "spark-ident",
   "1952-roller-derby-the-jolters-vs-the-chi",
   "adhere",
   "1952-roller-derby-the-chiefs-vs-the-red-",
@@ -388,7 +375,6 @@
   "adhere",
   "universal-newsreel-volume-35-release-39-",
   "adhere",
-  "spark-ident",
   "jackie-robinson-story-the",
   "adhere",
   "1950-roller-derby-the-jolters-vs-the-wes",
@@ -399,12 +385,10 @@
   "adhere",
   "golden-years-the",
   "adhere",
-  "spark-ident",
   "this-is-your-life-jesse-owens",
   "adhere"
  ],
  "fillers": [
-  "adhere",
-  "spark-ident"
+  "adhere"
  ]
 }

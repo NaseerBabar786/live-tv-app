@@ -112,9 +112,13 @@ const between = v => KINDS[v?.kind] || name;
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
 let corners = { labels: {} };
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(); }).catch(() => {});
+// A video that shows its own logo (a TV channel's drama, a label's song or trailer) shows no logo of ours at all
+// (owner, 2026-10-09, channel 1): logo-corners.json "hideOnSourceLogo" lists the pages it applies to and
+// "noLogo" the uploaders whose videos carry none. Our own clips (fillers) keep our logo.
 function placeBug() {
   const label = info[sub || ids[cur]]?.label;
-  const c = corners.labels?.[label] || corner;
+  const hide = !ownOn && (corners.hideOnSourceLogo || []).includes("block") && !(corners.noLogo || []).includes(label);
+  const c = hide ? "off" : corners.labels?.[label] || corner;
   $("bug").className = "bug " + c;
 }
 
@@ -157,6 +161,7 @@ function playOwn() {
   if (!v) return;
   ownOn = true;
   sub = null;
+  placeBug();
   $("now").classList.add("hide");
   try { player.stopVideo(); } catch {}
   const el = $("own");
@@ -169,6 +174,7 @@ function playOwn() {
 function stopOwn() {
   if (!ownOn) return;
   ownOn = false;
+  placeBug();
   const el = $("own");
   el.pause(); el.removeAttribute("src"); el.load(); el.hidden = true;
 }
