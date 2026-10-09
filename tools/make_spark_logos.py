@@ -33,10 +33,12 @@ CHANNELS = {
     "teenshi": ("TEENS", "HINDI"), "autohi": ("AUTO", "HINDI"), "auto-hindi": ("AUTO", "HINDI"),
     "english": ("MOVIES", "ENGLISH"), "kids": ("KIDS", "ENGLISH"), "teens": ("TEENS", "ENGLISH"), "travel": ("TRAVEL", None),
     "sports": ("SPORTS", None), "auto": ("AUTO", None), "ads": ("ADS", None), "comedyen": ("COMEDY", "ENGLISH"),
+    "comedyur": ("COMEDY", "URDU"), "comedypa": ("COMEDY", "PUNJABI"),
     "music": ("MUSIC", "PUNJABI"), "gurbani": ("GURBANI", None), "moviespa": ("MOVIES", "PUNJABI"), "sufi": ("SUFI QAWWALI", None),
     "news": ("NEWS", None),
     # Spark TV on Google Play (2026-10-09): its comedy and music channels are in no one language.
     "comedy-play": ("COMEDY", None), "music-play": ("MUSIC", None),
+    "cinema-urdu": ("CINEMA", "URDU"), "cinema-hindi": ("CINEMA", "HINDI"), "cooking-play": ("COOKING", None),
 }
 
 

@@ -1,0 +1,1096 @@
+{
+ "name": "Spark Auto Classics",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-auto.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Spark Auto Classics · Classic car films: how cars are made, driven and raced · Advertise on Spark TV: WhatsApp 437 602 6500",
+ "tickerOn": true,
+ "credits": "Cars: public-domain films from the Internet Archive (archive.org).",
+ "videos": [
+  {
+   "id": "automotive-service",
+   "title": "Automotive Service",
+   "url": "https://archive.org/download/Automoti1940/Automoti1940.mp4",
+   "secs": 601,
+   "kind": "programme"
+  },
+  {
+   "id": "design-for-dreaming",
+   "title": "Design for Dreaming",
+   "url": "https://archive.org/download/Designfo1956/Designfo1956.mp4",
+   "secs": 556,
+   "kind": "programme"
+  },
+  {
+   "id": "ride-for-cinderella-a",
+   "title": "Ride for Cinderella, A",
+   "url": "https://archive.org/download/RideforC1937/RideforC1937.mp4",
+   "secs": 650,
+   "kind": "programme"
+  },
+  {
+   "id": "corvair-in-action-the",
+   "title": "Corvair in Action, The",
+   "url": "https://archive.org/download/Corvairi1960/Corvairi1960.mp4",
+   "secs": 388,
+   "kind": "programme"
+  },
+  {
+   "id": "1955-chevrolet-screen-ads",
+   "title": "1955 Chevrolet Screen Ads",
+   "url": "https://archive.org/download/1955Chev1955/1955Chev1955.mp4",
+   "secs": 527,
+   "kind": "programme"
+  },
+  {
+   "id": "wonderful-new-world-of-fords-a-1960-ford",
+   "title": "Wonderful New World of Fords, A (1960 Ford Spot)",
+   "url": "https://archive.org/download/Wonderfu1960/Wonderfu1960.mp4",
+   "secs": 181,
+   "kind": "programme"
+  },
+  {
+   "id": "in-my-merry-oldsmobile",
+   "title": "In My Merry Oldsmobile",
+   "url": "https://archive.org/download/InMyMerr1932/InMyMerr1932.mp4",
+   "secs": 388,
+   "kind": "programme"
+  },
+  {
+   "id": "american-look-part-i",
+   "title": "American Look (Part I)",
+   "url": "https://archive.org/download/American1958/American1958.mp4",
+   "secs": 491,
+   "kind": "programme"
+  },
+  {
+   "id": "touch-of-magic-a",
+   "title": "Touch of Magic, A",
+   "url": "https://archive.org/download/TouchofM1961/TouchofM1961.mp4",
+   "secs": 635,
+   "kind": "programme"
+  },
+  {
+   "id": "around-the-corner",
+   "title": "Around the Corner",
+   "url": "https://archive.org/download/Aroundth1937/Aroundth1937.mp4",
+   "secs": 570,
+   "kind": "programme"
+  },
+  {
+   "id": "great-new-star-a",
+   "title": "Great New Star, A",
+   "url": "https://archive.org/download/GreatNew1952/GreatNew1952.mp4",
+   "secs": 736,
+   "kind": "programme"
+  },
+  {
+   "id": "american-look-part-ii",
+   "title": "American Look (Part II)",
+   "url": "https://archive.org/download/American1958_2/American1958_2.mp4",
+   "secs": 538,
+   "kind": "programme"
+  },
+  {
+   "id": "american-look-part-iii",
+   "title": "American Look (Part III)",
+   "url": "https://archive.org/download/American1958_3/American1958_3.mp4",
+   "secs": 659,
+   "kind": "programme"
+  },
+  {
+   "id": "master-hands-part-i",
+   "title": "Master Hands (Part I)",
+   "url": "https://archive.org/download/MasterHa1936/MasterHa1936.mp4",
+   "secs": 296,
+   "kind": "programme"
+  },
+  {
+   "id": "how-you-see-it",
+   "title": "How You See It",
+   "url": "https://archive.org/download/HowYouSe1936/HowYouSe1936.mp4",
+   "secs": 478,
+   "kind": "programme"
+  },
+  {
+   "id": "down-the-gasoline-trail",
+   "title": "Down the Gasoline Trail",
+   "url": "https://archive.org/download/DowntheG1935/DowntheG1935.mp4",
+   "secs": 477,
+   "kind": "programme"
+  },
+  {
+   "id": "peg-leg-pedro",
+   "title": "Peg-Leg Pedro",
+   "url": "https://archive.org/download/PegLegPe1938/PegLegPe1938.mp4",
+   "secs": 558,
+   "kind": "programme"
+  },
+  {
+   "id": "american-harvest-part-i",
+   "title": "American Harvest (Part I)",
+   "url": "https://archive.org/download/American1955/American1955.mp4",
+   "secs": 791,
+   "kind": "programme"
+  },
+  {
+   "id": "coach-for-cinderella-a",
+   "title": "Coach for Cinderella, A",
+   "url": "https://archive.org/download/Coachfor1936/Coachfor1936.mp4",
+   "secs": 562,
+   "kind": "programme"
+  },
+  {
+   "id": "inside-story-of-modern-gasoline-the",
+   "title": "Inside Story of Modern Gasoline, The",
+   "url": "https://archive.org/download/InsideSt1946/InsideSt1946.mp4",
+   "secs": 1356,
+   "kind": "programme"
+  },
+  {
+   "id": "tomorrow-s-drivers",
+   "title": "Tomorrow's Drivers",
+   "url": "https://archive.org/download/Tomorrow1954/Tomorrow1954.mp4",
+   "secs": 658,
+   "kind": "programme"
+  },
+  {
+   "id": "henry-ford-s-mirror-of-america-part-i",
+   "title": "Henry Ford's Mirror of America (Part I)",
+   "url": "https://archive.org/download/HenryFor1962/HenryFor1962.mp4",
+   "secs": 1034,
+   "kind": "programme"
+  },
+  {
+   "id": "from-dawn-to-sunset-part-i",
+   "title": "From Dawn to Sunset (Part I)",
+   "url": "https://archive.org/download/FromDawn1937/FromDawn1937.mp4",
+   "secs": 538,
+   "kind": "programme"
+  },
+  {
+   "id": "something-for-nothing",
+   "title": "Something for Nothing",
+   "url": "https://archive.org/download/Somethin1940/Somethin1940.mp4",
+   "secs": 527,
+   "kind": "programme"
+  },
+  {
+   "id": "tough-friends",
+   "title": "Tough Friends",
+   "url": "https://archive.org/download/ToughFri1938/ToughFri1938.mp4",
+   "secs": 642,
+   "kind": "programme"
+  },
+  {
+   "id": "american-harvest-part-ii",
+   "title": "American Harvest (Part II)",
+   "url": "https://archive.org/download/American1955_2/American1955_2.mp4",
+   "secs": 999,
+   "kind": "programme"
+  },
+  {
+   "id": "olds-minute-movies-futuramic-1948",
+   "title": "Olds Minute Movies [Futuramic 1948]",
+   "url": "https://archive.org/download/OldsMinu1948/OldsMinu1948.mp4",
+   "secs": 209,
+   "kind": "programme"
+  },
+  {
+   "id": "princess-and-the-pauper-the",
+   "title": "Princess and the Pauper, The",
+   "url": "https://archive.org/download/Princess1939/Princess1939.mp4",
+   "secs": 592,
+   "kind": "programme"
+  },
+  {
+   "id": "american-engineer-part-i",
+   "title": "American Engineer (Part I)",
+   "url": "https://archive.org/download/American1956/American1956.mp4",
+   "secs": 558,
+   "kind": "programme"
+  },
+  {
+   "id": "all-american-soap-box-derby-the-1936",
+   "title": "All-American Soap Box Derby, The (1936)",
+   "url": "https://archive.org/download/AllAmeri1936/AllAmeri1936.mp4",
+   "secs": 626,
+   "kind": "programme"
+  },
+  {
+   "id": "girl-on-the-magazine-cover-the",
+   "title": "Girl on the Magazine Cover, The",
+   "url": "https://archive.org/download/Girlonth1940/Girlonth1940.mp4",
+   "secs": 528,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-2-no-3",
+   "title": "Chevrolet Leader News (Vol. 2, No. 3)",
+   "url": "https://archive.org/download/Chevrole1936_3/Chevrole1936_3.mp4",
+   "secs": 547,
+   "kind": "programme"
+  },
+  {
+   "id": "over-the-waves",
+   "title": "Over the Waves",
+   "url": "https://archive.org/download/OvertheW1938/OvertheW1938.mp4",
+   "secs": 559,
+   "kind": "programme"
+  },
+  {
+   "id": "american-engineer-part-iv",
+   "title": "American Engineer (Part IV)",
+   "url": "https://archive.org/download/American1956_4/American1956_4.mp4",
+   "secs": 190,
+   "kind": "programme"
+  },
+  {
+   "id": "master-hands-part-iv",
+   "title": "Master Hands (Part IV)",
+   "url": "https://archive.org/download/MasterHa1936_4/MasterHa1936_4.mp4",
+   "secs": 612,
+   "kind": "programme"
+  },
+  {
+   "id": "master-hands-part-ii",
+   "title": "Master Hands (Part II)",
+   "url": "https://archive.org/download/MasterHa1936_2/MasterHa1936_2.mp4",
+   "secs": 407,
+   "kind": "programme"
+  },
+  {
+   "id": "free-air",
+   "title": "Free Air",
+   "url": "https://archive.org/download/FreeAir1937/FreeAir1937.mp4",
+   "secs": 579,
+   "kind": "programme"
+  },
+  {
+   "id": "facts-on-friction",
+   "title": "Facts on Friction",
+   "url": "https://archive.org/download/facts_on_friction/facts_on_friction.mp4",
+   "secs": 569,
+   "kind": "programme"
+  },
+  {
+   "id": "from-dawn-to-sunset-part-ii",
+   "title": "From Dawn to Sunset (Part II)",
+   "url": "https://archive.org/download/FromDawn1937_2/FromDawn1937_2.mp4",
+   "secs": 623,
+   "kind": "programme"
+  },
+  {
+   "id": "wheels-of-progress",
+   "title": "Wheels of Progress",
+   "url": "https://archive.org/download/Wheelsof1927/Wheelsof1927.mp4",
+   "secs": 852,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-3-no-2",
+   "title": "Chevrolet Leader News (Vol. 3, No. 2)",
+   "url": "https://archive.org/download/Chevrole1937_2/Chevrole1937_2.mp4",
+   "secs": 485,
+   "kind": "programme"
+  },
+  {
+   "id": "sky-billboards",
+   "title": "Sky Billboards",
+   "url": "https://archive.org/download/SkyBillb1935/SkyBillb1935.mp4",
+   "secs": 454,
+   "kind": "programme"
+  },
+  {
+   "id": "all-in-one",
+   "title": "All in One",
+   "url": "https://archive.org/download/AllinOne1938/AllinOne1938.mp4",
+   "secs": 662,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-sales-convention-musical",
+   "title": "[Chevrolet Sales Convention Musical]",
+   "url": "https://archive.org/download/Chevrole1954/Chevrole1954.mp4",
+   "secs": 915,
+   "kind": "programme"
+  },
+  {
+   "id": "roads-to-romance-coral-gables",
+   "title": "Roads to Romance: Coral Gables",
+   "url": "https://archive.org/download/RoadstoR1950/RoadstoR1950.mp4",
+   "secs": 180,
+   "kind": "programme"
+  },
+  {
+   "id": "roads-to-romance-the-santa-cruz-trail-an",
+   "title": "Roads to Romance: The Santa Cruz Trail and Land of the Giant Cactus",
+   "url": "https://archive.org/download/RoadstoR1950_2/RoadstoR1950_2.mp4",
+   "secs": 180,
+   "kind": "programme"
+  },
+  {
+   "id": "american-engineer-part-iii",
+   "title": "American Engineer (Part III)",
+   "url": "https://archive.org/download/American1956_3/American1956_3.mp4",
+   "secs": 529,
+   "kind": "programme"
+  },
+  {
+   "id": "from-dawn-to-sunset-part-iii",
+   "title": "From Dawn to Sunset (Part III)",
+   "url": "https://archive.org/download/FromDawn1937_3/FromDawn1937_3.mp4",
+   "secs": 335,
+   "kind": "programme"
+  },
+  {
+   "id": "master-hands-part-iii",
+   "title": "Master Hands (Part III)",
+   "url": "https://archive.org/download/MasterHa1936_3/MasterHa1936_3.mp4",
+   "secs": 324,
+   "kind": "programme"
+  },
+  {
+   "id": "american-engineer-part-ii",
+   "title": "American Engineer (Part II)",
+   "url": "https://archive.org/download/American1956_2/American1956_2.mp4",
+   "secs": 414,
+   "kind": "programme"
+  },
+  {
+   "id": "here-s-looking",
+   "title": "Here's Looking",
+   "url": "https://archive.org/download/HeresLoo1939/HeresLoo1939.mp4",
+   "secs": 514,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-3-no-1",
+   "title": "Chevrolet Leader News (Vol. 3, No. 1)",
+   "url": "https://archive.org/download/Chevrole1937/Chevrole1937.mp4",
+   "secs": 553,
+   "kind": "programme"
+  },
+  {
+   "id": "human-bridge-the",
+   "title": "Human Bridge, The",
+   "url": "https://archive.org/download/HumanBri1949/HumanBri1949.mp4",
+   "secs": 749,
+   "kind": "programme"
+  },
+  {
+   "id": "key-to-our-horizons",
+   "title": "Key to Our Horizons",
+   "url": "https://archive.org/download/KeytoOur1952/KeytoOur1952.mp4",
+   "secs": 646,
+   "kind": "programme"
+  },
+  {
+   "id": "american-maker",
+   "title": "American Maker",
+   "url": "https://archive.org/download/American1960/American1960.mp4",
+   "secs": 812,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-1-no-2",
+   "title": "Chevrolet Leader News (Vol. 1, No. 2)",
+   "url": "https://archive.org/download/Chevrole1935_2/Chevrole1935_2.mp4",
+   "secs": 375,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-2-no-4",
+   "title": "Chevrolet Leader News (Vol. 2, No. 4)",
+   "url": "https://archive.org/download/Chevrole1936_4/Chevrole1936_4.mp4",
+   "secs": 539,
+   "kind": "programme"
+  },
+  {
+   "id": "henry-ford-s-mirror-of-america-part-ii",
+   "title": "Henry Ford's Mirror of America (Part II)",
+   "url": "https://archive.org/download/HenryFor1962_2/13543B.mp4",
+   "secs": 1136,
+   "kind": "programme"
+  },
+  {
+   "id": "other-fellow-the",
+   "title": "Other Fellow, The",
+   "url": "https://archive.org/download/OtherFel1937/OtherFel1937.mp4",
+   "secs": 494,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-4-no-1",
+   "title": "Chevrolet Leader News (Vol. 4, No. 1)",
+   "url": "https://archive.org/download/Chevrole1938/Chevrole1938.mp4",
+   "secs": 449,
+   "kind": "programme"
+  },
+  {
+   "id": "general-motors-around-the-world-part-i",
+   "title": "General Motors Around the World (Part I)",
+   "url": "https://archive.org/download/GeneralM1927/GeneralM1927.mp4",
+   "secs": 649,
+   "kind": "programme"
+  },
+  {
+   "id": "when-you-know",
+   "title": "When You Know",
+   "url": "https://archive.org/download/WhenYouK1936/WhenYouK1936.mp4",
+   "secs": 512,
+   "kind": "programme"
+  },
+  {
+   "id": "triumph-of-america-part-i",
+   "title": "Triumph of America (Part I)",
+   "url": "https://archive.org/download/Triumpho1933/Triumpho1933.mp4",
+   "secs": 622,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-1-no-3",
+   "title": "Chevrolet Leader News (Vol. 1, No. 3)",
+   "url": "https://archive.org/download/Chevrole1935_3/Chevrole1935_3.mp4",
+   "secs": 499,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-2-no-2",
+   "title": "Chevrolet Leader News (Vol. 2, No. 2)",
+   "url": "https://archive.org/download/Chevrole1936_2/Chevrole1936_2.mp4",
+   "secs": 495,
+   "kind": "programme"
+  },
+  {
+   "id": "streamlines",
+   "title": "Streamlines",
+   "url": "https://archive.org/download/Streamli1936/Streamli1936.mp4",
+   "secs": 409,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-4-no-2",
+   "title": "Chevrolet Leader News (Vol. 4, No. 2)",
+   "url": "https://archive.org/download/Chevrole1939/Chevrole1939.mp4",
+   "secs": 499,
+   "kind": "programme"
+  },
+  {
+   "id": "thrill-driver-s-choice",
+   "title": "Thrill Driver's Choice",
+   "url": "https://archive.org/download/thrill_drivers_choice/thrill_drivers_choice.mp4",
+   "secs": 557,
+   "kind": "programme"
+  },
+  {
+   "id": "trail-of-the-rocket-part-i",
+   "title": "Trail of the Rocket (Part I)",
+   "url": "https://archive.org/download/Trailoft1951/Trailoft1951.mp4",
+   "secs": 884,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-5-no-2",
+   "title": "Chevrolet Leader News (Vol. 5, No. 2)",
+   "url": "https://archive.org/download/Chevrole1939_3/Chevrole1939_3.mp4",
+   "secs": 512,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-3-no-4",
+   "title": "Chevrolet Leader News (Vol. 3, No. 4)",
+   "url": "https://archive.org/download/Chevrole1937_4/Chevrole1937_4.mp4",
+   "secs": 378,
+   "kind": "programme"
+  },
+  {
+   "id": "general-motors-around-the-world-part-iii",
+   "title": "General Motors Around the World (Part III)",
+   "url": "https://archive.org/download/GeneralM1927_3/GeneralM1927_3.mp4",
+   "secs": 791,
+   "kind": "programme"
+  },
+  {
+   "id": "trader-thorne",
+   "title": "Trader Thorne",
+   "url": "https://archive.org/download/TraderTh1956/TraderTh1956.mp4",
+   "secs": 1343,
+   "kind": "programme"
+  },
+  {
+   "id": "just-a-spark",
+   "title": "Just a Spark",
+   "url": "https://archive.org/download/JustaSpa1937/JustaSpa1937.mp4",
+   "secs": 542,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-2-no-1",
+   "title": "Chevrolet Leader News (Vol. 2, No. 1)",
+   "url": "https://archive.org/download/Chevrole1936/Chevrole1936.mp4",
+   "secs": 506,
+   "kind": "programme"
+  },
+  {
+   "id": "formations",
+   "title": "Formations",
+   "url": "https://archive.org/download/Formatio1936/Formatio1936.mp4",
+   "secs": 523,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-3-no-3",
+   "title": "Chevrolet Leader News (Vol. 3, No. 3)",
+   "url": "https://archive.org/download/Chevrole1937_3/Chevrole1937_3.mp4",
+   "secs": 508,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-4-no-3",
+   "title": "Chevrolet Leader News (Vol. 4, No. 3)",
+   "url": "https://archive.org/download/Chevrole1938_2/Chevrole1938_2.mp4",
+   "secs": 569,
+   "kind": "programme"
+  },
+  {
+   "id": "general-motors-around-the-world-part-iv",
+   "title": "General Motors Around the World (Part IV)",
+   "url": "https://archive.org/download/GeneralM1927_4/GeneralM1927_4.mp4",
+   "secs": 791,
+   "kind": "programme"
+  },
+  {
+   "id": "triumph-of-america-part-ii",
+   "title": "Triumph of America (Part II)",
+   "url": "https://archive.org/download/Triumpho1933_2/Triumpho1933_2.mp4",
+   "secs": 660,
+   "kind": "programme"
+  },
+  {
+   "id": "general-motors-around-the-world-part-ii",
+   "title": "General Motors Around the World (Part II)",
+   "url": "https://archive.org/download/GeneralM1927_2/07762B.mp4",
+   "secs": 762,
+   "kind": "programme"
+  },
+  {
+   "id": "two-pay-days-part-ii",
+   "title": "Two Pay Days (Part II)",
+   "url": "https://archive.org/download/TwoPayDa1927_2/TwoPayDa1927_2.mp4",
+   "secs": 822,
+   "kind": "programme"
+  },
+  {
+   "id": "two-pay-days-part-i",
+   "title": "Two Pay Days (Part I)",
+   "url": "https://archive.org/download/TwoPayDa1927/17498.mp4",
+   "secs": 842,
+   "kind": "programme"
+  },
+  {
+   "id": "a-better-chicago-1937",
+   "title": "A Better Chicago 1937",
+   "url": "https://archive.org/download/ABetterChicago1937/69.45%20A%20Better%20Chicago%201937.mp4",
+   "secs": 542,
+   "kind": "programme"
+  },
+  {
+   "id": "danger-on-the-streets-circa-1936",
+   "title": "Danger On The Streets Circa 1936",
+   "url": "https://archive.org/download/DangerOnTheStreetsCirca1936/69.58%20Danger%20on%20the%20Streets%20circa%201936.mp4",
+   "secs": 480,
+   "kind": "programme"
+  },
+  {
+   "id": "jobs-not-handouts",
+   "title": "Jobs Not Handouts",
+   "url": "https://archive.org/download/119.1JobsNotHandouts/119.1%20Jobs%20Not%20Handouts.mp4",
+   "secs": 951,
+   "kind": "programme"
+  },
+  {
+   "id": "trip-down-market-street-before-the-fire-",
+   "title": "[Trip Down Market Street Before the Fire, A]",
+   "url": "https://archive.org/download/TripDown1905/TripDown1905.mp4",
+   "secs": 832,
+   "kind": "programme"
+  },
+  {
+   "id": "achievement-usa",
+   "title": "Achievement USA",
+   "url": "https://archive.org/download/Achievem1955/Achievem1955.mp4",
+   "secs": 614,
+   "kind": "programme"
+  },
+  {
+   "id": "how-to-go-places",
+   "title": "How to Go Places",
+   "url": "https://archive.org/download/HowtoGoP1954/HowtoGoP1954.mp4",
+   "secs": 640,
+   "kind": "programme"
+  },
+  {
+   "id": "the-hoodlum",
+   "title": "The Hoodlum",
+   "url": "https://archive.org/download/The_Hoodlum/The_Hoodlum_512kb.mp4",
+   "secs": 3707,
+   "kind": "programme"
+  },
+  {
+   "id": "on-the-run-part-i",
+   "title": "On the Run (Part I)",
+   "url": "https://archive.org/download/OntheRun1956/OntheRun1956.mp4",
+   "secs": 774,
+   "kind": "programme"
+  },
+  {
+   "id": "on-the-run-part-ii",
+   "title": "On the Run (Part II)",
+   "url": "https://archive.org/download/OntheRun1956_2/OntheRun1956_2.mp4",
+   "secs": 887,
+   "kind": "programme"
+  },
+  {
+   "id": "road-runners",
+   "title": "Road Runners",
+   "url": "https://archive.org/download/RoadRunn1952/RoadRunn1952.mp4",
+   "secs": 754,
+   "kind": "programme"
+  },
+  {
+   "id": "ingenuity-in-action-part-ii",
+   "title": "Ingenuity in Action (Part II)",
+   "url": "https://archive.org/download/Ingenuit1958_2/Ingenuit1958_2.mp4",
+   "secs": 885,
+   "kind": "programme"
+  },
+  {
+   "id": "give-yourself-the-green-light",
+   "title": "Give Yourself the Green Light",
+   "url": "https://archive.org/download/GiveYour1954/GiveYour1954.mp4",
+   "secs": 1339,
+   "kind": "programme"
+  },
+  {
+   "id": "ingenuity-in-action-part-i",
+   "title": "Ingenuity in Action (Part I)",
+   "url": "https://archive.org/download/Ingenuit1958/Ingenuit1958.mp4",
+   "secs": 749,
+   "kind": "programme"
+  },
+  {
+   "id": "all-american-soap-box-derby-1936",
+   "title": "All-American Soap Box Derby (1936)",
+   "url": "https://archive.org/download/AllAmeri1934/AllAmeri1934.mp4",
+   "secs": 625,
+   "kind": "programme"
+  },
+  {
+   "id": "your-permit-to-drive",
+   "title": "Your Permit to Drive",
+   "url": "https://archive.org/download/YourPerm1951/YourPerm1951.mp4",
+   "secs": 618,
+   "kind": "programme"
+  },
+  {
+   "id": "show-em-the-road-part-ii",
+   "title": "Show 'Em the Road (Part II)",
+   "url": "https://archive.org/download/ShowEmth1954_2/ShowEmth1954_2.mp4",
+   "secs": 772,
+   "kind": "programme"
+  },
+  {
+   "id": "groucho-marx-in-you-bet-your-life-chair-",
+   "title": "Groucho Marx in ''You Bet Your Life'' (''Chair'') (Comedy/Game Show)",
+   "url": "https://archive.org/download/GrouchoChair/GrouchoChair.ia.mp4",
+   "secs": 1770,
+   "kind": "programme"
+  },
+  {
+   "id": "show-em-the-road-part-i",
+   "title": "Show 'Em the Road (Part I)",
+   "url": "https://archive.org/download/ShowEmth1954/ShowEmth1954.mp4",
+   "secs": 793,
+   "kind": "programme"
+  },
+  {
+   "id": "wheels-across-africa-part-i",
+   "title": "Wheels Across Africa (Part I)",
+   "url": "https://archive.org/download/WheelsAc1936/WheelsAc1936.mp4",
+   "secs": 787,
+   "kind": "programme"
+  },
+  {
+   "id": "chevrolet-leader-news-vol-1-no-1",
+   "title": "Chevrolet Leader News (Vol. 1, No. 1)",
+   "url": "https://archive.org/download/Chevrole1935/Chevrole1935.mp4",
+   "secs": 488,
+   "kind": "programme"
+  },
+  {
+   "id": "drive-your-bicycle",
+   "title": "Drive Your Bicycle",
+   "url": "https://archive.org/download/DriveYou1955/DriveYou1955.mp4",
+   "secs": 647,
+   "kind": "programme"
+  },
+  {
+   "id": "helping-you-sell",
+   "title": "Helping You Sell",
+   "url": "https://archive.org/download/HelpingY1937/HelpingY1937.mp4",
+   "secs": 543,
+   "kind": "programme"
+  },
+  {
+   "id": "wheels-across-africa-part-iii",
+   "title": "Wheels Across Africa (Part III)",
+   "url": "https://archive.org/download/WheelsAc1936_3/WheelsAc1936_3.mp4",
+   "secs": 762,
+   "kind": "programme"
+  },
+  {
+   "id": "wheels-across-africa-part-ii",
+   "title": "Wheels Across Africa (Part II)",
+   "url": "https://archive.org/download/WheelsAc1936_2/WheelsAc1936_2.mp4",
+   "secs": 787,
+   "kind": "programme"
+  },
+  {
+   "id": "wheels-across-africa-part-iv",
+   "title": "Wheels Across Africa (Part IV)",
+   "url": "https://archive.org/download/WheelsAc1936_4/WheelsAc1936_4.mp4",
+   "secs": 759,
+   "kind": "programme"
+  },
+  {
+   "id": "highway-hearing-part-i",
+   "title": "Highway Hearing (Part I)",
+   "url": "https://archive.org/download/HighwayH1956/HighwayH1956.mp4",
+   "secs": 887,
+   "kind": "programme"
+  },
+  {
+   "id": "highway-hearing-part-ii",
+   "title": "Highway Hearing (Part II)",
+   "url": "https://archive.org/download/HighwayH1956_2/HighwayH1956_2.mp4",
+   "secs": 884,
+   "kind": "programme"
+  },
+  {
+   "id": "lassie-a-christmas-story-1958-film-noir-",
+   "title": "Lassie A Christmas Story (1958 Film Noir Christmas Special)",
+   "url": "https://archive.org/download/lassie-a-christmas-story-1959-film-noir-christmas-special/Lassie%20A%20Christmas%20Story%20%281959%20Film%20Noir%20Christmas%20Special%29.mp4",
+   "secs": 4503,
+   "kind": "programme"
+  },
+  {
+   "id": "the-hitch-hiker-1953-film-noir",
+   "title": "The Hitch Hiker ( 1953) [ Film Noir]",
+   "url": "https://archive.org/download/the-hitch-hiker-1953-film-noir/The%20Hitch-Hiker%20%281953%29%20%5BFilm%20Noir%5D.ia.mp4",
+   "secs": 4248,
+   "kind": "programme"
+  },
+  {
+   "id": "under-the-cock-eyed-moon-1930-short-film",
+   "title": "Under The Cock-eyed Moon (1930 Short, Film Noir, Comedy)",
+   "url": "https://archive.org/download/under-the-cock-eyed-moon-1930-silent-short-film-noir-rpf-16mm/Under%20the%20Cock-eyed%20Moon%20%281930%20Silent%2C%20Short%2C%20Film%20Noir%29%20%28rpf16mm%29.mp4",
+   "secs": 1220,
+   "kind": "programme"
+  },
+  {
+   "id": "stop-driving-us-crazy",
+   "title": "Stop Driving Us Crazy!",
+   "url": "https://archive.org/download/StopDriv1959/04365.mp4",
+   "secs": 591,
+   "kind": "programme"
+  },
+  {
+   "id": "live-and-let-live",
+   "title": "Live and Let Live",
+   "url": "https://archive.org/download/LiveandL1947/LiveandL1947.mp4",
+   "secs": 615,
+   "kind": "programme"
+  },
+  {
+   "id": "safe-roads",
+   "title": "Safe Roads",
+   "url": "https://archive.org/download/SafeRoad1935/SafeRoad1935.mp4",
+   "secs": 459,
+   "kind": "programme"
+  },
+  {
+   "id": "safest-place-the",
+   "title": "Safest Place, The",
+   "url": "https://archive.org/download/SafestPl1935/SafestPl1935.mp4",
+   "secs": 383,
+   "kind": "programme"
+  },
+  {
+   "id": "the-fast-and-the-furious-1954-john-irela",
+   "title": "The Fast and the Furious (1954) — John Ireland, Dorothy Malone + Two Vintage Cartoons",
+   "url": "https://archive.org/download/fast-and-furious-1954-two-vintage-cartoons/The%20Fast%20And%20The%20Furious%201954%281%29.mp4",
+   "secs": 5547,
+   "kind": "programme"
+  },
+  {
+   "id": "hot-rods-1953",
+   "title": "Hot Rods (1953)",
+   "url": "https://archive.org/download/hot-rods-1953/Hot%20Rods%20%281953%29.mp4",
+   "secs": 388,
+   "kind": "programme"
+  },
+  {
+   "id": "adhere",
+   "title": "Advertise on Spark TV",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
+   "secs": 15,
+   "kind": "ad"
+  }
+ ],
+ "slots": [],
+ "loop": [
+  "triumph-of-america-part-i",
+  "adhere",
+  "live-and-let-live",
+  "adhere",
+  "chevrolet-leader-news-vol-3-no-1",
+  "adhere",
+  "two-pay-days-part-i",
+  "adhere",
+  "how-to-go-places",
+  "adhere",
+  "stop-driving-us-crazy",
+  "adhere",
+  "just-a-spark",
+  "adhere",
+  "the-hitch-hiker-1953-film-noir",
+  "adhere",
+  "corvair-in-action-the",
+  "adhere",
+  "from-dawn-to-sunset-part-iii",
+  "adhere",
+  "master-hands-part-iv",
+  "adhere",
+  "chevrolet-leader-news-vol-4-no-1",
+  "adhere",
+  "chevrolet-leader-news-vol-2-no-2",
+  "adhere",
+  "from-dawn-to-sunset-part-i",
+  "adhere",
+  "chevrolet-leader-news-vol-2-no-4",
+  "adhere",
+  "trip-down-market-street-before-the-fire-",
+  "adhere",
+  "facts-on-friction",
+  "adhere",
+  "human-bridge-the",
+  "adhere",
+  "something-for-nothing",
+  "adhere",
+  "safe-roads",
+  "adhere",
+  "your-permit-to-drive",
+  "adhere",
+  "over-the-waves",
+  "adhere",
+  "groucho-marx-in-you-bet-your-life-chair-",
+  "adhere",
+  "all-american-soap-box-derby-the-1936",
+  "adhere",
+  "chevrolet-leader-news-vol-3-no-3",
+  "adhere",
+  "master-hands-part-iii",
+  "adhere",
+  "lassie-a-christmas-story-1958-film-noir-",
+  "adhere",
+  "american-harvest-part-i",
+  "adhere",
+  "american-harvest-part-ii",
+  "adhere",
+  "master-hands-part-i",
+  "adhere",
+  "chevrolet-leader-news-vol-2-no-3",
+  "adhere",
+  "down-the-gasoline-trail",
+  "adhere",
+  "tomorrow-s-drivers",
+  "adhere",
+  "peg-leg-pedro",
+  "adhere",
+  "wheels-across-africa-part-iii",
+  "adhere",
+  "general-motors-around-the-world-part-iii",
+  "adhere",
+  "american-look-part-i",
+  "adhere",
+  "roads-to-romance-coral-gables",
+  "adhere",
+  "a-better-chicago-1937",
+  "adhere",
+  "trail-of-the-rocket-part-i",
+  "adhere",
+  "show-em-the-road-part-ii",
+  "adhere",
+  "1955-chevrolet-screen-ads",
+  "adhere",
+  "girl-on-the-magazine-cover-the",
+  "adhere",
+  "american-look-part-iii",
+  "adhere",
+  "drive-your-bicycle",
+  "adhere",
+  "trader-thorne",
+  "adhere",
+  "touch-of-magic-a",
+  "adhere",
+  "wheels-of-progress",
+  "adhere",
+  "wheels-across-africa-part-ii",
+  "adhere",
+  "chevrolet-leader-news-vol-3-no-2",
+  "adhere",
+  "great-new-star-a",
+  "adhere",
+  "safest-place-the",
+  "adhere",
+  "road-runners",
+  "adhere",
+  "sky-billboards",
+  "adhere",
+  "hot-rods-1953",
+  "adhere",
+  "inside-story-of-modern-gasoline-the",
+  "adhere",
+  "two-pay-days-part-ii",
+  "adhere",
+  "wheels-across-africa-part-iv",
+  "adhere",
+  "jobs-not-handouts",
+  "adhere",
+  "chevrolet-leader-news-vol-1-no-2",
+  "adhere",
+  "when-you-know",
+  "adhere",
+  "design-for-dreaming",
+  "adhere",
+  "in-my-merry-oldsmobile",
+  "adhere",
+  "tough-friends",
+  "adhere",
+  "on-the-run-part-i",
+  "adhere",
+  "master-hands-part-ii",
+  "adhere",
+  "highway-hearing-part-ii",
+  "adhere",
+  "how-you-see-it",
+  "adhere",
+  "olds-minute-movies-futuramic-1948",
+  "adhere",
+  "chevrolet-leader-news-vol-2-no-1",
+  "adhere",
+  "chevrolet-leader-news-vol-1-no-3",
+  "adhere",
+  "helping-you-sell",
+  "adhere",
+  "american-engineer-part-i",
+  "adhere",
+  "chevrolet-leader-news-vol-3-no-4",
+  "adhere",
+  "wheels-across-africa-part-i",
+  "adhere",
+  "formations",
+  "adhere",
+  "ingenuity-in-action-part-i",
+  "adhere",
+  "chevrolet-leader-news-vol-5-no-2",
+  "adhere",
+  "ride-for-cinderella-a",
+  "adhere",
+  "general-motors-around-the-world-part-ii",
+  "adhere",
+  "general-motors-around-the-world-part-iv",
+  "adhere",
+  "under-the-cock-eyed-moon-1930-short-film",
+  "adhere",
+  "chevrolet-leader-news-vol-1-no-1",
+  "adhere",
+  "free-air",
+  "adhere",
+  "chevrolet-leader-news-vol-4-no-2",
+  "adhere",
+  "on-the-run-part-ii",
+  "adhere",
+  "wonderful-new-world-of-fords-a-1960-ford",
+  "adhere",
+  "the-fast-and-the-furious-1954-john-irela",
+  "adhere",
+  "all-in-one",
+  "adhere",
+  "american-engineer-part-ii",
+  "adhere",
+  "chevrolet-sales-convention-musical",
+  "adhere",
+  "american-look-part-ii",
+  "adhere",
+  "roads-to-romance-the-santa-cruz-trail-an",
+  "adhere",
+  "american-engineer-part-iv",
+  "adhere",
+  "achievement-usa",
+  "adhere",
+  "highway-hearing-part-i",
+  "adhere",
+  "coach-for-cinderella-a",
+  "adhere",
+  "key-to-our-horizons",
+  "adhere",
+  "general-motors-around-the-world-part-i",
+  "adhere",
+  "all-american-soap-box-derby-1936",
+  "adhere",
+  "from-dawn-to-sunset-part-ii",
+  "adhere",
+  "henry-ford-s-mirror-of-america-part-ii",
+  "adhere",
+  "henry-ford-s-mirror-of-america-part-i",
+  "adhere",
+  "the-hoodlum",
+  "adhere",
+  "give-yourself-the-green-light",
+  "adhere",
+  "here-s-looking",
+  "adhere",
+  "danger-on-the-streets-circa-1936",
+  "adhere",
+  "streamlines",
+  "adhere",
+  "ingenuity-in-action-part-ii",
+  "adhere",
+  "other-fellow-the",
+  "adhere",
+  "triumph-of-america-part-ii",
+  "adhere",
+  "american-maker",
+  "adhere",
+  "princess-and-the-pauper-the",
+  "adhere",
+  "chevrolet-leader-news-vol-4-no-3",
+  "adhere",
+  "american-engineer-part-iii",
+  "adhere",
+  "around-the-corner",
+  "adhere",
+  "automotive-service",
+  "adhere",
+  "thrill-driver-s-choice",
+  "adhere",
+  "show-em-the-road-part-i",
+  "adhere"
+ ],
+ "fillers": [
+  "adhere"
+ ]
+}

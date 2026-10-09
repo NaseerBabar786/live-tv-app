@@ -1,6 +1,6 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-09 13:16 UTC",
+ "built": "2026-10-09 22:54 UTC",
  "videos": [
   {
    "id": "MKpt0zZyT5E",
@@ -57,6 +57,14 @@
    "lang": "hi"
   },
   {
+   "id": "7_1ZGFxX3pI",
+   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
+   "label": "Goldmines",
+   "mins": 111.25,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
    "id": "fmkS85mNZWA",
    "title": "Oxygen (2026) New Released Hindi Dubbed Movie | Gopichand, Raashii Khanna, Anu Emmanuel, Jagapathi",
    "label": "Goldmines",
@@ -73,11 +81,11 @@
    "lang": "hi"
   },
   {
-   "id": "7_1ZGFxX3pI",
-   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
+   "id": "mJ8cGXi3NoY",
+   "title": "Shikaar (K13) New Released Hindi Dubbed Full Movie 2026 | Arulnithi, Shraddha Srinath",
    "label": "Goldmines",
-   "mins": 111.25,
-   "found": "2026-10-07",
+   "mins": 92.73333333333333,
+   "found": "2026-10-09",
    "lang": "hi"
   },
   {
@@ -94,14 +102,6 @@
    "label": "Pen Movies",
    "mins": 143.13333333333333,
    "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
-   "id": "kEPHfJ02dzY",
-   "title": "Kya Meri Sonam Gupta Bewafa Hai? - Full Hindi Movie | Surbhi Jyoti | Vijay Raaz | Pen Movie 2025",
-   "label": "Pen Movies",
-   "mins": 135.31666666666666,
-   "found": "2026-10-09",
    "lang": "hi"
   },
   {
@@ -145,6 +145,14 @@
    "lang": "hi"
   },
   {
+   "id": "RYaVCM9MeDM",
+   "title": "CRACK MLA (HD) - VIJAY THALAPATHY NEW RELEASE HINDI DUBBED MOVIE 2026 NEW SOUTH HINDI DUBBED MASTER",
+   "label": "B4U Movies",
+   "mins": 175.23333333333332,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
    "id": "tu8cklEAgoc",
    "title": "BLAST (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SHIVA RAJKUMAR MOVIE RUSTUM",
    "label": "B4U Movies",
@@ -153,10 +161,10 @@
    "lang": "hi"
   },
   {
-   "id": "SiR4tmx-YOk",
-   "title": "VIJAY THALAPATHY NEW SOUTH ACTION MOVIE |  DUBBED IN HINDI 2026 FULL HD | VIJAY THE MASTER",
+   "id": "c1fQeengVG0",
+   "title": "PAWAN KALYAN NEW RELEASE SOUTH HINDI DUBBED MOVIE 2026 FULL HD - NEW SOUTH MOVIE BHEEMLA NAYAK",
    "label": "B4U Movies",
-   "mins": 165.7,
+   "mins": 130.0,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -169,19 +177,11 @@
    "lang": "hi"
   },
   {
-   "id": "LN3zXaNEDmM",
-   "title": "BANARASI NEW SOUTH HINDI DUBBED MOVIE 2026 (HD) NEW SOUTH INDIAN MOVIES DUBBED IN HINDI VENKY MAMA",
+   "id": "SiR4tmx-YOk",
+   "title": "VIJAY THALAPATHY NEW SOUTH ACTION MOVIE |  DUBBED IN HINDI 2026 FULL HD | VIJAY THE MASTER",
    "label": "B4U Movies",
-   "mins": 121.16666666666667,
+   "mins": 165.7,
    "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "RYaVCM9MeDM",
-   "title": "CRACK MLA (HD) - VIJAY THALAPATHY NEW RELEASE HINDI DUBBED MOVIE 2026 NEW SOUTH HINDI DUBBED MASTER",
-   "label": "B4U Movies",
-   "mins": 175.23333333333332,
-   "found": "2026-10-07",
    "lang": "hi"
   },
   {
@@ -289,10 +289,10 @@
    "lang": "en"
   },
   {
-   "id": "9HUhUehH6C0",
-   "title": "The Investigation That Shakes a Town | Deadly Secrets by the Lake | 2025 Mystery Thriller Movie",
+   "id": "KAouzPF7GII",
+   "title": "She's Hunting The Cartel That Murdered Her Family | She-Vigilante | Full 2026 Action Movie",
    "label": "Movie Central",
-   "mins": 85.2,
+   "mins": 84.35,
    "found": "2026-10-09",
    "lang": "en"
   },
@@ -305,18 +305,18 @@
    "lang": "en"
   },
   {
-   "id": "9elghQz-JwY",
-   "title": "Dadi Ki Shadi | Eid Special Telefilm | Eid Day 1 | 21st March 2026 | Aleezay Shah  | ARY Digital",
-   "label": "ARY Digital",
-   "mins": 80.21666666666667,
-   "found": "2026-10-07",
-   "lang": "ur"
-  },
-  {
    "id": "-gjHbKrRpig",
    "title": "Tanka Laga | Eid Special Telefilm | Day 3 | 23 March 2026 | Amar Khan | Yasir Hussain | ARY Digital",
    "label": "ARY Digital",
    "mins": 89.61666666666666,
+   "found": "2026-10-07",
+   "lang": "ur"
+  },
+  {
+   "id": "9elghQz-JwY",
+   "title": "Dadi Ki Shadi | Eid Special Telefilm | Eid Day 1 | 21st March 2026 | Aleezay Shah  | ARY Digital",
+   "label": "ARY Digital",
+   "mins": 80.21666666666667,
    "found": "2026-10-07",
    "lang": "ur"
   },
@@ -337,18 +337,18 @@
    "lang": "ur"
   },
   {
-   "id": "k-1W7DxYBvc",
-   "title": "Mulazim Online - Eid Special - TeleFilm - 7th June 2025 - [ Nida Yasir - Yasir Nawaz ] - HUM TV",
-   "label": "HUM TV",
-   "mins": 69.11666666666666,
-   "found": "2026-10-07",
-   "lang": "ur"
-  },
-  {
    "id": "PlZS2B_5rqw",
    "title": "Deewani - Eid Special - TeleFilm - 8th June 2025 - [ Sahar Hashmi - Usama Khan ] - HUM TV",
    "label": "HUM TV",
    "mins": 72.71666666666667,
+   "found": "2026-10-07",
+   "lang": "ur"
+  },
+  {
+   "id": "k-1W7DxYBvc",
+   "title": "Mulazim Online - Eid Special - TeleFilm - 7th June 2025 - [ Nida Yasir - Yasir Nawaz ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 69.11666666666666,
    "found": "2026-10-07",
    "lang": "ur"
   },
@@ -358,6 +358,14 @@
    "label": "HUM TV",
    "mins": 64.56666666666666,
    "found": "2026-10-07",
+   "lang": "ur"
+  },
+  {
+   "id": "srfGxDsIv9s",
+   "title": "Love You Dolly - Eid Special - TeleFilm - 7th June 2025 - [ Syed Jibran - Nadia Khan ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 70.55,
+   "found": "2026-10-09",
    "lang": "ur"
   },
   {
@@ -393,19 +401,19 @@
    "lang": "ur"
   },
   {
-   "id": "1aBXrPbMwcw",
-   "title": "BAYDARDI - FULL MOVIE | AIMAN KHAN | AFFAN WAHEED | 3rd August 2025 | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 149.85,
-   "found": "2026-10-07",
-   "lang": "ur"
-  },
-  {
    "id": "UkJbuBZ-EOc",
    "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
    "label": "ARY Films",
    "mins": 144.48333333333332,
    "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
+   "id": "1aBXrPbMwcw",
+   "title": "BAYDARDI - FULL MOVIE | AIMAN KHAN | AFFAN WAHEED | 3rd August 2025 | ARY FILMS",
+   "label": "ARY Films",
+   "mins": 149.85,
+   "found": "2026-10-07",
    "lang": "ur"
   },
   {

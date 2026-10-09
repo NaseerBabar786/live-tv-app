@@ -210,13 +210,6 @@
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
-  },
-  {
-   "id": "spark-ident",
-   "title": "Spark TV",
-   "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
-   "secs": 20,
-   "kind": "ident"
   }
  ],
  "slots": [],
@@ -231,7 +224,6 @@
   "adhere",
   "freedom-highway-part-ii",
   "adhere",
-  "spark-ident",
   "midwest-holiday-part-i",
   "adhere",
   "sequoia-national-park-1938",
@@ -242,7 +234,6 @@
   "adhere",
   "among-your-souvenirs",
   "adhere",
-  "spark-ident",
   "amateur-film-travel-cities",
   "adhere",
   "flying-the-lindbergh-trail-part-ii",
@@ -253,7 +244,6 @@
   "adhere",
   "roads-to-romance-the-santa-cruz-trail-an",
   "adhere",
-  "spark-ident",
   "midwest-holiday-part-ii",
   "adhere",
   "desert-empire-part-i",
@@ -264,7 +254,6 @@
   "adhere",
   "miss-clark-introduces-panorama",
   "adhere",
-  "spark-ident",
   "coveted-east-indies-the-part-ii",
   "adhere",
   "roads-to-romance-coral-gables",
@@ -275,7 +264,6 @@
   "adhere",
   "freedom-highway-part-i",
   "adhere",
-  "spark-ident",
   "how-to-go-places",
   "adhere",
   "flying-the-lindbergh-trail-part-i",
@@ -284,7 +272,6 @@
   "adhere"
  ],
  "fillers": [
-  "adhere",
-  "spark-ident"
+  "adhere"
  ]
 }

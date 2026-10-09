@@ -1,7 +1,16 @@
 {
  "name": "Spark Teens",
- "built": "2026-10-09 13:12 UTC",
+ "built": "2026-10-09 22:50 UTC",
  "videos": [
+  {
+   "id": "bisPXWa67fc",
+   "title": "Phoebe's Venus Flytrap Gets HUGE 🌱😱 | The Thundermans | Nickelodeon",
+   "label": "Nickelodeon",
+   "mins": 5.116666666666666,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-10-09"
+  },
   {
    "id": "tP9Cs0lDRqA",
    "title": "Pumpkin Particle 🎃 | Totally Spies! | Cartoon Network",
@@ -731,14 +740,6 @@
    "title": "Do Penguins Control the Weather?",
    "label": "SciShow",
    "mins": 7.116666666666666,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "lkMtbeU2NyQ",
-   "title": "LSD May Lead to a New Kind of Medicine",
-   "label": "SciShow",
-   "mins": 24.666666666666668,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -1695,14 +1696,6 @@
    "lang": "en"
   },
   {
-   "id": "PjPnYMc6H9w",
-   "title": "Alex & Harper Bestie Moments ✨💖 | Wizards of and Wizards Beyond Waverly Place | Disney Channel",
-   "label": "Disney Channel",
-   "mins": 10.333333333333334,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
    "id": "d1deJ_2Y40Y",
    "title": "Chloe Gets a POWERFUL Amulet 💥 | The Thundermans: Undercover | Nickelodeon",
    "label": "Nickelodeon",
@@ -1806,14 +1799,6 @@
    "title": "Charlotte Transforms Into Kid Danger?! 🦸‍♀️ | Henry Danger | Nickelodeon",
    "label": "Nickelodeon",
    "mins": 4.65,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "Y-SsI0KqJl8",
-   "title": "Evil Phoebe vs. Evil Max 😈 | The Thundermans | Nickelodeon",
-   "label": "Nickelodeon",
-   "mins": 12.183333333333334,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -2250,7 +2235,7 @@
   },
   {
    "id": "6eeVYVBKRSs",
-   "title": "13-Year-Old Pole Dancer Makes INCREDIBLE Comeback To Win The Golden Buzzer!",
+   "title": "She Overcame A Serious Injury... Now She's Won The Golden Buzzer! 🤯 | Ukraine's Got Talent",
    "label": "Got Talent Global",
    "mins": 4.833333333333333,
    "found": "2026-10-07",
@@ -2317,6 +2302,30 @@
    "title": "She Makes the IMPOSSIBLE Look EASY! 🔥 | Ukraine's Got Talent 2026",
    "label": "Got Talent Global",
    "mins": 4.733333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "lkMtbeU2NyQ",
+   "title": "LSD May Lead to a New Kind of Medicine",
+   "label": "SciShow",
+   "mins": 24.666666666666668,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "PjPnYMc6H9w",
+   "title": "Alex & Harper Bestie Moments ✨💖 | Wizards of and Wizards Beyond Waverly Place | Disney Channel",
+   "label": "Disney Channel",
+   "mins": 10.333333333333334,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "Y-SsI0KqJl8",
+   "title": "Evil Phoebe vs. Evil Max 😈 | The Thundermans | Nickelodeon",
+   "label": "Nickelodeon",
+   "mins": 12.183333333333334,
    "found": "2026-10-07",
    "lang": "en"
   },

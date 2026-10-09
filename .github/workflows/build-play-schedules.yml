@@ -14,6 +14,10 @@ on:
       - docs/channel/sports-schedule.json
       - docs/channel/travel-schedule.json
       - docs/channel/sur-schedule.json
+      - docs/channel/auto-schedule.json
+      - docs/channel/cooking-schedule.json
+      - docs/channel/library.json
+      - docs/channel/shayari-clips.json
       - docs/channel/ads-sponsors.json
       - docs/channel/test-schedule.json
   pull_request:

@@ -221,13 +221,6 @@
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
-  },
-  {
-   "id": "spark-ident",
-   "title": "Spark TV",
-   "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
-   "secs": 20,
-   "kind": "ident"
   }
  ],
  "slots": [],
@@ -242,7 +235,6 @@
   "adhere",
   "instrumental-oriental-music-of4",
   "adhere",
-  "spark-ident",
   "aahkochaahyea-ghalib5",
   "adhere",
   "aeinakyun-ghalib6",
@@ -253,7 +245,6 @@
   "adhere",
   "chahiyeachon-ghalib9",
   "adhere",
-  "spark-ident",
   "dardsay-ghalib10",
   "adhere",
   "vadodora-chill-mix-isrc-usuan111",
@@ -264,7 +255,6 @@
   "adhere",
   "psychedelic-crater-isrc-usuan114",
   "adhere",
-  "spark-ident",
   "sitar-and-simple-beats-antti-l15",
   "adhere",
   "tablas-and-sitars-antti-luode16",
@@ -275,7 +265,6 @@
   "adhere",
   "indore-isrc-usuan160004119",
   "adhere",
-  "spark-ident",
   "allegro-de-concert-op-46-in-a-20",
   "adhere",
   "1st-violin-f-0221",
@@ -284,7 +273,6 @@
   "adhere"
  ],
  "fillers": [
-  "adhere",
-  "spark-ident"
+  "adhere"
  ]
 }

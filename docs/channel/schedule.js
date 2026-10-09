@@ -121,8 +121,8 @@ export const STATIONS = [
     credits: "Ads: our own Cable TV promos and our sponsors' ads. Advertise your business here: WhatsApp 437 602 6500 or tv.bulkbazaar.ca/advertise." },
   // 9 (2026-10-09): the Urdu half of Comedy, Pakistani sitcoms and comedy shows.
   { id: "comedyur", yt: true, web: "channel/ytc.html?c=comedyur", ytMins: 15, tagline: "Pakistani comedy shows and sitcoms, day and night", mix: true,
-    name: "Bazaar Comedy Urdu", dial: "9", doc: "_channel_comedyur", page: "channel/?c=comedyur", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedyur.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
+    name: "Spark Comedy Urdu", dial: "9", doc: "_channel_comedyur", page: "channel/?c=comedyur", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-comedyur.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
     credits: "Comedy: Pakistani shows from the TV channels' own YouTube channels (Hasb-e-Haal, Suno Chanda, Chupke Chupke, Joru Ka Ghulam and others). Backup: public-domain classic comedies." },
   { id: "comedyen", yt: true, web: "channel/ytc.html?c=comedyen", ytMins: 15, tagline: "English comedy and clean stand-up, day and night", mix: true,
     name: "Spark Comedy English", dial: "49", doc: "_channel_comedyen", page: "channel/?c=comedyen", auto: true, backup: true,
@@ -162,8 +162,8 @@ export const STATIONS = [
     credits: "Qawwali: Sufi kalam and qawwali from the label's and singers' own YouTube channels (OSA Islamic, Nusrat Fateh Ali Khan). Backup: free-to-use music from Wikimedia Commons." },
   // 65 (2026-10-09): Punjabi comedy films and stage dramas.
   { id: "comedypa", yt: true, web: "channel/ytc.html?c=comedypa", ytMins: 30, tagline: "Punjabi comedy films and stage dramas, day and night",
-    name: "Bazaar Comedy Punjabi", dial: "65", doc: "_channel_comedypa", page: "channel/?c=comedypa", auto: true, backup: true,
-    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedypa.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
+    name: "Spark Comedy Punjabi", dial: "65", doc: "_channel_comedypa", page: "channel/?c=comedypa", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-comedypa.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
     credits: "Comedy: Punjabi comedy films and stage dramas from the producers' and labels' own YouTube channels. Backup: public-domain classic comedies." },
 ];
 

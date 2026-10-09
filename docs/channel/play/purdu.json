@@ -1,0 +1,97 @@
+{
+ "name": "Spark Cinema Urdu",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-cinema-urdu.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Spark Cinema Urdu · Films in Urdu, dubbed by our AI voices · Stories made by us · Advertise on Spark TV: WhatsApp 437 602 6500",
+ "tickerOn": true,
+ "credits": "Films: Blender Foundation (CC BY) and public-domain films, dubbed into Urdu by our AI voices; credits on screen. Stories: made by us.",
+ "videos": [
+  {
+   "id": "cosmos-laundromat-urdu",
+   "title": "Cosmos Laundromat",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/cosmos-laundromat-urdu.mp4",
+   "secs": 731,
+   "kind": "programme"
+  },
+  {
+   "id": "tears-of-steel-urdu",
+   "title": "Tears of Steel",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-urdu.mp4",
+   "secs": 734,
+   "kind": "programme"
+  },
+  {
+   "id": "sintel-urdu",
+   "title": "Sintel",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel-urdu.mp4",
+   "secs": 888,
+   "kind": "programme"
+  },
+  {
+   "id": "seven-minutes-of-terror-urdu",
+   "title": "Curiosity's Seven Minutes of Terror",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-urdu.mp4",
+   "secs": 303,
+   "kind": "programme"
+  },
+  {
+   "id": "superman-1941-urdu",
+   "title": "Superman: The Mad Scientist (1941)",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/superman-1941-urdu.mp4",
+   "secs": 628,
+   "kind": "programme"
+  },
+  {
+   "id": "sprite-fright-urdu",
+   "title": "Sprite Fright",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sprite-fright-urdu.mp4",
+   "secs": 630,
+   "kind": "programme"
+  },
+  {
+   "id": "elephants-dream-urdu",
+   "title": "Elephants Dream",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-urdu.mp4",
+   "secs": 654,
+   "kind": "programme"
+  },
+  {
+   "id": "story-lion-and-rabbit",
+   "title": "شیر اور چالاک خرگوش · The Lion and the Clever Rabbit",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/story-lion-and-rabbit.mp4",
+   "secs": 202,
+   "kind": "programme"
+  },
+  {
+   "id": "adhere",
+   "title": "Advertise on Spark TV",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
+   "secs": 15,
+   "kind": "ad"
+  }
+ ],
+ "slots": [],
+ "loop": [
+  "cosmos-laundromat-urdu",
+  "adhere",
+  "tears-of-steel-urdu",
+  "adhere",
+  "sintel-urdu",
+  "adhere",
+  "seven-minutes-of-terror-urdu",
+  "adhere",
+  "superman-1941-urdu",
+  "adhere",
+  "sprite-fright-urdu",
+  "adhere",
+  "elephants-dream-urdu",
+  "adhere",
+  "story-lion-and-rabbit",
+  "adhere"
+ ],
+ "fillers": [
+  "adhere"
+ ]
+}
