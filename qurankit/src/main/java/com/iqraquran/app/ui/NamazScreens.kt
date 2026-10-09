@@ -98,6 +98,12 @@ object NS {
         "Not a Quran verse, so it is read by the device's Arabic voice. Learn the exact words from a teacher or the transliteration.",
         "یہ قرآن کی آیت نہیں، اس لیے ڈیوائس کی عربی آواز پڑھتی ہے۔ صحیح تلفظ استاد یا رومن لکھائی سے سیکھیں۔",
     )
+    val teacherVoice = L(
+        "Not a Quran verse, so it is read by your teacher voice (a computer voice). Check the exact words with a teacher.",
+        "یہ قرآن کی آیت نہیں، اس لیے آپ کی چنی ہوئی استاد کی آواز (کمپیوٹر کی آواز) پڑھتی ہے۔ صحیح تلفظ استاد سے پوچھیں۔",
+    )
+    val teacher = L("Teacher voice for duas", "دعاؤں کے لیے استاد کی آواز")
+    val quranReciter = L("Quran reciter for verses", "آیات کے لیے قاری")
     val reciterVoice = L("Recited from the Quran by your chosen reciter.", "آپ کے چنے ہوئے قاری کی تلاوت۔")
     val source = L("Source", "ماخذ")
 }
@@ -234,6 +240,7 @@ fun NamazStepScreen(vm: AppViewModel, index: Int) {
                     Text(tr(step.howEn, step.howUr), fontSize = 17.sp, color = palette.onBar)
                 }
             }
+            if (step.recitations.isNotEmpty()) item { VoicePicker(vm) }
             items(step.recitations) { id -> RecitationCard(vm, Namaz.recitation(id)) }
             if (step.noteEn.isNotEmpty()) {
                 item { Text(tr(step.noteEn, step.noteUr), fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurfaceVariant) }
@@ -269,7 +276,10 @@ fun RecitationCard(vm: AppViewModel, r: Namaz.Recitation, hidden: Boolean = fals
     val status by vm.speaker.status.collectAsState()
     val playing by vm.player.playing.collectAsState()
     val current by vm.player.current.collectAsState()
+    val failed by vm.player.error.collectAsState()
     var mine by remember { mutableStateOf(false) }
+    val quranAudio = r.ayahs.isNotEmpty() && r.wholeAyahs
+    val teacherUrl = if (quranAudio) null else Namaz.audioUrl(vm.namazVoice, r)
     var peek by remember { mutableStateOf(false) }
     val busy = mine && (speaking != null || (playing && current != null))
     LaunchedEffect(peek) {
@@ -279,6 +289,14 @@ fun RecitationCard(vm: AppViewModel, r: Namaz.Recitation, hidden: Boolean = fals
         }
     }
     LaunchedEffect(speaking, current) { if (speaking == null && current == null) mine = false }
+    // No internet or no recording yet: the device's own Arabic voice reads it instead.
+    LaunchedEffect(failed) {
+        if (failed && mine && teacherUrl != null) {
+            vm.player.stop()
+            mine = true
+            vm.speaker.say(arabic) { mine = false }
+        }
+    }
     val known = r.id in vm.namaz.duas
     Column(
         modifier = Modifier
@@ -328,12 +346,14 @@ fun RecitationCard(vm: AppViewModel, r: Namaz.Recitation, hidden: Boolean = fals
                     vm.player.stop()
                     vm.speaker.stop()
                     mine = true
-                    if (r.ayahs.isNotEmpty() && r.wholeAyahs) {
+                    if (quranAudio) {
                         vm.player.play(
                             r.ayahs.map { (s, a) -> AyahPlayer.Track(s, a, vm.reciter.url(s, a), "") },
                             gapMs = 0L,
                             onDone = { mine = false },
                         )
+                    } else if (teacherUrl != null) {
+                        vm.player.play(listOf(AyahPlayer.Track(0, 0, teacherUrl, "")), gapMs = 0L, onDone = { mine = false })
                     } else {
                         vm.speaker.say(arabic) { mine = false }
                     }
@@ -343,14 +363,55 @@ fun RecitationCard(vm: AppViewModel, r: Namaz.Recitation, hidden: Boolean = fals
                 Choice(if (known) "✓ " + NS.known.get() else NS.iKnowIt.get(), known) { vm.markDua(r.id, !known) }
             }
         }
-        if (mine && !(r.ayahs.isNotEmpty() && r.wholeAyahs) && status == Speaker.Status.NoArabic) {
+        if (mine && speaking != null && status == Speaker.Status.NoArabic) {
             Text(S.noArabicVoice.get(), color = palette.accent, fontSize = 14.sp)
         }
         Text(
-            if (r.ayahs.isNotEmpty() && r.wholeAyahs) NS.reciterVoice.get() else NS.deviceVoice.get(),
+            when {
+                quranAudio -> NS.reciterVoice.get()
+                teacherUrl != null -> NS.teacherVoice.get()
+                else -> NS.deviceVoice.get()
+            },
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+/**
+ * Who reads aloud: one teacher voice for every dua (so it no longer switches between voices) and
+ * the Quran reciter for the verses. Shared by Iqra Quran and Cable TV's Iqra Quran.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun VoicePicker(vm: AppViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(TileShape)
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(NS.teacher.get(), fontWeight = FontWeight.SemiBold, color = palette.accent)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Namaz.voices.forEach { v ->
+                Choice(tr(v.en, v.ur), vm.namazVoice == v.id) {
+                    vm.player.stop()
+                    vm.speaker.stop()
+                    vm.chooseNamazVoice(v.id)
+                }
+            }
+        }
+        Text(NS.quranReciter.get(), fontWeight = FontWeight.SemiBold, color = palette.accent)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            vm.reciters.forEach { r ->
+                Choice(tr(r.en, r.ur), vm.reciter.id == r.id) {
+                    vm.player.stop()
+                    vm.chooseReciter(r)
+                }
+            }
+        }
     }
 }
 
@@ -375,6 +436,7 @@ fun NamazDuasScreen(vm: AppViewModel) {
                     }
                 }
             }
+            item { VoicePicker(vm) }
             items(Namaz.memorizable, key = { it.id }) { r -> RecitationCard(vm, r, hidden) }
         }
     }

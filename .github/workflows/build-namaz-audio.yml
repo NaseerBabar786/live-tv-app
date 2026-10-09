@@ -1,0 +1,46 @@
+name: Build Learn Namaz voices
+
+# Reads every Learn Namaz dua that is not a whole Quran verse in each teacher voice (docs/quran/namaz,
+# see tools/build_namaz_audio.py) and commits the MP3s to the branch it ran on.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - tools/build_namaz_audio.py
+      - qurankit/src/main/java/com/iqraquran/app/data/Namaz.kt
+      - .github/workflows/build-namaz-audio.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-namaz-audio-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ffmpeg and edge-tts
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q edge-tts
+
+      - name: Read the duas in every teacher voice
+        run: python3 tools/build_namaz_audio.py
+
+      - name: Commit the recordings
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/quran/namaz
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "Learn Namaz: teacher voice recordings"
+          git pull --rebase origin "${{ github.ref_name }}"
+          git push origin "HEAD:${{ github.ref_name }}"

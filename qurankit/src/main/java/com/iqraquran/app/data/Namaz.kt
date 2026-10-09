@@ -52,6 +52,30 @@ object Namaz {
         val noteUr: String = "",
     )
 
+    /**
+     * A teacher voice for the recitations that are not whole Quran verses (those are recited by the
+     * chosen Quran reciter). Recordings are made by tools/build_namaz_audio.py; [DEVICE] = the
+     * device's own Arabic voice.
+     */
+    data class Voice(val id: String, val en: String, val ur: String)
+
+    const val DEVICE = "device"
+    const val AUDIO_BASE = "https://tv.bulkbazaar.ca/quran/namaz/"
+
+    val voices: List<Voice> = listOf(
+        Voice("hamed", "Hamed (man)", "حامد (مرد)"),
+        Voice("shakir", "Shakir (man)", "شاکر (مرد)"),
+        Voice("moaz", "Moaz (man)", "معاذ (مرد)"),
+        Voice("zariyah", "Zariyah (woman)", "زاریہ (خاتون)"),
+        Voice(DEVICE, "This device's voice", "ڈیوائس کی آواز"),
+    )
+
+    const val DEFAULT_VOICE = "hamed"
+
+    /** Where the teacher's recording of [r] in [voiceId] is, or null for the device voice. */
+    fun audioUrl(voiceId: String, r: Recitation): String? =
+        if (voiceId == DEVICE || voices.none { it.id == voiceId }) null else "$AUDIO_BASE$voiceId/${r.id}.mp3"
+
     data class Part(val en: String, val ur: String, val count: Int, val fard: Boolean = false)
     data class PrayerRakats(val nameEn: String, val nameUr: String, val parts: List<Part>)
 
@@ -251,7 +275,7 @@ object Namaz {
             titleEn = "Rabbana atina",
             titleUr = "ربنا آتنا",
             ayahs = listOf(2 to 201),
-            fromWord = "رَبَّنَآ",
+            fromWord = "\u0631\u064e\u0628\u0651\u064e\u0646\u064e\u0627\u0653", // رَبَّنَآ as written in the app's Quran text
             translit = "Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina 'adhaban-nar.",
             meaningEn = "Our Lord, grant us good in this world as well as good in the world to come, and protect us from the torment of the Fire. " +
                 "(Holy Quran 2:202, counting Bismillah as verse 1)",

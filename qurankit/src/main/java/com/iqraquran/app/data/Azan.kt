@@ -233,6 +233,10 @@ class AzanSettings(context: Context) {
         @Volatile
         var pickPlace: (() -> Unit)? = null
 
+        /** Opens the host app's Weather section from the Azan Clock's weather tile (Cable TV); null = none. */
+        @Volatile
+        var openWeather: (() -> Unit)? = null
+
         /** Called after any setting changes (the Iqra Quran app sets the next alarm). */
         @Volatile
         var changed: ((Context) -> Unit)? = null
