@@ -1,22 +1,29 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-09 22:38 UTC",
- "secs": 2359,
+ "built": "2026-10-09 23:18 UTC",
+ "secs": 2395,
  "videos": [
   {
-   "id": "gw3Qya-AaS4",
-   "title": "Mohabbat Episode 04 [Eng Sub] Feroze Khan - Nawal Saeed | 6th October 2026 - HAR PAL GEO",
+   "id": "gdBUOTcp3KQ",
+   "title": "Uswah Episode 17 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 9th October 2026",
    "label": "Har Pal Geo",
-   "secs": 2359,
+   "secs": 2395,
    "kind": "drama"
   }
  ],
  "spares": [
   {
-   "id": "M9tE1989BqQ",
-   "title": "Mere Pass Raho Tum | Episode 75 | 15th Sep 2026 | Nawal Saeed | Omer Shahzad | Express TV",
-   "label": "Express TV",
-   "secs": 2096,
+   "id": "bER6Y2CZWEw",
+   "title": "Jaan Nisar Episode 14 | Danish Taimoor - Hiba Bukhari | Geo Kahani",
+   "label": "Geo Kahani",
+   "secs": 2253,
+   "kind": "drama"
+  },
+  {
+   "id": "bL8rT2RtISc",
+   "title": "Khushi - Episode 27 - [ENG SUB] 9th Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
+   "label": "HUM TV",
+   "secs": 1979,
    "kind": "drama"
   },
   {
@@ -24,13 +31,6 @@
    "title": "Izzat Episode 19 | 8 October 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ARY Digital",
    "label": "ARY Digital",
    "secs": 2326,
-   "kind": "drama"
-  },
-  {
-   "id": "T0r8FhcNcoc",
-   "title": "Aap Ki Izzat - Last Episode 22 [Eng Sub] - 26 Sep 2026 [Urwa Hocane, Ahsan Khan & Saif Ali Khan]",
-   "label": "HUM TV",
-   "secs": 2571,
    "kind": "drama"
   }
  ]

@@ -1,36 +1,36 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-09 22:38 UTC",
- "secs": 2303,
+ "built": "2026-10-09 23:18 UTC",
+ "secs": 2126,
  "videos": [
   {
-   "id": "qQHFIEqtTC8",
-   "title": "Ehraam-e-Junoon Episode 24 | Neelam Muneer - Imran Abbas - Nimra Khan | Geo Kahani",
-   "label": "Geo Kahani",
-   "secs": 2303,
+   "id": "jIzCDqLpc7A",
+   "title": "Hum Bhi Ji Lain Episode 8 | 9th oct 2026 | Yasir Nawaz | Faiza Hassan | Express Ent",
+   "label": "Express TV",
+   "secs": 2126,
    "kind": "drama"
   }
  ],
  "spares": [
   {
-   "id": "o-qGGFEItHI",
-   "title": "Aakhri Sahara Episode 19 | Areej Mohyudin, Noor Hassan | Latest Pakistani Drama",
-   "label": "LTN Family",
-   "secs": 2220,
-   "kind": "drama"
-  },
-  {
-   "id": "VaAMUteKlw4",
-   "title": "Mein Kahani Hun S- 3 | Episode 2 | Saanjh | Sunita Marshall | Syed Jibran | 4 Oct 2026 | Express TV",
+   "id": "KUfP6qpDQbw",
+   "title": "Mere Pass Raho Tum | Episode 46 | 25th July 2026 | Nawal Saeed | Omer Shahzad | Express TV",
    "label": "Express TV",
-   "secs": 2108,
+   "secs": 1991,
    "kind": "drama"
   },
   {
-   "id": "_6MSyU6uUKU",
-   "title": "Uswah Episode 12 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 4th October 2026",
-   "label": "Har Pal Geo",
-   "secs": 2313,
+   "id": "zW4vWJjSrpM",
+   "title": "Raja London Ka Episode 23 [ENG SUB] 17th Aug 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
+   "label": "Express TV",
+   "secs": 1929,
+   "kind": "drama"
+  },
+  {
+   "id": "W2ECLWg8XpM",
+   "title": "Raja London Ka Episode 18 [ENG SUB] 28th July 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
+   "label": "Express TV",
+   "secs": 1953,
    "kind": "drama"
   }
  ]

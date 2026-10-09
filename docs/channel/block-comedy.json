@@ -1,30 +1,22 @@
 {
  "name": "مزاحیہ",
- "built": "2026-10-09 22:38 UTC",
- "secs": 1311,
+ "built": "2026-10-09 23:18 UTC",
+ "secs": 1254,
  "videos": [
-  {
-   "id": "noUVHO6p7N8",
-   "title": "FULL EPISODE 4816 - Bhide Ki Baat Sunkar Jethalal ! | Taarak Mehta ka Ooltah Chasmah",
-   "label": "Taarak Mehta",
-   "secs": 1311,
-   "kind": "comedy"
-  }
- ],
- "spares": [
-  {
-   "id": "_NjImGHkTug",
-   "title": "NEW Episode 4835 - Daya Ko Dekhke Jethalal Hua Shock ! Taarak Mehta Ka Ooltah Chashmah",
-   "label": "Taarak Mehta",
-   "secs": 640,
-   "kind": "comedy"
-  },
   {
    "id": "VxeEcRfx2DI",
    "title": "NEW Episode 4836 - Tapu Sonu Ki Jethalal Hua Taarak Mehta Ka Ooltah Chashmah",
    "label": "Taarak Mehta",
    "secs": 614,
    "kind": "comedy"
+  },
+  {
+   "id": "_NjImGHkTug",
+   "title": "NEW Episode 4835 - Daya Ko Dekhke Jethalal Hua Shock ! Taarak Mehta Ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "secs": 640,
+   "kind": "comedy"
   }
- ]
+ ],
+ "spares": []
 }

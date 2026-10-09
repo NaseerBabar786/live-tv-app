@@ -1,20 +1,13 @@
 {
  "name": "کھانا پکائیں",
- "built": "2026-10-09 22:38 UTC",
- "secs": 1357,
+ "built": "2026-10-09 23:18 UTC",
+ "secs": 1022,
  "videos": [
   {
-   "id": "QB2KDtoN4-s",
-   "title": "High protein Low carbs Breakfast recipe | Kabitaskitchen",
-   "label": "Kabita's Kitchen",
-   "secs": 441,
-   "kind": "cooking"
-  },
-  {
-   "id": "lPI-sodBzg8",
-   "title": "High protein Low Carbs recipe | Masoor Dal recipe",
-   "label": "Kabita's Kitchen",
-   "secs": 431,
+   "id": "YRl9hrd1xlI",
+   "title": "One Egg, 4 Delicious Recipes! The Ultimate Egg Special Recipes By Chef@sanjeevkapoorkhazana",
+   "label": "Sanjeev Kapoor",
+   "secs": 537,
    "kind": "cooking"
   },
   {
@@ -28,16 +21,16 @@
  "spares": [
   {
    "id": "aOM9QyL6SCI",
-   "title": "Lasooni Palak Khichdi | | Khichdi Recipe | Chef Ranveer Brar",
+   "title": "Palak Khichdi | | masala Khichdi Recipe | Chef Ranveer Brar",
    "label": "Ranveer Brar",
    "secs": 670,
    "kind": "cooking"
   },
   {
-   "id": "fnK0EK46Sbo",
-   "title": "2 Spl Tiffin recipes | Corn Dhokla & Uthappam | Chef Ranveer Brar",
-   "label": "Ranveer Brar",
-   "secs": 819,
+   "id": "QB2KDtoN4-s",
+   "title": "High protein Low carbs Breakfast recipe | Kabitaskitchen",
+   "label": "Kabita's Kitchen",
+   "secs": 441,
    "kind": "cooking"
   },
   {
