@@ -19,7 +19,10 @@ like the approved v5 montage (tools/make_spark_montage.py, whose clips and drawi
   fly        Fly-through (real footage only). Every shot holds the next one in a window at its centre; the camera
              flies through window after window, faster and faster, into the flower.
 
-Usage: python3 tools/make_spark_montage_ideas.py languages|carousel|remote|mosaic|panels|fly OUT.mp4
+  gallery    Calm gallery (real footage only), the fly-through's replacement: big postcards glide in from the right one
+             after another, then four cards take the petal colours and slide together into the flower.
+
+Usage: python3 tools/make_spark_montage_ideas.py languages|carousel|remote|mosaic|panels|fly|gallery OUT.mp4
 """
 import math, os, subprocess, sys, tempfile
 import numpy as np
@@ -643,6 +646,91 @@ def flythrough(clips, outro):
     return frame
 
 
+# idea 6, second try (owner, 2026-10-09 21:23: the fly-through felt like your head spinning): a calm gallery.
+# Big postcards of real footage glide in from the right, one after another, always the same direction, no zoom
+# tunnel and no turning; the next card peeks in at the edge. At the end four cards take the petal colours and
+# slide together into the flower.
+GALLERY = [("to-sky", "TORONTO"), ("train", "MUMBAI"), ("cricket", "CRICKET"), ("sintel-snow", "CINEMA"), ("quebec", "QUEBEC"),
+           ("bunny-fly", "KIDS"), ("golak", "SPORTS"), ("cst", "MUMBAI"), ("tos-city", "MOVIES"), ("clouds", "WEATHER"),
+           ("football", "FOOTBALL"), ("wing-rocket", "KIDS"), ("taxi", "CITIES"), ("stadium", "SPORTS"), ("city-lapse", "NEWS"),
+           ("llama", "KIDS"), ("cricket2", "CRICKET"), ("to-lapse", "TORONTO"), ("superman-zap", "CLASSICS"), ("heli", "NEWS")]
+GCOLS = {"TORONTO": (40, 120, 255), "MUMBAI": (255, 122, 0), "CRICKET": (0, 168, 96), "CINEMA": ORG, "QUEBEC": (40, 120, 255),
+         "KIDS": (255, 196, 0), "SPORTS": (0, 168, 96), "MOVIES": ORG, "WEATHER": (40, 120, 255), "FOOTBALL": (0, 168, 96),
+         "CITIES": PNK, "NEWS": PNK, "CLASSICS": (150, 150, 160)}
+
+
+def gallery_pos(t):
+    """Which card is in the middle at time t: one every second from 1 s, one every half second from 9 s, eased."""
+    if t < 1: return 0.0
+    if t < 9: s = t - 1; return math.floor(s) + inout(clamp((s % 1) / .55))
+    s = (t - 9) / .5; return 8 + math.floor(s) + inout(clamp((s % 1) / .6))
+
+
+def gallery(clips, outro):
+    tags = {w: label(w, c, 52) for w, c in GCOLS.items()}
+    cw, ch = int(W * .66), int(W * .66 * 9 / 16); gap = 70
+
+    def card(i, t, w=cw, h=ch):
+        nm = GALLERY[i % len(GALLERY)][0]
+        im = reel_frame(clips, nm, t + i * .4, w, h, k=clamp((t % 4) / 4) * .5).convert("RGBA")
+        m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).rounded_rectangle([0, 0, w - 1, h - 1], 26, fill=255); im.putalpha(m)
+        return im
+
+    shadow = Image.new("RGBA", (cw + 120, ch + 120), (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).rounded_rectangle([60, 70, cw + 60, ch + 70], 30, fill=(0, 0, 0, 150))
+    shadow = shadow.filter(M.ImageFilter.GaussianBlur(28))
+
+    def frame(t):
+        if t < 12.5:
+            p = gallery_pos(t); i0 = int(p)
+            f = bg_dark(t, clips[GALLERY[i0 % len(GALLERY)][0]], 0) * .9
+            cv = to_img(f).convert("RGBA")
+            for j in range(i0 - 1, i0 + 3):                    # left neighbour, centre, the next two waiting at the right
+                if j < 0: continue
+                x = W / 2 + (j - p) * (cw + gap) - cw / 2; y = (H - ch) / 2 - 30
+                if x > W or x + cw < 0: continue
+                cv.alpha_composite(shadow, (int(x) - 60, int(y) - 60))
+                im = card(j, t)
+                d = abs(j - p)
+                if d > .02: im = Image.blend(Image.new("RGBA", im.size, (0, 0, 0, 0)), im, max(.35, 1 - .55 * d))
+                cv.alpha_composite(im, (int(x), int(y)))
+            settle = 1 - min(1, abs(p - round(p)) * 4)
+            if t > 1.1 and settle > 0:
+                tg = fade_img(tags[GALLERY[int(round(p)) % len(GALLERY)][1]], settle)
+                cv.alpha_composite(tg, ((W - tg.width) // 2, int((H + ch) / 2 - 30 + 34)))
+            f = arr(cv.convert("RGB"))
+            if t < .9: f = f * clamp(t / .8)
+        else:
+            # four cards in a row take the petal colours and glide together into the flower's square
+            k = t - 12.5; cv = Image.new("RGBA", (W, H), tuple(int(v * 255) for v in DARK) + (255,))
+            a = out_cubic(clamp(k / .6)); e = inout(clamp((k - .7) / 1.5)); S = 760
+            sw, sh = int(W * .2), int(W * .2 * 9 / 16)
+            for i in range(4):
+                x0 = W / 2 + (i - 1.5) * (sw + 30) - sw / 2 + (1 - a) * W * .5; y0 = (H - sh) / 2
+                x1, y1 = (W - S) / 2, (H - S) / 2
+                x, y, w, h = x0 + (x1 - x0) * e, y0 + (y1 - y0) * e, sw + (S - sw) * e, sh + (S - sh) * e
+                w, h = max(4, int(w)), max(4, int(h))
+                im = reel_frame(clips, GALLERY[i * 3][0], t + i, w, h).convert("RGBA")
+                im = Image.blend(im, Image.new("RGBA", im.size, PETALS[i] + (255,)), clamp(k / 1.0) * .8)
+                pm = M.petal_mask(S, i).resize((w, h), Image.BILINEAR)
+                if e < .92:
+                    bx = pm.getbbox() or (0, 0, w, h); q = clamp(e / .92)
+                    box = [bx[0] * q, bx[1] * q, w - 1 - (w - 1 - bx[2]) * q, h - 1 - (h - 1 - bx[3]) * q]
+                    m = Image.new("L", (w, h), 0)
+                    ImageDraw.Draw(m).rounded_rectangle(box, max(8, int(min(box[2] - box[0], box[3] - box[1]) / 2 * q)), fill=255)
+                else:
+                    m = pm
+                im.putalpha(m); cv.alpha_composite(im, (int(x), int(y)))
+            f = arr(cv.convert("RGB"))
+            if k > 2.0: f = f + ((k - 2.0) / .5) ** 2 * .8
+        for t0 in (9,):
+            lk = leak(t, t0)
+            if lk is not None: f = f + lk
+        return f * (.4 + .6 * VIGN)
+
+    return frame
+
+
 def make(kind, out):
     print("fetching clips", flush=True)
     if kind == "languages":
@@ -660,13 +748,16 @@ def make(kind, out):
     elif kind == "panels":
         names = {n for p in PANELS for n in p} | set(GRIDC) | {"sintel-cliff"}
         tagline = "LIVE   ·   SPORTS   ·   MOVIES   ·   NEWS"
+    elif kind == "gallery":
+        names = {n for n, _ in GALLERY} | {"sintel-cliff"}
+        tagline = "FROM TORONTO TO MUMBAI   ·   ALL ON SPARK"
     else:
         names = set(FLY) | {"sintel-cliff"}
         tagline = "FROM TORONTO TO MUMBAI   ·   ALL ON SPARK"
     assert kind in ("languages", "carousel", "remote", "mosaic") or not names & AI_MADE, "ideas 5 and 6 use no AI-made video"
     clips = {n: Clip(n, 9.0 if n == "sintel-cliff" else 3.2) for n in names}
     outro = Outro(tagline, clips["sintel-cliff"])
-    body = {"languages": languages, "carousel": carousel, "remote": remote, "mosaic": mosaic, "panels": panels, "fly": flythrough}[kind](clips, outro)
+    body = {"languages": languages, "carousel": carousel, "remote": remote, "mosaic": mosaic, "panels": panels, "fly": flythrough, "gallery": gallery}[kind](clips, outro)
     bug = Image.open(M.BUG).convert("RGBA"); bug = fade_img(bug.resize((230, int(230 * bug.height / bug.width)), Image.LANCZOS), .8)
     cf = ImageFont.truetype(FONT, 21)
     fr = tempfile.mkdtemp()
