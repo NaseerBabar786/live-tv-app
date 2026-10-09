@@ -65,6 +65,7 @@
 <script src="promo.js"></script>
 <script src="still.js"></script>
 <script src="keepplaying.js"></script>
+<script src="lowfirst.js"></script>
 <script>
 // The player's own code loads while the channel's lists are fetched, not after (owner: our channels
 // were slow to start, 1.10.24); the player starts once both are ready.
@@ -201,6 +202,7 @@ function startPlayer() {
     },
   });
   stillFor(player);
+  lowFirst(player);
   keepPlaying(player, () => inBreak, () => cover(true));
 };
 // A frozen screen never stays: a song stuck loading, or on one frame, for 30 seconds is loaded again;
