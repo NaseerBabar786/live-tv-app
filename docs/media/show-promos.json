@@ -301,13 +301,111 @@
    "day": "all",
    "time": "07:00",
    "videos": [
-    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4"
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-day.mp4"
    ],
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0700.mp4",
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "f1847b0a120d"
+   "hash": "60ad76edbf68"
+  },
+  "show-all-0725": {
+   "title": "وقفہ: آج کے پروگرام اور موسم",
+   "when": "Every day · 7:25 AM",
+   "day": "all",
+   "time": "07:25",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/segment.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0725.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "1513cd894df1"
+  },
+  "show-all-0755": {
+   "title": "وقفہ: آج کے پروگرام اور موسم",
+   "when": "Every day · 7:55 AM",
+   "day": "all",
+   "time": "07:55",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/segment.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0755.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "7c8867355903"
+  },
+  "bazaar-tv-news-the-full-report-all-0800": {
+   "title": "Bazaar TV News: The Full Report",
+   "when": "Every day · 8 AM",
+   "day": "all",
+   "time": "08:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full-day.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0800.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "c15fddbe5efd"
+  },
+  "show-all-0825": {
+   "title": "وقفہ: آج کے پروگرام اور موسم",
+   "when": "Every day · 8:25 AM",
+   "day": "all",
+   "time": "08:25",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/segment.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0825.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "31369f98dfed"
+  },
+  "show-all-0855": {
+   "title": "وقفہ: آج کے پروگرام اور موسم",
+   "when": "Every day · 8:55 AM",
+   "day": "all",
+   "time": "08:55",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/segment.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0855.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "105f207dbd4f"
+  },
+  "bazaar-tv-news-headlines-all-0900": {
+   "title": "Bazaar TV News: Headlines",
+   "when": "Every day · 9 AM",
+   "day": "all",
+   "time": "09:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-day.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0900.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "0f1fdcb359f1"
+  },
+  "show-all-0925": {
+   "title": "وقفہ: آج کے پروگرام اور موسم",
+   "when": "Every day · 9:25 AM",
+   "day": "all",
+   "time": "09:25",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/segment.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0925.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "f1f1d33f1be6"
   },
   "bazaar-tv-news-headlines-all-1000": {
    "title": "Bazaar TV News: Headlines",
