@@ -1,15 +1,7 @@
 {
  "name": "Spark Movies Punjabi",
- "built": "2026-10-09 10:13 UTC",
+ "built": "2026-10-09 13:14 UTC",
  "videos": [
-  {
-   "id": "gog51LSdZ6w",
-   "title": "Jatta Dolie Naa | Full Movie | Kirandeep Rayat, Prabh Grewal | Latest Punjabi Movie | Action | Drama",
-   "label": "Yellow Music",
-   "mins": 136.3,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
   {
    "id": "0kFrVf3F6t8",
    "title": "Pure Punjabi | Full Punjabi Movie | Karan Kundra, Nav Bajwa, Manjot Singh, Surveen Chawla",
@@ -19,10 +11,10 @@
    "lang": "pa"
   },
   {
-   "id": "u483azPNvk8",
-   "title": "Wand (Full Movie) - Hardeep Gill -  Raj Dhaliwal - Latest Punjabi Movies - Shemaroo Punjabi",
-   "label": "ShemarooMe Punjabi",
-   "mins": 129.08333333333334,
+   "id": "gog51LSdZ6w",
+   "title": "Jatta Dolie Naa | Full Movie | Kirandeep Rayat, Prabh Grewal | Latest Punjabi Movie | Action | Drama",
+   "label": "Yellow Music",
+   "mins": 136.3,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -31,6 +23,30 @@
    "title": "Latest Punjabi Movie | Guggu Gill | Gavie Chahal | Gurchet Chitarkar | New Punjabi Movie 2020",
    "label": "ShemarooMe Punjabi",
    "mins": 137.33333333333334,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "s834KtDdrJg",
+   "title": "Jaswinder Bhalla Famous Chhankata | Full Video | Best Punjabi Comedy Movie | Punjabi Movie 2025",
+   "label": "ShemarooMe Punjabi",
+   "mins": 70.88333333333334,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "t1rXpoHyvRs",
+   "title": "Nanak Naam Jahaz Hai (Full Movie)| HD | Shri Guru Nanak Dev Ji | New Punjabi Movie 2025",
+   "label": "ShemarooMe Punjabi",
+   "mins": 137.88333333333333,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "u483azPNvk8",
+   "title": "Wand (Full Movie) - Hardeep Gill -  Raj Dhaliwal - Latest Punjabi Movies - Shemaroo Punjabi",
+   "label": "ShemarooMe Punjabi",
+   "mins": 129.08333333333334,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -88,6 +104,22 @@
    "label": "Yellow Music",
    "mins": 120.53333333333333,
    "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "0oUD2bRoC1U",
+   "title": "Chaar Sahibzaade 2: Rise Of Banda Singh Bahadur (PUNJABI)",
+   "label": "White Hill Studios",
+   "mins": 134.13333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "J71SEbJrcBA",
+   "title": "Mummy Punjabi",
+   "label": "White Hill Studios",
+   "mins": 121.7,
+   "found": "2026-10-08",
    "lang": "pa"
   },
   {
@@ -149,14 +181,6 @@
    "lang": "pa"
   },
   {
-   "id": "-4Ia1CScqCI",
-   "title": "Jaddi Sardar | Full Movie | Sippy Gill, Dilpreet Dhillon | Latest Punjabi Movie | Yellow Music",
-   "label": "Yellow Music",
-   "mins": 149.98333333333332,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "hY0mZs8u3zY",
    "title": "Ni Main Sass Kuttni (Full Movie) | Punjabi Comedy Film | Mehtab Virk | Gurpreet Ghuggi | Tanvi Nagi",
    "label": "Yellow Music",
@@ -165,18 +189,10 @@
    "lang": "pa"
   },
   {
-   "id": "RDJpYyWYiuA",
-   "title": "Jora 10 Numbaria | Full Movie | Dharmendra | Deep Sidhu | Latest Punjabi Movies 2021 | Yellow Music",
+   "id": "fDxyImNzI1E",
+   "title": "Punjab Singh | New Punjabi Full Movie with Subtitles | Gurjind Maan | Sarthi | Anita Devgan",
    "label": "Yellow Music",
-   "mins": 135.21666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "KOL4eXrO9Y0",
-   "title": "Lambran Da Laana Full Movie 🎬 | Babbal Rai & Sara Gurpal | New Punjabi Comedy Movie 😂 | HD Full Film",
-   "label": "Yellow Music",
-   "mins": 129.66666666666666,
+   "mins": 150.41666666666666,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -189,10 +205,10 @@
    "lang": "pa"
   },
   {
-   "id": "SYjz2c4bC1c",
-   "title": "JATT vs IELTS | Full Movie | Punjabi Comedy Drama | Punjabi Movies | Yellow Music",
+   "id": "RDJpYyWYiuA",
+   "title": "Jora 10 Numbaria | Full Movie | Dharmendra | Deep Sidhu | Latest Punjabi Movies 2021 | Yellow Music",
    "label": "Yellow Music",
-   "mins": 142.3,
+   "mins": 135.21666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -205,40 +221,24 @@
    "lang": "pa"
   },
   {
+   "id": "-4Ia1CScqCI",
+   "title": "Jaddi Sardar | Full Movie | Sippy Gill, Dilpreet Dhillon | Latest Punjabi Movie | Yellow Music",
+   "label": "Yellow Music",
+   "mins": 149.98333333333332,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "SYjz2c4bC1c",
+   "title": "JATT vs IELTS | Full Movie | Punjabi Comedy Drama | Punjabi Movies | Yellow Music",
+   "label": "Yellow Music",
+   "mins": 142.3,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "1-yl2iZSxqM",
    "title": "Sardara And Sons (Full Movie) 🎬 | Yograj Singh, Roshan Prince | Must-Watch Punjabi Family Drama",
-   "label": "Yellow Music",
-   "mins": 100.66666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "AvcQtwnIWjE",
-   "title": "Yes I Am Student (Full Movie) | Sidhu Moosewala | Tarnvir Singh Jagpal | Hit Punjabi Film 2025",
-   "label": "Yellow Music",
-   "mins": 109.75,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "GgldOv5aFrU",
-   "title": "BLACKIA (Full Movie) | Dev Kharoud & Ihana Dhillon | Punjabi Movies | Yellow Music",
-   "label": "Yellow Music",
-   "mins": 142.01666666666668,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "Lw7V0cEDp0s",
-   "title": "Munda Faridkotia | New Punjabi Movie | Roshan Prince | Sharan Kaur | Navpreet Banga | Yellow Music",
-   "label": "Yellow Music",
-   "mins": 131.0,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "4Z18lx91Nwk",
-   "title": "Sardara And Sons (Full Movie) | Yograj Singh | Sarbjit Cheema | Roshan Prince | New Punjabi Movie",
    "label": "Yellow Music",
    "mins": 100.66666666666667,
    "found": "2026-10-08",
@@ -253,50 +253,34 @@
    "lang": "pa"
   },
   {
-   "id": "fDxyImNzI1E",
-   "title": "Punjab Singh | New Punjabi Full Movie with Subtitles | Gurjind Maan | Sarthi | Anita Devgan",
+   "id": "GgldOv5aFrU",
+   "title": "BLACKIA (Full Movie) | Dev Kharoud & Ihana Dhillon | Punjabi Movies | Yellow Music",
    "label": "Yellow Music",
-   "mins": 150.41666666666666,
+   "mins": 142.01666666666668,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "_1OINizoQO8",
-   "title": "Ni Main Sass Kuttni | Full Punjabi Comedy Movie | Mehtab Virk | Gurpreet Ghuggi | Tanvi Nagi",
+   "id": "KOL4eXrO9Y0",
+   "title": "Lambran Da Laana Full Movie 🎬 | Babbal Rai & Sara Gurpal | New Punjabi Comedy Movie 😂 | HD Full Film",
    "label": "Yellow Music",
-   "mins": 112.53333333333333,
+   "mins": 129.66666666666666,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "FY2VtQpnra0",
-   "title": "Allahr Vres (Full Movie) | Armaan Bedil, Jaanvir Kaur & Jimmy Sharma | Punjabi Movies | Yellow Music",
+   "id": "AvcQtwnIWjE",
+   "title": "Yes I Am Student (Full Movie) | Sidhu Moosewala | Tarnvir Singh Jagpal | Hit Punjabi Film 2025",
    "label": "Yellow Music",
-   "mins": 133.81666666666666,
+   "mins": 109.75,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "CA1i9krTBuY",
-   "title": "Nishana | ਨਿਸ਼ਾਨਾ | Punjabi Movies | Kulwinder Billa | Tanroj Singh | Saanvi | Bhawna | Yellow Music",
+   "id": "Lw7V0cEDp0s",
+   "title": "Munda Faridkotia | New Punjabi Movie | Roshan Prince | Sharan Kaur | Navpreet Banga | Yellow Music",
    "label": "Yellow Music",
-   "mins": 144.85,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "Ylt-atQL1ns",
-   "title": "Blackia | Full Punjabi Movie | Dev Kharoud | Ihana Dhillon | Punjabi Action Crime Drama",
-   "label": "Yellow Music",
-   "mins": 127.13333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "q849TUnJRO0",
-   "title": "KRAZZY TABBAR | New Punjabi Movie | Harish Verma, Priyanka Mehta, Yograj Singh | Yellow Movies",
-   "label": "Yellow Music",
-   "mins": 118.56666666666666,
+   "mins": 131.0,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -317,10 +301,26 @@
    "lang": "pa"
   },
   {
-   "id": "F7RlCRvDBvQ",
-   "title": "Saka | Nankana Sahib | Full Punjabi Movie | Mukul Dev | Aman Dhaliwal | Yellow Music",
+   "id": "Ylt-atQL1ns",
+   "title": "Blackia | Full Punjabi Movie | Dev Kharoud | Ihana Dhillon | Punjabi Action Crime Drama",
    "label": "Yellow Music",
-   "mins": 130.6,
+   "mins": 127.13333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "q849TUnJRO0",
+   "title": "KRAZZY TABBAR | New Punjabi Movie | Harish Verma, Priyanka Mehta, Yograj Singh | Yellow Movies",
+   "label": "Yellow Music",
+   "mins": 118.56666666666666,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "4Z18lx91Nwk",
+   "title": "Sardara And Sons (Full Movie) | Yograj Singh | Sarbjit Cheema | Roshan Prince | New Punjabi Movie",
+   "label": "Yellow Music",
+   "mins": 100.66666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -333,10 +333,50 @@
    "lang": "pa"
   },
   {
+   "id": "_1OINizoQO8",
+   "title": "Ni Main Sass Kuttni | Full Punjabi Comedy Movie | Mehtab Virk | Gurpreet Ghuggi | Tanvi Nagi",
+   "label": "Yellow Music",
+   "mins": 112.53333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "CA1i9krTBuY",
+   "title": "Nishana | ਨਿਸ਼ਾਨਾ | Punjabi Movies | Kulwinder Billa | Tanroj Singh | Saanvi | Bhawna | Yellow Music",
+   "label": "Yellow Music",
+   "mins": 144.85,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "F7RlCRvDBvQ",
+   "title": "Saka | Nankana Sahib | Full Punjabi Movie | Mukul Dev | Aman Dhaliwal | Yellow Music",
+   "label": "Yellow Music",
+   "mins": 130.6,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "FY2VtQpnra0",
+   "title": "Allahr Vres (Full Movie) | Armaan Bedil, Jaanvir Kaur & Jimmy Sharma | Punjabi Movies | Yellow Music",
+   "label": "Yellow Music",
+   "mins": 133.81666666666666,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "66r3vF4RPtY",
    "title": "Titoo MBA - Married But Available | Full Movie | Latest Punjabi Movies | Comedy Drama",
    "label": "Yellow Music",
    "mins": 113.56666666666666,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "Gxs65ZWJtEk",
+   "title": "Lambran Da Laana (Full Movie) | Babbal Rai, Sara Gurpal, Yasir Hussain | Punjabi Comedy Drama",
+   "label": "Yellow Music",
+   "mins": 129.66666666666666,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -450,14 +490,6 @@
    "lang": "pa"
   },
   {
-   "id": "Wr9PLUHRyhY",
-   "title": "New Punjabi Comedy Movie 2025 | Jaswinder Bhalla | Nisha Bano | Karamjit Anmol | Binnu Dhillon |Film",
-   "label": "ShemarooMe Punjabi",
-   "mins": 134.03333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "2nt0wmL4mEM",
    "title": "Ek Jind Ek Jaan : Raj Babbar - Nagma - Ghuggi  | Blockbuster Punjabi Movie | Full Movies ( HD )",
    "label": "ShemarooMe Punjabi",
@@ -466,10 +498,10 @@
    "lang": "pa"
   },
   {
-   "id": "XtbVetYe7cI",
-   "title": "Punjabi Action Movie 2025 | Full Movie | New Punjabi Movie 2025 | Ninja | Latest Punjabi Movie 2025",
+   "id": "ip9TNpkzS0g",
+   "title": "Badla : The Revenge | Yograj Singh | Guggu Gill | Latest Punjabi Full Movies | New Punjabi Movie",
    "label": "ShemarooMe Punjabi",
-   "mins": 133.36666666666667,
+   "mins": 133.46666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -482,10 +514,18 @@
    "lang": "pa"
   },
   {
-   "id": "ip9TNpkzS0g",
-   "title": "Badla : The Revenge | Yograj Singh | Guggu Gill | Latest Punjabi Full Movies | New Punjabi Movie",
+   "id": "Wr9PLUHRyhY",
+   "title": "New Punjabi Comedy Movie 2025 | Jaswinder Bhalla | Nisha Bano | Karamjit Anmol | Binnu Dhillon |Film",
    "label": "ShemarooMe Punjabi",
-   "mins": 133.46666666666667,
+   "mins": 134.03333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "y0TsF0atDnI",
+   "title": "New Punjabi Movie 2025 | Soldier Romantic Story Movie | Full Movie | Latest Punjabi Movie 2025",
+   "label": "ShemarooMe Punjabi",
+   "mins": 137.53333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -506,10 +546,18 @@
    "lang": "pa"
   },
   {
-   "id": "y0TsF0atDnI",
-   "title": "New Punjabi Movie 2025 | Soldier Romantic Story Movie | Full Movie | Latest Punjabi Movie 2025",
+   "id": "QllmFxXxCuM",
+   "title": "Punjabi Movies 2026 | Full Siyapa Comedy Movie | New Punjabi Movie | Punjabi Comedy Film",
    "label": "ShemarooMe Punjabi",
-   "mins": 137.53333333333333,
+   "mins": 130.55,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "mgvRWKhgnDI",
+   "title": "Punjabi Action Movies 2025 Full Movie | Pavan Malhotra | Dilpreet Dhillon | Tanvi Nagi | New Film",
+   "label": "ShemarooMe Punjabi",
+   "mins": 111.93333333333334,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -522,18 +570,10 @@
    "lang": "pa"
   },
   {
-   "id": "MyzCNmZvVvs",
-   "title": "New Punjabi Movie 2026 (Official Full Movie) | Punjabi Action Movie | Guggu Gill | Yograj Singh Film",
+   "id": "KDBrFtyrtZc",
+   "title": "Suprehit Movie 2025 | Diljit Dosanjh | Surveen Chawla | Romantic Comedy Movie | New Punjabi Movie",
    "label": "ShemarooMe Punjabi",
-   "mins": 133.55,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "QllmFxXxCuM",
-   "title": "Punjabi Movies 2026 | Full Siyapa Comedy Movie | New Punjabi Movie | Punjabi Comedy Film",
-   "label": "ShemarooMe Punjabi",
-   "mins": 130.55,
+   "mins": 134.9,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -546,42 +586,10 @@
    "lang": "pa"
   },
   {
-   "id": "N_RZRB9c9CE",
-   "title": "Punjabi Movie 2024 | Full Punjabi Movie | Yograj Singh | Guggu Gill | New Punjabi Movie 2024",
-   "label": "ShemarooMe Punjabi",
-   "mins": 133.36666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "KDBrFtyrtZc",
-   "title": "Suprehit Movie 2025 | Diljit Dosanjh | Surveen Chawla | Romantic Comedy Movie | New Punjabi Movie",
-   "label": "ShemarooMe Punjabi",
-   "mins": 134.9,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "WAbUEDQgDX4",
    "title": "New Punjabi Movie 2024 | Jatt & Juliet | Full HD Movie | Diljit Dosanjh | Neeru Bajwa | Comedy Movie",
    "label": "ShemarooMe Punjabi",
    "mins": 124.31666666666666,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "ub8rpTvEVAM",
-   "title": "Dulla Vailly : Yograj Singh - Guggu Gill | Full HD | Latest Punjabi Movies 2019 | New Punjabi Movie",
-   "label": "ShemarooMe Punjabi",
-   "mins": 133.46666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "Yf8MqtzmwbE",
-   "title": "Latest Punjabi Movie 2024 | Full Movie | Yograj Singh, Sarbjit Cheema | New Punjabi Movie 2024",
-   "label": "ShemarooMe Punjabi",
-   "mins": 133.36666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -594,10 +602,42 @@
    "lang": "pa"
   },
   {
-   "id": "jfxbVNxnzKg",
-   "title": "New Punjabi Comedy Movies | Punjabi Movie Full New | Comedy Movie | Punjabi Movies 2025 | New Film",
+   "id": "XtbVetYe7cI",
+   "title": "Punjabi Action Movie 2025 | Full Movie | New Punjabi Movie 2025 | Ninja | Latest Punjabi Movie 2025",
    "label": "ShemarooMe Punjabi",
-   "mins": 121.63333333333334,
+   "mins": 133.36666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "ub8rpTvEVAM",
+   "title": "Dulla Vailly : Yograj Singh - Guggu Gill | Full HD | Latest Punjabi Movies 2019 | New Punjabi Movie",
+   "label": "ShemarooMe Punjabi",
+   "mins": 133.46666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "N_RZRB9c9CE",
+   "title": "Punjabi Movie 2024 | Full Punjabi Movie | Yograj Singh | Guggu Gill | New Punjabi Movie 2024",
+   "label": "ShemarooMe Punjabi",
+   "mins": 133.36666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "Yf8MqtzmwbE",
+   "title": "Latest Punjabi Movie 2024 | Full Movie | Yograj Singh, Sarbjit Cheema | New Punjabi Movie 2024",
+   "label": "ShemarooMe Punjabi",
+   "mins": 133.36666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "NMGMJyiqdBU",
+   "title": "Gurchet Chitarkar New Comedy Movie | Family 426 Return (Full Comedy Movie) | New Punjabi Movie 2025",
+   "label": "ShemarooMe Punjabi",
+   "mins": 78.98333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -706,14 +746,6 @@
    "lang": "pa"
   },
   {
-   "id": "eMHNTyo4vXc",
-   "title": "Bikkar Bai Senti Mental (Full Punjabi Movie) | Jassi Jasraj, Diljit Dosanjh, Rana Ranbir",
-   "label": "Pitaara TV",
-   "mins": 116.08333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "dYpxKHrCHEU",
    "title": "Singh vs Kaur | Gippy Grewal & Surveen Chawla | Superhit Punjabi Comedy Movie | Pitaara Tv",
    "label": "Pitaara TV",
@@ -722,18 +754,18 @@
    "lang": "pa"
   },
   {
-   "id": "wmrTSGhaNtw",
-   "title": "Munde Kamal De (Full Movie) | Superhit Punjabi Comedy | Amrinder Gill, Yuvraj Hans | Pitaara Tv",
-   "label": "Pitaara TV",
-   "mins": 90.5,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "-PCzTFGWrbQ",
    "title": "Aslee Punjab (Full Movie) | Real Story of Punjab | Dheeraj Kumar | Must-Watch Punjabi Film",
    "label": "Pitaara TV",
    "mins": 98.65,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "wmrTSGhaNtw",
+   "title": "Munde Kamal De (Full Movie) | Superhit Punjabi Comedy | Amrinder Gill, Yuvraj Hans | Pitaara Tv",
+   "label": "Pitaara TV",
+   "mins": 90.5,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -800,18 +832,26 @@
    "lang": "pa"
   },
   {
-   "id": "0oUD2bRoC1U",
-   "title": "Chaar Sahibzaade 2: Rise Of Banda Singh Bahadur (PUNJABI)",
-   "label": "White Hill Studios",
-   "mins": 134.13333333333333,
+   "id": "MyzCNmZvVvs",
+   "title": "New Punjabi Movie 2026 (Official Full Movie) | Punjabi Action Movie | Guggu Gill | Yograj Singh Film",
+   "label": "ShemarooMe Punjabi",
+   "mins": 133.55,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "J71SEbJrcBA",
-   "title": "Mummy Punjabi",
-   "label": "White Hill Studios",
-   "mins": 121.7,
+   "id": "jfxbVNxnzKg",
+   "title": "New Punjabi Comedy Movies | Punjabi Movie Full New | Comedy Movie | Punjabi Movies 2025 | New Film",
+   "label": "ShemarooMe Punjabi",
+   "mins": 121.63333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "eMHNTyo4vXc",
+   "title": "Bikkar Bai Senti Mental (Full Punjabi Movie) | Jassi Jasraj, Diljit Dosanjh, Rana Ranbir",
+   "label": "Pitaara TV",
+   "mins": 116.08333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -820,30 +860,6 @@
    "title": "Blockbuster Punjabi Comedy Movie - Family 423 - Gurchet Chitarkar - Old Is Gold - Full Punjabi Movie",
    "label": "ShemarooMe Punjabi",
    "mins": 79.78333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "NMGMJyiqdBU",
-   "title": "Gurchet Chitarkar New Comedy Movie | Family 426 Return (Full Comedy Movie) | New Punjabi Movie 2025",
-   "label": "ShemarooMe Punjabi",
-   "mins": 78.98333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "Gxs65ZWJtEk",
-   "title": "Lambran Da Laana (Full Movie) | Babbal Rai, Sara Gurpal, Yasir Hussain | Punjabi Comedy Drama",
-   "label": "Yellow Music",
-   "mins": 129.66666666666666,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "mgvRWKhgnDI",
-   "title": "Punjabi Action Movies 2025 Full Movie | Pavan Malhotra | Dilpreet Dhillon | Tanvi Nagi | New Film",
-   "label": "ShemarooMe Punjabi",
-   "mins": 111.93333333333334,
    "found": "2026-10-08",
    "lang": "pa"
   },

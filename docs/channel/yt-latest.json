@@ -1,6 +1,6 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-09 10:15 UTC",
+ "built": "2026-10-09 13:16 UTC",
  "videos": [
   {
    "id": "MKpt0zZyT5E",
@@ -65,14 +65,6 @@
    "lang": "hi"
   },
   {
-   "id": "7_1ZGFxX3pI",
-   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
-   "label": "Goldmines",
-   "mins": 111.25,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
    "id": "Bon7e5C7KNU",
    "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
    "label": "Goldmines",
@@ -81,10 +73,10 @@
    "lang": "hi"
   },
   {
-   "id": "GYJeCObuuB0",
-   "title": "Ranga Ranga (2025) New Released Hindi Dubbed Movie | Panja Vaisshnav Tej, Ketika Sharma",
+   "id": "7_1ZGFxX3pI",
+   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
    "label": "Goldmines",
-   "mins": 124.75,
+   "mins": 111.25,
    "found": "2026-10-07",
    "lang": "hi"
   },
@@ -105,10 +97,10 @@
    "lang": "hi"
   },
   {
-   "id": "OtUp3Zzyrvw",
-   "title": "Yamlok (2026) New South Hindi Dubbed Full Movie | Rajendra Prasad, Sivaji, Sonia | Shemaroo Movies",
-   "label": "Shemaroo Movies",
-   "mins": 125.7,
+   "id": "kEPHfJ02dzY",
+   "title": "Kya Meri Sonam Gupta Bewafa Hai? - Full Hindi Movie | Surbhi Jyoti | Vijay Raaz | Pen Movie 2025",
+   "label": "Pen Movies",
+   "mins": 135.31666666666666,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -145,18 +137,42 @@
    "lang": "hi"
   },
   {
-   "id": "mpN0hVg61xA",
-   "title": "RAVI TEJA KI NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL HD - SOUTH BLOCKBUSTER MOVIE DHAMAKA",
+   "id": "EhaX-eQmfF4",
+   "title": "JANA NAYAKAM (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL VIJAY THALAPATHY MOVIE MASTER",
    "label": "B4U Movies",
-   "mins": 131.33333333333334,
+   "mins": 171.23333333333332,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
+   "id": "tu8cklEAgoc",
+   "title": "BLAST (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SHIVA RAJKUMAR MOVIE RUSTUM",
+   "label": "B4U Movies",
+   "mins": 101.73333333333333,
    "found": "2026-10-09",
    "lang": "hi"
   },
   {
-   "id": "tZ6aA9T8tfs",
-   "title": "NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL HD - VIJAY THALAPATHY MOVIES HINDI DUBBED MASTER",
+   "id": "SiR4tmx-YOk",
+   "title": "VIJAY THALAPATHY NEW SOUTH ACTION MOVIE |  DUBBED IN HINDI 2026 FULL HD | VIJAY THE MASTER",
    "label": "B4U Movies",
-   "mins": 170.53333333333333,
+   "mins": 165.7,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "iFsL_Ko4VCk",
+   "title": "NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SOUTH HINDI DUBBED MOVIE MAFIA",
+   "label": "B4U Movies",
+   "mins": 91.83333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "LN3zXaNEDmM",
+   "title": "BANARASI NEW SOUTH HINDI DUBBED MOVIE 2026 (HD) NEW SOUTH INDIAN MOVIES DUBBED IN HINDI VENKY MAMA",
+   "label": "B4U Movies",
+   "mins": 121.16666666666667,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -169,34 +185,18 @@
    "lang": "hi"
   },
   {
-   "id": "EhaX-eQmfF4",
-   "title": "JANA NAYAKAM (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL VIJAY THALAPATHY MOVIE MASTER",
-   "label": "B4U Movies",
-   "mins": 171.23333333333332,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
-   "id": "LN3zXaNEDmM",
-   "title": "BANARASI NEW SOUTH HINDI DUBBED MOVIE 2026 (HD) NEW SOUTH INDIAN MOVIES DUBBED IN HINDI VENKY MAMA",
-   "label": "B4U Movies",
-   "mins": 121.16666666666667,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "uk48KLL13Y8",
-   "title": "TOXXIC (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL HD - KARTIKEYA - GUNA 369",
-   "label": "B4U Movies",
-   "mins": 123.9,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
    "id": "Mpf1IYpOpF4",
    "title": "Crazy Fellow Hindi Dubbed Movie 2026 Full Movie | Aadi Saikumar, Digangana Suryavanshi |Mirnaa Menon",
    "label": "Aditya Movies",
    "mins": 122.28333333333333,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
+   "id": "VDFys9V9poQ",
+   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
+   "label": "Aditya Movies",
+   "mins": 145.35,
    "found": "2026-10-07",
    "lang": "hi"
   },
@@ -241,34 +241,26 @@
    "lang": "hi"
   },
   {
-   "id": "VDFys9V9poQ",
-   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
+   "id": "RfL11k8Y7G4",
+   "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
    "label": "Aditya Movies",
-   "mins": 145.35,
-   "found": "2026-10-07",
+   "mins": 126.08333333333333,
+   "found": "2026-10-09",
    "lang": "hi"
   },
   {
-   "id": "oCwQ5ee7cyg",
-   "title": "F2 Full Movie in Hindi | Hindi Dubbed Movies 2025 Full Movie | Venkatesh, Varun Tej, Tamannaah",
-   "label": "Aditya Movies",
-   "mins": 109.05,
+   "id": "M2_LpZyq94g",
+   "title": "Veteran Actors Mentor A Determined Young Director | Ultra Low | Full 2025 Indie Drama Movie",
+   "label": "Movie Central",
+   "mins": 116.86666666666666,
    "found": "2026-10-09",
-   "lang": "hi"
+   "lang": "en"
   },
   {
    "id": "A4rgRr_T4Ow",
    "title": "His Faith In The Lord Is Being Tested | Broken Church | Full 2026 Faith Drama Movie",
    "label": "Movie Central",
    "mins": 86.65,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "irB4mOZRvoQ",
-   "title": "She Has No Idea He's Secretly A Billionaire | Love Undercover | 2026 Romantic Comedy Movie",
-   "label": "Movie Central",
-   "mins": 87.56666666666666,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -281,10 +273,10 @@
    "lang": "en"
   },
   {
-   "id": "nhZN34kGe8I",
-   "title": "This Mom Fell In Love With An Escaped Outlaw | Bright Sky | Full 2026 Romance Movie",
+   "id": "ERsURQC8Xxo",
+   "title": "Ruthless Hitman Took On The Chicago Mob | Silent Partners | Full 2026 Action Movie",
    "label": "Movie Central",
-   "mins": 85.66666666666667,
+   "mins": 82.61666666666666,
    "found": "2026-10-09",
    "lang": "en"
   },
@@ -297,26 +289,26 @@
    "lang": "en"
   },
   {
-   "id": "_rn2W-ZOToU",
-   "title": "Trapped In A Snow Storm She Finds Love | Christmas Everlasting | Full 2026 Christmas Romance Movie",
+   "id": "9HUhUehH6C0",
+   "title": "The Investigation That Shakes a Town | Deadly Secrets by the Lake | 2025 Mystery Thriller Movie",
    "label": "Movie Central",
-   "mins": 81.85,
+   "mins": 85.2,
    "found": "2026-10-09",
    "lang": "en"
   },
   {
-   "id": "7YkoXDuYxgA",
-   "title": "The Mermaid Who Changed The World | Mermaids' Lament | Full 2025 Drama Sci-Fi Movie",
+   "id": "atxp7E1KphA",
+   "title": "She Takes Down a Ruthless Gang | Bad B*tch Full Movie | 2025 Crime Thriller Full Movie",
    "label": "Movie Central",
-   "mins": 89.41666666666667,
+   "mins": 125.25,
    "found": "2026-10-09",
    "lang": "en"
   },
   {
-   "id": "ZQCRf1Vos18",
-   "title": "Bhaag Sunny Bhaag | Eid Special Telefilm | 23 March 2026 | Muneeb Butt | Zoha Tauqeer | ARY Digital",
+   "id": "9elghQz-JwY",
+   "title": "Dadi Ki Shadi | Eid Special Telefilm | Eid Day 1 | 21st March 2026 | Aleezay Shah  | ARY Digital",
    "label": "ARY Digital",
-   "mins": 79.23333333333333,
+   "mins": 80.21666666666667,
    "found": "2026-10-07",
    "lang": "ur"
   },
@@ -329,11 +321,19 @@
    "lang": "ur"
   },
   {
-   "id": "9elghQz-JwY",
-   "title": "Dadi Ki Shadi | Eid Special Telefilm | Eid Day 1 | 21st March 2026 | Aleezay Shah  | ARY Digital",
+   "id": "ZQCRf1Vos18",
+   "title": "Bhaag Sunny Bhaag | Eid Special Telefilm | 23 March 2026 | Muneeb Butt | Zoha Tauqeer | ARY Digital",
    "label": "ARY Digital",
-   "mins": 80.21666666666667,
+   "mins": 79.23333333333333,
    "found": "2026-10-07",
+   "lang": "ur"
+  },
+  {
+   "id": "dPNKYab1xHs",
+   "title": "Afrah Tafreeh - Telefilm - Eid Special 2026 - HUM TV",
+   "label": "HUM TV",
+   "mins": 70.4,
+   "found": "2026-10-09",
    "lang": "ur"
   },
   {
@@ -358,14 +358,6 @@
    "label": "HUM TV",
    "mins": 64.56666666666666,
    "found": "2026-10-07",
-   "lang": "ur"
-  },
-  {
-   "id": "srfGxDsIv9s",
-   "title": "Love You Dolly - Eid Special - TeleFilm - 7th June 2025 - [ Syed Jibran - Nadia Khan ] - HUM TV",
-   "label": "HUM TV",
-   "mins": 70.55,
-   "found": "2026-10-08",
    "lang": "ur"
   },
   {
@@ -401,19 +393,19 @@
    "lang": "ur"
   },
   {
-   "id": "UkJbuBZ-EOc",
-   "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 144.48333333333332,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "1aBXrPbMwcw",
    "title": "BAYDARDI - FULL MOVIE | AIMAN KHAN | AFFAN WAHEED | 3rd August 2025 | ARY FILMS",
    "label": "ARY Films",
    "mins": 149.85,
    "found": "2026-10-07",
+   "lang": "ur"
+  },
+  {
+   "id": "UkJbuBZ-EOc",
+   "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
+   "label": "ARY Films",
+   "mins": 144.48333333333332,
+   "found": "2026-10-08",
    "lang": "ur"
   },
   {
