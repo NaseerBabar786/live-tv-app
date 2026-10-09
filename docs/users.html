@@ -57,6 +57,16 @@
   .watch ol { margin: 4px 0 0; padding-left: 22px; font-size: 14px; }
   .watch ol li span { color: var(--muted); }
   .live { color: #81C784; font-weight: 700; }
+  dialog#msg { width: min(640px, calc(100vw - 24px)); max-height: calc(100vh - 24px); background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 16px; padding: 0; }
+  dialog#msg::backdrop { background: rgba(0,0,0,.7); }
+  .convo { max-height: 45vh; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin: 8px 0 10px; padding: 10px; background: var(--bg); border-radius: 12px; }
+  .bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; background: var(--surface-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .bubble.me { align-self: flex-end; background: #0D2A4A; }
+  .bubble .t { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+  #mText { width: 100%; min-height: 80px; padding: 8px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; box-sizing: border-box; }
+  .msg-btn { padding: 3px 10px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+  .msg-btn:hover { border-color: var(--focus); }
+  .new-reply { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #12391A; color: #A5D6A7; }
   input[type=search] { width: 100%; max-width: 360px; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
 </style>
 </head>
@@ -90,17 +100,31 @@
       <div class="row"><button class="btn primary" id="addBtn">➕ Add user</button><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Watching</th><th>Billing</th><th></th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Message</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Watching</th><th>Billing</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
   <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🎁 <b>Gifts</b>: in a viewer's panel, <b>Give free Gold</b> turns on Gold for 1 week to 1 year, or forever, with no payment (a Gold package that's still on is made longer). <b>Add free credit</b> gives them dollars that ✓ Paid today takes off their next payment; their app shows it in 💳 My billing details.</p>
+  <p class="small">✉ <b>Send message</b> writes to a viewer: the message pops up on their TV over whatever they're watching (within a minute if Cable TV is open, otherwise the next time they open it), and they can answer right away with the remote. Their answer shows here, with 💬 <b>New reply</b> on their row, and in <a href="suggestions#messages">Suggestions › Messages</a>.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
   <p class="small">➕ <b>Add user</b> makes a Cable TV account for someone before they install the app: type their name, email and a password you choose, then tell them. They open Cable TV, choose email sign-in and type the same email and password. They can change the password later in the app's Settings.</p>
   <p class="err" id="err"></p>
 </main>
 
+<dialog id="msg">
+  <div class="bill-head">
+    <div><h2 id="mName"></h2><div class="small" id="mSub"></div></div>
+    <button class="btn" id="mClose" aria-label="Close">✕</button>
+  </div>
+  <div class="bill-body">
+    <div class="convo" id="mList"></div>
+    <textarea id="mText" placeholder="Type your message. It pops up on their screen." maxlength="2000"></textarea>
+    <div class="row" style="margin-top:8px;align-items:center"><button class="btn primary" id="mSend">📨 Send</button><span class="small" id="mMsg"></span></div>
+    <p class="small" id="mSeen"></p>
+    <p class="small">It pops up over whatever they're watching, within a minute if Cable TV is open; if the TV is off, the next time they open it. They answer with one press of the remote (👍 OK, got it / Thank you! / Please call me) or type an answer, and it appears here at once. Ctrl+Enter sends.</p>
+  </div>
+</dialog>
 <dialog id="addUser">
   <div class="bill-head"><h2>Add user</h2><button class="btn" id="auClose" aria-label="Close">✕</button></div>
   <form class="bill-body" id="auForm" method="dialog">
@@ -210,7 +234,74 @@ if (!configured) {
     } catch (e) { $("err").textContent = "Couldn't load users: " + e.message; }
     await Promise.all([loadBilling(), loadUsage()]);
     stats(); render();
+    watchInbox();
   });
+
+  // Private messages (inbox/{uid}, as on Suggestions > Messages). Kept live, so "💬 New reply" shows as soon as a viewer answers.
+  let inbox = {};
+  function watchInbox() {
+    fs.onSnapshot(fs.collection(db, "inbox"), snap => {
+      inbox = Object.fromEntries(snap.docs.map(d => [d.id, d.data()]));
+      render();
+    }, () => {});
+  }
+
+  // ✉ Send message: the conversation with one viewer, live. What you send pops up on their screen over
+  // whatever is playing (app 1.11 and newer), within a minute while Cable TV is open, otherwise the next
+  // time they open it; they can answer with one press of the remote, and the answer appears here.
+  let msgUser = null, stopMsgs = null, stopHead = null;
+  function openMessages(u) {
+    msgUser = u;
+    $("mName").textContent = "✉ " + (u.name || "Cable TV viewer");
+    $("mSub").textContent = [u.email, u.device, u.appVersion ? "app " + u.appVersion : ""].filter(Boolean).join(" · ");
+    $("mText").value = ""; $("mMsg").textContent = ""; $("mSeen").textContent = "";
+    $("mList").textContent = "Loading…";
+    stopMsgs?.(); stopHead?.();
+    stopMsgs = fs.onSnapshot(fs.query(fs.collection(db, "inbox", u.id, "messages"), fs.orderBy("createdAt")), snap => {
+      const list = $("mList"); list.innerHTML = "";
+      if (snap.empty) { list.innerHTML = '<div class="small">No messages yet. Write the first one below.</div>'; return; }
+      for (const d of snap.docs) {
+        const m = d.data(), b = document.createElement("div"), t = document.createElement("div"), x = document.createElement("div");
+        b.className = "bubble" + (m.from === "admin" ? " me" : "");
+        t.className = "t"; t.textContent = (m.from === "admin" ? "You" : (m.name || "Viewer")) + " · " + fmt(toDate(m.createdAt));
+        x.textContent = m.text || "";
+        b.append(t, x); list.append(b);
+      }
+      list.scrollTop = list.scrollHeight;
+    }, e => $("mList").textContent = "Couldn't load the messages: " + e.message);
+    stopHead = fs.onSnapshot(fs.doc(db, "inbox", u.id), d => {
+      const h = d.data() || {};
+      $("mSeen").textContent = seenLine(h);
+      if (h.adminUnread) fs.setDoc(fs.doc(db, "inbox", u.id), { adminUnread: false }, { merge: true }).catch(() => {});
+    }, () => {});
+    $("msg").showModal();
+    setTimeout(() => $("mText").focus(), 50);
+  }
+  // The app marks seenOf = the time of the message it popped up (to the second).
+  function seenLine(h) {
+    if (h.lastFrom !== "admin") return "";
+    const last = toDate(h.lastAt), seenOf = toDate(h.seenOf), seenAt = toDate(h.seenAt);
+    if (last && seenOf && seenOf.getTime() >= last.getTime() - 1000) return `✓ Seen on their screen ${fmt(seenAt || seenOf)}`;
+    return "⏳ Not seen yet: it pops up on their screen within a minute if Cable TV is open, otherwise the next time they open it.";
+  }
+  function closeMessages() { stopMsgs?.(); stopHead?.(); stopMsgs = stopHead = null; msgUser = null; }
+  $("mClose").onclick = () => $("msg").close();
+  $("msg").addEventListener("close", closeMessages);
+  async function sendMessage() {
+    const u = msgUser, text = $("mText").value.trim();
+    if (!u || !text) return;
+    if (text.length > 2000) return $("mMsg").textContent = "That's too long: 2000 characters at most.";
+    $("mSend").disabled = true; $("mMsg").textContent = "Sending…";
+    try {
+      const me = auth.currentUser;
+      await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: me.uid, name: me.displayName || "Cable TV team", text, createdAt: fs.serverTimestamp() });
+      await fs.setDoc(fs.doc(db, "inbox", u.id), { uid: u.id, lastText: text.slice(0, 200), lastAt: fs.serverTimestamp(), lastFrom: "admin", userUnread: true, name: u.name || "", email: u.email || "" }, { merge: true });
+      $("mText").value = ""; $("mMsg").textContent = "✓ Sent.";
+    } catch (e) { $("mMsg").textContent = "Couldn't send: " + e.message; }
+    finally { $("mSend").disabled = false; }
+  }
+  $("mSend").onclick = sendMessage;
+  $("mText").onkeydown = e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendMessage(); } };
 
   // Billing details: billing/{uid} is yours only; billingInfo/{uid} is what the viewer filled in
   // in the app (and when you last asked them); plans/{uid} is the package turned on at /packages.
@@ -436,6 +527,13 @@ if (!configured) {
       [i + 1, u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, fmt(u.joined), fmt(u.lastOpened)].forEach(v => {
         const td = document.createElement("td"); td.textContent = v ?? ""; tr.append(td);
       });
+      // ✉ Send a message that pops up on their screen; a green badge when they've answered and you haven't read it.
+      const mTd = document.createElement("td"), mBtn = document.createElement("button");
+      mBtn.className = "msg-btn"; mBtn.textContent = "✉ Send message";
+      mBtn.onclick = () => openMessages(u);
+      mTd.append(mBtn);
+      if (inbox[u.id]?.adminUnread) { const n = document.createElement("span"); n.className = "new-reply"; n.textContent = "💬 New reply"; mTd.append(n); }
+      tr.insertBefore(mTd, tr.children[2]);
       const pk = packageNow(u), pTd = document.createElement("td"), pBadge = document.createElement("span");
       pBadge.className = "pkg " + (pk.tier === "Gold" ? "gold" : pk.tier === "Promo" ? "promo" : "free");
       pBadge.textContent = (pk.tier === "Gold" ? "⭐ " : "") + pk.name;
@@ -455,19 +553,15 @@ if (!configured) {
       badge.className = miss.length ? "miss" : "ok";
       badge.textContent = miss.length ? `${miss.length} missing` : (tierName(details(u).package) || "✓ Complete");
       bTd.append(badge); tr.append(bTd);
-      tr.onclick = e => { if (!e.target.closest("a")) openBilling(u); };
-      // Starts (or opens) a private conversation with this viewer; it lands in their Messages.
+      tr.onclick = e => { if (!e.target.closest("a, button")) openBilling(u); };
       const td = document.createElement("td");
-      const a = document.createElement("a");
-      a.textContent = "✉ Message";
-      a.href = "suggestions#to=" + encodeURIComponent(u.id) + "&name=" + encodeURIComponent(u.name || "") + "&email=" + encodeURIComponent(u.email || "");
       const setPw = document.createElement("a");
-      setPw.textContent = "🔑 Set password"; setPw.href = "#"; setPw.style.marginLeft = "12px";
+      setPw.textContent = "🔑 Set password"; setPw.href = "#";
       setPw.onclick = e => { e.preventDefault(); setPassword(u); };
       const reset = document.createElement("a");
       reset.textContent = "✉ Reset email"; reset.href = "#"; reset.style.marginLeft = "12px";
       reset.onclick = e => { e.preventDefault(); resetEmail(u); };
-      td.append(a, setPw, reset); tr.append(td);
+      td.append(setPw, reset); tr.append(td);
       tbody.append(tr);
     });
   }
