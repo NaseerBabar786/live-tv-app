@@ -375,23 +375,43 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-0300",
-   "cat": "promos",
-   "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0300.mp4",
-   "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 3 AM.",
-   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
-  },
-  {
-   "id": "show-promo-bazaar-tv-news-headlines-all-0400",
+   "id": "show-promo-bazaar-tv-news-headlines-all-0300",
    "cat": "promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0400.mp4",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0300.mp4",
    "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 4 AM.",
+   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 3 AM.",
+   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-the-full-report-all-0400",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0400.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 4 AM.",
+   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
+  },
+  {
+   "id": "show-promo-show-all-0425",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0425.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: وقفہ: آج کے پروگرام اور موسم, Every day · 4:25 AM.",
+   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
+  },
+  {
+   "id": "show-promo-show-all-0455",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0455.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: وقفہ: آج کے پروگرام اور موسم, Every day · 4:55 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -405,13 +425,43 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-0600",
+   "id": "show-promo-show-all-0525",
    "cat": "promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0600.mp4",
+   "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0525.mp4",
    "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 6 AM.",
+   "about": "Coming up on Bazaar TV: وقفہ: آج کے پروگرام اور موسم, Every day · 5:25 AM.",
+   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
+  },
+  {
+   "id": "show-promo-show-all-0555",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0555.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: وقفہ: آج کے پروگرام اور موسم, Every day · 5:55 AM.",
+   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
+  },
+  {
+   "id": "show-promo-bazaar-tv-news-headlines-all-0600",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0600.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 6 AM.",
+   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
+  },
+  {
+   "id": "show-promo-show-all-0625",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0625.mp4",
+   "secs": 20,
+   "about": "Coming up on Bazaar TV: وقفہ: آج کے پروگرام اور موسم, Every day · 6:25 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -422,26 +472,6 @@
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0700.mp4",
    "secs": 20,
    "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 7 AM.",
-   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
-  },
-  {
-   "id": "show-promo-bazaar-tv-news-headlines-all-0800",
-   "cat": "promos",
-   "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0800.mp4",
-   "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 8 AM.",
-   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
-  },
-  {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-0900",
-   "cat": "promos",
-   "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0900.mp4",
-   "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 9 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -495,26 +525,6 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-1500",
-   "cat": "promos",
-   "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-1500.mp4",
-   "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 3 PM.",
-   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
-  },
-  {
-   "id": "show-promo-bazaar-tv-news-headlines-all-1600",
-   "cat": "promos",
-   "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1600.mp4",
-   "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 4 PM.",
-   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
-  },
-  {
    "id": "show-promo-bazaar-tv-news-headlines-all-1700",
    "cat": "promos",
    "lang": "ur",
@@ -525,16 +535,6 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-1800",
-   "cat": "promos",
-   "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-1800.mp4",
-   "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 6 PM.",
-   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
-  },
-  {
    "id": "show-promo-bazaar-tv-news-headlines-all-1900",
    "cat": "promos",
    "lang": "ur",
@@ -542,26 +542,6 @@
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1900.mp4",
    "secs": 20,
    "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 7 PM.",
-   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
-  },
-  {
-   "id": "show-promo-bazaar-tv-news-headlines-all-2000",
-   "cat": "promos",
-   "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-2000.mp4",
-   "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: Headlines, Every day · 8 PM.",
-   "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
-  },
-  {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-2100",
-   "cat": "promos",
-   "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-2100.mp4",
-   "secs": 20,
-   "about": "Coming up on Bazaar TV: Bazaar TV News: The Full Report, Every day · 9 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
