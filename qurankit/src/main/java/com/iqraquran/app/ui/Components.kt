@@ -100,6 +100,7 @@ fun BigTile(
     icon: ImageVector?,
     modifier: Modifier = Modifier,
     badge: @Composable (() -> Unit)? = null,
+    contentColor: Color = Color.White,
     onClick: () -> Unit,
 ) {
     Box(
@@ -111,9 +112,9 @@ fun BigTile(
             .padding(18.dp),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            if (icon != null) Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(40.dp))
-            Text(title, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-            Text(subtitle, color = Color.White.copy(alpha = 0.85f), fontSize = 15.sp)
+            if (icon != null) Icon(icon, contentDescription = null, tint = contentColor, modifier = Modifier.size(40.dp))
+            Text(title, color = contentColor, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            Text(subtitle, color = contentColor.copy(alpha = 0.85f), fontSize = 15.sp)
             if (badge != null) badge()
         }
     }
