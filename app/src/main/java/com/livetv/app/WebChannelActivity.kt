@@ -313,6 +313,7 @@ class WebChannelActivity : Activity() {
             quick.addView(Button(this).apply {
                 text = q
                 isAllCaps = false
+                isFocusableInTouchMode = false
                 setOnClickListener { send(q) }
             })
         }
@@ -334,7 +335,8 @@ class WebChannelActivity : Activity() {
                 dialog.dismiss()
                 MessagePopup.closeRead()
             }
-            quick.getChildAt(0)?.requestFocus()
+            // The remote starts on "👍 OK, got it", not in the typing box.
+            quick.getChildAt(0)?.let { b -> b.post { b.requestFocus() } }
         }
         // Back closes it, like Close.
         dialog.setOnCancelListener { MessagePopup.closeRead() }
