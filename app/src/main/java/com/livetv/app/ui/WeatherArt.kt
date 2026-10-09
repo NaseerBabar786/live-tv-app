@@ -169,7 +169,7 @@ private fun DrawScope.flake(c: Offset, r: Float) {
 }
 
 /**
- * The sky behind the Weather section: the Cable TV theme's own colours (1.10.30), touched by the weather
+ * The sky behind the Weather section: the Cable TV theme's own colours (1.11), touched by the weather
  * and the time of day (a warm glow in sunshine, darker under rain), with slowly drifting clouds, stars at
  * night and falling rain or snow when it's wet.
  */

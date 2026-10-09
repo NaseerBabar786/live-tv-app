@@ -98,7 +98,7 @@ import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.sin
 
-// The Weather section's colours come from the Cable TV theme the viewer picked (1.10.30), so it looks
+// The Weather section's colours come from the Cable TV theme the viewer picked (1.11), so it looks
 // like the rest of the app; only the weather pictures and the sky's weather touches keep their own colours.
 private val SkyBottom: Color get() = Themes.current.background
 private val Panel: Color get() = Themes.current.panel.copy(alpha = 0.85f)

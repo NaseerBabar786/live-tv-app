@@ -48,7 +48,7 @@ var base = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/
   { subdomains: 'abcd', maxZoom: 12, attribution: '© OpenStreetMap © CARTO · Radar © RainViewer' }).addTo(map);
 var tileErrors = 0;
 base.on('tileerror', function (e) { if (++tileErrors <= 3) console.log('radar: map tile failed ' + (e.tile && e.tile.src)); });
-// The TV can lay the page out before the box has its size; measure again once it has one (1.10.30).
+// The TV can lay the page out before the box has its size; measure again once it has one (1.11).
 function fit() { map.invalidateSize(false); }
 window.addEventListener('resize', fit);
 [300, 1000, 2500, 5000].forEach(function (ms) { setTimeout(fit, ms); });
