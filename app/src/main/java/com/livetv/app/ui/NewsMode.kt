@@ -605,10 +605,10 @@ fun NewsMode(
                     Divider()
                 }
                 if (choices.bottom == NewsScreen.Bottom.Both) {
-                    Crawl(Modifier.fillMaxWidth().weight(0.8f).background(Color(0xFF0E1830)), markets, rates, gold, ::s, ::d)
+                    Crawl(Modifier.fillMaxWidth().weight(0.8f).background(Panel), markets, rates, gold, ::s, ::d)
                     Divider()
                 }
-                Box(Modifier.fillMaxWidth().weight(0.9f).background(Color(0xFF05070D)).padding(horizontal = d(12f))) {
+                Box(Modifier.fillMaxWidth().weight(0.9f).background(Themes.current.background).padding(horizontal = d(12f))) {
                     EditionTicker(Modifier.fillMaxSize(), big = true, always = true)
                 }
             }
@@ -1239,13 +1239,13 @@ private fun Cp24Layout(
                 }
             }
             if (crawl != Cp24Screen.NOTHING) {
-                Box(Modifier.fillMaxWidth().height(lineHeight).background(Color(0xFF0E1830))) {
+                Box(Modifier.fillMaxWidth().height(lineHeight).background(Panel)) {
                     if (crawl == Cp24Screen.STORIES) StoryCrawl(Modifier.fillMaxSize(), s, d)
                     else Crawl(Modifier.fillMaxSize(), markets, rates, gold, s, d)
                 }
             }
             Row(Modifier.fillMaxWidth().height(lineHeight)) {
-                Box(Modifier.weight(1f).fillMaxHeight().background(Color(0xFF05070D)).padding(horizontal = d(12f))) {
+                Box(Modifier.weight(1f).fillMaxHeight().background(Themes.current.background).padding(horizontal = d(12f))) {
                     EditionTicker(Modifier.fillMaxSize(), big = true, always = true)
                 }
                 Box(Modifier.width(d(56f)).fillMaxHeight().background(Cp24Red), contentAlignment = Alignment.Center) {

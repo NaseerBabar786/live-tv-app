@@ -44,16 +44,18 @@ var map = L.map('map', { zoomControl: false, keyboard: false, dragging: false, t
 map.createPane('labels');
 map.getPane('labels').style.zIndex = 450;
 map.getPane('labels').style.pointerEvents = 'none';
-var base = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
-  { subdomains: 'abcd', maxZoom: 12, attribution: '© OpenStreetMap © CARTO · Radar © RainViewer' }).addTo(map);
+// Esri's free dark grey map (no key needed). CARTO's free tiles now show an "API key" notice instead
+// of the map, which left the radar looking blank on the TV (1.11).
+var ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
+var base = L.tileLayer(ESRI + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 12, attribution: 'Map © Esri, HERE, Garmin, © OpenStreetMap · Radar © RainViewer' }).addTo(map);
 var tileErrors = 0;
 base.on('tileerror', function (e) { if (++tileErrors <= 3) console.log('radar: map tile failed ' + (e.tile && e.tile.src)); });
 // The TV can lay the page out before the box has its size; measure again once it has one (1.11).
 function fit() { map.invalidateSize(false); }
 window.addEventListener('resize', fit);
 [300, 1000, 2500, 5000].forEach(function (ms) { setTimeout(fit, ms); });
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',
-  { subdomains: 'abcd', maxZoom: 12, pane: 'labels' }).addTo(map);
+L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 12, pane: 'labels' }).addTo(map);
 L.marker([LAT, LON], { icon: L.divIcon({ className: '', html: '<div class="me"></div>', iconSize: [20, 20], iconAnchor: [10, 10] }),
   pane: 'labels', interactive: false }).addTo(map);
 
