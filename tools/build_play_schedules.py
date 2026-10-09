@@ -5,6 +5,9 @@ Spark TV on Google Play carries only channels whose every programme we own or ma
 2026-10-09): our news bulletins and ads, public-domain films and shows from the Internet Archive, and
 free-licence music from Wikimedia Commons. They are made here from our other channels' schedules:
 
+  pone       Spark TV One            channel 1 for Google Play: channel 1's news, ad breaks and idents on the
+                                     same clock, with our own Urdu/Hindi films, stories and shayari in place
+                                     of its YouTube dramas, songs and trailers (the only channel on Play for now)
   pnews      Spark TV News           the hourly bulletins from channel 1's schedule, round the clock
   pclassics  Spark Classics          Spark Cinema's public-domain films (filmein-schedule.json)
   purdu      Spark Cinema Urdu       our Urdu AI dubs of free films and our Urdu story videos (library.json)
@@ -19,7 +22,8 @@ free-licence music from Wikimedia Commons. They are made here from our other cha
   pads       Spark Ads               our "advertise here" ad and the sponsors' ads (ads-sponsors.json)
 
 The owner (2026-10-09): every Spark TV channel works like channel 1, with only programmes that are ours to
-show. A channel whose source schedule isn't built yet is left out until it is (the app then hides it).
+show. Spark TV launches on Play with channel 1 alone (the owner, 2026-10-09); the others are built here
+and kept ready, to be added to the app one by one (MyChannel.PLAY_READY). A channel whose source schedule isn't built yet is left out until it is (the app then hides it).
 
 Every YouTube video is left out, so is anything only allowed on the website (Cable TV promos, which
 point to an app outside Google Play), and nothing may link to a list the app would fill from YouTube.
@@ -85,6 +89,8 @@ CREDITS = {
     "pcooking": "Cooking: public-domain films from the Internet Archive (archive.org).",
     "purdu": "Films: Blender Foundation (CC BY) and public-domain films, dubbed into Urdu by our AI voices; credits on screen. Stories: made by us.",
     "phindi": "Films: Blender Foundation (CC BY) and public-domain films, dubbed into Hindi by our AI voices; credits on screen.",
+    "pone": "News: our own bulletins. Films: Blender Foundation (CC BY) and public-domain films dubbed by our AI "
+            "voices. Poetry: classic Urdu poets (public domain) read by our AI voice. Stories: made by us.",
     "pshayari": "Poetry: couplets of the classic Urdu poets (public domain), read by our AI voice over our own pictures.",
     "pnews": "News: our own bulletins from the news services named on screen, read by AI voices.",
     "pads": "Our own ads and our sponsors' ads.",
@@ -168,6 +174,40 @@ def shayari():
                    videos + [ADHERE, IDENT], loop)
 
 
+def one():
+    """Channel 1 for Google Play: channel 1's clock (news, ad breaks), our own programmes in between."""
+    o = load("test-schedule.json")
+    by = {v["id"]: v for v in o.get("videos", [])}
+    # Our own clips from channel 1. Not the Cable TV promos (they send viewers to an app outside Google Play)
+    # and not the "today's programmes" segment (it lists channel 1's YouTube dramas).
+    keep = ["welcome", "break", "next", "adhere", "adbreak", "adbreak-c", "spark-ident", "spark-ad-urdu",
+            "spark-montage", "spark-montage-2", "spark-montage-3", "spark-montage-4"]
+    keep += [i for i in by if i.startswith("news-")]
+    videos = [by[i] for i in keep if i in by and ok(by[i])]
+    have = {v["id"] for v in videos}
+    swap = {"promo": "spark-ad-urdu", "promo2": "spark-ad-urdu", "ad9": "adhere"}
+    slots = []
+    for sl in o.get("slots", []):
+        vid = swap.get(sl.get("video"), sl.get("video"))
+        if vid in have:
+            slots.append({**sl, "video": vid})
+    # Between the news: our Urdu films and stories, shayari, then the Hindi films, each brought in by "next".
+    urdu, hindi, sher = dubbed("purdu"), dubbed("phindi"), shayari()
+    progs = [v for v in urdu["videos"] + hindi["videos"] if v.get("kind") == "programme"]
+    shers = [v for v in sher["videos"] if v.get("kind") == "programme"]
+    videos += progs + shers
+    montages = [i for i in ("spark-montage", "spark-montage-2", "spark-montage-3", "spark-montage-4") if i in have]
+    loop = ["welcome"]
+    for k, v in enumerate(progs):
+        loop += ["spark-ident", "next", v["id"], "break", montages[k % len(montages)] if montages else "adhere", "adhere"]
+        # Three couplets after every film.
+        loop += [shers[(3 * k + j) % len(shers)]["id"] for j in range(3)] if shers else []
+    ticker = ("Spark TV · Full news at 12, 4 and 8, headlines every hour · Films in Urdu and Hindi, stories and "
+              "shayari of the classic poets")
+    return channel("pone", "Spark TV One", "spark-tv.png", ticker, videos, loop, slots,
+                   fillers=("adhere", "spark-ad-urdu", "next"))
+
+
 def news():
     o = load("test-schedule.json")
     by = {v["id"]: v for v in o.get("videos", [])}
@@ -205,7 +245,7 @@ def check(pid, o):
 
 def main():
     OUT.mkdir(exist_ok=True)
-    built = {"pnews": news(), "pads": ads(), "pshayari": shayari(), **{pid: dubbed(pid) for pid in DUBS},
+    built = {"pone": one(), "pnews": news(), "pads": ads(), "pshayari": shayari(), **{pid: dubbed(pid) for pid in DUBS},
              **{pid: classic(pid) for pid in CLASSICS}}
     for pid, o in built.items():
         if o is None:

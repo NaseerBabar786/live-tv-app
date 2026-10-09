@@ -2508,6 +2508,9 @@ private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Ho
 /** The layouts the top-bar button steps through; News mode is Cable TV's only. Home mode is back (user's choice, 1.9.18). */
 private val layouts = TileLayout.entries.filter {
     (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel && it != TileLayout.Strip && it != TileLayout.Duo) || Edition.LIVE_TV
+}.filter {
+    // Spark TV with channel 1 alone (2026-10-09): nothing to put side by side, so no Gold layouts to sell yet.
+    it == TileLayout.List || !Edition.PLAY_CHANNELS || com.livetv.app.data.MyChannel.PLAY_STATIONS.size > 1
 }
 
 /** The package feature each mode needs (see [Plans]); 1+List is in every package. */

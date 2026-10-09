@@ -88,11 +88,22 @@ object MyChannel {
 
     /**
      * Spark TV, our Google Play app (the owner, 2026-10-09): only channels whose every programme we own or may
-     * show (our news and ads, public-domain films from archive.org, free-licence music). No YouTube channels,
-     * since YouTube's rules forbid playing its videos locked. Their schedules are tv.bulkbazaar.ca/channel/play/<id>.json,
-     * made from our other channels' schedules by tools/build_play_schedules.py with every YouTube video taken out.
+     * show. No YouTube channels, since YouTube's rules forbid playing its videos locked. Their schedules are
+     * tv.bulkbazaar.ca/channel/play/<id>.json, made by tools/build_play_schedules.py with every YouTube video taken out.
+     *
+     * Spark TV launches on Google Play with channel 1 alone (the owner, 2026-10-09: "run channel one there, then
+     * slowly, gradually push other items"). Every programme on it is ours: channel 1's news and ad breaks with our
+     * own Urdu and Hindi films, stories and shayari in place of its YouTube dramas and songs.
      */
     val PLAY_STATIONS = listOf(
+        Station("pone", 1, "", "Spark TV One", logo = "spark-tv.png"),
+    )
+
+    /**
+     * Ready for Spark TV, every one ours to show like channel 1, added to [PLAY_STATIONS] one at a time as the
+     * owner decides (their schedules are built and kept fresh by tools/build_play_schedules.py).
+     */
+    val PLAY_READY = listOf(
         Station("pnews", 1, "", "Spark TV News", logo = "spark-news.png"),
         Station("pclassics", 2, "", "Spark Classics", logo = "spark-cinema.png", lang = ENGLISH),
         // Our own Urdu and Hindi AI dubs of free films (the owner, 2026-10-09: every channel like channel 1).

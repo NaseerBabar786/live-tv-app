@@ -12,12 +12,14 @@ class SparkChannelsTest {
     @Test
     fun onlyThePlayChannels() {
         assertEquals(MyChannel.PLAY_STATIONS, MyChannel.STATIONS)
+        // Channel 1 alone for now (the owner, 2026-10-09); the rest are ready, one by one later.
+        assertEquals(listOf("pone"), MyChannel.STATIONS.map { it.id })
+        assertEquals(listOf(1), MyChannel.STATIONS.map { it.number })
         assertEquals(
             listOf("pnews", "pclassics", "purdu", "phindi", "pshayari", "psports", "ptravel", "pcomedy", "pauto", "pcooking", "pmusic", "pads"),
-            MyChannel.STATIONS.map { it.id },
+            MyChannel.PLAY_READY.map { it.id },
         )
-        assertTrue(MyChannel.STATIONS.none { it.youtube })
-        assertEquals((1..12).toList(), MyChannel.STATIONS.map { it.number })
+        assertTrue((MyChannel.STATIONS + MyChannel.PLAY_READY).none { it.youtube })
     }
 
     @Test
