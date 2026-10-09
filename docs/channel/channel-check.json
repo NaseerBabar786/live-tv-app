@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-09 07:17 UTC",
+ "checked": "2026-10-09 16:07 UTC",
  "problems": [
   {
    "channel": "Spark Dramas Urdu",
@@ -31,7 +31,7 @@
   },
   {
    "channel": "Spark Teens Hindi",
-   "text": "25 programme(s) have no length; each gets 12 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
+   "text": "30 programme(s) have no length; each gets 12 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
   },
   {
    "channel": "Spark Teens Hindi",
@@ -46,12 +46,20 @@
    "text": "2026-10-09: only 0.2 hours of programmes; the day starts again from the top (not dead air, but repeats)."
   },
   {
+   "channel": "Spark Teens English",
+   "text": "1 programme(s) have no length; each gets 12 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
+  },
+  {
    "channel": "Spark Travel",
    "text": "2026-10-09: only 0.0 hours of programmes; the day starts again from the top (not dead air, but repeats)."
   },
   {
    "channel": "Spark Sports",
    "text": "2026-10-09: only 0.0 hours of programmes; the day starts again from the top (not dead air, but repeats)."
+  },
+  {
+   "channel": "Bazaar Comedy Urdu",
+   "text": "no locked schedule yet."
   },
   {
    "channel": "Spark Comedy English",
@@ -76,6 +84,10 @@
   {
    "channel": "Spark Gurbani",
    "text": "2 programme(s) have no length; each gets 30 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
+  },
+  {
+   "channel": "Bazaar Comedy Punjabi",
+   "text": "no locked schedule yet."
   }
  ]
 }
