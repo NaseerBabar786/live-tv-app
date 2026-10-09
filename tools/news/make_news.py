@@ -2,12 +2,20 @@
 
 Usage: python3 tools/news/make_news.py <out dir> [--kind headlines|full|auto|probe] [--hour H]
                                        [--stories file.json] [--weather file.json] [--offline]
+                                       [--set next|current|<ISO time>] [--room day|night] [--gather]
 
 Two bulletins, each always EXACTLY the same length so the channel schedule never has to change:
   headlines  3 minutes  (news-headlines.mp4), every hour
   full      10 minutes  (news-full.mp4), every three hours (00, 03, 06 ... Toronto time)
 --kind auto (the default) makes the one due at the next full hour in Toronto;
 --kind probe only checks every feed and the translator and writes news-probe.json.
+
+Owner's plan for channel 1 (2026-10-08): the channel runs one 8-hour set three times a day (12 am, 8 am, 4 pm
+Toronto). Each set gets ONE fresh headlines and ONE fresh full report, made just before the set and replayed
+through it (full at the set's start and 4 hours in, headlines every other hour). --set makes that bulletin: no
+clock time is read or shown, so it stays right at every replay. --room day|night makes the copy for the day
+(06:00-17:59) or night newsroom (news-<kind>-<room>.mp4); --gather only saves the stories (stories-<kind>.json),
+so all copies of a set read the same news.
 
 Bazaar TV is an Urdu/Hindi channel (owner, 2026-10-07), so everything spoken and written is Urdu:
   1. Pakistan and world news from Urdu news feeds (BBC Urdu, DW Urdu, Independent Urdu, Express), Canada news from Canadian English feeds (Global News, CityNews) put into Urdu with
@@ -244,8 +252,13 @@ def weather():
 def deg(n):
     return f"منفی {abs(n)}" if n < 0 else str(n)
 
-def weather_words(w, short):
+def weather_words(w, short, day=None):
     t = w[0]
+    if day is not None:   # a set's bulletin is replayed for 8 hours: the day's forecast, no "right now"
+        i = min(1, max(0, (day.date() - dt.datetime.now(TZ).date()).days))   # the set's own day (a 12 am set is made the evening before)
+        s = (f"ٹورنٹو میں آج موسم {WMO.get(t['dcode'][i], 'ملا جلا')} رہے گا، زیادہ سے زیادہ درجہ حرارت "
+             f"{deg(t['hi'][i])} اور کم سے کم {deg(t['lo'][i])} ڈگری۔")
+        return ("اور اب موسم۔ " if short else "اب موسم کا حال۔ ") + s
     s = f"ٹورنٹو میں اس وقت درجہ حرارت {deg(t['now'])} ڈگری سینٹی گریڈ ہے اور موسم {WMO.get(t['code'], 'ملا جلا')} ہے۔"
     if short: return "اور اب موسم۔ " + s
     s += (f" آج زیادہ سے زیادہ درجہ حرارت {deg(t['hi'][0])} اور کم سے کم {deg(t['lo'][0])} ڈگری رہے گا۔"
@@ -517,6 +530,21 @@ def weather_card(path, label, w):
 WEEKDAYS = ["پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ", "اتوار"]
 MONTHS = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"]
 
+SETS = (0, 8, 16)   # the 8-hour sets on channel 1, Toronto time
+
+def set_start(which, now=None):
+    """The start of the next (or current) 8-hour set in Toronto, or the one an ISO time names."""
+    if which not in ("next", "current"):
+        t = dt.datetime.fromisoformat(which)
+        return (t if t.tzinfo else t.replace(tzinfo=TZ)).astimezone(TZ)
+    now = now or dt.datetime.now(TZ)
+    day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    starts = [(day + dt.timedelta(days=d)).replace(hour=h) for d in (-1, 0, 1) for h in SETS]
+    return min(s for s in starts if s > now) if which == "next" else max(s for s in starts if s <= now)
+
+def day_room(hour):
+    return "day" if 6 <= hour < 18 else "night"
+
 def slot_hour(kind_arg, hour_arg):
     now = dt.datetime.now(TZ)
     if hour_arg is not None:
@@ -549,7 +577,7 @@ def probe(out):
               open(os.path.join(out, "news-probe.json"), "w"), ensure_ascii=False, indent=1)
     print("\n".join(NOTES))
 
-def newsreader(slot):
+def newsreader(slot, room=None, in_set=False):
     """The AI newsreader on camera for this hour (tools/news/presenters/on-air.json takes turns by hour).
     Her moving clip (news-move-<id>-raw.mp4, made by news-presenter-move.yml) must be in tools/news/presenters/clips/."""
     here = os.path.join(HERE, "presenters")
@@ -561,7 +589,9 @@ def newsreader(slot):
     ids = [i for i in ids if i in people and os.path.exists(os.path.join(here, "clips", f"{i}.mp4"))]
     if not ids:
         NOTES.append("no newsreader clip found"); return None
-    p = dict(people[ids[slot.hour % len(ids)]]); p["clip"] = boomerang(os.path.join(here, "clips", f"{p['id']}.mp4"))
+    # Sets: everyone gets a turn across the days (an hour-based turn would give the same 3 readers every day).
+    turn = (slot.toordinal() * len(SETS) + SETS.index(slot.hour)) if in_set and slot.hour in SETS else slot.hour
+    p = dict(people[ids[turn % len(ids)]]); p["clip"] = boomerang(os.path.join(here, "clips", f"{p['id']}.mp4"))
     return p
 
 def boomerang(clip):
@@ -591,12 +621,14 @@ def add_opening(body, secs, work):
     except Exception as e:
         NOTES.append(f"opening failed: {e}")
 
-def add_segment(body, clip, t0, work):
-    """Lays a ready-made segment's picture (the weather centre) over the bulletin from t0; its voice is already in the mix."""
+def add_segment(body, clip, t0, work, secs=None):
+    """Lays a ready-made segment's picture (the weather centre) over the bulletin from t0; its voice is already in the mix.
+    secs: how long its slot lasts; the last picture holds to the end, so the plain weather card never peeks out."""
     try:
         tmp = body + ".seg.mp4"
         run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", body, "-itsoffset", f"{t0:.3f}", "-i", clip,
-            "-filter_complex", f"[1:v]fps={FPS},setsar=1[s];[0:v][s]overlay=0:0:eof_action=pass,format=yuv420p[v]",
+            "-filter_complex", f"[1:v]fps={FPS},setsar=1[s];[0:v][s]overlay=0:0:" + (f"eof_action=repeat:enable='between(t,{t0:.3f},{t0 + secs:.3f})'"
+                                                                  if secs else "eof_action=pass") + ",format=yuv420p[v]",
             "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2),
             "-c:a", "copy", "-movflags", "+faststart", tmp)
         os.replace(tmp, body)
@@ -682,12 +714,22 @@ def main():
     opt = lambda k, d=None: args[args.index(k) + 1] if k in args else d
     os.makedirs(out, exist_ok=True)
     if opt("--kind") == "probe": return probe(out)
-    kind, slot = slot_hour(opt("--kind", "auto"), int(opt("--hour")) if opt("--hour") else None)
+    in_set = opt("--set") is not None
+    if in_set:
+        kind, slot = opt("--kind", "headlines"), set_start(opt("--set"))
+        if kind not in LENGTH: raise SystemExit("--set needs --kind headlines or full")
+    else:
+        kind, slot = slot_hour(opt("--kind", "auto"), int(opt("--hour")) if opt("--hour") else None)
     if "--due" in args:  # just say which bulletin is due next (the workflow uses it to skip a repeat run)
         return print(kind, slot.isoformat())
+    if "--gather" in args:
+        json.dump(gather(kind), open(os.path.join(out, f"stories-{kind}.json"), "w"), ensure_ascii=False, indent=1)
+        return print("saved", kind, "stories for", slot.isoformat(), "|", "; ".join(NOTES))
+    room = opt("--room")
+    name = f"news-{kind}" + (f"-{room}" if room else "")
     total = LENGTH[kind]
-    work = os.path.join(out, "work-" + kind); os.makedirs(work, exist_ok=True)
-    print("making", kind, "for", slot.isoformat())
+    work = os.path.join(out, "work-" + name); os.makedirs(work, exist_ok=True)
+    print("making", name, "for", slot.isoformat())
 
     picked = json.load(open(opt("--stories"))) if opt("--stories") else gather(kind)
     stories = [s for sec in ORDER for s in picked.get(sec, [])]
@@ -706,21 +748,26 @@ def main():
     nxt = slot + dt.timedelta(hours=1)
     next_full = slot + dt.timedelta(hours=3 - slot.hour % 3)
     up_next = f"اگلی خبریں {clock(nxt)}" + (f" • {NAME['full']}" if nxt.hour % 3 == 0 else "")
-
-    head = (f"السلام علیکم۔ ٹورنٹو میں {period(slot.hour)} کے {slot.hour % 12 or 12} بجے ہیں، اور یہ ہے بازار ٹی وی نیوز۔ "
-            + ("تفصیلی خبرنامے میں خوش آمدید۔" if kind == "full" else "پیش ہیں اس وقت کی اہم خبریں۔"))
+    every_full = "ہر تین گھنٹے بعد"
+    greet = f"السلام علیکم۔ ٹورنٹو میں {period(slot.hour)} کے {slot.hour % 12 or 12} بجے ہیں، اور یہ ہے بازار ٹی وی نیوز۔ "
+    if in_set:   # replayed through the 8-hour set, so no clock time anywhere
+        label = f"{NAME[kind]} • {date_ur(slot)}"
+        up_next = "اگلی خبریں ایک گھنٹے بعد"
+        every_full = "ہر چار گھنٹے بعد"
+        greet = "السلام علیکم، اور یہ ہے بازار ٹی وی نیوز۔ "
+    head = (greet + ("تفصیلی خبرنامے میں خوش آمدید۔" if kind == "full" else "پیش ہیں اس وقت کی اہم خبریں۔"))
     # Owner 2026-10-08: start with the headlines, then the sections.
     tops = [next(s for s in stories if s["section"] == sec)["headline"] for sec in ORDER if any(s["section"] == sec for s in stories)]
     if tops: head += " سب سے پہلے اہم سرخیاں۔ " + "۔ ".join(t.rstrip("۔.؟?! ") for t in tops[:4]) + "۔"
-    tail = ("یہ تھیں اس وقت کی خبریں۔ خبروں کی سرخیاں ہر گھنٹے، اور تفصیلی خبرنامہ ہر تین گھنٹے بعد، "
+    tail = (f"یہ تھیں اس وقت کی خبریں۔ خبروں کی سرخیاں ہر گھنٹے، اور تفصیلی خبرنامہ {every_full}، "
             "صرف بازار ٹی وی پر۔ اللہ حافظ۔")
-    weather_seg = weather_words(wx, kind == "headlines") if wx else None
+    weather_seg = weather_words(wx, kind == "headlines", slot if in_set else None) if wx else None
     NAMES = {"canada": "کینیڈا", "pakistan": "پاکستان", "india": "بھارت", "world": "دنیا", "film": "فلم اور شوبز", "sports": "کھیلوں"}
     present = [sec for sec in ORDER if any(s["section"] == sec for s in stories)]
     LEAD = {sec: ("اب " if 0 < i < len(present) - 1 else "اور آخر میں " if i else "") + NAMES[sec] + " کی خبریں۔ "
             for i, sec in enumerate(present)}
     # The voice always matches the newsreader on camera: a man reads with a man's voice, a lady with a lady's (owner 2026-10-08).
-    reader = newsreader(slot)
+    reader = newsreader(slot, room, in_set)
     rv = VOICE_B if reader and reader.get("voice") == VOICE_B else VOICE_A
     VOICE = {sec: rv for sec in ORDER}
 
@@ -729,7 +776,7 @@ def main():
     if weather_seg and reader and not offline:
         try:
             import weather_ideas
-            wxvid = weather_ideas.segment(work, rv, reader["clip"], kind == "headlines")
+            wxvid = weather_ideas.segment(work, rv, reader["clip"], kind == "headlines", slot if in_set else None)
         except Exception as e:
             NOTES.append(f"weather centre failed: {e}")
 
@@ -762,17 +809,18 @@ def main():
     background(os.path.join(work, "bg.mp4"))
     shown = [s for _, _, _, s in segs if s]
     cards, voice_track = [], np.zeros(int(SR * total) + SR, np.float32)
-    title_card(os.path.join(work, "c-title.png"), kind, f"{clock(slot)} • {date_ur(slot, True)}", "")
+    title_card(os.path.join(work, "c-title.png"), kind, date_ur(slot, True) if in_set else f"{clock(slot)} • {date_ur(slot, True)}", "")
     cards.append(("c-title.png", STING))
     t = STING; n = 0; on_camera = []; clips = []
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import broll
-    wx_at = None
+    wx_at = wx_dur = None
     for i, (sk, text, v, s) in enumerate(segs):
         audio = wxvid[1] if sk == "weather" and wxvid else voice(text, v)
         if sk == "weather" and wxvid: wx_at = t
         a = int(t * SR); voice_track[a:a + len(audio)] += audio[:len(voice_track) - a]
         dur = len(audio) / SR + GAP
+        if sk == "weather" and wxvid: wx_dur = dur
         pic = f"c-{i:02d}.png"
         if sk == "story":
             n += 1
@@ -790,7 +838,7 @@ def main():
             pic = "c-title.png"
         else:
             title_card(os.path.join(work, pic), kind, up_next,
-                       f"تفصیلی خبرنامہ ہر تین گھنٹے بعد، اگلا {clock(next_full)}")
+                       f"تفصیلی خبرنامہ {every_full}" + ("" if in_set else f"، اگلا {clock(next_full)}"))
         if sk in ("open", "close"): on_camera.append((t, dur))
         cards.append((pic, dur)); t += dur
     left = total - t
@@ -817,7 +865,7 @@ def main():
         for pic, dur in cards:
             f.write(f"file '{pic}'\nduration {dur:.3f}\n")
         f.write(f"file '{cards[-1][0]}'\n")
-    mp4 = os.path.join(out, f"news-{kind}.mp4")
+    mp4 = os.path.join(out, f"{name}.mp4")
     body = mp4 if news_len >= total - 0.01 else os.path.join(work, "body.mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-stream_loop", "-1", "-i", os.path.join(work, "bg.mp4"),
         "-f", "concat", "-safe", "0", "-i", os.path.join(work, "cards.txt"), "-i", os.path.join(work, "sound.wav"),
@@ -826,7 +874,7 @@ def main():
         "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR), "-movflags", "+faststart", body)
     add_broll(body, clips, work)
     add_opening(body, STING, work)
-    if wx_at is not None: add_segment(body, wxvid[0], wx_at, work)
+    if wx_at is not None: add_segment(body, wxvid[0], wx_at, work, wx_dur)
     if reader and on_camera:
         add_reader(body, reader, on_camera, label, work)
     promos = []
@@ -835,12 +883,12 @@ def main():
     got = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", mp4],
                                capture_output=True, text=True, check=True).stdout)
     if abs(got - total) > 1.0: raise SystemExit(f"{mp4} is {got:.1f} s, wanted {total} s")
-    info = {"kind": kind, "lang": "ur", "secs": total, "slot": slot.isoformat(),
+    info = {"kind": kind, "lang": "ur", "secs": total, "slot": slot.isoformat(), "set": in_set, "room": room,
             "made": dt.datetime.now(dt.timezone.utc).isoformat(), "sources": sources, "weather": bool(wx), "notes": NOTES,
             "news_secs": round(news_len, 1), "promos": promos,
             "reader": reader["id"] if reader else None,
             "stories": [{"section": s["section"], "headline": s["headline"], "source": s["source"]} for s in shown]}
-    json.dump(info, open(os.path.join(out, f"news-{kind}.json"), "w"), ensure_ascii=False, indent=1)
+    json.dump(info, open(os.path.join(out, f"{name}.json"), "w"), ensure_ascii=False, indent=1)
     print("made", mp4, f"{got:.1f} s")
 
 if __name__ == "__main__":
