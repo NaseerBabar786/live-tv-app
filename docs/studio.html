@@ -1795,6 +1795,7 @@ async function renderAdLibrary() {
   // Our older ads, kept on the site but off the air (replaced by newer ones).
   const old = [["1", 60], ["2", 30], ["3", 30], ["4", 30], ["6", 60]].filter(([n]) => !onAir.has("Cable TV Video Ad " + n))
     .map(([n, secs]) => card(`media/cable-tv-video-ad-${n}.mp4`, `media/cable-tv-ad-${n}-poster.jpg`, "Cable TV Video Ad " + n, secs, "Older ad, replaced by a newer one", false));
+  old.push(card("media/cable-tv-promotion-ad-promo-code.mp4", "media/cable-tv-promo-code-ad-poster.jpg", "Cable TV promo-code ad (WELCOME)", 30, "Older ad, replaced by Ad 8", false));
   // One folder per customer: their video ad and their pictures, with the same status /sponsors shows.
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Toronto" });
   const state = x => !x.active ? "OFF" : x.end && x.end < today ? "ENDED" : x.start && x.start > today ? "STARTS " + x.start : "ON AIR";
