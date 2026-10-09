@@ -432,6 +432,10 @@ fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> U
                 onDismiss()
                 viewModel.setShowMta(it)
             },
+            onResetDefaults = {
+                onDismiss()
+                viewModel.resetToDefaults()
+            },
             onDismiss = onDismiss,
             onSave = {
                 onDismiss()
