@@ -99,6 +99,34 @@
    "kind": "programme"
   },
   {
+   "id": "news-headlines-day",
+   "title": "Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-day.mp4",
+   "secs": 180,
+   "kind": "programme"
+  },
+  {
+   "id": "news-headlines-night",
+   "title": "Bazaar TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-night.mp4",
+   "secs": 180,
+   "kind": "programme"
+  },
+  {
+   "id": "news-full-day",
+   "title": "Bazaar TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full-day.mp4",
+   "secs": 600,
+   "kind": "programme"
+  },
+  {
+   "id": "news-full-night",
+   "title": "Bazaar TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full-night.mp4",
+   "secs": 600,
+   "kind": "programme"
+  },
+  {
    "id": "c1-1-wJ1BQB3y_gw",
    "title": "Khushi - Episode 21 - [ENG SUB] 3rd Oct 2026 [Sumaiyya Bukhsh, Mariam Ejaz, & Arslan Khan] - HUM TV",
    "url": "https://www.youtube.com/watch?v=wJ1BQB3y_gw",
@@ -313,7 +341,7 @@
   {
    "day": "all",
    "time": "00:00",
-   "video": "news-full"
+   "video": "news-full-night"
   },
   {
    "day": "all",
@@ -343,7 +371,7 @@
   {
    "day": "all",
    "time": "01:00",
-   "video": "news-headlines"
+   "video": "news-headlines-night"
   },
   {
    "day": "all",
@@ -378,7 +406,7 @@
   {
    "day": "all",
    "time": "02:00",
-   "video": "news-headlines"
+   "video": "news-headlines-night"
   },
   {
    "day": "all",
@@ -413,7 +441,7 @@
   {
    "day": "all",
    "time": "03:00",
-   "video": "news-headlines"
+   "video": "news-headlines-night"
   },
   {
    "day": "all",
@@ -448,7 +476,7 @@
   {
    "day": "all",
    "time": "04:00",
-   "video": "news-full"
+   "video": "news-full-night"
   },
   {
    "day": "all",
@@ -478,7 +506,7 @@
   {
    "day": "all",
    "time": "05:00",
-   "video": "news-headlines"
+   "video": "news-headlines-night"
   },
   {
    "day": "all",
@@ -513,7 +541,7 @@
   {
    "day": "all",
    "time": "06:00",
-   "video": "news-headlines"
+   "video": "news-headlines-day"
   },
   {
    "day": "all",
@@ -548,7 +576,7 @@
   {
    "day": "all",
    "time": "07:00",
-   "video": "news-headlines"
+   "video": "news-headlines-day"
   },
   {
    "day": "all",
@@ -583,7 +611,7 @@
   {
    "day": "all",
    "time": "08:00",
-   "video": "news-full"
+   "video": "news-full-day"
   },
   {
    "day": "all",
@@ -613,7 +641,7 @@
   {
    "day": "all",
    "time": "09:00",
-   "video": "news-headlines"
+   "video": "news-headlines-day"
   },
   {
    "day": "all",
@@ -648,7 +676,7 @@
   {
    "day": "all",
    "time": "10:00",
-   "video": "news-headlines"
+   "video": "news-headlines-day"
   },
   {
    "day": "all",
@@ -683,7 +711,7 @@
   {
    "day": "all",
    "time": "11:00",
-   "video": "news-headlines"
+   "video": "news-headlines-day"
   },
   {
    "day": "all",
@@ -718,7 +746,7 @@
   {
    "day": "all",
    "time": "12:00",
-   "video": "news-full"
+   "video": "news-full-day"
   },
   {
    "day": "all",
@@ -748,7 +776,7 @@
   {
    "day": "all",
    "time": "13:00",
-   "video": "news-headlines"
+   "video": "news-headlines-day"
   },
   {
    "day": "all",
@@ -783,7 +811,7 @@
   {
    "day": "all",
    "time": "14:00",
-   "video": "news-headlines"
+   "video": "news-headlines-day"
   },
   {
    "day": "all",
@@ -818,7 +846,7 @@
   {
    "day": "all",
    "time": "15:00",
-   "video": "news-headlines"
+   "video": "news-headlines-day"
   },
   {
    "day": "all",
@@ -853,7 +881,7 @@
   {
    "day": "all",
    "time": "16:00",
-   "video": "news-full"
+   "video": "news-full-day"
   },
   {
    "day": "all",
@@ -883,7 +911,7 @@
   {
    "day": "all",
    "time": "17:00",
-   "video": "news-headlines"
+   "video": "news-headlines-day"
   },
   {
    "day": "all",
@@ -918,7 +946,7 @@
   {
    "day": "all",
    "time": "18:00",
-   "video": "news-headlines"
+   "video": "news-headlines-night"
   },
   {
    "day": "all",
@@ -953,7 +981,7 @@
   {
    "day": "all",
    "time": "19:00",
-   "video": "news-headlines"
+   "video": "news-headlines-night"
   },
   {
    "day": "all",
@@ -988,7 +1016,7 @@
   {
    "day": "all",
    "time": "20:00",
-   "video": "news-full"
+   "video": "news-full-night"
   },
   {
    "day": "all",
@@ -1018,7 +1046,7 @@
   {
    "day": "all",
    "time": "21:00",
-   "video": "news-headlines"
+   "video": "news-headlines-night"
   },
   {
    "day": "all",
@@ -1053,7 +1081,7 @@
   {
    "day": "all",
    "time": "22:00",
-   "video": "news-headlines"
+   "video": "news-headlines-night"
   },
   {
    "day": "all",
@@ -1088,7 +1116,7 @@
   {
    "day": "all",
    "time": "23:00",
-   "video": "news-headlines"
+   "video": "news-headlines-night"
   },
   {
    "day": "all",
