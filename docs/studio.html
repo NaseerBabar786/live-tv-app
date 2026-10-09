@@ -116,6 +116,14 @@
     .work[data-tab=overview] .overview { display: grid; }
     .work[data-tab=step1] #step1, .work[data-tab=step2] #step2, .work[data-tab=step3] #step3, .work[data-tab=step4] #step4, .work[data-tab=week] #week, .work[data-tab=stats] #stats { display: block; }
     .work[data-tab=help] #howTo { display: block; }
+    .work[data-tab=adlib] #adlib { display: block; }
+    #adlib .alGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 8px 0 22px; }
+    #adlib .alCard { background: var(--surface); border: 2px solid var(--surface-2); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+    #adlib .alCard video { width: 100%; aspect-ratio: 16 / 9; background: #000; display: block; }
+    #adlib .alCard div { padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+    #adlib .alCard b { font-size: 16px; }
+    #adlib .alPill { align-self: flex-start; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #14532D; color: #BBF7D0; }
+    #adlib .alPill.off { background: var(--surface-2); color: var(--text); }
     .work[data-tab] .steps { display: block; }
     .work[data-tab] .steps #videos, .work[data-tab] .steps #loop, .work[data-tab] .steps #slots, .work[data-tab] .steps #library { max-height: calc(100vh - 330px); }
     .overview { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; }
@@ -513,6 +521,12 @@
       <div class="heatmap" id="stHeat"></div>
       <h3 style="margin-bottom:4px">Our channels</h3>
       <table class="rank" id="stChans"></table>
+    </section>
+
+    <section class="panel" id="adlib">
+      <h2>🎞 Ads &amp; montages</h2>
+      <p class="small" style="margin-top:0">Every ad, montage and moving logo we have, with where it plays. Press play to watch one. Only ads the owner approved are here; montages take turns, so each break shows a different one.</p>
+      <div id="alList"><p class="small">Loading…</p></div>
     </section>
 
       </div>
@@ -1285,9 +1299,9 @@ new IntersectionObserver(([e]) => {
 // ---------- the dashboard (wide screens) ----------
 // Our YouTube channels' Programmes panel sits in the dashboard, after the Overview (its tabs are dashboard tabs).
 $("chHelp").after($("picks"));
-const TABS = [["overview", "▦ Overview"], ["step1", "1 · Your channel"], ["step2", "2 · Videos"], ["step3", "3 · Loop"], ["step4", "4 · Time slots"], ["week", "📅 Week"], ["stats", "📊 Most watched"], ["help", "? Help"]];
+const TABS = [["overview", "▦ Overview"], ["step1", "1 · Your channel"], ["step2", "2 · Videos"], ["step3", "3 · Loop"], ["step4", "4 · Time slots"], ["week", "📅 Week"], ["stats", "📊 Most watched"], ["adlib", "🎞 Ads & montages"], ["help", "? Help"]];
 // Channels that play YouTube (Cinema, Music, Hits, Kids...): the same dashboard, with the Programmes steps.
-const WEB_TABS = [["overview", "▦ Overview"], ["library", "📚 Library"], ["approved", "✅ Next transmission"], ["schedule", "📅 Schedule"], ["stats", "📊 Most watched"], ["help", "? Help"]];
+const WEB_TABS = [["overview", "▦ Overview"], ["library", "📚 Library"], ["approved", "✅ Next transmission"], ["schedule", "📅 Schedule"], ["stats", "📊 Most watched"], ["adlib", "🎞 Ads & montages"], ["help", "? Help"]];
 let tab = "overview";
 function renderNav() {
   $("snav").innerHTML = "";
@@ -1311,6 +1325,7 @@ function setTab(id) {
   if (id === "overview") renderOverview();
   if (id === "week") renderWeek();
   if (id === "stats" && stats?.of !== station.name) loadStats();
+  if (id === "adlib") renderAdLibrary();
   if (wide.matches) window.scrollTo({ top: 0 });
 }
 const esc = t => String(t ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
@@ -1739,6 +1754,40 @@ $("promoAll").onclick = () => {
 
 // ---------- most watched ----------
 const fmtTime = secs => { const m = Math.round(secs / 60); return m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`; };
+// ---------- Ads & montages: everything we can put in a break, read from the files the channels play (owner, 2026-10-09) ----------
+let adLibDone = false;
+async function renderAdLibrary() {
+  if (adLibDone) return;
+  const get = async f => { try { return await (await fetch("media/" + f, { cache: "no-cache" })).json(); } catch { return null; } };
+  const [spark, promos, lib] = await Promise.all([get("spark-promos.json"), get("promos.json"), get("library.json")]);
+  const poster = src => "media/" + src.replace(/\.mp4$/, "-poster.jpg");
+  const card = (url, img, title, secs, where, on = true) => `<div class="alCard">
+      <video controls preload="none" playsinline src="${esc(url)}"${img ? ` poster="${esc(img)}"` : ""}></video>
+      <div><b>${esc(title)}</b><span class="small">${secs ? secs + " s · " : ""}${esc(where)}</span>
+      <span class="alPill${on ? "" : " off"}">${on ? "ON AIR" : "IN THE LIBRARY"}</span></div></div>`;
+  const group = (title, cards) => cards.length ? `<h3>${title} <span class="small">(${cards.length})</span></h3><div class="alGrid">${cards.join("")}</div>` : "";
+  const sp = spark || {}; const LANG = { ur: "Urdu", hi: "Hindi", en: "English", pa: "Punjabi" };
+  const montages = sp.montages?.list || (sp.montage ? [sp.montage] : []);
+  const shapes = [
+    ...(sp.ident ? [card("media/" + sp.ident.src, poster(sp.ident.src), sp.ident.title, sp.ident.secs, "Once an hour before a programme, on every Spark channel")] : []),
+    ...montages.map(m => card("media/" + m.src, poster(m.src), m.title, m.secs, "Takes turns in the breaks of every channel")),
+  ];
+  const seen = new Set([sp.ident?.src, ...montages.map(m => m.src)]);
+  const sparkAds = [
+    ...(sp.everyChannel || []).filter(a => !seen.has(a.src)).map(a => card("media/" + a.src, poster(a.src), a.title, a.secs, "Breaks on every channel")),
+    ...Object.entries(sp.byLanguage || {}).flatMap(([l, list]) => list.map(a => card("media/" + a.src, poster(a.src), a.title, a.secs, `Breaks on the ${LANG[l] || l} channels`))),
+  ];
+  const onAir = new Set((promos?.promos || []).map(p => p.title));
+  const cable = (lib?.items || []).filter(i => i.cat === "promos" && !/^show-promo-/.test(i.id))
+    .sort((a, b) => onAir.has(b.title) - onAir.has(a.title) || a.title.localeCompare(b.title, undefined, { numeric: true }))
+    .map(i => card(i.url, i.poster, i.title, i.secs, onAir.has(i.title) ? "Breaks on every channel" : "Approved earlier, not in the breaks now", onAir.has(i.title)));
+  // Our older ads, kept on the site but off the air (replaced by newer ones).
+  const old = [["1", 60], ["2", 30], ["3", 30], ["4", 30], ["6", 60]].filter(([n]) => !onAir.has("Cable TV Video Ad " + n))
+    .map(([n, secs]) => card(`media/cable-tv-video-ad-${n}.mp4`, `media/cable-tv-ad-${n}-poster.jpg`, "Cable TV Video Ad " + n, secs, "Older ad, replaced by a newer one", false));
+  $("alList").innerHTML = group("✨ Spark montages &amp; moving logo", shapes) + group("📣 Spark TV ads", sparkAds) + group("📺 Cable TV ads", cable) + group("🗄 Older Cable TV ads", old)
+    || '<p class="small">Could not load the list. Check your connection and open this tab again.</p>';
+  adLibDone = !!(spark || promos || lib);
+}
 async function loadStats() {
   const days = +$("stDays").value;
   const st = station === HITS ? { id: "hits", name: "Spark Hits" } : station;
