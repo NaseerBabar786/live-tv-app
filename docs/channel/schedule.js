@@ -80,6 +80,15 @@ export const STATIONS = [
     name: "Bazaar Teens Hindi", dial: "30", doc: "_channel_teenshi", page: "channel/?c=teenshi", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-teenshi.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Teens: shows from their makers' own YouTube channels (Fact Tech, Nick India). Backup: public-domain classic films." },
+  { id: "autohi", yt: true, web: "channel/ytc.html?c=autohi", ytMins: 12, tagline: "Cars and bikes in Hindi: reviews, launches and top 5s",
+    name: "Bazaar Auto Hindi", dial: "32", doc: "_channel_autohi", page: "channel/?c=autohi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-auto-hindi.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
+    // The day in blocks (owner, 2026-10-08), from midnight Toronto time; ytorder.js blockOrder.
+    blocks: [{ from: 0, kind: "any", name: "Hafte ki behtareen" }, { from: 6, kind: "new", name: "Nayi Gaadiyan" },
+             { from: 9, kind: "review", name: "Review" }, { from: 13, kind: "top10", name: "Top 5" },
+             { from: 15, kind: "review", name: "Review" }, { from: 18, kind: "new", name: "Nayi Gaadiyan" },
+             { from: 21, kind: "versus", name: "Muqabla" }, { from: 23, kind: "any", name: "Hafte ki behtareen" }],
+    credits: "Cars: reviews and launches from the car shows' own YouTube channels (Gagan Choudhary, Auto Yogi, CarDekho, ZigWheels, MotorOctane, 91Wheels, V3Cars). Backup: public-domain sports films." },
   // English: 41 to 59
   { id: "english", yt: true, trailerLangs: ["English"], web: "channel/ytc.html?c=english", ytMins: 100, tagline: "Full English films, day and night",
     name: "Bazaar Movies English", dial: "41", doc: "_channel_english", page: "channel/?c=english", auto: true, backup: true,
@@ -108,6 +117,17 @@ export const STATIONS = [
     name: "Bazaar Comedy English", dial: "49", doc: "_channel_comedyen", page: "channel/?c=comedyen", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedyen.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
     credits: "Comedy: shows from their own YouTube channels (Mr Bean, Just For Laughs Gags, Laurel and Hardy, Dry Bar Comedy and others). Backup: public-domain classic comedies." },
+  // 47 (owner, 2026-10-08): cars, supercars and motorsport in English.
+  { id: "auto", yt: true, web: "channel/ytc.html?c=auto", ytMins: 15, tagline: "Car reviews, new launches, supercars and racing",
+    name: "Bazaar Auto", dial: "47", doc: "_channel_auto", page: "channel/?c=auto", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-auto.png", ready: "https://tv.bulkbazaar.ca/channel/sports-schedule.json",
+    // The day in blocks (owner, 2026-10-08), from midnight Toronto time; ytorder.js blockOrder.
+    blocks: [{ from: 0, kind: "any", name: "Best of the Week" }, { from: 6, kind: "new", name: "New Launches" },
+             { from: 9, kind: "review", name: "Reviews" }, { from: 12, kind: "top10", name: "Top 10" },
+             { from: 14, kind: "versus", name: "Versus" }, { from: 16, kind: "review", name: "Reviews" },
+             { from: 18, kind: "race", name: "Race Day" }, { from: 20, kind: "supercar", name: "Supercars" },
+             { from: 23, kind: "any", name: "Best of the Week" }],
+    credits: "Cars: reviews, launches and racing highlights from their own YouTube channels (Top Gear, carwow, MotorTrend, Autocar, Throttle House, Formula 1, MotoGP, WRC and others). Backup: public-domain sports films." },
   // Punjabi: 61 to 79. MTA's channels are 81 to 88 in the app, every other channel 101 on.
   { id: "sur", yt: true, web: "channel/ytc.html?c=sur", ytMins: 5, tagline: "Punjabi, Sufi and qawwali, day and night",
     name: "Bazaar Music Punjabi", dial: "61", doc: "_channel_sur", page: "channel/?c=sur", auto: true,

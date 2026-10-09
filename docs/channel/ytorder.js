@@ -79,6 +79,7 @@ export function mixShows(order) {
 
 function baseOrder(station, list, date) {
   const seed = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000) + station.id.length;
+  if (station.blocks) return blockOrder(station, list, seed);
   if (station.newest) {
     // Latest Movies: each day opens with the films that went up on YouTube in the last week, newest first,
     // then goes on through the older ones from where the day before left off (the list comes newest first).
@@ -246,6 +247,36 @@ export function halfHourRebuild(station, keep, progs, promos = [], own = []) {
   let i = 0;
   const pick = () => progs.length ? progs[i++ % progs.length] : null;
   return keep.concat(packHalves(station, pick, promos, own, from, 48, { p: from * 3, o: from }));
+}
+
+/**
+ * A day in programme blocks, like TV (Spark Auto, the owner's wish 2026-10-08): [station.blocks] is
+ * [{ from: hour, kind, name }] from midnight Toronto time; each block plays videos tagged with its kind
+ * (yt-<id>.json "kinds", tools/build_youtube_channels.py), newest finds first in "new", the others shuffled
+ * for the day. No video comes twice in a day while others are left; a block whose kind runs out goes on
+ * with any video, and kind "any" takes everything. The ad break before each video counts as 45 seconds (breaks run 30 to 60).
+ */
+export function blockOrder(station, list, seed) {
+  const blocks = station.blocks, used = new Set(), out = [];
+  const all = shuffled(list, seed);
+  const pool = kind => kind === "new"
+    ? list.filter(v => (v.kinds || []).includes("new")).sort((a, b) => (b.found || "").localeCompare(a.found || ""))
+    : kind === "any" ? all : shuffled(list.filter(v => (v.kinds || []).includes(kind)), seed + kind.length);
+  const next = (kind, from) => {
+    if (used.size >= list.length) used.clear();
+    return from.find(v => !used.has(v.id)) || all.find(v => !used.has(v.id));
+  };
+  let t = 0;
+  blocks.forEach((b, i) => {
+    const end = (blocks[i + 1]?.from ?? 24) * 3600, from = pool(b.kind);
+    t = Math.max(t, b.from * 3600);
+    while (t < end && list.length) {
+      const v = next(b.kind, from);
+      used.add(v.id); out.push({ ...v, block: b.name });
+      t += lengthOf(v, station) + 45;
+    }
+  });
+  return out;
 }
 
 /**

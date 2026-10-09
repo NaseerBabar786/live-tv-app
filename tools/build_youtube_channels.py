@@ -21,6 +21,7 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
  16 Bazaar Dramas Hindi  full episodes of Hindi serials from the Indian TV channels' own channels
  17 Bazaar Shayari  Urdu and Hindi poetry: mushairas, kavi sammelan and poets reciting, from the
                     organisers', TV channels' and poets' own channels
+ 47 Spark Auto (English) and 32 Spark Auto Hindi  car reviews, launches, top 10s, supercars and motorsport
 
 Only the channel that really owns each handle is used (its name must match). Videos found on
 earlier runs are kept for KEEP_DAYS, so each list builds up. The public-domain schedules
@@ -70,6 +71,12 @@ def language_of(ch, label, title):
     if len(named) == 1:
         return named[0]
     return ch.get("langs", {}).get(label, ch.get("lang"))
+
+
+def kinds_of(ch, label, title):
+    """The parts of the day a video fits (Spark Auto's blocks: new, review, top10, versus, supercar, race);
+    the source's name counts too, so every Formula 1 upload is "race"."""
+    return [k for k, rx in ch["kinds"].items() if re.search(rx, f"{title} | {label}", re.I)]
 
 
 # Never on our channels, whatever the source.
@@ -393,6 +400,82 @@ CHANNELS = {
         ],
     },
     # For 12 to 16 year olds (the owner's wish, 2026-10-07); Bazaar Kids stays for small children.
+    # Spark Auto (English, 47) and Spark Auto Hindi (32), the owner's wish 2026-10-08: reviews, new launches,
+    # top 10s, comparisons, supercars and motorsport highlights from the car shows', magazines', carmakers'
+    # and racing series' own channels. Each video is tagged with the day's blocks it fits ("kinds").
+    "auto": {
+        "lang": "en", "langs": {"Gagan Choudhary": "hi", "Auto Yogi": "hi", "CarDekho": "hi", "ZigWheels": "hi",
+                                "MotorOctane": "hi", "91Wheels": "hi", "V3Cars": "hi"},
+        "split": {"en": "auto", "hi": "autohi"},
+        "name": "Bazaar Auto", "mins": (3, 90), "search": ["review", "top 10", "highlights"],
+        # No crashes, sponsored films, giveaways, podcasts or company events (channel-fit rule).
+        "skip": r"crash|accident|fatal|died|death|killed|branded content|sponsored|paid partnership|giveaway|podcast|"
+                r"q ?& ?a\b|merch|politic|election|masterclass|agm|earnings|investor|webinar|press conference|unboxing.*phone",
+        "kinds": {
+            "new": r"\bnew\b|launch|reveal|unveil|debut|price|20(2[5-9])|first drive|first look|nayi|naya|all details",
+            "review": r"review|tested|test drive|driven|road test|walkaround|walk around|drive impressions|ownership|owner|"
+                      r"pros,? cons|variants explained|worth|kaisi|should you buy|which (one|variant)",
+            "top10": r"\btop ?\d+|\b\d+ best|best .*(cars?|suvs?|bikes?)|worst|ranking|ranked|under \d+ lakh|cheapest|"
+                     r"how .* works?|explained|why |history",
+            "versus": r"\bvs\b|\bv\b|versus|drag race|comparison|compare|twin test|shootout|lap time|race\b.*\bvs",
+            "supercar": r"ferrari|lamborghini|mclaren|bugatti|porsche|koenigsegg|pagani|hypercar|supercar|rolls|bentley|aston|"
+                        r"maserati|amg|\bgt\d?\b|\bm\d\b|rs ?\d",
+            "race": r"highlights|grand prix|\bgp\b|qualifying|rally|le mans|\bf1\b|formula|motogp|nascar|indycar|"
+                    r"Formula 1|MotoGP|WRC|FIA WEC|Formula E|NASCAR|IndyCar",
+        },
+        # Racing, and fresh launches found in the last two days, come round more often.
+        "events": r"grand prix|highlights|launch|reveal|unveil|debut",
+        # A few from each source in turn, so no one show fills the channel.
+        # (The Hindi shows are fewer, so each keeps more.)
+        "most": {"*": 45, "Gagan Choudhary": 90, "Auto Yogi": 90, "CarDekho": 90, "ZigWheels": 90, "MotorOctane": 90,
+                 "91Wheels": 90, "V3Cars": 90},
+        "max": 2100,
+        "sources": [
+            # Reviews and new launches
+            ("Top Gear", ["@TopGear"], "Top Gear"),
+            ("carwow", ["@carwow"], "carwow"),
+            ("MotorTrend", ["@MotorTrend", "@MotorTrendChannel"], "MotorTrend|Motor Trend"),
+            ("Autocar", ["@autocar"], "Autocar"),
+            ("Car and Driver", ["@caranddriver", "@CarandDriver"], "Car and Driver"),
+            ("Throttle House", ["@ThrottleHouse"], "Throttle House"),
+            ("The Straight Pipes", ["@TheStraightPipes"], "Straight Pipes"),
+            ("Doug DeMuro", ["@DougDeMuro"], "Doug DeMuro"),
+            ("Fifth Gear", ["@FifthGear", "@fifthgear"], "Fifth Gear"),
+            ("Autocar India", ["@autocarindia1", "@AutocarIndia"], "Autocar India"),
+            ("Overdrive", ["@odmag", "@ODMag", "@OVERDRIVE"], "Overdrive|OVERDRIVE"),
+            # Supercars, classics and how cars work
+            ("Shmee150", ["@shmee150"], "Shmee150"),
+            ("Hagerty", ["@Hagerty"], "Hagerty"),
+            ("Jay Leno's Garage", ["@jaylenosgarage"], "Jay Leno"),
+            ("Supercar Blondie", ["@supercarblondie", "@SupercarBlondie"], "Supercar Blondie"),
+            ("Goodwood", ["@GoodwoodRRC", "@goodwoodroadracing"], "Goodwood"),
+            ("Donut", ["@donutmedia", "@Donut"], "Donut"),
+            ("Engineering Explained", ["@EngineeringExplained"], "Engineering Explained"),
+            ("Porsche", ["@Porsche"], "Porsche"),
+            ("Ferrari", ["@Ferrari"], "Ferrari"),
+            ("McLaren", ["@McLaren", "@McLarenAutomotive"], "McLaren"),
+            ("Lamborghini", ["@Lamborghini"], "Lamborghini"),
+            ("Mercedes-Benz", ["@MercedesBenz", "@MercedesBenzTV"], "Mercedes"),
+            ("BMW", ["@BMW"], "BMW"),
+            ("Bugatti", ["@Bugatti"], "Bugatti"),
+            # Motorsport highlights
+            ("Formula 1", ["@Formula1", "@F1"], "Formula 1|FORMULA 1"),
+            ("MotoGP", ["@MotoGP"], "MotoGP"),
+            ("WRC", ["@WRC", "@wrcofficial"], "WRC|FIA World Rally"),
+            ("FIA WEC", ["@FIAWEC", "@fiawec"], "WEC|FIA World Endurance"),
+            ("Formula E", ["@FIAFormulaE", "@FormulaE"], "Formula E"),
+            ("IndyCar", ["@INDYCAR", "@IndyCar"], "INDYCAR|IndyCar"),
+            ("NASCAR", ["@NASCAR"], "NASCAR"),
+            # Hindi: India's car shows
+            ("Gagan Choudhary", ["@GaganChoudhary"], "Gagan Choudhary"),
+            ("Auto Yogi", ["@AutoYogi"], "Auto Yogi"),
+            ("CarDekho", ["@CarDekhoIndia", "@cardekho"], "CarDekho"),
+            ("ZigWheels", ["@ZigWheels", "@zigwheels"], "ZigWheels"),
+            ("MotorOctane", ["@MotorOctane"], "MotorOctane"),
+            ("91Wheels", ["@91Wheels", "@91wheels"], "91Wheels"),
+            ("V3Cars", ["@V3Cars", "@v3cars"], "V3Cars|V3 Cars"),
+        ],
+    },
     "teens": {
         "lang": "en", "langs": {"Fact Tech": "hi", "Nick India": "hi"},
         "split": {"en": "teens", "hi": "teenshi"},
@@ -602,6 +685,8 @@ def build(cid, ch, today):
                           "found": old.get(vid, {}).get("found", today.isoformat())}
             if ch.get("lang"):
                 found[vid]["lang"] = language_of(ch, label, title)
+            if ch.get("kinds"):
+                found[vid]["kinds"] = kinds_of(ch, label, title)
             # When it went up on YouTube, as far as the page says ("3 weeks ago"): Bazaar TV One's blocks
             # take only new uploads (tools/build_bazaar_blocks.py, the owner's wish 2026-10-08).
             posted = dates.get(vid) or ((today - dt.timedelta(days=age)).isoformat() if age is not None else old.get(vid, {}).get("posted"))
@@ -634,6 +719,8 @@ def build(cid, ch, today):
             found[vid] = v
             if ch.get("lang"):
                 v["lang"] = language_of(ch, v["label"], v["title"])
+            if ch.get("kinds"):
+                v["kinds"] = kinds_of(ch, v["label"], v["title"])
     # Main events from the last two weeks, and anything found in the last two days, are "top":
     # the channel page plays them far more often (Bazaar Sports, the owner's wish, 2026-10-06).
     if ch.get("events"):
