@@ -161,6 +161,7 @@ fun EditionOverlay() {
         }
     }
     if (FirebaseConfig.configured) NewMessagePrompt()
+    MessagePopupShown()
     if (FirebaseConfig.configured && !Edition.MAX) WelcomePrompt()
     if (FirebaseConfig.configured && !Edition.MAX) PlanPrompts()
     if (FirebaseConfig.configured && !Edition.MAX) GoldTry()
@@ -373,8 +374,6 @@ private fun NewMessagePrompt() {
             kotlinx.coroutines.withTimeoutOrNull(wait) { kick.receive() }
         }
     }
-    val popup by MessagePopup.shown.collectAsStateWithLifecycle()
-    popup?.let { MessagePopupDialog(it) }
     if (reading) {
         MessagesScreen(onClose = { reading = false })
         return
@@ -393,6 +392,13 @@ private fun NewMessagePrompt() {
             },
         )
     }
+}
+
+/** The team's message over the main screen, while one is waiting (NewMessagePrompt fills it in). */
+@Composable
+private fun MessagePopupShown() {
+    val popup by MessagePopup.shown.collectAsStateWithLifecycle()
+    popup?.let { MessagePopupDialog(it) }
 }
 
 /** How often a viewer's app looks for a new message while it's open: one small read each time. */
