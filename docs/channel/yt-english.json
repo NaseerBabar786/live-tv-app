@@ -1,6 +1,6 @@
 {
  "name": "Bazaar Movies English",
- "built": "2026-10-09 00:44 UTC",
+ "built": "2026-10-09 02:21 UTC",
  "videos": [
   {
    "id": "F1Vwc2jC7EA",
@@ -44,16 +44,6 @@
    "latest": true
   },
   {
-   "id": "ERsURQC8Xxo",
-   "title": "Ruthless Hitman Took On The Chicago Mob | Silent Partners | Full 2026 Action Movie",
-   "label": "Movie Central",
-   "mins": 82.61666666666666,
-   "found": "2026-10-07",
-   "lang": "en",
-   "top": true,
-   "latest": true
-  },
-  {
    "id": "fIhM9MiEN50",
    "title": "Daddy Daughter Trip | Rob Schneider | Full 2025 Comedy Family Movie",
    "label": "Movie Central",
@@ -64,11 +54,11 @@
    "latest": true
   },
   {
-   "id": "KAouzPF7GII",
-   "title": "She's Hunting The Cartel That Murdered Her Family | She-Vigilante | Full 2026 Action Movie",
+   "id": "ERsURQC8Xxo",
+   "title": "Ruthless Hitman Took On The Chicago Mob | Silent Partners | Full 2026 Action Movie",
    "label": "Movie Central",
-   "mins": 84.35,
-   "found": "2026-10-08",
+   "mins": 82.61666666666666,
+   "found": "2026-10-07",
    "lang": "en",
    "top": true,
    "latest": true
@@ -79,6 +69,16 @@
    "label": "Movie Central",
    "mins": 87.26666666666667,
    "found": "2026-10-08",
+   "lang": "en",
+   "top": true,
+   "latest": true
+  },
+  {
+   "id": "3X6DWCIeO54",
+   "title": "Two Renovators Trapped Together Over Christmas | Renovating Christmas | 2026 Holiday Romance Movie",
+   "label": "Movie Central",
+   "mins": 86.21666666666667,
+   "found": "2026-10-09",
    "lang": "en",
    "top": true,
    "latest": true
@@ -101,10 +101,10 @@
    "lang": "en"
   },
   {
-   "id": "AlaLpJxQ-Bo",
-   "title": "Harlequin: The Waiting Game - Full Movie",
+   "id": "ZYQm5pZ8h8g",
+   "title": "And She Was - Full Movie",
    "label": "FilmRise Movies",
-   "mins": 90.25,
+   "mins": 89.85,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -142,18 +142,26 @@
    "lang": "en"
   },
   {
-   "id": "KXoHrdYStmw",
-   "title": "Baking Up Love | Full Romantic Movie | Hallmark Movie 2024 | @Movie Central",
-   "label": "Movie Central",
-   "mins": 96.78333333333333,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "MU1I3BgMJ2g",
    "title": "A Holiday For Love | Full Movie | Christmas Romance | Melissa Gilbert | Tim Matheson",
    "label": "Movie Central",
    "mins": 93.93333333333334,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "AlaLpJxQ-Bo",
+   "title": "Harlequin: The Waiting Game - Full Movie",
+   "label": "FilmRise Movies",
+   "mins": 90.25,
+   "found": "2026-10-08",
+   "lang": "en"
+  },
+  {
+   "id": "KXoHrdYStmw",
+   "title": "Baking Up Love | Full Romantic Movie | Hallmark Movie 2024 | @Movie Central",
+   "label": "Movie Central",
+   "mins": 96.78333333333333,
    "found": "2026-10-08",
    "lang": "en"
   },
@@ -206,14 +214,6 @@
    "lang": "en"
   },
   {
-   "id": "ZYQm5pZ8h8g",
-   "title": "And She Was - Full Movie",
-   "label": "FilmRise Movies",
-   "mins": 89.85,
-   "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
    "id": "Dp7a5VQ35Cs",
    "title": "Night Into Day | Full Movie | Post Nuclear Drama",
    "label": "Movie Central",
@@ -246,6 +246,14 @@
    "lang": "en"
   },
   {
+   "id": "xm1wgDsrgUk",
+   "title": "Love, Bubbles, And Crystal Cove | Sweet Second Chance Romance | Full Movie",
+   "label": "FilmRise Movies",
+   "mins": 87.06666666666666,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
    "id": "rGM9-9qFtfY",
    "title": "U.S. Seals 3: Frogmen | Full Movie",
    "label": "FilmRise Movies",
@@ -258,14 +266,6 @@
    "title": "Alice in Wonderland | FULL MOVIE | Family, Adventure |Ben Kingsley, Martin Short, Christopher Lloyd",
    "label": "Popcornflix",
    "mins": 133.68333333333334,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "sDGIgGqTPOg",
-   "title": "Delete | Part 1 of 2 | FULL MOVIE | 2013 | SciFi, Action",
-   "label": "Popcornflix",
-   "mins": 88.23333333333333,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -302,18 +302,18 @@
    "lang": "en"
   },
   {
-   "id": "6yenmPC1jOM",
-   "title": "Robert the Bruce | FULL MOVIE | Medieval Action Drama",
-   "label": "FilmRise Movies",
-   "mins": 123.66666666666667,
+   "id": "sDGIgGqTPOg",
+   "title": "Delete | Part 1 of 2 | FULL MOVIE | 2013 | SciFi, Action",
+   "label": "Popcornflix",
+   "mins": 88.23333333333333,
    "found": "2026-10-07",
    "lang": "en"
   },
   {
-   "id": "xm1wgDsrgUk",
-   "title": "Love, Bubbles, And Crystal Cove | Sweet Second Chance Romance | Full Movie",
+   "id": "6yenmPC1jOM",
+   "title": "Robert the Bruce | FULL MOVIE | Medieval Action Drama",
    "label": "FilmRise Movies",
-   "mins": 87.06666666666666,
+   "mins": 123.66666666666667,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -674,26 +674,10 @@
    "lang": "en"
   },
   {
-   "id": "MlqJs7-GRhY",
-   "title": "The Iceman - Full Movie",
-   "label": "FilmRise Movies",
-   "mins": 105.66666666666667,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
    "id": "WycfXXLwrfg",
    "title": "Octopus 2 - Full Movie",
    "label": "FilmRise Movies",
    "mins": 94.65,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "57YMa7kaZCA",
-   "title": "The Contract - Full Movie",
-   "label": "FilmRise Movies",
-   "mins": 96.3,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -706,10 +690,18 @@
    "lang": "en"
   },
   {
-   "id": "lV1nW_BwoVE",
-   "title": "A Storybook Christmas | Free Full Movie | FilmRise",
+   "id": "57YMa7kaZCA",
+   "title": "The Contract - Full Movie",
    "label": "FilmRise Movies",
-   "mins": 87.06666666666666,
+   "mins": 96.3,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
+   "id": "qCePB3BSTu8",
+   "title": "U.S. Seals 2 | Full Movie",
+   "label": "FilmRise Movies",
+   "mins": 94.85,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -718,6 +710,14 @@
    "title": "Operation Delta Force | Full Movie",
    "label": "FilmRise Movies",
    "mins": 93.11666666666666,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
+   "id": "lV1nW_BwoVE",
+   "title": "A Storybook Christmas | Free Full Movie | FilmRise",
+   "label": "FilmRise Movies",
+   "mins": 87.06666666666666,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -734,22 +734,6 @@
    "title": "Harlequin: The Awakening - Full Movie",
    "label": "FilmRise Movies",
    "mins": 91.55,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "qCePB3BSTu8",
-   "title": "U.S. Seals 2 | Full Movie",
-   "label": "FilmRise Movies",
-   "mins": 94.85,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "lUsbhHisRj0",
-   "title": "Blood and Money | FULL MOVIE | Survival Crime Thriller",
-   "label": "FilmRise Movies",
-   "mins": 89.61666666666666,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -964,14 +948,6 @@
    "lang": "en"
   },
   {
-   "id": "G3_YU9dPwsQ",
-   "title": "Lifted (Free Full Movie) Family Drama | Boy's dad deployed Afghanistan",
-   "label": "Popcornflix",
-   "mins": 108.26666666666667,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
    "id": "GVSwxNw40Bs",
    "title": "Gold | FULL MOVIE | 2013 | Western, Adventure, Klondike Gold Rush",
    "label": "Popcornflix",
@@ -980,26 +956,10 @@
    "lang": "en"
   },
   {
-   "id": "iiBk6wleCjI",
-   "title": "Personal Effects (Free Full Movie) Drama | Michelle Pfeiffer, Ashton Kutcher, Kathy Bates",
+   "id": "G3_YU9dPwsQ",
+   "title": "Lifted (Free Full Movie) Family Drama | Boy's dad deployed Afghanistan",
    "label": "Popcornflix",
-   "mins": 110.11666666666666,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "GXF2zw2UOe8",
-   "title": "Sugar Mountain (Free Full Movie)  Jason Momoa",
-   "label": "Popcornflix",
-   "mins": 105.73333333333333,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "DOViY-D2Mfw",
-   "title": "Fire From Below (Full Movie) Kevin Sorbo",
-   "label": "Popcornflix",
-   "mins": 89.3,
+   "mins": 108.26666666666667,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -1020,6 +980,30 @@
    "lang": "en"
   },
   {
+   "id": "GXF2zw2UOe8",
+   "title": "Sugar Mountain (Free Full Movie)  Jason Momoa",
+   "label": "Popcornflix",
+   "mins": 105.73333333333333,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
+   "id": "iiBk6wleCjI",
+   "title": "Personal Effects (Free Full Movie) Drama | Michelle Pfeiffer, Ashton Kutcher, Kathy Bates",
+   "label": "Popcornflix",
+   "mins": 110.11666666666666,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
+   "id": "DOViY-D2Mfw",
+   "title": "Fire From Below (Full Movie) Kevin Sorbo",
+   "label": "Popcornflix",
+   "mins": 89.3,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
    "id": "3PKoit52Sls",
    "title": "Shelter (Full Movie) Drama l Jennifer Connelly, Anthony Mackie",
    "label": "Popcornflix",
@@ -1028,18 +1012,18 @@
    "lang": "en"
   },
   {
-   "id": "0-y-8RbnpVs",
-   "title": "Ride (Free Full Movie) Helen Hunt, Luke Wilson",
-   "label": "Popcornflix",
-   "mins": 90.65,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
    "id": "Doo3UivJhtc",
    "title": "Henry's Crime | FULL MOVIE | 2010 | Keanu Reeves | Comedy, Drama, Crime",
    "label": "Popcornflix",
    "mins": 107.8,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
+   "id": "0-y-8RbnpVs",
+   "title": "Ride (Free Full Movie) Helen Hunt, Luke Wilson",
+   "label": "Popcornflix",
+   "mins": 90.65,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -1060,10 +1044,10 @@
    "lang": "en"
   },
   {
-   "id": "sJKquAZISZI",
-   "title": "The Way Home | FULL MOVIE | 2009 | Drama, Inspirational, Dean Cain",
+   "id": "NP04F1pp9Ew",
+   "title": "Cat 8 | Part 2 of 2 | FULL MOVIE | 2013 | SciFi, Action | Matthew Modine",
    "label": "Popcornflix",
-   "mins": 90.33333333333333,
+   "mins": 88.28333333333333,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -1072,6 +1056,14 @@
    "title": "Shark Killer | FULL MOVIE | 2014 | Action, Thriller",
    "label": "Popcornflix",
    "mins": 88.03333333333333,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
+   "id": "sJKquAZISZI",
+   "title": "The Way Home | FULL MOVIE | 2009 | Drama, Inspirational, Dean Cain",
+   "label": "Popcornflix",
+   "mins": 90.33333333333333,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -1157,18 +1149,18 @@
    "lang": "en"
   },
   {
-   "id": "ws8bvXA6Xxw",
-   "title": "Encounter | Full Movie | Sci-Fi Drama | Luke Hemsworth",
-   "label": "Movie Central",
-   "mins": 92.21666666666667,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
    "id": "HKmeRbjOIl8",
    "title": "Broke Dad Promises Daughter A Dream Spring Break | Daddy Daughter Trip | Full Family Comedy Movie",
    "label": "Movie Central",
    "mins": 96.58333333333333,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
+   "id": "ws8bvXA6Xxw",
+   "title": "Encounter | Full Movie | Sci-Fi Drama | Luke Hemsworth",
+   "label": "Movie Central",
+   "mins": 92.21666666666667,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -1197,14 +1189,6 @@
    "lang": "en"
   },
   {
-   "id": "uC1gF_w8v00",
-   "title": "Malibu Shark Attack | Full Movie | Action Adventure",
-   "label": "Movie Central",
-   "mins": 89.48333333333333,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
    "id": "0Dc36h7Nm64",
    "title": "Grandma's House | Full Movie | Heartfelt Drama",
    "label": "Movie Central",
@@ -1229,10 +1213,10 @@
    "lang": "en"
   },
   {
-   "id": "9g6bYzEyFn8",
-   "title": "Wounded Vietnam Vet Returns To Fight For His Land | Kuleana | Full Drama Thriller Movie",
+   "id": "uC1gF_w8v00",
+   "title": "Malibu Shark Attack | Full Movie | Action Adventure",
    "label": "Movie Central",
-   "mins": 95.23333333333333,
+   "mins": 89.48333333333333,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -1245,10 +1229,34 @@
    "lang": "en"
   },
   {
+   "id": "9g6bYzEyFn8",
+   "title": "Wounded Vietnam Vet Returns To Fight For His Land | Kuleana | Full Drama Thriller Movie",
+   "label": "Movie Central",
+   "mins": 95.23333333333333,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
    "id": "aCtzJ_brbeI",
    "title": "SEAL Team VI | Full Movie | Action War Drama",
    "label": "Movie Central",
    "mins": 95.73333333333333,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
+   "id": "MlqJs7-GRhY",
+   "title": "The Iceman - Full Movie",
+   "label": "FilmRise Movies",
+   "mins": 105.66666666666667,
+   "found": "2026-10-06",
+   "lang": "en"
+  },
+  {
+   "id": "lUsbhHisRj0",
+   "title": "Blood and Money | FULL MOVIE | Survival Crime Thriller",
+   "label": "FilmRise Movies",
+   "mins": 89.61666666666666,
    "found": "2026-10-06",
    "lang": "en"
   },
@@ -1369,14 +1377,6 @@
    "title": "Christmas Story | Free Full Holiday Movie | FilmRise Movies",
    "label": "FilmRise Movies",
    "mins": 80.78333333333333,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "NP04F1pp9Ew",
-   "title": "Cat 8 | Part 2 of 2 | FULL MOVIE | 2013 | SciFi, Action | Matthew Modine",
-   "label": "Popcornflix",
-   "mins": 88.28333333333333,
    "found": "2026-10-06",
    "lang": "en"
   },
