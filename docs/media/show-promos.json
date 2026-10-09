@@ -1,5 +1,5 @@
 {
- "about": "Coming-up promos for the shows booked on Bazaar TV (from the owner's saved schedule), made by tools/promos.",
+ "about": "Coming-up promos for the shows booked on Spark TV (from the owner's saved schedule), made by tools/promos.",
  "promos": {
   "bazaar-tv-news-the-full-report-all-0000": {
    "title": "Bazaar TV News: The Full Report",
@@ -13,7 +13,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "be22d0a12dc2"
+   "hash": "779d9f6dc4ee"
   },
   "show-all-0055": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -27,7 +27,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "d95a083930f3"
+   "hash": "bf15bca4bc3e"
   },
   "bazaar-tv-news-headlines-all-0100": {
    "title": "Bazaar TV News: Headlines",
@@ -41,7 +41,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "ae9d4729a188"
+   "hash": "5cfde9d8f291"
   },
   "show-all-0155": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -55,7 +55,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "a04594518f0e"
+   "hash": "468290b76cf3"
   },
   "bazaar-tv-news-headlines-all-0200": {
    "title": "Bazaar TV News: Headlines",
@@ -69,7 +69,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "1622d211fe05"
+   "hash": "e194f7a897ad"
   },
   "show-all-0225": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -83,7 +83,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "52e20c729666"
+   "hash": "c4e8d6e09dfc"
   },
   "show-all-0255": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -97,7 +97,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "f5b0c2d90aff"
+   "hash": "aa0ceb21180d"
   },
   "bazaar-tv-news-headlines-all-0300": {
    "title": "Bazaar TV News: Headlines",
@@ -111,7 +111,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "30c45ce4248d"
+   "hash": "36afba135741"
   },
   "show-all-0355": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
