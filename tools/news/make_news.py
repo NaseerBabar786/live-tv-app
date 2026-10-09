@@ -740,6 +740,23 @@ def add_opening(body, secs, work):
     except Exception as e:
         NOTES.append(f"opening failed: {e}")
 
+def duration(path):
+    return float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path],
+                                capture_output=True, text=True, check=True).stdout)
+
+def add_news_opener(mp4, opener, work):
+    """Owner's pick (2026-10-09): the Spark News opener montage (docs/media/spark-news-opener-<kind>.mp4, real news
+    footage with English + Urdu titles) plays first, then the bulletin. The bulletin was made that much shorter."""
+    tmp = os.path.join(work, "with-opener.mp4")
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", opener, "-i", mp4, "-filter_complex",
+        f"[0:v]scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2,fps={FPS},setsar=1,format=yuv420p[ov];"
+        f"[0:a]aformat=sample_rates={SR}:channel_layouts=mono,loudnorm=I=-16:TP=-1.5[oa];"
+        f"[1:v]fps={FPS},setsar=1,format=yuv420p[bv];[1:a]aformat=sample_rates={SR}:channel_layouts=mono[ba];"
+        "[ov][oa][bv][ba]concat=n=2:v=1:a=1[v][a]", "-map", "[v]", "-map", "[a]", "-r", str(FPS), "-c:v", "libx264",
+        "-preset", "veryfast", "-crf", "24", "-g", str(FPS * 2), "-c:a", "aac", "-b:a", "128k", "-ar", str(SR),
+        "-movflags", "+faststart", tmp)
+    os.replace(tmp, mp4)
+
 def add_segment(body, clip, t0, work, secs=None):
     """Lays a ready-made segment's picture (the weather centre) over the bulletin from t0; its voice is already in the mix.
     secs: how long its slot lasts; the last picture holds to the end, so the plain weather card never peeks out."""
@@ -848,7 +865,10 @@ def main():
         return print("saved", kind, "stories for", slot.isoformat(), "|", "; ".join(NOTES))
     room = opt("--room")
     name = f"news-{kind}" + (f"-{room}" if room else "")
-    total = LENGTH[kind]
+    # Owner, 2026-10-09: the headlines open with "SPARK NEWS HEADLINES", the full news with "SPARK NEWS".
+    opener = os.path.join(HERE, "..", "..", "docs", "media", f"spark-news-opener-{kind}.mp4")
+    opener_secs = duration(opener) if os.path.exists(opener) else 0.0
+    total = LENGTH[kind] - opener_secs   # the bulletin itself; the opener goes in front, so the slot stays the same
     work = os.path.join(out, "work-" + name); os.makedirs(work, exist_ok=True)
     print("making", name, "for", slot.isoformat())
 
@@ -1019,10 +1039,11 @@ def main():
     promos = []
     if body != mp4:
         promos = add_promos(body, total - news_len, slot, work, mp4)
-    got = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", mp4],
-                               capture_output=True, text=True, check=True).stdout)
+    if opener_secs: add_news_opener(mp4, opener, work)
+    total = LENGTH[kind]
+    got = duration(mp4)
     if abs(got - total) > 1.0: raise SystemExit(f"{mp4} is {got:.1f} s, wanted {total} s")
-    info = {"kind": kind, "lang": "ur", "secs": total, "slot": slot.isoformat(), "set": in_set, "room": room,
+    info = {"kind": kind, "lang": "ur", "secs": total, "opener_secs": round(opener_secs, 1), "slot": slot.isoformat(), "set": in_set, "room": room,
             "made": dt.datetime.now(dt.timezone.utc).isoformat(), "sources": sources, "weather": bool(wx), "notes": NOTES,
             "news_secs": round(news_len, 1), "promos": promos,
             "reader": reader["id"] if reader else None,
