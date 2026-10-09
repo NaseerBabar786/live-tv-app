@@ -1,0 +1,281 @@
+{
+ "name": "Spark Shayari",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-shayari.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Spark Shayari · Couplets of Ghalib, Mir, Iqbal and the classic poets, day and night · Advertise on Spark TV: WhatsApp 437 602 6500",
+ "tickerOn": true,
+ "credits": "Poetry: couplets of the classic Urdu poets (public domain), read by our AI voice over our own pictures.",
+ "videos": [
+  {
+   "id": "sher-01",
+   "title": "Aaj ka Sher · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-01.mp4",
+   "secs": 32,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-02",
+   "title": "Aaj ka Sher · Mir Taqi Mir",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-02.mp4",
+   "secs": 31,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-03",
+   "title": "Aaj ka Sher · Allama Iqbal",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-03.mp4",
+   "secs": 27,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-04",
+   "title": "Aaj ka Sher · Dagh Dehlvi",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-04.mp4",
+   "secs": 29,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-05",
+   "title": "Aaj ka Sher · Momin Khan Momin",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-05.mp4",
+   "secs": 25,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-06",
+   "title": "Aaj ka Sher · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-06.mp4",
+   "secs": 25,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-07",
+   "title": "Aaj ka Sher · Jigar Moradabadi",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-07.mp4",
+   "secs": 29,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-08",
+   "title": "Aaj ka Sher · Bahadur Shah Zafar",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-08.mp4",
+   "secs": 28,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-09",
+   "title": "Aaj ka Sher · Allama Iqbal",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-09.mp4",
+   "secs": 31,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-10",
+   "title": "Aaj ka Sher · Mir Taqi Mir",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-10.mp4",
+   "secs": 26,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-11",
+   "title": "Aaj ka Sher · Hasrat Mohani",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-11.mp4",
+   "secs": 30,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-12",
+   "title": "Aaj ka Sher · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-12.mp4",
+   "secs": 30,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-13",
+   "title": "Aaj ka Sher · Ameer Minai",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-13.mp4",
+   "secs": 31,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-14",
+   "title": "Aaj ka Sher · Ibrahim Zauq",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-14.mp4",
+   "secs": 27,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-15",
+   "title": "Aaj ka Sher · Akbar Allahabadi",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-15.mp4",
+   "secs": 30,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-16",
+   "title": "Aaj ka Sher · Allama Iqbal",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-16.mp4",
+   "secs": 27,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-17",
+   "title": "Aaj ka Sher · Altaf Hussain Hali",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-17.mp4",
+   "secs": 29,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-18",
+   "title": "Aaj ka Sher · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-18.mp4",
+   "secs": 27,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-19",
+   "title": "Aaj ka Sher · Dagh Dehlvi",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-19.mp4",
+   "secs": 30,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-20",
+   "title": "Aaj ka Sher · Mir Taqi Mir",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-20.mp4",
+   "secs": 26,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-21",
+   "title": "Aaj ka Sher · Allama Iqbal",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-21.mp4",
+   "secs": 32,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-22",
+   "title": "Aaj ka Sher · Ibrahim Zauq",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-22.mp4",
+   "secs": 29,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-23",
+   "title": "Aaj ka Sher · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-23.mp4",
+   "secs": 29,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-24",
+   "title": "Aaj ka Sher · Dagh Dehlvi",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-24.mp4",
+   "secs": 29,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-25",
+   "title": "Aaj ka Sher · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-25.mp4",
+   "secs": 29,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-26",
+   "title": "Aaj ka Sher · Allama Iqbal",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-26.mp4",
+   "secs": 29,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-27",
+   "title": "Aaj ka Sher · Mir Taqi Mir",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-27.mp4",
+   "secs": 26,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-28",
+   "title": "Aaj ka Sher · Akbar Allahabadi",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-28.mp4",
+   "secs": 31,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-29",
+   "title": "Aaj ka Sher · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-29.mp4",
+   "secs": 25,
+   "kind": "programme"
+  },
+  {
+   "id": "sher-30",
+   "title": "Aaj ka Sher · Bahadur Shah Zafar",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-30.mp4",
+   "secs": 29,
+   "kind": "programme"
+  },
+  {
+   "id": "adhere",
+   "title": "Advertise on Spark TV",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
+   "secs": 15,
+   "kind": "ad"
+  },
+  {
+   "id": "spark-ident",
+   "title": "Spark TV",
+   "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
+   "secs": 20,
+   "kind": "ident"
+  }
+ ],
+ "slots": [],
+ "loop": [
+  "sher-01",
+  "sher-02",
+  "sher-03",
+  "sher-04",
+  "sher-05",
+  "adhere",
+  "sher-06",
+  "sher-07",
+  "sher-08",
+  "sher-09",
+  "sher-10",
+  "adhere",
+  "sher-11",
+  "sher-12",
+  "sher-13",
+  "sher-14",
+  "sher-15",
+  "adhere",
+  "spark-ident",
+  "sher-16",
+  "sher-17",
+  "sher-18",
+  "sher-19",
+  "sher-20",
+  "adhere",
+  "sher-21",
+  "sher-22",
+  "sher-23",
+  "sher-24",
+  "sher-25",
+  "adhere",
+  "sher-26",
+  "sher-27",
+  "sher-28",
+  "sher-29",
+  "sher-30",
+  "adhere",
+  "spark-ident"
+ ],
+ "fillers": [
+  "adhere",
+  "spark-ident"
+ ]
+}

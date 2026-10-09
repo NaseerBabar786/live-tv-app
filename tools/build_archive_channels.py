@@ -4,7 +4,9 @@ Builds the ready-made schedules of our Internet Archive channels in Cable TV:
 
   * Spark Sports (6): classic sport, boxing, baseball, roller derby, sport films;
   * Spark Travel (7): travelogues and scenic films of countries, cities and parks;
-  * Spark Comedy (8): silent and classic comedy shorts, films and early TV comedies.
+  * Spark Comedy (8): silent and classic comedy shorts, films and early TV comedies;
+  * Spark Auto Classics and Spark Kitchen Classics: classic car and cooking films, only on Spark TV,
+    our Google Play app (tools/build_play_schedules.py), where every channel must be ours to show.
 
 Only films from the Archive's curated collections whose item states a public-domain mark, CC0
 or plain CC BY licence are taken (no "share-alike", "non-commercial" or "no-derivatives"), and
@@ -13,7 +15,7 @@ never play here.
 
 Writes docs/channel/<id>-schedule.json, the same shape Channel Studio saves: all the films back
 to back round the clock, in a new order every week. Standard library only.
-Run: python3 tools/build_archive_channels.py --channel sports|travel|comedy [--date YYYY-MM-DD]
+Run: python3 tools/build_archive_channels.py --channel sports|travel|comedy|auto|cooking [--date YYYY-MM-DD]
 """
 import argparse
 import concurrent.futures as cf
@@ -92,6 +94,26 @@ CHANNELS = {
                 r"rascal you|bamboo isle|c\.c\. and company|steptoe|dick van dyke|raiders|billy the kid",
         "ticker": "Spark Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies "
                   "· Channel 8 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
+    },
+    # Spark TV (Google Play) only, 2026-10-09: the owner wants every Play channel to be ours to show, like channel 1.
+    "auto": {
+        "name": "Spark Auto Classics", "dial": "",
+        "subjects": ["automobiles", "automobile", "cars", "car", "automotive", "automobile industry", "motor vehicles",
+                     "automobile racing", "hot rods", "trucks", "motoring", "automobile engines"],
+        # Cars, how they're made and raced; not the gory road-safety films or adverts.
+        "skip": r"safety|crash|crashes|accident|accidents|signal 30|mechanized death|wheels of tragedy|highway of agony|"
+                r"drunk|drinking|blood|death|dead|killed|injur\w*|insurance|police|jail|delinquen\w*|teen\w*|"
+                r"war\b|army|military|tank|bomb",
+        "ticker": "Spark Auto Classics · Classic car films: how cars are made, driven and raced",
+    },
+    "cooking": {
+        "name": "Spark Kitchen Classics", "dial": "",
+        "subjects": ["cooking", "cookery", "recipes", "recipe", "baking", "kitchen", "kitchens", "food preparation",
+                     "home economics", "cooking demonstrations", "bread", "cakes", "meals"],
+        # Cooking and kitchens; not slaughterhouses, diet scares or war-time rationing.
+        "skip": r"slaughter|meat packing|butcher|hunting|war\b|army|military|ration\w*|propaganda|diet pill|"
+                r"poison\w*|disease|germ\w*|alcohol|beer|wine|whisk(e)?y|cigarette\w*|tobacco|pork|ham\b|bacon|lard",
+        "ticker": "Spark Kitchen Classics · Classic cooking films: recipes, baking and kitchens from the film archives",
     },
 }
 

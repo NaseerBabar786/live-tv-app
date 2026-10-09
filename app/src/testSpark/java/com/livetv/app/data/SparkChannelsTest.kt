@@ -12,9 +12,12 @@ class SparkChannelsTest {
     @Test
     fun onlyThePlayChannels() {
         assertEquals(MyChannel.PLAY_STATIONS, MyChannel.STATIONS)
-        assertEquals(listOf("pnews", "pclassics", "pcomedy", "psports", "ptravel", "pmusic", "pads"), MyChannel.STATIONS.map { it.id })
+        assertEquals(
+            listOf("pnews", "pclassics", "purdu", "phindi", "pshayari", "psports", "ptravel", "pcomedy", "pauto", "pcooking", "pmusic", "pads"),
+            MyChannel.STATIONS.map { it.id },
+        )
         assertTrue(MyChannel.STATIONS.none { it.youtube })
-        assertEquals((1..7).toList(), MyChannel.STATIONS.map { it.number })
+        assertEquals((1..12).toList(), MyChannel.STATIONS.map { it.number })
     }
 
     @Test

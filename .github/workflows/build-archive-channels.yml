@@ -45,6 +45,15 @@ jobs:
         continue-on-error: true
         run: python3 tools/build_archive_channels.py --channel comedy
 
+      # Spark TV (Google Play) only: classic car and cooking films.
+      - name: Build Spark Auto Classics
+        continue-on-error: true
+        run: python3 tools/build_archive_channels.py --channel auto
+
+      - name: Build Spark Kitchen Classics
+        continue-on-error: true
+        run: python3 tools/build_archive_channels.py --channel cooking
+
       # Spark Kids is a hand-made list; make sure its Archive videos are H.264 copies too.
       - name: Spark Kids videos in H.264
         continue-on-error: true
@@ -64,7 +73,7 @@ jobs:
             echo "No changes."
             exit 0
           fi
-          git commit -m "Spark Sports, Travel and Comedy schedules for the week of $(date -u '+%Y-%m-%d')"
+          git commit -m "Spark Sports, Travel, Comedy, Auto and Kitchen schedules for the week of $(date -u '+%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

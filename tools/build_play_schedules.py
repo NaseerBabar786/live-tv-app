@@ -5,13 +5,21 @@ Spark TV on Google Play carries only channels whose every programme we own or ma
 2026-10-09): our news bulletins and ads, public-domain films and shows from the Internet Archive, and
 free-licence music from Wikimedia Commons. They are made here from our other channels' schedules:
 
-  pnews      Spark TV News          the hourly bulletins from channel 1's schedule, round the clock
-  pclassics  Spark Classics         Spark Cinema's public-domain films (filmein-schedule.json)
-  pcomedy    Spark Comedy Classics  comedy-schedule.json
-  psports    Spark Sports Classics  sports-schedule.json
-  ptravel    Spark Travel Classics  travel-schedule.json
-  pmusic     Spark Music            sur-schedule.json (Wikimedia Commons recordings)
-  pads       Spark Ads              our "advertise here" ad and the sponsors' ads (ads-sponsors.json)
+  pnews      Spark TV News           the hourly bulletins from channel 1's schedule, round the clock
+  pclassics  Spark Classics          Spark Cinema's public-domain films (filmein-schedule.json)
+  purdu      Spark Cinema Urdu       our Urdu AI dubs of free films and our Urdu story videos (library.json)
+  phindi     Spark Cinema Hindi      our Hindi AI dubs of the same films (library.json)
+  pshayari   Spark Shayari           our "Aaj ka Sher" clips of the classic poets (shayari-clips.json)
+  psports    Spark Sports Classics   sports-schedule.json
+  ptravel    Spark Travel Classics   travel-schedule.json
+  pcomedy    Spark Comedy Classics   comedy-schedule.json
+  pauto      Spark Auto Classics     auto-schedule.json (public-domain car films)
+  pcooking   Spark Kitchen Classics  cooking-schedule.json (public-domain cooking films)
+  pmusic     Spark Music             sur-schedule.json (Wikimedia Commons recordings)
+  pads       Spark Ads               our "advertise here" ad and the sponsors' ads (ads-sponsors.json)
+
+The owner (2026-10-09): every Spark TV channel works like channel 1, with only programmes that are ours to
+show. A channel whose source schedule isn't built yet is left out until it is (the app then hides it).
 
 Every YouTube video is left out, so is anything only allowed on the website (Cable TV promos, which
 point to an app outside Google Play), and nothing may link to a list the app would fill from YouTube.
@@ -22,6 +30,9 @@ import json
 import re
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from no_horror import is_horror  # noqa: E402  (no horror on our channels, the owner 2026-10-08)
 
 ROOT = Path(__file__).resolve().parent.parent
 CH = ROOT / "docs" / "channel"
@@ -50,6 +61,18 @@ CLASSICS = {
                 "Spark Travel Classics · Classic travel films from around the world"),
     "pmusic": ("sur-schedule.json", "Spark Music", "spark-music-play.png",
                "Spark Music · Free-licence recordings from Wikimedia Commons · Artist and licence on screen"),
+    "pauto": ("auto-schedule.json", "Spark Auto Classics", "spark-auto.png",
+              "Spark Auto Classics · Classic car films: how cars are made, driven and raced"),
+    "pcooking": ("cooking-schedule.json", "Spark Kitchen Classics", "spark-cooking-play.png",
+                 "Spark Kitchen Classics · Classic cooking films: recipes, baking and kitchens"),
+}
+
+# Our own dubs and stories (docs/channel/library.json): the Urdu and Hindi cinemas.
+DUBS = {
+    "purdu": ("Urdu AI dub", "Spark Cinema Urdu", "spark-cinema-urdu.png",
+              "Spark Cinema Urdu · Films in Urdu, dubbed by our AI voices · Stories made by us"),
+    "phindi": ("Hindi AI dub", "Spark Cinema Hindi", "spark-cinema-hindi.png",
+               "Spark Cinema Hindi · Films in Hindi, dubbed by our AI voices"),
 }
 
 CREDITS = {
@@ -58,6 +81,11 @@ CREDITS = {
     "psports": "Sports: public-domain films from the Internet Archive (archive.org).",
     "ptravel": "Travel: public-domain films from the Internet Archive (archive.org).",
     "pmusic": "Music: CC0, CC BY and public-domain recordings from Wikimedia Commons; artist and licence on screen.",
+    "pauto": "Cars: public-domain films from the Internet Archive (archive.org).",
+    "pcooking": "Cooking: public-domain films from the Internet Archive (archive.org).",
+    "purdu": "Films: Blender Foundation (CC BY) and public-domain films, dubbed into Urdu by our AI voices; credits on screen. Stories: made by us.",
+    "phindi": "Films: Blender Foundation (CC BY) and public-domain films, dubbed into Hindi by our AI voices; credits on screen.",
+    "pshayari": "Poetry: couplets of the classic Urdu poets (public domain), read by our AI voice over our own pictures.",
     "pnews": "News: our own bulletins from the news services named on screen, read by AI voices.",
     "pads": "Our own ads and our sponsors' ads.",
 }
@@ -92,12 +120,52 @@ def with_breaks(ids):
 
 def classic(pid):
     src, name, logo, ticker = CLASSICS[pid]
+    if not (CH / src).exists():
+        return None
     o = load(src)
     videos = [v for v in o.get("videos", []) if ok(v)]
     have = {v["id"] for v in videos}
     loop = [i for i in o.get("loop", []) if i in have]
     slots = [s for s in o.get("slots", []) if s.get("video") in have and all(e in have for e in s.get("episodes", []))]
     return channel(pid, name, logo, ticker, videos + [ADHERE, IDENT], with_breaks(loop), slots)
+
+
+def slug(url):
+    return re.sub(r"[^a-z0-9]+", "-", url.rsplit("/", 1)[-1].rsplit(".", 1)[0].lower()).strip("-")
+
+
+def ours(url):
+    """Our own files: the channel-media release or our website."""
+    return url.startswith(("https://github.com/NaseerBabar786/live-tv-app/releases/download/", "https://tv.bulkbazaar.ca/"))
+
+
+def dubbed(pid):
+    tag, name, logo, ticker = DUBS[pid]
+    lib = load("library.json")
+    films = [x for x in lib if tag in x.get("title", "") and ours(x.get("url", "")) and x.get("secs") and not is_horror(x["title"])]
+    # Our Urdu stories go on the Urdu cinema between the films.
+    if pid == "purdu":
+        films += [x for x in lib if x.get("cat", "").startswith("Our stories") and ours(x.get("url", "")) and x.get("secs")]
+    videos = [{"id": slug(x["url"]), "title": x["title"].replace(f" ({tag})", ""), "url": x["url"], "secs": round(x["secs"]),
+               "kind": "programme"} for x in films]
+    return channel(pid, name, logo, ticker, videos + [ADHERE, IDENT], with_breaks([v["id"] for v in videos]))
+
+
+def shayari():
+    clips = [c for c in load("shayari-clips.json").get("clips", []) if ours(c.get("src", "")) and c.get("secs")]
+    videos = [{"id": f"sher-{c['n']:02d}", "title": c.get("title") or "Aaj ka Sher", "url": c["src"], "secs": round(c["secs"]),
+               "kind": "programme"} for c in clips]
+    # A short ad of ours after every five couplets, the Spark logo after every fifteen.
+    loop = []
+    for i, v in enumerate(videos):
+        loop.append(v["id"])
+        if i % 5 == 4:
+            loop.append("adhere")
+        if i % 15 == 14:
+            loop.append("spark-ident")
+    return channel("pshayari", "Spark Shayari", "spark-shayari.png",
+                   "Spark Shayari · Couplets of Ghalib, Mir, Iqbal and the classic poets, day and night",
+                   videos + [ADHERE, IDENT], loop)
 
 
 def news():
@@ -137,8 +205,12 @@ def check(pid, o):
 
 def main():
     OUT.mkdir(exist_ok=True)
-    built = {"pnews": news(), "pads": ads(), **{pid: classic(pid) for pid in CLASSICS}}
+    built = {"pnews": news(), "pads": ads(), "pshayari": shayari(), **{pid: dubbed(pid) for pid in DUBS},
+             **{pid: classic(pid) for pid in CLASSICS}}
     for pid, o in built.items():
+        if o is None:
+            print(f"{pid}: its source schedule isn't built yet; left out")
+            continue
         check(pid, o)
         (OUT / f"{pid}.json").write_text(json.dumps(o, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         hours = sum(v.get("secs", 0) for v in o["videos"] if v.get("kind") != "ad") / 3600

@@ -16,7 +16,7 @@ Cable TV, App Bazaar or tv.bulkbazaar.ca downloads in the listing, screenshots o
   and 1 year; the price is the owner's choice). The app lists every base plan it finds, longest first.
 
 ## Short description (80 characters max)
-Free TV channels: news, classic films, comedy, sports, travel and music.
+Free TV channels: news, Urdu and Hindi films, poetry, classics, sports and music.
 
 ## Full description
 Spark TV brings you free channels, ready to watch on your TV, phone or tablet.
@@ -24,9 +24,13 @@ Spark TV brings you free channels, ready to watch on your TV, phone or tablet.
 Channels
 • Spark TV News: headlines and a full report, round the clock
 • Spark Classics: classic films, day and night, and a film every night at 8 PM (Toronto)
-• Spark Comedy Classics: classic comedy films and TV shows
+• Spark Cinema Urdu and Spark Cinema Hindi: films dubbed into Urdu and Hindi, and our own stories
+• Spark Shayari: couplets of Ghalib, Mir, Iqbal and the classic Urdu poets
 • Spark Sports Classics: great moments and classic sports films
 • Spark Travel Classics: classic travel films from around the world
+• Spark Comedy Classics: classic comedy films and TV shows
+• Spark Auto Classics: classic car films
+• Spark Kitchen Classics: classic cooking films
 • Spark Music: free-licence music, with the artist on screen
 • Spark Ads: our sponsors' ads
 
@@ -38,8 +42,9 @@ Features
 • Gold (subscription): watch 2, 4 or 6 channels at once with the 1×2, 2×2 and 2×3 layouts
 • No account and no sign-in
 
-Spark TV's films and shows are in the public domain (from the Internet Archive) and its music is
-free-licence (from Wikimedia Commons); the news is our own.
+Spark TV's films and shows are in the public domain (from the Internet Archive) or free-licence
+(Blender Foundation films, dubbed by us), its music is free-licence (from Wikimedia Commons), and the
+news, poetry readings and stories are our own.
 
 ## Graphics (in this folder)
 - **App icon (512 × 512):** icon-512.png

@@ -95,11 +95,17 @@ object MyChannel {
     val PLAY_STATIONS = listOf(
         Station("pnews", 1, "", "Spark TV News", logo = "spark-news.png"),
         Station("pclassics", 2, "", "Spark Classics", logo = "spark-cinema.png", lang = ENGLISH),
-        Station("pcomedy", 3, "", "Spark Comedy Classics", logo = "spark-comedy-play.png", lang = ENGLISH),
-        Station("psports", 4, "", "Spark Sports Classics", logo = "spark-sports.png", lang = ENGLISH),
-        Station("ptravel", 5, "", "Spark Travel Classics", logo = "spark-travel.png", lang = ENGLISH),
-        Station("pmusic", 6, "", "Spark Music", logo = "spark-music-play.png", lang = ENGLISH),
-        Station("pads", 7, "", "Spark Ads", logo = "spark-ads.png", lang = ENGLISH),
+        // Our own Urdu and Hindi AI dubs of free films (the owner, 2026-10-09: every channel like channel 1).
+        Station("purdu", 3, "", "Spark Cinema Urdu", logo = "spark-cinema-urdu.png"),
+        Station("phindi", 4, "", "Spark Cinema Hindi", logo = "spark-cinema-hindi.png", lang = HINDI),
+        Station("pshayari", 5, "", "Spark Shayari", logo = "spark-shayari.png"),
+        Station("psports", 6, "", "Spark Sports Classics", logo = "spark-sports.png", lang = ENGLISH),
+        Station("ptravel", 7, "", "Spark Travel Classics", logo = "spark-travel.png", lang = ENGLISH),
+        Station("pcomedy", 8, "", "Spark Comedy Classics", logo = "spark-comedy-play.png", lang = ENGLISH),
+        Station("pauto", 9, "", "Spark Auto Classics", logo = "spark-auto.png", lang = ENGLISH),
+        Station("pcooking", 10, "", "Spark Kitchen Classics", logo = "spark-cooking-play.png", lang = ENGLISH),
+        Station("pmusic", 11, "", "Spark Music", logo = "spark-music-play.png", lang = ENGLISH),
+        Station("pads", 12, "", "Spark Ads", logo = "spark-ads.png", lang = ENGLISH),
     )
 
     private val ALL_STATIONS = listOf(
