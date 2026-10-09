@@ -1,11 +1,17 @@
 {
- "updated": "2026-10-09T03:26Z",
+ "updated": "2026-10-09T09:28Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "Wu90UrxA0v4",
+   "title": "Canada's Daily Forecast - October 9, 2026  | #WeatherAM",
+   "channel": "The Weather Network",
+   "published": 1791536409
+  },
   {
    "id": "oIeP3pAayno",
    "title": "Canada's Thanksgiving long weekend forecast: snow, rain or sunshine? | #thanksgiving",
@@ -43,10 +49,22 @@
    "published": 1791478826
   },
   {
+   "id": "KsNciDVzeXU",
+   "title": "Hurricane Isaias and Rachel: A Rare Double U.S. Impact",
+   "channel": "AccuWeather",
+   "published": 1791470973
+  },
+  {
    "id": "3YfRSf5O2e4",
    "title": "Wintry mix and chilly temps for Thanksgiving in western Canada | #forecast",
    "channel": "The Weather Network",
    "published": 1791470960
+  },
+  {
+   "id": "Izf6JfYpLgs",
+   "title": "Hurricane Isaias, First of 2026 Atlantic Season",
+   "channel": "The Weather Channel",
+   "published": 1791465649
   },
   {
    "id": "gtw5t4LKlFw",
@@ -67,16 +85,118 @@
    "published": 1791450022
   },
   {
+   "id": "mr2ZrWQsWhI",
+   "title": "How to Tell If It's a Hurricane or Nor'easter",
+   "channel": "AccuWeather",
+   "published": 1791418224
+  },
+  {
+   "id": "6NMauXxTgHs",
+   "title": "Hurricane Isaias tornado threat: How far will it reach?",
+   "channel": "AccuWeather",
+   "published": 1791418113
+  },
+  {
+   "id": "wF9jzlVMgns",
+   "title": "Isaias Update: Gulf Hurricane With Inland Tornado Threat",
+   "channel": "AccuWeather",
+   "published": 1791417897
+  },
+  {
    "id": "5Auc9DkCBBU",
    "title": "Who has the best chance to see the northern lights this week? | #forecast",
    "channel": "The Weather Network",
    "published": 1791395421
   },
   {
-   "id": "nH06mAgGMXg",
-   "title": "Severe flooding brought Bangkok to a standstill, & humans weren’t the only ones navigating the water",
-   "channel": "The Weather Network",
-   "published": 1791392409
+   "id": "3FrNFgvqnbk",
+   "title": "Winter forecast 2026-2027: El Niño to reshape snow, cold across the US",
+   "channel": "AccuWeather",
+   "published": 1791394204
+  },
+  {
+   "id": "wa_sIes5SHc",
+   "title": "Isaias Could Become a Major Hurricane Before Landfall on Gulf Coast",
+   "channel": "AccuWeather",
+   "published": 1791386983
+  },
+  {
+   "id": "5NQ8nFgwvBw",
+   "title": "Former Hurricane May Stop Southern California's Heat Wave",
+   "channel": "AccuWeather",
+   "published": 1791325808
+  },
+  {
+   "id": "fXCqC5CDsO4",
+   "title": "What it’s actually like on the Bering Sea: HUGE Waves!",
+   "channel": "AccuWeather",
+   "published": 1791317804
+  },
+  {
+   "id": "1xGzK7y_33E",
+   "title": "The Forecast Feed: First Hurricane of the season expected to form this week",
+   "channel": "AccuWeather",
+   "published": 1791309618
+  },
+  {
+   "id": "bgrQuin71KM",
+   "title": "Wedding Guests Saved the Day from Flooding With CHAIRS?🌊",
+   "channel": "AccuWeather",
+   "published": 1791305085
+  },
+  {
+   "id": "86HqPyuO_Cc",
+   "title": "Will Isaias become a hurricane? Tracking the latest Gulf storm",
+   "channel": "AccuWeather",
+   "published": 1791304128
+  },
+  {
+   "id": "A3LM6bHskB0",
+   "title": "Flash Floods Devastate Towns in Spain",
+   "channel": "AccuWeather",
+   "published": 1791223346
+  },
+  {
+   "id": "wZ6Ls9ur944",
+   "title": "Widespread frost expected: Who will be affected this week?",
+   "channel": "AccuWeather",
+   "published": 1791223136
+  },
+  {
+   "id": "grIZj4wtOfU",
+   "title": "Paraguay Storm: Hail Slams into Backyard Pool!",
+   "channel": "AccuWeather",
+   "published": 1791209838
+  },
+  {
+   "id": "ZZwxSGaPDwA",
+   "title": "Tornado Sends Cafe Furniture Flying in Australia",
+   "channel": "AccuWeather",
+   "published": 1791059504
+  },
+  {
+   "id": "ed2fIOYIWms",
+   "title": "Powerful Nor'easter Batters East Coast",
+   "channel": "The Weather Channel",
+   "published": 1790520914
+  },
+  {
+   "id": "PvRaPDyCz-Y",
+   "title": "Mike Bettes Shows Severe Coastal Flooding in New Jersey",
+   "channel": "The Weather Channel",
+   "published": 1790519964
+  },
+  {
+   "id": "QDFwlhUNKj0",
+   "title": "Mike Bettes Live In Atlantic City As Nor'easter Hits Jersey Shore",
+   "channel": "The Weather Channel",
+   "published": 1790433764
+  },
+  {
+   "id": "71U3wgyac14",
+   "title": "Hurricane Nolo Tracking Toward Hawaii: Catastrophic Flooding Threatens Big Island",
+   "channel": "The Weather Channel",
+   "published": 1790377850
   }
  ]
 }
