@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Spark TV: the Spark Flower (four petals: orange, violet, pink, yellow). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#FF6B00"
+        android:pathData="M45,42a9,18 0,1 0,18,0a9,18 0,1 0,-18,0z" />
+    <path android:fillColor="#7C3AED"
+        android:pathData="M45,66a9,18 0,1 0,18,0a9,18 0,1 0,-18,0z" />
+    <path android:fillColor="#FF2D7A"
+        android:pathData="M48,54a18,9 0,1 0,36,0a18,9 0,1 0,-36,0z" />
+    <path android:fillColor="#FFC400"
+        android:pathData="M24,54a18,9 0,1 0,36,0a18,9 0,1 0,-36,0z" />
+</vector>

@@ -1557,7 +1557,7 @@ private fun ModesMenu(
                         Column(Modifier.weight(1f)) {
                             Text(
                                 layout.label + when {
-                                    locked(layout) -> "  · Premium"
+                                    locked(layout) -> "  · ${Edition.PREMIUM_NAME}"
                                     needs(layout) != null -> "  · 🔒 ${needs(layout)}"
                                     else -> ""
                                 },
@@ -1611,12 +1611,12 @@ private fun PremiumDialog(layout: String, onSubscribe: (option: Int) -> Unit, on
     SettingsTheme {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("$layout is Premium") },
+            title = { Text("$layout is ${Edition.PREMIUM_NAME}") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         "Watch two, four or six channels at once with the 1×2, 2×2 and 2×3 layouts. " +
-                            "Premium is ${price ?: "a small monthly price"} a month through Google Play (or less with 6 months " +
+                            "${Edition.PREMIUM_NAME} is ${price ?: "a small monthly price"} a month through Google Play (or less with 6 months " +
                             "or a year), works on every phone and TV signed in to your Google account, and you can " +
                             "cancel any time in Google Play."
                     )
@@ -1629,7 +1629,7 @@ private fun PremiumDialog(layout: String, onSubscribe: (option: Int) -> Unit, on
             },
             confirmButton = {
                 if (options.isEmpty()) {
-                    TextButton(onClick = { onSubscribe(0) }, modifier = Modifier.focusGlow()) { Text("Get Premium") }
+                    TextButton(onClick = { onSubscribe(0) }, modifier = Modifier.focusGlow()) { Text("Get ${Edition.PREMIUM_NAME}") }
                 }
             },
             dismissButton = {

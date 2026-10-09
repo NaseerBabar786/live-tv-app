@@ -17,12 +17,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Live TV Plus Premium: a Google Play subscription ([PRODUCT_ID], set up in Play Console) with
+ * Live TV Plus Premium and Spark TV Gold: a Google Play subscription ([PRODUCT_ID], set up in Play Console) with
  * one base plan per length: 1 year, 6 months, 3 months and 1 month ($1.99). The viewer picks one. Google ties it to the viewer's Google account, so it unlocks on every phone and
  * TV signed in to that account. The last answer is remembered so Premium works offline.
  */
 object PlayBilling : Premium.Billing {
-    const val PRODUCT_ID = "premium_monthly"
+    const val PRODUCT_ID = com.livetv.app.Edition.PREMIUM_PRODUCT
     private const val PREFS = "premium"
     private const val KEY_ACTIVE = "active"
 

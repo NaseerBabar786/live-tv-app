@@ -1,0 +1,290 @@
+{
+ "name": "Spark Travel Classics",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-travel.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Spark Travel Classics · Classic travel films from around the world · Advertise on Spark TV: WhatsApp 437 602 6500",
+ "tickerOn": true,
+ "credits": "Travel: public-domain films from the Internet Archive (archive.org).",
+ "videos": [
+  {
+   "id": "how-to-go-places",
+   "title": "How to Go Places",
+   "url": "https://archive.org/download/HowtoGoP1954/HowtoGoP1954.mp4",
+   "secs": 640,
+   "kind": "programme"
+  },
+  {
+   "id": "seeing-london",
+   "title": "Seeing London",
+   "url": "https://archive.org/download/SeeingLo1920/SeeingLo1920.mp4",
+   "secs": 835,
+   "kind": "programme"
+  },
+  {
+   "id": "freedom-highway-part-i",
+   "title": "Freedom Highway (Part I)",
+   "url": "https://archive.org/download/FreedomH1956/FreedomH1956.mp4",
+   "secs": 1265,
+   "kind": "programme"
+  },
+  {
+   "id": "freedom-highway-part-ii",
+   "title": "Freedom Highway (Part II)",
+   "url": "https://archive.org/download/FreedomH1956_2/FreedomH1956_2.mp4",
+   "secs": 820,
+   "kind": "programme"
+  },
+  {
+   "id": "amateur-film-saga-of-the-happy-wanderers",
+   "title": "[Amateur film: \"Saga of the Happy Wanderers\"]",
+   "url": "https://archive.org/download/Sagaofth1957/Sagaofth1957.mp4",
+   "secs": 946,
+   "kind": "programme"
+  },
+  {
+   "id": "midwest-holiday-part-ii",
+   "title": "Midwest Holiday (Part II)",
+   "url": "https://archive.org/download/MidwestH1952_2/MidwestH1952_2.mp4",
+   "secs": 816,
+   "kind": "programme"
+  },
+  {
+   "id": "roads-to-romance-coral-gables",
+   "title": "Roads to Romance: Coral Gables",
+   "url": "https://archive.org/download/RoadstoR1950/RoadstoR1950.mp4",
+   "secs": 180,
+   "kind": "programme"
+  },
+  {
+   "id": "roads-to-romance-the-santa-cruz-trail-an",
+   "title": "Roads to Romance: The Santa Cruz Trail and Land of the Giant Cactus",
+   "url": "https://archive.org/download/RoadstoR1950_2/RoadstoR1950_2.mp4",
+   "secs": 180,
+   "kind": "programme"
+  },
+  {
+   "id": "coveted-east-indies-the-part-i",
+   "title": "Coveted East Indies, The (Part I)",
+   "url": "https://archive.org/download/coveted_east_indies_1/coveted_east_indies_1.mp4",
+   "secs": 1156,
+   "kind": "programme"
+  },
+  {
+   "id": "midwest-holiday-part-i",
+   "title": "Midwest Holiday (Part I)",
+   "url": "https://archive.org/download/MidwestH1952/MidwestH1952.mp4",
+   "secs": 823,
+   "kind": "programme"
+  },
+  {
+   "id": "where-the-sun-reigns",
+   "title": "Where the Sun Reigns",
+   "url": "https://archive.org/download/Wherethe1955/Wherethe1955.mp4",
+   "secs": 812,
+   "kind": "programme"
+  },
+  {
+   "id": "introduction-to-haiti",
+   "title": "Introduction to Haiti",
+   "url": "https://archive.org/download/Introduc1942/Introduc1942.mp4",
+   "secs": 561,
+   "kind": "programme"
+  },
+  {
+   "id": "desert-empire-part-i",
+   "title": "Desert Empire (Part I)",
+   "url": "https://archive.org/download/DesertEm1948/DesertEm1948.mp4",
+   "secs": 618,
+   "kind": "programme"
+  },
+  {
+   "id": "coveted-east-indies-the-part-ii",
+   "title": "Coveted East Indies, The (Part II)",
+   "url": "https://archive.org/download/coveted_east_indies_2/coveted_east_indies_2.mp4",
+   "secs": 1043,
+   "kind": "programme"
+  },
+  {
+   "id": "desert-empire-part-ii",
+   "title": "Desert Empire (Part II)",
+   "url": "https://archive.org/download/DesertEm1948_2/DesertEm1948_2.mp4",
+   "secs": 543,
+   "kind": "programme"
+  },
+  {
+   "id": "desert-empire-part-iii",
+   "title": "Desert Empire (Part III)",
+   "url": "https://archive.org/download/DesertEm1948_3/DesertEm1948_3.mp4",
+   "secs": 623,
+   "kind": "programme"
+  },
+  {
+   "id": "flying-the-lindbergh-trail-part-i",
+   "title": "Flying the Lindbergh Trail (Part I)",
+   "url": "https://archive.org/download/Flyingth1937/Flyingth1937.mp4",
+   "secs": 1426,
+   "kind": "programme"
+  },
+  {
+   "id": "nature-s-cameo-bryce-canyon-national-par",
+   "title": "Nature's Cameo: Bryce Canyon National Park",
+   "url": "https://archive.org/download/NaturesC1930/NaturesC1930.mp4",
+   "secs": 456,
+   "kind": "programme"
+  },
+  {
+   "id": "flying-the-lindbergh-trail-part-ii",
+   "title": "Flying the Lindbergh Trail (Part II)",
+   "url": "https://archive.org/download/Flyingth1937_2/Flyingth1937_2.mp4",
+   "secs": 1446,
+   "kind": "programme"
+  },
+  {
+   "id": "6-1-2-magic-hours",
+   "title": "6 1/2 Magic Hours",
+   "url": "https://archive.org/download/612Magic1958/612Magic1958.mp4",
+   "secs": 750,
+   "kind": "programme"
+  },
+  {
+   "id": "passenger-train-the-second-edition",
+   "title": "Passenger Train, The (Second Edition)",
+   "url": "https://archive.org/download/Passenge1955/Passenge1955.mp4",
+   "secs": 644,
+   "kind": "programme"
+  },
+  {
+   "id": "amateur-film-travel-cities",
+   "title": "[Amateur film: \"Travel/Cities\"]",
+   "url": "https://archive.org/download/TravelCi1947/TravelCi1947.mp4",
+   "secs": 561,
+   "kind": "programme"
+  },
+  {
+   "id": "miss-clark-introduces-panorama",
+   "title": "Miss Clark Introduces Panorama",
+   "url": "https://archive.org/download/MissClarca./MissClarca..mp4",
+   "secs": 644,
+   "kind": "programme"
+  },
+  {
+   "id": "street-of-memory",
+   "title": "Street of Memory",
+   "url": "https://archive.org/download/Streetof1937/Streetof1937.mp4",
+   "secs": 524,
+   "kind": "programme"
+  },
+  {
+   "id": "among-your-souvenirs",
+   "title": "Among Your Souvenirs",
+   "url": "https://archive.org/download/among_your_souvenirs/among_your_souvenirs_512kb.mp4",
+   "secs": 807,
+   "kind": "programme"
+  },
+  {
+   "id": "the-shenandoah-national-park",
+   "title": "The Shenandoah National Park",
+   "url": "https://archive.org/download/TheShenandoahNationalPark/70.159%20The%20Shenandoah%20National%20Park.mp4",
+   "secs": 634,
+   "kind": "programme"
+  },
+  {
+   "id": "fort-frederick-maryland-48-106",
+   "title": "Fort Frederick Maryland 48.106",
+   "url": "https://archive.org/download/FortFrederickMaryland48.106/48.106AVeteranOfThreeWars-OldFortFrederickWillLiveAgain.mp4",
+   "secs": 573,
+   "kind": "programme"
+  },
+  {
+   "id": "sequoia-national-park-1938",
+   "title": "Sequoia National Park 1938",
+   "url": "https://archive.org/download/SequoiaNationalPark1938/48.87%20Sequoia%20National%20Park%201938.mp4",
+   "secs": 617,
+   "kind": "programme"
+  },
+  {
+   "id": "adhere",
+   "title": "Advertise on Spark TV",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
+   "secs": 15,
+   "kind": "ad"
+  },
+  {
+   "id": "spark-ident",
+   "title": "Spark TV",
+   "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
+   "secs": 20,
+   "kind": "ident"
+  }
+ ],
+ "slots": [],
+ "loop": [
+  "seeing-london",
+  "adhere",
+  "where-the-sun-reigns",
+  "adhere",
+  "coveted-east-indies-the-part-i",
+  "adhere",
+  "street-of-memory",
+  "adhere",
+  "freedom-highway-part-ii",
+  "adhere",
+  "spark-ident",
+  "midwest-holiday-part-i",
+  "adhere",
+  "sequoia-national-park-1938",
+  "adhere",
+  "desert-empire-part-iii",
+  "adhere",
+  "passenger-train-the-second-edition",
+  "adhere",
+  "among-your-souvenirs",
+  "adhere",
+  "spark-ident",
+  "amateur-film-travel-cities",
+  "adhere",
+  "flying-the-lindbergh-trail-part-ii",
+  "adhere",
+  "nature-s-cameo-bryce-canyon-national-par",
+  "adhere",
+  "amateur-film-saga-of-the-happy-wanderers",
+  "adhere",
+  "roads-to-romance-the-santa-cruz-trail-an",
+  "adhere",
+  "spark-ident",
+  "midwest-holiday-part-ii",
+  "adhere",
+  "desert-empire-part-i",
+  "adhere",
+  "fort-frederick-maryland-48-106",
+  "adhere",
+  "desert-empire-part-ii",
+  "adhere",
+  "miss-clark-introduces-panorama",
+  "adhere",
+  "spark-ident",
+  "coveted-east-indies-the-part-ii",
+  "adhere",
+  "roads-to-romance-coral-gables",
+  "adhere",
+  "6-1-2-magic-hours",
+  "adhere",
+  "introduction-to-haiti",
+  "adhere",
+  "freedom-highway-part-i",
+  "adhere",
+  "spark-ident",
+  "how-to-go-places",
+  "adhere",
+  "flying-the-lindbergh-trail-part-i",
+  "adhere",
+  "the-shenandoah-national-park",
+  "adhere"
+ ],
+ "fillers": [
+  "adhere",
+  "spark-ident"
+ ]
+}

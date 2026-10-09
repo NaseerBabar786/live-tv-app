@@ -1,0 +1,290 @@
+{
+ "name": "Spark Music",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-music.png",
+ "logoCorner": "tr",
+ "active": true,
+ "tz": "America/Toronto",
+ "ticker": "Spark Music · Free-licence recordings from Wikimedia Commons · Artist and licence on screen · Advertise on Spark TV: WhatsApp 437 602 6500",
+ "tickerOn": true,
+ "credits": "Music: CC0, CC BY and public-domain recordings from Wikimedia Commons; artist and licence on screen.",
+ "videos": [
+  {
+   "id": "sami-ninne-sri-ragam-ramakrish0",
+   "title": "Sami-ninne-Sri ragam-Ramakrishnamurthy · Ramakrishnamurthy",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-sami-ninne-sri-ragam-ramakrishnamurthy.mp4",
+   "secs": 489,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Sami-ninne-Sri_ragam-Ramakrishnamurthy.wav?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "ninnukori-mohanam-ramakrishnam1",
+   "title": "Ninnukori-Mohanam-ramakrishnamurthy · Ramakrishnamurthy",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-ninnukori-mohanam-ramakrishnamurthy.mp4",
+   "secs": 379,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Ninnukori-Mohanam-ramakrishnamurthy.wav?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "kharaharapriya2",
+   "title": "Kharaharapriya · Lavanya Kothandaraman",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-kharaharapriya.mp4",
+   "secs": 184,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Kharaharapriya.wav?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "jawad-syed-alhamdulilah-vocal-3",
+   "title": "Jawad Syed - Alhamdulilah (Vocal Only Nasheed) · SyedsLife",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-jawad-syed-alhamdulilah-vocal-only-nasheed.mp4",
+   "secs": 189,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/9/90/Jawad_Syed_-_Alhamdulilah_%28Vocal_Only_Nasheed%29.flac?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "instrumental-oriental-music-of4",
+   "title": "Instrumental Oriental Music of India · Music by Michael J. Burkard",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-instrumental-oriental-music-of-india.mp4",
+   "secs": 316,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Instrumental_Oriental_Music_of_India.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "aahkochaahyea-ghalib5",
+   "title": "Aahkochaahyea ghalib · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-aahkochaahyea-ghalib.mp4",
+   "secs": 95,
+   "kind": "programme",
+   "licence": "Public Domain",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Aahkochaahyea_ghalib.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "aeinakyun-ghalib6",
+   "title": "Aeinakyun ghalib · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-aeinakyun-ghalib.mp4",
+   "secs": 110,
+   "kind": "programme",
+   "licence": "Public Domain",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Aeinakyun_ghalib.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "baghtujhbin-ghalib7",
+   "title": "Baghtujhbin ghalib · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-baghtujhbin-ghalib.mp4",
+   "secs": 98,
+   "kind": "programme",
+   "licence": "Public Domain",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/1/12/Baghtujhbin_ghalib.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "bisateijz-ghalib8",
+   "title": "Bisateijz ghalib · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-bisateijz-ghalib.mp4",
+   "secs": 91,
+   "kind": "programme",
+   "licence": "Public Domain",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Bisateijz_ghalib.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "chahiyeachon-ghalib9",
+   "title": "Chahiyeachon ghalib · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-chahiyeachon-ghalib.mp4",
+   "secs": 97,
+   "kind": "programme",
+   "licence": "Public Domain",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Chahiyeachon_ghalib.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "dardsay-ghalib10",
+   "title": "Dardsay ghalib · Mirza Ghalib",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-dardsay-ghalib.mp4",
+   "secs": 152,
+   "kind": "programme",
+   "licence": "Public Domain",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Dardsay_ghalib.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "vadodora-chill-mix-isrc-usuan111",
+   "title": "Vadodora Chill Mix (ISRC USUAN1400050) · Kevin MacLeod",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-vadodora-chill-mix-isrc-usuan1400050.mp4",
+   "secs": 222,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Vadodora_Chill_Mix_%28ISRC_USUAN1400050%29.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "vadodora-isrc-usuan140004912",
+   "title": "Vadodora (ISRC USUAN1400049) · Kevin MacLeod",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-vadodora-isrc-usuan1400049.mp4",
+   "secs": 222,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Vadodora_%28ISRC_USUAN1400049%29.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "jalandhar-isrc-usuan140001813",
+   "title": "Jalandhar (ISRC USUAN1400018) · Kevin MacLeod",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-jalandhar-isrc-usuan1400018.mp4",
+   "secs": 249,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/8/85/Jalandhar_%28ISRC_USUAN1400018%29.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "psychedelic-crater-isrc-usuan114",
+   "title": "Psychedelic Crater (ISRC USUAN1100445) · Kevin MacLeod",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-psychedelic-crater-isrc-usuan1100445.mp4",
+   "secs": 200,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Psychedelic_Crater_%28ISRC_USUAN1100445%29.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "sitar-and-simple-beats-antti-l15",
+   "title": "Sitar and simple beats (Antti Luode) · Antti Luode",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-sitar-and-simple-beats-antti-luode.mp4",
+   "secs": 187,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Sitar_and_simple_beats_%28Antti_Luode%29.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "tablas-and-sitars-antti-luode16",
+   "title": "Tablas and Sitars (Antti Luode) · Antti Luode",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-tablas-and-sitars-antti-luode.mp4",
+   "secs": 182,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Tablas_and_Sitars_%28Antti_Luode%29.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "upbeat-sitar-antti-luode17",
+   "title": "Upbeat Sitar (Antti Luode) · Antti Luode",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-upbeat-sitar-antti-luode.mp4",
+   "secs": 182,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Upbeat_Sitar_%28Antti_Luode%29.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "happy-sitar-antti-luode18",
+   "title": "Happy sitar (Antti Luode) · Antti Luode",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-happy-sitar-antti-luode.mp4",
+   "secs": 166,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Happy_sitar_%28Antti_Luode%29.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "indore-isrc-usuan160004119",
+   "title": "Indore (ISRC USUAN1600041) · Kevin MacLeod",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-indore-isrc-usuan1600041.mp4",
+   "secs": 225,
+   "kind": "programme",
+   "licence": "CC BY 3.0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/3/33/Indore_%28ISRC_USUAN1600041%29.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "allegro-de-concert-op-46-in-a-20",
+   "title": "Allegro de Concert Op. 46 in A Major · Frederic Chopin",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-allegro-de-concert-op-46-in-a-major.mp4",
+   "secs": 760,
+   "kind": "programme",
+   "licence": "CC0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Allegro_de_Concert_Op._46_in_A_Major.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "1st-violin-f-0221",
+   "title": "1st violin F 02 · Mozart",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-1st-violin-f-02.mp4",
+   "secs": 245,
+   "kind": "programme",
+   "licence": "CC0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/0/01/1st_violin_F_02.wav?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "1st-violin-b-0222",
+   "title": "1st violin B 02 · Wolfgang Amadeus Mozart",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/sur-media/sur-1st-violin-b-02.mp4",
+   "secs": 245,
+   "kind": "programme",
+   "licence": "CC0",
+   "source": "https://upload.wikimedia.org/wikipedia/commons/3/34/1st_violin_B_02.wav?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+   "id": "adhere",
+   "title": "Advertise on Spark TV",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
+   "secs": 15,
+   "kind": "ad"
+  },
+  {
+   "id": "spark-ident",
+   "title": "Spark TV",
+   "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
+   "secs": 20,
+   "kind": "ident"
+  }
+ ],
+ "slots": [],
+ "loop": [
+  "sami-ninne-sri-ragam-ramakrish0",
+  "adhere",
+  "ninnukori-mohanam-ramakrishnam1",
+  "adhere",
+  "kharaharapriya2",
+  "adhere",
+  "jawad-syed-alhamdulilah-vocal-3",
+  "adhere",
+  "instrumental-oriental-music-of4",
+  "adhere",
+  "spark-ident",
+  "aahkochaahyea-ghalib5",
+  "adhere",
+  "aeinakyun-ghalib6",
+  "adhere",
+  "baghtujhbin-ghalib7",
+  "adhere",
+  "bisateijz-ghalib8",
+  "adhere",
+  "chahiyeachon-ghalib9",
+  "adhere",
+  "spark-ident",
+  "dardsay-ghalib10",
+  "adhere",
+  "vadodora-chill-mix-isrc-usuan111",
+  "adhere",
+  "vadodora-isrc-usuan140004912",
+  "adhere",
+  "jalandhar-isrc-usuan140001813",
+  "adhere",
+  "psychedelic-crater-isrc-usuan114",
+  "adhere",
+  "spark-ident",
+  "sitar-and-simple-beats-antti-l15",
+  "adhere",
+  "tablas-and-sitars-antti-luode16",
+  "adhere",
+  "upbeat-sitar-antti-luode17",
+  "adhere",
+  "happy-sitar-antti-luode18",
+  "adhere",
+  "indore-isrc-usuan160004119",
+  "adhere",
+  "spark-ident",
+  "allegro-de-concert-op-46-in-a-20",
+  "adhere",
+  "1st-violin-f-0221",
+  "adhere",
+  "1st-violin-b-0222",
+  "adhere"
+ ],
+ "fillers": [
+  "adhere",
+  "spark-ident"
+ ]
+}

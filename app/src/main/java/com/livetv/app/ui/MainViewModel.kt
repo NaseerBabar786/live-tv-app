@@ -66,7 +66,7 @@ data class UiState(
 ) {
     /** Stream Player Plus with no playlist yet: the screen asks the viewer to add one. */
     val needsPlaylist: Boolean
-        get() = !Edition.LIVE_TV && playlistSource.isBlank()
+        get() = !Edition.LIVE_TV && !Edition.PLAY_CHANNELS && playlistSource.isBlank()
 
     /** Screen title: the selected country's name when showing free channels by country. */
     val title: String
@@ -196,7 +196,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             }
         }
         // The owner's own channels (tv.bulkbazaar.ca/studio) join the list when they're switched on.
-        if (Edition.LIVE_TV) {
+        if (Edition.LIVE_TV || Edition.PLAY_CHANNELS) {
             MyChannel.init(app)
             viewModelScope.launch {
                 MyChannel.configs.collect { _ -> _state.update { it.copy(channels = withMyChannel(it.channels)) } }
@@ -213,6 +213,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     /** [list] with the owner's channels first (those that are on): Bazaar TV, Cinema, Music, Hits, Kids, Sports, Travel and Comedy. */
     private fun withMyChannel(list: List<Channel>): List<Channel> {
+        // Spark TV (Google Play) lists only our own channels.
+        if (Edition.PLAY_CHANNELS) return MyChannel.channels()
         val rest = list.filterNot { MyChannel.isMine(it) }
         if (rest.isEmpty() || !Edition.LIVE_TV) return rest
         return MyChannel.channels() + rest
@@ -232,8 +234,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
         _state.update { it.copy(loading = true, error = null) }
+        // Spark TV has no playlists: its channels are our own, read from the schedules saved on the device.
+        if (Edition.PLAY_CHANNELS) MyChannel.init(getApplication())
         viewModelScope.launch {
-            repo.loadChannels()
+            (if (Edition.PLAY_CHANNELS) Result.success(emptyList<Channel>()) else repo.loadChannels())
                 .onSuccess { list ->
                     val numbered = withMyChannel(numberOthers(list))
                     // The app opens on Favorites (when there are any) and on the channel watched
