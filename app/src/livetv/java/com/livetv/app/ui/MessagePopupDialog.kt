@@ -45,7 +45,13 @@ fun MessagePopupDialog(message: MessagePopup.Incoming) {
     var status by remember(message.at) { mutableStateOf("") }
     var sending by remember(message.at) { mutableStateOf(false) }
     val first = remember { FocusRequester() }
-    LaunchedEffect(message.at) { runCatching { first.requestFocus() } }
+    // The remote starts on "👍 OK, got it". The dialog's window may not be ready at first, so try again a few times.
+    LaunchedEffect(message.at) {
+        repeat(5) {
+            delay(200)
+            if (runCatching { first.requestFocus() }.isSuccess) return@LaunchedEffect
+        }
+    }
 
     fun send(text: String) {
         val reply = MessagePopup.sendReply ?: return
