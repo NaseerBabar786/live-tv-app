@@ -79,6 +79,5 @@ render(ad, 20, "ad-bulk-bazaar.mp4", key=-5)
 render(slide(GREEN, TEAL, [("آپ کا اشتہار یہاں ہو سکتا ہے!", f(UR, 50), "white"),
                            ("اسپارک ٹی وی پر اشتہار دیں", f(UR, 36), (253, 224, 71)),
                            ("WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise", f(BD, 32), "white")], logo=False, y=210), 15, "ad-advertise-here.mp4", key=5)
-render(slide(RED, ORANGE, [("Cable TV", f(B, 72), "white"),
-                           ("Up to 6 channels at once on one TV. Free.", f(BD, 38), "white"),
-                           ("Download at tv.bulkbazaar.ca", f(BD, 38), (255, 236, 179))]), 15, "promo-free-live-tv.mp4")
+# The old "Up to 6 channels at once on one TV. Free." slide is gone (2026-10-09): since the Free/Gold packages,
+# multi-view is Gold. channel/media/promo-free-live-tv.mp4 is now a copy of Cable TV Video Ad 9 (media/cabletv-ad-9.mp4).

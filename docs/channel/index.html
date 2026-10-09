@@ -100,7 +100,7 @@ function hitsTab() {
   $("tabs").appendChild(a);
 }
 for (const st of STATIONS) {
-  if (st.dial === "25") hitsTab();  // Hits is 23, in the Hindi block
+  if (st.dial === "24") hitsTab();  // Hits is 23: its tab goes between 22 and 24 (schedule.js)
   const a = document.createElement("a");
   // Channels that run like Spark Hits open their YouTube page (this page is their backup).
   a.href = st.yt ? `ytc.html?c=${st.id}` : st.id === "main" ? "./" : `./?c=${st.id}`;
