@@ -12,6 +12,12 @@ object AdBreak {
     val active: StateFlow<Boolean> = _active
 
     fun set(on: Boolean) { _active.value = on }
+
+    /** Skips the ad showing now (a picture ad, or a video ad) once Back may, after its first 10 seconds;
+     *  null before that. Strip and Carousel call it on Back, since the list screen's Back comes first there. */
+    @Volatile var pictureSkip: (() -> Unit)? = null
+    @Volatile var videoSkip: (() -> Unit)? = null
+    fun skip(): Boolean = (videoSkip ?: pictureSkip)?.let { it(); true } ?: false
 }
 
 /**
@@ -32,3 +38,9 @@ object LibraryAds {
     val now = MutableStateFlow<LibraryVideo?>(null)
 }
 
+
+/** The channel playing with sound in the big picture of Strip or Carousel mode, so the 10-minute ad
+ *  breaks run there too, like on a full-screen channel (audit A21). Null when neither mode is playing one. */
+object ModeAds {
+    val now = MutableStateFlow<String?>(null)
+}
