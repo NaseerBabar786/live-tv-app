@@ -40,7 +40,7 @@ UR = os.path.join(HERE, "fonts", "NotoNastaliqUrdu.ttf")
 LATIN = [("/usr/share/fonts/opentype/inter/Inter-Regular.otf", "/usr/share/fonts/opentype/inter/Inter-Bold.otf"),
          ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")]
 REGULAR, BOLD = next(p for p in LATIN if os.path.exists(p[0]))
-LOGO = os.path.join(ROOT, "docs", "channel", "logos", "bazaar-tv-square.png")
+LOGO = os.path.join(ROOT, "docs", "channel", "logos", "spark-tv-square.png")
 MEDIA = os.path.join(ROOT, "docs", "media")
 CLIPS = os.path.join(ROOT, "docs", "channel", "media")
 CITIES = [("ٹورنٹو", "Toronto", 43.65, -79.38, "America/Toronto"), ("لاہور", "Lahore", 31.55, 74.34, "Asia/Karachi"),
@@ -84,7 +84,7 @@ def background(heading, sub):
     urdu(d, W - 52, 34, heading, font(UR, 44), "#ffd84d")
     d.text((150, 52), sub, font=font(BOLD, 28), fill="white")
     d.line([(48, 138), (W - 48, 138)], fill="#ffd84d", width=2)
-    d.text((48, H - 40), "Bazaar TV · channel 1 on Cable TV  ·  " + credit("calm"), font=font(REGULAR, 17), fill="#aab4e0")
+    d.text((48, H - 40), "Spark TV · channel 1 on Cable TV  ·  " + credit("calm"), font=font(REGULAR, 17), fill="#aab4e0")
     return im, d
 
 

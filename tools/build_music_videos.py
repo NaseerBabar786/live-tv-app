@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Builds Bazaar TV's block of popular music videos (the owner's wish, 2026-10-06): the newest official
-videos in Hindi and Urdu (since 2026-10-07: the owner wants Bazaar TV 100% Urdu and Hindi) from the music labels' and artists' own YouTube channels,
-played in YouTube's own player, locked like Bazaar Hits (docs/channel/block.html). Nothing is
+Builds Spark TV's block of popular music videos (the owner's wish, 2026-10-06): the newest official
+videos in Hindi and Urdu (since 2026-10-07: the owner wants Spark TV 100% Urdu and Hindi) from the music labels' and artists' own YouTube channels,
+played in YouTube's own player, locked like Spark Hits (docs/channel/block.html). Nothing is
 downloaded or re-hosted.
 
-Like the upcoming trailers (tools/build_trailers.py), Bazaar TV's schedule holds one entry of kind
+Like the upcoming trailers (tools/build_trailers.py), Spark TV's schedule holds one entry of kind
 "music" pointing at docs/channel/music-videos.json, and the app and the website put this list in
 its place, so the block changes every day.
 
@@ -28,7 +28,7 @@ from playable import keep_playable  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "channel", "music-videos.json")
 
-# Songs from the last this many days only: Bazaar TV One is a newly launched channel with fresh content
+# Songs from the last this many days only: Spark TV One is a newly launched channel with fresh content
 # (the owner, 2026-10-08). Was 180.
 MAX_DAYS = 90
 SECS = (100, 420)
@@ -105,7 +105,7 @@ def main():
     if os.path.exists(OUT):
         old = {v["id"]: v for v in json.load(open(OUT, encoding="utf-8")).get("videos", [])}
     lists = [(lang, label, language(lang, sources, today, old)) for lang, label, sources in LANGUAGES]
-    # Only videos that play in an embedded player (Bazaar TV's block page): tools/playable.py.
+    # Only videos that play in an embedded player (Spark TV's block page): tools/playable.py.
     lists = [(lang, label, keep_playable(videos)) for lang, label, videos in lists]
     # An equal share for each language; one with too few songs leaves its share to the others.
     # Within a language the channels take turns, newest songs first.

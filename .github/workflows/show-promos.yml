@@ -1,6 +1,6 @@
-name: Show promos for Bazaar TV
+name: Show promos for Spark TV
 
-# A "coming up" promo for every show booked on Bazaar TV (tools/promos). Runs every hour, so a show
+# A "coming up" promo for every show booked on Spark TV (tools/promos). Runs every hour, so a show
 # the owner books in Channel Studio gets its promo within the hour; bookings already done are skipped.
 on:
   schedule:

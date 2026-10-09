@@ -10,10 +10,10 @@ AD_PICTURE, OUT = sys.argv[1], sys.argv[2]
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from calm_music import calm  # noqa: E402
-LOGO = os.path.join(HERE, "..", "docs", "channel", "logos", "bazaar-tv-square.png")
+LOGO = os.path.join(HERE, "..", "docs", "channel", "logos", "spark-tv-square.png")
 B = "/usr/share/fonts/opentype/inter/Inter-Black.otf"
 BD = "/usr/share/fonts/opentype/inter/Inter-Bold.otf"
-# Bazaar TV is an Urdu channel (the owner, 2026-10-07): the idents and our own ad are in Urdu.
+# Spark TV is an Urdu channel (the owner, 2026-10-07): the idents and our own ad are in Urdu.
 # Noto Nastaliq Urdu (SIL Open Font Licence); Pillow needs raqm to join the letters.
 UR = os.path.join(HERE, "fonts", "NotoNastaliqUrdu.ttf")
 W, H = 1280, 720
@@ -65,11 +65,11 @@ def render(still, seconds, name, zoom=True, key=0):
 os.makedirs(OUT, exist_ok=True)
 ORANGE, RED, NAVY, BLUE, GREEN, TEAL = (255, 153, 0), (220, 38, 38), (15, 23, 42), (30, 64, 175), (16, 185, 129), (6, 95, 70)
 
-# No Bazaar TV logo inside our own clips: the corner logo is already on screen (the owner, 2026-10-07).
-render(slide(ORANGE, RED, [("آپ دیکھ رہے ہیں بازار ٹی وی", f(UR, 54), "white"),
+# No Spark TV logo inside our own clips: the corner logo is already on screen (the owner, 2026-10-07).
+render(slide(ORANGE, RED, [("آپ دیکھ رہے ہیں اسپارک ٹی وی", f(UR, 54), "white"),
                            ("کیبل ٹی وی پر", f(UR, 34), (255, 236, 179))], logo=False, y=250), 10, "ident-welcome.mp4")
 render(slide(NAVY, BLUE, [("اگلا پروگرام", f(UR, 62), "white"),
-                          ("بازار ٹی وی کے ساتھ رہیے", f(UR, 34), (191, 219, 254))], logo=False, y=250), 8, "ident-coming-up.mp4", key=-3)
+                          ("اسپارک ٹی وی کے ساتھ رہیے", f(UR, 34), (191, 219, 254))], logo=False, y=250), 8, "ident-coming-up.mp4", key=-3)
 render(slide(NAVY, BLUE, [("وقفہ", f(UR, 62), "white"),
                           ("ہم ابھی واپس آتے ہیں", f(UR, 34), (191, 219, 254))], logo=False, y=250), 5, "ident-break.mp4", zoom=False, key=2)
 
@@ -77,7 +77,7 @@ ad = Image.open(AD_PICTURE).convert("RGB").resize((W, H))
 render(ad, 20, "ad-bulk-bazaar.mp4", key=-5)
 
 render(slide(GREEN, TEAL, [("آپ کا اشتہار یہاں ہو سکتا ہے!", f(UR, 50), "white"),
-                           ("بازار ٹی وی پر اشتہار دیں", f(UR, 36), (253, 224, 71)),
+                           ("اسپارک ٹی وی پر اشتہار دیں", f(UR, 36), (253, 224, 71)),
                            ("WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise", f(BD, 32), "white")], logo=False, y=210), 15, "ad-advertise-here.mp4", key=5)
 render(slide(RED, ORANGE, [("Cable TV", f(B, 72), "white"),
                            ("Up to 6 channels at once on one TV. Free.", f(BD, 38), "white"),

@@ -1,4 +1,4 @@
-"""Titles for Bazaar TV's on-screen writing. Bazaar TV is an Urdu channel (the owner, 2026-10-07): writing
+"""Titles for Spark TV's on-screen writing. Spark TV is an Urdu channel (the owner, 2026-10-07): writing
 on screen is Urdu, or English where needed, never Hindi script. YouTube titles of Hindi uploads often
 mix Devanagari with English; the Devanagari is taken out and the rest kept."""
 import re

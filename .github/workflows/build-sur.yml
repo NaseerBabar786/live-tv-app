@@ -1,6 +1,6 @@
-name: Build Bazaar Music
+name: Build Spark Music
 
-# Bazaar Music, our music channel (channel 3 in Cable TV): picks free-to-use songs on Wikimedia Commons
+# Spark Music, our music channel (channel 3 in Cable TV): picks free-to-use songs on Wikimedia Commons
 # (public domain, CC0, CC BY; no film songs), makes each a 720p MP4 with the song's name on screen,
 # puts them on the "sur-media" pre-release and writes docs/channel/sur-schedule.json.
 # Songs already on the release are kept. A pull request only tries a few songs.
@@ -55,7 +55,7 @@ jobs:
           # A pre-release, so it never becomes "latest" (the app's download link uses latest).
           gh release view sur-media -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
             gh release create sur-media -R "$GITHUB_REPOSITORY" --prerelease --latest=false \
-              --title "Bazaar Music songs" --notes "Songs for Bazaar Music, free to use (public domain, CC0 and CC BY, from Wikimedia Commons)."
+              --title "Spark Music songs" --notes "Songs for Spark Music, free to use (public domain, CC0 and CC BY, from Wikimedia Commons)."
           ls out/*.mp4 >/dev/null 2>&1 && gh release upload sur-media out/*.mp4 -R "$GITHUB_REPOSITORY" --clobber || echo "No new songs"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -64,7 +64,7 @@ jobs:
             echo "No changes."
             exit 0
           fi
-          git commit -m "Bazaar Music songs as of $(date -u '+%Y-%m-%d')"
+          git commit -m "Spark Music songs as of $(date -u '+%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

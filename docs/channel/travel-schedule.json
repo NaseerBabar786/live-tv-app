@@ -1,10 +1,10 @@
 {
- "name": "Bazaar Travel",
- "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-travel.png",
+ "name": "Spark Travel",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-travel.png",
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Bazaar Travel · See the world, day and night · Classic travel films of countries, cities and parks · Channel 7 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
+ "ticker": "Spark Travel · See the world, day and night · Classic travel films of countries, cities and parks · Channel 7 on Cable TV · Advertise with us: WhatsApp 437 602 6500",
  "tickerOn": true,
  "videos": [
   {

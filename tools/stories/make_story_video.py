@@ -1,4 +1,4 @@
-"""Makes a narrated story video (1280x720 MP4) for Bazaar TV from a story.json.
+"""Makes a narrated story video (1280x720 MP4) for Spark TV from a story.json.
 
 Usage: python3 tools/stories/make_story_video.py <story folder> <out dir> [--offline]
 

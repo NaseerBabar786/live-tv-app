@@ -1,7 +1,7 @@
 name: Build story videos
 
 # Makes the narrated story videos in tools/stories/<name>/story.json (AI voice, AI pictures,
-# Urdu subtitles) and puts them on the "channel-media" pre-release for Bazaar TV.
+# Urdu subtitles) and puts them on the "channel-media" pre-release for Spark TV.
 # A video already on the release is kept unless its story.json or the maker script changed
 # (or the run asks to "remake" it).
 

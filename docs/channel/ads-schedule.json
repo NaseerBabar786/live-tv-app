@@ -1,7 +1,7 @@
 {
-  "note": "Bazaar Ads (channel 15): our Cable TV promos (media/app-promos.json, the app's pop-up list), then our sponsors' ads (ads-sponsors.json, rebuilt hourly from /sponsors), then 'Advertise with us', round and round. The lists are put in place by MyChannel.expand and schedule.js expand.",
-  "name": "Bazaar Ads",
-  "logo": "https://tv.bulkbazaar.ca/channel/logos/bazaar-ads.png",
+  "note": "Spark Ads (channel 15): our Cable TV promos (media/app-promos.json, the app's pop-up list), then our sponsors' ads (ads-sponsors.json, rebuilt hourly from /sponsors), then 'Advertise with us', round and round. The lists are put in place by MyChannel.expand and schedule.js expand.",
+  "name": "Spark Ads",
+  "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-ads.png",
   "logoCorner": "tr",
   "active": true,
   "tz": "America/Toronto",

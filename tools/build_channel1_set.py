@@ -203,7 +203,7 @@ def layout(today):
     lists = {name: [v for v in load(os.path.join(CHANNEL, name), {}).get("videos", []) if fine(v)]
              for name in ("music-videos.json", "trailers.json", "block-cooking.json", "block-comedy.json",
                           "block-drama-1.json", "block-drama-2.json", "block-drama-3.json")}
-    # In case a serial's episode isn't there: today's new drama episodes (the blocks, their spares, then Bazaar Dramas).
+    # In case a serial's episode isn't there: today's new drama episodes (the blocks, their spares, then Spark Dramas).
     spare_dramas = []
     for name in ("block-drama-1.json", "block-drama-2.json", "block-drama-3.json"):
         d = load(os.path.join(CHANNEL, name), {})
@@ -321,7 +321,7 @@ def layout(today):
     sched["loop"] = loop
     sched["slots"] = slots
     sched["fillers"] = ["promo2", "adhere", "adbb", "next"]
-    sched["ticker"] = ("Welcome to Bazaar TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  "
+    sched["ticker"] = ("Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  "
                        "Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  "
                        "tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca")
     save(SCHEDULE, sched)

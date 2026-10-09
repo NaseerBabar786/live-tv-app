@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Channel Studio</title>
 <meta name="description" content="Run your own TV channel inside Cable TV.">
-<link rel="icon" href="channel/logos/bazaar-tv-square.png">
+<link rel="icon" href="channel/logos/spark-tv-square.png">
 <link rel="stylesheet" href="assets/site.css">
 <meta name="robots" content="noindex">
 <style>
@@ -133,7 +133,7 @@
     .tile .pill { display: inline-block; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
     .pill.on { background: #14532D; color: #DCFCE7; } .pill.off { background: #7F1D1D; color: #FEE2E2; } .pill.unsaved { background: var(--focus); color: #111; }
   }
-  /* Bazaar Hits: only the player and a note. */
+  /* Spark Hits: only the player and a note. */
   #hitsFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 3; background: #000; }
   /* Weekly schedule: a column per day, 24 hours tall; booked shows are blocks, the loop fills the rest. */
   .wk { display: grid; grid-template-columns: 52px repeat(7, minmax(84px, 1fr)); gap: 0 4px; max-height: 70vh; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); position: relative; }
@@ -169,11 +169,11 @@
   .heatmap i { display: block; aspect-ratio: 1.3; border-radius: 3px; background: var(--surface-2); }
   .hitsMode #step5, .hitsMode .savebar, .hitsMode .modes, .hitsMode #soundBtn, .hitsMode #barBtn, .hitsMode #adBtn, .hitsMode .tvbox details { display: none !important; }
   .hitsMode #hitsNote { display: block !important; }
-  /* 📺 Programmes (2026-10-07): which videos our YouTube channels and Bazaar Hits may play. */
+  /* 📺 Programmes (2026-10-07): which videos our YouTube channels and Spark Hits may play. */
   #picks, #chHelp { display: none; }
   .hitsMode #picks { display: block; }
-  /* Our YouTube channels and Bazaar Hits (2026-10-07): the same dashboard as Bazaar TV, with their own tabs
-     (Overview, Library, Next transmission, Schedule, Most watched, Help) instead of Bazaar TV's steps. */
+  /* Our YouTube channels and Spark Hits (2026-10-07): the same dashboard as Spark TV, with their own tabs
+     (Overview, Library, Next transmission, Schedule, Most watched, Help) instead of Spark TV's steps. */
   .hitsMode .work > #howTo, .hitsMode .steps > section:not(#stats) { display: none !important; }
   @media (max-width: 1199px) { .hitsMode .work > :not(#picks) { display: none !important; } }
   @media (min-width: 1200px) {
@@ -235,7 +235,7 @@
 <main class="wrap studio-main">
   <a href="admin" class="back-admin">← Back to Admin</a>
   <h1>Channel Studio</h1>
-  <p class="lead">Run your own TV channels. They show at the top of every list in Cable TV (Bazaar TV is <b>channel 1</b>, Bazaar Cinema <b>2</b>, Bazaar Music <b>3</b>, Bazaar Hits <b>4</b>, Bazaar Kids <b>5</b>, Bazaar Sports <b>6</b>, Bazaar Travel <b>7</b> and Bazaar Comedy <b>8</b>, from 1.9.45) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+  <p class="lead">Run your own TV channels. They show at the top of every list in Cable TV (Spark TV is <b>channel 1</b>, Spark Cinema <b>2</b>, Spark Music <b>3</b>, Spark Hits <b>4</b>, Spark Kids <b>5</b>, Spark Sports <b>6</b>, Spark Travel <b>7</b> and Spark Comedy <b>8</b>, from 1.9.45) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
@@ -243,7 +243,7 @@
   <div id="dash" class="hidden studio">
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
-    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 23)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span>. Choose its programmes and lock its schedule on the right. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
+    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Spark Hits (channel 23)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span>. Choose its programmes and lock its schedule on the right. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -345,12 +345,12 @@
       <label class="f"><input type="checkbox" id="active"> Channel is ON (untick to take it off the air; it disappears from the app)</label>
 
       <label class="f">Scrolling line (ticker) along the bottom
-        <input id="ticker" maxlength="300" placeholder="Welcome to Bazaar TV · Advertise with us: WhatsApp 437 602 6500">
+        <input id="ticker" maxlength="300" placeholder="Welcome to Spark TV · Advertise with us: WhatsApp 437 602 6500">
       </label>
       <label class="f"><input type="checkbox" id="tickerOn"> Show the scrolling line</label>
       <details class="help"><summary>Tips for the ticker</summary>
         <ul>
-          <li>Each channel keeps its own Bazaar logo, and its corner is picked for you so it never covers the video owner's logo.</li>
+          <li>Each channel keeps its own Spark logo, and its corner is picked for you so it never covers the video owner's logo.</li>
           <li>The scrolling line is one line of text. Separate items with " · ". Leave it empty or untick the box to hide it.</li>
         </ul>
       </details>
@@ -494,7 +494,7 @@
 
     <section class="panel" id="stats">
       <h2>📊 Most watched</h2>
-      <p class="small" style="margin-top:0">What people watch on our channels, counted by the Cable TV app (from version 1.9.65) on every signed-in TV and phone. Programme details are for channels you schedule here (Bazaar TV); channels that play YouTube show only their total. Use it to decide what to put on and when.</p>
+      <p class="small" style="margin-top:0">What people watch on our channels, counted by the Cable TV app (from version 1.9.65) on every signed-in TV and phone. Programme details are for channels you schedule here (Spark TV); channels that play YouTube show only their total. Use it to decide what to put on and when.</p>
       <div class="row">
         <select id="stDays" style="padding:8px;border-radius:10px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit">
           <option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option>
@@ -507,9 +507,9 @@
       </div>
       <div class="st-tiles" id="stTiles"></div>
       <p id="stTip" style="font-weight:700"></p>
-      <h3 style="margin-bottom:4px">Programmes on <span class="stName">Bazaar TV</span></h3>
+      <h3 style="margin-bottom:4px">Programmes on <span class="stName">Spark TV</span></h3>
       <table class="rank" id="stProgs"></table>
-      <h3 style="margin-bottom:4px">Best times on <span class="stName">Bazaar TV</span> <span class="small">(darker = more watching)</span></h3>
+      <h3 style="margin-bottom:4px">Best times on <span class="stName">Spark TV</span> <span class="small">(darker = more watching)</span></h3>
       <div class="heatmap" id="stHeat"></div>
       <h3 style="margin-bottom:4px">Our channels</h3>
       <table class="rank" id="stChans"></table>
@@ -638,9 +638,9 @@ window.studioFirebase = { auth, db, fs }; // shared with the 🎙 Ask Gemini but
 
 let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
 let stats = null; // the Most watched numbers, once loaded
-// The channel being worked on (?c=filmein opens Bazaar Cinema).
-// Bazaar Hits is a web page (the music labels' YouTube videos), not a schedule: Studio only plays it.
-const HITS = { id: "hits", name: "Bazaar Hits", dial: "23", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/bazaar-hits.png" };
+// The channel being worked on (?c=filmein opens Spark Cinema).
+// Spark Hits is a web page (the music labels' YouTube videos), not a schedule: Studio only plays it.
+const HITS = { id: "hits", name: "Spark Hits", dial: "23", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/spark-hits.png" };
 let station = [...STATIONS, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Math.random().toString(36).slice(2, 9);
@@ -662,7 +662,7 @@ function stationButton(st, note) {
   const b = document.createElement("button");
   b.type = "button";
   b.className = st === station ? "sel" : "";
-  // The channel number first, as big as the name: "1. Bazaar TV" (owner, 2026-10-07).
+  // The channel number first, as big as the name: "1. Spark TV" (owner, 2026-10-07).
   b.innerHTML = `<img alt=""><span><span><b class="dial"></b> <span class="nm"></span></span><small></small></span>`;
   b.querySelector("img").src = st.logo;
   b.querySelector(".dial").textContent = st.dial + ".";
@@ -681,7 +681,7 @@ function stationButton(st, note) {
 function renderStations() {
   $("stations").innerHTML = "";
   for (const st of STATIONS) {
-    // Bazaar Hits (23) sits between 22 and 25 in the Hindi block. It runs by itself from the music labels'
+    // Spark Hits (23) sits between 22 and 25 in the Hindi block. It runs by itself from the music labels'
     // song list (no schedule to edit), so picking it just plays it in the player.
     if (st.dial === "25") stationButton(HITS, "Channel 23 · runs by itself");
     stationButton(st, st.web ? `Channel ${st.dial} · runs by itself` : `Channel ${st.dial} in the app`);
@@ -694,11 +694,11 @@ function renderStations() {
 
 async function testProgramme() {
   const ready = await (await fetch(station.ready + "?t=" + Date.now())).json();
-  // Channels 9 to 11 borrow Bazaar Cinema's free films as their backup, under their own name and logo.
+  // Channels 9 to 11 borrow Spark Cinema's free films as their backup, under their own name and logo.
   return station.backup ? { ...ready, name: station.name, logo: station.logo, ...(station.noBug ? { logoCorner: "off" } : {}) } : ready;
 }
 
-/** Bazaar Hits: its own page plays inside the player; the editing parts are put away. */
+/** Spark Hits: its own page plays inside the player; the editing parts are put away. */
 function showHits(on) {
   $("dash").classList.toggle("hitsMode", on);
   let f = $("hitsFrame");
@@ -717,8 +717,8 @@ function showHits(on) {
   $("hitsAbout").textContent = station === HITS ? "plays the music labels' official YouTube songs round the clock"
     : `plays official videos from well-known YouTube channels round the clock (${station.tagline.toLowerCase()})`;
   $("hitsLink").href = station.page.startsWith("channel/?") ? station.web : station.page;
-  $("nowText").textContent = station === HITS ? "Bazaar Hits: film songs from the music labels' own YouTube channels, one after another."
-    : `${station.name}: official videos from YouTube channels, one after another, locked like Bazaar Hits.`;
+  $("nowText").textContent = station === HITS ? "Spark Hits: film songs from the music labels' own YouTube channels, one after another."
+    : `${station.name}: official videos from YouTube channels, one after another, locked like Spark Hits.`;
   $("modeText").textContent = "It runs by itself from its locked schedule. Choose its programmes in the Library and Next transmission. Tap 🔊 for sound.";
 }
 async function loadSaved() {
@@ -742,9 +742,9 @@ async function loadSaved() {
     $("err").textContent = "Couldn't load your channel: " + e.message;
     saved = await testProgramme();
   }
-  // The logo isn't picked here any more: a channel keeps the one already saved, else its own Bazaar logo.
+  // The logo isn't picked here any more: a channel keeps the one already saved, else its own Spark logo.
   if (!saved.logo) saved.logo = station.logo;
-  // Each channel keeps its own fixed name (owner, 2026-10-07): "Bazaar TV One", "Bazaar Cinema"...
+  // Each channel keeps its own fixed name (owner, 2026-10-07): "Spark TV One", "Spark Cinema"...
   saved.name = station.name;
   c = clone(saved);
   dirty = false;
@@ -1021,7 +1021,7 @@ function renderLoop() {
     d.querySelector('[data-a=x]').onclick = () => { c.loop.splice(i, 1); changed(); renderAll(); };
     // A break (ads and promos between two programmes) over 60 s: mark every item in it.
     let st = i; while (st > 0 && !isShowV(byId[c.loop[st - 1]])) st--;
-    // Bazaar Ads is all ads, round the clock: there are no breaks to keep short there.
+    // Spark Ads is all ads, round the clock: there are no breaks to keep short there.
     if (!isShowV(v) && station.id !== "ads") {
       let t = 0; for (let j = st; j < c.loop.length && !isShowV(byId[c.loop[j]]); j++) t += byId[c.loop[j]].secs > 0 ? byId[c.loop[j]].secs : 0;
       if (t > 61) {
@@ -1371,7 +1371,7 @@ function renderOverview() {
     $("overview").appendChild(b);
   }
 }
-/** The Overview of a channel that plays YouTube: one tile per part, like Bazaar TV's (owner, 2026-10-07). */
+/** The Overview of a channel that plays YouTube: one tile per part, like Spark TV's (owner, 2026-10-07). */
 function renderWebOverview() {
   if (!wide.matches) return;
   document.querySelectorAll(".chName").forEach(e => e.textContent = station.name);
@@ -1420,7 +1420,7 @@ function renderWebOverview() {
       <span class="go">Choose what goes on air ›</span>`],
     ["schedule", `<h3>📅 Schedule</h3>
       <ul>${li("<b>Today</b> " + today, dayState(today))}${li("<b>Tomorrow</b> " + tomorrow, dayState(tomorrow))}</ul>
-      <div class="sub">${station === HITS ? "Bazaar Hits makes its day by itself from the approved songs." : "24 hours from Next transmission, with our ad breaks" + (station.trailerLangs ? " and trailers" : "") + ". Lock it, or unlock to fix a mistake."}</div>
+      <div class="sub">${station === HITS ? "Spark Hits makes its day by itself from the approved songs." : "24 hours from Next transmission, with our ad breaks" + (station.trailerLangs ? " and trailers" : "") + ". Lock it, or unlock to fix a mistake."}</div>
       <span class="go">Open the schedule ›</span>`],
     ["schedule", `<h3>📺 Coming up</h3>
       <ul>${upNext.map(u => li((u.now ? "<b>Now</b> · " : u.at ? timeText(u.at, TORONTO) + " · " : "") + esc(u.title), lengthText(u.secs))).join("") || '<li class="sub">Loading…</li>'}</ul>
@@ -1738,12 +1738,12 @@ $("promoAll").onclick = () => {
 const fmtTime = secs => { const m = Math.round(secs / 60); return m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`; };
 async function loadStats() {
   const days = +$("stDays").value;
-  const st = station === HITS ? { id: "hits", name: "Bazaar Hits" } : station;
+  const st = station === HITS ? { id: "hits", name: "Spark Hits" } : station;
   const from = addDays(todayIn(), -(days - 1));
   $("stMsg").textContent = "Loading…";
   try {
     const snap = await fs.getDocs(fs.query(fs.collection(db, "usage"), fs.where("day", ">=", from)));
-    const ours = new Map([...STATIONS.map(x => [x.name, x.dial]), ["Bazaar Hits", "4"]]);
+    const ours = new Map([...STATIONS.map(x => [x.name, x.dial]), ["Spark Hits", "4"]]);
     const progs = new Map(), chans = new Map(), heat = {}, viewers = new Set();
     let total = 0;
     const add = (map, key, extra, secs, uid) => {
@@ -2054,7 +2054,7 @@ function renderPicks() {
     $("pkList").appendChild(row);
   }
   $("pkCount").textContent = shown ? `${shown} programme${shown === 1 ? "" : "s"} here.` : pkTab === "library" && filter === "new" ? "Nothing new waiting. New finds show up here every day." : "None.";
-  if (pkTab === "approved" && !counts.approved) $("pkCount").textContent = station === HITS ? "Nothing approved: Bazaar Hits plays every song." : "Nothing in Next transmission: the channel plays its free backup films instead.";
+  if (pkTab === "approved" && !counts.approved) $("pkCount").textContent = station === HITS ? "Nothing approved: Spark Hits plays every song." : "Nothing in Next transmission: the channel plays its free backup films instead.";
 }
 function torontoDate(ms) { return new Intl.DateTimeFormat("en-CA", { timeZone: TORONTO, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(ms)); }
 // (A long programme in 25-minute parts on a half-hour channel counts once, at its first part.)
@@ -2128,7 +2128,7 @@ function renderSchedule() {
   acts.innerHTML = "";
   const btn = (text, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn " + cls; b.textContent = text; b.onclick = fn; acts.appendChild(b); };
   const when = now.at ? ` at ${timeText(Date.parse(now.at), TORONTO)}` + (torontoDate(Date.parse(now.at)) !== today ? " yesterday" : "") : "";
-  if (hits) $("pkLockNote").textContent = "Bazaar Hits makes its day by itself from the approved songs.";
+  if (hits) $("pkLockNote").textContent = "Spark Hits makes its day by itself from the approved songs.";
   else if (editing) {
     $("pkLockNote").textContent = now.by ? "🔓 Unlocked for changes. TVs still play the locked day until you lock it again." : "✏️ Changing the order. Lock it when it looks right.";
     btn("🔒 Lock " + (pkDay === "today" ? "today" : "tomorrow"), "primary", () => lockDay(date, editedItems()));

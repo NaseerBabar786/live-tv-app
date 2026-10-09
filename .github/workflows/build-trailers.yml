@@ -1,6 +1,6 @@
 name: Build trailers and music videos
 
-# docs/channel/trailers.json and music-videos.json: Bazaar TV's blocks of upcoming film trailers (Hindi,
+# docs/channel/trailers.json and music-videos.json: Spark TV's blocks of upcoming film trailers (Hindi,
 # Pakistani) and popular music videos (Hindi, Urdu) from the studios',
 # labels' and artists' own YouTube channels, rebuilt every day. Played in
 # YouTube's player, locked, on tv.bulkbazaar.ca/channel/block.html (also in the app).
@@ -47,8 +47,8 @@ jobs:
         if: always()
         run: python3 tools/build_bazaar_blocks.py
 
-      # The owner's rule: only programmes that fit Bazaar TV (no children's shows; those are on Bazaar Kids).
-      - name: Check Bazaar TV's programmes fit the channel
+      # The owner's rule: only programmes that fit Spark TV (no children's shows; those are on Spark Kids).
+      - name: Check Spark TV's programmes fit the channel
         id: fit
         if: always()
         run: python3 tools/check_bazaar_tv.py

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Makes a "coming up" promo (make_promo.py) for every show booked on Bazaar TV's schedule, once:
+Makes a "coming up" promo (make_promo.py) for every show booked on Spark TV's schedule, once:
 a booking whose promo is already made with the same name, time, videos and maker is skipped.
 
 usage: make_show_promos.py out_dir [--remake] [--max N]
@@ -144,14 +144,14 @@ def main():
         promos[b["key"]] = {"title": make_promo.clean_title(b["title"]), "when": b["when"], "day": b["day"], "time": b["time"],
                             "videos": b["videos"], "url": RELEASE + name, "secs": info["secs"], "voice": info["voice"],
                             "credit": b["credit"], "hash": h}
-    json.dump({"about": f"Coming-up promos for the shows booked on Bazaar TV (from {source}), made by tools/promos.",
+    json.dump({"about": f"Coming-up promos for the shows booked on Spark TV (from {source}), made by tools/promos.",
                "promos": promos}, open(MANIFEST, "w"), indent=1, ensure_ascii=False)
     # Media Library › Cable TV Promos: one item per show promo, old ones taken out.
     lib = json.load(open(LIBRARY))
     lib["items"] = [x for x in lib["items"] if not x.get("id", "").startswith("show-promo-")]
     for k, p in promos.items():
         lib["items"].append({"id": "show-promo-" + k, "cat": "promos", "lang": "ur", "title": f"Promo: {p['title']}",
-                             "url": p["url"], "secs": p["secs"], "about": f"Coming up on Bazaar TV: {p['title']}, {p['when']}.",
+                             "url": p["url"], "secs": p["secs"], "about": f"Coming up on Spark TV: {p['title']}, {p['when']}.",
                              "credit": "Our own promo. " + music_credit() + (f". Pictures: {p['credit']}" if p["credit"] else "") + "."})
     json.dump(lib, open(LIBRARY, "w"), indent=1, ensure_ascii=False)
     print(f"{made} new promo(s); {len(promos)} booked show(s) have one.")

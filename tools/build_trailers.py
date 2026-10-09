@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Builds Bazaar TV's block of upcoming film trailers (the owner's wish, 2026-10-06): the newest
+Builds Spark TV's block of upcoming film trailers (the owner's wish, 2026-10-06): the newest
 official trailers and teasers of Hindi and Pakistani (Urdu) films, from the studios'
-and labels' own YouTube channels. They play in YouTube's own player, locked like Bazaar Hits
+and labels' own YouTube channels. They play in YouTube's own player, locked like Spark Hits
 (docs/channel/block.html); nothing is downloaded or re-hosted, as YouTube's terms require.
 
-Bazaar TV's schedule holds one entry of kind "trailers" pointing at docs/channel/trailers.json;
+Spark TV's schedule holds one entry of kind "trailers" pointing at docs/channel/trailers.json;
 the app (MyChannel.expand) and the website (schedule.js expand) put this list in its place, so the
 block changes every day without the owner saving anything in the Studio.
 
@@ -14,7 +14,7 @@ from the clock. Only uploads from the last MAX_DAYS days count as "upcoming".
 
 Since 2026-10-08 the same run also builds Movie Trailers, our channel of nothing but upcoming film
 trailers (the owner's wish): mostly English, from the Hollywood studios' own channels (ENGLISH), with
-the Hindi and Pakistani ones above making up about a fifth. It plays like Bazaar Hits, locked, on
+the Hindi and Pakistani ones above making up about a fifth. It plays like Spark Hits, locked, on
 docs/channel/ytc.html?c=trailers, in a new order every day.
 
 Writes docs/channel/trailers.json and docs/channel/yt-trailers.json. Standard library only.
@@ -42,7 +42,7 @@ MAX_DAYS = 60
 # A trailer or teaser runs from about half a minute to five minutes.
 SECS = (25, 330)
 # The whole block, about 35 minutes. Since 2026-10-07 only Hindi and Pakistani films: the owner wants
-# Bazaar TV 100% Urdu and Hindi.
+# Spark TV 100% Urdu and Hindi.
 TARGET_SECS = 35 * 60
 # At most this many trailers of one film (a teaser and a trailer are both fine).
 PER_FILM = 2
@@ -96,7 +96,7 @@ ENGLISH = [
     ("DreamWorks Animation", ["@DreamWorksAnimation", "@dreamworksanimation"], "DreamWorks"),
 ]
 CHANNEL_OUT = os.path.join(ROOT, "docs", "channel", "yt-trailers.json")
-# The channel keeps trailers a little longer than Bazaar TV's block: new films are still showing then.
+# The channel keeps trailers a little longer than Spark TV's block: new films are still showing then.
 CHANNEL_DAYS = 90
 # English is about four in five of the channel's trailers.
 OTHER_SHARE = 0.25
@@ -271,7 +271,7 @@ def main():
     if os.path.exists(OUT):
         old = {v["id"]: v for v in json.load(open(OUT, encoding="utf-8")).get("videos", [])}
     lists = [(lang, label, language(lang, label, sources, today, old)) for lang, label, sources in LANGUAGES]
-    # Only videos that play in an embedded player (Bazaar TV's block page): tools/playable.py.
+    # Only videos that play in an embedded player (Spark TV's block page): tools/playable.py.
     lists = [(lang, label, keep_playable(videos)) for lang, label, videos in lists]
     # Movie Trailers takes the Hindi and Pakistani ones too, before the block below drops its "age".
     channel(today, [dict(v) for _, _, videos in lists for v in videos])

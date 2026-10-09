@@ -1,7 +1,7 @@
-name: Build Bazaar Sports, Travel and Comedy schedules
+name: Build Spark Sports, Travel and Comedy schedules
 
 # Builds docs/channel/sports-, travel- and comedy-schedule.json (on tv.bulkbazaar.ca/channel/):
-# the ready-made schedules of Bazaar Sports (6), Travel (7) and Comedy (8),
+# the ready-made schedules of Spark Sports (6), Travel (7) and Comedy (8),
 # from public-domain and CC BY films on the Internet Archive. A new loop order every week.
 on:
   schedule:
@@ -33,20 +33,20 @@ jobs:
           python-version: "3.12"
 
       # Each channel on its own step, so one failing keeps its old schedule but not the other's.
-      - name: Build Bazaar Sports
+      - name: Build Spark Sports
         continue-on-error: true
         run: python3 tools/build_archive_channels.py --channel sports
 
-      - name: Build Bazaar Travel
+      - name: Build Spark Travel
         continue-on-error: true
         run: python3 tools/build_archive_channels.py --channel travel
 
-      - name: Build Bazaar Comedy
+      - name: Build Spark Comedy
         continue-on-error: true
         run: python3 tools/build_archive_channels.py --channel comedy
 
-      # Bazaar Kids is a hand-made list; make sure its Archive videos are H.264 copies too.
-      - name: Bazaar Kids videos in H.264
+      # Spark Kids is a hand-made list; make sure its Archive videos are H.264 copies too.
+      - name: Spark Kids videos in H.264
         continue-on-error: true
         run: python3 tools/build_archive_channels.py --fix docs/channel/kids-schedule.json
 
@@ -64,7 +64,7 @@ jobs:
             echo "No changes."
             exit 0
           fi
-          git commit -m "Bazaar Sports, Travel and Comedy schedules for the week of $(date -u '+%Y-%m-%d')"
+          git commit -m "Spark Sports, Travel and Comedy schedules for the week of $(date -u '+%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

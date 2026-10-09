@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 """
-Builds the video lists of our channels that run like Bazaar Hits (1.9.47): official uploads
+Builds the video lists of our channels that run like Spark Hits (1.9.47): official uploads
 from well-known YouTube channels, played one after another in YouTube's own embedded player
 on tv.bulkbazaar.ca/channel/ytc.html?c=<id> (also inside the app), locked so nobody can pause,
 skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's terms require.
 
-  2 Bazaar Cinema  full films from the studios' own channels
-  3 Bazaar Music   Punjabi, Sufi and qawwali from the labels' channels and Coke Studio (film songs are on 4)
-  5 Bazaar Kids    cartoons and English kids' shows from the makers' channels
-  6 Bazaar Sports  mostly cricket (ICC, PCB, BCCI, PSL, IPL...), plus wrestling (WWE, AEW), Canadian favourites (NHL, Sportsnet, TSN, Blue Jays, Raptors, CFL) and other popular sports
-  7 Bazaar Travel  tourism boards and travel shows
-  8 Bazaar Comedy  comedy shows from their channels
-  9 Bazaar Movies English  full English films from studios' and distributors' free-movie channels
- 10 Bazaar Movies Hindi    full Hindi films from the studios' channels
- 11 Bazaar Dramas Urdu  full episodes of Pakistani dramas from the TV channels' own channels
- 12 Bazaar Cooking recipes and cooking shows from the cooks' own channels
+  2 Spark Cinema  full films from the studios' own channels
+  3 Spark Music   Punjabi, Sufi and qawwali from the labels' channels and Coke Studio (film songs are on 4)
+  5 Spark Kids    cartoons and English kids' shows from the makers' channels
+  6 Spark Sports  mostly cricket (ICC, PCB, BCCI, PSL, IPL...), plus wrestling (WWE, AEW), Canadian favourites (NHL, Sportsnet, TSN, Blue Jays, Raptors, CFL) and other popular sports
+  7 Spark Travel  tourism boards and travel shows
+  8 Spark Comedy  comedy shows from their channels
+  9 Spark Movies English  full English films from studios' and distributors' free-movie channels
+ 10 Spark Movies Hindi    full Hindi films from the studios' channels
+ 11 Spark Dramas Urdu  full episodes of Pakistani dramas from the TV channels' own channels
+ 12 Spark Cooking recipes and cooking shows from the cooks' own channels
  13 Latest Movies  the newest full films in Hindi, English, Punjabi and Urdu from the studios',
                    labels' and TV channels' own uploads, newest first (no logo of ours on it)
- 14 Bazaar Teens  science, cartoons, challenges and talent shows for 12 to 16 year olds
- 16 Bazaar Dramas Hindi  full episodes of Hindi serials from the Indian TV channels' own channels
- 17 Bazaar Shayari  Urdu and Hindi poetry: mushairas, kavi sammelan and poets reciting, from the
+ 14 Spark Teens  science, cartoons, challenges and talent shows for 12 to 16 year olds
+ 16 Spark Dramas Hindi  full episodes of Hindi serials from the Indian TV channels' own channels
+ 17 Spark Shayari  Urdu and Hindi poetry: mushairas, kavi sammelan and poets reciting, from the
                     organisers', TV channels' and poets' own channels
  47 Spark Auto (English) and 32 Spark Auto Hindi  car reviews, launches, top 10s, supercars and motorsport
 
@@ -90,7 +90,7 @@ NEVER = r"trailer|teaser|#shorts?\b|\bshorts\b|promo|reaction|announcement|first
 CHANNELS = {
     "filmein": {
         "lang": "hi",
-        "name": "Bazaar Cinema", "mins": (70, 200), "search": "full movie",
+        "name": "Spark Cinema", "mins": (70, 200), "search": "full movie",
         "keep": r"full (movie|film)|movie|film",
         "skip": r"scene|song|jukebox|comedy scenes|best of|spoof",
         "sources": [
@@ -108,7 +108,7 @@ CHANNELS = {
         "lang": "pa", "langs": {"Coke Studio Pakistan": "ur", "Oriental Star Agencies": "ur"},
         "split": {"pa": "sur", "ur": "musicur"},
         # More sources and searches (2026-10-07): the channel had about 11 hours and repeated its day.
-        "name": "Bazaar Music", "mins": (2, 15), "search": ["official video", "qawwali", "sufi", "punjabi song"],
+        "name": "Spark Music", "mins": (2, 15), "search": ["official video", "qawwali", "sufi", "punjabi song"],
         "skip": r"jukebox|full album|non ?stop|mashup|audio|lyric|lyrical|making|interview|bts|behind the scenes",
         "sources": [
             ("White Hill Music", ["@WhiteHillMusic"], "White Hill"),
@@ -127,7 +127,7 @@ CHANNELS = {
         "lang": "en", "langs": {"Ghulam Rasool": "ur", "Jugnu Kids": "ur", "Kids TV Urdu": "ur",
                                 "ChuChu TV Hindi": "hi", "Infobells Hindi": "hi"},
         "split": {"en": "kids", "hi": "kidshi", "ur": "kidsur"},
-        "name": "Bazaar Kids", "mins": (2, 60),
+        "name": "Spark Kids", "mins": (2, 60),
         "skip": r"toy|unboxing|scary|horror|prank",
         "sources": [
             ("Ghulam Rasool", ["@GhulamRasoolCartoon", "@ghulamrasool", "@GhulamRasoolOfficial", "@KidsLandUrdu"], "Ghulam Rasool|Kids Land"),
@@ -163,7 +163,7 @@ CHANNELS = {
     "sports": {
         "lang": "en", "langs": {"Pro Kabaddi": "hi"},
         "split": {"en": "sports", "hi": "sportshi"},
-        "name": "Bazaar Sports", "mins": (2, 45), "search": "highlights",
+        "name": "Spark Sports", "mins": (2, 45), "search": "highlights",
         "skip": r"podcast|press conference|interview|reaction|preview|prediction|draw|ticket|bet",
         # Cricket is the main part, then wrestling, then the most-watched other sports (the owner's wish, 2026-10-06).
         "sources": [
@@ -202,7 +202,7 @@ CHANNELS = {
     "travel": {
         "lang": "en",
         # More sources and searches (2026-10-07): the channel had about 6 hours and repeated its day.
-        "name": "Bazaar Travel", "mins": (2, 60), "search": ["travel guide", "things to do", "episode"],
+        "name": "Spark Travel", "mins": (2, 60), "search": ["travel guide", "things to do", "episode"],
         "skip": r"podcast|interview|news|press|webinar|conference|recipe",
         "sources": [
             ("Incredible India", ["@IncredibleIndia", "@incredibleindia"], "Incredible India"),
@@ -225,7 +225,7 @@ CHANNELS = {
                                 "Laurel and Hardy": "en", "Dry Bar Comedy": "en", "Bulbulay": "ur", "Sawa Teen": "ur",
                                 "Hum Sab Umeed Se Hain": "ur", "Mazaaq Raat": "ur"},
         "split": {"hi": "comedy", "ur": "comedyur", "en": "comedyen"},
-        "name": "Bazaar Comedy", "mins": (2, 50),
+        "name": "Spark Comedy", "mins": (2, 50),
         "sources": [
             ("Mr Bean", ["@MrBean"], "Mr Bean"),
             ("Taarak Mehta", ["@TaarakMehtaKaOoltahChashmah", "@SonySAB"], "Taarak Mehta|Sony SAB"),
@@ -262,7 +262,7 @@ CHANNELS = {
     },
     "english": {
         "lang": "en",
-        "name": "Bazaar Movies English", "mins": (70, 200), "search": "full movie",
+        "name": "Spark Movies English", "mins": (70, 200), "search": "full movie",
         "keep": r"full (movie|film)|movie|film",
         "skip": r"scene|clip|horror|slasher|erotic|18\+|hindi|dubbed|spoof",
         "sources": [
@@ -276,7 +276,7 @@ CHANNELS = {
     },
     "hindi": {
         "lang": "hi",
-        "name": "Bazaar Movies Hindi", "mins": (70, 200),
+        "name": "Spark Movies Hindi", "mins": (70, 200),
         "search": ["hindi full movie", "new hindi movie %(year)s", "new hindi movie %(last)s"],
         # Mostly new films (the owner's wish, 2026-10-06): a film whose title names a year from the
         # last four is "top", and the channel page plays those three times as often as the rest.
@@ -296,7 +296,7 @@ CHANNELS = {
     # 2 is Urdu dramas and 24 Hindi dramas (the owner, 2026-10-08): two channels, one language each.
     "dramas": {
         "lang": "ur",
-        "name": "Bazaar Dramas Urdu", "mins": (18, 75), "search": "episode",
+        "name": "Spark Dramas Urdu", "mins": (18, 75), "search": "episode",
         # Full episodes only, no teasers, OSTs or clips; no reality or game shows (Tamasha) or cooking shows (channel-fit rule).
         "keep": r"episode|\bep\b|\bepi\b|ep\s*\d|قسط",
         "skip": rf"\bost\b|title song|scene|best moment|clip|bts|behind the scenes|review|highlights|recap|interview|morning show|news|{NOT_DRAMA}",
@@ -316,7 +316,7 @@ CHANNELS = {
     },
     "hindidramas": {
         "lang": "hi",
-        "name": "Bazaar Dramas Hindi", "mins": (15, 75), "search": ["full episode", "episode"],
+        "name": "Spark Dramas Hindi", "mins": (15, 75), "search": ["full episode", "episode"],
         "keep": r"episode|\bep\b|\bepi\b|ep\.?\s*\d|एपिसोड",
         "skip": rf"\bost\b|title (song|track)|best moment|bts|behind the scenes|review|highlights|recap|interview|news|promo|precap|{NOT_DRAMA}",
         # Doordarshan uploads much more than drama: only its serials.
@@ -338,7 +338,7 @@ CHANNELS = {
     # 17 Spark Shayari (owner, 2026-10-08): Urdu and Hindi poetry recited, never sung (sung ghazals belong on
     # Spark Music), no lessons, talks or panels, no politics, no horror, no other languages.
     "shayari": {
-        "name": "Bazaar Shayari", "mins": (2, 150), "search": ["mushaira", "shayari", "kavi sammelan"],
+        "name": "Spark Shayari", "mins": (2, 150), "search": ["mushaira", "shayari", "kavi sammelan"],
         "keep": r"mushair|musha'?era|mushayra|shayari|shayri|shaayri|\bsher\b|ghazal|nazm|kavi ?sammelan|kavi samm?elan|kavita|kavya|"
                 r"poet|poem|recit|kalam|kalaam|مشاعر|شاعر|غزل|نظم|کلام|कवि|कविता|शायर|मुशायर|ग़ज़ल|गज़ल|नज़्म",
         "skip": r"\bsong\b|singer|singing|sung|qawwal|music video|musical|jukebox|\bost\b|lyrical|cover|unplugged|concert|non-?stop|"
@@ -386,7 +386,7 @@ CHANNELS = {
         "lang": "hi", "langs": {"Food Fusion": "ur", "Kitchen with Amna": "ur", "Masala TV": "ur", "Chef Zakir": "ur",
                                 "Shireen Anwar": "ur"},
         "split": {"hi": "cooking", "ur": "cookingur"},
-        "name": "Bazaar Cooking", "mins": (4, 45),
+        "name": "Spark Cooking", "mins": (4, 45),
         "skip": r"vlog|q ?& ?a|giveaway|unboxing|review|haul|podcast|mukbang|eating challenge",
         "sources": [
             ("Food Fusion", ["@FoodFusionPk", "@foodfusion"], "Food Fusion"),
@@ -400,7 +400,7 @@ CHANNELS = {
             ("Get Curried", ["@GetCurried", "@getcurried"], "Get Curried"),
         ],
     },
-    # For 12 to 16 year olds (the owner's wish, 2026-10-07); Bazaar Kids stays for small children.
+    # For 12 to 16 year olds (the owner's wish, 2026-10-07); Spark Kids stays for small children.
     # Spark Auto (English, 47) and Spark Auto Hindi (32), the owner's wish 2026-10-08: reviews, new launches,
     # top 10s, comparisons, supercars and motorsport highlights from the car shows', magazines', carmakers'
     # and racing series' own channels. Each video is tagged with the day's blocks it fits ("kinds").
@@ -408,7 +408,7 @@ CHANNELS = {
         "lang": "en", "langs": {"Gagan Choudhary": "hi", "Auto Yogi": "hi", "CarDekho": "hi", "ZigWheels": "hi",
                                 "MotorOctane": "hi", "91Wheels": "hi", "V3Cars": "hi"},
         "split": {"en": "auto", "hi": "autohi"},
-        "name": "Bazaar Auto", "mins": (3, 90), "search": ["review", "top 10", "highlights"],
+        "name": "Spark Auto", "mins": (3, 90), "search": ["review", "top 10", "highlights"],
         # No crashes, sponsored films, giveaways, podcasts or company events (channel-fit rule).
         "skip": r"crash|accident|fatal|died|death|killed|branded content|sponsored|paid partnership|giveaway|podcast|"
                 r"q ?& ?a\b|merch|politic|election|masterclass|agm|earnings|investor|webinar|press conference|unboxing.*phone",
@@ -480,7 +480,7 @@ CHANNELS = {
     "teens": {
         "lang": "en", "langs": {"Fact Tech": "hi", "Nick India": "hi"},
         "split": {"en": "teens", "hi": "teenshi"},
-        "name": "Bazaar Teens", "mins": (3, 30),
+        "name": "Spark Teens", "mins": (3, 30),
         "skip": r"horror|scary|gore|explicit|18\+|podcast|vlog|merch|sponsor|giveaway|toy|nursery|rhymes?|preschool|toddler",
         "sources": [
             # Science and how things work
@@ -513,7 +513,7 @@ CHANNELS = {
     "gurbani": {
         # 62: shabad kirtan and paths from the labels' and SGPC's own channels. No ads over it (owner's channel rule).
         "lang": "pa",
-        "name": "Bazaar Gurbani", "mins": (5, 180), "search": ["shabad kirtan", "gurbani", "nitnem", "sukhmani sahib"],
+        "name": "Spark Gurbani", "mins": (5, 180), "search": ["shabad kirtan", "gurbani", "nitnem", "sukhmani sahib"],
         "skip": r"status|whatsapp|ringtone|reels?\b|vlog|interview|news|debate|speech|controvers",
         "sources": [
             ("T-Series Shabad Gurbani", ["@tseriesshabad", "@TSeriesShabadGurbani"], "Shabad Gurbani"),
@@ -527,7 +527,7 @@ CHANNELS = {
         # 63: full Punjabi films (older years too), comedies included, from the studios' and labels' own channels.
         # The newest ones (Latest Movies' Punjabi films) are put at the front by merge_latest.
         "lang": "pa",
-        "name": "Bazaar Movies Punjabi", "mins": (70, 200), "search": ["punjabi full movie", "full punjabi movie", "full movie"],
+        "name": "Spark Movies Punjabi", "mins": (70, 200), "search": ["punjabi full movie", "full punjabi movie", "full movie"],
         "keep": r"punjabi",
         "skip": r"scene|song|jukebox|comedy scenes|best of|spoof|clip|review|explained|recap|hindi dubbed|horror|slasher|erotic|18\+",
         "sources": [
@@ -552,7 +552,7 @@ CHANNELS = {
     "sufi": {
         # 64: Sufi kalam and qawwali, mostly Nusrat Fateh Ali Khan, from the label's own channels.
         "lang": "pa",
-        "name": "Bazaar Sufi Qawwali", "mins": (4, 120), "search": ["qawwali", "sufi kalam", "nusrat fateh ali khan"],
+        "name": "Spark Sufi Qawwali", "mins": (4, 120), "search": ["qawwali", "sufi kalam", "nusrat fateh ali khan"],
         "keep": r"qawwal|kalam|sufi|kafi|dhamal|nusrat|sabri|abida|bulleh|heer|naat|manqabat",
         "skip": r"jukebox|non ?stop|mashup|remix|lyric|status|whatsapp|reels?\b|interview|bts|behind the scenes|#shorts",
         "sources": [
@@ -670,7 +670,7 @@ def build(cid, ch, today):
                 print(f"  feed: {e}", file=sys.stderr)
         only = re.compile(ch.get("only", {}).get(label, ""), re.I) if label in ch.get("only", {}) else None
         kept = dated = 0
-        # Upload days from the channel feed (its 15 newest): Latest Movies, and Bazaar TV One's new-only blocks.
+        # Upload days from the channel feed (its 15 newest): Latest Movies, and Spark TV One's new-only blocks.
         dates = upload_dates(chan)
         for vid, title, mins, age in videos:
             if vid in found or skip.search(title) or is_horror(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
@@ -688,7 +688,7 @@ def build(cid, ch, today):
                 found[vid]["lang"] = language_of(ch, label, title)
             if ch.get("kinds"):
                 found[vid]["kinds"] = kinds_of(ch, label, title)
-            # When it went up on YouTube, as far as the page says ("3 weeks ago"): Bazaar TV One's blocks
+            # When it went up on YouTube, as far as the page says ("3 weeks ago"): Spark TV One's blocks
             # take only new uploads (tools/build_bazaar_blocks.py, the owner's wish 2026-10-08).
             posted = dates.get(vid) or ((today - dt.timedelta(days=age)).isoformat() if age is not None else old.get(vid, {}).get("posted"))
             if posted:
@@ -723,7 +723,7 @@ def build(cid, ch, today):
             if ch.get("kinds"):
                 v["kinds"] = kinds_of(ch, v["label"], v["title"])
     # Main events from the last two weeks, and anything found in the last two days, are "top":
-    # the channel page plays them far more often (Bazaar Sports, the owner's wish, 2026-10-06).
+    # the channel page plays them far more often (Spark Sports, the owner's wish, 2026-10-06).
     if ch.get("events"):
         events = re.compile(ch["events"], re.I)
         for v in found.values():

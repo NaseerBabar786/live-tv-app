@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Makes one "coming up" promo for a programme booked on Bazaar TV, like real channels run: fast cuts
+Makes one "coming up" promo for a programme booked on Spark TV, like real channels run: fast cuts
 of the programme's own pictures on the beat, its name and time slot, an announcer (Urdu by default)
 and free-licence music (tools/music/library.py), then an end card with our logo. Every second has real video moving.
 
@@ -8,7 +8,7 @@ usage: make_promo.py spec.json out.mp4
 spec: { "title": "Sintel", "when": "Every Friday · 8 PM", "day": "fri", "time": "20:00",
         "videos": ["https://…/ep1.mp4", …] (episodes: pictures come from the first few),
         "series": true/false, "credit": "Blender Foundation (CC BY)", "mood": "cinematic"|"energetic" (both use tools/music/library.py),
-        "secs": 20 or 30, "lang": "ur"|"en", "logo": "docs/channel/logos/bazaar-tv.png" }
+        "secs": 20 or 30, "lang": "ur"|"en", "logo": "docs/channel/logos/spark-tv.png" }
 
 Needs ffmpeg/ffprobe, numpy, pillow; edge-tts for the announcer (left out when it can't be reached).
 """
@@ -246,7 +246,7 @@ def overlay_main(t, spec, cut_start):
         f = FONT("Black", size)
         shadow_text(d, (W // 2, H // 2 - px(30)), "COMING UP", f, (255, 255, 255, a), "mm")
         f2 = FONT("Bold", 40)
-        shadow_text(d, (W // 2, H // 2 + px(52)), "ON BAZAAR TV", f2, YELLOW + (a,), "mm")
+        shadow_text(d, (W // 2, H // 2 + px(52)), "ON SPARK TV", f2, YELLOW + (a,), "mm")
     # Name, sliding in from the left (from 3.5 s).
     if t >= 3.5:
         k = ease((t - 3.5) / 0.45)
@@ -281,7 +281,7 @@ def overlay_main(t, spec, cut_start):
         # Channel line under the name (from 11 s).
         if t >= 11:
             fs = FONT("SemiBold", 26)
-            shadow_text(d, (px(64), H - px(64)), "Channel 1  ·  Bazaar TV  ·  free on the Cable TV app", fs,
+            shadow_text(d, (px(64), H - px(64)), "Channel 1  ·  Spark TV  ·  free on the Cable TV app", fs,
                         (255, 255, 255, int(230 * ease((t - 11) / 0.4))))
     return L
 
@@ -336,10 +336,10 @@ def lines_for(spec):
     """What the announcer says: [(start seconds, text)]."""
     title, end = spec["_title"], spec["secs"] - 6
     if spec.get("lang", "ur") == "en":
-        return [(3.6, f"{title}. {spec['when']}."), (end + 0.5, "Only on Bazaar TV, channel one. Free on the Cable TV app.")]
+        return [(3.6, f"{title}. {spec['when']}."), (end + 0.5, "Only on Spark TV, channel one. Free on the Cable TV app.")]
     when = f"{UR_DAYS.get(spec.get('day'), '')}، {urdu_time(spec.get('time', '20:00'))}"
     first = f"دیکھیے {title}۔ {when}۔" + (" ہر بار ایک نئی قسط۔" if spec.get("series") else "")
-    return [(3.6, first), (end + 0.5, "صرف بازار ٹی وی پر، کیبل ٹی وی ایپ میں، بالکل مفت۔")]
+    return [(3.6, first), (end + 0.5, "صرف اسپارک ٹی وی پر، کیبل ٹی وی ایپ میں، بالکل مفت۔")]
 
 
 def voice(text, path, lang):
@@ -413,7 +413,7 @@ def make(spec, out):
     hits, t = [], 0.0
     for c in cuts:
         hits.append(t); t += c
-    logo = Image.open(os.path.join(ROOT, spec.get("logo") or "docs/channel/logos/bazaar-tv.png")).convert("RGBA")
+    logo = Image.open(os.path.join(ROOT, spec.get("logo") or "docs/channel/logos/spark-tv.png")).convert("RGBA")
     with tempfile.TemporaryDirectory() as tmp:
         sound, said = soundtrack(spec, hits, tmp)
         silent = os.path.join(tmp, "v.mp4")

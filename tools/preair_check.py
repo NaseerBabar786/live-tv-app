@@ -10,7 +10,7 @@ show ... also in the Library ... no video goes live until you do a check". Two p
             Offline; fails the CI run when anything is missing.
 
   --lists   Every YouTube video on our lists is checked before it goes on air: our channels (yt-*.json,
-            Bazaar Hits, Bazaar TV's trailers, music videos and programme blocks), the Library
+            Spark Hits, Spark TV's trailers, music videos and programme blocks), the Library
             (Dramas.m3u, MTA.m3u) and the live channels (PakistanLive.m3u). A video that won't play in an embedded
             player (YouTube's oEmbed: 401 = embedding turned off, 404 = removed or private; or found by the
             nightly check, unplayable.json) is taken off the list, so it never shows YouTube's error or

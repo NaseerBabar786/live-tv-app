@@ -1,7 +1,7 @@
 """
-Will a YouTube video play in an embedded player (Bazaar TV's locked block page)? The owner saw a film stuck on
+Will a YouTube video play in an embedded player (Spark TV's locked block page)? The owner saw a film stuck on
 "YouTube didn't start (error 150)" (2026-10-07): its owner had turned embedding off. The lists our builders write
-(trailers, music videos, Bazaar TV's blocks) leave such videos out, the same way the nightly channel check does
+(trailers, music videos, Spark TV's blocks) leave such videos out, the same way the nightly channel check does
 (tools/check_channels.mjs): docs/channel/unplayable.json, and YouTube's oEmbed answer (401 = embedding turned off,
 404 = removed or private). Any other answer, or no answer, counts as playable.
 """

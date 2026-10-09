@@ -1,5 +1,5 @@
 """
-Calm background music for Bazaar TV's short clips (idents, our ads), made here from scratch, so it is ours:
+Calm background music for Spark TV's short clips (idents, our ads), made here from scratch, so it is ours:
 a soft pad with a slow harp-like arpeggio over a gentle chord turn, and a little room echo. The owner found
 the old buzzing three-note tone "really horrible" (2026-10-07) and asked for calm music instead.
 

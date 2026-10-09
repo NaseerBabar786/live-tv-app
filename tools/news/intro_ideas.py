@@ -1,4 +1,4 @@
-"""Three SAMPLE openings for Bazaar TV News (owner 2026-10-08: our TV logo with a small movement instead of a still slide).
+"""Three SAMPLE openings for Spark TV News (owner 2026-10-08: our TV logo with a small movement instead of a still slide).
 
     python3 tools/news/intro_ideas.py out/
       -> out/news-intro-1.mp4  Light sweep: the logo grows in, a shine passes over it, a red "News" bar slides under it
@@ -17,7 +17,7 @@ import make_news as N
 from make_news import W, H, FPS, SR, text, font
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BAZAAR = os.path.join(HERE, "..", "..", "docs", "channel", "logos", "bazaar-tv.png")
+SPARK = os.path.join(HERE, "..", "..", "docs", "channel", "logos", "spark-tv.png")
 SPARK = os.path.join(HERE, "intro", "spark-tv.png")
 SECS = 7.0
 RED, GOLD, ORANGE = (210, 30, 45), (245, 190, 40), (240, 120, 20)
@@ -93,7 +93,7 @@ def idea2(t, logo):
             st = start + seg * 120
             d.arc([cx - rr, cy - rr * 0.42, cx + rr, cy + rr * 0.42], st, st + 70, fill=col, width=4)
     place(im, logo, 0.7 * ease((t - 0.6) / 0.8), cx, cy, min(1, max(0, (t - 0.6) / 0.5)))
-    title = "بازار ٹی وی نیوز"
+    title = "اسپارک ٹی وی نیوز"
     if t > 2.0:
         toks = N.tokens(title); n = max(1, int(len(toks) * min(1, (t - 2.0) / 0.9)))
         fs = N.fonts(48)
@@ -152,7 +152,7 @@ def opening(path, secs=6.0, logo_path=None):
     the first seconds of every bulletin; the bulletin's own sting music plays under it."""
     global SECS
     SECS = secs
-    logo = Image.open(logo_path or (SPARK if os.environ.get("NEWS_LOGO") == "spark" else BAZAAR)).convert("RGBA")
+    logo = Image.open(logo_path or (SPARK if os.environ.get("NEWS_LOGO") == "spark" else SPARK)).convert("RGBA")
     p = subprocess.Popen(["ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgba",
                           "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "veryfast",
                           "-crf", "20", "-pix_fmt", "yuv420p", path], stdin=subprocess.PIPE)
@@ -167,8 +167,8 @@ def opening(path, secs=6.0, logo_path=None):
 
 def main():
     out = sys.argv[1]; work = os.path.join(out, "work-intro"); os.makedirs(work, exist_ok=True)
-    make(out, "news-intro-1", idea1, BAZAAR, work)
-    make(out, "news-intro-2", idea2, BAZAAR, work)
+    make(out, "news-intro-1", idea1, SPARK, work)
+    make(out, "news-intro-2", idea2, SPARK, work)
     make(out, "news-intro-3", idea3, SPARK, work)
 
 

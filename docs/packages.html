@@ -115,7 +115,7 @@
         <thead><tr><th>Feature</th><th><span class="pill Free">Free</span></th><th><span class="pill Gold">Gold</span></th></tr></thead>
         <tbody id="featRows"></tbody>
       </table></div>
-      <label class="small" for="extraChannels" style="display:block;margin-top:12px"><b>Extra channels without "All channels"</b>: a promotion without All channels gets our own Bazaar channels plus the channels you type here, separated by commas. Leave it empty for only our own channels.</label>
+      <label class="small" for="extraChannels" style="display:block;margin-top:12px"><b>Extra channels without "All channels"</b>: a promotion without All channels gets our own Spark channels plus the channels you type here, separated by commas. Leave it empty for only our own channels.</label>
       <input class="inp" id="extraChannels" placeholder="e.g. Aaj Tak, ARY News" style="width:100%;box-sizing:border-box;margin-top:6px">
       <div class="row" style="margin:10px 0 18px"><button class="btn primary" id="saveFeats">Save settings</button><span class="small" id="featMsg"></span></div>
       <h3>What viewers see in each package</h3>
@@ -185,7 +185,7 @@ const show = id => ["notReady", "signedOut", "denied", "dash"].forEach(x => $(x)
 const TIERS = ["Gold"];
 // What a package can include; the keys match the app (Plans.Feature). 1+List is in every package.
 const FEATURES = [
-  ["channels", "All channels", "every channel from every country (without it: only our own Bazaar channels)"],
+  ["channels", "All channels", "every channel from every country (without it: only our own Spark channels)"],
   ["browse", "Browse", "the home screen with rows of big channel cards"],
   ["carousel", "Carousel", "one big channel, slide left and right to the next"],
   ["strip", "Strip", "a big channel on top, small channel tiles along the bottom"],
@@ -361,7 +361,7 @@ if (!configured) {
   function showCards() {
     $("pkgCards").innerHTML = ALL_TIERS.map(t => {
       const id = t.toLowerCase(), has = ticked(id);
-      const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : ($("extraChannels").value.trim() ? `<li><b>Our own Bazaar channels</b> plus ${esc($("extraChannels").value.trim())}</li>` : "<li><b>Only our own Bazaar channels</b></li>"),
+      const items = [has.includes("channels") ? "<li><b>All channels</b></li>" : ($("extraChannels").value.trim() ? `<li><b>Our own Spark channels</b> plus ${esc($("extraChannels").value.trim())}</li>` : "<li><b>Only our own Spark channels</b></li>"),
         id === "free" ? "<li><b>1+List</b> only, with search (full screen, Favourites and every other feature: a 1-minute try)</li>" : "<li><b>1+List</b>, full screen, favourites and search</li>",
         ...FEATURES.filter(f => f[0] !== "channels" && has.includes(f[0])).map(f => `<li><b>${f[1]}</b>: ${f[2]}</li>`)];
       const price = id === "free" ? "$0" : "";

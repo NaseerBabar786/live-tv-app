@@ -1,6 +1,6 @@
-name: Build Bazaar Ads
+name: Build Spark Ads
 
-# docs/channel/ads-sponsors.json: the sponsors' ads on Bazaar Ads (channel 15), from the list
+# docs/channel/ads-sponsors.json: the sponsors' ads on Spark Ads (channel 15), from the list
 # tv.bulkbazaar.ca/sponsors publishes on every change. Rebuilt every hour, so a new, changed or
 # ended sponsor shows on the channel within the hour (tools/build_ads_channel.py).
 on:
@@ -49,7 +49,7 @@ jobs:
             echo "No changes."
             exit 0
           fi
-          git commit -m "Bazaar Ads sponsors as of $(date -u '+%Y-%m-%d %H:%M')"
+          git commit -m "Spark Ads sponsors as of $(date -u '+%Y-%m-%d %H:%M')"
           # Other jobs commit to main too; try again when one got in first.
           for i in 1 2 3 4; do
             git pull --rebase origin main && git push origin HEAD:main && break

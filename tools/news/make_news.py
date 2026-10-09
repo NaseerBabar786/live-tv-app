@@ -1,4 +1,4 @@
-"""Makes the Bazaar TV News bulletins in URDU (1280x720 MP4) from public news headlines.
+"""Makes the Spark TV News bulletins in URDU (1280x720 MP4) from public news headlines.
 
 Usage: python3 tools/news/make_news.py <out dir> [--kind headlines|full|auto|probe] [--hour H]
                                        [--stories file.json] [--weather file.json] [--offline]
@@ -17,7 +17,7 @@ clock time is read or shown, so it stays right at every replay. --room day|night
 (06:00-17:59) or night newsroom (news-<kind>-<room>.mp4); --gather only saves the stories (stories-<kind>.json),
 so all copies of a set read the same news.
 
-Bazaar TV is an Urdu/Hindi channel (owner, 2026-10-07), so everything spoken and written is Urdu:
+Spark TV is an Urdu/Hindi channel (owner, 2026-10-07), so everything spoken and written is Urdu:
   1. Pakistan and world news from Urdu news feeds (BBC Urdu, DW Urdu, Independent Urdu, Express), Canada news from Canadian English feeds (Global News, CityNews) put into Urdu with
      Google's free translate address; every story names its source,
   2. read with Microsoft Edge's free Urdu neural voices (edge-tts, ur-PK Uzma and Asad),
@@ -40,7 +40,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 URDU_FONT = os.path.join(HERE, "..", "stories", "fonts", "NotoNastaliqUrdu-700.ttf")
 LENGTH = {"headlines": 180, "full": 600}
 NAME = {"headlines": "خبروں کی سرخیاں", "full": "تفصیلی خبرنامہ"}
-BRAND = "بازار ٹی وی نیوز"
+BRAND = "اسپارک ٹی وی نیوز"
 VOICE_A, VOICE_B, RATE = "ur-PK-UzmaNeural", "ur-PK-AsadNeural", "+0%"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; BazaarTV-News/1.0; +https://tv.bulkbazaar.ca)"}
 NOTES = []  # what worked and what failed, saved in news-<kind>.json for checking
@@ -776,18 +776,18 @@ def main():
     next_full = slot + dt.timedelta(hours=3 - slot.hour % 3)
     up_next = f"اگلی خبریں {clock(nxt)}" + (f" • {NAME['full']}" if nxt.hour % 3 == 0 else "")
     every_full = "ہر تین گھنٹے بعد"
-    greet = f"السلام علیکم۔ ٹورنٹو میں {period(slot.hour)} کے {slot.hour % 12 or 12} بجے ہیں، اور یہ ہے بازار ٹی وی نیوز۔ "
+    greet = f"السلام علیکم۔ ٹورنٹو میں {period(slot.hour)} کے {slot.hour % 12 or 12} بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔ "
     if in_set:   # replayed through the 8-hour set, so no clock time anywhere
         label = f"{NAME[kind]} • {date_ur(slot)}"
         up_next = "اگلی خبریں ایک گھنٹے بعد"
         every_full = "ہر چار گھنٹے بعد"
-        greet = "السلام علیکم، اور یہ ہے بازار ٹی وی نیوز۔ "
+        greet = "السلام علیکم، اور یہ ہے اسپارک ٹی وی نیوز۔ "
     head = (greet + ("تفصیلی خبرنامے میں خوش آمدید۔" if kind == "full" else "پیش ہیں اس وقت کی اہم خبریں۔"))
     # Owner 2026-10-08: start with the headlines, then the sections.
     tops = [next(s for s in stories if s["section"] == sec)["headline"] for sec in ORDER if any(s["section"] == sec for s in stories)]
     if tops: head += " سب سے پہلے اہم سرخیاں۔ " + "۔ ".join(t.rstrip("۔.؟?! ") for t in tops[:4]) + "۔"
     tail = (f"یہ تھیں اس وقت کی خبریں۔ خبروں کی سرخیاں ہر گھنٹے، اور تفصیلی خبرنامہ {every_full}، "
-            "صرف بازار ٹی وی پر۔ اللہ حافظ۔")
+            "صرف اسپارک ٹی وی پر۔ اللہ حافظ۔")
     weather_seg = weather_words(wx, kind == "headlines", slot if in_set else None) if wx else None
     NAMES = {"canada": "کینیڈا", "pakistan": "پاکستان", "india": "بھارت", "world": "دنیا", "film": "فلم اور شوبز", "sports": "کھیلوں"}
     present = [sec for sec in ORDER if any(s["section"] == sec for s in stories)]

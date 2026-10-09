@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Checks that Bazaar TV (channel 1) carries only programmes that fit it. The owner's rule (2026-10-07):
-no programmes for small children on Bazaar TV, they belong on Bazaar Kids (channel 5); every channel
+Checks that Spark TV (channel 1) carries only programmes that fit it. The owner's rule (2026-10-07):
+no programmes for small children on Spark TV, they belong on Spark Kids (channel 5); every channel
 carries only what fits it. Run after the day's lists are built (build-trailers.yml); it fails, naming
 what doesn't fit, so it never goes on air unnoticed.
 
@@ -38,16 +38,16 @@ def main():
             for item in (lambda d: d.get("videos", []) + d.get("spares", []))(json.load(open(path, encoding="utf-8"))):
                 if not for_grown_ups(item):
                     wrong.append(f"{vid} ({os.path.basename(path)}): {item.get('title')} · {item.get('label')}")
-                # Only new programmes on Bazaar TV One (the owner, 2026-10-08); a block kept from an earlier
+                # Only new programmes on Spark TV One (the owner, 2026-10-08); a block kept from an earlier
                 # day may still hold an older one, so this only warns.
                 if v["kind"] == "list" and not is_new(item, item.get("kind"), today):
                     old.append(f"{vid}: {item.get('title')}")
     for line in old:
-        print(f"::warning title=Not a new programme on Bazaar TV One::{line}")
+        print(f"::warning title=Not a new programme on Spark TV One::{line}")
     if wrong:
-        print("Not for Bazaar TV (move children's programmes to Bazaar Kids):", *wrong, sep="\n  ")
+        print("Not for Spark TV (move children's programmes to Spark Kids):", *wrong, sep="\n  ")
         sys.exit(1)
-    print(f"Bazaar TV: {len(on_air)} items checked, all fit the channel.")
+    print(f"Spark TV: {len(on_air)} items checked, all fit the channel.")
 
 
 if __name__ == "__main__":
