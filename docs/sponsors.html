@@ -127,7 +127,7 @@
     <form id="tickerForm" class="panel" style="margin-top:18px">
       <h2 style="margin-top:0">Scrolling line</h2>
       <p class="small">A line of text that scrolls across once every 30 seconds (Cable TV 1.8.96 and newer): bigger in the band above the players in 1×2 and 2×2, and next to the channel count in the other layouts, and along the bottom of a full-screen channel and News mode. From Cable TV 1.11.0 it takes turns with a line about our packages (Free and Gold).</p>
-      <label class="f">Words <input type="text" id="tickerText" maxlength="160"></label>
+      <label class="f">Words <span class="small" id="tickerCount"></span> <textarea id="tickerText" maxlength="400" rows="3" style="min-height:70px"></textarea></label>
       <label class="f" style="font-weight:400"><input type="checkbox" id="tickerOn" checked> Show in the app</label>
       <div class="row"><button class="btn primary" id="tickerSave" type="submit">Save</button></div>
       <p class="small" id="tickerMsg"></p>
@@ -217,7 +217,7 @@ if (!configured) {
       // The scrolling line lives in the same collection as "_ticker"; it isn't a sponsor.
       ticker = all.find(s => s.id === TICKER_ID) || null;
       sponsors = all.filter(s => s.id !== TICKER_ID);
-      $("tickerText").value = ticker ? (ticker.text || "") : DEFAULT_TICKER;
+      $("tickerText").value = ticker ? (ticker.text || "") : DEFAULT_TICKER; tickerCount();
       $("tickerOn").checked = ticker ? !!ticker.active : true;
       try {
         deals = Object.fromEntries((await fs.getDocs(fs.collection(db, "sponsorDeals"))).docs.map(d => [d.id, d.data()]));
@@ -373,12 +373,16 @@ if (!configured) {
     $("form").classList.remove("hidden");
     $("form").scrollIntoView({ behavior: "smooth" });
   }
+  // Room for a long line (owner, 2026-10-09); it's one scrolling line, so Enter doesn't start a new one.
+  function tickerCount() { $("tickerCount").textContent = `(${$("tickerText").value.length} of 400 letters)`; }
+  $("tickerText").addEventListener("input", tickerCount);
+  $("tickerText").addEventListener("keydown", e => { if (e.key === "Enter") e.preventDefault(); });
   $("tickerForm").onsubmit = async ev => {
     ev.preventDefault();
     $("tickerSave").disabled = true; $("tickerMsg").textContent = "";
     try {
       await fs.setDoc(fs.doc(db, "sponsors", TICKER_ID), {
-        kind: "ticker", text: $("tickerText").value.trim(), active: $("tickerOn").checked,
+        kind: "ticker", text: $("tickerText").value.replace(/\s+/g, " ").trim(), active: $("tickerOn").checked,
         createdAt: ticker?.createdAt || fs.serverTimestamp(), updatedAt: fs.serverTimestamp(),
       });
       $("tickerMsg").textContent = "Saved. TVs pick it up the next time the app starts.";
