@@ -91,15 +91,23 @@ class MainActivity : ComponentActivity() {
     private var showWidgets by mutableStateOf(false)
 
     /** Voice search: the TV's speech screen, then [MainViewModel.spoken] with what was said. */
-    private val voiceSearch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()?.let(viewModel::spoken)
+    // The plain activity-result call: the newer API needs a Fragment library this app doesn't carry (lint).
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == VOICE_SEARCH) {
+            data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()?.let(viewModel::spoken)
+        }
     }
 
     private fun startVoiceSearch() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             .putExtra(RecognizerIntent.EXTRA_PROMPT, "Say a channel name")
-        if (runCatching { voiceSearch.launch(intent) }.isFailure) {
+        @Suppress("DEPRECATION")
+        val started = runCatching { startActivityForResult(intent, VOICE_SEARCH) }.isSuccess
+        if (!started) {
             Toast.makeText(this, "Voice search isn't available on this TV. Use the search button instead.", Toast.LENGTH_LONG).show()
         }
     }
@@ -466,3 +474,6 @@ class MainActivity : ComponentActivity() {
         inPictureInPicture = isInPictureInPictureMode
     }
 }
+
+/** Request code for the TV speech screen (voice search). */
+private const val VOICE_SEARCH = 4207
