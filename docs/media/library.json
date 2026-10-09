@@ -26,7 +26,11 @@
   },
   {
    "id": "promos",
-   "name": "Cable TV Promos"
+   "name": "Cable TV Ads"
+  },
+  {
+   "id": "spark-promos",
+   "name": "Spark TV Ads"
   }
  ],
  "items": [
@@ -268,8 +272,96 @@
    "credit": "Our own ad. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Upbeat Sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08, rotating with Ads 7 and 9."
   },
   {
+   "id": "spark-ident",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark TV moving logo (network ident)",
+   "url": "media/spark-ident.mp4",
+   "secs": 20,
+   "poster": "media/spark-ident-poster.jpg",
+   "about": "20 s moving logo: a montage of our channels' clips into the Spark Flower. Plays once an hour before a programme on every Spark channel.",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), public domain, Spark TV."
+  },
+  {
+   "id": "spark-montage",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark TV network montage",
+   "url": "media/spark-montage.mp4",
+   "secs": 30,
+   "poster": "media/spark-montage-poster.jpg",
+   "about": "30 s montage: shows through petal windows, rapid-fire words, a 3x3 wall flying into the flower. In the breaks of every channel.",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), public domain, Spark TV."
+  },
+  {
+   "id": "spark-montage-2",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark TV montage 2, channel surfing",
+   "url": "media/spark-montage-2.mp4",
+   "secs": 20,
+   "poster": "media/spark-montage-2-poster.jpg",
+   "about": "20 s montage: shows glide past on a carousel, faster and faster, then sliding strips into the flower. In the breaks of every channel (approved 2026-10-09).",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), public domain, Spark TV."
+  },
+  {
+   "id": "spark-ad-tour",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark TV Ad, channel tour",
+   "url": "media/spark-ad-tour.mp4",
+   "secs": 60,
+   "poster": "media/spark-ad-tour-poster.jpg",
+   "about": "60 s tour of the Spark channels. In the breaks of every channel.",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
+  },
+  {
+   "id": "spark-ad-urdu",
+   "cat": "spark-promos",
+   "lang": "ur",
+   "title": "Spark TV Ad, Urdu",
+   "url": "media/spark-ad-urdu.mp4",
+   "secs": 30,
+   "poster": "media/spark-ad-urdu-poster.jpg",
+   "about": "30 s Spark ad in Urdu, on the Urdu channels.",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
+  },
+  {
+   "id": "spark-ad-hindi",
+   "cat": "spark-promos",
+   "lang": "hi",
+   "title": "Spark TV Ad, Hindi",
+   "url": "media/spark-ad-hindi.mp4",
+   "secs": 30,
+   "poster": "media/spark-ad-hindi-poster.jpg",
+   "about": "30 s Spark ad in Hindi, on the Hindi channels.",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
+  },
+  {
+   "id": "spark-ad-english",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark TV Ad, English",
+   "url": "media/spark-ad-english.mp4",
+   "secs": 35,
+   "poster": "media/spark-ad-english-poster.jpg",
+   "about": "35 s Spark ad in English, on the English channels.",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
+  },
+  {
+   "id": "spark-ad-punjabi",
+   "cat": "spark-promos",
+   "lang": "pa",
+   "title": "Spark TV Ad, Punjabi",
+   "url": "media/spark-ad-punjabi.mp4",
+   "secs": 30,
+   "poster": "media/spark-ad-punjabi-poster.jpg",
+   "about": "30 s Spark ad in Punjabi, on the Punjabi channels.",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
+  },
+  {
    "id": "show-promo-bazaar-tv-news-the-full-report-all-0000",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: The Full Report",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0000.mp4",
@@ -279,7 +371,7 @@
   },
   {
    "id": "show-promo-show-all-0055",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0055.mp4",
@@ -289,7 +381,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-0100",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0100.mp4",
@@ -299,7 +391,7 @@
   },
   {
    "id": "show-promo-show-all-0155",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0155.mp4",
@@ -309,7 +401,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-0200",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0200.mp4",
@@ -319,7 +411,7 @@
   },
   {
    "id": "show-promo-show-all-0225",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0225.mp4",
@@ -329,7 +421,7 @@
   },
   {
    "id": "show-promo-show-all-0255",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0255.mp4",
@@ -339,7 +431,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-0300",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0300.mp4",
@@ -349,7 +441,7 @@
   },
   {
    "id": "show-promo-show-all-0355",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0355.mp4",
@@ -359,7 +451,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-the-full-report-all-0400",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: The Full Report",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0400.mp4",
@@ -369,7 +461,7 @@
   },
   {
    "id": "show-promo-show-all-0455",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0455.mp4",
@@ -379,7 +471,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-0500",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0500.mp4",
@@ -389,7 +481,7 @@
   },
   {
    "id": "show-promo-show-all-0555",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0555.mp4",
@@ -399,7 +491,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-0600",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0600.mp4",
@@ -409,7 +501,7 @@
   },
   {
    "id": "show-promo-show-all-0655",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0655.mp4",
@@ -419,7 +511,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-0700",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0700.mp4",
@@ -429,7 +521,7 @@
   },
   {
    "id": "show-promo-show-all-0725",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0725.mp4",
@@ -439,7 +531,7 @@
   },
   {
    "id": "show-promo-show-all-0755",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0755.mp4",
@@ -449,7 +541,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-the-full-report-all-0800",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: The Full Report",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0800.mp4",
@@ -459,7 +551,7 @@
   },
   {
    "id": "show-promo-show-all-0855",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0855.mp4",
@@ -469,7 +561,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-0900",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0900.mp4",
@@ -479,7 +571,7 @@
   },
   {
    "id": "show-promo-show-all-0955",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-0955.mp4",
@@ -489,7 +581,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-1000",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1000.mp4",
@@ -499,7 +591,7 @@
   },
   {
    "id": "show-promo-show-all-1025",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1025.mp4",
@@ -509,7 +601,7 @@
   },
   {
    "id": "show-promo-show-all-1055",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1055.mp4",
@@ -519,7 +611,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-1100",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1100.mp4",
@@ -529,7 +621,7 @@
   },
   {
    "id": "show-promo-show-all-1155",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1155.mp4",
@@ -539,7 +631,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-the-full-report-all-1200",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: The Full Report",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-1200.mp4",
@@ -549,7 +641,7 @@
   },
   {
    "id": "show-promo-show-all-1255",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1255.mp4",
@@ -559,7 +651,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-1300",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1300.mp4",
@@ -569,7 +661,7 @@
   },
   {
    "id": "show-promo-show-all-1355",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1355.mp4",
@@ -579,7 +671,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-1400",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1400.mp4",
@@ -589,7 +681,7 @@
   },
   {
    "id": "show-promo-show-all-1455",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1455.mp4",
@@ -599,7 +691,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-1500",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1500.mp4",
@@ -609,7 +701,7 @@
   },
   {
    "id": "show-promo-show-all-1525",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1525.mp4",
@@ -619,7 +711,7 @@
   },
   {
    "id": "show-promo-show-all-1555",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1555.mp4",
@@ -629,7 +721,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-the-full-report-all-1600",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: The Full Report",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-1600.mp4",
@@ -639,7 +731,7 @@
   },
   {
    "id": "show-promo-show-all-1655",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1655.mp4",
@@ -649,7 +741,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-1700",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1700.mp4",
@@ -659,7 +751,7 @@
   },
   {
    "id": "show-promo-show-all-1755",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1755.mp4",
@@ -669,7 +761,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-1800",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1800.mp4",
@@ -679,7 +771,7 @@
   },
   {
    "id": "show-promo-show-all-1825",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1825.mp4",
@@ -689,7 +781,7 @@
   },
   {
    "id": "show-promo-show-all-1855",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1855.mp4",
@@ -699,7 +791,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-1900",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1900.mp4",
@@ -709,7 +801,7 @@
   },
   {
    "id": "show-promo-show-all-1955",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-1955.mp4",
@@ -719,7 +811,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-the-full-report-all-2000",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: The Full Report",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-2000.mp4",
@@ -729,7 +821,7 @@
   },
   {
    "id": "show-promo-show-all-2055",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-2055.mp4",
@@ -739,7 +831,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-2100",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-2100.mp4",
@@ -749,7 +841,7 @@
   },
   {
    "id": "show-promo-show-all-2155",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-2155.mp4",
@@ -759,7 +851,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-2200",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-2200.mp4",
@@ -769,7 +861,7 @@
   },
   {
    "id": "show-promo-show-all-2255",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-2255.mp4",
@@ -779,7 +871,7 @@
   },
   {
    "id": "show-promo-bazaar-tv-news-headlines-all-2300",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: Bazaar TV News: Headlines",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-2300.mp4",
@@ -789,7 +881,7 @@
   },
   {
    "id": "show-promo-show-all-2325",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-2325.mp4",
@@ -799,7 +891,7 @@
   },
   {
    "id": "show-promo-show-all-2355",
-   "cat": "promos",
+   "cat": "spark-promos",
    "lang": "ur",
    "title": "Promo: وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-show-all-2355.mp4",

@@ -146,6 +146,7 @@ onAuthStateChanged(auth, async user => {
 
 // The built-in list (media/library.json) grows when new videos are made; the owner's own
 // changes (sections, moves, removals, added links) are kept on top of it.
+const PROMO_CATS = ["promos", "spark-promos"];
 async function load() {
   const builtIn = await (await fetch("media/library.json?t=" + Date.now())).json();
   let mine = null;
@@ -157,6 +158,10 @@ async function load() {
   const have = new Set(mine.items.map(i => i.id));
   const removed = new Set(mine.removed || []);
   for (const it of builtIn.items) if (!have.has(it.id) && !removed.has(it.id)) mine.items.push(it);
+  // Our ads sit in two folders (owner, 2026-10-09): Cable TV Ads and Spark TV Ads. Spark's own ads and show
+  // promos saved earlier under the one Promos section move to Spark TV Ads.
+  for (const it of mine.items) if (it.cat === "promos" && /^(show-promo-|spark-)/.test(it.id)) it.cat = "spark-promos";
+  for (const c of mine.categories) if (c.id === "promos" && c.name === "Cable TV Promos") c.name = "Cable TV Ads";
   const cats = new Set(mine.categories.map(c => c.id));
   for (const c of builtIn.categories) if (!cats.has(c.id) && mine.items.some(i => i.cat === c.id)) mine.categories.push(c);
   lib = mine;
@@ -177,12 +182,12 @@ function render() {
   const langsUsed = [...new Set(lib.items.map(i => i.lang))];
   $("langs").innerHTML = ["all", ...Object.keys(LANGS).filter(l => langsUsed.includes(l))].map(l =>
     `<button class="chip ${l === lang ? "sel" : ""}" data-lang="${l}">${l === "all" ? "All languages" : LANGS[l]}</button>`).join("")
-    + (lib.categories.some(c => c.id === "promos") ? `<button class="chip ${lang === "promos" ? "sel" : ""}" data-lang="promos">📣 Promos</button>` : "");
+    + (lib.categories.some(c => PROMO_CATS.includes(c.id)) ? `<button class="chip ${lang === "promos" ? "sel" : ""}" data-lang="promos">📣 Ads</button>` : "");
   $("langs").querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { lang = b.dataset.lang; render(); });
   const catOptions = id => lib.categories.map(c => `<option value="${esc(c.id)}" ${c.id === id ? "selected" : ""}>${esc(c.name)}</option>`).join("");
   $("aCat").innerHTML = catOptions();
-  // "Promos" shows only the Cable TV Promos section (our own ads, kept here until the owner uses them).
-  const shown = lang === "promos" ? lib.categories.filter(c => c.id === "promos") : lib.categories;
+  // "Ads" shows only our two ad folders, Cable TV Ads and Spark TV Ads.
+  const shown = lang === "promos" ? lib.categories.filter(c => PROMO_CATS.includes(c.id)) : lib.categories;
   $("cats").innerHTML = shown.map(c => {
     const items = lib.items.filter(i => i.cat === c.id && (lang === "all" || lang === "promos" || i.lang === lang));
     const total = lib.items.filter(i => i.cat === c.id).length;

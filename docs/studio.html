@@ -124,6 +124,8 @@
     #adlib .alCard b { font-size: 16px; }
     #adlib .alPill { align-self: flex-start; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #14532D; color: #BBF7D0; }
     #adlib .alPill.off { background: var(--surface-2); color: var(--text); }
+    #adlib .alFolder { border: 2px solid var(--line); border-radius: 14px; padding: 10px 16px; margin: 0 0 16px; }
+    #adlib .alFolder > summary { font-size: 20px; font-weight: 800; cursor: pointer; padding: 4px 0; }
     .work[data-tab] .steps { display: block; }
     .work[data-tab] .steps #videos, .work[data-tab] .steps #loop, .work[data-tab] .steps #slots, .work[data-tab] .steps #library { max-height: calc(100vh - 330px); }
     .overview { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; }
@@ -1766,6 +1768,8 @@ async function renderAdLibrary() {
       <div><b>${esc(title)}</b><span class="small">${secs ? secs + " s · " : ""}${esc(where)}</span>
       <span class="alPill${on ? "" : " off"}">${on ? "ON AIR" : "IN THE LIBRARY"}</span></div></div>`;
   const group = (title, cards) => cards.length ? `<h3>${title} <span class="small">(${cards.length})</span></h3><div class="alGrid">${cards.join("")}</div>` : "";
+  // Two folders (owner, 2026-10-09): Spark TV ads and Cable TV ads.
+  const folder = (title, groups) => `<details class="alFolder" open><summary>${title}</summary>${groups.join("") || '<p class="small">Nothing here yet.</p>'}</details>`;
   const sp = spark || {}; const LANG = { ur: "Urdu", hi: "Hindi", en: "English", pa: "Punjabi" };
   const montages = sp.montages?.list || (sp.montage ? [sp.montage] : []);
   const shapes = [
@@ -1778,14 +1782,17 @@ async function renderAdLibrary() {
     ...Object.entries(sp.byLanguage || {}).flatMap(([l, list]) => list.map(a => card("media/" + a.src, poster(a.src), a.title, a.secs, `Breaks on the ${LANG[l] || l} channels`))),
   ];
   const onAir = new Set((promos?.promos || []).map(p => p.title));
-  const cable = (lib?.items || []).filter(i => i.cat === "promos" && !/^show-promo-/.test(i.id))
-    .sort((a, b) => onAir.has(b.title) - onAir.has(a.title) || a.title.localeCompare(b.title, undefined, { numeric: true }))
-    .map(i => card(i.url, i.poster, i.title, i.secs, onAir.has(i.title) ? "Breaks on every channel" : "Approved earlier, not in the breaks now", onAir.has(i.title)));
+  const cableItems = (lib?.items || []).filter(i => i.cat === "promos" && !/^(show-promo-|spark-)/.test(i.id))
+    .sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
+  const cableOn = cableItems.filter(i => onAir.has(i.title)).map(i => card(i.url, i.poster, i.title, i.secs, "Breaks on every channel"));
+  const cableOff = cableItems.filter(i => !onAir.has(i.title)).map(i => card(i.url, i.poster, i.title, i.secs, "Approved earlier, not in the breaks now", false));
   // Our older ads, kept on the site but off the air (replaced by newer ones).
   const old = [["1", 60], ["2", 30], ["3", 30], ["4", 30], ["6", 60]].filter(([n]) => !onAir.has("Cable TV Video Ad " + n))
     .map(([n, secs]) => card(`media/cable-tv-video-ad-${n}.mp4`, `media/cable-tv-ad-${n}-poster.jpg`, "Cable TV Video Ad " + n, secs, "Older ad, replaced by a newer one", false));
-  $("alList").innerHTML = group("✨ Spark montages &amp; moving logo", shapes) + group("📣 Spark TV ads", sparkAds) + group("📺 Cable TV ads", cable) + group("🗄 Older Cable TV ads", old)
-    || '<p class="small">Could not load the list. Check your connection and open this tab again.</p>';
+  $("alList").innerHTML = spark || promos || lib
+    ? folder("📁 Spark TV ads", [group("✨ Montages &amp; moving logo", shapes), group("📣 Spark ads", sparkAds)])
+      + folder("📁 Cable TV ads", [group("📺 On air", cableOn), group("🗄 Older ads", [...cableOff, ...old])])
+    : '<p class="small">Could not load the list. Check your connection and open this tab again.</p>';
   adLibDone = !!(spark || promos || lib);
 }
 async function loadStats() {
