@@ -1,0 +1,50 @@
+name: Realistic presenter test (Modal)
+# Owner asked 2026-10-09 for more lifelike newsreaders: LongCat-Video-Avatar 1.5 on the owner's Modal account
+# (GPU; GitHub runners have none). Makes one short Urdu clip of a reader, never touches on-air files.
+# Result: channel-media/news-longcat-test-<reader>.mp4 (+ .json with GPU time and cost).
+on:
+  push:
+    branches-ignore: [main]
+    paths: ["tools/news/modal/**", ".github/workflows/presenter-modal-test.yml"]
+  workflow_dispatch:
+    inputs:
+      reader: {description: "Reader picture id on channel-media", default: "anchor-1q"}
+      resolution: {description: "480p or 720p", default: "480p"}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    env:
+      READER: ${{ inputs.reader || 'anchor-1q' }}
+      RES: ${{ inputs.resolution || '480p' }}
+      MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+      MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the Modal key is saved
+        run: |
+          if [ -z "$MODAL_TOKEN_ID" ] || [ -z "$MODAL_TOKEN_SECRET" ]; then
+            echo "::error::MODAL_TOKEN_ID / MODAL_TOKEN_SECRET secrets are missing"; exit 1
+          fi
+      - name: Reader picture and Urdu voice
+        run: |
+          set -eu
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q modal edge-tts
+          mkdir -p job
+          curl -fsSL -m 120 -o job/reader.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$READER.jpg"
+          edge-tts --voice ur-PK-UzmaNeural --text "السلام علیکم، اسپارک ٹی وی نیوز میں خوش آمدید۔ میں ہوں ثنا، اور یہ ہیں اس وقت کی اہم خبریں۔ کینیڈا، پاکستان اور دنیا بھر کی تازہ ترین خبریں، ہمارے ساتھ۔" --write-media job/voice.mp3
+          ffprobe -v error -show_entries format=duration -of csv=p=0 job/voice.mp3
+      - name: Make the clip on Modal
+        run: |
+          set -eu
+          modal run tools/news/modal/longcat_avatar.py --image job/reader.jpg --audio job/voice.mp3 \
+            --resolution "$RES" --out "job/news-longcat-test-$READER.mp4" \
+            --prompt "A beautiful Pakistani woman TV news anchor in her late twenties with long dark hair, wearing an elegant embroidered maroon shalwar kameez with a light dupatta, sits upright at a glossy news desk in a bright modern television news studio and is speaking calmly and clearly to the camera, reading the news with natural lip movements, gentle head movements and blinks, small natural hand movements on the desk, static camera, realistic broadcast footage"
+      - name: Upload
+        if: always()
+        run: |
+          ls job/news-longcat-test-* 2>/dev/null && gh release upload channel-media job/news-longcat-test-* -R "$GITHUB_REPOSITORY" --clobber || echo "nothing to upload"
