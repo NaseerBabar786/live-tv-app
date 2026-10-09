@@ -1,0 +1,40 @@
+{
+  "note": "Spark TV's own ads for Spark Ads (channel/ads-schedule.json, kind ads): the channel tour, the network montage, the four language ads and the moving logo, in turn (owner, 2026-10-08/09; same files as spark-promos.json).",
+  "promos": [
+    {
+      "src": "spark-ad-tour.mp4",
+      "title": "Spark TV Ad, channel tour",
+      "secs": 60
+    },
+    {
+      "src": "spark-montage.mp4",
+      "title": "Spark TV network montage",
+      "secs": 30
+    },
+    {
+      "src": "spark-ad-urdu.mp4",
+      "title": "Spark TV Ad, Urdu",
+      "secs": 30
+    },
+    {
+      "src": "spark-ad-hindi.mp4",
+      "title": "Spark TV Ad, Hindi",
+      "secs": 30
+    },
+    {
+      "src": "spark-ad-english.mp4",
+      "title": "Spark TV Ad, English",
+      "secs": 35
+    },
+    {
+      "src": "spark-ad-punjabi.mp4",
+      "title": "Spark TV Ad, Punjabi",
+      "secs": 30
+    },
+    {
+      "src": "spark-ident.mp4",
+      "title": "Spark TV moving logo (network ident)",
+      "secs": 20
+    }
+  ]
+}

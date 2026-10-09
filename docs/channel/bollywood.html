@@ -114,11 +114,12 @@ function play(step = 0) {
 // (📺 Programmes) don't play.
 let joinAt = 0;
 Promise.all([fetch("bollywood.json", { cache: "no-store" }).then(r => r.json()), import("./ytorder.js")]).then(async ([d, yo]) => {
-  const promos = await yo.loadPromos();
-  const picks = (await yo.loadPicks()).hits || null;
-  const list = d.songs.filter(s => yo.playable(s, picks));
   // Same running order as Channel Studio's guide (ytorder.js); every song counts as four minutes.
   const hits = { id: "hits", ytMins: 4 };
+  // Our promos and Spark TV's ads for every channel.
+  const promos = await yo.loadPromos("../media/", hits);
+  const picks = (await yo.loadPicks()).hits || null;
+  const list = d.songs.filter(s => yo.playable(s, picks));
   songs = yo.runningOrder(hits, list.length ? list : d.songs, yo.torontoDay().date);
   const items = yo.withBreaks(songs, hits, promos);
   let si = -1;

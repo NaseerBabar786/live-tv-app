@@ -57,7 +57,7 @@
       done();
     };
     const next = () => { k++; if (k >= list.length) finish(); else start(0); };
-    const canSkip = () => Date.now() >= skipFrom;
+    const canSkip = () => Date.now() >= skipFrom && !(list[k] && list[k].ident);
     function start(at) {
       const promo = list[k];
       clearTimeout(guard);
@@ -77,7 +77,7 @@
       else if (Date.now() - movedAt > 8000 && Date.now() - startedAt > 8000) { movedAt = Date.now(); next(); return; }
       const left = Math.ceil((skipFrom - Date.now()) / 1000);
       // An ad of 10 seconds or less just plays to the end: nothing to skip.
-      skip.hidden = (list[k] && list[k].secs || 30) <= 10;
+      skip.hidden = (list[k] && list[k].secs || 30) <= 10 || !!(list[k] && list[k].ident);
       skip.textContent = list[k] && list[k].own ? (left > 0 ? `Skip in ${left}` : "Skip ›")
         : left > 0 ? `Skip ad in ${left}` : (k < list.length - 1 ? "Skip ad ›" : "Skip ›");
     }, 250);

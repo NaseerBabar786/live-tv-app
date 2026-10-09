@@ -7,12 +7,14 @@
 //   node tools/lock_schedules.mjs
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { STATIONS } from "../docs/channel/schedule.js";
-import { dayPlan, torontoDay, loadPicks, carryOver, slimItem as slim, loadOwnerDays } from "../docs/channel/ytorder.js";
+import { dayPlan, sparkFor, torontoDay, loadPicks, carryOver, slimItem as slim, loadOwnerDays } from "../docs/channel/ytorder.js";
 
 const DIR = new URL("../docs/channel/", import.meta.url);
 mkdirSync(new URL("locked/", DIR), { recursive: true });
 const read = name => JSON.parse(readFileSync(new URL(name, DIR), "utf8"));
 const promos = (read("../media/promos.json").promos || []).filter(p => p.src && p.secs >= 10 && p.secs <= 60);
+// Spark TV's own ads (each channel's, in turn with the promos) and its moving logo once an hour (owner, 2026-10-09).
+const spark = existsSync(new URL("../media/spark-promos.json", DIR)) ? read("../media/spark-promos.json") : null;
 const allTrailers = existsSync(new URL("trailers.json", DIR)) ? read("trailers.json").videos || [] : [];
 const picks = await loadPicks();
 // Videos that no longer play in an embedded player (tools/check_channels.mjs) stay out of new days.
@@ -35,7 +37,9 @@ for (const st of STATIONS.filter(s => s.yt)) {
     ? (read(st.ownClips).clips || []).filter(c => c.src && c.secs > 0 && c.secs <= 120).map(c => ({ ...c, own: true })) : [];
   const old = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : { days: {} };
   const days = {};
-  const make = date => dayPlan(st, { list, picks: picks[st.id] || null, promos, trailers, own }, date).map(slim);
+  const sp = sparkFor(st, spark);
+  const breaks = st.noAds ? [] : promos.concat(sp.promos);
+  const make = date => dayPlan(st, { list, picks: picks[st.id] || null, promos: breaks, trailers, own, ident: sp.ident }, date).map(slim);
   const mine = await loadOwnerDays(st.id);
   days[today] = mine[today]?.items || old.days?.[today] || make(today);
   const nextDay = torontoDay(Date.now() + 24 * 3600e3).date;

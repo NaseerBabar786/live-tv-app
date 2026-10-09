@@ -149,7 +149,7 @@ export function inSeriesOrder(pool, day) {
  * Packs programmes into half hours [fromHalf, toHalf) of the day. [pick(half, setLeft, room)] gives the next
  * programme to start (one that fits in the [room] left in this half hour, if it can). Returns the items; each half hour adds up to exactly 30 minutes.
  */
-function packHalves(station, pick, promos, own, fromHalf, toHalf, counters) {
+function packHalves(station, pick, promos, own, fromHalf, toHalf, counters, ident = null) {
   const items = [];
   let cur = null;   // { v, start, len, part }
   const adBreak = () => {
@@ -211,17 +211,21 @@ function packHalves(station, pick, promos, own, fromHalf, toHalf, counters) {
     // long, only what still fits (the ads always stay), so the half hour is still exactly 30 minutes.
     if (ads) half.push(ads);
     let left = HALF - wall();
+    // Spark TV's moving logo on the hour, the last thing before the next programme (never inside the ads).
+    const id = ident && h % 2 === 0 && left >= ident.secs + MIN_TODAY ? ident : null;
+    if (id) left -= id.secs;
     const c = own.length ? own[counters.o % own.length] : null;
     if (c && left >= c.secs + MIN_TODAY) { counters.o++; half.push({ kind: "break", own: true, promos: [c], secs: c.secs }); left -= c.secs; }
     if (left >= MIN_TODAY + WEATHER_SECS) half.push({ kind: "break", card: "today", secs: left - WEATHER_SECS }, { kind: "break", card: "weather", secs: WEATHER_SECS });
     else if (left > 0) half.push({ kind: "break", card: "today", secs: left });
+    if (id) half.push({ kind: "break", ident: true, promos: [id], secs: id.secs });
     items.push(...half);
   }
   return items;
 }
 
 /** A half-hour channel's day: its 8-hour set, made afresh each day from the approved programmes, three times. */
-export function halfHourDay(station, list, date, promos = [], own = []) {
+export function halfHourDay(station, list, date, promos = [], own = [], ident = null) {
   const cfg = station.halfHours, setHalves = cfg.setHours * 2;
   const day = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000);
   const seed = day + station.id.length;
@@ -248,7 +252,7 @@ export function halfHourDay(station, list, date, promos = [], own = []) {
     }
     return null;
   };
-  const set = packHalves(station, pick, promos, own, 0, setHalves, { p: 0, o: 0 });
+  const set = packHalves(station, pick, promos, own, 0, setHalves, { p: 0, o: 0 }, ident);
   const out = [];
   for (let k = 0; k < 24 / cfg.setHours; k++) out.push(...set);
   return out;
@@ -258,11 +262,11 @@ export function halfHourDay(station, list, date, promos = [], own = []) {
  * The owner's own order (Channel Studio 📅 Schedule) for a half-hour channel: the half hours already kept
  * stay, then [progs] in that order from the next half hour to midnight.
  */
-export function halfHourRebuild(station, keep, progs, promos = [], own = []) {
+export function halfHourRebuild(station, keep, progs, promos = [], own = [], ident = null) {
   const from = Math.round(keep.reduce((t, x) => t + x.secs, 0) / HALF);
   let i = 0;
   const pick = () => progs.length ? progs[i++ % progs.length] : null;
-  return keep.concat(packHalves(station, pick, promos, own, from, 48, { p: from * 3, o: from }));
+  return keep.concat(packHalves(station, pick, promos, own, from, 48, { p: from * 3, o: from }, ident));
 }
 
 /**
@@ -349,21 +353,47 @@ export async function loadOwnClips(station, base = "") {
   } catch { return []; }
 }
 
-/** Our approved promos for the breaks, 5 to 60 seconds each (owner, 2026-10-07). */
-export async function loadPromos(base = "../media/") {
+/** Our approved promos for the breaks, 5 to 60 seconds each (owner, 2026-10-07); with [station], its Spark ads too. */
+export async function loadPromos(base = "../media/", station = null) {
+  let list = [];
   try {
     const d = await (await fetch(base + "promos.json", { cache: "no-cache" })).json();
-    return (d.promos || []).filter(p => p.src && p.secs >= 5 && p.secs <= 60);
-  } catch { return []; }
+    list = (d.promos || []).filter(p => p.src && p.secs >= 5 && p.secs <= 60);
+  } catch {}
+  return station ? list.concat(sparkFor(station, await loadSpark(base)).promos) : list;
+}
+
+// ---------- Spark TV's own ads and moving logo (owner, 2026-10-09) ----------
+// media/spark-promos.json: the ads for every channel (channel tour, network montage) take turns with the
+// Cable TV promos in the breaks, plus the ad in the channel's own language; the moving logo (ident) plays
+// between programmes once an hour, never inside a break. Channels with noAds (Gurbani) get neither.
+
+/** A channel's language by its number (owner, 2026-10-08): Urdu 1-19, Hindi 21-39, English 41-59, Punjabi 61-79. */
+export function langOf(station) {
+  const n = +station.dial;
+  return !n ? null : n < 20 ? "ur" : n < 40 ? "hi" : n < 60 ? "en" : n < 80 ? "pa" : null;
+}
+
+/** From spark-promos.json: { promos (this channel's Spark ads for the breaks), ident (or null) }. */
+export function sparkFor(station, d) {
+  if (!d || station.noAds) return { promos: [], ident: null };
+  const ok = p => p && p.src && p.secs >= 5 && p.secs <= 60;
+  const promos = (d.everyChannel || []).concat((d.byLanguage || {})[langOf(station)] || []).filter(ok);
+  return { promos, ident: ok(d.ident) ? { ...d.ident, ident: true } : null };
+}
+
+/** spark-promos.json, or null when it can't be read. */
+export async function loadSpark(base = "../media/") {
+  try { return await (await fetch(base + "spark-promos.json", { cache: "no-cache" })).json(); } catch { return null; }
 }
 
 /**
  * The running order with its ad breaks: [{ kind: "break", promos, secs } | { kind: "video", v, secs }].
  * Breaks take the promos in turn, as many as fit in 60 seconds, so each break shows different ones.
  */
-export function withBreaks(order, station, promos, trailers = [], own = []) {
+export function withBreaks(order, station, promos, trailers = [], own = [], ident = null) {
   const items = [];
-  let since = Infinity, p = 0, t = 0, hour = 0, o = 0;
+  let since = Infinity, p = 0, t = 0, hour = 0, o = 0, identHour = 0;
   // Movie channels (owner, 2026-10-07): after every film, 12 trailers. First "coming up" clips of the next
   // films on this channel (45 seconds from inside each film), then trailers of upcoming Hindi films
   // (channel/trailers.json, refreshed every day), then the ad break and the next film.
@@ -388,6 +418,11 @@ export function withBreaks(order, station, promos, trailers = [], own = []) {
         list.push(x); total += x.secs; p++;
       }
       if (list.length) { items.push({ kind: "break", promos: list, secs: total }); since = 0; }
+    }
+    // Spark TV's moving logo once an hour, right before the programme (after any break, never inside one).
+    if (ident) {
+      const now = items.reduce((n, x) => n + x.secs, 0);
+      if (now >= identHour * 3600) { items.push({ kind: "break", ident: true, promos: [ident], secs: ident.secs }); identHour = Math.floor(now / 3600) + 1; }
     }
     items.push({ kind: "video", v, secs });
     since += secs;
@@ -433,13 +468,13 @@ export function itemsFrom(items, count, fromMs = Date.now()) {
 }
 
 /** A channel's whole day: running order, ad breaks, clips and trailers. */
-export function dayPlan(station, { list, picks, promos = [], trailers = [], own = [] }, date) {
+export function dayPlan(station, { list, picks, promos = [], trailers = [], own = [], ident = null }, date) {
   // Own clips start each day further along, so the hours don't show the same ones every day.
   const day = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000);
   const from = own.length ? (day * 24) % own.length : 0;
   own = own.slice(from).concat(own.slice(0, from));
-  if (station.halfHours) return halfHourDay(station, list.filter(v => playable(v, picks)), date, promos, own);
-  const items = withBreaks(runningOrder(station, list.filter(v => playable(v, picks)), date), station, promos, trailers, own);
+  if (station.halfHours) return halfHourDay(station, list.filter(v => playable(v, picks)), date, promos, own, ident);
+  const items = withBreaks(runningOrder(station, list.filter(v => playable(v, picks)), date), station, promos, trailers, own, ident);
   // One day is enough (25 hours covers the day the clocks go back); a shorter list repeats round the clock.
   let t = 0;
   const end = items.findIndex(x => (t += x.secs) >= 25 * 3600);
@@ -454,9 +489,9 @@ export const slimItem = x => x.kind === "break" ? x : { ...x, v: { id: x.v.id, t
  * ([keep], what has played already and the one on now), then [progs] in the owner's order with the ad
  * breaks, clips and trailers in between, as in any day.
  */
-export function rebuildDay(station, keep, progs, promos = [], trailers = [], own = []) {
-  if (station.halfHours) return halfHourRebuild(station, keep, progs, promos, own);
-  return keep.concat(withBreaks(progs, station, promos, trailers).map(slimItem));
+export function rebuildDay(station, keep, progs, promos = [], trailers = [], own = [], ident = null) {
+  if (station.halfHours) return halfHourRebuild(station, keep, progs, promos, own, ident);
+  return keep.concat(withBreaks(progs, station, promos, trailers, [], ident).map(slimItem));
 }
 
 /**

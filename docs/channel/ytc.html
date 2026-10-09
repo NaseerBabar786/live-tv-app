@@ -96,7 +96,7 @@ let dataReady;
 const ready = new Promise(r => dataReady = r);
 { const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(s); }
 import { STATIONS } from "./schedule.js";
-import { loadPicks, loadPromos, loadTrailers, loadLocked, loadOwnClips, dayPlan, itemAt, torontoDay, lengthOf as lengthIn, HALF, TZ } from "./ytorder.js";
+import { loadPicks, loadPromos, loadSpark, sparkFor, loadTrailers, loadLocked, loadOwnClips, dayPlan, itemAt, torontoDay, lengthOf as lengthIn, HALF, TZ } from "./ytorder.js";
 const q = new URLSearchParams(location.search);
 const app = q.has("app");
 const $ = id => document.getElementById(id);
@@ -370,10 +370,10 @@ function watchStall() {
 // The day's running order with its ad breaks: the locked day (the owner's from Channel Studio, or
 // channel/locked/<id>.json written every night, so the day never changes once it has begun), or, when there is none, worked out the same way here from
 // the programmes the owner approved in Channel Studio (📺 Programmes).
-let all = [], unplayable = {}, picks = null, promos = [], trailers = [], own = [], day = null, locked = null;
+let all = [], unplayable = {}, picks = null, promos = [], trailers = [], own = [], ident = null, day = null, locked = null;
 function order() {
   day = torontoDay().date;
-  items = locked && locked.date === day ? locked.items : dayPlan(station, { list: all, picks, promos, trailers, own }, day);
+  items = locked && locked.date === day ? locked.items : dayPlan(station, { list: all, picks, promos, trailers, own, ident }, day);
 }
 
 // The owner can unlock today in Channel Studio to fix a mistake: the fixed day comes in within 5 minutes,
@@ -388,10 +388,10 @@ setInterval(() => {
 }, 5 * 60e3);
 
 let joinAt = 0;
-Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-cache" }).then(r => r.json()), loadPicks(), loadPromos(), loadTrailers(station), loadLocked(station), loadOwnClips(station),
+Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-cache" }).then(r => r.json()), loadPicks(), loadPromos("../media/", station), loadTrailers(station), loadLocked(station), loadOwnClips(station), loadSpark(),
   // What the nightly check and the hourly pre-air check (tools/preair_check.py) found won't play here.
   Promise.all(["unplayable.json", "preair-bad.json"].map(f => fetch(f, { cache: "no-cache" }).then(r => r.json()).catch(() => ({}))))
-    .then(([a, b]) => ({ ids: { ...(a.ids || {}), ...(b.ids || {}) } }))]).then(([d, p, pr, tr, lk, oc, un]) => {
+    .then(([a, b]) => ({ ids: { ...(a.ids || {}), ...(b.ids || {}) } }))]).then(([d, p, pr, tr, lk, oc, sp, un]) => {
   if (!d.videos || d.videos.length < 3) return fallBack();
   unplayable = un.ids || {};
   all = d.videos.filter(v => !unplayable[v.id]);
@@ -400,6 +400,7 @@ Promise.all([fetch(`yt-${station.id}.json`, { cache: "no-cache" }).then(r => r.j
   promos = station.noAds ? [] : pr;
   trailers = station.noAds ? [] : tr;
   own = oc;
+  ident = sparkFor(station, sp).ident;
   locked = lk && { date: torontoDay().date, items: lk };
   order();
   // Nothing left to play (every programme taken off): the free films take over.

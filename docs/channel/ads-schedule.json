@@ -1,5 +1,5 @@
 {
-  "note": "Spark Ads (channel 15): our Cable TV promos (media/app-promos.json, the app's pop-up list), then our sponsors' ads (ads-sponsors.json, rebuilt hourly from /sponsors), then 'Advertise with us', round and round. The lists are put in place by MyChannel.expand and schedule.js expand.",
+  "note": "Spark Ads (channel 15): our Cable TV promos (media/app-promos.json, the app's pop-up list), then Spark TV's own ads (media/spark-ads-list.json), then our sponsors' ads (ads-sponsors.json, rebuilt hourly from /sponsors), then 'Advertise with us', round and round. The lists are put in place by MyChannel.expand and schedule.js expand.",
   "name": "Spark Ads",
   "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-ads.png",
   "logoCorner": "tr",
@@ -8,9 +8,10 @@
   "tickerOn": false,
   "videos": [
     { "id": "promos", "title": "Cable TV promos", "url": "https://tv.bulkbazaar.ca/media/app-promos.json", "kind": "ads" },
+    { "id": "spark", "title": "Spark TV ads", "url": "https://tv.bulkbazaar.ca/media/spark-ads-list.json", "kind": "ads" },
     { "id": "sponsors", "title": "Our sponsors", "url": "https://tv.bulkbazaar.ca/channel/ads-sponsors.json", "kind": "ads" },
     { "id": "advertise", "title": "Advertise on Cable TV", "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4", "secs": 15, "kind": "ad" }
   ],
   "slots": [],
-  "loop": ["promos", "sponsors", "advertise"]
+  "loop": ["promos", "spark", "sponsors", "advertise"]
 }
