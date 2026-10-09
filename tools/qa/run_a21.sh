@@ -63,7 +63,8 @@ check_mode() { # mode name
   shot "$m-keys-during-break"
   sleep 10
   adb shell input keyevent KEYCODE_BACK; sleep 3; shot "$m-after-back"
-  if has "skip in|skip ad"; then note "INFO: ad still showing after Back (may be the next ad of the break)"; sleep 35; fi
+  if has "skip ad"; then note "FAIL: Back did not skip the ad in $m"; elif has "skip in"; then note "INFO: next ad of the break showing after Back"; else note "PASS: Back skipped the ad in $m"; fi
+  sleep 30
   shot "$m-after-break"
   alive "$m after the break"
 }
