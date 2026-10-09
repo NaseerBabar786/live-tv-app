@@ -270,7 +270,7 @@
 <main class="wrap studio-main">
   <a href="admin" class="back-admin">← Back to Admin</a>
   <h1>Channel Studio</h1>
-  <p class="lead">Run your own TV channels. They show at the top of every list in Cable TV (Spark TV is <b>channel 1</b>, Spark Cinema <b>2</b>, Spark Music <b>3</b>, Spark Hits <b>4</b>, Spark Kids <b>5</b>, Spark Sports <b>6</b>, Spark Travel <b>7</b> and Spark Comedy <b>8</b>, from 1.9.45) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+  <p class="lead">Run your own TV channels. They show at the top of every list in Cable TV (Spark TV One is <b>channel 1</b>; the other Spark channels sit in language blocks: Urdu <b>1-19</b>, Hindi <b>21-39</b>, English <b>41-59</b>, Punjabi <b>61-79</b>) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
@@ -838,16 +838,31 @@ function showHits(on) {
     : `${station.name}: official videos from YouTube channels, one after another, locked like Spark Hits.`;
   $("modeText").textContent = "It runs by itself from its locked schedule. Choose its programmes in the Library and Next transmission. Tap 🔊 for sound.";
 }
+// The network is Spark since 2026-10-09: a channel saved before then still says "Bazaar TV" in its scrolling line,
+// video titles and logo. Those are renamed here (Bulk Bazaar, the sponsor, keeps its name); true when anything changed.
+function sparkNames(cfg) {
+  const before = JSON.stringify(cfg);
+  const fix = t => typeof t !== "string" ? t : t
+    .replace(/(?<!Bulk |App |Bubble )\bBazaar (?=[A-Z])/g, "Spark ")
+    .replace(/(?<!بلک )بازار ٹی وی/g, "اسپارک ٹی وی");
+  cfg.ticker = fix(cfg.ticker);
+  (cfg.videos || []).forEach(v => { v.title = fix(v.title); });
+  (cfg.slots || []).forEach(x => { if (x && x.title) x.title = fix(x.title); });
+  if (/\/logos\/bazaar-[\w-]+\.png/.test(cfg.logo || "")) cfg.logo = station.logo;
+  return JSON.stringify(cfg) !== before;
+}
 async function loadSaved() {
   renderStations();
   showHits(!!station.web);
   // Every channel opens on its Overview first (owner, 2026-10-07).
   if (wide.matches) setTab("overview");
   if (station.web) { dirty = false; loadPicksPanel(); return; }
+  let loadedSaved = false;
   try {
     const snap = await fs.getDoc(fs.doc(db, "sponsors", station.doc));
     if (snap.exists() && snap.data().data) {
       saved = JSON.parse(snap.data().data);
+      loadedSaved = true;
       $("saveMsg").textContent = `Loaded your saved ${station.name}.`;
     } else {
       saved = await testProgramme();
@@ -863,9 +878,12 @@ async function loadSaved() {
   if (!saved.logo) saved.logo = station.logo;
   // Each channel keeps its own fixed name (owner, 2026-10-07): "Spark TV One", "Spark Cinema"...
   saved.name = station.name;
+  const renamed = loadedSaved && sparkNames(saved);
   c = clone(saved);
   dirty = false;
   renderAll();
+  // Saved straight away so TVs and the public page drop the old names too.
+  if (renamed) { await $("save").onclick(); $("saveMsg").innerHTML += " Old Bazaar names on this channel are now Spark."; }
 }
 
 // ---------- step 1 ----------
