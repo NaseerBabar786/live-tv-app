@@ -14,7 +14,12 @@ like the approved v5 montage (tools/make_spark_montage.py, whose clips and drawi
   mosaic     Every screen makes the flower. One show full screen, the camera pulls back and back: it is one of
              hundreds of screens, and the screens in the four petals take on the petal colours until they are the flower.
 
-Usage: python3 tools/make_spark_montage_ideas.py languages|carousel|remote|mosaic OUT.mp4
+  panels     Rhythm panels (real footage only). Slanted panels split the screen on the beat, a wall of cards flips,
+             four columns take the petal colours and swing into the flower.
+  fly        Fly-through (real footage only). Every shot holds the next one in a window at its centre; the camera
+             flies through window after window, faster and faster, into the flower.
+
+Usage: python3 tools/make_spark_montage_ideas.py languages|carousel|remote|mosaic|panels|fly OUT.mp4
 """
 import math, os, subprocess, sys, tempfile
 import numpy as np
@@ -467,6 +472,177 @@ def mosaic(clips, outro):
     return frame
 
 
+# ------------------------------------------------------------------ ideas 5 and 6: only real footage from our channels
+# Owner, 2026-10-09: no AI-made video at all, only shots from what runs on the Spark channels. So these two use the
+# Spark TV News footage (real video from Wikimedia Commons, tools/news/broll.py) and the films on Spark Cinema and
+# Spark Kids (Blender open movies, Superman 1941); never the AI newsreaders or the AI story videos.
+BR = M.NB
+M.CLIPS.update({
+    "train": (BR + "india-160decbb.mp4", 2, ""), "cst": (BR + "india-f5de6f65.mp4", 2, ""), "taxi": (BR + "india-c16af481.mp4", 2, ""),
+    "street": (BR + "india-45c3d88a.mp4", 2, ""), "quebec": (BR + "canada-bdb6a81c.mp4", 2, ""), "to-lapse": (BR + "canada-4ad1cd20.mp4", 2, ""),
+    "to-sky": (BR + "canada-2fd98608.mp4", 2, ""), "city-lapse": (BR + "world-73273108.mp4", 2, ""), "clouds": (BR + "weather-rain-3de3a689.mp4", 2, ""),
+    "rain": (BR + "weather-rain-f5f027fb.mp4", 2, ""), "golak": (BR + "sports-d6b78877.mp4", 2, ""), "cricket2": (BR + "cricket-c12cf9fb.mp4", 2, ""),
+    "projector": (BR + "film-d1282eb3.mp4", 2, ""), "reels": (BR + "film-3d50c860.mp4", 2, ""), "night-earth": (BR + "world-09bb4764.mp4", 2, ""),
+    "heli": (BR + "health-95f4d06b.mp4", 2, ""),
+    "elephants": (M.CM + "elephants-dream.mp4", 200, ""), "wing-sky": (M.CM + "wing-it.mp4", 120, ""), "tos-city": (M.CM + "tears-of-steel.mp4", 440, M.WIDE),
+})
+AI_MADE = {"anchor", "story"}                 # never in ideas 5 and 6
+
+
+def reel_frame(clips, nm, t, w=W, h=H, k=0.0, dx=0.0):
+    return push(clips[nm].frame(t % 3.0), k, 1.04, 1.12, dx=dx, size=(w, h))
+
+
+# idea 5: rhythm panels. Slanted panels split the screen on the beat, 1 -> 2 -> 3 -> 4, then a wall of cards flips,
+# then four columns take the petal colours and swing into the flower.
+PANELS = [["projector"], ["to-sky", "cricket"], ["train", "sintel-snow", "golak"], ["quebec", "bunny-fly", "football", "cst"],
+          ["city-lapse", "tos-robot"], ["clouds", "wing-sky", "cricket2"], ["taxi", "llama", "stadium", "to-lapse"],
+          ["to-sky", "golak", "sintel-face", "train"]]
+PWORDS = ["LIVE", "SPORTS", "MOVIES", "CITIES", "NEWS", "KIDS", "CRICKET", "SPARK"]
+GRIDC = ["to-lapse", "cricket", "sintel-snow", "train", "bunny-fly", "quebec", "golak", "tos-robot", "cst", "llama", "clouds", "football",
+         "city-lapse", "wing-sky", "taxi", "stadium", "superman-zap", "wing-rocket", "sintel-face", "cricket2"]
+
+
+def panels(clips, outro):
+    words = [word_img(w, PETALS[i % 4], 150) for i, w in enumerate(PWORDS)]
+    slant = 140
+
+    def split(t, names, k, wipe):
+        n = len(names); cv = Image.new("RGB", (W, H))
+        for i, nm in enumerate(names):
+            x0 = W * i / n; x1 = W * (i + 1) / n
+            m = Image.new("L", (W, H), 0)
+            ImageDraw.Draw(m).polygon([(x0 + slant / 2 - (slant if i else 400), 0), (x1 + slant / 2 + (0 if i < n - 1 else 400), 0),
+                                       (x1 - slant / 2 + (0 if i < n - 1 else 400), H), (x0 - slant / 2 - (slant * 0 if i else 400), H)], fill=255)
+            src = reel_frame(clips, nm, t + i * .4, k=k, dx=(-1) ** i * .4)
+            if wipe < 1 and i == n - 1:                       # the newest panel slides in
+                off = int((1 - out_cubic(wipe)) * W * .6); src = src.transform(src.size, Image.AFFINE, (1, 0, -off, 0, 1, 0))
+                m = m.transform(m.size, Image.AFFINE, (1, 0, -off, 0, 1, 0))
+            cv.paste(src, (0, 0), m)
+        d = ImageDraw.Draw(cv)
+        for i in range(1, n):                                 # coloured dividers in the petal colours
+            x = W * i / n; d.line([(x + slant / 2, 0), (x - slant / 2, H)], fill=PETALS[i % 4], width=10)
+        return cv
+
+    def wall(t, flip0):
+        """4x4 wall; each card flips (narrows, swaps, widens) on its own beat."""
+        cv = Image.new("RGB", (W, H), tuple(int(v * 255) for v in DARK)); g = 10; cw, ch = (W - 5 * g) // 4, (H - 5 * g) // 4
+        for r in range(4):
+            for c in range(4):
+                j = r * 4 + c; ph = (t - flip0 - (j % 7) * .07) / .5
+                n = int(max(0, ph)); f = max(0, ph) - n
+                nm = GRIDC[(j + n * 5) % len(GRIDC)]
+                sx = abs(math.cos(min(1, f / .35) * math.pi)) if f < .35 else 1
+                w = max(2, int(cw * sx))
+                im = reel_frame(clips, nm, t + j * .3, cw, ch, k=.5)
+                if w != cw: im = im.resize((w, ch), Image.BILINEAR)
+                cv.paste(im, (g + c * (cw + g) + (cw - w) // 2, g + r * (ch + g)))
+        return cv
+
+    def frame(t):
+        lay = None
+        if t < 9:
+            b = int(t / .5) if t >= 1 else 0
+            seg = min(len(PANELS) - 1, b // 2)
+            k = (t - seg * 1.0) / 1.0
+            prev_n = len(PANELS[seg - 1]) if seg else 0
+            wipe = clamp(k / .35) if len(PANELS[seg]) > prev_n and len(PANELS[seg]) > 1 else 1
+            f = arr(split(t, PANELS[seg], clamp(k), wipe))
+            if k < .06: f = f + (1 - k / .06) * .4
+            wi = words[seg]; a = clamp((k - .15) / .15) * (1 - clamp((k - .85) / .15))
+            if a > 0:
+                lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); q = fade_img(wi, a)
+                lay.alpha_composite(q, ((W - q.width) // 2, H - 110 - q.height))
+        elif t < 12.5:
+            f = arr(wall(t, 9.0))
+            if t < 9.1: f = f + (1 - (t - 9) / .1) * .6
+        else:
+            # four tall columns, each taking a petal colour over its show, close in and become the flower's petals
+            k = t - 12.5; cv = Image.new("RGBA", (W, H), tuple(int(v * 255) for v in DARK) + (255,))
+            e = inout(clamp((k - .5) / 1.5)); S = 760
+            for i in range(4):
+                x0, y0, w0, h0 = W * i / 4 + 6, 0, W / 4 - 12, H        # from its column...
+                x1, y1 = (W - S) / 2, (H - S) / 2                       # ...to the flower's square
+                x, y, w, h = x0 + (x1 - x0) * e, y0 + (y1 - y0) * e, w0 + (S - w0) * e, h0 + (S - h0) * e
+                w, h = max(4, int(w)), max(4, int(h))
+                im = reel_frame(clips, PANELS[3][i], t + i, w, h).convert("RGBA")
+                im = Image.blend(im, Image.new("RGBA", im.size, PETALS[i] + (255,)), clamp(k / 1.2) * .8)
+                pm = M.petal_mask(S, i).resize((w, h), Image.BILINEAR)
+                if e < .92:                                     # the column rounds off towards its petal's outline
+                    bx = pm.getbbox() or (0, 0, w, h); q = clamp(e / .92)
+                    box = [bx[0] * q, bx[1] * q, w - 1 - (w - 1 - bx[2]) * q, h - 1 - (h - 1 - bx[3]) * q]
+                    m = Image.new("L", (w, h), 0)
+                    ImageDraw.Draw(m).rounded_rectangle(box, int(min(box[2] - box[0], box[3] - box[1]) / 2 * q), fill=255)
+                else:
+                    m = pm
+                im.putalpha(m); cv.alpha_composite(im, (int(x), int(y)))
+            f = arr(cv.convert("RGB"))
+            if k > 1.9: f = f + ((k - 1.9) / .6) ** 2 * .9
+        for t0 in (5, 9):
+            lk = leak(t, t0)
+            if lk is not None: f = f + lk
+        if lay is not None: f, _ = comp(f, lay)
+        return f * (.35 + .65 * VIGN)
+
+    return frame
+
+
+# idea 6: fly-through. Every shot carries the next one in a framed window at its centre; the camera flies through
+# window after window, faster and faster, into a flash of light where the flower blooms.
+FLY = ["to-sky", "train", "cricket", "sintel-snow", "quebec", "golak", "bunny-fly", "cst", "tos-city", "clouds", "football", "wing-sky",
+       "taxi", "elephants", "stadium", "city-lapse", "llama", "cricket2", "superman-zap", "to-lapse", "rain", "heli", "reels", "night-earth"]
+FWORDS = {0: "TORONTO", 1: "MUMBAI", 2: "CRICKET", 3: "CINEMA", 4: "QUEBEC", 5: "SPORTS", 6: "KIDS", 8: "MOVIES", 10: "FOOTBALL"}
+SCALE = 3.2
+
+
+def fly_pos(t):
+    """How many windows the camera has flown through by time t (one per beat, then two, then four)."""
+    if t < 1: return 0.0
+    if t < 7: return (t - 1) / 1.0
+    if t < 11: return 6 + (t - 7) / .5
+    return 14 + (t - 11) / .25
+
+
+def flythrough(clips, outro):
+    words = {i: word_img(w, PETALS[i % 4], 140) for i, w in FWORDS.items()}
+
+    def shot(i, t, size):
+        w, h = size
+        return reel_frame(clips, FLY[i % len(FLY)], t + i * .5, max(2, w), max(2, h), k=.3)
+
+    def frame(t):
+        z = fly_pos(t); i = int(z); f = z - i
+        ease = f if t >= 7 else inout(f) * .7 + f * .3
+        s = SCALE ** ease                                       # how far into shot i we have flown
+        cv = Image.new("RGB", (W, H))
+        base = shot(i, t, (int(W * s) + 2, int(H * s) + 2))
+        cv.paste(base, (-(base.width - W) // 2, -(base.height - H) // 2))
+        lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        for depth in (1, 2):                                    # the next two windows, nested
+            ww, hh = int(W * s / SCALE ** depth), int(H * s / SCALE ** depth)
+            if ww < 8: break
+            x0, y0 = (W - ww) // 2, (H - hh) // 2
+            win = shot(i + depth, t, (ww, hh)).convert("RGBA")
+            m = Image.new("L", (ww, hh), 0); ImageDraw.Draw(m).rounded_rectangle([0, 0, ww - 1, hh - 1], max(4, ww // 40), fill=255)
+            if ww <= W * 1.6:
+                cv.paste(win.convert("RGB"), (x0, y0), m)
+                d.rounded_rectangle([x0 - 6, y0 - 6, x0 + ww + 5, y0 + hh + 5], max(6, ww // 36), outline=PETALS[(i + depth) % 4] + (255,), width=max(3, ww // 120))
+        f_ = arr(cv)
+        if f < .04 and z >= 1: f_ = f_ + (1 - f / .04) * .25
+        wi = words.get(i)
+        if wi is not None and t < 11:
+            a = clamp(f / .1) * (1 - clamp((f - .45) / .15))
+            q = fade_img(wi, a); lay.alpha_composite(q, (110, H - 120 - q.height))
+        f_, _ = comp(f_, lay)
+        if t > 14.2: f_ = f_ + ((t - 14.2) / .8) ** 2 * .9
+        for t0 in (7, 11):
+            lk = leak(t, t0)
+            if lk is not None: f_ = f_ + lk
+        return f_ * (.35 + .65 * VIGN)
+
+    return frame
+
+
 def make(kind, out):
     print("fetching clips", flush=True)
     if kind == "languages":
@@ -478,12 +654,19 @@ def make(kind, out):
     elif kind == "remote":
         names = {n for _, n, _ in FLIPS} | {"sintel-cliff"}
         tagline = "ONE REMOTE   ·   EVERY SPARK CHANNEL"
-    else:
+    elif kind == "mosaic":
         names = set(MOSAIC) | {"sintel-cliff"}
         tagline = "EVERY STORY   ·   ONE SPARK"
+    elif kind == "panels":
+        names = {n for p in PANELS for n in p} | set(GRIDC) | {"sintel-cliff"}
+        tagline = "LIVE   ·   SPORTS   ·   MOVIES   ·   NEWS"
+    else:
+        names = set(FLY) | {"sintel-cliff"}
+        tagline = "FROM TORONTO TO MUMBAI   ·   ALL ON SPARK"
+    assert kind in ("languages", "carousel", "remote", "mosaic") or not names & AI_MADE, "ideas 5 and 6 use no AI-made video"
     clips = {n: Clip(n, 9.0 if n == "sintel-cliff" else 3.2) for n in names}
     outro = Outro(tagline, clips["sintel-cliff"])
-    body = {"languages": languages, "carousel": carousel, "remote": remote, "mosaic": mosaic}[kind](clips, outro)
+    body = {"languages": languages, "carousel": carousel, "remote": remote, "mosaic": mosaic, "panels": panels, "fly": flythrough}[kind](clips, outro)
     bug = Image.open(M.BUG).convert("RGBA"); bug = fade_img(bug.resize((230, int(230 * bug.height / bug.width)), Image.LANCZOS), .8)
     cf = ImageFont.truetype(FONT, 21)
     fr = tempfile.mkdtemp()
