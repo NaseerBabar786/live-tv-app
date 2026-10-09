@@ -36,13 +36,14 @@ for (const st of STATIONS.filter(s => s.yt)) {
       total += x.secs;
       if (!(x.secs > 0)) warn(st.name, `${date} item ${n + 1} has no length.`);
       if (x.kind === "break") {
-        if (x.secs > 60) warn(st.name, `${date} item ${n + 1}: an ad break of ${x.secs} s (over 60).`);
+        // (Our own cards and clips are not ads.)
+        if (x.secs > 60 && !x.card && !x.own) warn(st.name, `${date} item ${n + 1}: an ad break of ${x.secs} s (over 60).`);
         return;
       }
       note(x.v.id, st.name);
       const full = lengthOf(x.v, st);
       if (x.cont && (x.start || 0) + x.secs > full + 5) warn(st.name, `${date}: the film carried over from the night before runs past its end (${x.v.title}).`);
-      if (!x.clip && !x.trailer && !x.cont && Math.abs(x.secs - full) > 5) warn(st.name, `${date} item ${n + 1}: listed ${x.secs} s but the video is ${full} s (${x.v.title}).`);
+      if (!x.clip && !x.trailer && !x.cont && !x.cut && !x.start && Math.abs(x.secs - full) > 5) warn(st.name, `${date} item ${n + 1}: listed ${x.secs} s but the video is ${full} s (${x.v.title}).`);
     });
     if (total < 23 * 3600) warn(st.name, `${date}: only ${(total / 3600).toFixed(1)} hours of programmes; the day starts again from the top (not dead air, but repeats).`);
   }

@@ -31,20 +31,20 @@ export const STATIONS = [
     name: "Bazaar Cooking Urdu", dial: "4", doc: "_channel_cookingur", page: "channel/?c=cookingur", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cookingur.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Cooking: recipes from the cooks' own YouTube channels (Food Fusion, Kitchen with Amna, Masala TV, Shireen Anwar). Backup: public-domain classic films." },
-  // 5 (owner, 2026-10-08): Urdu poetry (the Hindi half is Kavi Sammelan, 27). The day has a shape ([dayparts], Toronto time: classic readings
-  // in the morning, TV mushairas in the afternoon, the big mushairas in the evening, young poets at night), and
-  // every hour our own "Aaj ka Sher" ([ownClips], tools/shayari) plays between programmes.
+  // 5 (owner, 2026-10-08): Urdu poetry (the Hindi half is Kavi Sammelan, 27). Runs in half hours like channel 1
+  // ([halfHours], ytorder.js halfHourDay): an 8-hour set played three times a day (12 AM, 8 AM, 4 PM Toronto time),
+  // classic readings first, then TV mushairas, then the big mushairas; every half hour a 25-minute programme with two
+  // 1-minute breaks, then 5 minutes of ads, our own "Aaj ka Sher" ([ownClips], tools/shayari), today's list and the weather.
   { id: "shayari", yt: true, web: "channel/ytc.html?c=shayari", ytMins: 20, tagline: "Urdu poetry and mushaira, day and night",
     name: "Bazaar Shayari", nameUrdu: "سپارک شاعری", urduBug: "https://tv.bulkbazaar.ca/channel/logos/spark-shayari-urdu.png",
     dial: "5", doc: "_channel_shayari", page: "channel/?c=shayari", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-shayari.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     ownClips: "shayari-clips.json",
-    dayparts: [
-      { from: 0, labels: ["Rekhta", "Urdu Studio"] },
-      { from: 6, labels: ["Urdu Studio", "Rekhta"] },
-      { from: 12, labels: ["PTV Home", "PTV National", "DD Urdu", "Sahitya Akademi"] },
-      { from: 18, labels: ["Rekhta", "Lahore Literary Festival", "Faiz Festival", "Mushaira Media"] },
-    ],
+    halfHours: { setHours: 8, set: [
+      { hours: 2, maxMins: 20, labels: ["Urdu Studio", "Rekhta", "Faiz Festival", "Mushaira Media", "Sahitya Tak", "Kommune", "The Social House"] },
+      { hours: 3, labels: ["PTV Home", "PTV National", "DD Urdu", "Sahitya Akademi"] },
+      { hours: 3, labels: ["Rekhta", "Lahore Literary Festival", "Faiz Festival", "Mushaira Media"] },
+    ] },
     credits: "Poetry: mushairas and recitations from the organisers', TV channels' and poets' own YouTube channels (Rekhta, Sahitya Akademi, DD Urdu, PTV, Lahore Literary Festival, Faiz Festival, Mushaira Media, Urdu Studio). Aaj ka Sher: classic poets whose work is free to use, read by an AI voice. Backup: public-domain classic films." },
   // Hindi: 21 to 39 (Bazaar Hits, 23, is channel/bollywood.html)
   { id: "filmein", yt: true, trailerLangs: ["Hindi"], web: "channel/ytc.html?c=filmein", ytMins: 120, tagline: "Full films from the studios' own channels, day and night",
