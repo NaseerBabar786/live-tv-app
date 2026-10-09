@@ -45,7 +45,8 @@ for (const st of STATIONS.filter(s => s.yt)) {
     days[tomorrow] = make(tomorrow);
     // A film still running at midnight finishes first, like TV: tomorrow starts with the rest of it.
     const cont = carryOver(days[today], torontoDay().start);
-    if (cont) days[tomorrow].unshift(cont);
+    // (Not on a half-hour channel: its day always starts on the dot with its own set.)
+    if (cont && !st.halfHours) days[tomorrow].unshift(cont);
   }
   writeFileSync(file, JSON.stringify({ name: st.name, built: new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC", days }) + "\n");
   console.log(`${st.name}: ${Object.entries(days).map(([d, it]) => `${d} ${it.length} items`).join(", ")}`);

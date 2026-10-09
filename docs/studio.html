@@ -2007,7 +2007,8 @@ function renderPicks() {
   if (pkTab === "approved" && !counts.approved) $("pkCount").textContent = station === HITS ? "Nothing approved: Bazaar Hits plays every song." : "Nothing in Next transmission: the channel plays its free backup films instead.";
 }
 function torontoDate(ms) { return new Intl.DateTimeFormat("en-CA", { timeZone: TORONTO, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(ms)); }
-const isProg = x => x.kind === "video" && !x.trailer && !x.cont;
+// (A long programme in 25-minute parts on a half-hour channel counts once, at its first part.)
+const isProg = x => x.kind === "video" && !x.trailer && !x.cont && !(x.part > 1);
 /** The day as it stands: the one you locked here, the one locked at 10 PM, or a draft from Next transmission. */
 function pkDayNow(date) {
   if (pkOwner[date]?.items) return { items: pkOwner[date].items, by: "you", at: pkOwner[date].at };
@@ -2017,7 +2018,7 @@ function pkDayNow(date) {
 function pkDraft(date) {
   const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers, own: pkOwn }, date).map(slimItem);
   // Tomorrow begins with the rest of a film still running at midnight.
-  if (date !== torontoDay().date) {
+  if (date !== torontoDay().date && !pkStation().halfHours) {
     const today = pkDayNow(torontoDay().date).items, cont = today.length && carryOver(today, torontoDay().start);
     if (cont) items.unshift(cont);
   }
@@ -2029,12 +2030,14 @@ function startEdit(date, items) {
   if (date === torontoDay().date) {
     keep = itemAt(items).i + 1;
     while (items[keep]?.kind === "video" && items[keep].trailer) keep++;   // the trailers after the film on now
+    // A half-hour channel changes from the next half hour on.
+    if (pkStation().halfHours) for (let t = items.slice(0, keep).reduce((n, x) => n + x.secs, 0); keep < items.length && Math.round(t) % 1800; keep++) t += items[keep].secs;
   } else while (items[keep]?.cont) keep++;
   pkEdit = { date, keep: items.slice(0, keep), progs: items.slice(keep).filter(isProg).map(x => x.v), insertAt: null };
   renderSchedule();
 }
 function editedItems() {
-  return rebuildDay(pkStation(), pkEdit.keep, pkEdit.progs, breakPromos, pkTrailers);
+  return rebuildDay(pkStation(), pkEdit.keep, pkEdit.progs, breakPromos, pkTrailers, pkOwn);
 }
 async function lockDay(date, items) {
   const label = date === torontoDay().date ? "today" : "tomorrow";
@@ -2145,8 +2148,10 @@ function renderSchedule() {
     g.children[0].textContent = timeText(r.startMs, TORONTO);
     g.children[1].textContent = r.kind === "clips" ? `🎞 Coming up on ${station.name}: clips of our next ${r.count} films`
       : r.kind === "trailers" ? `🎬 Coming soon: ${r.count} trailers of new Hindi films`
-      : r.item.kind === "break" ? "📢 Ad break: " + r.item.promos.map(p => p.title || p.src).join(" + ")
-      : (r.item.cont ? "(continued) " : "") + r.item.v.title;
+      : r.item.card === "today" ? "🗓 Today's programmes (our own card, in Urdu)"
+      : r.item.card === "weather" ? "⛅ Weather (our own card)"
+      : r.item.kind === "break" ? (r.item.own ? "✨ " : "📢 Ad break: ") + r.item.promos.map(p => p.title || p.src).join(" + ")
+      : (r.item.cont ? "(continued) " : "") + r.item.v.title + (r.item.part ? ` (part ${r.item.part})` : "");
     g.children[2].textContent = lengthText(r.secs);
     if (r.prog != null) {
       const mv = document.createElement("span");

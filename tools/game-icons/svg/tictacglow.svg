@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#16263a"/><stop offset="1" stop-color="#03060e"/></linearGradient>
+    <radialGradient id="shine" cx="0.3" cy="0.2" r="0.8"><stop offset="0" stop-color="#7af0ff" stop-opacity=".22"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <clipPath id="sq"><rect width="512" height="512" rx="112"/></clipPath>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="glow2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+    <g opacity=".12" stroke="#3ce8ff" stroke-width="1.5"><path d="M0 64H512M0 128H512M0 192H512M0 256H512M0 320H512M0 384H512M0 448H512M64 0V512M128 0V512M192 0V512M256 0V512M320 0V512M384 0V512M448 0V512"/></g>
+    <rect width="512" height="512" fill="url(#shine)"/>
+  </g>
+  <g filter="url(#glow2)" stroke="#3ce8ff" stroke-width="10" stroke-linecap="round" opacity=".55">
+    <path d="M196 72V440M316 72V440M72 196H440M72 316H440"/>
+  </g>
+  <g filter="url(#glow)">
+    <path d="M86 86 L174 174 M174 86 L86 174" stroke="#ff3dc8" stroke-width="30" stroke-linecap="round"/>
+    <path d="M86 86 L174 174 M174 86 L86 174" stroke="#ffd6f4" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="256" cy="256" r="46" fill="none" stroke="#3ce8ff" stroke-width="30"/>
+    <circle cx="256" cy="256" r="46" fill="none" stroke="#d6fbff" stroke-width="10"/>
+    <path d="M342 342 L430 430 M430 342 L342 430" stroke="#ff3dc8" stroke-width="30" stroke-linecap="round"/>
+    <path d="M342 342 L430 430 M430 342 L342 430" stroke="#ffd6f4" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="386" cy="130" r="44" fill="none" stroke="#3ce8ff" stroke-width="30"/>
+    <circle cx="386" cy="130" r="44" fill="none" stroke="#d6fbff" stroke-width="10"/>
+  </g>
+  <path d="M110 380 l7 16 16 7 -16 7 -7 16 -7 -16 -16 -7 16 -7z" fill="#fff" opacity=".9"/>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ec8ff"/><stop offset="1" stop-color="#0b2a8c"/></linearGradient>
+    <radialGradient id="shine" cx="0.3" cy="0.2" r="0.8"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient><clipPath id="sq"><rect width="512" height="512" rx="112"/></clipPath>
+    <linearGradient id="frame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a7bff"/><stop offset="1" stop-color="#1238b8"/></linearGradient>
+    <radialGradient id="red" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#ffb3c0"/><stop offset=".45" stop-color="#ff2d4a"/><stop offset="1" stop-color="#9a0d22"/></radialGradient>
+    <radialGradient id="yel" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#fff6c2"/><stop offset=".45" stop-color="#ffc21a"/><stop offset="1" stop-color="#c47a00"/></radialGradient>
+    <mask id="holes"><rect width="512" height="512" fill="#fff"/>
+      <g fill="#000"><circle cx="152" cy="232" r="30"/><circle cx="222" cy="232" r="30"/><circle cx="292" cy="232" r="30"/><circle cx="362" cy="232" r="30"/><circle cx="152" cy="302" r="30"/><circle cx="222" cy="302" r="30"/><circle cx="292" cy="302" r="30"/><circle cx="362" cy="302" r="30"/><circle cx="152" cy="372" r="30"/><circle cx="222" cy="372" r="30"/><circle cx="292" cy="372" r="30"/><circle cx="362" cy="372" r="30"/></g></mask>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000a40" flood-opacity=".55"/></filter>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+    <g opacity=".12" fill="#fff"><circle cx="40" cy="40" r="14"/><circle cx="120" cy="40" r="14"/><circle cx="200" cy="40" r="14"/><circle cx="280" cy="40" r="14"/><circle cx="360" cy="40" r="14"/><circle cx="440" cy="40" r="14"/><circle cx="40" cy="120" r="14"/><circle cx="40" cy="200" r="14"/><circle cx="40" cy="280" r="14"/><circle cx="40" cy="360" r="14"/><circle cx="40" cy="440" r="14"/><circle cx="470" cy="200" r="14"/><circle cx="470" cy="280" r="14"/><circle cx="470" cy="360" r="14"/><circle cx="470" cy="440" r="14"/><circle cx="120" cy="480" r="14"/><circle cx="200" cy="480" r="14"/><circle cx="280" cy="480" r="14"/><circle cx="360" cy="480" r="14"/></g>
+    <rect width="512" height="512" fill="url(#shine)"/>
+  </g>
+  <!-- discs behind frame -->
+  <g>
+    <rect x="96" y="176" width="322" height="252" fill="#061a5a"/>
+    <circle cx="152" cy="372" r="32" fill="url(#red)"/><circle cx="222" cy="372" r="32" fill="url(#yel)"/><circle cx="292" cy="372" r="32" fill="url(#red)"/><circle cx="362" cy="372" r="32" fill="url(#yel)"/>
+    <circle cx="152" cy="302" r="32" fill="url(#yel)"/><circle cx="222" cy="302" r="32" fill="url(#red)"/><circle cx="292" cy="302" r="32" fill="url(#yel)"/>
+    <circle cx="222" cy="232" r="32" fill="url(#red)"/>
+  </g>
+  <g filter="url(#sh)">
+    <rect x="96" y="176" width="322" height="252" rx="30" fill="url(#frame)" stroke="#8cc0ff" stroke-width="4" mask="url(#holes)"/>
+    <rect x="80" y="420" width="354" height="34" rx="14" fill="#0e2e9e"/>
+  </g>
+  <rect x="112" y="186" width="290" height="12" rx="6" fill="#fff" opacity=".3"/>
+  <!-- dropping disc -->
+  <g stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".55"><path d="M346 40 V70M362 30 V78M378 40 V70"/></g>
+  <g filter="url(#sh)">
+    <circle cx="362" cy="126" r="38" fill="url(#red)"/>
+    <circle cx="362" cy="126" r="24" fill="none" stroke="#9a0d22" stroke-width="4" opacity=".5"/>
+    <ellipse cx="348" cy="110" rx="12" ry="7" fill="#fff" opacity=".75" transform="rotate(-30 348 110)"/>
+  </g>
+  <path d="M120 100 l8 20 20 8 -20 8 -8 20 -8 -20 -20 -8 20 -8z" fill="#fff7b0"/>
+</svg>

@@ -1,36 +1,36 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-08 21:20 UTC",
- "secs": 2149,
+ "built": "2026-10-09 00:00 UTC",
+ "secs": 2359,
  "videos": [
-  {
-   "id": "6kITzssrw-g",
-   "title": "Mitti De Baway Ep 04 (Sub) 1st Oct 26, Digitally VGO TEL, Happilac Paints & Vince Shampoo | Green TV",
-   "label": "Green Entertainment",
-   "secs": 2149,
-   "kind": "drama"
-  }
- ],
- "spares": [
-  {
-   "id": "gzRqeSZdqq4",
-   "title": "Dastoor Episode 43 (Subtitle) 3rd Oct 26, Hiba Aziz - Danial Afzal - Areej Mohyudin - Faraz Farooqui",
-   "label": "Green Entertainment",
-   "secs": 2179,
-   "kind": "drama"
-  },
   {
    "id": "gw3Qya-AaS4",
    "title": "Mohabbat Episode 04 [Eng Sub] Feroze Khan - Nawal Saeed | 6th October 2026 - HAR PAL GEO",
    "label": "Har Pal Geo",
    "secs": 2359,
    "kind": "drama"
+  }
+ ],
+ "spares": [
+  {
+   "id": "lYk_yts7xQU",
+   "title": "Dastoor Episode 45 (Subtitle) 5th Oct 26, Hiba Aziz - Danial Afzal - Areej Mohyudin - Faraz Farooqui",
+   "label": "Green Entertainment",
+   "secs": 2171,
+   "kind": "drama"
   },
   {
-   "id": "qfz_A3fhI3Q",
-   "title": "Dar-e-Nijaat Episode 2 | 7 August 2026 | Sheheryar Munawar | Dur-e-fishan | ENG SUB | ARY Digital",
+   "id": "01NNLy7AWgU",
+   "title": "Ranjish Episode 8 | 6th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
+   "label": "Express TV",
+   "secs": 2066,
+   "kind": "drama"
+  },
+  {
+   "id": "Mg5t1PzPYFs",
+   "title": "Bas Tera Saath Ho Last EP 45 | 5 October 2026 | Farhan Saeed | Sana Javed | ENG SUB | ARY Digital",
    "label": "ARY Digital",
-   "secs": 2280,
+   "secs": 2440,
    "kind": "drama"
   }
  ]

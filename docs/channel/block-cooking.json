@@ -1,29 +1,13 @@
 {
  "name": "کھانا پکائیں",
- "built": "2026-10-08 21:20 UTC",
- "secs": 1061,
+ "built": "2026-10-09 00:00 UTC",
+ "secs": 1284,
  "videos": [
   {
-   "id": "2W9Q-3X5Dyg",
-   "title": "Beef & Garlic Stir Fry Recipe By Asad Memon - Food Fusion",
-   "label": "Food Fusion",
-   "secs": 242,
-   "kind": "cooking"
-  },
-  {
-   "id": "fnK0EK46Sbo",
-   "title": "2 Spl Tiffin recipes | Corn Dhokla & Uthappam | Chef Ranveer Brar",
-   "label": "Ranveer Brar",
-   "secs": 819,
-   "kind": "cooking"
-  }
- ],
- "spares": [
-  {
-   "id": "UjzwnbbkKB8",
-   "title": "Pineapple Delight | Creamy & Delicious Dessert Recipe | Chef Saad Butt | Masala TV",
-   "label": "Masala TV",
-   "secs": 517,
+   "id": "lPI-sodBzg8",
+   "title": "High protein Low Carbs recipe | Masoor Dal recipe",
+   "label": "Kabita's Kitchen",
+   "secs": 431,
    "kind": "cooking"
   },
   {
@@ -38,6 +22,29 @@
    "title": "High protein Low carbs Breakfast recipe | Kabitaskitchen",
    "label": "Kabita's Kitchen",
    "secs": 441,
+   "kind": "cooking"
+  }
+ ],
+ "spares": [
+  {
+   "id": "fnK0EK46Sbo",
+   "title": "2 Spl Tiffin recipes | Corn Dhokla & Uthappam | Chef Ranveer Brar",
+   "label": "Ranveer Brar",
+   "secs": 819,
+   "kind": "cooking"
+  },
+  {
+   "id": "vk4tbdu_kvQ",
+   "title": "5 Regional Breakfast Recipes From Across India | Misal, Dhokla & More By Chef Sanjeev Kapoor",
+   "label": "Sanjeev Kapoor",
+   "secs": 845,
+   "kind": "cooking"
+  },
+  {
+   "id": "YRl9hrd1xlI",
+   "title": "One Egg, 4 Delicious Recipes! The Ultimate Egg Special Recipes By Chef@sanjeevkapoorkhazana",
+   "label": "Sanjeev Kapoor",
+   "secs": 537,
    "kind": "cooking"
   }
  ]

@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-""""Aaj ka Sher" clips for Spark Shayari (channel 17, owner 2026-10-08): one sher by a classic poet whose
-work is free to use, in Nastaliq calligraphy with the Hindi (Devanagari) line under it, read aloud twice
-by a free AI voice over calm library music (credited on screen). The channel plays one every hour,
-between programmes (docs/channel/schedule.js ownClips, ytorder.js withBreaks).
+""""Aaj ka Sher" clips for Spark Shayari (channel 5, owner 2026-10-08): one sher by a classic poet whose
+work is free to use, in Nastaliq calligraphy (Urdu only: Spark Shayari is an Urdu channel), read aloud twice
+by a free AI voice over calm library music (credited on screen). The channel plays one in the 5-minute break
+of every half hour (docs/channel/schedule.js ownClips, ytorder.js halfHourDay).
 
     python3 tools/shayari/make_sher_videos.py OUT_DIR [--only N] [--silent]
 
-Writes OUT_DIR/shayari-sher-NN.mp4 (1280x720, under 60 s) and OUT_DIR/shayari-clips.json. The voice is
+Writes OUT_DIR/shayari-sher-NN.mp4 (1280x720, under 60 s), OUT_DIR/shayari-bed.m4a (the calm music under
+the channel's own "today" and weather cards, same credit) and OUT_DIR/shayari-clips.json. The voice is
 Microsoft Edge's free neural voice (edge-tts, hi-IN-SwaraNeural reading the Devanagari text: Uzma's Urdu
 voice mispronounced words, the news thread found), so it only runs where edge-tts can connect (GitHub
 Actions); --silent makes the pictures with a quiet track instead, to check the look anywhere.
@@ -22,10 +23,10 @@ sys.path.insert(0, os.path.join(HERE, "..", "music"))
 import library as music  # noqa: E402
 
 URDU = os.path.join(HERE, "..", "stories", "fonts", "NotoNastaliqUrdu-700.ttf")
-DEVA = os.path.join(HERE, "fonts", "noto-sans-devanagari-devanagari-600-normal.woff")
 LOGO = os.path.join(ROOT, "docs", "channel", "logos", "spark-shayari-urdu.png")
 VOICE, RATE = "hi-IN-SwaraNeural", "-12%"
 W, H, FPS, SR = 1280, 720, 25, 44100
+BED_SECS = 300
 REL = "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/"
 GOLD, CREAM = (232, 190, 110), (250, 244, 232)
 # One colour pair per clip, in turn: deep night colours, so the gold and white writing reads well.
@@ -85,13 +86,12 @@ def background(k):
 def head_layer(poets_credit):
     """Always on: the heading, our Urdu logo and the music credit."""
     im = layer()
-    glow_text(im, (W // 2, 92), "آج کا شعر", font(URDU, 46), GOLD, direction="rtl", language="ur")
-    glow_text(im, (W // 2, 166), "आज का शेर", font(DEVA, 24), GOLD)
+    glow_text(im, (W // 2, 96), "آج کا شعر", font(URDU, 50), GOLD, direction="rtl", language="ur")
     d = ImageDraw.Draw(im)
     # A thin gold frame that stays still while the sky behind it drifts.
     d.rounded_rectangle([28, 28, W - 29, H - 29], 18, outline=GOLD + (150,), width=2)
     d.rounded_rectangle([38, 38, W - 39, H - 39], 14, outline=GOLD + (60,), width=1)
-    d.line([(W // 2 - 170, 194), (W // 2 + 170, 194)], fill=GOLD + (170,), width=2)
+    d.line([(W // 2 - 170, 176), (W // 2 + 170, 176)], fill=GOLD + (170,), width=2)
     if os.path.exists(LOGO):
         lg = Image.open(LOGO).convert("RGBA")
         lg = lg.resize((int(lg.width * 54 / lg.height), 54), Image.LANCZOS)
@@ -109,19 +109,16 @@ def latin(size):
     return ImageFont.load_default()
 
 
-def line_layer(ur, hi, y):
-    """One misra: Nastaliq big, its Devanagari under it."""
+def line_layer(ur, y):
+    """One misra in big Nastaliq (the Hindi spelling is only for the voice)."""
     im = layer()
-    glow_text(im, (W // 2, y), ur, fitted(ur, URDU, 54, W - 220, direction="rtl", language="ur"), CREAM, direction="rtl", language="ur")
-    hi = hi.replace(",", "")  # (the Devanagari font has no comma; the voice still pauses on it)
-    glow_text(im, (W // 2, y + 92), hi, fitted(hi, DEVA, 28, W - 240), GOLD)
+    glow_text(im, (W // 2, y), ur, fitted(ur, URDU, 60, W - 220, direction="rtl", language="ur"), CREAM, direction="rtl", language="ur")
     return im
 
 
 def poet_layer(p):
     im = layer()
-    glow_text(im, (W // 2, 592), p["ur"], font(URDU, 32), GOLD, direction="rtl", language="ur")
-    glow_text(im, (W // 2, 636), p["hi"], font(DEVA, 22), GOLD)
+    glow_text(im, (W // 2, 586), p["ur"], font(URDU, 38), GOLD, direction="rtl", language="ur")
     return im
 
 
@@ -171,7 +168,7 @@ def make(s, poets, k, out, silent):
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
         w.writeframes((mix * 32767).astype("<i2").tobytes())
     files = {"bg": background(k), "head": head_layer(music.credit("calm")),
-             "a": line_layer(s["ur"][0], s["hi"][0], 262), "b": line_layer(s["ur"][1], s["hi"][1], 440), "p": poet_layer(p)}
+             "a": line_layer(s["ur"][0], 286), "b": line_layer(s["ur"][1], 436), "p": poet_layer(p)}
     for key, im in files.items():
         im.save(os.path.join(work, key + ".png"))
     t_a, t_b, t_p = starts[1], starts[3], starts[9]
@@ -220,7 +217,13 @@ def main():
             continue
         clips.append(make(s, data["poets"], k, a.out, a.silent))
         print(f"sher {s['n']:2}: {clips[-1]['secs']} s, {clips[-1]['poet']}", flush=True)
-    json.dump({"source": source_hash(), "clips": clips}, open(os.path.join(a.out, "shayari-clips.json"), "w", encoding="utf-8"),
+    # The calm music under the channel's own "today" and weather cards (ytc.html), with the same credit.
+    bed = os.path.join(a.out, "shayari-bed.m4a")
+    wav = os.path.join(tempfile.mkdtemp(), "bed.wav")
+    music.save(wav, music.bed("calm", BED_SECS, fade_in=2.0, fade_out=4.0) * 0.5)
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", wav, "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", bed)
+    json.dump({"source": source_hash(), "clips": clips,
+               "bed": {"src": REL + os.path.basename(bed), "secs": BED_SECS, "credit": music.credit("calm")}}, open(os.path.join(a.out, "shayari-clips.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
 
 

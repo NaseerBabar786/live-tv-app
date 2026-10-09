@@ -31,20 +31,20 @@ export const STATIONS = [
     name: "Bazaar Cooking Urdu", dial: "4", doc: "_channel_cookingur", page: "channel/?c=cookingur", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-cookingur.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Cooking: recipes from the cooks' own YouTube channels (Food Fusion, Kitchen with Amna, Masala TV, Shireen Anwar). Backup: public-domain classic films." },
-  // 5 (owner, 2026-10-08): Urdu poetry (the Hindi half is Kavi Sammelan, 27). The day has a shape ([dayparts], Toronto time: classic readings
-  // in the morning, TV mushairas in the afternoon, the big mushairas in the evening, young poets at night), and
-  // every hour our own "Aaj ka Sher" ([ownClips], tools/shayari) plays between programmes.
+  // 5 (owner, 2026-10-08): Urdu poetry (the Hindi half is Kavi Sammelan, 27). Runs in half hours like channel 1
+  // ([halfHours], ytorder.js halfHourDay): an 8-hour set played three times a day (12 AM, 8 AM, 4 PM Toronto time),
+  // classic readings first, then TV mushairas, then the big mushairas; every half hour a 25-minute programme with two
+  // 1-minute breaks, then 5 minutes of ads, our own "Aaj ka Sher" ([ownClips], tools/shayari), today's list and the weather.
   { id: "shayari", yt: true, web: "channel/ytc.html?c=shayari", ytMins: 20, tagline: "Urdu poetry and mushaira, day and night",
     name: "Bazaar Shayari", nameUrdu: "سپارک شاعری", urduBug: "https://tv.bulkbazaar.ca/channel/logos/spark-shayari-urdu.png",
     dial: "5", doc: "_channel_shayari", page: "channel/?c=shayari", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-shayari.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     ownClips: "shayari-clips.json",
-    dayparts: [
-      { from: 0, labels: ["Rekhta", "Urdu Studio"] },
-      { from: 6, labels: ["Urdu Studio", "Rekhta"] },
-      { from: 12, labels: ["PTV Home", "PTV National", "DD Urdu", "Sahitya Akademi"] },
-      { from: 18, labels: ["Rekhta", "Lahore Literary Festival", "Faiz Festival", "Mushaira Media"] },
-    ],
+    halfHours: { setHours: 8, set: [
+      { hours: 2, maxMins: 20, labels: ["Urdu Studio", "Rekhta", "Faiz Festival", "Mushaira Media", "Sahitya Tak", "Kommune", "The Social House"] },
+      { hours: 3, labels: ["PTV Home", "PTV National", "DD Urdu", "Sahitya Akademi"] },
+      { hours: 3, labels: ["Rekhta", "Lahore Literary Festival", "Faiz Festival", "Mushaira Media"] },
+    ] },
     credits: "Poetry: mushairas and recitations from the organisers', TV channels' and poets' own YouTube channels (Rekhta, Sahitya Akademi, DD Urdu, PTV, Lahore Literary Festival, Faiz Festival, Mushaira Media, Urdu Studio). Aaj ka Sher: classic poets whose work is free to use, read by an AI voice. Backup: public-domain classic films." },
   // Hindi: 21 to 39 (Bazaar Hits, 23, is channel/bollywood.html)
   { id: "filmein", yt: true, trailerLangs: ["Hindi"], web: "channel/ytc.html?c=filmein", ytMins: 120, tagline: "Full films from the studios' own channels, day and night",
@@ -119,6 +119,20 @@ export const STATIONS = [
     name: "Bazaar Music Punjabi", dial: "61", doc: "_channel_sur", page: "channel/?c=sur", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-music.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
     credits: "Music: recordings that are free to use (public domain, CC0 and CC BY) from Wikimedia Commons; each song's credit and licence show on screen. No film songs." },
+  // More Punjabi (the owner, 2026-10-08). Gurbani has no ads of ours at all (noAds), out of respect, and no
+  // backup of other music (noBackup): when its list can't play, a wait card shows until it can.
+  { id: "gurbani", yt: true, web: "channel/ytc.html?c=gurbani", ytMins: 30, tagline: "Shabad kirtan and Gurbani, day and night", noAds: true,
+    name: "Bazaar Gurbani", dial: "62", doc: "_channel_gurbani", page: "channel/?c=gurbani", auto: true, noBackup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-gurbani.png", ready: "https://tv.bulkbazaar.ca/channel/gurbani-schedule.json",
+    credits: "Gurbani: shabad kirtan and paths from the labels' and SGPC's own YouTube channels (T-Series Shabad Gurbani, Amritt Saagar, SGPC). No other music ever plays in its place." },
+  { id: "moviespa", yt: true, web: "channel/ytc.html?c=moviespa", ytMins: 100, tagline: "Full Punjabi films, day and night",
+    name: "Bazaar Movies Punjabi", dial: "63", doc: "_channel_moviespa", page: "channel/?c=moviespa", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-moviespa.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Films: full Punjabi films from the studios' and labels' own YouTube channels (White Hill, Yellow Music, Speed Punjabi, Shemaroo, Saga and others). Backup: public-domain classic films." },
+  { id: "sufi", yt: true, web: "channel/ytc.html?c=sufi", ytMins: 12, tagline: "Sufi kalam and qawwali, day and night",
+    name: "Bazaar Sufi Qawwali", dial: "64", doc: "_channel_sufi", page: "channel/?c=sufi", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-sufi.png", ready: "https://tv.bulkbazaar.ca/channel/sur-schedule.json",
+    credits: "Qawwali: Sufi kalam and qawwali from the label's and singers' own YouTube channels (OSA Islamic, Nusrat Fateh Ali Khan). Backup: free-to-use music from Wikimedia Commons." },
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
