@@ -550,6 +550,11 @@
   },
   {
    "day": "all",
+   "time": "07:25",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
    "time": "07:47",
    "video": "adhere"
   },
@@ -560,12 +565,7 @@
   },
   {
    "day": "all",
-   "time": "08:17",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
-   "time": "08:25",
+   "time": "08:38",
    "video": "adhere"
   },
   {
@@ -580,6 +580,11 @@
   },
   {
    "day": "all",
+   "time": "09:10",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
    "time": "09:18",
    "video": "adhere"
   },
@@ -590,7 +595,7 @@
   },
   {
    "day": "all",
-   "time": "09:38",
+   "time": "09:47",
    "video": "adhere"
   },
   {
@@ -600,17 +605,17 @@
   },
   {
    "day": "all",
-   "time": "10:10",
+   "time": "10:18",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
+   "time": "10:25",
    "video": "adhere"
   },
   {
    "day": "all",
    "time": "10:38",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
-   "time": "10:47",
    "video": "adhere"
   },
   {
@@ -625,12 +630,7 @@
   },
   {
    "day": "all",
-   "time": "11:18",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
-   "time": "11:25",
+   "time": "11:38",
    "video": "adhere"
   },
   {
@@ -645,12 +645,17 @@
   },
   {
    "day": "all",
-   "time": "12:38",
+   "time": "12:17",
    "video": "adhere"
   },
   {
    "day": "all",
-   "time": "12:47",
+   "time": "12:25",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
+   "time": "12:38",
    "video": "adhere"
   },
   {
@@ -665,12 +670,7 @@
   },
   {
    "day": "all",
-   "time": "13:18",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
-   "time": "13:25",
+   "time": "13:38",
    "video": "adhere"
   },
   {
@@ -685,6 +685,11 @@
   },
   {
    "day": "all",
+   "time": "14:10",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
    "time": "14:18",
    "video": "adhere"
   },
@@ -695,7 +700,7 @@
   },
   {
    "day": "all",
-   "time": "14:38",
+   "time": "14:47",
    "video": "adhere"
   },
   {
@@ -705,7 +710,12 @@
   },
   {
    "day": "all",
-   "time": "15:10",
+   "time": "15:18",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
+   "time": "15:25",
    "video": "adhere"
   },
   {
@@ -715,17 +725,17 @@
   },
   {
    "day": "all",
-   "time": "15:47",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
    "time": "16:00",
    "video": "news-full-day"
   },
   {
    "day": "all",
-   "time": "16:38",
+   "time": "16:17",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
+   "time": "16:25",
    "video": "adhere"
   },
   {
@@ -740,11 +750,6 @@
   },
   {
    "day": "all",
-   "time": "17:10",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
    "time": "17:18",
    "video": "adhere"
   },
@@ -755,7 +760,7 @@
   },
   {
    "day": "all",
-   "time": "17:47",
+   "time": "17:38",
    "video": "adhere"
   },
   {
@@ -765,17 +770,17 @@
   },
   {
    "day": "all",
-   "time": "18:18",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
-   "time": "18:25",
+   "time": "18:10",
    "video": "adhere"
   },
   {
    "day": "all",
    "time": "18:38",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
+   "time": "18:47",
    "video": "adhere"
   },
   {
@@ -790,7 +795,12 @@
   },
   {
    "day": "all",
-   "time": "19:38",
+   "time": "19:18",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
+   "time": "19:25",
    "video": "adhere"
   },
   {
@@ -805,17 +815,12 @@
   },
   {
    "day": "all",
-   "time": "20:17",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
-   "time": "20:25",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
    "time": "20:38",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
+   "time": "20:47",
    "video": "adhere"
   },
   {
@@ -830,7 +835,12 @@
   },
   {
    "day": "all",
-   "time": "21:38",
+   "time": "21:18",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
+   "time": "21:25",
    "video": "adhere"
   },
   {
@@ -845,11 +855,6 @@
   },
   {
    "day": "all",
-   "time": "22:10",
-   "video": "adhere"
-  },
-  {
-   "day": "all",
    "time": "22:18",
    "video": "adhere"
   },
@@ -860,7 +865,7 @@
   },
   {
    "day": "all",
-   "time": "22:47",
+   "time": "22:38",
    "video": "adhere"
   },
   {
@@ -870,12 +875,17 @@
   },
   {
    "day": "all",
-   "time": "23:18",
+   "time": "23:10",
    "video": "adhere"
   },
   {
    "day": "all",
    "time": "23:38",
+   "video": "adhere"
+  },
+  {
+   "day": "all",
+   "time": "23:47",
    "video": "adhere"
   }
  ],
