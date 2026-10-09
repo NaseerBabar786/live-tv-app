@@ -224,13 +224,6 @@
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
-  },
-  {
-   "id": "spark-ident",
-   "title": "Spark TV",
-   "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
-   "secs": 20,
-   "kind": "ident"
   }
  ],
  "slots": [],
@@ -253,7 +246,6 @@
   "sher-14",
   "sher-15",
   "adhere",
-  "spark-ident",
   "sher-16",
   "sher-17",
   "sher-18",
@@ -271,11 +263,9 @@
   "sher-28",
   "sher-29",
   "sher-30",
-  "adhere",
-  "spark-ident"
+  "adhere"
  ],
  "fillers": [
-  "adhere",
-  "spark-ident"
+  "adhere"
  ]
 }

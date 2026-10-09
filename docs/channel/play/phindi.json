@@ -63,13 +63,6 @@
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
-  },
-  {
-   "id": "spark-ident",
-   "title": "Spark TV",
-   "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
-   "secs": 20,
-   "kind": "ident"
   }
  ],
  "slots": [],
@@ -84,14 +77,12 @@
   "adhere",
   "superman-1941-hindi",
   "adhere",
-  "spark-ident",
   "sprite-fright-hindi",
   "adhere",
   "elephants-dream-hindi",
   "adhere"
  ],
  "fillers": [
-  "adhere",
-  "spark-ident"
+  "adhere"
  ]
 }

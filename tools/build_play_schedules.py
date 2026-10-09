@@ -47,9 +47,7 @@ ADVERTISE = "Advertise on Spark TV: WhatsApp 437 602 6500"
 
 YOUTUBE = re.compile(r"youtu\.?be|youtube(-nocookie)?\.com", re.I)
 
-# Our own short clips, from channel 1's schedule: the moving Spark logo and "advertise here".
-IDENT = {"id": "spark-ident", "title": "Spark TV", "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
-         "secs": 20, "kind": "ident"}
+# Our own short clip from channel 1's schedule: "advertise here".
 ADHERE = {"id": "adhere", "title": "Advertise on Spark TV",
           "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4", "secs": 15, "kind": "ad"}
 
@@ -105,7 +103,7 @@ def ok(v):
     return bool(v.get("url")) and not YOUTUBE.search(v["url"]) and v.get("kind") not in ("trailers", "music", "list", "ads")
 
 
-def channel(pid, name, logo, ticker, videos, loop, slots=(), fillers=("adhere", "spark-ident"), corner="tr"):
+def channel(pid, name, logo, ticker, videos, loop, slots=(), fillers=("adhere",), corner="tr"):
     return {
         "name": name, "logo": LOGOS + logo, "logoCorner": corner, "active": True, "tz": TZ,
         "ticker": f"{ticker} · {ADVERTISE}", "tickerOn": True,
@@ -114,13 +112,11 @@ def channel(pid, name, logo, ticker, videos, loop, slots=(), fillers=("adhere", 
 
 
 def with_breaks(ids):
-    """[ids] with our 15-second "advertise here" after every programme and the Spark logo every fifth."""
+    """[ids] with our 15-second "advertise here" after every programme. No Spark logo ident: it names channels
+    (kids, sports, travel) a Play channel may not have."""
     out = []
-    for i, vid in enumerate(ids):
-        out.append(vid)
-        out.append("adhere")
-        if i % 5 == 4:
-            out.append("spark-ident")
+    for vid in ids:
+        out += [vid, "adhere"]
     return out
 
 
@@ -133,7 +129,7 @@ def classic(pid):
     have = {v["id"] for v in videos}
     loop = [i for i in o.get("loop", []) if i in have]
     slots = [s for s in o.get("slots", []) if s.get("video") in have and all(e in have for e in s.get("episodes", []))]
-    return channel(pid, name, logo, ticker, videos + [ADHERE, IDENT], with_breaks(loop), slots)
+    return channel(pid, name, logo, ticker, videos + [ADHERE], with_breaks(loop), slots)
 
 
 def slug(url):
@@ -154,7 +150,7 @@ def dubbed(pid):
         films += [x for x in lib if x.get("cat", "").startswith("Our stories") and ours(x.get("url", "")) and x.get("secs")]
     videos = [{"id": slug(x["url"]), "title": x["title"].replace(f" ({tag})", ""), "url": x["url"], "secs": round(x["secs"]),
                "kind": "programme"} for x in films]
-    return channel(pid, name, logo, ticker, videos + [ADHERE, IDENT], with_breaks([v["id"] for v in videos]))
+    return channel(pid, name, logo, ticker, videos + [ADHERE], with_breaks([v["id"] for v in videos]))
 
 
 def shayari():
@@ -167,25 +163,25 @@ def shayari():
         loop.append(v["id"])
         if i % 5 == 4:
             loop.append("adhere")
-        if i % 15 == 14:
-            loop.append("spark-ident")
     return channel("pshayari", "Spark Shayari", "spark-shayari.png",
                    "Spark Shayari · Couplets of Ghalib, Mir, Iqbal and the classic poets, day and night",
-                   videos + [ADHERE, IDENT], loop)
+                   videos + [ADHERE], loop)
 
 
 def one():
     """Channel 1 for Google Play: channel 1's clock (news, ad breaks), our own programmes in between."""
     o = load("test-schedule.json")
     by = {v["id"]: v for v in o.get("videos", [])}
-    # Our own clips from channel 1. Not the Cable TV promos (they send viewers to an app outside Google Play)
-    # and not the "today's programmes" segment (it lists channel 1's YouTube dramas).
-    keep = ["welcome", "break", "next", "adhere", "adbreak", "adbreak-c", "spark-ident", "spark-ad-urdu",
-            "spark-montage", "spark-montage-2", "spark-montage-3", "spark-montage-4"]
-    keep += [i for i in by if i.startswith("news-")]
+    # Only channel 1's clips that are right for Google Play, checked frame by frame (2026-10-09): the break and
+    # "next programme" cards, our "advertise here" ad and the news. Left out: the Cable TV promos and the 1-minute
+    # ad breaks (Gold, promo codes, "free on Cable TV"), the Urdu Spark ad (YouTube drama and song pictures), the
+    # welcome card ("on Cable TV"), the Spark logo and montages (they name channels Spark TV on Play doesn't
+    # have, kids among them) and the "today's programmes" segment (it lists channel 1's YouTube dramas).
+    keep = ["break", "next", "adhere"] + [i for i in by if i.startswith("news-")]
     videos = [by[i] for i in keep if i in by and ok(by[i])]
     have = {v["id"] for v in videos}
-    swap = {"promo": "spark-ad-urdu", "promo2": "spark-ad-urdu", "ad9": "adhere"}
+    # Channel 1's ad slots carry our "advertise here" ad instead; the second 1-minute break of the hour goes.
+    swap = {"promo": "adhere", "promo2": "adhere", "ad9": "adhere", "adbreak": "adhere"}
     slots = []
     for sl in o.get("slots", []):
         vid = swap.get(sl.get("video"), sl.get("video"))
@@ -196,16 +192,15 @@ def one():
     progs = [v for v in urdu["videos"] + hindi["videos"] if v.get("kind") == "programme"]
     shers = [v for v in sher["videos"] if v.get("kind") == "programme"]
     videos += progs + shers
-    montages = [i for i in ("spark-montage", "spark-montage-2", "spark-montage-3", "spark-montage-4") if i in have]
-    loop = ["welcome"]
+    loop = []
     for k, v in enumerate(progs):
-        loop += ["spark-ident", "next", v["id"], "break", montages[k % len(montages)] if montages else "adhere", "adhere"]
+        loop += ["next", v["id"], "break", "adhere"]
         # Three couplets after every film.
         loop += [shers[(3 * k + j) % len(shers)]["id"] for j in range(3)] if shers else []
     ticker = ("Spark TV · Full news at 12, 4 and 8, headlines every hour · Films in Urdu and Hindi, stories and "
               "shayari of the classic poets")
     return channel("pone", "Spark TV One", "spark-tv.png", ticker, videos, loop, slots,
-                   fillers=("adhere", "spark-ad-urdu", "next"))
+                   fillers=("adhere", "next", "break"))
 
 
 def news():
@@ -216,14 +211,14 @@ def news():
         if not ok(v):
             sys.exit(f"news bulletin {v['id']} is not our own file: {v['url']}")
     # Headlines and the full report in turn, our ads between them: about 20 minutes, round the clock.
-    loop = ["spark-ident", "news-headlines", "adhere", "news-full", "adhere"]
+    loop = ["news-headlines", "adhere", "news-full", "adhere"]
     return channel("pnews", "Spark TV News", "spark-news.png",
-                   "Spark TV News · Headlines and the full report, round the clock", [head, full, ADHERE, IDENT], loop)
+                   "Spark TV News · Headlines and the full report, round the clock", [head, full, ADHERE], loop)
 
 
 def ads():
     sponsors = load("ads-sponsors.json").get("ads", [])
-    videos, loop = [IDENT, ADHERE], ["spark-ident", "adhere"]
+    videos, loop = [ADHERE], ["adhere"]
     for j, a in enumerate(sponsors):
         url, secs = a.get("src", ""), round(float(a.get("secs") or 0))
         if not url.startswith("https://") or YOUTUBE.search(url) or not 5 <= secs <= 60:
