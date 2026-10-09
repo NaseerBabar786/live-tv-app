@@ -1,6 +1,5 @@
 package com.livetv.app.extras
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -110,7 +109,7 @@ fun SleepWarning(onSleep: () -> Unit) {
     if (end - now > 60_000L) return
     val keep = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { delay(100); keep.requestFocus() } }
-    BackHandler { Extras.setSleep(0) }
+    OnTop(onBack = { Extras.setSleep(0) }) {
     Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.45f)), contentAlignment = Alignment.Center) {
         Column(
             Modifier
@@ -134,5 +133,6 @@ fun SleepWarning(onSleep: () -> Unit) {
                 }
             }
         }
+    }
     }
 }
