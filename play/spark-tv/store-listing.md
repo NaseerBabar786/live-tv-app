@@ -17,13 +17,12 @@ Cable TV, App Bazaar or tv.bulkbazaar.ca downloads in the listing, screenshots o
   and 1 year; the price is the owner's choice). The app lists every base plan it finds, longest first.
 
 ## Short description (80 characters max)
-Spark TV One: news every hour, Urdu and Hindi films, stories and shayari.
+Spark TV One: Urdu and Hindi films, stories and shayari of the classic poets.
 
 ## Full description
 Spark TV brings you free channels, ready to watch on your TV, phone or tablet.
 
 Spark TV One
-• Full news at 12, 4 and 8 (Toronto), headlines every hour
 • Films in Urdu and Hindi, dubbed by us, and our own stories
 • Shayari: couplets of Ghalib, Mir, Iqbal and the classic Urdu poets
 • More channels are on the way
@@ -36,7 +35,7 @@ Features
 
 Spark TV's films and shows are in the public domain (from the Internet Archive) or free-licence
 (Blender Foundation films, dubbed by us), its music is free-licence (from Wikimedia Commons), and the
-news, poetry readings and stories are our own.
+poetry readings and stories are our own.
 
 ## Graphics (in this folder)
 - **App icon (512 × 512):** icon-512.png
@@ -60,7 +59,7 @@ https://tv.bulkbazaar.ca/sparktv/privacy.html (App content > Privacy policy)
 - Violence: **Yes, mild / unrealistic** (old films and cartoons-era comedy can include fist fights or
   gunfights). Sexual content, crude humour, drugs, gambling: **No**.
 - Does the app let users interact or share content? **No**
-- Does the app show news? **Yes** (our own news bulletins)
+- Does the app show news? **No**
 
 ## Other App content answers
 - Target audience: **18 and over** (keeps the app out of Google's Families rules)

@@ -47,6 +47,10 @@ ADVERTISE = "Advertise on Spark TV: WhatsApp 437 602 6500"
 
 YOUTUBE = re.compile(r"youtu\.?be|youtube(-nocookie)?\.com", re.I)
 
+# Spark TV One launches without news (2026-10-09): our bulletins translate other publishers' stories, whose
+# terms don't allow an app with ads. Back on once the news is made from sources free to reuse.
+WITH_NEWS = False
+
 # Our own short clip from channel 1's schedule: "advertise here".
 ADHERE = {"id": "adhere", "title": "Advertise on Spark TV",
           "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4", "secs": 15, "kind": "ad"}
@@ -177,7 +181,7 @@ def one():
     # ad breaks (Gold, promo codes, "free on Cable TV"), the Urdu Spark ad (YouTube drama and song pictures), the
     # welcome card ("on Cable TV"), the Spark logo and montages (they name channels Spark TV on Play doesn't
     # have, kids among them) and the "today's programmes" segment (it lists channel 1's YouTube dramas).
-    keep = ["break", "next", "adhere"] + [i for i in by if i.startswith("news-")]
+    keep = ["break", "next", "adhere"] + ([i for i in by if i.startswith("news-")] if WITH_NEWS else [])
     videos = [by[i] for i in keep if i in by and ok(by[i])]
     have = {v["id"] for v in videos}
     # Channel 1's ad slots carry our "advertise here" ad instead; the second 1-minute break of the hour goes.
@@ -197,10 +201,14 @@ def one():
         loop += ["next", v["id"], "break", "adhere"]
         # Three couplets after every film.
         loop += [shers[(3 * k + j) % len(shers)]["id"] for j in range(3)] if shers else []
-    ticker = ("Spark TV · Full news at 12, 4 and 8, headlines every hour · Films in Urdu and Hindi, stories and "
-              "shayari of the classic poets")
-    return channel("pone", "Spark TV One", "spark-tv.png", ticker, videos, loop, slots,
+    ticker = ("Spark TV · Films in Urdu and Hindi, stories and shayari of the classic poets"
+              if not WITH_NEWS else "Spark TV · Full news at 12, 4 and 8, headlines every hour · Films in Urdu and "
+              "Hindi, stories and shayari of the classic poets")
+    o = channel("pone", "Spark TV One", "spark-tv.png", ticker, videos, loop, slots,
                    fillers=("adhere", "next", "break"))
+    if not WITH_NEWS:
+        o["credits"] = o["credits"].replace("News: our own bulletins. ", "")
+    return o
 
 
 def news():
