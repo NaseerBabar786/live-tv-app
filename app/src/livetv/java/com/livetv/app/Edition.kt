@@ -62,6 +62,7 @@ import com.livetv.app.ui.UpdateState
 import com.livetv.app.ui.UpdateViewModel
 import com.livetv.app.ui.VodViewModel
 import com.livetv.app.ui.focusGlow
+import com.livetv.app.ui.appBazaarLaunchIntent
 
 /**
  * Cable TV: built-in free channels, a sponsor screen at start, and self-updates from GitHub.
@@ -74,6 +75,8 @@ object Edition {
     val APP_NAME = if (MAX) "Live TV Max" else "Cable TV"
     const val USER_AGENT = "LiveTV-Android/1.0"
     const val HAS_START_SCREEN = true
+    /** A top-bar button for our app store, App Bazaar (owner, 2026-10-09). */
+    const val HAS_APP_BAZAAR = true
     const val HAS_WEATHER = true
     /** Asks once for the device's approximate location, for the weather and prayer times. */
     const val HAS_DEVICE_LOCATION = true
@@ -442,6 +445,20 @@ fun EditionTicker(
     band: Boolean = false,
     lift: androidx.compose.ui.unit.Dp = androidx.compose.ui.unit.Dp(0f),
 ) = SponsorTicker(modifier, big, always, everyMs, skip, band, lift)
+
+/**
+ * Our app store (the top-bar App Bazaar button; it left Settings, owner 2026-10-09): opens the
+ * App Bazaar app at once when it's installed, else a dialog that installs it.
+ */
+@Composable
+fun EditionAppBazaar(onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    val opened = remember {
+        val open = context.appBazaarLaunchIntent()
+        open != null && runCatching { context.startActivity(open) }.isSuccess
+    }
+    if (opened) LaunchedEffect(Unit) { onDismiss() } else SettingsTheme { com.livetv.app.ui.AppBazaarDialog(onDismiss) }
+}
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

@@ -22,6 +22,8 @@ object Edition {
     const val USER_AGENT = "LiveTVPlus-Android/1.0"
     const val HAS_START_SCREEN = false
     const val HAS_WEATHER = true
+    /** No outside app store in the Google Play editions. */
+    const val HAS_APP_BAZAAR = false
     const val HAS_DEVICE_LOCATION = false
     /** Movies & Series from the saved playlists (Cable TV only). */
     const val HAS_VOD = false
@@ -66,6 +68,9 @@ fun EditionTicker(
     band: Boolean = false,
     lift: androidx.compose.ui.unit.Dp = androidx.compose.ui.unit.Dp(0f),
 ) = Unit
+
+@Composable
+fun EditionAppBazaar(onDismiss: () -> Unit) = Unit
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {
