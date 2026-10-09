@@ -1,0 +1,44 @@
+name: QA default settings (TV emulator)
+on:
+  push:
+    branches: ['qa/default-settings']
+concurrency:
+  group: qa-default-settings
+  cancel-in-progress: true
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build this branch (no sign-in) and main, same debug key
+        run: |
+          ./gradlew assembleLivetvDebug
+          cp app/build/outputs/apk/livetv/debug/app-livetv-debug.apk new.apk
+          git fetch --depth 1 origin main && git worktree add ../mainwt FETCH_HEAD
+          (cd ../mainwt && ./gradlew assembleLivetvDebug) && cp ../mainwt/app/build/outputs/apk/livetv/debug/app-livetv-debug.apk main.apk
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: android-tv
+          arch: x86
+          profile: tv_1080p
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash tools/qa/run_defaults_qa.sh qa-out main.apk new.apk
+      - name: Publish results
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete qa-default-settings --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
+          gh release create qa-default-settings --repo "$GITHUB_REPOSITORY" --prerelease --latest=false \
+            --target "$GITHUB_SHA" --title "QA default settings" --notes "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" qa-out/*
