@@ -869,6 +869,12 @@ def films(kept, today):
                 kept[vid] = {"movie": movie, "channel": name, "group": name, "language": language,
                              "title": title, "added": today.isoformat(), "owner_ok": True}
                 new += 1
+        for vid in [v for v, e in kept.items() if e.get("movie") and e.get("channel") == name and not e.get("owner_ok")]:
+            own = uploaded_by(vid, cid, handle, query)  # films listed before the uploader check
+            if own is False:
+                print(f"    off, not {name}'s own: {kept.pop(vid)['movie']}")
+            elif own:
+                kept[vid]["owner_ok"] = True
         print(f"{name} ({handle} {cid}): {len(videos)} videos, {new} new {language} films")
         for _, title, mins in videos[:3]:
             print(f"    e.g. {title} ({mins and round(mins)} min)")
