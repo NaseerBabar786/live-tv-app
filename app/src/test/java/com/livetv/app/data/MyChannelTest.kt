@@ -205,6 +205,14 @@ class MyChannelTest {
     }
 
     @Test
+    fun comedyUrduIsInTheUrduBlock() {
+        val c = MyChannel.parse(JSONObject("""{"name":"Bazaar Comedy Urdu","videos":[]}"""), "comedyur").channel
+        assertEquals("Spark Comedy Urdu", c.name)
+        assertEquals(MyChannel.URDU, c.language)
+        assertEquals(9, MyChannel.STATIONS.first { it.id == "comedyur" }.number)
+    }
+
+    @Test
     fun ourChannelsAreCalledSpark() {
         assertEquals("Spark TV One", MyChannel.brand("Bazaar TV One"))
         assertEquals("Spark Movies Hindi", MyChannel.brand("Bazaar Movies Hindi"))

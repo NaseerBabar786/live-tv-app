@@ -89,6 +89,7 @@ CHANNELS = [  # file, word, main colour, second colour, tag under the slab
     ("bazaar-kidshi", "KIDS", (60, 200, 60), (255, 200, 0), "HINDI"),
     ("bazaar-teenshi", "TEENS", (0, 200, 220), (150, 60, 255), "HINDI"),
     ("bazaar-comedyen", "COMEDY", (255, 200, 0), (255, 80, 60), "ENGLISH"),
+    ("bazaar-comedyur", "COMEDY", (255, 200, 0), (255, 80, 60), "URDU"),  # 9
     ("bazaar-kavi", "KAVI", (235, 140, 120), (120, 30, 90), "HINDI"),  # 27: Hindi poetry, kavi sammelan
     ("bazaar-gurbani", "GURBANI", (255, 150, 0), (20, 60, 160), "PUNJABI"),  # 62
     ("bazaar-moviespa", "MOVIES", (235, 50, 70), (255, 170, 0), "PUNJABI"),  # 63

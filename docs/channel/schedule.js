@@ -119,6 +119,11 @@ export const STATIONS = [
   { id: "ads", name: "Bazaar Ads", dial: "48", doc: "_channel_ads", page: "channel/?c=ads", auto: true, noPopup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-ads.png", ready: "https://tv.bulkbazaar.ca/channel/ads-schedule.json",
     credits: "Ads: our own Cable TV promos and our sponsors' ads. Advertise your business here: WhatsApp 437 602 6500 or tv.bulkbazaar.ca/advertise." },
+  // 9 (2026-10-09): the Urdu half of Comedy, Pakistani sitcoms and comedy shows.
+  { id: "comedyur", yt: true, web: "channel/ytc.html?c=comedyur", ytMins: 15, tagline: "Pakistani comedy shows and sitcoms, day and night", mix: true,
+    name: "Bazaar Comedy Urdu", dial: "9", doc: "_channel_comedyur", page: "channel/?c=comedyur", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedyur.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",
+    credits: "Comedy: Pakistani shows from the TV channels' own YouTube channels (Hasb-e-Haal, Suno Chanda, Chupke Chupke, Joru Ka Ghulam and others). Backup: public-domain classic comedies." },
   { id: "comedyen", yt: true, web: "channel/ytc.html?c=comedyen", ytMins: 15, tagline: "English comedy and clean stand-up, day and night", mix: true,
     name: "Bazaar Comedy English", dial: "49", doc: "_channel_comedyen", page: "channel/?c=comedyen", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-comedyen.png", ready: "https://tv.bulkbazaar.ca/channel/comedy-schedule.json",

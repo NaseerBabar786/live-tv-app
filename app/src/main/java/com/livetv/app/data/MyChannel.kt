@@ -93,6 +93,8 @@ object MyChannel {
         Station("cookingur", 4, "", "Spark Cooking Urdu", youtube = true, backup = "filmein", logo = "spark-cookingur.png"),
         // Urdu poetry and mushairas, with our own hourly "Aaj ka Sher" (17 before the language blocks).
         Station("shayari", 5, "", "Spark Shayari", youtube = true, backup = "filmein", logo = "spark-shayari.png"),
+        // Pakistani sitcoms and comedy shows (Hasb-e-Haal, Suno Chanda, Chupke Chupke...), the Urdu half of Comedy (2026-10-09).
+        Station("comedyur", 9, "", "Spark Comedy Urdu", youtube = true, backup = "comedy", logo = "spark-comedyur.png"),
         // Hindi (Spark Hits, 23, is [bollywood] below)
         Station("filmein", 21, "00", "Spark Cinema", youtube = true, lang = HINDI),
         Station("hindi", 22, "", "Spark Movies Hindi", youtube = true, backup = "filmein", logo = "spark-hindi.png", lang = HINDI),
