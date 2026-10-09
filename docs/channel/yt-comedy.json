@@ -1,10 +1,260 @@
 {
  "name": "Bazaar Comedy",
- "built": "2026-10-08 23:44 UTC",
+ "built": "2026-10-09 02:10 UTC",
  "videos": [
   {
+   "id": "oCrvPlxovRQ",
+   "title": "Jetha Ne Kyu Bola Popat Ko रिपोर्टर का कलंक| Haste Raho Hasate Raho| Taarak Mehta ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 10.533333333333333,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "fD6RH2rV7nI",
+   "title": "Jetha Drawer Me Kya छुपाने की कोशिश KIi ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
+   "label": "Taarak Mehta",
+   "mins": 9.366666666666667,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "xnf17VkAko0",
+   "title": "The Kapil Sharma Show | Nakli Dharam Ji Ne Kyun Maanga Deepika Se Shagun? | Best Moments",
+   "label": "The Kapil Sharma Show",
+   "mins": 9.283333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "BxBn0QbWWRE",
+   "title": "Krushna ने लिया भूतनी से पंगा ! | The Kapil Sharma Show 2 | Best Moments",
+   "label": "The Kapil Sharma Show",
+   "mins": 13.516666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "YKZHvtmPnfc",
+   "title": "Chandu को बनना है Vicky Kaushal & Yami Gautam जैसा Big Star! | The Kapil Sharma Show | Reloaded",
+   "label": "The Kapil Sharma Show",
+   "mins": 14.883333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "YZHiczYmvWA",
+   "title": "Dr. Gulati ने कैसे जीता World Cup? | The Kapil Sharma Show S1 | Ek Kalakaar Anek Andaz",
+   "label": "The Kapil Sharma Show",
+   "mins": 29.333333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "CocAJ4qo7go",
+   "title": "Wagle Ki Duniya - Ep 1 - Full Episode - 8th February, 2021",
+   "label": "Wagle Ki Duniya",
+   "mins": 24.95,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "Osw5zH05eEE",
+   "title": "Solar Power | Wagle Ki Duniya | Ep 1175 | Full Episode | 3 Jan 2025",
+   "label": "Wagle Ki Duniya",
+   "mins": 28.316666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "oSAlyfpiyZs",
+   "title": "Sakhi's Weight Loss Journey - Wagle Ki Duniya - Ep 587 - Full Episode - 16 Feb 2023",
+   "label": "Wagle Ki Duniya",
+   "mins": 22.2,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "1inUj0v0HzE",
+   "title": "Atharva's Healthy Diet - Wagle Ki Duniya - Ep 462 - Full Episode - 23 Sep  2022",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.583333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "AD_xFkeBLpw",
+   "title": "Wagle Ki Duniya - Ep 54 - Full Episode - 7th May, 2021",
+   "label": "Wagle Ki Duniya",
+   "mins": 22.2,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "ngcSIO_rSDw",
+   "title": "Ananya Ki Zimmedari | Wagle Ki Duniya | Ep 1245 | Full Episode | 26 Mar 2025",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.7,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "GVkNP3KuzgU",
+   "title": "Rat Attack At Rajesh's House | Wagle Ki Duniya | Ep 1278 | Full Episode | 3 May 2025",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.983333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "XLRs-c6TW80",
+   "title": "Remarriage Function | Wagle Ki Duniya | Ep 1289 | Full Episode | 16 May 2025",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.566666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "ciIJvqdjZ2Q",
+   "title": "Vandana Arranges A House Party | Wagle Ki Duniya | Ep 1044 | Full Episode | 3 Aug 2024",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.433333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "CA08GxRuJmc",
+   "title": "Harshad's Secret Is Out | Wagle Ki Duniya | Ep 671 | Full Episode | 25 May 2023",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.25,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "eO37eNNMCEk",
+   "title": "Wagle Ki Duniya - Ep 9  - Full Episode - 18th February, 2021",
+   "label": "Wagle Ki Duniya",
+   "mins": 24.65,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "qBJ2ssQq9io",
+   "title": "Wagle Ki Duniya - Ep 48 - Full Episode - 29th April, 2021",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.216666666666665,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "4Q5hYQph5NU",
+   "title": "Atharva Ka Burden | Wagle Ki Duniya | Ep 1128 | Full Episode | 9 Nov 2024",
+   "label": "Wagle Ki Duniya",
+   "mins": 22.366666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "TowLd802akg",
+   "title": "Civilian Fauji | Wagle Ki Duniya | Ep 984 | Full Episode | 25 May 2024",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.116666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "Xfey7bWaLs8",
+   "title": "Wagle Ki Duniya - Wake Up Atharva! - Ep 192 - Full Episode - 10th November 2021",
+   "label": "Wagle Ki Duniya",
+   "mins": 22.583333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "3hNpPwZPs8o",
+   "title": "Harshad In Danger | Wagle Ki Duniya | Ep 1288 | Full Episode | 15 May 2025",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.9,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "vd2XoGrKizM",
+   "title": "Baarish Ke Maze | Wagle Ki Duniya | Ep 1037 | Full Episode | 26 July 2024",
+   "label": "Wagle Ki Duniya",
+   "mins": 20.483333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "4icqlIfEGz4",
+   "title": "Vivaan's Internship | Wagle Ki Duniya | Ep 1336 | Full Episode | 10 July 2025",
+   "label": "Wagle Ki Duniya",
+   "mins": 24.233333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "w-VRWO_T8iA",
+   "title": "Wagle Ki Duniya - Vandana Slaps Atharva - Ep 206 - Full Episode - 26th November 2021",
+   "label": "Wagle Ki Duniya",
+   "mins": 22.866666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "LJd9YFzfhh0",
+   "title": "Atharva's First Day Of College | Wagle Ki Duniya | Ep 1011 | Full Episode | 26 June 2024",
+   "label": "Wagle Ki Duniya",
+   "mins": 22.1,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "p_49sonV_BQ",
+   "title": "Wagle Ki Duniya - Ep 73 - Full Episode - 3rd June, 2021",
+   "label": "Wagle Ki Duniya",
+   "mins": 22.983333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "PoJTtVducVE",
+   "title": "Early Retirement - Wagle Ki Duniya - Ep 457- Full Episode - 17 Sep  2022",
+   "label": "Wagle Ki Duniya",
+   "mins": 21.633333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "oinFYQnBoNM",
+   "title": "Business Partner | Wagle Ki Duniya | Ep 1282 | Full Episode | 8 May 2025",
+   "label": "Wagle Ki Duniya",
+   "mins": 20.933333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "5GS-zxyItMQ",
+   "title": "Wagle Ki Duniya - Ep 7  - Full Episode - 16th February, 2021",
+   "label": "Wagle Ki Duniya",
+   "mins": 25.35,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "KuKYygfLq80",
+   "title": "Earthquake Aftermath | Wagle Ki Duniya | Ep 1310 | Full Episode | 10 June 2025",
+   "label": "Wagle Ki Duniya",
+   "mins": 20.35,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
    "id": "SBdxMKY22J4",
-   "title": "SE 01 EP 365 - Jethalal Mocks Bhide by Calling Him a 'Battery'! | Taarak Mehta Ka Ooltah Chashmah",
+   "title": "SE 01 EP 365 -  Jethalal Ne Bhide Ko बैटरी बोलकर उड़ाया मजाक ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
    "mins": 19.916666666666668,
    "found": "2026-10-08",
@@ -13,7 +263,7 @@
   },
   {
    "id": "KW-kcZaxsK8",
-   "title": "SE 01 EP 364 - Why Did Jethalal Call Bhide An Enemy Of Intellect! | Taarak Mehta Ka Ooltah Chashmah",
+   "title": "SE 01 EP 364 -  Jethalal Ne Kyu Bola Bhide Ko अकाल का दुश्मन ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
    "mins": 20.233333333333334,
    "found": "2026-10-08",
@@ -21,8 +271,17 @@
    "posted": "2026-10-08"
   },
   {
+   "id": "mHjjPx_UoxY",
+   "title": "SE 01 EP 363 -  Jetha के करण Bapuji Ko Kyu किया पुलिस ने गिराफ्तार ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "mins": 20.0,
+   "found": "2026-10-08",
+   "lang": "hi",
+   "posted": "2026-10-08"
+  },
+  {
    "id": "Ti5-o5NZX38",
-   "title": "SE 01 EP 362 - Who Insulted Bhide and Jethalal! | Taarak Mehta Ka Ooltah Chashmah",
+   "title": "SE 01 EP 362 -  Kinse Bhide Aur Jethalal Ki Insult Ki ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
    "mins": 19.816666666666666,
    "found": "2026-10-08",
@@ -31,7 +290,7 @@
   },
   {
    "id": "3PK7OOzNhaI",
-   "title": "SE 01 EP 361 - Why Did the Rickshaw Driver Reject Jethalal! | Taarak Mehta Ka Ooltah Chashmah",
+   "title": "SE 01 EP 361 -  Rickshaw Waale Ne Kyu Reject Kiya Jethalal Ko ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
    "mins": 20.016666666666666,
    "found": "2026-10-08",
@@ -40,7 +299,7 @@
   },
   {
    "id": "VxeEcRfx2DI",
-   "title": "NEW Episode 4836 - Jethalal Very Happy To See Tapu and Sonu's Duo - Taarak Mehta Ka Ooltah Chashmah",
+   "title": "NEW Episode 4836 - Tapu Sonu Ki जोड़ी देख Jethalal Hua बहुत खुश  Taarak Mehta Ka Ooltah Chashmah",
    "label": "Taarak Mehta",
    "mins": 10.233333333333333,
    "found": "2026-10-08",
@@ -49,7 +308,7 @@
   },
   {
    "id": "SQ7EXXW76C0",
-   "title": "How did Hathi Bhai suddenly fall on Popatlal's umbrella! | FULL MOVIE | Taarak Mehta Ka Ooltah Ch...",
+   "title": "Hathi Bhai अचानक केसे गिर गए Popatlal Ke छतरी पर !  | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
    "label": "Taarak Mehta",
    "mins": 49.03333333333333,
    "found": "2026-10-08",
@@ -57,7 +316,7 @@
   },
   {
    "id": "RMo3FaSqcyU",
-   "title": "Why Did Popatlal Take Bhide Master to Task Early in the Morning! | FULL MOVIE | Taarak Mehta Ka O...",
+   "title": "Popatlal Ne Subh Kyu Li Bhide Master Ki Class ! | FULL MOVIE | Taarak Mehta Ka Ooltah Chashmah",
    "label": "Taarak Mehta",
    "mins": 31.866666666666667,
    "found": "2026-10-08",
@@ -65,7 +324,7 @@
   },
   {
    "id": "WyMKyEA6AkI",
-   "title": "Why Did Babitaji Refuse to Play Garba! | Keep Laughing, Keep Making Others Laugh | Taarak Mehta K...",
+   "title": "Babitaji Kyu Kiya Garba Khalne Se Mana ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
    "label": "Taarak Mehta",
    "mins": 9.866666666666667,
    "found": "2026-10-08",
@@ -73,7 +332,7 @@
   },
   {
    "id": "nk3WK8wy2L4",
-   "title": "How did Jethalal's foot get stuck in the pot! | Keep Laughing, Keep Making Others Laugh | Taarak ...",
+   "title": "आखिर Jethalal Ka पैर केसे फंसा घड़े में ! | Haste Raho Hasate Raho | Taarak Mehta ka Ooltah Chashmah",
    "label": "Taarak Mehta",
    "mins": 11.183333333333334,
    "found": "2026-10-08",
@@ -81,7 +340,7 @@
   },
   {
    "id": "8Mqg0YHJo6Y",
-   "title": "SE 01 EP 360 - Why Were Madhavi and Komal Happy After Hearing Daya's Idea! | Taarak Mehta Ka Oolt...",
+   "title": "SE 01 EP 360 -  Daya Ka Idea Sunkar Kyu Khush Hue Madhavi Aur Komal! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
    "mins": 19.216666666666665,
    "found": "2026-10-08",
@@ -89,15 +348,31 @@
   },
   {
    "id": "Dy6Cavyyqns",
-   "title": "SE 01 EP 359 - Why Did Daya Lie To Jethalal! | Taarak Mehta Ka Ooltah Chashmah",
+   "title": "SE 01 EP 359 -  Daya Ne Kyu Bola Jethalal Se झूठ ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
    "mins": 17.316666666666666,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
+   "id": "dvbmoFL6EQQ",
+   "title": "SE 01 EP 358 -  Bhide Dega Madhavi Ko Sadi Kharid Ne Ki Permission ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "mins": 19.566666666666666,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "cX1VNQ-bOec",
+   "title": "SE 01 EP 357 -  Jethalal Ne Mara Daya Ke बनाए केसर बासुंदी पर ताव ! | Taarak Mehta Ka oltah hashmah",
+   "label": "Taarak Mehta",
+   "mins": 20.8,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "7ArZMN85pYU",
-   "title": "SE 01 EP 356 - Bhide Gives Madhavi Permission to Buy a Saree! | Taarak Mehta Ka Ooltah Chashmah",
+   "title": "SE 01 EP 356 -  Bhide Dega Madhavi Ko Sadi Kharid Ne Ki Permission ! | Taarak Mehta Ka oltah hashmah",
    "label": "Taarak Mehta",
    "mins": 20.233333333333334,
    "found": "2026-10-08",
@@ -487,33 +762,8 @@
    "lang": "hi"
   },
   {
-   "id": "mHjjPx_UoxY",
-   "title": "SE 01 EP 363 -  Jetha के करण Bapuji Ko Kyu किया पुलिस ने गिराफ्तार ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "mins": 20.0,
-   "found": "2026-10-08",
-   "lang": "hi",
-   "posted": "2026-10-08"
-  },
-  {
-   "id": "dvbmoFL6EQQ",
-   "title": "SE 01 EP 358 -  Bhide Dega Madhavi Ko Sadi Kharid Ne Ki Permission ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "mins": 19.566666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "cX1VNQ-bOec",
-   "title": "SE 01 EP 357 -  Jethalal Ne Mara Daya Ke बनाए केसर बासुंदी पर ताव ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "mins": 20.8,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "_NjImGHkTug",
-   "title": "NEW Episode 4835 - Jethalal Shocked to See Daya! Taarak Mehta Ka Ooltah Chashmah",
+   "title": "NEW Episode 4835 - Daya Ko Dekhke Jethalal Hua Shock ! Taarak Mehta Ka Ooltah Chashmah",
    "label": "Taarak Mehta",
    "mins": 10.666666666666666,
    "found": "2026-10-07",
@@ -521,7 +771,7 @@
   },
   {
    "id": "noUVHO6p7N8",
-   "title": "FULL EPISODE 4816 - Why did Jethalal get furious after hearing Bhide's words! | Taarak Mehta ka O...",
+   "title": "FULL EPISODE 4816 - Bhide Ki Baat Sunkar क्यों भड़क गया Jethalal ! | Taarak Mehta ka Ooltah Chasmah",
    "label": "Taarak Mehta",
    "mins": 21.85,
    "found": "2026-10-07",
@@ -581,22 +831,6 @@
    "label": "The Kapil Sharma Show",
    "mins": 29.316666666666666,
    "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
-   "id": "CwGLp8dzy48",
-   "title": "SE 01 EP 352 -  Jethalal Kyu चुप चुप के देख रहा हे Society Walo Ko ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "mins": 19.683333333333334,
-   "found": "2026-10-06",
-   "lang": "hi"
-  },
-  {
-   "id": "0wDByVUxLvM",
-   "title": "SE 01 EP 351 -  Babita ji Ne Kyu Kiya Jetha Par Doubt ! | Taarak Mehta Ka oltah hashmah",
-   "label": "Taarak Mehta",
-   "mins": 20.016666666666666,
-   "found": "2026-10-06",
    "lang": "hi"
   }
  ]

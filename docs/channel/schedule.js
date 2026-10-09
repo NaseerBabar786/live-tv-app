@@ -156,15 +156,31 @@ export const STATIONS = [
 ];
 
 /** The date, weekday (0 = Sunday), hour and minute of [ms] in time zone [tz]. */
+// Making a date formatter is slow, so each time zone gets one, made once. A channel with many time
+// slots (channel 1's 8-hour set) asks for thousands of times per guide, which froze Studio (2026-10-08).
+const formatters = new Map();
 function parts(ms, tz) {
-  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", {
+  let f = formatters.get(tz);
+  if (!f) formatters.set(tz, f = new Intl.DateTimeFormat("en-CA", {
     timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
-  }).formatToParts(new Date(ms)).map(x => [x.type, x.value]));
+  }));
+  const p = Object.fromEntries(f.formatToParts(new Date(ms)).map(x => [x.type, x.value]));
   return { date: `${p.year}-${p.month}-${p.day}`, weekday: WEEKDAYS.indexOf(p.weekday.toLowerCase().slice(0, 3)), hour: +p.hour, minute: +p.minute };
 }
 
+// Worked out once per date and time: the guide asks for the same slot times over and over.
+const zoned = new Map();
 /** Milliseconds for [date] "yyyy-mm-dd" at [hh]:[mm] in time zone [tz]. */
 export function zonedTime(date, hh, mm, tz) {
+  const key = `${date} ${hh}:${mm} ${tz}`;
+  let ms = zoned.get(key);
+  if (ms === undefined) {
+    if (zoned.size > 20000) zoned.clear();
+    zoned.set(key, ms = zonedTimeOnce(date, hh, mm, tz));
+  }
+  return ms;
+}
+function zonedTimeOnce(date, hh, mm, tz) {
   const [y, m, d] = date.split("-").map(Number);
   let guess = Date.UTC(y, m - 1, d, hh, mm);
   // Two passes settle the time zone offset (also across a daylight-saving change).

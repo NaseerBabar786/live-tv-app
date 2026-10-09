@@ -209,8 +209,8 @@ object Namaz {
             titleUr = "دو سجدوں کے درمیان (جلسہ)",
             arabic = "اَللّٰهُمَّ اغْفِرْ لِيْ وَارْحَمْنِيْ وَاهْدِنِيْ وَعَافِنِيْ وَارْفَعْنِيْ وَاجْبُرْنِيْ وَارْزُقْنِيْ",
             translit = "Allahummaghfir li warhamni wahdini wa 'afini warfa'ni wajburni warzuqni.",
-            meaningEn = "O Allah, forgive me, have mercy on me, guide me, grant me well-being, raise me up, " +
-                "make good my shortcomings and provide for me.",
+            meaningEn = "O Allah, forgive me and have mercy on me and guide me and grant me security and raise me up " +
+                "and make good my shortcomings and provide for me.",
             meaningUr = "اے اللہ! مجھے بخش دے، مجھ پر رحم کر، مجھے ہدایت دے، مجھے عافیت دے، مجھے بلندی عطا کر، " +
                 "میری کمی پوری کر اور مجھے رزق عطا کر۔",
         ),
@@ -304,9 +304,9 @@ object Namaz {
             translit = "Allahumma inna nasta'inuka wa nastaghfiruka wa nu'minu bika wa natawakkalu 'alaika wa nuthni 'alaikal-khair, " +
                 "wa nashkuruka wa la nakfuruka wa nakhla'u wa natruku man yafjuruk. Allahumma iyyaka na'budu wa laka nusalli wa nasjudu " +
                 "wa ilaika nas'a wa nahfidu wa narju rahmataka wa nakhsha 'adhabaka inna 'adhabaka bil-kuffari mulhiq.",
-            meaningEn = "O Allah, we ask Thy help and seek Thy forgiveness, we believe in Thee and put our trust in Thee, and we praise Thee " +
-                "in the best manner; we thank Thee and are not ungrateful to Thee, and we cast off and forsake him who disobeys Thee. " +
-                "O Allah, Thee alone do we worship, to Thee do we pray and before Thee do we prostrate, to Thee do we turn in haste, " +
+            meaningEn = "O Allah, we beseech Thy help and request Thy protection and believe in Thee and trust in Thee, and we laud Thee " +
+                "in the best manner and we thank Thee and we are not ungrateful to Thee, and we cast off and forsake him who disobeys Thee. " +
+                "O Allah, Thee alone do we serve and to Thee alone do we pray and make obeisance, and to Thee we flee and are quick, " +
                 "we hope for Thy mercy and fear Thy punishment; surely Thy punishment overtakes the disbelievers.",
             meaningUr = "اے اللہ! ہم تجھ سے مدد مانگتے ہیں اور تجھ سے بخشش چاہتے ہیں، تجھ پر ایمان لاتے ہیں اور تجھ پر بھروسہ کرتے ہیں، " +
                 "اور تیری بہترین تعریف کرتے ہیں، تیرا شکر کرتے ہیں اور تیری ناشکری نہیں کرتے، اور جو تیری نافرمانی کرے اُسے ہم چھوڑتے اور الگ کرتے ہیں۔ " +
@@ -364,13 +364,13 @@ object Namaz {
         ),
         Step(
             "qiyam", "Standing (Qiyam)", "قیام", "قِيَام",
-            "Fold your arms, right hand over the left, and stand still with your eyes on the place of Sajdah. " +
+            "Fold your hands on your chest, right hand over the left, and stand still with your eyes on the place of Sajdah. " +
                 "Recite Thana and Ta'awwudh (first rak'ah only), then Bismillah, Surah Al-Fatihah and Amin.",
-            "ہاتھ باندھ لیں، دایاں ہاتھ بائیں ہاتھ کے اوپر، اور سجدے کی جگہ پر نظر رکھ کر سکون سے کھڑے ہوں۔ " +
+            "سینے پر ہاتھ باندھ لیں، دایاں ہاتھ بائیں ہاتھ کے اوپر، اور سجدے کی جگہ پر نظر رکھ کر سکون سے کھڑے ہوں۔ " +
                 "ثناء اور تعوّذ (صرف پہلی رکعت میں) پڑھیں، پھر بسم اللہ، سورۃ الفاتحہ اور آمین۔",
             listOf("thana", "taawwudh", "tasmiya", "fatiha", "amin"),
-            "The Salat book accepts folding the hands a little below the navel, a little above it, or higher.",
-            "کتاب نماز کے مطابق ہاتھ ناف سے کچھ نیچے، کچھ اوپر یا اس سے بھی اوپر باندھنا سب درست ہے۔",
+            "The Salat book describes the hands folded on the chest, and says folding them a little below or above the navel is also a sign of respect.",
+            "کتاب نماز میں سینے پر ہاتھ باندھنا بیان ہوا ہے، اور ناف سے کچھ نیچے یا اوپر باندھنا بھی ادب ہی کی علامت بتایا گیا ہے۔",
         ),
         Step(
             "surah", "Recite a surah", "سورت پڑھیں", "قِرَاءَة",
