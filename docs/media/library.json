@@ -305,6 +305,28 @@
    "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), public domain, Spark TV."
   },
   {
+   "id": "spark-montage-3",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark TV montage 3, the remote",
+   "url": "media/spark-montage-3.mp4",
+   "secs": 20,
+   "poster": "media/spark-montage-3-poster.jpg",
+   "about": "20 s montage: a TV flips through the Spark channels faster and faster, the channel list scrolls, the TV switches off to a dot that blooms into the flower. In the breaks of every channel (approved 2026-10-09).",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), public domain, Spark TV."
+  },
+  {
+   "id": "spark-montage-4",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark TV montage 4, every screen",
+   "url": "media/spark-montage-4.mp4",
+   "secs": 20,
+   "poster": "media/spark-montage-4-poster.jpg",
+   "about": "20 s montage: one show pulls back into hundreds of screens that turn into the Spark Flower. In the breaks of every channel (approved 2026-10-09).",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), public domain, Spark TV."
+  },
+  {
    "id": "spark-ad-tour",
    "cat": "spark-promos",
    "lang": "en",

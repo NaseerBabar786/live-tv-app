@@ -103,7 +103,7 @@ def segment_lengths(h, spans):
 NOT_EPISODE = re.compile(r"teaser|promo|\bost\b|review|scene|highlight|recap|clip|bts|behind|reaction|preview|"
                          r"\bnext\b|making|interview|title song|best moment", re.I)
 EPISODE_NO = re.compile(r"\b(?:episode|epi|ep)\.?\s*0*(\d{1,3})\b", re.I)
-MONTAGES = ["spark-montage", "spark-montage-2"]  # approved Spark montages, one per hour in turn
+MONTAGES = ["spark-montage", "spark-montage-2", "spark-montage-3", "spark-montage-4"]  # approved Spark montages, one per hour in turn
 REL = "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/"
 
 
@@ -195,6 +195,8 @@ def layout(today):
     base["spark-ident"] = {"id": "spark-ident", "title": "اسپارک ٹی وی", "url": M + "spark-ident.mp4", "secs": 20, "kind": "ident"}
     base["spark-montage"] = {"id": "spark-montage", "title": "اسپارک ٹی وی", "url": M + "spark-montage.mp4", "secs": 30, "kind": "ad"}
     base["spark-montage-2"] = {"id": "spark-montage-2", "title": "اسپارک ٹی وی", "url": M + "spark-montage-2.mp4", "secs": 20, "kind": "ad"}
+    for n in (3, 4):
+        base[f"spark-montage-{n}"] = {"id": f"spark-montage-{n}", "title": "اسپارک ٹی وی", "url": M + f"spark-montage-{n}.mp4", "secs": 20, "kind": "ad"}
     base["spark-ad-urdu"] = {"id": "spark-ad-urdu", "title": "اسپارک ٹی وی", "url": M + "spark-ad-urdu.mp4", "secs": 30, "kind": "ad"}
     base["segment"] = {"id": "segment", "title": "وقفہ: آج کے پروگرام اور موسم", "url": REL + "segment.mp4", "secs": SEGMENT, "kind": "programme"}
     for kind, secs in (("headlines", HEADLINES), ("full", FULL)):
@@ -220,7 +222,7 @@ def layout(today):
                      if v.get("mins") and v["id"] not in bad]
     songs = sorted(lists["music-videos.json"] + lists["trailers.json"], key=lambda v: -v["secs"])
     used = set()
-    pads = sorted([own[k] for k in ("promo2", "adbb", "adhere", "welcome", "next", "break")] + [base["ad9"], base["spark-montage"], base["spark-montage-2"], base["spark-ad-urdu"]],
+    pads = sorted([own[k] for k in ("promo2", "adbb", "adhere", "welcome", "next", "break")] + [base["ad9"], base["spark-ad-urdu"]] + [base[m] for m in MONTAGES],
                   key=lambda v: -v["secs"])
     opening = own["next"]["secs"] + base["spark-ident"]["secs"]
 
@@ -283,9 +285,9 @@ def layout(today):
         put = {g: [] for g in gaps}
         # The 30 s clips take turns hour by hour: our Cable TV promo, the Spark montage, the Spark Urdu ad.
         turns = ["promo2", "spark-montage", "spark-ad-urdu"]
-        # The Spark montages share the montage's turn, a different one each hour (owner, 2026-10-09), and
+        # The Spark montages share the montage's turn, a different one each time and day (owner, 2026-10-09), and
         # a shorter one still goes in first, like a 30 s clip.
-        hpads = [p for p in pads if p["id"] not in MONTAGES or p["id"] == MONTAGES[h % len(MONTAGES)]]
+        hpads = [p for p in pads if p["id"] not in MONTAGES or p["id"] == MONTAGES[(today.toordinal() + h // 3) % len(MONTAGES)]]
         turn = lambda v: "spark-montage" if v["id"] in MONTAGES else v["id"]  # noqa: E731
         first = lambda v: (turns.index(turn(v)) - h) % len(turns) if turn(v) in turns else 0  # noqa: E731
         for p in sorted(hpads, key=lambda v: (-(30 if v["id"] in MONTAGES else v["secs"]), first(v))):
