@@ -1,7 +1,8 @@
 name: Build dramas playlist
 
 # Builds docs/Dramas.m3u (tv.bulkbazaar.ca/Dramas.m3u): the newest Pakistani drama
-# episodes, telefilms, cooking and Islamic shows and Urdu cartoons from their owners' official YouTube uploads, for Cable TV's Library.
+# episodes, telefilms, cooking and Islamic shows and Urdu cartoons from their owners' official YouTube uploads, for Cable TV's Library,
+# and docs/MTA.m3u (MTA's own programmes, a folder each, in Urdu and English).
 on:
   schedule:
     - cron: "0 9 * * *"   # every day at 09:00 UTC: 5 am in Toronto (4 am in winter)
@@ -18,7 +19,7 @@ permissions:
   pages: write
 
 concurrency:
-  group: build-dramas
+  group: build-dramas-${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
   cancel-in-progress: false
 
 jobs:
@@ -57,6 +58,7 @@ jobs:
           echo "== Dailymotion"; grep -B1 "dailymotion.com" docs/Dramas.m3u | grep "^#EXTINF" | sed 's/.*group-title="\([^"]*\)",/\1 | /' | awk -F" [|] " '{c[$1]++; if (c[$1] <= 8) print}'
           echo "== Kapil"; grep -i "kapil" docs/Dramas.m3u | grep "^#EXTINF" | sed 's/.*,//' | head -n 10
           echo "== MTA"; grep "^#EXTINF" docs/MTA.m3u | sed "s/.*tvg-language=\"\([A-Za-z]*\)\" tvg-genre=\"\([A-Za-z]*\)\" group-title=\"\([^\"]*\)\",/\1 | \2 | \3 | /" | awk -F" [|] " "{c[\$3]++; if (c[\$3] <= 5) print}"
+          echo "== MTA counts"; grep "^#EXTINF" docs/MTA.m3u | sed 's/.*tvg-language="\([A-Za-z]*\)" tvg-genre="\([A-Za-z]*\)" group-title="\([^"]*\)".*/\1 | \2 | \3/' | sort | uniq -c
           for l in Hindi Punjabi English; do echo "== $l"; grep "tvg-language=\"$l\"" docs/Dramas.m3u | grep -v "Hindi dubbed" | sed "s/.*tvg-genre=\"\\([A-Za-z]*\\)\" group-title=\"\\([^\"]*\\)\",/\\1 | \\2 | /" | awk -F" [|] " "{c[\$1\" | \"\$2]++; if (c[\$1\" | \"\$2] <= 4) print}"; done
 
       # A push made with the workflow's own token doesn't start other workflows,
@@ -64,7 +66,7 @@ jobs:
       # The owner's rule (2026-10-07): no video goes on air until it passes the pre-air check; one that
       # would show YouTube's error or "Watch on YouTube" screen is taken off the list first.
       - name: Pre-air check
-        run: python3 tools/preair_check.py --lists --files docs/Dramas.m3u
+        run: python3 tools/preair_check.py --lists --files docs/Dramas.m3u docs/MTA.m3u
 
       - name: Publish the playlist
         if: github.ref == 'refs/heads/main'
@@ -79,6 +81,12 @@ jobs:
             exit 0
           fi
           git commit -m "Dramas playlist: newest episodes as of $(date -u '+%Y-%m-%d') UTC"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          # The hourly pre-air check also commits the lists; when it did so during this build, this build's
+          # list wins (it already passed its own checks above). Tried a few times in case main moves again.
+          for i in 1 2 3 4; do
+            git pull --rebase -X theirs origin main && git push origin HEAD:main && break
+            git rebase --abort 2>/dev/null || true
+            sleep $((i * 10))
+          done
+          git fetch -q origin main && git merge-base --is-ancestor HEAD origin/main || { echo "::error::The playlist could not be published."; exit 1; }
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

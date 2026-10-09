@@ -4,14 +4,17 @@ name: Build trailers and music videos
 # Pakistani) and popular music videos (Hindi, Urdu) from the studios',
 # labels' and artists' own YouTube channels, rebuilt every day. Played in
 # YouTube's player, locked, on tv.bulkbazaar.ca/channel/block.html (also in the app).
+# Also docs/channel/yt-trailers.json: our Movie Trailers channel (mostly English studio trailers, 2026-10-08).
 on:
   schedule:
-    - cron: "30 8 * * *"   # every day, 08:30 UTC
+    # Once a day, just after midnight in Toronto: channel 1's 8-hour set for the new day (the same set
+    # plays at 12 am, 8 am and 4 pm, so it must not change during the day).
+    - cron: "5 4 * * *"
   push:
     branches: [main]
-    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, tools/playable.py, tools/check_bazaar_tv.py, docs/channel/test-schedule.json, .github/workflows/build-trailers.yml]
+    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, tools/playable.py, tools/check_bazaar_tv.py, docs/channel/test-schedule.json, tools/build_channel1_set.py, tools/today_guide.mjs, .github/workflows/build-trailers.yml]
   pull_request:
-    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, tools/playable.py, tools/check_bazaar_tv.py, docs/channel/test-schedule.json, .github/workflows/build-trailers.yml]
+    paths: [tools/build_trailers.py, tools/build_music_videos.py, tools/build_bazaar_blocks.py, tools/playable.py, tools/check_bazaar_tv.py, docs/channel/test-schedule.json, tools/build_channel1_set.py, tools/today_guide.mjs, .github/workflows/build-trailers.yml]
   workflow_dispatch:
 
 permissions:
@@ -52,8 +55,20 @@ jobs:
 
       # The owner's rule (2026-10-07): no video goes on air until it passes the pre-air check; one that
       # would show YouTube's error or "Watch on YouTube" screen is taken off the list first.
+      # Channel 1's serials (owner, 2026-10-08): today's episode of each drama, from episode 1 on.
+      - name: Find today's drama episodes for channel 1
+        if: always()
+        run: python3 tools/build_channel1_set.py --find "$(TZ=America/Toronto date -d '+2 hours' +%F)"
+
       - name: Pre-air check
-        run: python3 tools/preair_check.py --lists --files docs/channel/trailers.json docs/channel/music-videos.json docs/channel/block-*.json
+        run: python3 tools/preair_check.py --lists --files docs/channel/trailers.json docs/channel/yt-trailers.json docs/channel/music-videos.json docs/channel/block-*.json docs/channel/channel1-episodes.json
+
+      # The 8-hour set, played at 12 am, 8 am and 4 pm: half hours with ad breaks, the 5-minute segment at
+      # :25 and :55, the news at the top of each hour (tools/build_channel1_set.py).
+      - name: Lay out channel 1's 8-hour set
+        id: layout
+        if: always() && steps.fit.outcome == 'success'
+        run: python3 tools/build_channel1_set.py --layout "$(TZ=America/Toronto date -d '+2 hours' +%F)"
 
       - name: Publish the lists
         # Never lists that break the owner's rule (the check above).
@@ -63,7 +78,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/channel/trailers.json docs/channel/music-videos.json docs/channel/block-*.json
+          git add docs/channel/trailers.json docs/channel/music-videos.json docs/channel/block-*.json docs/channel/test-schedule.json docs/channel/channel1-*.json
+          if [ -f docs/channel/yt-trailers.json ]; then git add docs/channel/yt-trailers.json; fi
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0
@@ -77,3 +93,5 @@ jobs:
             sleep $((i * 10))
           done
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."
+          # The 5-minute segment's "Today" page shows the new set's times.
+          gh workflow run build-channel1-segment.yml -R "$GITHUB_REPOSITORY" || echo "::warning::Could not start the segment build."

@@ -132,7 +132,15 @@ class Store(context: Context) {
         prefs.edit().putString("hifz_$profileId", arr.toString()).apply()
     }
 
+    /** A learner's Learn Namaz record (see NamazProgress), as JSON. */
+    fun namaz(profileId: String): NamazProgress =
+        NamazProgress.fromJson(prefs.getString("namaz_$profileId", null))
+
+    fun saveNamaz(profileId: String, p: NamazProgress) {
+        prefs.edit().putString("namaz_$profileId", p.toJson()).apply()
+    }
+
     fun deleteProfileData(profileId: String) {
-        prefs.edit().remove("stars_$profileId").remove("hifz_$profileId").apply()
+        prefs.edit().remove("stars_$profileId").remove("hifz_$profileId").remove("namaz_$profileId").apply()
     }
 }

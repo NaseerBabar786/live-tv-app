@@ -13,11 +13,15 @@ skip or leave for YouTube. Nothing is downloaded or re-hosted, as YouTube's term
   8 Bazaar Comedy  comedy shows from their channels
   9 Bazaar Movies English  full English films from studios' and distributors' free-movie channels
  10 Bazaar Movies Hindi    full Hindi films from the studios' channels
- 11 Bazaar Dramas  full episodes of Pakistani dramas from the TV channels' own channels
+ 11 Bazaar Dramas Urdu  full episodes of Pakistani dramas from the TV channels' own channels
  12 Bazaar Cooking recipes and cooking shows from the cooks' own channels
  13 Latest Movies  the newest full films in Hindi, English, Punjabi and Urdu from the studios',
                    labels' and TV channels' own uploads, newest first (no logo of ours on it)
  14 Bazaar Teens  science, cartoons, challenges and talent shows for 12 to 16 year olds
+ 16 Bazaar Dramas Hindi  full episodes of Hindi serials from the Indian TV channels' own channels
+ 17 Bazaar Shayari  Urdu and Hindi poetry: mushairas, kavi sammelan and poets reciting, from the
+                    organisers', TV channels' and poets' own channels
+ 47 Spark Auto (English) and 32 Spark Auto Hindi  car reviews, launches, top 10s, supercars and motorsport
 
 Only the channel that really owns each handle is used (its name must match). Videos found on
 earlier runs are kept for KEEP_DAYS, so each list builds up. The public-domain schedules
@@ -36,6 +40,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id, fetch, videos_feed, videos_page  # noqa: E402
+from no_horror import is_horror  # noqa: E402  (the owner's rule 2026-10-08: no horror on our channels)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEEP_DAYS = 180
@@ -54,11 +59,37 @@ def other_language(title):
     return bool(OTHER_LANGUAGE.search(title)) and not OUR_LANGUAGE.search(title)
 
 
+# Every channel is in one language (the owner, 2026-10-08): Urdu "ur", Hindi "hi", English "en", Punjabi "pa".
+# A video is in its source's language ("lang", or "langs" per source), unless its title names one of
+# Urdu, Hindi or Punjabi alone ("Punjabi Song" from Coke Studio, "Hindi Dubbed"). A channel with "split"
+# writes each language's videos to that language's list and leaves out the rest.
+TITLE_LANGS = {"ur": re.compile(r"\burdu\b", re.I), "hi": re.compile(r"\bhindi\b", re.I), "pa": re.compile(r"\bpunjabi\b", re.I)}
+
+
+def language_of(ch, label, title):
+    named = [code for code, rx in TITLE_LANGS.items() if rx.search(title)]
+    if len(named) == 1:
+        return named[0]
+    return ch.get("langs", {}).get(label, ch.get("lang"))
+
+
+def kinds_of(ch, label, title):
+    """The parts of the day a video fits (Spark Auto's blocks: new, review, top10, versus, supercar, race);
+    the source's name counts too, so every Formula 1 upload is "race"."""
+    return [k for k, rx in ch["kinds"].items() if re.search(rx, f"{title} | {label}", re.I)]
+
+
 # Never on our channels, whatever the source.
+# Reality, game, talent, chat and cooking shows: never on the drama channels (the channel-fit rule, 2026-10-08).
+NOT_DRAMA = (r"reality|tamasha|\bbuzz\b|bigg boss|game show|jeeto|laughter chefs|kapil|khatron|indian idol|superstar singer|dance|"
+             r"talent|got latent|shark tank|masterchef|cooking|recipe|kitchen|mix plate|morning|talk show|podcast|elimination|"
+             r"pati patni aur panga|the journalist")
+
 NEVER = r"trailer|teaser|#shorts?\b|\bshorts\b|promo|reaction|announcement|first look|motion poster|\blive\b|livestream|premiere"
 
 CHANNELS = {
     "filmein": {
+        "lang": "hi",
         "name": "Bazaar Cinema", "mins": (70, 200), "search": "full movie",
         "keep": r"full (movie|film)|movie|film",
         "skip": r"scene|song|jukebox|comedy scenes|best of|spoof",
@@ -72,6 +103,10 @@ CHANNELS = {
         ],
     },
     "sur": {
+        # One language per channel (the owner, 2026-10-08): Punjabi songs stay here (3 -> Spark Music Punjabi),
+        # Urdu ones go to Spark Music Urdu (musicur).
+        "lang": "pa", "langs": {"Coke Studio Pakistan": "ur", "Oriental Star Agencies": "ur"},
+        "split": {"pa": "sur", "ur": "musicur"},
         # More sources and searches (2026-10-07): the channel had about 11 hours and repeated its day.
         "name": "Bazaar Music", "mins": (2, 15), "search": ["official video", "qawwali", "sufi", "punjabi song"],
         "skip": r"jukebox|full album|non ?stop|mashup|audio|lyric|lyrical|making|interview|bts|behind the scenes",
@@ -89,6 +124,9 @@ CHANNELS = {
         ],
     },
     "kids": {
+        "lang": "en", "langs": {"Ghulam Rasool": "ur", "Jugnu Kids": "ur", "Kids TV Urdu": "ur",
+                                "ChuChu TV Hindi": "hi", "Infobells Hindi": "hi"},
+        "split": {"en": "kids", "hi": "kidshi", "ur": "kidsur"},
         "name": "Bazaar Kids", "mins": (2, 60),
         "skip": r"toy|unboxing|scary|horror|prank",
         "sources": [
@@ -123,6 +161,8 @@ CHANNELS = {
                                         "Mr Bean Cartoon", "Numberblocks", "Hey Duggee", "Thomas & Friends")},
     },
     "sports": {
+        "lang": "en", "langs": {"Pro Kabaddi": "hi"},
+        "split": {"en": "sports", "hi": "sportshi"},
         "name": "Bazaar Sports", "mins": (2, 45), "search": "highlights",
         "skip": r"podcast|press conference|interview|reaction|preview|prediction|draw|ticket|bet",
         # Cricket is the main part, then wrestling, then the most-watched other sports (the owner's wish, 2026-10-06).
@@ -160,6 +200,7 @@ CHANNELS = {
                 "NHL": 20, "Sportsnet": 15, "TSN": 15, "Blue Jays": 10, "Raptors": 10, "CFL": 10},
     },
     "travel": {
+        "lang": "en",
         # More sources and searches (2026-10-07): the channel had about 6 hours and repeated its day.
         "name": "Bazaar Travel", "mins": (2, 60), "search": ["travel guide", "things to do", "episode"],
         "skip": r"podcast|interview|news|press|webinar|conference|recipe",
@@ -180,19 +221,46 @@ CHANNELS = {
         ],
     },
     "comedy": {
-        "name": "Bazaar Comedy", "mins": (2, 45),
-        "skip": r"podcast|interview|news|vlog|reaction|roast|adult|18\+",
+        "lang": "hi", "langs": {"Mr Bean": "en", "Shaun the Sheep": "en", "Just For Laughs Gags": "en", "The Pink Panther": "en",
+                                "Laurel and Hardy": "en", "Dry Bar Comedy": "en", "Bulbulay": "ur", "Sawa Teen": "ur",
+                                "Hum Sab Umeed Se Hain": "ur", "Mazaaq Raat": "ur"},
+        "split": {"hi": "comedy", "ur": "comedyur", "en": "comedyen"},
+        "name": "Bazaar Comedy", "mins": (2, 50),
         "sources": [
             ("Mr Bean", ["@MrBean"], "Mr Bean"),
             ("Taarak Mehta", ["@TaarakMehtaKaOoltahChashmah", "@SonySAB"], "Taarak Mehta|Sony SAB"),
             ("Bulbulay", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
             ("The Kapil Sharma Show", ["@SonyTV", "@SETIndia"], "Sony Entertainment Television|SET India"),
             ("Shaun the Sheep", ["@shaunthesheep"], "Shaun the Sheep"),
+            # More variety (the owner, 2026-10-08: "so many times Taarak Mehta ... English comedy programs
+            # ... stand-up comedy shows"). Family-friendly shows from their own channels only.
+            # Hindi and Urdu sitcoms and comedy shows
+            ("Bhabiji Ghar Par Hain", ["@andtvchannel", "@AndTV"], "&TV|And TV"),
+            ("Wagle Ki Duniya", ["@SonySAB", "@sonysab"], "Sony SAB"),
+            ("Sawa Teen", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
+            ("Hum Sab Umeed Se Hain", ["@HarPalGeo", "@GeoEntertainment"], "HAR PAL GEO|Har Pal Geo|Geo Entertainment"),
+            ("Mazaaq Raat", ["@DunyaNews", "@dunyanewsofficial"], "Dunya News"),
+            # English comedy
+            ("Just For Laughs Gags", ["@JustForLaughsGags", "@justforlaughsgags"], "Just For Laughs Gags"),
+            ("The Pink Panther", ["@ThePinkPanther", "@officialpinkpanther"], "Pink Panther"),
+            ("Laurel and Hardy", ["@LaurelandHardyOfficial", "@laurelandhardy"], "Laurel and Hardy|Laurel & Hardy"),
+            # Clean stand-up comedy
+            ("Dry Bar Comedy", ["@DryBarComedy", "@drybarcomedy"], "Dry Bar Comedy"),
+            ("Zakir Khan", ["@ZakirKhan", "@zakirkhan"], "Zakir Khan"),
+            ("Gaurav Kapoor", ["@GauravKapoor", "@gauravkapoorcomedy"], "Gaurav Kapoor"),
         ],
         # A source channel with many kinds of shows: only these shows are taken from it.
-        "only": {"Bulbulay": r"bulbulay", "The Kapil Sharma Show": r"kapil", "Taarak Mehta": r"taarak|tmkoc|mehta"},
+        "only": {"Bulbulay": r"bulbulay", "The Kapil Sharma Show": r"kapil", "Taarak Mehta": r"taarak|tmkoc|mehta",
+                 "Bhabiji Ghar Par Hain": r"bhabi ?ji", "Wagle Ki Duniya": r"wagle", "Sawa Teen": r"sawa teen",
+                 "Hum Sab Umeed Se Hain": r"hum sab umeed", "Mazaaq Raat": r"mazaa?q raat"},
+        # Stand-up must be clean: nothing marked for grown-ups only.
+        "skip": r"podcast|interview|breaking news|news (?:bulletin|headlines)|vlog|reaction|roast|adult|18\+|explicit|uncensored|not for kids|a rated|nsfw",
+        # No one show fills the channel: at most this many videos from each (newest kept); the page also
+        # lets the shows take turns (mix: true in docs/channel/schedule.js).
+        "most": {"*": 25},
     },
     "english": {
+        "lang": "en",
         "name": "Bazaar Movies English", "mins": (70, 200), "search": "full movie",
         "keep": r"full (movie|film)|movie|film",
         "skip": r"scene|clip|horror|slasher|erotic|18\+|hindi|dubbed|spoof",
@@ -206,6 +274,7 @@ CHANNELS = {
         ],
     },
     "hindi": {
+        "lang": "hi",
         "name": "Bazaar Movies Hindi", "mins": (70, 200),
         "search": ["hindi full movie", "new hindi movie %(year)s", "new hindi movie %(last)s"],
         # Mostly new films (the owner's wish, 2026-10-06): a film whose title names a year from the
@@ -223,11 +292,13 @@ CHANNELS = {
             ("Pen Movies", ["@PenMovies"], "Pen Movies"),
         ],
     },
+    # 2 is Urdu dramas and 24 Hindi dramas (the owner, 2026-10-08): two channels, one language each.
     "dramas": {
-        "name": "Bazaar Dramas", "mins": (18, 75), "search": "episode",
-        # Full episodes only, no teasers, OSTs or clips.
+        "lang": "ur",
+        "name": "Bazaar Dramas Urdu", "mins": (18, 75), "search": "episode",
+        # Full episodes only, no teasers, OSTs or clips; no reality or game shows (Tamasha) or cooking shows (channel-fit rule).
         "keep": r"episode|\bep\b|\bepi\b|ep\s*\d|قسط",
-        "skip": r"\bost\b|title song|scene|best moment|clip|bts|behind the scenes|review|highlights|recap|interview|morning show|news",
+        "skip": rf"\bost\b|title song|scene|best moment|clip|bts|behind the scenes|review|highlights|recap|interview|morning show|news|{NOT_DRAMA}",
         "sources": [
             ("HUM TV", ["@HUMTV", "@humtvpk"], "HUM TV"),
             ("ARY Digital", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
@@ -235,9 +306,85 @@ CHANNELS = {
             ("Green Entertainment", ["@GreenTVEntertainment", "@greenentertainment"], "Green"),
             ("Express TV", ["@ExpressTV", "@expresstv"], "Express TV"),
             ("Geo Entertainment", ["@GeoEntertainment"], "Geo"),
+            ("ARY Zindagi", ["@ARYZindagiOfficial", "@ARYZindagi"], "ARY Zindagi"),
+            ("Geo Kahani", ["@GeoKahani"], "Geo Kahani"),
+            ("LTN Family", ["@LTNFamily", "@ltnfamily"], "LTN Family"),
+            ("PTV Home", ["@PTVHomeOfficial", "@PTVHome"], "PTV Home"),
+            ("Aaj Entertainment", ["@AajEntertainment"], "Aaj Entertainment"),
         ],
     },
+    "hindidramas": {
+        "lang": "hi",
+        "name": "Bazaar Dramas Hindi", "mins": (15, 75), "search": ["full episode", "episode"],
+        "keep": r"episode|\bep\b|\bepi\b|ep\.?\s*\d|एपिसोड",
+        "skip": rf"\bost\b|title (song|track)|best moment|bts|behind the scenes|review|highlights|recap|interview|news|promo|precap|{NOT_DRAMA}",
+        # Doordarshan uploads much more than drama: only its serials.
+        "only": {"Doordarshan": r"byomkesh|ye hawayein|flop show|tenali|malgudi|hum log|buniyaad|circus|fauji|tehkikaat|surabhi|serial"},
+        "sources": [
+            ("StarPlus", ["@StarPlus"], "StarPlus|Star Plus"),
+            ("Sony SAB", ["@SonySAB"], "Sony SAB"),
+            ("Sony Pal", ["@SonyPal"], "Sony Pal"),
+            ("SET India", ["@SETIndia", "@SonyTV"], "Sony Entertainment Television|SET India", ["crime patrol full episode", "full episode"]),
+            ("Colors TV", ["@ColorsTV"], "Colors"),
+            ("And TV", ["@andtvchannel"], "&TV|And TV"),
+            ("Dangal TV", ["@DangalTVChannel", "@DangalTV"], "Dangal"),
+            ("Shemaroo TV", ["@ShemarooTV", "@shemarootv"], "Shemaroo"),
+            ("Shemaroo Umang", ["@ShemarooUmang"], "Shemaroo Umang"),
+            ("Sun Neo", ["@SunNeo", "@SunNeoTV"], "Sun Neo"),
+            ("Doordarshan", ["@DoordarshanNational", "@ddnational"], "Doordarshan|DD National"),
+        ],
+    },
+    # 17 Spark Shayari (owner, 2026-10-08): Urdu and Hindi poetry recited, never sung (sung ghazals belong on
+    # Spark Music), no lessons, talks or panels, no politics, no horror, no other languages.
+    "shayari": {
+        "name": "Bazaar Shayari", "mins": (2, 150), "search": ["mushaira", "shayari", "kavi sammelan"],
+        "keep": r"mushair|musha'?era|mushayra|shayari|shayri|shaayri|\bsher\b|ghazal|nazm|kavi ?sammelan|kavi samm?elan|kavita|kavya|"
+                r"poet|poem|recit|kalam|kalaam|مشاعر|شاعر|غزل|نظم|کلام|कवि|कविता|शायर|मुशायर|ग़ज़ल|गज़ल|नज़्म",
+        "skip": r"\bsong\b|singer|singing|sung|qawwal|music video|musical|jukebox|\bost\b|lyrical|cover|unplugged|concert|non-?stop|"
+                r"learning|module|lesson|lecture|explained|seminar|panel|discussion|in conversation|book launch|rekhta books|dastak|"
+                r"tribute|speaks|\btalk\b|podcast|interview|storytelling|aftermovie|\bwhy\b|history of|who shaped|lives|rivalr|prose|nobel|"
+                r"by children|school|"
+                r"marathi|kashmiri|punjabi|pashto|sindhi|mushairo|angrezi|english mushaira|gujarati|bengali|dogri|"
+                r"noha|marsiya|majlis|horror|bhoot|bhut|ghost|chudail|\bdarr?\b|daravn|"
+                r"news|debate|politic|election|chunav|चुनाव|modi|rahul gandhi|kejriwal|yogi|imran khan|nawaz|shehbaz|maryam|bjp|"
+                r"congress|\bpti\b|pml|gyanesh|reaction|roast|stand ?up|comedy show|meme",
+        # Festivals and the Akademi upload much more than poetry: only their mushairas and readings.
+        "only": {
+            "Sahitya Akademi": r"mushaira|urdu|hindi|kavi|poets'? meet|ghazal|poetry reading",
+            "Faiz Festival": r"mushaira|in mushaira|poetry performed|recit",
+            "Lahore Literary Festival": r"mushaira",
+            "Doordarshan": r"kavi|mushaira|sammelan|kavita",
+            "Kumar Vishwas": r"kavi ?sammelan|mushaira|jashn|shayar|ghazal",
+        },
+        "sources": [
+            ("Rekhta", ["@JashneRekhta"], "Jashn-e-Rekhta|Jashn e Rekhta|JashneRekhta"),
+            ("Sahitya Akademi", ["@SahityaAkademi"], "Sahitya Akademi"),
+            ("DD Urdu", ["@DDUrdu", "@DDUrduOfficial"], "DD Urdu"),
+            ("Doordarshan", ["@DoordarshanNational", "@ddnational"], "Doordarshan|DD National"),
+            ("PTV Home", ["@PTVHomeOfficial", "@PTVHome"], "PTV Home|PTV"),
+            ("PTV National", ["@PTVNationalOfficial", "@PTVNational"], "PTV National|PTV"),
+            ("Lahore Literary Festival", ["@LahoreLiteraryFestival"], "Lahore Literary"),
+            ("Faiz Festival", ["@FaizFestival"], "Faiz"),
+            ("Mushaira Media", ["@MushairaMedia"], "Mushaira Media|Mushaira"),
+            ("Sahitya Tak", ["@SahityaTak"], "Sahitya Tak|Sahitya"),
+            ("Kumar Vishwas", ["@KumarVishwas"], "Kumar Vishwas"),
+            ("Kommune", ["@KommuneIndia"], "Kommune"),
+            ("The Social House", ["@TheSocialHouse"], "Social House"),
+            ("Hindi Kavita", ["@HindiKavita"], "Hindi Kavita"),
+            ("Urdu Studio", ["@UrduStudio"], "Urdu Studio"),
+        ],
+        "cap": {"*": 60},
+        # Urdu poetry stays on Shayari (5); the Hindi sources make Kavi Sammelan (27).
+        "lang": "ur", "split": {"ur": "shayari", "hi": "kavi"},
+        "langs": {"Rekhta": "ur", "Sahitya Akademi": "ur", "DD Urdu": "ur", "Doordarshan": "hi", "PTV Home": "ur",
+                  "PTV National": "ur", "Lahore Literary Festival": "ur", "Faiz Festival": "ur", "Mushaira Media": "ur",
+                  "Sahitya Tak": "hi", "Kumar Vishwas": "hi", "Kommune": "hi", "The Social House": "hi",
+                  "Hindi Kavita": "hi", "Urdu Studio": "ur"},
+    },
     "cooking": {
+        "lang": "hi", "langs": {"Food Fusion": "ur", "Kitchen with Amna": "ur", "Masala TV": "ur", "Chef Zakir": "ur",
+                                "Shireen Anwar": "ur"},
+        "split": {"hi": "cooking", "ur": "cookingur"},
         "name": "Bazaar Cooking", "mins": (4, 45),
         "skip": r"vlog|q ?& ?a|giveaway|unboxing|review|haul|podcast|mukbang|eating challenge",
         "sources": [
@@ -253,7 +400,85 @@ CHANNELS = {
         ],
     },
     # For 12 to 16 year olds (the owner's wish, 2026-10-07); Bazaar Kids stays for small children.
+    # Spark Auto (English, 47) and Spark Auto Hindi (32), the owner's wish 2026-10-08: reviews, new launches,
+    # top 10s, comparisons, supercars and motorsport highlights from the car shows', magazines', carmakers'
+    # and racing series' own channels. Each video is tagged with the day's blocks it fits ("kinds").
+    "auto": {
+        "lang": "en", "langs": {"Gagan Choudhary": "hi", "Auto Yogi": "hi", "CarDekho": "hi", "ZigWheels": "hi",
+                                "MotorOctane": "hi", "91Wheels": "hi", "V3Cars": "hi"},
+        "split": {"en": "auto", "hi": "autohi"},
+        "name": "Bazaar Auto", "mins": (3, 90), "search": ["review", "top 10", "highlights"],
+        # No crashes, sponsored films, giveaways, podcasts or company events (channel-fit rule).
+        "skip": r"crash|accident|fatal|died|death|killed|branded content|sponsored|paid partnership|giveaway|podcast|"
+                r"q ?& ?a\b|merch|politic|election|masterclass|agm|earnings|investor|webinar|press conference|unboxing.*phone",
+        "kinds": {
+            "new": r"\bnew\b|launch|reveal|unveil|debut|price|20(2[5-9])|first drive|first look|nayi|naya|all details",
+            "review": r"review|tested|test drive|driven|road test|walkaround|walk around|drive impressions|ownership|owner|"
+                      r"pros,? cons|variants explained|worth|kaisi|should you buy|which (one|variant)",
+            "top10": r"\btop ?\d+|\b\d+ best|best .*(cars?|suvs?|bikes?)|worst|ranking|ranked|under \d+ lakh|cheapest|"
+                     r"how .* works?|explained|why |history",
+            "versus": r"\bvs\b|\bv\b|versus|drag race|comparison|compare|twin test|shootout|lap time|race\b.*\bvs",
+            "supercar": r"ferrari|lamborghini|mclaren|bugatti|porsche|koenigsegg|pagani|hypercar|supercar|rolls|bentley|aston|"
+                        r"maserati|amg|\bgt\d?\b|\bm\d\b|rs ?\d",
+            "race": r"highlights|grand prix|\bgp\b|qualifying|rally|le mans|\bf1\b|formula|motogp|nascar|indycar|"
+                    r"Formula 1|MotoGP|WRC|FIA WEC|Formula E|NASCAR|IndyCar",
+        },
+        # Racing, and fresh launches found in the last two days, come round more often.
+        "events": r"grand prix|highlights|launch|reveal|unveil|debut",
+        # A few from each source in turn, so no one show fills the channel.
+        # (The Hindi shows are fewer, so each keeps more.)
+        "most": {"*": 45, "Gagan Choudhary": 90, "Auto Yogi": 90, "CarDekho": 90, "ZigWheels": 90, "MotorOctane": 90,
+                 "91Wheels": 90, "V3Cars": 90},
+        "max": 2100,
+        "sources": [
+            # Reviews and new launches
+            ("Top Gear", ["@TopGear"], "Top Gear"),
+            ("carwow", ["@carwow"], "carwow"),
+            ("MotorTrend", ["@MotorTrend", "@MotorTrendChannel"], "MotorTrend|Motor Trend"),
+            ("Autocar", ["@autocar"], "Autocar"),
+            ("Car and Driver", ["@caranddriver", "@CarandDriver"], "Car and Driver"),
+            ("Throttle House", ["@ThrottleHouse"], "Throttle House"),
+            ("The Straight Pipes", ["@TheStraightPipes"], "Straight Pipes"),
+            ("Doug DeMuro", ["@DougDeMuro"], "Doug DeMuro"),
+            ("Fifth Gear", ["@FifthGear", "@fifthgear"], "Fifth Gear"),
+            ("Autocar India", ["@autocarindia1", "@AutocarIndia"], "Autocar India"),
+            ("Overdrive", ["@odmag", "@ODMag", "@OVERDRIVE"], "Overdrive|OVERDRIVE"),
+            # Supercars, classics and how cars work
+            ("Shmee150", ["@shmee150"], "Shmee150"),
+            ("Hagerty", ["@Hagerty"], "Hagerty"),
+            ("Jay Leno's Garage", ["@jaylenosgarage"], "Jay Leno"),
+            ("Supercar Blondie", ["@supercarblondie", "@SupercarBlondie"], "Supercar Blondie"),
+            ("Goodwood", ["@GoodwoodRRC", "@goodwoodroadracing"], "Goodwood"),
+            ("Donut", ["@donutmedia", "@Donut"], "Donut"),
+            ("Engineering Explained", ["@EngineeringExplained"], "Engineering Explained"),
+            ("Porsche", ["@Porsche"], "Porsche"),
+            ("Ferrari", ["@Ferrari"], "Ferrari"),
+            ("McLaren", ["@McLaren", "@McLarenAutomotive"], "McLaren"),
+            ("Lamborghini", ["@Lamborghini"], "Lamborghini"),
+            ("Mercedes-Benz", ["@MercedesBenz", "@MercedesBenzTV"], "Mercedes"),
+            ("BMW", ["@BMW"], "BMW"),
+            ("Bugatti", ["@Bugatti"], "Bugatti"),
+            # Motorsport highlights
+            ("Formula 1", ["@Formula1", "@F1"], "Formula 1|FORMULA 1"),
+            ("MotoGP", ["@MotoGP"], "MotoGP"),
+            ("WRC", ["@WRC", "@wrcofficial"], "WRC|FIA World Rally"),
+            ("FIA WEC", ["@FIAWEC", "@fiawec"], "WEC|FIA World Endurance"),
+            ("Formula E", ["@FIAFormulaE", "@FormulaE"], "Formula E"),
+            ("IndyCar", ["@INDYCAR", "@IndyCar"], "INDYCAR|IndyCar"),
+            ("NASCAR", ["@NASCAR"], "NASCAR"),
+            # Hindi: India's car shows
+            ("Gagan Choudhary", ["@GaganChoudhary"], "Gagan Choudhary"),
+            ("Auto Yogi", ["@AutoYogi"], "Auto Yogi"),
+            ("CarDekho", ["@CarDekhoIndia", "@cardekho"], "CarDekho"),
+            ("ZigWheels", ["@ZigWheels", "@zigwheels"], "ZigWheels"),
+            ("MotorOctane", ["@MotorOctane"], "MotorOctane"),
+            ("91Wheels", ["@91Wheels", "@91wheels"], "91Wheels"),
+            ("V3Cars", ["@V3Cars", "@v3cars"], "V3Cars|V3 Cars"),
+        ],
+    },
     "teens": {
+        "lang": "en", "langs": {"Fact Tech": "hi", "Nick India": "hi"},
+        "split": {"en": "teens", "hi": "teenshi"},
         "name": "Bazaar Teens", "mins": (3, 30),
         "skip": r"horror|scary|gore|explicit|18\+|podcast|vlog|merch|sponsor|giveaway|toy|nursery|rhymes?|preschool|toddler",
         "sources": [
@@ -283,7 +508,66 @@ CHANNELS = {
     },
     # The owner's wish (2026-10-06): just "Latest Movies", newest uploads first, no logo of ours. Only the
     # rights holders' own channels: re-uploads of new films by anyone else are pirated and soon taken down.
+    # Punjabi (the owner, 2026-10-08: "a couple more Punjabi channels"). Each goes on air with 50+ programmes.
+    "gurbani": {
+        # 62: shabad kirtan and paths from the labels' and SGPC's own channels. No ads over it (owner's channel rule).
+        "lang": "pa",
+        "name": "Bazaar Gurbani", "mins": (5, 180), "search": ["shabad kirtan", "gurbani", "nitnem", "sukhmani sahib"],
+        "skip": r"status|whatsapp|ringtone|reels?\b|vlog|interview|news|debate|speech|controvers",
+        "sources": [
+            ("T-Series Shabad Gurbani", ["@tseriesshabad", "@TSeriesShabadGurbani"], "Shabad Gurbani"),
+            ("Amritt Saagar", ["@amrittsaagar", "@AmrittSaagar"], "Amritt Saagar"),
+            ("SGPC", ["@officialsgpc", "@SGPCSriAmritsar"], "SGPC|Shiromani"),
+            ("Finetouch Gurbani", ["@FinetouchGurbani", "@FinetouchMusic"], "Finetouch"),
+        ],
+        "most": {"*": 150},
+    },
+    "moviespa": {
+        # 63: full Punjabi films (older years too), comedies included, from the studios' and labels' own channels.
+        # The newest ones (Latest Movies' Punjabi films) are put at the front by merge_latest.
+        "lang": "pa",
+        "name": "Bazaar Movies Punjabi", "mins": (70, 200), "search": ["punjabi full movie", "full punjabi movie", "full movie"],
+        "keep": r"punjabi",
+        "skip": r"scene|song|jukebox|comedy scenes|best of|spoof|clip|review|explained|recap|hindi dubbed|horror|slasher|erotic|18\+",
+        "sources": [
+            ("White Hill Studios", ["@WhiteHillStudios", "@WhiteHillDhol", "@WhiteHillMusic"], "White Hill"),
+            ("Yellow Music", ["@YellowMusicOfficial", "@YellowMusic"], "Yellow Music"),
+            ("Speed Punjabi", ["@SpeedPunjabi", "@speedpunjabi"], "Speed Punjabi"),
+            ("ShemarooMe Punjabi", ["@ShemarooMePunjabi", "@ShemarooPunjabi"], "Shemaroo"),
+            ("Punjabi Hits", ["@PunjabiHits"], "Punjabi Hits"),
+            ("Saga Hits", ["@sagahits", "@SagaMusic"], "Saga"),
+            ("Tips Punjabi", ["@TipsPunjabi"], "Tips Punjabi"),
+            ("PTC Punjabi Gold", ["@PTCPunjabiGold", "@ptcpunjabigold"], "PTC Punjabi"),
+            ("Omjee", ["@OmjeeGroup", "@OmjeeStarStudios"], "Omjee"),
+            ("Lokdhun Punjabi", ["@LokdhunPunjabi", "@lokdhunpunjabi"], "Lokdhun"),
+            ("Rhythm Boyz", ["@RhythmBoyz", "@RhythmBoyzEntertainment"], "Rhythm Boyz"),
+            ("T-Series Apna Punjab", ["@TSeriesApnaPunjab", "@tseriesapnapunjab"], "Apna Punjab"),
+            ("Pitaara TV", ["@PitaaraTV"], "Pitaara"),
+            ("Goyal Music", ["@GoyalMusicOfficial"], "Goyal Music"),
+            ("Humble Motion Pictures", ["@HumbleMotionPictures", "@HumbleMusic"], "Humble"),
+            ("Geet MP3", ["@GeetMP3"], "Geet MP3"),
+        ],
+    },
+    "sufi": {
+        # 64: Sufi kalam and qawwali, mostly Nusrat Fateh Ali Khan, from the label's own channels.
+        "lang": "pa",
+        "name": "Bazaar Sufi Qawwali", "mins": (4, 120), "search": ["qawwali", "sufi kalam", "nusrat fateh ali khan"],
+        "keep": r"qawwal|kalam|sufi|kafi|dhamal|nusrat|sabri|abida|bulleh|heer|naat|manqabat",
+        "skip": r"jukebox|non ?stop|mashup|remix|lyric|status|whatsapp|reels?\b|interview|bts|behind the scenes|#shorts",
+        "sources": [
+            ("OSA Islamic", ["@OSAIslamic", "@osaislamic"], "OSA Islamic|Oriental Star"),
+            ("Nusrat Fateh Ali Khan", ["@NusratFatehAliKhanOfficial", "@NFAKOfficial"], "Nusrat Fateh Ali Khan"),
+            ("Sabri Brothers", ["@SabriBrothersOfficial"], "Sabri Brothers"),
+            ("Abida Parveen", ["@AbidaParveenOfficial"], "Abida Parveen"),
+        ],
+    },
     "latest": {
+        # Since 2026-10-08 Latest Movies is no channel of its own: each language's newest films lead that
+        # language's Movies channel (merge_latest below).
+        "lang": "hi", "langs": {"FilmRise Movies": "en", "Popcornflix": "en", "Paramount Movies": "en", "Movie Central": "en",
+                                "Moviegrams": "en", "Maverick Movies": "en", "White Hill": "pa", "Saga": "pa",
+                                "Speed Records": "pa", "Tips Punjabi": "pa", "ARY Digital": "ur", "HUM TV": "ur",
+                                "Har Pal Geo": "ur", "Green Entertainment": "ur", "ARY Films": "ur"},
         # The owner's rule (2026-10-07): only films released this year or last year. The year must be in
         # the title ("Do Khiladi (2026)"), and every year named there must be one of the two, so an old film
         # re-uploaded as "New Released 2026" with "(2018)" in its name stays out.
@@ -350,9 +634,12 @@ def upload_dates(chan):
 
 def build(cid, ch, today):
     out = os.path.join(ROOT, "docs", "channel", f"yt-{cid}.json")
+    split = ch.get("split") or {}
     old = {}
-    if os.path.exists(out):
-        old = {v["id"]: v for v in json.load(open(out, encoding="utf-8")).get("videos", [])}
+    for each in sorted({cid, *split.values()}):
+        path = os.path.join(ROOT, "docs", "channel", f"yt-{each}.json")
+        if os.path.exists(path):
+            old.update({v["id"]: v for v in json.load(open(path, encoding="utf-8")).get("videos", [])})
     skip = re.compile(rf"{NEVER}|{ch['skip']}", re.I)
     keep = re.compile(ch["keep"], re.I) if ch.get("keep") else None
     low, high = ch["mins"]
@@ -382,9 +669,10 @@ def build(cid, ch, today):
                 print(f"  feed: {e}", file=sys.stderr)
         only = re.compile(ch.get("only", {}).get(label, ""), re.I) if label in ch.get("only", {}) else None
         kept = dated = 0
-        dates = upload_dates(chan) if ch.get("newest") else {}
+        # Upload days from the channel feed (its 15 newest): Latest Movies, and Bazaar TV One's new-only blocks.
+        dates = upload_dates(chan)
         for vid, title, mins, age in videos:
-            if vid in found or skip.search(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
+            if vid in found or skip.search(title) or is_horror(title) or other_language(title) or (keep and not keep.search(title)) or (only and not only.search(title)):
                 continue
             if ch.get("release_years") is not None and not recent_film(title, today, ch["release_years"]):
                 continue
@@ -395,6 +683,15 @@ def build(cid, ch, today):
                 break
             found[vid] = {"id": vid, "title": title.strip(), "label": label, "mins": mins,
                           "found": old.get(vid, {}).get("found", today.isoformat())}
+            if ch.get("lang"):
+                found[vid]["lang"] = language_of(ch, label, title)
+            if ch.get("kinds"):
+                found[vid]["kinds"] = kinds_of(ch, label, title)
+            # When it went up on YouTube, as far as the page says ("3 weeks ago"): Bazaar TV One's blocks
+            # take only new uploads (tools/build_bazaar_blocks.py, the owner's wish 2026-10-08).
+            posted = dates.get(vid) or ((today - dt.timedelta(days=age)).isoformat() if age is not None else old.get(vid, {}).get("posted"))
+            if posted:
+                found[vid]["posted"] = posted
             if ch.get("newest"):
                 # When it went up on YouTube: the channel's feed (its 15 newest), else "3 weeks ago" on the
                 # page, else as known before; a film with no known date goes after the dated ones.
@@ -417,8 +714,13 @@ def build(cid, ch, today):
             continue
         if ch.get("release_years") is not None and not recent_film(v["title"], today, ch["release_years"]):
             continue
-        if vid not in found and v.get("label") in labels and not other_language(v["title"]) and (today - dt.date.fromisoformat(v.get("up", v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
+        # (A title the channel now skips goes too, so a rule added later also clears what came before it.)
+        if vid not in found and v.get("label") in labels and not is_horror(v) and not other_language(v["title"]) and not skip.search(v["title"]) and (today - dt.date.fromisoformat(v.get("up", v["found"]))).days <= ch.get("max_age", KEEP_DAYS):
             found[vid] = v
+            if ch.get("lang"):
+                v["lang"] = language_of(ch, v["label"], v["title"])
+            if ch.get("kinds"):
+                v["kinds"] = kinds_of(ch, v["label"], v["title"])
     # Main events from the last two weeks, and anything found in the last two days, are "top":
     # the channel page plays them far more often (Bazaar Sports, the owner's wish, 2026-10-06).
     if ch.get("events"):
@@ -435,21 +737,65 @@ def build(cid, ch, today):
         newest = lambda v: (bool(v.get("up")), v.get("up", ""))  # noqa: E731
     else:
         newest = lambda v: (bool(v.get("top")), v["found"])  # noqa: E731
-    videos = sorted(found.values(), key=newest, reverse=True)[:ch.get("max", MAX_VIDEOS)]
-    summary = f"{ch['name']}: {len(videos)} videos ({', '.join(counts)})"
-    if ch.get("events") or ch.get("recent_years"):
-        summary += f"; {sum(1 for v in videos if v.get('top'))} top ({'main events and newest' if ch.get('events') else 'new films'})"
-    SUMMARIES.append(summary)
-    # (Latest Movies is written even when short: an old list would break the owner's year rule.)
-    if len(videos) < 5 and ch.get("release_years") is None:
-        print(f"{ch['name']}: too few videos; keeping the old list.", file=sys.stderr)
-        return False
-    with open(out, "w", encoding="utf-8") as f:
-        json.dump({"name": ch["name"], "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-                   "videos": videos}, f, ensure_ascii=False, indent=1)
-        f.write("\n")
-    print(f"Wrote {os.path.relpath(out, ROOT)}: {summary}")
-    return True
+    videos = sorted(found.values(), key=newest, reverse=True)
+    if ch.get("most"):
+        # Balance: the newest few of each source, so one show doesn't fill the channel.
+        per, counted = ch["most"], {}
+        balanced = []
+        for v in videos:
+            counted[v["label"]] = counted.get(v["label"], 0) + 1
+            if counted[v["label"]] <= per.get(v["label"], per.get("*", MAX_VIDEOS)):
+                balanced.append(v)
+        videos = balanced
+    videos = videos[:ch.get("max", MAX_VIDEOS)]
+    lists = {cid: videos}
+    if split:
+        lists = {each: [v for v in videos if v.get("lang") == code] for code, each in split.items()}
+    wrote = False
+    for each, vids in lists.items():
+        name = ch["name"] if each == cid else f"{ch['name']} ({each})"
+        summary = f"{name}: {len(vids)} videos" + (f" ({', '.join(counts)})" if each == cid else "")
+        if ch.get("events") or ch.get("recent_years"):
+            summary += f"; {sum(1 for v in vids if v.get('top'))} top ({'main events and newest' if ch.get('events') else 'new films'})"
+        SUMMARIES.append(summary)
+        # (Latest Movies is written even when short: an old list would break the owner's year rule.)
+        if len(vids) < 5 and ch.get("release_years") is None:
+            print(f"{name}: too few videos; keeping the old list.", file=sys.stderr)
+            continue
+        out = os.path.join(ROOT, "docs", "channel", f"yt-{each}.json")
+        with open(out, "w", encoding="utf-8") as f:
+            json.dump({"name": name, "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+                       "videos": vids}, f, ensure_ascii=False, indent=1)
+            f.write("\n")
+        print(f"Wrote {os.path.relpath(out, ROOT)}: {summary}")
+        wrote = True
+    return wrote
+
+
+# Each language's newest films (Latest Movies' list) lead that language's Movies channel; Punjabi and
+# Urdu films are kept in lists of their own until those channels have enough to go on air.
+LATEST_INTO = {"hi": "hindi", "en": "english", "pa": "moviespa", "ur": "moviesur"}
+
+
+def merge_latest():
+    src = os.path.join(ROOT, "docs", "channel", "yt-latest.json")
+    if not os.path.exists(src):
+        return
+    latest = json.load(open(src, encoding="utf-8")).get("videos", [])
+    for code, each in LATEST_INTO.items():
+        path = os.path.join(ROOT, "docs", "channel", f"yt-{each}.json")
+        data = json.load(open(path, encoding="utf-8")) if os.path.exists(path) else {"name": f"Latest Movies ({each})", "videos": []}
+        new = [dict(v, top=True, latest=True) for v in latest if v.get("lang") == code]
+        ids = {v["id"] for v in new}
+        rest = [v for v in data["videos"] if not v.get("latest") and v["id"] not in ids]
+        if not new and len(rest) == len(data["videos"]):
+            continue
+        data["videos"] = new + rest
+        data["built"] = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=1)
+            f.write("\n")
+        SUMMARIES.append(f"Newest films into {each}: {len(new)}")
 
 
 def main():
@@ -458,6 +804,7 @@ def main():
     args = ap.parse_args()
     today = dt.date.today()
     ok = [build(cid, CHANNELS[cid], today) for cid in ([args.channel] if args.channel else CHANNELS)]
+    merge_latest()
     if os.environ.get("GITHUB_ACTIONS"):
         # One notice for all of them: GitHub shows only 10 per step, and there are more channels than that.
         print("::notice title=YouTube channel lists::" + "%0A".join(SUMMARIES))

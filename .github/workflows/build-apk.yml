@@ -48,6 +48,20 @@ jobs:
       - name: Run unit tests
         run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest :appbazaar:testDebugUnitTest :quran:testDebugUnitTest :qurankit:testDebugUnitTest
 
+      # Names the failing unit tests in the run's annotations (logs are long).
+      - name: Show failing tests
+        if: failure()
+        run: |
+          grep -rl "<failure" --include=*.xml . | while read f; do
+            python3 - "$f" <<'PY'
+          import sys, xml.etree.ElementTree as E
+          for c in E.parse(sys.argv[1]).getroot().iter("testcase"):
+              for x in c.findall("failure"):
+                  m = (x.get("message") or "")[:300].replace("\n", " ")
+                  print(f"::error::{c.get('classname')}.{c.get('name')}: {m}")
+          PY
+          done
+
       # Decodes the private signing key from the repository secrets, when set, so
       # every build is signed with the same key and updates install over the old app.
       - name: Load signing key

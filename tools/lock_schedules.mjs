@@ -30,9 +30,12 @@ for (const st of STATIONS.filter(s => s.yt)) {
   if (!existsSync(new URL(`yt-${st.id}.json`, DIR))) continue;
   const list = (read(`yt-${st.id}.json`).videos || []).filter(v => !unplayable[v.id]);
   const trailers = st.trailerLangs ? allTrailers.filter(v => v.id && v.secs > 0 && v.secs <= 600 && st.trailerLangs.includes(v.lang)) : [];
+  // A channel's own short clips (Spark Shayari's hourly "Aaj ka Sher", tools/shayari).
+  const own = st.ownClips && existsSync(new URL(st.ownClips, DIR))
+    ? (read(st.ownClips).clips || []).filter(c => c.src && c.secs > 0 && c.secs <= 120).map(c => ({ ...c, own: true })) : [];
   const old = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : { days: {} };
   const days = {};
-  const make = date => dayPlan(st, { list, picks: picks[st.id] || null, promos, trailers }, date).map(slim);
+  const make = date => dayPlan(st, { list, picks: picks[st.id] || null, promos, trailers, own }, date).map(slim);
   const mine = await loadOwnerDays(st.id);
   days[today] = mine[today]?.items || old.days?.[today] || make(today);
   const nextDay = torontoDay(Date.now() + 24 * 3600e3).date;
@@ -42,7 +45,8 @@ for (const st of STATIONS.filter(s => s.yt)) {
     days[tomorrow] = make(tomorrow);
     // A film still running at midnight finishes first, like TV: tomorrow starts with the rest of it.
     const cont = carryOver(days[today], torontoDay().start);
-    if (cont) days[tomorrow].unshift(cont);
+    // (Not on a half-hour channel: its day always starts on the dot with its own set.)
+    if (cont && !st.halfHours) days[tomorrow].unshift(cont);
   }
   writeFileSync(file, JSON.stringify({ name: st.name, built: new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC", days }) + "\n");
   console.log(`${st.name}: ${Object.entries(days).map(([d, it]) => `${d} ${it.length} items`).join(", ")}`);

@@ -60,7 +60,26 @@ export async function loadPicks() {
  * third video; on Bazaar Movies Hindi new films ([topRatio] 3) three for every older one.
  */
 export function runningOrder(station, list, date) {
+  const order = baseOrder(station, list, date);
+  return station.mix ? mixShows(order) : order;
+}
+
+/**
+ * The shows take turns (Bazaar Comedy, the owner's wish 2026-10-08: not Taarak Mehta again and again):
+ * one video from each source in turn, keeping each source's own order; a source with more videos
+ * comes round again once the others have had theirs.
+ */
+export function mixShows(order) {
+  const by = new Map();
+  order.forEach(v => { const k = v.label || ""; if (!by.has(k)) by.set(k, []); by.get(k).push(v); });
+  const rows = [...by.values()], out = [];
+  for (let i = 0; out.length < order.length; i++) rows.forEach(r => { if (i < r.length) out.push(r[i]); });
+  return out;
+}
+
+function baseOrder(station, list, date) {
   const seed = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000) + station.id.length;
+  if (station.blocks) return blockOrder(station, list, seed);
   if (station.newest) {
     // Latest Movies: each day opens with the films that went up on YouTube in the last week, newest first,
     // then goes on through the older ones from where the day before left off (the list comes newest first).
@@ -83,6 +102,181 @@ export function runningOrder(station, list, date) {
     return out;
   }
   return top.concat(rest);
+}
+
+// ---------- Half hours (Spark Shayari, owner 2026-10-08: "the same schedule as channel 1") ----------
+// The day is one 8-hour set ([halfHours].set: its parts, e.g. classic readings, TV mushairas, big mushairas),
+// played three times (12 AM, 8 AM and 4 PM Toronto time), made afresh each day. Every half hour is a
+// 25-minute programme with two 1-minute ad breaks inside it, then a 5-minute break: 60 seconds of our ads,
+// our own clip (Aaj ka Sher), "today on the channel" (card "today", drawn by ytc.html) and the weather
+// (card "weather"). A long programme plays in 25-minute parts ("Part 2", picking up at the same second);
+// short ones follow each other, and the breaks inside come between two of them when one ends close by.
+
+export const HALF = 1800, PROG = 1500, PROG_CONTENT = PROG - 120, WEATHER_SECS = 50;
+const BREAKS_AT = [500, 940];   // the two 1-minute breaks, in seconds of programme (about 8:20 and 16:40)
+const NEAR = 150;               // a break moves to the end of a programme this close to it
+const CRUMB = 45;               // never a piece shorter than this: a tail is dropped, a start waits
+const MIN_TODAY = 60;
+
+/** A series (DD Urdu's Kavi Hazir Hai, PTV's Eid mushaira) plays its episodes in order, one further on each day. */
+function seriesKey(v) {
+  const m = (v.title || "").match(/(?:episode|epi|ep|part)\s*[-#.:]?\s*(\d+)/i);
+  if (!m) return null;
+  const name = v.title.split(/[|#]|\b(?:episode|epi|ep|part)\b/i)[0].toLowerCase().replace(/[^a-z؀-ۿ]+/g, " ").trim();
+  return name ? { key: v.label + "/" + name, n: +m[1] } : null;
+}
+export function inSeriesOrder(pool, day) {
+  const groups = new Map();
+  pool.forEach((v, i) => { const s = seriesKey(v); if (s) { if (!groups.has(s.key)) groups.set(s.key, []); groups.get(s.key).push({ v, i, n: s.n }); } });
+  const out = pool.slice();
+  for (const g of groups.values()) {
+    if (g.length < 2) continue;
+    const eps = g.slice().sort((a, b) => a.n - b.n || (a.v.posted || "").localeCompare(b.v.posted || "")).map(x => x.v);
+    const from = day % eps.length;
+    const turn = eps.slice(from).concat(eps.slice(0, from));
+    g.forEach((x, k) => { out[x.i] = turn[k]; });
+  }
+  return out;
+}
+
+/**
+ * Packs programmes into half hours [fromHalf, toHalf) of the day. [pick(half, setLeft, room)] gives the next
+ * programme to start (one that fits in the [room] left in this half hour, if it can). Returns the items; each half hour adds up to exactly 30 minutes.
+ */
+function packHalves(station, pick, promos, own, fromHalf, toHalf, counters) {
+  const items = [];
+  let cur = null;   // { v, start, len, part }
+  const adBreak = () => {
+    const list = [];
+    let total = 0;
+    while (promos.length && list.length < promos.length && total + promos[counters.p % promos.length].secs <= 60) {
+      const x = promos[counters.p++ % promos.length];
+      list.push(x); total += x.secs;
+    }
+    return list.length ? { kind: "break", promos: list, secs: total } : null;
+  };
+  for (let h = fromHalf; h < toHalf; h++) {
+    const half = [];
+    let used = 0, b = 0;
+    const takeBreak = () => { const x = adBreak(); if (x) half.push(x); b++; };
+    while (used < PROG_CONTENT) {
+      const room = PROG_CONTENT - used, bAt = b < BREAKS_AT.length ? BREAKS_AT[b] : Infinity;
+      if (!cur) {
+        // Not a new programme for the last moments of the half hour: they go to "today on the channel".
+        if (room < 120 && b >= BREAKS_AT.length) break;
+        const v = pick(h, (toHalf - h) * PROG_CONTENT - used, room);
+        if (!v) break;
+        cur = { v, start: 0, len: lengthOf(v, station), part: 1 };
+        // A break due very soon comes before the new programme instead of in its first minutes.
+        if (bAt - used <= NEAR) { takeBreak(); continue; }
+      }
+      const rest = cur.len - cur.start, limit = Math.min(PROG_CONTENT, bAt);
+      let secs = rest, done = true;
+      if (used + rest > limit) {
+        // It ends a little after the break is due: the break waits for it.
+        if (limit === bAt && used + rest - bAt <= NEAR && used + rest <= PROG_CONTENT) secs = rest;
+        else {
+          secs = limit - used;
+          done = rest - secs < CRUMB;   // a few seconds of applause or credits left: dropped
+        }
+      }
+      if (secs > 0) {
+        const it = { kind: "video", v: cur.v, secs };
+        if (cur.start) Object.assign(it, { start: cur.start, part: cur.part });
+        if (cur.start + secs < cur.len) it.cut = true;
+        half.push(it);
+        used += secs;
+      }
+      if (done) cur = null; else { cur.start += secs; cur.part++; }
+      if (b < BREAKS_AT.length && used >= BREAKS_AT[b] - (done ? NEAR : 0)) takeBreak();
+    }
+    while (b < BREAKS_AT.length) takeBreak();
+    // The 5-minute break: our ads, our own clip, today on the channel, the weather.
+    const ads = adBreak();
+    if (ads) half.push(ads);
+    if (own.length) { const c = own[counters.o++ % own.length]; half.push({ kind: "break", own: true, promos: [c], secs: c.secs }); }
+    let today = HALF - WEATHER_SECS - half.reduce((t, x) => t + x.secs, 0);
+    if (today < MIN_TODAY) {
+      // (Only when there's nothing to play: the half hour is still exactly 30 minutes.)
+      half.push({ kind: "break", card: "today", secs: Math.max(1, today + WEATHER_SECS) });
+    } else half.push({ kind: "break", card: "today", secs: today }, { kind: "break", card: "weather", secs: WEATHER_SECS });
+    items.push(...half);
+  }
+  return items;
+}
+
+/** A half-hour channel's day: its 8-hour set, made afresh each day from the approved programmes, three times. */
+export function halfHourDay(station, list, date, promos = [], own = []) {
+  const cfg = station.halfHours, setHalves = cfg.setHours * 2;
+  const day = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000);
+  const seed = day + station.id.length;
+  const used = new Set();
+  const pools = cfg.set.map((part, k) => {
+    let pool = list.filter(v => part.labels.includes(v.label) && (!part.maxMins || (v.mins || 0) <= part.maxMins));
+    if (!pool.length) pool = list.slice();
+    return { part, pool: inSeriesOrder(shuffled(pool, seed + k), day), next: 0 };
+  });
+  const ends = []; let t = 0;
+  cfg.set.forEach(part => ends.push(t += part.hours * 2));
+  // From the part of the set the half hour belongs to: a programme not played yet today, best one that ends
+  // before this half hour's break (short recitations, so they aren't cut), else one that ends before the set does.
+  const pick = (h, left, room) => {
+    const p = pools[Math.max(0, ends.findIndex(e => h < e))] || pools[0];
+    const n = p.pool.length;
+    for (const fit of [room, left, Infinity]) for (let k = 0; k < n; k++) {
+      const v = p.pool[(p.next + k) % n];
+      if (used.has(v.id) && k < n - 1 && used.size < list.length) continue;
+      if (lengthOf(v, station) > fit) continue;
+      p.next = (p.next + k + 1) % n; used.add(v.id);
+      return v;
+    }
+    return null;
+  };
+  const set = packHalves(station, pick, promos, own, 0, setHalves, { p: 0, o: 0 });
+  const out = [];
+  for (let k = 0; k < 24 / cfg.setHours; k++) out.push(...set);
+  return out;
+}
+
+/**
+ * The owner's own order (Channel Studio 📅 Schedule) for a half-hour channel: the half hours already kept
+ * stay, then [progs] in that order from the next half hour to midnight.
+ */
+export function halfHourRebuild(station, keep, progs, promos = [], own = []) {
+  const from = Math.round(keep.reduce((t, x) => t + x.secs, 0) / HALF);
+  let i = 0;
+  const pick = () => progs.length ? progs[i++ % progs.length] : null;
+  return keep.concat(packHalves(station, pick, promos, own, from, 48, { p: from * 3, o: from }));
+}
+
+/**
+ * A day in programme blocks, like TV (Spark Auto, the owner's wish 2026-10-08): [station.blocks] is
+ * [{ from: hour, kind, name }] from midnight Toronto time; each block plays videos tagged with its kind
+ * (yt-<id>.json "kinds", tools/build_youtube_channels.py), newest finds first in "new", the others shuffled
+ * for the day. No video comes twice in a day while others are left; a block whose kind runs out goes on
+ * with any video, and kind "any" takes everything. The ad break before each video counts as 45 seconds (breaks run 30 to 60).
+ */
+export function blockOrder(station, list, seed) {
+  const blocks = station.blocks, used = new Set(), out = [];
+  const all = shuffled(list, seed);
+  const pool = kind => kind === "new"
+    ? list.filter(v => (v.kinds || []).includes("new")).sort((a, b) => (b.found || "").localeCompare(a.found || ""))
+    : kind === "any" ? all : shuffled(list.filter(v => (v.kinds || []).includes(kind)), seed + kind.length);
+  const next = (kind, from) => {
+    if (used.size >= list.length) used.clear();
+    return from.find(v => !used.has(v.id)) || all.find(v => !used.has(v.id));
+  };
+  let t = 0;
+  blocks.forEach((b, i) => {
+    const end = (blocks[i + 1]?.from ?? 24) * 3600, from = pool(b.kind);
+    t = Math.max(t, b.from * 3600);
+    while (t < end && list.length) {
+      const v = next(b.kind, from);
+      used.add(v.id); out.push({ ...v, block: b.name });
+      t += lengthOf(v, station) + 45;
+    }
+  });
+  return out;
 }
 
 /**
@@ -130,6 +324,15 @@ export async function loadTrailers(station, base = "") {
   } catch { return []; }
 }
 
+/** A channel's own short videos ([ownClips], e.g. Spark Shayari's "Aaj ka Sher"): [{ src, secs, title }]. */
+export async function loadOwnClips(station, base = "") {
+  if (!station.ownClips) return [];
+  try {
+    const d = await (await fetch(base + station.ownClips, { cache: "no-cache" })).json();
+    return (d.clips || []).filter(c => c.src && c.secs > 0 && c.secs <= 120).map(c => ({ ...c, own: true }));
+  } catch { return []; }
+}
+
 /** Our approved promos for the breaks, 5 to 60 seconds each (owner, 2026-10-07). */
 export async function loadPromos(base = "../media/") {
   try {
@@ -142,9 +345,9 @@ export async function loadPromos(base = "../media/") {
  * The running order with its ad breaks: [{ kind: "break", promos, secs } | { kind: "video", v, secs }].
  * Breaks take the promos in turn, as many as fit in 60 seconds, so each break shows different ones.
  */
-export function withBreaks(order, station, promos, trailers = []) {
+export function withBreaks(order, station, promos, trailers = [], own = []) {
   const items = [];
-  let since = Infinity, p = 0, t = 0;
+  let since = Infinity, p = 0, t = 0, hour = 0, o = 0;
   // Movie channels (owner, 2026-10-07): after every film, 12 trailers. First "coming up" clips of the next
   // films on this channel (45 seconds from inside each film), then trailers of upcoming Hindi films
   // (channel/trailers.json, refreshed every day), then the ad break and the next film.
@@ -152,6 +355,15 @@ export function withBreaks(order, station, promos, trailers = []) {
   const ours = station.trailerLangs ? TRAILERS_PER_BLOCK - news : 0;
   order.forEach((v, i) => {
     const secs = lengthOf(v, station);
+    // Our own short video once an hour, between programmes (Spark Shayari's "Aaj ka Sher"), in place of
+    // that hour's ad break, so viewers never sit through two breaks in a row.
+    const clock = own.length ? items.reduce((n, x) => n + x.secs, 0) : 0;
+    if (own.length && clock >= hour * 3600) {
+      const c = own[o++ % own.length];
+      items.push({ kind: "break", own: true, promos: [c], secs: c.secs });
+      hour = Math.floor(clock / 3600) + 1;
+      since = 0;
+    }
     if (promos.length && since >= BREAK_GAP_SECS) {
       const list = [];
       let total = 0;
@@ -205,8 +417,13 @@ export function itemsFrom(items, count, fromMs = Date.now()) {
 }
 
 /** A channel's whole day: running order, ad breaks, clips and trailers. */
-export function dayPlan(station, { list, picks, promos = [], trailers = [] }, date) {
-  const items = withBreaks(runningOrder(station, list.filter(v => playable(v, picks)), date), station, promos, trailers);
+export function dayPlan(station, { list, picks, promos = [], trailers = [], own = [] }, date) {
+  // Own clips start each day further along, so the hours don't show the same ones every day.
+  const day = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000);
+  const from = own.length ? (day * 24) % own.length : 0;
+  own = own.slice(from).concat(own.slice(0, from));
+  if (station.halfHours) return halfHourDay(station, list.filter(v => playable(v, picks)), date, promos, own);
+  const items = withBreaks(runningOrder(station, list.filter(v => playable(v, picks)), date), station, promos, trailers, own);
   // One day is enough (25 hours covers the day the clocks go back); a shorter list repeats round the clock.
   let t = 0;
   const end = items.findIndex(x => (t += x.secs) >= 25 * 3600);
@@ -221,7 +438,8 @@ export const slimItem = x => x.kind === "break" ? x : { ...x, v: { id: x.v.id, t
  * ([keep], what has played already and the one on now), then [progs] in the owner's order with the ad
  * breaks, clips and trailers in between, as in any day.
  */
-export function rebuildDay(station, keep, progs, promos = [], trailers = []) {
+export function rebuildDay(station, keep, progs, promos = [], trailers = [], own = []) {
+  if (station.halfHours) return halfHourRebuild(station, keep, progs, promos, own);
   return keep.concat(withBreaks(progs, station, promos, trailers).map(slimItem));
 }
 

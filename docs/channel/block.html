@@ -66,6 +66,7 @@
 <button class="sound" id="sound" hidden>🔊 آواز کے لیے ٹیپ کریں</button>
 <div class="ticker" id="ticker"><span id="tick" dir="auto"></span></div>
 <script src="keepplaying.js"></script>
+<script src="lowfirst.js"></script>
 <script>
 const q = new URLSearchParams(location.search);
 const $ = id => document.getElementById(id);
@@ -96,7 +97,7 @@ let info = {};
 const lists = {};
 // Keep in step with tools/build_trailers.py, build_music_videos.py and build_bazaar_blocks.py.
 const LISTS = ["trailers.json", "music-videos.json", "block-drama-1.json", "block-drama-2.json", "block-drama-3.json",
-  "block-cooking.json", "block-comedy.json", "block-film.json"];
+  "block-cooking.json", "block-comedy.json"];
 for (const list of LISTS) {
   fetch(list, { cache: "no-store" }).then(r => r.json()).then(d => {
     lists[list] = d;
@@ -290,6 +291,7 @@ window.onYouTubeIframeAPIReady = () => {
       },
     },
   });
+  lowFirst(player);
 };
 $("shield").onclick = showNow;
 $("sound").onclick = () => { player.unMute(); if (ownOn) $("own").muted = false; else player.playVideo(); $("sound").hidden = true; };

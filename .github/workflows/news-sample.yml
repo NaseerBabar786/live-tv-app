@@ -4,7 +4,7 @@ name: News look sample
 on:
   push:
     branches-ignore: [main]
-    paths: [".github/workflows/news-sample.yml", "tools/news/make_news.py", "tools/news/broll.py", "tools/news/intro_ideas.py"]
+    paths: [".github/workflows/news-sample.yml", "tools/news/make_news.py", "tools/news/broll.py", "tools/news/intro_ideas.py", "tools/news/weather_ideas.py"]
   workflow_dispatch:
     inputs:
       look:
@@ -24,7 +24,7 @@ jobs:
           timeout 300 sudo apt-get update -qq || true
           sudo apt-get install -y -qq ffmpeg fonts-dejavu-core libraqm0 libfribidi0
           pip install -q edge-tts numpy pillow
-          for id in ${READERS:-$(python3 -c "import json; print(' '.join(json.load(open('tools/news/presenters/on-air.json'))['readers']))")}; do
+          for id in ${READERS:-$(python3 tools/news/make_news.py --reader-ids)}; do
             curl -fsSL -m 120 -o "tools/news/presenters/clips/$id.mp4" \
               "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/news-move-$id-raw.mp4" || true
           done
@@ -48,8 +48,8 @@ jobs:
         run: |
           set -eu
           for k in headlines full; do
-            python3 tools/news/make_news.py out --kind $k
-            mv out/news-$k.mp4 news-sample-$LOOK-$k.mp4
+            python3 tools/news/make_news.py out --set next --kind $k --room day   # the on-air 8-hour-set bulletin
+            mv out/news-$k-day.mp4 news-sample-$LOOK-$k.mp4
           done
           python3 tools/news/intro_ideas.py intro-out
           gh release upload channel-media intro-out/news-intro-*.mp4 -R "$GITHUB_REPOSITORY" --clobber

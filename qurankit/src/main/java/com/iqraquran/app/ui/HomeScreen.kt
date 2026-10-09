@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Psychology
+import androidx.compose.material.icons.filled.SelfImprovement
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -140,6 +141,11 @@ fun HomeScreen(vm: AppViewModel) {
         { m ->
             HomeTile(PS.namaz.get(), PS.namazSub.get(), vm.tileColor("namaz"), Icons.Filled.AccessTime, wide, m) {
                 vm.open(Screen.Prayer)
+            }
+        },
+        { m ->
+            HomeTile(NS.learnNamaz.get(), NS.learnNamazSub.get(), vm.tileColor("learn"), Icons.Filled.SelfImprovement, wide, m) {
+                vm.open(Screen.NamazHome)
             }
         },
     )

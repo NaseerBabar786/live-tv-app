@@ -242,7 +242,7 @@
   <div id="dash" class="hidden studio">
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
-    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 4)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span>. Choose its programmes and lock its schedule on the right. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
+    <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Bazaar Hits (channel 23)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span>. Choose its programmes and lock its schedule on the right. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
     <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
     <div class="stations" id="stations"></div>
     <section class="panel tvbox" id="tvbox">
@@ -587,8 +587,8 @@
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand, zonedTime } from "./channel/schedule.js";
 import { mountCards } from "./channel/cards.js";
-import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
-let breakPromos = [], pkTrailers = [];
+import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
+let breakPromos = [], pkTrailers = [], pkOwn = [];
 loadBreakPromos("media/").then(p => { breakPromos = p; setTimeout(() => { try { if (pick) renderPicks(); } catch {} }); });
 const $ = id => document.getElementById(id);
 // The clock in the corner: Toronto time, the time our channels' schedules run on.
@@ -638,7 +638,7 @@ let c = null, saved = null, editingVideo = null, preview = null, dirty = false;
 let stats = null; // the Most watched numbers, once loaded
 // The channel being worked on (?c=filmein opens Bazaar Cinema).
 // Bazaar Hits is a web page (the music labels' YouTube videos), not a schedule: Studio only plays it.
-const HITS = { id: "hits", name: "Bazaar Hits", dial: "4", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/bazaar-hits.png" };
+const HITS = { id: "hits", name: "Bazaar Hits", dial: "23", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/bazaar-hits.png" };
 let station = [...STATIONS, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Math.random().toString(36).slice(2, 9);
@@ -679,9 +679,9 @@ function stationButton(st, note) {
 function renderStations() {
   $("stations").innerHTML = "";
   for (const st of STATIONS) {
-    // Bazaar Hits (4) sits between 3 and 5. It runs by itself from the music labels'
+    // Bazaar Hits (23) sits between 22 and 25 in the Hindi block. It runs by itself from the music labels'
     // song list (no schedule to edit), so picking it just plays it in the player.
-    if (st.dial === "5") stationButton(HITS, "Channel 4 · runs by itself");
+    if (st.dial === "25") stationButton(HITS, "Channel 23 · runs by itself");
     stationButton(st, st.web ? `Channel ${st.dial} · runs by itself` : `Channel ${st.dial} in the app`);
   }
   $("publicLink").href = station.page;
@@ -1894,6 +1894,7 @@ async function loadPicksPanel() {
     if (wanted !== station) return;
     pkList = d.videos || d.songs || [];
     pkTrailers = station === HITS ? [] : await loadTrailers(station, "channel/");
+    pkOwn = station === HITS ? [] : await loadOwnClips(station, "channel/");
     try { pkLocked = station === HITS ? null : await (await fetch(`channel/locked/${station.id}.json?t=${Date.now()}`)).json(); } catch { pkLocked = null; }
     pkOwner = {};
     if (station !== HITS) {
@@ -2006,7 +2007,8 @@ function renderPicks() {
   if (pkTab === "approved" && !counts.approved) $("pkCount").textContent = station === HITS ? "Nothing approved: Bazaar Hits plays every song." : "Nothing in Next transmission: the channel plays its free backup films instead.";
 }
 function torontoDate(ms) { return new Intl.DateTimeFormat("en-CA", { timeZone: TORONTO, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(ms)); }
-const isProg = x => x.kind === "video" && !x.trailer && !x.cont;
+// (A long programme in 25-minute parts on a half-hour channel counts once, at its first part.)
+const isProg = x => x.kind === "video" && !x.trailer && !x.cont && !(x.part > 1);
 /** The day as it stands: the one you locked here, the one locked at 10 PM, or a draft from Next transmission. */
 function pkDayNow(date) {
   if (pkOwner[date]?.items) return { items: pkOwner[date].items, by: "you", at: pkOwner[date].at };
@@ -2014,9 +2016,9 @@ function pkDayNow(date) {
   return { items: pkDraft(date), by: null };
 }
 function pkDraft(date) {
-  const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers }, date).map(slimItem);
+  const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers, own: pkOwn }, date).map(slimItem);
   // Tomorrow begins with the rest of a film still running at midnight.
-  if (date !== torontoDay().date) {
+  if (date !== torontoDay().date && !pkStation().halfHours) {
     const today = pkDayNow(torontoDay().date).items, cont = today.length && carryOver(today, torontoDay().start);
     if (cont) items.unshift(cont);
   }
@@ -2028,12 +2030,14 @@ function startEdit(date, items) {
   if (date === torontoDay().date) {
     keep = itemAt(items).i + 1;
     while (items[keep]?.kind === "video" && items[keep].trailer) keep++;   // the trailers after the film on now
+    // A half-hour channel changes from the next half hour on.
+    if (pkStation().halfHours) for (let t = items.slice(0, keep).reduce((n, x) => n + x.secs, 0); keep < items.length && Math.round(t) % 1800; keep++) t += items[keep].secs;
   } else while (items[keep]?.cont) keep++;
   pkEdit = { date, keep: items.slice(0, keep), progs: items.slice(keep).filter(isProg).map(x => x.v), insertAt: null };
   renderSchedule();
 }
 function editedItems() {
-  return rebuildDay(pkStation(), pkEdit.keep, pkEdit.progs, breakPromos, pkTrailers);
+  return rebuildDay(pkStation(), pkEdit.keep, pkEdit.progs, breakPromos, pkTrailers, pkOwn);
 }
 async function lockDay(date, items) {
   const label = date === torontoDay().date ? "today" : "tomorrow";
@@ -2144,8 +2148,10 @@ function renderSchedule() {
     g.children[0].textContent = timeText(r.startMs, TORONTO);
     g.children[1].textContent = r.kind === "clips" ? `🎞 Coming up on ${station.name}: clips of our next ${r.count} films`
       : r.kind === "trailers" ? `🎬 Coming soon: ${r.count} trailers of new Hindi films`
-      : r.item.kind === "break" ? "📢 Ad break: " + r.item.promos.map(p => p.title || p.src).join(" + ")
-      : (r.item.cont ? "(continued) " : "") + r.item.v.title;
+      : r.item.card === "today" ? "🗓 Today's programmes (our own card, in Urdu)"
+      : r.item.card === "weather" ? "⛅ Weather (our own card)"
+      : r.item.kind === "break" ? (r.item.own ? "✨ " : "📢 Ad break: ") + r.item.promos.map(p => p.title || p.src).join(" + ")
+      : (r.item.cont ? "(continued) " : "") + r.item.v.title + (r.item.part ? ` (part ${r.item.part})` : "");
     g.children[2].textContent = lengthText(r.secs);
     if (r.prog != null) {
       const mv = document.createElement("span");

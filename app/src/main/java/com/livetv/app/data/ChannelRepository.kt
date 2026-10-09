@@ -47,8 +47,9 @@ class ChannelRepository(context: Context) {
 
     private val checked: Boolean get() = provider == PROVIDER_CHECKED
 
+    /** A favourite on a channel of ours that went away counts for the channel that took its place ([MyChannel.MOVED]). */
     var favorites: Set<String>
-        get() = prefs.getStringSet(KEY_FAVORITES, emptySet())?.toSet() ?: emptySet()
+        get() = prefs.getStringSet(KEY_FAVORITES, emptySet())?.map { MyChannel.MOVED[it] ?: it }?.toSet() ?: emptySet()
         set(value) = prefs.edit { putStringSet(KEY_FAVORITES, value) }
 
     /** Languages chosen in Settings; empty means every language. */
@@ -67,7 +68,7 @@ class ChannelRepository(context: Context) {
         set(value) = prefs.edit { putBoolean(KEY_MTA, value) }
 
     var lastChannelUrl: String?
-        get() = prefs.getString(KEY_LAST_CHANNEL, null)
+        get() = prefs.getString(KEY_LAST_CHANNEL, null)?.let { MyChannel.MOVED[it] ?: it }
         set(value) = prefs.edit { putString(KEY_LAST_CHANNEL, value) }
 
     /**
@@ -116,8 +117,8 @@ class ChannelRepository(context: Context) {
                 else -> M3uParser.parse(downloadCached(source, source))
             }
             require(channels.isNotEmpty()) { "No playable channels found for this source." }
-            // MTA's own channels lead the list when they're on (right after our Bazaar channels,
-            // so 16 to 23), and replace any copy of them further down.
+            // MTA's own channels lead the list when they're on (right after our Spark channels,
+            // numbered 81 to 88), and replace any copy of them further down.
             val withMta = withPakistaniLive(channels.filterNot { Mta.isOldLink(it.url) })
                 .let { if (showMta) Mta.CHANNELS + it else it }
             // Lists can repeat a stream (e.g. one channel filed under two names). The

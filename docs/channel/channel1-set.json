@@ -1,0 +1,108 @@
+{
+ "date": "2026-10-08",
+ "episode": 1,
+ "hours": [
+  {
+   "hour": 1,
+   "full_news": true,
+   "programmes": [
+    {
+     "id": "c1-1-P4zyZAl30To",
+     "urdu": "مٹی دے باوے: قسط 1",
+     "title": "Mitti De Baway · Episode 1",
+     "secs": 1920
+    }
+   ]
+  },
+  {
+   "hour": 2,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-2-v94Gz57T0UY",
+     "urdu": "اسوہ: قسط 1",
+     "title": "Uswah · Episode 1",
+     "secs": 2557
+    }
+   ]
+  },
+  {
+   "hour": 3,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-3-lPI-sodBzg8",
+     "urdu": "کھانا پکائیں",
+     "title": "High protein Low Carbs recipe",
+     "secs": 431
+    },
+    {
+     "id": "c1-3-_NjImGHkTug",
+     "urdu": "مزاحیہ",
+     "title": "Taarak Mehta · Episode 4835",
+     "secs": 640
+    }
+   ]
+  },
+  {
+   "hour": 4,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-4-xNqlw__CeSA",
+     "urdu": "ترکِ تمنا: قسط 1",
+     "title": "Tark-e-Tamanna · Episode 1",
+     "secs": 2079
+    }
+   ]
+  },
+  {
+   "hour": 5,
+   "full_news": true,
+   "programmes": [
+    {
+     "id": "c1-5-5U6xxaGYpbw",
+     "urdu": "محبت یا اعتبار: قسط 1",
+     "title": "Mohabbat ya Aitebar · Episode 1",
+     "secs": 1906
+    }
+   ]
+  },
+  {
+   "hour": 6,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-6-lWyspJk5FWc",
+     "urdu": "مدار: قسط 1",
+     "title": "Madaar · Episode 1",
+     "secs": 2117
+    }
+   ]
+  },
+  {
+   "hour": 7,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-7-hIxoxwFztIU",
+     "urdu": "رقاص: قسط 1",
+     "title": "Raqaas · Episode 1",
+     "secs": 2014
+    }
+   ]
+  },
+  {
+   "hour": 8,
+   "full_news": false,
+   "programmes": [
+    {
+     "id": "c1-8-vrOCv5SOTrU",
+     "urdu": "نئے گانے اور فلموں کے ٹریلر",
+     "title": "New songs and film trailers",
+     "secs": 0
+    }
+   ]
+  }
+ ]
+}

@@ -1,24 +1,8 @@
 {
  "name": "کھانا پکائیں",
- "built": "2026-10-08 12:35 UTC",
- "secs": 1027,
+ "built": "2026-10-09 01:30 UTC",
+ "secs": 1284,
  "videos": [
-  {
-   "id": "i9dfVlbDVY4",
-   "title": "Viral Ranjha Gosht Without Tandoor & Oven Recipe l Mutton Ranjha Gosht Ab Ghar Main Banayein",
-   "label": "Kitchen with Amna",
-   "secs": 534,
-   "kind": "cooking"
-  },
-  {
-   "id": "Sh4l1nh1exk",
-   "title": "Restaurant Style Lasooni Paneer | | Green Paneer Masala | Chef Ranveer Brar",
-   "label": "Ranveer Brar",
-   "secs": 493,
-   "kind": "cooking"
-  }
- ],
- "spares": [
   {
    "id": "lPI-sodBzg8",
    "title": "High protein Low Carbs recipe | Masoor Dal recipe",
@@ -27,17 +11,40 @@
    "kind": "cooking"
   },
   {
-   "id": "CpaP0VRPbXc",
-   "title": "Kali Mirch Mutton Karahi l Lahori Black Pepper Mutton Karahi Recipe l Bakra Eid Special Recipe",
-   "label": "Kitchen with Amna",
-   "secs": 357,
+   "id": "rIw7g_2JZ9k",
+   "title": "Soya Chilli Recipe No deep fry | | Soya Chilli Recipe | Kabita",
+   "label": "Kabita's Kitchen",
+   "secs": 412,
    "kind": "cooking"
   },
   {
-   "id": "QVyv3nezaPE",
-   "title": "Raw Papaya Kabab | Raw Papaya recipe by Kabita",
+   "id": "QB2KDtoN4-s",
+   "title": "High protein Low carbs Breakfast recipe | Kabitaskitchen",
    "label": "Kabita's Kitchen",
-   "secs": 321,
+   "secs": 441,
+   "kind": "cooking"
+  }
+ ],
+ "spares": [
+  {
+   "id": "fnK0EK46Sbo",
+   "title": "2 Spl Tiffin recipes | Corn Dhokla & Uthappam | Chef Ranveer Brar",
+   "label": "Ranveer Brar",
+   "secs": 819,
+   "kind": "cooking"
+  },
+  {
+   "id": "vk4tbdu_kvQ",
+   "title": "5 Regional Breakfast Recipes From Across India | Misal, Dhokla & More By Chef Sanjeev Kapoor",
+   "label": "Sanjeev Kapoor",
+   "secs": 845,
+   "kind": "cooking"
+  },
+  {
+   "id": "YRl9hrd1xlI",
+   "title": "One Egg, 4 Delicious Recipes! The Ultimate Egg Special Recipes By Chef@sanjeevkapoorkhazana",
+   "label": "Sanjeev Kapoor",
+   "secs": 537,
    "kind": "cooking"
   }
  ]

@@ -19,6 +19,7 @@ import androidx.media3.exoplayer.audio.AudioSink
 import androidx.media3.exoplayer.audio.DefaultAudioSink
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter
 import com.livetv.app.data.Channel
 import com.livetv.app.data.ChannelRepository
 import com.livetv.app.data.MyChannel
@@ -40,6 +41,9 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
         // With many tiles playing, the TV's video chips can run out; tiny previews then
         // fall back to software decoding instead of staying blank.
         setRenderersFactory(LevelingRenderersFactory(context).setEnableDecoderFallback(preview))
+        // Owner's rule (2026-10-09): the picture starts at the lowest quality so it plays at once, then
+        // steps up as the measured connection allows (streams with several qualities: HLS, DASH).
+        setBandwidthMeter(DefaultBandwidthMeter.Builder(context).setInitialBitrateEstimate(LOW_START_BITRATE).build())
         if (preview) {
             setLoadControl(
                 DefaultLoadControl.Builder()
@@ -63,6 +67,11 @@ class StreamPlayer(private val context: Context, preview: Boolean = false) {
                 }
             }
         })
+    }
+
+    private companion object {
+        /** What the connection is taken to be before anything is measured: below every stream's second quality. */
+        const val LOW_START_BITRATE = 150_000L
     }
 
     private var channel: Channel? = null

@@ -1,0 +1,87 @@
+name: Build Aaj ka Sher videos
+
+# Spark Shayari (5)'s "Aaj ka Sher" clips (tools/shayari): a classic sher in Urdu calligraphy, read by a
+# free AI voice over library music, and the music under the channel's own today and weather cards. They go on
+# the "channel-media" pre-release and their list to docs/channel/shayari-clips.json; the channel plays a clip
+# in the 5-minute break of every half hour.
+# They are made again only when shers.json, the maker or the music library changes.
+# On a pull request one clip is made, to check the voice and the maker still work.
+
+on:
+  push:
+    branches: [main]
+    paths: ["tools/shayari/**", "tools/music/library.py", ".github/workflows/build-shayari-videos.yml"]
+  pull_request:
+    paths: ["tools/shayari/**", ".github/workflows/build-shayari-videos.yml"]
+  workflow_dispatch:
+    inputs:
+      remake:
+        description: "Make them all again"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: shayari-videos
+  cancel-in-progress: false
+
+jobs:
+  videos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          pip install -q edge-tts numpy pillow
+
+      - name: Make the videos
+        id: make
+        env:
+          REMAKE: ${{ github.event.inputs.remake }}
+        run: |
+          set -eu
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            python3 tools/shayari/make_sher_videos.py out --only 1
+            exit 0
+          fi
+          want=$(python3 tools/shayari/make_sher_videos.py x --hash)
+          have=$(python3 -c "import json; print(json.load(open('docs/channel/shayari-clips.json')).get('source',''))" 2>/dev/null || true)
+          if [ "$REMAKE" != "true" ] && [ "$want" = "$have" ]; then echo "Up to date."; exit 0; fi
+          python3 tools/shayari/make_sher_videos.py out
+          echo "made=1" >> "$GITHUB_OUTPUT"
+
+      - name: Keep a sample
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: aaj-ka-sher-sample
+          path: out/*.mp4
+
+      - name: Upload and publish the list
+        if: steps.make.outputs.made == '1' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          gh release view channel-media >/dev/null 2>&1 || \
+            gh release create channel-media --prerelease --latest=false --title "Channel media" --notes "Videos for our channels."
+          gh release upload channel-media out/shayari-sher-*.mp4 out/shayari-bed.m4a --clobber
+          cp out/shayari-clips.json docs/channel/shayari-clips.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/channel/shayari-clips.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Aaj ka Sher videos for Spark Shayari"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

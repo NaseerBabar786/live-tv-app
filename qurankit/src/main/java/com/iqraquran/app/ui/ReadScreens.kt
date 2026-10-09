@@ -100,7 +100,7 @@ fun SurahListScreen(vm: AppViewModel, forHifz: Boolean, kids: Boolean) {
 }
 
 @Composable
-private fun SurahRow(s: Surah, modifier: Modifier, onClick: () -> Unit) {
+internal fun SurahRow(s: Surah, modifier: Modifier, onClick: () -> Unit) {
     Row(
         modifier = modifier
             .fillMaxWidth()

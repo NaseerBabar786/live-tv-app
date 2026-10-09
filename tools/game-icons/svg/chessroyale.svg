@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b3213f"/><stop offset="1" stop-color="#3d0716"/></linearGradient>
+    <radialGradient id="shine" cx="0.3" cy="0.2" r="0.8"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient><clipPath id="sq"><rect width="512" height="512" rx="112"/></clipPath>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a8650c"/><stop offset=".3" stop-color="#ffe69a"/><stop offset=".55" stop-color="#ffc233"/><stop offset="1" stop-color="#9a5a08"/></linearGradient>
+    <linearGradient id="ivory" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c9bfae"/><stop offset=".35" stop-color="#ffffff"/><stop offset=".7" stop-color="#efe7d8"/><stop offset="1" stop-color="#a99d88"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#1a0006" flood-opacity=".55"/></filter>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+    <g opacity=".1" fill="#fff"><path d="M0 0h64v64H0zM128 0h64v64h-64zM256 0h64v64h-64zM384 0h64v64h-64zM64 64h64v64H64zM192 64h64v64h-64zM320 64h64v64h-64zM448 64h64v64h-64zM0 128h64v64H0zM128 128h64v64h-64zM256 128h64v64h-64zM384 128h64v64h-64zM64 192h64v64H64zM192 192h64v64h-64zM320 192h64v64h-64zM448 192h64v64h-64zM0 256h64v64H0zM128 256h64v64h-64zM256 256h64v64h-64zM384 256h64v64h-64zM64 320h64v64H64zM192 320h64v64h-64zM320 320h64v64h-64zM448 320h64v64h-64zM0 384h64v64H0zM128 384h64v64h-64zM256 384h64v64h-64zM384 384h64v64h-64zM64 448h64v64H64zM192 448h64v64h-64zM320 448h64v64h-64zM448 448h64v64h-64z"/></g>
+    <rect width="512" height="512" fill="url(#shine)"/>
+  </g>
+  <g filter="url(#sh)">
+    <!-- king -->
+    <rect x="196" y="58" width="24" height="76" rx="7" fill="url(#gold)"/>
+    <rect x="174" y="80" width="68" height="24" rx="7" fill="url(#gold)"/>
+    <path d="M160 214 C138 160 170 124 208 124 C246 124 278 160 256 214 Z" fill="url(#gold)"/>
+    <rect x="150" y="204" width="116" height="30" rx="12" fill="url(#gold)"/>
+    <path d="M166 382 C172 320 182 270 188 234 H228 C234 270 244 320 250 382 Z" fill="url(#gold)"/>
+    <rect x="138" y="368" width="140" height="32" rx="12" fill="url(#gold)"/>
+    <rect x="110" y="394" width="196" height="44" rx="16" fill="url(#gold)"/>
+    <ellipse cx="182" cy="160" rx="10" ry="22" fill="#fff" opacity=".6" transform="rotate(20 182 160)"/>
+    <rect x="186" y="250" width="9" height="110" rx="4.5" fill="#fff" opacity=".45"/>
+    <!-- knight -->
+    <path d="M318 392 C318 346 330 318 350 296 C324 306 302 312 286 306 C268 299 266 276 278 262 L322 222 C328 200 334 184 344 172 L348 150 L368 172 C410 182 438 228 434 292 C432 332 424 362 426 392 Z" fill="url(#ivory)"/>
+    <path d="M368 180 C398 196 418 236 414 300" stroke="#fff" stroke-width="10" stroke-linecap="round" fill="none" opacity=".75"/>
+    <circle cx="340" cy="218" r="8" fill="#3d0716"/>
+    <path d="M282 280 q10 -2 14 4" stroke="#8a7d68" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <rect x="302" y="376" width="140" height="30" rx="12" fill="url(#ivory)"/>
+    <rect x="282" y="400" width="180" height="40" rx="15" fill="url(#ivory)"/>
+  </g>
+  <path d="M440 92 l8 20 20 8 -20 8 -8 20 -8 -20 -20 -8 20 -8z" fill="#ffe69a"/>
+  <path d="M84 250 l5 12 12 5 -12 5 -5 12 -5 -12 -12 -5 12 -5z" fill="#ffe69a" opacity=".85"/>
+</svg>

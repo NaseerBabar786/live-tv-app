@@ -1,11 +1,29 @@
 {
- "updated": "2026-10-08T18:29Z",
+ "updated": "2026-10-09T00:38Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "oIeP3pAayno",
+   "title": "Canada's Thanksgiving long weekend forecast: snow, rain or sunshine? | #thanksgiving",
+   "channel": "The Weather Network",
+   "published": 1791505816
+  },
+  {
+   "id": "F_n-wrg9kZA",
+   "title": "Thanksgiving weekend to bring first flakes to the Prairies | #snow",
+   "channel": "The Weather Network",
+   "published": 1791504074
+  },
+  {
+   "id": "hAo3Pxyyb5w",
+   "title": "October's drastic daylight change across Canada | #darkwinter",
+   "channel": "The Weather Network",
+   "published": 1791487806
+  },
   {
    "id": "tQaTaMiiJJ4",
    "title": "'Rat Patrol' How Alberta is working to stay rat free | #Alberta",
@@ -103,24 +121,6 @@
    "published": 1791386983
   },
   {
-   "id": "lYvk9oOV7Vc",
-   "title": "Tropical storm Isaias expected to become first Atlantic hurricane",
-   "channel": "The Weather Network",
-   "published": 1791375783
-  },
-  {
-   "id": "NaismNHrWPk",
-   "title": "Winter Sneak Peek: Could this be Canada’s warmest winter on record? | #WeatherAM",
-   "channel": "The Weather Network",
-   "published": 1791370828
-  },
-  {
-   "id": "6PdtuCBb_xc",
-   "title": "Could self-driving cars work in Canada?",
-   "channel": "The Weather Network",
-   "published": 1791367207
-  },
-  {
    "id": "5NQ8nFgwvBw",
    "title": "Former Hurricane May Stop Southern California's Heat Wave",
    "channel": "AccuWeather",
@@ -197,12 +197,6 @@
    "title": "Hurricane Nolo Tracking Toward Hawaii: Catastrophic Flooding Threatens Big Island",
    "channel": "The Weather Channel",
    "published": 1790377850
-  },
-  {
-   "id": "M5OK2LsukTY",
-   "title": "September Nor'easter Threatens East Coast With Major Coastal Flooding",
-   "channel": "The Weather Channel",
-   "published": 1790276462
   }
  ]
 }
