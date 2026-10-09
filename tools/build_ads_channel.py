@@ -13,7 +13,7 @@ The sponsors come from the public copy tv.bulkbazaar.ca/sponsors saves on every 
 - a sponsor video that keeps the ad length rule (5 to 60 seconds) plays as it is;
 - otherwise the sponsor's picture becomes a 10-second video here (a slow zoom, so it moves),
   saved in docs/channel/ads/ under a name made from the picture, so a new picture gets a new file.
-Until the owner's list has been saved once, the Bulk Bazaar ad already on the website plays.
+Until the owner's list has been saved once, no sponsor ads play.
 
 Writes docs/channel/ads-sponsors.json and docs/channel/ads/*.mp4. Needs ffmpeg.
 Run: python3 tools/build_ads_channel.py
@@ -36,8 +36,9 @@ MEDIA = os.path.join(ROOT, "docs", "channel", "ads")
 SITE = "https://tv.bulkbazaar.ca/channel/"
 DOC = ("https://firestore.googleapis.com/v1/projects/live-tv-b2164/databases/(default)/documents/"
        "channel/ads-sponsors?key=AIzaSyAukJcRHwIV_W3TKtr3_5XiVJZe-7491KE")
-# Until the owner's sponsors list is published: the Bulk Bazaar ad already on the website.
-DEFAULT = [{"src": SITE + "media/ad-bulk-bazaar.mp4", "title": "Bulk Bazaar", "secs": 20}]
+# Until the owner's sponsors list is published: no sponsor ads (no Bulk Bazaar ad for now, owner 2026-10-09);
+# the channel plays our promos and the Spark TV ads.
+DEFAULT = []
 PICTURE_SECS = 10
 
 
