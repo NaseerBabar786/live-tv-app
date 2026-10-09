@@ -13,7 +13,7 @@ TAG = "news-archive"
 CHANNEL = "Spark TV One"
 HERE = os.path.dirname(os.path.abspath(__file__))
 M3U = os.path.join(HERE, "..", "..", "docs", "NewsArchive.m3u")
-LOGO = "https://tv.bulkbazaar.ca/channel/logos/spark-tv.png"
+LOGO = "https://tv.bulkbazaar.ca/channel/logos/spark-news-poster.png"  # 2:3 poster, tools/make_library_folders.py
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
           "November", "December"]
 

@@ -113,6 +113,18 @@ object Vod {
     const val NEWS_ARCHIVE_URL = "https://tv.bulkbazaar.ca/NewsArchive.m3u"
 
     /**
+     * The folders on the Library's main page next to the languages (owner, 2026-10-09): Spark TV's own
+     * programmes (the news archive) and MTA's, each with its own picture, instead of inside Urdu's Shows.
+     */
+    enum class Folder(val label: String, val source: String) {
+        SPARK("Spark TV", NEWS_ARCHIVE_URL),
+        MTA("MTA", Mta.VIDEOS_URL),
+    }
+
+    /** The main-page folder a playlist's videos go in, or null for the language folders. */
+    fun folder(source: String): Folder? = Folder.entries.firstOrNull { it.source == source }
+
+    /**
      * The playlists Movies & Series always shows: the free lists in Cable TV, none in the store editions.
      * The old public-domain classics ([FREE_MOVIES_URL]) left the Library at the owner's wish (2026-10-07):
      * too old for viewers. Newer English films, shows and cartoons come in Dramas.m3u; the classics still
