@@ -133,7 +133,7 @@ object QuranSection {
         runCatching { context.packageManager.getPackageInfo(pkg, 0); true }.getOrDefault(false)
 
     @Composable
-    fun Screen(onClose: () -> Unit) {
+    fun Screen(onClose: () -> Unit, onWeather: (() -> Unit)? = null) {
         val vm: AppViewModel = viewModel()
         val tv = Themes.current
         val colours = remember(tv) { paletteFor(tv) }
@@ -142,7 +142,9 @@ object QuranSection {
         var pickingCity by remember { mutableStateOf(false) }
         DisposableEffect(Unit) {
             AzanSettings.pickPlace = { pickingCity = true }
-            onDispose { AzanSettings.pickPlace = null }
+            // The Azan Clock's weather tile opens Cable TV's Weather section; Back returns to the Azan Clock.
+            AzanSettings.openWeather = onWeather
+            onDispose { AzanSettings.pickPlace = null; AzanSettings.openWeather = null }
         }
         DeviceLocation()
         val placeVersion by Location.version.collectAsState()

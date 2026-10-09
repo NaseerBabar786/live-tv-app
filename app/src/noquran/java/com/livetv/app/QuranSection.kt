@@ -10,5 +10,5 @@ object QuranSection {
     fun startAzan(activity: android.app.Activity) = Unit
 
     @Composable
-    fun Screen(onClose: () -> Unit) = Unit
+    fun Screen(onClose: () -> Unit, onWeather: (() -> Unit)? = null) = Unit
 }
