@@ -1,6 +1,7 @@
 package com.livetv.app.games
 
 import androidx.compose.foundation.Canvas
+import com.livetv.app.ui.Themes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -33,8 +34,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.livetv.app.ui.FocusColor
 
-internal val FieldColor = Color(0xFF0A0F1E)
-internal val FieldLine = Color(0xFF26314F)
+internal val FieldColor: Color get() = Themes.current.panel
+internal val FieldLine: Color get() = Themes.current.line
 private val BLOCK_COLORS = listOf(
     Color(0xFF00BCD4), Color(0xFFFFD600), Color(0xFFAB47BC), Color(0xFF66BB6A),
     Color(0xFFEF5350), Color(0xFF42A5F5), Color(0xFFFF9800),
@@ -205,7 +206,7 @@ internal fun Grid(cols: Int, rows: Int, frame: MutableIntState, gap: Float = 4f,
         Modifier
             .aspectRatio(cols / rows.toFloat())
             .fillMaxSize()
-            .background(Color(0xFF1B2238), RoundedCornerShape(10.dp))
+            .background(Themes.current.surfaceVariant, RoundedCornerShape(10.dp))
             .padding((gap / 2).dp),
     ) {
         for (r in 0 until rows) {

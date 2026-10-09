@@ -297,7 +297,7 @@ class MainActivity : ComponentActivity() {
         }
         val sleepAt by Extras.sleepAt.collectAsStateWithLifecycle()
         IconButton(onClick = { showSleep = true }, modifier = Modifier.focusGlow()) {
-            Icon(Icons.Filled.Bedtime, contentDescription = "Sleep timer", tint = if (sleepAt != null) Color(0xFFFFD54F) else Color.White)
+            Icon(Icons.Filled.Bedtime, contentDescription = "Sleep timer", tint = if (sleepAt != null) com.livetv.app.ui.Themes.current.secondary else com.livetv.app.ui.Themes.current.onSurface)
         }
         IconButton(onClick = { showWidgets = true }, modifier = Modifier.focusGlow()) {
             Icon(Icons.Filled.Widgets, contentDescription = "Widgets", tint = Color.White)

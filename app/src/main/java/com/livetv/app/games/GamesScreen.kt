@@ -1,6 +1,7 @@
 package com.livetv.app.games
 
 import android.content.Context
+import com.livetv.app.ui.Themes
 import android.content.pm.PackageManager
 import android.view.KeyEvent
 import androidx.activity.compose.BackHandler
@@ -422,7 +423,7 @@ private fun InfoPanel(info: GameInfo, game: Game, frame: MutableIntState, scores
 private fun Choices(game: Game, touch: Boolean) {
     Box(
         Modifier
-            .background(Color.Black.copy(alpha = 0.88f), RoundedCornerShape(16.dp))
+            .background(Themes.current.panel.copy(alpha = 0.92f), RoundedCornerShape(16.dp))
             .border(2.dp, FocusColor, RoundedCornerShape(16.dp))
             .padding(horizontal = 28.dp, vertical = 20.dp),
     ) {
@@ -456,7 +457,7 @@ private fun Choices(game: Game, touch: Boolean) {
 private fun GameOver(game: Game, touch: Boolean) {
     Box(
         Modifier
-            .background(Color.Black.copy(alpha = 0.8f), RoundedCornerShape(16.dp))
+            .background(Themes.current.panel.copy(alpha = 0.88f), RoundedCornerShape(16.dp))
             .border(2.dp, FocusColor, RoundedCornerShape(16.dp))
             .padding(horizontal = 28.dp, vertical = 20.dp),
         contentAlignment = Alignment.Center,

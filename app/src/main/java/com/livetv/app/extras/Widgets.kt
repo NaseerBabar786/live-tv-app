@@ -1,6 +1,7 @@
 package com.livetv.app.extras
 
 import android.text.format.DateFormat
+import com.livetv.app.ui.Themes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -126,7 +127,7 @@ private fun AzanWidget() {
         }
     }
     val text = nextAzanText(prayers, now) ?: return
-    Card { Line("🕌 $text", bold = true, color = Color(0xFFFFD54F)) }
+    Card { Line("🕌 $text", bold = true, color = Themes.current.secondary) }
 }
 
 @Composable
@@ -154,7 +155,7 @@ private fun RatesWidget() {
             val usd = r["USD"]
             if (usd != null && usd > 0 && pkr != null) Line("💵 $1 = Rs ${"%,.1f".format(pkr / usd)}", size = 13)
         }
-        tola?.let { Line("🪙 Gold: Rs ${"%,.0f".format(it)} a tola", bold = true, size = 13, color = Color(0xFFFFD54F)) }
+        tola?.let { Line("🪙 Gold: Rs ${"%,.0f".format(it)} a tola", bold = true, size = 13, color = Themes.current.secondary) }
     }
 }
 
@@ -195,7 +196,7 @@ private fun CricketWidget() {
     Card {
         Line("🏏 ${s.title}", size = 12, color = Color.White.copy(alpha = 0.75f))
         Line(s.score, bold = true)
-        if (s.status.isNotBlank()) Line(s.status, size = 12, color = Color(0xFFFFD54F))
+        if (s.status.isNotBlank()) Line(s.status, size = 12, color = Themes.current.secondary)
     }
 }
 

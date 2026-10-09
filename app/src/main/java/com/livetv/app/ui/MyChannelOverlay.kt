@@ -165,7 +165,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                 Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .background(Color(0xE6101827))
+                    .background(Themes.current.panel.copy(alpha = 0.9f))
                     .padding(vertical = unit * 0.6f),
                 contentAlignment = Alignment.CenterStart,
             ) {
@@ -187,8 +187,8 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
     }
 }
 
-private val CardBack = Color(0xEB0B1220)
-private val Accent = Color(0xFFFACC15)
+private val CardBack: Color get() = Themes.current.panel.copy(alpha = 0.92f)
+private val Accent: Color get() = Themes.current.secondary
 
 private fun clock(ms: Long): String = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(ms))
 
@@ -208,9 +208,9 @@ private fun NextCard(shows: List<MyChannel.Upcoming>, unit: Dp) {
         Text("UP NEXT", color = Accent, fontWeight = FontWeight.Black, fontSize = (unit.value * 1.6f).sp)
         Text(first.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = (unit.value * 2.6f).sp,
             maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(whenText(first.at), color = Color(0xFFCBD5E1), fontSize = (unit.value * 1.7f).sp)
+        Text(whenText(first.at), color = Themes.current.soft, fontSize = (unit.value * 1.7f).sp)
         shows.getOrNull(1)?.let {
-            Text("Later: ${clock(it.at)}  ${it.title}", color = Color(0xFF94A3B8), fontSize = (unit.value * 1.5f).sp,
+            Text("Later: ${clock(it.at)}  ${it.title}", color = Themes.current.muted, fontSize = (unit.value * 1.5f).sp,
                 maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = unit * 0.5f))
         }
     }
@@ -231,13 +231,13 @@ private fun TodayCard(name: String, shows: List<MyChannel.Upcoming>, unit: Dp) {
             val on = s.at <= now
             val next = s.at == nextAt
             Row(Modifier.padding(vertical = unit * 0.35f)) {
-                Text(if (on) "NOW" else clock(s.at), color = if (next) Accent else if (on) Color(0xFF4ADE80) else Color(0xFFCBD5E1),
+                Text(if (on) "NOW" else clock(s.at), color = if (next) Accent else if (on) Color(0xFF4ADE80) else Themes.current.soft,
                     fontWeight = FontWeight.Bold, fontSize = (unit.value * 1.6f).sp, modifier = Modifier.width(unit * 9f))
                 Column {
                     Text(s.title, color = Color.White,
                         fontWeight = if (next) FontWeight.Bold else FontWeight.Normal, fontSize = (unit.value * 1.6f).sp,
                         maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    if (s.more > 0) Text("+${s.more} more today", color = Color(0xFF94A3B8), fontSize = (unit.value * 1.3f).sp, maxLines = 1)
+                    if (s.more > 0) Text("+${s.more} more today", color = Themes.current.muted, fontSize = (unit.value * 1.3f).sp, maxLines = 1)
                 }
             }
         }
