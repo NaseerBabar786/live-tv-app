@@ -589,8 +589,11 @@
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand, zonedTime } from "./channel/schedule.js";
 import { mountCards } from "./channel/cards.js";
-import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
-let breakPromos = [], pkTrailers = [], pkOwn = [];
+import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadSpark, sparkFor, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
+let breakPromos = [], pkTrailers = [], pkOwn = [], sparkAds = null;
+loadSpark("media/").then(d => { sparkAds = d; });
+// A channel's breaks: our Cable TV promos and its Spark TV ads; its moving logo once an hour (channel/ytorder.js).
+const pkBreaks = () => ({ promos: breakPromos.concat(sparkFor(pkStation(), sparkAds).promos), ident: sparkFor(pkStation(), sparkAds).ident });
 loadBreakPromos("media/").then(p => { breakPromos = p; setTimeout(() => { try { if (pick) renderPicks(); } catch {} }); });
 const $ = id => document.getElementById(id);
 // The clock in the corner: Toronto time, the time our channels' schedules run on.
@@ -2066,7 +2069,7 @@ function pkDayNow(date) {
   return { items: pkDraft(date), by: null };
 }
 function pkDraft(date) {
-  const items = dayPlan(pkStation(), { list: pkList, picks: pick, promos: breakPromos, trailers: pkTrailers, own: pkOwn }, date).map(slimItem);
+  const items = dayPlan(pkStation(), { list: pkList, picks: pick, ...pkBreaks(), trailers: pkTrailers, own: pkOwn }, date).map(slimItem);
   // Tomorrow begins with the rest of a film still running at midnight.
   if (date !== torontoDay().date && !pkStation().halfHours) {
     const today = pkDayNow(torontoDay().date).items, cont = today.length && carryOver(today, torontoDay().start);
@@ -2087,7 +2090,7 @@ function startEdit(date, items) {
   renderSchedule();
 }
 function editedItems() {
-  return rebuildDay(pkStation(), pkEdit.keep, pkEdit.progs, breakPromos, pkTrailers, pkOwn);
+  return rebuildDay(pkStation(), pkEdit.keep, pkEdit.progs, pkBreaks().promos, pkTrailers, pkOwn, pkBreaks().ident);
 }
 async function lockDay(date, items) {
   const label = date === torontoDay().date ? "today" : "tomorrow";
