@@ -124,7 +124,7 @@ CHANNELS = {
         ],
     },
     "kids": {
-        "lang": "en", "langs": {"Ghulam Rasool": "ur", "Jugnu Kids": "ur", "Kids TV Urdu": "ur",
+        "lang": "en", "langs": {"Ghulam Rasool": "ur", "Jugnu Kids": "ur", "Kids TV Urdu": "ur", "Kids Land": "ur", "Moral Vision Kids Urdu": "ur",
                                 "ChuChu TV Hindi": "hi", "Infobells Hindi": "hi"},
         "split": {"en": "kids", "hi": "kidshi", "ur": "kidsur"},
         "name": "Bazaar Kids", "mins": (2, 60),
@@ -139,6 +139,9 @@ CHANNELS = {
             ("Masha and the Bear", ["@MashaBearEN", "@MashaandtheBear"], "Masha and The Bear"),
             ("Peppa Pig", ["@PeppaPigOfficial"], "Peppa Pig"),
             ("Kids TV Urdu", ["@KidsTVUrdu"], "Kids TV"),
+            # More Urdu for Spark Kids Urdu (2026-10-09): the makers of Ghulam Rasool and Kaneez Fatima, Islamic cartoons.
+            ("Kids Land", ["@kidslandofficial", "@KidsLand"], "Kids Land"),
+            ("Moral Vision Kids Urdu", ["@MoralVisionKidsUrdu", "@moralvisionurdu"], "Moral Vision"),
             # English programmes for kids (the owner's wish, 2026-10-07), from the shows' own channels.
             ("Bluey", ["@BlueyOfficialChannel", "@Bluey"], "Bluey"),
             ("Super Simple Songs", ["@SuperSimpleSongs"], "Super Simple"),
@@ -223,7 +226,8 @@ CHANNELS = {
     "comedy": {
         "lang": "hi", "langs": {"Mr Bean": "en", "Shaun the Sheep": "en", "Just For Laughs Gags": "en", "The Pink Panther": "en",
                                 "Laurel and Hardy": "en", "Dry Bar Comedy": "en", "Bulbulay": "ur", "Sawa Teen": "ur",
-                                "Hum Sab Umeed Se Hain": "ur", "Mazaaq Raat": "ur"},
+                                "Hum Sab Umeed Se Hain": "ur", "Mazaaq Raat": "ur", "Hasb-e-Haal": "ur", "Dugdugi": "ur",
+                                "Suno Chanda": "ur", "Joru Ka Ghulam": "ur", "Chupke Chupke": "ur", "Aangan Terha": "ur"},
         "split": {"hi": "comedy", "ur": "comedyur", "en": "comedyen"},
         "name": "Bazaar Comedy", "mins": (2, 50),
         "sources": [
@@ -241,6 +245,13 @@ CHANNELS = {
             ("Sawa Teen", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital", ["sawa teen episode", "sawa teen"]),
             ("Hum Sab Umeed Se Hain", ["@HarPalGeo", "@GeoEntertainment"], "HAR PAL GEO|Har Pal Geo|Geo Entertainment", ["hum sab umeed se hain"]),
             ("Mazaaq Raat", ["@DunyaNews", "@dunyanewsofficial"], "Dunya News", ["mazaaq raat"]),
+            # More Pakistani comedy for Spark Comedy Urdu (2026-10-09), full episodes from the channels' own uploads.
+            ("Hasb-e-Haal", ["@DunyaNews", "@dunyanewsofficial"], "Dunya News", ["hasb e haal full episode"]),
+            ("Dugdugi", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital", ["dugdugi episode"]),
+            ("Suno Chanda", ["@HUMTV", "@HumTvOfficial"], "HUM TV", ["suno chanda episode"]),
+            ("Joru Ka Ghulam", ["@HUMTV", "@HumTvOfficial"], "HUM TV", ["joru ka ghulam episode"]),
+            ("Chupke Chupke", ["@HUMTV", "@HumTvOfficial"], "HUM TV", ["chupke chupke episode"]),
+            ("Aangan Terha", ["@PTVHomeOfficial", "@ptvhome"], "PTV Home", ["aangan terha"]),
             # English comedy
             ("Just For Laughs Gags", ["@JustForLaughsGags", "@justforlaughsgags"], "Just For Laughs Gags"),
             ("The Pink Panther", ["@ThePinkPanther", "@officialpinkpanther"], "Pink Panther"),
@@ -253,7 +264,9 @@ CHANNELS = {
         # A source channel with many kinds of shows: only these shows are taken from it.
         "only": {"Bulbulay": r"bulbulay", "The Kapil Sharma Show": r"kapil", "Taarak Mehta": r"taarak|tmkoc|mehta",
                  "Bhabiji Ghar Par Hain": r"bhabi ?ji", "Wagle Ki Duniya": r"wagle", "Sawa Teen": r"sawa teen",
-                 "Hum Sab Umeed Se Hain": r"hum sab umeed", "Mazaaq Raat": r"mazaa?q raat"},
+                 "Hum Sab Umeed Se Hain": r"hum sab umeed", "Mazaaq Raat": r"mazaa?q raat",
+                 "Hasb-e-Haal": r"hasb.?e.?haal|hasb-e-haal", "Dugdugi": r"dugdugi", "Suno Chanda": r"suno chanda",
+                 "Joru Ka Ghulam": r"joru ka ghulam", "Chupke Chupke": r"chupke chupke", "Aangan Terha": r"aangan terha"},
         # Stand-up must be clean: nothing marked for grown-ups only.
         "skip": r"podcast|interview|breaking news|news (?:bulletin|headlines)|vlog|reaction|roast|adult|18\+|explicit|uncensored|not for kids|a rated|nsfw",
         # No one show fills the channel: at most this many videos from each (newest kept); the page also
@@ -561,6 +574,24 @@ CHANNELS = {
             ("Sabri Brothers", ["@SabriBrothersOfficial"], "Sabri Brothers"),
             ("Abida Parveen", ["@AbidaParveenOfficial"], "Abida Parveen"),
         ],
+    },
+    "comedypa": {
+        # Spark Comedy Punjabi (probe 2026-10-09): Punjabi comedy from the producers' and labels' own channels.
+        # Stage dramas only from the label's official channel; the owner approves each in Studio before air.
+        "lang": "pa",
+        "name": "Bazaar Comedy Punjabi", "mins": (15, 180), "search": ["punjabi comedy full", "stage drama full", "chhankata"],
+        "keep": r"comedy|stage drama|chhankata|funny|hasya|mazahiya|jugtan|full movie",
+        "skip": r"mujra|dance|hot\b|item song|adult|18\+|vulgar|double meaning|interview|podcast|news|#shorts|status",
+        "sources": [
+            ("Tip Top Stage Dramas", ["@TipTopStageDramas", "@tiptopstagedramas", "@HiTechMusicLtd"], "Tip Top|Hi-Tech"),
+            ("Goyal Music", ["@GoyalMusicOfficial"], "Goyal Music"),
+            ("Troll Punjabi", ["@TrollPunjabi", "@trollpunjabi"], "Troll Punjabi"),
+            ("PTC Punjabi", ["@PTCPunjabi", "@ptcpunjabi"], "PTC Punjabi"),
+            ("DD Punjabi", ["@ddpunjabiofficial"], "DD Punjabi"),
+            ("Speed Punjabi", ["@SpeedPunjabi"], "Speed Punjabi", ["comedy full movie"]),
+            ("White Hill Studios", ["@WhiteHillStudios", "@WhiteHillDhol"], "White Hill", ["comedy full movie"]),
+        ],
+        "most": {"*": 40},
     },
     "latest": {
         # Since 2026-10-08 Latest Movies is no channel of its own: each language's newest films lead that
