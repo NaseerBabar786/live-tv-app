@@ -117,6 +117,12 @@ const BREAKS_AT = [500, 940];   // the two 1-minute breaks, in seconds of progra
 const NEAR = 150;               // a break moves to the end of a programme this close to it
 const CRUMB = 45;               // never a piece shorter than this: a tail is dropped, a start waits
 const MIN_TODAY = 60;
+// A programme that runs a little long (owner, 2026-10-09: "take the time from the ads") isn't cut at :25: it
+// finishes inside the 5-minute break, which shrinks to 1 minute of ads; if even that isn't enough it carries
+// on after the ads and the next programme starts a few minutes later (the next half hour's break makes it up).
+// Only long mushairas, over [STRETCH_MAX], still play in 25-minute parts with the whole break between them.
+export const STRETCH_MAX = 40 * 60;
+const STRETCH = 300 - 60;
 
 /** A series (DD Urdu's Kavi Hazir Hai, PTV's Eid mushaira) plays its episodes in order, one further on each day. */
 function seriesKey(v) {
@@ -158,6 +164,10 @@ function packHalves(station, pick, promos, own, fromHalf, toHalf, counters) {
   for (let h = fromHalf; h < toHalf; h++) {
     const half = [];
     let used = 0, b = 0;
+    // This half hour's ads in the 5-minute break, worked out first: a programme running long may use the
+    // rest of the break, never these.
+    const ads = adBreak();
+    const wall = () => half.reduce((t, x) => t + x.secs, 0);
     const takeBreak = () => { const x = adBreak(); if (x) half.push(x); b++; };
     while (used < PROG_CONTENT) {
       const room = PROG_CONTENT - used, bAt = b < BREAKS_AT.length ? BREAKS_AT[b] : Infinity;
@@ -173,9 +183,15 @@ function packHalves(station, pick, promos, own, fromHalf, toHalf, counters) {
       const rest = cur.len - cur.start, limit = Math.min(PROG_CONTENT, bAt);
       let secs = rest, done = true;
       if (used + rest > limit) {
+        const hard = HALF - (ads?.secs || 0) - wall();   // time left before this half hour's ads must start
         // It ends a little after the break is due: the break waits for it.
         if (limit === bAt && used + rest - bAt <= NEAR && used + rest <= PROG_CONTENT) secs = rest;
-        else {
+        // Running a little long at :25: it takes the time from the 5-minute break, and if that's not enough
+        // it stops for the ads and carries on after them.
+        else if (limit !== bAt && cur.len <= STRETCH_MAX) {
+          secs = Math.min(rest, hard);
+          done = rest - secs < CRUMB;
+        } else {
           secs = limit - used;
           done = rest - secs < CRUMB;   // a few seconds of applause or credits left: dropped
         }
@@ -191,15 +207,14 @@ function packHalves(station, pick, promos, own, fromHalf, toHalf, counters) {
       if (b < BREAKS_AT.length && used >= BREAKS_AT[b] - (done ? NEAR : 0)) takeBreak();
     }
     while (b < BREAKS_AT.length) takeBreak();
-    // The 5-minute break: our ads, our own clip, today on the channel, the weather.
-    const ads = adBreak();
+    // The 5-minute break: our ads, our own clip, today on the channel, the weather; when a programme ran
+    // long, only what still fits (the ads always stay), so the half hour is still exactly 30 minutes.
     if (ads) half.push(ads);
-    if (own.length) { const c = own[counters.o++ % own.length]; half.push({ kind: "break", own: true, promos: [c], secs: c.secs }); }
-    let today = HALF - WEATHER_SECS - half.reduce((t, x) => t + x.secs, 0);
-    if (today < MIN_TODAY) {
-      // (Only when there's nothing to play: the half hour is still exactly 30 minutes.)
-      half.push({ kind: "break", card: "today", secs: Math.max(1, today + WEATHER_SECS) });
-    } else half.push({ kind: "break", card: "today", secs: today }, { kind: "break", card: "weather", secs: WEATHER_SECS });
+    let left = HALF - wall();
+    const c = own.length ? own[counters.o % own.length] : null;
+    if (c && left >= c.secs + MIN_TODAY) { counters.o++; half.push({ kind: "break", own: true, promos: [c], secs: c.secs }); left -= c.secs; }
+    if (left >= MIN_TODAY + WEATHER_SECS) half.push({ kind: "break", card: "today", secs: left - WEATHER_SECS }, { kind: "break", card: "weather", secs: WEATHER_SECS });
+    else if (left > 0) half.push({ kind: "break", card: "today", secs: left });
     items.push(...half);
   }
   return items;
@@ -219,11 +234,12 @@ export function halfHourDay(station, list, date, promos = [], own = []) {
   const ends = []; let t = 0;
   cfg.set.forEach(part => ends.push(t += part.hours * 2));
   // From the part of the set the half hour belongs to: a programme not played yet today, best one that ends
-  // before this half hour's break (short recitations, so they aren't cut), else one that ends before the set does.
+  // before this half hour's break (short recitations, so they aren't cut), then one that ends inside the break
+  // (it takes the time from it), else one that ends before the set does.
   const pick = (h, left, room) => {
     const p = pools[Math.max(0, ends.findIndex(e => h < e))] || pools[0];
     const n = p.pool.length;
-    for (const fit of [room, left, Infinity]) for (let k = 0; k < n; k++) {
+    for (const fit of [room, room + STRETCH, left, Infinity]) for (let k = 0; k < n; k++) {
       const v = p.pool[(p.next + k) % n];
       if (used.has(v.id) && k < n - 1 && used.size < list.length) continue;
       if (lengthOf(v, station) > fit) continue;
