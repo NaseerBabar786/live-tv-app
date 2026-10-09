@@ -62,6 +62,8 @@ launch() {
 }
 fresh() { # clean start in 1+List
   adb shell am force-stop "$PKG"; launch; sleep "${1:-25}"
+  # An update prompt would cover every screen; answer it with Later.
+  if [ -n "$(find_text "Update now")" ]; then tap_text "Later"; sleep 2; fi
 }
 alive() { running && note "OK: app running ($1)" || note "PROBLEM: APP NOT RUNNING ($1)"; }
 section() { note "===== $* ====="; }

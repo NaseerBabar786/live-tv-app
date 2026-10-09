@@ -43,6 +43,18 @@ jobs:
           for x in failed: print("FAILED", x)
           PY
           cat unit-summary.txt
+      # Same version name and code as the candidate (as build-apk.yml does), so the no-sign-in copy
+      # doesn't see the public 1.11.0 as an update and cover every screen with "New update available".
+      - name: Cable TV version name, as build 1376
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          python3 tools/version_codes.py scale
+          latest=$(gh release view --json tagName -q .tagName 2>/dev/null || true)
+          held=$(gh release view approved --json name -q .name 2>/dev/null || true)
+          python3 tools/public_version.py apply "$(python3 tools/public_version.py test 1376 "$latest" "$held")"
+          grep -m2 versionName app/build.gradle.kts
       # Built without the TV sign-in secret, so the app skips sign-in on the emulator.
       - name: Build no-sign-in APK
         run: ./gradlew assembleLivetvDebug
