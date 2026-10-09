@@ -43,6 +43,7 @@ import com.livetv.app.ui.SponsorBar
 import com.livetv.app.ui.SponsorCard
 import com.livetv.app.ui.LIBRARY_PREFIX
 import com.livetv.app.player.LibraryAds
+import com.livetv.app.player.ModeAds
 import com.livetv.app.ui.StartScreen
 import com.livetv.app.ui.SponsorBox
 import com.livetv.app.ui.SponsorVideoBox
@@ -173,9 +174,11 @@ fun EditionOverlay() {
     // player only our own promo before it starts, no paid sponsor ads (YouTube's rules).
     val library by LibraryAds.now.collectAsStateWithLifecycle()
     val vod = library
+    // Strip and Carousel's big picture gets the breaks too (A21).
+    val inMode by ModeAds.now.collectAsStateWithLifecycle()
     SponsorCard(
         channelId = vod?.let { LIBRARY_PREFIX + it.id } ?: main.lastWatchedId,
-        fullScreen = main.playing != null || (vod != null && (!vod.embed || vod.waiting)),
+        fullScreen = main.playing != null || (vod != null && (!vod.embed || vod.waiting)) || inMode != null,
         promosOnly = vod?.embed == true,
     )
     val updates = viewModel<UpdateViewModel>()
