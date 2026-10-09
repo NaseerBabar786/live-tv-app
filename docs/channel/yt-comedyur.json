@@ -1,20 +1,12 @@
 {
  "name": "Spark Comedy (comedyur)",
- "built": "2026-10-09 07:05 UTC",
+ "built": "2026-10-09 10:04 UTC",
  "videos": [
   {
    "id": "zCv56QVyF3k",
    "title": "Bulbulay Season 2 Episode 376 | 3 October 2026 | ARY Digital",
    "label": "Bulbulay",
    "mins": 26.283333333333335,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "nmemKwaKcw4",
-   "title": "Bulbulay Season 2 Episode 375 | 26 September 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 25.166666666666668,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -27,26 +19,34 @@
    "lang": "ur"
   },
   {
+   "id": "LlV45xHn5Jw",
+   "title": "Bulbulay Ep 61 - Is Baar Bijli ka Bill Kon Bharega :D",
+   "label": "Bulbulay",
+   "mins": 21.816666666666666,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "nmemKwaKcw4",
+   "title": "Bulbulay Season 2 Episode 375 | 26 September 2026 | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 25.166666666666668,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "weYV3Onw06w",
+   "title": "Bulbulay Episode 64 | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 20.733333333333334,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
    "id": "pHvZntWaCCI",
    "title": "Ramzan Mein Bulbulay House | MOMO | NABEEL | MEHMOOD SB | KHOOBSURAT",
    "label": "Bulbulay",
    "mins": 24.233333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "uYgIQk9Q0vE",
-   "title": "Bulbulay Ep # 450 | ARY Digital Drama",
-   "label": "Bulbulay",
-   "mins": 22.733333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "9KkEY6MzRSU",
-   "title": "Bulbulay Season 2 Episode 364 | 11 July 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 22.8,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -59,42 +59,10 @@
    "lang": "ur"
   },
   {
-   "id": "j4800JYYU_U",
-   "title": "Bulbulay Season 2 Episode 366 | 25 July 2026 | ARY Digital",
+   "id": "uYgIQk9Q0vE",
+   "title": "Bulbulay Ep # 450 | ARY Digital Drama",
    "label": "Bulbulay",
-   "mins": 23.1,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "gZ8AS7yzJQ4",
-   "title": "Bulbulay Season 2 Episode 374 | 19 September 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 25.766666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "jknoTDN4Fvo",
-   "title": "Bulbulay Season 2 Episode 346 | 15 March 2026 | Comedy | ARY Digital Drama",
-   "label": "Bulbulay",
-   "mins": 25.733333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "vX9EeOa2px4",
-   "title": "Bulbulay Ep 309 - ARY Digital Drama",
-   "label": "Bulbulay",
-   "mins": 19.183333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "cQF5kV0fqc4",
-   "title": "Bulbulay Ep 213 - ARY Digital Drama",
-   "label": "Bulbulay",
-   "mins": 19.75,
+   "mins": 22.733333333333334,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -107,58 +75,18 @@
    "lang": "ur"
   },
   {
-   "id": "f8kuvaLuxuY",
-   "title": "Bulbulay Ep 400 - ARY Digital Drama",
+   "id": "gZ8AS7yzJQ4",
+   "title": "Bulbulay Season 2 Episode 374 | 19 September 2026 | ARY Digital",
    "label": "Bulbulay",
-   "mins": 22.316666666666666,
+   "mins": 25.766666666666666,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "DgShmAgmWuc",
-   "title": "Bulbulay Episode – 23 | ARY Digital Drama",
+   "id": "j4800JYYU_U",
+   "title": "Bulbulay Season 2 Episode 366 | 25 July 2026 | ARY Digital",
    "label": "Bulbulay",
-   "mins": 21.5,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "gfz1dALrMj4",
-   "title": "Bulbulay Season 2 | Episode 241 | 24 February 2024 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 22.5,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "OvWE8sS6b8o",
-   "title": "Bulbulay Season 2 Episode 264 | 17 August 2024 | Comedy | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 21.25,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "SI5x3njmdpk",
-   "title": "Bulbulay Season 2 Episode 373 | 12 September 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 23.433333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "PtOb9ffXS-c",
-   "title": "Bulbulay Ep 10 - ARY Digital Drama",
-   "label": "Bulbulay",
-   "mins": 21.3,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "A5dLb0Olh3Q",
-   "title": "Bulbulay Season 2 Episode 336 | 3 Jan 2026 | Comedy | ARY Digital Drama",
-   "label": "Bulbulay",
-   "mins": 20.95,
+   "mins": 23.1,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -171,26 +99,42 @@
    "lang": "ur"
   },
   {
-   "id": "qfKpA9ceigE",
-   "title": "Bulbulay Season 2 Episode 339 | 24 Jan 2026 | Comedy | ARY Digital Drama",
+   "id": "9KkEY6MzRSU",
+   "title": "Bulbulay Season 2 Episode 364 | 11 July 2026 | ARY Digital",
    "label": "Bulbulay",
-   "mins": 20.9,
+   "mins": 22.8,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "vlzQcwTIzA4",
-   "title": "Bulbulay Season 2 | Episode 248 | 4 May 2024 | Comedy | ARY Digital",
+   "id": "SI5x3njmdpk",
+   "title": "Bulbulay Season 2 Episode 373 | 12 September 2026 | ARY Digital",
    "label": "Bulbulay",
-   "mins": 20.733333333333334,
+   "mins": 23.433333333333334,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "WJfJLLSzYvU",
-   "title": "Bulbulay Season 2 Episode 344 | 1 March 2026 | Comedy | ARY Digital Drama",
+   "id": "gfz1dALrMj4",
+   "title": "Bulbulay Season 2 | Episode 241 | 24 February 2024 | ARY Digital",
    "label": "Bulbulay",
-   "mins": 23.866666666666667,
+   "mins": 22.5,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "PtOb9ffXS-c",
+   "title": "Bulbulay Ep 10 - ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 21.3,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "y9EDO06kxEU",
+   "title": "Bulbulay Episode – 15 | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 20.366666666666667,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -199,6 +143,62 @@
    "title": "Bulbulay Season 2 Episode 322 | 27 September 2025 | Comedy | ARY Digital Drama",
    "label": "Bulbulay",
    "mins": 23.216666666666665,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "D3Om2nJO09g",
+   "title": "Bulbulay Ep 290 - ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 20.7,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "t_ZVTbi07D8",
+   "title": "Bulbulay Ep 134 - ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 18.283333333333335,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "OvWE8sS6b8o",
+   "title": "Bulbulay Season 2 Episode 264 | 17 August 2024 | Comedy | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 21.25,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "cLm_5vG9YwM",
+   "title": "Bulbulay Ep 02 - Aysa Kya Huwa Jo Nabeel Ganja Hogya",
+   "label": "Bulbulay",
+   "mins": 19.883333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "A5dLb0Olh3Q",
+   "title": "Bulbulay Season 2 Episode 336 | 3 Jan 2026 | Comedy | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 20.95,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "NbTZe293cmI",
+   "title": "Bulbulay Season 2 | Episode 243 | 9 March 2024 | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 22.75,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "gUT-w3vwZw4",
+   "title": "Bulbulay Ep 263 - 22nd September 2016 - ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 20.166666666666668,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -219,58 +219,10 @@
    "lang": "ur"
   },
   {
-   "id": "XmRVkGq2Ees",
-   "title": "Best Of Mazaaq Raat | In The Loving Memory Of Junaid Jamshed | Dunya News | MR1",
-   "label": "Mazaaq Raat",
-   "mins": 36.93333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "B-NHlffDxF4",
-   "title": "'Didi Tera Devar Deewana....' | Faisal Ramay Hilarious Comedy in Mazaaq Raat | Hira Mani Laughing",
-   "label": "Mazaaq Raat",
-   "mins": 8.783333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "FRc7m_O1dOc",
-   "title": "Sohail Ahmed Special | Mazaaq Raat 27 May 2020 | مذاق رات | Dunya News | MR1",
-   "label": "Mazaaq Raat",
-   "mins": 34.35,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "BPAO05w2_lE",
-   "title": "Amanat Chan and Anousha Ali | Mazaaq Raat 6 July 2022 | مذاق رات | Dunya News",
-   "label": "Mazaaq Raat",
-   "mins": 31.083333333333332,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
    "id": "dFamKfLawvg",
    "title": "Goshi 2 Non-Stop Comedy | Mazaq Raat | Imran Ashraf | Dunya News",
    "label": "Mazaaq Raat",
    "mins": 17.8,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "BYpycexq988",
-   "title": "Nirgoli Ki Jugtain | Moammar Rana | Ukasha Gul Ashraf | Mazaaq Raat EID Special",
-   "label": "Mazaaq Raat",
-   "mins": 5.033333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "Qepz3APL9Ow",
-   "title": "Fun With Sohail Ahmad | Imran Ashraf | Mazaq Raat Season 2 | Ep 01 | Honey Albela | Sakhawat Naz",
-   "label": "Mazaaq Raat",
-   "mins": 31.8,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -283,34 +235,18 @@
    "lang": "ur"
   },
   {
-   "id": "FCluBWCZjA8",
-   "title": "Imran Asraf ky Bhai ki Mazaq Raat mein Kmall Entry | Mazaq Raat | Dunya News",
+   "id": "XmRVkGq2Ees",
+   "title": "Best Of Mazaaq Raat | In The Loving Memory Of Junaid Jamshed | Dunya News | MR1",
    "label": "Mazaaq Raat",
-   "mins": 6.7,
+   "mins": 36.93333333333333,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "Od5urmUph6g",
-   "title": "Best Of Nirgoli | Iftekhar Thakur Faryal Mehmood | Mazaaq Raat | Dunya News",
+   "id": "CRjFk3nTa10",
+   "title": "Real Basant Fun Begins! Abrar Ul Haq’s Explosive Entry | Jatt Charya Kacheri 😘😎 | Mazaq Raat",
    "label": "Mazaaq Raat",
-   "mins": 17.2,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "VoVEeQyGoQM",
-   "title": "Excellent performance of Policeman Afzal in Mazaaq Raat",
-   "label": "Mazaaq Raat",
-   "mins": 6.366666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "uU2WyCQBkQQ",
-   "title": "Amanat Chan  & Anaya Malik | Mazaaq Raat 4 May 2020 | مذاق رات | Dunya News | MR1",
-   "label": "Mazaaq Raat",
-   "mins": 35.75,
+   "mins": 10.283333333333333,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -323,10 +259,26 @@
    "lang": "ur"
   },
   {
-   "id": "Ju3gbBs2isg",
-   "title": "Agha Majid Ki Jugtain | Mazaaq Raat | Dunya News",
+   "id": "FRc7m_O1dOc",
+   "title": "Sohail Ahmed Special | Mazaaq Raat 27 May 2020 | مذاق رات | Dunya News | MR1",
    "label": "Mazaaq Raat",
-   "mins": 11.566666666666666,
+   "mins": 34.35,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "BYpycexq988",
+   "title": "Nirgoli Ki Jugtain | Moammar Rana | Ukasha Gul Ashraf | Mazaaq Raat EID Special",
+   "label": "Mazaaq Raat",
+   "mins": 5.033333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "BPAO05w2_lE",
+   "title": "Amanat Chan and Anousha Ali | Mazaaq Raat 6 July 2022 | مذاق رات | Dunya News",
+   "label": "Mazaaq Raat",
+   "mins": 31.083333333333332,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -339,58 +291,106 @@
    "lang": "ur"
   },
   {
-   "id": "P5Kx4g4YsPw",
-   "title": "Saleem Albela & Afshan Sarfraz | Mazaaq Raat 18 May 2020 | مذاق رات | Dunya News | MR1",
+   "id": "uU2WyCQBkQQ",
+   "title": "Amanat Chan  & Anaya Malik | Mazaaq Raat 4 May 2020 | مذاق رات | Dunya News | MR1",
    "label": "Mazaaq Raat",
-   "mins": 31.383333333333333,
+   "mins": 35.75,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "dEr7keriU7Q",
-   "title": "Sawan Aaye Sawan Jaye | Beautiful Voice | Imran Ashraf | Mazaq Raat | Dunya News",
+   "id": "bImEDqvcOF0",
+   "title": "Umer Dar & Mahnoor Khan | Mazaaq Raat 21 August 2019 | مذاق رات | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 6.333333333333333,
+   "mins": 39.68333333333333,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "_Of0xJ9eDNE",
-   "title": "Chal Mele Nu Chaliye | Wonderful Performance 👌😍💫 | Amanat Ali & Aoun Ali | Mazaq Raat",
+   "id": "Qepz3APL9Ow",
+   "title": "Fun With Sohail Ahmad | Imran Ashraf | Mazaq Raat Season 2 | Ep 01 | Honey Albela | Sakhawat Naz",
    "label": "Mazaaq Raat",
-   "mins": 3.1166666666666667,
+   "mins": 31.8,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "xJysjcAVb7Y",
-   "title": "Leo Twins & Sawera Saeed | Mazaaq Raat 15 July 2020 | مذاق رات | Dunya News | MR1",
+   "id": "G_XfOw6kiXM",
+   "title": "Nadeem Baig & Dur-e-Fishan Saleem | Mazaaq Raat 9 June 2021 | مذاق رات | Dunya News | HJ1V",
    "label": "Mazaaq Raat",
-   "mins": 27.0,
+   "mins": 36.96666666666667,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "7dn5SvY2xkQ",
-   "title": "Yasir Hussain & Iqra Aziz | Mazaaq Raat 12 November 2018 | مذاق رات | Dunya News",
+   "id": "MX39sPZAXG4",
+   "title": "Best of Mazaq Raat | Sohail Ahmed Vs Iftikar Thakur | Extreme Juggat Bazi | Mazaaq Raat | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 33.63333333333333,
+   "mins": 10.466666666666667,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "CBHSySLcKiY",
-   "title": "Ranjha Ban Bethy a Heer Koi Na | DJ Aoun's Performance 😎😍 | Hareem Farooq Dancing | Mazaq Raat",
+   "id": "tJW4fHZq-zU",
+   "title": "Show Mein Hua 'Tappon' Ka Muqabla 😍 | Nadia Jamil vs Mazaq Raat Team 👏😉 | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 5.066666666666666,
+   "mins": 8.516666666666667,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "MlP3gKFF7lk",
-   "title": "Ahmad Shah Khagga and Hira Faisal | Mazaaq Raat 31 Aug 2022 | مذاق رات | Dunya News",
+   "id": "o7wA9Pt0yXo",
+   "title": "Pakistan Kabaddi Team Special | Mazaaq Raat 24 February 2020 | مذاق رات | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 29.55,
+   "mins": 33.3,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "N8J13DimTj4",
+   "title": "Tum Aik Gorakh Dhanda Ho | La ilaha Teri Shan La Wahda Ho | Qawali | Wonderful Lyrics 🥰 Mazaq Raat",
+   "label": "Mazaaq Raat",
+   "mins": 4.75,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "YIhw5nVwa8A",
+   "title": "Omer Shahzad & Dur-E-Fishan | Mazaaq Raat 23 September 2020 | مذاق رات | Dunya News | HJ1I",
+   "label": "Mazaaq Raat",
+   "mins": 31.05,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "Bqck7J9nu9c",
+   "title": "Shehbaz Sharif & Sohail Ahmed Azizi - Best of Mazaaq Raat 6 October 2017 - مذاق رات - Dunya News",
+   "label": "Mazaaq Raat",
+   "mins": 32.016666666666666,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "wds1k48hpVs",
+   "title": "Amanat Ali Khan and Zainab Ayub | Mazaaq Raat | 19 April 2022 | مذاق رات | Dunya News",
+   "label": "Mazaaq Raat",
+   "mins": 28.4,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "qhhqTfU_mQo",
+   "title": "Tahir Anjum Non-Stop Comedy | Mazaq Raat | Imran Ashraf | Dunya News",
+   "label": "Mazaaq Raat",
+   "mins": 9.783333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "J2nS5hiqm9A",
+   "title": "Zakoota Jin and Hamoon Jadugar Real Life Story | Haseeb Pasha Shares Moments in Mazaq Raat 😱🔥",
+   "label": "Mazaaq Raat",
+   "mins": 9.583333333333334,
    "found": "2026-10-09",
    "lang": "ur"
   }

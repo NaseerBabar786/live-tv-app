@@ -1,7 +1,16 @@
 {
  "name": "Spark Teens",
- "built": "2026-10-09 07:12 UTC",
+ "built": "2026-10-09 10:12 UTC",
  "videos": [
+  {
+   "id": "tP9Cs0lDRqA",
+   "title": "Pumpkin Particle 🎃 | Totally Spies! | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": null,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-09-21"
+  },
   {
    "id": "_y9JuojAIg0",
    "title": "We Finally Know More About Humanity’s First Civilization",
@@ -1360,7 +1369,7 @@
    "id": "8QIIixbNXMo",
    "title": "Pearl and Rose: Love & Loyalty 💗🌹 Steven Universe | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 13.966666666666667,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-10-07"
@@ -1369,7 +1378,7 @@
    "id": "cj9WSsFf_Ao",
    "title": "Every Alien Introduced in Ben 10: Alien Force | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 21.383333333333333,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-10-05"
@@ -1378,7 +1387,7 @@
    "id": "NLvdhOHQG7g",
    "title": "Presenting: The League of Legs 🦵💪 Teen Titans GO! | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 12.633333333333333,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-10-02"
@@ -1387,7 +1396,7 @@
    "id": "Qp6rn3htTDk",
    "title": "Bubblegum & Marceline’s CUTEST Moments 💖🦇 | Adventure Time | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 16.55,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-30"
@@ -1396,7 +1405,7 @@
    "id": "XBFGU_k6Xb8",
    "title": "Secret Menu Tacos 🌮 🤫 | Regular Show: The Lost Tapes | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 3.8333333333333335,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-28"
@@ -1405,7 +1414,7 @@
    "id": "BfOIUpuD_eQ",
    "title": "Pumpkin Punch-up! 💥 🎃 | Totally Spies! | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 4.1,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-27"
@@ -1414,7 +1423,7 @@
    "id": "zNvyOkMa30o",
    "title": "Pops & Jerry Cage Match 🥊 | Regular Show: The Lost Tapes | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 3.0833333333333335,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-22"
@@ -1423,7 +1432,7 @@
    "id": "dWqKLWoxxkc",
    "title": "Hollywood Squares 🟦 | Teen Titans GO! | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 3.5833333333333335,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-14"
@@ -1432,7 +1441,7 @@
    "id": "ot6_PfCauww",
    "title": "The Reason Why Things Change | Teen Titans GO! | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 3.966666666666667,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-12"
@@ -1441,7 +1450,7 @@
    "id": "uFj-gC6pl1Q",
    "title": "Season 1 Out of Context 😂🐱The Amazing World of Gumball | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 19.833333333333332,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-10"
@@ -1450,7 +1459,7 @@
    "id": "Iie12cLRrig",
    "title": "WILD Beast Boy Transformations 🦏💚 Teen Titans GO! | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 14.333333333333334,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-08"
@@ -1459,7 +1468,7 @@
    "id": "y9LlWqU6K10",
    "title": "Best of Four Arms 🦾💥Ben 10 | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 14.95,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-06"
@@ -1468,122 +1477,10 @@
    "id": "izAjLdXIlOY",
    "title": "Friends Working Together 🐻🤝 We Baby Bears | Cartoon Network",
    "label": "Cartoon Network",
-   "mins": 19.0,
+   "mins": null,
    "found": "2026-10-07",
    "lang": "en",
    "posted": "2026-09-04"
-  },
-  {
-   "id": "0dQJ4E4XN7g",
-   "title": "Sweet Signature Moves! 🎣 | Teen Titans GO! | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 3.183333333333333,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "Dp3CNYGZY5c",
-   "title": "Most Hilarious Pranks EVER! 😂📞 The Regular Show | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 16.883333333333333,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "7X9kn4IWUsw",
-   "title": "Meet the Kings of Ooo 👑👑 Adventure Time | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 24.933333333333334,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "IdYKylsuk5U",
-   "title": "Summer Fun with the Bears ☀️🐻 We Bare Bears | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 19.75,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "0DcQaqoKc-I",
-   "title": "Fixing Titan Gear! 🛠️⚙️ | Teen Titans GO! | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 3.9,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "tVQjNDoWSHo",
-   "title": "What the Teen Titans Learned at Super Summer Hero Camp 🏕️🦸 Teen Titans GO! | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 16.416666666666668,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "28zT-6DHE-M",
-   "title": "Ben 10 Goes Camping... What Could Go Wrong? 🏕️ Ben 10 | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 14.016666666666667,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "TB-nRW-XtDY",
-   "title": "Best of Shock Rock! ⚡🔵 Ben 10 | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 17.983333333333334,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "5h0CjMzxHxY",
-   "title": "Slapstick Humor at Its Best 🤣 The Amazing World of Gumball | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 13.233333333333333,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "hMuvDg2IMRg",
-   "title": "The Repair Shop! 🛠️⚙️ | Teen Titans GO! | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 3.3,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "m-b8KWvAHLQ",
-   "title": "Starfire: Alien on Earth 👽💖 Teen Titans GO! | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 20.233333333333334,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "g0OX7wmoxiY",
-   "title": "Most Ridiculous Cafeteria Scenes 🍟😂 The Amazing World of Gumball | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 9.066666666666666,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "7rf6aHkq3g0",
-   "title": "The Bears Vs. the Pigeon Cartel 🐻🐦 We Bare Bears | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 12.65,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "8XDySsY8XCI",
-   "title": "Eileen ❤️’s Rigby 🐿️💕 The Regular Show | Cartoon Network",
-   "label": "Cartoon Network",
-   "mins": 17.6,
-   "found": "2026-10-07",
-   "lang": "en"
   },
   {
    "id": "7b5tiqlZSFc",
@@ -2249,7 +2146,7 @@
   },
   {
    "id": "6eeVYVBKRSs",
-   "title": "13-Year-Old Pole Dancer Makes INCREDIBLE Comeback To Win The Golden Buzzer!",
+   "title": "After Months Of Rehab, She Stuns The Judges With THIS! 😮 | Ukraine's Got Talent",
    "label": "Got Talent Global",
    "mins": 4.833333333333333,
    "found": "2026-10-07",
@@ -2324,6 +2221,118 @@
    "title": "14-Year-Old Singer Wins Her SECOND Golden Buzzer on America's Got Talent! 🤩",
    "label": "Got Talent Global",
    "mins": 5.083333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "0dQJ4E4XN7g",
+   "title": "Sweet Signature Moves! 🎣 | Teen Titans GO! | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 3.183333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "Dp3CNYGZY5c",
+   "title": "Most Hilarious Pranks EVER! 😂📞 The Regular Show | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 16.883333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "7X9kn4IWUsw",
+   "title": "Meet the Kings of Ooo 👑👑 Adventure Time | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 24.933333333333334,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "IdYKylsuk5U",
+   "title": "Summer Fun with the Bears ☀️🐻 We Bare Bears | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 19.75,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "0DcQaqoKc-I",
+   "title": "Fixing Titan Gear! 🛠️⚙️ | Teen Titans GO! | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 3.9,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "tVQjNDoWSHo",
+   "title": "What the Teen Titans Learned at Super Summer Hero Camp 🏕️🦸 Teen Titans GO! | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 16.416666666666668,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "28zT-6DHE-M",
+   "title": "Ben 10 Goes Camping... What Could Go Wrong? 🏕️ Ben 10 | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 14.016666666666667,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "TB-nRW-XtDY",
+   "title": "Best of Shock Rock! ⚡🔵 Ben 10 | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 17.983333333333334,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "5h0CjMzxHxY",
+   "title": "Slapstick Humor at Its Best 🤣 The Amazing World of Gumball | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 13.233333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "hMuvDg2IMRg",
+   "title": "The Repair Shop! 🛠️⚙️ | Teen Titans GO! | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 3.3,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "m-b8KWvAHLQ",
+   "title": "Starfire: Alien on Earth 👽💖 Teen Titans GO! | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 20.233333333333334,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "g0OX7wmoxiY",
+   "title": "Most Ridiculous Cafeteria Scenes 🍟😂 The Amazing World of Gumball | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 9.066666666666666,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "7rf6aHkq3g0",
+   "title": "The Bears Vs. the Pigeon Cartel 🐻🐦 We Bare Bears | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 12.65,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "8XDySsY8XCI",
+   "title": "Eileen ❤️’s Rigby 🐿️💕 The Regular Show | Cartoon Network",
+   "label": "Cartoon Network",
+   "mins": 17.6,
    "found": "2026-10-07",
    "lang": "en"
   },

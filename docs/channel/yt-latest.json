@@ -1,6 +1,6 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-09 07:15 UTC",
+ "built": "2026-10-09 10:15 UTC",
  "videos": [
   {
    "id": "MKpt0zZyT5E",
@@ -65,18 +65,18 @@
    "lang": "hi"
   },
   {
-   "id": "Bon7e5C7KNU",
-   "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
-   "label": "Goldmines",
-   "mins": 108.73333333333333,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
    "id": "7_1ZGFxX3pI",
    "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
    "label": "Goldmines",
    "mins": 111.25,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
+   "id": "Bon7e5C7KNU",
+   "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
+   "label": "Goldmines",
+   "mins": 108.73333333333333,
    "found": "2026-10-07",
    "lang": "hi"
   },
@@ -105,19 +105,19 @@
    "lang": "hi"
   },
   {
+   "id": "OtUp3Zzyrvw",
+   "title": "Yamlok (2026) New South Hindi Dubbed Full Movie | Rajendra Prasad, Sivaji, Sonia | Shemaroo Movies",
+   "label": "Shemaroo Movies",
+   "mins": 125.7,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
    "id": "6X7963xWI-Q",
    "title": "Dheeram (2025) South Suspense Thriller Movies (4K) Indrajith Sukumaran, Varalaxmi & Divya Pillai",
    "label": "Ultra Movie Parlour",
    "mins": 134.61666666666667,
    "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
-   "id": "Y8eJVvSWuKM",
-   "title": "2026 की सबसे बड़ी South SUSPENSE THRILLER MOVIE - SCAM SHIKARI - करोड़ों का स्कैम सिर्फ एक फोन से !",
-   "label": "Ultra Movie Parlour",
-   "mins": 112.56666666666666,
-   "found": "2026-10-09",
    "lang": "hi"
   },
   {
@@ -145,11 +145,19 @@
    "lang": "hi"
   },
   {
-   "id": "EhaX-eQmfF4",
-   "title": "JANA NAYAKAM (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL VIJAY THALAPATHY MOVIE MASTER",
+   "id": "mpN0hVg61xA",
+   "title": "RAVI TEJA KI NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL HD - SOUTH BLOCKBUSTER MOVIE DHAMAKA",
    "label": "B4U Movies",
-   "mins": 171.23333333333332,
-   "found": "2026-10-07",
+   "mins": 131.33333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "tZ6aA9T8tfs",
+   "title": "NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL HD - VIJAY THALAPATHY MOVIES HINDI DUBBED MASTER",
+   "label": "B4U Movies",
+   "mins": 170.53333333333333,
+   "found": "2026-10-09",
    "lang": "hi"
   },
   {
@@ -161,27 +169,11 @@
    "lang": "hi"
   },
   {
-   "id": "tu8cklEAgoc",
-   "title": "BLAST (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SHIVA RAJKUMAR MOVIE RUSTUM",
+   "id": "EhaX-eQmfF4",
+   "title": "JANA NAYAKAM (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL VIJAY THALAPATHY MOVIE MASTER",
    "label": "B4U Movies",
-   "mins": 101.73333333333333,
+   "mins": 171.23333333333332,
    "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
-   "id": "iFsL_Ko4VCk",
-   "title": "NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SOUTH HINDI DUBBED MOVIE MAFIA",
-   "label": "B4U Movies",
-   "mins": 91.83333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "SiR4tmx-YOk",
-   "title": "VIJAY THALAPATHY NEW SOUTH ACTION MOVIE |  DUBBED IN HINDI 2026 FULL HD | VIJAY THE MASTER",
-   "label": "B4U Movies",
-   "mins": 165.7,
-   "found": "2026-10-08",
    "lang": "hi"
   },
   {
@@ -189,6 +181,14 @@
    "title": "BANARASI NEW SOUTH HINDI DUBBED MOVIE 2026 (HD) NEW SOUTH INDIAN MOVIES DUBBED IN HINDI VENKY MAMA",
    "label": "B4U Movies",
    "mins": 121.16666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "uk48KLL13Y8",
+   "title": "TOXXIC (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL HD - KARTIKEYA - GUNA 369",
+   "label": "B4U Movies",
+   "mins": 123.9,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -201,34 +201,10 @@
    "lang": "hi"
   },
   {
-   "id": "VDFys9V9poQ",
-   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
-   "label": "Aditya Movies",
-   "mins": 145.35,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
    "id": "8Vkx70ZaBBQ",
    "title": "Swathimutyam Hindi Dubbed Movie 2026 Full Movie | Ganesh Bellamkonda, Varsha Bollamma | South Movie",
    "label": "Aditya Movies",
    "mins": 108.36666666666666,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "gJpoFk6HXug",
-   "title": "Butta Bomma Hindi Dubbed Full Movie 2025 | Anikha Surendran, Arjun Das, Surya Vashistta |South Movie",
-   "label": "Aditya Movies",
-   "mins": 105.76666666666667,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
-   "id": "pBP49rdzP4M",
-   "title": "Intelligent Hindi Dubbed Full Movie | Sai Dharam Tej, Lavanya Tripathi | South Dubbed Movie 2026",
-   "label": "Aditya Movies",
-   "mins": 121.28333333333333,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -241,6 +217,22 @@
    "lang": "hi"
   },
   {
+   "id": "pBP49rdzP4M",
+   "title": "Intelligent Hindi Dubbed Full Movie | Sai Dharam Tej, Lavanya Tripathi | South Dubbed Movie 2026",
+   "label": "Aditya Movies",
+   "mins": 121.28333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "gJpoFk6HXug",
+   "title": "Butta Bomma Hindi Dubbed Full Movie 2025 | Anikha Surendran, Arjun Das, Surya Vashistta |South Movie",
+   "label": "Aditya Movies",
+   "mins": 105.76666666666667,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
    "id": "gfDhPJUIFFA",
    "title": "Kotha Kothagaa Hindi Dubbed Full Movie | Ajay, Virti Vaghani | South Movie New 2026 | Aditya Movies",
    "label": "Aditya Movies",
@@ -249,20 +241,20 @@
    "lang": "hi"
   },
   {
-   "id": "RfL11k8Y7G4",
-   "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
+   "id": "VDFys9V9poQ",
+   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
    "label": "Aditya Movies",
-   "mins": 126.08333333333333,
-   "found": "2026-10-08",
+   "mins": 145.35,
+   "found": "2026-10-07",
    "lang": "hi"
   },
   {
-   "id": "M2_LpZyq94g",
-   "title": "Veteran Actors Mentor A Determined Young Director | Ultra Low | Full 2025 Indie Drama Movie",
-   "label": "Movie Central",
-   "mins": 116.86666666666666,
-   "found": "2026-10-07",
-   "lang": "en"
+   "id": "oCwQ5ee7cyg",
+   "title": "F2 Full Movie in Hindi | Hindi Dubbed Movies 2025 Full Movie | Venkatesh, Varun Tej, Tamannaah",
+   "label": "Aditya Movies",
+   "mins": 109.05,
+   "found": "2026-10-09",
+   "lang": "hi"
   },
   {
    "id": "A4rgRr_T4Ow",
@@ -289,11 +281,11 @@
    "lang": "en"
   },
   {
-   "id": "ERsURQC8Xxo",
-   "title": "Ruthless Hitman Took On The Chicago Mob | Silent Partners | Full 2026 Action Movie",
+   "id": "nhZN34kGe8I",
+   "title": "This Mom Fell In Love With An Escaped Outlaw | Bright Sky | Full 2026 Romance Movie",
    "label": "Movie Central",
-   "mins": 82.61666666666666,
-   "found": "2026-10-07",
+   "mins": 85.66666666666667,
+   "found": "2026-10-09",
    "lang": "en"
   },
   {
@@ -305,12 +297,28 @@
    "lang": "en"
   },
   {
-   "id": "3X6DWCIeO54",
-   "title": "Two Renovators Trapped Together Over Christmas | Renovating Christmas | 2026 Holiday Romance Movie",
+   "id": "_rn2W-ZOToU",
+   "title": "Trapped In A Snow Storm She Finds Love | Christmas Everlasting | Full 2026 Christmas Romance Movie",
    "label": "Movie Central",
-   "mins": 86.21666666666667,
+   "mins": 81.85,
    "found": "2026-10-09",
    "lang": "en"
+  },
+  {
+   "id": "7YkoXDuYxgA",
+   "title": "The Mermaid Who Changed The World | Mermaids' Lament | Full 2025 Drama Sci-Fi Movie",
+   "label": "Movie Central",
+   "mins": 89.41666666666667,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "ZQCRf1Vos18",
+   "title": "Bhaag Sunny Bhaag | Eid Special Telefilm | 23 March 2026 | Muneeb Butt | Zoha Tauqeer | ARY Digital",
+   "label": "ARY Digital",
+   "mins": 79.23333333333333,
+   "found": "2026-10-07",
+   "lang": "ur"
   },
   {
    "id": "-gjHbKrRpig",
@@ -325,22 +333,6 @@
    "title": "Dadi Ki Shadi | Eid Special Telefilm | Eid Day 1 | 21st March 2026 | Aleezay Shah  | ARY Digital",
    "label": "ARY Digital",
    "mins": 80.21666666666667,
-   "found": "2026-10-07",
-   "lang": "ur"
-  },
-  {
-   "id": "ZQCRf1Vos18",
-   "title": "Bhaag Sunny Bhaag | Eid Special Telefilm | 23 March 2026 | Muneeb Butt | Zoha Tauqeer | ARY Digital",
-   "label": "ARY Digital",
-   "mins": 79.23333333333333,
-   "found": "2026-10-07",
-   "lang": "ur"
-  },
-  {
-   "id": "dPNKYab1xHs",
-   "title": "Afrah Tafreeh - Telefilm - Eid Special 2026 - HUM TV",
-   "label": "HUM TV",
-   "mins": 70.4,
    "found": "2026-10-07",
    "lang": "ur"
   },
@@ -393,6 +385,30 @@
    "lang": "ur"
   },
   {
+   "id": "PUASJ0o-oT8",
+   "title": "Pyaar Ka Punch | Eid Special Telefilm (Subtitles) 21st March 2026 | Naeema Butt & Saif Ali Khan",
+   "label": "Green Entertainment",
+   "mins": 129.7,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "V8psurIwxSM",
+   "title": "Saiyyan Thanedaar - Eid Special Telefilm (Subtitles) 8th June 2025 - Presented By Parley Gold Gleam",
+   "label": "Green Entertainment",
+   "mins": 70.5,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "UkJbuBZ-EOc",
+   "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
+   "label": "ARY Films",
+   "mins": 144.48333333333332,
+   "found": "2026-10-08",
+   "lang": "ur"
+  },
+  {
    "id": "1aBXrPbMwcw",
    "title": "BAYDARDI - FULL MOVIE | AIMAN KHAN | AFFAN WAHEED | 3rd August 2025 | ARY FILMS",
    "label": "ARY Films",
@@ -405,14 +421,6 @@
    "title": "NOOR UL AIN - FULL MOVIE | SAJAL ALY | IMRAN ABBAS | 17th August 2025 | ARY FILMS",
    "label": "ARY Films",
    "mins": 145.06666666666666,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
-   "id": "UkJbuBZ-EOc",
-   "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 144.48333333333332,
    "found": "2026-10-08",
    "lang": "ur"
   }

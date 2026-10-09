@@ -1,7 +1,33 @@
 {
  "name": "Spark Kids",
- "built": "2026-10-09 07:03 UTC",
+ "built": "2026-10-09 10:02 UTC",
  "videos": [
+  {
+   "id": "6Rs-Qy4nRaM",
+   "title": "Peppa Pig Tales 🍼 Baby Evie COPIES Peppa at LUNCHTIME! 🥣 | LEGO DUPLO Peppa Pig Episodes",
+   "label": "Peppa Pig",
+   "mins": 30.433333333333334,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-09-30"
+  },
+  {
+   "id": "1SJYioPHgW4",
+   "title": "Peppa Pig Tries Cousin Chloe's CRAZY MAKEOVER! 😲 | Sleepover Fun | Tales Full Episodes | 30 Mins",
+   "label": "Peppa Pig",
+   "mins": 36.11666666666667,
+   "found": "2026-10-09",
+   "lang": "en",
+   "posted": "2026-09-29"
+  },
+  {
+   "id": "fGZGMB6syK4",
+   "title": "George Pig's Full Hearing Aid Story!💙🦻| Mini Movie | Peppa Pig Tales Episodes | 24 Minutes",
+   "label": "Peppa Pig",
+   "mins": 24.016666666666666,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
   {
    "id": "uFXJ-50SEqY",
    "title": "George Pig CASTS a SPELL on Peppa!😨 SPOOKY Movie Night | Peppa Pig Official BEST EPISODES COLLECTION",
@@ -39,6 +65,14 @@
    "title": "Peppa Pig Plays CHEESE HOLE IN THE WALL!🧀 BRAND NEW Peppa Pig Tales Full Episodes | 35 Mins",
    "label": "Peppa Pig",
    "mins": 35.93333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "Jx-lDDJkoCU",
+   "title": "Phoebe & Jay FULL EPISODE | Beating the Heat / Tower Time ☀️ | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 25.733333333333334,
    "found": "2026-10-09",
    "lang": "en"
   },
@@ -229,24 +263,6 @@
    "posted": "2026-10-06"
   },
   {
-   "id": "uMzriID81qA",
-   "title": "Let's Play…Relax ☺️ 🫧 | Bluey and Bingo Playtime | Bluey",
-   "label": "Bluey",
-   "mins": 2.4833333333333334,
-   "found": "2026-10-07",
-   "lang": "en",
-   "posted": "2026-10-05"
-  },
-  {
-   "id": "nWC1TulOPJ4",
-   "title": "Let's Play…Seesaw 💙 | Bluey and Bingo Playtime | Bluey",
-   "label": "Bluey",
-   "mins": 2.3,
-   "found": "2026-10-07",
-   "lang": "en",
-   "posted": "2026-10-02"
-  },
-  {
    "id": "4AIl54tH89U",
    "title": "Reading A Childhood Letter 💌💙 | 40 Minutes of Family Time | Bluey",
    "label": "Bluey",
@@ -272,14 +288,6 @@
    "lang": "en"
   },
   {
-   "id": "751y03NGCK8",
-   "title": "Let's Play…Pavlova 💙 😋 | Bluey and Bingo Playtime | Bluey",
-   "label": "Bluey",
-   "mins": 2.216666666666667,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
    "id": "7PBDE0051wc",
    "title": "FULL EPISODES 💙 🍼 Baby Bluey Rolls Over! 🥹 | Bluey",
    "label": "Bluey",
@@ -292,14 +300,6 @@
    "title": "1 HOUR of Pretend Play at School 🍼 💙 Rusty is a Baby to Bluey 🤣 | Bluey",
    "label": "Bluey",
    "mins": 58.86666666666667,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "Te9MFi_ll9Q",
-   "title": "Let's Play…Barky Boats 💙 🛶  | Bluey and Bingo Playtime ⭐️ | Bluey",
-   "label": "Bluey",
-   "mins": 2.8666666666666667,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -324,14 +324,6 @@
    "title": "Bedroom Bluey Book Read Aloud by Tan France ✨ | Bluey Book Reads 💙 | Bluey",
    "label": "Bluey",
    "mins": 8.05,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "9SyKINCHY3g",
-   "title": "Let's Play…Cubby 💙 🧸 | Bluey and Bingo Playtime ⭐️ | Bluey",
-   "label": "Bluey",
-   "mins": 3.1333333333333333,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -489,7 +481,8 @@
    "label": "Super Simple Songs",
    "mins": 2.9166666666666665,
    "found": "2026-10-07",
-   "lang": "en"
+   "lang": "en",
+   "posted": "2026-07-02"
   },
   {
    "id": "N8gOM-A3cUw",
@@ -1139,117 +1132,10 @@
    "lang": "en"
   },
   {
-   "id": "YiUPaJiI1BY",
-   "title": "Clifford the Big Red Dog FULL EPISODE | Things That Go Bump / Sherlock Bones 👻 👀 | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 23.866666666666667,
-   "found": "2026-10-07",
-   "lang": "en",
-   "posted": "2026-10-02"
-  },
-  {
-   "id": "3rtYYZgqn0c",
-   "title": "Xavier Riddle and the Secret Museum FULL EPISODE | I am Mary Shelley 🎃 | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 12.35,
-   "found": "2026-10-07",
-   "lang": "en",
-   "posted": "2026-09-28"
-  },
-  {
-   "id": "J6NCneLtMgg",
-   "title": "Clifford the Big Red Dog FULL EP | The Halloween Costume Crisis / Clifford's Howl-o-ween! | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 23.866666666666667,
-   "found": "2026-10-07",
-   "lang": "en",
-   "posted": "2026-09-25"
-  },
-  {
-   "id": "7SNAEQVbnPM",
-   "title": "Elinor Wonders Why FULL EPISODE | The Festival of the Moon 🌙 | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 23.85,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "0DbYdEhH74Q",
-   "title": "Carl the Collector FULL EPISODE | Whole Lotta Lotta / Leaf It To Carl 🎧📚 | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 23.35,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "Jrk15OPnyHY",
-   "title": "Let's Go Luna! COMPILATION | Hispanic and Latino Heritage Month Folktales 🪇💃 | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 35.3,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
    "id": "bfYpGhz1zdY",
    "title": "Work It Out Wombats! FULL EPISODE | The Mighty Zeke 🦸🚲 | PBS KIDS",
    "label": "PBS Kids",
    "mins": 13.233333333333333,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "U5xPa-2CMRQ",
-   "title": "Alma's Way FULL EPISODE | Library Run / The Library of...Things! 📚 | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 23.833333333333332,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "9tdSJx5odwY",
-   "title": "Hero Elementary FULL EPISODE | Teacher of the Year / The Sweet Smell of Success 🏆 | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 25.483333333333334,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "0LMBFpddAGc",
-   "title": "Alma's Way | Borrowing a Ukulele 🎶 NEW Full Episode Premiering September 7th! | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 3.783333333333333,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "GNYI9eVIy74",
-   "title": "The Day You Begin FULL MOVIE (ASL) ✏️ | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 44.4,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "Q0tc4nF6RGE",
-   "title": "Super Why! COMPILATION | The Ultimate Comic Book Super Reader Marathon! 📚💫 38+ MIN | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 38.833333333333336,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "eX1CKnTTuqw",
-   "title": "Alma's Way | Library Run! 📚🏃‍♀️ NEW Full Episode Premiering September 7th! | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 2.6,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "5xzgMNJQZHE",
-   "title": "Xavier Riddle and the Secret Museum COMPILATION | Hispanic Heritage Month! | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 51.583333333333336,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -1270,26 +1156,10 @@
    "lang": "en"
   },
   {
-   "id": "rymbMCYmTQo",
-   "title": "Sesame Street FULL EPISODE | Four Furry Superheroes 🦸 | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 26.316666666666666,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
    "id": "DTiFLCTSqYg",
    "title": "Lyla in the Loop FULL EPISODE | Lyla Can't Sleep / Hairdos and Hair Don'ts 🪮 | PBS KIDS",
    "label": "PBS Kids",
    "mins": 25.316666666666666,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
-   "id": "z4kqzoSSxGk",
-   "title": "The Day You Begin FULL MOVIE 📚 | PBS KIDS",
-   "label": "PBS Kids",
-   "mins": 44.43333333333333,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -1714,14 +1584,6 @@
    "lang": "en"
   },
   {
-   "id": "swrZN0Q5jXE",
-   "title": "I know my four times table | Learn to Count | Numberblocks",
-   "label": "Numberblocks",
-   "mins": 2.3666666666666667,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
    "id": "BXGwHzbEOE8",
    "title": "Let's Sing with the Squirrels 🎤 | Kids Songs & Nursery Rhymes | Learning Songs | Hey Duggee",
    "label": "Hey Duggee",
@@ -1999,6 +1861,179 @@
    "title": "James Builds a Bridge | Watch Out Thomas! | FULL EPISODE",
    "label": "Thomas & Friends",
    "mins": 4.016666666666667,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "uMzriID81qA",
+   "title": "Let's Play…Relax ☺️ 🫧 | Bluey and Bingo Playtime | Bluey",
+   "label": "Bluey",
+   "mins": 2.4833333333333334,
+   "found": "2026-10-07",
+   "lang": "en",
+   "posted": "2026-10-05"
+  },
+  {
+   "id": "nWC1TulOPJ4",
+   "title": "Let's Play…Seesaw 💙 | Bluey and Bingo Playtime | Bluey",
+   "label": "Bluey",
+   "mins": 2.3,
+   "found": "2026-10-07",
+   "lang": "en",
+   "posted": "2026-10-02"
+  },
+  {
+   "id": "751y03NGCK8",
+   "title": "Let's Play…Pavlova 💙 😋 | Bluey and Bingo Playtime | Bluey",
+   "label": "Bluey",
+   "mins": 2.216666666666667,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "Te9MFi_ll9Q",
+   "title": "Let's Play…Barky Boats 💙 🛶  | Bluey and Bingo Playtime ⭐️ | Bluey",
+   "label": "Bluey",
+   "mins": 2.8666666666666667,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "9SyKINCHY3g",
+   "title": "Let's Play…Cubby 💙 🧸 | Bluey and Bingo Playtime ⭐️ | Bluey",
+   "label": "Bluey",
+   "mins": 3.1333333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "YiUPaJiI1BY",
+   "title": "Clifford the Big Red Dog FULL EPISODE | Things That Go Bump / Sherlock Bones 👻 👀 | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 23.866666666666667,
+   "found": "2026-10-07",
+   "lang": "en",
+   "posted": "2026-10-02"
+  },
+  {
+   "id": "3rtYYZgqn0c",
+   "title": "Xavier Riddle and the Secret Museum FULL EPISODE | I am Mary Shelley 🎃 | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 12.35,
+   "found": "2026-10-07",
+   "lang": "en",
+   "posted": "2026-09-28"
+  },
+  {
+   "id": "J6NCneLtMgg",
+   "title": "Clifford the Big Red Dog FULL EP | The Halloween Costume Crisis / Clifford's Howl-o-ween! | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 23.866666666666667,
+   "found": "2026-10-07",
+   "lang": "en",
+   "posted": "2026-09-25"
+  },
+  {
+   "id": "7SNAEQVbnPM",
+   "title": "Elinor Wonders Why FULL EPISODE | The Festival of the Moon 🌙 | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 23.85,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "0DbYdEhH74Q",
+   "title": "Carl the Collector FULL EPISODE | Whole Lotta Lotta / Leaf It To Carl 🎧📚 | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 23.35,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "Jrk15OPnyHY",
+   "title": "Let's Go Luna! COMPILATION | Hispanic and Latino Heritage Month Folktales 🪇💃 | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 35.3,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "U5xPa-2CMRQ",
+   "title": "Alma's Way FULL EPISODE | Library Run / The Library of...Things! 📚 | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 23.833333333333332,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "9tdSJx5odwY",
+   "title": "Hero Elementary FULL EPISODE | Teacher of the Year / The Sweet Smell of Success 🏆 | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 25.483333333333334,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "0LMBFpddAGc",
+   "title": "Alma's Way | Borrowing a Ukulele 🎶 NEW Full Episode Premiering September 7th! | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 3.783333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "GNYI9eVIy74",
+   "title": "The Day You Begin FULL MOVIE (ASL) ✏️ | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 44.4,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "Q0tc4nF6RGE",
+   "title": "Super Why! COMPILATION | The Ultimate Comic Book Super Reader Marathon! 📚💫 38+ MIN | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 38.833333333333336,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "eX1CKnTTuqw",
+   "title": "Alma's Way | Library Run! 📚🏃‍♀️ NEW Full Episode Premiering September 7th! | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 2.6,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "5xzgMNJQZHE",
+   "title": "Xavier Riddle and the Secret Museum COMPILATION | Hispanic Heritage Month! | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 51.583333333333336,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "rymbMCYmTQo",
+   "title": "Sesame Street FULL EPISODE | Four Furry Superheroes 🦸 | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 26.316666666666666,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "z4kqzoSSxGk",
+   "title": "The Day You Begin FULL MOVIE 📚 | PBS KIDS",
+   "label": "PBS Kids",
+   "mins": 44.43333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "swrZN0Q5jXE",
+   "title": "I know my four times table | Learn to Count | Numberblocks",
+   "label": "Numberblocks",
+   "mins": 2.3666666666666667,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -2592,38 +2627,6 @@
    "title": "🌴📅 Why Should the Summer End? ☀️🧘‍♂️ Best Episodes Collection 🎬 Masha and the Bear 2026",
    "label": "Masha and the Bear",
    "mins": 20.05,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "xuxwuW-7siM",
-   "title": "👱🏻‍♀️💐 Say Cheese and More Popular Episodes 📸🐻 Best Episodes Collection 🎬 Masha and the Bear 2026",
-   "label": "Masha and the Bear",
-   "mins": 55.13333333333333,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "tSG9KYQsLTU",
-   "title": "🤫❓Secret Episode 🏠👤 Full Episodes Compilation 🎬 Masha and the Bear 2026",
-   "label": "Masha and the Bear",
-   "mins": 46.016666666666666,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "mbeQDcgY5SI",
-   "title": "🎬 Watch Right Now! 📺🍿Best episodes cartoon collection 🦸‍♂️⚡ Masha and the Bear 2026",
-   "label": "Masha and the Bear",
-   "mins": 34.63333333333333,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "yRLTqesfKXY",
-   "title": "Masha and the Bear 2026 🐾😻 Oh, My Cat! 🐈‍⬛⛱️ Best episodes cartoon collection 🎬",
-   "label": "Masha and the Bear",
-   "mins": 20.883333333333333,
    "found": "2026-10-06",
    "lang": "en"
   }
