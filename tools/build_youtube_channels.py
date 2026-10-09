@@ -229,17 +229,18 @@ CHANNELS = {
         "sources": [
             ("Mr Bean", ["@MrBean"], "Mr Bean"),
             ("Taarak Mehta", ["@TaarakMehtaKaOoltahChashmah", "@SonySAB"], "Taarak Mehta|Sony SAB"),
-            ("Bulbulay", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
-            ("The Kapil Sharma Show", ["@SonyTV", "@SETIndia"], "Sony Entertainment Television|SET India"),
+            ("Bulbulay", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital", ["bulbulay episode", "bulbulay"]),
+            ("The Kapil Sharma Show", ["@SonyTV", "@SETIndia"], "Sony Entertainment Television|SET India", ["kapil sharma show"]),
             ("Shaun the Sheep", ["@shaunthesheep"], "Shaun the Sheep"),
             # More variety (the owner, 2026-10-08: "so many times Taarak Mehta ... English comedy programs
             # ... stand-up comedy shows"). Family-friendly shows from their own channels only.
-            # Hindi and Urdu sitcoms and comedy shows
+            # Hindi and Urdu sitcoms and comedy shows. These share a big TV channel with its dramas and news,
+            # so its newest uploads seldom hold them: each searches that channel for its own name.
             ("Bhabiji Ghar Par Hain", ["@andtvchannel", "@AndTV"], "&TV|And TV"),
-            ("Wagle Ki Duniya", ["@SonySAB", "@sonysab"], "Sony SAB"),
-            ("Sawa Teen", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital"),
-            ("Hum Sab Umeed Se Hain", ["@HarPalGeo", "@GeoEntertainment"], "HAR PAL GEO|Har Pal Geo|Geo Entertainment"),
-            ("Mazaaq Raat", ["@DunyaNews", "@dunyanewsofficial"], "Dunya News"),
+            ("Wagle Ki Duniya", ["@SonySAB", "@sonysab"], "Sony SAB", ["wagle ki duniya full episode", "wagle ki duniya"]),
+            ("Sawa Teen", ["@ARYDigitalasia", "@ARYDigital"], "ARY Digital", ["sawa teen episode", "sawa teen"]),
+            ("Hum Sab Umeed Se Hain", ["@HarPalGeo", "@GeoEntertainment"], "HAR PAL GEO|Har Pal Geo|Geo Entertainment", ["hum sab umeed se hain"]),
+            ("Mazaaq Raat", ["@DunyaNews", "@dunyanewsofficial"], "Dunya News", ["mazaaq raat"]),
             # English comedy
             ("Just For Laughs Gags", ["@JustForLaughsGags", "@justforlaughsgags"], "Just For Laughs Gags"),
             ("The Pink Panther", ["@ThePinkPanther", "@officialpinkpanther"], "Pink Panther"),

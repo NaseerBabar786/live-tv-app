@@ -52,6 +52,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -80,6 +82,8 @@ fun SettingsDialog(
     onLanguagesChange: (Set<String>) -> Unit,
     showMta: Boolean,
     onShowMtaChange: (Boolean) -> Unit,
+    /** "Default settings": back to the starting languages and every country (Cable TV). */
+    onResetDefaults: () -> Unit = {},
     onDismiss: () -> Unit,
     onSave: (String) -> Unit,
     /** Another family profile was picked: the app reads its favourites and languages. */
@@ -119,6 +123,35 @@ fun SettingsDialog(
             onSwitch = { id -> if (com.livetv.app.extras.Profiles.switchTo(id)) onProfileChanged() },
             onDismiss = { editingProfiles = false },
         )
+        return
+    }
+    var confirmingDefaults by rememberSaveable { mutableStateOf(false) }
+    if (confirmingDefaults) {
+        val no = remember { FocusRequester() }
+        AlertDialog(
+            onDismissRequest = { confirmingDefaults = false },
+            title = { Text("Go back to default settings?") },
+            text = {
+                Text(
+                    "Languages: ${ChannelRepository.DEFAULT_LANGUAGES.joinToString(", ")}.\n" +
+                        "Countries: all countries.\n" +
+                        "Your favourites, package and sign-in stay as they are.",
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = { confirmingDefaults = false; onResetDefaults() },
+                    modifier = Modifier.focusGlow(),
+                ) { Text("Yes, use defaults") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { confirmingDefaults = false },
+                    modifier = Modifier.focusRequester(no).focusGlow(),
+                ) { Text("No") }
+            },
+        )
+        LaunchedEffect(Unit) { runCatching { no.requestFocus() } }
         return
     }
     if (pickingTheme) {
@@ -258,6 +291,13 @@ fun SettingsDialog(
                     selected = picked != null,
                     enabled = countries.isNotEmpty(),
                 ) { pickingCountries = true }
+
+                if (!Edition.MAX) {
+                    OutlinedButton(
+                        onClick = { confirmingDefaults = true },
+                        modifier = Modifier.fillMaxWidth().focusGlow(),
+                    ) { Text("↺ Default settings") }
+                }
 
                 HorizontalDivider()
                 ThemeSection(onPick = { pickingTheme = true })

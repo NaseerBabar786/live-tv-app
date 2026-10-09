@@ -330,6 +330,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(languageFilter = languages, category = null) }
     }
 
+    /** Settings' "Default settings": the starting languages and every country again. Favourites stay. */
+    fun resetToDefaults() {
+        repo.resetToDefaults()
+        _state.update { it.copy(languageFilter = repo.languages, category = null, language = null) }
+        setPlaylistSource(repo.playlistSource)
+    }
+
     fun setCategory(category: String?) = _state.update { it.copy(category = category) }
 
     fun toggleFavorite(channel: Channel) {

@@ -103,7 +103,18 @@ OTHER_SHARE = 0.25
 # Red-band (grown-ups only) trailers and horror never go on the channel.
 ADULT = re.compile(r"red[- ]?band|restricted|\brated r\b|\br-rated\b|uncensored|explicit|18\+|nsfw|"
                    r"horror|slasher|haunt|ghost|zombie|demon|exorcis|possess|terrifier|\bsaw\b|conjuring|annabelle|"
-                   r"insidious|smile 2|final destination|scream \d|\bthe nun\b|5 nights|five nights", re.I)
+                   r"insidious|smile 2|final destination|scream \d|\bthe nun\b|5 nights|five nights|"
+                   # Horror and creepy films the words above miss (first list, 2026-10-09)
+                   r"werwulf|clayface|other mommy|resident evil|boi[uú]na|\bremain\b", re.I)
+# The studios also post video-game trailers, fan-event clips and streaming-only films: not new cinema films.
+NOT_FILM = re.compile(r"launch trailer|showcase|\breact\b|d23|fortnite|kingdom hearts|marvel.s wolverine|playstation|xbox|"
+                      r"nintendo|stream only|lionsgate\+|\+ ?original", re.I)
+YEAR = re.compile(r"\b(19[2-9]\d|20[0-4]\d)\b")
+
+
+def new_film(title, today):
+    """Not an old film's trailer put up again ("THE KILLER ELITE (1975)"): any year it names is last year or later."""
+    return all(int(y) >= today.year - 1 for y in YEAR.findall(title))
 
 AGO = re.compile(r"(\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago", re.I)
 DAYS = {"second": 0, "minute": 0, "hour": 0, "day": 1, "week": 7, "month": 30, "year": 365}
@@ -223,12 +234,13 @@ def channel(today, others):
     old = {}
     if os.path.exists(CHANNEL_OUT):
         old = {v["id"]: v for v in json.load(open(CHANNEL_OUT, encoding="utf-8")).get("videos", [])}
-    english = [v for v in language("English", "", ENGLISH, today, old, CHANNEL_DAYS) if not ADULT.search(v["title"])]
+    english = [v for v in language("English", "", ENGLISH, today, old, CHANNEL_DAYS)
+               if not ADULT.search(v["title"]) and not NOT_FILM.search(v["title"]) and new_film(v["title"], today)]
     english = keep_playable(english)
     # Hindi and Pakistani take turns, so a short share still has both.
     by = {}
     for v in others:
-        if not ADULT.search(v["title"]):
+        if not ADULT.search(v["title"]) and not NOT_FILM.search(v["title"]) and new_film(v["title"], today):
             by.setdefault(v["lang"], []).append(v)
     turns = [v for row in zip_longest(*by.values()) for v in row if v]
     rest = turns[:max(4, round(len(english) * OTHER_SHARE))]

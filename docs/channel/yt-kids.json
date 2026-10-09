@@ -1,7 +1,23 @@
 {
  "name": "Bazaar Kids",
- "built": "2026-10-08 23:41 UTC",
+ "built": "2026-10-09 02:08 UTC",
  "videos": [
+  {
+   "id": "aCahKt5wtUQ",
+   "title": "Peppa Pig Learns about the TOOTH FAIRY! 🧚🦷 | Losing a Tooth! | Peppa Pig Official Full Episodes",
+   "label": "Peppa Pig",
+   "mins": 44.96666666666667,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "00iWUnhjm8o",
+   "title": "Peppa Pig Plays CHEESE HOLE IN THE WALL!🧀 BRAND NEW Peppa Pig Tales Full Episodes | 35 Mins",
+   "label": "Peppa Pig",
+   "mins": 35.93333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
   {
    "id": "gHm61z1kUuw",
    "title": "Itsy Bitsy Spider Adventure | Lemonade Stand Disaster | CoComelon Nursery Rhymes & Kids Songs",
@@ -1576,14 +1592,6 @@
    "lang": "en"
   },
   {
-   "id": "32u_bxrZIVk",
-   "title": "Mr Bean's First EVER First Class Flight to America ✈️ | Bean: the Movie | Mr Bean",
-   "label": "Mr Bean Cartoon",
-   "mins": 10.016666666666667,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
    "id": "OdNkLG3k33s",
    "title": "I’m a Number Detective | Learn to Count | Numberblocks",
    "label": "Numberblocks",
@@ -1975,6 +1983,14 @@
    "title": "The Grand Opening | Thomas & Friends | Season 7 Episode 21",
    "label": "Thomas & Friends",
    "mins": 5.6,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
+   "id": "32u_bxrZIVk",
+   "title": "Mr Bean's First EVER First Class Flight to America ✈️ | Bean: the Movie | Mr Bean",
+   "label": "Mr Bean Cartoon",
+   "mins": 10.016666666666667,
    "found": "2026-10-07",
    "lang": "en"
   },
@@ -2613,30 +2629,6 @@
    "found": "2026-10-06",
    "lang": "en",
    "posted": "2026-09-27"
-  },
-  {
-   "id": "uFXJ-50SEqY",
-   "title": "George Pig CASTS a SPELL on Peppa!😨 SPOOKY Movie Night | Peppa Pig Official BEST EPISODES COLLECTION",
-   "label": "Peppa Pig",
-   "mins": 45.11666666666667,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "5qPJ-pDwe-0",
-   "title": "Peppa Pig Rides a SUPER FANCY PLANE! ✈️ Costume Fun | BRAND NEW Peppa Pig Tales Episodes | 35 Mins",
-   "label": "Peppa Pig",
-   "mins": 36.13333333333333,
-   "found": "2026-10-06",
-   "lang": "en"
-  },
-  {
-   "id": "DnFtd12VEds",
-   "title": "Peppa Pig Tales 2026 🦷 Peppa Pig Sees Baby Evie's FIRST TOOTH! 🥹 BRAND NEW Peppa Pig Episodes",
-   "label": "Peppa Pig",
-   "mins": 30.033333333333335,
-   "found": "2026-10-06",
-   "lang": "en"
   }
  ]
 }

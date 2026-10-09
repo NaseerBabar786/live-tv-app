@@ -25,6 +25,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.request
 
 from PIL import Image, ImageDraw, ImageFont
@@ -111,8 +112,21 @@ def today_page(day):
         d.text((60, y + 6), at, font=font(BOLD, 24), fill="#ffd84d")
         d.text((60, y + 36), fit(d, " + ".join(p["title"] for p in progs), font(REGULAR, 18), 760), font=font(REGULAR, 18), fill="#c9d3ff")
         y += 56
-    urdu(d, W - 60, y + 2, "تفصیلی خبریں: رات اور دن کے 12، 4 اور 8 بجے  ·  ہر گھنٹے اہم سرخیاں", font(UR, 22), "#9fe3ff")
+    # The six full-news times in Latin figures, so none of them reads as a single "12, 4, 8".
+    urdu(d, W - 60, y + 2, "تفصیلی خبریں  ·  باقی ہر گھنٹے اہم سرخیاں", font(UR, 22), "#9fe3ff")
+    d.text((60, y + 8), "Full news: 12 am · 4 am · 8 am · 12 pm · 4 pm · 8 pm", font=font(BOLD, 22), fill="#9fe3ff")
     return im
+
+
+def forecast(url, tries=3):
+    """Open-Meteo's answer; it sometimes drops one city's request, so each is asked up to three times."""
+    for n in range(tries):
+        try:
+            return json.load(urllib.request.urlopen(url, timeout=20))
+        except Exception:  # noqa: BLE001
+            if n == tries - 1:
+                raise
+            time.sleep(3 * (n + 1))
 
 
 def weather_page():
@@ -124,7 +138,7 @@ def weather_page():
         try:
             url = (f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,weather_code"
                    f"&daily=temperature_2m_max,temperature_2m_min&timezone={tz}&forecast_days=1")
-            w = json.load(urllib.request.urlopen(url, timeout=20))
+            w = forecast(url)
             code = w["current"]["weather_code"]
             sky = next((t for codes, t in SKY if code in codes), "")
             now = f"{round(w['current']['temperature_2m'])}°"
