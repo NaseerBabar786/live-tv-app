@@ -118,6 +118,7 @@ weather_round() { # name
   adb shell am force-stop "$PKG" 2>/dev/null || true
   adb logcat -c
   launch; sleep 20
+  tap_text "Later"; sleep 2
   tap_text "Weather" || { key KEYCODE_DPAD_UP; tap_text "Weather"; }
   sleep 25; shot "20-weather-$1"
   for i in 1 2 3; do key KEYCODE_DPAD_DOWN; done
