@@ -139,6 +139,10 @@ def layout(today):
     base["ad9"] = {"id": "ad9", "title": "کیبل ٹی وی", "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-9.mp4", "secs": 15, "kind": "ad"}
     base["adbreak-c"] = {"id": "adbreak-c", "title": "اشتہارات", "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-c.mp4", "secs": 60, "kind": "ad"}
     base["segment"] = {"id": "segment", "title": "وقفہ: آج کے پروگرام اور موسم", "url": REL + "segment.mp4", "secs": SEGMENT, "kind": "programme"}
+    for kind, secs in (("headlines", HEADLINES), ("full", FULL)):
+        plain = base[f"news-{kind}"]
+        for room in ("day", "night"):
+            base[f"news-{kind}-{room}"] = dict(plain, id=f"news-{kind}-{room}", url=REL + f"news-{kind}-{room}.mp4", secs=secs)
     for gone in ("today", "trailers", "music", "drama-1", "drama-2", "drama-3", "cooking", "comedy", "film"):
         base.pop(gone, None)
 
@@ -219,7 +223,9 @@ def layout(today):
     turn = 0
     for hh in range(24):
         h = hh % 8 + 1
-        slots.append({"day": "all", "time": f"{hh:02d}:00", "video": "news-full" if h in FULL_NEWS else "news-headlines"})
+        # The news rooms (owner, 2026-10-08): the day studio from 6 am to 5:59 pm, the night one otherwise.
+        room = "day" if 6 <= hh < 18 else "night"
+        slots.append({"day": "all", "time": f"{hh:02d}:00", "video": f"{'news-full' if h in FULL_NEWS else 'news-headlines'}-{room}"})
         for mm in ([17] if h in FULL_NEWS else [10, 18]) + [38, 47]:
             slots.append({"day": "all", "time": f"{hh:02d}:{mm:02d}", "video": ads[turn % len(ads)]})
             turn += 1
