@@ -841,7 +841,7 @@ def main():
         # One notice for all of them: GitHub shows only 10 per step, and there are more channels than that.
         print("::notice title=YouTube channel lists::" + "%0A".join(SUMMARIES))
         # Counts only, so the last channels are not cut off when the full notice is too long to show.
-        print("::notice title=Channel counts::" + ", ".join(s.split(" (")[0].split(";")[0] for s in SUMMARIES))
+        print("::notice title=Channel counts::" + "; ".join(s.split(" videos")[0] for s in SUMMARIES))
     if not any(ok):
         sys.exit("No channel list could be built.")
 
