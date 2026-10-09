@@ -29,8 +29,8 @@ class NamazTest {
     fun partOfAVerseStartsAtTheGivenWord() {
         val r = Namaz.recitation("rabbana_atina")
         assertFalse(r.wholeAyahs)
-        val text = Namaz.arabicOf(r) { _, _ -> "وَمِنۡهُمۡ مَّنۡ يَّقُوۡلُ رَبَّنَآ اٰتِنَا" }
-        assertEquals("رَبَّنَآ اٰتِنَا", text)
+        val text = Namaz.arabicOf(r) { _, _ -> "وَمِنۡهُمۡ مَّنۡ يَّقُوۡلُ ${r.fromWord} اٰتِنَا" }
+        assertEquals("${r.fromWord} اٰتِنَا", text)
         assertTrue(Namaz.recitation("fatiha").wholeAyahs)
         assertEquals(7, Namaz.recitation("fatiha").ayahs.size)
     }
