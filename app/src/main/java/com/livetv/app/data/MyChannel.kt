@@ -108,6 +108,9 @@ object MyChannel {
         Station("autohi", 32, "", "Spark Auto Hindi", youtube = true, backup = "sports", logo = "spark-autohi.png", lang = HINDI),
         // English
         Station("english", 41, "", "Spark Movies English", youtube = true, backup = "filmein", logo = "spark-english.png", lang = ENGLISH),
+        // Trailers of new and upcoming films, mostly English from the Hollywood studios' own channels plus Hindi
+        // and Pakistani ones (tools/build_trailers.py, daily; owner 2026-10-08). Its own logo, no Spark word.
+        Station("trailers", 42, "", "Movie Trailers", youtube = true, backup = "filmein", logo = "movie-trailers.png", lang = ENGLISH),
         Station("kids", 43, "00000", "Spark Kids English", youtube = true, lang = ENGLISH),
         Station("teens", 44, "", "Spark Teens English", youtube = true, backup = "filmein", logo = "spark-teens.png", lang = ENGLISH),
         Station("travel", 45, "0000000", "Spark Travel", youtube = true, lang = ENGLISH),

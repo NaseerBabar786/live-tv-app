@@ -94,6 +94,12 @@ export const STATIONS = [
     name: "Bazaar Movies English", dial: "41", doc: "_channel_english", page: "channel/?c=english", auto: true, backup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-english.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
     credits: "Films: full films from the studios' and distributors' own YouTube channels. Backup: public-domain classics from the Internet Archive." },
+  // 42 (owner, 2026-10-08): trailers of new and upcoming films, mostly English from the Hollywood studios' own
+  // channels, with Hindi and Pakistani ones; rebuilt daily by tools/build_trailers.py. Its own logo, no Bazaar word.
+  { id: "trailers", yt: true, web: "channel/ytc.html?c=trailers", ytMins: 3, tagline: "Trailers of the newest and upcoming films",
+    name: "Movie Trailers", dial: "42", doc: "_channel_trailers", page: "channel/?c=trailers", auto: true, backup: true,
+    logo: "https://tv.bulkbazaar.ca/channel/logos/movie-trailers.png", ready: "https://tv.bulkbazaar.ca/channel/filmein-schedule.json",
+    credits: "Movie Trailers: official trailers from the studios' own YouTube channels (Warner Bros, Universal, Sony Pictures, Paramount, Disney, Marvel, Pixar, 20th Century, Lionsgate, Yash Raj, T-Series, ARY Films and others). Backup: public-domain classic films." },
   { id: "kids", yt: true, web: "channel/ytc.html?c=kids", ytMins: 10, tagline: "Cartoons and songs for children, day and night",
     name: "Bazaar Kids English", dial: "43", doc: "_channel_kids", page: "channel/?c=kids", auto: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/bazaar-kids.png", ready: "https://tv.bulkbazaar.ca/channel/kids-schedule.json",
