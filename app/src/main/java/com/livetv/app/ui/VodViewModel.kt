@@ -64,17 +64,20 @@ data class VodState(
  * the first list's copy.
  */
 fun shelves(items: List<Channel>): Map<Vod.Language, VodShelf> =
-    items.distinctBy { Vod.sameTitleKey(it) }.groupBy { Vod.language(it) }.mapValues { (_, list) ->
-        val (episodes, movies) = list.partition { Vod.kind(it) == Vod.Kind.EPISODE }
-        val (kids, grownUp) = episodes.partition { Vod.isKids(it) }
-        val (shows, series) = grownUp.partition { Vod.isShow(it) }
-        VodShelf(
-            movies = movies.sortedBy { it.name.lowercase() },
-            series = Vod.shows(series),
-            shows = Vod.shows(shows),
-            kids = Vod.shows(kids),
-        )
-    }
+    items.distinctBy { Vod.sameTitleKey(it) }.groupBy { Vod.language(it) }.mapValues { (_, list) -> shelf(list) }
+
+/** One shelf's Movies, Series, Shows and Kids, each drama or show a folder of its episodes. */
+private fun shelf(list: List<Channel>): VodShelf {
+    val (episodes, movies) = list.partition { Vod.kind(it) == Vod.Kind.EPISODE }
+    val (kids, grownUp) = episodes.partition { Vod.isKids(it) }
+    val (shows, series) = grownUp.partition { Vod.isShow(it) }
+    return VodShelf(
+        movies = movies.sortedBy { it.name.lowercase() },
+        series = Vod.shows(series),
+        shows = Vod.shows(shows),
+        kids = Vod.shows(kids),
+    )
+}
 
 /**
  * The language shelves and the main-page folders' shelves: Spark TV's and MTA's lists go in their own
@@ -83,10 +86,10 @@ fun shelves(items: List<Channel>): Map<Vod.Language, VodShelf> =
 fun library(lists: List<Pair<Playlist, List<Channel>>>): Pair<Map<Vod.Language, VodShelf>, Map<Vod.Folder, VodShelf>> {
     val seen = HashSet<String>()
     val byFolder = lists.map { (playlist, items) -> Vod.folder(playlist.source) to items.filter { seen.add(it.id) } }
+    // One shelf for every language in the folder, so a programme with episodes in two languages is one folder
+    // (two with the same name crashed the grid on the emulator).
     val folders = Vod.Folder.entries.associateWith { folder ->
-        shelves(byFolder.filter { it.first == folder }.flatMap { it.second }).values
-            .fold(VodShelf()) { all, s -> VodShelf(all.movies + s.movies, all.series + s.series, all.shows + s.shows, all.kids + s.kids) }
-            .let { s -> VodShelf(s.movies.sortedBy { it.name.lowercase() }, s.series.sortedBy { it.name.lowercase() }, s.shows.sortedBy { it.name.lowercase() }, s.kids.sortedBy { it.name.lowercase() }) }
+        shelf(byFolder.filter { it.first == folder }.flatMap { it.second }.distinctBy { Vod.sameTitleKey(it) })
     }.filterValues { !it.isEmpty }
     return shelves(byFolder.filter { it.first == null }.flatMap { it.second }) to folders
 }
