@@ -651,7 +651,7 @@ def duration(path):
                                 capture_output=True, text=True, check=True).stdout)
 
 def add_news_opener(mp4, opener, work):
-    """Owner's pick (2026-10-09): the Spark TV News opener montage (docs/media/spark-news-opener.mp4, real news
+    """Owner's pick (2026-10-09): the Spark News opener montage (docs/media/spark-news-opener-<kind>.mp4, real news
     footage with English + Urdu titles) plays first, then the bulletin. The bulletin was made that much shorter."""
     tmp = os.path.join(work, "with-opener.mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", opener, "-i", mp4, "-filter_complex",
@@ -771,7 +771,8 @@ def main():
         return print("saved", kind, "stories for", slot.isoformat(), "|", "; ".join(NOTES))
     room = opt("--room")
     name = f"news-{kind}" + (f"-{room}" if room else "")
-    opener = os.path.join(HERE, "..", "..", "docs", "media", "spark-news-opener.mp4")
+    # Owner, 2026-10-09: the headlines open with "SPARK NEWS HEADLINES", the full news with "SPARK NEWS".
+    opener = os.path.join(HERE, "..", "..", "docs", "media", f"spark-news-opener-{kind}.mp4")
     opener_secs = duration(opener) if os.path.exists(opener) else 0.0
     total = LENGTH[kind] - opener_secs   # the bulletin itself; the opener goes in front, so the slot stays the same
     work = os.path.join(out, "work-" + name); os.makedirs(work, exist_ok=True)

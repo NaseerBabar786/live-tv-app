@@ -23,7 +23,7 @@ like the approved v5 montage (tools/make_spark_montage.py, whose clips and drawi
              after another, then four cards take the petal colours and slide together into the flower.
 
   news       Spark TV News opener (real news footage only, English + Urdu): three bands of news pictures glide
-             sideways, a bilingual lower third names each one, a wall of screens, then the SPARK TV NEWS title card.
+             sideways, a bilingual lower third names each one, a wall of screens, then the SPARK NEWS title card.
 
 Usage: python3 tools/make_spark_montage_ideas.py languages|carousel|remote|mosaic|panels|fly|gallery|news OUT.mp4
 """
@@ -738,7 +738,7 @@ def gallery(clips, outro):
 # Real footage only (the Spark TV News footage from Wikimedia Commons), no AI video; every word on screen in English
 # and Urdu (channel 1 is an Urdu channel). Three bands of news pictures glide sideways at a steady pace (no zoom,
 # no spinning), a lower third names each place or topic in both languages, the bands settle into a wall of screens,
-# and the title card "SPARK TV NEWS / اسپارک ٹی وی نیوز" closes it. It owns its ending (no 'spark tv' outro).
+# and the title card "SPARK NEWS / اسپارک نیوز" (or the HEADLINES version) closes it. It owns its ending (no 'spark tv' outro).
 M.CLIPS.update({"court": (BR + "court-2d5d0ee3.mp4", 2, ""),
                 "india-st": (BR + "india-a49850ca.mp4", 2, ""), "cricket3": (BR + "cricket-c12cf9fb.mp4", 6, "")})
 NEWS_BANDS = [["to-sky", "train", "cricket", "clouds", "city-lapse", "court", "golak"],
@@ -750,6 +750,9 @@ NEWS_LINES = [("TORONTO", "ٹورنٹو"), ("MUMBAI", "ممبئی"), ("CRICKET",
 NEWS_RED = (214, 32, 48)
 URDU = os.path.join(HERE, "fonts", "NotoNastaliqUrdu.ttf")
 NEWS_END = 12.5                              # the title card starts here
+# Owner, 2026-10-09 22:39: one version before the headlines, one before the full news; only the title card differs.
+NEWS_TITLES = {"headlines": ("SPARK NEWS HEADLINES", "اسپارک نیوز کی سرخیاں"), "full": ("SPARK NEWS", "اسپارک نیوز")}
+NEWS_TITLE = NEWS_TITLES["full"]
 
 
 def urdu_text(d, xy, text, font, fill, anchor="la"):
@@ -760,6 +763,12 @@ def news(clips, outro):
     tw, th, g = 520, 292, 18
     en = ImageFont.truetype(M.WORD_FONT, 54); ur = ImageFont.truetype(URDU, 48)
     big_en = ImageFont.truetype(M.WORD_FONT, 132); big_ur = ImageFont.truetype(URDU, 104)
+    meas = ImageDraw.Draw(Image.new("RGBA", (8, 8)))
+    LW = meas.textlength(NEWS_TITLE[0], font=big_en)
+    if LW > 1280:                                    # the longer HEADLINES title gets a smaller font to fit
+        big_en = ImageFont.truetype(M.WORD_FONT, int(132 * 1280 / LW)); LW = meas.textlength(NEWS_TITLE[0], font=big_en)
+    LW = max(LW, meas.textlength(NEWS_TITLE[1], font=big_ur, direction="rtl", language="ur"))
+    tx = int((W - (LW + 330)) / 2 + 330)             # the flower and the words sit centred together
     L = logo_parts(); pet = [petal(260, i, c) for i, c in enumerate(PETALS)]
 
     def bands(t, open_k=1.0):
@@ -821,16 +830,15 @@ def news(clips, outro):
                 else: fl.alpha_composite(q.crop(((q.width - S) // 2, (q.height - S) // 2, (q.width + S) // 2, (q.height + S) // 2)))
         rot = -60 * (1 - out_cubic(k / .9))
         if abs(rot) > .05: fl = fl.rotate(rot, resample=Image.BICUBIC)
-        tx = W // 2 - 520
         lay.alpha_composite(fl, (tx - S - 30, H // 2 - S // 2 - 20))
         wk = clamp((k - .45) / .5)
-        if wk > 0:                                           # "SPARK TV NEWS" wipes in, then the red line, then Urdu
-            txt = Image.new("RGBA", (1200, 170), (0, 0, 0, 0)); ImageDraw.Draw(txt).text((0, 0), "SPARK TV NEWS", font=big_en, fill=(255, 255, 255, 255))
+        if wk > 0:                                           # the title wipes in, then the red line, then Urdu
+            txt = Image.new("RGBA", (int(LW) + 40, 170), (0, 0, 0, 0)); ImageDraw.Draw(txt).text((0, 0), NEWS_TITLE[0], font=big_en, fill=(255, 255, 255, 255))
             txt = txt.crop((0, 0, max(1, int(txt.width * out_cubic(wk))), txt.height)); lay.alpha_composite(txt, (tx, H // 2 - 150))
         lk = clamp((k - .8) / .4)
-        if lk > 0: d.rectangle([tx, H // 2 + 20, tx + int(1040 * out_cubic(lk)), H // 2 + 30], fill=NEWS_RED + (255,))
+        if lk > 0: d.rectangle([tx, H // 2 + 20, tx + int(LW * out_cubic(lk)), H // 2 + 30], fill=NEWS_RED + (255,))
         uk = clamp((k - 1.1) / .5)
-        if uk > 0: urdu_text(d, (tx + 1040, H // 2 + 50), "اسپارک ٹی وی نیوز", big_ur, (255, 255, 255, int(255 * uk)), anchor="ra")
+        if uk > 0: urdu_text(d, (tx + LW, H // 2 + 50), NEWS_TITLE[1], big_ur, (255, 255, 255, int(255 * uk)), anchor="ra")
         gk = (k - 2.4) / .8
         if 0 < gk < 1:
             la = np.asarray(lay, np.float32).copy()
@@ -864,11 +872,11 @@ def news(clips, outro):
     return frame
 
 # News openers 2 and 3 (owner, 2026-10-09 22:23: the first one goes on air for now; make a couple of nicer ones).
-# Same rules: real Spark TV News footage only, English + Urdu words; both end on the same SPARK TV NEWS title card.
+# Same rules: real Spark TV News footage only, English + Urdu words; both end on the same SPARK NEWS title card.
 CLOCK_WIN = [("to-sky", "TORONTO", "ٹورنٹو"), ("train", "MUMBAI", "ممبئی"), ("cricket", "SPORTS", "کھیل"), ("clouds", "WEATHER", "موسم")]
 WIPES = [("to-sky", "TORONTO", "ٹورنٹو"), ("street", "MUMBAI", "ممبئی"), ("cricket", "CRICKET", "کرکٹ"), ("clouds", "WEATHER", "موسم"),
          ("city-lapse", "WORLD", "دنیا"), ("stadium", "SPORTS", "کھیل")]
-TICKER = "LIVE ON SPARK TV NEWS   ·   اسپارک ٹی وی نیوز   ·   TORONTO   ·   ٹورنٹو   ·   MUMBAI   ·   ممبئی   ·   CRICKET   ·   کرکٹ   ·   WEATHER   ·   موسم   ·   "
+TICKER = "LIVE ON SPARK NEWS   ·   اسپارک نیوز   ·   TORONTO   ·   ٹورنٹو   ·   MUMBAI   ·   ممبئی   ·   CRICKET   ·   کرکٹ   ·   WEATHER   ·   موسم   ·   "
 
 
 def bilingual_tag(d, x, y, e_txt, u_txt, en, ur, a=1.0):
@@ -882,7 +890,7 @@ def bilingual_tag(d, x, y, e_txt, u_txt, en, ur, a=1.0):
 
 def news_clock(clips, outro):
     """Opener 2, the news clock: a clock face counts down to the hour while four windows of the day's places open
-    around it, one per beat; the hand reaches twelve as the SPARK TV NEWS card comes in. Nothing zooms or spins
+    around it, one per beat; the hand reaches twelve as the SPARK NEWS card comes in. Nothing zooms or spins
     except the clock's own hand."""
     title = news(clips, outro)
     en = ImageFont.truetype(M.WORD_FONT, 40); ur = ImageFont.truetype(URDU, 36)
@@ -989,8 +997,8 @@ def news_wipes(clips, outro):
                 urdu_text(d, (110 + uw / 2, y + 70), u_txt, ur, (255, 255, 255, int(255 * a)), anchor="mm")
         # the corner name and the LIVE ticker stay on screen the whole time
         ia = clamp(t / .5)
-        d.text((80, 70), "SPARK TV NEWS", font=small, fill=(255, 255, 255, int(235 * ia)), anchor="lm")
-        d.rectangle([80, 96, 80 + d.textlength("SPARK TV NEWS", font=small), 102], fill=NEWS_RED + (int(255 * ia),))
+        d.text((80, 70), "SPARK NEWS", font=small, fill=(255, 255, 255, int(235 * ia)), anchor="lm")
+        d.rectangle([80, 96, 80 + d.textlength("SPARK NEWS", font=small), 102], fill=NEWS_RED + (int(255 * ia),))
         by = H - 110
         d.rectangle([0, by, W, by + 70], fill=(14, 16, 32, int(235 * ia)))
         lw = d.textlength("LIVE", font=tag) + 90
@@ -1008,6 +1016,9 @@ def news_wipes(clips, outro):
 
 
 def make(kind, out):
+    global NEWS_TITLE
+    kind, _, version = kind.partition(":")           # news openers: news:headlines or news:full (the default)
+    NEWS_TITLE = NEWS_TITLES[version or "full"]
     print("fetching clips", flush=True)
     if kind == "languages":
         names = {n for v in LANG_CLIPS.values() for n in v} | {"sintel-cliff"}

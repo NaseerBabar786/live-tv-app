@@ -360,14 +360,25 @@
    "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Spark TV News footage (Wikimedia Commons), Blender Foundation (CC BY), public domain."
   },
   {
-   "id": "spark-news-opener",
+   "id": "spark-news-opener-headlines",
    "cat": "spark-promos",
    "lang": "en",
-   "title": "Spark TV News opener",
-   "url": "media/spark-news-opener.mp4",
+   "title": "Spark News opener, headlines",
+   "url": "media/spark-news-opener-headlines.mp4",
    "secs": 20,
-   "poster": "media/spark-news-opener-poster.jpg",
-   "about": "20 s news opener from real news footage only: a red line opens into moving rows of Toronto, Mumbai, cricket and weather shots with English + Urdu labels, a wall of screens, then SPARK TV NEWS / اسپارک ٹی وی نیوز. Opens every news bulletin (approved 2026-10-09).",
+   "poster": "media/spark-news-opener-headlines-poster.jpg",
+   "about": "20 s news opener from real news footage only: a red line opens into moving rows of Toronto, Mumbai, cricket and weather shots with English + Urdu labels, a wall of screens, then SPARK NEWS HEADLINES / اسپارک نیوز کی سرخیاں. Opens every headlines bulletin (approved 2026-10-09).",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Spark TV News footage (Wikimedia Commons)."
+  },
+  {
+   "id": "spark-news-opener-full",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark News opener, full news",
+   "url": "media/spark-news-opener-full.mp4",
+   "secs": 20,
+   "poster": "media/spark-news-opener-full-poster.jpg",
+   "about": "20 s news opener from real news footage only: a red line opens into moving rows of Toronto, Mumbai, cricket and weather shots with English + Urdu labels, a wall of screens, then SPARK NEWS / اسپارک نیوز. Opens every full news bulletin (approved 2026-10-09).",
    "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Spark TV News footage (Wikimedia Commons)."
   },
   {
