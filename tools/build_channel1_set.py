@@ -103,7 +103,7 @@ def segment_lengths(h, spans):
 NOT_EPISODE = re.compile(r"teaser|promo|\bost\b|review|scene|highlight|recap|clip|bts|behind|reaction|preview|"
                          r"\bnext\b|making|interview|title song|best moment", re.I)
 EPISODE_NO = re.compile(r"\b(?:episode|epi|ep)\.?\s*0*(\d{1,3})\b", re.I)
-MONTAGES = ["spark-montage", "spark-montage-2", "spark-montage-3", "spark-montage-4"]  # approved Spark montages, one per hour in turn
+MONTAGES = ["spark-montage", "spark-montage-2", "spark-montage-3", "spark-montage-4", "spark-montage-5"]  # approved Spark montages, one per hour in turn
 REL = "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/"
 
 
@@ -199,7 +199,7 @@ def layout(today):
     base["spark-ident"] = {"id": "spark-ident", "title": "اسپارک ٹی وی", "url": M + "spark-ident.mp4", "secs": 20, "kind": "ident"}
     base["spark-montage"] = {"id": "spark-montage", "title": "اسپارک ٹی وی", "url": M + "spark-montage.mp4", "secs": 30, "kind": "ad"}
     base["spark-montage-2"] = {"id": "spark-montage-2", "title": "اسپارک ٹی وی", "url": M + "spark-montage-2.mp4", "secs": 20, "kind": "ad"}
-    for n in (3, 4):
+    for n in (3, 4, 5):
         base[f"spark-montage-{n}"] = {"id": f"spark-montage-{n}", "title": "اسپارک ٹی وی", "url": M + f"spark-montage-{n}.mp4", "secs": 20, "kind": "ad"}
     base["spark-ad-urdu"] = {"id": "spark-ad-urdu", "title": "اسپارک ٹی وی", "url": M + "spark-ad-urdu.mp4", "secs": 30, "kind": "ad"}
     base["segment"] = {"id": "segment", "title": "وقفہ: آج کے پروگرام اور موسم", "url": REL + "segment.mp4", "secs": SEGMENT, "kind": "programme"}
