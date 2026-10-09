@@ -4,8 +4,18 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "videos": [],
+ "videos": [
+  {
+   "id": "gurbani-hold",
+   "title": "Spark Gurbani · back in a moment",
+   "url": "https://tv.bulkbazaar.ca/channel/media/gurbani-hold.mp4",
+   "secs": 60,
+   "kind": "programme"
+  }
+ ],
  "slots": [],
- "loop": [],
- "note": "Spark Gurbani has no backup of other music (the owner, 2026-10-08): only Gurbani, or a wait card until its list loads."
+ "loop": [
+  "gurbani-hold"
+ ],
+ "note": "Spark Gurbani has no backup of other music (the owner, 2026-10-08). Its only backup is a silent 'back in a moment' card, so the app lists the channel (it hides a channel with an empty schedule) while the YouTube page plays its kirtan."
 }
