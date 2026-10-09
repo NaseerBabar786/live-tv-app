@@ -1,11 +1,35 @@
 {
- "updated": "2026-10-09T12:30Z",
+ "updated": "2026-10-09T15:26Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "9REL4BUYjMk",
+   "title": "Isaias upgraded to a major Hurricane, Canadian impacts possible | #forecast",
+   "channel": "The Weather Network",
+   "published": 1791557054
+  },
+  {
+   "id": "UNJ4bP_NNSo",
+   "title": "Hurricane Isaias reached Category 3 intensity on Friday morning, officially major hurricane status",
+   "channel": "The Weather Network",
+   "published": 1791556574
+  },
+  {
+   "id": "0Sw6A6EXyhU",
+   "title": "LIVE: Hurricane Isaias With Storm Chasers - Gulf Coast Oct. 9",
+   "channel": "AccuWeather",
+   "published": 1791553238
+  },
+  {
+   "id": "3BPxvcoGnx8",
+   "title": "Cat 3 Hurricane Isaias Is Coming for the Gulf Coast. Are You Ready?",
+   "channel": "AccuWeather",
+   "published": 1791552777
+  },
   {
    "id": "uWMrNuOKyKw",
    "title": "Swap out these 4 foods to help boost your immune system this season",
@@ -71,18 +95,6 @@
    "title": "Hurricane Isaias forms in the Gulf, threatens U.S. coast and impacts Canada | #forecast",
    "channel": "The Weather Network",
    "published": 1791465214
-  },
-  {
-   "id": "7IICcogoIjQ",
-   "title": "Cottage checklist for closing up ahead of the winter season | #cottage",
-   "channel": "The Weather Network",
-   "published": 1791453635
-  },
-  {
-   "id": "FgZ02zAOHcI",
-   "title": "Canada's Daily Forecast - October 8, 2026  | #WeatherAM",
-   "channel": "The Weather Network",
-   "published": 1791450022
   },
   {
    "id": "mr2ZrWQsWhI",
@@ -155,18 +167,6 @@
    "title": "Widespread frost expected: Who will be affected this week?",
    "channel": "AccuWeather",
    "published": 1791223136
-  },
-  {
-   "id": "grIZj4wtOfU",
-   "title": "Paraguay Storm: Hail Slams into Backyard Pool!",
-   "channel": "AccuWeather",
-   "published": 1791209838
-  },
-  {
-   "id": "ZZwxSGaPDwA",
-   "title": "Tornado Sends Cafe Furniture Flying in Australia",
-   "channel": "AccuWeather",
-   "published": 1791059504
   },
   {
    "id": "ed2fIOYIWms",
