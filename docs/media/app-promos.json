@@ -1,5 +1,5 @@
 {
-  "note": "Cable TV promo for the app's ad break every 10 minutes on full-screen channels. Owner, 2026-10-07: Ad 6 (60 s) and the Gold promo-code ad (30 s, approved 22:19) rotate; the earlier ads are off for now. 720p copy so TVs start it quickly. secs = length in seconds (5-60, steps of 5). 2026-10-08: Ad 8 (30 s, new Gold promo, approved 05:49) replaced the promo-code ad. Ad 9 (15 s channel wall, approved 2026-10-08 05:50) added. 2026-10-08 12:18: owner picked Ad 7 (music C, Upbeat Sitar); Ad 7 replaces Ad 6 (old wording: 15 free channels, phone and PC).",
+  "note": "Cable TV promo for the app's ad break every 10 minutes on full-screen channels. Owner, 2026-10-07: Ad 6 (60 s) and the Gold promo-code ad (30 s, approved 22:19) rotate; the earlier ads are off for now. 720p copy so TVs start it quickly. secs = length in seconds (5-60, steps of 5). 2026-10-08: Ad 8 (30 s, new Gold promo, approved 05:49) replaced the promo-code ad. Ad 9 (15 s channel wall, approved 2026-10-08 05:50) added. 2026-10-08 12:18: owner picked Ad 7 (music C, Upbeat Sitar); Ad 7 replaces Ad 6 (old wording: 15 free channels, phone and PC). 2026-10-09 19:33: owner approved the Spark TV ads for the channels' ad breaks; the Spark channel tour (60 s) takes turns with Ads 7, 8 and 9.",
   "promos": [
     {
       "src": "cabletv-ad-7.mp4",
@@ -12,6 +12,10 @@
     {
       "src": "cabletv-ad-9.mp4",
       "secs": 15
+    },
+    {
+      "src": "spark-ad-tour.mp4",
+      "secs": 60
     }
   ]
 }

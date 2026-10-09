@@ -4,7 +4,7 @@
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca",
+ "ticker": "Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise",
  "tickerOn": true,
  "videos": [
   {
@@ -27,13 +27,6 @@
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-coming-up.mp4",
    "secs": 8,
    "kind": "ident"
-  },
-  {
-   "id": "adbb",
-   "title": "اشتہار: بلک بازار",
-   "url": "https://tv.bulkbazaar.ca/channel/media/ad-bulk-bazaar.mp4",
-   "secs": 20,
-   "kind": "ad"
   },
   {
    "id": "adhere",
@@ -73,7 +66,7 @@
   {
    "id": "adbreak",
    "title": "اشتہارات",
-   "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-b.mp4",
+   "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-d.mp4",
    "secs": 60,
    "kind": "ad"
   },
@@ -1298,7 +1291,7 @@
  "fillers": [
   "promo2",
   "adhere",
-  "adbb",
+  "spark-ad-urdu",
   "next"
  ]
 }

@@ -185,7 +185,11 @@ def layout(today):
     sched = load(SCHEDULE, {})
     base = {v["id"]: v for v in sched.get("videos", []) if not v["id"].startswith("c1-")}
     # Our own clips: the slots' videos and the short pieces that make each hour come out exact.
-    own = {k: base[k] for k in ("welcome", "break", "next", "adbb", "adhere", "promo", "promo2", "adbreak")}
+    # No Bulk Bazaar ads for now (owner, 2026-10-09): its 20 s ad is out, and the 1-minute break that carried it
+    # (ad-break-b) is now ad-break-d, with the Urdu Spark ad and a short Spark logo in its place.
+    base.pop("adbb", None)
+    base["adbreak"] = {"id": "adbreak", "title": "اشتہارات", "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-d.mp4", "secs": 60, "kind": "ad"}
+    own = {k: base[k] for k in ("welcome", "break", "next", "adhere", "promo", "promo2", "adbreak")}
     base["ad9"] = {"id": "ad9", "title": "کیبل ٹی وی", "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-9.mp4", "secs": 15, "kind": "ad"}
     base["adbreak-c"] = {"id": "adbreak-c", "title": "اشتہارات", "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-c.mp4", "secs": 60, "kind": "ad"}
     # Spark TV's moving logo opens every hour's programmes, and the network montage and the Urdu Spark ad
@@ -218,7 +222,7 @@ def layout(today):
                      if v.get("mins") and v["id"] not in bad]
     songs = sorted(lists["music-videos.json"] + lists["trailers.json"], key=lambda v: -v["secs"])
     used = set()
-    pads = sorted([own[k] for k in ("promo2", "adbb", "adhere", "welcome", "next", "break")] + [base["ad9"], base["spark-montage"], base["spark-ad-urdu"]],
+    pads = sorted([own[k] for k in ("promo2", "adhere", "welcome", "next", "break")] + [base["ad9"], base["spark-montage"], base["spark-ad-urdu"]],
                   key=lambda v: -v["secs"])
     opening = own["next"]["secs"] + base["spark-ident"]["secs"]
 
@@ -331,10 +335,10 @@ def layout(today):
     loop = apart_from_slot_ads(loop, slots, {v["id"]: v for v in sched["videos"]})
     sched["loop"] = loop
     sched["slots"] = slots
-    sched["fillers"] = ["promo2", "adhere", "adbb", "next"]
+    sched["fillers"] = ["promo2", "adhere", "spark-ad-urdu", "next"]
     sched["ticker"] = ("Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  "
                        "Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  "
-                       "tv.bulkbazaar.ca/advertise  ·  Shop at bulkbazaar.ca")
+                       "tv.bulkbazaar.ca/advertise")
     save(SCHEDULE, sched)
     save(SET_FILE, {"date": today.isoformat(), "episode": n, "hours": hours})
     print(f"Wrote {os.path.relpath(SCHEDULE, ROOT)}: {len(loop)} loop items, {len(slots)} slots.")
