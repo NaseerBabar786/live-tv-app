@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spark TV channels · Urdu, Hindi, English and Punjabi</title>
+<meta name="description" content="Every Spark TV channel by language, with its channel number and what is on now.">
+<meta property="og:image" content="https://tv.bulkbazaar.ca/media/spark-montage-poster.jpg">
+<link rel="icon" href="../channel/logos/spark-tv-square.png">
+<link rel="stylesheet" href="spark.css">
+<style>
+  .lang-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin: 0 0 16px; }
+  .lang-head .native { font-size: 26px; color: var(--muted); }
+  .jump { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="./" aria-label="Spark TV home"><img src="../channel/logos/spark-tv.png" alt="spark tv"></a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="channels" class="on">Channels</a>
+      <a href="../channel/" class="hide-sm">Watch</a>
+      <a href="advertise" class="cta">Advertise</a>
+    </nav>
+  </div>
+</header>
+
+<section style="padding-bottom:10px">
+  <div class="wrap">
+    <div class="eyebrow">Channel guide</div>
+    <h1>Our <span class="grad">channels</span></h1>
+    <p class="lead">Every Spark channel is in one language, and each language has its own block of numbers on the remote. Tap a channel to watch it live.</p>
+    <div class="jump" id="jump"></div>
+  </div>
+</section>
+<div id="langs"></div>
+
+<footer class="bottom">
+  <div class="wrap cols">
+    <div><img src="../channel/logos/spark-tv.png" alt="spark tv" style="height:44px"><p>Free channels in Urdu, Hindi, English and Punjabi. Part of the free Cable TV app, brought to you by <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener" style="display:inline">Bulk Bazaar Inc.</a></p></div>
+    <div><b>Watch</b><a href="channels">All channels</a><a href="../channel/">Live player</a><a href="../#download">Get the Cable TV app</a></div>
+    <div><b>Advertise</b><a href="advertise">Ad spots and prices</a><a href="advertise#book">Book an ad</a><a href="../channel/?c=ads">Spark Ads channel</a></div>
+    <div><b>Contact</b><a href="https://wa.me/14376026500">WhatsApp 437 602 6500</a><a href="mailto:naseerahmadbabar@gmail.com?subject=Spark%20TV">Email us</a><a href="../privacy">Privacy policy</a></div>
+  </div>
+</footer>
+
+<script type="module">
+import { sparkChannels, onNow, LANGS } from "./channels.js";
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const all = sparkChannels();
+
+$("jump").innerHTML = LANGS.map(l => `<a class="btn" href="#${l.key}"><span class="tag ${l.key}">${l.name}</span> ${l.from} to ${l.to}</a>`).join("");
+$("langs").innerHTML = LANGS.map(l => {
+  const list = all.filter(c => c.lang === l.key);
+  return `<section id="${l.key}"><div class="wrap">
+    <div class="lang-head"><h2>${l.name}</h2><span class="native">${l.native}</span><span class="small">${list.length} channels · numbers ${l.from} to ${l.to}</span></div>
+    <div class="cards">${list.map(c => `<a class="card" href="${c.watch}" data-id="${c.id}"><div class="art"><img class="lg" alt="${esc(c.name)}" src="${esc(c.logo)}"><span class="dial">${c.dial}</span></div>
+      <div class="body"><b>${esc(c.name)}</b><span class="tl">${esc(c.tagline)}</span></div></a>`).join("")}</div></div></section>`;
+}).join("");
+
+all.forEach(c => onNow(c).then(n => {
+  const a = n && document.querySelector(`.card[data-id="${c.id}"]`);
+  if (!a) return;
+  a.querySelector(".art").insertAdjacentHTML("afterbegin", `<img class="thumb" alt="" loading="lazy" onerror="this.remove()" src="${n.thumb}">`);
+  a.querySelector(".body").insertAdjacentHTML("beforeend", `<span class="now">${esc(n.title)}</span>`);
+}));
+</script>
+<script src="../assets/visits.js"></script>
+</body>
+</html>
