@@ -22,7 +22,10 @@ like the approved v5 montage (tools/make_spark_montage.py, whose clips and drawi
   gallery    Calm gallery (real footage only), the fly-through's replacement: big postcards glide in from the right one
              after another, then four cards take the petal colours and slide together into the flower.
 
-Usage: python3 tools/make_spark_montage_ideas.py languages|carousel|remote|mosaic|panels|fly|gallery OUT.mp4
+  news       Spark TV News opener (real news footage only, English + Urdu): three bands of news pictures glide
+             sideways, a bilingual lower third names each one, a wall of screens, then the SPARK TV NEWS title card.
+
+Usage: python3 tools/make_spark_montage_ideas.py languages|carousel|remote|mosaic|panels|fly|gallery|news OUT.mp4
 """
 import math, os, subprocess, sys, tempfile
 import numpy as np
@@ -731,6 +734,136 @@ def gallery(clips, outro):
     return frame
 
 
+# ------------------------------------------------------------------ the Spark TV News opener (owner, 2026-10-09)
+# Real footage only (the Spark TV News footage from Wikimedia Commons), no AI video; every word on screen in English
+# and Urdu (channel 1 is an Urdu channel). Three bands of news pictures glide sideways at a steady pace (no zoom,
+# no spinning), a lower third names each place or topic in both languages, the bands settle into a wall of screens,
+# and the title card "SPARK TV NEWS / اسپارک ٹی وی نیوز" closes it. It owns its ending (no 'spark tv' outro).
+M.CLIPS.update({"court": (BR + "court-2d5d0ee3.mp4", 2, ""),
+                "india-st": (BR + "india-a49850ca.mp4", 2, ""), "cricket3": (BR + "cricket-c12cf9fb.mp4", 6, "")})
+NEWS_BANDS = [["to-sky", "train", "cricket", "clouds", "city-lapse", "court", "golak"],
+              ["night-earth", "cst", "football", "quebec", "taxi", "heli", "to-lapse"],
+              ["street", "stadium", "to-lapse", "city", "india-st", "taxi", "cricket2"]]
+NEWS_WALL = ["to-sky", "cst", "cricket", "clouds", "night-earth", "court", "football", "quebec", "city-lapse", "train", "heli", "stadium"]
+NEWS_LINES = [("TORONTO", "ٹورنٹو"), ("MUMBAI", "ممبئی"), ("CRICKET", "کرکٹ"), ("WORLD", "دنیا"), ("WEATHER", "موسم"),
+              ("SPORTS", "کھیل"), ("CITIES", "شہر")]
+NEWS_RED = (214, 32, 48)
+URDU = os.path.join(HERE, "fonts", "NotoNastaliqUrdu.ttf")
+NEWS_END = 12.5                              # the title card starts here
+
+
+def urdu_text(d, xy, text, font, fill, anchor="la"):
+    d.text(xy, text, font=font, fill=fill, anchor=anchor, direction="rtl", language="ur", features=["-kern"])
+
+
+def news(clips, outro):
+    tw, th, g = 520, 292, 18
+    en = ImageFont.truetype(M.WORD_FONT, 54); ur = ImageFont.truetype(URDU, 48)
+    big_en = ImageFont.truetype(M.WORD_FONT, 132); big_ur = ImageFont.truetype(URDU, 104)
+    L = logo_parts(); pet = [petal(260, i, c) for i, c in enumerate(PETALS)]
+
+    def bands(t, open_k=1.0):
+        cv = Image.new("RGB", (W, H), tuple(int(v * 255) for v in DARK))
+        bh = th + g; top = (H - 3 * bh + g) / 2
+        for b, row in enumerate(NEWS_BANDS):
+            speed = 150 * (1 if b % 2 else -1)              # pixels a second, steady
+            off = (t * speed) % ((tw + g) * len(row))
+            y = top + b * bh + (1 - open_k) * (H / 2 - (top + b * bh + th / 2))
+            for j in range(-1, len(row) + 3):
+                x = j * (tw + g) - off + (0 if b % 2 else -(tw + g) * 2)
+                x = (x + (tw + g) * len(row)) % ((tw + g) * len(row)) - (tw + g)
+                if x > W or x + tw < 0: continue
+                nm = row[j % len(row)]
+                im = reel_frame(clips, nm, t + j * .37 + b, tw, max(2, int(th * open_k)))
+                cv.paste(im, (int(x), int(y)))
+        return cv
+
+    def wall(t, k):
+        """The bands settle into a 4x3 wall; the middle screens get a red frame."""
+        cv = Image.new("RGB", (W, H), tuple(int(v * 255) for v in DARK)); d = ImageDraw.Draw(cv)
+        cw, chh = (W - 5 * 14) // 4, (H - 4 * 14) // 3
+        for r in range(3):
+            for c in range(4):
+                j = r * 4 + c; a = clamp((k - .04 * j) / .3)
+                if a <= 0: continue
+                x, y = 14 + c * (cw + 14), 14 + r * (chh + 14)
+                im = reel_frame(clips, NEWS_WALL[j], t + j * .3, cw, chh)
+                if a < 1: im = Image.blend(Image.new("RGB", im.size, tuple(int(v * 255) for v in DARK)), im, a)
+                cv.paste(im, (x, y))
+                if r == 1 and c in (1, 2): d.rectangle([x - 4, y - 4, x + cw + 3, y + chh + 3], outline=NEWS_RED, width=6)
+        return cv
+
+    def lower_third(t, lay):
+        i = int((t - 1.6) / 1.5)
+        if i < 0 or i >= len(NEWS_LINES): return
+        k = (t - 1.6) - 1.5 * i; a = clamp(k / .2) * (1 - clamp((k - 1.3) / .2))
+        e_txt, u_txt = NEWS_LINES[i]; d = ImageDraw.Draw(lay)
+        ew = d.textlength(e_txt, font=en) + 70; uw = d.textlength(u_txt, font=ur, direction="rtl", language="ur") + 60
+        y = H - 210; slide = (1 - out_cubic(k / .3)) * -120
+        x = 110 + slide
+        d.rectangle([x, y, x + ew, y + 92], fill=(255, 255, 255, int(240 * a)))
+        d.text((x + 35, y + 46), e_txt, font=en, fill=(20, 22, 34, int(255 * a)), anchor="lm")
+        d.rectangle([x + ew, y, x + ew + uw, y + 92], fill=NEWS_RED + (int(240 * a),))
+        urdu_text(d, (x + ew + uw / 2, y + 40), u_txt, ur, (255, 255, 255, int(255 * a)), anchor="mm")
+        d.rectangle([x, y + 92, x + ew + uw, y + 100], fill=(20, 22, 34, int(200 * a)))
+
+    def title(t):
+        k = t - NEWS_END
+        f = arr(wall(t, 1.0)); f = up(blur(f[::4, ::4], 6)) * (.35 - .15 * clamp(k / 2)) + DARK * .6
+        lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        # the flower blooms on the left of the words
+        S = 300; fl = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+        for i in range(4):
+            gs = max(2, int(S * out_back((k - .06 * i) / .5, 2.2)))
+            if gs > 2:
+                q = pet[i].resize((min(gs, S * 2), min(gs, S * 2)), Image.BILINEAR)
+                if q.width <= S: fl.alpha_composite(q, ((S - q.width) // 2, (S - q.height) // 2))
+                else: fl.alpha_composite(q.crop(((q.width - S) // 2, (q.height - S) // 2, (q.width + S) // 2, (q.height + S) // 2)))
+        rot = -60 * (1 - out_cubic(k / .9))
+        if abs(rot) > .05: fl = fl.rotate(rot, resample=Image.BICUBIC)
+        tx = W // 2 - 520
+        lay.alpha_composite(fl, (tx - S - 30, H // 2 - S // 2 - 20))
+        wk = clamp((k - .45) / .5)
+        if wk > 0:                                           # "SPARK TV NEWS" wipes in, then the red line, then Urdu
+            txt = Image.new("RGBA", (1200, 170), (0, 0, 0, 0)); ImageDraw.Draw(txt).text((0, 0), "SPARK TV NEWS", font=big_en, fill=(255, 255, 255, 255))
+            txt = txt.crop((0, 0, max(1, int(txt.width * out_cubic(wk))), txt.height)); lay.alpha_composite(txt, (tx, H // 2 - 150))
+        lk = clamp((k - .8) / .4)
+        if lk > 0: d.rectangle([tx, H // 2 + 20, tx + int(1040 * out_cubic(lk)), H // 2 + 30], fill=NEWS_RED + (255,))
+        uk = clamp((k - 1.1) / .5)
+        if uk > 0: urdu_text(d, (tx + 1040, H // 2 + 50), "اسپارک ٹی وی نیوز", big_ur, (255, 255, 255, int(255 * uk)), anchor="ra")
+        gk = (k - 2.4) / .8
+        if 0 < gk < 1:
+            la = np.asarray(lay, np.float32).copy()
+            band = np.exp(-(((xx + yy * .35) - (tx - 300 + gk * 1700)) / 55) ** 2)[..., None]
+            la[..., :3] = la[..., :3] + (255 - la[..., :3]) * band * .8
+            lay = Image.fromarray(la.astype(np.uint8), "RGBA")
+        f, _ = comp(f, lay)
+        if k < .15: f = f + (1 - k / .15) * .7
+        return f
+
+    def frame(t):
+        if t >= NEWS_END: return title(t) * (.45 + .55 * VIGN)
+        if t < 1.2:                                          # a red line draws across, then opens into the bands
+            k = t / 1.2; cv = Image.new("RGB", (W, H), tuple(int(v * 255) for v in DARK))
+            if k > .5: cv = bands(t, out_cubic((k - .5) / .5))
+            d = ImageDraw.Draw(cv); lw = int(W * out_cubic(min(1, k / .5)))
+            if k < .9: d.rectangle([(W - lw) // 2, H // 2 - 4, (W + lw) // 2, H // 2 + 4], fill=NEWS_RED)
+            f = arr(cv)
+        elif t < 10.2:
+            f = arr(bands(t))
+        else:
+            k = (t - 10.2) / 2.0
+            m = clamp(k / .3)                                 # bands cross-fade into the wall, no dip to black
+            f = arr(wall(t, .3 + k)) if m >= 1 else arr(bands(t)) * (1 - m) + arr(wall(t, .3 + k)) * m
+        lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); lower_third(t, lay)
+        f, _ = comp(f, lay)
+        lk = leak(t, 10.2, NEWS_RED)
+        if lk is not None: f = f + lk * .6
+        return f * (.45 + .55 * VIGN)
+
+    return frame
+
+
 def make(kind, out):
     print("fetching clips", flush=True)
     if kind == "languages":
@@ -748,6 +881,9 @@ def make(kind, out):
     elif kind == "panels":
         names = {n for p in PANELS for n in p} | set(GRIDC) | {"sintel-cliff"}
         tagline = "LIVE   ·   SPORTS   ·   MOVIES   ·   NEWS"
+    elif kind == "news":
+        names = {n for b in NEWS_BANDS for n in b} | set(NEWS_WALL) | {"sintel-cliff"}
+        tagline = ""
     elif kind == "gallery":
         names = {n for n, _ in GALLERY} | {"sintel-cliff"}
         tagline = "FROM TORONTO TO MUMBAI   ·   ALL ON SPARK"
@@ -757,18 +893,18 @@ def make(kind, out):
     assert kind in ("languages", "carousel", "remote", "mosaic") or not names & AI_MADE, "ideas 5 and 6 use no AI-made video"
     clips = {n: Clip(n, 9.0 if n == "sintel-cliff" else 3.2) for n in names}
     outro = Outro(tagline, clips["sintel-cliff"])
-    body = {"languages": languages, "carousel": carousel, "remote": remote, "mosaic": mosaic, "panels": panels, "fly": flythrough, "gallery": gallery}[kind](clips, outro)
+    body = {"languages": languages, "carousel": carousel, "remote": remote, "mosaic": mosaic, "panels": panels, "fly": flythrough, "gallery": gallery, "news": news}[kind](clips, outro)
     bug = Image.open(M.BUG).convert("RGBA"); bug = fade_img(bug.resize((230, int(230 * bug.height / bug.width)), Image.LANCZOS), .8)
     cf = ImageFont.truetype(FONT, 21)
     fr = tempfile.mkdtemp()
     for n in range(N):
         t = n / FPS
-        f = outro.frame(t) if t >= OUT else body(t)
+        f = outro.frame(t) if t >= OUT and kind != "news" else body(t)
         img = to_img(grain(f, n))
-        if 1.5 <= t < OUT - .3: img.paste(bug, (W - 60 - bug.width, 50), bug)
+        if 1.5 <= t < (NEWS_END - .3 if kind == "news" else OUT - .3): img.paste(bug, (W - 60 - bug.width, 50), bug)
         ck = clamp((t - OUT - 3.6) / .5) * (1 - clamp((t - (SECS - .7)) / .4))
         if ck > 0:
-            d = ImageDraw.Draw(img, "RGBA"); txt = credit("feelgood") + "  ·  Clips: Blender Foundation (CC BY), public domain, Spark TV"
+            d = ImageDraw.Draw(img, "RGBA"); txt = credit("feelgood") + ("  ·  Clips: Spark TV News footage, Wikimedia Commons" if kind == "news" else "  ·  Clips: Blender Foundation (CC BY), public domain, Spark TV")
             d.text((W - 44 - d.textlength(txt, font=cf), H - 56), txt, font=cf, fill=(255, 255, 255, int(105 * ck)))
         if t > SECS - .6: img = Image.blend(img, Image.new("RGB", (W, H)), clamp((t - (SECS - .6)) / .55))
         img.save(f"{fr}/{n:04d}.jpg", quality=95)
