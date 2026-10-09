@@ -34,6 +34,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -97,16 +98,27 @@ def find(today):
     for s in SERIALS:
         eps = known.setdefault(s["show"], {})
         label, handles, name = s["source"]
-        _, chan = channel_id(handles, name)
+        # YouTube sometimes answers a request with an empty page (the first live run found nothing on
+        # Green's channel, the test run an hour earlier found most of it), so each look is tried 3 times.
+        chan = None
+        for attempt in range(3):
+            _, chan = channel_id(handles, name)
+            if chan:
+                break
+            time.sleep(5 * (attempt + 1))
         if chan:
             show = s["show"].replace("-", " ")
-            for q in (f"{show} episode {n:02d}", f"{show} episode {n}", f"{show} episode"):
+            for q in (f"{show} episode {n:02d}", f"{show} episode {n}", f"{show} episode", show):
                 url = f"https://www.youtube.com/channel/{chan}/search?query=" + urllib.parse.quote_plus(q)
-                try:
-                    found = videos_page(url)
-                except Exception as e:  # noqa: BLE001
-                    print(f"  {url}: {e}", file=sys.stderr)
-                    continue
+                found = []
+                for attempt in range(3):
+                    try:
+                        found = videos_page(url)
+                    except Exception as e:  # noqa: BLE001
+                        print(f"  {url}: {e}", file=sys.stderr)
+                    if found:
+                        break
+                    time.sleep(5 * (attempt + 1))
                 for vid, title, mins in found:
                     m = EPISODE_NO.search(title)
                     if not m or NOT_EPISODE.search(title) or key(s["show"]) not in key(title[:60]):
