@@ -39,6 +39,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          mkdir up; for f in qa-out/*; do [ -s "$f" ] && cp "$f" up/; done; ls -la up
           gh release delete qa-default-settings --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
           gh release create qa-default-settings --repo "$GITHUB_REPOSITORY" --prerelease --latest=false \
-            --target "$GITHUB_SHA" --title "QA default settings" --notes "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" qa-out/*
+            --target "$GITHUB_SHA" --title "QA default settings" --notes "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" up/*
