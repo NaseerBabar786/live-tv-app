@@ -1,11 +1,23 @@
 {
- "updated": "2026-10-09T18:28Z",
+ "updated": "2026-10-09T21:25Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "WssmZ-dN0Sw",
+   "title": "Rare tropical storm takes aim at California coast | #tropicalstorm",
+   "channel": "The Weather Network",
+   "published": 1791576028
+  },
+  {
+   "id": "qQjJv0PAYzM",
+   "title": "7.7 magnitude earthquake strikes Panama Friday afternoon | #earthquake",
+   "channel": "The Weather Network",
+   "published": 1791573162
+  },
   {
    "id": "_I5amnCUNvI",
    "title": "Feel like you're seeing more spiders this fall? Here's why",
@@ -83,18 +95,6 @@
    "title": "October's drastic daylight change across Canada | #darkwinter",
    "channel": "The Weather Network",
    "published": 1791487806
-  },
-  {
-   "id": "tQaTaMiiJJ4",
-   "title": "'Rat Patrol' How Alberta is working to stay rat free | #Alberta",
-   "channel": "The Weather Network",
-   "published": 1791482427
-  },
-  {
-   "id": "CsO1do54McY",
-   "title": "Exploring the secret microclimates of fall at a pumpkin patch",
-   "channel": "The Weather Network",
-   "published": 1791482418
   },
   {
    "id": "KsNciDVzeXU",
