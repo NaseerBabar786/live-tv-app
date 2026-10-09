@@ -437,6 +437,10 @@ fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> U
                 onDismiss()
                 viewModel.setPlaylistSource(it)
             },
+            onProfileChanged = {
+                onDismiss()
+                viewModel.profileChanged()
+            },
         )
     }
 }

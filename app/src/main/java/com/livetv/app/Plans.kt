@@ -55,6 +55,8 @@ object Plans {
         Themes("themes", "Themes"),
         FullScreen("full", "Full screen"),
         Favorites("favorites", "Favourites"),
+        Guide("guide", "TV guide & reminders"),
+        Profiles("profiles", "Family profiles"),
         TwoDevices("devices", "2 devices");
 
         companion object {

@@ -82,6 +82,8 @@ fun SettingsDialog(
     onShowMtaChange: (Boolean) -> Unit,
     onDismiss: () -> Unit,
     onSave: (String) -> Unit,
+    /** Another family profile was picked: the app reads its favourites and languages. */
+    onProfileChanged: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val appVersion = remember {
@@ -101,6 +103,24 @@ fun SettingsDialog(
     var addingLink by rememberSaveable { mutableStateOf(false) }
     var pickingCity by rememberSaveable { mutableStateOf(false) }
     var pickingTheme by rememberSaveable { mutableStateOf(false) }
+    var settingSleep by rememberSaveable { mutableStateOf(false) }
+    var pickingWidgets by rememberSaveable { mutableStateOf(false) }
+    var editingProfiles by rememberSaveable { mutableStateOf(false) }
+    if (settingSleep) {
+        com.livetv.app.extras.SleepTimerDialog(onDismiss = { settingSleep = false })
+        return
+    }
+    if (pickingWidgets) {
+        com.livetv.app.extras.WidgetsDialog(onDismiss = { pickingWidgets = false })
+        return
+    }
+    if (editingProfiles) {
+        com.livetv.app.extras.ProfilesDialog(
+            onSwitch = { id -> if (com.livetv.app.extras.Profiles.switchTo(id)) onProfileChanged() },
+            onDismiss = { editingProfiles = false },
+        )
+        return
+    }
     if (pickingTheme) {
         ThemePicker(onDismiss = { pickingTheme = false })
         return
@@ -243,6 +263,23 @@ fun SettingsDialog(
                 ThemeSection(onPick = { pickingTheme = true })
                 HorizontalDivider()
                 WeatherCitySection(onPick = { pickingCity = true })
+
+                HorizontalDivider()
+                Text("TV extras", fontWeight = FontWeight.Bold)
+                val sleepAt by com.livetv.app.extras.Extras.sleepAt.collectAsState()
+                OutlinedButton(onClick = { settingSleep = true }, modifier = Modifier.fillMaxWidth().focusGlow()) {
+                    Text(if (sleepAt != null) "💤 Sleep timer: on" else "💤 Sleep timer")
+                }
+                OutlinedButton(onClick = { pickingWidgets = true }, modifier = Modifier.fillMaxWidth().focusGlow()) {
+                    Text("🧩 Widgets on full screen")
+                }
+                val profile by com.livetv.app.extras.Profiles.current.collectAsState()
+                OutlinedButton(
+                    onClick = { if (!Plans.ask("Family profiles", Plans.Feature.Profiles)) editingProfiles = true },
+                    modifier = Modifier.fillMaxWidth().focusGlow(),
+                ) {
+                    Text("👪 Family profiles: " + com.livetv.app.extras.Profiles.all.value.firstOrNull { it.id == profile }?.name.orEmpty())
+                }
 
                 HorizontalDivider()
                 Text("News, CP24 and My Screen", fontWeight = FontWeight.Bold)
