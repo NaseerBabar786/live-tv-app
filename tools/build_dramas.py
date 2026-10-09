@@ -59,6 +59,8 @@ CHANNELS = [
     ("Prasar Bharati Archives", ["@PrasarBharatiArchives", "@prasarbharatiarchive"], "Prasar Bharati Archives", "Hindi"),
     # More free sources the owner approved (2026-10-08, "more free movie sources" thread; probed from Actions).
     ("Aaj Entertainment", ["@AajEntertainment"], "Aaj Entertainment", "Urdu"),
+    # Daily new-sources check, 2026-10-09 (probe run 37920714292).
+    ("LTN Family", ["@LTNFamily", "channel/UCEXUJUcgAw0PVX0y4sAaoCA"], "LTN Family", "Urdu"),
     # FilmRise TV (1950s-60s sitcoms such as That Girl) left on 2026-10-07 with the other old English programmes.
 ]
 
@@ -95,12 +97,12 @@ MIN_SHOW_EPISODE_MINUTES = 30
 RETIRED = {"FilmRise TV"}
 
 # Channels whose single-episode telefilms go under Urdu Movies.
-TELEFILM_CHANNELS = {"ARY Digital", "HUM TV", "Geo Entertainment"}
+TELEFILM_CHANNELS = {"ARY Digital", "HUM TV", "Geo Entertainment", "LTN Family"}
 TELEFILM = re.compile(r"\btele[\s-]?films?\b", re.IGNORECASE)
 MIN_TELEFILM_MINUTES = 45
 TELEFILM_WORDS = re.compile(
     r"\b(tele[\s-]?films?|eid|ul|al|adha|fitr|special|full|new|latest|hd|4k|ary digital|ary|hum tv|hum|"
-    r"har pal geo|geo tv|geo|digital|pakistani|drama|\d{4})\b", re.IGNORECASE)
+    r"har pal geo|geo tv|geo|ltn family|ltn|digital|pakistani|drama|\d{4})\b", re.IGNORECASE)
 
 # Channels where every full video is a show, filed in a folder named after the channel:
 # (name, handles, search, language, shortest video in minutes).
@@ -123,6 +125,7 @@ SHOW_CHANNELS = [
     ("Free Documentary", ["@FreeDocumentary"], "Free Documentary", "English", 20),
     ("Free Documentary Nature", ["@FreeDocumentaryNature"], "Free Documentary - Nature|Free Documentary Nature", "English", 20),
     ("BBC Earth", ["@bbcearth"], "BBC Earth", "English", 40),
+    ("Timeline", ["@TimelineChannel", "channel/UC88lvyJe7aHZmcvzvubDFRg"], "Timeline - World History|Timeline", "English", 20),
 ]
 # Cartoons from their makers' own channels, filed under Kids.
 KIDS_CHANNELS = [
@@ -143,11 +146,18 @@ KIDS_CHANNELS = [
     ("Teletubbies", ["@teletubbies"], "Teletubbies", "English", 10),
     ("Blippi", ["@Blippi"], "Blippi", "English", 10),
     ("Super Wings", [], "Super Wings", "English", 10),
+    ("Shemaroo Kids", ["@ShemarooKids", "channel/UC9iBBFfq7L3ipvodSLrU8gQ"], "Shemaroo Kids", "Hindi", 10),
+    ("LEGO Ninjago", ["@LEGO", "channel/UCP-Ng5SXUEt0VE-TXqRdL6g"], "LEGO", "English", 15),
 ]
 # Channels that also post other things: only titles with these words are kept.
 ONLY_TITLES = {
     "Pokémon": re.compile(r"full episode", re.IGNORECASE),
     "Hell's Kitchen": re.compile(r"full episode|marathon|season \d", re.IGNORECASE),
+    "LEGO Ninjago": re.compile(r"full episode", re.IGNORECASE),
+}
+# Channels that also post things that don't fit the Library: titles with these words are left out.
+SKIP_TITLES = {
+    "Timeline": re.compile(r"uncensored|footage|murder|serial killer|killer|massacre|execution", re.IGNORECASE),
 }
 # Muslim Television Ahmadiyya's own channels; their videos go to MTA.m3u only, which Live
 # TV shows only when the viewer turns MTA on in Settings.
@@ -195,6 +205,7 @@ MOVIE_CHANNELS = [
     ("Pen Movies", ["@PenMovies"], "Pen Movies"),
     ("RKD Studios", ["@RKDStudios"], "RKD Studios"),
     ("Aditya Movies", ["@AdityaMovies"], "Aditya Movies"),
+    ("Wamindia Movies", ["@WamindiaMovies", "channel/UCt7_pnSRPKU3bu2GqmgH8gQ"], "Wamindia"),
 ]
 MIN_MOVIE_MINUTES = 80
 DUBBED = re.compile(r"hindi\s+dubbed", re.IGNORECASE)
@@ -218,6 +229,9 @@ FILM_CHANNELS = [
     # More free sources the owner approved (2026-10-08, "more free movie sources" thread; probed from Actions).
     ("ARY Films", ["@ARYFilms"], "ARY Films", "Urdu"),
     ("NH Studioz", ["@NHStudioz"], "NH Studioz", "Hindi"),
+    # Daily new-sources check, 2026-10-09 (probe run 37920714292).
+    ("Zee Classic", ["channel/UC3ux-QuJyWnEuEjzksKgnpQ"], "Zee Classic", "Hindi"),
+    ("Goldmines Bollywood", ["@GoldminesBollywood", "channel/UCOF23vGxkbhN4wl7ROrgXsA"], "Goldmines Bollywood", "Hindi"),
     ("Shemaroo Punjabi", ["@ShemarooPunjabi"], "Shemaroo Punjabi", "Punjabi"),
     ("Lokdhun Punjabi", [], "Lokdhun Punjabi|Lokdhun", "Punjabi"),
     ("Rhythm Boyz", ["@RhythmBoyz"], "Rhythm Boyz", "Punjabi"),
@@ -602,6 +616,8 @@ def channel_shows(kept, today, channels, genre):
                 continue
             if name in ONLY_TITLES and not ONLY_TITLES[name].search(title):
                 continue
+            if name in SKIP_TITLES and SKIP_TITLES[name].search(title):
+                continue
             if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
                 continue
             if vid in kept:
@@ -923,7 +939,8 @@ def main():
         urls = [f"https://www.youtube.com/channel/{cid}/videos",
                 f"https://www.youtube.com/channel/{cid}/search?query=episode"]
         if name in TELEFILM_CHANNELS:
-            urls.append(f"https://www.youtube.com/channel/{cid}/search?query=telefilm")
+            urls += [f"https://www.youtube.com/channel/{cid}/search?query=telefilm",
+                     f"https://www.youtube.com/channel/{cid}/search?query=full+telefilm"]
         for url in urls:
             try:
                 for v in videos_page(url):
