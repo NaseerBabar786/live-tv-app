@@ -25,8 +25,8 @@ class VodShelvesTest {
         assertEquals(2, urdu.series.single().episodes.size)
         assertEquals(listOf("Tamasha"), urdu.shows.map { it.name })
         assertEquals(listOf("Pushpa"), shelves.getValue(Vod.Language.HINDI).movies.map { it.name })
-        // Punjabi is movies only.
-        assertEquals(true, shelves.getValue(Vod.Language.PUNJABI).isEmpty)
+        // Punjabi serials and shows are listed too (owner, PR #353).
+        assertEquals(listOf("Jatt"), shelves.getValue(Vod.Language.PUNJABI).series.map { it.name })
     }
 
     @Test

@@ -457,7 +457,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         folderLists.getValue(section).filter { it.newEpisodes(weekSince) > 0 }.map { section to it }
                     }
                     val sections = Vod.Section.entries.filter { section ->
-                        section == Vod.Section.MOVIES || (language != Vod.Language.PUNJABI && shelf.folders(section).isNotEmpty())
+                        section == Vod.Section.MOVIES || shelf.folders(section).isNotEmpty()
                     }
                     val groups = if (weekTab) emptyList() else (if (tab == Vod.Section.MOVIES) movies.mapNotNull { it.group } else
                         folderLists.getValue(tab).mapNotNull { it.group })
