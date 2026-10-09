@@ -1,11 +1,7 @@
 #EXTM3U
 # Pakistani channels' own 24/7 live streams on their YouTube channels.
-#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/gSXTqfN2n0M/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",Geo News
-https://www.youtube.com/watch?v=gSXTqfN2n0M
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/5FW9ZVMR_7M/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",ARY News
 https://www.youtube.com/watch?v=5FW9ZVMR_7M
-#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/_4YqCis0x3A/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",Express News
-https://www.youtube.com/watch?v=_4YqCis0x3A
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/kZK2BiSdC68/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",92 News
 https://www.youtube.com/watch?v=kZK2BiSdC68
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/cleNtpjod6Q/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",Hum News
