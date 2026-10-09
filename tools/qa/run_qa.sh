@@ -97,6 +97,8 @@ shot popup-1plus-list
 check "pop-up shows over 1+List" "Message from the Cable TV team"
 check "message text shows" "Your Gold package ends next week"
 check "quick answers show" "👍 OK, got it" "OK, got it"
+# Taps earlier put the emulator in touch mode; a real remote never is. One arrow press leaves it (Left stays on the first answer).
+key KEYCODE_DPAD_LEFT; shot focus-on-first-answer
 key KEYCODE_DPAD_CENTER
 sleep 1; shot after-quick-answer
 check "answer sent" "Sent to the Cable TV team"
@@ -126,6 +128,7 @@ note "top: $(top_activity)"
 message "Fourth message over a YouTube channel."
 shot popup-web-channel
 check "pop-up over the YouTube channel window" "Message from the Cable TV team"
+key KEYCODE_DPAD_LEFT; shot web-focus
 key KEYCODE_DPAD_CENTER; sleep 1; shot web-after-answer
 sleep 2; shot web-popup-gone
 nocheck "web pop-up closes after answering" "Message from the Cable TV team"
