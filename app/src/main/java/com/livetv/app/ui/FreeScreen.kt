@@ -46,6 +46,19 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import android.view.TextureView
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -155,17 +168,15 @@ private fun NextPrayer() {
     Text("Next prayer:  $name $shown", color = PrayerGreen, fontSize = 15.sp, maxLines = 1)
 }
 
-/** Our own promos, one at a time, the next every 10 seconds. */
+/** Our own promos, one at a time: the next every 10 seconds, after the Spark ad once it has played through. */
 @Composable
 private fun PromoSlides(modifier: Modifier) {
     var turn by remember { mutableIntStateOf(0) }
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(10_000)
-            turn++
-        }
-    }
     val slide = Math.floorMod(turn, SLIDES)
+    LaunchedEffect(turn) {
+        delay(if (slide == AD_SLIDE) AD_SLIDE_MS else 10_000)
+        turn++
+    }
     AnimatedContent(
         targetState = slide,
         transitionSpec = { fadeIn(tween(500)) togetherWith fadeOut(tween(500)) },
@@ -174,15 +185,91 @@ private fun PromoSlides(modifier: Modifier) {
     ) { s ->
         when (s) {
             0 -> SparkSlide()
-            1 -> SparkShowsSlide()
-            2 -> AppsSlide()
-            3 -> GoldSlide()
+            AD_SLIDE -> SparkAdSlide()
+            2 -> SparkShowsSlide()
+            3 -> AppsSlide()
+            4 -> GoldSlide()
             else -> ShareSlide()
         }
     }
 }
 
-private const val SLIDES = 5
+private const val SLIDES = 6
+
+/** The Spark TV network montage (owner approved 2026-10-09 for the next version): 30 s, plus a moment to start. */
+private const val AD_SLIDE = 1
+private const val AD_SLIDE_MS = 33_000L
+private const val SPARK_AD = "https://tv.bulkbazaar.ca/media/spark-montage.mp4"
+private const val SPARK_AD_POSTER = "https://tv.bulkbazaar.ca/media/spark-montage-poster.jpg"
+
+/**
+ * The Spark network ad, playing silently in the promo box (the channel keeps the sound). Its picture shows until
+ * the video starts; the player is let go as soon as the slide moves on, so the TV decodes it only for these 30 s.
+ */
+@Composable
+private fun SparkAdSlide() {
+    val context = LocalContext.current
+    var showing by remember { mutableStateOf(false) }
+    val player = remember {
+        ExoPlayer.Builder(context).build().apply {
+            volume = 0f
+            trackSelectionParameters = trackSelectionParameters.buildUpon()
+                .setMaxVideoSize(1280, 720)
+                .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, true)
+                .build()
+            addListener(object : Player.Listener {
+                override fun onRenderedFirstFrame() { showing = true }
+                override fun onPlayerError(error: PlaybackException) { showing = false }
+            })
+            setMediaItem(MediaItem.fromUri(SPARK_AD))
+            playWhenReady = true
+            prepare()
+        }
+    }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_STOP -> player.pause()
+                Lifecycle.Event.ON_START -> player.play()
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            player.release()
+        }
+    }
+    Box(
+        Modifier
+            .fillMaxSize()
+            .clip(CardShape)
+            .background(Color.Black)
+            .border(1.dp, Color(0xFF7846C8), CardShape),
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f), contentAlignment = Alignment.Center) {
+            AsyncImage(model = SPARK_AD_POSTER, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+            AndroidView(
+                factory = { ctx -> TextureView(ctx).also { player.setVideoTextureView(it) } },
+                onRelease = { player.clearVideoTextureView(it) },
+                modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (showing) 1f else 0f },
+            )
+        }
+        Text(
+            "Spark TV",
+            color = Color.White,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(6.dp)
+                .background(Color.Black.copy(alpha = 0.6f), ChipShape)
+                .padding(horizontal = 6.dp, vertical = 2.dp),
+        )
+    }
+}
 
 @Composable
 private fun Slide(top: Color, edge: Color, content: @Composable () -> Unit) {
@@ -212,7 +299,7 @@ private fun SparkSlide() = Slide(Color(0xFF2A1E4C), Color(0xFF7846C8)) {
             Box(Modifier.weight(1f)) { Logo(b, 16.dp) }
         }
     }
-    Text("+ 7,800 channels from around the world", color = Muted, fontSize = 12.sp, maxLines = 1)
+    Text("15 channels of our own, free on Cable TV", color = Muted, fontSize = 12.sp, maxLines = 1)
 }
 
 @Composable
