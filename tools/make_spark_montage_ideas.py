@@ -863,6 +863,149 @@ def news(clips, outro):
 
     return frame
 
+# News openers 2 and 3 (owner, 2026-10-09 22:23: the first one goes on air for now; make a couple of nicer ones).
+# Same rules: real Spark TV News footage only, English + Urdu words; both end on the same SPARK TV NEWS title card.
+CLOCK_WIN = [("to-sky", "TORONTO", "ٹورنٹو"), ("train", "MUMBAI", "ممبئی"), ("cricket", "SPORTS", "کھیل"), ("clouds", "WEATHER", "موسم")]
+WIPES = [("to-sky", "TORONTO", "ٹورنٹو"), ("street", "MUMBAI", "ممبئی"), ("cricket", "CRICKET", "کرکٹ"), ("clouds", "WEATHER", "موسم"),
+         ("city-lapse", "WORLD", "دنیا"), ("stadium", "SPORTS", "کھیل")]
+TICKER = "LIVE ON SPARK TV NEWS   ·   اسپارک ٹی وی نیوز   ·   TORONTO   ·   ٹورنٹو   ·   MUMBAI   ·   ممبئی   ·   CRICKET   ·   کرکٹ   ·   WEATHER   ·   موسم   ·   "
+
+
+def bilingual_tag(d, x, y, e_txt, u_txt, en, ur, a=1.0):
+    """White English box + red Urdu box, as in the first opener's lower third."""
+    ew = d.textlength(e_txt, font=en) + 50; uw = d.textlength(u_txt, font=ur, direction="rtl", language="ur") + 44
+    d.rectangle([x, y, x + ew, y + 66], fill=(255, 255, 255, int(240 * a)))
+    d.text((x + 25, y + 33), e_txt, font=en, fill=(20, 22, 34, int(255 * a)), anchor="lm")
+    d.rectangle([x + ew, y, x + ew + uw, y + 66], fill=NEWS_RED + (int(240 * a),))
+    urdu_text(d, (x + ew + uw / 2, y + 28), u_txt, ur, (255, 255, 255, int(255 * a)), anchor="mm")
+
+
+def news_clock(clips, outro):
+    """Opener 2, the news clock: a clock face counts down to the hour while four windows of the day's places open
+    around it, one per beat; the hand reaches twelve as the SPARK TV NEWS card comes in. Nothing zooms or spins
+    except the clock's own hand."""
+    title = news(clips, outro)
+    en = ImageFont.truetype(M.WORD_FONT, 40); ur = ImageFont.truetype(URDU, 36)
+    mid_en = ImageFont.truetype(M.WORD_FONT, 64); mid_ur = ImageFont.truetype(URDU, 50)
+    R = 250; cx, cy = W // 2, H // 2
+    ww, wh = 600, 338
+    spots = [(70, 90), (W - 70 - ww, 90), (70, H - 90 - wh - 40), (W - 70 - ww, H - 90 - wh - 40)]
+    circ = Image.new("L", (2 * R, 2 * R), 0); ImageDraw.Draw(circ).ellipse([0, 0, 2 * R - 1, 2 * R - 1], fill=255)
+
+    def frame(t):
+        if t >= NEWS_END: return title(t)
+        bg = reel_frame(clips, "night-earth", t, W // 8, H // 8)
+        f = up(blur(arr(bg), 2)) * .25 + DARK * .75
+        lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        # four windows, one per beat; at the end they slide back out to the sides
+        out_k = clamp((t - 10.8) / 1.2)
+        for i, (nm, e_txt, u_txt) in enumerate(CLOCK_WIN):
+            k = clamp((t - (.8 + 2.3 * i)) / .6)
+            if k <= 0: continue
+            x0, y0 = spots[i]; side = -1 if x0 < W // 2 else 1
+            x = int(x0 + side * (1 - out_cubic(k)) * 160 + side * in_cubic(out_k) * 900)
+            a = out_cubic(k)
+            im = reel_frame(clips, nm, t + i, ww, wh).convert("RGBA"); im.putalpha(int(255 * a))
+            lay.alpha_composite(im, (x, y0))
+            d.rectangle([x, y0 + wh, x + ww, y0 + wh + 6], fill=NEWS_RED + (int(255 * a),))
+            bilingual_tag(d, x + 18, y0 + wh - 84, e_txt, u_txt, en, ur, a)
+        # the clock face: the world turning inside it, white ring, red mark at twelve, the hand sweeping to twelve
+        ck = out_cubic(clamp(t / .8))
+        face = reel_frame(clips, "night-earth", t, 2 * R, 2 * R).convert("RGBA")
+        face = Image.blend(face, Image.new("RGBA", face.size, (6, 7, 16, 255)), .45)
+        face.putalpha(circ.point(lambda v: int(v * ck)))
+        lay.alpha_composite(face, (cx - R, cy - R))
+        d.ellipse([cx - R, cy - R, cx + R, cy + R], outline=(255, 255, 255, int(255 * ck)), width=10)
+        for m in range(60):
+            ang = math.radians(m * 6); r0 = R - (34 if m % 5 == 0 else 18)
+            col = NEWS_RED + (int(255 * ck),) if m == 0 else (255, 255, 255, int((230 if m % 5 == 0 else 120) * ck))
+            d.line([cx + r0 * math.sin(ang), cy - r0 * math.cos(ang), cx + (R - 12) * math.sin(ang), cy - (R - 12) * math.cos(ang)],
+                   fill=col, width=8 if m % 5 == 0 else 3)
+        d.text((cx, cy - 64), "NEWS", font=mid_en, fill=(255, 255, 255, int(255 * ck)), anchor="mm")
+        urdu_text(d, (cx, cy + 50), "خبریں", mid_ur, (255, 255, 255, int(255 * ck)), anchor="mm")
+        ang = math.radians(-360 + 360 * clamp(t / NEWS_END))     # one sweep, landing on twelve
+        hl = R - 40
+        d.line([cx - 30 * math.sin(ang), cy + 30 * math.cos(ang), cx + hl * math.sin(ang), cy - hl * math.cos(ang)],
+               fill=NEWS_RED + (int(255 * ck),), width=8)
+        d.ellipse([cx - 14, cy - 14, cx + 14, cy + 14], fill=NEWS_RED + (int(255 * ck),))
+        f, _ = comp(f, lay)
+        pk = (t - (NEWS_END - .35)) / .35                        # a red pulse as the hand reaches twelve
+        if 0 < pk < 1: f = f + np.array(NEWS_RED, np.float32) / 255 * .5 * pk
+        return f * (.45 + .55 * VIGN)
+
+    return frame
+
+
+def news_wipes(clips, outro):
+    """Opener 3, headline wipes: full-screen news pictures, each wiped in by a red bar from left to right, a big
+    English word with its Urdu under it, and a LIVE ticker running along the bottom."""
+    title = news(clips, outro)
+    big = ImageFont.truetype(M.WORD_FONT, 120); ur = ImageFont.truetype(URDU, 76)
+    tk_en = ImageFont.truetype(M.WORD_FONT, 34); tk_ur = ImageFont.truetype(URDU, 34); tag = ImageFont.truetype(M.WORD_FONT, 34)
+    small = ImageFont.truetype(M.WORD_FONT, 36)
+    SHOT = 11.7 / len(WIPES); BAR = 70
+    # the ticker strip is drawn once, English and Urdu pieces side by side, then scrolled
+    pieces = [p for p in TICKER.split("   ·   ") if p]
+    strip_w = 0; meas = ImageDraw.Draw(Image.new("RGBA", (10, 10)))
+    widths = []
+    for p in pieces:
+        isur = any("؀" <= ch <= "ۿ" for ch in p)
+        w = meas.textlength(p, font=tk_ur, direction="rtl", language="ur") if isur else meas.textlength(p, font=tk_en)
+        widths.append((p, isur, w)); strip_w += w + 70
+    strip = Image.new("RGBA", (int(strip_w), 60), (0, 0, 0, 0)); sd = ImageDraw.Draw(strip); x = 0
+    for p, isur, w in widths:
+        if isur: urdu_text(sd, (x, 8), p, tk_ur, (255, 255, 255, 255))
+        else: sd.text((x, 30), p, font=tk_en, fill=(255, 255, 255, 255), anchor="lm")
+        x += w + 20; sd.ellipse([x + 15, 26, x + 23, 34], fill=NEWS_RED + (255,)); x += 50
+
+    def shot(i, t):
+        nm, e_txt, u_txt = WIPES[min(i, len(WIPES) - 1)]
+        return reel_frame(clips, nm, t + i * .4)
+
+    def frame(t):
+        if t >= NEWS_END: return title(t)
+        i = int(t / SHOT); k = (t - i * SHOT) / .45             # the wipe takes the first .45 s of each shot
+        cur = shot(i, t)
+        if i > 0 and k < 1 or t >= 11.7:
+            prev = shot(i - 1, t) if t < 11.7 else shot(len(WIPES) - 1, t)
+            kk = clamp(k) if t < 11.7 else clamp((t - 11.7) / .8)
+            edge = int(-BAR + (W + 2 * BAR) * inout(kk))
+            img = prev.copy()
+            if t < 11.7: img.paste(cur.crop((0, 0, max(0, edge), H)), (0, 0))
+            else: ImageDraw.Draw(img).rectangle([0, 0, max(0, edge), H], fill=NEWS_RED)
+            ImageDraw.Draw(img).rectangle([edge - BAR, 0, edge, H], fill=NEWS_RED)
+            cur = img
+        f = arr(cur) * .82
+        lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        if t < 11.7:
+            j = min(i, len(WIPES) - 1); _, e_txt, u_txt = WIPES[j]
+            wk = clamp((t - j * SHOT - .3) / .35); a = wk * (1 - clamp((t - (j + 1) * SHOT + .1) / .1))
+            if a > 0:
+                # the English word slides up, the Urdu sits under it in a red box
+                y = H - 400 + int((1 - out_cubic(wk)) * 40)
+                d.text((110, y), e_txt, font=big, fill=(255, 255, 255, int(255 * a)), anchor="ls")
+                uw = d.textlength(u_txt, font=ur, direction="rtl", language="ur") + 60
+                d.rectangle([110, y + 22, 110 + uw, y + 132], fill=NEWS_RED + (int(235 * a),))
+                urdu_text(d, (110 + uw / 2, y + 70), u_txt, ur, (255, 255, 255, int(255 * a)), anchor="mm")
+        # the corner name and the LIVE ticker stay on screen the whole time
+        ia = clamp(t / .5)
+        d.text((80, 70), "SPARK TV NEWS", font=small, fill=(255, 255, 255, int(235 * ia)), anchor="lm")
+        d.rectangle([80, 96, 80 + d.textlength("SPARK TV NEWS", font=small), 102], fill=NEWS_RED + (int(255 * ia),))
+        by = H - 110
+        d.rectangle([0, by, W, by + 70], fill=(14, 16, 32, int(235 * ia)))
+        lw = d.textlength("LIVE", font=tag) + 90
+        sx = int(lw + 30 - (t * 160) % (strip.width))
+        for rep in range(3):
+            if sx + rep * strip.width < W: lay.alpha_composite(strip, (sx + rep * strip.width, by + 5))
+        d.rectangle([0, by, lw + 10, by + 70], fill=NEWS_RED + (int(255 * ia),))
+        d.ellipse([28, by + 27, 44, by + 43], fill=(255, 255, 255, int(255 * ia * (.5 + .5 * (math.sin(t * 6) > 0)))))
+        d.text((58, by + 35), "LIVE", font=tag, fill=(255, 255, 255, int(255 * ia)), anchor="lm")
+        f, _ = comp(f, lay)
+        if t >= 11.7: f = arr(cur) * .9                         # the last wipe paints the screen red, into the card
+        return f * (.5 + .5 * VIGN)
+
+    return frame
+
 
 def make(kind, out):
     print("fetching clips", flush=True)
@@ -884,6 +1027,9 @@ def make(kind, out):
     elif kind == "news":
         names = {n for b in NEWS_BANDS for n in b} | set(NEWS_WALL) | {"sintel-cliff"}
         tagline = ""
+    elif kind in ("news2", "news3"):
+        names = {n for n, _, _ in (CLOCK_WIN if kind == "news2" else WIPES)} | set(NEWS_WALL) | {"night-earth", "sintel-cliff"}
+        tagline = ""
     elif kind == "gallery":
         names = {n for n, _ in GALLERY} | {"sintel-cliff"}
         tagline = "FROM TORONTO TO MUMBAI   ·   ALL ON SPARK"
@@ -893,18 +1039,18 @@ def make(kind, out):
     assert kind in ("languages", "carousel", "remote", "mosaic") or not names & AI_MADE, "ideas 5 and 6 use no AI-made video"
     clips = {n: Clip(n, 9.0 if n == "sintel-cliff" else 3.2) for n in names}
     outro = Outro(tagline, clips["sintel-cliff"])
-    body = {"languages": languages, "carousel": carousel, "remote": remote, "mosaic": mosaic, "panels": panels, "fly": flythrough, "gallery": gallery, "news": news}[kind](clips, outro)
+    body = {"languages": languages, "carousel": carousel, "remote": remote, "mosaic": mosaic, "panels": panels, "fly": flythrough, "gallery": gallery, "news": news, "news2": news_clock, "news3": news_wipes}[kind](clips, outro)
     bug = Image.open(M.BUG).convert("RGBA"); bug = fade_img(bug.resize((230, int(230 * bug.height / bug.width)), Image.LANCZOS), .8)
     cf = ImageFont.truetype(FONT, 21)
     fr = tempfile.mkdtemp()
     for n in range(N):
         t = n / FPS
-        f = outro.frame(t) if t >= OUT and kind != "news" else body(t)
+        f = outro.frame(t) if t >= OUT and not kind.startswith("news") else body(t)
         img = to_img(grain(f, n))
-        if 1.5 <= t < (NEWS_END - .3 if kind == "news" else OUT - .3): img.paste(bug, (W - 60 - bug.width, 50), bug)
+        if 1.5 <= t < (NEWS_END - .3 if kind.startswith("news") else OUT - .3): img.paste(bug, (W - 60 - bug.width, 50), bug)
         ck = clamp((t - OUT - 3.6) / .5) * (1 - clamp((t - (SECS - .7)) / .4))
         if ck > 0:
-            d = ImageDraw.Draw(img, "RGBA"); txt = credit("feelgood") + ("  ·  Clips: Spark TV News footage, Wikimedia Commons" if kind == "news" else "  ·  Clips: Blender Foundation (CC BY), public domain, Spark TV")
+            d = ImageDraw.Draw(img, "RGBA"); txt = credit("feelgood") + ("  ·  Clips: Spark TV News footage, Wikimedia Commons" if kind.startswith("news") else "  ·  Clips: Blender Foundation (CC BY), public domain, Spark TV")
             d.text((W - 44 - d.textlength(txt, font=cf), H - 56), txt, font=cf, fill=(255, 255, 255, int(105 * ck)))
         if t > SECS - .6: img = Image.blend(img, Image.new("RGB", (W, H)), clamp((t - (SECS - .6)) / .55))
         img.save(f"{fr}/{n:04d}.jpg", quality=95)
