@@ -52,4 +52,18 @@ class NamazTest {
         assertEquals(NamazProgress(), NamazProgress.fromJson(null))
         assertEquals(NamazProgress(), NamazProgress.fromJson("s=;d=;p="))
     }
+
+    @Test
+    fun partVerseWordIsInTheAppsQuranText() {
+        val quran = java.io.File("src/main/assets/quran/quran.json").readText()
+        Namaz.recitations.filter { it.fromWord.isNotEmpty() }.forEach { assertTrue(it.id, it.fromWord in quran) }
+    }
+
+    @Test
+    fun teacherVoicesMatchTheRecordings() {
+        val script = java.io.File("../tools/build_namaz_audio.py").readText()
+        Namaz.voices.filter { it.id != Namaz.DEVICE }.forEach { assertTrue(it.id, "(\"${it.id}\"," in script) }
+        assertEquals(null, Namaz.audioUrl(Namaz.DEVICE, Namaz.recitation("thana")))
+        assertEquals("https://tv.bulkbazaar.ca/quran/namaz/hamed/thana.mp3", Namaz.audioUrl("hamed", Namaz.recitation("thana")))
+    }
 }
