@@ -1,6 +1,6 @@
 {
  "name": "Spark Comedy (comedyur)",
- "built": "2026-10-09 02:10 UTC",
+ "built": "2026-10-09 07:05 UTC",
  "videos": [
   {
    "id": "zCv56QVyF3k",
@@ -139,14 +139,6 @@
    "lang": "ur"
   },
   {
-   "id": "A5dLb0Olh3Q",
-   "title": "Bulbulay Season 2 Episode 336 | 3 Jan 2026 | Comedy | ARY Digital Drama",
-   "label": "Bulbulay",
-   "mins": 20.95,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
    "id": "SI5x3njmdpk",
    "title": "Bulbulay Season 2 Episode 373 | 12 September 2026 | ARY Digital",
    "label": "Bulbulay",
@@ -159,6 +151,14 @@
    "title": "Bulbulay Ep 10 - ARY Digital Drama",
    "label": "Bulbulay",
    "mins": 21.3,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "A5dLb0Olh3Q",
+   "title": "Bulbulay Season 2 Episode 336 | 3 Jan 2026 | Comedy | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 20.95,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -211,10 +211,10 @@
    "lang": "ur"
   },
   {
-   "id": "Qepz3APL9Ow",
-   "title": "Fun With Sohail Ahmad | Imran Ashraf | Mazaq Raat Season 2 | Ep 01 | Honey Albela | Sakhawat Naz",
+   "id": "QBDteYXpNKE",
+   "title": "Shahbaz Gill & Hareem Farooq | Eid Special | Mazaaq Raat 26 May 2020 | مذاق رات | Dunya News | MR1",
    "label": "Mazaaq Raat",
-   "mins": 31.8,
+   "mins": 37.05,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -227,6 +227,22 @@
    "lang": "ur"
   },
   {
+   "id": "B-NHlffDxF4",
+   "title": "'Didi Tera Devar Deewana....' | Faisal Ramay Hilarious Comedy in Mazaaq Raat | Hira Mani Laughing",
+   "label": "Mazaaq Raat",
+   "mins": 8.783333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "FRc7m_O1dOc",
+   "title": "Sohail Ahmed Special | Mazaaq Raat 27 May 2020 | مذاق رات | Dunya News | MR1",
+   "label": "Mazaaq Raat",
+   "mins": 34.35,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
    "id": "BPAO05w2_lE",
    "title": "Amanat Chan and Anousha Ali | Mazaaq Raat 6 July 2022 | مذاق رات | Dunya News",
    "label": "Mazaaq Raat",
@@ -235,82 +251,50 @@
    "lang": "ur"
   },
   {
-   "id": "a2Ms-UmhHDQ",
-   "title": "Sohail Ahmed VS Nirgoli | Juggat Muqabla | Mazaaq Raat | Dunya News | HJ2E",
+   "id": "dFamKfLawvg",
+   "title": "Goshi 2 Non-Stop Comedy | Mazaq Raat | Imran Ashraf | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 8.916666666666666,
+   "mins": 17.8,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "KhqG2_ShtqY",
-   "title": "Qaisar Piya Flirting With Aima Baig | Mazaaq Raat | Dunya News | MR1",
+   "id": "BYpycexq988",
+   "title": "Nirgoli Ki Jugtain | Moammar Rana | Ukasha Gul Ashraf | Mazaaq Raat EID Special",
    "label": "Mazaaq Raat",
-   "mins": 10.483333333333333,
+   "mins": 5.033333333333333,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "CRjFk3nTa10",
-   "title": "Real Basant Fun Begins! Abrar Ul Haq’s Explosive Entry | Jatt Charya Kacheri 😘😎 | Mazaq Raat",
+   "id": "Qepz3APL9Ow",
+   "title": "Fun With Sohail Ahmad | Imran Ashraf | Mazaq Raat Season 2 | Ep 01 | Honey Albela | Sakhawat Naz",
    "label": "Mazaaq Raat",
-   "mins": 10.283333333333333,
+   "mins": 31.8,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "uU2WyCQBkQQ",
-   "title": "Amanat Chan  & Anaya Malik | Mazaaq Raat 4 May 2020 | مذاق رات | Dunya News | MR1",
+   "id": "9eGFA_eQLUc",
+   "title": "Jugtain He Jugtain | Best of Imran Ashraf | Mazaaq Raat Eid Special",
    "label": "Mazaaq Raat",
-   "mins": 35.75,
+   "mins": 10.116666666666667,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "N8J13DimTj4",
-   "title": "Tum Aik Gorakh Dhanda Ho | La ilaha Teri Shan La Wahda Ho | Qawali | Wonderful Lyrics 🥰 Mazaq Raat",
+   "id": "FCluBWCZjA8",
+   "title": "Imran Asraf ky Bhai ki Mazaq Raat mein Kmall Entry | Mazaq Raat | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 4.75,
+   "mins": 6.7,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "o7wA9Pt0yXo",
-   "title": "Pakistan Kabaddi Team Special | Mazaaq Raat 24 February 2020 | مذاق رات | Dunya News",
+   "id": "Od5urmUph6g",
+   "title": "Best Of Nirgoli | Iftekhar Thakur Faryal Mehmood | Mazaaq Raat | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 33.3,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "J2nS5hiqm9A",
-   "title": "Zakoota Jin and Hamoon Jadugar Real Life Story | Haseeb Pasha Shares Moments in Mazaq Raat 😱🔥",
-   "label": "Mazaaq Raat",
-   "mins": 9.583333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "_gc4Z7vHLrg",
-   "title": "Agha Majid And Faisal Ramay Best Comedy Ever! | Mazaaq Raat Season 2 | Dunya News",
-   "label": "Mazaaq Raat",
-   "mins": 7.416666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "xJysjcAVb7Y",
-   "title": "Leo Twins & Sawera Saeed | Mazaaq Raat 15 July 2020 | مذاق رات | Dunya News | MR1",
-   "label": "Mazaaq Raat",
-   "mins": 27.0,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "oEg_3xq6FY8",
-   "title": "Asli Angraiz Vs Pure Desi | Mazaaq Raat 22 October 2018 | مذاق رات | Dunya News",
-   "label": "Mazaaq Raat",
-   "mins": 30.683333333333334,
+   "mins": 17.2,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -323,42 +307,66 @@
    "lang": "ur"
   },
   {
-   "id": "bImEDqvcOF0",
-   "title": "Umer Dar & Mahnoor Khan | Mazaaq Raat 21 August 2019 | مذاق رات | Dunya News",
+   "id": "uU2WyCQBkQQ",
+   "title": "Amanat Chan  & Anaya Malik | Mazaaq Raat 4 May 2020 | مذاق رات | Dunya News | MR1",
    "label": "Mazaaq Raat",
-   "mins": 39.68333333333333,
+   "mins": 35.75,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "omYIHLYaMuk",
-   "title": "Allah Ditta Lonay Wala's Song Allah Mulak Tu Sohni | Saraiki Song | Kamal Kar Diya 😥🔥 | Mazaq Raat",
+   "id": "_gc4Z7vHLrg",
+   "title": "Agha Majid And Faisal Ramay Best Comedy Ever! | Mazaaq Raat Season 2 | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 8.633333333333333,
+   "mins": 7.416666666666667,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "Y_fdkoh_VhI",
-   "title": "Best Of Nirgoli - Nirgoli Ka Jalwa with Iqra Aziz - Mazaaq Raat - Dunya News",
+   "id": "Ju3gbBs2isg",
+   "title": "Agha Majid Ki Jugtain | Mazaaq Raat | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 16.333333333333332,
+   "mins": 11.566666666666666,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "suLO22gkXWg",
-   "title": "Ihsan ul Haq Bajwa & Nida Khan | Mazaaq Raat 9 March 2020 | مذاق رات | Dunya News",
+   "id": "R_ouOaI9q3w",
+   "title": "Amanat Chan Comedian Kay Sath Sath Singer Bhi 😱🔥 Kya Awaz Hai 🥰 Imran Ashraf | Mazaq Raat",
    "label": "Mazaaq Raat",
-   "mins": 32.15,
+   "mins": 9.0,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "MlP3gKFF7lk",
-   "title": "Ahmad Shah Khagga and Hira Faisal | Mazaaq Raat 31 Aug 2022 | مذاق رات | Dunya News",
+   "id": "P5Kx4g4YsPw",
+   "title": "Saleem Albela & Afshan Sarfraz | Mazaaq Raat 18 May 2020 | مذاق رات | Dunya News | MR1",
    "label": "Mazaaq Raat",
-   "mins": 29.55,
+   "mins": 31.383333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "dEr7keriU7Q",
+   "title": "Sawan Aaye Sawan Jaye | Beautiful Voice | Imran Ashraf | Mazaq Raat | Dunya News",
+   "label": "Mazaaq Raat",
+   "mins": 6.333333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "_Of0xJ9eDNE",
+   "title": "Chal Mele Nu Chaliye | Wonderful Performance 👌😍💫 | Amanat Ali & Aoun Ali | Mazaq Raat",
+   "label": "Mazaaq Raat",
+   "mins": 3.1166666666666667,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "xJysjcAVb7Y",
+   "title": "Leo Twins & Sawera Saeed | Mazaaq Raat 15 July 2020 | مذاق رات | Dunya News | MR1",
+   "label": "Mazaaq Raat",
+   "mins": 27.0,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -371,34 +379,18 @@
    "lang": "ur"
   },
   {
-   "id": "gSllG1KKySU",
-   "title": "Imran Khan Ibrar Ul Haq Aur Nirgoli | Mazaaq Raat | Dunya News",
+   "id": "CBHSySLcKiY",
+   "title": "Ranjha Ban Bethy a Heer Koi Na | DJ Aoun's Performance 😎😍 | Hareem Farooq Dancing | Mazaq Raat",
    "label": "Mazaaq Raat",
-   "mins": 10.666666666666666,
+   "mins": 5.066666666666666,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "G_XfOw6kiXM",
-   "title": "Nadeem Baig & Dur-e-Fishan Saleem | Mazaaq Raat 9 June 2021 | مذاق رات | Dunya News | HJ1V",
+   "id": "MlP3gKFF7lk",
+   "title": "Ahmad Shah Khagga and Hira Faisal | Mazaaq Raat 31 Aug 2022 | مذاق رات | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 36.96666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "Bqck7J9nu9c",
-   "title": "Shehbaz Sharif & Sohail Ahmed Azizi - Best of Mazaaq Raat 6 October 2017 - مذاق رات - Dunya News",
-   "label": "Mazaaq Raat",
-   "mins": 32.016666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "fvxvyvVSUPw",
-   "title": "Nirgoli Ki IMF Say Mulaqat - Very Funny Video - Mazaaq Raat - Dunya News",
-   "label": "Mazaaq Raat",
-   "mins": 13.016666666666667,
+   "mins": 29.55,
    "found": "2026-10-09",
    "lang": "ur"
   }

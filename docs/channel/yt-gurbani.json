@@ -1,12 +1,52 @@
 {
  "name": "Spark Gurbani",
- "built": "2026-10-09 02:18 UTC",
+ "built": "2026-10-09 07:12 UTC",
  "videos": [
   {
    "id": "8mv2qmKZKeY",
    "title": "MIL MERE PREETMA JIYO | BHAI SURINDER SINGH (JODHPURI) | MIL MERE PREETMA JIYO",
    "label": "T-Series Shabad Gurbani",
    "mins": 12.116666666666667,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "A5NxILepxhE",
+   "title": "PRABH DORI HATH TUMARE - BHAI JASWANT SINGH || PUNJABI DEVOTIONAL || AUDIO JUKEBOX ||",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 58.166666666666664,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "IAVRkDg-3oY",
+   "title": "So Satgur Pyara Mere Naal Hai | Bhai Lakhvinder Singh Ji-Fatehgarh Sahib Wale",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 7.966666666666667,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "AB0oUMWyHpQ",
+   "title": "Singh Sahib Gyani Ram Singh Ji Khalsa - Anand Sahib - Nitnem",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 12.15,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "urTUrVLPNZQ",
+   "title": "Singh Sahib Gyani Ram Singh Ji Khalsa - Chaupai Sahib - Nitnem",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 5.0,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "muFXPfBEKIk",
+   "title": "Jis Da Sahib Dadha Hoye - Sabh Jag Phir Main Dekhya Har Eko Daata",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 8.216666666666667,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -19,26 +59,10 @@
    "lang": "pa"
   },
   {
-   "id": "mQQGDQ7CuGA",
-   "title": "SUKHMANI SAHIB🙏 | BHAI JASKARAN SINGH PATIALA WALE HAZURI RAGI | SHABAD GURBANI",
+   "id": "tMJMOGKTFoM",
+   "title": "Bhai Rai Singh Ji - Tu Kaahe Doleh Praaniya - Main Jann Tera",
    "label": "T-Series Shabad Gurbani",
-   "mins": 71.1,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
-   "id": "uRh0sXGr-HM",
-   "title": "SRI SUKHMANI SAHIB DA KIRTAN PART-2 | Shabad Gurbani | BHAI HARBANS SINGH JI | Full Audio Song",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 58.25,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
-   "id": "muFXPfBEKIk",
-   "title": "Jis Da Sahib Dadha Hoye - Sabh Jag Phir Main Dekhya Har Eko Daata",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 8.216666666666667,
+   "mins": 15.883333333333333,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -67,6 +91,22 @@
    "lang": "pa"
   },
   {
+   "id": "HsSdeKtQN04",
+   "title": "Full Nitnem Path ( Panj Baniyan ) | Audio Jukebox | Bhai Pushpinder Singh Ji Chahal | Amritt Saagar",
+   "label": "Amritt Saagar",
+   "mins": 78.16666666666667,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "6s37f2TjAt0",
+   "title": "Kirtan Sohila | Nitnem Bani | Punjabi English Hindi Read Along | Makhan Singh Mauji Manguwalia (UK)",
+   "label": "Amritt Saagar",
+   "mins": 5.333333333333333,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
    "id": "YZUT-qNhk0k",
    "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | Friday, November 28, 2025",
    "label": "SGPC",
@@ -75,10 +115,10 @@
    "lang": "pa"
   },
   {
-   "id": "fkL2M31KmyA",
-   "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | Tuesday, December 02, 2025",
+   "id": "6aBZzSKXHpo",
+   "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | November 29, 2025",
    "label": "SGPC",
-   "mins": 12.083333333333334,
+   "mins": 7.633333333333334,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -87,6 +127,38 @@
    "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | November 20, 2025",
    "label": "SGPC",
    "mins": 6.716666666666667,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "u-6UzYNqNKU",
+   "title": "ਸੱਚਖੰਡ ਸ੍ਰੀ ਹਰਿਮੰਦਰ ਸਾਹਿਬ ਵਿਖੇ ਚੰਦੋਆ ਸਾਹਿਬ ਅਤੇ ਰੁਮਾਲਾ ਸਾਹਿਬ ਭੇਟ ਕਰਨ ਦੀ ਪ੍ਰਕਿਰਿਆ ਤੇ ਸਾਂਭ-ਸੰਭਾਲ",
+   "label": "SGPC",
+   "mins": 14.783333333333333,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "mQQGDQ7CuGA",
+   "title": "SUKHMANI SAHIB🙏 | BHAI JASKARAN SINGH PATIALA WALE HAZURI RAGI | SHABAD GURBANI",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 71.1,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "uRh0sXGr-HM",
+   "title": "SRI SUKHMANI SAHIB DA KIRTAN PART-2 | Shabad Gurbani | BHAI HARBANS SINGH JI | Full Audio Song",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 58.25,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "fkL2M31KmyA",
+   "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | Tuesday, December 02, 2025",
+   "label": "SGPC",
+   "mins": 12.083333333333334,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -318,6 +390,14 @@
    "lang": "pa"
   },
   {
+   "id": "YN9SiKx6eY0",
+   "title": "Bhai Harjinder Singh Ji | Aath Pehar Salahe (Video Shabad) | Ohla",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 5.966666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "ek10jXsxmT0",
    "title": "Charan Kamal Tere Dhoye Dhoye Pivaa I BHAI HARJINDER SINGH, BHAI MANINDER SINGH I SHABAD GURBANI",
    "label": "T-Series Shabad Gurbani",
@@ -334,170 +414,10 @@
    "lang": "pa"
   },
   {
-   "id": "YN9SiKx6eY0",
-   "title": "Bhai Harjinder Singh Ji | Aath Pehar Salahe (Video Shabad) | Ohla",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 5.966666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "JW1gk_nKEvs",
    "title": "Bhai Harjinder Singh Ji | Lakh Khushian (Shabad) | Shabad Gurbani",
    "label": "T-Series Shabad Gurbani",
    "mins": 13.25,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "uq8zf9Gx4cA",
-   "title": "KAR BANDE TU BANDGI - BHAI NIRMAL SINGH JI KHALSA || PUNJABI DEVOTIONAL || AUDIO JUKEBOX ||",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 61.266666666666666,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "m1qAbbSAvbo",
-   "title": "KYA MAANGO I BHAI NIRMAL SINGH JI I NADIYAA WAAH VICHHUNIYAA VOL.18 I AUDIO SONG",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 12.583333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "oSlgJnCfYJg",
-   "title": "MERE RAM RAI | BHAI HARJINDER SINGH, BHAI MANINDER SINGH | SHABAD GURBANI",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 59.1,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "qz0yxrBiQSM",
-   "title": "SABH JOT TERI JAGJEEVNA I BHAI HARJINDER SINGH I SABH JOT TERI I SHABAD GURBANI I FULL AUDIO SONG",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 11.783333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "mpGo8vwxkFw",
-   "title": "Jyo Jyo Tera Hukum | Bhai Balwinder Singh Lupoke (Hazoori Ragi Sri Darbar Sahib-Amritsar)",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 7.833333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "gVp1ULqzpMk",
-   "title": "Bhai Harjinder Singh Ji | Nanak Chinta Mat Karho (Shabad) | Toon Mero Pyaro | Shabad Gurbani",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 15.433333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "VrVk9B7Yt0M",
-   "title": "GURMUKH LAHA LEI GAYE | BHAI HARJINDER SINGH (SRINAGAR WALE)",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 9.083333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "AuJT6BARgko",
-   "title": "SATGUR TUMRE KAAJ SAWARE | BHAI DAVINDER SINGH SODHI (LUDHIANA WALE) | WADHAIA",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 9.533333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "KsKMjzUSek0",
-   "title": "Aath Pehar Salahey I Shabad Gurbani I BHAI HARJINDER SINGH (SRINAGAR WALE) I AUDIO | Ohla Vol.77",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 6.016666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "itcSrAVCjQw",
-   "title": "Bhai Sarabjit Singh Ji - Gobind Hum Aise Apradhi - Hum Aise Apradhi",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 13.266666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "zXQOGVM2t1E",
-   "title": "CHARAN KAMAL TERE DHOYE DHOYE PIVAA I SHABAD GURBANI I BHAI HARJINDER SINGH JI I FULL AUDIO SONG",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 10.366666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "zTif1snQcHI",
-   "title": "Bhai Surinder Singh Ji Jodhpuri - Har Jiyo Nimaniyan Tu Maan - Shabad Gurbani",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 10.15,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "jOecW5lbdZM",
-   "title": "Tum Karoh Daya Mere Sai | SHABAD GURBANI | Lyrical | BHAI SATVINDER SINGH, BHAI HARVINDER SINGH JI",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 13.333333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "8_x4Oiw1uPs",
-   "title": "Lakh Khushian Patshahian | Shabad Gurbani | BHAI RAVINDER SINGH | Mera Maat Pita Har Raya",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 15.016666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "ir346KJ42cY",
-   "title": "SUN YAAR HAMARE SAJAN [Full Song] Kaun Jaanei Gun Tere",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 7.383333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "8WNBTon0N9g",
-   "title": "Hans Raj Hans - Mil Mere Preetma Jeeo - Wadda Mera Gobind",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 6.8,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "ALrIeAdYcZ0",
-   "title": "DHAN DHAN RAM DAS GURU - BHAI HARJINDER SINGH || PUNJABI DEVOTIONAL || AUDIO JUKEBOX ||",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 58.53333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "bhIDePEJwws",
-   "title": "Bhai Harcharan Singh Khalsa | Santaan Naal Vair Kamavde (Shabad) | Kutta Raaj Bahaliyai",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 6.416666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "19hWfbvrOVw",
-   "title": "Bhai Satvinder, Bhai Harvinder Singh - Apni Mehar Kar - Koi Bolei Ram Ram",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 10.033333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -510,18 +430,162 @@
    "lang": "pa"
   },
   {
-   "id": "bH4SGbvL5Ds",
-   "title": "HUM KOOKAR TERE DARBAR | BHAI HARJINDER SINGH (SRINAGAR WALE)",
+   "id": "gVp1ULqzpMk",
+   "title": "Bhai Harjinder Singh Ji | Nanak Chinta Mat Karho (Shabad) | Toon Mero Pyaro | Shabad Gurbani",
    "label": "T-Series Shabad Gurbani",
-   "mins": 12.483333333333333,
+   "mins": 15.433333333333334,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "KNAN9g6a--k",
-   "title": "SAAIYAN MAIN CHAARE KUNDA BHALIAA I Shabad Gurbani, BHAI SATVINDER SINGH, BHAI HARVINDER SINGH",
+   "id": "AuJT6BARgko",
+   "title": "SATGUR TUMRE KAAJ SAWARE | BHAI DAVINDER SINGH SODHI (LUDHIANA WALE) | WADHAIA",
    "label": "T-Series Shabad Gurbani",
-   "mins": 14.75,
+   "mins": 9.533333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "zTif1snQcHI",
+   "title": "Bhai Surinder Singh Ji Jodhpuri - Har Jiyo Nimaniyan Tu Maan - Shabad Gurbani",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 10.15,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "itcSrAVCjQw",
+   "title": "Bhai Sarabjit Singh Ji - Gobind Hum Aise Apradhi - Hum Aise Apradhi",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 13.266666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "VrVk9B7Yt0M",
+   "title": "GURMUKH LAHA LEI GAYE | BHAI HARJINDER SINGH (SRINAGAR WALE)",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 9.083333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "mpGo8vwxkFw",
+   "title": "Jyo Jyo Tera Hukum | Bhai Balwinder Singh Lupoke (Hazoori Ragi Sri Darbar Sahib-Amritsar)",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 7.833333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "8WNBTon0N9g",
+   "title": "Hans Raj Hans - Mil Mere Preetma Jeeo - Wadda Mera Gobind",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 6.8,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "oSlgJnCfYJg",
+   "title": "MERE RAM RAI | BHAI HARJINDER SINGH, BHAI MANINDER SINGH | SHABAD GURBANI",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 59.1,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "m1qAbbSAvbo",
+   "title": "KYA MAANGO I BHAI NIRMAL SINGH JI I NADIYAA WAAH VICHHUNIYAA VOL.18 I AUDIO SONG",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 12.583333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "uq8zf9Gx4cA",
+   "title": "KAR BANDE TU BANDGI - BHAI NIRMAL SINGH JI KHALSA || PUNJABI DEVOTIONAL || AUDIO JUKEBOX ||",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 61.266666666666666,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "bhIDePEJwws",
+   "title": "Bhai Harcharan Singh Khalsa | Santaan Naal Vair Kamavde (Shabad) | Kutta Raaj Bahaliyai",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 6.416666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "jOecW5lbdZM",
+   "title": "Tum Karoh Daya Mere Sai | SHABAD GURBANI | Lyrical | BHAI SATVINDER SINGH, BHAI HARVINDER SINGH JI",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 13.333333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "qz0yxrBiQSM",
+   "title": "SABH JOT TERI JAGJEEVNA I BHAI HARJINDER SINGH I SABH JOT TERI I SHABAD GURBANI I FULL AUDIO SONG",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 11.783333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "zXQOGVM2t1E",
+   "title": "CHARAN KAMAL TERE DHOYE DHOYE PIVAA I SHABAD GURBANI I BHAI HARJINDER SINGH JI I FULL AUDIO SONG",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 10.366666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "F6QSw03qRiI",
+   "title": "Tum Karoh Daya Mere Sai I Bhai Satvinder, Bhai Harvinder Singh",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 13.35,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "lGSOO29Avc0",
+   "title": "APNE SEWAK KI AAPE RAAKHEI I BHAI KAMALJEET SINGH JI I SHABAD GURBANI I FULL AUDIO SONG",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 8.733333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "KsKMjzUSek0",
+   "title": "Aath Pehar Salahey I Shabad Gurbani I BHAI HARJINDER SINGH (SRINAGAR WALE) I AUDIO | Ohla Vol.77",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 6.016666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "8_x4Oiw1uPs",
+   "title": "Lakh Khushian Patshahian | Shabad Gurbani | BHAI RAVINDER SINGH | Mera Maat Pita Har Raya",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 15.016666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "wyP_hMIZiOY",
+   "title": "Bhai Harjinder Singh (Srinagar Wale) | Saachi Preet Hum Tum Siyo Jori (Shabad) | Kehey Ravidas",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 11.65,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "19hWfbvrOVw",
+   "title": "Bhai Satvinder, Bhai Harvinder Singh - Apni Mehar Kar - Koi Bolei Ram Ram",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 10.033333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -530,6 +594,14 @@
    "title": "Bhai Satvinder Singh Ji - Apni Mehar Kar - Koi Bolei Ram Ram",
    "label": "T-Series Shabad Gurbani",
    "mins": 10.05,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "ir346KJ42cY",
+   "title": "SUN YAAR HAMARE SAJAN [Full Song] Kaun Jaanei Gun Tere",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 7.383333333333334,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -558,10 +630,10 @@
    "lang": "pa"
   },
   {
-   "id": "F6QSw03qRiI",
-   "title": "Tum Karoh Daya Mere Sai I Bhai Satvinder, Bhai Harvinder Singh",
+   "id": "Gxmxts_wqsM",
+   "title": "Sabhna Vich Tu Vartada Saaha (Shabad) | Bhai Satwinder Singh, Bhai Harvinder Singh Ji",
    "label": "T-Series Shabad Gurbani",
-   "mins": 13.35,
+   "mins": 14.1,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -574,10 +646,10 @@
    "lang": "pa"
   },
   {
-   "id": "Gxmxts_wqsM",
-   "title": "Sabhna Vich Tu Vartada Saaha (Shabad) | Bhai Satwinder Singh, Bhai Harvinder Singh Ji",
+   "id": "uPGng_1JNQQ",
+   "title": "KAUN JAANEI GUN TERE [Full Song] Kaun Jaanei Gun Tere",
    "label": "T-Series Shabad Gurbani",
-   "mins": 14.1,
+   "mins": 10.966666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -586,14 +658,6 @@
    "title": "TUM KAROH DAYA MERE SAI | GURBANI IS JAG MEH CHANAN VOL 1 | SHABAD GURBANI",
    "label": "T-Series Shabad Gurbani",
    "mins": 13.35,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "uPGng_1JNQQ",
-   "title": "KAUN JAANEI GUN TERE [Full Song] Kaun Jaanei Gun Tere",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 10.966666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -630,14 +694,6 @@
    "lang": "pa"
   },
   {
-   "id": "lGSOO29Avc0",
-   "title": "APNE SEWAK KI AAPE RAAKHEI I BHAI KAMALJEET SINGH JI I SHABAD GURBANI I FULL AUDIO SONG",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 8.733333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "aJEmX_R3IKo",
    "title": "NITNEM I SANT BABA BHAG SINGH - NANAKSAR WALE I FULL VIDEO SONGS JUKE BOX",
    "label": "T-Series Shabad Gurbani",
@@ -662,22 +718,6 @@
    "lang": "pa"
   },
   {
-   "id": "aYLi-YasFIk",
-   "title": "Bhai Trilochan Singh - Rehraas Sahib - Japji Sahib Rehraas Sahib",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 21.233333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "byoRDrYkYS0",
-   "title": "Bhai Harbans Singh - Rehraas Sahib - Japji Sahib Rehraas Sahib",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 18.516666666666666,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "FsRkAzWH-uI",
    "title": "Japji Sahib - Prof.Satnam Singh Sethi - Nitnem",
    "label": "T-Series Shabad Gurbani",
@@ -686,50 +726,10 @@
    "lang": "pa"
   },
   {
-   "id": "Dp2zUm_a4BY",
-   "title": "Bhai Jarnail Singh Ji - Shabad Hazare (Aad) - Shabad Hazare - Baraah Maah - Dukh Bhanjani Sahib",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 8.333333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "Hiza7gVszfk",
-   "title": "Japji Sahib - Japji Sahib Rehraas Sahib",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 22.116666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "xyTrhR7u7Fk",
-   "title": "Bhai Jarnail Singh Ji (Dam Dami Taksal Wale) - Raheraas Sahib",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 21.666666666666668,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "dj0BZSt-o7c",
    "title": "Singh Sahib Giani Jaswinder Singh Ji - Jap Ji Sahib - Nitnem",
    "label": "T-Series Shabad Gurbani",
    "mins": 24.05,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "BIRKGDXDfTk",
-   "title": "Bhai Tarlochan Singh Ji - Aarti - Sodaar Rehras Aarti",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 15.4,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "0oegA6tfOYI",
-   "title": "SHABAD HAZARE I BHAI TIRLOCHAN SINGH I SHABAD GURBANI I JAPJI SAHIB RAEHRAAS SAHIB",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 6.916666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -750,34 +750,26 @@
    "lang": "pa"
   },
   {
-   "id": "Bl9YQl3wd4k",
-   "title": "Bhai Jarnail Singh Ji - Baarah Maah Manjh - Shabad Hazare- Baraah Maah- Dukh Bhanjani Sahib",
+   "id": "Hiza7gVszfk",
+   "title": "Japji Sahib - Japji Sahib Rehraas Sahib",
    "label": "T-Series Shabad Gurbani",
-   "mins": 9.433333333333334,
+   "mins": 22.116666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "_-XcGVRVMqw",
-   "title": "SHABAD HAZARE | BHAI RAVINDER SINGH | JAPJI SAHEB RAERAAS SAHEB",
+   "id": "JEFIJeDVPqI",
+   "title": "Satnam Singh Sethi - Jaap Sahib - Nitnem",
    "label": "T-Series Shabad Gurbani",
-   "mins": 8.883333333333333,
+   "mins": 31.833333333333332,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "Db8T3ixlOb0",
-   "title": "Bhai Jarnail Singh Ji - Sukhmani Sahib",
+   "id": "Dp2zUm_a4BY",
+   "title": "Bhai Jarnail Singh Ji - Shabad Hazare (Aad) - Shabad Hazare - Baraah Maah - Dukh Bhanjani Sahib",
    "label": "T-Series Shabad Gurbani",
-   "mins": 88.95,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "INTQzmAXQdM",
-   "title": "Bhai Jarnail Singh Ji (Dam Dami Taksal Wale) - Chaupai Sahib - Nitnem",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 5.4,
+   "mins": 8.333333333333334,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -798,6 +790,30 @@
    "lang": "pa"
   },
   {
+   "id": "xyTrhR7u7Fk",
+   "title": "Bhai Jarnail Singh Ji (Dam Dami Taksal Wale) - Raheraas Sahib",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 21.666666666666668,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "byoRDrYkYS0",
+   "title": "Bhai Harbans Singh - Rehraas Sahib - Japji Sahib Rehraas Sahib",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 18.516666666666666,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "INTQzmAXQdM",
+   "title": "Bhai Jarnail Singh Ji (Dam Dami Taksal Wale) - Chaupai Sahib - Nitnem",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 5.4,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "zxgHjFEEK8U",
    "title": "Sant Baba Bhag Singh Ji - Japji Sahib - Nitnem",
    "label": "T-Series Shabad Gurbani",
@@ -806,18 +822,26 @@
    "lang": "pa"
   },
   {
-   "id": "JEFIJeDVPqI",
-   "title": "Satnam Singh Sethi - Jaap Sahib - Nitnem",
+   "id": "BIRKGDXDfTk",
+   "title": "Bhai Tarlochan Singh Ji - Aarti - Sodaar Rehras Aarti",
    "label": "T-Series Shabad Gurbani",
-   "mins": 31.833333333333332,
+   "mins": 15.4,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "f288bghaEP4",
-   "title": "SUKHMANI SAHIB | PROF. SATNAAM SINGH SETHI JI | SHABAD GURBANI",
+   "id": "aYLi-YasFIk",
+   "title": "Bhai Trilochan Singh - Rehraas Sahib - Japji Sahib Rehraas Sahib",
    "label": "T-Series Shabad Gurbani",
-   "mins": 71.08333333333333,
+   "mins": 21.233333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "x3bdyG4naDw",
+   "title": "Singh Sahib Giani Jaswinder Singh Ji - Jaap Sahib - Nitnem",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 23.866666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -830,10 +854,26 @@
    "lang": "pa"
   },
   {
-   "id": "0BPZOJmSl_M",
-   "title": "Bhai Trilochan Singh Ji - Sukhmani Sahib",
+   "id": "R5rdsTPLbdI",
+   "title": "Prof. Satnam Singh Sethi - Anand Sahib - Nitnem",
    "label": "T-Series Shabad Gurbani",
-   "mins": 83.16666666666667,
+   "mins": 18.083333333333332,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "Bl9YQl3wd4k",
+   "title": "Bhai Jarnail Singh Ji - Baarah Maah Manjh - Shabad Hazare- Baraah Maah- Dukh Bhanjani Sahib",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 9.433333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "Mow3TYj-hwc",
+   "title": "Tav Prasad Savaiye - Nitnem",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 5.033333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -854,10 +894,42 @@
    "lang": "pa"
   },
   {
+   "id": "0BPZOJmSl_M",
+   "title": "Bhai Trilochan Singh Ji - Sukhmani Sahib",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 83.16666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "f288bghaEP4",
+   "title": "SUKHMANI SAHIB | PROF. SATNAAM SINGH SETHI JI | SHABAD GURBANI",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 71.08333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "Db8T3ixlOb0",
+   "title": "Bhai Jarnail Singh Ji - Sukhmani Sahib",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 88.95,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "D7gjRACsSy8",
    "title": "SUKHMANI SAHIB I PROF. SATNAAM SINGH SETHI I SHABAD I FULL AUDIO",
    "label": "T-Series Shabad Gurbani",
    "mins": 71.05,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "KYWX9YBlsHk",
+   "title": "Ragi Major Singh Ji - Sukhmani Sahib (Samput)",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 72.96666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -878,10 +950,10 @@
    "lang": "pa"
   },
   {
-   "id": "KYWX9YBlsHk",
-   "title": "Ragi Major Singh Ji - Sukhmani Sahib (Samput)",
+   "id": "NWn5o4hukh4",
+   "title": "Bhai Harbans Singh Ji (Jagadhri Wale) - Sri Sukhmani Sahib Da Kirtan",
    "label": "T-Series Shabad Gurbani",
-   "mins": 72.96666666666667,
+   "mins": 89.23333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -894,10 +966,10 @@
    "lang": "pa"
   },
   {
-   "id": "Jdgfy1q8fDk",
-   "title": "SUKHMANI SAHIB I SANT NIRANJAN SINGH | SHABAD | FULL AUDIO",
+   "id": "c50oB3ImIvc",
+   "title": "Bhai Guriqbal Singh, Bhai Amandeep Singh Ji - Sukhmani Sahib (Vyakhya Sahit)",
    "label": "T-Series Shabad Gurbani",
-   "mins": 91.0,
+   "mins": 82.41666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -910,18 +982,10 @@
    "lang": "pa"
   },
   {
-   "id": "c50oB3ImIvc",
-   "title": "Bhai Guriqbal Singh, Bhai Amandeep Singh Ji - Sukhmani Sahib (Vyakhya Sahit)",
+   "id": "Jdgfy1q8fDk",
+   "title": "SUKHMANI SAHIB I SANT NIRANJAN SINGH | SHABAD | FULL AUDIO",
    "label": "T-Series Shabad Gurbani",
-   "mins": 82.41666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "NWn5o4hukh4",
-   "title": "Bhai Harbans Singh Ji (Jagadhri Wale) - Sri Sukhmani Sahib Da Kirtan",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 89.23333333333333,
+   "mins": 91.0,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -938,46 +1002,6 @@
    "title": "Sant Baba Khem Singh Ji - Waheguru Mantra - Sada Teri Sarnai",
    "label": "T-Series Shabad Gurbani",
    "mins": 76.91666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "S3L6lTIO2UM",
-   "title": "SUKHMANI SAHIB | BHAI GURIQBAL SINGH (GURUDWARA MATA KOLAN JI AMRITSAR)",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 87.03333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "TsouruUS9JA",
-   "title": "SUKHMANI SAHIB🙏 | PART 1 & 2 AUDIO JUKEBOX | BHAI TIRLOCHAN SINGH (DELHI WALE)",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 83.06666666666666,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "d-MVEpEEWKs",
-   "title": "SUKHMANI SAHIB🙏 : GURBANI KIRTAN🙏 | BHAI RAGHBIR SINGH (U.S.A. WALE) | SHABAD GURBANI",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 104.71666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "XfjTTxatnGs",
-   "title": "Sadhu Singh Ji (Dehradoon Wale) - Sukhmani Sahib",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 91.58333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "ct0QIYVvilE",
-   "title": "Bhai Dhian Singh Komal - Sukhmani Sahib",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 85.4,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1246,14 +1270,6 @@
    "lang": "pa"
   },
   {
-   "id": "Vblxy--RyTc",
-   "title": "Inhi Ki Kirpa Ke Saje Hum Hain - Bhai Joginder Singh Riar | Gurbani Shabad Kirtan - Amritt Saagar",
-   "label": "Amritt Saagar",
-   "mins": 8.8,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "VGgT0ASIWgA",
    "title": "Meharwaan Sahib Meharwaan | Bhai Gagandeep Singh Sri Ganga Nagar Wale | Gurbani Kirtan Amritt Saagar",
    "label": "Amritt Saagar",
@@ -1262,18 +1278,18 @@
    "lang": "pa"
   },
   {
-   "id": "vqyUjODIBvM",
-   "title": "Inhi Ki Kirpa - Bhai Joginder Singh Ji Riar | Amritt Saagar | Gurbani Shabad Kirtan",
+   "id": "Vblxy--RyTc",
+   "title": "Inhi Ki Kirpa Ke Saje Hum Hain - Bhai Joginder Singh Riar | Gurbani Shabad Kirtan - Amritt Saagar",
    "label": "Amritt Saagar",
-   "mins": 8.75,
+   "mins": 8.8,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "oQhqiD6LQdc",
-   "title": "New Shabad Gurbani Kirtan 2026 - Non Stop Gurbani Shabad Kirtan 2026 -  Shabad Gurbani - Best Shabad",
+   "id": "vqyUjODIBvM",
+   "title": "Inhi Ki Kirpa - Bhai Joginder Singh Ji Riar | Amritt Saagar | Gurbani Shabad Kirtan",
    "label": "Amritt Saagar",
-   "mins": null,
+   "mins": 8.75,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1310,18 +1326,18 @@
    "lang": "pa"
   },
   {
-   "id": "7dLupciZUzc",
-   "title": "Dhan Dhan Hamare Bhag - Bhai Sarabjit Singh Ji Patna Sahib Wale - Best Shabad Kirtan - Amritt Saagar",
+   "id": "oQhqiD6LQdc",
+   "title": "New Shabad Gurbani Kirtan 2026 - Non Stop Gurbani Shabad Kirtan 2026 -  Shabad Gurbani - Best Shabad",
    "label": "Amritt Saagar",
-   "mins": 8.083333333333334,
+   "mins": null,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "d-C_qNmfrfA",
-   "title": "Allah Paakan Paak Hai | Bhai Mehtab Singh Ji Jalandhar Wale | Amritt Saagar | Shabad Gurbani Kirtan",
+   "id": "7dLupciZUzc",
+   "title": "Dhan Dhan Hamare Bhag - Bhai Sarabjit Singh Ji Patna Sahib Wale - Best Shabad Kirtan - Amritt Saagar",
    "label": "Amritt Saagar",
-   "mins": 10.1,
+   "mins": 8.083333333333334,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1334,10 +1350,10 @@
    "lang": "pa"
   },
   {
-   "id": "VwPhJar_tWE",
-   "title": "New Shabad Gurbani Kirtan 2026 Jukebox - Koi Aan Milave - New Shabad Kirtan - Nonstop Shabad Kirtan",
+   "id": "d-C_qNmfrfA",
+   "title": "Allah Paakan Paak Hai | Bhai Mehtab Singh Ji Jalandhar Wale | Amritt Saagar | Shabad Gurbani Kirtan",
    "label": "Amritt Saagar",
-   "mins": 55.416666666666664,
+   "mins": 10.1,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1350,22 +1366,6 @@
    "lang": "pa"
   },
   {
-   "id": "4zh1IOhqydg",
-   "title": "Kinka Ek Kinka - Bhai Mehtab Singh Jalandhar Wale - Gurbani Shabad Kirtan - Amritt Saagar",
-   "label": "Amritt Saagar",
-   "mins": 11.016666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "zsUYQYVNcrk",
-   "title": "Vin Boleya Sabh Kish Janda - Bhai Joginder Singh Riar - Amritt Saagar - Shabad Kirtan Gurbani",
-   "label": "Amritt Saagar",
-   "mins": 11.0,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "YKGeocIP2Eg",
    "title": "Gobind Gaajey Shabad Baajey - Bhai Gurpreet Singh Ji Shimla Wale | Amritt Saagar | Shabad Gurbani",
    "label": "Amritt Saagar",
@@ -1374,10 +1374,10 @@
    "lang": "pa"
   },
   {
-   "id": "O4y5oC9iJXw",
-   "title": "Dhan Dhan Baba Deep Singh Ji | Nonstop Simran | Naam Simran | Bhai Amandeep Singh Ji Bibi Kaulan Ji",
+   "id": "4zh1IOhqydg",
+   "title": "Kinka Ek Kinka - Bhai Mehtab Singh Jalandhar Wale - Gurbani Shabad Kirtan - Amritt Saagar",
    "label": "Amritt Saagar",
-   "mins": 60.15,
+   "mins": 11.016666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1390,10 +1390,18 @@
    "lang": "pa"
   },
   {
-   "id": "JW86qS2smcI",
-   "title": "Japji Sahib Path ( Nitnem Bani ) Punjabi English Hindi Read Along | Bhai Jaskaran Singh Patiala Wale",
+   "id": "zsUYQYVNcrk",
+   "title": "Vin Boleya Sabh Kish Janda - Bhai Joginder Singh Riar - Amritt Saagar - Shabad Kirtan Gurbani",
    "label": "Amritt Saagar",
-   "mins": 17.983333333333334,
+   "mins": 11.0,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "VwPhJar_tWE",
+   "title": "New Shabad Gurbani Kirtan 2026 Jukebox - Koi Aan Milave - New Shabad Kirtan - Nonstop Shabad Kirtan",
+   "label": "Amritt Saagar",
+   "mins": 55.416666666666664,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1406,34 +1414,34 @@
    "lang": "pa"
   },
   {
+   "id": "JW86qS2smcI",
+   "title": "Japji Sahib Path ( Nitnem Bani ) Punjabi English Hindi Read Along | Bhai Jaskaran Singh Patiala Wale",
+   "label": "Amritt Saagar",
+   "mins": 17.983333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "OkL4TVVD7s8",
+   "title": "Dhan Dhan Ramdas Gur 24x7 Simran Jaap | ਧੰਨ ਧੰਨ ਰਾਮਦਾਸ ਗੁਰ | Gurbani Shabad Kirtan - Amritt Saagar",
+   "label": "Amritt Saagar",
+   "mins": null,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "O4y5oC9iJXw",
+   "title": "Dhan Dhan Baba Deep Singh Ji | Nonstop Simran | Naam Simran | Bhai Amandeep Singh Ji Bibi Kaulan Ji",
+   "label": "Amritt Saagar",
+   "mins": 60.15,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "sO-8AUnT5hE",
    "title": "Abchal Nagar Gobind Guru - Bhai Joginder Singh Riar Ludhiana Wale | Gurbani Kirtan - Amritt Saagar",
    "label": "Amritt Saagar",
    "mins": 9.9,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "QUnUPzF6jfE",
-   "title": "10 Most Peaceful Shabads - New Shabad Gurbani Kirtan 2026 Jukebox - Gurbani Shabad Kirtan - Gurbani",
-   "label": "Amritt Saagar",
-   "mins": 85.6,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "Y1O1qM0zIrA",
-   "title": "Bani Bhagat Ravidas Ji (Audio Jukebox) - Gurbani Shabad Kirtan By Various Ragi Sahib - Amritt Saagar",
-   "label": "Amritt Saagar",
-   "mins": 172.66666666666666,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "KrT9BN-9eps",
-   "title": "Eh Janam Tumhare Lekhe - Bhai Jagjeet Singh Babiha - New Gurbani Shabad Kirtan - Amritt Saagar",
-   "label": "Amritt Saagar",
-   "mins": 7.066666666666666,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1446,10 +1454,34 @@
    "lang": "pa"
   },
   {
+   "id": "KrT9BN-9eps",
+   "title": "Eh Janam Tumhare Lekhe - Bhai Jagjeet Singh Babiha - New Gurbani Shabad Kirtan - Amritt Saagar",
+   "label": "Amritt Saagar",
+   "mins": 7.066666666666666,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "aFbk1aTLIvo",
    "title": "Bhai Joginder Singh Riar Ludhiana Wale - Aesa Naam Niranjan Hoe - Best Mind Relaxing Gurbani Shabad",
    "label": "Amritt Saagar",
    "mins": 8.183333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "Y1O1qM0zIrA",
+   "title": "Bani Bhagat Ravidas Ji (Audio Jukebox) - Gurbani Shabad Kirtan By Various Ragi Sahib - Amritt Saagar",
+   "label": "Amritt Saagar",
+   "mins": 172.66666666666666,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "QUnUPzF6jfE",
+   "title": "10 Most Peaceful Shabads - New Shabad Gurbani Kirtan 2026 Jukebox - Gurbani Shabad Kirtan - Gurbani",
+   "label": "Amritt Saagar",
+   "mins": 85.6,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1502,14 +1534,6 @@
    "lang": "pa"
   },
   {
-   "id": "wTeUxSEo3tc",
-   "title": "Sukhmani Sahib | Kirtan Roopi | Punjabi English Hindi Read Along | Learn Path | Amritt Saagar",
-   "label": "Amritt Saagar",
-   "mins": 155.45,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "HA2xaiF8nTM",
    "title": "Japji Sahib | Nitnem Bani | Punjabi English Hindi Read Along | Makhan Singh Ji Mauji Manguwalia (UK)",
    "label": "Amritt Saagar",
@@ -1522,6 +1546,14 @@
    "title": "Japji Sahib | Bhai Sukhwinder Singh Riar | Amritt Saagar",
    "label": "Amritt Saagar",
    "mins": 22.283333333333335,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "wTeUxSEo3tc",
+   "title": "Sukhmani Sahib | Kirtan Roopi | Punjabi English Hindi Read Along | Learn Path | Amritt Saagar",
+   "label": "Amritt Saagar",
+   "mins": 155.45,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1542,26 +1574,18 @@
    "lang": "pa"
   },
   {
-   "id": "QYoNF0-vcoA",
-   "title": "Japji Sahib | Nitnem | Panj Bania | Bhai Pushpinder Singh Ji Sangroor Wale",
-   "label": "Amritt Saagar",
-   "mins": 24.1,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "g7N90gDR1xA",
-   "title": "Satnam Waheguru Simran - Bhai Lakhwinder Singh Ji Hazoori Ragi Sri Darbar Sahib, Asr | Amritt Saagar",
-   "label": "Amritt Saagar",
-   "mins": 60.03333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "mDo7jm6FGq0",
    "title": "Jaap Sahib | Nitnem | Panj Bania | Bhai Pushpinder Singh Ji Sangroor Wale",
    "label": "Amritt Saagar",
    "mins": 23.916666666666668,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "QYoNF0-vcoA",
+   "title": "Japji Sahib | Nitnem | Panj Bania | Bhai Pushpinder Singh Ji Sangroor Wale",
+   "label": "Amritt Saagar",
+   "mins": 24.1,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1574,10 +1598,10 @@
    "lang": "pa"
   },
   {
-   "id": "pp1Lw9WlA0Q",
-   "title": "Kirtan Sohila - Bhai Sukhwinder Singh Riar",
+   "id": "g7N90gDR1xA",
+   "title": "Satnam Waheguru Simran - Bhai Lakhwinder Singh Ji Hazoori Ragi Sri Darbar Sahib, Asr | Amritt Saagar",
    "label": "Amritt Saagar",
-   "mins": 5.4,
+   "mins": 60.03333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1598,18 +1622,18 @@
    "lang": "pa"
   },
   {
-   "id": "c2DvO_mIUYM",
-   "title": "Waheguru Simran - Naam Simran | Bhai Satinderbir Singh Ji Hazoori Ragi Sri Darbar Sahib, Amritsar",
-   "label": "Amritt Saagar",
-   "mins": 59.18333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "CdrfLky3YIs",
    "title": "Dhan Guru Teg Bahadur Sahib - Simran 1 Hour | Guru Teg Bahadur Ji Simran - Naam Simran Amritt Saagar",
    "label": "Amritt Saagar",
    "mins": 60.733333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "c2DvO_mIUYM",
+   "title": "Waheguru Simran - Naam Simran | Bhai Satinderbir Singh Ji Hazoori Ragi Sri Darbar Sahib, Amritsar",
+   "label": "Amritt Saagar",
+   "mins": 59.18333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1775,26 +1799,18 @@
    "lang": "pa"
   },
   {
-   "id": "ZXlVGvQdKwc",
-   "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | Monday, December 01, 2025",
-   "label": "SGPC",
-   "mins": 7.116666666666666,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "eMV0tShy48c",
-   "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | November 23, 2025",
-   "label": "SGPC",
-   "mins": 6.266666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "n7Wp0nwI5_o",
    "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | Wednesday, Nov 27, 2025",
    "label": "SGPC",
    "mins": 11.816666666666666,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "ZXlVGvQdKwc",
+   "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | Monday, December 01, 2025",
+   "label": "SGPC",
+   "mins": 7.116666666666666,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1969,26 +1985,98 @@
    "lang": "pa"
   },
   {
-   "id": "wyP_hMIZiOY",
-   "title": "Bhai Harjinder Singh (Srinagar Wale) | Saachi Preet Hum Tum Siyo Jori (Shabad) | Kehey Ravidas",
+   "id": "ALrIeAdYcZ0",
+   "title": "DHAN DHAN RAM DAS GURU - BHAI HARJINDER SINGH || PUNJABI DEVOTIONAL || AUDIO JUKEBOX ||",
    "label": "T-Series Shabad Gurbani",
-   "mins": 11.65,
+   "mins": 58.53333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "Mow3TYj-hwc",
-   "title": "Tav Prasad Savaiye - Nitnem",
+   "id": "bH4SGbvL5Ds",
+   "title": "HUM KOOKAR TERE DARBAR | BHAI HARJINDER SINGH (SRINAGAR WALE)",
    "label": "T-Series Shabad Gurbani",
-   "mins": 5.033333333333333,
+   "mins": 12.483333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "x3bdyG4naDw",
-   "title": "Singh Sahib Giani Jaswinder Singh Ji - Jaap Sahib - Nitnem",
+   "id": "KNAN9g6a--k",
+   "title": "SAAIYAN MAIN CHAARE KUNDA BHALIAA I Shabad Gurbani, BHAI SATVINDER SINGH, BHAI HARVINDER SINGH",
    "label": "T-Series Shabad Gurbani",
-   "mins": 23.866666666666667,
+   "mins": 14.75,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "0oegA6tfOYI",
+   "title": "SHABAD HAZARE I BHAI TIRLOCHAN SINGH I SHABAD GURBANI I JAPJI SAHIB RAEHRAAS SAHIB",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 6.916666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "_-XcGVRVMqw",
+   "title": "SHABAD HAZARE | BHAI RAVINDER SINGH | JAPJI SAHEB RAERAAS SAHEB",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 8.883333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "S3L6lTIO2UM",
+   "title": "SUKHMANI SAHIB | BHAI GURIQBAL SINGH (GURUDWARA MATA KOLAN JI AMRITSAR)",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 87.03333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "TsouruUS9JA",
+   "title": "SUKHMANI SAHIB🙏 | PART 1 & 2 AUDIO JUKEBOX | BHAI TIRLOCHAN SINGH (DELHI WALE)",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 83.06666666666666,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "d-MVEpEEWKs",
+   "title": "SUKHMANI SAHIB🙏 : GURBANI KIRTAN🙏 | BHAI RAGHBIR SINGH (U.S.A. WALE) | SHABAD GURBANI",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 104.71666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "XfjTTxatnGs",
+   "title": "Sadhu Singh Ji (Dehradoon Wale) - Sukhmani Sahib",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 91.58333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "ct0QIYVvilE",
+   "title": "Bhai Dhian Singh Komal - Sukhmani Sahib",
+   "label": "T-Series Shabad Gurbani",
+   "mins": 85.4,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "pp1Lw9WlA0Q",
+   "title": "Kirtan Sohila - Bhai Sukhwinder Singh Riar",
+   "label": "Amritt Saagar",
+   "mins": 5.4,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "eMV0tShy48c",
+   "title": "Hukamnama Sachkhand Sri Harmandir Sahib Sri Darbar Sahib, Sri Amritsar | November 23, 2025",
+   "label": "SGPC",
+   "mins": 6.266666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1997,14 +2085,6 @@
    "title": "Davinder Singh Ji Sodhi (Ludhiane Wale) - Japji Sahib - Japji Sahib Reahraas Sahib",
    "label": "T-Series Shabad Gurbani",
    "mins": 32.2,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "R5rdsTPLbdI",
-   "title": "Prof. Satnam Singh Sethi - Anand Sahib - Nitnem",
-   "label": "T-Series Shabad Gurbani",
-   "mins": 18.083333333333332,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -2037,14 +2117,6 @@
    "title": "SUKHMANI SAHIB WADDA SAMPAT PART - 1 ||  BHAI MAJOR SINGH JI RAGI || SOLO || PUNJABI DEVOTIONAL ||",
    "label": "T-Series Shabad Gurbani",
    "mins": 119.0,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "OkL4TVVD7s8",
-   "title": "Dhan Dhan Ramdas Gur 24x7 Simran Jaap | ਧੰਨ ਧੰਨ ਰਾਮਦਾਸ ਗੁਰ | Gurbani Shabad Kirtan - Amritt Saagar",
-   "label": "Amritt Saagar",
-   "mins": null,
    "found": "2026-10-08",
    "lang": "pa"
   },

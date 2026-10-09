@@ -1,7 +1,31 @@
 {
  "name": "Spark Kids",
- "built": "2026-10-09 02:08 UTC",
+ "built": "2026-10-09 07:03 UTC",
  "videos": [
+  {
+   "id": "uFXJ-50SEqY",
+   "title": "George Pig CASTS a SPELL on Peppa!😨 SPOOKY Movie Night | Peppa Pig Official BEST EPISODES COLLECTION",
+   "label": "Peppa Pig",
+   "mins": 45.11666666666667,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "5qPJ-pDwe-0",
+   "title": "Peppa Pig Rides a SUPER FANCY PLANE! ✈️ Costume Fun | BRAND NEW Peppa Pig Tales Episodes | 35 Mins",
+   "label": "Peppa Pig",
+   "mins": 36.13333333333333,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
+  {
+   "id": "DnFtd12VEds",
+   "title": "Peppa Pig Tales 2026 🦷 Peppa Pig Sees Baby Evie's FIRST TOOTH! 🥹 BRAND NEW Peppa Pig Episodes",
+   "label": "Peppa Pig",
+   "mins": 30.033333333333335,
+   "found": "2026-10-09",
+   "lang": "en"
+  },
   {
    "id": "aCahKt5wtUQ",
    "title": "Peppa Pig Learns about the TOOTH FAIRY! 🧚🦷 | Losing a Tooth! | Peppa Pig Official Full Episodes",
@@ -2602,33 +2626,6 @@
    "mins": 20.883333333333333,
    "found": "2026-10-06",
    "lang": "en"
-  },
-  {
-   "id": "6Rs-Qy4nRaM",
-   "title": "Peppa Pig Tales 🍼 Baby Evie COPIES Peppa at LUNCHTIME! 🥣 | LEGO DUPLO Peppa Pig Episodes",
-   "label": "Peppa Pig",
-   "mins": 30.433333333333334,
-   "found": "2026-10-06",
-   "lang": "en",
-   "posted": "2026-09-30"
-  },
-  {
-   "id": "1SJYioPHgW4",
-   "title": "Peppa Pig Tries Cousin Chloe's CRAZY MAKEOVER! 😲 | Sleepover Fun | Tales Full Episodes | 30 Mins",
-   "label": "Peppa Pig",
-   "mins": 36.11666666666667,
-   "found": "2026-10-06",
-   "lang": "en",
-   "posted": "2026-09-29"
-  },
-  {
-   "id": "fGZGMB6syK4",
-   "title": "George Pig's Full Hearing Aid Story!💙🦻| Mini Movie | Peppa Pig Tales Episodes | 24 Minutes",
-   "label": "Peppa Pig",
-   "mins": 24.016666666666666,
-   "found": "2026-10-06",
-   "lang": "en",
-   "posted": "2026-09-27"
   }
  ]
 }

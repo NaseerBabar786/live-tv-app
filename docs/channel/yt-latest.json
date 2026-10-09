@@ -1,6 +1,6 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-09 02:21 UTC",
+ "built": "2026-10-09 07:15 UTC",
  "videos": [
   {
    "id": "MKpt0zZyT5E",
@@ -65,18 +65,18 @@
    "lang": "hi"
   },
   {
-   "id": "7_1ZGFxX3pI",
-   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
-   "label": "Goldmines",
-   "mins": 111.25,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
    "id": "Bon7e5C7KNU",
    "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
    "label": "Goldmines",
    "mins": 108.73333333333333,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
+   "id": "7_1ZGFxX3pI",
+   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
+   "label": "Goldmines",
+   "mins": 111.25,
    "found": "2026-10-07",
    "lang": "hi"
   },
@@ -110,6 +110,14 @@
    "label": "Ultra Movie Parlour",
    "mins": 134.61666666666667,
    "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
+   "id": "Y8eJVvSWuKM",
+   "title": "2026 की सबसे बड़ी South SUSPENSE THRILLER MOVIE - SCAM SHIKARI - करोड़ों का स्कैम सिर्फ एक फोन से !",
+   "label": "Ultra Movie Parlour",
+   "mins": 112.56666666666666,
+   "found": "2026-10-09",
    "lang": "hi"
   },
   {
@@ -161,14 +169,6 @@
    "lang": "hi"
   },
   {
-   "id": "c1fQeengVG0",
-   "title": "PAWAN KALYAN NEW RELEASE SOUTH HINDI DUBBED MOVIE 2026 FULL HD - NEW SOUTH MOVIE BHEEMLA NAYAK",
-   "label": "B4U Movies",
-   "mins": 130.0,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
    "id": "iFsL_Ko4VCk",
    "title": "NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SOUTH HINDI DUBBED MOVIE MAFIA",
    "label": "B4U Movies",
@@ -182,6 +182,14 @@
    "label": "B4U Movies",
    "mins": 165.7,
    "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "LN3zXaNEDmM",
+   "title": "BANARASI NEW SOUTH HINDI DUBBED MOVIE 2026 (HD) NEW SOUTH INDIAN MOVIES DUBBED IN HINDI VENKY MAMA",
+   "label": "B4U Movies",
+   "mins": 121.16666666666667,
+   "found": "2026-10-09",
    "lang": "hi"
   },
   {
@@ -209,11 +217,11 @@
    "lang": "hi"
   },
   {
-   "id": "ftI9RAEuSLo",
-   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
+   "id": "gJpoFk6HXug",
+   "title": "Butta Bomma Hindi Dubbed Full Movie 2025 | Anikha Surendran, Arjun Das, Surya Vashistta |South Movie",
    "label": "Aditya Movies",
-   "mins": 124.95,
-   "found": "2026-10-09",
+   "mins": 105.76666666666667,
+   "found": "2026-10-07",
    "lang": "hi"
   },
   {
@@ -225,11 +233,19 @@
    "lang": "hi"
   },
   {
-   "id": "gJpoFk6HXug",
-   "title": "Butta Bomma Hindi Dubbed Full Movie 2025 | Anikha Surendran, Arjun Das, Surya Vashistta |South Movie",
+   "id": "ftI9RAEuSLo",
+   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
    "label": "Aditya Movies",
-   "mins": 105.76666666666667,
-   "found": "2026-10-07",
+   "mins": 124.95,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "gfDhPJUIFFA",
+   "title": "Kotha Kothagaa Hindi Dubbed Full Movie | Ajay, Virti Vaghani | South Movie New 2026 | Aditya Movies",
+   "label": "Aditya Movies",
+   "mins": 110.51666666666667,
+   "found": "2026-10-09",
    "lang": "hi"
   },
   {
@@ -237,14 +253,6 @@
    "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
    "label": "Aditya Movies",
    "mins": 126.08333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "yR9pSZoZ6CY",
-   "title": "Gamblers Hindi Dubbed Movie 2026 Full Movie | Sangeeth Shobhan, Prashanthi | South New Movie 2026",
-   "label": "Aditya Movies",
-   "mins": 97.98333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },

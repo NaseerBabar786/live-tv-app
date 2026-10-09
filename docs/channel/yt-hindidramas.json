@@ -1,12 +1,721 @@
 {
  "name": "Spark Dramas Hindi",
- "built": "2026-10-09 02:12 UTC",
+ "built": "2026-10-09 07:07 UTC",
  "videos": [
+  {
+   "id": "s_KQQ2PTpjo",
+   "title": "Arnav drops Khushi home | Full Ep. 28 | Iss Pyaar Ko Kya Naam Doon?",
+   "label": "StarPlus",
+   "mins": 20.233333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "nAitj0b7ELM",
+   "title": "Kumkum, Jatin To Remarry | Full Ep. 28 | Kumkum – Ek Pyara Sa Bandhan",
+   "label": "StarPlus",
+   "mins": 71.5,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "o7e77BGG-fQ",
+   "title": "Parvati Stands Strong Against Hidden Family Betrayals! | Full Ep. 29 | Kahaani Ghar Ghar Kii",
+   "label": "StarPlus",
+   "mins": 19.133333333333333,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "oY8-TUzId_s",
+   "title": "The cursed Pandu | Full Ep. 31 | Mahabharat",
+   "label": "StarPlus",
+   "mins": 30.366666666666667,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "0f9Il5GjlLc",
+   "title": "Ashwini’s Strong Accusation | Full Ep. 178 | Ghum Hai Kisikey Pyaar Meiin",
+   "label": "StarPlus",
+   "mins": 21.616666666666667,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "seEmRIDzPkE",
+   "title": "Kartik Misses Naira on Her Birthday | Full Ep. 2935 | Yeh Rishta Kya Kehlata Hai",
+   "label": "StarPlus",
+   "mins": 23.816666666666666,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "T8zqho1Xcyw",
+   "title": "Ye Hai Mohabbatein-Season 1 | Episode 1",
+   "label": "StarPlus",
+   "mins": 17.833333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
   {
    "id": "HexFDc8drJY",
    "title": "Krishna Feels Dejected | Full Ep. 28 | Kahaani Ghar Ghar Kii",
    "label": "StarPlus",
    "mins": 19.333333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "BH0eQelJSi0",
+   "title": "Maddam Sir - A Food Festival - Ep 414 - Full Episode - 2 Feb 2022",
+   "label": "Sony SAB",
+   "mins": 21.516666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "q3w9jn8h7c8",
+   "title": "Maddam Sir - Ep 14 - Full Episode - 12th March 2020",
+   "label": "Sony SAB",
+   "mins": 23.916666666666668,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "ZEtQZvC9HlI",
+   "title": "Tenali Rama - Ep 150 - Full Episode - 1st February, 2018",
+   "label": "Sony SAB",
+   "mins": 21.9,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "qBimW4_ZN7A",
+   "title": "Manthara ने Kaikeyi को Shri Ram के खिलाफ भड़काया | Shrimad Ramayan - Ep 25 | Full Episode",
+   "label": "Sony SAB",
+   "mins": 23.683333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "BT18iGtWh4o",
+   "title": "Maddam Sir - Urmila Fails To Solve The Case - Ep 402 - Full Episode - 19 Jan 2022",
+   "label": "Sony SAB",
+   "mins": 21.933333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "qsW1qwlb1eI",
+   "title": "Episode: 20 | Truth Revealed In Naaglok | Hastinapur Ke Veer | Full Episode | 24 Jun 2026",
+   "label": "Sony SAB",
+   "mins": 23.733333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "XQ_6e0zXTU8",
+   "title": "Virat Sends A New Refrigerator | Itti Si Khushi | Ep 2 | Full Episode | 19 Aug 2025",
+   "label": "Sony SAB",
+   "mins": 30.916666666666668,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "YRka3JmRSlY",
+   "title": "Maddam Sir - Ep 27  - Full Episode - 17th July 2020",
+   "label": "Sony SAB",
+   "mins": 23.116666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "uXjasAfo8wM",
+   "title": "Wagle Ki Duniya - Harshad Taunts Jyoti - Ep 180 - Full Episode - 27th  October  2021",
+   "label": "Sony SAB",
+   "mins": 21.716666666666665,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "an3ArFSxeBw",
+   "title": "Episode: 26 | Bheem's Truth | Hastinapur Ke Veer | Full Episode | 1 Jul 2026",
+   "label": "Sony SAB",
+   "mins": 24.016666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "g_AO59kEjto",
+   "title": "Episode: 41 | Gurudev's Tough Teaching | Hastinapur Ke Veer | Full Episode | 18 Jul 2026",
+   "label": "Sony SAB",
+   "mins": 25.166666666666668,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "7QqdjtSUdQI",
+   "title": "Tenali Rama - Full Episode 132",
+   "label": "Sony Pal",
+   "mins": 20.966666666666665,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "IAl517ytSz4",
+   "title": "Mini And Neil Come Closer | Patiala Babes - EP 317 | Full Episode | 19 January 2022",
+   "label": "Sony Pal",
+   "mins": 18.1,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "rwF8juFFhA0",
+   "title": "'Young Kaatelals’ Goes Viral! | Kaatelal & Sons - Ep 23 | Full Episode | 16 February 2022",
+   "label": "Sony Pal",
+   "mins": 21.633333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "7BL_atWdUfs",
+   "title": "Tenali Rama - Full Episode 135",
+   "label": "Sony Pal",
+   "mins": 21.066666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "yGNZqki4HKE",
+   "title": "Ayaan In Jaipur | Pukaar - Dil Se Dil Tak - Ep 37 | Full Episode | 16 Jul 2024",
+   "label": "SET India",
+   "mins": 45.7,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "mEoOAjB3o-E",
+   "title": "Dhadkan Zindaggi Kii - Bypass Surgery - Ep 1 - Full Episode 6th December, 2021",
+   "label": "SET India",
+   "mins": 45.733333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "s7BwGiZzG_8",
+   "title": "Beyhadh 2 - Ep 56 - Full Episode - 17th February, 2020",
+   "label": "SET India",
+   "mins": 20.333333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "o4uH2Dok3A8",
+   "title": "Kyun Utthe Dil Chhod Aaye? - Ep 01 - Full Episode - 25th January, 2021",
+   "label": "SET India",
+   "mins": 45.71666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "oB8Jd5PGSnk",
+   "title": "Udaariyaan |  Ep. 43 | Fateh Chooses Jasmine Over His Family! | Colors TV",
+   "label": "Colors TV",
+   "mins": 20.6,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "vnlKOxV6D84",
+   "title": "Dil se dil tak |  Ep. 44 | Will Teni Finally Impress Dadaji? | Colors TV",
+   "label": "Colors TV",
+   "mins": 20.65,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "dva4iD6NPxA",
+   "title": "Entertainment Ki Raat Housefull | Full Ep. 37 | Karan-Tejasswi face a test | Colors TV",
+   "label": "Colors TV",
+   "mins": 42.78333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "IAzytjG859o",
+   "title": "Ragini ने समझाया Time की एहमियत | Agnifera | Full Ep 1 |  @And TV",
+   "label": "And TV",
+   "mins": 21.483333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "k1DZkfHfPAs",
+   "title": "Waaris | Ep.291 | Raj और Sakshi के मिलन के गम में Preet गटक गई बोतल | Full Episode | AND TV",
+   "label": "And TV",
+   "mins": 21.583333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "ka0docYeKvg",
+   "title": "Chupke Chupke | Ep.2 | Meera भी शादी नहीं करना चाहती | Full Episode | AND TV",
+   "label": "And TV",
+   "mins": 21.5,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "pWywyqbLZCk",
+   "title": "Waaris | Ep.187 | Raman की पीठ पे किसने घुसाया छुरा ? | Full Episode | AND TV",
+   "label": "And TV",
+   "mins": 19.85,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "Xft32BOagDE",
+   "title": "Tere Bin | Ep.67 | Vijaya को लग रहा Nandini और Akshay का तालुख | Full Episode | AND TV",
+   "label": "And TV",
+   "mins": 21.583333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "fNZ20UNJ0Wg",
+   "title": "Bindiya ने Poonam पर दोहरी चाल चली | Begusarai | Full Ep.158 | 7 Oct 15 | @andtvchannel",
+   "label": "And TV",
+   "mins": 21.783333333333335,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "NlsYjAwW2n4",
+   "title": "Tere Bin | Ep.1 | Neeti के सवालो ने किया Vijaya के लिए खड़ा बवाल | Full Episode | AND TV",
+   "label": "And TV",
+   "mins": 22.633333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "Yj_NysrFatg",
+   "title": "Preeti को किसने हराया? | Adhuri Kahaani Humari Full Ep 131 | 13 May 16 | Krish @andtvchannel",
+   "label": "And TV",
+   "mins": 26.75,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "jpgdTjL-NNc",
+   "title": "Ganga जा रहे हैं Sagar से दूर! | Gangaa | Full Episode 23 | @andtvchannel",
+   "label": "And TV",
+   "mins": 21.866666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "IDkmkZtZKc4",
+   "title": "Rimjhim - Choti Umar Bada Safar | Maha Episode | रिमझिम की कसौटी | Dangal TV",
+   "label": "Dangal TV",
+   "mins": 41.6,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "2ouzwWYJjD8",
+   "title": "Mann Sundar | रुही और जुही की ज़िंदगी – क्या लिखा है तक़दीर में? | MahaEpisode | Dangal TV",
+   "label": "Dangal TV",
+   "mins": 43.15,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "bWOdZmox4uk",
+   "title": "Mann Atisundar राधिका की संघर्ष गाथा क्या उसे मिलेगा प्यार और परिवार का साथ? Mahaepisode | DangalTV",
+   "label": "Dangal TV",
+   "mins": 39.916666666666664,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "SlZR9DyoHoQ",
+   "title": "Kaisi Teri Dillagi | Maha Episode | Kajri se Kajal tak ki kahani | New Show | Dangal TV",
+   "label": "Dangal TV",
+   "mins": 43.65,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "h1r6r9ZRs0A",
+   "title": "Tees Ke Paar Jab Mila Pyaar | Tanvi aur Yug ki kahani | MahaEpisode | Dangal TV",
+   "label": "Dangal TV",
+   "mins": 43.61666666666667,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "hEV_mYyz5Fc",
+   "title": "Pati Anaadi | Maha Episode  | Kishori aur Lala ki Kahani | Dangal TV",
+   "label": "Dangal TV",
+   "mins": 44.11666666666667,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "2BA7Au73d7w",
+   "title": "Mann Sundar | 5 Oct 2026 | Full Episode 1748 | Full HD #Newepisode | Dangal TV",
+   "label": "Dangal TV",
+   "mins": 22.5,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "a33gGKPTuL0",
+   "title": "Mann Atisundar | 4 Oct 2026 | Full Episode 1168 | Full HD #Newepisode | Dangal TV",
+   "label": "Dangal TV",
+   "mins": 22.5,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "ucdXEKbc3nA",
+   "title": "Web of Deceit | Crime and Emotions New Episodes | Beware of Crime #crimeworld",
+   "label": "Shemaroo TV",
+   "mins": 38.416666666666664,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "qNiV13he8G0",
+   "title": "Kyunki Tum Hi Ho Hindi Drama Show | Full Episode | आयुष्मान  को हुआ प्यार का एहसास | Episode 5",
+   "label": "Shemaroo TV",
+   "mins": 24.35,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "u37kU3TiGX4",
+   "title": "Crime World New Episode | Crime World Full Episode | Crime Show | Shemaroo TV",
+   "label": "Shemaroo TV",
+   "mins": 47.18333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "yV_Nnm9wCRE",
+   "title": "Chaahenge Tumhe Itnaa | Siddarth ne sikhaya Ashi ko Sabak | Full Episode 06 | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 22.583333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "nLLyJVwKuig",
+   "title": "Jamuniya Full Episode 37 | रतन और जमुनिया के बीच कम हो रहे फासले | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 22.416666666666668,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "pzYHvIo8O3w",
+   "title": "Gauna Ek Pratha Hindi Drama Show | Full Episode | Gaurav Gehna Ka Hua Milan | Full Episode  58",
+   "label": "Shemaroo Umang",
+   "mins": 22.333333333333332,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "M4XBPP-pjgE",
+   "title": "Kundali Milan Hindi Drama Show | Full Episode | Chand Mahattavapurna Ghante | Episode 45",
+   "label": "Shemaroo Umang",
+   "mins": 23.166666666666668,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "6oO6FN1jQ4k",
+   "title": "Shraddha Hue Kidnap | Kismat Ki Lakiron Se | Full Episode 531 | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 22.983333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "OSXfrCWgXlM",
+   "title": "Jamuniya Full Episode 03 | रतन का स्वयंवर | Shemaroo Umang | Hindi Tv Serial",
+   "label": "Shemaroo Umang",
+   "mins": 24.45,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "PWQfAa0_71c",
+   "title": "Jamuniya Full Episode 01 | रतन और जमुनिया की पहली मुलाक़ात | Shemaroo Umang | Hindi Tv Serial",
+   "label": "Shemaroo Umang",
+   "mins": 32.9,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "0Bvc01qJQro",
+   "title": "Jamuniya Full Episode 34 | रतन और जमुनिया की हुई दोस्ती | Shemaroo Umang | Hindi Tv Serial",
+   "label": "Shemaroo Umang",
+   "mins": 22.266666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "JLWBSmC-8qk",
+   "title": "Jamuniya Full Episode 24 | जमुनिया को है पैसों की जरुरत   | Shemaroo Umang | Hindi Tv Serial",
+   "label": "Shemaroo Umang",
+   "mins": 21.283333333333335,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "1v88S4pHpvw",
+   "title": "Chaahenge Tumhe Itnaa | Ashi Bani Kuwari Suhagan | Full Episode 03 | Shemaroo Umang | Hind Tv Serial",
+   "label": "Shemaroo Umang",
+   "mins": 23.366666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "GK3HJobZ_CI",
+   "title": "Chaahenge Tumhe Itnaa | Ashi Aur Siddarth ki Hui Romantic Mulakat | Full Episode 04 | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 22.75,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "DdcLW--l9gE",
+   "title": "Jamuniya Full Episode 39 | उजाला ने जमुनिया को सबक सिखाने चली नई चाल | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 22.416666666666668,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "HTF_0gTEwA4",
+   "title": "Chaahenge Tumhe Itnaa New Episode | Siddarth par hua Chaku se vaar | Full Episode 31 |Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 23.783333333333335,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "EymzGqYLNtc",
+   "title": "Jamuniya Full Episode 36 | जमुनिया की चोट देख के रतन को हुआ दुःख  Shemaroo Umang Hindi Tv Serial",
+   "label": "Shemaroo Umang",
+   "mins": 18.866666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "Oib9_hzeIUQ",
+   "title": "Jamuniya Full Episode 32 | जमुनिया ने बनाया जला हुआ प्रशाद | Shemaroo Umang | Hindi Tv Serial",
+   "label": "Shemaroo Umang",
+   "mins": 21.6,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "viKcdEilw48",
+   "title": "Badi Haveli Ki Chhoti Thakurain Ep 131 | क्या बबलू लेगा जयवीर की जान? | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 22.566666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "iDBqJOgLQxk",
+   "title": "Chaahenge Tumhe Itnaa New Episode | Ashi Aur Siddarth Ka Hua Samna |Full Episode 11 | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 23.116666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "IWDrz6_IBKg",
+   "title": "Gauna Ek Pratha Hindi Drama Show |Full Episode | HUmara Sach Kisiko Mat Batana Gehna  | Ep 52",
+   "label": "Shemaroo Umang",
+   "mins": 21.783333333333335,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "Ol-Z0GoOG9s",
+   "title": "Chaahenge Tumhe Itnaa New Episode 156 | क्या सिड आशी को गीत के चुंगल से बचा पायेगा? | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 19.133333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "OqaUn7VCShI",
+   "title": "Chaahenge Tumhe Itnaa New Episode 79 | Amrita Ne Sikhaya Ashi Ko Sabak | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 22.95,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "0MH6BlH25H0",
+   "title": "Gauna Ek Pratha Full Episode 147 | Gaurav Ne Kiya Gehna par vaar  | Hindi Romantic Show",
+   "label": "Shemaroo Umang",
+   "mins": 22.966666666666665,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "flg6JiMGlKY",
+   "title": "Gauna Ek Pratha | Gaurav Ki Jaan Hai Khatre mein | Full Episode 43 | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 20.75,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "uNmwon5GVJ4",
+   "title": "Thodi Si Umeed Thoda Sa Aasman | Epi - 81 | Full Ep | 07 Oct 2026 | Sun Neo",
+   "label": "Sun Neo",
+   "mins": 24.933333333333334,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "kPatPZhWStI",
+   "title": "Divya Prem: Pyaar aur Rahasya ki Kahaani - Full Episode | Epi - 451| 07 Oct 2026 | Hindi Serial",
+   "label": "Sun Neo",
+   "mins": 25.183333333333334,
+   "found": "2026-10-09",
+   "lang": "hi",
+   "posted": "2026-10-09"
+  },
+  {
+   "id": "rESCNDVeIiA",
+   "title": "Nayantara | Full Episode 02 | Family Drama | Digital Exclusive | Sun Neo",
+   "label": "Sun Neo",
+   "mins": 17.516666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "vhbw4gCmFOc",
+   "title": "Chhathi Maiyya Ki Bitiya - Full Episode 1 | Sun Neo",
+   "label": "Sun Neo",
+   "mins": 30.933333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "PP7BAY-HXyQ",
+   "title": "Nandini Ka Pratishod - Full Episode | Ep No - 206 | 03 Mar 2025 | Sun neo serial",
+   "label": "Sun Neo",
+   "mins": 52.35,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "UvKj8hkVCf0",
+   "title": "Saajha Sindoor - Full Episode 1 | Sun Neo",
+   "label": "Sun Neo",
+   "mins": 31.066666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "ALEjskY0RxM",
+   "title": "Nayantara | Full Episode 01 | Family Drama | Digital Exclusive | Sun Neo",
+   "label": "Sun Neo",
+   "mins": 30.866666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "k5itjtF5YyU",
+   "title": "Roopamati | Full Episode 131 | Supernatural Hindi Drama | Digital Exclusive | Sun Neo",
+   "label": "Sun Neo",
+   "mins": 22.933333333333334,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "ilTNwKv3Lvw",
+   "title": "Nandini Ka Pratishod - Full Epi | Ep No - 187 | Sun Neo Serial |05 Feb 2025",
+   "label": "Sun Neo",
+   "mins": 51.11666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "adkXPKbAijQ",
+   "title": "Nandini Ka Pratishod - Full Epi | Ep No - 166 | Sun Neo Serial |14 Jan 2025",
+   "label": "Sun Neo",
+   "mins": 50.56666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "ibPXhslJM2k",
+   "title": "Byomkesh Bakshi | अदृश्य त्रिकोन | Adrishya Trikon | 1960 | Episode #22",
+   "label": "Doordarshan",
+   "mins": 39.56666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "nkRep3G_Pu8",
+   "title": "Byomkesh Bakshi | किले का रहस्य | Kile Ka Rahasya | North Bihar 1952 | Episode #12",
+   "label": "Doordarshan",
+   "mins": 43.18333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "xvJNxZY4IrQ",
+   "title": "Byomkesh Bakshi: Ep#22 Adrishya Trikon",
+   "label": "Doordarshan",
+   "mins": 39.45,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "H_ZisDw9t14",
+   "title": "Byomkesh Bakshi: Ep#11 - Tasvir Chor",
+   "label": "Doordarshan",
+   "mins": 42.81666666666667,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "PVAUZ4Sh5m0",
+   "title": "Ye Hawayein (ये हवायें) - Episode # 40",
+   "label": "Doordarshan",
+   "mins": 50.15,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "MMVhPBNiK8c",
+   "title": "Byomkesh Bakshi: Ep#20 Anjaan Khooni",
+   "label": "Doordarshan",
+   "mins": 40.35,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -107,14 +816,6 @@
    "lang": "hi"
   },
   {
-   "id": "q3w9jn8h7c8",
-   "title": "Maddam Sir - Ep 14 - Full Episode - 12th March 2020",
-   "label": "Sony SAB",
-   "mins": 23.916666666666668,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
    "id": "ai3YK4441u4",
    "title": "A Love Confession- Ziddi Dil Maane Na - Ep 233 - Full Episode - 4 June 2022",
    "label": "Sony SAB",
@@ -127,38 +828,6 @@
    "title": "Aladdin - Ep 91 - Full Episode - 20th December, 2018",
    "label": "Sony SAB",
    "mins": 22.583333333333332,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "qBimW4_ZN7A",
-   "title": "Manthara ने Kaikeyi को Shri Ram के खिलाफ भड़काया | Shrimad Ramayan - Ep 25 | Full Episode",
-   "label": "Sony SAB",
-   "mins": 23.683333333333334,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "XQ_6e0zXTU8",
-   "title": "Virat Sends A New Refrigerator | Itti Si Khushi | Ep 2 | Full Episode | 19 Aug 2025",
-   "label": "Sony SAB",
-   "mins": 30.916666666666668,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "7QqdjtSUdQI",
-   "title": "Tenali Rama - Full Episode 132",
-   "label": "Sony Pal",
-   "mins": 20.966666666666665,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "7BL_atWdUfs",
-   "title": "Tenali Rama - Full Episode 135",
-   "label": "Sony Pal",
-   "mins": 21.066666666666666,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -187,82 +856,10 @@
    "lang": "hi"
   },
   {
-   "id": "IAzytjG859o",
-   "title": "Ragini ने समझाया Time की एहमियत | Agnifera | Full Ep 1 |  @And TV",
-   "label": "And TV",
-   "mins": 21.483333333333334,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "k1DZkfHfPAs",
-   "title": "Waaris | Ep.291 | Raj और Sakshi के मिलन के गम में Preet गटक गई बोतल | Full Episode | AND TV",
-   "label": "And TV",
-   "mins": 21.583333333333332,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "ka0docYeKvg",
-   "title": "Chupke Chupke | Ep.2 | Meera भी शादी नहीं करना चाहती | Full Episode | AND TV",
-   "label": "And TV",
-   "mins": 21.5,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "pWywyqbLZCk",
-   "title": "Waaris | Ep.187 | Raman की पीठ पे किसने घुसाया छुरा ? | Full Episode | AND TV",
-   "label": "And TV",
-   "mins": 19.85,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "Xft32BOagDE",
-   "title": "Tere Bin | Ep.67 | Vijaya को लग रहा Nandini और Akshay का तालुख | Full Episode | AND TV",
-   "label": "And TV",
-   "mins": 21.583333333333332,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "fNZ20UNJ0Wg",
-   "title": "Bindiya ने Poonam पर दोहरी चाल चली | Begusarai | Full Ep.158 | 7 Oct 15 | @andtvchannel",
-   "label": "And TV",
-   "mins": 21.783333333333335,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "NlsYjAwW2n4",
-   "title": "Tere Bin | Ep.1 | Neeti के सवालो ने किया Vijaya के लिए खड़ा बवाल | Full Episode | AND TV",
-   "label": "And TV",
-   "mins": 22.633333333333333,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
    "id": "p2F1iAAq7Hk",
    "title": "क्वीन्स हैं हम - Queens Hain Hum - Full Ep - 12 - Tarul Swami,Prarthi M Dholakia -And TV",
    "label": "And TV",
    "mins": 21.616666666666667,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "2BA7Au73d7w",
-   "title": "Mann Sundar | 5 Oct 2026 | Full Episode 1748 | Full HD #Newepisode | Dangal TV",
-   "label": "Dangal TV",
-   "mins": 22.5,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "a33gGKPTuL0",
-   "title": "Mann Atisundar | 4 Oct 2026 | Full Episode 1168 | Full HD #Newepisode | Dangal TV",
-   "label": "Dangal TV",
-   "mins": 22.5,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -275,42 +872,10 @@
    "lang": "hi"
   },
   {
-   "id": "u37kU3TiGX4",
-   "title": "Crime World New Episode | Crime World Full Episode | Crime Show | Shemaroo TV",
-   "label": "Shemaroo TV",
-   "mins": 47.18333333333333,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "PWQfAa0_71c",
-   "title": "Jamuniya Full Episode 01 | रतन और जमुनिया की पहली मुलाक़ात | Shemaroo Umang | Hindi Tv Serial",
-   "label": "Shemaroo Umang",
-   "mins": 32.9,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "nLLyJVwKuig",
-   "title": "Jamuniya Full Episode 37 | रतन और जमुनिया के बीच कम हो रहे फासले | Shemaroo Umang",
-   "label": "Shemaroo Umang",
-   "mins": 22.416666666666668,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
    "id": "XSNI8E7nX4s",
    "title": "Chaahenge Tumhe Itnaa New Episode | Siddarth hai Anaath | Full Episode 27 | Shemaroo Umang",
    "label": "Shemaroo Umang",
    "mins": 22.95,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "JLWBSmC-8qk",
-   "title": "Jamuniya Full Episode 24 | जमुनिया को है पैसों की जरुरत   | Shemaroo Umang | Hindi Tv Serial",
-   "label": "Shemaroo Umang",
-   "mins": 21.283333333333335,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -331,26 +896,10 @@
    "lang": "hi"
   },
   {
-   "id": "OSXfrCWgXlM",
-   "title": "Jamuniya Full Episode 03 | रतन का स्वयंवर | Shemaroo Umang | Hindi Tv Serial",
-   "label": "Shemaroo Umang",
-   "mins": 24.45,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
    "id": "ajTIAR626Xc",
    "title": "Jamuniya Full Episode 17 |जमुनिया को मिल गयी घर में रहने की इज्जाजत |Shemaroo Umang Hindi Tv Serial",
    "label": "Shemaroo Umang",
    "mins": 24.866666666666667,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "0Bvc01qJQro",
-   "title": "Jamuniya Full Episode 34 | रतन और जमुनिया की हुई दोस्ती | Shemaroo Umang | Hindi Tv Serial",
-   "label": "Shemaroo Umang",
-   "mins": 22.266666666666666,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -379,14 +928,6 @@
    "lang": "hi"
   },
   {
-   "id": "DdcLW--l9gE",
-   "title": "Jamuniya Full Episode 39 | उजाला ने जमुनिया को सबक सिखाने चली नई चाल | Shemaroo Umang",
-   "label": "Shemaroo Umang",
-   "mins": 22.416666666666668,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
    "id": "8KcMCWnOzKw",
    "title": "Jamuniya Full Episode 08 | फस गई जमुनिया मधुमती के जाल में | Shemaroo Umang | Hindi Tv Serial",
    "label": "Shemaroo Umang",
@@ -395,74 +936,10 @@
    "lang": "hi"
   },
   {
-   "id": "viKcdEilw48",
-   "title": "Badi Haveli Ki Chhoti Thakurain Ep 131 | क्या बबलू लेगा जयवीर की जान? | Shemaroo Umang",
-   "label": "Shemaroo Umang",
-   "mins": 22.566666666666666,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "IWDrz6_IBKg",
-   "title": "Gauna Ek Pratha Hindi Drama Show |Full Episode | HUmara Sach Kisiko Mat Batana Gehna  | Ep 52",
-   "label": "Shemaroo Umang",
-   "mins": 21.783333333333335,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "Ol-Z0GoOG9s",
-   "title": "Chaahenge Tumhe Itnaa New Episode 156 | क्या सिड आशी को गीत के चुंगल से बचा पायेगा? | Shemaroo Umang",
-   "label": "Shemaroo Umang",
-   "mins": 19.133333333333333,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "0MH6BlH25H0",
-   "title": "Gauna Ek Pratha Full Episode 147 | Gaurav Ne Kiya Gehna par vaar  | Hindi Romantic Show",
-   "label": "Shemaroo Umang",
-   "mins": 22.966666666666665,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "OqaUn7VCShI",
-   "title": "Chaahenge Tumhe Itnaa New Episode 79 | Amrita Ne Sikhaya Ashi Ko Sabak | Shemaroo Umang",
-   "label": "Shemaroo Umang",
-   "mins": 22.95,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "flg6JiMGlKY",
-   "title": "Gauna Ek Pratha | Gaurav Ki Jaan Hai Khatre mein | Full Episode 43 | Shemaroo Umang",
-   "label": "Shemaroo Umang",
-   "mins": 20.75,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
    "id": "lMa0MNLQLOk",
    "title": "Badi Haveli Ki Chhoti Thakurain FULL EP 108 | चमकीली हुई सच मे अंधी या रच रही कोई नई चाल ?",
    "label": "Shemaroo Umang",
    "mins": 25.15,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "rESCNDVeIiA",
-   "title": "Nayantara | Full Episode 02 | Family Drama | Digital Exclusive | Sun Neo",
-   "label": "Sun Neo",
-   "mins": 17.516666666666666,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "ibPXhslJM2k",
-   "title": "Byomkesh Bakshi | अदृश्य त्रिकोन | Adrishya Trikon | 1960 | Episode #22",
-   "label": "Doordarshan",
-   "mins": 39.56666666666667,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -483,30 +960,6 @@
    "lang": "hi"
   },
   {
-   "id": "PVAUZ4Sh5m0",
-   "title": "Ye Hawayein (ये हवायें) - Episode # 40",
-   "label": "Doordarshan",
-   "mins": 50.15,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "MMVhPBNiK8c",
-   "title": "Byomkesh Bakshi: Ep#20 Anjaan Khooni",
-   "label": "Doordarshan",
-   "mins": 40.35,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "UX6aurph908",
-   "title": "Gautam Gets Furious | Full Ep. 2 | Pandya Store",
-   "label": "StarPlus",
-   "mins": 19.6,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "yA_Nfx-Aqes",
    "title": "Gautam Takes Charge of Pandya Store | Full Ep. 1 | Pandya Store",
    "label": "StarPlus",
@@ -523,10 +976,10 @@
    "lang": "hi"
   },
   {
-   "id": "UT1nBSF1JBQ",
-   "title": "Aarti Doesn't Want to Marry Raj | Full Ep. 26 | Kumkum – Ek Pyara Sa Bandhan",
+   "id": "UX6aurph908",
+   "title": "Gautam Gets Furious | Full Ep. 2 | Pandya Store",
    "label": "StarPlus",
-   "mins": 48.766666666666666,
+   "mins": 19.6,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -539,10 +992,10 @@
    "lang": "hi"
   },
   {
-   "id": "EP8d47ZEIq4",
-   "title": "Veera hui pregnant | Full Episode:805 | Veera",
+   "id": "UT1nBSF1JBQ",
+   "title": "Aarti Doesn't Want to Marry Raj | Full Ep. 26 | Kumkum – Ek Pyara Sa Bandhan",
    "label": "StarPlus",
-   "mins": 22.0,
+   "mins": 48.766666666666666,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -551,6 +1004,14 @@
    "title": "Jatin's Rudeness Shocks Kumkum | Full Ep. 25 | Kumkum – Ek Pyara Sa Bandhan",
    "label": "StarPlus",
    "mins": 46.68333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "3G1Acu2bmBM",
+   "title": "The Proposal Creates Confusion | Full Ep. 24 | Kumkum – Ek Pyara Sa Bandhan",
+   "label": "StarPlus",
+   "mins": 44.55,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -571,26 +1032,10 @@
    "lang": "hi"
   },
   {
-   "id": "3G1Acu2bmBM",
-   "title": "The Proposal Creates Confusion | Full Ep. 24 | Kumkum – Ek Pyara Sa Bandhan",
+   "id": "625bFvzIcbU",
+   "title": "Sikander हार nahin मानेगा!| Full Episode:291| Kulfi Kumar Bajewala",
    "label": "StarPlus",
-   "mins": 44.55,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "tw10G7ij1y8",
-   "title": "Muskaan लापता kaise hui?| Full Episode:1656|Yeh Rishta Kya Kehlata Hai",
-   "label": "StarPlus",
-   "mins": 21.1,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "xI-H9CPtceg",
-   "title": "Ishita ke व्यवहार से निराश kyun hai Ruhi?| Full Episode:1475| Yeh Hai Mohabbatein",
-   "label": "StarPlus",
-   "mins": 19.616666666666667,
+   "mins": 20.516666666666666,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -603,18 +1048,18 @@
    "lang": "hi"
   },
   {
-   "id": "625bFvzIcbU",
-   "title": "Sikander हार nahin मानेगा!| Full Episode:291| Kulfi Kumar Bajewala",
+   "id": "EP8d47ZEIq4",
+   "title": "Veera hui pregnant | Full Episode:805 | Veera",
    "label": "StarPlus",
-   "mins": 20.516666666666666,
+   "mins": 22.0,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "9MD_skevCEg",
-   "title": "Juhi ne di Rajshekhar ko ढमकी! | Full Episode:1493 | Yeh Rishta Kya Kehlata Hai",
+   "id": "tw10G7ij1y8",
+   "title": "Muskaan लापता kaise hui?| Full Episode:1656|Yeh Rishta Kya Kehlata Hai",
    "label": "StarPlus",
-   "mins": 21.183333333333334,
+   "mins": 21.1,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -627,18 +1072,10 @@
    "lang": "hi"
   },
   {
-   "id": "npX99h71KS0",
-   "title": "Akshara ke jaane se Naitik hua नाराज़! | Full Episode:1471 | Yeh Rishta Kya Kehlata Hai",
+   "id": "xI-H9CPtceg",
+   "title": "Ishita ke व्यवहार से निराश kyun hai Ruhi?| Full Episode:1475| Yeh Hai Mohabbatein",
    "label": "StarPlus",
-   "mins": 20.716666666666665,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "abNS_0kE00U",
-   "title": "Nandii gives birth to baby boy!| Full Episode:1633|Yeh Rishta Kya Kehlata Hai",
-   "label": "StarPlus",
-   "mins": 20.6,
+   "mins": 19.616666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -651,10 +1088,34 @@
    "lang": "hi"
   },
   {
+   "id": "XIVvPjt-Zxo",
+   "title": "The Fake Call | Full Ep. 23 | Kumkum – Ek Pyara Sa Bandhan",
+   "label": "StarPlus",
+   "mins": 48.333333333333336,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "7odhEOz0i0s",
    "title": "Ujwal Spills the Beans | Full Ep. 20 | Kumkum – Ek Pyara Sa Bandhan",
    "label": "StarPlus",
    "mins": 49.46666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "npX99h71KS0",
+   "title": "Akshara ke jaane se Naitik hua नाराज़! | Full Episode:1471 | Yeh Rishta Kya Kehlata Hai",
+   "label": "StarPlus",
+   "mins": 20.716666666666665,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "9MD_skevCEg",
+   "title": "Juhi ne di Rajshekhar ko ढमकी! | Full Episode:1493 | Yeh Rishta Kya Kehlata Hai",
+   "label": "StarPlus",
+   "mins": 21.183333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -667,10 +1128,26 @@
    "lang": "hi"
   },
   {
-   "id": "kTrw65luEgk",
-   "title": "Chhaya Breaks Parvati’s Heart With Harsh Words | Full Ep. 26 | Kahaani Ghar Ghar Kii",
+   "id": "abNS_0kE00U",
+   "title": "Nandii gives birth to baby boy!| Full Episode:1633|Yeh Rishta Kya Kehlata Hai",
    "label": "StarPlus",
-   "mins": 19.6,
+   "mins": 20.6,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "VWIgzbLNhJw",
+   "title": "Ishita to accept Nikhil's deal!| Full Episode:1415 | Yeh Hai Mohabbatein",
+   "label": "StarPlus",
+   "mins": 20.866666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "RXJRpRom6tw",
+   "title": "Naitik ne banaya Akshara ka पसंदीदा खाना!| Full Episode:1582 | Yeh Rishta Kya Kehlata Hai",
+   "label": "StarPlus",
+   "mins": 19.95,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -683,6 +1160,14 @@
    "lang": "hi"
   },
   {
+   "id": "_RDd74pItRM",
+   "title": "Ranoo and Badima | Full Ep. 29 | Sasural Genda Phool",
+   "label": "StarPlus",
+   "mins": 20.1,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "w3ePPXdQAjU",
    "title": "Episode: 82 | Duryodhan Finds His Rival | Hastinapur Ke Veer | Full Episode | 04 Sept 2026",
    "label": "Sony SAB",
@@ -691,10 +1176,26 @@
    "lang": "hi"
   },
   {
-   "id": "V_5DNno4VSM",
-   "title": "Meet The Divekars | Itti Si Khushi | Ep 1 | Full Episode | 18 Aug 2025",
+   "id": "02j_NghgCO4",
+   "title": "Tenali Rama - Ep 693 - Full Episode - 27th February 2020",
    "label": "Sony SAB",
-   "mins": 36.56666666666667,
+   "mins": 23.016666666666666,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "3c9J8WQlKQg",
+   "title": "Tenali Rama - Ep 497 - Full Episode - 29th May, 2019",
+   "label": "Sony SAB",
+   "mins": 20.05,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "sG6goc_Wmrs",
+   "title": "Tenali Rama - Ep 219 - Full Episode - 9th May, 2018",
+   "label": "Sony SAB",
+   "mins": 20.266666666666666,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -715,10 +1216,18 @@
    "lang": "hi"
   },
   {
-   "id": "02j_NghgCO4",
-   "title": "Tenali Rama - Ep 693 - Full Episode - 27th February 2020",
+   "id": "efYMZtDRToU",
+   "title": "Tenali Rama - Ep 217 - Full Episode - 7th May, 2018",
    "label": "Sony SAB",
-   "mins": 23.016666666666666,
+   "mins": 20.933333333333334,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "6I47Q1XsEMQ",
+   "title": "Tenali Rama - Ep 154 - Full Episode - 7th February, 2018",
+   "label": "Sony SAB",
+   "mins": 21.883333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -747,78 +1256,6 @@
    "lang": "hi"
   },
   {
-   "id": "3c9J8WQlKQg",
-   "title": "Tenali Rama - Ep 497 - Full Episode - 29th May, 2019",
-   "label": "Sony SAB",
-   "mins": 20.05,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "WcGephk9NzE",
-   "title": "Maddam Sir - Ep 2 - Full Episode - 25th February 2020",
-   "label": "Sony SAB",
-   "mins": 27.4,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "6I47Q1XsEMQ",
-   "title": "Tenali Rama - Ep 154 - Full Episode - 7th February, 2018",
-   "label": "Sony SAB",
-   "mins": 21.883333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "xZr_F3wNuJg",
-   "title": "Maddam Sir - Ep 114 - Full Episode - 17th November 2020",
-   "label": "Sony SAB",
-   "mins": 22.9,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "sG6goc_Wmrs",
-   "title": "Tenali Rama - Ep 219 - Full Episode - 9th May, 2018",
-   "label": "Sony SAB",
-   "mins": 20.266666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "rHCFFWOz0bA",
-   "title": "Maddam Sir - Ep 171 - Full Episode - 4th February, 2021",
-   "label": "Sony SAB",
-   "mins": 21.933333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "EwEV6ceHGz8",
-   "title": "Maddam Sir - Ep 106 - Full Episode - 5th November 2020",
-   "label": "Sony SAB",
-   "mins": 24.666666666666668,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "tIIbE_tRtXw",
-   "title": "Maddam sir - Mira Solves The Case - Ep 343 - Full Episode - 11th November 2021",
-   "label": "Sony SAB",
-   "mins": 22.05,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "efYMZtDRToU",
-   "title": "Tenali Rama - Ep 217 - Full Episode - 7th May, 2018",
-   "label": "Sony SAB",
-   "mins": 20.933333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "iySg6n3TfpM",
    "title": "Tenali Rama - Ep 431 - Full Episode - 26th February, 2019",
    "label": "Sony SAB",
@@ -827,26 +1264,26 @@
    "lang": "hi"
   },
   {
-   "id": "MDXE3Vv1ws4",
-   "title": "Maddam Sir - Ep 154 - Full Episode - 12th January, 2021",
+   "id": "K72RdpsesIw",
+   "title": "Tenali Rama - Ep 705 - Full Episode - 16th March 2020",
    "label": "Sony SAB",
-   "mins": 23.2,
+   "mins": 16.783333333333335,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "196rp3kL0oA",
-   "title": "Maddam Sir - Ep 133 - Full Episode - 14th December 2020",
+   "id": "RAucfBjmsWs",
+   "title": "Tenali Rama - Ep 347 - Full Episode - 1st November, 2018",
    "label": "Sony SAB",
-   "mins": 23.916666666666668,
+   "mins": 20.333333333333332,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "BLqrAHgDaf4",
-   "title": "Tenali Rama - Ep 580 - Full Episode - 23rd September, 2019",
+   "id": "EwEV6ceHGz8",
+   "title": "Maddam Sir - Ep 106 - Full Episode - 5th November 2020",
    "label": "Sony SAB",
-   "mins": 19.85,
+   "mins": 24.666666666666668,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -867,34 +1304,42 @@
    "lang": "hi"
   },
   {
-   "id": "qiDS5LpuVxg",
-   "title": "Maddam sir -Robot Appointed As Police Officer - Ep 341 - Full Episode - 9th November 2021",
+   "id": "tIIbE_tRtXw",
+   "title": "Maddam sir - Mira Solves The Case - Ep 343 - Full Episode - 11th November 2021",
    "label": "Sony SAB",
-   "mins": 23.083333333333332,
+   "mins": 22.05,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "SlcGf1oUrao",
-   "title": "Yukti Ka Hissa Hai Ghar Mein | Vanshaj | Ep 245 | Full Episode | 22 Mar 2024",
+   "id": "xZr_F3wNuJg",
+   "title": "Maddam Sir - Ep 114 - Full Episode - 17th November 2020",
    "label": "Sony SAB",
-   "mins": 23.4,
+   "mins": 22.9,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "AD_xFkeBLpw",
-   "title": "Wagle Ki Duniya - Ep 54 - Full Episode - 7th May, 2021",
+   "id": "Wz_VXQ3h92Y",
+   "title": "A New Conspiracy - Maddam Sir - Ep 511 - Full Episode - 26 May 2022",
    "label": "Sony SAB",
-   "mins": 22.2,
+   "mins": 21.816666666666666,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "NS95O6s1lnI",
-   "title": "Tenali Rama - Ep 257 - Full Episode - 2nd July, 2018",
+   "id": "z3TwXLxwDms",
+   "title": "Urmila Set To Wear Maddam Sir's Shoes - Maddam Sir - Ep 399 - Full Episode - 15 Jan 2022",
    "label": "Sony SAB",
-   "mins": 21.583333333333332,
+   "mins": 22.55,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "196rp3kL0oA",
+   "title": "Maddam Sir - Ep 133 - Full Episode - 14th December 2020",
+   "label": "Sony SAB",
+   "mins": 23.916666666666668,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -907,18 +1352,66 @@
    "lang": "hi"
   },
   {
-   "id": "dV8sEhRmFbk",
-   "title": "Baalveer Returns - Ep 91 - Full Episode - 14th January 2020",
+   "id": "rHCFFWOz0bA",
+   "title": "Maddam Sir - Ep 171 - Full Episode - 4th February, 2021",
    "label": "Sony SAB",
-   "mins": 21.433333333333334,
+   "mins": 21.933333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "I6tITrLImNM",
-   "title": "Baalveer Returns - Ep 295 - Full Episode - 8th February, 2021",
+   "id": "BLqrAHgDaf4",
+   "title": "Tenali Rama - Ep 580 - Full Episode - 23rd September, 2019",
    "label": "Sony SAB",
-   "mins": 22.183333333333334,
+   "mins": 19.85,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "qiDS5LpuVxg",
+   "title": "Maddam sir -Robot Appointed As Police Officer - Ep 341 - Full Episode - 9th November 2021",
+   "label": "Sony SAB",
+   "mins": 23.083333333333332,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "IVtzsSPBHtQ",
+   "title": "Episode: 37 | Duryodhan's Evil Plan | Hastinapur Ke Veer | Full Episode | 14 Jul 2026",
+   "label": "Sony SAB",
+   "mins": 26.45,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "SlcGf1oUrao",
+   "title": "Yukti Ka Hissa Hai Ghar Mein | Vanshaj | Ep 245 | Full Episode | 22 Mar 2024",
+   "label": "Sony SAB",
+   "mins": 23.4,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "V_5DNno4VSM",
+   "title": "Meet The Divekars | Itti Si Khushi | Ep 1 | Full Episode | 18 Aug 2025",
+   "label": "Sony SAB",
+   "mins": 36.56666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "NS95O6s1lnI",
+   "title": "Tenali Rama - Ep 257 - Full Episode - 2nd July, 2018",
+   "label": "Sony SAB",
+   "mins": 21.583333333333332,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "dV8sEhRmFbk",
+   "title": "Baalveer Returns - Ep 91 - Full Episode - 14th January 2020",
+   "label": "Sony SAB",
+   "mins": 21.433333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -931,14 +1424,6 @@
    "lang": "hi"
   },
   {
-   "id": "_VImajK1hFk",
-   "title": "Maddam sir - Ep 227 - Full Episode - 9th June, 2021",
-   "label": "Sony SAB",
-   "mins": 23.683333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "533W7R3hU_w",
    "title": "Maddam Sir - Haseena Solves The Case -  Ep 424 - Full Episode - 14 Feb 2022",
    "label": "Sony SAB",
@@ -947,10 +1432,26 @@
    "lang": "hi"
   },
   {
-   "id": "fQ-ABFEXdLI",
-   "title": "Wagle Ki Duniya - Ep 45 - Full Episode - 26th April, 2021",
+   "id": "I6tITrLImNM",
+   "title": "Baalveer Returns - Ep 295 - Full Episode - 8th February, 2021",
    "label": "Sony SAB",
-   "mins": 22.7,
+   "mins": 22.183333333333334,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "WcGephk9NzE",
+   "title": "Maddam Sir - Ep 2 - Full Episode - 25th February 2020",
+   "label": "Sony SAB",
+   "mins": 27.4,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "_VImajK1hFk",
+   "title": "Maddam sir - Ep 227 - Full Episode - 9th June, 2021",
+   "label": "Sony SAB",
+   "mins": 23.683333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1055,18 +1556,18 @@
    "lang": "hi"
   },
   {
-   "id": "LsyF7ju8ud0",
-   "title": "Best Of CID | सीआईडी | The Shark Attack | Full Episode",
-   "label": "Sony Pal",
-   "mins": 46.516666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "YL14qr7llnw",
    "title": "House Decoration | Gutur Gu | Full Episode | Episode 1 | 25 March 2022",
    "label": "Sony Pal",
    "mins": 23.5,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "LsyF7ju8ud0",
+   "title": "Best Of CID | सीआईडी | The Shark Attack | Full Episode",
+   "label": "Sony Pal",
+   "mins": 46.516666666666666,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1079,26 +1580,18 @@
    "lang": "hi"
   },
   {
+   "id": "psMg8wYP754",
+   "title": "CID | सीआईडी | Ep 969 | A Shocking Case | Full Episode",
+   "label": "Sony Pal",
+   "mins": 42.983333333333334,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "_JqMJAsqcg8",
    "title": "Best Of F.I.R | Full Episode - Ep 01 | 28th November, 2020",
    "label": "Sony Pal",
    "mins": 21.483333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "QSXT-1ONdaE",
-   "title": "CID के सामने आई एक Invisible Dart की Mystery | CID | Full Episode 1118 | 15 Sep 2026",
-   "label": "Sony Pal",
-   "mins": 42.86666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "ZDnZjAeP9gs",
-   "title": "CID | सीआईडी | Ep 1242 | Mystery Of The Yellow Hat | Full Episode",
-   "label": "Sony Pal",
-   "mins": 43.0,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1119,6 +1612,46 @@
    "lang": "hi"
   },
   {
+   "id": "ZDnZjAeP9gs",
+   "title": "CID | सीआईडी | Ep 1242 | Mystery Of The Yellow Hat | Full Episode",
+   "label": "Sony Pal",
+   "mins": 43.0,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "0WvIeLUXut8",
+   "title": "Baalveer Returns | Full Episode | Episode 114 | 17th January, 2021",
+   "label": "Sony Pal",
+   "mins": 21.25,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "7KqJ66FA2yQ",
+   "title": "CID | सीआईडी | Ep 973 | Scarecrow Secret | Full Episode",
+   "label": "Sony Pal",
+   "mins": 44.05,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "oTxxFhtouAU",
+   "title": "CID | सीआईडी | Ep 967 | Crime At Night | Full Episode",
+   "label": "Sony Pal",
+   "mins": 44.36666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "Qq1LveWdVHs",
+   "title": "CID | सीआईडी | Ep 983 | Television Mystery | Full Episode",
+   "label": "Sony Pal",
+   "mins": 44.016666666666666,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "UJWYWG7r4Ek",
    "title": "Adaalat | Full Episode | Episode 1 | 18th February, 2021",
    "label": "Sony Pal",
@@ -1135,38 +1668,6 @@
    "lang": "hi"
   },
   {
-   "id": "oTxxFhtouAU",
-   "title": "CID | सीआईडी | Ep 967 | Crime At Night | Full Episode",
-   "label": "Sony Pal",
-   "mins": 44.36666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "yuSmpH_rpt0",
-   "title": "Adaalat | Full Episode | Episode 15 | 22nd February, 2021",
-   "label": "Sony Pal",
-   "mins": 38.833333333333336,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "psMg8wYP754",
-   "title": "CID | सीआईडी | Ep 969 | A Shocking Case | Full Episode",
-   "label": "Sony Pal",
-   "mins": 42.983333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "7KqJ66FA2yQ",
-   "title": "CID | सीआईडी | Ep 973 | Scarecrow Secret | Full Episode",
-   "label": "Sony Pal",
-   "mins": 44.05,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "S13rLQrUybw",
    "title": "CID | सीआईडी | Ep 991 | The Secret Of Video Game | Full Episode",
    "label": "Sony Pal",
@@ -1175,26 +1676,26 @@
    "lang": "hi"
   },
   {
-   "id": "0WvIeLUXut8",
-   "title": "Baalveer Returns | Full Episode | Episode 114 | 17th January, 2021",
+   "id": "QSXT-1ONdaE",
+   "title": "CID के सामने आई एक Invisible Dart की Mystery | CID | Full Episode 1118 | 15 Sep 2026",
    "label": "Sony Pal",
-   "mins": 21.25,
+   "mins": 42.86666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "Qq1LveWdVHs",
-   "title": "CID | सीआईडी | Ep 983 | Television Mystery | Full Episode",
+   "id": "ZoV7pgtVB8c",
+   "title": "CID | सीआईडी | Ep 979 | Three Criminals | Full Episode",
    "label": "Sony Pal",
-   "mins": 44.016666666666666,
+   "mins": 41.8,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "Xfx3X2ZwBas",
-   "title": "Tenali Rama - Full Episode 82",
+   "id": "M3QhFPuKorI",
+   "title": "CID | सीआईडी | Ep 996 | Mist In Air | Full Episode",
    "label": "Sony Pal",
-   "mins": 22.65,
+   "mins": 43.733333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1231,18 +1732,18 @@
    "lang": "hi"
   },
   {
-   "id": "AgFv3HlHZbI",
-   "title": "CID | सीआईडी | Ep 945 | The Secret of cut finger | Full Episode",
+   "id": "Xfx3X2ZwBas",
+   "title": "Tenali Rama - Full Episode 82",
    "label": "Sony Pal",
-   "mins": 50.083333333333336,
+   "mins": 22.65,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "fsc9eFNYwYI",
-   "title": "Best Of CID | सीआईडी |  A Bizarre Case | Full Episode",
+   "id": "AgFv3HlHZbI",
+   "title": "CID | सीआईडी | Ep 945 | The Secret of cut finger | Full Episode",
    "label": "Sony Pal",
-   "mins": 48.75,
+   "mins": 50.083333333333336,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1312,18 +1813,18 @@
    "lang": "hi"
   },
   {
-   "id": "UAnKLLEX-c8",
-   "title": "मासूम बगावत | Crime Patrol 2026 - Crime Ka Current Season | Ep 1 | Full Episode | 31 Aug 2026",
-   "label": "SET India",
-   "mins": 43.38333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "V0AvKVarhlQ",
    "title": "एक Mysterious Crime को कैसे हल करेगी Police? |Crime Patrol–26 Jurm, 26 Cases | Ep 25 | Full Episodes",
    "label": "SET India",
    "mins": 46.983333333333334,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "XYrazXNMvdA",
+   "title": "Neerav की बेटी का High Profile Case कैसे Solve करेगी Team CID? | CID | New Season | Full Episode",
+   "label": "SET India",
+   "mins": 44.68333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1336,10 +1837,10 @@
    "lang": "hi"
   },
   {
-   "id": "XYrazXNMvdA",
-   "title": "Neerav की बेटी का High Profile Case कैसे Solve करेगी Team CID? | CID | New Season | Full Episode",
+   "id": "UAnKLLEX-c8",
+   "title": "मासूम बगावत | Crime Patrol 2026 - Crime Ka Current Season | Ep 1 | Full Episode | 31 Aug 2026",
    "label": "SET India",
-   "mins": 44.68333333333333,
+   "mins": 43.38333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1360,22 +1861,6 @@
    "lang": "hi"
   },
   {
-   "id": "E_EloXQ5jWU",
-   "title": "Bepannaah | Full Episode Ep. 4 | Aditya lashes out at the funeral | Colors TV",
-   "label": "Colors TV",
-   "mins": 37.6,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "MUsR7EE0csQ",
-   "title": "Naagin S1 | Full Episode Ep. 47 | Yamini's truth is revealed | Colors TV",
-   "label": "Colors TV",
-   "mins": 40.333333333333336,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "534tsl5qBHQ",
    "title": "Naagin S5 | Full Ep - 23 | The end of Shakura? | Colors TV",
    "label": "Colors TV",
@@ -1384,42 +1869,18 @@
    "lang": "hi"
   },
   {
-   "id": "feZLUnyAvc0",
-   "title": "Naagin S5 | Full Episode Ep. 32 | Battle of serpents! | Colors TV",
-   "label": "Colors TV",
-   "mins": 38.7,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "_qw45oCfEZ8",
-   "title": "Kasam | Full Episode Ep. 48 | Will Saloni reveal Pawan’s truth | Colors TV",
-   "label": "Colors TV",
-   "mins": 20.133333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "xtdTGBGDf0M",
-   "title": "Shubharambh | Full Episode Ep. 13 | Asha’s Big Reveal! A \"Queen\" For Her Raja?  | Colors TV",
-   "label": "Colors TV",
-   "mins": 24.183333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "fRs69UDDtbw",
-   "title": "Comedy Nights Bachao | Full Episode Ep. 40 | Krushna morphs into Rakhi Sawant | Colors TV",
-   "label": "Colors TV",
-   "mins": 55.483333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "WuBgpLTbDWA",
    "title": "Episode 1 | Shayad Yahi Hai Pyaar",
    "label": "Colors TV",
    "mins": 46.916666666666664,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "5hS_ZzayB0I",
+   "title": "Naagin S5 |  Ep. 31 | Bani Confronts Jay | Colors TV",
+   "label": "Colors TV",
+   "mins": 40.733333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1468,70 +1929,6 @@
    "title": "अनुराग ने की रागिनी से शादी! | 11 April 17 | Agnifera | Full Ep.17 |Ankit Gera |@And TV",
    "label": "And TV",
    "mins": 21.433333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "y4Hxf3L4Q8w",
-   "title": "Who is Amma ji flirting with in the restroom? - Bhabi Ji Ghar Par Hai - Full Episode 2554 - And Tv",
-   "label": "And TV",
-   "mins": 20.833333333333332,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "t4v0lFjvQr4",
-   "title": "Vibhuti और Anita छोड़ कर जा रहे है मोहल्ला | Bhabi ji ghar par hai! | Full Ep.2319 |@andtvchannel",
-   "label": "And TV",
-   "mins": 20.75,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "o5oWc0sV8jY",
-   "title": "यह थो Bhot sahi कहा उन्हों ने | Bhabi Ji Ghar Par Hai! - Full Ep - 181 - Anita Mishra, @andtvchannel",
-   "label": "And TV",
-   "mins": 21.866666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "H2TVJF5E8Qg",
-   "title": "Anita ने क्यू किया Vibhuti के ? | Bhabi Ji Ghar Par Hai Full Ep 812 | 9 Apr 18 | Anita @andtvchannel",
-   "label": "And TV",
-   "mins": 21.433333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "Fg8Qyr6z-_4",
-   "title": "Amma तुम क्यू ताने मार रहे हो ?-Happu Ki Ultan Paltan Full Ep - 281-22 Jan 2024-Happu-@andtvchannel",
-   "label": "And TV",
-   "mins": 21.483333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "h__JadYp6gU",
-   "title": "Will Teeka and Tillu Change Their Fate with a Tea Stall? | Bhabi Ji Ghar Par Hai! | Full Ep. 2510...",
-   "label": "And TV",
-   "mins": 26.416666666666668,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "lgLN-kMlaEM",
-   "title": "Train के सामने Suicide का Case | Agent Raghav Crime Branch | Ep.1 | And TV",
-   "label": "And TV",
-   "mins": 42.3,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "Y5V7DsdSizI",
-   "title": "Shalini को हुआ Mannequin से Attraction | Laal Ishq | Full Ep 87 |@andtvchannel",
-   "label": "And TV",
-   "mins": 44.86666666666667,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1643,7 +2040,7 @@
    "id": "ZwbVd9pMu8g",
    "title": "Mann Atisundar राधिका की संघर्ष गाथा क्या उसे मिलेगा प्यार और परिवार का साथ? Mahaepisode | DangalTV",
    "label": "Dangal TV",
-   "mins": 42.65,
+   "mins": 43.78333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1680,48 +2077,8 @@
    "lang": "hi"
   },
   {
-   "id": "90twkfFN9QM",
-   "title": "Hamari Bhabhi Number 1 | Full Episode 33 | 7 Oct 2026 | HD #newepisode Dangal TV",
-   "label": "Dangal TV",
-   "mins": 22.5,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "y5XpARTc348",
-   "title": "Sohni - Aur Nahi Koi Honi | 7 Oct 2026 | Full Episode 3 | Dangal TV Channel",
-   "label": "Dangal TV",
-   "mins": 24.833333333333332,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "v8ZiOK6xE2g",
-   "title": "Rimjhim - Choti Umar Bada Safar | Full Episode 357 | 7 Oct 2026 | Full HD #Newepisode | Dangal TV",
-   "label": "Dangal TV",
-   "mins": 22.5,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "gTy0bhGjy9o",
-   "title": "Mann Sundar | 7 Oct 2026 | Full Episode 1750 | Full HD #Newepisode | Dangal TV",
-   "label": "Dangal TV",
-   "mins": 22.5,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "iGfQ6Egeujo",
    "title": "Mann Atisundar | 7 Oct 2026 | Full Episode 1171 | Full HD #Newepisode | Dangal TV",
-   "label": "Dangal TV",
-   "mins": 22.5,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "Cw7SYtm01SE",
-   "title": "Pati Brahmachari | Full Episode 435 | 7 Oct 2026 | Full HD #Newepisode | Dangal TV",
    "label": "Dangal TV",
    "mins": 22.5,
    "found": "2026-10-08",
@@ -1736,16 +2093,24 @@
    "lang": "hi"
   },
   {
-   "id": "8dyZZFuqmBs",
-   "title": "ISHQ JUNOONI | Full Episode 218 | 6 Oct 2026 | Full HD #Newepisode | Dangal TV",
+   "id": "fgTUab6snm4",
+   "title": "ISHQ JUNOONI | Full Episode 219 | 7 Oct 2026 | Full HD #Newepisode | Dangal TV",
    "label": "Dangal TV",
    "mins": 22.5,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "fgTUab6snm4",
-   "title": "ISHQ JUNOONI | Full Episode 219 | 7 Oct 2026 | Full HD #Newepisode | Dangal TV",
+   "id": "HOxrvTISlbs",
+   "title": "Mann Atisundar | 6 Oct 2026 | Full Episode 1170 | Full HD #Newepisode | Dangal TV",
+   "label": "Dangal TV",
+   "mins": 22.5,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "v8ZiOK6xE2g",
+   "title": "Rimjhim - Choti Umar Bada Safar | Full Episode 357 | 7 Oct 2026 | Full HD #Newepisode | Dangal TV",
    "label": "Dangal TV",
    "mins": 22.5,
    "found": "2026-10-08",
@@ -1760,10 +2125,10 @@
    "lang": "hi"
   },
   {
-   "id": "HOxrvTISlbs",
-   "title": "Mann Atisundar | 6 Oct 2026 | Full Episode 1170 | Full HD #Newepisode | Dangal TV",
+   "id": "nQqPwoyOq2I",
+   "title": "Mann Sundar | 6 Oct 2026 | Full Episode 1749 | Full HD #Newepisode | Dangal TV",
    "label": "Dangal TV",
-   "mins": 22.5,
+   "mins": 22.333333333333332,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1784,18 +2149,10 @@
    "lang": "hi"
   },
   {
-   "id": "2S5srus2LmM",
-   "title": "Hamari Bhabhi Number 1 | Full Episode 31 | 5 Oct 2026 | HD #newepisode Dangal TV",
+   "id": "Cw7SYtm01SE",
+   "title": "Pati Brahmachari | Full Episode 435 | 7 Oct 2026 | Full HD #Newepisode | Dangal TV",
    "label": "Dangal TV",
-   "mins": 22.533333333333335,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "nQqPwoyOq2I",
-   "title": "Mann Sundar | 6 Oct 2026 | Full Episode 1749 | Full HD #Newepisode | Dangal TV",
-   "label": "Dangal TV",
-   "mins": 22.333333333333332,
+   "mins": 22.5,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1808,8 +2165,8 @@
    "lang": "hi"
   },
   {
-   "id": "212gqFHG3dc",
-   "title": "Rimjhim - Choti Umar Bada Safar | Full Episode 355 | 5 Oct 2026 | Full HD #Newepisode | Dangal TV",
+   "id": "WaZP_Vj2Cho",
+   "title": "Kaisi Teri Dillagi | Full Episode 79 | 5 Oct 2026 | New Show | Dangal TV",
    "label": "Dangal TV",
    "mins": 22.5,
    "found": "2026-10-08",
@@ -1824,24 +2181,40 @@
    "lang": "hi"
   },
   {
-   "id": "e0TD8b-YBaI",
-   "title": "Kaisi Teri Dillagi | Full Episode 78 | 3 Oct 2026 | New Show | Dangal TV",
+   "id": "2S5srus2LmM",
+   "title": "Hamari Bhabhi Number 1 | Full Episode 31 | 5 Oct 2026 | HD #newepisode Dangal TV",
+   "label": "Dangal TV",
+   "mins": 22.533333333333335,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "8dyZZFuqmBs",
+   "title": "ISHQ JUNOONI | Full Episode 218 | 6 Oct 2026 | Full HD #Newepisode | Dangal TV",
    "label": "Dangal TV",
    "mins": 22.5,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "FwFX8JzlM1o",
-   "title": "Hamari Bhabhi Number 1 | Full Episode 1 | 31 Aug 2026 | HD #newepisode Dangal TV",
+   "id": "gTy0bhGjy9o",
+   "title": "Mann Sundar | 7 Oct 2026 | Full Episode 1750 | Full HD #Newepisode | Dangal TV",
    "label": "Dangal TV",
-   "mins": 24.85,
+   "mins": 22.5,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "WaZP_Vj2Cho",
-   "title": "Kaisi Teri Dillagi | Full Episode 79 | 5 Oct 2026 | New Show | Dangal TV",
+   "id": "212gqFHG3dc",
+   "title": "Rimjhim - Choti Umar Bada Safar | Full Episode 355 | 5 Oct 2026 | Full HD #Newepisode | Dangal TV",
+   "label": "Dangal TV",
+   "mins": 22.5,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "e0TD8b-YBaI",
+   "title": "Kaisi Teri Dillagi | Full Episode 78 | 3 Oct 2026 | New Show | Dangal TV",
    "label": "Dangal TV",
    "mins": 22.5,
    "found": "2026-10-08",
@@ -1852,6 +2225,22 @@
    "title": "Kaisi Teri Dillagi | Full Episode 77 | 2 Oct 2026 | New Show | Dangal TV",
    "label": "Dangal TV",
    "mins": 22.5,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "90twkfFN9QM",
+   "title": "Hamari Bhabhi Number 1 | Full Episode 33 | 7 Oct 2026 | HD #newepisode Dangal TV",
+   "label": "Dangal TV",
+   "mins": 22.5,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "FwFX8JzlM1o",
+   "title": "Hamari Bhabhi Number 1 | Full Episode 1 | 31 Aug 2026 | HD #newepisode Dangal TV",
+   "label": "Dangal TV",
+   "mins": 24.85,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1962,18 +2351,18 @@
    "lang": "hi"
   },
   {
-   "id": "njNJMqB4Jbc",
-   "title": "Kyunki Tum Hi Ho Hindi Drama Show | Full Episode | क्यू घबरा रही है काव्या? | Episode 3",
-   "label": "Shemaroo TV",
-   "mins": 23.333333333333332,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "OdBuNdTe7Ik",
    "title": "Kismat Ki Lakiron Se Hindi Drama Show | Full Episode | Kirti Ne Kiya Mahol Kharaab | Episode 66",
    "label": "Shemaroo TV",
    "mins": 25.35,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "njNJMqB4Jbc",
+   "title": "Kyunki Tum Hi Ho Hindi Drama Show | Full Episode | क्यू घबरा रही है काव्या? | Episode 3",
+   "label": "Shemaroo TV",
+   "mins": 23.333333333333332,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -1994,22 +2383,6 @@
    "lang": "hi"
   },
   {
-   "id": "sfeJuPcLHk4",
-   "title": "Kismat Ki Lakiron Se Hindi Drama Show | Full Episode | पहली मुलाक़ात  | Ep1",
-   "label": "Shemaroo TV",
-   "mins": 28.716666666666665,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "UJofzUb9tmg",
-   "title": "Shravani Hindi Drama Show | Full Episode | श्रवणी ने उगलवाया सच  | Episode 8",
-   "label": "Shemaroo TV",
-   "mins": 25.95,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "V83KnGmBRDo",
    "title": "Kyunki Tum Hi Ho Hindi Drama Show | Full Episode | काव्य के लिए खास दिन | Episode 4",
    "label": "Shemaroo TV",
@@ -2022,6 +2395,14 @@
    "title": "Payal in Big Trouble | Kismat Ki Lakiron Se | Full Episode 186 | Shemaroo Umang",
    "label": "Shemaroo TV",
    "mins": 24.266666666666666,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "UJofzUb9tmg",
+   "title": "Shravani Hindi Drama Show | Full Episode | श्रवणी ने उगलवाया सच  | Episode 8",
+   "label": "Shemaroo TV",
+   "mins": 25.95,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2066,14 +2447,6 @@
    "lang": "hi"
   },
   {
-   "id": "OwytxJYgYMU",
-   "title": "Kyunki Tum Hi Ho Hindi Drama Show | Full Episode | कहां फंस गई काव्या  | Episode 2",
-   "label": "Shemaroo TV",
-   "mins": 30.783333333333335,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "G1FuDHluU9g",
    "title": "Kismat Ki Lakiron Se Hindi Drama Show | Full Episode | Shraddha Ne Abhay Ko Danta | Episode 47",
    "label": "Shemaroo TV",
@@ -2082,10 +2455,10 @@
    "lang": "hi"
   },
   {
-   "id": "henJv4D7w7c",
-   "title": "Main Dil Tum Dhadkan Full Episode 59 | वृंदा का सफर | Shemaroo Umang #drama #shemarootv",
+   "id": "OwytxJYgYMU",
+   "title": "Kyunki Tum Hi Ho Hindi Drama Show | Full Episode | कहां फंस गई काव्या  | Episode 2",
    "label": "Shemaroo TV",
-   "mins": 20.9,
+   "mins": 30.783333333333335,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2106,18 +2479,18 @@
    "lang": "hi"
   },
   {
-   "id": "KD1dss-DdFs",
-   "title": "Crime World New Episode | Crime World Full Episode | Crime Show | Shemaroo TV",
-   "label": "Shemaroo TV",
-   "mins": 43.416666666666664,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "ONgny4Jv8uM",
    "title": "Crime World New Episode | Crime World Full Episode | Crime Show | Shemaroo TV",
    "label": "Shemaroo TV",
    "mins": 47.43333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "KD1dss-DdFs",
+   "title": "Crime World New Episode | Crime World Full Episode | Crime Show | Shemaroo TV",
+   "label": "Shemaroo TV",
+   "mins": 43.416666666666664,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2170,14 +2543,6 @@
    "lang": "hi"
   },
   {
-   "id": "1sc4q98jQxE",
-   "title": "Abhay's Life in Danger | Kismat Ki Lakiron Se | Full Episode 222 | Shemaroo Umang",
-   "label": "Shemaroo TV",
-   "mins": 24.166666666666668,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "_TYZD-mZEks",
    "title": "Shravani Hindi Drama Show | Full Episode | चंद्रा पे इलज़ाम | Episode 15",
    "label": "Shemaroo TV",
@@ -2186,18 +2551,18 @@
    "lang": "hi"
   },
   {
-   "id": "lyzAEwsWx8g",
-   "title": "Zabaan Sambhal Ke Full Episode 9 | 90s Comedy Tv Show",
+   "id": "1sc4q98jQxE",
+   "title": "Abhay's Life in Danger | Kismat Ki Lakiron Se | Full Episode 222 | Shemaroo Umang",
    "label": "Shemaroo TV",
-   "mins": 23.466666666666665,
+   "mins": 24.166666666666668,
    "found": "2026-10-08",
    "lang": "hi"
   },
   {
-   "id": "yk2n2m3WYOk",
-   "title": "वाली और तृषा का हुआ आमना सामना | Sankat Mochan Mahabali Hanuman | Ep 291",
+   "id": "lyzAEwsWx8g",
+   "title": "Zabaan Sambhal Ke Full Episode 9 | 90s Comedy Tv Show",
    "label": "Shemaroo TV",
-   "mins": 19.733333333333334,
+   "mins": 23.466666666666665,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2294,10 +2659,10 @@
    "lang": "hi"
   },
   {
-   "id": "vsTkH3po48E",
-   "title": "Chaahenge Tumhe Itnaa | Ashi ne Mangi Siddarth Se Maafi | Full Episode 08 | Shemaroo Umang",
+   "id": "pcplhqfQHMg",
+   "title": "Chaahenge Tumhe Itnaa | Ashi Aur Kunal KI Shadi | Full Episode 02 | Shemaroo Umang | Hind Tv Serial",
    "label": "Shemaroo Umang",
-   "mins": 22.4,
+   "mins": 23.266666666666666,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2310,42 +2675,10 @@
    "lang": "hi"
   },
   {
-   "id": "pcplhqfQHMg",
-   "title": "Chaahenge Tumhe Itnaa | Ashi Aur Kunal KI Shadi | Full Episode 02 | Shemaroo Umang | Hind Tv Serial",
+   "id": "vsTkH3po48E",
+   "title": "Chaahenge Tumhe Itnaa | Ashi ne Mangi Siddarth Se Maafi | Full Episode 08 | Shemaroo Umang",
    "label": "Shemaroo Umang",
-   "mins": 23.266666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "hz37tyIJun0",
-   "title": "Chaahenge Tumhe Itnaa New Episode | Ashi ne dekha Siddarth ka Sapna |Full Episode 32 |Shemaroo Umang",
-   "label": "Shemaroo Umang",
-   "mins": 22.95,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "IYbydXIy3go",
-   "title": "Chaahenge Tumhe Itnaa New Episode 137 | Aashi Ki Jindagi hai khatre Main |Shemaroo Umang",
-   "label": "Shemaroo Umang",
-   "mins": 20.883333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "MgTmOAPUtLw",
-   "title": "Jamuniya Full Episode 01 | रतन और जमुनिया की पहली मुलाक़ात | Shemaroo Umang | Hindi Tv Serial",
-   "label": "Shemaroo Umang",
-   "mins": 32.916666666666664,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "HV5atR8vkWk",
-   "title": "Jamuniya Full Episode 31 | कब मिलेगा जमुनिया को उसका अलसी हक़ | Shemaroo Umang | Hindi Tv Serial",
-   "label": "Shemaroo Umang",
-   "mins": 22.25,
+   "mins": 22.4,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2358,6 +2691,14 @@
    "lang": "hi"
   },
   {
+   "id": "MgTmOAPUtLw",
+   "title": "Jamuniya Full Episode 01 | रतन और जमुनिया की पहली मुलाक़ात | Shemaroo Umang | Hindi Tv Serial",
+   "label": "Shemaroo Umang",
+   "mins": 32.916666666666664,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "_vDmp4vdLDs",
    "title": "Chaahenge Tumhe Itnaa New Episode | Geet ko hua Siddarth par shaq | Full Episode 12 | Shemaroo Umang",
    "label": "Shemaroo Umang",
@@ -2366,10 +2707,18 @@
    "lang": "hi"
   },
   {
-   "id": "FVLAkxDJwps",
-   "title": "Jamuniya Full Episode 13 | जमुनिया का फिर हुआ रतन से आमना सामना | Shemaroo Umang | Hindi Tv Serial",
+   "id": "hz37tyIJun0",
+   "title": "Chaahenge Tumhe Itnaa New Episode | Ashi ne dekha Siddarth ka Sapna |Full Episode 32 |Shemaroo Umang",
    "label": "Shemaroo Umang",
-   "mins": 24.416666666666668,
+   "mins": 22.95,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "HV5atR8vkWk",
+   "title": "Jamuniya Full Episode 31 | कब मिलेगा जमुनिया को उसका अलसी हक़ | Shemaroo Umang | Hindi Tv Serial",
+   "label": "Shemaroo Umang",
+   "mins": 22.25,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2390,10 +2739,10 @@
    "lang": "hi"
   },
   {
-   "id": "8FxtguMjK_4",
-   "title": "Main Dil Tum Dhadkan New Episode 19 | केशव को मिल गया अपना बेटा | Shemaroo Umang",
+   "id": "IYbydXIy3go",
+   "title": "Chaahenge Tumhe Itnaa New Episode 137 | Aashi Ki Jindagi hai khatre Main |Shemaroo Umang",
    "label": "Shemaroo Umang",
-   "mins": 20.466666666666665,
+   "mins": 20.883333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2402,6 +2751,14 @@
    "title": "Chaahenge Tumhe Itnaa New Episode 147 | SID का जन्मदिन | Shemaroo Umang",
    "label": "Shemaroo Umang",
    "mins": 22.616666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "8FxtguMjK_4",
+   "title": "Main Dil Tum Dhadkan New Episode 19 | केशव को मिल गया अपना बेटा | Shemaroo Umang",
+   "label": "Shemaroo Umang",
+   "mins": 20.466666666666665,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2418,14 +2775,6 @@
    "title": "Badi Haveli Ki Chhoti Thakurain Full Episode 95 | क्या खत्म हो जाएगा जयवीर और चैना का रिश्ता?",
    "label": "Shemaroo Umang",
    "mins": 24.633333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "o9XYc1EpgOo",
-   "title": "Chaahenge Tumhe Itnaa New Episode 43 | Amrita Ne Milaya Sid Aur Ashi Ko | Shemaroo Umang",
-   "label": "Shemaroo Umang",
-   "mins": 23.033333333333335,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2496,18 +2845,18 @@
    "lang": "hi"
   },
   {
-   "id": "NTUbVJxzliQ",
-   "title": "Roopamati | Full Episode 133 | Supernatural Hindi Drama | Digital Exclusive | Sun Neo",
-   "label": "Sun Neo",
-   "mins": 22.733333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "rEfwIhQA5DA",
    "title": "Nayantara | Full Episode 03 | Family Drama | Digital Exclusive | Sun Neo",
    "label": "Sun Neo",
    "mins": 21.116666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "NTUbVJxzliQ",
+   "title": "Roopamati | Full Episode 133 | Supernatural Hindi Drama | Digital Exclusive | Sun Neo",
+   "label": "Sun Neo",
+   "mins": 22.733333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2528,14 +2877,6 @@
    "lang": "hi"
   },
   {
-   "id": "GCJNdeoRd1w",
-   "title": "Jaspal Bhatti's Flop Show | Government Employees |  Ep #01",
-   "label": "Doordarshan",
-   "mins": 23.5,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "JCy9BfqMw2c",
    "title": "Jaspal Bhatti's Flop Show | Ph.D. Scholar |  Ep #05",
    "label": "Doordarshan",
@@ -2544,10 +2885,10 @@
    "lang": "hi"
   },
   {
-   "id": "y5lffue-dCU",
-   "title": "Jaspal Bhatti's Flop Show | Property Encroachers | Ep 3",
+   "id": "GCJNdeoRd1w",
+   "title": "Jaspal Bhatti's Flop Show | Government Employees |  Ep #01",
    "label": "Doordarshan",
-   "mins": 26.316666666666666,
+   "mins": 23.5,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2560,6 +2901,14 @@
    "lang": "hi"
   },
   {
+   "id": "oAy9f-CEpnw",
+   "title": "Byomkesh Bakshi | नेकलेस | Necklace | 1957 | Episode #17",
+   "label": "Doordarshan",
+   "mins": 40.71666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "houu5Zh50yA",
    "title": "Jaspal Bhatti's Flop Show |  Fake Medical Bills | Ep 2",
    "label": "Doordarshan",
@@ -2568,7 +2917,7 @@
    "lang": "hi"
   },
   {
-   "id": "PDwCErZbpfs",
+   "id": "y5lffue-dCU",
    "title": "Jaspal Bhatti's Flop Show | Property Encroachers | Ep 3",
    "label": "Doordarshan",
    "mins": 26.316666666666666,
@@ -2584,30 +2933,6 @@
    "lang": "hi"
   },
   {
-   "id": "dpdo8t2F8cQ",
-   "title": "Byomkesh Bakshi: Ep#1- Satyanveshi",
-   "label": "Doordarshan",
-   "mins": 41.88333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "oAy9f-CEpnw",
-   "title": "Byomkesh Bakshi | नेकलेस | Necklace | 1957 | Episode #17",
-   "label": "Doordarshan",
-   "mins": 40.71666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "jd_A1972B1A",
-   "title": "Jaspal Bhatti's Flop Show | Corrupt Contractors and Engineers | Ep # 4",
-   "label": "Doordarshan",
-   "mins": 24.666666666666668,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
    "id": "RfvlwL4aJYE",
    "title": "Byomkesh Bakshi | आदिम शत्रु | Aadim Shatru | Part 2 | Calcutta 1955 | Episode #14",
    "label": "Doordarshan",
@@ -2616,10 +2941,18 @@
    "lang": "hi"
   },
   {
-   "id": "3En_0dC1KZU",
-   "title": "Byomkesh Bakshi | बेमिसाल | Bemisal | 1960 | Episode # 24",
+   "id": "dpdo8t2F8cQ",
+   "title": "Byomkesh Bakshi: Ep#1- Satyanveshi",
    "label": "Doordarshan",
-   "mins": 38.93333333333333,
+   "mins": 41.88333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "PDwCErZbpfs",
+   "title": "Jaspal Bhatti's Flop Show | Property Encroachers | Ep 3",
+   "label": "Doordarshan",
+   "mins": 26.316666666666666,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2632,6 +2965,30 @@
    "lang": "hi"
   },
   {
+   "id": "jd_A1972B1A",
+   "title": "Jaspal Bhatti's Flop Show | Corrupt Contractors and Engineers | Ep # 4",
+   "label": "Doordarshan",
+   "mins": 24.666666666666668,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "6koJ9opUDO4",
+   "title": "Byomkesh Bakshi: Ep#10 - Upsanhaar",
+   "label": "Doordarshan",
+   "mins": 40.53333333333333,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "nYYOc6pkxls",
+   "title": "Byomkesh Bakshi: Ep#32 - Lohe Ka Biscuit",
+   "label": "Doordarshan",
+   "mins": 39.5,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "gKzHcph0lnI",
    "title": "Byomkesh Bakshi: Ep#14 - Aadim Shatru - Part II",
    "label": "Doordarshan",
@@ -2640,42 +2997,10 @@
    "lang": "hi"
   },
   {
-   "id": "epJvt_yz3-U",
-   "title": "Jaspal Bhatti's Flop Show | Telephone Department | Ep #09",
+   "id": "3En_0dC1KZU",
+   "title": "Byomkesh Bakshi | बेमिसाल | Bemisal | 1960 | Episode # 24",
    "label": "Doordarshan",
-   "mins": 22.366666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "rCgJiDnT2Ws",
-   "title": "Byomkesh Bakshi: Ep#2 - Rastey Ka Kanta",
-   "label": "Doordarshan",
-   "mins": 40.45,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "HLURA_dgHHk",
-   "title": "Byomkesh Bakshi | पहाड़ी रहस्य | Pahari Rahasya | 1958 | Episode #19",
-   "label": "Doordarshan",
-   "mins": 40.25,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "n5ugW2eskMM",
-   "title": "Byomkesh Bakshi: Ep#7 - Laal Neelam",
-   "label": "Doordarshan",
-   "mins": 38.233333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "nCWPn-8RTB4",
-   "title": "Byomkesh Bakshi: Ep#6 - Quicksand",
-   "label": "Doordarshan",
-   "mins": 40.43333333333333,
+   "mins": 38.93333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2688,6 +3013,38 @@
    "lang": "hi"
   },
   {
+   "id": "epJvt_yz3-U",
+   "title": "Jaspal Bhatti's Flop Show | Telephone Department | Ep #09",
+   "label": "Doordarshan",
+   "mins": 22.366666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "n5ugW2eskMM",
+   "title": "Byomkesh Bakshi: Ep#7 - Laal Neelam",
+   "label": "Doordarshan",
+   "mins": 38.233333333333334,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "rCgJiDnT2Ws",
+   "title": "Byomkesh Bakshi: Ep#2 - Rastey Ka Kanta",
+   "label": "Doordarshan",
+   "mins": 40.45,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
+   "id": "4dm1jbhvdFQ",
+   "title": "Byomkesh Bakshi: Ep#29 - Dhokadhari",
+   "label": "Doordarshan",
+   "mins": 36.81666666666667,
+   "found": "2026-10-08",
+   "lang": "hi"
+  },
+  {
    "id": "om8ziJIdNvM",
    "title": "Byomkesh Bakshi | Satyavenshi Calcutta – 1932 | Chinatown Murders Investigation | Episode # 01",
    "label": "Doordarshan",
@@ -2696,10 +3053,10 @@
    "lang": "hi"
   },
   {
-   "id": "6koJ9opUDO4",
-   "title": "Byomkesh Bakshi: Ep#10 - Upsanhaar",
+   "id": "nCWPn-8RTB4",
+   "title": "Byomkesh Bakshi: Ep#6 - Quicksand",
    "label": "Doordarshan",
-   "mins": 40.53333333333333,
+   "mins": 40.43333333333333,
    "found": "2026-10-08",
    "lang": "hi"
   },
@@ -2716,382 +3073,6 @@
    "title": "Ye Hawayein (ये हवायें) - Episode # 38",
    "label": "Doordarshan",
    "mins": 49.35,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "VnNO_jBjMHE",
-   "title": "Ye Hawayein (ये हवायें) - Episode # 52",
-   "label": "Doordarshan",
-   "mins": 51.416666666666664,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "vDlvB_SU9pA",
-   "title": "Ye Hawayein (ये हवायें) - Episode # 34",
-   "label": "Doordarshan",
-   "mins": 49.78333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "4dm1jbhvdFQ",
-   "title": "Byomkesh Bakshi: Ep#29 - Dhokadhari",
-   "label": "Doordarshan",
-   "mins": 36.81666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "nYYOc6pkxls",
-   "title": "Byomkesh Bakshi: Ep#32 - Lohe Ka Biscuit",
-   "label": "Doordarshan",
-   "mins": 39.5,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "Igj63T-rJpc",
-   "title": "Byomkesh Bakshi: Ep#3 - Seemant Heera",
-   "label": "Doordarshan",
-   "mins": 41.18333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "qEswKEZ10YE",
-   "title": "Byomkesh Bakshi: Ep#5 - Wasiyat",
-   "label": "Doordarshan",
-   "mins": 42.96666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "cuhSQT-Sq1c",
-   "title": "Ye Hawayein (ये हवायें) - Episode # 33",
-   "label": "Doordarshan",
-   "mins": 49.95,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "9c2ZFFC5BYw",
-   "title": "Ye Hawayein (ये हवायें) - Episode # 50",
-   "label": "Doordarshan",
-   "mins": 54.333333333333336,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "eHaBMNPtNpU",
-   "title": "Ye Hawayein (ये हवायें) - Episode # 35",
-   "label": "Doordarshan",
-   "mins": 49.516666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "UR7Vcm1G9P4",
-   "title": "Byomkesh Bakshi: Ep#18 - Amrit Ki Maut",
-   "label": "Doordarshan",
-   "mins": 40.583333333333336,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "TocXQVU6FOQ",
-   "title": "Byomkesh Bakshi: Ep#13 - Chiriya Ghar Part 2",
-   "label": "Doordarshan",
-   "mins": 41.1,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "Lce6PEGDWA0",
-   "title": "Byomkesh Bakshi: Ep# 15  - Aag aur Patanga",
-   "label": "Doordarshan",
-   "mins": 41.13333333333333,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "VWIgzbLNhJw",
-   "title": "Ishita to accept Nikhil's deal!| Full Episode:1415 | Yeh Hai Mohabbatein",
-   "label": "StarPlus",
-   "mins": 20.866666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "XIVvPjt-Zxo",
-   "title": "The Fake Call | Full Ep. 23 | Kumkum – Ek Pyara Sa Bandhan",
-   "label": "StarPlus",
-   "mins": 48.333333333333336,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "RXJRpRom6tw",
-   "title": "Naitik ne banaya Akshara ka पसंदीदा खाना!| Full Episode:1582 | Yeh Rishta Kya Kehlata Hai",
-   "label": "StarPlus",
-   "mins": 19.95,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "6LoBiCNvHLA",
-   "title": "Naman's haldi ceremony!| Full Episode:1614|Yeh Rishta Kya Kehlata Hai",
-   "label": "StarPlus",
-   "mins": 20.733333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "Npk5NVRzPjg",
-   "title": "Bhalla's Baisakhi celebration!| Full Episode:1454 | Yeh Hai Mohabbatein",
-   "label": "StarPlus",
-   "mins": 20.7,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "iqfveFa01aw",
-   "title": "Sagarika ko बिच्छू ne काट लिया! | Full Episode:1095 | Diya Aur Baati Hum",
-   "label": "StarPlus",
-   "mins": 19.983333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "_RDd74pItRM",
-   "title": "Ranoo and Badima | Full Ep. 29 | Sasural Genda Phool",
-   "label": "StarPlus",
-   "mins": 20.1,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "K72RdpsesIw",
-   "title": "Tenali Rama - Ep 705 - Full Episode - 16th March 2020",
-   "label": "Sony SAB",
-   "mins": 16.783333333333335,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "RAucfBjmsWs",
-   "title": "Tenali Rama - Ep 347 - Full Episode - 1st November, 2018",
-   "label": "Sony SAB",
-   "mins": 20.333333333333332,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "IVtzsSPBHtQ",
-   "title": "Episode: 37 | Duryodhan's Evil Plan | Hastinapur Ke Veer | Full Episode | 14 Jul 2026",
-   "label": "Sony SAB",
-   "mins": 26.45,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "Wz_VXQ3h92Y",
-   "title": "A New Conspiracy - Maddam Sir - Ep 511 - Full Episode - 26 May 2022",
-   "label": "Sony SAB",
-   "mins": 21.816666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "z3TwXLxwDms",
-   "title": "Urmila Set To Wear Maddam Sir's Shoes - Maddam Sir - Ep 399 - Full Episode - 15 Jan 2022",
-   "label": "Sony SAB",
-   "mins": 22.55,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "9TyWajNA4AM",
-   "title": "Maddam Sir - Ep 82 - Full Episode - 2nd October 2020",
-   "label": "Sony SAB",
-   "mins": 21.9,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "xZ8iHAm4BkI",
-   "title": "Baalveer Returns | Full Episode | Episode 126 | 29th January, 2021",
-   "label": "Sony Pal",
-   "mins": 21.916666666666668,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "z-HDFVVgdnI",
-   "title": "Baalveer Returns | Full Episode | Episode 319 | 26th July, 2021",
-   "label": "Sony Pal",
-   "mins": 21.783333333333335,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "12ZecK88G8c",
-   "title": "Best Of CID | सीआईडी | Daya Goes Missing | Full Episode",
-   "label": "Sony Pal",
-   "mins": 41.7,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "oxc9_61m0m4",
-   "title": "Baalveer Returns | Full Episode | Episode 183 | 27th March, 2021",
-   "label": "Sony Pal",
-   "mins": 22.583333333333332,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "Yz7CPCEQAnA",
-   "title": "Baalveer Returns | Full Episode | Episode 120 | 23th January, 2021",
-   "label": "Sony Pal",
-   "mins": 21.083333333333332,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "d2N0uztEfaw",
-   "title": "Baalveer Returns | Full Episode | Episode 227 | 10th May, 2021",
-   "label": "Sony Pal",
-   "mins": 22.816666666666666,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "xYIwHWWEzZI",
-   "title": "CID | सीआईडी | Ep 963 | Crime In Haridwar | Full Episode",
-   "label": "Sony Pal",
-   "mins": 41.483333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "9-9eOBJOr9Y",
-   "title": "Baalveer Returns | Full Episode | Episode 204 | 17th April, 2021",
-   "label": "Sony Pal",
-   "mins": 21.583333333333332,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "1yvivIRwfZk",
-   "title": "CID | सीआईडी | Ep 995 | Baby In Danger | Full Episode",
-   "label": "Sony Pal",
-   "mins": 43.71666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "9z10DYF287k",
-   "title": "Baalveer Returns | Full Episode | Episode 289 | 11th July, 2021",
-   "label": "Sony Pal",
-   "mins": 22.166666666666668,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "5cZXnIDy-NI",
-   "title": "Best Of CID | सीआईडी | 4 Laash Ka Raaz | Full Episode",
-   "label": "Sony Pal",
-   "mins": 43.55,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "M3QhFPuKorI",
-   "title": "CID | सीआईडी | Ep 996 | Mist In Air | Full Episode",
-   "label": "Sony Pal",
-   "mins": 43.733333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "6ZGqd-oAnXk",
-   "title": "Karthik Fights Back | Vighnaharta Ganesh - Ep 332 | Full Episode | 20 June 2022",
-   "label": "Sony Pal",
-   "mins": 21.916666666666668,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "qIIDWK65Cvk",
-   "title": "School में मचे आतंक को शांत कैसे करेगी Team CID? | CID | Full Episode 1155 | 3 Oct 2026",
-   "label": "Sony Pal",
-   "mins": 41.6,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "ZoV7pgtVB8c",
-   "title": "CID | सीआईडी | Ep 979 | Three Criminals | Full Episode",
-   "label": "Sony Pal",
-   "mins": 41.8,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "nLEU2Bhc6XU",
-   "title": "Hero's New Powers | Hero: Gayab Mode On - Ep 94 | Full Episode | 27 March 2022",
-   "label": "Sony Pal",
-   "mins": 20.433333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "PY5dgHj2VNA",
-   "title": "Team CID के सामने Fairyland का डरावना रहस्य | CID | New Season | Full Episode",
-   "label": "SET India",
-   "mins": 46.21666666666667,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "_39HgufH19k",
-   "title": "Best Of Crime Patrol - The Hurdles - Full Episode",
-   "label": "SET India",
-   "mins": 39.85,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "yuLdLG_fJdQ",
-   "title": "Naagin S2 | Full Episode Ep. 43 | Shivangi reveals her true self to Rocky | Colors TV",
-   "label": "Colors TV",
-   "mins": 42.666666666666664,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "9kLoctwIqIg",
-   "title": "Rangrasiya | Full Episode Ep. 42 | Thakurain is Rudra's Mother    | Colors TV",
-   "label": "Colors TV",
-   "mins": 21.983333333333334,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "VFKfHbbZL0o",
-   "title": "Sasural Simar Ka 2 |  Ep. 43 | The Grand Wedding Rituals Finally Begin! | Colors TV",
-   "label": "Colors TV",
-   "mins": 23.966666666666665,
-   "found": "2026-10-08",
-   "lang": "hi"
-  },
-  {
-   "id": "5hS_ZzayB0I",
-   "title": "Naagin S5 |  Ep. 31 | Bani Confronts Jay | Colors TV",
-   "label": "Colors TV",
-   "mins": 40.733333333333334,
    "found": "2026-10-08",
    "lang": "hi"
   }
