@@ -84,62 +84,13 @@ fresh 20
 if [ -z "$(find_text "Modes")" ]; then key KEYCODE_BACK; sleep 2; fi
 tap_text "Modes" && { sleep 2; tap_text "1+List" && sleep 10; }
 
-section "list from the top"
+section "channel 62 after the website fix"
 for i in 1 2 3 4 5 6 7 8 9 10; do adb shell input swipe 1660 350 1660 950 200; done; sleep 2
 for i in 1 2 3 4 5 6; do shot "list-top-$i"; adb shell input swipe 1660 950 1660 450 600; sleep 2; done
-
-section "channels small, then full screen by OK on the player"
-for ch in "1|Spark TV One" "62|Spark Gurbani" "5|Spark Shayari" "47|Spark Auto" "32|Spark Auto Hindi" "64|Spark Sufi Qawwali"; do
-  num="${ch%%|*}"; name="${ch#*|}"
-  fresh 15
-  if list_tap "$name"; then
-    sleep 4; shot "ch$num-small-5s"; sleep 10; shot "ch$num-small-15s"
-    adb shell input tap 700 600; note "tapped the player"
-    sleep 3; shot "ch$num-full-3s"; sleep 8; shot "ch$num-full-11s"; sleep 15; shot "ch$num-full-26s"
-    key KEYCODE_BACK; sleep 3
-    alive "channel $num"
-  else
-    note "PROBLEM: channel $num ($name) is not in the channel list"
-  fi
-done
-
-section "dial 62 and 1 from full screen"
-fresh 15; adb shell input tap 700 600; sleep 6; shot dial-from-full
-dial 62; sleep 3; shot dial-62-1s; sleep 10; shot dial-62-11s
-dial 1; sleep 3; shot dial-1-1s; sleep 10; shot dial-1-11s; sleep 20; shot dial-1-31s
-key KEYCODE_BACK; sleep 2
-
-section "library favorites"
-fresh 15
-tap_text "Library" && sleep 6
-tap_text "Punjabi" && { sleep 6; shot lib-punjabi
-  # Hold on the first film's poster for 1.5 s (a long press, like holding OK).
-  adb shell input swipe 1044 220 1044 220 1500; sleep 1; shot lib-after-hold
-  key KEYCODE_BACK; sleep 3; }
-shot lib-home-after-hold
-tap_text "★ Favorites" "Favorites" && { sleep 4; shot lib-favorites; }
-key KEYCODE_BACK; sleep 2
-alive "library"
-
-section "learn namaz steps"
-fresh 15
-tap_text "Iqra Quran" && sleep 8
-scroll_tap 960 "Learn Namaz" && sleep 4
-tap_text "How to pray" && { sleep 4
-  for i in $(seq 1 15); do
-    shot "step-$i-top"
-    adb shell input swipe 960 900 960 300 500; sleep 1; shot "step-$i-more"
-    scroll_tap 960 "Next" || break
-    sleep 3
-  done
-  key KEYCODE_BACK; sleep 2; }
-tap_text "Duas of namaz" && { sleep 4
-  for i in $(seq 1 30); do adb shell input swipe 960 950 960 350 500; sleep 1
-    if [ -n "$(find_text "Du'a-e-Qunut (in Witr)")" ]; then adb shell input swipe 960 700 960 450 500; sleep 1; shot duas-qunut; adb shell input swipe 960 900 960 500 500; sleep 1; shot duas-qunut-2; break; fi
-  done; key KEYCODE_BACK; sleep 2; }
-tap_text "Rak'at of the 5 prayers" && { sleep 4; shot rakat; adb shell input swipe 960 900 960 300 500; sleep 1; shot rakat-2; }
-alive "quran"
-
+if list_tap "Spark Gurbani"; then sleep 5; shot ch62-small-5s; sleep 15; shot ch62-small-20s
+  adb shell input tap 700 600; sleep 5; shot ch62-full-5s; sleep 20; shot ch62-full-25s; key KEYCODE_BACK; sleep 2
+else note "PROBLEM: channel 62 still not in the list"; fi
+alive "channel 62"
 section "end"
 adb logcat -d > "$OUT/logcat.txt"
 grep -n "FATAL EXCEPTION\|ANR in\|Process: $PKG" "$OUT"/logcat*.txt > "$OUT/crashes-found.txt"
