@@ -12,6 +12,14 @@
   .wrap { max-width: 1640px; }
   .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 0 0 20px; }
   .stat { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 14px 16px; }
+  .analysis { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 14px 18px; margin: 0 0 20px; }
+  .analysis h2 { font-size: 18px; margin: 0 0 8px; }
+  .analysis .headline { font-size: 16px; margin: 0 0 12px; }
+  .analysis .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px 24px; }
+  .analysis .grid > div { font-size: 14px; line-height: 1.5; }
+  .analysis b.k { color: var(--focus); }
+  .analysis .who { color: var(--muted); font-size: 13px; }
+  .analysis .who a { color: inherit; text-decoration: underline dotted; cursor: pointer; }
   .stat .n { font-size: 30px; font-weight: 800; color: var(--focus); }
   .stat .l { color: var(--muted); font-size: 14px; }
   .table-wrap { overflow-x: auto; border: 1px solid var(--surface-2); border-radius: 14px; }
@@ -57,6 +65,10 @@
   .watch ol { margin: 4px 0 0; padding-left: 22px; font-size: 14px; }
   .watch ol li span { color: var(--muted); }
   .live { color: #81C784; font-weight: 700; }
+  .seen { white-space: nowrap; font-size: 13px; }
+  .seen.on { color: #81C784; font-weight: 700; }
+  .seen.old { color: var(--muted); }
+  .seen.gone { color: #E57373; }
   input[type=search] { width: 100%; max-width: 360px; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
 </style>
 </head>
@@ -85,16 +97,18 @@
   <div id="denied" class="panel hidden">This account can't see the user list. <button class="btn" data-signout>Use another account</button></div>
   <div id="dash" class="hidden">
     <div class="stats" id="stats"></div>
+    <div class="analysis" id="analysis"></div>
     <p class="small hidden" id="pkgOff">⭐ Packages are off right now (at <a href="packages">Packages</a>), so every viewer has everything. The Package column shows what each viewer will have once you turn packages on.</p>
     <div class="row" style="justify-content:space-between;margin-bottom:12px">
       <input type="search" id="q" placeholder="Search name, email, device or package">
       <div class="row"><button class="btn primary" id="addBtn">➕ Add user</button><button class="btn" id="csv">Download list (CSV)</button><button class="btn" data-signout>Sign out</button></div>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Watching</th><th>Billing</th><th></th></tr></thead>
+      <thead><tr><th>#</th><th>Name</th><th>Last seen</th><th>Email</th><th>Sign-in</th><th>Device</th><th>Model</th><th>Version</th><th>Joined</th><th>Last opened</th><th>Package</th><th>Watching</th><th>Billing</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
+  <p class="small">🟢 <b>Last seen</b> works like WhatsApp: <span class="seen on">online now</span> means their app is open (it checks in every 10 minutes while open), then "last seen 5 min ago", "today at 3:40 PM", "yesterday at 8:40 PM", a weekday, or a date. <span class="seen old">Grey</span> = not seen for over a week, <span class="seen gone">red</span> = not seen for over 30 days. The list is sorted with the most recently seen at the top; hover over a time to see the exact date.</p>
   <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Bazaar channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🎁 <b>Gifts</b>: in a viewer's panel, <b>Give free Gold</b> turns on Gold for 1 week to 1 year, or forever, with no payment (a Gold package that's still on is made longer). <b>Add free credit</b> gives them dollars that ✓ Paid today takes off their next payment; their app shows it in 💳 My billing details.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
@@ -210,6 +224,7 @@ if (!configured) {
         .sort((a, b) => (b.lastOpened || 0) - (a.lastOpened || 0));
     } catch (e) { $("err").textContent = "Couldn't load users: " + e.message; }
     await Promise.all([loadBilling(), loadUsage()]);
+    users.sort((a, b) => (lastSeen(b).at || 0) - (lastSeen(a).at || 0));
     stats(); render();
   });
 
@@ -258,6 +273,35 @@ if (!configured) {
     const last = recs[0], top = topChannels([last])[0];
     return top ? { live: false, name: top[0], at: last.updated, guess: true } : null;
   }
+  /**
+   * WhatsApp-style "last seen": the newest of when the app last opened (users.lastOpened), when it last
+   * sent its viewing totals (usage.updated: every 10 minutes while open, and when it closes) and when the
+   * last channel was on screen (usage.nowAt). "Online now" = a sign of life in the last 15 minutes that
+   * wasn't the app saying it had closed.
+   */
+  function lastSeen(u) {
+    let at = u.lastOpened || null, closed = false;
+    for (const r of usage[u.id] || []) for (const d of [r.updated, r.nowAt]) {
+      if (d && (!at || d > at)) { at = d; closed = r.nowLive === false && d === r.updated; }
+    }
+    return { at, online: !!at && !closed && Date.now() - at < LIVE_MS };
+  }
+  const clock = d => d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  function seenText(s) {
+    if (!s.at) return "never seen";
+    if (s.online) return "online now";
+    const m = Math.floor((Date.now() - s.at) / 60e3);
+    if (m < 60) return `last seen ${Math.max(1, m)} min ago`;
+    const day0 = new Date(); day0.setHours(0, 0, 0, 0);
+    const days = Math.round((day0 - new Date(s.at).setHours(0, 0, 0, 0)) / 864e5);
+    if (days <= 0) return `last seen today at ${clock(s.at)}`;
+    if (days === 1) return `last seen yesterday at ${clock(s.at)}`;
+    if (days < 7) return `last seen ${s.at.toLocaleDateString([], { weekday: "long" })} at ${clock(s.at)}`;
+    const sameYear = s.at.getFullYear() === new Date().getFullYear();
+    return `last seen ${s.at.toLocaleDateString([], { month: "short", day: "numeric", ...(sameYear ? {} : { year: "numeric" }) })}` + (days < 30 ? ` (${days} days ago)` : "");
+  }
+  /** on = online, week = seen in the last 7 days, old = 7-30 days, gone = over 30 days or never. */
+  const seenClass = s => !s.at ? "gone" : s.online ? "on" : Date.now() - s.at < 7 * 864e5 ? "week" : Date.now() - s.at < 30 * 864e5 ? "old" : "gone";
   const ago = d => { const m = Math.round((Date.now() - d) / 60e3); return m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : d.toLocaleDateString([], { month: "short", day: "numeric" }); };
   // Languages aren't sent by the app, so they're worked out from the channel: our own Bazaar channels
   // by name, other channels by their country (Pakistan = Urdu, India = Hindi, and so on).
@@ -407,9 +451,11 @@ if (!configured) {
     const within = (d, ms) => d && now - d < ms;
     const items = [
       ["Total users", users.length],
-      ["Opened today", users.filter(u => u.lastOpened >= startOfToday).length],
-      ["Last 7 days", users.filter(u => within(u.lastOpened, 7 * day)).length],
-      ["Last 30 days", users.filter(u => within(u.lastOpened, 30 * day)).length],
+      ["Online now", users.filter(u => lastSeen(u).online).length],
+      ["Seen today", users.filter(u => lastSeen(u).at >= startOfToday).length],
+      ["Seen in 7 days", users.filter(u => within(lastSeen(u).at, 7 * day)).length],
+      ["Seen in 30 days", users.filter(u => within(lastSeen(u).at, 30 * day)).length],
+      ["Not seen in 30 days", users.filter(u => !within(lastSeen(u).at, 30 * day)).length],
       ["New this week", users.filter(u => within(u.joined, 7 * day)).length],
       ["On TVs", users.filter(u => u.device === "TV").length],
       ["On phones/tablets", users.filter(u => u.device && u.device !== "TV").length],
@@ -418,6 +464,7 @@ if (!configured) {
       ...(users.some(u => packageNow(u).tier === "Promo") ? [["On a promotion", users.filter(u => packageNow(u).tier === "Promo").length]] : []),
       ["Billing details complete", users.filter(u => !missing(u).length).length],
     ];
+    analysis();
     $("stats").innerHTML = "";
     for (const [l, n] of items) {
       const el = document.createElement("div"); el.className = "stat";
@@ -427,6 +474,76 @@ if (!configured) {
     }
   }
 
+  /**
+   * The summary at the top: who's active and who isn't, built from Last seen (see lastSeen) and the
+   * minutes the app reports in usage/{day}_{uid} (last 30 days).
+   */
+  function analysis() {
+    const el = $("analysis"); el.innerHTML = "";
+    if (!users.length) return;
+    const now = Date.now(), day = 864e5, n = users.length;
+    const seen = new Map(users.map(u => [u.id, lastSeen(u)]));
+    const ageOf = u => { const s = seen.get(u.id); return s.at ? now - s.at : Infinity; };
+    const pct = k => n ? Math.round(100 * k / n) + "%" : "0%";
+    const online = users.filter(u => seen.get(u.id).online);
+    const week = users.filter(u => ageOf(u) < 7 * day), month = users.filter(u => ageOf(u) < 30 * day);
+    const quiet = users.filter(u => ageOf(u) >= 7 * day && ageOf(u) < 30 * day), gone = users.filter(u => ageOf(u) >= 30 * day);
+    // Minutes watched per viewer: this week (days 0-6) and the week before (7-13).
+    const thisWk = daysAgo(6), lastWk = daysAgo(13), secs = {}, prevSecs = {}, daysOn = {};
+    for (const [uid, recs] of Object.entries(usage)) for (const r of recs) {
+      if (!(r.seconds > 0)) continue;
+      if (r.day >= thisWk) { secs[uid] = (secs[uid] || 0) + r.seconds; (daysOn[uid] ||= new Set()).add(r.day); }
+      else if (r.day >= lastWk) prevSecs[uid] = (prevSecs[uid] || 0) + r.seconds;
+    }
+    const watchers = Object.keys(secs).filter(id => users.some(u => u.id === id));
+    const prevWatchers = Object.keys(prevSecs).filter(id => users.some(u => u.id === id));
+    const totalSecs = watchers.reduce((a, id) => a + secs[id], 0);
+    const viewerDays = watchers.reduce((a, id) => a + daysOn[id].size, 0);
+    // Stopped coming: watched in the week before, nothing this week.
+    const stopped = users.filter(u => prevSecs[u.id] && !secs[u.id] && ageOf(u) >= 7 * day);
+    const newWk = users.filter(u => u.joined && now - u.joined < 7 * day);
+    const newMonth = users.filter(u => u.joined && now - u.joined < 30 * day);
+    const cameBack = newMonth.filter(u => (seen.get(u.id).at || 0) - u.joined > day);
+    const top = watchers.slice().sort((a, b) => secs[b] - secs[a]).slice(0, 5).map(id => users.find(u => u.id === id));
+    const tierActive = t => { const all = users.filter(u => packageNow(u).tier === t); return [week.filter(u => packageNow(u).tier === t).length, all.length]; };
+    const [gA, gN] = tierActive("Gold"), [fA, fN] = tierActive("Free");
+    const tvA = week.filter(u => u.device === "TV").length, phA = week.filter(u => u.device && u.device !== "TV").length;
+    const byDay = {};
+    for (const [uid, set] of Object.entries(daysOn)) for (const d of set) (byDay[d] ||= new Set()).add(uid);
+    const busiest = Object.entries(byDay).sort((a, b) => b[1].size - a[1].size)[0];
+
+    const he = v => String(v).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+    const who = list => {
+      const span = document.createElement("div"); span.className = "who";
+      list.slice(0, 8).forEach((u, i) => {
+        if (i) span.append(", ");
+        const a = document.createElement("a"); a.textContent = u.name || u.email || "Viewer"; a.title = seenText(seen.get(u.id));
+        a.onclick = () => openBilling(u); span.append(a);
+      });
+      if (list.length > 8) span.append(` and ${list.length - 8} more`);
+      return span;
+    };
+    const box = (html, list) => { const d = document.createElement("div"); d.innerHTML = html; if (list?.length) d.append(who(list)); return d; };
+    const h = document.createElement("h2"); h.textContent = "📊 Activity summary";
+    const head = document.createElement("p"); head.className = "headline";
+    const trend = prevWatchers.length ? (watchers.length > prevWatchers.length ? `, up from ${prevWatchers.length} the week before` : watchers.length < prevWatchers.length ? `, down from ${prevWatchers.length} the week before` : ", the same as the week before") : "";
+    head.innerHTML = `<b class="k">${week.length}</b> of your ${n} viewers (${pct(week.length)}) used Cable TV in the last 7 days, and <b class="k">${online.length}</b> ${online.length === 1 ? "is" : "are"} online now. <b class="k">${watchers.length}</b> watched something this week${trend}.`;
+    const grid = document.createElement("div"); grid.className = "grid";
+    grid.append(
+      box(`🟢 <b>Online now:</b> ${online.length}`, online),
+      box(`✅ <b>Active this week:</b> ${week.length} (${pct(week.length)}) · this month: ${month.length} (${pct(month.length)})`),
+      box(`😴 <b>Quiet for 1 to 4 weeks:</b> ${quiet.length}`, quiet),
+      box(`🔴 <b>Not seen for 30+ days:</b> ${gone.length}`, gone),
+      box(`📉 <b>Stopped coming:</b> ${stopped.length} watched the week before but not this week`, stopped),
+      box(`🆕 <b>New this week:</b> ${newWk.length} · new this month: ${newMonth.length}` + (newMonth.length ? `, and ${cameBack.length} of them came back after their first day` : ""), newWk),
+      box(`⏱ <b>Watch time this week:</b> ${totalSecs ? hm(totalSecs) + " in total" : "none yet"}` + (viewerDays ? ` · about ${hm(totalSecs / viewerDays)} a day for each viewer on the days they watch` : "")),
+      box(`🏆 <b>Most active this week:</b>` + (top.length ? " " + top.map(u => `${he(u.name || u.email || "Viewer")} (${hm(secs[u.id])})`).join(", ") : " nobody watched yet")),
+      box(`⭐ <b>Gold vs Free:</b> ${gA} of ${gN} Gold viewers active this week · ${fA} of ${fN} Free`),
+      box(`📺 <b>Devices this week:</b> ${tvA} on TVs · ${phA} on phones/tablets` + (busiest ? ` · busiest day: ${new Date(busiest[0] + "T12:00").toLocaleDateString([], { weekday: "long" })} (${busiest[1].size} watched)` : "")),
+    );
+    el.append(h, head, grid);
+  }
+
   const fmt = d => d ? d.toLocaleString([], { dateStyle: "medium", timeStyle: "short" }) : "";
   function render() {
     const q = $("q").value.trim().toLowerCase();
@@ -434,8 +551,11 @@ if (!configured) {
     const tbody = $("rows"); tbody.innerHTML = "";
     list.forEach((u, i) => {
       const tr = document.createElement("tr");
-      [i + 1, u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, fmt(u.joined), fmt(u.lastOpened)].forEach(v => {
-        const td = document.createElement("td"); td.textContent = v ?? ""; tr.append(td);
+      const seen = lastSeen(u);
+      [i + 1, u.name, { text: (seen.online ? "● " : "") + seenText(seen), cls: "seen " + seenClass(seen), title: seen.at ? fmt(seen.at) : "" }, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, fmt(u.joined), fmt(u.lastOpened)].forEach(v => {
+        const td = document.createElement("td");
+        if (v && typeof v === "object") { td.textContent = v.text; td.className = v.cls; td.title = v.title; } else td.textContent = v ?? "";
+        tr.append(td);
       });
       const pk = packageNow(u), pTd = document.createElement("td"), pBadge = document.createElement("span");
       pBadge.className = "pkg " + (pk.tier === "Gold" ? "gold" : pk.tier === "Promo" ? "promo" : "free");
@@ -568,7 +688,7 @@ if (!configured) {
     cur = u;
     const d = details(u), v = info[u.id] || {}, plan = activePlan(u.id);
     $("bName").textContent = u.name || u.email || "Viewer";
-    $("bSub").textContent = [u.email, u.device, plan ? `${tierName(GOLD.includes(plan.tier) ? "Gold" : plan.tier)} until ${plan.until.toLocaleDateString()}` : "No paid package on"].filter(Boolean).join(" · ");
+    $("bSub").textContent = [u.email, seenText(lastSeen(u)), u.device, plan ? `${tierName(GOLD.includes(plan.tier) ? "Gold" : plan.tier)} until ${plan.until.toLocaleDateString()}` : "No paid package on"].filter(Boolean).join(" · ");
     ensureOption(d.package); $("fPackage").value = d.package; $("fLength").value = d.length; $("fMethod").value = d.method;
     $("fAmount").value = d.amount || priceFor(d.package, d.length);
     $("fLastPaid").value = dayStr(d.lastPaid); $("fNext").value = dayStr(d.next);
@@ -618,7 +738,7 @@ if (!configured) {
       await fs.setDoc(fs.doc(db, "plans", u.id), data);
       plans[u.id] = { ...data, until: fs.Timestamp.fromDate(until) };
       stats(); render(); giftPanel(u);
-      $("bSub").textContent = [u.email, u.device, `Gold until ${until.toLocaleDateString()}`].filter(Boolean).join(" · ");
+      $("bSub").textContent = [u.email, seenText(lastSeen(u)), u.device, `Gold until ${until.toLocaleDateString()}`].filter(Boolean).join(" · ");
       $("gMsg").textContent = `Done: ${who} has Gold ${len === "forever" ? "forever" : "until " + until.toLocaleDateString()}. Their app picks it up the next time it starts (or within the hour).`;
     } catch (e) { $("gMsg").textContent = "Couldn't save: " + e.message; }
   };
@@ -764,8 +884,8 @@ if (!configured) {
   $("csv").onclick = () => {
     const esc = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
     const day = d => d ? d.toISOString().slice(0, 10) : "";
-    const lines = [["Name", "Email", "Sign-in", "Device", "Model", "Version", "Joined", "Last opened", "Package now", "Package note", "Billing package", "Pays", "Amount", "Payment method", "Last paid", "Next payment", "Phone", "WhatsApp", "Missing"].map(esc).join(",")]
-      .concat(users.map(u => { const d = details(u); return [u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, u.joined?.toISOString(), u.lastOpened?.toISOString(),
+    const lines = [["Name", "Email", "Sign-in", "Device", "Model", "Version", "Joined", "Last opened", "Last seen", "Package now", "Package note", "Billing package", "Pays", "Amount", "Payment method", "Last paid", "Next payment", "Phone", "WhatsApp", "Missing"].map(esc).join(",")]
+      .concat(users.map(u => { const d = details(u); return [u.name, u.email, u.signIn || "Google", u.device, u.model, u.appVersion, u.joined?.toISOString(), u.lastOpened?.toISOString(), lastSeen(u).at?.toISOString(),
         packageNow(u).name, packageNow(u).note, d.package, LENGTH_LABEL[d.length] || "", d.amount, d.method, day(d.lastPaid), day(d.next), d.phone, d.whatsapp, missing(u).map(m => m[1]).join("; ")].map(esc).join(","); }));
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
