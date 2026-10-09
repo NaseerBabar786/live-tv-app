@@ -2194,6 +2194,14 @@ private fun PlayerWithList(
                 rowState.scrollToItem(0)
             }
         }
+        // The remote's cursor starts on the channel playing, also on a first start when nothing was watched yet
+        // (the emulator found it on the top bar then, so Right went to Library).
+        val rowFocusId = focusId?.takeIf { id -> channels.any { it.id == id } } ?: selected?.id
+        LaunchedEffect(rowFocusId != null) {
+            if (rowFocusId == null) return@LaunchedEffect
+            withFrameNanos { }
+            runCatching { focus.requestFocus() }
+        }
         BoxWithConstraints(Modifier.fillMaxSize().padding(14.dp)) {
             val gap = 12.dp
             val rowHeight = 60.dp
@@ -2216,7 +2224,7 @@ private fun PlayerWithList(
                                 current = channel.id == selected?.id,
                                 modifier = Modifier
                                     .fillMaxHeight()
-                                    .then(if (channel.id == focusId) Modifier.focusRequester(focus) else Modifier)
+                                    .then(if (channel.id == rowFocusId) Modifier.focusRequester(focus) else Modifier)
                                     .focusGlow(ChipShape)
                                     .clickable { onSelect(channel) },
                             )

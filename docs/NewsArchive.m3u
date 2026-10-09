@@ -1,4 +1,6 @@
 #EXTM3U
 # Spark TV One: the full news report of each day, newest first (the newest 30; tools/news/archive.py).
+#EXTINF:-1 mins="10" added="2026-10-09" desc="The full Urdu news report of the day on Spark TV One." tvg-logo="https://tv.bulkbazaar.ca/channel/logos/spark-tv.png" tvg-language="Urdu" tvg-genre="Shows" group-title="Spark TV One",Spark TV One News · 9 October 2026
+https://github.com/NaseerBabar786/live-tv-app/releases/download/news-archive/news-full-2026-10-09.mp4
 #EXTINF:-1 mins="10" added="2026-10-08" desc="The full Urdu news report of the day on Spark TV One." tvg-logo="https://tv.bulkbazaar.ca/channel/logos/spark-tv.png" tvg-language="Urdu" tvg-genre="Shows" group-title="Spark TV One",Spark TV One News · 8 October 2026
 https://github.com/NaseerBabar786/live-tv-app/releases/download/news-archive/news-full-2026-10-08.mp4

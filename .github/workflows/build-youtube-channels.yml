@@ -59,6 +59,12 @@ jobs:
             exit 0
           fi
           git commit -m "YouTube channel lists as of $(date -u '+%Y-%m-%d')"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          # The hourly pre-air check may have committed a list meanwhile: on a clash this build's list wins
+          # (it passed the pre-air check above), like build-dramas.yml. Tried a few times in case main moves again.
+          for i in 1 2 3 4; do
+            git pull --rebase -X theirs origin main && git push origin HEAD:main && break
+            git rebase --abort 2>/dev/null || true
+            sleep $((i * 10))
+          done
+          git fetch -q origin main && git merge-base --is-ancestor HEAD origin/main || { echo "::error::The lists could not be published."; exit 1; }
           gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Could not request a Pages build."

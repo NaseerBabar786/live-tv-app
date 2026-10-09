@@ -21,8 +21,17 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 /**
  * Our YouTube channels and Bazaar Hits full screen (1.9.51): the locked page in a plain WebView that
@@ -194,6 +203,7 @@ class WebChannelActivity : Activity() {
 
     override fun onStop() {
         super.onStop()
+        MessagePopup.webInFront = false
         if (QuranSection.azanShowing && !isFinishing) {
             pausedForAzan = true
             webView?.onPause()
@@ -202,6 +212,7 @@ class WebChannelActivity : Activity() {
 
     override fun onStart() {
         super.onStart()
+        MessagePopup.webInFront = true
         if (pausedForAzan) {
             pausedForAzan = false
             webView?.onResume()
@@ -211,6 +222,7 @@ class WebChannelActivity : Activity() {
     // A Gold try on Free (full screen, or the Library for a film) closes this window when its minute is up.
     private val goldCheck = object : Runnable {
         override fun run() {
+            showMessage()
             val t = Plans.trying.value
             if (t != null && System.currentTimeMillis() >= t.until) Plans.endTry()
             if (!Plans.canUse(if (film) Plans.Feature.Library else Plans.Feature.FullScreen)) finish()
@@ -231,9 +243,104 @@ class WebChannelActivity : Activity() {
     }
 
     override fun onDestroy() {
+        messageDialog?.dismiss()
+        messageDialog = null
+        scope.cancel()
         webView?.destroy()
         webView = null
         super.onDestroy()
+    }
+
+    // A message from the Cable TV team pops up here too, over the playing channel (owner, 2026-10-09).
+    private val scope = MainScope()
+    private var messageDialog: android.app.AlertDialog? = null
+    private var messageAt = 0L
+
+    /** Shows the waiting message, or takes it away once it was answered or closed (here or on the main screen). */
+    private fun showMessage() {
+        val m = MessagePopup.shown.value
+        if (m == null) {
+            messageDialog?.dismiss()
+            messageDialog = null
+            messageAt = 0L
+            return
+        }
+        if (m.at == messageAt && messageDialog != null) return
+        messageDialog?.dismiss()
+        messageAt = m.at
+        messageDialog = messageDialog(m).also { it.show() }
+    }
+
+    private fun messageDialog(m: MessagePopup.Incoming): android.app.AlertDialog {
+        val pad = (16 * resources.displayMetrics.density).toInt()
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(pad * 3 / 2, pad / 2, pad * 3 / 2, 0)
+        }
+        m.lines.forEach { line ->
+            box.addView(TextView(this).apply {
+                text = line
+                textSize = 20f
+                setPadding(0, 0, 0, pad / 2)
+            })
+        }
+        val status = TextView(this).apply { textSize = 15f }
+        val input = EditText(this).apply {
+            hint = "Or type your answer here"
+            maxLines = 4
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or
+                android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
+        }
+        val quick = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        lateinit var dialog: android.app.AlertDialog
+        fun send(text: String) {
+            val reply = MessagePopup.sendReply ?: return
+            status.text = "Sending…"
+            scope.launch {
+                try {
+                    reply(text)
+                    Toast.makeText(this@WebChannelActivity, "✓ Sent to the Cable TV team", Toast.LENGTH_SHORT).show()
+                    MessagePopup.close()
+                    dialog.dismiss()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    status.text = "Couldn't send. Check the internet and try again."
+                }
+            }
+        }
+        MessagePopup.QUICK_REPLIES.forEach { q ->
+            quick.addView(Button(this).apply {
+                text = q
+                isAllCaps = false
+                isFocusableInTouchMode = false
+                setOnClickListener { send(q) }
+            })
+        }
+        box.addView(quick)
+        box.addView(input)
+        box.addView(status)
+        dialog = android.app.AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+            .setTitle(MessagePopup.TITLE)
+            .setView(ScrollView(this).apply { addView(box) })
+            .setPositiveButton("Send", null)
+            .setNegativeButton("Close", null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val t = input.text.toString().trim()
+                if (t.isEmpty()) status.text = "Type your answer first, or choose one of the answers above." else send(t)
+            }
+            dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+                dialog.dismiss()
+                MessagePopup.closeRead()
+            }
+            // The remote starts on "👍 OK, got it", not in the typing box.
+            quick.getChildAt(0)?.let { b -> b.post { b.requestFocus() } }
+        }
+        // Back closes it, like Close.
+        dialog.setOnCancelListener { MessagePopup.closeRead() }
+        return dialog
     }
 
     companion object {

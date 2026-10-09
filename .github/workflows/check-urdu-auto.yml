@@ -1,0 +1,57 @@
+name: Check Urdu car content
+
+# Once a month: is there enough Urdu car content (100 h) for a Spark Auto Urdu channel yet?
+# (The owner's plan, 2026-10-08: English and Hindi car channels now, Urdu when there's enough.)
+# Writes docs/channel/urdu-auto-check.json and opens an issue the first time there is enough.
+on:
+  schedule:
+    - cron: "30 10 1 * *"   # the 1st of every month, 10:30 UTC
+  pull_request:
+    paths: [tools/check_urdu_auto.py, .github/workflows/check-urdu-auto.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: check-urdu-auto
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Count Urdu car content
+        id: count
+        run: python3 tools/check_urdu_auto.py | tee out.txt && grep -o 'ENOUGH=[01]' out.txt >> "$GITHUB_OUTPUT"
+
+      - name: Save the result
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/channel/urdu-auto-check.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Urdu car content check as of $(date -u '+%Y-%m-%d') [skip ci]"
+          for i in 1 2 3 4; do
+            git pull --rebase -X theirs origin main && git push origin HEAD:main && break
+            git rebase --abort 2>/dev/null || true
+            sleep $((i * 10))
+          done
+
+      - name: Tell Claude and the owner
+        if: github.ref == 'refs/heads/main' && steps.count.outputs.ENOUGH == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Spark Auto Urdu: enough Urdu car content"
+          if gh issue list --state open --search "$title in:title" --json number -q '.[0].number' | grep -q .; then exit 0; fi
+          gh issue create --title "$title" --body "The monthly check found $(jq .hours docs/channel/urdu-auto-check.json) hours of Urdu car videos that play (needs $(jq .min_hours docs/channel/urdu-auto-check.json)). Details: docs/channel/urdu-auto-check.json. Ask the owner whether to add Spark Auto Urdu to the Urdu set."
