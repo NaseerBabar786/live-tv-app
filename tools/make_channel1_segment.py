@@ -12,8 +12,8 @@ the halves of the programmes (tools/build_channel1_set.py books it). 300 seconds
     4:52  "coming up" ident                 8 s
 
 Made every hour by .github/workflows/build-channel1-segment.yml, so the weather is fresh, and put on the
-channel-media pre-release under a fixed name (segment.mp4). Channel 1 is an Urdu channel: headings and
-names in Urdu (Noto Nastaliq Urdu). Weather: Open-Meteo (free, no key). Music under the pages: a
+channel-media pre-release under a fixed name (segment.mp4). Channel 1 is an Urdu channel, and every writing
+on it shows Urdu (Noto Nastaliq Urdu) and English together (owner, 2026-10-09). Weather: Open-Meteo (free, no key). Music under the pages: a
 free-licence recording, credited on screen (tools/music).
 
 Run: python3 tools/make_channel1_segment.py out/segment.mp4 [YYYY-MM-DD]
@@ -46,10 +46,11 @@ CLIPS = os.path.join(ROOT, "docs", "channel", "media")
 CITIES = [("ٹورنٹو", "Toronto", 43.65, -79.38, "America/Toronto"), ("لاہور", "Lahore", 31.55, 74.34, "Asia/Karachi"),
           ("کراچی", "Karachi", 24.86, 67.01, "Asia/Karachi"), ("دہلی", "Delhi", 28.61, 77.21, "Asia/Kolkata"),
           ("ممبئی", "Mumbai", 19.08, 72.88, "Asia/Kolkata")]
-# WMO weather codes (Open-Meteo) in Urdu.
-SKY = [((0,), "صاف آسمان، دھوپ"), ((1, 2), "کہیں کہیں بادل"), ((3,), "بادل"), ((45, 48), "دھند"),
-       ((51, 53, 55, 56, 57), "ہلکی بوندا باندی"), ((61, 63, 80, 81), "بارش"), ((65, 82), "تیز بارش"),
-       ((66, 67), "ٹھنڈی بارش"), ((71, 73, 75, 77, 85, 86), "برف باری"), ((95, 96, 99), "گرج چمک کے ساتھ بارش")]
+# WMO weather codes (Open-Meteo) in Urdu and English.
+SKY = [((0,), "صاف آسمان، دھوپ", "Clear, sunny"), ((1, 2), "کہیں کہیں بادل", "Some clouds"), ((3,), "بادل", "Cloudy"),
+       ((45, 48), "دھند", "Fog"), ((51, 53, 55, 56, 57), "ہلکی بوندا باندی", "Light drizzle"), ((61, 63, 80, 81), "بارش", "Rain"),
+       ((65, 82), "تیز بارش", "Heavy rain"), ((66, 67), "ٹھنڈی بارش", "Freezing rain"),
+       ((71, 73, 75, 77, 85, 86), "برف باری", "Snow"), ((95, 96, 99), "گرج چمک کے ساتھ بارش", "Thunderstorms")]
 
 
 def font(path, size):
@@ -101,7 +102,7 @@ def today_page(day):
     for r in json.loads(out)["rows"]:
         if r.get("id") and not r.get("resumed"):
             times.setdefault(r["id"], []).append(r["at"])
-    im, d = background("آج چینل 1 پر", day.strftime("%A %-d %B") + "  ·  Toronto time")
+    im, d = background("آج چینل 1 پر", "Today on channel 1  ·  " + day.strftime("%A %-d %B"))
     y = 150
     for h in s["hours"]:
         progs = h["programmes"]
@@ -134,13 +135,13 @@ def weather_page():
     im, d = background("موسم", "Weather now  ·  today's high and low")
     y, got = 170, 0
     for ur, name, lat, lon, tz in CITIES:
-        sky, now, hi, lo, local = "", "–", "–", "–", ""
+        sky, sky_en, now, hi, lo, local = "", "", "–", "–", "–", ""
         try:
             url = (f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,weather_code"
                    f"&daily=temperature_2m_max,temperature_2m_min&timezone={tz}&forecast_days=1")
             w = forecast(url)
             code = w["current"]["weather_code"]
-            sky = next((t for codes, t in SKY if code in codes), "")
+            sky, sky_en = next(((t, e) for codes, t, e in SKY if code in codes), ("", ""))
             now = f"{round(w['current']['temperature_2m'])}°"
             hi, lo = round(w["daily"]["temperature_2m_max"][0]), round(w["daily"]["temperature_2m_min"][0])
             local = dt.datetime.fromisoformat(w["current"]["time"]).strftime("%I:%M %p").lstrip("0").lower()
@@ -151,21 +152,22 @@ def weather_page():
         urdu(d, W - 260, y + 4, sky, font(UR, 24), "#c9d3ff")
         d.text((60, y + 2), now, font=font(BOLD, 44), fill="#ffd84d")
         d.text((180, y + 6), f"{hi}° / {lo}°", font=font(BOLD, 26), fill="white")
-        d.text((180, y + 40), f"{name}  ·  {local}", font=font(REGULAR, 18), fill="#aab4e0")
+        d.text((180, y + 40), f"{name}  ·  {local}" + (f"  ·  {sky_en}" if sky_en else ""), font=font(REGULAR, 18), fill="#aab4e0")
         y += 92
     return im if got else None
 
 
 def tips_page():
     im, d = background("کیبل ٹی وی", "Cable TV tips")
-    lines = [("مفت پیکج: تمام چینل، ون پلس لسٹ میں", "white"),
-             ("گولڈ: ہر فیچر، ہر لے آؤٹ، گیمز اور موسم", "#ffd84d"),
-             ("ہمارے دوسرے چینل: ڈرامے، فلمیں، موسیقی، کھیل، کھانا", "white"),
-             ("اپنا اشتہار دیں: واٹس ایپ پر رابطہ کریں", "#9fe3ff")]
-    y = 180
-    for text, colour in lines:
-        urdu(d, W - 70, y, text, font(UR, 34), colour)
-        y += 96
+    lines = [("مفت پیکج: تمام چینل، ون پلس لسٹ میں", "Free package: every channel, in 1+List", "white"),
+             ("گولڈ: ہر فیچر، ہر لے آؤٹ، گیمز اور موسم", "Gold: every feature, every layout, games and weather", "#ffd84d"),
+             ("ہمارے دوسرے چینل: ڈرامے، فلمیں، موسیقی، کھیل، کھانا", "Our other channels: dramas, films, music, sports, cooking", "white"),
+             ("اپنا اشتہار دیں: واٹس ایپ پر رابطہ کریں", "Advertise with us: message us on WhatsApp", "#9fe3ff")]
+    y = 160
+    for text, english, colour in lines:
+        urdu(d, W - 70, y, text, font(UR, 30), colour)
+        d.text((W - 70, y + 80), english, font=font(REGULAR, 22), fill=colour, anchor="ra")
+        y += 112
     d.text((70, H - 110), "WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca", font=font(BOLD, 30), fill="white")
     return im
 

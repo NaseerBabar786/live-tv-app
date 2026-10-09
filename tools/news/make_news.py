@@ -17,7 +17,8 @@ clock time is read or shown, so it stays right at every replay. --room day|night
 (06:00-17:59) or night newsroom (news-<kind>-<room>.mp4); --gather only saves the stories (stories-<kind>.json),
 so all copies of a set read the same news.
 
-Spark TV is an Urdu/Hindi channel (owner, 2026-10-07), so everything spoken and written is Urdu:
+Spark TV is an Urdu/Hindi channel (owner, 2026-10-07), so everything spoken is Urdu; everything written on
+screen shows Urdu and English together (owner, 2026-10-09: every headline gets an English line):
   1. Pakistan and world news from Urdu news feeds (BBC Urdu, DW Urdu, Independent Urdu, Express), Canada news from Canadian English feeds (Global News, CityNews) put into Urdu with
      Google's free translate address; every story names its source,
   2. read with Microsoft Edge's free Urdu neural voices (edge-tts, ur-PK Uzma and Asad),
@@ -40,7 +41,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 URDU_FONT = os.path.join(HERE, "..", "stories", "fonts", "NotoNastaliqUrdu-700.ttf")
 LENGTH = {"headlines": 180, "full": 600}
 NAME = {"headlines": "خبروں کی سرخیاں", "full": "تفصیلی خبرنامہ"}
+NAME_EN = {"headlines": "News headlines", "full": "Full news"}
 BRAND = "اسپارک ٹی وی نیوز"
+BRAND_EN = "SPARK TV NEWS"
+# The English line in the lower bar (set per bulletin in main()); channel 1 writes Urdu and English (owner, 2026-10-09).
+LABEL_EN = BRAND_EN
 VOICE_A, VOICE_B, RATE = "ur-PK-UzmaNeural", "ur-PK-AsadNeural", "+0%"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; BazaarTV-News/1.0; +https://tv.bulkbazaar.ca)"}
 NOTES = []  # what worked and what failed, saved in news-<kind>.json for checking
@@ -90,6 +95,13 @@ EXTRA = 6
 END_MAX = 12.0
 CITIES = [("ٹورنٹو", 43.65, -79.38), ("وینکوور", 49.28, -123.12), ("کیلگری", 51.05, -114.07),
           ("مونٹریال", 45.50, -73.57), ("اوٹاوا", 45.42, -75.70), ("ہیلی فیکس", 44.65, -63.58)]
+CITY_EN = {"ٹورنٹو": "Toronto", "وینکوور": "Vancouver", "کیلگری": "Calgary", "مونٹریال": "Montreal", "اوٹاوا": "Ottawa",
+           "ہیلی فیکس": "Halifax", "اسلام آباد": "Islamabad", "لاہور": "Lahore", "کراچی": "Karachi", "پشاور": "Peshawar",
+           "کوئٹہ": "Quetta", "ملتان": "Multan"}
+SOURCE_EN = {"بی بی سی اردو": "BBC Urdu", "ڈی ڈبلیو اردو": "DW Urdu", "انڈپینڈنٹ اردو": "Independent Urdu", "ایکسپریس": "Express",
+             "گلوبل نیوز": "Global News", "سٹی نیوز": "CityNews", "سی بی سی نیوز": "CBC News", "بی بی سی ہندی": "BBC Hindi",
+             "ڈی ڈبلیو ہندی": "DW Hindi", "ای ایس پی این کرک انفو": "ESPNcricinfo", "بی بی سی سپورٹ": "BBC Sport",
+             "ایکسپریس شوبز": "Express Showbiz", "ورائٹی": "Variety", "بی بی سی": "BBC"}
 
 def ufont(size):
     return ImageFont.truetype(URDU_FONT, size, layout_engine=ImageFont.Layout.RAQM)
@@ -155,9 +167,9 @@ def same_story(a, b):
     x, y = words(a["title"]), words(b["title"])
     return bool(x and y) and len(x & y) / min(len(x), len(y)) >= 0.5
 
-def translate(text, src="en"):
-    """English (or Hindi: src="hi") to Urdu with Google's free translate address (no key)."""
-    url = (f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl=ur&dt=t&q="
+def translate(text, src="en", to="ur"):
+    """English (or Hindi: src="hi") to Urdu with Google's free translate address (no key); to="en" for the English line."""
+    url = (f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl={to}&dt=t&q="
            + urllib.parse.quote(text))
     data = json.loads(fetch(url))
     return clean("".join(part[0] for part in data[0] if part and part[0]))
@@ -194,11 +206,19 @@ def gather(kind):
     for s in urdu:
         s["section"] = "pakistan" if any(w in s["title"] + " " + s["desc"][:200] for w in PAKISTAN_WORDS) else "world"
     picked = {sec: [s for s in urdu if s["section"] == sec][:want[sec] + EXTRA] for sec in ("pakistan", "world")}
+    # Every headline also gets its English line on screen (owner, 2026-10-09).
+    for s in picked["pakistan"] + picked["world"]:
+        try:
+            s["en"] = translate(s["title"], "ur", "en")
+        except Exception as e:
+            NOTES.append(f"English line failed: {e}")
     for sec, feeds, lang in (("india", INDIA_FEEDS, "hi"), ("canada", CANADA_FEEDS, "en"), ("sports", SPORTS_FEEDS, "en"), ("film", FILM_FEEDS, "auto")):
         done = []
         for s in take_turns(read_feeds(feeds), want[sec] + EXTRA, seen, sec):
             try:
-                s["title"] = translate(s["title"], lang)
+                orig = s["title"]
+                s["en"] = orig if lang == "en" else translate(orig, lang, "en")
+                s["title"] = translate(orig, lang)
                 first = re.split(r"(?<=[.!?।])\s+", s["desc"])[0] if s["desc"] else ""
                 s["desc"] = translate(first, lang) if first else ""
                 done.append(s)
@@ -222,11 +242,17 @@ def script(stories, kind):
     """What the reader says: the source first, then the headline (and in the full report, one more sentence)."""
     for s in stories:
         s["headline"] = s["title"].rstrip("۔.")
+        s["headline_en"] = (s.get("en") or "").strip()
         more = first_sentence(s["desc"]) if kind == "full" else ""
         if more and same_story({"title": more}, {"title": s["title"]}): more = ""
         s["read"] = f"{s['source']} کے مطابق، {end(s['title'])}" + (f" {end(more)}" if more else "")
 
 # ---------- weather (Open-Meteo, CC BY 4.0) ----------
+WMO_EN = {0: "Clear", 1: "Mostly clear", 2: "Partly cloudy", 3: "Cloudy", 45: "Fog", 48: "Fog", 51: "Light drizzle",
+          53: "Drizzle", 55: "Heavy drizzle", 56: "Drizzle", 57: "Drizzle", 61: "Light rain", 63: "Rain", 65: "Heavy rain",
+          66: "Freezing rain", 67: "Freezing rain", 71: "Light snow", 73: "Snow", 75: "Heavy snow", 77: "Snow",
+          80: "Rain showers", 81: "Rain showers", 82: "Heavy showers", 85: "Snow showers", 86: "Snow showers",
+          95: "Thunderstorms", 96: "Hail", 99: "Hail"}
 WMO = {0: "صاف", 1: "زیادہ تر صاف", 2: "جزوی طور پر ابر آلود", 3: "ابر آلود", 45: "دھند", 48: "دھند",
        51: "ہلکی بوندا باندی", 53: "بوندا باندی", 55: "تیز بوندا باندی", 56: "بوندا باندی", 57: "بوندا باندی",
        61: "ہلکی بارش", 63: "بارش", 65: "تیز بارش", 66: "ٹھنڈی بارش", 67: "ٹھنڈی بارش",
@@ -392,6 +418,8 @@ def background(path, secs=8):
 # ---------- graphics (right to left) ----------
 RED, BLUE, TEAL, GREEN, GOLD = (210, 30, 45), (25, 110, 220), (20, 150, 140), (20, 130, 70), (245, 190, 40)
 SAFFRON, PURPLE, PINK = (215, 105, 20), (125, 60, 190), (200, 40, 120)
+SECTION_EN = {"pakistan": "Pakistan", "world": "World", "canada": "Canada", "india": "India", "sports": "Sports",
+              "film": "Showbiz", "weather": "Weather"}
 SECTION = {"pakistan": ("پاکستان", GREEN), "world": ("دنیا", BLUE), "canada": ("کینیڈا", RED), "india": ("بھارت", SAFFRON), "sports": ("کھیل", PURPLE), "film": ("شوبز", PINK),
            "weather": ("موسم", TEAL)}
 RIGHT = 1170  # right edge of the text inside the panel
@@ -411,8 +439,11 @@ def tokens(text):
     out = []
     for word in text.split():
         if word == "•": out.append((word, "dot")); continue
-        if re.search(r"[A-Za-z]", word):
-            out.append((word, "latin")); continue
+        # English words (and plain figures right after them) stay together, so an English phrase reads left to right.
+        if re.search(r"[A-Za-z]", word) or (out and out[-1][1] == "latin" and word.isascii()):
+            if out and out[-1][1] == "latin": out[-1] = (out[-1][0] + " " + word, "latin")
+            else: out.append((word, "latin"))
+            continue
         w = "".join(c for c in word.translate(DIGITS).translate(PUNCT) if urdu_ok(c) or c == " ")
         out += [(x, "urdu") for x in w.split()]
     return out
@@ -458,18 +489,42 @@ def wrap(d, s, size, width, max_lines):
         out[-1] = out[-1] + [("…", "latin")]
     return out
 
-def lower_bar(d, label):
+def en_text(d, xy, s, size, fill, anchor="la", width=None, bold=False):
+    """An English line (channel 1 writes Urdu and English together, owner 2026-10-09), cut with … to [width]."""
+    f = font(bold, size)
+    if width:
+        while len(s) > 4 and d.textlength(s, font=f) > width: s = s[:-2].rstrip() + "…"
+    d.text(xy, s, font=f, fill=fill, anchor=anchor)
+
+def wrap_en(d, s, size, width, max_lines, bold=False):
+    f, out, line = font(bold, size), [], ""
+    for w in s.split():
+        if line and d.textlength(line + " " + w, font=f) > width:
+            out.append(line); line = w
+        else: line = (line + " " + w).strip()
+    if line: out.append(line)
+    if len(out) > max_lines:
+        out = out[:max_lines]; last = out[-1]
+        while len(last) > 4 and d.textlength(last + "…", font=f) > width: last = last[:-1]
+        out[-1] = last.rstrip() + "…"
+    return out
+
+def lower_bar(d, label, en=None):
     # y 606-654: free bottom strip below it stays clear for the app's ticker.
     d.rectangle([930, 606, 1210, 654], fill=RED)
     text(d, 1070, 628, BRAND, 26, "white", "m")
     d.rectangle([70, 606, 930, 654], fill=(245, 245, 248))
     text(d, 910, 628, label, 22, (20, 25, 45))
+    # The English line on the left of the bar, as far as the Urdu label leaves room.
+    room = 910 - line_len(d, tokens(label), fonts(22)) - 30 - 88
+    if room > 80: en_text(d, (88, 630), LABEL_EN if en is None else en, 18, (60, 70, 100), "lm", room, True)
 
 def panel(d, col):
     d.rounded_rectangle([70, 108, 1210, 590], 18, fill=(8, 16, 40, 225))
     d.rectangle([1200, 126, 1210, 572], fill=col)
 
 def pill(d, name, col):
+    """The section's name, Urdu and English: 'پاکستان • Pakistan'."""
     pw = line_len(d, tokens(name), fonts(24)) + 40
     d.rounded_rectangle([RIGHT - pw, 128, RIGHT, 176], 8, fill=col)
     text(d, RIGHT - pw / 2, 150, name, 24, "white", "m")
@@ -477,11 +532,12 @@ def pill(d, name, col):
 # Scene clip box on story cards (left of the text), when a free clip fits the story; see broll.py.
 BROLL_BOX = (100, 196, 448, 252)
 
-def card(path, label, section, headline, body, source, count, video_credit=None):
+def card(path, label, section, headline, body, source, count, video_credit=None, headline_en="", source_en="", count_en=""):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     name, col = SECTION[section]
-    panel(d, col); pill(d, name, col)
+    panel(d, col); pill(d, f"{name} • {SECTION_EN[section]}", col)
     if count: text(d, 110, 150, count, 20, (170, 185, 215), "l")
+    if count_en: en_text(d, (110, 176), count_en, 15, (170, 185, 215))
     tw = 1050
     if video_credit:
         x, y, w, h = BROLL_BOX; tw = RIGHT - (x + w) - 40
@@ -493,45 +549,62 @@ def card(path, label, section, headline, body, source, count, video_credit=None)
         lines = wrap(d, headline, size, tw, 3)
         if len(lines) <= 2 or size <= 34: break
         size -= 4
+    if headline_en and len(lines) > 2: lines = wrap(d, headline, size, tw, 2)   # room for the English line
     step = int(size * 1.75)
     y = 200 + step // 2
     for ln in lines:
         draw_line(d, RIGHT, y, ln, fonts(size), "white"); y += step
-    y += 6
-    for ln in wrap(d, body, 25, tw, max(1, (545 - y) // 46)):
+    y += int(size * 1.3) - step
+    # The headline in English under the Urdu one (owner, 2026-10-09).
+    for ln in wrap_en(d, headline_en, 24, tw, 2, True) if headline_en else []:
+        d.text((RIGHT, y), ln, font=font(True, 24), fill=GOLD, anchor="ra"); y += 32
+    y += 30
+    for ln in wrap(d, body, 25, tw, max(0, (545 - y) // 46)):
         draw_line(d, RIGHT, y, ln, fonts(25, False), LIGHT); y += 46
     if source: text(d, RIGHT, 562, source, 19, DIM)
+    if source_en: en_text(d, (110 if not video_credit else BROLL_BOX[0], 562), source_en, 16, DIM, "lm", 420)
     lower_bar(d, label)
     im.save(path)
 
-def title_card(path, kind, when, sub, english=""):
+def title_card(path, kind, when, sub, english="", when_en="", sub_en=""):
+    """Urdu with English under each line (channel 1 writes both, owner 2026-10-09)."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    d.rounded_rectangle([170, 180, 1110, 540], 22, fill=(8, 16, 40, 230))
-    text(d, W / 2, 260, BRAND, 78, "white", "m")
-    d.rectangle([340, 342, 940, 348], fill=RED)
-    text(d, W / 2, 400, NAME[kind], 44, GOLD, "m")
-    text(d, W / 2, 478, when, 28, (210, 220, 240), "m")
-    y = 575
-    for ln in wrap(d, sub, 18, 1080, 3) if sub else []:
-        draw_line(d, W / 2, y, ln, fonts(18, False), (180, 195, 225), "m"); y += 36
-    if english: d.text((W / 2, y + 2), english, font=font(False, 16), fill=(150, 165, 200), anchor="mm")
+    d.rounded_rectangle([170, 120, 1110, 585], 22, fill=(8, 16, 40, 230))
+    text(d, W / 2, 190, BRAND, 70, "white", "m")
+    d.text((W / 2, 282), BRAND_EN, font=font(True, 28), fill="white", anchor="mm")
+    d.rectangle([340, 310, 940, 315], fill=RED)
+    text(d, W / 2, 352, NAME[kind], 40, GOLD, "m")
+    d.text((W / 2, 418), NAME_EN[kind], font=font(True, 24), fill=GOLD, anchor="mm")
+    text(d, W / 2, 468, when, 28, (210, 220, 240), "m")
+    if when_en: d.text((W / 2, 540), when_en, font=font(False, 22), fill=(210, 220, 240), anchor="mm")
+    y = 610
+    for ln in wrap(d, sub, 18, 1080, 2) if sub else []:
+        draw_line(d, W / 2, y, ln, fonts(18, False), (180, 195, 225), "m"); y += 34
+    for ln in wrap_en(d, sub_en, 15, 1080, 2) if sub_en else []:
+        d.text((W / 2, y - 4), ln, font=font(False, 15), fill=(180, 195, 225), anchor="mm"); y += 20
+    if english: d.text((W / 2, y + 2), english, font=font(False, 14), fill=(150, 165, 200), anchor="mm")
     im.save(path)
 
 def weather_card(path, label, w):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    panel(d, TEAL); pill(d, "موسم", TEAL)
+    panel(d, TEAL); pill(d, "موسم • Weather", TEAL)
     t = w[0]
     text(d, RIGHT, 220, "ٹورنٹو", 40, "white")
+    d.text((RIGHT - 130, 222), "Toronto", font=font(True, 24), fill="white", anchor="rm")
     d.text((RIGHT, 300), f"{t['now']}°", font=font(True, 110), fill="white", anchor="rm")
     x = RIGHT - 270
-    text(d, x, 262, WMO.get(t["code"], ""), 36, GOLD)
-    text(d, x, 322, f"آج زیادہ سے زیادہ {deg(t['hi'][0])} • کم سے کم {deg(t['lo'][0])} ڈگری", 26, LIGHT)
-    text(d, x, 372, f"کل {WMO.get(t['dcode'][1], '')} • زیادہ سے زیادہ {deg(t['hi'][1])} ڈگری", 26, LIGHT)
+    text(d, x, 232, WMO.get(t["code"], ""), 34, GOLD)
+    d.text((x, 276), WMO_EN.get(t["code"], ""), font=font(True, 20), fill=GOLD, anchor="rm")
+    text(d, x, 298, f"آج زیادہ سے زیادہ {deg(t['hi'][0])} • کم سے کم {deg(t['lo'][0])} ڈگری", 24, LIGHT)
+    d.text((x, 342), f"Today: high {t['hi'][0]}°, low {t['lo'][0]}°", font=font(False, 18), fill=LIGHT, anchor="rm")
+    text(d, x, 378, f"کل {WMO.get(t['dcode'][1], '')} • زیادہ سے زیادہ {deg(t['hi'][1])} ڈگری", 24, LIGHT)
+    d.text((x, 422), f"Tomorrow: {WMO_EN.get(t['dcode'][1], '')}, high {t['hi'][1]}°", font=font(False, 18), fill=LIGHT, anchor="rm")
     x = RIGHT
     for c in w[1:]:
-        d.rounded_rectangle([x - 196, 430, x, 535], 12, fill=(20, 40, 80, 235))
-        text(d, x - 98, 458, c["city"], 22, (190, 205, 230), "m")
-        d.text((x - 98, 505), f"{c['now']}°", font=font(True, 36), fill="white", anchor="mm")
+        d.rounded_rectangle([x - 196, 448, x, 560], 12, fill=(20, 40, 80, 235))
+        text(d, x - 98, 470, c["city"], 22, (190, 205, 230), "m")
+        d.text((x - 98, 500), CITY_EN.get(c["city"], ""), font=font(False, 15), fill=(190, 205, 230), anchor="mm")
+        d.text((x - 98, 533), f"{c['now']}°", font=font(True, 30), fill="white", anchor="mm")
         x -= 212
     d.text((110, 565), "Open-Meteo.com (CC BY 4.0)", font=font(False, 18), fill=DIM, anchor="lm")
     lower_bar(d, label)
@@ -577,6 +650,12 @@ def clock(slot):
 
 def date_ur(slot, year=False):
     return f"{WEEKDAYS[slot.weekday()]}، {slot.day} {MONTHS[slot.month - 1]}" + (f" {slot.year}" if year else "")
+
+def date_en(slot, year=False):
+    return slot.strftime("%A %-d %B") + (f" {slot.year}" if year else "")
+
+def clock_en(slot):
+    return f"{slot.hour % 12 or 12} {'am' if slot.hour < 12 else 'pm'}"
 
 def probe(out):
     read_feeds(URDU_FEEDS + INDIA_FEEDS + CANADA_FEEDS + SPORTS_FEEDS + FILM_FEEDS)
@@ -663,7 +742,7 @@ def add_segment(body, clip, t0, work, secs=None):
 def add_reader(body, reader, windows, label, work):
     """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    lower_bar(d, f"{label} • {reader['ur']}")
+    lower_bar(d, f"{label} • {reader['ur']}", f"{LABEL_EN} · {reader.get('name', '')}")
     im.save(os.path.join(work, "reader-bar.png"))
     # One continuous copy of the (looping, forward-and-back) clip runs under the whole bulletin and shows only in
     # the windows, so the newsreader never restarts mid-gesture between segments.
@@ -770,17 +849,24 @@ def main():
         except Exception as e:
             print("weather failed", e); wx = None; NOTES.append(f"weather failed: {e}")
 
+    global LABEL_EN
     label = f"{NAME[kind]} • {clock(slot)} • {date_ur(slot)}"
+    LABEL_EN = f"Spark TV News · {NAME_EN[kind]} · {clock_en(slot)} · {slot.strftime('%a %-d %b')}"
     sources = sorted({s["source"] for s in stories})
     nxt = slot + dt.timedelta(hours=1)
     next_full = slot + dt.timedelta(hours=3 - slot.hour % 3)
     up_next = f"اگلی خبریں {clock(nxt)}" + (f" • {NAME['full']}" if nxt.hour % 3 == 0 else "")
+    up_next_en = f"Next news at {clock_en(nxt)}" + (" · Full news" if nxt.hour % 3 == 0 else "")
     every_full = "ہر تین گھنٹے بعد"
+    every_full_en = "every three hours"
     greet = f"السلام علیکم۔ ٹورنٹو میں {period(slot.hour)} کے {slot.hour % 12 or 12} بجے ہیں، اور یہ ہے اسپارک ٹی وی نیوز۔ "
     if in_set:   # replayed through the 8-hour set, so no clock time anywhere
         label = f"{NAME[kind]} • {date_ur(slot)}"
+        LABEL_EN = f"Spark TV News · {NAME_EN[kind]} · {slot.strftime('%a %-d %b')}"
         up_next = "اگلی خبریں ایک گھنٹے بعد"
+        up_next_en = "Next news in one hour"
         every_full = "ہر چار گھنٹے بعد"
+        every_full_en = "every four hours"
         greet = "السلام علیکم، اور یہ ہے اسپارک ٹی وی نیوز۔ "
     head = (greet + ("تفصیلی خبرنامے میں خوش آمدید۔" if kind == "full" else "پیش ہیں اس وقت کی اہم خبریں۔"))
     # Owner 2026-10-08: start with the headlines, then the sections.
@@ -836,7 +922,8 @@ def main():
     background(os.path.join(work, "bg.mp4"))
     shown = [s for _, _, _, s in segs if s]
     cards, voice_track = [], np.zeros(int(SR * total) + SR, np.float32)
-    title_card(os.path.join(work, "c-title.png"), kind, date_ur(slot, True) if in_set else f"{clock(slot)} • {date_ur(slot, True)}", "")
+    title_card(os.path.join(work, "c-title.png"), kind, date_ur(slot, True) if in_set else f"{clock(slot)} • {date_ur(slot, True)}", "",
+               when_en=date_en(slot, True) if in_set else f"{clock_en(slot)} · {date_en(slot, True)}")
     cards.append(("c-title.png", STING))
     t = STING; n = 0; on_camera = []; clips = []
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -852,20 +939,23 @@ def main():
         if sk == "story":
             n += 1
             src = "ذریعہ " + s["source"] + (" • ترجمہ" if s["section"] in ("canada", "india", "sports", "film") else "")
+            src_en = "Source: " + SOURCE_EN.get(s["source"], "") + (" (translated)" if s["section"] in ("canada", "india", "sports", "film") else "")
             # Owner 2026-10-08: scenery that doesn't match the story feels wrong, so the box shows the newsreader
             # unless NEWS_BROLL=1 asks for the topic clips.
             clip = broll.pick(s, work) if os.environ.get("NEWS_BROLL") == "1" and not offline else None
             if not clip and reader: clip = (reader["clip"], " ")   # no scene clip: the newsreader reads in the window
             if clip: clips.append((t, len(audio) / SR + GAP, clip[0]))
             card(os.path.join(work, pic), label, s["section"], s["headline"],
-                 first_sentence(s["desc"]), src, f"خبر {n} • کل {len(shown)}", clip[1] if clip else None)
+                 first_sentence(s["desc"]), src, f"خبر {n} • کل {len(shown)}", clip[1] if clip else None,
+                 s.get("headline_en", ""), src_en, f"Story {n} of {len(shown)}")
         elif sk == "weather":
             weather_card(os.path.join(work, pic), label, wx)
         elif sk == "open":
             pic = "c-title.png"
         else:
             title_card(os.path.join(work, pic), kind, up_next,
-                       f"تفصیلی خبرنامہ {every_full}" + ("" if in_set else f"، اگلا {clock(next_full)}"))
+                       f"تفصیلی خبرنامہ {every_full}" + ("" if in_set else f"، اگلا {clock(next_full)}"),
+                       when_en=up_next_en, sub_en=f"Full news {every_full_en}" + ("" if in_set else f", next at {clock_en(next_full)}"))
         if sk in ("open", "close"): on_camera.append((t, dur))
         cards.append((pic, dur)); t += dur
     left = total - t
@@ -873,8 +963,11 @@ def main():
     end_secs = left if left <= END_MAX + 3 else END_MAX
     news_len = t + end_secs
     credits = ("خبروں کے ذرائع " + "، ".join(sources) + " • بھارت، کینیڈا، کھیل اور شوبز کی خبروں کا ترجمہ اور آواز مصنوعی ذہانت")
+    credits_en = ("News sources: " + ", ".join(SOURCE_EN.get(x, x) for x in sources)
+                  + " · India, Canada, sports and showbiz news translated and voiced by AI")
     title_card(os.path.join(work, "c-end.png"), kind, up_next, credits,
-               music_credit() + (" · Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else " · AI voice"))
+               music_credit() + (" · Weather: Open-Meteo.com (CC BY 4.0) · AI voice" if wx else " · AI voice"),
+               when_en=up_next_en, sub_en=credits_en)
     cards.append(("c-end.png", end_secs))
 
     music = np.zeros_like(voice_track)
@@ -914,7 +1007,8 @@ def main():
             "made": dt.datetime.now(dt.timezone.utc).isoformat(), "sources": sources, "weather": bool(wx), "notes": NOTES,
             "news_secs": round(news_len, 1), "promos": promos,
             "reader": reader["id"] if reader else None,
-            "stories": [{"section": s["section"], "headline": s["headline"], "source": s["source"]} for s in shown]}
+            "stories": [{"section": s["section"], "headline": s["headline"], "headline_en": s.get("headline_en", ""),
+                         "source": s["source"]} for s in shown]}
     json.dump(info, open(os.path.join(out, f"{name}.json"), "w"), ensure_ascii=False, indent=1)
     print("made", mp4, f"{got:.1f} s")
 

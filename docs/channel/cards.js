@@ -71,23 +71,24 @@ function fill(el, isToday, c, now) {
   if (isToday) {
     const list = todaysShows(c, now);
     if (!list.length) { el.classList.remove("show"); return; }
-    add("h", `TODAY ON ${(c.name || "Spark TV One").toUpperCase()}`);
+    // Channel 1's writing is in Urdu and English together (owner, 2026-10-09): c.bilingual, set by build_channel1_set.py.
+    add("h", `TODAY ON ${(c.name || "Spark TV One").toUpperCase()}` + (c.bilingual ? "  ·  آج کے پروگرام" : ""));
     let hi = false;
     for (const s of list) {
       const row = add("row", "");
       const on = s.at <= now;
       if (on) row.classList.add("on");
       else if (!hi) { row.classList.add("hi"); hi = true; }
-      add("w", on ? "NOW" : timeText(s.at), row);
+      add("w", on ? (c.bilingual ? "NOW · ابھی" : "NOW") : timeText(s.at), row);
       const n = add("n", s.title, add("", "", row));
-      if (s.more) add("m", `+${s.more} more today`, n.parentNode);
+      if (s.more) add("m", `+${s.more} more today` + (c.bilingual ? ` · آج مزید ${s.more}` : ""), n.parentNode);
     }
   } else {
     const list = upNext(c, now, 2);
     if (!list.length) return;
-    add("h", "UP NEXT");
+    add("h", c.bilingual ? "UP NEXT  ·  اگلا پروگرام" : "UP NEXT");
     add("t", list[0].title);
     add("s", `${timeText(list[0].at)} · ${whenText(list[0].at, now)}`);
-    if (list[1]) add("s", `Later: ${timeText(list[1].at)}  ${list[1].title}`);
+    if (list[1]) add("s", `${c.bilingual ? "Later · بعد میں" : "Later"}: ${timeText(list[1].at)}  ${list[1].title}`);
   }
 }

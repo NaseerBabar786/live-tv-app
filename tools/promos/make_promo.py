@@ -26,6 +26,24 @@ W, H, FPS = 1920, 1080, 30
 px = lambda n: int(round(n * W / 1280))
 FONT = lambda w, size: ImageFont.truetype(os.path.join(HERE, "fonts", f"InterDisplay-{w}.otf"), px(size))
 YELLOW = (250, 204, 21)
+# Channel 1 writes Urdu and English together (owner, 2026-10-09): Urdu lines in Noto Nastaliq beside the English.
+UR_FONT = os.path.join(HERE, "..", "fonts", "NotoNastaliqUrdu.ttf")
+
+
+def UFONT(size):
+    f = ImageFont.truetype(UR_FONT, px(size))
+    f.set_variation_by_axes([700])
+    return f
+
+
+def is_urdu(t):
+    return any("\u0600" <= c <= "\u06ff" for c in t)
+
+
+def split_title(t):
+    """'Mitti De Baway · Episode 1 · مٹی دے باوے: قسط 1' -> ('Mitti De Baway · Episode 1', 'مٹی دے باوے: قسط 1')."""
+    parts = [p.strip() for p in t.split(" · ")]
+    return " · ".join(p for p in parts if not is_urdu(p)), " · ".join(p for p in parts if is_urdu(p))
 
 
 def run(cmd, **kw):
@@ -203,6 +221,20 @@ def shadow_text(d, xy, text, font, fill=(255, 255, 255, 255), anchor="la", shado
     d.text((x, y), text, font=font, fill=fill, anchor=anchor)
 
 
+def ur_text(d, xy, text, size, fill=(255, 255, 255, 255), anchor="ma", shadow=6):
+    """Urdu, right to left, with the same soft shadow as shadow_text."""
+    f = UFONT(size)
+    kw = {"direction": "rtl", "language": "ur", "anchor": anchor}
+    x, y = xy
+    if shadow:
+        d.text((x + px(2), y + px(3)), text, font=f, fill=(0, 0, 0, 110), **kw)
+    d.text((x, y), text, font=f, fill=fill, **kw)
+
+
+def ur_when(spec):
+    return f"{UR_DAYS.get(spec.get('day'), '')}، {urdu_time(spec.get('time', '20:00'))}"
+
+
 def ease(x):
     x = max(0.0, min(1.0, x))
     return 1 - (1 - x) ** 3
@@ -247,6 +279,7 @@ def overlay_main(t, spec, cut_start):
         shadow_text(d, (W // 2, H // 2 - px(30)), "COMING UP", f, (255, 255, 255, a), "mm")
         f2 = FONT("Bold", 40)
         shadow_text(d, (W // 2, H // 2 + px(52)), "ON SPARK TV", f2, YELLOW + (a,), "mm")
+        ur_text(d, (W // 2, H // 2 + px(90)), "اسپارک ٹی وی پر جلد", 34, (255, 255, 255, a))
     # Name, sliding in from the left (from 3.5 s).
     if t >= 3.5:
         k = ease((t - 3.5) / 0.45)
@@ -265,6 +298,10 @@ def overlay_main(t, spec, cut_start):
         d.rectangle((x - px(22), y0 + px(8), x - px(12), y0 + lh * len(lines) - px(6)), fill=YELLOW + (255,))
         for i, line in enumerate(lines):
             shadow_text(d, (x, y0 + i * lh), line, f)
+        # The name in Urdu (and its time from 7.5 s), on the right, above the name.
+        if spec.get("_ur") or t >= 7.5:
+            ur = spec.get("_ur", "") + (("  ·  " if spec.get("_ur") else "") + ur_when(spec) if t >= 7.5 else "")
+            ur_text(d, (W - px(64), y0 - px(150)), ur, 34, (255, 255, 255, int(255 * k)), "ra")
         # The time slot, above the name (from 7.5 s).
         if t >= 7.5:
             k2 = ease((t - 7.5) / 0.35)
@@ -304,12 +341,17 @@ def end_card(t, spec, logo):
     for line in lines:
         shadow_text(d, (W // 2, y + px(30 * (1 - k2))), line, f, (255, 255, 255, int(255 * k2)), "ma")
         y += int(f.size * 1.05)
+    if spec.get("_ur"):
+        ur_text(d, (W // 2, y + px(6)), spec["_ur"], 36, (255, 255, 255, int(255 * k2)))
+        y += px(78)
     k3 = ease((t - 0.7) / 0.4)
     fw = FONT("Black", 44)
     shadow_text(d, (W // 2, y + px(18)), spec["when"].upper(), fw, YELLOW + (int(255 * k3),), "ma")
+    ur_text(d, (W // 2, y + px(74)), ur_when(spec), 28, YELLOW + (int(255 * k3),))
     k4 = ease((t - 1.2) / 0.4)
     fs = FONT("SemiBold", 30)
-    shadow_text(d, (W // 2, y + px(90)), "Channel 1 on the free Cable TV app  ·  tv.bulkbazaar.ca", fs, (255, 255, 255, int(235 * k4)), "ma")
+    shadow_text(d, (W // 2, y + px(150)), "Channel 1 on the free Cable TV app  ·  tv.bulkbazaar.ca", fs, (255, 255, 255, int(235 * k4)), "ma")
+    ur_text(d, (W // 2, y + px(194)), "کیبل ٹی وی ایپ پر چینل 1، بالکل مفت", 26, (255, 255, 255, int(235 * k4)))
     line = "  ·  ".join(x for x in (spec.get("credit"), music_lib.credit("promo")) if x)
     fc = FONT("SemiBold", 18)
     d.text((W // 2, H - px(34)), line, font=fc, fill=(220, 220, 220, int(200 * k4)), anchor="ma")
@@ -323,7 +365,7 @@ UR_DAYS = {"mon": "ہر پیر", "tue": "ہر منگل", "wed": "ہر بدھ", "
 
 def urdu_time(hhmm):
     h, m = (int(x) for x in hhmm.split(":"))
-    part = "صبح" if 4 <= h < 12 else "دوپہر" if h < 16 else "شام" if h < 19 else "رات"
+    part = "رات" if h < 4 else "صبح" if h < 12 else "دوپہر" if h < 16 else "شام" if h < 19 else "رات"
     h12 = h % 12 or 12
     if m == 0:
         return f"{part} {h12} بجے"
@@ -334,7 +376,7 @@ def urdu_time(hhmm):
 
 def lines_for(spec):
     """What the announcer says: [(start seconds, text)]."""
-    title, end = spec["_title"], spec["secs"] - 6
+    title, end = spec.get("_ur") or spec["_title"], spec["secs"] - 6
     if spec.get("lang", "ur") == "en":
         return [(3.6, f"{title}. {spec['when']}."), (end + 0.5, "Only on Spark TV, channel one. Free on the Cable TV app.")]
     when = f"{UR_DAYS.get(spec.get('day'), '')}، {urdu_time(spec.get('time', '20:00'))}"
@@ -406,7 +448,8 @@ CUTS = {20: [1.5, 1, 1, 1.5, 1, 1, 2, 1, 1, 1, 2],
 def make(spec, out):
     spec = dict(spec)
     spec["secs"] = 30 if spec.get("secs", 20) > 25 else 20
-    spec["_title"] = clean_title(spec.get("show") or spec["title"])
+    en, ur = split_title(spec.get("show") or spec["title"])
+    spec["_title"], spec["_ur"] = clean_title(en or ur), ur if en else ""
     cuts = CUTS[spec["secs"]]
     end = spec["secs"] - 6
     moments = pick_moments(spec["videos"], len(cuts) + 1)

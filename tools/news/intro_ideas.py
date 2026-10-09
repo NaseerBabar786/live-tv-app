@@ -70,7 +70,7 @@ def news_bar(d, p, y=520):
     w = 520 * ease(p); x1 = W / 2 + 260; x0 = x1 - w
     d.rectangle([x0, y - 34, x1, y + 34], fill=RED)
     d.rectangle([x0 - 10, y - 34, x0, y + 34], fill=GOLD)
-    if p > 0.6: text(d, W / 2, y, "خبریں", 40, "white", "m")
+    if p > 0.6: text(d, W / 2, y, "خبریں • NEWS", 40, "white", "m")   # Urdu and English (owner, 2026-10-09)
 
 
 def idea1(t, logo):
@@ -102,7 +102,8 @@ def idea2(t, logo):
     return im
 
 
-HEADS = ["پاکستان", "کینیڈا", "دنیا", "بھارت", "کھیل", "شوبز", "موسم", "تازہ ترین خبریں", "اہم سرخیاں", "معیشت"]
+HEADS = ["پاکستان", "Canada", "دنیا", "India", "کھیل", "Showbiz", "موسم", "Latest news", "اہم سرخیاں", "Business",
+         "کینیڈا", "Pakistan", "بھارت", "World", "شوبز", "Sports", "تازہ ترین خبریں", "Weather", "معیشت", "Headlines"]
 
 
 def idea3(t, logo):
