@@ -46,7 +46,7 @@ jobs:
         run: python3 tools/build_logo_index.py
 
       - name: Run unit tests
-        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest :appbazaar:testDebugUnitTest :quran:testDebugUnitTest :qurankit:testDebugUnitTest
+        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest testSparkDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest :appbazaar:testDebugUnitTest :quran:testDebugUnitTest :qurankit:testDebugUnitTest
 
       # Names the failing unit tests in the run's annotations (logs are long).
       - name: Show failing tests
@@ -78,11 +78,11 @@ jobs:
       # Cable TV ships as a debug APK (sideloaded); Stream Player Plus and Live TV Plus as
       # a release APK plus the app bundle (.aab) that Google Play asks for.
       # Live TV Max is sideloaded like Cable TV, so it is a debug APK too.
-      - name: Build Cable TV, Live TV Max, Stream Player Plus and Live TV Plus
+      - name: Build Cable TV, Live TV Max, Stream Player Plus, Live TV Plus and Spark TV
         env:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           TV_CLIENT_SECRET: ${{ secrets.TV_CLIENT_SECRET }}
-        run: ./gradlew assembleLivetvDebug assembleMaxDebug assemblePlayerRelease bundlePlayerRelease assemblePlusRelease bundlePlusRelease
+        run: ./gradlew assembleLivetvDebug assembleMaxDebug assemblePlayerRelease bundlePlayerRelease assemblePlusRelease bundlePlusRelease assembleSparkRelease bundleSparkRelease
 
       - name: Build Live Cam
         env:
@@ -157,6 +157,13 @@ jobs:
           path: |
             app/build/outputs/apk/plus/release/*.apk
             app/build/outputs/bundle/plusRelease/*.aab
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spark-tv
+          path: |
+            app/build/outputs/apk/spark/release/*.apk
+            app/build/outputs/bundle/sparkRelease/*.aab
 
       # Every build goes to ONE fixed pre-release, "candidate", that nobody's app reads. The owner tests
       # one version a day (owner, 2026-10-08): when all the day's jobs are merged, "Offer test version"
@@ -251,6 +258,25 @@ jobs:
               --latest=false
           fi
           gh release edit live-tv-plus --notes "Always the newest Live TV Plus build (now $version), for testing on phones and TVs." || true
+
+      # Spark TV, our Google Play app (owner, 2026-10-09): every build goes to the fixed "spark-tv-test"
+      # pre-release (never "latest"), which only the owner uses through tv.bulkbazaar.ca/sparktest. The .aab
+      # there is what goes to Google Play, and only after the owner's yes.
+      - name: Publish Spark TV test build
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts | sed -n 5p)
+          cp app/build/outputs/apk/spark/release/*.apk SparkTV.apk
+          cp app/build/outputs/bundle/sparkRelease/*.aab SparkTV.aab
+          if gh release view spark-tv-test > /dev/null 2>&1; then
+            gh release upload spark-tv-test SparkTV.apk SparkTV.aab --clobber
+          else
+            gh release create spark-tv-test SparkTV.apk SparkTV.aab --prerelease --latest=false \
+              --title "Spark TV (test)" --notes "Spark TV test build for the owner only."
+          fi
+          gh release edit spark-tv-test --notes "Spark TV $version test build ${{ github.run_number }} for the owner only (from ${{ github.sha }}). The .aab goes to Google Play after the owner's yes." || true
 
 
   # Crash rollback (owner's rule): rebuilds the last approved version of every app with this build's

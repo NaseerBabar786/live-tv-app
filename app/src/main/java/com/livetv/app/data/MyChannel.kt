@@ -84,7 +84,25 @@ object MyChannel {
      * (tools/build_youtube_channels.py); a channel that was mixed before 2026-10-08 is split by language
      * there, and the free films below are the backup.
      */
-    val STATIONS = listOf(
+    val STATIONS get() = if (com.livetv.app.Edition.PLAY_CHANNELS) PLAY_STATIONS else ALL_STATIONS
+
+    /**
+     * Spark TV, our Google Play app (the owner, 2026-10-09): only channels whose every programme we own or may
+     * show (our news and ads, public-domain films from archive.org, free-licence music). No YouTube channels,
+     * since YouTube's rules forbid playing its videos locked. Their schedules are tv.bulkbazaar.ca/channel/play/<id>.json,
+     * made from our other channels' schedules by tools/build_play_schedules.py with every YouTube video taken out.
+     */
+    val PLAY_STATIONS = listOf(
+        Station("pnews", 1, "", "Spark TV News", logo = "spark-news.png"),
+        Station("pclassics", 2, "", "Spark Classics", logo = "spark-cinema.png", lang = ENGLISH),
+        Station("pcomedy", 3, "", "Spark Comedy Classics", logo = "spark-comedy-play.png", lang = ENGLISH),
+        Station("psports", 4, "", "Spark Sports Classics", logo = "spark-sports.png", lang = ENGLISH),
+        Station("ptravel", 5, "", "Spark Travel Classics", logo = "spark-travel.png", lang = ENGLISH),
+        Station("pmusic", 6, "", "Spark Music", logo = "spark-music-play.png", lang = ENGLISH),
+        Station("pads", 7, "", "Spark Ads", logo = "spark-ads.png", lang = ENGLISH),
+    )
+
+    private val ALL_STATIONS = listOf(
         // Urdu
         Station("main", 1, "0", "Spark TV One"),
         Station("dramas", 2, "", "Spark Dramas Urdu", youtube = true, backup = "filmein", logo = "spark-dramas.png"),
@@ -308,11 +326,12 @@ object MyChannel {
     /** The channels that are on, in station order. */
     fun channels(): List<Channel> =
         // In number order, language by language (Spark Hits is 23).
-        (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + bollywood).sortedBy { it.number }
+        (STATIONS.mapNotNull { st -> _configs.value[st.id]?.channel } + listOfNotNull(bollywood.takeUnless { com.livetv.app.Edition.PLAY_CHANNELS }))
+            .sortedBy { it.number }
 
     /** The channel a viewer reaches by typing a row of zeros as before 1.9.45 ("0", "00"), when it's on. */
     fun byDial(typed: String): Channel? =
-        if (typed == "0000") bollywood else STATIONS.firstOrNull { it.dial.isNotEmpty() && it.dial == typed }?.let { _configs.value[it.id]?.channel }
+        if (typed == "0000" && !com.livetv.app.Edition.PLAY_CHANNELS) bollywood else STATIONS.firstOrNull { it.dial.isNotEmpty() && it.dial == typed }?.let { _configs.value[it.id]?.channel }
 
     /** [channel]'s settings when it's one of ours and on. */
     fun configOf(channel: Channel?): Config? = channel?.takeIf(::isMine)?.let { _configs.value[it.url.removePrefix(SCHEME)] }
@@ -326,6 +345,8 @@ object MyChannel {
                 val v = a.optJSONObject(i) ?: return@mapNotNull null
                 val url = v.optString("url").trim()
                 if (url.isEmpty()) return@mapNotNull null
+                // Spark TV (Google Play) never plays a YouTube video, whatever a schedule says.
+                if (com.livetv.app.Edition.PLAY_CHANNELS && YouTube.videoId(url) != null) return@mapNotNull null
                 val secs = v.optLong("secs").coerceAtLeast(0)
                 Video(v.optString("id"), v.optString("title").ifBlank { "My channel" }, url, secs, v.optString("kind").ifBlank { if (secs > 0) "programme" else "live" })
             }

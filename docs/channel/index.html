@@ -87,23 +87,31 @@
 import { firebaseConfig } from "../firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, expand, blockPage } from "./schedule.js";
 import { mountCards } from "./cards.js";
+import { torontoDay } from "./ytorder.js";
 const $ = id => document.getElementById(id);
 const video = $("video");
 // Which of our channels: ?c=filmein is Spark Cinema, ?c=sur Spark Music, ?c=kids Spark Kids, ?c=sports Spark Sports, ?c=travel Spark Travel, ?c=comedy Spark Comedy, otherwise Spark TV.
-const station = STATIONS.find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
+const wanted = new URLSearchParams(location.search).get("c");
+// Spark Hits (23) runs on its own page (bollywood.html), so it isn't in STATIONS.
+const HITS = { id: "hits", name: "Spark Hits", dial: "23", logo: "logos/spark-hits.png", web: "bollywood.html",
+  credits: "Music: official videos from the music labels' own YouTube channels." };
+const station = wanted === "hits" ? HITS : STATIONS.find(x => x.id === wanted) || STATIONS[0];
+// Channels that run on our locked YouTube page (and Hits) play in the player box here, like channel 1
+// (owner, 2026-10-09: clicking a channel must never leave the page player for a full-window page).
+const embedded = !!(station.yt || station === HITS);
 // Spark Hits (0000) is its own page (the music labels' YouTube videos, one after another),
 // so it gets a tab between 3 and 5.
 function hitsTab() {
   const a = document.createElement("a");
-  a.href = "bollywood.html";
+  a.href = "./?c=hits";
+  if (station === HITS) a.className = "sel";
   a.innerHTML = `<img alt="" src="logos/spark-hits.png"><span>23  Spark Hits</span>`;
   $("tabs").appendChild(a);
 }
 for (const st of STATIONS) {
   if (st.dial === "24") hitsTab();  // Hits is 23: its tab goes between 22 and 24 (schedule.js)
   const a = document.createElement("a");
-  // Channels that run like Spark Hits open their YouTube page (this page is their backup).
-  a.href = st.yt ? `ytc.html?c=${st.id}` : st.id === "main" ? "./" : `./?c=${st.id}`;
+  a.href = st.id === "main" ? "./" : `./?c=${st.id}`;
   if (st === station) a.className = "sel";
   a.innerHTML = `<img alt=""><span></span>`;
   a.querySelector("img").src = st.logo;
@@ -141,7 +149,8 @@ function spark(cfg) {
   if (typeof cfg.logo === "string") cfg.logo = cfg.logo.replace(/\/logos\/bazaar-/, "/logos/spark-");
   return cfg;
 }
-let c = spark(await load()), tv = null;
+if (embedded) playEmbedded();
+let c = embedded ? null : spark(await load()), tv = null;
 function show() {
   document.title = `${c.name || "My Channel"} · Watch live`;
   $("name").textContent = c.name || "My Channel";
@@ -187,11 +196,13 @@ function onOff(on) {
   $("off").textContent = `${c.name || "This channel"} is off air right now.` + (on.next ? ` Next: ${on.next.title} at ${timeText(on.nextAt, c.tz)}.` : "");
   $("nowText").textContent = "Off air";
 }
+if (!embedded) {
 show();
 // Every 10 minutes "Up next", every 20 minutes today's shows, with the ad breaks.
 mountCards($("stage"), () => c);
 if (c.active === false) onOff({});
 else tv = tuneIn(video, c, { onChange, onOff, onBlock });
+}
 
 /** Spark TV's upcoming trailers: our locked YouTube page over the player while they're on. */
 function onBlock(b) {
@@ -206,10 +217,54 @@ function onBlock(b) {
   frame.classList.remove("hidden");
 }
 
+/** A YouTube-run channel (or Hits): its locked page in the player box, with today's guide from its locked day. */
+async function playEmbedded() {
+  document.title = `${station.name} · Watch live`;
+  $("name").textContent = station.name;
+  $("logo").src = station.logo; $("logo").classList.remove("hidden");
+  $("favicon").href = station.logo.replace(/\.png$/, "-square.png");
+  video.classList.add("hidden"); $("sound").classList.add("hidden");
+  const frame = $("block");
+  frame.title = station.name;
+  frame.setAttribute("allowfullscreen", "");
+  frame.allow = "autoplay; encrypted-media; fullscreen";
+  frame.src = station === HITS ? "bollywood.html" : `ytc.html?c=${station.id}`;
+  frame.classList.remove("hidden");
+  $("guide").innerHTML = `<p class="small">Today's programmes show here once the day's schedule is ready.</p>`;
+  try {
+    const r = await fetch(`locked/${station.id}.json`, { cache: "no-cache" });
+    if (!r.ok) return;
+    const { date, start } = torontoDay();
+    const items = (await r.json()).days?.[date];
+    if (!items?.length) return;
+    const total = items.reduce((t, x) => t + (x.secs || 0), 0);
+    const loop = Math.floor((Date.now() - start) / 1000 / total);
+    let at = start + loop * total * 1000;
+    const shows = [];
+    for (let k = 0; k < items.length * 2 && shows.length < 25; k++) {
+      const x = items[k % items.length];
+      const end = at + x.secs * 1000;
+      if (end > Date.now() && x.kind === "video" && x.v) shows.push({ at, title: x.v.title, secs: x.secs });
+      at = end;
+    }
+    $("guide").innerHTML = "";
+    shows.forEach((g, i) => {
+      const d = document.createElement("div");
+      if (i === 0) d.className = "cur";
+      d.innerHTML = `<span class="t"></span><span></span><span class="l"></span>`;
+      d.children[0].textContent = g.at <= Date.now() ? "Now" : timeText(g.at, "America/Toronto");
+      d.children[1].textContent = g.title;
+      d.children[2].textContent = lengthText(g.secs);
+      $("guide").appendChild(d);
+    });
+    if (shows[0]) $("nowText").textContent = `Now: ${shows[0].title}` + (shows[1] ? `  ·  Next: ${shows[1].title} at ${timeText(shows[1].at, "America/Toronto")}` : "");
+  } catch {}
+}
+
 $("sound").onclick = () => { video.muted = false; video.play().catch(() => {}); $("sound").classList.add("hidden"); };
 $("full").onclick = () => $("stage").requestFullscreen?.();
 // New settings from the owner arrive within 5 minutes.
-setInterval(async () => {
+if (!embedded) setInterval(async () => {
   try {
     const n = spark(await load());
     if (JSON.stringify(n) === JSON.stringify(c)) return;

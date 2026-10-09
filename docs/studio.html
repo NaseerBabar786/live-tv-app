@@ -63,6 +63,32 @@
   .guide div { display: grid; grid-template-columns: 80px 1fr auto; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--bg); }
   .guide div.cur { outline: 2px solid var(--focus); }
   .guide div.adrow { color: var(--muted); font-size: .9em; padding: 3px 10px; }
+  /* Channel picker (owner, 2026-10-09): with 30+ channels the buttons pushed the TV preview down, so the page
+     shows only the current channel in one line and the full list slides out from the left when asked. */
+  .chpick { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; }
+  .chcur { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; border-radius: 14px; border: 2px solid var(--focus); background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; text-align: left; }
+  .chcur img { width: 64px; height: 34px; object-fit: contain; flex: none; }
+  .chcur .t { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .chcur .t small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+  .chcur .dial { color: var(--focus); font-weight: 800; }
+  .chcur .chg { flex: none; background: var(--focus); color: #111; border-radius: 10px; padding: 6px 12px; font-size: 14px; }
+  .chstep { flex: none; width: 40px; height: 46px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-size: 18px; cursor: pointer; }
+  .chstep:hover, .chcur:hover { border-color: var(--focus); }
+  @media (max-width: 640px) { .chcur .chg .w { display: none; } .chcur img { width: 48px; } .chstep { width: 34px; } }
+  .chdrawer { position: fixed; inset: 0; z-index: 50; visibility: hidden; }
+  .chdrawer.open { visibility: visible; }
+  .chdrawer .shade { position: absolute; inset: 0; background: rgba(0,0,0,.55); opacity: 0; transition: opacity .2s; }
+  .chdrawer.open .shade { opacity: 1; }
+  .chdrawer .pane { position: absolute; left: 0; top: 0; bottom: 0; width: min(440px, 92vw); background: var(--bg); border-right: 2px solid var(--focus); display: flex; flex-direction: column; transform: translateX(-100%); transition: transform .22s ease-out; box-shadow: 8px 0 30px rgba(0,0,0,.5); }
+  .chdrawer.open .pane { transform: none; }
+  .chdrawer .head { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .chdrawer .head b { flex: 1; font-size: 18px; }
+  .chdrawer .head button { background: var(--surface); color: var(--text); border: 2px solid var(--line); border-radius: 999px; width: 34px; height: 34px; cursor: pointer; font: inherit; }
+  .chdrawer input { margin: 10px 14px 4px; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
+  .chdrawer .stations { flex: 1; overflow-y: auto; display: flex; flex-direction: column; flex-wrap: nowrap; gap: 6px; padding: 6px 14px 16px; margin: 0; }
+  .chdrawer .stations h4 { margin: 10px 0 2px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .chdrawer .stations button { width: 100%; text-align: left; padding: 5px 10px 5px 5px; border-width: 2px; font-size: 15px; }
+  .chdrawer .stations img { width: 60px; height: 32px; }
   .stations { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 18px; }
   .stations button, .stations a { text-decoration: none; }
   .stations button, .stations a { display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 14px; border: 3px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
@@ -74,25 +100,23 @@
   .studio { display: flex; flex-direction: column; }
   .studio .side, .studio .work, .studio .steps { display: contents; }
   .snav, .overview { display: none; }
-  .side > p { order: 1; } .stations { order: 2; } .tvbox { order: 3; } #howTo { order: 4; } .steps > section { order: 5; }
+  .chpick { order: 1; } .tvbox { order: 3; } #howTo { order: 4; } .steps > section { order: 5; }
   #step5 { order: 6; } .savebar { order: 7; } .work > :not(#howTo):not(.steps) { order: 8; }
   @media (min-width: 1200px) {
     main.studio-main, header .wrap { max-width: 1880px; }
     main.studio-main { padding-top: 20px; }
     main.studio-main h1 { font-size: 30px; margin: 0 0 2px; }
-    main.studio-main .lead { margin: 0 0 14px; font-size: 15px; }
+    main.studio-main > .lead { display: none; } /* the TV preview comes first; the intro moves into ? Help */
+    main.studio-main .back-admin { float: right; margin: 0; }
+    main.studio-main h1 { margin-bottom: 12px !important; }
     .studio { display: grid; grid-template-columns: minmax(520px, 38%) 1fr; gap: 18px; align-items: start; }
     .studio .side { display: flex; flex-direction: column; position: sticky; top: 10px; max-height: calc(100vh - 20px); overflow-y: auto; padding-right: 4px; }
     .studio .work { display: block; min-width: 0; }
     .studio .steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(540px, 1fr)); gap: 18px; align-items: start; }
     .studio .steps > section.panel { margin: 0; min-width: 0; }
-    .side > p { margin-bottom: 4px !important; }
-    .side .stations { gap: 6px; margin-bottom: 10px; }
-    .side .stations button, .side .stations a { padding: 4px 10px 4px 4px; gap: 6px; font-size: 14px; border-width: 2px; }
-    .side .stations img { width: 60px; height: 30px; }
-    .side .stations small { font-size: 11px; white-space: nowrap; }
-    /* Save sits right under the channel picker, so it is always on screen. */
-    .side .savebar { order: 3; margin-bottom: 12px !important; padding: 8px 12px; } .side .tvbox { order: 4; } .side #step5 { order: 5; }
+    /* Top of the left column: current channel (one line), the TV preview, Save, then the guide. */
+    .side .chpick { order: 1; margin-bottom: 10px; } .side .tvbox { order: 2; }
+    .side .savebar { order: 3; margin-bottom: 12px !important; padding: 8px 12px; } .side #step5 { order: 4; }
     .side .tvbox .row .btn { padding: 6px 12px; font-size: 14px; }
     .side .tvbox #nowText { margin-top: 8px !important; }
     .side .tvbox { margin-bottom: 12px; padding: 14px; }
@@ -255,8 +279,14 @@
     <!-- Wide screens: this column stays put on the left (channels, player, guide, Save); the steps sit beside it. -->
     <aside class="side">
     <div id="hitsNote" class="panel hidden" style="order:3;margin:0 0 12px"><b id="hitsName">Spark Hits (channel 23)</b> <span id="hitsAbout">plays the music labels' official YouTube songs round the clock</span>. Choose its programmes and lock its schedule on the right. Below is what it's playing right now, as on TV. <a id="hitsLink" href="channel/bollywood.html" target="_blank" rel="noopener">Open its page</a></div>
-    <p style="font-weight:600;margin:0 0 6px">Which channel are you working on?</p>
-    <div class="stations" id="stations"></div>
+    <div class="chpick">
+      <button type="button" class="chstep" id="chPrev" title="Previous channel">◀</button>
+      <button type="button" class="chcur" id="chOpen" title="Choose another channel">
+        <img alt="" id="chCurLogo"><span class="t"><b class="dial" id="chCurDial"></b> <span id="chCurName"></span><small id="chCurNote"></small></span>
+        <span class="chg">☰<span class="w"> Channels</span></span>
+      </button>
+      <button type="button" class="chstep" id="chNext" title="Next channel">▶</button>
+    </div>
     <section class="panel tvbox" id="tvbox">
       <div class="row" style="justify-content:space-between;margin:0 0 10px">
         <h2 style="margin:0">📺 How it looks on TV</h2>
@@ -601,6 +631,14 @@
   </div>
   <p class="err" id="err"></p>
 </main>
+<div class="chdrawer" id="chDrawer" aria-hidden="true">
+  <div class="shade" id="chShade"></div>
+  <div class="pane" role="dialog" aria-label="Choose a channel">
+    <div class="head"><b>Which channel are you working on?</b><button type="button" id="chClose" title="Close">✕</button></div>
+    <input type="search" id="chFind" placeholder="Find a channel: name or number" autocomplete="off">
+    <div class="stations" id="stations"></div>
+  </div>
+</div>
 
 <script type="module">
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
@@ -688,29 +726,88 @@ function stationButton(st, note) {
   b.querySelector(".dial").textContent = st.dial + ".";
   b.querySelector(".nm").textContent = st.name;
   b.querySelector("small").textContent = note;
-  b.onclick = async () => {
-    if (st === station) return;
-    if (dirty && !confirm(`You have unsaved changes on ${station.name}. Leave them?`)) return;
-    station = st;
-    history.replaceState(null, "", st.id === "main" ? location.pathname : `?c=${st.id}`);
-    stopPreview();
-    await loadSaved();
-  };
+  b.dataset.find = (st.dial + " " + st.name + " " + note).toLowerCase();
+  b.onclick = () => pickStation(st);
   $("stations").appendChild(b);
 }
+async function pickStation(st) {
+  closeDrawer();
+  if (st === station) return;
+  if (dirty && !confirm(`You have unsaved changes on ${station.name}. Leave them?`)) return;
+  station = st;
+  history.replaceState(null, "", st.id === "main" ? location.pathname : `?c=${st.id}`);
+  stopPreview();
+  await loadSaved();
+}
+const noteFor = st => st === HITS || st.web ? `Channel ${st.dial} · runs by itself` : `Channel ${st.dial} in the app`;
+// In channel-number order, grouped by language block like the app's numbering. Spark Hits (23) runs by
+// itself from the music labels' song list (no schedule to edit), so picking it just plays it in the player.
+const ordered = () => [...STATIONS, HITS].sort((a, b) => +a.dial - +b.dial);
+const blockOf = d => d < 20 ? "Urdu" : d < 40 ? "Hindi" : d < 60 ? "English" : "Punjabi";
 function renderStations() {
   $("stations").innerHTML = "";
-  for (const st of STATIONS) {
-    // Spark Hits (23) sits between 22 and 25 in the Hindi block. It runs by itself from the music labels'
-    // song list (no schedule to edit), so picking it just plays it in the player.
-    if (st.dial === "25") stationButton(HITS, "Channel 23 · runs by itself");
-    stationButton(st, st.web ? `Channel ${st.dial} · runs by itself` : `Channel ${st.dial} in the app`);
+  let block = "";
+  for (const st of ordered()) {
+    if (blockOf(+st.dial) !== block) {
+      block = blockOf(+st.dial);
+      const h = document.createElement("h4");
+      h.textContent = block;
+      $("stations").appendChild(h);
+    }
+    stationButton(st, noteFor(st));
   }
+  $("chCurLogo").src = station.logo;
+  $("chCurDial").textContent = station.dial + ".";
+  $("chCurName").textContent = station.name;
+  $("chCurNote").textContent = noteFor(station);
+  filterStations();
   $("publicLink").href = station.page;
   $("publicLink").textContent = "tv.bulkbazaar.ca/" + station.page;
   $("loadTest").textContent = station.auto ? "Load the automatic schedule" : "Load the test programme";
   $("useAuto").classList.toggle("hidden", !station.auto);
 }
+
+function openDrawer() {
+  $("chDrawer").classList.add("open");
+  $("chDrawer").setAttribute("aria-hidden", "false");
+  $("chFind").value = ""; filterStations();
+  setTimeout(() => { $("stations").querySelector(".sel")?.scrollIntoView({ block: "center" }); $("chFind").focus(); }, 60);
+}
+function closeDrawer() {
+  $("chDrawer").classList.remove("open");
+  $("chDrawer").setAttribute("aria-hidden", "true");
+}
+function filterStations() {
+  const q = $("chFind").value.trim().toLowerCase();
+  let shown = 0;
+  for (const el of $("stations").children) {
+    if (el.tagName === "H4") continue;
+    const on = !q || el.dataset.find.includes(q);
+    el.style.display = on ? "" : "none";
+    shown += on;
+  }
+  // Hide a language heading when none of its channels match.
+  for (const h of $("stations").querySelectorAll("h4")) {
+    let n = h.nextElementSibling, any = false;
+    while (n && n.tagName !== "H4") { if (n.style.display !== "none") any = true; n = n.nextElementSibling; }
+    h.style.display = any ? "" : "none";
+  }
+  return shown;
+}
+function stepStation(by) {
+  const list = ordered(), i = list.indexOf(station);
+  pickStation(list[(i + by + list.length) % list.length]);
+}
+$("chOpen").onclick = openDrawer;
+$("chClose").onclick = closeDrawer;
+$("chShade").onclick = closeDrawer;
+$("chPrev").onclick = () => stepStation(-1);
+$("chNext").onclick = () => stepStation(1);
+$("chFind").oninput = filterStations;
+$("chFind").onkeydown = e => {
+  if (e.key === "Enter") { const first = [...$("stations").querySelectorAll("button")].find(b => b.style.display !== "none"); first?.click(); }
+};
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("chDrawer").classList.contains("open")) closeDrawer(); });
 
 async function testProgramme() {
   const ready = await (await fetch(station.ready + "?t=" + Date.now())).json();
@@ -1310,6 +1407,8 @@ let undocked = false;
 $("undock").onclick = () => { undocked = true; $("tvslot").classList.remove("docked"); };
 // On wide screens the player's column stays on screen by itself, so it never docks.
 const wide = matchMedia("(min-width: 1200px)");
+// Wide screens: the intro (with the public page link) lives in ? Help, so the TV preview sits near the top.
+if (wide.matches) $("howTo").querySelector("summary").after(document.querySelector("main.studio-main > .lead"));
 if (wide.matches) $("howTo").open = false;
 new IntersectionObserver(([e]) => {
   const away = !wide.matches && !e.isIntersecting && e.boundingClientRect.top < 0;

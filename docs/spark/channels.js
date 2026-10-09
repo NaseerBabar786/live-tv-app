@@ -14,7 +14,7 @@ export const LANGS = [
 
 // Spark Hits (23) plays on its own page (channel/bollywood.html), so it isn't in STATIONS.
 const HITS = { id: "hits", name: "Spark Hits", dial: "23", tagline: "Bollywood hit songs, day and night",
-  logo: "../channel/logos/spark-hits.png", watch: "../channel/bollywood.html" };
+  logo: "../channel/logos/spark-hits.png", watch: "../channel/?c=hits" };
 
 const TAGLINES = {
   main: "Our flagship Urdu channel: news every hour, films, dramas and music",
@@ -30,7 +30,7 @@ export function sparkChannels() {
     dial: s.dial,
     tagline: s.tagline || TAGLINES[s.id] || "",
     logo: (s.logo || "").replace("https://tv.bulkbazaar.ca/channel/", "../channel/").replace("/logos/bazaar-", "/logos/spark-"),
-    watch: s.yt ? `../channel/ytc.html?c=${s.id}` : s.id === "main" ? "../channel/" : `../channel/?c=${s.id}`,
+    watch: s.id === "main" ? "../channel/" : `../channel/?c=${s.id}`,
     live: s.yt ? `../channel/ytc.html?c=${s.id}&mute=1` : null,
     yt: !!s.yt,
   })).concat([HITS]);
