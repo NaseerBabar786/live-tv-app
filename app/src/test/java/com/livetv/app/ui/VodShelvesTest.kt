@@ -13,12 +13,14 @@ class VodShelvesTest {
     fun sparkTvAndMtaGetTheirOwnFolders() {
         val news = yt("Spark TV One News · 9 October 2026", "Urdu", "Shows").copy(group = "Spark TV One")
         val mta = yt("Friday Sermon Episode 3", "Urdu", "Shows").copy(group = "MTA Friday Sermon")
+        // The same programme in English too: still one folder (two with one name crashed the grid).
+        val mtaEnglish = yt("Friday Sermon Episode 4", "English", "Shows").copy(group = "MTA Friday Sermon")
         val drama = yt("Kaffara Episode 1", "Urdu", "Series")
         val (shelves, folders) = library(
             listOf(
                 com.livetv.app.data.Playlist("Pakistani dramas", Vod.DRAMAS_URL) to listOf(drama),
                 com.livetv.app.data.Playlist("Spark TV One News", Vod.NEWS_ARCHIVE_URL) to listOf(news),
-                com.livetv.app.data.Playlist("MTA", com.livetv.app.data.Mta.VIDEOS_URL) to listOf(mta),
+                com.livetv.app.data.Playlist("MTA", com.livetv.app.data.Mta.VIDEOS_URL) to listOf(mta, mtaEnglish),
             ),
         )
         val urdu = shelves.getValue(Vod.Language.URDU)
@@ -26,6 +28,7 @@ class VodShelvesTest {
         assertEquals(emptyList<String>(), urdu.shows.map { it.name })
         assertEquals(listOf("Spark TV One"), folders.getValue(Vod.Folder.SPARK).shows.map { it.name })
         assertEquals(listOf("Friday Sermon"), folders.getValue(Vod.Folder.MTA).shows.map { it.name })
+        assertEquals(2, folders.getValue(Vod.Folder.MTA).shows.single().episodes.size)
     }
 
     @Test

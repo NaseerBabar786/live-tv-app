@@ -721,7 +721,8 @@ private fun PosterGrid(
         verticalArrangement = Arrangement.spacedBy(14.dp),
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(posters, key = { it.key }) { poster ->
+        // One tile per key: a repeated key crashes the grid.
+        items(posters.distinctBy { it.key }, key = { it.key }) { poster ->
             Column(
                 Modifier
                     .then(if (poster.key == focusKey) Modifier.focusRequester(focus) else Modifier)
