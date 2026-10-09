@@ -3,11 +3,17 @@ package com.livetv.app.data
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeFalse
+import org.junit.Before
 import org.junit.Test
 import java.util.Calendar
 import java.util.TimeZone
 
 class MyChannelTest {
+    /** Cable TV's channels; Spark TV (Google Play) has its own list, tested in src/testSpark. */
+    @Before
+    fun cableTvOnly() = assumeFalse(com.livetv.app.Edition.PLAY_CHANNELS)
+
     private val tz = TimeZone.getTimeZone("America/Toronto")
 
     /** 2026-10-06 (a Tuesday) at [h]:[m] in Toronto. */

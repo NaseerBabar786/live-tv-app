@@ -53,6 +53,15 @@ android {
             buildConfigField("boolean", "IS_MAX", "true")
             buildConfigField("String", "TV_CLIENT_SECRET", "\"${System.getenv("TV_CLIENT_SECRET") ?: ""}\"")
         }
+        // Spark TV: the Google Play app of our Spark channels. Only channels we own outright (our news,
+        // public-domain films, free-licence music, our ads); no YouTube channels, no outside streams, no
+        // self-updates. Gold is a Google Play subscription.
+        create("spark") {
+            dimension = "edition"
+            applicationId = "ca.bulkbazaar.sparktv"
+            versionCode = 1
+            versionName = "1.0.0"
+        }
     }
     // The two store editions share their playlist settings screen.
     sourceSets {
@@ -62,6 +71,13 @@ android {
         getByName("livetv").java.srcDir("src/quran/java")
         getByName("player").java.srcDir("src/noquran/java")
         getByName("plus").java.srcDir("src/noquran/java")
+        getByName("spark").java.srcDir("src/noquran/java")
+        // Google Play billing, shared by the two editions that sell a subscription.
+        getByName("plus").java.srcDir("src/playbilling/java")
+        getByName("spark").java.srcDir("src/playbilling/java")
+        // Spark TV ships with its channels' schedules as they were at build time, so a first start
+        // (or a start without internet) has channels at once; the newest come from the website.
+        getByName("spark").assets.srcDir("../docs/channel/play")
         // Live TV Max is built from Cable TV's own code and pictures, plus its icon in src/max.
         getByName("max") {
             java.srcDir("src/livetv/java")
@@ -144,6 +160,7 @@ dependencies {
     "maxImplementation"("com.google.zxing:core:3.5.3")
     // Live TV Plus Premium: a Google Play subscription.
     "plusImplementation"("com.android.billingclient:billing-ktx:7.1.1")
+    "sparkImplementation"("com.android.billingclient:billing-ktx:7.1.1")
     debugImplementation(libs.androidx.compose.ui.tooling)
     testImplementation(libs.junit)
     // Real org.json for JVM unit tests (the Android one is a stub there).

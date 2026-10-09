@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Spark TV's Android TV home-screen banner (320×180 dp), drawn from the Spark logo. -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/spark_banner"
+    android:gravity="fill" />

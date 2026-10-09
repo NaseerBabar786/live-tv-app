@@ -82,6 +82,10 @@ object Edition {
     const val HAS_DEVICE_LOCATION = true
     /** Movies & Series from the saved playlists (Cable TV only). */
     const val HAS_VOD = true
+    /** Spark TV (Google Play): only our own channels that may go on Google Play, no YouTube ones. */
+    const val PLAY_CHANNELS = false
+    /** What the paid features are called in this app. */
+    const val PREMIUM_NAME = "Premium"
 }
 
 /**
