@@ -275,7 +275,7 @@ window.onYouTubeIframeAPIReady = () => {
         keepPlaying(e.target, () => finished || ownOn, () => cover(true));
       },
       onStateChange: e => {
-        if (e.data === YT.PlayerState.PLAYING) { if (ownOn) { e.target.stopVideo(); return; } cover(false); started = true; failures = 0; }
+        if (e.data === YT.PlayerState.PLAYING) { if (ownOn) { e.target.stopVideo(); return; } if (!adOn) cover(false); started = true; failures = 0; }
         // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
         // (Not while our own show plays: YouTube is stopped under it then.)
         else if (!ownOn) cover(true);
@@ -297,6 +297,21 @@ window.onYouTubeIframeAPIReady = () => {
   });
   lowFirst(player);
 };
+// YouTube's own ads inside a video come with its "Skip" button (owner, 2026-10-09: no skip-ahead on channel 1):
+// while one plays, our break card covers it and its sound is off. An ad shows as a different video id, or
+// as a much shorter length than the programme's.
+let adOn = false;
+setInterval(() => {
+  if (!player || !player.getDuration || finished || ownOn || cur < 0) return;
+  const id = sub || ids[cur], want = (sub ? info[sub]?.secs : secs[cur]) || 0;
+  const d = player.getDuration() || 0, vid = player.getVideoData?.()?.video_id;
+  const ad = player.getPlayerState() === YT.PlayerState.PLAYING &&
+    ((vid && vid !== id) || (d > 0 && want >= 120 && d <= 180 && d < want / 2));
+  if (ad === adOn) return;
+  adOn = ad;
+  if (ad) { cover(true, "Break · وقفہ", name); player.mute(); }
+  else { if (player.getPlayerState() === YT.PlayerState.PLAYING) cover(false); if (app || $("sound").hidden) player.unMute(); }
+}, 500);
 $("shield").onclick = showNow;
 $("sound").onclick = () => { player.unMute(); if (ownOn) $("own").muted = false; else player.playVideo(); $("sound").hidden = true; };
 document.addEventListener("keydown", e => {
