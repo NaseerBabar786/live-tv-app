@@ -134,9 +134,10 @@ fun NamazHomeScreen(vm: AppViewModel) {
                         BigTile(
                             t.first.get(),
                             t.second.get(),
-                            NamazColors[i],
+                            palette.bar,
                             t.third,
                             Modifier.weight(1f).height(if (wide) 170.dp else 160.dp).then(if (i == 0) Modifier.focusRequester(first) else Modifier),
+                            contentColor = palette.onBar,
                             onClick = onClick,
                         )
                     }
@@ -153,8 +154,6 @@ fun NamazHomeScreen(vm: AppViewModel) {
     }
     LaunchedEffect(Unit) { runCatching { first.requestFocus() } }
 }
-
-private val NamazColors = listOf(Color(0xFF0B5D45), Color(0xFF1565C0), Color(0xFF7E57C2), Color(0xFFEF6C00))
 
 @Composable
 private fun ProgressCard(vm: AppViewModel) {
@@ -510,7 +509,7 @@ fun NamazSurahsScreen(vm: AppViewModel) {
             item { Text(NS.myPlan.get(), fontSize = 20.sp, fontWeight = FontWeight.Bold, color = palette.accent) }
             items(extra, key = { "e$it" }) { n -> PlanRow(vm, n, removable = true, modifier = Modifier) }
             item {
-                BigTile(NS.addMore.get(), tr("Any surah of the Quran", "قرآن کی کوئی بھی سورت"), Color(0xFF0B5D45), Icons.Filled.Add, Modifier.fillMaxWidth()) {
+                BigTile(NS.addMore.get(), tr("Any surah of the Quran", "قرآن کی کوئی بھی سورت"), palette.bar, Icons.Filled.Add, Modifier.fillMaxWidth(), contentColor = palette.onBar) {
                     vm.open(Screen.NamazAddSurah)
                 }
             }
