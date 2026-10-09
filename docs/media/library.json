@@ -806,6 +806,61 @@
    "secs": 20,
    "about": "Coming up on Spark TV: وقفہ: آج کے پروگرام اور موسم, Every day · 11:55 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
+  },
+  {
+   "id": "spark-ad-tour",
+   "cat": "promos",
+   "lang": "en",
+   "title": "Spark TV Ad, channel tour",
+   "url": "media/spark-ad-tour.mp4",
+   "secs": 60,
+   "poster": "media/spark-ad-tour-poster.jpg",
+   "about": "60 s tour of our own Spark channels with what each is showing this week",
+   "credit": "Our own ad. Pictures: what our Spark channels show this week. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
+  },
+  {
+   "id": "spark-ad-urdu",
+   "cat": "promos",
+   "lang": "ur",
+   "title": "Spark TV Ad, Urdu",
+   "url": "media/spark-ad-urdu.mp4",
+   "secs": 30,
+   "poster": "media/spark-ad-urdu-poster.jpg",
+   "about": "30 s ad for our Urdu Spark channels",
+   "credit": "Our own ad. Pictures: what our Spark channels show this week. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
+  },
+  {
+   "id": "spark-ad-hindi",
+   "cat": "promos",
+   "lang": "hi",
+   "title": "Spark TV Ad, Hindi",
+   "url": "media/spark-ad-hindi.mp4",
+   "secs": 30,
+   "poster": "media/spark-ad-hindi-poster.jpg",
+   "about": "30 s ad for our Hindi Spark channels",
+   "credit": "Our own ad. Pictures: what our Spark channels show this week. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
+  },
+  {
+   "id": "spark-ad-english",
+   "cat": "promos",
+   "lang": "en",
+   "title": "Spark TV Ad, English",
+   "url": "media/spark-ad-english.mp4",
+   "secs": 35,
+   "poster": "media/spark-ad-english-poster.jpg",
+   "about": "35 s ad for our English Spark channels",
+   "credit": "Our own ad. Pictures: what our Spark channels show this week. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
+  },
+  {
+   "id": "spark-ad-punjabi",
+   "cat": "promos",
+   "lang": "pa",
+   "title": "Spark TV Ad, Punjabi",
+   "url": "media/spark-ad-punjabi.mp4",
+   "secs": 30,
+   "poster": "media/spark-ad-punjabi-poster.jpg",
+   "about": "30 s ad for our Punjabi Spark channels: Music Punjabi, Movies Punjabi, Gurbani, Sufi Qawwali",
+   "credit": "Our own ad. Pictures: what our Spark channels show this week. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
   }
  ]
 }
