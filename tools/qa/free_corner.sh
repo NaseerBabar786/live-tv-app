@@ -6,10 +6,13 @@ mkdir -p "$OUT"; LOG="$OUT/steps.txt"; : > "$LOG"
 note() { echo "$(date -u +%H:%M:%S) $*" | tee -a "$LOG"; }
 shot() { adb exec-out screencap -p > "$OUT/$1.png" 2>/dev/null; note "screenshot $1 running=$(adb shell pidof $PKG >/dev/null && echo yes || echo NO)"; }
 adb logcat -c
+# Real TVs animate; the emulator runner turns animations off, which stops the ticker from moving.
+adb shell settings put global animator_duration_scale 1; adb shell settings put global transition_animation_scale 1; adb shell settings put global window_animation_scale 1
 adb install -r "$APK" >> "$LOG" 2>&1
 for p in ACCESS_COARSE_LOCATION ACCESS_FINE_LOCATION POST_NOTIFICATIONS; do adb shell pm grant "$PKG" android.permission.$p >/dev/null 2>&1; done
 adb shell monkey -p "$PKG" -c android.intent.category.LEANBACK_LAUNCHER 1 >/dev/null 2>&1
 sleep 20; shot 01-start
+for s in 2 4 6; do sleep 2; shot 01-ticker-$s; done
 # Back closes a start screen or dialog if one is up, without leaving the app.
 sleep 5; shot 02-25s
 sleep 10; shot 03-35s
