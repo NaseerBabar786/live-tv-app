@@ -61,6 +61,7 @@
 </header>
 
 <main class="wrap">
+  <a href="admin" class="back-admin hidden" id="backAdmin">← Back to Admin</a>
   <h1>💬 Suggestions</h1>
   <p class="lead">Tell us what to improve or add to Cable TV, and reply to other viewers' ideas. Private replies from the Cable TV team arrive in your Messages. Only Cable TV app users can read and post here.</p>
 
@@ -176,6 +177,7 @@ if (!configured) {
     me = user;
     if (!user) return show("signedOut");
     admin = !!ADMIN_EMAIL && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    $("backAdmin").classList.toggle("hidden", !admin);
     let isUser = admin;
     if (!isUser) {
       try { isUser = (await fs.getDoc(fs.doc(db, "users", user.uid))).exists(); } catch { isUser = false; }
