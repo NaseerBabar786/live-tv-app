@@ -69,6 +69,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
@@ -97,20 +98,25 @@ import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.sin
 
-// The Weather section's own colours (1.10.20): deep blue like the big weather apps, whatever the app theme.
-private val SkyBottom = Color(0xFF141C48)
-private val Panel = Color(0x730A122D)
-private val TabOn = Color(0xFF2F5BD3)
-private val Yellow = Color(0xFFFFD000)
-private val Soft = Color(0xFFC9D2EE)
-private val Dim = Color(0xFF97A3CC)
+// The Weather section's colours come from the Cable TV theme the viewer picked (1.11), so it looks
+// like the rest of the app; only the weather pictures and the sky's weather touches keep their own colours.
+private val SkyBottom: Color get() = Themes.current.background
+private val Panel: Color get() = Themes.current.panel.copy(alpha = 0.85f)
+private val TabOn: Color get() = Themes.current.primary
+private val Yellow: Color get() = Themes.current.secondary
+private val Soft: Color get() = Themes.current.soft
+private val Dim: Color get() = Themes.current.muted
+private val Ink: Color get() = Themes.current.onSurface
 private val PanelShape = RoundedCornerShape(22.dp)
 private val TileShape = RoundedCornerShape(16.dp)
 
-/** See-through glass over the sky, lit a little from the top left (1.10.23). */
-private fun Modifier.glass(shape: androidx.compose.ui.graphics.Shape) = this
-    .background(Brush.linearGradient(listOf(Color.White.copy(alpha = 0.15f), Color.White.copy(alpha = 0.05f))), shape)
-    .border(1.dp, Color.White.copy(alpha = 0.16f), shape)
+/** See-through glass in the theme's colours over the sky, lit a little from the top left (1.10.23). */
+private fun Modifier.glass(shape: androidx.compose.ui.graphics.Shape): Modifier {
+    val t = Themes.current
+    return this
+        .background(Brush.linearGradient(listOf(t.surfaceVariant.copy(alpha = 0.72f), t.surface.copy(alpha = 0.5f))), shape)
+        .border(1.dp, t.line.copy(alpha = 0.9f), shape)
+}
 
 private enum class Tab(val label: String) {
     Weather("☀️ Weather"),
@@ -212,7 +218,7 @@ fun WeatherScreen(onClose: () -> Unit) {
     val r = report?.takeIf { place != null && WeatherApp.same(it.place, place) }
     val canRemove = place != null && index >= mineCount
 
-    CompositionLocalProvider(LocalContentColor provides Color.White) {
+    CompositionLocalProvider(LocalContentColor provides Ink) {
         Box(Modifier.fillMaxSize().background(SkyBottom)) {
             SkyBackdrop(r?.current?.code, r?.current?.day ?: true)
             Column(Modifier.fillMaxSize().safeDrawingPadding().padding(horizontal = if (wide) 24.dp else 12.dp, vertical = 10.dp)) {
@@ -341,7 +347,7 @@ private fun Header(
                     t.label,
                     fontWeight = FontWeight.Bold,
                     fontSize = if (wide) 15.sp else 14.sp,
-                    color = if (on) Color.White else Soft,
+                    color = if (on) Ink else Soft,
                     maxLines = 1,
                     modifier = Modifier
                         .then(if (on) Modifier.focusRequester(firstFocus) else Modifier)
@@ -356,7 +362,7 @@ private fun Header(
     val title = @Composable {
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onClose, modifier = Modifier.focusGlow()) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back to channels", tint = Color.White)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back to channels", tint = Ink)
             }
             Row(
                 Modifier.background(Panel, PillShape).padding(horizontal = 18.dp, vertical = 8.dp),
@@ -387,11 +393,11 @@ private fun Chip(label: String, on: Boolean, onClick: () -> Unit) {
         label,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
-        color = if (on) SkyBottom else Color.White,
+        color = if (on) SkyBottom else Ink,
         maxLines = 1,
         modifier = Modifier
             .focusGlow(PillShape)
-            .background(if (on) Color.White else Panel, PillShape)
+            .background(if (on) Ink else Panel, PillShape)
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 7.dp),
     )
@@ -441,7 +447,7 @@ private fun HomeTab(
                     Row(Modifier.fillMaxWidth().height(290.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                         Hero(r, Modifier.weight(1f).fillMaxHeight()) { onTab(Tab.Hourly) }
                         PanelBox(Modifier.weight(1.4f).fillMaxHeight(), "Next 24 Hours", more = { onTab(Tab.Hourly) }) {
-                            TempGraph(r.hoursFromNow(24), Modifier.fillMaxSize())
+                            TempGraph(r.hoursFromNow(24), Modifier.fillMaxSize(), lineColor = Yellow)
                         }
                     }
                     Row(Modifier.fillMaxWidth().height(270.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -597,7 +603,7 @@ private fun NowPanel(r: WeatherApp.Report, modifier: Modifier, onNowcast: () -> 
     }
 }
 
-/** The weeks around today: what each past day reached (white) and the forecast highs (yellow). */
+/** The weeks around today: what each past day reached (plain) and the forecast highs (in the theme colour). */
 @Composable
 private fun Month(r: WeatherApp.Report) {
     val today = r.now.take(10)
@@ -629,14 +635,14 @@ private fun Month(r: WeatherApp.Report) {
                                 color = if (isToday) SkyBottom else Dim,
                                 modifier = if (isToday) Modifier.background(Yellow, CircleShape).padding(horizontal = 5.dp) else Modifier,
                             )
-                            Text("${d.high}°", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = if (d.date < today) Color.White else Yellow)
+                            Text("${d.high}°", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = if (d.date < today) Ink else Yellow)
                         }
                     }
                 }
                 repeat(7 - week.size) { Spacer(Modifier.weight(1f)) }
             }
         }
-        Text("White: what it reached · Yellow: forecast high", fontSize = 10.sp, color = Dim, modifier = Modifier.padding(top = 2.dp))
+        Text("Plain: what it reached · Coloured: forecast high", fontSize = 10.sp, color = Dim, modifier = Modifier.padding(top = 2.dp))
     }
 }
 
@@ -873,7 +879,7 @@ private fun Eye(fraction: Float) {
             close()
         }, Brush.horizontalGradient(listOf(Color(0xFF3F6FE0), Color(0x553F6FE0)), startX = eyeW, endX = beamEnd))
         drawOval(Color.White, Offset(0f, cy - 13.dp.toPx()), Size(eyeW, 26.dp.toPx()))
-        drawCircle(Color(0xFF2F5BD3), 9.dp.toPx(), Offset(eyeW / 2, cy))
+        drawCircle(TabOn, 9.dp.toPx(), Offset(eyeW / 2, cy))
         drawCircle(SkyBottom, 4.dp.toPx(), Offset(eyeW / 2, cy))
     }
 }
@@ -1214,7 +1220,8 @@ private fun Legend() {
 @Composable
 private fun Radar(place: Location.Place, mini: Boolean, modifier: Modifier, onWeb: (WebView) -> Unit = {}) {
     var failed by remember(place.latitude, place.longitude) { mutableStateOf(false) }
-    Box(modifier.background(Color(0xFF1C2233))) {
+    val bg = Themes.current.panel
+    Box(modifier.background(bg)) {
         if (failed) {
             Text("The radar can't be shown on this device.", color = Soft, modifier = Modifier.align(Alignment.Center).padding(16.dp))
             return@Box
@@ -1229,6 +1236,7 @@ private fun Radar(place: Location.Place, mini: Boolean, modifier: Modifier, onWe
                             .replace("__LON__", "%.4f".format(Locale.US, place.longitude))
                             .replace("__ZOOM__", if (mini) "6" else "7")
                             .replace("__MINI__", if (mini) "1" else "0")
+                            .replace("__BG__", "#%06X".format(Locale.US, bg.toArgb() and 0xFFFFFF))
                         WebView(context).apply {
                             // Without this the page's height is its content's (none), so the map is 0 px tall.
                             layoutParams = android.view.ViewGroup.LayoutParams(
@@ -1239,7 +1247,14 @@ private fun Radar(place: Location.Place, mini: Boolean, modifier: Modifier, onWe
                             settings.domStorageEnabled = true
                             isFocusable = false
                             isFocusableInTouchMode = false
-                            setBackgroundColor(android.graphics.Color.rgb(28, 34, 51))
+                            setBackgroundColor(bg.toArgb())
+                            // The page's own errors go to logcat ("Radar"), so a blank map can be traced.
+                            webChromeClient = object : android.webkit.WebChromeClient() {
+                                override fun onConsoleMessage(m: android.webkit.ConsoleMessage): Boolean {
+                                    android.util.Log.i("Radar", "${m.message()} (${m.sourceId()}:${m.lineNumber()})")
+                                    return true
+                                }
+                            }
                             webViewClient = object : WebViewClient() {
                                 // Nothing on the radar opens another page.
                                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest) = true
@@ -1379,7 +1394,7 @@ private fun WeatherDialog(title: String, onDismiss: () -> Unit, content: @Compos
             Modifier.fillMaxWidth(0.92f).widthIn(max = 1100.dp),
             shape = PanelShape,
             color = SkyBottom,
-            contentColor = Color.White,
+            contentColor = Ink,
         ) {
             Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {

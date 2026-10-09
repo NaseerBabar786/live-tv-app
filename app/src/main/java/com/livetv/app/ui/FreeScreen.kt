@@ -87,7 +87,7 @@ import java.util.Locale
 
 private const val LOGOS = "https://tv.bulkbazaar.ca/channel/logos/"
 private val Gold = Color(0xFFE8B43C)
-private val Muted = Color(0xFFA0A6B9)
+private val Muted: Color get() = Themes.current.muted
 private val PrayerGreen = Color(0xFF8CDCA0)
 
 /** The right-hand panel: clock and date, weather, next prayer and the promo slides. */
@@ -280,7 +280,7 @@ private fun Slide(top: Color, edge: Color, content: @Composable () -> Unit) {
         Modifier
             .fillMaxSize()
             .clip(CardShape)
-            .background(Brush.verticalGradient(listOf(top, Color(0xFF12141C))))
+            .background(Brush.verticalGradient(listOf(top, Themes.current.background)))
             .border(1.dp, edge, CardShape),
     ) {
         // The words shrink to fit a short box (a 1080p TV gives it only about 120 dp), so no line is cut off.
