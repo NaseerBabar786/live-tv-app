@@ -687,8 +687,14 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
         }
     }
     val shownMs = now - shownAt
-    BackHandler(enabled = fullScreen && shownFor > SKIP_AFTER_MS && shownMs >= SKIP_AFTER_MS) {
+    val pictureSkips = fullScreen && shownFor > SKIP_AFTER_MS && shownMs >= SKIP_AFTER_MS
+    BackHandler(enabled = pictureSkips) {
         if (showing === sponsor) showing = null
+    }
+    // Strip and Carousel let Back through to us only when it skips (A21).
+    DisposableEffect(pictureSkips) {
+        AdBreak.pictureSkips = pictureSkips
+        onDispose { AdBreak.pictureSkips = false }
     }
     if (fullScreen && fullBreak) {
         // The ad fills the screen while the channel waits underneath.
@@ -855,7 +861,12 @@ private fun VideoPopup(sponsor: Sponsor, screenWidth: Int, paused: Boolean, labe
     }
     // Back skips it once it has played [SKIP_AFTER_MS], like YouTube's "Skip ad" (1.9.58).
     val skippable = player.duration <= 0 || player.duration > SKIP_AFTER_MS + 1_000
-    BackHandler(enabled = showing && !paused && skippable && playedMs >= SKIP_AFTER_MS) { done() }
+    val videoSkips = showing && !paused && skippable && playedMs >= SKIP_AFTER_MS
+    BackHandler(enabled = videoSkips) { done() }
+    DisposableEffect(videoSkips) {
+        AdBreak.videoSkips = videoSkips
+        onDispose { AdBreak.videoSkips = false }
+    }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         // Leaving the app closes it.

@@ -79,6 +79,7 @@ import com.livetv.app.Watching
 import com.livetv.app.data.Channel
 import com.livetv.app.data.MyChannel
 import com.livetv.app.data.YouTube
+import com.livetv.app.player.AdBreak
 import com.livetv.app.player.StreamPlayer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -248,6 +249,8 @@ internal fun StripMode(
         if (page == null) stream.play(channel)
     }
     LaunchedEffect(sound) { stream.player.volume = if (sound) 1f else 0f }
+    // The 10-minute ad breaks, as on a full-screen channel (A21): the big picture pauses for them.
+    val adOn by modeAdBreak(stream, shownId?.takeIf { page == null && sound && playing })
     DisposableEffect(shownId, sound, playing) {
         val channel = shownId?.let { id -> channels.firstOrNull { it.id == id } }
         if (channel != null && sound && playing) Watching.watch(stream, channel)
@@ -272,6 +275,8 @@ internal fun StripMode(
             .focusRequester(focus)
             .onFocusChanged { if (it.isFocused) onFocused() }
             .onPreviewKeyEvent { e ->
+                // An ad break is on: the remote belongs to the ad; Back goes through only once it skips the ad.
+                if (adOn) return@onPreviewKeyEvent !(e.key == Key.Back && AdBreak.backSkips)
                 if (e.type == KeyEventType.KeyDown) touchedAt = System.currentTimeMillis()
                 when {
                     e.key == Key.Back -> {
