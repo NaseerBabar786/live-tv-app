@@ -1,0 +1,22 @@
+name: AI writer probe (temporary)
+on:
+  push:
+    branches: [ai-probe]
+permissions:
+  contents: read
+  models: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask GitHub Models for a short sourced paragraph
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for model in openai/gpt-4.1-mini openai/gpt-4o-mini meta/llama-3.3-70b-instruct; do
+            echo "== $model"
+            curl -sS -m 60 https://models.github.ai/inference/chat/completions \
+              -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: application/json" \
+              -d "{\"model\":\"$model\",\"messages\":[{\"role\":\"system\",\"content\":\"You write short Urdu news text only from the given article.\"},{\"role\":\"user\",\"content\":\"Article: The city closed its main bridge for repairs on Monday. Shop owners near the bridge say customers fell by half, and the school board says buses now take 20 minutes longer. Write two Urdu sentences: the immediate impact and one knock-on effect the article states.\"}],\"max_tokens\":200}" | head -c 1500
+            echo
+          done
