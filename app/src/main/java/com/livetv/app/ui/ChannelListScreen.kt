@@ -139,6 +139,7 @@ import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -610,7 +611,20 @@ fun ChannelListScreen(
                             onValueChange = { windowStart = 0; twoIds = emptyList(); onQueryChange(it) },
                             placeholder = { Text("Search channels") },
                             singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
+                            // Clear on every theme, with the yellow focus outline the buttons have (owner, 2026-10-10:
+                            // moving from the mic to the search box, it was hard to see).
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = Themes.current.onSurface,
+                                unfocusedTextColor = Themes.current.onSurface,
+                                focusedContainerColor = Themes.current.surfaceVariant,
+                                unfocusedContainerColor = Themes.current.surfaceVariant,
+                                focusedBorderColor = Themes.current.focus,
+                                unfocusedBorderColor = Themes.current.muted,
+                                cursorColor = Themes.current.focus,
+                                focusedPlaceholderColor = Themes.current.soft,
+                                unfocusedPlaceholderColor = Themes.current.soft,
+                            ),
+                            modifier = Modifier.fillMaxWidth().remoteTextField(),
                         )
                     } else {
                         // Logo and title, with the clock and weather spread evenly underneath.

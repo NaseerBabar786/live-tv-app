@@ -22,6 +22,8 @@ import com.livetv.app.extras.ReminderPopup
 import com.livetv.app.extras.Screensaver
 import com.livetv.app.extras.SleepTimerDialog
 import com.livetv.app.extras.SleepWarning
+import com.livetv.app.extras.VoiceSearch
+import com.livetv.app.extras.VoiceSearchDialog
 import com.livetv.app.extras.WhoIsWatching
 import com.livetv.app.extras.WidgetStack
 import com.livetv.app.extras.WidgetsDialog
@@ -89,6 +91,9 @@ class MainActivity : ComponentActivity() {
     /** The sleep timer and widget pickers, from the full-screen channel bar. */
     private var showSleep by mutableStateOf(false)
     private var showWidgets by mutableStateOf(false)
+    private var showVoice by mutableStateOf(false)
+    // The mic button shows only on TVs where voice search can work.
+    private val voiceAvailable by lazy { VoiceSearch.available(this) }
 
     /** Voice search: the TV's speech screen, then [MainViewModel.spoken] with what was said. */
     // The plain activity-result call: the newer API needs a Fragment library this app doesn't carry (lint).
@@ -102,11 +107,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startVoiceSearch() {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            .putExtra(RecognizerIntent.EXTRA_PROMPT, "Say a channel name")
+        if (VoiceSearch.canListen(this)) {
+            showVoice = true
+            return
+        }
         @Suppress("DEPRECATION")
-        val started = runCatching { startActivityForResult(intent, VOICE_SEARCH) }.isSuccess
+        val started = runCatching { startActivityForResult(VoiceSearch.speechIntent(this), VOICE_SEARCH) }.isSuccess
         if (!started) {
             Toast.makeText(this, "Voice search isn't available on this TV. Use the search button instead.", Toast.LENGTH_LONG).show()
         }
@@ -266,7 +272,7 @@ class MainActivity : ComponentActivity() {
                 onOpenWeather = if (Edition.LIVE_TV) ({ if (!Plans.ask("Weather", Plans.Feature.Weather)) showWeather = true }) else null,
                 onWatch = viewModel::watched,
                 onOpenGuide = if (Edition.LIVE_TV) ({ if (!Plans.ask("TV guide", Plans.Feature.Guide)) showGuide = true }) else null,
-                onVoiceSearch = if (Edition.LIVE_TV) ::startVoiceSearch else null,
+                onVoiceSearch = if (Edition.LIVE_TV && voiceAvailable) ::startVoiceSearch else null,
                 searchWake = viewModel.searchWake,
                 onReport = if (Edition.LIVE_TV) ({ Extras.reportBroken(this@MainActivity, it) }) else null,
             )
@@ -275,6 +281,7 @@ class MainActivity : ComponentActivity() {
         if (Edition.LIVE_TV) {
             if (showSleep) SleepTimerDialog(onDismiss = { showSleep = false })
             if (showWidgets) WidgetsDialog(onDismiss = { showWidgets = false })
+            if (showVoice) VoiceSearchDialog(onSpoken = viewModel::spoken, onDismiss = { showVoice = false })
             ReminderPopup(onWatch = { url ->
                 state.channels.firstOrNull { it.url == url }?.let { c ->
                     showGuide = false
