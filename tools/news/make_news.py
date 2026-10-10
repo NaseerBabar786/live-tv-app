@@ -17,6 +17,10 @@ clock time is read or shown, so it stays right at every replay. --room day|night
 (06:00-17:59) or night newsroom (news-<kind>-<room>.mp4); --gather only saves the stories (stories-<kind>.json),
 so all copies of a set read the same news.
 
+The headlines follow the owner's running order (2026-10-10): 1-2 breaking stories (the ones most sources carry)
+with a second sentence, 2-3 developments with what someone said in the source's report, local news (Toronto,
+Pakistan's cities) with a map of where it happened, one uplifting story, then sports and showbiz in brief.
+
 Spark TV is an Urdu/Hindi channel (owner, 2026-10-07), so everything spoken is Urdu; everything written on
 screen shows Urdu and English together (owner, 2026-10-09: every headline gets an English line):
   1. Pakistan and world news from Urdu news feeds (BBC Urdu, DW Urdu, Independent Urdu, Express), Canada news from Canadian English feeds (Global News, CityNews) put into Urdu with
@@ -192,10 +196,15 @@ def take_turns(lists, want, seen, section=None):
     out, i = [], 0
     while len(out) < want and any(i < len(l) for l in lists):
         for l in lists:
-            if i < len(l) and not any(same_story(l[i], s) for s in seen):
-                s = dict(l[i])
-                if section: s["section"] = section
-                out.append(s); seen.append(l[i])
+            if i >= len(l): continue
+            dup = next((s for s in seen if same_story(l[i], s)), None)
+            if dup is not None:
+                # The same story from another source: it counts as one of the big stories (headlines' Breaking).
+                dup["cover"] = dup.get("cover", 1) + 1
+                continue
+            s = l[i]
+            if section: s["section"] = section
+            out.append(s); seen.append(s)
         i += 1
     return out
 
@@ -229,6 +238,69 @@ def gather(kind):
     NOTES.append("stories: " + ", ".join(f"{k} {len(v)}" for k, v in picked.items()))
     return picked
 
+# ---------- the headlines' running order (owner, 2026-10-10) ----------
+# 1-2 breaking stories first (the ones most sources carry), each with a second sentence; then 2-3 developments,
+# each with what someone said in the source's own report (an official's or expert's words, never made up); then
+# local news (Toronto and Pakistan's cities) with a map of where it happened; then one uplifting story; then
+# sports and showbiz in brief, and the weather. Anchor-led, as before.
+TIER = {"breaking": ("اہم ترین خبر", "Breaking", (205, 25, 40)),
+        "develop": ("تازہ پیش رفت", "Developing", (30, 100, 200)),
+        "local": ("مقامی خبریں", "Local news", (20, 130, 70)),
+        "good": ("اچھی خبر", "Good news", (215, 140, 20)),
+        "brief": ("مختصر خبریں", "In brief", (125, 60, 190))}
+TIER_LEAD = {"breaking": "سب سے پہلے اہم ترین خبریں۔ ", "develop": "اب دیکھتے ہیں تازہ پیش رفت۔ ", "local": "اب مقامی خبریں۔ ",
+             "good": "اور اب ایک اچھی خبر۔ ", "brief": "اب مختصر خبریں۔ "}
+QUOTE = re.compile(r"[“\"«][^”\"»]{12,}[”\"»]|نے کہا|کا کہنا ہے|کہنا تھا|نے بتایا|said|says|told")
+GOOD = re.compile(r"جیت|اعزاز|ریکارڈ|خوشخبری|کامیاب|تقریب|میلہ|بچا لیا|رضاکار|عطیہ|گولڈ میڈل|ایوارڈ|celebrat|rescue|award|"
+                  r"record|volunteer|donat|wins?\b|won\b|graduat|festival|reunite|saved|honou?r", re.I)
+BAD = re.compile(r"ہلاک|قتل|حملہ|زخمی|دھماکہ|جاں بحق|موت|جنگ|killed|dead|death|attack|shooting|war\b|crash", re.I)
+# Where local stories happened, for their map: (Urdu name, English name, latitude, longitude).
+PLACES = [("ٹورنٹو", "Toronto", 43.65, -79.38), ("مسی ساگا", "Mississauga", 43.59, -79.64), ("برامپٹن", "Brampton", 43.73, -79.76),
+          ("اوٹاوا", "Ottawa", 45.42, -75.70), ("مونٹریال", "Montreal", 45.50, -73.57), ("وینکوور", "Vancouver", 49.28, -123.12),
+          ("کیلگری", "Calgary", 51.05, -114.07), ("اونٹاریو", "Ontario", 44.5, -79.5),
+          ("کراچی", "Karachi", 24.86, 67.01), ("لاہور", "Lahore", 31.55, 74.34), ("اسلام آباد", "Islamabad", 33.68, 73.05),
+          ("راولپنڈی", "Rawalpindi", 33.60, 73.04), ("پشاور", "Peshawar", 34.01, 71.58), ("کوئٹہ", "Quetta", 30.18, 66.99),
+          ("ملتان", "Multan", 30.20, 71.47), ("فیصل آباد", "Faisalabad", 31.42, 73.08), ("حیدرآباد", "Hyderabad", 25.40, 68.37),
+          ("سیالکوٹ", "Sialkot", 32.49, 74.53), ("گوجرانوالہ", "Gujranwala", 32.16, 74.19), ("گلگت", "Gilgit", 35.92, 74.31)]
+
+
+def place_of(s):
+    text = f"{s.get('title', '')} {s.get('desc', '')} {s.get('en', '')}"
+    return next((p for p in PLACES if p[0] in text or re.search(rf"\b{p[1]}\b", text)), None)
+
+
+def quote_of(s):
+    """The sentence of the source's report in which someone is quoted, or ""."""
+    for sent in re.split(r"(?<=[۔.!?؟])\s+", s.get("desc") or ""):
+        if QUOTE.search(sent) and not same_story({"title": sent}, {"title": s["title"]}):
+            return " ".join(sent.split()[:45])
+    return ""
+
+
+def headline_order(stories):
+    """The stories in the headlines' order, each with its "tier"."""
+    left = list(stories)
+    def take(rule, n, tier):
+        got = [s for s in left if rule(s)][:n]
+        for s in got:
+            s["tier"] = tier; left.remove(s)
+        return got
+    big = sorted([s for s in left if s["section"] in ("pakistan", "world", "canada", "india")],
+                 key=lambda s: -s.get("cover", 1))
+    breaking = [s for s in big if s.get("cover", 1) >= 2][:2] or big[:1] + [s for s in big[1:] if s["section"] != big[0]["section"]][:1]
+    for s in breaking:
+        s["tier"] = "breaking"; left.remove(s)
+    # Picked scarcest first (good news, then local), then shown in the bulletin's order.
+    good = take(lambda s: s["section"] not in ("sports", "film") and GOOD.search(f"{s['title']} {s.get('desc', '')} {s.get('en', '')}") and
+                not BAD.search(f"{s['title']} {s.get('desc', '')} {s.get('en', '')}"), 1, "good")
+    local = take(lambda s: s["section"] in ("canada", "pakistan") and place_of(s), 2, "local")
+    develop = take(lambda s: s["section"] in ("pakistan", "world", "india", "canada") and quote_of(s), 3, "develop")
+    if len(develop) < 2:
+        develop += take(lambda s: s["section"] in ("pakistan", "world", "india"), 2 - len(develop), "develop")
+    brief = take(lambda s: s["section"] == "sports", 1, "brief") + take(lambda s: s["section"] == "film", 1, "brief")
+    return breaking + develop + local + good + brief
+
+
 def first_sentence(text, max_words=40):
     first = re.split(r"(?<=[۔.!?؟])\s+", text)[0] if text else ""
     w = first.split()
@@ -243,7 +315,8 @@ def script(stories, kind):
     for s in stories:
         s["headline"] = s["title"].rstrip("۔.")
         s["headline_en"] = (s.get("en") or "").strip()
-        more = first_sentence(s["desc"]) if kind == "full" else ""
+        more = first_sentence(s["desc"]) if kind == "full" or s.get("tier") == "breaking" else ""
+        if s.get("tier") == "develop": more = quote_of(s)
         if more and same_story({"title": more}, {"title": s["title"]}): more = ""
         s["read"] = f"{s['source']} کے مطابق، {end(s['title'])}" + (f" {end(more)}" if more else "")
 
@@ -532,14 +605,23 @@ def pill(d, name, col):
 # Scene clip box on story cards (left of the text), when a free clip fits the story; see broll.py.
 BROLL_BOX = (100, 196, 448, 252)
 
-def card(path, label, section, headline, body, source, count, video_credit=None, headline_en="", source_en="", count_en=""):
+def card(path, label, section, headline, body, source, count, video_credit=None, headline_en="", source_en="", count_en="",
+         tier=None, where=None):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     name, col = SECTION[section]
-    panel(d, col); pill(d, f"{name} • {SECTION_EN[section]}", col)
+    if tier:   # the headlines: the part of the bulletin, then the section ("اہم ترین خبر • Breaking · پاکستان")
+        t_ur, t_en, col = TIER[tier]
+        panel(d, col); pill(d, f"{t_ur} • {t_en}", col)
+    else:
+        panel(d, col); pill(d, f"{name} • {SECTION_EN[section]}", col)
+    if where:
+        draw_map(im, d, where, col)
     if count: text(d, 110, 150, count, 20, (170, 185, 215), "l")
     if count_en: en_text(d, (110, 176), count_en, 15, (170, 185, 215))
     tw = 1050
-    if video_credit:
+    if where:
+        tw = RIGHT - (BROLL_BOX[0] + BROLL_BOX[2]) - 40
+    elif video_credit:
         x, y, w, h = BROLL_BOX; tw = RIGHT - (x + w) - 40
         d.rectangle((x - 3, y - 3, x + w + 2, y + h + 2), outline=col, width=3)
         d.rectangle((x, y, x + w - 1, y + h - 1), fill=(0, 0, 0, 0))
@@ -565,6 +647,56 @@ def card(path, label, section, headline, body, source, count, video_credit=None,
     if source_en: en_text(d, (110 if not video_credit else BROLL_BOX[0], 562), source_en, 16, DIM, "lm", 420)
     lower_bar(d, label)
     im.save(path)
+
+_WORLD = None
+
+
+def world_shapes():
+    """Country outlines (Natural Earth 1:110m, public domain), downloaded once; [] when they can't be had."""
+    global _WORLD
+    if _WORLD is None:
+        cache = os.path.join(os.environ.get("RUNNER_TEMP", "/tmp"), "ne_110m_countries.geojson")
+        try:
+            if not os.path.exists(cache):
+                data = fetch("https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson", 60)
+                open(cache, "wb").write(data)
+            feats = json.load(open(cache, encoding="utf-8"))["features"]
+            _WORLD = []
+            for f in feats:
+                g = f["geometry"]
+                polys = g["coordinates"] if g["type"] == "MultiPolygon" else [g["coordinates"]]
+                _WORLD += [p[0] for p in polys]
+        except Exception as e:
+            NOTES.append(f"map outlines failed: {e}"); _WORLD = []
+    return _WORLD
+
+
+def draw_map(im, d, where, col):
+    """A map of the area around [where] (Urdu name, English name, lat, lon) with a pin, in the story box."""
+    ur, en, lat, lon = where
+    x, y, w, h = BROLL_BOX
+    span = 16.0    # degrees of longitude shown: the city and the country around it
+    sx = w / span; sy = sx / max(0.3, math.cos(math.radians(lat)))
+    px = lambda lo, la: (x + w / 2 + (lo - lon) * sx, y + h / 2 - (la - lat) * sy)   # noqa: E731
+    m = Image.new("RGBA", im.size, (0, 0, 0, 0)); md = ImageDraw.Draw(m)
+    md.rectangle((x, y, x + w - 1, y + h - 1), fill=(18, 52, 92, 255))
+    for ring in world_shapes():
+        pts = [px(lo, la) for lo, la in ring]
+        if max(p[0] for p in pts) < x or min(p[0] for p in pts) > x + w or max(p[1] for p in pts) < y or min(p[1] for p in pts) > y + h:
+            continue
+        md.polygon(pts, fill=(64, 92, 72, 255), outline=(150, 175, 160, 255))
+    # Only the box: anything drawn outside it is cleared.
+    mask = Image.new("L", im.size, 0); ImageDraw.Draw(mask).rectangle((x, y, x + w - 1, y + h - 1), fill=255)
+    im.paste(m, (0, 0), Image.composite(m, Image.new("RGBA", im.size), mask).split()[3])
+    cx, cy = x + w / 2, y + h / 2
+    d.rectangle((x - 3, y - 3, x + w + 2, y + h + 2), outline=col, width=3)
+    d.ellipse((cx - 14, cy - 14, cx + 14, cy + 14), outline=(255, 255, 255), width=3)
+    d.ellipse((cx - 7, cy - 7, cx + 7, cy + 7), fill=(230, 40, 50))
+    d.rounded_rectangle((cx - 110, cy + 20, cx + 110, cy + 74), 8, fill=(8, 16, 40, 235))
+    text(d, cx, cy + 36, ur, 22, "white", "m")
+    d.text((cx, cy + 62), en, font=font(True, 16), fill=GOLD, anchor="mm")
+    d.text((x, y + h + 10), "Map: Natural Earth", font=font(False, 15), fill=DIM)
+
 
 def title_card(path, kind, when, sub, english="", when_en="", sub_en=""):
     """Urdu with English under each line (channel 1 writes both, owner 2026-10-09)."""
@@ -875,6 +1007,10 @@ def main():
     picked = json.load(open(opt("--stories"))) if opt("--stories") else gather(kind)
     stories = [s for sec in ORDER for s in picked.get(sec, [])]
     if len(stories) < 3: raise SystemExit("Too few stories found; keeping the last bulletin.")
+    # The headlines go breaking, developments, local, good news, in brief (owner, 2026-10-10); the full news by section.
+    if kind == "headlines":
+        stories = headline_order(stories)
+        NOTES.append("order: " + ", ".join(f"{s['tier']}/{s['section']}" for s in stories))
     script(stories, kind)
     if offline:
         wx = json.load(open(opt("--weather"))) if opt("--weather") else None
@@ -904,9 +1040,10 @@ def main():
         every_full_en = "every four hours"
         greet = "السلام علیکم، اور یہ ہے اسپارک ٹی وی نیوز۔ "
     head = (greet + ("تفصیلی خبرنامے میں خوش آمدید۔" if kind == "full" else "پیش ہیں اس وقت کی اہم خبریں۔"))
-    # Owner 2026-10-08: start with the headlines, then the sections.
+    # Owner 2026-10-08: start with the headlines, then the sections. (The headlines bulletin opens straight on its
+    # breaking news instead, owner 2026-10-10.)
     tops = [next(s for s in stories if s["section"] == sec)["headline"] for sec in ORDER if any(s["section"] == sec for s in stories)]
-    if tops: head += " سب سے پہلے اہم سرخیاں۔ " + "۔ ".join(t.rstrip("۔.؟?! ") for t in tops[:4]) + "۔"
+    if tops and kind == "full": head += " سب سے پہلے اہم سرخیاں۔ " + "۔ ".join(t.rstrip("۔.؟?! ") for t in tops[:4]) + "۔"
     tail = (f"یہ تھیں اس وقت کی خبریں۔ خبروں کی سرخیاں ہر گھنٹے، اور تفصیلی خبرنامہ {every_full}، "
             "صرف اسپارک ٹی وی پر۔ اللہ حافظ۔")
     weather_seg = weather_words(wx, kind == "headlines", slot if in_set else None) if wx else None
@@ -934,6 +1071,14 @@ def main():
 
     def plan(counts):
         segs = []
+        if kind == "headlines":
+            # In the running order; the fitting step below drops stories from the end (counts["all"]).
+            last = None
+            for s in stories[:counts["all"]]:
+                segs.append(("story", (TIER_LEAD[s["tier"]] if s["tier"] != last else "") + s["read"], rv, s))
+                last = s["tier"]
+            if weather_seg: segs.append(("weather", weather_seg, wv, None))
+            return segs
         for sec in ORDER:
             for i, s in enumerate([s for s in stories if s["section"] == sec][:counts[sec]]):
                 segs.append(("story", (LEAD[sec] if i == 0 else "") + s["read"], VOICE[sec], s))
@@ -949,10 +1094,14 @@ def main():
         return cache[key]
     STING, GAP, END_MIN = 6.0, 0.7, 8.0
     counts = {sec: sum(s["section"] == sec for s in stories) for sec in ORDER}
+    counts["all"] = len(stories)
     while True:
         segs = [("open", head, rv, None)] + plan(counts) + [("close", tail, rv, None)]
         used = STING + sum((wxvid[2] if k == "weather" and wxvid else len(voice(t, v)) / SR) + GAP for k, t, v, _ in segs)
-        if used + END_MIN <= total or sum(counts.values()) <= 2: break
+        if used + END_MIN <= total or (kind == "headlines" and counts["all"] <= 3) or sum(counts[k] for k in ORDER) <= 2: break
+        if kind == "headlines":
+            counts["all"] -= 1
+            continue
         biggest = max(ORDER, key=lambda k: counts[k])
         counts[biggest] -= 1
     print(counts, f"{used:.0f} s of {total} s")
@@ -984,9 +1133,14 @@ def main():
             clip = broll.pick(s, work) if os.environ.get("NEWS_BROLL") == "1" and not offline else None
             if not clip and reader: clip = (reader["clip"], " ")   # no scene clip: the newsreader reads in the window
             if clip: clips.append((t, len(audio) / SR + GAP, clip[0]))
+            # Local news shows a map of where it happened in the box instead (owner, 2026-10-10).
+            where = place_of(s) if s.get("tier") == "local" else None
+            if where and clip and clip[0] == reader["clip"]:
+                clips.pop(); clip = None
+            body = (quote_of(s) if s.get("tier") == "develop" else "") or first_sentence(s["desc"])
             card(os.path.join(work, pic), label, s["section"], s["headline"],
-                 first_sentence(s["desc"]), src, f"خبر {n} • کل {len(shown)}", clip[1] if clip else None,
-                 s.get("headline_en", ""), src_en, f"Story {n} of {len(shown)}")
+                 body, src, f"خبر {n} • کل {len(shown)}", clip[1] if clip else None,
+                 s.get("headline_en", ""), src_en, f"Story {n} of {len(shown)}", tier=s.get("tier"), where=where)
         elif sk == "weather":
             weather_card(os.path.join(work, pic), label, wx)
         elif sk == "open":
