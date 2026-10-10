@@ -385,7 +385,7 @@ fun SettingsDialog(
                             NewBadge()
                         }
                     }
-                    if (!Edition.MAX) {
+                    if (!Edition.MAX && !Edition.FREE_FOR_ALL) {
                         val tier by Plans.current.collectAsState()
                         val offer by Subscription.offer.collectAsState()
                         OutlinedButton(

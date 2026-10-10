@@ -102,6 +102,8 @@ object Sponsors {
                     val on = f.optJSONObject("active")?.optBoolean("booleanValue") ?: false
                     // Words saved before the rename to Cable TV (1.9.48) still say the old name.
                     ticker = f.text("text").trim().replace("Free Live TV", "Cable TV").takeIf { on && it.isNotEmpty() }
+                        // Advertising is free (owner, 2026-10-10): saved words that don't say so yet get the free words.
+                        ?.let { if (Regex("advertis", RegexOption.IGNORE_CASE).containsMatchIn(it) && !it.contains("free", true)) DEFAULT_TICKER else it }
                     continue
                 }
                 arr.put(
@@ -169,7 +171,7 @@ object Sponsors {
     /** The ticker's document in sponsors/; older app versions skip it because it has no picture. */
     private const val TICKER_ID = "_ticker"
     private const val K_TICKER = "ticker"
-    const val DEFAULT_TICKER = "Advertise your business on Cable TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise"
+    const val DEFAULT_TICKER = "Advertise your business free on Cable TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise"
 }
 
 /**
