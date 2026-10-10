@@ -857,6 +857,25 @@ def boomerang(clip):
             NOTES.append(f"boomerang failed: {e}"); return clip
     return out
 
+def lip_clip(reader, key):
+    """A lip-synced clip of this reader saying a fixed line (news_lines.py), made once on Modal by
+    tools/news/modal/longcat_avatar.py::lines and downloaded by the workflow as clips/lip-<picture>-<key>.mp4.
+    Used only once the owner turns it on ("lipsync": true in on-air.json) or for a sample (NEWS_LIPSYNC=1)."""
+    if not reader: return None
+    here = os.path.join(HERE, "presenters")
+    try: on = json.load(open(os.path.join(here, "on-air.json"))).get("lipsync", False)
+    except Exception: on = False
+    if not (on or os.environ.get("NEWS_LIPSYNC") == "1"): return None
+    import news_lines
+    path = os.path.join(here, "clips", news_lines.clip_name(reader["id"], key))
+    return path if os.path.exists(path) and os.path.getsize(path) > 10000 else None
+
+def clip_audio(path, work):
+    wav = os.path.join(work, os.path.basename(path)[:-4] + ".wav")
+    if not os.path.exists(wav):
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", path, "-vn", "-ac", "1", "-ar", str(SR), wav)
+    return read_wav(wav)
+
 def add_opening(body, secs, work):
     """Owner's pick (2026-10-08, opening 3): the headline wall with our logo landing replaces the still title
     for the first seconds. If it can't be made, the still title simply stays."""
@@ -903,7 +922,7 @@ def add_segment(body, clip, t0, work, secs=None):
     except Exception as e:
         NOTES.append(f"weather centre overlay failed: {e}")
 
-def add_reader(body, reader, windows, label, work):
+def add_reader(body, reader, windows, label, work, lip_windows=()):
     """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     lower_bar(d, f"{label} • {reader['ur']}", f"{LABEL_EN} · {reader.get('name', '')}")
@@ -916,6 +935,16 @@ def add_reader(body, reader, windows, label, work):
              f"[0:v][r]overlay=0:0:shortest=1:enable='{on}'[m]",
              f"[m][2:v]overlay=0:0:shortest=1:enable='{on}'[b]"]
     last = "[b]"
+    # Lip-synced lines play over the loop in their windows, under the lower bar.
+    if lip_windows:
+        graph[-1] = f"[m]null[b0]"; last = "[b0]"
+        for i, (t0, clip) in enumerate(lip_windows):
+            ins += ["-i", clip]
+            k = 3 + i
+            graph.append(f"[{k}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1,"
+                         f"setpts=PTS-STARTPTS+{t0:.3f}/TB[l{i}]")
+            graph.append(f"{last}[l{i}]overlay=0:0:eof_action=pass[b{i + 1}]"); last = f"[b{i + 1}]"
+        graph.append(f"{last}[2:v]overlay=0:0:shortest=1:enable='{on}'[b]"); last = "[b]"
     tmp = os.path.join(work, "with-reader.mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(graph) + f";{last}format=yuv420p[v]",
         "-map", "[v]", "-map", "0:a", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
@@ -1043,9 +1072,10 @@ def main():
     # Owner 2026-10-08: start with the headlines, then the sections. (The headlines bulletin opens straight on its
     # breaking news instead, owner 2026-10-10.)
     tops = [next(s for s in stories if s["section"] == sec)["headline"] for sec in ORDER if any(s["section"] == sec for s in stories)]
-    if tops and kind == "full": head += " سب سے پہلے اہم سرخیاں۔ " + "۔ ".join(t.rstrip("۔.؟?! ") for t in tops[:4]) + "۔"
+    if tops and kind == "full": rundown = "سب سے پہلے اہم سرخیاں۔ " + "۔ ".join(t.rstrip("۔.؟?! ") for t in tops[:4]) + "۔"
     tail = (f"یہ تھیں اس وقت کی خبریں۔ خبروں کی سرخیاں ہر گھنٹے، اور تفصیلی خبرنامہ {every_full}، "
             "صرف اسپارک ٹی وی پر۔ اللہ حافظ۔")
+    rundown = ""
     weather_seg = weather_words(wx, kind == "headlines", slot if in_set else None) if wx else None
     NAMES = {"canada": "کینیڈا", "pakistan": "پاکستان", "india": "بھارت", "world": "دنیا", "film": "فلم اور شوبز", "sports": "کھیلوں"}
     present = [sec for sec in ORDER if any(s["section"] == sec for s in stories)]
@@ -1054,6 +1084,17 @@ def main():
     # The voice always matches the newsreader on camera: a man reads with a man's voice, a lady with a lady's (owner 2026-10-08).
     reader = newsreader(slot, room, in_set, kind)
     rv = voice_of(reader)
+    # Lip-synced fixed lines (owner 2026-10-10), only in the 8-hour sets, whose lines never change (news_lines.py).
+    import news_lines
+    lips = {}
+    if in_set:
+        lips = {k: c for k, c in (("open", lip_clip(reader, f"open-{kind}")), ("close", lip_clip(reader, "close"))) if c}
+        if lips: NOTES.append("lip-synced lines: " + ", ".join(os.path.basename(c) for c in lips.values()))
+    if "open" in lips:
+        head = news_lines.OPEN[kind]   # the rundown follows as its own on-camera segment
+    elif rundown:
+        head += " " + rundown; rundown = ""
+    if "close" in lips: tail = news_lines.CLOSE
     VOICE = {sec: rv for sec in ORDER}
     # Full news: a second presenter, a lady when possible, does the weather (owner, 2026-10-09).
     wx_reader = (weather_presenter(reader) if kind == "full" else None) or reader
@@ -1092,12 +1133,15 @@ def main():
         if key not in cache:
             cache[key] = speak(text, v, os.path.join(work, f"v{len(cache):02d}"), offline)
         return cache[key]
+    def seg_audio(k, text, v):
+        return clip_audio(lips[k], work) if k in lips else voice(text, v)
     STING, GAP, END_MIN = 6.0, 0.7, 8.0
     counts = {sec: sum(s["section"] == sec for s in stories) for sec in ORDER}
     counts["all"] = len(stories)
     while True:
-        segs = [("open", head, rv, None)] + plan(counts) + [("close", tail, rv, None)]
-        used = STING + sum((wxvid[2] if k == "weather" and wxvid else len(voice(t, v)) / SR) + GAP for k, t, v, _ in segs)
+        segs = ([("open", head, rv, None)] + ([("open2", rundown, rv, None)] if rundown else []) + plan(counts)
+                + [("close", tail, rv, None)])
+        used = STING + sum((wxvid[2] if k == "weather" and wxvid else len(seg_audio(k, t, v)) / SR) + GAP for k, t, v, _ in segs)
         if used + END_MIN <= total or (kind == "headlines" and counts["all"] <= 3) or sum(counts[k] for k in ORDER) <= 2: break
         if kind == "headlines":
             counts["all"] -= 1
@@ -1113,12 +1157,12 @@ def main():
     title_card(os.path.join(work, "c-title.png"), kind, date_ur(slot, True) if in_set else f"{clock(slot)} • {date_ur(slot, True)}", "",
                when_en=date_en(slot, True) if in_set else f"{clock_en(slot)} · {date_en(slot, True)}")
     cards.append(("c-title.png", STING))
-    t = STING; n = 0; on_camera = []; clips = []
+    t = STING; n = 0; on_camera = []; clips = []; lip_windows = []
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import broll
     wx_at = wx_dur = None
     for i, (sk, text, v, s) in enumerate(segs):
-        audio = wxvid[1] if sk == "weather" and wxvid else voice(text, v)
+        audio = wxvid[1] if sk == "weather" and wxvid else seg_audio(sk, text, v)
         if sk == "weather" and wxvid: wx_at = t
         a = int(t * SR); voice_track[a:a + len(audio)] += audio[:len(voice_track) - a]
         dur = len(audio) / SR + GAP
@@ -1143,13 +1187,14 @@ def main():
                  s.get("headline_en", ""), src_en, f"Story {n} of {len(shown)}", tier=s.get("tier"), where=where)
         elif sk == "weather":
             weather_card(os.path.join(work, pic), label, wx)
-        elif sk == "open":
+        elif sk in ("open", "open2"):
             pic = "c-title.png"
         else:
             title_card(os.path.join(work, pic), kind, up_next,
                        f"تفصیلی خبرنامہ {every_full}" + ("" if in_set else f"، اگلا {clock(next_full)}"),
                        when_en=up_next_en, sub_en=f"Full news {every_full_en}" + ("" if in_set else f", next at {clock_en(next_full)}"))
-        if sk in ("open", "close"): on_camera.append((t, dur))
+        if sk in ("open", "open2", "close"): on_camera.append((t, dur))
+        if sk in lips: lip_windows.append((t, lips[sk]))
         cards.append((pic, dur)); t += dur
     left = total - t
     # A short gap stays on the end card; a long one gets promos after a normal-length end card.
@@ -1189,7 +1234,7 @@ def main():
     add_opening(body, STING, work)
     if wx_at is not None: add_segment(body, wxvid[0], wx_at, work, wx_dur)
     if reader and on_camera:
-        add_reader(body, reader, on_camera, label, work)
+        add_reader(body, reader, on_camera, label, work, lip_windows)
     promos = []
     if body != mp4:
         promos = add_promos(body, total - news_len, slot, work, mp4)
