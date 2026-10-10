@@ -2118,17 +2118,14 @@ private fun PlayerWithList(
                 // A heading over each language's block of our channels (Spark Urdu, Spark Hindi...).
                 val heading = channel.group?.takeIf { MyChannel.isMine(channel) && channels.getOrNull(index - 1)?.group != it }
                 if (heading != null) {
-                    // A bright pill in the theme's second colour: the small blue words were hard to see (owner, 2026-10-10).
+                    // The same colour as the channel names: the blue words were hard to see (owner, 2026-10-10).
                     Text(
                         heading.uppercase(),
-                        color = Color.Black,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 14.sp,
+                        color = Themes.current.onSurface,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 11.sp,
                         letterSpacing = 1.sp,
-                        modifier = Modifier
-                            .padding(start = 6.dp, top = if (index == 0) 0.dp else 8.dp, bottom = 2.dp)
-                            .background(Themes.current.secondary, RoundedCornerShape(50))
-                            .padding(horizontal = 12.dp, vertical = 3.dp),
+                        modifier = Modifier.padding(start = 10.dp, top = if (index == 0) 0.dp else 6.dp, bottom = 2.dp),
                     )
                 }
                 Box {
