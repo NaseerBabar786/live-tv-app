@@ -439,6 +439,12 @@ object MyChannel {
         return at(nowMs) || (aheadMs > 0 && at(nowMs + aheadMs))
     }
 
+    /** Our shayari clips (sher-NN) carry the Spark Shayari logo top right, so the corner logo stays off for them: one logo (owner, 2026-10-10). */
+    fun clipHasLogo(channelUrl: String?, nowMs: Long = System.currentTimeMillis()): Boolean {
+        val c = usable(_configs.value[channelUrl?.removePrefix(SCHEME) ?: return false]) ?: return false
+        return (runCatching { whatsOn(c, nowMs) }.getOrNull() as? Now.Playing)?.video?.let { it.id.startsWith("sher-") } == true
+    }
+
     private class Start(val at: Long, val video: Video, val dated: Boolean, val show: String = "")
 
     /**

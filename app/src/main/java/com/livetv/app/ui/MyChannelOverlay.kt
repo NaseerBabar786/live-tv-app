@@ -85,6 +85,12 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             delay(1_000)
         }
     }
+    val clipLogo by produceState(false, channel?.url) {
+        while (true) {
+            value = MyChannel.clipHasLogo(channel?.url)
+            delay(1_000)
+        }
+    }
     val ownLine = c.ticker?.takeIf { band == 0.dp && !newsOn }
     BoxWithConstraints(modifier.fillMaxSize()) {
         // Sized from the picture, so it looks the same in full screen and in a smaller player.
@@ -98,7 +104,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
         val tickerHeight = unit * 4f
         // Channel 1's own slides and clips carry the Spark logo and their headings sit in the top corners, so
         // its corner logo and time stay off: one logo, nothing on top of writing (owner, 2026-10-10), whatever Studio says.
-        if (c.logoCorner != "off" && c.logo != null && channel?.url != MyChannel.URL) {
+        if (c.logoCorner != "off" && c.logo != null && channel?.url != MyChannel.URL && !clipLogo) {
             val bottom = c.logoCorner == "bl" || c.logoCorner == "br"
             val left = c.logoCorner == "tl" || c.logoCorner == "bl"
             // 25% smaller than before (owner, 2026-10-07): 9 -> 6.75 of the width; the clock and gap follow. Solid, not see-through (owner, 2026-10-10).
