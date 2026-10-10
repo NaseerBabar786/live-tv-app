@@ -20,7 +20,7 @@ export const STATIONS = [
   // it that could raise a Google Play red flag. [play]: never edited in Studio.
   { id: "pone", play: true, noPopup: true, name: "Spark One", dial: "0", page: "channel/?c=pone",
     tagline: "Our own films in Urdu and Hindi, stories and shayari",
-    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-tv.png", ready: "https://tv.bulkbazaar.ca/channel/play/pone.json",
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-one.png", ready: "https://tv.bulkbazaar.ca/channel/play/pone.json",
     credits: "Films: Blender Foundation (CC BY) and public-domain films dubbed by our AI voices. Poetry: classic Urdu poets (public domain) read by our AI voice. Stories: made by us." },
   // Every channel of ours is in one language (the owner, 2026-10-08). Urdu: 1 to 19
   { id: "main", name: "Spark TV One", dial: "1", doc: "_channel", page: "channel/",

@@ -123,7 +123,7 @@ object MyChannel {
         // Spark One (the owner, 2026-10-10): the Google-safe channel, exactly as the Google Play app plays it, every
         // programme ours to show (tv.bulkbazaar.ca/channel/play/pone.json). At the very top of the list (0), every
         // other channel keeps its number. Nothing goes on it that could raise a Google Play red flag.
-        Station(PONE, 0, "", "Spark One", logo = "spark-tv.png"),
+        Station(PONE, 0, "", "Spark One", logo = "spark-one.png"),
         // Urdu
         Station("main", 1, "0", "Spark TV One"),
         Station("dramas", 2, "", "Spark Dramas Urdu", youtube = true, backup = "filmein", logo = "spark-dramas.png"),
