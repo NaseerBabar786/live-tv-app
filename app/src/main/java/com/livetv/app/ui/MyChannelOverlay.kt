@@ -96,7 +96,9 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             else -> Alignment.TopEnd
         }
         val tickerHeight = unit * 4f
-        if (c.logoCorner != "off" && c.logo != null) {
+        // Channel 1's own slides and clips carry the Spark logo and their headings sit in the top corners, so
+        // its corner logo and time stay off: one logo, nothing on top of writing (owner, 2026-10-10), whatever Studio says.
+        if (c.logoCorner != "off" && c.logo != null && channel?.url != MyChannel.URL) {
             val bottom = c.logoCorner == "bl" || c.logoCorner == "br"
             val left = c.logoCorner == "tl" || c.logoCorner == "bl"
             // 25% smaller than before (owner, 2026-10-07): 9 -> 6.75 of the width; the clock and gap follow.
