@@ -139,8 +139,9 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             }
         }
         val logoLeft = c.logoCorner == "tl" || c.logoCorner == "bl"
-        // Channel 1's writing is in Urdu and English together (owner, 2026-10-09), the cards' headings too.
-        val both = c.id == "main"
+        // Channel 1's writing is in Urdu and English together (owner, 2026-10-09), the cards' headings too;
+        // the same for Spark TV One, channel 1 of the Google Play app Spark One (owner, 2026-10-10).
+        val both = c.id == "main" || c.id == "pone"
         val today = card?.today == true
         val shows = remember(card?.untilMs, today) {
             card?.let { runCatching { if (it.today) MyChannel.todaysShows(c, System.currentTimeMillis()) else MyChannel.upNext(c, System.currentTimeMillis()) }.getOrNull() }.orEmpty()
@@ -194,9 +195,11 @@ private val Accent: Color get() = Themes.current.secondary
 
 private fun clock(ms: Long): String = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(ms))
 
-private fun whenText(ms: Long): String {
+private fun whenText(ms: Long, both: Boolean = false): String {
     val mins = ((ms - System.currentTimeMillis()) / 60_000L).coerceAtLeast(0)
-    return if (mins < 60) "${clock(ms)} · in ${if (mins < 1) "a moment" else "$mins min"}" else clock(ms)
+    if (mins >= 60) return clock(ms)
+    val en = "in ${if (mins < 1) "a moment" else "$mins min"}"
+    return if (both) "${clock(ms)} · $en · ${if (mins < 1) "ابھی" else "$mins منٹ میں"}" else "${clock(ms)} · $en"
 }
 
 /** "UP NEXT" and the programme after it, low on the picture beside the scrolling line. */
@@ -208,9 +211,10 @@ private fun NextCard(shows: List<MyChannel.Upcoming>, unit: Dp, both: Boolean = 
             .padding(horizontal = unit * 2f, vertical = unit * 1.3f),
     ) {
         Text(if (both) "UP NEXT  ·  اگلا پروگرام" else "UP NEXT", color = Accent, fontWeight = FontWeight.Black, fontSize = (unit.value * 1.6f).sp)
+        // Titles in Urdu and English are long: two lines, so neither language is cut off.
         Text(first.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = (unit.value * 2.6f).sp,
-            maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(whenText(first.at), color = Themes.current.soft, fontSize = (unit.value * 1.7f).sp)
+            maxLines = if (both) 2 else 1, overflow = TextOverflow.Ellipsis)
+        Text(whenText(first.at, both), color = Themes.current.soft, fontSize = (unit.value * 1.7f).sp)
         shows.getOrNull(1)?.let {
             Text("${if (both) "Later · بعد میں" else "Later"}: ${clock(it.at)}  ${it.title}", color = Themes.current.muted, fontSize = (unit.value * 1.5f).sp,
                 maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = unit * 0.5f))

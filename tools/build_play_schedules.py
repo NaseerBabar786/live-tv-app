@@ -145,21 +145,39 @@ def ours(url):
     return url.startswith(("https://github.com/NaseerBabar786/live-tv-app/releases/download/", "https://tv.bulkbazaar.ca/"))
 
 
+def urdu_titles():
+    """English film title -> its Urdu name (tools/dub/films.json), for "Urdu · English" programme titles."""
+    films = json.loads((ROOT / "tools" / "dub" / "films.json").read_text(encoding="utf-8"))
+    return {f["title"]: f["titleUr"] for f in films.values() if f.get("titleUr")}
+
+
+def both(title, ur):
+    """A programme title in Urdu and English (owner 2026-10-10: all writing on Spark TV One in both)."""
+    return f"{ur[title]} · {title}" if title in ur else title
+
+
 def dubbed(pid):
     tag, name, logo, ticker = DUBS[pid]
+    ur = urdu_titles()
     lib = load("library.json")
     films = [x for x in lib if tag in x.get("title", "") and ours(x.get("url", "")) and x.get("secs") and not is_horror(x["title"])]
     # Our Urdu stories go on the Urdu cinema between the films.
     if pid == "purdu":
         films += [x for x in lib if x.get("cat", "").startswith("Our stories") and ours(x.get("url", "")) and x.get("secs")]
-    videos = [{"id": slug(x["url"]), "title": x["title"].replace(f" ({tag})", ""), "url": x["url"], "secs": round(x["secs"]),
+    videos = [{"id": slug(x["url"]), "title": both(x["title"].replace(f" ({tag})", ""), ur), "url": x["url"], "secs": round(x["secs"]),
                "kind": "programme"} for x in films]
     return channel(pid, name, logo, ticker, videos + [ADHERE], with_breaks([v["id"] for v in videos]))
 
 
 def shayari():
     clips = [c for c in load("shayari-clips.json").get("clips", []) if ours(c.get("src", "")) and c.get("secs")]
-    videos = [{"id": f"sher-{c['n']:02d}", "title": c.get("title") or "Aaj ka Sher", "url": c["src"], "secs": round(c["secs"]),
+    poets = json.loads((ROOT / "tools" / "shayari" / "shers.json").read_text(encoding="utf-8"))["poets"]
+    poet_ur = {p["en"]: p["ur"] for p in poets.values()}
+
+    def title(c):  # "آج کا شعر · مرزا غالب · Today's verse · Mirza Ghalib", also for clips made before English came in
+        p = c.get("poet", "")
+        return f"آج کا شعر · {poet_ur[p]} · Today's verse · {p}" if p in poet_ur else c.get("title") or "Aaj ka Sher"
+    videos = [{"id": f"sher-{c['n']:02d}", "title": title(c), "url": c["src"], "secs": round(c["secs"]),
                "kind": "programme"} for c in clips]
     # A short ad of ours after every five couplets, the Spark logo after every fifteen.
     loop = []
@@ -204,10 +222,15 @@ def one():
     ticker = ("Spark TV · Films in Urdu and Hindi, stories and shayari of the classic poets"
               if not WITH_NEWS else "Spark TV · Full news at 12, 4 and 8, headlines every hour · Films in Urdu and "
               "Hindi, stories and shayari of the classic poets")
-    o = channel("pone", "Spark TV One", "spark-tv.png", ticker, videos, loop, slots,
+    o = channel("pone", "Spark TV One", "spark-one.png", ticker, videos, loop, slots,
                    fillers=("adhere", "next", "break"))
     if not WITH_NEWS:
         o["credits"] = o["credits"].replace("News: our own bulletins. ", "")
+    # Channel 1 writes everything in Urdu and English (owner 2026-10-09, again for Spark One 2026-10-10).
+    o["ticker"] += " · " + ("اسپارک ٹی وی: اردو اور ہندی میں فلمیں، کہانیاں اور کلاسیکی شاعروں کی شاعری"
+                            " · اسپارک ٹی وی پر اشتہار دیں: واٹس ایپ 437 602 6500")
+    o["credits"] += (" فلمیں: بلینڈر فاؤنڈیشن (CC BY) اور پبلک ڈومین فلمیں، ہماری اے آئی آوازوں میں۔"
+                     " شاعری: کلاسیکی اردو شاعر (پبلک ڈومین)، ہماری اے آئی آواز میں۔ کہانیاں: ہماری اپنی۔")
     return o
 
 
