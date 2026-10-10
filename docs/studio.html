@@ -1442,7 +1442,7 @@ function setTab(id) {
   if (!(station.web ? WEB_TABS : TABS).some(([t]) => t === id)) id = "overview";
   tab = id;
   document.querySelector(".work").dataset.tab = id;
-  if (station.web && ["library", "approved", "schedule"].includes(id) && pick) { pkTab = id; renderPicks(); }
+  if (station.web && ["library", "approved", "schedule"].includes(id) && pick) { pkTab = id; renderPicks(); loadRatings(); }
   if (id === "help") $("howTo").open = true;
   renderNav();
   if (id === "overview") renderOverview();
@@ -2248,7 +2248,7 @@ function renderPicks() {
       tag.textContent = st === "approved" ? "✅ In next transmission" : st === "new" ? "🆕 New" : st === "removed" ? "Off the air" : "In the Library";
       small.appendChild(tag);
     }
-    small.appendChild(document.createTextNode([v.label, v.top ? "★ comes round more often" : "", v.found ? "found " + v.found : ""].filter(Boolean).join(" · ")));
+    small.appendChild(document.createTextNode([v.label, v.top ? "★ comes round more often" : "", v.found ? "found " + v.found : "", ratingLine(v.id)].filter(Boolean).join(" · ")));
     const acts = row.querySelector(".acts");
     const btn = (text, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn " + cls; b.textContent = text; b.onclick = fn; acts.appendChild(b); };
     btn("▶ Preview", "pv", () => previewVideo(v));
@@ -2258,6 +2258,30 @@ function renderPicks() {
   }
   $("pkCount").textContent = shown ? `${shown} programme${shown === 1 ? "" : "s"} here.` : pkTab === "library" && filter === "new" ? "Nothing new waiting. New finds show up here every day." : "None.";
   if (pkTab === "approved" && !counts.approved) $("pkCount").textContent = station === HITS ? "Nothing approved: Spark Hits plays every song." : "Nothing in Next transmission: the channel plays its free backup films instead.";
+}
+// Viewers' ratings at the end of each programme (owner, 2026-10-10; docs/channel/ytc.html, tools/ratings.py):
+// 👍 / 👎 and stars per programme, shown on its row. Liked ones (and their shows' other episodes) come round more often.
+let viewerRatings = null, ratingsAt = 0;
+async function loadRatings() {
+  if (viewerRatings && Date.now() - ratingsAt < 5 * 60e3) return;
+  ratingsAt = Date.now();
+  try {
+    const out = {};
+    (await fs.getDocs(fs.collection(db, "ratings"))).forEach(d => {
+      const r = d.data();
+      const x = out[r.video] || (out[r.video] = { up: 0, down: 0, stars: [] });
+      if (r.like > 0) x.up++; else if (r.like < 0) x.down++;
+      if (r.stars >= 1 && r.stars <= 5) x.stars.push(r.stars);
+    });
+    viewerRatings = out;
+    if (pick) renderPicks();
+  } catch { viewerRatings = viewerRatings || {}; }
+}
+function ratingLine(id) {
+  const r = viewerRatings?.[id];
+  if (!r) return "";
+  const avg = r.stars.length ? ` ★ ${(r.stars.reduce((a, b) => a + b, 0) / r.stars.length).toFixed(1)} (${r.stars.length})` : "";
+  return `Viewers: 👍 ${r.up} 👎 ${r.down}${avg}`;
 }
 function torontoDate(ms) { return new Intl.DateTimeFormat("en-CA", { timeZone: TORONTO, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(ms)); }
 // (A long programme in 25-minute parts on a half-hour channel counts once, at its first part.)

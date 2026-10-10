@@ -41,6 +41,16 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_dramas import channel_id, fetch, videos_feed, videos_page  # noqa: E402
 from no_horror import is_horror  # noqa: E402  (the owner's rule 2026-10-08: no horror on our channels)
+import ratings  # noqa: E402  (viewers' 👍 / 👎 and stars, owner 2026-10-10)
+
+_RATINGS = None
+
+
+def viewer_ratings():
+    global _RATINGS
+    if _RATINGS is None:
+        _RATINGS = ratings.load()
+    return _RATINGS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEEP_DAYS = 180
@@ -764,6 +774,11 @@ def build(cid, ch, today):
         for v in found.values():
             years = [int(y) for y in re.findall(r"\b(19[5-9]\d|20[0-4]\d)\b", v["title"])]
             v["top"] = bool(years) and max(years) >= today.year - ch["recent_years"]
+    # What viewers liked comes round more often, and other episodes of the same show too; what most of them
+    # disliked never does (owner, 2026-10-10: ratings at the end of each programme).
+    raised, lowered = ratings.apply(list(found.values()), viewer_ratings())
+    if raised or lowered:
+        print(f"{ch['name']}: viewers' ratings made {raised} programmes top and {lowered} not")
     # Newest films first, so the list keeps them when it is full (Latest Movies: by the day each went up on YouTube).
     if ch.get("newest"):
         newest = lambda v: (bool(v.get("up")), v.get("up", ""))  # noqa: E731
