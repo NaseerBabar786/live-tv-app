@@ -666,7 +666,8 @@ fun ChannelListScreen(
                             },
                             Modifier.focusRequester(searchButtonFocus),
                         )
-                        if (Edition.HAS_APP_BAZAAR) BarButton(Icons.Filled.Storefront, "App Bazaar", { showAppBazaar = true })
+                        // Its picture is enough (owner, 2026-10-10), which saves the widest name.
+                        if (Edition.HAS_APP_BAZAAR) BarButton(Icons.Filled.Storefront, "App Bazaar", { showAppBazaar = true }, showLabel = false)
                         BarButton(Icons.Filled.Settings, "Settings", { showSettings = true })
                     } else {
                         if (wideScreen || phone) {
@@ -2599,7 +2600,7 @@ private val TileTextHeight = 30.dp
 
 /** A top-bar button on TVs: the icon with its name small underneath, the same yellow focus as every button. */
 @Composable
-private fun BarButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun BarButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier, showLabel: Boolean = true) {
     Column(
         modifier
             .focusGlow(RoundedCornerShape(10.dp))
@@ -2608,7 +2609,7 @@ private fun BarButton(icon: ImageVector, label: String, onClick: () -> Unit, mod
             .padding(horizontal = 5.dp, vertical = 3.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(icon, contentDescription = label, modifier = Modifier.size(22.dp))
-        Text(label, fontSize = 11.sp, fontWeight = FontWeight.Bold, maxLines = 1, softWrap = false)
+        Icon(icon, contentDescription = label, modifier = Modifier.size(if (showLabel) 22.dp else 28.dp).padding(top = if (showLabel) 0.dp else 3.dp))
+        if (showLabel) Text(label, fontSize = 11.sp, fontWeight = FontWeight.Bold, maxLines = 1, softWrap = false)
     }
 }
