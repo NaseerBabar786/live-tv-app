@@ -1,11 +1,29 @@
 {
- "updated": "2026-10-10T12:28Z",
+ "updated": "2026-10-10T15:23Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "qEWbbv93Rj0",
+   "title": "First cold event of the season brings snow to the Prairies | #forecast",
+   "channel": "The Weather Network",
+   "published": 1791641734
+  },
+  {
+   "id": "Oo36YIvWuQA",
+   "title": "How Hurricane Isaias impacts Canada's Thanksgiving | #isaias",
+   "channel": "The Weather Network",
+   "published": 1791640824
+  },
+  {
+   "id": "R7uNyZMnEjM",
+   "title": "Flamingos Shelter in Bathroom During Hurricane Isaias",
+   "channel": "AccuWeather",
+   "published": 1791637244
+  },
   {
    "id": "Olf-gW4ZNRk",
    "title": "Hurricane Isaias: Post-landfall remnants head toward Canada | #hurricane",
@@ -97,18 +115,6 @@
    "published": 1791552777
   },
   {
-   "id": "uWMrNuOKyKw",
-   "title": "Swap out these 4 foods to help boost your immune system this season",
-   "channel": "The Weather Network",
-   "published": 1791540021
-  },
-  {
-   "id": "Wu90UrxA0v4",
-   "title": "Canada's Daily Forecast - October 9, 2026  | #WeatherAM",
-   "channel": "The Weather Network",
-   "published": 1791536409
-  },
-  {
    "id": "KsNciDVzeXU",
    "title": "Hurricane Isaias and Rachel: A Rare Double U.S. Impact",
    "channel": "AccuWeather",
@@ -175,12 +181,6 @@
    "published": 1791305085
   },
   {
-   "id": "86HqPyuO_Cc",
-   "title": "Will Isaias become a hurricane? Tracking the latest Gulf storm",
-   "channel": "AccuWeather",
-   "published": 1791304128
-  },
-  {
    "id": "ed2fIOYIWms",
    "title": "Powerful Nor'easter Batters East Coast",
    "channel": "The Weather Channel",
@@ -191,12 +191,6 @@
    "title": "Mike Bettes Shows Severe Coastal Flooding in New Jersey",
    "channel": "The Weather Channel",
    "published": 1790519964
-  },
-  {
-   "id": "QDFwlhUNKj0",
-   "title": "Mike Bettes Live In Atlantic City As Nor'easter Hits Jersey Shore",
-   "channel": "The Weather Channel",
-   "published": 1790433764
   }
  ]
 }
