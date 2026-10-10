@@ -20,6 +20,12 @@
   .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
   .chip { padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
   .chip.on { background: var(--red); border-color: var(--red); color: #fff; }
+  /* On a TV (the Cable TV app opens ?tv=1) an order is a QR code to scan with the phone. */
+  #qr { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: grid; place-items: center; z-index: 9; }
+  #qr .box { background: #fff; color: #111; border-radius: 18px; padding: 24px 28px; text-align: center; max-width: 520px; }
+  #qr .box b { font-size: 22px; display: block; margin-bottom: 4px; }
+  #qrCode { display: inline-block; margin: 14px 0; }
+  #qrPrice { display: block; font-weight: 800; }
 </style>
 </head>
 <body>
@@ -47,6 +53,9 @@
   <div class="chips" id="chips"></div>
   <div class="items" id="items"><p class="small">Loading…</p></div>
   <p class="err" id="err"></p>
+  <div id="qr" class="hidden"><div class="box"><b id="qrTitle"></b><span id="qrPrice"></span><div id="qrCode"></div>
+    <p>Scan this with your phone's camera to order on WhatsApp.<br>Or WhatsApp <b style="display:inline">437 602 6500</b> with item code <b style="display:inline" id="qrItem"></b>.</p>
+    <button class="btn" id="qrClose" style="color:#111;border-color:#bbb">Back to the shop</button></div></div>
 </main>
 <footer>
   <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
@@ -58,6 +67,19 @@ const CATS = ["Food", "Clothes", "Beauty", "Home", "Crafts", "Other"];
 const $ = id => document.getElementById(id);
 const val = f => f ? (f.stringValue ?? f.integerValue ?? f.timestampValue ?? "") : "";
 let items = [], cat = "All";
+const TV = new URLSearchParams(location.search).has("tv");
+if (TV) document.querySelector("p.row").innerHTML = '<span class="small">Sell from home: open <b>tv.bulkbazaar.ca/sell</b> on your phone. Listing is free.</span>';
+
+// Back on the TV remote closes the QR code first (the code opens as a page step: #qr).
+async function showQr(it) {
+  if (!window.QRCode) await new Promise((ok, no) => { const sc = document.createElement("script");
+    sc.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"; sc.onload = ok; sc.onerror = no; document.head.append(sc); });
+  $("qrTitle").textContent = it.title; $("qrPrice").textContent = it.price; $("qrItem").textContent = it.code;
+  $("qrCode").innerHTML = ""; new QRCode($("qrCode"), { text: order(it), width: 260, height: 260 });
+  $("qr").classList.remove("hidden"); location.hash = "qr"; $("qrClose").focus();
+}
+$("qrClose").onclick = () => history.back();
+addEventListener("hashchange", () => { if (location.hash !== "#qr") $("qr").classList.add("hidden"); });
 
 function order(it) {
   const t = `Hi, I'd like to order from the Cable TV shop:\n${it.title} (${it.price})\nItem code: ${it.code}\nSeller: ${it.seller}, ${it.city}`;
@@ -76,6 +98,7 @@ function draw() {
     el.querySelector(".desc").textContent = it.description;
     el.querySelector(".by").textContent = `${it.seller} · ${it.city} · item ${it.code}`;
     el.querySelector("a").href = order(it);
+    if (TV) { const a = el.querySelector("a"); a.textContent = "Order (QR code)"; a.removeAttribute("target"); a.onclick = e => { e.preventDefault(); showQr(it); }; }
     $("items").append(el);
   }
 }
