@@ -518,6 +518,8 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
         // Bazaar TV (channel 1) is our own live channel: its ads run in its own schedule breaks, never during
         // the news, so the app adds no pop-up ads or breaks over it (owner, 2026-10-08).
         if (watchingId.value == MyChannel.URL) return
+        // Spark One (the Google-safe channel): its ads run in its own breaks, like on Google Play.
+        if (watchingId.value == MyChannel.PONE_URL) return
         // Spark Gurbani (62): no ads over it at all, out of respect (the owner, 2026-10-08).
         if (watchingId.value == MyChannel.GURBANI_URL) return
         val first = if (onlyPromos) null else Sponsors.next("card")
