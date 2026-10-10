@@ -95,7 +95,7 @@ const wanted = new URLSearchParams(location.search).get("c");
 // Spark Hits (23) runs on its own page (bollywood.html), so it isn't in STATIONS.
 const HITS = { id: "hits", name: "Spark Hits", dial: "23", logo: "logos/spark-hits.png", web: "bollywood.html",
   credits: "Music: official videos from the music labels' own YouTube channels." };
-const station = wanted === "hits" ? HITS : STATIONS.find(x => x.id === wanted) || STATIONS[0];
+const station = wanted === "hits" ? HITS : STATIONS.find(x => x.id === wanted) || STATIONS.find(x => x.id === "main");
 // Channels that run on our locked YouTube page (and Hits) play in the player box here, like channel 1
 // (owner, 2026-10-09: clicking a channel must never leave the page player for a full-window page).
 const embedded = !!(station.yt || station === HITS);

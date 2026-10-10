@@ -34,7 +34,8 @@ export function sparkChannels() {
     live: s.yt ? `../channel/ytc.html?c=${s.id}&mute=1` : null,
     yt: !!s.yt,
   })).concat([HITS]);
-  for (const c of list) c.lang = (LANGS.find(l => +c.dial >= l.from && +c.dial <= l.to) || LANGS[2]).key;
+  // Spark One (0) heads the Urdu row.
+  for (const c of list) c.lang = c.id === "pone" ? "ur" : (LANGS.find(l => +c.dial >= l.from && +c.dial <= l.to) || LANGS[2]).key;
   return list.sort((a, b) => a.dial - b.dial);
 }
 
