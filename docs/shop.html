@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop from home sellers</title>
+<meta name="description" content="Homemade food, clothes and crafts from families in our community. Order on WhatsApp.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .item { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .item img, .item .nopic { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--surface-2); display: block; }
+  .item .nopic { display: grid; place-items: center; font-size: 42px; }
+  .item .body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .item b { font-size: 18px; }
+  .item .price { color: var(--focus); font-weight: 800; }
+  .item .desc { color: var(--muted); font-size: 14px; white-space: pre-wrap; flex: 1; }
+  .item .by { font-size: 13px; color: var(--muted); }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
+  .chip { padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+  .chip.on { background: var(--red); border-color: var(--red); color: #fff; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Cable TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Cable TV</span>
+    </a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="suggestions">Suggestions</a>
+      <a href="./#download">Download</a>
+      <a href="devices/">Devices</a>
+      <a href="shop">Shop</a>
+      <a href="admin" class="admin-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>🛍 Shop from home sellers</h1>
+  <p class="lead">Homemade food, clothes, crafts and more from families in our community. Order on WhatsApp: we pass your order to the seller, and you pay the seller when you get it.</p>
+  <p class="row"><a class="btn primary" href="sell">Sell from home</a><span class="small">Anyone can sell here. Listing is free.</span></p>
+  <div class="chips" id="chips"></div>
+  <div class="items" id="items"><p class="small">Loading…</p></div>
+  <p class="err" id="err"></p>
+</main>
+<footer>
+  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+</footer>
+<script type="module">
+// Approved items come from Firestore shopItems/ (only items the owner approved on /shop-admin are readable).
+const BASE = "https://firestore.googleapis.com/v1/projects/live-tv-b2164/databases/(default)/documents";
+const CATS = ["Food", "Clothes", "Beauty", "Home", "Crafts", "Other"];
+const $ = id => document.getElementById(id);
+const val = f => f ? (f.stringValue ?? f.integerValue ?? f.timestampValue ?? "") : "";
+let items = [], cat = "All";
+
+function order(it) {
+  const t = `Hi, I'd like to order from the Cable TV shop:\n${it.title} (${it.price})\nItem code: ${it.code}\nSeller: ${it.seller}, ${it.city}`;
+  return "https://wa.me/14376026500?text=" + encodeURIComponent(t);
+}
+function draw() {
+  const list = items.filter(it => cat === "All" || it.category === cat);
+  $("items").innerHTML = list.length ? "" : '<p class="small" style="grid-column:1/-1">Nothing here yet. Be the first: <a href="sell">sell from home</a>.</p>';
+  for (const it of list) {
+    const el = document.createElement("div"); el.className = "item";
+    el.innerHTML = (it.photo ? '<img alt="">' : '<div class="nopic">🛍</div>') +
+      '<div class="body"><b></b><span class="price"></span><span class="desc"></span><span class="by"></span><a class="btn primary" target="_blank" rel="noopener">Order on WhatsApp</a></div>';
+    if (it.photo) el.querySelector("img").src = it.photo;
+    el.querySelector("b").textContent = it.title;
+    el.querySelector(".price").textContent = it.price;
+    el.querySelector(".desc").textContent = it.description;
+    el.querySelector(".by").textContent = `${it.seller} · ${it.city} · item ${it.code}`;
+    el.querySelector("a").href = order(it);
+    $("items").append(el);
+  }
+}
+function chips() {
+  for (const c of ["All", ...CATS]) {
+    const b = document.createElement("button"); b.className = "chip" + (c === cat ? " on" : ""); b.textContent = c;
+    b.onclick = () => { cat = c; document.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === b)); draw(); };
+    $("chips").append(b);
+  }
+}
+try {
+  const r = await fetch(BASE + ":runQuery", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+    structuredQuery: { from: [{ collectionId: "shopItems" }], where: { fieldFilter: { field: { fieldPath: "status" }, op: "EQUAL", value: { stringValue: "approved" } } }, limit: 300 } }) });
+  if (!r.ok) throw new Error(r.status);
+  items = (await r.json()).filter(x => x.document).map(x => {
+    const f = x.document.fields, id = x.document.name.split("/").pop();
+    return { id, code: id.slice(0, 6).toUpperCase(), title: val(f.title), price: val(f.price), description: val(f.description), category: val(f.category),
+             seller: val(f.seller), city: val(f.city), photo: val(f.photo), at: val(f.approvedAt) || val(f.createdAt) };
+  }).sort((a, b) => b.at.localeCompare(a.at));
+  chips(); draw();
+} catch {
+  $("items").innerHTML = '<p class="small" style="grid-column:1/-1">The shop is opening soon. Sellers can already <a href="sell">add their items</a>.</p>';
+}
+</script>
+<script src="assets/admin-nav.js"></script>
+<script src="assets/visits.js"></script>
+</body>
+</html>
