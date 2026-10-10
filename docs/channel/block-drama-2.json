@@ -1,6 +1,6 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-10 04:16 UTC",
+ "built": "2026-10-10 22:48 UTC",
  "secs": 2236,
  "videos": [
   {
@@ -13,17 +13,10 @@
  ],
  "spares": [
   {
-   "id": "sQAazBmVQZ8",
-   "title": "Gulbahar - Episode 08 - [ENG SUB] - 8th Oct 2026 [ Sanam Saeed, Emmad Irfani & Komal Meer ] - HUM TV",
-   "label": "HUM TV",
-   "secs": 2068,
-   "kind": "drama"
-  },
-  {
-   "id": "i0tbGRAssN4",
-   "title": "Dastoor Episode 48 (Subtitle) 8th Oct 26, Hiba Aziz - Danial Afzal - Areej Mohyudin - Faraz Farooqui",
+   "id": "ptDYBfgtUiE",
+   "title": "Mitti De Baway Ep 06 (Sub) 8th Oct 26, Digitally VGO TEL, Happilac Paints & Vince Shampoo | Green TV",
    "label": "Green Entertainment",
-   "secs": 2152,
+   "secs": 2005,
    "kind": "drama"
   },
   {
@@ -31,6 +24,13 @@
    "title": "Madaar Episode 11 (Subtitles) 7th October 2026 | Humayoun Ashraf - Sumaiyya Bukhsh | Green TV",
    "label": "Green Entertainment",
    "secs": 2055,
+   "kind": "drama"
+  },
+  {
+   "id": "8kGiIkRirH0",
+   "title": "Madaar Episode 12 (Subtitles) 8th October 2026 | Humayoun Ashraf - Sumaiyya Bukhsh | Green TV",
+   "label": "Green Entertainment",
+   "secs": 2240,
    "kind": "drama"
   }
  ]

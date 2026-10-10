@@ -1,6 +1,6 @@
 {
  "name": "Movie Trailers",
- "built": "2026-10-10 04:16 UTC",
+ "built": "2026-10-10 22:47 UTC",
  "videos": [
   {
    "id": "pV32AcPa-iA",
@@ -9,7 +9,7 @@
    "lang": "English",
    "mins": 2.15,
    "found": "2026-10-09",
-   "up": "2026-10-10"
+   "up": "2026-10-09"
   },
   {
    "id": "Dr060OLTodE",
@@ -18,7 +18,7 @@
    "lang": "English",
    "mins": 1.42,
    "found": "2026-10-09",
-   "up": "2026-10-10"
+   "up": "2026-10-09"
   },
   {
    "id": "l_Ozo1xUgbU",
@@ -27,7 +27,7 @@
    "lang": "English",
    "mins": 2.6,
    "found": "2026-10-09",
-   "up": "2026-10-02"
+   "up": "2026-10-01"
   },
   {
    "id": "OFLyW0lxFU0",
@@ -36,7 +36,7 @@
    "lang": "English",
    "mins": 1.65,
    "found": "2026-10-09",
-   "up": "2026-10-01"
+   "up": "2026-09-30"
   },
   {
    "id": "SzopCeFAWF0",
@@ -45,7 +45,7 @@
    "lang": "English",
    "mins": 2.77,
    "found": "2026-10-09",
-   "up": "2026-09-29"
+   "up": "2026-09-28"
   },
   {
    "id": "bhKKR5He_Fo",
@@ -93,24 +93,6 @@
    "up": "2026-09-19"
   },
   {
-   "id": "Vuv0kqGWjno",
-   "title": "The Cat in the Hat | Main Trailer",
-   "label": "Warner Bros. Pictures",
-   "lang": "English",
-   "mins": 2.43,
-   "found": "2026-10-09",
-   "up": "2026-09-12"
-  },
-  {
-   "id": "Dw-5ZGapGTQ",
-   "title": "Whalefall | Official Trailer | In Theaters October 16",
-   "label": "20th Century Studios",
-   "lang": "English",
-   "mins": 1.62,
-   "found": "2026-10-09",
-   "up": "2026-09-12"
-  },
-  {
    "id": "fvnyrBnUx4E",
    "title": "By Any Means | Final Trailer (2026 Movie) – Yahya Abdul-Mateen II, Mark Wahlberg",
    "label": "Paramount Pictures",
@@ -152,6 +134,24 @@
    "label": "Sony Pictures",
    "lang": "English",
    "mins": 2.53,
+   "found": "2026-10-09",
+   "up": "2026-09-10"
+  },
+  {
+   "id": "Vuv0kqGWjno",
+   "title": "The Cat in the Hat | Main Trailer",
+   "label": "Warner Bros. Pictures",
+   "lang": "English",
+   "mins": 2.43,
+   "found": "2026-10-09",
+   "up": "2026-09-10"
+  },
+  {
+   "id": "Dw-5ZGapGTQ",
+   "title": "Whalefall | Official Trailer | In Theaters October 16",
+   "label": "20th Century Studios",
+   "lang": "English",
+   "mins": 1.62,
    "found": "2026-10-09",
    "up": "2026-09-10"
   },
@@ -219,22 +219,13 @@
    "up": "2026-07-12"
   },
   {
-   "id": "gM4LkaXwGuY",
-   "title": "THE SOCIAL RECKONING – Official Teaser Trailer (HD)",
-   "label": "Sony Pictures",
-   "lang": "English",
-   "mins": 2.5,
-   "found": "2026-10-09",
-   "up": "2026-07-12"
-  },
-  {
    "id": "A36nagDzugo",
    "title": "Ranabaali Official Trailer (Hindi) | Vijay Deverakonda | Rashmika | Rahul Sankrityan | Ajay-Atul",
    "label": "T-Series",
    "lang": "Hindi",
    "mins": 3.88,
    "found": "2026-10-08",
-   "up": "2026-10-09"
+   "up": "2026-10-08"
   },
   {
    "id": "SoTw56f1-OA",
@@ -243,7 +234,7 @@
    "lang": "Hindi",
    "mins": 3.52,
    "found": "2026-10-07",
-   "up": "2026-10-06"
+   "up": "2026-10-05"
   },
   {
    "id": "qGbvEhKhaWA",
@@ -252,7 +243,7 @@
    "lang": "Hindi",
    "mins": 3.08,
    "found": "2026-10-07",
-   "up": "2026-09-30"
+   "up": "2026-09-29"
   },
   {
    "id": "hN_ZUElLH44",
