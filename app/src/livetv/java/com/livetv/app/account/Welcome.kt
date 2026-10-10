@@ -38,7 +38,8 @@ object Welcome {
      * turned off on tv.bulkbazaar.ca/packages, or already used and never shown.
      */
     suspend fun state(account: Account): State? = withContext(Dispatchers.IO) {
-        if (Edition.MAX || account.isAdmin) return@withContext null
+        // Everything is free (owner, 2026-10-10): no Gold gift to offer.
+        if (Edition.FREE_FOR_ALL || Edition.MAX || account.isAdmin) return@withContext null
         val u = account.user.value ?: return@withContext null
         val t = account.token()
         val code = getOrNull(Firestore.doc("promoCodes/$CODE"), t)?.optJSONObject("fields") ?: return@withContext null

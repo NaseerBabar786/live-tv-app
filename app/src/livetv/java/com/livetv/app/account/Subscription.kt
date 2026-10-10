@@ -105,26 +105,17 @@ object Subscription {
     val status: StateFlow<Status?> = _status
 
     /** Packages are on, and this viewer's package has 2 devices: their account works on two devices. */
-    val twoDevices: Boolean get() = _offer.value.enforced && Plans.has(Plans.Feature.TwoDevices)
+    val twoDevices: Boolean get() = true  // everything is free (owner, 2026-10-10), 2 devices too
 
     private const val PREFS = "subscription"
 
     /** The last known package, so a start without internet keeps it. */
     fun init(context: Context) {
         if (Edition.MAX) return
-        val p = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        // The owner's packages as last read; packages off (nothing saved) leaves everything open.
-        if (p.contains("features_free")) {
-            Plans.setFeatures(Plans.Tier.entries.associateWith { Plans.Feature.parse(p.getString("features_${it.name.lowercase()}", "") ?: "") })
-        }
-        Plans.setExtraChannels(p.getString("extra_channels", "") ?: "")
-        p.getString("tier", null)?.let { name ->
-            Plans.Tier.of(name)?.let { tier ->
-                val until = p.getLong("until", 0L)
-                // A saved package that has run out since counts as Free until the next check.
-                Plans.set(if (until in 1 until System.currentTimeMillis()) Plans.Tier.Free else tier)
-            }
-        }
+        // Everything is free for everyone (owner, 2026-10-10): no packages, every feature open. The saved
+        // package stays in the prefs untouched (settings-kept rule); it just isn't used.
+        Plans.setFeatures(null)
+        Plans.set(Plans.Tier.Gold)
     }
 
     /** Reads the offer and the viewer's package. Quietly keeps the last known one when offline. */
@@ -272,7 +263,7 @@ object Subscription {
         }
         val trial = f.optJSONObject("trialDays")?.let { it.optString("integerValue").toIntOrNull() ?: it.optInt("doubleValue", 7) } ?: 7
         return Offer(
-            enforced = f.bool("enforce"),
+            enforced = false,  // everything is free (owner, 2026-10-10), whatever the packages page says
             trialDays = trial.coerceIn(0, 365),
             prices = prices,
             howToPay = f.str("howToPay").ifBlank { DEFAULT_HOW_TO_PAY },

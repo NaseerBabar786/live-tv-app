@@ -136,10 +136,10 @@ private const val TICKER_DP_PER_SECOND = 110f
 private var nextTickerAt = 0L
 /**
  * The packages line (owner, 2026-10-08): it takes turns with the "advertise with us" words, one run each.
- * Free = every channel in 1+List; Gold = full screen and every other feature.
+ * Since 2026-10-10 (owner) everything is free: every channel and every feature, for everyone.
  */
 private const val PACKAGE_LINE =
-    "All 7,800+ channels free on Cable TV  ·  Gold \$9.99/month adds full screen, every mode, Library, Games & more  ·  New? 7 days free + code WELCOME"
+    "All 7,800+ channels and every feature free on Cable TV  ·  Full screen, every mode, Library, Games & more  ·  Advertising is free too: WhatsApp 437 602 6500"
 /** How many runs the ticker has made since start, across screens, so the two lines keep taking turns. */
 private var tickerRuns = 0
 
