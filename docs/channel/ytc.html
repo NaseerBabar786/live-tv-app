@@ -74,7 +74,7 @@
   .card .credit { position: absolute; bottom: 4vh; left: 0; right: 0; text-align: center; font-size: 1.7vh; color: rgba(233,220,196,.75); }
 </style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Gurmukhi:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="player"></div>
@@ -303,12 +303,13 @@ async function playCard(it, offset, at) {
 // Spark Shayari's purple card, shown for 15 s once in each quarter hour (from :01, :16, :31, :46 Toronto time,
 // as soon as a programme is playing: never over our ads, Shayari's own break cards or the loading cover).
 // The programme's sound goes on under it. Urdu channels (2-19) write Urdu + English, Hindi ones (21-39)
-// Hindi + English, the rest English; times are Toronto time, like Shayari's card.
+// Hindi + English, Punjabi ones (61-79) Punjabi (Gurmukhi) + English, the rest English (owner: each channel's own language + English); times are Toronto time, like Shayari's card.
 const QUARTER = 15 * 60e3, SCHED_FROM = 60e3, SCHED_UNTIL = 6 * 60e3, SCHED_SECS = 15;
 const dial = +station.dial || 0;
-const LANG = dial >= 2 && dial < 20 ? "ur" : dial >= 21 && dial < 40 ? "hi" : "en";
+const LANG = dial >= 2 && dial < 20 ? "ur" : dial >= 21 && dial < 40 ? "hi" : dial >= 61 && dial < 80 ? "pa" : "en";
 const HEAD = { ur: ["آج کے پروگرام", "Today's programmes · ٹورنٹو کا وقت · Toronto time"],
   hi: ["आज के कार्यक्रम", "Today's programmes · टोरंटो समय · Toronto time"],
+  pa: ["ਅੱਜ ਦੇ ਪ੍ਰੋਗਰਾਮ", "Today's programmes · ਟੋਰਾਂਟੋ ਸਮਾਂ · Toronto time"],
   en: ["Today's programmes", `Coming up on ${station.shownName || station.name} · Toronto time`] };
 const engTime = ms => new Intl.DateTimeFormat("en-CA", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(ms).replace(/\s?([ap])\.?m\.?/i, (_, x) => ` ${x.toUpperCase()}M`);
 function scheduleCard() {
@@ -336,7 +337,7 @@ function scheduleCard() {
     r.className = "row" + (k === cur ? " cur" : "");
     r.innerHTML = `<span class="t"></span><span class="w"></span>`;
     if (LANG === "ur") { r.firstChild.classList.add("ur"); r.firstChild.textContent = k === cur ? "ابھی · Now" : urduTime(start + begins[k] * 1000); }
-    else r.firstChild.textContent = k === cur ? (LANG === "hi" ? "अभी · Now" : "Now") : engTime(start + begins[k] * 1000);
+    else r.firstChild.textContent = k === cur ? ({ hi: "अभी · Now", pa: "ਹੁਣ · Now" }[LANG] || "Now") : engTime(start + begins[k] * 1000);
     if (LANG !== "ur") { r.style.flexDirection = "row"; r.firstChild.style.direction = r.lastChild.style.direction = "ltr"; r.firstChild.style.textAlign = r.lastChild.style.textAlign = "left"; r.lastChild.style.lineHeight = "1.6"; }
     r.lastChild.textContent = shortTitle(it.v.title);
     rows.appendChild(r);
