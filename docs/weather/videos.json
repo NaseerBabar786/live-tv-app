@@ -1,11 +1,23 @@
 {
- "updated": "2026-10-10T00:36Z",
+ "updated": "2026-10-10T09:24Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "0Sw6A6EXyhU",
+   "title": "LIVE: Hurricane Isaias With Storm Chasers - Gulf Coast Oct. 9",
+   "channel": "AccuWeather",
+   "published": 1791601930
+  },
+  {
+   "id": "KjShK6nri4Y",
+   "title": "This Hotel Roof Didn't Stand A Chance Against Isaias",
+   "channel": "AccuWeather",
+   "published": 1791600952
+  },
   {
    "id": "4jZZoDSd5m8",
    "title": "Traffic cams catch moment flash flood hits cars on busy street | #flashflood",
@@ -59,12 +71,6 @@
    "title": "Hurricane Isaias reached Category 3 intensity on Friday morning, officially major hurricane status",
    "channel": "The Weather Network",
    "published": 1791556574
-  },
-  {
-   "id": "0Sw6A6EXyhU",
-   "title": "LIVE: Hurricane Isaias With Storm Chasers - Gulf Coast Oct. 9",
-   "channel": "AccuWeather",
-   "published": 1791553238
   },
   {
    "id": "3BPxvcoGnx8",
@@ -167,12 +173,6 @@
    "title": "Will Isaias become a hurricane? Tracking the latest Gulf storm",
    "channel": "AccuWeather",
    "published": 1791304128
-  },
-  {
-   "id": "A3LM6bHskB0",
-   "title": "Flash Floods Devastate Towns in Spain",
-   "channel": "AccuWeather",
-   "published": 1791223346
   },
   {
    "id": "ed2fIOYIWms",
