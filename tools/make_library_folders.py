@@ -65,13 +65,13 @@ def mta_folder():
     return im
 
 
-def news_poster():
-    """The 2:3 poster of the Spark TV One News folder inside Spark TV (docs/channel/logos/spark-news-poster.png)."""
+def news_poster(word="NEWS"):
+    """A 2:3 poster for a folder inside Spark TV: News (spark-news-poster.png) and Headlines (spark-headlines-poster.png)."""
     global W, H
     W, H = 600, 900
     im = gradient((24, 18, 52), (8, 8, 20))
     glows(im, [(150, 220, 170, spark.PETALS[0]), (460, 300, 160, spark.PETALS[1]), (180, 700, 170, spark.PETALS[2]), (450, 760, 170, spark.PETALS[3])])
-    logo = spark.square("NEWS", None)
+    logo = spark.square(word, None)
     logo = fit(logo.crop(logo.getbbox()), W * .78, H * .62)
     im.alpha_composite(logo, ((W - logo.width) // 2, (H - logo.height) // 2))
     frame(im)
@@ -84,9 +84,10 @@ def main():
         path = os.path.join(OUT, name + ".png")
         im.convert("RGB").save(path, optimize=True)
         print("wrote", path)
-    path = os.path.join(HERE, "..", "docs", "channel", "logos", "spark-news-poster.png")
-    news_poster().convert("RGB").save(path, optimize=True)
-    print("wrote", path)
+    for word, file in (("NEWS", "spark-news-poster"), ("HEADLINES", "spark-headlines-poster")):
+        path = os.path.join(HERE, "..", "docs", "channel", "logos", file + ".png")
+        news_poster(word).convert("RGB").save(path, optimize=True)
+        print("wrote", path)
 
 
 if __name__ == "__main__":
