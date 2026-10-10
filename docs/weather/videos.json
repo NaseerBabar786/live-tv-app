@@ -1,11 +1,29 @@
 {
- "updated": "2026-10-10T09:24Z",
+ "updated": "2026-10-10T12:28Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "Olf-gW4ZNRk",
+   "title": "Hurricane Isaias: Post-landfall remnants head toward Canada | #hurricane",
+   "channel": "The Weather Network",
+   "published": 1791633688
+  },
+  {
+   "id": "UeOwsgjwpT4",
+   "title": "Canada's Daily Forecast - October 10, 2026 | #weatheram",
+   "channel": "The Weather Network",
+   "published": 1791632496
+  },
+  {
+   "id": "1ChMhywvqoQ",
+   "title": "FIVE tips for navigating foggy roads safely this fall",
+   "channel": "The Weather Network",
+   "published": 1791626440
+  },
   {
    "id": "0Sw6A6EXyhU",
    "title": "LIVE: Hurricane Isaias With Storm Chasers - Gulf Coast Oct. 9",
@@ -89,18 +107,6 @@
    "title": "Canada's Daily Forecast - October 9, 2026  | #WeatherAM",
    "channel": "The Weather Network",
    "published": 1791536409
-  },
-  {
-   "id": "oIeP3pAayno",
-   "title": "Canada's Thanksgiving long weekend forecast: snow, rain or sunshine? | #thanksgiving",
-   "channel": "The Weather Network",
-   "published": 1791505816
-  },
-  {
-   "id": "F_n-wrg9kZA",
-   "title": "Thanksgiving weekend to bring first flakes to the Prairies | #snow",
-   "channel": "The Weather Network",
-   "published": 1791504074
   },
   {
    "id": "KsNciDVzeXU",
