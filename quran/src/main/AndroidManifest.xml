@@ -22,7 +22,7 @@
 
     <!-- Lets the app find the phone's text-to-speech engine for the Qaida letter sounds. -->
     <queries>
-        <!-- Asks Cable TV whether this is the owner's device (OwnerTest). -->
+        <!-- Asks NextGen Cable whether this is the owner's device (OwnerTest). -->
         <package android:name="com.naseerbabar.livetv" />
         <package android:name="com.naseerbabar.livetvmax" />
         <intent>
@@ -68,7 +68,7 @@
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
-        <!-- Stop from the notification, or from Cable TV's Azan screen (which stays silent while this app plays). -->
+        <!-- Stop from the notification, or from NextGen Cable's Azan screen (which stays silent while this app plays). -->
         <receiver android:name=".azan.AzanStopReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="com.iqraquran.app.STOP_AZAN" />

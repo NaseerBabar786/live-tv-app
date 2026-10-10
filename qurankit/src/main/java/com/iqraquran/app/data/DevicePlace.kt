@@ -66,7 +66,7 @@ object DevicePlace {
         )
     }
 
-    /** Cities matching [name] (Open-Meteo's free place search, as Cable TV's weather city). */
+    /** Cities matching [name] (Open-Meteo's free place search, as NextGen Cable's weather city). */
     suspend fun search(name: String): List<Place> = withContext(Dispatchers.IO) {
         runCatching {
             val url = "https://geocoding-api.open-meteo.com/v1/search?count=8&language=en&format=json&name=" +

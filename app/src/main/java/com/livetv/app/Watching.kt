@@ -11,7 +11,7 @@ import java.util.Locale
 
 /**
  * Counts how long each channel is watched, per day, so the owner's stats page can show what
- * people watch. Only totals are kept here; Cable TV sends them to Firebase now and then.
+ * people watch. Only totals are kept here; NextGen Cable sends them to Firebase now and then.
  */
 object Watching {
     /** One channel's total for a day. */

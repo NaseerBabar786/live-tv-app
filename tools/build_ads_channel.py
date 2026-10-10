@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Builds the sponsors' part of Spark Ads (channel 15, the owner's wish, 2026-10-07): a channel that
-plays our Cable TV promos and our sponsors' ads round the clock.
+plays our NextGen Cable promos and our sponsors' ads round the clock.
 
 Spark Ads' schedule (docs/channel/ads-schedule.json) holds list entries of kind "ads": our promos
 (docs/media/app-promos.json, the same list as the app's pop-up) and the sponsors (this file's output,

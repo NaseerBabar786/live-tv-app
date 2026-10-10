@@ -33,7 +33,7 @@ fun SettingsScreen(vm: AppViewModel, footer: @Composable () -> Unit = {}) {
                 Choice("اردو", vm.lang == Lang.Ur) { vm.setLanguage(Lang.Ur) }
                 Choice("English", vm.lang == Lang.En) { vm.setLanguage(Lang.En) }
             }
-            // Inside Cable TV the colours follow Cable TV's theme, so only line spacing is offered.
+            // Inside NextGen Cable the colours follow NextGen Cable's theme, so only line spacing is offered.
             Heading(if (vm.themeLocked) S.lineSpacing.get() else S.readingTheme.get())
             ThemePicker(vm)
             if (!vm.themeLocked) {

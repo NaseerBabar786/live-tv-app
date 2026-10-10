@@ -50,13 +50,13 @@ import com.livetv.app.ui.focusGlow
 import kotlinx.coroutines.delay
 
 /**
- * Voice search inside Cable TV. It listens itself (Android's SpeechRecognizer, as Google's own TV search
+ * Voice search inside NextGen Cable. It listens itself (Android's SpeechRecognizer, as Google's own TV search
  * screens do), so viewers never get Android's "Google or Speech Recognition and Synthesis?" question, and
  * the remote's microphone is used. The owner's VIZIO Google TV, 2026-10-10: Android's speech screen showed
  * a white mic that never turned red, whatever was pressed.
  */
 object VoiceSearch {
-    /** Cable TV can listen by itself on this device. */
+    /** NextGen Cable can listen by itself on this device. */
     fun canListen(context: Context): Boolean = runCatching { SpeechRecognizer.isRecognitionAvailable(context) }.getOrDefault(false)
 
     /** Some speech screen can take [speechIntent] (the older way, used only when [canListen] is false). */
@@ -100,7 +100,7 @@ fun VoiceSearchDialog(onSpoken: (String) -> Unit, onDismiss: () -> Unit) {
             phase = Hearing.Starting
             attempt++
         } else {
-            problem = "Cable TV needs the microphone for voice search. Allow it, or use the search button instead."
+            problem = "NextGen Cable needs the microphone for voice search. Allow it, or use the search button instead."
             phase = Hearing.Failed
         }
     }
@@ -150,7 +150,7 @@ fun VoiceSearchDialog(onSpoken: (String) -> Unit, onDismiss: () -> Unit) {
             override fun onError(error: Int) {
                 problem = when (error) {
                     SpeechRecognizer.ERROR_NO_MATCH, SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "I didn't catch that."
-                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Cable TV needs the microphone for voice search."
+                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "NextGen Cable needs the microphone for voice search."
                     SpeechRecognizer.ERROR_NETWORK, SpeechRecognizer.ERROR_NETWORK_TIMEOUT, SpeechRecognizer.ERROR_SERVER -> "Voice search needs the internet. Check the connection."
                     SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "The microphone is busy. Try again."
                     else -> "Voice search didn't work this time."

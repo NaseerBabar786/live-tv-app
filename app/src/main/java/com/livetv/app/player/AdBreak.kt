@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * A full-screen ad break is on (Cable TV's sponsor ads, 1.9.66): the channel pauses underneath, like
+ * A full-screen ad break is on (NextGen Cable's sponsor ads, 1.9.66): the channel pauses underneath, like
  * YouTube, and goes back to live when the break ends. Set by the sponsor pop-up, watched by [PlayerScreen].
  */
 object AdBreak {
@@ -21,7 +21,7 @@ object AdBreak {
 }
 
 /**
- * When the next full-screen ad break is due (elapsed realtime), kept by Cable TV's sponsor pop-up;
+ * When the next full-screen ad break is due (elapsed realtime), kept by NextGen Cable's sponsor pop-up;
  * [enabled] is false in the editions without ads. A Library video in a site's own player (YouTube)
  * waits for the break before it starts, since no ad may cover that player (1.9.89).
  */

@@ -57,11 +57,11 @@ data class UiState(
     val countries: List<Famelack.Country> = emptyList(),
     /** Playlists the viewer added (Stream Player Plus). */
     val playlists: List<Playlist> = emptyList(),
-    /** Cable TV's channel list: the main (Famelack) list or iptv-org's. */
+    /** NextGen Cable's channel list: the main (Famelack) list or iptv-org's. */
     val provider: String = ChannelRepository.PROVIDER_FAMELACK,
-    /** Whether MTA's channels and Library programmes are shown (Cable TV only). */
+    /** Whether MTA's channels and Library programmes are shown (NextGen Cable only). */
     val showMta: Boolean = false,
-    /** A Cable TV package without all channels: only [Plans.freeChannel]s are listed. */
+    /** A NextGen Cable package without all channels: only [Plans.freeChannel]s are listed. */
     val freeOnly: Boolean = false,
 ) {
     /** Stream Player Plus with no playlist yet: the screen asks the viewer to add one. */
@@ -176,7 +176,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         reload()
-        // Cable TV's Free package lists only its few channels; the channel watched last moves onto one of them.
+        // NextGen Cable's Free package lists only its few channels; the channel watched last moves onto one of them.
         viewModelScope.launch {
             combine(Plans.current, Plans.features, Plans.extraChannels) { _, _, _ -> !Plans.has(Plans.Feature.AllChannels) }.collect { freeOnly ->
                 _state.update { s ->
@@ -288,7 +288,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun addDemoPlaylist() = addPlaylist(DEMO_PLAYLIST_NAME, ChannelRepository.SOURCE_SAMPLE)
 
     /**
-     * Forgets a playlist. When it was the one showing, Cable TV goes back to its built-in
+     * Forgets a playlist. When it was the one showing, NextGen Cable goes back to its built-in
      * channels and Stream Player Plus to the next saved playlist (or none).
      */
     fun removePlaylist(playlist: Playlist) {
@@ -300,7 +300,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Switches Cable TV between the main channel list and iptv-org's, keeping the chosen countries. */
+    /** Switches NextGen Cable between the main channel list and iptv-org's, keeping the chosen countries. */
     fun setProvider(provider: String) {
         if (provider == repo.provider) return
         repo.provider = provider

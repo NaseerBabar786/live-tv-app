@@ -164,10 +164,10 @@ class AzanSettings(context: Context) {
 
     // ---------- Place ----------
 
-    /** Finds the place from the internet address (geojs.io, as Cable TV's weather does), unless picked by hand. */
+    /** Finds the place from the internet address (geojs.io, as NextGen Cable's weather does), unless picked by hand. */
     suspend fun refreshPlace() = withContext(Dispatchers.IO) {
         if (placeFixed && place != null) return@withContext
-        // An app that knows better where the viewer is (Cable TV: the same place as its weather).
+        // An app that knows better where the viewer is (NextGen Cable: the same place as its weather).
         placeSource?.let { source ->
             val p = runCatching { source() }.getOrNull()
             if (p != null) {
@@ -225,15 +225,15 @@ class AzanSettings(context: Context) {
         const val BASE = "https://tv.bulkbazaar.ca/quran/azan/"
         const val DEFAULT_VOICE = "makkah"
 
-        /** Where the viewer is, from the host app (Cable TV: the device's location, as its weather uses); null = internet guess. */
+        /** Where the viewer is, from the host app (NextGen Cable: the device's location, as its weather uses); null = internet guess. */
         @Volatile
         var placeSource: (suspend () -> Place?)? = null
 
-        /** Opens the host app's city picker (Cable TV's weather city); null = no picker. */
+        /** Opens the host app's city picker (NextGen Cable's weather city); null = no picker. */
         @Volatile
         var pickPlace: (() -> Unit)? = null
 
-        /** Opens the host app's Weather section from the Azan Clock's weather tile (Cable TV); null = none. */
+        /** Opens the host app's Weather section from the Azan Clock's weather tile (NextGen Cable); null = none. */
         @Volatile
         var openWeather: (() -> Unit)? = null
 

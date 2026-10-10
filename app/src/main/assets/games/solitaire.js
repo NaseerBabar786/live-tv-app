@@ -1,4 +1,4 @@
-// Cable TV Solitaire (1.10.28): Klondike on a card table. Arrows + OK on the TV remote, tap or drag with touch/mouse.
+// NextGen Cable Solitaire (1.10.28): Klondike on a card table. Arrows + OK on the TV remote, tap or drag with touch/mouse.
 (()=>{
 const $=s=>document.querySelector(s);
 const app=$('#app'), board=$('#board'), cursorEl=$('#cursor');
@@ -496,7 +496,7 @@ $('#statsBtn').onclick=showStats;
 $('#autoBtn').onclick=()=>{if(canAuto())autoFinish();else toast('Turn over every card in the columns first')};
 addEventListener('resize',()=>{if(!dealing)render(true)});
 
-/* ---------- inside Cable TV: wins go to the Games menu, Back leaves ---------- */
+/* ---------- inside NextGen Cable: wins go to the Games menu, Back leaves ---------- */
 const inApp=!!window.CableGames;
 function report(){try{window.CableGames&&window.CableGames.record('solitaireplus',stats.won)}catch(e){}}
 function leave(){try{if(window.CableGames){window.CableGames.exit();return}}catch(e){}}

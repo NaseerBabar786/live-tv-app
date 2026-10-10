@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 
 /**
- * Plays a Library video from YouTube inside Cable TV (1.9.99): our film page (docs/channel/film.html) with
+ * Plays a Library video from YouTube inside NextGen Cable (1.9.99): our film page (docs/channel/film.html) with
  * YouTube's embedded player under our own pause, back and forward buttons, in its own plain window
  * (WebChannelActivity), where TVs show YouTube's picture. Until 1.9.94 TVs handed it to the YouTube app,
  * which kept the viewer there. Back (or the video's end) comes back here, to the Library. A video its owner

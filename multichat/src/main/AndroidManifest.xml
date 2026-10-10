@@ -24,7 +24,7 @@
     <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
 
     <queries>
-        <!-- Asks Cable TV whether this is the owner's device (OwnerTest). -->
+        <!-- Asks NextGen Cable whether this is the owner's device (OwnerTest). -->
         <package android:name="com.naseerbabar.livetv" />
         <package android:name="com.naseerbabar.livetvmax" />
     </queries>

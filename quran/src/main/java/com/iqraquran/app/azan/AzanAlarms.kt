@@ -66,7 +66,7 @@ class AzanRescheduleReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) = AzanAlarms.schedule(context)
 }
 
-/** "Stop" from the notification, or from Cable TV's Azan screen. */
+/** "Stop" from the notification, or from NextGen Cable's Azan screen. */
 class AzanStopReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         context.stopService(Intent(context, AzanService::class.java))

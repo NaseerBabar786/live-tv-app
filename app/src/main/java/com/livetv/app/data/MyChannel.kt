@@ -158,7 +158,7 @@ object MyChannel {
         Station("sports", 46, "000000", "Spark Sports", youtube = true, lang = ENGLISH),
         // Cars (the owner, 2026-10-08): reviews, launches, top 10s, supercars and motorsport, in blocks through the day.
         Station("auto", 47, "", "Spark Auto", youtube = true, backup = "sports", logo = "spark-auto.png", lang = ENGLISH),
-        // Ads and promos round the clock in our own player (owner, 2026-10-07): our Cable TV promos, the
+        // Ads and promos round the clock in our own player (owner, 2026-10-07): our NextGen Cable promos, the
         // sponsors' ads from /sponsors and "Advertise with us" (docs/channel/ads-schedule.json). No pop-up ads on it.
         Station("ads", 48, "", "Spark Ads", logo = "spark-ads.png", lang = ENGLISH),
         Station("comedyen", 49, "", "Spark Comedy English", youtube = true, backup = "comedy", logo = "spark-comedyen.png", lang = ENGLISH),

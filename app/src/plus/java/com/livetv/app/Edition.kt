@@ -11,7 +11,7 @@ import com.livetv.app.ui.SettingsTheme
 import com.livetv.app.ui.UiState
 
 /**
- * Live TV Plus: the Google Play edition of Cable TV. Same look as Cable TV (logo, clock and
+ * Live TV Plus: the Google Play edition of NextGen Cable. Same look as NextGen Cable (logo, clock and
  * weather), but only a player: no channels of its own, no sponsor screen, no outside links
  * and no self-updates (Google Play updates it).
  */
@@ -25,7 +25,7 @@ object Edition {
     /** No outside app store in the Google Play editions. */
     const val HAS_APP_BAZAAR = false
     const val HAS_DEVICE_LOCATION = false
-    /** Movies & Series from the saved playlists (Cable TV only). */
+    /** Movies & Series from the saved playlists (NextGen Cable only). */
     const val HAS_VOD = false
     /** Spark TV (Google Play): only our own channels that may go on Google Play, no YouTube ones. */
     const val PLAY_CHANNELS = false

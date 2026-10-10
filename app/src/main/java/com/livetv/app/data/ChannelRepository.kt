@@ -20,7 +20,7 @@ import java.net.URL
  *
  * The playlist source is one of:
  *  - "famelack:mix": Pakistani, Indian, Canadian, UK and USA channels from [Famelack] (Live TV Max's default)
- *  - "famelack:all": every country from [Famelack] (Cable TV's default)
+ *  - "famelack:all": every country from [Famelack] (NextGen Cable's default)
  *  - "famelack:pick:<cc>,<cc>": the countries the user ticked, one section each
  *  - "famelack:<country>": free channels for one country from [Famelack]
  *  - "sample": the bundled sample playlist (assets/sample.m3u)
@@ -33,7 +33,7 @@ class ChannelRepository(context: Context) {
     private val prefs = appContext.getSharedPreferences("live_tv", Context.MODE_PRIVATE)
 
     init {
-        // Cable TV's starting settings (owner, 2026-10-09) go in on a first install only: an update never
+        // NextGen Cable's starting settings (owner, 2026-10-09) go in on a first install only: an update never
         // changes what a viewer already has, so older installs keep every language they had.
         if (Edition.LIVE_TV && !Edition.MAX && !prefs.contains(KEY_DEFAULTS)) {
             val fresh = runCatching {
@@ -47,12 +47,12 @@ class ChannelRepository(context: Context) {
         }
     }
 
-    /** Defaults to every country in Cable TV, and to the Pakistani, Indian, Canadian, UK and USA mix in Max. */
+    /** Defaults to every country in NextGen Cable, and to the Pakistani, Indian, Canadian, UK and USA mix in Max. */
     var playlistSource: String
         get() = prefs.getString(KEY_SOURCE, null)?.ifBlank { null } ?: defaultSource()
         set(value) = prefs.edit { putString(KEY_SOURCE, value.trim()) }
 
-    /** The channel list: [PROVIDER_FAMELACK] or [PROVIDER_CHECKED]. Cable TV always uses the daily-checked
+    /** The channel list: [PROVIDER_FAMELACK] or [PROVIDER_CHECKED]. NextGen Cable always uses the daily-checked
      *  working list (owner's choice, 1.9.60: the Settings choice is gone, and viewers who had picked the main
      *  list move over too); Live TV Max keeps its Settings choice, main list by default. */
     var provider: String
@@ -72,7 +72,7 @@ class ChannelRepository(context: Context) {
         get() = prefs.getStringSet(KEY_LANGUAGES, emptySet())?.toSet() ?: emptySet()
         set(value) = prefs.edit { putStringSet(KEY_LANGUAGES, value) }
 
-    /** Settings' "Default settings" button: the starting languages and every country (Cable TV). */
+    /** Settings' "Default settings" button: the starting languages and every country (NextGen Cable). */
     fun resetToDefaults() = prefs.edit {
         putStringSet(KEY_LANGUAGES, if (Edition.LIVE_TV && !Edition.MAX) DEFAULT_LANGUAGES else emptySet())
         remove(KEY_SOURCE)
@@ -83,7 +83,7 @@ class ChannelRepository(context: Context) {
         get() = Playlist.fromJson(prefs.getString(KEY_PLAYLISTS, null))
         set(value) = prefs.edit { putString(KEY_PLAYLISTS, Playlist.toJson(value)) }
 
-    /** Whether MTA's channels and Library programmes are shown (Cable TV only; off by default). */
+    /** Whether MTA's channels and Library programmes are shown (NextGen Cable only; off by default). */
     var showMta: Boolean
         get() = Edition.HAS_VOD && prefs.getBoolean(KEY_MTA, false)
         set(value) = prefs.edit { putBoolean(KEY_MTA, value) }
@@ -149,7 +149,7 @@ class ChannelRepository(context: Context) {
     }
 
     /**
-     * The movies and series episodes in every saved playlist (Cable TV's Movies & Series).
+     * The movies and series episodes in every saved playlist (NextGen Cable's Movies & Series).
      * A playlist that can't be loaded is skipped; each item's group gets the playlist's
      * name when the playlist gives none.
      */
@@ -175,7 +175,7 @@ class ChannelRepository(context: Context) {
     }
 
     /**
-     * Adds the Pakistani channels that stream live on their own YouTube channel (Cable TV only,
+     * Adds the Pakistani channels that stream live on their own YouTube channel (NextGen Cable only,
      * when the list has Pakistani channels), after the last Pakistani channel. Each replaces a
      * channel of the same name in the list, whose own stream doesn't work, so none is listed twice.
      */
@@ -258,7 +258,7 @@ class ChannelRepository(context: Context) {
         }
     }
 
-    /** Cable TV starts on every country of the working list (owner's choice, 1.10.10); Live TV Max on the
+    /** NextGen Cable starts on every country of the working list (owner's choice, 1.10.10); Live TV Max on the
      *  Pakistani, Indian, Canadian, UK and USA mix; Stream Player Plus has none until a playlist is added. */
     private fun defaultSource(): String = when {
         Edition.LIVE_TV && !Edition.MAX -> Famelack.SOURCE_ALL
@@ -311,7 +311,7 @@ class ChannelRepository(context: Context) {
         private const val KEY_MTA = "mta"
         private const val KEY_DEFAULTS = "defaults_v1"
 
-        /** The languages a new Cable TV install starts with, and what "Default settings" goes back to. */
+        /** The languages a new NextGen Cable install starts with, and what "Default settings" goes back to. */
         val DEFAULT_LANGUAGES = setOf("English", "Hindi", "Urdu", "Punjabi")
         const val PROVIDER_FAMELACK = "famelack"
         const val PROVIDER_CHECKED = "checked"

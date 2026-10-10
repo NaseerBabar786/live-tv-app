@@ -23,7 +23,7 @@ import java.util.TimeZone
 data class User(val uid: String, val name: String, val email: String)
 
 /**
- * Signing in to Cable TV with a Google account, through Firebase's REST API (no Firebase SDK).
+ * Signing in to NextGen Cable with a Google account, through Firebase's REST API (no Firebase SDK).
  *
  * A Google ID token, from the phone's account picker or the TV code flow ([TvSignIn]), is traded
  * for a Firebase session; the refresh token is kept so the viewer stays signed in. Each start

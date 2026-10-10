@@ -10,7 +10,7 @@ a { color: var(--accent); }
 header { border-bottom: 1px solid var(--surface-2); }
 header .wrap { display: flex; align-items: center; gap: 12px; height: 64px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: var(--text); text-decoration: none; }
-.brand svg { width: 36px; height: 36px; }
+.brand svg, .brand img { width: 36px; height: 36px; border-radius: 9px; }
 header nav { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
 header nav a { color: var(--text); text-decoration: none; padding: 8px 10px; border-radius: 999px; font-weight: 600; font-size: 15px; white-space: nowrap; }
 header nav a:hover { background: var(--surface-2); }

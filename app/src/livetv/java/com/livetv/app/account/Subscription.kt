@@ -15,7 +15,7 @@ import org.json.JSONObject
 import java.util.Date
 
 /**
- * Cable TV's packages for the signed-in viewer.
+ * NextGen Cable's packages for the signed-in viewer.
  *
  * The owner sets each viewer's package and end date on tv.bulkbazaar.ca/packages (plans/{uid});
  * the prices, how to pay, the free trial and whether packages are on at all live in

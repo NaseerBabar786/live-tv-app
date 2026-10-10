@@ -1,5 +1,5 @@
-// On TVs the Cable TV app's small picture can't show YouTube's video (only its sound comes through), so
-// there the page shows the playing video's own picture instead (?still=1, Cable TV 1.9.60). Full screen
+// On TVs the NextGen Cable app's small picture can't show YouTube's video (only its sound comes through), so
+// there the page shows the playing video's own picture instead (?still=1, NextGen Cable 1.9.60). Full screen
 // plays the video as normal.
 (function () {
   window.stillFor = () => {};

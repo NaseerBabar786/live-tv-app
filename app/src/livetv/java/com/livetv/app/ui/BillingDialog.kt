@@ -72,21 +72,21 @@ fun BillingDialog(asked: Boolean = false, onDismiss: () -> Unit) {
             title = { Text(if (done) "Thank you!" else "💳 My billing details") },
             text = {
                 if (done) {
-                    Text("Your details are sent to the Cable TV team. We'll message you with how to pay and turn your package on as soon as it's paid.")
+                    Text("Your details are sent to the NextGen Cable team. We'll message you with how to pay and turn your package on as soon as it's paid.")
                 } else if (!loaded) {
                     CircularProgressIndicator()
                 } else {
                     Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         if (credit > 0) {
                             Text(
-                                "🎁 You have $" + String.format(java.util.Locale.US, "%.2f", credit) + " free credit from the Cable TV team" +
+                                "🎁 You have $" + String.format(java.util.Locale.US, "%.2f", credit) + " free credit from the NextGen Cable team" +
                                     (if (creditNote.isNotBlank()) " ($creditNote)" else "") + ". It comes off your next payment.",
                                 fontWeight = FontWeight.Bold,
                             )
                         }
                         Text(
-                            if (asked) "The free period has ended. To keep watching, please tell us how you'd like to pay. Only the Cable TV team sees this."
-                            else "Tell us how you'd like to pay for Cable TV. Only the Cable TV team sees this.",
+                            if (asked) "The free period has ended. To keep watching, please tell us how you'd like to pay. Only the NextGen Cable team sees this."
+                            else "Tell us how you'd like to pay for NextGen Cable. Only the NextGen Cable team sees this.",
                         )
                         OutlinedTextField(
                             value = phone, onValueChange = { phone = it.take(30) }, singleLine = true,

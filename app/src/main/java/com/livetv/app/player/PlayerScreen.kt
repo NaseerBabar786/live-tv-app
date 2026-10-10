@@ -104,9 +104,9 @@ fun PlayerScreen(
     onZap: ((Int) -> Unit)? = null,
     /** "Report and go to the next channel" when the channel won't play; null hides it (movies). */
     onReport: (() -> Unit)? = null,
-    /** More buttons on the channel bar, before 123 (Cable TV's Last channel, Sleep timer and Widgets). */
+    /** More buttons on the channel bar, before 123 (NextGen Cable's Last channel, Sleep timer and Widgets). */
     barButtons: @Composable () -> Unit = {},
-    /** Drawn over the picture, under the channel bar (Cable TV's floating widgets). */
+    /** Drawn over the picture, under the channel bar (NextGen Cable's floating widgets). */
     overlay: @Composable BoxScope.() -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -143,7 +143,7 @@ fun PlayerScreen(
         onDispose { streamPlayer.release() }
     }
 
-    // A full-screen ad break (Cable TV): the channel pauses while the ads play, then carries on from
+    // A full-screen ad break (NextGen Cable): the channel pauses while the ads play, then carries on from
     // live (a live stream jumps back to now; a film carries on where it stopped).
     val adBreak by AdBreak.active.collectAsStateWithLifecycle()
     var pausedForAds by remember { mutableStateOf(false) }

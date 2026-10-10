@@ -69,8 +69,8 @@ ORANGE, RED, NAVY, BLUE, GREEN, TEAL = (255, 153, 0), (220, 38, 38), (15, 23, 42
 # Every writing on channel 1 is in Urdu AND English (owner, 2026-10-09): each Urdu line has its English line under it.
 render(slide(ORANGE, RED, [("آپ دیکھ رہے ہیں اسپارک ٹی وی", f(UR, 54), "white"),
                            ("You're watching Spark TV", f(BD, 34), "white"),
-                           ("کیبل ٹی وی پر", f(UR, 30), (255, 236, 179)),
-                           ("on Cable TV", f(BD, 26), (255, 236, 179))], logo=False, y=170), 10, "ident-welcome.mp4")
+                           ("نیکسٹ جین کیبل پر", f(UR, 30), (255, 236, 179)),
+                           ("on NextGen Cable", f(BD, 26), (255, 236, 179))], logo=False, y=170), 10, "ident-welcome.mp4")
 render(slide(NAVY, BLUE, [("اگلا پروگرام", f(UR, 62), "white"),
                           ("UP NEXT", f(B, 44), "white"),
                           ("اسپارک ٹی وی کے ساتھ رہیے", f(UR, 32), (191, 219, 254)),

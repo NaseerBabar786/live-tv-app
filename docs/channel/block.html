@@ -267,7 +267,7 @@ window.onYouTubeIframeAPIReady = () => {
     playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, origin: location.origin },
     events: {
       onReady: e => {
-        // 60% matches Cable TV's leveled channels (as on our other YouTube channels).
+        // 60% matches NextGen Cable's leveled channels (as on our other YouTube channels).
         e.target.setVolume(60);
         if (!app) { e.target.mute(); $("sound").hidden = false; }
         load(i, (Date.now() - starts[i]) / 1000);

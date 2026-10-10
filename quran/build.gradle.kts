@@ -5,7 +5,7 @@ plugins {
 }
 
 // Iqra Quran: learn to read the Quran (kids' Qaida), read it with audio, and memorize it (Hifz).
-// A separate app from Live TV; its Quran screens and text live in :qurankit, which Cable TV also uses.
+// A separate app from Live TV; its Quran screens and text live in :qurankit, which NextGen Cable also uses.
 android {
     namespace = "com.iqraquran.app"
     compileSdk = 36

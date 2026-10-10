@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cable TV</title>
-<meta name="description" content="Watch free live TV channels from Pakistan, India, Canada, the UK and the USA, and get the Cable TV app for Google TV, Android TV and Fire TV, with every channel and every feature free for everyone: every mode and the Library of movies and dramas.">
-<meta property="og:title" content="Cable TV: live TV on your big screen">
+<title>NextGen Cable</title>
+<meta name="description" content="Watch free live TV channels from Pakistan, India, Canada, the UK and the USA, and get the NextGen Cable app for Google TV, Android TV and Fire TV, with every channel and every feature free for everyone: every mode and the Library of movies and dramas.">
+<meta property="og:title" content="NextGen Cable: live TV on your big screen">
 <meta property="og:description" content="Pakistani, Indian, Canadian, British and American channels, plus 170 more countries: 7,800+ live channels. Get the app for Google TV, Android TV and Fire TV.">
 <meta property="og:image" content="https://tv.bulkbazaar.ca/share.jpg">
 <meta property="og:url" content="https://tv.bulkbazaar.ca/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="nextgen-icon.png">
 <style>
   :root {
     --bg: #06070A;
@@ -34,7 +34,7 @@
   header { position: sticky; top: 0; z-index: 10; background: rgba(6,7,10,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--surface-2); }
   header .wrap { display: flex; align-items: center; gap: 12px; height: 64px; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 22px; color: var(--text); text-decoration: none; }
-  .brand svg { width: 40px; height: 40px; }
+  .brand svg, .brand img { width: 40px; height: 40px; border-radius: 10px; }
   nav { margin-left: auto; display: flex; gap: 4px; }
   nav a { color: var(--text); text-decoration: none; padding: 8px 12px; border-radius: 999px; font-weight: 600; font-size: 15px; }
   nav a:hover { background: var(--surface-2); }
@@ -274,9 +274,9 @@
 
 <header>
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="Cable TV home">
-      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Cable TV</span>
+    <a class="brand" href="#top" aria-label="NextGen Cable home">
+      <img src="nextgen-icon.png" alt="" aria-hidden="true">
+      <span>NextGen Cable</span>
     </a>
     <nav>
       <a href="#features">Features</a>
@@ -298,7 +298,7 @@
     <div>
       <p class="kicker">📺 The best app for live TV on your Android TV!</p>
       <h1>Free live <span class="tv">TV</span>, made for your big screen<small>7,800+ channels free, and up to 6 at once on one TV, all free</small></h1>
-      <p>Pakistani, Indian, Canadian, British and American channels. Get the Cable TV app for Google TV, Android TV and Fire TV, or watch here in your browser.</p>
+      <p>Pakistani, Indian, Canadian, British and American channels. Get the NextGen Cable app for Google TV, Android TV and Fire TV, or watch here in your browser.</p>
       <div class="btns">
         <a class="btn dl" id="heroApk" href="#download">⬇ Get the app <small>(Android)</small></a>
         <a class="btn primary" href="#watch">▶ Watch in your browser</a>
@@ -315,16 +315,16 @@
     </div>
     <figure>
       <div class="tvbox" id="tvbox">
-        <img src="app-tv.jpg" width="1200" height="920" alt="The Cable TV app on a television: clock and weather at the top, a row of genres, and channel tiles in two rows">
-        <div class="tvstage" id="tvstage"><video id="tvvideo" src="media/livetv-promo.mp4" poster="media/livetv-promo-poster.jpg" muted loop playsinline preload="metadata" aria-label="Spark TV on Cable TV: our own channels, free for everyone"></video></div>
+        <img src="app-tv.jpg" width="1200" height="920" alt="The NextGen Cable app on a television: clock and weather at the top, a row of genres, and channel tiles in two rows">
+        <div class="tvstage" id="tvstage"><video id="tvvideo" src="media/livetv-promo.mp4" poster="media/livetv-promo-poster.jpg" muted loop playsinline preload="metadata" aria-label="Spark TV on NextGen Cable: our own channels, free for everyone"></video></div>
       </div>
       <div class="tvctl"><button type="button" id="tvfull">⛶ Watch full screen</button><a class="btn" style="padding:7px 14px;font-size:14px" href="media/livetv-promo.mp4" download="CableTV-promo.mp4">⬇ Download video</a></div>
-      <figcaption>Spark TV in 60 seconds: our own channels on Cable TV, where every channel and every feature is free</figcaption>
+      <figcaption>Spark TV in 60 seconds: our own channels on NextGen Cable, where every channel and every feature is free</figcaption>
     </figure>
   </div>
 
   <section id="video" class="ad-video">
-    <p class="small">Share Cable TV: <a href="media/livetv-promo.mp4" download="SparkTV-60s.mp4">⬇ the 60-second video</a> · <a href="media/spark-montage.mp4" download="SparkTV-30s.mp4">⬇ the 30-second video</a> for WhatsApp, TikTok or Facebook.</p>
+    <p class="small">Share NextGen Cable: <a href="media/livetv-promo.mp4" download="SparkTV-60s.mp4">⬇ the 60-second video</a> · <a href="media/spark-montage.mp4" download="SparkTV-30s.mp4">⬇ the 30-second video</a> for WhatsApp, TikTok or Facebook.</p>
   </section>
 
   <div class="tiles" role="navigation" aria-label="Quick links">
@@ -332,7 +332,7 @@
     <a class="tile hot" href="#watch" data-quad><span class="ti">▦</span><b>4 at once</b><span>Four channels on one screen</span></a>
     <a class="tile" href="#download"><span class="ti">⬇</span><b>Get the app</b><span>Newest version <i class="newest-ver">1.11.0</i></span></a>
     <a class="tile" href="#guide"><span class="ti">📖</span><b>Install guide</b><span>Google TV, Android TV and Fire TV</span></a>
-    <a class="tile" href="devices/"><span class="ti">📦</span><b>No Android TV?</b><span>Cheap devices that run Cable TV</span></a>
+    <a class="tile" href="devices/"><span class="ti">📦</span><b>No Android TV?</b><span>Cheap devices that run NextGen Cable</span></a>
     <a class="tile" href="#news"><span class="ti">🆕</span><b>What's new</b><span>Latest changes and full history</span></a>
     <a class="tile" href="#layouts"><span class="ti">🖼️</span><b>See it on a TV</b><span>Photos of every layout</span></a>
     <a class="tile" href="channel/"><span class="ti">📡</span><b>Our channels</b><span>Our own channels, live now</span></a>
@@ -376,22 +376,22 @@
 
     <section id="layouts">
       <h2>See it on a TV</h2>
-      <p class="lead">Real photos of Cable TV on a Chromecast with Google TV. Press the TV button at the top to switch layouts.</p>
+      <p class="lead">Real photos of NextGen Cable on a Chromecast with Google TV. Press the TV button at the top to switch layouts.</p>
       <div class="gallery">
-        <figure><a href="media/tv/1plus-list.jpg" target="_blank" rel="noopener"><img src="media/tv/1plus-list.jpg" alt="Cable TV on a TV, 1+List: one big player with the channel list beside it" loading="lazy" width="1200" height="720"></a><figcaption>1+List: one big player with the channel list beside it</figcaption></figure>
-        <figure><a href="media/tv/1plus3.jpg" target="_blank" rel="noopener"><img src="media/tv/1plus3.jpg" alt="Cable TV on a TV, 1+3: a big player with the sound, plus three live tiles" loading="lazy" width="1200" height="720"></a><figcaption>1+3: a big player with the sound, plus three live tiles</figcaption></figure>
-        <figure><a href="media/tv/1x2.jpg" target="_blank" rel="noopener"><img src="media/tv/1x2.jpg" alt="Cable TV on a TV, 1×2: two channels side by side" loading="lazy" width="1200" height="720"></a><figcaption>1×2: two channels side by side</figcaption></figure>
-        <figure><a href="media/tv/1x2-full.jpg" target="_blank" rel="noopener"><img src="media/tv/1x2-full.jpg" alt="Cable TV on a TV, 1×2 full screen: press OK and the two channels fill the TV" loading="lazy" width="1200" height="720"></a><figcaption>1×2 full screen: press OK and the two channels fill the TV</figcaption></figure>
-        <figure><a href="media/tv/2x2.jpg" target="_blank" rel="noopener"><img src="media/tv/2x2.jpg" alt="Cable TV on a TV, 2×2: four channels, all playing" loading="lazy" width="1200" height="720"></a><figcaption>2×2: four channels, all playing</figcaption></figure>
-        <figure><a href="media/tv/2x2-full.jpg" target="_blank" rel="noopener"><img src="media/tv/2x2-full.jpg" alt="Cable TV on a TV, 2×2 full screen" loading="lazy" width="1200" height="720"></a><figcaption>2×2 full screen</figcaption></figure>
-        <figure><a href="media/tv/2x3.jpg" target="_blank" rel="noopener"><img src="media/tv/2x3.jpg" alt="Cable TV on a TV, 2×3: six channels at the same time" loading="lazy" width="1200" height="720"></a><figcaption>2×3: six channels at the same time</figcaption></figure>
-        <figure><a href="media/tv/2x3-full.jpg" target="_blank" rel="noopener"><img src="media/tv/2x3-full.jpg" alt="Cable TV on a TV, 2×3 full screen" loading="lazy" width="1200" height="720"></a><figcaption>2×3 full screen</figcaption></figure>
+        <figure><a href="media/tv/1plus-list.jpg" target="_blank" rel="noopener"><img src="media/tv/1plus-list.jpg" alt="NextGen Cable on a TV, 1+List: one big player with the channel list beside it" loading="lazy" width="1200" height="720"></a><figcaption>1+List: one big player with the channel list beside it</figcaption></figure>
+        <figure><a href="media/tv/1plus3.jpg" target="_blank" rel="noopener"><img src="media/tv/1plus3.jpg" alt="NextGen Cable on a TV, 1+3: a big player with the sound, plus three live tiles" loading="lazy" width="1200" height="720"></a><figcaption>1+3: a big player with the sound, plus three live tiles</figcaption></figure>
+        <figure><a href="media/tv/1x2.jpg" target="_blank" rel="noopener"><img src="media/tv/1x2.jpg" alt="NextGen Cable on a TV, 1×2: two channels side by side" loading="lazy" width="1200" height="720"></a><figcaption>1×2: two channels side by side</figcaption></figure>
+        <figure><a href="media/tv/1x2-full.jpg" target="_blank" rel="noopener"><img src="media/tv/1x2-full.jpg" alt="NextGen Cable on a TV, 1×2 full screen: press OK and the two channels fill the TV" loading="lazy" width="1200" height="720"></a><figcaption>1×2 full screen: press OK and the two channels fill the TV</figcaption></figure>
+        <figure><a href="media/tv/2x2.jpg" target="_blank" rel="noopener"><img src="media/tv/2x2.jpg" alt="NextGen Cable on a TV, 2×2: four channels, all playing" loading="lazy" width="1200" height="720"></a><figcaption>2×2: four channels, all playing</figcaption></figure>
+        <figure><a href="media/tv/2x2-full.jpg" target="_blank" rel="noopener"><img src="media/tv/2x2-full.jpg" alt="NextGen Cable on a TV, 2×2 full screen" loading="lazy" width="1200" height="720"></a><figcaption>2×2 full screen</figcaption></figure>
+        <figure><a href="media/tv/2x3.jpg" target="_blank" rel="noopener"><img src="media/tv/2x3.jpg" alt="NextGen Cable on a TV, 2×3: six channels at the same time" loading="lazy" width="1200" height="720"></a><figcaption>2×3: six channels at the same time</figcaption></figure>
+        <figure><a href="media/tv/2x3-full.jpg" target="_blank" rel="noopener"><img src="media/tv/2x3-full.jpg" alt="NextGen Cable on a TV, 2×3 full screen" loading="lazy" width="1200" height="720"></a><figcaption>2×3 full screen</figcaption></figure>
       </div>
     </section>
 
     <section id="features">
       <h2>What's in the app</h2>
-      <p class="lead">Everything you see here, plus more, in the Cable TV app for Android TVs. Newest version: <b class="newest-ver">1.11.0</b>.</p>
+      <p class="lead">Everything you see here, plus more, in the NextGen Cable app for Android TVs. Newest version: <b class="newest-ver">1.11.0</b>.</p>
       <div class="features">
         <div class="feature"><div class="ic">🎁</div><h3>Everything free<span class="badge">NEW</span></h3><p>Every channel and every feature is free for everyone: full screen, every mode, Favourites, Movies &amp; Dramas, Games, Iqra Quran, Weather and Themes. No packages, no payments. Advertising your business is free too: WhatsApp 437 602 6500.</p></div>
         <div class="feature"><div class="ic">📡</div><h3>Our own channels<span class="badge">NEW</span></h3><p>Our own channels are grouped by language: Urdu 1 to 19, Hindi 21 to 39, English 41 to 59 and Punjabi 61 to 79. New in 1.11.0: Shayari, Dramas Urdu and Hindi, Gurbani, Movies Punjabi, Sufi Qawwali, Auto, Auto Hindi and Movie Trailers. Channel 1 shows only new programmes, with its own news from day and night newsrooms, and its ads never interrupt the news.</p></div>
@@ -414,7 +414,7 @@
     <section id="download">
       <h2>Get the app</h2>
       <p class="lead">For Google TV, Android TV and Fire TV. It's not in the Play Store, so follow the <a href="#guide">install guide</a> below. It takes about two minutes.</p>
-      <div class="note warn hidden" id="appleNote">You're on an Apple device. The Cable TV app only works on Android, but you can <a href="#watch">watch here in your browser</a>.</div>
+      <div class="note warn hidden" id="appleNote">You're on an Apple device. The NextGen Cable app only works on Android, but you can <a href="#watch">watch here in your browser</a>.</div>
       <div class="panel download">
         <div>
           <div class="btns" style="margin-bottom:18px">
@@ -436,8 +436,8 @@
       <div class="panel whatsnew">
         <h3>What's new <span class="ver">lately</span></h3>
         <ul>
-          <li><b>Cable TV 1.11.1:</b> a TV guide with reminders, voice search, a sleep timer and full-screen widgets. New comedy channels: Spark Comedy Urdu (9) and Spark Comedy Punjabi (65). Punjabi comedy and serials in the Library. Weather and every part of the app now follow the theme you pick, and the weather radar map works. The App Bazaar button sits in the top bar next to Settings.</li>
-          <li><b>Cable TV 1.11.0, our own channels by language:</b> Urdu 1 to 19, Hindi 21 to 39, English 41 to 59 and Punjabi 61 to 79, with new channels: Shayari, Dramas Urdu, Dramas Hindi, Gurbani (62), Movies Punjabi (63), Sufi Qawwali (64), Auto (47), Auto Hindi (32) and Movie Trailers (42). The MTA channels have moved.</li>
+          <li><b>NextGen Cable 1.11.1:</b> a TV guide with reminders, voice search, a sleep timer and full-screen widgets. New comedy channels: Spark Comedy Urdu (9) and Spark Comedy Punjabi (65). Punjabi comedy and serials in the Library. Weather and every part of the app now follow the theme you pick, and the weather radar map works. The App Bazaar button sits in the top bar next to Settings.</li>
+          <li><b>NextGen Cable 1.11.0, our own channels by language:</b> Urdu 1 to 19, Hindi 21 to 39, English 41 to 59 and Punjabi 61 to 79, with new channels: Shayari, Dramas Urdu, Dramas Hindi, Gurbani (62), Movies Punjabi (63), Sufi Qawwali (64), Auto (47), Auto Hindi (32) and Movie Trailers (42). The MTA channels have moved.</li>
           <li><b>Channel 1:</b> only new programmes, in one 8-hour set shown three times a day, with news from a day and a night newsroom. Its ads come only in its own breaks, never during the news.</li>
           <li><b>Library:</b> an Added this week tab and a date on every tile, every video checked before it is listed, more sources, a bigger MTA section, Channel 1's daily news report, and "Did it play properly?" after every video. Hold OK on a film or series to save it to Favorites.</li>
           <li><b>No horror</b> on our channels or in the Library.</li>
@@ -445,13 +445,13 @@
           <li><b>Games:</b> ten new games, Spades, a new Solitaire and Bubble Bazaar, all with modern icons.</li>
           <li><b>Faster start:</b> our channels start at a lower picture and step up as your connection allows.</li>
           <li><b>More:</b> richer Weather graphics, a channel size choice in My Screen, a Favorites row in Duo, a modern Iqra Quran home with Learn Namaz, and better crash reports so we can fix problems sooner.</li>
-          <li><b>New name, Cable TV:</b> Free Live TV is now called Cable TV. Same free app, same channels, favourites and settings; it updates by itself.</li>
+          <li><b>New name, NextGen Cable:</b> Free Live TV is now called NextGen Cable. Same free app, same channels, favourites and settings; it updates by itself.</li>
           <li><b>New logos for our own channels:</b> Spark TV, Cinema, Music, Hits, Kids, Sports, Travel and Comedy have bold new broadcast-style logos, a slanted colour block with speed lines, shown wide in the corner of the picture.</li>
-          <li><b>Sign in with any email:</b> make your own Cable TV account with any email and a password, no Google account needed (Google still works too). Tap Show password to see what you typed, change it any time in Settings, and if you forget it, use Forgot password or message us on WhatsApp at 437 602 6500.</li>
+          <li><b>Sign in with any email:</b> make your own NextGen Cable account with any email and a password, no Google account needed (Google still works too). Tap Show password to see what you typed, change it any time in Settings, and if you forget it, use Forgot password or message us on WhatsApp at 437 602 6500.</li>
           <li><b>Make every tile your own:</b> on Home and My Screen, move onto a tile with the arrows and press OK. Change what it shows, its text size, background, corners, border, colour and spacing, plus its own choices (seconds on the clock, the next hours under the weather, all five prayer times and more). The channel is bigger too, and every mode is now in one Modes menu.</li>
           <li><b>New Browse mode on TV:</b> a home screen like your favourite streaming apps. Big channel cards in rows (Continue watching, Favorites, each country and each genre), a search bar on top and an icon menu on the left. Rest on a card and the channel starts playing right in it; press OK to watch.</li>
           <li><b>Customize right on the screen:</b> in News, CP24 and My Screen, hold OK on the remote (or tap ⚙ on a phone). A panel opens on the side and you see every change straight away.</li>
-          <li><b>Messages from the Cable TV team:</b> when we answer your suggestion, the reply comes to your private Messages, and you can write back. Find it in the app (Settings, ✉ Messages) or on the <a href="suggestions#messages">Suggestions page</a>.</li>
+          <li><b>Messages from the NextGen Cable team:</b> when we answer your suggestion, the reply comes to your private Messages, and you can write back. Find it in the app (Settings, ✉ Messages) or on the <a href="suggestions#messages">Suggestions page</a>.</li>
           <li><b>New My Screen mode on TV:</b> build your own screen. Put the channel on the left, the right, or make it bigger; choose what the four boxes beside it and the panel under it show (clock, weather, prayer times, markets, currency rates, top stories or a second channel); pick glass cards, flat edge to edge or bold headers, and a gold, red, green, blue or purple accent. Everything stretches to fill the screen, with no empty gaps.</li>
           <li><b>Themes:</b> Settings > Themes opens its own menu with 10 dark themes for the whole app: Midnight, Pure black, Emerald, Royal, Sunset, Ocean, Crimson, Graphite, Black gold and Plum. Make the text Large or Extra large for easy reading from the sofa.</li>
           <li><b>New Home mode on TV:</b> a modern screen of cards around your channel: the clock with the Islamic date, the weather for the rest of the day, the next prayer with a countdown and a reminder 10 minutes before, sehri and iftar in Ramadan, top stories, markets, currency rates and our sponsor. Press Right for a second channel in the corner.</li>
@@ -479,14 +479,14 @@
             <dt>1.11.1</dt><dd>TV guide with reminders, voice search, sleep timer, full-screen widgets, Last channel key. Spark Comedy Urdu (9) and Spark Comedy Punjabi (65). Library: Punjabi comedy and serials, more free sources, faster loading on Chromecast. Weather and the whole app follow the chosen theme; the weather radar map shows. App Bazaar button in the top bar. Azan Clock weather tile; Learn Namaz teacher voice. Messages from the owner pop up on the TV. New installs start with English, Hindi, Urdu and Punjabi, plus a Default settings button. Ad breaks in Strip and Carousel modes.</dd>
             <dt>1.11.0</dt><dd>Our own channels grouped by language (Urdu 1-19, Hindi 21-39, English 41-59, Punjabi 61-79) with new Shayari, Dramas Urdu, Dramas Hindi, Gurbani, Movies Punjabi, Sufi Qawwali, Auto, Auto Hindi and Movie Trailers channels; MTA channels moved. Channel 1: only new programmes in an 8-hour set three times a day, day and night newsrooms, ads only in its own breaks and never during the news. No horror on our channels or in the Library. Library: Added this week and dates on tiles, videos checked before listing, more sources, bigger MTA section, "Did it play properly?", Favorites (hold OK), Channel 1's daily news report. Free viewers get the Info Corner screen; the bottom line takes turns between packages and "Advertise with us". Faster start on our channels. Ten new games, Spades, new Solitaire, Bubble Bazaar, modern game icons. Richer Weather graphics, My Screen channel size, Duo Favorites row, Iqra Quran modern home and Learn Namaz, better crash reports.</dd>
             <dt>1.9.53</dt><dd>Equal volume: every channel now plays at about the same loudness, so switching from a quiet channel to a loud one no longer jumps the volume. Spark YouTube channels are matched to the same level.</dd>
-            <dt>1.9.48</dt><dd>Free Live TV is now called <b>Cable TV</b>. Same app, same channels and settings; it updates by itself as usual.</dd>
+            <dt>1.9.48</dt><dd>Free Live TV is now called <b>NextGen Cable</b>. Same app, same channels and settings; it updates by itself as usual.</dd>
             <dt>1.9.13</dt><dd>Live TV is now called <b>Free Live TV</b>. Same app, same channels and settings; it updates by itself as usual.</dd>
             <dt>1.9.12</dt><dd>12 more games, 24 in all: Ludo, Cricket, Snakes &amp; Ladders, Chess, Checkers, Quiz Time (general knowledge, cricket, geography, science, Islamic knowledge), Sudoku, Solitaire, Car Race, Maze Muncher, Carrom and Word Guess. Ludo and Snakes &amp; Ladders are for up to 4 people passing the remote.</dd>
             <dt>1.9.11</dt><dd>A Modes menu lists every mode in one place. Home and My Screen: move onto any tile with the arrows and press OK to change what it shows, its text size, colours, corners and more; the channel is bigger (about three quarters of the width on My Screen, a quarter bigger on Home). CP24's channel takes three quarters of the width. Every screen's settings have a text size. 2×2 fills the whole width. No more round play button over the channel.</dd>
             <dt>1.9.10</dt><dd>New Browse mode on TV: rows of big channel cards (Continue watching, Favorites, countries and genres), a search bar and an icon menu on the left; the highlighted card plays live.</dd>
             <dt>1.9.9</dt><dd>Customize News, CP24 and My Screen right inside the screen: hold OK (or tap ⚙ on a phone) and a panel opens on the side; every change shows behind it straight away. Themes now have their own menu with 10 dark themes (new: Ocean, Crimson, Graphite, Black gold, Plum). The sponsor card on channel change can show every 2 minutes.</dd>
             <dt>1.9.8</dt><dd>Games: a new Games button with 12 classic games you play with the TV remote (Snake, Falling Blocks, Brick Breaker, Space Defender, Paddle Ball, 2048, Tic-Tac-Toe, Four in a Row, Mines, Memory Cards, Slide Puzzle, Color Echo). Your best scores are kept; on phones there are on-screen buttons.</dd>
-            <dt>1.9.7</dt><dd>Private messages: replies from the Cable TV team to your suggestions and any message the team sends you arrive in ✉ Messages (in Settings and on the website), and you can write back there. The app tells you when a new one arrives.</dd>
+            <dt>1.9.7</dt><dd>Private messages: replies from the NextGen Cable team to your suggestions and any message the team sends you arrive in ✉ Messages (in Settings and on the website), and you can write back there. The app tells you when a new one arrives.</dd>
             <dt>1.9.6</dt><dd>My Screen: a new layout you build yourself in Settings. Pick where the channel goes, up to four boxes beside it and one under it, a style (glass cards, flat edge to edge, bold headers) and an accent colour. Every part stretches to fill the screen; the sponsor and the advertising line always stay.</dd>
             <dt>1.9.5</dt><dd>Themes and styles in Settings: six colour themes for the whole app (Midnight, Pure black, Emerald, Royal, Sunset, Light) and three text sizes.</dd>
             <dt>1.9.4</dt><dd>Home mode for TVs: modern cards with clock, weather, the next prayer and reminders, Ramadan sehri and iftar countdown, top stories, markets, rates, the sponsor, and a second channel in the corner (Right).</dd>
@@ -503,7 +503,7 @@
             <dt>1.8.93</dt><dd>The 1×2 sponsor bar can show a sponsor's own wide banner.</dd>
             <dt>1.8.92</dt><dd>In 1×2, a slim sponsor bar now sits in the space under the two channels.</dd>
             <dt>1.8.91</dt><dd>The "Sponsor" tag no longer covers the sponsor's picture.</dd>
-            <dt>1.8.90</dt><dd>Sponsors: the start screen, a small strip under the 1+List channel list, and now and then a small corner card after a channel change show the businesses that keep Cable TV free. Want your business here? See <a href="advertise">Advertise</a>.</dd>
+            <dt>1.8.90</dt><dd>Sponsors: the start screen, a small strip under the 1+List channel list, and now and then a small corner card after a channel change show the businesses that keep NextGen Cable free. Want your business here? See <a href="advertise">Advertise</a>.</dd>
             <dt>1.8.89</dt><dd>New sponsor message wording on the start screen.</dd>
             <dt>1.8.88</dt><dd>The app now counts which channels are watched and for how long (totals only), for the new viewing stats page. See the privacy policy.</dd>
             <dt>1.8.87</dt><dd>When the channel bar hides in full screen, the channel number stays small in the top-left corner for 5 minutes.</dd>
@@ -559,7 +559,7 @@
             <li>If you see <i>"your phone is not allowed to install unknown apps from this source"</i>, tap <b>Settings</b>, turn on <b>Allow from this source</b>, then press Back.</li>
             <li>Tap <b>Install</b>.</li>
             <li>If Google Play Protect blocks it, tap <b>More details</b>, then <b>Install anyway</b>.</li>
-            <li>Tap <b>Open</b>. Cable TV is now in your app list.</li>
+            <li>Tap <b>Open</b>. NextGen Cable is now in your app list.</li>
             <li>Tap <b>Sign in with Google</b> and pick your account. You only do this once.</li>
           </ol>
         </div>
@@ -577,14 +577,14 @@
             <li>Turn on <b>Downloader</b>.</li>
           </ol>
           <div class="note">On some older Android TVs it is under Settings › Device Preferences › Security &amp; restrictions › Unknown sources.</div>
-          <h3>C. Download and install Cable TV</h3>
+          <h3>C. Download and install NextGen Cable</h3>
           <ol class="steps">
             <li>Open <b>Downloader</b>. Allow it to access files if it asks.</li>
             <li>Type <b>tinyurl.com/2y669ug7</b> in the box and press <b>Go</b>. If that fails, type the full link shown above.</li>
             <li>Wait for the download to reach about <b>27 MB</b>, then press <b>Install</b>. If Play Protect warns you, choose <b>Install anyway</b>.</li>
             <li>Press <b>Open</b>, or <b>Done</b> and then <b>Delete</b> to remove the downloaded file.</li>
-            <li>Cable TV shows a code. On your phone, scan the QR code or go to <b>google.com/device</b>, enter the code and pick your Google account. The TV carries on by itself.</li>
-            <li>To pin Cable TV to the home screen, highlight it, hold <b>OK</b> and choose <b>Add to favourites</b>.</li>
+            <li>NextGen Cable shows a code. On your phone, scan the QR code or go to <b>google.com/device</b>, enter the code and pick your Google account. The TV carries on by itself.</li>
+            <li>To pin NextGen Cable to the home screen, highlight it, hold <b>OK</b> and choose <b>Add to favourites</b>.</li>
           </ol>
         </div>
         <div data-pane="fire" class="hidden">
@@ -593,26 +593,26 @@
             <li>Go to <b>Settings</b> › <b>My Fire TV</b> › <b>Developer options</b> › <b>Install unknown apps</b> and turn on <b>Downloader</b>. If Developer options is missing, open <b>Settings</b> › <b>My Fire TV</b> › <b>About</b> and press <b>OK</b> on your device name 7 times.</li>
             <li>Follow part <b>C</b> of the Google TV steps.</li>
           </ol>
-          <div class="note">Cable TV works on Android 5.0 and newer. It does not work on iPhone, iPad, Apple TV, Roku, or Samsung and LG TVs that don't run Android. On those, you can watch on this website instead, or plug in our <a href="devices/">recommended device</a>, the Onn Full HD stick (about $40).</div>
+          <div class="note">NextGen Cable works on Android 5.0 and newer. It does not work on iPhone, iPad, Apple TV, Roku, or Samsung and LG TVs that don't run Android. On those, you can watch on this website instead, or plug in our <a href="devices/">recommended device</a>, the Onn Full HD stick (about $40).</div>
         </div>
         <div data-pane="update" class="hidden">
           <ol class="steps">
-            <li>Open Cable TV. When it starts, it checks for a new version and downloads it by itself (<i>Updating Cable TV</i>).</li>
-            <li>The first time, Android may ask you to allow Cable TV to install apps. Turn it on and press Back; the update carries on.</li>
+            <li>Open NextGen Cable. When it starts, it checks for a new version and downloads it by itself (<i>Updating NextGen Cable</i>).</li>
+            <li>The first time, Android may ask you to allow NextGen Cable to install apps. Turn it on and press Back; the update carries on.</li>
             <li>Android shows its own install screen. Select <b>Install</b> (or <b>Update</b>), and <b>Install anyway</b> if Play Protect asks. Your favourites and settings are kept.</li>
-            <li>Cable TV asks you to sign in once, with Google or with any email. A Free account works on one device at a time; Gold works on two.</li>
+            <li>NextGen Cable asks you to sign in once, with Google or with any email. A Free account works on one device at a time; Gold works on two.</li>
           </ol>
           <div class="note">Versions before 1.8.28 ask first: select <b>Update now</b> once. You can also download from the same link again and install over the old app.</div>
         </div>
         <div data-pane="help" class="hidden">
           <h3>"App not installed"</h3>
-          <p class="small">An older copy (before version 1.7.2) is on the device. Uninstall Cable TV once, then install again.</p>
+          <p class="small">An older copy (before version 1.7.2) is on the device. Uninstall NextGen Cable once, then install again.</p>
           <h3>"There was a problem parsing the package"</h3>
           <p class="small">The download was incomplete. Delete it and download again, checking it is about 27 MB. On a TV, try the full link.</p>
           <h3>A channel doesn't play</h3>
           <p class="small">The broadcaster may be offline, or the channel only plays in its own country (marked Geo-blocked). Some channels play in the app but not in a web browser. In the app, Settings › Channel list › <b>Working channels only</b> hides channels that failed our daily check.</p>
           <h3>Blocked by Play Protect</h3>
-          <p class="small">Tap <b>More details</b>, then <b>Install anyway</b>. Cable TV isn't in the Play Store, so Google shows this warning for it.</p>
+          <p class="small">Tap <b>More details</b>, then <b>Install anyway</b>. NextGen Cable isn't in the Play Store, so Google shows this warning for it.</p>
         </div>
       </div>
     </section>
@@ -636,13 +636,13 @@
     </aside>
   </div>
   <div class="bz-note" style="margin:32px auto 40px">
-    <p class="t2">Cable TV's channels stay free thanks to our sponsor, <b>Bulk Bazaar Inc.</b> Please show them love: visit <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">bulkbazaar.ca</a> and leave them a 5-star review <span class="stars">★★★★★</span></p>
-    <p class="t3">Enjoying Cable TV? Please share it with your family and friends!</p>
+    <p class="t2">NextGen Cable's channels stay free thanks to our sponsor, <b>Bulk Bazaar Inc.</b> Please show them love: visit <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">bulkbazaar.ca</a> and leave them a 5-star review <span class="stars">★★★★★</span></p>
+    <p class="t3">Enjoying NextGen Cable? Please share it with your family and friends!</p>
   </div>
 </main>
 
 <footer>
-  <div class="wrap"><nav><a href="#features">Features</a><a href="#watch">Watch</a><a href="#download">Download</a><a href="#guide">Install guide</a><a href="LiveTV-Install-Guide.pdf">Guide (PDF)</a><a href="suggestions">Suggestions</a><a href="advertise">Advertise</a><a href="privacy">Privacy</a></nav><p class="thanks">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener"><b>Bulk Bazaar Inc.</b></a> Visit <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">www.bulkbazaar.ca</a>.</p>Channels come from public, free-to-air streams listed by the Famelack project. Cable TV does not host any video.</div>
+  <div class="wrap"><nav><a href="#features">Features</a><a href="#watch">Watch</a><a href="#download">Download</a><a href="#guide">Install guide</a><a href="LiveTV-Install-Guide.pdf">Guide (PDF)</a><a href="suggestions">Suggestions</a><a href="advertise">Advertise</a><a href="privacy">Privacy</a></nav><p class="thanks">NextGen Cable comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener"><b>Bulk Bazaar Inc.</b></a> Visit <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">www.bulkbazaar.ca</a>.</p>Channels come from public, free-to-air streams listed by the Famelack project. NextGen Cable does not host any video.</div>
 </footer>
 
 <div class="player" id="player" role="dialog" aria-modal="true" aria-label="Player">
@@ -886,7 +886,7 @@
   function tryStream(c, n) {
     stop(); showMsg("");
     const url = c.streams[n];
-    if (!url) { showMsg("This channel isn't playing right now, or it only plays in the Cable TV app or in its own country. Try another channel."); return; }
+    if (!url) { showMsg("This channel isn't playing right now, or it only plays in the NextGen Cable app or in its own country. Try another channel."); return; }
     const next = () => { if (visible[current] === c) tryStream(c, n + 1); };
     if (window.Hls && Hls.isSupported() && !/\.(mp4|webm)(\?|$)/i.test(url)) {
       hls = new Hls({ maxBufferLength: 20 });

@@ -125,7 +125,7 @@ export const STATIONS = [
     credits: "Sport: public-domain and CC BY sports films (classic boxing, cricket, football, athletics) from the Internet Archive. No modern leagues or tournaments." },
   { id: "ads", name: "Spark Ads", dial: "48", doc: "_channel_ads", page: "channel/?c=ads", auto: true, noPopup: true,
     logo: "https://tv.bulkbazaar.ca/channel/logos/spark-ads.png", ready: "https://tv.bulkbazaar.ca/channel/ads-schedule.json",
-    credits: "Ads: our own Cable TV promos and our sponsors' ads. Advertise your business here: WhatsApp 437 602 6500 or tv.bulkbazaar.ca/advertise." },
+    credits: "Ads: our own NextGen Cable promos and our sponsors' ads. Advertise your business here: WhatsApp 437 602 6500 or tv.bulkbazaar.ca/advertise." },
   // 9 (2026-10-09): the Urdu half of Comedy, Pakistani sitcoms and comedy shows.
   { id: "comedyur", yt: true, web: "channel/ytc.html?c=comedyur", ytMins: 15, tagline: "Pakistani comedy shows and sitcoms, day and night", mix: true,
     name: "Spark Comedy Urdu", dial: "9", doc: "_channel_comedyur", page: "channel/?c=comedyur", auto: true, backup: true,

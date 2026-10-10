@@ -66,9 +66,9 @@ import com.livetv.app.ui.Palette as TvPalette
 import com.livetv.app.ui.Themes
 
 /**
- * Iqra Quran inside Cable TV (its top-bar button): the same screens as the Iqra Quran app
- * (Kids Qaida, Read with recitation, Hifz), drawn in Cable TV's current theme so it feels part of the app.
- * Back on its home screen returns to Cable TV.
+ * Iqra Quran inside NextGen Cable (its top-bar button): the same screens as the Iqra Quran app
+ * (Kids Qaida, Read with recitation, Hifz), drawn in NextGen Cable's current theme so it feels part of the app.
+ * Back on its home screen returns to NextGen Cable.
  */
 object QuranSection {
     const val AVAILABLE = true
@@ -80,9 +80,9 @@ object QuranSection {
     private var top: java.lang.ref.WeakReference<Activity>? = null
 
     /**
-     * The Azan inside Cable TV: while Cable TV is on screen, each prayer time opens the Azan screen (the
+     * The Azan inside NextGen Cable: while NextGen Cable is on screen, each prayer time opens the Azan screen (the
      * channel pauses under it and comes back after) or a banner, as set in Iqra Quran > Azan Clock.
-     * When the Iqra Quran app is installed it plays the Azan itself, so Cable TV shows the screen silently.
+     * When the Iqra Quran app is installed it plays the Azan itself, so NextGen Cable shows the screen silently.
      */
     fun startAzan(activity: Activity) {
         AzanActivity.hostPalette = paletteFor(Themes.current)
@@ -118,7 +118,7 @@ object QuranSection {
                 if (wait > 60_000L) { delay(minOf(wait - 1000L, 10 * 60_000L)); continue }
                 delay(wait.coerceAtLeast(0))
                 val a = top?.get()
-                // The Azan Clock is part of Iqra Quran, a Gold feature in Cable TV (1.10.17).
+                // The Azan Clock is part of Iqra Quran, a Gold feature in NextGen Cable (1.10.17).
                 if (a != null && !a.isFinishing && a !is AzanActivity && com.livetv.app.Plans.has(com.livetv.app.Plans.Feature.Quran)) {
                     AzanActivity.hostPalette = paletteFor(Themes.current)
                     val silent = installed(app, AzanActivity.IQRA_PACKAGE)
@@ -138,11 +138,11 @@ object QuranSection {
         val tv = Themes.current
         val colours = remember(tv) { paletteFor(tv) }
         SideEffect { vm.fixedPalette = colours; AzanActivity.hostPalette = colours }
-        // The place for the prayer times is Cable TV's weather place; its city picker changes both.
+        // The place for the prayer times is NextGen Cable's weather place; its city picker changes both.
         var pickingCity by remember { mutableStateOf(false) }
         DisposableEffect(Unit) {
             AzanSettings.pickPlace = { pickingCity = true }
-            // The Azan Clock's weather tile opens Cable TV's Weather section; Back returns to the Azan Clock.
+            // The Azan Clock's weather tile opens NextGen Cable's Weather section; Back returns to the Azan Clock.
             AzanSettings.openWeather = onWeather
             onDispose { AzanSettings.pickPlace = null; AzanSettings.openWeather = null }
         }
@@ -155,7 +155,7 @@ object QuranSection {
         DisposableEffect(lifecycle) {
             // Recitation and Hifz repeats run a long time without a key press.
             view.keepScreenOn = true
-            // Leaving Cable TV stops the recitation, as in the Iqra Quran app.
+            // Leaving NextGen Cable stops the recitation, as in the Iqra Quran app.
             val observer = LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_STOP) { vm.player.stop(); vm.speaker.stop() }
             }
@@ -174,7 +174,7 @@ object QuranSection {
             LocalLayoutDirection provides if (lang == Lang.Ur) LayoutDirection.Rtl else LayoutDirection.Ltr,
         ) {
             IqraTheme(colours) {
-                // Back steps back through the Quran screens, then from its home screen to Cable TV.
+                // Back steps back through the Quran screens, then from its home screen to NextGen Cable.
                 BackHandler { if (!vm.back()) onClose() }
                 Box(
                     Modifier.fillMaxSize().onPreviewKeyEvent { e ->
@@ -213,7 +213,7 @@ object QuranSection {
         }
     }
 
-    /** Iqra Quran's colours taken from a Cable TV theme. */
+    /** Iqra Quran's colours taken from a NextGen Cable theme. */
     fun paletteFor(tv: TvPalette): QuranPalette {
         val accent = tv.secondary
         val onAccent = if (accent.luminance() > 0.45f) Color(0xFF111111) else Color.White

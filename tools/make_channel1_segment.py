@@ -4,11 +4,11 @@ Channel 1's 5-minute segment (the owner's rule, 2026-10-08): it plays at :25 and
 the halves of the programmes (tools/build_channel1_set.py books it). 300 seconds:
 
     0:00  "break" ident                     5 s
-    0:05  ads: Cable TV Ad 7               60 s
+    0:05  ads: NextGen Cable Ad 7               60 s
     1:05  Today on channel 1               60 s   every programme of the 8-hour set and its three times today
     2:05  weather                          60 s   Toronto, Lahore, Karachi, Delhi, Mumbai: now, today's high and low
     3:05  ads: Ad 8, Advertise here, Ad 9  60 s
-    4:05  Cable TV tips                    47 s
+    4:05  NextGen Cable tips                    47 s
     4:52  "coming up" ident                 8 s
 
 Made every hour by .github/workflows/build-channel1-segment.yml, so the weather is fresh, and put on the
@@ -85,7 +85,7 @@ def background(heading, sub):
     urdu(d, W - 52, 34, heading, font(UR, 44), "#ffd84d")
     d.text((150, 52), sub, font=font(BOLD, 28), fill="white")
     d.line([(48, 138), (W - 48, 138)], fill="#ffd84d", width=2)
-    d.text((48, H - 40), "Spark TV · channel 1 on Cable TV  ·  " + credit("calm"), font=font(REGULAR, 17), fill="#aab4e0")
+    d.text((48, H - 40), "Spark TV · channel 1 on NextGen Cable  ·  " + credit("calm"), font=font(REGULAR, 17), fill="#aab4e0")
     return im, d
 
 
@@ -158,7 +158,7 @@ def weather_page():
 
 
 def tips_page():
-    im, d = background("کیبل ٹی وی", "Cable TV tips")
+    im, d = background("نیکسٹ جین کیبل", "NextGen Cable tips")
     lines = [("مفت پیکج: تمام چینل، ون پلس لسٹ میں", "Free package: every channel, in 1+List", "white"),
              ("گولڈ: ہر فیچر، ہر لے آؤٹ، گیمز اور موسم", "Gold: every feature, every layout, games and weather", "#ffd84d"),
              ("ہمارے دوسرے چینل: ڈرامے، فلمیں، موسیقی، کھیل، کھانا", "Our other channels: dramas, films, music, sports, cooking", "white"),

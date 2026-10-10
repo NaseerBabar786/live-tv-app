@@ -251,7 +251,7 @@ class WebChannelActivity : Activity() {
         super.onDestroy()
     }
 
-    // A message from the Cable TV team pops up here too, over the playing channel (owner, 2026-10-09).
+    // A message from the NextGen Cable team pops up here too, over the playing channel (owner, 2026-10-09).
     private val scope = MainScope()
     private var messageDialog: android.app.AlertDialog? = null
     private var messageAt = 0L
@@ -299,7 +299,7 @@ class WebChannelActivity : Activity() {
             scope.launch {
                 try {
                     reply(text)
-                    Toast.makeText(this@WebChannelActivity, "✓ Sent to the Cable TV team", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@WebChannelActivity, "✓ Sent to the NextGen Cable team", Toast.LENGTH_SHORT).show()
                     MessagePopup.close()
                     dialog.dismiss()
                 } catch (e: CancellationException) {

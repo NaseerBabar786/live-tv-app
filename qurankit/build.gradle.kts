@@ -5,13 +5,13 @@ plugins {
 }
 
 // Iqra Quran's screens, Quran text, recitation and lessons. Used by the Iqra Quran app (:quran)
-// and built into Cable TV (its Iqra Quran button), so both always have the same Quran section.
+// and built into NextGen Cable (its Iqra Quran button), so both always have the same Quran section.
 android {
     namespace = "com.iqraquran.kit"
     compileSdk = 36
 
     defaultConfig {
-        // Cable TV still runs on Android 5, so this stays as low as Cable TV.
+        // NextGen Cable still runs on Android 5, so this stays as low as NextGen Cable.
         minSdk = 21
     }
     compileOptions {

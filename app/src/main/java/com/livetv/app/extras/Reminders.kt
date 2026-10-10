@@ -44,7 +44,7 @@ import org.json.JSONObject
 
 /**
  * "Remind me" (owner, 2026-10-09): a show picked in the TV guide pops up a minute before it starts, with Watch
- * and Dismiss. Saved on the TV, so reminders stay after a restart; they work while Cable TV is open.
+ * and Dismiss. Saved on the TV, so reminders stay after a restart; they work while NextGen Cable is open.
  */
 object Reminders {
     data class Reminder(
@@ -103,7 +103,7 @@ object Reminders {
 }
 
 /**
- * The reminder pop-up, over every screen of Cable TV: a minute before a show the viewer picked, "Starting now on
+ * The reminder pop-up, over every screen of NextGen Cable: a minute before a show the viewer picked, "Starting now on
  * Channel 6: …" with Watch (opens the channel) and Dismiss. It goes away by itself 5 minutes after the start.
  */
 @Composable

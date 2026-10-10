@@ -8,7 +8,7 @@ enum class Kind(val label: String, val heading: String) {
 }
 
 /**
- * One note. [topic] groups notes in the message (for example "Cable TV" or "Website"),
+ * One note. [topic] groups notes in the message (for example "NextGen Cable" or "Website"),
  * [sentAt] is set once the note went to Claude; until then it waits in the lists.
  */
 data class Note(

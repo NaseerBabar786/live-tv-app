@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cable TV Users</title>
-<meta name="description" content="Cable TV user dashboard.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>NextGen Cable Users</title>
+<meta name="description" content="NextGen Cable user dashboard.">
+<link rel="icon" href="nextgen-icon.png">
 <link rel="stylesheet" href="assets/site.css">
 <meta name="robots" content="noindex">
 <style>
@@ -94,9 +94,9 @@
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Cable TV home">
-      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Cable TV</span>
+    <a class="brand" href="./" aria-label="NextGen Cable home">
+      <img src="nextgen-icon.png" alt="" aria-hidden="true">
+      <span>NextGen Cable</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -109,8 +109,8 @@
 
 <main class="wrap">
   <a href="admin" class="back-admin">← Back to Admin</a>
-  <h1>Cable TV users</h1>
-  <p class="lead">Everyone who has signed in to the Cable TV app. Only the owner's account can see this page.</p>
+  <h1>NextGen Cable users</h1>
+  <p class="lead">Everyone who has signed in to the NextGen Cable app. Only the owner's account can see this page.</p>
   <div id="notReady" class="panel hidden">The user list will appear here once sign-in is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account can't see the user list. <button class="btn" data-signout>Use another account</button></div>
@@ -131,10 +131,10 @@
   <p class="small">🟢 <b>Last seen</b> works like WhatsApp: <span class="seen on">online now</span> means their app is open (it checks in every 10 minutes while open), then "last seen 5 min ago", "today at 3:40 PM", "yesterday at 8:40 PM", a weekday, or a date. <span class="seen old">Grey</span> = not seen for over a week, <span class="seen gone">red</span> = not seen for over 30 days. The list is sorted with the most recently seen at the top; hover over a time to see the exact date.</p>
   <p class="small">💳 Click any user to see <b>what they watch</b> (the channel on now or last watched, and for today, 7 or 30 days: the channels, languages, countries and kinds of channel they watch most, and their favourite shows on our Spark channels, and which features they use most: modes, full screen, Movies &amp; Dramas, Games) and their <b>billing details</b>: package, how and how often they pay, next payment date, phone number and notes. The panel lists what's missing; <b>Ask in the app</b> sends them a message and a form to fill in, and the Email, Text and WhatsApp buttons open a ready-made message on your own device for you to send.</p>
   <p class="small">🎁 <b>Gifts</b>: in a viewer's panel, <b>Give free Gold</b> turns on Gold for 1 week to 1 year, or forever, with no payment (a Gold package that's still on is made longer). <b>Add free credit</b> gives them dollars that ✓ Paid today takes off their next payment; their app shows it in 💳 My billing details.</p>
-  <p class="small">✉ <b>Send message</b> writes to a viewer: the message pops up on their TV over whatever they're watching (within a minute if Cable TV is open, otherwise the next time they open it), and they can answer right away with the remote. Their answer shows here, with 💬 <b>New reply</b> on their row, and in <a href="suggestions#messages">Suggestions › Messages</a>.</p>
+  <p class="small">✉ <b>Send message</b> writes to a viewer: the message pops up on their TV over whatever they're watching (within a minute if NextGen Cable is open, otherwise the next time they open it), and they can answer right away with the remote. Their answer shows here, with 💬 <b>New reply</b> on their row, and in <a href="suggestions#messages">Suggestions › Messages</a>.</p>
   <p class="small">🔑 <b>Set password</b> gives a viewer a new password you choose; tell it to them and they can change it later in the app's Settings. Their app signs out and asks for the new password. ✉ <b>Reset email</b> sends them Firebase's link to make their own (only works if the email is real). Nobody can see a viewer's current password: it's stored scrambled.</p>
-  <p class="small">⚙ <b>Account</b> (at the bottom of a viewer's panel): <b>⛔ Deactivate</b> turns their sign-in off. Their app signs them out within about an hour (or when it next starts) and they can't sign back in until you press <b>✓ Reactivate</b>; nothing is deleted. <b>🗑 Delete permanently</b> (you type DELETE to confirm) removes their sign-in, package, billing details, messages, forum posts and viewing history for good. Delete only works for accounts not seen for more than 2 months. 💌 <b>Come back reminders</b> (sent automatically each time you open this page): viewers away 7+ days get a friendly message, one more each week, and a final notice with the closing date 2 weeks before the 2-month mark (the banner at the top lists who is due and who is ready to delete; deleting keeps only their email and name on the 📧 Mailing list), in the app (they see it when they next open Cable TV) with promo code COMEBACK (the same gift as WELCOME, each account once); the Activity summary sends them all with one button, and WhatsApp / Email open a ready message on your device. Both use your Google owner permission, like Set password.</p>
-  <p class="small">➕ <b>Add user</b> makes a Cable TV account for someone before they install the app: type their name, email and a password you choose, then tell them. They open Cable TV, choose email sign-in and type the same email and password. They can change the password later in the app's Settings.</p>
+  <p class="small">⚙ <b>Account</b> (at the bottom of a viewer's panel): <b>⛔ Deactivate</b> turns their sign-in off. Their app signs them out within about an hour (or when it next starts) and they can't sign back in until you press <b>✓ Reactivate</b>; nothing is deleted. <b>🗑 Delete permanently</b> (you type DELETE to confirm) removes their sign-in, package, billing details, messages, forum posts and viewing history for good. Delete only works for accounts not seen for more than 2 months. 💌 <b>Come back reminders</b> (sent automatically each time you open this page): viewers away 7+ days get a friendly message, one more each week, and a final notice with the closing date 2 weeks before the 2-month mark (the banner at the top lists who is due and who is ready to delete; deleting keeps only their email and name on the 📧 Mailing list), in the app (they see it when they next open NextGen Cable) with promo code COMEBACK (the same gift as WELCOME, each account once); the Activity summary sends them all with one button, and WhatsApp / Email open a ready message on your device. Both use your Google owner permission, like Set password.</p>
+  <p class="small">➕ <b>Add user</b> makes a NextGen Cable account for someone before they install the app: type their name, email and a password you choose, then tell them. They open NextGen Cable, choose email sign-in and type the same email and password. They can change the password later in the app's Settings.</p>
   <p class="err" id="err"></p>
 </main>
 
@@ -148,7 +148,7 @@
     <textarea id="mText" placeholder="Type your message. It pops up on their screen." maxlength="2000"></textarea>
     <div class="row" style="margin-top:8px;align-items:center"><button class="btn primary" id="mSend">📨 Send</button><span class="small" id="mMsg"></span></div>
     <p class="small" id="mSeen"></p>
-    <p class="small">It pops up over whatever they're watching, within a minute if Cable TV is open; if the TV is off, the next time they open it. They answer with one press of the remote (👍 OK, got it / Thank you! / Please call me) or type an answer, and it appears here at once. Ctrl+Enter sends.</p>
+    <p class="small">It pops up over whatever they're watching, within a minute if NextGen Cable is open; if the TV is off, the next time they open it. They answer with one press of the remote (👍 OK, got it / Thank you! / Please call me) or type an answer, and it appears here at once. Ctrl+Enter sends.</p>
   </div>
 </dialog>
 <dialog id="addUser">
@@ -247,7 +247,7 @@
   </div>
 </dialog>
 <footer>
-  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+  <div class="wrap">NextGen Cable comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
 </footer>
 
 <script type="module">
@@ -302,12 +302,12 @@ if (!configured) {
   }
 
   // ✉ Send message: the conversation with one viewer, live. What you send pops up on their screen over
-  // whatever is playing (app 1.11 and newer), within a minute while Cable TV is open, otherwise the next
+  // whatever is playing (app 1.11 and newer), within a minute while NextGen Cable is open, otherwise the next
   // time they open it; they can answer with one press of the remote, and the answer appears here.
   let msgUser = null, stopMsgs = null, stopHead = null;
   function openMessages(u) {
     msgUser = u;
-    $("mName").textContent = "✉ " + (u.name || "Cable TV viewer");
+    $("mName").textContent = "✉ " + (u.name || "NextGen Cable viewer");
     $("mSub").textContent = [u.email, u.device, u.appVersion ? "app " + u.appVersion : ""].filter(Boolean).join(" · ");
     $("mText").value = ""; $("mMsg").textContent = ""; $("mSeen").textContent = "";
     $("mList").textContent = "Loading…";
@@ -337,7 +337,7 @@ if (!configured) {
     if (h.lastFrom !== "admin") return "";
     const last = toDate(h.lastAt), seenOf = toDate(h.seenOf), seenAt = toDate(h.seenAt);
     if (last && seenOf && seenOf.getTime() >= last.getTime() - 1000) return `✓ Seen on their screen ${fmt(seenAt || seenOf)}`;
-    return "⏳ Not seen yet: it pops up on their screen within a minute if Cable TV is open, otherwise the next time they open it.";
+    return "⏳ Not seen yet: it pops up on their screen within a minute if NextGen Cable is open, otherwise the next time they open it.";
   }
   function closeMessages() { stopMsgs?.(); stopHead?.(); stopMsgs = stopHead = null; msgUser = null; }
   $("mClose").onclick = () => $("msg").close();
@@ -349,7 +349,7 @@ if (!configured) {
     $("mSend").disabled = true; $("mMsg").textContent = "Sending…";
     try {
       const me = auth.currentUser;
-      await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: me.uid, name: me.displayName || "Cable TV team", text, createdAt: fs.serverTimestamp() });
+      await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: me.uid, name: me.displayName || "NextGen Cable team", text, createdAt: fs.serverTimestamp() });
       await fs.setDoc(fs.doc(db, "inbox", u.id), { uid: u.id, lastText: text.slice(0, 200), lastAt: fs.serverTimestamp(), lastFrom: "admin", userUnread: true, name: u.name || "", email: u.email || "" }, { merge: true });
       $("mText").value = ""; $("mMsg").textContent = "✓ Sent.";
     } catch (e) { $("mMsg").textContent = "Couldn't send: " + e.message; }
@@ -667,7 +667,7 @@ if (!configured) {
     const h = document.createElement("h2"); h.textContent = "📊 Activity summary";
     const head = document.createElement("p"); head.className = "headline";
     const trend = prevWatchers.length ? (watchers.length > prevWatchers.length ? `, up from ${prevWatchers.length} the week before` : watchers.length < prevWatchers.length ? `, down from ${prevWatchers.length} the week before` : ", the same as the week before") : "";
-    head.innerHTML = `<b class="k">${week.length}</b> of your ${n} viewers (${pct(week.length)}) used Cable TV in the last 7 days, and <b class="k">${online.length}</b> ${online.length === 1 ? "is" : "are"} online now. <b class="k">${watchers.length}</b> watched something this week${trend}.`;
+    head.innerHTML = `<b class="k">${week.length}</b> of your ${n} viewers (${pct(week.length)}) used NextGen Cable in the last 7 days, and <b class="k">${online.length}</b> ${online.length === 1 ? "is" : "are"} online now. <b class="k">${watchers.length}</b> watched something this week${trend}.`;
     const grid = document.createElement("div"); grid.className = "grid";
     grid.append(
       box(`🟢 <b>Online now:</b> ${online.length}`, online),
@@ -799,7 +799,7 @@ if (!configured) {
   function contactText(u, miss) {
     const first = (u.name || "").split(" ")[0] || "there";
     const asks = miss.filter(m => m[2]).map(m => "- " + m[2]);
-    return `Hi ${first}, this is the Cable TV team. The free period has ended, so to keep watching please send us:\n${asks.join("\n") || "- a quick confirmation of your package"}\n\nYou can also fill this in on your TV: Cable TV › Settings › 💳 My billing details. Questions? WhatsApp 437 602 6500. Thank you!`;
+    return `Hi ${first}, this is the NextGen Cable team. The free period has ended, so to keep watching please send us:\n${asks.join("\n") || "- a quick confirmation of your package"}\n\nYou can also fill this in on your TV: NextGen Cable › Settings › 💳 My billing details. Questions? WhatsApp 437 602 6500. Thank you!`;
   }
 
   function fillLinks(u) {
@@ -807,7 +807,7 @@ if (!configured) {
     const text = contactText(u, miss);
     const email = d.email;
     $("bEmail").classList.toggle("hidden", !email);
-    $("bEmail").href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent("Your Cable TV package")}&body=${encodeURIComponent(text)}`;
+    $("bEmail").href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent("Your NextGen Cable package")}&body=${encodeURIComponent(text)}`;
     const phone = intl(d.phone), wa = intl(d.whatsapp || d.phone);
     $("bSms").classList.toggle("hidden", !phone);
     $("bSms").href = `sms:+${phone}?body=${encodeURIComponent(text)}`;
@@ -910,7 +910,7 @@ if (!configured) {
     const days = Math.floor((Date.now() - s.at) / 864e5);
     if (days > DELETE_AFTER_DAYS) return null;
     const ok = new Date(s.at.getTime() + (DELETE_AFTER_DAYS + 1) * 864e5);
-    return `Can't delete yet: ${seenText(s)}. An account can only be deleted after more than 2 months without using Cable TV (from ${ok.toLocaleDateString([], { dateStyle: "medium" })}). To stop them now, use Deactivate.`;
+    return `Can't delete yet: ${seenText(s)}. An account can only be deleted after more than 2 months without using NextGen Cable (from ${ok.toLocaleDateString([], { dateStyle: "medium" })}). To stop them now, use Deactivate.`;
   };
   /**
    * Removes an account for good: the sign-in, then everything we keep about them. Only their email and name are
@@ -990,7 +990,7 @@ if (!configured) {
   // COMEBACK (the same gift as WELCOME, made on first use); then one more every week; when 2 weeks are left before
   // the 2-month mark, a final notice with the date the account will be closed. After that the page suggests
   // deleting the account (you confirm; nothing is deleted by itself). In the app it's a private message they see
-  // when they next open Cable TV; WhatsApp and Email open the same text on your own device.
+  // when they next open NextGen Cable; WhatsApp and Email open the same text on your own device.
   // billing/{uid} (only you can read it) remembers comebackStep (1-6 weekly, 7 final), comebackFor (the "last
   // seen" time that time away started from) and comebackAt; coming back starts a fresh count.
   const AWAY_DAYS = 7, FINAL_DAYS = DELETE_AFTER_DAYS - 14, FINAL_STEP = 7, COMEBACK = "COMEBACK";
@@ -1015,17 +1015,17 @@ if (!configured) {
   function comebackText(u, step = stepDue(u)) {
     const first = (u.name || "").trim().split(/\s+/)[0] || "there";
     const giftOn = comebackCode && comebackCode.active !== false && !usedComeback(u);
-    const howTo = `open Settings › Packages in Cable TV and type promo code ${COMEBACK}`;
+    const howTo = `open Settings › Packages in NextGen Cable and type promo code ${COMEBACK}`;
     if (step >= FINAL_STEP) {
       const when = closeDate(u);
-      return `Hi ${first}, we haven't seen you on Cable TV for almost 2 months. To keep things tidy, your Cable TV account will be closed for good on ${when ? longDay(when) : "the date shown in the app"}. ` +
-        `To keep it, just open Cable TV before then, or reply to this message. ` + (giftOn ? `Your welcome back gift is still waiting: ${giftLen(comebackCode.days)} of Gold free, ${howTo}. ` : "") + `We'd love to have you back! – Cable TV`;
+      return `Hi ${first}, we haven't seen you on NextGen Cable for almost 2 months. To keep things tidy, your NextGen Cable account will be closed for good on ${when ? longDay(when) : "the date shown in the app"}. ` +
+        `To keep it, just open NextGen Cable before then, or reply to this message. ` + (giftOn ? `Your welcome back gift is still waiting: ${giftLen(comebackCode.days)} of Gold free, ${howTo}. ` : "") + `We'd love to have you back! – NextGen Cable`;
     }
     if (step <= 1)
-      return `Hi ${first}, we miss you on Cable TV! 📺 We've added new channels, shows and features since you last watched. ` +
-        (giftOn ? `As a welcome back gift, here's ${giftLen(comebackCode.days)} of Gold free: ${howTo}. ` : "") + `Have a look at our latest promotions too. See you soon! – Cable TV`;
-    return `Hi ${first}, it's been ${step} weeks since you last watched Cable TV. 📺 New shows and channels are waiting for you, and so are our latest promotions. ` +
-      (giftOn ? `Your welcome back gift is still there: ${giftLen(comebackCode.days)} of Gold free (${howTo}). ` : "") + `Hope to see you soon! – Cable TV`;
+      return `Hi ${first}, we miss you on NextGen Cable! 📺 We've added new channels, shows and features since you last watched. ` +
+        (giftOn ? `As a welcome back gift, here's ${giftLen(comebackCode.days)} of Gold free: ${howTo}. ` : "") + `Have a look at our latest promotions too. See you soon! – NextGen Cable`;
+    return `Hi ${first}, it's been ${step} weeks since you last watched NextGen Cable. 📺 New shows and channels are waiting for you, and so are our latest promotions. ` +
+      (giftOn ? `Your welcome back gift is still there: ${giftLen(comebackCode.days)} of Gold free (${howTo}). ` : "") + `Hope to see you soon! – NextGen Cable`;
   }
   const stepName = n => n >= FINAL_STEP ? "final notice" : n === 1 ? "first reminder" : `week ${n} reminder`;
   /** Reads COMEBACK; makes it the first time, copying WELCOME's package and length (each account can use it once). */
@@ -1043,7 +1043,7 @@ if (!configured) {
   async function sendComeback(u) {
     await ensureComeback();
     const step = stepDue(u), text = comebackText(u, step), from = lastSeen(u).at.getTime();
-    await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: auth.currentUser.uid, name: "Cable TV", text, createdAt: fs.serverTimestamp() });
+    await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: auth.currentUser.uid, name: "NextGen Cable", text, createdAt: fs.serverTimestamp() });
     await fs.setDoc(fs.doc(db, "inbox", u.id), { uid: u.id, lastText: text.slice(0, 200), lastAt: fs.serverTimestamp(), lastFrom: "admin", userUnread: true, name: u.name || "", email: u.email || "" }, { merge: true });
     await fs.setDoc(fs.doc(db, "billing", u.id), { comebackAt: fs.serverTimestamp(), comebackStep: step, comebackFor: from }, { merge: true });
     Object.assign(billing[u.id] ||= {}, { comebackAt: new Date(), comebackStep: step, comebackFor: from });
@@ -1053,7 +1053,7 @@ if (!configured) {
     if (!list.length) return alert("Nobody is due a reminder right now.");
     try { await ensureComeback(); } catch (e) { return alert("Couldn't get the COMEBACK code ready: " + e.message); }
     const lines = list.map(u => `• ${u.name || u.email}: ${stepName(stepDue(u))} (away ${awayDays(u)} days)`).join("\n");
-    if (!confirm(`Send ${list.length} reminder${list.length > 1 ? "s" : ""} in the app?\n\n${lines}\n\nThey see it when they next open Cable TV. For example:\n\n"${comebackText(list[0])}"`)) return;
+    if (!confirm(`Send ${list.length} reminder${list.length > 1 ? "s" : ""} in the app?\n\n${lines}\n\nThey see it when they next open NextGen Cable. For example:\n\n"${comebackText(list[0])}"`)) return;
     let ok = 0; const failed = [];
     for (const u of list) { try { await sendComeback(u); ok++; } catch (e) { failed.push((u.name || u.email) + ": " + e.message); } }
     stats(); render(); dueBanner();
@@ -1068,14 +1068,14 @@ if (!configured) {
     $("cbSend").disabled = !need; $("cbSend").classList.toggle("dim", !need);
     const d = details(u), wa = intl(d.whatsapp || d.phone || ""), email = d.email || u.email, text = comebackText(u, Math.max(1, due));
     $("cbWa").classList.toggle("hidden", !wa); $("cbWa").href = `https://wa.me/${wa}?text=${encodeURIComponent(text)}`;
-    $("cbEmail").classList.toggle("hidden", !email); $("cbEmail").href = `mailto:${encodeURIComponent(email || "")}?subject=${encodeURIComponent(due >= FINAL_STEP ? "Your Cable TV account" : "We miss you on Cable TV")}&body=${encodeURIComponent(text)}`;
+    $("cbEmail").classList.toggle("hidden", !email); $("cbEmail").href = `mailto:${encodeURIComponent(email || "")}?subject=${encodeURIComponent(due >= FINAL_STEP ? "Your NextGen Cable account" : "We miss you on NextGen Cable")}&body=${encodeURIComponent(text)}`;
     $("cbMsg").textContent = "";
   }
   $("cbSend").onclick = async () => {
     if (!cur || !needsComeback(cur)) return;
     try { await ensureComeback(); } catch (e) { return $("cbMsg").textContent = "Couldn't get the COMEBACK code ready: " + e.message; }
     if (!confirm(`Send the ${stepName(stepDue(cur))} to ${cur.name || cur.email} in the app?\n\n"${comebackText(cur)}"`)) return;
-    try { await sendComeback(cur); comebackPanel(cur); stats(); render(); dueBanner(); $("cbMsg").textContent = "✓ Sent. They'll see it when they next open Cable TV."; }
+    try { await sendComeback(cur); comebackPanel(cur); stats(); render(); dueBanner(); $("cbMsg").textContent = "✓ Sent. They'll see it when they next open NextGen Cable."; }
     catch (e) { $("cbMsg").textContent = "Couldn't send: " + e.message; }
   };
   // Owner's choice (2026-10-09): reminders go out automatically, each time this page is opened, to everyone due.
@@ -1248,7 +1248,7 @@ if (!configured) {
     $("bMsg").textContent = "Sending…";
     try {
       const me = auth.currentUser;
-      await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: me.uid, name: me.displayName || "Cable TV team", text, createdAt: fs.serverTimestamp() });
+      await fs.addDoc(fs.collection(db, "inbox", u.id, "messages"), { from: "admin", uid: me.uid, name: me.displayName || "NextGen Cable team", text, createdAt: fs.serverTimestamp() });
       await fs.setDoc(fs.doc(db, "inbox", u.id), { uid: u.id, lastText: text.slice(0, 200), lastAt: fs.serverTimestamp(), lastFrom: "admin", userUnread: true, name: u.name || "", email: u.email || "" }, { merge: true });
       const ask = { asked: miss.map(m => m[0]).join(","), askedAt: fs.serverTimestamp() };
       await fs.setDoc(fs.doc(db, "billingInfo", u.id), ask, { merge: true });
@@ -1290,7 +1290,7 @@ if (!configured) {
       users.unshift({ id: made.localId, name, email, signIn: "Email", joined });
       stats(); render();
       $("addUser").close();
-      alert(`Done. ${name} can now sign in to Cable TV with email sign-in:\n\nEmail: ${email}\nPassword: ${pw}\n\nThey can change it in the app's Settings › Change password.`);
+      alert(`Done. ${name} can now sign in to NextGen Cable with email sign-in:\n\nEmail: ${email}\nPassword: ${pw}\n\nThey can change it in the app's Settings › Change password.`);
     } catch (err) {
       $("auErr").textContent = "Couldn't create the account: " + err.message;
     } finally { $("auSave").disabled = false; }

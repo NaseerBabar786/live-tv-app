@@ -213,7 +213,7 @@ fun ChannelListScreen(
     onOpenQuran: (() -> Unit)? = null,
     /** A channel picked to play in 1+List's player, remembered as the last one watched. */
     onWatch: (Channel) -> Unit = {},
-    /** Opens the TV guide (Cable TV, 2026-10-09); null hides its button. */
+    /** Opens the TV guide (NextGen Cable, 2026-10-09); null hides its button. */
     onOpenGuide: (() -> Unit)? = null,
     /** Voice search with the remote's microphone; null hides the mic button. */
     onVoiceSearch: (() -> Unit)? = null,
@@ -274,7 +274,7 @@ fun ChannelListScreen(
     val prefs = remember { context.getSharedPreferences("live_tv", Context.MODE_PRIVATE) }
     var previewSound by remember { mutableStateOf(prefs.getBoolean(PREF_PREVIEW_SOUND, true)) }
     // TV and tablet layout, picked with the button in the top bar. Each time the app opens, Live TV Max
-    // starts on the Browse home screen; Cable TV and the other apps start in 1+List (user's choice, 1.9.41).
+    // starts on the Browse home screen; NextGen Cable and the other apps start in 1+List (user's choice, 1.9.41).
     val wideScreen = LocalConfiguration.current.screenWidthDp >= 600
     // Phones and tablets have every mode too (1.9.90): 1+List and Browse also fit an upright phone,
     // the other modes turn the phone sideways while they're on.
@@ -289,7 +289,7 @@ fun ChannelListScreen(
     }
     // The mode on screen, for the owner's "most used features" (Features).
     LaunchedEffect(tileLayout) { com.livetv.app.Features.use(tileLayout.feature?.key ?: "list") }
-    // Cable TV's packages: a mode the viewer's package doesn't have (it ran out, or its minute's try is
+    // NextGen Cable's packages: a mode the viewer's package doesn't have (it ran out, or its minute's try is
     // over) goes back to Browse or 1+List.
     val tier by Plans.current.collectAsStateWithLifecycle()
     val packages by Plans.features.collectAsStateWithLifecycle()
@@ -316,7 +316,7 @@ fun ChannelListScreen(
     DeviceLocation(ask = !wideScreen)
     // "1+List": the channel playing on the left, kept when coming back from full screen.
     val listMode = (wideScreen || phone) && tileLayout == TileLayout.List
-    // Cable TV's Free package on a TV: 1+List shows as "Info Corner" (the owner's pick, 2026-10-08), the player at
+    // NextGen Cable's Free package on a TV: 1+List shows as "Info Corner" (the owner's pick, 2026-10-08), the player at
     // about 40% of the screen with clock, weather, next prayer and our own promos beside it. Only how it looks
     // changes: the saved mode stays 1+List, so Gold (or a Gold trial) shows the normal 1+List again.
     val freeScreen = Edition.LIVE_TV && wideScreen && !phone && listMode && tier == Plans.Tier.Free
@@ -1455,7 +1455,7 @@ fun ChannelListScreen(
                         )
                     }
                     }
-                    // 1×2, 2×2 and 2×3: Cable TV's sponsor banner, centred in the space under the tiles.
+                    // 1×2, 2×2 and 2×3: NextGen Cable's sponsor banner, centred in the space under the tiles.
                     if (packed && hasAd && bannerHeight >= 36.dp) {
                         Box(
                             Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(bannerSpace),
@@ -1468,7 +1468,7 @@ fun ChannelListScreen(
                 }
             }
             }
-            // Cable TV's "advertise with us" line along the bottom of every channel screen (owner's rule,
+            // NextGen Cable's "advertise with us" line along the bottom of every channel screen (owner's rule,
             // 1.9.58): 1+List, the tile layouts and their full-screen tiles, Browse, Carousel and Duo.
             // Strip mode has its own band above its strip; News, CP24, Home and My Screen their own lines.
             if (bottomBand && freeScreen) {
@@ -1558,7 +1558,7 @@ private fun ModesMenu(
     current: TileLayout,
     /** Live TV Plus: the modes that need Premium. */
     locked: (TileLayout) -> Boolean,
-    /** Cable TV: the package a mode needs, when the viewer's package doesn't have it. */
+    /** NextGen Cable: the package a mode needs, when the viewer's package doesn't have it. */
     needs: (TileLayout) -> String? = { null },
     onPick: (TileLayout) -> Unit,
     onDismiss: () -> Unit,
@@ -1996,9 +1996,17 @@ private fun SoundBadge(modifier: Modifier) {
     )
 }
 
-/** The app icon: a white TV with a red play button on a red tile. */
+/** The app icon: NextGen Cable's neon N (owner, 2026-10-10); the other editions keep their own tile. */
 @Composable
 internal fun AppLogo(size: Dp = 40.dp) {
+    if (Edition.LIVE_TV && !Edition.MAX) {
+        Image(
+            painter = painterResource(R.drawable.app_logo),
+            contentDescription = null,
+            modifier = Modifier.size(size).clip(RoundedCornerShape(10.dp)),
+        )
+        return
+    }
     Box(
         Modifier
             .size(size)
@@ -2037,7 +2045,7 @@ private fun PlayerWithList(
     focus: FocusRequester,
     onSelect: (Channel) -> Unit,
     onOpen: (Channel) -> Unit,
-    /** Cable TV's Free package on a TV: the "Info Corner" layout ([FreeInfoPanel]). */
+    /** NextGen Cable's Free package on a TV: the "Info Corner" layout ([FreeInfoPanel]). */
     free: Boolean = false,
     /** "Channel not working" in a channel's menu (hold OK); null hides it. */
     onReport: ((Channel) -> Unit)? = null,
@@ -2546,14 +2554,14 @@ private enum class TileLayout(val label: String, val columns: Int, val rows: Int
 
 /**
  * The layout picked with the layout button since the app was opened. Each time the app opens
- * it starts again (Browse on Cable TV's TV screens), so the pick is kept only until then, not saved.
+ * it starts again (Browse on NextGen Cable's TV screens), so the pick is kept only until then, not saved.
  */
 private var sessionTileLayout: TileLayout? = null
 
-/** News, CP24 and Home: one channel with information around it (Cable TV only). */
+/** News, CP24 and Home: one channel with information around it (NextGen Cable only). */
 private val INFO_LAYOUTS = setOf(TileLayout.News, TileLayout.Cp24, TileLayout.Home, TileLayout.Mine)
 
-/** The layouts the top-bar button steps through; News mode is Cable TV's only. Home mode is back (user's choice, 1.9.18). */
+/** The layouts the top-bar button steps through; News mode is NextGen Cable's only. Home mode is back (user's choice, 1.9.18). */
 private val layouts = TileLayout.entries.filter {
     (it !in INFO_LAYOUTS && it != TileLayout.Browse && it != TileLayout.Carousel && it != TileLayout.Strip && it != TileLayout.Duo) || Edition.LIVE_TV
 }.filter {

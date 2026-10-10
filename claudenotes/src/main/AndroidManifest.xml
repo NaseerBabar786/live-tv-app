@@ -9,7 +9,7 @@
 
     <!-- Lets the app see the phone's speech-to-text service on Android 11 and newer. -->
     <queries>
-        <!-- Asks Cable TV whether this is the owner's device (OwnerTest). -->
+        <!-- Asks NextGen Cable whether this is the owner's device (OwnerTest). -->
         <package android:name="com.naseerbabar.livetv" />
         <package android:name="com.naseerbabar.livetvmax" />
         <intent>

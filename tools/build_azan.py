@@ -1,4 +1,4 @@
-"""Builds the Azan recordings Iqra Quran (and Cable TV's Iqra Quran section, and the PC app) play at
+"""Builds the Azan recordings Iqra Quran (and NextGen Cable's Iqra Quran section, and the PC app) play at
 prayer time: docs/quran/azan/<id>.mp3 plus docs/quran/azan/azan.json (served at tv.bulkbazaar.ca/quran/azan/).
 
 Only freely licensed recordings from Wikimedia Commons are used, and only when the file page's licence is

@@ -318,7 +318,7 @@ def overlay_main(t, spec, cut_start):
         # Channel line under the name (from 11 s).
         if t >= 11:
             fs = FONT("SemiBold", 26)
-            shadow_text(d, (px(64), H - px(64)), "Channel 1  ·  Spark TV  ·  free on the Cable TV app", fs,
+            shadow_text(d, (px(64), H - px(64)), "Channel 1  ·  Spark TV  ·  free on the NextGen Cable app", fs,
                         (255, 255, 255, int(230 * ease((t - 11) / 0.4))))
     return L
 
@@ -350,8 +350,8 @@ def end_card(t, spec, logo):
     ur_text(d, (W // 2, y + px(74)), ur_when(spec), 28, YELLOW + (int(255 * k3),))
     k4 = ease((t - 1.2) / 0.4)
     fs = FONT("SemiBold", 30)
-    shadow_text(d, (W // 2, y + px(150)), "Channel 1 on the free Cable TV app  ·  tv.bulkbazaar.ca", fs, (255, 255, 255, int(235 * k4)), "ma")
-    ur_text(d, (W // 2, y + px(194)), "کیبل ٹی وی ایپ پر چینل 1، بالکل مفت", 26, (255, 255, 255, int(235 * k4)))
+    shadow_text(d, (W // 2, y + px(150)), "Channel 1 on the free NextGen Cable app  ·  tv.bulkbazaar.ca", fs, (255, 255, 255, int(235 * k4)), "ma")
+    ur_text(d, (W // 2, y + px(194)), "نیکسٹ جین کیبل ایپ پر چینل 1، بالکل مفت", 26, (255, 255, 255, int(235 * k4)))
     line = "  ·  ".join(x for x in (spec.get("credit"), music_lib.credit("promo")) if x)
     fc = FONT("SemiBold", 18)
     d.text((W // 2, H - px(34)), line, font=fc, fill=(220, 220, 220, int(200 * k4)), anchor="ma")
@@ -378,10 +378,10 @@ def lines_for(spec):
     """What the announcer says: [(start seconds, text)]."""
     title, end = spec.get("_ur") or spec["_title"], spec["secs"] - 6
     if spec.get("lang", "ur") == "en":
-        return [(3.6, f"{title}. {spec['when']}."), (end + 0.5, "Only on Spark TV, channel one. Free on the Cable TV app.")]
+        return [(3.6, f"{title}. {spec['when']}."), (end + 0.5, "Only on Spark TV, channel one. Free on the NextGen Cable app.")]
     when = f"{UR_DAYS.get(spec.get('day'), '')}، {urdu_time(spec.get('time', '20:00'))}"
     first = f"دیکھیے {title}۔ {when}۔" + (" ہر بار ایک نئی قسط۔" if spec.get("series") else "")
-    return [(3.6, first), (end + 0.5, "صرف اسپارک ٹی وی پر، کیبل ٹی وی ایپ میں، بالکل مفت۔")]
+    return [(3.6, first), (end + 0.5, "صرف اسپارک ٹی وی پر، نیکسٹ جین کیبل ایپ میں، بالکل مفت۔")]
 
 
 def voice(text, path, lang):

@@ -343,7 +343,7 @@ export function upcoming(order, station, count, fromMs = Date.now()) {
 }
 
 // ---------- Ad breaks in the running order (owner, 2026-10-07) ----------
-// Before every programme comes an ad break with our own Cable TV promos (media/promos.json), each
+// Before every programme comes an ad break with our own NextGen Cable promos (media/promos.json), each
 // break a different set, never over 60 seconds (the owner's ad length rule). On channels of short
 // videos (music, clips) a break comes before the next video once 10 minutes have run since the last one.
 
@@ -380,7 +380,7 @@ export async function loadPromos(base = "../media/", station = null) {
 
 // ---------- Spark TV's own ads and moving logo (owner, 2026-10-09) ----------
 // media/spark-promos.json: the ads for every channel (channel tour, network montage) take turns with the
-// Cable TV promos in the breaks, plus the ad in the channel's own language; the moving logo (ident) plays
+// NextGen Cable promos in the breaks, plus the ad in the channel's own language; the moving logo (ident) plays
 // between programmes once an hour, never inside a break. Channels with noAds (Gurbani) get neither.
 
 /** A channel's language by its number (owner, 2026-10-08): Urdu 1-19, Hindi 21-39, English 41-59, Punjabi 61-79. */

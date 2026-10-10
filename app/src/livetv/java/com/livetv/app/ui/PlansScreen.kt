@@ -45,7 +45,7 @@ import java.util.Date
 fun planDate(d: Date): String = DateFormat.getDateInstance(DateFormat.MEDIUM).format(d)
 
 /**
- * Cable TV's packages: the viewer's package and when it ends, what each package adds and
+ * NextGen Cable's packages: the viewer's package and when it ends, what each package adds and
  * costs, and an Ask button for each length that messages the owner, who replies with how to pay.
  */
 @Composable
@@ -288,7 +288,7 @@ private fun TrialNotice(until: Date, prefs: android.content.SharedPreferences, o
         1L -> "1 day left"
         else -> "$left days left"
     }
-    val text = (if (first) "Welcome to Cable TV! Every channel is free, always. For your first $trialDays days you also have Gold " +
+    val text = (if (first) "Welcome to NextGen Cable! Every channel is free, always. For your first $trialDays days you also have Gold " +
         "free: full screen, Favourites, every mode (Browse, 1+3, 2×2, News...), Movies & Dramas, Games, Iqra Quran, Weather and Themes. " else "") +
         "Your Gold trial ends on ${planDate(until)}" + when (left) {
             0L -> " (today)."

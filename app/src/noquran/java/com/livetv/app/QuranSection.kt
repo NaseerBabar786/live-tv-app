@@ -2,7 +2,7 @@ package com.livetv.app
 
 import androidx.compose.runtime.Composable
 
-/** Iqra Quran is built into Cable TV only; the other apps have no Quran section. */
+/** Iqra Quran is built into NextGen Cable only; the other apps have no Quran section. */
 object QuranSection {
     const val AVAILABLE = false
     const val azanShowing = false

@@ -1,4 +1,4 @@
-"""Builds the teacher-voice recordings of Learn Namaz (Iqra Quran and Cable TV's Iqra Quran section):
+"""Builds the teacher-voice recordings of Learn Namaz (Iqra Quran and NextGen Cable's Iqra Quran section):
 docs/quran/namaz/<voice>/<id>.mp3, served at tv.bulkbazaar.ca/quran/namaz/.
 
 Every recitation in qurankit's data/Namaz.kt that is not a whole Quran verse (those are recited by the

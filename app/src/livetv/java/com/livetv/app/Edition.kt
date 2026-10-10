@@ -65,7 +65,7 @@ import com.livetv.app.ui.focusGlow
 import com.livetv.app.ui.appBazaarLaunchIntent
 
 /**
- * Cable TV: built-in free channels, a sponsor screen at start, and self-updates from GitHub.
+ * NextGen Cable: built-in free channels, a sponsor screen at start, and self-updates from GitHub.
  * Live TV Max (the max flavor) is built from this same code; [MAX] tells them apart.
  */
 object Edition {
@@ -75,7 +75,7 @@ object Edition {
 
     /** Every channel and every feature free for everyone, no packages or payments (owner, 2026-10-10). */
     const val FREE_FOR_ALL = true
-    val APP_NAME = if (MAX) "Live TV Max" else "Cable TV"
+    val APP_NAME = if (MAX) "Live TV Max" else "NextGen Cable"
     const val USER_AGENT = "LiveTV-Android/1.0"
     const val HAS_START_SCREEN = true
     /** A top-bar button for our app store, App Bazaar (owner, 2026-10-09). */
@@ -83,7 +83,7 @@ object Edition {
     const val HAS_WEATHER = true
     /** Asks once for the device's approximate location, for the weather and prayer times. */
     const val HAS_DEVICE_LOCATION = true
-    /** Movies & Series from the saved playlists (Cable TV only). */
+    /** Movies & Series from the saved playlists (NextGen Cable only). */
     const val HAS_VOD = true
     /** Spark TV (Google Play): only our own channels that may go on Google Play, no YouTube ones. */
     const val PLAY_CHANNELS = false
@@ -104,7 +104,7 @@ fun EditionStartScreen(onDone: () -> Unit) {
     LaunchedEffect(state.loading) { if (!state.loading) library.refreshIfChanged() }
     // Everyone signs in with Google once (when the owner's Firebase project is set up);
     // each start is then recorded so the owner can count users. Live TV Max doesn't ask:
-    // one account works on one device at a time, so it would sign Cable TV out on the same TV.
+    // one account works on one device at a time, so it would sign NextGen Cable out on the same TV.
     val context = LocalContext.current
     val account = remember { Account.get(context) }
     val user by account.user.collectAsStateWithLifecycle()
@@ -218,7 +218,7 @@ fun EditionOverlay() {
 }
 
 /**
- * Cable TV's packages: the packages screen when a mode or section needs a bigger package
+ * NextGen Cable's packages: the packages screen when a mode or section needs a bigger package
  * (or from Settings), and the warning when a package is about to end.
  */
 @Composable
@@ -337,7 +337,7 @@ private fun WelcomePrompt() {
 }
 
 /**
- * Private messages. A viewer gets the Cable TV team's message as a pop-up over whatever is playing,
+ * Private messages. A viewer gets the NextGen Cable team's message as a pop-up over whatever is playing,
  * within about a minute while the app is open, or a few seconds after the next start if the TV was off
  * (owner, 2026-10-09), and can answer it right there with one press of the remote. The owner gets
  * "New message from a viewer" soon after start and then every 30 minutes (their list costs more to check).

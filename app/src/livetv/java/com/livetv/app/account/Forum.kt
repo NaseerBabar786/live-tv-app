@@ -38,7 +38,7 @@ class Forum(private val account: Account) {
             collection,
             mapOf(
                 "uid" to user.uid,
-                "name" to user.name.ifBlank { "Cable TV viewer" },
+                "name" to user.name.ifBlank { "NextGen Cable viewer" },
                 "text" to text.trim().take(MAX_LENGTH),
                 "createdAt" to Date(),
             ),

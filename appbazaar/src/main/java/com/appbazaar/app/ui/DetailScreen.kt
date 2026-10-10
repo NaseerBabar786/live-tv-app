@@ -106,7 +106,7 @@ fun DetailScreen(
                     if (app.forPc && action != Action.OnPc && !isTv) {
                         FocusOutlinedButton(onClick = { sharePage(context, app) }) { Text("Send to my PC") }
                     }
-                    // No website button next to an app that installs here: on Cable TV it opened the
+                    // No website button next to an app that installs here: on NextGen Cable it opened the
                     // web player instead of the app. Web-only apps still open their site from the main button.
                 }
                 DownloadBar(action, Modifier.widthIn(max = 420.dp).fillMaxWidth().padding(top = 12.dp).clip(RoundedCornerShape(4.dp)))

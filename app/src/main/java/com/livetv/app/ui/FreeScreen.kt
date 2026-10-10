@@ -82,7 +82,7 @@ import java.util.Locale
  * "Info Corner", the Free viewers' screen (owner picked idea A, 2026-10-08): 1+List on a TV becomes the player
  * at about 40% of the screen, a panel of clock, weather, next prayer and our own promos beside it, and a row of
  * channels under it. No paid sponsors here (owner, 2026-10-08): the promos and the line along the bottom are only
- * about Cable TV, the Spark channels and our apps. Gold viewers keep the normal 1+List; nothing saved changes.
+ * about NextGen Cable, the Spark channels and our apps. Gold viewers keep the normal 1+List; nothing saved changes.
  */
 
 private const val LOGOS = "https://tv.bulkbazaar.ca/channel/logos/"
@@ -319,7 +319,7 @@ private fun SparkSlide() = Slide(Color(0xFF2A1E4C), Color(0xFF7846C8)) {
             Box(Modifier.weight(1f)) { Logo(b, 16.dp) }
         }
     }
-    Text("15 channels of our own, free on Cable TV", color = Muted, fontSize = 12.sp, maxLines = 1)
+    Text("15 channels of our own, free on NextGen Cable", color = Muted, fontSize = 12.sp, maxLines = 1)
 }
 
 @Composable
@@ -355,7 +355,7 @@ private fun GoldSlide() = Slide(Color(0xFF3C2E0A), Gold) {
 
 @Composable
 private fun ShareSlide() = Slide(Color(0xFF14243C), AccentBlue) {
-    Text("Enjoying Cable TV?", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+    Text("Enjoying NextGen Cable?", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
     Text("Tell your family and friends.", color = Muted, fontSize = 13.sp)
     Text("Free to install on any Google TV:", color = Muted, fontSize = 13.sp)
     Text("tv.bulkbazaar.ca", color = Color.White, fontSize = 17.sp, fontWeight = FontWeight.Bold)
@@ -392,7 +392,7 @@ internal fun FreeTicker(modifier: Modifier, lift: Dp = 0.dp) {
             "Our own Spark channels are free for everyone",
             "Iqra Quran and App Bazaar: free on apps.bulkbazaar.ca",
             "Get Gold for every layout, Movies & Dramas and Games: 1 month free with code WELCOME",
-            "Share Cable TV: tv.bulkbazaar.ca",
+            "Share NextGen Cable: tv.bulkbazaar.ca",
         ).joinToString("     •     ", postfix = "     •     ")
     }
     BoxWithConstraints(modifier.clipToBounds().background(Color.Black.copy(alpha = 0.55f))) {

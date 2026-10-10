@@ -27,7 +27,7 @@ object AzanWeather {
         val ur get() = words(code).second
     }
 
-    /** Fahrenheit where people use it (as Cable TV's weather); Celsius everywhere else. */
+    /** Fahrenheit where people use it (as NextGen Cable's weather); Celsius everywhere else. */
     private val FAHRENHEIT = setOf("US", "LR", "MM", "BS", "BZ", "KY", "PW", "FM", "MH")
 
     /** The weather now at [place], or null when it can't be reached. */
@@ -68,7 +68,7 @@ object AzanWeather {
         }.getOrNull()
     }
 
-    /** WMO weather code to an emoji (the same pictures as Cable TV's top bar). */
+    /** WMO weather code to an emoji (the same pictures as NextGen Cable's top bar). */
     fun icon(code: Int, day: Boolean = true): String = when (code) {
         0 -> if (day) "☀️" else "🌙"
         1, 2 -> if (day) "🌤️" else "☁️"

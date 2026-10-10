@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
 /*
- * Phones and tablets (1.9.90): Cable TV is one app for TVs and phones, so every mode built for the
+ * Phones and tablets (1.9.90): NextGen Cable is one app for TVs and phones, so every mode built for the
  * remote also works with the finger. A tap does what OK does on the highlighted item, a long press
  * what holding OK does, and a swipe what the arrow keys do. Every new mode or layout gets the same.
  */

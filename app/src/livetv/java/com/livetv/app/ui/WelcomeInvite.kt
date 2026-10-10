@@ -141,7 +141,7 @@ fun WelcomeDialog(onDismiss: () -> Unit) {
     }
 }
 
-/** The invitation at the top of a viewer's Messages, from the Cable TV team, with the button while the code still works. */
+/** The invitation at the top of a viewer's Messages, from the NextGen Cable team, with the button while the code still works. */
 @Composable
 fun WelcomeCard(state: Welcome.State) {
     val (use, press) = rememberWelcomeUse()
@@ -155,7 +155,7 @@ fun WelcomeCard(state: Welcome.State) {
                 .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp))
                 .padding(horizontal = 14.dp, vertical = 10.dp),
         ) {
-            Text("Cable TV team", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall, color = ink)
+            Text("NextGen Cable team", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall, color = ink)
             Text(Welcome.TITLE, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, color = ink)
             Text(Welcome.TEXT, style = MaterialTheme.typography.bodyLarge, color = ink)
             use.result?.let { Text(it, fontWeight = FontWeight.Bold, color = AccentBlue) }

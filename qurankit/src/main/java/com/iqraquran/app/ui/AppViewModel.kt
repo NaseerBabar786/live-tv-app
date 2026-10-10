@@ -132,7 +132,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         private set
 
     /**
-     * Set by an app that hosts these screens with its own look (Cable TV): the colours then follow
+     * Set by an app that hosts these screens with its own look (NextGen Cable): the colours then follow
      * that app's theme and the theme choices are hidden.
      */
     var fixedPalette by mutableStateOf<Palette?>(null)

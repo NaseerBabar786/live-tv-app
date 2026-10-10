@@ -54,7 +54,7 @@ import java.text.DateFormat
 import java.util.Date
 
 /**
- * Messages, full screen. A viewer sees their private conversation with the Cable TV team and can
+ * Messages, full screen. A viewer sees their private conversation with the NextGen Cable team and can
  * write back; the owner sees everyone's conversations, newest first, and opens one to answer.
  */
 @Composable
@@ -138,7 +138,7 @@ fun MessagesScreen(onClose: () -> Unit) {
                         )
                     } else if (!admin) {
                         Text(
-                            "Your private conversation with the Cable TV team. Only you and the team can see it. " +
+                            "Your private conversation with the NextGen Cable team. Only you and the team can see it. " +
                                 "Also on the website: tv.bulkbazaar.ca/suggestions",
                             style = MaterialTheme.typography.bodyMedium,
                         )
@@ -167,7 +167,7 @@ fun MessagesScreen(onClose: () -> Unit) {
                             list == null && error == null -> CircularProgressIndicator()
                             list != null && list.isEmpty() && invite != null -> WelcomeCard(invite)
                             list != null && list.isEmpty() -> Text(
-                                if (admin) "No messages yet." else "No messages yet. Choose ＋ Write to send the Cable TV team a message, and we'll answer here.",
+                                if (admin) "No messages yet." else "No messages yet. Choose ＋ Write to send the NextGen Cable team a message, and we'll answer here.",
                                 style = MaterialTheme.typography.bodyLarge,
                             )
                             list != null -> LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -192,7 +192,7 @@ fun MessagesScreen(onClose: () -> Unit) {
             if (writing) {
                 val uid = open
                 WriteDialog(
-                    title = if (admin) "Message to ${openName.substringBefore(" · ")}" else "Message to the Cable TV team",
+                    title = if (admin) "Message to ${openName.substringBefore(" · ")}" else "Message to the NextGen Cable team",
                     onDismiss = { writing = false },
                     onSend = { text ->
                         writing = false
@@ -260,8 +260,8 @@ private fun Bubble(m: Message, mine: Boolean, admin: Boolean) {
             Text(
                 when {
                     mine -> "You"
-                    m.fromAdmin -> "Cable TV team"
-                    else -> m.name.ifBlank { "Cable TV viewer" }
+                    m.fromAdmin -> "NextGen Cable team"
+                    else -> m.name.ifBlank { "NextGen Cable viewer" }
                 },
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.bodySmall,

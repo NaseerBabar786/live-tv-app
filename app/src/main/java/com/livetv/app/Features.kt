@@ -8,7 +8,7 @@ import org.json.JSONObject
  * Counts how long each part of the app is used, and how often it's opened, per day, so the owner can see
  * which features viewers use most (tv.bulkbazaar.ca/users and /stats, owner 2026-10-08). The keys are the
  * packages' feature keys ("browse", "five", "news"...) plus "list" (1+List) and "full" (a channel full screen);
- * the PC app (cabletv-pc/src/ui/features.js) uses the same ones. Cable TV sends the totals with [Watching]'s.
+ * the PC app (cabletv-pc/src/ui/features.js) uses the same ones. NextGen Cable sends the totals with [Watching]'s.
  */
 object Features {
     class Use(var seconds: Long, var opens: Int)

@@ -99,7 +99,7 @@ private val StoriesRed = Color(0xFFC62828)
 /**
  * "News" mode, laid out like a 24-hour news channel: the live channel in the top left with the
  * sound, the clock, weather, markets and prayer times down the right, today's top stories, rupee
- * rates and Cable TV's scrolling line along the bottom, and a sponsor (picture or muted video) in
+ * rates and NextGen Cable's scrolling line along the bottom, and a sponsor (picture or muted video) in
  * the bottom right corner. Up and Down change channel, OK opens it full screen, Back goes up to
  * the top bar.
  */

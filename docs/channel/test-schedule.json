@@ -4,7 +4,7 @@
  "logoCorner": "off",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  اسپارک ٹی وی میں خوش آمدید  ·  نئے پاکستانی ڈرامے پہلی قسط سے، ہر روز نئی قسط  ·  اپنا اشتہار دیں: واٹس ایپ 437 602 6500",
+ "ticker": "Welcome to Spark TV, channel 1 on NextGen Cable  ·  New Pakistani dramas from episode 1, a new episode every day  ·  Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  اسپارک ٹی وی میں خوش آمدید  ·  نئے پاکستانی ڈرامے پہلی قسط سے، ہر روز نئی قسط  ·  اپنا اشتہار دیں: واٹس ایپ 437 602 6500",
  "tickerOn": true,
  "videos": [
   {
@@ -37,7 +37,7 @@
   },
   {
    "id": "promo",
-   "title": "Cable TV · کیبل ٹی وی",
+   "title": "NextGen Cable · نیکسٹ جین کیبل",
    "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-7.mp4",
    "secs": 60,
    "kind": "ad"
@@ -72,7 +72,7 @@
   },
   {
    "id": "ad9",
-   "title": "Cable TV · کیبل ٹی وی",
+   "title": "NextGen Cable · نیکسٹ جین کیبل",
    "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-9.mp4",
    "secs": 15,
    "kind": "ad"
