@@ -148,13 +148,27 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
             android.widget.Toast.LENGTH_SHORT,
         ).show()
     }
+    // A trailer playing (owner, 2026-10-10): no ad break before it, no "Did it play properly?" after it,
+    // and Back goes to the film's Watch / Watch trailer card again.
+    var trailerOf by remember { mutableStateOf<Channel?>(null) }
+    // A film with a trailer: its card with "Watch" and "Watch trailer" first.
+    var choose by remember { mutableStateOf<Channel?>(null) }
+    val openMovie: (Channel) -> Unit = { movie -> if (movie.trailer != null) choose = movie else playMovie(movie) }
+    val playTrailer: (Channel, String?) -> Unit = { title, id ->
+        Vod.trailerOf(title.name, id)?.let { trailerOf = title; playing = it }
+    }
     // Worked out again after something plays, so the last one watched comes first.
     val favorites = remember(state.shelves, state.folders, favKeys, playing) { favoriteItems(context, state, favKeys) }
     // After every video: "Did it play properly?" (owner, 2026-10-08; see LibraryReports).
     var askAbout by remember { mutableStateOf<Channel?>(null) }
     // Opened from the home screen for one video: Back from it goes straight back there.
     val stopPlaying: () -> Unit = {
-        if (start?.play != null) onClose() else { askAbout = playing; playing = null }
+        val after = trailerOf
+        when {
+            after != null -> { trailerOf = null; playing = null; if (after.trailer != null) choose = after }
+            start?.play != null -> onClose()
+            else -> { askAbout = playing; playing = null }
+        }
     }
     val tabFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { vm.refreshIfChanged() }
@@ -182,11 +196,12 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
         val embed = Bilibili.isVideo(channel.url) || Dailymotion.videoId(channel.url) != null ||
             Vimeo.videoId(channel.url) != null || YouTube.videoId(channel.url) != null
         val wide = LocalConfiguration.current.screenWidthDp >= 400
+        val trailer = trailerOf != null
         var waiting by remember(channel.id) {
-            mutableStateOf(embed && wide && AdTiming.enabled && SystemClock.elapsedRealtime() >= AdTiming.nextFullAt)
+            mutableStateOf(!trailer && embed && wide && AdTiming.enabled && SystemClock.elapsedRealtime() >= AdTiming.nextFullAt)
         }
         DisposableEffect(channel.id) { onDispose { LibraryAds.now.value = null } }
-        LaunchedEffect(channel.id, embed, waiting) { LibraryAds.now.value = LibraryVideo(channel.id, embed, waiting) }
+        LaunchedEffect(channel.id, embed, waiting) { if (!trailer) LibraryAds.now.value = LibraryVideo(channel.id, embed, waiting) }
         if (waiting) {
             LaunchedEffect(channel.id) {
                 // The break comes up a moment after the video is picked; when it doesn't, the video plays.
@@ -210,7 +225,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                 videoId = id,
                 title = channel.name,
                 onBack = stopPlaying,
-                onEnded = { playingShow?.let { LibraryFavorites.watched(context, it, channel, ended = true) } },
+                onEnded = { if (!trailer) playingShow?.let { LibraryFavorites.watched(context, it, channel, ended = true) } },
             )
             return
         }
@@ -246,6 +261,15 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     }
     BackHandler(onBack = back)
     BackHandler(enabled = askAbout != null) { askAbout = null }
+
+    choose?.let { movie ->
+        WatchCard(
+            movie,
+            onWatch = { choose = null; playMovie(movie) },
+            onTrailer = { choose = null; playTrailer(movie, movie.trailer) },
+            onDismiss = { choose = null },
+        )
+    }
 
     LaunchedEffect(show?.name, languageName, state.loading) {
         if (state.loading) return@LaunchedEffect
@@ -320,6 +344,25 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                     contentPadding = PaddingValues(12.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
+                    // When it came out and its trailer, above the episodes (owner, 2026-10-10).
+                    val released = Vod.released(show.year, show.firstPub)
+                    if (released != null || show.trailer != null) {
+                        item(key = "about") {
+                            Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    listOfNotNull(released, "${show.episodes.size} episodes", show.genres.joinToString(", ").ifEmpty { null }).joinToString(" · "),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.weight(1f),
+                                )
+                                if (show.trailer != null) {
+                                    WatchButton("Watch trailer", primary = false) {
+                                        playTrailer(Channel(name = show.name, url = show.name), show.trailer)
+                                    }
+                                }
+                            }
+                        }
+                    }
                     items(show.episodes, key = { it.channel.id }) { episode ->
                         Row(
                             Modifier
@@ -359,6 +402,14 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                     )
                                 }
                             }
+                            Vod.day(episode.channel.pub)?.let {
+                                Text(
+                                    "Online $it",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(start = 12.dp),
+                                )
+                            }
                             Vod.length(episode.channel.mins)?.let {
                                 Text(
                                     it,
@@ -396,7 +447,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                             val series = fav.show
                             if (movie != null) Poster(
                                 fav.key, movie.name, movie.logo,
-                                listOfNotNull(fav.folder?.label ?: fav.language.label, Vod.Section.MOVIES.label, Vod.length(movie.mins)).joinToString(" · "),
+                                listOfNotNull(fav.folder?.label ?: fav.language.label, Vod.Section.MOVIES.label, Vod.length(movie.mins), movie.year?.toString()).joinToString(" · "),
                                 favorite = true,
                             ) else Poster(
                                 fav.key, series!!.name, series.logo,
@@ -410,7 +461,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                     ) { key ->
                         val fav = favorites.firstOrNull { it.key == key } ?: return@PosterGrid
                         lastPicked = key
-                        fav.movie?.let(playMovie)
+                        fav.movie?.let(openMovie)
                         fav.show?.let { series ->
                             // Straight into the episode to carry on with; Back from it shows the series' episodes.
                             languageName = fav.folder?.name ?: fav.language.name
@@ -519,12 +570,13 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
 
                     if (weekTab) {
                         // Newest first, every section together; the label under each says what it is.
-                        val week = (weekMovies.map { Triple(it.added.orEmpty(), it.id, Poster(it.id, it.name, it.logo, listOfNotNull(Vod.Section.MOVIES.label, Vod.length(it.mins)).joinToString(" · "), Vod.isNew(it, newSince), Vod.addedLabel(it.added), it.desc, LibraryFavorites.movieKey(it) in favKeys)) } +
+                        val week = (weekMovies.map { Triple(it.added.orEmpty(), it.id, Poster(it.id, it.name, it.logo, listOfNotNull(Vod.Section.MOVIES.label, Vod.length(it.mins), Vod.released(it.year, it.pub)).joinToString(" · "), Vod.isNew(it, newSince), Vod.addedLabel(it.added), it.desc, LibraryFavorites.movieKey(it) in favKeys)) } +
                             weekFolders.map { (section, show) ->
                                 val fresh = show.newEpisodes(weekSince)
                                 Triple(show.added.orEmpty(), show.name, Poster(
                                     show.name, show.name, show.logo,
-                                    "${section.label} · $fresh new " + if (fresh == 1) "episode" else "episodes",
+                                    "${section.label} · $fresh new " + (if (fresh == 1) "episode" else "episodes") +
+                                        (Vod.released(show.year, show.firstPub)?.let { " · $it" } ?: ""),
                                     show.newEpisodes(newSince) > 0,
                                     Vod.addedLabel(show.added),
                                     show.desc,
@@ -544,7 +596,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         ) { key ->
                             lastPicked = key
                             val movie = weekMovies.firstOrNull { it.id == key }
-                            if (movie != null) playMovie(movie) else openShow = key
+                            if (movie != null) openMovie(movie) else openShow = key
                         }
                     } else if (tab == Vod.Section.MOVIES) {
                         val list = movies.filter {
@@ -557,7 +609,9 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                 moviesGrid,
                                 list.map {
                                     Poster(
-                                        it.id, it.name, it.logo, Vod.length(it.mins), fresh = Vod.isNew(it, newSince),
+                                        it.id, it.name, it.logo,
+                                        listOfNotNull(Vod.length(it.mins), Vod.released(it.year, it.pub)).joinToString(" · ").ifEmpty { null },
+                                        fresh = Vod.isNew(it, newSince),
                                         added = Vod.addedLabel(it.added), detail = it.desc,
                                         favorite = LibraryFavorites.movieKey(it) in favKeys,
                                     )
@@ -567,7 +621,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                 onHold = { id -> list.firstOrNull { it.id == id }?.let { toggleFavorite(LibraryFavorites.movieKey(it)) } },
                             ) { id ->
                                 lastPicked = id
-                                list.firstOrNull { it.id == id }?.let(playMovie)
+                                list.firstOrNull { it.id == id }?.let(openMovie)
                             }
                         }
                     } else {
@@ -585,7 +639,8 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                                         it.name, it.name, it.logo,
                                         "${it.episodes.size} episodes" +
                                             (Vod.length(it.episodeMins)?.let { len -> " · $len each" } ?: "") +
-                                            if (fresh > 0) " · $fresh new" else "",
+                                            (if (fresh > 0) " · $fresh new" else "") +
+                                            (Vod.released(it.year, it.firstPub)?.let { r -> " · $r" } ?: ""),
                                         fresh = fresh > 0,
                                         added = Vod.addedLabel(it.added),
                                         detail = it.desc,
@@ -933,6 +988,67 @@ private fun PlayedProperlyCard(video: Channel, onDone: () -> Unit) {
                     onDone()
                 }
                 .padding(horizontal = 14.dp, vertical = 8.dp),
+        )
+    }
+}
+
+/**
+ * A film with an official trailer (owner, 2026-10-10): its details, then "Watch" (picked first) and
+ * "Watch trailer", so a viewer can see the trailer before the film. Films without one just play.
+ */
+@Composable
+private fun WatchCard(movie: Channel, onWatch: () -> Unit, onTrailer: () -> Unit, onDismiss: () -> Unit) {
+    val watch = remember { FocusRequester() }
+    LaunchedEffect(movie.id) {
+        delay(100)
+        runCatching { watch.requestFocus() }
+    }
+    androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
+        Surface(shape = CardShape, color = MaterialTheme.colorScheme.surface) {
+            Column(Modifier.padding(24.dp).width(460.dp)) {
+                Text(movie.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                val line = listOfNotNull(Vod.released(movie.year, movie.pub), Vod.length(movie.mins), movie.genres.joinToString(", ").ifEmpty { null })
+                if (line.isNotEmpty()) {
+                    Text(
+                        line.joinToString(" · "),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 6.dp),
+                    )
+                }
+                movie.desc?.let {
+                    Text(it, style = MaterialTheme.typography.bodyMedium, maxLines = 4, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 10.dp))
+                }
+                Row(Modifier.padding(top = 20.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    WatchButton("Watch", primary = true, modifier = Modifier.focusRequester(watch), onClick = onWatch)
+                    WatchButton("Watch trailer", primary = false, onClick = onTrailer)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WatchButton(label: String, primary: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Row(
+        modifier
+            .focusGlow(ChipShape)
+            .clip(ChipShape)
+            .background(if (primary) AccentBlue else MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 18.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            if (primary) Icons.Filled.PlayArrow else Icons.Filled.Movie,
+            contentDescription = null,
+            tint = if (primary) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+            label,
+            fontWeight = FontWeight.Bold,
+            color = if (primary) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 8.dp),
         )
     }
 }

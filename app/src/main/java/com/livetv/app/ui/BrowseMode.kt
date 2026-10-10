@@ -775,7 +775,7 @@ internal fun BrowseMode(
             }
             if (onOpenGames != null) RailItem(Icons.Filled.SportsEsports, "Games", railFocused, right = back, onClick = onOpenGames)
             if (onOpenWeather != null) RailItem(Icons.Filled.WbSunny, "Weather", railFocused, right = back, onClick = onOpenWeather)
-            if (onOpenQuran != null) RailItem(Icons.AutoMirrored.Filled.MenuBook, "Iqra Quran", railFocused, right = back, onClick = onOpenQuran)
+            if (onOpenQuran != null) RailItem(Icons.AutoMirrored.Filled.MenuBook, "Quran", railFocused, right = back, onClick = onOpenQuran)
             if (onNextMode != null) RailItem(Icons.Filled.Tv, modeLabel, railFocused, Modifier.focusRequester(modeFocus), right = back, onClick = onNextMode)
             if (onOpenAppBazaar != null) RailItem(Icons.Filled.Storefront, "App Bazaar", railFocused, right = back, onClick = onOpenAppBazaar)
             RailItem(Icons.Filled.Settings, "Settings", railFocused, right = back, onClick = onOpenSettings)

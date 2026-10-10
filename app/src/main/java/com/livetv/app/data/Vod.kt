@@ -89,6 +89,29 @@ object Vod {
         return "Added " + java.text.SimpleDateFormat("MMM d", java.util.Locale.US).format(day)
     }
 
+    /**
+     * When a title came out, for its details (owner, 2026-10-10): "Released 2019" when the year is known
+     * (tools/library_titles.py), else "Online since Mar 2024", the month its video went online; null when neither.
+     */
+    fun released(year: Int?, pub: String?): String? =
+        year?.let { "Released $it" } ?: pub?.let { monthYear(it) }?.let { "Online since $it" }
+
+    /** "Mar 6, 2024" for "2024-03-06", or null. */
+    fun day(pub: String?): String? = format(pub, "MMM d, yyyy")
+
+    private fun monthYear(pub: String): String? = format(pub, "MMM yyyy")
+
+    private fun format(pub: String?, pattern: String): String? {
+        val date = runCatching {
+            java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).apply { isLenient = false }.parse(pub ?: return null)
+        }.getOrNull() ?: return null
+        return java.text.SimpleDateFormat(pattern, java.util.Locale.US).format(date)
+    }
+
+    /** A film's official trailer, played in our YouTube player (owner, 2026-10-10: "Watch trailer"), or null. */
+    fun trailerOf(name: String, trailer: String?): Channel? =
+        trailer?.let { Channel(name = "$name (trailer)", url = "https://www.youtube.com/watch?v=$it") }
+
     /** Whether a programme first showed up in its list on or after [since] (see tools/first_seen.py). */
     fun isNew(channel: Channel, since: String): Boolean = channel.added?.let { it >= since } == true
 
@@ -157,6 +180,15 @@ object Vod {
         val genres: List<String>
             get() = episodes.flatMap { it.channel.genres }.groupingBy { it }.eachCount()
                 .filter { it.value * 2 >= episodes.size }.entries.sortedByDescending { it.value }.map { it.key }.take(2)
+
+        /** The year it came out, when known (every episode carries the show's year). */
+        val year: Int? get() = episodes.firstNotNullOfOrNull { it.channel.year }
+
+        /** The day its first episode went online, when known. */
+        val firstPub: String? get() = episodes.mapNotNull { it.channel.pub }.minOrNull()
+
+        /** Its official trailer's YouTube id, when there is one. */
+        val trailer: String? get() = episodes.firstNotNullOfOrNull { it.channel.trailer }
 
         /** A line about the show, from the newest episode that has one. */
         val desc: String? get() = episodes.asReversed().firstNotNullOfOrNull { it.channel.desc }

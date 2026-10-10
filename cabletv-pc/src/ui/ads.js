@@ -5,7 +5,7 @@
 //   (not in the first 3 minutes);
 // - on a full-screen channel, an ad break every 10 minutes: the channel pauses, our own Cable TV promo
 //   plays (a different one each time), with a sponsor's picture when it still fits in the minute,
-//   or a sponsor's booked video (at most once every 30 minutes). Esc skips an ad after 10 seconds.
+//   or a sponsor's booked video (at most once every 30 minutes). Esc skips an ad after 5 seconds (owner, 2026-10-10).
 import * as sponsors from './sponsors.js';
 import * as nav from './nav.js';
 import * as store from './store.js';
@@ -13,7 +13,7 @@ import * as mine from './mychannel.js';
 
 const CARD_MS = 5000, CARD_SITE_MS = 8000, CARD_EVERY_MS = 3 * 60000, CARD_NOT_BEFORE_MS = 3 * 60000;
 const VIDEO_EVERY_MS = 30 * 60000;
-const POD_SIZE = 2, PICTURE_MS = 20000, BREAK_MS = 60000, SKIP_AFTER_MS = 10000, BREAK_EVERY_MS = 10 * 60000;
+const POD_SIZE = 2, PICTURE_MS = 20000, BREAK_MS = 60000, SKIP_AFTER_MS = 5000, BREAK_EVERY_MS = 10 * 60000;
 const TICKER_FIRST_MS = 30000, TICKER_EVERY_MS = 30000, TICKER_PX_PER_SECOND = 110;
 const PROMO_ID = 'promo';
 const PROMOS_URL = 'https://tv.bulkbazaar.ca/media/app-promos.json';
