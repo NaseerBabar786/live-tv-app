@@ -41,6 +41,7 @@
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
+  .bug.off { display: none; }
   /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
      owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
      YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
@@ -138,7 +139,9 @@ let corners = { default: "tr", labels: {} }, bugLabel = null;
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(bugLabel); }).catch(() => {});
 function placeBug(label) {
   bugLabel = label;
-  const corner = corners.labels?.[label] || corners.default || "tr";
+  // A video showing its own logo shows none of ours (owner, 2026-10-10: every channel; logo-corners.json).
+  const hide = (corners.hideOnSourceLogo || []).includes("ytc") && !(corners.noLogo || []).includes(label);
+  const corner = hide ? "off" : corners.labels?.[label] || corners.default || "tr";
   document.querySelector(".bug").className = "bug " + corner;
 }
 function showNow() {
