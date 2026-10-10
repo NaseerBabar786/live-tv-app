@@ -1,6 +1,6 @@
 {
  "name": "Spark Comedy Punjabi",
- "built": "2026-10-09 22:52 UTC",
+ "built": "2026-10-10 10:09 UTC",
  "videos": [
   {
    "id": "FYHYIG8Ez2U",
@@ -213,18 +213,18 @@
    "lang": "pa"
   },
   {
-   "id": "uCvRiIiMdng",
-   "title": "TITLEE (FULL DRAMA) SOHAIL AHMAD, NASEEM VICKY & ZAFRI KHAN   BEST PAKISTANI COMEDY STAGE DRAMA",
-   "label": "Tip Top Stage Dramas",
-   "mins": 141.83333333333334,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
    "id": "KnYxI9QzTzw",
    "title": "Oh Vekh Chiri (Full Comedy) - Iftikhar Thakur, Zafri Khan, Nasir Chinyoti, Khushboo, Amanat Chan",
    "label": "Tip Top Stage Dramas",
    "mins": 86.45,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "uCvRiIiMdng",
+   "title": "TITLEE (FULL DRAMA) SOHAIL AHMAD, NASEEM VICKY & ZAFRI KHAN   BEST PAKISTANI COMEDY STAGE DRAMA",
+   "label": "Tip Top Stage Dramas",
+   "mins": 141.83333333333334,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -312,18 +312,18 @@
    "lang": "pa"
   },
   {
-   "id": "qsctyCHH-1g",
-   "title": "Chhankata 2003 Part 2",
-   "label": "Goyal Music",
-   "mins": 17.133333333333333,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
    "id": "cNpO9DfZjro",
    "title": "हाँस हाँस के पेट विच दर्द पौन वाली पंजाबी कॉमेडी | Punjabi Comedy 2017 | Comedy No 1",
    "label": "Goyal Music",
    "mins": 18.8,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "qsctyCHH-1g",
+   "title": "Chhankata 2003 Part 2",
+   "label": "Goyal Music",
+   "mins": 17.133333333333333,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -340,6 +340,14 @@
    "title": "Chhankata 2003 Part 3",
    "label": "Goyal Music",
    "mins": 17.683333333333334,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "COFes2cqBQ0",
+   "title": "हाँस हाँस के पेट विच दर्द पौन वाली पंजाबी कॉमेडी | Punjabi Comedy 2017 | Comedy No 1",
+   "label": "Goyal Music",
+   "mins": 18.8,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -408,18 +416,18 @@
    "lang": "pa"
   },
   {
-   "id": "_StWVMwp_lM",
-   "title": "Teri Meri Tu Tu Main Main | Malik te Naukar | Comedy Show | DD Punjabi",
-   "label": "DD Punjabi",
-   "mins": 19.433333333333334,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
    "id": "AoELSo7phS4",
    "title": "Teri Meri Tu Tu Main Main | Miyaa Biwi te Saala | Comedy Show | DD Punjabi",
    "label": "DD Punjabi",
    "mins": 15.05,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "_StWVMwp_lM",
+   "title": "Teri Meri Tu Tu Main Main | Malik te Naukar | Comedy Show | DD Punjabi",
+   "label": "DD Punjabi",
+   "mins": 19.433333333333334,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -532,14 +540,6 @@
    "title": "Jaswinder Bhalla Comedy Top 10 (Jukebox) | Punjabi Comedy Scenes | Punjabi Movies | Speed Punjabi",
    "label": "Speed Punjabi",
    "mins": 31.3,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
-   "id": "COFes2cqBQ0",
-   "title": "हाँस हाँस के पेट विच दर्द पौन वाली पंजाबी कॉमेडी | Punjabi Comedy 2017 | Comedy No 1",
-   "label": "Goyal Music",
-   "mins": 18.8,
    "found": "2026-10-09",
    "lang": "pa"
   }

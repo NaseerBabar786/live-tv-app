@@ -1,7 +1,383 @@
 {
  "name": "Spark Comedy (comedyur)",
- "built": "2026-10-09 22:43 UTC",
+ "built": "2026-10-10 10:01 UTC",
  "videos": [
+  {
+   "id": "gfz1dALrMj4",
+   "title": "Bulbulay Season 2 | Episode 241 | 24 February 2024 | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 22.5,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "BrmxzJZ9SFc",
+   "title": "Bulbulay Episode 26 | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 21.05,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "zSVVrPYx2wk",
+   "title": "Bulbulay Ep 124 - ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 18.566666666666666,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "vX9EeOa2px4",
+   "title": "Bulbulay Ep 309 - ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 19.183333333333334,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "OvWE8sS6b8o",
+   "title": "Bulbulay Season 2 Episode 264 | 17 August 2024 | Comedy | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 21.25,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "DgShmAgmWuc",
+   "title": "Bulbulay Episode – 23 | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 21.5,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "cQF5kV0fqc4",
+   "title": "Bulbulay Ep 213 - ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 19.75,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "A5dLb0Olh3Q",
+   "title": "Bulbulay Season 2 Episode 336 | 3 Jan 2026 | Comedy | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 20.95,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "YWaBoAKWjVw",
+   "title": "Bulbulay Episode 53 | MOMO | Khoobsurat | Nabeel | Mehmood Sb",
+   "label": "Bulbulay",
+   "mins": 21.6,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "qUjfLHAXenE",
+   "title": "Bulbulay Season 2 | Episode 42 | 1st March 2020 | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 21.45,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "vlzQcwTIzA4",
+   "title": "Bulbulay Season 2 | Episode 248 | 4 May 2024 | Comedy | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 20.733333333333334,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "jknoTDN4Fvo",
+   "title": "Bulbulay Season 2 Episode 346 | 15 March 2026 | Comedy | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 25.733333333333334,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "XXaQri3dhyc",
+   "title": "Bulbulay Season 2 Episode 322 | 27 September 2025 | Comedy | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 23.216666666666665,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "2dAoUeqDNAQ",
+   "title": "Bulbulay Season 2 Episode 370 | 22 August 2026 | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 21.133333333333333,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "pFKACO8E6p8",
+   "title": "Bulbulay Ep 210 - ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 17.8,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "5qglL8BQHy8",
+   "title": "Bulbulay Season 2 Episode 356 | 23 May 2026 | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 22.716666666666665,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "yiZ4bvPrlQs",
+   "title": "Bulbulay Season 2 Episode 363 | 4 July 2026 | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 20.666666666666668,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "7F7U8RKHW8k",
+   "title": "Bulbulay Season 2 Episode 352 | 25 April 2026 | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 22.733333333333334,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "Hg93rN0Dhc4",
+   "title": "Bulbulay Season 2 Episode 357 | Eid Special | EID DAY 1 | 27 May 2026 | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 24.333333333333332,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "_hHVBhzerrg",
+   "title": "Bulbulay Season 2 Episode 354 | 9 May 2026 | ARY Digital",
+   "label": "Bulbulay",
+   "mins": 27.2,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "DoPNEQ1yRWY",
+   "title": "Bulbulay Season 2 Episode 343 | 22 Feb 2026 | Comedy | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 24.816666666666666,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "zaUYsev97bg",
+   "title": "Bulbulay Episode – 443 – 5th March 2017 | ARY Digital Drama",
+   "label": "Bulbulay",
+   "mins": 20.233333333333334,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "6ZacFbuQmKY",
+   "title": "Yashma Gill Ka Faisal Ramay Ko Shadi Ka Proposal | Faisal Ka Inkar | Mazaq Raat",
+   "label": "Mazaaq Raat",
+   "mins": 10.066666666666666,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "M6Kycm2bnGs",
+   "title": "Jawad Wasim Non-Stop Comedy | Mazaq Raat | Imran Ashraf | Dunya News",
+   "label": "Mazaaq Raat",
+   "mins": 18.883333333333333,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "CRjFk3nTa10",
+   "title": "Real Basant Fun Begins! Abrar Ul Haq’s Explosive Entry | Jatt Charya Kacheri 😘😎 | Mazaq Raat",
+   "label": "Mazaaq Raat",
+   "mins": 10.283333333333333,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "dEr7keriU7Q",
+   "title": "Sawan Aaye Sawan Jaye | Beautiful Voice | Imran Ashraf | Mazaq Raat | Dunya News",
+   "label": "Mazaaq Raat",
+   "mins": 6.333333333333333,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "wTAmzfPoswM",
+   "title": "Dunya News - HASB-E-HAAL - 19-Jan-2014",
+   "label": "Hasb-e-Haal",
+   "mins": 37.983333333333334,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "dkAj09JTjT0",
+   "title": "Old Tailor vs Fashion Designer | Hasb e Haal | Dunya News | HH1",
+   "label": "Hasb-e-Haal",
+   "mins": 10.5,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "A67G-QpGoQc",
+   "title": "Imran Khan Hasb e Haal - 16 October 2013 - حسب حال - Dunya News",
+   "label": "Hasb-e-Haal",
+   "mins": 38.483333333333334,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "nd7SPn8X-dI",
+   "title": "Musician in Hasb e Haal | Hasb e Haal | 11 Dec 2021 | حسب حال | Dunya News",
+   "label": "Hasb-e-Haal",
+   "mins": 39.25,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "QvyDlM466qg",
+   "title": "Azizi As SHO Siddique| Hasb e Haal | 16 Dec 2022 | حسب حال | Dunya News",
+   "label": "Hasb-e-Haal",
+   "mins": 38.53333333333333,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "QKTft8RGsd4",
+   "title": "Hasb e Haal 12 January 2018 - Azizi as Classical Singer - حسب حال | Dunya News",
+   "label": "Hasb-e-Haal",
+   "mins": 37.93333333333333,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "BXaw-lobwTE",
+   "title": "Azizi as Abdul Latifi | Goasht Ke Peechay Larai | Hasb e Haal | 02 July 2023 | حسب حال | Dunya News",
+   "label": "Hasb-e-Haal",
+   "mins": 38.483333333333334,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "qgBUcLaeE-Y",
+   "title": "Azizi as Amil Baba | Hasb e Haal | 12 Mar 2022 | حسب حال | Dunya News",
+   "label": "Hasb-e-Haal",
+   "mins": 32.71666666666667,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "LYtg1Pp2cYQ",
+   "title": "Hasb e Haal 6 March 2020 | Amanullah Khan Special | حسب حال | Dunya News",
+   "label": "Hasb-e-Haal",
+   "mins": 36.166666666666664,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "kbU3YGUmF7Q",
+   "title": "Suno Chanda Season 2 - Episode 14 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 36.13333333333333,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "FW2cDIGSFkg",
+   "title": "Suno Chanda Season 2 - Episode 09 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 38.88333333333333,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "_awIUj6vXA4",
+   "title": "Suno Chanda Episode #3 HUM TV Drama 19 May 2018",
+   "label": "Suno Chanda",
+   "mins": 36.516666666666666,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "goZZmTjXnhU",
+   "title": "Suno Chanda Season 2 - Episode 26 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 38.21666666666667,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "WxMnSToG6cM",
+   "title": "Suno Chanda Season 2 - Episode 21 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 38.516666666666666,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "UPrTYJTVQsI",
+   "title": "Suno Chanda Season 2 - Episode 24 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 37.983333333333334,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "Jr2tB1F3NBE",
+   "title": "Suno Chanda Season 2 - Episode 12 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 39.2,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "nOWqIK8elt0",
+   "title": "Uss Se Ziada Takleef Tou Tumko Horahi Hai | Chupke Chupke | Best Moment | HUM TV | Drama",
+   "label": "Chupke Chupke",
+   "mins": 2.966666666666667,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "0gUjEZGb1to",
+   "title": "Chupke Chupke Episode 28 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "label": "Chupke Chupke",
+   "mins": 34.53333333333333,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "VUYYLdKh-GM",
+   "title": "Chupke Chupke Episode 22 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "label": "Chupke Chupke",
+   "mins": 34.7,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "jvuDyvaZs-Y",
+   "title": "Chupke Chupke Episode 29 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "label": "Chupke Chupke",
+   "mins": 34.7,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
+  {
+   "id": "l3d9UUQTdq4",
+   "title": "Chupke Chupke Episode 23 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "label": "Chupke Chupke",
+   "mins": 35.11666666666667,
+   "found": "2026-10-10",
+   "lang": "ur"
+  },
   {
    "id": "zCv56QVyF3k",
    "title": "Bulbulay Season 2 Episode 376 | 3 October 2026 | ARY Digital",
@@ -19,197 +395,12 @@
    "lang": "ur"
   },
   {
-   "id": "SI5x3njmdpk",
-   "title": "Bulbulay Season 2 Episode 373 | 12 September 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 23.433333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "gZ8AS7yzJQ4",
-   "title": "Bulbulay Season 2 Episode 374 | 19 September 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 25.766666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "FkPaHO4G8Bg",
-   "title": "Bulbulay Ep 67 - Gher Main Nayi Maid Ki Entry, Has Has ke Pait Mai Dard Hojayega",
-   "label": "Bulbulay",
-   "mins": 23.716666666666665,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "j4800JYYU_U",
-   "title": "Bulbulay Season 2 Episode 366 | 25 July 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 23.1,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "53pKBjg2N2g",
-   "title": "Bulbulay Season 2 Episode 360 | 13 June 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 25.95,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "EjyjPfo8nAI",
-   "title": "Bulbulay Season 2 Episode 372 | 5 September 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 26.25,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "zFUWaHxFmtc",
-   "title": "Bulbulay Season 2 Episode 362 | 27 June 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 23.866666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "_ZVNKWjvxB4",
-   "title": "Bulbulay Season 2 Episode 368 | 8 August 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 26.7,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "9KkEY6MzRSU",
-   "title": "Bulbulay Season 2 Episode 364 | 11 July 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 22.8,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "QsZUAjKpDqU",
-   "title": "Bulbulay Season 2 Episode 371 | 29 August 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 22.783333333333335,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "euJp2xP1NFM",
-   "title": "Bulbulay Season 2 Episode 369 | 15 August 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 23.833333333333332,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "pHvZntWaCCI",
-   "title": "Ramzan Mein Bulbulay House | MOMO | NABEEL | MEHMOOD SB | KHOOBSURAT",
-   "label": "Bulbulay",
-   "mins": 24.233333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "sUvHo0dKUho",
-   "title": "Bulbulay Episode 1 - Khoobsurat Shaadi Chor Kar Q Bhaghi",
-   "label": "Bulbulay",
-   "mins": 20.3,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "DV1qJKmsZVw",
-   "title": "Bulbulay Season 2 Episode 365 | 18 July 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 24.733333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "wqSxICBr0zk",
-   "title": "Bulbulay Season 2 Episode 355 | 16 May 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 23.833333333333332,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "yZDoWur1muk",
-   "title": "Bulbulay Season 2 Episode 359 | 6 June 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 22.816666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "OnJvEp_OQOM",
-   "title": "Bulbulay Season 2 Episode 353 | 2 May 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 20.266666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "zRoYYmMOkUM",
-   "title": "Bulbulay Season 2 Episode 367 | 1 August 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 24.466666666666665,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
    "id": "uYgIQk9Q0vE",
    "title": "Bulbulay Ep # 450 | ARY Digital Drama",
    "label": "Bulbulay",
    "mins": 22.733333333333334,
    "found": "2026-10-09",
    "lang": "ur"
-  },
-  {
-   "id": "weYV3Onw06w",
-   "title": "Bulbulay Episode 64 | ARY Digital Drama",
-   "label": "Bulbulay",
-   "mins": 20.733333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "HsN5QpK1GQM",
-   "title": "Bulbulay Season 2 Episode 361 | 20 June 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 20.083333333333332,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "mEIT2UBNI4E",
-   "title": "Bulbulay Season 2 Episode 351  | 18 April 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 23.633333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "LCxoOkvGS_Q",
-   "title": "Bulbulay Season 2 Episode 358 | 30 May 2026 | ARY Digital",
-   "label": "Bulbulay",
-   "mins": 24.766666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "rSs2p8XWgsc",
-   "title": "Ainak Wala Jin | Hamoon Jadugar Ki Dewani Fan Ka Waqia | Haseeb Pasha | Mazaq Raat 😱🔥 Dunya News",
-   "label": "Mazaaq Raat",
-   "mins": 9.933333333333334,
-   "found": "2026-10-09",
-   "lang": "ur",
-   "posted": "2026-10-09"
   },
   {
    "id": "QBDteYXpNKE",
@@ -228,14 +419,6 @@
    "lang": "ur"
   },
   {
-   "id": "lZAMsHHCLzo",
-   "title": "A Night to Remember: Tariq Aziz's Last Mazaaq Raat Appearance Will Leave You in Awe",
-   "label": "Mazaaq Raat",
-   "mins": 29.35,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
    "id": "dFamKfLawvg",
    "title": "Goshi 2 Non-Stop Comedy | Mazaq Raat | Imran Ashraf | Dunya News",
    "label": "Mazaaq Raat",
@@ -244,26 +427,10 @@
    "lang": "ur"
   },
   {
-   "id": "R_ouOaI9q3w",
-   "title": "Amanat Chan Comedian Kay Sath Sath Singer Bhi 😱🔥 Kya Awaz Hai 🥰 Imran Ashraf | Mazaq Raat",
+   "id": "FRc7m_O1dOc",
+   "title": "Sohail Ahmed Special | Mazaaq Raat 27 May 2020 | مذاق رات | Dunya News | MR1",
    "label": "Mazaaq Raat",
-   "mins": 9.0,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "Qepz3APL9Ow",
-   "title": "Fun With Sohail Ahmad | Imran Ashraf | Mazaq Raat Season 2 | Ep 01 | Honey Albela | Sakhawat Naz",
-   "label": "Mazaaq Raat",
-   "mins": 31.8,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "uU2WyCQBkQQ",
-   "title": "Amanat Chan  & Anaya Malik | Mazaaq Raat 4 May 2020 | مذاق رات | Dunya News | MR1",
-   "label": "Mazaaq Raat",
-   "mins": 35.75,
+   "mins": 34.35,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -276,10 +443,10 @@
    "lang": "ur"
   },
   {
-   "id": "FRc7m_O1dOc",
-   "title": "Sohail Ahmed Special | Mazaaq Raat 27 May 2020 | مذاق رات | Dunya News | MR1",
+   "id": "uU2WyCQBkQQ",
+   "title": "Amanat Chan  & Anaya Malik | Mazaaq Raat 4 May 2020 | مذاق رات | Dunya News | MR1",
    "label": "Mazaaq Raat",
-   "mins": 34.35,
+   "mins": 35.75,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -308,10 +475,10 @@
    "lang": "ur"
   },
   {
-   "id": "FCluBWCZjA8",
-   "title": "Imran Asraf ky Bhai ki Mazaq Raat mein Kmall Entry | Mazaq Raat | Dunya News",
+   "id": "Qepz3APL9Ow",
+   "title": "Fun With Sohail Ahmad | Imran Ashraf | Mazaq Raat Season 2 | Ep 01 | Honey Albela | Sakhawat Naz",
    "label": "Mazaaq Raat",
-   "mins": 6.7,
+   "mins": 31.8,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -324,18 +491,10 @@
    "lang": "ur"
   },
   {
-   "id": "J2nS5hiqm9A",
-   "title": "Zakoota Jin and Hamoon Jadugar Real Life Story | Haseeb Pasha Shares Moments in Mazaq Raat 😱🔥",
+   "id": "R_ouOaI9q3w",
+   "title": "Amanat Chan Comedian Kay Sath Sath Singer Bhi 😱🔥 Kya Awaz Hai 🥰 Imran Ashraf | Mazaq Raat",
    "label": "Mazaaq Raat",
-   "mins": 9.583333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "qhhqTfU_mQo",
-   "title": "Tahir Anjum Non-Stop Comedy | Mazaq Raat | Imran Ashraf | Dunya News",
-   "label": "Mazaaq Raat",
-   "mins": 9.783333333333333,
+   "mins": 9.0,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -348,10 +507,18 @@
    "lang": "ur"
   },
   {
-   "id": "xJysjcAVb7Y",
-   "title": "Leo Twins & Sawera Saeed | Mazaaq Raat 15 July 2020 | مذاق رات | Dunya News | MR1",
+   "id": "FCluBWCZjA8",
+   "title": "Imran Asraf ky Bhai ki Mazaq Raat mein Kmall Entry | Mazaq Raat | Dunya News",
    "label": "Mazaaq Raat",
-   "mins": 27.0,
+   "mins": 6.7,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "qhhqTfU_mQo",
+   "title": "Tahir Anjum Non-Stop Comedy | Mazaq Raat | Imran Ashraf | Dunya News",
+   "label": "Mazaaq Raat",
+   "mins": 9.783333333333333,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -360,14 +527,6 @@
    "title": "Pakistan Kabaddi Team Special | Mazaaq Raat 24 February 2020 | مذاق رات | Dunya News",
    "label": "Mazaaq Raat",
    "mins": 33.3,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "CBHSySLcKiY",
-   "title": "Ranjha Ban Bethy a Heer Koi Na | DJ Aoun's Performance 😎😍 | Hareem Farooq Dancing | Mazaq Raat",
-   "label": "Mazaaq Raat",
-   "mins": 5.066666666666666,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -388,10 +547,18 @@
    "lang": "ur"
   },
   {
-   "id": "bImEDqvcOF0",
-   "title": "Umer Dar & Mahnoor Khan | Mazaaq Raat 21 August 2019 | مذاق رات | Dunya News",
+   "id": "xJysjcAVb7Y",
+   "title": "Leo Twins & Sawera Saeed | Mazaaq Raat 15 July 2020 | مذاق رات | Dunya News | MR1",
    "label": "Mazaaq Raat",
-   "mins": 39.68333333333333,
+   "mins": 27.0,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "CBHSySLcKiY",
+   "title": "Ranjha Ban Bethy a Heer Koi Na | DJ Aoun's Performance 😎😍 | Hareem Farooq Dancing | Mazaq Raat",
+   "label": "Mazaaq Raat",
+   "mins": 5.066666666666666,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -436,14 +603,6 @@
    "lang": "ur"
   },
   {
-   "id": "nT-kjeiGCW0",
-   "title": "Koorh Awam Teachers Ko Jugtain Lagatay Hoe - Amanat Chunn Sohail Ahmed - Hasb e Haal - Dunya News",
-   "label": "Hasb-e-Haal",
-   "mins": 13.6,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
    "id": "g1Dh_YP6tv8",
    "title": "Ustad Sahib Jugtoon Say Tang - Hasb e Haal - Dunya News",
    "label": "Hasb-e-Haal",
@@ -460,34 +619,10 @@
    "lang": "ur"
   },
   {
-   "id": "bMzOwtd4zOg",
-   "title": "Dunya News-Best of HASB-E-HAAL-26-05-2012-Part-5/5",
-   "label": "Hasb-e-Haal",
-   "mins": 7.633333333333334,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
    "id": "KqrhJBh_hi4",
    "title": "Hasb e Haal 26 April 2018 - Azizi as Heera Superhit - حسب حال - Dunya News",
    "label": "Hasb-e-Haal",
    "mins": 34.3,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "Oy8pzHa82FY",
-   "title": "Dunya TV-HASB-E-HAAL-24-04-2010-5",
-   "label": "Hasb-e-Haal",
-   "mins": 8.166666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "H81l8QsyPUA",
-   "title": "Funny Mehfil-e-Mauseeqi in Hasb-e-Haal | 12 SEP 2021 | Dunya News",
-   "label": "Hasb-e-Haal",
-   "mins": 32.166666666666664,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -500,42 +635,10 @@
    "lang": "ur"
   },
   {
-   "id": "0AAMoZE7HZ0",
-   "title": "Hasb e Haal | Junaid Saleem | Sohail Ahmed | Amanat chan | حسب حال | Dunya News",
+   "id": "H81l8QsyPUA",
+   "title": "Funny Mehfil-e-Mauseeqi in Hasb-e-Haal | 12 SEP 2021 | Dunya News",
    "label": "Hasb-e-Haal",
-   "mins": 39.766666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "k3K_fOY6Kkw",
-   "title": "Hasb e Haal 28 March 2020 | Gaon Ki Panchayat | حسب حال | Dunya News",
-   "label": "Hasb-e-Haal",
-   "mins": 39.583333333333336,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "A3TShxWI0vg",
-   "title": "Funny Mehfil-e-Mauseeqi in Hasb-e-Haal | 24 Sep 2021 | Dunya News",
-   "label": "Hasb-e-Haal",
-   "mins": 39.2,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "blEftPfzg54",
-   "title": "Dunya News - HASB-E-HAAL - 23-02-2013 - Part 5/5",
-   "label": "Hasb-e-Haal",
-   "mins": 6.1,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "B1dhjC0M0IM",
-   "title": "Azizi as Sureelay Khan | Hasb e Haal | 29 July 2021 | حسب حال | Dunya News",
-   "label": "Hasb-e-Haal",
-   "mins": 43.45,
+   "mins": 32.166666666666664,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -548,34 +651,18 @@
    "lang": "ur"
   },
   {
-   "id": "etdvPXNMN4M",
-   "title": "Dunya TV - BEST-OF-HASB-E-HAAL - 06-11-2009 - 1",
+   "id": "k3K_fOY6Kkw",
+   "title": "Hasb e Haal 28 March 2020 | Gaon Ki Panchayat | حسب حال | Dunya News",
    "label": "Hasb-e-Haal",
-   "mins": 9.1,
+   "mins": 39.583333333333336,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "DuJIly3U3XM",
-   "title": "Donald Trump in Hasb e Haal | 26 July 2021 | حسب حال | Hasb e Haal | Dunya News",
+   "id": "B1dhjC0M0IM",
+   "title": "Azizi as Sureelay Khan | Hasb e Haal | 29 July 2021 | حسب حال | Dunya News",
    "label": "Hasb-e-Haal",
-   "mins": 41.93333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "Nwtt5sM57Dc",
-   "title": "Azizi As Dolatmand - Amanat Chunn Ghareeb Dost - Hasb e Haal",
-   "label": "Hasb-e-Haal",
-   "mins": 12.4,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "loezYD_9txI",
-   "title": "Azizi as Police Officer | Hasb e Haal | 30 January 2022 | حسب حال | Dunya News",
-   "label": "Hasb-e-Haal",
-   "mins": 35.666666666666664,
+   "mins": 43.45,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -588,10 +675,18 @@
    "lang": "ur"
   },
   {
-   "id": "kyf-E2KhmcA",
-   "title": "Suno Chanda | OST | Farhan Saeed & Iqra Aziz l Ramzan Special l Hum TV Drama",
-   "label": "Suno Chanda",
-   "mins": 2.066666666666667,
+   "id": "A3TShxWI0vg",
+   "title": "Funny Mehfil-e-Mauseeqi in Hasb-e-Haal | 24 Sep 2021 | Dunya News",
+   "label": "Hasb-e-Haal",
+   "mins": 39.2,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "bMzOwtd4zOg",
+   "title": "Dunya News-Best of HASB-E-HAAL-26-05-2012-Part-5/5",
+   "label": "Hasb-e-Haal",
+   "mins": 7.633333333333334,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -612,154 +707,10 @@
    "lang": "ur"
   },
   {
-   "id": "lh8kLyeL3n0",
-   "title": "Suno Chanda Season 2 - Episode 27 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
-   "label": "Suno Chanda",
-   "mins": 37.78333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "iJbqkkKdiMk",
-   "title": "Jiya Aur Arsalan Ki Shadi - Suno Chanda",
-   "label": "Suno Chanda",
-   "mins": 6.766666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "2ZtyMBLF8rM",
-   "title": "Suno Chanda Episode #18 HUM TV Drama 3 June 2018",
-   "label": "Suno Chanda",
-   "mins": 37.266666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "cUKZJ4PPxOM",
-   "title": "Suno Chanda Episode #7  HUM TV Drama 23 May 2018",
-   "label": "Suno Chanda",
-   "mins": 36.3,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "EtTFbDsBhZE",
-   "title": "OPPO presents Suno Chanda Season 2 Episode #19 HUM TV Drama 25 May 2019",
-   "label": "Suno Chanda",
-   "mins": 37.833333333333336,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "pnRLARwjZAI",
-   "title": "Suno Chanda Season 2 - Episode 20 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
-   "label": "Suno Chanda",
-   "mins": 38.916666666666664,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
    "id": "b3E2RTuA2Bg",
    "title": "Suno Chanda Episode #20 HUM TV Drama 5 June 2018",
    "label": "Suno Chanda",
    "mins": 39.266666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "OYuhfZykEyQ",
-   "title": "Suno Chanda Season 2 - Episode 28 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
-   "label": "Suno Chanda",
-   "mins": 38.766666666666666,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "S3inUFFobW4",
-   "title": "Suno Chanda Season 2 - Episode 13 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
-   "label": "Suno Chanda",
-   "mins": 37.2,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "ZlFc9Pu9-00",
-   "title": "Suno Chanda Episode #4 HUM TV Drama 20 May 2018",
-   "label": "Suno Chanda",
-   "mins": 36.81666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "bZA08F87Oxc",
-   "title": "Suno Chanda Season 2 - Episode 11 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
-   "label": "Suno Chanda",
-   "mins": 36.95,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "COFNJPd1x1M",
-   "title": "Suno Chanda Episode #9 HUM TV Drama 25 May 2018",
-   "label": "Suno Chanda",
-   "mins": 36.53333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "lkCr6akU1yU",
-   "title": "Suno Chanda Season 2 - Episode 04 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
-   "label": "Suno Chanda",
-   "mins": 37.4,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "OtHrg9FHZiI",
-   "title": "Suno Chanda Episode #8 HUM TV Drama 24 May 2018",
-   "label": "Suno Chanda",
-   "mins": 36.81666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "n1MotZb7I2Y",
-   "title": "Suno Chanda Season 2 - Episode 07 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
-   "label": "Suno Chanda",
-   "mins": 38.38333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "UCDXtroK87E",
-   "title": "OPPO presents Suno Chanda Season 2 Episode #17 HUM TV Drama 23 May 2019",
-   "label": "Suno Chanda",
-   "mins": 38.75,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "BAp43w2_2eI",
-   "title": "Suno Chanda Episode #14 HUM TV Drama 30 May 2018",
-   "label": "Suno Chanda",
-   "mins": 40.11666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "ReTRn4cyRzU",
-   "title": "Chand Ghanton Ki Dulhan Se Zabardasti !! #iqraaziz #farhansaeed !! Suno Chanda",
-   "label": "Suno Chanda",
-   "mins": 6.666666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "uOrc14ck12A",
-   "title": "Suno Chanda Season 2 - Episode 16 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
-   "label": "Suno Chanda",
-   "mins": 38.833333333333336,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -772,10 +723,98 @@
    "lang": "ur"
   },
   {
-   "id": "0E0E1gJeIFg",
-   "title": "Suno Chanda Episode #10 HUM TV Drama 26 May 2018",
+   "id": "n1MotZb7I2Y",
+   "title": "Suno Chanda Season 2 - Episode 07 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
    "label": "Suno Chanda",
-   "mins": 37.36666666666667,
+   "mins": 38.38333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "2ZtyMBLF8rM",
+   "title": "Suno Chanda Episode #18 HUM TV Drama 3 June 2018",
+   "label": "Suno Chanda",
+   "mins": 37.266666666666666,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "kyf-E2KhmcA",
+   "title": "Suno Chanda | OST | Farhan Saeed & Iqra Aziz l Ramzan Special l Hum TV Drama",
+   "label": "Suno Chanda",
+   "mins": 2.066666666666667,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "pnRLARwjZAI",
+   "title": "Suno Chanda Season 2 - Episode 20 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 38.916666666666664,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "bZA08F87Oxc",
+   "title": "Suno Chanda Season 2 - Episode 11 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 36.95,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "OYuhfZykEyQ",
+   "title": "Suno Chanda Season 2 - Episode 28 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 38.766666666666666,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "ReTRn4cyRzU",
+   "title": "Chand Ghanton Ki Dulhan Se Zabardasti !! #iqraaziz #farhansaeed !! Suno Chanda",
+   "label": "Suno Chanda",
+   "mins": 6.666666666666667,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "OtHrg9FHZiI",
+   "title": "Suno Chanda Episode #8 HUM TV Drama 24 May 2018",
+   "label": "Suno Chanda",
+   "mins": 36.81666666666667,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "COFNJPd1x1M",
+   "title": "Suno Chanda Episode #9 HUM TV Drama 25 May 2018",
+   "label": "Suno Chanda",
+   "mins": 36.53333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "lh8kLyeL3n0",
+   "title": "Suno Chanda Season 2 - Episode 27 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 37.78333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "S3inUFFobW4",
+   "title": "Suno Chanda Season 2 - Episode 13 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 37.2,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "BAp43w2_2eI",
+   "title": "Suno Chanda Episode #14 HUM TV Drama 30 May 2018",
+   "label": "Suno Chanda",
+   "mins": 40.11666666666667,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -784,6 +823,14 @@
    "title": "Suno Chanda Episode #12 HUM TV Drama 28 May 2018",
    "label": "Suno Chanda",
    "mins": 37.2,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "lkCr6akU1yU",
+   "title": "Suno Chanda Season 2 - Episode 04 - Iqra Aziz - Farhan Saeed - Mashal Khan- HUM TV",
+   "label": "Suno Chanda",
+   "mins": 37.4,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -868,14 +915,6 @@
    "lang": "ur"
   },
   {
-   "id": "VYhd3Eb8Qak",
-   "title": "Amma Tumhara Beta Na Joru Ka Ghulam Ban Kar Reh Gaya Hai...! - Aye Dil Aazma Nahin - HUMTV",
-   "label": "Joru Ka Ghulam",
-   "mins": 5.583333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
    "id": "b1fa-Krw48Y",
    "title": "Chupke Chupke | Episode 1 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
    "label": "Chupke Chupke",
@@ -900,10 +939,26 @@
    "lang": "ur"
   },
   {
+   "id": "efSsmW1cPR4",
+   "title": "Chupke Chupke - Episode 01 - Osman Khalid Butt - Ayeza Khan - Arsalan Naseer - HUM TV",
+   "label": "Chupke Chupke",
+   "mins": 37.1,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
    "id": "huJhYQnwluY",
    "title": "Chupke Chupke Episode 10 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
    "label": "Chupke Chupke",
    "mins": 37.03333333333333,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "FCI0nrvZ64c",
+   "title": "Chupke Chupke Episode 12 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "label": "Chupke Chupke",
+   "mins": 35.71666666666667,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -924,6 +979,22 @@
    "lang": "ur"
   },
   {
+   "id": "kqSrqQwKyus",
+   "title": "Chupke Chupke Episode 18 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "label": "Chupke Chupke",
+   "mins": 34.9,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
+   "id": "OrjAOpvunHs",
+   "title": "Chupke Chupke Episode 24 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "label": "Chupke Chupke",
+   "mins": 34.75,
+   "found": "2026-10-09",
+   "lang": "ur"
+  },
+  {
    "id": "sN_wPpUTCWw",
    "title": "Chupke Chupke | Episode 5 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
    "label": "Chupke Chupke",
@@ -940,10 +1011,10 @@
    "lang": "ur"
   },
   {
-   "id": "j7JQzIpGFW8",
-   "title": "Chupke Chupke Episode 11 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "id": "jLOeDMZU-ns",
+   "title": "Chupke Chupke | Episode 4 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
    "label": "Chupke Chupke",
-   "mins": 37.266666666666666,
+   "mins": 37.1,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -964,66 +1035,10 @@
    "lang": "ur"
   },
   {
-   "id": "FCI0nrvZ64c",
-   "title": "Chupke Chupke Episode 12 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "id": "hst_60j_vzU",
+   "title": "Chupke Chupke Episode 21 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
    "label": "Chupke Chupke",
-   "mins": 35.71666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "jLOeDMZU-ns",
-   "title": "Chupke Chupke | Episode 4 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
-   "label": "Chupke Chupke",
-   "mins": 37.1,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "kqSrqQwKyus",
-   "title": "Chupke Chupke Episode 18 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
-   "label": "Chupke Chupke",
-   "mins": 34.9,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "UnfOLHVGwKE",
-   "title": "Chupke Chupke Episode 15 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
-   "label": "Chupke Chupke",
-   "mins": 34.8,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "lX20ZetFw14",
-   "title": "Chupke Chupke | Episode 8 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
-   "label": "Chupke Chupke",
-   "mins": 37.56666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "OrjAOpvunHs",
-   "title": "Chupke Chupke Episode 24 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
-   "label": "Chupke Chupke",
-   "mins": 34.75,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "HGTh6VEec2Q",
-   "title": "Chupke Chupke | Episode 6 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
-   "label": "Chupke Chupke",
-   "mins": 37.13333333333333,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "kmRQF0oeoVI",
-   "title": "Chupke Chupke Episode 20 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
-   "label": "Chupke Chupke",
-   "mins": 35.96666666666667,
+   "mins": 35.5,
    "found": "2026-10-09",
    "lang": "ur"
   },
@@ -1044,34 +1059,26 @@
    "lang": "ur"
   },
   {
-   "id": "Uq8Ecue93_o",
-   "title": "Chupke Chupke Episode 14 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
+   "id": "UnfOLHVGwKE",
+   "title": "Chupke Chupke Episode 15 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
    "label": "Chupke Chupke",
-   "mins": 35.8,
+   "mins": 34.8,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "efSsmW1cPR4",
-   "title": "Chupke Chupke - Episode 01 - Osman Khalid Butt - Ayeza Khan - Arsalan Naseer - HUM TV",
+   "id": "lX20ZetFw14",
+   "title": "Chupke Chupke | Episode 8 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
    "label": "Chupke Chupke",
-   "mins": 37.1,
+   "mins": 37.56666666666667,
    "found": "2026-10-09",
    "lang": "ur"
   },
   {
-   "id": "1foN2cX2Zcw",
-   "title": "Chupke Chupke | Episode 7 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
-   "label": "Chupke Chupke",
-   "mins": 37.11666666666667,
-   "found": "2026-10-09",
-   "lang": "ur"
-  },
-  {
-   "id": "hst_60j_vzU",
-   "title": "Chupke Chupke Episode 21 | Digitally Presented by Mezan & Powered by Master Paints | HUM TV | Drama",
-   "label": "Chupke Chupke",
-   "mins": 35.5,
+   "id": "VYhd3Eb8Qak",
+   "title": "Amma Tumhara Beta Na Joru Ka Ghulam Ban Kar Reh Gaya Hai...! - Aye Dil Aazma Nahin - HUMTV",
+   "label": "Joru Ka Ghulam",
+   "mins": 5.583333333333333,
    "found": "2026-10-09",
    "lang": "ur"
   }

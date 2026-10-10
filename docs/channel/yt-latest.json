@@ -1,7 +1,17 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-09 22:54 UTC",
+ "built": "2026-10-10 10:11 UTC",
  "videos": [
+  {
+   "id": "BZojTJXqY2A",
+   "title": "He Is Falling In Love With His Kids Nanny | A Nanny for Christmas | Full 2026 Holiday Romance Movie",
+   "label": "Movie Central",
+   "mins": 87.66666666666667,
+   "found": "2026-10-10",
+   "lang": "en",
+   "posted": "2026-10-09",
+   "up": "2026-10-09"
+  },
   {
    "id": "MKpt0zZyT5E",
    "title": "Superhit New Hindi Romantic Thriller Movie - Full HD 2026 - Dino Morea | Gumnaam - The Mystery",
@@ -57,14 +67,6 @@
    "lang": "hi"
   },
   {
-   "id": "7_1ZGFxX3pI",
-   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
-   "label": "Goldmines",
-   "mins": 111.25,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
    "id": "fmkS85mNZWA",
    "title": "Oxygen (2026) New Released Hindi Dubbed Movie | Gopichand, Raashii Khanna, Anu Emmanuel, Jagapathi",
    "label": "Goldmines",
@@ -81,11 +83,19 @@
    "lang": "hi"
   },
   {
-   "id": "mJ8cGXi3NoY",
-   "title": "Shikaar (K13) New Released Hindi Dubbed Full Movie 2026 | Arulnithi, Shraddha Srinath",
+   "id": "7_1ZGFxX3pI",
+   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
    "label": "Goldmines",
-   "mins": 92.73333333333333,
-   "found": "2026-10-09",
+   "mins": 111.25,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
+   "id": "GYJeCObuuB0",
+   "title": "Ranga Ranga (2025) New Released Hindi Dubbed Movie | Panja Vaisshnav Tej, Ketika Sharma",
+   "label": "Goldmines",
+   "mins": 124.75,
+   "found": "2026-10-10",
    "lang": "hi"
   },
   {
@@ -102,6 +112,14 @@
    "label": "Pen Movies",
    "mins": 143.13333333333333,
    "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
+   "id": "kEPHfJ02dzY",
+   "title": "Kya Meri Sonam Gupta Bewafa Hai? - Full Hindi Movie | Surbhi Jyoti | Vijay Raaz | Pen Movie 2025",
+   "label": "Pen Movies",
+   "mins": 135.31666666666666,
+   "found": "2026-10-10",
    "lang": "hi"
   },
   {
@@ -126,14 +144,6 @@
    "label": "Ultra Movie Parlour",
    "mins": 108.46666666666667,
    "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
-   "id": "t1zclFQj4p0",
-   "title": "SUSPENSE THIRLLER MOVIE - Jilabi (2025) - Swapnil Joshi, Prasad Oak & Shivani Surve | New Release",
-   "label": "Ultra Movie Parlour",
-   "mins": 126.13333333333334,
-   "found": "2026-10-09",
    "lang": "hi"
   },
   {
@@ -169,18 +179,18 @@
    "lang": "hi"
   },
   {
-   "id": "iFsL_Ko4VCk",
-   "title": "NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SOUTH HINDI DUBBED MOVIE MAFIA",
-   "label": "B4U Movies",
-   "mins": 91.83333333333333,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
    "id": "SiR4tmx-YOk",
    "title": "VIJAY THALAPATHY NEW SOUTH ACTION MOVIE |  DUBBED IN HINDI 2026 FULL HD | VIJAY THE MASTER",
    "label": "B4U Movies",
    "mins": 165.7,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "iFsL_Ko4VCk",
+   "title": "NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SOUTH HINDI DUBBED MOVIE MAFIA",
+   "label": "B4U Movies",
+   "mins": 91.83333333333333,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -193,14 +203,6 @@
    "lang": "hi"
   },
   {
-   "id": "VDFys9V9poQ",
-   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
-   "label": "Aditya Movies",
-   "mins": 145.35,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
    "id": "8Vkx70ZaBBQ",
    "title": "Swathimutyam Hindi Dubbed Movie 2026 Full Movie | Ganesh Bellamkonda, Varsha Bollamma | South Movie",
    "label": "Aditya Movies",
@@ -209,11 +211,11 @@
    "lang": "hi"
   },
   {
-   "id": "ftI9RAEuSLo",
-   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
+   "id": "VDFys9V9poQ",
+   "title": "Extra Ordinary Man Hindi Dubbed Full Movie 2025 | Nithiin | Sreeleela | Rajasekhar | South New Movie",
    "label": "Aditya Movies",
-   "mins": 124.95,
-   "found": "2026-10-09",
+   "mins": 145.35,
+   "found": "2026-10-07",
    "lang": "hi"
   },
   {
@@ -233,6 +235,14 @@
    "lang": "hi"
   },
   {
+   "id": "ftI9RAEuSLo",
+   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
+   "label": "Aditya Movies",
+   "mins": 124.95,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
    "id": "gfDhPJUIFFA",
    "title": "Kotha Kothagaa Hindi Dubbed Full Movie | Ajay, Virti Vaghani | South Movie New 2026 | Aditya Movies",
    "label": "Aditya Movies",
@@ -241,11 +251,11 @@
    "lang": "hi"
   },
   {
-   "id": "RfL11k8Y7G4",
-   "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
+   "id": "oCwQ5ee7cyg",
+   "title": "F2 Full Movie in Hindi | Hindi Dubbed Movies 2025 Full Movie | Venkatesh, Varun Tej, Tamannaah",
    "label": "Aditya Movies",
-   "mins": 126.08333333333333,
-   "found": "2026-10-09",
+   "mins": 109.05,
+   "found": "2026-10-10",
    "lang": "hi"
   },
   {
@@ -297,14 +307,6 @@
    "lang": "en"
   },
   {
-   "id": "atxp7E1KphA",
-   "title": "She Takes Down a Ruthless Gang | Bad B*tch Full Movie | 2025 Crime Thriller Full Movie",
-   "label": "Movie Central",
-   "mins": 125.25,
-   "found": "2026-10-09",
-   "lang": "en"
-  },
-  {
    "id": "-gjHbKrRpig",
    "title": "Tanka Laga | Eid Special Telefilm | Day 3 | 23 March 2026 | Amar Khan | Yasir Hussain | ARY Digital",
    "label": "ARY Digital",
@@ -337,18 +339,18 @@
    "lang": "ur"
   },
   {
-   "id": "PlZS2B_5rqw",
-   "title": "Deewani - Eid Special - TeleFilm - 8th June 2025 - [ Sahar Hashmi - Usama Khan ] - HUM TV",
-   "label": "HUM TV",
-   "mins": 72.71666666666667,
-   "found": "2026-10-07",
-   "lang": "ur"
-  },
-  {
    "id": "k-1W7DxYBvc",
    "title": "Mulazim Online - Eid Special - TeleFilm - 7th June 2025 - [ Nida Yasir - Yasir Nawaz ] - HUM TV",
    "label": "HUM TV",
    "mins": 69.11666666666666,
+   "found": "2026-10-07",
+   "lang": "ur"
+  },
+  {
+   "id": "PlZS2B_5rqw",
+   "title": "Deewani - Eid Special - TeleFilm - 8th June 2025 - [ Sahar Hashmi - Usama Khan ] - HUM TV",
+   "label": "HUM TV",
+   "mins": 72.71666666666667,
    "found": "2026-10-07",
    "lang": "ur"
   },
@@ -401,19 +403,19 @@
    "lang": "ur"
   },
   {
-   "id": "UkJbuBZ-EOc",
-   "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
-   "label": "ARY Films",
-   "mins": 144.48333333333332,
-   "found": "2026-10-08",
-   "lang": "ur"
-  },
-  {
    "id": "1aBXrPbMwcw",
    "title": "BAYDARDI - FULL MOVIE | AIMAN KHAN | AFFAN WAHEED | 3rd August 2025 | ARY FILMS",
    "label": "ARY Films",
    "mins": 149.85,
    "found": "2026-10-07",
+   "lang": "ur"
+  },
+  {
+   "id": "UkJbuBZ-EOc",
+   "title": "GUL O GULZAR - FULL MOVIE | KINZA HASHMI | SABOOR ALY | 13 July 2025 | ARY FILMS",
+   "label": "ARY Films",
+   "mins": 144.48333333333332,
+   "found": "2026-10-08",
    "lang": "ur"
   },
   {
