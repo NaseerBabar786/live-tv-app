@@ -62,7 +62,7 @@
   .card .row { display: flex; align-items: center; gap: 2vw; border-bottom: 1px solid rgba(232,190,110,.18); padding: .2vh 0; }
   .card .row .t { flex: 0 0 auto; min-width: 14vw; font-weight: 700; font-size: 3vh; color: #e8be6e; direction: rtl; text-align: right; }
   .card .row .w { flex: 1; min-width: 0; font-size: 2.6vh; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: right; line-height: 2.2; }
-  .card .row.now .w, .card .row.now .t { color: #fff6d8; }
+  .card .row.now .w, .card .row.now .t, .card .row.cur .w, .card .row.cur .t { color: #fff6d8; }
   .card .row { flex-direction: row-reverse; }
   .card .cities { position: absolute; top: 27vh; left: 6vw; right: 6vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vw; direction: rtl; }
   .card .city { background: rgba(255,255,255,.07); border: 1px solid rgba(232,190,110,.35); border-radius: 16px; text-align: center; padding: 2.5vh 1vw; }
@@ -298,6 +298,66 @@ async function playCard(it, offset, at) {
     rejoin(at);
   }, Math.max(0.5, it.secs - offset) * 1000);
 }
+
+// ---------- "Today's programmes" every 15 minutes on every Spark channel (owner, 2026-10-10) ----------
+// Spark Shayari's purple card, shown for 15 s once in each quarter hour (from :01, :16, :31, :46 Toronto time,
+// as soon as a programme is playing: never over our ads, Shayari's own break cards or the loading cover).
+// The programme's sound goes on under it. Urdu channels (2-19) write Urdu + English, Hindi ones (21-39)
+// Hindi + English, the rest English; times are Toronto time, like Shayari's card.
+const QUARTER = 15 * 60e3, SCHED_FROM = 60e3, SCHED_UNTIL = 6 * 60e3, SCHED_SECS = 15;
+const dial = +station.dial || 0;
+const LANG = dial >= 2 && dial < 20 ? "ur" : dial >= 21 && dial < 40 ? "hi" : "en";
+const HEAD = { ur: ["آج کے پروگرام", "Today's programmes · ٹورنٹو کا وقت · Toronto time"],
+  hi: ["आज के कार्यक्रम", "Today's programmes · टोरंटो समय · Toronto time"],
+  en: ["Today's programmes", `Coming up on ${station.shownName || station.name} · Toronto time`] };
+const engTime = ms => new Intl.DateTimeFormat("en-CA", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(ms).replace(/\s?([ap])\.?m\.?/i, (_, x) => ` ${x.toUpperCase()}M`);
+function scheduleCard() {
+  if (station.halfHours) return todayCard(cur);
+  const [title, subText] = HEAD[LANG];
+  const c = cardShell(title);
+  c.querySelector(".credit").textContent = "";
+  const h = c.querySelector("h1");
+  if (LANG !== "ur") { h.classList.remove("ur"); h.style.lineHeight = "1.6"; h.style.top = "6vh"; }
+  const sub = document.createElement("div");
+  sub.className = "sub";
+  sub.textContent = subText;
+  const rows = document.createElement("div");
+  rows.className = "rows";
+  c.append(sub, rows);
+  const { start } = torontoDay(clock());
+  let t = 0;
+  const begins = items.map(x => { const at = t; t += x.secs; return at; });
+  let lastId = null, n = 0;
+  for (let k = cur; k < items.length && n < 8; k++) {
+    const it = items[k];
+    if (it.kind !== "video" || it.clip || (it.trailer && station.id !== "trailers") || it.v.id === lastId) continue;
+    lastId = it.v.id;
+    const r = document.createElement("div");
+    r.className = "row" + (k === cur ? " cur" : "");
+    r.innerHTML = `<span class="t"></span><span class="w"></span>`;
+    if (LANG === "ur") { r.firstChild.classList.add("ur"); r.firstChild.textContent = k === cur ? "ابھی · Now" : urduTime(start + begins[k] * 1000); }
+    else r.firstChild.textContent = k === cur ? (LANG === "hi" ? "अभी · Now" : "Now") : engTime(start + begins[k] * 1000);
+    if (LANG !== "ur") { r.style.flexDirection = "row"; r.firstChild.style.direction = r.lastChild.style.direction = "ltr"; r.firstChild.style.textAlign = r.lastChild.style.textAlign = "left"; r.lastChild.style.lineHeight = "1.6"; }
+    r.lastChild.textContent = shortTitle(it.v.title);
+    rows.appendChild(r);
+    n++;
+  }
+  return n >= 2 ? c : null;
+}
+let schedShown = -1;
+setInterval(() => {
+  if (!started || inBreak || !items.length || !player?.getPlayerState) return;
+  const now = clock(), q = Math.floor(now / QUARTER), into = now - q * QUARTER;
+  if (q === schedShown || into < SCHED_FROM || into > SCHED_UNTIL) return;
+  if (items[cur]?.kind !== "video" || document.querySelector(".card") || player.getPlayerState() !== YT.PlayerState.PLAYING) return;
+  schedShown = q;
+  const el = scheduleCard();
+  if (!el) return;
+  el.classList.add("sched");
+  document.body.appendChild(el);
+  const at = cur;
+  setTimeout(() => { if (cur === at) el.remove(); }, SCHED_SECS * 1000);
+}, 2000);
 
 /** Like TV, the clock decides what's on: after a programme (or an ad break) the channel goes on wherever it is now. */
 function rejoin(ended) {
