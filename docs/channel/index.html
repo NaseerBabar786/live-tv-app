@@ -158,7 +158,8 @@ function show() {
     $("logo").src = c.logo; $("logo").classList.remove("hidden"); $("favicon").href = /\/channel\/logos\/(bazaar|spark)-[a-z-]+\.png$/.test(c.logo) ? c.logo.replace(/\.png$/, "-square.png") : c.logo;
     $("bug").src = c.logo;
   }
-  const corner = c.logoCorner || "tr";
+  // Channel 1's slides and clips carry the Spark logo already: no second one in the corner (owner, 2026-10-10).
+  const corner = station.id === "main" ? "off" : c.logoCorner || "tr";
   $("bug").className = `bug ${corner}` + (!c.logo || corner === "off" ? " hidden" : "");
   const tick = c.tickerOn !== false && (c.ticker || "").trim();
   $("ticker").classList.toggle("hidden", !tick);

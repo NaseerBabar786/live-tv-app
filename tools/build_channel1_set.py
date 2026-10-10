@@ -368,6 +368,8 @@ def layout(today):
     loop = apart_from_slot_ads(loop, slots, {v["id"]: v for v in sched["videos"]})
     sched["loop"] = loop
     sched["slots"] = slots
+    # Our slides and clips carry the Spark logo already: no second one in the corner (owner, 2026-10-10).
+    sched["logoCorner"] = "off"
     sched["fillers"] = ["promo2", "adhere", "spark-ad-urdu", "next"]
     sched["bilingual"] = True  # the website's cards show Urdu headings beside the English ones (owner, 2026-10-09)
     # English first, so the line reads left to right; the Urdu parts follow (owner, 2026-10-09).

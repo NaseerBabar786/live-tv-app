@@ -96,7 +96,10 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             else -> Alignment.TopEnd
         }
         val tickerHeight = unit * 4f
-        if (c.logoCorner != "off" && c.logo != null) {
+        // Channel 1's own slides and clips already carry the Spark logo, so its corner logo stays off and only
+        // the time stays in its place (owner, 2026-10-10: one logo, never on top of writing), whatever Studio says.
+        val clockOnly = channel?.url == MyChannel.URL
+        if ((c.logoCorner != "off" || clockOnly) && c.logo != null) {
             val bottom = c.logoCorner == "bl" || c.logoCorner == "br"
             val left = c.logoCorner == "tl" || c.logoCorner == "bl"
             // 25% smaller than before (owner, 2026-10-07): 9 -> 6.75 of the width; the clock and gap follow.
@@ -126,7 +129,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                         // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
                         .height(logoHeight)
                         .widthIn(max = unit * 19.5f)
-                        .alpha(0.55f),
+                        .alpha(if (clockOnly) 0f else 0.55f),
                 )
                 if (!bottom) Box(Modifier.offset(y = -logoHeight * (1f - ink.second) + gap)) { ChannelClock(logoHeight) }
             }
