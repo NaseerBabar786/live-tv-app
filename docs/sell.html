@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sell from home</title>
+<meta name="description" content="Sell homemade food, clothes and crafts to Cable TV and Spark TV families. Free to list; 10% only when you sell.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  form { display: grid; gap: 12px; max-width: 640px; }
+  label b { display: block; margin-bottom: 4px; }
+  input, select { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .two { grid-template-columns: 1fr; } }
+  #preview { max-width: 240px; border-radius: 12px; display: block; margin-top: 8px; }
+  .ok { color: #9CCC65; }
+  ol li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Cable TV home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Cable TV</span>
+    </a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="suggestions">Suggestions</a>
+      <a href="./#download">Download</a>
+      <a href="devices/">Devices</a>
+      <a href="shop">Shop</a>
+      <a href="admin" class="admin-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Sell from home</h1>
+  <p class="lead">Make food, clothes, crafts or anything else at home? Show it to Cable TV and Spark TV families. Listing is free, and you only pay when you sell.</p>
+  <h2>How it works</h2>
+  <ol>
+    <li>Fill in the form below. We check every item, usually within a day, then it appears in the <a href="shop">shop</a>.</li>
+    <li>A buyer orders on WhatsApp. We send you the order with the buyer's name and phone number.</li>
+    <li>You deliver the item, or the buyer picks it up, and the buyer pays you.</li>
+    <li>Within 7 days you send us 10% of the price by Interac e-Transfer. You keep the other 90%.</li>
+  </ol>
+  <h2>Your item</h2>
+  <form id="form">
+    <label><b>What are you selling?</b><input id="title" maxlength="80" required placeholder="Homemade chicken biryani, 2 kg tray"></label>
+    <div class="two">
+      <label><b>Price</b><input id="price" maxlength="40" required placeholder="$35"></label>
+      <label><b>Kind</b><select id="category"></select></label>
+    </div>
+    <label><b>Tell buyers about it</b><textarea id="description" maxlength="600" placeholder="What's in it, sizes, how fresh, delivery or pickup, how many days' notice you need"></textarea></label>
+    <label><b>Photo</b> <span class="small">(optional, makes it sell faster)</span><input id="photo" type="file" accept="image/*"><img id="preview" class="hidden" alt="Your photo"></label>
+    <div class="two">
+      <label><b>Your name or shop name</b><input id="seller" maxlength="80" required></label>
+      <label><b>City or area</b><input id="city" maxlength="60" required placeholder="Mississauga"></label>
+    </div>
+    <label><b>Your phone (WhatsApp)</b> <span class="small">Only we see it; buyers order through us.</span><input id="phone" maxlength="40" required inputmode="tel"></label>
+    <label class="small"><input type="checkbox" id="agree" required style="width:auto"> I made this item or have the right to sell it, and I'll send 10% of each sale within 7 days.</label>
+    <div class="row"><button class="btn primary" id="send" type="submit">Send for checking</button><span class="small" id="msg"></span></div>
+  </form>
+</main>
+<footer>
+  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+</footer>
+<script type="module">
+// A new item goes to Firestore shopItems/ as "pending"; the owner approves it on /shop-admin before anyone sees it.
+// If it can't be saved, the same details open in WhatsApp so no seller is lost.
+const URL_ = "https://firestore.googleapis.com/v1/projects/live-tv-b2164/databases/(default)/documents/shopItems";
+const CATS = ["Food", "Clothes", "Beauty", "Home", "Crafts", "Other"];
+const $ = id => document.getElementById(id);
+CATS.forEach(c => $("category").append(new Option(c, c)));
+let photo = "";
+
+// The photo is shrunk in the browser to a small JPEG (stored with the item, no upload server needed).
+$("photo").onchange = async () => {
+  const file = $("photo").files[0]; photo = "";
+  if (!file) return $("preview").classList.add("hidden");
+  const img = await createImageBitmap(file);
+  const s = Math.min(1, 800 / Math.max(img.width, img.height));
+  const c = document.createElement("canvas"); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  for (const q of [0.8, 0.65, 0.5, 0.4]) { photo = c.toDataURL("image/jpeg", q); if (photo.length < 240000) break; }
+  if (photo.length >= 240000) { photo = ""; $("msg").textContent = "That photo is too big. Please try another one."; return; }
+  $("preview").src = photo; $("preview").classList.remove("hidden");
+};
+
+function whatsapp(b) {
+  const t = `Hi, I'd like to sell in the Cable TV shop.\nItem: ${b.title}\nPrice: ${b.price}\nKind: ${b.category}\n${b.description}\nName: ${b.seller}, ${b.city}\nPhone: ${b.phone}`;
+  return "https://wa.me/14376026500?text=" + encodeURIComponent(t);
+}
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const b = Object.fromEntries(["title", "price", "category", "description", "seller", "city", "phone"].map(f => [f, $(f).value.trim()]));
+  $("send").disabled = true; $("msg").className = "small"; $("msg").textContent = "Sending…";
+  const fields = Object.fromEntries(Object.entries(b).map(([k, v]) => [k, { stringValue: v }]));
+  fields.photo = { stringValue: photo };
+  fields.status = { stringValue: "pending" };
+  fields.createdAt = { timestampValue: new Date().toISOString() };
+  try {
+    const r = await fetch(URL_, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fields }) });
+    if (!r.ok) throw new Error(r.status);
+    $("form").reset(); photo = ""; $("preview").classList.add("hidden");
+    $("msg").className = "ok";
+    $("msg").innerHTML = 'Thank you! We\'ll check your item and put it in the <a href="shop">shop</a>, usually within a day. Got more? Add the next one.';
+  } catch {
+    $("msg").className = "err";
+    $("msg").innerHTML = `We couldn't send it from here. <a class="btn" href="${whatsapp(b)}" target="_blank" rel="noopener">Send it on WhatsApp instead</a>`;
+  } finally { $("send").disabled = false; }
+});
+</script>
+<script src="assets/admin-nav.js"></script>
+<script src="assets/visits.js"></script>
+</body>
+</html>
