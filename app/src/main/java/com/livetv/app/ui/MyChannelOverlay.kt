@@ -101,7 +101,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
         if (c.logoCorner != "off" && c.logo != null && channel?.url != MyChannel.URL) {
             val bottom = c.logoCorner == "bl" || c.logoCorner == "br"
             val left = c.logoCorner == "tl" || c.logoCorner == "bl"
-            // 25% smaller than before (owner, 2026-10-07): 9 -> 6.75 of the width; the clock and gap follow.
+            // 25% smaller than before (owner, 2026-10-07): 9 -> 6.75 of the width; the clock and gap follow. Solid, not see-through (owner, 2026-10-10).
             val logoHeight = unit * 6.75f
             // The time sits with the logo (owner, 2026-10-07): under it in a top corner, above it in a
             // bottom one, lined up with its outer edge, so it moves wherever the logo has to go.
@@ -128,7 +128,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                         // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
                         .height(logoHeight)
                         .widthIn(max = unit * 19.5f)
-                        .alpha(0.55f),
+                        .alpha(1f),
                 )
                 if (!bottom) Box(Modifier.offset(y = -logoHeight * (1f - ink.second) + gap)) { ChannelClock(logoHeight) }
             }
@@ -262,7 +262,7 @@ private fun ChannelClock(logoHeight: Dp) {
             delay(60_000L - System.currentTimeMillis() % 60_000L + 50)
         }
     }
-    // See-through like the logo, a watermark (owner, 2026-10-07); a faint shadow keeps it readable on white.
+    // Solid like the logo (owner, 2026-10-10: no see-through watermark); a faint shadow keeps it readable on white.
     Text(
         time,
         color = Color.White,
@@ -271,7 +271,7 @@ private fun ChannelClock(logoHeight: Dp) {
         maxLines = 1,
         softWrap = false,
         style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.5f), Offset(1f, 1f), 3f)),
-        modifier = Modifier.alpha(0.55f),
+        modifier = Modifier.alpha(1f),
     )
 }
 

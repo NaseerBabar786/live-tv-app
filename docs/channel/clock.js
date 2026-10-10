@@ -4,7 +4,7 @@
 // Follows the logo (#bug) wherever the page moves it.
 (() => {
   const css = document.createElement("style");
-  css.textContent = ".bugclock { position: absolute; pointer-events: none; white-space: nowrap; color: #fff; opacity: .55;" +
+  css.textContent = ".bugclock { position: absolute; pointer-events: none; white-space: nowrap; color: #fff; opacity: 1;" +
     " font: 700 16px system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; line-height: 1;" +
     " text-shadow: 1px 1px 3px rgba(0,0,0,.5); } .bugclock[hidden] { display: none; }";
   document.head.appendChild(css);
