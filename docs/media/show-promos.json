@@ -405,7 +405,21 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "78556de9948e"
+   "hash": "05548675a984"
+  },
+  "spark-tv-news-headlines-all-1300": {
+   "title": "Spark TV News: Headlines",
+   "when": "Every day · 1 PM",
+   "day": "all",
+   "time": "13:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-day.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1300.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "a38be4b2ce39"
   },
   "show-all-1355": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -419,7 +433,21 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "1db2dc4a17ce"
+   "hash": "4049a237f241"
+  },
+  "spark-tv-news-headlines-all-1400": {
+   "title": "Spark TV News: Headlines",
+   "when": "Every day · 2 PM",
+   "day": "all",
+   "time": "14:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-day.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1400.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "c16d64e6c83a"
   },
   "show-all-1455": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -433,7 +461,21 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "6b50657ed9a5"
+   "hash": "21dcf6430a9c"
+  },
+  "spark-tv-news-headlines-all-1500": {
+   "title": "Spark TV News: Headlines",
+   "when": "Every day · 3 PM",
+   "day": "all",
+   "time": "15:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-day.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1500.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "1f7a09e8e1d4"
   },
   "show-all-1525": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -447,7 +489,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "67d962cd3723"
+   "hash": "a8c3b4175f7d"
   },
   "show-all-1555": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -461,7 +503,7 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "26e3d44eb376"
+   "hash": "91de4bdcd00b"
   },
   "show-all-1655": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
