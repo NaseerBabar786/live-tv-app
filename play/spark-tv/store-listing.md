@@ -1,18 +1,18 @@
-# Spark TV Urdu: Google Play listing
+# Spark One: Google Play listing
 
-Paste this into Play Console. Spark TV Urdu carries only programmes we own or may show (our news and ads,
+Paste this into Play Console. Spark One carries only programmes we own or may show (our news and ads,
 public-domain films and shows, free-licence music). Never show or name a YouTube channel, a TV network,
 Cable TV, App Bazaar or tv.bulkbazaar.ca downloads in the listing, screenshots or video.
 
 ## App details
-- **App name:** Spark TV Urdu (the owner, 2026-10-09: three apps on Google Play are already called "Spark TV";
-  the channels inside keep their Spark names)
+- **App name:** Spark One (the owner, 2026-10-10: four apps on Google Play are already called "Spark TV";
+  "Spark One" is free there and matches channel 1, Spark TV One; the channels inside keep their Spark names)
 - **Package name:** ca.bulkbazaar.sparktv (fixed after the first upload)
 - **Developer:** Bulk Bazaar Inc.
 - **App or game:** App · **Free or paid:** Free
 - **Category:** Entertainment
 - **Contains ads:** Yes (our own and our sponsors' short video ads between programmes; no ad network)
-- **In-app purchases:** **No for now.** While Spark TV Urdu has channel 1 alone, the app shows no Gold layouts
+- **In-app purchases:** **No for now.** While Spark One has channel 1 alone, the app shows no Gold layouts
   (nothing to put side by side). When more channels are added: one subscription, Gold, product ID `spark_gold` (auto-renewing). Create it in
   Play Console under Monetize > Subscriptions with that exact ID, then add base plans (for example 1 month
   and 1 year; the price is the owner's choice). The app lists every base plan it finds, longest first.
@@ -21,7 +21,7 @@ Cable TV, App Bazaar or tv.bulkbazaar.ca downloads in the listing, screenshots o
 Spark TV One: Urdu and Hindi films, stories and shayari of the classic poets.
 
 ## Full description
-Spark TV Urdu brings you free channels, ready to watch on your TV, phone or tablet.
+Spark One brings you free channels, ready to watch on your TV, phone or tablet.
 
 Spark TV One
 • Films in Urdu and Hindi, dubbed by us, and our own stories
@@ -34,7 +34,7 @@ Features
 • Clock and local weather in the top bar
 • No account and no sign-in
 
-Spark TV Urdu's films and shows are in the public domain (from the Internet Archive) or free-licence
+Spark One's films and shows are in the public domain (from the Internet Archive) or free-licence
 (Blender Foundation films, dubbed by us), its music is free-licence (from Wikimedia Commons), and the
 poetry readings and stories are our own.
 
