@@ -88,6 +88,7 @@
 <script src="promo.js"></script>
 <script src="still.js"></script>
 <script src="keepplaying.js"></script>
+<script src="hideads.js"></script>
 <script src="lowfirst.js"></script>
 <script type="module">
 // The player's own code loads while the channel's lists are fetched, not after (owner: our channels
@@ -476,6 +477,8 @@ function startPlayer() {
   stillFor(player);
   lowFirst(player);
   keepPlaying(player, () => inBreak, () => cover(true));
+  hideYouTubeAds(player, () => inBreak || !target ? null : { id: target.id, secs: items[target.item]?.secs }, cover,
+    () => (app || $("sound").hidden) && !new URLSearchParams(location.search).has("mute"));
 };
 // A tap or OK only shows what's playing; double-click goes full screen (on the website).
 $("shield").onclick = showNow;

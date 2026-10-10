@@ -65,6 +65,7 @@
 <script src="promo.js"></script>
 <script src="still.js"></script>
 <script src="keepplaying.js"></script>
+<script src="hideads.js"></script>
 <script src="lowfirst.js"></script>
 <script>
 // The player's own code loads while the channel's lists are fetched, not after (owner: our channels
@@ -199,6 +200,8 @@ function startPlayer() {
   stillFor(player);
   lowFirst(player);
   keepPlaying(player, () => inBreak, () => cover(true));
+  hideYouTubeAds(player, () => inBreak ? null : { id: songs[at].id, secs: songs[at].secs }, cover,
+    () => (app || $("sound").hidden) && !new URLSearchParams(location.search).has("mute"));
 };
 // A frozen screen never stays: a song stuck loading, or on one frame, for 30 seconds is loaded again;
 // stuck a second time, the next song plays.
