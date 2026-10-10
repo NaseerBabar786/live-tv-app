@@ -222,7 +222,7 @@ def one():
     ticker = ("Spark TV · Films in Urdu and Hindi, stories and shayari of the classic poets"
               if not WITH_NEWS else "Spark TV · Full news at 12, 4 and 8, headlines every hour · Films in Urdu and "
               "Hindi, stories and shayari of the classic poets")
-    o = channel("pone", "Spark TV One", "spark-tv.png", ticker, videos, loop, slots,
+    o = channel("pone", "Spark TV One", "spark-one.png", ticker, videos, loop, slots,
                    fillers=("adhere", "next", "break"))
     if not WITH_NEWS:
         o["credits"] = o["credits"].replace("News: our own bulletins. ", "")

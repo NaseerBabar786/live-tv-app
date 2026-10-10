@@ -96,7 +96,7 @@ object MyChannel {
      * own Urdu and Hindi films, stories and shayari in place of its YouTube dramas and songs.
      */
     val PLAY_STATIONS = listOf(
-        Station("pone", 1, "", "Spark TV One", logo = "spark-tv.png"),
+        Station("pone", 1, "", "Spark TV One", logo = "spark-one.png"),
     )
 
     /**
