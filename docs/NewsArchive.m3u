@@ -6,6 +6,8 @@ https://github.com/NaseerBabar786/live-tv-app/releases/download/news-archive/new
 https://github.com/NaseerBabar786/live-tv-app/releases/download/news-archive/news-full-2026-10-09.mp4
 #EXTINF:-1 mins="10" added="2026-10-08" desc="The full Urdu news report of the day on Spark TV One." tvg-logo="https://tv.bulkbazaar.ca/channel/logos/spark-news-poster.png" tvg-language="Urdu" tvg-genre="Shows" group-title="Spark TV One",Spark TV One News · 8 October 2026
 https://github.com/NaseerBabar786/live-tv-app/releases/download/news-archive/news-full-2026-10-08.mp4
+#EXTINF:-1 mins="3" added="2026-10-10" desc="The Urdu news headlines on Spark TV One, 8 AM." tvg-logo="https://tv.bulkbazaar.ca/channel/logos/spark-headlines-poster.png" tvg-language="Urdu" tvg-genre="Shows" group-title="Spark TV One Headlines",Spark TV One Headlines · 10 October 2026, 8 AM
+https://github.com/NaseerBabar786/live-tv-app/releases/download/news-archive/news-headlines-2026-10-10-08.mp4
 #EXTINF:-1 mins="3" added="2026-10-10" desc="The Urdu news headlines on Spark TV One, 12 AM." tvg-logo="https://tv.bulkbazaar.ca/channel/logos/spark-headlines-poster.png" tvg-language="Urdu" tvg-genre="Shows" group-title="Spark TV One Headlines",Spark TV One Headlines · 10 October 2026, 12 AM
 https://github.com/NaseerBabar786/live-tv-app/releases/download/news-archive/news-headlines-2026-10-10-00.mp4
 #EXTINF:-1 mins="3" added="2026-10-09" desc="The Urdu news headlines on Spark TV One, 4 PM." tvg-logo="https://tv.bulkbazaar.ca/channel/logos/spark-headlines-poster.png" tvg-language="Urdu" tvg-genre="Shows" group-title="Spark TV One Headlines",Spark TV One Headlines · 9 October 2026, 4 PM
