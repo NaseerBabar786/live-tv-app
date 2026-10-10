@@ -1,14 +1,12 @@
 #EXTM3U
 # Pakistani channels' own 24/7 live streams on their YouTube channels.
-#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/jUtzA6PVnMM/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",ARY News
-https://www.youtube.com/watch?v=jUtzA6PVnMM
-#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/Sr-MO0E1mWc/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",Express News
-https://www.youtube.com/watch?v=Sr-MO0E1mWc
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/5Vpijpts1YU/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",ARY News
+https://www.youtube.com/watch?v=5Vpijpts1YU
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/kZK2BiSdC68/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",92 News
 https://www.youtube.com/watch?v=kZK2BiSdC68
-#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/7t9UIEic3xQ/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",Hum News
-https://www.youtube.com/watch?v=7t9UIEic3xQ
-#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/iboT2kP-2L8/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",GNN
-https://www.youtube.com/watch?v=iboT2kP-2L8
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/OJWgRH_urdM/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",Hum News
+https://www.youtube.com/watch?v=OJWgRH_urdM
+#EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/M5nhGLt8GzI/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",GNN
+https://www.youtube.com/watch?v=M5nhGLt8GzI
 #EXTINF:-1 tvg-logo="https://i.ytimg.com/vi/AAoT8lDXspg/hqdefault.jpg" tvg-country="PK" tvg-language="Urdu" tvg-genre="News" group-title="Pakistani",BOL News
 https://www.youtube.com/watch?v=AAoT8lDXspg
