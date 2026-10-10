@@ -96,6 +96,7 @@ import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Storefront
+import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.foundation.verticalScroll
@@ -181,6 +182,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.livetv.app.Edition
 import com.livetv.app.EditionAppBazaar
+import com.livetv.app.EditionShop
 import com.livetv.app.EditionSponsorBar
 import com.livetv.app.EditionTicker
 import com.livetv.app.Watching
@@ -227,6 +229,7 @@ fun ChannelListScreen(
     val searchButtonFocus = remember { FocusRequester() }
     var showSettings by rememberSaveable { mutableStateOf(false) }
     var showAppBazaar by rememberSaveable { mutableStateOf(false) }
+    var showShop by rememberSaveable { mutableStateOf(false) }
     val gridState = rememberLazyGridState()
     val lastWatchedFocus = remember { FocusRequester() }
     // Lets 1×2 move the highlight to a card or the layout button directly.
@@ -688,6 +691,7 @@ fun ChannelListScreen(
                         )
                         // Its picture is enough (owner, 2026-10-10), which saves the widest name.
                         if (Edition.HAS_APP_BAZAAR) BarButton(Icons.Filled.Storefront, "App Bazaar", { showAppBazaar = true }, showLabel = false)
+                        if (Edition.HAS_SHOP) BarButton(Icons.Filled.ShoppingBag, "Shop", { showShop = true }, showLabel = false)
                         BarButton(Icons.Filled.Settings, "Settings", { showSettings = true })
                     } else {
                         if (wideScreen || phone) {
@@ -816,6 +820,11 @@ fun ChannelListScreen(
                                 }
                             }
                         }
+                        if (Edition.HAS_SHOP) {
+                            IconButton(onClick = { showShop = true }, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.Filled.ShoppingBag, contentDescription = "Shop")
+                            }
+                        }
                         IconButton(onClick = { showSettings = true }, modifier = Modifier.focusGlow()) {
                             Icon(Icons.Filled.Settings, contentDescription = "Settings")
                         }
@@ -914,6 +923,7 @@ fun ChannelListScreen(
                         onOpenQuran = onOpenQuran,
                         onOpenVodItem = onOpenVodItem,
                         onOpenAppBazaar = if (Edition.HAS_APP_BAZAAR) ({ showAppBazaar = true }) else null,
+                        onOpenShop = if (Edition.HAS_SHOP) ({ showShop = true }) else null,
                         onOpenSettings = { showSettings = true },
                         onRailFocused = { topBarFocused = it },
                     )
@@ -1496,6 +1506,7 @@ fun ChannelListScreen(
 
     if (showSettings) settings { showSettings = false }
     if (showAppBazaar) EditionAppBazaar { showAppBazaar = false }
+    if (showShop) EditionShop { showShop = false }
     if (exitOpen) ExitDialog(onExit = { (context as? Activity)?.finish() }, onDismiss = { exitOpen = false })
     if (modesOpen) {
         ModesMenu(

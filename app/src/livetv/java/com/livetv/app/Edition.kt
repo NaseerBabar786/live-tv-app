@@ -80,6 +80,8 @@ object Edition {
     const val HAS_START_SCREEN = true
     /** A top-bar button for our app store, App Bazaar (owner, 2026-10-09). */
     const val HAS_APP_BAZAAR = true
+    /** A top-bar button for the shop of home sellers, tv.bulkbazaar.ca/shop (owner's earn-from-home idea, 2026-10-10). Cable TV only. */
+    val HAS_SHOP = !MAX
     const val HAS_WEATHER = true
     /** Asks once for the device's approximate location, for the weather and prayer times. */
     const val HAS_DEVICE_LOCATION = true
@@ -467,6 +469,12 @@ fun EditionAppBazaar(onDismiss: () -> Unit) {
         open != null && runCatching { context.startActivity(open) }.isSuccess
     }
     if (opened) LaunchedEffect(Unit) { onDismiss() } else SettingsTheme { com.livetv.app.ui.AppBazaarDialog(onDismiss) }
+}
+
+/** The shop of home sellers (tv.bulkbazaar.ca/shop) in our in-app web page; on a TV each item shows a QR code to order by phone. */
+@Composable
+fun EditionShop(onDismiss: () -> Unit) {
+    com.livetv.app.ui.SponsorSite("https://tv.bulkbazaar.ca/shop?tv=1", "Shop from home sellers", onClose = onDismiss)
 }
 
 @Composable
