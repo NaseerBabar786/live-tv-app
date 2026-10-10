@@ -293,8 +293,9 @@ class MainActivity : ComponentActivity() {
                 onOpenWeather = if (Edition.LIVE_TV) ({ if (!Plans.ask("Weather", Plans.Feature.Weather)) showWeather = true }) else null,
                 onWatch = viewModel::watched,
                 onOpenGuide = if (Edition.LIVE_TV) ({ if (!Plans.ask("TV guide", Plans.Feature.Guide)) showGuide = true }) else null,
-                // On TVs voice search is the remote's mic key, as in Google's apps, so no mic button (owner, 2026-10-10).
-                onVoiceSearch = if (Edition.LIVE_TV && voiceAvailable && !isTv(this@MainActivity)) ::startVoiceSearch else null,
+                // The owner wants voice on the remote's mic key, as in Google's apps; this button goes once that is
+                // proven on his TV (2026-10-10).
+                onVoiceSearch = if (Edition.LIVE_TV && voiceAvailable) ::startVoiceSearch else null,
                 searchWake = viewModel.searchWake,
                 onReport = if (Edition.LIVE_TV) ({ Extras.reportBroken(this@MainActivity, it) }) else null,
             )
