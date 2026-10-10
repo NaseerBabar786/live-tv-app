@@ -15,6 +15,13 @@ export const TEST_SCHEDULE_URL = "https://tv.bulkbazaar.ca/channel/test-schedule
  * locked; their schedule ([ready] or the owner's saved one) is the backup when YouTube won't play.
  */
 export const STATIONS = [
+  // Spark One (owner, 2026-10-10): the Google-safe channel at the top of the list, exactly as the Google Play app
+  // plays it, every programme ours to show (channel/play/pone.json, tools/build_play_schedules.py). Nothing goes on
+  // it that could raise a Google Play red flag. [play]: never edited in Studio.
+  { id: "pone", play: true, noPopup: true, name: "Spark One", dial: "0", page: "channel/?c=pone",
+    tagline: "Our own films in Urdu and Hindi, stories and shayari",
+    logo: "https://tv.bulkbazaar.ca/channel/logos/spark-tv.png", ready: "https://tv.bulkbazaar.ca/channel/play/pone.json",
+    credits: "Films: Blender Foundation (CC BY) and public-domain films dubbed by our AI voices. Poetry: classic Urdu poets (public domain) read by our AI voice. Stories: made by us." },
   // Every channel of ours is in one language (the owner, 2026-10-08). Urdu: 1 to 19
   { id: "main", name: "Spark TV One", dial: "1", doc: "_channel", page: "channel/",
     logo: "https://tv.bulkbazaar.ca/channel/logos/spark-tv.png", ready: TEST_SCHEDULE_URL,

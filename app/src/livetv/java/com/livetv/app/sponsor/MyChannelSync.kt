@@ -19,6 +19,8 @@ import org.json.JSONObject
 object MyChannelSync {
     private fun readyMade(id: String) =
         if (id == "main") "https://tv.bulkbazaar.ca/channel/test-schedule.json"
+        // Spark One: the Google Play app's own schedule, every programme ours (no YouTube, no news).
+        else if (id == MyChannel.PONE) "https://tv.bulkbazaar.ca/channel/play/${MyChannel.PONE}.json"
         else "https://tv.bulkbazaar.ca/channel/$id-schedule.json"
 
     /** Quietly keeps the saved settings when offline. */
@@ -36,7 +38,8 @@ object MyChannelSync {
     private fun fetch(station: MyChannel.Station, token: String?): JSONObject? {
         val id = station.id
         val owner = if (id == "main") "sponsors/_channel" else "sponsors/_channel_$id"
-        val doc = token?.let { document(owner, it) } ?: document("channel/$id", null)
+        // Spark One is never edited in Studio: always the Google-safe schedule built on the website.
+        val doc = if (id == MyChannel.PONE) null else token?.let { document(owner, it) } ?: document("channel/$id", null)
         if (doc != null) return doc
         val ready = JSONObject(Http.request("GET", readyMade(station.backup), null, null, null))
         // Another channel's schedule as the backup: it still shows this channel's own name and logo.
