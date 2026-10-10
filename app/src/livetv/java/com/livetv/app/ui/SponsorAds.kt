@@ -108,7 +108,8 @@ private const val VIDEO_EVERY_MS = 30 * 60_000L
 private const val POD_SIZE = 2
 private const val PICTURE_MS = 20_000L
 private const val BREAK_MS = 60_000L
-private const val SKIP_AFTER_MS = 10_000L
+/** Owner, 2026-10-10: every pop-up ad can be skipped after 5 seconds (was 10); a 5-second ad just plays to its end. */
+private const val SKIP_AFTER_MS = 5_000L
 
 /** Full-screen channels: an ad break every 10 minutes (owner, 1.9.68): the channel pauses, our own Cable TV
  *  promo plays (a different one each time) with a sponsor's ad when one fits, then the channel carries on. */

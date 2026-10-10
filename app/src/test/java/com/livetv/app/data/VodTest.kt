@@ -141,4 +141,25 @@ class VodLanguageTest {
         assertEquals("Beyond", film.name)
         assertEquals(listOf("Sci-Fi", "Thriller"), film.genres)
     }
+
+    @Test
+    fun releaseYearUploadDayAndTrailer() {
+        val list = M3uParser.parse(
+            """
+            #EXTM3U
+            #EXTINF:-1 mins="112" year="2019" pub="2023-05-04" trailer="abcdefghijk" tvg-language="Hindi" tvg-genre="Movies",14 Phere
+            https://www.youtube.com/watch?v=aaaaaaaaaaa
+            #EXTINF:-1 pub="2024-03-06" tvg-language="Urdu" tvg-genre="Series",Khaie Episode 23
+            https://www.youtube.com/watch?v=bbbbbbbbbbb
+            """.trimIndent()
+        )
+        assertEquals(2019, list[0].year)
+        assertEquals("abcdefghijk", list[0].trailer)
+        assertEquals("Released 2019", Vod.released(list[0].year, list[0].pub))
+        assertEquals("Online since Mar 2024", Vod.released(list[1].year, list[1].pub))
+        assertEquals("Mar 6, 2024", Vod.day(list[1].pub))
+        assertEquals(null, list[1].trailer)
+        assertEquals("https://www.youtube.com/watch?v=abcdefghijk", Vod.trailerOf("14 Phere", list[0].trailer)?.url)
+        assertEquals(null, Vod.released(null, null))
+    }
 }
