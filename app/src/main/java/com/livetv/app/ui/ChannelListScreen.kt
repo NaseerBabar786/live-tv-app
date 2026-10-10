@@ -171,6 +171,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -638,134 +639,165 @@ fun ChannelListScreen(
                     }
                 },
                 actions = {
-                    if (wideScreen || phone) {
-                        TextButton(
-                            onClick = { modesOpen = true },
-                            colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
-                            modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
-                        ) {
-                            Icon(Icons.Filled.Tv, contentDescription = null)
-                            Text("Modes", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                    // TVs: every button keeps its name, small under its icon, so the row fits beside the name, clock,
+                    // date and weather (owner, 2026-10-10: names help, nothing may be cut off).
+                    if (wideScreen) {
+                        BarButton(Icons.Filled.Tv, "Modes", { modesOpen = true }, Modifier.focusRequester(layoutButtonFocus))
+                        if (onOpenVod != null) BarButton(Icons.Filled.VideoLibrary, "Library", onOpenVod)
+                        if (onOpenGuide != null) BarButton(Icons.Filled.CalendarViewWeek, "Guide", onOpenGuide)
+                        if (onOpenGames != null) BarButton(Icons.Filled.SportsEsports, "Games", onOpenGames)
+                        if (onOpenWeather != null) BarButton(Icons.Filled.WbSunny, "Weather", onOpenWeather)
+                        if (onOpenQuran != null) BarButton(Icons.AutoMirrored.Filled.MenuBook, "Iqra Quran", onOpenQuran)
+                        BarButton(
+                            if (previewSound) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff,
+                            if (previewSound) "Sound on" else "Sound off",
+                            {
+                                previewSound = !previewSound
+                                prefs.edit().putBoolean(PREF_PREVIEW_SOUND, previewSound).apply()
+                            },
+                        )
+                        if (onVoiceSearch != null) BarButton(Icons.Filled.Mic, "Voice", onVoiceSearch)
+                        BarButton(
+                            if (searching) Icons.Filled.Close else Icons.Filled.Search,
+                            if (searching) "Close" else "Search",
+                            {
+                                if (searching) onQueryChange("")
+                                searching = !searching
+                            },
+                            Modifier.focusRequester(searchButtonFocus),
+                        )
+                        if (Edition.HAS_APP_BAZAAR) BarButton(Icons.Filled.Storefront, "App Bazaar", { showAppBazaar = true })
+                        BarButton(Icons.Filled.Settings, "Settings", { showSettings = true })
+                    } else {
+                        if (wideScreen || phone) {
+                            TextButton(
+                                onClick = { modesOpen = true },
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusRequester(layoutButtonFocus).focusGlow(),
+                            ) {
+                                Icon(Icons.Filled.Tv, contentDescription = null)
+                                Text("Modes", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
                         }
-                    }
-                    if (onOpenVod != null) {
-                        TextButton(
-                            onClick = onOpenVod,
-                            colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                        if (onOpenVod != null) {
+                            TextButton(
+                                onClick = onOpenVod,
+                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                modifier = Modifier.focusGlow(),
+                            ) {
+                                Icon(Icons.Filled.VideoLibrary, contentDescription = null)
+                                Text("Library", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            }
+                        }
+                        if (onOpenGuide != null) {
+                            if (wideScreen) {
+                                TextButton(
+                                    onClick = onOpenGuide,
+                                    colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                    modifier = Modifier.focusGlow(),
+                                ) {
+                                    Icon(Icons.Filled.CalendarViewWeek, contentDescription = null)
+                                    Text("Guide", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                                }
+                            } else {
+                                IconButton(onClick = onOpenGuide, modifier = Modifier.focusGlow()) {
+                                    Icon(Icons.Filled.CalendarViewWeek, contentDescription = "TV guide")
+                                }
+                            }
+                        }
+                        if (onOpenGames != null) {
+                            if (wideScreen) {
+                                TextButton(
+                                    onClick = onOpenGames,
+                                    colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                    modifier = Modifier.focusGlow(),
+                                ) {
+                                    Icon(Icons.Filled.SportsEsports, contentDescription = null)
+                                    Text("Games", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                                }
+                            } else {
+                                IconButton(onClick = onOpenGames, modifier = Modifier.focusGlow()) {
+                                    Icon(Icons.Filled.SportsEsports, contentDescription = "Games")
+                                }
+                            }
+                        }
+                        if (onOpenWeather != null) {
+                            if (wideScreen) {
+                                TextButton(
+                                    onClick = onOpenWeather,
+                                    colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                    modifier = Modifier.focusGlow(),
+                                ) {
+                                    Icon(Icons.Filled.WbSunny, contentDescription = null)
+                                    Text("Weather", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                                }
+                            } else {
+                                IconButton(onClick = onOpenWeather, modifier = Modifier.focusGlow()) {
+                                    Icon(Icons.Filled.WbSunny, contentDescription = "Weather")
+                                }
+                            }
+                        }
+                        if (onOpenQuran != null) {
+                            if (wideScreen) {
+                                TextButton(
+                                    onClick = onOpenQuran,
+                                    colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                    modifier = Modifier.focusGlow(),
+                                ) {
+                                    Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null)
+                                    Text("Iqra Quran", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                                }
+                            } else {
+                                IconButton(onClick = onOpenQuran, modifier = Modifier.focusGlow()) {
+                                    Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = "Iqra Quran")
+                                }
+                            }
+                        }
+                        IconButton(
+                            onClick = {
+                                previewSound = !previewSound
+                                prefs.edit().putBoolean(PREF_PREVIEW_SOUND, previewSound).apply()
+                            },
                             modifier = Modifier.focusGlow(),
                         ) {
-                            Icon(Icons.Filled.VideoLibrary, contentDescription = null)
-                            Text("Library", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                            Icon(
+                                if (previewSound) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff,
+                                contentDescription = if (previewSound) "Mute previews" else "Unmute previews",
+                            )
                         }
-                    }
-                    if (onOpenGuide != null) {
-                        if (wideScreen) {
-                            TextButton(
-                                onClick = onOpenGuide,
-                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
-                                modifier = Modifier.focusGlow(),
-                            ) {
-                                Icon(Icons.Filled.CalendarViewWeek, contentDescription = null)
-                                Text("Guide", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
-                            }
-                        } else {
-                            IconButton(onClick = onOpenGuide, modifier = Modifier.focusGlow()) {
-                                Icon(Icons.Filled.CalendarViewWeek, contentDescription = "TV guide")
+                        if (onVoiceSearch != null) {
+                            IconButton(onClick = onVoiceSearch, modifier = Modifier.focusGlow()) {
+                                Icon(Icons.Filled.Mic, contentDescription = "Voice search")
                             }
                         }
-                    }
-                    if (onOpenGames != null) {
-                        if (wideScreen) {
-                            TextButton(
-                                onClick = onOpenGames,
-                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
-                                modifier = Modifier.focusGlow(),
-                            ) {
-                                Icon(Icons.Filled.SportsEsports, contentDescription = null)
-                                Text("Games", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
-                            }
-                        } else {
-                            IconButton(onClick = onOpenGames, modifier = Modifier.focusGlow()) {
-                                Icon(Icons.Filled.SportsEsports, contentDescription = "Games")
+                        IconButton(modifier = Modifier.focusRequester(searchButtonFocus).focusGlow(), onClick = {
+                            if (searching) onQueryChange("")
+                            searching = !searching
+                        }) {
+                            Icon(
+                                if (searching) Icons.Filled.Close else Icons.Filled.Search,
+                                contentDescription = if (searching) "Close search" else "Search",
+                            )
+                        }
+                        if (Edition.HAS_APP_BAZAAR) {
+                            if (wideScreen) {
+                                TextButton(
+                                    onClick = { showAppBazaar = true },
+                                    colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                                    modifier = Modifier.focusGlow(),
+                                ) {
+                                    Icon(Icons.Filled.Storefront, contentDescription = null)
+                                    Text("App Bazaar", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
+                                }
+                            } else {
+                                IconButton(onClick = { showAppBazaar = true }, modifier = Modifier.focusGlow()) {
+                                    Icon(Icons.Filled.Storefront, contentDescription = "App Bazaar")
+                                }
                             }
                         }
-                    }
-                    if (onOpenWeather != null) {
-                        if (wideScreen) {
-                            TextButton(
-                                onClick = onOpenWeather,
-                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
-                                modifier = Modifier.focusGlow(),
-                            ) {
-                                Icon(Icons.Filled.WbSunny, contentDescription = null)
-                                Text("Weather", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
-                            }
-                        } else {
-                            IconButton(onClick = onOpenWeather, modifier = Modifier.focusGlow()) {
-                                Icon(Icons.Filled.WbSunny, contentDescription = "Weather")
-                            }
+                        IconButton(onClick = { showSettings = true }, modifier = Modifier.focusGlow()) {
+                            Icon(Icons.Filled.Settings, contentDescription = "Settings")
                         }
-                    }
-                    if (onOpenQuran != null) {
-                        if (wideScreen) {
-                            TextButton(
-                                onClick = onOpenQuran,
-                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
-                                modifier = Modifier.focusGlow(),
-                            ) {
-                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null)
-                                Text("Iqra Quran", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
-                            }
-                        } else {
-                            IconButton(onClick = onOpenQuran, modifier = Modifier.focusGlow()) {
-                                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = "Iqra Quran")
-                            }
-                        }
-                    }
-                    IconButton(
-                        onClick = {
-                            previewSound = !previewSound
-                            prefs.edit().putBoolean(PREF_PREVIEW_SOUND, previewSound).apply()
-                        },
-                        modifier = Modifier.focusGlow(),
-                    ) {
-                        Icon(
-                            if (previewSound) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff,
-                            contentDescription = if (previewSound) "Mute previews" else "Unmute previews",
-                        )
-                    }
-                    if (onVoiceSearch != null) {
-                        IconButton(onClick = onVoiceSearch, modifier = Modifier.focusGlow()) {
-                            Icon(Icons.Filled.Mic, contentDescription = "Voice search")
-                        }
-                    }
-                    IconButton(modifier = Modifier.focusRequester(searchButtonFocus).focusGlow(), onClick = {
-                        if (searching) onQueryChange("")
-                        searching = !searching
-                    }) {
-                        Icon(
-                            if (searching) Icons.Filled.Close else Icons.Filled.Search,
-                            contentDescription = if (searching) "Close search" else "Search",
-                        )
-                    }
-                    if (Edition.HAS_APP_BAZAAR) {
-                        if (wideScreen) {
-                            TextButton(
-                                onClick = { showAppBazaar = true },
-                                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
-                                modifier = Modifier.focusGlow(),
-                            ) {
-                                Icon(Icons.Filled.Storefront, contentDescription = null)
-                                Text("App Bazaar", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 6.dp))
-                            }
-                        } else {
-                            IconButton(onClick = { showAppBazaar = true }, modifier = Modifier.focusGlow()) {
-                                Icon(Icons.Filled.Storefront, contentDescription = "App Bazaar")
-                            }
-                        }
-                    }
-                    IconButton(onClick = { showSettings = true }, modifier = Modifier.focusGlow()) {
-                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
                 },
                 modifier = Modifier.onFocusChanged { topBarFocused = it.hasFocus },
@@ -2564,3 +2596,19 @@ private val NoBringIntoView = object : BringIntoViewSpec {
 
 /** Room under a tile's picture for the channel name (one line). */
 private val TileTextHeight = 30.dp
+
+/** A top-bar button on TVs: the icon with its name small underneath, the same yellow focus as every button. */
+@Composable
+private fun BarButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier
+            .focusGlow(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(10.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 5.dp, vertical = 3.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Icon(icon, contentDescription = label, modifier = Modifier.size(22.dp))
+        Text(label, fontSize = 11.sp, fontWeight = FontWeight.Bold, maxLines = 1, softWrap = false)
+    }
+}
