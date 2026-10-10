@@ -699,7 +699,10 @@ let stats = null; // the Most watched numbers, once loaded
 // The channel being worked on (?c=filmein opens Spark Cinema).
 // Spark Hits is a web page (the music labels' YouTube videos), not a schedule: Studio only plays it.
 const HITS = { id: "hits", name: "Spark Hits", dial: "23", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/spark-hits.png" };
-let station = [...STATIONS, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
+// Spark One is the Google-safe channel (owner, 2026-10-10): built on its own from programmes that are ours to show
+// (channel/play/pone.json), never edited here, so a Studio save can't put anything risky on it.
+const EDITABLE = STATIONS.filter(x => !x.play);
+let station = [...EDITABLE, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || EDITABLE[0];
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Math.random().toString(36).slice(2, 9);
 
@@ -742,7 +745,7 @@ async function pickStation(st) {
 const noteFor = st => st === HITS || st.web ? `Channel ${st.dial} · runs by itself` : `Channel ${st.dial} in the app`;
 // In channel-number order, grouped by language block like the app's numbering. Spark Hits (23) runs by
 // itself from the music labels' song list (no schedule to edit), so picking it just plays it in the player.
-const ordered = () => [...STATIONS, HITS].sort((a, b) => +a.dial - +b.dial);
+const ordered = () => [...EDITABLE, HITS].sort((a, b) => +a.dial - +b.dial);
 const blockOf = d => d < 20 ? "Urdu" : d < 40 ? "Hindi" : d < 60 ? "English" : "Punjabi";
 function renderStations() {
   $("stations").innerHTML = "";

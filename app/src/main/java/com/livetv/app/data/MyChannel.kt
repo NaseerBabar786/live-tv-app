@@ -96,7 +96,7 @@ object MyChannel {
      * own Urdu and Hindi films, stories and shayari in place of its YouTube dramas and songs.
      */
     val PLAY_STATIONS = listOf(
-        Station("pone", 1, "", "Spark TV One", logo = "spark-tv.png"),
+        Station(PONE, 1, "", "Spark TV One", logo = "spark-tv.png"),
     )
 
     /**
@@ -120,6 +120,10 @@ object MyChannel {
     )
 
     private val ALL_STATIONS = listOf(
+        // Spark One (the owner, 2026-10-10): the Google-safe channel, exactly as the Google Play app plays it, every
+        // programme ours to show (tv.bulkbazaar.ca/channel/play/pone.json). At the very top of the list (0), every
+        // other channel keeps its number. Nothing goes on it that could raise a Google Play red flag.
+        Station(PONE, 0, "", "Spark One", logo = "spark-one.png"),
         // Urdu
         Station("main", 1, "0", "Spark TV One"),
         Station("dramas", 2, "", "Spark Dramas Urdu", youtube = true, backup = "filmein", logo = "spark-dramas.png"),
@@ -174,6 +178,10 @@ object MyChannel {
      * (Latest Movies' newest films lead each language's Movies channel since 2026-10-08).
      */
     val MOVED = mapOf("mychannel://latest" to "mychannel://hindi")
+
+    /** Spark One, the Google-safe channel at the top of the list (the owner, 2026-10-10). */
+    const val PONE = "pone"
+    const val PONE_URL = "mychannel://pone"
 
     /** Bazaar Ads' address: the channel that is all ads, so no pop-up ad breaks come over it. */
     const val ADS_URL = "mychannel://ads"
