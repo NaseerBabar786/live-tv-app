@@ -111,7 +111,7 @@
           <label class="f">Contact email <input type="email" id="dEmail" maxlength="120"></label>
           <label class="f">Package booked <input type="text" id="dPackage" maxlength="120" placeholder="e.g. 3 months, all spots"></label>
         </div>
-        <label class="f">Price and payment <input type="text" id="dPrice" maxlength="120" placeholder="e.g. $150 per month, paid until 31 Dec"></label>
+        <label class="f">Price and payment <input type="text" id="dPrice" maxlength="120" placeholder="Free (advertising is free since 2026-10-10)"></label>
         <label class="f">Deal notes <textarea id="dNotes" maxlength="3000" placeholder="What we agreed, invoices, reminders"></textarea></label>
       </div>
       <div class="row">
@@ -188,7 +188,7 @@ if (!configured) {
   const db = fs.getFirestore(app);
   let sponsors = [], editing = null, image = "", banner = "", ticker = null;
   const TICKER_ID = "_ticker";
-  const DEFAULT_TICKER = "Advertise your business on Cable TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
+  const DEFAULT_TICKER = "Advertise your business free on Cable TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
   /** Private deal details, admin only: sponsorDeals/{sponsorId} = { person, phone, email, package, price, notes }. */
   let deals = {}, dealNote = "";
   const DEAL_FIELDS = { person: "dPerson", phone: "dPhone", email: "dEmail", package: "dPackage", price: "dPrice", notes: "dNotes" };
@@ -219,6 +219,12 @@ if (!configured) {
       sponsors = all.filter(s => s.id !== TICKER_ID);
       $("tickerText").value = ticker ? (ticker.text || "") : DEFAULT_TICKER; tickerCount();
       $("tickerOn").checked = ticker ? !!ticker.active : true;
+      // Advertising is free (owner, 2026-10-10): a saved line that doesn't say so yet switches to the free words once.
+      if (ticker && /advertis/i.test(ticker.text || "") && !/free/i.test(ticker.text || "")) {
+        $("tickerText").value = DEFAULT_TICKER; tickerCount();
+        $("tickerForm").requestSubmit();
+        return;
+      }
       try {
         deals = Object.fromEntries((await fs.getDocs(fs.collection(db, "sponsorDeals"))).docs.map(d => [d.id, d.data()]));
         dealNote = "";
