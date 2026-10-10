@@ -32,7 +32,7 @@ The top corners and the bottom strip stay free for the app's channel number, log
 --offline skips the internet (silent voice, sample stories) to check the layout.
 Needs ffmpeg, numpy, Pillow (with raqm/fribidi for Urdu text) and (online) edge-tts.
 """
-import asyncio, datetime as dt, email.utils, html, json, math, os, re, subprocess, sys, time
+import asyncio, datetime as dt, email.utils, html, json, math, os, re, shutil, subprocess, sys, time
 import urllib.parse, urllib.request, wave
 import xml.etree.ElementTree as ET
 from zoneinfo import ZoneInfo
@@ -375,10 +375,37 @@ def read_wav(path):
     with wave.open(path, "rb") as f:
         return np.frombuffer(f.readframes(f.getnframes()), dtype="<i2").astype(np.float32) / 32767
 
-async def _tts(text, voice, path):
+# Owner 2026-10-10: the newsreader spoke too slowly and flatly ("normal people have some emotion: sometimes a
+# little faster, sometimes slower"). Every reader is PACE % quicker than her voice's own speed, each kind of story
+# has its own tone (MOOD: breaking quicker and a touch higher, good news warmer and calmer, in-brief brisk), and each
+# sentence of a story gets a slightly different speed so a story isn't read at one flat rate.
+# How the Urdu voices should SAY names they get wrong (owner 2026-10-10: "Independent" sounded wrong). Only the
+# voice uses these spellings; the screen keeps the normal ones.
+SAY = {"السلام علیکم": "اَلسّلامُ عَلَیکُم", "انڈپینڈنٹ": "اِنڈی پینڈنٹ", "انڈیپنڈنٹ": "اِنڈی پینڈنٹ", "ای ایس پی این کرک انفو": "ای ایس پی این، کرک اِنفو",
+       "سٹی نیوز": "سِٹی نیوز", "ورائٹی": "وَرائٹی", "ٹورنٹو": "ٹورانٹو"}
+PACE = int(os.environ.get("NEWS_PACE", "12"))
+MOOD = {"breaking": (6, 3), "develop": (0, 0), "local": (3, 0), "good": (-3, 6), "brief": (8, 2),
+        "sports": (6, 2), "film": (4, 4), "": (0, 0)}   # (rate %, pitch Hz)
+SWING = (0, 4, -3, 2, -2, 5)   # rate % added to a story's 1st, 2nd, ... sentence
+
+def with_mood(voice, mood):
+    """'voice|pitch|rate' + the tone of a kind of story: 'voice|pitch|rate|mood'."""
+    name, pitch, rate = (voice.split("|") + ["+0Hz", RATE])[:3]
+    return f"{name}|{pitch}|{rate}|{mood if mood in MOOD else ''}"
+
+def _shift(value, by, unit):
+    m = re.match(r"([+-]?\d+)", value or "0")
+    n = (int(m.group(1)) if m else 0) + by
+    return f"{n:+d}{unit}"
+
+async def _tts(text, voice, path, swing=0):
     import edge_tts
-    name, pitch, rate = (voice.split("|") + ["+0Hz", RATE])[:3]   # "voice|pitch|rate", see voice_of()
-    await edge_tts.Communicate(text, name, rate=rate, pitch=pitch).save(path)
+    name, pitch, rate, mood = (voice.split("|") + ["+0Hz", RATE, ""])[:4]   # "voice|pitch|rate|mood": voice_of(), with_mood()
+    for written, said in SAY.items():
+        text = text.replace(written, said)
+    dr, dp = MOOD.get(mood, (0, 0))
+    await edge_tts.Communicate(text, name, rate=_shift(rate, PACE + dr + swing, "%"),
+                               pitch=_shift(pitch, dp, "Hz")).save(path)
 
 def voice_of(reader):
     """The newsreader's own voice (tools/news/presenters/voices.json, by name; owner 2026-10-09: a different voice
@@ -395,17 +422,30 @@ def speak(text, voice, base, offline):
     if offline:
         write_wav(wav, np.zeros(int(SR * (0.5 + len(text) * 0.062)), np.float32))
         return read_wav(wav)
-    for attempt in range(5):
-        try:
-            asyncio.run(_tts(text, voice, base + ".mp3"))
-            if os.path.getsize(base + ".mp3") > 1000: break
-        except Exception as e:
-            print("voice retry", attempt, e)
-        time.sleep(5 * (attempt + 1))
-    else:
-        raise SystemExit("Voice failed for: " + text)
-    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", base + ".mp3", "-ac", "1", "-ar", str(SR), wav)
-    return read_wav(wav)
+    # A story is read sentence by sentence, each at its own slightly different speed (SWING), with a short breath.
+    parts = [p for p in re.split(r"(?<=[۔؟!?])\s+", text.strip()) if p] if "|" in voice and voice.count("|") >= 3 else [text]
+    out = []
+    for k, part in enumerate(parts):
+        mp3 = f"{base}-{k}.mp3"
+        for attempt in range(5):
+            try:
+                asyncio.run(_tts(part, voice, mp3, SWING[k % len(SWING)] if len(parts) > 1 else 0))
+                if os.path.getsize(mp3) > 1000: break
+            except Exception as e:
+                print("voice retry", attempt, e)
+            time.sleep(5 * (attempt + 1))
+        else:
+            raise SystemExit("Voice failed for: " + part)
+        run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", mp3, "-ac", "1", "-ar", str(SR), wav)
+        if os.environ.get("NEWS_SAY_DIR"):   # the pronunciation check (tools/news/say_check.py) listens to these
+            keep = os.environ["NEWS_SAY_DIR"]; os.makedirs(keep, exist_ok=True)
+            n = len([f for f in os.listdir(keep) if f.endswith(".mp3")])
+            shutil.copy(mp3, os.path.join(keep, f"{n:04d}.mp3"))
+            with open(os.path.join(keep, f"{n:04d}.txt"), "w", encoding="utf-8") as f:
+                f.write(part.strip())
+        if out: out.append(np.zeros(int(SR * 0.12), np.float32))
+        out.append(read_wav(wav))
+    return np.concatenate(out)
 
 # ---------- music: real recordings from tools/music/library.py (CC BY, credited on the end card) ----------
 STING_MUSIC = os.environ.get("NEWS_STING", "promo")   # opening and end card
@@ -582,15 +622,33 @@ def wrap_en(d, s, size, width, max_lines, bold=False):
         out[-1] = last.rstrip() + "…"
     return out
 
-def lower_bar(d, label, en=None):
+_LOGO = {}
+
+def spark_logo(im, x, y, h, name="spark-news.png"):
+    """Pastes the Spark News logo (docs/channel/logos, owner 2026-10-10: show the logo, not only the name) h px high."""
+    if name not in _LOGO:
+        try:
+            _LOGO[name] = Image.open(os.path.join(HERE, "..", "..", "docs", "channel", "logos", name)).convert("RGBA")
+        except OSError:
+            _LOGO[name] = None
+    lg = _LOGO[name]
+    if lg is None: return 0
+    lg = lg.resize((round(lg.width * h / lg.height), h), Image.LANCZOS)
+    im.alpha_composite(lg, (round(x), round(y)))
+    return lg.width
+
+def lower_bar(d, label, en=None, top=606):
     # y 606-654: free bottom strip below it stays clear for the app's ticker.
-    d.rectangle([930, 606, 1210, 654], fill=RED)
-    text(d, 1070, 628, BRAND, 26, "white", "m")
-    d.rectangle([70, 606, 930, 654], fill=(245, 245, 248))
-    text(d, 910, 628, label, 22, (20, 25, 45))
+    o = top - 606
+    d.rectangle([930, 606 + o, 1210, 654 + o], fill=(10, 20, 52))
+    d.rectangle([930, 606 + o, 936, 654 + o], fill=RED)
+    if not spark_logo(d._image, 958, 609 + o, 42):
+        text(d, 1070, 628 + o, BRAND, 26, "white", "m")
+    d.rectangle([70, 606 + o, 930, 654 + o], fill=(245, 245, 248) if not o else (225, 228, 238))
+    text(d, 910, 628 + o, label, 22, (20, 25, 45))
     # The English line on the left of the bar, as far as the Urdu label leaves room.
     room = 910 - line_len(d, tokens(label), fonts(22)) - 30 - 88
-    if room > 80: en_text(d, (88, 630), LABEL_EN if en is None else en, 18, (60, 70, 100), "lm", room, True)
+    if room > 80: en_text(d, (88, 630 + o), LABEL_EN if en is None else en, 18, (60, 70, 100), "lm", room, True)
 
 def panel(d, col):
     d.rounded_rectangle([70, 108, 1210, 590], 18, fill=(8, 16, 40, 225))
@@ -605,47 +663,44 @@ def pill(d, name, col):
 # Scene clip box on story cards (left of the text), when a free clip fits the story; see broll.py.
 BROLL_BOX = (100, 196, 448, 252)
 
-def card(path, label, section, headline, body, source, count, video_credit=None, headline_en="", source_en="", count_en="",
-         tier=None, where=None):
+# Story graphics like a real bulletin (owner 2026-10-10: "not giving a realistic look"; no story counter, no source
+# line): the newsreader full screen, a coloured flag (Breaking / Developing ...) over a headline strap in the lower
+# third (Urdu, with the English line under it), the channel bar below, and a map over her shoulder for local news.
+# Sources are named by the newsreader and on the end card.
+MAP_BOX = (842, 96, 368, 207)
+STRAP_Y = 486
+
+def card(path, label, section, headline, headline_en="", tier=None, where=None):
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    name, col = SECTION[section]
-    if tier:   # the headlines: the part of the bulletin, then the section ("اہم ترین خبر • Breaking · پاکستان")
-        t_ur, t_en, col = TIER[tier]
-        panel(d, col); pill(d, f"{t_ur} • {t_en}", col)
+    if tier:
+        f_ur, f_en, col = TIER[tier]
     else:
-        panel(d, col); pill(d, f"{name} • {SECTION_EN[section]}", col)
+        f_ur, f_en = SECTION[section][0], SECTION_EN[section]; col = SECTION[section][1]
     if where:
-        draw_map(im, d, where, col)
-    if count: text(d, 110, 150, count, 20, (170, 185, 215), "l")
-    if count_en: en_text(d, (110, 176), count_en, 15, (170, 185, 215))
-    tw = 1050
-    if where:
-        tw = RIGHT - (BROLL_BOX[0] + BROLL_BOX[2]) - 40
-    elif video_credit:
-        x, y, w, h = BROLL_BOX; tw = RIGHT - (x + w) - 40
-        d.rectangle((x - 3, y - 3, x + w + 2, y + h + 2), outline=col, width=3)
-        d.rectangle((x, y, x + w - 1, y + h - 1), fill=(0, 0, 0, 0))
-        d.text((x, y + h + 10), video_credit, font=font(False, 15), fill=DIM)
-    size = 44
-    while True:
-        lines = wrap(d, headline, size, tw, 3)
-        if len(lines) <= 2 or size <= 34: break
-        size -= 4
-    if headline_en and len(lines) > 2: lines = wrap(d, headline, size, tw, 2)   # room for the English line
-    step = int(size * 1.75)
-    y = 200 + step // 2
+        draw_map(im, d, where, col, MAP_BOX)
+    # The flag, right-aligned above the strap.
+    flag = f"{f_ur} • {f_en}"
+    fw = line_len(d, tokens(flag), fonts(22)) + 36
+    d.rectangle([1210 - fw, STRAP_Y - 40, 1210, STRAP_Y], fill=col)
+    text(d, 1210 - fw / 2, STRAP_Y - 20, flag, 22, "white", "m")
+    # The strap: the Urdu headline on white, the English one on navy under it.
+    tw = 1210 - 70 - 40
+    size = 34
+    while size > 26 and len(wrap(d, headline, size, tw, 2)) > 1: size -= 2
+    lines = wrap(d, headline, size, tw, 2)
+    uh = 30 + int(size * 1.55) * len(lines)
+    d.rectangle([70, STRAP_Y, 1210, STRAP_Y + uh], fill=(246, 246, 250))
+    d.rectangle([70, STRAP_Y, 78, STRAP_Y + uh], fill=col)
+    y = STRAP_Y + 15 + int(size * 1.55) // 2
     for ln in lines:
-        draw_line(d, RIGHT, y, ln, fonts(size), "white"); y += step
-    y += int(size * 1.3) - step
-    # The headline in English under the Urdu one (owner, 2026-10-09).
-    for ln in wrap_en(d, headline_en, 24, tw, 2, True) if headline_en else []:
-        d.text((RIGHT, y), ln, font=font(True, 24), fill=GOLD, anchor="ra"); y += 32
-    y += 30
-    for ln in wrap(d, body, 25, tw, max(0, (545 - y) // 46)):
-        draw_line(d, RIGHT, y, ln, fonts(25, False), LIGHT); y += 46
-    if source: text(d, RIGHT, 562, source, 19, DIM)
-    if source_en: en_text(d, (110 if not video_credit else BROLL_BOX[0], 562), source_en, 16, DIM, "lm", 420)
-    lower_bar(d, label)
+        draw_line(d, 1190, y, ln, fonts(size), (14, 22, 48)); y += int(size * 1.55)
+    ey = STRAP_Y + uh
+    if headline_en:
+        d.rectangle([70, ey, 1210, ey + 34], fill=(10, 24, 62))
+        en_text(d, (1190, ey + 17), headline_en, 19, "white", "rm", tw, True)
+        ey += 34
+    # The channel bar sits right under the strap (the bottom strip below it stays free for the app's ticker).
+    lower_bar(d, label, top=max(606, ey + 4))
     im.save(path)
 
 _WORLD = None
@@ -671,10 +726,10 @@ def world_shapes():
     return _WORLD
 
 
-def draw_map(im, d, where, col):
-    """A map of the area around [where] (Urdu name, English name, lat, lon) with a pin, in the story box."""
+def draw_map(im, d, where, col, box=None):
+    """A map of the area around [where] (Urdu name, English name, lat, lon) with a pin, in [box]."""
     ur, en, lat, lon = where
-    x, y, w, h = BROLL_BOX
+    x, y, w, h = box or BROLL_BOX
     span = 16.0    # degrees of longitude shown: the city and the country around it
     sx = w / span; sy = sx / max(0.3, math.cos(math.radians(lat)))
     px = lambda lo, la: (x + w / 2 + (lo - lon) * sx, y + h / 2 - (la - lat) * sy)   # noqa: E731
@@ -695,13 +750,14 @@ def draw_map(im, d, where, col):
     d.rounded_rectangle((cx - 110, cy + 20, cx + 110, cy + 74), 8, fill=(8, 16, 40, 235))
     text(d, cx, cy + 36, ur, 22, "white", "m")
     d.text((cx, cy + 62), en, font=font(True, 16), fill=GOLD, anchor="mm")
-    d.text((x, y + h + 10), "Map: Natural Earth", font=font(False, 15), fill=DIM)
+    d.text((x + w - 4, y + h - 4), "Map: Natural Earth", font=font(False, 11), fill=(200, 210, 225), anchor="rd")
 
 
 def title_card(path, kind, when, sub, english="", when_en="", sub_en=""):
     """Urdu with English under each line (channel 1 writes both, owner 2026-10-09)."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     d.rounded_rectangle([170, 120, 1110, 585], 22, fill=(8, 16, 40, 230))
+    spark_logo(im, 196, 140, 64)
     text(d, W / 2, 190, BRAND, 70, "white", "m")
     d.text((W / 2, 282), BRAND_EN, font=font(True, 28), fill="white", anchor="mm")
     d.rectangle([340, 310, 940, 315], fill=RED)
@@ -904,20 +960,26 @@ def add_segment(body, clip, t0, work, secs=None):
         NOTES.append(f"weather centre overlay failed: {e}")
 
 def add_reader(body, reader, windows, label, work):
-    """Shows the newsreader full screen (moving, with our lower bar) while she says the opening and closing lines."""
+    """Shows the newsreader full screen (moving) in [windows] ((start, secs, graphics png or None)): our lower bar
+    while she says the opening and closing lines, each story's strap while she reads it."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     lower_bar(d, f"{label} • {reader['ur']}", f"{LABEL_EN} · {reader.get('name', '')}")
     im.save(os.path.join(work, "reader-bar.png"))
     # One continuous copy of the (looping, forward-and-back) clip runs under the whole bulletin and shows only in
     # the windows, so the newsreader never restarts mid-gesture between segments.
-    ins = ["-i", body, "-stream_loop", "-1", "-i", reader["clip"], "-loop", "1", "-i", os.path.join(work, "reader-bar.png")]
-    on = "+".join(f"between(t,{t0:.3f},{t0 + dur:.3f})" for t0, dur in windows)
+    pngs = list(dict.fromkeys(p or "reader-bar.png" for _, _, p in windows))
+    ins = ["-i", body, "-stream_loop", "-1", "-i", reader["clip"]]
+    for p in pngs: ins += ["-loop", "1", "-i", os.path.join(work, p)]
+    between = lambda ws: "+".join(f"between(t,{t0:.3f},{t0 + dur:.3f})" for t0, dur, _ in ws)   # noqa: E731
     graph = [f"[1:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1[r]",
-             f"[0:v][r]overlay=0:0:shortest=1:enable='{on}'[m]",
-             f"[m][2:v]overlay=0:0:shortest=1:enable='{on}'[b]"]
-    last = "[b]"
+             f"[0:v][r]overlay=0:0:shortest=1:enable='{between(windows)}'[m0]"]
+    last = "m0"
+    for i, p in enumerate(pngs):
+        ws = [w for w in windows if (w[2] or "reader-bar.png") == p]
+        graph.append(f"[{last}][{i + 2}:v]overlay=0:0:shortest=1:enable='{between(ws)}'[m{i + 1}]")
+        last = f"m{i + 1}"
     tmp = os.path.join(work, "with-reader.mp4")
-    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(graph) + f";{last}format=yuv420p[v]",
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(graph) + f";[{last}]format=yuv420p[v]",
         "-map", "[v]", "-map", "0:a", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
         "-g", str(FPS * 2), "-c:a", "copy", "-movflags", "+faststart", tmp)
     os.replace(tmp, body)
@@ -1075,13 +1137,13 @@ def main():
             # In the running order; the fitting step below drops stories from the end (counts["all"]).
             last = None
             for s in stories[:counts["all"]]:
-                segs.append(("story", (TIER_LEAD[s["tier"]] if s["tier"] != last else "") + s["read"], rv, s))
+                segs.append(("story", (TIER_LEAD[s["tier"]] if s["tier"] != last else "") + s["read"], with_mood(rv, s["tier"]), s))
                 last = s["tier"]
             if weather_seg: segs.append(("weather", weather_seg, wv, None))
             return segs
         for sec in ORDER:
             for i, s in enumerate([s for s in stories if s["section"] == sec][:counts[sec]]):
-                segs.append(("story", (LEAD[sec] if i == 0 else "") + s["read"], VOICE[sec], s))
+                segs.append(("story", (LEAD[sec] if i == 0 else "") + s["read"], with_mood(VOICE[sec], sec), s))
         if weather_seg: segs.append(("weather", weather_seg, wv, None))
         return segs
 
@@ -1092,7 +1154,7 @@ def main():
         if key not in cache:
             cache[key] = speak(text, v, os.path.join(work, f"v{len(cache):02d}"), offline)
         return cache[key]
-    STING, GAP, END_MIN = 6.0, 0.7, 8.0
+    STING, GAP, END_MIN = 6.0, 0.45, 8.0   # a shorter pause between stories (owner: it felt slow)
     counts = {sec: sum(s["section"] == sec for s in stories) for sec in ORDER}
     counts["all"] = len(stories)
     while True:
@@ -1126,21 +1188,14 @@ def main():
         pic = f"c-{i:02d}.png"
         if sk == "story":
             n += 1
-            src = "ذریعہ " + s["source"] + (" • ترجمہ" if s["section"] in ("canada", "india", "sports", "film") else "")
-            src_en = "Source: " + SOURCE_EN.get(s["source"], "") + (" (translated)" if s["section"] in ("canada", "india", "sports", "film") else "")
-            # Owner 2026-10-08: scenery that doesn't match the story feels wrong, so the box shows the newsreader
-            # unless NEWS_BROLL=1 asks for the topic clips.
+            # Owner 2026-10-10: the newsreader full screen with the story's strap, like a real bulletin (topic
+            # clips only with NEWS_BROLL=1, in the old box). Local news adds a map of where it happened.
             clip = broll.pick(s, work) if os.environ.get("NEWS_BROLL") == "1" and not offline else None
-            if not clip and reader: clip = (reader["clip"], " ")   # no scene clip: the newsreader reads in the window
             if clip: clips.append((t, len(audio) / SR + GAP, clip[0]))
-            # Local news shows a map of where it happened in the box instead (owner, 2026-10-10).
             where = place_of(s) if s.get("tier") == "local" else None
-            if where and clip and clip[0] == reader["clip"]:
-                clips.pop(); clip = None
-            body = (quote_of(s) if s.get("tier") == "develop" else "") or first_sentence(s["desc"])
-            card(os.path.join(work, pic), label, s["section"], s["headline"],
-                 body, src, f"خبر {n} • کل {len(shown)}", clip[1] if clip else None,
-                 s.get("headline_en", ""), src_en, f"Story {n} of {len(shown)}", tier=s.get("tier"), where=where)
+            card(os.path.join(work, pic), label, s["section"], s["headline"], s.get("headline_en", ""),
+                 tier=s.get("tier"), where=where)
+            if not clip: on_camera.append((t, dur, pic))
         elif sk == "weather":
             weather_card(os.path.join(work, pic), label, wx)
         elif sk == "open":
@@ -1149,7 +1204,7 @@ def main():
             title_card(os.path.join(work, pic), kind, up_next,
                        f"تفصیلی خبرنامہ {every_full}" + ("" if in_set else f"، اگلا {clock(next_full)}"),
                        when_en=up_next_en, sub_en=f"Full news {every_full_en}" + ("" if in_set else f", next at {clock_en(next_full)}"))
-        if sk in ("open", "close"): on_camera.append((t, dur))
+        if sk in ("open", "close"): on_camera.append((t, dur, None))
         cards.append((pic, dur)); t += dur
     left = total - t
     # A short gap stays on the end card; a long one gets promos after a normal-length end card.
