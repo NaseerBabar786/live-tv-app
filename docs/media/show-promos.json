@@ -629,7 +629,21 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "28fa617e1ba8"
+   "hash": "604eadfcfdd6"
+  },
+  "spark-tv-news-the-full-report-all-2000": {
+   "title": "Spark TV News: The Full Report",
+   "when": "Every day · 8 PM",
+   "day": "all",
+   "time": "20:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full-night.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-the-full-report-all-2000.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "61e78f519143"
   },
   "show-all-2055": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -643,7 +657,21 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "64dabd6d76f8"
+   "hash": "ced916fd18de"
+  },
+  "spark-tv-news-headlines-all-2100": {
+   "title": "Spark TV News: Headlines",
+   "when": "Every day · 9 PM",
+   "day": "all",
+   "time": "21:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-night.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-2100.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "814a2a7051ef"
   },
   "show-all-2155": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -657,7 +685,21 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "1c45d9d6a728"
+   "hash": "4a617cef5fd3"
+  },
+  "spark-tv-news-headlines-all-2200": {
+   "title": "Spark TV News: Headlines",
+   "when": "Every day · 10 PM",
+   "day": "all",
+   "time": "22:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-night.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-2200.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "e8c144d8b15e"
   },
   "show-all-2255": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
@@ -671,7 +713,21 @@
    "secs": 20,
    "voice": true,
    "credit": "",
-   "hash": "a6b960fed5c8"
+   "hash": "e21d6ecb3f50"
+  },
+  "spark-tv-news-headlines-all-2300": {
+   "title": "Spark TV News: Headlines",
+   "when": "Every day · 11 PM",
+   "day": "all",
+   "time": "23:00",
+   "videos": [
+    "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-night.mp4"
+   ],
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-2300.mp4",
+   "secs": 20,
+   "voice": true,
+   "credit": "",
+   "hash": "07c5c8c48976"
   },
   "show-all-2325": {
    "title": "وقفہ: آج کے پروگرام اور موسم",
