@@ -167,7 +167,7 @@ SKIP_TITLES = {
     "Timeline": re.compile(r"uncensored|footage|murder|serial killer|killer|massacre|execution", re.IGNORECASE),
 }
 # Kids' channels post Halloween specials in October: nothing scary goes on the Kids shelf.
-SCARY = re.compile(r"hallowe+n|spooky|scary|creepy|ghosts?|monsters? night|haunted", re.IGNORECASE)
+SCARY = re.compile(r"hallowe+n|spo+ky|scary|creepy|ghosts?|monsters?|haunted|zombies?|witch|curse|terrifying|trick[- ]or[- ]treat|vampires?", re.IGNORECASE)
 # Muslim Television Ahmadiyya's own channels; their videos go to MTA.m3u only, which Live
 # TV shows only when the viewer turns MTA on in Settings.
 MTA_CHANNELS = [
@@ -1027,6 +1027,8 @@ def main():
     # page (such as an old PTV classic) stays.
     cutoff = (today - dt.timedelta(days=KEEP_DAYS)).isoformat()
     kept = {k: v for k, v in kept.items() if v.get("seen", v["added"]) >= cutoff and v.get("channel") not in RETIRED}
+    # Nothing scary on the Kids shelf, including what was kept before the rule (2026-10-10).
+    kept = {k: v for k, v in kept.items() if not (v.get("genre") == "Kids" and SCARY.search(v.get("title", "")))}
     episodes = {k: v for k, v in kept.items() if "show" in v}
     movies = {k: v for k, v in kept.items() if "movie" in v}
     telefilms = {k: v for k, v in kept.items() if "telefilm" in v}
