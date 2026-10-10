@@ -50,7 +50,7 @@ https://www.youtube.com/watch?v=vXAIKi_vt1A
 https://www.youtube.com/watch?v=7Ya8QS8fANA
 #EXTINF:-1 mins="58" desc="Listen to the beautiful Recitation of the Holy Qur'an (Part 29)." added="2026-10-07" tvg-logo="https://i.ytimg.com/vi/EiOmPaQST9U/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Shows" group-title="MTA Quran",Holy Qur’an Recitation | Part 29
 https://www.youtube.com/watch?v=EiOmPaQST9U
-#EXTINF:-1 mins="146" desc="Recitation of the Holy Qur'an by Maulana Feroz Alam with Urdu translation. Part 27." added="2026-10-06" tvg-logo="https://i.ytimg.com/vi/jWp8aAdRbyI/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 27
+#EXTINF:-1 mins="146" desc="Recitation of the Holy Qur'an by Maulana Feroz Alam with Urdu translation. Part 27." added="2026-10-06" tvg-logo="https://i.ytimg.com/vi/jWp8aAdRbyI/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 27
 https://www.youtube.com/watch?v=jWp8aAdRbyI
 #EXTINF:-1 mins="147" desc="Recitation of the Holy Qur'an by Maulana Feroz Alam with Urdu translation. Part 12." added="2026-10-06" tvg-logo="https://i.ytimg.com/vi/194V1YfE93g/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Quran",Tilawat - Part 12
 https://www.youtube.com/watch?v=194V1YfE93g
@@ -398,6 +398,8 @@ https://www.youtube.com/watch?v=OfGa2lFITaI
 https://www.youtube.com/watch?v=4qvtfQN6cxY
 #EXTINF:-1 mins="25" genres="Family;Religious" desc="A multi-segment children's programme that offers creative learning through DIY crafts, science experiments inspired by Islamic insights, and delicious snack recipes." added="2026-10-02" tvg-logo="https://i.ytimg.com/vi/wCXUOBGZ2fE/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Guldusta",Guldasta | Ep 2
 https://www.youtube.com/watch?v=wCXUOBGZ2fE
+#EXTINF:-1 mins="55" genres="Religious" desc="Friday sermon delivered on 9th October 2026 by the Head of the Ahmadiyya Muslim Community, Hazrat Mirza Masroor Ahmad (may Allah be his Helper), from Masjid Mubarak in Islamabad,…" added="2026-10-10" tvg-logo="https://i.ytimg.com/vi/cwsfbXWAqjQ/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Friday Sermons",Friday Sermon | 9th October 2026
+https://www.youtube.com/watch?v=cwsfbXWAqjQ
 #EXTINF:-1 genres="Religious" desc="Friday sermon delivered on 10th July 2020 by the Head of the Ahmadiyya Muslim Community, Hazrat Mirza Masroor Ahmad (may Allah be his Helper), from Masjid Mubarak in Islamabad,…" added="2026-10-09" tvg-logo="https://i.ytimg.com/vi/iU7-f301Vzw/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Shows" group-title="MTA Friday Sermons",Friday Sermon | خطبئہِ جمعہ
 https://www.youtube.com/watch?v=iU7-f301Vzw
 #EXTINF:-1 mins="57" genres="Religious" desc="Friday sermon delivered on 7th March 2025 by the Head of the Ahmadiyya Muslim Community, Hazrat Mirza Masroor Ahmad (may Allah be his Helper), from Masjid Mubarak in Islamabad,…" added="2026-10-09" tvg-logo="https://i.ytimg.com/vi/ScoQp4vbaoY/hqdefault.jpg" tvg-language="English" tvg-genre="Shows" group-title="MTA Friday Sermons",Friday Sermon | 7th March 2025
@@ -1258,7 +1260,7 @@ https://www.youtube.com/watch?v=G9P05gABRHQ
 https://www.youtube.com/watch?v=Bq24-qlnMao
 #EXTINF:-1 mins="66" desc="A question and answer session with Hazrat Mirza Tahir Ahmad, Khalifatul-Masih IV (ra) at the occasion of Atfal Ijtema Germany. Recorded on May 29, 1993." added="2026-10-03" tvg-logo="https://i.ytimg.com/vi/8X89XTlRuRY/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Kids" group-title="MTA Children's Programmes",Question Answer Session with Atfal 29 May 1993 (Urdu)
 https://www.youtube.com/watch?v=8X89XTlRuRY
-#EXTINF:-1 mins="30" genres="Family;Religious" added="2026-10-03" tvg-logo="https://i.ytimg.com/vi/iYAD8FaZr9c/hqdefault.jpg" tvg-language="Urdu" tvg-genre="Kids" group-title="MTA Children's Programmes",Kids Time: Programme 1 (English & Urdu)
+#EXTINF:-1 mins="30" genres="Family;Religious" added="2026-10-03" tvg-logo="https://i.ytimg.com/vi/iYAD8FaZr9c/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Kids Time: Programme 1 (English & Urdu)
 https://www.youtube.com/watch?v=iYAD8FaZr9c
 #EXTINF:-1 mins="10" genres="Family" desc="Part 6 of an educational class with Hadhrat Mirza Masroor Ahmad, Head of the Ahmadiyya Muslim Community. Recorded on 17th January 2010." added="2026-10-03" tvg-logo="https://i.ytimg.com/vi/WGnXkKXkyjI/hqdefault.jpg" tvg-language="English" tvg-genre="Kids" group-title="MTA Children's Programmes",Children's Class: 17th January 2010 - Part 6
 https://www.youtube.com/watch?v=WGnXkKXkyjI
