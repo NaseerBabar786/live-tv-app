@@ -50,7 +50,7 @@ jobs:
       - name: Make the clip on Modal
         run: |
           set -euo pipefail
-          modal run tools/news/modal/longcat_avatar.py --image job/reader-real.jpg --audio job/voice.mp3 \
+          modal run tools/news/modal/longcat_avatar.py::main --image job/reader-real.jpg --audio job/voice.mp3 \
             --resolution "$RES" --out "job/news-longcat-test-$READER-$TAG.mp4" \
             --prompt "A Pakistani woman TV news anchor in her late twenties with long dark hair, wearing an embroidered maroon shalwar kameez with a light dupatta, sits upright at a news desk in a real television studio, the background softly out of focus. She reads the news to the camera in a calm, composed, professional way: natural mouth movement matching her words, steady expression, gentle blinks, very small natural head movements, both hands stay still on the desk, no hand gestures, no exaggerated expressions, static camera, real broadcast camera footage, natural skin texture" 2>&1 | tee "job/news-longcat-test-$READER-$TAG.log"
       - name: Upload
