@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-10 16:03 UTC",
+ "checked": "2026-10-10 22:23 UTC",
  "problems": [
   {
    "channel": "Spark Dramas Urdu",
@@ -35,7 +35,7 @@
   },
   {
    "channel": "Spark Teens Hindi",
-   "text": "35 programme(s) have no length; each gets 12 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
+   "text": "34 programme(s) have no length; each gets 12 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
   },
   {
    "channel": "Spark Teens Hindi",
@@ -84,10 +84,6 @@
   {
    "channel": "Spark Movies Punjabi",
    "text": "1 programme(s) have no length; each gets 100 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
-  },
-  {
-   "channel": "Spark Teens Hindi",
-   "text": "video UFXtHoOGhzo can't play here (removed or private); new schedules leave it out, and today's fills its time."
   }
  ]
 }
