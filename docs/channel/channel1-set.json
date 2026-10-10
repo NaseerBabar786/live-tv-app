@@ -1,16 +1,16 @@
 {
- "date": "2026-10-09",
- "episode": 1,
+ "date": "2026-10-10",
+ "episode": 2,
  "hours": [
   {
    "hour": 1,
    "full_news": true,
    "programmes": [
     {
-     "id": "c1-1-P4zyZAl30To",
-     "urdu": "مٹی دے باوے: قسط 1",
-     "title": "Mitti De Baway · Episode 1",
-     "secs": 1920
+     "id": "c1-1-sEms255DVP8",
+     "urdu": "مٹی دے باوے: قسط 2",
+     "title": "Mitti De Baway · Episode 2",
+     "secs": 2101
     }
    ],
    "segments": [
@@ -23,10 +23,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-2-v94Gz57T0UY",
-     "urdu": "اسوہ: قسط 1",
-     "title": "Uswah · Episode 1",
-     "secs": 2557
+     "id": "c1-2-KxPcUdOo2_Y",
+     "urdu": "اسوہ: قسط 2",
+     "title": "Uswah · Episode 2",
+     "secs": 2382
     }
    ],
    "segments": [
@@ -39,10 +39,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-3-N6ss-wL7rFI",
-     "urdu": "ڈرامہ",
-     "title": "Ranjish Episode 9",
-     "secs": 1912
+     "id": "c1-3-uuZQ-JgKT2s",
+     "urdu": "محبت: قسط 1",
+     "title": "Mohabbat · Episode 1",
+     "secs": 2303
     }
    ],
    "segments": [
@@ -55,10 +55,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-4-xNqlw__CeSA",
-     "urdu": "ترکِ تمنا: قسط 1",
-     "title": "Tark-e-Tamanna · Episode 1",
-     "secs": 2079
+     "id": "c1-4-vCZ2KOFyeHY",
+     "urdu": "ترکِ تمنا: قسط 2",
+     "title": "Tark-e-Tamanna · Episode 2",
+     "secs": 2085
     }
    ],
    "segments": [
@@ -71,10 +71,10 @@
    "full_news": true,
    "programmes": [
     {
-     "id": "c1-5-5U6xxaGYpbw",
-     "urdu": "محبت یا اعتبار: قسط 1",
-     "title": "Mohabbat ya Aitebar · Episode 1",
-     "secs": 1906
+     "id": "c1-5-myWZTHsKcRg",
+     "urdu": "محبت یا اعتبار: قسط 2",
+     "title": "Mohabbat ya Aitebar · Episode 2",
+     "secs": 1895
     }
    ],
    "segments": [
@@ -87,10 +87,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-6-lWyspJk5FWc",
-     "urdu": "مدار: قسط 1",
-     "title": "Madaar · Episode 1",
-     "secs": 2117
+     "id": "c1-6-2sVQ_0pz2w8",
+     "urdu": "مدار: قسط 2",
+     "title": "Madaar · Episode 2",
+     "secs": 2079
     }
    ],
    "segments": [
@@ -103,10 +103,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-7-hIxoxwFztIU",
-     "urdu": "رقاص: قسط 1",
-     "title": "Raqaas · Episode 1",
-     "secs": 2014
+     "id": "c1-7-qd0e09OhSdQ",
+     "urdu": "رقاص: قسط 2",
+     "title": "Raqaas · Episode 2",
+     "secs": 2130
     }
    ],
    "segments": [
@@ -119,10 +119,10 @@
    "full_news": false,
    "programmes": [
     {
-     "id": "c1-8-gPfTi712OZQ",
-     "urdu": "ڈرامہ",
-     "title": "Raja London Ka Episode 22",
-     "secs": 2022
+     "id": "c1-8-ESnSw6n9KBU",
+     "urdu": "ہم راہی: قسط 1",
+     "title": "Humrahi · Episode 1",
+     "secs": 2449
     }
    ],
    "segments": [

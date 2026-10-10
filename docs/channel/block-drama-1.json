@@ -1,36 +1,36 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-09 23:18 UTC",
- "secs": 2557,
+ "built": "2026-10-10 02:16 UTC",
+ "secs": 2304,
  "videos": [
   {
-   "id": "v94Gz57T0UY",
-   "title": "Uswah Episode 01 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 23rd September 2026",
-   "label": "Har Pal Geo",
-   "secs": 2557,
+   "id": "aWhTeQxd5wA",
+   "title": "Ehsaan Faramosh Episode 44 | Momina Iqbal | ARY Zindagi Drama",
+   "label": "ARY Zindagi",
+   "secs": 2304,
    "kind": "drama"
   }
  ],
  "spares": [
   {
-   "id": "N6ss-wL7rFI",
-   "title": "Ranjish Episode 9 [ENG SUB] | 7th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
+   "id": "nwQZtlocHBo",
+   "title": "Raja London Ka Episode 24 [ENG SUB] 18th Aug 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
    "label": "Express TV",
-   "secs": 1912,
+   "secs": 2091,
    "kind": "drama"
   },
   {
-   "id": "gPfTi712OZQ",
-   "title": "Raja London Ka Episode 22 [ENG SUB] 11th Aug 2026 | Samar Jafri | Zaviyar Ejaz | Ameema Saleem",
-   "label": "Express TV",
-   "secs": 2022,
+   "id": "lWyspJk5FWc",
+   "title": "Madaar Episode 01 (Subtitles) 23rd September 2026 | Humayoun Ashraf - Sumaiyya Bukhsh | Green TV",
+   "label": "Green Entertainment",
+   "secs": 2117,
    "kind": "drama"
   },
   {
-   "id": "5d-BfcnSy00",
-   "title": "Main Tera Episode 56 | 8 October 2026 | Ghana Ali | Yusra Irfan | Arez Ahmed | ARY Digital",
-   "label": "ARY Digital",
-   "secs": 2236,
+   "id": "ptDYBfgtUiE",
+   "title": "Mitti De Baway Ep 06 (Sub) 8th Oct 26, Digitally VGO TEL, Happilac Paints & Vince Shampoo | Green TV",
+   "label": "Green Entertainment",
+   "secs": 2005,
    "kind": "drama"
   }
  ]
