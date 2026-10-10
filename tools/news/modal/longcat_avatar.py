@@ -19,7 +19,8 @@ import modal
 app = modal.App("spark-presenter-test")
 weights = modal.Volume.from_name("longcat-weights", create_if_missing=True)
 W = "/w"
-GPU = os.environ.get("PRESENTER_GPU", "L40S")
+# L40S (48 GB) ran out of memory on the second part of a 12 s clip, so the default is the 80 GB A100.
+GPU = os.environ.get("PRESENTER_GPU", "A100-80GB")
 GPU_PER_HOUR = {"L40S": 1.95, "A100-80GB": 2.50, "H100": 3.95}
 
 image = (
@@ -36,7 +37,7 @@ image = (
         "grep -v -E '^(libsndfile1|tritonserverclient)==' /repo/requirements_avatar.txt >> /tmp/req.txt",
         "pip install -r /tmp/req.txt 'huggingface_hub[cli]' hf_transfer",
     )
-    .env({"HF_HUB_ENABLE_HF_TRANSFER": "1"})
+    .env({"HF_HUB_ENABLE_HF_TRANSFER": "1", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"})
 )
 
 
