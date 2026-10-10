@@ -1,5 +1,5 @@
 {
- "_note": "Aaj ka Sher for Spark Shayari (5, Urdu): one sher by a classic Urdu poet whose work is free to use (died long ago). Shown in Urdu only; the Hindi spelling is what the AI voice reads (it says Urdu words better from it). Made with tools/shayari/make_sher_videos.py.",
+ "_note": "Aaj ka Sher (Spark Shayari 5 and Spark TV One): one sher by a classic Urdu poet whose work is free to use (died long ago). Shown in Urdu with a short English meaning under each line (owner 2026-10-10: all writing in Urdu and English); the Hindi spelling is what the AI voice reads (it says Urdu words better from it). English meanings are our own. Made with tools/shayari/make_sher_videos.py.",
  "poets": {
   "ghalib": {
    "ur": "مرزا غالب",
@@ -73,6 +73,10 @@
    "hi": [
     "हज़ारों ख़्वाहिशें ऐसी कि हर ख़्वाहिश पे दम निकले",
     "बहुत निकले मिरे अरमान लेकिन फिर भी कम निकले"
+   ],
+   "en": [
+    "Thousands of desires, each one worth dying for",
+    "Many of my wishes came true, yet still too few"
    ]
   },
   {
@@ -85,6 +89,10 @@
    "hi": [
     "पत्ता पत्ता बूटा बूटा हाल हमारा जाने है",
     "जाने न जाने गुल ही न जाने बाग़ तो सारा जाने है"
+   ],
+   "en": [
+    "Every leaf and every bush knows how I feel",
+    "Only the flower may not know; the whole garden does"
    ]
   },
   {
@@ -97,6 +105,10 @@
    "hi": [
     "सितारों से आगे जहाँ और भी हैं",
     "अभी इश्क़ के इम्तिहाँ और भी हैं"
+   ],
+   "en": [
+    "Beyond the stars there are still more worlds",
+    "Love still has more trials to face"
    ]
   },
   {
@@ -109,6 +121,10 @@
    "hi": [
     "उर्दू है जिस का नाम हमीं जानते हैं 'दाग़'",
     "हिन्दोस्ताँ में धूम हमारी ज़बाँ की है"
+   ],
+   "en": [
+    "Only we truly know the one called Urdu, says Dagh",
+    "All of Hindustan rings with the fame of our tongue"
    ]
   },
   {
@@ -121,6 +137,10 @@
    "hi": [
     "तुम मिरे पास होते हो गोया",
     "जब कोई दूसरा नहीं होता"
+   ],
+   "en": [
+    "It feels as if you are here with me",
+    "whenever no one else is around"
    ]
   },
   {
@@ -133,6 +153,10 @@
    "hi": [
     "दिल-ए-नादाँ तुझे हुआ क्या है",
     "आख़िर इस दर्द की दवा क्या है"
+   ],
+   "en": [
+    "O foolish heart, what has happened to you?",
+    "What, after all, is the cure for this pain?"
    ]
   },
   {
@@ -145,6 +169,10 @@
    "hi": [
     "ये इश्क़ नहीं आसाँ इतना ही समझ लीजे",
     "इक आग का दरिया है और डूब के जाना है"
+   ],
+   "en": [
+    "Love is not easy, understand this much:",
+    "it is a river of fire, and you must dive in to cross"
    ]
   },
   {
@@ -157,6 +185,10 @@
    "hi": [
     "लगता नहीं है दिल मिरा उजड़े दयार में",
     "किस की बनी है आलम-ए-ना-पाएदार में"
+   ],
+   "en": [
+    "My heart finds no peace in this ruined land",
+    "Who has ever been at ease in this passing world?"
    ]
   },
   {
@@ -169,6 +201,10 @@
    "hi": [
     "ख़ुदी को कर बुलंद इतना कि हर तक़दीर से पहले",
     "ख़ुदा बंदे से ख़ुद पूछे बता तेरी रज़ा क्या है"
+   ],
+   "en": [
+    "Raise your self so high that before each fate is written",
+    "God Himself asks you: tell me, what is your wish?"
    ]
   },
   {
@@ -181,6 +217,10 @@
    "hi": [
     "नाज़ुकी उस के लब की क्या कहिए",
     "पंखुड़ी इक गुलाब की सी है"
+   ],
+   "en": [
+    "What can one say of the softness of those lips?",
+    "They are like the petal of a rose"
    ]
   },
   {
@@ -193,6 +233,10 @@
    "hi": [
     "चुपके चुपके रात दिन आँसू बहाना याद है",
     "हम को अब तक आशिक़ी का वो ज़माना याद है"
+   ],
+   "en": [
+    "I remember the quiet tears, night and day",
+    "I still remember those days of being in love"
    ]
   },
   {
@@ -205,6 +249,10 @@
    "hi": [
     "हैं और भी दुनिया में सुख़न-वर बहुत अच्छे",
     "कहते हैं कि 'ग़ालिब' का है अंदाज़-ए-बयाँ और"
+   ],
+   "en": [
+    "There are many fine poets in the world",
+    "but they say Ghalib's way of saying it is unique"
    ]
   },
   {
@@ -217,6 +265,10 @@
    "hi": [
     "सरकती जाए है रुख़ से नक़ाब आहिस्ता आहिस्ता",
     "निकलता आ रहा है आफ़ताब आहिस्ता आहिस्ता"
+   ],
+   "en": [
+    "The veil slips from the face, slowly, slowly",
+    "as the sun comes into view, slowly, slowly"
    ]
   },
   {
@@ -229,6 +281,10 @@
    "hi": [
     "लाई हयात आए क़ज़ा ले चली चले",
     "अपनी ख़ुशी न आए न अपनी ख़ुशी चले"
+   ],
+   "en": [
+    "Life brought me, death takes me, and so I go",
+    "I came not by my wish, and leave not by my wish"
    ]
   },
   {
@@ -241,6 +297,10 @@
    "hi": [
     "हम आह भी करते हैं तो हो जाते हैं बदनाम",
     "वो क़त्ल भी करते हैं तो चर्चा नहीं होता"
+   ],
+   "en": [
+    "If we so much as sigh, we are blamed",
+    "they do far worse, and no one says a word"
    ]
   },
   {
@@ -253,6 +313,10 @@
    "hi": [
     "तू शाहीं है परवाज़ है काम तेरा",
     "तिरे सामने आसमाँ और भी हैं"
+   ],
+   "en": [
+    "You are a falcon; flying is your calling",
+    "Before you lie still more skies"
    ]
   },
   {
@@ -265,6 +329,10 @@
    "hi": [
     "है जुस्तुजू कि ख़ूब से है ख़ूब-तर कहाँ",
     "अब ठहरती है देखिए जा कर नज़र कहाँ"
+   ],
+   "en": [
+    "The search goes on: where is better than the best?",
+    "Let us see where the eye will finally rest"
    ]
   },
   {
@@ -277,6 +345,10 @@
    "hi": [
     "इश्क़ ने 'ग़ालिब' निकम्मा कर दिया",
     "वर्ना हम भी आदमी थे काम के"
+   ],
+   "en": [
+    "Love has made Ghalib good for nothing",
+    "or else I too was a man of some use"
    ]
   },
   {
@@ -289,6 +361,10 @@
    "hi": [
     "ख़ूब पर्दा है कि चिलमन से लगे बैठे हैं",
     "साफ़ छुपते भी नहीं सामने आते भी नहीं"
+   ],
+   "en": [
+    "What a veil: sitting close behind the screen,",
+    "neither truly hidden nor coming into view"
    ]
   },
   {
@@ -301,6 +377,10 @@
    "hi": [
     "राह-ए-दूर-ए-इश्क़ में रोता है क्या",
     "आगे आगे देखिए होता है क्या"
+   ],
+   "en": [
+    "Why weep so early on love's long road?",
+    "Wait and see what lies ahead"
    ]
   },
   {
@@ -313,6 +393,10 @@
    "hi": [
     "नहीं है ना-उमीद 'इक़बाल' अपनी किश्त-ए-वीराँ से",
     "ज़रा नम हो तो ये मिट्टी बहुत ज़रख़ेज़ है साक़ी"
+   ],
+   "en": [
+    "Iqbal has not lost hope in his barren field",
+    "with a little rain, this soil is rich indeed"
    ]
   },
   {
@@ -325,6 +409,10 @@
    "hi": [
     "अब तो घबरा के ये कहते हैं कि मर जाएँगे",
     "मर के भी चैन न पाया तो किधर जाएँगे"
+   ],
+   "en": [
+    "Troubled, we now say we will leave this world",
+    "but if we find no peace there, where then?"
    ]
   },
   {
@@ -337,6 +425,10 @@
    "hi": [
     "ये न थी हमारी क़िस्मत कि विसाल-ए-यार होता",
     "अगर और जीते रहते यही इंतिज़ार होता"
+   ],
+   "en": [
+    "It was not my fate to meet my beloved",
+    "had I lived longer, I would only have waited on"
    ]
   },
   {
@@ -349,6 +441,10 @@
    "hi": [
     "हज़ारों काम मोहब्बत में हैं मज़े के 'दाग़'",
     "जो लोग कुछ नहीं करते कमाल करते हैं"
+   ],
+   "en": [
+    "Love is full of delightful tasks, Dagh",
+    "those who seem to do nothing work wonders"
    ]
   },
   {
@@ -361,6 +457,10 @@
    "hi": [
     "रगों में दौड़ते फिरने के हम नहीं क़ाइल",
     "जब आँख ही से न टपका तो फिर लहू क्या है"
+   ],
+   "en": [
+    "Blood that only runs through the veins means little to me",
+    "if it never falls as a tear, what is it worth?"
    ]
   },
   {
@@ -373,6 +473,10 @@
    "hi": [
     "अपने मन में डूब कर पा जा सुराग़-ए-ज़िंदगी",
     "तू अगर मेरा नहीं बनता न बन अपना तो बन"
+   ],
+   "en": [
+    "Look deep within yourself and find the secret of life",
+    "if you won't be mine, then at least be your own"
    ]
   },
   {
@@ -385,6 +489,10 @@
    "hi": [
     "दिल की वीरानी का क्या मज़कूर है",
     "ये नगर सौ मर्तबा लूटा गया"
+   ],
+   "en": [
+    "Why speak of the emptiness of my heart?",
+    "this city has been plundered a hundred times"
    ]
   },
   {
@@ -397,6 +505,10 @@
    "hi": [
     "हम ऐसी कुल किताबें क़ाबिल-ए-ज़ब्ती समझते हैं",
     "कि जिन को पढ़ के लड़के बाप को ख़ब्ती समझते हैं"
+   ],
+   "en": [
+    "I think such books should all be taken away",
+    "that make boys think their fathers are fools"
    ]
   },
   {
@@ -409,6 +521,10 @@
    "hi": [
     "कोई उम्मीद बर नहीं आती",
     "कोई सूरत नज़र नहीं आती"
+   ],
+   "en": [
+    "No hope ever comes true",
+    "no way forward is in sight"
    ]
   },
   {
@@ -421,6 +537,10 @@
    "hi": [
     "कितना है बद-नसीब 'ज़फ़र' दफ़्न के लिए",
     "दो गज़ ज़मीन भी न मिली कू-ए-यार में"
+   ],
+   "en": [
+    "How unlucky is Zafar, that for his grave",
+    "he found not even two yards of land in his beloved's lane"
    ]
   }
  ]

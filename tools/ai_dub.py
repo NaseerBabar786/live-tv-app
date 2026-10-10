@@ -11,6 +11,8 @@ Only for films we may change and show again: the Blender open movies (CC BY) alr
            Microsoft Edge neural voices, fits each line into its time, lays them over the music
            and effects (original voices kept very quietly underneath) and makes
            <film>-<language>.mp4 plus .srt subtitles.
+  credit   puts the credit card (Urdu and English, owner 2026-10-10) over the first 8 seconds of the
+           dubbed MP4 already on the release, covering the old English-only one; the sound is kept as it is.
 """
 import asyncio, json, math, os, subprocess, sys, wave
 
@@ -225,19 +227,81 @@ def voice(film, lang):
     title, holder, licence = credits(film)
     credit = credit_line(film, lang_name)
     write_srt(f"{OUT}/{film}-{folder}.srt", lines, credit)
-    font = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
     # The credit sits on screen for the first 8 seconds (CC BY asks for credit and a note of what changed).
-    with open(f"{film}-{lang}-credit.txt", "w", encoding="utf-8") as f:
-        f.write(f"{title} - AI {lang_name} dub (test)\n{holder}\n{licence}  -  voices changed by Spark TV")
-    draw = (f"drawtext=fontfile={font}:textfile={film}-{lang}-credit.txt:fontcolor=white:fontsize=22:line_spacing=6:"
-            f"box=1:boxcolor=black@0.55:boxborderw=12:x=30:y=h-th-40:enable='lt(t,8)'")
-    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-i", f"{film}-{lang}-mix.wav",
-        "-map", "0:v:0", "-map", "1:a:0", "-vf", draw,
+    card = credit_card(film, lang, *video_size(src))
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-i", f"{film}-{lang}-mix.wav", "-i", card,
+        "-map", "[v]", "-map", "1:a:0", "-filter_complex", "[0:v:0][2:v]overlay=0:0:enable='lt(t,8)'[v]",
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "24", "-maxrate", "2500k", "-bufsize", "5000k", "-g", "50",
         "-c:a", "aac", "-b:a", "160k", "-af", "loudnorm=I=-16:TP=-1.5:LRA=11",
         "-metadata", f"title={title} ({lang_name} AI dub)", "-metadata", f"comment={credit} Original: {licence}.",
         "-metadata:s:a:0", f"language={iso}", "-movflags", "+faststart", "-shortest",
         f"{OUT}/{film}-{folder}.mp4")
+
+
+# ---------------------------------------------------------------- credit card
+
+URDU_FONT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stories", "fonts", "NotoNastaliqUrdu-700.ttf")
+LATIN_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+LANG_UR = {"ur": "اردو", "hi": "ہندی"}  # the Nastaliq font has no "·", ":" or brackets: Urdu commas only
+
+
+def video_size(path):
+    out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
+                          "-of", "csv=p=0", path], check=True, capture_output=True, text=True).stdout
+    w, h = out.strip().split(",")[:2]
+    return int(w), int(h)
+
+
+def credit_card(film, lang, w, h, cover_old=False):
+    """A see-through picture the size of the film with the credit in Urdu and English at the bottom left.
+    [cover_old]: the box also hides the English-only credit the earlier dubs drew there (22 px DejaVu at
+    x=30, 40 px above the bottom, in a 12 px box)."""
+    from PIL import Image, ImageDraw, ImageFont
+    folder, lang_name, _, _ = LANGS[lang]
+    f = FILMS[film]
+    k = h / 720
+    ur = ImageFont.truetype(URDU_FONT, round(26 * k))
+    en = ImageFont.truetype(LATIN_FONT, round(20 * k))
+    small = ImageFont.truetype(LATIN_FONT, round(16 * k))
+    rows = [(f"{f.get('titleUr', f['title'])}، {LANG_UR[lang]} میں اسپارک ٹی وی کی اے آئی آوازیں", ur, {"direction": "rtl", "language": "ur"}),
+            (f"{f['title']} · AI {lang_name} voices by Spark TV", en, {}),
+            (f"{f['holder']} · {f['licence']}", small, {})]
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    pad, gap = round(14 * k), round(12 * k)
+    sizes = [d.textbbox((0, 0), t, font=fo, **kw) for t, fo, kw in rows]
+    bw = max(b[2] - b[0] for b in sizes) + 2 * pad
+    bh = sum(b[3] - b[1] for b in sizes) + gap * (len(rows) - 1) + 2 * pad
+    x0, y1 = round(24 * k), h - round(28 * k)
+    box = [x0, y1 - bh, x0 + bw, y1]
+    if cover_old:
+        old = f"{f['title']} - AI {lang_name} dub (test)\n{f['holder']}\n{f['licence']}  -  voices changed by Bazaar TV"
+        ob = d.multiline_textbbox((0, 0), old, font=ImageFont.truetype(LATIN_FONT, 22), spacing=6)
+        tw, th = ob[2] - ob[0], ob[3] - ob[1]
+        box = [min(box[0], 30 - 16), min(box[1], h - 40 - th - 16), max(box[2], 30 + tw + 16), max(box[3], h - 40 + 16)]
+    d.rounded_rectangle(box, radius=round(10 * k), fill=(12, 14, 24, 255 if cover_old else 215))
+    y = box[3] - bh + pad
+    for (t, fo, kw), b in zip(rows, sizes):
+        if kw:  # Urdu reads from the right edge of the box
+            d.text((box[2] - pad - (b[2] - b[0]), y - b[1]), t, font=fo, fill=(255, 224, 140, 255), **kw)
+        else:
+            d.text((box[0] + pad, y - b[1]), t, font=fo, fill=(245, 245, 245, 255))
+        y += b[3] - b[1] + gap
+    path = f"{film}-{lang}-credit.png"
+    img.save(path)
+    return path
+
+
+def recredit(film, lang):
+    """The dubbed MP4 on the release with the new credit card over its first 8 seconds; the sound is copied."""
+    folder = LANGS[lang][0]
+    os.makedirs(OUT, exist_ok=True)
+    src = fetch(f"{BASE}/{film}-{folder}.mp4", f"old-{film}-{folder}.mp4")
+    card = credit_card(film, lang, *video_size(src), cover_old=True)
+    run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", src, "-i", card,
+        "-map", "[v]", "-map", "0:a:0", "-filter_complex", "[0:v:0][1:v]overlay=0:0:enable='lt(t,8)'[v]",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "24", "-maxrate", "2500k", "-bufsize", "5000k", "-g", "50",
+        "-c:a", "copy", "-map_metadata", "0", "-movflags", "+faststart", f"{OUT}/{film}-{folder}.mp4")
 
 
 if __name__ == "__main__":
@@ -246,6 +310,9 @@ if __name__ == "__main__":
         film = film.strip()
         if step == "prepare":
             prepare(film)
+        elif step == "credit":
+            for lang in sys.argv[3].split(","):
+                recredit(film, lang.strip())
         else:
             for lang in sys.argv[3].split(","):
                 voice(film, lang.strip())

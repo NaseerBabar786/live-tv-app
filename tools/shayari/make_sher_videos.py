@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """"Aaj ka Sher" clips for Spark Shayari (channel 5, owner 2026-10-08): one sher by a classic poet whose
-work is free to use, in Nastaliq calligraphy (Urdu only: Spark Shayari is an Urdu channel), read aloud twice
+work is free to use, in Nastaliq calligraphy with a short English meaning under each line (owner 2026-10-10:
+every writing on screen in Urdu and English; Spark TV One plays these clips too), read aloud twice
 by a free AI voice over calm library music (credited on screen). The channel plays one in the 5-minute break
 of every half hour (docs/channel/schedule.js ownClips, ytorder.js halfHourDay).
 
@@ -86,12 +87,13 @@ def background(k):
 def head_layer(poets_credit):
     """Always on: the heading, our Urdu logo and the music credit."""
     im = layer()
-    glow_text(im, (W // 2, 96), "آج کا شعر", font(URDU, 50), GOLD, direction="rtl", language="ur")
+    glow_text(im, (W // 2, 92), "آج کا شعر", font(URDU, 50), GOLD, direction="rtl", language="ur")
+    glow_text(im, (W // 2, 156), "TODAY'S VERSE", latin(20), GOLD)
     d = ImageDraw.Draw(im)
     # A thin gold frame that stays still while the sky behind it drifts.
     d.rounded_rectangle([28, 28, W - 29, H - 29], 18, outline=GOLD + (150,), width=2)
     d.rounded_rectangle([38, 38, W - 39, H - 39], 14, outline=GOLD + (60,), width=1)
-    d.line([(W // 2 - 170, 176), (W // 2 + 170, 176)], fill=GOLD + (170,), width=2)
+    d.line([(W // 2 - 170, 182), (W // 2 + 170, 182)], fill=GOLD + (170,), width=2)
     if os.path.exists(LOGO):
         lg = Image.open(LOGO).convert("RGBA")
         lg = lg.resize((int(lg.width * 54 / lg.height), 54), Image.LANCZOS)
@@ -99,6 +101,17 @@ def head_layer(poets_credit):
     small = latin(15)
     d.text((W // 2, H - 44), poets_credit, font=small, fill=(220, 210, 190, 200), anchor="mm")
     return im
+
+
+def latin_path():
+    for p in ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+              "/usr/share/fonts/opentype/inter/Inter-Bold.otf"]:
+        if os.path.exists(p):
+            return p
+    return None
+
+
+LATIN = latin_path()
 
 
 def latin(size):
@@ -109,16 +122,18 @@ def latin(size):
     return ImageFont.load_default()
 
 
-def line_layer(ur, y):
-    """One misra in big Nastaliq (the Hindi spelling is only for the voice)."""
+def line_layer(ur, en, y):
+    """One misra in big Nastaliq with its English meaning under it (the Hindi spelling is only for the voice)."""
     im = layer()
-    glow_text(im, (W // 2, y), ur, fitted(ur, URDU, 60, W - 220, direction="rtl", language="ur"), CREAM, direction="rtl", language="ur")
+    glow_text(im, (W // 2, y), ur, fitted(ur, URDU, 56, W - 220, direction="rtl", language="ur"), CREAM, direction="rtl", language="ur")
+    glow_text(im, (W // 2, y + 80), en, fitted(en, LATIN, 26, W - 220), (215, 205, 185))
     return im
 
 
 def poet_layer(p):
     im = layer()
-    glow_text(im, (W // 2, 586), p["ur"], font(URDU, 38), GOLD, direction="rtl", language="ur")
+    glow_text(im, (W // 2, 572), p["ur"], font(URDU, 36), GOLD, direction="rtl", language="ur")
+    glow_text(im, (W // 2, 626), p["en"], latin(24), GOLD)
     return im
 
 
@@ -161,6 +176,7 @@ def make(s, poets, k, out, silent):
     if secs > 58:  # the clip stays under a minute
         raise SystemExit(f"sher {s['n']} is {secs:.0f} s: too long")
     bed = music.bed("calm", secs, fade_in=1.5, fade_out=2.5).mean(1)[: len(voice)]
+    bed = np.pad(bed, (0, max(0, len(voice) - len(bed))))  # the music can come out a sample short
     mix = voice * 0.95 + bed[: len(voice)] * 0.16
     mix = np.clip(mix / max(1.0, np.abs(mix).max() / 0.95), -1, 1)
     wav = os.path.join(work, "mix.wav")
@@ -168,7 +184,7 @@ def make(s, poets, k, out, silent):
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
         w.writeframes((mix * 32767).astype("<i2").tobytes())
     files = {"bg": background(k), "head": head_layer(music.credit("calm")),
-             "a": line_layer(s["ur"][0], 286), "b": line_layer(s["ur"][1], 436), "p": poet_layer(p)}
+             "a": line_layer(s["ur"][0], s["en"][0], 254), "b": line_layer(s["ur"][1], s["en"][1], 402), "p": poet_layer(p)}
     for key, im in files.items():
         im.save(os.path.join(work, key + ".png"))
     t_a, t_b, t_p = starts[1], starts[3], starts[9]
@@ -190,7 +206,7 @@ def make(s, poets, k, out, silent):
         "-c:v", "libx264", "-preset", "medium", "-crf", "23", "-r", str(FPS), "-c:a", "aac", "-b:a", "128k",
         "-movflags", "+faststart", mp4)
     return {"n": s["n"], "src": REL + os.path.basename(mp4), "secs": int(np.ceil(secs)),
-            "title": f"Aaj ka Sher · {p['en']}", "poet": p["en"]}
+            "title": f"آج کا شعر · {p['ur']} · Today's verse · {p['en']}", "poet": p["en"]}
 
 
 def source_hash():
