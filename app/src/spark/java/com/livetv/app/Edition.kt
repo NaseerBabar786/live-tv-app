@@ -23,7 +23,7 @@ import com.livetv.app.ui.UiState
 object Edition {
     const val LIVE_TV = false
     const val MAX = false
-    const val APP_NAME = "Spark TV"
+    const val APP_NAME = "Spark One"
     const val USER_AGENT = "SparkTV-Android/1.0"
     const val HAS_START_SCREEN = false
     const val HAS_WEATHER = true
