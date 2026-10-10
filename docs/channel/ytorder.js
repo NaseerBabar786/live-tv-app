@@ -38,7 +38,10 @@ export const REVIEW_FROM = "2026-10-07";
  * found up to the date counts as approved, like pressing Studio > Library > Approve all new > Save then.
  * Videos found later wait for the owner's review as usual; his own picks (on/out/off) still win.
  */
-export const APPROVED_UNTIL = { comedyur: "2026-10-10", comedypa: "2026-10-10", auto: "2026-10-10", autohi: "2026-10-10" };
+// sur, musicur, sports, travel, hindidramas (2026-10-10, owner "fix that"): their lists were rebuilt on 10-09,
+// nothing was approved, and their days came out empty (61 Spark Music Punjabi showed no video).
+export const APPROVED_UNTIL = { comedyur: "2026-10-10", comedypa: "2026-10-10", auto: "2026-10-10", autohi: "2026-10-10",
+  sur: "2026-10-10", musicur: "2026-10-10", sports: "2026-10-10", travel: "2026-10-10", hindidramas: "2026-10-10" };
 /** [picks] (all channels) with each channel's [APPROVED_UNTIL] date added as its pick's "until". */
 export function withApprovals(picks) {
   const all = { ...(picks || {}) };
