@@ -29,6 +29,7 @@ object Edition {
     const val HAS_WEATHER = true
     /** No outside app store in the Google Play editions. */
     const val HAS_APP_BAZAAR = false
+    const val HAS_SHOP = false
     const val HAS_DEVICE_LOCATION = false
     const val HAS_VOD = false
     /** Only our own channels that may go on Google Play ([MyChannel.PLAY_STATIONS]). */
@@ -90,6 +91,9 @@ fun EditionTicker(
 
 @Composable
 fun EditionAppBazaar(onDismiss: () -> Unit) = Unit
+
+@Composable
+fun EditionShop(onDismiss: () -> Unit) = Unit
 
 /** Spark TV has no playlists to set up: Settings tells where the programmes come from. */
 @Composable
