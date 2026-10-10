@@ -644,7 +644,7 @@
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand, zonedTime } from "./channel/schedule.js";
 import { mountCards } from "./channel/cards.js";
-import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadSpark, sparkFor, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
+import { playable, status, withApprovals, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadSpark, sparkFor, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
 let breakPromos = [], pkTrailers = [], pkOwn = [], sparkAds = null;
 loadSpark("media/").then(d => { sparkAds = d; });
 // A channel's breaks: our Cable TV promos and its Spark TV ads; its moving logo once an hour (channel/ytorder.js).
@@ -2137,7 +2137,7 @@ async function loadPicksPanel() {
   try {
     if (!pkAll) {
       const snap = await fs.getDoc(fs.doc(db, "sponsors", "_picks"));
-      pkAll = snap.exists() && snap.data().data ? JSON.parse(snap.data().data) : {};
+      pkAll = withApprovals(snap.exists() && snap.data().data ? JSON.parse(snap.data().data) : {});
     }
     const url = station === HITS ? "channel/bollywood.json" : `channel/yt-${station.id}.json`;
     const d = await (await fetch(url + "?t=" + Date.now())).json();
