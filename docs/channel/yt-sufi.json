@@ -1,7 +1,23 @@
 {
  "name": "Spark Sufi Qawwali",
- "built": "2026-10-10 10:09 UTC",
+ "built": "2026-10-10 23:05 UTC",
  "videos": [
+  {
+   "id": "oc-zrWV0HlE",
+   "title": "Kamli Wale Nigahe Karam Ho Agar | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 16.433333333333334,
+   "found": "2026-10-10",
+   "lang": "pa"
+  },
+  {
+   "id": "AYLpIm1RAbw",
+   "title": "Mera Dil Vi Chaunda Madine Mein Jawan | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 15.05,
+   "found": "2026-10-10",
+   "lang": "pa"
+  },
   {
    "id": "5p0EzmN8SW0",
    "title": "Mere Dil Mein Ishq-E-Huzoor Hai | Rahat Fateh Ali Khan | Qawwali official version | OSA Islamic",
@@ -19,18 +35,10 @@
    "lang": "pa"
   },
   {
-   "id": "AYLpIm1RAbw",
-   "title": "Mera Dil Vi Chaunda Madine Mein Jawan | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "id": "4tv0d6_oO3M",
+   "title": "Main Neewan Mera Murshad Ucha | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 15.05,
-   "found": "2026-10-10",
-   "lang": "pa"
-  },
-  {
-   "id": "GSv5PnT49ug",
-   "title": "Ya Muhammad Noor-e-Mujassim | Aziz Mian Qawwali | official complete version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 15.633333333333333,
+   "mins": 30.683333333333334,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -59,10 +67,10 @@
    "lang": "pa"
   },
   {
-   "id": "4tv0d6_oO3M",
-   "title": "Main Neewan Mera Murshad Ucha | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "id": "GSv5PnT49ug",
+   "title": "Ya Muhammad Noor-e-Mujassim | Aziz Mian Qawwali | official complete version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 30.683333333333334,
+   "mins": 15.633333333333333,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -268,14 +276,6 @@
    "lang": "pa"
   },
   {
-   "id": "vXWKT22zv-8",
-   "title": "Sare Nabian Da Nabi | Ustad Nusrat Fateh Ali Khan | HD Video Qawali | Qawwali | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 16.566666666666666,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "SDqMBvh2kPk",
    "title": "Kardo kardo karam meri Khawaja Piya | Nusrat Fateh Ali Khan | Most beautiful Qawwali | OSA Islamic",
    "label": "OSA Islamic",
@@ -292,18 +292,10 @@
    "lang": "pa"
   },
   {
-   "id": "SeanaNEDSvw",
-   "title": "Ali Mola Ali Dam Dam | Nusrat Fateh Ali Khan | Best Qawwali  official complete version | OSA Islamic",
+   "id": "vXWKT22zv-8",
+   "title": "Sare Nabian Da Nabi | Ustad Nusrat Fateh Ali Khan | HD Video Qawali | Qawwali | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 30.4,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "S0m427pGqaI",
-   "title": "Dam Dam Ali Ali Kar | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 22.166666666666668,
+   "mins": 16.566666666666666,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -316,6 +308,14 @@
    "lang": "pa"
   },
   {
+   "id": "iSik3FMldyk",
+   "title": "Tajdar-e-Haram | Abida Khanam  | Best Famous Naat | Official Complete Version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 9.716666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "lD3JeTIZndE",
    "title": "Ya Hayyo Ya Qayyum (Full Version) | Nusrat Fateh Ali Khan | official | OSA Islamic",
    "label": "OSA Islamic",
@@ -324,26 +324,10 @@
    "lang": "pa"
   },
   {
-   "id": "DlnOPo1pE8o",
-   "title": "Data Hajweri Tenu Lakhan | Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "id": "SeanaNEDSvw",
+   "title": "Ali Mola Ali Dam Dam | Nusrat Fateh Ali Khan | Best Qawwali  official complete version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 8.766666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "iOQ9HLaJr8Q",
-   "title": "Dam Dam Ali Ali | Original Qawwali | Ustad Nusrat Fateh Ali Khan | Complete Version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 21.916666666666668,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "4cVyXhJ-rhU",
-   "title": "Is Karam Ka Kru Shukar Kesy Adaa   NFAK   Sufism Pakistan",
-   "label": "OSA Islamic",
-   "mins": 77.03333333333333,
+   "mins": 30.4,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -352,6 +336,30 @@
    "title": "Ban Gayi Baat Unka Karam Ho Gaya | Maqbool Sabri | Sabri Brothers | official version | OSA Islamic",
    "label": "OSA Islamic",
    "mins": 10.15,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "3sb8Lw6DNnY",
+   "title": "Tere Hondiyan Sondiyan Mehbooba | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 15.9,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "S0m427pGqaI",
+   "title": "Dam Dam Ali Ali Kar | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 22.166666666666668,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "DlnOPo1pE8o",
+   "title": "Data Hajweri Tenu Lakhan | Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 8.766666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -372,18 +380,18 @@
    "lang": "pa"
   },
   {
-   "id": "3sb8Lw6DNnY",
-   "title": "Tere Hondiyan Sondiyan Mehbooba | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 15.9,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "XdseevcKtTI",
    "title": "Ali Dam Dam De Andar (Original) | Qari M. Saeed Chishti | One of the Best Manqabat | OSA Islamic",
    "label": "OSA Islamic",
    "mins": 30.55,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "4cVyXhJ-rhU",
+   "title": "Is Karam Ka Kru Shukar Kesy Adaa   NFAK   Sufism Pakistan",
+   "label": "OSA Islamic",
+   "mins": 77.03333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -396,6 +404,14 @@
    "lang": "pa"
   },
   {
+   "id": "XJDUcKdkEN4",
+   "title": "Kehde Ghar Jawan | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 14.55,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "5i2Nb8Hd_MU",
    "title": "Maye Ni Maye Mere Geetan De Nainan Vich | Nusrat Fateh Ali Khan | official version | OSA Islamic",
    "label": "OSA Islamic",
@@ -404,10 +420,10 @@
    "lang": "pa"
   },
   {
-   "id": "KIoREUi22Ec",
-   "title": "Shahswar-e-Karbala Kee Shahswari Ko Salam | Ustad Nusrat Fateh Ali Khan | OSA Islamic",
+   "id": "iOQ9HLaJr8Q",
+   "title": "Dam Dam Ali Ali | Original Qawwali | Ustad Nusrat Fateh Ali Khan | Complete Version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 15.2,
+   "mins": 21.916666666666668,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -416,14 +432,6 @@
    "title": "Asghar Tere Jhoole Main | Rahat Fateh Ali Khan | Qawwali official version | OSA Islamic",
    "label": "OSA Islamic",
    "mins": 12.366666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "iSik3FMldyk",
-   "title": "Tajdar-e-Haram | Abida Khanam  | Best Famous Naat | Official Complete Version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 9.716666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -444,26 +452,10 @@
    "lang": "pa"
   },
   {
-   "id": "fSVtb3nfza4",
-   "title": "Yusuf Zuleikha (Full Version) | Nusrat Fateh Ali Khan | official complete version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 31.366666666666667,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "EqhdFiTq-a0",
    "title": "Bina Ishq Na Manzil Hath Aawe | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
    "label": "OSA Islamic",
    "mins": 29.55,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "rpk7XYYkoTs",
-   "title": "Meri Rooh Wich Wasda Lal Sakhi | Abida Parveen | official version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 7.216666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -476,18 +468,18 @@
    "lang": "pa"
   },
   {
-   "id": "m6zNkbgmf0c",
-   "title": "Hind Sindh Da Shezada | Abida Parveen | official version | OSA Islamic",
+   "id": "rpk7XYYkoTs",
+   "title": "Meri Rooh Wich Wasda Lal Sakhi | Abida Parveen | official version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 10.866666666666667,
+   "mins": 7.216666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "J2IqfXjbr7s",
-   "title": "Ik Nukte Wich Gal Mukdi Ae | Abida Parveen | official version | OSA Islamic",
+   "id": "m6zNkbgmf0c",
+   "title": "Hind Sindh Da Shezada | Abida Parveen | official version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 14.516666666666667,
+   "mins": 10.866666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -500,10 +492,18 @@
    "lang": "pa"
   },
   {
-   "id": "ODR6z4L-Bw8",
-   "title": "Khudi Ka Sirre Nihan La Illaha Illallah | Nusrat Fateh Ali Khan  | Best Famous Qawwali | OSA Islamic",
+   "id": "fSVtb3nfza4",
+   "title": "Yusuf Zuleikha (Full Version) | Nusrat Fateh Ali Khan | official complete version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 18.25,
+   "mins": 31.366666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "KIoREUi22Ec",
+   "title": "Shahswar-e-Karbala Kee Shahswari Ko Salam | Ustad Nusrat Fateh Ali Khan | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 15.2,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -516,10 +516,10 @@
    "lang": "pa"
   },
   {
-   "id": "SG5BWsJ-u5Q",
-   "title": "Sab Mast Qalander Kehnde Ne | Qari M. Saeed Chishti | One of the Best Manqabat | OSA Islamic",
+   "id": "J2IqfXjbr7s",
+   "title": "Ik Nukte Wich Gal Mukdi Ae | Abida Parveen | official version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 27.5,
+   "mins": 14.516666666666667,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -528,6 +528,30 @@
    "title": "Nusrat Fateh Ali Khan - Arshe Azam Ka Doolha | Official Qawali",
    "label": "OSA Islamic",
    "mins": 22.733333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "jK9NR-tYxLg",
+   "title": "Ishq Di Tumbi Baba Fareed | Abida Parveen | official version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 8.516666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "eqG0iImdKLg",
+   "title": "Meri Hazri Karin Kabool | Abida Parveen | official version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 6.333333333333333,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "ODR6z4L-Bw8",
+   "title": "Khudi Ka Sirre Nihan La Illaha Illallah | Nusrat Fateh Ali Khan  | Best Famous Qawwali | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 18.25,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -556,14 +580,6 @@
    "lang": "pa"
   },
   {
-   "id": "XJDUcKdkEN4",
-   "title": "Kehde Ghar Jawan | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 14.55,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "qdOF1mjuDV8",
    "title": "Tasbeeh De Ik Ik Dane | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
    "label": "OSA Islamic",
@@ -580,18 +596,10 @@
    "lang": "pa"
   },
   {
-   "id": "1lW_xsiNZHk",
-   "title": "Rawe Wasdi Jhok Fareedan Di | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "id": "sc3zBHc4hHQ",
+   "title": "Mustafa Ya Mustafa | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 10.1,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "yONbyA9x-i0",
-   "title": "Ya Muhammad Madine Bula Lo | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 30.6,
+   "mins": 13.533333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -893,6 +901,14 @@
    "lang": "pa"
   },
   {
+   "id": "jU11bwiJl_8",
+   "title": "NARA E MASTANA - Abida Parveen & Asrar - Bazm-e-Rang Chapter 2 | Official Video",
+   "label": "Abida Parveen",
+   "mins": 7.0,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
    "id": "raYnzbIyOfE",
    "title": "Pardadari - Abida Parveen - Atif Aslam | Official Video | BazmeRang Chapter 1",
    "label": "Abida Parveen",
@@ -901,10 +917,10 @@
    "lang": "pa"
   },
   {
-   "id": "jU11bwiJl_8",
-   "title": "NARA E MASTANA - Abida Parveen & Asrar - Bazm-e-Rang Chapter 2 | Official Video",
+   "id": "C8CekMXgJEo",
+   "title": "Prem Piyala - Abida Parveen - Jabar Abbas | OFFICIAL VIDEO | BazmeRang Chapter 1",
    "label": "Abida Parveen",
-   "mins": 7.0,
+   "mins": 5.616666666666666,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -921,14 +937,6 @@
    "title": "Teray Ishq Nachaya | Original | Abida Parveen",
    "label": "Abida Parveen",
    "mins": 14.383333333333333,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "C8CekMXgJEo",
-   "title": "Prem Piyala - Abida Parveen - Jabar Abbas | OFFICIAL VIDEO | BazmeRang Chapter 1",
-   "label": "Abida Parveen",
-   "mins": 5.616666666666666,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -981,18 +989,18 @@
    "lang": "pa"
   },
   {
-   "id": "nyJGayDFHag",
-   "title": "Sarapa - Abida Parveen | Official Video | BazmeRang Chapter 1",
-   "label": "Abida Parveen",
-   "mins": 5.183333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "lyOOXyv4ve0",
    "title": "Nisar Mein - Abida Parveen",
    "label": "Abida Parveen",
    "mins": 9.683333333333334,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "nyJGayDFHag",
+   "title": "Sarapa - Abida Parveen | Official Video | BazmeRang Chapter 1",
+   "label": "Abida Parveen",
+   "mins": 5.183333333333334,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1005,18 +1013,18 @@
    "lang": "pa"
   },
   {
-   "id": "8JSsTLh1HxM",
-   "title": "PIYA HO - Abida Parveen | Waqar Ehsin | BAZMeRANG Chapter 1",
-   "label": "Abida Parveen",
-   "mins": 4.633333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
    "id": "BksIEuav6Mk",
    "title": "Kab Thehre Ga Dard - Abida Parveen",
    "label": "Abida Parveen",
    "mins": 6.716666666666667,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "8JSsTLh1HxM",
+   "title": "PIYA HO - Abida Parveen | Waqar Ehsin | BAZMeRANG Chapter 1",
+   "label": "Abida Parveen",
+   "mins": 4.633333333333334,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1045,18 +1053,26 @@
    "lang": "pa"
   },
   {
-   "id": "jK9NR-tYxLg",
-   "title": "Ishq Di Tumbi Baba Fareed | Abida Parveen | official version | OSA Islamic",
+   "id": "SG5BWsJ-u5Q",
+   "title": "Sab Mast Qalander Kehnde Ne | Qari M. Saeed Chishti | One of the Best Manqabat | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 8.516666666666667,
+   "mins": 27.5,
    "found": "2026-10-08",
    "lang": "pa"
   },
   {
-   "id": "eqG0iImdKLg",
-   "title": "Meri Hazri Karin Kabool | Abida Parveen | official version | OSA Islamic",
+   "id": "1lW_xsiNZHk",
+   "title": "Rawe Wasdi Jhok Fareedan Di | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
    "label": "OSA Islamic",
-   "mins": 6.333333333333333,
+   "mins": 10.1,
+   "found": "2026-10-08",
+   "lang": "pa"
+  },
+  {
+   "id": "yONbyA9x-i0",
+   "title": "Ya Muhammad Madine Bula Lo | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
+   "label": "OSA Islamic",
+   "mins": 30.6,
    "found": "2026-10-08",
    "lang": "pa"
   },
@@ -1065,14 +1081,6 @@
    "title": "Mangte Hain Karam | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
    "label": "OSA Islamic",
    "mins": 30.483333333333334,
-   "found": "2026-10-08",
-   "lang": "pa"
-  },
-  {
-   "id": "sc3zBHc4hHQ",
-   "title": "Mustafa Ya Mustafa | Ustad Nusrat Fateh Ali Khan | official version | OSA Islamic",
-   "label": "OSA Islamic",
-   "mins": 13.533333333333333,
    "found": "2026-10-08",
    "lang": "pa"
   },

@@ -1,7 +1,17 @@
 {
  "name": "Latest Movies",
- "built": "2026-10-10 10:11 UTC",
+ "built": "2026-10-10 23:07 UTC",
  "videos": [
+  {
+   "id": "UGSWfOj5sjU",
+   "title": "Holiday Planner Falls For Her Newest Client | Christmas Planner | Full 2026 Christmas Romance Movie",
+   "label": "Movie Central",
+   "mins": 90.38333333333334,
+   "found": "2026-10-10",
+   "lang": "en",
+   "posted": "2026-10-10",
+   "up": "2026-10-10"
+  },
   {
    "id": "BZojTJXqY2A",
    "title": "He Is Falling In Love With His Kids Nanny | A Nanny for Christmas | Full 2026 Holiday Romance Movie",
@@ -59,14 +69,6 @@
    "lang": "hi"
   },
   {
-   "id": "Xojf144alBo",
-   "title": "Uppena (Hindi) 2026 New Released Hindi Dubbed Full Movie | Panja Vaisshnav Tej, Vijay Sethupathi",
-   "label": "Goldmines",
-   "mins": 116.11666666666666,
-   "found": "2026-10-07",
-   "lang": "hi"
-  },
-  {
    "id": "fmkS85mNZWA",
    "title": "Oxygen (2026) New Released Hindi Dubbed Movie | Gopichand, Raashii Khanna, Anu Emmanuel, Jagapathi",
    "label": "Goldmines",
@@ -75,18 +77,18 @@
    "lang": "hi"
   },
   {
-   "id": "Bon7e5C7KNU",
-   "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
+   "id": "Xojf144alBo",
+   "title": "Uppena (Hindi) 2026 New Released Hindi Dubbed Full Movie | Panja Vaisshnav Tej, Vijay Sethupathi",
    "label": "Goldmines",
-   "mins": 108.73333333333333,
+   "mins": 116.11666666666666,
    "found": "2026-10-07",
    "lang": "hi"
   },
   {
-   "id": "7_1ZGFxX3pI",
-   "title": "RDX Love (Hindi) 2026 New Released Hindi Dubbed Full Movie | Tejus Kancherla, Payal Rajput",
+   "id": "Bon7e5C7KNU",
+   "title": "U Turn 2 (2026) New Released Romantic Thriller Full Movie | Sundeep Kishan, Anya Singh, Divya Ganesh",
    "label": "Goldmines",
-   "mins": 111.25,
+   "mins": 108.73333333333333,
    "found": "2026-10-07",
    "lang": "hi"
   },
@@ -115,14 +117,6 @@
    "lang": "hi"
   },
   {
-   "id": "kEPHfJ02dzY",
-   "title": "Kya Meri Sonam Gupta Bewafa Hai? - Full Hindi Movie | Surbhi Jyoti | Vijay Raaz | Pen Movie 2025",
-   "label": "Pen Movies",
-   "mins": 135.31666666666666,
-   "found": "2026-10-10",
-   "lang": "hi"
-  },
-  {
    "id": "6X7963xWI-Q",
    "title": "Dheeram (2025) South Suspense Thriller Movies (4K) Indrajith Sukumaran, Varalaxmi & Divya Pillai",
    "label": "Ultra Movie Parlour",
@@ -147,11 +141,11 @@
    "lang": "hi"
   },
   {
-   "id": "EhaX-eQmfF4",
-   "title": "JANA NAYAKAM (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL VIJAY THALAPATHY MOVIE MASTER",
-   "label": "B4U Movies",
-   "mins": 171.23333333333332,
-   "found": "2026-10-07",
+   "id": "t1zclFQj4p0",
+   "title": "SUSPENSE THIRLLER MOVIE - Jilabi (2025) - Swapnil Joshi, Prasad Oak & Shivani Surve | New Release",
+   "label": "Ultra Movie Parlour",
+   "mins": 126.13333333333334,
+   "found": "2026-10-10",
    "lang": "hi"
   },
   {
@@ -163,10 +157,26 @@
    "lang": "hi"
   },
   {
+   "id": "EhaX-eQmfF4",
+   "title": "JANA NAYAKAM (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI 2026 FULL VIJAY THALAPATHY MOVIE MASTER",
+   "label": "B4U Movies",
+   "mins": 171.23333333333332,
+   "found": "2026-10-07",
+   "lang": "hi"
+  },
+  {
    "id": "tu8cklEAgoc",
    "title": "BLAST (HD) - NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SHIVA RAJKUMAR MOVIE RUSTUM",
    "label": "B4U Movies",
    "mins": 101.73333333333333,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "iFsL_Ko4VCk",
+   "title": "NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SOUTH HINDI DUBBED MOVIE MAFIA",
+   "label": "B4U Movies",
+   "mins": 91.83333333333333,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -187,14 +197,6 @@
    "lang": "hi"
   },
   {
-   "id": "iFsL_Ko4VCk",
-   "title": "NEW SOUTH INDIAN MOVIES DUBBED IN HINDI FULL HD 2026 - SOUTH HINDI DUBBED MOVIE MAFIA",
-   "label": "B4U Movies",
-   "mins": 91.83333333333333,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
    "id": "Mpf1IYpOpF4",
    "title": "Crazy Fellow Hindi Dubbed Movie 2026 Full Movie | Aadi Saikumar, Digangana Suryavanshi |Mirnaa Menon",
    "label": "Aditya Movies",
@@ -207,6 +209,14 @@
    "title": "Swathimutyam Hindi Dubbed Movie 2026 Full Movie | Ganesh Bellamkonda, Varsha Bollamma | South Movie",
    "label": "Aditya Movies",
    "mins": 108.36666666666666,
+   "found": "2026-10-09",
+   "lang": "hi"
+  },
+  {
+   "id": "ftI9RAEuSLo",
+   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
+   "label": "Aditya Movies",
+   "mins": 124.95,
    "found": "2026-10-09",
    "lang": "hi"
   },
@@ -235,26 +245,18 @@
    "lang": "hi"
   },
   {
-   "id": "ftI9RAEuSLo",
-   "title": "Chaari 111 Hindi Dubbed Full Movie | Vennela Kishore, Samyuktha Viswanathan | South Movie 2026",
+   "id": "yR9pSZoZ6CY",
+   "title": "Gamblers Hindi Dubbed Movie 2026 Full Movie | Sangeeth Shobhan, Prashanthi | South New Movie 2026",
    "label": "Aditya Movies",
-   "mins": 124.95,
-   "found": "2026-10-09",
+   "mins": 97.98333333333333,
+   "found": "2026-10-10",
    "lang": "hi"
   },
   {
-   "id": "gfDhPJUIFFA",
-   "title": "Kotha Kothagaa Hindi Dubbed Full Movie | Ajay, Virti Vaghani | South Movie New 2026 | Aditya Movies",
+   "id": "RfL11k8Y7G4",
+   "title": "Gam Gam Ganesha Hindi Dubbed Full Movie 2026 | Anand Deverakonda, Nayan Sarika | Vennela Kishore",
    "label": "Aditya Movies",
-   "mins": 110.51666666666667,
-   "found": "2026-10-09",
-   "lang": "hi"
-  },
-  {
-   "id": "oCwQ5ee7cyg",
-   "title": "F2 Full Movie in Hindi | Hindi Dubbed Movies 2025 Full Movie | Venkatesh, Varun Tej, Tamannaah",
-   "label": "Aditya Movies",
-   "mins": 109.05,
+   "mins": 126.08333333333333,
    "found": "2026-10-10",
    "lang": "hi"
   },
@@ -275,14 +277,6 @@
    "lang": "en"
   },
   {
-   "id": "fIhM9MiEN50",
-   "title": "Daddy Daughter Trip | Rob Schneider | Full 2025 Comedy Family Movie",
-   "label": "Movie Central",
-   "mins": 96.58333333333333,
-   "found": "2026-10-07",
-   "lang": "en"
-  },
-  {
    "id": "ERsURQC8Xxo",
    "title": "Ruthless Hitman Took On The Chicago Mob | Silent Partners | Full 2026 Action Movie",
    "label": "Movie Central",
@@ -291,19 +285,19 @@
    "lang": "en"
   },
   {
+   "id": "fIhM9MiEN50",
+   "title": "Daddy Daughter Trip | Rob Schneider | Full 2025 Comedy Family Movie",
+   "label": "Movie Central",
+   "mins": 96.58333333333333,
+   "found": "2026-10-07",
+   "lang": "en"
+  },
+  {
    "id": "nW1pVutjpt4",
    "title": "Escape the Secluded Killing Grounds | Hillwalkers | Full 2026 Survival Movie",
    "label": "Movie Central",
    "mins": 87.26666666666667,
    "found": "2026-10-08",
-   "lang": "en"
-  },
-  {
-   "id": "KAouzPF7GII",
-   "title": "She's Hunting The Cartel That Murdered Her Family | She-Vigilante | Full 2026 Action Movie",
-   "label": "Movie Central",
-   "mins": 84.35,
-   "found": "2026-10-09",
    "lang": "en"
   },
   {
@@ -371,18 +365,18 @@
    "lang": "ur"
   },
   {
-   "id": "U1PMejqRvWc",
-   "title": "Meri Uraan | Telefilm - [Eng Sub] - Anika Zulfikar - Shahroz Sabzwari | 3rd Aug 2025 - HAR PAL GEO",
-   "label": "Har Pal Geo",
-   "mins": 113.58333333333333,
-   "found": "2026-10-07",
-   "lang": "ur"
-  },
-  {
    "id": "ZkRsxwkBuXA",
    "title": "Dil Ne Kaha Dil Se - Telefilm - [Eng Sub] - Digitally Presented by Master Paints - 3rd April 2025",
    "label": "Har Pal Geo",
    "mins": 83.08333333333333,
+   "found": "2026-10-07",
+   "lang": "ur"
+  },
+  {
+   "id": "U1PMejqRvWc",
+   "title": "Meri Uraan | Telefilm - [Eng Sub] - Anika Zulfikar - Shahroz Sabzwari | 3rd Aug 2025 - HAR PAL GEO",
+   "label": "Har Pal Geo",
+   "mins": 113.58333333333333,
    "found": "2026-10-07",
    "lang": "ur"
   },
