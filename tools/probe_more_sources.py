@@ -11,31 +11,28 @@ import playable  # noqa: E402
 
 # (language, name, handles, owner name(s), kind, shortest minutes, searches)
 CANDIDATES = [
-    # Urdu (2026-10-09 daily search)
-    ("Urdu", "Har Pal Geo", ["@HarPalGeo", "@harpalgeoofficial"], "Har Pal Geo", "show", 30, ["episode", "full episode"]),
-    ("Urdu", "Express Entertainment", ["@ExpressEntertainmentPK", "@ExpressEntertainment"], "Express Entertainment", "show", 30, ["episode"]),
-    ("Urdu", "LTN Family", ["@LTNFamilyOfficial", "@LTNFamily"], "LTN Family", "show", 30, ["episode"]),
-    ("Urdu", "Hum Network telefilms", ["@HUMTV"], "HUM TV|Hum TV", "film", 60, ["telefilm", "full telefilm"]),
-    ("Urdu", "Pakistani classic films (Geo Films / Lollywood)", ["@LollywoodClassics"], "Lollywood Classics", "film", 70, ["full movie"]),
+    # Urdu (2026-10-10 daily search)
+    ("Urdu", "TRT Ertugrul Urdu", ["@TRTErtugrulbyPTV", "@TRTErtugrulUrdu"], "TRT Ertugrul|Ertugrul", "show", 30, ["episode", "urdu"]),
+    ("Urdu", "Kurulus Osman Urdu", ["@KurulusOsmanUrdu", "@kurulusosmanurduofficial"], "Kurulus Osman", "show", 30, ["episode", "urdu"]),
+    ("Urdu", "PTV classic dramas", ["@PTVDramaClassics", "@ptvclassics"], "PTV", "show", 30, ["episode", "drama"]),
+    ("Urdu", "Play Entertainment", ["@PlayEntertainmentPK", "@PlayEntertainment"], "Play Entertainment", "show", 30, ["episode"]),
     # Hindi
-    ("Hindi", "NFDC India", ["@NFDCIndia", "@NFDC"], "NFDC|National Film Development", "film", 60, ["full movie", "full film"]),
-    ("Hindi", "Children's Film Society India", ["@CFSIIndia", "@childrensfilmsocietyindia"], "Children's Film Society|CFSI", "film", 45, ["full movie", "full film"]),
-    ("Hindi", "Goldmines Bollywood", ["@GoldminesBollywood"], "Goldmines Bollywood", "film", 70, ["full movie"]),
-    ("Hindi", "Wamindia Movies", ["@WamindiaMovies", "@Wamindia"], "Wamindia", "film", 70, ["full movie"]),
-    ("Hindi", "Shemaroo Kids", ["@ShemarooKids"], "Shemaroo Kids", "kids", 10, ["full episode", "cartoon"]),
-    ("Hindi", "Zee Classic / Zee Music Classic films", ["@ZeeClassic"], "Zee Classic", "film", 70, ["full movie"]),
+    ("Hindi", "Sagar World (Ramayan, Shri Krishna)", ["@SagarWorld", "@TilakOfficial", "@RamanandSagarOfficial"], "Sagar|Tilak", "show", 30, ["episode", "full episode"]),
+    ("Hindi", "TVF", ["@TheViralFever", "@TVF"], "TVF|The Viral Fever", "show", 20, ["full episode", "episode"]),
+    ("Hindi", "Dice Media", ["@DiceMediaIndia", "@DiceMedia"], "Dice Media", "show", 20, ["episode"]),
+    ("Hindi", "ZEE5 free movies", ["@ZEE5", "@zee5premium"], "ZEE5", "film", 70, ["full movie"]),
+    ("Hindi", "Zee Cinema", ["@ZeeCinema"], "Zee Cinema", "film", 70, ["full movie"]),
     # Punjabi
-    ("Punjabi", "Jaswinder Bhalla films (Speed Punjabi)", ["@SpeedPunjabi"], "Speed Punjabi", "film", 70, ["full movie"]),
-    ("Punjabi", "White Hill Dhaakad", ["@WhiteHillDhaakad"], "White Hill Dhaakad", "film", 70, ["full movie"]),
+    ("Punjabi", "Omjee Group", ["@OmjeeGroup", "@omjeecinema"], "Omjee", "film", 70, ["full movie"]),
+    ("Punjabi", "Vehli Janta Films", ["@VehliJantaFilms"], "Vehli Janta", "film", 60, ["full movie"]),
+    ("Punjabi", "Chaupal (full films)", ["@ChaupalTV", "@chaupal"], "Chaupal", "film", 70, ["full movie"]),
     # English
-    ("English", "Real Stories", ["@RealStories"], "Real Stories", "show", 40, ["documentary", "full documentary"]),
-    ("English", "Timeline World History", ["@TimelineChannel", "@timelineworldhistorydocumentaries"], "Timeline", "show", 40, ["documentary"]),
-    ("English", "Wonder", ["@WONDERchannel", "@WonderChannel"], "Wonder", "show", 40, ["documentary"]),
-    ("English", "Timeless Classic Movies", ["@TimelessClassicMovies"], "Timeless Classic Movies", "film", 60, ["full movie"]),
-    ("English", "Grjngo Western Movies", ["@GrjngoWesternMovies", "@Grjngo"], "Grjngo", "film", 60, ["full movie", "western"]),
-    ("English", "Moviedome", ["@Moviedome"], "Moviedome", "film", 70, ["full movie"]),
-    ("English", "LEGO full episodes", ["@LEGO"], "LEGO", "kids", 15, ["full episode"]),
-    ("English", "Little Baby Bum Kids TV", ["@LittleBabyBum"], "Little Baby Bum", "kids", 20, ["compilation"]),
+    ("English", "Curious George", ["@CuriousGeorge", "@curiousgeorgeofficial"], "Curious George", "kids", 20, ["full episode", "compilation"]),
+    ("English", "Zig and Sharko", ["@ZigandSharko", "@ZigAndSharkoOfficial"], "Zig & Sharko|Zig and Sharko", "kids", 20, ["compilation", "full episode"]),
+    ("English", "Shaun the Sheep", ["@shaunthesheep", "@ShaunTheSheepOfficial"], "Shaun the Sheep", "kids", 20, ["full episode", "compilation"]),
+    ("English", "Wild Kratts", ["@WildKratts", "@wildkrattsofficial"], "Wild Kratts", "kids", 20, ["full episode"]),
+    ("English", "WB Kids (Tom and Jerry, Looney Tunes)", ["@WBKids"], "WB Kids", "kids", 20, ["full episode", "compilation"]),
+    ("English", "Great Big Story / docs: Free Documentary History", ["@FreeDocumentaryHistory"], "Free Documentary - History|Free Documentary History", "show", 40, ["documentary"]),
 ]
 
 
