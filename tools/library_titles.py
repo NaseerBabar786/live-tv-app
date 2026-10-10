@@ -16,6 +16,9 @@ import json
 import os
 import re
 import sys
+import threading
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -27,6 +30,10 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
 WIKI_UA = "CableTVLibrary/1.0 (https://tv.bulkbazaar.ca; naseerahmadbabar@gmail.com)"
 MAX_LOOKS = int(os.environ.get("LIBRARY_TITLES_MAX", "1500"))  # titles looked up per run; the rest next morning
 AGAIN_DAYS = 30  # a title with nothing found is looked up again after this long
+# Wikidata answers "429 too many requests" to parallel bursts: one request at a time, at most 2 a second,
+# and only this many year look-ups per run (the rest the next morning).
+MAX_YEARS = int(os.environ.get("LIBRARY_YEARS_MAX", "400"))
+WIKI_GAP = 0.5
 
 # The same patterns as the app (Vod.kt), so a show's name here is the folder's name there.
 SEASON_EPISODE = re.compile(r"^(.*?)[\s._\-:|]*\bS(\d{1,2})[\s._\-]*E(\d{1,3})\b.*$", re.I)
@@ -69,6 +76,36 @@ def get_json(url, ua=UA, data=None):
         return json.loads(r.read().decode("utf-8", "replace"))
 
 
+_wiki_lock = threading.Lock()
+_wiki_last = [0.0]
+_wiki_left = [MAX_YEARS]
+
+
+class WikiBusy(Exception):
+    """Wikidata kept saying "too many requests", or this run's year look-ups are used up."""
+
+
+def wiki_json(url):
+    """get_json for Wikidata, one request at a time with a gap, waiting and trying again on 429."""
+    for wait in (5, 20, 60, None):
+        with _wiki_lock:
+            gap = _wiki_last[0] + WIKI_GAP - time.monotonic()
+            if gap > 0:
+                time.sleep(gap)
+            try:
+                return get_json(url, ua=WIKI_UA)
+            except urllib.error.HTTPError as e:
+                if e.code != 429:
+                    raise
+                if wait is None:
+                    _wiki_left[0] = 0  # still busy after a minute and a half: no more years this run
+                    raise WikiBusy(str(e)) from e
+                retry = e.headers.get("Retry-After", "")
+                time.sleep(int(retry) if retry.isdigit() and int(retry) < 300 else wait)
+            finally:
+                _wiki_last[0] = time.monotonic()
+
+
 # --- the year ---------------------------------------------------------------------------------------------
 
 YEAR_IN_TITLE = re.compile(r"[(\[]((?:19[3-9]|20[0-4])\d)[)\]]")
@@ -88,8 +125,12 @@ def wikidata_year(kind, language, title):
     key = title_key(title)
     if len(key) < 3:
         return None
-    found = get_json("https://www.wikidata.org/w/api.php?action=wbsearchentities&type=item&language=en&uselang=en"
-                     "&limit=15&format=json&search=" + urllib.parse.quote(title), ua=WIKI_UA).get("search", [])
+    with _wiki_lock:
+        if _wiki_left[0] <= 0:
+            raise WikiBusy("year look-ups for this run used up")
+        _wiki_left[0] -= 1
+    found = wiki_json("https://www.wikidata.org/w/api.php?action=wbsearchentities&type=item&language=en&uselang=en"
+                     "&limit=15&format=json&search=" + urllib.parse.quote(title)).get("search", [])
     fits = FILM if kind == "movie" else SERIES
     hits = [h for h in found if fits.search(h.get("description", "")) and
             (title_key(h.get("label", "")) == key or title_key(h.get("match", {}).get("text", "")) == key)]
@@ -99,8 +140,8 @@ def wikidata_year(kind, language, title):
         hits = [h for h in hits if not SOUTH_ASIAN.search(h.get("description", ""))]
     if not hits:
         return None
-    claims = get_json("https://www.wikidata.org/w/api.php?action=wbgetentities&props=claims&format=json&ids=" +
-                      "|".join(h["id"] for h in hits[:5]), ua=WIKI_UA).get("entities", {})
+    claims = wiki_json("https://www.wikidata.org/w/api.php?action=wbgetentities&props=claims&format=json&ids=" +
+                       "|".join(h["id"] for h in hits[:5])).get("entities", {})
     years = set()
     for h in hits[:5]:
         props = claims.get(h["id"], {}).get("claims", {})
@@ -182,21 +223,30 @@ def load(path, default):
         return default
 
 
-def look(kind, language, title, channel, exclude):
-    found = {"checked": dt.date.today().isoformat()}
-    m = YEAR_IN_TITLE.search(title)
-    try:
-        year = int(m.group(1)) if m else wikidata_year(kind, language, BRACKETED.sub("", title).strip())
-        if year:
-            found["year"] = year
-    except Exception as e:  # noqa: BLE001
-        print(f"  {title}: year failed ({e})", file=sys.stderr)
-    try:
-        trailer = find_trailer(kind, BRACKETED.sub("", title).strip(), channel, exclude)
-        if trailer:
-            found["trailer"] = trailer
-    except Exception as e:  # noqa: BLE001
-        print(f"  {title}: trailer failed ({e})", file=sys.stderr)
+def look(kind, language, title, channel, exclude, before=None):
+    """What is known of one title: [before] (an earlier look) plus whatever is still missing. "yearChecked" is
+    only set once the year look-up really finished, so one Wikidata hiccup never hides a year for a month."""
+    found = dict(before or {})
+    found["checked"] = dt.date.today().isoformat()
+    if not found.get("year") and not found.get("yearChecked"):
+        m = YEAR_IN_TITLE.search(title)
+        try:
+            year = int(m.group(1)) if m else wikidata_year(kind, language, BRACKETED.sub("", title).strip())
+            if year:
+                found["year"] = year
+            found["yearChecked"] = found["checked"]
+        except WikiBusy:
+            pass  # next run
+        except Exception as e:  # noqa: BLE001
+            print(f"  {title}: year failed ({e})", file=sys.stderr)
+    if not found.get("trailer") and (before is None or not before.get("trailerChecked")):
+        try:
+            trailer = find_trailer(kind, BRACKETED.sub("", title).strip(), channel, exclude)
+            if trailer:
+                found["trailer"] = trailer
+            found["trailerChecked"] = found["checked"]
+        except Exception as e:  # noqa: BLE001
+            print(f"  {title}: trailer failed ({e})", file=sys.stderr)
     return found
 
 
@@ -210,10 +260,16 @@ def update(entries, ids):
     for kind, language, title, channel in entries:
         wanted.setdefault(entry_key(kind, language, title), (kind, language, title, channel))
     again = (dt.date.today() - dt.timedelta(days=AGAIN_DAYS)).isoformat()
-    todo = [k for k in wanted if k not in known or
-            (not known[k].get("year") and not known[k].get("trailer") and known[k].get("checked", "") < again)][:MAX_LOOKS]
+    for v in known.values():  # a month on, a title with nothing found is looked at afresh
+        if not v.get("year") and not v.get("trailer") and v.get("checked", "") < again:
+            v.pop("yearChecked", None)
+            v.pop("trailerChecked", None)
+    # Titles never looked at first, then ones whose year look-up did not finish (Wikidata busy last time).
+    todo = ([k for k in wanted if k not in known] +
+            [k for k in wanted if k in known and not known[k].get("year") and not known[k].get("yearChecked")])
+    todo = todo[:MAX_LOOKS]
     with ThreadPoolExecutor(6) as pool:
-        for k, found in zip(todo, pool.map(lambda k: look(*wanted[k], ids), todo)):
+        for k, found in zip(todo, pool.map(lambda k: look(*wanted[k], ids, known.get(k)), todo)):
             known[k] = found
     # Other playlists' titles stay (Dramas and Free share this file).
     os.makedirs(os.path.dirname(TITLES), exist_ok=True)
