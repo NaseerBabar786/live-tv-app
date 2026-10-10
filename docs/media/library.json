@@ -239,39 +239,6 @@
    "srt": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-hindi.srt"
   },
   {
-   "id": "cable-tv-video-ad-7",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 7",
-   "url": "media/cable-tv-video-ad-7.mp4",
-   "secs": 60,
-   "poster": "media/cable-tv-ad-7-poster.jpg",
-   "about": "60 s TV-remote tour for the new packages: all 7,800+ channels free in 1+List, then every Gold feature (full screen, Favorites, every mode, Library, Games, Iqra Quran, Azan Clock, Weather, Themes), Free vs Gold, 7 days of Gold free + code WELCOME, and 3 install steps",
-   "credit": "Our own ad. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Upbeat Sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08, rotating with Ads 8 and 9; also the home page video and the app pop-up promo."
-  },
-  {
-   "id": "cable-tv-video-ad-9",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 9",
-   "url": "media/cable-tv-video-ad-9.mp4",
-   "secs": 15,
-   "poster": "media/cable-tv-ad-9-poster.jpg",
-   "about": "15 s: a wall of hundreds of channels, 7,800+ free; a crown turns it gold with the Gold features; 7 days of Gold free, then code WELCOME",
-   "credit": "Our own ad. Clips from our channels © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Happy sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08."
-  },
-  {
-   "id": "cable-tv-video-ad-8",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 8",
-   "url": "media/cable-tv-video-ad-8.mp4",
-   "secs": 30,
-   "poster": "media/cable-tv-ad-8-poster.jpg",
-   "about": "30 s Gold promo for the new packages: 7,800+ channels free, Gold $9.99/month adds full screen, every mode, Library, Games, Iqra Quran, Azan Clock, Weather and Themes; 7 days of Gold free, then code WELCOME for one more month, and how to use the code",
-   "credit": "Our own ad. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Upbeat Sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08, rotating with Ads 7 and 9."
-  },
-  {
    "id": "spark-ident",
    "cat": "spark-promos",
    "lang": "en",

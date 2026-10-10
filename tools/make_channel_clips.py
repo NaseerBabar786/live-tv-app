@@ -86,8 +86,9 @@ if os.path.exists(AD_PICTURE):
 
 render(slide(GREEN, TEAL, [("آپ کا اشتہار یہاں ہو سکتا ہے!", f(UR, 48), "white"),
                            ("Your ad could be here!", f(B, 40), "white"),
-                           ("اسپارک ٹی وی پر اشتہار دیں", f(UR, 32), (253, 224, 71)),
-                           ("Advertise on Spark TV", f(BD, 30), (253, 224, 71)),
+                           # Advertising is free (owner, 2026-10-10).
+                           ("اسپارک ٹی وی پر مفت اشتہار دیں", f(UR, 32), (253, 224, 71)),
+                           ("Advertise free on Spark TV", f(BD, 30), (253, 224, 71)),
                            ("WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise", f(BD, 30), "white")], logo=False, y=120), 15, "ad-advertise-here.mp4", key=5)
-# The old "Up to 6 channels at once on one TV. Free." slide is gone (2026-10-09): since the Free/Gold packages,
-# multi-view is Gold. channel/media/promo-free-live-tv.mp4 is now a copy of Cable TV Video Ad 9 (media/cabletv-ad-9.mp4).
+# channel/media/promo-free-live-tv.mp4: since everything is free (owner, 2026-10-10) the Gold ads are off air; it is now
+# 15 s of Spark montage 7 (media/cabletv-ad-9.mp4 holds the same).

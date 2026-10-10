@@ -1,20 +1,40 @@
 {
-  "note": "Our own Cable TV promo for the breaks on our YouTube channels (channel/promo.js) and the locked day schedules. Owner, 2026-10-07: Ad 6 is on air; earlier ads are off for now. 2026-10-07 22:19: owner approved the Gold promo-code ad (WELCOME) for every channel; the two rotate. Never paid sponsor ads. Only ads the owner has approved go here. 2026-10-08 05:49: owner approved Cable TV Video Ad 8 (new Gold promo for the Free/Gold packages); it replaces the promo-code ad. Ad 9 (15 s channel wall, approved 2026-10-08 05:50) added. 2026-10-08 12:18: owner picked Ad 7 (music C, Upbeat Sitar); Ad 7 replaces Ad 6 (old wording: 15 free channels, phone and PC).",
+  "note": "Our own Cable TV promo for the breaks on our YouTube channels (channel/promo.js) and the locked day schedules. Owner, 2026-10-07: Ad 6 is on air; earlier ads are off for now. 2026-10-07 22:19: owner approved the Gold promo-code ad (WELCOME) for every channel; the two rotate. Never paid sponsor ads. Only ads the owner has approved go here. 2026-10-08 05:49: owner approved Cable TV Video Ad 8 (new Gold promo for the Free/Gold packages); it replaces the promo-code ad. Ad 9 (15 s channel wall, approved 2026-10-08 05:50) added. 2026-10-08 12:18: owner picked Ad 7 (music C, Upbeat Sitar); Ad 7 replaces Ad 6 (old wording: 15 free channels, phone and PC). 2026-10-10 (owner): everything is free now, so the Gold ads (Cable TV Video Ads 7, 8, 9 and the promo-code ad) are off air; the Spark montages take their place.",
   "promos": [
     {
-      "src": "cabletv-ad-7.mp4",
-      "title": "Cable TV Video Ad 7",
-      "secs": 60
-    },
-    {
-      "src": "cabletv-ad-8.mp4",
-      "title": "Cable TV Video Ad 8",
+      "src": "spark-montage.mp4",
+      "title": "Spark TV network montage",
       "secs": 30
     },
     {
-      "src": "cabletv-ad-9.mp4",
-      "title": "Cable TV Video Ad 9",
-      "secs": 15
+      "src": "spark-montage-2.mp4",
+      "title": "Spark TV montage 2",
+      "secs": 20
+    },
+    {
+      "src": "spark-montage-3.mp4",
+      "title": "Spark TV montage 3",
+      "secs": 20
+    },
+    {
+      "src": "spark-montage-4.mp4",
+      "title": "Spark TV montage 4",
+      "secs": 20
+    },
+    {
+      "src": "spark-montage-5.mp4",
+      "title": "Spark TV montage 5",
+      "secs": 20
+    },
+    {
+      "src": "spark-montage-6.mp4",
+      "title": "Spark TV montage 6",
+      "secs": 20
+    },
+    {
+      "src": "spark-montage-7.mp4",
+      "title": "Spark TV montage 7",
+      "secs": 20
     }
   ]
 }

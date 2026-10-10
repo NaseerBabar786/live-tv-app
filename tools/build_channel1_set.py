@@ -195,7 +195,7 @@ def find(today):
 
 BOTH = {"welcome": "Welcome to Spark TV · اسپارک ٹی وی میں خوش آمدید", "break": "Break · وقفہ", "next": "Up next · اگلا پروگرام",
         "adhere": "Advertise on Spark TV · اسپارک ٹی وی پر اشتہار دیں", "promo": "Cable TV · کیبل ٹی وی",
-        "promo2": "Cable TV Gold · کیبل ٹی وی گولڈ", "news-headlines": "Spark TV News: Headlines · خبروں کی سرخیاں",
+        "promo2": "Spark TV · اسپارک ٹی وی", "news-headlines": "Spark TV News: Headlines · خبروں کی سرخیاں",
         "news-full": "Spark TV News: The Full Report · تفصیلی خبرنامہ"}
 
 
