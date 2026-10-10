@@ -112,7 +112,7 @@ document.title = station.name + " · Watch live";
 // Latest Movies carries no logo of ours (the owner's wish).
 if (station.noBug) $("bug").hidden = true;
 else $("bug").src = station.bug || station.logo;
-$("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+$("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (!app) $("back").hidden = false;
 
 /** YouTube won't play here: the channel's free-film schedule plays instead. */
