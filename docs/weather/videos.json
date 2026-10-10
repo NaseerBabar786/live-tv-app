@@ -1,11 +1,53 @@
 {
- "updated": "2026-10-10T15:23Z",
+ "updated": "2026-10-10T21:23Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "ywo4iiIb_T0",
+   "title": "How an Ontario tornado warning and frost advisory occurred together | #fallweather",
+   "channel": "The Weather Network",
+   "published": 1791662422
+  },
+  {
+   "id": "iBg2w9yfu-Y",
+   "title": "Raw Power of This Storm Caught on Camera by AccuWeather reporters",
+   "channel": "AccuWeather",
+   "published": 1791660093
+  },
+  {
+   "id": "LwfWt3FaflE",
+   "title": "Man clings to overturned truck as flash flood sweeps vehicles away in Chile!",
+   "channel": "AccuWeather",
+   "published": 1791659559
+  },
+  {
+   "id": "PHDm1E6RRW0",
+   "title": "Panicked people flee supermarket as powerful earthquake hits Panama | #earthquake",
+   "channel": "The Weather Network",
+   "published": 1791658830
+  },
+  {
+   "id": "Ph-EVpW3Vxw",
+   "title": "Monarch migrations are changing, with new weather patterns to blame | #butterfly",
+   "channel": "The Weather Network",
+   "published": 1791655239
+  },
+  {
+   "id": "Oa0EWVKFXBI",
+   "title": "The Hurricane Isaias storm damage in Fort Walton Beach you have to see",
+   "channel": "AccuWeather",
+   "published": 1791654327
+  },
+  {
+   "id": "ESKJRmSAoMo",
+   "title": "This Is What Hurricane Isaias Left Behind",
+   "channel": "AccuWeather",
+   "published": 1791650369
+  },
   {
    "id": "qEWbbv93Rj0",
    "title": "First cold event of the season brings snow to the Prairies | #forecast",
@@ -103,12 +145,6 @@
    "published": 1791557054
   },
   {
-   "id": "UNJ4bP_NNSo",
-   "title": "Hurricane Isaias reached Category 3 intensity on Friday morning, officially major hurricane status",
-   "channel": "The Weather Network",
-   "published": 1791556574
-  },
-  {
    "id": "3BPxvcoGnx8",
    "title": "Cat 3 Hurricane Isaias Is Coming for the Gulf Coast. Are You Ready?",
    "channel": "AccuWeather",
@@ -155,30 +191,6 @@
    "title": "Isaias Could Become a Major Hurricane Before Landfall on Gulf Coast",
    "channel": "AccuWeather",
    "published": 1791386983
-  },
-  {
-   "id": "5NQ8nFgwvBw",
-   "title": "Former Hurricane May Stop Southern California's Heat Wave",
-   "channel": "AccuWeather",
-   "published": 1791325808
-  },
-  {
-   "id": "fXCqC5CDsO4",
-   "title": "What it’s actually like on the Bering Sea: HUGE Waves!",
-   "channel": "AccuWeather",
-   "published": 1791317804
-  },
-  {
-   "id": "1xGzK7y_33E",
-   "title": "The Forecast Feed: First Hurricane of the season expected to form this week",
-   "channel": "AccuWeather",
-   "published": 1791309618
-  },
-  {
-   "id": "bgrQuin71KM",
-   "title": "Wedding Guests Saved the Day from Flooding With CHAIRS?🌊",
-   "channel": "AccuWeather",
-   "published": 1791305085
   },
   {
    "id": "ed2fIOYIWms",

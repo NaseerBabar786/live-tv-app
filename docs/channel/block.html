@@ -87,7 +87,7 @@ $("bug").src = logo;
 // The ticker stays in English (the owner, 2026-10-07), though the rest of Spark TV's writing is Urdu.
 const own = q.get("tick") || "";
 $("tick").textContent = /advertise/i.test(own) ? own
-  : `${name} · ${own ? own + " · " : ""}Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+  : `${name} · ${own ? own + " · " : ""}Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (/[\u0600-\u06FF]/.test($("tick").textContent)) $("ticker").classList.add("rtl");
 
 // Titles, makers and languages from the day's lists (the address carries only ids and lengths).

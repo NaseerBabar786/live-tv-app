@@ -189,6 +189,8 @@ function onChange(on) {
   $("off").classList.add("hidden");
   // No ads while the news is on (owner, 2026-10-08): the line with the "advertise with us" words hides.
   $("ticker").classList.toggle("hidden", !$("tickerText").textContent || /^news-/.test((on.video && on.video.id) || ""));
+  // Our shayari clips carry the Spark Shayari logo top right: the corner logo and time stay off for them, one logo (owner, 2026-10-10).
+  if (station.id !== "main") $("bug").classList.toggle("hidden", !c.logo || /\boff\b/.test($("bug").className) || /^sher-/.test((on.video && on.video.id) || ""));
   const next = guide(c, Date.now(), 6, 60).slice(1).find(isShow);
   $("nowText").textContent = `Now: ${on.video.title}` + (next ? `  ·  Next: ${next.video.title} at ${timeText(next.at, c.tz)}` : "");
   renderGuide();

@@ -58,7 +58,7 @@ const app = q.has("app"), id = q.get("v") || "", name = q.get("name") || "";
 const $ = x => document.getElementById(x);
 let player = null, nowTimer = null;
 if (name) document.title = name + " · Watch live";
-$("tick").textContent = `${name ? name + " on Cable TV · " : ""}Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+$("tick").textContent = `${name ? name + " on Cable TV · " : ""}Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 
 function showNow() {
   if (!name) return;
