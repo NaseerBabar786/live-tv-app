@@ -132,6 +132,12 @@ class MyChannelTest {
         assertTrue(MyChannel.isMine(films.channel))
         assertEquals(MyChannel.URL, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.url)
         assertEquals(1, MyChannel.parse(JSONObject("""{"videos":[]}""")).channel.number)
+        // Spark One, the Google-safe channel, comes first; every other channel keeps its number.
+        val one = MyChannel.parse(JSONObject("""{"name":"Spark TV One","videos":[]}"""), MyChannel.PONE)
+        assertEquals(0, one.channel.number)
+        assertEquals("Spark One", one.channel.name)
+        assertEquals(MyChannel.PONE_URL, one.channel.url)
+        assertEquals(null, MyChannel.webPage(one.channel))
         assertEquals(21, films.channel.number)
         assertEquals("https://tv.bulkbazaar.ca/channel/ytc.html?c=filmein&app=1&brand=spark", MyChannel.webPage(films.channel))
         assertEquals(null, MyChannel.webPage(MyChannel.parse(JSONObject("""{"videos":[]}""")).channel))
@@ -179,7 +185,9 @@ class MyChannelTest {
     @Test
     fun everyChannelIsInItsLanguagesBlock() {
         val blocks = mapOf(MyChannel.URDU to 1..19, MyChannel.HINDI to 21..39, MyChannel.ENGLISH to 41..59, MyChannel.PUNJABI to 61..79)
-        MyChannel.STATIONS.forEach { assertTrue("${it.id} ${it.number}", it.number in blocks.getValue(it.lang)) }
+        // Spark One (2026-10-10) sits at the top of the list as 0, before the language blocks.
+        MyChannel.STATIONS.filter { it.id != MyChannel.PONE }.forEach { assertTrue("${it.id} ${it.number}", it.number in blocks.getValue(it.lang)) }
+        assertEquals(MyChannel.PONE, MyChannel.STATIONS.first().id)
         assertTrue(MyChannel.HITS_NUMBER in blocks.getValue(MyChannel.HINDI))
         val numbers = MyChannel.STATIONS.map { it.number } + MyChannel.HITS_NUMBER
         assertEquals(numbers.size, numbers.toSet().size)

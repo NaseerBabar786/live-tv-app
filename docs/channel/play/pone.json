@@ -1,79 +1,79 @@
 {
  "name": "Spark TV One",
- "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-tv.png",
+ "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-one.png",
  "logoCorner": "tr",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Spark TV · Films in Urdu and Hindi, stories and shayari of the classic poets · Advertise on Spark TV: WhatsApp 437 602 6500",
+ "ticker": "Spark TV · Films in Urdu and Hindi, stories and shayari of the classic poets · Advertise on Spark TV: WhatsApp 437 602 6500 · اسپارک ٹی وی: اردو اور ہندی میں فلمیں، کہانیاں اور کلاسیکی شاعروں کی شاعری · اسپارک ٹی وی پر اشتہار دیں: واٹس ایپ 437 602 6500",
  "tickerOn": true,
- "credits": "Films: Blender Foundation (CC BY) and public-domain films dubbed by our AI voices. Poetry: classic Urdu poets (public domain) read by our AI voice. Stories: made by us.",
+ "credits": "Films: Blender Foundation (CC BY) and public-domain films dubbed by our AI voices. Poetry: classic Urdu poets (public domain) read by our AI voice. Stories: made by us. فلمیں: بلینڈر فاؤنڈیشن (CC BY) اور پبلک ڈومین فلمیں، ہماری اے آئی آوازوں میں۔ شاعری: کلاسیکی اردو شاعر (پبلک ڈومین)، ہماری اے آئی آواز میں۔ کہانیاں: ہماری اپنی۔",
  "videos": [
   {
    "id": "break",
-   "title": "وقفہ",
+   "title": "Break · وقفہ",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-break.mp4",
    "secs": 5,
    "kind": "ident"
   },
   {
    "id": "next",
-   "title": "اگلا پروگرام",
+   "title": "Up next · اگلا پروگرام",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-coming-up.mp4",
    "secs": 8,
    "kind": "ident"
   },
   {
    "id": "adhere",
-   "title": "اشتہار: اسپارک ٹی وی پر اشتہار دیں",
+   "title": "Advertise on Spark TV · اسپارک ٹی وی پر اشتہار دیں",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
   },
   {
    "id": "cosmos-laundromat-urdu",
-   "title": "Cosmos Laundromat",
+   "title": "کاسموس لانڈرومیٹ · Cosmos Laundromat",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/cosmos-laundromat-urdu.mp4",
    "secs": 731,
    "kind": "programme"
   },
   {
    "id": "tears-of-steel-urdu",
-   "title": "Tears of Steel",
+   "title": "ٹیئرز آف اسٹیل · Tears of Steel",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-urdu.mp4",
    "secs": 734,
    "kind": "programme"
   },
   {
    "id": "sintel-urdu",
-   "title": "Sintel",
+   "title": "سنٹیل · Sintel",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel-urdu.mp4",
    "secs": 888,
    "kind": "programme"
   },
   {
    "id": "seven-minutes-of-terror-urdu",
-   "title": "Curiosity's Seven Minutes of Terror",
+   "title": "مریخ پر کیوریوسٹی کے سات منٹ · Curiosity's Seven Minutes of Terror",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-urdu.mp4",
    "secs": 303,
    "kind": "programme"
   },
   {
    "id": "superman-1941-urdu",
-   "title": "Superman: The Mad Scientist (1941)",
+   "title": "سپرمین اور پاگل سائنسدان · Superman: The Mad Scientist (1941)",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/superman-1941-urdu.mp4",
    "secs": 628,
    "kind": "programme"
   },
   {
    "id": "sprite-fright-urdu",
-   "title": "Sprite Fright",
+   "title": "اسپرائٹ فرائٹ · Sprite Fright",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sprite-fright-urdu.mp4",
    "secs": 630,
    "kind": "programme"
   },
   {
    "id": "elephants-dream-urdu",
-   "title": "Elephants Dream",
+   "title": "ایلیفنٹس ڈریم · Elephants Dream",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-urdu.mp4",
    "secs": 654,
    "kind": "programme"
@@ -87,259 +87,259 @@
   },
   {
    "id": "cosmos-laundromat-hindi",
-   "title": "Cosmos Laundromat",
+   "title": "کاسموس لانڈرومیٹ · Cosmos Laundromat",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/cosmos-laundromat-hindi.mp4",
    "secs": 731,
    "kind": "programme"
   },
   {
    "id": "tears-of-steel-hindi",
-   "title": "Tears of Steel",
+   "title": "ٹیئرز آف اسٹیل · Tears of Steel",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/tears-of-steel-hindi.mp4",
    "secs": 734,
    "kind": "programme"
   },
   {
    "id": "sintel-hindi",
-   "title": "Sintel",
+   "title": "سنٹیل · Sintel",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sintel-hindi.mp4",
    "secs": 888,
    "kind": "programme"
   },
   {
    "id": "seven-minutes-of-terror-hindi",
-   "title": "Curiosity's Seven Minutes of Terror",
+   "title": "مریخ پر کیوریوسٹی کے سات منٹ · Curiosity's Seven Minutes of Terror",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/seven-minutes-of-terror-hindi.mp4",
    "secs": 303,
    "kind": "programme"
   },
   {
    "id": "superman-1941-hindi",
-   "title": "Superman: The Mad Scientist (1941)",
+   "title": "سپرمین اور پاگل سائنسدان · Superman: The Mad Scientist (1941)",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/superman-1941-hindi.mp4",
    "secs": 628,
    "kind": "programme"
   },
   {
    "id": "sprite-fright-hindi",
-   "title": "Sprite Fright",
+   "title": "اسپرائٹ فرائٹ · Sprite Fright",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/sprite-fright-hindi.mp4",
    "secs": 630,
    "kind": "programme"
   },
   {
    "id": "elephants-dream-hindi",
-   "title": "Elephants Dream",
+   "title": "ایلیفنٹس ڈریم · Elephants Dream",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-hindi.mp4",
    "secs": 654,
    "kind": "programme"
   },
   {
    "id": "sher-01",
-   "title": "Aaj ka Sher · Mirza Ghalib",
+   "title": "آج کا شعر · مرزا غالب · Today's verse · Mirza Ghalib",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-01.mp4",
    "secs": 32,
    "kind": "programme"
   },
   {
    "id": "sher-02",
-   "title": "Aaj ka Sher · Mir Taqi Mir",
+   "title": "آج کا شعر · میر تقی میر · Today's verse · Mir Taqi Mir",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-02.mp4",
    "secs": 31,
    "kind": "programme"
   },
   {
    "id": "sher-03",
-   "title": "Aaj ka Sher · Allama Iqbal",
+   "title": "آج کا شعر · علامہ اقبال · Today's verse · Allama Iqbal",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-03.mp4",
    "secs": 27,
    "kind": "programme"
   },
   {
    "id": "sher-04",
-   "title": "Aaj ka Sher · Dagh Dehlvi",
+   "title": "آج کا شعر · داغ دہلوی · Today's verse · Dagh Dehlvi",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-04.mp4",
    "secs": 29,
    "kind": "programme"
   },
   {
    "id": "sher-05",
-   "title": "Aaj ka Sher · Momin Khan Momin",
+   "title": "آج کا شعر · مومن خاں مومن · Today's verse · Momin Khan Momin",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-05.mp4",
    "secs": 25,
    "kind": "programme"
   },
   {
    "id": "sher-06",
-   "title": "Aaj ka Sher · Mirza Ghalib",
+   "title": "آج کا شعر · مرزا غالب · Today's verse · Mirza Ghalib",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-06.mp4",
    "secs": 25,
    "kind": "programme"
   },
   {
    "id": "sher-07",
-   "title": "Aaj ka Sher · Jigar Moradabadi",
+   "title": "آج کا شعر · جگر مرادآبادی · Today's verse · Jigar Moradabadi",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-07.mp4",
    "secs": 29,
    "kind": "programme"
   },
   {
    "id": "sher-08",
-   "title": "Aaj ka Sher · Bahadur Shah Zafar",
+   "title": "آج کا شعر · بہادر شاہ ظفر · Today's verse · Bahadur Shah Zafar",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-08.mp4",
    "secs": 28,
    "kind": "programme"
   },
   {
    "id": "sher-09",
-   "title": "Aaj ka Sher · Allama Iqbal",
+   "title": "آج کا شعر · علامہ اقبال · Today's verse · Allama Iqbal",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-09.mp4",
    "secs": 31,
    "kind": "programme"
   },
   {
    "id": "sher-10",
-   "title": "Aaj ka Sher · Mir Taqi Mir",
+   "title": "آج کا شعر · میر تقی میر · Today's verse · Mir Taqi Mir",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-10.mp4",
    "secs": 26,
    "kind": "programme"
   },
   {
    "id": "sher-11",
-   "title": "Aaj ka Sher · Hasrat Mohani",
+   "title": "آج کا شعر · حسرت موہانی · Today's verse · Hasrat Mohani",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-11.mp4",
    "secs": 30,
    "kind": "programme"
   },
   {
    "id": "sher-12",
-   "title": "Aaj ka Sher · Mirza Ghalib",
+   "title": "آج کا شعر · مرزا غالب · Today's verse · Mirza Ghalib",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-12.mp4",
    "secs": 30,
    "kind": "programme"
   },
   {
    "id": "sher-13",
-   "title": "Aaj ka Sher · Ameer Minai",
+   "title": "آج کا شعر · امیر مینائی · Today's verse · Ameer Minai",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-13.mp4",
    "secs": 31,
    "kind": "programme"
   },
   {
    "id": "sher-14",
-   "title": "Aaj ka Sher · Ibrahim Zauq",
+   "title": "آج کا شعر · ابراہیم ذوق · Today's verse · Ibrahim Zauq",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-14.mp4",
    "secs": 27,
    "kind": "programme"
   },
   {
    "id": "sher-15",
-   "title": "Aaj ka Sher · Akbar Allahabadi",
+   "title": "آج کا شعر · اکبر الہ آبادی · Today's verse · Akbar Allahabadi",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-15.mp4",
    "secs": 30,
    "kind": "programme"
   },
   {
    "id": "sher-16",
-   "title": "Aaj ka Sher · Allama Iqbal",
+   "title": "آج کا شعر · علامہ اقبال · Today's verse · Allama Iqbal",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-16.mp4",
    "secs": 27,
    "kind": "programme"
   },
   {
    "id": "sher-17",
-   "title": "Aaj ka Sher · Altaf Hussain Hali",
+   "title": "آج کا شعر · الطاف حسین حالی · Today's verse · Altaf Hussain Hali",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-17.mp4",
    "secs": 29,
    "kind": "programme"
   },
   {
    "id": "sher-18",
-   "title": "Aaj ka Sher · Mirza Ghalib",
+   "title": "آج کا شعر · مرزا غالب · Today's verse · Mirza Ghalib",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-18.mp4",
    "secs": 27,
    "kind": "programme"
   },
   {
    "id": "sher-19",
-   "title": "Aaj ka Sher · Dagh Dehlvi",
+   "title": "آج کا شعر · داغ دہلوی · Today's verse · Dagh Dehlvi",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-19.mp4",
    "secs": 30,
    "kind": "programme"
   },
   {
    "id": "sher-20",
-   "title": "Aaj ka Sher · Mir Taqi Mir",
+   "title": "آج کا شعر · میر تقی میر · Today's verse · Mir Taqi Mir",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-20.mp4",
    "secs": 26,
    "kind": "programme"
   },
   {
    "id": "sher-21",
-   "title": "Aaj ka Sher · Allama Iqbal",
+   "title": "آج کا شعر · علامہ اقبال · Today's verse · Allama Iqbal",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-21.mp4",
    "secs": 32,
    "kind": "programme"
   },
   {
    "id": "sher-22",
-   "title": "Aaj ka Sher · Ibrahim Zauq",
+   "title": "آج کا شعر · ابراہیم ذوق · Today's verse · Ibrahim Zauq",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-22.mp4",
    "secs": 29,
    "kind": "programme"
   },
   {
    "id": "sher-23",
-   "title": "Aaj ka Sher · Mirza Ghalib",
+   "title": "آج کا شعر · مرزا غالب · Today's verse · Mirza Ghalib",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-23.mp4",
    "secs": 29,
    "kind": "programme"
   },
   {
    "id": "sher-24",
-   "title": "Aaj ka Sher · Dagh Dehlvi",
+   "title": "آج کا شعر · داغ دہلوی · Today's verse · Dagh Dehlvi",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-24.mp4",
    "secs": 29,
    "kind": "programme"
   },
   {
    "id": "sher-25",
-   "title": "Aaj ka Sher · Mirza Ghalib",
+   "title": "آج کا شعر · مرزا غالب · Today's verse · Mirza Ghalib",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-25.mp4",
    "secs": 29,
    "kind": "programme"
   },
   {
    "id": "sher-26",
-   "title": "Aaj ka Sher · Allama Iqbal",
+   "title": "آج کا شعر · علامہ اقبال · Today's verse · Allama Iqbal",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-26.mp4",
    "secs": 29,
    "kind": "programme"
   },
   {
    "id": "sher-27",
-   "title": "Aaj ka Sher · Mir Taqi Mir",
+   "title": "آج کا شعر · میر تقی میر · Today's verse · Mir Taqi Mir",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-27.mp4",
    "secs": 26,
    "kind": "programme"
   },
   {
    "id": "sher-28",
-   "title": "Aaj ka Sher · Akbar Allahabadi",
+   "title": "آج کا شعر · اکبر الہ آبادی · Today's verse · Akbar Allahabadi",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-28.mp4",
    "secs": 31,
    "kind": "programme"
   },
   {
    "id": "sher-29",
-   "title": "Aaj ka Sher · Mirza Ghalib",
+   "title": "آج کا شعر · مرزا غالب · Today's verse · Mirza Ghalib",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-29.mp4",
    "secs": 25,
    "kind": "programme"
   },
   {
    "id": "sher-30",
-   "title": "Aaj ka Sher · Bahadur Shah Zafar",
+   "title": "آج کا شعر · بہادر شاہ ظفر · Today's verse · Bahadur Shah Zafar",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/shayari-sher-30.mp4",
    "secs": 29,
    "kind": "programme"

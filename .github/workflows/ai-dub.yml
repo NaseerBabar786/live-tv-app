@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       step:
-        description: "find, prepare or voice"
+        description: "find, prepare, voice or credit (new Urdu + English credit card on the dubs already made)"
         required: true
         default: prepare
       films:
@@ -16,7 +16,7 @@ on:
         required: true
         default: tears-of-steel,elephants-dream
       langs:
-        description: "Languages for the voice step"
+        description: "Languages for the voice and credit steps"
         required: true
         default: ur,hi
 
@@ -39,7 +39,7 @@ jobs:
             pip install -q torch torchaudio --index-url https://download.pytorch.org/whl/cpu
             pip install -q demucs faster-whisper soundfile
           else
-            pip install -q edge-tts
+            pip install -q edge-tts pillow
           fi
       - name: Find films
         if: inputs.step == 'find'

@@ -1,37 +1,15 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-09 22:38 UTC",
- "secs": 2303,
+ "built": "2026-10-10 22:48 UTC",
+ "secs": 1912,
  "videos": [
   {
-   "id": "qQHFIEqtTC8",
-   "title": "Ehraam-e-Junoon Episode 24 | Neelam Muneer - Imran Abbas - Nimra Khan | Geo Kahani",
-   "label": "Geo Kahani",
-   "secs": 2303,
+   "id": "N6ss-wL7rFI",
+   "title": "Ranjish Episode 9 [ENG SUB] | 7th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
+   "label": "Express TV",
+   "secs": 1912,
    "kind": "drama"
   }
  ],
- "spares": [
-  {
-   "id": "o-qGGFEItHI",
-   "title": "Aakhri Sahara Episode 19 | Areej Mohyudin, Noor Hassan | Latest Pakistani Drama",
-   "label": "LTN Family",
-   "secs": 2220,
-   "kind": "drama"
-  },
-  {
-   "id": "VaAMUteKlw4",
-   "title": "Mein Kahani Hun S- 3 | Episode 2 | Saanjh | Sunita Marshall | Syed Jibran | 4 Oct 2026 | Express TV",
-   "label": "Express TV",
-   "secs": 2108,
-   "kind": "drama"
-  },
-  {
-   "id": "_6MSyU6uUKU",
-   "title": "Uswah Episode 12 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 4th October 2026",
-   "label": "Har Pal Geo",
-   "secs": 2313,
-   "kind": "drama"
-  }
- ]
+ "spares": []
 }

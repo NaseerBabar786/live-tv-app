@@ -10,14 +10,14 @@
  "videos": [
   {
    "id": "news-headlines",
-   "title": "Spark TV News: Headlines",
+   "title": "Spark TV News: Headlines · خبروں کی سرخیاں",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4",
    "secs": 180,
    "kind": "programme"
   },
   {
    "id": "news-full",
-   "title": "Spark TV News: The Full Report",
+   "title": "Spark TV News: The Full Report · تفصیلی خبرنامہ",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4",
    "secs": 600,
    "kind": "programme"

@@ -239,39 +239,6 @@
    "srt": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/elephants-dream-hindi.srt"
   },
   {
-   "id": "cable-tv-video-ad-7",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 7",
-   "url": "media/cable-tv-video-ad-7.mp4",
-   "secs": 60,
-   "poster": "media/cable-tv-ad-7-poster.jpg",
-   "about": "60 s TV-remote tour for the new packages: all 7,800+ channels free in 1+List, then every Gold feature (full screen, Favorites, every mode, Library, Games, Iqra Quran, Azan Clock, Weather, Themes), Free vs Gold, 7 days of Gold free + code WELCOME, and 3 install steps",
-   "credit": "Our own ad. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Upbeat Sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08, rotating with Ads 8 and 9; also the home page video and the app pop-up promo."
-  },
-  {
-   "id": "cable-tv-video-ad-9",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 9",
-   "url": "media/cable-tv-video-ad-9.mp4",
-   "secs": 15,
-   "poster": "media/cable-tv-ad-9-poster.jpg",
-   "about": "15 s: a wall of hundreds of channels, 7,800+ free; a crown turns it gold with the Gold features; 7 days of Gold free, then code WELCOME",
-   "credit": "Our own ad. Clips from our channels © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Happy sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08."
-  },
-  {
-   "id": "cable-tv-video-ad-8",
-   "cat": "promos",
-   "lang": "en",
-   "title": "Cable TV Video Ad 8",
-   "url": "media/cable-tv-video-ad-8.mp4",
-   "secs": 30,
-   "poster": "media/cable-tv-ad-8-poster.jpg",
-   "about": "30 s Gold promo for the new packages: 7,800+ channels free, Gold $9.99/month adds full screen, every mode, Library, Games, Iqra Quran, Azan Clock, Weather and Themes; 7 days of Gold free, then code WELCOME for one more month, and how to use the code",
-   "credit": "Our own ad. Clips from our channels: Sintel, Tears of Steel, Big Buck Bunny, Caminandes, Sprite Fright, Cosmos Laundromat © Blender Foundation, CC BY; Superman (1941), public domain. Music: \"Upbeat Sitar\" by Antti Luode, CC BY 3.0. On air everywhere since 2026-10-08, rotating with Ads 7 and 9."
-  },
-  {
    "id": "spark-ident",
    "cat": "spark-promos",
    "lang": "en",
@@ -301,7 +268,7 @@
    "url": "media/spark-montage-2.mp4",
    "secs": 20,
    "poster": "media/spark-montage-2-poster.jpg",
-   "about": "20 s montage: shows glide past on a carousel, faster and faster, then sliding strips into the flower. In the breaks of every channel (approved 2026-10-09).",
+   "about": "20 s montage: shows glide past on a carousel, faster and faster, then sliding strips into the flower. In the breaks of every channel (owner picked the news clock 2026-10-10).",
    "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), public domain, Spark TV."
   },
   {
@@ -312,7 +279,7 @@
    "url": "media/spark-montage-3.mp4",
    "secs": 20,
    "poster": "media/spark-montage-3-poster.jpg",
-   "about": "20 s montage: a TV flips through the Spark channels faster and faster, the channel list scrolls, the TV switches off to a dot that blooms into the flower. In the breaks of every channel (approved 2026-10-09).",
+   "about": "20 s montage: a TV flips through the Spark channels faster and faster, the channel list scrolls, the TV switches off to a dot that blooms into the flower. In the breaks of every channel (owner picked the news clock 2026-10-10).",
    "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), public domain, Spark TV."
   },
   {
@@ -323,7 +290,7 @@
    "url": "media/spark-montage-4.mp4",
    "secs": 20,
    "poster": "media/spark-montage-4-poster.jpg",
-   "about": "20 s montage: one show pulls back into hundreds of screens that turn into the Spark Flower. In the breaks of every channel (approved 2026-10-09).",
+   "about": "20 s montage: one show pulls back into hundreds of screens that turn into the Spark Flower. In the breaks of every channel (owner picked the news clock 2026-10-10).",
    "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), public domain, Spark TV."
   },
   {
@@ -334,7 +301,7 @@
    "url": "media/spark-montage-5.mp4",
    "secs": 20,
    "poster": "media/spark-montage-5-poster.jpg",
-   "about": "20 s montage from real footage only: slanted panels split the screen on the beat, a wall of 16 screens flips, four columns close into the flower. In the breaks of every channel (approved 2026-10-09).",
+   "about": "20 s montage from real footage only: slanted panels split the screen on the beat, a wall of 16 screens flips, four columns close into the flower. In the breaks of every channel (owner picked the news clock 2026-10-10).",
    "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Spark TV News footage (Wikimedia Commons), Blender Foundation (CC BY), public domain."
   },
   {
@@ -345,7 +312,7 @@
    "url": "media/spark-montage-6.mp4",
    "secs": 20,
    "poster": "media/spark-montage-6-poster.jpg",
-   "about": "20 s montage: one TV, four languages. A wall in the Urdu, Hindi, English and Punjabi colours, each language full screen in turn, folding into the flower. In the breaks of every channel (approved 2026-10-09).",
+   "about": "20 s montage: one TV, four languages. A wall in the Urdu, Hindi, English and Punjabi colours, each language full screen in turn, folding into the flower. In the breaks of every channel (owner picked the news clock 2026-10-10).",
    "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Blender Foundation (CC BY), Spark TV News footage (Wikimedia Commons), Spark TV."
   },
   {
@@ -356,8 +323,30 @@
    "url": "media/spark-montage-7.mp4",
    "secs": 20,
    "poster": "media/spark-montage-7-poster.jpg",
-   "about": "20 s montage from real footage only: big postcards glide in one after another, then four cards slide together into the flower. In the breaks of every channel (approved 2026-10-09).",
+   "about": "20 s montage from real footage only: big postcards glide in one after another, then four cards slide together into the flower. In the breaks of every channel (owner picked the news clock 2026-10-10).",
    "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Spark TV News footage (Wikimedia Commons), Blender Foundation (CC BY), public domain."
+  },
+  {
+   "id": "spark-news-opener-headlines",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark News opener, headlines",
+   "url": "media/spark-news-opener-headlines.mp4",
+   "secs": 20,
+   "poster": "media/spark-news-opener-headlines-poster.jpg",
+   "about": "20 s news opener from real news footage only: the news clock: a clock face (NEWS / خبریں) sweeps to twelve while four windows open around it (Toronto, Mumbai, sports, weather, each labelled in English + Urdu), then SPARK NEWS HEADLINES / اسپارک نیوز کی سرخیاں. Opens every headlines bulletin (owner picked the news clock 2026-10-10).",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Spark TV News footage (Wikimedia Commons)."
+  },
+  {
+   "id": "spark-news-opener-full",
+   "cat": "spark-promos",
+   "lang": "en",
+   "title": "Spark News opener, full news",
+   "url": "media/spark-news-opener-full.mp4",
+   "secs": 20,
+   "poster": "media/spark-news-opener-full-poster.jpg",
+   "about": "20 s news opener from real news footage only: the news clock: a clock face (NEWS / خبریں) sweeps to twelve while four windows open around it (Toronto, Mumbai, sports, weather, each labelled in English + Urdu), then SPARK NEWS / اسپارک نیوز. Opens every full news bulletin (owner picked the news clock 2026-10-10).",
+   "credit": "Our own ad. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0. Clips: Spark TV News footage (Wikimedia Commons)."
   },
   {
    "id": "spark-ad-tour",
@@ -415,13 +404,13 @@
    "credit": "Our own ad. Pictures: what our Spark channels show this week. Music: \"Inspiring Advertising\" by Rafael Krux, CC BY 4.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-0000",
+   "id": "show-promo-spark-tv-news-the-full-report-all-0000",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0000.mp4",
+   "title": "Promo: Spark TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-the-full-report-all-0000.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: The Full Report, Every day · 12 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: The Full Report, Every day · 12 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -435,13 +424,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-0100",
+   "id": "show-promo-spark-tv-news-headlines-all-0100",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0100.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-0100.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 1 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 1 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -455,13 +444,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-0200",
+   "id": "show-promo-spark-tv-news-headlines-all-0200",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0200.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-0200.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 2 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 2 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -485,13 +474,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-0300",
+   "id": "show-promo-spark-tv-news-headlines-all-0300",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0300.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-0300.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 3 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 3 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -505,13 +494,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-0400",
+   "id": "show-promo-spark-tv-news-the-full-report-all-0400",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0400.mp4",
+   "title": "Promo: Spark TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-the-full-report-all-0400.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: The Full Report, Every day · 4 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: The Full Report, Every day · 4 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -525,13 +514,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-0500",
+   "id": "show-promo-spark-tv-news-headlines-all-0500",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0500.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-0500.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 5 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 5 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -545,13 +534,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-0600",
+   "id": "show-promo-spark-tv-news-headlines-all-0600",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0600.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-0600.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 6 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 6 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -565,13 +554,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-0700",
+   "id": "show-promo-spark-tv-news-headlines-all-0700",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0700.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-0700.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 7 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 7 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -595,13 +584,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-0800",
+   "id": "show-promo-spark-tv-news-the-full-report-all-0800",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-0800.mp4",
+   "title": "Promo: Spark TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-the-full-report-all-0800.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: The Full Report, Every day · 8 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: The Full Report, Every day · 8 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -615,13 +604,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-0900",
+   "id": "show-promo-spark-tv-news-headlines-all-0900",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-0900.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-0900.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 9 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 9 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -635,13 +624,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-1000",
+   "id": "show-promo-spark-tv-news-headlines-all-1000",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1000.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1000.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 10 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 10 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -665,13 +654,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-1100",
+   "id": "show-promo-spark-tv-news-headlines-all-1100",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1100.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1100.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 11 AM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 11 AM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -685,13 +674,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-1200",
+   "id": "show-promo-spark-tv-news-the-full-report-all-1200",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-1200.mp4",
+   "title": "Promo: Spark TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-the-full-report-all-1200.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: The Full Report, Every day · 12 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: The Full Report, Every day · 12 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -705,13 +694,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-1300",
+   "id": "show-promo-spark-tv-news-headlines-all-1300",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1300.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1300.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 1 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 1 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -725,13 +714,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-1400",
+   "id": "show-promo-spark-tv-news-headlines-all-1400",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1400.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1400.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 2 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 2 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -745,13 +734,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-1500",
+   "id": "show-promo-spark-tv-news-headlines-all-1500",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1500.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1500.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 3 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 3 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -775,13 +764,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-1600",
+   "id": "show-promo-spark-tv-news-the-full-report-all-1600",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-1600.mp4",
+   "title": "Promo: Spark TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-the-full-report-all-1600.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: The Full Report, Every day · 4 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: The Full Report, Every day · 4 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -795,13 +784,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-1700",
+   "id": "show-promo-spark-tv-news-headlines-all-1700",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1700.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1700.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 5 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 5 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -815,13 +804,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-1800",
+   "id": "show-promo-spark-tv-news-headlines-all-1800",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1800.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1800.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 6 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 6 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -845,13 +834,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-1900",
+   "id": "show-promo-spark-tv-news-headlines-all-1900",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-1900.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-1900.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 7 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 7 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -865,13 +854,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-the-full-report-all-2000",
+   "id": "show-promo-spark-tv-news-the-full-report-all-2000",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: The Full Report",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-the-full-report-all-2000.mp4",
+   "title": "Promo: Spark TV News: The Full Report",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-the-full-report-all-2000.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: The Full Report, Every day · 8 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: The Full Report, Every day · 8 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -885,13 +874,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-2100",
+   "id": "show-promo-spark-tv-news-headlines-all-2100",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-2100.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-2100.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 9 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 9 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -905,13 +894,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-2200",
+   "id": "show-promo-spark-tv-news-headlines-all-2200",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-2200.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-2200.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 10 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 10 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
@@ -925,13 +914,13 @@
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {
-   "id": "show-promo-bazaar-tv-news-headlines-all-2300",
+   "id": "show-promo-spark-tv-news-headlines-all-2300",
    "cat": "spark-promos",
    "lang": "ur",
-   "title": "Promo: Bazaar TV News: Headlines",
-   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-bazaar-tv-news-headlines-all-2300.mp4",
+   "title": "Promo: Spark TV News: Headlines",
+   "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/show-promo-spark-tv-news-headlines-all-2300.mp4",
    "secs": 20,
-   "about": "Coming up on Spark TV: Bazaar TV News: Headlines, Every day · 11 PM.",
+   "about": "Coming up on Spark TV: Spark TV News: Headlines, Every day · 11 PM.",
    "credit": "Our own promo. Music: \"Psychedelic Crater\" by Kevin MacLeod (incompetech.com), CC BY 3.0."
   },
   {

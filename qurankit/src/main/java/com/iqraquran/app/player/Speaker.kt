@@ -4,6 +4,7 @@ import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import java.util.Locale
+import java.util.concurrent.Executors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,10 +26,19 @@ class Speaker(context: Context) {
 
     private var onDone: (() -> Unit)? = null
 
+    /**
+     * Every call into the speech engine runs here, never on the main thread: the engine can hold its lock for
+     * seconds (choosing the Arabic voice on a slow TV), and Back from the Quran screen then froze the whole app
+     * (Android's "not responding", Cable TV 1.11.0 on a Chromecast, 2026-10-10: Speaker.stop waiting for that lock).
+     */
+    private val worker = Executors.newSingleThreadExecutor { r -> Thread(r, "speaker").apply { isDaemon = true } }
+
     private val tts: TextToSpeech = TextToSpeech(context.applicationContext) { result -> onInit(result) }
 
     private fun onInit(result: Int) {
-        _status.value = if (result == TextToSpeech.SUCCESS && setArabic()) Status.Ready else Status.NoArabic
+        worker.execute {
+            _status.value = if (result == TextToSpeech.SUCCESS && setArabic()) Status.Ready else Status.NoArabic
+        }
     }
 
     init {
@@ -66,17 +76,20 @@ class Speaker(context: Context) {
         val id = "u${++counter}"
         onDone = done
         _speaking.value = id
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, id)
+        worker.execute { tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, id) }
     }
 
     fun stop() {
         onDone = null
         _speaking.value = null
-        tts.stop()
+        worker.execute { tts.stop() }
     }
 
     fun release() {
-        tts.stop()
-        tts.shutdown()
+        worker.execute {
+            tts.stop()
+            tts.shutdown()
+        }
+        worker.shutdown()
     }
 }

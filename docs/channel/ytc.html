@@ -8,14 +8,15 @@
 <style>
   /* Our channels that run like Spark Hits (1.9.47): official uploads from well-known YouTube
      channels (list built by tools/build_youtube_channels.py), one after another in YouTube's own
-     player, locked so nobody can pause, skip or leave for YouTube (the owner's rule for every
+     player, locked so nobody can pause, skip or leave for YouTube while live (the owner's rule for every
      YouTube channel). ?c=<station id>; the app adds &app=1. When YouTube won't play, the channel's
-     free-film schedule plays instead (on the website: channel/?c=<id>; in the app: its own player). */
+     free-film schedule plays instead (on the website: channel/?c=<id>; in the app: its own player).
+     Since 2026-10-10 OK opens today's guide: a programme picked there plays on demand with our own pause bar. */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
   #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .shield { position: absolute; inset: 0; background: transparent; }
-  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: .55; pointer-events: none; }
-  .now { position: absolute; left: 3%; bottom: calc(var(--strip) + 5%); max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; pointer-events: none; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: 1; filter: drop-shadow(0 0 3px rgba(0,0,0,.6)); pointer-events: none; }
+  .now { position: absolute; left: 3%; bottom: calc(var(--strip) + 5%); max-width: 55%; background: rgba(16,24,39,.85); color: #fff; padding: .45em .8em; border-radius: 8px; font-weight: 700; font-size: clamp(11px, 1.5vw, 18px); transition: opacity .6s; pointer-events: none; }
   .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
   .hide { opacity: 0; }
   .sound, .back { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
@@ -41,6 +42,7 @@
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
+  .bug.off { display: none; }
   /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
      owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
      YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
@@ -61,7 +63,7 @@
   .card .row { display: flex; align-items: center; gap: 2vw; border-bottom: 1px solid rgba(232,190,110,.18); padding: .2vh 0; }
   .card .row .t { flex: 0 0 auto; min-width: 14vw; font-weight: 700; font-size: 3vh; color: #e8be6e; direction: rtl; text-align: right; }
   .card .row .w { flex: 1; min-width: 0; font-size: 2.6vh; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: right; line-height: 2.2; }
-  .card .row.now .w, .card .row.now .t { color: #fff6d8; }
+  .card .row.now .w, .card .row.now .t, .card .row.cur .w, .card .row.cur .t { color: #fff6d8; }
   .card .row { flex-direction: row-reverse; }
   .card .cities { position: absolute; top: 27vh; left: 6vw; right: 6vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vw; direction: rtl; }
   .card .city { background: rgba(255,255,255,.07); border: 1px solid rgba(232,190,110,.35); border-radius: 16px; text-align: center; padding: 2.5vh 1vw; }
@@ -71,9 +73,41 @@
   .card .city .c { font-size: 2.5vh; color: #e9dcc4; line-height: 2.2; }
   .card .city .r { font-size: 2.2vh; color: #cbbfa8; }
   .card .credit { position: absolute; bottom: 4vh; left: 0; right: 0; text-align: center; font-size: 1.7vh; color: rgba(233,220,196,.75); }
+  /* Today's guide and on-demand play (owner, 2026-10-10): OK opens a strip of today's programmes; one picked plays
+     from its start with our own pause, rewind and forward bar (never YouTube's); Live goes back to the channel. */
+  .guide { position: absolute; left: 0; right: 0; bottom: var(--strip); z-index: 7; background: linear-gradient(transparent, rgba(8,10,24,.96) 22%);
+    color: #fff; padding: 6vh 3vw 2.5vh; font-size: clamp(11px, 1.6vw, 20px); }
+  .guide .h { font-weight: 800; color: #FACC15; letter-spacing: .06em; margin-bottom: .6em; }
+  .guide .h small { color: #cbd5e1; font-weight: 400; letter-spacing: 0; margin-left: 1em; }
+  .guide .strip { display: flex; gap: 1.2vw; overflow: hidden; }
+  .guide .g { flex: 0 0 17vw; background: rgba(255,255,255,.08); border: 2px solid transparent; border-radius: 10px; overflow: hidden; opacity: .85; }
+  .guide .g img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #111; }
+  .guide .g .w { padding: .35em .5em 0; font-size: .8em; color: #94a3b8; }
+  .guide .g .n { padding: 0 .5em .45em; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .guide .g.on .w { color: #4ADE80; font-weight: 700; }
+  .guide .g.sel { border-color: #FACC15; opacity: 1; transform: scale(1.04); }
+  .dbar { position: absolute; left: 50%; bottom: calc(var(--strip) + 4vh); transform: translateX(-50%); z-index: 8; display: flex; gap: 1vw; align-items: center;
+    background: rgba(8,10,24,.92); color: #fff; padding: .6em 1em; border-radius: 999px; font-size: clamp(12px, 1.7vw, 22px); transition: opacity .5s; }
+  .dbar .b { padding: .35em .9em; border-radius: 999px; border: 2px solid transparent; font-weight: 700; white-space: nowrap; }
+  .dbar .b.sel { border-color: #FACC15; background: rgba(250,204,21,.15); }
+  .dbar .live { color: #f87171; }
+  .dbar .t { font-variant-numeric: tabular-nums; opacity: .85; min-width: 9em; text-align: center; }
+  .rate { position: absolute; right: 3%; bottom: calc(var(--strip) + 5%); z-index: 7; background: rgba(8,10,24,.94); color: #fff; border-radius: 14px;
+    padding: .8em 1em; font-size: clamp(11px, 1.4vw, 18px); max-width: 64%; box-shadow: 0 .3em 1.2em rgba(0,0,0,.5); }
+  .rate .q { font-weight: 800; }
+  .rate .q .ur { font-family: "Noto Nastaliq Urdu", serif; line-height: 2; }
+  .rate .note { font-size: .75em; opacity: .8; margin: .2em 0 .6em; }
+  .rate .opts { display: flex; gap: .4em; }
+  .rate .o { padding: .3em .6em; border-radius: 999px; border: 2px solid rgba(255,255,255,.2); white-space: nowrap; cursor: pointer; }
+  .rate .o.sel { border-color: #FACC15; background: rgba(250,204,21,.15); }
+  .pausecard { position: absolute; left: 0; right: 0; top: 0; height: calc(100% - var(--strip)); z-index: 5; background: #000 center / cover no-repeat;
+    display: grid; place-items: center; }
+  .pausecard::before { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.6); }
+  .pausecard div { position: relative; color: #fff; font-weight: 800; font-size: clamp(16px, 3vw, 40px); text-align: center; }
+  .pausecard small { display: block; font-weight: 400; font-size: .5em; opacity: .85; margin-top: .4em; }
 </style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Gurmukhi:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="player"></div>
@@ -111,7 +145,7 @@ document.title = station.name + " · Watch live";
 // Latest Movies carries no logo of ours (the owner's wish).
 if (station.noBug) $("bug").hidden = true;
 else $("bug").src = station.bug || station.logo;
-$("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+$("tick").textContent = `${station.name} · ${station.tagline || ""} · Channel ${station.dial} on Cable TV · Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (!app) $("back").hidden = false;
 
 /** YouTube won't play here: the channel's free-film schedule plays instead. */
@@ -119,7 +153,10 @@ function fallBack() {
   // Spark Gurbani (noBackup): never another channel's music in its place; a wait card, then try again.
   if (station.noBackup) return holdOn();
   if (app) location.href = "livetv://fallback";
-  else location.replace(`./?c=${station.id}`);
+  // Inside the channel page's player box: the whole page switches to the free films, instead of
+  // loading the channel page inside its own player box again and again.
+  else if (window.top !== window) window.top.location.replace(`./?c=${station.id}&films=1`);
+  else location.replace(`./?c=${station.id}&films=1`);
 }
 
 function holdOn() {
@@ -138,7 +175,9 @@ let corners = { default: "tr", labels: {} }, bugLabel = null;
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(bugLabel); }).catch(() => {});
 function placeBug(label) {
   bugLabel = label;
-  const corner = corners.labels?.[label] || corners.default || "tr";
+  // A video showing its own logo shows none of ours (owner, 2026-10-10: every channel; logo-corners.json).
+  const hide = (corners.hideOnSourceLogo || []).includes("ytc") && !(corners.noLogo || []).includes(label);
+  const corner = hide ? "off" : corners.labels?.[label] || corners.default || "tr";
   document.querySelector(".bug").className = "bug " + corner;
 }
 function showNow() {
@@ -160,6 +199,7 @@ function showNow() {
  */
 function playItem(i, offset = 0) {
   cur = (i + items.length) % items.length;
+  watching = { k: cur, at: Date.now() };
   const it = items[cur];
   cover(true);
   if (it.card) return playCard(it, offset, cur);
@@ -296,6 +336,67 @@ async function playCard(it, offset, at) {
   }, Math.max(0.5, it.secs - offset) * 1000);
 }
 
+// ---------- "Today's programmes" every 15 minutes on every Spark channel (owner, 2026-10-10) ----------
+// Spark Shayari's purple card, shown for 15 s once in each quarter hour (from :01, :16, :31, :46 Toronto time,
+// as soon as a programme is playing: never over our ads, Shayari's own break cards or the loading cover).
+// The programme's sound goes on under it. Urdu channels (2-19) write Urdu + English, Hindi ones (21-39)
+// Hindi + English, Punjabi ones (61-79) Punjabi (Gurmukhi) + English, the rest English (owner: each channel's own language + English); times are Toronto time, like Shayari's card.
+const QUARTER = 15 * 60e3, SCHED_FROM = 60e3, SCHED_UNTIL = 6 * 60e3, SCHED_SECS = 15;
+const dial = +station.dial || 0;
+const LANG = dial >= 2 && dial < 20 ? "ur" : dial >= 21 && dial < 40 ? "hi" : dial >= 61 && dial < 80 ? "pa" : "en";
+const HEAD = { ur: ["آج کے پروگرام", "Today's programmes · ٹورنٹو کا وقت · Toronto time"],
+  hi: ["आज के कार्यक्रम", "Today's programmes · टोरंटो समय · Toronto time"],
+  pa: ["ਅੱਜ ਦੇ ਪ੍ਰੋਗਰਾਮ", "Today's programmes · ਟੋਰਾਂਟੋ ਸਮਾਂ · Toronto time"],
+  en: ["Today's programmes", `Coming up on ${station.shownName || station.name} · Toronto time`] };
+const engTime = ms => new Intl.DateTimeFormat("en-CA", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(ms).replace(/\s?([ap])\.?m\.?/i, (_, x) => ` ${x.toUpperCase()}M`);
+function scheduleCard() {
+  if (station.halfHours) return todayCard(cur);
+  const [title, subText] = HEAD[LANG];
+  const c = cardShell(title);
+  c.querySelector(".credit").textContent = "";
+  const h = c.querySelector("h1");
+  if (LANG !== "ur") { h.classList.remove("ur"); h.style.lineHeight = "1.6"; h.style.top = "6vh"; }
+  const sub = document.createElement("div");
+  sub.className = "sub";
+  sub.textContent = subText;
+  const rows = document.createElement("div");
+  rows.className = "rows";
+  c.append(sub, rows);
+  const { start } = torontoDay(clock());
+  let t = 0;
+  const begins = items.map(x => { const at = t; t += x.secs; return at; });
+  let lastId = null, n = 0;
+  for (let k = cur; k < items.length && n < 8; k++) {
+    const it = items[k];
+    if (it.kind !== "video" || it.clip || (it.trailer && station.id !== "trailers") || it.v.id === lastId) continue;
+    lastId = it.v.id;
+    const r = document.createElement("div");
+    r.className = "row" + (k === cur ? " cur" : "");
+    r.innerHTML = `<span class="t"></span><span class="w"></span>`;
+    if (LANG === "ur") { r.firstChild.classList.add("ur"); r.firstChild.textContent = k === cur ? "ابھی · Now" : urduTime(start + begins[k] * 1000); }
+    else r.firstChild.textContent = k === cur ? ({ hi: "अभी · Now", pa: "ਹੁਣ · Now" }[LANG] || "Now") : engTime(start + begins[k] * 1000);
+    if (LANG !== "ur") { r.style.flexDirection = "row"; r.firstChild.style.direction = r.lastChild.style.direction = "ltr"; r.firstChild.style.textAlign = r.lastChild.style.textAlign = "left"; r.lastChild.style.lineHeight = "1.6"; }
+    r.lastChild.textContent = shortTitle(it.v.title);
+    rows.appendChild(r);
+    n++;
+  }
+  return n >= 2 ? c : null;
+}
+let schedShown = -1;
+setInterval(() => {
+  if (!started || inBreak || demand || guide || !items.length || !player?.getPlayerState) return;
+  const now = clock(), q = Math.floor(now / QUARTER), into = now - q * QUARTER;
+  if (q === schedShown || into < SCHED_FROM || into > SCHED_UNTIL) return;
+  if (items[cur]?.kind !== "video" || document.querySelector(".card") || player.getPlayerState() !== YT.PlayerState.PLAYING) return;
+  schedShown = q;
+  const el = scheduleCard();
+  if (!el) return;
+  el.classList.add("sched");
+  document.body.appendChild(el);
+  const at = cur;
+  setTimeout(() => { if (cur === at) el.remove(); }, SCHED_SECS * 1000);
+}, 2000);
+
 /** Like TV, the clock decides what's on: after a programme (or an ad break) the channel goes on wherever it is now. */
 function rejoin(ended) {
   if (torontoDay().date !== day) {
@@ -344,6 +445,7 @@ let fillAt = 0;
 // Some TVs ignore where the video was asked to start; once it plays, it's moved to where the channel is.
 let target = null;
 function keepInStep() {
+  if (demand) return;
   if (inBreak || !player || !target || !player.getCurrentTime || player.getPlayerState() !== YT.PlayerState.PLAYING || player.getVideoData?.().video_id !== target.id) return;
   const want = (Date.now() - target.at) / 1000, have = player.getCurrentTime() - target.base;
   // A clip that has run its 45 seconds: the channel goes on (some players don't stop at the end point).
@@ -356,6 +458,7 @@ function keepInStep() {
  */
 let lastT = -1, movedAt = Date.now(), stuckItem = -1, stuckTimes = 0;
 function watchStall() {
+  if (demand) { movedAt = Date.now(); return; }
   if (inBreak || !player?.getPlayerState || !started) { movedAt = Date.now(); return; }
   const t = player.getCurrentTime?.() || 0, playing = player.getPlayerState() === YT.PlayerState.PLAYING;
   if (playing && t !== lastT) { lastT = t; movedAt = Date.now(); return; }
@@ -459,6 +562,7 @@ function startPlayer() {
       // It never stays paused; the next item follows when one ends.
       onStateChange: e => {
         if (inBreak) return;
+        if (demand) return demandState(e.data);
         if (e.data === YT.PlayerState.PLAYING) cover(false);
         // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
         else cover(true);
@@ -470,21 +574,250 @@ function startPlayer() {
       },
       // A video its owner won't let others play is skipped; when none will play, the free films take over.
       // (its time is filled like any programme that ends early, not by playing the next one over and over).
-      onError: e => { if (inBreak) return; cover(true); lastError = e.data; if (++failures >= 5) fallBack(); else { const at = cur; setTimeout(() => at === cur && !inBreak && endedEarly(at), 1000); } },
+      onError: e => { if (inBreak) return; if (demand) return backToLive(); cover(true); lastError = e.data; if (++failures >= 5) fallBack(); else { const at = cur; setTimeout(() => at === cur && !inBreak && endedEarly(at), 1000); } },
     },
   });
   stillFor(player);
   lowFirst(player);
-  keepPlaying(player, () => inBreak, () => cover(true));
+  keepPlaying(player, () => inBreak || !!demand, () => cover(true));
 };
 // A tap or OK only shows what's playing; double-click goes full screen (on the website).
-$("shield").onclick = showNow;
 $("shield").ondblclick = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {});
 $("sound").onclick = () => { player.unMute(); player.playVideo(); $("sound").hidden = true; };
+// ---------- Today's guide: any programme now, with pause, rewind and forward (owner, 2026-10-10) ----------
+// OK (or a tap) shows what's on and opens a strip of today's programmes; ◀ ▶ move along it, OK plays the one
+// picked from its start. While it plays on demand, OK, ◀ and ▶ show our bar: rewind 30 s, pause, forward 30 s,
+// Guide and Live (back to the channel where it is now). Never while our ads play, and YouTube's own paused screen
+// never shows: our pause card covers it. Up and Down still change channel (the app takes them first).
+let demand = null, guide = null, gSel = 0, bar = null, bSel = 1, barTimer = null;
+const timeOf = ms => LANG === "ur" ? urduTime(ms) : engTime(ms);
+function guideRows() {
+  const { start } = torontoDay(clock());
+  const rows = [];
+  let t = 0;
+  items.forEach((it, k) => {
+    const at = t; t += it.secs;
+    if (it.kind !== "video" || it.clip || (it.trailer && station.id !== "trailers")) return;
+    const last = rows[rows.length - 1];
+    // A long programme in parts (with breaks between) is one row, from its first part.
+    if (last && last.id === it.v.id) { last.secs += it.secs; last.until = k; return; }
+    rows.push({ k, until: k, id: it.v.id, title: it.v.title, startMs: start + at * 1000, secs: it.secs, now: false });
+  });
+  // (No findLastIndex: older TVs' browsers don't have it.)
+  let live = -1;
+  rows.forEach((r, n) => { if (r.k <= cur) live = n; });
+  if (live >= 0) rows[live].now = true;
+  return { rows, live: Math.max(0, live) };
+}
+function drawGuide() {
+  const { rows } = guide;
+  const from = Math.max(0, Math.min(gSel - 2, rows.length - 5));
+  const strip = guide.el.querySelector(".strip");
+  strip.innerHTML = "";
+  rows.slice(from, from + 5).forEach((r, n) => {
+    const g = document.createElement("div");
+    g.className = "g" + (r.now && !demand ? " on" : "") + (from + n === gSel ? " sel" : "");
+    g.innerHTML = `<img alt=""><div class="w"></div><div class="n"></div>`;
+    g.querySelector("img").src = `https://i.ytimg.com/vi/${r.id}/mqdefault.jpg`;
+    g.querySelector(".w").textContent = r.now && !demand ? "● Live now" : timeOf(r.startMs);
+    g.querySelector(".n").textContent = shortTitle(r.title);
+    g.onclick = () => { gSel = from + n; pickGuide(); };
+    strip.appendChild(g);
+  });
+}
+function openGuide() {
+  if (inBreak || !items.length) return;
+  closeBar();
+  // The quarter-hour "Today's programmes" card makes way for it.
+  document.querySelector(".card.sched")?.remove();
+  const g = guideRows();
+  if (!g.rows.length) return;
+  guide = { ...g, el: document.createElement("div") };
+  guide.el.className = "guide";
+  guide.el.innerHTML = `<div class="h">TODAY ON ${(station.shownName || station.name).toUpperCase()}<small>◀ ▶ choose · OK watch from the start · Back to close</small></div><div class="strip"></div>`;
+  gSel = demand ? Math.max(0, g.rows.findIndex(r => r.id === demand.id)) : g.live;
+  document.body.appendChild(guide.el);
+  drawGuide();
+  clearTimeout(guide.timer);
+  guide.timer = setTimeout(closeGuide, 20000);
+}
+function closeGuide() { if (guide) { clearTimeout(guide.timer); guide.el.remove(); guide = null; } }
+function pickGuide() {
+  const r = guide.rows[gSel];
+  closeGuide();
+  if (!r) return;
+  if (r.now && !demand) return showNow();   // the one on now: just carry on watching live
+  startDemand(r);
+}
+function startDemand(r) {
+  if (inBreak) return;
+  document.querySelector(".card")?.remove();
+  demand = { id: r.id, title: r.title, base: items[r.k]?.start || 0 };
+  cover(true);
+  player.loadVideoById({ videoId: r.id, startSeconds: demand.base });
+  $("now").innerHTML = "<span></span><small></small>";
+  $("now").firstChild.textContent = shortTitle(r.title);
+  $("now").lastChild.textContent = "On demand · OK for pause, rewind and forward";
+  $("now").classList.remove("hide");
+  clearTimeout(nowTimer);
+  nowTimer = setTimeout(() => $("now").classList.add("hide"), 6000);
+}
+function demandState(state) {
+  if (state === YT.PlayerState.PLAYING) { cover(false); document.querySelector(".pausecard")?.remove(); }
+  else if (state === YT.PlayerState.PAUSED) pauseCard();
+  else if (state === YT.PlayerState.ENDED) backToLive();
+  else if (!document.querySelector(".pausecard")) cover(true);
+  if (bar) drawBar();
+}
+function pauseCard() {
+  if (document.querySelector(".pausecard")) return;
+  const c = document.createElement("div");
+  c.className = "pausecard";
+  c.style.backgroundImage = `url(https://i.ytimg.com/vi/${demand.id}/hqdefault.jpg)`;
+  c.innerHTML = "<div>⏸ Paused<small></small></div>";
+  c.querySelector("small").textContent = shortTitle(demand.title);
+  document.body.appendChild(c);
+}
+function backToLive() {
+  if (!demand) return;
+  demand = null;
+  closeBar(); closeGuide();
+  document.querySelector(".pausecard")?.remove();
+  const w = itemAt(items, clock());
+  playItem(w.i, w.offset < 10 ? 0 : w.offset);
+}
+const BUTTONS = [["⏪ 30 s", () => seekBy(-30)], ["⏩ 30 s", () => seekBy(30)], ["⏯", () => togglePause()], ["Guide", () => openGuide()], ["● Live", () => backToLive()]];
+// Order on screen: rewind, pause, forward, guide, live.
+const SHOWN = [0, 2, 1, 3, 4];
+function seekBy(s) { const t = player.getCurrentTime?.() || 0; player.seekTo(Math.max(demand.base, t + s), true); }
+function togglePause() { player.getPlayerState() === YT.PlayerState.PAUSED ? player.playVideo() : player.pauseVideo(); }
+const mmss = s => { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
+function drawBar() {
+  // A new bar starts on Pause.
+  if (!bar) { bar = document.createElement("div"); bar.className = "dbar"; document.body.appendChild(bar); bSel = 1; }
+  bar.innerHTML = "";
+  const t = document.createElement("div");
+  t.className = "t";
+  t.textContent = `${mmss((player.getCurrentTime?.() || 0) - demand.base)} / ${mmss((player.getDuration?.() || 0) - demand.base)}`;
+  bar.appendChild(t);
+  SHOWN.forEach((b, n) => {
+    const el = document.createElement("div");
+    el.className = "b" + (n === bSel ? " sel" : "") + (b === 4 ? " live" : "");
+    el.textContent = b === 2 && player.getPlayerState?.() === YT.PlayerState.PAUSED ? "▶ Play" : b === 2 ? "⏸ Pause" : BUTTONS[b][0];
+    el.onclick = () => { bSel = n; BUTTONS[b][1](); drawBar(); };
+    bar.appendChild(el);
+  });
+  clearTimeout(barTimer);
+  // Paused, the bar stays; playing, it goes after 6 seconds.
+  if (player.getPlayerState?.() !== YT.PlayerState.PAUSED) barTimer = setTimeout(closeBar, 6000);
+}
+function closeBar() { clearTimeout(barTimer); bar?.remove(); bar = null; }
+setInterval(() => { if (bar && demand) drawBar(); }, 1000);
+$("shield").onclick = () => demand ? (bar ? closeBar() : drawBar()) : (showNow(), guide ? closeGuide() : openGuide());
+
 document.addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") { showNow(); e.preventDefault(); }
-  if (e.key === "MediaPlayPause" || e.key === "MediaPause" || e.key === "k") e.preventDefault();
+  const k = e.key;
+  if (k === "MediaPlayPause" || k === "MediaPause" || k === "k") e.preventDefault();
+  if (guide) {
+    if (k === "ArrowLeft") { gSel = Math.max(0, gSel - 1); drawGuide(); }
+    else if (k === "ArrowRight") { gSel = Math.min(guide.rows.length - 1, gSel + 1); drawGuide(); }
+    else if (k === "Enter" || k === " ") pickGuide();
+    else if (k === "Escape" || k === "Backspace") closeGuide();
+    else return;
+    clearTimeout(guide?.timer);
+    if (guide) guide.timer = setTimeout(closeGuide, 20000);
+    e.preventDefault();
+    return;
+  }
+  if (demand) {
+    if (k === "MediaPlayPause" || k === "MediaPlay" || k === "MediaPause") { togglePause(); drawBar(); }
+    else if (k === "MediaRewind") seekBy(-30);
+    else if (k === "MediaFastForward") seekBy(30);
+    else if (!bar && (k === "Enter" || k === " " || k === "ArrowLeft" || k === "ArrowRight")) drawBar();
+    else if (bar && k === "ArrowLeft") { bSel = Math.max(0, bSel - 1); drawBar(); }
+    else if (bar && k === "ArrowRight") { bSel = Math.min(SHOWN.length - 1, bSel + 1); drawBar(); }
+    else if (bar && (k === "Enter" || k === " ")) { BUTTONS[SHOWN[bSel]][1](); if (demand && !guide) drawBar(); }
+    else if (k === "Escape" || k === "Backspace") backToLive();
+    else return;
+    e.preventDefault();
+    return;
+  }
+  if (rating) {
+    if (k === "ArrowLeft") { rSel = Math.max(0, rSel - 1); drawRate(); }
+    else if (k === "ArrowRight") { rSel = Math.min(RATE.length - 1, rSel + 1); drawRate(); }
+    else if (k === "Enter" || k === " ") sendRate();
+    else if (k === "Escape" || k === "Backspace") closeRate();
+    else return;
+    e.preventDefault();
+    return;
+  }
+  if (k === "Enter" || k === " ") { showNow(); openGuide(); e.preventDefault(); }
 });
+
+// ---------- Ratings at the end of a programme (owner, 2026-10-10) ----------
+// In the last minute of a programme the viewer has watched for at least 5 minutes: 👍 / 👎 or 1 to 5 stars
+// (◀ ▶ and OK, or a tap). The answer goes to the owner's Firebase ("ratings": channel, video, title, like,
+// stars, time; nothing personal); Channel Studio shows them, and tools/ratings.py makes the best-liked
+// programmes (and their shows' other episodes) come round more often. Never over our ads or the guide.
+let watching = { k: -1, at: 0 }, rating = null, rSel = 0;
+const RATE = [["👍 Like", 1, 0], ["👎 Dislike", -1, 0], ["★", 0, 1], ["★★", 0, 2], ["★★★", 0, 3], ["★★★★", 0, 4], ["★★★★★", 0, 5]];
+const ASK = { ur: "یہ پروگرام کیسا لگا؟", hi: "यह कार्यक्रम कैसा लगा?", pa: "ਇਹ ਪ੍ਰੋਗਰਾਮ ਕਿਵੇਂ ਲੱਗਿਆ?" };
+const NOTE = { ur: "جو پروگرام زیادہ پسند کیے جائیں گے، وہ اور ان جیسے پروگرام اس چینل پر زیادہ چلیں گے۔",
+  hi: "जो कार्यक्रम ज़्यादा पसंद किए जाएँगे, वे और उन जैसे कार्यक्रम इस चैनल पर ज़्यादा चलेंगे।",
+  pa: "ਜਿਹੜੇ ਪ੍ਰੋਗਰਾਮ ਵੱਧ ਪਸੰਦ ਕੀਤੇ ਜਾਣਗੇ, ਉਹ ਅਤੇ ਉਨ੍ਹਾਂ ਵਰਗੇ ਪ੍ਰੋਗਰਾਮ ਇਸ ਚੈਨਲ ਤੇ ਵੱਧ ਚੱਲਣਗੇ।" };
+const rated = new Set();
+function drawRate() {
+  const opts = rating.el.querySelector(".opts");
+  opts.innerHTML = "";
+  RATE.forEach(([label], n) => {
+    const o = document.createElement("span");
+    o.className = "o" + (n === rSel ? " sel" : "");
+    o.textContent = label;
+    o.onclick = () => { rSel = n; sendRate(); };
+    opts.appendChild(o);
+  });
+}
+function openRate(it) {
+  rating = { id: it.v.id, title: it.v.title, el: document.createElement("div") };
+  rated.add(it.v.id);
+  rSel = 0;
+  const el = rating.el;
+  el.className = "rate";
+  el.innerHTML = `<div class="q"></div><div class="note"></div><div class="opts"></div>`;
+  const q = el.querySelector(".q");
+  if (ASK[LANG]) { const u = document.createElement("span"); u.textContent = ASK[LANG] + " · "; if (LANG === "ur") u.className = "ur"; q.appendChild(u); }
+  q.appendChild(document.createTextNode("Rate " + shortTitle(it.v.title)));
+  el.querySelector(".note").textContent = (NOTE[LANG] ? NOTE[LANG] + " " : "") +
+    "Programmes rated higher, and ones like them, will play more often on this channel.";
+  document.body.appendChild(el);
+  $("now").classList.add("hide");
+  drawRate();
+  rating.timer = setTimeout(closeRate, 40000);
+}
+function closeRate() { if (rating) { clearTimeout(rating.timer); rating.el.remove(); rating = null; } }
+function sendRate() {
+  if (!rating) return;
+  const [, like, stars] = RATE[rSel];
+  const str = v => ({ stringValue: String(v).slice(0, 200) });
+  fetch("https://firestore.googleapis.com/v1/projects/live-tv-b2164/databases/(default)/documents/ratings?key=AIzaSyAukJcRHwIV_W3TKtr3_5XiVJZe-7491KE", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ fields: { station: str(station.id), video: str(rating.id), title: str(rating.title), like: { integerValue: like },
+      stars: { integerValue: stars }, time: { timestampValue: new Date().toISOString() } } }),
+  }).catch(() => {});
+  rating.el.querySelector(".opts").textContent = LANG === "ur" ? "شکریہ! · Thank you!" : "Thank you!";
+  clearTimeout(rating.timer);
+  rating.timer = setTimeout(closeRate, 2500);
+}
+setInterval(() => {
+  if (rating || demand || guide || inBreak || !started || !items.length) return;
+  const it = items[cur];
+  if (it?.kind !== "video" || it.clip || it.trailer || rated.has(it.v.id) || watching.k !== cur || Date.now() - watching.at < 5 * 60e3) return;
+  if (document.querySelector(".card") || player?.getPlayerState?.() !== YT.PlayerState.PLAYING) return;
+  // The last minute of the programme (a programme in parts: its last part).
+  if (items.slice(cur + 1, cur + 4).some(x => x.kind === "video" && x.v?.id === it.v.id)) return;
+  const w = itemAt(items, clock());
+  if (w.i === cur && it.secs - w.offset <= 60) openRate(it);
+}, 2000);
 </script>
 <script src="clock.js"></script>
 </body>

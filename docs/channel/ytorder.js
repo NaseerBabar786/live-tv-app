@@ -33,12 +33,27 @@ export const lengthOf = (v, station) => Math.round((v.mins || station?.ytMins ||
  * Videos found up to [REVIEW_FROM] were on air before the review started, so they count as approved.
  */
 export const REVIEW_FROM = "2026-10-07";
+/**
+ * "Approve all new" done for the owner (2026-10-10, his ask: Claude does it): on these channels every video
+ * found up to the date counts as approved, like pressing Studio > Library > Approve all new > Save then.
+ * Videos found later wait for the owner's review as usual; his own picks (on/out/off) still win.
+ */
+// sur, musicur, sports, travel, hindidramas (2026-10-10, owner "fix that"): their lists were rebuilt on 10-09,
+// nothing was approved, and their days came out empty (61 Spark Music Punjabi showed no video).
+export const APPROVED_UNTIL = { comedyur: "2026-10-10", comedypa: "2026-10-10", auto: "2026-10-10", autohi: "2026-10-10",
+  sur: "2026-10-10", musicur: "2026-10-10", sports: "2026-10-10", travel: "2026-10-10", hindidramas: "2026-10-10" };
+/** [picks] (all channels) with each channel's [APPROVED_UNTIL] date added as its pick's "until". */
+export function withApprovals(picks) {
+  const all = { ...(picks || {}) };
+  for (const [id, until] of Object.entries(APPROVED_UNTIL)) all[id] = { ...(all[id] || {}), until };
+  return all;
+}
 export function status(v, pick) {
   const on = pick?.on || [], out = pick?.out || [], off = pick?.off || [], offLabels = pick?.offLabels || [];
   if (on.includes(v.id)) return "approved";
   if (off.includes(v.id) || offLabels.includes(v.label)) return "removed";
   if (out.includes(v.id)) return "library";
-  if ((v.found || "") > REVIEW_FROM) return "new";
+  if ((v.found || "") > (pick?.until > REVIEW_FROM ? pick.until : REVIEW_FROM)) return "new";
   // The old "wait until I tick them" mode: anything not ticked was off.
   return pick?.mode === "manual" ? "removed" : "approved";
 }
@@ -48,10 +63,10 @@ export const playable = (v, pick) => status(v, pick) === "approved";
 export async function loadPicks() {
   try {
     const r = await fetch(PICKS_URL, { cache: "no-store" });
-    if (!r.ok) return {};
+    if (!r.ok) return withApprovals({});
     const d = await r.json();
-    return JSON.parse(d.fields?.data?.stringValue || "{}") || {};
-  } catch { return {}; }
+    return withApprovals(JSON.parse(d.fields?.data?.stringValue || "{}") || {});
+  } catch { return withApprovals({}); }
 }
 
 /**
@@ -473,8 +488,12 @@ export function dayPlan(station, { list, picks, promos = [], trailers = [], own 
   const day = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000);
   const from = own.length ? (day * 24) % own.length : 0;
   own = own.slice(from).concat(own.slice(0, from));
-  if (station.halfHours) return halfHourDay(station, list.filter(v => playable(v, picks)), date, promos, own, ident);
-  const items = withBreaks(runningOrder(station, list.filter(v => playable(v, picks)), date), station, promos, trailers, own, ident);
+  // A channel with nothing approved yet (every video still waiting for review, as on a channel whose list was
+  // rebuilt) plays its waiting videos rather than going blank; removed ones stay off (2026-10-10, 61 was empty).
+  let ok = list.filter(v => playable(v, picks));
+  if (!ok.length) ok = list.filter(v => status(v, picks) === "new");
+  if (station.halfHours) return halfHourDay(station, ok, date, promos, own, ident);
+  const items = withBreaks(runningOrder(station, ok, date), station, promos, trailers, own, ident);
   // One day is enough (25 hours covers the day the clocks go back); a shorter list repeats round the clock.
   let t = 0;
   const end = items.findIndex(x => (t += x.secs) >= 25 * 3600);

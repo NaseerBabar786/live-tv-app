@@ -1,7 +1,7 @@
 name: Build story videos
 
 # Makes the narrated story videos in tools/stories/<name>/story.json (AI voice, AI pictures,
-# Urdu subtitles) and puts them on the "channel-media" pre-release for Spark TV.
+# Urdu subtitles with an English line under each) and puts them on the "channel-media" pre-release for Spark TV.
 # A video already on the release is kept unless its story.json or the maker script changed
 # (or the run asks to "remake" it).
 
@@ -38,6 +38,26 @@ jobs:
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
           pip install -q edge-tts numpy pillow
+
+      - name: Reuse the pictures of the last run
+        # Without them a remade video (for example new subtitles) would get new AI pictures. The newest
+        # "story-pictures" artifact that has a story's pictures goes to tools/stories/<name>/images/,
+        # which the maker uses instead of asking for new ones.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -u
+          for id in $(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=story-pictures&per_page=10" \
+                -q '.artifacts[] | select(.expired | not) | .id' 2>/dev/null); do
+            rm -rf prev && mkdir prev
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > prev.zip 2>/dev/null && unzip -q -o prev.zip -d prev || continue
+            for d in prev/*/images; do
+              name=$(basename "$(dirname "$d")")
+              [ -f "tools/stories/$name/story.json" ] && [ ! -d "tools/stories/$name/images" ] || continue
+              mkdir -p "tools/stories/$name/images" && cp "$d"/*.jpg "tools/stories/$name/images/" && echo "Pictures for $name from artifact $id"
+            done
+          done
+          rm -rf prev prev.zip
 
       - name: Make videos
         env:

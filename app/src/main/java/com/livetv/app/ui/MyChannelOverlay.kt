@@ -85,6 +85,12 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             delay(1_000)
         }
     }
+    val clipLogo by produceState(false, channel?.url) {
+        while (true) {
+            value = MyChannel.clipHasLogo(channel?.url)
+            delay(1_000)
+        }
+    }
     val ownLine = c.ticker?.takeIf { band == 0.dp && !newsOn }
     BoxWithConstraints(modifier.fillMaxSize()) {
         // Sized from the picture, so it looks the same in full screen and in a smaller player.
@@ -96,10 +102,12 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             else -> Alignment.TopEnd
         }
         val tickerHeight = unit * 4f
-        if (c.logoCorner != "off" && c.logo != null) {
+        // Channel 1's own slides and clips carry the Spark logo and their headings sit in the top corners, so
+        // its corner logo and time stay off: one logo, nothing on top of writing (owner, 2026-10-10), whatever Studio says.
+        if (c.logoCorner != "off" && c.logo != null && channel?.url != MyChannel.URL && !clipLogo) {
             val bottom = c.logoCorner == "bl" || c.logoCorner == "br"
             val left = c.logoCorner == "tl" || c.logoCorner == "bl"
-            // 25% smaller than before (owner, 2026-10-07): 9 -> 6.75 of the width; the clock and gap follow.
+            // 25% smaller than before (owner, 2026-10-07): 9 -> 6.75 of the width; the clock and gap follow. Solid, not see-through (owner, 2026-10-10).
             val logoHeight = unit * 6.75f
             // The time sits with the logo (owner, 2026-10-07): under it in a top corner, above it in a
             // bottom one, lined up with its outer edge, so it moves wherever the logo has to go.
@@ -126,7 +134,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                         // Our logos are wide (1.9.47; taller in 1.9.49 for the bigger BAZAAR); a square one still fits in the same height.
                         .height(logoHeight)
                         .widthIn(max = unit * 19.5f)
-                        .alpha(0.55f),
+                        .alpha(1f),
                 )
                 if (!bottom) Box(Modifier.offset(y = -logoHeight * (1f - ink.second) + gap)) { ChannelClock(logoHeight) }
             }
@@ -139,6 +147,9 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             }
         }
         val logoLeft = c.logoCorner == "tl" || c.logoCorner == "bl"
+        // Channel 1's writing is in Urdu and English together (owner, 2026-10-09), the cards' headings too;
+        // the same for Spark TV One, channel 1 of the Google Play app Spark One (owner, 2026-10-10).
+        val both = c.id == "main" || c.id == "pone"
         val today = card?.today == true
         val shows = remember(card?.untilMs, today) {
             card?.let { runCatching { if (it.today) MyChannel.todaysShows(c, System.currentTimeMillis()) else MyChannel.upNext(c, System.currentTimeMillis()) }.getOrNull() }.orEmpty()
@@ -152,14 +163,14 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             enter = fadeIn() + slideInHorizontally { if (logoLeft) it else -it },
             exit = fadeOut(),
             modifier = Modifier.align(if (logoLeft) Alignment.CenterEnd else Alignment.CenterStart).padding(horizontal = unit * 2.5f),
-        ) { TodayCard(c.name, shown, unit) }
+        ) { TodayCard(c.name, shown, unit, both) }
         AnimatedVisibility(
             visible = card != null && !today && shows.isNotEmpty(),
             enter = fadeIn() + slideInHorizontally { if (c.logoCorner == "bl") it else -it },
             exit = fadeOut() + slideOutHorizontally { if (c.logoCorner == "bl") it else -it },
             modifier = Modifier.align(if (c.logoCorner == "bl") Alignment.BottomEnd else Alignment.BottomStart)
                 .padding(horizontal = unit * 2.5f).padding(bottom = (if (ownLine != null) tickerHeight else 0.dp) + unit * 2.5f),
-        ) { NextCard(shown, unit) }
+        ) { NextCard(shown, unit, both) }
         ownLine?.let { line ->
             Box(
                 Modifier
@@ -192,25 +203,28 @@ private val Accent: Color get() = Themes.current.secondary
 
 private fun clock(ms: Long): String = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(ms))
 
-private fun whenText(ms: Long): String {
+private fun whenText(ms: Long, both: Boolean = false): String {
     val mins = ((ms - System.currentTimeMillis()) / 60_000L).coerceAtLeast(0)
-    return if (mins < 60) "${clock(ms)} · in ${if (mins < 1) "a moment" else "$mins min"}" else clock(ms)
+    if (mins >= 60) return clock(ms)
+    val en = "in ${if (mins < 1) "a moment" else "$mins min"}"
+    return if (both) "${clock(ms)} · $en · ${if (mins < 1) "ابھی" else "$mins منٹ میں"}" else "${clock(ms)} · $en"
 }
 
 /** "UP NEXT" and the programme after it, low on the picture beside the scrolling line. */
 @Composable
-private fun NextCard(shows: List<MyChannel.Upcoming>, unit: Dp) {
+private fun NextCard(shows: List<MyChannel.Upcoming>, unit: Dp, both: Boolean = false) {
     val first = shows.firstOrNull() ?: return
     Column(
         Modifier.widthIn(max = unit * 46f).background(CardBack, RoundedCornerShape(unit * 1.2f))
             .padding(horizontal = unit * 2f, vertical = unit * 1.3f),
     ) {
-        Text("UP NEXT", color = Accent, fontWeight = FontWeight.Black, fontSize = (unit.value * 1.6f).sp)
+        Text(if (both) "UP NEXT  ·  اگلا پروگرام" else "UP NEXT", color = Accent, fontWeight = FontWeight.Black, fontSize = (unit.value * 1.6f).sp)
+        // Titles in Urdu and English are long: two lines, so neither language is cut off.
         Text(first.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = (unit.value * 2.6f).sp,
-            maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(whenText(first.at), color = Themes.current.soft, fontSize = (unit.value * 1.7f).sp)
+            maxLines = if (both) 2 else 1, overflow = TextOverflow.Ellipsis)
+        Text(whenText(first.at, both), color = Themes.current.soft, fontSize = (unit.value * 1.7f).sp)
         shows.getOrNull(1)?.let {
-            Text("Later: ${clock(it.at)}  ${it.title}", color = Themes.current.muted, fontSize = (unit.value * 1.5f).sp,
+            Text("${if (both) "Later · بعد میں" else "Later"}: ${clock(it.at)}  ${it.title}", color = Themes.current.muted, fontSize = (unit.value * 1.5f).sp,
                 maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = unit * 0.5f))
         }
     }
@@ -218,26 +232,26 @@ private fun NextCard(shows: List<MyChannel.Upcoming>, unit: Dp) {
 
 /** "TODAY ON BAZAAR TV": the rest of today's booked shows, the next one marked. */
 @Composable
-private fun TodayCard(name: String, shows: List<MyChannel.Upcoming>, unit: Dp) {
+private fun TodayCard(name: String, shows: List<MyChannel.Upcoming>, unit: Dp, both: Boolean = false) {
     val now = System.currentTimeMillis()
     val nextAt = shows.firstOrNull { it.at > now }?.at
     Column(
         Modifier.width(unit * 40f).background(CardBack, RoundedCornerShape(unit * 1.2f))
             .padding(horizontal = unit * 2f, vertical = unit * 1.6f),
     ) {
-        Text("TODAY ON ${name.uppercase()}", color = Accent, fontWeight = FontWeight.Black, fontSize = (unit.value * 1.7f).sp,
+        Text("TODAY ON ${name.uppercase()}" + if (both) "  ·  آج کے پروگرام" else "", color = Accent, fontWeight = FontWeight.Black, fontSize = (unit.value * 1.7f).sp,
             maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(bottom = unit * 0.8f))
         for (s in shows) {
             val on = s.at <= now
             val next = s.at == nextAt
             Row(Modifier.padding(vertical = unit * 0.35f)) {
-                Text(if (on) "NOW" else clock(s.at), color = if (next) Accent else if (on) Color(0xFF4ADE80) else Themes.current.soft,
+                Text(if (on) (if (both) "NOW · ابھی" else "NOW") else clock(s.at), color = if (next) Accent else if (on) Color(0xFF4ADE80) else Themes.current.soft,
                     fontWeight = FontWeight.Bold, fontSize = (unit.value * 1.6f).sp, modifier = Modifier.width(unit * 9f))
                 Column {
                     Text(s.title, color = Color.White,
                         fontWeight = if (next) FontWeight.Bold else FontWeight.Normal, fontSize = (unit.value * 1.6f).sp,
                         maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    if (s.more > 0) Text("+${s.more} more today", color = Themes.current.muted, fontSize = (unit.value * 1.3f).sp, maxLines = 1)
+                    if (s.more > 0) Text("+${s.more} more today" + if (both) " · آج مزید ${s.more}" else "", color = Themes.current.muted, fontSize = (unit.value * 1.3f).sp, maxLines = 1)
                 }
             }
         }
@@ -254,7 +268,7 @@ private fun ChannelClock(logoHeight: Dp) {
             delay(60_000L - System.currentTimeMillis() % 60_000L + 50)
         }
     }
-    // See-through like the logo, a watermark (owner, 2026-10-07); a faint shadow keeps it readable on white.
+    // Solid like the logo (owner, 2026-10-10: no see-through watermark); a faint shadow keeps it readable on white.
     Text(
         time,
         color = Color.White,
@@ -263,7 +277,7 @@ private fun ChannelClock(logoHeight: Dp) {
         maxLines = 1,
         softWrap = false,
         style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.5f), Offset(1f, 1f), 3f)),
-        modifier = Modifier.alpha(0.55f),
+        modifier = Modifier.alpha(1f),
     )
 }
 

@@ -16,8 +16,8 @@
      over the player takes every click and tap; YouTube's own buttons are switched off below. */
   #player, iframe#player { pointer-events: none; }
   .shield { position: absolute; inset: 0; background: transparent; }
-  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: .55; pointer-events: none; }
-  .now { position: absolute; left: 3%; bottom: calc(var(--strip) + 5%); max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: 1; filter: drop-shadow(0 0 3px rgba(0,0,0,.6)); pointer-events: none; }
+  .now { position: absolute; left: 3%; bottom: calc(var(--strip) + 5%); max-width: 55%; background: rgba(16,24,39,.85); color: #fff; padding: .45em .8em; border-radius: 8px; font-weight: 700; font-size: clamp(11px, 1.5vw, 18px); transition: opacity .6s; }
   .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
   .hide { opacity: 0; }
   .sound, .back { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
@@ -43,6 +43,7 @@
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
+  .bug.off { display: none; }
   /* YouTube's own bars (its title along the top, its buttons and logo along the bottom) still showed on the
      owner's TV with its buttons turned off (film.html, 1.9.99). The player is made taller than its box, so
      YouTube puts the picture exactly in the box and draws its bars above it (off the screen) and below it
@@ -60,7 +61,7 @@
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
 <a class="back" id="back" href="./" hidden>Our channels</a>
-<div class="ticker"><span>Spark Hits · Film songs, day and night, from the music labels' own channels · Channel 23 on Cable TV · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
+<div class="ticker"><span>Spark Hits · Film songs, day and night, from the music labels' own channels · Channel 23 on Cable TV · Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
 <div class="msg" id="msg"></div>
 <script src="promo.js"></script>
 <script src="still.js"></script>
@@ -90,7 +91,9 @@ let corners = { default: "tr", labels: {} }, bugLabel = null;
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(bugLabel); }).catch(() => {});
 function placeBug(label) {
   bugLabel = label;
-  const corner = corners.labels?.[label] || corners.default || "tr";
+  // A video showing its own logo shows none of ours (owner, 2026-10-10: every channel; logo-corners.json).
+  const hide = (corners.hideOnSourceLogo || []).includes("bollywood") && !(corners.noLogo || []).includes(label);
+  const corner = hide ? "off" : corners.labels?.[label] || corners.default || "tr";
   document.querySelector(".bug").className = "bug " + corner;
 }
 function showNow() {

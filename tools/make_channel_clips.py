@@ -13,7 +13,7 @@ from calm_music import calm  # noqa: E402
 LOGO = os.path.join(HERE, "..", "docs", "channel", "logos", "spark-tv-square.png")
 B = "/usr/share/fonts/opentype/inter/Inter-Black.otf"
 BD = "/usr/share/fonts/opentype/inter/Inter-Bold.otf"
-# Spark TV is an Urdu channel (the owner, 2026-10-07): the idents and our own ad are in Urdu.
+# Spark TV is an Urdu channel (the owner, 2026-10-07); its writing is Urdu with English under it (owner, 2026-10-09).
 # Noto Nastaliq Urdu (SIL Open Font Licence); Pillow needs raqm to join the letters.
 UR = os.path.join(HERE, "fonts", "NotoNastaliqUrdu.ttf")
 W, H = 1280, 720
@@ -66,18 +66,29 @@ os.makedirs(OUT, exist_ok=True)
 ORANGE, RED, NAVY, BLUE, GREEN, TEAL = (255, 153, 0), (220, 38, 38), (15, 23, 42), (30, 64, 175), (16, 185, 129), (6, 95, 70)
 
 # No Spark TV logo inside our own clips: the corner logo is already on screen (the owner, 2026-10-07).
+# Every writing on channel 1 is in Urdu AND English (owner, 2026-10-09): each Urdu line has its English line under it.
 render(slide(ORANGE, RED, [("آپ دیکھ رہے ہیں اسپارک ٹی وی", f(UR, 54), "white"),
-                           ("کیبل ٹی وی پر", f(UR, 34), (255, 236, 179))], logo=False, y=250), 10, "ident-welcome.mp4")
+                           ("You're watching Spark TV", f(BD, 34), "white"),
+                           ("کیبل ٹی وی پر", f(UR, 30), (255, 236, 179)),
+                           ("on Cable TV", f(BD, 26), (255, 236, 179))], logo=False, y=170), 10, "ident-welcome.mp4")
 render(slide(NAVY, BLUE, [("اگلا پروگرام", f(UR, 62), "white"),
-                          ("اسپارک ٹی وی کے ساتھ رہیے", f(UR, 34), (191, 219, 254))], logo=False, y=250), 8, "ident-coming-up.mp4", key=-3)
+                          ("UP NEXT", f(B, 44), "white"),
+                          ("اسپارک ٹی وی کے ساتھ رہیے", f(UR, 32), (191, 219, 254)),
+                          ("Stay with Spark TV", f(BD, 28), (191, 219, 254))], logo=False, y=170), 8, "ident-coming-up.mp4", key=-3)
 render(slide(NAVY, BLUE, [("وقفہ", f(UR, 62), "white"),
-                          ("ہم ابھی واپس آتے ہیں", f(UR, 34), (191, 219, 254))], logo=False, y=250), 5, "ident-break.mp4", zoom=False, key=2)
+                          ("BREAK", f(B, 44), "white"),
+                          ("ہم ابھی واپس آتے ہیں", f(UR, 32), (191, 219, 254)),
+                          ("We'll be right back", f(BD, 28), (191, 219, 254))], logo=False, y=170), 5, "ident-break.mp4", zoom=False, key=2)
 
-ad = Image.open(AD_PICTURE).convert("RGB").resize((W, H))
-render(ad, 20, "ad-bulk-bazaar.mp4", key=-5)
+if os.path.exists(AD_PICTURE):
+    ad = Image.open(AD_PICTURE).convert("RGB").resize((W, H))
+    render(ad, 20, "ad-bulk-bazaar.mp4", key=-5)
 
-render(slide(GREEN, TEAL, [("آپ کا اشتہار یہاں ہو سکتا ہے!", f(UR, 50), "white"),
-                           ("اسپارک ٹی وی پر اشتہار دیں", f(UR, 36), (253, 224, 71)),
-                           ("WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise", f(BD, 32), "white")], logo=False, y=210), 15, "ad-advertise-here.mp4", key=5)
-# The old "Up to 6 channels at once on one TV. Free." slide is gone (2026-10-09): since the Free/Gold packages,
-# multi-view is Gold. channel/media/promo-free-live-tv.mp4 is now a copy of Cable TV Video Ad 9 (media/cabletv-ad-9.mp4).
+render(slide(GREEN, TEAL, [("آپ کا اشتہار یہاں ہو سکتا ہے!", f(UR, 48), "white"),
+                           ("Your ad could be here!", f(B, 40), "white"),
+                           # Advertising is free (owner, 2026-10-10).
+                           ("اسپارک ٹی وی پر مفت اشتہار دیں", f(UR, 32), (253, 224, 71)),
+                           ("Advertise free on Spark TV", f(BD, 30), (253, 224, 71)),
+                           ("WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise", f(BD, 30), "white")], logo=False, y=120), 15, "ad-advertise-here.mp4", key=5)
+# channel/media/promo-free-live-tv.mp4: since everything is free (owner, 2026-10-10) the Gold ads are off air; it is now
+# 15 s of Spark montage 7 (media/cabletv-ad-9.mp4 holds the same).

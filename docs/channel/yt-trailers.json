@@ -1,6 +1,6 @@
 {
  "name": "Movie Trailers",
- "built": "2026-10-09 22:37 UTC",
+ "built": "2026-10-10 22:47 UTC",
  "videos": [
   {
    "id": "pV32AcPa-iA",
@@ -54,7 +54,7 @@
    "lang": "English",
    "mins": 1.58,
    "found": "2026-10-09",
-   "up": "2026-09-25"
+   "up": "2026-09-26"
   },
   {
    "id": "nzNYomSd5Ls",
@@ -63,7 +63,7 @@
    "lang": "English",
    "mins": 2.63,
    "found": "2026-10-09",
-   "up": "2026-09-25"
+   "up": "2026-09-26"
   },
   {
    "id": "B9XOzCUvFB8",
@@ -72,7 +72,7 @@
    "lang": "English",
    "mins": 1.9,
    "found": "2026-10-09",
-   "up": "2026-09-18"
+   "up": "2026-09-19"
   },
   {
    "id": "cwVE1qf6Ixs",
@@ -81,7 +81,7 @@
    "lang": "English",
    "mins": 3.0,
    "found": "2026-10-09",
-   "up": "2026-09-18"
+   "up": "2026-09-19"
   },
   {
    "id": "lYXtL5TreOE",
@@ -90,25 +90,7 @@
    "lang": "English",
    "mins": 2.42,
    "found": "2026-10-09",
-   "up": "2026-09-18"
-  },
-  {
-   "id": "Vuv0kqGWjno",
-   "title": "The Cat in the Hat | Main Trailer",
-   "label": "Warner Bros. Pictures",
-   "lang": "English",
-   "mins": 2.43,
-   "found": "2026-10-09",
-   "up": "2026-09-11"
-  },
-  {
-   "id": "Dw-5ZGapGTQ",
-   "title": "Whalefall | Official Trailer | In Theaters October 16",
-   "label": "20th Century Studios",
-   "lang": "English",
-   "mins": 1.62,
-   "found": "2026-10-09",
-   "up": "2026-09-11"
+   "up": "2026-09-19"
   },
   {
    "id": "fvnyrBnUx4E",
@@ -117,7 +99,7 @@
    "lang": "English",
    "mins": 1.6,
    "found": "2026-10-09",
-   "up": "2026-09-09"
+   "up": "2026-09-10"
   },
   {
    "id": "job8V254NAE",
@@ -126,7 +108,7 @@
    "lang": "English",
    "mins": 2.45,
    "found": "2026-10-09",
-   "up": "2026-09-09"
+   "up": "2026-09-10"
   },
   {
    "id": "bfCgu83suHs",
@@ -135,7 +117,7 @@
    "lang": "English",
    "mins": 2.02,
    "found": "2026-10-09",
-   "up": "2026-09-09"
+   "up": "2026-09-10"
   },
   {
    "id": "U6sbm1OaJb8",
@@ -144,7 +126,7 @@
    "lang": "English",
    "mins": 2.82,
    "found": "2026-10-09",
-   "up": "2026-09-09"
+   "up": "2026-09-10"
   },
   {
    "id": "MfHEZw7Xw_c",
@@ -153,7 +135,25 @@
    "lang": "English",
    "mins": 2.53,
    "found": "2026-10-09",
-   "up": "2026-09-09"
+   "up": "2026-09-10"
+  },
+  {
+   "id": "Vuv0kqGWjno",
+   "title": "The Cat in the Hat | Main Trailer",
+   "label": "Warner Bros. Pictures",
+   "lang": "English",
+   "mins": 2.43,
+   "found": "2026-10-09",
+   "up": "2026-09-10"
+  },
+  {
+   "id": "Dw-5ZGapGTQ",
+   "title": "Whalefall | Official Trailer | In Theaters October 16",
+   "label": "20th Century Studios",
+   "lang": "English",
+   "mins": 1.62,
+   "found": "2026-10-09",
+   "up": "2026-09-10"
   },
   {
    "id": "rN9F6-tbySY",
@@ -162,7 +162,7 @@
    "lang": "English",
    "mins": 2.23,
    "found": "2026-10-09",
-   "up": "2026-09-09"
+   "up": "2026-09-10"
   },
   {
    "id": "zhApeaHMvfs",
@@ -171,7 +171,7 @@
    "lang": "English",
    "mins": 3.12,
    "found": "2026-10-09",
-   "up": "2026-08-10"
+   "up": "2026-08-11"
   },
   {
    "id": "1zip1rNaNYs",
@@ -180,7 +180,7 @@
    "lang": "English",
    "mins": 4.17,
    "found": "2026-10-09",
-   "up": "2026-08-10"
+   "up": "2026-08-11"
   },
   {
    "id": "74nF-FWAS6M",
@@ -189,7 +189,7 @@
    "lang": "English",
    "mins": 3.92,
    "found": "2026-10-09",
-   "up": "2026-08-10"
+   "up": "2026-08-11"
   },
   {
    "id": "P3uI5sLosKU",
@@ -198,7 +198,7 @@
    "lang": "English",
    "mins": 2.63,
    "found": "2026-10-09",
-   "up": "2026-08-10"
+   "up": "2026-08-11"
   },
   {
    "id": "wixzainceAE",
@@ -207,7 +207,7 @@
    "lang": "English",
    "mins": 2.53,
    "found": "2026-10-09",
-   "up": "2026-07-11"
+   "up": "2026-07-12"
   },
   {
    "id": "62bIsvRcPv0",
@@ -216,16 +216,7 @@
    "lang": "English",
    "mins": 2.7,
    "found": "2026-10-09",
-   "up": "2026-07-11"
-  },
-  {
-   "id": "gM4LkaXwGuY",
-   "title": "THE SOCIAL RECKONING – Official Teaser Trailer (HD)",
-   "label": "Sony Pictures",
-   "lang": "English",
-   "mins": 2.5,
-   "found": "2026-10-09",
-   "up": "2026-07-11"
+   "up": "2026-07-12"
   },
   {
    "id": "A36nagDzugo",
@@ -261,7 +252,7 @@
    "lang": "Hindi",
    "mins": 3.32,
    "found": "2026-10-07",
-   "up": "2026-09-25"
+   "up": "2026-09-26"
   },
   {
    "id": "EE_DucFkXEM",
@@ -270,7 +261,7 @@
    "lang": "Hindi",
    "mins": 2.12,
    "found": "2026-10-07",
-   "up": "2026-09-09"
+   "up": "2026-09-10"
   },
   {
    "id": "llLHwxkZ02k",
@@ -279,7 +270,7 @@
    "lang": "Hindi",
    "mins": 4.17,
    "found": "2026-10-08",
-   "up": "2026-08-10"
+   "up": "2026-08-11"
   }
  ]
 }

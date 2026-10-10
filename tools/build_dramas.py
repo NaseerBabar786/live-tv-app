@@ -126,6 +126,8 @@ SHOW_CHANNELS = [
     ("Free Documentary Nature", ["@FreeDocumentaryNature"], "Free Documentary - Nature|Free Documentary Nature", "English", 20),
     ("BBC Earth", ["@bbcearth"], "BBC Earth", "English", 40),
     ("Timeline", ["@TimelineChannel", "channel/UC88lvyJe7aHZmcvzvubDFRg"], "Timeline - World History|Timeline", "English", 20),
+    ("Free Documentary History", ["@FreeDocumentaryHistory", "channel/UCsgPO6cNV0wBG-Og3bUZoFA"],
+     "Free Documentary - History|Free Documentary History", "English", 20),
 ]
 # Cartoons from their makers' own channels, filed under Kids.
 KIDS_CHANNELS = [
@@ -148,6 +150,11 @@ KIDS_CHANNELS = [
     ("Super Wings", [], "Super Wings", "English", 10),
     ("Shemaroo Kids", ["@ShemarooKids", "channel/UC9iBBFfq7L3ipvodSLrU8gQ"], "Shemaroo Kids", "Hindi", 10),
     ("LEGO Ninjago", ["@LEGO", "channel/UCP-Ng5SXUEt0VE-TXqRdL6g"], "LEGO", "English", 15),
+    # Daily new-sources check, 2026-10-10: full-episode compilations.
+    ("Curious George", ["@CuriousGeorge", "channel/UCu7IDy0y-ZA0qaG51wrQY6w"], "Curious George", "English", 20),
+    ("Zig & Sharko", ["@ZigandSharko", "channel/UCcKJJuOe2tOqgrKw0Gks-sw"], "Zig & Sharko|Zig and Sharko", "English", 20),
+    ("Wild Kratts", ["@WildKratts", "channel/UCxEmDFo1yUbbxjEb9RjitVA"], "Wild Kratts", "English", 20),
+    ("WB Kids", ["@WBKids", "channel/UC9trsD1jCTXXtN3xIOIU8gg"], "WB Kids", "English", 20),
 ]
 # Channels that also post other things: only titles with these words are kept.
 ONLY_TITLES = {
@@ -159,6 +166,8 @@ ONLY_TITLES = {
 SKIP_TITLES = {
     "Timeline": re.compile(r"uncensored|footage|murder|serial killer|killer|massacre|execution", re.IGNORECASE),
 }
+# Kids' channels post Halloween specials in October: nothing scary goes on the Kids shelf.
+SCARY = re.compile(r"hallowe+n|spo+ky|scary|creepy|ghosts?|monsters?|haunted|zombies?|witch|curse|terrifying|trick[- ]or[- ]treat|vampires?", re.IGNORECASE)
 # Muslim Television Ahmadiyya's own channels; their videos go to MTA.m3u only, which Live
 # TV shows only when the viewer turns MTA on in Settings.
 MTA_CHANNELS = [
@@ -232,6 +241,9 @@ FILM_CHANNELS = [
     # Daily new-sources check, 2026-10-09 (probe run 37920714292).
     ("Zee Classic", ["channel/UC3ux-QuJyWnEuEjzksKgnpQ"], "Zee Classic", "Hindi"),
     ("Goldmines Bollywood", ["@GoldminesBollywood", "channel/UCOF23vGxkbhN4wl7ROrgXsA"], "Goldmines Bollywood", "Hindi"),
+    # Daily new-sources check, 2026-10-10 (probe run 38046642733).
+    ("Zee Cinema", ["channel/UCxz2c50dBGCGDbbbZ8LesNQ"], "Zee Cinema", "Hindi"),
+    ("Chaupal", ["channel/UCH3FAffJyp6RBYLSZsYnKdQ"], "Chaupal", "Punjabi"),
     ("Shemaroo Punjabi", ["@ShemarooPunjabi"], "Shemaroo Punjabi", "Punjabi"),
     ("Lokdhun Punjabi", [], "Lokdhun Punjabi|Lokdhun", "Punjabi"),
     ("Rhythm Boyz", ["@RhythmBoyz"], "Rhythm Boyz", "Punjabi"),
@@ -245,7 +257,7 @@ FILM_CHANNELS = [
 ]
 # Punjabi film channels that post only Punjabi films, so their titles needn't say "Punjabi".
 ALL_PUNJABI = {"Shemaroo Punjabi", "Lokdhun Punjabi", "Rhythm Boyz", "Ultra Punjabi",
-               "T-Series Apna Punjab", "Pitaara TV", "Humble Motion Pictures"}
+               "T-Series Apna Punjab", "Pitaara TV", "Humble Motion Pictures", "Chaupal"}
 # Punjabi channels have many more films than their /videos page shows, so these searches run too.
 PUNJABI_SEARCHES = ["punjabi movie", "full film", "comedy movie", "new punjabi movie"]
 # Channels whose titles start with a one-line story and put the film's name second:
@@ -617,6 +629,8 @@ def channel_shows(kept, today, channels, genre):
             if name in ONLY_TITLES and not ONLY_TITLES[name].search(title):
                 continue
             if name in SKIP_TITLES and SKIP_TITLES[name].search(title):
+                continue
+            if genre == "Kids" and SCARY.search(title):
                 continue
             if language == "Hindi" and OTHER_LANGUAGE.search(title) and not re.search(r"hindi", title, re.I):
                 continue
@@ -1013,6 +1027,8 @@ def main():
     # page (such as an old PTV classic) stays.
     cutoff = (today - dt.timedelta(days=KEEP_DAYS)).isoformat()
     kept = {k: v for k, v in kept.items() if v.get("seen", v["added"]) >= cutoff and v.get("channel") not in RETIRED}
+    # Nothing scary on the Kids shelf, including what was kept before the rule (2026-10-10).
+    kept = {k: v for k, v in kept.items() if not (v.get("genre") == "Kids" and SCARY.search(v.get("title", "")))}
     episodes = {k: v for k, v in kept.items() if "show" in v}
     movies = {k: v for k, v in kept.items() if "movie" in v}
     telefilms = {k: v for k, v in kept.items() if "telefilm" in v}

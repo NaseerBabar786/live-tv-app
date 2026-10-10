@@ -34,7 +34,7 @@
   .stage { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; container-type: inline-size; }
   .stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; background: #000; }
   .stage video.keep { object-fit: contain; }
-  .stage .bug { position: absolute; height: 6.75cqw; width: auto; max-width: 19.5cqw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .stage .bug { position: absolute; height: 6.75cqw; width: auto; max-width: 19.5cqw; object-fit: contain; opacity: 1; filter: drop-shadow(0 0 3px rgba(0,0,0,.6)); pointer-events: none; }
   .bug.tr { top: 2cqw; right: 2.5cqw; } .bug.tl { top: 2cqw; left: 2.5cqw; } .bug.br { bottom: 2cqw; right: 2.5cqw; } .bug.bl { bottom: 2cqw; left: 2.5cqw; }
   .stage.ticking .bug.br, .stage.ticking .bug.bl { bottom: 6cqw; }
   .stage .ticker { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(16,24,39,.9); color: #fff; font-weight: 700; overflow: hidden; white-space: nowrap; font-size: 1.9cqw; line-height: 1.25; padding: .6cqw 0; }
@@ -386,7 +386,7 @@
       <label class="f"><input type="checkbox" id="active"> Channel is ON (untick to take it off the air; it disappears from the app)</label>
 
       <label class="f">Scrolling line (ticker) along the bottom
-        <input id="ticker" maxlength="300" placeholder="Welcome to Spark TV · Advertise with us: WhatsApp 437 602 6500">
+        <input id="ticker" maxlength="300" placeholder="Welcome to Spark TV · Advertise free with us: WhatsApp 437 602 6500">
       </label>
       <label class="f"><input type="checkbox" id="tickerOn"> Show the scrolling line</label>
       <details class="help"><summary>Tips for the ticker</summary>
@@ -644,7 +644,7 @@
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
 import { whatsOn, guide, timeText, lengthText, tuneIn, STATIONS, onDay, episodeOn, airingsBefore, expand, zonedTime } from "./channel/schedule.js";
 import { mountCards } from "./channel/cards.js";
-import { playable, status, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadSpark, sparkFor, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
+import { playable, status, withApprovals, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadSpark, sparkFor, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
 let breakPromos = [], pkTrailers = [], pkOwn = [], sparkAds = null;
 loadSpark("media/").then(d => { sparkAds = d; });
 // A channel's breaks: our Cable TV promos and its Spark TV ads; its moving logo once an hour (channel/ytorder.js).
@@ -699,7 +699,10 @@ let stats = null; // the Most watched numbers, once loaded
 // The channel being worked on (?c=filmein opens Spark Cinema).
 // Spark Hits is a web page (the music labels' YouTube videos), not a schedule: Studio only plays it.
 const HITS = { id: "hits", name: "Spark Hits", dial: "23", web: "channel/bollywood.html?app=1", page: "channel/bollywood.html", logo: "channel/logos/spark-hits.png" };
-let station = [...STATIONS, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || STATIONS[0];
+// Spark One is the Google-safe channel (owner, 2026-10-10): built on its own from programmes that are ours to show
+// (channel/play/pone.json), never edited here, so a Studio save can't put anything risky on it.
+const EDITABLE = STATIONS.filter(x => !x.play);
+let station = [...EDITABLE, HITS].find(x => x.id === new URLSearchParams(location.search).get("c")) || EDITABLE[0];
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Math.random().toString(36).slice(2, 9);
 
@@ -742,7 +745,7 @@ async function pickStation(st) {
 const noteFor = st => st === HITS || st.web ? `Channel ${st.dial} · runs by itself` : `Channel ${st.dial} in the app`;
 // In channel-number order, grouped by language block like the app's numbering. Spark Hits (23) runs by
 // itself from the music labels' song list (no schedule to edit), so picking it just plays it in the player.
-const ordered = () => [...STATIONS, HITS].sort((a, b) => +a.dial - +b.dial);
+const ordered = () => [...EDITABLE, HITS].sort((a, b) => +a.dial - +b.dial);
 const blockOf = d => d < 20 ? "Urdu" : d < 40 ? "Hindi" : d < 60 ? "English" : "Punjabi";
 function renderStations() {
   $("stations").innerHTML = "";
@@ -1439,7 +1442,7 @@ function setTab(id) {
   if (!(station.web ? WEB_TABS : TABS).some(([t]) => t === id)) id = "overview";
   tab = id;
   document.querySelector(".work").dataset.tab = id;
-  if (station.web && ["library", "approved", "schedule"].includes(id) && pick) { pkTab = id; renderPicks(); }
+  if (station.web && ["library", "approved", "schedule"].includes(id) && pick) { pkTab = id; renderPicks(); loadRatings(); }
   if (id === "help") $("howTo").open = true;
   renderNav();
   if (id === "overview") renderOverview();
@@ -2137,7 +2140,7 @@ async function loadPicksPanel() {
   try {
     if (!pkAll) {
       const snap = await fs.getDoc(fs.doc(db, "sponsors", "_picks"));
-      pkAll = snap.exists() && snap.data().data ? JSON.parse(snap.data().data) : {};
+      pkAll = withApprovals(snap.exists() && snap.data().data ? JSON.parse(snap.data().data) : {});
     }
     const url = station === HITS ? "channel/bollywood.json" : `channel/yt-${station.id}.json`;
     const d = await (await fetch(url + "?t=" + Date.now())).json();
@@ -2245,7 +2248,7 @@ function renderPicks() {
       tag.textContent = st === "approved" ? "✅ In next transmission" : st === "new" ? "🆕 New" : st === "removed" ? "Off the air" : "In the Library";
       small.appendChild(tag);
     }
-    small.appendChild(document.createTextNode([v.label, v.top ? "★ comes round more often" : "", v.found ? "found " + v.found : ""].filter(Boolean).join(" · ")));
+    small.appendChild(document.createTextNode([v.label, v.top ? "★ comes round more often" : "", v.found ? "found " + v.found : "", ratingLine(v.id)].filter(Boolean).join(" · ")));
     const acts = row.querySelector(".acts");
     const btn = (text, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn " + cls; b.textContent = text; b.onclick = fn; acts.appendChild(b); };
     btn("▶ Preview", "pv", () => previewVideo(v));
@@ -2255,6 +2258,30 @@ function renderPicks() {
   }
   $("pkCount").textContent = shown ? `${shown} programme${shown === 1 ? "" : "s"} here.` : pkTab === "library" && filter === "new" ? "Nothing new waiting. New finds show up here every day." : "None.";
   if (pkTab === "approved" && !counts.approved) $("pkCount").textContent = station === HITS ? "Nothing approved: Spark Hits plays every song." : "Nothing in Next transmission: the channel plays its free backup films instead.";
+}
+// Viewers' ratings at the end of each programme (owner, 2026-10-10; docs/channel/ytc.html, tools/ratings.py):
+// 👍 / 👎 and stars per programme, shown on its row. Liked ones (and their shows' other episodes) come round more often.
+let viewerRatings = null, ratingsAt = 0;
+async function loadRatings() {
+  if (viewerRatings && Date.now() - ratingsAt < 5 * 60e3) return;
+  ratingsAt = Date.now();
+  try {
+    const out = {};
+    (await fs.getDocs(fs.collection(db, "ratings"))).forEach(d => {
+      const r = d.data();
+      const x = out[r.video] || (out[r.video] = { up: 0, down: 0, stars: [] });
+      if (r.like > 0) x.up++; else if (r.like < 0) x.down++;
+      if (r.stars >= 1 && r.stars <= 5) x.stars.push(r.stars);
+    });
+    viewerRatings = out;
+    if (pick) renderPicks();
+  } catch { viewerRatings = viewerRatings || {}; }
+}
+function ratingLine(id) {
+  const r = viewerRatings?.[id];
+  if (!r) return "";
+  const avg = r.stars.length ? ` ★ ${(r.stars.reduce((a, b) => a + b, 0) / r.stars.length).toFixed(1)} (${r.stars.length})` : "";
+  return `Viewers: 👍 ${r.up} 👎 ${r.down}${avg}`;
 }
 function torontoDate(ms) { return new Intl.DateTimeFormat("en-CA", { timeZone: TORONTO, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(ms)); }
 // (A long programme in 25-minute parts on a half-hour channel counts once, at its first part.)

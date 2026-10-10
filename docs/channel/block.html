@@ -22,12 +22,12 @@
   #player { pointer-events: none; }
   #own { background: #000; object-fit: contain; pointer-events: none; }
   .shield { background: transparent; }
-  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: .55; pointer-events: none; }
+  .bug { position: absolute; top: 3%; right: 2.5%; height: 6.75vw; max-width: 19.5vw; object-fit: contain; opacity: 1; filter: drop-shadow(0 0 3px rgba(0,0,0,.6)); pointer-events: none; }
   .bug.tl { right: auto; left: 2.5%; }
   .bug.br { top: auto; bottom: 12%; }
   .bug.bl { top: auto; bottom: 12%; right: auto; left: 2.5%; }
   .bug.off { display: none; }
-  .now { position: absolute; left: 3%; bottom: calc(var(--strip) + 5%); max-width: 70%; background: rgba(16,24,39,.85); color: #fff; padding: .6em 1em; border-radius: 10px; font-weight: 700; font-size: clamp(13px, 2.2vw, 26px); transition: opacity .6s; pointer-events: none; }
+  .now { position: absolute; left: 3%; bottom: calc(var(--strip) + 5%); max-width: 55%; background: rgba(16,24,39,.85); color: #fff; padding: .45em .8em; border-radius: 8px; font-weight: 700; font-size: clamp(11px, 1.5vw, 18px); transition: opacity .6s; pointer-events: none; }
   .now small { display: block; font-weight: 400; opacity: .8; font-size: .7em; }
   .hide { opacity: 0; }
   .sound { position: absolute; top: 3%; left: 2.5%; padding: .6em 1em; border-radius: 999px; border: 0; background: #E53935; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
@@ -87,7 +87,7 @@ $("bug").src = logo;
 // The ticker stays in English (the owner, 2026-10-07), though the rest of Spark TV's writing is Urdu.
 const own = q.get("tick") || "";
 $("tick").textContent = /advertise/i.test(own) ? own
-  : `${name} · ${own ? own + " · " : ""}Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+  : `${name} · ${own ? own + " · " : ""}Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 if (/[\u0600-\u06FF]/.test($("tick").textContent)) $("ticker").classList.add("rtl");
 
 // Titles, makers and languages from the day's lists (the address carries only ids and lengths).
@@ -275,7 +275,7 @@ window.onYouTubeIframeAPIReady = () => {
         keepPlaying(e.target, () => finished || ownOn, () => cover(true));
       },
       onStateChange: e => {
-        if (e.data === YT.PlayerState.PLAYING) { if (ownOn) { e.target.stopVideo(); return; } if (!adOn) cover(false); started = true; failures = 0; }
+        if (e.data === YT.PlayerState.PLAYING) { if (ownOn) { e.target.stopVideo(); return; } cover(false); started = true; failures = 0; }
         // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
         // (Not while our own show plays: YouTube is stopped under it then.)
         else if (!ownOn) cover(true);
@@ -297,21 +297,6 @@ window.onYouTubeIframeAPIReady = () => {
   });
   lowFirst(player);
 };
-// YouTube's own ads inside a video come with its "Skip" button (owner, 2026-10-09: no skip-ahead on channel 1):
-// while one plays, our break card covers it and its sound is off. An ad shows as a different video id, or
-// as a much shorter length than the programme's.
-let adOn = false;
-setInterval(() => {
-  if (!player || !player.getDuration || finished || ownOn || cur < 0) return;
-  const id = sub || ids[cur], want = (sub ? info[sub]?.secs : secs[cur]) || 0;
-  const d = player.getDuration() || 0, vid = player.getVideoData?.()?.video_id;
-  const ad = player.getPlayerState() === YT.PlayerState.PLAYING &&
-    ((vid && vid !== id) || (d > 0 && want >= 120 && d <= 180 && d < want / 2));
-  if (ad === adOn) return;
-  adOn = ad;
-  if (ad) { cover(true, "Break · وقفہ", name); player.mute(); }
-  else { if (player.getPlayerState() === YT.PlayerState.PLAYING) cover(false); if (app || $("sound").hidden) player.unMute(); }
-}, 500);
 $("shield").onclick = showNow;
 $("sound").onclick = () => { player.unMute(); if (ownOn) $("own").muted = false; else player.playVideo(); $("sound").hidden = true; };
 document.addEventListener("keydown", e => {

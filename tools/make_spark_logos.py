@@ -21,8 +21,9 @@ PETALS = ((255, 106, 0), (255, 45, 120), (124, 58, 237), (255, 196, 0))
 LANG = {"URDU": (0, 150, 80), "HINDI": (255, 120, 0), "ENGLISH": (40, 105, 255), "PUNJABI": (215, 150, 0)}
 WORD = {"TV": (150, 156, 170), "CINEMA": (230, 160, 20), "MUSIC": (150, 80, 255), "HITS": (255, 45, 120), "KIDS": (40, 190, 80),
         "SPORTS": (0, 120, 255), "TRAVEL": (0, 175, 220), "COMEDY": (255, 190, 0), "MOVIES": (235, 50, 70), "DRAMAS": (190, 80, 235),
-        "COOKING": (245, 90, 40), "TEENS": (0, 200, 200), "ADS": (255, 200, 0), "NEWS": (230, 35, 55), "SHAYARI": (0, 190, 170),
-        "KAVI SAMMELAN": (0, 190, 170), "AUTO": (120, 140, 255), "GURBANI": (255, 153, 51), "SUFI QAWWALI": (0, 175, 125)}
+        "COOKING": (245, 90, 40), "TEENS": (0, 200, 200), "ADS": (255, 200, 0), "NEWS": (230, 35, 55), "HEADLINES": (255, 196, 0), "SHAYARI": (0, 190, 170),
+        "KAVI SAMMELAN": (0, 190, 170), "AUTO": (120, 140, 255), "GURBANI": (255, 153, 51), "SUFI QAWWALI": (0, 175, 125),
+        "ONE": (150, 156, 170)}
 
 # Logo file key -> (channel word, language tag or None). The tag only goes on channels whose name has a language in it.
 CHANNELS = {
@@ -39,6 +40,8 @@ CHANNELS = {
     # Spark TV on Google Play (2026-10-09): its comedy and music channels are in no one language.
     "comedy-play": ("COMEDY", None), "music-play": ("MUSIC", None),
     "cinema-urdu": ("CINEMA", "URDU"), "cinema-hindi": ("CINEMA", "HINDI"), "cooking-play": ("COOKING", None),
+    # Spark One, the Google Play app, and its channel Spark TV One (owner, 2026-10-10: the flower, "spark", "one" under it).
+    "one": ("ONE", None),
 }
 
 

@@ -7,7 +7,8 @@ Each scene has an English picture prompt and Urdu lines. The script
   2. gets one AI picture per scene from Pollinations (free, no key), or reuses
      <story folder>/images/NN.jpg when it is already there,
   3. moves slowly over each picture (pan and zoom), timed to the voice,
-  4. adds soft background music (Kevin MacLeod, CC BY 3.0, credited at the end) and Urdu subtitles.
+  4. adds soft background music (Kevin MacLeod, CC BY 3.0, credited at the end) and Urdu subtitles, each with its English line
+     under it (story.json "en"; the title and lesson cards get English lines too).
 --offline skips the internet (silent voice of guessed length, plain pictures) to test the layout.
 Needs ffmpeg, numpy, Pillow and (online) edge-tts.
 """
@@ -108,9 +109,12 @@ WrapStyle: 0
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Sub,Noto Nastaliq Urdu,44,&H00FFFFFF,&H00FFFFFF,&H00101010,&H99000000,0,0,0,0,100,100,0,0,1,3.5,2,2,90,90,26,1
+Style: Sub,Noto Nastaliq Urdu,44,&H00FFFFFF,&H00FFFFFF,&H00101010,&H99000000,0,0,0,0,100,100,0,0,1,3.5,2,2,90,90,62,1
+Style: SubEn,DejaVu Sans,24,&H00F0F0F0,&H00F0F0F0,&H00101010,&H99000000,0,0,0,0,100,100,0,0,1,2.5,1.5,2,90,90,24,1
 Style: Big,Noto Nastaliq Urdu,74,&H0066E0FF,&H0066E0FF,&H00101010,&HAA000000,0,0,0,0,100,100,0,0,1,5,3,8,60,60,70,1
-Style: Small,Noto Nastaliq Urdu,40,&H00FFFFFF,&H00FFFFFF,&H00101010,&HAA000000,0,0,0,0,100,100,0,0,1,3,2,8,60,60,215,1
+Style: Small,Noto Nastaliq Urdu,40,&H00FFFFFF,&H00FFFFFF,&H00101010,&HAA000000,0,0,0,0,100,100,0,0,1,3,2,8,60,60,246,1
+Style: BigEn,DejaVu Sans,40,&H0066E0FF,&H0066E0FF,&H00101010,&HAA000000,1,0,0,0,100,100,0,0,1,3,2,8,60,60,184,1
+Style: SmallEn,DejaVu Sans,24,&H00FFFFFF,&H00FFFFFF,&H00101010,&HAA000000,0,0,0,0,100,100,0,0,1,2,1.5,8,60,60,316,1
 Style: Credit,DejaVu Sans,16,&H00DDDDDD,&H00DDDDDD,&H00101010,&H99000000,0,0,0,0,100,100,0,0,1,1.5,1,2,40,40,10,1
 
 [Events]
@@ -154,6 +158,8 @@ def main():
             speak(line, story["voice"], story.get("rate", "+0%"), wav[:-4] + ".mp3", wav, offline)
             a = read_wav(wav); d = len(a) / SR
             events.append((now + t - 0.1, now + t + d + 0.25, "Sub", line))
+            if sc.get("en"):  # every line in English too (owner 2026-10-10: all writing in Urdu and English)
+                events.append((now + t - 0.1, now + t + d + 0.25, "SubEn", sc["en"][j]))
             parts += [a, np.zeros(int(SR * gap), np.float32)]
             t += d + gap
         tail = 2.5 if i == len(story["scenes"]) - 1 else 0.7
@@ -165,8 +171,13 @@ def main():
         if sc.get("card") == "title":
             events.append((now + 0.3, now + dur - 0.3, "Big", story["title"]))
             events.append((now + 0.8, now + dur - 0.3, "Small", story.get("subtitle", "")))
+            if story.get("titleEnCard"):
+                events.append((now + 0.3, now + dur - 0.3, "BigEn", story["titleEnCard"]))
+                events.append((now + 0.8, now + dur - 0.3, "SmallEn", story.get("subtitleEn", "")))
         elif sc.get("card") == "moral":
             events.append((now + 0.3, now + dur - 0.3, "Big", sc.get("cardText", "")))
+            if sc.get("cardTextEn"):
+                events.append((now + 0.3, now + dur - 0.3, "BigEn", sc["cardTextEn"]))
         # pan and zoom: alternate zoom in / out and drift direction
         zin = i % 2 == 0
         px = ["0.5", "on/{n}", "1-on/{n}", "0.5"][i % 4].format(n=n)

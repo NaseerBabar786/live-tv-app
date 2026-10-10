@@ -34,12 +34,17 @@ object Premium {
     var billing: Billing? = null
         private set
 
+    /**
+     * Everything is free in every app (owner, 2026-10-10): Premium (Live TV Plus) and Gold (Spark One) stay
+     * unlocked for everyone and nothing is offered for sale, so an edition's billing is no longer installed.
+     */
+    @Suppress("UNUSED_PARAMETER")
     fun install(billing: Billing, active: Boolean) {
-        this.billing = billing
-        _active.value = active
+        _active.value = true
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun setActive(active: Boolean) {
-        _active.value = active
+        _active.value = true
     }
 }

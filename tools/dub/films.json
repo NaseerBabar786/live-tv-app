@@ -1,6 +1,7 @@
 {
  "tears-of-steel": {
   "title": "Tears of Steel",
+  "titleUr": "ٹیئرز آف اسٹیل",
   "holder": "(CC) Blender Foundation | mango.blender.org",
   "licence": "CC BY 3.0",
   "cat": "movies",
@@ -8,6 +9,7 @@
  },
  "elephants-dream": {
   "title": "Elephants Dream",
+  "titleUr": "ایلیفنٹس ڈریم",
   "holder": "(c) 2006 Blender Foundation / Netherlands Media Art Institute / elephantsdream.org",
   "licence": "CC BY 2.5",
   "cat": "stories",
@@ -15,6 +17,7 @@
  },
  "sintel": {
   "title": "Sintel",
+  "titleUr": "سنٹیل",
   "holder": "(c) Blender Foundation | durian.blender.org",
   "licence": "CC BY 3.0",
   "cat": "movies",
@@ -22,6 +25,7 @@
  },
  "cosmos-laundromat": {
   "title": "Cosmos Laundromat",
+  "titleUr": "کاسموس لانڈرومیٹ",
   "holder": "(CC) Blender Foundation | gooseberry.blender.org",
   "licence": "CC BY 4.0",
   "cat": "dramas",
@@ -33,6 +37,7 @@
  },
  "sprite-fright": {
   "title": "Sprite Fright",
+  "titleUr": "اسپرائٹ فرائٹ",
   "holder": "(CC) Blender Foundation | studio.blender.org",
   "licence": "CC BY 4.0",
   "cat": "comedy",
@@ -44,6 +49,7 @@
  },
  "wing-it": {
   "title": "Wing It!",
+  "titleUr": "وِنگ اِٹ",
   "holder": "(CC) Blender Foundation | studio.blender.org",
   "licence": "CC BY 4.0",
   "cat": "kids",
@@ -54,6 +60,7 @@
  },
  "seven-minutes-of-terror": {
   "title": "Curiosity's Seven Minutes of Terror",
+  "titleUr": "مریخ پر کیوریوسٹی کے سات منٹ",
   "holder": "NASA / JPL-Caltech",
   "licence": "Public domain",
   "cat": "documentaries",
@@ -64,6 +71,7 @@
  },
  "superman-1941": {
   "title": "Superman: The Mad Scientist (1941)",
+  "titleUr": "سپرمین اور پاگل سائنسدان",
   "holder": "Fleischer Studios, 1941",
   "licence": "Public domain",
   "cat": "kids",

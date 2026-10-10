@@ -1,7 +1,15 @@
 {
  "name": "Spark Comedy Punjabi",
- "built": "2026-10-09 22:52 UTC",
+ "built": "2026-10-10 23:05 UTC",
  "videos": [
+  {
+   "id": "dK6MHn0hP8o",
+   "title": "LADIES VS THAKUR & FRIENDS (FULL DRAMA) IFTIKHAR THAKUR & NASIR CHINYOTI BEST PAKISTANI STAGE DRAMA",
+   "label": "Tip Top Stage Dramas",
+   "mins": 76.48333333333333,
+   "found": "2026-10-10",
+   "lang": "pa"
+  },
   {
    "id": "FYHYIG8Ez2U",
    "title": "NACH KE YAAR MANANA (FULL DRAMA) AMANAT CHAN - BEST PAKISTANI COMEDY STAGE DRAMA - TIP TOP WORLDWIDE",
@@ -213,18 +221,18 @@
    "lang": "pa"
   },
   {
-   "id": "uCvRiIiMdng",
-   "title": "TITLEE (FULL DRAMA) SOHAIL AHMAD, NASEEM VICKY & ZAFRI KHAN   BEST PAKISTANI COMEDY STAGE DRAMA",
-   "label": "Tip Top Stage Dramas",
-   "mins": 141.83333333333334,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
    "id": "KnYxI9QzTzw",
    "title": "Oh Vekh Chiri (Full Comedy) - Iftikhar Thakur, Zafri Khan, Nasir Chinyoti, Khushboo, Amanat Chan",
    "label": "Tip Top Stage Dramas",
    "mins": 86.45,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "uCvRiIiMdng",
+   "title": "TITLEE (FULL DRAMA) SOHAIL AHMAD, NASEEM VICKY & ZAFRI KHAN   BEST PAKISTANI COMEDY STAGE DRAMA",
+   "label": "Tip Top Stage Dramas",
+   "mins": 141.83333333333334,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -280,6 +288,30 @@
    "posted": "2025-04-29"
   },
   {
+   "id": "UxFxPmLFaww",
+   "title": "Dangar Mail | Gurchet Chitarkar | Goyal Music | Punjabi Movies 2020 Full Movie",
+   "label": "Goyal Music",
+   "mins": 48.55,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "cNpO9DfZjro",
+   "title": "हाँस हाँस के पेट विच दर्द पौन वाली पंजाबी कॉमेडी | Punjabi Comedy 2017 | Comedy No 1",
+   "label": "Goyal Music",
+   "mins": 18.8,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "COFes2cqBQ0",
+   "title": "हाँस हाँस के पेट विच दर्द पौन वाली पंजाबी कॉमेडी | Punjabi Comedy 2017 | Comedy No 1",
+   "label": "Goyal Music",
+   "mins": 18.8,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
    "id": "s2NUa6_-xz8",
    "title": "Chhankata 2005 | Jarh Te Koke | Jaswinder Bhalla | Official Goyal Music Part 3",
    "label": "Goyal Music",
@@ -288,18 +320,26 @@
    "lang": "pa"
   },
   {
-   "id": "_1M30P1uA0c",
-   "title": "Chhankata 2005 | Jarh Te Koke | Jaswinder Bhalla | Goyal Music | Part 3",
-   "label": "Goyal Music",
-   "mins": 18.816666666666666,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
    "id": "B4TPlQ9t4E4",
    "title": "Chhankata 2005 | Jarh Te Koke | Jaswinder Bhalla | Official Goyal Music Part 2",
    "label": "Goyal Music",
    "mins": 21.083333333333332,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "VO99v-MM1hE",
+   "title": "Chhankata 2003 Part 3",
+   "label": "Goyal Music",
+   "mins": 17.683333333333334,
+   "found": "2026-10-09",
+   "lang": "pa"
+  },
+  {
+   "id": "_1M30P1uA0c",
+   "title": "Chhankata 2005 | Jarh Te Koke | Jaswinder Bhalla | Goyal Music | Part 3",
+   "label": "Goyal Music",
+   "mins": 18.816666666666666,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -316,30 +356,6 @@
    "title": "Chhankata 2003 Part 2",
    "label": "Goyal Music",
    "mins": 17.133333333333333,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
-   "id": "cNpO9DfZjro",
-   "title": "हाँस हाँस के पेट विच दर्द पौन वाली पंजाबी कॉमेडी | Punjabi Comedy 2017 | Comedy No 1",
-   "label": "Goyal Music",
-   "mins": 18.8,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
-   "id": "UxFxPmLFaww",
-   "title": "Dangar Mail | Gurchet Chitarkar | Goyal Music | Punjabi Movies 2020 Full Movie",
-   "label": "Goyal Music",
-   "mins": 48.55,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
-   "id": "VO99v-MM1hE",
-   "title": "Chhankata 2003 Part 3",
-   "label": "Goyal Music",
-   "mins": 17.683333333333334,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -400,10 +416,10 @@
    "lang": "pa"
   },
   {
-   "id": "YOnAyk1HBAk",
-   "title": "Teri Meri Tu Tu Main Main | Miyan Biwi Te Mobile | Comedy Show | DD Punjabi",
+   "id": "AoELSo7phS4",
+   "title": "Teri Meri Tu Tu Main Main | Miyaa Biwi te Saala | Comedy Show | DD Punjabi",
    "label": "DD Punjabi",
-   "mins": 15.133333333333333,
+   "mins": 15.05,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -416,10 +432,10 @@
    "lang": "pa"
   },
   {
-   "id": "AoELSo7phS4",
-   "title": "Teri Meri Tu Tu Main Main | Miyaa Biwi te Saala | Comedy Show | DD Punjabi",
+   "id": "YOnAyk1HBAk",
+   "title": "Teri Meri Tu Tu Main Main | Miyan Biwi Te Mobile | Comedy Show | DD Punjabi",
    "label": "DD Punjabi",
-   "mins": 15.05,
+   "mins": 15.133333333333333,
    "found": "2026-10-09",
    "lang": "pa"
   },
@@ -520,14 +536,6 @@
    "lang": "pa"
   },
   {
-   "id": "VuMaTpqlXZ4",
-   "title": "Kalla Coat Evvi Ni Paya | Jaswinder Bhalla Golden Moments | Punjabi Comedy Scenes",
-   "label": "Speed Punjabi",
-   "mins": 47.68333333333333,
-   "found": "2026-10-09",
-   "lang": "pa"
-  },
-  {
    "id": "UMHS_-KHTKo",
    "title": "Jaswinder Bhalla Comedy Top 10 (Jukebox) | Punjabi Comedy Scenes | Punjabi Movies | Speed Punjabi",
    "label": "Speed Punjabi",
@@ -536,10 +544,10 @@
    "lang": "pa"
   },
   {
-   "id": "COFes2cqBQ0",
-   "title": "हाँस हाँस के पेट विच दर्द पौन वाली पंजाबी कॉमेडी | Punjabi Comedy 2017 | Comedy No 1",
-   "label": "Goyal Music",
-   "mins": 18.8,
+   "id": "VuMaTpqlXZ4",
+   "title": "Kalla Coat Evvi Ni Paya | Jaswinder Bhalla Golden Moments | Punjabi Comedy Scenes",
+   "label": "Speed Punjabi",
+   "mins": 47.68333333333333,
    "found": "2026-10-09",
    "lang": "pa"
   }

@@ -72,6 +72,9 @@ object Edition {
     const val LIVE_TV = true
     /** Live TV Max: opens on the Browse home screen, with language rows, a now/next guide, movies and dramas. */
     const val MAX = BuildConfig.IS_MAX
+
+    /** Every channel and every feature free for everyone, no packages or payments (owner, 2026-10-10). */
+    const val FREE_FOR_ALL = true
     val APP_NAME = if (MAX) "Live TV Max" else "Cable TV"
     const val USER_AGENT = "LiveTV-Android/1.0"
     const val HAS_START_SCREEN = true
@@ -297,6 +300,8 @@ private fun BillingPrompt() {
     LaunchedEffect(user?.uid) {
         if (user == null || account.isAdmin) return@LaunchedEffect
         delay(60_000)
+        // Everything is free (owner, 2026-10-10): no payment details to ask for.
+        if (Edition.FREE_FOR_ALL) return@LaunchedEffect
         if (runCatching { Billing.load(account) }.getOrNull()?.waiting == true) open = true
     }
     if (open) BillingDialog(asked = true, onDismiss = { open = false })

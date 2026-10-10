@@ -1,10 +1,27 @@
 package com.livetv.app
 
 import android.app.PictureInPictureParams
+import android.app.SearchManager
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.PixelFormat
+import android.os.Build
+import android.os.Bundle
+import android.provider.MediaStore
 import android.speech.RecognizerIntent
+import android.util.Rational
+import android.view.KeyEvent
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
@@ -12,8 +29,19 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import com.livetv.app.data.MyChannel
 import com.livetv.app.extras.Extras
 import com.livetv.app.extras.GuideScreen
 import com.livetv.app.extras.HomeScreenRow
@@ -22,44 +50,23 @@ import com.livetv.app.extras.ReminderPopup
 import com.livetv.app.extras.Screensaver
 import com.livetv.app.extras.SleepTimerDialog
 import com.livetv.app.extras.SleepWarning
+import com.livetv.app.extras.VoiceSearch
+import com.livetv.app.extras.VoiceSearchDialog
 import com.livetv.app.extras.WhoIsWatching
 import com.livetv.app.extras.WidgetStack
 import com.livetv.app.extras.WidgetsDialog
-import com.livetv.app.ui.focusGlow
-import android.content.res.Configuration
-import android.graphics.PixelFormat
-import android.os.Build
-import android.os.Bundle
-import android.util.Rational
-import android.view.KeyEvent
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livetv.app.games.GamesScreen
 import com.livetv.app.player.PlayerScreen
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import com.livetv.app.data.MyChannel
-import com.livetv.app.ui.rememberBlockPage
 import com.livetv.app.ui.ChannelListScreen
 import com.livetv.app.ui.LiveTvTheme
 import com.livetv.app.ui.MainViewModel
 import com.livetv.app.ui.VodScreen
 import com.livetv.app.ui.VodTarget
+import com.livetv.app.ui.focusGlow
 import com.livetv.app.ui.isTv
+import com.livetv.app.ui.rememberBlockPage
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -89,6 +96,9 @@ class MainActivity : ComponentActivity() {
     /** The sleep timer and widget pickers, from the full-screen channel bar. */
     private var showSleep by mutableStateOf(false)
     private var showWidgets by mutableStateOf(false)
+    private var showVoice by mutableStateOf(false)
+    // The mic button shows only on TVs where voice search can work.
+    private val voiceAvailable by lazy { VoiceSearch.available(this) }
 
     /** Voice search: the TV's speech screen, then [MainViewModel.spoken] with what was said. */
     // The plain activity-result call: the newer API needs a Fragment library this app doesn't carry (lint).
@@ -102,11 +112,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startVoiceSearch() {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            .putExtra(RecognizerIntent.EXTRA_PROMPT, "Say a channel name")
+        if (VoiceSearch.canListen(this)) {
+            showVoice = true
+            return
+        }
         @Suppress("DEPRECATION")
-        val started = runCatching { startActivityForResult(intent, VOICE_SEARCH) }.isSuccess
+        val started = runCatching { startActivityForResult(VoiceSearch.speechIntent(this), VOICE_SEARCH) }.isSuccess
         if (!started) {
             Toast.makeText(this, "Voice search isn't available on this TV. Use the search button instead.", Toast.LENGTH_LONG).show()
         }
@@ -118,6 +129,22 @@ class MainActivity : ComponentActivity() {
             viewModel.pendingUrl = it
             viewModel.openPending()
         }
+        // Google TV's own voice search ("Geo News on Cable TV"): the words come here, once the channels are in.
+        if (Edition.LIVE_TV && intent?.action in SEARCH_ACTIONS) {
+            intent?.getStringExtra(SearchManager.QUERY)?.takeIf { it.isNotBlank() }?.let { said ->
+                lifecycleScope.launch {
+                    viewModel.state.first { it.channels.isNotEmpty() }
+                    viewModel.spoken(said)
+                }
+            }
+        }
+    }
+
+    /** The remote's search / microphone key, where the TV hands it to the app: Cable TV's voice search. */
+    override fun onSearchRequested(): Boolean {
+        if (!Edition.LIVE_TV) return super.onSearchRequested()
+        startVoiceSearch()
+        return true
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -266,7 +293,9 @@ class MainActivity : ComponentActivity() {
                 onOpenWeather = if (Edition.LIVE_TV) ({ if (!Plans.ask("Weather", Plans.Feature.Weather)) showWeather = true }) else null,
                 onWatch = viewModel::watched,
                 onOpenGuide = if (Edition.LIVE_TV) ({ if (!Plans.ask("TV guide", Plans.Feature.Guide)) showGuide = true }) else null,
-                onVoiceSearch = if (Edition.LIVE_TV) ::startVoiceSearch else null,
+                // The owner wants voice on the remote's mic key, as in Google's apps; this button goes once that is
+                // proven on his TV (2026-10-10).
+                onVoiceSearch = if (Edition.LIVE_TV && voiceAvailable) ::startVoiceSearch else null,
                 searchWake = viewModel.searchWake,
                 onReport = if (Edition.LIVE_TV) ({ Extras.reportBroken(this@MainActivity, it) }) else null,
             )
@@ -275,6 +304,7 @@ class MainActivity : ComponentActivity() {
         if (Edition.LIVE_TV) {
             if (showSleep) SleepTimerDialog(onDismiss = { showSleep = false })
             if (showWidgets) WidgetsDialog(onDismiss = { showWidgets = false })
+            if (showVoice) VoiceSearchDialog(onSpoken = viewModel::spoken, onDismiss = { showVoice = false })
             ReminderPopup(onWatch = { url ->
                 state.channels.firstOrNull { it.url == url }?.let { c ->
                     showGuide = false
@@ -481,3 +511,4 @@ class MainActivity : ComponentActivity() {
 
 /** Request code for the TV speech screen (voice search). */
 private const val VOICE_SEARCH = 4207
+private val SEARCH_ACTIONS = setOf(Intent.ACTION_SEARCH, MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)

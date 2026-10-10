@@ -1,374 +1,360 @@
 {
  "name": "Spark TV One",
  "logo": "https://tv.bulkbazaar.ca/channel/logos/spark-tv.png",
- "logoCorner": "tr",
+ "logoCorner": "off",
  "active": true,
  "tz": "America/Toronto",
- "ticker": "Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise",
+ "ticker": "Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise  ·  اسپارک ٹی وی میں خوش آمدید  ·  نئے پاکستانی ڈرامے پہلی قسط سے، ہر روز نئی قسط  ·  اپنا اشتہار دیں: واٹس ایپ 437 602 6500",
  "tickerOn": true,
  "videos": [
   {
    "id": "welcome",
-   "title": "اسپارک ٹی وی میں خوش آمدید",
+   "title": "Welcome to Spark TV · اسپارک ٹی وی میں خوش آمدید",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-welcome.mp4",
    "secs": 10,
    "kind": "ident"
   },
   {
    "id": "break",
-   "title": "وقفہ",
+   "title": "Break · وقفہ",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-break.mp4",
    "secs": 5,
    "kind": "ident"
   },
   {
    "id": "next",
-   "title": "اگلا پروگرام",
+   "title": "Up next · اگلا پروگرام",
    "url": "https://tv.bulkbazaar.ca/channel/media/ident-coming-up.mp4",
    "secs": 8,
    "kind": "ident"
   },
   {
    "id": "adhere",
-   "title": "اشتہار: اسپارک ٹی وی پر اشتہار دیں",
+   "title": "Advertise on Spark TV · اسپارک ٹی وی پر اشتہار دیں",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-advertise-here.mp4",
    "secs": 15,
    "kind": "ad"
   },
   {
    "id": "promo",
-   "title": "کیبل ٹی وی",
+   "title": "Cable TV · کیبل ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-7.mp4",
    "secs": 60,
    "kind": "ad"
   },
   {
    "id": "promo2",
-   "title": "کیبل ٹی وی گولڈ",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-8.mp4",
    "secs": 30,
    "kind": "ad"
   },
   {
    "id": "news-headlines",
-   "title": "Spark TV News: Headlines",
+   "title": "Spark TV News: Headlines · خبروں کی سرخیاں",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines.mp4",
    "secs": 180,
    "kind": "programme"
   },
   {
    "id": "news-full",
-   "title": "Spark TV News: The Full Report",
+   "title": "Spark TV News: The Full Report · تفصیلی خبرنامہ",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full.mp4",
    "secs": 600,
    "kind": "programme"
   },
   {
    "id": "adbreak",
-   "title": "اشتہارات",
+   "title": "Ads · اشتہارات",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-d.mp4",
    "secs": 60,
    "kind": "ad"
   },
   {
    "id": "ad9",
-   "title": "کیبل ٹی وی",
+   "title": "Cable TV · کیبل ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-9.mp4",
    "secs": 15,
    "kind": "ad"
   },
   {
    "id": "adbreak-c",
-   "title": "اشتہارات",
+   "title": "Ads · اشتہارات",
    "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-c.mp4",
    "secs": 60,
    "kind": "ad"
   },
   {
    "id": "segment",
-   "title": "وقفہ: آج کے پروگرام اور موسم",
+   "title": "Break: today's programmes and weather · وقفہ: آج کے پروگرام اور موسم",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/segment.mp4",
    "secs": 300,
    "kind": "programme"
   },
   {
    "id": "news-headlines-day",
-   "title": "Spark TV News: Headlines",
+   "title": "Spark TV News: Headlines · خبروں کی سرخیاں",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-day.mp4",
    "secs": 180,
    "kind": "programme"
   },
   {
    "id": "news-headlines-night",
-   "title": "Spark TV News: Headlines",
+   "title": "Spark TV News: Headlines · خبروں کی سرخیاں",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-headlines-night.mp4",
    "secs": 180,
    "kind": "programme"
   },
   {
    "id": "news-full-day",
-   "title": "Spark TV News: The Full Report",
+   "title": "Spark TV News: The Full Report · تفصیلی خبرنامہ",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full-day.mp4",
    "secs": 600,
    "kind": "programme"
   },
   {
    "id": "news-full-night",
-   "title": "Spark TV News: The Full Report",
+   "title": "Spark TV News: The Full Report · تفصیلی خبرنامہ",
    "url": "https://github.com/NaseerBabar786/live-tv-app/releases/download/channel-media/news-full-night.mp4",
    "secs": 600,
    "kind": "programme"
   },
   {
    "id": "spark-ident",
-   "title": "اسپارک ٹی وی",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/spark-ident.mp4",
    "secs": 20,
    "kind": "ident"
   },
   {
    "id": "spark-montage",
-   "title": "اسپارک ٹی وی",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/spark-montage.mp4",
    "secs": 30,
    "kind": "ad"
   },
   {
    "id": "spark-ad-urdu",
-   "title": "اسپارک ٹی وی",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/spark-ad-urdu.mp4",
    "secs": 30,
    "kind": "ad"
   },
   {
    "id": "spark-montage-2",
-   "title": "اسپارک ٹی وی",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/spark-montage-2.mp4",
    "secs": 20,
    "kind": "ad"
   },
   {
    "id": "spark-montage-3",
-   "title": "اسپارک ٹی وی",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/spark-montage-3.mp4",
    "secs": 20,
    "kind": "ad"
   },
   {
    "id": "spark-montage-4",
-   "title": "اسپارک ٹی وی",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/spark-montage-4.mp4",
    "secs": 20,
    "kind": "ad"
   },
   {
    "id": "spark-montage-5",
-   "title": "اسپارک ٹی وی",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/spark-montage-5.mp4",
    "secs": 20,
    "kind": "ad"
   },
   {
    "id": "spark-montage-6",
-   "title": "اسپارک ٹی وی",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/spark-montage-6.mp4",
    "secs": 20,
    "kind": "ad"
   },
   {
    "id": "spark-montage-7",
-   "title": "اسپارک ٹی وی",
+   "title": "Spark TV · اسپارک ٹی وی",
    "url": "https://tv.bulkbazaar.ca/media/spark-montage-7.mp4",
    "secs": 20,
    "kind": "ad"
   },
   {
-   "id": "c1-1-P4zyZAl30To",
-   "title": "Mitti De Baway Ep 01 (Sub) 23 Sep 26 | Digitally VGO TEL, Happilac Paints & Vince Shampoo | Green TV",
-   "url": "https://www.youtube.com/watch?v=P4zyZAl30To",
-   "secs": 1920,
+   "id": "c1-1-sEms255DVP8",
+   "title": "Mitti De Baway · Episode 2 · مٹی دے باوے: قسط 2",
+   "url": "https://www.youtube.com/watch?v=sEms255DVP8",
+   "secs": 2101,
    "kind": "programme"
   },
   {
    "id": "c1-1-7V-6AUGBgBY",
-   "title": "Achha Sila Diya 8K Video Song | Jaani,B Praak | Nora F,Rajkummar R | Nikhil-Vinay,Yogesh |Bhushan K",
+   "title": "Song · گانا · Achha Sila Diya 8K Video Song | Jaani,B Praak | Nora F,Rajkummar R | Nikhil-Vinay,Yogesh |Bhushan K",
    "url": "https://www.youtube.com/watch?v=7V-6AUGBgBY",
-   "secs": 319,
+   "secs": 316,
    "kind": "programme"
   },
   {
-   "id": "c1-1-e-1zjovjWiA",
-   "title": "Dil | Coke Studio Nu.WAV | Afusic x Zoha Waseem x Ali Soomro",
-   "url": "https://www.youtube.com/watch?v=e-1zjovjWiA",
-   "secs": 188,
+   "id": "c1-2-KxPcUdOo2_Y",
+   "title": "Uswah · Episode 2 · اسوہ: قسط 2",
+   "url": "https://www.youtube.com/watch?v=KxPcUdOo2_Y",
+   "secs": 2382,
    "kind": "programme"
   },
   {
-   "id": "c1-2-v94Gz57T0UY",
-   "title": "Uswah Episode 01 [Eng Sub] Omer Shahzad - Saniya Shamshad - Haroon Shahid | 23rd September 2026",
-   "url": "https://www.youtube.com/watch?v=v94Gz57T0UY",
-   "secs": 2557,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-2-8Ix-ekSoEdY",
-   "title": "Rangeen | Coke Studio Nu.WAV | Hasan Raheem x Izzchughtai x Umair",
-   "url": "https://www.youtube.com/watch?v=8Ix-ekSoEdY",
-   "secs": 235,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-3-v6URzqhk61g",
-   "title": "Betiyaan Episode 37 | Fatima Effendi | Mah-e-Noor Haider | ARY Zindagi Drama",
-   "url": "https://www.youtube.com/watch?v=v6URzqhk61g",
-   "secs": 2271,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-3-XWwGY0c5-ro",
-   "title": "Dil Dhadkaye - Full Video | I'm Game (Hindi) | Dulquer Salmaan, Kayadu | Armaan Malik, Jakes Bejoy",
+   "id": "c1-2-XWwGY0c5-ro",
+   "title": "Song · گانا · Dil Dhadkaye - Full Video | I'm Game (Hindi) | Dulquer Salmaan, Kayadu | Armaan Malik, Jakes Bejoy",
    "url": "https://www.youtube.com/watch?v=XWwGY0c5-ro",
    "secs": 294,
    "kind": "programme"
   },
   {
-   "id": "c1-3-Bgj-oDQcxac",
-   "title": "Slap Song - Full Video | I'm Game (Hindi) | Dulquer Salmaan & Kayadu | Jakes Bejoy, Bilal Q, Numan K",
-   "url": "https://www.youtube.com/watch?v=Bgj-oDQcxac",
-   "secs": 227,
+   "id": "c1-3-uuZQ-JgKT2s",
+   "title": "Mohabbat · Episode 1 · محبت: قسط 1",
+   "url": "https://www.youtube.com/watch?v=uuZQ-JgKT2s",
+   "secs": 2303,
    "kind": "programme"
   },
   {
-   "id": "c1-4-xNqlw__CeSA",
-   "title": "Tark-e-Tamanna - Episode 01 [Eng Sub] | 28th Sep 2026 | ft. Mirza Zain Baig & Janice Tessa | HUM TV",
-   "url": "https://www.youtube.com/watch?v=xNqlw__CeSA",
-   "secs": 2079,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-4-bjzGEuQN0F4",
-   "title": "Loser Song - Full Video | I'm Game (Hindi) | Dulquer Salmaan | Benny Dayal, Jakes B, Reble, Neeraj M",
+   "id": "c1-3-bjzGEuQN0F4",
+   "title": "Song · گانا · Loser Song - Full Video | I'm Game (Hindi) | Dulquer Salmaan | Benny Dayal, Jakes B, Reble, Neeraj M",
    "url": "https://www.youtube.com/watch?v=bjzGEuQN0F4",
    "secs": 280,
    "kind": "programme"
   },
   {
-   "id": "c1-4-PVKNl9UsmZg",
-   "title": "Arziyaan 8K Full Video Song | Jigariyaa | Harshvardhan Deo | Cherry Mardia | Vikrant B | Aishwarya M",
+   "id": "c1-3-PVKNl9UsmZg",
+   "title": "Song · گانا · Arziyaan 8K Full Video Song | Jigariyaa | Harshvardhan Deo | Cherry Mardia | Vikrant B | Aishwarya M",
    "url": "https://www.youtube.com/watch?v=PVKNl9UsmZg",
-   "secs": 261,
+   "secs": 260,
    "kind": "programme"
   },
   {
-   "id": "c1-4-4o5508kTdT8",
-   "title": "Coke Studio Nu.WAV",
-   "url": "https://www.youtube.com/watch?v=4o5508kTdT8",
-   "secs": 147,
+   "id": "c1-4-vCZ2KOFyeHY",
+   "title": "Tark-e-Tamanna · Episode 2 · ترکِ تمنا: قسط 2",
+   "url": "https://www.youtube.com/watch?v=vCZ2KOFyeHY",
+   "secs": 2085,
    "kind": "programme"
   },
   {
-   "id": "c1-5-5U6xxaGYpbw",
-   "title": "Mohabbat ya Aitebar | Episode 1 | Adnan Siddiqui, Samia & Nausheen | New Pakistani Drama",
-   "url": "https://www.youtube.com/watch?v=5U6xxaGYpbw",
-   "secs": 1906,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-5-llLHwxkZ02k",
-   "title": "Namit Malhotra’s Ramayana - Hindi Trailer | Nitesh Tiwari | Ranbir, Yash, Hans Zimmer, A.R.Rahman",
+   "id": "c1-4-llLHwxkZ02k",
+   "title": "Trailer · فلم کا ٹریلر · Namit Malhotra’s Ramayana - Hindi Trailer | Nitesh Tiwari | Ranbir, Yash, Hans Zimmer, A.R.Rahman",
    "url": "https://www.youtube.com/watch?v=llLHwxkZ02k",
    "secs": 250,
    "kind": "programme"
   },
   {
-   "id": "c1-5-ghajr4DFmSY",
-   "title": "Maheya | Coke Studio Nu.WAV | Asim Azhar x AARYAN x Rovalio",
+   "id": "c1-4-ghajr4DFmSY",
+   "title": "Song · گانا · Maheya | Coke Studio Nu.WAV | Asim Azhar x AARYAN x Rovalio",
    "url": "https://www.youtube.com/watch?v=ghajr4DFmSY",
-   "secs": 246,
+   "secs": 249,
    "kind": "programme"
   },
   {
-   "id": "c1-6-lWyspJk5FWc",
-   "title": "Madaar Episode 01 (Subtitles) 23rd September 2026 | Humayoun Ashraf - Sumaiyya Bukhsh | Green TV",
-   "url": "https://www.youtube.com/watch?v=lWyspJk5FWc",
-   "secs": 2117,
+   "id": "c1-4-WRcIwPwlxbw",
+   "title": "Song · گانا · Hun Ishq Main - Atif Aslam ft. Yumna Zaidi | When Love Hurts The Most - Official Video",
+   "url": "https://www.youtube.com/watch?v=WRcIwPwlxbw",
+   "secs": 203,
    "kind": "programme"
   },
   {
-   "id": "c1-6-A36nagDzugo",
-   "title": "Ranabaali Official Trailer (Hindi) | Vijay Deverakonda | Rashmika | Rahul Sankrityan | Ajay-Atul",
+   "id": "c1-5-myWZTHsKcRg",
+   "title": "Mohabbat ya Aitebar · Episode 2 · محبت یا اعتبار: قسط 2",
+   "url": "https://www.youtube.com/watch?v=myWZTHsKcRg",
+   "secs": 1895,
+   "kind": "programme"
+  },
+  {
+   "id": "c1-5-8Ix-ekSoEdY",
+   "title": "Song · گانا · Rangeen | Coke Studio Nu.WAV | Hasan Raheem x Izzchughtai x Umair",
+   "url": "https://www.youtube.com/watch?v=8Ix-ekSoEdY",
+   "secs": 235,
+   "kind": "programme"
+  },
+  {
+   "id": "c1-5-A36nagDzugo",
+   "title": "Trailer · فلم کا ٹریلر · Ranabaali Official Trailer (Hindi) | Vijay Deverakonda | Rashmika | Rahul Sankrityan | Ajay-Atul",
    "url": "https://www.youtube.com/watch?v=A36nagDzugo",
-   "secs": 233,
+   "secs": 232,
+   "kind": "programme"
+  },
+  {
+   "id": "c1-6-2sVQ_0pz2w8",
+   "title": "Madaar · Episode 2 · مدار: قسط 2",
+   "url": "https://www.youtube.com/watch?v=2sVQ_0pz2w8",
+   "secs": 2079,
+   "kind": "programme"
+  },
+  {
+   "id": "c1-6-Bgj-oDQcxac",
+   "title": "Song · گانا · Slap Song - Full Video | I'm Game (Hindi) | Dulquer Salmaan & Kayadu | Jakes Bejoy, Bilal Q, Numan K",
+   "url": "https://www.youtube.com/watch?v=Bgj-oDQcxac",
+   "secs": 227,
    "kind": "programme"
   },
   {
    "id": "c1-6-SoTw56f1-OA",
-   "title": "#418 Oﬃcial Trailer - The Last Warning (Hindi) | Prashanth Neel | Kirtan N | In Cinemas Oct23rd",
+   "title": "Trailer · فلم کا ٹریلر · #418 Oﬃcial Trailer - The Last Warning (Hindi) | Prashanth Neel | Kirtan N | In Cinemas Oct23rd",
    "url": "https://www.youtube.com/watch?v=SoTw56f1-OA",
    "secs": 211,
    "kind": "programme"
   },
   {
-   "id": "c1-6-WRcIwPwlxbw",
-   "title": "Hun Ishq Main - Atif Aslam ft. Yumna Zaidi | When Love Hurts The Most - Official Video",
-   "url": "https://www.youtube.com/watch?v=WRcIwPwlxbw",
-   "secs": 201,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-7-hIxoxwFztIU",
-   "title": "Raqaas Ep 01 (Subtitle) 7 Sep 26 | Digitally Parley Cosmetics & Happilac Paints | Danyal Z - Komal M",
-   "url": "https://www.youtube.com/watch?v=hIxoxwFztIU",
-   "secs": 2014,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-7-hN_ZUElLH44",
-   "title": "Udta Teer Official Trailer | Ayushmann Khurrana & Sara Ali Khan | Akash Kaushik | In Cinemas Oct 23",
+   "id": "c1-6-hN_ZUElLH44",
+   "title": "Trailer · فلم کا ٹریلر · Udta Teer Official Trailer | Ayushmann Khurrana & Sara Ali Khan | Akash Kaushik | In Cinemas Oct 23",
    "url": "https://www.youtube.com/watch?v=hN_ZUElLH44",
-   "secs": 199,
+   "secs": 195,
+   "kind": "programme"
+  },
+  {
+   "id": "c1-7-qd0e09OhSdQ",
+   "title": "Raqaas · Episode 2 · رقاص: قسط 2",
+   "url": "https://www.youtube.com/watch?v=qd0e09OhSdQ",
+   "secs": 2130,
+   "kind": "programme"
+  },
+  {
+   "id": "c1-7-e-1zjovjWiA",
+   "title": "Song · گانا · Dil | Coke Studio Nu.WAV | Afusic x Zoha Waseem x Ali Soomro",
+   "url": "https://www.youtube.com/watch?v=e-1zjovjWiA",
+   "secs": 189,
    "kind": "programme"
   },
   {
    "id": "c1-7-2mHIX2Px24A",
-   "title": "MESS (Official Video): Arinar Black | Aditya Prakash | T-Series",
+   "title": "Song · گانا · MESS (Official Video): Arinar Black | Aditya Prakash | T-Series",
    "url": "https://www.youtube.com/watch?v=2mHIX2Px24A",
    "secs": 187,
    "kind": "programme"
   },
   {
    "id": "c1-7-vrOCv5SOTrU",
-   "title": "Jaadugari | AMAN | Official Music Video | Raah Records | New Release",
+   "title": "Song · گانا · Jaadugari | AMAN | Official Music Video | Raah Records | New Release",
    "url": "https://www.youtube.com/watch?v=vrOCv5SOTrU",
+   "secs": 181,
+   "kind": "programme"
+  },
+  {
+   "id": "c1-8-ESnSw6n9KBU",
+   "title": "Humrahi · Episode 1 · ہم راہی: قسط 1",
+   "url": "https://www.youtube.com/watch?v=ESnSw6n9KBU",
+   "secs": 2449,
+   "kind": "programme"
+  },
+  {
+   "id": "c1-8-qGbvEhKhaWA",
+   "title": "Trailer · فلم کا ٹریلر · Prahaar: The Untold Story of Ujjwal Nikam | Official Trailer | Rajkummar R | Wamiqa Gabbi | 16th Oct",
+   "url": "https://www.youtube.com/watch?v=qGbvEhKhaWA",
    "secs": 185,
    "kind": "programme"
   },
   {
-   "id": "c1-7-qGbvEhKhaWA",
-   "title": "Prahaar: The Untold Story of Ujjwal Nikam | Official Trailer | Rajkummar R | Wamiqa Gabbi | 16th Oct",
-   "url": "https://www.youtube.com/watch?v=qGbvEhKhaWA",
-   "secs": 182,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-8-FKNyF8MXByk",
-   "title": "Izzat Episode 18 | 7 October 2026 | Merub Ali | Atabik Mohsin | Hashaam Khan | ARY Digital",
-   "url": "https://www.youtube.com/watch?v=FKNyF8MXByk",
-   "secs": 2379,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-8-q5HK8lXE_aE",
-   "title": "Massacre Song | Music Video | ALPHA | Alia Bhatt, Sharvari | Rohansh & Abeer, Shilpa, Jonita, Kausar",
-   "url": "https://www.youtube.com/watch?v=q5HK8lXE_aE",
-   "secs": 175,
-   "kind": "programme"
-  },
-  {
-   "id": "c1-8-EE_DucFkXEM",
-   "title": "Mahaveer Karna Official Hindi Teaser | Ramesh Varma | Dr. Jayantilal Gada I Gnaani | Ramji Dot",
-   "url": "https://www.youtube.com/watch?v=EE_DucFkXEM",
-   "secs": 178,
+   "id": "c1-8-4o5508kTdT8",
+   "title": "Song · گانا · Coke Studio Nu.WAV",
+   "url": "https://www.youtube.com/watch?v=4o5508kTdT8",
+   "secs": 145,
    "kind": "programme"
   }
  ],
@@ -1187,66 +1173,73 @@
  "loop": [
   "spark-ident",
   "next",
-  "c1-1-P4zyZAl30To",
-  "c1-1-7V-6AUGBgBY",
-  "c1-1-e-1zjovjWiA",
-  "break",
-  "spark-ident",
-  "next",
-  "c1-2-v94Gz57T0UY",
-  "c1-2-8Ix-ekSoEdY",
-  "spark-ident",
-  "next",
-  "c1-3-v6URzqhk61g",
-  "c1-3-XWwGY0c5-ro",
-  "c1-3-Bgj-oDQcxac",
-  "spark-ident",
-  "next",
-  "c1-4-xNqlw__CeSA",
-  "spark-montage-7",
-  "c1-4-bjzGEuQN0F4",
-  "c1-4-PVKNl9UsmZg",
-  "c1-4-4o5508kTdT8",
-  "break",
-  "spark-ident",
-  "next",
-  "c1-5-5U6xxaGYpbw",
-  "spark-montage-7",
-  "c1-5-llLHwxkZ02k",
-  "break",
-  "c1-5-ghajr4DFmSY",
-  "break",
-  "spark-ident",
-  "next",
-  "c1-6-lWyspJk5FWc",
-  "adhere",
-  "c1-6-A36nagDzugo",
-  "c1-6-SoTw56f1-OA",
+  "c1-1-sEms255DVP8",
   "welcome",
-  "c1-6-WRcIwPwlxbw",
+  "c1-1-7V-6AUGBgBY",
   "break",
   "spark-ident",
   "next",
-  "c1-7-hIxoxwFztIU",
+  "c1-2-KxPcUdOo2_Y",
+  "spark-ad-urdu",
+  "c1-2-XWwGY0c5-ro",
+  "spark-ident",
+  "next",
+  "c1-3-uuZQ-JgKT2s",
+  "promo2",
+  "c1-3-bjzGEuQN0F4",
+  "c1-3-PVKNl9UsmZg",
+  "break",
+  "spark-ident",
+  "next",
+  "c1-4-vCZ2KOFyeHY",
+  "break",
+  "c1-4-llLHwxkZ02k",
+  "c1-4-ghajr4DFmSY",
+  "c1-4-WRcIwPwlxbw",
+  "spark-ident",
+  "next",
+  "c1-5-myWZTHsKcRg",
+  "spark-ad-urdu",
+  "c1-5-8Ix-ekSoEdY",
+  "spark-ad-urdu",
+  "c1-5-A36nagDzugo",
+  "welcome",
+  "spark-ident",
+  "next",
+  "c1-6-2sVQ_0pz2w8",
+  "promo2",
+  "c1-6-Bgj-oDQcxac",
+  "promo2",
+  "c1-6-SoTw56f1-OA",
   "adhere",
-  "c1-7-hN_ZUElLH44",
-  "break",
-  "c1-7-2mHIX2Px24A",
-  "c1-7-vrOCv5SOTrU",
-  "c1-7-qGbvEhKhaWA",
+  "c1-6-hN_ZUElLH44",
   "break",
   "spark-ident",
   "next",
-  "c1-8-FKNyF8MXByk",
-  "spark-ad-urdu",
-  "c1-8-q5HK8lXE_aE",
-  "spark-ad-urdu",
-  "c1-8-EE_DucFkXEM"
+  "c1-7-qd0e09OhSdQ",
+  "spark-montage-2",
+  "welcome",
+  "c1-7-e-1zjovjWiA",
+  "welcome",
+  "c1-7-2mHIX2Px24A",
+  "spark-montage-2",
+  "spark-montage-2",
+  "welcome",
+  "c1-7-vrOCv5SOTrU",
+  "adhere",
+  "spark-ident",
+  "next",
+  "c1-8-ESnSw6n9KBU",
+  "next",
+  "c1-8-qGbvEhKhaWA",
+  "c1-8-4o5508kTdT8",
+  "break"
  ],
  "fillers": [
   "promo2",
   "adhere",
   "spark-ad-urdu",
   "next"
- ]
+ ],
+ "bilingual": true
 }

@@ -1,11 +1,107 @@
 {
- "updated": "2026-10-09T21:25Z",
+ "updated": "2026-10-10T21:23Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
   "AccuWeather": "UCuYqi3hOfz6-3Hdp6tEJjAg"
  },
  "videos": [
+  {
+   "id": "ywo4iiIb_T0",
+   "title": "How an Ontario tornado warning and frost advisory occurred together | #fallweather",
+   "channel": "The Weather Network",
+   "published": 1791662422
+  },
+  {
+   "id": "iBg2w9yfu-Y",
+   "title": "Raw Power of This Storm Caught on Camera by AccuWeather reporters",
+   "channel": "AccuWeather",
+   "published": 1791660093
+  },
+  {
+   "id": "LwfWt3FaflE",
+   "title": "Man clings to overturned truck as flash flood sweeps vehicles away in Chile!",
+   "channel": "AccuWeather",
+   "published": 1791659559
+  },
+  {
+   "id": "PHDm1E6RRW0",
+   "title": "Panicked people flee supermarket as powerful earthquake hits Panama | #earthquake",
+   "channel": "The Weather Network",
+   "published": 1791658830
+  },
+  {
+   "id": "Ph-EVpW3Vxw",
+   "title": "Monarch migrations are changing, with new weather patterns to blame | #butterfly",
+   "channel": "The Weather Network",
+   "published": 1791655239
+  },
+  {
+   "id": "Oa0EWVKFXBI",
+   "title": "The Hurricane Isaias storm damage in Fort Walton Beach you have to see",
+   "channel": "AccuWeather",
+   "published": 1791654327
+  },
+  {
+   "id": "ESKJRmSAoMo",
+   "title": "This Is What Hurricane Isaias Left Behind",
+   "channel": "AccuWeather",
+   "published": 1791650369
+  },
+  {
+   "id": "qEWbbv93Rj0",
+   "title": "First cold event of the season brings snow to the Prairies | #forecast",
+   "channel": "The Weather Network",
+   "published": 1791641734
+  },
+  {
+   "id": "Oo36YIvWuQA",
+   "title": "How Hurricane Isaias impacts Canada's Thanksgiving | #isaias",
+   "channel": "The Weather Network",
+   "published": 1791640824
+  },
+  {
+   "id": "R7uNyZMnEjM",
+   "title": "Flamingos Shelter in Bathroom During Hurricane Isaias",
+   "channel": "AccuWeather",
+   "published": 1791637244
+  },
+  {
+   "id": "Olf-gW4ZNRk",
+   "title": "Hurricane Isaias: Post-landfall remnants head toward Canada | #hurricane",
+   "channel": "The Weather Network",
+   "published": 1791633688
+  },
+  {
+   "id": "UeOwsgjwpT4",
+   "title": "Canada's Daily Forecast - October 10, 2026 | #weatheram",
+   "channel": "The Weather Network",
+   "published": 1791632496
+  },
+  {
+   "id": "1ChMhywvqoQ",
+   "title": "FIVE tips for navigating foggy roads safely this fall",
+   "channel": "The Weather Network",
+   "published": 1791626440
+  },
+  {
+   "id": "0Sw6A6EXyhU",
+   "title": "LIVE: Hurricane Isaias With Storm Chasers - Gulf Coast Oct. 9",
+   "channel": "AccuWeather",
+   "published": 1791601930
+  },
+  {
+   "id": "KjShK6nri4Y",
+   "title": "This Hotel Roof Didn't Stand A Chance Against Isaias",
+   "channel": "AccuWeather",
+   "published": 1791600952
+  },
+  {
+   "id": "4jZZoDSd5m8",
+   "title": "Traffic cams catch moment flash flood hits cars on busy street | #flashflood",
+   "channel": "The Weather Network",
+   "published": 1791583227
+  },
   {
    "id": "WssmZ-dN0Sw",
    "title": "Rare tropical storm takes aim at California coast | #tropicalstorm",
@@ -49,52 +145,10 @@
    "published": 1791557054
   },
   {
-   "id": "UNJ4bP_NNSo",
-   "title": "Hurricane Isaias reached Category 3 intensity on Friday morning, officially major hurricane status",
-   "channel": "The Weather Network",
-   "published": 1791556574
-  },
-  {
-   "id": "0Sw6A6EXyhU",
-   "title": "LIVE: Hurricane Isaias With Storm Chasers - Gulf Coast Oct. 9",
-   "channel": "AccuWeather",
-   "published": 1791553238
-  },
-  {
    "id": "3BPxvcoGnx8",
    "title": "Cat 3 Hurricane Isaias Is Coming for the Gulf Coast. Are You Ready?",
    "channel": "AccuWeather",
    "published": 1791552777
-  },
-  {
-   "id": "uWMrNuOKyKw",
-   "title": "Swap out these 4 foods to help boost your immune system this season",
-   "channel": "The Weather Network",
-   "published": 1791540021
-  },
-  {
-   "id": "Wu90UrxA0v4",
-   "title": "Canada's Daily Forecast - October 9, 2026  | #WeatherAM",
-   "channel": "The Weather Network",
-   "published": 1791536409
-  },
-  {
-   "id": "oIeP3pAayno",
-   "title": "Canada's Thanksgiving long weekend forecast: snow, rain or sunshine? | #thanksgiving",
-   "channel": "The Weather Network",
-   "published": 1791505816
-  },
-  {
-   "id": "F_n-wrg9kZA",
-   "title": "Thanksgiving weekend to bring first flakes to the Prairies | #snow",
-   "channel": "The Weather Network",
-   "published": 1791504074
-  },
-  {
-   "id": "hAo3Pxyyb5w",
-   "title": "October's drastic daylight change across Canada | #darkwinter",
-   "channel": "The Weather Network",
-   "published": 1791487806
   },
   {
    "id": "KsNciDVzeXU",
@@ -139,42 +193,6 @@
    "published": 1791386983
   },
   {
-   "id": "5NQ8nFgwvBw",
-   "title": "Former Hurricane May Stop Southern California's Heat Wave",
-   "channel": "AccuWeather",
-   "published": 1791325808
-  },
-  {
-   "id": "fXCqC5CDsO4",
-   "title": "What it’s actually like on the Bering Sea: HUGE Waves!",
-   "channel": "AccuWeather",
-   "published": 1791317804
-  },
-  {
-   "id": "1xGzK7y_33E",
-   "title": "The Forecast Feed: First Hurricane of the season expected to form this week",
-   "channel": "AccuWeather",
-   "published": 1791309618
-  },
-  {
-   "id": "bgrQuin71KM",
-   "title": "Wedding Guests Saved the Day from Flooding With CHAIRS?🌊",
-   "channel": "AccuWeather",
-   "published": 1791305085
-  },
-  {
-   "id": "86HqPyuO_Cc",
-   "title": "Will Isaias become a hurricane? Tracking the latest Gulf storm",
-   "channel": "AccuWeather",
-   "published": 1791304128
-  },
-  {
-   "id": "A3LM6bHskB0",
-   "title": "Flash Floods Devastate Towns in Spain",
-   "channel": "AccuWeather",
-   "published": 1791223346
-  },
-  {
    "id": "ed2fIOYIWms",
    "title": "Powerful Nor'easter Batters East Coast",
    "channel": "The Weather Channel",
@@ -185,18 +203,6 @@
    "title": "Mike Bettes Shows Severe Coastal Flooding in New Jersey",
    "channel": "The Weather Channel",
    "published": 1790519964
-  },
-  {
-   "id": "QDFwlhUNKj0",
-   "title": "Mike Bettes Live In Atlantic City As Nor'easter Hits Jersey Shore",
-   "channel": "The Weather Channel",
-   "published": 1790433764
-  },
-  {
-   "id": "71U3wgyac14",
-   "title": "Hurricane Nolo Tracking Toward Hawaii: Catastrophic Flooding Threatens Big Island",
-   "channel": "The Weather Channel",
-   "published": 1790377850
   }
  ]
 }
