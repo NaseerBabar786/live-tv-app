@@ -120,7 +120,10 @@ function fallBack() {
   // Spark Gurbani (noBackup): never another channel's music in its place; a wait card, then try again.
   if (station.noBackup) return holdOn();
   if (app) location.href = "livetv://fallback";
-  else location.replace(`./?c=${station.id}`);
+  // Inside the channel page's player box: the whole page switches to the free films, instead of
+  // loading the channel page inside its own player box again and again.
+  else if (window.top !== window) window.top.location.replace(`./?c=${station.id}&films=1`);
+  else location.replace(`./?c=${station.id}&films=1`);
 }
 
 function holdOn() {

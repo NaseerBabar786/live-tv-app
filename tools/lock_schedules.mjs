@@ -41,7 +41,8 @@ for (const st of STATIONS.filter(s => s.yt)) {
   const breaks = st.noAds ? [] : promos.concat(sp.promos);
   const make = date => dayPlan(st, { list, picks: picks[st.id] || null, promos: breaks, trailers, own, ident: sp.ident }, date).map(slim);
   const mine = await loadOwnerDays(st.id);
-  days[today] = mine[today]?.items || old.days?.[today] || make(today);
+  // An empty locked day (nothing was approved when it was made) is made again.
+  days[today] = mine[today]?.items || (old.days?.[today]?.length ? old.days[today] : make(today));
   const nextDay = torontoDay(Date.now() + 24 * 3600e3).date;
   if (mine[nextDay]?.items) days[nextDay] = mine[nextDay].items;
   else if (tomorrow && old.days?.[tomorrow]) days[tomorrow] = old.days[tomorrow];

@@ -38,7 +38,10 @@ export const REVIEW_FROM = "2026-10-07";
  * found up to the date counts as approved, like pressing Studio > Library > Approve all new > Save then.
  * Videos found later wait for the owner's review as usual; his own picks (on/out/off) still win.
  */
-export const APPROVED_UNTIL = { comedyur: "2026-10-10", comedypa: "2026-10-10", auto: "2026-10-10", autohi: "2026-10-10" };
+// sur, musicur, sports, travel, hindidramas (2026-10-10, owner "fix that"): their lists were rebuilt on 10-09,
+// nothing was approved, and their days came out empty (61 Spark Music Punjabi showed no video).
+export const APPROVED_UNTIL = { comedyur: "2026-10-10", comedypa: "2026-10-10", auto: "2026-10-10", autohi: "2026-10-10",
+  sur: "2026-10-10", musicur: "2026-10-10", sports: "2026-10-10", travel: "2026-10-10", hindidramas: "2026-10-10" };
 /** [picks] (all channels) with each channel's [APPROVED_UNTIL] date added as its pick's "until". */
 export function withApprovals(picks) {
   const all = { ...(picks || {}) };
@@ -485,8 +488,12 @@ export function dayPlan(station, { list, picks, promos = [], trailers = [], own 
   const day = Math.floor(Date.parse(date + "T00:00:00Z") / 86400000);
   const from = own.length ? (day * 24) % own.length : 0;
   own = own.slice(from).concat(own.slice(0, from));
-  if (station.halfHours) return halfHourDay(station, list.filter(v => playable(v, picks)), date, promos, own, ident);
-  const items = withBreaks(runningOrder(station, list.filter(v => playable(v, picks)), date), station, promos, trailers, own, ident);
+  // A channel with nothing approved yet (every video still waiting for review, as on a channel whose list was
+  // rebuilt) plays its waiting videos rather than going blank; removed ones stay off (2026-10-10, 61 was empty).
+  let ok = list.filter(v => playable(v, picks));
+  if (!ok.length) ok = list.filter(v => status(v, picks) === "new");
+  if (station.halfHours) return halfHourDay(station, ok, date, promos, own, ident);
+  const items = withBreaks(runningOrder(station, ok, date), station, promos, trailers, own, ident);
   // One day is enough (25 hours covers the day the clocks go back); a shorter list repeats round the clock.
   let t = 0;
   const end = items.findIndex(x => (t += x.secs) >= 25 * 3600);
