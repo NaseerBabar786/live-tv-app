@@ -674,6 +674,52 @@ def upload_dates(chan):
     return dict(re.findall(r"<yt:videoId>([\w-]{11})</yt:videoId>.*?<published>(\d{4}-\d\d-\d\d)", feed, re.S))
 
 
+# Lists that keep only videos with no other channel's logo burned in (the owner's wish, 2026-10-10:
+# programmes with no other branding). tools/logo_check.py looks at three stills of each video.
+CLEAN = {"english", "teens", "travel", "auto", "comedyen"}
+CLEAN_MIN = 20  # fewer logo-free videos than this: the list stays as it was, so the channel never runs dry
+
+
+def logo_results(ids=None):
+    """{video id: result} from docs/channel/logo-check.json; with ids, those not checked yet are checked first."""
+    try:
+        import logo_check
+        if ids:
+            cache = logo_check.load_cache()
+            logo_check.check(ids, cache)
+            logo_check.save_cache(cache)
+            return cache["videos"]
+        return logo_check.load_cache()["videos"]
+    except Exception as e:  # noqa: BLE001  (no Pillow, or YouTube's stills out of reach)
+        print(f"Logo check: {e}", file=sys.stderr)
+        return {}
+
+
+def keep_clean(each, vids):
+    """Marks the logo-free videos ("clean": our Spark logo shows on them); on a CLEAN list, keeps only those."""
+    results = logo_results([v["id"] for v in vids] if each in CLEAN else None)
+    # An uploader that stamps its logo on many of its videos counts as stamping all of them: the check
+    # can miss a faint or part-time logo, and such an uploader's "clean" ones are usually misses.
+    seen, stamped = {}, {}
+    for v in vids:
+        if v["id"] in results:
+            seen[v["label"]] = seen.get(v["label"], 0) + 1
+            stamped[v["label"]] = stamped.get(v["label"], 0) + bool(results[v["id"]]["logo"])
+    branded = {label for label, n in seen.items() if n >= 3 and stamped[label] / n >= 0.2}
+    for v in vids:
+        v.pop("clean", None)
+        if results.get(v["id"], {}).get("logo") is False and v["label"] not in branded:
+            v["clean"] = True
+    if each not in CLEAN:
+        return vids
+    clean = [v for v in vids if v.get("clean")]
+    if len(clean) < CLEAN_MIN:
+        print(f"{each}: only {len(clean)} logo-free videos; keeping all {len(vids)}.", file=sys.stderr)
+        return vids
+    SUMMARIES.append(f"{each}: {len(clean)} logo-free of {len(vids)}")
+    return clean
+
+
 def build(cid, ch, today):
     out = os.path.join(ROOT, "docs", "channel", f"yt-{cid}.json")
     split = ch.get("split") or {}
@@ -800,6 +846,7 @@ def build(cid, ch, today):
         lists = {each: [v for v in videos if v.get("lang") == code] for code, each in split.items()}
     wrote = False
     for each, vids in lists.items():
+        vids = keep_clean(each, vids)
         name = ch["name"] if each == cid else f"{ch['name']} ({each})"
         summary = f"{name}: {len(vids)} videos" + (f" ({', '.join(counts)})" if each == cid else "")
         if ch.get("events") or ch.get("recent_years"):
@@ -833,6 +880,10 @@ def merge_latest():
         path = os.path.join(ROOT, "docs", "channel", f"yt-{each}.json")
         data = json.load(open(path, encoding="utf-8")) if os.path.exists(path) else {"name": f"Latest Movies ({each})", "videos": []}
         new = [dict(v, top=True, latest=True) for v in latest if v.get("lang") == code]
+        if each in CLEAN:
+            # (Newest films join a logo-free channel only when they are logo-free too.)
+            results = logo_results([v["id"] for v in new])
+            new = [dict(v, clean=True) for v in new if results.get(v["id"], {}).get("logo") is False]
         ids = {v["id"] for v in new}
         rest = [v for v in data["videos"] if not v.get("latest") and v["id"] not in ids]
         if not new and len(rest) == len(data["videos"]):

@@ -173,17 +173,20 @@ const lengthOf = v => lengthIn(v, station);
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
 let corners = { default: "tr", labels: {} }, bugLabel = null;
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(bugLabel); }).catch(() => {});
-function placeBug(label) {
+let bugClean = false;
+function placeBug(label, clean = bugClean) {
   bugLabel = label;
+  bugClean = clean;
   // A video showing its own logo shows none of ours (owner, 2026-10-10: every channel; logo-corners.json).
-  const hide = (corners.hideOnSourceLogo || []).includes("ytc") && !(corners.noLogo || []).includes(label);
+  // A video the logo check found clean (tools/logo_check.py, "clean" in the list) keeps ours.
+  const hide = (corners.hideOnSourceLogo || []).includes("ytc") && !(corners.noLogo || []).includes(label) && !clean;
   const corner = hide ? "off" : corners.labels?.[label] || corners.default || "tr";
   document.querySelector(".bug").className = "bug " + corner;
 }
 function showNow() {
   const v = items[cur]?.v;
   if (!v) return;
-  placeBug(v.label);
+  placeBug(v.label, !!v.clean);
   $("now").innerHTML = "<span></span><small></small>";
   // A long mushaira in 25-minute parts: "Part 2" (in Urdu on our Urdu channel).
   $("now").firstChild.textContent = v.title + (items[cur].part ? (station.nameUrdu ? ` · حصہ ${items[cur].part}` : ` · Part ${items[cur].part}`) : "");
