@@ -38,7 +38,12 @@ jobs:
           pip install -q modal edge-tts "rembg[cpu]" pillow numpy
           mkdir -p job
           curl -fsSL -m 120 -o job/reader.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$READER.jpg"
-          edge-tts --voice ur-PK-UzmaNeural --text "السلام علیکم، اسپارک ٹی وی نیوز میں خوش آمدید۔ میں ہوں ثنا، اور یہ ہیں اس وقت کی اہم خبریں۔ کینیڈا، پاکستان اور دنیا بھر کی تازہ ترین خبریں، ہمارے ساتھ۔" --write-media job/voice.mp3
+          # v2: livelier voice, each phrase at its own speed (owner: too slow and flat)
+          python tools/news/modal/lively_voice.py job/voice.mp3 ur-PK-UzmaNeural \
+            "+10%|+3Hz|السلام علیکم، اسپارک ٹی وی نیوز میں خوش آمدید۔" \
+            "+18%|+0Hz|میں ہوں ثنا، اور یہ ہیں اس وقت کی اہم خبریں۔" \
+            "+24%|+2Hz|کینیڈا، پاکستان اور دنیا بھر کی تازہ ترین خبریں،" \
+            "+8%|-2Hz|ہمارے ساتھ۔"
           # v2: real-camera look (blurred studio, no garbled screen text)
           python tools/news/modal/real_bg.py job/reader.jpg job/reader-real.jpg
           ffprobe -v error -show_entries format=duration -of csv=p=0 job/voice.mp3
