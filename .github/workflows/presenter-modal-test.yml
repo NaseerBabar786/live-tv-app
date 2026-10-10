@@ -9,7 +9,8 @@ on:
   workflow_dispatch:
     inputs:
       reader: {description: "Reader picture id on channel-media", default: "anchor-1q"}
-      resolution: {description: "480p or 720p", default: "480p"}
+      resolution: {description: "480p or 720p", default: "720p"}
+      tag: {description: "Name suffix for the result files", default: "v2"}
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -18,7 +19,8 @@ jobs:
       contents: write
     env:
       READER: ${{ inputs.reader || 'anchor-1q' }}
-      RES: ${{ inputs.resolution || '480p' }}
+      RES: ${{ inputs.resolution || '720p' }}
+      TAG: ${{ inputs.tag || 'v2' }}
       MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
       MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
       GH_TOKEN: ${{ github.token }}
@@ -33,18 +35,21 @@ jobs:
         run: |
           set -eu
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-          pip install -q modal edge-tts
+          pip install -q modal edge-tts "rembg[cpu]" pillow numpy
           mkdir -p job
           curl -fsSL -m 120 -o job/reader.jpg "https://github.com/$GITHUB_REPOSITORY/releases/download/channel-media/$READER.jpg"
           edge-tts --voice ur-PK-UzmaNeural --text "السلام علیکم، اسپارک ٹی وی نیوز میں خوش آمدید۔ میں ہوں ثنا، اور یہ ہیں اس وقت کی اہم خبریں۔ کینیڈا، پاکستان اور دنیا بھر کی تازہ ترین خبریں، ہمارے ساتھ۔" --write-media job/voice.mp3
+          # v2: real-camera look (blurred studio, no garbled screen text)
+          python tools/news/modal/real_bg.py job/reader.jpg job/reader-real.jpg
           ffprobe -v error -show_entries format=duration -of csv=p=0 job/voice.mp3
       - name: Make the clip on Modal
         run: |
           set -euo pipefail
-          modal run tools/news/modal/longcat_avatar.py --image job/reader.jpg --audio job/voice.mp3 \
-            --resolution "$RES" --out "job/news-longcat-test-$READER.mp4" \
-            --prompt "A beautiful Pakistani woman TV news anchor in her late twenties with long dark hair, wearing an elegant embroidered maroon shalwar kameez with a light dupatta, sits upright at a glossy news desk in a bright modern television news studio and is speaking calmly and clearly to the camera, reading the news with natural lip movements, gentle head movements and blinks, small natural hand movements on the desk, static camera, realistic broadcast footage" 2>&1 | tee "job/news-longcat-test-$READER.log"
+          modal run tools/news/modal/longcat_avatar.py --image job/reader-real.jpg --audio job/voice.mp3 \
+            --resolution "$RES" --out "job/news-longcat-test-$READER-$TAG.mp4" \
+            --prompt "A Pakistani woman TV news anchor in her late twenties with long dark hair, wearing an embroidered maroon shalwar kameez with a light dupatta, sits upright at a news desk in a real television studio, the background softly out of focus. She reads the news to the camera in a calm, composed, professional way: natural mouth movement matching her words, steady expression, gentle blinks, very small natural head movements, both hands stay still on the desk, no hand gestures, no exaggerated expressions, static camera, real broadcast camera footage, natural skin texture" 2>&1 | tee "job/news-longcat-test-$READER-$TAG.log"
       - name: Upload
         if: always()
         run: |
-          ls job/news-longcat-test-* 2>/dev/null && gh release upload channel-media job/news-longcat-test-* -R "$GITHUB_REPOSITORY" --clobber || echo "nothing to upload"
+          ls job/news-longcat-test-*-$TAG* 2>/dev/null && cp job/reader-real.jpg "job/news-longcat-test-$READER-$TAG.jpg" 2>/dev/null || true
+          gh release upload channel-media job/news-longcat-test-*-$TAG* -R "$GITHUB_REPOSITORY" --clobber || echo "nothing to upload"
