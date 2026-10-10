@@ -98,7 +98,8 @@ const HITS = { id: "hits", name: "Spark Hits", dial: "23", logo: "logos/spark-hi
 const station = wanted === "hits" ? HITS : STATIONS.find(x => x.id === wanted) || STATIONS.find(x => x.id === "main");
 // Channels that run on our locked YouTube page (and Hits) play in the player box here, like channel 1
 // (owner, 2026-10-09: clicking a channel must never leave the page player for a full-window page).
-const embedded = !!(station.yt || station === HITS);
+// &films=1: YouTube wouldn't play (ytc.html fell back), so the channel's free-film schedule plays here instead.
+const embedded = !!(station.yt || station === HITS) && !new URLSearchParams(location.search).has("films");
 // Spark Hits (0000) is its own page (the music labels' YouTube videos, one after another),
 // so it gets a tab between 3 and 5.
 function hitsTab() {
