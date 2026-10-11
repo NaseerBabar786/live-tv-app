@@ -46,7 +46,7 @@ for tab in "Hourly" "7 Days" "14 Days" "Maps" "News" "Video"; do
   if tab_tap "$tab"; then sleep 6; shot "tab-$(echo "$tab" | tr ' ' '-')"; fi
 done
 # A weather video plays in our locked film page, then Back comes back to the app.
-weather; if tab_tap "Video"; then sleep 6; adb shell input keyevent KEYCODE_DPAD_DOWN; adb shell input keyevent KEYCODE_DPAD_CENTER; sleep 15; shot video-playing; back; sleep 3; shot after-video; fi
+weather; if tab_tap "Video"; then sleep 8; tap_text " h ago" " d ago" " m ago" "ago"; sleep 20; shot video-playing; back; sleep 3; shot after-video; fi
 weather
 if tap_text "⚙ Settings" "Settings"; then
   shot settings
