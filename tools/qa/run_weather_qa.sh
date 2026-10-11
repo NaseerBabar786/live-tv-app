@@ -56,7 +56,9 @@ if tap_text "⚙ Settings" "Settings"; then
   back; sleep 3; shot back-from-settings
 fi
 # The morning forecast notification, fired now instead of waiting for 7 am.
-adb shell am broadcast -n "$PKG/.MorningForecast" >>"$LOG" 2>&1; sleep 25
+adb shell am broadcast -n "$PKG/.MorningForecast" >>"$LOG" 2>&1; sleep 45
+adb logcat -d -s MorningForecast | tee -a "$LOG"
+adb shell cmd statusbar expand-notifications; sleep 3; shot notifications; adb shell cmd statusbar collapse; sleep 2
 adb shell dumpsys notification --noredact 2>/dev/null | grep -A3 "pkg=$PKG" | head -20 | tee "$OUT/notification.txt" >>"$LOG"
 adb shell dumpsys notification --noredact 2>/dev/null | grep -m3 "android.title=\|android.text=" | tee -a "$OUT/notification.txt" >>"$LOG"
 # The widget provider runs its update (the home screen draws it on a real phone).
