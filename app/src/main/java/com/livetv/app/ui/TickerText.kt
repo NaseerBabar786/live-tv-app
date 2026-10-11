@@ -37,7 +37,12 @@ object TickerText {
             val words = part.replace(SPARK_TV, "").replace(SPARK, "").replace(SPACES, " ").trim()
             if (words.isNotEmpty() && words != "TV") out += words
         }
-        if (out.isEmpty()) return null
+        return out.joinToString("  ·  ").takeIf { it.isNotEmpty() }
+    }
+
+    /** [line] as it runs on screen: [clean], then NextGen Cable free for everyone and our apps at the end. */
+    fun shown(line: String?): String? {
+        val out = clean(line)?.split("  ·  ")?.toMutableList() ?: return null
         // NextGen Cable is free for everyone, and our apps follow at the end (owner, 2026-10-11).
         val cable = out.indexOfFirst { it.contains("NextGen Cable", ignoreCase = true) }
         if (cable < 0) out += "NextGen Cable, free for everyone"

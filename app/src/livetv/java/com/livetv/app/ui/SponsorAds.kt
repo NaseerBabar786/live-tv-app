@@ -149,7 +149,7 @@ private var tickerRuns = 0
  * "advertise with us" parts stay out (owner, 2026-10-11); when nothing else is left, the packages line runs every time.
  */
 private fun nextTickerLine(advertise: String): String {
-    val own = TickerText.clean(advertise)
+    val own = TickerText.shown(advertise)
     return if (own != null && tickerRuns++ % 2 == 0) own else PACKAGE_LINE
 }
 
