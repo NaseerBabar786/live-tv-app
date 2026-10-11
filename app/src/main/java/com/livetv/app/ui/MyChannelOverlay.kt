@@ -91,7 +91,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
             delay(1_000)
         }
     }
-    val ownLine = c.ticker?.takeIf { band == 0.dp && !newsOn }
+    val ownLine = TickerText.shown(c.ticker)?.takeIf { band == 0.dp && !newsOn }
     BoxWithConstraints(modifier.fillMaxSize()) {
         // Sized from the picture, so it looks the same in full screen and in a smaller player.
         val unit = maxWidth / 100
@@ -180,6 +180,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                     .padding(vertical = unit * 0.6f),
                 contentAlignment = Alignment.CenterStart,
             ) {
+                TestTransmissionBehind((unit.value * 1.9f).sp, Modifier.matchParentSize())
                 Text(
                     line,
                     color = Color.White,

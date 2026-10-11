@@ -140,12 +140,18 @@ private var nextTickerAt = 0L
  * Since 2026-10-10 (owner) everything is free: every channel and every feature, for everyone.
  */
 private const val PACKAGE_LINE =
-    "All 7,800+ channels and every feature free on NextGen Cable  ·  Full screen, every mode, Library, Games & more  ·  Advertising is free too: WhatsApp 437 602 6500"
+    "All 7,800+ channels and every feature free on NextGen Cable  ·  Full screen, every mode, Library, Games & more"
 /** How many runs the ticker has made since start, across screens, so the two lines keep taking turns. */
 private var tickerRuns = 0
 
-/** The words for the ticker's next run: the sponsors' line and the packages line, in turn. */
-private fun nextTickerLine(advertise: String): String = if (tickerRuns++ % 2 == 0) advertise else PACKAGE_LINE
+/**
+ * The words for the ticker's next run: the sponsors' line and the packages line, in turn. The line's
+ * "advertise with us" parts stay out (owner, 2026-10-11); when nothing else is left, the packages line runs every time.
+ */
+private fun nextTickerLine(advertise: String): String {
+    val own = TickerText.shown(advertise)
+    return if (own != null && tickerRuns++ % 2 == 0) own else PACKAGE_LINE
+}
 
 /**
  * One line of text that scrolls from right to left across [modifier]'s space every 30 seconds:
@@ -203,6 +209,10 @@ fun SponsorTicker(
     BoxWithConstraints(modifier.clipToBounds()) {
         if (!running) return@BoxWithConstraints
         if (everyMs > 0 || band) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.55f)))
+        TestTransmissionBehind(
+            (if (big) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleSmall).fontSize,
+            Modifier.matchParentSize().padding(bottom = lift),
+        )
         val boxWidth = constraints.maxWidth.toFloat()
         val pxPerSecond = with(LocalDensity.current) { TICKER_DP_PER_SECOND.dp.toPx() }
         var textWidth by remember { mutableIntStateOf(0) }
