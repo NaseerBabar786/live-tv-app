@@ -1,15 +1,37 @@
 {
  "name": "ڈرامہ",
- "built": "2026-10-10 22:48 UTC",
- "secs": 1912,
+ "built": "2026-10-11 01:24 UTC",
+ "secs": 2264,
  "videos": [
   {
-   "id": "N6ss-wL7rFI",
-   "title": "Ranjish Episode 9 [ENG SUB] | 7th Oct 2026 | Mohib Mirza | Hina Chaudhry | Express Entertainment",
-   "label": "Express TV",
-   "secs": 1912,
+   "id": "zXwOcp7Mo0A",
+   "title": "Jaan Nisar Episode 15 | Danish Taimoor - Hiba Bukhari | Geo Kahani",
+   "label": "Geo Kahani",
+   "secs": 2264,
    "kind": "drama"
   }
  ],
- "spares": []
+ "spares": [
+  {
+   "id": "unIudLtH-Js",
+   "title": "Dar-e-Nijaat Episode 21 | 10 October 2026 | Sheheryar Munawar | Dur-e-Fishan | ENG SUB | ARY Digital",
+   "label": "ARY Digital",
+   "secs": 2323,
+   "kind": "drama"
+  },
+  {
+   "id": "-19N9bvXpG4",
+   "title": "Maa Nahi Saas Hoon Main EP 27 | Erum Akhtar - Sumbul Iqbal - Hammad Shoaib | Geo Kahani",
+   "label": "Geo Kahani",
+   "secs": 2243,
+   "kind": "drama"
+  },
+  {
+   "id": "WanDB4fRvOs",
+   "title": "Dar-e-Nijaat Episode 20 | 9 October 2026 | Sheheryar Munawar | Dur-e-Fishan | ENG SUB | ARY Digital",
+   "label": "ARY Digital",
+   "secs": 2336,
+   "kind": "drama"
+  }
+ ]
 }
