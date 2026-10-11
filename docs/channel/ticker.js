@@ -1,9 +1,11 @@
 /* Every channel's ticker (owner, 2026-10-11): "Test transmission" shows behind the moving words, and the
    "advertise with us" words (the WhatsApp number, tv.bulkbazaar.ca/advertise) and the word "Spark" are left out; the rest of
-   the line keeps running. Works on any page with a .ticker strip, whatever sets its words and when. */
+   the line keeps running, with "NextGen Cable, free for everyone" and our apps at the end. Works on any page with a .ticker strip, whatever sets its words and when. */
 (function () {
   const AD = /advertis|اشتہار|602\s*6500|\/advertise/i;
+  const EXTRA = ["Download our app on TV", "Lots more free apps at apps.bulkbazaar.ca"];
   function clean(s) {
+    if (!String(s || "").trim()) return "";  // a ticker turned off stays off
     const out = [];
     let dropped = false;
     for (const p of String(s || "").split(/\s*·\s*/)) {
@@ -16,6 +18,11 @@
       const w = t.replace(/\bSpark TV,\s*/gi, "").replace(/\bSpark\b\s*|اسپارک\s*/gi, "").replace(/\s{2,}/g, " ").trim();
       if (w && w !== "TV") out.push(w);
     }
+    // NextGen Cable is free for everyone, and our apps follow at the end (owner, 2026-10-11).
+    const cable = out.findIndex(function (t) { return /NextGen Cable/i.test(t); });
+    if (cable < 0) out.push("NextGen Cable, free for everyone");
+    else if (!/free for everyone/i.test(out[cable])) out[cable] += ", free for everyone";
+    EXTRA.forEach(function (t) { if (out.indexOf(t) < 0) out.push(t); });
     return out.join(" · ");
   }
   window.cleanTicker = clean;
