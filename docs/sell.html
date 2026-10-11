@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sell from home</title>
-<meta name="description" content="Sell homemade food, clothes and crafts to Cable TV and Spark TV families. Free to list, free to sell: we take nothing.">
+<meta name="description" content="Sell homemade food, clothes and crafts to NextGen Cable and Spark TV families. Free to list, free to sell: we take nothing.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/site.css">
 <style>
@@ -21,9 +21,9 @@
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Cable TV home">
+    <a class="brand" href="./" aria-label="NextGen Cable home">
       <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Cable TV</span>
+      <span>NextGen Cable</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -38,7 +38,7 @@
 
 <main class="wrap">
   <h1>Sell from home</h1>
-  <p class="lead">Make food, clothes, crafts or anything else at home? Show it to Cable TV and Spark TV families. It's completely free: no listing fee and no cut of your sales.</p>
+  <p class="lead">Make food, clothes, crafts or anything else at home? Show it to NextGen Cable and Spark TV families. It's completely free: no listing fee and no cut of your sales.</p>
   <h2>How it works</h2>
   <ol>
     <li>Fill in the form below. We check every item, usually within a day, then it appears in the <a href="shop">shop</a>.</li>
@@ -64,7 +64,7 @@
   </form>
 </main>
 <footer>
-  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+  <div class="wrap">NextGen Cable comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
 </footer>
 <script type="module">
 // A new item goes to Firestore shopItems/ as "pending"; the owner approves it on /shop-admin before anyone sees it.
@@ -89,7 +89,7 @@ $("photo").onchange = async () => {
 };
 
 function whatsapp(b) {
-  const t = `Hi, I'd like to sell in the Cable TV shop.\nItem: ${b.title}\nPrice: ${b.price}\nKind: ${b.category}\n${b.description}\nName: ${b.seller}, ${b.city}\nPhone: ${b.phone}`;
+  const t = `Hi, I'd like to sell in the NextGen Cable shop.\nItem: ${b.title}\nPrice: ${b.price}\nKind: ${b.category}\n${b.description}\nName: ${b.seller}, ${b.city}\nPhone: ${b.phone}`;
   return "https://wa.me/14376026500?text=" + encodeURIComponent(t);
 }
 

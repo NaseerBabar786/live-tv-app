@@ -15,9 +15,9 @@ import com.livetv.app.data.Channel
 import com.livetv.app.data.MyChannel
 
 /**
- * Cable TV on the TV's own home screen (owner, 2026-10-09). Google TV shows apps only in "Continue watching", so
- * the channel watched last goes there; older Android TV home screens also get a "Cable TV" row of our Spark
- * channels and the viewer's favourites. Clicking one opens Cable TV on that channel. Android 8 and up, TVs only;
+ * NextGen Cable on the TV's own home screen (owner, 2026-10-09). Google TV shows apps only in "Continue watching", so
+ * the channel watched last goes there; older Android TV home screens also get a "NextGen Cable" row of our Spark
+ * channels and the viewer's favourites. Clicking one opens NextGen Cable on that channel. Android 8 and up, TVs only;
  * anything the TV refuses is skipped quietly.
  */
 object HomeScreenRow {
@@ -66,7 +66,7 @@ object HomeScreenRow {
         }
     }
 
-    /** The "Cable TV" row (older Android TV home screens): our channels, then the viewer's favourites, at most 30. */
+    /** The "NextGen Cable" row (older Android TV home screens): our channels, then the viewer's favourites, at most 30. */
     fun update(context: Context, channels: List<Channel>, favorites: Set<String>) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !supported(context) || channels.isEmpty()) return
         val app = context.applicationContext

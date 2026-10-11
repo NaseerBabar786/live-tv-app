@@ -306,7 +306,7 @@ REPORTS = ("https://firestore.googleapis.com/v1/projects/live-tv-b2164/databases
 
 def reported():
     """Programmes viewers say don't play: more "No" than "Yes" answers to "Did it play properly?"
-    (Cable TV's Library, LibraryReports.kt). {link or YouTube id: "N said no, M said yes"}."""
+    (NextGen Cable's Library, LibraryReports.kt). {link or YouTube id: "N said no, M said yes"}."""
     votes, token = {}, ""
     try:
         while True:

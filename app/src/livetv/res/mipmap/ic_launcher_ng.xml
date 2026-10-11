@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher icon for Android 5 to 7; Android 8+ uses the adaptive icon in mipmap-anydpi-v26. -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android" android:src="@drawable/ic_ng_icon" />

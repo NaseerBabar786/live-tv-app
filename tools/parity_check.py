@@ -1,10 +1,10 @@
-"""Keeps every Cable TV platform in step (owner's rule, 2026-10-07: a feature added to Cable TV goes to
+"""Keeps every NextGen Cable platform in step (owner's rule, 2026-10-07: a feature added to NextGen Cable goes to
 TV, PC and phone together, and to any platform added later).
 
 For a pull request, compares the changed files with .github/platforms.json:
-- Cable TV (the Android app) changed: every platform's folder must change too, with the feature, or
+- NextGen Cable (the Android app) changed: every platform's folder must change too, with the feature, or
   with a line in its PARITY.md saying why nothing was needed there (a TV-only fix, another app's change).
-- Cable TV's version changed: each platform's parity file must name that version ("matches").
+- NextGen Cable's version changed: each platform's parity file must name that version ("matches").
 - A platform's own code (or the website code it shares) changed: its version must go up, so the
   installed copies are offered the update.
 
@@ -70,12 +70,12 @@ def main(base):
                                   f"so installed copies are offered the update.")
 
     if errors:
-        print("Cable TV platforms are out of step:\n")
+        print("NextGen Cable platforms are out of step:\n")
         for e in errors:
             print(f"- {e}")
             print(f"::error::{e}")
         sys.exit(1)
-    print(f"All Cable TV platforms are in step (Cable TV {new_v}).")
+    print(f"All NextGen Cable platforms are in step (NextGen Cable {new_v}).")
 
 
 if __name__ == "__main__":

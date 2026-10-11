@@ -82,7 +82,7 @@ fun SettingsDialog(
     onLanguagesChange: (Set<String>) -> Unit,
     showMta: Boolean,
     onShowMtaChange: (Boolean) -> Unit,
-    /** "Default settings": back to the starting languages and every country (Cable TV). */
+    /** "Default settings": back to the starting languages and every country (NextGen Cable). */
     onResetDefaults: () -> Unit = {},
     onDismiss: () -> Unit,
     onSave: (String) -> Unit,
@@ -251,7 +251,7 @@ fun SettingsDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
                 TestVersionButton(Modifier.fillMaxWidth().focusGlow())
-                // Cable TV always uses the working channels (1.9.60); Live TV Max still offers the choice.
+                // NextGen Cable always uses the working channels (1.9.60); Live TV Max still offers the choice.
                 if (Edition.MAX) {
                     Text("Channel list", fontWeight = FontWeight.Bold)
                     SourceButton("Main list", provider == ChannelRepository.PROVIDER_FAMELACK) {
@@ -344,7 +344,7 @@ fun SettingsDialog(
                     }
                 }
 
-                // Owner (2026-10-07): Cable TV no longer offers finding or adding playlists;
+                // Owner (2026-10-07): NextGen Cable no longer offers finding or adding playlists;
                 // lists a viewer already added stay here so they can still pick or remove them.
                 if (Edition.MAX || playlists.isNotEmpty()) {
                     HorizontalDivider()
@@ -379,7 +379,7 @@ fun SettingsDialog(
                         onClick = { showingMessages = true },
                         modifier = Modifier.fillMaxWidth().focusGlow(),
                     ) {
-                        Text(if (account.isAdmin) "✉ Messages from viewers" else "✉ Messages from the Cable TV team")
+                        Text(if (account.isAdmin) "✉ Messages from viewers" else "✉ Messages from the NextGen Cable team")
                         if (unread) {
                             Spacer(Modifier.width(8.dp))
                             NewBadge()
@@ -653,7 +653,7 @@ internal fun AppBazaarDialog(onDismiss: () -> Unit) {
                     onClick = {
                         val updater = com.livetv.app.data.Updater(context)
                         if (!updater.ensureInstallAllowed()) {
-                            Toast.makeText(context, "Allow Cable TV to install apps, then press Install again.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Allow NextGen Cable to install apps, then press Install again.", Toast.LENGTH_LONG).show()
                             return@TextButton
                         }
                         progress = 0f
@@ -677,7 +677,7 @@ internal fun AppBazaarDialog(onDismiss: () -> Unit) {
     )
 }
 
-/** Starts Cable TV again from the beginning (after signing out, so it asks to sign in). */
+/** Starts NextGen Cable again from the beginning (after signing out, so it asks to sign in). */
 private fun android.content.Context.restartApp() {
     val intent = packageManager.getLaunchIntentForPackage(packageName)?.addFlags(
         Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK,

@@ -37,7 +37,7 @@ enum class AzanMode(val en: String, val ur: String) {
 
 /**
  * A way of working out Fajr and Isha: the sun's angle below the horizon, or (Umm al-Qura) Isha a fixed
- * time after Maghrib. ISNA is what Cable TV's News mode shows (aladhan method 2).
+ * time after Maghrib. ISNA is what NextGen Cable's News mode shows (aladhan method 2).
  */
 enum class CalcMethod(val en: String, val ur: String, val fajrAngle: Double, val ishaAngle: Double, val ishaMinutes: Int = 0) {
     Isna("North America (ISNA)", "شمالی امریکہ (ISNA)", 15.0, 15.0),

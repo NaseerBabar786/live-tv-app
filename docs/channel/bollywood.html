@@ -9,7 +9,7 @@
 <link rel="icon" href="logos/spark-hits-square.png">
 <style>
   /* Plays the music labels' own YouTube uploads in YouTube's player, one after another, like a
-     channel. Opened full screen by the Cable TV app (?app=1) and linked from /channel. */
+     channel. Opened full screen by the NextGen Cable app (?app=1) and linked from /channel. */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
   #player { position: absolute; inset: 0; width: 100%; height: 100%; }
   /* Like a TV channel: nobody can pause, skip or open YouTube from the picture. A clear sheet
@@ -61,7 +61,7 @@
 <div class="now hide" id="now"></div>
 <button class="sound" id="sound" hidden>🔊 Tap for sound</button>
 <a class="back" id="back" href="./" hidden>Our channels</a>
-<div class="ticker"><span>Spark Hits · Film songs, day and night, from the music labels' own channels · Channel 23 on Cable TV · Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
+<div class="ticker"><span>Spark Hits · Film songs, day and night, from the music labels' own channels · Channel 23 on NextGen Cable · Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise</span></div>
 <div class="msg" id="msg"></div>
 <script src="promo.js"></script>
 <script src="still.js"></script>
@@ -163,7 +163,7 @@ function startPlayer() {
     playerVars: { autoplay: pendingBreak ? 0 : 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, origin: location.origin },
     events: {
       onReady: e => {
-        // YouTube's own leveling leaves videos a little louder than Cable TV's leveled channels;
+        // YouTube's own leveling leaves videos a little louder than NextGen Cable's leveled channels;
         // 60% brings them to the same loudness, so switching channels keeps one volume.
         e.target.setVolume(60);
         if (!app) { e.target.mute(); $("sound").hidden = false; }

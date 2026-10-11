@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds a playlist of free films and shows that their makers share openly, for Cable TV's
+Builds a playlist of free films and shows that their makers share openly, for NextGen Cable's
 Library. Every source here is public domain or freely licensed by its owner:
 
   * Wikimedia Commons: public-domain and Creative Commons films and documentaries
@@ -19,7 +19,7 @@ Nothing that is already in Movies.m3u or Dramas.m3u is listed again, and each ti
 listed once, so the Library never shows a film twice.
 
 Writes (in docs/, served at tv.bulkbazaar.ca):
-  Free.m3u    the playlist (built into Cable TV's Library)
+  Free.m3u    the playlist (built into NextGen Cable's Library)
   free.json   counts and the time it was built
 
 Standard library only. Run: python3 tools/build_free.py
@@ -86,7 +86,7 @@ def get_json(url):
 
 
 def compact(text):
-    """A title reduced to its letters and digits, the way Cable TV matches titles."""
+    """A title reduced to its letters and digits, the way NextGen Cable matches titles."""
     text = re.sub(r"\(.*?\)|\[.*?\]", " ", (text or "").lower())
     text = re.sub(r"\b(the|full movie|full episode|hd|4k)\b", " ", text)
     return "".join(ch for ch in text if ch.isalnum())

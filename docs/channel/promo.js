@@ -1,5 +1,5 @@
 /* Promo breaks on our YouTube channels (ytc.html, bollywood.html): every 10 minutes, between two
-   videos (never in the middle of one), one of our own Cable TV promos plays in our own video
+   videos (never in the middle of one), one of our own NextGen Cable promos plays in our own video
    player, outside YouTube's, then the channel carries on. The promos are listed in
    media/promos.json and play in turn. Only our own promos here, never paid
    sponsor ads: YouTube's rules don't allow selling ads around its videos. Paid ads run on

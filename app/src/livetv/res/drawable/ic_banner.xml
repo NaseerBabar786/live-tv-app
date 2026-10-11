@@ -1,8 +1,3 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="320dp" android:height="180dp"
-    android:viewportWidth="320" android:viewportHeight="180">
-    <path android:fillColor="#1E1E2E" android:pathData="M0,0h320v180h-320z" />
-    <path android:fillColor="#FFFFFF"
-        android:pathData="M110,55h100a6,6 0,0 1,6 6v58a6,6 0,0 1,-6 6h-100a6,6 0,0 1,-6 -6v-58a6,6 0,0 1,6 -6z" />
-    <path android:fillColor="#E53935" android:pathData="M150,72 L178,90 L150,108 Z" />
-</vector>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NextGen Cable's Android TV banner: the neon N and the name (owner, 2026-10-10). -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android" android:src="@drawable/ic_ng_banner" />

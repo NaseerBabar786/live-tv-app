@@ -29,7 +29,7 @@ class Speaker(context: Context) {
     /**
      * Every call into the speech engine runs here, never on the main thread: the engine can hold its lock for
      * seconds (choosing the Arabic voice on a slow TV), and Back from the Quran screen then froze the whole app
-     * (Android's "not responding", Cable TV 1.11.0 on a Chromecast, 2026-10-10: Speaker.stop waiting for that lock).
+     * (Android's "not responding", NextGen Cable 1.11.0 on a Chromecast, 2026-10-10: Speaker.stop waiting for that lock).
      */
     private val worker = Executors.newSingleThreadExecutor { r -> Thread(r, "speaker").apply { isDaemon = true } }
 

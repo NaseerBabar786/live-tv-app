@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cable TV Suggestions</title>
-<meta name="description" content="Cable TV users share ideas and suggestions for the app.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>NextGen Cable Suggestions</title>
+<meta name="description" content="NextGen Cable users share ideas and suggestions for the app.">
+<link rel="icon" href="nextgen-icon.png">
 <link rel="stylesheet" href="assets/site.css">
 <style>
   .post { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; padding: 14px 16px; margin: 0 0 12px; }
@@ -46,9 +46,9 @@
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Cable TV home">
-      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Cable TV</span>
+    <a class="brand" href="./" aria-label="NextGen Cable home">
+      <img src="nextgen-icon.png" alt="" aria-hidden="true">
+      <span>NextGen Cable</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -63,12 +63,12 @@
 <main class="wrap">
   <a href="admin" class="back-admin hidden" id="backAdmin">← Back to Admin</a>
   <h1>💬 Suggestions</h1>
-  <p class="lead">Tell us what to improve or add to Cable TV, and reply to other viewers' ideas. Private replies from the Cable TV team arrive in your Messages. Only Cable TV app users can read and post here.</p>
+  <p class="lead">Tell us what to improve or add to NextGen Cable, and reply to other viewers' ideas. Private replies from the NextGen Cable team arrive in your Messages. Only NextGen Cable app users can read and post here.</p>
 
   <div id="notReady" class="panel hidden">Suggestions is opening soon. Please check back in a little while.</div>
 
   <div id="signedOut" class="panel hidden">
-    <p style="margin-top:0">Sign in with the same account you use in the Cable TV app.</p>
+    <p style="margin-top:0">Sign in with the same account you use in the NextGen Cable app.</p>
     <form id="emailForm" style="display:grid;gap:8px;max-width:360px;margin-bottom:14px">
       <input id="emEmail" type="email" placeholder="Email" autocomplete="username" required style="padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit">
       <input id="emPass" type="password" placeholder="Password" autocomplete="current-password" required style="padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit">
@@ -76,13 +76,13 @@
       <div class="row"><button class="btn primary" type="submit">Sign in</button><a href="#" id="emForgot" class="small">Forgot password?</a></div>
     </form>
     <button class="btn" id="signIn">Sign in with Google</button>
-    <p class="small">No account yet? Create one in the Cable TV app. Forgot your password? Message us on WhatsApp at 437 602 6500 and we'll set a new one.</p>
-    <p class="small">Don't have the app yet? <a href="./#download">Download Cable TV</a>, sign in there once, then come back.</p>
+    <p class="small">No account yet? Create one in the NextGen Cable app. Forgot your password? Message us on WhatsApp at 437 602 6500 and we'll set a new one.</p>
+    <p class="small">Don't have the app yet? <a href="./#download">Download NextGen Cable</a>, sign in there once, then come back.</p>
   </div>
 
   <div id="notUser" class="panel hidden">
-    <p style="margin-top:0"><b>This account hasn't signed in to the Cable TV app yet.</b> Open Cable TV on your phone or TV, sign in with this account, then refresh this page.</p>
-    <div class="row"><a class="btn" href="./#download">Download Cable TV</a><button class="btn" data-signout>Use another account</button></div>
+    <p style="margin-top:0"><b>This account hasn't signed in to the NextGen Cable app yet.</b> Open NextGen Cable on your phone or TV, sign in with this account, then refresh this page.</p>
+    <div class="row"><a class="btn" href="./#download">Download NextGen Cable</a><button class="btn" data-signout>Use another account</button></div>
   </div>
 
   <div id="forum" class="hidden">
@@ -123,7 +123,7 @@
   <p class="err" id="err"></p>
 </main>
 <footer>
-  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+  <div class="wrap">NextGen Cable comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
 </footer>
 
 <script type="module">
@@ -191,7 +191,7 @@ if (!configured) {
     if (admin && location.hash.startsWith("#to=")) {
       const h = new URLSearchParams(location.hash.slice(1));
       openTab("inbox", false);
-      openThread(h.get("to"), h.get("name") || "Cable TV viewer", h.get("email") || "");
+      openThread(h.get("to"), h.get("name") || "NextGen Cable viewer", h.get("email") || "");
     }
   });
 
@@ -201,7 +201,7 @@ if (!configured) {
     const el = document.createElement("div");
     el.className = "post";
     el.innerHTML = `<div class="meta"><span class="who"></span><span class="when"></span></div><div class="text"></div><div class="actions"></div>`;
-    el.querySelector(".who").textContent = d.name || "Cable TV viewer";
+    el.querySelector(".who").textContent = d.name || "NextGen Cable viewer";
     el.querySelector(".when").textContent = fmt(d.createdAt);
     el.querySelector(".text").textContent = d.text || "";
     const actions = el.querySelector(".actions");
@@ -246,13 +246,13 @@ if (!configured) {
     return el;
   }
 
-  // ---- Messages: private conversations between each viewer and the Cable TV team ----
+  // ---- Messages: private conversations between each viewer and the NextGen Cable team ----
   // inbox/{viewer uid} holds the latest message and who has unread ones; inbox/{uid}/messages holds them all.
   let openUid = null;
 
   async function sendMessage(uid, text, extra = {}) {
     const fromAdmin = admin && uid !== me.uid;
-    const msg = { from: fromAdmin ? "admin" : "user", uid: me.uid, name: me.displayName || "Cable TV viewer", text, createdAt: fs.serverTimestamp() };
+    const msg = { from: fromAdmin ? "admin" : "user", uid: me.uid, name: me.displayName || "NextGen Cable viewer", text, createdAt: fs.serverTimestamp() };
     if (extra.quote) msg.quote = String(extra.quote).slice(0, 300);
     await fs.addDoc(fs.collection(db, "inbox", uid, "messages"), msg);
     const head = { uid, lastText: text.slice(0, 200), lastAt: fs.serverTimestamp(), lastFrom: msg.from };
@@ -261,7 +261,7 @@ if (!configured) {
       if (extra.name) head.name = extra.name;
       if (extra.email) head.email = extra.email;
     } else {
-      Object.assign(head, { adminUnread: true, userUnread: false, name: me.displayName || "Cable TV viewer", email: me.email || "" });
+      Object.assign(head, { adminUnread: true, userUnread: false, name: me.displayName || "NextGen Cable viewer", email: me.email || "" });
     }
     await fs.setDoc(fs.doc(db, "inbox", uid), head, { merge: true });
   }
@@ -287,7 +287,7 @@ if (!configured) {
     $("forumPane").classList.toggle("hidden", inbox);
     $("inboxPane").classList.toggle("hidden", !inbox);
     history.replaceState(null, "", inbox ? "#messages" : location.pathname);
-    if (inbox && openFirst) admin ? listConvos() : openThread(me.uid, "Cable TV team");
+    if (inbox && openFirst) admin ? listConvos() : openThread(me.uid, "NextGen Cable team");
   }
   $("tabForum").onclick = () => openTab("forum");
   $("tabInbox").onclick = () => openTab("inbox");
@@ -309,9 +309,9 @@ if (!configured) {
       const b = document.createElement("button");
       b.className = "convo";
       b.innerHTML = `<div class="body"><div style="font-weight:800"></div><div class="last"></div></div><span class="small">Write ›</span>`;
-      b.querySelector(".body div").textContent = v.name || "Cable TV viewer";
+      b.querySelector(".body div").textContent = v.name || "NextGen Cable viewer";
       b.querySelector(".last").textContent = v.email || "";
-      b.onclick = () => { $("findViewer").value = ""; box.innerHTML = ""; openThread(v.uid, v.name || "Cable TV viewer", v.email || ""); };
+      b.onclick = () => { $("findViewer").value = ""; box.innerHTML = ""; openThread(v.uid, v.name || "NextGen Cable viewer", v.email || ""); };
       box.append(b);
     });
   };
@@ -331,10 +331,10 @@ if (!configured) {
         const b = document.createElement("button");
         b.className = "convo" + (d.adminUnread ? " unread" : "");
         b.innerHTML = `<div class="body"><div class="who" style="font-weight:800"></div><div class="last"></div></div><span class="small"></span>`;
-        b.querySelector(".who").textContent = d.name || "Cable TV viewer";
+        b.querySelector(".who").textContent = d.name || "NextGen Cable viewer";
         b.querySelector(".last").textContent = (d.lastFrom === "admin" ? "You: " : "") + (d.lastText || "");
         b.querySelector(".small").textContent = fmt(d.lastAt);
-        b.onclick = () => openThread(c.id, d.name || "Cable TV viewer", d.email);
+        b.onclick = () => openThread(c.id, d.name || "NextGen Cable viewer", d.email);
         box.append(b);
       });
     } catch (e) { box.innerHTML = ""; $("err").textContent = "Couldn't load messages: " + e.message; }
@@ -347,14 +347,14 @@ if (!configured) {
     $("thread").classList.remove("hidden");
     $("backToList").classList.toggle("hidden", !admin);
     $("threadWho").textContent = admin ? who + (email ? " · " + email : "") : "";
-    $("threadNote").textContent = admin ? "" : "Your private conversation with the Cable TV team. Only you and the team can see it.";
+    $("threadNote").textContent = admin ? "" : "Your private conversation with the NextGen Cable team. Only you and the team can see it.";
     $("msgInfo").textContent = "";
     const chat = $("chat");
     chat.innerHTML = '<p class="small">Loading…</p>';
     try {
       const snap = await fs.getDocs(fs.query(fs.collection(db, "inbox", uid, "messages"), fs.orderBy("createdAt", "asc"), fs.limit(500)));
       if (openUid !== uid) return;
-      chat.innerHTML = snap.empty ? '<p class="small">' + (admin ? "No messages yet. Write the first one below; it goes to their Messages in the app and here." : "No messages yet. Write to the Cable TV team below and we'll answer here.") + '</p>' : "";
+      chat.innerHTML = snap.empty ? '<p class="small">' + (admin ? "No messages yet. Write the first one below; it goes to their Messages in the app and here." : "No messages yet. Write to the NextGen Cable team below and we'll answer here.") + '</p>' : "";
       snap.forEach(m => {
         const d = m.data();
         const mine = (d.from === "admin") === admin;
@@ -362,7 +362,7 @@ if (!configured) {
         b.className = "bubble" + (mine ? " mine" : "");
         const from = document.createElement("span");
         from.className = "from";
-        from.textContent = mine ? "You" : d.from === "admin" ? "Cable TV team" : (d.name || who);
+        from.textContent = mine ? "You" : d.from === "admin" ? "NextGen Cable team" : (d.name || who);
         b.append(from);
         if (d.quote) { const q = document.createElement("span"); q.className = "quote"; q.textContent = (admin ? "Suggestion: " : "Your suggestion: ") + d.quote; b.append(q); }
         b.append(document.createTextNode(d.text || ""));
@@ -390,7 +390,7 @@ if (!configured) {
       const [who, email] = $("threadWho").textContent.split(" · ");
       await sendMessage(openUid, text, { name: who, email });
       $("msgText").value = "";
-      await openThread(openUid, who || "Cable TV viewer", email);
+      await openThread(openUid, who || "NextGen Cable viewer", email);
       $("msgInfo").textContent = "Sent.";
     } catch (e) { $("msgInfo").textContent = "Couldn't send: " + e.message; }
     $("msgSend").disabled = false;
@@ -428,7 +428,7 @@ if (!configured) {
         const text = form.querySelector("textarea").value.trim();
         if (!text) return;
         try {
-          await fs.addDoc(fs.collection(db, "posts", postId, "replies"), { uid: me.uid, name: me.displayName || "Cable TV viewer", text, createdAt: fs.serverTimestamp() });
+          await fs.addDoc(fs.collection(db, "posts", postId, "replies"), { uid: me.uid, name: me.displayName || "NextGen Cable viewer", text, createdAt: fs.serverTimestamp() });
           loadReplies(postId, box);
         } catch (e) { $("err").textContent = "Couldn't reply: " + e.message; }
       };
@@ -441,7 +441,7 @@ if (!configured) {
     if (!text) return;
     $("send").disabled = true;
     try {
-      await fs.addDoc(fs.collection(db, "posts"), { uid: me.uid, name: me.displayName || "Cable TV viewer", text, createdAt: fs.serverTimestamp() });
+      await fs.addDoc(fs.collection(db, "posts"), { uid: me.uid, name: me.displayName || "NextGen Cable viewer", text, createdAt: fs.serverTimestamp() });
       $("newText").value = "";
       $("sendMsg").textContent = "Posted. Thank you!";
       load();

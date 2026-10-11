@@ -379,7 +379,7 @@ fun RecitationCard(vm: AppViewModel, r: Namaz.Recitation, hidden: Boolean = fals
 
 /**
  * Who reads aloud: one teacher voice for every dua (so it no longer switches between voices) and
- * the Quran reciter for the verses. Shared by Iqra Quran and Cable TV's Iqra Quran.
+ * the Quran reciter for the verses. Shared by Iqra Quran and NextGen Cable's Iqra Quran.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

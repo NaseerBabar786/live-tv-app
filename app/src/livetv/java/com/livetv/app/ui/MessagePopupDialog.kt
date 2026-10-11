@@ -61,7 +61,7 @@ fun MessagePopupDialog(message: MessagePopup.Incoming) {
         scope.launch {
             try {
                 reply(text)
-                status = "✓ Sent to the Cable TV team"
+                status = "✓ Sent to the NextGen Cable team"
                 delay(1_500)
                 MessagePopup.close()
             } catch (e: CancellationException) {

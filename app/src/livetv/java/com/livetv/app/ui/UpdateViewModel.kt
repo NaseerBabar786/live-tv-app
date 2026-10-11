@@ -22,7 +22,7 @@ sealed interface UpdateState {
 }
 
 /**
- * Checks GitHub for a newer Cable TV once per launch (the view model outlives rotation).
+ * Checks GitHub for a newer NextGen Cable once per launch (the view model outlives rotation).
  * Only versions the owner tested and approved are published where this looks, and even then
  * it only shows a "New update available" reminder: nothing downloads until the viewer taps
  * Update now.

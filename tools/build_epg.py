@@ -3,7 +3,7 @@
 Builds docs/epg.json (tv.bulkbazaar.ca/epg.json): what's on now and next on our channels, for
 Live TV Max's guide. Programme listings come from the free public XMLTV guides at
 epgshare01.online, one or more files per country. Only channels that are in our lists (the
-Famelack countries Cable TV shows by default, plus docs/LiveTV.m3u) are kept, and only the next
+Famelack countries NextGen Cable shows by default, plus docs/LiveTV.m3u) are kept, and only the next
 30 hours, so the file stays small enough for a TV to download.
 
 Channels are matched by name: both sides go through key() (Guide.key in the app does the same),

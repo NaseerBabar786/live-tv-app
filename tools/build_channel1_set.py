@@ -194,7 +194,7 @@ def find(today):
 
 
 BOTH = {"welcome": "Welcome to Spark TV · اسپارک ٹی وی میں خوش آمدید", "break": "Break · وقفہ", "next": "Up next · اگلا پروگرام",
-        "adhere": "Advertise on Spark TV · اسپارک ٹی وی پر اشتہار دیں", "promo": "Cable TV · کیبل ٹی وی",
+        "adhere": "Advertise on Spark TV · اسپارک ٹی وی پر اشتہار دیں", "promo": "NextGen Cable · نیکسٹ جین کیبل",
         "promo2": "Spark TV · اسپارک ٹی وی", "news-headlines": "Spark TV News: Headlines · خبروں کی سرخیاں",
         "news-full": "Spark TV News: The Full Report · تفصیلی خبرنامہ"}
 
@@ -218,7 +218,7 @@ def layout(today):
         if k in base:
             base[k]["title"] = title
     own = {k: base[k] for k in ("welcome", "break", "next", "adhere", "promo", "promo2", "adbreak")}
-    base["ad9"] = {"id": "ad9", "title": "Cable TV · کیبل ٹی وی", "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-9.mp4", "secs": 15, "kind": "ad"}
+    base["ad9"] = {"id": "ad9", "title": "NextGen Cable · نیکسٹ جین کیبل", "url": "https://tv.bulkbazaar.ca/media/cable-tv-video-ad-9.mp4", "secs": 15, "kind": "ad"}
     base["adbreak-c"] = {"id": "adbreak-c", "title": "Ads · اشتہارات", "url": "https://tv.bulkbazaar.ca/channel/media/ad-break-c.mp4", "secs": 60, "kind": "ad"}
     # Spark TV's moving logo opens every hour's programmes, and the network montage and the Urdu Spark ad
     # take turns with our other short clips in the gaps (owner, 2026-10-09; media/spark-promos.json).
@@ -312,7 +312,7 @@ def layout(today):
         gaps = [i + 1 for i in range(start, len(loop)) if loop[i] != "next"]
         room = {g: (2 if g == len(loop) else 30) for g in gaps}  # the next hour opens with the 20 s logo and the 8 s "next"
         put = {g: [] for g in gaps}
-        # The 30 s clips take turns hour by hour: our Cable TV promo, the Spark montage, the Spark Urdu ad.
+        # The 30 s clips take turns hour by hour: our NextGen Cable promo, the Spark montage, the Spark Urdu ad.
         turns = ["promo2", "spark-montage", "spark-ad-urdu"]
         # The Spark montages share the montage's turn, a different one each time and day (owner, 2026-10-09), and
         # a shorter one still goes in first, like a 30 s clip.
@@ -373,7 +373,7 @@ def layout(today):
     sched["fillers"] = ["promo2", "adhere", "spark-ad-urdu", "next"]
     sched["bilingual"] = True  # the website's cards show Urdu headings beside the English ones (owner, 2026-10-09)
     # English first, so the line reads left to right; the Urdu parts follow (owner, 2026-10-09).
-    sched["ticker"] = ("Welcome to Spark TV, channel 1 on Cable TV  ·  New Pakistani dramas from episode 1, a new episode every day  ·  "
+    sched["ticker"] = ("Welcome to Spark TV, channel 1 on NextGen Cable  ·  New Pakistani dramas from episode 1, a new episode every day  ·  "
                        "Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  "
                        "tv.bulkbazaar.ca/advertise  ·  اسپارک ٹی وی میں خوش آمدید  ·  نئے پاکستانی ڈرامے پہلی قسط سے، ہر روز نئی قسط  ·  "
                        "اپنا اشتہار دیں: واٹس ایپ 437 602 6500")

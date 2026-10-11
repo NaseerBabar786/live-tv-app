@@ -111,12 +111,12 @@ private const val BREAK_MS = 60_000L
 /** Owner, 2026-10-10: every pop-up ad can be skipped after 5 seconds (was 10); a 5-second ad just plays to its end. */
 private const val SKIP_AFTER_MS = 5_000L
 
-/** Full-screen channels: an ad break every 10 minutes (owner, 1.9.68): the channel pauses, our own Cable TV
+/** Full-screen channels: an ad break every 10 minutes (owner, 1.9.68): the channel pauses, our own NextGen Cable
  *  promo plays (a different one each time) with a sponsor's ad when one fits, then the channel carries on. */
 private const val BREAK_EVERY_MS = 10 * 60_000L
 /** [SponsorCard]'s channelId for a Library video ("vod:" + its id). */
 const val LIBRARY_PREFIX = "vod:"
-/** Our Cable TV promos for the breaks, in turn: media/app-promos.json on the website (the owner can add more). */
+/** Our NextGen Cable promos for the breaks, in turn: media/app-promos.json on the website (the owner can add more). */
 private const val PROMO_ID = "promo"
 private const val PROMOS_URL = "https://tv.bulkbazaar.ca/media/app-promos.json"
 private val DEFAULT_PROMOS = listOf(
@@ -140,7 +140,7 @@ private var nextTickerAt = 0L
  * Since 2026-10-10 (owner) everything is free: every channel and every feature, for everyone.
  */
 private const val PACKAGE_LINE =
-    "All 7,800+ channels and every feature free on Cable TV  ·  Full screen, every mode, Library, Games & more  ·  Advertising is free too: WhatsApp 437 602 6500"
+    "All 7,800+ channels and every feature free on NextGen Cable  ·  Full screen, every mode, Library, Games & more  ·  Advertising is free too: WhatsApp 437 602 6500"
 /** How many runs the ticker has made since start, across screens, so the two lines keep taking turns. */
 private var tickerRuns = 0
 
@@ -472,7 +472,7 @@ private fun SponsorVideo(url: String) {
  * A small sponsor card in the bottom right corner for a few seconds after the channel changes,
  * at most once every 3 minutes. It never takes the focus or covers the middle of the picture.
  * A sponsor whose pop-up is set to video plays their video in a bigger window instead, to the end
- * (on a full screen channel, at most every [VIDEO_EVERY_MS]); with no such sponsor, the Cable TV
+ * (on a full screen channel, at most every [VIDEO_EVERY_MS]); with no such sponsor, the NextGen Cable
  * promo plays like that once per start. OK opens the sponsor's website; back from it, the video goes on.
  */
 @Composable
@@ -498,7 +498,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
     var videoMax by remember { mutableLongStateOf(BREAK_MS) }
     var videoPlayed by remember { mutableLongStateOf(0L) }
     val isFullScreen by rememberUpdatedState(fullScreen)
-    // Before a Library video in YouTube's player: only our own Cable TV promo, no paid sponsor (YouTube's rules, 1.9.89).
+    // Before a Library video in YouTube's player: only our own NextGen Cable promo, no paid sponsor (YouTube's rules, 1.9.89).
     val onlyPromos by rememberUpdatedState(promosOnly)
     val opener = rememberSiteOpener()
     // While the card or video shows on a full-screen channel, OK on the remote (or a tap) opens the
@@ -543,7 +543,7 @@ fun SponsorCard(channelId: String?, fullScreen: Boolean, promosOnly: Boolean = f
                 prefs.edit().putInt("promoNext", n + 1).apply()
                 val (url, secs) = promos[Math.floorMod(n, promos.size)]
                 Sponsor(
-                    id = "$PROMO_ID:$n", name = "Cable TV", line = "", contact = "", start = "", end = "",
+                    id = "$PROMO_ID:$n", name = "NextGen Cable", line = "", contact = "", start = "", end = "",
                     active = true, picture = null, video = url, website = "", popupVideo = true, videoSecs = secs,
                 )
             }
@@ -765,7 +765,7 @@ private fun AdFooter(sponsor: Sponsor, label: String, secondsLeft: Int, skipIn: 
     }
 }
 
-/** "Ad 1 of 2" during a break of more than one ad, else "Ad" (nothing for our own Cable TV promo). */
+/** "Ad 1 of 2" during a break of more than one ad, else "Ad" (nothing for our own NextGen Cable promo). */
 private fun adLabel(at: Int, size: Int, sponsor: Sponsor): String =
     if (sponsor.id.startsWith(PROMO_ID)) "" else if (size > 1) "Ad ${at + 1} of $size" else "Ad"
 

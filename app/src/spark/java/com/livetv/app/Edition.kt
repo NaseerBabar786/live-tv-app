@@ -15,7 +15,7 @@ import com.livetv.app.ui.SettingsTheme
 import com.livetv.app.ui.UiState
 
 /**
- * Spark TV: the Google Play app of our Spark channels (the owner, 2026-10-09). Cable TV's look, clock and
+ * Spark TV: the Google Play app of our Spark channels (the owner, 2026-10-09). NextGen Cable's look, clock and
  * weather, with only the channels whose every programme we own or may show: our news and ads,
  * public-domain films and free-licence music. No YouTube channels, no playlists, no sponsor pop-ups,
  * no outside links and no self-updates (Google Play updates it). Gold is a Google Play subscription.

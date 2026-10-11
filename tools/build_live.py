@@ -2,7 +2,7 @@
 """
 Builds docs/PakistanLive.m3u (tv.bulkbazaar.ca/PakistanLive.m3u): the 24/7 live streams that
 Pakistani channels run on their own YouTube channels (Geo News, ARY News...), for channels
-that have no working stream in our lists. Cable TV adds them after its Pakistani channels and
+that have no working stream in our lists. NextGen Cable adds them after its Pakistani channels and
 plays them in YouTube's own player, as YouTube's terms require.
 
 A channel's live video changes whenever it restarts its stream, so this runs every few hours.
@@ -19,7 +19,7 @@ import urllib.parse
 
 from build_dramas import DOCS, _text, channel_id, fetch
 
-# (name in Cable TV, the YouTube channel's exact name, genre)
+# (name in NextGen Cable, the YouTube channel's exact name, genre)
 LIVE_CHANNELS = [
     ("Geo News", "Geo News", "News"),
     ("Geo News English", "Geo News English", "News"),

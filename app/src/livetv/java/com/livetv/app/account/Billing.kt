@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Date
 
-/** What a viewer told us about paying for Cable TV, in Settings › My billing details. */
+/** What a viewer told us about paying for NextGen Cable, in Settings › My billing details. */
 data class BillingInfo(
     val phone: String = "",
     val whatsapp: String = "",

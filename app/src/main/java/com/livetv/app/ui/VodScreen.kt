@@ -89,7 +89,7 @@ import com.livetv.app.player.LibraryVideo
 import com.livetv.app.player.PlayerScreen
 
 /**
- * Cable TV's Movies & Series. First a language (Urdu, Hindi, Punjabi, English), then its
+ * NextGen Cable's Movies & Series. First a language (Urdu, Hindi, Punjabi, English), then its
  * Movies, Series and Shows as poster grids filtered by the playlists' own groups. Each
  * drama or show is a folder that opens its episode list; anything picked plays full
  * screen (YouTube videos in our film window with YouTube's embedded player, 1.9.99).
@@ -191,7 +191,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     }
 
     playing?.let { channel ->
-        // Cable TV's ad breaks run here too (1.9.89). A video in YouTube's (or another site's) own player
+        // NextGen Cable's ad breaks run here too (1.9.89). A video in YouTube's (or another site's) own player
         // gets its break before it starts, on our own black screen, never over that player.
         val embed = Bilibili.isVideo(channel.url) || Dailymotion.videoId(channel.url) != null ||
             Vimeo.videoId(channel.url) != null || YouTube.videoId(channel.url) != null

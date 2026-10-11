@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Marks each programme in a Library playlist with the day it first appeared there, so Cable TV's
+Marks each programme in a Library playlist with the day it first appeared there, so NextGen Cable's
 Library can show a "Newly added" section (items added in the last few days).
 
 Adds added="YYYY-MM-DD" to every #EXTINF line. The day comes from, in order:

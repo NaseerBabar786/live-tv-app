@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cable TV · Library</title>
+<title>NextGen Cable · Library</title>
 <style>
-  /* Library films and episodes from official YouTube channels (Cable TV 1.9.99), played inside our app
+  /* Library films and episodes from official YouTube channels (NextGen Cable 1.9.99), played inside our app
      instead of handing them to the YouTube app: YouTube's embedded player with its own buttons off and
      our own on top (pause, back and forward 10 s, a progress bar). ?v=<video id>&t=<title>; the app adds
      &app=1. Remote: OK pauses and plays, Left/Right go back and forward (held: faster), Up/Down show the
@@ -70,7 +70,7 @@ let started = false, seekTo = null, seekTimer = null, held = 0;
 
 const title = q.get("t") || "";
 $("top").textContent = title;
-document.title = (title ? title + " · " : "") + "Cable TV";
+document.title = (title ? title + " · " : "") + "NextGen Cable";
 // Phones and the website: no remote, so the remote's hint isn't needed.
 if (!app || matchMedia("(pointer: coarse)").matches) $("hint").hidden = true;
 
@@ -208,7 +208,7 @@ window.onYouTubeIframeAPIReady = () => {
     events: {
       onReady: e => {
         ready = true;
-        // The same loudness as Cable TV's leveled channels (see ytc.html).
+        // The same loudness as NextGen Cable's leveled channels (see ytc.html).
         e.target.setVolume(60);
         if (!app) e.target.mute(); // browsers only start a video with sound after a tap
         e.target.playVideo();

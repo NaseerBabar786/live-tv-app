@@ -138,7 +138,7 @@ object Themes {
     /** The theme the viewer picked (kept even while their package doesn't have Themes). */
     private var chosen by mutableStateOf(all.first())
 
-    /** Whether the viewer's package has Themes (Cable TV's Gold, 1.10.17); the first theme shows otherwise. */
+    /** Whether the viewer's package has Themes (NextGen Cable's Gold, 1.10.17); the first theme shows otherwise. */
     var unlocked by mutableStateOf(true)
 
     val current: Palette get() = if (unlocked) chosen else all.first()

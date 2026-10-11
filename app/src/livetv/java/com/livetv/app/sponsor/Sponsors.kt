@@ -18,7 +18,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
-/** A business that pays to be shown in Cable TV, as the owner set it up on tv.bulkbazaar.ca/sponsors. */
+/** A business that pays to be shown in NextGen Cable, as the owner set it up on tv.bulkbazaar.ca/sponsors. */
 class Sponsor(
     val id: String,
     val name: String,
@@ -100,8 +100,8 @@ object Sponsors {
                 // The ticker's words live in the same collection, so no new Firebase rule is needed.
                 if (id == TICKER_ID) {
                     val on = f.optJSONObject("active")?.optBoolean("booleanValue") ?: false
-                    // Words saved before the rename to Cable TV (1.9.48) still say the old name.
-                    ticker = f.text("text").trim().replace("Free Live TV", "Cable TV").takeIf { on && it.isNotEmpty() }
+                    // Words saved before the renames (Free Live TV, then Cable TV) still say an old name.
+                    ticker = f.text("text").trim().replace("Free Live TV", "NextGen Cable").replace(OLD_NAME, "NextGen Cable").takeIf { on && it.isNotEmpty() }
                         // Advertising is free (owner, 2026-10-10): saved words that don't say so yet get the free words.
                         ?.let { if (Regex("advertis", RegexOption.IGNORE_CASE).containsMatchIn(it) && !it.contains("free", true)) DEFAULT_TICKER else it }
                     continue
@@ -171,12 +171,15 @@ object Sponsors {
     /** The ticker's document in sponsors/; older app versions skip it because it has no picture. */
     private const val TICKER_ID = "_ticker"
     private const val K_TICKER = "ticker"
-    const val DEFAULT_TICKER = "Advertise your business free on Cable TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise"
+    /** The app's name before NextGen Cable (owner, 2026-10-10); ticker words saved under it are renamed on the fly. */
+    private val OLD_NAME = Regex("(?<!NextGen )Cable TV")
+
+    const val DEFAULT_TICKER = "Advertise your business free on NextGen Cable  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise"
 }
 
 /**
  * Counts how often each sponsor is shown, per day and place, so the owner can tell sponsors how
- * many times their ad was seen. Cable TV sends the totals to Firebase with the viewing totals.
+ * many times their ad was seen. NextGen Cable sends the totals to Firebase with the viewing totals.
  */
 object SponsorViews {
     private var prefs: SharedPreferences? = null

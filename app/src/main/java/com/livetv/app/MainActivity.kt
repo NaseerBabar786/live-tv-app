@@ -73,24 +73,24 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
     private var inPictureInPicture by mutableStateOf(false)
 
-    /** The start screen (Cable TV's sponsor screen) shows once per launch, not again after rotation. */
+    /** The start screen (NextGen Cable's sponsor screen) shows once per launch, not again after rotation. */
     private var showStartScreen by mutableStateOf(Edition.HAS_START_SCREEN)
 
-    /** Cable TV's Movies & Series screen is open. */
+    /** NextGen Cable's Movies & Series screen is open. */
     private var showVod by mutableStateOf(false)
     /** A movie or show picked on Live TV Max's home screen, for the Library to open at. */
     private var vodStart by mutableStateOf<VodTarget?>(null)
 
-    /** Cable TV's Games section is open. */
+    /** NextGen Cable's Games section is open. */
     private var showGames by mutableStateOf(false)
 
-    /** Cable TV's Weather section is open (1.10.13). */
+    /** NextGen Cable's Weather section is open (1.10.13). */
     private var showWeather by mutableStateOf(false)
 
-    /** Cable TV's Iqra Quran section is open. */
+    /** NextGen Cable's Iqra Quran section is open. */
     private var showQuran by mutableStateOf(false)
 
-    /** Cable TV's TV guide is open (2026-10-09). */
+    /** NextGen Cable's TV guide is open (2026-10-09). */
     private var showGuide by mutableStateOf(false)
 
     /** The sleep timer and widget pickers, from the full-screen channel bar. */
@@ -129,7 +129,7 @@ class MainActivity : ComponentActivity() {
             viewModel.pendingUrl = it
             viewModel.openPending()
         }
-        // Google TV's own voice search ("Geo News on Cable TV"): the words come here, once the channels are in.
+        // Google TV's own voice search ("Geo News on NextGen Cable"): the words come here, once the channels are in.
         if (Edition.LIVE_TV && intent?.action in SEARCH_ACTIONS) {
             intent?.getStringExtra(SearchManager.QUERY)?.takeIf { it.isNotBlank() }?.let { said ->
                 lifecycleScope.launch {
@@ -140,7 +140,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** The remote's search / microphone key, where the TV hands it to the app: Cable TV's voice search. */
+    /** The remote's search / microphone key, where the TV hands it to the app: NextGen Cable's voice search. */
     override fun onSearchRequested(): Boolean {
         if (!Edition.LIVE_TV) return super.onSearchRequested()
         startVoiceSearch()
@@ -169,7 +169,7 @@ class MainActivity : ComponentActivity() {
         com.livetv.app.ui.Themes.init(this)
         Extras.init(this)
         if (savedInstanceState == null) takeChannelFrom(intent)
-        // Azan at prayer times while Cable TV is on screen (Iqra Quran > Namaz settings).
+        // Azan at prayer times while NextGen Cable is on screen (Iqra Quran > Namaz settings).
         QuranSection.startAzan(this)
         enableEdgeToEdge()
         // TVs draw a web page's video (YouTube) underneath the window, showing through a hole in the page;
@@ -215,7 +215,7 @@ class MainActivity : ComponentActivity() {
         }
         // A channel clicked on the TV's home screen opens once the channels are in.
         LaunchedEffect(state.channels) { viewModel.openPending() }
-        // Our channels and the viewer's favourites in the TV home screen's "Cable TV" row (older Android TV).
+        // Our channels and the viewer's favourites in the TV home screen's "NextGen Cable" row (older Android TV).
         LaunchedEffect(state.channels.size, state.favorites) {
             if (Edition.LIVE_TV && state.channels.isNotEmpty()) HomeScreenRow.update(this@MainActivity, state.channels, state.favorites)
         }
@@ -319,7 +319,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** Cable TV's buttons on the full-screen channel bar: last channel, sleep timer, widgets. */
+    /** NextGen Cable's buttons on the full-screen channel bar: last channel, sleep timer, widgets. */
     @Composable
     private fun ChannelBarExtras() {
         IconButton(onClick = viewModel::lastChannel, modifier = Modifier.focusGlow()) {

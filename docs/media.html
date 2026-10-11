@@ -50,9 +50,9 @@
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Cable TV home">
-      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Cable TV</span>
+    <a class="brand" href="./" aria-label="NextGen Cable home">
+      <img src="nextgen-icon.png" alt="" aria-hidden="true">
+      <span>NextGen Cable</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -109,7 +109,7 @@
 </dialog>
 
 <footer>
-  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+  <div class="wrap">NextGen Cable comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
 </footer>
 
 <script type="module">
@@ -158,10 +158,10 @@ async function load() {
   const have = new Set(mine.items.map(i => i.id));
   const removed = new Set(mine.removed || []);
   for (const it of builtIn.items) if (!have.has(it.id) && !removed.has(it.id)) mine.items.push(it);
-  // Our ads sit in two folders (owner, 2026-10-09): Cable TV Ads and Spark TV Ads. Spark's own ads and show
+  // Our ads sit in two folders (owner, 2026-10-09): NextGen Cable Ads and Spark TV Ads. Spark's own ads and show
   // promos saved earlier under the one Promos section move to Spark TV Ads.
   for (const it of mine.items) if (it.cat === "promos" && /^(show-promo-|spark-)/.test(it.id)) it.cat = "spark-promos";
-  for (const c of mine.categories) if (c.id === "promos" && c.name === "Cable TV Promos") c.name = "Cable TV Ads";
+  for (const c of mine.categories) if (c.id === "promos" && /^(Cable TV|NextGen Cable) (Promos|Ads)$/.test(c.name)) c.name = "NextGen Cable Ads";
   const cats = new Set(mine.categories.map(c => c.id));
   for (const c of builtIn.categories) if (!cats.has(c.id) && mine.items.some(i => i.cat === c.id)) mine.categories.push(c);
   lib = mine;
@@ -186,7 +186,7 @@ function render() {
   $("langs").querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { lang = b.dataset.lang; render(); });
   const catOptions = id => lib.categories.map(c => `<option value="${esc(c.id)}" ${c.id === id ? "selected" : ""}>${esc(c.name)}</option>`).join("");
   $("aCat").innerHTML = catOptions();
-  // "Ads" shows only our two ad folders, Cable TV Ads and Spark TV Ads.
+  // "Ads" shows only our two ad folders, NextGen Cable Ads and Spark TV Ads.
   const shown = lang === "promos" ? lib.categories.filter(c => PROMO_CATS.includes(c.id)) : lib.categories;
   $("cats").innerHTML = shown.map(c => {
     const items = lib.items.filter(i => i.cat === c.id && (lang === "all" || lang === "promos" || i.lang === lang));

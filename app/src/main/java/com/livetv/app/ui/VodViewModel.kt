@@ -94,7 +94,7 @@ fun library(lists: List<Pair<Playlist, List<Channel>>>): Pair<Map<Vod.Language, 
     return shelves(byFolder.filter { it.first == null }.flatMap { it.second }) to folders
 }
 
-/** Cable TV's Movies & Series: the movies and episodes in the viewer's saved playlists. */
+/** NextGen Cable's Movies & Series: the movies and episodes in the viewer's saved playlists. */
 class VodViewModel(app: Application) : AndroidViewModel(app) {
 
     private val repo = ChannelRepository(app)

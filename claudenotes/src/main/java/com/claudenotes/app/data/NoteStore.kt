@@ -75,6 +75,6 @@ class NoteStore(context: Context) {
     }
 
     companion object {
-        val DEFAULT_TOPICS = listOf("Cable TV", "Website", "App Bazaar", "Quran app", "Other").map { Topic(it) }
+        val DEFAULT_TOPICS = listOf("NextGen Cable", "Website", "App Bazaar", "Quran app", "Other").map { Topic(it) }
     }
 }

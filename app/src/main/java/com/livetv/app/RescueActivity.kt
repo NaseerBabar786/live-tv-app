@@ -27,7 +27,7 @@ import java.net.URL
  */
 class RescueActivity : Activity() {
 
-    private val appName: String get() = when (packageName) { "com.naseerbabar.livetv" -> "Cable TV"; "com.naseerbabar.livetvmax" -> "Live TV Max"; else -> getString(R.string.app_name) }
+    private val appName: String get() = when (packageName) { "com.naseerbabar.livetv" -> "NextGen Cable"; "com.naseerbabar.livetvmax" -> "Live TV Max"; else -> getString(R.string.app_name) }
     private val apk: String? get() = when (packageName) { "com.naseerbabar.livetv" -> "LiveTV.apk"; "com.naseerbabar.livetvmax" -> "LiveTVMax.apk"; else -> null }
 
     private lateinit var status: TextView

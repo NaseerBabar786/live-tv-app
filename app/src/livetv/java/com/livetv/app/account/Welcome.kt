@@ -10,7 +10,7 @@ import java.util.Date
 
 /**
  * The welcome invitation (owner, 2026-10-08): every viewer who hasn't used the WELCOME promo code
- * gets a message from the Cable TV team inviting them to try Gold free for one month and leave us
+ * gets a message from the NextGen Cable team inviting them to try Gold free for one month and leave us
  * a good review, with a one-press button that uses the code. The app makes it itself, no server:
  * it sits at the top of the viewer's Messages, and pops up once per account (users/{uid}.welcomeAt
  * records when), so new viewers get it on their first start and existing Free viewers on their next.
@@ -18,11 +18,11 @@ import java.util.Date
 object Welcome {
     const val CODE = "WELCOME"
     const val TITLE = "🎁 Try Gold free for one month"
-    const val TEXT = "Thank you for joining Cable TV! Here is your welcome gift: Gold free for one more month, " +
+    const val TEXT = "Thank you for joining NextGen Cable! Here is your welcome gift: Gold free for one more month, " +
         "every mode and every feature (the channels are always free). Press \"Use code $CODE\", or type promo code $CODE in Settings > Packages. " +
         "One free month per account.\n\n" +
         "Look around, enjoy the app, and if you like it, please leave us a good review ★★★★★ and tell your friends. " +
-        "Thank you! The Cable TV team"
+        "Thank you! The NextGen Cable team"
 
     /** Hours after the free trial ends before the gift pops up (owner, 2026-10-08). */
     const val AFTER_TRIAL_HOURS = 8

@@ -380,7 +380,7 @@ fun NextCard(vm: AppViewModel, now: Long) {
 
 /**
  * The weather now at the prayer times' place (owner, 2026-10-09: replaces the area / calculation / muezzin tile;
- * those stay under the gear button). Pressing it opens the host app's Weather section when it has one (Cable TV).
+ * those stay under the gear button). Pressing it opens the host app's Weather section when it has one (NextGen Cable).
  */
 @Composable
 private fun WeatherTile(vm: AppViewModel, compact: Boolean = false) {

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cable TV Stats</title>
-<meta name="description" content="Cable TV viewing stats.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>NextGen Cable Stats</title>
+<meta name="description" content="NextGen Cable viewing stats.">
+<link rel="icon" href="nextgen-icon.png">
 <link rel="stylesheet" href="assets/site.css">
 <meta name="robots" content="noindex">
 <style>
@@ -32,9 +32,9 @@
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Cable TV home">
-      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Cable TV</span>
+    <a class="brand" href="./" aria-label="NextGen Cable home">
+      <img src="nextgen-icon.png" alt="" aria-hidden="true">
+      <span>NextGen Cable</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -47,7 +47,7 @@
 
 <main class="wrap">
   <a href="admin" class="back-admin">← Back to Admin</a>
-  <h1>Cable TV stats</h1>
+  <h1>NextGen Cable stats</h1>
   <p class="lead">How many people watch, and what they watch. Counting started with app version 1.8.88; only the owner's account can see this page.</p>
   <div id="notReady" class="panel hidden">Stats will appear here once sign-in is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
@@ -106,7 +106,7 @@
           <thead><tr><th>Feature</th><th class="num">Viewers</th><th class="num">Opened</th><th class="num">Hours</th><th>Share</th></tr></thead>
           <tbody id="features"></tbody>
         </table></div>
-        <p class="small">Modes, full screen, Movies &amp; Dramas and Games (from Cable TV 1.10.5 and PC 1.0.9).</p>
+        <p class="small">Modes, full screen, Movies &amp; Dramas and Games (from NextGen Cable 1.10.5 and PC 1.0.9).</p>
       </div>
       <div>
         <h2>By genre</h2>
@@ -149,7 +149,7 @@
   <p class="err" id="err"></p>
 </main>
 <footer>
-  <div class="wrap">Cable TV comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+  <div class="wrap">NextGen Cable comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
 </footer>
 
 <script type="module">
@@ -437,7 +437,7 @@ if (!configured) {
       }
     }
     fill("features", [...feats.values()].sort((a, b) => b.s - a.s), e => [e.label, { cls: "num", text: e.users.size }, { cls: "num", text: e.o.toLocaleString() }, { cls: "num", text: hours(e.s) },
-      { html: `<span class="share" style="width:${Math.round(e.s / Math.max(1, featTotal) * 120)}px"></span> ${Math.round(e.s / Math.max(1, featTotal) * 100)}%` }], "Shows once viewers have Cable TV 1.10.5 or PC 1.0.9.");
+      { html: `<span class="share" style="width:${Math.round(e.s / Math.max(1, featTotal) * 120)}px"></span> ${Math.round(e.s / Math.max(1, featTotal) * 100)}%` }], "Shows once viewers have NextGen Cable 1.10.5 or PC 1.0.9.");
 
     const sponsors = new Map();
     for (const r of sponsorRows) {

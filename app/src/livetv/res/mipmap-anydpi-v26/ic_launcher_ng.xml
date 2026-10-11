@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NextGen Cable's neon N (owner, 2026-10-10). Max shares src/livetv/res but keeps its own icon from main. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_ng_background" />
+    <foreground android:drawable="@drawable/ic_ng_foreground" />
+</adaptive-icon>

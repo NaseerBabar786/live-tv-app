@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 
 /**
  * The owner's test updates. Every new build first goes to the owner-only "test" release; nobody else
- * gets it until the owner has tried it and said it is good. On the owner's device (Cable TV signed in as the
+ * gets it until the owner has tried it and said it is good. On the owner's device (NextGen Cable signed in as the
  * owner, or seven quick taps on the version number) test updates are on and a "Try test version" button shows.
  */
 object OwnerTest {
@@ -26,11 +26,11 @@ object OwnerTest {
     fun set(context: Context, on: Boolean) =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply()
 
-    /** Cable TV and Live TV Max answer whether their signed-in account is the owner's (see their OwnerProvider). */
+    /** NextGen Cable and Live TV Max answer whether their signed-in account is the owner's (see their OwnerProvider). */
     private val OWNER_APPS = listOf("com.naseerbabar.livetv", "com.naseerbabar.livetvmax")
 
     /**
-     * Whether this is the owner's device: test updates were switched on here, or Cable TV on this device is
+     * Whether this is the owner's device: test updates were switched on here, or NextGen Cable on this device is
      * signed in with the owner's account. Only our own apps (same signing key) get an answer. Call off the main thread.
      */
     fun isOwner(context: Context): Boolean {

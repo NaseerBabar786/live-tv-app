@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cable TV · Watch live</title>
+<title>NextGen Cable · Watch live</title>
 <meta name="robots" content="noindex">
 <style>
   /* A YouTube channel or video in a channel list, played like a TV channel (1.9.46): YouTube's
      own player, as YouTube's terms require, but with its buttons off and a clear sheet over it,
      so nobody can pause, skip or leave for YouTube. The same rule as Spark Hits (bollywood.html).
-     Opened full screen by the Cable TV app: ?v=<video id>&name=<channel name>&app=1 */
+     Opened full screen by the NextGen Cable app: ?v=<video id>&name=<channel name>&app=1 */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
   #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .shield { position: absolute; inset: 0; background: transparent; }
@@ -58,7 +58,7 @@ const app = q.has("app"), id = q.get("v") || "", name = q.get("name") || "";
 const $ = x => document.getElementById(x);
 let player = null, nowTimer = null;
 if (name) document.title = name + " · Watch live";
-$("tick").textContent = `${name ? name + " on Cable TV · " : ""}Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+$("tick").textContent = `${name ? name + " on NextGen Cable · " : ""}Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
 
 function showNow() {
   if (!name) return;
@@ -88,7 +88,7 @@ window.onYouTubeIframeAPIReady = () => {
     playerVars: { autoplay: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, cc_load_policy: 0, origin: location.origin },
     events: {
       onReady: e => {
-        // YouTube's own leveling leaves videos a little louder than Cable TV's leveled channels;
+        // YouTube's own leveling leaves videos a little louder than NextGen Cable's leveled channels;
         // 60% brings them to the same loudness, so switching channels keeps one volume.
         e.target.setVolume(60);
         $("msg").remove();

@@ -25,7 +25,7 @@ The owner (2026-10-09): every Spark TV channel works like channel 1, with only p
 show. Spark TV launches on Play with channel 1 alone (the owner, 2026-10-09); the others are built here
 and kept ready, to be added to the app one by one (MyChannel.PLAY_READY). A channel whose source schedule isn't built yet is left out until it is (the app then hides it).
 
-Every YouTube video is left out, so is anything only allowed on the website (Cable TV promos, which
+Every YouTube video is left out, so is anything only allowed on the website (NextGen Cable promos, which
 point to an app outside Google Play), and nothing may link to a list the app would fill from YouTube.
 A short ad break of ours follows every programme. Fails (exit 1) when a schedule would carry a YouTube
 link or come out empty. Run after the schedules it reads change (build-play-schedules.yml).
@@ -195,9 +195,9 @@ def one():
     o = load("test-schedule.json")
     by = {v["id"]: v for v in o.get("videos", [])}
     # Only channel 1's clips that are right for Google Play, checked frame by frame (2026-10-09): the break and
-    # "next programme" cards, our "advertise here" ad and the news. Left out: the Cable TV promos and the 1-minute
-    # ad breaks (Gold, promo codes, "free on Cable TV"), the Urdu Spark ad (YouTube drama and song pictures), the
-    # welcome card ("on Cable TV"), the Spark logo and montages (they name channels Spark TV on Play doesn't
+    # "next programme" cards, our "advertise here" ad and the news. Left out: the NextGen Cable promos and the 1-minute
+    # ad breaks (Gold, promo codes, "free on NextGen Cable"), the Urdu Spark ad (YouTube drama and song pictures), the
+    # welcome card ("on NextGen Cable"), the Spark logo and montages (they name channels Spark TV on Play doesn't
     # have, kids among them) and the "today's programmes" segment (it lists channel 1's YouTube dramas).
     keep = ["break", "next", "adhere"] + ([i for i in by if i.startswith("news-")] if WITH_NEWS else [])
     videos = [by[i] for i in keep if i in by and ok(by[i])]

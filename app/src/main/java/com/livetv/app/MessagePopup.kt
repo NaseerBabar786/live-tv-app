@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * A private message from the Cable TV team that pops up over whatever is playing (owner, 2026-10-09):
+ * A private message from the NextGen Cable team that pops up over whatever is playing (owner, 2026-10-09):
  * the owner writes it at tv.bulkbazaar.ca/users, and the viewer can answer at once with the remote.
- * Cable TV's Messages fill it in; the main screen shows it, and so does a full-screen YouTube channel or
+ * NextGen Cable's Messages fill it in; the main screen shows it, and so does a full-screen YouTube channel or
  * Library film (WebChannelActivity, a window of its own), so it's seen wherever the viewer is.
  */
 object MessagePopup {
@@ -29,7 +29,7 @@ object MessagePopup {
     /** One-press answers, so nobody has to type with the remote. */
     val QUICK_REPLIES = listOf("👍 OK, got it", "Thank you!", "Please call me")
 
-    const val TITLE = "✉ Message from the Cable TV team"
+    const val TITLE = "✉ Message from the NextGen Cable team"
 
     fun show(message: Incoming) {
         _shown.value = message

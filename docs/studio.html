@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Channel Studio</title>
-<meta name="description" content="Run your own TV channel inside Cable TV.">
+<meta name="description" content="Run your own TV channel inside NextGen Cable.">
 <link rel="icon" href="channel/logos/spark-tv-square.png">
 <link rel="stylesheet" href="assets/site.css">
 <meta name="robots" content="noindex">
@@ -253,9 +253,9 @@
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Cable TV home">
-      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Cable TV</span>
+    <a class="brand" href="./" aria-label="NextGen Cable home">
+      <img src="nextgen-icon.png" alt="" aria-hidden="true">
+      <span>NextGen Cable</span>
     </a>
     <nav>
       <a href="./">Home</a>
@@ -270,7 +270,7 @@
 <main class="wrap studio-main">
   <a href="admin" class="back-admin">← Back to Admin</a>
   <h1>Channel Studio</h1>
-  <p class="lead">Run your own TV channels. They show at the top of every list in Cable TV (Spark TV One is <b>channel 1</b>; the other Spark channels sit in language blocks: Urdu <b>1-19</b>, Hindi <b>21-39</b>, English <b>41-59</b>, Punjabi <b>61-79</b>) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
+  <p class="lead">Run your own TV channels. They show at the top of every list in NextGen Cable (Spark TV One is <b>channel 1</b>; the other Spark channels sit in language blocks: Urdu <b>1-19</b>, Hindi <b>21-39</b>, English <b>41-59</b>, Punjabi <b>61-79</b>) and on the public page <a id="publicLink" href="channel/" target="_blank">tv.bulkbazaar.ca/channel</a>. Everyone sees the same moment, like real TV. TVs pick up changes within about 10 minutes.</p>
 
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account isn't the owner's. <button class="btn" data-signout>Use another account</button></div>
@@ -535,7 +535,7 @@
 
     <section class="panel" id="stats">
       <h2>📊 Most watched</h2>
-      <p class="small" style="margin-top:0">What people watch on our channels, counted by the Cable TV app (from version 1.9.65) on every signed-in TV and phone. Programme details are for channels you schedule here (Spark TV); channels that play YouTube show only their total. Use it to decide what to put on and when.</p>
+      <p class="small" style="margin-top:0">What people watch on our channels, counted by the NextGen Cable app (from version 1.9.65) on every signed-in TV and phone. Programme details are for channels you schedule here (Spark TV); channels that play YouTube show only their total. Use it to decide what to put on and when.</p>
       <div class="row">
         <select id="stDays" style="padding:8px;border-radius:10px;background:var(--bg);color:var(--text);border:1.5px solid var(--line);font:inherit">
           <option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option>
@@ -558,7 +558,7 @@
 
     <section class="panel" id="adlib">
       <h2>🎞 Ads &amp; montages</h2>
-      <p class="small" style="margin-top:0">Our ads library: montages and the moving logo, Spark TV ads, Cable TV ads and our customers' ads, each in its own folder, with where it plays. Press play to watch one. Only ads the owner approved are here; montages take turns, so each break shows a different one.</p>
+      <p class="small" style="margin-top:0">Our ads library: montages and the moving logo, Spark TV ads, NextGen Cable ads and our customers' ads, each in its own folder, with where it plays. Press play to watch one. Only ads the owner approved are here; montages take turns, so each break shows a different one.</p>
       <div id="alList"><p class="small">Loading…</p></div>
     </section>
 
@@ -647,7 +647,7 @@ import { mountCards } from "./channel/cards.js";
 import { playable, status, withApprovals, dayPlan, itemAt, torontoDay, loadPromos as loadBreakPromos, loadSpark, sparkFor, loadTrailers, loadOwnClips, rebuildDay, carryOver, slimItem, schedDoc } from "./channel/ytorder.js";
 let breakPromos = [], pkTrailers = [], pkOwn = [], sparkAds = null;
 loadSpark("media/").then(d => { sparkAds = d; });
-// A channel's breaks: our Cable TV promos and its Spark TV ads; its moving logo once an hour (channel/ytorder.js).
+// A channel's breaks: our NextGen Cable promos and its Spark TV ads; its moving logo once an hour (channel/ytorder.js).
 const pkBreaks = () => ({ promos: breakPromos.concat(sparkFor(pkStation(), sparkAds).promos), ident: sparkFor(pkStation(), sparkAds).ident });
 loadBreakPromos("media/").then(p => { breakPromos = p; setTimeout(() => { try { if (pick) renderPicks(); } catch {} }); });
 const $ = id => document.getElementById(id);
@@ -1149,7 +1149,7 @@ function renderLoop() {
     loopRows[i] = d;
     d.querySelector("b").insertAdjacentHTML("beforeend", `<span class="kind ${kindOf(v)}">${kindLabel[kindOf(v)]}</span>`);
     d.querySelector(".meta").textContent = v.secs > 0 ? `starts at ${at > 0 ? lengthText(at) : "0:00"} into the loop · ${lengthText(v.secs)} long`
-      : kindOf(v) === "ads" ? (/ads-sponsors/.test(v.url) ? "every sponsor showing today on /sponsors, one after another (updates by itself every hour)" : "our Cable TV promos on air, one after another (the same list as the app's pop-up)")
+      : kindOf(v) === "ads" ? (/ads-sponsors/.test(v.url) ? "every sponsor showing today on /sponsors, one after another (updates by itself every hour)" : "our NextGen Cable promos on air, one after another (the same list as the app's pop-up)")
       : ["trailers", "music", "list"].includes(kindOf(v)) ? "today's YouTube list: its videos play here one after another (the list changes every day)"
       : "live stream: plays until the next time slot (the rest of the loop is skipped)";
     at += v.secs > 0 ? v.secs : 0;
@@ -1373,7 +1373,7 @@ function runTicker(text) {
 }
 /** The white "Advertise" line from the Sponsors page, run once along the bottom as on a full-screen TV. */
 async function runAdLine() {
-  let text = "Advertise your business on Cable TV  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
+  let text = "Advertise your business on NextGen Cable  ·  WhatsApp 437 602 6500  ·  tv.bulkbazaar.ca/advertise";
   try {
     const t = await fs.getDoc(fs.doc(db, "sponsors", "_ticker"));
     if (t.exists()) {
@@ -1494,7 +1494,7 @@ function renderOverview() {
       <div class="sub">booked shows this week · ${c.slots.filter(x => x.episodes?.length > 1).length} weekly series</div>
       <span class="go">Plan the week ›</span>`],
     ["stats", `<h3>📊 Most watched</h3>
-      ${stats ? `<div class="big">${esc(stats.top?.name || "No data yet")}</div><div class="sub">${stats.top ? fmtTime(stats.top.secs) + " watched in the last " + stats.days + " days" : "Counts arrive from Cable TV 1.9.65 and newer"}</div>` : '<div class="sub">See which programmes and times people watch most</div>'}
+      ${stats ? `<div class="big">${esc(stats.top?.name || "No data yet")}</div><div class="sub">${stats.top ? fmtTime(stats.top.secs) + " watched in the last " + stats.days + " days" : "Counts arrive from NextGen Cable 1.9.65 and newer"}</div>` : '<div class="sub">See which programmes and times people watch most</div>'}
       <span class="go">Open the numbers ›</span>`],
     ["help", `<h3>${dirty ? '<span class="pill unsaved">NOT SAVED</span>' : '<span class="pill on">SAVED</span>'} Status</h3>
       <div class="sub">${dirty ? "You have changes that aren't on TVs yet. Press Save on the left." : "Everything here is on TVs (they pick up changes within about 10 minutes)."}</div>
@@ -1894,7 +1894,7 @@ async function renderAdLibrary() {
       <div><b>${esc(title)}</b><span class="small">${secs ? secs + " s · " : ""}${esc(where)}</span>
       <span class="alPill${on ? "" : " off"}">${esc(pill)}</span></div></div>`;
   const group = (title, cards) => cards.length ? `<h3>${title} <span class="small">(${cards.length})</span></h3><div class="alGrid">${cards.join("")}</div>` : "";
-  // Two folders (owner, 2026-10-09): Spark TV ads and Cable TV ads.
+  // Two folders (owner, 2026-10-09): Spark TV ads and NextGen Cable ads.
   const folder = (title, groups) => `<details class="alFolder" open><summary>${title}</summary>${groups.join("") || '<p class="small">Nothing here yet.</p>'}</details>`;
   const sp = spark || {}; const LANG = { ur: "Urdu", hi: "Hindi", en: "English", pa: "Punjabi" };
   const montages = sp.montages?.list || (sp.montage ? [sp.montage] : []);
@@ -1913,9 +1913,9 @@ async function renderAdLibrary() {
   const cableOn = cableItems.filter(i => onAir.has(i.title)).map(i => card(i.url, i.poster, i.title, i.secs, "Breaks on every channel"));
   const cableOff = cableItems.filter(i => !onAir.has(i.title)).map(i => card(i.url, i.poster, i.title, i.secs, "Approved earlier, not in the breaks now", false));
   // Our older ads, kept on the site but off the air (replaced by newer ones).
-  const old = [["1", 60], ["2", 30], ["3", 30], ["4", 30], ["6", 60]].filter(([n]) => !onAir.has("Cable TV Video Ad " + n))
-    .map(([n, secs]) => card(`media/cable-tv-video-ad-${n}.mp4`, `media/cable-tv-ad-${n}-poster.jpg`, "Cable TV Video Ad " + n, secs, "Older ad, replaced by a newer one", false));
-  old.push(card("media/cable-tv-promotion-ad-promo-code.mp4", "media/cable-tv-promo-code-ad-poster.jpg", "Cable TV promo-code ad (WELCOME)", 30, "Older ad, replaced by Ad 8", false));
+  const old = [["1", 60], ["2", 30], ["3", 30], ["4", 30], ["6", 60]].filter(([n]) => !onAir.has("NextGen Cable Video Ad " + n))
+    .map(([n, secs]) => card(`media/cable-tv-video-ad-${n}.mp4`, `media/cable-tv-ad-${n}-poster.jpg`, "NextGen Cable Video Ad " + n, secs, "Older ad, replaced by a newer one", false));
+  old.push(card("media/cable-tv-promotion-ad-promo-code.mp4", "media/cable-tv-promo-code-ad-poster.jpg", "NextGen Cable promo-code ad (WELCOME)", 30, "Older ad, replaced by Ad 8", false));
   // One folder per customer: their video ad and their pictures, with the same status /sponsors shows.
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Toronto" });
   const state = x => !x.active ? "OFF" : x.end && x.end < today ? "ENDED" : x.start && x.start > today ? "STARTS " + x.start : "ON AIR";
@@ -1933,7 +1933,7 @@ async function renderAdLibrary() {
     ? (ideas.length ? folder("📁 Waiting for your approval", [group("💡 New montage ideas", ideas)]) : "")
       + folder("📁 Montages &amp; moving logo", [group("✨ Spark TV", shapes)])
       + folder("📁 Spark TV ads", [group("📣 On air", sparkAds)])
-      + folder("📁 Cable TV ads", [group("📺 On air", cableOn), group("🗄 Older ads", [...cableOff, ...old])])
+      + folder("📁 NextGen Cable ads", [group("📺 On air", cableOn), group("🗄 Older ads", [...cableOff, ...old])])
       + folder("📁 Customer ads", sponsors === null ? ['<p class="small">Couldn\'t load the customers. Sign in with the admin account and open this tab again.</p>']
         : customers.length ? [`<p class="small">Our advertisers, from the <a href="sponsors">Sponsors page</a>. Open a folder to see what we run for them.</p>`, ...customers] : ['<p class="small">No customers yet. Add them on the <a href="sponsors">Sponsors page</a>.</p>'])
     : '<p class="small">Could not load the list. Check your connection and open this tab again.</p>';
@@ -1990,7 +1990,7 @@ async function loadStats() {
       const max = Math.max(1, ...rows.map(r => r.secs));
       return rows.length ? `<tr><th>#</th><th>${label}</th><th class="n">Watched</th><th class="n">Viewers</th><th class="n">Per viewer</th><th style="width:22%"></th></tr>` +
         rows.slice(0, 50).map((r, i) => `<tr><td>${i + 1}</td><td>${esc(r.name)}${r.show && r.show !== r.name ? ` <span class="small">(${esc(r.show)})</span>` : ""}${r.dial ? ` <span class="small">· ch ${esc(r.dial)}</span>` : ""}</td><td class="n">${fmtTime(r.secs)}</td><td class="n">${r.users.size}</td><td class="n">${fmtTime(r.secs / r.users.size)}</td><td><div class="bar" style="width:${(100 * r.secs / max).toFixed(1)}%"></div></td></tr>`).join("")
-        : `<tr><td class="small">Nothing counted yet in these days.${label === "Programme" ? " Programme counts come from Cable TV 1.9.65 and newer." : ""}</td></tr>`;
+        : `<tr><td class="small">Nothing counted yet in these days.${label === "Programme" ? " Programme counts come from NextGen Cable 1.9.65 and newer." : ""}</td></tr>`;
     };
     $("stProgs").innerHTML = table(pl, "Programme");
     $("stChans").innerHTML = table(cl, "Channel");

@@ -13,7 +13,7 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * Cable TV's TV extras (owner, 2026-10-09): sleep timer, screensaver, the "Channel not working" report,
+ * NextGen Cable's TV extras (owner, 2026-10-09): sleep timer, screensaver, the "Channel not working" report,
  * floating widgets over full screen, reminders, family profiles and the TV home-screen card. This object
  * keeps the small settings they share; each feature has its own file in this package.
  */

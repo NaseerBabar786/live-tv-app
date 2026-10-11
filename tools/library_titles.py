@@ -1,5 +1,5 @@
 """
-Per-title facts for Cable TV's Library (owner, 2026-10-10), kept in docs/library-info/titles.json:
+Per-title facts for NextGen Cable's Library (owner, 2026-10-10), kept in docs/library-info/titles.json:
   - the year a film or programme came out ("Released 2019" in its details). From the title when it says
     ("Film Name (2019)"), else from Wikidata (a film's publication date, a series' first air date), but only
     when exactly one film or series of that name and country fits; never a guess.
@@ -303,7 +303,7 @@ def titles_in(path):
 
 def write_count():
     """How many titles (films, and dramas or shows each counted once) the Library has, for the number under
-    Cable TV's Library button: Dramas, Free and the news archive always; MTA's only when MTA is on."""
+    NextGen Cable's Library button: Dramas, Free and the news archive always; MTA's only when MTA is on."""
     docs = os.path.join(ROOT, "docs")
     main = set()
     for name in ("Dramas.m3u", "Free.m3u", "NewsArchive.m3u"):

@@ -3,7 +3,7 @@ package com.livetv.app.data
 /**
  * MTA (Muslim Television Ahmadiyya): its own live channels, streamed openly from its own
  * servers, and its programmes in the Library (tv.bulkbazaar.ca/MTA.m3u, from MTA's own
- * YouTube channel). Off until the viewer turns MTA on in Cable TV's Settings.
+ * YouTube channel). Off until the viewer turns MTA on in NextGen Cable's Settings.
  */
 object Mta {
     const val GROUP = "MTA"

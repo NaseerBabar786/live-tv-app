@@ -1,4 +1,4 @@
-// Cable TV Spades: you and Mitthu against Sheru and Gajju. Bidding with nil, bags, hints, daily goals,
+// NextGen Cable Spades: you and Mitthu against Sheru and Gajju. Bidding with nil, bags, hints, daily goals,
 // levels and monthly season badges (kept on the TV). The record sent to the app is the number of matches won.
 (function(){
 "use strict";

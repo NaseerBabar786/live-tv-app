@@ -10,7 +10,7 @@ import java.util.Calendar
 import java.util.TimeZone
 
 class MyChannelTest {
-    /** Cable TV's channels; Spark TV (Google Play) has its own list, tested in src/testSpark. */
+    /** NextGen Cable's channels; Spark TV (Google Play) has its own list, tested in src/testSpark. */
     @Before
     fun cableTvOnly() = assumeFalse(com.livetv.app.Edition.PLAY_CHANNELS)
 

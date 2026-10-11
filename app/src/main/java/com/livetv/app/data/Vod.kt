@@ -148,7 +148,7 @@ object Vod {
     fun folder(source: String): Folder? = Folder.entries.firstOrNull { it.source == source }
 
     /**
-     * The playlists Movies & Series always shows: the free lists in Cable TV, none in the store editions.
+     * The playlists Movies & Series always shows: the free lists in NextGen Cable, none in the store editions.
      * The old public-domain classics ([FREE_MOVIES_URL]) left the Library at the owner's wish (2026-10-07):
      * too old for viewers. Newer English films, shows and cartoons come in Dramas.m3u; the classics still
      * play on Bazaar Cinema.
@@ -229,7 +229,7 @@ object Vod {
     }
 
     private fun isEpisode(channel: Channel): Boolean {
-        // tvg-genre from Cable TV's own lists: Movies, or a Series, Shows or Kids folder.
+        // tvg-genre from NextGen Cable's own lists: Movies, or a Series, Shows or Kids folder.
         channel.category?.lowercase()?.let { c ->
             if (c == "movies" || c == "movie") return false
             if (c == "series" || c == "shows" || c == "kids") return true

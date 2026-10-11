@@ -2,7 +2,7 @@ package com.livetv.app
 
 /**
  * While a sponsor's card shows after a channel change, OK on the remote opens their website
- * instead of its usual job. Set by Cable TV's card, null the rest of the time.
+ * instead of its usual job. Set by NextGen Cable's card, null the rest of the time.
  */
 object SponsorKey {
     @Volatile

@@ -32,7 +32,7 @@ class Updater(context: Context) {
     suspend fun checkForUpdate(): Release? = withContext(Dispatchers.IO) {
         testRelease()?.let { return@withContext it }
         val json = JSONObject(fetchText(if (Edition.MAX) MAX_RELEASE_API else LATEST_RELEASE_API))
-        // Live TV Max's fixed release is named "Live TV Max 1.0.0"; Cable TV's tags carry the version.
+        // Live TV Max's fixed release is named "Live TV Max 1.0.0"; NextGen Cable's tags carry the version.
         val version = if (Edition.MAX) json.getString("name").substringAfterLast(' ') else versionFromTag(json.getString("tag_name"))
         val assets = json.getJSONArray("assets")
         val apk = (0 until assets.length()).map { assets.getJSONObject(it) }

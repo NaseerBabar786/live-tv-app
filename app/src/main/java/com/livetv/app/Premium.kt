@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Premium features (the 2×2 and 1×2 layouts). Cable TV and Stream Player Plus have them for
+ * Premium features (the 2×2 and 1×2 layouts). NextGen Cable and Stream Player Plus have them for
  * everyone; Live TV Plus sells them as a Google Play subscription and sets [billing] at start.
  */
 object Premium {

@@ -1,6 +1,6 @@
 // The Spark TV network's channels for the Spark website (tv.bulkbazaar.ca/spark), straight from the same
 // list the app and the watch pages use (channel/schedule.js STATIONS, kept in step with MyChannel.STATIONS),
-// so a new channel shows up here on its own. Only our own channels: MTA and the 7,800+ others are Cable TV's.
+// so a new channel shows up here on its own. Only our own channels: MTA and the 7,800+ others are NextGen Cable's.
 
 import { STATIONS } from "../channel/schedule.js";
 import { torontoDay } from "../channel/ytorder.js";

@@ -49,7 +49,7 @@ fun UpdatePromptDialog(
                             LinearProgressIndicator(progress = { update.progress }, modifier = Modifier.fillMaxWidth())
                         }
                         is UpdateState.NeedsPermission -> Text(
-                            "Allow Cable TV to install apps in the screen that opened, then come back " +
+                            "Allow NextGen Cable to install apps in the screen that opened, then come back " +
                                 "and press Update now again."
                         )
                         else -> Unit

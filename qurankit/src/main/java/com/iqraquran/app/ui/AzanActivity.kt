@@ -26,7 +26,7 @@ import kotlinx.coroutines.delay
 
 /**
  * The Azan on screen: the prayer, its time and a Stop button while the Azan plays (OK or Back stops it).
- * Opened at prayer time by the Iqra Quran app's alarm, and by Cable TV while it's on screen.
+ * Opened at prayer time by the Iqra Quran app's alarm, and by NextGen Cable while it's on screen.
  */
 open class AzanActivity : ComponentActivity() {
 
@@ -131,11 +131,11 @@ open class AzanActivity : ComponentActivity() {
         private const val BANNER_MS = 12_000L
         private const val SILENT_MS = 150_000L
 
-        /** Set by an app that shows these screens in its own colours (Cable TV). */
+        /** Set by an app that shows these screens in its own colours (NextGen Cable). */
         @Volatile
         var hostPalette: Palette? = null
 
-        /** True while an Azan screen is up (Cable TV quiets its YouTube channels meanwhile). */
+        /** True while an Azan screen is up (NextGen Cable quiets its YouTube channels meanwhile). */
         @Volatile
         var showing = false
             internal set

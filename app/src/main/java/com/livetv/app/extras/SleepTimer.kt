@@ -53,7 +53,7 @@ fun SleepTimerDialog(onDismiss: () -> Unit) {
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    if (left != null) "Cable TV turns off in about $left min." else "Cable TV closes by itself after the time you pick.",
+                    if (left != null) "NextGen Cable turns off in about $left min." else "NextGen Cable closes by itself after the time you pick.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.secondary,
                 )
@@ -122,7 +122,7 @@ fun SleepWarning(onSleep: () -> Unit) {
             Text("💤 Still watching?", color = Color.White, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.height(8.dp))
             Text(
-                "The sleep timer turns Cable TV off in ${((end - now) / 1000).coerceAtLeast(0)} seconds.",
+                "The sleep timer turns NextGen Cable off in ${((end - now) / 1000).coerceAtLeast(0)} seconds.",
                 color = Color.White.copy(alpha = 0.85f),
             )
             Spacer(Modifier.height(16.dp))

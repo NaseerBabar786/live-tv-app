@@ -6,9 +6,9 @@ the `sur-media` release). Every video that uses one shows the credit line from `
 
 | mood | track | used by |
 |---|---|---|
-| energetic | "Upbeat Sitar" by Antti Luode (130 BPM, stretched to 128 for the ads) | Cable TV Video Ads 1-4 |
+| energetic | "Upbeat Sitar" by Antti Luode (130 BPM, stretched to 128 for the ads) | NextGen Cable Video Ads 1-4 |
 | promo | "Psychedelic Crater" by Kevin MacLeod (120 BPM) | show promos (tools/promos) |
-| happy | "Happy sitar" by Antti Luode | Cable TV Video Ad 5 |
+| happy | "Happy sitar" by Antti Luode | NextGen Cable Video Ad 5 |
 | calm | "Vadodora Chill Mix" by Kevin MacLeod | story videos |
 
 The news (tools/news) has its own music, made in the news work with the owner.

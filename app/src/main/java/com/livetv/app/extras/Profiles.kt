@@ -226,7 +226,7 @@ fun ProfilesDialog(onSwitch: (String) -> Unit, onDismiss: () -> Unit) {
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
-                    "Each person gets their own favourites, last channel and languages. With two or more, Cable TV asks " +
+                    "Each person gets their own favourites, last channel and languages. With two or more, NextGen Cable asks " +
                         "\"Who's watching?\" when it starts.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.secondary,

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Cable TV only: the self-updater downloads new versions and hands them to the installer. -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- NextGen Cable only: the self-updater downloads new versions and hands them to the installer. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- Weather and prayer times for where the device is (asked once; a city typed in Settings wins). -->
@@ -15,7 +16,7 @@
     <queries>
         <!-- Settings opens the App Bazaar app when it is installed. -->
         <package android:name="com.naseerbabar.appbazaar" />
-        <!-- The Azan: when the Iqra Quran app is installed it plays the Azan, and Cable TV shows it silently. -->
+        <!-- The Azan: when the Iqra Quran app is installed it plays the Azan, and NextGen Cable shows it silently. -->
         <package android:name="com.naseerbabar.iqraquran" />
         <!-- Voice search: Android's speech service, or its speech screen on TVs without one. -->
         <intent>
@@ -31,8 +32,11 @@
         </intent>
     </queries>
 
-    <application>
-        <!-- Google TV's own voice search can send what was said to Cable TV ("Geo News on Cable TV"). -->
+    <!-- NextGen Cable's neon N icon (owner, 2026-10-10). -->
+    <application
+        android:icon="@mipmap/ic_launcher_ng"
+        tools:replace="android:icon">
+        <!-- Google TV's own voice search can send what was said to NextGen Cable ("Geo News on NextGen Cable"). -->
         <activity android:name="com.livetv.app.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

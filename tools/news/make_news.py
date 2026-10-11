@@ -94,7 +94,7 @@ WANT = {"headlines": {"pakistan": 4, "india": 3, "world": 4, "canada": 3, "sport
 ORDER = ("canada", "pakistan", "india", "world", "film", "sports")   # owner 2026-10-08
 # Spare stories per section: used when the wanted ones are short, so the bulletin fills its slot.
 EXTRA = 6
-# The end card stays at most this long; any time still left is filled with our own Cable TV promos
+# The end card stays at most this long; any time still left is filled with our own NextGen Cable promos
 # (docs/media/app-promos.json), so the channel never sits on a still slide (owner, 2026-10-07).
 END_MAX = 12.0
 CITIES = [("ٹورنٹو", 43.65, -79.38), ("وینکوور", 49.28, -123.12), ("کیلگری", 51.05, -114.07),
@@ -942,7 +942,7 @@ def add_broll(body, clips, work):
     os.replace(tmp, body)
 
 def add_promos(body, secs, slot, work, mp4):
-    """Fills the time after the bulletin with our own Cable TV promos, in turn (a different start each hour)."""
+    """Fills the time after the bulletin with our own NextGen Cable promos, in turn (a different start each hour)."""
     media = os.path.join(HERE, "..", "..", "docs", "media")
     cfg = json.load(open(os.path.join(media, "app-promos.json")))["promos"]
     files = [os.path.join(media, p["src"]) for p in cfg if os.path.exists(os.path.join(media, p["src"]))]

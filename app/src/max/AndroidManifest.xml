@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Live TV Max: like Cable TV's (src/livetv), with its own TV banner. The self-updater downloads new versions and hands them to the installer. -->
+<!-- Live TV Max: like NextGen Cable's (src/livetv), with its own TV banner. The self-updater downloads new versions and hands them to the installer. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
