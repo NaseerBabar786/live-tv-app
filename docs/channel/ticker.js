@@ -1,5 +1,5 @@
 /* Every channel's ticker (owner, 2026-10-11): "Test transmission" shows behind the moving words, and the
-   "advertise with us" words (the WhatsApp number, tv.bulkbazaar.ca/advertise) are left out; the rest of
+   "advertise with us" words (the WhatsApp number, tv.bulkbazaar.ca/advertise) and the word "Spark" are left out; the rest of
    the line keeps running. Works on any page with a .ticker strip, whatever sets its words and when. */
 (function () {
   const AD = /advertis|اشتہار|602\s*6500|\/advertise/i;
@@ -12,7 +12,9 @@
       // A bare web address right after the advertise words was part of them.
       if (AD.test(t) || (dropped && /^(tv\.)?bulkbazaar\.ca\/?$/i.test(t))) { dropped = true; continue; }
       dropped = false;
-      out.push(t);
+      // No "Spark" word in the tickers either (owner, 2026-10-11): "Spark Hits" reads "Hits".
+      const w = t.replace(/\bSpark TV,\s*/gi, "").replace(/\bSpark\b\s*|اسپارک\s*/gi, "").replace(/\s{2,}/g, " ").trim();
+      if (w && w !== "TV") out.push(w);
     }
     return out.join(" · ");
   }
