@@ -47,8 +47,17 @@
 
 <main class="wrap">
   <a href="admin" class="back-admin">← Back to Admin</a>
-  <h1>NextGen Cable stats</h1>
-  <p class="lead">How many people watch, and what they watch. Counting started with app version 1.8.88; only the owner's account can see this page.</p>
+  <h1 id="title">NextGen Cable stats</h1>
+  <p class="lead" id="lead">How many people watch, and what they watch. Counting started with app version 1.8.88; only the owner's account can see this page.</p>
+  <script>
+    // Admin › Website visitors opens stats?view=website: only the website part shows.
+    if (new URLSearchParams(location.search).get("view") === "website") document.addEventListener("DOMContentLoaded", () => {
+      document.title = "Website visitors · NextGen Cable";
+      document.getElementById("title").textContent = "Website visitors";
+      document.getElementById("lead").innerHTML = 'Who visits tv.bulkbazaar.ca and what they do there. Only the owner\'s account can see this page. App viewers are on the <a href="stats">Stats</a> page.';
+      for (const id of ["appPart", "sponsorPart"]) document.getElementById(id).hidden = true;
+    });
+  </script>
   <div id="notReady" class="panel hidden">Stats will appear here once sign-in is set up.</div>
   <div id="signedOut" class="panel hidden"><button class="btn primary" id="signIn">Sign in with Google</button></div>
   <div id="denied" class="panel hidden">This account can't see the stats. <button class="btn" data-signout>Use another account</button></div>
@@ -57,6 +66,7 @@
       <span class="small" id="range"></span>
       <div class="row"><button class="btn" id="all">Load every month</button><button class="btn" data-signout>Sign out</button></div>
     </div>
+    <div id="appPart">
     <div class="stats" id="stats"></div>
     <p class="small">A viewer is someone who watched at least one channel that day. Watch time counts the main picture (full screen, the 1+List player, or the tile with the sound).</p>
 
@@ -117,6 +127,7 @@
       </div>
     </div>
 
+    </div>
     <h2 id="website">Website visitors (tv.bulkbazaar.ca)</h2>
     <p class="small">How many people visit the website, what they read, what they click, what they watch and where they spend the most time. Each browser counts as one visitor and nobody is named. Your own visits aren't counted. Time counts only while the page is on screen and the visitor is using it (or something is playing). Time on page, parts of pages, clicks, where visitors came from and programmes are counted from 11 October 2026.</p>
     <div class="stats" id="webStats"></div>
@@ -130,7 +141,7 @@
         </select>
       </label>
     </div>
-    <div class="grid2" style="margin-top:8px">
+    <div class="grid2" style="margin-top:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))">
       <div>
         <h2>Where visitors spend the most time</h2>
         <div class="table-wrap"><table>
@@ -188,12 +199,14 @@
         <div class="chart-labels"><span>12 am</span><span>6 am</span><span>12 pm</span><span>6 pm</span><span>11 pm</span></div>
       </div>
     </div>
+    <div id="sponsorPart">
     <h2 id="sponsors">Sponsors</h2>
     <p class="small">How many times each sponsor was shown in the period above, and on how many devices (app 1.8.90 and newer). The strip counts once a minute while it shows. Manage sponsors on the <a href="sponsors">Sponsors</a> page.</p>
     <div class="table-wrap"><table>
       <thead><tr><th>Sponsor</th><th class="num">Start screen</th><th class="num">Side picture (1+List, 1+3)</th><th class="num">Corner card</th><th class="num">Bar (1×2, 2×2, 2×3)</th><th class="num">Total</th><th class="num">Website clicks</th><th class="num">Devices</th></tr></thead>
       <tbody id="sponsorRows"></tbody>
     </table></div>
+    </div>
   </div>
   <p class="err" id="err"></p>
 </main>
