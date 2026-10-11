@@ -41,11 +41,23 @@ export const REVIEW_FROM = "2026-10-07";
 // sur, musicur, sports, travel, hindidramas (2026-10-10, owner "fix that"): their lists were rebuilt on 10-09,
 // nothing was approved, and their days came out empty (61 Spark Music Punjabi showed no video).
 export const APPROVED_UNTIL = { comedyur: "2026-10-10", comedypa: "2026-10-10", auto: "2026-10-10", autohi: "2026-10-10",
-  sur: "2026-10-10", musicur: "2026-10-10", sports: "2026-10-10", travel: "2026-10-10", hindidramas: "2026-10-10" };
+  sur: "2026-10-10", musicur: "2026-10-10", sports: "2026-10-11", travel: "2026-10-10", hindidramas: "2026-10-10",
+  // 2026-10-11, owner "approve of everything and finish it": every channel's new programmes, after the pre-air,
+  // no-horror and channel-fit checks (only [APPROVED_OUT] failed).
+  dramas: "2026-10-11", cookingur: "2026-10-11", shayari: "2026-10-11", filmein: "2026-10-11", hindi: "2026-10-11",
+  comedy: "2026-10-11", cooking: "2026-10-11", kavi: "2026-10-11", kidshi: "2026-10-11", teenshi: "2026-10-11",
+  english: "2026-10-11", trailers: "2026-10-11", kids: "2026-10-11", teens: "2026-10-11", comedyen: "2026-10-11",
+  gurbani: "2026-10-11", moviespa: "2026-10-11", sufi: "2026-10-11" };
+/** Programmes left out of those approvals (kept in the Library only): a children's cartoon on Comedy English. */
+export const APPROVED_OUT = { comedyen: ["xyjieWkUCbg"] };
 /** [picks] (all channels) with each channel's [APPROVED_UNTIL] date added as its pick's "until". */
 export function withApprovals(picks) {
   const all = { ...(picks || {}) };
   for (const [id, until] of Object.entries(APPROVED_UNTIL)) all[id] = { ...(all[id] || {}), until };
+  for (const [id, ids] of Object.entries(APPROVED_OUT)) {
+    const p = all[id] || {}, out = (p.out || []).concat(ids.filter(x => !(p.on || []).includes(x) && !(p.out || []).includes(x)));
+    all[id] = { ...p, out };
+  }
   return all;
 }
 export function status(v, pick) {
