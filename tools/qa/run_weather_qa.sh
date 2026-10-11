@@ -33,6 +33,8 @@ tap_text() { local b; b=$(find_text "$@"); if [ -n "$b" ]; then adb shell input 
 back() { adb shell input keyevent KEYCODE_BACK; sleep 2; }
 launch() { adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1 || adb shell monkey -p "$PKG" -c android.intent.category.LEANBACK_LAUNCHER 1 >/dev/null 2>&1; sleep 10; }
 grant() { for p in ACCESS_COARSE_LOCATION ACCESS_FINE_LOCATION POST_NOTIFICATIONS; do adb shell pm grant "$PKG" android.permission.$p >/dev/null 2>&1; done; }
+# The tab row scrolls sideways on phones: swipe it left when a tab is off screen.
+tab_tap() { tap_text "$@" && return 0; local b; b=$(find_text "Hourly"); [ -n "$b" ] || return 1; set -- "$@"; local y=${b#* }; adb shell input swipe 900 $y 150 $y 300; sleep 2; tap_text "$@"; }
 weather() { find_text "☀️ Weather" | grep -q . || { back; find_text "☀️ Weather" | grep -q . || launch; }; tap_text "☀️ Weather" >/dev/null; }
 
 adb logcat -c
@@ -41,11 +43,11 @@ adb shell dumpsys package "$PKG" | grep -m2 -E 'versionName|versionCode' | tee -
 grant; launch; sleep 10; shot home
 for tab in "Hourly" "7 Days" "14 Days" "Maps" "News" "Video"; do
   weather
-  if tap_text "$tab"; then sleep 6; shot "tab-$(echo "$tab" | tr ' ' '-')"; fi
+  if tab_tap "$tab"; then sleep 6; shot "tab-$(echo "$tab" | tr ' ' '-')"; fi
 done
 # A weather video plays in our locked film page, then Back comes back to the app.
-weather; if tap_text "Video"; then sleep 6; adb shell input keyevent KEYCODE_DPAD_DOWN; adb shell input keyevent KEYCODE_DPAD_CENTER; sleep 15; shot video-playing; back; sleep 3; shot after-video; fi
-weather; adb shell input swipe 900 600 200 600 400; sleep 1
+weather; if tab_tap "Video"; then sleep 6; adb shell input keyevent KEYCODE_DPAD_DOWN; adb shell input keyevent KEYCODE_DPAD_CENTER; sleep 15; shot video-playing; back; sleep 3; shot after-video; fi
+weather
 if tap_text "⚙ Settings" "Settings"; then
   shot settings
   tap_text "Pure black" && shot theme-pure-black
