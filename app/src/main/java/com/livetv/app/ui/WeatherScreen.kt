@@ -134,8 +134,8 @@ private enum class Tab(val label: String) {
  * (parts of the day), 14 Days, a moving rain radar, weather news with pictures and weather videos, for the
  * viewer's own place and any places they add. The remote's arrows move around and OK opens; on a phone
  * everything is tapped. Back closes a story, then goes to the first tab, then closes the section.
- * The Spark Weather app shows this same screen as the whole app: it passes [onSettings] (a Settings chip
- * instead of the back arrow).
+ * The Spark Weather app shows this same screen as the whole app: it passes [onSettings] (a ⚙ Settings
+ * button beside the place's name instead of the back arrow).
  */
 @Composable
 fun WeatherScreen(onClose: () -> Unit, onSettings: (() -> Unit)? = null) {
@@ -232,6 +232,7 @@ fun WeatherScreen(onClose: () -> Unit, onSettings: (() -> Unit)? = null) {
                     firstFocus = firstFocus,
                     onTab = { tabName = it.name },
                     onClose = onClose.takeIf { onSettings == null },
+                    onSettings = onSettings,
                 )
                 LazyRow(
                     contentPadding = PaddingValues(vertical = 8.dp),
@@ -246,7 +247,6 @@ fun WeatherScreen(onClose: () -> Unit, onSettings: (() -> Unit)? = null) {
                     }
                     item { Chip("⟳ Refresh", on = false) { reload++ } }
                     if (canRemove) item { Chip("✕ Remove place", on = false) { removing = place } }
-                    if (onSettings != null) item { Chip("⚙ Settings", on = false, onClick = onSettings) }
                 }
                 Box(Modifier.fillMaxWidth().weight(1f)) {
                     when {
@@ -338,6 +338,7 @@ private fun Header(
     firstFocus: FocusRequester,
     onTab: (Tab) -> Unit,
     onClose: (() -> Unit)?,
+    onSettings: (() -> Unit)? = null,
 ) {
     val tabs = @Composable {
         Row(
@@ -370,12 +371,26 @@ private fun Header(
                 }
             }
             Row(
-                Modifier.background(Panel, PillShape).padding(horizontal = 18.dp, vertical = 8.dp),
+                Modifier.weight(1f, fill = false).background(Panel, PillShape).padding(horizontal = 18.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(place?.city?.ifBlank { null } ?: "Weather", fontSize = 22.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 val sub = if (mine) "📍 where you are" else place?.region.orEmpty()
                 if (sub.isNotBlank()) Text("  $sub", fontSize = 13.sp, color = Soft, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+            if (onSettings != null) {
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    "⚙ Settings",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .focusGlow(PillShape)
+                        .background(Panel, PillShape)
+                        .clickable(onClick = onSettings)
+                        .padding(horizontal = 14.dp, vertical = 9.dp),
+                )
             }
         }
     }
