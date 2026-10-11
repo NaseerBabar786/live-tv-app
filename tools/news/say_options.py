@@ -15,10 +15,10 @@ import make_news as N  # noqa: E402
 
 NUMBERS = ["ایک", "دو", "تین", "چار", "پانچ", "چھ", "سات", "آٹھ", "نو", "دس"]
 CHOICES = [
-    # Round 2 (2026-10-11): the owner picked greeting 4; none of the first four "Independent" ways sounded right.
-    ("{} اردو کے مطابق۔",
-     ["اِنڈی پینڈینٹ", "اِن ڈِپَینڈَنٹ", "اِنڈِپِینڈِنٹ", "اِن ڈی پین ڈینٹ", "انڈیپنڈنٹ",
-      "In-dee-pen-dent", "اِنڈیپینڈنٹ نیوز", "اِنڈے پینڈنٹ", "Independent"]),
+    # Owner's picks 2026-10-11: greeting choice 4 ("اَسَّلامُ عَلَیکُم") and "Independent" in English letters
+    # (choice 4 of the first round); both are in make_news.SAY. Add a new word here to offer choices again.
+    ("السلام علیکم، اور یہ ہے اسپارک ٹی وی نیوز۔", ["اَسَّلامُ عَلَیکُم"]),
+    ("{} اردو کے مطابق۔", ["Independent"]),
 ]
 
 
