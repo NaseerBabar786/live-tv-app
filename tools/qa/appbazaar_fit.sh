@@ -19,6 +19,6 @@ shot() {
   adb uninstall com.naseerbabar.appbazaar
   adb logcat -c
 }
-shot before.apk before
 shot appbazaar/build/outputs/apk/debug/appbazaar-debug.apk after
+shot before.apk before
 find out -empty -delete; ls -la out
