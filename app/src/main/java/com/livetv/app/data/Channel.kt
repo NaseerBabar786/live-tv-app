@@ -28,6 +28,12 @@ data class Channel(
     val desc: String? = null,
     /** Library programmes: its genres for the genre chips ("Action", "Comedy"; genres="Action;Comedy"). */
     val genres: List<String> = emptyList(),
+    /** Library programmes: the year it came out (year="2019", tools/library_titles.py), or null. */
+    val year: Int? = null,
+    /** Library programmes: the day the video went online ("2024-03-06", pub="..."), or null. */
+    val pub: String? = null,
+    /** Library programmes: the YouTube id of its official trailer (trailer="..."), or null. */
+    val trailer: String? = null,
 ) {
     /** Stable key used for favorites and list keys. */
     val id: String get() = url

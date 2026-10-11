@@ -34,6 +34,9 @@ import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import library_titles  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INFO_DIR = os.path.join(ROOT, "docs", "library-info")
 REMOVED = os.path.join(ROOT, "docs", "library-removed.json")
@@ -115,11 +118,34 @@ def innertube(endpoint, body):
         return r.read().decode("utf-8", "replace")
 
 
+MONTHS = {m: n for n, m in enumerate(("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), 1)}
+
+
+def upload_day(page):
+    """The day a video went on YouTube ("2024-03-06") from its watch-page data, or "" when it doesn't say.
+    YouTube writes it as "Mar 6, 2024", "Premiered Mar 6, 2024" or "Streamed live on Mar 6, 2024"."""
+    m = re.search(r'"dateText":\{"simpleText":"[^"]*?([A-Z][a-z]{2}) (\d{1,2}), (\d{4})"', page)
+    if not m or m.group(1) not in MONTHS:
+        return ""
+    return f"{m.group(3)}-{MONTHS[m.group(1)]:02d}-{int(m.group(2)):02d}"
+
+
+def dated(vid):
+    """Only the upload day, for videos looked at before it was kept (2026-10-10)."""
+    try:
+        return vid, upload_day(innertube("next", {"videoId": vid}))
+    except Exception as e:  # noqa: BLE001
+        print(f"  {vid}: upload day failed ({e})", file=sys.stderr)
+        return vid, None
+
+
 def look(vid):
-    """What we know about one YouTube video: mins, desc, still (True/False), checked."""
+    """What we know about one YouTube video: mins, desc, pub (upload day), still (True/False), checked."""
     info = {"checked": dt.date.today().isoformat()}
     try:  # the description, from the watch page's data (this part works without signing in)
-        m = re.search(r'"attributedDescription":\{"content":"((?:[^"\\]|\\.)*)"', innertube("next", {"videoId": vid}))
+        page = innertube("next", {"videoId": vid})
+        info["pub"] = upload_day(page)
+        m = re.search(r'"attributedDescription":\{"content":"((?:[^"\\]|\\.)*)"', page)
         full = json.loads(f'"{m.group(1)}"') if m else ""
         desc = describe(full)
         if desc:
@@ -153,11 +179,13 @@ def look_other(url):
             j = json.loads(get("https://vimeo.com/api/oembed.json?url=" + urllib.parse.quote(url, safe="")))
             if j.get("duration"):
                 info["mins"] = max(1, round(j["duration"] / 60))
+            info["pub"] = (j.get("upload_date") or "")[:10]
             desc = describe(html.unescape(re.sub(r"<[^>]+>", "\n", j.get("description") or "")))
         else:
             nasa_id = urllib.parse.unquote(url.split("/video/", 1)[1].split("/", 1)[0])
             j = json.loads(get("https://images-api.nasa.gov/search?nasa_id=" + urllib.parse.quote(nasa_id)))
             data = j["collection"]["items"][0]["data"][0]
+            info["pub"] = (data.get("date_created") or "")[:10]
             desc = describe(data.get("description_508") or data.get("description") or "")
         if desc:
             info["desc"] = desc
@@ -229,7 +257,7 @@ def why_off(attrs, name, known, url, vid, removed):
     return None
 
 
-def rewrite(path, info, removed, taken):
+def rewrite(path, info, removed, taken, titles=None):
     """Rewrites one playlist; what's taken off goes into [taken] (language, section, name, why)."""
     with open(path, encoding="utf-8") as f:
         lines = f.read().splitlines()
@@ -255,8 +283,15 @@ def rewrite(path, info, removed, taken):
         mins = known.get("mins") or attrs.get("mins")
         desc = known.get("desc") or attrs.get("desc")
         kinds = genres(f"{name} {story(known.get('about')) or desc or ''}")
-        extinf = re.sub(r'\s(?:mins|desc|genres)="[^"]*"', "", extinf)
+        # When it came out and its trailer (owner, 2026-10-10; tools/library_titles.py), and the day it went online.
+        title = (titles or {}).get(library_titles.entry_key(*library_titles.title_of(attrs, name)), {})
+        pub = known.get("pub") or attrs.get("pub")
+        year = title.get("year") or attrs.get("year")
+        trailer = title.get("trailer") or attrs.get("trailer")
+        extinf = re.sub(r'\s(?:mins|desc|genres|year|pub|trailer)="[^"]*"', "", extinf)
         extra = (f' mins="{mins}"' if mins else "") + (f' genres="{";".join(kinds)}"' if kinds else "") + \
+                (f' year="{year}"' if year else "") + (f' pub="{pub}"' if pub else "") + \
+                (f' trailer="{trailer}"' if trailer else "") + \
                 (f' desc="{html.unescape(desc)}"' if desc else "")
         out.append(re.sub(r"^(#EXTINF:\s*-?\d+)", lambda g: g.group(1) + extra, extinf, count=1))
         out.append(line)
@@ -295,6 +330,24 @@ def reported():
     return out
 
 
+def titles_for(path, ids):
+    """Each title's year and trailer (tools/library_titles.py); MTA's own programmes get none."""
+    if os.path.basename(path) == "MTA.m3u":
+        return {}
+    entries = []
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("#EXTINF"):
+                head, _, name = line.rstrip("\n").partition('",')
+                attrs = dict(ATTR.findall(head + '"'))
+                entries.append((*library_titles.title_of(attrs, name), attrs.get("group-title")))
+    try:
+        return library_titles.update(entries, set(ids))
+    except Exception as e:  # noqa: BLE001
+        print(f"::warning::Release years and trailers could not be looked up ({e})")
+        return {}
+
+
 def main(args):
     if args and args[0] == "--probe":
         for vid in args[1:]:
@@ -314,7 +367,12 @@ def main(args):
         # Only what's on the list now is kept, so the file doesn't grow for ever.
         info = {k: old[k] for k in ids + others if k in old}
         todo = [v for v in ids if v not in info][:MAX_NEW]
+        # Videos looked at before the upload day was kept (2026-10-10) get just that, a few thousand a morning.
+        undated = [v for v in ids if v in info and "pub" not in info[v]][:max(0, MAX_NEW - len(todo))]
         with ThreadPoolExecutor(12) as pool:
+            for vid, day in pool.map(dated, undated):
+                if day is not None:
+                    info[vid]["pub"] = day
             for url, found in pool.map(look_other, [u for u in others if u not in info]):
                 info[url] = found
             for n, (vid, found) in enumerate(pool.map(look, todo), 1):
@@ -330,7 +388,7 @@ def main(args):
             json.dump(info, f, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
             f.write("\n")
         before = len(taken)
-        rewrite(path, info, removed, taken)
+        rewrite(path, info, removed, taken, titles_for(path, ids))
         print(f"{os.path.basename(path)}: {len(taken) - before} taken off")
     counts = {}
     for lang, section, _, why, _ in taken:
@@ -344,3 +402,4 @@ def main(args):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
+    library_titles.write_count()

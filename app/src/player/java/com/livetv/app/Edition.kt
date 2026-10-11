@@ -21,6 +21,7 @@ object Edition {
     const val HAS_WEATHER = false
     /** No outside app store in the Google Play editions. */
     const val HAS_APP_BAZAAR = false
+    const val HAS_SHOP = false
     const val HAS_DEVICE_LOCATION = false
     /** Movies & Series from the saved playlists (NextGen Cable only). */
     const val HAS_VOD = false
@@ -68,6 +69,9 @@ fun EditionTicker(
 
 @Composable
 fun EditionAppBazaar(onDismiss: () -> Unit) = Unit
+
+@Composable
+fun EditionShop(onDismiss: () -> Unit) = Unit
 
 @Composable
 fun EditionSettings(state: UiState, viewModel: MainViewModel, onDismiss: () -> Unit) {

@@ -12,6 +12,7 @@ on:
     paths:
       - tools/build_dramas.py
       - tools/library_check.py
+      - tools/library_titles.py
       - .github/workflows/build-dramas.yml
 
 permissions:
@@ -51,6 +52,10 @@ jobs:
         run: |
           python3 -c "import json; d=json.load(open('docs/dramas.json')); print(d['built'], d['shows'], 'shows', d['episodes'], 'episodes', d.get('movies'), 'movies')"
           head -n 21 docs/Dramas.m3u
+          echo "== Release years and trailers"; echo "year: $(grep -c ' year=' docs/Dramas.m3u)  pub: $(grep -c ' pub=' docs/Dramas.m3u)  trailer: $(grep -c ' trailer=' docs/Dramas.m3u)"
+          grep -o 'year="[0-9]*"\|trailer="[^"]*"\|tvg-genre="Movies"[^,]*,.*' docs/Dramas.m3u | grep -B2 'tvg-genre="Movies"' | head -n 30 || true
+          grep ' trailer=' docs/Dramas.m3u | sed 's/.*year="\([0-9]*\)".*trailer="\([^"]*\)".*group-title="\([^"]*\)",/\1 | \2 | \3 | /' | head -n 25 || true
+          cat docs/library-count.json
           grep -c "Hindi dubbed" docs/Dramas.m3u || true
           echo "== English"; grep "tvg-language=\"English\"" docs/Dramas.m3u | sed 's/.*tvg-genre="\([^"]*\)" group-title="\([^"]*\)",/\1 | \2 | /' | awk -F" [|] " '{k=$1"|"$2; c[k]++; if (c[k] <= 3) print}'
           echo "== English counts"; grep "tvg-language=\"English\"" docs/Dramas.m3u | sed 's/.*group-title="\([^"]*\)".*/\1/' | sort | uniq -c
@@ -75,7 +80,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/Dramas.m3u docs/dramas.json docs/MTA.m3u docs/library-info
+          git add docs/Dramas.m3u docs/dramas.json docs/MTA.m3u docs/library-info docs/library-count.json
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0

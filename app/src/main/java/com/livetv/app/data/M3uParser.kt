@@ -71,6 +71,9 @@ object M3uParser {
                             mins = attrs["mins"]?.toIntOrNull()?.takeIf { it > 0 },
                             desc = attrs["desc"]?.trim()?.takeIf { it.isNotBlank() },
                             genres = attrs["genres"]?.split(';')?.map { it.trim() }?.filter { it.isNotEmpty() }.orEmpty(),
+                            year = attrs["year"]?.toIntOrNull()?.takeIf { it in 1890..2100 },
+                            pub = attrs["pub"]?.takeIf { it.length == 10 },
+                            trailer = attrs["trailer"]?.takeIf { it.length == 11 },
                         )
                         reset()
                     }

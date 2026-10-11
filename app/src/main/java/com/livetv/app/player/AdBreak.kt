@@ -13,7 +13,7 @@ object AdBreak {
 
     fun set(on: Boolean) { _active.value = on }
 
-    /** Skips the ad showing now (a picture ad, or a video ad) once Back may, after its first 10 seconds;
+    /** Skips the ad showing now (a picture ad, or a video ad) once Back may, after its first 5 seconds;
      *  null before that. Strip and Carousel call it on Back, since the list screen's Back comes first there. */
     @Volatile var pictureSkip: (() -> Unit)? = null
     @Volatile var videoSkip: (() -> Unit)? = null

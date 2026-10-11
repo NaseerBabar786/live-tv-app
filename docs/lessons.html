@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quran and Urdu teachers</title>
+<meta name="description" content="Online Quran, Qaida, Tajweed and Urdu lessons with teachers from our community. Book on WhatsApp.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 108'%3E%3Crect width='108' height='108' rx='22' fill='%231E1E2E'/%3E%3Crect x='26' y='38' width='56' height='36' rx='4' fill='white'/%3E%3Cpath d='M49 47l14 9-14 9z' fill='%23E53935'/%3E%3Cpath d='M45 30l9 8 9-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .item { background: var(--surface); border: 1px solid var(--surface-2); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .item img, .item .nopic { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--surface-2); display: block; }
+  .item .nopic { display: grid; place-items: center; font-size: 42px; }
+  .item .body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .item b { font-size: 18px; }
+  .item .price { color: var(--focus); font-weight: 800; }
+  .item .desc { color: var(--muted); font-size: 14px; white-space: pre-wrap; flex: 1; }
+  .item .by { font-size: 13px; color: var(--muted); }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
+  .chip { padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+  .chip.on { background: var(--red); border-color: var(--red); color: #fff; }
+  /* On a TV (the NextGen Cable app opens ?tv=1) an order is a QR code to scan with the phone. */
+  #qr { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: grid; place-items: center; z-index: 9; }
+  #qr .box { background: #fff; color: #111; border-radius: 18px; padding: 24px 28px; text-align: center; max-width: 520px; }
+  #qr .box b { font-size: 22px; display: block; margin-bottom: 4px; }
+  #qrCode { display: inline-block; margin: 14px 0; }
+  #qrPrice { display: block; font-weight: 800; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="NextGen Cable home">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" rx="22" fill="#1E1E2E"/><rect x="26" y="38" width="56" height="36" rx="4" fill="#fff"/><path d="M49 47l14 9-14 9z" fill="#E53935"/><path d="M45 30l9 8 9-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>NextGen Cable</span>
+    </a>
+    <nav>
+      <a href="./">Home</a>
+      <a href="suggestions">Suggestions</a>
+      <a href="./#download">Download</a>
+      <a href="devices/">Devices</a>
+      <a href="shop">Shop</a>
+      <a href="admin" class="admin-link">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>📖 Quran and Urdu lessons</h1>
+  <p class="lead">Online lessons on WhatsApp or Zoom with teachers from our community: Quran reading, Qaida for children, Tajweed, Hifz, Urdu and Arabic. Book on WhatsApp: we put you in touch with the teacher, and you pay the teacher for each lesson.</p>
+  <p class="row"><a class="btn primary" href="teach">Teach from home</a><span class="small">Teachers can join for free.</span></p>
+  <div class="chips" id="chips"></div>
+  <div class="items" id="items"><p class="small">Loading…</p></div>
+  <p class="err" id="err"></p>
+  <div id="qr" class="hidden"><div class="box"><b id="qrTitle"></b><span id="qrPrice"></span><div id="qrCode"></div>
+    <p>Scan this with your phone's camera to book on WhatsApp.<br>Or WhatsApp <b style="display:inline">437 602 6500</b> with teacher code <b style="display:inline" id="qrItem"></b>.</p>
+    <button class="btn" id="qrClose" style="color:#111;border-color:#bbb">Back to the teachers</button></div></div>
+</main>
+<footer>
+  <div class="wrap">NextGen Cable comes to you with the compliments of <a href="https://www.bulkbazaar.ca" target="_blank" rel="noopener">Bulk Bazaar Inc.</a> · <a href="privacy">Privacy policy</a></div>
+</footer>
+<script type="module">
+// Approved teachers come from Firestore teachers/ (only teachers the owner approved on /lessons-admin are readable).
+const BASE = "https://firestore.googleapis.com/v1/projects/live-tv-b2164/databases/(default)/documents";
+const CATS = ["Quran reading", "Qaida for kids", "Tajweed", "Hifz", "Urdu", "Arabic"];
+const $ = id => document.getElementById(id);
+const val = f => f ? (f.stringValue ?? f.integerValue ?? f.timestampValue ?? "") : "";
+let items = [], cat = "All";
+const TV = new URLSearchParams(location.search).has("tv");
+if (TV) document.querySelector("p.row").innerHTML = '<span class="small">Teach from home: open <b>tv.bulkbazaar.ca/teach</b> on your phone.</span>';
+
+// Back on the TV remote closes the QR code first (the code opens as a page step: #qr).
+async function showQr(it) {
+  if (!window.QRCode) await new Promise((ok, no) => { const sc = document.createElement("script");
+    sc.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"; sc.onload = ok; sc.onerror = no; document.head.append(sc); });
+  $("qrTitle").textContent = it.title; $("qrPrice").textContent = it.price; $("qrItem").textContent = it.code;
+  $("qrCode").innerHTML = ""; new QRCode($("qrCode"), { text: order(it), width: 260, height: 260 });
+  $("qr").classList.remove("hidden"); location.hash = "qr"; $("qrClose").focus();
+}
+$("qrClose").onclick = () => history.back();
+addEventListener("hashchange", () => { if (location.hash !== "#qr") $("qr").classList.add("hidden"); });
+
+function order(it) {
+  const t = `Hi, I'd like lessons with a teacher from NextGen Cable:\n${it.title}: ${it.category} (${it.price})\nTeacher code: ${it.code}`;
+  return "https://wa.me/14376026500?text=" + encodeURIComponent(t);
+}
+function draw() {
+  const list = items.filter(it => cat === "All" || it.category === cat);
+  $("items").innerHTML = list.length ? "" : '<p class="small" style="grid-column:1/-1">No teachers here yet. Are you a teacher? <a href="teach">Join for free</a>.</p>';
+  for (const it of list) {
+    const el = document.createElement("div"); el.className = "item";
+    el.innerHTML = (it.photo ? '<img alt="">' : '<div class="nopic">📖</div>') +
+      '<div class="body"><b></b><span class="price"></span><span class="desc"></span><span class="by"></span><a class="btn primary" target="_blank" rel="noopener">Book on WhatsApp</a></div>';
+    if (it.photo) el.querySelector("img").src = it.photo;
+    el.querySelector("b").textContent = it.title;
+    el.querySelector(".price").textContent = it.price;
+    el.querySelector(".desc").textContent = it.description;
+    el.querySelector(".by").textContent = `${it.seller} · ${it.city} · teacher ${it.code}`;
+    el.querySelector("a").href = order(it);
+    if (TV) { const a = el.querySelector("a"); a.textContent = "Book (QR code)"; a.removeAttribute("target"); a.onclick = e => { e.preventDefault(); showQr(it); }; }
+    $("items").append(el);
+  }
+}
+function chips() {
+  for (const c of ["All", ...CATS]) {
+    const b = document.createElement("button"); b.className = "chip" + (c === cat ? " on" : ""); b.textContent = c;
+    b.onclick = () => { cat = c; document.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === b)); draw(); };
+    $("chips").append(b);
+  }
+}
+try {
+  const r = await fetch(BASE + ":runQuery", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+    structuredQuery: { from: [{ collectionId: "teachers" }], where: { fieldFilter: { field: { fieldPath: "status" }, op: "EQUAL", value: { stringValue: "approved" } } }, limit: 300 } }) });
+  if (!r.ok) throw new Error(r.status);
+  items = (await r.json()).filter(x => x.document).map(x => {
+    const f = x.document.fields, id = x.document.name.split("/").pop();
+    return { id, code: id.slice(0, 6).toUpperCase(), title: val(f.name), price: val(f.rate), category: val(f.subject),
+             description: [val(f.about), val(f.times) && "Times: " + val(f.times)].filter(Boolean).join("\n"),
+             seller: `Teaches ${val(f.teaches).toLowerCase()}`, city: val(f.languages), photo: val(f.photo), at: val(f.approvedAt) || val(f.createdAt) };
+  }).sort((a, b) => b.at.localeCompare(a.at));
+  chips(); draw();
+} catch {
+  $("items").innerHTML = '<p class="small" style="grid-column:1/-1">Lessons are opening soon. Teachers can already <a href="teach">join</a>.</p>';
+}
+</script>
+<script src="assets/admin-nav.js"></script>
+<script src="assets/visits.js"></script>
+</body>
+</html>
