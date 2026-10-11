@@ -150,6 +150,7 @@ function spark(cfg) {
   if (typeof cfg.logo === "string") cfg.logo = cfg.logo.replace(/\/logos\/bazaar-/, "/logos/spark-");
   return cfg;
 }
+let nowTitle = "", embeddedShows = []; // for the watch-time counting below
 if (embedded) playEmbedded();
 let c = embedded ? null : spark(await load()), tv = null;
 function show() {
@@ -186,6 +187,7 @@ function renderGuide() {
   if (!list.length) $("guide").innerHTML = `<p class="small">Nothing booked yet.</p>`;
 }
 function onChange(on) {
+  nowTitle = (on.video && on.video.title) || "";
   $("off").classList.add("hidden");
   // No ads while the news is on (owner, 2026-10-08): the line with the "advertise with us" words hides.
   $("ticker").classList.toggle("hidden", !$("tickerText").textContent || /^news-/.test((on.video && on.video.id) || ""));
@@ -251,6 +253,7 @@ async function playEmbedded() {
       if (end > Date.now() && x.kind === "video" && x.v) shows.push({ at, title: x.v.title, secs: x.secs });
       at = end;
     }
+    embeddedShows = shows;
     $("guide").innerHTML = "";
     shows.forEach((g, i) => {
       const d = document.createElement("div");
@@ -264,6 +267,18 @@ async function playEmbedded() {
     if (shows[0]) $("nowText").textContent = `Now: ${shows[0].title}` + (shows[1] ? `  ·  Next: ${shows[1].title} at ${timeText(shows[1].at, "America/Toronto")}` : "");
   } catch {}
 }
+
+// Anonymous watch-time counting for the owner's Stats page (assets/visits.js): which channel and programme.
+setInterval(() => {
+  if (!window.ltWatch || document.hidden) return;
+  const ch = { id: "spark-" + station.id, name: `${station.dial} ${station.name}`, group: "Spark channel page" };
+  if (embedded) {
+    if ($("block").classList.contains("hidden")) return;
+    const g = embeddedShows.find(x => x.at <= Date.now() && Date.now() < x.at + x.secs * 1000);
+    ltWatch(ch, 5, false, g ? g.title : "");
+  } else if (!video.paused && !video.ended && video.readyState >= 3) ltWatch(ch, 5, false, nowTitle);
+  else if (!$("block").classList.contains("hidden")) ltWatch(ch, 5, false, nowTitle);
+}, 5000);
 
 $("sound").onclick = () => { video.muted = false; video.play().catch(() => {}); $("sound").classList.add("hidden"); };
 $("full").onclick = () => $("stage").requestFullscreen?.();

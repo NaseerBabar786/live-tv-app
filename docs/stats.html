@@ -117,26 +117,75 @@
       </div>
     </div>
 
-    <h2 id="website">Website (tv.bulkbazaar.ca)</h2>
-    <p class="small">Visitors to the website and what they watched there. Each browser counts as one visitor; nobody is named. Your own visits aren't counted. Watch time counts the normal player and the box with sound in 2×2.</p>
+    <h2 id="website">Website visitors (tv.bulkbazaar.ca)</h2>
+    <p class="small">How many people visit the website, what they read, what they click, what they watch and where they spend the most time. Each browser counts as one visitor and nobody is named. Your own visits aren't counted. Time counts only while the page is on screen and the visitor is using it (or something is playing). Time on page, parts of pages, clicks, where visitors came from and programmes are counted from 11 October 2026.</p>
     <div class="stats" id="webStats"></div>
     <h2>Website visitors per day (last 30 days)</h2>
     <div class="chart" id="webDaily"></div>
     <div class="chart-labels" id="webDailyLabels"></div>
+    <div class="row" style="margin-top:12px">
+      <label class="small">Website tables show:
+        <select id="webPeriod" style="background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px">
+          <option value="1">Today</option><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="0">Everything loaded</option>
+        </select>
+      </label>
+    </div>
     <div class="grid2" style="margin-top:8px">
+      <div>
+        <h2>Where visitors spend the most time</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Page</th><th class="num">Visitors</th><th class="num">Views</th><th class="num">Time</th><th class="num">Per visitor</th></tr></thead>
+          <tbody id="webPages"></tbody>
+        </table></div>
+      </div>
+      <div>
+        <h2>What they read on each page</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Part of the page</th><th>Page</th><th class="num">Visitors</th><th class="num">Time</th></tr></thead>
+          <tbody id="webParts"></tbody>
+        </table></div>
+      </div>
       <div>
         <h2>Watched most on the website</h2>
         <div class="table-wrap"><table>
-          <thead><tr><th>#</th><th>Channel</th><th>Country</th><th class="num">Viewers</th><th class="num">Minutes</th></tr></thead>
+          <thead><tr><th>#</th><th>Channel</th><th>Where</th><th class="num">Viewers</th><th class="num">Minutes</th></tr></thead>
           <tbody id="webTop"></tbody>
         </table></div>
       </div>
       <div>
-        <h2>Pages and devices</h2>
+        <h2>Programmes watched on our channel pages</h2>
         <div class="table-wrap"><table>
-          <thead><tr><th>Page or device</th><th class="num">Visitors</th><th class="num">Page views</th></tr></thead>
-          <tbody id="webPages"></tbody>
+          <thead><tr><th>Programme</th><th>Channel</th><th class="num">Viewers</th><th class="num">Minutes</th></tr></thead>
+          <tbody id="webShows"></tbody>
         </table></div>
+      </div>
+      <div>
+        <h2>What they click</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Link or button</th><th class="num">Visitors</th><th class="num">Clicks</th></tr></thead>
+          <tbody id="webClicks"></tbody>
+        </table></div>
+      </div>
+      <div>
+        <h2>Where visitors come from</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Came from</th><th class="num">Visitors</th><th class="num">Visits</th></tr></thead>
+          <tbody id="webFrom"></tbody>
+        </table></div>
+        <p class="small">"Typed or saved link" means no other site sent them (typed address, bookmark, or an app that hides it).</p>
+      </div>
+      <div>
+        <h2>Devices and places</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Device or time zone</th><th class="num">Visitors</th><th class="num">Time</th></tr></thead>
+          <tbody id="webDevs"></tbody>
+        </table></div>
+        <p class="small">Places come from the browser's time zone (for example Toronto), not from addresses.</p>
+      </div>
+      <div>
+        <h2>Busiest hours (visitor's own clock)</h2>
+        <div class="chart" id="webHours" style="height:120px"></div>
+        <div class="chart-labels"><span>12 am</span><span>6 am</span><span>12 pm</span><span>6 pm</span><span>11 pm</span></div>
       </div>
     </div>
     <h2 id="sponsors">Sponsors</h2>
@@ -197,7 +246,9 @@ if (!configured) {
   let rows = [];
   /** One record per viewer per day: { uid, day, sponsors: { id: { n, start, strip, card } } }. */
   let sponsorRows = [], sponsorNote = "";
-  /** One record per website visitor per day: { uid, day, dev, views, pages: { page: n }, watch, quad, channels: { id: { n, c, s } } }. */
+  /** One record per website visitor per day: { uid, day, dev, tz, first, views, secs, pages: { page: n }, time: { page: secs },
+   *  parts: { k: { n: "label|page", s } }, clicks: { k: { n, k } }, from: { site: n }, hrs: { hour: n }, watch, quad,
+   *  channels: { id: { n, c, s } }, shows: { k: { n, ch, s } } }. */
   let webRows = [], webNote = "";
 
   $("signIn").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $("err").textContent = e.message);
@@ -257,7 +308,8 @@ if (!configured) {
     load(dayStr(d));
   });
   $("all").onclick = () => load(null);
-  $("period").onchange = () => { renderChannels(); renderWebPeriod(); };
+  $("period").onchange = () => renderChannels();
+  $("webPeriod").onchange = () => renderWebPeriod();
 
   function viewersSince(from) { return new Set(rows.filter(r => r.day >= from).map(r => r.uid)).size; }
   function secondsSince(from) { return rows.filter(r => r.day >= from).reduce((a, r) => a + (r.seconds || 0), 0); }
@@ -342,6 +394,8 @@ if (!configured) {
       ["Watched TV on the website, last 30 days", people(d30.filter(r => r.watch > 0))],
       ...(w => w < 3600 ? [["Minutes watched on the website, last 30 days", Math.round(w / 60)]] : [["Hours watched on the website, last 30 days", hours(w)]])(d30.reduce((a, r) => a + (r.watch || 0), 0)),
       ["Used 2×2, last 30 days", people(d30.filter(r => r.quad > 0))],
+      ...(t => t.length ? [["Average time per visit, last 30 days", mins(t.reduce((a, r) => a + r.secs, 0) / t.length)]] : [])(d30.filter(r => r.secs > 0)),
+      ...(f => f.length ? [["New visitors, last 30 days", people(f.filter(r => r.first >= daysAgo(29)))], ["Came back on another day, last 30 days", people(f.filter(r => r.first < r.day))]] : [])(d30.filter(r => r.first)),
     ];
     $("webStats").innerHTML = "";
     for (const [l, n] of items) {
@@ -365,35 +419,64 @@ if (!configured) {
     renderWebPeriod();
   }
 
+  const mins = s => s < 60 ? `${Math.round(s)} s` : s < 3600 ? `${Math.round(s / 60)} min` : `${hours(s)} h`;
+  const PAGE_LABEL = { home: "Home page (watch, install, news)", channel: "Our channel pages (watch live)", spark: "Spark TV home", privacy: "Privacy" };
+  const pageLabel = k => PAGE_LABEL[k] || k.split("-").map(w => w[0].toUpperCase() + w.slice(1)).join(" › ");
+  function fillRows(id, rows, cols, note) {
+    $(id).innerHTML = "";
+    rows.forEach(r => { const tr = document.createElement("tr"); cells(tr, cols(r)); $(id).append(tr); });
+    if (!rows.length) { $(id).innerHTML = `<tr><td colspan="${$(id).closest("table").querySelectorAll("th").length}" class="small"></td></tr>`; $(id).querySelector("td").textContent = note; }
+  }
   function renderWebPeriod() {
-    const n = Number($("period").value);
+    const n = Number($("webPeriod").value);
     const from = n ? daysAgo(n - 1) : "";
     const list = webRows.filter(r => r.day >= from);
-    const chans = new Map(), pages = new Map(), devs = new Map();
-    const bump = (map, key, uid, views) => { if (!map.has(key)) map.set(key, { users: new Set(), views: 0 }); const e = map.get(key); e.users.add(uid); e.views += views; };
+    const groups = {};
+    // groups[name] maps key -> { label, extra, users, n (count), s (seconds) }
+    const bump = (g, key, uid, add) => {
+      const m = groups[g] || (groups[g] = new Map());
+      if (!m.has(key)) m.set(key, { label: key, extra: "", users: new Set(), n: 0, s: 0 });
+      const e = m.get(key); e.users.add(uid); e.n += add.n || 0; e.s += add.s || 0;
+      if (add.label) e.label = add.label;
+      if (add.extra) e.extra = add.extra;
+      return e;
+    };
+    const hrs = new Array(24).fill(0);
     for (const r of list) {
-      for (const [k, c] of Object.entries(r.channels || {})) {
-        if (!chans.has(k)) chans.set(k, { label: c.n || "?", country: c.c || "", users: new Set(), s: 0 });
-        const e = chans.get(k); e.users.add(r.uid); e.s += c.s || 0;
-      }
-      for (const [pg, v] of Object.entries(r.pages || {})) bump(pages, pg === "home" ? "Home page" : pg[0].toUpperCase() + pg.slice(1) + " page", r.uid, v || 0);
-      bump(devs, "On a " + (r.dev || "Computer").toLowerCase(), r.uid, r.views || 0);
+      for (const [k, c] of Object.entries(r.channels || {})) bump("chans", k, r.uid, { s: c.s || 0, label: c.n || "?", extra: c.c || "" });
+      for (const [k, c] of Object.entries(r.shows || {})) bump("shows", k, r.uid, { s: c.s || 0, label: c.n || "?", extra: c.ch || "" });
+      const pk = new Set([...Object.keys(r.pages || {}), ...Object.keys(r.time || {})]);
+      for (const pg of pk) bump("pages", pg, r.uid, { n: (r.pages || {})[pg] || 0, s: (r.time || {})[pg] || 0, label: pageLabel(pg) });
+      for (const [k, c] of Object.entries(r.parts || {})) { const [l, pg] = String(c.n || "?").split("|"); bump("parts", k, r.uid, { s: c.s || 0, label: l, extra: pageLabel(pg || "") }); }
+      for (const [k, c] of Object.entries(r.clicks || {})) bump("clicks", k, r.uid, { n: c.k || 0, label: c.n || k });
+      const fr = Object.entries(r.from || {});
+      if (fr.length) for (const [k, v] of fr) bump("from", k, r.uid, { n: v || 0 });
+      else bump("from", "Typed or saved link", r.uid, { n: 1 });
+      bump("devs", "On a " + (r.dev || "Computer").toLowerCase(), r.uid, { s: r.secs || 0 });
+      if (r.tz) bump("devs", r.tz.split("/").pop().replace(/_/g, " ") + " time zone", r.uid, { s: r.secs || 0 });
+      for (const [h, v] of Object.entries(r.hrs || {})) hrs[Number(h)] += v || 0;
     }
+    const top = (g, by, max = 25) => [...(groups[g] || new Map()).values()].sort(by).slice(0, max);
+    const bySecs = (a, b) => b.s - a.s || b.users.size - a.users.size, byCount = (a, b) => b.n - a.n, byUsers = (a, b) => b.users.size - a.users.size || b.n - a.n;
     const note = webNote || "Nothing yet in this period.";
-    $("webTop").innerHTML = "";
-    [...chans.values()].sort((a, b) => b.s - a.s).slice(0, 25).forEach((e, i) => {
-      const tr = document.createElement("tr");
-      cells(tr, [i + 1, e.label, e.country, { cls: "num", text: e.users.size }, { cls: "num", text: Math.max(1, Math.round(e.s / 60)).toLocaleString() }]);
-      $("webTop").append(tr);
+    const num = v => ({ cls: "num", text: Number(v).toLocaleString() });
+    const tm = s => ({ cls: "num", text: s ? mins(s) : "–" });
+    fillRows("webPages", top("pages", (a, b) => b.s - a.s || b.n - a.n), e => [e.label, num(e.users.size), num(e.n), tm(e.s), tm(e.s / e.users.size)], note);
+    fillRows("webParts", top("parts", bySecs), e => [e.label, e.extra, num(e.users.size), tm(e.s)], webNote || "Nothing yet in this period (counted from 11 October 2026).");
+    fillRows("webTop", top("chans", bySecs), e => [0, e.label, e.extra, num(e.users.size), num(Math.max(1, Math.round(e.s / 60)))], note);
+    [...$("webTop").rows].forEach((tr, i) => { if (tr.cells.length > 1) tr.cells[0].textContent = i + 1; });
+    fillRows("webShows", top("shows", bySecs), e => [e.label, e.extra, num(e.users.size), num(Math.max(1, Math.round(e.s / 60)))], webNote || "Nothing yet in this period (counted from 11 October 2026).");
+    fillRows("webClicks", top("clicks", byCount), e => [e.label, num(e.users.size), num(e.n)], webNote || "Nothing yet in this period (counted from 11 October 2026).");
+    fillRows("webFrom", top("from", byUsers), e => [e.label, num(e.users.size), num(e.n)], note);
+    fillRows("webDevs", top("devs", byUsers, 30), e => [e.label, num(e.users.size), tm(e.s)], note);
+    const hmax = Math.max(1, ...hrs);
+    $("webHours").innerHTML = "";
+    hrs.forEach((v, h) => {
+      const b = document.createElement("div"); b.className = "bar";
+      b.style.height = `${v / hmax * 100}%`;
+      b.title = `${(h % 12) || 12} ${h < 12 ? "am" : "pm"}: ${v} page views`;
+      $("webHours").append(b);
     });
-    if (!chans.size) $("webTop").innerHTML = `<tr><td colspan="5" class="small"></td></tr>`, $("webTop").querySelector("td").textContent = note;
-    $("webPages").innerHTML = "";
-    for (const [label, e] of [...[...pages].sort((a, b) => b[1].views - a[1].views), ...[...devs].sort((a, b) => b[1].users.size - a[1].users.size)]) {
-      const tr = document.createElement("tr");
-      cells(tr, [label, { cls: "num", text: e.users.size }, { cls: "num", text: e.views.toLocaleString() }]);
-      $("webPages").append(tr);
-    }
-    if (!pages.size) $("webPages").innerHTML = `<tr><td colspan="3" class="small"></td></tr>`, $("webPages").querySelector("td").textContent = note;
   }
 
   const FEATURE_LABEL = { list: "1+List", browse: "Browse", carousel: "Carousel", strip: "Strip", duo: "Duo", five: "1+3", two: "1×2", four: "2×2", six: "2×3", news: "News", cp24: "CP24", home: "Home", mine: "My Screen", full: "Full screen channel", library: "Movies & Dramas", games: "Games", quran: "Iqra Quran", weather: "Weather" };
