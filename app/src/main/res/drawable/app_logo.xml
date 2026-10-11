@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The logo inside the app for editions without their own (NextGen Cable has one in src/livetv). -->
+<!-- The logo inside the app for editions without their own (NextGen Cable has its own picture,
+     src/livetv/res/drawable/app_logo.png: Compose's painterResource can't draw a <bitmap> XML). -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
