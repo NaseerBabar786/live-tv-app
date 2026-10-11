@@ -56,6 +56,8 @@ if tap_text "⚙ Settings" "Settings"; then
   back; sleep 3; shot back-from-settings
 fi
 # The morning forecast notification, fired now instead of waiting for 7 am.
+# The receiver is not exported (only the app's own alarm reaches it), so the shell needs root to fire it.
+adb root >/dev/null 2>&1; sleep 4; adb wait-for-device
 adb shell am broadcast -n "$PKG/com.sparkweather.app.MorningForecast" >>"$LOG" 2>&1; sleep 45
 adb logcat -d -s MorningForecast | tee -a "$LOG"
 adb shell cmd statusbar expand-notifications; sleep 3; shot notifications; adb shell cmd statusbar collapse; sleep 2
