@@ -17,7 +17,7 @@ object Forecast {
         val app = context.applicationContext
         Location.init(app)
         WeatherApp.init(app)
-        if (Location.hasPermission(app)) runBlocking { withTimeoutOrNull(15_000) { Location.refreshDevice(app) } }
+        if (Location.hasPermission(app)) runBlocking { withTimeoutOrNull(8_000) { Location.refreshDevice(app) } }
         val mine = runCatching { Location.current() }.getOrNull()
         val others = WeatherApp.places().filterNot { p -> mine?.let { WeatherApp.same(it, p) } == true }
         val places = listOfNotNull(mine) + others
