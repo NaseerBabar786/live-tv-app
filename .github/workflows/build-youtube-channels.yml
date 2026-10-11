@@ -33,6 +33,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      # Pillow for the logo check (tools/logo_check.py): some channels keep only logo-free videos.
+      - run: pip install pillow
+
       - name: Build the lists
         run: |
           if [ "${{ github.event.schedule }}" = "15 */3 * * *" ]; then
@@ -53,7 +56,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/channel/yt-*.json
+          git add docs/channel/yt-*.json docs/channel/logo-check.json
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0
