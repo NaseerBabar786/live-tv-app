@@ -79,7 +79,6 @@ object Extras {
         Clock("clock", "Clock and weather", "The time, the date and today's temperature"),
         Azan("azan", "Next Azan", "The next prayer and how long until it"),
         Cricket("cricket", "Cricket score", "The live score while a match is on"),
-        Rates("rates", "Gold and dollar rates", "Today's gold price per tola and the dollar in rupees"),
         UpNext("next", "Up next", "What's on next on the channel you're watching");
 
         companion object {
