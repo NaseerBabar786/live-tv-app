@@ -1,0 +1,13 @@
+<!doctype html><html><body style="margin:0;background:#000">
+<div id="player"></div>
+<script>
+const q = new URLSearchParams(location.search);
+window.report = null;
+function onYouTubeIframeAPIReady() {
+  window.p = new YT.Player("player", { width: q.get("w"), height: q.get("h"), videoId: q.get("v"),
+    playerVars: { autoplay: 1, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0, playsinline: 1, modestbranding: 1, iv_load_policy: 3, origin: location.origin },
+    events: { onReady: e => { e.target.mute(); e.target.playVideo(); } } });
+}
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body></html>

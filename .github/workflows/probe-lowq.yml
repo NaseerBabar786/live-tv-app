@@ -1,0 +1,14 @@
+name: Probe low quality start
+on:
+  push:
+    branches: [probe/lowq]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm i playwright@1.56.1 && npx playwright install chromium
+      - run: (python3 -m http.server 8000 &) ; sleep 2; node tools/probe/lowq.js 737cpHuq69s
+      - uses: actions/upload-artifact@v4
+        with: { name: shots, path: "probe-*.png" }
