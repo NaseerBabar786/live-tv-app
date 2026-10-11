@@ -134,9 +134,11 @@ private enum class Tab(val label: String) {
  * (parts of the day), 14 Days, a moving rain radar, weather news with pictures and weather videos, for the
  * viewer's own place and any places they add. The remote's arrows move around and OK opens; on a phone
  * everything is tapped. Back closes a story, then goes to the first tab, then closes the section.
+ * The Spark Weather app shows this same screen as the whole app: it passes [onSettings] (a Settings chip
+ * instead of the back arrow).
  */
 @Composable
-fun WeatherScreen(onClose: () -> Unit) {
+fun WeatherScreen(onClose: () -> Unit, onSettings: (() -> Unit)? = null) {
     val locationVersion by Location.version.collectAsStateWithLifecycle()
     var mine by remember { mutableStateOf<Location.Place?>(null) }
     var added by remember { mutableStateOf(WeatherApp.places()) }
@@ -229,7 +231,7 @@ fun WeatherScreen(onClose: () -> Unit) {
                     wide = wide,
                     firstFocus = firstFocus,
                     onTab = { tabName = it.name },
-                    onClose = onClose,
+                    onClose = onClose.takeIf { onSettings == null },
                 )
                 LazyRow(
                     contentPadding = PaddingValues(vertical = 8.dp),
@@ -244,6 +246,7 @@ fun WeatherScreen(onClose: () -> Unit) {
                     }
                     item { Chip("⟳ Refresh", on = false) { reload++ } }
                     if (canRemove) item { Chip("✕ Remove place", on = false) { removing = place } }
+                    if (onSettings != null) item { Chip("⚙ Settings", on = false, onClick = onSettings) }
                 }
                 Box(Modifier.fillMaxWidth().weight(1f)) {
                     when {
@@ -334,7 +337,7 @@ private fun Header(
     wide: Boolean,
     firstFocus: FocusRequester,
     onTab: (Tab) -> Unit,
-    onClose: () -> Unit,
+    onClose: (() -> Unit)?,
 ) {
     val tabs = @Composable {
         Row(
@@ -361,8 +364,10 @@ private fun Header(
     }
     val title = @Composable {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onClose, modifier = Modifier.focusGlow()) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back to channels", tint = Ink)
+            if (onClose != null) {
+                IconButton(onClick = onClose, modifier = Modifier.focusGlow()) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back to channels", tint = Ink)
+                }
             }
             Row(
                 Modifier.background(Panel, PillShape).padding(horizontal = 18.dp, vertical = 8.dp),

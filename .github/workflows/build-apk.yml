@@ -46,7 +46,7 @@ jobs:
         run: python3 tools/build_logo_index.py
 
       - name: Run unit tests
-        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest testSparkDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest :appbazaar:testDebugUnitTest :quran:testDebugUnitTest :qurankit:testDebugUnitTest
+        run: ./gradlew testLivetvDebugUnitTest testPlayerDebugUnitTest testPlusDebugUnitTest testMaxDebugUnitTest testSparkDebugUnitTest :livecam:testDebugUnitTest :claudenotes:testDebugUnitTest :multichat:testDebugUnitTest :appbazaar:testDebugUnitTest :quran:testDebugUnitTest :qurankit:testDebugUnitTest :weather:testDebugUnitTest
 
       # Names the failing unit tests in the run's annotations (logs are long).
       - name: Show failing tests
@@ -108,6 +108,16 @@ jobs:
         with:
           name: iqra-quran-debug-apk
           path: quran/build/outputs/apk/debug/quran-debug.apk
+
+      - name: Build Spark Weather
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew :weather:assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spark-weather-debug-apk
+          path: weather/build/outputs/apk/debug/weather-debug.apk
 
       - name: Build Notes for Claude
         env:
@@ -180,6 +190,7 @@ jobs:
           cp app/build/outputs/apk/max/debug/app-max-debug.apk LiveTVMax.apk
           cp appbazaar/build/outputs/apk/debug/appbazaar-debug.apk AppBazaar.apk
           cp quran/build/outputs/apk/debug/quran-debug.apk IqraQuran.apk
+          cp weather/build/outputs/apk/debug/weather-debug.apk SparkWeather.apk
           cp livecam/build/outputs/apk/debug/livecam-debug.apk LiveCam.apk
           cp multichat/build/outputs/apk/debug/multichat-debug.apk MultiChat.apk
           cp claudenotes/build/outputs/apk/debug/claudenotes-debug.apk NotesForClaude.apk
@@ -191,13 +202,14 @@ jobs:
             "live-tv-max": "$(v app/build.gradle.kts 4)",
             "app-bazaar": "$(v appbazaar/build.gradle.kts)",
             "iqra-quran": "$(v quran/build.gradle.kts)",
+            "spark-weather": "$(v weather/build.gradle.kts)",
             "live-cam": "$(v livecam/build.gradle.kts)",
             "multi-chat": "$(v multichat/build.gradle.kts)",
             "notes-for-claude": "$(v claudenotes/build.gradle.kts)"
           }
           JSON
           cat versions.json
-          files="LiveTV.apk LiveTVMax.apk AppBazaar.apk IqraQuran.apk LiveCam.apk MultiChat.apk NotesForClaude.apk versions.json"
+          files="LiveTV.apk LiveTVMax.apk AppBazaar.apk IqraQuran.apk SparkWeather.apk LiveCam.apk MultiChat.apk NotesForClaude.apk versions.json"
           if gh release view candidate > /dev/null 2>&1; then
             gh release upload candidate $files --clobber
           else
@@ -278,6 +290,24 @@ jobs:
           fi
           gh release edit spark-tv-test --notes "Spark TV $version test build ${{ github.run_number }} for the owner only (from ${{ github.sha }}). The .aab goes to Google Play after the owner's yes." || true
 
+      # Spark Weather, a new app (owner, 2026-10-11): until its first version is approved, every build also goes
+      # to the fixed "spark-weather-test" pre-release (never "latest"), which only the owner uses through
+      # tv.bulkbazaar.ca/weathertest. After that it follows the daily test and release like every other app.
+      - name: Publish Spark Weather test build
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep -oP 'versionName = "\K[^"]+' weather/build.gradle.kts)
+          cp weather/build/outputs/apk/debug/weather-debug.apk SparkWeather.apk
+          if gh release view spark-weather-test > /dev/null 2>&1; then
+            gh release upload spark-weather-test SparkWeather.apk --clobber
+          else
+            gh release create spark-weather-test SparkWeather.apk --prerelease --latest=false \
+              --title "Spark Weather (test)" --notes "Spark Weather test build for the owner only."
+          fi
+          gh release edit spark-weather-test --notes "Spark Weather $version test build ${{ github.run_number }} for the owner only (from ${{ github.sha }})." || true
+
 
   # Crash rollback (owner's rule): rebuilds the last approved version of every app with this build's
   # version code + 1, so an app whose new version closes by itself can go back with one tap
@@ -344,6 +374,7 @@ jobs:
           live-tv-max :app:assembleMaxDebug app/build/outputs/apk/max/debug/app-max-debug.apk LiveTVMax.apk
           app-bazaar :appbazaar:assembleDebug appbazaar/build/outputs/apk/debug/appbazaar-debug.apk AppBazaar.apk
           iqra-quran :quran:assembleDebug quran/build/outputs/apk/debug/quran-debug.apk IqraQuran.apk
+          spark-weather :weather:assembleDebug weather/build/outputs/apk/debug/weather-debug.apk SparkWeather.apk
           live-cam :livecam:assembleDebug livecam/build/outputs/apk/debug/livecam-debug.apk LiveCam.apk
           multi-chat :multichat:assembleDebug multichat/build/outputs/apk/debug/multichat-debug.apk MultiChat.apk
           notes-for-claude :claudenotes:assembleDebug claudenotes/build/outputs/apk/debug/claudenotes-debug.apk NotesForClaude.apk

@@ -25,6 +25,7 @@ on:
           - live-tv-max
           - app-bazaar
           - iqra-quran
+          - spark-weather
           - live-cam
           - multi-chat
           - notes-for-claude
@@ -192,7 +193,7 @@ jobs:
 
       # Per-version tag "<prefix>-v<version>" (the apps' update checks look for the highest one)
       # plus a fixed release whose link never changes (App Bazaar and the Downloader codes use it).
-      - name: Iqra Quran, Live Cam, Multi Chat
+      - name: Iqra Quran, Spark Weather, Live Cam, Multi Chat
         run: |
           publish() { # id prefix fixed file title
             [ "$APPS" = "$1" ] || [ "$APPS" = all ] || return 0
@@ -211,6 +212,8 @@ jobs:
             gh release edit "$3" --notes "Newest approved $5 build (now $version), from $COMMIT." || true
           }
           publish iqra-quran iqra-quran iqra-quran IqraQuran.apk "Iqra Quran"
+          if [ -f SparkWeather.apk ]; then publish spark-weather spark-weather spark-weather SparkWeather.apk "Spark Weather"
+          elif [ "$APPS" = spark-weather ]; then echo "::error::This test build has no Spark Weather."; exit 1; fi
           publish live-cam livecam livecam LiveCam.apk "Live Cam"
           publish multi-chat multichat multichat MultiChat.apk "Multi Chat"
 
@@ -264,7 +267,7 @@ jobs:
       - name: Rollback copies
         run: |
           gh release download rollback --pattern approved.json --clobber 2>/dev/null || echo '{}' > approved.json
-          for pair in cable-tv:LiveTV.apk live-tv-max:LiveTVMax.apk app-bazaar:AppBazaar.apk iqra-quran:IqraQuran.apk \
+          for pair in cable-tv:LiveTV.apk live-tv-max:LiveTVMax.apk app-bazaar:AppBazaar.apk iqra-quran:IqraQuran.apk spark-weather:SparkWeather.apk \
                       live-cam:LiveCam.apk multi-chat:MultiChat.apk notes-for-claude:NotesForClaude.apk; do
             id=${pair%%:*}; apk=${pair#*:}
             [ "$APPS" = "$id" ] || [ "$APPS" = all ] || continue
