@@ -11,7 +11,8 @@
      player, locked so nobody can pause, skip or leave for YouTube while live (the owner's rule for every
      YouTube channel). ?c=<station id>; the app adds &app=1. When YouTube won't play, the channel's
      free-film schedule plays instead (on the website: channel/?c=<id>; in the app: its own player).
-     Since 2026-10-10 OK opens today's guide: a programme picked there plays on demand with our own pause bar. */
+     Since 2026-10-10 OK opens today's guide: a programme picked there plays on demand with our own pause bar.
+     Since 2026-10-10 (owner's yes) the live channel itself pauses, rewinds and goes forward (OK shows the bar). */
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
   #player { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .shield { position: absolute; inset: 0; background: transparent; }
@@ -139,7 +140,9 @@ let items = [], cur = 0, inBreak = false, player = null, nowTimer = null, failur
 // How far this screen runs ahead of the clock (ms): after a programme that ends a long while before its
 // listed end, or won't play at all, the channel goes straight on to the next one instead of standing still.
 let ahead = 0;
-const clock = () => Date.now() + ahead;
+// How far the viewer is behind live (ms) after pausing or rewinding the channel itself (owner, 2026-10-10).
+let lag = 0, held = 0;
+const clock = () => Date.now() + ahead - lag;
 
 document.title = station.name + " · Watch live";
 // Latest Movies carries no logo of ours (the owner's wish).
@@ -173,17 +176,20 @@ const lengthOf = v => lengthIn(v, station);
 // Our logo never sits on the uploader's own logo (the owner's rule): logo-corners.json says which corner is free.
 let corners = { default: "tr", labels: {} }, bugLabel = null;
 fetch("logo-corners.json", { cache: "no-store" }).then(r => r.json()).then(c => { corners = c; placeBug(bugLabel); }).catch(() => {});
-function placeBug(label) {
+let bugClean = false;
+function placeBug(label, clean = bugClean) {
   bugLabel = label;
+  bugClean = clean;
   // A video showing its own logo shows none of ours (owner, 2026-10-10: every channel; logo-corners.json).
-  const hide = (corners.hideOnSourceLogo || []).includes("ytc") && !(corners.noLogo || []).includes(label);
+  // A video the logo check found clean (tools/logo_check.py, "clean" in the list) keeps ours.
+  const hide = (corners.hideOnSourceLogo || []).includes("ytc") && !(corners.noLogo || []).includes(label) && !clean;
   const corner = hide ? "off" : corners.labels?.[label] || corners.default || "tr";
   document.querySelector(".bug").className = "bug " + corner;
 }
 function showNow() {
   const v = items[cur]?.v;
   if (!v) return;
-  placeBug(v.label);
+  placeBug(v.label, !!v.clean);
   $("now").innerHTML = "<span></span><small></small>";
   // A long mushaira in 25-minute parts: "Part 2" (in Urdu on our Urdu channel).
   $("now").firstChild.textContent = v.title + (items[cur].part ? (station.nameUrdu ? ` · حصہ ${items[cur].part}` : ` · Part ${items[cur].part}`) : "");
@@ -402,7 +408,7 @@ function rejoin(ended) {
   if (torontoDay().date !== day) {
     // A new day: its locked schedule (or, without one, the day worked out here), back on the clock.
     const date = torontoDay().date;
-    ahead = 0;
+    ahead = 0; lag = 0;
     return loadLocked(station, "", date).then(lk => { locked = lk && { date, items: lk }; order(); const w = itemAt(items); playItem(w.i, w.offset); });
   }
   let w = itemAt(items, clock());
@@ -458,7 +464,7 @@ function keepInStep() {
  */
 let lastT = -1, movedAt = Date.now(), stuckItem = -1, stuckTimes = 0;
 function watchStall() {
-  if (demand) { movedAt = Date.now(); return; }
+  if (demand || held) { movedAt = Date.now(); return; }
   if (inBreak || !player?.getPlayerState || !started) { movedAt = Date.now(); return; }
   const t = player.getCurrentTime?.() || 0, playing = player.getPlayerState() === YT.PlayerState.PLAYING;
   if (playing && t !== lastT) { lastT = t; movedAt = Date.now(); return; }
@@ -563,6 +569,9 @@ function startPlayer() {
       onStateChange: e => {
         if (inBreak) return;
         if (demand) return demandState(e.data);
+        if (held) { if (e.data === YT.PlayerState.PLAYING) resumeLive(); else pauseCard(); return; }
+        if (e.data === YT.PlayerState.PLAYING) document.querySelector(".pausecard")?.remove();
+        if (bar && !demand) drawBar();
         if (e.data === YT.PlayerState.PLAYING) cover(false);
         // Any other state (loading, paused, ended, cued) shows YouTube's own screen: only our cover shows then.
         else cover(true);
@@ -579,7 +588,7 @@ function startPlayer() {
   });
   stillFor(player);
   lowFirst(player);
-  keepPlaying(player, () => inBreak || !!demand, () => cover(true));
+  keepPlaying(player, () => inBreak || !!demand || !!held, () => cover(true));
 };
 // A tap or OK only shows what's playing; double-click goes full screen (on the website).
 $("shield").ondblclick = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {});
@@ -671,26 +680,59 @@ function demandState(state) {
 }
 function pauseCard() {
   if (document.querySelector(".pausecard")) return;
+  const v = demand || { id: items[cur]?.v?.id, title: items[cur]?.v?.title || "" };
   const c = document.createElement("div");
   c.className = "pausecard";
-  c.style.backgroundImage = `url(https://i.ytimg.com/vi/${demand.id}/hqdefault.jpg)`;
+  c.style.backgroundImage = `url(https://i.ytimg.com/vi/${v.id}/hqdefault.jpg)`;
   c.innerHTML = "<div>⏸ Paused<small></small></div>";
-  c.querySelector("small").textContent = shortTitle(demand.title);
+  c.querySelector("small").textContent = shortTitle(v.title);
   document.body.appendChild(c);
 }
 function backToLive() {
-  if (!demand) return;
-  demand = null;
+  if (!demand && !lag && !held) return closeBar();
+  demand = null; lag = 0; held = 0;
   closeBar(); closeGuide();
   document.querySelector(".pausecard")?.remove();
   const w = itemAt(items, clock());
   playItem(w.i, w.offset < 10 ? 0 : w.offset);
 }
-const BUTTONS = [["⏪ 30 s", () => seekBy(-30)], ["⏩ 30 s", () => seekBy(30)], ["⏯", () => togglePause()], ["Guide", () => openGuide()], ["● Live", () => backToLive()]];
+const BUTTONS = [["⏪ 30 s", () => seekBy(-30)], ["⏩ 30 s", () => seekBy(30)], ["⏯", () => togglePause()], ["Guide", () => { closeBar(); openGuide(); }], ["● Live", () => backToLive()]];
 // Order on screen: rewind, pause, forward, guide, live.
 const SHOWN = [0, 2, 1, 3, 4];
-function seekBy(s) { const t = player.getCurrentTime?.() || 0; player.seekTo(Math.max(demand.base, t + s), true); }
-function togglePause() { player.getPlayerState() === YT.PlayerState.PAUSED ? player.playVideo() : player.pauseVideo(); }
+// ---------- Pause, rewind and forward on the live channel itself (owner, 2026-10-10) ----------
+// Like a TV box's time-shift: pausing or rewinding puts this screen behind live (lag), and the whole channel,
+// ad breaks included, carries on from there; forward catches up, never past live, and ● Live jumps back to it.
+// Only in a programme: never while our ads, cards, trailers or "coming up" clips play (YouTube's own in-video
+// ads play as YouTube plays them). Rewind goes back to the start of the programme on now, not further.
+const canShift = () => !demand && !inBreak && items[cur]?.kind === "video" && !items[cur].clip && !items[cur].trailer && !items[cur].card && !!target;
+function shiftBy(ms) { lag += ms; if (target) target.at += ms; }
+function resumeLive() {
+  if (held) { shiftBy(Date.now() - held); held = 0; }
+  document.querySelector(".pausecard")?.remove();
+  cover(false);
+}
+function seekBy(s) {
+  const t = player.getCurrentTime?.() || 0;
+  if (demand) return player.seekTo(Math.max(demand.base, t + s), true);
+  if (!canShift()) return;
+  const it = items[cur], base = target.base;
+  // Paused, the time so far counts first, so forward never jumps past live.
+  if (held) { shiftBy(Date.now() - held); held = Date.now(); }
+  let to = s < 0 ? Math.max(base, t + s) : Math.min(t + s, t + lag / 1000, base + it.secs - 2);
+  if (to <= t && s > 0) return;
+  shiftBy((t - to) * 1000);
+  if (lag < 1000) { shiftBy(-lag); }
+  player.seekTo(to, true);
+}
+function togglePause() {
+  if (demand) return player.getPlayerState() === YT.PlayerState.PAUSED ? player.playVideo() : player.pauseVideo();
+  if (held) { resumeLive(); player.playVideo(); return; }
+  if (!canShift()) return;
+  held = Date.now();
+  player.pauseVideo();
+  pauseCard();
+}
+const isPaused = () => demand ? player.getPlayerState?.() === YT.PlayerState.PAUSED : !!held;
 const mmss = s => { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
 function drawBar() {
   // A new bar starts on Pause.
@@ -698,22 +740,29 @@ function drawBar() {
   bar.innerHTML = "";
   const t = document.createElement("div");
   t.className = "t";
-  t.textContent = `${mmss((player.getCurrentTime?.() || 0) - demand.base)} / ${mmss((player.getDuration?.() || 0) - demand.base)}`;
+  const behind = lag + (held ? Date.now() - held : 0);
+  t.textContent = demand ? `${mmss((player.getCurrentTime?.() || 0) - demand.base)} / ${mmss((player.getDuration?.() || 0) - demand.base)}`
+    : behind >= 1000 ? `−${mmss(behind / 1000)} behind live` : "Watching live";
   bar.appendChild(t);
   SHOWN.forEach((b, n) => {
     const el = document.createElement("div");
     el.className = "b" + (n === bSel ? " sel" : "") + (b === 4 ? " live" : "");
-    el.textContent = b === 2 && player.getPlayerState?.() === YT.PlayerState.PAUSED ? "▶ Play" : b === 2 ? "⏸ Pause" : BUTTONS[b][0];
+    el.textContent = b === 2 && isPaused() ? "▶ Play" : b === 2 ? "⏸ Pause" : BUTTONS[b][0];
     el.onclick = () => { bSel = n; BUTTONS[b][1](); drawBar(); };
     bar.appendChild(el);
   });
   clearTimeout(barTimer);
   // Paused, the bar stays; playing, it goes after 6 seconds.
-  if (player.getPlayerState?.() !== YT.PlayerState.PAUSED) barTimer = setTimeout(closeBar, 6000);
+  if (!isPaused()) barTimer = setTimeout(closeBar, 6000);
 }
 function closeBar() { clearTimeout(barTimer); bar?.remove(); bar = null; }
-setInterval(() => { if (bar && demand) drawBar(); }, 1000);
-$("shield").onclick = () => demand ? (bar ? closeBar() : drawBar()) : (showNow(), guide ? closeGuide() : openGuide());
+setInterval(() => {
+  if (bar && demand) drawBar();
+  // The live bar goes when our ads begin (no controls on them); a paused screen stays paused.
+  else if (bar && !held && !canShift()) closeBar();
+  else if (bar) drawBar();
+}, 1000);
+$("shield").onclick = () => guide ? closeGuide() : bar ? closeBar() : (demand || canShift() || held) ? drawBar() : (showNow(), openGuide());
 
 document.addEventListener("keydown", e => {
   const k = e.key;
@@ -747,6 +796,22 @@ document.addEventListener("keydown", e => {
     else if (k === "ArrowRight") { rSel = Math.min(RATE.length - 1, rSel + 1); drawRate(); }
     else if (k === "Enter" || k === " ") sendRate();
     else if (k === "Escape" || k === "Backspace") closeRate();
+    else return;
+    e.preventDefault();
+    return;
+  }
+  // On the live channel: OK, ◀ or ▶ show our bar (rewind, pause, forward, guide, live) while a programme plays;
+  // during our ads OK still opens the guide, and the bar comes back after the break.
+  if (held || bar || canShift()) {
+    if (k === "MediaPlayPause" || k === "MediaPlay" || k === "MediaPause") { togglePause(); drawBar(); }
+    else if (k === "MediaRewind") { seekBy(-30); drawBar(); }
+    else if (k === "MediaFastForward") { seekBy(30); drawBar(); }
+    else if (!bar && (k === "Enter" || k === " " || k === "ArrowLeft" || k === "ArrowRight")) { showNow(); drawBar(); }
+    else if (bar && k === "ArrowLeft") { bSel = Math.max(0, bSel - 1); drawBar(); }
+    else if (bar && k === "ArrowRight") { bSel = Math.min(SHOWN.length - 1, bSel + 1); drawBar(); }
+    else if (bar && (k === "Enter" || k === " ")) { BUTTONS[SHOWN[bSel]][1](); if (!guide && (bar || held || demand)) drawBar(); }
+    else if (bar && (k === "Escape" || k === "Backspace") && !held) closeBar();
+    else if (held && (k === "Escape" || k === "Backspace")) { togglePause(); drawBar(); }
     else return;
     e.preventDefault();
     return;
