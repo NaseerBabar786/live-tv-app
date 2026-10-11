@@ -1,6 +1,6 @@
 {
  "name": "Spark Movies English",
- "built": "2026-10-10 23:07 UTC",
+ "built": "2026-10-11 01:01 UTC",
  "videos": [
   {
    "id": "UGSWfOj5sjU",
@@ -12,7 +12,8 @@
    "posted": "2026-10-10",
    "up": "2026-10-10",
    "top": true,
-   "latest": true
+   "latest": true,
+   "clean": true
   },
   {
    "id": "BZojTJXqY2A",
@@ -24,7 +25,8 @@
    "posted": "2026-10-09",
    "up": "2026-10-09",
    "top": true,
-   "latest": true
+   "latest": true,
+   "clean": true
   },
   {
    "id": "F1Vwc2jC7EA",
@@ -35,7 +37,8 @@
    "lang": "en",
    "up": "2026-10-03",
    "top": true,
-   "latest": true
+   "latest": true,
+   "clean": true
   },
   {
    "id": "M2_LpZyq94g",
@@ -45,7 +48,8 @@
    "found": "2026-10-09",
    "lang": "en",
    "top": true,
-   "latest": true
+   "latest": true,
+   "clean": true
   },
   {
    "id": "A4rgRr_T4Ow",
@@ -55,7 +59,8 @@
    "found": "2026-10-07",
    "lang": "en",
    "top": true,
-   "latest": true
+   "latest": true,
+   "clean": true
   },
   {
    "id": "ERsURQC8Xxo",
@@ -65,7 +70,8 @@
    "found": "2026-10-09",
    "lang": "en",
    "top": true,
-   "latest": true
+   "latest": true,
+   "clean": true
   },
   {
    "id": "fIhM9MiEN50",
@@ -75,7 +81,8 @@
    "found": "2026-10-07",
    "lang": "en",
    "top": true,
-   "latest": true
+   "latest": true,
+   "clean": true
   },
   {
    "id": "nW1pVutjpt4",
@@ -85,7 +92,8 @@
    "found": "2026-10-08",
    "lang": "en",
    "top": true,
-   "latest": true
+   "latest": true,
+   "clean": true
   },
   {
    "id": "85UxL-AJdpQ",
