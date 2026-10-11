@@ -1,7 +1,8 @@
 // Maze Munch: a modern remake of Maze Muncher. Gobble every dot in the neon maze while four ghosts
 // hunt you, each in its own way; a power orb turns them blue for a while so you can munch them too.
-// Fruit pops up for a bonus, every level is a little faster, three lives. Remote: arrows steer (a turn
-// waits for the next opening), OK pauses. Touch: swipe to steer, tap to pause. Keyboard: arrows/WASD.
+// Fruit pops up for a bonus, every level is a little faster. Four skill choices on the start screen
+// (Beginner, Normal, Hard, Professional), the last one is remembered. Remote: ◀ ▶ pick the skill, OK plays;
+// in the game arrows steer (a turn waits for the next opening), OK pauses. Touch: swipe to steer, tap to pause. Keyboard: arrows/WASD.
 'use strict';
 
 (() => {
@@ -101,18 +102,45 @@
   const fruitFor = (lv) => FRUITS[Math.min(lv - 1, FRUITS.length - 1)];
   const SCARED = '#3d5afe';
 
+  // ---------- Skill choices ----------
+  // lives; player speed (start, per level); ghost speed as a share of the player's (start, per level, top);
+  // power time (start, less per level, least); ghosts leave home later (release ×); wander = chance a hunting
+  // ghost takes a random turn; scatter × = how long ghosts drift to their corners.
+  const DIFFS = [
+    { id: 'beginner', name: 'Beginner', tip: 'Slow ghosts  ·  5 lives  ·  long power time',
+      lives: 5, ps: 6.4, pStep: 0.2, gs: 0.6, gStep: 0.015, gTop: 0.72, fr: 11, frStep: 0.5, frMin: 6, release: 2, wander: 0.45, scatter: 1.6 },
+    { id: 'normal', name: 'Normal', tip: 'The classic chase  ·  3 lives',
+      lives: 3, ps: 7.2, pStep: 0.45, gs: 0.86, gStep: 0.025, gTop: 0.97, fr: 7, frStep: 0.8, frMin: 2, release: 1, wander: 0, scatter: 1 },
+    { id: 'hard', name: 'Hard', tip: 'Faster, smarter ghosts  ·  short power time',
+      lives: 3, ps: 7.6, pStep: 0.45, gs: 0.93, gStep: 0.02, gTop: 1, fr: 5, frStep: 0.7, frMin: 1.5, release: 0.6, wander: 0, scatter: 0.7 },
+    { id: 'pro', name: 'Professional', tip: 'Ghosts as fast as you  ·  2 lives',
+      lives: 2, ps: 8, pStep: 0.4, gs: 1, gStep: 0.01, gTop: 1.05, fr: 3.5, frStep: 0.5, frMin: 1, release: 0.35, wander: 0, scatter: 0.5 },
+  ];
+  let diffIx = clamp(Kit.store.get('mazemunch.skill', 0) | 0, 0, DIFFS.length - 1);
+  let diff = DIFFS[diffIx];
+  // Best score per skill; the old single best was played on today's Normal.
+  const bests = Object.assign({ beginner: 0, normal: Kit.store.get('mazemunch.best', 0), hard: 0, pro: 0 },
+    Kit.store.get('mazemunch.bests', {}) || {});
+  const topBest = () => Math.max(...DIFFS.map((d) => bests[d.id] || 0));
+
   // ---------- State ----------
   // state: 'menu' (a demo plays itself behind the title), 'ready', 'play', 'paused', 'dying', 'clear', 'over'
   let state = 'menu', demo = true;
-  let best = Kit.store.get('mazemunch.best', 0), bestDirty = false, bestFlushT = 0, startBest = 0;
+  let best = bests[diff.id] || 0, bestDirty = false, bestFlushT = 0, startBest = 0;
   let score = 0, shown = 0, bump = 0, lives = 3, level = 1, extraGiven = false, newBest = false, ghostsEaten = 0;
   let dots = new Uint8Array(MW * MH), dotsLeft = 0, eaten = 0, fruit = null, fruitsShown = 0;
   let player, ghosts = [], frightT = 0, frightMax = 1, phaseIx = 0, phaseT = 0, freezeT = 0, combo = 0;
   let stateT = 0, readyT = 0, deathT = 0, clearT = 0, overT = 0, wakaFlip = false, turnK = 0;
 
-  const playerSpeed = () => Math.min(10, 7.2 + (level - 1) * 0.45);
-  const ghostRatio = () => Math.min(0.97, 0.86 + (level - 1) * 0.025);
-  const frightFor = () => Math.max(2, 7 - (level - 1) * 0.8);
+  const playerSpeed = () => Math.min(10.5, diff.ps + (level - 1) * diff.pStep);
+  const ghostRatio = () => Math.min(diff.gTop, diff.gs + (level - 1) * diff.gStep);
+  const frightFor = () => Math.max(diff.frMin, diff.fr - (level - 1) * diff.frStep);
+  const phaseLen = (i) => PHASES[i] * (i % 2 === 0 ? diff.scatter : 1);
+  function pickDiff(i) {
+    diffIx = (i + DIFFS.length) % DIFFS.length; diff = DIFFS[diffIx];
+    best = bests[diff.id] || 0;
+    Kit.store.set('mazemunch.skill', diffIx);
+  }
 
   function loadLevel() {
     dots = baseDots.slice();
@@ -128,7 +156,7 @@
     const release = [0, 1.5, 4.5, 8];
     ghosts = GHOSTS.map((g, id) => ({
       id, x: spots[id].x, y: spots[id].y, t: 0, dir: id === 0 ? D.left : NONE,
-      mode: id === 0 ? 'normal' : 'house', release: release[id] * k, scared: false,
+      mode: id === 0 ? 'normal' : 'house', release: release[id] * k * diff.release, scared: false,
     }));
     frightT = 0; phaseIx = 0; phaseT = 0; freezeT = 0; combo = 0;
   }
@@ -228,7 +256,7 @@
     }
     const opts = ORDER.filter((d) => !opposite(d, g.dir) && canGo(g, d));
     if (!opts.length) { g.dir = ORDER.find((d) => canGo(g, d)) || NONE; return; }
-    if (g.scared) { g.dir = opts[(Math.random() * opts.length) | 0]; return; }
+    if (g.scared || (diff.wander && !demo && Math.random() < diff.wander)) { g.dir = opts[(Math.random() * opts.length) | 0]; return; }
     const tg = ghostTarget(g);
     let bestD = Infinity;
     for (const d of opts) {
@@ -265,8 +293,9 @@
   function flushBest() {
     if (!bestDirty) return;
     bestDirty = false;
-    Kit.store.set('mazemunch.best', best);
-    Kit.record('mazemunch', best);
+    bests[diff.id] = best;
+    Kit.store.set('mazemunch.bests', bests);
+    Kit.record('mazemunch', topBest());
   }
 
   function playerArrive(p) {
@@ -352,7 +381,7 @@
       if (frightT <= 0) for (const g of ghosts) g.scared = false;
     } else if (phaseIx < PHASES.length) {
       phaseT += dt;
-      if (phaseT > PHASES[phaseIx]) { phaseT = 0; phaseIx++; for (const g of ghosts) if (g.mode === 'normal') reverse(g); }
+      if (phaseT > phaseLen(phaseIx)) { phaseT = 0; phaseIx++; for (const g of ghosts) if (g.mode === 'normal') reverse(g); }
     }
     const before = state;
     advance(player, playerSpeed() * dt, demo ? demoChoose : playerChoose, playerArrive);
@@ -386,10 +415,15 @@
 
   function start() {
     demo = false;
-    level = 1; score = 0; shown = 0; lives = 3; extraGiven = false; newBest = false; ghostsEaten = 0;
+    level = 1; score = 0; shown = 0; lives = diff.lives; extraGiven = false; newBest = false; ghostsEaten = 0;
     startBest = best;
     loadLevel();
     toReady();
+  }
+  // Back to the start screen (from Game over) so the skill can be changed; the demo plays again.
+  function toMenu() {
+    state = 'menu'; demo = true; stateT = 0; score = 0; shown = 0; level = 1;
+    sfx.move(); loadLevel();
   }
   function toReady() {
     state = 'ready'; readyT = stateT;
@@ -399,8 +433,18 @@
   // ---------- Input ----------
   Kit.onKeys((k) => {
     if (k === 'mute') { Kit.toggleMute(); return; }
-    if (state === 'menu') { if (k === 'ok') start(); return; }
-    if (state === 'over') { if (k === 'ok' && stateT - overT > 1.2) start(); return; }
+    if (state === 'menu') {
+      if (k === 'ok') { start(); return; }
+      const step = k === 'left' || k === 'up' ? -1 : k === 'right' || k === 'down' ? 1 : 0;
+      if (step) { pickDiff(diffIx + step); sfx.move(); }
+      return;
+    }
+    if (state === 'over') {
+      if (stateT - overT <= 1.2) return;
+      if (k === 'ok') start();
+      else if (D[k]) toMenu();
+      return;
+    }
     if (k === 'restart') { start(); return; }
     if (k === 'ok') {
       if (state === 'play') { state = 'paused'; sfx.move(); } else if (state === 'paused') { state = 'play'; sfx.pick(); }
@@ -417,7 +461,11 @@
     down(e) {
       const m = muteBox();
       if (e.x >= m.x && e.y >= m.y && e.x <= m.x + m.w && e.y <= m.y + m.h) { Kit.toggleMute(); return; }
-      if (state === 'menu') { start(); return; }
+      if (state === 'menu') {
+        const hit = (L.pills || []).findIndex((r) => e.x >= r.x && e.y >= r.y && e.x <= r.x + r.w && e.y <= r.y + r.h);
+        if (hit >= 0 && hit !== diffIx) { pickDiff(hit); sfx.move(); return; }
+        start(); return;
+      }
       if (state === 'over') { if (stateT - overT > 1.2) start(); return; }
       swipe = { x: e.x, y: e.y, moved: false };
     },
@@ -871,6 +919,7 @@
       c.restore();
       text(c, 'LEVEL', lx, H * 0.41, u * 0.6, lbl, 800);
       outlined(c, String(level), lx, H * 0.49, u * 1.3, '#ffffff', '#5ff0ff');
+      text(c, diff.name, lx, H * 0.555, u * 0.5, '#ffd23f', 800);
       text(c, 'LIVES', lx, H * 0.63, u * 0.6, lbl, 800);
       lifeIcons(c, lx, H * 0.71, lives, u * 1.0, 'center');
 
@@ -894,7 +943,7 @@
       c.save(); c.translate(W * 0.2, y); c.scale(1 + bump * 0.15, 1 + bump * 0.15);
       outlined(c, String(Math.round(shown)), 0, 0, u * 1.1, '#fff7c2', '#ffb800');
       c.restore();
-      text(c, `Level ${level}`, W / 2, y, u * 0.6, '#ffffff', 800);
+      text(c, `Level ${level} · ${diff.name}`, W / 2, y, u * 0.6, '#ffffff', 800);
       text(c, `👑 ${Math.max(best, score)}`, W * 0.8, y, u * 0.6, '#ffd23f', 800);
       lifeIcons(c, W / 2, L.my * 0.8, lives, u * 0.7, 'center');
     }
@@ -904,14 +953,15 @@
     const W = Kit.W, H = Kit.H, cs = L.cs;
     c.fillStyle = 'rgba(3,5,20,0.6)'; c.fillRect(0, 0, W, H);
     const a = ease.back(clamp(stateT / 0.5, 0, 1));
-    const pw = Math.min(W * 0.94, cs * 20), ph = Math.min(H * 0.84, cs * 14.5);
-    c.save(); c.translate(W / 2, H / 2 - cs * 0.3); c.scale(a, a);
+    const pw = Math.min(W * 0.94, cs * 20), ph = Math.min(H * 0.9, cs * 16.5);
+    const ox = W / 2, oy = H / 2 - cs * 0.3;
+    c.save(); c.translate(ox, oy); c.scale(a, a);
     panel(c, -pw / 2, -ph / 2, pw, ph, cs * 0.8, '#5ff0ff');
     // Title with a little muncher chasing along
-    outlined(c, 'MAZE MUNCH', 0, -ph * 0.37, cs * 1.65, '#fff7c2', '#ffb800');
-    text(c, 'Eat every dot. Dodge the ghosts.', 0, -ph * 0.245, cs * 0.6, 'rgba(255,255,255,0.88)', 700);
+    outlined(c, 'MAZE MUNCH', 0, -ph * 0.39, cs * 1.65, '#fff7c2', '#ffb800');
+    text(c, 'Eat every dot. Dodge the ghosts.', 0, -ph * 0.29, cs * 0.6, 'rgba(255,255,255,0.88)', 700);
     GHOSTS.forEach((g, i) => {
-      const cx = (i % 2 ? 0.25 : -0.25) * pw, cy = (i < 2 ? -0.09 : 0.075) * ph;
+      const cx = (i % 2 ? 0.25 : -0.25) * pw, cy = (i < 2 ? -0.175 : -0.05) * ph;
       const s = cs * 1.35, sx = cx - pw * 0.16;
       c.globalAlpha = 0.5; c.drawImage(glow(g.color, s * 2), sx - s, cy - s, s * 2, s * 2); c.globalAlpha = 1;
       c.drawImage(ghostSprite(i, Math.floor(t * 4 + i) % 2, s), sx - s / 2, cy - s / 2 + Math.sin(t * 3 + i) * cs * 0.06, s, s);
@@ -919,17 +969,35 @@
       text(c, g.name, cx - pw * 0.09, cy - cs * 0.28, cs * 0.66, g.color, 900, 'left');
       text(c, g.style, cx - pw * 0.09, cy + cs * 0.32, cs * 0.48, 'rgba(255,255,255,0.8)', 600, 'left');
     });
-    const ty = ph * 0.215;
+    const ty = ph * 0.03;
     const os = cs * 1.3;
     c.font = `700 ${Math.round(cs * 0.52)}px system-ui, sans-serif`;
     const tip = 'Power orbs turn ghosts blue: munch them!';
     const tw = c.measureText(tip).width;
     c.drawImage(orbSprite(os), -tw / 2 - os * 0.85, ty - os / 2, os, os);
     text(c, tip, cs * 0.2, ty, cs * 0.52, '#ffb3d9', 700);
-    button(c, Kit.touchFirst() ? 'Tap to play' : 'OK  Play', 0, ph * 0.335, cs * 6.5, cs * 1.25, t, true);
-    text(c, `👑 Best ${best}`, 0, ph * 0.44, cs * 0.58, '#ffd23f', 800);
+    // Skill row: ◀ Beginner  Normal  Hard  Professional ▶
+    const py = ph * 0.165, pgap = pw * 0.015, pwid = (pw * 0.86 - pgap * 3) / 4, pht = cs * 1.15;
+    text(c, Kit.touchFirst() ? 'Tap a skill' : '◀  ▶  choose your skill', 0, py - pht * 1.05, cs * 0.5, 'rgba(150,225,255,0.9)', 800);
+    L.pills = [];
+    DIFFS.forEach((d, i) => {
+      const x = -pw * 0.43 + i * (pwid + pgap), on = i === diffIx;
+      const k = on ? 1.05 + Math.sin(t * 5) * 0.015 : 1;
+      c.save(); c.translate(x + pwid / 2, py); c.scale(k, k);
+      roundRect(c, -pwid / 2, -pht / 2, pwid, pht, pht / 2);
+      const g = c.createLinearGradient(0, -pht / 2, 0, pht / 2);
+      g.addColorStop(0, on ? '#7dffb0' : 'rgba(120,140,200,0.35)'); g.addColorStop(1, on ? '#13b86a' : 'rgba(40,55,110,0.55)');
+      c.fillStyle = g; c.fill();
+      c.lineWidth = on ? 4 : 2; c.strokeStyle = on ? '#ffffff' : 'rgba(150,225,255,0.35)'; c.stroke();
+      text(c, d.name, 0, pht * 0.03, Math.min(pht * 0.42, pwid / (d.name.length * 0.62)), on ? '#04220f' : 'rgba(255,255,255,0.8)', 900);
+      c.restore();
+      L.pills.push({ x: ox + x, y: oy + py - pht / 2, w: pwid, h: pht });
+    });
+    text(c, diff.tip, 0, py + pht * 0.95, cs * 0.5, 'rgba(255,255,255,0.85)', 700);
+    button(c, Kit.touchFirst() ? 'Tap to play' : 'OK  Play', 0, ph * 0.355, cs * 6.5, cs * 1.25, t, true);
+    text(c, `👑 Best (${diff.name}) ${best}`, 0, ph * 0.45, cs * 0.55, '#ffd23f', 800);
     c.restore();
-    if (!Kit.touchFirst()) text(c, 'Arrows steer  ·  OK pauses  ·  Back for games', W / 2, Math.min(H - cs * 0.6, H / 2 - cs * 0.3 + ph / 2 + cs * 0.75), cs * 0.52, 'rgba(255,255,255,0.75)', 700);
+    if (!Kit.touchFirst()) text(c, '◀ ▶ skill  ·  Arrows steer  ·  OK pauses  ·  Back for games', W / 2, Math.min(H - cs * 0.5, oy + ph / 2 + cs * 0.7), cs * 0.5, 'rgba(255,255,255,0.75)', 700);
   }
 
   function drawOver(c, t) {
@@ -942,11 +1010,12 @@
     panel(c, -pw / 2, -ph / 2, pw, ph, cs * 0.8, '#ffd23f');
     outlined(c, 'Game over', 0, -ph * 0.36, cs * 1.35, '#ffffff', '#7fe7ff');
     outlined(c, String(score), 0, -ph * 0.13, cs * 2.0, '#fff7c2', '#ffb800');
-    text(c, newBest ? '🎉 New best score!' : `👑 Best ${best}`, 0, ph * 0.06, cs * 0.65, newBest ? '#ffd23f' : '#ffffff', 800);
+    text(c, newBest ? `🎉 New ${diff.name} best!` : `👑 Best (${diff.name}) ${best}`, 0, ph * 0.06, cs * 0.65, newBest ? '#ffd23f' : '#ffffff', 800);
     text(c, `Level ${level}  ·  ${ghostsEaten} ghost${ghostsEaten === 1 ? '' : 's'} munched`, 0, ph * 0.18, cs * 0.52, 'rgba(255,255,255,0.78)', 700);
     const ready = stateT - overT > 1.2;
     c.globalAlpha = ready ? 1 : 0.45;
-    button(c, Kit.touchFirst() ? 'Tap to play again' : 'OK  play again', 0, ph * 0.35, cs * 7.5, cs * 1.25, t, ready);
+    button(c, Kit.touchFirst() ? 'Tap to play again' : 'OK  play again', 0, ph * 0.33, cs * 7.5, cs * 1.25, t, ready);
+    if (!Kit.touchFirst()) text(c, '◀ ▶  change skill', 0, ph * 0.44, cs * 0.5, 'rgba(255,255,255,0.75)', 700);
     c.globalAlpha = 1;
     c.restore();
   }
@@ -956,5 +1025,5 @@
   Kit.run(update, draw);
   loadLevel();
   Kit.canvas.focus();
-  if (best > 0) Kit.record('mazemunch', best);
+  if (topBest() > 0) Kit.record('mazemunch', topBest());
 })();
