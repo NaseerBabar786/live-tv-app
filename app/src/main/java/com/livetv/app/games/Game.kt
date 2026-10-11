@@ -149,6 +149,20 @@ class WebGameInfo(
 )
 
 val WEB_GAMES = listOf(
+    // Family games (1.11.x): several people take turns with one remote, a TV player can fill any seat,
+    // and every game starts on Beginner.
+    WebGameInfo("dotsboxes", "Dots & Boxes", "🔲", "dotsboxes.html") { "Wins: $it" },
+    WebGameInfo("dicefive", "Dice Five", "🎲", "dicefive.html") { "Best: $it" },
+    WebGameInfo("tambola", "Tambola", "🎱", "tambola.html") { "Wins: $it" },
+    WebGameInfo("dominoes", "Dominoes", "🁫", "dominoes.html") { "Wins: $it" },
+    WebGameInfo("crazyeights", "Crazy Eights", "🃏", "crazyeights.html") { "Wins: $it" },
+    WebGameInfo("actitout", "Act It Out", "🎭", "actitout.html") { "Best: $it" },
+    WebGameInfo("minigolf", "Mini Golf", "⛳", "minigolf.html") { "Wins: $it" },
+    WebGameInfo("strikelanes", "Strike Lanes", "🎳", "strikelanes.html") { "Best: $it" },
+    WebGameInfo("bullseye", "Bullseye Darts", "🎯", "bullseye.html") { "Wins: $it" },
+    WebGameInfo("seabattle", "Sea Battle", "🚢", "seabattle.html") { "Wins: $it" },
+    WebGameInfo("flipdisc", "Flip Disc", "⚫", "flipdisc.html") { "Wins: $it" },
+    WebGameInfo("pebblepits", "Pebble Pits", "🪨", "pebblepits.html") { "Wins: $it" },
     WebGameInfo("bubblebazaar", "Bubble Bazaar", "🔮", "bubblebazaar.html") { "Level $it done" },
     WebGameInfo("solitaireplus", "Solitaire", "🂡", "solitaire.html") { "Wins: $it" },
     WebGameInfo("spades", "Spades", "♠️", "spades.html") { "Wins: $it" },

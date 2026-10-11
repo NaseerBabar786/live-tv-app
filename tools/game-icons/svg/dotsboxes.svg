@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b5cff"/><stop offset="1" stop-color="#1a1460"/></linearGradient>
+    <radialGradient id="shine" cx="0.3" cy="0.2" r="0.8"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient><clipPath id="sq"><rect width="512" height="512" rx="112"/></clipPath>
+    <linearGradient id="board" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262c66"/><stop offset="1" stop-color="#0e1135"/></linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8aa0"/><stop offset="1" stop-color="#d81f45"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8cc4ff"/><stop offset="1" stop-color="#1f6fe0"/></linearGradient>
+    <radialGradient id="dot" cx=".38" cy=".32" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#dfe3ff"/><stop offset="1" stop-color="#8a93c8"/></radialGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0a0630" flood-opacity=".55"/></filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+    <g opacity=".12" stroke="#fff" stroke-width="2"><path d="M0 64H512M0 128H512M0 192H512M0 256H512M0 320H512M0 384H512M0 448H512M64 0V512M128 0V512M192 0V512M256 0V512M320 0V512M384 0V512M448 0V512"/></g>
+    <rect width="512" height="512" fill="url(#shine)"/>
+  </g>
+  <g filter="url(#sh)" transform="rotate(-6 256 256)">
+    <rect x="86" y="86" width="340" height="340" rx="40" fill="url(#board)" stroke="#9aa8ff" stroke-opacity=".6" stroke-width="5"/>
+    <!-- filled boxes -->
+    <rect x="134" y="134" width="108" height="108" rx="16" fill="url(#red)"/>
+    <rect x="270" y="270" width="108" height="108" rx="16" fill="url(#blue)"/>
+    <text x="188" y="210" font-family="Fredoka" font-weight="700" font-size="76" fill="#fff" text-anchor="middle">R</text>
+    <text x="324" y="346" font-family="Fredoka" font-weight="700" font-size="76" fill="#fff" text-anchor="middle">B</text>
+    <!-- glow lines -->
+    <g stroke-linecap="round" stroke-width="22" opacity=".45" filter="url(#glow)">
+      <path d="M128 128H256M128 128V256M128 256H256M256 128V256" stroke="#ff4d6d"/>
+      <path d="M256 384H384M384 256V384M256 256V384M256 256H384M384 128V256" stroke="#3d9bff"/>
+    </g>
+    <g stroke-linecap="round" stroke-width="13">
+      <path d="M128 128H256M128 128V256M128 256H256M256 128V256" stroke="#ff4d6d"/>
+      <path d="M256 384H384M384 256V384M256 256V384M256 256H384M384 128V256" stroke="#3d9bff"/>
+    </g>
+    <path d="M140 384H244" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="14 12" opacity=".85"/>
+    <g fill="url(#dot)">
+      <circle cx="128" cy="128" r="16"/><circle cx="256" cy="128" r="16"/><circle cx="384" cy="128" r="16"/>
+      <circle cx="128" cy="256" r="16"/><circle cx="256" cy="256" r="16"/><circle cx="384" cy="256" r="16"/>
+      <circle cx="128" cy="384" r="16"/><circle cx="256" cy="384" r="16"/><circle cx="384" cy="384" r="16"/>
+    </g>
+  </g>
+  <path d="M430 70 l8 20 20 8 -20 8 -8 20 -8 -20 -20 -8 20 -8z" fill="#fff3b0"/>
+</svg>

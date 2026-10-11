@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#a2361a"/></linearGradient>
+    <radialGradient id="shine" cx="0.3" cy="0.2" r="0.8"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient><clipPath id="sq"><rect width="512" height="512" rx="112"/></clipPath>
+    <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c88a52"/><stop offset=".5" stop-color="#93582c"/><stop offset="1" stop-color="#6e3d1a"/></linearGradient>
+    <radialGradient id="hole" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#5a2e12"/><stop offset=".7" stop-color="#3c1c08"/><stop offset="1" stop-color="#241002"/></radialGradient>
+    <radialGradient id="p1" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffd0d8"/><stop offset=".45" stop-color="#ff5d73"/><stop offset="1" stop-color="#8e1c2e"/></radialGradient>
+    <radialGradient id="p2" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#d4e9ff"/><stop offset=".45" stop-color="#4da3ff"/><stop offset="1" stop-color="#174f99"/></radialGradient>
+    <radialGradient id="p3" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff6c8"/><stop offset=".45" stop-color="#ffd23f"/><stop offset="1" stop-color="#9a7400"/></radialGradient>
+    <radialGradient id="p4" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#d2ffe9"/><stop offset=".45" stop-color="#3ddc97"/><stop offset="1" stop-color="#127a4c"/></radialGradient>
+    <radialGradient id="p5" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#efe3ff"/><stop offset=".45" stop-color="#b388ff"/><stop offset="1" stop-color="#5a2fa0"/></radialGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#3a0e00" flood-opacity=".5"/></filter>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+    <rect width="512" height="512" fill="url(#shine)"/>
+  </g>
+  <g filter="url(#sh)">
+    <rect x="56" y="176" width="400" height="250" rx="110" fill="url(#wood)"/>
+    <g stroke="#3c1806" stroke-opacity=".18" stroke-width="3" fill="none"><path d="M70 230 q120 -14 372 4M66 300 q160 12 380 -6M72 370 q140 -10 368 6"/></g>
+    <ellipse cx="200" cy="246" rx="46" ry="44" fill="url(#hole)"/>
+    <ellipse cx="312" cy="246" rx="46" ry="44" fill="url(#hole)"/>
+    <ellipse cx="200" cy="356" rx="46" ry="44" fill="url(#hole)"/>
+    <ellipse cx="312" cy="356" rx="46" ry="44" fill="url(#hole)"/>
+    <ellipse cx="102" cy="301" rx="30" ry="92" fill="url(#hole)"/>
+    <ellipse cx="410" cy="301" rx="30" ry="92" fill="url(#hole)"/>
+    <circle cx="188" cy="244" r="17" fill="url(#p1)"/><circle cx="212" cy="256" r="17" fill="url(#p2)"/><circle cx="204" cy="232" r="17" fill="url(#p3)"/>
+    <circle cx="300" cy="352" r="17" fill="url(#p4)"/><circle cx="324" cy="362" r="17" fill="url(#p5)"/>
+    <circle cx="196" cy="358" r="17" fill="url(#p3)"/>
+    <circle cx="410" cy="330" r="17" fill="url(#p2)"/><circle cx="406" cy="300" r="17" fill="url(#p1)"/><circle cx="412" cy="360" r="17" fill="url(#p4)"/>
+  </g>
+  <!-- a pebble hopping -->
+  <path d="M312 230 Q330 120 410 210" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-dasharray="4 16" opacity=".9"/>
+  <g filter="url(#sh)"><circle cx="352" cy="150" r="30" fill="url(#p1)"/><ellipse cx="342" cy="138" rx="10" ry="6" fill="#fff" opacity=".8" transform="rotate(-30 342 138)"/></g>
+  <path d="M90 70 l8 20 20 8 -20 8 -8 20 -8 -20 -20 -8 20 -8z" fill="#fff3b0"/>
+</svg>
