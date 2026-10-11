@@ -1,0 +1,39 @@
+name: Newsreader lip-synced lines (Modal)
+# Owner 2026-10-11 picked version 1 (LongCat-Video-Avatar, plain studio photo, 480p): make each reader's fixed
+# greeting and goodbye once with real lip sync and reuse them every day. Runs on the owner's Modal free credit;
+# --budget stops it before the spend passes the limit. Clips already on channel-media are skipped.
+# Result: channel-media/lip-<picture>-<line>.mp4 + lip-report.json. Not on air until on-air.json "lipsync": true.
+on:
+  push:
+    branches-ignore: [main]
+    paths: [".github/workflows/presenter-lines.yml"]
+  workflow_dispatch:
+    inputs:
+      readers: {description: "Comma list of readers", default: "anchor-1,anchor-m1,anchor-5,anchor-m6"}
+      budget: {description: "Stop after about this many USD", default: "10"}
+jobs:
+  lines:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    permissions:
+      contents: write
+    env:
+      READERS: ${{ inputs.readers || 'anchor-1,anchor-m1,anchor-5,anchor-m6' }}
+      BUDGET: ${{ inputs.budget || '10' }}
+      MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+      MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make the lines on Modal
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q modal edge-tts
+          mkdir -p lips
+          modal run tools/news/modal/longcat_avatar.py::lines --readers "$READERS" --out lips --budget "$BUDGET" 2>&1 | tee lips/lip-run.log
+      - name: Upload
+        if: always()
+        run: |
+          ls -la lips || true
+          gh release upload channel-media lips/* -R "$GITHUB_REPOSITORY" --clobber || echo "nothing to upload"
