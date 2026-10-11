@@ -34,7 +34,7 @@ scroll_tap() { for i in 1 2 3 4 5 6; do tap_text "$@" && return 0; adb shell inp
 back() { adb shell input keyevent KEYCODE_BACK; sleep 2; }
 launch() { adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1 || adb shell monkey -p "$PKG" -c android.intent.category.LEANBACK_LAUNCHER 1 >/dev/null 2>&1; sleep 8; }
 grant() { for p in ACCESS_COARSE_LOCATION ACCESS_FINE_LOCATION POST_NOTIFICATIONS; do adb shell pm grant "$PKG" android.permission.$p >/dev/null 2>&1; done; }
-home() { for i in 1 2 3 4 5 6; do find_text "Kids Qaida" "بچوں کا قاعدہ" | grep -q . && return 0; back; running || launch; done; }
+home() { for i in 1 2 3; do find_text "Kids Qaida" "بچوں کا قاعدہ" | grep -q . && return 0; back; find_text "Kids Qaida" "بچوں کا قاعدہ" | grep -q . && return 0; launch; done; }
 
 adb logcat -c
 if [ -n "$PUBLIC_APK" ] && [ -s "$PUBLIC_APK" ]; then
