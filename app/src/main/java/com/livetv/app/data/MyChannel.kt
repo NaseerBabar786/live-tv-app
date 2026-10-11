@@ -392,7 +392,8 @@ object MyChannel {
             videos = videos,
             slots = slots,
             loop = loop,
-            ticker = o.optString("ticker").trim().takeIf { it.isNotEmpty() && o.optBoolean("tickerOn", true) },
+            // Without the "advertise with us" words (owner, 2026-10-11).
+            ticker = com.livetv.app.ui.TickerText.clean(o.optString("ticker").trim().takeIf { o.optBoolean("tickerOn", true) }),
             logoCorner = o.optString("logoCorner").ifBlank { "tr" },
             id = id,
             fillers = o.optJSONArray("fillers")?.let { a -> (0 until a.length()).map { a.optString(it) } }.orEmpty(),

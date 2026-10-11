@@ -180,6 +180,7 @@ fun MyChannelOverlay(channel: Channel?, modifier: Modifier = Modifier) {
                     .padding(vertical = unit * 0.6f),
                 contentAlignment = Alignment.CenterStart,
             ) {
+                TestTransmissionBehind((unit.value * 1.9f).sp, Modifier.matchParentSize())
                 Text(
                     line,
                     color = Color.White,
