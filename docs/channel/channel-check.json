@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-11 02:04 UTC",
+ "checked": "2026-10-11 03:49 UTC",
  "problems": [
   {
    "channel": "Spark Dramas Urdu",
@@ -28,10 +28,6 @@
   {
    "channel": "Spark Comedy Hindi",
    "text": "2026-10-10: only 0.7 hours of programmes; the day starts again from the top (not dead air, but repeats)."
-  },
-  {
-   "channel": "Spark Comedy Hindi",
-   "text": "2026-10-11: only 0.9 hours of programmes; the day starts again from the top (not dead air, but repeats)."
   },
   {
    "channel": "Spark Cooking Hindi",
@@ -66,10 +62,6 @@
    "text": "2026-10-10: only 0.2 hours of programmes; the day starts again from the top (not dead air, but repeats)."
   },
   {
-   "channel": "Movie Trailers",
-   "text": "2026-10-11: only 0.2 hours of programmes; the day starts again from the top (not dead air, but repeats)."
-  },
-  {
    "channel": "Spark Teens English",
    "text": "1 programme(s) have no length; each gets 12 minutes in the schedule (a shorter one is filled with promos or the next programme starts early)."
   },
@@ -80,10 +72,6 @@
   {
    "channel": "Spark Comedy English",
    "text": "2026-10-10: only 2.7 hours of programmes; the day starts again from the top (not dead air, but repeats)."
-  },
-  {
-   "channel": "Spark Comedy English",
-   "text": "2026-10-11: only 2.9 hours of programmes; the day starts again from the top (not dead air, but repeats)."
   },
   {
    "channel": "Spark Auto",
