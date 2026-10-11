@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import java.util.Calendar
 
 /**
@@ -24,13 +25,17 @@ class MorningForecast : BroadcastReceiver() {
         val done = goAsync()
         Thread {
             try {
-                Forecast.load(context, own = true)?.let { r ->
+                val r = Forecast.load(context, own = true)
+                if (r == null) {
+                    Log.w(TAG, "No weather this morning (offline or no place)")
+                } else {
                     val title = "${r.place.city.ifBlank { "Today" }}: ${Forecast.temperature(r)} ${r.current.icon} ${r.current.sky}"
                     val text = listOf(Forecast.today(r), r.nowcast().orEmpty(), r.tip()).filter { it.isNotBlank() }.joinToString("\n")
                     notify(context, title, text)
                 }
-            } catch (_: Throwable) {
+            } catch (e: Throwable) {
                 // Nothing shows this morning; tomorrow's alarm still comes.
+                Log.w(TAG, "Morning forecast failed", e)
             } finally {
                 done.finish()
             }
@@ -44,6 +49,7 @@ class MorningForecast : BroadcastReceiver() {
 
     companion object {
         const val OFF = -1
+        private const val TAG = "MorningForecast"
         private const val PREFS = "morning_forecast"
         private const val K_HOUR = "hour"
         private const val CHANNEL = "morning"
@@ -79,7 +85,10 @@ class MorningForecast : BroadcastReceiver() {
         private fun notify(context: Context, title: String, text: String) {
             if (Build.VERSION.SDK_INT >= 33 &&
                 context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
-            ) return
+            ) {
+                Log.w(TAG, "Notifications are off for Spark Weather")
+                return
+            }
             val manager = context.getSystemService(NotificationManager::class.java) ?: return
             manager.createNotificationChannel(
                 NotificationChannel(CHANNEL, "Morning forecast", NotificationManager.IMPORTANCE_DEFAULT),
@@ -98,6 +107,7 @@ class MorningForecast : BroadcastReceiver() {
                 .setAutoCancel(true)
                 .build()
             manager.notify(1, n)
+            Log.i(TAG, "Posted: $title")
         }
     }
 }
