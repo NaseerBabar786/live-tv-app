@@ -66,6 +66,7 @@
 <button class="sound" id="sound" hidden>🔊 آواز کے لیے ٹیپ کریں</button>
 <div class="ticker" id="ticker"><span id="tick" dir="auto"></span></div>
 <script src="keepplaying.js"></script>
+<script src="ticker.js"></script>
 <script src="lowfirst.js"></script>
 <script>
 const q = new URLSearchParams(location.search);
@@ -86,8 +87,8 @@ $("bug").src = logo;
 // The advertise line always runs here (the owner's ads rule); the channel's own line when it has one.
 // The ticker stays in English (the owner, 2026-10-07), though the rest of Spark TV's writing is Urdu.
 const own = q.get("tick") || "";
-$("tick").textContent = /advertise/i.test(own) ? own
-  : `${name} · ${own ? own + " · " : ""}Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+// No "advertise with us" words (owner, 2026-10-11): ticker.js takes them out of the channel's own line too.
+$("tick").textContent = cleanTicker(`${name} · ${own}`);
 if (/[\u0600-\u06FF]/.test($("tick").textContent)) $("ticker").classList.add("rtl");
 
 // Titles, makers and languages from the day's lists (the address carries only ids and lengths).

@@ -268,8 +268,7 @@ def main():
         "active": True,
         "tz": "America/Toronto",
         "ticker": ("Spark Music · Free music, day and night · Classical, qawwali, ghazal and more, all free to use "
-                   "(public domain and Creative Commons, from Wikimedia Commons) · Channel 3 on NextGen Cable "
-                   "· Advertise with us: WhatsApp 437 602 6500"),
+                   "(public domain and Creative Commons, from Wikimedia Commons) · Channel 3 on NextGen Cable"),
         "tickerOn": True,
         "videos": videos,
         "slots": [],

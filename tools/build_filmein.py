@@ -42,7 +42,7 @@ SOUTH_ASIAN = {"Hindi", "Urdu", "Punjabi"}
 RIP = re.compile(r"www\.|\.com|@|\bCD ?\d\b|xclusive|dvdrip|x264", re.I)
 
 TICKER = ("Spark Cinema · Classic films, free, day and night · Raat Ki Film: a film every night at 8 PM (Toronto) "
-          "· Channel 2 on NextGen Cable · Advertise with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca")
+          "· Channel 2 on NextGen Cable")
 
 
 def films_in_playlist(path):
