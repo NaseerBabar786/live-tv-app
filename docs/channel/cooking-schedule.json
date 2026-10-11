@@ -57,17 +57,17 @@
    "kind": "programme"
   },
   {
-   "id": "making-a-new-day-out-of-tuesday-part-ii",
-   "title": "Making a New Day Out of Tuesday (Part II)",
-   "url": "https://archive.org/download/MakingaN1946_2/MakingaN1946_2.mp4",
-   "secs": 698,
-   "kind": "programme"
-  },
-  {
    "id": "mother-takes-a-holiday-part-i",
    "title": "Mother Takes a Holiday (Part I)",
    "url": "https://archive.org/download/MotherTa1952/MotherTa1952.mp4",
    "secs": 809,
+   "kind": "programme"
+  },
+  {
+   "id": "making-a-new-day-out-of-tuesday-part-ii",
+   "title": "Making a New Day Out of Tuesday (Part II)",
+   "url": "https://archive.org/download/MakingaN1946_2/MakingaN1946_2.mp4",
+   "secs": 698,
    "kind": "programme"
   },
   {
@@ -119,7 +119,7 @@
   "dr-christian-4-remedy-for-riches-1940-dr",
   "touch-of-magic-a",
   "a-better-new-jersey-1937",
-  "making-a-new-day-out-of-tuesday-part-ii",
+  "mother-takes-a-holiday-part-i",
   "a-better-minnesota-1937",
   "practical-dreamer",
   "mother-takes-a-holiday-part-ii",
@@ -128,8 +128,8 @@
   "wonderful-world-of-wash-n-wear-the",
   "valiant-lady-8-december-1953",
   "jay-can-do-it",
-  "mother-takes-a-holiday-part-i",
+  "making-a-new-day-out-of-tuesday-part-ii",
   "nya-on-the-farm"
  ],
- "built": "2026-10-11 01:23 UTC"
+ "built": "2026-10-11 04:51 UTC"
 }
