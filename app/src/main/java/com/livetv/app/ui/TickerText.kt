@@ -1,7 +1,6 @@
 package com.livetv.app.ui
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,12 +12,15 @@ import androidx.compose.ui.unit.em
 
 /**
  * Every ticker (owner, 2026-10-11): "Test transmission" shows behind the moving words, and the
- * "advertise with us" words (the WhatsApp number, tv.bulkbazaar.ca/advertise) are left out; the rest of
+ * "advertise with us" words (the WhatsApp number, tv.bulkbazaar.ca/advertise) and the word "Spark" are left out; the rest of
  * the line keeps running. The website's channel pages do the same (docs/channel/ticker.js).
  */
 object TickerText {
     const val TEST = "TEST TRANSMISSION  ·  ٹیسٹ ٹرانسمیشن"
     private val AD = Regex("advertis|اشتہار|602\\s*6500|/advertise", RegexOption.IGNORE_CASE)
+    private val SPARK_TV = Regex("\\bSpark TV,\\s*", RegexOption.IGNORE_CASE)
+    private val SPARK = Regex("\\bSpark\\b\\s*|اسپارک\\s*", RegexOption.IGNORE_CASE)
+    private val SPACES = Regex("\\s{2,}")
     private val BARE_SITE = Regex("(tv\\.)?bulkbazaar\\.ca/?", RegexOption.IGNORE_CASE)
 
     /** [line] without its advertise parts, or null when nothing else is left. */
@@ -30,7 +32,9 @@ object TickerText {
             // A bare web address right after the advertise words was part of them.
             if (AD.containsMatchIn(part) || (dropped && BARE_SITE.matches(part))) { dropped = true; continue }
             dropped = false
-            out += part
+            // No "Spark" word in the tickers either (owner, 2026-10-11): "Spark Hits" reads "Hits".
+            val words = part.replace(SPARK_TV, "").replace(SPARK, "").replace(SPACES, " ").trim()
+            if (words.isNotEmpty() && words != "TV") out += words
         }
         return out.joinToString("  ·  ").takeIf { it.isNotEmpty() }
     }
@@ -39,7 +43,7 @@ object TickerText {
 /** "Test transmission", faint and still, in the middle of a ticker's band, behind its moving words. */
 @Composable
 fun TestTransmissionBehind(fontSize: TextUnit, modifier: Modifier = Modifier) {
-    Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier, contentAlignment = Alignment.Center) {
         Text(
             TickerText.TEST,
             color = Color.White.copy(alpha = 0.22f),
