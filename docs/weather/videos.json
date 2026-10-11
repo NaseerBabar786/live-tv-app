@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-10T21:23Z",
+ "updated": "2026-10-11T03:26Z",
  "channels": {
   "The Weather Network": "UClQK9j4uUAnrZamq1_FhtcQ",
   "The Weather Channel": "UCGTUbwceCMibvpbd2NaIP7A",
@@ -7,22 +7,16 @@
  },
  "videos": [
   {
+   "id": "qKgQr5PsFIA",
+   "title": "State of emergency as ocean swamps California coast | #tropicalstorm",
+   "channel": "The Weather Network",
+   "published": 1791669661
+  },
+  {
    "id": "ywo4iiIb_T0",
    "title": "How an Ontario tornado warning and frost advisory occurred together | #fallweather",
    "channel": "The Weather Network",
    "published": 1791662422
-  },
-  {
-   "id": "iBg2w9yfu-Y",
-   "title": "Raw Power of This Storm Caught on Camera by AccuWeather reporters",
-   "channel": "AccuWeather",
-   "published": 1791660093
-  },
-  {
-   "id": "LwfWt3FaflE",
-   "title": "Man clings to overturned truck as flash flood sweeps vehicles away in Chile!",
-   "channel": "AccuWeather",
-   "published": 1791659559
   },
   {
    "id": "PHDm1E6RRW0",
@@ -37,18 +31,6 @@
    "published": 1791655239
   },
   {
-   "id": "Oa0EWVKFXBI",
-   "title": "The Hurricane Isaias storm damage in Fort Walton Beach you have to see",
-   "channel": "AccuWeather",
-   "published": 1791654327
-  },
-  {
-   "id": "ESKJRmSAoMo",
-   "title": "This Is What Hurricane Isaias Left Behind",
-   "channel": "AccuWeather",
-   "published": 1791650369
-  },
-  {
    "id": "qEWbbv93Rj0",
    "title": "First cold event of the season brings snow to the Prairies | #forecast",
    "channel": "The Weather Network",
@@ -59,12 +41,6 @@
    "title": "How Hurricane Isaias impacts Canada's Thanksgiving | #isaias",
    "channel": "The Weather Network",
    "published": 1791640824
-  },
-  {
-   "id": "R7uNyZMnEjM",
-   "title": "Flamingos Shelter in Bathroom During Hurricane Isaias",
-   "channel": "AccuWeather",
-   "published": 1791637244
   },
   {
    "id": "Olf-gW4ZNRk",
@@ -83,18 +59,6 @@
    "title": "FIVE tips for navigating foggy roads safely this fall",
    "channel": "The Weather Network",
    "published": 1791626440
-  },
-  {
-   "id": "0Sw6A6EXyhU",
-   "title": "LIVE: Hurricane Isaias With Storm Chasers - Gulf Coast Oct. 9",
-   "channel": "AccuWeather",
-   "published": 1791601930
-  },
-  {
-   "id": "KjShK6nri4Y",
-   "title": "This Hotel Roof Didn't Stand A Chance Against Isaias",
-   "channel": "AccuWeather",
-   "published": 1791600952
   },
   {
    "id": "4jZZoDSd5m8",
@@ -127,82 +91,10 @@
    "published": 1791565215
   },
   {
-   "id": "hgyzv2P_tRY",
-   "title": "Flash Flood Sweeps Away Cars and Buses in Chile",
-   "channel": "AccuWeather",
-   "published": 1791562980
-  },
-  {
    "id": "RqYhUpQER0w",
    "title": "First snowfall of the season to Western Canada Thankgiving weekend | #forecast",
    "channel": "The Weather Network",
    "published": 1791559202
-  },
-  {
-   "id": "9REL4BUYjMk",
-   "title": "Isaias upgraded to a major Hurricane, Canadian impacts possible | #forecast",
-   "channel": "The Weather Network",
-   "published": 1791557054
-  },
-  {
-   "id": "3BPxvcoGnx8",
-   "title": "Cat 3 Hurricane Isaias Is Coming for the Gulf Coast. Are You Ready?",
-   "channel": "AccuWeather",
-   "published": 1791552777
-  },
-  {
-   "id": "KsNciDVzeXU",
-   "title": "Hurricane Isaias and Rachel: A Rare Double U.S. Impact",
-   "channel": "AccuWeather",
-   "published": 1791470973
-  },
-  {
-   "id": "Izf6JfYpLgs",
-   "title": "Hurricane Isaias, First of 2026 Atlantic Season",
-   "channel": "The Weather Channel",
-   "published": 1791465649
-  },
-  {
-   "id": "mr2ZrWQsWhI",
-   "title": "How to Tell If It's a Hurricane or Nor'easter",
-   "channel": "AccuWeather",
-   "published": 1791418224
-  },
-  {
-   "id": "6NMauXxTgHs",
-   "title": "Hurricane Isaias tornado threat: How far will it reach?",
-   "channel": "AccuWeather",
-   "published": 1791418113
-  },
-  {
-   "id": "wF9jzlVMgns",
-   "title": "Isaias Update: Gulf Hurricane With Inland Tornado Threat",
-   "channel": "AccuWeather",
-   "published": 1791417897
-  },
-  {
-   "id": "3FrNFgvqnbk",
-   "title": "Winter forecast 2026-2027: El Niño to reshape snow, cold across the US",
-   "channel": "AccuWeather",
-   "published": 1791394204
-  },
-  {
-   "id": "wa_sIes5SHc",
-   "title": "Isaias Could Become a Major Hurricane Before Landfall on Gulf Coast",
-   "channel": "AccuWeather",
-   "published": 1791386983
-  },
-  {
-   "id": "ed2fIOYIWms",
-   "title": "Powerful Nor'easter Batters East Coast",
-   "channel": "The Weather Channel",
-   "published": 1790520914
-  },
-  {
-   "id": "PvRaPDyCz-Y",
-   "title": "Mike Bettes Shows Severe Coastal Flooding in New Jersey",
-   "channel": "The Weather Channel",
-   "published": 1790519964
   }
  ]
 }
