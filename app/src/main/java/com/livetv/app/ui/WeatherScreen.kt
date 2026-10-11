@@ -135,7 +135,7 @@ private enum class Tab(val label: String) {
  * viewer's own place and any places they add. The remote's arrows move around and OK opens; on a phone
  * everything is tapped. Back closes a story, then goes to the first tab, then closes the section.
  * The Spark Weather app shows this same screen as the whole app: it passes [onSettings] (a ⚙ Settings
- * button beside the place's name instead of the back arrow).
+ * button instead of the back arrow: among the place chips on TVs, beside the place's name on phones).
  */
 @Composable
 fun WeatherScreen(onClose: () -> Unit, onSettings: (() -> Unit)? = null) {
@@ -232,7 +232,8 @@ fun WeatherScreen(onClose: () -> Unit, onSettings: (() -> Unit)? = null) {
                     firstFocus = firstFocus,
                     onTab = { tabName = it.name },
                     onClose = onClose.takeIf { onSettings == null },
-                    onSettings = onSettings,
+                    // Wide screens have room for it among the place chips; phones show it beside the place's name.
+                    onSettings = onSettings.takeIf { !wide },
                 )
                 LazyRow(
                     contentPadding = PaddingValues(vertical = 8.dp),
@@ -247,6 +248,7 @@ fun WeatherScreen(onClose: () -> Unit, onSettings: (() -> Unit)? = null) {
                     }
                     item { Chip("⟳ Refresh", on = false) { reload++ } }
                     if (canRemove) item { Chip("✕ Remove place", on = false) { removing = place } }
+                    if (wide && onSettings != null) item { Chip("⚙ Settings", on = false, onClick = onSettings) }
                 }
                 Box(Modifier.fillMaxWidth().weight(1f)) {
                     when {
