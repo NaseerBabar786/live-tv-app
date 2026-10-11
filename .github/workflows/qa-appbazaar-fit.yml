@@ -28,6 +28,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 25
         with:
           api-level: 30
           target: android-tv
@@ -43,4 +44,6 @@ jobs:
         run: |
           gh release delete qa-appbazaar-fit --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
           gh release create qa-appbazaar-fit --repo "$GITHUB_REPOSITORY" --prerelease --latest=false \
-            --target "$GITHUB_SHA" --title "QA App Bazaar TV fit" --notes "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" out/*
+            --target "$GITHUB_SHA" --title "QA App Bazaar TV fit" --notes "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          mkdir -p out; ls -la out > out/files.txt 2>&1
+          for f in out/*; do [ -s "$f" ] && gh release upload qa-appbazaar-fit "$f" --repo "$GITHUB_REPOSITORY" --clobber; done

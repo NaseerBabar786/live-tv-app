@@ -1,7 +1,9 @@
 #!/bin/bash
 # Installs App Bazaar before/after on the TV emulator and takes screenshots of the store and its Help page.
-set -x
 mkdir -p out
+exec > >(tee -a out/run-log.txt) 2>&1
+set -x
+pwd
 adb shell wm size > out/screen.txt; adb shell wm density >> out/screen.txt
 shot() {
   adb install -r -d "$1" || adb install -r "$1"
