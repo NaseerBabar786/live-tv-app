@@ -19,4 +19,4 @@ shot() {
 }
 shot before.apk before
 shot appbazaar/build/outputs/apk/debug/appbazaar-debug.apk after
-ls -la out
+find out -empty -delete; ls -la out
