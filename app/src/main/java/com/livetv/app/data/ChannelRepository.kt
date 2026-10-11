@@ -2,6 +2,7 @@ package com.livetv.app.data
 
 import android.content.Context
 import android.net.Uri
+import com.livetv.app.CrashGuard
 import com.livetv.app.Edition
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
@@ -158,7 +159,7 @@ class ChannelRepository(context: Context) {
     /** The Library's videos, each playlist's on its own (Spark TV's and MTA's go in their own folders). */
     suspend fun loadVodLists(): List<Pair<Playlist, List<Channel>>> = coroutineScope {
         val mta = if (showMta) listOf(Playlist("MTA", Mta.VIDEOS_URL)) else emptyList()
-        (playlists + Vod.builtIn() + mta).map { playlist ->
+        (playlists + Vod.builtIn(CrashGuard.ownerTesting(appContext)) + mta).map { playlist ->
             async(Dispatchers.IO) {
                 runCatching {
                     val text = when {

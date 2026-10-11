@@ -136,12 +136,20 @@ object Vod {
     const val NEWS_ARCHIVE_URL = "https://tv.bulkbazaar.ca/NewsArchive.m3u"
 
     /**
+     * Every programme with no other channel's logo, by channel (tools/build_logo_free.py): only on the owner's
+     * TV, so he can see what is available (owner, 2026-10-11).
+     */
+    const val LOGO_FREE_URL = "https://tv.bulkbazaar.ca/LogoFree.m3u"
+
+    /**
      * The folders on the Library's main page next to the languages (owner, 2026-10-09): Spark TV's own
-     * programmes (the news archive) and MTA's, each with its own picture, instead of inside Urdu's Shows.
+     * programmes (the news archive) and MTA's, each with its own picture, instead of inside Urdu's Shows;
+     * and the owner's Logo-free folder (its list is loaded only on his TV, so viewers never see it).
      */
     enum class Folder(val label: String, val source: String) {
         SPARK("Spark TV", NEWS_ARCHIVE_URL),
         MTA("MTA", Mta.VIDEOS_URL),
+        LOGO_FREE("Logo-free", LOGO_FREE_URL),
     }
 
     /** The main-page folder a playlist's videos go in, or null for the language folders. */
@@ -153,14 +161,14 @@ object Vod {
      * too old for viewers. Newer English films, shows and cartoons come in Dramas.m3u; the classics still
      * play on Bazaar Cinema.
      */
-    fun builtIn(): List<Playlist> =
+    fun builtIn(owner: Boolean = false): List<Playlist> =
         if (Edition.HAS_VOD) {
             // In this order, so where a title is in two lists the first one's copy is kept.
             listOf(
                 Playlist("Pakistani dramas", DRAMAS_URL),
                 Playlist("Free films and shows", FREE_SOURCES_URL),
                 Playlist("Spark TV One News", NEWS_ARCHIVE_URL),
-            )
+            ) + if (owner) listOf(Playlist("Logo-free", LOGO_FREE_URL)) else emptyList()
         } else {
             emptyList()
         }

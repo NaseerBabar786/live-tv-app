@@ -113,10 +113,15 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
     val favView = languageName == FAV
     // Spark TV and MTA are folders of their own on the main page, opened like a language (owner, 2026-10-09).
     val folder = Vod.Folder.entries.firstOrNull { it.name == languageName }
-    val language = languageName?.takeIf { it != FAV && folder == null }?.let { Vod.Language.valueOf(it) }
+    // The owner's Logo-free folder opens on its own languages first ("LF_URDU" opens its Urdu), like the
+    // main page (owner, 2026-10-11).
+    var inLogoFree by rememberSaveable { mutableStateOf(false) }
+    val logoFreeLanguage = languageName?.takeIf { it.startsWith(LOGO_FREE_PREFIX) }
+        ?.let { Vod.Language.valueOf(it.removePrefix(LOGO_FREE_PREFIX)) }
+    val language = languageName?.takeIf { it != FAV && folder == null && logoFreeLanguage == null }?.let { Vod.Language.valueOf(it) }
     // Inside a language or a folder: its tabs and titles.
-    val page = language != null || folder != null
-    val pageLabel = folder?.label ?: language?.label
+    val page = language != null || folder != null || logoFreeLanguage != null
+    val pageLabel = folder?.label ?: language?.label ?: logoFreeLanguage?.let { "${Vod.Folder.LOGO_FREE.label} · ${it.label}" }
     // A series opened from Favorites: Back from its episodes goes back to Favorites.
     var fromFav by rememberSaveable { mutableStateOf(false) }
     var tabName by rememberSaveable { mutableStateOf((start?.section ?: Vod.Section.MOVIES).name) }
@@ -240,9 +245,10 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
         return
     }
 
-    val shelf = folder?.let { state.folders[it] } ?: language?.let { state.shelves[it] } ?: VodShelf()
+    val shelf = folder?.let { state.folders[it] } ?: language?.let { state.shelves[it] }
+        ?: logoFreeLanguage?.let { state.logoFree[it] } ?: VodShelf()
     // A series' favourites key keeps its own language, also inside a folder, so saved favourites stay put.
-    val keyLanguage: (Vod.Show) -> Vod.Language = { language ?: it.episodes.firstOrNull()?.let { e -> Vod.language(e.channel) } ?: Vod.Language.URDU }
+    val keyLanguage: (Vod.Show) -> Vod.Language = { language ?: logoFreeLanguage ?: it.episodes.firstOrNull()?.let { e -> Vod.language(e.channel) } ?: Vod.Language.URDU }
     val folders = if (weekTab) Vod.Section.entries.flatMap { shelf.folders(it) } else shelf.folders(tab)
     val show = openShow?.let { name -> folders.firstOrNull { it.name == name } }
     val showKey = if (show != null && page) LibraryFavorites.showKey(keyLanguage(show), show) else null
@@ -256,6 +262,7 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
             searching -> { searching = false; query = "" }
             favView -> { lastPicked = FAV; languageName = null }
             page -> { lastPicked = languageName; languageName = null; group = null }
+            inLogoFree -> { inLogoFree = false; lastPicked = Vod.Folder.LOGO_FREE.name }
             else -> onClose()
         }
     }
@@ -476,6 +483,22 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                         }
                     }
                 }
+                !page && inLogoFree -> PosterGrid(
+                    languageGrid,
+                    state.logoFree.map { (lang, langShelf) ->
+                        Poster(LOGO_FREE_PREFIX + lang.name, lang.label, null, countLine(langShelf, weekSince))
+                    },
+                    lastPicked ?: state.logoFree.keys.firstOrNull()?.let { LOGO_FREE_PREFIX + it.name },
+                    pickedFocus,
+                    columns = GridCells.Fixed(4),
+                    tile = true,
+                ) { name ->
+                    languageName = name
+                    val opened = shelfOf(state, name)
+                    tabName = Vod.Section.entries.firstOrNull { sectionItems(opened, it).isNotEmpty() }?.name ?: Vod.Section.MOVIES.name
+                    group = null
+                    lastPicked = null
+                }
                 !page -> PosterGrid(
                     languageGrid,
                     (if (favorites.isEmpty()) emptyList() else listOf(
@@ -492,6 +515,11 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
                 ) { name ->
                     if (name == FAV) {
                         languageName = FAV
+                        lastPicked = null
+                        return@PosterGrid
+                    }
+                    if (name == Vod.Folder.LOGO_FREE.name) {
+                        inLogoFree = true
                         lastPicked = null
                         return@PosterGrid
                     }
@@ -664,7 +692,8 @@ fun VodScreen(inPictureInPicture: Boolean, onClose: () -> Unit, start: VodTarget
 
 /** The shelf of a main-page tile: a language's, or the Spark TV or MTA folder's. */
 private fun shelfOf(state: VodState, name: String): VodShelf? =
-    Vod.Folder.entries.firstOrNull { it.name == name }?.let { state.folders[it] }
+    name.takeIf { it.startsWith(LOGO_FREE_PREFIX) }?.let { n -> state.logoFree[Vod.Language.valueOf(n.removePrefix(LOGO_FREE_PREFIX))] }
+        ?: Vod.Folder.entries.firstOrNull { it.name == name }?.let { state.folders[it] }
         ?: Vod.Language.entries.firstOrNull { it.name == name }?.let { state.shelves[it] }
 
 private fun sectionItems(shelf: VodShelf?, section: Vod.Section): List<Any> {
@@ -683,7 +712,11 @@ private fun countLine(shelf: VodShelf?, weekSince: String): String {
 private fun folderPicture(folder: Vod.Folder): Int = when (folder) {
     Vod.Folder.SPARK -> R.drawable.library_spark_tv
     Vod.Folder.MTA -> R.drawable.library_mta
+    Vod.Folder.LOGO_FREE -> R.drawable.library_spark_tv
 }
+
+/** Marks a language page inside the owner's Logo-free folder ("LF_URDU"). */
+private const val LOGO_FREE_PREFIX = "LF_"
 
 /** Marks a genre chip's filter value (never part of a real group name). */
 private const val GENRE = "\u0000genre:"

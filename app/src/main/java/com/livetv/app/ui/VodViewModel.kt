@@ -54,6 +54,8 @@ data class VodState(
     val shelves: Map<Vod.Language, VodShelf> = emptyMap(),
     /** The Spark TV and MTA folders' own shelves (none when they're empty). */
     val folders: Map<Vod.Folder, VodShelf> = emptyMap(),
+    /** The owner's Logo-free folder by language, each with its Movies, Series, Shows and Kids (owner, 2026-10-11). */
+    val logoFree: Map<Vod.Language, VodShelf> = emptyMap(),
     /** False until a playlist has been saved in Settings > My playlists. */
     val hasPlaylists: Boolean = true,
 )
@@ -120,7 +122,11 @@ class VodViewModel(app: Application) : AndroidViewModel(app) {
             // the remote's keys wait and Android closes the app as "not responding" (2026-10-08).
             val lists = repo.loadVodLists()
             val (shelves, folders) = withContext(Dispatchers.Default) { library(lists) }
-            _state.update { it.copy(loading = false, shelves = shelves, folders = folders) }
+            val logoFree = withContext(Dispatchers.Default) {
+                shelves(lists.filter { Vod.folder(it.first.source) == Vod.Folder.LOGO_FREE }.flatMap { it.second })
+                    .filterValues { !it.isEmpty }
+            }
+            _state.update { it.copy(loading = false, shelves = shelves, folders = folders, logoFree = logoFree) }
         }
     }
 }
