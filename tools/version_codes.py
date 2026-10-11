@@ -11,7 +11,7 @@ the rollback again.
 """
 import re, sys
 
-FILES = ["app/build.gradle.kts", "appbazaar/build.gradle.kts", "quran/build.gradle.kts",
+FILES = ["app/build.gradle.kts", "appbazaar/build.gradle.kts", "quran/build.gradle.kts", "weather/build.gradle.kts",
          "livecam/build.gradle.kts", "multichat/build.gradle.kts", "claudenotes/build.gradle.kts"]
 CODE = re.compile(r"(versionCode\s*=\s*)(\d+)")
 

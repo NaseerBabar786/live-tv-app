@@ -47,12 +47,14 @@ jobs:
               exit 1
             fi
             commit=$(gh api "repos/$GH_REPO/actions/runs/$run" --jq .head_sha)
-            rm -f LiveTV.apk LiveTVMax.apk AppBazaar.apk IqraQuran.apk LiveCam.apk MultiChat.apk NotesForClaude.apk versions.json
+            rm -f LiveTV.apk LiveTVMax.apk AppBazaar.apk IqraQuran.apk SparkWeather.apk LiveCam.apk MultiChat.apk NotesForClaude.apk versions.json
             get() { mkdir -p "a/$1"; gh run download "$run" -n "$1" -D "a/$1"; cp "a/$1"/*.apk "$2"; }
             get live-tv-debug-apk LiveTV.apk
             get live-tv-max-debug-apk LiveTVMax.apk
             get app-bazaar-apk AppBazaar.apk
             get iqra-quran-debug-apk IqraQuran.apk
+            # Spark Weather is newer than some builds that can still be offered.
+            get spark-weather-debug-apk SparkWeather.apk || true
             get live-cam-debug-apk LiveCam.apk
             get multi-chat-debug-apk MultiChat.apk
             get notes-for-claude-apk NotesForClaude.apk
@@ -67,6 +69,7 @@ jobs:
             "live-tv-max": "$(vn LiveTVMax.apk)",
             "app-bazaar": "$(vn AppBazaar.apk)",
             "iqra-quran": "$(vn IqraQuran.apk)",
+            "spark-weather": "$( [ -f SparkWeather.apk ] && vn SparkWeather.apk )",
             "live-cam": "$(vn LiveCam.apk)",
             "multi-chat": "$(vn MultiChat.apk)",
             "notes-for-claude": "$(vn NotesForClaude.apk)"

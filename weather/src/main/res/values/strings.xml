@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Spark Weather</string>
+    <string name="widget_name">Spark Weather</string>
+    <string name="widget_description">The weather now and today\'s high and low</string>
+</resources>
