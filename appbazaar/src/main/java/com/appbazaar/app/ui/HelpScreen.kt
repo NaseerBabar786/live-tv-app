@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.sp
 fun HelpScreen(isTv: Boolean, onBack: () -> Unit, onPermission: () -> Unit, onTryTest: () -> Unit) {
     val back = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { back.requestFocus() } }
-    val pad = if (isTv) 48.dp else 16.dp
+    val pad = sidePad(isTv)
     Column(
         Modifier.fillMaxSize().background(Bg).verticalScroll(rememberScrollState())
             .padding(horizontal = pad, vertical = if (isTv) 28.dp else 12.dp),

@@ -15,6 +15,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +24,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
@@ -35,6 +38,7 @@ import com.appbazaar.app.ui.HelpScreen
 import com.appbazaar.app.ui.StoreScreen
 import com.appbazaar.app.ui.StoreTheme
 import com.appbazaar.app.ui.StoreViewModel
+import com.appbazaar.app.ui.tvDensity
 
 class MainActivity : ComponentActivity() {
 
@@ -66,6 +70,11 @@ class MainActivity : ComponentActivity() {
                     if (help) help = false else openId = null
                 }
 
+                // TVs draw the store smaller so a whole page fits on the screen (it looked zoomed in).
+                val view = LocalView.current
+                val density = LocalDensity.current
+                val pageDensity = if (store.isTv) tvDensity(density, view.width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels) else density
+                CompositionLocalProvider(LocalDensity provides pageDensity) {
                 Box(Modifier.fillMaxSize().background(Bg).safeDrawingPadding()) {
                     when {
                         help -> HelpScreen(
@@ -93,6 +102,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter))
+                }
                 }
 
                 if (state.askInstallPermission) {

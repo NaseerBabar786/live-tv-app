@@ -60,7 +60,7 @@ fun DetailScreen(
     val mainFocus = remember { FocusRequester() }
     val context = LocalContext.current
     LaunchedEffect(app.id) { runCatching { mainFocus.requestFocus() } }
-    val pad = if (isTv) 48.dp else 16.dp
+    val pad = sidePad(isTv)
 
     Column(
         Modifier.fillMaxSize().background(Bg).verticalScroll(rememberScrollState())

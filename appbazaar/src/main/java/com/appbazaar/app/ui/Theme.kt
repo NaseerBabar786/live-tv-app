@@ -21,6 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 // The same colours as apps.bulkbazaar.ca: white pages, Play-store green buttons, teal logo.
@@ -131,4 +135,21 @@ fun FocusOutlinedButton(
         interactionSource = source,
         content = content,
     )
+}
+
+/** How wide a TV page is drawn, in dp: the whole store fits on one TV screen like the website, not zoomed in. */
+const val TV_PAGE_WIDTH_DP = 1280f
+
+/** The TV's density shrunk so its screen is [TV_PAGE_WIDTH_DP] wide (never bigger than Android's own size). */
+fun tvDensity(d: Density, widthPx: Int): Density {
+    val fit = widthPx / TV_PAGE_WIDTH_DP
+    return if (widthPx <= 0 || fit >= d.density) d else Density(fit, d.fontScale)
+}
+
+/** Empty space on the left and right of each page: 10% of the screen on TVs. */
+@Composable
+fun sidePad(isTv: Boolean): Dp {
+    if (!isTv) return 16.dp
+    val width = LocalView.current.width
+    return if (width <= 0) 48.dp else with(LocalDensity.current) { (width * 0.1f).toDp() }
 }

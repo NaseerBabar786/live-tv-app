@@ -78,7 +78,7 @@ fun StoreScreen(
     LaunchedEffect(isTv) { if (isTv) runCatching { firstFocus.requestFocus() } }
     val list = state.visible()
     val featured = if (state.section == Section.UPDATES) emptyList() else list.filter { it.featured }
-    val pad = if (isTv) 48.dp else 16.dp
+    val pad = sidePad(isTv)
 
     Column(Modifier.fillMaxSize().background(Bg)) {
         TopBar(state, isTv, pad, onRefresh, onHelp, onUpdateAll)
