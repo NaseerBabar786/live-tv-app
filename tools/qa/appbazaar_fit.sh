@@ -6,7 +6,7 @@ set -x
 pwd
 adb shell wm size > out/screen.txt; adb shell wm density >> out/screen.txt
 shot() {
-  adb install -r -d "$1" || adb install -r "$1"
+  timeout 180 adb install --no-streaming -r -t "$1" || timeout 180 adb install -r -t "$1"
   adb shell monkey -p com.naseerbabar.appbazaar -c android.intent.category.LEANBACK_LAUNCHER 1
   sleep 25
   adb exec-out screencap -p > "out/$2-store.png"
