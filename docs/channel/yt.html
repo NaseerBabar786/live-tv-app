@@ -51,6 +51,7 @@
 <div class="msg" id="msg"></div>
 <script src="still.js"></script>
 <script src="keepplaying.js"></script>
+<script src="ticker.js"></script>
 <script src="lowfirst.js"></script>
 <script>
 const q = new URLSearchParams(location.search);
@@ -58,7 +59,7 @@ const app = q.has("app"), id = q.get("v") || "", name = q.get("name") || "";
 const $ = x => document.getElementById(x);
 let player = null, nowTimer = null;
 if (name) document.title = name + " · Watch live";
-$("tick").textContent = `${name ? name + " on NextGen Cable · " : ""}Advertise free with us: WhatsApp 437 602 6500 · tv.bulkbazaar.ca/advertise`;
+$("tick").textContent = name ? name + " on NextGen Cable" : "NextGen Cable";
 
 function showNow() {
   if (!name) return;

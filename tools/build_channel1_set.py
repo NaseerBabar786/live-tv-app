@@ -374,9 +374,8 @@ def layout(today):
     sched["bilingual"] = True  # the website's cards show Urdu headings beside the English ones (owner, 2026-10-09)
     # English first, so the line reads left to right; the Urdu parts follow (owner, 2026-10-09).
     sched["ticker"] = ("Welcome to Spark TV, channel 1 on NextGen Cable  ·  New Pakistani dramas from episode 1, a new episode every day  ·  "
-                       "Full news at 12, 4 and 8, headlines every hour  ·  Advertise with us: WhatsApp 437 602 6500  ·  "
-                       "tv.bulkbazaar.ca/advertise  ·  اسپارک ٹی وی میں خوش آمدید  ·  نئے پاکستانی ڈرامے پہلی قسط سے، ہر روز نئی قسط  ·  "
-                       "اپنا اشتہار دیں: واٹس ایپ 437 602 6500")
+                       "Full news at 12, 4 and 8, headlines every hour  ·  "
+                       "اسپارک ٹی وی میں خوش آمدید  ·  نئے پاکستانی ڈرامے پہلی قسط سے، ہر روز نئی قسط")
     save(SCHEDULE, sched)
     save(SET_FILE, {"date": today.isoformat(), "episode": n, "hours": hours})
     print(f"Wrote {os.path.relpath(SCHEDULE, ROOT)}: {len(loop)} loop items, {len(slots)} slots.")

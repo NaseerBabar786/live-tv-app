@@ -43,7 +43,6 @@ CH = ROOT / "docs" / "channel"
 OUT = CH / "play"
 LOGOS = "https://tv.bulkbazaar.ca/channel/logos/"
 TZ = "America/Toronto"
-ADVERTISE = "Advertise on Spark TV: WhatsApp 437 602 6500"
 
 YOUTUBE = re.compile(r"youtu\.?be|youtube(-nocookie)?\.com", re.I)
 
@@ -110,7 +109,7 @@ def ok(v):
 def channel(pid, name, logo, ticker, videos, loop, slots=(), fillers=("adhere",), corner="tr"):
     return {
         "name": name, "logo": LOGOS + logo, "logoCorner": corner, "active": True, "tz": TZ,
-        "ticker": f"{ticker} · {ADVERTISE}", "tickerOn": True,
+        "ticker": ticker, "tickerOn": True,
         "credits": CREDITS[pid], "videos": videos, "slots": list(slots), "loop": loop, "fillers": list(fillers),
     }
 
@@ -227,8 +226,7 @@ def one():
     if not WITH_NEWS:
         o["credits"] = o["credits"].replace("News: our own bulletins. ", "")
     # Channel 1 writes everything in Urdu and English (owner 2026-10-09, again for Spark One 2026-10-10).
-    o["ticker"] += " · " + ("اسپارک ٹی وی: اردو اور ہندی میں فلمیں، کہانیاں اور کلاسیکی شاعروں کی شاعری"
-                            " · اسپارک ٹی وی پر اشتہار دیں: واٹس ایپ 437 602 6500")
+    o["ticker"] += " · " + ("اسپارک ٹی وی: اردو اور ہندی میں فلمیں، کہانیاں اور کلاسیکی شاعروں کی شاعری")
     o["credits"] += (" فلمیں: بلینڈر فاؤنڈیشن (CC BY) اور پبلک ڈومین فلمیں، ہماری اے آئی آوازوں میں۔"
                      " شاعری: کلاسیکی اردو شاعر (پبلک ڈومین)، ہماری اے آئی آواز میں۔ کہانیاں: ہماری اپنی۔")
     return o

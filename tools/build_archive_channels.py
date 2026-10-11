@@ -65,7 +65,7 @@ CHANNELS = {
         "skip": rf"bullfight|cockfight|hunting|fifa \d|pes \d|nba 2k|highlights 20\d\d|vs\.? .* 20[12]\d|"
                 rf"ozzie and harriet|{TRAVEL_FILMS}",
         "ticker": "Spark Sports · Classic sport from the film archives, day and night · Boxing, cricket, football, "
-                  "athletics and more · Channel 6 on NextGen Cable · Advertise with us: WhatsApp 437 602 6500",
+                  "athletics and more · Channel 6 on NextGen Cable",
     },
     "travel": {
         "name": "Spark Travel", "dial": "7",
@@ -77,7 +77,7 @@ CHANNELS = {
                 r"conservation corps|civilan conservation|ccc\b|human crop|groundwater|silt|captain z-ro|fashion|"
                 r"planet|spaceship|venus",
         "ticker": "Spark Travel · See the world, day and night · Classic travel films of countries, cities and "
-                  "parks · Channel 7 on NextGen Cable · Advertise with us: WhatsApp 437 602 6500",
+                  "parks · Channel 7 on NextGen Cable",
     },
     "comedy": {
         "name": "Spark Comedy", "dial": "8",
@@ -93,7 +93,7 @@ CHANNELS = {
                 r"naughty|death|killer|crime|crooked|manhunt|creature|haunted|machine gun|baby face|scarlet clue|"
                 r"rascal you|bamboo isle|c\.c\. and company|steptoe|dick van dyke|raiders|billy the kid",
         "ticker": "Spark Comedy · Laughs day and night · Chaplin, Laurel and Hardy, Keaton and classic TV comedies "
-                  "· Channel 8 on NextGen Cable · Advertise with us: WhatsApp 437 602 6500",
+                  "· Channel 8 on NextGen Cable",
     },
     # Spark TV (Google Play) only, 2026-10-09: the owner wants every Play channel to be ours to show, like channel 1.
     "auto": {
