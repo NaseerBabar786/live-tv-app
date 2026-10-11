@@ -967,17 +967,23 @@ def add_reader(body, reader, windows, label, work):
     im.save(os.path.join(work, "reader-bar.png"))
     # One continuous copy of the (looping, forward-and-back) clip runs under the whole bulletin and shows only in
     # the windows, so the newsreader never restarts mid-gesture between segments.
-    pngs = list(dict.fromkeys(p or "reader-bar.png" for _, _, p in windows))
-    ins = ["-i", body, "-stream_loop", "-1", "-i", reader["clip"]]
-    for p in pngs: ins += ["-loop", "1", "-i", os.path.join(work, p)]
+    # Her graphics in each window come from one image track (concat of stills, see of the bulletin's own cards),
+    # not one looping input per story: twenty inputs made the 10-minute bulletin take far too long.
+    Image.new("RGBA", (W, H), (0, 0, 0, 0)).save(os.path.join(work, "blank.png"))
+    t, lines = 0.0, []
+    for t0, dur, p in sorted(windows):
+        if t0 > t + 0.001: lines.append(("blank.png", t0 - t))
+        lines.append((p or "reader-bar.png", dur)); t = t0 + dur
+    lines.append(("blank.png", 1.0))
+    with open(os.path.join(work, "reader-gfx.txt"), "w") as f:
+        for p, d in lines: f.write(f"file '{p}'\nduration {d:.3f}\n")
+        f.write("file 'blank.png'\n")
+    ins = ["-i", body, "-stream_loop", "-1", "-i", reader["clip"], "-f", "concat", "-safe", "0", "-i", os.path.join(work, "reader-gfx.txt")]
     between = lambda ws: "+".join(f"between(t,{t0:.3f},{t0 + dur:.3f})" for t0, dur, _ in ws)   # noqa: E731
     graph = [f"[1:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1[r]",
-             f"[0:v][r]overlay=0:0:shortest=1:enable='{between(windows)}'[m0]"]
-    last = "m0"
-    for i, p in enumerate(pngs):
-        ws = [w for w in windows if (w[2] or "reader-bar.png") == p]
-        graph.append(f"[{last}][{i + 2}:v]overlay=0:0:shortest=1:enable='{between(ws)}'[m{i + 1}]")
-        last = f"m{i + 1}"
+             f"[0:v][r]overlay=0:0:shortest=1:enable='{between(windows)}'[m0]",
+             f"[2:v]fps={FPS},format=rgba[g]", "[m0][g]overlay=0:0:eof_action=pass:format=auto[m1]"]
+    last = "m1"
     tmp = os.path.join(work, "with-reader.mp4")
     run("ffmpeg", "-nostdin", "-loglevel", "error", "-y", *ins, "-filter_complex", ";".join(graph) + f";[{last}]format=yuv420p[v]",
         "-map", "[v]", "-map", "0:a", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
