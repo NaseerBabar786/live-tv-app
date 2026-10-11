@@ -683,6 +683,7 @@ private fun countLine(shelf: VodShelf?, weekSince: String): String {
 private fun folderPicture(folder: Vod.Folder): Int = when (folder) {
     Vod.Folder.SPARK -> R.drawable.library_spark_tv
     Vod.Folder.MTA -> R.drawable.library_mta
+    Vod.Folder.LOGO_FREE -> R.drawable.library_spark_tv
 }
 
 /** Marks a genre chip's filter value (never part of a real group name). */
