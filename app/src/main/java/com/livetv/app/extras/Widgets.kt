@@ -38,7 +38,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livetv.app.data.Channel
 import com.livetv.app.data.Guide
 import com.livetv.app.data.MyChannel
-import com.livetv.app.data.News
 import com.livetv.app.ui.ChipShape
 import com.livetv.app.ui.focusGlow
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +64,6 @@ fun WidgetStack(channel: Channel, modifier: Modifier = Modifier) {
                 Extras.Widget.Clock -> ClockWidget()
                 Extras.Widget.Azan -> AzanWidget()
                 Extras.Widget.Cricket -> CricketWidget()
-                Extras.Widget.Rates -> RatesWidget()
                 Extras.Widget.UpNext -> UpNextWidget(channel)
             }
         }
@@ -128,35 +126,6 @@ private fun AzanWidget() {
     }
     val text = nextAzanText(prayers, now) ?: return
     Card { Line("🕌 $text", bold = true, color = Themes.current.secondary) }
-}
-
-@Composable
-private fun RatesWidget() {
-    val info by produceState<Pair<News.Rates?, Double?>>(null to null) {
-        while (true) {
-            val rates = withContext(Dispatchers.IO) { News.rates() }
-            val gold = withContext(Dispatchers.IO) { runCatching { News.markets().firstOrNull { it.name.startsWith("Gold") }?.price }.getOrNull() }
-            if (rates != null) value = rates to (gold ?: value.second)
-            delay(if (rates == null) 5 * 60_000L else 60 * 60_000L)
-        }
-    }
-    val (rates, gold) = info
-    val r = rates ?: return
-    val pkr = r["PKR"]
-    val inr = r["INR"]
-    val tola = News.goldTola(gold, r, "PKR")
-    val base = if (r.base == "USD") "$1" else "1 ${r.base}"
-    Card {
-        if (pkr != null || inr != null) {
-            Line(listOfNotNull(pkr?.let { "Rs ${"%,.1f".format(it)}" }, inr?.let { "₹${"%,.1f".format(it)}" })
-                .joinToString(" · ", prefix = "💱 $base = "), size = 13)
-        }
-        if (r.base != "USD") {
-            val usd = r["USD"]
-            if (usd != null && usd > 0 && pkr != null) Line("💵 $1 = Rs ${"%,.1f".format(pkr / usd)}", size = 13)
-        }
-        tola?.let { Line("🪙 Gold: Rs ${"%,.0f".format(it)} a tola", bold = true, size = 13, color = Themes.current.secondary) }
-    }
 }
 
 @Composable
