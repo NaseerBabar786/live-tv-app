@@ -172,18 +172,41 @@ def same_story(a, b):
     return bool(x and y) and len(x & y) / min(len(x), len(y)) >= 0.5
 
 def translate(text, src="en", to="ur"):
-    """English (or Hindi: src="hi") to Urdu with Google's free translate address (no key); to="en" for the English line."""
-    url = (f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl={to}&dt=t&q="
-           + urllib.parse.quote(text))
-    # The free address sometimes turns a runner away for a moment (2026-10-11 sample: no English lines, no
-    # Canada stories): a short wait and up to two more tries before the story goes without.
-    for wait in (2, 6, None):
-        try:
-            data = json.loads(fetch(url))
-            return clean("".join(part[0] for part in data[0] if part and part[0]))
-        except Exception:
-            if wait is None: raise
-            time.sleep(wait)
+    """English (or Hindi: src="hi") to Urdu with Google's free translate address (no key); to="en" for the English line.
+    GitHub's runners are sometimes turned away there (2026-10-11: on-air bulletins lost every English line and all
+    Canada, India, sports and showbiz stories), so a second Google address and then MyMemory (free, no key) step in."""
+    q = urllib.parse.quote(text)
+    def gtx():
+        data = json.loads(fetch(f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl={to}&dt=t&q={q}"))
+        return "".join(part[0] for part in data[0] if part and part[0])
+    def dict_ex():
+        data = json.loads(fetch(f"https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl={src}&tl={to}&q={q}"))
+        if isinstance(data, dict):
+            return "".join(x.get("trans", "") for x in data.get("sentences", []))
+        first = data[0]
+        return first[0] if isinstance(first, list) else first
+    def mymemory():
+        if src == "auto": raise ValueError("MyMemory needs the source language")
+        data = json.loads(fetch(f"https://api.mymemory.translated.net/get?q={q}&langpair={src}|{to}&de=naseerahmadbabar%40gmail.com"))
+        if int(data.get("responseStatus", 200)) != 200: raise ValueError(data.get("responseDetails", "MyMemory refused"))
+        return html.unescape(data["responseData"]["translatedText"])
+    errors = []
+    for name, way in (("google", gtx), ("google2", dict_ex), ("mymemory", mymemory)):
+        if TRANSLATOR_FAILS.get(name, 0) >= 3: continue   # failed three lines running: not tried again this run
+        for wait in (2, None):
+            try:
+                out = clean(way())
+                if not out: raise ValueError("empty answer")
+                TRANSLATOR_FAILS[name] = 0
+                if name != "google": TRANSLATED_BY[name] = TRANSLATED_BY.get(name, 0) + 1
+                return out
+            except Exception as e:
+                if wait is None:
+                    errors.append(f"{name}: {e}"); TRANSLATOR_FAILS[name] = TRANSLATOR_FAILS.get(name, 0) + 1
+                else: time.sleep(wait)
+    raise RuntimeError("; ".join(errors) or "no translator left")
+
+TRANSLATED_BY, TRANSLATOR_FAILS = {}, {}   # lines a stand-in translator did (in the notes); failures in a row
 
 def read_feeds(feeds):
     now, lists = time.time(), []
@@ -243,6 +266,8 @@ def gather(kind):
                 break
         picked[sec] = done
     NOTES.append("stories: " + ", ".join(f"{k} {len(v)}" for k, v in picked.items()))
+    if TRANSLATED_BY: NOTES.append(f"stand-in translators: {TRANSLATED_BY}")
+    picked["_notes"] = list(NOTES)   # kept with the stories (--gather), so the bulletin's notes show what happened
     return picked
 
 # ---------- the headlines' running order (owner, 2026-10-10) ----------
@@ -1080,6 +1105,7 @@ def main():
     print("making", name, "for", slot.isoformat())
 
     picked = json.load(open(opt("--stories"))) if opt("--stories") else gather(kind)
+    if opt("--stories"): NOTES.extend(picked.get("_notes", []) if isinstance(picked, dict) else [])
     stories = [s for sec in ORDER for s in picked.get(sec, [])]
     if len(stories) < 3: raise SystemExit("Too few stories found; keeping the last bulletin.")
     # The headlines go breaking, developments, local, good news, in brief (owner, 2026-10-10); the full news by section.
