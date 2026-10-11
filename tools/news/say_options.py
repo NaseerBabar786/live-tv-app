@@ -13,12 +13,12 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import make_news as N  # noqa: E402
 
-NUMBERS = ["ایک", "دو", "تین", "چار", "پانچ"]
+NUMBERS = ["ایک", "دو", "تین", "چار", "پانچ", "چھ", "سات", "آٹھ", "نو", "دس"]
 CHOICES = [
-    ("السلام علیکم، اور یہ ہے اسپارک ٹی وی نیوز۔",
-     ["السلام علیکم", "اَلسّلامُ عَلَیکُم", "اَسّلام و علیکم", "اَسَّلامُ عَلَیکُم", "Assalam o Alaikum"]),
+    # Round 2 (2026-10-11): the owner picked greeting 4; none of the first four "Independent" ways sounded right.
     ("{} اردو کے مطابق۔",
-     ["انڈپینڈنٹ", "اِنڈی پینڈنٹ", "اِن ڈی پَین ڈَنٹ", "Independent"]),
+     ["اِنڈی پینڈینٹ", "اِن ڈِپَینڈَنٹ", "اِنڈِپِینڈِنٹ", "اِن ڈی پین ڈینٹ", "انڈیپنڈنٹ",
+      "In-dee-pen-dent", "اِنڈیپینڈنٹ نیوز", "اِنڈے پینڈنٹ", "Independent"]),
 ]
 
 

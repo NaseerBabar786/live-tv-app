@@ -412,8 +412,9 @@ def read_wav(path):
 # has its own tone (MOOD: breaking quicker and a touch higher, good news warmer and calmer, in-brief brisk), and each
 # sentence of a story gets a slightly different speed so a story isn't read at one flat rate.
 # How the Urdu voices should SAY names they get wrong (owner 2026-10-10: "Independent" sounded wrong). Only the
-# voice uses these spellings; the screen keeps the normal ones.
-SAY = {"السلام علیکم": "اَلسّلامُ عَلَیکُم", "انڈپینڈنٹ": "اِنڈی پینڈنٹ", "انڈیپنڈنٹ": "اِنڈی پینڈنٹ", "ای ایس پی این کرک انفو": "ای ایس پی این، کرک اِنفو",
+# voice uses these spellings; the screen keeps the normal ones. The greeting is the owner's pick (choice 4,
+# 2026-10-11); "Independent" is still being tried (say_options.py).
+SAY = {"السلام علیکم": "اَسَّلامُ عَلَیکُم", "انڈپینڈنٹ": "اِنڈی پینڈنٹ", "انڈیپنڈنٹ": "اِنڈی پینڈنٹ", "ای ایس پی این کرک انفو": "ای ایس پی این، کرک اِنفو",
        "سٹی نیوز": "سِٹی نیوز", "ورائٹی": "وَرائٹی", "ٹورنٹو": "ٹورانٹو"}
 PACE = int(os.environ.get("NEWS_PACE", "12"))
 MOOD = {"breaking": (6, 3), "develop": (0, 0), "local": (3, 0), "good": (-3, 6), "brief": (8, 2),
