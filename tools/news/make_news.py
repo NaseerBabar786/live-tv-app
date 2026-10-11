@@ -175,8 +175,15 @@ def translate(text, src="en", to="ur"):
     """English (or Hindi: src="hi") to Urdu with Google's free translate address (no key); to="en" for the English line."""
     url = (f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl={to}&dt=t&q="
            + urllib.parse.quote(text))
-    data = json.loads(fetch(url))
-    return clean("".join(part[0] for part in data[0] if part and part[0]))
+    # The free address sometimes turns a runner away for a moment (2026-10-11 sample: no English lines, no
+    # Canada stories): a short wait and up to two more tries before the story goes without.
+    for wait in (2, 6, None):
+        try:
+            data = json.loads(fetch(url))
+            return clean("".join(part[0] for part in data[0] if part and part[0]))
+        except Exception:
+            if wait is None: raise
+            time.sleep(wait)
 
 def read_feeds(feeds):
     now, lists = time.time(), []
