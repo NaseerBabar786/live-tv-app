@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.em
 /**
  * Every ticker (owner, 2026-10-11): "Test transmission" shows behind the moving words, and the
  * "advertise with us" words (the WhatsApp number, tv.bulkbazaar.ca/advertise) and the word "Spark" are left out; the rest of
- * the line keeps running. The website's channel pages do the same (docs/channel/ticker.js).
+ * the line keeps running, with "NextGen Cable, free for everyone" and our apps at the end. The website's channel pages do the same (docs/channel/ticker.js).
  */
 object TickerText {
     const val TEST = "TEST TRANSMISSION  ·  ٹیسٹ ٹرانسمیشن"
@@ -21,6 +21,7 @@ object TickerText {
     private val SPARK_TV = Regex("\\bSpark TV,\\s*", RegexOption.IGNORE_CASE)
     private val SPARK = Regex("\\bSpark\\b\\s*|اسپارک\\s*", RegexOption.IGNORE_CASE)
     private val SPACES = Regex("\\s{2,}")
+    private val EXTRA = listOf("Download our app on TV", "Lots more free apps at apps.bulkbazaar.ca")
     private val BARE_SITE = Regex("(tv\\.)?bulkbazaar\\.ca/?", RegexOption.IGNORE_CASE)
 
     /** [line] without its advertise parts, or null when nothing else is left. */
@@ -36,7 +37,13 @@ object TickerText {
             val words = part.replace(SPARK_TV, "").replace(SPARK, "").replace(SPACES, " ").trim()
             if (words.isNotEmpty() && words != "TV") out += words
         }
-        return out.joinToString("  ·  ").takeIf { it.isNotEmpty() }
+        if (out.isEmpty()) return null
+        // NextGen Cable is free for everyone, and our apps follow at the end (owner, 2026-10-11).
+        val cable = out.indexOfFirst { it.contains("NextGen Cable", ignoreCase = true) }
+        if (cable < 0) out += "NextGen Cable, free for everyone"
+        else if (!out[cable].contains("free for everyone", ignoreCase = true)) out[cable] += ", free for everyone"
+        EXTRA.forEach { if (it !in out) out += it }
+        return out.joinToString("  ·  ")
     }
 }
 
