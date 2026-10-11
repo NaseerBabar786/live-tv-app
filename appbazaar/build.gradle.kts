@@ -14,8 +14,8 @@ android {
         applicationId = "com.naseerbabar.appbazaar"
         minSdk = 26
         targetSdk = 36
-        versionCode = 9
-        versionName = "1.3.5"
+        versionCode = 10
+        versionName = "1.3.6"
     }
 
     // Same shared signing key as Live TV when CI has it, so updates install over the old app.
