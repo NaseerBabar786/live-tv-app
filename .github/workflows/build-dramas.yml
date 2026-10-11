@@ -11,6 +11,7 @@ on:
   pull_request:
     paths:
       - tools/build_dramas.py
+      - tools/english_series.py
       - tools/library_check.py
       - tools/library_titles.py
       - .github/workflows/build-dramas.yml
