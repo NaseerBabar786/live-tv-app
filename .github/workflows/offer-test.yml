@@ -40,10 +40,12 @@ jobs:
             # Build APK run instead (artifacts are kept 90 days), so the exact build that was
             # checked on the emulator is the one the owner gets.
             echo "The candidate is build $have; taking build $want from its Build APK run."
-            run=$(gh api "repos/$GH_REPO/actions/workflows/build-apk.yml/runs?branch=main&event=push&per_page=100" \
-              --jq ".workflow_runs[] | select(.run_number == $want and .conclusion == \"success\") | .id" | head -1)
+            # Usually a main build; a fix-only build from a pull request also works, so a test can
+            # be finished without the features merged after it (owner, 2026-10-11).
+            run=$(gh api "repos/$GH_REPO/actions/workflows/build-apk.yml/runs?status=success&per_page=100" \
+              --jq ".workflow_runs[] | select(.run_number == $want) | .id" | head -1)
             if [ -z "$run" ]; then
-              echo "::error::No successful Build APK run on main with number $want."
+              echo "::error::No successful Build APK run with number $want."
               exit 1
             fi
             commit=$(gh api "repos/$GH_REPO/actions/runs/$run" --jq .head_sha)
